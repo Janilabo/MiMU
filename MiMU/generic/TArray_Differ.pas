@@ -72,7 +72,7 @@ begin
   Result := (Length(arr) <> Length(target));
   if not Result then
   for i := High(arr) downto 0 do
-    if ((arr[i].X <> target[i].X) or (arr[i].Y <> target[i].Y)) then
+    if (arr[i] <> target[i]) then
       Exit(True);
 end;
 
@@ -84,7 +84,7 @@ begin
   Result := (Length(arr) <> Length(target));
   if not Result then
   for i := High(arr) downto 0 do
-    if ((arr[i].X1 <> target[i].X1) or (arr[i].Y1 <> target[i].Y1) or (arr[i].X2 <> target[i].X2) or (arr[i].Y2 <> target[i].Y2)) then
+    if (arr[i] <> target[i]) then
       Exit(True);
 end;
 
@@ -96,6 +96,6 @@ begin
   Result := (Length(arr) <> Length(target));
   if not Result then
   for i := High(arr) downto 0 do
-    if ((arr[i].start <> target[i].start) or (arr[i].stop <> target[i].stop)) then
+    if (arr[i] <> target[i]) then
       Exit(True);
 end;

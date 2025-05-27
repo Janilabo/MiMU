@@ -121,7 +121,7 @@ begin
   begin
     SetLength(Result, (s + 1));
     for i := s downto 0 do
-      if ((arr[i].X = item.X) and (arr[i].Y = item.Y)) then
+      if (arr[i] = item) then
       begin
         Result[r] := i;
         Inc(r);
@@ -142,7 +142,7 @@ begin
   begin
     SetLength(Result, (s + 1));
     for i := s downto 0 do
-      if ((arr[i].X1 = item.X1) and (arr[i].Y1 = item.Y1) and (arr[i].X2 = item.X2) and (arr[i].Y2 = item.Y2)) then
+      if (arr[i] = item) then
       begin
         Result[r] := i;
         Inc(r);
@@ -163,7 +163,7 @@ begin
   begin
     SetLength(Result, (s + 1));
     for i := s downto 0 do
-      if ((arr[i].start = item.start) and (arr[i].stop = item.stop)) then
+      if (arr[i] = item) then
       begin
         Result[r] := i;
         Inc(r);

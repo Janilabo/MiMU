@@ -53,7 +53,7 @@ end;
 function TArray_PosLast(const arr: TPointArray; const item: TPoint; const start: Int32 = 2147483647): Int32; overload; cdecl;
 begin
   for Result := Min(High(arr), start) downto 0 do
-    if ((arr[Result].X = item.X) and (arr[Result].Y = item.Y)) then
+    if (arr[Result] = item) then
       Exit;
   Result := -1;
 end;
@@ -62,7 +62,7 @@ end;
 function TArray_PosLast(const arr: TBoxArray; const item: TBox; const start: Int32 = 2147483647): Int32; overload; cdecl;
 begin
   for Result := Min(High(arr), start) downto 0 do
-    if ((arr[Result].X1 = item.X1) and (arr[Result].Y1 = item.Y1) and (arr[Result].X2 = item.X2) and (arr[Result].Y2 = item.Y2)) then
+    if (arr[Result] = item) then
       Exit;
   Result := -1;
 end;
@@ -71,7 +71,7 @@ end;
 function TArray_PosLast(const arr: TRangeArray; const item: TRange; const start: Int32 = 2147483647): Int32; overload; cdecl;
 begin
   for Result := Min(High(arr), start) downto 0 do
-    if ((arr[Result].start = item.start) and (arr[Result].stop = item.stop)) then
+    if (arr[Result] = item) then
       Exit;
   Result := -1;
 end;
@@ -155,7 +155,7 @@ begin
   h := High(items);
   for Result := Min(High(arr), start) downto 0 do
     for i := 0 to h do
-      if ((arr[Result].X = items[i].X) and (arr[Result].Y = items[i].Y)) then
+      if (arr[Result] = items[i]) then
         Exit;
   Result := -1;
 end;
@@ -168,7 +168,7 @@ begin
   h := High(items);
   for Result := Min(High(arr), start) downto 0 do
     for i := 0 to h do
-      if ((arr[Result].X1 = items[i].X1) and (arr[Result].Y1 = items[i].Y1) and (arr[Result].X2 = items[i].X2) and (arr[Result].Y2 = items[i].Y2)) then
+      if (arr[Result] = items[i]) then
         Exit;
   Result := -1;
 end;
@@ -181,7 +181,7 @@ begin
   h := High(items);
   for Result := Min(High(arr), start) downto 0 do
     for i := 0 to h do
-      if ((arr[Result].start = items[i].start) and (arr[Result].stop = items[i].stop)) then
+      if (arr[Result] = items[i]) then
         Exit;
   Result := -1;
 end;

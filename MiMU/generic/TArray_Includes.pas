@@ -65,7 +65,7 @@ var
   i: Int32;
 begin
   for i := Min(High(arr), start) downto 0 do
-    if ((item.X = arr[i].X) and (item.Y = arr[i].Y)) then
+    if (item = arr[i]) then
       Exit(True);
   Result := False;
 end;
@@ -76,7 +76,7 @@ var
   i: Int32;
 begin
   for i := Min(High(arr), start) downto 0 do
-    if ((item.X1 = arr[i].X1) and (item.Y1 = arr[i].Y1) and (item.X2 = arr[i].X2) and (item.Y2 = arr[i].Y2)) then
+    if (item = arr[i]) then
       Exit(True);
   Result := False;
 end;
@@ -87,7 +87,7 @@ var
   i: Int32;
 begin
   for i := Min(High(arr), start) downto 0 do
-    if ((item.start = arr[i].start) and (item.stop = arr[i].stop)) then
+    if (item = arr[i]) then
       Exit(True);
   Result := False;
 end;

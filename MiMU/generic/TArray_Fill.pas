@@ -22,7 +22,7 @@ begin
 end;
 
 // TDoubleArray
-function TArray_Fill(const arr: TDoubleArray; const item: Double; const start: Int32 = 0; const count: Int32 = 2147483647): TDoubleArray; //overload; cdecl;
+function TArray_Fill(const arr: TDoubleArray; const item: Double; const start: Int32 = 0; const count: Int32 = 2147483647): TDoubleArray; overload; cdecl;
 var
   h, i, s, t: Int32;
 begin

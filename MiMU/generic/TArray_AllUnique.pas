@@ -77,7 +77,7 @@ begin
   h := High(arr);
   for a := 0 to (h - 1) do
     for b := (a + 1) to h do
-      if ((arr[a].X = arr[b].X) and (arr[a].Y = arr[b].Y)) then
+      if (arr[a] = arr[b]) then
         Exit(False);
   Result := (h > -1);
 end;
@@ -90,7 +90,7 @@ begin
   h := High(arr);
   for a := 0 to (h - 1) do
     for b := (a + 1) to h do
-      if ((arr[a].X1 = arr[b].X1) and (arr[a].Y1 = arr[b].Y1) and (arr[a].X1 = arr[b].X1) and (arr[a].Y1 = arr[b].Y1)) then
+      if (arr[a] = arr[b]) then
         Exit(False);
   Result := (h > -1);
 end;
@@ -103,7 +103,7 @@ begin
   h := High(arr);
   for a := 0 to (h - 1) do
     for b := (a + 1) to h do
-      if ((arr[a].start = arr[b].start) and (arr[a].stop = arr[b].stop)) then
+      if (arr[a] = arr[b]) then
         Exit(False);
   Result := (h > -1);
 end;

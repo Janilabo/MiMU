@@ -111,7 +111,7 @@ begin
   repeat
      x := 0;
      repeat
-       Result := ((arr[i].X = allowed[x].X) and (arr[i].Y = allowed[x].Y));
+       Result := (arr[i] = allowed[x]);
        x := (x + 1);
      until (Result or (x = y));
      i := (i - 1);
@@ -130,7 +130,7 @@ begin
   repeat
      x := 0;
      repeat
-       Result := ((arr[i].X1 = allowed[x].X1) and (arr[i].Y1 = allowed[x].Y1) and (arr[i].X2 = allowed[x].X2) and (arr[i].Y2 = allowed[x].Y2));
+       Result := (arr[i] = allowed[x]);
        x := (x + 1);
      until (Result or (x = y));
      i := (i - 1);
@@ -149,7 +149,7 @@ begin
   repeat
      x := 0;
      repeat
-       Result := ((arr[i].start = allowed[x].start) and (arr[i].stop = allowed[x].stop));
+       Result := (arr[i] = allowed[x]);
        x := (x + 1);
      until (Result or (x = y));
      i := (i - 1);

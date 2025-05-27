@@ -71,9 +71,20 @@ type
   T2DRangeArray = array of TRangeArray;
 
 operator+(const a, b: TPoint): TPoint;
+operator+(const a, b: TBox): TBox;
+operator+(const a, b: TRange): TRange;
+
 operator-(const a, b: TPoint): TPoint;
+operator-(const a, b: TBox): TBox;
+operator-(const a, b: TRange): TRange;
+
 operator=(const a, b: TPoint): Boolean;
+operator=(const a, b: TBox): Boolean;
+operator=(const a, b: TRange): Boolean;
+
 operator<>(const a, b: TPoint): Boolean;
+operator<>(const a, b: TBox): Boolean;
+operator<>(const a, b: TRange): Boolean;
 
 procedure Swap(var A, B: Int32); overload; inline;
 procedure Swap(var A, B: Int64); overload; inline;
@@ -538,7 +549,7 @@ function TArray_ExtractEvery(const arr: TBoxArray; const X: Int32 = 1; const sta
 function TArray_ExtractEvery(const arr: TRangeArray; const X: Int32 = 1; const start: Int32 = 0): TRangeArray; overload; cdecl;
 
 function TArray_Fill(const arr: TIntegerArray; const item: Int32; const start: Int32 = 0; const count: Int32 = 2147483647): TIntegerArray; overload; cdecl;
-function TArray_Fill(const arr: TDoubleArray; const item: Double; const start: Int32 = 0; const count: Int32 = 2147483647): TDoubleArray; //overload; cdecl;
+function TArray_Fill(const arr: TDoubleArray; const item: Double; const start: Int32 = 0; const count: Int32 = 2147483647): TDoubleArray; overload; cdecl;
 function TArray_Fill(const arr: TStringArray; const item: string; const start: Int32 = 0; const count: Int32 = 2147483647): TStringArray; overload; cdecl;
 function TArray_Fill(const arr: TCharArray; const item: Char; const start: Int32 = 0; const count: Int32 = 2147483647): TCharArray; overload; cdecl;
 function TArray_Fill(const arr: TBooleanArray; const item: Boolean; const start: Int32 = 0; const count: Int32 = 2147483647): TBooleanArray; overload; cdecl;
@@ -912,71 +923,24 @@ function T2DArray_Create(const size1D, size2D: Int32; const item: TRange): T2DRa
   
 implementation
 
-{$I MiMU/types/Double.pas}
-{$I MiMU/types/Int32.pas}
-{$I MiMU/types/Int64.pas}
-{$I MiMU/types/String.pas}
-{$I MiMU/types/Boolean.pas}
-{$I MiMU/types/TPoint.pas}
-{$I MiMU/types/TBox.pas}
-{$I MiMU/types/TRange.pas}
-
-{$I MiMU/generic/TArray_Copy.pas}
-{$I MiMU/generic/TArray_Get.pas}
-{$I MiMU/generic/TArray_Set.pas}
-{$I MiMU/generic/TArray_Clone.pas}
-{$I MiMU/generic/TArray_Differ.pas}
-{$I MiMU/generic/TArray_Equal.pas}
-{$I MiMU/generic/TArray_AllEqual.pas}
-{$I MiMU/generic/TArray_AllSame.pas}
-{$I MiMU/generic/TArray_AllUnique.pas}
-{$I MiMU/generic/TArray_Append.pas}
-{$I MiMU/generic/TArray_Add.pas}
-{$I MiMU/generic/TArray_Create.pas}
-{$I MiMU/generic/TArray_Build.pas}
-{$I MiMU/generic/TArray_BuiltWith.pas}
-{$I MiMU/generic/TArray_BuiltWithout.pas}
-{$I MiMU/generic/TArray_Contains.pas}
-{$I MiMU/generic/TArray_Includes.pas}
-{$I MiMU/generic/TArray_Position.pas}
-{$I MiMU/generic/TArray_Positions.pas}
-{$I MiMU/generic/TArray_Pos.pas}
-{$I MiMU/generic/TArray_Pop.pas}
-{$I MiMU/generic/TArray_PosLast.pas}
-{$I MiMU/generic/TArray_PosLasts.pas}
-{$I MiMU/generic/TArray_Push.pas}
-{$I MiMU/generic/TArray_Delete.pas}
-{$I MiMU/generic/TArray_Remove.pas}
-{$I MiMU/generic/TArray_Filter.pas}
-{$I MiMU/generic/TArray_Extract.pas}
-{$I MiMU/generic/TArray_FilterEvery.pas}
-{$I MiMU/generic/TArray_ExtractEvery.pas}
-{$I MiMU/generic/TArray_Reverse.pas}
-{$I MiMU/generic/TArray_Reversed.pas}
-{$I MiMU/generic/TArray_Flip.pas}
-{$I MiMU/generic/TArray_Fill.pas}
-{$I MiMU/generic/TArray_Holds.pas}
-{$I MiMU/generic/TArray_Dupe.pas}
-{$I MiMU/generic/TArray_Swap.pas}
-{$I MiMU/generic/TArray_Trade.pas}
-{$I MiMU/generic/TArray_Unique.pas}
-{$I MiMU/generic/TArray_Uniqued.pas}
-{$I MiMU/generic/TArray_Uniques.pas}
-{$I MiMU/generic/TArray_Pick.pas}
-{$I MiMU/generic/TArray_Move.pas}
-{$I MiMU/generic/TArray_Group.pas}
-{$I MiMU/generic/TArray_Partition.pas}
-{$I MiMU/generic/TArray_Distribute.pas}
-{$I MiMU/generic/TArray_Randomize.pas}
-
-{$I MiMU/generic/T2DArray_Create.pas}
-
-{$I MiMU/types/TPointArray.pas}
-
 operator+(const a, b: TPoint): TPoint;
 begin
   Result.X := (a.X + b.X);
   Result.X := (a.Y + b.Y);
+end;
+
+operator+(const a, b: TBox): TBox;
+begin
+  Result.X1 := (a.X1 + b.X1);
+  Result.Y1 := (a.Y1 + b.Y1);
+  Result.X2 := (a.X2 + b.X2);
+  Result.Y2 := (a.Y2 + b.Y2);
+end;
+
+operator+(const a, b: TRange): TRange;
+begin
+  Result.start := (a.start + b.start);
+  Result.stop := (a.stop + b.stop);
 end;
 
 operator-(const a, b: TPoint): TPoint;
@@ -985,14 +949,48 @@ begin
   Result.Y := (a.Y - b.Y);
 end;
 
+operator-(const a, b: TBox): TBox;
+begin
+  Result.X1 := (a.X1 - b.X1);
+  Result.Y1 := (a.Y1 - b.Y1);
+  Result.X2 := (a.X2 - b.X2);
+  Result.Y2 := (a.Y2 - b.Y2);
+end;
+
+operator-(const a, b: TRange): TRange;
+begin
+  Result.start := (a.start - b.start);
+  Result.stop := (a.stop - b.stop);
+end;
+
 operator=(const a, b: TPoint): Boolean;
 begin
   Result := ((a.X = b.X) and (a.Y = b.Y));
 end;
 
+operator=(const a, b: TBox): Boolean;
+begin
+  Result := ((a.X1 = b.X1) and (a.Y1 = b.Y1) and (a.X2 = b.X2) and (a.Y2 = b.Y2));
+end;
+
+operator=(const a, b: TRange): Boolean;
+begin
+  Result := ((a.start = b.start) and (a.stop = b.stop));
+end;
+
 operator<>(const a, b: TPoint): Boolean;
 begin
   Result := not ((a.X = b.X) and (a.Y = b.Y));
+end;
+
+operator<>(const a, b: TBox): Boolean;
+begin
+  Result := not ((a.X1 = b.X1) and (a.Y1 = b.Y1) and (a.X2 = b.X2) and (a.Y2 = b.Y2));
+end;
+
+operator<>(const a, b: TRange): Boolean;
+begin
+  Result := not ((a.start = b.start) and (a.stop = b.stop));
 end;  
 
 procedure Swap(var A, B: Int32); overload; inline;
@@ -1075,6 +1073,67 @@ begin
   A := B;
   B := T;
 end;
+
+{$I MiMU/types/Double.pas}
+{$I MiMU/types/Int32.pas}
+{$I MiMU/types/Int64.pas}
+{$I MiMU/types/String.pas}
+{$I MiMU/types/Boolean.pas}
+{$I MiMU/types/TPoint.pas}
+{$I MiMU/types/TBox.pas}
+{$I MiMU/types/TRange.pas}
+
+{$I MiMU/generic/TArray_Copy.pas}
+{$I MiMU/generic/TArray_Get.pas}
+{$I MiMU/generic/TArray_Set.pas}
+{$I MiMU/generic/TArray_Clone.pas}
+{$I MiMU/generic/TArray_Differ.pas}
+{$I MiMU/generic/TArray_Equal.pas}
+{$I MiMU/generic/TArray_AllEqual.pas}
+{$I MiMU/generic/TArray_AllSame.pas}
+{$I MiMU/generic/TArray_AllUnique.pas}
+{$I MiMU/generic/TArray_Append.pas}
+{$I MiMU/generic/TArray_Add.pas}
+{$I MiMU/generic/TArray_Create.pas}
+{$I MiMU/generic/TArray_Build.pas}
+{$I MiMU/generic/TArray_BuiltWith.pas}
+{$I MiMU/generic/TArray_BuiltWithout.pas}
+{$I MiMU/generic/TArray_Contains.pas}
+{$I MiMU/generic/TArray_Includes.pas}
+{$I MiMU/generic/TArray_Position.pas}
+{$I MiMU/generic/TArray_Positions.pas}
+{$I MiMU/generic/TArray_Pos.pas}
+{$I MiMU/generic/TArray_Pop.pas}
+{$I MiMU/generic/TArray_PosLast.pas}
+{$I MiMU/generic/TArray_PosLasts.pas}
+{$I MiMU/generic/TArray_Push.pas}
+{$I MiMU/generic/TArray_Delete.pas}
+{$I MiMU/generic/TArray_Remove.pas}
+{$I MiMU/generic/TArray_Filter.pas}
+{$I MiMU/generic/TArray_Extract.pas}
+{$I MiMU/generic/TArray_FilterEvery.pas}
+{$I MiMU/generic/TArray_ExtractEvery.pas}
+{$I MiMU/generic/TArray_Reverse.pas}
+{$I MiMU/generic/TArray_Reversed.pas}
+{$I MiMU/generic/TArray_Flip.pas}
+{$I MiMU/generic/TArray_Fill.pas}
+{$I MiMU/generic/TArray_Holds.pas}
+{$I MiMU/generic/TArray_Dupe.pas}
+{$I MiMU/generic/TArray_Swap.pas}
+{$I MiMU/generic/TArray_Trade.pas}
+{$I MiMU/generic/TArray_Unique.pas}
+{$I MiMU/generic/TArray_Uniqued.pas}
+{$I MiMU/generic/TArray_Uniques.pas}
+{$I MiMU/generic/TArray_Pick.pas}
+{$I MiMU/generic/TArray_Move.pas}
+{$I MiMU/generic/TArray_Group.pas}
+{$I MiMU/generic/TArray_Partition.pas}
+{$I MiMU/generic/TArray_Distribute.pas}
+{$I MiMU/generic/TArray_Randomize.pas}
+
+{$I MiMU/generic/T2DArray_Create.pas}
+
+{$I MiMU/types/TPointArray.pas}
 
 initialization
 

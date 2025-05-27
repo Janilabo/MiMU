@@ -195,7 +195,7 @@ begin
     f := False;
     for r := 0 to g do
     begin
-      f := ((arr[i].X = Result[r][0].X) and (arr[i].Y = Result[r][0].Y));
+      f := (arr[i] = Result[r][0]);
       if f then
       begin
         l := Length(Result[r]);
@@ -230,7 +230,7 @@ begin
     f := False;
     for r := 0 to g do
     begin
-      f := ((arr[i].X1 = Result[r][0].X1) and (arr[i].Y1 = Result[r][0].Y1) and (arr[i].X2 = Result[r][0].X2) and (arr[i].Y2 = Result[r][0].Y2));
+      f := (arr[i] = Result[r][0]);
       if f then
       begin
         l := Length(Result[r]);
@@ -265,7 +265,7 @@ begin
     f := False;
     for r := 0 to g do
     begin
-      f := ((arr[i].start = Result[r][0].start) and (arr[i].stop = Result[r][0].stop));
+      f := (arr[i] = Result[r][0]);
       if f then
       begin
         l := Length(Result[r]);

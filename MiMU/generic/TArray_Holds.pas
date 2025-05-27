@@ -140,7 +140,7 @@ begin
     a := (a + 1);
     for x := 0 to y do
     begin
-      n := ((arr[(a + x)].X <> chain[x].X) or (arr[(a + x)].Y <> chain[x].Y));
+      n := (arr[(a + x)] <> chain[x]);
       if n then
         Break;
     end;
@@ -164,7 +164,7 @@ begin
     a := (a + 1);
     for x := 0 to y do
     begin
-      n := ((arr[(a + x)].X1 <> chain[x].X1) or (arr[(a + x)].Y1 <> chain[x].Y1) or (arr[(a + x)].X2 <> chain[x].X2) or (arr[(a + x)].Y2 <> chain[x].Y2));
+      n := (arr[(a + x)] <> chain[x]);
       if n then
         Break;
     end;
@@ -188,7 +188,7 @@ begin
     a := (a + 1);
     for x := 0 to y do
     begin
-      n := ((arr[(a + x)].start <> chain[x].start) or (arr[(a + x)].stop <> chain[x].stop));
+      n := (arr[(a + x)] <> chain[x]);
       if n then
         Break;
     end;

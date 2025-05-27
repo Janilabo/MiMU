@@ -157,7 +157,7 @@ begin
   s := False;
   r := 0;
   for i := m to (l - 1) do
-    if (s or ((arr[i].X <> item.X) or (arr[i].Y <> item.Y))) then
+    if (s or (arr[i] <> item)) then
     begin
       arr[(r + m)] := arr[i];
       Inc(r);
@@ -185,7 +185,7 @@ begin
   s := False;
   r := 0;
   for i := m to (l - 1) do
-    if (s or ((arr[i].X1 <> item.X1) or (arr[i].Y1 <> item.Y1) or (arr[i].X2 <> item.X2) or (arr[i].Y2 <> item.Y2))) then
+    if (s or (arr[i] <> item)) then
     begin
       arr[(r + m)] := arr[i];
       Inc(r);
@@ -213,7 +213,7 @@ begin
   s := False;
   r := 0;
   for i := m to (l - 1) do
-    if (s or ((arr[i].start <> item.start) or (arr[i].stop <> item.stop))) then
+    if (s or (arr[i] <> item)) then
     begin
       arr[(r + m)] := arr[i];
       Inc(r);
@@ -457,7 +457,7 @@ begin
     if not s then
     for a := 0 to b do
     begin
-      d := ((arr[i].X = items[a].X) and (arr[i].Y = items[a].Y));
+      d := (arr[i] = items[a]);
       if d then
       begin
         s := not all;
@@ -498,7 +498,7 @@ begin
     if not s then
     for a := 0 to b do
     begin
-      d := ((arr[i].X1 = items[a].X1) and (arr[i].Y1 = items[a].Y1) and (arr[i].X2 = items[a].X2) and (arr[i].Y2 = items[a].Y2));
+      d := (arr[i] = items[a]);
       if d then
       begin
         s := not all;
@@ -539,7 +539,7 @@ begin
     if not s then
     for a := 0 to b do
     begin
-      d := ((arr[i].start = items[a].start) and (arr[i].stop = items[a].stop));
+      d := (arr[i] = items[a]);
       if d then
       begin
         s := not all;

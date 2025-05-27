@@ -98,7 +98,7 @@ begin
   SetLength(Result, (l - start));
   r := 0;
   for i := start to (l - 1) do
-    if ((arr[i].X <> item.X) or (arr[i].Y <> item.Y)) then
+    if (arr[i] <> item) then
     begin
       Result[r] := arr[i];
       Inc(r);
@@ -115,7 +115,7 @@ begin
   SetLength(Result, (l - start));
   r := 0;
   for i := start to (l - 1) do
-    if ((arr[i].X1 <> item.X1) or (arr[i].Y1 <> item.Y1) or (arr[i].X2 <> item.X2) or (arr[i].Y2 <> item.Y2)) then
+    if (arr[i] <> item) then
     begin
       Result[r] := arr[i];
       Inc(r);
@@ -132,7 +132,7 @@ begin
   SetLength(Result, (l - start));
   r := 0;
   for i := start to (l - 1) do
-    if ((arr[i].start <> item.start) or (arr[i].stop <> item.stop)) then
+    if (arr[i] <> item) then
     begin
       Result[r] := arr[i];
       Inc(r);

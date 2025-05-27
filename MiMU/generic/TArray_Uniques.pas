@@ -174,7 +174,7 @@ begin
     begin
       for y := 0 to h do
       begin
-        m := ((y <> x) and ((arr[x].X = arr[y].X) and (arr[x].Y = arr[y].Y)));
+        m := ((y <> x) and (arr[x] = arr[y]));
         if m then
           Break;
       end;
@@ -205,7 +205,7 @@ begin
     begin
       for y := 0 to h do
       begin
-        m := ((y <> x) and ((arr[x].X1 = arr[y].X1) and (arr[x].Y1 = arr[y].Y1) and (arr[x].X2 = arr[y].X2) and (arr[x].Y2 = arr[y].Y2)));
+        m := ((y <> x) and (arr[x] = arr[y]));
         if m then
           Break;
       end;
@@ -236,7 +236,7 @@ begin
     begin
       for y := 0 to h do
       begin
-        m := ((y <> x) and ((arr[x].start = arr[y].start) and (arr[x].stop = arr[y].stop)));
+        m := ((y <> x) and (arr[x] = arr[y]));
         if m then
           Break;
       end;

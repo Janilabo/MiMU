@@ -158,7 +158,7 @@ begin
   begin
     for j := 0 to a do
     begin
-      m := ((arr[i].X = arr[j].X) and (arr[i].Y = arr[j].Y));
+      m := (arr[i] = arr[j]);
       if m then
         Break;
     end;
@@ -186,7 +186,7 @@ begin
   begin
     for j := 0 to a do
     begin
-      m := ((arr[i].X1 = arr[j].X1) and (arr[i].Y1 = arr[j].Y1) and (arr[i].X2 = arr[j].X2) and (arr[i].Y2 = arr[j].Y2));
+      m := (arr[i] = arr[j]);
       if m then
         Break;
     end;
@@ -214,7 +214,7 @@ begin
   begin
     for j := 0 to a do
     begin
-      m := ((arr[i].start = arr[j].start) and (arr[i].stop = arr[j].stop));
+      m := (arr[i] = arr[j]);
       if m then
         Break;
     end;

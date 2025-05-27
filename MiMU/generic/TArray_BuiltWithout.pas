@@ -133,7 +133,7 @@ begin
     repeat
        x := 0;
        repeat
-         Result := not ((arr[i].X = forbidden[x].X) and (arr[i].Y = forbidden[x].Y));
+         Result := not (arr[i] = forbidden[x]);
          x := (x + 1);
        until ((x = y) or (not Result));
        i := (i - 1);
@@ -156,7 +156,7 @@ begin
     repeat
        x := 0;
        repeat
-         Result := not ((arr[i].X1 = forbidden[x].X1) and (arr[i].Y1 = forbidden[x].Y1) and (arr[i].X2 = forbidden[x].X2) and (arr[i].Y2 = forbidden[x].Y2));
+         Result := not (arr[i] = forbidden[x]);
          x := (x + 1);
        until ((x = y) or (not Result));
        i := (i - 1);
@@ -179,7 +179,7 @@ begin
     repeat
        x := 0;
        repeat
-         Result := not ((arr[i].start = forbidden[x].start) and (arr[i].stop = forbidden[x].stop));
+         Result := not (arr[i] = forbidden[x]);
          x := (x + 1);
        until ((x = y) or (not Result));
        i := (i - 1);

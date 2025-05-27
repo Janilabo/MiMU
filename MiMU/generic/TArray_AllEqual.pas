@@ -77,7 +77,7 @@ begin
   l := Low(arr);
   h := High(arr);
   for i := (l + 1) to h do
-    if ((arr[l].X <> arr[i].X) or (arr[l].Y <> arr[i].Y)) then
+    if (arr[l] <> arr[i]) then
       Exit(False);
   Result := (Length(arr) > 0);
 end;
@@ -90,7 +90,7 @@ begin
   l := Low(arr);
   h := High(arr);
   for i := (l + 1) to h do
-    if ((arr[l].X1 <> arr[i].X1) or (arr[l].Y1 <> arr[i].Y1) or (arr[l].X2 <> arr[i].X2) or (arr[l].Y2 <> arr[i].Y2)) then
+    if (arr[l] <> arr[i]) then
       Exit(False);
   Result := (Length(arr) > 0);
 end;
@@ -103,7 +103,7 @@ begin
   l := Low(arr);
   h := High(arr);
   for i := (l + 1) to h do
-    if ((arr[l].start <> arr[i].start) or (arr[l].stop <> arr[i].stop)) then
+    if (arr[l] <> arr[i]) then
       Exit(False);
   Result := (Length(arr) > 0);
 end;

@@ -163,7 +163,7 @@ begin
     begin
       j := 0;
       repeat
-        if ((arr[i].X <> Result[j].X) or (arr[i].Y <> Result[j].Y)) then
+        if (arr[i] <> Result[j]) then
           j := (j + 1)
         else
           j := 0;
@@ -192,7 +192,7 @@ begin
     begin
       j := 0;
       repeat
-        if ((arr[i].X1 <> Result[j].X1) or (arr[i].Y1 <> Result[j].Y1) or (arr[i].X2 <> Result[j].X2) or (arr[i].Y2 <> Result[j].Y2)) then
+        if (arr[i] <> Result[j]) then
           j := (j + 1)
         else
           j := 0;
@@ -221,7 +221,7 @@ begin
     begin
       j := 0;
       repeat
-        if ((arr[i].start <> Result[j].start) or (arr[i].stop <> Result[j].stop)) then
+        if (arr[i] <> Result[j]) then
           j := (j + 1)
         else
           j := 0;
