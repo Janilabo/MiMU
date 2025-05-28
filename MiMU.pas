@@ -781,6 +781,14 @@ function TArray_Push(var arr: TBooleanArray; const item: Boolean): Int32; overlo
 function TArray_Push(var arr: TPointArray; const item: TPoint): Int32; overload; cdecl;
 function TArray_Push(var arr: TBoxArray; const item: TBox): Int32; overload; cdecl;
 function TArray_Push(var arr: TRangeArray; const item: TRange): Int32; overload; cdecl;
+function TArray_Push(var arr: TIntegerArray; const items: TIntegerArray): Int32; overload; cdecl;
+function TArray_Push(var arr: TDoubleArray; const items: TDoubleArray): Int32; overload; cdecl;
+function TArray_Push(var arr: TStringArray; const items: TStringArray): Int32; overload; cdecl;
+function TArray_Push(var arr: TCharArray; const items: TCharArray): Int32; overload; cdecl;
+function TArray_Push(var arr: TBooleanArray; const items: TBooleanArray): Int32; overload; cdecl;
+function TArray_Push(var arr: TPointArray; const items: TPointArray): Int32; overload; cdecl;
+function TArray_Push(var arr: TBoxArray; const items: TBoxArray): Int32; overload; cdecl;
+function TArray_Push(var arr: TRangeArray; const items: TRangeArray): Int32; overload; cdecl;
 
 function TArray_Randomize(var arr: TIntegerArray; const shuffles: Int32 = 1): Boolean; overload; cdecl;
 function TArray_Randomize(var arr: TDoubleArray; const shuffles: Int32 = 1): Boolean; overload; cdecl;
@@ -911,6 +919,23 @@ function TArray_Uniques(const arr: TBooleanArray): TIntegerArray; overload; cdec
 function TArray_Uniques(const arr: TPointArray): TIntegerArray; overload; cdecl;
 function TArray_Uniques(const arr: TBoxArray): TIntegerArray; overload; cdecl;
 function TArray_Uniques(const arr: TRangeArray): TIntegerArray; overload; cdecl;
+
+function TArray_Unshift(var arr: TIntegerArray; const item: Int32): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TDoubleArray; const item: Double): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TStringArray; const item: string): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TCharArray; const item: Char): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TBooleanArray; const item: Boolean): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TPointArray; const item: TPoint): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TBoxArray; const item: TBox): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TRangeArray; const item: TRange): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TIntegerArray; const items: TIntegerArray): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TDoubleArray; const items: TDoubleArray): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TStringArray; const items: TStringArray): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TCharArray; const items: TCharArray): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TBooleanArray; const items: TBooleanArray): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TPointArray; const items: TPointArray): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TBoxArray; const items: TBoxArray): Int32; overload; cdecl;
+function TArray_Unshift(var arr: TRangeArray; const items: TRangeArray): Int32; overload; cdecl;
 
 function T2DArray_Create(const size1D, size2D: Int32; const item: Int32): T2DIntegerArray; overload; cdecl;
 function T2DArray_Create(const size1D, size2D: Int32; const item: Double): T2DDoubleArray; overload; cdecl;
@@ -1124,6 +1149,7 @@ end;
 {$I MiMU/generic/TArray_Unique.pas}
 {$I MiMU/generic/TArray_Uniqued.pas}
 {$I MiMU/generic/TArray_Uniques.pas}
+{$I MiMU/generic/TArray_Unshift.pas}
 {$I MiMU/generic/TArray_Pick.pas}
 {$I MiMU/generic/TArray_Move.pas}
 {$I MiMU/generic/TArray_Group.pas}
