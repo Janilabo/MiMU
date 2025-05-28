@@ -434,6 +434,15 @@ function TArray_Clone(const arr: TPointArray; const startIndex: Int32 = 0; const
 function TArray_Clone(const arr: TBoxArray; const startIndex: Int32 = 0; const count: Int32 = 2147483647): TBoxArray; overload; cdecl;
 function TArray_Clone(const arr: TRangeArray; const startIndex: Int32 = 0; const count: Int32 = 2147483647): TRangeArray; overload; cdecl;
 
+function TArray_Combine(const a, b: TIntegerArray): TIntegerArray; overload; cdecl;
+function TArray_Combine(const a, b: TDoubleArray): TDoubleArray; overload; cdecl;
+function TArray_Combine(const a, b: TStringArray): TStringArray; overload; cdecl;
+function TArray_Combine(const a, b: TCharArray): TCharArray; overload; cdecl;
+function TArray_Combine(const a, b: TBooleanArray): TBooleanArray; overload; cdecl;
+function TArray_Combine(const a, b: TPointArray): TPointArray; overload; cdecl;
+function TArray_Combine(const a, b: TBoxArray): TBoxArray; overload; cdecl;
+function TArray_Combine(const a, b: TRangeArray): TRangeArray; overload; cdecl;
+
 function TArray_Contains(const arr: TIntegerArray; const item: Int32; const start: Int32 = 0): Boolean; overload; cdecl;
 function TArray_Contains(const arr: TDoubleArray; const item: Double; const start: Int32 = 0): Boolean; overload; cdecl;
 function TArray_Contains(const arr: TStringArray; const item: string; const start: Int32 = 0): Boolean; overload; cdecl;
@@ -513,6 +522,15 @@ function TArray_Dupe(const arr: TPointArray): TPointArray; overload; cdecl;
 function TArray_Dupe(const arr: TBoxArray): TBoxArray; overload; cdecl;
 function TArray_Dupe(const arr: TRangeArray): TRangeArray; overload; cdecl;
 
+function TArray_Empty(const arr: TIntegerArray): Boolean; overload; cdecl;
+function TArray_Empty(const arr: TDoubleArray): Boolean; overload; cdecl;
+function TArray_Empty(const arr: TStringArray): Boolean; overload; cdecl;
+function TArray_Empty(const arr: TCharArray): Boolean; overload; cdecl;
+function TArray_Empty(const arr: TBooleanArray): Boolean; overload; cdecl;
+function TArray_Empty(const arr: TPointArray): Boolean; overload; cdecl;
+function TArray_Empty(const arr: TBoxArray): Boolean; overload; cdecl;
+function TArray_Empty(const arr: TRangeArray): Boolean; overload; cdecl;
+
 function TArray_Equal(const arr, target: TIntegerArray): Boolean; overload; cdecl;
 function TArray_Equal(const arr, target: TDoubleArray): Boolean; overload; cdecl;
 function TArray_Equal(const arr, target: TStringArray): Boolean; overload; cdecl;
@@ -521,6 +539,23 @@ function TArray_Equal(const arr, target: TBooleanArray): Boolean; overload; cdec
 function TArray_Equal(const arr, target: TPointArray): Boolean; overload; cdecl;
 function TArray_Equal(const arr, target: TBoxArray): Boolean; overload; cdecl;
 function TArray_Equal(const arr, target: TRangeArray): Boolean; overload; cdecl;
+
+function TArray_Extend(const arr: TIntegerArray; const item: Int32): TIntegerArray; overload; cdecl;
+function TArray_Extend(const arr: TDoubleArray; const item: Double): TDoubleArray; overload; cdecl;
+function TArray_Extend(const arr: TStringArray; const item: string): TStringArray; overload; cdecl;
+function TArray_Extend(const arr: TCharArray; const item: Char): TCharArray; overload; cdecl;
+function TArray_Extend(const arr: TBooleanArray; const item: Boolean): TBooleanArray; overload; cdecl;
+function TArray_Extend(const arr: TPointArray; const item: TPoint): TPointArray; overload; cdecl;
+function TArray_Extend(const arr: TBoxArray; const item: TBox): TBoxArray; overload; cdecl;
+function TArray_Extend(const arr: TRangeArray; const item: TRange): TRangeArray; overload; cdecl;
+function TArray_Extend(const arr: TIntegerArray; const items: TIntegerArray): TIntegerArray; overload; cdecl;
+function TArray_Extend(const arr: TDoubleArray; const items: TDoubleArray): TDoubleArray; overload; cdecl;
+function TArray_Extend(const arr: TStringArray; const items: TStringArray): TStringArray; overload; cdecl;
+function TArray_Extend(const arr: TCharArray; const items: TCharArray): TCharArray; overload; cdecl;
+function TArray_Extend(const arr: TBooleanArray; const items: TBooleanArray): TBooleanArray; overload; cdecl;
+function TArray_Extend(const arr: TPointArray; const items: TPointArray): TPointArray; overload; cdecl;
+function TArray_Extend(const arr: TBoxArray; const items: TBoxArray): TBoxArray; overload; cdecl;
+function TArray_Extend(const arr: TRangeArray; const items: TRangeArray): TRangeArray; overload; cdecl;
 
 function TArray_Extract(const arr: TIntegerArray; const item: Int32; const start: Int32 = 0): TIntegerArray; overload; cdecl;
 function TArray_Extract(const arr: TDoubleArray; const item: Double; const start: Int32 = 0): TDoubleArray; overload; cdecl;
@@ -937,6 +972,15 @@ function TArray_Unshift(var arr: TPointArray; const items: TPointArray): Int32; 
 function TArray_Unshift(var arr: TBoxArray; const items: TBoxArray): Int32; overload; cdecl;
 function TArray_Unshift(var arr: TRangeArray; const items: TRangeArray): Int32; overload; cdecl;
 
+function T2DArray_Blank(const arr: T2DIntegerArray): Boolean; overload; cdecl;
+function T2DArray_Blank(const arr: T2DDoubleArray): Boolean; overload; cdecl;
+function T2DArray_Blank(const arr: T2DStringArray): Boolean; overload; cdecl;
+function T2DArray_Blank(const arr: T2DCharArray): Boolean; overload; cdecl;
+function T2DArray_Blank(const arr: T2DBooleanArray): Boolean; overload; cdecl;
+function T2DArray_Blank(const arr: T2DPointArray): Boolean; overload; cdecl;
+function T2DArray_Blank(const arr: T2DBoxArray): Boolean; overload; cdecl;
+function T2DArray_Blank(const arr: T2DRangeArray): Boolean; overload; cdecl;
+
 function T2DArray_Create(const size1D, size2D: Int32; const item: Int32): T2DIntegerArray; overload; cdecl;
 function T2DArray_Create(const size1D, size2D: Int32; const item: Double): T2DDoubleArray; overload; cdecl;
 function T2DArray_Create(const size1D, size2D: Int32; const item: string): T2DStringArray; overload; cdecl;
@@ -945,6 +989,24 @@ function T2DArray_Create(const size1D, size2D: Int32; const item: Boolean): T2DB
 function T2DArray_Create(const size1D, size2D: Int32; const item: TPoint): T2DPointArray; overload; cdecl;
 function T2DArray_Create(const size1D, size2D: Int32; const item: TBox): T2DBoxArray; overload; cdecl;
 function T2DArray_Create(const size1D, size2D: Int32; const item: TRange): T2DRangeArray; overload; cdecl;
+
+function T2DArray_Empty(const arr: T2DIntegerArray): Boolean; overload; cdecl;
+function T2DArray_Empty(const arr: T2DDoubleArray): Boolean; overload; cdecl;
+function T2DArray_Empty(const arr: T2DStringArray): Boolean; overload; cdecl;
+function T2DArray_Empty(const arr: T2DCharArray): Boolean; overload; cdecl;
+function T2DArray_Empty(const arr: T2DBooleanArray): Boolean; overload; cdecl;
+function T2DArray_Empty(const arr: T2DPointArray): Boolean; overload; cdecl;
+function T2DArray_Empty(const arr: T2DBoxArray): Boolean; overload; cdecl;
+function T2DArray_Empty(const arr: T2DRangeArray): Boolean; overload; cdecl;
+
+function T2DArray_Merge(const arr: T2DIntegerArray): TIntegerArray; overload; cdecl;
+function T2DArray_Merge(const arr: T2DDoubleArray): TDoubleArray; overload; cdecl;
+function T2DArray_Merge(const arr: T2DStringArray): TStringArray; overload; cdecl;
+function T2DArray_Merge(const arr: T2DCharArray): TCharArray; overload; cdecl;
+function T2DArray_Merge(const arr: T2DBooleanArray): TBooleanArray; overload; cdecl;
+function T2DArray_Merge(const arr: T2DPointArray): TPointArray; overload; cdecl;
+function T2DArray_Merge(const arr: T2DBoxArray): TBoxArray; overload; cdecl;
+function T2DArray_Merge(const arr: T2DRangeArray): TRangeArray; overload; cdecl;
   
 implementation
 
@@ -1113,7 +1175,9 @@ end;
 {$I MiMU/generic/TArray_Set.pas}
 {$I MiMU/generic/TArray_Clone.pas}
 {$I MiMU/generic/TArray_Differ.pas}
+{$I MiMU/generic/TArray_Empty}
 {$I MiMU/generic/TArray_Equal.pas}
+{$I MiMU/generic/TArray_Extend.pas}
 {$I MiMU/generic/TArray_AllEqual.pas}
 {$I MiMU/generic/TArray_AllSame.pas}
 {$I MiMU/generic/TArray_AllUnique.pas}
@@ -1123,6 +1187,7 @@ end;
 {$I MiMU/generic/TArray_Build.pas}
 {$I MiMU/generic/TArray_BuiltWith.pas}
 {$I MiMU/generic/TArray_BuiltWithout.pas}
+{$I MiMU/generic/TArray_Combine.pas}
 {$I MiMU/generic/TArray_Contains.pas}
 {$I MiMU/generic/TArray_Includes.pas}
 {$I MiMU/generic/TArray_Position.pas}
@@ -1157,7 +1222,10 @@ end;
 {$I MiMU/generic/TArray_Distribute.pas}
 {$I MiMU/generic/TArray_Randomize.pas}
 
+{$I MiMU/generic/T2DArray_Blank}
 {$I MiMU/generic/T2DArray_Create.pas}
+{$I MiMU/generic/T2DArray_Empty.pas}
+{$I MiMU/generic/T2DArray_Merge.pas}
 
 {$I MiMU/types/TPointArray.pas}
 
