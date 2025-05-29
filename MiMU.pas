@@ -202,6 +202,15 @@ function String_TrimRight(const str: string; const t: Char = #32): string; cdecl
 function String_Trim(const str: string; const t: Char = #32): string; cdecl;
 
 function Boolean_Random: Boolean; cdecl; inline;
+function Boolean_X(const X: Boolean; const trueX, falseX: Boolean): Boolean; overload; cdecl;
+function Boolean_X(const X: Boolean; const trueX, falseX: Int32): Int32; overload; cdecl;
+function Boolean_X(const X: Boolean; const trueX, falseX: Int64): Int64; overload; cdecl;
+function Boolean_X(const X: Boolean; const trueX, falseX: Double): Double; overload; cdecl;
+function Boolean_X(const X: Boolean; const trueX, falseX: string): string; overload; cdecl;
+function Boolean_X(const X: Boolean; const trueX, falseX: Char): Char; overload; cdecl;
+function Boolean_X(const X: Boolean; const trueX, falseX: TPoint): TPoint; overload; cdecl;
+function Boolean_X(const X: Boolean; const trueX, falseX: TBox): TBox; overload; cdecl;
+function Boolean_X(const X: Boolean; const trueX, falseX: TRange): TRange; overload; cdecl;
 
 function TPoint_To(const X, Y: Int32): TPoint; cdecl; inline;
 function TPoint_At(const X, Y: Int32): TPoint; cdecl; inline;
