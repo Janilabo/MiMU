@@ -318,3 +318,23 @@ begin
   else
     Result := 0.0;
 end;
+
+{==============================================================================]
+ <Double_Oversize>
+ @action: Returns true if x is higher than limit.
+ @note: None
+[==============================================================================}
+function Double_Oversize(const x, limit: Double): Boolean; cdecl;
+begin
+  Result := (x > limit);
+end;
+
+{==============================================================================]
+ <Double_Undersize>
+ @action: Returns true if x is lower than limit.
+ @note: None
+[==============================================================================}
+function Double_Undersize(const x, limit: Double): Boolean; cdecl;
+begin
+  Result := (x < limit);
+end;

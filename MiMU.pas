@@ -116,6 +116,8 @@ function Int32_Difference(const x, T: Int32): Int32; cdecl; inline;
 function Int32_Opposite(const x: Int32): Int32; cdecl; inline;
 function Int32_Sign(const x: Int32): Int32; cdecl; inline;
 function Int32_Random(const range: Int32): Int32; cdecl;
+function Int32_Oversize(const x, limit: Int32): Boolean; cdecl; inline;
+function Int32_Undersize(const x, limit: Int32): Boolean; cdecl; inline;
 
 function Int64_Even(const x: Int64): Boolean; cdecl; inline;
 function Int64_Odd(const x: Int64): Boolean; cdecl; inline;
@@ -132,6 +134,8 @@ function Int64_Difference(const x, T: Int64): Int64; cdecl; inline;
 function Int64_Opposite(const x: Int64): Int64; cdecl; inline;
 function Int64_Sign(const x: Int64): Int32; cdecl; inline;
 function Int64_Random(const range: Int64): Int64; cdecl;
+function Int64_Oversize(const x, limit: Int64): Boolean; cdecl; inline;
+function Int64_Undersize(const x, limit: Int64): Boolean; cdecl; inline;
 
 function Double_Inc(var x: Double; const N: Double = 1): Double; cdecl; inline;
 function Double_Dec(var x: Double; const N: Double = 1): Double; cdecl;
@@ -157,6 +161,8 @@ function Double_FixRadians(const rdns: Double): Double; cdecl;
 function Double_Radians(const dgrs: Double; const compass: Boolean = False): Double; cdecl;
 function Double_Percent(const source, position: Double): Double; cdecl; inline;
 function Double_Percentage(const source, percent: Double): Double; cdecl; inline;
+function Double_Oversize(const x, limit: Double): Boolean; cdecl;
+function Double_Undersize(const x, limit: Double): Boolean; cdecl;
 
 function String_At(const str, s: string; const index: Int32 = 1): Boolean; cdecl; inline;
 function String_Get(const str: string; const index, size: Int32): string; cdecl; inline;
@@ -283,8 +289,8 @@ function TBox_CenterVertically(const bx, area: TBox): TBox; cdecl;
 function TBox_CenterHorizontally(const bx, area: TBox): TBox; cdecl;
 
 function TRange_Neutral(const range: TRange): Boolean; cdecl;
-function TRange_Increasing(const range: TRange): Boolean; cdecl;
-function TRange_Decreasing(const range: TRange): Boolean; cdecl;
+function TRange_Ascending(const range: TRange): Boolean; cdecl;
+function TRange_Descending(const range: TRange): Boolean; cdecl;
 function TRange_Create(const start: Int32 = 0; const stop: Int32 = 0): TRange; cdecl;
 function TRange_Build(const start: Int32 = 0; const stop: Int32 = 0): TRange; cdecl;
 function TRange_Grab(const range: TRange): TRange; cdecl;
@@ -328,6 +334,8 @@ function TRange_Touch(const a, b: TRange): Boolean; cdecl;
 function TRange_Touches(const a, b: TRange): Boolean; cdecl;
 function TRange_Distance(const a, b: TRange): Int32; cdecl;
 function TRange_DistHausdorff(const a, b: TRange): Int32; cdecl;
+function TRange_Digit(const range: TRange; const x: Int32): Boolean; cdecl; inline;
+function TRange_Value(const range: TRange; const x: Int32): Boolean; cdecl; inline;
 
 function TPointArray_Bounds(const arr: TPointArray): TBox; cdecl;
 function TPointArray_Unique(var arr: TPointArray): Int32; cdecl;
@@ -688,6 +696,15 @@ function TArray_Move(var arr: TPointArray; oldIndex, newIndex: Int32): Boolean; 
 function TArray_Move(var arr: TBoxArray; oldIndex, newIndex: Int32): Boolean; overload; cdecl;
 function TArray_Move(var arr: TRangeArray; oldIndex, newIndex: Int32): Boolean; overload; cdecl;
 
+function TArray_Oversize(const arr: TIntegerArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Oversize(const arr: TDoubleArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Oversize(const arr: TStringArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Oversize(const arr: TCharArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Oversize(const arr: TBooleanArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Oversize(const arr: TPointArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Oversize(const arr: TBoxArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Oversize(const arr: TRangeArray; const limit: Int32): Boolean; overload; cdecl;
+
 function TArray_Partition(const arr: TIntegerArray; const size: Int32): T2DIntegerArray; overload; cdecl;
 function TArray_Partition(const arr: TDoubleArray; const size: Int32): T2DDoubleArray; overload; cdecl;
 function TArray_Partition(const arr: TStringArray; const size: Int32): T2DStringArray; overload; cdecl;
@@ -980,6 +997,15 @@ function TArray_Trade(var a, b: TPointArray): Int32; overload; cdecl;
 function TArray_Trade(var a, b: TBoxArray): Int32; overload; cdecl;
 function TArray_Trade(var a, b: TRangeArray): Int32; overload; cdecl;
 
+function TArray_Undersize(const arr: TIntegerArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Undersize(const arr: TDoubleArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Undersize(const arr: TStringArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Undersize(const arr: TCharArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Undersize(const arr: TBooleanArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Undersize(const arr: TPointArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Undersize(const arr: TBoxArray; const limit: Int32): Boolean; overload; cdecl;
+function TArray_Undersize(const arr: TRangeArray; const limit: Int32): Boolean; overload; cdecl;
+
 function TArray_Unique(var arr: TIntegerArray): Int32; overload; cdecl;
 function TArray_Unique(var arr: TDoubleArray): Int32; overload; cdecl;
 function TArray_Unique(var arr: TStringArray): Int32; overload; cdecl;
@@ -1263,6 +1289,7 @@ end;
 {$I MiMU/generic/TArray_Combine.pas}
 {$I MiMU/generic/TArray_Contains.pas}
 {$I MiMU/generic/TArray_Includes.pas}
+{$I MiMU/generic/TArray_Oversize.pas}
 {$I MiMU/generic/TArray_Position.pas}
 {$I MiMU/generic/TArray_Positions.pas}
 {$I MiMU/generic/TArray_Pos.pas}
@@ -1284,6 +1311,7 @@ end;
 {$I MiMU/generic/TArray_Dupe.pas}
 {$I MiMU/generic/TArray_Swap.pas}
 {$I MiMU/generic/TArray_Trade.pas}
+{$I MiMU/generic/TArray_Undersize.pas}
 {$I MiMU/generic/TArray_Unique.pas}
 {$I MiMU/generic/TArray_Uniqued.pas}
 {$I MiMU/generic/TArray_Uniques.pas}

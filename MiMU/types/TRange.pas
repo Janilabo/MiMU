@@ -9,21 +9,21 @@ begin
 end;
 
 {==============================================================================]
-  <TRange_Increasing>
+  <TRange_Ascending>
   @action: Returns true if range start is lower than stop
   @note: None.
 [==============================================================================}
-function TRange_Increasing(const range: TRange): Boolean; cdecl;
+function TRange_Ascending(const range: TRange): Boolean; cdecl;
 begin
   Result := (range.start < range.stop);
 end;
 
 {==============================================================================]
-  <TRange_Decreasing>
+  <TRange_Descending>
   @action: Returns true if range start is higher than stop
   @note: None.
 [==============================================================================}
-function TRange_Decreasing(const range: TRange): Boolean; cdecl;
+function TRange_Descending(const range: TRange): Boolean; cdecl;
 begin
   Result := (range.start > range.stop);
 end;
@@ -654,4 +654,25 @@ begin
   i := TRange_Normalize(a);
   j := TRange_Normalize(b);
   Result := Max(Abs(i.start - j.stop), Abs(i.stop - j.start));
+end;
+
+{==============================================================================]
+ <TRange_Digit>
+ @action: Returns true if range contains x-value.
+ @note: None.
+[==============================================================================}
+function TRange_Digit(const range: TRange; const x: Int32): Boolean; cdecl; inline;
+begin
+  Result := (((x >= range.start) and (x <= range.stop)) or ((x >= range.stop) and (x <= range.start)));
+end;
+
+
+{==============================================================================]
+ <TRange_Value>
+ @action: Returns true if range contains x-value.
+ @note: None.
+[==============================================================================}
+function TRange_Value(const range: TRange; const x: Int32): Boolean; cdecl; inline;
+begin
+  Result := not (((x < range.start) and (x < range.stop)) or ((x > range.stop) and (x > range.start)));
 end;

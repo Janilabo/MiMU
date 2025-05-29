@@ -202,3 +202,23 @@ begin
   if (range < 0) then
     Result := (Result * -1);
 end;
+
+{==============================================================================]
+ <Int64_Oversize>
+ @action: Returns true if x is higher than limit.
+ @note: None
+[==============================================================================}
+function Int64_Oversize(const x, limit: Int64): Boolean; cdecl; inline;
+begin
+  Result := (x > limit);
+end;
+
+{==============================================================================]
+ <Int64_Undersize>
+ @action: Returns true if x is lower than limit.
+ @note: None
+[==============================================================================}
+function Int64_Undersize(const x, limit: Int64): Boolean; cdecl; inline;
+begin
+  Result := (x < limit);
+end;
