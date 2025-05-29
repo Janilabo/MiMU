@@ -346,6 +346,19 @@ function TRange_DistHausdorff(const a, b: TRange): Int32; cdecl;
 function TRange_Digit(const range: TRange; const x: Int32): Boolean; cdecl; inline;
 function TRange_Value(const range: TRange; const x: Int32): Boolean; cdecl; inline;
 
+function TIntegerArray_Descending(const arr: TIntegerArray): Boolean; cdecl;
+function TIntegerArray_Ascending(const arr: TIntegerArray): Boolean; cdecl;
+function TIntegerArray_Bounds(const arr: TIntegerArray): TRange; cdecl;
+function TIntegerArray_Min(const arr: TIntegerArray): Int32; cdecl;
+function TIntegerArray_Max(const arr: TIntegerArray): Int32; cdecl;
+function TIntegerArray_Sum(const arr: TIntegerArray): Int64; cdecl;
+function TIntegerArray_Density(const arr: TIntegerArray): Double; cdecl;
+function TIntegerArray_Mean(const arr: TIntegerArray): Double; cdecl;
+function TIntegerArray_MostFrequent(const arr: TIntegerArray; const null: Int32 = -2147483648): Int32; cdecl;
+function TIntegerArray_LeastFrequent(const arr: TIntegerArray; const null: Int32 = -2147483648): Int32; cdecl;
+function TIntegerArray_BubbleSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BubbleSortOptimized(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+
 function TPointArray_Bounds(const arr: TPointArray): TBox; cdecl;
 function TPointArray_Unique(var arr: TPointArray): Int32; cdecl;
 function TPointArray_Uniqued(const arr: TPointArray): TPointArray; cdecl;
@@ -695,6 +708,24 @@ function TArray_Includes(const arr: TBooleanArray; const item: Boolean; const st
 function TArray_Includes(const arr: TPointArray; const item: TPoint; const start: Int32 = 2147483647): Boolean; overload; cdecl;
 function TArray_Includes(const arr: TBoxArray; const item: TBox; const start: Int32 = 2147483647): Boolean; overload; cdecl;
 function TArray_Includes(const arr: TRangeArray; const item: TRange; const start: Int32 = 2147483647): Boolean; overload; cdecl;
+
+function TArray_LeastFrequent(const arr: TIntegerArray): Int32; cdecl; overload;
+function TArray_LeastFrequent(const arr: TDoubleArray): Double; cdecl; overload;
+function TArray_LeastFrequent(const arr: TStringArray): string; cdecl; overload;
+function TArray_LeastFrequent(const arr: TCharArray): Char; cdecl; overload;
+function TArray_LeastFrequent(const arr: TBooleanArray): Boolean; cdecl; overload;
+function TArray_LeastFrequent(const arr: TPointArray): TPoint; cdecl; overload;
+function TArray_LeastFrequent(const arr: TBoxArray): TBox; cdecl; overload;
+function TArray_LeastFrequent(const arr: TRangeArray): TRange; cdecl; overload;
+
+function TArray_MostFrequent(const arr: TIntegerArray): Int32; cdecl; overload;
+function TArray_MostFrequent(const arr: TDoubleArray): Double; cdecl; overload;
+function TArray_MostFrequent(const arr: TStringArray): string; cdecl; overload;
+function TArray_MostFrequent(const arr: TCharArray): Char; cdecl; overload;
+function TArray_MostFrequent(const arr: TBooleanArray): Boolean; cdecl; overload;
+function TArray_MostFrequent(const arr: TPointArray): TPoint; cdecl; overload;
+function TArray_MostFrequent(const arr: TBoxArray): TBox; cdecl; overload;
+function TArray_MostFrequent(const arr: TRangeArray): TRange; cdecl; overload;
 
 function TArray_Move(var arr: TIntegerArray; oldIndex, newIndex: Int32): Boolean; overload; cdecl;
 function TArray_Move(var arr: TDoubleArray; oldIndex, newIndex: Int32): Boolean; overload; cdecl;
@@ -1331,6 +1362,8 @@ end;
 {$I MiMU/generic/TArray_Partition.pas}
 {$I MiMU/generic/TArray_Distribute.pas}
 {$I MiMU/generic/TArray_Randomize.pas}
+{$I MiMU/generic/TArray_LeastFrequent}
+{$I MiMU/generic/TArray_MostFrequent}
 
 {$I MiMU/generic/T2DArray_Blank.pas}
 {$I MiMU/generic/T2DArray_Create.pas}
@@ -1338,6 +1371,7 @@ end;
 {$I MiMU/generic/T2DArray_Length.pas}
 {$I MiMU/generic/T2DArray_Merge.pas}
 
+{$I MiMU/types/TIntegerArray.pas}
 {$I MiMU/types/TPointArray.pas}
 
 initialization
