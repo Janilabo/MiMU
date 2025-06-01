@@ -439,6 +439,74 @@ begin
   end;
 end;
 
+function TIntegerArray_QuickSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+var
+  s: TRangeArray;
+  t, i, j, p, o: Int32;
+  r: TRange;
+  procedure Push(const start, stop: Int32);
+  begin
+    Inc(t);
+    SetLength(s, (t + 1));
+    s[t].start := start;
+    s[t].stop := stop;
+  end;
+  function Pop(out start, stop: Int32): Boolean;
+  begin
+    if (t < 0) then
+    begin
+      Result := False;
+      Exit;
+    end;
+    start := s[t].start;
+    stop := s[t].stop;
+    Dec(t);
+    Result := True;
+  end;
+begin
+  Result := High(arr);
+  if (Result < 1) then
+    Exit;
+  o := Boolean_X(ascending, -1, 1);
+  t := -1;
+  Push(0, High(arr));
+  r := TRange_Create(0, High(arr));
+  while Pop(r.start, r.stop) do
+  begin
+    while (r.start < r.stop) do
+    begin
+      i := r.start;
+      j := r.stop;
+      p := arr[((r.start + r.stop) div 2)];
+      while (i <= j) do
+      begin
+        while (Sign(arr[i] - p) = o) do
+          Inc(i);
+        while (Sign(arr[j] - p) = -o) do
+          Dec(j);
+        if (i <= j) then
+        begin
+		  Swap(arr[i], arr[j]);
+          Inc(i);
+          Dec(j);
+        end;
+      end;
+      if ((j - r.start) < (r.stop - i)) then
+      begin
+        if (i < r.stop) then
+          Push(i, r.stop);
+        r.stop := j;
+      end
+      else
+      begin
+        if (r.start < j) then
+          Push(r.start, j);
+        r.start := i;
+      end;
+    end;
+  end;
+end;
+
 {==============================================================================]
   <TIntegerArray_BinarySearch>
   @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.

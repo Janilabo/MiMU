@@ -368,6 +368,7 @@ function TIntegerArray_MostFrequent(const arr: TIntegerArray; const null: Int32 
 function TIntegerArray_LeastFrequent(const arr: TIntegerArray; const null: Int32 = -2147483648): Int32; cdecl;
 function TIntegerArray_BubbleSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_BubbleSortOptimized(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_QuickSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_BinarySearch(const arr: TIntegerArray; const x: Int32): Int32; cdecl;
 function TIntegerArray_BinaryAppend(var arr: TIntegerArray; const x: Int32): Int32; cdecl;
 function TIntegerArray_BinaryAdd(const arr: TIntegerArray; const x: Int32): TIntegerArray; cdecl;
