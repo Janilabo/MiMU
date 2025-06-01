@@ -676,3 +676,28 @@ function TRange_Value(const range: TRange; const x: Int32): Boolean; cdecl; inli
 begin
   Result := not (((x < range.start) and (x < range.stop)) or ((x > range.stop) and (x > range.start)));
 end;
+
+{==============================================================================]
+ <TRange_Middle>
+ @action: The value(s) at the center position(s) of given range.
+ @note: None
+[==============================================================================}
+function TRange_Middle(const range: TRange): Double; cdecl;
+var
+  s: Int32;
+begin
+  s := (TRange_Max(range) + TRange_Min(range));
+  Result := (s div 2);
+  if ((s mod 2) = 1) then
+    Result := (((Result + 1) + Result) / 2.0);
+end;
+
+{==============================================================================]
+ <TRange_Middle>
+ @action: The value(s) at the center position(s) of given range.
+ @note: None
+[==============================================================================}
+function TRange_Center(const range: TRange): Int32; cdecl;
+begin
+  Result := ((TRange_Max(range) + TRange_Min(range)) div 2);
+end;
