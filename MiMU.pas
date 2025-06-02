@@ -173,8 +173,8 @@ function String_Between(const str, s1, s2: string; const offset: Int32 = 0): str
 function String_Count(const str, s: string; const overlap: Boolean = True): Int32; cdecl;
 function String_FromLeft(const str: string; const x: Int32): string; cdecl;
 function String_FromRight(const str: string; const x: Int32): string; cdecl;
-function String_Explode(const str, d: string; const limit: Int32 = -1): TStringArray; cdecl;
-function String_Exploded(const str: string; const d: TStringArray; const limit: Int32 = -1): TStringArray; cdecl;
+function String_Explode(const str, d: string; const limit: Int32 = -1): TStringArray; overload; cdecl;
+function String_Explode(const str: string; const d: TStringArray; const limit: Int32 = -1): TStringArray; overload; cdecl;
 function String_Slice(const str: string; const a, b: Int32): string; cdecl;
 function String_Chunk(const str: string; const a, b: Int32): string; cdecl;
 function String_Reverse(var str: string): Boolean; cdecl;

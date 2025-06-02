@@ -175,7 +175,7 @@ end;
   @action: Explodes str with delimiter (d).
   @note: Explodes up to (maximum) limit. Limit as -1 means no limits.
 [==============================================================================}
-function String_Explode(const str, d: string; const limit: Int32 = -1): TStringArray; cdecl;
+function String_Explode(const str, d: string; const limit: Int32 = -1): TStringArray; overload; cdecl;
 var
   a, b, l, p, r, s, t: Int32;
   m: Boolean;
@@ -188,25 +188,26 @@ begin
     a := 1;
     p := 1;
     r := 0;
-	if (limit = -1) then
+    if (limit = -1) then
       t := l
     else
       t := limit;
-    while (((r + 1) < t) and ((a + (s - 1)) <= l)) do
+    while (((r + 1) < t) and ((a + s - 1) <= l)) do
     begin
+      m := True;
       for b := 1 to s do
       begin
-        m := (str[((a + b) - 1)] = d[b]);
-        if not m then
+        if (str[((a + b) - 1)] <> d[b]) then
+        begin
+          m := False;
           Break;
+        end;
       end;
       if m then
       begin
         Result[r] := Copy(str, p, (a - p));
-        if (((a + s) - 1) = l) then
-          Exit;
         p := (a + s);
-        a := ((a + s) - 1);
+        a := (p - 1);
         Inc(r);
         SetLength(Result, (r + 1));
       end;
@@ -218,80 +219,60 @@ begin
 end;
 
 {==============================================================================]
-  <String_Exploded>
+  <String_Explode>
   @action: Explodes str with delimiters (d).
   @note: Explodes up to (maximum) limit. Limit as -1 means no limits.
 [==============================================================================}
-function String_Exploded(const str: string; const d: TStringArray; const limit: Int32 = -1): TStringArray; cdecl;
+function String_Explode(const str: string; const d: TStringArray; const limit: Int32 = -1): TStringArray; overload; cdecl;
 var
-  a, b, i, l, p, r, s, z, g, t: Int32;
-  m: Boolean;
-  x: TStringArray;
+  i, j, p, l, f, c: Integer;
+  s, x: string;
+  r: Boolean;
 begin
-  SetLength(Result, 1);
-  l := Length(str);
-  s := Length(d);
-  if ((l > 0) and (s > 0)) then
-  begin
-    x := d;
-    r := 0;
-    z := 0;
-    if (limit = -1) then
-      t := l
-    else
-      t := limit;
-    for a := 0 to (s - 1) do
-      if (x[a] <> '') then
-      begin
-        if (z = 0) then
-          z := Length(x[a])
-        else
-          if (Length(x[a]) < z) then
-            z := Length(x[a]);
-        x[r] := x[a];
-        Inc(r);
-      end;
-    if (r > 0) then
+  case ((str = '') or (Length(d) = 0)) of
+    False:
     begin
-      s := r;
-      a := 1;
+      SetLength(Result, 0);
       p := 1;
-      r := 0;
-      while (((r + 1) < t) and ((a + (z - 1)) <= l)) do
+      c := 0;
+      r := False;
+      while not r do
       begin
-        m := False;
-        for i := 0 to (s - 1) do
+        f := 0;
+        l := 0;
+        for i := 0 to High(d) do
         begin
-          g := Length(x[i]);
-          if ((a + (g - 1)) <= l) then
+          x := d[i];
+          if (x = '') then
+            Continue;
+          j := String_Pos(str, x, p);
+          if (j > 0) and ((f = 0) or (j < f)) then
           begin
-            for b := 1 to g do
-            begin
-              m := (str[((a + b) - 1)] = x[i][b]);
-              if not m then
-                Break;
-            end;
-            if m then
-              Break;
+            f := j;
+            l := Length(x);
           end;
         end;
-        if m then
+        if ((f > 0) and ((limit = -1) or (c < (limit - 1)))) then
         begin
-          Result[r] := Copy(str, p, (a - p));
-          if ((a + (g + 1)) = l) then
-            Exit;
-          p := (a + g);
-          a := ((a + g) - 1);
-          Inc(r);
-          SetLength(Result, (r + 1));
+          s := Copy(str, p, (f - p));
+          SetLength(Result, (c + 1));
+          Result[c] := s;
+          Inc(c);
+          p := (f + l);
+        end else
+        begin
+          SetLength(Result, (c + 1));
+          Result[c] := Copy(str, p, ((Length(str) - p) + 1));
+          r := True;
         end;
-        Inc(a);
       end;
-      Result[r] := Copy(str, p, ((l - p) + 1));
-    end else
-      Result[0] := '';
-  end else
-    Result[0] := '';
+    end;
+    True:
+    begin
+      SetLength(Result, 1);
+      Result[0] := str;
+    end;
+  end;
 end;
 
 {==============================================================================]
