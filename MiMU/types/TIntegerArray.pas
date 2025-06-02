@@ -439,11 +439,16 @@ begin
   end;
 end;
 
+{==============================================================================]
+  <TIntegerArray_QuickSort>
+  @action: QuickSort algorithm that is NOT based on recursion.
+  @note: non-recursive.
+[==============================================================================}
 function TIntegerArray_QuickSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 var
+  t, p, o: Int32;
   s: TRangeArray;
-  t, i, j, p, o: Int32;
-  r: TRange;
+  x, r: TRange;
   procedure Push(const start, stop: Int32);
   begin
     Inc(t);
@@ -465,45 +470,158 @@ var
   end;
 begin
   Result := High(arr);
-  if (Result < 1) then
-    Exit;
-  o := Boolean_X(ascending, -1, 1);
-  t := -1;
-  Push(0, High(arr));
-  r := TRange_Create(0, High(arr));
-  while Pop(r.start, r.stop) do
+  if (Result > 0) then
   begin
-    while (r.start < r.stop) do
+    o := Boolean_X(ascending, -1, 1);
+    t := -1;
+    Push(0, High(arr));
+    r := TRange_Create(0, High(arr));
+    while Pop(r.start, r.stop) do
     begin
-      i := r.start;
-      j := r.stop;
-      p := arr[((r.start + r.stop) div 2)];
-      while (i <= j) do
+      while (r.start < r.stop) do
       begin
-        while (Sign(arr[i] - p) = o) do
-          Inc(i);
-        while (Sign(arr[j] - p) = -o) do
-          Dec(j);
-        if (i <= j) then
+        x := r;
+        p := arr[((r.start + r.stop) div 2)];
+        while (x.start <= x.stop) do
         begin
-		  Swap(arr[i], arr[j]);
-          Inc(i);
-          Dec(j);
+          while (Sign(arr[x.start] - p) = o) do
+            Inc(x.start);
+          while (Sign(arr[x.stop] - p) = -o) do
+            Dec(x.stop);
+          if (x.start <= x.stop) then
+          begin
+            Swap(arr[x.start], arr[x.stop]);
+            Inc(x.start);
+            Dec(x.stop);
+          end;
         end;
-      end;
-      if ((j - r.start) < (r.stop - i)) then
-      begin
-        if (i < r.stop) then
-          Push(i, r.stop);
-        r.stop := j;
-      end
-      else
-      begin
-        if (r.start < j) then
-          Push(r.start, j);
-        r.start := i;
-      end;
+        if ((x.stop - r.start) < (r.stop - x.start)) then
+        begin
+          if (x.start < r.stop) then
+            Push(x.start, r.stop);
+          r.stop := x.stop;
+        end else
+        begin
+          if (r.start < x.stop) then
+            Push(r.start, x.stop);
+          r.start := x.start;
+        end;
+	  end;
     end;
+  end;
+end;
+
+{==============================================================================]
+  <TIntegerArray_QSort>
+  @action: QuickSort algorithm that IS based on recursion.
+  @note: recursive.
+[==============================================================================}
+function TIntegerArray_QSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+  procedure QuickSort(var arr: TIntegerArray; const start, stop: Int32; const ascending: Boolean = True);
+  var
+    p, o: Int32;
+    s: TRange;
+  begin
+    if (start < stop) then
+    begin
+      o := Boolean_X(ascending, -1, 1);
+      p := arr[((start + stop) div 2)];
+      s := TRange_Create(start, stop);
+      repeat
+        while (Sign(arr[s.start] - p) = o) do
+          Inc(s.start);
+        while (Sign(arr[s.stop] - p) = -o) do
+          Dec(s.stop);
+        if (s.start <= s.stop) then
+        begin
+          Swap(arr[s.start], arr[s.stop]);
+          Inc(s.start);
+          Dec(s.stop);
+        end;
+      until (s.start > s.stop);
+      if (start < s.stop) then
+        QuickSort(arr, start, s.stop, ascending);
+      if (s.start < stop) then
+        QuickSort(arr, s.start, stop, ascending);
+    end;
+  end;
+begin
+  Result := High(arr);
+  if (Result > 0) then
+    QuickSort(arr, 0, Result, ascending);
+end;
+
+{==============================================================================]
+  <TIntegerArray_CoctailSort>
+  @action: CoctailSort algorithm for TIntegerArrays.
+  @note: None.
+[==============================================================================}
+function TIntegerArray_CoctailSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+var
+  i, o: Int32;
+  s: Boolean;
+begin
+  Result := High(arr);
+  if (Result > 0) then
+  begin
+    o := Boolean_X(ascending, -1, 1);
+    repeat
+      s := False;
+      for i := 0 to (Result - 1) do
+        if (Sign(arr[(i + 1)] - arr[i]) = o) then
+        begin
+          Swap(arr[i], arr[(i + 1)]);
+          s := True;
+        end;
+      if not s then
+        Break;
+      s := False;
+      for i := (Result - 1) downto 0 do
+         if (Sign(arr[(i + 1)] - arr[i]) = o) then
+        begin
+          Swap(arr[i], arr[(i + 1)]);
+          s := True;
+        end;
+    until not s;
+  end;
+end;
+
+{==============================================================================]
+  <TIntegerArray_CoctailSort>
+  @action: CoctailSort algorithm for TIntegerArrays.
+  @note: CoctailSort v2.
+[==============================================================================}
+function TIntegerArray_CoctailSort2(var arr: TIntegerArray; const ascending: Boolean = True): Int32;
+var
+  b, e, i, o: Int32;
+  s: Boolean;
+begin
+  Result := High(arr);
+  if (Result > 0) then
+  begin
+    o := Boolean_X(ascending, -1, 1);
+    b := -1;
+    e := (Length(arr) - 2);
+    repeat
+      s := False;
+      Inc(b);
+      for i := b to e do
+        if not (Sign(arr[i] - arr[(i + 1)]) = o) then
+        begin
+          Swap(arr[i], arr[(i + 1)]);
+          s := True;
+        end;
+      if not s then
+        Break;
+      s := False;
+      Dec(e);
+      for i := e downto b do
+        if not (Sign(arr[i] - arr[(i + 1)]) = o) then
+        begin
+          Swap(arr[i], arr[(i + 1)]);
+          s := True;
+        end;
+    until not s;
   end;
 end;
 
