@@ -372,6 +372,15 @@ function TIntegerArray_QuickSort(var arr: TIntegerArray; const ascending: Boolea
 function TIntegerArray_QSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_CoctailSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_CoctailSort2(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_CombSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_GnomeSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_HeapSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_InsertionSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_MergeSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_MergeSortBU(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_ShellSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinarySort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinarySorted(const arr: TIntegerArray; const ascending: Boolean = True): TIntegerArray; cdecl;
 function TIntegerArray_BinarySearch(const arr: TIntegerArray; const x: Int32): Int32; cdecl;
 function TIntegerArray_BinaryAppend(var arr: TIntegerArray; const x: Int32): Int32; cdecl;
 function TIntegerArray_BinaryAdd(const arr: TIntegerArray; const x: Int32): TIntegerArray; cdecl;
