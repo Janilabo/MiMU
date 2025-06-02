@@ -412,6 +412,26 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArray_BubbleSort2>
+  @action: Sorts arr with BubbleSort algorithm - contains some optimization.
+  @note: Supports sorting to ascending and descending order. Returns High(arr)!
+[==============================================================================}
+function TIntegerArray_BubbleSort2(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+var
+  a, b, o: Int32;
+begin
+  Result := High(arr);
+  if (Result > 0) then
+  begin
+    o := Boolean_X(ascending, -1, 1);
+    for a := 0 to (Result - 1) do
+      for b := 1 to (Result - a) do
+        if (Sign(arr[b] - arr[(b - 1)]) = o) then
+          Swap(arr[b], arr[(b - 1)]);
+  end;
+end;
+
+{==============================================================================]
   <TIntegerArray_BubbleSortOptimized>
   @action: Sorts arr with BubbleSort algorithm
   @note: Supports sorting to ascending and descending order. Returns High(arr)!
@@ -509,6 +529,45 @@ begin
 	  end;
     end;
   end;
+end;
+
+{==============================================================================]
+  <TIntegerArray_QuickSort3W>
+  @action: 3-way QuickSort algorithm that is NOT based on recursion.
+  @note: recursive. Returns High(arr).
+[==============================================================================}
+function TIntegerArray_QuickSort3W(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+  procedure SortLH(var arr: TIntegerArray; const L, H: Int32; const ascending: Boolean = True);
+  var
+    a, b, p, x, o: Int32;
+  begin
+    if (L >= H) then
+      Exit;
+    o := Boolean_X(ascending, -1, 1);
+    x := arr[L];
+    a := L;
+    b := H;
+    p := (L + 1);
+    while (p <= b) do
+      if (Sign(arr[p] - x) = o) then
+      begin
+        Swap(arr[a], arr[p]);
+        Inc(p);
+        Inc(a);
+      end else
+      if (Sign(arr[p] - x) = -o) then
+      begin
+        Swap(arr[b], arr[p]);
+        Dec(b);
+      end else
+        Inc(p);
+    SortLH(arr, L, (a - 1), ascending);
+    SortLH(arr, (b + 1), H, ascending);
+  end;
+begin
+  Result := High(arr);
+  if (Result > 0) then
+    SortLH(arr, 0, Result, ascending);
 end;
 
 {==============================================================================]
@@ -632,7 +691,7 @@ end;
 [==============================================================================}
 function TIntegerArray_CombSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 var
-  i, g, o: Integer;
+  i, g, o: Int32;
   s: Boolean;
 begin
   Result := High(arr);
@@ -682,6 +741,38 @@ begin
   end;
 end;
 
+function TIntegerArray_GnomeSortOptimized(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+var
+  p, l, o: Int32;
+begin
+  Result := High(arr);
+  if (Result > 0) then
+  begin
+    o := Boolean_X(ascending, -1, 1);
+    p := 1;
+    l := 0;
+    while (p < Length(arr)) do
+      if (Sign(arr[p] - arr[(p - 1)]) = o) then
+      begin
+        Swap(arr[p], arr[(p - 1)]);
+        if (p > 1) then
+        begin
+          if (l <> 0) then
+            l := p
+          else
+            Dec(p);
+        end else
+          Inc(p);
+      end else
+        if (l <> 0) then
+        begin
+          p := l;
+          l := 0;
+        end else
+          Inc(p);
+  end;
+end;
+
 {==============================================================================]
   <TIntegerArray_HeapSort>
   @action: HeapSort algorithm for TIntegerArrays.
@@ -689,7 +780,7 @@ end;
 [==============================================================================}
 function TIntegerArray_HeapSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 var
-  a, b, r, c, o: Integer;
+  a, b, r, c, o: Int32;
 begin
   Result := High(arr);
   if (Result > 0) then
@@ -759,6 +850,129 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArray_SelectionSort>
+  @action: SelectionSort algorithm for TIntegerArrays.
+  @note: Returns High(arr).
+[==============================================================================}
+function TIntegerArray_SelectionSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+var
+  c, t, m, o: Int32;
+begin
+  Result := High(arr);
+  if (Result > 0) then
+  begin
+    o := Boolean_X(ascending, -1, 1);
+    for c := 0 to Result do
+    begin
+      m := c;
+      for t := (c + 1) to Result do
+        if (Sign(arr[t] - arr[m]) = o) then
+          m := t;
+      Swap(arr[m], arr[c]);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <TIntegerArray_SelectionSortBidirectional>
+  @action: Bidirectional SelectionSort algorithm for TIntegerArrays.
+  @note: Returns High(arr).
+[==============================================================================}
+function TIntegerArray_SelectionSortBidirectional(var arr: TIntegerArray; const ascending: Boolean = True): Int32;
+var
+  a, b, x, i, t, h, l, s, o: Int32;
+begin
+  Result := High(arr);
+  if (Result > 0) then
+  begin
+    o := Boolean_X(ascending, -1, 1);
+    t := Length(arr);
+    s := ((t - 1) div 2);
+    for i := 0 to s do
+    begin
+      l := i;
+      h := ((t - 1) - i);
+      a := l;
+      b := h;
+      if (Sign(arr[l] - arr[h]) = -o) then
+        Swap(arr[h], arr[l]);
+      for x := (a + 1) to (b - 1) do
+        if (Sign(arr[x] - arr[l]) = o) then
+          l := x
+        else
+          if (Sign(arr[x] - arr[h]) = -o) then
+            h := x;
+      if (l <> a) then
+        Swap(arr[a], arr[l]);
+      if (h <> b) then
+        Swap(arr[b], arr[h]);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <TIntegerArray_SelectionSortBidirectional2>
+  @action: Bidirectional SelectionSort algorithm for TIntegerArrays.
+  @note: Returns High(arr).
+[==============================================================================}
+function TIntegerArray_SelectionSortBidirectional2(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+var
+  a, b, x, i, l, s, o: Integer;
+begin
+  Result := High(arr);
+  if (Result > 0) then
+  begin
+    o := Boolean_X(ascending, -1, 1);
+    l := Length(arr);
+    s := ((l - 1) div 2);
+    for i := 0 to s do
+    begin
+      a := i;
+      b := ((l - 1) - i);
+      if (Sign(arr[b] - arr[a]) = o) then
+        Swap(arr[a], arr[b]);
+      for x := (a + 1) to (b - 1) do
+        if (Sign(arr[x] - arr[a]) = o) then
+          Swap(arr[a], arr[x])
+        else
+          if (Sign(arr[x] - arr[b]) = -o) then
+            Swap(arr[x], arr[b]);
+      end;
+  end;
+end;
+
+{==============================================================================]
+  <TIntegerArray_PancakeSort>
+  @action: PancakeSort algorithm for TIntegerArrays.
+  @note: Returns High(arr).
+[==============================================================================}
+function TIntegerArray_PancakeSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+var
+  i, j, l, m, x, o: Int32;
+begin
+  Result := High(arr);
+  if (Result > 0 )then
+  begin
+    o := Boolean_X(ascending, -1, 1);
+    l := 0;
+    for i := Result downto l do
+    begin
+      m := i;
+      for j := l to (i - 1) do
+        if (Sign(arr[m] - arr[j]) = o) then
+          m := j;
+      if (m = i) then
+        Continue;
+      if (m <> l) then
+      for x := l to (((m - l) - 1) div 2) do
+        Swap(arr[x], arr[(m - (x - l))]);
+      for x := l to (((i - l) - 1) div 2) do
+        Swap(arr[x], arr[(i - (x - l))]);
+    end;
+  end;
+end;
+
+{==============================================================================]
   <TIntegerArray_MergeSort>
   @action: MergeSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
@@ -766,7 +980,7 @@ end;
 function TIntegerArray_MergeSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
   procedure Merge(var arr, tmp: TIntegerArray; const Lo, Hi: Int32; const ascending: Boolean = True);
   var
-    L, R, i, m, o: Integer;
+    L, R, i, m, o: Int32;
   begin
     if (Lo >= Hi) then
       Exit;
@@ -819,7 +1033,7 @@ end;
 function TIntegerArray_MergeSortBU(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 var
   t: TIntegerArray;
-  n, w, i, a, b, m, l, r, k: Integer;
+  n, w, i, a, b, m, l, r, k: Int32;
 begin
   Result := High(arr);
   if (Result > 0) then
