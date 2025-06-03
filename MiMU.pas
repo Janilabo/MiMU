@@ -380,19 +380,22 @@ function TIntegerArray_GnomeSortOptimized(var arr: TIntegerArray; const ascendin
 function TIntegerArray_HeapSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_InsertionSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_SelectionSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
-function TIntegerArray_SelectionSortBidirectional(var arr: TIntegerArray; const ascending: Boolean = True): Int32;
+function TIntegerArray_SelectionSortBidirectional(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_SelectionSortBidirectional2(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_PancakeSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_MergeSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_MergeSortBU(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_ShellSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_BinarySort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_BinarySorted(const arr: TIntegerArray; const ascending: Boolean = True): TIntegerArray; cdecl;
-function TIntegerArray_BinarySearch(const arr: TIntegerArray; const x: Int32): Int32; cdecl;
-function TIntegerArray_BinaryAppend(var arr: TIntegerArray; const x: Int32): Int32; cdecl;
-function TIntegerArray_BinaryAdd(const arr: TIntegerArray; const x: Int32): TIntegerArray; cdecl;
-function TIntegerArray_BinarySearchF(const arr: TIntegerArray; const x: TRange): Int32; cdecl;
-function TIntegerArray_BinarySearchL(const arr: TIntegerArray; const x: TRange): Int32; cdecl;
+function TIntegerArray_BinaryBoundLower(const arr: TIntegerArray; const target: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryBoundUpper(const arr: TIntegerArray; const target: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinarySearch(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryAppend(var arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryAdd(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): TIntegerArray; cdecl;
+function TIntegerArray_BinarySearchF(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinarySearchL(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Int32; cdecl;
 
 function TPointArray_Bounds(const arr: TPointArray): TBox; cdecl;
 function TPointArray_Unique(var arr: TPointArray): Int32; cdecl;
@@ -1002,6 +1005,23 @@ function TArray_Set(const arr: TPointArray; const start: Int32; const items: TPo
 function TArray_Set(const arr: TBoxArray; const start: Int32; const items: TBoxArray): TBoxArray; overload; cdecl;
 function TArray_Set(const arr: TRangeArray; const start: Int32; const items: TRangeArray): TRangeArray; overload; cdecl;
 
+function TArray_Shift(var arr: TIntegerArray): Int32; overload; cdecl;
+function TArray_Shift(var arr: TDoubleArray): Double; overload; cdecl;
+function TArray_Shift(var arr: TStringArray): string; overload; cdecl;
+function TArray_Shift(var arr: TCharArray): Char; overload; cdecl;
+function TArray_Shift(var arr: TBooleanArray): Boolean; overload; cdecl;
+function TArray_Shift(var arr: TPointArray): TPoint; overload; cdecl;
+function TArray_Shift(var arr: TBoxArray): TBox; overload; cdecl;
+function TArray_Shift(var arr: TRangeArray): TRange; overload; cdecl;
+function TArray_Shift(var arr: TIntegerArray; const shift: Int32): TIntegerArray; overload; cdecl;
+function TArray_Shift(var arr: TDoubleArray; const shift: Int32): TDoubleArray; overload; cdecl;
+function TArray_Shift(var arr: TStringArray; const shift: Int32): TStringArray; overload; cdecl;
+function TArray_Shift(var arr: TCharArray; const shift: Int32): TCharArray; overload; cdecl;
+function TArray_Shift(var arr: TBooleanArray; const shift: Int32): TBooleanArray; overload; cdecl;
+function TArray_Shift(var arr: TPointArray; const shift: Int32): TPointArray; overload; cdecl;
+function TArray_Shift(var arr: TBoxArray; const shift: Int32): TBoxArray; overload; cdecl;
+function TArray_Shift(var arr: TRangeArray; const shift: Int32): TRangeArray; overload; cdecl;
+
 function TArray_Size(var arr: TIntegerArray; const size: Int32): Int32; overload; cdecl;
 function TArray_Size(var arr: TDoubleArray; const size: Int32): Int32; overload; cdecl;
 function TArray_Size(var arr: TStringArray; const size: Int32): Int32; overload; cdecl;
@@ -1391,6 +1411,7 @@ end;
 {$I MiMU/generic/TArray_Uniqued.pas}
 {$I MiMU/generic/TArray_Uniques.pas}
 {$I MiMU/generic/TArray_Unshift.pas}
+{$I MiMU/generic/TArray_Shift.pas}
 {$I MiMU/generic/TArray_Pick.pas}
 {$I MiMU/generic/TArray_Move.pas}
 {$I MiMU/generic/TArray_Group.pas}

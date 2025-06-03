@@ -741,6 +741,11 @@ begin
   end;
 end;
 
+{==============================================================================]
+  <TIntegerArray_GnomeSortOptimized>
+  @action: Optimized GnomeSort algorithm for TIntegerArrays.
+  @note: Returns High(arr).
+[==============================================================================}
 function TIntegerArray_GnomeSortOptimized(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 var
   p, l, o: Int32;
@@ -878,7 +883,7 @@ end;
   @action: Bidirectional SelectionSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_SelectionSortBidirectional(var arr: TIntegerArray; const ascending: Boolean = True): Int32;
+function TIntegerArray_SelectionSortBidirectional(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 var
   a, b, x, i, t, h, l, s, o: Int32;
 begin
@@ -1128,6 +1133,37 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArray_BSort>
+  @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
+  @note: Returns High(arr).
+[==============================================================================}
+function TIntegerArray_BSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+var
+  i, j, a, l, r, m, o: Integer;
+begin
+  Result := High(arr);
+  if (Result > 0) then
+    o := Boolean_X(ascending, -1, 1);
+  for i := 1 to Result do
+  begin
+    a := arr[i];
+    l := 0;
+    r := (i - 1);
+    while (l <= r) do
+    begin
+      m := ((l + r) div 2);
+      if (Sign(a - arr[m]) = o) then
+        r := (m - 1)
+      else
+        l := (m + 1);
+    end;
+    for j := (i - 1) downto l do
+      arr[j + 1] := arr[j];
+    arr[l] := a;
+  end;
+end;
+
+{==============================================================================]
   <TIntegerArray_BinarySort>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).
@@ -1198,24 +1234,71 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArray_BinaryBoundLower>
+  @action: Returns Binary Search Lower Bound based on target value.
+  @note: Works with sorted arrays! (supports both ascending and descending order)
+[==============================================================================}
+function TIntegerArray_BinaryBoundLower(const arr: TIntegerArray; const target: Int32; const ascending: Boolean = True): Int32; cdecl;
+var
+  l, m, h, o: Int32;
+begin
+  l := 0;
+  h := Length(arr);
+  o := Boolean_X(ascending, 1, -1);
+  while (l < h) do
+  begin
+    m := ((l + h) div 2);
+    if ((o * arr[m]) < (o * target)) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  Result := l;
+end;
+
+{==============================================================================]
+  <TIntegerArray_BinaryBoundUpper>
+  @action: Returns Binary Search Upper Bound based on target value.
+  @note: Works with sorted arrays! (supports both ascending and descending order)
+[==============================================================================}
+function TIntegerArray_BinaryBoundUpper(const arr: TIntegerArray; const target: Int32; const ascending: Boolean = True): Int32; cdecl;
+var
+  l, m, h, o: Int32;
+begin
+  l := 0;
+  h := Length(arr);
+  o := Boolean_X(ascending, 1, -1);
+  while (l < h) do
+  begin
+    m := ((l + h) div 2);
+    if ((o * arr[m]) <= (o * target)) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  Result := l;
+end;
+
+{==============================================================================]
   <TIntegerArray_BinarySearch>
   @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.
-  @note: Works with sorted arrays! (ASCENDING ORDER)
+  @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinarySearch(const arr: TIntegerArray; const x: Int32): Int32; cdecl;
+function TIntegerArray_BinarySearch(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
 var
-  l, h, m: Int32;
+  l, h, m, o: Int32;
 begin
   Result := -1;
   l := 0;
   h := High(arr);
+  o := Boolean_X(ascending, 1, -1);
   while ((l <= h) and (Result = -1)) do
   begin
     m := ((l + h) div 2);
-    if (arr[m] = x) then
+    if ((o * arr[m]) = (o * x)) then
       Result := m
     else
-      if (arr[m] < x) then
+      if ((o * arr[m]) < (o * x)) then
         l := (m + 1)
       else
         h := (m - 1);
@@ -1225,18 +1308,19 @@ end;
 {==============================================================================]
   <TIntegerArray_BinaryAppend>
   @action: Binary Append method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the index x was added to.
-  @note: Works with sorted arrays! (ASCENDING ORDER)
+  @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinaryAppend(var arr: TIntegerArray; const x: Int32): Int32; cdecl;
+function TIntegerArray_BinaryAppend(var arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
 var
-  h, m, i: Int32;
+  h, m, i, o: Int32;
 begin
   Result := 0;
   h := High(arr);
+  o := Boolean_X(ascending, 1, -1);
   while (Result <= h) do
   begin
     m := ((Result + h) div 2);
-    if (arr[m] < x) then
+    if ((o * arr[m]) < (o * x)) then
       Result := (m + 1)
     else
       h := (m - 1);
@@ -1250,18 +1334,19 @@ end;
 {==============================================================================]
   <TIntegerArray_BinaryAdd>
   @action: Binary Add method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the arr with x.
-  @note: Works with sorted arrays! (ASCENDING ORDER)
+  @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinaryAdd(const arr: TIntegerArray; const x: Int32): TIntegerArray; cdecl;
+function TIntegerArray_BinaryAdd(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): TIntegerArray; cdecl;
 var
-  l, h, m, p, i: Int32;
+  l, h, m, p, i, o: Int32;
 begin
   l := 0;
   h := High(arr);
+  o := Boolean_X(ascending, 1, -1);
   while (l <= h) do
   begin
     m := ((l + h) div 2);
-    if (arr[m] < x) then
+    if ((o * arr[m]) < (o * x)) then
       l := (m + 1)
     else
       h := (m - 1);
@@ -1278,24 +1363,25 @@ end;
 {==============================================================================]
   <TIntegerArray_BinarySearchF>
   @action: Binary Search which supports TRange search, uses first match from x-range.
-  @note: Works with sorted arrays! (ASCENDING ORDER)
+  @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinarySearchF(const arr: TIntegerArray; const x: TRange): Int32; cdecl;
+function TIntegerArray_BinarySearchF(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Int32; cdecl;
 var
-  l, h, m: Int32;
+  l, h, m, o: Int32;
   f: TRange;
 begin
   Result := -1;
   f := TRange_Normalize(x);
   l := 0;
   h := High(arr);
+  o := Boolean_X(ascending, 1, -1);
   while (l <= h) do
   begin
     m := ((l + h) div 2);
-    if (arr[m] < f.start) then
+    if ((o * arr[m]) < (o * f.start)) then
       l := (m + 1)
     else
-      if (arr[m] > f.stop) then
+      if ((o * arr[m]) > (o * f.stop)) then
         h := (m - 1)
     else
     begin
@@ -1308,24 +1394,25 @@ end;
 {==============================================================================]
   <TIntegerArray_BinarySearchL>
   @action: Binary Search which supports TRange search, uses last match from x-range.
-  @note: Works with sorted arrays! (ASCENDING ORDER)
+  @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinarySearchL(const arr: TIntegerArray; const x: TRange): Int32; cdecl;
+function TIntegerArray_BinarySearchL(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Int32; cdecl;
 var
-  l, h, m: Int32;
+  l, h, m, o: Int32;
   f: TRange;
 begin
   Result := -1;
   f := TRange_Normalize(x);
   l := 0;
   h := High(arr);
+  o := Boolean_X(ascending, 1, -1);
   while (l <= h) do
   begin
     m := ((l + h) div 2);
-    if (arr[m] < f.start) then
+    if ((o * arr[m]) < (o * f.start)) then
       l := (m + 1)
     else
-      if (arr[m] > f.stop) then
+      if ((o * arr[m]) > (o * f.stop)) then
         h := (m - 1)
       else
       begin
