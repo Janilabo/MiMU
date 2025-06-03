@@ -389,9 +389,14 @@ function TIntegerArray_ShellSort(var arr: TIntegerArray; const ascending: Boolea
 function TIntegerArray_BSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_BinarySort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_BinarySorted(const arr: TIntegerArray; const ascending: Boolean = True): TIntegerArray; cdecl;
-function TIntegerArray_BinaryBoundLower(const arr: TIntegerArray; const target: Int32; const ascending: Boolean = True): Int32; cdecl;
-function TIntegerArray_BinaryBoundUpper(const arr: TIntegerArray; const target: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryBoundL(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryBoundR(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryPosL(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryPosR(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryLocate(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): TRange; cdecl;
 function TIntegerArray_BinarySearch(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryContains(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Boolean; cdecl;
+function TIntegerArray_BinaryLocation(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): TRange; cdecl;
 function TIntegerArray_BinaryAppend(var arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_BinaryAdd(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): TIntegerArray; cdecl;
 function TIntegerArray_BinarySearchF(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Int32; cdecl;

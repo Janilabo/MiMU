@@ -1234,11 +1234,11 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinaryBoundLower>
-  @action: Returns Binary Search Lower Bound based on target value.
+  <TIntegerArray_BinaryBoundL>
+  @action: Returns Binary Search Lower Bound based on x-value.
   @note: Works with sorted arrays! (supports both ascending and descending order)
 [==============================================================================}
-function TIntegerArray_BinaryBoundLower(const arr: TIntegerArray; const target: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryBoundL(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
 var
   l, m, h, o: Int32;
 begin
@@ -1248,7 +1248,7 @@ begin
   while (l < h) do
   begin
     m := ((l + h) div 2);
-    if ((o * arr[m]) < (o * target)) then
+    if ((o * arr[m]) < (o * x)) then
       l := (m + 1)
     else
       h := m;
@@ -1257,11 +1257,11 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinaryBoundUpper>
-  @action: Returns Binary Search Upper Bound based on target value.
+  <TIntegerArray_BinaryBoundR>
+  @action: Returns Binary Search Upper Bound based on x-value.
   @note: Works with sorted arrays! (supports both ascending and descending order)
 [==============================================================================}
-function TIntegerArray_BinaryBoundUpper(const arr: TIntegerArray; const target: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryBoundR(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
 var
   l, m, h, o: Int32;
 begin
@@ -1271,12 +1271,62 @@ begin
   while (l < h) do
   begin
     m := ((l + h) div 2);
-    if ((o * arr[m]) <= (o * target)) then
+    if ((o * arr[m]) <= (o * x)) then
       l := (m + 1)
     else
       h := m;
   end;
   Result := l;
+end;
+
+{==============================================================================]
+  <TIntegerArray_BinaryPosL>
+  @action: Returns L-side pos of x in arr with Binary Search. -1 if x does not exist.
+  @note: Works with sorted arrays! (supports both ascending and descending order)
+[==============================================================================}
+function TIntegerArray_BinaryPosL(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+var
+  l, m, h, o: Int32;
+begin
+  Result := -1;
+  l := 0;
+  h := Length(arr);
+  o := Boolean_X(ascending, 1, -1);
+  while (l < h) do
+  begin
+    m := ((l + h) div 2);
+    if ((o * arr[m]) < (o * x)) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  if ((l < Length(arr)) and (arr[l] = x)) then
+    Result := l;
+end;
+
+{==============================================================================]
+  <TIntegerArray_BinaryPosR>
+  @action: Returns R-side pos of x in arr with Binary Search. -1 if x does not exist.
+  @note: Works with sorted arrays! (supports both ascending and descending order)
+[==============================================================================}
+function TIntegerArray_BinaryPosR(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+var
+  l, m, h, o: Int32;
+begin
+  Result := -1;
+  l := 0;
+  h := Length(arr);
+  o := Boolean_X(ascending, 1, -1);
+  while (l < h) do
+  begin
+    m := ((l + h) div 2);
+    if ((o * arr[m]) <= (o * x)) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  if ((l > 0) and (arr[(l - 1)] = x)) then
+    Result := (l - 1);
 end;
 
 {==============================================================================]
@@ -1303,6 +1353,66 @@ begin
       else
         h := (m - 1);
   end;
+end;
+
+{==============================================================================]
+  <TIntegerArray_BinaryContains>
+  @action: Binary Contains function for TIntegerArrays.
+  @note: Works with sorted arrays! (ascending or descending)
+[==============================================================================}
+function TIntegerArray_BinaryContains(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Boolean; cdecl;
+begin
+  Result := (TIntegerArray_BinarySearch(arr, x, ascending) > -1);
+end;
+
+{==============================================================================]
+  <TIntegerArray_BinaryLocate>
+  @action: Returns Binary Search left and right index as TRange based on x value.
+  @note: Works with sorted arrays! (supports both ascending and descending order)
+[==============================================================================}
+function TIntegerArray_BinaryLocate(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): TRange; cdecl;
+begin
+  Result.start := TIntegerArray_BinaryPosL(arr, x, ascending);
+  if (Result.start > -1) then
+    Result.stop := TIntegerArray_BinaryPosR(arr, x, ascending)
+  else
+    Result.stop := -1;
+end;
+
+{==============================================================================]
+  <TIntegerArray_BinaryContains>
+  @action: Binary Contains function for TIntegerArrays. Contains location storage variable. With Result as False it will be -1..-1.
+  @note: Works with sorted arrays! (ascending or descending)
+[==============================================================================}
+function TIntegerArray_BinaryLocation(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): TRange; cdecl;
+var
+  s, l, h, m, o: Int32;
+  r: Boolean;
+begin
+  r := False;
+  l := 0;
+  h := High(arr);
+  s := h;
+  o := Boolean_X(ascending, 1, -1);
+  while ((l <= h) and (not r)) do
+  begin
+    m := ((l + h) div 2);
+    r := ((o * arr[m]) = (o * x));
+    if r then
+	  begin
+      Result := TRange_Create(m, m);
+      while ((Result.start > 0) and (arr[(Result.start - 1)] = x)) do
+        Dec(Result.start);
+      while ((Result.stop < s) and (arr[(Result.stop + 1)] = x)) do
+        Inc(Result.stop);
+    end else
+      if ((o * arr[m]) < (o * x)) then
+        l := (m + 1)
+      else
+        h := (m - 1);
+  end;
+  if not r then
+    Result := TRange_Create(-1, -1);
 end;
 
 {==============================================================================]
