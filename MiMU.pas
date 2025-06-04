@@ -404,6 +404,10 @@ function TIntegerArray_BinaryAppend(var arr: TIntegerArray; const x: Int32; cons
 function TIntegerArray_BinaryAdd(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): TIntegerArray; cdecl;
 function TIntegerArray_BinarySearchF(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Int32; cdecl;
 function TIntegerArray_BinarySearchL(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_Split(const arr: TIntegerArray; const minDiff, maxDiff: Int32): T2DIntegerArray; overload; cdecl;
+function TIntegerArray_Split(const arr: TIntegerArray; const diff: Int32): T2DIntegerArray; overload; cdecl;
+function TIntegerArray_Sblit(const arr: TIntegerArray; const minDiff, maxDiff: Int32): T2DIntegerArray; overload; cdecl;
+function TIntegerArray_Sblit(const arr: TIntegerArray; const diff: Int32): T2DIntegerArray; overload; cdecl;
 
 function TPointArray_Bounds(const arr: TPointArray): TBox; cdecl;
 function TPointArray_Unique(var arr: TPointArray): Int32; cdecl;
