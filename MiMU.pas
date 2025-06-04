@@ -296,7 +296,6 @@ function TBox_SimilarSize(const a, b: TBox; const differency: Integer): Boolean;
 function TBox_Centered(const bx, area: TBox): TBox; cdecl;
 function TBox_CenterVertically(const bx, area: TBox): TBox; cdecl;
 function TBox_CenterHorizontally(const bx, area: TBox): TBox; cdecl;
-
 function TRange_Neutral(const range: TRange): Boolean; cdecl;
 function TRange_Ascending(const range: TRange): Boolean; cdecl;
 function TRange_Descending(const range: TRange): Boolean; cdecl;
@@ -351,6 +350,10 @@ function TRange_Center(const range: TRange): Int32; cdecl;
 function TIntegerArray_Descending(const arr: TIntegerArray): Boolean; cdecl;
 function TIntegerArray_Ascending(const arr: TIntegerArray): Boolean; cdecl;
 function TIntegerArray_Bounds(const arr: TIntegerArray): TRange; cdecl;
+function TIntegerArray_TRange(const arr: TIntegerArray): TRange; cdecl;
+function TIntegerArray_Unique(var arr: TIntegerArray): Int32; cdecl;
+function TIntegerArray_Uniqued(const arr: TIntegerArray): TIntegerArray; cdecl;
+function TIntegerArray_Numberline(const arr: TIntegerArray): TIntegerArray; cdecl;
 function TIntegerArray_Min(const arr: TIntegerArray): Int32; cdecl;
 function TIntegerArray_Max(const arr: TIntegerArray): Int32; cdecl;
 function TIntegerArray_Mini(const arr: TIntegerArray; const ascending: Boolean = True; const start: Int32 = -1): Int32; overload; cdecl;
@@ -542,6 +545,14 @@ function TArray_Copy(const arr: TPointArray; const IDs: TIntegerArray): TPointAr
 function TArray_Copy(const arr: TBoxArray; const IDs: TIntegerArray): TBoxArray; overload; cdecl;
 function TArray_Copy(const arr: TRangeArray; const IDs: TIntegerArray): TRangeArray; overload; cdecl;
 
+function TArray_Create(const item: Int32): TIntegerArray; overload; cdecl;
+function TArray_Create(const item: Double): TDoubleArray; overload; cdecl;
+function TArray_Create(const item: string): TStringArray; overload; cdecl;
+function TArray_Create(const item: Char): TCharArray; overload; cdecl;
+function TArray_Create(const item: Boolean): TBooleanArray; overload; cdecl;
+function TArray_Create(const item: TPoint): TPointArray; overload; cdecl;
+function TArray_Create(const item: TBox): TBoxArray; overload; cdecl;
+function TArray_Create(const item: TRange): TRangeArray; overload; cdecl;
 function TArray_Create(const size: Int32; const item: Int32): TIntegerArray; overload; cdecl;
 function TArray_Create(const size: Int32; const item: Double): TDoubleArray; overload; cdecl;
 function TArray_Create(const size: Int32; const item: string): TStringArray; overload; cdecl;

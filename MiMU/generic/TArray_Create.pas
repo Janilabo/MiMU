@@ -1,5 +1,67 @@
 {==============================================================================]
  <TArray_Create> 
+ @action: Creates array with item, size as 1.
+ @note: [item]
+[==============================================================================}
+
+// TIntegerArray
+function TArray_Create(const item: Int32): TIntegerArray; overload; cdecl;
+begin
+  SetLength(Result, 1);
+  Result[0] := item;
+end;
+
+// TDoubleArray
+function TArray_Create(const item: Double): TDoubleArray; overload; cdecl;
+begin
+  SetLength(Result, 1);
+  Result[0] := item;
+end;
+
+// TStringArray
+function TArray_Create(const item: string): TStringArray; overload; cdecl;
+begin
+  SetLength(Result, 1);
+  Result[0] := item;
+end;
+
+// TCharArray
+function TArray_Create(const item: Char): TCharArray; overload; cdecl;
+begin
+  SetLength(Result, 1);
+  Result[0] := item;
+end;
+
+// TBooleanArray
+function TArray_Create(const item: Boolean): TBooleanArray; overload; cdecl;
+begin
+  SetLength(Result, 1);
+  Result[0] := item;
+end;
+
+// TPointArray
+function TArray_Create(const item: TPoint): TPointArray; overload; cdecl;
+begin
+  SetLength(Result, 1);
+  Result[0] := item;
+end;
+
+// TBoxArray
+function TArray_Create(const item: TBox): TBoxArray; overload; cdecl;
+begin
+  SetLength(Result, 1);
+  Result[0] := item;
+end;
+
+// TRangeArray
+function TArray_Create(const item: TRange): TRangeArray; overload; cdecl;
+begin
+  SetLength(Result, 1);
+  Result[0] := item;
+end;
+
+{==============================================================================]
+ <TArray_Create> 
  @action: Creates array with item where size is length of the array.
  @note: item is placed on every index in result.
 [==============================================================================}

@@ -54,6 +54,120 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArray_TRange>
+  @action: Stores arr bounds to TRange.
+  @note: Returns -2147483648..-2147483648 with empty array.
+[==============================================================================}
+function TIntegerArray_TRange(const arr: TIntegerArray): TRange; cdecl;
+var
+  i: Int32;
+begin
+  if (High(arr) = -1) then
+    Exit(TRange_Create(-2147483648, -2147483648));
+  Result := TRange_Create(arr[0], arr[0]);
+  for i := 1 to High(arr) do
+  begin
+    Result.start := Min(Result.start, arr[i]);
+    Result.stop := Max(Result.stop, arr[i]);
+  end;
+end;
+
+{==============================================================================]
+  <TIntegerArray_Unique>
+  @action: Removes duplicates from array arr and returns the count of deleted items.
+  @note: Not recommended with very large arrays
+[==============================================================================}
+function TIntegerArray_Unique(var arr: TIntegerArray): Int32; cdecl;
+var
+  x, y, z: Int32;
+  r: TRange;
+  b: TBooleanArray;
+begin
+  y := High(arr);
+  if (y > 0) then
+  begin
+    z := 0;
+    r := TIntegerArray_Bounds(arr);
+    SetLength(b, (Abs(r.start - r.stop) + 1));
+    for x := 0 to y do
+      if not b[(arr[x] - r.start)] then
+      begin
+        b[(arr[x] - r.start)] := True;
+        arr[z] := arr[x];
+        Inc(z);
+      end;
+    SetLength(b, 0);
+    SetLength(arr, z);
+    Result := ((y + 1) - z);
+  end else
+    Result := 0;
+end;
+
+{==============================================================================]
+  <TIntegerArray_Uniqued>
+  @action: Removes duplicates from array arr and returns it.
+  @note: Not recommended with very large arrays
+[==============================================================================}
+function TIntegerArray_Uniqued(const arr: TIntegerArray): TIntegerArray; cdecl;
+var
+  x, y, z: Int32;
+  r: TRange;
+  b: TBooleanArray;
+begin
+  z := 0;
+  y := High(arr);
+  if (y > 0) then
+  begin
+    SetLength(Result, (y + 1));
+    r := TIntegerArray_Bounds(arr);
+    SetLength(b, (Abs(r.start - r.stop) + 1));
+    for x := 0 to y do
+      if not b[(arr[x] - r.start)] then
+      begin
+        b[(arr[x] - r.start)] := True;
+        Result[z] := arr[x];
+        Inc(z);
+      end;
+    SetLength(b, 0);
+  end;
+  SetLength(Result, z);
+end;
+
+{==============================================================================]
+  <TIntegerArray_Numberline>
+  @action: Returns numberline of array arr.
+  @note: None.
+[==============================================================================}
+function TIntegerArray_Numberline(const arr: TIntegerArray): TIntegerArray; cdecl;
+var
+  i, x, y: Integer;
+  r: TRange;
+begin
+  y := High(arr);
+  case Int32_Compare(y, 0) of
+    1:
+    begin
+      r := TRange_Create(arr[0], arr[0]);
+      for x := 1 to y do
+        if (arr[x] < r.start) then
+          r.start := arr[x]
+        else
+          if (arr[x] > r.stop) then
+            r.stop := arr[x];
+      if (r.start <> r.stop) then
+      begin
+        SetLength(Result, (Abs(r.start - r.stop) + 1));
+        for i := r.start to r.stop do
+          Result[(i - r.start)] := i;
+      end else
+        Result := TArray_Create(r.start);
+    end;
+    0: Result := TArray_Create(arr[0]);
+    -1: SetLength(Result, 0);
+  end;
+end;
+
+{==============================================================================]
   <TIntegerArray_Min>
   @action: Returns array minimum value.
   @note: None.
