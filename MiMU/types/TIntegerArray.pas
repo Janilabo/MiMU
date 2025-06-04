@@ -1770,3 +1770,160 @@ function TIntegerArray_Sblit(const arr: TIntegerArray; const diff: Int32): T2DIn
 begin
   Result := TIntegerArray_Sblit(arr, 0, diff);
 end;
+
+{==============================================================================]
+  <TIntegerArray_Group>
+  @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
+          that are within a given difference range (minDiff, maxDiff) of the first integer value in the sub-array.
+  @note: None
+[==============================================================================}
+function TIntegerArray_Group(const arr: TIntegerArray; const minDiff, maxDiff: Int32): T2DIntegerArray; overload; cdecl;
+var
+  a, h, l, i, r: Int32;
+  m: Boolean;
+  s: TRange;
+begin
+  r := 0;
+  h := High(arr);
+  if (h > -1) then
+  begin
+    SetLength(Result, (h + 1));
+    SetLength(Result[0], 1);
+    Result[0][0] := arr[0];
+    if (h > 0) then
+    begin
+      r := 1;
+      s := TRange_Build(minDiff, maxDiff);
+      for i := 1 to h do
+      begin
+        m := False;
+        for a := 0 to (r - 1) do
+          if ((arr[i] = Result[a][0]) or TRange_Value(s, Abs(arr[i] - Result[a][0]))) then
+          begin
+            m := True;
+            l := Length(Result[a]);
+            SetLength(Result[a], (l + 1));
+            Result[a][l] := arr[i];
+            Break;
+          end;
+        if not m then
+        begin
+          SetLength(Result[r], 1);
+          Result[r][0] := arr[i];
+          Inc(r);
+        end;
+      end;
+    end;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TIntegerArray_Group>
+  @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
+           that are within a given difference/distance (diff) of the first integer value in the sub-array.
+  @note: None
+[==============================================================================}
+function TIntegerArray_Group(const arr: TIntegerArray; const diff: Int32): T2DIntegerArray; overload; cdecl;
+begin
+  Result := TIntegerArray_Group(arr, 0, diff);
+end;
+
+{==============================================================================]
+  <TIntegerArray_Groub>
+  @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
+          that are within a given difference range (minDiff, maxDiff) of the first integer value in the sub-array.
+  @note: Alternative for TIntegerArray_Group, based on array Binary Sorting.
+[==============================================================================}
+function TIntegerArray_Groub(const arr: TIntegerArray; const minDiff, maxDiff: Int32): T2DIntegerArray; overload; cdecl;
+var
+  a: TIntegerArray;
+  h, i, j, r, l: Int32;
+  s: TRange;
+  m: Boolean;
+begin
+  h := High(arr);
+  if (h > -1) then
+  begin
+    a := TIntegerArray_BinarySorted(arr);
+    SetLength(Result, (h + 1));
+    SetLength(Result[0], 1);
+    Result[0][0] := a[0];
+    r := 1;
+    s := TRange_Build(minDiff, maxDiff);
+    for i := 1 to h do
+    begin
+      m := False;
+      for j := 0 to (r - 1) do
+      begin
+        if ((a[i] = Result[j][0]) or TRange_Value(s, Abs(a[i] - Result[j][0]))) then
+        begin
+          l := Length(Result[j]);
+          SetLength(Result[j], (l + 1));
+          Result[j][l] := a[i];
+          m := True;
+          Break;
+        end;
+      end;
+      if not m then
+      begin
+        SetLength(Result[r], 1);
+        Result[r][0] := a[i];
+        Inc(r);
+      end;
+    end;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TIntegerArray_Groub>
+  @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
+           that are within a given difference/distance (diff) of the first integer value in the sub-array.
+  @note: Alternative for TIntegerArray_Group, based on array Binary Sorting.
+[==============================================================================}
+function TIntegerArray_Groub(const arr: TIntegerArray; const diff: Int32): T2DIntegerArray; overload; cdecl;
+begin
+  Result := TIntegerArray_Groub(arr, 0, diff);
+end;
+
+{==============================================================================]
+  <TIntegerArray_Invert>
+  @action: Returns inverted arr.
+  @note: Arr = [0,2,4,6,8,10] => Result := [1, 3, 5, 7, 9]
+[==============================================================================}
+function TIntegerArray_Invert(const arr: TIntegerArray): TIntegerArray; cdecl;
+var
+  c, l, i, x, y, r: Integer;
+  b: TBooleanArray;
+  a: TRange;
+begin
+  r := 0;
+  y := High(arr);
+  if (y > 0) then
+  begin
+    a := TIntegerArray_Bounds(arr);
+    if (a.start <> a.stop) then
+    begin
+      c := 0;
+      l := TRange_Size(a);
+      b := TArray_Create(l, False);
+      for x := 0 to y do
+        if not b[(arr[x] - a.start)] then
+        begin
+          b[(arr[x] - a.start)] := True;
+          Inc(c);
+        end;
+      SetLength(Result, (l - c));
+      if (Length(Result) > 0) then
+      for i := 0 to (l - 1) do
+        if not b[i] then
+        begin
+          Result[r] := (i + a.start);
+          Inc(r);
+        end;
+      SetLength(b, 0);
+    end;
+  end;
+  SetLength(Result, r);
+end;
