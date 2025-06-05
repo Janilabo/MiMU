@@ -19,7 +19,7 @@ end;
   @action: Fast method for getting substring from string index position by size.
   @note: UNSAFE! Minimal checks for efficiency.
 [==============================================================================}
-function String_Get(const str: string; const index, size: Int32): string; cdecl; inline;
+function String_Get(const str: string; const index: Int32; const size: Int32): string; cdecl; inline;
 var
   i: Int32;
 begin
@@ -29,18 +29,66 @@ begin
 end;
 
 {==============================================================================]
+  <String_Pick>
+  @action: Method for getting substring from string index position by size.
+  @note: Contains some failsafes, alternative for String_Get.
+[==============================================================================}
+function String_Pick(const str: string; const index: Int32; const size: Int32 = 2147483647): string; cdecl;
+var
+  s, i, p: Int32;
+begin
+  i := Max(index, 1);
+  s := Min(((Length(str) - i) + 1), size);
+  SetLength(Result, s);
+  for p := 1 to s do
+    Result[p] := str[((i + p) - 1)];
+end;
+
+{==============================================================================]
+  <String_PosL>
+  @action: Returns first position of s string in str.
+  @note: Starts search from start position.!
+[==============================================================================}
+function String_PosL(const str, s: string; const start: Int32 = 1): Int32; cdecl;
+var
+  l: Int32;
+begin
+  l := Length(s);
+  for Result := Max(1, start) to ((Length(str) - l) + 1) do
+    if (Copy(str, Result, l) = s) then
+      Exit;
+  Result := 0;
+end;
+
+{==============================================================================]
+  <String_PosR>
+  @action: Returns last position of s string in str.
+  @note: Starts search from start position.!
+[==============================================================================}
+function String_PosR(const str, s: string; const start: Int32 = 2147483647): Int32; cdecl;
+var
+  l: Int32;
+begin
+  l := Length(s);
+  for Result := Min(start, ((Length(str) - l) + 1)) downto 1 do
+    if (Copy(str, Result, l) = s) then
+      Exit;
+  Result := 0;
+end;
+
+{==============================================================================]
   <String_Pos>
   @action: Returns last position of s string in str.
-  @note: Starts search from offset position.!
+  @note: Starts search from start position.!
 [==============================================================================}
-function String_Pos(const str, s: string; const offset: Int32 = 0): Int32; cdecl;
+function String_Pos(const str, s: string; const start: Int32 = 1): Int32; cdecl;
 var
   a, b: Int32;
 begin
   a := Length(str);
   b := Length(s);
   if ((a > 0) and (b > 0) and (b <= a)) then
-  for Result := Max(1, offset) to ((a - b) + 1) do
+  for Result := Max(1, start) to ((a - b) + 1) do
     if String_At(str, s, Result) then
       Exit;
   Result := 0;
@@ -49,18 +97,18 @@ end;
 {==============================================================================]
   <String_PosLast>
   @action: Returns last position of s string in str.
-  @note: Starts search from offset position. -1 means str length!
+  @note: Starts search from start position. -1 means str length!
 [==============================================================================}
-function String_PosLast(const str, s: string; const offset: Int32 = -1): Int32; cdecl;
+function String_PosLast(const str, s: string; const start: Int32 = 2147483647): Int32; cdecl;
 var
   a, b, o: Int32;
 begin
   a := Length(str);
   b := Length(s);
-  if (offset = -1) then
+  if (start = -1) then
     o := ((a - b) + 1)
   else
-    o := Max(1, offset);
+    o := Max(1, start);
   if ((a > 0) and (b > 0) and (b <= a)) then
   for Result := o downto 1 do
     if String_At(str, s, Result) then
@@ -70,20 +118,20 @@ end;
 
 {==============================================================================]
   <String_Position>
-  @action: Returns s position from str. Starts scanning from offset.
+  @action: Returns s position from str. Starts scanning from start.
            If s doesn't exist in str, Result will be set as 0.
-  @note: Supports offset.
+  @note: Supports start.
 [==============================================================================}
-function String_Position(const str, s: string; const offset: Int32 = 0): Int32; cdecl;
+function String_Position(const str, s: string; const start: Int32 = 1): Int32; cdecl;
 var
   a, b, i: Int32;
 begin
-  if (offset < 2) then
+  if (start < 2) then
     Exit(Pos(s, str));
   a := Length(str);
   b := Length(s);
   if ((a > 0) and (b > 0) and (b <= a)) then
-  for Result := offset to ((a - b) + 1) do
+  for Result := start to ((a - b) + 1) do
   begin
     i := 1;
     while ((i <= b) and (str[((Result + i) - 1)] = s[i])) do
@@ -95,15 +143,47 @@ begin
 end;
 
 {==============================================================================]
+  <String_Contains>
+  @action: Returns true if s can be found in str.
+  @note: Starts search from start position.!
+[==============================================================================}
+function String_Contains(const str, s: string; const start: Int32 = 1): Boolean; cdecl;
+var
+  i, l: Int32;
+begin
+  l := Length(s);
+  for i := Max(1, start) to ((Length(str) - l) + 1) do
+    if (Copy(str, i, l) = s) then
+      Exit(True);
+  Result := False;
+end;
+
+{==============================================================================]
+  <String_Includes>
+  @action: Returns true if s can be found in str.
+  @note: Starts backwards search from start position.!
+[==============================================================================}
+function String_Includes(const str, s: string; const start: Int32 = 2147483647): Boolean; cdecl;
+var
+  i, l: Int32;
+begin
+  l := Length(s);
+  for i := Min(start, ((Length(str) - l) + 1)) downto 1 do
+    if (Copy(str, i, l) = s) then
+      Exit(True);
+  Result := False;
+end;
+
+{==============================================================================]
  <String_Between>
  @action: Returns the string between s1 and s2 in str.
- @note: Supports offset.
+ @note: Supports offset (start).
 [==============================================================================}
-function String_Between(const str, s1, s2: string; const offset: Int32 = 0): string; cdecl;
+function String_Between(const str, s1, s2: string; const start: Int32 = 1): string; cdecl;
 var
   b, e, l: Int32;
 begin
-  b := String_Pos(str, s1, offset);
+  b := String_Pos(str, s1, start);
   if (b = 0) then
     Exit('');
   l := Length(s1);
@@ -118,21 +198,38 @@ end;
   @action: Simply returns the count of s in str.
   @note: Contains support for overlapping (overlap)
 [==============================================================================}
-function String_Count(const str, s: string; const overlap: Boolean = True): Int32; cdecl;
+function String_Count(const str, s: string; const overlap: Boolean = True; const start: Int32 = 1): Int32; cdecl;
 var
   p, o: Int32;
+  c: string;
 begin
   Result := 0;
-  p := 0;
-  if not overlap then
-  begin
-    o := Length(s);
-    p := (p - (o - 1));
-  end else
-    o := 1;
-  if (o <= Length(str)) then
+  c := Copy(str, start, ((Length(str) - start) + 1));
+  o := Boolean_X(overlap, 1, Length(s));
+  p := (1 - o);
   repeat
-    p := String_Pos(str, s, (p + o));
+    p := String_Pos(c, s, (p + o));
+    if (p > 0) then
+      Inc(Result);
+  until (p < 1);
+end;
+
+{==============================================================================]
+  <String_Amount>
+  @action: Simply returns the amount of s in str.
+  @note: Contains support for overlapping (overlap)
+[==============================================================================}
+function String_Amount(const str, s: string; const overlap: Boolean = True; const start: Int32 = 2147483647): Int32; cdecl;
+var
+  p, o: Int32;
+  c: string;
+begin
+  Result := 0;
+  c := Copy(str, 1, start);
+  o := Boolean_X(overlap, 1, Length(s));
+  p := (1 - o);
+  repeat
+    p := String_Pos(c, s, (p + o));
     if (p > 0) then
       Inc(Result);
   until (p < 1);
@@ -433,11 +530,11 @@ end;
   @action: Returns true if s was found in str and it was set as the beginning of the str.
   @note: None
 [==============================================================================}
-function String_Begin(var str: string; const s: string; const offset: Int32 = 0): Boolean; cdecl;
+function String_Begin(var str: string; const s: string; const start: Int32 = 1): Boolean; cdecl;
 var
   p: Int32;
 begin
-  p := String_Pos(str, s, offset);
+  p := String_Pos(str, s, start);
   Result := (p > 0);
   if Result then
     str := Copy(str, p, (Length(str) - (p - 1)));
@@ -448,11 +545,11 @@ end;
   @action: Returns true if s was found in str and it was set as the ending of the str.
   @note: Supports offset.
 [==============================================================================}
-function String_End(var str: string; const s: string; const offset: Int32 = -1): Boolean; cdecl;
+function String_End(var str: string; const s: string; const start: Int32 = 2147483647): Boolean; cdecl;
 var
   p: Int32;
 begin
-  p := String_PosLast(str, s, offset);
+  p := String_PosLast(str, s, start);
   Result := (p > 0);
   if Result then
     str := Copy(str, 1, ((p + Length(s)) - 1));
@@ -514,15 +611,15 @@ end;
   @action: Returns string that is found after s in str.
   @note: None
 [==============================================================================}
-function String_After(const str, s: string; offset: Int32 = -1): string; cdecl;
+function String_After(const str, s: string; start: Int32 = 1): string; cdecl;
 var
   p, sL, strL: Int32;
 begin
   sL := Length(s);
   strL := Length(str);
-  if ((sL < strL) and (offset < strL)) then
+  if ((sL < strL) and (start < strL)) then
   begin
-    p := String_Pos(str, s, offset);
+    p := String_Pos(str, s, start);
     if (p > 0) then
       Result := Copy(str, (p + sL), ((1 + strL) - (p + sL)))
     else
@@ -536,14 +633,14 @@ end;
   @action: Returns string that is found before s in str.
   @note: None
 [==============================================================================}
-function String_Before(const str, s: string; offset: Int32 = -1): string; cdecl;
+function String_Before(const str, s: string; start: Int32 = 1): string; cdecl;
 var
   p, strL: Int32;
 begin
   strL := Length(str);
-  if ((Length(s) < strL) and (offset < strL)) then
+  if ((Length(s) < strL) and (start < strL)) then
   begin
-    p := String_Pos(str, s, offset);
+    p := String_PosR(str, s, start);
     if (p > 1) then
       Result := Copy(str, 1, (p - 1))
     else
@@ -555,13 +652,13 @@ end;
 {==============================================================================]
   <String_AfterLast>
   @action: Returns string that is found after last s in str.
-  @note: Supports offset.
+  @note: Supports start.
 [==============================================================================}
-function String_AfterLast(const str, s: string; const offset: Int32 = -1): string; cdecl;
+function String_AfterLast(const str, s: string; const start: Int32 = 2147483647): string; cdecl;
 var
   p: Int32;
 begin
-  p := String_PosLast(str, s, offset);
+  p := String_PosLast(str, s, start);
   if (p > 0) then
     Result := Copy(str, (p + 1), (Length(str) - p))
   else
@@ -573,11 +670,11 @@ end;
   @action: Returns string that is found before last s in str.
   @note: None
 [==============================================================================}
-function String_BeforeLast(const str, s: string; const offset: Int32 = -1): string; cdecl;
+function String_BeforeLast(const str, s: string; const start: Int32 = 2147483647): string; cdecl;
 var
   p: Int32;
 begin
-  p := String_PosLast(str, s, offset);
+  p := String_PosLast(str, s, start);
   if (p > 0) then
     Result := Copy(str, 1, (p - Length(s)))
   else
