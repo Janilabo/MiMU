@@ -615,6 +615,15 @@ function TArray_Distribute(const arr: TPointArray; const parts: Int32): T2DPoint
 function TArray_Distribute(const arr: TBoxArray; const parts: Int32): T2DBoxArray; overload; cdecl;
 function TArray_Distribute(const arr: TRangeArray; const parts: Int32): T2DRangeArray; overload; cdecl;
 
+function TArray_Dump(var arr: TIntegerArray; const items: TIntegerArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Dump(var arr: TDoubleArray; const items: TDoubleArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Dump(var arr: TStringArray; const items: TStringArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Dump(var arr: TCharArray; const items: TCharArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Dump(var arr: TBooleanArray; const items: TBooleanArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Dump(var arr: TPointArray; const items: TPointArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Dump(var arr: TBoxArray; const items: TBoxArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Dump(var arr: TRangeArray; const items: TRangeArray; const index: Int32 = 0): Int32; overload; cdecl;
+
 function TArray_Dupe(const arr: TIntegerArray): TIntegerArray; overload; cdecl;
 function TArray_Dupe(const arr: TDoubleArray): TDoubleArray; overload; cdecl;
 function TArray_Dupe(const arr: TStringArray): TStringArray; overload; cdecl;
@@ -772,6 +781,39 @@ function TArray_Holds(const arr, chain: TPointArray): Boolean; overload; cdecl;
 function TArray_Holds(const arr, chain: TBoxArray): Boolean; overload; cdecl;
 function TArray_Holds(const arr, chain: TRangeArray): Boolean; overload; cdecl;
 
+function TArray_IDs(const arr: TIntegerArray): TIntegerArray; overload; cdecl;
+function TArray_IDs(const arr: TDoubleArray): TIntegerArray; overload; cdecl;
+function TArray_IDs(const arr: TStringArray): TIntegerArray; overload; cdecl;
+function TArray_IDs(const arr: TCharArray): TIntegerArray; overload; cdecl;
+function TArray_IDs(const arr: TBooleanArray): TIntegerArray; overload; cdecl;
+function TArray_IDs(const arr: TPointArray): TIntegerArray; overload; cdecl;
+function TArray_IDs(const arr: TBoxArray): TIntegerArray; overload; cdecl;
+function TArray_IDs(const arr: TRangeArray): TIntegerArray; overload; cdecl;
+function TArray_IDs(const arr: TIntegerArray; const IDs: TIntegerArray): TIntegerArray; overload; cdecl;
+function TArray_IDs(const arr: TDoubleArray; const IDs: TIntegerArray): TDoubleArray; overload; cdecl;
+function TArray_IDs(const arr: TStringArray; const IDs: TIntegerArray): TStringArray; overload; cdecl;
+function TArray_IDs(const arr: TCharArray; const IDs: TIntegerArray): TCharArray; overload; cdecl;
+function TArray_IDs(const arr: TBooleanArray; const IDs: TIntegerArray): TBooleanArray; overload; cdecl;
+function TArray_IDs(const arr: TPointArray; const IDs: TIntegerArray): TPointArray; overload; cdecl;
+function TArray_IDs(const arr: TBoxArray; const IDs: TIntegerArray): TBoxArray; overload; cdecl;
+function TArray_IDs(const arr: TRangeArray; const IDs: TIntegerArray): TRangeArray; overload; cdecl;
+function TArray_IDs(const arr: TIntegerArray; const IDs: TIntegerArray; const item: Int32): TIntegerArray; overload; cdecl;
+function TArray_IDs(const arr: TDoubleArray; const IDs: TIntegerArray; const item: Double): TDoubleArray; overload; cdecl;
+function TArray_IDs(const arr: TStringArray; const IDs: TIntegerArray; const item: string): TStringArray; overload; cdecl;
+function TArray_IDs(const arr: TCharArray; const IDs: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
+function TArray_IDs(const arr: TBooleanArray; const IDs: TIntegerArray; const item: Boolean): TBooleanArray; overload; cdecl;
+function TArray_IDs(const arr: TPointArray; const IDs: TIntegerArray; const item: TPoint): TPointArray; overload; cdecl;
+function TArray_IDs(const arr: TBoxArray; const IDs: TIntegerArray; const item: TBox): TBoxArray; overload; cdecl;
+function TArray_IDs(const arr: TRangeArray; const IDs: TIntegerArray; const item: TRange): TRangeArray; overload; cdecl;
+function TArray_IDs(const arr: TIntegerArray; const IDs: TIntegerArray; const items: TIntegerArray): TIntegerArray; overload; cdecl;
+function TArray_IDs(const arr: TDoubleArray; const IDs: TIntegerArray; const items: TDoubleArray): TDoubleArray; overload; cdecl;
+function TArray_IDs(const arr: TStringArray; const IDs: TIntegerArray; const items: TStringArray): TStringArray; overload; cdecl;
+function TArray_IDs(const arr: TCharArray; const IDs: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
+function TArray_IDs(const arr: TBooleanArray; const IDs: TIntegerArray; const items: TBooleanArray): TBooleanArray; overload; cdecl;
+function TArray_IDs(const arr: TPointArray; const IDs: TIntegerArray; const items: TPointArray): TPointArray; overload; cdecl;
+function TArray_IDs(const arr: TBoxArray; const IDs: TIntegerArray; const items: TBoxArray): TBoxArray; overload; cdecl;
+function TArray_IDs(const arr: TRangeArray; const IDs: TIntegerArray; const items: TRangeArray): TRangeArray; overload; cdecl;
+
 function TArray_Includes(const arr: TIntegerArray; const item: Int32; const start: Int32 = 2147483647): Boolean; overload; cdecl;
 function TArray_Includes(const arr: TDoubleArray; const item: Double; const start: Int32 = 2147483647): Boolean; overload; cdecl;
 function TArray_Includes(const arr: TStringArray; const item: string; const start: Int32 = 2147483647): Boolean; overload; cdecl;
@@ -780,6 +822,15 @@ function TArray_Includes(const arr: TBooleanArray; const item: Boolean; const st
 function TArray_Includes(const arr: TPointArray; const item: TPoint; const start: Int32 = 2147483647): Boolean; overload; cdecl;
 function TArray_Includes(const arr: TBoxArray; const item: TBox; const start: Int32 = 2147483647): Boolean; overload; cdecl;
 function TArray_Includes(const arr: TRangeArray; const item: TRange; const start: Int32 = 2147483647): Boolean; overload; cdecl;
+
+function TArray_Keep(var arr: TIntegerArray; const items: TIntegerArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Keep(var arr: TDoubleArray; const items: TDoubleArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Keep(var arr: TStringArray; const items: TStringArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Keep(var arr: TCharArray; const items: TCharArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Keep(var arr: TBooleanArray; const items: TBooleanArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Keep(var arr: TPointArray; const items: TPointArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Keep(var arr: TBoxArray; const items: TBoxArray; const index: Int32 = 0): Int32; overload; cdecl;
+function TArray_Keep(var arr: TRangeArray; const items: TRangeArray; const index: Int32 = 0): Int32; overload; cdecl;
 
 function TArray_LeastFrequent(const arr: TIntegerArray): Int32; cdecl; overload;
 function TArray_LeastFrequent(const arr: TDoubleArray): Double; cdecl; overload;
@@ -1397,7 +1448,10 @@ end;
 {$I MiMU/generic/TArray_Copy.pas}
 {$I MiMU/generic/TArray_Get.pas}
 {$I MiMU/generic/TArray_Set.pas}
+{$I MiMU/generic/TArray_IDs.pas}
 {$I MiMU/generic/TArray_Size.pas}
+{$I MiMU/generic/TArray_Keep.pas}
+{$I MiMU/generic/TArray_Dump.pas}
 {$I MiMU/generic/TArray_SizeBetween.pas}
 {$I MiMU/generic/TArray_SizeMax.pas}
 {$I MiMU/generic/TArray_SizeMin.pas}
