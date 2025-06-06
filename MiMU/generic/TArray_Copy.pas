@@ -5,75 +5,51 @@
 [==============================================================================}
 
 // TIntegerArray
-function TArray_Copy(const arr: TIntegerArray; const index: Int32 = 0; const count: Int32 = -1): TIntegerArray; overload; cdecl;
+function TArray_Copy(const arr: TIntegerArray; const index: Int32 = 0; const count: Int32 = 2147483647): TIntegerArray; overload; cdecl;
 begin
-  if (count < 0) then 
-    Result := Copy(arr, index, Length(arr))
-  else
-    Result := Copy(arr, index, count);  
+  Result := Copy(arr, index, count);  
 end;
 
 // TDoubleArray
-function TArray_Copy(const arr: TDoubleArray; const index: Int32 = 0; const count: Int32 = -1): TDoubleArray; overload; cdecl;
+function TArray_Copy(const arr: TDoubleArray; const index: Int32 = 0; const count: Int32 = 2147483647): TDoubleArray; overload; cdecl;
 begin
-  if (count < 0) then 
-    Result := Copy(arr, index, Length(arr))
-  else
-    Result := Copy(arr, index, count);  
+  Result := Copy(arr, index, count);  
 end;
 
 // TStringArray
-function TArray_Copy(const arr: TStringArray; const index: Int32 = 0; const count: Int32 = -1): TStringArray; overload; cdecl;
+function TArray_Copy(const arr: TStringArray; const index: Int32 = 0; const count: Int32 = 2147483647): TStringArray; overload; cdecl;
 begin
-  if (count < 0) then 
-    Result := Copy(arr, index, Length(arr))
-  else
-    Result := Copy(arr, index, count);  
+  Result := Copy(arr, index, count);  
 end;
 
 // TCharArray
-function TArray_Copy(const arr: TCharArray; const index: Int32 = 0; const count: Int32 = -1): TCharArray; overload; cdecl;
+function TArray_Copy(const arr: TCharArray; const index: Int32 = 0; const count: Int32 = 2147483647): TCharArray; overload; cdecl;
 begin
-  if (count < 0) then 
-    Result := Copy(arr, index, Length(arr))
-  else
-    Result := Copy(arr, index, count);  
+  Result := Copy(arr, index, count);  
 end;
 
 // TBooleanArray
-function TArray_Copy(const arr: TBooleanArray; const index: Int32 = 0; const count: Int32 = -1): TBooleanArray; overload; cdecl;
+function TArray_Copy(const arr: TBooleanArray; const index: Int32 = 0; const count: Int32 = 2147483647): TBooleanArray; overload; cdecl;
 begin
-  if (count < 0) then 
-    Result := Copy(arr, index, Length(arr))
-  else
-    Result := Copy(arr, index, count);  
+  Result := Copy(arr, index, count);  
 end;
 
 // TPointArray
-function TArray_Copy(const arr: TPointArray; const index: Int32 = 0; const count: Int32 = -1): TPointArray; overload; cdecl;
+function TArray_Copy(const arr: TPointArray; const index: Int32 = 0; const count: Int32 = 2147483647): TPointArray; overload; cdecl;
 begin
-  if (count < 0) then 
-    Result := Copy(arr, index, Length(arr))
-  else
-    Result := Copy(arr, index, count);  
+  Result := Copy(arr, index, count);  
 end;
 
 // TBoxArray
-function TArray_Copy(const arr: TBoxArray; const index: Int32 = 0; const count: Int32 = -1): TBoxArray; overload; cdecl;
+function TArray_Copy(const arr: TBoxArray; const index: Int32 = 0; const count: Int32 = 2147483647): TBoxArray; overload; cdecl;
 begin
-  if (count < 0) then 
-    Result := Copy(arr, index, Length(arr))
-  else
-    Result := Copy(arr, index, count);  
+  Result := Copy(arr, index, count);  
 end;
 
 // TRangeArray
-function TArray_Copy(const arr: TRangeArray; const index: Int32 = 0; const count: Int32 = -1): TRangeArray; overload; cdecl;
+function TArray_Copy(const arr: TRangeArray; const index: Int32 = 0; const count: Int32 = 2147483647): TRangeArray; overload; cdecl;
 begin
-  if (count < 0) then 
-    Result := Copy(arr, index, Length(arr))
-  else
-    Result := Copy(arr, index, count);  
+  Result := Copy(arr, index, count);  
 end;
 
 {==============================================================================]
