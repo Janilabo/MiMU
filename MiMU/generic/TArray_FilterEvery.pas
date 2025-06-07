@@ -1,21 +1,21 @@
 {==============================================================================]
  <TArray_FilterEvery>
  @action: Filters every/each X item from arr.
- @note: Custom start
+ @note: Custom index
 [==============================================================================}
 
 // TIntegerArray
-function TArray_FilterEvery(const arr: TIntegerArray; const X: Int32 = 1; const start: Int32 = 0): TIntegerArray; overload; cdecl;
+function TArray_FilterEvery(const arr: TIntegerArray; const X: Int32 = 1; const index: Int32 = 0): TIntegerArray; overload; cdecl;
 var
   i, h, l: Int32;
 begin
   l := Length(arr);
-  SetLength(Result, (l - start));
-  if ((l - start) < 1) then
+  SetLength(Result, (l - index));
+  if ((l - index) < 1) then
     Exit;
   h := 0;
-  for i := start to (l - 1) do
-    if not (((i - start) mod X) = 0) then
+  for i := index to (l - 1) do
+    if not (((i - index) mod X) = 0) then
     begin
       Result[h] := arr[i];
       Inc(h);
@@ -24,17 +24,17 @@ begin
 end;
 
 // TDoubleArray
-function TArray_FilterEvery(const arr: TDoubleArray; const X: Int32 = 1; const start: Int32 = 0): TDoubleArray; overload; cdecl;
+function TArray_FilterEvery(const arr: TDoubleArray; const X: Int32 = 1; const index: Int32 = 0): TDoubleArray; overload; cdecl;
 var
   i, h, l: Int32;
 begin
   l := Length(arr);
-  SetLength(Result, (l - start));
-  if ((l - start) < 1) then
+  SetLength(Result, (l - index));
+  if ((l - index) < 1) then
     Exit;
   h := 0;
-  for i := start to (l - 1) do
-    if not (((i - start) mod X) = 0) then
+  for i := index to (l - 1) do
+    if not (((i - index) mod X) = 0) then
     begin
       Result[h] := arr[i];
       Inc(h);
@@ -43,17 +43,17 @@ begin
 end;
 
 // TStringArray
-function TArray_FilterEvery(const arr: TStringArray; const X: Int32 = 1; const start: Int32 = 0): TStringArray; overload; cdecl;
+function TArray_FilterEvery(const arr: TStringArray; const X: Int32 = 1; const index: Int32 = 0): TStringArray; overload; cdecl;
 var
   i, h, l: Int32;
 begin
   l := Length(arr);
-  SetLength(Result, (l - start));
-  if ((l - start) < 1) then
+  SetLength(Result, (l - index));
+  if ((l - index) < 1) then
     Exit;
   h := 0;
-  for i := start to (l - 1) do
-    if not (((i - start) mod X) = 0) then
+  for i := index to (l - 1) do
+    if not (((i - index) mod X) = 0) then
     begin
       Result[h] := arr[i];
       Inc(h);
@@ -62,17 +62,17 @@ begin
 end;
 
 // TCharArray
-function TArray_FilterEvery(const arr: TCharArray; const X: Int32 = 1; const start: Int32 = 0): TCharArray; overload; cdecl;
+function TArray_FilterEvery(const arr: TCharArray; const X: Int32 = 1; const index: Int32 = 0): TCharArray; overload; cdecl;
 var
   i, h, l: Int32;
 begin
   l := Length(arr);
-  SetLength(Result, (l - start));
-  if ((l - start) < 1) then
+  SetLength(Result, (l - index));
+  if ((l - index) < 1) then
     Exit;
   h := 0;
-  for i := start to (l - 1) do
-    if not (((i - start) mod X) = 0) then
+  for i := index to (l - 1) do
+    if not (((i - index) mod X) = 0) then
     begin
       Result[h] := arr[i];
       Inc(h);
@@ -81,17 +81,17 @@ begin
 end;
 
 // TBooleanArray
-function TArray_FilterEvery(const arr: TBooleanArray; const X: Int32 = 1; const start: Int32 = 0): TBooleanArray; overload; cdecl;
+function TArray_FilterEvery(const arr: TBooleanArray; const X: Int32 = 1; const index: Int32 = 0): TBooleanArray; overload; cdecl;
 var
   i, h, l: Int32;
 begin
   l := Length(arr);
-  SetLength(Result, (l - start));
-  if ((l - start) < 1) then
+  SetLength(Result, (l - index));
+  if ((l - index) < 1) then
     Exit;
   h := 0;
-  for i := start to (l - 1) do
-    if not (((i - start) mod X) = 0) then
+  for i := index to (l - 1) do
+    if not (((i - index) mod X) = 0) then
     begin
       Result[h] := arr[i];
       Inc(h);
@@ -100,17 +100,17 @@ begin
 end;
 
 // TPointArray
-function TArray_FilterEvery(const arr: TPointArray; const X: Int32 = 1; const start: Int32 = 0): TPointArray; overload; cdecl;
+function TArray_FilterEvery(const arr: TPointArray; const X: Int32 = 1; const index: Int32 = 0): TPointArray; overload; cdecl;
 var
   i, h, l: Int32;
 begin
   l := Length(arr);
-  SetLength(Result, (l - start));
-  if ((l - start) < 1) then
+  SetLength(Result, (l - index));
+  if ((l - index) < 1) then
     Exit;
   h := 0;
-  for i := start to (l - 1) do
-    if not (((i - start) mod X) = 0) then
+  for i := index to (l - 1) do
+    if not (((i - index) mod X) = 0) then
     begin
       Result[h] := arr[i];
       Inc(h);
@@ -119,17 +119,17 @@ begin
 end;
 
 // TBoxArray
-function TArray_FilterEvery(const arr: TBoxArray; const X: Int32 = 1; const start: Int32 = 0): TBoxArray; overload; cdecl;
+function TArray_FilterEvery(const arr: TBoxArray; const X: Int32 = 1; const index: Int32 = 0): TBoxArray; overload; cdecl;
 var
   i, h, l: Int32;
 begin
   l := Length(arr);
-  SetLength(Result, (l - start));
-  if ((l - start) < 1) then
+  SetLength(Result, (l - index));
+  if ((l - index) < 1) then
     Exit;
   h := 0;
-  for i := start to (l - 1) do
-    if not (((i - start) mod X) = 0) then
+  for i := index to (l - 1) do
+    if not (((i - index) mod X) = 0) then
     begin
       Result[h] := arr[i];
       Inc(h);
@@ -138,17 +138,17 @@ begin
 end;
 
 // TRangeArray
-function TArray_FilterEvery(const arr: TRangeArray; const X: Int32 = 1; const start: Int32 = 0): TRangeArray; overload; cdecl;
+function TArray_FilterEvery(const arr: TRangeArray; const X: Int32 = 1; const index: Int32 = 0): TRangeArray; overload; cdecl;
 var
   i, h, l: Int32;
 begin
   l := Length(arr);
-  SetLength(Result, (l - start));
-  if ((l - start) < 1) then
+  SetLength(Result, (l - index));
+  if ((l - index) < 1) then
     Exit;
   h := 0;
-  for i := start to (l - 1) do
-    if not (((i - start) mod X) = 0) then
+  for i := index to (l - 1) do
+    if not (((i - index) mod X) = 0) then
     begin
       Result[h] := arr[i];
       Inc(h);

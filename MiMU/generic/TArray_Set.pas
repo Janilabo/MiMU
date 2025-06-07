@@ -217,7 +217,7 @@ end;
 [==============================================================================}
 
 // TIntegerArray
-function TArray_Set(const arr: TIntegerArray; const start: Int32; const items: TIntegerArray): TIntegerArray; overload; cdecl;
+function TArray_Set(const arr: TIntegerArray; const index: Int32; const items: TIntegerArray): TIntegerArray; overload; cdecl;
 var
   i: Int32;
 begin
@@ -225,11 +225,11 @@ begin
   for i := 0 to High(arr) do
     Result[i] := arr[i];
   for i := 0 to High(items) do
-    Result[(start + i)] := items[i];
+    Result[(index + i)] := items[i];
 end;
 
 // TDoubleArray
-function TArray_Set(const arr: TDoubleArray; const start: Int32; const items: TDoubleArray): TDoubleArray; overload; cdecl;
+function TArray_Set(const arr: TDoubleArray; const index: Int32; const items: TDoubleArray): TDoubleArray; overload; cdecl;
 var
   i: Int32;
 begin
@@ -237,11 +237,11 @@ begin
   for i := 0 to High(arr) do
     Result[i] := arr[i];
   for i := 0 to High(items) do
-    Result[(start + i)] := items[i];
+    Result[(index + i)] := items[i];
 end;
 
 // TStringArray
-function TArray_Set(const arr: TStringArray; const start: Int32; const items: TStringArray): TStringArray; overload; cdecl;
+function TArray_Set(const arr: TStringArray; const index: Int32; const items: TStringArray): TStringArray; overload; cdecl;
 var
   i: Int32;
 begin
@@ -249,11 +249,11 @@ begin
   for i := 0 to High(arr) do
     Result[i] := arr[i];
   for i := 0 to High(items) do
-    Result[(start + i)] := items[i];
+    Result[(index + i)] := items[i];
 end;
 
 // TCharArray
-function TArray_Set(const arr: TCharArray; const start: Int32; const items: TCharArray): TCharArray; overload; cdecl;
+function TArray_Set(const arr: TCharArray; const index: Int32; const items: TCharArray): TCharArray; overload; cdecl;
 var
   i: Int32;
 begin
@@ -261,11 +261,11 @@ begin
   for i := 0 to High(arr) do
     Result[i] := arr[i];
   for i := 0 to High(items) do
-    Result[(start + i)] := items[i];
+    Result[(index + i)] := items[i];
 end;
 
 // TBooleanArray
-function TArray_Set(const arr: TBooleanArray; const start: Int32; const items: TBooleanArray): TBooleanArray; overload; cdecl;
+function TArray_Set(const arr: TBooleanArray; const index: Int32; const items: TBooleanArray): TBooleanArray; overload; cdecl;
 var
   i: Int32;
 begin
@@ -273,11 +273,11 @@ begin
   for i := 0 to High(arr) do
     Result[i] := arr[i];
   for i := 0 to High(items) do
-    Result[(start + i)] := items[i];
+    Result[(index + i)] := items[i];
 end;
 
 // TPointArray
-function TArray_Set(const arr: TPointArray; const start: Int32; const items: TPointArray): TPointArray; overload; cdecl;
+function TArray_Set(const arr: TPointArray; const index: Int32; const items: TPointArray): TPointArray; overload; cdecl;
 var
   i: Int32;
 begin
@@ -285,11 +285,11 @@ begin
   for i := 0 to High(arr) do
     Result[i] := arr[i];
   for i := 0 to High(items) do
-    Result[(start + i)] := items[i];
+    Result[(index + i)] := items[i];
 end;
 
 // TBoxArray
-function TArray_Set(const arr: TBoxArray; const start: Int32; const items: TBoxArray): TBoxArray; overload; cdecl;
+function TArray_Set(const arr: TBoxArray; const index: Int32; const items: TBoxArray): TBoxArray; overload; cdecl;
 var
   i: Int32;
 begin
@@ -297,11 +297,11 @@ begin
   for i := 0 to High(arr) do
     Result[i] := arr[i];
   for i := 0 to High(items) do
-    Result[(start + i)] := items[i];
+    Result[(index + i)] := items[i];
 end;
 
 // TRangeArray
-function TArray_Set(const arr: TRangeArray; const start: Int32; const items: TRangeArray): TRangeArray; overload; cdecl;
+function TArray_Set(const arr: TRangeArray; const index: Int32; const items: TRangeArray): TRangeArray; overload; cdecl;
 var
   i: Int32;
 begin
@@ -309,5 +309,5 @@ begin
   for i := 0 to High(arr) do
     Result[i] := arr[i];
   for i := 0 to High(items) do
-    Result[(start + i)] := items[i];
+    Result[(index + i)] := items[i];
 end;
