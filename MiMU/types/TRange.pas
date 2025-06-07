@@ -168,6 +168,22 @@ begin
   end;
 end;
 
+function TRange_Values(const range: TRange): TIntegerArray; cdecl;
+var
+  i, r: Int32;
+begin
+  r := 0;
+  SetLength(Result, TRange_Size(range));
+  case TRange_Ascending(range) of
+    False:
+    for i := range.start downto range.stop do
+      Result[Int32_Inc(r)] := i;
+    True:
+    for i := range.start to range.stop do
+      Result[Int32_Inc(r)] := i;
+  end;
+end;
+
 {==============================================================================]
   <TRange_TIntegerArray>
   @action: Returns digits of the given range.

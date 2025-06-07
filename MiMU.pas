@@ -98,10 +98,14 @@ procedure Swap(var A, B: TRange); overload; inline;
 
 function Int32_Even(const x: Int32): Boolean; cdecl; inline;
 function Int32_Odd(const x: Int32): Boolean; cdecl; inline;
-function Int32_Inc(var x: Int32; const N: Int32 = 1): Int32; cdecl; inline;
+function Int32_Inc(var x: Int32; const N: Int32 = 1): Int32; cdecl;
 function Int32_Dec(var x: Int32; const N: Int32 = 1): Int32; cdecl;
-function Int32_Increase(var x: Int32; const N: Int32 = 1): Int32; cdecl; inline;
+function Int32_Increase(var x: Int32; const N: Int32 = 1): Int32; cdecl;
 function Int32_Decrease(var x: Int32; const N: Int32 = 1): Int32; cdecl;
+function Int32_Increment(var x: Int32; const N: Int32 = 1): Int32; cdecl;
+function Int32_Decrement(var x: Int32; const N: Int32 = 1): Int32; cdecl;
+function Int32_Incr(var x: Int32; const N: Int32 = 1): Int32; cdecl;
+function Int32_Decr(var x: Int32; const N: Int32 = 1): Int32; cdecl;
 function Int32_DigitCount(const x: Int32): Int32; cdecl;
 function Int32_Digitz(const x: Int32): TIntegerArray; cdecl;
 function Int32_Digits(const x: Int32): TIntegerArray; cdecl;
@@ -121,10 +125,14 @@ function Int32_Undersize(const x, limit: Int32): Boolean; cdecl; inline;
 
 function Int64_Even(const x: Int64): Boolean; cdecl; inline;
 function Int64_Odd(const x: Int64): Boolean; cdecl; inline;
-function Int64_Inc(var x: Int64; const N: Int64 = 1): Int64; cdecl; inline;
+function Int64_Inc(var x: Int64; const N: Int64 = 1): Int64; cdecl;
 function Int64_Dec(var x: Int64; const N: Int64 = 1): Int64; cdecl;
-function Int64_Increase(var x: Int64; const N: Int64 = 1): Int64; cdecl; inline;
+function Int64_Increase(var x: Int64; const N: Int64 = 1): Int64; cdecl;
 function Int64_Decrease(var x: Int64; const N: Int64 = 1): Int64; cdecl;
+function Int64_Increment(var x: Int64; const N: Int64 = 1): Int64; cdecl;
+function Int64_Decrement(var x: Int64; const N: Int64 = 1): Int64; cdecl;
+function Int64_Incr(var x: Int64; const N: Int64 = 1): Int64; cdecl;
+function Int64_Decr(var x: Int64; const N: Int64 = 1): Int64; cdecl;
 function Int64_DigitCount(const x: Int64): Int32; cdecl;
 function Int64_Digitz(const x: Int64): TIntegerArray; cdecl;
 function Int64_Digits(const x: Int64): TIntegerArray; cdecl;
@@ -137,10 +145,14 @@ function Int64_Random(const range: Int64): Int64; cdecl;
 function Int64_Oversize(const x, limit: Int64): Boolean; cdecl; inline;
 function Int64_Undersize(const x, limit: Int64): Boolean; cdecl; inline;
 
-function Double_Inc(var x: Double; const N: Double = 1): Double; cdecl; inline;
+function Double_Inc(var x: Double; const N: Double = 1): Double; cdecl;
 function Double_Dec(var x: Double; const N: Double = 1): Double; cdecl;
-function Double_Increase(var x: Double; const N: Double = 1): Double; cdecl; inline;
+function Double_Increase(var x: Double; const N: Double = 1): Double; cdecl;
 function Double_Decrease(var x: Double; const N: Double = 1): Double; cdecl;
+function Double_Increment(var x: Double; const N: Double = 1): Double; cdecl;
+function Double_Decrement(var x: Double; const N: Double = 1): Double; cdecl;
+function Double_Incr(var x: Double; const N: Double = 1): Double; cdecl;
+function Double_Decr(var x: Double; const N: Double = 1): Double; cdecl;
 function Double_Digits(const x: Double): TIntegerArray; cdecl;
 function Double_NegA(const x: Double): Double; cdecl; inline;
 function Double_Neg(const x: Double): Double; cdecl; inline;
@@ -164,6 +176,7 @@ function Double_Percentage(const source, percent: Double): Double; cdecl; inline
 function Double_Oversize(const x, limit: Double): Boolean; cdecl;
 function Double_Undersize(const x, limit: Double): Boolean; cdecl;
 
+function String_Chars(const str: string): TCharArray; cdecl;
 function String_At(const str, s: string; const index: Int32 = 1): Boolean; cdecl; inline;
 function String_Get(const str: string; const index, count: Int32): string; cdecl; inline;
 function String_Pick(const str: string; const index: Int32; const count: Int32 = 2147483647): string; cdecl;
@@ -207,7 +220,10 @@ function String_TrimLeft(const str: string; const t: Char = #32): string; cdecl;
 function String_TrimRight(const str: string; const t: Char = #32): string; cdecl;
 function String_Trim(const str: string; const t: Char = #32): string; cdecl;
 function String_TRange(const str: string): TRange; cdecl;
-function String_IDs(const str: string): TIntegerArray; cdecl;
+function String_IDs(const str: string): TIntegerArray; overload; cdecl;
+function String_IDs(const str: string; const IDs: TIntegerArray): TCharArray; overload; cdecl;
+function String_IDs(const str: string; const IDs: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
+function String_IDs(const str: string; const IDs: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
 
 function Boolean_Random: Boolean; cdecl; inline;
 function Boolean_X(const X: Boolean; const trueX, falseX: Boolean): Boolean; overload; cdecl;
@@ -319,6 +335,7 @@ function TRange_Max(const range: TRange): Int32; cdecl;
 function TRange_Maximum(const range: TRange): Int32; cdecl;
 function TRange_Digits(const range: TRange): TIntegerArray; cdecl;
 function TRange_Ints(const range: TRange): TIntegerArray; cdecl;
+function TRange_Values(const range: TRange): TIntegerArray; cdecl;
 function TRange_TIntegerArray(const range: TRange): TIntegerArray; cdecl;
 function TRange_Normalize(const range: TRange): TRange; cdecl;
 function TRange_Overlapping(const a, b: TRange): Boolean; cdecl;
@@ -430,6 +447,8 @@ function TPointArray_Invert(const arr: TPointArray): TPointArray; cdecl;
 function TPointArray_Edge(const arr: TPointArray; const scan8W: Boolean = False): TPointArray; cdecl;
 function TPointArray_FloodFill(const arr: TPointArray; const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; cdecl;
 function TPointArray_FloodFill(const arr: TPointArray; const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; cdecl;
+
+function TRangeArray_TIntegerArray(const arr: TRangeArray): TIntegerArray; cdecl;
 
 function TArray_Add(const arr: TIntegerArray; const item: Int32): TIntegerArray; overload; cdecl;
 function TArray_Add(const arr: TDoubleArray; const item: Double): TDoubleArray; overload; cdecl;
@@ -1517,6 +1536,7 @@ end;
 
 {$I MiMU/types/TIntegerArray.pas}
 {$I MiMU/types/TPointArray.pas}
+{$I MiMU/types/TRangeArray.pas}
 
 initialization
 

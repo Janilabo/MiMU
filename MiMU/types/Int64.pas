@@ -21,23 +21,23 @@ end;
 {==============================================================================]
  <Int64_Inc>
  @action: Increases the Int64 value x by N.
- @note: Returns the increased x!
+ @note: Returns x before increasing it with N!
 [==============================================================================}
-function Int64_Inc(var x: Int64; const N: Int64 = 1): Int64; cdecl; inline;
+function Int64_Inc(var x: Int64; const N: Int64 = 1): Int64; cdecl;
 begin
-  x := (x + N);
   Result := x;
+  Inc(x, N);
 end;
 
 {==============================================================================]
  <Int64_Dec>
  @action: Decreases the Int64 value x by N.
- @note:  Returns the increased x!
+ @note: Returns x before decreasing it with N!
 [==============================================================================}
 function Int64_Dec(var x: Int64; const N: Int64 = 1): Int64; cdecl;
 begin
   Result := x;
-  x := (x - N);
+  Dec(x, N);
 end;
 
 {==============================================================================]
@@ -45,7 +45,7 @@ end;
  @action: Increases the Int64 value x by N.
  @note: Returns x before increasing it with N!
 [==============================================================================}
-function Int64_Increase(var x: Int64; const N: Int64 = 1): Int64; cdecl; inline;
+function Int64_Increase(var x: Int64; const N: Int64 = 1): Int64; cdecl;
 begin
   Result := x;
   x := (x + N);
@@ -60,6 +60,50 @@ function Int64_Decrease(var x: Int64; const N: Int64 = 1): Int64; cdecl;
 begin
   Result := x;
   x := (x - N);
+end;
+
+{==============================================================================]
+ <Int64_Increment>
+ @action: Increases the Int64 value x by N.
+ @note: Returns the increased x!
+[==============================================================================}
+function Int64_Increment(var x: Int64; const N: Int64 = 1): Int64; cdecl;
+begin
+  x := (x + N);
+  Result := x;
+end;
+
+{==============================================================================]
+  <Int64_Decrement>
+ @action: Decreases the Int64 value x by N.
+ @note: Returns the decreased x!
+[==============================================================================}
+function Int64_Decrement(var x: Int64; const N: Int64 = 1): Int64; cdecl;
+begin
+  x := (x - N);
+  Result := x;
+end;
+
+{==============================================================================]
+ <Int64_Increment>
+ @action: Increases the Int64 value x by N.
+ @note: Returns the increased x!
+[==============================================================================}
+function Int64_Incr(var x: Int64; const N: Int64 = 1): Int64; cdecl;
+begin
+  Inc(x, N);
+  Result := x;
+end;
+
+{==============================================================================]
+  <Int64_Decrement>
+ @action: Decreases the Int64 value x by N.
+ @note: Returns the decreased x!
+[==============================================================================}
+function Int64_Decr(var x: Int64; const N: Int64 = 1): Int64; cdecl;
+begin
+  Dec(x, N);
+  Result := x;
 end;
 
 {==============================================================================]

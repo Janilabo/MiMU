@@ -1,18 +1,18 @@
 {==============================================================================]
  <Double_Inc>
  @action: Increases the x value by N.
- @note: Returns the increased x!
+ @note: Returns x before increasing it with N!
 [==============================================================================}
-function Double_Inc(var x: Double; const N: Double = 1): Double; cdecl; inline;
+function Double_Inc(var x: Double; const N: Double = 1): Double; cdecl;
 begin
-  x := (x + N);
   Result := x;
+  x := (x + N);
 end;
 
 {==============================================================================]
  <Double_Dec>
  @action: Decreases the x value by N.
- @note:  Returns the increased x!
+ @note: Returns x before decreasing it with N!
 [==============================================================================}
 function Double_Dec(var x: Double; const N: Double = 1): Double; cdecl;
 begin
@@ -25,7 +25,7 @@ end;
  @action: Increases the Double value x by N.
  @note: Returns x before increasing it with N!
 [==============================================================================}
-function Double_Increase(var x: Double; const N: Double = 1): Double; cdecl; inline;
+function Double_Increase(var x: Double; const N: Double = 1): Double; cdecl;
 begin
   Result := x;
   x := (x + N);
@@ -40,6 +40,50 @@ function Double_Decrease(var x: Double; const N: Double = 1): Double; cdecl;
 begin
   Result := x;
   x := (x - N);
+end;
+
+{==============================================================================]
+ <Double_Increment>
+ @action: Increases the Double value x by N.
+ @note: Returns the increased x!
+[==============================================================================}
+function Double_Increment(var x: Double; const N: Double = 1): Double; cdecl;
+begin
+  x := (x + N);
+  Result := x;
+end;
+
+{==============================================================================]
+  <Double_Decrement>
+ @action: Decreases the Double value x by N.
+ @note: Returns the decreased x!
+[==============================================================================}
+function Double_Decrement(var x: Double; const N: Double = 1): Double; cdecl;
+begin
+  x := (x - N);
+  Result := x;
+end;
+
+{==============================================================================]
+ <Double_Incr>
+ @action: Increases the x value by N.
+ @note: Returns the increased x!
+[==============================================================================}
+function Double_Incr(var x: Double; const N: Double = 1): Double; cdecl;
+begin
+  x := (x + N);
+  Result := x;
+end;
+
+{==============================================================================]
+ <Double_Decr>
+ @action: Decreases the x value by N.
+ @note: Returns the decreased x!
+[==============================================================================}
+function Double_Decr(var x: Double; const N: Double = 1): Double; cdecl;
+begin
+  x := (x - N);
+  Result := x;
 end;
 
 {==============================================================================]

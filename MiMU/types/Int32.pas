@@ -23,21 +23,21 @@ end;
  @action: Increases the x value by N.
  @note: Returns the increased x!
 [==============================================================================}
-function Int32_Inc(var x: Int32; const N: Int32 = 1): Int32; cdecl; inline;
+function Int32_Inc(var x: Int32; const N: Int32 = 1): Int32; cdecl;
 begin
-  x := (x + N);
   Result := x;
+  Inc(x, N);
 end;
 
 {==============================================================================]
  <Int32_Dec>
  @action: Decreases the x value by N.
- @note:  Returns the increased x!
+ @note: Returns the increased x!
 [==============================================================================}
 function Int32_Dec(var x: Int32; const N: Int32 = 1): Int32; cdecl;
 begin
   Result := x;
-  x := (x - N);
+  Dec(x, N);
 end;
 
 {==============================================================================]
@@ -45,7 +45,7 @@ end;
  @action: Increases the Int32 value x by N.
  @note: Returns x before increasing it with N!
 [==============================================================================}
-function Int32_Increase(var x: Int32; const N: Int32 = 1): Int32; cdecl; inline;
+function Int32_Increase(var x: Int32; const N: Int32 = 1): Int32; cdecl;
 begin
   Result := x;
   x := (x + N);
@@ -60,6 +60,50 @@ function Int32_Decrease(var x: Int32; const N: Int32 = 1): Int32; cdecl;
 begin
   Result := x;
   x := (x - N);
+end;
+
+{==============================================================================]
+ <Int32_Increment>
+ @action: Increases the Int32 value x by N.
+ @note: Returns the increased x!
+[==============================================================================}
+function Int32_Increment(var x: Int32; const N: Int32 = 1): Int32; cdecl;
+begin
+  x := (x + N);
+  Result := x;
+end;
+
+{==============================================================================]
+  <Int32_Decrement>
+ @action: Decreases the Int32 value x by N.
+ @note: Returns the decreased x!
+[==============================================================================}
+function Int32_Decrement(var x: Int32; const N: Int32 = 1): Int32; cdecl;
+begin
+  x := (x - N);
+  Result := x;
+end;
+
+{==============================================================================]
+ <Int32_Increment>
+ @action: Increases the Int32 value x by N.
+ @note: Returns the increased x!
+[==============================================================================}
+function Int32_Incr(var x: Int32; const N: Int32 = 1): Int32; cdecl;
+begin
+  Inc(x, N);
+  Result := x;
+end;
+
+{==============================================================================]
+  <Int32_Decrement>
+ @action: Decreases the Int32 value x by N.
+ @note: Returns the decreased x!
+[==============================================================================}
+function Int32_Decr(var x: Int32; const N: Int32 = 1): Int32; cdecl;
+begin
+  Dec(x, N);
+  Result := x;
 end;
 
 {==============================================================================]

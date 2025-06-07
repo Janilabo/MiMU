@@ -1,4 +1,18 @@
 {==============================================================================]
+  <String_Chars>
+  @action: Returns characters of string as TCharArray.
+  @note: None.
+[==============================================================================}
+function String_Chars(const str: string): TCharArray; cdecl;
+var
+  i: Int32;
+begin
+  SetLength(Result, Length(str));
+  for i := 0 to High(Result) do
+    Result[i] := str[(i + 1)];
+end;
+
+{==============================================================================]
   <String_At>
   @action: Checks if string s is at index position in str.
   @note: UNSAFE: Minimal checking for efficiency!
@@ -861,10 +875,53 @@ end;
   @action: Returns indexes of string as TIntegerArray.
   @note: With empty string this function returns as []!
 [==============================================================================}
-function String_IDs(const str: string): TIntegerArray; cdecl;
+function String_IDs(const str: string): TIntegerArray; overload; cdecl;
 begin
   if (Length(str) > 0) then
     Result := TRange_TIntegerArray(String_TRange(str))
   else
     SetLength(Result, 0);
 end;
+
+{==============================================================================]
+  <String_IDs>
+  @action: Returns indexes of string as TCharArray.
+  @note: Unsafe method without failsafes, use with care!
+[==============================================================================}
+function String_IDs(const str: string; const IDs: TIntegerArray): TCharArray; overload; cdecl;
+var
+  i: Int32;
+begin
+  SetLength(Result, Length(IDs));
+  for i := 0 to High(Result) do
+    Result[i] := str[IDs[i]];
+end;
+
+{==============================================================================]
+  <String_IDs>
+  @action: Returns indexes of string as TCharArray. Replaces character of str from IDs with item.
+  @note: Unsafe method without failsafes, use with care!
+[==============================================================================}
+function String_IDs(const str: string; const IDs: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
+var
+  i: Int32;
+begin
+  Result := String_Chars(str);
+  for i := 0 to High(IDs) do
+    Result[(IDs[i] - 1)] := item;
+end;
+
+{==============================================================================]
+  <String_IDs>
+  @action: Returns indexes of string as TCharArray. Replaces character of str from IDs with item.
+  @note: Unsafe method without failsafes, use with care!
+[==============================================================================}
+function String_IDs(const str: string; const IDs: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
+var
+  i, l: Int32;
+begin
+  Result := String_Chars(str);
+  l := Length(items);
+  for i := 0 to High(IDs) do
+    Result[(IDs[i] - 1)] := items[(i mod l)];	
+end;  
