@@ -449,6 +449,7 @@ function TPointArray_FloodFill(const arr: TPointArray; const start: TPoint; cons
 function TPointArray_FloodFill(const arr: TPointArray; const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; cdecl;
 
 function TRangeArray_TIntegerArray(const arr: TRangeArray): TIntegerArray; cdecl;
+function TRangeArray_T2DIntegerArray(const arr: TRangeArray): T2DIntegerArray; cdecl;
 
 function TArray_Add(const arr: TIntegerArray; const item: Int32): TIntegerArray; overload; cdecl;
 function TArray_Add(const arr: TDoubleArray; const item: Double): TDoubleArray; overload; cdecl;
