@@ -1,4 +1,4 @@
-                                    { MiMU is Massive Unit for Free Pascal )
+                                            { MiMU is Massive Unit )                                                                                                                         
  ╔╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╗
  ╠╬╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╬╣
  ╠╣                                                                                                           ╠╣
@@ -28,7 +28,7 @@
  ╠╣                                                                                                           ╠╣
  ╠╬╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╬╣
  ╚╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╝ 
- (v0.31}
+                                             ( ..for Free Pascal }
  
  unit MiMU;
 
@@ -44,7 +44,7 @@ uses
   classes, sysutils, math;
 
 const
-  MiMU_VERSION = 0.31;
+  MiMU_VERSION_NUMBER = 0.32;
 
 type
   TIntegerArray = array of Integer;
@@ -72,6 +72,8 @@ type
   end;
   TRangeArray = array of TRange;
   T2DRangeArray = array of TRangeArray;
+  
+function MiMU_Version: Double; cdecl;
 
 operator+(const a, b: TPoint): TPoint;
 operator+(const a, b: TBox): TBox;
@@ -1307,6 +1309,11 @@ function T2DArray_Merge(const arr: T2DBoxArray): TBoxArray; overload; cdecl;
 function T2DArray_Merge(const arr: T2DRangeArray): TRangeArray; overload; cdecl;
   
 implementation
+
+function MiMU_Version: Double; cdecl;
+begin
+  Result := MiMU_VERSION_NUMBER;
+end;
 
 operator+(const a, b: TPoint): TPoint;
 begin
