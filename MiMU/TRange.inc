@@ -33,7 +33,7 @@ end;
   @action: Create a TRange with start and stop
   @note: None.
 [==============================================================================}
-function TRange_Create(const start: Int32 = 0; const stop: Int32 = 0): TRange; cdecl;
+function TRange_Create(const start: Integer = 0; const stop: Integer = 0): TRange; cdecl;
 begin
   Result.start := start;
   Result.stop := stop;
@@ -44,7 +44,7 @@ end;
   @action: Create a TRange with start and stop, using Min and Max for safety.
   @note: None.
 [==============================================================================}
-function TRange_Build(const start: Int32 = 0; const stop: Int32 = 0): TRange; cdecl;
+function TRange_Build(const start: Integer = 0; const stop: Integer = 0): TRange; cdecl;
 begin
   Result.start := Min(start, stop);
   Result.stop := Max(stop, start);
@@ -68,7 +68,7 @@ end;
   @action: Returns size of the given range.
   @note: None.
 [==============================================================================}
-function TRange_Size(const range: TRange): Int32; cdecl;
+function TRange_Size(const range: TRange): Integer; cdecl;
 begin
   Result := (Abs(range.stop - range.start) + 1);
 end;
@@ -78,7 +78,7 @@ end;
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
-function TRange_Length(const range: TRange): Int32; cdecl;
+function TRange_Length(const range: TRange): Integer; cdecl;
 begin
   if (range.start > range.stop) then
     Result := ((range.start - range.stop) + 1)
@@ -91,7 +91,7 @@ end;
   @action: Returns minimum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange_Min(const range: TRange): Int32; cdecl;
+function TRange_Min(const range: TRange): Integer; cdecl;
 begin
   Result := Min(range.start, range.stop);
 end;
@@ -101,7 +101,7 @@ end;
   @action: Returns minimum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange_Minimum(const range: TRange): Int32; cdecl;
+function TRange_Minimum(const range: TRange): Integer; cdecl;
 begin
   if (range.stop > range.start) then
     Result := range.start
@@ -114,7 +114,7 @@ end;
   @action: Returns maximum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange_Max(const range: TRange): Int32; cdecl;
+function TRange_Max(const range: TRange): Integer; cdecl;
 begin
   Result := Max(range.stop, range.start);
 end;
@@ -124,7 +124,7 @@ end;
   @action: Returns maximum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange_Maximum(const range: TRange): Int32; cdecl;
+function TRange_Maximum(const range: TRange): Integer; cdecl;
 begin
   if (range.start < range.stop) then
     Result := range.stop
@@ -139,7 +139,7 @@ end;
 [==============================================================================}
 function TRange_Digits(const range: TRange): TIntegerArray; cdecl;
 var
-  i, s: Int32;
+  i, s: Integer;
 begin
   s := Sign(range.stop - range.start);
   SetLength(Result, (Abs(range.stop - range.start) + 1));
@@ -154,7 +154,7 @@ end;
 [==============================================================================}
 function TRange_Ints(const range: TRange): TIntegerArray; cdecl;
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   l := (Abs(range.stop - range.start) + 1);
   SetLength(Result, l);
@@ -170,17 +170,17 @@ end;
 
 function TRange_Values(const range: TRange): TIntegerArray; cdecl;
 var
-  i, r: Int32;
+  i, r: Integer;
 begin
   r := 0;
   SetLength(Result, TRange_Size(range));
   case TRange_Ascending(range) of
     False:
     for i := range.start downto range.stop do
-      Result[Int32_Inc(r)] := i;
+      Result[Integer_Inc(r)] := i;
     True:
     for i := range.start to range.stop do
-      Result[Int32_Inc(r)] := i;
+      Result[Integer_Inc(r)] := i;
   end;
 end;
 
@@ -191,7 +191,7 @@ end;
 [==============================================================================}
 function TRange_TIntegerArray(const range: TRange): TIntegerArray; cdecl;
 var
-  i, l, d: Int32;
+  i, l, d: Integer;
 begin
   l := TRange_Length(range);
   SetLength(Result, l);
@@ -246,7 +246,7 @@ end;
 function TRange_Intersection(const a, b: TRange; const null: TRange): TRange; cdecl;
 var
   s, t: TRange;
-  x, y: Int32;
+  x, y: Integer;
 begin
   s := TRange_Normalize(a);
   t := TRange_Normalize(b);
@@ -266,7 +266,7 @@ end;
 function TRange_Intersect(const a, b: TRange; var intersection: TRange): Boolean; cdecl;
 var
   s, t: TRange;
-  x, y: Int32;
+  x, y: Integer;
 begin
   s := TRange_Normalize(a);
   t := TRange_Normalize(b);
@@ -293,7 +293,7 @@ end;
   @action: Returns shift of range r by delta.
   @note: None.
 [==============================================================================}
-function TRange_Shift(const range: TRange; const delta: Int32): TRange; cdecl;
+function TRange_Shift(const range: TRange; const delta: Integer): TRange; cdecl;
 begin
   Result := TRange_Create((range.start + delta), (range.stop + delta));
 end;
@@ -303,7 +303,7 @@ end;
   @action: Returns True if range contains x-value.
   @note: None.
 [==============================================================================}
-function TRange_Contains(const range: TRange; const x: Int32): Boolean; overload; cdecl;
+function TRange_Contains(const range: TRange; const x: Integer): Boolean; overload; cdecl;
 begin
   Result := ((x >= Min(range.start, range.stop)) and (x <= Max(range.stop, range.start)));
 end;
@@ -336,7 +336,7 @@ end;
 [==============================================================================}
 function TRange_Reverse(var range: TRange): Boolean; cdecl;
 var
-  s: Int32;
+  s: Integer;
 begin
   Result := (range.start <> range.stop);
   if not Result then
@@ -416,7 +416,7 @@ end;
   @action: Returns range with start and stop with maximum value.
   @note: Makes sure neither start or stop is higher than maximum.
 [==============================================================================}
-function TRange_ClampMax(const range: TRange; const maximum: Int32): TRange; cdecl;
+function TRange_ClampMax(const range: TRange; const maximum: Integer): TRange; cdecl;
 begin
   if (range.start > maximum) then
     Result.start := maximum
@@ -433,7 +433,7 @@ end;
   @action: Returns range with start and stop with minimum value.
   @note: Makes sure neither start or stop is lower than minimum.
 [==============================================================================}
-function TRange_ClampMin(const range: TRange; const minimum: Int32): TRange; cdecl;
+function TRange_ClampMin(const range: TRange; const minimum: Integer): TRange; cdecl;
 begin
   if (range.start < minimum) then
     Result.start := minimum
@@ -465,7 +465,7 @@ end;
   @action: Ensures range start and stop stays within minimum.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
-function TRange_RestrictMin(var range: TRange; const minimum: Int32): Boolean; cdecl;
+function TRange_RestrictMin(var range: TRange; const minimum: Integer): Boolean; cdecl;
 var
   e: TRange;
 begin
@@ -480,7 +480,7 @@ end;
   @action: Ensures range start and stop stays within maximum.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
-function TRange_RestrictMax(var range: TRange; const maximum: Int32): Boolean; cdecl;
+function TRange_RestrictMax(var range: TRange; const maximum: Integer): Boolean; cdecl;
 var
   e: TRange;
 begin
@@ -506,7 +506,7 @@ end;
   @action: Ensures range start and stop stays within minimum.
   @note: Alternative for TRange_ClampMin.
 [==============================================================================}
-function TRange_ClipMin(const range: TRange; minimum: Int32): TRange;
+function TRange_ClipMin(const range: TRange; minimum: Integer): TRange;
 begin
   Result.start := Max(range.start, minimum);
   Result.stop := Max(range.stop, minimum);
@@ -517,7 +517,7 @@ end;
   @action: Ensures range start and stop stays within maximum.
   @note: Alternative for TRange_ClampMax.
 [==============================================================================}
-function TRange_ClipMax(const range: TRange; maximum: Int32): TRange;
+function TRange_ClipMax(const range: TRange; maximum: Integer): TRange;
 begin
   Result.start := Min(range.start, maximum);
   Result.stop := Min(range.stop, maximum);
@@ -528,9 +528,9 @@ end;
   @action: Distributes range to TRangeArray by amount of parts
   @note: None.
 [==============================================================================}
-function TRange_Distribute(const range: TRange; const parts: Int32): TRangeArray; cdecl;
+function TRange_Distribute(const range: TRange; const parts: Integer): TRangeArray; cdecl;
 var
-  i, s, e, a, b, p: Int32;
+  i, s, e, a, b, p: Integer;
   r: TRange;
 begin
   if (parts > 0) then
@@ -561,9 +561,9 @@ end;
   @action: Partitions range to TRangeArray by size of parts
   @note: None.
 [==============================================================================}
-function TRange_Partition(const range: TRange; const size: Int32): TRangeArray; cdecl;
+function TRange_Partition(const range: TRange; const size: Integer): TRangeArray; cdecl;
 var
-  a, b, l: Int32;
+  a, b, l: Integer;
   r: TRange;
 begin
   l := 0;
@@ -591,9 +591,9 @@ end;
   @action: Partitions range to TRangeArray by size of parts
   @note: Alternative for TRange_Partition.
 [==============================================================================}
-function TRange_Divide(const range: TRange; const size: Int32): TRangeArray; cdecl;
+function TRange_Divide(const range: TRange; const size: Integer): TRangeArray; cdecl;
 var
-  a, b, i: Int32;
+  a, b, i: Integer;
   r: TRange;
 begin
   if (size > 0) then
@@ -643,7 +643,7 @@ end;
   @action: Returns minimum distance between ranges a and b.
   @note: If ranges overlap, distance is 0.
 [==============================================================================}
-function TRange_Distance(const a, b: TRange): Int32; cdecl;
+function TRange_Distance(const a, b: TRange): Integer; cdecl;
 var
   r1, r2: TRange;
 begin
@@ -663,7 +663,7 @@ end;
   @action: Returns Hausdorff-based distance between ranges a and b.
   @note: None.
 [==============================================================================}
-function TRange_DistHausdorff(const a, b: TRange): Int32; cdecl;
+function TRange_DistHausdorff(const a, b: TRange): Integer; cdecl;
 var
   i, j: TRange;
 begin
@@ -677,7 +677,7 @@ end;
  @action: Returns true if range contains x-value.
  @note: None.
 [==============================================================================}
-function TRange_Digit(const range: TRange; const x: Int32): Boolean; cdecl; inline;
+function TRange_Digit(const range: TRange; const x: Integer): Boolean; cdecl; inline;
 begin
   Result := (((x >= range.start) and (x <= range.stop)) or ((x >= range.stop) and (x <= range.start)));
 end;
@@ -688,7 +688,7 @@ end;
  @action: Returns true if range contains x-value.
  @note: None.
 [==============================================================================}
-function TRange_Value(const range: TRange; const x: Int32): Boolean; cdecl; inline;
+function TRange_Value(const range: TRange; const x: Integer): Boolean; cdecl; inline;
 begin
   Result := not (((x < range.start) and (x < range.stop)) or ((x > range.stop) and (x > range.start)));
 end;
@@ -700,7 +700,7 @@ end;
 [==============================================================================}
 function TRange_Middle(const range: TRange): Double; cdecl;
 var
-  s: Int32;
+  s: Integer;
 begin
   s := (TRange_Max(range) + TRange_Min(range));
   Result := (s div 2);
@@ -713,7 +713,7 @@ end;
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
-function TRange_Center(const range: TRange): Int32; cdecl;
+function TRange_Center(const range: TRange): Integer; cdecl;
 begin
   Result := ((TRange_Max(range) + TRange_Min(range)) div 2);
 end;

@@ -5,7 +5,7 @@
 [==============================================================================}
 function String_Chars(const str: string): TCharArray; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   SetLength(Result, Length(str));
   for i := 0 to High(Result) do
@@ -17,9 +17,9 @@ end;
   @action: Checks if string s is at index position in str.
   @note: UNSAFE: Minimal checking for efficiency!
 [==============================================================================}
-function String_At(const str, s: string; const index: Int32 = 1): Boolean; cdecl; inline;
+function String_At(const str, s: string; const index: Integer = 1): Boolean; cdecl; inline;
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   l := Length(s);
   for i := 1 to l do
@@ -33,9 +33,9 @@ end;
   @action: Fast method for getting substring from string index position by size.
   @note: UNSAFE! Minimal checks for efficiency.
 [==============================================================================}
-function String_Get(const str: string; const index: Int32; const count: Int32): string; cdecl; inline;
+function String_Get(const str: string; const index: Integer; const count: Integer): string; cdecl; inline;
 var
-  i: Int32;
+  i: Integer;
 begin
   SetLength(Result, count);
   for i := 1 to count do
@@ -47,9 +47,9 @@ end;
   @action: Method for getting substring from string index position by count.
   @note: Contains some failsafes, alternative for String_Get.
 [==============================================================================}
-function String_Pick(const str: string; const index: Int32; const count: Int32 = 2147483647): string; cdecl;
+function String_Pick(const str: string; const index: Integer; const count: Integer = 2147483647): string; cdecl;
 var
-  s, i, p: Int32;
+  s, i, p: Integer;
 begin
   i := Max(index, 1);
   s := Min(((Length(str) - i) + 1), count);
@@ -63,9 +63,9 @@ end;
   @action: Returns first position of s string in str.
   @note: Starts search from index position.!
 [==============================================================================}
-function String_PosL(const str, s: string; const index: Int32 = 1): Int32; cdecl;
+function String_PosL(const str, s: string; const index: Integer = 1): Integer; cdecl;
 var
-  l: Int32;
+  l: Integer;
 begin
   l := Length(s);
   for Result := Max(1, index) to ((Length(str) - l) + 1) do
@@ -79,9 +79,9 @@ end;
   @action: Returns last position of s string in str.
   @note: Starts search from index position.!
 [==============================================================================}
-function String_PosR(const str, s: string; const index: Int32 = 2147483647): Int32; cdecl;
+function String_PosR(const str, s: string; const index: Integer = 2147483647): Integer; cdecl;
 var
-  l: Int32;
+  l: Integer;
 begin
   l := Length(s);
   for Result := Min(index, ((Length(str) - l) + 1)) downto 1 do
@@ -95,9 +95,9 @@ end;
   @action: Returns last position of s string in str.
   @note: Starts search from index position.!
 [==============================================================================}
-function String_Pos(const str, s: string; const index: Int32 = 1): Int32; cdecl;
+function String_Pos(const str, s: string; const index: Integer = 1): Integer; cdecl;
 var
-  a, b: Int32;
+  a, b: Integer;
 begin
   a := Length(str);
   b := Length(s);
@@ -113,9 +113,9 @@ end;
   @action: Returns last position of s string in str.
   @note: Starts search from index position. -1 means str length!
 [==============================================================================}
-function String_PosLast(const str, s: string; const index: Int32 = 2147483647): Int32; cdecl;
+function String_PosLast(const str, s: string; const index: Integer = 2147483647): Integer; cdecl;
 var
-  a, b, o: Int32;
+  a, b, o: Integer;
 begin
   a := Length(str);
   b := Length(s);
@@ -136,9 +136,9 @@ end;
            If s doesn't exist in str, Result will be set as 0.
   @note: Supports custom index as scan start.
 [==============================================================================}
-function String_Position(const str, s: string; const index: Int32 = 1): Int32; cdecl;
+function String_Position(const str, s: string; const index: Integer = 1): Integer; cdecl;
 var
-  a, b, i: Int32;
+  a, b, i: Integer;
 begin
   if (index < 2) then
     Exit(Pos(s, str));
@@ -161,9 +161,9 @@ end;
   @action: Returns true if s can be found in str.
   @note: Starts search from index position.!
 [==============================================================================}
-function String_Contains(const str, s: string; const index: Int32 = 1): Boolean; cdecl;
+function String_Contains(const str, s: string; const index: Integer = 1): Boolean; cdecl;
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   l := Length(s);
   for i := Max(1, index) to ((Length(str) - l) + 1) do
@@ -177,9 +177,9 @@ end;
   @action: Returns true if s can be found in str.
   @note: Starts backwards search from index position.!
 [==============================================================================}
-function String_Includes(const str, s: string; const index: Int32 = 2147483647): Boolean; cdecl;
+function String_Includes(const str, s: string; const index: Integer = 2147483647): Boolean; cdecl;
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   l := Length(s);
   for i := Min(index, ((Length(str) - l) + 1)) downto 1 do
@@ -193,9 +193,9 @@ end;
  @action: Returns the string between s1 and s2 in str.
  @note: Supports offset (index).
 [==============================================================================}
-function String_Between(const str, s1, s2: string; const index: Int32 = 1): string; cdecl;
+function String_Between(const str, s1, s2: string; const index: Integer = 1): string; cdecl;
 var
-  b, e, l: Int32;
+  b, e, l: Integer;
 begin
   b := String_Pos(str, s1, index);
   if (b = 0) then
@@ -212,9 +212,9 @@ end;
   @action: Simply returns the count of s in str.
   @note: Contains support for overlapping (overlap)
 [==============================================================================}
-function String_Count(const str, s: string; const overlap: Boolean = True; const index: Int32 = 1): Int32; cdecl;
+function String_Count(const str, s: string; const overlap: Boolean = True; const index: Integer = 1): Integer; cdecl;
 var
-  p, o: Int32;
+  p, o: Integer;
   c: string;
 begin
   Result := 0;
@@ -233,9 +233,9 @@ end;
   @action: Simply returns the amount of s in str.
   @note: Contains support for overlapping (overlap)
 [==============================================================================}
-function String_Amount(const str, s: string; const overlap: Boolean = True; const index: Int32 = 2147483647): Int32; cdecl;
+function String_Amount(const str, s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer; cdecl;
 var
-  p, o: Int32;
+  p, o: Integer;
   c: string;
 begin
   Result := 0;
@@ -254,7 +254,7 @@ end;
   @action: Returns string from left with count of characters.
   @note: None
 [==============================================================================}
-function String_FromLeft(const str: string; const count: Int32; const index: Int32 = 1): string; cdecl;
+function String_FromLeft(const str: string; const count: Integer; const index: Integer = 1): string; cdecl;
 begin
   Result := Copy(str, index, count);
 end;
@@ -264,7 +264,7 @@ end;
   @action: Returns string from right with count of characters.
   @note: None
 [==============================================================================}
-function String_FromRight(const str: string; const count: Int32; const index: Int32 = 2147483647): string; cdecl;
+function String_FromRight(const str: string; const count: Integer; const index: Integer = 2147483647): string; cdecl;
 begin
   Result := Copy(str, ((Min(Length(str), index) - count) + 1), count);
 end;
@@ -274,9 +274,9 @@ end;
   @action: Explodes str with delimiter (d).
   @note: Explodes up to (maximum) limit. Limit as -1 means no limits.
 [==============================================================================}
-function String_Explode(const str, d: string; const limit: Int32 = -1): TStringArray; overload; cdecl;
+function String_Explode(const str, d: string; const limit: Integer = -1): TStringArray; overload; cdecl;
 var
-  a, b, l, p, r, s, t: Int32;
+  a, b, l, p, r, s, t: Integer;
   m: Boolean;
 begin
   SetLength(Result, 1);
@@ -322,7 +322,7 @@ end;
   @action: Explodes str with delimiters (d).
   @note: Explodes up to (maximum) limit. Limit as -1 means no limits.
 [==============================================================================}
-function String_Explode(const str: string; const d: TStringArray; const limit: Int32 = -1): TStringArray; overload; cdecl;
+function String_Explode(const str: string; const d: TStringArray; const limit: Integer = -1): TStringArray; overload; cdecl;
 var
   i, j, p, l, f, c: Integer;
   s, x: string;
@@ -379,9 +379,9 @@ end;
   @action: Returns slice of string with a and b.
   @note: Supports reversed slice, when a is higher than b.
 [==============================================================================}
-function String_Slice(const str: string; const a, b: Int32): string; cdecl;
+function String_Slice(const str: string; const a, b: Integer): string; cdecl;
 var
-  i, l, x, y: Int32;
+  i, l, x, y: Integer;
 begin
   l := Length(str);
   if (l > 0) then
@@ -415,9 +415,9 @@ end;
   @action: Returns chunk of string between a and b.
   @note: Supports reversed chunk, when a is higher than b.
 [==============================================================================}
-function String_Chunk(const str: string; const a, b: Int32): string; cdecl;
+function String_Chunk(const str: string; const a, b: Integer): string; cdecl;
 var
-  i, l, x, y: Int32;
+  i, l, x, y: Integer;
 begin
   l := Length(str);
   x := a;
@@ -470,7 +470,7 @@ end;
 [==============================================================================}
 function String_Flip(const str: string): string; cdecl;
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   l := Length(str);
   SetLength(Result, l);
@@ -485,7 +485,7 @@ end;
 [==============================================================================}
 function String_Reversed(const str: string): string; cdecl;
 var
-  i, l, m: Int32;
+  i, l, m: Integer;
 begin
   l := Length(str);
   if (l > 1) then
@@ -520,7 +520,7 @@ end;
 [==============================================================================}
 function String_EndsWith(const str, s: string): Boolean; cdecl;
 var
-  l, t: Int32;
+  l, t: Integer;
 begin
   l := Length(s);
   t := Length(str);
@@ -532,9 +532,9 @@ end;
   @action: Returns true if s was found in str and it was set as the beginning of the str.
   @note: None
 [==============================================================================}
-function String_Begin(var str: string; const s: string; const index: Int32 = 1): Boolean; cdecl;
+function String_Begin(var str: string; const s: string; const index: Integer = 1): Boolean; cdecl;
 var
-  p: Int32;
+  p: Integer;
 begin
   p := String_Pos(str, s, index);
   Result := (p > 0);
@@ -547,9 +547,9 @@ end;
   @action: Returns true if s was found in str and it was set as the ending of the str.
   @note: Supports offset.
 [==============================================================================}
-function String_End(var str: string; const s: string; const index: Int32 = 2147483647): Boolean; cdecl;
+function String_End(var str: string; const s: string; const index: Integer = 2147483647): Boolean; cdecl;
 var
-  p: Int32;
+  p: Integer;
 begin
   p := String_PosLast(str, s, index);
   Result := (p > 0);
@@ -562,9 +562,9 @@ end;
   @action: Returns string (with count) that is behind the index in str.
   @note: None
 [==============================================================================}
-function String_Behind(const str: string; const index, count: Int32): string; cdecl;
+function String_Behind(const str: string; const index, count: Integer): string; cdecl;
 var
-  l, r, c: Int32;
+  l, r, c: Integer;
 begin
   l := Length(str);
   if ((l > 0) and (index > 1) and (count > 0)) then
@@ -587,9 +587,9 @@ end;
   @action: Returns string (with count) that is behind the index in str.
   @note: None
 [==============================================================================}
-function String_Ahead(const str: string; const index, count: Int32): string; cdecl;
+function String_Ahead(const str: string; const index, count: Integer): string; cdecl;
 var
-  l, c, i: Int32;
+  l, c, i: Integer;
 begin
   l := Length(str);
   if ((l > 0) and (index <= l) and (count > 0)) then
@@ -613,9 +613,9 @@ end;
   @action: Returns string that is found after s in str.
   @note: None
 [==============================================================================}
-function String_After(const str, s: string; const index: Int32 = 1): string; cdecl;
+function String_After(const str, s: string; const index: Integer = 1): string; cdecl;
 var
-  p, b, a: Int32;
+  p, b, a: Integer;
 begin
   b := Length(s);
   a := Length(str);
@@ -635,9 +635,9 @@ end;
   @action: Returns string that is found before s in str.
   @note: None
 [==============================================================================}
-function String_Before(const str, s: string; const index: Int32 = 1): string; cdecl;
+function String_Before(const str, s: string; const index: Integer = 1): string; cdecl;
 var
-  p, l: Int32;
+  p, l: Integer;
 begin
   l := Length(str);
   if ((Length(s) < l)) then
@@ -656,9 +656,9 @@ end;
   @action: Returns string that is found after last s in str.
   @note: Supports index.
 [==============================================================================}
-function String_AfterLast(const str, s: string; const index: Int32 = 2147483647): string; cdecl;
+function String_AfterLast(const str, s: string; const index: Integer = 2147483647): string; cdecl;
 var
-  p: Int32;
+  p: Integer;
 begin
   p := String_PosLast(str, s, index);
   if (p > 0) then
@@ -672,9 +672,9 @@ end;
   @action: Returns string that is found before last s in str.
   @note: None
 [==============================================================================}
-function String_BeforeLast(const str, s: string; const index: Int32 = 2147483647): string; cdecl;
+function String_BeforeLast(const str, s: string; const index: Integer = 2147483647): string; cdecl;
 var
-  p: Int32;
+  p: Integer;
 begin
   p := String_PosLast(str, s, index);
   if (p > 0) then
@@ -688,9 +688,9 @@ end;
   @action: Returns str centered with fill characters where size is the length of the Result.
   @note: Supports custom filling character by fill!
 [==============================================================================}
-function String_Center(const str: string; const size: Int32; const fill: Char = #32): string; cdecl;
+function String_Center(const str: string; const size: Integer; const fill: Char = #32): string; cdecl;
 var
-  l, p: Int32;
+  l, p: Integer;
 begin
   l := Length(str);
   if (l >= size) then
@@ -721,9 +721,9 @@ end;
   @action: Returns str * x (duplicated) times. Example: ('ha', 3) => 'hahaha'
   @note: None
 [==============================================================================}
-function String_Duplicate(const str: string; const x: Int32 = 2): string; cdecl;
+function String_Duplicate(const str: string; const x: Integer = 2): string; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   Result := '';
   for i := 1 to x do
@@ -736,9 +736,9 @@ end;
            Places glue between the str positions to result.
   @note: Supports custom glue addition between duplicated str's.
 [==============================================================================}
-function String_Duplicated(const str: string; const x: Int32; const glue: string): string; cdecl;
+function String_Duplicated(const str: string; const x: Integer; const glue: string): string; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   Result := '';
   if (x > 0) then
@@ -756,7 +756,7 @@ end;
   @action: Compares str with T.
   @note: Results: 0=EQUAL, 1=str>T, -1=str<T
 [==============================================================================}
-function String_Compare(const str, T: string): Int32; cdecl; inline;
+function String_Compare(const str, T: string): Integer; cdecl; inline;
 begin
   if (str = T) then
     Exit(0);
@@ -783,7 +783,7 @@ end;
 [==============================================================================}
 function String_PregQuote(const str: string; const regex: string = '.\+*?[^]$(){}=!<>|:-'): string; cdecl;
 var
-  l, i: Int32;
+  l, i: Integer;
 begin
   Result := str;
   l := Length(str);
@@ -890,7 +890,7 @@ end;
 [==============================================================================}
 function String_IDs(const str: string; const IDs: TIntegerArray): TCharArray; overload; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   SetLength(Result, Length(IDs));
   for i := 0 to High(Result) do
@@ -904,7 +904,7 @@ end;
 [==============================================================================}
 function String_IDs(const str: string; const IDs: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   Result := String_Chars(str);
   for i := 0 to High(IDs) do
@@ -918,7 +918,7 @@ end;
 [==============================================================================}
 function String_IDs(const str: string; const IDs: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   Result := String_Chars(str);
   l := Length(items);

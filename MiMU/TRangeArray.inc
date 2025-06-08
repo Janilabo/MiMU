@@ -5,7 +5,7 @@
 [==============================================================================}
 function TRangeArray_TIntegerArray(const arr: TRangeArray): TIntegerArray; cdecl;
 var
-  i, j, l: Int32;
+  i, j, l: Integer;
   r: TIntegerArray;
 begin
   l := 0;
@@ -16,7 +16,7 @@ begin
   begin
     r := TRange_TIntegerArray(arr[i]);
     for j := High(r) downto 0 do
-      Result[Int32_Decr(l)] := r[j];
+      Result[Integer_Decr(l)] := r[j];
   end;
 end;
 
@@ -27,7 +27,7 @@ end;
 [==============================================================================}
 function TRangeArray_T2DIntegerArray(const arr: TRangeArray): T2DIntegerArray; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   SetLength(Result, Length(arr));
    for i := 0 to High(arr) do

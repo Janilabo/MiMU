@@ -5,7 +5,7 @@
 [==============================================================================}
 function TPointArray_Bounds(const arr: TPointArray): TBox; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   if (High(arr) = -1) then
     Exit(TBox_Form(-2147483648));
@@ -30,7 +30,7 @@ end;
   @action: Removes duplicates from arr.
   @note: Returns number of duplicate items that were removed from arr.
 [==============================================================================}
-function TPointArray_Unique(var arr: TPointArray): Int32; cdecl;
+function TPointArray_Unique(var arr: TPointArray): Integer; cdecl;
 var
   i, r, l: Integer;
   m: T2DBooleanArray;

@@ -6,7 +6,7 @@
 [==============================================================================}
 function TIntegerArray_Descending(const arr: TIntegerArray): Boolean; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   Result := False;
   for i := 1 to High(arr) do
@@ -24,7 +24,7 @@ end;
 [==============================================================================}
 function TIntegerArray_Ascending(const arr: TIntegerArray): Boolean; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   Result := False;
   for i := 1 to High(arr) do
@@ -41,7 +41,7 @@ end;
 [==============================================================================}
 function TIntegerArray_Bounds(const arr: TIntegerArray): TRange; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   if (High(arr) > -1) then
     Result := TRange_Create(arr[0], arr[0]);
@@ -60,7 +60,7 @@ end;
 [==============================================================================}
 function TIntegerArray_TRange(const arr: TIntegerArray): TRange; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   if (High(arr) = -1) then
     Exit(TRange_Create(-2147483648, -2147483648));
@@ -77,9 +77,9 @@ end;
   @action: Removes duplicates from array arr and returns the count of deleted items.
   @note: Not recommended with very large arrays
 [==============================================================================}
-function TIntegerArray_Unique(var arr: TIntegerArray): Int32; cdecl;
+function TIntegerArray_Unique(var arr: TIntegerArray): Integer; cdecl;
 var
-  x, y, z: Int32;
+  x, y, z: Integer;
   r: TRange;
   b: TBooleanArray;
 begin
@@ -110,7 +110,7 @@ end;
 [==============================================================================}
 function TIntegerArray_Uniqued(const arr: TIntegerArray): TIntegerArray; cdecl;
 var
-  x, y, z: Int32;
+  x, y, z: Integer;
   r: TRange;
   b: TBooleanArray;
 begin
@@ -144,7 +144,7 @@ var
   r: TRange;
 begin
   y := High(arr);
-  case Int32_Compare(y, 0) of
+  case Integer_Compare(y, 0) of
     1:
     begin
       r := TRange_Create(arr[0], arr[0]);
@@ -172,9 +172,9 @@ end;
   @action: Returns array minimum value.
   @note: None.
 [==============================================================================}
-function TIntegerArray_Min(const arr: TIntegerArray): Int32; cdecl;
+function TIntegerArray_Min(const arr: TIntegerArray): Integer; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   if (High(arr) > -1) then
     Result := arr[0];
@@ -188,9 +188,9 @@ end;
   @action: Returns array maximum value.
   @note: None.
 [==============================================================================}
-function TIntegerArray_Max(const arr: TIntegerArray): Int32; cdecl;
+function TIntegerArray_Max(const arr: TIntegerArray): Integer; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   if (High(arr) > -1) then
     Result := arr[0];
@@ -204,9 +204,9 @@ end;
   @action: Returns array INDEX with minimum value.
   @note: Supports reversed order (last min index) with ascending as False.
 [==============================================================================}
-function TIntegerArray_Mini(const arr: TIntegerArray; const ascending: Boolean = True; const start: Int32 = -1): Int32; overload; cdecl;
+function TIntegerArray_Mini(const arr: TIntegerArray; const ascending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
 var
-  h, i, s: Int32;
+  h, i, s: Integer;
 begin
   h := High(arr);
   if ((h = -1) or (ascending and (start > h)) or ((not ascending) and (start < 0))) then
@@ -231,7 +231,7 @@ begin
   end;
 end;
 
-function TIntegerArray_Mini(const arr: TIntegerArray; const start: Int32; const ascending: Boolean = True): Int32; overload; cdecl;
+function TIntegerArray_Mini(const arr: TIntegerArray; const start: Integer; const ascending: Boolean = True): Integer; overload; cdecl;
 begin
   Result := TIntegerArray_Mini(arr, ascending, start);
 end;
@@ -241,9 +241,9 @@ end;
   @action: Returns array INDEX with maximum value.
   @note: Supports reversed order (last max index) with ascending as False.
 [==============================================================================}
-function TIntegerArray_Maxi(const arr: TIntegerArray; const ascending: Boolean = True; const start: Int32 = -1): Int32; overload; cdecl;
+function TIntegerArray_Maxi(const arr: TIntegerArray; const ascending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
 var
-  h, i, s: Int32;
+  h, i, s: Integer;
 begin
   h := High(arr);
   if ((h = -1) or (ascending and (start > h)) or ((not ascending) and (start < 0))) then
@@ -268,7 +268,7 @@ begin
   end;
 end;
 
-function TIntegerArray_Maxi(const arr: TIntegerArray; const start: Int32; const ascending: Boolean = True): Int32; overload; cdecl;
+function TIntegerArray_Maxi(const arr: TIntegerArray; const start: Integer; const ascending: Boolean = True): Integer; overload; cdecl;
 begin
   Result := TIntegerArray_Maxi(arr, ascending, start);
 end;
@@ -280,7 +280,7 @@ end;
 [==============================================================================}
 function TIntegerArray_Sum(const arr: TIntegerArray): Int64; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   Result := 0;
   for i := 0 to High(arr) do
@@ -295,7 +295,7 @@ end;
 function TIntegerArray_Density(const arr: TIntegerArray): Double; cdecl;
 var
   a: TIntegerArray;
-  c, i, j, h, l: Int32;
+  c, i, j, h, l: Integer;
   u: Boolean;
 begin
   if (Length(arr) = 0) then
@@ -342,12 +342,12 @@ end;
  @action: The value that occurs most frequently in arr.
  @note: None
 [==============================================================================}
-function TIntegerArray_Mode(const arr: TIntegerArray): Int32; cdecl;
+function TIntegerArray_Mode(const arr: TIntegerArray): Integer; cdecl;
 var
   c, a: TIntegerArray;
-  i, j, l: Int32;
+  i, j, l: Integer;
 begin
-  case Int32_Compare(High(arr), 0) of
+  case Integer_Compare(High(arr), 0) of
     1:
     begin
       SetLength(c, 0);
@@ -387,7 +387,7 @@ end;
 function TIntegerArray_Median(const arr: TIntegerArray): Double; cdecl;
 var
   a: TIntegerArray;
-  i, j, n, s: Int32;
+  i, j, n, s: Integer;
 begin
   n := Length(arr);
   if (n = 0) then
@@ -415,7 +415,7 @@ end;
 [==============================================================================}
 function TIntegerArray_Middle(const arr: TIntegerArray): Double; cdecl;
 var
-  l: Int32;
+  l: Integer;
 begin
   l := Length(arr);
   if (l = 0) then
@@ -431,7 +431,7 @@ end;
  @action: The value at the center position of a sorted or unsorted arr.
  @note: None
 [==============================================================================}
-function TIntegerArray_Center(const arr: TIntegerArray): Int32; cdecl;
+function TIntegerArray_Center(const arr: TIntegerArray): Integer; cdecl;
 begin
   if (Length(arr) = 0) then
     Exit(-2147483648);
@@ -444,13 +444,13 @@ end;
  @note: Be careful with values! Try to avoid using too low or high values!
         Such as: -200,000,000 or +200,000,000. Heavy memory-usage could possibly cause crashing.
 [==============================================================================}
-function TIntegerArray_MostFrequent(const arr: TIntegerArray; const null: Int32 = -2147483648): Int32; cdecl;
+function TIntegerArray_MostFrequent(const arr: TIntegerArray; const null: Integer = -2147483648): Integer; cdecl;
 var
-  x, t: Int32;
+  x, t: Integer;
   b: TIntegerArray;
   r: TRange;
 begin
-  case Int32_Compare(High(arr), 0) of
+  case Integer_Compare(High(arr), 0) of
     1:
     begin
       r := TIntegerArray_Bounds(arr);
@@ -477,13 +477,13 @@ end;
  @note: Be careful with values! Try to avoid using too low or high values!
         Such as: -200,000,000 or +200,000,000. Heavy memory-usage could possibly cause crashing.
 [==============================================================================}
-function TIntegerArray_LeastFrequent(const arr: TIntegerArray; const null: Int32 = -2147483648): Int32; cdecl;
+function TIntegerArray_LeastFrequent(const arr: TIntegerArray; const null: Integer = -2147483648): Integer; cdecl;
 var
-  x, t: Int32;
+  x, t: Integer;
   b: TIntegerArray;
   r: TRange;
 begin
-  case Int32_Compare(High(arr), 0) of
+  case Integer_Compare(High(arr), 0) of
     1:
     begin
       r := TIntegerArray_Bounds(arr);
@@ -509,9 +509,9 @@ end;
   @action: Sorts arr with BubbleSort algorithm
   @note: Supports sorting to ascending and descending order. Returns High(arr)!
 [==============================================================================}
-function TIntegerArray_BubbleSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BubbleSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  a, b: Int32;
+  a, b: Integer;
 begin
   Result := High(arr);
   if (Result > 0) then
@@ -526,9 +526,9 @@ end;
   @action: Sorts arr with BubbleSort algorithm - contains some optimization.
   @note: Supports sorting to ascending and descending order. Returns High(arr)!
 [==============================================================================}
-function TIntegerArray_BubbleSort2(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BubbleSort2(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  a, b, o: Int32;
+  a, b, o: Integer;
 begin
   Result := High(arr);
   if (Result > 0) then
@@ -546,9 +546,9 @@ end;
   @action: Sorts arr with BubbleSort algorithm
   @note: Supports sorting to ascending and descending order. Returns High(arr)!
 [==============================================================================}
-function TIntegerArray_BubbleSortOptimized(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BubbleSortOptimized(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  i, j, o: Int32;
+  i, j, o: Integer;
   s: Boolean;
 begin
   Result := High(arr);
@@ -574,19 +574,19 @@ end;
   @action: QuickSort algorithm that is NOT based on recursion.
   @note: non-recursive. Returns High(arr).
 [==============================================================================}
-function TIntegerArray_QuickSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_QuickSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  t, p, o: Int32;
+  t, p, o: Integer;
   s: TRangeArray;
   x, r: TRange;
-  procedure Push(const start, stop: Int32);
+  procedure Push(const start, stop: Integer);
   begin
     Inc(t);
     SetLength(s, (t + 1));
     s[t].start := start;
     s[t].stop := stop;
   end;
-  function Pop(out start, stop: Int32): Boolean;
+  function Pop(out start, stop: Integer): Boolean;
   begin
     if (t < 0) then
     begin
@@ -646,10 +646,10 @@ end;
   @action: 3-way QuickSort algorithm that is NOT based on recursion.
   @note: recursive. Returns High(arr).
 [==============================================================================}
-function TIntegerArray_QuickSort3W(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
-  procedure SortLH(var arr: TIntegerArray; const L, H: Int32; const ascending: Boolean = True);
+function TIntegerArray_QuickSort3W(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+  procedure SortLH(var arr: TIntegerArray; const L, H: Integer; const ascending: Boolean = True);
   var
-    a, b, p, x, o: Int32;
+    a, b, p, x, o: Integer;
   begin
     if (L >= H) then
       Exit;
@@ -685,10 +685,10 @@ end;
   @action: QuickSort algorithm that IS based on recursion.
   @note: recursive. Returns High(arr).
 [==============================================================================}
-function TIntegerArray_QSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
-  procedure QuickSort(var arr: TIntegerArray; const start, stop: Int32; const ascending: Boolean = True);
+function TIntegerArray_QSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+  procedure QuickSort(var arr: TIntegerArray; const start, stop: Integer; const ascending: Boolean = True);
   var
-    p, o: Int32;
+    p, o: Integer;
     s: TRange;
   begin
     if (start < stop) then
@@ -725,9 +725,9 @@ end;
   @action: CoctailSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_CoctailSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_CoctailSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  i, o: Int32;
+  i, o: Integer;
   s: Boolean;
 begin
   Result := High(arr);
@@ -760,9 +760,9 @@ end;
   @action: CoctailSort algorithm for TIntegerArrays.
   @note: CoctailSort v2. Returns High(arr).
 [==============================================================================}
-function TIntegerArray_CoctailSort2(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_CoctailSort2(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  b, e, i, o: Int32;
+  b, e, i, o: Integer;
   s: Boolean;
 begin
   Result := High(arr);
@@ -799,9 +799,9 @@ end;
   @action: CombSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_CombSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_CombSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  i, g, o: Int32;
+  i, g, o: Integer;
   s: Boolean;
 begin
   Result := High(arr);
@@ -831,9 +831,9 @@ end;
   @action: GnomeSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_GnomeSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_GnomeSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  o, p, t: Int32;
+  o, p, t: Integer;
 begin
   Result := High(arr);
   if (Result > 0) then
@@ -856,9 +856,9 @@ end;
   @action: Optimized GnomeSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_GnomeSortOptimized(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_GnomeSortOptimized(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  p, l, o: Int32;
+  p, l, o: Integer;
 begin
   Result := High(arr);
   if (Result > 0) then
@@ -893,9 +893,9 @@ end;
   @action: HeapSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_HeapSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_HeapSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  a, b, r, c, o: Int32;
+  a, b, r, c, o: Integer;
 begin
   Result := High(arr);
   if (Result > 0) then
@@ -946,9 +946,9 @@ end;
   @action: InsertionSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_InsertionSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_InsertionSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  a, b, o: Int32;
+  a, b, o: Integer;
 begin
   Result := High(arr);
   if (Result > 0) then
@@ -969,9 +969,9 @@ end;
   @action: SelectionSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_SelectionSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_SelectionSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  c, t, m, o: Int32;
+  c, t, m, o: Integer;
 begin
   Result := High(arr);
   if (Result > 0) then
@@ -993,9 +993,9 @@ end;
   @action: Bidirectional SelectionSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_SelectionSortBidirectional(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_SelectionSortBidirectional(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  a, b, x, i, t, h, l, s, o: Int32;
+  a, b, x, i, t, h, l, s, o: Integer;
 begin
   Result := High(arr);
   if (Result > 0) then
@@ -1030,7 +1030,7 @@ end;
   @action: Bidirectional SelectionSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_SelectionSortBidirectional2(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_SelectionSortBidirectional2(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
   a, b, x, i, l, s, o: Integer;
 begin
@@ -1061,9 +1061,9 @@ end;
   @action: PancakeSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_PancakeSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_PancakeSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  i, j, l, m, x, o: Int32;
+  i, j, l, m, x, o: Integer;
 begin
   Result := High(arr);
   if (Result > 0 )then
@@ -1092,10 +1092,10 @@ end;
   @action: MergeSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_MergeSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
-  procedure Merge(var arr, tmp: TIntegerArray; const Lo, Hi: Int32; const ascending: Boolean = True);
+function TIntegerArray_MergeSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+  procedure Merge(var arr, tmp: TIntegerArray; const Lo, Hi: Integer; const ascending: Boolean = True);
   var
-    L, R, i, m, o: Int32;
+    L, R, i, m, o: Integer;
   begin
     if (Lo >= Hi) then
       Exit;
@@ -1129,7 +1129,7 @@ function TIntegerArray_MergeSort(var arr: TIntegerArray; const ascending: Boolea
           end;
   end;
 var
-  l: Int32;
+  l: Integer;
   t: TIntegerArray;
 begin
   Result := High(arr);
@@ -1145,10 +1145,10 @@ end;
   @action: Bottom-up MergeSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_MergeSortBU(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_MergeSortBU(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
   t: TIntegerArray;
-  n, w, i, a, b, m, l, r, k: Int32;
+  n, w, i, a, b, m, l, r, k: Integer;
 begin
   Result := High(arr);
   if (Result > 0) then
@@ -1206,9 +1206,9 @@ end;
   @action: ShellSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_ShellSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_ShellSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  x, a, b, l, o: Int32;
+  x, a, b, l, o: Integer;
 begin
   Result := High(arr);
   if (Result > 0) then
@@ -1247,7 +1247,7 @@ end;
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_BSort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
   i, j, a, l, r, m, o: Integer;
 begin
@@ -1278,9 +1278,9 @@ end;
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_BinarySort(var arr: TIntegerArray; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinarySort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
 var
-  j, l, h, m, p, i, a, o: Int32;
+  j, l, h, m, p, i, a, o: Integer;
 begin
   Result := High(arr);
   if (Result > 0) then
@@ -1314,7 +1314,7 @@ end;
 [==============================================================================}
 function TIntegerArray_BinarySorted(const arr: TIntegerArray; const ascending: Boolean = True): TIntegerArray; cdecl;
 var
-  j, l, h, m, p, i, n, a, o: Int32;
+  j, l, h, m, p, i, n, a, o: Integer;
 begin
   n := Length(arr);
   SetLength(Result, n);
@@ -1348,9 +1348,9 @@ end;
   @action: Returns Binary Search Lower Bound based on x-value.
   @note: Works with sorted arrays! (supports both ascending and descending order)
 [==============================================================================}
-function TIntegerArray_BinaryBoundL(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryBoundL(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
 var
-  l, m, h, o: Int32;
+  l, m, h, o: Integer;
 begin
   l := 0;
   h := Length(arr);
@@ -1371,9 +1371,9 @@ end;
   @action: Returns Binary Search Upper Bound based on x-value.
   @note: Works with sorted arrays! (supports both ascending and descending order)
 [==============================================================================}
-function TIntegerArray_BinaryBoundR(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryBoundR(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
 var
-  l, m, h, o: Int32;
+  l, m, h, o: Integer;
 begin
   l := 0;
   h := Length(arr);
@@ -1394,9 +1394,9 @@ end;
   @action: Returns L-side pos of x in arr with Binary Search. -1 if x does not exist.
   @note: Works with sorted arrays! (supports both ascending and descending order)
 [==============================================================================}
-function TIntegerArray_BinaryPosL(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryPosL(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
 var
-  l, m, h, o: Int32;
+  l, m, h, o: Integer;
 begin
   Result := -1;
   l := 0;
@@ -1419,9 +1419,9 @@ end;
   @action: Returns R-side pos of x in arr with Binary Search. -1 if x does not exist.
   @note: Works with sorted arrays! (supports both ascending and descending order)
 [==============================================================================}
-function TIntegerArray_BinaryPosR(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryPosR(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
 var
-  l, m, h, o: Int32;
+  l, m, h, o: Integer;
 begin
   Result := -1;
   l := 0;
@@ -1444,9 +1444,9 @@ end;
   @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinarySearch(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinarySearch(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
 var
-  l, h, m, o: Int32;
+  l, h, m, o: Integer;
 begin
   Result := -1;
   l := 0;
@@ -1470,7 +1470,7 @@ end;
   @action: Binary Contains function for TIntegerArrays.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinaryContains(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Boolean; cdecl;
+function TIntegerArray_BinaryContains(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Boolean; cdecl;
 begin
   Result := (TIntegerArray_BinarySearch(arr, x, ascending) > -1);
 end;
@@ -1480,7 +1480,7 @@ end;
   @action: Returns Binary Search left and right index as TRange based on x value.
   @note: Works with sorted arrays! (supports both ascending and descending order)
 [==============================================================================}
-function TIntegerArray_BinaryLocate(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): TRange; cdecl;
+function TIntegerArray_BinaryLocate(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): TRange; cdecl;
 begin
   Result.start := TIntegerArray_BinaryPosL(arr, x, ascending);
   if (Result.start > -1) then
@@ -1494,9 +1494,9 @@ end;
   @action: Binary Contains function for TIntegerArrays. Contains location storage variable. With Result as False it will be -1..-1.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinaryLocation(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): TRange; cdecl;
+function TIntegerArray_BinaryLocation(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): TRange; cdecl;
 var
-  s, l, h, m, o: Int32;
+  s, l, h, m, o: Integer;
   r: Boolean;
 begin
   r := False;
@@ -1530,9 +1530,9 @@ end;
   @action: Binary Append method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the index x was added to.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinaryAppend(var arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinaryAppend(var arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
 var
-  h, m, i, o: Int32;
+  h, m, i, o: Integer;
 begin
   Result := 0;
   h := High(arr);
@@ -1556,9 +1556,9 @@ end;
   @action: Binary Add method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the arr with x.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinaryAdd(const arr: TIntegerArray; const x: Int32; const ascending: Boolean = True): TIntegerArray; cdecl;
+function TIntegerArray_BinaryAdd(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): TIntegerArray; cdecl;
 var
-  l, h, m, p, i, o: Int32;
+  l, h, m, p, i, o: Integer;
 begin
   l := 0;
   h := High(arr);
@@ -1585,9 +1585,9 @@ end;
   @action: Binary Search which supports TRange search, uses first match from x-range.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinarySearchF(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinarySearchF(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Integer; cdecl;
 var
-  l, h, m, o: Int32;
+  l, h, m, o: Integer;
   f: TRange;
 begin
   Result := -1;
@@ -1616,9 +1616,9 @@ end;
   @action: Binary Search which supports TRange search, uses last match from x-range.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinarySearchL(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Int32; cdecl;
+function TIntegerArray_BinarySearchL(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Integer; cdecl;
 var
-  l, h, m, o: Int32;
+  l, h, m, o: Integer;
   f: TRange;
 begin
   Result := -1;
@@ -1648,9 +1648,9 @@ end;
           that are within a given difference range (minDiff, maxDiff) from each other.
   @note: None
 [==============================================================================}
-function TIntegerArray_Split(const arr: TIntegerArray; const minDiff, maxDiff: Int32): T2DIntegerArray; overload; cdecl;
+function TIntegerArray_Split(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
 var
-  a, b, h, l, i, r: Int32;
+  a, b, h, l, i, r: Integer;
   m: Boolean;
   s: TRange;
 begin
@@ -1702,7 +1702,7 @@ end;
           that are within a given difference/distance (diff) from each other.
   @note: None
 [==============================================================================}
-function TIntegerArray_Split(const arr: TIntegerArray; const diff: Int32): T2DIntegerArray; overload; cdecl;
+function TIntegerArray_Split(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
 begin
   Result := TIntegerArray_Split(arr, 0, diff);
 end;
@@ -1713,10 +1713,10 @@ end;
           that are within a given difference range (minDiff, maxDiff) from each other.
   @note: Alternative for TIntegerArray_Split. Based on Binary Sorted array.
 [==============================================================================}
-function TIntegerArray_Sblit(const arr: TIntegerArray; const minDiff, maxDiff: Int32): T2DIntegerArray; overload; cdecl;
+function TIntegerArray_Sblit(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
 var
   a: TIntegerArray;
-  h, i, j, r, l, k: Int32;
+  h, i, j, r, l, k: Integer;
   m: Boolean;
   s: TRange;
 begin
@@ -1766,7 +1766,7 @@ end;
           that are within a given difference/distance (diff) from each other.
   @note: Alternative for TIntegerArray_Split. Based on Binary Sorted array.
 [==============================================================================}
-function TIntegerArray_Sblit(const arr: TIntegerArray; const diff: Int32): T2DIntegerArray; overload; cdecl;
+function TIntegerArray_Sblit(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
 begin
   Result := TIntegerArray_Sblit(arr, 0, diff);
 end;
@@ -1777,9 +1777,9 @@ end;
           that are within a given difference range (minDiff, maxDiff) of the first integer value in the sub-array.
   @note: None
 [==============================================================================}
-function TIntegerArray_Group(const arr: TIntegerArray; const minDiff, maxDiff: Int32): T2DIntegerArray; overload; cdecl;
+function TIntegerArray_Group(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
 var
-  a, h, l, i, r: Int32;
+  a, h, l, i, r: Integer;
   m: Boolean;
   s: TRange;
 begin
@@ -1824,7 +1824,7 @@ end;
            that are within a given difference/distance (diff) of the first integer value in the sub-array.
   @note: None
 [==============================================================================}
-function TIntegerArray_Group(const arr: TIntegerArray; const diff: Int32): T2DIntegerArray; overload; cdecl;
+function TIntegerArray_Group(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
 begin
   Result := TIntegerArray_Group(arr, 0, diff);
 end;
@@ -1835,10 +1835,10 @@ end;
           that are within a given difference range (minDiff, maxDiff) of the first integer value in the sub-array.
   @note: Alternative for TIntegerArray_Group, based on array Binary Sorting.
 [==============================================================================}
-function TIntegerArray_Groub(const arr: TIntegerArray; const minDiff, maxDiff: Int32): T2DIntegerArray; overload; cdecl;
+function TIntegerArray_Groub(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
 var
   a: TIntegerArray;
-  h, i, j, r, l: Int32;
+  h, i, j, r, l: Integer;
   s: TRange;
   m: Boolean;
 begin
@@ -1882,7 +1882,7 @@ end;
            that are within a given difference/distance (diff) of the first integer value in the sub-array.
   @note: Alternative for TIntegerArray_Group, based on array Binary Sorting.
 [==============================================================================}
-function TIntegerArray_Groub(const arr: TIntegerArray; const diff: Int32): T2DIntegerArray; overload; cdecl;
+function TIntegerArray_Groub(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
 begin
   Result := TIntegerArray_Groub(arr, 0, diff);
 end;

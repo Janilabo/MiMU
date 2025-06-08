@@ -3,7 +3,7 @@
   @action: Builds TBox using X1, Y1, X2, Y2.
   @note: Unsafe, fast.
 [==============================================================================}
-function TBox_Build(const X1, Y1, X2, Y2: Int32): TBox; overload; cdecl;
+function TBox_Build(const X1, Y1, X2, Y2: Integer): TBox; overload; cdecl;
 begin
   Result.X1 := X1;
   Result.Y1 := Y1;
@@ -29,7 +29,7 @@ end;
   @action: Creates TBox using X1, Y1, X2, Y2.
   @note: Min-Maxed. Creates only valid TBoxes.
 [==============================================================================}
-function TBox_Create(const X1, Y1, X2, Y2: Int32): TBox; overload; cdecl;
+function TBox_Create(const X1, Y1, X2, Y2: Integer): TBox; overload; cdecl;
 begin
   Result.X1 := Min(X1, X2);
   Result.Y1 := Min(Y1, Y2);
@@ -55,7 +55,7 @@ end;
   @action: Forms TBox using XY for all X1, Y1, X2, Y2.
   @note: Unsafe, fast.
 [==============================================================================}
-function TBox_Form(const XY: Int32 = 0): TBox; overload; cdecl;
+function TBox_Form(const XY: Integer = 0): TBox; overload; cdecl;
 begin
   Result.X1 := XY;
   Result.Y1 := XY;
@@ -81,7 +81,7 @@ end;
   @action: Creates TBox from pt by radius used for width and height.
   @note: None.
 [==============================================================================}
-function TBox_At(const pt: TPoint; const radius: Int32 = 0): TBox; overload; cdecl;
+function TBox_At(const pt: TPoint; const radius: Integer = 0): TBox; overload; cdecl;
 begin
   Result.X1 := (pt.X - radius);
   Result.Y1 := (pt.Y - radius);
@@ -94,7 +94,7 @@ end;
   @action: Creates TBox from pt by radius used for width and height.
   @note: None.
 [==============================================================================}
-function TBox_At(const pt: TPoint; const wRadius, hRadius: Int32): TBox; overload; cdecl;
+function TBox_At(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload; cdecl;
 begin
   Result.X1 := (pt.X - wRadius);
   Result.Y1 := (pt.Y - hRadius);
@@ -107,7 +107,7 @@ end;
   @action: Creates box to point, with size for width and height.
   @note: None.
 [==============================================================================}
-function TBox_To(const pt: TPoint; const size: Int32 = 1): TBox; overload; cdecl;
+function TBox_To(const pt: TPoint; const size: Integer = 1): TBox; overload; cdecl;
 begin
   Result.X1 := pt.X;
   Result.Y1 := pt.Y;
@@ -120,7 +120,7 @@ end;
   @action: Creates box to point, with width and height.
   @note: None.
 [==============================================================================}
-function TBox_To(const pt: TPoint; const width, height: Int32): TBox; overload; cdecl;
+function TBox_To(const pt: TPoint; const width, height: Integer): TBox; overload; cdecl;
 begin
   Result.X1 := pt.X;
   Result.Y1 := pt.Y;
@@ -133,7 +133,7 @@ end;
   @action: Stores dimensions from TBox (bx) to width and height variables
   @note: Returns bx area.
 [==============================================================================}
-function TBox_Size(const bx: TBox; var width, height: Int32): Int32; cdecl; inline;
+function TBox_Size(const bx: TBox; var width, height: Integer): Integer; cdecl; inline;
 begin
   width := ((bx.X2 - bx.X1) + 1);
   height := ((bx.Y2 - bx.Y1) + 1);
@@ -146,7 +146,7 @@ end;
            Returns -1 with invalid TBox.
   @note: None
 [==============================================================================}
-function TBox_Area(const bx: TBox): Int32; cdecl; inline;
+function TBox_Area(const bx: TBox): Integer; cdecl; inline;
 begin
   Result := (((bx.X2 - bx.X1) + 1) * ((bx.Y2 - bx.Y1) + 1));
 end;
@@ -166,7 +166,7 @@ end;
   @action: Returns bx width.
   @note: Fast, works with only valid TBoxes.
 [==============================================================================}
-function TBox_W(const bx: TBox): Int32; overload; cdecl;
+function TBox_W(const bx: TBox): Integer; overload; cdecl;
 begin
   Result := ((bx.X2 - bx.X1) + 1);
 end;
@@ -176,7 +176,7 @@ end;
   @action: Sets bx width.
   @note: Returns old width.
 [==============================================================================}
-function TBox_W(var bx: TBox; const width: Int32): Int32; overload; cdecl;
+function TBox_W(var bx: TBox; const width: Integer): Integer; overload; cdecl;
 begin
   Result := ((bx.X2 - bx.X1) + 1);
   bx.X2 := (bx.X1 + (width - 1));
@@ -187,7 +187,7 @@ end;
   @action: Returns bx width.
   @note: Safe, based on Abs() call.
 [==============================================================================}
-function TBox_Width(const bx: TBox): Int32; overload; cdecl;
+function TBox_Width(const bx: TBox): Integer; overload; cdecl;
 begin
   Result := (Abs(bx.X2 - bx.X1) + 1);
 end;
@@ -197,7 +197,7 @@ end;
   @action: Sets bx width.
   @note: Returns old width.
 [==============================================================================}
-function TBox_Width(var bx: TBox; const width: Int32): Int32; overload; cdecl;
+function TBox_Width(var bx: TBox; const width: Integer): Integer; overload; cdecl;
 begin
   Result := (Abs(bx.X2 - bx.X1) + 1);
   bx.X2 := (bx.X1 + (width - 1));
@@ -208,7 +208,7 @@ end;
   @action: Returns bx height.
   @note: Fast, works with only valid TBoxes.
 [==============================================================================}
-function TBox_H(const bx: TBox): Int32; overload; cdecl;
+function TBox_H(const bx: TBox): Integer; overload; cdecl;
 begin
   Result := ((bx.Y2 - bx.Y1) + 1);
 end;
@@ -218,7 +218,7 @@ end;
   @action: Sets bx height.
   @note: Returns old height.
 [==============================================================================}
-function TBox_H(var bx: TBox; const height: Int32): Int32; overload; cdecl;
+function TBox_H(var bx: TBox; const height: Integer): Integer; overload; cdecl;
 begin
   Result := ((bx.Y2 - bx.Y1) + 1);
   bx.Y2 := (bx.Y1 + (height - 1));
@@ -229,7 +229,7 @@ end;
   @action: Returns bx height.
   @note: Safe, based on Abs() call.
 [==============================================================================}
-function TBox_Height(const bx: TBox): Int32; overload; cdecl;
+function TBox_Height(const bx: TBox): Integer; overload; cdecl;
 begin
   Result := (Abs(bx.Y2 - bx.Y1) + 1);
 end;
@@ -239,7 +239,7 @@ end;
   @action: Sets bx height.
   @note: Returns old height.
 [==============================================================================}
-function TBox_Height(var bx: TBox; const height: Int32): Int32; overload; cdecl;
+function TBox_Height(var bx: TBox; const height: Integer): Integer; overload; cdecl;
 begin
   Result := (Abs(bx.Y2 - bx.Y1) + 1);
   bx.Y2 := (bx.Y1 + (height - 1));
@@ -250,7 +250,7 @@ end;
   @action: Returns bx that has been expanded fully by change.
   @note: Works with positive values only.
 [==============================================================================}
-function TBox_Expand(const bx: TBox; const change: Int32 = 1): TBox; cdecl;
+function TBox_Expand(const bx: TBox; const change: Integer = 1): TBox; cdecl;
 begin
   if (change < 1) then
     Exit(bx);
@@ -265,7 +265,7 @@ end;
   @action: Returns bx that has been shrinked fully by change.
   @note: Works with positive values only. UNSAFE method, no checks!
 [==============================================================================}
-function TBox_Shrink(const bx: TBox; const change: Int32 = 1): TBox; cdecl;
+function TBox_Shrink(const bx: TBox; const change: Integer = 1): TBox; cdecl;
 begin
   if (change < 1) then
     Exit(bx);
@@ -280,7 +280,7 @@ end;
   @action: Returns bx that has been resized fully by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox_Resize(const bx: TBox; const change: Int32): TBox; cdecl;
+function TBox_Resize(const bx: TBox; const change: Integer): TBox; cdecl;
 begin
   Result.X1 := (bx.X1 - change);
   Result.Y1 := (bx.Y1 - change);
@@ -293,7 +293,7 @@ end;
   @action: Returns bx that has been resized vertically by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox_ResizeVertically(const bx: TBox; const change: Int32): TBox; cdecl;
+function TBox_ResizeVertically(const bx: TBox; const change: Integer): TBox; cdecl;
 begin
   Result.X1 := bx.X1;
   Result.Y1 := (bx.Y1 - change);
@@ -306,7 +306,7 @@ end;
   @action: Returns bx that has been resized horizontally by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox_ResizeHorizontally(const bx: TBox; const change: Int32): TBox; cdecl;
+function TBox_ResizeHorizontally(const bx: TBox; const change: Integer): TBox; cdecl;
 begin
   Result.X1 := (bx.X1 - change);
   Result.Y1 := bx.Y1;
@@ -319,7 +319,7 @@ end;
   @action: Returns bx that has been resized horizontally by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox_ResizeTop(const bx: TBox; const change: Int32): TBox; cdecl;
+function TBox_ResizeTop(const bx: TBox; const change: Integer): TBox; cdecl;
 begin
   Result.X1 := bx.X1;
   Result.Y1 := (bx.Y1 - change);
@@ -332,7 +332,7 @@ end;
   @action: Returns bx that has been resized from bottom by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox_ResizeBottom(const bx: TBox; const change: Int32): TBox; cdecl;
+function TBox_ResizeBottom(const bx: TBox; const change: Integer): TBox; cdecl;
 begin
   Result.X1 := bx.X1;
   Result.Y1 := bx.Y1;
@@ -345,7 +345,7 @@ end;
   @action: Returns bx that has been resized from left-side by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox_ResizeLeft(const bx: TBox; const change: Int32): TBox; cdecl;
+function TBox_ResizeLeft(const bx: TBox; const change: Integer): TBox; cdecl;
 begin
   Result.X1 := (bx.X1 - change);
   Result.Y1 := bx.Y1;
@@ -358,7 +358,7 @@ end;
   @action: Returns bx that has been resized from right-side by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox_ResizeRight(const bx: TBox; const change: Int32): TBox; cdecl;
+function TBox_ResizeRight(const bx: TBox; const change: Integer): TBox; cdecl;
 begin
   Result.X1 := bx.X1;
   Result.Y1 := bx.Y1;
@@ -371,7 +371,7 @@ end;
   @action: Returns bx that has been resized from top-left by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox_ResizeTopLeft(const bx: TBox; const change: Int32): TBox; cdecl;
+function TBox_ResizeTopLeft(const bx: TBox; const change: Integer): TBox; cdecl;
 begin
   Result.X1 := (bx.X1 - change);
   Result.Y1 := (bx.Y1 - change);
@@ -384,7 +384,7 @@ end;
   @action: Returns bx that has been resized from top-right by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox_ResizeTopRight(const bx: TBox; const change: Int32): TBox; cdecl;
+function TBox_ResizeTopRight(const bx: TBox; const change: Integer): TBox; cdecl;
 begin
   Result.X1 := bx.X1;
   Result.Y1 := (bx.Y1 - change);
@@ -397,7 +397,7 @@ end;
   @action: Returns bx that has been resized from bottom-right by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox_ResizeBottomRight(const bx: TBox; const change: Int32): TBox; cdecl;
+function TBox_ResizeBottomRight(const bx: TBox; const change: Integer): TBox; cdecl;
 begin
   Result.X1 := bx.X1;
   Result.Y1 := bx.Y1;
@@ -410,7 +410,7 @@ end;
   @action: Returns bx that has been resized from bottom-left by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox_ResizeBottomLeft(const bx: TBox; const change: Int32): TBox; cdecl;
+function TBox_ResizeBottomLeft(const bx: TBox; const change: Integer): TBox; cdecl;
 begin
   Result.X1 := (bx.X1 - change);
   Result.Y1 := bx.Y1;
@@ -465,7 +465,7 @@ end;
 [==============================================================================}
 function TBox_In(const bx: TBox; const areas: TBoxArray): Boolean; overload; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   for i := 0 to High(areas) do
     if not ((bx.X2 < areas[i].X1) or (bx.X1 > areas[i].X2) or (bx.Y2 < areas[i].Y1) or (bx.Y1 > areas[i].Y2)) then
@@ -490,7 +490,7 @@ end;
 [==============================================================================}
 function TBox_Inside(const bx: TBox; const areas: TBoxArray): Boolean; overload; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   for i := 0 to High(areas) do
     if ((bx.X1 > areas[i].X1) and (bx.X1 < areas[i].X2) and (bx.X2 > areas[i].X1) and (bx.X2 < areas[i].X2) and (bx.Y1 > areas[i].Y1) and (bx.Y1 < areas[i].Y2) and (bx.Y2 > areas[i].Y1) and (bx.Y2 < areas[i].Y2)) then
@@ -595,7 +595,7 @@ end;
            are within maxWDiff (max width differency) and maxHDiff (max height differency).
   @note: None
 [==============================================================================}
-function TBox_Similar(const a, b: TBox; const maxWDiff, maxHDiff: Int32): Boolean; overload; cdecl;
+function TBox_Similar(const a, b: TBox; const maxWDiff, maxHDiff: Integer): Boolean; overload; cdecl;
 begin
   Result := ((Abs(((b.X2 - b.X1) + 1) - ((a.X2 - a.X1) + 1)) <= maxWDiff) and (Abs(((b.Y2 - b.Y1) + 1) - ((a.Y2 - a.Y1) + 1)) <= maxHDiff));
 end;
@@ -606,7 +606,7 @@ end;
            are within diff (max width and height differency).
   @note: None
 [==============================================================================}
-function TBox_Similar(const a, b: TBox; const diff: Int32): Boolean; overload; cdecl;
+function TBox_Similar(const a, b: TBox; const diff: Integer): Boolean; overload; cdecl;
 begin
   Result := ((Abs(((b.X2 - b.X1) + 1) - ((a.X2 - a.X1) + 1)) <= diff) and (Abs(((b.Y2 - b.Y1) + 1) - ((a.Y2 - a.Y1) + 1)) <= diff));
 end;
@@ -619,7 +619,7 @@ end;
 [==============================================================================}
 function TBox_Fix(var bx: TBox): Boolean; cdecl;
 var
-  t: Int32;
+  t: Integer;
   x, y: Boolean;
 begin
   x := (bx.X1 > bx.X2);
@@ -748,7 +748,7 @@ end;
 [==============================================================================}
 function TBox_Points(const bx: TBox): TPointArray; cdecl;
 var
-  x, y, r: Int32;
+  x, y, r: Integer;
 begin
   SetLength(Result, (((bx.X2 - bx.X1) + 1) * ((bx.Y2 - bx.Y1) + 1)));
   r := 0;
@@ -768,7 +768,7 @@ end;
 [==============================================================================}
 function TBox_TPointArray(const bx: TBox): TPointArray; cdecl;
 var
-  i, w, h, x, y: Int32;
+  i, w, h, x, y: Integer;
 begin
   w := ((bx.X2 - bx.X1) + 1);
   h := ((bx.Y2 - bx.Y1) + 1);
@@ -789,7 +789,7 @@ end;
           spaceVertical = space between rows
  @note: None.
 [==============================================================================}
-function TBox_Grid(const bx: TBox; const rows, columns: Int32; const spaceVertical: Int32 = 0; const spaceHorizontal: Int32 = 0): TBoxArray; cdecl;
+function TBox_Grid(const bx: TBox; const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray; cdecl;
 var
   w, h, r, c, i, x, y: Integer;
 begin
@@ -820,9 +820,9 @@ end;
           where space is the amount of space between each cell.
  @note: None
 [==============================================================================}
-function TBox_Row(const bx: TBox; const cells: Int32; const space: Int32 = 0): TBoxArray; cdecl;
+function TBox_Row(const bx: TBox; const cells: Integer; const space: Integer = 0): TBoxArray; cdecl;
 var
-  w, h, i, z: Int32;
+  w, h, i, z: Integer;
 begin
   if (cells > 0) then
   begin
@@ -846,9 +846,9 @@ end;
           where space is the amount of space between each cell.
  @note: None
 [==============================================================================}
-function TBox_Column(const bx: TBox; const cells: Int32; const space: Int32 = 0): TBoxArray; cdecl;
+function TBox_Column(const bx: TBox; const cells: Integer; const space: Integer = 0): TBoxArray; cdecl;
 var
-  w, h, i, z: Int32;
+  w, h, i, z: Integer;
 begin
   if (cells > 0) then
   begin
@@ -906,7 +906,7 @@ end;
            are within widthDifferency and heightDifferency.
   @note: None.
 [==============================================================================}
-function TBox_SimilarSize(const a, b: TBox; const widthDifferency, heightDifferency: Int32): Boolean; overload; cdecl;
+function TBox_SimilarSize(const a, b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload; cdecl;
 begin
   Result := ((Abs(((b.X2 - b.X1) + 1) - ((a.X2 - a.X1) + 1)) <= widthDifferency) and (Abs(((b.Y2 - b.Y1) + 1) - ((a.Y2 - a.Y1) + 1)) <= heightDifferency));
 end;
@@ -929,7 +929,7 @@ end;
 [==============================================================================}
 function TBox_Centered(const bx, area: TBox): TBox; cdecl;
 var
-  w, h: Int32;
+  w, h: Integer;
 begin
   TBox_Size(bx, w, h);
   Result.X1 := (area.X1 + ((TBox_Width(area) - w) div 2));
@@ -945,7 +945,7 @@ end;
 [==============================================================================}
 function TBox_CenterVertically(const bx, area: TBox): TBox; cdecl;
 var
-  h: Int32;
+  h: Integer;
 begin
   h := TBox_H(bx);
   Result.X1 := bx.X1;
@@ -961,7 +961,7 @@ end;
 [==============================================================================}
 function TBox_CenterHorizontally(const bx, area: TBox): TBox; cdecl;
 var
-  w: Int32;
+  w: Integer;
 begin
   w := TBox_W(bx);
   Result.X1 := (area.X1 + ((TBox_W(area) - w) div 2));

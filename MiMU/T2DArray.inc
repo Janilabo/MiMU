@@ -1,12 +1,12 @@
 {==============================================================================]
- <T2DArray_Blank(arr: TArray; parts: Int32): T2DArray>
+ <T2DArray_Blank(arr: TArray; parts: Integer): T2DArray>
  @action: Returns true if array is blank (no inventory, only empty indexes of []).
  @note: Blank array could be for example [[], [], []]. Returns false if array contains any items.
         NOTE: Returns false if array is empty (1D Length = 0)!
  [==============================================================================}
 {$IFDEF T2DArray_Blank}
 var
-  i: Int32;
+  i: Integer;
 begin
   for i := 0 to High(arr) do
     if (Length(arr[i]) > 0) then
@@ -16,13 +16,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <T2DTArray_Create(size1D, size2D: Int32; item: VarType)> 
+ <T2DTArray_Create(size1D, size2D: Integer; item: VarType)> 
  @action: Creates array with item where size is length of the array.
  @note: item is placed on every index in result.
 [==============================================================================}
 {$IFDEF T2DArray_Create}
 var
-  i, j, s: Int32;
+  i, j, s: Integer;
 begin
   s := (Max(0, size2D) - 1);
   SetLength(Result, Max(0, size1D), (s + 1));
@@ -50,7 +50,7 @@ end;
 [==============================================================================}
 {$IFDEF T2DArray_Length1}
 var
-  i: Int32;
+  i: Integer;
 begin
   Result := 0;
   SetLength(lengths, Length(arr));
@@ -70,7 +70,7 @@ end;
 [==============================================================================}
 {$IFDEF T2DArray_Length2}
 var
-  i: Int32;
+  i: Integer;
 begin
   Result := 0;
   for i := 0 to High(arr) do
@@ -85,7 +85,7 @@ end;
 [==============================================================================}
 {$IFDEF T2DArray_Merge}
 var
-  i, j, l: Int32;
+  i, j, l: Integer;
 begin
   l := 0;
   for i := 0 to High(arr) do

@@ -3,7 +3,7 @@
   @action: Returns TPoint with X and Y.
   @note: None.
 [==============================================================================}
-function TPoint_To(const X, Y: Int32): TPoint; cdecl; inline;
+function TPoint_To(const X, Y: Integer): TPoint; cdecl; inline;
 begin
   Result.X := X;
   Result.Y := Y;
@@ -14,7 +14,7 @@ end;
   @action: Returns TPoint with X and Y.
   @note: None.
 [==============================================================================}
-function TPoint_At(const X, Y: Int32): TPoint; cdecl; inline;
+function TPoint_At(const X, Y: Integer): TPoint; cdecl; inline;
 begin
   Result.X := X;
   Result.Y := Y;
@@ -134,7 +134,7 @@ end;
           spaceVertical = space between rows
  @note: None.
 [==============================================================================}
-function TPoint_Grid(const pt: TPoint; const rows, columns: Int32; const spaceVertical: Int32 = 0; const spaceHorizontal: Int32 = 0): TPointArray; cdecl;
+function TPoint_Grid(const pt: TPoint; const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray; cdecl;
 var
   r, c, i, x, y: Integer;
 begin
@@ -162,9 +162,9 @@ end;
           where space is the amount of space between each cell.
  @note: None
 [==============================================================================}
-function TPoint_Row(const pt: TPoint; const cells: Int32; const space: Int32 = 0): TPointArray; cdecl;
+function TPoint_Row(const pt: TPoint; const cells: Integer; const space: Integer = 0): TPointArray; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   if (cells > 0) then
   begin
@@ -184,9 +184,9 @@ end;
           where space is the amount of space between each cell.
  @note: None
 [==============================================================================}
-function TPoint_Column(const pt: TPoint; const cells: Int32; const space: Int32 = 0): TPointArray; cdecl;
+function TPoint_Column(const pt: TPoint; const cells: Integer; const space: Integer = 0): TPointArray; cdecl;
 var
-  i: Int32;
+  i: Integer;
 begin
   if (cells > 0) then
   begin

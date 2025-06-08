@@ -5,7 +5,7 @@
 [==============================================================================}
 {$IFDEF TArray_Add1}
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   l := Length(arr);
   SetLength(Result, (l + 1));
@@ -22,7 +22,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Add2}
 var
-  h, i, l: Int32;
+  h, i, l: Integer;
 begin
   h := High(items);
   l := Length(arr);
@@ -43,7 +43,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_AllEqual}
 var
-  h, i, l: Int32;
+  h, i, l: Integer;
 begin
   l := Low(arr);
   h := High(arr);
@@ -61,7 +61,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_AllSame}
 var
-  i: Int32;
+  i: Integer;
 begin
   for i := 1 to High(arr) do
     if (arr[0] <> arr[i]) then
@@ -77,7 +77,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_AllUnique}
 var
-  h, a, b: Int32;
+  h, a, b: Integer;
 begin
   h := High(arr);
   for a := 0 to (h - 1) do
@@ -89,7 +89,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Append(arr: TArray; item: VarType): Int32>
+ <TArray_Append(arr: TArray; item: VarType): Integer>
  @action: Appends arr with item. Returns the index of added item.
  @note: Adds item to the right side of the array.
 [==============================================================================}
@@ -102,13 +102,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Append(arr: TArray; items: TArray): Int32>
+ <TArray_Append(arr: TArray; items: TArray): Integer>
  @action: Adds all items items to arr.
  @note: Returns the highest index in the end.
 [==============================================================================}
 {$IFDEF TArray_Append2}
 var
-  h, i: Int32;
+  h, i: Integer;
 begin
   h := High(items);
   Result := (Length(arr) + h);
@@ -121,7 +121,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Build(item: VarType; size: Int32): TArray> 
+ <TArray_Build(item: VarType; size: Integer): TArray> 
  @action: Creates array with item where size is length of the array.
  @note: item is placed on every index in result.
 [==============================================================================}
@@ -138,7 +138,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_BuiltWith}
 var
-  i, x, y: Int32;
+  i, x, y: Integer;
 begin
   y := Length(allowed);
   i := High(arr);
@@ -162,7 +162,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_BuiltWithout}
 var
-  i, x, y: Int32;
+  i, x, y: Integer;
 begin
   if (Length(arr) < 1) then
     Exit(False);
@@ -184,13 +184,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Clone(arr: TArray; index: Int32; count: Int32): TArray>
+ <TArray_Clone(arr: TArray; index: Integer; count: Integer): TArray>
  @action: Returns copy of an array arr.
  @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
 {$IFDEF TArray_Clone}
 var
-  i, s, c: Int32;
+  i, s, c: Integer;
 begin
   if (count > 0) then
   begin
@@ -221,13 +221,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Contains(arr: TArray; item: VarType; index: Int32): Boolean>
+ <TArray_Contains(arr: TArray; item: VarType; index: Integer): Boolean>
  @action: Looks array for item starting from start index. If found, Result will be True.
  @note: None.
 [==============================================================================}
 {$IFDEF TArray_Contains}
 var
-  i: Int32;
+  i: Integer;
 begin
   for i := index to High(arr) do
     if (item = arr[i]) then
@@ -237,7 +237,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Copy(arr: TArray; index: Int32; count: Int32): TArray>
+ <TArray_Copy(arr: TArray; index: Integer; count: Integer): TArray>
  @action: Returns copy of an array arr.
  @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
@@ -255,7 +255,7 @@ end;
 ==========================================================}
 {$IFDEF TArray_Copy2}
 var
-  i, h, l, r: Int32;
+  i, h, l, r: Integer;
 begin
   r := 0;
   h := High(arr);
@@ -287,13 +287,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Create(size: Int32; item: VarType): TArray> 
+ <TArray_Create(size: Integer; item: VarType): TArray> 
  @action: Creates array with item where size is length of the array.
  @note: item is placed on every index in result.
 [==============================================================================}
 {$IFDEF TArray_Create2}
 var
-  i: Int32;
+  i: Integer;
 begin
   SetLength(Result, Max(0, size));
   for i := 0 to High(Result) do
@@ -302,13 +302,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Delete(arr: TArray; index: Int32): Boolean>
+ <TArray_Delete(arr: TArray; index: Integer): Boolean>
  @action: Deletes array item from arr by index.
  @note: Returns true with success (index existed in arr).
 [==============================================================================}
 {$IFDEF TArray_Delete1}
 var
-  i, h: Int32;
+  i, h: Integer;
 begin
   h := High(arr);
   Result := ((index <= h) and (index > -1));
@@ -321,13 +321,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Delete(arr: TArray; IDs: TIntegerArray): Int32>
+ <TArray_Delete(arr: TArray; IDs: TIntegerArray): Integer>
  @action: Deletes array items from arr by indexes (IDs).
  @note: Returns amount of items that were deleted succesfully by IDs.
 [==============================================================================}
 {$IFDEF TArray_Delete2}
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   l := Length(arr);
   Result := 0;
@@ -347,7 +347,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Differ}
 var
-  i: Int32;
+  i: Integer;
 begin
   Result := (Length(arr) <> Length(target));
   if not Result then
@@ -358,13 +358,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Distribute(arr: TArray; parts: Int32): T2DArray>
+ <TArray_Distribute(arr: TArray; parts: Integer): T2DArray>
  @action: Distributes array arr to 2D array by number of parts.
  @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5][6,7]
  [==============================================================================}
 {$IFDEF TArray_Distribute}
 var
-  l, p, b, r, i, j, s, c: Int32;
+  l, p, b, r, i, j, s, c: Integer;
 begin
   l := Length(arr);
   if ((parts > 0) and (l > 0)) then
@@ -392,13 +392,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Dump(arr: TArray; items: TArray; index: Int32): Int32>
+ <TArray_Dump(arr: TArray; items: TArray; index: Integer): Integer>
  @action: Deletes items from array, keeps others. Returns array length (after action).
  @note: Supports custom start index!
 [==============================================================================}
 {$IFDEF TArray_Dump}
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   l := Length(arr);
   Result := 0;
@@ -421,7 +421,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Dupe}
 var
-  i, l, j: Int32;
+  i, l, j: Integer;
 begin
   l := Length(arr);
   SetLength(Result, l);
@@ -462,7 +462,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Equal}
 var
-  i: Int32;
+  i: Integer;
 begin
   Result := (Length(arr) = Length(target));
   if Result then
@@ -479,7 +479,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Extend1}
 var
-  i, h: Int32;
+  i, h: Integer;
 begin
   h := High(arr);
   SetLength(Result, (h + 2));
@@ -496,7 +496,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Extend2}
 var
-  i, h, l: Int32;
+  i, h, l: Integer;
 begin
   h := High(arr);
   l := Length(items);
@@ -509,13 +509,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Extract(arr: TArray; item: VarType; index: Int32): TArray>
+ <TArray_Extract(arr: TArray; item: VarType; index: Integer): TArray>
  @action: Keeps (extracts) all values in arr that are item. Starts scan from start index.
  @note: Returns the items.
 [==============================================================================} 
 {$IFDEF TArray_Extract1}
 var
-  i, l, r: Int32;
+  i, l, r: Integer;
 begin
   l := Length(arr);
   SetLength(Result, (l - index));
@@ -531,13 +531,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Extract(arr, items: TArray; index: Int32): TArray>
+ <TArray_Extract(arr, items: TArray; index: Integer): TArray>
  @action: Keeps (extracts) all values in arr that are in items. Starts scan from start index.
  @note: Returns the items.
 [==============================================================================}
 {$IFDEF TArray_Extract2}
 var
-  i, l, r: Int32;
+  i, l, r: Integer;
 begin
   r := 0;
   if (Length(items) > 0) then
@@ -556,13 +556,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_ExtractEvery(arr: TArray; X: Int32; index: Int32): TArray>
+ <TArray_ExtractEvery(arr: TArray; X: Integer; index: Integer): TArray>
  @action: Keeps (extracts) all X values from array. Starts scan from start index.
  @note: Returns the items.
 [==============================================================================} 
 {$IFDEF TArray_ExtractEvery}
 var
-  i, h, l: Int32;
+  i, h, l: Integer;
 begin
   l := Length(arr);
   SetLength(Result, (l - index));
@@ -580,13 +580,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Fill(arr: TArray; item: VarType; index: Int32; count: Int32): TArray>
+ <TArray_Fill(arr: TArray; item: VarType; index: Integer; count: Integer): TArray>
  @action: Fills whole arr with item.
  @note: None
 [==============================================================================}
 {$IFDEF TArray_Fill1}
 var
-  h, i, s, t: Int32;
+  h, i, s, t: Integer;
 begin
   s := Max(0, index);
   h := High(arr);
@@ -602,13 +602,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Fill(arr, items: TArray; index: Int32; count: Int32): TArray>
+ <TArray_Fill(arr, items: TArray; index: Integer; count: Integer): TArray>
  @action: Fills whole arr with items.
  @note: None
 [==============================================================================}
 {$IFDEF TArray_Fill2}
 var
-  h, i, s, t, l: Int32;
+  h, i, s, t, l: Integer;
 begin
   h := High(arr);
   l := Length(items);
@@ -629,13 +629,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Filter(arr: TArray; item: VarType; index: Int32): TArray>
+ <TArray_Filter(arr: TArray; item: VarType; index: Integer): TArray>
  @action: Removes all values from arr that are found in items.
  @note: None
 [==============================================================================}
 {$IFDEF TArray_Filter1}
 var
-  i, l, r: Int32;
+  i, l, r: Integer;
 begin
   l := Length(arr);
   SetLength(Result, (l - index));
@@ -651,13 +651,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Filter(arr, items: TArray; index: Int32): TArray>
+ <TArray_Filter(arr, items: TArray; index: Integer): TArray>
  @action: Removes all values from arr that are found in items.
  @note: None
 [==============================================================================}
 {$IFDEF TArray_Filter2}
 var
-  i, l, r: Int32;
+  i, l, r: Integer;
 begin
   l := Length(arr);
   if (Length(items) = 0) then
@@ -675,13 +675,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_FilterEvery(arr: TArray; X: Int32; index: Int32): TArray>
+ <TArray_FilterEvery(arr: TArray; X: Integer; index: Integer): TArray>
  @action: Filters every/each X item from arr.
  @note: Custom index
 [==============================================================================}
 {$IFDEF TArray_FilterEvery}
 var
-  i, h, l: Int32;
+  i, h, l: Integer;
 begin
   l := Length(arr);
   SetLength(Result, (l - index));
@@ -705,7 +705,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Flip}
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   i := 0;
   l := (Length(arr) - 1);
@@ -726,7 +726,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Get1}
 var
-  i: Int32;
+  i: Integer;
 begin
   SetLength(Result, Length(arr));
   for i := 0 to High(arr) do
@@ -741,7 +741,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Get2}
 var
-  i: Int32;
+  i: Integer;
 begin
   SetLength(Result, Length(IDs));
   for i := 0 to High(IDs) do
@@ -756,7 +756,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Group}
 var
-  a, h, i, r, g, l: Int32;
+  a, h, i, r, g, l: Integer;
   f: Boolean;
 begin
   h := High(arr);
@@ -796,7 +796,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Holds}
 var
-  a, b, x, y, z: Int32;
+  a, b, x, y, z: Integer;
   n: Boolean;
 begin
   z := High(arr);
@@ -825,7 +825,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_IDs1}
 var
-  i: Int32;
+  i: Integer;
 begin
   SetLength(Result, Length(arr));
   for i := 0 to High(arr) do
@@ -840,7 +840,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_IDs2}
 var
-  i: Int32;
+  i: Integer;
 begin
   SetLength(Result, Length(IDs));
   for i := 0 to High(Result) do
@@ -855,7 +855,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_IDs3}
 var
-  i: Int32;
+  i: Integer;
 begin
   Result := TArray_Get(arr);
   for i := 0 to High(IDs) do
@@ -870,7 +870,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_IDs4}
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   Result := TArray_Get(arr);
   l := Length(items);
@@ -880,13 +880,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Includes(arr: TArray; item: VarType; index: Int32): Boolean>
+ <TArray_Includes(arr: TArray; item: VarType; index: Integer): Boolean>
  @action: Looks array for item starting from start index down to index 0. If found, Result will be True.
  @note: Alternative to TArray_Contains, but this scans in opposite direction.
 [==============================================================================}
 {$IFDEF TArray_Includes}
 var
-  i: Int32;
+  i: Integer;
 begin
   for i := Min(High(arr), index) downto 0 do
     if (item = arr[i]) then
@@ -896,13 +896,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Keep(arr, items: TArray; index: Int32): Int32>
+ <TArray_Keep(arr, items: TArray; index: Integer): Integer>
  @action: Keeps items in array, removes others. Returns array length (after action).
  @note: Supports custom start index!
 [==============================================================================}
 {$IFDEF TArray_Keep}
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   l := Length(arr);
   case (High(items) > -1) of
@@ -930,7 +930,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_LeastFrequent}
 var
-  i, j, c, m: Int32;
+  i, j, c, m: Integer;
   f: Boolean;
 begin
   if (Length(arr) = 0) then
@@ -968,7 +968,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_MostFrequent}
 var
-  i, j, c, m: Int32;
+  i, j, c, m: Integer;
 begin
   if (High(arr) = -1) then
     Exit;
@@ -990,13 +990,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Move(arr: TArray; oldIndex, newIndex: Int32): Boolean>
+ <TArray_Move(arr: TArray; oldIndex, newIndex: Integer): Boolean>
  @action: Moves item from oldIndex to newIndex in array arr.
  @note: Returns true with success.
 [==============================================================================}
 {$IFDEF TArray_Move}
 var
-  h, i: Int32;
+  h, i: Integer;
 begin
   h := High(arr);
   Result := ((h > 0) and (oldIndex <> newIndex) and InRange(oldIndex, 0, h) and InRange(newIndex, 0, h));
@@ -1017,7 +1017,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Oversize(arr: TArray; limit: Int32): Boolean>
+ <TArray_Oversize(arr: TArray; limit: Integer): Boolean>
  @action: Returns true if size of arr is OVER the limit.
  @note: None.	
 [==============================================================================}
@@ -1028,13 +1028,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Partition(arr: TArray; size: Int32): T2DArray>
+ <TArray_Partition(arr: TArray; size: Integer): T2DArray>
  @action: Partitions array arr to 2D array by size of parts.
  @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5,6][7]
 [==============================================================================}
 {$IFDEF TArray_Partition}
 var
-  p, i, j, s, r, l: Int32;
+  p, i, j, s, r, l: Integer;
 begin
   l := Length(arr);
   if ((size > 0) and (l > 0)) then
@@ -1065,7 +1065,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Pick}
 var
-  l, h, t, i, r: Int32;
+  l, h, t, i, r: Integer;
 begin
   h := High(arr);
   l := Length(IDs);
@@ -1097,7 +1097,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Pop1}
 var
-  h: Int32;
+  h: Integer;
 begin
   h := High(arr);
   if (h = -1) then
@@ -1114,7 +1114,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Pop2}
 var
-  h: Int32;
+  h: Integer;
 begin
   h := High(arr);
   if (h = -1) then
@@ -1125,7 +1125,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Pos(arr: TArray; item: VarType; index: Int32): Int32>
+ <TArray_Pos(arr: TArray; item: VarType; index: Integer): Integer>
  @action: Returns index position from arr which matched with item.
  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
@@ -1139,13 +1139,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Pos(arr: TArray; items: TArray; index: Int32): Int32>
+ <TArray_Pos(arr: TArray; items: TArray; index: Integer): Integer>
  @action: Returns index position from arr which matches with items.
  @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
 {$IFDEF TArray_Pos2}
 var
-  h, i: Int32;
+  h, i: Integer;
 begin
   h := High(items);
   for Result := index to High(arr) do
@@ -1157,7 +1157,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Position(arr: TArray; item: VarType; index: Int32): Int32>
+ <TArray_Position(arr: TArray; item: VarType; index: Integer): Integer>
  @action: Returns index position from arr which matched with item.
  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
@@ -1171,13 +1171,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Position(arr: TArray; items: TArray; index: Int32): Int32>
+ <TArray_Position(arr: TArray; items: TArray; index: Integer): Integer>
  @action: Returns index position from arr which matches with items.
  @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
 {$IFDEF TArray_Position2}
 var
-  h, i: Int32;
+  h, i: Integer;
 begin
   h := High(items);
   if (h > -1) then
@@ -1190,13 +1190,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Positions(arr: TArray; item: VarType; index: Int32): TIntegerArray>
+ <TArray_Positions(arr: TArray; item: VarType; index: Integer): TIntegerArray>
  @action: Returns index positions from arr which matched with item.
  @note: None.
 [==============================================================================}
 {$IFDEF TArray_Positions1}
 var
-  i, r, h, s: Int32;
+  i, r, h, s: Integer;
 begin
   r := 0;
   h := High(arr);
@@ -1216,13 +1216,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Positions(arr: TArray; items: TArray; index: Int32): TIntegerArray>
+ <TArray_Positions(arr: TArray; items: TArray; index: Integer): TIntegerArray>
  @action: Returns index positions from arr which matches with items.
  @note: None.
 [==============================================================================}
 {$IFDEF TArray_Positions2}
 var
-  i, r, h, s: Int32;
+  i, r, h, s: Integer;
 begin
   r := 0;
   h := High(arr);
@@ -1242,7 +1242,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_PosLast(arr: TArray; item: VarType; index: Int32): Int32>
+ <TArray_PosLast(arr: TArray; item: VarType; index: Integer): Integer>
  @action: Returns last index position from arr which matched with item.
  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
@@ -1256,13 +1256,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Pos(arr: TArray; items: TArray; index: Int32): Int32>
+ <TArray_Pos(arr: TArray; items: TArray; index: Integer): Integer>
  @action: Returns index position from arr which matches with items.
  @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
 {$IFDEF TArray_PosLast2}
 var
-  h, i: Int32;
+  h, i: Integer;
 begin
   h := High(items);
   for Result := Min(High(arr), index) downto 0 do
@@ -1274,13 +1274,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_PosLasts(arr: TArray; item: VarType; index: Int32): TIntegerArray>
+ <TArray_PosLasts(arr: TArray; item: VarType; index: Integer): TIntegerArray>
  @action: Returns last index positions from arr which matched with item.
  @note: None.
 [==============================================================================}
 {$IFDEF TArray_PosLasts1}
 var
-  i, r, h, s: Int32;
+  i, r, h, s: Integer;
 begin
   r := 0;
   h := High(arr);
@@ -1300,13 +1300,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_PosLasts(arr: TArray; items: TArray; index: Int32): TIntegerArray>
+ <TArray_PosLasts(arr: TArray; items: TArray; index: Integer): TIntegerArray>
  @action: Returns last index positions from arr which matches with items.
  @note: None.
 [==============================================================================}
 {$IFDEF TArray_PosLasts2}
 var
-  i, r, h, s: Int32;
+  i, r, h, s: Integer;
 begin
   r := 0;
   h := High(arr);
@@ -1326,7 +1326,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Push(arr: TArray; item: VarType): Int32>
+ <TArray_Push(arr: TArray; item: VarType): Integer>
  @action: Places item in array with arr.
  @note: Returns array (arr+item) length.
 [==============================================================================}
@@ -1339,13 +1339,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Push(arr: TArray; items: TArray): Int32>
+ <TArray_Push(arr: TArray; items: TArray): Integer>
  @action: Places items in array with arr.
  @note: Returns array (arr+item) length.
 [==============================================================================}
 {$IFDEF TArray_Push2}
 var
-  h, i, l: Int32;
+  h, i, l: Integer;
 begin
   h := High(items);
   l := Length(arr);
@@ -1365,7 +1365,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Randomize}
 var
-  l, i, s, x, y: Int32;
+  l, i, s, x, y: Integer;
 begin
   l := Length(arr);
   Result := ((l > 1) and (shuffles > 0));
@@ -1382,13 +1382,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Remove(arr: TArray; item: VarType; index: Int32; all: Boolean): Int32>
+ <TArray_Remove(arr: TArray; item: VarType; index: Integer; all: Boolean): Integer>
  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
  @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
 {$IFDEF TArray_Remove1}
 var
-  l, i, r, m: Int32;
+  l, i, r, m: Integer;
   s: Boolean;
 begin
   l := Length(arr);
@@ -1410,7 +1410,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Remove(arr: TArray; item: VarType; all: Boolean): Int32>
+ <TArray_Remove(arr: TArray; item: VarType; all: Boolean): Integer>
  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
  @note: Returns amount of items that were removed.
 [==============================================================================}
@@ -1421,13 +1421,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Remove(arr: TArray; items: TArray; index: Int32; all: Boolean): Int32>
+ <TArray_Remove(arr: TArray; items: TArray; index: Integer; all: Boolean): Integer>
  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
  @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
 {$IFDEF TArray_Remove3}
 var
-  a, b, l, i, r, m: Int32;
+  a, b, l, i, r, m: Integer;
   d, s: Boolean;
 begin
   l := Length(arr);
@@ -1462,7 +1462,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Remove(arr: TArray; items: TArray; all: Boolean): Int32>
+ <TArray_Remove(arr: TArray; items: TArray; all: Boolean): Integer>
  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
  @note: Returns amount of items that were removed.
 [==============================================================================}
@@ -1479,7 +1479,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Reverse}
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   l := Length(arr);
   Result := (l > 1);
@@ -1496,7 +1496,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Reversed}
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   l := Length(arr);
   SetLength(Result, l);
@@ -1512,7 +1512,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Set1}
 var
-  i: Int32;
+  i: Integer;
 begin
   SetLength(Result, Length(arr));
   for i := 0 to High(arr) do
@@ -1529,7 +1529,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Set2}
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   SetLength(Result, Length(arr));
   l := Length(items);
@@ -1541,13 +1541,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Set(arr: TArray; index: Int32; items: TArray): TArray>
+ <TArray_Set(arr: TArray; index: Integer; items: TArray): TArray>
  @action: Returns array arr filled with items to starting from custom start index.
  @note: Unsafe method! No safety checking.
 [==============================================================================}
 {$IFDEF TArray_Set3}
 var
-  i: Int32;
+  i: Integer;
 begin
   SetLength(Result, Length(arr));
   for i := 0 to High(arr) do
@@ -1564,7 +1564,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Shift1}
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   l := (Length(arr) - 1);
   if (l < 0) then
@@ -1577,13 +1577,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Shift(arr: TArray; shift: Int32): TArray>
+ <TArray_Shift(arr: TArray; shift: Integer): TArray>
  @action: Shortens the array with first SHIFT element(s).
  @note: Returns the removed arr[x]s.
 [==============================================================================}
 {$IFDEF TArray_Shift2}
 var
-  i, l, s: Int32;
+  i, l, s: Integer;
 begin
   l := Length(arr);
   s := Max(0, Min(shift, l));
@@ -1599,7 +1599,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Size(arr: TArray; size: Int32): Int32>
+ <TArray_Size(arr: TArray; size: Integer): Integer>
  @action: Set's arr length to size.
  @note: size > Length(arr) => Result will give how many elements were added
         size < Length(arr) => Result will give how many elements got deleted (it will be negative value!)
@@ -1607,7 +1607,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Size1}
 var
-  l: Int32;
+  l: Integer;
 begin
   l := Length(arr);
   SetLength(arr, size);
@@ -1616,13 +1616,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Size(arr: TArray; size: Int32; null: VarType): Int32>
+ <TArray_Size(arr: TArray; size: Integer; null: VarType): Integer>
  @action: Set's arr length to size.
  @note: Uses null for created indexes.
 [==============================================================================}
 {$IFDEF TArray_Size2}
 var
-  i, l: Int32;
+  i, l: Integer;
 begin
   l := Length(arr);
   SetLength(arr, size);
@@ -1633,7 +1633,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Size(arr: TArray): Int32>
+ <TArray_Size(arr: TArray): Integer>
  @action: Returns array length.
  @note: Just normal Length() for this last one, with single parameter.		
 [==============================================================================}
@@ -1644,7 +1644,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_SizeBetween(arr: TArray; x, y: Int32): Boolean>
+ <TArray_SizeBetween(arr: TArray; x, y: Integer): Boolean>
  @action: Returns true if size is at equal/greater than x and equal/lesser than y.
  @note: 	
 [==============================================================================}
@@ -1655,7 +1655,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_SizeMax(arr: TArray; y: Int32): Boolean>
+ <TArray_SizeMax(arr: TArray; y: Integer): Boolean>
  @action: Returns true if size is at equal/lesser than y.
  @note: 	
 [==============================================================================}
@@ -1666,7 +1666,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_SizeMin(arr: TArray; x: Int32): Boolean>
+ <TArray_SizeMin(arr: TArray; x: Integer): Boolean>
  @action: Returns true if size is at equal/greater than x.
  @note: 	
 [==============================================================================}
@@ -1677,7 +1677,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Swap(a, b: TArray): Int32> 
+ <TArray_Swap(a, b: TArray): Integer> 
  @action: Swaps array a and array b.
  @note: a will be b and b will be a.
 [==============================================================================}
@@ -1694,13 +1694,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Trade(a, b: TArray): Int32> 
+ <TArray_Trade(a, b: TArray): Integer> 
  @action: Swaps array a and array b.
  @note: a will be b and b will be a.
 [==============================================================================}
 {$IFDEF TArray_Trade}
 var
-  x, y: Int32;
+  x, y: Integer;
 begin
   x := Length(a);
   y := Length(b);
@@ -1716,7 +1716,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Undersize(arr: TArray; limit: Int32): Boolean>
+ <TArray_Undersize(arr: TArray; limit: Integer): Boolean>
  @action: Returns true if size of arr is UNDER the limit.
  @note: None.	
 [==============================================================================} 
@@ -1727,13 +1727,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Unique(arr: TArray): Int32>
+ <TArray_Unique(arr: TArray): Integer>
  @action: Removes all duplicates from arr.
  @note: Returns the number of items that were removed.
 [==============================================================================}
 {$IFDEF TArray_Unique}
 var
-  a, l, i, j: Int32;
+  a, l, i, j: Integer;
   m: Boolean;
 begin
   l := Length(arr);
@@ -1766,7 +1766,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Uniqued}
 var
-  i, j, l, c: Int32;
+  i, j, l, c: Integer;
 begin
   l := Length(arr);
   SetLength(Result, l);
@@ -1800,7 +1800,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Uniques}
 var
-  h, r, x, y: Int32;
+  h, r, x, y: Integer;
   m: Boolean;
 begin
   h := High(arr);
@@ -1830,13 +1830,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Unshift(arr: TArray; item: VarType): Int32>
+ <TArray_Unshift(arr: TArray; item: VarType): Integer>
  @action: Grows arr with item. Returns the index of added item.
  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
 {$IFDEF TArray_Unshift1}
 var
-  i: Int32;
+  i: Integer;
 begin
   Result := Length(arr);
   SetLength(arr, (Result + 1));
@@ -1847,13 +1847,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Unshift(arr: TArray; items: TArray): Int32>
+ <TArray_Unshift(arr: TArray; items: TArray): Integer>
  @action: Grows arr with items. Returns the index of last added item.
  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
 {$IFDEF TArray_Unshift2}
 var
-  h, l, i: Int32;
+  h, l, i: Integer;
 begin
   h := High(items);
   if (h = -1) then
