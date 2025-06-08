@@ -44,7 +44,7 @@ uses
   classes, sysutils, math;
 
 const
-  MiMU_VERSION_NUMBER = 0.32;
+  MiMU_VERSION_NUMBER = 0.33;
 
 type
   TIntegerArray = array of Integer;
@@ -762,6 +762,39 @@ function TArray_FilterEvery(const arr: TPointArray; const X: Integer = 1; const 
 function TArray_FilterEvery(const arr: TBoxArray; const X: Integer = 1; const index: Integer = 0): TBoxArray; overload; cdecl;
 function TArray_FilterEvery(const arr: TRangeArray; const X: Integer = 1; const index: Integer = 0): TRangeArray; overload; cdecl;
 
+function TArray_Find(const arr: TIntegerArray; const IDs: TRange; const item: Integer): Integer; overload; cdecl;
+function TArray_Find(const arr: TDoubleArray; const IDs: TRange; const item: Double): Integer; overload; cdecl;
+function TArray_Find(const arr: TStringArray; const IDs: TRange; const item: string): Integer; overload; cdecl;
+function TArray_Find(const arr: TCharArray; const IDs: TRange; const item: Char): Integer; overload; cdecl;
+function TArray_Find(const arr: TBooleanArray; const IDs: TRange; const item: Boolean): Integer; overload; cdecl;
+function TArray_Find(const arr: TPointArray; const IDs: TRange; const item: TPoint): Integer; overload; cdecl;
+function TArray_Find(const arr: TBoxArray; const IDs: TRange; const item: TBox): Integer; overload; cdecl;
+function TArray_Find(const arr: TRangeArray; const IDs: TRange; const item: TRange): Integer; overload; cdecl;
+function TArray_Find(const arr: TIntegerArray; const IDs: TIntegerArray; const item: Integer): Integer; overload; cdecl;
+function TArray_Find(const arr: TDoubleArray; const IDs: TIntegerArray; const item: Double): Integer; overload; cdecl;
+function TArray_Find(const arr: TStringArray; const IDs: TIntegerArray; const item: string): Integer; overload; cdecl;
+function TArray_Find(const arr: TCharArray; const IDs: TIntegerArray; const item: Char): Integer; overload; cdecl;
+function TArray_Find(const arr: TBooleanArray; const IDs: TIntegerArray; const item: Boolean): Integer; overload; cdecl;
+function TArray_Find(const arr: TPointArray; const IDs: TIntegerArray; const item: TPoint): Integer; overload; cdecl;
+function TArray_Find(const arr: TBoxArray; const IDs: TIntegerArray; const item: TBox): Integer; overload; cdecl;
+function TArray_Find(const arr: TRangeArray; const IDs: TIntegerArray; const item: TRange): Integer; overload; cdecl;
+function TArray_Find(const arr: TIntegerArray; const IDs: TRange; const items: TIntegerArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TDoubleArray; const IDs: TRange; const items: TDoubleArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TStringArray; const IDs: TRange; const items: TStringArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TCharArray; const IDs: TRange; const items: TCharArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TBooleanArray; const IDs: TRange; const items: TBooleanArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TPointArray; const IDs: TRange; const items: TPointArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TBoxArray; const IDs: TRange; const items: TBoxArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TRangeArray; const IDs: TRange; const items: TRangeArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TIntegerArray; const IDs: TIntegerArray; const items: TIntegerArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TDoubleArray; const IDs: TIntegerArray; const items: TDoubleArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TStringArray; const IDs: TIntegerArray; const items: TStringArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TCharArray; const IDs: TIntegerArray; const items: TCharArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TBooleanArray; const IDs: TIntegerArray; const items: TBooleanArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TPointArray; const IDs: TIntegerArray; const items: TPointArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TBoxArray; const IDs: TIntegerArray; const items: TBoxArray): Integer; overload; cdecl;
+function TArray_Find(const arr: TRangeArray; const IDs: TIntegerArray; const items: TRangeArray): Integer; overload; cdecl;
+
 function TArray_Flip(var arr: TIntegerArray): Boolean; overload; cdecl;
 function TArray_Flip(var arr: TDoubleArray): Boolean; overload; cdecl;
 function TArray_Flip(var arr: TStringArray): Boolean; overload; cdecl;
@@ -857,23 +890,23 @@ function TArray_Keep(var arr: TPointArray; const items: TPointArray; const index
 function TArray_Keep(var arr: TBoxArray; const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl;
 function TArray_Keep(var arr: TRangeArray; const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl;
 
-function TArray_LeastFrequent(const arr: TIntegerArray): Integer; cdecl; overload;
-function TArray_LeastFrequent(const arr: TDoubleArray): Double; cdecl; overload;
-function TArray_LeastFrequent(const arr: TStringArray): string; cdecl; overload;
-function TArray_LeastFrequent(const arr: TCharArray): Char; cdecl; overload;
-function TArray_LeastFrequent(const arr: TBooleanArray): Boolean; cdecl; overload;
-function TArray_LeastFrequent(const arr: TPointArray): TPoint; cdecl; overload;
-function TArray_LeastFrequent(const arr: TBoxArray): TBox; cdecl; overload;
-function TArray_LeastFrequent(const arr: TRangeArray): TRange; cdecl; overload;
+function TArray_LeastFrequent(const arr: TIntegerArray): Integer; overload; cdecl;
+function TArray_LeastFrequent(const arr: TDoubleArray): Double; overload; cdecl;
+function TArray_LeastFrequent(const arr: TStringArray): string; overload; cdecl;
+function TArray_LeastFrequent(const arr: TCharArray): Char; overload; cdecl;
+function TArray_LeastFrequent(const arr: TBooleanArray): Boolean; overload; cdecl;
+function TArray_LeastFrequent(const arr: TPointArray): TPoint; overload; cdecl;
+function TArray_LeastFrequent(const arr: TBoxArray): TBox; overload; cdecl;
+function TArray_LeastFrequent(const arr: TRangeArray): TRange; overload; cdecl;
 
-function TArray_MostFrequent(const arr: TIntegerArray): Integer; cdecl; overload;
-function TArray_MostFrequent(const arr: TDoubleArray): Double; cdecl; overload;
-function TArray_MostFrequent(const arr: TStringArray): string; cdecl; overload;
-function TArray_MostFrequent(const arr: TCharArray): Char; cdecl; overload;
-function TArray_MostFrequent(const arr: TBooleanArray): Boolean; cdecl; overload;
-function TArray_MostFrequent(const arr: TPointArray): TPoint; cdecl; overload;
-function TArray_MostFrequent(const arr: TBoxArray): TBox; cdecl; overload;
-function TArray_MostFrequent(const arr: TRangeArray): TRange; cdecl; overload;
+function TArray_MostFrequent(const arr: TIntegerArray): Integer; overload; cdecl;
+function TArray_MostFrequent(const arr: TDoubleArray): Double; overload; cdecl;
+function TArray_MostFrequent(const arr: TStringArray): string; overload; cdecl;
+function TArray_MostFrequent(const arr: TCharArray): Char; overload; cdecl;
+function TArray_MostFrequent(const arr: TBooleanArray): Boolean; overload; cdecl;
+function TArray_MostFrequent(const arr: TPointArray): TPoint; overload; cdecl;
+function TArray_MostFrequent(const arr: TBoxArray): TBox; overload; cdecl;
+function TArray_MostFrequent(const arr: TRangeArray): TRange; overload; cdecl;
 
 function TArray_Move(var arr: TIntegerArray; oldIndex, newIndex: Integer): Boolean; overload; cdecl;
 function TArray_Move(var arr: TDoubleArray; oldIndex, newIndex: Integer): Boolean; overload; cdecl;
@@ -1114,6 +1147,39 @@ function TArray_Set(const arr: TBooleanArray; const index: Integer; const items:
 function TArray_Set(const arr: TPointArray; const index: Integer; const items: TPointArray): TPointArray; overload; cdecl;
 function TArray_Set(const arr: TBoxArray; const index: Integer; const items: TBoxArray): TBoxArray; overload; cdecl;
 function TArray_Set(const arr: TRangeArray; const index: Integer; const items: TRangeArray): TRangeArray; overload; cdecl;
+
+function TArray_Scan(const arr: TIntegerArray; const IDs: TRange; const item: Integer; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TDoubleArray; const IDs: TRange; const item: Double; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TStringArray; const IDs: TRange; const item: string; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TCharArray; const IDs: TRange; const item: Char; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TBooleanArray; const IDs: TRange; const item: Boolean; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TPointArray; const IDs: TRange; const item: TPoint; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TBoxArray; const IDs: TRange; const item: TBox; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TRangeArray; const IDs: TRange; const item: TRange; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TIntegerArray; const IDs: TIntegerArray; const item: Integer; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TDoubleArray; const IDs: TIntegerArray; const item: Double; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TStringArray; const IDs: TIntegerArray; const item: string; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TCharArray; const IDs: TIntegerArray; const item: Char; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TBooleanArray; const IDs: TIntegerArray; const item: Boolean; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TPointArray; const IDs: TIntegerArray; const item: TPoint; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TBoxArray; const IDs: TIntegerArray; const item: TBox; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TRangeArray; const IDs: TIntegerArray; const item: TRange; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TIntegerArray; const IDs: TRange; const items: TIntegerArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TDoubleArray; const IDs: TRange; const items: TDoubleArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TStringArray; const IDs: TRange; const items: TStringArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TCharArray; const IDs: TRange; const items: TCharArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TBooleanArray; const IDs: TRange; const items: TBooleanArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TPointArray; const IDs: TRange; const items: TPointArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TBoxArray; const IDs: TRange; const items: TBoxArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TRangeArray; const IDs: TRange; const items: TRangeArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TIntegerArray; const IDs: TIntegerArray; const items: TIntegerArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TDoubleArray; const IDs: TIntegerArray; const items: TDoubleArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TStringArray; const IDs: TIntegerArray; const items: TStringArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TCharArray; const IDs: TIntegerArray; const items: TCharArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TBooleanArray; const IDs: TIntegerArray; const items: TBooleanArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TPointArray; const IDs: TIntegerArray; const items: TPointArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TBoxArray; const IDs: TIntegerArray; const items: TBoxArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function TArray_Scan(const arr: TRangeArray; const IDs: TIntegerArray; const items: TRangeArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
 
 function TArray_Shift(var arr: TIntegerArray): Integer; overload; cdecl;
 function TArray_Shift(var arr: TDoubleArray): Double; overload; cdecl;

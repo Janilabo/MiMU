@@ -395,6 +395,50 @@ function TArray_FilterEvery(const arr: TBoxArray; const X: Integer = 1; const in
 function TArray_FilterEvery(const arr: TRangeArray; const X: Integer = 1; const index: Integer = 0): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_FilterEvery}
 
+{$DEFINE TArray_Find1}
+function TArray_Find(const arr: TIntegerArray; const IDs: TRange; const item: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TDoubleArray; const IDs: TRange; const item: Double): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TStringArray; const IDs: TRange; const item: string): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TCharArray; const IDs: TRange; const item: Char): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TBooleanArray; const IDs: TRange; const item: Boolean): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TPointArray; const IDs: TRange; const item: TPoint): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TBoxArray; const IDs: TRange; const item: TBox): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TRangeArray; const IDs: TRange; const item: TRange): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Find1}
+
+{$DEFINE TArray_Find2}
+function TArray_Find(const arr: TIntegerArray; const IDs: TIntegerArray; const item: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TDoubleArray; const IDs: TIntegerArray; const item: Double): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TStringArray; const IDs: TIntegerArray; const item: string): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TCharArray; const IDs: TIntegerArray; const item: Char): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TBooleanArray; const IDs: TIntegerArray; const item: Boolean): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TPointArray; const IDs: TIntegerArray; const item: TPoint): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TBoxArray; const IDs: TIntegerArray; const item: TBox): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TRangeArray; const IDs: TIntegerArray; const item: TRange): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Find2}
+
+{$DEFINE TArray_Find3}
+function TArray_Find(const arr: TIntegerArray; const IDs: TRange; const items: TIntegerArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TDoubleArray; const IDs: TRange; const items: TDoubleArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TStringArray; const IDs: TRange; const items: TStringArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TCharArray; const IDs: TRange; const items: TCharArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TBooleanArray; const IDs: TRange; const items: TBooleanArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TPointArray; const IDs: TRange; const items: TPointArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TBoxArray; const IDs: TRange; const items: TBoxArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TRangeArray; const IDs: TRange; const items: TRangeArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Find3}
+
+{$DEFINE TArray_Find4}
+function TArray_Find(const arr: TIntegerArray; const IDs: TIntegerArray; const items: TIntegerArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TDoubleArray; const IDs: TIntegerArray; const items: TDoubleArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TStringArray; const IDs: TIntegerArray; const items: TStringArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TCharArray; const IDs: TIntegerArray; const items: TCharArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TBooleanArray; const IDs: TIntegerArray; const items: TBooleanArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TPointArray; const IDs: TIntegerArray; const items: TPointArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TBoxArray; const IDs: TIntegerArray; const items: TBoxArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Find(const arr: TRangeArray; const IDs: TIntegerArray; const items: TRangeArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Find4}
+
 {$DEFINE TArray_Flip}
 function TArray_Flip(var arr: TIntegerArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 function TArray_Flip(var arr: TDoubleArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
@@ -517,25 +561,25 @@ function TArray_Keep(var arr: TRangeArray; const items: TRangeArray; const index
 {$UNDEF TArray_Keep}
 
 {$DEFINE TArray_LeastFrequent}
-function TArray_LeastFrequent(const arr: TIntegerArray): Integer; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_LeastFrequent(const arr: TDoubleArray): Double; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_LeastFrequent(const arr: TStringArray): string; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_LeastFrequent(const arr: TCharArray): Char; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_LeastFrequent(const arr: TBooleanArray): Boolean; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_LeastFrequent(const arr: TPointArray): TPoint; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_LeastFrequent(const arr: TBoxArray): TBox; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_LeastFrequent(const arr: TRangeArray): TRange; cdecl; overload; {$I MIMU\TArray.inc}
+function TArray_LeastFrequent(const arr: TIntegerArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_LeastFrequent(const arr: TDoubleArray): Double; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_LeastFrequent(const arr: TStringArray): string; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_LeastFrequent(const arr: TCharArray): Char; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_LeastFrequent(const arr: TBooleanArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_LeastFrequent(const arr: TPointArray): TPoint; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_LeastFrequent(const arr: TBoxArray): TBox; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_LeastFrequent(const arr: TRangeArray): TRange; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_LeastFrequent}
 
 {$DEFINE TArray_MostFrequent}
-function TArray_MostFrequent(const arr: TIntegerArray): Integer; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_MostFrequent(const arr: TDoubleArray): Double; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_MostFrequent(const arr: TStringArray): string; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_MostFrequent(const arr: TCharArray): Char; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_MostFrequent(const arr: TBooleanArray): Boolean; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_MostFrequent(const arr: TPointArray): TPoint; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_MostFrequent(const arr: TBoxArray): TBox; cdecl; overload; {$I MIMU\TArray.inc}
-function TArray_MostFrequent(const arr: TRangeArray): TRange; cdecl; overload; {$I MIMU\TArray.inc}
+function TArray_MostFrequent(const arr: TIntegerArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_MostFrequent(const arr: TDoubleArray): Double; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_MostFrequent(const arr: TStringArray): string; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_MostFrequent(const arr: TCharArray): Char; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_MostFrequent(const arr: TBooleanArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_MostFrequent(const arr: TPointArray): TPoint; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_MostFrequent(const arr: TBoxArray): TBox; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_MostFrequent(const arr: TRangeArray): TRange; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_MostFrequent}
 
 {$DEFINE TArray_Move}
@@ -812,6 +856,50 @@ function TArray_Reversed(const arr: TPointArray): TPointArray; overload; cdecl; 
 function TArray_Reversed(const arr: TBoxArray): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
 function TArray_Reversed(const arr: TRangeArray): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Reversed}
+
+{$DEFINE TArray_Scan1}
+function TArray_Scan(const arr: TIntegerArray; const IDs: TRange; const item: Integer; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TDoubleArray; const IDs: TRange; const item: Double; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TStringArray; const IDs: TRange; const item: string; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TCharArray; const IDs: TRange; const item: Char; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TBooleanArray; const IDs: TRange; const item: Boolean; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TPointArray; const IDs: TRange; const item: TPoint; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TBoxArray; const IDs: TRange; const item: TBox; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TRangeArray; const IDs: TRange; const item: TRange; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Scan1}
+
+{$DEFINE TArray_Scan2}
+function TArray_Scan(const arr: TIntegerArray; const IDs: TIntegerArray; const item: Integer; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TDoubleArray; const IDs: TIntegerArray; const item: Double; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TStringArray; const IDs: TIntegerArray; const item: string; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TCharArray; const IDs: TIntegerArray; const item: Char; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TBooleanArray; const IDs: TIntegerArray; const item: Boolean; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TPointArray; const IDs: TIntegerArray; const item: TPoint; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TBoxArray; const IDs: TIntegerArray; const item: TBox; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TRangeArray; const IDs: TIntegerArray; const item: TRange; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Scan2}
+
+{$DEFINE TArray_Scan3}
+function TArray_Scan(const arr: TIntegerArray; const IDs: TRange; const items: TIntegerArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TDoubleArray; const IDs: TRange; const items: TDoubleArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TStringArray; const IDs: TRange; const items: TStringArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TCharArray; const IDs: TRange; const items: TCharArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TBooleanArray; const IDs: TRange; const items: TBooleanArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TPointArray; const IDs: TRange; const items: TPointArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TBoxArray; const IDs: TRange; const items: TBoxArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TRangeArray; const IDs: TRange; const items: TRangeArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Scan3}
+
+{$DEFINE TArray_Scan4}
+function TArray_Scan(const arr: TIntegerArray; const IDs: TIntegerArray; const items: TIntegerArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TDoubleArray; const IDs: TIntegerArray; const items: TDoubleArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TStringArray; const IDs: TIntegerArray; const items: TStringArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TCharArray; const IDs: TIntegerArray; const items: TCharArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TBooleanArray; const IDs: TIntegerArray; const items: TBooleanArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TPointArray; const IDs: TIntegerArray; const items: TPointArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TBoxArray; const IDs: TIntegerArray; const items: TBoxArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Scan(const arr: TRangeArray; const IDs: TIntegerArray; const items: TRangeArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Scan4}
 
 {$DEFINE TArray_Set1}
 function TArray_Set(const arr: TIntegerArray; const IDs: TIntegerArray; const item: Integer): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}

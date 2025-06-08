@@ -699,6 +699,84 @@ end;
 {$ENDIF}
 
 {==============================================================================]
+ <TArray_Find(arr: TArray; item: VarType; IDs: TRange): Integer>
+ @action: Scans array for item by IDs. Returns position if found.
+ @note: Unsafe method! No safety checking.
+[==============================================================================}
+{$IFDEF TArray_Find1}
+begin
+  if (High(arr) > -1) then
+  case TRange_Ascending(IDs) of
+    True:
+    for Result := IDs.start to IDs.stop do
+      if (arr[Result] = item) then
+        Exit;
+    False:
+    for Result := IDs.start downto IDs.stop do
+      if (arr[Result] = item) then
+        Exit;
+  end;
+  Result := -1;
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <TArray_Find(arr: TArray; item: VarType; IDs: TIntegerArray): Integer>
+ @action: Scans array for item by IDs. Returns position if found.
+ @note: Unsafe method! No safety checking.
+[==============================================================================}
+{$IFDEF TArray_Find2}
+var
+  i: Integer;
+begin
+  if (High(arr) > -1) then
+  for i := 0 to High(IDs) do
+    if (arr[IDs[i]] = item) then
+      Exit(IDs[i]);
+  Result := -1;
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <TArray_Find(arr: TArray; items: TArray; IDs: TRange): Integer>
+ @action: Scans array for items by IDs. Returns position if found.
+ @note: Unsafe method! No safety checking.
+[==============================================================================}
+{$IFDEF TArray_Find3}
+begin
+  if ((High(arr) > -1) and (High(items) > -1)) then
+  case TRange_Ascending(IDs) of
+    True:
+    for Result := IDs.start to IDs.stop do
+      if TArray_Contains(items, arr[Result]) then
+        Exit;
+    False:
+    for Result := IDs.start downto IDs.stop do
+      if TArray_Contains(items, arr[Result]) then
+        Exit;
+  end;
+  Result := -1;
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <TArray_Find(arr: TArray; items: TArray; IDs: TIntegerArray): Integer>
+ @action: Scans array for items by IDs. Returns position if found.
+ @note: Unsafe method! No safety checking.
+[==============================================================================}
+{$IFDEF TArray_Find4}
+var
+  i: Integer;
+begin
+  if ((High(arr) > -1) and (High(items) > -1)) then
+  for i := 0 to High(IDs) do
+    if TArray_Contains(items, arr[IDs[i]]) then
+      Exit(IDs[i]);
+  Result := -1;
+end;
+{$ENDIF}
+
+{==============================================================================]
  <TArray_Flip(arr: TArray): Boolean>
  @action: Reverses array arr.
  @note: Alternative for TArray_Reverse
@@ -1502,6 +1580,122 @@ begin
   SetLength(Result, l);
   for i := 0 to (l - 1) do
     Result[i] := arr[((l - i) - 1)];
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <TArray_Scan(arr: TArray; item: VarType; IDs: TRange; limit: Integer): TIntegerArray>
+ @action: Scans array for item by IDs. Returns all the positions.
+ @note: Unsafe method! No safety checking.
+[==============================================================================}
+{$IFDEF TArray_Scan1}
+var
+  i, r: Integer;
+begin
+  r := 0;
+  if (High(arr) > -1) then
+  begin
+    SetLength(Result, TRange_Size(IDs));
+    case TRange_Ascending(IDs) of
+      True:
+      for i := IDs.start to IDs.stop do
+	    if (r >= limit) then
+		  Break
+		else
+          if (arr[i] = item) then
+            Result[Integer_Inc(r)] := i;
+      False:
+      for i := IDs.start downto IDs.stop do
+	    if (r >= limit) then
+		  Break
+		else
+          if (arr[i] = item) then
+		    Result[Integer_Inc(r)] := i;
+    end;
+  end;
+  SetLength(Result, r);
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <TArray_Scan(arr: TArray; item: VarType; IDs: TIntegerArray): TIntegerArray>
+ @action: Scans array for item by IDs. Returns all the positions.
+ @note: Unsafe method! No safety checking.
+[==============================================================================}
+{$IFDEF TArray_Scan2}
+var
+  i, r: Integer;
+begin
+  r := 0;
+  if (High(arr) > -1) then
+  begin
+    SetLength(Result, Length(IDs));
+    for i := 0 to High(IDs) do
+	  if (r >= limit) then
+	    Break
+	  else
+        if (arr[IDs[i]] = item) then
+	      Result[Integer_Inc(r)] := IDs[i];
+  end;
+  SetLength(Result, r);
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <TArray_Scan(arr: TArray; items: TArray; IDs: TRange; limit: Integer): TIntegerArray>
+ @action: Scans array for items by IDs. Returns all the positions.
+ @note: Unsafe method! No safety checking.
+[==============================================================================}
+{$IFDEF TArray_Scan3}
+var
+  i, r: Integer;
+begin
+  r := 0;
+  if ((High(arr) > -1) and (High(items) > -1)) then
+  begin
+    SetLength(Result, TRange_Size(IDs));
+    case TRange_Ascending(IDs) of
+      True:
+      for i := IDs.start to IDs.stop do
+	    if (r >= limit) then
+		  Break
+		else
+          if TArray_Contains(items, arr[i]) then
+            Result[Integer_Inc(r)] := i;
+      False:
+      for i := IDs.start downto IDs.stop do
+	    if (r >= limit) then
+		  Break
+		else
+          if TArray_Contains(items, arr[i]) then
+		    Result[Integer_Inc(r)] := i;
+    end;
+  end;
+  SetLength(Result, r);
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <TArray_Scan(arr: TArray; item: VarType; IDs: TIntegerArray): TIntegerArray>
+ @action: Scans array for items by IDs. Returns all the positions.
+ @note: Unsafe method! No safety checking.
+[==============================================================================}
+{$IFDEF TArray_Scan4}
+var
+  i, r: Integer;
+begin
+  r := 0;
+  if ((High(arr) > -1) and (High(items) > -1)) then
+  begin
+    SetLength(Result, Length(IDs));
+    for i := 0 to High(IDs) do
+	  if (r >= limit) then
+	    Break
+	  else
+        if TArray_Contains(items, arr[IDs[i]]) then
+	      Result[Integer_Inc(r)] := IDs[i];
+  end;
+  SetLength(Result, r);
 end;
 {$ENDIF}
 
