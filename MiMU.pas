@@ -44,7 +44,7 @@ uses
   classes, sysutils, math;
 
 const
-  MiMU_VERSION_NUMBER = 0.33;
+  MiMU_VERSION_NUMBER = 0.34;
 
 type
   TIntegerArray = array of Integer;
@@ -72,7 +72,7 @@ type
   end;
   TRangeArray = array of TRange;
   T2DRangeArray = array of TRangeArray;
-  
+
 function MiMU_Version: Double; cdecl;
 
 operator+(const a, b: TPoint): TPoint;
@@ -377,6 +377,7 @@ function TRange_Digit(const range: TRange; const x: Integer): Boolean; cdecl; in
 function TRange_Value(const range: TRange; const x: Integer): Boolean; cdecl; inline;
 function TRange_Middle(const range: TRange): Double; cdecl;
 function TRange_Center(const range: TRange): Integer; cdecl;
+function TRange_String(const range: TRange): string; cdecl;
 
 function TIntegerArray_Descending(const arr: TIntegerArray): Boolean; cdecl;
 function TIntegerArray_Ascending(const arr: TIntegerArray): Boolean; cdecl;
@@ -435,6 +436,8 @@ function TIntegerArray_BinaryAppend(var arr: TIntegerArray; const x: Integer; co
 function TIntegerArray_BinaryAdd(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): TIntegerArray; cdecl;
 function TIntegerArray_BinarySearchF(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Integer; cdecl;
 function TIntegerArray_BinarySearchL(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArray_BinaryUnique(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArray_BinaryUniqued(const arr: TIntegerArray; const ascending: Boolean = True): TIntegerArray; cdecl;
 function TIntegerArray_Split(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
 function TIntegerArray_Split(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
 function TIntegerArray_Sblit(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
@@ -500,22 +503,22 @@ function TArray_AllUnique(const arr: TPointArray): Boolean; overload; cdecl;
 function TArray_AllUnique(const arr: TBoxArray): Boolean; overload; cdecl;
 function TArray_AllUnique(const arr: TRangeArray): Boolean; overload; cdecl;
 
-function TArray_Append(var arr: TIntegerArray; const item: Integer): Integer; overload; cdecl;
-function TArray_Append(var arr: TDoubleArray; const item: Double): Integer; overload; cdecl;
-function TArray_Append(var arr: TStringArray; const item: string): Integer; overload; cdecl;
-function TArray_Append(var arr: TCharArray; const item: Char): Integer; overload; cdecl;
-function TArray_Append(var arr: TBooleanArray; const item: Boolean): Integer; overload; cdecl;
-function TArray_Append(var arr: TPointArray; const item: TPoint): Integer; overload; cdecl;
-function TArray_Append(var arr: TBoxArray; const item: TBox): Integer; overload; cdecl;
-function TArray_Append(var arr: TRangeArray; const item: TRange): Integer; overload; cdecl;
-function TArray_Append(var arr: TIntegerArray; const items: TIntegerArray): Integer; overload; cdecl;
-function TArray_Append(var arr: TDoubleArray; const items: TDoubleArray): Integer; overload; cdecl;
-function TArray_Append(var arr: TStringArray; const items: TStringArray): Integer; overload; cdecl;
-function TArray_Append(var arr: TCharArray; const items: TCharArray): Integer; overload; cdecl;
-function TArray_Append(var arr: TBooleanArray; const items: TBooleanArray): Integer; overload; cdecl;
-function TArray_Append(var arr: TPointArray; const items: TPointArray): Integer; overload; cdecl;
-function TArray_Append(var arr: TBoxArray; const items: TBoxArray): Integer; overload; cdecl;
-function TArray_Append(var arr: TRangeArray; const items: TRangeArray): Integer; overload; cdecl;
+function TArray_Append(var arr: TIntegerArray; const item: Integer; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TDoubleArray; const item: Double; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TStringArray; const item: string; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TCharArray; const item: Char; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TBooleanArray; const item: Boolean; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TPointArray; const item: TPoint; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TBoxArray; const item: TBox; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TRangeArray; const item: TRange; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TIntegerArray; const items: TIntegerArray; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TDoubleArray; const items: TDoubleArray; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TStringArray; const items: TStringArray; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TCharArray; const items: TCharArray; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TBooleanArray; const items: TBooleanArray; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TPointArray; const items: TPointArray; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TBoxArray; const items: TBoxArray; const duplicates: Boolean = True): Integer; overload; cdecl;
+function TArray_Append(var arr: TRangeArray; const items: TRangeArray; const duplicates: Boolean = True): Integer; overload; cdecl;
 
 function TArray_Build(const item: Integer; const size: Integer = 1): TIntegerArray; overload; cdecl;
 function TArray_Build(const item: Double; const size: Integer = 1): TDoubleArray; overload; cdecl;
@@ -898,6 +901,23 @@ function TArray_LeastFrequent(const arr: TBooleanArray): Boolean; overload; cdec
 function TArray_LeastFrequent(const arr: TPointArray): TPoint; overload; cdecl;
 function TArray_LeastFrequent(const arr: TBoxArray): TBox; overload; cdecl;
 function TArray_LeastFrequent(const arr: TRangeArray): TRange; overload; cdecl;
+
+function TArray_Length(var arr: TIntegerArray; const size: Integer): Integer; overload; cdecl;
+function TArray_Length(var arr: TDoubleArray; const size: Integer): Integer; overload; cdecl;
+function TArray_Length(var arr: TStringArray; const size: Integer): Integer; overload; cdecl;
+function TArray_Length(var arr: TCharArray; const size: Integer): Integer; overload; cdecl;
+function TArray_Length(var arr: TBooleanArray; const size: Integer): Integer; overload; cdecl;
+function TArray_Length(var arr: TPointArray; const size: Integer): Integer; overload; cdecl;
+function TArray_Length(var arr: TBoxArray; const size: Integer): Integer; overload; cdecl;
+function TArray_Length(var arr: TRangeArray; const size: Integer): Integer; overload; cdecl;
+function TArray_Length(const arr: TIntegerArray): Integer; overload; cdecl;
+function TArray_Length(const arr: TDoubleArray): Integer; overload; cdecl;
+function TArray_Length(const arr: TStringArray): Integer; overload; cdecl;
+function TArray_Length(const arr: TCharArray): Integer; overload; cdecl;
+function TArray_Length(const arr: TBooleanArray): Integer; overload; cdecl;
+function TArray_Length(const arr: TPointArray): Integer; overload; cdecl;
+function TArray_Length(const arr: TBoxArray): Integer; overload; cdecl;
+function TArray_Length(const arr: TRangeArray): Integer; overload; cdecl;
 
 function TArray_MostFrequent(const arr: TIntegerArray): Integer; overload; cdecl;
 function TArray_MostFrequent(const arr: TDoubleArray): Double; overload; cdecl;

@@ -66,25 +66,25 @@ function TArray_AllUnique(const arr: TRangeArray): Boolean; overload; cdecl; {$I
 {$UNDEF TArray_AllUnique}
 
 {$DEFINE TArray_Append1}
-function TArray_Append(var arr: TIntegerArray; const item: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TDoubleArray; const item: Double): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TStringArray; const item: string): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TCharArray; const item: Char): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TBooleanArray; const item: Boolean): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TPointArray; const item: TPoint): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TBoxArray; const item: TBox): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TRangeArray; const item: TRange): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TIntegerArray; const item: Integer; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TDoubleArray; const item: Double; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TStringArray; const item: string; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TCharArray; const item: Char; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TBooleanArray; const item: Boolean; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TPointArray; const item: TPoint; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TBoxArray; const item: TBox; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TRangeArray; const item: TRange; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Append1}
 
 {$DEFINE TArray_Append2}
-function TArray_Append(var arr: TIntegerArray; const items: TIntegerArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TDoubleArray; const items: TDoubleArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TStringArray; const items: TStringArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TCharArray; const items: TCharArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TBooleanArray; const items: TBooleanArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TPointArray; const items: TPointArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TBoxArray; const items: TBoxArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Append(var arr: TRangeArray; const items: TRangeArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TIntegerArray; const items: TIntegerArray; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TDoubleArray; const items: TDoubleArray; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TStringArray; const items: TStringArray; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TCharArray; const items: TCharArray; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TBooleanArray; const items: TBooleanArray; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TPointArray; const items: TPointArray; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TBoxArray; const items: TBoxArray; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Append(var arr: TRangeArray; const items: TRangeArray; const duplicates: Boolean = True): Integer; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Append2}
 
 {$DEFINE TArray_Build}
@@ -570,6 +570,28 @@ function TArray_LeastFrequent(const arr: TPointArray): TPoint; overload; cdecl; 
 function TArray_LeastFrequent(const arr: TBoxArray): TBox; overload; cdecl; {$I MIMU\TArray.inc}
 function TArray_LeastFrequent(const arr: TRangeArray): TRange; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_LeastFrequent}
+
+{$DEFINE TArray_Length1}
+function TArray_Length(var arr: TIntegerArray; const size: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(var arr: TDoubleArray; const size: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(var arr: TStringArray; const size: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(var arr: TCharArray; const size: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(var arr: TBooleanArray; const size: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(var arr: TPointArray; const size: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(var arr: TBoxArray; const size: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(var arr: TRangeArray; const size: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Length1}
+
+{$DEFINE TArray_Length2}
+function TArray_Length(const arr: TIntegerArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(const arr: TDoubleArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(const arr: TStringArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(const arr: TCharArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(const arr: TBooleanArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(const arr: TPointArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(const arr: TBoxArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Length(const arr: TRangeArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Length2}
 
 {$DEFINE TArray_MostFrequent}
 function TArray_MostFrequent(const arr: TIntegerArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}

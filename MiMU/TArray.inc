@@ -89,12 +89,14 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Append(arr: TArray; item: VarType): Integer>
+ <TArray_Append(arr: TArray; item: VarType; duplicates: Boolean): Integer>
  @action: Appends arr with item. Returns the index of added item.
  @note: Adds item to the right side of the array.
 [==============================================================================}
 {$IFDEF TArray_Append1}
 begin
+  if ((not duplicates) and TArray_Contains(arr, item)) then
+    Exit(High(arr));
   Result := Length(arr);
   SetLength(arr, (Result + 1));
   arr[Result] := item;
@@ -102,7 +104,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Append(arr: TArray; items: TArray): Integer>
+ <TArray_Append(arr: TArray; items: TArray; duplicates; Boolean): Integer>
  @action: Adds all items items to arr.
  @note: Returns the highest index in the end.
 [==============================================================================}
@@ -111,12 +113,22 @@ var
   h, i: Integer;
 begin
   h := High(items);
-  Result := (Length(arr) + h);
+  Result := High(arr);
   if (h = -1) then
     Exit;
-  SetLength(arr, (Result + 1));
-  for i := 0 to h do
-    arr[(Result - i)] := items[(h - i)];
+  SetLength(arr, ((Result + h) + 2));
+  case duplicates of
+    False:
+	  begin
+	    for i := 0 to h do
+	      if not TArray_Contains(arr, items[i]) then
+          arr[(Integer_Incr(Result))] := items[i];
+      SetLength(arr, (Result + 1));
+    end;
+    True:
+  	for i := 0 to h do
+      arr[Integer_Incr(Result)] := items[i];
+  end;
 end;
 {$ENDIF}
 
@@ -1036,6 +1048,29 @@ begin
       Result := arr[i];
     end;
   end;
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <TArray_Length(arr: TArray, size: Integer): Integer> 
+ @action: Returns size and sets it as size of arr.
+ @note: None.
+[==============================================================================}
+{$IFDEF TArray_Length1}
+begin
+  Result := size;
+  SetLength(arr, size);
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <TArray_Length(arr: TArray: TArray): Integer> 
+ @action: Returns array length.
+ @note: Simply Result := Length(arr);
+[==============================================================================}
+{$IFDEF TArray_Length2}
+begin
+  Result := Length(arr);
 end;
 {$ENDIF}
 

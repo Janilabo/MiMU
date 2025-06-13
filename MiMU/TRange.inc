@@ -717,3 +717,13 @@ function TRange_Center(const range: TRange): Integer; cdecl;
 begin
   Result := ((TRange_Max(range) + TRange_Min(range)) div 2);
 end;
+
+{==============================================================================]
+ <TRange_String>
+ @action: Converts TRange range to string.
+ @note: None
+[==============================================================================}
+function TRange_String(const range: TRange): string; cdecl;
+begin
+  Result := ('[' + IntToStr(range.start) + '..' + IntToStr(range.stop) + ']');
+end;

@@ -1643,6 +1643,47 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArray_BinaryUnique>
+  @action: Binary Search-based Unique method.
+  @note: Alternative for TArray_Unique, for TIntegerArrays.
+[==============================================================================}
+function TIntegerArray_BinaryUnique(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+var
+  i, o: Integer;
+begin
+  Result := 0;
+  if (High(Result) = -1) then
+    Exit;
+  o := Boolean_X(ascending, -1, 1);
+  for i := 1 to High(arr) do
+    if (Sign(arr[Result] - arr[i]) = o) then
+      arr[Integer_Incr(Result)] := arr[i];
+  Result := (Result + 1);
+  SetLength(arr, Result);
+end;
+
+{==============================================================================]
+  <TIntegerArray_BinaryUniqued>
+  @action: Binary Search-based Uniqued method.
+  @note: Alternative for TArray_Uniqued, for TIntegerArrays.
+[==============================================================================}
+function TIntegerArray_BinaryUniqued(const arr: TIntegerArray; const ascending: Boolean = True): TIntegerArray; cdecl;
+var
+  i, o, r: Integer;
+begin
+  SetLength(Result, Length(arr));
+  if (High(arr) = -1) then
+    Exit;
+  r := 0;
+  o := Boolean_X(ascending, -1, 1);
+  Result[0] := arr[0];
+  for i := 1 to High(arr) do
+    if (Sign(Result[r] - arr[i]) = o) then
+      Result[Integer_Incr(r)] := arr[i];
+  SetLength(Result, (r + 1));
+end;
+
+{==============================================================================]
   <TIntegerArray_Split>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference range (minDiff, maxDiff) from each other.
