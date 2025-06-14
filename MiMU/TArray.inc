@@ -1,5 +1,5 @@
 {==============================================================================]
- <TArray_Add(const arr: TArray; item: VarType): TArray>
+ <TArray_Add(const arr: TArray; item: VarType; duplicates: Boolean): TArray>
  @action: Appends arr with item. Returns the array with added item.
  @note: Adds item to the right side of the array.
 [==============================================================================}
@@ -11,18 +11,21 @@ begin
   SetLength(Result, (l + 1));
   for i := 0 to (l - 1) do
     Result[i] := arr[i];
-  Result[l] := item;
+  if ((not duplicates) and TArray_Contains(arr, item)) then
+    SetLength(Result, l)
+  else
+    Result[l] := item;
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Add(const arr: TArray; items: TArray): TArray>
+ <TArray_Add(const arr: TArray; items: TArray; duplicates: Boolean): TArray>
  @action: Appends arr with items. Returns the array with added items.
  @note: Adds item to the right side of the array.
 [==============================================================================}
 {$IFDEF TArray_Add2}
 var
-  h, i, l: Integer;
+  a, h, i, l: Integer;
 begin
   h := High(items);
   l := Length(arr);
@@ -31,8 +34,19 @@ begin
     Exit;
   for i := 0 to (l - 1) do
     Result[i] := arr[i];
-  for i := 0 to h do
-    Result[(l + i)] := items[i];
+  case duplicates of
+    False:
+	begin
+	  a := 0;
+	  for i := 0 to h do
+	    if not TArray_Contains(Result, items[i]) then
+        Result[(l + Integer_Inc(a))] := items[i];
+      SetLength(Result, (l + a));
+    end;
+    True:
+    for i := 0 to h do
+      Result[(l + i)] := items[i];
+  end;
 end;
 {$ENDIF}
 

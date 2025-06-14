@@ -1509,7 +1509,7 @@ begin
     m := ((l + h) div 2);
     r := ((o * arr[m]) = (o * x));
     if r then
-	  begin
+	begin
       Result := TRange_Create(m, m);
       while ((Result.start > 0) and (arr[(Result.start - 1)] = x)) do
         Dec(Result.start);
@@ -1652,7 +1652,7 @@ var
   i, o: Integer;
 begin
   Result := 0;
-  if (High(Result) = -1) then
+  if (High(arr) = -1) then
     Exit;
   o := Boolean_X(ascending, -1, 1);
   for i := 1 to High(arr) do

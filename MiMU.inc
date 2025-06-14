@@ -11,25 +11,25 @@
 {$I MiMU\TRangeArray.inc}
 
 {$DEFINE TArray_Add1}
-function TArray_Add(const arr: TIntegerArray; const item: Integer): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TDoubleArray; const item: Double): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TStringArray; const item: string): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TCharArray; const item: Char): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TBooleanArray; const item: Boolean): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TPointArray; const item: TPoint): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TBoxArray; const item: TBox): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TRangeArray; const item: TRange): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TIntegerArray; const item: Integer; const duplicates: Boolean = True): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TDoubleArray; const item: Double; const duplicates: Boolean = True): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TStringArray; const item: string; const duplicates: Boolean = True): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TCharArray; const item: Char; const duplicates: Boolean = True): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TBooleanArray; const item: Boolean; const duplicates: Boolean = True): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TPointArray; const item: TPoint; const duplicates: Boolean = True): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TBoxArray; const item: TBox; const duplicates: Boolean = True): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TRangeArray; const item: TRange; const duplicates: Boolean = True): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Add1}
 
 {$DEFINE TArray_Add2}
-function TArray_Add(const arr: TIntegerArray; const items: TIntegerArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TDoubleArray; const items: TDoubleArray): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TStringArray; const items: TStringArray): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TCharArray; const items: TCharArray): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TBooleanArray; const items: TBooleanArray): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TPointArray; const items: TPointArray): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TBoxArray; const items: TBoxArray): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Add(const arr: TRangeArray; const items: TRangeArray): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TIntegerArray; const items: TIntegerArray; const duplicates: Boolean = True): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TDoubleArray; const items: TDoubleArray; const duplicates: Boolean = True): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TStringArray; const items: TStringArray; const duplicates: Boolean = True): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TCharArray; const items: TCharArray; const duplicates: Boolean = True): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TBooleanArray; const items: TBooleanArray; const duplicates: Boolean = True): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TPointArray; const items: TPointArray; const duplicates: Boolean = True): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TBoxArray; const items: TBoxArray; const duplicates: Boolean = True): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Add(const arr: TRangeArray; const items: TRangeArray; const duplicates: Boolean = True): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Add2}
 
 {$DEFINE TArray_AllEqual}

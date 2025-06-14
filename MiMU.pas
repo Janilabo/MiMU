@@ -459,22 +459,22 @@ function TPointArray_FloodFill(const arr: TPointArray; const start: TPoint; cons
 function TRangeArray_TIntegerArray(const arr: TRangeArray): TIntegerArray; cdecl;
 function TRangeArray_T2DIntegerArray(const arr: TRangeArray): T2DIntegerArray; cdecl;
 
-function TArray_Add(const arr: TIntegerArray; const item: Integer): TIntegerArray; overload; cdecl;
-function TArray_Add(const arr: TDoubleArray; const item: Double): TDoubleArray; overload; cdecl;
-function TArray_Add(const arr: TStringArray; const item: string): TStringArray; overload; cdecl;
-function TArray_Add(const arr: TCharArray; const item: Char): TCharArray; overload; cdecl;
-function TArray_Add(const arr: TBooleanArray; const item: Boolean): TBooleanArray; overload; cdecl;
-function TArray_Add(const arr: TPointArray; const item: TPoint): TPointArray; overload; cdecl;
-function TArray_Add(const arr: TBoxArray; const item: TBox): TBoxArray; overload; cdecl;
-function TArray_Add(const arr: TRangeArray; const item: TRange): TRangeArray; overload; cdecl;
-function TArray_Add(const arr: TIntegerArray; const items: TIntegerArray): TIntegerArray; overload; cdecl;
-function TArray_Add(const arr: TDoubleArray; const items: TDoubleArray): TDoubleArray; overload; cdecl;
-function TArray_Add(const arr: TStringArray; const items: TStringArray): TStringArray; overload; cdecl;
-function TArray_Add(const arr: TCharArray; const items: TCharArray): TCharArray; overload; cdecl;
-function TArray_Add(const arr: TBooleanArray; const items: TBooleanArray): TBooleanArray; overload; cdecl;
-function TArray_Add(const arr: TPointArray; const items: TPointArray): TPointArray; overload; cdecl;
-function TArray_Add(const arr: TBoxArray; const items: TBoxArray): TBoxArray; overload; cdecl;
-function TArray_Add(const arr: TRangeArray; const items: TRangeArray): TRangeArray; overload; cdecl;
+function TArray_Add(const arr: TIntegerArray; const item: Integer; const duplicates: Boolean = True): TIntegerArray; overload; cdecl;
+function TArray_Add(const arr: TDoubleArray; const item: Double; const duplicates: Boolean = True): TDoubleArray; overload; cdecl;
+function TArray_Add(const arr: TStringArray; const item: string; const duplicates: Boolean = True): TStringArray; overload; cdecl;
+function TArray_Add(const arr: TCharArray; const item: Char; const duplicates: Boolean = True): TCharArray; overload; cdecl;
+function TArray_Add(const arr: TBooleanArray; const item: Boolean; const duplicates: Boolean = True): TBooleanArray; overload; cdecl;
+function TArray_Add(const arr: TPointArray; const item: TPoint; const duplicates: Boolean = True): TPointArray; overload; cdecl;
+function TArray_Add(const arr: TBoxArray; const item: TBox; const duplicates: Boolean = True): TBoxArray; overload; cdecl;
+function TArray_Add(const arr: TRangeArray; const item: TRange; const duplicates: Boolean = True): TRangeArray; overload; cdecl;
+function TArray_Add(const arr: TIntegerArray; const items: TIntegerArray; const duplicates: Boolean = True): TIntegerArray; overload; cdecl;
+function TArray_Add(const arr: TDoubleArray; const items: TDoubleArray; const duplicates: Boolean = True): TDoubleArray; overload; cdecl;
+function TArray_Add(const arr: TStringArray; const items: TStringArray; const duplicates: Boolean = True): TStringArray; overload; cdecl;
+function TArray_Add(const arr: TCharArray; const items: TCharArray; const duplicates: Boolean = True): TCharArray; overload; cdecl;
+function TArray_Add(const arr: TBooleanArray; const items: TBooleanArray; const duplicates: Boolean = True): TBooleanArray; overload; cdecl;
+function TArray_Add(const arr: TPointArray; const items: TPointArray; const duplicates: Boolean = True): TPointArray; overload; cdecl;
+function TArray_Add(const arr: TBoxArray; const items: TBoxArray; const duplicates: Boolean = True): TBoxArray; overload; cdecl;
+function TArray_Add(const arr: TRangeArray; const items: TRangeArray; const duplicates: Boolean = True): TRangeArray; overload; cdecl;
 
 function TArray_AllEqual(const arr: TIntegerArray): Boolean; overload; cdecl;
 function TArray_AllEqual(const arr: TDoubleArray): Boolean; overload; cdecl;
