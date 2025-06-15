@@ -44,7 +44,7 @@ uses
   classes, sysutils, math;
 
 const
-  MiMU_VERSION_NUMBER = 0.34;
+  MiMU_VERSION_NUMBER = 0.35;
 
 type
   TIntegerArray = array of Integer;
@@ -240,6 +240,14 @@ function Boolean_X(const X: Boolean; const trueX, falseX: Char): Char; overload;
 function Boolean_X(const X: Boolean; const trueX, falseX: TPoint): TPoint; overload; cdecl;
 function Boolean_X(const X: Boolean; const trueX, falseX: TBox): TBox; overload; cdecl;
 function Boolean_X(const X: Boolean; const trueX, falseX: TRange): TRange; overload; cdecl;
+function Boolean_Opposite(const x: Boolean): Boolean; cdecl;
+function Boolean_Toggle(var x: Boolean): Boolean; cdecl;
+function Boolean_Set(var x: Boolean; const state: Boolean): Boolean; cdecl;
+function Boolean_Unset(var x: Boolean; const state: Boolean): Boolean; cdecl;
+function Boolean_Check(var x: Boolean): Boolean; cdecl;
+function Boolean_Uncheck(var x: Boolean): Boolean; cdecl;
+function Boolean_Enable(var x: Boolean): Boolean; cdecl;
+function Boolean_Disable(var x: Boolean): Boolean; cdecl;
 
 function TPoint_To(const X, Y: Integer): TPoint; cdecl; inline;
 function TPoint_At(const X, Y: Integer): TPoint; cdecl; inline;
@@ -381,7 +389,8 @@ function TRange_String(const range: TRange): string; cdecl;
 
 function TIntegerArray_Descending(const arr: TIntegerArray): Boolean; cdecl;
 function TIntegerArray_Ascending(const arr: TIntegerArray): Boolean; cdecl;
-function TIntegerArray_Bounds(const arr: TIntegerArray): TRange; cdecl;
+function TIntegerArray_Bounds(const arr: TIntegerArray): TRange; overload; cdecl;
+function TIntegerArray_Bounds(const arr: TIntegerArray; var size: Integer): TRange; overload; cdecl;
 function TIntegerArray_TRange(const arr: TIntegerArray): TRange; cdecl;
 function TIntegerArray_Unique(var arr: TIntegerArray): Integer; cdecl;
 function TIntegerArray_Uniqued(const arr: TIntegerArray): TIntegerArray; cdecl;
@@ -448,7 +457,8 @@ function TIntegerArray_Groub(const arr: TIntegerArray; const minDiff, maxDiff: I
 function TIntegerArray_Groub(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
 function TIntegerArray_Invert(const arr: TIntegerArray): TIntegerArray; cdecl;
 
-function TPointArray_Bounds(const arr: TPointArray): TBox; cdecl;
+function TPointArray_Bounds(const arr: TPointArray): TBox; overload; cdecl;
+function TPointArray_Bounds(const arr: TPointArray; var width, height: Integer): TBox; overload; cdecl;
 function TPointArray_Unique(var arr: TPointArray): Integer; cdecl;
 function TPointArray_Uniqued(const arr: TPointArray): TPointArray; cdecl;
 function TPointArray_Invert(const arr: TPointArray): TPointArray; cdecl;

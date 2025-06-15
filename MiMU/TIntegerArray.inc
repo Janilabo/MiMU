@@ -39,18 +39,37 @@ end;
   @action: Stores arr bounds to TRange.
   @note: None.
 [==============================================================================}
-function TIntegerArray_Bounds(const arr: TIntegerArray): TRange; cdecl;
+function TIntegerArray_Bounds(const arr: TIntegerArray): TRange; overload; cdecl;
 var
   i: Integer;
 begin
-  if (High(arr) > -1) then
-    Result := TRange_Create(arr[0], arr[0]);
+  if (High(arr) = -1) then
+    Exit(TRange_Create(-2147483648, -2147483648));
+  Result := TRange_Create(arr[0], arr[0]);
   for i := 1 to High(arr) do
     if (arr[i] < Result.start) then
       Result.start := arr[i]
     else
       if (arr[i] > Result.stop) then
         Result.stop := arr[i];
+end;
+
+function TIntegerArray_Bounds(const arr: TIntegerArray; var size: Integer): TRange; overload; cdecl;
+var
+  i: Integer;
+begin
+  case (High(arr) = -1) of
+    False:
+	begin
+	  Result := TIntegerArray_Bounds(arr);
+	  size := TRange_Size(Result);
+	end;
+    True:
+    begin
+      Result := TRange_Create(-2147483648, -2147483648);
+      size := 0;
+    end;
+  end;
 end;
 
 {==============================================================================]
@@ -88,14 +107,10 @@ begin
   begin
     z := 0;
     r := TIntegerArray_Bounds(arr);
-    SetLength(b, TRange_Size(r));
+    b := TArray_Create(TRange_Size(r), False);
     for x := 0 to y do
-      if not b[(arr[x] - r.start)] then
-      begin
-        b[(arr[x] - r.start)] := True;
-        arr[z] := arr[x];
-        Inc(z);
-      end;
+      if Boolean_Check(b[(arr[x] - r.start)]) then
+        arr[Integer_Inc(z)] := arr[x];
     SetLength(b, 0);
     SetLength(arr, z);
     Result := ((y + 1) - z);
@@ -120,14 +135,10 @@ begin
   begin
     SetLength(Result, (y + 1));
     r := TIntegerArray_Bounds(arr);
-    SetLength(b, (Abs(r.start - r.stop) + 1));
+	b := TArray_Create(TRange_Size(r), False);
     for x := 0 to y do
-      if not b[(arr[x] - r.start)] then
-      begin
-        b[(arr[x] - r.start)] := True;
-        Result[z] := arr[x];
-        Inc(z);
-      end;
+      if Boolean_Check(b[(arr[x] - r.start)]) then
+        Result[Integer_Inc(z)] := arr[x];
     SetLength(b, 0);
   end;
   SetLength(Result, z);
@@ -319,10 +330,7 @@ begin
         Break;
       end;
     if u then
-    begin
-      a[c] := arr[i];
-      Inc(c);
-    end;
+      a[Integer_Inc(c)] := arr[i];
   end;
   Result := (Double(c) / (Abs(l - h) + 1));
 end;
@@ -454,9 +462,7 @@ begin
     1:
     begin
       r := TIntegerArray_Bounds(arr);
-      SetLength(b, TRange_Size(r));
-      for x := 0 to (r.stop - r.start) do
-        b[x] := 0;
+	  b := TArray_Create(TRange_Size(r), Integer(0));
       for x := 0 to High(arr) do
         Inc(b[(arr[x] - r.start)]);
       t := 0;
@@ -487,9 +493,7 @@ begin
     1:
     begin
       r := TIntegerArray_Bounds(arr);
-      SetLength(b, TRange_Size(r));
-      for x := 0 to (r.stop - r.start) do
-        b[x] := 0;
+      b := TArray_Create(TRange_Size(r), Integer(0));
       for x := 0 to High(arr) do
         Inc(b[(arr[x] - r.start)]);
       t := 0;
@@ -1109,24 +1113,15 @@ function TIntegerArray_MergeSort(var arr: TIntegerArray; const ascending: Boolea
       tmp[i] := arr[i];
     for i := Lo to Hi do
       if (L > m) then
-      begin
-        arr[i] := tmp[R];
-        Inc(R);
-      end else
+        arr[i] := tmp[Integer_Inc(R)]
+      else
         if (R > Hi) then
-        begin
-          arr[i] := tmp[L];
-          Inc(L);
-        end else
+          arr[i] := tmp[Integer_Inc(L)]
+        else
           if (Sign(tmp[R] - tmp[L]) = o) then
-          begin
-            arr[i] := tmp[R];
-            Inc(R);
-          end else
-          begin
-            arr[i] := tmp[L];
-            Inc(L);
-          end;
+            arr[i] := tmp[Integer_Inc(R)]
+          else
+            arr[i] := tmp[Integer_Inc(L)];
   end;
 var
   l: Integer;
@@ -1172,28 +1167,15 @@ begin
         while ((l <= m) and (r <= b)) do
         begin
           if ((ascending and (t[l] <= t[r])) or (not ascending and (t[l] >= t[r]))) then
-          begin
-            arr[k] := t[l];
-            Inc(l);
-          end else
-          begin
-            arr[k] := t[r];
-            Inc(r);
-          end;
+            arr[k] := t[Integer_Inc(l)]
+          else
+            arr[k] := t[Integer_Inc(r)];
           Inc(k);
         end;
         while (l <= m) do
-        begin
-          arr[k] := t[l];
-          Inc(l);
-          Inc(k);
-        end;
+          arr[Integer_Inc(k)] := t[Integer_Inc(l)];
         while (r <= b) do
-        begin
-          arr[k] := t[r];
-          Inc(r);
-          Inc(k);
-        end;
+          arr[Integer_Inc(k)] := t[Integer_Inc(r)];
         i := (i + (2 * w));
       end;
       w := (w * 2);
@@ -1792,8 +1774,7 @@ begin
       if not m then
       begin
         SetLength(Result[r], 1);
-        Result[r][0] := a[i];
-        Inc(r);
+        Result[Integer_Inc(r)][0] := a[i];
       end;
     end;
     SetLength(a, 0);
@@ -1850,8 +1831,7 @@ begin
         if not m then
         begin
           SetLength(Result[r], 1);
-          Result[r][0] := arr[i];
-          Inc(r);
+          Result[Integer_Inc(r)][0] := arr[i];
         end;
       end;
     end;
@@ -1909,8 +1889,7 @@ begin
       if not m then
       begin
         SetLength(Result[r], 1);
-        Result[r][0] := a[i];
-        Inc(r);
+        Result[Integer_Inc(r)][0] := a[i];
       end;
     end;
   end;
@@ -1950,19 +1929,13 @@ begin
       l := TRange_Size(a);
       b := TArray_Create(l, False);
       for x := 0 to y do
-        if not b[(arr[x] - a.start)] then
-        begin
-          b[(arr[x] - a.start)] := True;
+        if Boolean_Check(b[(arr[x] - a.start)]) then
           Inc(c);
-        end;
       SetLength(Result, (l - c));
       if (Length(Result) > 0) then
       for i := 0 to (l - 1) do
         if not b[i] then
-        begin
-          Result[r] := (i + a.start);
-          Inc(r);
-        end;
+          Result[Integer_Inc(r)] := (i + a.start);
       SetLength(b, 0);
     end;
   end;

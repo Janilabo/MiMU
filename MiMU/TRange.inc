@@ -285,7 +285,7 @@ end;
 function TRange_Union(const a, b: TRange): TRange; cdecl;
 begin
   Result.start := Min(Min(a.start, a.stop), Min(b.start, b.stop));
-  Result.stop  := Max(Max(a.start, a.stop), Max(b.start, b.stop));
+  Result.stop := Max(Max(a.start, a.stop), Max(b.start, b.stop));
 end;
 
 {==============================================================================]
@@ -576,10 +576,9 @@ begin
     begin
       b := Min(((a + size) - 1), r.stop);
       if (range.start > range.stop) then
-        Result[l] := TRange_Create(b, a)
+        Result[Integer_Inc(l)] := TRange_Create(b, a)
       else
-        Result[l] := TRange_Create(a, b);
-      l := (l + 1);
+        Result[Integer_Inc(l)] := TRange_Create(a, b);
       a := (b + 1);
     end;
   end;

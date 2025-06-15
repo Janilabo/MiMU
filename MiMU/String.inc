@@ -304,10 +304,9 @@ begin
       end;
       if m then
       begin
-        Result[r] := Copy(str, p, (a - p));
+        Result[Integer_Inc(r)] := Copy(str, p, (a - p));
         p := (a + s);
         a := (p - 1);
-        Inc(r);
         SetLength(Result, (r + 1));
       end;
       Inc(a);
@@ -355,8 +354,7 @@ begin
         begin
           s := Copy(str, p, (f - p));
           SetLength(Result, (c + 1));
-          Result[c] := s;
-          Inc(c);
+          Result[Integer_Inc(c)] := s;
           p := (f + l);
         end else
         begin

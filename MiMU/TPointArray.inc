@@ -3,7 +3,7 @@
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArray_Bounds(const arr: TPointArray): TBox; cdecl;
+function TPointArray_Bounds(const arr: TPointArray): TBox; overload; cdecl;
 var
   i: Integer;
 begin
@@ -26,13 +26,35 @@ begin
 end;
 
 {==============================================================================]
+  <TPointArray_Bounds>
+  @action: Returns bounding box around TPointArray arr.
+  @note: Stores width and height of bounds to width and height variables.
+[==============================================================================}
+function TPointArray_Bounds(const arr: TPointArray; var width, height: Integer): TBox; overload; cdecl;
+begin
+  case (High(arr) = -1) of
+    False:
+	begin
+	  Result := TPointArray_Bounds(arr);
+	  TBox_Size(Result, width, height);
+	end;
+    True:
+	begin
+      Result := TBox_Form(-2147483648);
+	  width := 0;
+	  height := 0;
+	end;
+  end;
+end;
+
+{==============================================================================]
   <TPointArray_Unique>
   @action: Removes duplicates from arr.
   @note: Returns number of duplicate items that were removed from arr.
 [==============================================================================}
 function TPointArray_Unique(var arr: TPointArray): Integer; cdecl;
 var
-  i, r, l: Integer;
+  i, r, l, w, h: Integer;
   m: T2DBooleanArray;
   b: TBox;
 begin
@@ -40,15 +62,11 @@ begin
   if (l > 1) then
   begin
     r := 0;
-    b := TPointArray_Bounds(arr);
-    SetLength(m, ((b.X2 - b.X1) + 1), ((b.Y2 - b.Y1) + 1));
+    b := TPointArray_Bounds(arr, w, h);
+    m := T2DArray_Create(w, h, False);
     for i := 0 to (l - 1) do
-      if not m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)] then
-      begin
-        m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)] := True;
-        arr[r] := arr[i];
-        Inc(r);
-      end;
+	  if Boolean_Check(m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)]) then
+        arr[Integer_Inc(r)] := arr[i];
     SetLength(arr, r);
     SetLength(m, 0);
   end;
@@ -62,7 +80,7 @@ end;
 [==============================================================================}
 function TPointArray_Uniqued(const arr: TPointArray): TPointArray; cdecl;
 var
-  i, r, l: Integer;
+  i, r, l, w, h: Integer;
   m: T2DBooleanArray;
   b: TBox;
 begin
@@ -70,16 +88,12 @@ begin
   l := Length(arr);
   if (l > 0) then
   begin
-    b := TPointArray_Bounds(arr);
-    SetLength(Result, l);
-    SetLength(m, ((b.X2 - b.X1) + 1), ((b.Y2 - b.Y1) + 1));
+    b := TPointArray_Bounds(arr, w, h);
+	m := T2DArray_Create(w, h, False);
+	SetLength(Result, l);
     for i := 0 to (l - 1) do
-      if not m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)] then
-      begin
-        m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)] := True;
-        Result[r] := arr[i];
-        Inc(r);
-      end;
+      if Boolean_Check(m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)]) then
+        Result[Integer_Inc(r)] := arr[i];
     SetLength(m, 0);
   end;
   SetLength(Result, r);
@@ -92,33 +106,25 @@ end;
 [==============================================================================}
 function TPointArray_Invert(const arr: TPointArray): TPointArray; cdecl;
 var
-  i, x, y, h, r, l: Integer;
+  i, x, y, w, h, r, l: Integer;
   m: T2DBooleanArray;
   b: TBox;
 begin
   r := 0;
-  h := High(arr);
-  if (h > 0) then
+  if (High(arr) > 0) then
   begin
-    b := TPointArray_Bounds(arr);
-	m := T2DArray_Create(((b.X2 - b.X1) + 1), ((b.Y2 - b.Y1) + 1), False);
+    b := TPointArray_Bounds(arr, w, h);
+	m := T2DArray_Create(w, h, False);
     x := 0;
-    for i := 0 to h do
-      if not m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)] then
-      begin
-        m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)] := True;
+    for i := 0 to High(arr) do
+      if Boolean_Check(m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)]) then
         Inc(x);
-      end;
-    SetLength(Result, ((((b.X2 - b.X1) + 1) * ((b.Y2 - b.Y1) + 1)) - x));
+    SetLength(Result, ((w * h) - x));
     if (Length(Result) > 0) then
-    for y := 0 to (b.Y2 - b.Y1) do
-      for x := 0 to (b.X2 - b.X1) do
+    for y := 0 to (h - 1) do
+      for x := 0 to (w - 1) do
         if not m[x][y] then
-        begin
-          Result[r].X := (x + b.X1);
-          Result[r].Y := (y + b.Y1);
-          Inc(r);
-        end;
+		  Result[Integer_Inc(r)] := TPoint_At((x + b.X1), (y + b.Y1));
     SetLength(m, 0);
   end;
   SetLength(Result, r);
@@ -143,8 +149,7 @@ begin
     TBox_Size(b, w, h);
     m := T2DArray_Create(w, h, False);
     for i := 0 to (l - 1) do
-      if not m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)] then
-        m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)] := True;
+      m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)] := True;
     SetLength(Result, (w * h));
     w := (w - 2);
     h := (h - 2);
@@ -154,20 +159,12 @@ begin
       for y := 1 to h do
         for x := 1 to w do
           if (m[x][y] and not (m[(x - 1)][y] and m[x][(y - 1)] and m[(x + 1)][y] and m[x][(y + 1)])) then
-          begin
-            Result[r].X := (x + b.X1);
-            Result[r].Y := (y + b.Y1);
-            Inc(r);
-          end;
+		    Result[Integer_Inc(r)] := TPoint_At((x + b.X1), (y + b.Y1));
       True:
       for y := 1 to h do
         for x := 1 to w do
           if (m[x][y] and not (m[(x - 1)][y] and m[x][(y - 1)] and m[(x + 1)][y] and m[x][(y + 1)] and m[(x - 1)][(y - 1)] and m[(x - 1)][(y + 1)] and m[(x + 1)][(y - 1)] and m[(x + 1)][(y + 1)])) then
-          begin
-            Result[r].X := (x + b.X1);
-            Result[r].Y := (y + b.Y1);
-            Inc(r);
-          end;
+            Result[Integer_Inc(r)] := TPoint_At((x + b.X1), (y + b.Y1));
     end;
     SetLength(Result, r);
     SetLength(m, 0);
@@ -209,13 +206,13 @@ begin
   if ((l > 0) and ((start.X >= area.X1) and (start.Y >= area.Y1) and (start.X <= area.X2) and (start.Y <= area.Y2))) then
   begin
     o := False;
-    TBox_Size(area, W, H);
-	c := T2DArray_Create(W, H, False);
+    TBox_Size(area, w, h);
+	c := T2DArray_Create(w, h, False);
     for i := 0 to (l - 1) do
     begin
       if not o then
         o := ((start.X = arr[i].X) and (start.Y = arr[i].Y));
-      if (((arr[i].X - area.X1) > -1) and ((arr[i].Y - area.Y1) > -1) and ((arr[i].Y - area.Y1) < H) and ((arr[i].X - area.X1) < W)) then
+      if (((arr[i].X - area.X1) > -1) and ((arr[i].Y - area.Y1) > -1) and ((arr[i].Y - area.Y1) < h) and ((arr[i].X - area.X1) < w)) then
         c[(arr[i].X - area.X1)][(arr[i].Y - area.Y1)] := True;
     end;
     s := not o;
@@ -224,8 +221,8 @@ begin
     else
       f := 3;
     SetLength(a, (f + 1));
-    SetLength(q, (W * H));
-	z := T2DArray_Create(W, H, False);
+    SetLength(q, (w * h));
+	z := T2DArray_Create(w, h, False);
     q[0] := start;
     l := 0;
     while (l > -1) do
@@ -236,12 +233,11 @@ begin
         p := a[i];
         x := (p.X - area.X1);
         y := (p.Y - area.Y1);
-        if ((x > -1) and (y > -1) and (x < W) and (y < H) and (c[x][y] = not s)) then
+        if ((x > -1) and (y > -1) and (x < w) and (y < h) and (c[x][y] = not s)) then
         begin
           c[x][y] := s;
           z[x][y] := True;
-          q[l] := p;
-          Inc(l);
+          q[Integer_Inc(l)] := p;
         end;
       end;
       l := (l - 1);
@@ -249,14 +245,11 @@ begin
     SetLength(c, 0);
     SetLength(q, 0);
     SetLength(a, 0);
-    SetLength(Result, (W * H));
-    for Y := 0 to (H - 1) do
-      for X := 0 to (W - 1) do
-        if z[X][Y] then
-        begin
-          Result[r] := TPoint_To((X + area.X1), (Y + area.Y1));
-          Inc(r);
-        end;
+    SetLength(Result, (w * h));
+    for y := 0 to (h - 1) do
+      for x := 0 to (w - 1) do
+        if z[x][y] then
+          Result[Integer_Inc(r)] := TPoint_To((x + area.X1), (y + area.Y1));
     SetLength(z, 0);
   end;
   SetLength(Result, r);

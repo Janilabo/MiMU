@@ -619,7 +619,6 @@ end;
 [==============================================================================}
 function TBox_Fix(var bx: TBox): Boolean; cdecl;
 var
-  t: Integer;
   x, y: Boolean;
 begin
   x := (bx.X1 > bx.X2);
@@ -628,17 +627,9 @@ begin
   if not Result then
     Exit;
   if x then
-  begin
-    t := bx.X1;
-	bx.X1 := bx.X2;
-	bx.X2 := t;
-  end;
+    Swap(bx.X1, bx.X2);
   if y then
-  begin
-    t := bx.Y1;
-    bx.Y1 := bx.Y2;
-    bx.Y2 := t;	
-  end;
+    Swap(bx.Y1, bx.Y2);
 end;
 
 {==============================================================================]
@@ -754,11 +745,7 @@ begin
   r := 0;
   for y := bx.Y1 to bx.Y2 do
     for x := bx.X1 to bx.X2 do
-    begin
-      Result[r].X := x;
-      Result[r].Y := y;
-      r := (r + 1);
-    end;
+	  Result[Integer_Inc(r)] := TPoint_At(x, y);
 end;
 
 {==============================================================================]
@@ -774,10 +761,7 @@ begin
   h := ((bx.Y2 - bx.Y1) + 1);
   SetLength(Result, (w * h));
   for i := 0 to ((w * h) - 1) do
-  begin
-    Result[i].X := (bx.X1 + (i mod w));
-    Result[i].Y := (bx.Y1 + (i div w));
-  end;
+    Result[i] := TPoint_At((bx.X1 + (i mod w)), (bx.Y1 + (i div w)));
 end;
 
 {==============================================================================]
@@ -804,10 +788,7 @@ begin
       begin
         i := ((r * columns) + c);
         x := (bx.X1 + (c * (w + spaceHorizontal)));
-        Result[i].X1 := x;
-        Result[i].Y1 := y;
-        Result[i].X2 := (x + (w - 1));
-        Result[i].Y2 := (y + (h - 1));
+		Result[i] := TBox_Build(x, y, (x + (w - 1)), (y + (h - 1)));
       end;
     end;
   end else
@@ -831,10 +812,7 @@ begin
     for i := 0 to (cells - 1) do
     begin
       z := (bx.X1 + (i * (w + space)));
-      Result[i].X1 := z;
-      Result[i].Y1 := bx.Y1;
-      Result[i].X2 := (z + (w - 1));
-      Result[i].Y2 := bx.Y2;
+	  Result[i] := TBox_Build(z, bx.Y1, (z + (w - 1)), bx.Y2);
     end;
   end else
     SetLength(Result, 0);
@@ -857,10 +835,7 @@ begin
     for i := 0 to (cells - 1) do
     begin
       z := (bx.Y1 + (i * (h + space)));
-      Result[i].X1 := bx.X1;
-      Result[i].Y1 := z;
-      Result[i].X2 := bx.X2;
-      Result[i].Y2 := (z + (h - 1));
+	  Result[i] := TBox_Build(bx.X1, z, bx.X2, (z + (h - 1)));
     end;
   end else
     SetLength(Result, 0);

@@ -148,8 +148,7 @@ begin
       begin
         i := ((r * columns) + c);
         x := (pt.X + (c * (spaceHorizontal + 1)));
-        Result[i].X := x;
-        Result[i].Y := y;
+		Result[i] := TPoint_At(x, y);
       end;
     end;
   end else
@@ -170,10 +169,7 @@ begin
   begin
     SetLength(Result, cells);
     for i := 0 to (cells - 1) do
-    begin
-      Result[i].X := (pt.X + (i * (space + 1)));
-      Result[i].Y := pt.Y;
-    end;
+	  Result[i] := TPoint_At((pt.X + (i * (space + 1))), pt.Y);
   end else
     SetLength(Result, 0);
 end;
@@ -192,10 +188,7 @@ begin
   begin
     SetLength(Result, cells);
     for i := 0 to (cells - 1) do
-    begin
-      Result[i].X := pt.X;
-      Result[i].Y := (pt.Y + (i * (space + 1)));
-    end;
+	  Result[i] := TPoint_At(pt.X, (pt.Y + (i * (space + 1))));
   end else
     SetLength(Result, 0);
 end;

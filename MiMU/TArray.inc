@@ -407,10 +407,7 @@ begin
         Inc(c);
       SetLength(Result[i], c);
       for j := 0 to (c - 1) do
-      begin
-        Result[i][j] := arr[s];
-        Inc(s);
-      end;
+        Result[i][j] := arr[Integer_Inc(s)];
     end;
   end else
     SetLength(Result, 0);
@@ -548,10 +545,7 @@ begin
   r := 0;
   for i := index to (l - 1) do
     if (arr[i] = item) then
-    begin
-      Result[r] := arr[i];
-      Inc(r);
-    end;
+      Result[Integer_Inc(r)] := arr[i];
   SetLength(Result, r);
 end;
 {$ENDIF}
@@ -572,10 +566,7 @@ begin
     SetLength(Result, (l - index));
     for i := index to (l - 1) do
       if TArray_Contains(items, arr[i]) then
-      begin
-        Result[r] := arr[i];
-        Inc(r);
-      end;
+        Result[Integer_Inc(r)] := arr[i];
   end;
   SetLength(Result, r);
 end;
@@ -597,10 +588,7 @@ begin
   h := 0;
   for i := index to (l - 1) do
     if (((i - index) mod X) = 0) then
-    begin
-      Result[h] := arr[i];
-      Inc(h);
-    end;
+      Result[Integer_Inc(h)] := arr[i];
   SetLength(Result, h);
 end;
 {$ENDIF}
@@ -668,10 +656,7 @@ begin
   r := 0;
   for i := index to (l - 1) do
     if (arr[i] <> item) then
-    begin
-      Result[r] := arr[i];
-      Inc(r);
-    end;
+      Result[Integer_Inc(r)] := arr[i];
   SetLength(Result, r);
 end;
 {$ENDIF}
@@ -692,10 +677,7 @@ begin
   SetLength(Result, (l - index));
   for i := index to (l - 1) do
     if not TArray_Contains(items, arr[i]) then
-    begin
-      Result[r] := arr[i];
-      Inc(r);
-    end;
+      Result[Integer_Inc(r)] := arr[i];
   SetLength(Result, r);
 end;
 {$ENDIF}
@@ -716,10 +698,7 @@ begin
   h := 0;
   for i := index to (l - 1) do
     if not (((i - index) mod X) = 0) then
-    begin
-      Result[h] := arr[i];
-      Inc(h);
-    end;
+      Result[Integer_Inc(h)] := arr[i];
   SetLength(Result, h);
 end;
 {$ENDIF}
@@ -815,11 +794,7 @@ begin
   l := (Length(arr) - 1);
   Result := (l > 0);
   while (i < l) do
-  begin
-    Swap(arr[i], arr[l]);
-    Inc(i);
-    Dec(l);
-  end;
+    Swap(arr[Integer_Inc(i)], arr[Integer_Dec(l)]);
 end;
 {$ENDIF}
 
@@ -1205,8 +1180,7 @@ begin
       i := (i + 1);
       if ((IDs[i] > h) or (IDs[i] < 0)) then
         Continue;
-      Result[r] := arr[IDs[i]];
-      Inc(r);
+      Result[Integer_Inc(r)] := arr[IDs[i]];
       for t := IDs[i] to (h - 1) do
         arr[t] := arr[(t + 1)];
       Dec(h);
@@ -1304,12 +1278,11 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Position2}
 var
-  h, i: Integer;
+  i: Integer;
 begin
-  h := High(items);
-  if (h > -1) then
+  if (High(items) > -1) then
   for Result := Max(0, index) to High(arr) do
-    for i := 0 to h do
+    for i := 0 to High(items) do
       if (arr[Result] = items[i]) then
         Exit;
   Result := -1;
@@ -1333,10 +1306,7 @@ begin
     SetLength(Result, ((h + 1) - s));
     for i := s to h do
       if (arr[i] = item) then
-      begin
-        Result[r] := i;
-        Inc(r);
-      end;
+        Result[Integer_Inc(r)] := i;
   end;
   SetLength(Result, r);
 end;
@@ -1359,10 +1329,7 @@ begin
     SetLength(Result, ((h + 1) - s));
     for i := s to h do
       if TArray_Contains(items, arr[i]) then
-      begin
-        Result[r] := i;
-        Inc(r);
-      end;
+        Result[Integer_Inc(r)] := i;
   end;
   SetLength(Result, r);
 end;
@@ -1417,10 +1384,7 @@ begin
     SetLength(Result, (s + 1));
     for i := s downto 0 do
       if (arr[i] = item) then
-      begin
-        Result[r] := i;
-        Inc(r);
-      end;
+        Result[Integer_Inc(r)] := i;
   end;
   SetLength(Result, r);
 end;
@@ -1443,10 +1407,7 @@ begin
     SetLength(Result, (s + 1));
     for i := s downto 0 do
       if TArray_Contains(items, arr[i]) then
-      begin
-        Result[r] := i;
-        Inc(r);
-      end;
+        Result[Integer_Inc(r)] := i;
   end;
   SetLength(Result, r);
 end;
@@ -1526,10 +1487,8 @@ begin
   r := 0;
   for i := m to (l - 1) do
     if (s or (arr[i] <> item)) then
-    begin
-      arr[(r + m)] := arr[i];
-      Inc(r);
-    end else
+      arr[(Integer_Inc(r) + m)] := arr[i]
+    else
       s := not all;
   SetLength(arr, (r + m));
   Result := (l - Length(arr));
@@ -1577,10 +1536,8 @@ begin
       end;
     end;
     if not d then
-    begin
-      arr[(r + m)] := arr[i];
-      Inc(r);
-    end else
+      arr[(Integer_Inc(r) + m)] := arr[i]
+    else
       d := not s;
   end;
   SetLength(arr, (r + m));
@@ -1993,8 +1950,7 @@ begin
     end;
     if m then
       Continue;
-    a := (a + 1);
-    arr[a] := arr[i];
+    arr[Integer_Incr(a)] := arr[i];
   end;
   Result := (l - (a + 1));
   if (Result > 0) then
@@ -2026,10 +1982,7 @@ begin
           j := 0;
       until ((j = 0) or (j > c));
       if (j > 0) then
-      begin
-        Result[c] := arr[i];
-        Inc(c);
-      end;
+        Result[Integer_Inc(c)] := arr[i];
     end;
     SetLength(Result, c);
   end;
@@ -2060,10 +2013,7 @@ begin
           Break;
       end;
       if not m then
-      begin
-        Result[r] := x;
-        Inc(r);
-      end;
+        Result[Integer_Inc(r)] := x;
     end;
     SetLength(Result, r);
   end;
