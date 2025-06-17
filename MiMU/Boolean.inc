@@ -90,7 +90,7 @@ end;
 {==============================================================================]
   <Boolean_Opposite>
   @action: Returns the opposite value of X.
-  @note:   True => False / False => True.
+  @note: True => False / False => True.
 [==============================================================================}
 function Boolean_Opposite(const x: Boolean): Boolean; cdecl;
 begin
@@ -100,7 +100,7 @@ end;
 {==============================================================================]
   <Boolean_Toggle>
   @action: Toggles the Boolean value of X.
-  @note:   Returns the original value before toggling.
+  @note: Returns the original value before toggling.
 [==============================================================================}
 function Boolean_Toggle(var x: Boolean): Boolean; cdecl;
 begin
@@ -111,7 +111,7 @@ end;
 {==============================================================================]
   <Boolean_Set>
   @action: Sets X to the given state if different.
-  @note:   Returns True if X was changed.
+  @note: Returns True if X was changed.
 [==============================================================================}
 function Boolean_Set(var x: Boolean; const state: Boolean): Boolean; cdecl;
 begin
@@ -123,7 +123,7 @@ end;
 {==============================================================================]
   <Boolean_Unset>
   @action: Inverts X only if it equals the given state.
-  @note:   Returns True if X was changed.
+  @note: Returns True if X was changed.
 [==============================================================================}
 function Boolean_Unset(var x: Boolean; const state: Boolean): Boolean; cdecl;
 begin
@@ -135,7 +135,7 @@ end;
 {==============================================================================]
   <Boolean_Check>
   @action: Sets X to True (checked).
-  @note:   Returns True if X was previously False.
+  @note: Returns True if X was previously False.
 [==============================================================================}
 function Boolean_Check(var x: Boolean): Boolean; cdecl;
 begin
@@ -146,7 +146,7 @@ end;
 {==============================================================================]
   <Boolean_Uncheck>
   @action: Sets X to False (unchecked).
-  @note:   Returns True if X was previously True.
+  @note: Returns True if X was previously True.
 [==============================================================================}
 function Boolean_Uncheck(var x: Boolean): Boolean; cdecl;
 begin
@@ -157,7 +157,7 @@ end;
 {==============================================================================]
   <Boolean_Enable>
   @action: Sets X to True (enabled).
-  @note:   Returns True if X was previously False.
+  @note: Returns True if X was previously False.
 [==============================================================================}
 function Boolean_Enable(var x: Boolean): Boolean; cdecl;
 begin
@@ -168,7 +168,7 @@ end;
 {==============================================================================]
   <Boolean_Disable>
   @action: Sets X to False (disabled).
-  @note:   Returns True if X was previously True.
+  @note: Returns True if X was previously True.
 [==============================================================================}
 function Boolean_Disable(var x: Boolean): Boolean; cdecl;
 begin

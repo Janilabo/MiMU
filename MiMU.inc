@@ -6,6 +6,7 @@
 {$I MiMU\TPoint.inc}
 {$I MiMU\TBox.inc}
 {$I MiMU\TRange.inc}
+{$I MiMU\TBooleanHelper.inc}
 {$I MiMU\TIntegerArray.inc}
 {$I MiMU\TPointArray.inc}
 {$I MiMU\TRangeArray.inc}

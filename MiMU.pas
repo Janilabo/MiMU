@@ -32,46 +32,83 @@
  
  unit MiMU;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}
 {$macro on}
 {$inline on}
 {$modeswitch advancedrecords}
 {$modeswitch arrayoperators}
+{$modeswitch typehelpers}
+{$H+}
 
 interface
 
 uses
-  classes, sysutils, math;
+  classes, SysUtils, math;
 
 const
   MiMU_VERSION_NUMBER = 0.35;
 
 type
-  TIntegerArray = array of Integer;
-  T2DIntegerArray = array of TIntegerArray;
-  TDoubleArray = array of Double;
-  T2DDoubleArray = array of TDoubleArray;
-  TBooleanArray = array of Boolean;
-  T2DBooleanArray = array of TBooleanArray;
-  TCharArray = array of Char;
-  T2DCharArray = array of TCharArray;
-  TStringArray = array of string;
-  T2DStringArray = array of TStringArray;
   TPoint = record
     X, Y: Integer;
   end;
-  TPointArray = array of TPoint;
-  T2DPointArray = array of TPointArray;
   TBox = record
     X1, Y1, X2, Y2: Integer;
   end;
-  TBoxArray = array of TBox;
-  T2DBoxArray = array of TBoxArray;
   TRange = record
     start, stop: Integer;
   end;
+  TIntegerArray = array of Integer;
+  TDoubleArray = array of Double;
+  TStringArray = array of string;
+  TCharArray = array of Char;
+  TBooleanArray = array of Boolean;
+  TPointArray = array of TPoint;
+  TBoxArray = array of TBox;
   TRangeArray = array of TRange;
+  T2DIntegerArray = array of TIntegerArray;
+  T2DDoubleArray = array of TDoubleArray;
+  T2DStringArray = array of TStringArray;
+  T2DCharArray = array of TCharArray;
+  T2DBooleanArray = array of TBooleanArray;
+  T2DPointArray = array of TPointArray;
+  T2DBoxArray = array of TBoxArray;
   T2DRangeArray = array of TRangeArray;
+  TBooleanHelper = type helper for Boolean
+    function ToString: string; cdecl;
+    function ToInteger: Integer; cdecl;
+    function AsInteger: Integer; cdecl;
+    function Toggle: Boolean; cdecl;
+    function Opposite: Boolean; cdecl;
+    function Randomize: Boolean; cdecl;
+    function Select(const bTrue, bFalse: Integer): Integer; overload; cdecl;
+    function Select(const bTrue, bFalse: Int64): Int64; overload; cdecl;
+    function Select(const bTrue, bFalse: Double): Double; overload; cdecl;
+    function Select(const bTrue, bFalse: string): string; overload; cdecl;
+    function Select(const bTrue, bFalse: Char): Char; overload; cdecl;
+    function Select(const bTrue, bFalse: Boolean): Boolean; overload; cdecl;
+    function Select(const bTrue, bFalse: TPoint): TPoint; overload; cdecl;
+    function Select(const bTrue, bFalse: TBox): TBox; overload; cdecl;
+    function Select(const bTrue, bFalse: TRange): TRange; overload; cdecl;
+    function Evaluate(const bTrue, bFalse: Integer): Integer; overload; cdecl;
+    function Evaluate(const bTrue, bFalse: Int64): Int64; overload; cdecl;
+    function Evaluate(const bTrue, bFalse: Double): Double; overload; cdecl;
+    function Evaluate(const bTrue, bFalse: string): string; overload; cdecl;
+    function Evaluate(const bTrue, bFalse: Char): Char; overload; cdecl;
+    function Evaluate(const bTrue, bFalse: Boolean): Boolean; overload; cdecl;
+    function Evaluate(const bTrue, bFalse: TPoint): TPoint; overload; cdecl;
+    function Evaluate(const bTrue, bFalse: TBox): TBox; overload; cdecl;
+    function Evaluate(const bTrue, bFalse: TRange): TRange; overload; cdecl;
+    function Enable: Boolean; cdecl;
+    function Disable: Boolean; cdecl;
+	function EnableState(const state: Boolean): Boolean; cdecl;
+	function DisableState(const state: Boolean): Boolean; cdecl;
+	function SetFalse: Integer; cdecl;
+    function SetTrue: Integer; cdecl;
+  end;
+  TIntegerArrayHelper = type helper for TIntegerArray
+    function Contains(const item: Integer; const index: Integer = 0): Boolean; cdecl; 
+  end;
 
 function MiMU_Version: Double; cdecl;
 
@@ -1561,6 +1598,18 @@ begin
   A := B;
   B := T;
 end;
+
+function TIntegerArrayHelper.Contains(const item: Integer; const index: Integer = 0): Boolean; cdecl;
+var
+  i: Integer;
+begin
+  for i := index to High(Self) do
+    if (item = Self[i]) then
+      Exit(True);
+  Result := False;
+end;
+
+{$mode objfpc}{$H+}
 
 {$I MiMU.inc}
 
