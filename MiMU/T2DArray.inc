@@ -93,6 +93,6 @@ begin
   SetLength(Result, l);
   for i := High(arr) downto 0 do
     for j := High(arr[i]) downto 0 do
-      Result[Integer_Decr(l)] := arr[i][j];
+      Result[l.Decrement] := arr[i][j];
 end;
 {$ENDIF}

@@ -219,7 +219,7 @@ var
 begin
   Result := 0;
   c := Copy(str, index, ((Length(str) - index) + 1));
-  o := Boolean_X(overlap, 1, Length(s));
+  o := overlap.Select(1, Length(s));
   p := (1 - o);
   repeat
     p := String_Pos(c, s, (p + o));
@@ -240,7 +240,7 @@ var
 begin
   Result := 0;
   c := Copy(str, 1, index);
-  o := Boolean_X(overlap, 1, Length(s));
+  o := overlap.Select(1, Length(s));
   p := (1 - o);
   repeat
     p := String_Pos(c, s, (p + o));
@@ -304,7 +304,7 @@ begin
       end;
       if m then
       begin
-        Result[Integer_Inc(r)] := Copy(str, p, (a - p));
+        Result[r.Increase] := Copy(str, p, (a - p));
         p := (a + s);
         a := (p - 1);
         SetLength(Result, (r + 1));
@@ -354,7 +354,7 @@ begin
         begin
           s := Copy(str, p, (f - p));
           SetLength(Result, (c + 1));
-          Result[Integer_Inc(c)] := s;
+          Result[c.Increase] := s;
           p := (f + l);
         end else
         begin

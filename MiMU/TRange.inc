@@ -177,10 +177,10 @@ begin
   case TRange_Ascending(range) of
     False:
     for i := range.start downto range.stop do
-      Result[Integer_Inc(r)] := i;
+      Result[r.Increase] := i;
     True:
     for i := range.start to range.stop do
-      Result[Integer_Inc(r)] := i;
+      Result[r.Increase] := i;
   end;
 end;
 
@@ -576,9 +576,9 @@ begin
     begin
       b := Min(((a + size) - 1), r.stop);
       if (range.start > range.stop) then
-        Result[Integer_Inc(l)] := TRange_Create(b, a)
+        Result[l.Increase] := TRange_Create(b, a)
       else
-        Result[Integer_Inc(l)] := TRange_Create(a, b);
+        Result[l.Increase] := TRange_Create(a, b);
       a := (b + 1);
     end;
   end;

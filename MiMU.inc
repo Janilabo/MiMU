@@ -1,12 +1,11 @@
-{$I MiMU\Double.inc}
-{$I MiMU\Integer.inc}
-{$I MiMU\Int64.inc}
 {$I MiMU\String.inc}
-{$I MiMU\Boolean.inc}
-{$I MiMU\TPoint.inc}
 {$I MiMU\TBox.inc}
 {$I MiMU\TRange.inc}
+{$I MiMU\TIntegerHelper.inc}
+{$I MiMU\TInt64Helper.inc}
+{$I MiMU\TDoubleHelper.inc}
 {$I MiMU\TBooleanHelper.inc}
+{$I MiMU\TPointHelper.inc}
 {$I MiMU\TIntegerArray.inc}
 {$I MiMU\TPointArray.inc}
 {$I MiMU\TRangeArray.inc}

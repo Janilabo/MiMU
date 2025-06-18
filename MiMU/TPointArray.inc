@@ -65,8 +65,8 @@ begin
     b := TPointArray_Bounds(arr, w, h);
     m := T2DArray_Create(w, h, False);
     for i := 0 to (l - 1) do
-	  if Boolean_Check(m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)]) then
-        arr[Integer_Inc(r)] := arr[i];
+	  if m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)].Enable then
+        arr[r.Increase] := arr[i];
     SetLength(arr, r);
     SetLength(m, 0);
   end;
@@ -92,8 +92,8 @@ begin
 	m := T2DArray_Create(w, h, False);
 	SetLength(Result, l);
     for i := 0 to (l - 1) do
-      if Boolean_Check(m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)]) then
-        Result[Integer_Inc(r)] := arr[i];
+      if m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)].Enable then
+        Result[r.Increase] := arr[i];
     SetLength(m, 0);
   end;
   SetLength(Result, r);
@@ -117,14 +117,14 @@ begin
 	m := T2DArray_Create(w, h, False);
     x := 0;
     for i := 0 to High(arr) do
-      if Boolean_Check(m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)]) then
+      if m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)].Enable then
         Inc(x);
     SetLength(Result, ((w * h) - x));
     if (Length(Result) > 0) then
     for y := 0 to (h - 1) do
       for x := 0 to (w - 1) do
         if not m[x][y] then
-		  Result[Integer_Inc(r)] := TPoint_At((x + b.X1), (y + b.Y1));
+		  Result[r.Increase].Create((x + b.X1), (y + b.Y1));
     SetLength(m, 0);
   end;
   SetLength(Result, r);
@@ -159,12 +159,12 @@ begin
       for y := 1 to h do
         for x := 1 to w do
           if (m[x][y] and not (m[(x - 1)][y] and m[x][(y - 1)] and m[(x + 1)][y] and m[x][(y + 1)])) then
-		    Result[Integer_Inc(r)] := TPoint_At((x + b.X1), (y + b.Y1));
+		    Result[r.Increase].Create((x + b.X1), (y + b.Y1));
       True:
       for y := 1 to h do
         for x := 1 to w do
           if (m[x][y] and not (m[(x - 1)][y] and m[x][(y - 1)] and m[(x + 1)][y] and m[x][(y + 1)] and m[(x - 1)][(y - 1)] and m[(x - 1)][(y + 1)] and m[(x + 1)][(y - 1)] and m[(x + 1)][(y + 1)])) then
-            Result[Integer_Inc(r)] := TPoint_At((x + b.X1), (y + b.Y1));
+            Result[r.Increase].Create((x + b.X1), (y + b.Y1));
     end;
     SetLength(Result, r);
     SetLength(m, 0);
@@ -182,16 +182,16 @@ end;
 function TPointArray_FloodFill(const arr: TPointArray; const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; cdecl;
   procedure GetAdjacent(var adj: TPointArray; const n: TPoint; const FF8W: Boolean);
   begin
-    adj[0] := TPoint_To(n.x, (n.y - 1));
-    adj[3] := TPoint_To(n.x, (n.y + 1));
-    adj[1] := TPoint_To((n.x + 1), n.y);
-    adj[2] := TPoint_To((n.x - 1), n.y);
+    adj[0].Create(n.x, (n.y - 1));
+    adj[3].Create(n.x, (n.y + 1));
+    adj[1].Create((n.x + 1), n.y);
+    adj[2].Create((n.x - 1), n.y);
     if FF8W then
     begin
-      adj[4] := TPoint_To((n.x - 1), (n.y - 1));
-      adj[5] := TPoint_To((n.x + 1), (n.y - 1));
-      adj[6] := TPoint_To((n.x - 1), (n.y + 1));
-      adj[7] := TPoint_To((n.x + 1), (n.y + 1));
+      adj[4].Create((n.x - 1), (n.y - 1));
+      adj[5].Create((n.x + 1), (n.y - 1));
+      adj[6].Create((n.x - 1), (n.y + 1));
+      adj[7].Create((n.x + 1), (n.y + 1));
     end;
   end;
 var
@@ -237,7 +237,7 @@ begin
         begin
           c[x][y] := s;
           z[x][y] := True;
-          q[Integer_Inc(l)] := p;
+          q[l.Increase] := p;
         end;
       end;
       l := (l - 1);
@@ -249,7 +249,7 @@ begin
     for y := 0 to (h - 1) do
       for x := 0 to (w - 1) do
         if z[x][y] then
-          Result[Integer_Inc(r)] := TPoint_To((x + area.X1), (y + area.Y1));
+          Result[r.Increase].Create((x + area.X1), (y + area.Y1));
     SetLength(z, 0);
   end;
   SetLength(Result, r);

@@ -40,7 +40,7 @@ begin
 	  a := 0;
 	  for i := 0 to h do
 	    if not TArray_Contains(Result, items[i]) then
-        Result[(l + Integer_Inc(a))] := items[i];
+        Result[(l + a.Increase)] := items[i];
       SetLength(Result, (l + a));
     end;
     True:
@@ -136,12 +136,12 @@ begin
 	  begin
 	    for i := 0 to h do
 	      if not TArray_Contains(arr, items[i]) then
-          arr[(Integer_Incr(Result))] := items[i];
+          arr[(Result.Increment)] := items[i];
       SetLength(arr, (Result + 1));
     end;
     True:
   	for i := 0 to h do
-      arr[Integer_Incr(Result)] := items[i];
+      arr[Result.Increment] := items[i];
   end;
 end;
 {$ENDIF}
@@ -407,7 +407,7 @@ begin
         Inc(c);
       SetLength(Result[i], c);
       for j := 0 to (c - 1) do
-        Result[i][j] := arr[Integer_Inc(s)];
+        Result[i][j] := arr[s.Increase];
     end;
   end else
     SetLength(Result, 0);
@@ -545,7 +545,7 @@ begin
   r := 0;
   for i := index to (l - 1) do
     if (arr[i] = item) then
-      Result[Integer_Inc(r)] := arr[i];
+      Result[r.Increase] := arr[i];
   SetLength(Result, r);
 end;
 {$ENDIF}
@@ -566,7 +566,7 @@ begin
     SetLength(Result, (l - index));
     for i := index to (l - 1) do
       if TArray_Contains(items, arr[i]) then
-        Result[Integer_Inc(r)] := arr[i];
+        Result[r.Increase] := arr[i];
   end;
   SetLength(Result, r);
 end;
@@ -588,7 +588,7 @@ begin
   h := 0;
   for i := index to (l - 1) do
     if (((i - index) mod X) = 0) then
-      Result[Integer_Inc(h)] := arr[i];
+      Result[h.Increase] := arr[i];
   SetLength(Result, h);
 end;
 {$ENDIF}
@@ -656,7 +656,7 @@ begin
   r := 0;
   for i := index to (l - 1) do
     if (arr[i] <> item) then
-      Result[Integer_Inc(r)] := arr[i];
+      Result[r.Increase] := arr[i];
   SetLength(Result, r);
 end;
 {$ENDIF}
@@ -677,7 +677,7 @@ begin
   SetLength(Result, (l - index));
   for i := index to (l - 1) do
     if not TArray_Contains(items, arr[i]) then
-      Result[Integer_Inc(r)] := arr[i];
+      Result[r.Increase] := arr[i];
   SetLength(Result, r);
 end;
 {$ENDIF}
@@ -698,7 +698,7 @@ begin
   h := 0;
   for i := index to (l - 1) do
     if not (((i - index) mod X) = 0) then
-      Result[Integer_Inc(h)] := arr[i];
+      Result[h.Increase] := arr[i];
   SetLength(Result, h);
 end;
 {$ENDIF}
@@ -794,7 +794,7 @@ begin
   l := (Length(arr) - 1);
   Result := (l > 0);
   while (i < l) do
-    Swap(arr[Integer_Inc(i)], arr[Integer_Dec(l)]);
+    Swap(arr[i.Increase], arr[l.Decrease]);
 end;
 {$ENDIF}
 
@@ -1180,7 +1180,7 @@ begin
       i := (i + 1);
       if ((IDs[i] > h) or (IDs[i] < 0)) then
         Continue;
-      Result[Integer_Inc(r)] := arr[IDs[i]];
+      Result[r.Increase] := arr[IDs[i]];
       for t := IDs[i] to (h - 1) do
         arr[t] := arr[(t + 1)];
       Dec(h);
@@ -1306,7 +1306,7 @@ begin
     SetLength(Result, ((h + 1) - s));
     for i := s to h do
       if (arr[i] = item) then
-        Result[Integer_Inc(r)] := i;
+        Result[r.Increase] := i;
   end;
   SetLength(Result, r);
 end;
@@ -1329,7 +1329,7 @@ begin
     SetLength(Result, ((h + 1) - s));
     for i := s to h do
       if TArray_Contains(items, arr[i]) then
-        Result[Integer_Inc(r)] := i;
+        Result[r.Increase] := i;
   end;
   SetLength(Result, r);
 end;
@@ -1384,7 +1384,7 @@ begin
     SetLength(Result, (s + 1));
     for i := s downto 0 do
       if (arr[i] = item) then
-        Result[Integer_Inc(r)] := i;
+        Result[r.Increase] := i;
   end;
   SetLength(Result, r);
 end;
@@ -1407,7 +1407,7 @@ begin
     SetLength(Result, (s + 1));
     for i := s downto 0 do
       if TArray_Contains(items, arr[i]) then
-        Result[Integer_Inc(r)] := i;
+        Result[r.Increase] := i;
   end;
   SetLength(Result, r);
 end;
@@ -1487,7 +1487,7 @@ begin
   r := 0;
   for i := m to (l - 1) do
     if (s or (arr[i] <> item)) then
-      arr[(Integer_Inc(r) + m)] := arr[i]
+      arr[(r.Increase + m)] := arr[i]
     else
       s := not all;
   SetLength(arr, (r + m));
@@ -1536,7 +1536,7 @@ begin
       end;
     end;
     if not d then
-      arr[(Integer_Inc(r) + m)] := arr[i]
+      arr[(r.Increase + m)] := arr[i]
     else
       d := not s;
   end;
@@ -1609,14 +1609,14 @@ begin
 		  Break
 		else
           if (arr[i] = item) then
-            Result[Integer_Inc(r)] := i;
+            Result[r.Increase] := i;
       False:
       for i := IDs.start downto IDs.stop do
 	    if (r >= limit) then
 		  Break
 		else
           if (arr[i] = item) then
-		    Result[Integer_Inc(r)] := i;
+		    Result[r.Increase] := i;
     end;
   end;
   SetLength(Result, r);
@@ -1641,7 +1641,7 @@ begin
 	    Break
 	  else
         if (arr[IDs[i]] = item) then
-	      Result[Integer_Inc(r)] := IDs[i];
+	      Result[r.Increase] := IDs[i];
   end;
   SetLength(Result, r);
 end;
@@ -1667,14 +1667,14 @@ begin
 		  Break
 		else
           if TArray_Contains(items, arr[i]) then
-            Result[Integer_Inc(r)] := i;
+            Result[r.Increase] := i;
       False:
       for i := IDs.start downto IDs.stop do
 	    if (r >= limit) then
 		  Break
 		else
           if TArray_Contains(items, arr[i]) then
-		    Result[Integer_Inc(r)] := i;
+		    Result[r.Increase] := i;
     end;
   end;
   SetLength(Result, r);
@@ -1699,7 +1699,7 @@ begin
 	    Break
 	  else
         if TArray_Contains(items, arr[IDs[i]]) then
-	      Result[Integer_Inc(r)] := IDs[i];
+	      Result[r.Increase] := IDs[i];
   end;
   SetLength(Result, r);
 end;
@@ -1950,7 +1950,7 @@ begin
     end;
     if m then
       Continue;
-    arr[Integer_Incr(a)] := arr[i];
+    arr[a.Increment] := arr[i];
   end;
   Result := (l - (a + 1));
   if (Result > 0) then
@@ -1982,7 +1982,7 @@ begin
           j := 0;
       until ((j = 0) or (j > c));
       if (j > 0) then
-        Result[Integer_Inc(c)] := arr[i];
+        Result[c.Increase] := arr[i];
     end;
     SetLength(Result, c);
   end;
@@ -2013,7 +2013,7 @@ begin
           Break;
       end;
       if not m then
-        Result[Integer_Inc(r)] := x;
+        Result[r.Increase] := x;
     end;
     SetLength(Result, r);
   end;

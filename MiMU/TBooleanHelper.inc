@@ -58,14 +58,39 @@ begin
 end;
 
 {==============================================================================]
- <TBooleanHelper.Randomize>
- @action: Returns Self and then randomizes it.
+ <TBooleanHelper.Switch>
+ @action: Reverses Self.
+ @note: Also returns the reversed Self.
+[==============================================================================}
+function TBooleanHelper.Switch: Boolean; cdecl;
+begin
+  if Self then
+    Self := False
+  else
+    Self := True;
+  Result := Self;
+end;
+
+{==============================================================================]
+ <TBooleanHelper.Flip>
+ @action: Reverses Self.
+ @note: Also returns the reversed Self.
+[==============================================================================}
+function TBooleanHelper.Flip: Boolean; cdecl;
+begin
+  Self := not Self;
+  Result := Self;
+end;
+
+{==============================================================================]
+ <TBooleanHelper.Shuffle>
+ @action: Randomizes Self and then returns it.
  @note: None
 [==============================================================================}
-function TBooleanHelper.Randomize: Boolean; cdecl;
+function TBooleanHelper.Shuffle: Boolean; cdecl;
 begin
-  Result := Self;
   Self := (Random(2) = 0);
+  Result := Self;
 end;
 
 {==============================================================================]
@@ -225,7 +250,7 @@ begin
 end;
 
 {==============================================================================]
-  <Boolean_Enable>
+  <TBooleanHelper.Enable>
   @action: Sets Self to True (enabled).
   @note: Returns True if Self was previously False.
 [==============================================================================}
@@ -236,7 +261,7 @@ begin
 end;
 
 {==============================================================================]
-  <Boolean_Disable>
+  <TBooleanHelper.Disable>
   @action: Sets Self to False (disabled).
   @note: Returns True if Self was previously True.
 [==============================================================================}
@@ -244,30 +269,6 @@ function TBooleanHelper.Disable: Boolean; cdecl;
 begin
   Result := (Self = True);
   Self := False;
-end;
-
-{==============================================================================]
-  <Boolean_Set>
-  @action: Sets Self to the given state if different.
-  @note: Returns True if Self was changed.
-[==============================================================================}
-function TBooleanHelper.EnableState(const state: Boolean): Boolean; cdecl;
-begin
-  Result := (Self <> state);
-  if Result then
-    Self := state;
-end;
-
-{==============================================================================]
-  <TBooleanHelper.DisableState>
-  @action: Inverts Self only if it equals the given state.
-  @note: Returns True if Self was changed.
-[==============================================================================}
-function TBooleanHelper.DisableState(const state: Boolean): Boolean; cdecl;
-begin
-  Result := (Self = state);
-  if Result then
-    Self := not state;
 end;
 
 {==============================================================================]
@@ -290,4 +291,28 @@ function TBooleanHelper.SetTrue: Integer; cdecl;
 begin
   Self := True;
   Result := 1;
+end;
+
+{==============================================================================]
+  <TBooleanHelper.SwitchOn>
+  @action: Sets Self to the given state if different.
+  @note: Returns True if Self was changed.
+[==============================================================================}
+function TBooleanHelper.SwitchOn(const state: Boolean): Boolean; cdecl;
+begin
+  Result := (Self <> state);
+  if Result then
+    Self := state;
+end;
+
+{==============================================================================]
+  <TBooleanHelper.SwitchOff>
+  @action: Inverts Self only if it equals the given state.
+  @note: Returns True if Self was changed.
+[==============================================================================}
+function TBooleanHelper.SwitchOff(const state: Boolean): Boolean; cdecl;
+begin
+  Result := (Self = state);
+  if Result then
+    Self := not state;
 end;

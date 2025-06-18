@@ -109,8 +109,8 @@ begin
     r := TIntegerArray_Bounds(arr);
     b := TArray_Create(TRange_Size(r), False);
     for x := 0 to y do
-      if Boolean_Check(b[(arr[x] - r.start)]) then
-        arr[Integer_Inc(z)] := arr[x];
+      if b[(arr[x] - r.start)].Enable then
+        arr[z.Increase] := arr[x];
     SetLength(b, 0);
     SetLength(arr, z);
     Result := ((y + 1) - z);
@@ -137,8 +137,8 @@ begin
     r := TIntegerArray_Bounds(arr);
 	b := TArray_Create(TRange_Size(r), False);
     for x := 0 to y do
-      if Boolean_Check(b[(arr[x] - r.start)]) then
-        Result[Integer_Inc(z)] := arr[x];
+      if b[(arr[x] - r.start)].Enable then
+        Result[z.Increase] := arr[x];
     SetLength(b, 0);
   end;
   SetLength(Result, z);
@@ -155,7 +155,7 @@ var
   r: TRange;
 begin
   y := High(arr);
-  case Integer_Compare(y, 0) of
+  case y.Compare(0) of
     1:
     begin
       r := TRange_Create(arr[0], arr[0]);
@@ -330,7 +330,7 @@ begin
         Break;
       end;
     if u then
-      a[Integer_Inc(c)] := arr[i];
+      a[c.Increase] := arr[i];
   end;
   Result := (Double(c) / (Abs(l - h) + 1));
 end;
@@ -353,9 +353,10 @@ end;
 function TIntegerArray_Mode(const arr: TIntegerArray): Integer; cdecl;
 var
   c, a: TIntegerArray;
-  i, j, l: Integer;
+  h, i, j, l: Integer;
 begin
-  case Integer_Compare(High(arr), 0) of
+  h := High(arr);
+  case h.Compare(0) of
     1:
     begin
       SetLength(c, 0);
@@ -454,11 +455,12 @@ end;
 [==============================================================================}
 function TIntegerArray_MostFrequent(const arr: TIntegerArray; const null: Integer = -2147483648): Integer; cdecl;
 var
-  x, t: Integer;
+  h, x, t: Integer;
   b: TIntegerArray;
   r: TRange;
 begin
-  case Integer_Compare(High(arr), 0) of
+  h := High(arr);
+  case h.Compare(0) of
     1:
     begin
       r := TIntegerArray_Bounds(arr);
@@ -485,11 +487,12 @@ end;
 [==============================================================================}
 function TIntegerArray_LeastFrequent(const arr: TIntegerArray; const null: Integer = -2147483648): Integer; cdecl;
 var
-  x, t: Integer;
+  h, x, t: Integer;
   b: TIntegerArray;
   r: TRange;
 begin
-  case Integer_Compare(High(arr), 0) of
+  h := High(arr);
+  case h.Compare(0) of
     1:
     begin
       r := TIntegerArray_Bounds(arr);
@@ -537,7 +540,7 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     for a := 0 to (Result - 1) do
       for b := 1 to (Result - a) do
         if (Sign(arr[b] - arr[(b - 1)]) = o) then
@@ -558,7 +561,7 @@ begin
   Result := High(arr);
   if (Result < 1) then
     Exit;
-  o := Boolean_X(ascending, -1, 1);
+  o := ascending.Select(-1, 1);
   for i := 0 to (Result - 1) do
   begin
     s := False;
@@ -606,7 +609,7 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     t := -1;
     Push(0, High(arr));
     r := TRange_Create(0, High(arr));
@@ -657,7 +660,7 @@ function TIntegerArray_QuickSort3W(var arr: TIntegerArray; const ascending: Bool
   begin
     if (L >= H) then
       Exit;
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     x := arr[L];
     a := L;
     b := H;
@@ -697,7 +700,7 @@ function TIntegerArray_QSort(var arr: TIntegerArray; const ascending: Boolean = 
   begin
     if (start < stop) then
     begin
-      o := Boolean_X(ascending, -1, 1);
+      o := ascending.Select(-1, 1);
       p := arr[((start + stop) div 2)];
       s := TRange_Create(start, stop);
       repeat
@@ -737,7 +740,7 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     repeat
       s := False;
       for i := 0 to (Result - 1) do
@@ -772,7 +775,7 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     b := -1;
     e := (Length(arr) - 2);
     repeat
@@ -811,9 +814,9 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     g := Length(arr);
-    s := true;
+    s := True;
     while ((g > 1) or s) do
     begin
       g := Trunc(g / 1.3);
@@ -842,7 +845,7 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     p := 1;
     while (p < (Result + 1)) do
       if (Sign(arr[p] - arr[(p - 1)]) = o) then
@@ -867,7 +870,7 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     p := 1;
     l := 0;
     while (p < Length(arr)) do
@@ -904,7 +907,7 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     a := (Result div 2);
     b := Result;
     while (a >= 0) do
@@ -957,7 +960,7 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     for a := 1 to Result do
       for b := a downto 1 do
       begin
@@ -980,7 +983,7 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     for c := 0 to Result do
     begin
       m := c;
@@ -1004,7 +1007,7 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     t := Length(arr);
     s := ((t - 1) div 2);
     for i := 0 to s do
@@ -1041,7 +1044,7 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     l := Length(arr);
     s := ((l - 1) div 2);
     for i := 0 to s do
@@ -1072,7 +1075,7 @@ begin
   Result := High(arr);
   if (Result > 0 )then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     l := 0;
     for i := Result downto l do
     begin
@@ -1103,7 +1106,7 @@ function TIntegerArray_MergeSort(var arr: TIntegerArray; const ascending: Boolea
   begin
     if (Lo >= Hi) then
       Exit;
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     m := (Lo + (Hi - Lo) div 2);
     Merge(arr, tmp, Lo, m, ascending);
     Merge(arr, tmp, (m + 1), Hi, ascending);
@@ -1113,15 +1116,15 @@ function TIntegerArray_MergeSort(var arr: TIntegerArray; const ascending: Boolea
       tmp[i] := arr[i];
     for i := Lo to Hi do
       if (L > m) then
-        arr[i] := tmp[Integer_Inc(R)]
+        arr[i] := tmp[R.Increase]
       else
         if (R > Hi) then
-          arr[i] := tmp[Integer_Inc(L)]
+          arr[i] := tmp[L.Increase]
         else
           if (Sign(tmp[R] - tmp[L]) = o) then
-            arr[i] := tmp[Integer_Inc(R)]
+            arr[i] := tmp[R.Increase]
           else
-            arr[i] := tmp[Integer_Inc(L)];
+            arr[i] := tmp[L.Increase];
   end;
 var
   l: Integer;
@@ -1167,15 +1170,15 @@ begin
         while ((l <= m) and (r <= b)) do
         begin
           if ((ascending and (t[l] <= t[r])) or (not ascending and (t[l] >= t[r]))) then
-            arr[k] := t[Integer_Inc(l)]
+            arr[k] := t[l.Increase]
           else
-            arr[k] := t[Integer_Inc(r)];
+            arr[k] := t[r.Increase];
           Inc(k);
         end;
         while (l <= m) do
-          arr[Integer_Inc(k)] := t[Integer_Inc(l)];
+          arr[k.Increase] := t[l.Increase];
         while (r <= b) do
-          arr[Integer_Inc(k)] := t[Integer_Inc(r)];
+          arr[k.Increase] := t[r.Increase];
         i := (i + (2 * w));
       end;
       w := (w * 2);
@@ -1195,7 +1198,7 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     case (Result > 1) of
       True:
       begin
@@ -1235,7 +1238,7 @@ var
 begin
   Result := High(arr);
   if (Result > 0) then
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
   for i := 1 to Result do
   begin
     a := arr[i];
@@ -1267,7 +1270,7 @@ begin
   Result := High(arr);
   if (Result > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     for j := 1 to Result do
     begin
       a := arr[j];
@@ -1302,7 +1305,7 @@ begin
   SetLength(Result, n);
   if (n > 0) then
   begin
-    o := Boolean_X(ascending, -1, 1);
+    o := ascending.Select(-1, 1);
     Result[0] := arr[0];
     for j := 1 to (n - 1) do
     begin
@@ -1336,7 +1339,7 @@ var
 begin
   l := 0;
   h := Length(arr);
-  o := Boolean_X(ascending, 1, -1);
+  o := ascending.Select(1, -1);
   while (l < h) do
   begin
     m := ((l + h) div 2);
@@ -1359,7 +1362,7 @@ var
 begin
   l := 0;
   h := Length(arr);
-  o := Boolean_X(ascending, 1, -1);
+  o := ascending.Select(1, -1);
   while (l < h) do
   begin
     m := ((l + h) div 2);
@@ -1383,7 +1386,7 @@ begin
   Result := -1;
   l := 0;
   h := Length(arr);
-  o := Boolean_X(ascending, 1, -1);
+  o := ascending.Select(1, -1);
   while (l < h) do
   begin
     m := ((l + h) div 2);
@@ -1408,7 +1411,7 @@ begin
   Result := -1;
   l := 0;
   h := Length(arr);
-  o := Boolean_X(ascending, 1, -1);
+  o := ascending.Select(1, -1);
   while (l < h) do
   begin
     m := ((l + h) div 2);
@@ -1433,7 +1436,7 @@ begin
   Result := -1;
   l := 0;
   h := High(arr);
-  o := Boolean_X(ascending, 1, -1);
+  o := ascending.Select(1, -1);
   while ((l <= h) and (Result = -1)) do
   begin
     m := ((l + h) div 2);
@@ -1485,7 +1488,7 @@ begin
   l := 0;
   h := High(arr);
   s := h;
-  o := Boolean_X(ascending, 1, -1);
+  o := ascending.Select(1, -1);
   while ((l <= h) and (not r)) do
   begin
     m := ((l + h) div 2);
@@ -1518,7 +1521,7 @@ var
 begin
   Result := 0;
   h := High(arr);
-  o := Boolean_X(ascending, 1, -1);
+  o := ascending.Select(1, -1);
   while (Result <= h) do
   begin
     m := ((Result + h) div 2);
@@ -1544,7 +1547,7 @@ var
 begin
   l := 0;
   h := High(arr);
-  o := Boolean_X(ascending, 1, -1);
+  o := ascending.Select(1, -1);
   while (l <= h) do
   begin
     m := ((l + h) div 2);
@@ -1576,7 +1579,7 @@ begin
   f := TRange_Normalize(x);
   l := 0;
   h := High(arr);
-  o := Boolean_X(ascending, 1, -1);
+  o := ascending.Select(1, -1);
   while (l <= h) do
   begin
     m := ((l + h) div 2);
@@ -1607,7 +1610,7 @@ begin
   f := TRange_Normalize(x);
   l := 0;
   h := High(arr);
-  o := Boolean_X(ascending, 1, -1);
+  o := ascending.Select(1, -1);
   while (l <= h) do
   begin
     m := ((l + h) div 2);
@@ -1636,10 +1639,10 @@ begin
   Result := 0;
   if (High(arr) = -1) then
     Exit;
-  o := Boolean_X(ascending, -1, 1);
+  o := ascending.Select(-1, 1);
   for i := 1 to High(arr) do
     if (Sign(arr[Result] - arr[i]) = o) then
-      arr[Integer_Incr(Result)] := arr[i];
+      arr[Result.Increment] := arr[i];
   Result := (Result + 1);
   SetLength(arr, Result);
 end;
@@ -1657,11 +1660,11 @@ begin
   if (High(arr) = -1) then
     Exit;
   r := 0;
-  o := Boolean_X(ascending, -1, 1);
+  o := ascending.Select(-1, 1);
   Result[0] := arr[0];
   for i := 1 to High(arr) do
     if (Sign(Result[r] - arr[i]) = o) then
-      Result[Integer_Incr(r)] := arr[i];
+      Result[r.Increment] := arr[i];
   SetLength(Result, (r + 1));
 end;
 
@@ -1774,7 +1777,7 @@ begin
       if not m then
       begin
         SetLength(Result[r], 1);
-        Result[Integer_Inc(r)][0] := a[i];
+        Result[r.Increase][0] := a[i];
       end;
     end;
     SetLength(a, 0);
@@ -1831,7 +1834,7 @@ begin
         if not m then
         begin
           SetLength(Result[r], 1);
-          Result[Integer_Inc(r)][0] := arr[i];
+          Result[r.Increase][0] := arr[i];
         end;
       end;
     end;
@@ -1889,7 +1892,7 @@ begin
       if not m then
       begin
         SetLength(Result[r], 1);
-        Result[Integer_Inc(r)][0] := a[i];
+        Result[r.Increase][0] := a[i];
       end;
     end;
   end;
@@ -1929,13 +1932,13 @@ begin
       l := TRange_Size(a);
       b := TArray_Create(l, False);
       for x := 0 to y do
-        if Boolean_Check(b[(arr[x] - a.start)]) then
+        if b[(arr[x] - a.start)].Enable then
           Inc(c);
       SetLength(Result, (l - c));
       if (Length(Result) > 0) then
       for i := 0 to (l - 1) do
         if not b[i] then
-          Result[Integer_Inc(r)] := (i + a.start);
+          Result[r.Increase] := (i + a.start);
       SetLength(b, 0);
     end;
   end;

@@ -16,7 +16,7 @@ begin
   begin
     r := TRange_TIntegerArray(arr[i]);
     for j := High(r) downto 0 do
-      Result[Integer_Decr(l)] := r[j];
+      Result[l.Decrement] := r[j];
   end;
 end;
 

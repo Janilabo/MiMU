@@ -1,103 +1,59 @@
 {==============================================================================]
- <Double_Inc>
- @action: Increases the x value by N.
- @note: Returns x before increasing it with N!
-[==============================================================================}
-function Double_Inc(var x: Double; const N: Double = 1): Double; cdecl;
-begin
-  Result := x;
-  x := (x + N);
-end;
-
-{==============================================================================]
- <Double_Dec>
- @action: Decreases the x value by N.
- @note: Returns x before decreasing it with N!
-[==============================================================================}
-function Double_Dec(var x: Double; const N: Double = 1): Double; cdecl;
-begin
-  Result := x;
-  x := (x - N);
-end;
-
-{==============================================================================]
- <Double_Increase>
+ <TDoubleHelper.Increase>
  @action: Increases the Double value x by N.
  @note: Returns x before increasing it with N!
 [==============================================================================}
-function Double_Increase(var x: Double; const N: Double = 1): Double; cdecl;
+function TDoubleHelper.Increase(const N: Double = 1): Double; cdecl;
 begin
-  Result := x;
-  x := (x + N);
+  Result := Self;
+  Self := (Self + N);
 end;
 
 {==============================================================================]
-  <Double_Decrease>
+  <TDoubleHelper.Decrease>
  @action: Decreases the Double value x by N.
  @note: Returns x before decreasing it with N!
 [==============================================================================}
-function Double_Decrease(var x: Double; const N: Double = 1): Double; cdecl;
+function TDoubleHelper.Decrease(const N: Double = 1): Double; cdecl;
 begin
-  Result := x;
-  x := (x - N);
+  Result := Self;
+  Self := (Self - N);
 end;
 
 {==============================================================================]
- <Double_Increment>
+ <TDoubleHelper.Increment>
  @action: Increases the Double value x by N.
  @note: Returns the increased x!
 [==============================================================================}
-function Double_Increment(var x: Double; const N: Double = 1): Double; cdecl;
+function TDoubleHelper.Increment(const N: Double = 1): Double; cdecl;
 begin
-  x := (x + N);
-  Result := x;
+  Self := (Self + N);
+  Result := Self;
 end;
 
 {==============================================================================]
-  <Double_Decrement>
+  <TDoubleHelper.Decrement>
  @action: Decreases the Double value x by N.
  @note: Returns the decreased x!
 [==============================================================================}
-function Double_Decrement(var x: Double; const N: Double = 1): Double; cdecl;
+function TDoubleHelper.Decrement(const N: Double = 1): Double; cdecl;
 begin
-  x := (x - N);
-  Result := x;
+  Self := (Self - N);
+  Result := Self;
 end;
 
 {==============================================================================]
- <Double_Incr>
- @action: Increases the x value by N.
- @note: Returns the increased x!
-[==============================================================================}
-function Double_Incr(var x: Double; const N: Double = 1): Double; cdecl;
-begin
-  x := (x + N);
-  Result := x;
-end;
-
-{==============================================================================]
- <Double_Decr>
- @action: Decreases the x value by N.
- @note: Returns the decreased x!
-[==============================================================================}
-function Double_Decr(var x: Double; const N: Double = 1): Double; cdecl;
-begin
-  x := (x - N);
-  Result := x;
-end;
-
-{==============================================================================]
- <Double_Digits>
+ <TDoubleHelper.Digits>
  @action: Converts Double value (x) to digits of it.
           Example: 1234 => 1,2,3,4, -999 => 9,9,9
  @note: If x is negative value, the negative sign is ignored. 
 [==============================================================================}
-function Double_Digits(const x: Double): TIntegerArray; cdecl;
+function TDoubleHelper.Digits: TIntegerArray; cdecl;
 var
   s: string;
   l, i: Int32;
 begin
-  s := FloatToStr(Abs(x));
+  s := FloatToStr(Abs(Self));
   l := Length(s);
   SetLength(Result, l);
   for i := 0 to (l - 1) do
@@ -105,71 +61,71 @@ begin
 end;
 
 {==============================================================================]
- <Double_NegA>
+ <TDoubleHelper.NegA>
  @action: Returns the negative number of x. 
           -9999 to -9999 OR 9999 to -9999 (+/- => -)
  @note: None
 [==============================================================================}
-function Double_NegA(const x: Double): Double; cdecl; inline;
+function TDoubleHelper.NegA: Double; cdecl; inline;
 begin
-  Result := (Abs(x) * -1);
+  Result := (Abs(Self) * -1);
 end;
 
 {==============================================================================]
- <Double_Neg>
+ <TDoubleHelper.Neg>
  @action: Returns the negative number of i. 
           -9999 to -9999 OR 9999 to -9999 (+/- => -)
  @note: None
 [==============================================================================}
-function Double_Neg(const x: Double): Double; cdecl; inline;
+function TDoubleHelper.Neg: Double; cdecl; inline;
 begin
-  if (x > 0) then
-    Result := (x * -1)
+  if (Self > 0) then
+    Result := (Self * -1)
   else
-    Result := x;
+    Result := Self;
 end; 
 
 {==============================================================================]
- <Double_Negative>
+ <TDoubleHelper.Negative>
  @action: Returns True if Double value x is lower than 0 (negative), otherwise False. 
  @note: 0 is not negative or positive!
 [==============================================================================}
-function Double_Negative(const x: Double): Boolean; cdecl; inline;
+function TDoubleHelper.Negative: Boolean; cdecl; inline;
 begin
-  Result := (x < 0);
+  Result := (Self < 0);
 end;
 
 {==============================================================================]
- <Double_Positive>
+ <TDoubleHelper.Positive>
  @action: Returns True if Double value x is higher than 0 (positive), otherwise False. 
  @note: 0 is not negative or positive!
 [==============================================================================}
-function Double_Positive(const x: Double): Boolean; cdecl; inline;
+function TDoubleHelper.Positive: Boolean; cdecl; inline;
 begin
-  Result := (x > 0);
+  Result := (Self > 0);
 end;
 
 {==============================================================================]
- <Double_Neutral>
+ <TDoubleHelper.Neutral>
  @action: Returns True if Double value x is 0 (neutral), otherwise False. 
  @note: 0 is not negative or positive!
 [==============================================================================}
-function Double_Neutral(const x: Double): Boolean; cdecl; inline;
+function TDoubleHelper.Neutral: Boolean; cdecl; inline;
 begin
-  Result := (x = 0);
+  Result := (Self = 0);
 end;
 
 {==============================================================================]
- <Double_MinDecimal>
+ <TDoubleHelper.MinDecimal>
  @action: Returns the minimum decimal value.
           0.12345 => 0.00001
  @note: None
 [==============================================================================}
-function Double_MinDecimal(const x: Double): Double; cdecl;
+function TDoubleHelper.MinDecimal: Double; cdecl;
 var
   d: Double;
 begin
-  d := Frac(x);
+  d := Frac(Self);
   if (d = 0) then
     Result := 0
   else
@@ -180,16 +136,16 @@ begin
 end;
 
 {==============================================================================]
- <Double_MaxDecimal>
+ <TDoubleHelper.MaxDecimal>
  @action: Returns the maximum decimal value.
           0.12345 => 0.99999
  @note: None
 [==============================================================================}
-function Double_MaxDecimal(const x: Double): Double; cdecl;
+function TDoubleHelper.MaxDecimal: Double; cdecl;
 var
   d: Double;
 begin
-  d := Frac(x);
+  d := Frac(Self);
   if (d = 0) then
     Result := 0
   else
@@ -200,21 +156,21 @@ begin
 end;
 
 {==============================================================================]
- <Double_Copy>
+ <TDoubleHelper.Acc>
  @action: Returns x with decimal accuracy of a. Examples below with '123.456789'.
           a=0    a=1     a=2       a=3       a=4         a=5
           123   123.4   123.45   123.456   123.4567   123.45678
  @note: None
 [==============================================================================}
-function Double_Copy(const x: Double; const a: Int32): Double; cdecl;
+function TDoubleHelper.Accuracy(const a: Int32): Double; cdecl;
 var
   d: Double;
   z: Boolean;
 begin
   if (a < 1) then
-    Exit(x);
-  Result := Int(Real(x));
-  d := Frac(x);
+    Exit(Self);
+  Result := Int(Real(Self));
+  d := Frac(Self);
   z := (d < 0.1);
   if z then
     d := (d + 0.1);
@@ -224,16 +180,16 @@ begin
 end;
 
 {==============================================================================]
- <Double_Compare>
+ <TDoubleHelper.Compare>
  @action: Compares x with target T.
           Results: 0=EQUAL, 1=x>T, -1=x<T
  @note: None
 [==============================================================================}
-function Double_Compare(const x, T: Double): Int32; cdecl; inline;
+function TDoubleHelper.Compare(const T: Double): Int32; cdecl; inline;
 begin
-  if (x = T) then
+  if (Self = T) then
     Exit(0);
-  if (x > T) then
+  if (Self > T) then
     Result := 1
   else
     Result := -1;
@@ -244,30 +200,30 @@ end;
  @action: Returns the distance between x and T.
  @note: None
 [==============================================================================}
-function Double_Distance(const x, T: Double): Double; cdecl; inline;
+function TDoubleHelper.Distance(const T: Double): Double; cdecl; inline;
 begin
-  Result := Abs(T - x);
+  Result := Abs(T - Self);
 end;
 
 {==============================================================================]
- <Double_Difference>
+ <TDoubleHelper.Difference>
  @action: Returns the difference from x to T.
  @note: None
 [==============================================================================}
-function Double_Difference(const x, T: Double): Double; cdecl; inline;
+function TDoubleHelper.Difference(const T: Double): Double; cdecl; inline;
 begin
-  Result := (T - x);
+  Result := (T - Self);
 end;
 
 {==============================================================================]
- <Double_Opposite>
+ <TDoubleHelper.Opposite>
  @action: Returns the opposite number of x. 
           -9999 to 9999 OR 9999 to -9999 (- <=> +) 
  @note: None
 [==============================================================================}
-function Double_Opposite(const x: Double): Double; cdecl; inline;
+function TDoubleHelper.Opposite: Double; cdecl; inline;
 begin
-  Result := (x * -1);
+  Result := (Self * -1);
 end;
 
 {==============================================================================]
@@ -276,101 +232,110 @@ end;
           x < 0 = -1            x = 0 = 0             x > 0 = 1
  @note: None
 [==============================================================================}
-function Double_Sign(const x: Double): Int32; cdecl; inline;
+function TDoubleHelper.Sign: Int32; cdecl; inline;
 begin
-  if (x = 0) then
+  if (Self = 0) then
     Exit(0);
-  if (x > 0) then
+  if (Self > 0) then
     Result := 1
   else
     Result := -1;
 end;
 
 {==============================================================================]
- <Double_FixDegrees>
+ <TDoubleHelper.FixDegrees>
  @action: 365 => 5 | 722 => 2 | 359.9 => 359.9 | 360 => 0
  @note: None
 [==============================================================================}
-function Double_FixDegrees(const dgrs: Double): Double; cdecl;
+function TDoubleHelper.FixDegrees: Double; cdecl;
 var
   t: Int32;
 begin
   t := -1;
-  if (dgrs > -1) then
+  if (Self > -1) then
     t := Abs(t);
-  Result := Abs(dgrs);
+  Result := Abs(Self);
   Result := ((Floor(Result) mod 360 + Frac(Result)) * t);
   if (Result < 0) then
     Result := (Result + 360.0);
 end;
 
 {==============================================================================]
- <Double_Degrees>
+ <TDoubleHelper.Degrees>
  @action: Converts Radians to Degrees.
  @note: None
 [==============================================================================} 
-function Double_Degrees(const rdns: Double): Double; cdecl;
+function TDoubleHelper.Degrees: Double; cdecl;
+var
+  r: Double;
 begin
-  Result := Double_FixDegrees(rdns * (180.0 / Pi));
+  r := (Self * (180.0 / Pi));
+  Result := r.FixDegrees;
 end;
 
 {==============================================================================]
- <Double_FixRadians>
+ <TDoubleHelper.FixRadians>
  @action: 365 => 5 | 722 => 2 | 359.9 => 359.9 | 360 => 0
  @note: None
 [==============================================================================}
-function Double_FixRadians(const rdns: Double): Double; cdecl;
+function TDoubleHelper.FixRadians: Double; cdecl;
+var
+  r: Double;
 begin
-  Result := (Double_FixDegrees((rdns * (180.0 / Pi))) * (Pi / 180.0));
+  r := (Self * (180.0 / Pi));
+  Result := (r.FixDegrees * (Pi / 180.0));
 end;
 
 {==============================================================================]
- <Double_Radians>
+ <TDoubleHelper.Radians>
  @action: Converts Degrees or Compass (degrees) to Radians.
  @note: Supports compass.
 [==============================================================================}
-function Double_Radians(const dgrs: Double; const compass: Boolean = False): Double; cdecl;
+function TDoubleHelper.Radians(const compass: Boolean = False): Double; cdecl;
+var
+  d: Double;
 begin
   if not compass then
-    Result := Double_FixRadians(dgrs * (Pi / 180.0))
+    d := (Self * (Pi / 180.0))
   else
-    Result := Double_FixRadians((dgrs - 90.0) * (Pi / 180.0));
+    d := ((Self - 90.0) * (Pi / 180.0));
+  Result := d.FixRadians;
 end;
 
 {==============================================================================]
- <Double_Percent>
- @action: Returns percent (%) from source by position.
+ <TDoubleHelper.Percent>
+ @action: Returns percent (%) from x by position.
  @note: Value-to-Percent conversion!
 [==============================================================================}
-function Double_Percent(const source, position: Double): Double; cdecl; inline;
+function TDoubleHelper.Percent(const position: Double): Double; cdecl; inline;
 begin
   if (position <> 0) then
-    Result := ((position / source) * 100.0)
+    Result := ((position / Self) * 100.0)
   else
     Result := 0.0;
 end;
 
 {==============================================================================]
- <Double_Percentage>
- @action: Returns value from source by percent.
+ <TDoubleHelper.Percentage>
+ @action: Returns value from x by percent.
  @note: Percent-to-Value conversion!
 [==============================================================================}
-function Double_Percentage(const source, percent: Double): Double; cdecl; inline;
+function TDoubleHelper.Percentage(const percent: Double): Double; cdecl; inline;
 begin
   if (percent <> 0) then
-    Result := ((percent / 100.0) * source)
+    Result := ((percent / 100.0) * Self)
   else
     Result := 0.0;
 end;
 
 {==============================================================================]
- <Double_Oversize>
+ <TDoubleHelper.Oversize>
  @action: Returns true if x is higher than limit.
  @note: None
 [==============================================================================}
-function Double_Oversize(const x, limit: Double): Boolean; cdecl;
+function TDoubleHelper.Oversize(const limit: Double): Boolean; cdecl;
 begin
-  Result := (x > limit);
+  Result := (Self > limit);
 end;
 
 {==============================================================================]
@@ -378,7 +343,7 @@ end;
  @action: Returns true if x is lower than limit.
  @note: None
 [==============================================================================}
-function Double_Undersize(const x, limit: Double): Boolean; cdecl;
+function TDoubleHelper.Undersize(const limit: Double): Boolean; cdecl;
 begin
-  Result := (x < limit);
+  Result := (Self < limit);
 end;

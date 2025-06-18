@@ -1,122 +1,78 @@
 {==============================================================================]
- <Int64_Even>
+ <TInt64Helper.Even>
  @action: Returns true if Int64 value x is an even number.
  @note: None
 [==============================================================================}
-function Int64_Even(const x: Int64): Boolean; cdecl; inline;
+function TInt64Helper.Even: Boolean; cdecl; inline;
 begin
-  Result := ((x mod 2) = 0);
+  Result := ((Self mod 2) = 0);
 end;
 
 {==============================================================================]
- <Int64_Odd>
+ <TInt64Helper.Odd>
  @action: Returns true if Int64 value x is an odd number.
  @note: None
 [==============================================================================}
-function Int64_Odd(const x: Int64): Boolean; cdecl; inline;
+function TInt64Helper.Odd: Boolean; cdecl; inline;
 begin
-  Result := ((x mod 2) <> 0);
+  Result := ((Self mod 2) <> 0);
 end;
 
 {==============================================================================]
- <Int64_Inc>
+ <TInt64Helper.Increase>
  @action: Increases the Int64 value x by N.
  @note: Returns x before increasing it with N!
 [==============================================================================}
-function Int64_Inc(var x: Int64; const N: Int64 = 1): Int64; cdecl;
+function TInt64Helper.Increase(const N: Int64 = 1): Int64; cdecl;
 begin
-  Result := x;
-  Inc(x, N);
+  Result := Self;
+  Self := (Self + N);
 end;
 
 {==============================================================================]
- <Int64_Dec>
+  <TInt64Helper.Decrease>
  @action: Decreases the Int64 value x by N.
  @note: Returns x before decreasing it with N!
 [==============================================================================}
-function Int64_Dec(var x: Int64; const N: Int64 = 1): Int64; cdecl;
+function TInt64Helper.Decrease(const N: Int64 = 1): Int64; cdecl;
 begin
-  Result := x;
-  Dec(x, N);
+  Result := Self;
+  Self := (Self - N);
 end;
 
 {==============================================================================]
- <Int64_Increase>
- @action: Increases the Int64 value x by N.
- @note: Returns x before increasing it with N!
-[==============================================================================}
-function Int64_Increase(var x: Int64; const N: Int64 = 1): Int64; cdecl;
-begin
-  Result := x;
-  x := (x + N);
-end;
-
-{==============================================================================]
-  <Int64_Decrease>
- @action: Decreases the Int64 value x by N.
- @note: Returns x before decreasing it with N!
-[==============================================================================}
-function Int64_Decrease(var x: Int64; const N: Int64 = 1): Int64; cdecl;
-begin
-  Result := x;
-  x := (x - N);
-end;
-
-{==============================================================================]
- <Int64_Increment>
+ <TInt64Helper.Increment>
  @action: Increases the Int64 value x by N.
  @note: Returns the increased x!
 [==============================================================================}
-function Int64_Increment(var x: Int64; const N: Int64 = 1): Int64; cdecl;
+function TInt64Helper.Increment(const N: Int64 = 1): Int64; cdecl;
 begin
-  x := (x + N);
-  Result := x;
+  Self := (Self + N);
+  Result := Self;
 end;
 
 {==============================================================================]
-  <Int64_Decrement>
+  <TInt64Helper.Decrement>
  @action: Decreases the Int64 value x by N.
  @note: Returns the decreased x!
 [==============================================================================}
-function Int64_Decrement(var x: Int64; const N: Int64 = 1): Int64; cdecl;
+function TInt64Helper.Decrement(const N: Int64 = 1): Int64; cdecl;
 begin
-  x := (x - N);
-  Result := x;
+  Self := (Self - N);
+  Result := Self;
 end;
 
 {==============================================================================]
- <Int64_Increment>
- @action: Increases the Int64 value x by N.
- @note: Returns the increased x!
-[==============================================================================}
-function Int64_Incr(var x: Int64; const N: Int64 = 1): Int64; cdecl;
-begin
-  Inc(x, N);
-  Result := x;
-end;
-
-{==============================================================================]
-  <Int64_Decrement>
- @action: Decreases the Int64 value x by N.
- @note: Returns the decreased x!
-[==============================================================================}
-function Int64_Decr(var x: Int64; const N: Int64 = 1): Int64; cdecl;
-begin
-  Dec(x, N);
-  Result := x;
-end;
-
-{==============================================================================]
- <Int64_DigitCount>
+ <TInt64Helper.DigitCount>
  @action: Returns count of digits Int64 x value contains.
  @note: If x is negative value, the negative sign is ignored.
         Works with -9223372036854775808 - 9223372036854775807! 
 [==============================================================================}
-function Int64_DigitCount(const x: Int64): Integer; cdecl;
+function TInt64Helper.DigitCount: Integer; cdecl;
 var
   a, n, m: Int64;
 begin
-  a := Abs(x);
+  a := Abs(Self);
   Result := 0;
   m := 10;
   repeat
@@ -127,18 +83,18 @@ begin
 end;
 
 {==============================================================================]
- <Int64_Digitz>
+ <TInt64Helper.Digitz>
  @action: Converts Int64 value (x) to digits of it.
           Example: 1234 => 1,2,3,4, -999 => 9,9,9
  @note: If x is negative value, the negative sign is ignored.
         Works with -9223372036854775808 - 9223372036854775807! 
 [==============================================================================}
-function Int64_Digitz(const x: Int64): TIntegerArray; cdecl;
+function TInt64Helper.Digitz: TIntegerArray; cdecl;
 var
   a, n, m: Int64;
   i, r: Integer;
 begin
-  a := Abs(x);
+  a := Abs(Self);
   r := 0;
   SetLength(Result, 19);
   m := 10;
@@ -154,18 +110,18 @@ begin
 end; 
 
 {==============================================================================]
- <Int64_Digits>
+ <TInt64Helper.Digits>
  @action: Converts Int64 value (x) to digits of it.
           Example: 1234 => 1,2,3,4, -999 => 9,9,9
  @note: If x is negative value, the negative sign is ignored.
         Works with -9223372036854775808 - 9223372036854775807! 
 [==============================================================================}
-function Int64_Digits(const x: Int64): TIntegerArray; cdecl;
+function TInt64Helper.Digits: TIntegerArray; cdecl;
 var
   s: string;
   l, i: Integer;
 begin
-  s := IntToStr(Abs(x));
+  s := IntToStr(Abs(Self));
   l := Length(s);
   SetLength(Result, l);
   for i := 0 to (l - 1) do
@@ -173,96 +129,96 @@ begin
 end;
 
 {==============================================================================]
- <Int64_Compare>
+ <TInt64Helper.Compare>
  @action: Compares x with target T.
           Results: 0=EQUAL, 1=x>T, -1=x<T
  @note: None
 [==============================================================================}
-function Int64_Compare(const x, T: Int64): Integer; cdecl; inline;
+function TInt64Helper.Compare(const T: Int64): Integer; cdecl; inline;
 begin
-  if (x = T) then
+  if (Self = T) then
     Exit(0);
-  if (x > T) then
+  if (Self > T) then
     Result := 1
   else
     Result := -1;
 end;
 
 {==============================================================================]
- <Int64_Distance>
+ <TInt64Helper.Distance>
  @action: Returns the distance between x and T.
  @note: None
 [==============================================================================}
-function Int64_Distance(const x, T: Int64): Int64; cdecl; inline;
+function TInt64Helper.Distance(const T: Int64): Int64; cdecl; inline;
 begin
-  Result := Abs(T - x);
+  Result := Abs(T - Self);
 end;
 
 {==============================================================================]
- <Int64_Difference>
+ <TInt64Helper.Difference>
  @action: Returns the difference from x to T.
  @note: None
 [==============================================================================}
-function Int64_Difference(const x, T: Int64): Int64; cdecl; inline;
+function TInt64Helper.Difference(const T: Int64): Int64; cdecl; inline;
 begin
-  Result := (T - x);
+  Result := (T - Self);
 end;
 
 {==============================================================================]
- <Int64_Opposite>
+ <TInt64Helper.Opposite>
  @action: Returns the opposite number of x. 
           -9999 to 9999 OR 9999 to -9999 (- <=> +) 
  @note: None
 [==============================================================================}
-function Int64_Opposite(const x: Int64): Int64; cdecl; inline;
+function TInt64Helper.Opposite: Int64; cdecl; inline;
 begin
-  Result := (x * -1);
+  Result := (Self * -1);
 end;
 
 {==============================================================================]
- <Int64_Sign>
+ <TInt64Helper.Sign>
  @action: Indicates whether x value is positive, negative or zero.
           x < 0 = -1            x = 0 = 0             x > 0 = 1
  @note: None
 [==============================================================================}
-function Int64_Sign(const x: Int64): Integer; cdecl; inline;
+function TInt64Helper.Sign: Integer; cdecl; inline;
 begin
-  if (x = 0) then
+  if (Self = 0) then
     Exit(0);
-  if (x > 0) then
+  if (Self > 0) then
     Result := 1
   else
     Result := -1;
 end;
 
 {==============================================================================]
- <Int64_Random>
+ <TInt64Helper.Shuffle>
  @action: Random() with support for negative Range.
  @note: None
 [==============================================================================}
-function Int64_Random(const range: Int64): Int64; cdecl;
+function TInt64Helper.Shuffle: Int64; cdecl;
 begin
-  Result := Random(Abs(range));
-  if (range < 0) then
+  Result := Random(Abs(Self));
+  if (Self < 0) then
     Result := (Result * -1);
 end;
 
 {==============================================================================]
- <Int64_Oversize>
+ <TInt64Helper.Oversize>
  @action: Returns true if x is higher than limit.
  @note: None
 [==============================================================================}
-function Int64_Oversize(const x, limit: Int64): Boolean; cdecl; inline;
+function TInt64Helper.Oversize(const limit: Int64): Boolean; cdecl; inline;
 begin
-  Result := (x > limit);
+  Result := (Self > limit);
 end;
 
 {==============================================================================]
- <Int64_Undersize>
+ <TInt64Helper.Undersize>
  @action: Returns true if x is lower than limit.
  @note: None
 [==============================================================================}
-function Int64_Undersize(const x, limit: Int64): Boolean; cdecl; inline;
+function TInt64Helper.Undersize(const limit: Int64): Boolean; cdecl; inline;
 begin
-  Result := (x < limit);
+  Result := (Self < limit);
 end;
