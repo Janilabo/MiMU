@@ -1,7 +1,7 @@
-{$I MiMU\String.inc}
 {$I MiMU\TIntegerHelper.inc}
 {$I MiMU\TInt64Helper.inc}
 {$I MiMU\TDoubleHelper.inc}
+{$I MiMU\TStringHelper.inc}
 {$I MiMU\TBooleanHelper.inc}
 {$I MiMU\TPointHelper.inc}
 {$I MiMU\TBoxHelper.inc}
