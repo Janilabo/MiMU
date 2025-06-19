@@ -44,8 +44,8 @@ var
   i: Integer;
 begin
   if (High(arr) = -1) then
-    Exit(TRange_Create(-2147483648, -2147483648));
-  Result := TRange_Create(arr[0], arr[0]);
+    Exit(Result.Create(-2147483648, -2147483648));
+  Result.Create(arr[0], arr[0]);
   for i := 1 to High(arr) do
     if (arr[i] < Result.start) then
       Result.start := arr[i]
@@ -62,11 +62,11 @@ begin
     False:
 	begin
 	  Result := TIntegerArray_Bounds(arr);
-	  size := TRange_Size(Result);
+	  size := Result.Size;
 	end;
     True:
     begin
-      Result := TRange_Create(-2147483648, -2147483648);
+      Result.Create(-2147483648, -2147483648);
       size := 0;
     end;
   end;
@@ -82,8 +82,8 @@ var
   i: Integer;
 begin
   if (High(arr) = -1) then
-    Exit(TRange_Create(-2147483648, -2147483648));
-  Result := TRange_Create(arr[0], arr[0]);
+    Exit(Result.Create(-2147483648, -2147483648));
+  Result := Result.Create(arr[0], arr[0]);
   for i := 1 to High(arr) do
   begin
     Result.start := Min(Result.start, arr[i]);
@@ -107,7 +107,7 @@ begin
   begin
     z := 0;
     r := TIntegerArray_Bounds(arr);
-    b := TArray_Create(TRange_Size(r), False);
+    b := TArray_Create(r.Size, False);
     for x := 0 to y do
       if b[(arr[x] - r.start)].Enable then
         arr[z.Increase] := arr[x];
@@ -135,7 +135,7 @@ begin
   begin
     SetLength(Result, (y + 1));
     r := TIntegerArray_Bounds(arr);
-	b := TArray_Create(TRange_Size(r), False);
+	b := TArray_Create(r.Size, False);
     for x := 0 to y do
       if b[(arr[x] - r.start)].Enable then
         Result[z.Increase] := arr[x];
@@ -158,7 +158,7 @@ begin
   case y.Compare(0) of
     1:
     begin
-      r := TRange_Create(arr[0], arr[0]);
+      r.Create(arr[0], arr[0]);
       for x := 1 to y do
         if (arr[x] < r.start) then
           r.start := arr[x]
@@ -167,7 +167,7 @@ begin
             r.stop := arr[x];
       if (r.start <> r.stop) then
       begin
-        SetLength(Result, TRange_Size(r));
+        SetLength(Result, r.Size);
         for i := r.start to r.stop do
           Result[(i - r.start)] := i;
       end else
@@ -464,7 +464,7 @@ begin
     1:
     begin
       r := TIntegerArray_Bounds(arr);
-	  b := TArray_Create(TRange_Size(r), Integer(0));
+      b := TArray_Create(r.Size, Integer(0));
       for x := 0 to High(arr) do
         Inc(b[(arr[x] - r.start)]);
       t := 0;
@@ -496,7 +496,7 @@ begin
     1:
     begin
       r := TIntegerArray_Bounds(arr);
-      b := TArray_Create(TRange_Size(r), Integer(0));
+      b := TArray_Create(r.Size, Integer(0));
       for x := 0 to High(arr) do
         Inc(b[(arr[x] - r.start)]);
       t := 0;
@@ -612,7 +612,7 @@ begin
     o := ascending.Select(-1, 1);
     t := -1;
     Push(0, High(arr));
-    r := TRange_Create(0, High(arr));
+    r.Create(0, High(arr));
     while Pop(r.start, r.stop) do
     begin
       while (r.start < r.stop) do
@@ -702,7 +702,7 @@ function TIntegerArray_QSort(var arr: TIntegerArray; const ascending: Boolean = 
     begin
       o := ascending.Select(-1, 1);
       p := arr[((start + stop) div 2)];
-      s := TRange_Create(start, stop);
+      s.Create(start, stop);
       repeat
         while (Sign(arr[s.start] - p) = o) do
           Inc(s.start);
@@ -1495,7 +1495,7 @@ begin
     r := ((o * arr[m]) = (o * x));
     if r then
 	begin
-      Result := TRange_Create(m, m);
+      Result.Create(m, m);
       while ((Result.start > 0) and (arr[(Result.start - 1)] = x)) do
         Dec(Result.start);
       while ((Result.stop < s) and (arr[(Result.stop + 1)] = x)) do
@@ -1507,7 +1507,7 @@ begin
         h := (m - 1);
   end;
   if not r then
-    Result := TRange_Create(-1, -1);
+    Result.Create(-1, -1);
 end;
 
 {==============================================================================]
@@ -1576,7 +1576,7 @@ var
   f: TRange;
 begin
   Result := -1;
-  f := TRange_Normalize(x);
+  f := x.Normalize;
   l := 0;
   h := High(arr);
   o := ascending.Select(1, -1);
@@ -1607,7 +1607,7 @@ var
   f: TRange;
 begin
   Result := -1;
-  f := TRange_Normalize(x);
+  f := x.Normalize;
   l := 0;
   h := High(arr);
   o := ascending.Select(1, -1);
@@ -1690,7 +1690,7 @@ begin
     if (h > 0) then
     begin
       r := 1;
-      s := TRange_Build(minDiff, maxDiff);
+      s.Build(minDiff, maxDiff);
       for i := 1 to h do
       begin
         m := False;
@@ -1702,7 +1702,7 @@ begin
             if ((arr[i] = Result[a][b]) or (not m)) then
               Break
             else
-              m := TRange_Value(s, (Abs(arr[i] - Result[a][b])));
+              m := s.Value(Abs(arr[i] - Result[a][b]));
           if m then
           begin
             SetLength(Result[a], (l + 1));
@@ -1754,7 +1754,7 @@ begin
     SetLength(Result[0], 1);
     Result[0][0] := a[0];
     r := 1;
-    s := TRange_Build(minDiff, maxDiff);
+    s.Build(minDiff, maxDiff);
     for i := 1 to h do
     begin
       m := False;
@@ -1766,7 +1766,7 @@ begin
           if ((a[i] = Result[j][k]) or (not m)) then
             Break
           else
-            m := TRange_Value(s, Abs(a[i] - Result[j][k]));
+            m := s.Value(Abs(a[i] - Result[j][k]));
         if m then
         begin
           SetLength(Result[j], (l + 1));
@@ -1818,12 +1818,12 @@ begin
     if (h > 0) then
     begin
       r := 1;
-      s := TRange_Build(minDiff, maxDiff);
+      s.Build(minDiff, maxDiff);
       for i := 1 to h do
       begin
         m := False;
         for a := 0 to (r - 1) do
-          if ((arr[i] = Result[a][0]) or TRange_Value(s, Abs(arr[i] - Result[a][0]))) then
+          if ((arr[i] = Result[a][0]) or s.Value(Abs(arr[i] - Result[a][0]))) then
           begin
             m := True;
             l := Length(Result[a]);
@@ -1874,13 +1874,13 @@ begin
     SetLength(Result[0], 1);
     Result[0][0] := a[0];
     r := 1;
-    s := TRange_Build(minDiff, maxDiff);
+    s.Build(minDiff, maxDiff);
     for i := 1 to h do
     begin
       m := False;
       for j := 0 to (r - 1) do
       begin
-        if ((a[i] = Result[j][0]) or TRange_Value(s, Abs(a[i] - Result[j][0]))) then
+        if ((a[i] = Result[j][0]) or s.Value(Abs(a[i] - Result[j][0]))) then
         begin
           l := Length(Result[j]);
           SetLength(Result[j], (l + 1));
@@ -1929,7 +1929,7 @@ begin
     if (a.start <> a.stop) then
     begin
       c := 0;
-      l := TRange_Size(a);
+      l := a.Size;
       b := TArray_Create(l, False);
       for x := 0 to y do
         if b[(arr[x] - a.start)].Enable then

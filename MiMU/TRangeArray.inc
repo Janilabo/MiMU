@@ -10,11 +10,11 @@ var
 begin
   l := 0;
   for i := 0 to High(arr) do
-    l := (l + TRange_Size(arr[i]));
+    l := (l + arr[i].Size);
   SetLength(Result, l);
   for i := High(arr) downto 0 do
   begin
-    r := TRange_TIntegerArray(arr[i]);
+    r := arr[i].TIA;
     for j := High(r) downto 0 do
       Result[l.Decrement] := r[j];
   end;
@@ -31,5 +31,5 @@ var
 begin
   SetLength(Result, Length(arr));
    for i := 0 to High(arr) do
-    Result[i] := TRange_TIntegerArray(arr[i]);
+    Result[i] := arr[i].TIA;
 end;

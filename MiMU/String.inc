@@ -865,7 +865,7 @@ end;
 [==============================================================================}
 function String_TRange(const str: string): TRange; cdecl;
 begin
-  Result := TRange_Build(Min(1, Length(str)), Length(str));
+  Result.Build(Min(1, Length(str)), Length(str));
 end;
 
 {==============================================================================]
@@ -874,10 +874,14 @@ end;
   @note: With empty string this function returns as []!
 [==============================================================================}
 function String_IDs(const str: string): TIntegerArray; overload; cdecl;
+var
+  r: TRange;
 begin
   if (Length(str) > 0) then
-    Result := TRange_TIntegerArray(String_TRange(str))
-  else
+  begin
+    r := String_TRange(str);
+    Result := r.TIA;
+  end else
     SetLength(Result, 0);
 end;
 

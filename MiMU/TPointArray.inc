@@ -8,8 +8,8 @@ var
   i: Integer;
 begin
   if (High(arr) = -1) then
-    Exit(TBox_Form(-2147483648));
-  Result := TBox_At(arr[0]);
+    Exit(Result.Form(-2147483648));
+  Result.Make(arr[0]);
   for i := 1 to High(arr) do
   begin
     if (arr[i].X < Result.X1) then
@@ -34,16 +34,16 @@ function TPointArray_Bounds(const arr: TPointArray; var width, height: Integer):
 begin
   case (High(arr) = -1) of
     False:
-	begin
-	  Result := TPointArray_Bounds(arr);
-	  TBox_Size(Result, width, height);
-	end;
+    begin
+      Result := TPointArray_Bounds(arr);
+      Result.Size(width, height);
+    end;
     True:
-	begin
-      Result := TBox_Form(-2147483648);
-	  width := 0;
-	  height := 0;
-	end;
+    begin
+      Result.Form(-2147483648);
+      width := 0;
+      height := 0;
+    end;
   end;
 end;
 
@@ -65,7 +65,7 @@ begin
     b := TPointArray_Bounds(arr, w, h);
     m := T2DArray_Create(w, h, False);
     for i := 0 to (l - 1) do
-	  if m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)].Enable then
+      if m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)].Enable then
         arr[r.Increase] := arr[i];
     SetLength(arr, r);
     SetLength(m, 0);
@@ -89,8 +89,8 @@ begin
   if (l > 0) then
   begin
     b := TPointArray_Bounds(arr, w, h);
-	m := T2DArray_Create(w, h, False);
-	SetLength(Result, l);
+    m := T2DArray_Create(w, h, False);
+    SetLength(Result, l);
     for i := 0 to (l - 1) do
       if m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)].Enable then
         Result[r.Increase] := arr[i];
@@ -124,7 +124,7 @@ begin
     for y := 0 to (h - 1) do
       for x := 0 to (w - 1) do
         if not m[x][y] then
-		  Result[r.Increase].Create((x + b.X1), (y + b.Y1));
+          Result[r.Increase].Create((x + b.X1), (y + b.Y1));
     SetLength(m, 0);
   end;
   SetLength(Result, r);
@@ -145,8 +145,9 @@ begin
   l := Length(arr);
   if (l > 4) then
   begin
-    b := TBox_Expand(TPointArray_Bounds(arr));
-    TBox_Size(b, w, h);
+    b := TPointArray_Bounds(arr);
+    b := b.Expand;
+    b.Size(w, h);
     m := T2DArray_Create(w, h, False);
     for i := 0 to (l - 1) do
       m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)] := True;
@@ -159,7 +160,7 @@ begin
       for y := 1 to h do
         for x := 1 to w do
           if (m[x][y] and not (m[(x - 1)][y] and m[x][(y - 1)] and m[(x + 1)][y] and m[x][(y + 1)])) then
-		    Result[r.Increase].Create((x + b.X1), (y + b.Y1));
+            Result[r.Increase].Create((x + b.X1), (y + b.Y1));
       True:
       for y := 1 to h do
         for x := 1 to w do
@@ -206,8 +207,8 @@ begin
   if ((l > 0) and ((start.X >= area.X1) and (start.Y >= area.Y1) and (start.X <= area.X2) and (start.Y <= area.Y2))) then
   begin
     o := False;
-    TBox_Size(area, w, h);
-	c := T2DArray_Create(w, h, False);
+    area.Size(w, h);
+    c := T2DArray_Create(w, h, False);
     for i := 0 to (l - 1) do
     begin
       if not o then
@@ -222,7 +223,7 @@ begin
       f := 3;
     SetLength(a, (f + 1));
     SetLength(q, (w * h));
-	z := T2DArray_Create(w, h, False);
+    z := T2DArray_Create(w, h, False);
     q[0] := start;
     l := 0;
     while (l > -1) do

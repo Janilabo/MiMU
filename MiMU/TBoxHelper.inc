@@ -207,10 +207,10 @@ end;
   @action: Sets bx width.
   @note: Returns old width.
 [==============================================================================}
-function TBoxHelper.Width(const width: Integer): Integer; overload; cdecl;
+function TBoxHelper.Width(const w: Integer): Integer; overload; cdecl;
 begin
   Result := (Abs(Self.X2 - Self.X1) + 1);
-  Self.X2 := (Self.X1 + (width - 1));
+  Self.X2 := (Self.X1 + (w - 1));
 end;
 
 {==============================================================================]
@@ -249,10 +249,10 @@ end;
   @action: Sets bx height.
   @note: Returns old height.
 [==============================================================================}
-function TBoxHelper.Height(const height: Integer): Integer; overload; cdecl;
+function TBoxHelper.Height(const h: Integer): Integer; overload; cdecl;
 begin
   Result := (Abs(Self.Y2 - Self.Y1) + 1);
-  Self.Y2 := (Self.Y1 + (height - 1));
+  Self.Y2 := (Self.Y1 + (h - 1));
 end;
 
 {==============================================================================]
@@ -422,10 +422,10 @@ end;
 [==============================================================================}
 function TBoxHelper.ResizeBottomLeft(const change: Integer): TBox; cdecl;
 begin
-  Result.X1 := (bx.X1 - change);
-  Result.Y1 := bx.Y1;
-  Result.X2 := bx.X2;
-  Result.Y2 := (bx.Y2 + change);
+  Result.X1 := (Self.X1 - change);
+  Result.Y1 := Self.Y1;
+  Result.X2 := Self.X2;
+  Result.Y2 := (Self.Y2 + change);
 end;
 
 {==============================================================================]
@@ -651,7 +651,7 @@ function TBoxHelper.Constraint(const area: TBox): Boolean; cdecl;
 var
   b: TBox;
 begin
-  b := bx;
+  b := Self;
   Self.X1 := Max(area.X1, Min(area.X2, Self.X1));
   Self.Y1 := Max(area.Y1, Min(area.Y2, Self.Y1));
   Self.X2 := Max(area.X1, Min(area.X2, Self.X2));
@@ -759,11 +759,11 @@ begin
 end;
 
 {==============================================================================]
-  <TBoxHelper.TPointArray>
+  <TBoxHelper.TPA>
   Explanation: Returns TBox points as TPointArray.
   Example: None.
 [==============================================================================}
-function TBoxHelper.TPointArray: TPointArray; cdecl;
+function TBoxHelper.TPA: TPointArray; cdecl;
 var
   i, w, h, x, y: Integer;
 begin
@@ -789,7 +789,7 @@ var
 begin
   if (((rows > -1) and (columns > -1)) and ((rows * columns) > 0)) then
   begin
-    TBox_Size(Self, w, h);
+    Self.Size(w, h);
     SetLength(Result, (rows * columns));
     for r := 0 to (rows - 1) do
     begin
@@ -798,7 +798,7 @@ begin
       begin
         i := ((r * columns) + c);
         x := (Self.X1 + (c * (w + spaceHorizontal)));
-		Result[i] := TBox_Build(x, y, (x + (w - 1)), (y + (h - 1)));
+        Result[i].Build(x, y, (x + (w - 1)), (y + (h - 1)));
       end;
     end;
   end else
@@ -817,12 +817,12 @@ var
 begin
   if (cells > 0) then
   begin
-    TBox_Size(Self, w, h);
+    Self.Size(w, h);
     SetLength(Result, cells);
     for i := 0 to (cells - 1) do
     begin
       z := (Self.X1 + (i * (w + space)));
-	  Result[i] := TBox_Build(z, Self.Y1, (z + (w - 1)), Self.Y2);
+      Result[i].Build(z, Self.Y1, (z + (w - 1)), Self.Y2);
     end;
   end else
     SetLength(Result, 0);
@@ -840,12 +840,12 @@ var
 begin
   if (cells > 0) then
   begin
-    TBox_Size(Self, w, h);
+    Self.Size(w, h);
     SetLength(Result, cells);
     for i := 0 to (cells - 1) do
     begin
       z := (Self.Y1 + (i * (h + space)));
-	  Result[i] := TBox_Build(Self.X1, z, Self.X2, (z + (h - 1)));
+      Result[i].Build(Self.X1, z, Self.X2, (z + (h - 1)));
     end;
   end else
     SetLength(Result, 0);
@@ -906,7 +906,7 @@ end;
 [==============================================================================}
 function TBoxHelper.SimilarSize(const b: TBox; const differency: Integer): Boolean; overload; cdecl;
 begin
-  Result := ((Abs(((b.X2 - b.X1) + 1) - ((Self - Self.X1) + 1)) <= differency) and (Abs(((b.Y2 - b.Y1) + 1) - ((Self.Y2 - Self.Y1) + 1)) <= differency));
+  Result := ((Abs(((b.X2 - b.X1) + 1) - ((Self.X2 - Self.X1) + 1)) <= differency) and (Abs(((b.Y2 - b.Y1) + 1) - ((Self.Y2 - Self.Y1) + 1)) <= differency));
 end;
 
 {==============================================================================]
@@ -918,9 +918,9 @@ function TBoxHelper.Centered(const area: TBox): TBox; cdecl;
 var
   w, h: Integer;
 begin
-  TBox_Size(Self, w, h);
-  Result.X1 := (area.X1 + ((TBox_Width(area) - w) div 2));
-  Result.Y1 := (area.Y1 + ((TBox_Height(area) - h) div 2));
+  Self.Size(w, h);
+  Result.X1 := (area.X1 + ((area.Width - w) div 2));
+  Result.Y1 := (area.Y1 + ((area.Height - h) div 2));
   Result.X2 := (Result.X1 + (w - 1));
   Result.Y2 := (Result.Y1 + (h - 1));
 end;
@@ -934,9 +934,9 @@ function TBoxHelper.CenterVertically(const area: TBox): TBox; cdecl;
 var
   h: Integer;
 begin
-  h := TBox_H(Self);
+  h := Self.H;
   Result.X1 := Self.X1;
-  Result.Y1 := (area.Y1 + ((TBox_H(area) - h) div 2));
+  Result.Y1 := (area.Y1 + ((area.H - h) div 2));
   Result.X2 := Self.X2;
   Result.Y2 := (Result.Y1 + (h - 1));
 end;
@@ -950,8 +950,8 @@ function TBoxHelper.CenterHorizontally(const area: TBox): TBox; cdecl;
 var
   w: Integer;
 begin
-  w := TBox_W(Self);
-  Result.X1 := (area.X1 + ((TBox_W(area) - w) div 2));
+  w := Self.W;
+  Result.X1 := (area.X1 + ((area.W - w) div 2));
   Result.X2 := (Result.X1 + (w - 1));
   Result.Y1 := Self.Y1;
   Result.Y2 := Self.Y2;

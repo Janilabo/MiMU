@@ -711,7 +711,7 @@ end;
 {$IFDEF TArray_Find1}
 begin
   if (High(arr) > -1) then
-  case TRange_Ascending(IDs) of
+  case IDs.Ascending of
     True:
     for Result := IDs.start to IDs.stop do
       if (arr[Result] = item) then
@@ -750,7 +750,7 @@ end;
 {$IFDEF TArray_Find3}
 begin
   if ((High(arr) > -1) and (High(items) > -1)) then
-  case TRange_Ascending(IDs) of
+  case IDs.Ascending of
     True:
     for Result := IDs.start to IDs.stop do
       if TArray_Contains(items, arr[Result]) then
@@ -1601,8 +1601,8 @@ begin
   r := 0;
   if (High(arr) > -1) then
   begin
-    SetLength(Result, TRange_Size(IDs));
-    case TRange_Ascending(IDs) of
+    SetLength(Result, IDs.Size);
+    case IDs.Ascending of
       True:
       for i := IDs.start to IDs.stop do
 	    if (r >= limit) then
@@ -1659,22 +1659,22 @@ begin
   r := 0;
   if ((High(arr) > -1) and (High(items) > -1)) then
   begin
-    SetLength(Result, TRange_Size(IDs));
-    case TRange_Ascending(IDs) of
+    SetLength(Result, IDs.Size);
+    case IDs.Ascending of
       True:
       for i := IDs.start to IDs.stop do
-	    if (r >= limit) then
-		  Break
-		else
+        if (r >= limit) then
+          Break
+        else
           if TArray_Contains(items, arr[i]) then
             Result[r.Increase] := i;
       False:
       for i := IDs.start downto IDs.stop do
-	    if (r >= limit) then
-		  Break
-		else
+        if (r >= limit) then
+          Break
+        else
           if TArray_Contains(items, arr[i]) then
-		    Result[r.Increase] := i;
+            Result[r.Increase] := i;
     end;
   end;
   SetLength(Result, r);
