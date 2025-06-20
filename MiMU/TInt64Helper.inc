@@ -106,7 +106,7 @@ begin
   until ((r = 19) or (n = a));
   SetLength(Result, r);
   for i := 0 to ((r div 2) - 1) do
-    Swap(Result[i], Result[((r - i) - 1)]);
+    Swap(Result[i], Result[(r - i) - 1]);
 end; 
 
 {==============================================================================]
@@ -125,7 +125,7 @@ begin
   l := Length(s);
   SetLength(Result, l);
   for i := 0 to (l - 1) do
-    Result[i] := StrToInt(s[(i + 1)]);
+    Result[i] := StrToInt(s[i + 1]);
 end;
 
 {==============================================================================]

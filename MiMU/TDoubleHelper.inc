@@ -57,7 +57,7 @@ begin
   l := Length(s);
   SetLength(Result, l);
   for i := 0 to (l - 1) do
-    Result[i] := StrToInt(s[(i + 1)]);
+    Result[i] := StrToInt(s[i + 1]);
 end;
 
 {==============================================================================]

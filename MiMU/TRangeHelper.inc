@@ -163,7 +163,7 @@ begin
   case (Self.start > Self.stop) of
     True:
     for i := 0 to High(Result) do
-      Result[((l - i) - 1)] := (i + Self.stop);
+      Result[(l - i) - 1] := (i + Self.stop);
     False:
     for i := 0 to High(Result) do
       Result[i] := (i + Self.start);
@@ -208,7 +208,7 @@ begin
     for i := 0 to ((l - 1) div 2) do
     begin
       Result[i] := (Self.start + (i * d));
-      Result[((l - 1) - i)] := (Self.stop - (i * d));
+      Result[(l - 1) - i] := (Self.stop - (i * d));
     end;
   end else
     Result[0] := Self.start;

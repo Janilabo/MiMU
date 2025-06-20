@@ -46,7 +46,7 @@ uses
   Classes, SysUtils, Math;
 
 const
-  MiMU_VERSION_NUMBER = 0.4;
+  MiMU_VERSION_NUMBER = 0.41;
 
 type
   TPoint = record
@@ -371,8 +371,10 @@ type
     function Str: string; cdecl;  
   end;
   TIntegerArrayHelper = type helper for TIntegerArray
-//    function Contains(const item: Integer; const index: Integer = 0): Boolean; cdecl;
-    function Descending: Boolean; cdecl;
+    function Contains(const item: Integer; const index: Integer = 0): Boolean; cdecl;
+    function Includes(const item: Integer; const index: Integer = 2147483647): Boolean; cdecl;
+    function Clear: Boolean; cdecl;
+	function Descending: Boolean; cdecl;
     function Ascending: Boolean; cdecl;
     function Bounds: TRange; overload; cdecl;
     function Bounds(var size: Integer): TRange; overload; cdecl;
@@ -695,6 +697,14 @@ function TArray_Empty(const arr: TBooleanArray): Boolean; overload; cdecl;
 function TArray_Empty(const arr: TPointArray): Boolean; overload; cdecl;
 function TArray_Empty(const arr: TBoxArray): Boolean; overload; cdecl;
 function TArray_Empty(const arr: TRangeArray): Boolean; overload; cdecl;
+function TArray_Empty(const arr: Integer): TIntegerArray; overload; cdecl;
+function TArray_Empty(const arr: Double): TDoubleArray; overload; cdecl;
+function TArray_Empty(const arr: string): TStringArray; overload; cdecl;
+function TArray_Empty(const arr: Char): TCharArray; overload; cdecl;
+function TArray_Empty(const arr: Boolean): TBooleanArray; overload; cdecl;
+function TArray_Empty(const arr: TPoint): TPointArray; overload; cdecl;
+function TArray_Empty(const arr: TBox): TBoxArray; overload; cdecl;
+function TArray_Empty(const arr: TRange): TRangeArray; overload; cdecl;
 
 function TArray_Equal(const arr, target: TIntegerArray): Boolean; overload; cdecl;
 function TArray_Equal(const arr, target: TDoubleArray): Boolean; overload; cdecl;
@@ -1578,17 +1588,6 @@ begin
   B := T;
 end;
 
-{
-function Contains(const item: Integer; const index: Integer = 0): Boolean; cdecl;
-var
-  i: Integer;
-begin
-  for i := index to High(Self) do
-    if (item = Self[i]) then
-      Exit(True);
-  Result := False;
-end;
-}
 {$mode objfpc}{$H+}
 
 {$I MiMU.inc}

@@ -40,12 +40,12 @@ begin
 	  a := 0;
 	  for i := 0 to h do
 	    if not TArray_Contains(Result, items[i]) then
-        Result[(l + a.Increase)] := items[i];
+        Result[l + a.Increase] := items[i];
       SetLength(Result, (l + a));
     end;
     True:
     for i := 0 to h do
-      Result[(l + i)] := items[i];
+      Result[l + i] := items[i];
   end;
 end;
 {$ENDIF}
@@ -227,7 +227,7 @@ begin
     s := Max(0, index);
     SetLength(Result, c);
     for i := s to ((s + c) - 1) do
-      Result[(i - s)] := arr[i];
+      Result[i - s] := arr[i];
   end else
     SetLength(Result, 0);
 end;
@@ -291,10 +291,7 @@ begin
     SetLength(Result, l);
     for i := 0 to (l - 1) do
       if ((IDs[i] <= h) and (IDs[i] > -1)) then
-      begin
-        Result[r] := arr[IDs[i]];
-        Inc(r);
-      end;
+        Result[r.Increase] := arr[IDs[i]];
   end;
   SetLength(Result, r);
 end;
@@ -341,7 +338,7 @@ begin
   if not Result then
     Exit;
   for i := index to (h - 1) do
-    arr[i] := arr[(i + 1)];
+    arr[i] := arr[i + 1];
   SetLength(arr, h);
 end;
 {$ENDIF}
@@ -359,7 +356,7 @@ begin
   Result := 0;
   for i := 0 to (l - 1) do
     if not TArray_Contains(IDs, i) then
-      arr[(i - Result)] := arr[i]
+      arr[i - Result] := arr[i]
     else
       Result := (Result + 1);
   SetLength(arr, (l - Result));
@@ -428,7 +425,7 @@ begin
   if (High(items) > -1) then
   for i := Max(0, index) to (l - 1) do
     if not TArray_Contains(items, arr[i]) then
-      arr[(i - Result)] := arr[i]
+      arr[i - Result] := arr[i]
     else
       Inc(Result);
   Result := (l - Result);
@@ -472,9 +469,20 @@ end;
  @action: Returns true if array is empty (Length = 0).
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Empty}
+{$IFDEF TArray_Empty1}
 begin
   Result := (Length(arr) = 0);
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <TArray_Empty(arr: VarType): TArray>
+ @action: Returns empty array based on given variable type.
+ @note: None.
+[==============================================================================}
+{$IFDEF TArray_Empty2}
+begin
+  SetLength(Result, 0);
 end;
 {$ENDIF}
 
@@ -507,7 +515,7 @@ begin
   h := High(arr);
   SetLength(Result, (h + 2));
   for i := 0 to h do
-    Result[(i + 1)] := arr[i];
+    Result[i + 1] := arr[i];
   Result[0] := item;
 end;
 {$ENDIF}
@@ -525,7 +533,7 @@ begin
   l := Length(items);
   SetLength(Result, ((h + 1) + l));
   for i := 0 to h do
-    Result[(i + l)] := arr[i];
+    Result[i + l] := arr[i];
   for i := 0 to (l - 1) do
     Result[i] := items[i];
 end;
@@ -636,7 +644,7 @@ begin
     Result[i] := arr[i];
   t := Min(h, (s + (count - 1)));
   for i := s to t do
-    Result[i] := items[((index + i) mod (l - 1))];
+    Result[i] := items[(index + i) mod (l - 1)];
   for i := (t + 1) to h do
     Result[i] := arr[i];
 end;
@@ -859,8 +867,7 @@ begin
     end;
     if not f then
     begin
-      g := (g + 1);
-      SetLength(Result[g], 1);
+      SetLength(Result[g.Increment], 1);
       Result[g][0] := arr[i];
     end;
   end;
@@ -954,7 +961,7 @@ begin
   Result := TArray_Get(arr);
   l := Length(items);
   for i := 0 to High(IDs) do
-    Result[IDs[i]] := items[(i mod l)];
+    Result[IDs[i]] := items[i mod l];
 end;
 {$ENDIF}
 
@@ -990,7 +997,7 @@ begin
       Result := 0;
       for i := Max(0, index) to (l - 1) do
         if TArray_Contains(items, arr[i]) then
-          arr[(i - Result)] := arr[i]
+          arr[i - Result] := arr[i]
         else
           Inc(Result);
     end;
@@ -1152,7 +1159,7 @@ begin
         r := size;
       SetLength(Result[i], r);
       for j := 0 to (r - 1) do
-        Result[i][j] := arr[(s + j)];
+        Result[i][j] := arr[s + j];
     end;
   end else
     SetLength(Result, 0);
@@ -1182,7 +1189,7 @@ begin
         Continue;
       Result[r.Increase] := arr[IDs[i]];
       for t := IDs[i] to (h - 1) do
-        arr[t] := arr[(t + 1)];
+        arr[t] := arr[t + 1];
       Dec(h);
     until ((i = (l - 1)) or (h < 0));
     SetLength(arr, (h + 1));
@@ -1422,7 +1429,7 @@ end;
 begin
   Result := (Length(arr) + 1);
   SetLength(arr, Result);
-  arr[(Result - 1)] := item;
+  arr[Result - 1] := item;
 end;
 {$ENDIF}
 
@@ -1442,7 +1449,7 @@ begin
     Exit;
   SetLength(arr, Result);
   for i := 0 to h do
-    arr[(l + i)] := items[i];
+    arr[l + i] := items[i];
 end;
 {$ENDIF}
 
@@ -1487,7 +1494,7 @@ begin
   r := 0;
   for i := m to (l - 1) do
     if (s or (arr[i] <> item)) then
-      arr[(r.Increase + m)] := arr[i]
+      arr[r.Increase + m] := arr[i]
     else
       s := not all;
   SetLength(arr, (r + m));
@@ -1569,7 +1576,7 @@ begin
   Result := (l > 1);
   if Result then
   for i := 0 to ((l div 2) - 1) do
-    Swap(arr[i], arr[((l - i) - 1)]);
+    Swap(arr[i], arr[(l - i) - 1]);
 end;
 {$ENDIF}
 
@@ -1585,7 +1592,7 @@ begin
   l := Length(arr);
   SetLength(Result, l);
   for i := 0 to (l - 1) do
-    Result[i] := arr[((l - i) - 1)];
+    Result[i] := arr[(l - i) - 1];
 end;
 {$ENDIF}
 
@@ -1736,7 +1743,7 @@ begin
   for i := 0 to High(arr) do
     Result[i] := arr[i];
   for i := 0 to High(IDs) do
-    Result[IDs[i]] := items[(i mod l)];
+    Result[IDs[i]] := items[i mod l];
 end;
 {$ENDIF}
 
@@ -1753,7 +1760,7 @@ begin
   for i := 0 to High(arr) do
     Result[i] := arr[i];
   for i := 0 to High(items) do
-    Result[(index + i)] := items[i];
+    Result[index + i] := items[i];
 end;
 {$ENDIF}
 
@@ -1771,7 +1778,7 @@ begin
     Exit;
   Result := arr[0];
   for i := 0 to (l - 1) do
-    arr[i] := arr[(i + 1)];
+    arr[i] := arr[i + 1];
   SetLength(arr, l);
 end;
 {$ENDIF}
@@ -1793,7 +1800,7 @@ begin
   for i := 0 to (s - 1) do
     Result[i] := arr[i];
   for i := s to High(arr) do
-    arr[(i - s)] := arr[i];
+    arr[i - s] := arr[i];
   SetLength(arr, (Length(arr) - s));
 end;
 {$ENDIF}
@@ -1828,7 +1835,7 @@ begin
   SetLength(arr, size);
   Result := (Length(arr) - l);
   for i := 0 to (Result - 1) do
-    arr[(l + i)] := null;
+    arr[l + i] := null;
 end;
 {$ENDIF}
 
@@ -2034,7 +2041,7 @@ begin
   Result := Length(arr);
   SetLength(arr, (Result + 1));
   for i := Result downto 1 do
-    arr[i] := arr[(i - 1)];
+    arr[i] := arr[i - 1];
   arr[0] := item;
 end;
 {$ENDIF}
@@ -2055,7 +2062,7 @@ begin
   Result := (l + h);
   SetLength(arr, (Result + 1));
   for i := Result downto (h + 1) do
-    arr[i] := arr[(i - (h + 1))];
+    arr[i] := arr[i - (h + 1)];
   for i := 0 to h do
     arr[i] := items[i];
 end;

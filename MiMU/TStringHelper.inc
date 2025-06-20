@@ -148,7 +148,7 @@ begin
   for Result := index to ((a - b) + 1) do
   begin
     i := 1;
-    while ((i <= b) and (Self[((Result + i) - 1)] = s[i])) do
+    while ((i <= b) and (Self[(Result + i) - 1] = s[i])) do
       i := (i + 1);
     if (i > b) then
       Exit;
@@ -401,7 +401,7 @@ begin
       begin
         SetLength(Result, ((x - y) + 1));
         for i := x downto y do
-          Result[((x - i) + 1)] := Self[i];
+          Result[(x - i) + 1] := Self[i];
       end else
         Result := Copy(Self, x, 1);
   end else
@@ -435,7 +435,7 @@ begin
     begin
       SetLength(Result, ((x - y) - 1));
       for i := (x - 1) downto (y + 1) do
-        Result[(x - i)] := Self[i];
+        Result[x - i] := Self[i];
     end else
       Result := '';
 end;
@@ -456,8 +456,8 @@ begin
   for i := 0 to ((l div 2) - 1) do
   begin
     c := Self[(i + 1)];
-    Self[(i + 1)] := Self[(l - i)];
-    Self[(l - i)] := c;
+    Self[i + 1] := Self[l - i];
+    Self[l - i] := c;
   end;
 end;
 
@@ -473,7 +473,7 @@ begin
   l := Length(Self);
   SetLength(Result, l);
   for i := l downto 1 do
-    Result[i] := Self[((l - i) + 1)];
+    Result[i] := Self[(l - i) + 1];
 end;
 
 {==============================================================================]
@@ -492,11 +492,11 @@ begin
     m := Floor(l / 2);
     for i := 1 to m do
     begin
-      Result[i] := Self[((l - i) + 1)];
-      Result[((l - i) + 1)] := Self[i];
+      Result[i] := Self[(l - i) + 1];
+      Result[(l - i) + 1] := Self[i];
     end;
     if not ((l mod 2) = 0) then
-      Result[(m + 1)] := Self[(m + 1)];
+      Result[m + 1] := Self[m + 1];
   end else
     Result := Self;
 end;
@@ -854,7 +854,7 @@ begin
       Exit;
     SetLength(Result, (l - (x + y)));
     for i := x to ((l - y) - 1) do
-      Result[((i - x) + 1)] := Self[(i + 1)];
+      Result[(i - x) + 1] := Self[i + 1];
   end;
 end;
 
@@ -925,5 +925,5 @@ begin
   Result := Self.Chars;
   l := Length(items);
   for i := 0 to High(ID) do
-    Result[ID[i] - 1] := items[(i mod l)];	
+    Result[ID[i] - 1] := items[i mod l];	
 end;  

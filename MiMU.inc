@@ -263,7 +263,7 @@ function TArray_Dupe(const arr: TBoxArray): TBoxArray; overload; cdecl; {$I MIMU
 function TArray_Dupe(const arr: TRangeArray): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Dupe}
 
-{$DEFINE TArray_Empty}
+{$DEFINE TArray_Empty1}
 function TArray_Empty(const arr: TIntegerArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 function TArray_Empty(const arr: TDoubleArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 function TArray_Empty(const arr: TStringArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
@@ -272,7 +272,18 @@ function TArray_Empty(const arr: TBooleanArray): Boolean; overload; cdecl; {$I M
 function TArray_Empty(const arr: TPointArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 function TArray_Empty(const arr: TBoxArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 function TArray_Empty(const arr: TRangeArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-{$UNDEF TArray_Empty}
+{$UNDEF TArray_Empty1}
+
+{$DEFINE TArray_Empty2}
+function TArray_Empty(const arr: Integer): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Empty(const arr: Double): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Empty(const arr: string): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Empty(const arr: Char): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Empty(const arr: Boolean): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Empty(const arr: TPoint): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Empty(const arr: TBox): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TArray_Empty(const arr: TRange): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Empty2}
 
 {$DEFINE TArray_Equal}
 function TArray_Equal(const arr, target: TIntegerArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
