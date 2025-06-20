@@ -46,7 +46,7 @@ uses
   Classes, SysUtils, Math;
 
 const
-  MiMU_VERSION_NUMBER = 0.35;
+  MiMU_VERSION_NUMBER = 0.4;
 
 type
   TPoint = record
@@ -371,7 +371,90 @@ type
     function Str: string; cdecl;  
   end;
   TIntegerArrayHelper = type helper for TIntegerArray
-    function Contains(const item: Integer; const index: Integer = 0): Boolean; cdecl;
+//    function Contains(const item: Integer; const index: Integer = 0): Boolean; cdecl;
+    function Descending: Boolean; cdecl;
+    function Ascending: Boolean; cdecl;
+    function Bounds: TRange; overload; cdecl;
+    function Bounds(var size: Integer): TRange; overload; cdecl;
+    function Range: TRange; cdecl;
+    function Unique: Integer; cdecl;
+    function Uniqued: TIntegerArray; cdecl;
+    function Numberline: TIntegerArray; cdecl;
+    function Lowest: Integer; cdecl;
+    function Highest: Integer; cdecl;
+    function Mini(const ascending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
+    function Mini(const start: Integer; const ascending: Boolean = True): Integer; overload; cdecl;
+    function Maxi(const ascending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
+    function Maxi(const start: Integer; const ascending: Boolean = True): Integer; overload; cdecl;
+    function Sum: Int64; cdecl;
+    function Density: Double; cdecl;
+    function Mean: Double; cdecl;
+    function Mode: Integer; cdecl;
+    function Median: Double; cdecl;
+    function Middle: Double; cdecl;
+    function Center: Integer; cdecl;
+    function MostFrequent(const null: Integer = -2147483648): Integer; cdecl;
+    function LeastFrequent(const null: Integer = -2147483648): Integer; cdecl;
+    function BubbleSort(const ascending: Boolean = True): Integer; cdecl;
+    function BubbleSort2(const ascending: Boolean = True): Integer; cdecl;
+    function BubbleSortOptimized(const ascending: Boolean = True): Integer; cdecl;
+    function QuickSort(const ascending: Boolean = True): Integer; cdecl;
+    function QuickSort3W(const ascending: Boolean = True): Integer; cdecl;
+    function QSort(const ascending: Boolean = True): Integer; cdecl;
+    function CoctailSort(const ascending: Boolean = True): Integer; cdecl;
+    function CoctailSort2(const ascending: Boolean = True): Integer; cdecl;
+    function CombSort(const ascending: Boolean = True): Integer; cdecl;
+    function GnomeSort(const ascending: Boolean = True): Integer; cdecl;
+    function GnomeSortOptimized(const ascending: Boolean = True): Integer; cdecl;
+    function HeapSort(const ascending: Boolean = True): Integer; cdecl;
+    function InsertionSort(const ascending: Boolean = True): Integer; cdecl;
+    function SelectionSort(const ascending: Boolean = True): Integer; cdecl;
+    function SelectionSortBidirectional(const ascending: Boolean = True): Integer; cdecl;
+    function SelectionSortBidirectional2(const ascending: Boolean = True): Integer; cdecl;
+    function PancakeSort(const ascending: Boolean = True): Integer; cdecl;
+    function MergeSort(const ascending: Boolean = True): Integer; cdecl;
+    function MergeSortBU(const ascending: Boolean = True): Integer; cdecl;
+    function ShellSort(const ascending: Boolean = True): Integer; cdecl;
+    function BSort(const ascending: Boolean = True): Integer; cdecl;
+    function BinarySort(const ascending: Boolean = True): Integer; cdecl;
+    function BinarySorted(const ascending: Boolean = True): TIntegerArray; cdecl;
+    function BinaryBoundL(const x: Integer; const ascending: Boolean = True): Integer; cdecl;
+    function BinaryBoundR(const x: Integer; const ascending: Boolean = True): Integer; cdecl;
+    function BinaryPosL(const x: Integer; const ascending: Boolean = True): Integer; cdecl;
+    function BinaryPosR(const x: Integer; const ascending: Boolean = True): Integer; cdecl;
+    function BinarySearch(const x: Integer; const ascending: Boolean = True): Integer; cdecl;
+    function BinaryContains(const x: Integer; const ascending: Boolean = True): Boolean; cdecl;
+    function BinaryLocate(const x: Integer; const ascending: Boolean = True): TRange; cdecl;
+    function BinaryLocation(const x: Integer; const ascending: Boolean = True): TRange; cdecl;
+    function BinaryAppend(const x: Integer; const ascending: Boolean = True): Integer; cdecl;
+    function BinaryAdd(const x: Integer; const ascending: Boolean = True): TIntegerArray; cdecl;
+    function BinarySearchF(const x: TRange; const ascending: Boolean = True): Integer; cdecl;
+    function BinarySearchL(const x: TRange; const ascending: Boolean = True): Integer; cdecl;
+    function BinaryUnique(const ascending: Boolean = True): Integer; cdecl;
+    function BinaryUniqued(const ascending: Boolean = True): TIntegerArray; cdecl;
+    function Split(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+    function Split(const diff: Integer): T2DIntegerArray; overload; cdecl;
+    function Sblit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+    function Sblit(const diff: Integer): T2DIntegerArray; overload; cdecl;
+    function Group(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+    function Group(const diff: Integer): T2DIntegerArray; overload; cdecl;
+    function Groub(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+    function Groub(const diff: Integer): T2DIntegerArray; overload; cdecl;
+    function Invert: TIntegerArray; cdecl;
+  end;
+  TPointArrayHelper = type helper for TPointArray
+    function Bounds: TBox; overload; cdecl;
+    function Bounds(var width, height: Integer): TBox; overload; cdecl;
+    function Unique: Integer; cdecl;
+    function Uniqued: TPointArray; cdecl;
+    function Invert: TPointArray; cdecl;
+    function Edge(const scan8W: Boolean = False): TPointArray; cdecl;
+    function FloodFill(const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; cdecl;
+    function FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; cdecl;  
+  end;
+  TRangeArrayHelper = type helper for TRangeArray
+    function TIA: TIntegerArray; cdecl;
+    function T2DIA: T2DIntegerArray; cdecl;  
   end;
 
 function MiMU_Version: Double; cdecl;
@@ -401,88 +484,6 @@ procedure Swap(var A, B: Boolean); overload; inline;
 procedure Swap(var A, B: TPoint); overload; inline;
 procedure Swap(var A, B: TBox); overload; inline;
 procedure Swap(var A, B: TRange); overload; inline;
-
-function TIntegerArray_Descending(const arr: TIntegerArray): Boolean; cdecl;
-function TIntegerArray_Ascending(const arr: TIntegerArray): Boolean; cdecl;
-function TIntegerArray_Bounds(const arr: TIntegerArray): TRange; overload; cdecl;
-function TIntegerArray_Bounds(const arr: TIntegerArray; var size: Integer): TRange; overload; cdecl;
-function TIntegerArray_TRange(const arr: TIntegerArray): TRange; cdecl;
-function TIntegerArray_Unique(var arr: TIntegerArray): Integer; cdecl;
-function TIntegerArray_Uniqued(const arr: TIntegerArray): TIntegerArray; cdecl;
-function TIntegerArray_Numberline(const arr: TIntegerArray): TIntegerArray; cdecl;
-function TIntegerArray_Min(const arr: TIntegerArray): Integer; cdecl;
-function TIntegerArray_Max(const arr: TIntegerArray): Integer; cdecl;
-function TIntegerArray_Mini(const arr: TIntegerArray; const ascending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
-function TIntegerArray_Mini(const arr: TIntegerArray; const start: Integer; const ascending: Boolean = True): Integer; overload; cdecl;
-function TIntegerArray_Maxi(const arr: TIntegerArray; const ascending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
-function TIntegerArray_Maxi(const arr: TIntegerArray; const start: Integer; const ascending: Boolean = True): Integer; overload; cdecl;
-function TIntegerArray_Sum(const arr: TIntegerArray): Int64; cdecl;
-function TIntegerArray_Density(const arr: TIntegerArray): Double; cdecl;
-function TIntegerArray_Mean(const arr: TIntegerArray): Double; cdecl;
-function TIntegerArray_Mode(const arr: TIntegerArray): Integer; cdecl;
-function TIntegerArray_Median(const arr: TIntegerArray): Double; cdecl;
-function TIntegerArray_Middle(const arr: TIntegerArray): Double; cdecl;
-function TIntegerArray_Center(const arr: TIntegerArray): Integer; cdecl;
-function TIntegerArray_MostFrequent(const arr: TIntegerArray; const null: Integer = -2147483648): Integer; cdecl;
-function TIntegerArray_LeastFrequent(const arr: TIntegerArray; const null: Integer = -2147483648): Integer; cdecl;
-function TIntegerArray_BubbleSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BubbleSort2(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BubbleSortOptimized(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_QuickSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_QuickSort3W(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_QSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_CoctailSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_CoctailSort2(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_CombSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_GnomeSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_GnomeSortOptimized(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_HeapSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_InsertionSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_SelectionSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_SelectionSortBidirectional(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_SelectionSortBidirectional2(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_PancakeSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_MergeSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_MergeSortBU(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_ShellSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BinarySort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BinarySorted(const arr: TIntegerArray; const ascending: Boolean = True): TIntegerArray; cdecl;
-function TIntegerArray_BinaryBoundL(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BinaryBoundR(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BinaryPosL(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BinaryPosR(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BinaryLocate(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): TRange; cdecl;
-function TIntegerArray_BinarySearch(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BinaryContains(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Boolean; cdecl;
-function TIntegerArray_BinaryLocation(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): TRange; cdecl;
-function TIntegerArray_BinaryAppend(var arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BinaryAdd(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): TIntegerArray; cdecl;
-function TIntegerArray_BinarySearchF(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BinarySearchL(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BinaryUnique(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-function TIntegerArray_BinaryUniqued(const arr: TIntegerArray; const ascending: Boolean = True): TIntegerArray; cdecl;
-function TIntegerArray_Split(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
-function TIntegerArray_Split(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
-function TIntegerArray_Sblit(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
-function TIntegerArray_Sblit(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
-function TIntegerArray_Group(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
-function TIntegerArray_Group(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
-function TIntegerArray_Groub(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
-function TIntegerArray_Groub(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
-function TIntegerArray_Invert(const arr: TIntegerArray): TIntegerArray; cdecl;
-
-function TPointArray_Bounds(const arr: TPointArray): TBox; overload; cdecl;
-function TPointArray_Bounds(const arr: TPointArray; var width, height: Integer): TBox; overload; cdecl;
-function TPointArray_Unique(var arr: TPointArray): Integer; cdecl;
-function TPointArray_Uniqued(const arr: TPointArray): TPointArray; cdecl;
-function TPointArray_Invert(const arr: TPointArray): TPointArray; cdecl;
-function TPointArray_Edge(const arr: TPointArray; const scan8W: Boolean = False): TPointArray; cdecl;
-function TPointArray_FloodFill(const arr: TPointArray; const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; cdecl;
-function TPointArray_FloodFill(const arr: TPointArray; const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; cdecl;
-
-function TRangeArray_TIntegerArray(const arr: TRangeArray): TIntegerArray; cdecl;
-function TRangeArray_T2DIntegerArray(const arr: TRangeArray): T2DIntegerArray; cdecl;
 
 function TArray_Add(const arr: TIntegerArray; const item: Integer; const duplicates: Boolean = True): TIntegerArray; overload; cdecl;
 function TArray_Add(const arr: TDoubleArray; const item: Double; const duplicates: Boolean = True): TDoubleArray; overload; cdecl;
@@ -1577,7 +1578,8 @@ begin
   B := T;
 end;
 
-function TIntegerArrayHelper.Contains(const item: Integer; const index: Integer = 0): Boolean; cdecl;
+{
+function Contains(const item: Integer; const index: Integer = 0): Boolean; cdecl;
 var
   i: Integer;
 begin
@@ -1586,7 +1588,7 @@ begin
       Exit(True);
   Result := False;
 end;
-
+}
 {$mode objfpc}{$H+}
 
 {$I MiMU.inc}

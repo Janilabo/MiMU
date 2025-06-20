@@ -1,67 +1,67 @@
 {==============================================================================]
-  <TIntegerArray_Descending>
+  <TIntegerArrayHelper.Descending>
   @action: Returns true if array arr is in descending order.
   @note: CAUTION! Does not work with arrays that contain only unique values.
          [0,1] = False | [0,0] = False | [1,0] = True |
 [==============================================================================}
-function TIntegerArray_Descending(const arr: TIntegerArray): Boolean; cdecl;
+function TIntegerArrayHelper.Descending: Boolean; cdecl;
 var
   i: Integer;
 begin
   Result := False;
-  for i := 1 to High(arr) do
-    if (arr[i] > arr[(i - 1)]) then
+  for i := 1 to High(Self) do
+    if (Self[i] > Self[i - 1]) then
       Exit(False)
     else
-      Result := (Result or (arr[i] < arr[(i - 1)]));
+      Result := (Result or (Self[i] < Self[i - 1]));
 end;
 
 {==============================================================================]
-  <TIntegerArray_Asscending>
+  <TIntegerArrayHelper.Ascending>
   @action: Returns true if array arr is in asscending order.
   @note: CAUTION! Does not work with arrays that contain only unique values.
          [0,1] = True | [0,0] = False | [1,0] = False |
 [==============================================================================}
-function TIntegerArray_Ascending(const arr: TIntegerArray): Boolean; cdecl;
+function TIntegerArrayHelper.Ascending: Boolean; cdecl;
 var
   i: Integer;
 begin
   Result := False;
-  for i := 1 to High(arr) do
-    if (arr[i] < arr[(i - 1)]) then
+  for i := 1 to High(Self) do
+    if (Self[i] < Self[i - 1]) then
       Exit(False)
     else
-      Result := (Result or (arr[i] > arr[(i - 1)]));
+      Result := (Result or (Self[i] > Self[i - 1]));
 end;
 
 {==============================================================================]
-  <TIntegerArray_Bounds>
+  <TIntegerArrayHelper.Bounds>
   @action: Stores arr bounds to TRange.
   @note: None.
 [==============================================================================}
-function TIntegerArray_Bounds(const arr: TIntegerArray): TRange; overload; cdecl;
+function TIntegerArrayHelper.Bounds: TRange; overload; cdecl;
 var
   i: Integer;
 begin
-  if (High(arr) = -1) then
+  if (High(Self) = -1) then
     Exit(Result.Create(-2147483648, -2147483648));
-  Result.Create(arr[0], arr[0]);
-  for i := 1 to High(arr) do
-    if (arr[i] < Result.start) then
-      Result.start := arr[i]
+  Result.Create(Self[0], Self[0]);
+  for i := 1 to High(Self) do
+    if (Self[i] < Result.start) then
+      Result.start := Self[i]
     else
-      if (arr[i] > Result.stop) then
-        Result.stop := arr[i];
+      if (Self[i] > Result.stop) then
+        Result.stop := Self[i];
 end;
 
-function TIntegerArray_Bounds(const arr: TIntegerArray; var size: Integer): TRange; overload; cdecl;
+function TIntegerArrayHelper.Bounds(var size: Integer): TRange; overload; cdecl;
 var
   i: Integer;
 begin
-  case (High(arr) = -1) of
+  case (High(Self) = -1) of
     False:
 	begin
-	  Result := TIntegerArray_Bounds(arr);
+	  Result := Self.Bounds;
 	  size := Result.Size;
 	end;
     True:
@@ -73,21 +73,21 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_TRange>
+  <TIntegerArrayHelper.Range>
   @action: Stores arr bounds to TRange.
   @note: Returns -2147483648..-2147483648 with empty array.
 [==============================================================================}
-function TIntegerArray_TRange(const arr: TIntegerArray): TRange; cdecl;
+function TIntegerArrayHelper.Range: TRange; cdecl;
 var
   i: Integer;
 begin
-  if (High(arr) = -1) then
+  if (High(Self) = -1) then
     Exit(Result.Create(-2147483648, -2147483648));
-  Result := Result.Create(arr[0], arr[0]);
-  for i := 1 to High(arr) do
+  Result := Result.Create(Self[0], Self[0]);
+  for i := 1 to High(Self) do
   begin
-    Result.start := Min(Result.start, arr[i]);
-    Result.stop := Max(Result.stop, arr[i]);
+    Result.start := Min(Result.start, Self[i]);
+    Result.stop := Max(Result.stop, Self[i]);
   end;
 end;
 
@@ -96,75 +96,75 @@ end;
   @action: Removes duplicates from array arr and returns the count of deleted items.
   @note: Not recommended with very large arrays
 [==============================================================================}
-function TIntegerArray_Unique(var arr: TIntegerArray): Integer; cdecl;
+function TIntegerArrayHelper.Unique: Integer; cdecl;
 var
   x, y, z: Integer;
   r: TRange;
   b: TBooleanArray;
 begin
-  y := High(arr);
+  y := High(Self);
   if (y > 0) then
   begin
     z := 0;
-    r := TIntegerArray_Bounds(arr);
+    r := Self.Bounds;
     b := TArray_Create(r.Size, False);
     for x := 0 to y do
-      if b[(arr[x] - r.start)].Enable then
-        arr[z.Increase] := arr[x];
+      if b[Self[x] - r.start].Enable then
+        Self[z.Increase] := Self[x];
     SetLength(b, 0);
-    SetLength(arr, z);
+    SetLength(Self, z);
     Result := ((y + 1) - z);
   end else
     Result := 0;
 end;
 
 {==============================================================================]
-  <TIntegerArray_Uniqued>
+  <TIntegerArrayHelper.Uniqued>
   @action: Removes duplicates from array arr and returns it.
   @note: Not recommended with very large arrays
 [==============================================================================}
-function TIntegerArray_Uniqued(const arr: TIntegerArray): TIntegerArray; cdecl;
+function TIntegerArrayHelper.Uniqued: TIntegerArray; cdecl;
 var
   x, y, z: Integer;
   r: TRange;
   b: TBooleanArray;
 begin
   z := 0;
-  y := High(arr);
+  y := High(Self);
   if (y > 0) then
   begin
     SetLength(Result, (y + 1));
-    r := TIntegerArray_Bounds(arr);
+    r := Self.Bounds;
 	b := TArray_Create(r.Size, False);
     for x := 0 to y do
-      if b[(arr[x] - r.start)].Enable then
-        Result[z.Increase] := arr[x];
+      if b[Self[x] - r.start].Enable then
+        Result[z.Increase] := Self[x];
     SetLength(b, 0);
   end;
   SetLength(Result, z);
 end;
 
 {==============================================================================]
-  <TIntegerArray_Numberline>
+  <TIntegerArrayHelper.Numberline>
   @action: Returns numberline of array arr.
   @note: None.
 [==============================================================================}
-function TIntegerArray_Numberline(const arr: TIntegerArray): TIntegerArray; cdecl;
+function TIntegerArrayHelper.Numberline: TIntegerArray; cdecl;
 var
   i, x, y: Integer;
   r: TRange;
 begin
-  y := High(arr);
+  y := High(Self);
   case y.Compare(0) of
     1:
     begin
-      r.Create(arr[0], arr[0]);
+      r.Create(Self[0], Self[0]);
       for x := 1 to y do
-        if (arr[x] < r.start) then
-          r.start := arr[x]
+        if (Self[x] < r.start) then
+          r.start := Self[x]
         else
-          if (arr[x] > r.stop) then
-            r.stop := arr[x];
+          if (Self[x] > r.stop) then
+            r.stop := Self[x];
       if (r.start <> r.stop) then
       begin
         SetLength(Result, r.Size);
@@ -173,7 +173,7 @@ begin
       end else
         Result := TArray_Create(r.start);
     end;
-    0: Result := TArray_Create(arr[0]);
+    0: Result := TArray_Create(Self[0]);
     -1: SetLength(Result, 0);
   end;
 end;
@@ -183,43 +183,43 @@ end;
   @action: Returns array minimum value.
   @note: None.
 [==============================================================================}
-function TIntegerArray_Min(const arr: TIntegerArray): Integer; cdecl;
+function TIntegerArrayHelper.Lowest: Integer; cdecl;
 var
   i: Integer;
 begin
-  if (High(arr) > -1) then
-    Result := arr[0];
-  for i := 1 to High(arr) do
-    if (arr[i] < Result) then
-      Result := arr[i];
+  if (High(Self) > -1) then
+    Result := Self[0];
+  for i := 1 to High(Self) do
+    if (Self[i] < Result) then
+      Result := Self[i];
 end;
 
 {==============================================================================]
-  <TIntegerArray_Max>
+  <TIntegerArrayHelper.Highest>
   @action: Returns array maximum value.
   @note: None.
 [==============================================================================}
-function TIntegerArray_Max(const arr: TIntegerArray): Integer; cdecl;
+function TIntegerArrayHelper.Highest: Integer; cdecl;
 var
   i: Integer;
 begin
-  if (High(arr) > -1) then
-    Result := arr[0];
-  for i := 1 to High(arr) do
-    if (arr[i] < Result) then
-      Result := arr[i];
+  if (High(Self) > -1) then
+    Result := Self[0];
+  for i := 1 to High(Self) do
+    if (Self[i] < Result) then
+      Result := Self[i];
 end;
 
 {==============================================================================]
-  <TIntegerArray_Mini>
+  <TIntegerArrayHelper.Mini>
   @action: Returns array INDEX with minimum value.
   @note: Supports reversed order (last min index) with ascending as False.
 [==============================================================================}
-function TIntegerArray_Mini(const arr: TIntegerArray; const ascending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
+function TIntegerArrayHelper.Mini(const ascending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
 var
   h, i, s: Integer;
 begin
-  h := High(arr);
+  h := High(Self);
   if ((h = -1) or (ascending and (start > h)) or ((not ascending) and (start < 0))) then
     Exit(-1);
   case ascending of
@@ -228,7 +228,7 @@ begin
       s := Max(0, start);
       Result := s;
       for i := (s + 1) to h do
-        if (arr[i] < arr[Result]) then
+        if (Self[i] < Self[Result]) then
           Result := i;
     end;
     False:
@@ -236,27 +236,27 @@ begin
       s := Min(h, start);
       Result := s;
       for i := (s - 1) downto 0 do
-        if (arr[i] < arr[Result]) then
+        if (Self[i] < Self[Result]) then
           Result := i;
     end;
   end;
 end;
 
-function TIntegerArray_Mini(const arr: TIntegerArray; const start: Integer; const ascending: Boolean = True): Integer; overload; cdecl;
+function TIntegerArrayHelper.Mini(const start: Integer; const ascending: Boolean = True): Integer; overload; cdecl;
 begin
-  Result := TIntegerArray_Mini(arr, ascending, start);
+  Result := Self.Mini(ascending, start);
 end;
 
 {==============================================================================]
-  <TIntegerArray_Maxi>
+  <TIntegerArrayHelper.Maxi>
   @action: Returns array INDEX with maximum value.
   @note: Supports reversed order (last max index) with ascending as False.
 [==============================================================================}
-function TIntegerArray_Maxi(const arr: TIntegerArray; const ascending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
+function TIntegerArrayHelper.Maxi(const ascending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
 var
   h, i, s: Integer;
 begin
-  h := High(arr);
+  h := High(Self);
   if ((h = -1) or (ascending and (start > h)) or ((not ascending) and (start < 0))) then
     Exit(-1);
   case ascending of
@@ -265,7 +265,7 @@ begin
       s := Max(0, start);
       Result := s;
       for i := (s + 1) to h do
-        if (arr[i] > arr[Result]) then
+        if (Self[i] > Self[Result]) then
           Result := i;
     end;
     False:
@@ -273,100 +273,100 @@ begin
       s := Min(h, start);
       Result := s;
       for i := (s - 1) downto 0 do
-        if (arr[i] > arr[Result]) then
+        if (Self[i] > Self[Result]) then
           Result := i;
     end;
   end;
 end;
 
-function TIntegerArray_Maxi(const arr: TIntegerArray; const start: Integer; const ascending: Boolean = True): Integer; overload; cdecl;
+function TIntegerArrayHelper.Maxi(const start: Integer; const ascending: Boolean = True): Integer; overload; cdecl;
 begin
-  Result := TIntegerArray_Maxi(arr, ascending, start);
+  Result := Self.Maxi(ascending, start);
 end;
 
 {==============================================================================]
- <TIntegerArray_Sum>
+ <TIntegerArrayHelper.Sum>
  @action: Returns the sum of all arr values together.
  @note: None
 [==============================================================================}
-function TIntegerArray_Sum(const arr: TIntegerArray): Int64; cdecl;
+function TIntegerArrayHelper.Sum: Int64; cdecl;
 var
   i: Integer;
 begin
   Result := 0;
-  for i := 0 to High(arr) do
-    Result := (Result + arr[i]);
+  for i := 0 to High(Self) do
+    Result := (Result + Self[i]);
 end;
 
 {==============================================================================]
- <TIntegerArray_Density>
+ <TIntegerArrayHelper.Density>
  @action: Returns the calculated density from given arr.
  @note: None
 [==============================================================================}
-function TIntegerArray_Density(const arr: TIntegerArray): Double; cdecl;
+function TIntegerArrayHelper.Density: Double; cdecl;
 var
   a: TIntegerArray;
   c, i, j, h, l: Integer;
   u: Boolean;
 begin
-  if (Length(arr) = 0) then
+  if (Length(Self) = 0) then
     Exit(0.0);
-  l := arr[0];
-  h := arr[0];
-  SetLength(a, Length(arr));
+  l := Self[0];
+  h := Self[0];
+  SetLength(a, Length(Self));
   c := 0;
-  for i := 0 to High(arr) do
+  for i := 0 to High(Self) do
   begin
-    if (arr[i] < l) then
-      l := arr[i]
+    if (Self[i] < l) then
+      l := Self[i]
     else
-      if (arr[i] > h) then
-        h := arr[i];
+      if (Self[i] > h) then
+        h := Self[i];
     u := True;
     for j := 0 to (c - 0) do
-      if (a[j] = arr[i]) then
+      if (a[j] = Self[i]) then
       begin
         u := False;
         Break;
       end;
     if u then
-      a[c.Increase] := arr[i];
+      a[c.Increase] := Self[i];
   end;
   Result := (Double(c) / (Abs(l - h) + 1));
 end;
 
 {==============================================================================]
- <TIntegerArray_Mean>
+ <TIntegerArrayHelper.Mean>
  @action: The sum of all arr values divided by the length of arr.
  @note: None
 [==============================================================================}
-function TIntegerArray_Mean(const arr: TIntegerArray): Double; cdecl;
+function TIntegerArrayHelper.Mean: Double; cdecl;
 begin
-  Result := (TIntegerArray_Sum(arr) / Length(arr));
+  Result := (Self.Sum / Length(Self));
 end;
 
 {==============================================================================]
- <TIntegerArray_Mode>
+ <TIntegerArrayHelper.Mode>
  @action: The value that occurs most frequently in arr.
  @note: None
 [==============================================================================}
-function TIntegerArray_Mode(const arr: TIntegerArray): Integer; cdecl;
+function TIntegerArrayHelper.Mode: Integer; cdecl;
 var
   c, a: TIntegerArray;
   h, i, j, l: Integer;
 begin
-  h := High(arr);
+  h := High(Self);
   case h.Compare(0) of
     1:
     begin
       SetLength(c, 0);
       SetLength(a, 0);
-      for i := 0 to High(arr) do
+      for i := 0 to High(Self) do
       begin
         l := -1;
         for j := 0 to High(a) do
         begin
-          if (arr[i] = a[j]) then
+          if (Self[i] = a[j]) then
           begin
             l := j;
             Break;
@@ -374,12 +374,12 @@ begin
         end;
         if (l = -1) then
         begin
-          TArray_Append(a, arr[i]);
+          TArray_Append(a, Self[i]);
           TArray_Append(c, 1);
         end else
           Inc(c[l]);
       end;
-      Result := a[TIntegerArray_Maxi(c)];
+      Result := a[c.Maxi];
     end;
     0: Result := 0;
     -1: Result := -2147483648;
@@ -387,86 +387,86 @@ begin
 end;
 
 {==============================================================================]
- <TIntegerArray_Median>
+ <TIntegerArrayHelper.Median>
  @action: The middle value when the arr is sorted:
           -Odd number of elements => the exact middle.
           -Even number => the average of the two middle elements.
  @note: None
 [==============================================================================}
-function TIntegerArray_Median(const arr: TIntegerArray): Double; cdecl;
+function TIntegerArrayHelper.Median: Double; cdecl;
 var
   a: TIntegerArray;
   i, j, n, s: Integer;
 begin
-  n := Length(arr);
+  n := Length(Self);
   if (n = 0) then
     Exit(-2147483648);
-  a := Copy(arr, 0, n);
+  a := Copy(Self, 0, n);
   for i := 0 to (n - 2) do
-    if (a[i] > a[(i + 1)]) then
+    if (a[i] > a[i + 1]) then
     begin
       for j := 0 to (n - 2) do
         for s := 0 to ((n - j) - 2) do
-          if (a[s] > a[(s + 1)]) then
-		    Swap(a[s], a[(s + 1)]);
+          if (a[s] > a[s + 1]) then
+		    Swap(a[s], a[s + 1]);
       Break;
     end;
   if ((n mod 2) = 1) then
-    Result := a[(n div 2)]
+    Result := a[n div 2]
   else
-    Result := ((a[n div 2 - 1] + a[(n div 2)]) / 2);
+    Result := ((a[n div 2 - 1] + a[n div 2]) / 2);
 end;
 
 {==============================================================================]
- <TIntegerArray_Middle>
+ <TIntegerArrayHelper.Middle>
  @action: The value(s) at the center position(s) of a sorted or unsorted arr.
  @note: None
 [==============================================================================}
-function TIntegerArray_Middle(const arr: TIntegerArray): Double; cdecl;
+function TIntegerArrayHelper.Middle: Double; cdecl;
 var
   l: Integer;
 begin
-  l := Length(arr);
+  l := Length(Self);
   if (l = 0) then
     Exit(-2147483648);
   if ((l mod 2) = 1) then
-    Result := arr[(l div 2)]
+    Result := Self[l div 2]
   else
-    Result := ((arr[((l div 2) - 1)] + arr[(l div 2)]) / 2.0);
+    Result := ((Self[(l div 2) - 1] + Self[l div 2]) / 2.0);
 end;
 
 {==============================================================================]
- <TIntegerArray_Center>
+ <TIntegerArrayHelper.Center>
  @action: The value at the center position of a sorted or unsorted arr.
  @note: None
 [==============================================================================}
-function TIntegerArray_Center(const arr: TIntegerArray): Integer; cdecl;
+function TIntegerArrayHelper.Center: Integer; cdecl;
 begin
-  if (Length(arr) = 0) then
+  if (Length(Self) = 0) then
     Exit(-2147483648);
-  Result := arr[(Length(arr) div 2)];
+  Result := Self[(Length(Self) div 2)];
 end;
 
 {==============================================================================]
- <TIntegerArray_MostFrequent>
+ <TIntegerArrayHelper.MostFrequent>
  @action: Returns the most frequent/common value from arr.
  @note: Be careful with values! Try to avoid using too low or high values!
         Such as: -200,000,000 or +200,000,000. Heavy memory-usage could possibly cause crashing.
 [==============================================================================}
-function TIntegerArray_MostFrequent(const arr: TIntegerArray; const null: Integer = -2147483648): Integer; cdecl;
+function TIntegerArrayHelper.MostFrequent(const null: Integer = -2147483648): Integer; cdecl;
 var
   h, x, t: Integer;
   b: TIntegerArray;
   r: TRange;
 begin
-  h := High(arr);
+  h := High(Self);
   case h.Compare(0) of
     1:
     begin
-      r := TIntegerArray_Bounds(arr);
+      r := Self.Bounds;
       b := TArray_Create(r.Size, Integer(0));
-      for x := 0 to High(arr) do
-        Inc(b[(arr[x] - r.start)]);
+      for x := 0 to High(Self) do
+        Inc(b[(Self[x] - r.start)]);
       t := 0;
       for x := 0 to (r.stop - r.start) do
         if (b[x] > b[t]) then
@@ -474,31 +474,31 @@ begin
       Result := (t + r.start);
       SetLength(b, 0);
     end;
-    0: Result := arr[0];
+    0: Result := Self[0];
     -1: Result := null;
   end;
 end;
 
 {==============================================================================]
- <TIntegerArray_LeastFrequent>
+ <TIntegerArrayHelper.LeastFrequent>
  @action: Returns the least frequent/common value from TIA.
  @note: Be careful with values! Try to avoid using too low or high values!
         Such as: -200,000,000 or +200,000,000. Heavy memory-usage could possibly cause crashing.
 [==============================================================================}
-function TIntegerArray_LeastFrequent(const arr: TIntegerArray; const null: Integer = -2147483648): Integer; cdecl;
+function TIntegerArrayHelper.LeastFrequent(const null: Integer = -2147483648): Integer; cdecl;
 var
   h, x, t: Integer;
   b: TIntegerArray;
   r: TRange;
 begin
-  h := High(arr);
+  h := High(Self);
   case h.Compare(0) of
     1:
     begin
-      r := TIntegerArray_Bounds(arr);
+      r := Self.Bounds;
       b := TArray_Create(r.Size, Integer(0));
-      for x := 0 to High(arr) do
-        Inc(b[(arr[x] - r.start)]);
+      for x := 0 to High(Self) do
+        Inc(b[(Self[x] - r.start)]);
       t := 0;
       for x := 0 to (r.stop - r.start) do
         if ((b[x] > 0) and (b[x] < b[t])) then
@@ -506,59 +506,59 @@ begin
       Result := (t + r.start);
       SetLength(b, 0);
     end;
-    0: Result := arr[0];
+    0: Result := Self[0];
     -1: Result := null;
   end;
 end; 
 
 {==============================================================================]
-  <TIntegerArray_BubbleSort>
+  <TIntegerArrayHelper.BubbleSort>
   @action: Sorts arr with BubbleSort algorithm
   @note: Supports sorting to ascending and descending order. Returns High(arr)!
 [==============================================================================}
-function TIntegerArray_BubbleSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BubbleSort(const ascending: Boolean = True): Integer; cdecl;
 var
   a, b: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   for a := 0 to (Result - 1) do
     for b := 1 to Result do
-      if ((ascending and (arr[(b - 1)] > arr[b])) or (not ascending and (arr[(b - 1)] < arr[b]))) then
-        Swap(arr[b], arr[(b - 1)]);
+      if ((ascending and (Self[b - 1] > Self[b])) or (not ascending and (Self[b - 1] < Self[b]))) then
+        Swap(Self[b], Self[b - 1]);
 end;
 
 {==============================================================================]
-  <TIntegerArray_BubbleSort2>
+  <TIntegerArrayHelper.BubbleSort2>
   @action: Sorts arr with BubbleSort algorithm - contains some optimization.
   @note: Supports sorting to ascending and descending order. Returns High(arr)!
 [==============================================================================}
-function TIntegerArray_BubbleSort2(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BubbleSort2(const ascending: Boolean = True): Integer; cdecl;
 var
   a, b, o: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
     for a := 0 to (Result - 1) do
       for b := 1 to (Result - a) do
-        if (Sign(arr[b] - arr[(b - 1)]) = o) then
-          Swap(arr[b], arr[(b - 1)]);
+        if (Sign(Self[b] - Self[b - 1]) = o) then
+          Swap(Self[b], Self[b - 1]);
   end;
 end;
 
 {==============================================================================]
-  <TIntegerArray_BubbleSortOptimized>
+  <TIntegerArrayHelper.BubbleSortOptimized>
   @action: Sorts arr with BubbleSort algorithm
   @note: Supports sorting to ascending and descending order. Returns High(arr)!
 [==============================================================================}
-function TIntegerArray_BubbleSortOptimized(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BubbleSortOptimized(const ascending: Boolean = True): Integer; cdecl;
 var
   i, j, o: Integer;
   s: Boolean;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result < 1) then
     Exit;
   o := ascending.Select(-1, 1);
@@ -566,9 +566,9 @@ begin
   begin
     s := False;
     for j := 1 to (Result - i) do
-      if (Sign(arr[j] - arr[(j - 1)]) = o) then
+      if (Sign(Self[j] - Self[j - 1]) = o) then
       begin
-        Swap(arr[(j - 1)], arr[j]);
+        Swap(Self[j - 1], Self[j]);
         s := True;
       end;
     if not s then
@@ -577,11 +577,11 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_QuickSort>
+  <TIntegerArrayHelper.QuickSort>
   @action: QuickSort algorithm that is NOT based on recursion.
   @note: non-recursive. Returns High(arr).
 [==============================================================================}
-function TIntegerArray_QuickSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.QuickSort(const ascending: Boolean = True): Integer; cdecl;
 var
   t, p, o: Integer;
   s: TRangeArray;
@@ -606,28 +606,28 @@ var
     Result := True;
   end;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
     t := -1;
-    Push(0, High(arr));
-    r.Create(0, High(arr));
+    Push(0, High(Self));
+    r.Create(0, High(Self));
     while Pop(r.start, r.stop) do
     begin
       while (r.start < r.stop) do
       begin
         x := r;
-        p := arr[((r.start + r.stop) div 2)];
+        p := Self[(r.start + r.stop) div 2];
         while (x.start <= x.stop) do
         begin
-          while (Sign(arr[x.start] - p) = o) do
+          while (Sign(Self[x.start] - p) = o) do
             Inc(x.start);
-          while (Sign(arr[x.stop] - p) = -o) do
+          while (Sign(Self[x.stop] - p) = -o) do
             Dec(x.stop);
           if (x.start <= x.stop) then
           begin
-            Swap(arr[x.start], arr[x.stop]);
+            Swap(Self[x.start], Self[x.stop]);
             Inc(x.start);
             Dec(x.stop);
           end;
@@ -649,11 +649,11 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_QuickSort3W>
+  <TIntegerArrayHelper.QuickSort3W>
   @action: 3-way QuickSort algorithm that is NOT based on recursion.
   @note: recursive. Returns High(arr).
 [==============================================================================}
-function TIntegerArray_QuickSort3W(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.QuickSort3W(const ascending: Boolean = True): Integer; cdecl;
   procedure SortLH(var arr: TIntegerArray; const L, H: Integer; const ascending: Boolean = True);
   var
     a, b, p, x, o: Integer;
@@ -682,18 +682,18 @@ function TIntegerArray_QuickSort3W(var arr: TIntegerArray; const ascending: Bool
     SortLH(arr, (b + 1), H, ascending);
   end;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
-    SortLH(arr, 0, Result, ascending);
+    SortLH(Self, 0, Result, ascending);
 end;
 
 {==============================================================================]
-  <TIntegerArray_QSort>
+  <TIntegerArrayHelper.QSort>
   @action: QuickSort algorithm that IS based on recursion.
   @note: recursive. Returns High(arr).
 [==============================================================================}
-function TIntegerArray_QSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
-  procedure QuickSort(var arr: TIntegerArray; const start, stop: Integer; const ascending: Boolean = True);
+function TIntegerArrayHelper.QSort(const ascending: Boolean = True): Integer; cdecl;
+  procedure _QuickSort(var arr: TIntegerArray; const start, stop: Integer; const ascending: Boolean = True);
   var
     p, o: Integer;
     s: TRange;
@@ -701,7 +701,7 @@ function TIntegerArray_QSort(var arr: TIntegerArray; const ascending: Boolean = 
     if (start < stop) then
     begin
       o := ascending.Select(-1, 1);
-      p := arr[((start + stop) div 2)];
+      p := arr[(start + stop) div 2];
       s.Create(start, stop);
       repeat
         while (Sign(arr[s.start] - p) = o) do
@@ -716,46 +716,46 @@ function TIntegerArray_QSort(var arr: TIntegerArray; const ascending: Boolean = 
         end;
       until (s.start > s.stop);
       if (start < s.stop) then
-        QuickSort(arr, start, s.stop, ascending);
+        _QuickSort(arr, start, s.stop, ascending);
       if (s.start < stop) then
-        QuickSort(arr, s.start, stop, ascending);
+        _QuickSort(arr, s.start, stop, ascending);
     end;
   end;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
-    QuickSort(arr, 0, Result, ascending);
+    _QuickSort(Self, 0, Result, ascending);
 end;
 
 {==============================================================================]
-  <TIntegerArray_CoctailSort>
+  <TIntegerArrayHelper.CoctailSort>
   @action: CoctailSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_CoctailSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.CoctailSort(const ascending: Boolean = True): Integer; cdecl;
 var
   i, o: Integer;
   s: Boolean;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
     repeat
       s := False;
       for i := 0 to (Result - 1) do
-        if (Sign(arr[(i + 1)] - arr[i]) = o) then
+        if (Sign(Self[i + 1] - Self[i]) = o) then
         begin
-          Swap(arr[i], arr[(i + 1)]);
+          Swap(Self[i], Self[i + 1]);
           s := True;
         end;
       if not s then
         Break;
       s := False;
       for i := (Result - 1) downto 0 do
-         if (Sign(arr[(i + 1)] - arr[i]) = o) then
+         if (Sign(Self[i + 1] - Self[i]) = o) then
         begin
-          Swap(arr[i], arr[(i + 1)]);
+          Swap(Self[i], Self[i + 1]);
           s := True;
         end;
     until not s;
@@ -763,28 +763,28 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_CoctailSort>
+  <TIntegerArrayHelper.CoctailSort2>
   @action: CoctailSort algorithm for TIntegerArrays.
   @note: CoctailSort v2. Returns High(arr).
 [==============================================================================}
-function TIntegerArray_CoctailSort2(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.CoctailSort2(const ascending: Boolean = True): Integer; cdecl;
 var
   b, e, i, o: Integer;
   s: Boolean;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
     b := -1;
-    e := (Length(arr) - 2);
+    e := (Length(Self) - 2);
     repeat
       s := False;
       Inc(b);
       for i := b to e do
-        if not (Sign(arr[i] - arr[(i + 1)]) = o) then
+        if not (Sign(Self[i] - Self[i + 1]) = o) then
         begin
-          Swap(arr[i], arr[(i + 1)]);
+          Swap(Self[i], Self[i + 1]);
           s := True;
         end;
       if not s then
@@ -792,9 +792,9 @@ begin
       s := False;
       Dec(e);
       for i := e downto b do
-        if not (Sign(arr[i] - arr[(i + 1)]) = o) then
+        if not (Sign(Self[i] - Self[i + 1]) = o) then
         begin
-          Swap(arr[i], arr[(i + 1)]);
+          Swap(Self[i], Self[i + 1]);
           s := True;
         end;
     until not s;
@@ -802,20 +802,20 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_CombSort>
+  <TIntegerArrayHelper.CombSort>
   @action: CombSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_CombSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.CombSort(const ascending: Boolean = True): Integer; cdecl;
 var
   i, g, o: Integer;
   s: Boolean;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
-    g := Length(arr);
+    g := Length(Self);
     s := True;
     while ((g > 1) or s) do
     begin
@@ -824,9 +824,9 @@ begin
         g := 1;
       s := False;
       for i := 0 to (Result - g) do
-        if (Sign(arr[(i + g)] - arr[i]) = o) then
+        if (Sign(Self[i + g] - Self[i]) = o) then
         begin
-          Swap(arr[i], arr[(i + g)]);
+          Swap(Self[i], Self[i + g]);
           s := True;
         end;
     end;
@@ -834,23 +834,23 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_GnomeSort>
+  <TIntegerArrayHelper.GnomeSort>
   @action: GnomeSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_GnomeSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.GnomeSort(const ascending: Boolean = True): Integer; cdecl;
 var
   o, p, t: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
     p := 1;
     while (p < (Result + 1)) do
-      if (Sign(arr[p] - arr[(p - 1)]) = o) then
+      if (Sign(Self[p] - Self[p - 1]) = o) then
       begin
-        Swap(arr[p], arr[(p - 1)]);
+        Swap(Self[p], Self[p - 1]);
         if (p > 1) then
           Dec(p);
       end else
@@ -859,24 +859,24 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_GnomeSortOptimized>
+  <TIntegerArrayHelper.GnomeSortOptimized>
   @action: Optimized GnomeSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_GnomeSortOptimized(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.GnomeSortOptimized(const ascending: Boolean = True): Integer; cdecl;
 var
   p, l, o: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
     p := 1;
     l := 0;
-    while (p < Length(arr)) do
-      if (Sign(arr[p] - arr[(p - 1)]) = o) then
+    while (p < Length(Self)) do
+      if (Sign(Self[p] - Self[p - 1]) = o) then
       begin
-        Swap(arr[p], arr[(p - 1)]);
+        Swap(Self[p], Self[p - 1]);
         if (p > 1) then
         begin
           if (l <> 0) then
@@ -896,15 +896,15 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_HeapSort>
+  <TIntegerArrayHelper.HeapSort>
   @action: HeapSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_HeapSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.HeapSort(const ascending: Boolean = True): Integer; cdecl;
 var
   a, b, r, c, o: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
@@ -916,11 +916,11 @@ begin
       while (((r * 2) + 1) <= Result) do
       begin
         c := ((r * 2) + 1);
-        if ((c < Result) and (Sign(arr[c] - arr[(c + 1)]) = o)) then
+        if ((c < Result) and (Sign(Self[c] - Self[c + 1]) = o)) then
           c := (c + 1);
-        if (Sign(arr[r] - arr[c]) = o) then
+        if (Sign(Self[r] - Self[c]) = o) then
         begin
-          Swap(arr[r], arr[c]);
+          Swap(Self[r], Self[c]);
           r := c;
         end else
           Break;
@@ -929,17 +929,17 @@ begin
     end;
     while (b > 0) do
     begin
-      Swap(arr[0], arr[b]);
+      Swap(Self[0], Self[b]);
       b := (b - 1);
       r := 0;
       while (((r * 2) + 1) <= b) do
       begin
         c := ((r * 2) + 1);
-        if ((c < b) and (Sign(arr[c] - arr[(c + 1)]) = o)) then
+        if ((c < b) and (Sign(Self[c] - Self[c + 1]) = o)) then
           c := (c + 1);
-        if (Sign(arr[r] - arr[c]) = o) then
+        if (Sign(Self[r] - Self[c]) = o) then
         begin
-          Swap(arr[r], arr[c]);
+          Swap(Self[r], Self[c]);
           r := c;
         end else
           Break;
@@ -949,38 +949,38 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_InsertionSort>
+  <TIntegerArrayHelper.InsertionSort>
   @action: InsertionSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_InsertionSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.InsertionSort(const ascending: Boolean = True): Integer; cdecl;
 var
   a, b, o: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
     for a := 1 to Result do
       for b := a downto 1 do
       begin
-        if not (Sign(arr[b] - arr[(b - 1)]) = o) then
+        if not (Sign(Self[b] - Self[b - 1]) = o) then
           Break;
-        Swap(arr[b], arr[(b - 1)]);
+        Swap(Self[b], Self[b - 1]);
       end;
   end;
 end;
 
 {==============================================================================]
-  <TIntegerArray_SelectionSort>
+  <TIntegerArrayHelper.SelectionSort>
   @action: SelectionSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_SelectionSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.SelectionSort(const ascending: Boolean = True): Integer; cdecl;
 var
   c, t, m, o: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
@@ -988,27 +988,27 @@ begin
     begin
       m := c;
       for t := (c + 1) to Result do
-        if (Sign(arr[t] - arr[m]) = o) then
+        if (Sign(Self[t] - Self[m]) = o) then
           m := t;
-      Swap(arr[m], arr[c]);
+      Swap(Self[m], Self[c]);
     end;
   end;
 end;
 
 {==============================================================================]
-  <TIntegerArray_SelectionSortBidirectional>
+  <TIntegerArrayHelper.SelectionSortBidirectional>
   @action: Bidirectional SelectionSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_SelectionSortBidirectional(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.SelectionSortBidirectional(const ascending: Boolean = True): Integer; cdecl;
 var
   a, b, x, i, t, h, l, s, o: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
-    t := Length(arr);
+    t := Length(Self);
     s := ((t - 1) div 2);
     for i := 0 to s do
     begin
@@ -1016,63 +1016,63 @@ begin
       h := ((t - 1) - i);
       a := l;
       b := h;
-      if (Sign(arr[l] - arr[h]) = -o) then
-        Swap(arr[h], arr[l]);
+      if (Sign(Self[l] - Self[h]) = -o) then
+        Swap(Self[h], Self[l]);
       for x := (a + 1) to (b - 1) do
-        if (Sign(arr[x] - arr[l]) = o) then
+        if (Sign(Self[x] - Self[l]) = o) then
           l := x
         else
-          if (Sign(arr[x] - arr[h]) = -o) then
+          if (Sign(Self[x] - Self[h]) = -o) then
             h := x;
       if (l <> a) then
-        Swap(arr[a], arr[l]);
+        Swap(Self[a], Self[l]);
       if (h <> b) then
-        Swap(arr[b], arr[h]);
+        Swap(Self[b], Self[h]);
     end;
   end;
 end;
 
 {==============================================================================]
-  <TIntegerArray_SelectionSortBidirectional2>
+  <TIntegerArrayHelper.SelectionSortBidirectional2>
   @action: Bidirectional SelectionSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_SelectionSortBidirectional2(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.SelectionSortBidirectional2(const ascending: Boolean = True): Integer; cdecl;
 var
   a, b, x, i, l, s, o: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
-    l := Length(arr);
+    l := Length(Self);
     s := ((l - 1) div 2);
     for i := 0 to s do
     begin
       a := i;
       b := ((l - 1) - i);
-      if (Sign(arr[b] - arr[a]) = o) then
-        Swap(arr[a], arr[b]);
+      if (Sign(Self[b] - Self[a]) = o) then
+        Swap(Self[a], Self[b]);
       for x := (a + 1) to (b - 1) do
-        if (Sign(arr[x] - arr[a]) = o) then
-          Swap(arr[a], arr[x])
+        if (Sign(Self[x] - Self[a]) = o) then
+          Swap(Self[a], Self[x])
         else
-          if (Sign(arr[x] - arr[b]) = -o) then
-            Swap(arr[x], arr[b]);
+          if (Sign(Self[x] - Self[b]) = -o) then
+            Swap(Self[x], Self[b]);
       end;
   end;
 end;
 
 {==============================================================================]
-  <TIntegerArray_PancakeSort>
+  <TIntegerArrayHelper.PancakeSort>
   @action: PancakeSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_PancakeSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.PancakeSort(const ascending: Boolean = True): Integer; cdecl;
 var
   i, j, l, m, x, o: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0 )then
   begin
     o := ascending.Select(-1, 1);
@@ -1081,25 +1081,25 @@ begin
     begin
       m := i;
       for j := l to (i - 1) do
-        if (Sign(arr[m] - arr[j]) = o) then
+        if (Sign(Self[m] - Self[j]) = o) then
           m := j;
       if (m = i) then
         Continue;
       if (m <> l) then
       for x := l to (((m - l) - 1) div 2) do
-        Swap(arr[x], arr[(m - (x - l))]);
+        Swap(Self[x], Self[m - (x - l)]);
       for x := l to (((i - l) - 1) div 2) do
-        Swap(arr[x], arr[(i - (x - l))]);
+        Swap(Self[x], Self[i - (x - l)]);
     end;
   end;
 end;
 
 {==============================================================================]
-  <TIntegerArray_MergeSort>
+  <TIntegerArrayHelper.MergeSort>
   @action: MergeSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_MergeSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.MergeSort(const ascending: Boolean = True): Integer; cdecl;
   procedure Merge(var arr, tmp: TIntegerArray; const Lo, Hi: Integer; const ascending: Boolean = True);
   var
     L, R, i, m, o: Integer;
@@ -1130,25 +1130,25 @@ var
   l: Integer;
   t: TIntegerArray;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     SetLength(t, (Result + 1));
-    Merge(arr, t, 0, Result, ascending);
+    Merge(Self, t, 0, Result, ascending);
   end;
 end;
 
 {==============================================================================]
-  <TIntegerArray_MergeSortBU>
+  <TIntegerArrayHelper.MergeSortBU>
   @action: Bottom-up MergeSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_MergeSortBU(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.MergeSortBU(const ascending: Boolean = True): Integer; cdecl;
 var
   t: TIntegerArray;
   n, w, i, a, b, m, l, r, k: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     n := (Result + 1);
@@ -1163,22 +1163,22 @@ begin
         m := Min((i + (w - 1)), (n - 1));
         b := Min((i + (2 * w) - 1), (n - 1));
         for k := a to b do
-          t[k] := arr[k];
+          t[k] := Self[k];
         L := a;
         R := (m + 1);
         k := a;
         while ((l <= m) and (r <= b)) do
         begin
           if ((ascending and (t[l] <= t[r])) or (not ascending and (t[l] >= t[r]))) then
-            arr[k] := t[l.Increase]
+            Self[k] := t[l.Increase]
           else
-            arr[k] := t[r.Increase];
+            Self[k] := t[r.Increase];
           Inc(k);
         end;
         while (l <= m) do
-          arr[k.Increase] := t[l.Increase];
+          Self[k.Increase] := t[l.Increase];
         while (r <= b) do
-          arr[k.Increase] := t[r.Increase];
+          Self[k.Increase] := t[r.Increase];
         i := (i + (2 * w));
       end;
       w := (w * 2);
@@ -1187,22 +1187,22 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_ShellSort>
+  <TIntegerArrayHelper.ShellSort>
   @action: ShellSort algorithm for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_ShellSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.ShellSort(const ascending: Boolean = True): Integer; cdecl;
 var
   x, a, b, l, o: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
     case (Result > 1) of
       True:
       begin
-        l := Length(arr);
+        l := Length(Self);
         x := 0;
         while (x < (l div 3)) do
           x := ((x * 3) + 1);
@@ -1211,9 +1211,9 @@ begin
           for a := x to (l - 1) do
           begin
             b := a;
-            while ((b >= x) and (Sign(arr[b] - arr[(b - x)]) = o)) do
+            while ((b >= x) and (Sign(Self[b] - Self[b - x]) = o)) do
             begin
-              Swap(arr[b], arr[(b - x)]);
+              Swap(Self[b], Self[b - x]);
               b := (b - x);
             end;
           end;
@@ -1221,95 +1221,95 @@ begin
         end;
       end;
       False:
-      if (Sign(arr[1] - arr[0]) = o) then
-        Swap(arr[0], arr[1]);
+      if (Sign(Self[1] - Self[0]) = o) then
+        Swap(Self[0], Self[1]);
     end;
   end;
 end;
 
 {==============================================================================]
-  <TIntegerArray_BSort>
+  <TIntegerArrayHelper.BSort>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_BSort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BSort(const ascending: Boolean = True): Integer; cdecl;
 var
   i, j, a, l, r, m, o: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
     o := ascending.Select(-1, 1);
   for i := 1 to Result do
   begin
-    a := arr[i];
+    a := Self[i];
     l := 0;
     r := (i - 1);
     while (l <= r) do
     begin
       m := ((l + r) div 2);
-      if (Sign(a - arr[m]) = o) then
+      if (Sign(a - Self[m]) = o) then
         r := (m - 1)
       else
         l := (m + 1);
     end;
     for j := (i - 1) downto l do
-      arr[j + 1] := arr[j];
-    arr[l] := a;
+      Self[j + 1] := Self[j];
+    Self[l] := a;
   end;
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinarySort>
+  <TIntegerArrayHelper.BinarySort>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArray_BinarySort(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BinarySort(const ascending: Boolean = True): Integer; cdecl;
 var
   j, l, h, m, p, i, a, o: Integer;
 begin
-  Result := High(arr);
+  Result := High(Self);
   if (Result > 0) then
   begin
     o := ascending.Select(-1, 1);
     for j := 1 to Result do
     begin
-      a := arr[j];
+      a := Self[j];
       l := 0;
       h := j;
       while (l < h) do
       begin
         m := ((l + h) div 2);
-        if (Sign(arr[m] - a) = o) then
+        if (Sign(Self[m] - a) = o) then
           l := (m + 1)
         else
           h := m;
       end;
       p := l;
       for i := j downto (p + 1) do
-        arr[i] := arr[(i - 1)];
-      arr[p] := a;
+        Self[i] := Self[i - 1];
+      Self[p] := a;
     end;
   end;
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinarySorted>
+  <TIntegerArrayHelper.BinarySorted>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns sorted array arr.
 [==============================================================================}
-function TIntegerArray_BinarySorted(const arr: TIntegerArray; const ascending: Boolean = True): TIntegerArray; cdecl;
+function TIntegerArrayHelper.BinarySorted(const ascending: Boolean = True): TIntegerArray; cdecl;
 var
   j, l, h, m, p, i, n, a, o: Integer;
 begin
-  n := Length(arr);
+  n := Length(Self);
   SetLength(Result, n);
   if (n > 0) then
   begin
     o := ascending.Select(-1, 1);
-    Result[0] := arr[0];
+    Result[0] := Self[0];
     for j := 1 to (n - 1) do
     begin
-      a := arr[j];
+      a := Self[j];
       l := 0;
       h := j;
       while (l < h) do
@@ -1322,28 +1322,28 @@ begin
       end;
       p := l;
       for i := j downto (p + 1) do
-        Result[i] := Result[(i - 1)];
+        Result[i] := Result[i - 1];
       Result[p] := a;
     end;
   end;
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinaryBoundL>
+  <TIntegerArrayHelper.BinaryBoundL>
   @action: Returns Binary Search Lower Bound based on x-value.
   @note: Works with sorted arrays! (supports both ascending and descending order)
 [==============================================================================}
-function TIntegerArray_BinaryBoundL(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BinaryBoundL(const x: Integer; const ascending: Boolean = True): Integer; cdecl;
 var
   l, m, h, o: Integer;
 begin
   l := 0;
-  h := Length(arr);
+  h := Length(Self);
   o := ascending.Select(1, -1);
   while (l < h) do
   begin
     m := ((l + h) div 2);
-    if ((o * arr[m]) < (o * x)) then
+    if ((o * Self[m]) < (o * x)) then
       l := (m + 1)
     else
       h := m;
@@ -1352,21 +1352,21 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinaryBoundR>
+  <TIntegerArrayHelper.BinaryBoundR>
   @action: Returns Binary Search Upper Bound based on x-value.
   @note: Works with sorted arrays! (supports both ascending and descending order)
 [==============================================================================}
-function TIntegerArray_BinaryBoundR(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BinaryBoundR(const x: Integer; const ascending: Boolean = True): Integer; cdecl;
 var
   l, m, h, o: Integer;
 begin
   l := 0;
-  h := Length(arr);
+  h := Length(Self);
   o := ascending.Select(1, -1);
   while (l < h) do
   begin
     m := ((l + h) div 2);
-    if ((o * arr[m]) <= (o * x)) then
+    if ((o * Self[m]) <= (o * x)) then
       l := (m + 1)
     else
       h := m;
@@ -1375,75 +1375,75 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinaryPosL>
+  <TIntegerArrayHelper.BinaryPosL>
   @action: Returns L-side pos of x in arr with Binary Search. -1 if x does not exist.
   @note: Works with sorted arrays! (supports both ascending and descending order)
 [==============================================================================}
-function TIntegerArray_BinaryPosL(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BinaryPosL(const x: Integer; const ascending: Boolean = True): Integer; cdecl;
 var
   l, m, h, o: Integer;
 begin
   Result := -1;
   l := 0;
-  h := Length(arr);
+  h := Length(Self);
   o := ascending.Select(1, -1);
   while (l < h) do
   begin
     m := ((l + h) div 2);
-    if ((o * arr[m]) < (o * x)) then
+    if ((o * Self[m]) < (o * x)) then
       l := (m + 1)
     else
       h := m;
   end;
-  if ((l < Length(arr)) and (arr[l] = x)) then
+  if ((l < Length(Self)) and (Self[l] = x)) then
     Result := l;
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinaryPosR>
+  <TIntegerArrayHelper.BinaryPosR>
   @action: Returns R-side pos of x in arr with Binary Search. -1 if x does not exist.
   @note: Works with sorted arrays! (supports both ascending and descending order)
 [==============================================================================}
-function TIntegerArray_BinaryPosR(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BinaryPosR(const x: Integer; const ascending: Boolean = True): Integer; cdecl;
 var
   l, m, h, o: Integer;
 begin
   Result := -1;
   l := 0;
-  h := Length(arr);
+  h := Length(Self);
   o := ascending.Select(1, -1);
   while (l < h) do
   begin
     m := ((l + h) div 2);
-    if ((o * arr[m]) <= (o * x)) then
+    if ((o * Self[m]) <= (o * x)) then
       l := (m + 1)
     else
       h := m;
   end;
-  if ((l > 0) and (arr[(l - 1)] = x)) then
+  if ((l > 0) and (Self[l - 1] = x)) then
     Result := (l - 1);
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinarySearch>
+  <TIntegerArrayHelper.BinarySearch>
   @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinarySearch(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BinarySearch(const x: Integer; const ascending: Boolean = True): Integer; cdecl;
 var
   l, h, m, o: Integer;
 begin
   Result := -1;
   l := 0;
-  h := High(arr);
+  h := High(Self);
   o := ascending.Select(1, -1);
   while ((l <= h) and (Result = -1)) do
   begin
     m := ((l + h) div 2);
-    if ((o * arr[m]) = (o * x)) then
+    if ((o * Self[m]) = (o * x)) then
       Result := m
     else
-      if ((o * arr[m]) < (o * x)) then
+      if ((o * Self[m]) < (o * x)) then
         l := (m + 1)
       else
         h := (m - 1);
@@ -1451,57 +1451,57 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinaryContains>
+  <TIntegerArrayHelper.BinaryContains>
   @action: Binary Contains function for TIntegerArrays.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinaryContains(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Boolean; cdecl;
+function TIntegerArrayHelper.BinaryContains(const x: Integer; const ascending: Boolean = True): Boolean; cdecl;
 begin
-  Result := (TIntegerArray_BinarySearch(arr, x, ascending) > -1);
+  Result := (Self.BinarySearch(x, ascending) > -1);
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinaryLocate>
+  <TIntegerArrayHelper.BinaryLocate>
   @action: Returns Binary Search left and right index as TRange based on x value.
   @note: Works with sorted arrays! (supports both ascending and descending order)
 [==============================================================================}
-function TIntegerArray_BinaryLocate(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): TRange; cdecl;
+function TIntegerArrayHelper.BinaryLocate(const x: Integer; const ascending: Boolean = True): TRange; cdecl;
 begin
-  Result.start := TIntegerArray_BinaryPosL(arr, x, ascending);
+  Result.start := Self.BinaryPosL(x, ascending);
   if (Result.start > -1) then
-    Result.stop := TIntegerArray_BinaryPosR(arr, x, ascending)
+    Result.stop := Self.BinaryPosR(x, ascending)
   else
     Result.stop := -1;
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinaryContains>
+  <TIntegerArrayHelper.BinaryLocation>
   @action: Binary Contains function for TIntegerArrays. Contains location storage variable. With Result as False it will be -1..-1.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinaryLocation(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): TRange; cdecl;
+function TIntegerArrayHelper.BinaryLocation(const x: Integer; const ascending: Boolean = True): TRange; cdecl;
 var
   s, l, h, m, o: Integer;
   r: Boolean;
 begin
   r := False;
   l := 0;
-  h := High(arr);
+  h := High(Self);
   s := h;
   o := ascending.Select(1, -1);
   while ((l <= h) and (not r)) do
   begin
     m := ((l + h) div 2);
-    r := ((o * arr[m]) = (o * x));
+    r := ((o * Self[m]) = (o * x));
     if r then
 	begin
       Result.Create(m, m);
-      while ((Result.start > 0) and (arr[(Result.start - 1)] = x)) do
+      while ((Result.start > 0) and (Self[Result.start - 1] = x)) do
         Dec(Result.start);
-      while ((Result.stop < s) and (arr[(Result.stop + 1)] = x)) do
+      while ((Result.stop < s) and (Self[Result.stop + 1] = x)) do
         Inc(Result.stop);
     end else
-      if ((o * arr[m]) < (o * x)) then
+      if ((o * Self[m]) < (o * x)) then
         l := (m + 1)
       else
         h := (m - 1);
@@ -1511,66 +1511,66 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinaryAppend>
+  <TIntegerArrayHelper.BinaryAppend>
   @action: Binary Append method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the index x was added to.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinaryAppend(var arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BinaryAppend(const x: Integer; const ascending: Boolean = True): Integer; cdecl;
 var
   h, m, i, o: Integer;
 begin
   Result := 0;
-  h := High(arr);
+  h := High(Self);
   o := ascending.Select(1, -1);
   while (Result <= h) do
   begin
     m := ((Result + h) div 2);
-    if ((o * arr[m]) < (o * x)) then
+    if ((o * Self[m]) < (o * x)) then
       Result := (m + 1)
     else
       h := (m - 1);
   end;
-  SetLength(arr, (Length(arr) + 1));
-  for i := High(arr) downto (Result + 1) do
-    arr[i] := arr[(i - 1)];
-  arr[Result] := x;
+  SetLength(Self, (Length(Self) + 1));
+  for i := High(Self) downto (Result + 1) do
+    Self[i] := Self[i - 1];
+  Self[Result] := x;
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinaryAdd>
+  <TIntegerArrayHelper.BinaryAdd>
   @action: Binary Add method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the arr with x.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinaryAdd(const arr: TIntegerArray; const x: Integer; const ascending: Boolean = True): TIntegerArray; cdecl;
+function TIntegerArrayHelper.BinaryAdd(const x: Integer; const ascending: Boolean = True): TIntegerArray; cdecl;
 var
   l, h, m, p, i, o: Integer;
 begin
   l := 0;
-  h := High(arr);
+  h := High(Self);
   o := ascending.Select(1, -1);
   while (l <= h) do
   begin
     m := ((l + h) div 2);
-    if ((o * arr[m]) < (o * x)) then
+    if ((o * Self[m]) < (o * x)) then
       l := (m + 1)
     else
       h := (m - 1);
   end;
   p := l;
-  SetLength(Result, (Length(arr) + 1));
+  SetLength(Result, (Length(Self) + 1));
   for i := 0 to (p - 1) do
-    Result[i] := arr[i];
+    Result[i] := Self[i];
   Result[p] := x;
-  for i := p to High(arr) do
-    Result[(i + 1)] := arr[i];
+  for i := p to High(Self) do
+    Result[i + 1] := Self[i];
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinarySearchF>
+  <TIntegerArrayHelper.BinarySearchF>
   @action: Binary Search which supports TRange search, uses first match from x-range.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinarySearchF(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BinarySearchF(const x: TRange; const ascending: Boolean = True): Integer; cdecl;
 var
   l, h, m, o: Integer;
   f: TRange;
@@ -1578,15 +1578,15 @@ begin
   Result := -1;
   f := x.Normalize;
   l := 0;
-  h := High(arr);
+  h := High(Self);
   o := ascending.Select(1, -1);
   while (l <= h) do
   begin
     m := ((l + h) div 2);
-    if ((o * arr[m]) < (o * f.start)) then
+    if ((o * Self[m]) < (o * f.start)) then
       l := (m + 1)
     else
-      if ((o * arr[m]) > (o * f.stop)) then
+      if ((o * Self[m]) > (o * f.stop)) then
         h := (m - 1)
     else
     begin
@@ -1597,11 +1597,11 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinarySearchL>
+  <TIntegerArrayHelper.BinarySearchL>
   @action: Binary Search which supports TRange search, uses last match from x-range.
   @note: Works with sorted arrays! (ascending or descending)
 [==============================================================================}
-function TIntegerArray_BinarySearchL(const arr: TIntegerArray; const x: TRange; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BinarySearchL(const x: TRange; const ascending: Boolean = True): Integer; cdecl;
 var
   l, h, m, o: Integer;
   f: TRange;
@@ -1609,15 +1609,15 @@ begin
   Result := -1;
   f := x.Normalize;
   l := 0;
-  h := High(arr);
+  h := High(Self);
   o := ascending.Select(1, -1);
   while (l <= h) do
   begin
     m := ((l + h) div 2);
-    if ((o * arr[m]) < (o * f.start)) then
+    if ((o * Self[m]) < (o * f.start)) then
       l := (m + 1)
     else
-      if ((o * arr[m]) > (o * f.stop)) then
+      if ((o * Self[m]) > (o * f.stop)) then
         h := (m - 1)
       else
       begin
@@ -1628,65 +1628,65 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinaryUnique>
+  <TIntegerArrayHelper.BinaryUnique>
   @action: Binary Search-based Unique method.
   @note: Alternative for TArray_Unique, for TIntegerArrays.
 [==============================================================================}
-function TIntegerArray_BinaryUnique(var arr: TIntegerArray; const ascending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.BinaryUnique(const ascending: Boolean = True): Integer; cdecl;
 var
   i, o: Integer;
 begin
   Result := 0;
-  if (High(arr) = -1) then
+  if (High(Self) = -1) then
     Exit;
   o := ascending.Select(-1, 1);
-  for i := 1 to High(arr) do
-    if (Sign(arr[Result] - arr[i]) = o) then
-      arr[Result.Increment] := arr[i];
+  for i := 1 to High(Self) do
+    if (Sign(Self[Result] - Self[i]) = o) then
+      Self[Result.Increment] := Self[i];
   Result := (Result + 1);
-  SetLength(arr, Result);
+  SetLength(Self, Result);
 end;
 
 {==============================================================================]
-  <TIntegerArray_BinaryUniqued>
+  <TIntegerArrayHelper.BinaryUniqued>
   @action: Binary Search-based Uniqued method.
   @note: Alternative for TArray_Uniqued, for TIntegerArrays.
 [==============================================================================}
-function TIntegerArray_BinaryUniqued(const arr: TIntegerArray; const ascending: Boolean = True): TIntegerArray; cdecl;
+function TIntegerArrayHelper.BinaryUniqued(const ascending: Boolean = True): TIntegerArray; cdecl;
 var
   i, o, r: Integer;
 begin
-  SetLength(Result, Length(arr));
-  if (High(arr) = -1) then
+  SetLength(Result, Length(Self));
+  if (High(Self) = -1) then
     Exit;
   r := 0;
   o := ascending.Select(-1, 1);
-  Result[0] := arr[0];
-  for i := 1 to High(arr) do
-    if (Sign(Result[r] - arr[i]) = o) then
-      Result[r.Increment] := arr[i];
+  Result[0] := Self[0];
+  for i := 1 to High(Self) do
+    if (Sign(Result[r] - Self[i]) = o) then
+      Result[r.Increment] := Self[i];
   SetLength(Result, (r + 1));
 end;
 
 {==============================================================================]
-  <TIntegerArray_Split>
+  <TIntegerArrayHelper.Split>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference range (minDiff, maxDiff) from each other.
   @note: None
 [==============================================================================}
-function TIntegerArray_Split(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Split(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
 var
   a, b, h, l, i, r: Integer;
   m: Boolean;
   s: TRange;
 begin
   r := 0;
-  h := High(arr);
+  h := High(Self);
   if (h > -1) then
   begin
     SetLength(Result, (h + 1));
     SetLength(Result[0], 1);
-    Result[0][0] := arr[0];
+    Result[0][0] := Self[0];
     if (h > 0) then
     begin
       r := 1;
@@ -1699,22 +1699,21 @@ begin
           l := Length(Result[a]);
           m := True;
           for b := 0 to (l - 1) do
-            if ((arr[i] = Result[a][b]) or (not m)) then
+            if ((Self[i] = Result[a][b]) or (not m)) then
               Break
             else
-              m := s.Value(Abs(arr[i] - Result[a][b]));
+              m := s.Value(Abs(Self[i] - Result[a][b]));
           if m then
           begin
             SetLength(Result[a], (l + 1));
-            Result[a][l] := arr[i];
+            Result[a][l] := Self[i];
             Break;
           end;
         end;
         if not m then
         begin
           SetLength(Result[r], 1);
-          Result[r][0] := arr[i];
-          Inc(r);
+          Result[r.Increase][0] := Self[i];
         end;
       end;
     end;
@@ -1723,33 +1722,33 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_Split>
+  <TIntegerArrayHelper.Split>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference/distance (diff) from each other.
   @note: None
 [==============================================================================}
-function TIntegerArray_Split(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Split(const diff: Integer): T2DIntegerArray; overload; cdecl;
 begin
-  Result := TIntegerArray_Split(arr, 0, diff);
+  Result := Self.Split(0, diff);
 end;
 
 {==============================================================================]
-  <TIntegerArray_Sblit>
+  <TIntegerArrayHelper.Sblit>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference range (minDiff, maxDiff) from each other.
   @note: Alternative for TIntegerArray_Split. Based on Binary Sorted array.
 [==============================================================================}
-function TIntegerArray_Sblit(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Sblit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
 var
   a: TIntegerArray;
   h, i, j, r, l, k: Integer;
   m: Boolean;
   s: TRange;
 begin
-  h := High(arr);
+  h := High(Self);
   if (h > -1) then
   begin
-    a := TIntegerArray_BinarySorted(arr);
+    a := Self.BinarySorted;
     SetLength(Result, Length(a));
     SetLength(Result[0], 1);
     Result[0][0] := a[0];
@@ -1786,35 +1785,35 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_Sblit>
+  <TIntegerArrayHelper.Sblit>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference/distance (diff) from each other.
   @note: Alternative for TIntegerArray_Split. Based on Binary Sorted array.
 [==============================================================================}
-function TIntegerArray_Sblit(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Sblit(const diff: Integer): T2DIntegerArray; overload; cdecl;
 begin
-  Result := TIntegerArray_Sblit(arr, 0, diff);
+  Result := Self.Sblit(0, diff);
 end;
 
 {==============================================================================]
-  <TIntegerArray_Group>
+  <TIntegerArrayHelper.Group>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference range (minDiff, maxDiff) of the first integer value in the sub-array.
   @note: None
 [==============================================================================}
-function TIntegerArray_Group(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Group(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
 var
   a, h, l, i, r: Integer;
   m: Boolean;
   s: TRange;
 begin
   r := 0;
-  h := High(arr);
+  h := High(Self);
   if (h > -1) then
   begin
     SetLength(Result, (h + 1));
     SetLength(Result[0], 1);
-    Result[0][0] := arr[0];
+    Result[0][0] := Self[0];
     if (h > 0) then
     begin
       r := 1;
@@ -1823,18 +1822,18 @@ begin
       begin
         m := False;
         for a := 0 to (r - 1) do
-          if ((arr[i] = Result[a][0]) or s.Value(Abs(arr[i] - Result[a][0]))) then
+          if ((Self[i] = Result[a][0]) or s.Value(Abs(Self[i] - Result[a][0]))) then
           begin
             m := True;
             l := Length(Result[a]);
             SetLength(Result[a], (l + 1));
-            Result[a][l] := arr[i];
+            Result[a][l] := Self[i];
             Break;
           end;
         if not m then
         begin
           SetLength(Result[r], 1);
-          Result[r.Increase][0] := arr[i];
+          Result[r.Increase][0] := Self[i];
         end;
       end;
     end;
@@ -1843,33 +1842,33 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_Group>
+  <TIntegerArrayHelper.Group>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
            that are within a given difference/distance (diff) of the first integer value in the sub-array.
   @note: None
 [==============================================================================}
-function TIntegerArray_Group(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Group(const diff: Integer): T2DIntegerArray; overload; cdecl;
 begin
-  Result := TIntegerArray_Group(arr, 0, diff);
+  Result := Self.Group(0, diff);
 end;
 
 {==============================================================================]
-  <TIntegerArray_Groub>
+  <TIntegerArrayHelper.Groub>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference range (minDiff, maxDiff) of the first integer value in the sub-array.
   @note: Alternative for TIntegerArray_Group, based on array Binary Sorting.
 [==============================================================================}
-function TIntegerArray_Groub(const arr: TIntegerArray; const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Groub(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
 var
   a: TIntegerArray;
   h, i, j, r, l: Integer;
   s: TRange;
   m: Boolean;
 begin
-  h := High(arr);
+  h := High(Self);
   if (h > -1) then
   begin
-    a := TIntegerArray_BinarySorted(arr);
+    a := Self.BinarySorted;
     SetLength(Result, (h + 1));
     SetLength(Result[0], 1);
     Result[0][0] := a[0];
@@ -1900,39 +1899,39 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_Groub>
+  <TIntegerArrayHelper.Groub>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
            that are within a given difference/distance (diff) of the first integer value in the sub-array.
   @note: Alternative for TIntegerArray_Group, based on array Binary Sorting.
 [==============================================================================}
-function TIntegerArray_Groub(const arr: TIntegerArray; const diff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Groub(const diff: Integer): T2DIntegerArray; overload; cdecl;
 begin
-  Result := TIntegerArray_Groub(arr, 0, diff);
+  Result := Self.Groub(0, diff);
 end;
 
 {==============================================================================]
-  <TIntegerArray_Invert>
+  <TIntegerArrayHelper.Invert>
   @action: Returns inverted arr.
   @note: Arr = [0,2,4,6,8,10] => Result := [1, 3, 5, 7, 9]
 [==============================================================================}
-function TIntegerArray_Invert(const arr: TIntegerArray): TIntegerArray; cdecl;
+function TIntegerArrayHelper.Invert: TIntegerArray; cdecl;
 var
   c, l, i, x, y, r: Integer;
   b: TBooleanArray;
   a: TRange;
 begin
   r := 0;
-  y := High(arr);
+  y := High(Self);
   if (y > 0) then
   begin
-    a := TIntegerArray_Bounds(arr);
+    a := Self.Bounds;
     if (a.start <> a.stop) then
     begin
       c := 0;
       l := a.Size;
       b := TArray_Create(l, False);
       for x := 0 to y do
-        if b[(arr[x] - a.start)].Enable then
+        if b[Self[x] - a.start].Enable then
           Inc(c);
       SetLength(Result, (l - c));
       if (Length(Result) > 0) then

@@ -1,41 +1,41 @@
 {==============================================================================]
-  <TPointArray_Bounds>
+  <TPointArrayHelper.Bounds>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArray_Bounds(const arr: TPointArray): TBox; overload; cdecl;
+function TPointArrayHelper.Bounds: TBox; overload; cdecl;
 var
   i: Integer;
 begin
-  if (High(arr) = -1) then
+  if (High(Self) = -1) then
     Exit(Result.Form(-2147483648));
-  Result.Make(arr[0]);
-  for i := 1 to High(arr) do
+  Result.Make(Self[0]);
+  for i := 1 to High(Self) do
   begin
-    if (arr[i].X < Result.X1) then
-      Result.X1 := arr[i].X
+    if (Self[i].X < Result.X1) then
+      Result.X1 := Self[i].X
     else
-      if (arr[i].X > Result.X2) then
-        Result.X2 := arr[i].X;
-    if (arr[i].Y < Result.Y1) then
-      Result.Y1 := arr[i].Y
+      if (Self[i].X > Result.X2) then
+        Result.X2 := Self[i].X;
+    if (Self[i].Y < Result.Y1) then
+      Result.Y1 := Self[i].Y
     else
-      if (arr[i].Y > Result.Y2) then
-        Result.Y2 := arr[i].Y;
+      if (Self[i].Y > Result.Y2) then
+        Result.Y2 := Self[i].Y;
   end;
 end;
 
 {==============================================================================]
-  <TPointArray_Bounds>
+  <TPointArrayHelper.Bounds>
   @action: Returns bounding box around TPointArray arr.
   @note: Stores width and height of bounds to width and height variables.
 [==============================================================================}
-function TPointArray_Bounds(const arr: TPointArray; var width, height: Integer): TBox; overload; cdecl;
+function TPointArrayHelper.Bounds(var width, height: Integer): TBox; overload; cdecl;
 begin
-  case (High(arr) = -1) of
+  case (High(Self) = -1) of
     False:
     begin
-      Result := TPointArray_Bounds(arr);
+      Result := Self.Bounds;
       Result.Size(width, height);
     end;
     True:
@@ -48,76 +48,76 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray_Unique>
+  <TPointArrayHelper.Unique>
   @action: Removes duplicates from arr.
   @note: Returns number of duplicate items that were removed from arr.
 [==============================================================================}
-function TPointArray_Unique(var arr: TPointArray): Integer; cdecl;
+function TPointArrayHelper.Unique: Integer; cdecl;
 var
   i, r, l, w, h: Integer;
   m: T2DBooleanArray;
   b: TBox;
 begin
-  l := Length(arr);
+  l := Length(Self);
   if (l > 1) then
   begin
     r := 0;
-    b := TPointArray_Bounds(arr, w, h);
+    b := Self.Bounds(w, h);
     m := T2DArray_Create(w, h, False);
     for i := 0 to (l - 1) do
-      if m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)].Enable then
-        arr[r.Increase] := arr[i];
-    SetLength(arr, r);
+      if m[Self[i].X - b.X1][Self[i].Y - b.Y1].Enable then
+        Self[r.Increase] := Self[i];
+    SetLength(Self, r);
     SetLength(m, 0);
   end;
-  Result := (l - Length(arr));
+  Result := (l - Length(Self));
 end;
 
 {==============================================================================]
-  <TPointArray_Uniqued>
+  <TPointArrayHelper.Uniqued>
   @action: Returns arr without duplicates.
   @note: None.
 [==============================================================================}
-function TPointArray_Uniqued(const arr: TPointArray): TPointArray; cdecl;
+function TPointArrayHelper.Uniqued: TPointArray; cdecl;
 var
   i, r, l, w, h: Integer;
   m: T2DBooleanArray;
   b: TBox;
 begin
   r := 0;
-  l := Length(arr);
+  l := Length(Self);
   if (l > 0) then
   begin
-    b := TPointArray_Bounds(arr, w, h);
+    b := Self.Bounds(w, h);
     m := T2DArray_Create(w, h, False);
     SetLength(Result, l);
     for i := 0 to (l - 1) do
-      if m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)].Enable then
-        Result[r.Increase] := arr[i];
+      if m[Self[i].X - b.X1][Self[i].Y - b.Y1].Enable then
+        Result[r.Increase] := Self[i];
     SetLength(m, 0);
   end;
   SetLength(Result, r);
 end;
 
 {==============================================================================]
-  <TPointArray_Uniqued>
+  <TPointArrayHelper.Invert>
   @action: Returns arr without duplicates.
   @note: None.
 [==============================================================================}
-function TPointArray_Invert(const arr: TPointArray): TPointArray; cdecl;
+function TPointArrayHelper.Invert: TPointArray; cdecl;
 var
   i, x, y, w, h, r, l: Integer;
   m: T2DBooleanArray;
   b: TBox;
 begin
   r := 0;
-  if (High(arr) > 0) then
+  if (High(Self) > 0) then
   begin
-    b := TPointArray_Bounds(arr, w, h);
+    b := Self.Bounds(w, h);
 	m := T2DArray_Create(w, h, False);
     x := 0;
-    for i := 0 to High(arr) do
-      if m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)].Enable then
+    for i := 0 to High(Self) do
+      if m[Self[i].X - b.X1][Self[i].Y - b.Y1].Enable then
         Inc(x);
     SetLength(Result, ((w * h) - x));
     if (Length(Result) > 0) then
@@ -131,26 +131,26 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray_Edge>
+ <TPointArrayHelper.Edge>
  @action: Returns with all the edge-points from arr.
           Supports both, 4-way and 8-way direction scanning styles.
  @note: Edge-points are points that are on the edge of the TPointArray, not completely surrounded by other points.
 [==============================================================================}
-function TPointArray_Edge(const arr: TPointArray; const scan8W: Boolean = False): TPointArray; cdecl;
+function TPointArrayHelper.Edge(const scan8W: Boolean = False): TPointArray; cdecl;
 var
   i, l, x, y, w, h, r: Integer;
   m: T2DBooleanArray;
   b: TBox;
 begin
-  l := Length(arr);
+  l := Length(Self);
   if (l > 4) then
   begin
-    b := TPointArray_Bounds(arr);
+    b := Self.Bounds;
     b := b.Expand;
     b.Size(w, h);
     m := T2DArray_Create(w, h, False);
     for i := 0 to (l - 1) do
-      m[(arr[i].X - b.X1)][(arr[i].Y - b.Y1)] := True;
+      m[Self[i].X - b.X1][Self[i].Y - b.Y1] := True;
     SetLength(Result, (w * h));
     w := (w - 2);
     h := (h - 2);
@@ -159,28 +159,28 @@ begin
       False:
       for y := 1 to h do
         for x := 1 to w do
-          if (m[x][y] and not (m[(x - 1)][y] and m[x][(y - 1)] and m[(x + 1)][y] and m[x][(y + 1)])) then
+          if (m[x][y] and not (m[x - 1][y] and m[x][y - 1] and m[x + 1][y] and m[x][y + 1])) then
             Result[r.Increase].Create((x + b.X1), (y + b.Y1));
       True:
       for y := 1 to h do
         for x := 1 to w do
-          if (m[x][y] and not (m[(x - 1)][y] and m[x][(y - 1)] and m[(x + 1)][y] and m[x][(y + 1)] and m[(x - 1)][(y - 1)] and m[(x - 1)][(y + 1)] and m[(x + 1)][(y - 1)] and m[(x + 1)][(y + 1)])) then
+          if (m[x][y] and not (m[x - 1][y] and m[x][y - 1] and m[x + 1][y] and m[x][y + 1] and m[x - 1][y - 1] and m[x - 1][y + 1] and m[x + 1][y - 1] and m[x + 1][y + 1])) then
             Result[r.Increase].Create((x + b.X1), (y + b.Y1));
     end;
     SetLength(Result, r);
     SetLength(m, 0);
   end else
-    Result := Copy(arr, 0, Length(arr));
+    Result := Copy(Self, 0, Length(Self));
 end;
 
 {==============================================================================]
-  <TPointArray_FloodFill
+  <TPointArrayHelper.FloodFill>
   @action:: Outputs Flood Filled points from TPointArray or non-TPointArray points inside an area,
             starting from start, based on FloodFill() action.
             Supports custom area by area as TBox.
   note: Make sure start is inside your area. Doesn't pay attention to ANYTHING outside area. :)
 [==============================================================================}
-function TPointArray_FloodFill(const arr: TPointArray; const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; cdecl;
+function TPointArrayHelper.FloodFill(const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; cdecl;
   procedure GetAdjacent(var adj: TPointArray; const n: TPoint; const FF8W: Boolean);
   begin
     adj[0].Create(n.x, (n.y - 1));
@@ -203,7 +203,7 @@ var
   o, s: Boolean;
 begin
   r := 0;
-  l := Length(arr);
+  l := Length(Self);
   if ((l > 0) and ((start.X >= area.X1) and (start.Y >= area.Y1) and (start.X <= area.X2) and (start.Y <= area.Y2))) then
   begin
     o := False;
@@ -212,9 +212,9 @@ begin
     for i := 0 to (l - 1) do
     begin
       if not o then
-        o := ((start.X = arr[i].X) and (start.Y = arr[i].Y));
-      if (((arr[i].X - area.X1) > -1) and ((arr[i].Y - area.Y1) > -1) and ((arr[i].Y - area.Y1) < h) and ((arr[i].X - area.X1) < w)) then
-        c[(arr[i].X - area.X1)][(arr[i].Y - area.Y1)] := True;
+        o := ((start.X = Self[i].X) and (start.Y = Self[i].Y));
+      if (((Self[i].X - area.X1) > -1) and ((Self[i].Y - area.Y1) > -1) and ((Self[i].Y - area.Y1) < h) and ((Self[i].X - area.X1) < w)) then
+        c[Self[i].X - area.X1][Self[i].Y - area.Y1] := True;
     end;
     s := not o;
     if scan8W then
@@ -263,7 +263,7 @@ end;
  @note: Make sure start is inside TPA Bounds.
         Doesn't pay attention to ANYTHING outside those boundaries. :)
 [==============================================================================}
-function TPointArray_FloodFill(const arr: TPointArray; const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; cdecl;
+function TPointArrayHelper.FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; cdecl;
 begin
-  Result := TPointArray_FloodFill(arr, start, TPointArray_Bounds(arr), scan8W);
+  Result := Self.FloodFill(start, Self.Bounds, scan8W);
 end;

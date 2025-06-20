@@ -6,9 +6,9 @@
 {$I MiMU\TPointHelper.inc}
 {$I MiMU\TBoxHelper.inc}
 {$I MiMU\TRangeHelper.inc}
-{$I MiMU\TIntegerArray.inc}
-{$I MiMU\TPointArray.inc}
-{$I MiMU\TRangeArray.inc}
+{$I MiMU\TIntegerArrayHelper.inc}
+{$I MiMU\TPointArrayHelper.inc}
+{$I MiMU\TRangeArrayHelper.inc}
 
 {$DEFINE TArray_Add1}
 function TArray_Add(const arr: TIntegerArray; const item: Integer; const duplicates: Boolean = True): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
