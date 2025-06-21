@@ -170,7 +170,7 @@ begin
     SetLength(Result, r);
     SetLength(m, 0);
   end else
-    Result := Copy(Self, 0, Length(Self));
+    Result := Self.Copy;
 end;
 
 {==============================================================================]

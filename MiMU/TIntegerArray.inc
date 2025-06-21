@@ -401,7 +401,7 @@ begin
   n := Length(Self);
   if (n = 0) then
     Exit(-2147483648);
-  a := Copy(Self, 0, n);
+  a := Self.Copy;
   for i := 0 to (n - 2) do
     if (a[i] > a[i + 1]) then
     begin

@@ -158,7 +158,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_BuiltWith(arr, allowed: TArray): Boolean> 
+ <arr.BuiltWith(allowed: TArray): Boolean> 
  @action: Checks if array arr contains only allowed items.
  @note: None.
 [==============================================================================}
@@ -167,13 +167,13 @@ var
   i, x, y: Integer;
 begin
   y := Length(allowed);
-  i := High(arr);
+  i := High(Self);
   if ((i < 0) or (y < 1)) then
     Exit(False);
   repeat
      x := 0;
      repeat
-       Result := (arr[i] = allowed[x]);
+       Result := (Self[i] = allowed[x]);
        x := (x + 1);
      until (Result or (x = y));
      i := (i - 1);
@@ -182,7 +182,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_BuiltWithout(arr, forbidden: TArray): Boolean> 
+ <arr.BuiltWithout(forbidden: TArray): Boolean> 
  @action: Checks if array arr does not have any forbidden items.
  @note: None.
 [==============================================================================}
@@ -190,16 +190,16 @@ end;
 var
   i, x, y: Integer;
 begin
-  if (Length(arr) < 1) then
+  if (Length(Self) < 1) then
     Exit(False);
   y := Length(forbidden);
   if not (y < 1) then
   begin
-    i := High(arr);
+    i := High(Self);
     repeat
        x := 0;
        repeat
-         Result := not (arr[i] = forbidden[x]);
+         Result := not (Self[i] = forbidden[x]);
          x := (x + 1);
        until ((x = y) or (not Result));
        i := (i - 1);
@@ -299,13 +299,26 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Copy(arr: TArray; index: Integer; count: Integer): TArray>
+ <arr.Copy(index: Integer; count: Integer): TArray>
  @action: Returns copy of an array arr.
  @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
 {$IFDEF TArray_Copy}
+var
+  i, c, l: Integer;
 begin
-  Result := Copy(arr, index, count);  
+  l := Length(Self);
+  if (index < l) then
+  begin
+    i := Max(index, 0);
+    c := count;
+    if ((i + c) > l) then
+      c := (l - i);
+    SetLength(Result, c);
+    for l := 0 to (c - 1) do
+      Result[l] := Self[l + i];
+  end else
+    SetLength(Result, 0);
 end;
 {$ENDIF}
 
@@ -339,7 +352,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Delete(arr: TArray; index: Integer): Boolean>
+ <arr.Delete(index: Integer): Boolean>
  @action: Deletes array item from arr by index.
  @note: Returns true with success (index existed in arr).
 [==============================================================================}
@@ -347,38 +360,38 @@ end;
 var
   i, h: Integer;
 begin
-  h := High(arr);
+  h := High(Self);
   Result := ((index <= h) and (index > -1));
   if not Result then
     Exit;
   for i := index to (h - 1) do
-    arr[i] := arr[i + 1];
-  SetLength(arr, h);
+    Self[i] := Self[i + 1];
+  SetLength(Self, h);
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Delete(arr: TArray; IDs: TIntegerArray): Integer>
- @action: Deletes array items from arr by indexes (IDs).
- @note: Returns amount of items that were deleted succesfully by IDs.
+ <arr.Delete(ID: TIntegerArray): Integer>
+ @action: Deletes array items from arr by indexes (ID).
+ @note: Returns amount of items that were deleted succesfully by ID's.
 [==============================================================================}
 {$IFDEF TArray_Delete2}
 var
   i, l: Integer;
 begin
-  l := Length(arr);
+  l := Length(Self);
   Result := 0;
   for i := 0 to (l - 1) do
-    if not IDs.Contains(i) then
-      arr[i - Result] := arr[i]
+    if not ID.Contains(i) then
+      Self[i - Result] := Self[i]
     else
       Result := (Result + 1);
-  SetLength(arr, (l - Result));
+  SetLength(Self, (l - Result));
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Differ(arr, target: TArray): Boolean>
+ <arr.Differ(target: TArray): Boolean>
  @action: Returns true if arr differs from target.
  @note: None
 [==============================================================================}
@@ -386,16 +399,16 @@ end;
 var
   i: Integer;
 begin
-  Result := (Length(arr) <> Length(target));
+  Result := (Length(Self) <> Length(target));
   if not Result then
-  for i := High(arr) downto 0 do
-    if (arr[i] <> target[i]) then
+  for i := High(Self) downto 0 do
+    if (Self[i] <> target[i]) then
       Exit(True);
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Distribute(arr: TArray; parts: Integer): T2DArray>
+ <arr.Distribute(parts: Integer): T2DArray>
  @action: Distributes array arr to 2D array by number of parts.
  @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5][6,7]
  [==============================================================================}
@@ -403,7 +416,7 @@ end;
 var
   l, p, b, r, i, j, s, c: Integer;
 begin
-  l := Length(arr);
+  l := Length(Self);
   if ((parts > 0) and (l > 0)) then
   begin
     p := Min(parts, l);
@@ -418,7 +431,7 @@ begin
         Inc(c);
       SetLength(Result[i], c);
       for j := 0 to (c - 1) do
-        Result[i][j] := arr[s.Increase];
+        Result[i][j] := Self[s.Increase];
     end;
   end else
     SetLength(Result, 0);
@@ -426,7 +439,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Dump(arr: TArray; items: TArray; index: Integer): Integer>
+ <TArray_Dump(items: TArray; index: Integer): Integer>
  @action: Deletes items from array, keeps others. Returns array length (after action).
  @note: Supports custom start index!
 [==============================================================================}
@@ -434,22 +447,22 @@ end;
 var
   i, l: Integer;
 begin
-  l := Length(arr);
+  l := Length(Self);
   Result := 0;
   if (High(items) > -1) then
   for i := Max(0, index) to (l - 1) do
-    if not items.Contains(arr[i]) then
-      arr[i - Result] := arr[i]
+    if not items.Contains(Self[i]) then
+      Self[i - Result] := Self[i]
     else
       Inc(Result);
   Result := (l - Result);
   if (Result < l) then
-    SetLength(arr, Result);
+    SetLength(Self, Result);
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Dupe(arr: TArray): TArray>
+ <arr.Dupe: TArray>
  @action: Returns copy of an array arr.
  @note: None.
 [==============================================================================}
@@ -457,22 +470,22 @@ end;
 var
   i, l, j: Integer;
 begin
-  l := Length(arr);
+  l := Length(Self);
   SetLength(Result, l);
   if (l > 0) then
   begin
     if ((l mod 2) <> 0) then
     begin
       j := (l div 2);
-      Result[j] := arr[j];
+      Result[j] := Self[j];
     end;
     if (l = 1) then
 	  Exit;
     for i := 0 to ((l div 2) - 1) do
     begin
       j := ((l - i) - 1);
-      Result[i] := arr[i];
-      Result[j] := arr[j];
+      Result[i] := Self[i];
+      Result[j] := Self[j];
     end;
   end;
 end;
@@ -1907,9 +1920,9 @@ begin
   Result := (Length(a) + Length(b));
   if (Result = 0) then
     Exit;
-  c := TArray_Dupe(a);
-  a := TArray_Dupe(b);
-  b := TArray_Dupe(c);
+  c := a.Dupe;
+  a := b.Dupe;
+  b := c.Dupe;
   SetLength(c, 0);
 end; 
 {$ENDIF}

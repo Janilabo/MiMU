@@ -379,6 +379,8 @@ type
     function Append(const item: Integer; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TIntegerArray; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Build(const item: Integer; const size: Integer = 1): TIntegerArray; overload; cdecl;
+    function BuiltWith(const allowed: TIntegerArray): Boolean; overload; cdecl;
+    function BuiltWithout(const forbidden: TIntegerArray): Boolean; overload; cdecl;
     function Create(const item: Integer): TIntegerArray; overload; cdecl;
     function Create(const size: Integer; const item: Integer): TIntegerArray; overload; cdecl;
     function Clear: Boolean; cdecl;
@@ -386,6 +388,13 @@ type
     function Clone(const ID: TIntegerArray): TIntegerArray; overload; cdecl;
     function Combine(const b: TIntegerArray): TIntegerArray; overload; cdecl;
     function Contains(const item: Integer; const index: Integer = 0): Boolean; cdecl;
+    function Copy(const index: Integer = 0; const count: Integer = 2147483647): TIntegerArray; overload; cdecl;
+	function Delete(const index: Integer = 0): Boolean; overload; cdecl;
+	function Delete(const ID: TIntegerArray): Integer; overload; cdecl;
+    function Differ(const target: TIntegerArray): Boolean; overload; cdecl;
+    function Distribute(const parts: Integer): T2DIntegerArray; overload; cdecl;
+	function Dump(const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl;
+    function Dupe: TIntegerArray; overload; cdecl;
     function Includes(const item: Integer; const index: Integer = 2147483647): Boolean; cdecl;
 
     function Descending: Boolean; cdecl;
@@ -467,6 +476,8 @@ type
     function Append(const item: Double; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TDoubleArray; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Build(const item: Double; const size: Integer = 1): TDoubleArray; overload; cdecl;
+    function BuiltWith(const allowed: TDoubleArray): Boolean; overload; cdecl;
+    function BuiltWithout(const forbidden: TDoubleArray): Boolean; overload; cdecl;
     function Create(const item: Double): TDoubleArray; overload; cdecl;
     function Create(const size: Integer; const item: Double): TDoubleArray; overload; cdecl;
     function Clear: Boolean; cdecl;
@@ -474,6 +485,13 @@ type
     function Clone(const ID: TIntegerArray): TDoubleArray; overload; cdecl;
     function Combine(const b: TDoubleArray): TDoubleArray; overload; cdecl;
     function Contains(const item: Double; const index: Integer = 0): Boolean; cdecl;
+    function Copy(const index: Integer = 0; const count: Integer = 2147483647): TDoubleArray; overload; cdecl;
+	function Delete(const index: Integer = 0): Boolean; overload; cdecl;
+	function Delete(const ID: TIntegerArray): Integer; overload; cdecl;
+    function Differ(const target: TDoubleArray): Boolean; overload; cdecl;
+    function Distribute(const parts: Integer): T2DDoubleArray; overload; cdecl;
+    function Dump(const items: TDoubleArray; const index: Integer = 0): Integer; overload; cdecl;
+    function Dupe: TDoubleArray; overload; cdecl;
     function Includes(const item: Double; const index: Integer = 2147483647): Boolean; cdecl;	
   end;
   TStringArrayHelper = type helper for TStringArray
@@ -485,6 +503,8 @@ type
     function Append(const item: string; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TStringArray; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Build(const item: string; const size: Integer = 1): TStringArray; overload; cdecl;
+    function BuiltWith(const allowed: TStringArray): Boolean; overload; cdecl;
+    function BuiltWithout(const forbidden: TStringArray): Boolean; overload; cdecl;
     function Create(const item: string): TStringArray; overload; cdecl;
     function Create(const size: Integer; const item: string): TStringArray; overload; cdecl;
     function Clear: Boolean; cdecl;
@@ -492,6 +512,13 @@ type
     function Clone(const ID: TIntegerArray): TStringArray; overload; cdecl;
     function Combine(const b: TStringArray): TStringArray; overload; cdecl;
     function Contains(const item: string; const index: Integer = 0): Boolean; cdecl;
+    function Copy(const index: Integer = 0; const count: Integer = 2147483647): TStringArray; overload; cdecl;
+	function Delete(const index: Integer = 0): Boolean; overload; cdecl;
+	function Delete(const ID: TIntegerArray): Integer; overload; cdecl;
+    function Differ(const target: TStringArray): Boolean; overload; cdecl;
+    function Distribute(const parts: Integer): T2DStringArray; overload; cdecl;
+    function Dump(const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl;
+    function Dupe: TStringArray; overload; cdecl;
     function Includes(const item: string; const index: Integer = 2147483647): Boolean; cdecl;	
   end;
   TCharArrayHelper = type helper for TCharArray
@@ -503,6 +530,8 @@ type
     function Append(const item: Char; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TCharArray; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Build(const item: Char; const size: Integer = 1): TCharArray; overload; cdecl;
+    function BuiltWith(const allowed: TCharArray): Boolean; overload; cdecl;
+    function BuiltWithout(const forbidden: TCharArray): Boolean; overload; cdecl;
     function Create(const item: Char): TCharArray; overload; cdecl;
     function Create(const size: Integer; const item: Char): TCharArray; overload; cdecl;
     function Clear: Boolean; cdecl;
@@ -510,6 +539,13 @@ type
     function Clone(const ID: TIntegerArray): TCharArray; overload; cdecl;
     function Combine(const b: TCharArray): TCharArray; overload; cdecl;
     function Contains(const item: Char; const index: Integer = 0): Boolean; cdecl;
+	function Copy(const index: Integer = 0; const count: Integer = 2147483647): TCharArray; overload; cdecl;
+	function Delete(const index: Integer = 0): Boolean; overload; cdecl;
+	function Delete(const ID: TIntegerArray): Integer; overload; cdecl;
+    function Differ(const target: TCharArray): Boolean; overload; cdecl;
+    function Distribute(const parts: Integer): T2DCharArray; overload; cdecl;
+    function Dump(const items: TCharArray; const index: Integer = 0): Integer; overload; cdecl;
+    function Dupe: TCharArray; overload; cdecl;
     function Includes(const item: Char; const index: Integer = 2147483647): Boolean; cdecl;
   end;
   TBooleanArrayHelper = type helper for TBooleanArray
@@ -521,6 +557,8 @@ type
     function Append(const item: Boolean; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TBooleanArray; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Build(const item: Boolean; const size: Integer = 1): TBooleanArray; overload; cdecl;
+    function BuiltWith(const allowed: TBooleanArray): Boolean; overload; cdecl;
+    function BuiltWithout(const forbidden: TBooleanArray): Boolean; overload; cdecl;
     function Create(const item: Boolean): TBooleanArray; overload; cdecl;
     function Create(const size: Integer; const item: Boolean): TBooleanArray; overload; cdecl;
     function Clear: Boolean; cdecl;
@@ -528,6 +566,13 @@ type
     function Clone(const ID: TIntegerArray): TBooleanArray; overload; cdecl;
     function Combine(const b: TBooleanArray): TBooleanArray; overload; cdecl;
     function Contains(const item: Boolean; const index: Integer = 0): Boolean; cdecl;
+	function Copy(const index: Integer = 0; const count: Integer = 2147483647): TBooleanArray; overload; cdecl;
+	function Delete(const index: Integer = 0): Boolean; overload; cdecl;
+	function Delete(const ID: TIntegerArray): Integer; overload; cdecl;
+    function Differ(const target: TBooleanArray): Boolean; overload; cdecl;
+    function Distribute(const parts: Integer): T2DBooleanArray; overload; cdecl;
+    function Dump(const items: TBooleanArray; const index: Integer = 0): Integer; overload; cdecl;
+    function Dupe: TBooleanArray; overload; cdecl;
     function Includes(const item: Boolean; const index: Integer = 2147483647): Boolean; cdecl;	
   end;
   TPointArrayHelper = type helper for TPointArray
@@ -539,6 +584,8 @@ type
     function Append(const item: TPoint; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TPointArray; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Build(const item: TPoint; const size: Integer = 1): TPointArray; overload; cdecl;
+    function BuiltWith(const allowed: TPointArray): Boolean; overload; cdecl;
+    function BuiltWithout(const forbidden: TPointArray): Boolean; overload; cdecl;
     function Create(const item: TPoint): TPointArray; overload; cdecl;
     function Create(const size: Integer; const item: TPoint): TPointArray; overload; cdecl;
     function Clear: Boolean; cdecl;
@@ -546,6 +593,13 @@ type
     function Clone(const ID: TIntegerArray): TPointArray; overload; cdecl;
     function Combine(const b: TPointArray): TPointArray; overload; cdecl;
     function Contains(const item: TPoint; const index: Integer = 0): Boolean; cdecl;
+	function Copy(const index: Integer = 0; const count: Integer = 2147483647): TPointArray; overload; cdecl;
+	function Delete(const index: Integer = 0): Boolean; overload; cdecl;
+	function Delete(const ID: TIntegerArray): Integer; overload; cdecl;
+    function Differ(const target: TPointArray): Boolean; overload; cdecl;
+    function Distribute(const parts: Integer): T2DPointArray; overload; cdecl;
+    function Dump(const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl;
+    function Dupe: TPointArray; overload; cdecl;
     function Includes(const item: TPoint; const index: Integer = 2147483647): Boolean; cdecl;
 
     function Bounds: TBox; overload; cdecl;
@@ -566,6 +620,8 @@ type
     function Append(const item: TBox; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TBoxArray; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Build(const item: TBox; const size: Integer = 1): TBoxArray; overload; cdecl;
+    function BuiltWith(const allowed: TBoxArray): Boolean; overload; cdecl;
+    function BuiltWithout(const forbidden: TBoxArray): Boolean; overload; cdecl;
     function Create(const item: TBox): TBoxArray; overload; cdecl;
     function Create(const size: Integer; const item: TBox): TBoxArray; overload; cdecl;
     function Clear: Boolean; cdecl;
@@ -573,6 +629,13 @@ type
     function Clone(const ID: TIntegerArray): TBoxArray; overload; cdecl;
     function Combine(const b: TBoxArray): TBoxArray; overload; cdecl;
     function Contains(const item: TBox; const index: Integer = 0): Boolean; cdecl;
+	function Copy(const index: Integer = 0; const count: Integer = 2147483647): TBoxArray; overload; cdecl;
+	function Delete(const index: Integer = 0): Boolean; overload; cdecl;
+	function Delete(const ID: TIntegerArray): Integer; overload; cdecl;
+    function Differ(const target: TBoxArray): Boolean; overload; cdecl;
+    function Distribute(const parts: Integer): T2DBoxArray; overload; cdecl;
+    function Dump(const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl;
+    function Dupe: TBoxArray; overload; cdecl;
     function Includes(const item: TBox; const index: Integer = 2147483647): Boolean; cdecl;	
   end;
   TRangeArrayHelper = type helper for TRangeArray
@@ -584,6 +647,8 @@ type
     function Append(const item: TRange; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TRangeArray; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Build(const item: TRange; const size: Integer = 1): TRangeArray; overload; cdecl;
+    function BuiltWith(const allowed: TRangeArray): Boolean; overload; cdecl;
+    function BuiltWithout(const forbidden: TRangeArray): Boolean; overload; cdecl;
     function Create(const item: TRange): TRangeArray; overload; cdecl;
     function Create(const size: Integer; const item: TRange): TRangeArray; overload; cdecl;
     function Clear: Boolean; cdecl;
@@ -591,6 +656,13 @@ type
     function Clone(const ID: TIntegerArray): TRangeArray; overload; cdecl;
     function Combine(const b: TRangeArray): TRangeArray; overload; cdecl;
     function Contains(const item: TRange; const index: Integer = 0): Boolean; cdecl;
+    function Copy(const index: Integer = 0; const count: Integer = 2147483647): TRangeArray; overload; cdecl;
+	function Delete(const index: Integer = 0): Boolean; overload; cdecl;
+	function Delete(const ID: TIntegerArray): Integer; overload; cdecl;
+    function Differ(const target: TRangeArray): Boolean; overload; cdecl;
+    function Distribute(const parts: Integer): T2DRangeArray; overload; cdecl;
+    function Dump(const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl;
+    function Dupe: TRangeArray; overload; cdecl;
     function Includes(const item: TRange; const index: Integer = 2147483647): Boolean; cdecl;
 
     function TIA: TIntegerArray; cdecl;
@@ -624,86 +696,6 @@ procedure Swap(var A, B: Boolean); overload; inline;
 procedure Swap(var A, B: TPoint); overload; inline;
 procedure Swap(var A, B: TBox); overload; inline;
 procedure Swap(var A, B: TRange); overload; inline;
-
-function TArray_BuiltWith(const arr, allowed: TIntegerArray): Boolean; overload; cdecl;
-function TArray_BuiltWith(const arr, allowed: TDoubleArray): Boolean; overload; cdecl;
-function TArray_BuiltWith(const arr, allowed: TStringArray): Boolean; overload; cdecl;
-function TArray_BuiltWith(const arr, allowed: TCharArray): Boolean; overload; cdecl;
-function TArray_BuiltWith(const arr, allowed: TBooleanArray): Boolean; overload; cdecl;
-function TArray_BuiltWith(const arr, allowed: TPointArray): Boolean; overload; cdecl;
-function TArray_BuiltWith(const arr, allowed: TBoxArray): Boolean; overload; cdecl;
-function TArray_BuiltWith(const arr, allowed: TRangeArray): Boolean; overload; cdecl;
-
-function TArray_BuiltWithout(const arr, forbidden: TIntegerArray): Boolean; overload; cdecl;
-function TArray_BuiltWithout(const arr, forbidden: TDoubleArray): Boolean; overload; cdecl;
-function TArray_BuiltWithout(const arr, forbidden: TStringArray): Boolean; overload; cdecl;
-function TArray_BuiltWithout(const arr, forbidden: TCharArray): Boolean; overload; cdecl;
-function TArray_BuiltWithout(const arr, forbidden: TBooleanArray): Boolean; overload; cdecl;
-function TArray_BuiltWithout(const arr, forbidden: TPointArray): Boolean; overload; cdecl;
-function TArray_BuiltWithout(const arr, forbidden: TBoxArray): Boolean; overload; cdecl;
-function TArray_BuiltWithout(const arr, forbidden: TRangeArray): Boolean; overload; cdecl;
-
-function TArray_Copy(const arr: TIntegerArray; const index: Integer = 0; const count: Integer = 2147483647): TIntegerArray; overload; cdecl;
-function TArray_Copy(const arr: TDoubleArray; const index: Integer = 0; const count: Integer = 2147483647): TDoubleArray; overload; cdecl;
-function TArray_Copy(const arr: TStringArray; const index: Integer = 0; const count: Integer = 2147483647): TStringArray; overload; cdecl;
-function TArray_Copy(const arr: TCharArray; const index: Integer = 0; const count: Integer = 2147483647): TCharArray; overload; cdecl;
-function TArray_Copy(const arr: TBooleanArray; const index: Integer = 0; const count: Integer = 2147483647): TBooleanArray; overload; cdecl;
-function TArray_Copy(const arr: TPointArray; const index: Integer = 0; const count: Integer = 2147483647): TPointArray; overload; cdecl;
-function TArray_Copy(const arr: TBoxArray; const index: Integer = 0; const count: Integer = 2147483647): TBoxArray; overload; cdecl;
-function TArray_Copy(const arr: TRangeArray; const index: Integer = 0; const count: Integer = 2147483647): TRangeArray; overload; cdecl;
-
-function TArray_Delete(var arr: TIntegerArray; const index: Integer = 0): Boolean; overload; cdecl;
-function TArray_Delete(var arr: TDoubleArray; const index: Integer = 0): Boolean; overload; cdecl;
-function TArray_Delete(var arr: TStringArray; const index: Integer = 0): Boolean; overload; cdecl;
-function TArray_Delete(var arr: TCharArray; const index: Integer = 0): Boolean; overload; cdecl;
-function TArray_Delete(var arr: TBooleanArray; const index: Integer = 0): Boolean; overload; cdecl;
-function TArray_Delete(var arr: TPointArray; const index: Integer = 0): Boolean; overload; cdecl;
-function TArray_Delete(var arr: TBoxArray; const index: Integer = 0): Boolean; overload; cdecl;
-function TArray_Delete(var arr: TRangeArray; const index: Integer = 0): Boolean; overload; cdecl;
-function TArray_Delete(var arr: TIntegerArray; const IDs: TIntegerArray): Integer; overload; cdecl;
-function TArray_Delete(var arr: TDoubleArray; const IDs: TIntegerArray): Integer; overload; cdecl;
-function TArray_Delete(var arr: TStringArray; const IDs: TIntegerArray): Integer; overload; cdecl;
-function TArray_Delete(var arr: TCharArray; const IDs: TIntegerArray): Integer; overload; cdecl;
-function TArray_Delete(var arr: TBooleanArray; const IDs: TIntegerArray): Integer; overload; cdecl;
-function TArray_Delete(var arr: TPointArray; const IDs: TIntegerArray): Integer; overload; cdecl;
-function TArray_Delete(var arr: TBoxArray; const IDs: TIntegerArray): Integer; overload; cdecl;
-function TArray_Delete(var arr: TRangeArray; const IDs: TIntegerArray): Integer; overload; cdecl;
-
-function TArray_Differ(const arr, target: TIntegerArray): Boolean; overload; cdecl;
-function TArray_Differ(const arr, target: TDoubleArray): Boolean; overload; cdecl;
-function TArray_Differ(const arr, target: TStringArray): Boolean; overload; cdecl;
-function TArray_Differ(const arr, target: TCharArray): Boolean; overload; cdecl;
-function TArray_Differ(const arr, target: TBooleanArray): Boolean; overload; cdecl;
-function TArray_Differ(const arr, target: TPointArray): Boolean; overload; cdecl;
-function TArray_Differ(const arr, target: TBoxArray): Boolean; overload; cdecl;
-function TArray_Differ(const arr, target: TRangeArray): Boolean; overload; cdecl;
-
-function TArray_Distribute(const arr: TIntegerArray; const parts: Integer): T2DIntegerArray; overload; cdecl;
-function TArray_Distribute(const arr: TDoubleArray; const parts: Integer): T2DDoubleArray; overload; cdecl;
-function TArray_Distribute(const arr: TStringArray; const parts: Integer): T2DStringArray; overload; cdecl;
-function TArray_Distribute(const arr: TCharArray; const parts: Integer): T2DCharArray; overload; cdecl;
-function TArray_Distribute(const arr: TBooleanArray; const parts: Integer): T2DBooleanArray; overload; cdecl;
-function TArray_Distribute(const arr: TPointArray; const parts: Integer): T2DPointArray; overload; cdecl;
-function TArray_Distribute(const arr: TBoxArray; const parts: Integer): T2DBoxArray; overload; cdecl;
-function TArray_Distribute(const arr: TRangeArray; const parts: Integer): T2DRangeArray; overload; cdecl;
-
-function TArray_Dump(var arr: TIntegerArray; const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Dump(var arr: TDoubleArray; const items: TDoubleArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Dump(var arr: TStringArray; const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Dump(var arr: TCharArray; const items: TCharArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Dump(var arr: TBooleanArray; const items: TBooleanArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Dump(var arr: TPointArray; const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Dump(var arr: TBoxArray; const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Dump(var arr: TRangeArray; const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl;
-
-function TArray_Dupe(const arr: TIntegerArray): TIntegerArray; overload; cdecl;
-function TArray_Dupe(const arr: TDoubleArray): TDoubleArray; overload; cdecl;
-function TArray_Dupe(const arr: TStringArray): TStringArray; overload; cdecl;
-function TArray_Dupe(const arr: TCharArray): TCharArray; overload; cdecl;
-function TArray_Dupe(const arr: TBooleanArray): TBooleanArray; overload; cdecl;
-function TArray_Dupe(const arr: TPointArray): TPointArray; overload; cdecl;
-function TArray_Dupe(const arr: TBoxArray): TBoxArray; overload; cdecl;
-function TArray_Dupe(const arr: TRangeArray): TRangeArray; overload; cdecl;
 
 function TArray_Empty(const arr: TIntegerArray): Boolean; overload; cdecl;
 function TArray_Empty(const arr: TDoubleArray): Boolean; overload; cdecl;
