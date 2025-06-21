@@ -11,7 +11,7 @@ begin
   SetLength(Result, (l + 1));
   for i := 0 to (l - 1) do
     Result[i] := arr[i];
-  if ((not duplicates) and TArray_Contains(arr, item)) then
+  if ((not duplicates) and arr.Contains(item)) then
     SetLength(Result, l)
   else
     Result[l] := item;
@@ -39,7 +39,7 @@ begin
 	begin
 	  a := 0;
 	  for i := 0 to h do
-	    if not TArray_Contains(Result, items[i]) then
+	    if not Result.Contains(items[i]) then
         Result[l + a.Increase] := items[i];
       SetLength(Result, (l + a));
     end;
@@ -109,7 +109,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Append1}
 begin
-  if ((not duplicates) and TArray_Contains(arr, item)) then
+  if ((not duplicates) and arr.Contains(item)) then
     Exit(High(arr));
   Result := Length(arr);
   SetLength(arr, (Result + 1));
@@ -133,14 +133,14 @@ begin
   SetLength(arr, ((Result + h) + 2));
   case duplicates of
     False:
-	  begin
-	    for i := 0 to h do
-	      if not TArray_Contains(arr, items[i]) then
+    begin
+      for i := 0 to h do
+        if not arr.Contains(items[i]) then
           arr[(Result.Increment)] := items[i];
       SetLength(arr, (Result + 1));
     end;
     True:
-  	for i := 0 to h do
+    for i := 0 to h do
       arr[Result.Increment] := items[i];
   end;
 end;
@@ -210,7 +210,19 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Clone(arr: TArray; index: Integer; count: Integer): TArray>
+  <arr.Clear: Boolean>
+  @action: SetLength(arr, 0) and returns true if items existed before doing it.
+  @note: None.
+[==============================================================================}
+{$IFDEF TArray_Clear}
+begin
+  Result := (Length(Self) > 0);
+  SetLength(Self, 0);
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.Clone(index: Integer; count: Integer): TArray>
  @action: Returns copy of an array arr.
  @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
@@ -223,11 +235,11 @@ begin
     if (index < 0) then
       c := (index + count)
     else
-      c := Min(count, (Length(arr) - index));
+      c := Min(count, (Length(Self) - index));
     s := Max(0, index);
     SetLength(Result, c);
     for i := s to ((s + c) - 1) do
-      Result[i - s] := arr[i];
+      Result[i - s] := Self[i];
   end else
     SetLength(Result, 0);
 end;
@@ -247,7 +259,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Contains(arr: TArray; item: VarType; index: Integer): Boolean>
+ <arr.Contains(item: VarType; index: Integer): Boolean>
  @action: Looks array for item starting from start index. If found, Result will be True.
  @note: None.
 [==============================================================================}
@@ -255,8 +267,8 @@ end;
 var
   i: Integer;
 begin
-  for i := index to High(arr) do
-    if (item = arr[i]) then
+  for i := index to High(Self) do
+    if (item = Self[i]) then
       Exit(True);
   Result := False;
 end;
@@ -355,7 +367,7 @@ begin
   l := Length(arr);
   Result := 0;
   for i := 0 to (l - 1) do
-    if not TArray_Contains(IDs, i) then
+    if not IDs.Contains(i) then
       arr[i - Result] := arr[i]
     else
       Result := (Result + 1);
@@ -424,7 +436,7 @@ begin
   Result := 0;
   if (High(items) > -1) then
   for i := Max(0, index) to (l - 1) do
-    if not TArray_Contains(items, arr[i]) then
+    if not items.Contains(arr[i]) then
       arr[i - Result] := arr[i]
     else
       Inc(Result);
@@ -573,7 +585,7 @@ begin
     l := Length(arr);
     SetLength(Result, (l - index));
     for i := index to (l - 1) do
-      if TArray_Contains(items, arr[i]) then
+      if items.Contains(arr[i]) then
         Result[r.Increase] := arr[i];
   end;
   SetLength(Result, r);
@@ -684,7 +696,7 @@ begin
   r := 0;
   SetLength(Result, (l - index));
   for i := index to (l - 1) do
-    if not TArray_Contains(items, arr[i]) then
+    if not items.Contains(arr[i]) then
       Result[r.Increase] := arr[i];
   SetLength(Result, r);
 end;
@@ -761,11 +773,11 @@ begin
   case IDs.Ascending of
     True:
     for Result := IDs.start to IDs.stop do
-      if TArray_Contains(items, arr[Result]) then
+      if items.Contains(arr[Result]) then
         Exit;
     False:
     for Result := IDs.start downto IDs.stop do
-      if TArray_Contains(items, arr[Result]) then
+      if items.Contains(arr[Result]) then
         Exit;
   end;
   Result := -1;
@@ -783,7 +795,7 @@ var
 begin
   if ((High(arr) > -1) and (High(items) > -1)) then
   for i := 0 to High(IDs) do
-    if TArray_Contains(items, arr[IDs[i]]) then
+    if items.Contains(arr[IDs[i]]) then
       Exit(IDs[i]);
   Result := -1;
 end;
@@ -966,7 +978,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Includes(arr: TArray; item: VarType; index: Integer): Boolean>
+ <arr.Includes(item: VarType; index: Integer): Boolean>
  @action: Looks array for item starting from start index down to index 0. If found, Result will be True.
  @note: Alternative to TArray_Contains, but this scans in opposite direction.
 [==============================================================================}
@@ -974,8 +986,8 @@ end;
 var
   i: Integer;
 begin
-  for i := Min(High(arr), index) downto 0 do
-    if (item = arr[i]) then
+  for i := Min(High(Self), index) downto 0 do
+    if (item = Self[i]) then
       Exit(True);
   Result := False;
 end;
@@ -996,7 +1008,7 @@ begin
     begin
       Result := 0;
       for i := Max(0, index) to (l - 1) do
-        if TArray_Contains(items, arr[i]) then
+        if items.Contains(arr[i]) then
           arr[i - Result] := arr[i]
         else
           Inc(Result);
@@ -1335,7 +1347,7 @@ begin
   begin
     SetLength(Result, ((h + 1) - s));
     for i := s to h do
-      if TArray_Contains(items, arr[i]) then
+      if items.Contains(arr[i]) then
         Result[r.Increase] := i;
   end;
   SetLength(Result, r);
@@ -1413,7 +1425,7 @@ begin
   begin
     SetLength(Result, (s + 1));
     for i := s downto 0 do
-      if TArray_Contains(items, arr[i]) then
+      if items.Contains(arr[i]) then
         Result[r.Increase] := i;
   end;
   SetLength(Result, r);
@@ -1673,14 +1685,14 @@ begin
         if (r >= limit) then
           Break
         else
-          if TArray_Contains(items, arr[i]) then
+          if items.Contains(arr[i]) then
             Result[r.Increase] := i;
       False:
       for i := IDs.start downto IDs.stop do
         if (r >= limit) then
           Break
         else
-          if TArray_Contains(items, arr[i]) then
+          if items.Contains(arr[i]) then
             Result[r.Increase] := i;
     end;
   end;
@@ -1702,11 +1714,11 @@ begin
   begin
     SetLength(Result, Length(IDs));
     for i := 0 to High(IDs) do
-	  if (r >= limit) then
-	    Break
-	  else
-        if TArray_Contains(items, arr[IDs[i]]) then
-	      Result[r.Increase] := IDs[i];
+      if (r >= limit) then
+        Break
+      else
+        if items.Contains(arr[IDs[i]]) then
+	  Result[r.Increase] := IDs[i];
   end;
   SetLength(Result, r);
 end;

@@ -1,45 +1,4 @@
 {==============================================================================]
-  <TIntegerArrayHelper.Contains>
-  @action: Returns true if arr contains item.
-  @note: None.
-[==============================================================================}
-function TIntegerArrayHelper.Contains(const item: Integer; const index: Integer = 0): Boolean; cdecl;
-var
-  i: Integer;
-begin
-  for i := Max(0, index) to High(Self) do
-    if (item = Self[i]) then
-      Exit(True);
-  Result := False;
-end;
-
-{==============================================================================]
-  <TIntegerArrayHelper.Includes>
-  @action: SetLength(arr, 0) and returns true if items existed before doing it.
-  @note: None.
-[==============================================================================}
-function TIntegerArrayHelper.Includes(const item: Integer; const index: Integer = 2147483647): Boolean; cdecl;
-var
-  i: Integer;
-begin
-  for i := Min(High(Self), index) downto 0 do
-    if (item = Self[i]) then
-      Exit(True);
-  Result := False;
-end;
-
-{==============================================================================]
-  <TIntegerArrayHelper.Clear>
-  @action: SetLength(arr, 0) and returns true if items existed before doing it.
-  @note: None.
-[==============================================================================}
-function TIntegerArrayHelper.Clear: Boolean; cdecl;
-begin
-  Result := (Length(Self) > 0);
-  SetLength(Self, 0);
-end;
-
-{==============================================================================]
   <TIntegerArrayHelper.Descending>
   @action: Returns true if array arr is in descending order.
   @note: CAUTION! Does not work with arrays that contain only unique values.

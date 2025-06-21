@@ -1,14 +1,19 @@
-{$I MiMU\TIntegerHelper.inc}
-{$I MiMU\TInt64Helper.inc}
-{$I MiMU\TDoubleHelper.inc}
-{$I MiMU\TStringHelper.inc}
-{$I MiMU\TBooleanHelper.inc}
-{$I MiMU\TPointHelper.inc}
-{$I MiMU\TBoxHelper.inc}
-{$I MiMU\TRangeHelper.inc}
-{$I MiMU\TIntegerArrayHelper.inc}
-{$I MiMU\TPointArrayHelper.inc}
-{$I MiMU\TRangeArrayHelper.inc}
+{$I MiMU\Integer.inc}
+{$I MiMU\Int64.inc}
+{$I MiMU\Double.inc}
+{$I MiMU\String.inc}
+{$I MiMU\Boolean.inc}
+{$I MiMU\TPoint.inc}
+{$I MiMU\TBox.inc}
+{$I MiMU\TRange.inc}
+{$I MiMU\TIntegerArray.inc}
+{$I MiMU\TDoubleArray.inc}
+{$I MiMU\TStringArray.inc}
+{$I MiMU\TCharArray.inc}
+{$I MiMU\TBooleanArray.inc}
+{$I MiMU\TPointArray.inc}
+{$I MiMU\TBoxArray.inc}
+{$I MiMU\TRangeArray.inc}
 
 {$DEFINE TArray_Add1}
 function TArray_Add(const arr: TIntegerArray; const item: Integer; const duplicates: Boolean = True): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
@@ -120,15 +125,26 @@ function TArray_BuiltWithout(const arr, forbidden: TBoxArray): Boolean; overload
 function TArray_BuiltWithout(const arr, forbidden: TRangeArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_BuiltWithout}
 
+{$DEFINE TArray_Clear}
+function TIntegerArrayHelper.Clear: Boolean; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Clear: Boolean; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Clear: Boolean; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Clear: Boolean; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Clear: Boolean; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Clear: Boolean; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Clear: Boolean; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Clear: Boolean; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Clear}
+
 {$DEFINE TArray_Clone}
-function TArray_Clone(const arr: TIntegerArray; const index: Integer = 0; const count: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Clone(const arr: TDoubleArray; const index: Integer = 0; const count: Integer = 2147483647): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Clone(const arr: TStringArray; const index: Integer = 0; const count: Integer = 2147483647): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Clone(const arr: TCharArray; const index: Integer = 0; const count: Integer = 2147483647): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Clone(const arr: TBooleanArray; const index: Integer = 0; const count: Integer = 2147483647): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Clone(const arr: TPointArray; const index: Integer = 0; const count: Integer = 2147483647): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Clone(const arr: TBoxArray; const index: Integer = 0; const count: Integer = 2147483647): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Clone(const arr: TRangeArray; const index: Integer = 0; const count: Integer = 2147483647): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.Clone(const index: Integer = 0; const count: Integer = 2147483647): TIntegerArray; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Clone(const index: Integer = 0; const count: Integer = 2147483647): TDoubleArray; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Clone(const index: Integer = 0; const count: Integer = 2147483647): TStringArray; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Clone(const index: Integer = 0; const count: Integer = 2147483647): TCharArray; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Clone(const index: Integer = 0; const count: Integer = 2147483647): TBooleanArray; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Clone(const index: Integer = 0; const count: Integer = 2147483647): TPointArray; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Clone(const index: Integer = 0; const count: Integer = 2147483647): TBoxArray; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Clone(const index: Integer = 0; const count: Integer = 2147483647): TRangeArray; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Clone}
 
 {$DEFINE TArray_Combine}
@@ -143,14 +159,14 @@ function TArray_Combine(const a, b: TRangeArray): TRangeArray; overload; cdecl; 
 {$UNDEF TArray_Combine}
 
 {$DEFINE TArray_Contains}
-function TArray_Contains(const arr: TIntegerArray; const item: Integer; const index: Integer = 0): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Contains(const arr: TDoubleArray; const item: Double; const index: Integer = 0): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Contains(const arr: TStringArray; const item: string; const index: Integer = 0): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Contains(const arr: TCharArray; const item: Char; const index: Integer = 0): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Contains(const arr: TBooleanArray; const item: Boolean; const index: Integer = 0): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Contains(const arr: TPointArray; const item: TPoint; const index: Integer = 0): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Contains(const arr: TBoxArray; const item: TBox; const index: Integer = 0): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Contains(const arr: TRangeArray; const item: TRange; const index: Integer = 0): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.Contains(const item: Integer; const index: Integer = 0): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Contains(const item: Double; const index: Integer = 0): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Contains(const item: string; const index: Integer = 0): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Contains(const item: Char; const index: Integer = 0): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Contains(const item: Boolean; const index: Integer = 0): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Contains(const item: TPoint; const index: Integer = 0): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Contains(const item: TBox; const index: Integer = 0): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Contains(const item: TRange; const index: Integer = 0): Boolean; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Contains}
 
 {$DEFINE TArray_Copy1}
@@ -550,14 +566,14 @@ function TArray_IDs(const arr: TRangeArray; const IDs: TIntegerArray; const item
 {$UNDEF TArray_IDs4}
 
 {$DEFINE TArray_Includes}
-function TArray_Includes(const arr: TIntegerArray; const item: Integer; const index: Integer = 2147483647): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Includes(const arr: TDoubleArray; const item: Double; const index: Integer = 2147483647): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Includes(const arr: TStringArray; const item: string; const index: Integer = 2147483647): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Includes(const arr: TCharArray; const item: Char; const index: Integer = 2147483647): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Includes(const arr: TBooleanArray; const item: Boolean; const index: Integer = 2147483647): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Includes(const arr: TPointArray; const item: TPoint; const index: Integer = 2147483647): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Includes(const arr: TBoxArray; const item: TBox; const index: Integer = 2147483647): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Includes(const arr: TRangeArray; const item: TRange; const index: Integer = 2147483647): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.Includes(const item: Integer; const index: Integer = 2147483647): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Includes(const item: Double; const index: Integer = 2147483647): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Includes(const item: string; const index: Integer = 2147483647): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Includes(const item: Char; const index: Integer = 2147483647): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Includes(const item: Boolean; const index: Integer = 2147483647): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Includes(const item: TPoint; const index: Integer = 2147483647): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Includes(const item: TBox; const index: Integer = 2147483647): Boolean; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Includes(const item: TRange; const index: Integer = 2147483647): Boolean; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Includes}
 
 {$DEFINE TArray_Keep}
