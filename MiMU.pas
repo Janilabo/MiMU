@@ -436,8 +436,18 @@ type
     function Find(const ID: TIntegerArray; const item: Integer): Integer; overload; cdecl;
     function Find(const ID: TRange; const items: TIntegerArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TIntegerArray): Integer; overload; cdecl;
-    function Flip: Boolean; overload; cdecl;	
+    function Flip: Boolean; overload; cdecl;
+    function Get: TIntegerArray; overload; cdecl;
+    function Get(const ID: TIntegerArray): TIntegerArray; overload; cdecl;
+    function Get(const ID: TRange): TIntegerArray; overload; cdecl;
+    function Group: T2DIntegerArray; overload; cdecl;
+    function Holds(const chain: TIntegerArray): Boolean; overload; cdecl;
+    function IDs(const ascending: Boolean = True): TIntegerArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray): TIntegerArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const item: Integer): TIntegerArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const items: TIntegerArray): TIntegerArray; overload; cdecl;
     function Includes(const item: Integer; const index: Integer = 2147483647): Boolean; cdecl;
+    function Keep(const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl;
 
     function Descending: Boolean; cdecl;
     function Ascending: Boolean; cdecl;
@@ -551,7 +561,17 @@ type
     function Find(const ID: TRange; const items: TDoubleArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TDoubleArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
+    function Get: TDoubleArray; overload; cdecl;
+    function Get(const ID: TIntegerArray): TDoubleArray; overload; cdecl;
+    function Get(const ID: TRange): TDoubleArray; overload; cdecl;
+    function Group: T2DDoubleArray; overload; cdecl;
+    function Holds(const chain: TDoubleArray): Boolean; overload; cdecl;
+    function IDs(const ascending: Boolean = True): TIntegerArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray): TDoubleArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const item: Double): TDoubleArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const items: TDoubleArray): TDoubleArray; overload; cdecl;
     function Includes(const item: Double; const index: Integer = 2147483647): Boolean; cdecl;
+    function Keep(const items: TDoubleArray; const index: Integer = 0): Integer; overload; cdecl;
   end;
   TStringArrayHelper = type helper for TStringArray
     function Add(const item: string; const duplicates: Boolean = True): TStringArray; overload; cdecl;
@@ -595,7 +615,17 @@ type
     function Find(const ID: TRange; const items: TStringArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TStringArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
-    function Includes(const item: string; const index: Integer = 2147483647): Boolean; cdecl;	
+    function Get: TStringArray; overload; cdecl;
+    function Get(const ID: TIntegerArray): TStringArray; overload; cdecl;
+    function Get(const ID: TRange): TStringArray; overload; cdecl;
+    function Group: T2DStringArray; overload; cdecl;
+    function Holds(const chain: TStringArray): Boolean; overload; cdecl;
+    function IDs(const ascending: Boolean = True): TIntegerArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray): TStringArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const item: string): TStringArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const items: TStringArray): TStringArray; overload; cdecl;
+    function Includes(const item: string; const index: Integer = 2147483647): Boolean; cdecl;
+    function Keep(const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl;	
   end;
   TCharArrayHelper = type helper for TCharArray
     function Add(const item: Char; const duplicates: Boolean = True): TCharArray; overload; cdecl;
@@ -639,7 +669,17 @@ type
     function Find(const ID: TRange; const items: TCharArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TCharArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
+    function Get: TCharArray; overload; cdecl;
+    function Get(const ID: TIntegerArray): TCharArray; overload; cdecl;
+    function Get(const ID: TRange): TCharArray; overload; cdecl;
+    function Group: T2DCharArray; overload; cdecl;
+    function Holds(const chain: TCharArray): Boolean; overload; cdecl;
+    function IDs(const ascending: Boolean = True): TIntegerArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray): TCharArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
     function Includes(const item: Char; const index: Integer = 2147483647): Boolean; cdecl;
+    function Keep(const items: TCharArray; const index: Integer = 0): Integer; overload; cdecl;
   end;
   TBooleanArrayHelper = type helper for TBooleanArray
     function Add(const item: Boolean; const duplicates: Boolean = True): TBooleanArray; overload; cdecl;
@@ -683,7 +723,17 @@ type
     function Find(const ID: TRange; const items: TBooleanArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TBooleanArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
-    function Includes(const item: Boolean; const index: Integer = 2147483647): Boolean; cdecl;	
+    function Get: TBooleanArray; overload; cdecl;
+    function Get(const ID: TIntegerArray): TBooleanArray; overload; cdecl;
+    function Get(const ID: TRange): TBooleanArray; overload; cdecl;
+    function Group: T2DBooleanArray; overload; cdecl;
+    function Holds(const chain: TBooleanArray): Boolean; overload; cdecl;
+    function IDs(const ascending: Boolean = True): TIntegerArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray): TBooleanArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const item: Boolean): TBooleanArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const items: TBooleanArray): TBooleanArray; overload; cdecl; 
+    function Includes(const item: Boolean; const index: Integer = 2147483647): Boolean; cdecl;
+    function Keep(const items: TBooleanArray; const index: Integer = 0): Integer; overload; cdecl;
   end;
   TPointArrayHelper = type helper for TPointArray
     function Add(const item: TPoint; const duplicates: Boolean = True): TPointArray; overload; cdecl;
@@ -727,7 +777,17 @@ type
     function Find(const ID: TRange; const items: TPointArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TPointArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
+    function Get: TPointArray; overload; cdecl;
+    function Get(const ID: TIntegerArray): TPointArray; overload; cdecl;
+    function Get(const ID: TRange): TPointArray; overload; cdecl;
+    function Group: T2DPointArray; overload; cdecl;
+    function Holds(const chain: TPointArray): Boolean; overload; cdecl;
+    function IDs(const ascending: Boolean = True): TIntegerArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray): TPointArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const item: TPoint): TPointArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const items: TPointArray): TPointArray; overload; cdecl;
     function Includes(const item: TPoint; const index: Integer = 2147483647): Boolean; cdecl;
+    function Keep(const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl;
 
     function Bounds: TBox; overload; cdecl;
     function Bounds(var width, height: Integer): TBox; overload; cdecl;
@@ -780,7 +840,17 @@ type
     function Find(const ID: TRange; const items: TBoxArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TBoxArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
-    function Includes(const item: TBox; const index: Integer = 2147483647): Boolean; cdecl;	
+    function Get: TBoxArray; overload; cdecl;
+    function Get(const ID: TIntegerArray): TBoxArray; overload; cdecl;
+    function Get(const ID: TRange): TBoxArray; overload; cdecl;
+    function Group: T2DBoxArray; overload; cdecl;
+    function Holds(const chain: TBoxArray): Boolean; overload; cdecl;
+    function IDs(const ascending: Boolean = True): TIntegerArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray): TBoxArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const item: TBox): TBoxArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const items: TBoxArray): TBoxArray; overload; cdecl;
+    function Includes(const item: TBox; const index: Integer = 2147483647): Boolean; cdecl;
+    function Keep(const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl;
   end;
   TRangeArrayHelper = type helper for TRangeArray
     function Add(const item: TRange; const duplicates: Boolean = True): TRangeArray; overload; cdecl;
@@ -824,8 +894,18 @@ type
     function Find(const ID: TRange; const items: TRangeArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TRangeArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
+    function Get: TRangeArray; overload; cdecl;
+    function Get(const ID: TIntegerArray): TRangeArray; overload; cdecl;
+    function Get(const ID: TRange): TRangeArray; overload; cdecl;
+    function Group: T2DRangeArray; overload; cdecl;
+    function Holds(const chain: TRangeArray): Boolean; overload; cdecl;
+    function IDs(const ascending: Boolean = True): TIntegerArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray): TRangeArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const item: TRange): TRangeArray; overload; cdecl;
+    function IDs(const ID: TIntegerArray; const items: TRangeArray): TRangeArray; overload; cdecl;
 	function Includes(const item: TRange; const index: Integer = 2147483647): Boolean; cdecl;
-
+    function Keep(const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl;
+	
     function TIA: TIntegerArray; cdecl;
     function T2DIA: T2DIntegerArray; cdecl;  
   end;
@@ -857,83 +937,6 @@ procedure Swap(var A, B: Boolean); overload; inline;
 procedure Swap(var A, B: TPoint); overload; inline;
 procedure Swap(var A, B: TBox); overload; inline;
 procedure Swap(var A, B: TRange); overload; inline;
-
-function TArray_Get(const arr: TIntegerArray): TIntegerArray; overload; cdecl;
-function TArray_Get(const arr: TDoubleArray): TDoubleArray; overload; cdecl;
-function TArray_Get(const arr: TStringArray): TStringArray; overload; cdecl;
-function TArray_Get(const arr: TCharArray): TCharArray; overload; cdecl;
-function TArray_Get(const arr: TBooleanArray): TBooleanArray; overload; cdecl;
-function TArray_Get(const arr: TPointArray): TPointArray; overload; cdecl;
-function TArray_Get(const arr: TBoxArray): TBoxArray; overload; cdecl;
-function TArray_Get(const arr: TRangeArray): TRangeArray; overload; cdecl;
-function TArray_Get(const arr: TIntegerArray; const IDs: TIntegerArray): TIntegerArray; overload; cdecl;
-function TArray_Get(const arr: TDoubleArray; const IDs: TIntegerArray): TDoubleArray; overload; cdecl;
-function TArray_Get(const arr: TStringArray; const IDs: TIntegerArray): TStringArray; overload; cdecl;
-function TArray_Get(const arr: TCharArray; const IDs: TIntegerArray): TCharArray; overload; cdecl;
-function TArray_Get(const arr: TBooleanArray; const IDs: TIntegerArray): TBooleanArray; overload; cdecl;
-function TArray_Get(const arr: TPointArray; const IDs: TIntegerArray): TPointArray; overload; cdecl;
-function TArray_Get(const arr: TBoxArray; const IDs: TIntegerArray): TBoxArray; overload; cdecl;
-function TArray_Get(const arr: TRangeArray; const IDs: TIntegerArray): TRangeArray; overload; cdecl;
-
-function TArray_Group(const arr: TIntegerArray): T2DIntegerArray; overload; cdecl;
-function TArray_Group(const arr: TDoubleArray): T2DDoubleArray; overload; cdecl;
-function TArray_Group(const arr: TStringArray): T2DStringArray; overload; cdecl;
-function TArray_Group(const arr: TCharArray): T2DCharArray; overload; cdecl;
-function TArray_Group(const arr: TBooleanArray): T2DBooleanArray; overload; cdecl;
-function TArray_Group(const arr: TPointArray): T2DPointArray; overload; cdecl;
-function TArray_Group(const arr: TBoxArray): T2DBoxArray; overload; cdecl;
-function TArray_Group(const arr: TRangeArray): T2DRangeArray; overload; cdecl;
-
-function TArray_Holds(const arr, chain: TIntegerArray): Boolean; overload; cdecl;
-function TArray_Holds(const arr, chain: TDoubleArray): Boolean; overload; cdecl;
-function TArray_Holds(const arr, chain: TStringArray): Boolean; overload; cdecl;
-function TArray_Holds(const arr, chain: TCharArray): Boolean; overload; cdecl;
-function TArray_Holds(const arr, chain: TBooleanArray): Boolean; overload; cdecl;
-function TArray_Holds(const arr, chain: TPointArray): Boolean; overload; cdecl;
-function TArray_Holds(const arr, chain: TBoxArray): Boolean; overload; cdecl;
-function TArray_Holds(const arr, chain: TRangeArray): Boolean; overload; cdecl;
-
-function TArray_IDs(const arr: TIntegerArray): TIntegerArray; overload; cdecl;
-function TArray_IDs(const arr: TDoubleArray): TIntegerArray; overload; cdecl;
-function TArray_IDs(const arr: TStringArray): TIntegerArray; overload; cdecl;
-function TArray_IDs(const arr: TCharArray): TIntegerArray; overload; cdecl;
-function TArray_IDs(const arr: TBooleanArray): TIntegerArray; overload; cdecl;
-function TArray_IDs(const arr: TPointArray): TIntegerArray; overload; cdecl;
-function TArray_IDs(const arr: TBoxArray): TIntegerArray; overload; cdecl;
-function TArray_IDs(const arr: TRangeArray): TIntegerArray; overload; cdecl;
-function TArray_IDs(const arr: TIntegerArray; const IDs: TIntegerArray): TIntegerArray; overload; cdecl;
-function TArray_IDs(const arr: TDoubleArray; const IDs: TIntegerArray): TDoubleArray; overload; cdecl;
-function TArray_IDs(const arr: TStringArray; const IDs: TIntegerArray): TStringArray; overload; cdecl;
-function TArray_IDs(const arr: TCharArray; const IDs: TIntegerArray): TCharArray; overload; cdecl;
-function TArray_IDs(const arr: TBooleanArray; const IDs: TIntegerArray): TBooleanArray; overload; cdecl;
-function TArray_IDs(const arr: TPointArray; const IDs: TIntegerArray): TPointArray; overload; cdecl;
-function TArray_IDs(const arr: TBoxArray; const IDs: TIntegerArray): TBoxArray; overload; cdecl;
-function TArray_IDs(const arr: TRangeArray; const IDs: TIntegerArray): TRangeArray; overload; cdecl;
-function TArray_IDs(const arr: TIntegerArray; const IDs: TIntegerArray; const item: Integer): TIntegerArray; overload; cdecl;
-function TArray_IDs(const arr: TDoubleArray; const IDs: TIntegerArray; const item: Double): TDoubleArray; overload; cdecl;
-function TArray_IDs(const arr: TStringArray; const IDs: TIntegerArray; const item: string): TStringArray; overload; cdecl;
-function TArray_IDs(const arr: TCharArray; const IDs: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
-function TArray_IDs(const arr: TBooleanArray; const IDs: TIntegerArray; const item: Boolean): TBooleanArray; overload; cdecl;
-function TArray_IDs(const arr: TPointArray; const IDs: TIntegerArray; const item: TPoint): TPointArray; overload; cdecl;
-function TArray_IDs(const arr: TBoxArray; const IDs: TIntegerArray; const item: TBox): TBoxArray; overload; cdecl;
-function TArray_IDs(const arr: TRangeArray; const IDs: TIntegerArray; const item: TRange): TRangeArray; overload; cdecl;
-function TArray_IDs(const arr: TIntegerArray; const IDs: TIntegerArray; const items: TIntegerArray): TIntegerArray; overload; cdecl;
-function TArray_IDs(const arr: TDoubleArray; const IDs: TIntegerArray; const items: TDoubleArray): TDoubleArray; overload; cdecl;
-function TArray_IDs(const arr: TStringArray; const IDs: TIntegerArray; const items: TStringArray): TStringArray; overload; cdecl;
-function TArray_IDs(const arr: TCharArray; const IDs: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
-function TArray_IDs(const arr: TBooleanArray; const IDs: TIntegerArray; const items: TBooleanArray): TBooleanArray; overload; cdecl;
-function TArray_IDs(const arr: TPointArray; const IDs: TIntegerArray; const items: TPointArray): TPointArray; overload; cdecl;
-function TArray_IDs(const arr: TBoxArray; const IDs: TIntegerArray; const items: TBoxArray): TBoxArray; overload; cdecl;
-function TArray_IDs(const arr: TRangeArray; const IDs: TIntegerArray; const items: TRangeArray): TRangeArray; overload; cdecl;
-
-function TArray_Keep(var arr: TIntegerArray; const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Keep(var arr: TDoubleArray; const items: TDoubleArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Keep(var arr: TStringArray; const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Keep(var arr: TCharArray; const items: TCharArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Keep(var arr: TBooleanArray; const items: TBooleanArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Keep(var arr: TPointArray; const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Keep(var arr: TBoxArray; const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Keep(var arr: TRangeArray; const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl;
 
 function TArray_LeastFrequent(const arr: TIntegerArray): Integer; overload; cdecl;
 function TArray_LeastFrequent(const arr: TDoubleArray): Double; overload; cdecl;
