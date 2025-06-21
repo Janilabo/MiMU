@@ -1,5 +1,5 @@
 {==============================================================================]
- <TArray_Add(const arr: TArray; item: VarType; duplicates: Boolean): TArray>
+ <arr.Add(item: VarType; duplicates: Boolean): TArray>
  @action: Appends arr with item. Returns the array with added item.
  @note: Adds item to the right side of the array.
 [==============================================================================}
@@ -7,11 +7,11 @@
 var
   i, l: Integer;
 begin
-  l := Length(arr);
+  l := Length(Self);
   SetLength(Result, (l + 1));
   for i := 0 to (l - 1) do
-    Result[i] := arr[i];
-  if ((not duplicates) and arr.Contains(item)) then
+    Result[i] := Self[i];
+  if ((not duplicates) and Self.Contains(item)) then
     SetLength(Result, l)
   else
     Result[l] := item;
@@ -19,7 +19,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Add(const arr: TArray; items: TArray; duplicates: Boolean): TArray>
+ <arr.Add(items: TArray; duplicates: Boolean): TArray>
  @action: Appends arr with items. Returns the array with added items.
  @note: Adds item to the right side of the array.
 [==============================================================================}
@@ -28,12 +28,12 @@ var
   a, h, i, l: Integer;
 begin
   h := High(items);
-  l := Length(arr);
+  l := Length(Self);
   SetLength(Result, (l + (h + 1)));
   if ((h = -1) and (l = 0)) then
     Exit;
   for i := 0 to (l - 1) do
-    Result[i] := arr[i];
+    Result[i] := Self[i];
   case duplicates of
     False:
 	begin
@@ -51,41 +51,41 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_AllEqual(arr: TArray): Boolean>
+ <arr.AllEqual: Boolean>
  @action: Returns true if all values in arr are equal (arr contains only equal values).
- @note: None
+ @note: Returns FALSE with empty array!
 [==============================================================================}
 {$IFDEF TArray_AllEqual}
 var
   h, i, l: Integer;
 begin
-  l := Low(arr);
-  h := High(arr);
+  l := Low(Self);
+  h := High(Self);
   for i := (l + 1) to h do
-    if (arr[l] <> arr[i]) then
+    if (Self[l] <> Self[i]) then
       Exit(False);
-  Result := (Length(arr) > 0);
+  Result := (Length(Self) > 0);
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_AllSame(arr: TArray): Boolean>
+ <arr.AllSame: Boolean>
  @action: Returns true if all values in arr are the same (arr contains only equal values).
- @note: None
+ @note: Returns FALSE with empty array!
 [==============================================================================}
 {$IFDEF TArray_AllSame}
 var
   i: Integer;
 begin
-  for i := 1 to High(arr) do
-    if (arr[0] <> arr[i]) then
+  for i := 1 to High(Self) do
+    if (Self[0] <> Self[i]) then
       Exit(False);
-  Result := (Length(arr)  > 0);
+  Result := (Length(Self) > 0);
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_AllUnique(arr: TArray): Boolean>
+ <arr.AllUnique: Boolean>
  @action: Returns true if all values in arr are unique (arr contains ONLY unique values).
  @note: None
 [==============================================================================}
@@ -93,32 +93,32 @@ end;
 var
   h, a, b: Integer;
 begin
-  h := High(arr);
+  h := High(Self);
   for a := 0 to (h - 1) do
     for b := (a + 1) to h do
-      if (arr[a] = arr[b]) then
+      if (Self[a] = Self[b]) then
         Exit(False);
   Result := (h > -1);
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Append(arr: TArray; item: VarType; duplicates: Boolean): Integer>
+ <arr.Append(item: VarType; duplicates: Boolean): Integer>
  @action: Appends arr with item. Returns the index of added item.
  @note: Adds item to the right side of the array.
 [==============================================================================}
 {$IFDEF TArray_Append1}
 begin
-  if ((not duplicates) and arr.Contains(item)) then
-    Exit(High(arr));
-  Result := Length(arr);
-  SetLength(arr, (Result + 1));
-  arr[Result] := item;
+  if ((not duplicates) and Self.Contains(item)) then
+    Exit(High(Self));
+  Result := Length(Self);
+  SetLength(Self, (Result + 1));
+  Self[Result] := item;
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Append(arr: TArray; items: TArray; duplicates; Boolean): Integer>
+ <arr.Append(items: TArray; duplicates; Boolean): Integer>
  @action: Adds all items items to arr.
  @note: Returns the highest index in the end.
 [==============================================================================}
@@ -127,33 +127,33 @@ var
   h, i: Integer;
 begin
   h := High(items);
-  Result := High(arr);
+  Result := High(Self);
   if (h = -1) then
     Exit;
-  SetLength(arr, ((Result + h) + 2));
+  SetLength(Self, ((Result + h) + 2));
   case duplicates of
     False:
     begin
       for i := 0 to h do
-        if not arr.Contains(items[i]) then
-          arr[(Result.Increment)] := items[i];
-      SetLength(arr, (Result + 1));
+        if not Self.Contains(items[i]) then
+          Self[(Result.Increment)] := items[i];
+      SetLength(Self, (Result + 1));
     end;
     True:
     for i := 0 to h do
-      arr[Result.Increment] := items[i];
+      Self[Result.Increment] := items[i];
   end;
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Build(item: VarType; size: Integer): TArray> 
+ <arr.Build(item: VarType; size: Integer): TArray> 
  @action: Creates array with item where size is length of the array.
  @note: item is placed on every index in result.
 [==============================================================================}
 {$IFDEF TArray_Build}
 begin
-  Result := TArray_Create(size, item);
+  Result := Self.Create(size, item);
 end;
 {$ENDIF}
 
@@ -226,7 +226,7 @@ end;
  @action: Returns copy of an array arr.
  @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
-{$IFDEF TArray_Clone}
+{$IFDEF TArray_Clone1}
 var
   i, s, c: Integer;
 begin
@@ -246,15 +246,39 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Combine(a, b: TArray): TArray>
- @action: Combines arrays a and b together as single array.
+ <arr.Clone(ID: TIntegerArray): TArray>
+ @action: Outputs array of items from arr by indexes (ID).
+ @note: Ignores invalid ID's (doesn't include those to result, they will be left out).
+[====================
+==========================================================}
+{$IFDEF TArray_Clone2}
+var
+  i, h, l, r: Integer;
+begin
+  r := 0;
+  h := High(Self);
+  l := Length(ID);
+  if ((l > 0) and (h > -1)) then
+  begin
+    SetLength(Result, l);
+    for i := 0 to (l - 1) do
+      if ((ID[i] <= h) and (ID[i] > -1)) then
+        Result[r.Increase] := Self[ID[i]];
+  end;
+  SetLength(Result, r);
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.Combine(b: TArray): TArray>
+ @action: Combines arrays arr and b together as single array.
  @note: This is an alternative method. :)
 [==============================================================================}
 {$IFDEF TArray_Combine}
 begin
   SetLength(Result, 0);
-  Insert(a, Result, 0);
-  Insert(b, Result, Length(a));
+  Insert(Self, Result, 0);
+  Insert(b, Result, Length(Self));
 end;
 {$ENDIF}
 
@@ -279,60 +303,38 @@ end;
  @action: Returns copy of an array arr.
  @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
-{$IFDEF TArray_Copy1}
+{$IFDEF TArray_Copy}
 begin
   Result := Copy(arr, index, count);  
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Copy(arr: TArray; IDs: TIntegerArray): TArray>
- @action: Outputs array of items from arr by indexes (IDs).
- @note: Ignores invalid ID's (doesn't include those to result, they will be left out).
-[====================
-==========================================================}
-{$IFDEF TArray_Copy2}
-var
-  i, h, l, r: Integer;
-begin
-  r := 0;
-  h := High(arr);
-  l := Length(IDs);
-  if ((l > 0) and (h > -1)) then
-  begin
-    SetLength(Result, l);
-    for i := 0 to (l - 1) do
-      if ((IDs[i] <= h) and (IDs[i] > -1)) then
-        Result[r.Increase] := arr[IDs[i]];
-  end;
-  SetLength(Result, r);
-end;
-{$ENDIF}
-
-{==============================================================================]
- <TArray_Create(item: VarType): TArray> 
- @action: Creates array with item, size as 1.
+ <arr.Create(item: VarType): TArray> 
+ @action: Creates array with item, size as 1. Returns old Self.
  @note: [item]
 [==============================================================================}
 {$IFDEF TArray_Create1}
 begin
-  SetLength(Result, 1);
-  Result[0] := item;
+  Result := self.Clone;
+  SetLength(Self, 1);
+  Self[0] := item;
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Create(size: Integer; item: VarType): TArray> 
- @action: Creates array with item where size is length of the array.
+ <arr.Create(size: Integer; item: VarType): TArray> 
+ @action: Creates array with item where size is length of the array. Returns old Self.
  @note: item is placed on every index in result.
 [==============================================================================}
 {$IFDEF TArray_Create2}
 var
   i: Integer;
 begin
-  SetLength(Result, Max(0, size));
-  for i := 0 to High(Result) do
-    Result[i] := item;
+  Result := self.Clone;
+  SetLength(Self, Max(0, size));
+  for i := 0 to High(Self) do
+    Self[i] := item;
 end;
 {$ENDIF}
 

@@ -107,7 +107,7 @@ begin
   begin
     z := 0;
     r := Self.Bounds;
-    b := TArray_Create(r.Size, False);
+    b.Create(r.Size, False);
     for x := 0 to y do
       if b[Self[x] - r.start].Enable then
         Self[z.Increase] := Self[x];
@@ -135,7 +135,7 @@ begin
   begin
     SetLength(Result, (y + 1));
     r := Self.Bounds;
-	b := TArray_Create(r.Size, False);
+	b.Create(r.Size, False);
     for x := 0 to y do
       if b[Self[x] - r.start].Enable then
         Result[z.Increase] := Self[x];
@@ -171,9 +171,9 @@ begin
         for i := r.start to r.stop do
           Result[i - r.start] := i;
       end else
-        Result := TArray_Create(r.start);
+        Result.Create(r.start);
     end;
-    0: Result := TArray_Create(Self[0]);
+    0: Result.Create(Self[0]);
     -1: SetLength(Result, 0);
   end;
 end;
@@ -374,8 +374,8 @@ begin
         end;
         if (l = -1) then
         begin
-          TArray_Append(a, Self[i]);
-          TArray_Append(c, 1);
+          a.Append(Self[i]);
+          c.Append(1);
         end else
           Inc(c[l]);
       end;
@@ -408,13 +408,13 @@ begin
       for j := 0 to (n - 2) do
         for s := 0 to ((n - j) - 2) do
           if (a[s] > a[s + 1]) then
-		    Swap(a[s], a[s + 1]);
+            Swap(a[s], a[s + 1]);
       Break;
     end;
   if ((n mod 2) = 1) then
     Result := a[n div 2]
   else
-    Result := ((a[n div 2 - 1] + a[n div 2]) / 2);
+    Result := ((a[(n div 2) - 1] + a[n div 2]) / 2);
 end;
 
 {==============================================================================]
@@ -464,7 +464,7 @@ begin
     1:
     begin
       r := Self.Bounds;
-      b := TArray_Create(r.Size, Integer(0));
+      b.Create(r.Size, 0);
       for x := 0 to High(Self) do
         Inc(b[(Self[x] - r.start)]);
       t := 0;
@@ -496,7 +496,7 @@ begin
     1:
     begin
       r := Self.Bounds;
-      b := TArray_Create(r.Size, Integer(0));
+      b.Create(r.Size, 0);
       for x := 0 to High(Self) do
         Inc(b[(Self[x] - r.start)]);
       t := 0;
@@ -643,7 +643,7 @@ begin
             Push(r.start, x.stop);
           r.start := x.start;
         end;
-	  end;
+      end;
     end;
   end;
 end;
@@ -1929,7 +1929,7 @@ begin
     begin
       c := 0;
       l := a.Size;
-      b := TArray_Create(l, False);
+      b.Create(l, False);
       for x := 0 to y do
         if b[Self[x] - a.start].Enable then
           Inc(c);
