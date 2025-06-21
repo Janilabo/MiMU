@@ -97,6 +97,9 @@ type
     function Shuffle: Integer; cdecl;
     function Oversize(const limit: Integer): Boolean; cdecl; inline;
     function Undersize(const limit: Integer): Boolean; cdecl; inline;
+	
+	function TArray(const size: Integer = 1): TIntegerArray; overload cdecl;
+	function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DIntegerArray; overload cdecl;
   end;
   TInt64Helper = type helper for Int64
     function Even: Boolean; cdecl; inline;
@@ -144,6 +147,9 @@ type
     function Percentage(const percent: Double): Double; cdecl; inline;
     function Oversize(const limit: Double): Boolean; cdecl;
     function Undersize(const limit: Double): Boolean; cdecl;
+	
+	function TArray(const size: Integer = 1): TDoubleArray; overload cdecl;
+    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DDoubleArray; overload cdecl;
   end;
   TStringHelper = type helper for string
     function Chars: TCharArray; cdecl;
@@ -193,7 +199,14 @@ type
     function IDs: TIntegerArray; overload; cdecl;
     function IDs(const ID: TIntegerArray): TCharArray; overload; cdecl;
     function IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
-    function IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;  
+    function IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
+	
+    function TArray(const size: Integer = 1): TStringArray; overload cdecl;
+    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DStringArray; overload cdecl;	
+  end;
+  TCharHelper = type helper for Char
+    function TArray(const size: Integer = 1): TCharArray; overload cdecl;
+    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DCharArray; overload cdecl;
   end;
   TBooleanHelper = type helper for Boolean
     function ToString: string; cdecl;
@@ -227,7 +240,10 @@ type
     function SetFalse: Integer; cdecl;
     function SetTrue: Integer; cdecl;
     function SwitchOn(const state: Boolean): Boolean; cdecl;
-    function SwitchOff(const state: Boolean): Boolean; cdecl; 
+    function SwitchOff(const state: Boolean): Boolean; cdecl;
+	
+    function TArray(const size: Integer = 1): TBooleanArray; overload cdecl;
+    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DBooleanArray; overload cdecl;	
   end;
   TPointHelper = type helper for TPoint
     function Create(const X, Y: Integer): TPoint; cdecl; inline;
@@ -244,7 +260,10 @@ type
     function DistChebyshev(const target: TPoint): Double; cdecl;
     function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray; cdecl;
     function Row(const cells: Integer; const space: Integer = 0): TPointArray; cdecl;
-    function Column(const cells: Integer; const space: Integer = 0): TPointArray; cdecl;  
+    function Column(const cells: Integer; const space: Integer = 0): TPointArray; cdecl;
+	
+    function TArray(const size: Integer = 1): TPointArray; overload cdecl;
+    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DPointArray; overload cdecl;	
   end;
   TBoxHelper = type helper for TBox
     function Build(const X1, Y1, X2, Y2: Integer): TBox; overload; cdecl;
@@ -315,6 +334,9 @@ type
     function Centered(const area: TBox): TBox; cdecl;
     function CenterVertically(const area: TBox): TBox; cdecl;
     function CenterHorizontally(const area: TBox): TBox; cdecl;
+	
+    function TArray(const size: Integer = 1): TBoxArray; overload cdecl;
+	function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DBoxArray; overload cdecl;
   end;
   TRangeHelper = type helper for TRange
     function Neutral: Boolean; cdecl;
@@ -368,7 +390,10 @@ type
     function Value(const x: Integer): Boolean; cdecl; inline;
     function Middle: Double; cdecl;
     function Center: Integer; cdecl;
-    function Str: string; cdecl;  
+    function Str: string; cdecl;
+	
+    function TArray(const size: Integer = 1): TRangeArray; overload cdecl;
+    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DRangeArray; overload cdecl;	
   end;
   TIntegerArrayHelper = type helper for TIntegerArray
     function Add(const item: Integer; const duplicates: Boolean = True): TIntegerArray; overload; cdecl;
@@ -395,6 +420,23 @@ type
     function Distribute(const parts: Integer): T2DIntegerArray; overload; cdecl;
 	function Dump(const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl;
     function Dupe: TIntegerArray; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Equal(const target: TIntegerArray): Boolean; overload; cdecl;
+    function Extend(const item: Integer): TIntegerArray; overload; cdecl;
+    function Extend(const items: TIntegerArray): TIntegerArray; overload; cdecl;
+    function Extract(const item: Integer; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Extract(const items: TIntegerArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function ExtractEvery(const X: Integer = 1; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Fill(const item: Integer; const index: Integer = 0; const count: Integer = 2147483647): TIntegerArray; overload; cdecl;
+	function Fill(const items: TIntegerArray; const index: Integer = 0; const count: Integer = 2147483647): TIntegerArray; overload; cdecl;
+    function Filter(const item: Integer; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Filter(const items: TIntegerArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function FilterEvery(const X: Integer = 1; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Find(const ID: TRange; const item: Integer): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const item: Integer): Integer; overload; cdecl;
+    function Find(const ID: TRange; const items: TIntegerArray): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const items: TIntegerArray): Integer; overload; cdecl;
+    function Flip: Boolean; overload; cdecl;	
     function Includes(const item: Integer; const index: Integer = 2147483647): Boolean; cdecl;
 
     function Descending: Boolean; cdecl;
@@ -492,7 +534,24 @@ type
     function Distribute(const parts: Integer): T2DDoubleArray; overload; cdecl;
     function Dump(const items: TDoubleArray; const index: Integer = 0): Integer; overload; cdecl;
     function Dupe: TDoubleArray; overload; cdecl;
-    function Includes(const item: Double; const index: Integer = 2147483647): Boolean; cdecl;	
+    function Empty: Boolean; overload; cdecl;
+    function Equal(const target: TDoubleArray): Boolean; overload; cdecl;
+    function Extend(const item: Double): TDoubleArray; overload; cdecl;
+    function Extend(const items: TDoubleArray): TDoubleArray; overload; cdecl;
+    function Extract(const item: Double; const index: Integer = 0): TDoubleArray; overload; cdecl;
+    function Extract(const items: TDoubleArray; const index: Integer = 0): TDoubleArray; overload; cdecl;
+    function ExtractEvery(const X: Integer = 1; const index: Integer = 0): TDoubleArray; overload; cdecl;
+    function Fill(const item: Double; const index: Integer = 0; const count: Integer = 2147483647): TDoubleArray; overload; cdecl;
+	function Fill(const items: TDoubleArray; const index: Integer = 0; const count: Integer = 2147483647): TDoubleArray; overload; cdecl;
+    function Filter(const item: Double; const index: Integer = 0): TDoubleArray; overload; cdecl;
+    function Filter(const items: TDoubleArray; const index: Integer = 0): TDoubleArray; overload; cdecl;
+    function FilterEvery(const X: Integer = 1; const index: Integer = 0): TDoubleArray; overload; cdecl;
+    function Find(const ID: TRange; const item: Double): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const item: Double): Integer; overload; cdecl;
+    function Find(const ID: TRange; const items: TDoubleArray): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const items: TDoubleArray): Integer; overload; cdecl;
+    function Flip: Boolean; overload; cdecl;
+    function Includes(const item: Double; const index: Integer = 2147483647): Boolean; cdecl;
   end;
   TStringArrayHelper = type helper for TStringArray
     function Add(const item: string; const duplicates: Boolean = True): TStringArray; overload; cdecl;
@@ -519,6 +578,23 @@ type
     function Distribute(const parts: Integer): T2DStringArray; overload; cdecl;
     function Dump(const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl;
     function Dupe: TStringArray; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Equal(const target: TStringArray): Boolean; overload; cdecl;
+    function Extend(const item: string): TStringArray; overload; cdecl;
+    function Extend(const items: TStringArray): TStringArray; overload; cdecl;
+    function Extract(const item: string; const index: Integer = 0): TStringArray; overload; cdecl;
+    function Extract(const items: TStringArray; const index: Integer = 0): TStringArray; overload; cdecl;
+    function ExtractEvery(const X: Integer = 1; const index: Integer = 0): TStringArray; overload; cdecl;
+    function Fill(const item: string; const index: Integer = 0; const count: Integer = 2147483647): TStringArray; overload; cdecl;
+	function Fill(const items: TStringArray; const index: Integer = 0; const count: Integer = 2147483647): TStringArray; overload; cdecl;
+    function Filter(const item: string; const index: Integer = 0): TStringArray; overload; cdecl;
+    function Filter(const items: TStringArray; const index: Integer = 0): TStringArray; overload; cdecl;
+    function FilterEvery(const X: Integer = 1; const index: Integer = 0): TStringArray; overload; cdecl;
+    function Find(const ID: TRange; const item: string): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const item: string): Integer; overload; cdecl;
+    function Find(const ID: TRange; const items: TStringArray): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const items: TStringArray): Integer; overload; cdecl;
+    function Flip: Boolean; overload; cdecl;
     function Includes(const item: string; const index: Integer = 2147483647): Boolean; cdecl;	
   end;
   TCharArrayHelper = type helper for TCharArray
@@ -546,6 +622,23 @@ type
     function Distribute(const parts: Integer): T2DCharArray; overload; cdecl;
     function Dump(const items: TCharArray; const index: Integer = 0): Integer; overload; cdecl;
     function Dupe: TCharArray; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Equal(const target: TCharArray): Boolean; overload; cdecl;
+    function Extend(const item: Char): TCharArray; overload; cdecl;
+    function Extend(const items: TCharArray): TCharArray; overload; cdecl;
+    function Extract(const item: Char; const index: Integer = 0): TCharArray; overload; cdecl;
+    function Extract(const items: TCharArray; const index: Integer = 0): TCharArray; overload; cdecl;
+    function ExtractEvery(const X: Integer = 1; const index: Integer = 0): TCharArray; overload; cdecl;
+    function Fill(const item: Char; const index: Integer = 0; const count: Integer = 2147483647): TCharArray; overload; cdecl;
+	function Fill(const items: TCharArray; const index: Integer = 0; const count: Integer = 2147483647): TCharArray; overload; cdecl;
+    function Filter(const item: Char; const index: Integer = 0): TCharArray; overload; cdecl;
+    function Filter(const items: TCharArray; const index: Integer = 0): TCharArray; overload; cdecl;
+    function FilterEvery(const X: Integer = 1; const index: Integer = 0): TCharArray; overload; cdecl;
+    function Find(const ID: TRange; const item: Char): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const item: Char): Integer; overload; cdecl;
+    function Find(const ID: TRange; const items: TCharArray): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const items: TCharArray): Integer; overload; cdecl;
+    function Flip: Boolean; overload; cdecl;
     function Includes(const item: Char; const index: Integer = 2147483647): Boolean; cdecl;
   end;
   TBooleanArrayHelper = type helper for TBooleanArray
@@ -573,6 +666,23 @@ type
     function Distribute(const parts: Integer): T2DBooleanArray; overload; cdecl;
     function Dump(const items: TBooleanArray; const index: Integer = 0): Integer; overload; cdecl;
     function Dupe: TBooleanArray; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Equal(const target: TBooleanArray): Boolean; overload; cdecl;
+    function Extend(const item: Boolean): TBooleanArray; overload; cdecl;
+    function Extend(const items: TBooleanArray): TBooleanArray; overload; cdecl;
+    function Extract(const item: Boolean; const index: Integer = 0): TBooleanArray; overload; cdecl;
+    function Extract(const items: TBooleanArray; const index: Integer = 0): TBooleanArray; overload; cdecl;
+    function ExtractEvery(const X: Integer = 1; const index: Integer = 0): TBooleanArray; overload; cdecl;
+    function Fill(const item: Boolean; const index: Integer = 0; const count: Integer = 2147483647): TBooleanArray; overload; cdecl;
+	function Fill(const items: TBooleanArray; const index: Integer = 0; const count: Integer = 2147483647): TBooleanArray; overload; cdecl;
+    function Filter(const item: Boolean; const index: Integer = 0): TBooleanArray; overload; cdecl;
+    function Filter(const items: TBooleanArray; const index: Integer = 0): TBooleanArray; overload; cdecl;
+    function FilterEvery(const X: Integer = 1; const index: Integer = 0): TBooleanArray; overload; cdecl;
+    function Find(const ID: TRange; const item: Boolean): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const item: Boolean): Integer; overload; cdecl;
+    function Find(const ID: TRange; const items: TBooleanArray): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const items: TBooleanArray): Integer; overload; cdecl;
+    function Flip: Boolean; overload; cdecl;
     function Includes(const item: Boolean; const index: Integer = 2147483647): Boolean; cdecl;	
   end;
   TPointArrayHelper = type helper for TPointArray
@@ -600,6 +710,23 @@ type
     function Distribute(const parts: Integer): T2DPointArray; overload; cdecl;
     function Dump(const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl;
     function Dupe: TPointArray; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Equal(const target: TPointArray): Boolean; overload; cdecl;
+    function Extend(const item: TPoint): TPointArray; overload; cdecl;
+    function Extend(const items: TPointArray): TPointArray; overload; cdecl;
+    function Extract(const item: TPoint; const index: Integer = 0): TPointArray; overload; cdecl;
+    function Extract(const items: TPointArray; const index: Integer = 0): TPointArray; overload; cdecl;
+    function ExtractEvery(const X: Integer = 1; const index: Integer = 0): TPointArray; overload; cdecl;
+    function Fill(const item: TPoint; const index: Integer = 0; const count: Integer = 2147483647): TPointArray; overload; cdecl;
+	function Fill(const items: TPointArray; const index: Integer = 0; const count: Integer = 2147483647): TPointArray; overload; cdecl;
+    function Filter(const item: TPoint; const index: Integer = 0): TPointArray; overload; cdecl;
+    function Filter(const items: TPointArray; const index: Integer = 0): TPointArray; overload; cdecl;
+    function FilterEvery(const X: Integer = 1; const index: Integer = 0): TPointArray; overload; cdecl;
+    function Find(const ID: TRange; const item: TPoint): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const item: TPoint): Integer; overload; cdecl;
+    function Find(const ID: TRange; const items: TPointArray): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const items: TPointArray): Integer; overload; cdecl;
+    function Flip: Boolean; overload; cdecl;
     function Includes(const item: TPoint; const index: Integer = 2147483647): Boolean; cdecl;
 
     function Bounds: TBox; overload; cdecl;
@@ -636,6 +763,23 @@ type
     function Distribute(const parts: Integer): T2DBoxArray; overload; cdecl;
     function Dump(const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl;
     function Dupe: TBoxArray; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Equal(const target: TBoxArray): Boolean; overload; cdecl;
+    function Extend(const item: TBox): TBoxArray; overload; cdecl;
+    function Extend(const items: TBoxArray): TBoxArray; overload; cdecl;
+    function Extract(const item: TBox; const index: Integer = 0): TBoxArray; overload; cdecl;
+    function Extract(const items: TBoxArray; const index: Integer = 0): TBoxArray; overload; cdecl;
+    function ExtractEvery(const X: Integer = 1; const index: Integer = 0): TBoxArray; overload; cdecl;
+    function Fill(const item: TBox; const index: Integer = 0; const count: Integer = 2147483647): TBoxArray; overload; cdecl;
+	function Fill(const items: TBoxArray; const index: Integer = 0; const count: Integer = 2147483647): TBoxArray; overload; cdecl;
+    function Filter(const item: TBox; const index: Integer = 0): TBoxArray; overload; cdecl;
+    function Filter(const items: TBoxArray; const index: Integer = 0): TBoxArray; overload; cdecl;
+    function FilterEvery(const X: Integer = 1; const index: Integer = 0): TBoxArray; overload; cdecl;
+    function Find(const ID: TRange; const item: TBox): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const item: TBox): Integer; overload; cdecl;
+    function Find(const ID: TRange; const items: TBoxArray): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const items: TBoxArray): Integer; overload; cdecl;
+    function Flip: Boolean; overload; cdecl;
     function Includes(const item: TBox; const index: Integer = 2147483647): Boolean; cdecl;	
   end;
   TRangeArrayHelper = type helper for TRangeArray
@@ -663,7 +807,24 @@ type
     function Distribute(const parts: Integer): T2DRangeArray; overload; cdecl;
     function Dump(const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl;
     function Dupe: TRangeArray; overload; cdecl;
-    function Includes(const item: TRange; const index: Integer = 2147483647): Boolean; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Equal(const target: TRangeArray): Boolean; overload; cdecl;
+    function Extend(const item: TRange): TRangeArray; overload; cdecl;
+    function Extend(const items: TRangeArray): TRangeArray; overload; cdecl;
+    function Extract(const item: TRange; const index: Integer = 0): TRangeArray; overload; cdecl;
+    function Extract(const items: TRangeArray; const index: Integer = 0): TRangeArray; overload; cdecl;
+    function ExtractEvery(const X: Integer = 1; const index: Integer = 0): TRangeArray; overload; cdecl;
+    function Fill(const item: TRange; const index: Integer = 0; const count: Integer = 2147483647): TRangeArray; overload; cdecl;
+	function Fill(const items: TRangeArray; const index: Integer = 0; const count: Integer = 2147483647): TRangeArray; overload; cdecl;
+    function Filter(const item: TRange; const index: Integer = 0): TRangeArray; overload; cdecl;
+    function Filter(const items: TRangeArray; const index: Integer = 0): TRangeArray; overload; cdecl;
+    function FilterEvery(const X: Integer = 1; const index: Integer = 0): TRangeArray; overload; cdecl;
+    function Find(const ID: TRange; const item: TRange): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const item: TRange): Integer; overload; cdecl;
+    function Find(const ID: TRange; const items: TRangeArray): Integer; overload; cdecl;
+    function Find(const ID: TIntegerArray; const items: TRangeArray): Integer; overload; cdecl;
+    function Flip: Boolean; overload; cdecl;
+	function Includes(const item: TRange; const index: Integer = 2147483647): Boolean; cdecl;
 
     function TIA: TIntegerArray; cdecl;
     function T2DIA: T2DIntegerArray; cdecl;  
@@ -696,160 +857,6 @@ procedure Swap(var A, B: Boolean); overload; inline;
 procedure Swap(var A, B: TPoint); overload; inline;
 procedure Swap(var A, B: TBox); overload; inline;
 procedure Swap(var A, B: TRange); overload; inline;
-
-function TArray_Empty(const arr: TIntegerArray): Boolean; overload; cdecl;
-function TArray_Empty(const arr: TDoubleArray): Boolean; overload; cdecl;
-function TArray_Empty(const arr: TStringArray): Boolean; overload; cdecl;
-function TArray_Empty(const arr: TCharArray): Boolean; overload; cdecl;
-function TArray_Empty(const arr: TBooleanArray): Boolean; overload; cdecl;
-function TArray_Empty(const arr: TPointArray): Boolean; overload; cdecl;
-function TArray_Empty(const arr: TBoxArray): Boolean; overload; cdecl;
-function TArray_Empty(const arr: TRangeArray): Boolean; overload; cdecl;
-function TArray_Empty(const arr: Integer): TIntegerArray; overload; cdecl;
-function TArray_Empty(const arr: Double): TDoubleArray; overload; cdecl;
-function TArray_Empty(const arr: string): TStringArray; overload; cdecl;
-function TArray_Empty(const arr: Char): TCharArray; overload; cdecl;
-function TArray_Empty(const arr: Boolean): TBooleanArray; overload; cdecl;
-function TArray_Empty(const arr: TPoint): TPointArray; overload; cdecl;
-function TArray_Empty(const arr: TBox): TBoxArray; overload; cdecl;
-function TArray_Empty(const arr: TRange): TRangeArray; overload; cdecl;
-
-function TArray_Equal(const arr, target: TIntegerArray): Boolean; overload; cdecl;
-function TArray_Equal(const arr, target: TDoubleArray): Boolean; overload; cdecl;
-function TArray_Equal(const arr, target: TStringArray): Boolean; overload; cdecl;
-function TArray_Equal(const arr, target: TCharArray): Boolean; overload; cdecl;
-function TArray_Equal(const arr, target: TBooleanArray): Boolean; overload; cdecl;
-function TArray_Equal(const arr, target: TPointArray): Boolean; overload; cdecl;
-function TArray_Equal(const arr, target: TBoxArray): Boolean; overload; cdecl;
-function TArray_Equal(const arr, target: TRangeArray): Boolean; overload; cdecl;
-
-function TArray_Extend(const arr: TIntegerArray; const item: Integer): TIntegerArray; overload; cdecl;
-function TArray_Extend(const arr: TDoubleArray; const item: Double): TDoubleArray; overload; cdecl;
-function TArray_Extend(const arr: TStringArray; const item: string): TStringArray; overload; cdecl;
-function TArray_Extend(const arr: TCharArray; const item: Char): TCharArray; overload; cdecl;
-function TArray_Extend(const arr: TBooleanArray; const item: Boolean): TBooleanArray; overload; cdecl;
-function TArray_Extend(const arr: TPointArray; const item: TPoint): TPointArray; overload; cdecl;
-function TArray_Extend(const arr: TBoxArray; const item: TBox): TBoxArray; overload; cdecl;
-function TArray_Extend(const arr: TRangeArray; const item: TRange): TRangeArray; overload; cdecl;
-function TArray_Extend(const arr: TIntegerArray; const items: TIntegerArray): TIntegerArray; overload; cdecl;
-function TArray_Extend(const arr: TDoubleArray; const items: TDoubleArray): TDoubleArray; overload; cdecl;
-function TArray_Extend(const arr: TStringArray; const items: TStringArray): TStringArray; overload; cdecl;
-function TArray_Extend(const arr: TCharArray; const items: TCharArray): TCharArray; overload; cdecl;
-function TArray_Extend(const arr: TBooleanArray; const items: TBooleanArray): TBooleanArray; overload; cdecl;
-function TArray_Extend(const arr: TPointArray; const items: TPointArray): TPointArray; overload; cdecl;
-function TArray_Extend(const arr: TBoxArray; const items: TBoxArray): TBoxArray; overload; cdecl;
-function TArray_Extend(const arr: TRangeArray; const items: TRangeArray): TRangeArray; overload; cdecl;
-
-function TArray_Extract(const arr: TIntegerArray; const item: Integer; const index: Integer = 0): TIntegerArray; overload; cdecl;
-function TArray_Extract(const arr: TDoubleArray; const item: Double; const index: Integer = 0): TDoubleArray; overload; cdecl;
-function TArray_Extract(const arr: TStringArray; const item: string; const index: Integer = 0): TStringArray; overload; cdecl;
-function TArray_Extract(const arr: TCharArray; const item: Char; const index: Integer = 0): TCharArray; overload; cdecl;
-function TArray_Extract(const arr: TBooleanArray; const item: Boolean; const index: Integer = 0): TBooleanArray; overload; cdecl;
-function TArray_Extract(const arr: TPointArray; const item: TPoint; const index: Integer = 0): TPointArray; overload; cdecl;
-function TArray_Extract(const arr: TBoxArray; const item: TBox; const index: Integer = 0): TBoxArray; overload; cdecl;
-function TArray_Extract(const arr: TRangeArray; const item: TRange; const index: Integer = 0): TRangeArray; overload; cdecl;
-function TArray_Extract(const arr: TIntegerArray; const items: TIntegerArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
-function TArray_Extract(const arr: TDoubleArray; const items: TDoubleArray; const index: Integer = 0): TDoubleArray; overload; cdecl;
-function TArray_Extract(const arr: TStringArray; const items: TStringArray; const index: Integer = 0): TStringArray; overload; cdecl;
-function TArray_Extract(const arr: TCharArray; const items: TCharArray; const index: Integer = 0): TCharArray; overload; cdecl;
-function TArray_Extract(const arr: TBooleanArray; const items: TBooleanArray; const index: Integer = 0): TBooleanArray; overload; cdecl;
-function TArray_Extract(const arr: TPointArray; const items: TPointArray; const index: Integer = 0): TPointArray; overload; cdecl;
-function TArray_Extract(const arr: TBoxArray; const items: TBoxArray; const index: Integer = 0): TBoxArray; overload; cdecl;
-function TArray_Extract(const arr: TRangeArray; const items: TRangeArray; const index: Integer = 0): TRangeArray; overload; cdecl;
-
-function TArray_ExtractEvery(const arr: TIntegerArray; const X: Integer = 1; const index: Integer = 0): TIntegerArray; overload; cdecl;
-function TArray_ExtractEvery(const arr: TDoubleArray; const X: Integer = 1; const index: Integer = 0): TDoubleArray; overload; cdecl;
-function TArray_ExtractEvery(const arr: TStringArray; const X: Integer = 1; const index: Integer = 0): TStringArray; overload; cdecl;
-function TArray_ExtractEvery(const arr: TCharArray; const X: Integer = 1; const index: Integer = 0): TCharArray; overload; cdecl;
-function TArray_ExtractEvery(const arr: TBooleanArray; const X: Integer = 1; const index: Integer = 0): TBooleanArray; overload; cdecl;
-function TArray_ExtractEvery(const arr: TPointArray; const X: Integer = 1; const index: Integer = 0): TPointArray; overload; cdecl;
-function TArray_ExtractEvery(const arr: TBoxArray; const X: Integer = 1; const index: Integer = 0): TBoxArray; overload; cdecl;
-function TArray_ExtractEvery(const arr: TRangeArray; const X: Integer = 1; const index: Integer = 0): TRangeArray; overload; cdecl;
-
-function TArray_Fill(const arr: TIntegerArray; const item: Integer; const index: Integer = 0; const count: Integer = 2147483647): TIntegerArray; overload; cdecl;
-function TArray_Fill(const arr: TDoubleArray; const item: Double; const index: Integer = 0; const count: Integer = 2147483647): TDoubleArray; overload; cdecl;
-function TArray_Fill(const arr: TStringArray; const item: string; const index: Integer = 0; const count: Integer = 2147483647): TStringArray; overload; cdecl;
-function TArray_Fill(const arr: TCharArray; const item: Char; const index: Integer = 0; const count: Integer = 2147483647): TCharArray; overload; cdecl;
-function TArray_Fill(const arr: TBooleanArray; const item: Boolean; const index: Integer = 0; const count: Integer = 2147483647): TBooleanArray; overload; cdecl;
-function TArray_Fill(const arr: TPointArray; const item: TPoint; const index: Integer = 0; const count: Integer = 2147483647): TPointArray; overload; cdecl;
-function TArray_Fill(const arr: TBoxArray; const item: TBox; const index: Integer = 0; const count: Integer = 2147483647): TBoxArray; overload; cdecl;
-function TArray_Fill(const arr: TRangeArray; const item: TRange; const index: Integer = 0; const count: Integer = 2147483647): TRangeArray; overload; cdecl;
-function TArray_Fill(const arr: TIntegerArray; const items: TIntegerArray; const index: Integer = 0; const count: Integer = 2147483647): TIntegerArray; overload; cdecl;
-function TArray_Fill(const arr: TDoubleArray; const items: TDoubleArray; const index: Integer = 0; const count: Integer = 2147483647): TDoubleArray; overload; cdecl;
-function TArray_Fill(const arr: TStringArray; const items: TStringArray; const index: Integer = 0; const count: Integer = 2147483647): TStringArray; overload; cdecl;
-function TArray_Fill(const arr: TCharArray; const items: TCharArray; const index: Integer = 0; const count: Integer = 2147483647): TCharArray; overload; cdecl;
-function TArray_Fill(const arr: TBooleanArray; const items: TBooleanArray; const index: Integer = 0; const count: Integer = 2147483647): TBooleanArray; overload; cdecl;
-function TArray_Fill(const arr: TPointArray; const items: TPointArray; const index: Integer = 0; const count: Integer = 2147483647): TPointArray; overload; cdecl;
-function TArray_Fill(const arr: TBoxArray; const items: TBoxArray; const index: Integer = 0; const count: Integer = 2147483647): TBoxArray; overload; cdecl;
-function TArray_Fill(const arr: TRangeArray; const items: TRangeArray; const index: Integer = 0; const count: Integer = 2147483647): TRangeArray; overload; cdecl;
-
-function TArray_Filter(const arr: TIntegerArray; const item: Integer; const index: Integer = 0): TIntegerArray; overload; cdecl;
-function TArray_Filter(const arr: TDoubleArray; const item: Double; const index: Integer = 0): TDoubleArray; overload; cdecl;
-function TArray_Filter(const arr: TStringArray; const item: string; const index: Integer = 0): TStringArray; overload; cdecl;
-function TArray_Filter(const arr: TCharArray; const item: Char; const index: Integer = 0): TCharArray; overload; cdecl;
-function TArray_Filter(const arr: TBooleanArray; const item: Boolean; const index: Integer = 0): TBooleanArray; overload; cdecl;
-function TArray_Filter(const arr: TPointArray; const item: TPoint; const index: Integer = 0): TPointArray; overload; cdecl;
-function TArray_Filter(const arr: TBoxArray; const item: TBox; const index: Integer = 0): TBoxArray; overload; cdecl;
-function TArray_Filter(const arr: TRangeArray; const item: TRange; const index: Integer = 0): TRangeArray; overload; cdecl;
-function TArray_Filter(const arr: TIntegerArray; const items: TIntegerArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
-function TArray_Filter(const arr: TDoubleArray; const items: TDoubleArray; const index: Integer = 0): TDoubleArray; overload; cdecl;
-function TArray_Filter(const arr: TStringArray; const items: TStringArray; const index: Integer = 0): TStringArray; overload; cdecl;
-function TArray_Filter(const arr: TCharArray; const items: TCharArray; const index: Integer = 0): TCharArray; overload; cdecl;
-function TArray_Filter(const arr: TBooleanArray; const items: TBooleanArray; const index: Integer = 0): TBooleanArray; overload; cdecl;
-function TArray_Filter(const arr: TPointArray; const items: TPointArray; const index: Integer = 0): TPointArray; overload; cdecl;
-function TArray_Filter(const arr: TBoxArray; const items: TBoxArray; const index: Integer = 0): TBoxArray; overload; cdecl;
-function TArray_Filter(const arr: TRangeArray; const items: TRangeArray; const index: Integer = 0): TRangeArray; overload; cdecl;
-
-function TArray_FilterEvery(const arr: TIntegerArray; const X: Integer = 1; const index: Integer = 0): TIntegerArray; overload; cdecl;
-function TArray_FilterEvery(const arr: TDoubleArray; const X: Integer = 1; const index: Integer = 0): TDoubleArray; overload; cdecl;
-function TArray_FilterEvery(const arr: TStringArray; const X: Integer = 1; const index: Integer = 0): TStringArray; overload; cdecl;
-function TArray_FilterEvery(const arr: TCharArray; const X: Integer = 1; const index: Integer = 0): TCharArray; overload; cdecl;
-function TArray_FilterEvery(const arr: TBooleanArray; const X: Integer = 1; const index: Integer = 0): TBooleanArray; overload; cdecl;
-function TArray_FilterEvery(const arr: TPointArray; const X: Integer = 1; const index: Integer = 0): TPointArray; overload; cdecl;
-function TArray_FilterEvery(const arr: TBoxArray; const X: Integer = 1; const index: Integer = 0): TBoxArray; overload; cdecl;
-function TArray_FilterEvery(const arr: TRangeArray; const X: Integer = 1; const index: Integer = 0): TRangeArray; overload; cdecl;
-
-function TArray_Find(const arr: TIntegerArray; const IDs: TRange; const item: Integer): Integer; overload; cdecl;
-function TArray_Find(const arr: TDoubleArray; const IDs: TRange; const item: Double): Integer; overload; cdecl;
-function TArray_Find(const arr: TStringArray; const IDs: TRange; const item: string): Integer; overload; cdecl;
-function TArray_Find(const arr: TCharArray; const IDs: TRange; const item: Char): Integer; overload; cdecl;
-function TArray_Find(const arr: TBooleanArray; const IDs: TRange; const item: Boolean): Integer; overload; cdecl;
-function TArray_Find(const arr: TPointArray; const IDs: TRange; const item: TPoint): Integer; overload; cdecl;
-function TArray_Find(const arr: TBoxArray; const IDs: TRange; const item: TBox): Integer; overload; cdecl;
-function TArray_Find(const arr: TRangeArray; const IDs: TRange; const item: TRange): Integer; overload; cdecl;
-function TArray_Find(const arr: TIntegerArray; const IDs: TIntegerArray; const item: Integer): Integer; overload; cdecl;
-function TArray_Find(const arr: TDoubleArray; const IDs: TIntegerArray; const item: Double): Integer; overload; cdecl;
-function TArray_Find(const arr: TStringArray; const IDs: TIntegerArray; const item: string): Integer; overload; cdecl;
-function TArray_Find(const arr: TCharArray; const IDs: TIntegerArray; const item: Char): Integer; overload; cdecl;
-function TArray_Find(const arr: TBooleanArray; const IDs: TIntegerArray; const item: Boolean): Integer; overload; cdecl;
-function TArray_Find(const arr: TPointArray; const IDs: TIntegerArray; const item: TPoint): Integer; overload; cdecl;
-function TArray_Find(const arr: TBoxArray; const IDs: TIntegerArray; const item: TBox): Integer; overload; cdecl;
-function TArray_Find(const arr: TRangeArray; const IDs: TIntegerArray; const item: TRange): Integer; overload; cdecl;
-function TArray_Find(const arr: TIntegerArray; const IDs: TRange; const items: TIntegerArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TDoubleArray; const IDs: TRange; const items: TDoubleArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TStringArray; const IDs: TRange; const items: TStringArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TCharArray; const IDs: TRange; const items: TCharArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TBooleanArray; const IDs: TRange; const items: TBooleanArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TPointArray; const IDs: TRange; const items: TPointArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TBoxArray; const IDs: TRange; const items: TBoxArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TRangeArray; const IDs: TRange; const items: TRangeArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TIntegerArray; const IDs: TIntegerArray; const items: TIntegerArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TDoubleArray; const IDs: TIntegerArray; const items: TDoubleArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TStringArray; const IDs: TIntegerArray; const items: TStringArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TCharArray; const IDs: TIntegerArray; const items: TCharArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TBooleanArray; const IDs: TIntegerArray; const items: TBooleanArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TPointArray; const IDs: TIntegerArray; const items: TPointArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TBoxArray; const IDs: TIntegerArray; const items: TBoxArray): Integer; overload; cdecl;
-function TArray_Find(const arr: TRangeArray; const IDs: TIntegerArray; const items: TRangeArray): Integer; overload; cdecl;
-
-function TArray_Flip(var arr: TIntegerArray): Boolean; overload; cdecl;
-function TArray_Flip(var arr: TDoubleArray): Boolean; overload; cdecl;
-function TArray_Flip(var arr: TStringArray): Boolean; overload; cdecl;
-function TArray_Flip(var arr: TCharArray): Boolean; overload; cdecl;
-function TArray_Flip(var arr: TBooleanArray): Boolean; overload; cdecl;
-function TArray_Flip(var arr: TPointArray): Boolean; overload; cdecl;
-function TArray_Flip(var arr: TBoxArray): Boolean; overload; cdecl;
-function TArray_Flip(var arr: TRangeArray): Boolean; overload; cdecl;
 
 function TArray_Get(const arr: TIntegerArray): TIntegerArray; overload; cdecl;
 function TArray_Get(const arr: TDoubleArray): TDoubleArray; overload; cdecl;

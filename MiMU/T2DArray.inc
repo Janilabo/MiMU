@@ -1,4 +1,23 @@
 {==============================================================================]
+ <var.T2DArray(size1D, size2D: Integer): T2DArray>
+ @action: Creates 2D array with Self.
+ @note: None.
+[==============================================================================}
+{$IFDEF var_T2DArray}
+var
+  i, j: Integer;
+begin
+  SetLength(Result, size1D);
+  for i := 0 to High(Result) do
+  begin
+    SetLength(Result[i], size2D);
+	for j := 0 to High(Result[i]) do
+      Result[i][j] := Self;
+  end;
+end;
+{$ENDIF}
+
+{==============================================================================]
  <T2DArray_Blank(arr: TArray; parts: Integer): T2DArray>
  @action: Returns true if array is blank (no inventory, only empty indexes of []).
  @note: Blank array could be for example [[], [], []]. Returns false if array contains any items.
