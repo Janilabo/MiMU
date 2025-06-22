@@ -98,7 +98,7 @@ type
     function Oversize(const limit: Integer): Boolean; cdecl; inline;
     function Undersize(const limit: Integer): Boolean; cdecl; inline;
 	
-	function TArray(const size: Integer = 1): TIntegerArray; overload cdecl;
+	function TArray(const aSize: Integer = 1): TIntegerArray; overload cdecl;
 	function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DIntegerArray; overload cdecl;
   end;
   TInt64Helper = type helper for Int64
@@ -148,7 +148,7 @@ type
     function Oversize(const limit: Double): Boolean; cdecl;
     function Undersize(const limit: Double): Boolean; cdecl;
 	
-	function TArray(const size: Integer = 1): TDoubleArray; overload cdecl;
+	function TArray(const aSize: Integer = 1): TDoubleArray; overload cdecl;
     function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DDoubleArray; overload cdecl;
   end;
   TStringHelper = type helper for string
@@ -201,11 +201,11 @@ type
     function IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
     function IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
 	
-    function TArray(const size: Integer = 1): TStringArray; overload cdecl;
+    function TArray(const aSize: Integer = 1): TStringArray; overload cdecl;
     function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DStringArray; overload cdecl;	
   end;
   TCharHelper = type helper for Char
-    function TArray(const size: Integer = 1): TCharArray; overload cdecl;
+    function TArray(const aSize: Integer = 1): TCharArray; overload cdecl;
     function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DCharArray; overload cdecl;
   end;
   TBooleanHelper = type helper for Boolean
@@ -242,7 +242,7 @@ type
     function SwitchOn(const state: Boolean): Boolean; cdecl;
     function SwitchOff(const state: Boolean): Boolean; cdecl;
 	
-    function TArray(const size: Integer = 1): TBooleanArray; overload cdecl;
+    function TArray(const aSize: Integer = 1): TBooleanArray; overload cdecl;
     function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DBooleanArray; overload cdecl;	
   end;
   TPointHelper = type helper for TPoint
@@ -262,7 +262,7 @@ type
     function Row(const cells: Integer; const space: Integer = 0): TPointArray; cdecl;
     function Column(const cells: Integer; const space: Integer = 0): TPointArray; cdecl;
 	
-    function TArray(const size: Integer = 1): TPointArray; overload cdecl;
+    function TArray(const aSize: Integer = 1): TPointArray; overload cdecl;
     function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DPointArray; overload cdecl;	
   end;
   TBoxHelper = type helper for TBox
@@ -335,7 +335,7 @@ type
     function CenterVertically(const area: TBox): TBox; cdecl;
     function CenterHorizontally(const area: TBox): TBox; cdecl;
 	
-    function TArray(const size: Integer = 1): TBoxArray; overload cdecl;
+    function TArray(const aSize: Integer = 1): TBoxArray; overload cdecl;
 	function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DBoxArray; overload cdecl;
   end;
   TRangeHelper = type helper for TRange
@@ -392,7 +392,7 @@ type
     function Center: Integer; cdecl;
     function Str: string; cdecl;
 	
-    function TArray(const size: Integer = 1): TRangeArray; overload cdecl;
+    function TArray(const aSize: Integer = 1): TRangeArray; overload cdecl;
     function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DRangeArray; overload cdecl;	
   end;
   TIntegerArrayHelper = type helper for TIntegerArray
@@ -403,11 +403,11 @@ type
 	function AllUnique: Boolean; overload; cdecl;
     function Append(const item: Integer; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TIntegerArray; const duplicates: Boolean = True): Integer; overload; cdecl;
-    function Build(const item: Integer; const size: Integer = 1): TIntegerArray; overload; cdecl;
+    function Build(const item: Integer; const aSize: Integer = 1): TIntegerArray; overload; cdecl;
     function BuiltWith(const allowed: TIntegerArray): Boolean; overload; cdecl;
     function BuiltWithout(const forbidden: TIntegerArray): Boolean; overload; cdecl;
     function Create(const item: Integer): TIntegerArray; overload; cdecl;
-    function Create(const size: Integer; const item: Integer): TIntegerArray; overload; cdecl;
+    function Create(const aSize: Integer; const item: Integer): TIntegerArray; overload; cdecl;
     function Clear: Boolean; cdecl;
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TIntegerArray; cdecl;
     function Clone(const ID: TIntegerArray): TIntegerArray; overload; cdecl;
@@ -447,7 +447,16 @@ type
     function IDs(const ID: TIntegerArray; const item: Integer): TIntegerArray; overload; cdecl;
     function IDs(const ID: TIntegerArray; const items: TIntegerArray): TIntegerArray; overload; cdecl;
     function Includes(const item: Integer; const index: Integer = 2147483647): Boolean; cdecl;
+    function Len: Integer; overload; cdecl;
+    function Len(const aSize: Integer): Integer; overload; cdecl;
+    function Len(const aSize: Integer; const null: Integer): Integer; overload; cdecl;
     function Keep(const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl;
+    function LeastFrequent: Integer; overload; cdecl;
+    function MostFrequent: Integer; overload; cdecl;
+    function Resize(const aChange: Integer): Integer; overload; cdecl;
+    function Resize(const aChange: Integer; const null: Integer): Integer; overload; cdecl;
+    function Size(const aSize: Integer): Integer; overload; cdecl;
+    function Size: Integer; overload; cdecl;
 
     function Descending: Boolean; cdecl;
     function Ascending: Boolean; cdecl;
@@ -470,8 +479,8 @@ type
     function Median: Double; cdecl;
     function Middle: Double; cdecl;
     function Center: Integer; cdecl;
-    function MostFrequent(const null: Integer = -2147483648): Integer; cdecl;
-    function LeastFrequent(const null: Integer = -2147483648): Integer; cdecl;
+    function MFrequent(const null: Integer = -2147483648): Integer; cdecl;
+    function LFrequent(const null: Integer = -2147483648): Integer; cdecl;
     function BubbleSort(const ascending: Boolean = True): Integer; cdecl;
     function BubbleSort2(const ascending: Boolean = True): Integer; cdecl;
     function BubbleSortOptimized(const ascending: Boolean = True): Integer; cdecl;
@@ -527,11 +536,11 @@ type
 	function AllUnique: Boolean; overload; cdecl;
     function Append(const item: Double; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TDoubleArray; const duplicates: Boolean = True): Integer; overload; cdecl;
-    function Build(const item: Double; const size: Integer = 1): TDoubleArray; overload; cdecl;
+    function Build(const item: Double; const aSize: Integer = 1): TDoubleArray; overload; cdecl;
     function BuiltWith(const allowed: TDoubleArray): Boolean; overload; cdecl;
     function BuiltWithout(const forbidden: TDoubleArray): Boolean; overload; cdecl;
     function Create(const item: Double): TDoubleArray; overload; cdecl;
-    function Create(const size: Integer; const item: Double): TDoubleArray; overload; cdecl;
+    function Create(const aSize: Integer; const item: Double): TDoubleArray; overload; cdecl;
     function Clear: Boolean; cdecl;
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TDoubleArray; cdecl;
     function Clone(const ID: TIntegerArray): TDoubleArray; overload; cdecl;
@@ -571,7 +580,16 @@ type
     function IDs(const ID: TIntegerArray; const item: Double): TDoubleArray; overload; cdecl;
     function IDs(const ID: TIntegerArray; const items: TDoubleArray): TDoubleArray; overload; cdecl;
     function Includes(const item: Double; const index: Integer = 2147483647): Boolean; cdecl;
+    function Len: Integer; overload; cdecl;
+    function Len(const aSize: Integer): Integer; overload; cdecl;
+    function Len(const aSize: Integer; const null: Double): Integer; overload; cdecl;
     function Keep(const items: TDoubleArray; const index: Integer = 0): Integer; overload; cdecl;
+    function LeastFrequent: Double; overload; cdecl;
+    function MostFrequent: Double; overload; cdecl;
+    function Resize(const aChange: Integer): Integer; overload; cdecl;
+    function Resize(const aChange: Integer; const null: Double): Integer; overload; cdecl;
+    function Size(const aSize: Integer): Integer; overload; cdecl;
+    function Size: Integer; overload; cdecl;
   end;
   TStringArrayHelper = type helper for TStringArray
     function Add(const item: string; const duplicates: Boolean = True): TStringArray; overload; cdecl;
@@ -581,11 +599,11 @@ type
 	function AllUnique: Boolean; overload; cdecl;
     function Append(const item: string; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TStringArray; const duplicates: Boolean = True): Integer; overload; cdecl;
-    function Build(const item: string; const size: Integer = 1): TStringArray; overload; cdecl;
+    function Build(const item: string; const aSize: Integer = 1): TStringArray; overload; cdecl;
     function BuiltWith(const allowed: TStringArray): Boolean; overload; cdecl;
     function BuiltWithout(const forbidden: TStringArray): Boolean; overload; cdecl;
     function Create(const item: string): TStringArray; overload; cdecl;
-    function Create(const size: Integer; const item: string): TStringArray; overload; cdecl;
+    function Create(const aSize: Integer; const item: string): TStringArray; overload; cdecl;
     function Clear: Boolean; cdecl;
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TStringArray; cdecl;
     function Clone(const ID: TIntegerArray): TStringArray; overload; cdecl;
@@ -625,7 +643,16 @@ type
     function IDs(const ID: TIntegerArray; const item: string): TStringArray; overload; cdecl;
     function IDs(const ID: TIntegerArray; const items: TStringArray): TStringArray; overload; cdecl;
     function Includes(const item: string; const index: Integer = 2147483647): Boolean; cdecl;
-    function Keep(const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl;	
+    function Len: Integer; overload; cdecl;
+    function Len(const aSize: Integer): Integer; overload; cdecl;
+    function Len(const aSize: Integer; const null: string): Integer; overload; cdecl;
+    function Keep(const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl;
+    function LeastFrequent: string; overload; cdecl;
+    function MostFrequent: string; overload; cdecl;
+    function Resize(const aChange: Integer): Integer; overload; cdecl;
+    function Resize(const aChange: Integer; const null: string): Integer; overload; cdecl;
+    function Size(const aSize: Integer): Integer; overload; cdecl;
+    function Size: Integer; overload; cdecl;
   end;
   TCharArrayHelper = type helper for TCharArray
     function Add(const item: Char; const duplicates: Boolean = True): TCharArray; overload; cdecl;
@@ -635,11 +662,11 @@ type
 	function AllUnique: Boolean; overload; cdecl;
     function Append(const item: Char; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TCharArray; const duplicates: Boolean = True): Integer; overload; cdecl;
-    function Build(const item: Char; const size: Integer = 1): TCharArray; overload; cdecl;
+    function Build(const item: Char; const aSize: Integer = 1): TCharArray; overload; cdecl;
     function BuiltWith(const allowed: TCharArray): Boolean; overload; cdecl;
     function BuiltWithout(const forbidden: TCharArray): Boolean; overload; cdecl;
     function Create(const item: Char): TCharArray; overload; cdecl;
-    function Create(const size: Integer; const item: Char): TCharArray; overload; cdecl;
+    function Create(const aSize: Integer; const item: Char): TCharArray; overload; cdecl;
     function Clear: Boolean; cdecl;
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TCharArray; cdecl;
     function Clone(const ID: TIntegerArray): TCharArray; overload; cdecl;
@@ -679,7 +706,16 @@ type
     function IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
     function IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
     function Includes(const item: Char; const index: Integer = 2147483647): Boolean; cdecl;
+    function Len: Integer; overload; cdecl;
+    function Len(const aSize: Integer): Integer; overload; cdecl;
+    function Len(const aSize: Integer; const null: Char): Integer; overload; cdecl;
     function Keep(const items: TCharArray; const index: Integer = 0): Integer; overload; cdecl;
+    function LeastFrequent: Char; overload; cdecl;
+    function MostFrequent: Char; overload; cdecl;
+    function Resize(const aChange: Integer): Integer; overload; cdecl;
+    function Resize(const aChange: Integer; const null: Char): Integer; overload; cdecl;
+    function Size(const aSize: Integer): Integer; overload; cdecl;
+    function Size: Integer; overload; cdecl;
   end;
   TBooleanArrayHelper = type helper for TBooleanArray
     function Add(const item: Boolean; const duplicates: Boolean = True): TBooleanArray; overload; cdecl;
@@ -689,11 +725,11 @@ type
 	function AllUnique: Boolean; overload; cdecl;
     function Append(const item: Boolean; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TBooleanArray; const duplicates: Boolean = True): Integer; overload; cdecl;
-    function Build(const item: Boolean; const size: Integer = 1): TBooleanArray; overload; cdecl;
+    function Build(const item: Boolean; const aSize: Integer = 1): TBooleanArray; overload; cdecl;
     function BuiltWith(const allowed: TBooleanArray): Boolean; overload; cdecl;
     function BuiltWithout(const forbidden: TBooleanArray): Boolean; overload; cdecl;
     function Create(const item: Boolean): TBooleanArray; overload; cdecl;
-    function Create(const size: Integer; const item: Boolean): TBooleanArray; overload; cdecl;
+    function Create(const aSize: Integer; const item: Boolean): TBooleanArray; overload; cdecl;
     function Clear: Boolean; cdecl;
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TBooleanArray; cdecl;
     function Clone(const ID: TIntegerArray): TBooleanArray; overload; cdecl;
@@ -733,7 +769,16 @@ type
     function IDs(const ID: TIntegerArray; const item: Boolean): TBooleanArray; overload; cdecl;
     function IDs(const ID: TIntegerArray; const items: TBooleanArray): TBooleanArray; overload; cdecl; 
     function Includes(const item: Boolean; const index: Integer = 2147483647): Boolean; cdecl;
+    function Len: Integer; overload; cdecl;
+    function Len(const aSize: Integer): Integer; overload; cdecl;
+    function Len(const aSize: Integer; const null: Boolean): Integer; overload; cdecl;
     function Keep(const items: TBooleanArray; const index: Integer = 0): Integer; overload; cdecl;
+    function LeastFrequent: Boolean; overload; cdecl;
+    function MostFrequent: Boolean; overload; cdecl;
+    function Resize(const aChange: Integer): Integer; overload; cdecl;
+    function Resize(const aChange: Integer; const null: Boolean): Integer; overload; cdecl;
+    function Size(const aSize: Integer): Integer; overload; cdecl;
+    function Size: Integer; overload; cdecl;
   end;
   TPointArrayHelper = type helper for TPointArray
     function Add(const item: TPoint; const duplicates: Boolean = True): TPointArray; overload; cdecl;
@@ -743,11 +788,11 @@ type
 	function AllUnique: Boolean; overload; cdecl;
     function Append(const item: TPoint; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TPointArray; const duplicates: Boolean = True): Integer; overload; cdecl;
-    function Build(const item: TPoint; const size: Integer = 1): TPointArray; overload; cdecl;
+    function Build(const item: TPoint; const aSize: Integer = 1): TPointArray; overload; cdecl;
     function BuiltWith(const allowed: TPointArray): Boolean; overload; cdecl;
     function BuiltWithout(const forbidden: TPointArray): Boolean; overload; cdecl;
     function Create(const item: TPoint): TPointArray; overload; cdecl;
-    function Create(const size: Integer; const item: TPoint): TPointArray; overload; cdecl;
+    function Create(const aSize: Integer; const item: TPoint): TPointArray; overload; cdecl;
     function Clear: Boolean; cdecl;
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TPointArray; cdecl;
     function Clone(const ID: TIntegerArray): TPointArray; overload; cdecl;
@@ -787,7 +832,16 @@ type
     function IDs(const ID: TIntegerArray; const item: TPoint): TPointArray; overload; cdecl;
     function IDs(const ID: TIntegerArray; const items: TPointArray): TPointArray; overload; cdecl;
     function Includes(const item: TPoint; const index: Integer = 2147483647): Boolean; cdecl;
+    function Len: Integer; overload; cdecl;
+    function Len(const aSize: Integer): Integer; overload; cdecl;
+    function Len(const aSize: Integer; const null: TPoint): Integer; overload; cdecl;
     function Keep(const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl;
+    function LeastFrequent: TPoint; overload; cdecl;
+    function MostFrequent: TPoint; overload; cdecl;
+    function Resize(const aChange: Integer): Integer; overload; cdecl;
+    function Resize(const aChange: Integer; const null: TPoint): Integer; overload; cdecl;
+	function Size(const aSize: Integer): Integer; overload; cdecl;
+    function Size: Integer; overload; cdecl;
 
     function Bounds: TBox; overload; cdecl;
     function Bounds(var width, height: Integer): TBox; overload; cdecl;
@@ -806,11 +860,11 @@ type
 	function AllUnique: Boolean; overload; cdecl;
     function Append(const item: TBox; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TBoxArray; const duplicates: Boolean = True): Integer; overload; cdecl;
-    function Build(const item: TBox; const size: Integer = 1): TBoxArray; overload; cdecl;
+    function Build(const item: TBox; const aSize: Integer = 1): TBoxArray; overload; cdecl;
     function BuiltWith(const allowed: TBoxArray): Boolean; overload; cdecl;
     function BuiltWithout(const forbidden: TBoxArray): Boolean; overload; cdecl;
     function Create(const item: TBox): TBoxArray; overload; cdecl;
-    function Create(const size: Integer; const item: TBox): TBoxArray; overload; cdecl;
+    function Create(const aSize: Integer; const item: TBox): TBoxArray; overload; cdecl;
     function Clear: Boolean; cdecl;
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TBoxArray; cdecl;
     function Clone(const ID: TIntegerArray): TBoxArray; overload; cdecl;
@@ -850,7 +904,16 @@ type
     function IDs(const ID: TIntegerArray; const item: TBox): TBoxArray; overload; cdecl;
     function IDs(const ID: TIntegerArray; const items: TBoxArray): TBoxArray; overload; cdecl;
     function Includes(const item: TBox; const index: Integer = 2147483647): Boolean; cdecl;
+    function Len: Integer; overload; cdecl;
+    function Len(const aSize: Integer): Integer; overload; cdecl;
+    function Len(const aSize: Integer; const null: TBox): Integer; overload; cdecl;
     function Keep(const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl;
+    function LeastFrequent: TBox; overload; cdecl;
+    function MostFrequent: TBox; overload; cdecl;
+    function Resize(const aChange: Integer): Integer; overload; cdecl;
+    function Resize(const aChange: Integer; const null: TBox): Integer; overload; cdecl;
+    function Size(const aSize: Integer): Integer; overload; cdecl;
+    function Size: Integer; overload; cdecl;
   end;
   TRangeArrayHelper = type helper for TRangeArray
     function Add(const item: TRange; const duplicates: Boolean = True): TRangeArray; overload; cdecl;
@@ -860,11 +923,11 @@ type
 	function AllUnique: Boolean; overload; cdecl;
     function Append(const item: TRange; const duplicates: Boolean = True): Integer; overload; cdecl;
     function Append(const items: TRangeArray; const duplicates: Boolean = True): Integer; overload; cdecl;
-    function Build(const item: TRange; const size: Integer = 1): TRangeArray; overload; cdecl;
+    function Build(const item: TRange; const aSize: Integer = 1): TRangeArray; overload; cdecl;
     function BuiltWith(const allowed: TRangeArray): Boolean; overload; cdecl;
     function BuiltWithout(const forbidden: TRangeArray): Boolean; overload; cdecl;
     function Create(const item: TRange): TRangeArray; overload; cdecl;
-    function Create(const size: Integer; const item: TRange): TRangeArray; overload; cdecl;
+    function Create(const aSize: Integer; const item: TRange): TRangeArray; overload; cdecl;
     function Clear: Boolean; cdecl;
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TRangeArray; cdecl;
     function Clone(const ID: TIntegerArray): TRangeArray; overload; cdecl;
@@ -904,7 +967,16 @@ type
     function IDs(const ID: TIntegerArray; const item: TRange): TRangeArray; overload; cdecl;
     function IDs(const ID: TIntegerArray; const items: TRangeArray): TRangeArray; overload; cdecl;
 	function Includes(const item: TRange; const index: Integer = 2147483647): Boolean; cdecl;
+    function Len: Integer; overload; cdecl;
+    function Len(const aSize: Integer): Integer; overload; cdecl;
+    function Len(const aSize: Integer; const null: TRange): Integer; overload; cdecl;
     function Keep(const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl;
+    function LeastFrequent: TRange; overload; cdecl;
+    function MostFrequent: TRange; overload; cdecl;
+    function Resize(const aChange: Integer): Integer; overload; cdecl;
+    function Resize(const aChange: Integer; const null: TRange): Integer; overload; cdecl;
+    function Size(const aSize: Integer): Integer; overload; cdecl;
+    function Size: Integer; overload; cdecl;
 	
     function TIA: TIntegerArray; cdecl;
     function T2DIA: T2DIntegerArray; cdecl;  
@@ -937,41 +1009,6 @@ procedure Swap(var A, B: Boolean); overload; inline;
 procedure Swap(var A, B: TPoint); overload; inline;
 procedure Swap(var A, B: TBox); overload; inline;
 procedure Swap(var A, B: TRange); overload; inline;
-
-function TArray_LeastFrequent(const arr: TIntegerArray): Integer; overload; cdecl;
-function TArray_LeastFrequent(const arr: TDoubleArray): Double; overload; cdecl;
-function TArray_LeastFrequent(const arr: TStringArray): string; overload; cdecl;
-function TArray_LeastFrequent(const arr: TCharArray): Char; overload; cdecl;
-function TArray_LeastFrequent(const arr: TBooleanArray): Boolean; overload; cdecl;
-function TArray_LeastFrequent(const arr: TPointArray): TPoint; overload; cdecl;
-function TArray_LeastFrequent(const arr: TBoxArray): TBox; overload; cdecl;
-function TArray_LeastFrequent(const arr: TRangeArray): TRange; overload; cdecl;
-
-function TArray_Length(var arr: TIntegerArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Length(var arr: TDoubleArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Length(var arr: TStringArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Length(var arr: TCharArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Length(var arr: TBooleanArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Length(var arr: TPointArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Length(var arr: TBoxArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Length(var arr: TRangeArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Length(const arr: TIntegerArray): Integer; overload; cdecl;
-function TArray_Length(const arr: TDoubleArray): Integer; overload; cdecl;
-function TArray_Length(const arr: TStringArray): Integer; overload; cdecl;
-function TArray_Length(const arr: TCharArray): Integer; overload; cdecl;
-function TArray_Length(const arr: TBooleanArray): Integer; overload; cdecl;
-function TArray_Length(const arr: TPointArray): Integer; overload; cdecl;
-function TArray_Length(const arr: TBoxArray): Integer; overload; cdecl;
-function TArray_Length(const arr: TRangeArray): Integer; overload; cdecl;
-
-function TArray_MostFrequent(const arr: TIntegerArray): Integer; overload; cdecl;
-function TArray_MostFrequent(const arr: TDoubleArray): Double; overload; cdecl;
-function TArray_MostFrequent(const arr: TStringArray): string; overload; cdecl;
-function TArray_MostFrequent(const arr: TCharArray): Char; overload; cdecl;
-function TArray_MostFrequent(const arr: TBooleanArray): Boolean; overload; cdecl;
-function TArray_MostFrequent(const arr: TPointArray): TPoint; overload; cdecl;
-function TArray_MostFrequent(const arr: TBoxArray): TBox; overload; cdecl;
-function TArray_MostFrequent(const arr: TRangeArray): TRange; overload; cdecl;
 
 function TArray_Move(var arr: TIntegerArray; oldIndex, newIndex: Integer): Boolean; overload; cdecl;
 function TArray_Move(var arr: TDoubleArray; oldIndex, newIndex: Integer): Boolean; overload; cdecl;
@@ -1262,31 +1299,6 @@ function TArray_Shift(var arr: TBooleanArray; const shift: Integer): TBooleanArr
 function TArray_Shift(var arr: TPointArray; const shift: Integer): TPointArray; overload; cdecl;
 function TArray_Shift(var arr: TBoxArray; const shift: Integer): TBoxArray; overload; cdecl;
 function TArray_Shift(var arr: TRangeArray; const shift: Integer): TRangeArray; overload; cdecl;
-
-function TArray_Size(var arr: TIntegerArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Size(var arr: TDoubleArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Size(var arr: TStringArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Size(var arr: TCharArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Size(var arr: TBooleanArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Size(var arr: TPointArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Size(var arr: TBoxArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Size(var arr: TRangeArray; const size: Integer): Integer; overload; cdecl;
-function TArray_Size(var arr: TIntegerArray; const size: Integer; const null: Integer): Integer; overload; cdecl;
-function TArray_Size(var arr: TDoubleArray; const size: Integer; const null: Double): Integer; overload; cdecl;
-function TArray_Size(var arr: TStringArray; const size: Integer; const null: string): Integer; overload; cdecl;
-function TArray_Size(var arr: TCharArray; const size: Integer; const null: Char): Integer; overload; cdecl;
-function TArray_Size(var arr: TBooleanArray; const size: Integer; const null: Boolean): Integer; overload; cdecl;
-function TArray_Size(var arr: TPointArray; const size: Integer; const null: TPoint): Integer; overload; cdecl;
-function TArray_Size(var arr: TBoxArray; const size: Integer; const null: TBox): Integer; overload; cdecl;
-function TArray_Size(var arr: TRangeArray; const size: Integer; const null: TRange): Integer; overload; cdecl;
-function TArray_Size(const arr: TIntegerArray): Integer; overload; cdecl;
-function TArray_Size(const arr: TDoubleArray): Integer; overload; cdecl;
-function TArray_Size(const arr: TStringArray): Integer; overload; cdecl;
-function TArray_Size(const arr: TCharArray): Integer; overload; cdecl;
-function TArray_Size(const arr: TBooleanArray): Integer; overload; cdecl;
-function TArray_Size(const arr: TPointArray): Integer; overload; cdecl;
-function TArray_Size(const arr: TBoxArray): Integer; overload; cdecl;
-function TArray_Size(const arr: TRangeArray): Integer; overload; cdecl;
 
 function TArray_SizeBetween(const arr: TIntegerArray; const x, y: Integer): Boolean; overload; cdecl;
 function TArray_SizeBetween(const arr: TDoubleArray; const x, y: Integer): Boolean; overload; cdecl;

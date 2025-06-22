@@ -1,13 +1,13 @@
 {==============================================================================]
- <var.TArray(size: Integer): TArray>
- @action: Appends arr with item. Returns the array with added item.
- @note: Adds item to the right side of the array.
+ <var.TArray(aSize: Integer): TArray>
+ @action: Creates TArray with Self.
+ @note: aSize will be Length of the created array.
 [==============================================================================}
 {$IFDEF var_TArray}
 var
   i: Integer;
 begin
-  SetLength(Result, size);
+  SetLength(Result, aSize);
   for i := 0 to High(Result) do
     Result[i] := Self;
 end;
@@ -1043,6 +1043,51 @@ end;
 {$ENDIF}
 
 {==============================================================================]
+ <arr.Len: Integer>
+ @action: Simply Result := Length(arr);
+ @note: None.
+[==============================================================================}
+{$IFDEF TArray_Len1}
+begin
+  Result := Length(Self);
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.Len(aSize: Integer): Integer>
+ @action: Set's arr length to aSize.
+ @note: aSize > Length(arr) => Result will give how many elements were added
+        aSize < Length(arr) => Result will give how many elements got deleted (it will be negative value!)
+		aSize = Length(arr) => Returns 0.
+[==============================================================================}
+{$IFDEF TArray_Len2}
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Self, aSize);
+  Result := (Length(Self) - l);
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.Len(arr: TArray; aSize: Integer; null: VarType): Integer>
+ @action: Set's arr length to size.
+ @note: Uses null for created indexes.
+[==============================================================================}
+{$IFDEF TArray_Len3}
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Self, aSize);
+  Result := (Length(Self) - l);
+  for i := 0 to (Result - 1) do
+    Self[l + i] := null;
+end;
+{$ENDIF}
+
+{==============================================================================]
  <arr.Keep(items: TArray; index: Integer): Integer>
  @action: Keeps items in array, removes others. Returns array length (after action).
  @note: Supports custom start index!
@@ -1071,7 +1116,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_LeastFrequent(arr: TArray): VarType> 
+ <arr.LeastFrequent: VarType> 
  @action: Returns the least frequent arr item.
  @note: None.
 [==============================================================================}
@@ -1080,15 +1125,15 @@ var
   i, j, c, m: Integer;
   f: Boolean;
 begin
-  if (Length(arr) = 0) then
+  if (Length(Self) = 0) then
     Exit;
   m := 2147483647;
-  Result := arr[0];
-  for i := 0 to High(arr) do
+  Result := Self[0];
+  for i := 0 to High(Self) do
   begin
     f := False;
     for j := 0 to (i - 1) do
-      if (arr[j] = arr[i]) then
+      if (Self[j] = Self[i]) then
       begin
         f := True;
         Break;
@@ -1096,43 +1141,20 @@ begin
     if f then
       Continue;
     c := 1;
-    for j := (i + 1) to High(arr) do
-      if (arr[j] = arr[i]) then
+    for j := (i + 1) to High(Self) do
+      if (Self[j] = Self[i]) then
         Inc(c);
     if (c < m) then
     begin
       m := c;
-      Result := arr[i];
+      Result := Self[i];
     end;
   end;
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Length(arr: TArray, size: Integer): Integer> 
- @action: Returns size and sets it as size of arr.
- @note: None.
-[==============================================================================}
-{$IFDEF TArray_Length1}
-begin
-  Result := size;
-  SetLength(arr, size);
-end;
-{$ENDIF}
-
-{==============================================================================]
- <TArray_Length(arr: TArray: TArray): Integer> 
- @action: Returns array length.
- @note: Simply Result := Length(arr);
-[==============================================================================}
-{$IFDEF TArray_Length2}
-begin
-  Result := Length(arr);
-end;
-{$ENDIF}
-
-{==============================================================================]
- <TArray_MostFrequent(arr: TArray): VarType> 
+ <arr.MostFrequent: VarType> 
  @action: Returns the most frequent arr item.
  @note: None.
 [==============================================================================}
@@ -1140,20 +1162,20 @@ end;
 var
   i, j, c, m: Integer;
 begin
-  if (High(arr) = -1) then
+  if (High(Self) = -1) then
     Exit;
   m := 0;
-  Result := arr[0];
-  for i := 0 to High(arr) do
+  Result := Self[0];
+  for i := 0 to High(Self) do
   begin
     c := 1;
-    for j := (i + 1) to High(arr) do
-      if (arr[j] = arr[i]) then
+    for j := (i + 1) to High(Self) do
+      if (Self[j] = Self[i]) then
         Inc(c);
     if (c > m) then
     begin
       m := c;
-      Result := arr[i];
+      Result := Self[i];
     end;
   end;
 end;
@@ -1625,6 +1647,43 @@ end;
 {$ENDIF}
 
 {==============================================================================]
+ <arr.Resize(aChange: Integer): Integer>
+ @action: Updates's arr length with aChange.
+ @note: aChange > 0 => Result will give how many elements were added
+        aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
+		aChange = 0 => Returns 0.
+[==============================================================================}
+{$IFDEF TArray_Resize1}
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Self, (l + aChange));
+  Result := (Length(Self) - l);
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.Resize(aChange: Integer; null: VarType): Integer>
+ @action: Updates's arr length with aChange.
+ @note: aChange > 0 => Result will give how many elements were added
+        aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
+		aChange = 0 => Returns 0.
+		Supports null for filling created indexes.
+[==============================================================================}
+{$IFDEF TArray_Resize2}
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Self, aChange);
+  Result := (Length(Self) - l);
+  for i := 0 to (Result - 1) do
+    Self[l + i] := null;
+end;
+{$ENDIF}
+
+{==============================================================================]
  <TArray_Reverse(arr: TArray): Boolean>
  @action: Reverses items in array.
  @note: Returns true with success (array contains 2 or more items)
@@ -1867,48 +1926,26 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Size(arr: TArray; size: Integer): Integer>
- @action: Set's arr length to size.
- @note: size > Length(arr) => Result will give how many elements were added
-        size < Length(arr) => Result will give how many elements got deleted (it will be negative value!)
-		size = Length(arr) => Returns 0.
+ <arr.Size(aSize: Integer): Integer> 
+ @action: Sets array size as aSize and then returns the size using Length call.
+ @note: None.
 [==============================================================================}
 {$IFDEF TArray_Size1}
-var
-  l: Integer;
 begin
-  l := Length(arr);
-  SetLength(arr, size);
-  Result := (Length(arr) - l);
+  SetLength(Self, aSize);
+  Result := Length(Self);
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Size(arr: TArray; size: Integer; null: VarType): Integer>
- @action: Set's arr length to size.
- @note: Uses null for created indexes.
+ <arr.Size: Integer> 
+ @action: Returns array length.
+ @note: Simply Result := Length(arr);
 [==============================================================================}
 {$IFDEF TArray_Size2}
-var
-  i, l: Integer;
 begin
-  l := Length(arr);
-  SetLength(arr, size);
-  Result := (Length(arr) - l);
-  for i := 0 to (Result - 1) do
-    arr[l + i] := null;
+  Result := Length(Self);
 end;
-{$ENDIF}
-
-{==============================================================================]
- <TArray_Size(arr: TArray): Integer>
- @action: Returns array length.
- @note: Just normal Length() for this last one, with single parameter.		
-[==============================================================================}
-{$IFDEF TArray_Size3}
-begin
-  Result := Length(arr);
-end; 
 {$ENDIF}
 
 {==============================================================================]
