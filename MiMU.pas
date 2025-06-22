@@ -447,6 +447,7 @@ type
     function IDs(const ID: TIntegerArray; const item: Integer): TIntegerArray; overload; cdecl;
     function IDs(const ID: TIntegerArray; const items: TIntegerArray): TIntegerArray; overload; cdecl;
     function Includes(const item: Integer; const index: Integer = 2147483647): Boolean; cdecl;
+    function Keep(const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl;
     function LeastFrequent: Integer; overload; cdecl;
     function Len: Integer; overload; cdecl;
     function Len(const aSize: Integer): Integer; overload; cdecl;
@@ -455,7 +456,7 @@ type
     function Location(const items: TIntegerArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: Integer; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Locations(const items: TIntegerArray; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
-    function Keep(const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl;
+    function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: Integer; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
     function Resize(const aChange: Integer): Integer; overload; cdecl;
@@ -473,6 +474,8 @@ type
     function Position(const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: Integer; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TIntegerArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Push(const item: Integer): Integer; overload; cdecl;
+    function Push(const items: TIntegerArray): Integer; overload; cdecl;
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
 
     function Descending: Boolean; cdecl;
@@ -606,6 +609,7 @@ type
     function Location(const items: TDoubleArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: Double; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Locations(const items: TDoubleArray; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
+    function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: Double; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload; cdecl;
     function Resize(const aChange: Integer): Integer; overload; cdecl;
@@ -623,6 +627,8 @@ type
     function Position(const items: TDoubleArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: Double; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TDoubleArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Push(const item: Double): Integer; overload; cdecl;
+    function Push(const items: TDoubleArray): Integer; overload; cdecl;
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
   end;
   TStringArrayHelper = type helper for TStringArray
@@ -686,6 +692,7 @@ type
     function Location(const items: TStringArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: string; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Locations(const items: TStringArray; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
+    function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: string; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
     function Resize(const aChange: Integer): Integer; overload; cdecl;
@@ -703,6 +710,8 @@ type
     function Position(const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: string; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TStringArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Push(const item: string): Integer; overload; cdecl;
+    function Push(const items: TStringArray): Integer; overload; cdecl;
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
   end;
   TCharArrayHelper = type helper for TCharArray
@@ -766,6 +775,7 @@ type
     function Location(const items: TCharArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: Char; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Locations(const items: TCharArray; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
+    function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: Char; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
     function Resize(const aChange: Integer): Integer; overload; cdecl;
@@ -782,7 +792,9 @@ type
     function Position(const item: Char; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const items: TCharArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: Char; const index: Integer = 0): TIntegerArray; overload; cdecl;
-    function Positions(const items: TCharArray; const index: Integer = 0): TIntegerArray; overload; cdecl;	
+    function Positions(const items: TCharArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Push(const item: Char): Integer; overload; cdecl;
+    function Push(const items: TCharArray): Integer; overload; cdecl;	
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
   end;
   TBooleanArrayHelper = type helper for TBooleanArray
@@ -846,6 +858,7 @@ type
     function Location(const items: TBooleanArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: Boolean; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Locations(const items: TBooleanArray; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
+    function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: Boolean; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
     function Resize(const aChange: Integer): Integer; overload; cdecl;
@@ -863,6 +876,8 @@ type
     function Position(const items: TBooleanArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: Boolean; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TBooleanArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Push(const item: Boolean): Integer; overload; cdecl;
+    function Push(const items: TBooleanArray): Integer; overload; cdecl;
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
   end;
   TPointArrayHelper = type helper for TPointArray
@@ -926,6 +941,7 @@ type
     function Location(const items: TPointArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: TPoint; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Locations(const items: TPointArray; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
+    function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: TPoint; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
     function Resize(const aChange: Integer): Integer; overload; cdecl;
@@ -943,8 +959,10 @@ type
     function Position(const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: TPoint; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TPointArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Push(const item: TPoint): Integer; overload; cdecl;
+    function Push(const items: TPointArray): Integer; overload; cdecl;
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
-
+	
     function Bounds: TBox; overload; cdecl;
     function Bounds(var width, height: Integer): TBox; overload; cdecl;
     function Unique: Integer; cdecl;
@@ -1015,6 +1033,7 @@ type
     function Location(const items: TBoxArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: TBox; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Locations(const items: TBoxArray; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
+    function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: TBox; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
     function Resize(const aChange: Integer): Integer; overload; cdecl;
@@ -1032,6 +1051,8 @@ type
     function Position(const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: TBox; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TBoxArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Push(const item: TBox): Integer; overload; cdecl;
+    function Push(const items: TBoxArray): Integer; overload; cdecl;
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
   end;
   TRangeArrayHelper = type helper for TRangeArray
@@ -1095,6 +1116,7 @@ type
     function Location(const items: TRangeArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: TRange; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Locations(const items: TRangeArray; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
+    function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: TRange; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
     function Resize(const aChange: Integer): Integer; overload; cdecl;
@@ -1112,6 +1134,8 @@ type
     function Position(const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: TRange; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TRangeArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Push(const item: TRange): Integer; overload; cdecl;
+    function Push(const items: TRangeArray): Integer; overload; cdecl;
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
 	
     function TIA: TIntegerArray; cdecl;
@@ -1162,32 +1186,6 @@ function TArray_Pos(const arr: TBooleanArray; const items: TBooleanArray; const 
 function TArray_Pos(const arr: TPointArray; const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl;
 function TArray_Pos(const arr: TBoxArray; const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl;
 function TArray_Pos(const arr: TRangeArray; const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl;
-
-function TArray_Push(var arr: TIntegerArray; const item: Integer): Integer; overload; cdecl;
-function TArray_Push(var arr: TDoubleArray; const item: Double): Integer; overload; cdecl;
-function TArray_Push(var arr: TStringArray; const item: string): Integer; overload; cdecl;
-function TArray_Push(var arr: TCharArray; const item: Char): Integer; overload; cdecl;
-function TArray_Push(var arr: TBooleanArray; const item: Boolean): Integer; overload; cdecl;
-function TArray_Push(var arr: TPointArray; const item: TPoint): Integer; overload; cdecl;
-function TArray_Push(var arr: TBoxArray; const item: TBox): Integer; overload; cdecl;
-function TArray_Push(var arr: TRangeArray; const item: TRange): Integer; overload; cdecl;
-function TArray_Push(var arr: TIntegerArray; const items: TIntegerArray): Integer; overload; cdecl;
-function TArray_Push(var arr: TDoubleArray; const items: TDoubleArray): Integer; overload; cdecl;
-function TArray_Push(var arr: TStringArray; const items: TStringArray): Integer; overload; cdecl;
-function TArray_Push(var arr: TCharArray; const items: TCharArray): Integer; overload; cdecl;
-function TArray_Push(var arr: TBooleanArray; const items: TBooleanArray): Integer; overload; cdecl;
-function TArray_Push(var arr: TPointArray; const items: TPointArray): Integer; overload; cdecl;
-function TArray_Push(var arr: TBoxArray; const items: TBoxArray): Integer; overload; cdecl;
-function TArray_Push(var arr: TRangeArray; const items: TRangeArray): Integer; overload; cdecl;
-
-function TArray_Randomize(var arr: TIntegerArray; const shuffles: Integer = 1): Boolean; overload; cdecl;
-function TArray_Randomize(var arr: TDoubleArray; const shuffles: Integer = 1): Boolean; overload; cdecl;
-function TArray_Randomize(var arr: TStringArray; const shuffles: Integer = 1): Boolean; overload; cdecl;
-function TArray_Randomize(var arr: TCharArray; const shuffles: Integer = 1): Boolean; overload; cdecl;
-function TArray_Randomize(var arr: TBooleanArray; const shuffles: Integer = 1): Boolean; overload; cdecl;
-function TArray_Randomize(var arr: TPointArray; const shuffles: Integer = 1): Boolean; overload; cdecl;
-function TArray_Randomize(var arr: TBoxArray; const shuffles: Integer = 1): Boolean; overload; cdecl;
-function TArray_Randomize(var arr: TRangeArray; const shuffles: Integer = 1): Boolean; overload; cdecl;
 
 function TArray_Remove(var arr: TIntegerArray; const item: Integer; const index: Integer = 0; const all: Boolean = True): Integer; overload; cdecl;
 function TArray_Remove(var arr: TDoubleArray; const item: Double; const index: Integer = 0; const all: Boolean = True): Integer; overload; cdecl;

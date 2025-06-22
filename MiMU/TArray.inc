@@ -1232,6 +1232,25 @@ end;
 {$ENDIF}
 
 {==============================================================================]
+ <arr.Mix(shuffles: Integer): Boolean>
+ @action: Ramdomizes array with custom shuffles.
+ @note: None.
+[==============================================================================}
+{$IFDEF TArray_Mix}
+var
+  l, i, s: Integer;
+begin
+  l := Length(Self);
+  Result := ((l > 1) and (shuffles > 0));
+  if not Result then
+    Exit;
+  for s := 1 to shuffles do
+    for i := 0 to (l - 1) do
+      Swap(Random(l), Random(l));
+end;
+{$ENDIF}
+
+{==============================================================================]
  <arr.MostFrequent: VarType> 
  @action: Returns the most frequent arr item.
  @note: None.
@@ -1504,20 +1523,20 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Push(arr: TArray; item: VarType): Integer>
+ <arr.Push(item: VarType): Integer>
  @action: Places item in array with arr.
  @note: Returns array (arr+item) length.
 [==============================================================================}
 {$IFDEF TArray_Push1}
 begin
-  Result := (Length(arr) + 1);
-  SetLength(arr, Result);
-  arr[Result - 1] := item;
+  Result := (Length(Self) + 1);
+  SetLength(Self, Result);
+  Self[Result - 1] := item;
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Push(arr: TArray; items: TArray): Integer>
+ <arr.Push(items: TArray): Integer>
  @action: Places items in array with arr.
  @note: Returns array (arr+item) length.
 [==============================================================================}
@@ -1526,36 +1545,13 @@ var
   h, i, l: Integer;
 begin
   h := High(items);
-  l := Length(arr);
+  l := Length(Self);
   Result := (l + (h + 1));
   if (h < 0) then
     Exit;
-  SetLength(arr, Result);
+  SetLength(Self, Result);
   for i := 0 to h do
-    arr[l + i] := items[i];
-end;
-{$ENDIF}
-
-{==============================================================================]
- <TArray_Randomize(arr: TArray): Boolean>
- @action: Ramdomizes array with custom shuffles.
- @note: None.
-[==============================================================================}
-{$IFDEF TArray_Randomize}
-var
-  l, i, s, x, y: Integer;
-begin
-  l := Length(arr);
-  Result := ((l > 1) and (shuffles > 0));
-  if not Result then
-    Exit;
-  for s := 1 to shuffles do
-    for i := 0 to (l - 1) do
-    begin
-      x := Random(l);
-      y := Random(l);
-	  Swap(arr[x], arr[y]);
-    end;
+    Self[l + i] := items[i];
 end;
 {$ENDIF}
 
