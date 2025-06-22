@@ -1039,25 +1039,25 @@ function TRangeArrayHelper.Scan(const ID: TIntegerArray; const items: TRangeArra
 {$UNDEF TArray_Scan4}
 
 {$DEFINE TArray_Shift1}
-function TArray_Shift(var arr: TIntegerArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TDoubleArray): Double; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TStringArray): string; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TCharArray): Char; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TBooleanArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TPointArray): TPoint; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TBoxArray): TBox; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TRangeArray): TRange; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.Shift: Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Shift: Double; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Shift: string; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Shift: Char; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Shift: Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Shift: TPoint; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Shift: TBox; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Shift: TRange; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Shift1}
 
 {$DEFINE TArray_Shift2}
-function TArray_Shift(var arr: TIntegerArray; const shift: Integer): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TDoubleArray; const shift: Integer): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TStringArray; const shift: Integer): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TCharArray; const shift: Integer): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TBooleanArray; const shift: Integer): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TPointArray; const shift: Integer): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TBoxArray; const shift: Integer): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Shift(var arr: TRangeArray; const shift: Integer): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.Shift(const sCount: Integer): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Shift(const sCount: Integer): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Shift(const sCount: Integer): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Shift(const sCount: Integer): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Shift(const sCount: Integer): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Shift( const sCount: Integer): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Shift(const sCount: Integer): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Shift(const sCount: Integer): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Shift2}
 
 {$DEFINE TArray_Size1}
@@ -1083,36 +1083,36 @@ function TRangeArrayHelper.Size: Integer; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Size2}
 
 {$DEFINE TArray_SizeBetween}
-function TArray_SizeBetween(const arr: TIntegerArray; const x, y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeBetween(const arr: TDoubleArray; const x, y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeBetween(const arr: TStringArray; const x, y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeBetween(const arr: TCharArray; const x, y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeBetween(const arr: TBooleanArray; const x, y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeBetween(const arr: TPointArray; const x, y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeBetween(const arr: TBoxArray; const x, y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeBetween(const arr: TRangeArray; const x, y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_SizeBetween}
 
 {$DEFINE TArray_SizeMax}
-function TArray_SizeMax(const arr: TIntegerArray; const y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMax(const arr: TDoubleArray; const y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMax(const arr: TStringArray; const y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMax(const arr: TCharArray; const y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMax(const arr: TBooleanArray; const y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMax(const arr: TPointArray; const y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMax(const arr: TBoxArray; const y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMax(const arr: TRangeArray; const y: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.SizeMax(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.SizeMax(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.SizeMax(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.SizeMax(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.SizeMax(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.SizeMax(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.SizeMax(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.SizeMax(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_SizeMax}
 
 {$DEFINE TArray_SizeMin}
-function TArray_SizeMin(const arr: TIntegerArray; const x: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMin(const arr: TDoubleArray; const x: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMin(const arr: TStringArray; const x: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMin(const arr: TCharArray; const x: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMin(const arr: TBooleanArray; const x: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMin(const arr: TPointArray; const x: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMin(const arr: TBoxArray; const x: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_SizeMin(const arr: TRangeArray; const x: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.SizeMin(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.SizeMin(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.SizeMin(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.SizeMin(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.SizeMin(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.SizeMin(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.SizeMin(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.SizeMin(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_SizeMin}
 
 {$DEFINE TArray_Swap1}
@@ -1138,14 +1138,14 @@ function TRangeArrayHelper.Swap(var b: TRangeArray): Integer; overload; cdecl; v
 {$UNDEF TArray_Swap2}
 
 {$DEFINE TArray_Trade}
-function TArray_Trade(var a, b: TIntegerArray): Integer; overload; cdecl; var c: TIntegerArray; {$I MIMU\TArray.inc}
-function TArray_Trade(var a, b: TDoubleArray): Integer; overload; cdecl; var c: TDoubleArray; {$I MIMU\TArray.inc}
-function TArray_Trade(var a, b: TStringArray): Integer; overload; cdecl; var c: TStringArray; {$I MIMU\TArray.inc}
-function TArray_Trade(var a, b: TCharArray): Integer; overload; cdecl; var c: TCharArray; {$I MIMU\TArray.inc}
-function TArray_Trade(var a, b: TBooleanArray): Integer; overload; cdecl; var c: TBooleanArray; {$I MIMU\TArray.inc}
-function TArray_Trade(var a, b: TPointArray): Integer; overload; cdecl; var c: TPointArray; {$I MIMU\TArray.inc}
-function TArray_Trade(var a, b: TBoxArray): Integer; overload; cdecl; var c: TBoxArray; {$I MIMU\TArray.inc}
-function TArray_Trade(var a, b: TRangeArray): Integer; overload; cdecl; var c: TRangeArray; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.Trade(var b: TIntegerArray): Integer; overload; cdecl; var a: TIntegerArray; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Trade(var b: TDoubleArray): Integer; overload; cdecl; var a: TDoubleArray; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Trade(var b: TStringArray): Integer; overload; cdecl; var a: TStringArray; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Trade(var b: TCharArray): Integer; overload; cdecl; var a: TCharArray; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Trade(var b: TBooleanArray): Integer; overload; cdecl; var a: TBooleanArray; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Trade(var b: TPointArray): Integer; overload; cdecl; var a: TPointArray; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Trade(var b: TBoxArray): Integer; overload; cdecl; var a: TBoxArray; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Trade(var b: TRangeArray): Integer; overload; cdecl; var a: TRangeArray; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Trade}
 
 {$DEFINE TArray_Undersize}
@@ -1160,58 +1160,58 @@ function TRangeArrayHelper.Undersize(const limit: Integer): Boolean; overload; c
 {$UNDEF TArray_Undersize}
 
 {$DEFINE TArray_Unique}
-function TArray_Unique(var arr: TIntegerArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unique(var arr: TDoubleArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unique(var arr: TStringArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unique(var arr: TCharArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unique(var arr: TBooleanArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unique(var arr: TPointArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unique(var arr: TBoxArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unique(var arr: TRangeArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.Unique: Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Unique: Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Unique: Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Unique: Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Unique: Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Unique: Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Unique: Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Unique: Integer; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Unique}
 
 {$DEFINE TArray_Uniqued}
-function TArray_Uniqued(const arr: TIntegerArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniqued(const arr: TDoubleArray): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniqued(const arr: TStringArray): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniqued(const arr: TCharArray): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniqued(const arr: TBooleanArray): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniqued(const arr: TPointArray): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniqued(const arr: TBoxArray): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniqued(const arr: TRangeArray): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.Uniqued: TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Uniqued: TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Uniqued: TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Uniqued: TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Uniqued: TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Uniqued: TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Uniqued: TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Uniqued: TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Uniqued}
 
 {$DEFINE TArray_Uniques}
-function TArray_Uniques(const arr: TIntegerArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniques(const arr: TDoubleArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniques(const arr: TStringArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniques(const arr: TCharArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniques(const arr: TBooleanArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniques(const arr: TPointArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniques(const arr: TBoxArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Uniques(const arr: TRangeArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.Uniques: TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Uniques: TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Uniques: TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Uniques: TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Uniques: TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Uniques: TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Uniques: TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Uniques: TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Uniques}
 
 {$DEFINE TArray_Unshift1}
-function TArray_Unshift(var arr: TIntegerArray; const item: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TDoubleArray; const item: Double): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TStringArray; const item: string): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TCharArray; const item: Char): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TBooleanArray; const item: Boolean): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TPointArray; const item: TPoint): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TBoxArray; const item: TBox): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TRangeArray; const item: TRange): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.Unshift(const item: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Unshift(const item: Double): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Unshift(const item: string): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Unshift(const item: Char): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Unshift(const item: Boolean): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Unshift(const item: TPoint): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Unshift(const item: TBox): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Unshift(const item: TRange): Integer; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Unshift1}
 
 {$DEFINE TArray_Unshift2}
-function TArray_Unshift(var arr: TIntegerArray; const items: TIntegerArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TDoubleArray; const items: TDoubleArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TStringArray; const items: TStringArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TCharArray; const items: TCharArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TBooleanArray; const items: TBooleanArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TPointArray; const items: TPointArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TBoxArray; const items: TBoxArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Unshift(var arr: TRangeArray; const items: TRangeArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.Unshift(const items: TIntegerArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Unshift(const items: TDoubleArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Unshift(const items: TStringArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Unshift(const items: TCharArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Unshift(const items: TBooleanArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Unshift(const items: TPointArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Unshift(const items: TBoxArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Unshift(const items: TRangeArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Unshift2}
 
 {$DEFINE T2DArray_Blank}

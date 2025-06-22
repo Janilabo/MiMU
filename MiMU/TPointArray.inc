@@ -48,11 +48,11 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Unique>
+  <TPointArrayHelper.Undupe>
   @action: Removes duplicates from arr.
   @note: Returns number of duplicate items that were removed from arr.
 [==============================================================================}
-function TPointArrayHelper.Unique: Integer; cdecl;
+function TPointArrayHelper.Undupe: Integer; cdecl;
 var
   i, r, l, w, h: Integer;
   m: T2DBooleanArray;
@@ -74,11 +74,11 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Uniqued>
+  <TPointArrayHelper.Unduped>
   @action: Returns arr without duplicates.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Uniqued: TPointArray; cdecl;
+function TPointArrayHelper.Unduped: TPointArray; cdecl;
 var
   i, r, l, w, h: Integer;
   m: T2DBooleanArray;

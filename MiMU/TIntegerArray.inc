@@ -92,11 +92,11 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray_Unique>
+  <TIntegerArray.Undupe>
   @action: Removes duplicates from array arr and returns the count of deleted items.
   @note: Not recommended with very large arrays
 [==============================================================================}
-function TIntegerArrayHelper.Unique: Integer; cdecl;
+function TIntegerArrayHelper.Undupe: Integer; cdecl;
 var
   x, y, z: Integer;
   r: TRange;
@@ -119,11 +119,11 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Uniqued>
+  <TIntegerArrayHelper.Unduped>
   @action: Removes duplicates from array arr and returns it.
   @note: Not recommended with very large arrays
 [==============================================================================}
-function TIntegerArrayHelper.Uniqued: TIntegerArray; cdecl;
+function TIntegerArrayHelper.Unduped: TIntegerArray; cdecl;
 var
   x, y, z: Integer;
   r: TRange;

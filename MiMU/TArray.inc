@@ -1881,7 +1881,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Shift(arr: TArray): VarType>
+ <arr.Shift: VarType>
  @action: Shortens the array with first element.
  @note: Returns the removed arr[0].
 [==============================================================================}
@@ -1889,35 +1889,35 @@ end;
 var
   i, l: Integer;
 begin
-  l := (Length(arr) - 1);
+  l := (Length(Self) - 1);
   if (l < 0) then
     Exit;
-  Result := arr[0];
+  Result := Self[0];
   for i := 0 to (l - 1) do
-    arr[i] := arr[i + 1];
-  SetLength(arr, l);
+    Self[i] := Self[i + 1];
+  SetLength(Self, l);
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Shift(arr: TArray; shift: Integer): TArray>
- @action: Shortens the array with first SHIFT element(s).
+ <arr.Shift(sCount: Integer): TArray>
+ @action: Shortens the array with first SCOUNT element(s).
  @note: Returns the removed arr[x]s.
 [==============================================================================}
 {$IFDEF TArray_Shift2}
 var
   i, l, s: Integer;
 begin
-  l := Length(arr);
-  s := Max(0, Min(shift, l));
+  l := Length(Self);
+  s := Max(0, Min(sCount, l));
   SetLength(Result, s);
   if (l = 0) then
     Exit;
   for i := 0 to (s - 1) do
-    Result[i] := arr[i];
-  for i := s to High(arr) do
-    arr[i - s] := arr[i];
-  SetLength(arr, (Length(arr) - s));
+    Result[i] := Self[i];
+  for i := s to High(Self) do
+    Self[i - s] := Self[i];
+  SetLength(Self, (Length(Self) - s));
 end;
 {$ENDIF}
 
@@ -1945,35 +1945,35 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_SizeBetween(arr: TArray; x, y: Integer): Boolean>
- @action: Returns true if size is at equal/greater than x and equal/lesser than y.
+ <arr.SizeBetween(arr: TArray; sMin, sMax: Integer): Boolean>
+ @action: Returns true if size is at equal/greater than sMin and equal/lesser than sMax.
  @note: 	
 [==============================================================================}
 {$IFDEF TArray_SizeBetween}
 begin
-  Result := ((Length(arr) >= x) and (Length(arr) <= y));
+  Result := InRange(Length(Self), sMin, sMax);
 end;      
 {$ENDIF}
 
 {==============================================================================]
- <TArray_SizeMax(arr: TArray; y: Integer): Boolean>
- @action: Returns true if size is at equal/lesser than y.
+ <arr.SizeMax(target: Integer): Boolean>
+ @action: Returns true if size is at equal/lesser than target.
  @note: 	
 [==============================================================================}
 {$IFDEF TArray_SizeMax}
 begin
-  Result := (Length(arr) <= y);
+  Result := (Length(Self) <= target);
 end;    
 {$ENDIF}
 
 {==============================================================================]
- <TArray_SizeMin(arr: TArray; x: Integer): Boolean>
- @action: Returns true if size is at equal/greater than x.
+ <arr.SizeMin(target: Integer): Boolean>
+ @action: Returns true if size is at equal/greater than target.
  @note: 	
 [==============================================================================}
 {$IFDEF TArray_SizeMin}
 begin
-  Result := (Length(arr) >= x);
+  Result := (Length(Self) >= target);
 end;   
 {$ENDIF}
 
@@ -2015,23 +2015,19 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Trade(a, b: TArray): Integer> 
- @action: Swaps array a and array b.
- @note: a will be b and b will be a.
+ <arr.Trade(b: TArray): Integer> 
+ @action: Swaps array arr and array b.
+ @note: arr will be b and b will be arr.
 [==============================================================================}
 {$IFDEF TArray_Trade}
-var
-  x, y: Integer;
 begin
-  x := Length(a);
-  y := Length(b);
-  Result := (x + y);
+  Result := (Length(Self) + Length(b));
   if (Result > 0) then
   begin
-    c := Copy(a, 0, x);
-    a := Copy(b, 0, y);
-    b := Copy(c, 0, x);
-    SetLength(c, 0);
+    a := Self.Copy;
+    Self := b.Copy;
+    b := a.Copy;
+    SetLength(a, 0);
   end;
 end;
 {$ENDIF}
@@ -2048,7 +2044,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Unique(arr: TArray): Integer>
+ <arr.Unique: Integer>
  @action: Removes all duplicates from arr.
  @note: Returns the number of items that were removed.
 [==============================================================================}
@@ -2057,7 +2053,7 @@ var
   a, l, i, j: Integer;
   m: Boolean;
 begin
-  l := Length(arr);
+  l := Length(Self);
   if (l < 2) then
     Exit(0);
   a := 0;
@@ -2065,22 +2061,22 @@ begin
   begin
     for j := 0 to a do
     begin
-      m := (arr[i] = arr[j]);
+      m := (Self[i] = Self[j]);
       if m then
         Break;
     end;
     if m then
       Continue;
-    arr[a.Increment] := arr[i];
+    Self[a.Increment] := Self[i];
   end;
   Result := (l - (a + 1));
   if (Result > 0) then
-    SetLength(arr, (a + 1));
+    SetLength(Self, (a + 1));
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Uniqued(arr: TArray): TArray>
+ <arr.Uniqued: TArray>
  @action: Removes all duplicates from arr.
  @note: Returns the unique version of arr.
 [==============================================================================}
@@ -2088,7 +2084,7 @@ end;
 var
   i, j, l, c: Integer;
 begin
-  l := Length(arr);
+  l := Length(Self);
   SetLength(Result, l);
   if (l > 0) then
   begin
@@ -2097,13 +2093,13 @@ begin
     begin
       j := 0;
       repeat
-        if (arr[i] <> Result[j]) then
+        if (Self[i] <> Result[j]) then
           j := (j + 1)
         else
           j := 0;
       until ((j = 0) or (j > c));
       if (j > 0) then
-        Result[c.Increase] := arr[i];
+        Result[c.Increase] := Self[i];
     end;
     SetLength(Result, c);
   end;
@@ -2111,7 +2107,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Uniques(arr: TArray): TIntegerArray>
+ <arr.Uniques: TIntegerArray>
  @action: Returns the indexes of unique array (arr) items.
  @note: None.
 [==============================================================================}
@@ -2120,7 +2116,7 @@ var
   h, r, x, y: Integer;
   m: Boolean;
 begin
-  h := High(arr);
+  h := High(Self);
   SetLength(Result, (h + 1));
   if (h > 0) then
   begin
@@ -2129,7 +2125,7 @@ begin
     begin
       for y := 0 to h do
       begin
-        m := ((y <> x) and (arr[x] = arr[y]));
+        m := ((y <> x) and (Self[x] = Self[y]));
         if m then
           Break;
       end;
@@ -2144,7 +2140,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Unshift(arr: TArray; item: VarType): Integer>
+ <arr.Unshift(item: VarType): Integer>
  @action: Grows arr with item. Returns the index of added item.
  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
@@ -2152,16 +2148,16 @@ end;
 var
   i: Integer;
 begin
-  Result := Length(arr);
-  SetLength(arr, (Result + 1));
+  Result := Length(Self);
+  SetLength(Self, (Result + 1));
   for i := Result downto 1 do
-    arr[i] := arr[i - 1];
-  arr[0] := item;
+    Self[i] := Self[i - 1];
+  Self[0] := item;
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Unshift(arr: TArray; items: TArray): Integer>
+ <arr.Unshift(items: TArray): Integer>
  @action: Grows arr with items. Returns the index of last added item.
  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
@@ -2171,13 +2167,13 @@ var
 begin
   h := High(items);
   if (h = -1) then
-    Exit(High(arr));
-  l := Length(arr);
+    Exit(High(Self));
+  l := Length(Self);
   Result := (l + h);
-  SetLength(arr, (Result + 1));
+  SetLength(Self, (Result + 1));
   for i := Result downto (h + 1) do
-    arr[i] := arr[i - (h + 1)];
+    Self[i] := Self[i - (h + 1)];
   for i := 0 to h do
-    arr[i] := items[i];
+    Self[i] := items[i];
 end;
 {$ENDIF}
