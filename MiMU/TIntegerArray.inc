@@ -586,14 +586,14 @@ var
   t, p, o: Integer;
   s: TRangeArray;
   x, r: TRange;
-  procedure Push(const start, stop: Integer);
+  procedure qsPush(const start, stop: Integer);
   begin
     Inc(t);
     SetLength(s, (t + 1));
     s[t].start := start;
     s[t].stop := stop;
   end;
-  function Pop(out start, stop: Integer): Boolean;
+  function qsPop(out start, stop: Integer): Boolean;
   begin
     if (t < 0) then
     begin
@@ -611,9 +611,9 @@ begin
   begin
     o := ascending.Select(-1, 1);
     t := -1;
-    Push(0, High(Self));
+    qsPush(0, High(Self));
     r.Create(0, High(Self));
-    while Pop(r.start, r.stop) do
+    while qsPop(r.start, r.stop) do
     begin
       while (r.start < r.stop) do
       begin
@@ -635,12 +635,12 @@ begin
         if ((x.stop - r.start) < (r.stop - x.start)) then
         begin
           if (x.start < r.stop) then
-            Push(x.start, r.stop);
+            qsPush(x.start, r.stop);
           r.stop := x.stop;
         end else
         begin
           if (r.start < x.stop) then
-            Push(r.start, x.stop);
+            qsPush(r.start, x.stop);
           r.start := x.start;
         end;
       end;
