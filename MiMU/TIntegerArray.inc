@@ -97,25 +97,8 @@ end;
   @note: Not recommended with very large arrays
 [==============================================================================}
 function TIntegerArrayHelper.Undupe: Integer; cdecl;
-var
-  x, y, z: Integer;
-  r: TRange;
-  b: TBooleanArray;
 begin
-  y := High(Self);
-  if (y > 0) then
-  begin
-    z := 0;
-    r := Self.Bounds;
-    b.Create(r.Size, False);
-    for x := 0 to y do
-      if b[Self[x] - r.start].Enable then
-        Self[z.Increase] := Self[x];
-    SetLength(b, 0);
-    SetLength(Self, z);
-    Result := ((y + 1) - z);
-  end else
-    Result := 0;
+  Result := T1D.Unique(Self);
 end;
 
 {==============================================================================]

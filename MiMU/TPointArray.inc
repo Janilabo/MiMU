@@ -53,24 +53,8 @@ end;
   @note: Returns number of duplicate items that were removed from arr.
 [==============================================================================}
 function TPointArrayHelper.Undupe: Integer; cdecl;
-var
-  i, r, l, w, h: Integer;
-  m: T2DBooleanArray;
-  b: TBox;
 begin
-  l := Length(Self);
-  if (l > 1) then
-  begin
-    r := 0;
-    b := Self.Bounds(w, h);
-    m := T2DArray_Create(w, h, False);
-    for i := 0 to (l - 1) do
-      if m[Self[i].X - b.X1][Self[i].Y - b.Y1].Enable then
-        Self[r.Increase] := Self[i];
-    SetLength(Self, r);
-    SetLength(m, 0);
-  end;
-  Result := (l - Length(Self));
+  Result := T1D.Unique(Self);
 end;
 
 {==============================================================================]

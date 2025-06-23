@@ -1333,6 +1333,11 @@ type
     function TIA: TIntegerArray; cdecl;
     function T2DIA: T2DIntegerArray; cdecl;  
   end;
+  type
+    T1D = class
+      class function Unique(var arr: TIntegerArray): Integer; overload; cdecl;
+      class function Unique(var arr: TPointArray): Integer; overload; cdecl;
+    end;
 
 function MiMU_Version: Double; cdecl;
 
@@ -1588,6 +1593,49 @@ begin
   T := A;
   A := B;
   B := T;
+end;
+
+class function T1D.Unique(var arr: TIntegerArray): Integer; overload; cdecl;
+var
+  x, y, z: Integer;
+  r: TRange;
+  b: TBooleanArray;
+begin
+  y := High(arr);
+  if (y > 0) then
+  begin
+    z := 0;
+    r := arr.Bounds;
+    b.Create(r.Size, False);
+    for x := 0 to y do
+      if b[arr[x] - r.start].Enable then
+        arr[z.Increase] := arr[x];
+    SetLength(b, 0);
+    SetLength(arr, z);
+    Result := ((y + 1) - z);
+  end else
+    Result := 0;
+end;
+
+class function T1D.Unique(var arr: TPointArray): Integer; overload; cdecl;
+var
+  i, r, l, w, h: Integer;
+  m: T2DBooleanArray;
+  b: TBox;
+begin
+  l := Length(arr);
+  if (l > 1) then
+  begin
+    r := 0;
+    b := arr.Bounds(w, h);
+    m := T2DArray_Create(w, h, False);
+    for i := 0 to (l - 1) do
+      if m[arr[i].X - b.X1][arr[i].Y - b.Y1].Enable then
+        arr[r.Increase] := arr[i];
+    SetLength(arr, r);
+    SetLength(m, 0);
+  end;
+  Result := (l - Length(arr));
 end;
 
 {$mode objfpc}{$H+}

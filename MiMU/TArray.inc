@@ -162,13 +162,13 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <arr.Build(item: VarType; size: Integer): TArray> 
- @action: Creates array with item where size is length of the array.
+ <arr.Build(item: VarType; aSize: Integer): TArray> 
+ @action: Creates array with item where aSize is length of the array.
  @note: item is placed on every index in result.
 [==============================================================================}
 {$IFDEF TArray_Build}
 begin
-  Result := Self.Create(size, item);
+  Result := Self.Create(aSize, item);
 end;
 {$ENDIF}
 
@@ -344,7 +344,7 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Create1}
 begin
-  Result := self.Clone;
+  Result := Self.Clone;
   SetLength(Self, 1);
   Self[0] := item;
 end;
@@ -352,15 +352,15 @@ end;
 
 {==============================================================================]
  <arr.Create(size: Integer; item: VarType): TArray> 
- @action: Creates array with item where size is length of the array. Returns old Self.
+ @action: Creates array with item where aSize is length of the array. Returns old Self.
  @note: item is placed on every index in result.
 [==============================================================================}
 {$IFDEF TArray_Create2}
 var
   i: Integer;
 begin
-  Result := self.Clone;
-  SetLength(Self, Max(0, size));
+  Result := Self.Clone;
+  SetLength(Self, Max(0, aSize));
   for i := 0 to High(Self) do
     Self[i] := item;
 end;
