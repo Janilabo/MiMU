@@ -502,10 +502,10 @@ type
     function Unshift(const item: Integer): Integer; overload; cdecl;
     function Unshift(const items: TIntegerArray): Integer; overload; cdecl;
 
-    function Descending: Boolean; cdecl;
-    function Ascending: Boolean; cdecl;
+    function Descend: Boolean; cdecl;
+    function Ascend: Boolean; cdecl;
     function Bounds: TRange; overload; cdecl;
-    function Bounds(var size: Integer): TRange; overload; cdecl;
+    function Bounds(var aSize: Integer): TRange; overload; cdecl;
     function Range: TRange; cdecl;
     function Undupe: Integer; cdecl;
     function Unduped: TIntegerArray; cdecl;

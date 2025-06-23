@@ -351,7 +351,7 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <arr.Create(size: Integer; item: VarType): TArray> 
+ <arr.Create(aSize: Integer; item: VarType): TArray> 
  @action: Creates array with item where aSize is length of the array. Returns old Self.
  @note: item is placed on every index in result.
 [==============================================================================}
