@@ -535,6 +535,40 @@ end;
 {$ENDIF}
 
 {==============================================================================]
+ <arr.Exch(aIndex, bIndex: Integer): Boolean>
+ @action: Fast version of Exchange().
+ @note: Unsafe, no checking.
+[==============================================================================}
+{$IFDEF TArray_Exch}
+begin
+  Result := (Self[aIndex] <> Self[bIndex]);
+  c := Self[aIndex];
+  Self[aIndex] := Self[bIndex];
+  Self[bIndex] := c;
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.Exchange(aIndex, bIndex: Integer): Boolean>
+ @action: Swap items aIndex and bIndex in array arr.
+ @note: Returns true with success.
+[==============================================================================}
+{$IFDEF TArray_Exchange}
+var
+  h: Integer;
+begin
+  h := High(Self);
+  Result := ((h > 0) and (aIndex <> bIndex) and InRange(aIndex, 0, h) and InRange(bIndex, 0, h) and (Self[aIndex] <> Self[bIndex]));
+  if Result then
+  begin
+    c := Self[aIndex];
+	Self[aIndex] := Self[bIndex];
+	Self[bIndex] := c;
+  end;
+end;
+{$ENDIF}
+
+{==============================================================================]
  <arr.Extend(item: VarType): TArray>
  @action: Extends arr with item. Returns it.
  @note: Places item to the left side of the array.
@@ -833,7 +867,7 @@ begin
   l := (Length(Self) - 1);
   Result := (l > 0);
   while (i < l) do
-    Swap(i.Increase, l.Decrease);
+    Exchange(i.Increase, l.Decrease);
 end;
 {$ENDIF}
 
@@ -1246,7 +1280,7 @@ begin
     Exit;
   for s := 1 to shuffles do
     for i := 0 to (l - 1) do
-      Swap(Random(l), Random(l));
+      Exchange(Random(l), Random(l));
 end;
 {$ENDIF}
 
@@ -1744,7 +1778,7 @@ begin
   Result := (l > 1);
   if Result then
   for i := 0 to ((l div 2) - 1) do
-    Swap(i, (l - i) - 1);
+    Exchange(i, ((l - i) - 1));
 end;
 {$ENDIF}
 
@@ -1978,31 +2012,11 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <arr.Swap(aIndex, bIndex: Integer): Boolean>
- @action: Swap items aIndex and bIndex in array arr.
- @note: Returns true with success.
-[==============================================================================}
-{$IFDEF TArray_Swap1}
-var
-  h: Integer;
-begin
-  h := High(Self);
-  Result := ((h > 0) and (aIndex <> bIndex) and InRange(aIndex, 0, h) and InRange(bIndex, 0, h));
-  if Result then
-  begin
-    c := Self[aIndex];
-    Self[aIndex] := Self[bIndex];
-    Self[bIndex] := c;
-  end;
-end;
-{$ENDIF}
-
-{==============================================================================]
  <arr.Swap(b: TArray): Integer> 
  @action: Swaps array arr and array b.
  @note: arr will be b and b will be arr.
 [==============================================================================}
-{$IFDEF TArray_Swap2}
+{$IFDEF TArray_Swap}
 begin
   Result := (Length(Self) + Length(b));
   if (Result = 0) then

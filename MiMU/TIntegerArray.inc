@@ -391,7 +391,7 @@ begin
       for j := 0 to (n - 2) do
         for s := 0 to ((n - j) - 2) do
           if (a[s] > a[s + 1]) then
-            Swap(s, s + 1);
+            Exchange(s, (s + 1));
       Break;
     end;
   if ((n mod 2) = 1) then
@@ -508,7 +508,7 @@ begin
   for a := 0 to (Result - 1) do
     for b := 1 to Result do
       if ((ascending and (Self[b - 1] > Self[b])) or (not ascending and (Self[b - 1] < Self[b]))) then
-        Swap(b, b - 1);
+        Exchange(b, (b - 1));
 end;
 
 {==============================================================================]
@@ -527,7 +527,7 @@ begin
     for a := 0 to (Result - 1) do
       for b := 1 to (Result - a) do
         if (Sign(Self[b] - Self[b - 1]) = o) then
-          Swap(b, b - 1);
+          Exchange(b, (b - 1));
   end;
 end;
 
@@ -551,7 +551,7 @@ begin
     for j := 1 to (Result - i) do
       if (Sign(Self[j] - Self[j - 1]) = o) then
       begin
-        Swap(j - 1, j);
+        Exchange((j - 1), j);
         s := True;
       end;
     if not s then
@@ -610,7 +610,7 @@ begin
             Dec(x.stop);
           if (x.start <= x.stop) then
           begin
-            Swap(x.start, x.stop);
+            Exchange(x.start, x.stop);
             Inc(x.start);
             Dec(x.stop);
           end;
@@ -651,13 +651,13 @@ function TIntegerArrayHelper.QuickSort3W(const ascending: Boolean = True): Integ
     while (p <= b) do
       if (Sign(arr[p] - x) = o) then
       begin
-        Swap(a, p);
+        Exchange(a, p);
         Inc(p);
         Inc(a);
       end else
       if (Sign(arr[p] - x) = -o) then
       begin
-        Swap(b, p);
+        Exchange(b, p);
         Dec(b);
       end else
         Inc(p);
@@ -693,7 +693,7 @@ function TIntegerArrayHelper.QSort(const ascending: Boolean = True): Integer; cd
           Dec(s.stop);
         if (s.start <= s.stop) then
         begin
-          Swap(s.start, s.stop);
+          Exchange(s.start, s.stop);
           Inc(s.start);
           Dec(s.stop);
         end;
@@ -729,7 +729,7 @@ begin
       for i := 0 to (Result - 1) do
         if (Sign(Self[i + 1] - Self[i]) = o) then
         begin
-          Swap(i, i + 1);
+          Exchange(i, (i + 1));
           s := True;
         end;
       if not s then
@@ -738,7 +738,7 @@ begin
       for i := (Result - 1) downto 0 do
          if (Sign(Self[i + 1] - Self[i]) = o) then
         begin
-          Swap(i, i + 1);
+          Exchange(i, (i + 1));
           s := True;
         end;
     until not s;
@@ -767,7 +767,7 @@ begin
       for i := b to e do
         if not (Sign(Self[i] - Self[i + 1]) = o) then
         begin
-          Swap(i, i + 1);
+          Exchange(i, (i + 1));
           s := True;
         end;
       if not s then
@@ -777,7 +777,7 @@ begin
       for i := e downto b do
         if not (Sign(Self[i] - Self[i + 1]) = o) then
         begin
-          Swap(i, i + 1);
+          Exchange(i, (i + 1));
           s := True;
         end;
     until not s;
@@ -809,7 +809,7 @@ begin
       for i := 0 to (Result - g) do
         if (Sign(Self[i + g] - Self[i]) = o) then
         begin
-          Swap(i, i + g);
+          Exchange(i, (i + g));
           s := True;
         end;
     end;
@@ -833,7 +833,7 @@ begin
     while (p < (Result + 1)) do
       if (Sign(Self[p] - Self[p - 1]) = o) then
       begin
-        Swap(p, p - 1);
+        Exchange(p, (p - 1));
         if (p > 1) then
           Dec(p);
       end else
@@ -859,7 +859,7 @@ begin
     while (p < Length(Self)) do
       if (Sign(Self[p] - Self[p - 1]) = o) then
       begin
-        Swap(p, p - 1);
+        Exchange(p, (p - 1));
         if (p > 1) then
         begin
           if (l <> 0) then
@@ -903,7 +903,7 @@ begin
           c := (c + 1);
         if (Sign(Self[r] - Self[c]) = o) then
         begin
-          Swap(r, c);
+          Exchange(r, c);
           r := c;
         end else
           Break;
@@ -912,7 +912,7 @@ begin
     end;
     while (b > 0) do
     begin
-      Swap(0, b);
+      Exchange(0, b);
       b := (b - 1);
       r := 0;
       while (((r * 2) + 1) <= b) do
@@ -922,7 +922,7 @@ begin
           c := (c + 1);
         if (Sign(Self[r] - Self[c]) = o) then
         begin
-          Swap(r, c);
+          Exchange(r, c);
           r := c;
         end else
           Break;
@@ -949,7 +949,7 @@ begin
       begin
         if not (Sign(Self[b] - Self[b - 1]) = o) then
           Break;
-        Swap(b, b - 1);
+        Exchange(b, (b - 1));
       end;
   end;
 end;
@@ -973,7 +973,7 @@ begin
       for t := (c + 1) to Result do
         if (Sign(Self[t] - Self[m]) = o) then
           m := t;
-      Swap(m, c);
+      Exchange(m, c);
     end;
   end;
 end;
@@ -1000,7 +1000,7 @@ begin
       a := l;
       b := h;
       if (Sign(Self[l] - Self[h]) = -o) then
-        Swap(h, l);
+        Exchange(h, l);
       for x := (a + 1) to (b - 1) do
         if (Sign(Self[x] - Self[l]) = o) then
           l := x
@@ -1008,9 +1008,9 @@ begin
           if (Sign(Self[x] - Self[h]) = -o) then
             h := x;
       if (l <> a) then
-        Swap(a, l);
+        Exchange(a, l);
       if (h <> b) then
-        Swap(b, h);
+        Exchange(b, h);
     end;
   end;
 end;
@@ -1035,13 +1035,13 @@ begin
       a := i;
       b := ((l - 1) - i);
       if (Sign(Self[b] - Self[a]) = o) then
-        Swap(a, b);
+        Exchange(a, b);
       for x := (a + 1) to (b - 1) do
         if (Sign(Self[x] - Self[a]) = o) then
-          Swap(a, x)
+          Exchange(a, x)
         else
           if (Sign(Self[x] - Self[b]) = -o) then
-            Swap(x, b);
+            Exchange(x, b);
       end;
   end;
 end;
@@ -1070,9 +1070,9 @@ begin
         Continue;
       if (m <> l) then
       for x := l to (((m - l) - 1) div 2) do
-        Swap(x, m - (x - l));
+        Exchange(x, (m - (x - l)));
       for x := l to (((i - l) - 1) div 2) do
-        Swap(x, i - (x - l));
+        Exchange(x, (i - (x - l)));
     end;
   end;
 end;
@@ -1196,7 +1196,7 @@ begin
             b := a;
             while ((b >= x) and (Sign(Self[b] - Self[b - x]) = o)) do
             begin
-              Swap(b, b - x);
+              Exchange(b, (b - x));
               b := (b - x);
             end;
           end;
@@ -1205,7 +1205,7 @@ begin
       end;
       False:
       if (Sign(Self[1] - Self[0]) = o) then
-        Swap(0, 1);
+        Exchange(0, 1);
     end;
   end;
 end;

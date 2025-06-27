@@ -323,6 +323,28 @@ function TBoxArrayHelper.Equal(const target: TBoxArray): Boolean; overload; cdec
 function TRangeArrayHelper.Equal(const target: TRangeArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Equal}
 
+{$DEFINE TArray_Exch}
+function TIntegerArrayHelper.Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Integer; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Double; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: string; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Char; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Boolean; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: TPoint; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: TBox; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: TRange; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Exch}
+
+{$DEFINE TArray_Exchange}
+function TIntegerArrayHelper.Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Integer; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Double; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: string; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Char; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Boolean; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: TPoint; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: TBox; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: TRange; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Exchange}
+
 {$DEFINE TArray_Extend1}
 function TIntegerArrayHelper.Extend(const item: Integer): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
 function TDoubleArrayHelper.Extend(const item: Double): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
@@ -1115,18 +1137,7 @@ function TBoxArrayHelper.SizeMin(const target: Integer): Boolean; overload; cdec
 function TRangeArrayHelper.SizeMin(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_SizeMin}
 
-{$DEFINE TArray_Swap1}
-function TIntegerArrayHelper.Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Integer; {$I MIMU\TArray.inc}
-function TDoubleArrayHelper.Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Double; {$I MIMU\TArray.inc}
-function TStringArrayHelper.Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: string; {$I MIMU\TArray.inc}
-function TCharArrayHelper.Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Char; {$I MIMU\TArray.inc}
-function TBooleanArrayHelper.Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Boolean; {$I MIMU\TArray.inc}
-function TPointArrayHelper.Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: TPoint; {$I MIMU\TArray.inc}
-function TBoxArrayHelper.Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: TBox; {$I MIMU\TArray.inc}
-function TRangeArrayHelper.Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: TRange; {$I MIMU\TArray.inc}
-{$UNDEF TArray_Swap1}
-
-{$DEFINE TArray_Swap2}
+{$DEFINE TArray_Swap}
 function TIntegerArrayHelper.Swap(var b: TIntegerArray): Integer; overload; cdecl; var a: TIntegerArray; {$I MIMU\TArray.inc}
 function TDoubleArrayHelper.Swap(var b: TDoubleArray): Integer; overload; cdecl; var a: TDoubleArray; {$I MIMU\TArray.inc}
 function TStringArrayHelper.Swap(var b: TStringArray): Integer; overload; cdecl; var a: TStringArray; {$I MIMU\TArray.inc}
@@ -1135,7 +1146,7 @@ function TBooleanArrayHelper.Swap(var b: TBooleanArray): Integer; overload; cdec
 function TPointArrayHelper.Swap(var b: TPointArray): Integer; overload; cdecl; var a: TPointArray; {$I MIMU\TArray.inc}
 function TBoxArrayHelper.Swap(var b: TBoxArray): Integer; overload; cdecl; var a: TBoxArray; {$I MIMU\TArray.inc}
 function TRangeArrayHelper.Swap(var b: TRangeArray): Integer; overload; cdecl; var a: TRangeArray; {$I MIMU\TArray.inc}
-{$UNDEF TArray_Swap2}
+{$UNDEF TArray_Swap}
 
 {$DEFINE TArray_Trade}
 function TIntegerArrayHelper.Trade(var b: TIntegerArray): Integer; overload; cdecl; var a: TIntegerArray; {$I MIMU\TArray.inc}

@@ -422,6 +422,8 @@ type
     function Dupe: TIntegerArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TIntegerArray): Boolean; overload; cdecl;
+	function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
+    function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: Integer): TIntegerArray; overload; cdecl;
     function Extend(const items: TIntegerArray): TIntegerArray; overload; cdecl;
     function Extract(const item: Integer; const index: Integer = 0): TIntegerArray; overload; cdecl;
@@ -463,7 +465,6 @@ type
     function Resize(const aChange: Integer; const null: Integer): Integer; overload; cdecl;
     function Size(const aSize: Integer): Integer; overload; cdecl;
     function Size: Integer; overload; cdecl;
-    function Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Swap(var b: TIntegerArray): Integer; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DIntegerArray; overload; cdecl;
@@ -599,6 +600,8 @@ type
     function Dupe: TDoubleArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TDoubleArray): Boolean; overload; cdecl;
+    function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
+    function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: Double): TDoubleArray; overload; cdecl;
     function Extend(const items: TDoubleArray): TDoubleArray; overload; cdecl;
     function Extract(const item: Double; const index: Integer = 0): TDoubleArray; overload; cdecl;
@@ -640,7 +643,6 @@ type
     function Resize(const aChange: Integer; const null: Double): Integer; overload; cdecl;
     function Size(const aSize: Integer): Integer; overload; cdecl;
     function Size: Integer; overload; cdecl;
-    function Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Swap(var b: TDoubleArray): Integer; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DDoubleArray; overload; cdecl;
@@ -706,6 +708,8 @@ type
     function Dupe: TStringArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TStringArray): Boolean; overload; cdecl;
+    function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
+    function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: string): TStringArray; overload; cdecl;
     function Extend(const items: TStringArray): TStringArray; overload; cdecl;
     function Extract(const item: string; const index: Integer = 0): TStringArray; overload; cdecl;
@@ -747,7 +751,6 @@ type
     function Resize(const aChange: Integer; const null: string): Integer; overload; cdecl;
     function Size(const aSize: Integer): Integer; overload; cdecl;
     function Size: Integer; overload; cdecl;
-    function Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Swap(var b: TStringArray): Integer; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DStringArray; overload; cdecl;
@@ -813,6 +816,8 @@ type
     function Dupe: TCharArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TCharArray): Boolean; overload; cdecl;
+    function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
+	function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: Char): TCharArray; overload; cdecl;
     function Extend(const items: TCharArray): TCharArray; overload; cdecl;
     function Extract(const item: Char; const index: Integer = 0): TCharArray; overload; cdecl;
@@ -854,7 +859,6 @@ type
     function Resize(const aChange: Integer; const null: Char): Integer; overload; cdecl;
     function Size(const aSize: Integer): Integer; overload; cdecl;
     function Size: Integer; overload; cdecl;
-    function Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Swap(var b: TCharArray): Integer; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DCharArray; overload; cdecl;
@@ -920,6 +924,8 @@ type
     function Dupe: TBooleanArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TBooleanArray): Boolean; overload; cdecl;
+    function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
+    function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: Boolean): TBooleanArray; overload; cdecl;
     function Extend(const items: TBooleanArray): TBooleanArray; overload; cdecl;
     function Extract(const item: Boolean; const index: Integer = 0): TBooleanArray; overload; cdecl;
@@ -961,7 +967,6 @@ type
     function Resize(const aChange: Integer; const null: Boolean): Integer; overload; cdecl;
     function Size(const aSize: Integer): Integer; overload; cdecl;
     function Size: Integer; overload; cdecl;
-    function Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Swap(var b: TBooleanArray): Integer; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DBooleanArray; overload; cdecl;
@@ -1027,6 +1032,8 @@ type
     function Dupe: TPointArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TPointArray): Boolean; overload; cdecl;
+    function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
+    function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: TPoint): TPointArray; overload; cdecl;
     function Extend(const items: TPointArray): TPointArray; overload; cdecl;
     function Extract(const item: TPoint; const index: Integer = 0): TPointArray; overload; cdecl;
@@ -1068,7 +1075,6 @@ type
     function Resize(const aChange: Integer; const null: TPoint): Integer; overload; cdecl;
     function Size(const aSize: Integer): Integer; overload; cdecl;
     function Size: Integer; overload; cdecl;
-    function Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Swap(var b: TPointArray): Integer; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DPointArray; overload; cdecl;
@@ -1143,6 +1149,8 @@ type
     function Dupe: TBoxArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TBoxArray): Boolean; overload; cdecl;
+    function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
+    function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: TBox): TBoxArray; overload; cdecl;
     function Extend(const items: TBoxArray): TBoxArray; overload; cdecl;
     function Extract(const item: TBox; const index: Integer = 0): TBoxArray; overload; cdecl;
@@ -1184,7 +1192,6 @@ type
     function Resize(const aChange: Integer; const null: TBox): Integer; overload; cdecl;
     function Size(const aSize: Integer): Integer; overload; cdecl;
     function Size: Integer; overload; cdecl;
-    function Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Swap(var b: TBoxArray): Integer; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DBoxArray; overload; cdecl;
@@ -1250,6 +1257,8 @@ type
     function Dupe: TRangeArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TRangeArray): Boolean; overload; cdecl;
+    function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
+    function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: TRange): TRangeArray; overload; cdecl;
     function Extend(const items: TRangeArray): TRangeArray; overload; cdecl;
     function Extract(const item: TRange; const index: Integer = 0): TRangeArray; overload; cdecl;
@@ -1291,7 +1300,6 @@ type
     function Resize(const aChange: Integer; const null: TRange): Integer; overload; cdecl;
     function Size(const aSize: Integer): Integer; overload; cdecl;
     function Size: Integer; overload; cdecl;
-    function Swap(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Swap(var b: TRangeArray): Integer; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DRangeArray; overload; cdecl;
@@ -1335,6 +1343,9 @@ type
   end;
   type
     T1D = class
+      class function Init(var arr: TIntegerArray): Integer; overload; cdecl;
+      class function Init(var arr: TPointArray): Integer; overload; cdecl;
+      class function Init(var arr: TBooleanArray): Integer; overload; cdecl;
       class function Unique(var arr: TIntegerArray): Integer; overload; cdecl;
       class function Unique(var arr: TPointArray): Integer; overload; cdecl;
     end;
@@ -1357,15 +1368,15 @@ operator<>(const a, b: TPoint): Boolean;
 operator<>(const a, b: TBox): Boolean;
 operator<>(const a, b: TRange): Boolean;
 
-procedure Swap(var A, B: Integer); overload; inline;
-procedure Swap(var A, B: Int64); overload; inline;
-procedure Swap(var A, B: Double); overload; inline;
-procedure Swap(var A, B: string); overload; inline;
-procedure Swap(var A, B: Char); overload; inline;
-procedure Swap(var A, B: Boolean); overload; inline;
-procedure Swap(var A, B: TPoint); overload; inline;
-procedure Swap(var A, B: TBox); overload; inline;
-procedure Swap(var A, B: TRange); overload; inline;
+function Swap(var A, B: Integer): Boolean; overload; inline;
+function Swap(var A, B: Int64): Boolean; overload; inline;
+function Swap(var A, B: Double): Boolean; overload; inline;
+function Swap(var A, B: string): Boolean; overload; inline;
+function Swap(var A, B: Char): Boolean; overload; inline;
+function Swap(var A, B: Boolean): Boolean; overload; inline;
+function Swap(var A, B: TPoint): Boolean; overload; inline;
+function Swap(var A, B: TBox): Boolean; overload; inline;
+function Swap(var A, B: TRange): Boolean; overload; inline;
 
 function TArray_Pos(const arr: TIntegerArray; const item: Integer; const index: Integer = 0): Integer; overload; cdecl;
 function TArray_Pos(const arr: TDoubleArray; const item: Double; const index: Integer = 0): Integer; overload; cdecl;
@@ -1514,85 +1525,115 @@ begin
   Result := not ((a.start = b.start) and (a.stop = b.stop));
 end;  
 
-procedure Swap(var A, B: Integer); overload; inline;
+function Swap(var A, B: Integer): Boolean; overload; inline;
 var
   T: Integer;
 begin
+  Result := (A <> B);
   T := A;
   A := B;
   B := T;
 end;
 
-procedure Swap(var A, B: Int64); overload; inline;
+function Swap(var A, B: Int64): Boolean; overload; inline;
 var
   T: Int64;
 begin
+  Result := (A <> B);
   T := A;
   A := B;
   B := T;
 end;
 
-procedure Swap(var A, B: Double); overload; inline;
+function Swap(var A, B: Double): Boolean; overload; inline;
 var
   T: Double;
 begin
+  Result := (A <> B);
   T := A;
   A := B;
   B := T;
 end;
 
-procedure Swap(var A, B: string); overload; inline;
+function Swap(var A, B: string): Boolean; overload; inline;
 var
   T: string;
 begin
+  Result := (A <> B);
   T := A;
   A := B;
   B := T;
 end;
 
-procedure Swap(var A, B: Char); overload; inline;
+function Swap(var A, B: Char): Boolean; overload; inline;
 var
   T: Char;
 begin
+  Result := (A <> B);
   T := A;
   A := B;
   B := T;
 end;
 
-procedure Swap(var A, B: Boolean); overload; inline;
+function Swap(var A, B: Boolean): Boolean; overload; inline;
 var
   T: Boolean;
 begin
+  Result := (A <> B);
   T := A;
   A := B;
   B := T;
 end;
 
-procedure Swap(var A, B: TPoint); overload; inline;
+function Swap(var A, B: TPoint): Boolean; overload; inline;
 var
   T: TPoint;
 begin
+  Result := (A <> B);
   T := A;
   A := B;
   B := T;
 end;
 
-procedure Swap(var A, B: TBox); overload; inline;
+function Swap(var A, B: TBox): Boolean; overload; inline;
 var
   T: TBox;
 begin
+  Result := (A <> B);
   T := A;
   A := B;
   B := T;
 end;
 
-procedure Swap(var A, B: TRange); overload; inline;
+function Swap(var A, B: TRange): Boolean; overload; inline;
 var
   T: TRange;
 begin
+  Result := (A <> B);
   T := A;
   A := B;
   B := T;
+end;
+
+class function T1D.Init(var arr: TIntegerArray): Integer; overload; cdecl;
+begin
+  Result := Length(arr);
+  if (Result > 0) then
+    FillChar(arr[0], (Result * SizeOf(Integer)), 0);
+end;
+
+class function T1D.Init(var arr: TPointArray): Integer; overload; cdecl;
+begin
+  Result := Length(arr);
+  if (Result > 0) then
+    FillChar(arr[0], (Result * SizeOf(TPoint)), 0);
+end;
+
+class function T1D.Init(var arr: TBooleanArray): Integer; overload; cdecl;
+begin
+  Result := Length(arr);
+  if (Result > 0) then
+    FillChar(arr[0], Result, 0);
 end;
 
 class function T1D.Unique(var arr: TIntegerArray): Integer; overload; cdecl;
