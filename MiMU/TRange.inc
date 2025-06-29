@@ -232,7 +232,7 @@ end;
 [==============================================================================}
 function TRangeHelper.Overlapping(const b: TRange): Boolean; cdecl;
 begin
-  Result := (Min(Self.start, Self.stop) <= Max(b.start, b.stop)) and (Min(b.start, b.stop) <= Max(Self.start, Self.stop));
+  Result := ((Min(Self.start, Self.stop) <= Max(b.start, b.stop)) and (Min(b.start, b.stop) <= Max(Self.start, Self.stop)));
 end;
 
 {==============================================================================]
@@ -242,7 +242,7 @@ end;
 [==============================================================================}
 function TRangeHelper.Overlap(const b: TRange): Boolean; cdecl;
 begin
-  Result := not (Min(Self.start, Self.stop) > Max(b.start, b.stop)) or (Min(b.start, b.stop) > Max(Self.start, Self.stop));
+  Result := not ((Min(Self.start, Self.stop) > Max(b.start, b.stop)) or (Min(b.start, b.stop) > Max(Self.start, Self.stop)));
 end;
 
 {==============================================================================]
