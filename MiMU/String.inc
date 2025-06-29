@@ -31,7 +31,7 @@ var
 begin
   p := Self.Loc(s, index);
   if (p > 0) then
-    Result := Copy(Self, (p + 1), (Length(Self) - p))
+    Result := Copy(Self, (p + Length(s)), ((1 + Length(Self)) - (p + Length(s))))
   else
     Result := '';
 end;
@@ -131,7 +131,7 @@ var
 begin
   p := Self.Loc(s, index);
   if (p > 0) then
-    Result := Copy(Self, 1, (p - Length(s)))
+    Result := Copy(Self, 1, (p - 1))
   else
     Result := '';
 end;
