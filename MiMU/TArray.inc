@@ -487,22 +487,39 @@ var
 begin
   l := Length(Self);
   SetLength(Result, l);
-  if (l > 0) then
+  if (l = 0) then
+    Exit;
+  if ((l mod 2) <> 0) then
   begin
-    if ((l mod 2) <> 0) then
-    begin
-      j := (l div 2);
-      Result[j] := Self[j];
-    end;
-    if (l = 1) then
-	  Exit;
-    for i := 0 to ((l div 2) - 1) do
-    begin
-      j := ((l - i) - 1);
-      Result[i] := Self[i];
-      Result[j] := Self[j];
-    end;
+    j := (l div 2);
+    Result[j] := Self[j];
   end;
+  if (l > 1) then
+  for i := 0 to ((l div 2) - 1) do
+  begin
+    j := ((l - i) - 1);
+    Result[i] := Self[i];
+    Result[j] := Self[j];
+  end;
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.Duplicate(xTimes: Integer): TArray>
+ @action: Returns copy of an array arr.
+ @note: None.
+[==============================================================================}
+{$IFDEF TArray_Duplicate}
+var
+  m, i, j, l: Integer;
+begin
+  l := Length(Self);
+  m := Max(0, xTimes);
+  SetLength(Result, (m * l));
+  if (l > 0) then
+  for i := 0 to (m - 1) do
+    for j := 0 to (l - 1) do
+      Result[(i * l) + j] := Self[j];
 end;
 {$ENDIF}
 
@@ -2009,6 +2026,128 @@ end;
 begin
   Result := (Length(Self) >= target);
 end;   
+{$ENDIF}
+
+{==============================================================================]
+ <arr.SubarrayLocation(pattern: TArray): Integer>
+ @action: Returns subarray position in arr that match pattern exactly.
+ @note: arr[0,1,2,0,1,2,3].([1,2]) => 4	
+[==============================================================================}
+{$IFDEF TArray_SubarrayLocation}
+var
+  i, j, l, s, p: Integer;
+begin
+  l := Length(Self);
+  p := Length(pattern);
+  if ((p > 0) and (p <= l)) then
+  for i := (l - p) downto 0 do
+  begin
+    s := 0;
+    for j := 0 to (p - 1) do
+      if (Self[i + j] <> pattern[j]) then
+        Break
+      else
+        s := s + 1;
+    if (s = p) then
+      Exit(i);
+  end;
+  Result := -1;
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.SubarrayLocations(pattern: TArray): TIntegerArray>
+ @action: Returns subarray positions in arr that match pattern exactly.
+ @note: arr[0,1,2,0,1,2,3].([1,2]) => [4,1]	
+[==============================================================================}
+{$IFDEF TArray_SubarrayLocations}
+var
+  i, j, l, s, r, p: Integer;
+begin
+  l := Length(Self);
+  p := Length(pattern);
+  SetLength(Result, 0);
+  r := 0;
+  if ((p > 0) and (p <= l)) then
+  begin
+    SetLength(Result, ((l - p) + 1));
+    for i := (l - p) downto 0 do
+    begin
+      s := 0;
+      for j := 0 to (p - 1) do
+        if (Self[i + j] <> pattern[j]) then
+          Break
+        else
+          s := s + 1;
+      if (s = p) then
+        Result[r.Increase] := i;
+    end;
+  end;
+  SetLength(Result, r);
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.SubarrayPosition(pattern: TArray): Integer>
+ @action: Returns subarray position in arr that match pattern exactly.
+ @note: arr[0,1,2,0,1,2,3].([1,2]) => 1	
+[==============================================================================}
+{$IFDEF TArray_SubarrayPosition}
+var
+  i, j, l, p: Integer;
+  f: Boolean;
+begin
+  l := Length(Self);
+  p := Length(pattern);
+  if ((p > 0) and (p <= l)) then
+  for i := 0 to (l - p) do
+  begin
+    f := True;
+    for j := 0 to (p - 1) do
+      if (Self[i + j] <> pattern[j]) then
+      begin
+        f := False;
+        Break;
+      end;
+    if f then
+      Exit(i);
+  end;
+  Result := -1;
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.SubarrayPositions(pattern: TArray): TIntegerArray>
+ @action: Returns subarray positions in arr that match pattern exactly.
+ @note: arr[0,1,2,0,1,2,3].([1,2]) => [1,4]	
+[==============================================================================}
+{$IFDEF TArray_SubarrayPositions}
+var
+  i, j, l, p, r: Integer;
+  f: Boolean;
+begin
+  l := Length(Self);
+  p := Length(pattern);
+  SetLength(Result, 0);
+  r := 0;
+  if ((p > 0) and (p <= l)) then
+  begin
+    SetLength(Result, ((l - p) + 1));
+    for i := 0 to (l - p) do
+    begin
+      f := True;
+      for j := 0 to (p - 1) do
+        if (Self[i + j] <> pattern[j]) then
+        begin
+          f := False;
+          Break;
+        end;
+      if f then
+        Result[r.Increase] := i;
+    end;
+  end;
+  SetLength(Result, r);
+end;
 {$ENDIF}
 
 {==============================================================================]

@@ -301,6 +301,17 @@ function TBoxArrayHelper.Dupe: TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
 function TRangeArrayHelper.Dupe: TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Dupe}
 
+{$DEFINE TArray_Duplicate}
+function TIntegerArrayHelper.Duplicate(const xTimes: Integer = 1): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Duplicate(const xTimes: Integer = 1): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Duplicate(const xTimes: Integer = 1): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Duplicate(const xTimes: Integer = 1): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Duplicate(const xTimes: Integer = 1): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Duplicate(const xTimes: Integer = 1): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Duplicate(const xTimes: Integer = 1): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Duplicate(const xTimes: Integer = 1): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Duplicate}
+
 {$DEFINE TArray_Empty1}
 function TIntegerArrayHelper.Empty: Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 function TDoubleArrayHelper.Empty: Boolean; overload; cdecl; {$I MIMU\TArray.inc}
@@ -1136,6 +1147,50 @@ function TPointArrayHelper.SizeMin(const target: Integer): Boolean; overload; cd
 function TBoxArrayHelper.SizeMin(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 function TRangeArrayHelper.SizeMin(const target: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_SizeMin}
+
+{$DEFINE TArray_SubarrayLocation}
+function TIntegerArrayHelper.SubarrayLocation(const pattern: TIntegerArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.SubarrayLocation(const pattern: TDoubleArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.SubarrayLocation(const pattern: TStringArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.SubarrayLocation(const pattern: TCharArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.SubarrayLocation(const pattern: TBooleanArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.SubarrayLocation(const pattern: TPointArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.SubarrayLocation(const pattern: TBoxArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.SubarrayLocation(const pattern: TRangeArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_SubarrayLocation}
+
+{$DEFINE TArray_SubarrayLocations}
+function TIntegerArrayHelper.SubarrayLocations(const pattern: TIntegerArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.SubarrayLocations(const pattern: TDoubleArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.SubarrayLocations(const pattern: TStringArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.SubarrayLocations(const pattern: TCharArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.SubarrayLocations(const pattern: TBooleanArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.SubarrayLocations(const pattern: TPointArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.SubarrayLocations(const pattern: TBoxArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.SubarrayLocations(const pattern: TRangeArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_SubarrayLocations}
+
+{$DEFINE TArray_SubarrayPosition}
+function TIntegerArrayHelper.SubarrayPosition(const pattern: TIntegerArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.SubarrayPosition(const pattern: TDoubleArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.SubarrayPosition(const pattern: TStringArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.SubarrayPosition(const pattern: TCharArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.SubarrayPosition(const pattern: TBooleanArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.SubarrayPosition(const pattern: TPointArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.SubarrayPosition(const pattern: TBoxArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.SubarrayPosition(const pattern: TRangeArray): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_SubarrayPosition}
+
+{$DEFINE TArray_SubarrayPositions}
+function TIntegerArrayHelper.SubarrayPositions(const pattern: TIntegerArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.SubarrayPositions(const pattern: TDoubleArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.SubarrayPositions(const pattern: TStringArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.SubarrayPositions(const pattern: TCharArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.SubarrayPositions(const pattern: TBooleanArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.SubarrayPositions(const pattern: TPointArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.SubarrayPositions(const pattern: TBoxArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.SubarrayPositions(const pattern: TRangeArray): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_SubarrayPositions}
 
 {$DEFINE TArray_Swap}
 function TIntegerArrayHelper.Swap(var b: TIntegerArray): Integer; overload; cdecl; var a: TIntegerArray; {$I MIMU\TArray.inc}

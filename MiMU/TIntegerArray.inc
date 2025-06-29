@@ -431,12 +431,12 @@ begin
 end;
 
 {==============================================================================]
- <TIntegerArrayHelper.MFrequent>
+ <TIntegerArrayHelper.MostFreq>
  @action: Returns the most frequent/common value from arr.
  @note: Be careful with values! Try to avoid using too low or high values!
         Such as: -200,000,000 or +200,000,000. Heavy memory-usage could possibly cause crashing.
 [==============================================================================}
-function TIntegerArrayHelper.MFrequent(const null: Integer = -2147483648): Integer; cdecl;
+function TIntegerArrayHelper.MostFreq(const null: Integer = -2147483648): Integer; cdecl;
 var
   h, x, t: Integer;
   b: TIntegerArray;
@@ -463,12 +463,12 @@ begin
 end;
 
 {==============================================================================]
- <TIntegerArrayHelper.LFrequent>
+ <TIntegerArrayHelper.LeastFreq>
  @action: Returns the least frequent/common value from TIA.
  @note: Be careful with values! Try to avoid using too low or high values!
         Such as: -200,000,000 or +200,000,000. Heavy memory-usage could possibly cause crashing.
 [==============================================================================}
-function TIntegerArrayHelper.LFrequent(const null: Integer = -2147483648): Integer; cdecl;
+function TIntegerArrayHelper.LeastFreq(const null: Integer = -2147483648): Integer; cdecl;
 var
   h, x, t: Integer;
   b: TIntegerArray;
