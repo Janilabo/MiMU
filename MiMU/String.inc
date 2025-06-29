@@ -3,61 +3,59 @@
   @action: Returns string that is found after s in str.
   @note: None
 [==============================================================================}
-function TStringHelper.After(const s: string; const index: Integer = 1): string; cdecl;
+function TStringHelper.After(const s: string; const index: Integer = 1): string; overload;
 var
-  p, b, a: Integer;
+  p: Integer;
 begin
-  b := Length(s);
-  a := Length(Self);
-  if ((b < a) and (index < a)) then
-  begin
-    p := Self.Find(s, index);
-    if (p > 0) then
-      Result := Copy(Self, (p + b), ((1 + a) - (p + b)))
-    else
-      Result := '';
-  end else
+  p := Self.Pos(s, index);
+  if (p > 0) then
+    Result := Copy(Self, (p + Length(s)), Length(Self))
+  else
     Result := '';
 end;
 
 {==============================================================================]
-  <TStringHelper.AfterLast>
-  @action: Returns string that is found after last s in str.
-  @note: Supports index.
+  <TStringHelper.After>
+  @action: Returns string that is found after index in str.
+  @note: None
 [==============================================================================}
-function TStringHelper.AfterLast(const s: string; const index: Integer = 2147483647): string; cdecl;
-var
-  p: Integer;
+function TStringHelper.After(const index: Integer; const count: Integer = 2147483647): string; overload;
 begin
-  p := Self.Loc(s, index);
-  if (p > 0) then
-    Result := Copy(Self, (p + Length(s)), ((1 + Length(Self)) - (p + Length(s))))
+  if ((index >= 0) and (index < Length(Self)) and (count > 0)) then
+    Result := Copy(Self, (index + 1), count)
   else
     Result := '';
 end;
 
 {==============================================================================]
   <TStringHelper.Ahead>
-  @action: Returns string (with count) that is behind the index in str.
+  @action: Returns string that is ahead the s in str.
   @note: None
 [==============================================================================}
-function TStringHelper.Ahead(const index, count: Integer): string; cdecl;
+function TStringHelper.Ahead(const s: string; const index: Integer = 2147483647): string; overload;
 var
-  l, c, i: Integer;
+  p: Integer;
 begin
-  l := Length(Self);
-  if ((l > 0) and (index <= l) and (count > 0)) then
+  p := Self.Loc(s, index);
+  if (p > 0) then
+    Result := Copy(Self, 1, (p - 1))
+  else
+    Result := '';
+end;
+
+{==============================================================================]
+  <TStringHelper.Ahead>
+  @action: Returns string that is ahead the index in str.
+  @note: None
+[==============================================================================}
+function TStringHelper.Ahead(const index: Integer; const count: Integer = 2147483647): string; overload;
+var
+  c: Integer;
+begin
+  if ((index > 1) and (count > 0)) then
   begin
-    c := count;
-	i := index;
-    if (i < 1) then
-    begin
-      c := (c - Abs(i - 1));
-      i := 1;
-    end;
-    if ((c > 0) and ((i + c) > l)) then
-      c := (c - (((i + c) - l) - 1));
-    Result := Copy(Self, i, c);
+    c := Min(count, (index - 1));
+    Result := Copy(Self, (index - c), c);
   end else
     Result := '';
 end;
@@ -104,34 +102,46 @@ end;
   @action: Returns string that is found before s in str.
   @note: None
 [==============================================================================}
-function TStringHelper.Before(const s: string; const index: Integer = 1): string; cdecl;
+function TStringHelper.Before(const s: string; const index: Integer = 1): string; overload;
 var
-  p, l: Integer;
+  p: Integer;
 begin
-  l := Length(Self);
-  if ((Length(s) < l)) then
+  p := Self.Pos(s, index);
+  if (p > 0) then
+    Result := Copy(Self, 1, (p - 1))
+  else
+    Result := '';
+end;
+
+{==============================================================================]
+  <TStringHelper.Before>
+  @action: Returns string that is found before index in str.
+  @note: None
+[==============================================================================}
+function TStringHelper.Before(const index: Integer; const count: Integer = 2147483647): string; overload;
+var
+  c: Integer;
+begin
+  if ((index > 1) and (count > 0)) then
   begin
-    p := Self.Find(s, Min(l, index));
-    if (p > 1) then
-      Result := Copy(Self, 1, (p - 1))
-    else
-      Result := '';
+    c := Min(count, (index - 1));
+    Result := Copy(Self, (index - c), c);
   end else
     Result := '';
 end;
 
 {==============================================================================]
-  <TStringHelper.BeforeLast>
-  @action: Returns string that is found before last s in str.
+  <TStringHelper.Behind>
+  @action: Returns string (with count) that is behind the s in str.
   @note: None
 [==============================================================================}
-function TStringHelper.BeforeLast(const s: string; const index: Integer = 2147483647): string; cdecl;
+function TStringHelper.Behind(const s: string; const index: Integer = 2147483647): string; overload;
 var
   p: Integer;
 begin
   p := Self.Loc(s, index);
   if (p > 0) then
-    Result := Copy(Self, 1, (p - 1))
+    Result := Copy(Self, (p + Length(s)), Length(Self))
   else
     Result := '';
 end;
@@ -141,23 +151,11 @@ end;
   @action: Returns string (with count) that is behind the index in str.
   @note: None
 [==============================================================================}
-function TStringHelper.Behind(const index, count: Integer): string; cdecl;
-var
-  l, r, c: Integer;
+function TStringHelper.Behind(const index: Integer; const count: Integer = 2147483647): string; overload;
 begin
-  l := Length(Self);
-  if ((l > 0) and (index > 1) and (count > 0)) then
-  begin
-    c := count;
-    if ((index - c) < 1) then
-      c := ((index - c) + (c - 1));
-    if (index > (l + 1)) then
-    begin
-      r := ((index - l) - 1);
-      c := (c - r);
-    end;
-    Result := Copy(Self, ((index - c) - r), c);
-  end else
+  if (index >= 0) and (index < Length(Self)) and (count > 0) then
+    Result := Copy(Self, (index + 1), count)
+  else
     Result := '';
 end;
 

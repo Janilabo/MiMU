@@ -152,14 +152,16 @@ type
     function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DDoubleArray; overload cdecl;
   end;
   TStringHelper = type helper for string
-    function After(const s: string; const index: Integer = 1): string; cdecl;
-    function AfterLast(const s: string; const index: Integer = 2147483647): string; cdecl;
-    function Ahead(const index, count: Integer): string; cdecl;
+    function After(const s: string; const index: Integer = 1): string; overload;
+    function After(const index: Integer; const count: Integer = 2147483647): string; overload;
+    function Ahead(const s: string; const index: Integer = 2147483647): string; overload;
+    function Ahead(const index: Integer; const count: Integer = 2147483647): string; overload;
+    function Before(const s: string; const index: Integer = 1): string; overload;
+    function Before(const index: Integer; const count: Integer = 2147483647): string; overload;
+    function Behind(const s: string; const index: Integer = 2147483647): string; overload;
+    function Behind(const index: Integer; const count: Integer = 2147483647): string; overload;
     function Amount(const s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer; cdecl;
     function At(const s: string; const index: Integer = 1): Boolean; cdecl; inline;
-    function Before(const s: string; const index: Integer = 1): string; cdecl;
-    function BeforeLast(const s: string; const index: Integer = 2147483647): string; cdecl;
-    function Behind(const index, count: Integer): string; cdecl;
     function Between(const s1, s2: string; const index: Integer = 1): string; cdecl;
     function Chars: TCharArray; cdecl;
     function Chunk(const a, b: Integer): string; cdecl;
@@ -184,10 +186,10 @@ type
     function IDs(const ID: TIntegerArray): TCharArray; overload; cdecl;
     function IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
     function IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
-	function Includes(const s: string; const index: Integer = 2147483647): Boolean; cdecl;
+    function Includes(const s: string; const index: Integer = 2147483647): Boolean; cdecl;
     function Loc(const s: string; const index: Integer = 2147483647): Integer; cdecl;
     function Location(const s: string; const index: Integer = 2147483647): Integer; cdecl;
-	function Pick(const index: Integer; const count: Integer = 2147483647): string; cdecl;
+    function Pick(const index: Integer; const count: Integer = 2147483647): string; cdecl;
     function Pos(const s: string; const index: Integer = 1): Integer; cdecl;
     function Position(const s: string; const index: Integer = 1): Integer; cdecl;
     function PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string; cdecl;
