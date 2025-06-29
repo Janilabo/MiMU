@@ -889,6 +889,44 @@ end;
 {$ENDIF}
 
 {==============================================================================]
+ <arr.FromLeft(count, index): TArray>
+ @action: Returns count of array items from left-side by index.
+ @note: None
+[==============================================================================}
+{$IFDEF TArray_FromLeft}
+var
+  m: Integer;
+  a, r, i: TRange;
+begin
+  m := Min(High(Self), index);
+  a.Build(0, High(Self));
+  if ((count > 0) and a.Intersect(r.Build((m - count), (m - 1)), i)) then
+    Result := Self.Copy(i.start, ((i.stop - i.start) + 1))
+  else
+    SetLength(Result, 0);
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.FromRight(count, index): TArray>
+ @action: Returns count of array items from right-side by index.
+ @note: None
+[==============================================================================}
+{$IFDEF TArray_FromRight}
+var
+  m: Integer;
+  a, r, i: TRange;
+begin
+  m := Max(0, index);
+  a.Build(0, High(Self));
+  if ((count > 0) and a.Intersect(r.Build((m + 1), (m + count)), i)) then
+    Result := Self.Copy(i.start, ((i.stop - i.start) + 1))
+  else
+    SetLength(Result, 0);
+end;
+{$ENDIF}
+
+{==============================================================================]
  <arr.Get: TArray>
  @action: Copy of an array arr.
  @note: Just an alternative.
@@ -1399,6 +1437,26 @@ end;
 {$ENDIF}
 
 {==============================================================================]
+ <arr.Next(index: Integer; count: Integer): TArray>
+ @action: Returns next items from array by index and count.
+ @note: None.	
+[==============================================================================}
+{$IFDEF TArray_Next}
+var
+  m, i: Integer;
+begin
+  if ((index >= 0) and (index < (Length(Self) - 1)) and (count > 0)) then
+  begin
+    m := Min((Length(Self) - (index + 1)), count);
+    SetLength(Result, m);
+    for i := 0 to (m - 1) do
+      Result[i] := Self[(index + 1) + i];
+  end else
+    SetLength(Result, 0);
+end;
+{$ENDIF}
+
+{==============================================================================]
  <arr.Oversize(limit: Integer): Boolean>
  @action: Returns true if size of arr is OVER the limit.
  @note: None.	
@@ -1622,6 +1680,27 @@ begin
         Result[r.Increase] := i;
   end;
   SetLength(Result, r);
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.Previous(index: Integer; count: Integer): TIntegerArray>
+ @action: Returns previous array items from index by count.
+ @note: None.
+[==============================================================================}
+{$IFDEF TArray_Previous}
+var
+  m, l, i: Integer;
+begin
+  if ((index > 0) and (index < Length(Self)) and (count > 0)) then
+  begin
+    m := Max(0, (index - count));
+    l := (((index - 1) - m) + 1);
+    SetLength(Result, l);
+    for i := 0 to (l - 1) do
+      Result[i] := Self[m + i];
+  end else
+    SetLength(Result, 0);
 end;
 {$ENDIF}
 

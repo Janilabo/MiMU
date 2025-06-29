@@ -444,6 +444,8 @@ type
     function Find(const ID: TRange; const items: TIntegerArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TIntegerArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
+    function FromLeft(const count: Integer; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
+    function FromRight(const count: Integer; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Get: TIntegerArray; overload; cdecl;
     function Get(const ID: TIntegerArray): TIntegerArray; overload; cdecl;
     function Get(const ID: TRange): TIntegerArray; overload; cdecl;
@@ -468,6 +470,7 @@ type
     function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: Integer; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
+	function Next(const index: Integer; const count: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DIntegerArray; overload; cdecl;
     function Pick(const ID: TIntegerArray): TIntegerArray; overload; cdecl;
@@ -479,6 +482,7 @@ type
     function Position(const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: Integer; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TIntegerArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Previous(const index: Integer; const count: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Push(const item: Integer): Integer; overload; cdecl;
     function Push(const items: TIntegerArray): Integer; overload; cdecl;
     function Put(const ID: TIntegerArray; const item: Integer): TIntegerArray; overload; cdecl;
@@ -631,6 +635,8 @@ type
     function Find(const ID: TRange; const items: TDoubleArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TDoubleArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
+    function FromLeft(const count: Integer; const index: Integer = 2147483647): TDoubleArray; overload; cdecl;
+    function FromRight(const count: Integer; const index: Integer = 0): TDoubleArray; overload; cdecl;
     function Get: TDoubleArray; overload; cdecl;
     function Get(const ID: TIntegerArray): TDoubleArray; overload; cdecl;
     function Get(const ID: TRange): TDoubleArray; overload; cdecl;
@@ -655,6 +661,7 @@ type
     function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: Double; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload; cdecl;
+    function Next(const index: Integer; const count: Integer = 2147483647): TDoubleArray; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DDoubleArray; overload; cdecl;
     function Pick(const ID: TIntegerArray): TDoubleArray; overload; cdecl;
@@ -666,6 +673,7 @@ type
     function Position(const items: TDoubleArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: Double; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TDoubleArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Previous(const index: Integer; const count: Integer = 2147483647): TDoubleArray; overload; cdecl;
     function Push(const item: Double): Integer; overload; cdecl;
     function Push(const items: TDoubleArray): Integer; overload; cdecl;
     function Put(const ID: TIntegerArray; const item: Double): TDoubleArray; overload; cdecl;
@@ -748,6 +756,8 @@ type
     function Find(const ID: TRange; const items: TStringArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TStringArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
+    function FromLeft(const count: Integer; const index: Integer = 2147483647): TStringArray; overload; cdecl;
+    function FromRight(const count: Integer; const index: Integer = 0): TStringArray; overload; cdecl;
     function Get: TStringArray; overload; cdecl;
     function Get(const ID: TIntegerArray): TStringArray; overload; cdecl;
     function Get(const ID: TRange): TStringArray; overload; cdecl;
@@ -772,6 +782,7 @@ type
     function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: string; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
+    function Next(const index: Integer; const count: Integer = 2147483647): TStringArray; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DStringArray; overload; cdecl;
     function Pick(const ID: TIntegerArray): TStringArray; overload; cdecl;
@@ -783,6 +794,7 @@ type
     function Position(const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: string; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TStringArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Previous(const index: Integer; const count: Integer = 2147483647): TStringArray; overload; cdecl;
     function Push(const item: string): Integer; overload; cdecl;
     function Push(const items: TStringArray): Integer; overload; cdecl;
     function Put(const ID: TIntegerArray; const item: string): TStringArray; overload; cdecl;
@@ -865,6 +877,8 @@ type
     function Find(const ID: TRange; const items: TCharArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TCharArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
+    function FromLeft(const count: Integer; const index: Integer = 2147483647): TCharArray; overload; cdecl;
+    function FromRight(const count: Integer; const index: Integer = 0): TCharArray; overload; cdecl;
     function Get: TCharArray; overload; cdecl;
     function Get(const ID: TIntegerArray): TCharArray; overload; cdecl;
     function Get(const ID: TRange): TCharArray; overload; cdecl;
@@ -889,6 +903,7 @@ type
     function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: Char; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
+    function Next(const index: Integer; const count: Integer = 2147483647): TCharArray; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DCharArray; overload; cdecl;
     function Pick(const ID: TIntegerArray): TCharArray; overload; cdecl;
@@ -900,6 +915,7 @@ type
     function Position(const items: TCharArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: Char; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TCharArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Previous(const index: Integer; const count: Integer = 2147483647): TCharArray; overload; cdecl;
     function Push(const item: Char): Integer; overload; cdecl;
     function Push(const items: TCharArray): Integer; overload; cdecl;
     function Put(const ID: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
@@ -982,6 +998,8 @@ type
     function Find(const ID: TRange; const items: TBooleanArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TBooleanArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
+    function FromLeft(const count: Integer; const index: Integer = 2147483647): TBooleanArray; overload; cdecl;
+    function FromRight(const count: Integer; const index: Integer = 0): TBooleanArray; overload; cdecl;
     function Get: TBooleanArray; overload; cdecl;
     function Get(const ID: TIntegerArray): TBooleanArray; overload; cdecl;
     function Get(const ID: TRange): TBooleanArray; overload; cdecl;
@@ -1006,6 +1024,7 @@ type
     function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: Boolean; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
+    function Next(const index: Integer; const count: Integer = 2147483647): TBooleanArray; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DBooleanArray; overload; cdecl;
     function Pick(const ID: TIntegerArray): TBooleanArray; overload; cdecl;
@@ -1017,6 +1036,7 @@ type
     function Position(const items: TBooleanArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: Boolean; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TBooleanArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Previous(const index: Integer; const count: Integer = 2147483647): TBooleanArray; overload; cdecl;
     function Push(const item: Boolean): Integer; overload; cdecl;
     function Push(const items: TBooleanArray): Integer; overload; cdecl;
     function Put(const ID: TIntegerArray; const item: Boolean): TBooleanArray; overload; cdecl;
@@ -1099,6 +1119,8 @@ type
     function Find(const ID: TRange; const items: TPointArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TPointArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
+    function FromLeft(const count: Integer; const index: Integer = 2147483647): TPointArray; overload; cdecl;
+    function FromRight(const count: Integer; const index: Integer = 0): TPointArray; overload; cdecl;
     function Get: TPointArray; overload; cdecl;
     function Get(const ID: TIntegerArray): TPointArray; overload; cdecl;
     function Get(const ID: TRange): TPointArray; overload; cdecl;
@@ -1123,6 +1145,7 @@ type
     function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: TPoint; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
+    function Next(const index: Integer; const count: Integer = 2147483647): TPointArray; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DPointArray; overload; cdecl;
     function Pick(const ID: TIntegerArray): TPointArray; overload; cdecl;
@@ -1134,6 +1157,7 @@ type
     function Position(const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: TPoint; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TPointArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Previous(const index: Integer; const count: Integer = 2147483647): TPointArray; overload; cdecl;
     function Push(const item: TPoint): Integer; overload; cdecl;
     function Push(const items: TPointArray): Integer; overload; cdecl;
     function Put(const ID: TIntegerArray; const item: TPoint): TPointArray; overload; cdecl;
@@ -1225,6 +1249,8 @@ type
     function Find(const ID: TRange; const items: TBoxArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TBoxArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
+    function FromLeft(const count: Integer; const index: Integer = 2147483647): TBoxArray; overload; cdecl;
+    function FromRight(const count: Integer; const index: Integer = 0): TBoxArray; overload; cdecl;
     function Get: TBoxArray; overload; cdecl;
     function Get(const ID: TIntegerArray): TBoxArray; overload; cdecl;
     function Get(const ID: TRange): TBoxArray; overload; cdecl;
@@ -1249,6 +1275,7 @@ type
     function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: TBox; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
+    function Next(const index: Integer; const count: Integer = 2147483647): TBoxArray; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DBoxArray; overload; cdecl;
     function Pick(const ID: TIntegerArray): TBoxArray; overload; cdecl;
@@ -1260,6 +1287,7 @@ type
     function Position(const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: TBox; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TBoxArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+    function Previous(const index: Integer; const count: Integer = 2147483647): TBoxArray; overload; cdecl;
     function Push(const item: TBox): Integer; overload; cdecl;
     function Push(const items: TBoxArray): Integer; overload; cdecl;
     function Put(const ID: TIntegerArray; const item: TBox): TBoxArray; overload; cdecl;
@@ -1342,6 +1370,8 @@ type
     function Find(const ID: TRange; const items: TRangeArray): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: TRangeArray): Integer; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
+    function FromLeft(const count: Integer; const index: Integer = 2147483647): TRangeArray; overload; cdecl;
+    function FromRight(const count: Integer; const index: Integer = 0): TRangeArray; overload; cdecl;
     function Get: TRangeArray; overload; cdecl;
     function Get(const ID: TIntegerArray): TRangeArray; overload; cdecl;
     function Get(const ID: TRange): TRangeArray; overload; cdecl;
@@ -1366,6 +1396,7 @@ type
     function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: TRange; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload cdecl;
+    function Next(const index: Integer; const count: Integer = 2147483647): TRangeArray; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DRangeArray; overload; cdecl;
     function Pick(const ID: TIntegerArray): TRangeArray; overload; cdecl;
@@ -1377,6 +1408,7 @@ type
     function Position(const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: TRange; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: TRangeArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+	function Previous(const index: Integer; const count: Integer = 2147483647): TRangeArray; overload; cdecl;
     function Push(const item: TRange): Integer; overload; cdecl;
     function Push(const items: TRangeArray): Integer; overload; cdecl;
     function Put(const ID: TIntegerArray; const item: TRange): TRangeArray; overload; cdecl;

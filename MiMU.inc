@@ -521,6 +521,28 @@ function TBoxArrayHelper.Flip: Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 function TRangeArrayHelper.Flip: Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Flip}
 
+{$DEFINE TArray_FromLeft}
+function TIntegerArrayHelper.FromLeft(const count: Integer; const index: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.FromLeft(const count: Integer; const index: Integer = 2147483647): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.FromLeft(const count: Integer; const index: Integer = 2147483647): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.FromLeft(const count: Integer; const index: Integer = 2147483647): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.FromLeft(const count: Integer; const index: Integer = 2147483647): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.FromLeft(const count: Integer; const index: Integer = 2147483647): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.FromLeft(const count: Integer; const index: Integer = 2147483647): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.FromLeft(const count: Integer; const index: Integer = 2147483647): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_FromLeft}
+
+{$DEFINE TArray_FromRight}
+function TIntegerArrayHelper.FromRight(const count: Integer; const index: Integer = 0): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.FromRight(const count: Integer; const index: Integer = 0): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.FromRight(const count: Integer; const index: Integer = 0): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.FromRight(const count: Integer; const index: Integer = 0): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.FromRight(const count: Integer; const index: Integer = 0): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.FromRight(const count: Integer; const index: Integer = 0): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.FromRight(const count: Integer; const index: Integer = 0): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.FromRight(const count: Integer; const index: Integer = 0): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_FromRight}
+
 {$DEFINE TArray_Get1}
 function TIntegerArrayHelper.Get: TIntegerArray; overload; cdecl; var a: Integer; {$I MIMU\TArray.inc}
 function TDoubleArrayHelper.Get: TDoubleArray; overload; cdecl; var a: Double; {$I MIMU\TArray.inc}
@@ -785,6 +807,17 @@ function TBoxArrayHelper.Move(const oldIndex, newIndex: Integer): Boolean; overl
 function TRangeArrayHelper.Move(const oldIndex, newIndex: Integer): Boolean; overload; cdecl; var t: TRange; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Move}
 
+{$DEFINE TArray_Next}
+function TIntegerArrayHelper.Next(const index: Integer; const count: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Next(const index: Integer; const count: Integer = 2147483647): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Next(const index: Integer; const count: Integer = 2147483647): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Next(const index: Integer; const count: Integer = 2147483647): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Next(const index: Integer; const count: Integer = 2147483647): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Next(const index: Integer; const count: Integer = 2147483647): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Next(const index: Integer; const count: Integer = 2147483647): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Next(const index: Integer; const count: Integer = 2147483647): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Next}
+
 {$DEFINE TArray_Oversize}
 function TIntegerArrayHelper.Oversize(const limit: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 function TDoubleArrayHelper.Oversize(const limit: Integer): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
@@ -905,6 +938,17 @@ function TPointArrayHelper.Positions(const items: TPointArray; const index: Inte
 function TBoxArrayHelper.Positions(const items: TBoxArray; const index: Integer = 0): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
 function TRangeArrayHelper.Positions(const items: TRangeArray; const index: Integer = 0): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Positions2}
+
+{$DEFINE TArray_Previous}
+function TIntegerArrayHelper.Previous(const index: Integer; const count: Integer = 2147483647): TIntegerArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Previous(const index: Integer; const count: Integer = 2147483647): TDoubleArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Previous(const index: Integer; const count: Integer = 2147483647): TStringArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Previous(const index: Integer; const count: Integer = 2147483647): TCharArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Previous(const index: Integer; const count: Integer = 2147483647): TBooleanArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Previous(const index: Integer; const count: Integer = 2147483647): TPointArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Previous(const index: Integer; const count: Integer = 2147483647): TBoxArray; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Previous(const index: Integer; const count: Integer = 2147483647): TRangeArray; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Previous}
 
 {$DEFINE TArray_Push1}
 function TIntegerArrayHelper.Push(const item: Integer): Integer; overload; cdecl; {$I MIMU\TArray.inc}
