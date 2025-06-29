@@ -579,8 +579,8 @@ begin
   if Result then
   begin
     c := Self[aIndex];
-	Self[aIndex] := Self[bIndex];
-	Self[bIndex] := c;
+    Self[aIndex] := Self[bIndex];
+    Self[bIndex] := c;
   end;
 end;
 {$ENDIF}
