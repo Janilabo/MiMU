@@ -1205,11 +1205,11 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <arr.Location(item: VarType; index: Integer): Integer>
+ <arr.Loc(item: VarType; index: Integer): Integer>
  @action: Returns last index position from arr which matched with item.
  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
-{$IFDEF TArray_Location1}
+{$IFDEF TArray_Loc1}
 begin
   for Result := Min(High(Self), index) downto 0 do
     if (Self[Result] = item) then
@@ -1219,19 +1219,61 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <arr.Pos(items: TArray; index: Integer): Integer>
+ <arr.Loc(items: TArray; index: Integer): Integer>
+ @action: Returns index position from arr which matches with items.
+ @note: Returns -1 if any of arr items doesnt match with items!
+[==============================================================================}
+{$IFDEF TArray_Loc2}
+var
+  h, i: Integer;
+begin
+  h := High(items);
+  if (h > -1) then
+  for Result := Min(High(Self), index) downto 0 do
+    for i := 0 to h do
+      if (Self[Result] = items[i]) then
+        Exit;
+  Result := -1;
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.Location(item: VarType; index: Integer): Integer>
+ @action: Returns index position from arr which matched with item.
+ @note: Returns -1 if any of arr items doesnt match with item!
+[==============================================================================}
+{$IFDEF TArray_Location1}
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  Result := Min(l, (index + 1));
+  while (Result.Decrement > -1) do
+    if (Self[Result] = item) then
+      Exit;
+  Result := -1;
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.Location(items: TArray; index: Integer): Integer>
  @action: Returns index position from arr which matches with items.
  @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
 {$IFDEF TArray_Location2}
 var
-  h, i: Integer;
+  h, i, l: Integer;
 begin
   h := High(items);
-  for Result := Min(High(Self), index) downto 0 do
-    for i := 0 to h do
-      if (Self[Result] = items[i]) then
-        Exit;
+  if (h > -1) then
+  begin
+    l := Length(Self);
+    Result := Min(l, (index + 1));
+    while (Result.Decrement > -1) do
+      for i := 0 to h do
+        if (Self[Result] = items[i]) then
+          Exit;
+  end;
   Result := -1;
 end;
 {$ENDIF}
@@ -1464,21 +1506,21 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Pos(arr: TArray; item: VarType; index: Integer): Integer>
+ <arr.Pos(item: VarType; index: Integer): Integer>
  @action: Returns index position from arr which matched with item.
  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
 {$IFDEF TArray_Pos1}
 begin
-  for Result := index to High(arr) do
-    if (arr[Result] = item) then
+  for Result := Max(0, index) to High(Self) do
+    if (Self[Result] = item) then
       Exit;
   Result := -1;
 end;
 {$ENDIF}
 
 {==============================================================================]
- <TArray_Pos(arr: TArray; items: TArray; index: Integer): Integer>
+ <arr.Pos(items: TArray; index: Integer): Integer>
  @action: Returns index position from arr which matches with items.
  @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
@@ -1487,9 +1529,10 @@ var
   h, i: Integer;
 begin
   h := High(items);
-  for Result := index to High(arr) do
+  if (h > -1) then
+  for Result := Max(0, index) to High(Self) do
     for i := 0 to h do
-      if (arr[Result] = items[i]) then
+      if (Self[Result] = items[i]) then
         Exit;
   Result := -1;
 end;
@@ -1501,8 +1544,12 @@ end;
  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
 {$IFDEF TArray_Position1}
+var
+  l: Integer;
 begin
-  for Result := Max(0, index) to High(Self) do
+  Result := Max(-1, (index - 1));
+  l := Length(Self);
+  while (Result.Increment < l) do
     if (Self[Result] = item) then
       Exit;
   Result := -1;
@@ -1516,13 +1563,18 @@ end;
 [==============================================================================}
 {$IFDEF TArray_Position2}
 var
-  i: Integer;
+  h, i, l: Integer;
 begin
-  if (High(items) > -1) then
-  for Result := Max(0, index) to High(Self) do
-    for i := 0 to High(items) do
-      if (Self[Result] = items[i]) then
-        Exit;
+  h := High(items);
+  if (h > -1) then
+  begin
+    Result := Max(-1, (index - 1));
+    l := Length(Self);
+    while (Result.Increment < l) do
+      for i := 0 to h do
+        if (Self[Result] = items[i]) then
+          Exit;
+  end;
   Result := -1;
 end;
 {$ENDIF}

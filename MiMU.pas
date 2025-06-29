@@ -455,6 +455,8 @@ type
     function Len: Integer; overload; cdecl;
     function Len(const aSize: Integer): Integer; overload; cdecl;
     function Len(const aSize: Integer; const null: Integer): Integer; overload; cdecl;
+    function Loc(const item: Integer; const index: Integer = 2147483647): Integer; overload; cdecl;
+    function Loc(const items: TIntegerArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const item: Integer; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const items: TIntegerArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: Integer; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
@@ -467,6 +469,8 @@ type
     function Pick(const ID: TIntegerArray): TIntegerArray; overload; cdecl;
     function Pop: Integer; overload; cdecl;
     function Pop(const null: Integer): Integer; overload; cdecl;
+    function Pos(const item: Integer; const index: Integer = 0): Integer; overload; cdecl;
+    function Pos(const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const item: Integer; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: Integer; const index: Integer = 0): TIntegerArray; overload; cdecl;
@@ -638,6 +642,8 @@ type
     function Len: Integer; overload; cdecl;
     function Len(const aSize: Integer): Integer; overload; cdecl;
     function Len(const aSize: Integer; const null: Double): Integer; overload; cdecl;
+    function Loc(const item: Double; const index: Integer = 2147483647): Integer; overload; cdecl;
+    function Loc(const items: TDoubleArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const item: Double; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const items: TDoubleArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: Double; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
@@ -650,6 +656,8 @@ type
     function Pick(const ID: TIntegerArray): TDoubleArray; overload; cdecl;
     function Pop: Double; overload; cdecl;
     function Pop(const null: Double): Double; overload; cdecl;
+    function Pos(const item: Double; const index: Integer = 0): Integer; overload; cdecl;
+    function Pos(const items: TDoubleArray; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const item: Double; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const items: TDoubleArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: Double; const index: Integer = 0): TIntegerArray; overload; cdecl;
@@ -751,6 +759,8 @@ type
     function Len: Integer; overload; cdecl;
     function Len(const aSize: Integer): Integer; overload; cdecl;
     function Len(const aSize: Integer; const null: string): Integer; overload; cdecl;
+    function Loc(const item: string; const index: Integer = 2147483647): Integer; overload; cdecl;
+    function Loc(const items: TStringArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const item: string; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const items: TStringArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: string; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
@@ -763,6 +773,8 @@ type
     function Pick(const ID: TIntegerArray): TStringArray; overload; cdecl;
     function Pop: string; overload; cdecl;
     function Pop(const null: string): string; overload; cdecl;
+    function Pos(const item: string; const index: Integer = 0): Integer; overload; cdecl;
+    function Pos(const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const item: string; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: string; const index: Integer = 0): TIntegerArray; overload; cdecl;
@@ -864,6 +876,8 @@ type
     function Len: Integer; overload; cdecl;
     function Len(const aSize: Integer): Integer; overload; cdecl;
     function Len(const aSize: Integer; const null: Char): Integer; overload; cdecl;
+    function Loc(const item: Char; const index: Integer = 2147483647): Integer; overload; cdecl;
+    function Loc(const items: TCharArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const item: Char; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const items: TCharArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: Char; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
@@ -876,6 +890,8 @@ type
     function Pick(const ID: TIntegerArray): TCharArray; overload; cdecl;
     function Pop: Char; overload; cdecl;
     function Pop(const null: Char): Char; overload; cdecl;
+    function Pos(const item: Char; const index: Integer = 0): Integer; overload; cdecl;
+    function Pos(const items: TCharArray; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const item: Char; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const items: TCharArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: Char; const index: Integer = 0): TIntegerArray; overload; cdecl;
@@ -977,6 +993,8 @@ type
     function Len: Integer; overload; cdecl;
     function Len(const aSize: Integer): Integer; overload; cdecl;
     function Len(const aSize: Integer; const null: Boolean): Integer; overload; cdecl;
+    function Loc(const item: Boolean; const index: Integer = 2147483647): Integer; overload; cdecl;
+    function Loc(const items: TBooleanArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const item: Boolean; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const items: TBooleanArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: Boolean; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
@@ -989,6 +1007,8 @@ type
     function Pick(const ID: TIntegerArray): TBooleanArray; overload; cdecl;
     function Pop: Boolean; overload; cdecl;
     function Pop(const null: Boolean): Boolean; overload; cdecl;
+    function Pos(const item: Boolean; const index: Integer = 0): Integer; overload; cdecl;
+    function Pos(const items: TBooleanArray; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const item: Boolean; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const items: TBooleanArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: Boolean; const index: Integer = 0): TIntegerArray; overload; cdecl;
@@ -1090,6 +1110,8 @@ type
     function Len: Integer; overload; cdecl;
     function Len(const aSize: Integer): Integer; overload; cdecl;
     function Len(const aSize: Integer; const null: TPoint): Integer; overload; cdecl;
+    function Loc(const item: TPoint; const index: Integer = 2147483647): Integer; overload; cdecl;
+    function Loc(const items: TPointArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const item: TPoint; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const items: TPointArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: TPoint; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
@@ -1102,6 +1124,8 @@ type
     function Pick(const ID: TIntegerArray): TPointArray; overload; cdecl;
     function Pop: TPoint; overload; cdecl;
     function Pop(const null: TPoint): TPoint; overload; cdecl;
+    function Pos(const item: TPoint; const index: Integer = 0): Integer; overload; cdecl;
+    function Pos(const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const item: TPoint; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: TPoint; const index: Integer = 0): TIntegerArray; overload; cdecl;
@@ -1212,6 +1236,8 @@ type
     function Len: Integer; overload; cdecl;
     function Len(const aSize: Integer): Integer; overload; cdecl;
     function Len(const aSize: Integer; const null: TBox): Integer; overload; cdecl;
+    function Loc(const item: TBox; const index: Integer = 2147483647): Integer; overload; cdecl;
+    function Loc(const items: TBoxArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const item: TBox; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const items: TBoxArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: TBox; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
@@ -1224,6 +1250,8 @@ type
     function Pick(const ID: TIntegerArray): TBoxArray; overload; cdecl;
     function Pop: TBox; overload; cdecl;
     function Pop(const null: TBox): TBox; overload; cdecl;
+    function Pos(const item: TBox; const index: Integer = 0): Integer; overload; cdecl;
+    function Pos(const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const item: TBox; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: TBox; const index: Integer = 0): TIntegerArray; overload; cdecl;
@@ -1325,6 +1353,8 @@ type
     function Len: Integer; overload; cdecl;
     function Len(const aSize: Integer): Integer; overload; cdecl;
     function Len(const aSize: Integer; const null: TRange): Integer; overload; cdecl;
+    function Loc(const item: TRange; const index: Integer = 2147483647): Integer; overload; cdecl;
+    function Loc(const items: TRangeArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const item: TRange; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const items: TRangeArray; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: TRange; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
@@ -1337,6 +1367,8 @@ type
     function Pick(const ID: TIntegerArray): TRangeArray; overload; cdecl;
     function Pop: TRange; overload; cdecl;
     function Pop(const null: TRange): TRange; overload; cdecl;
+    function Pos(const item: TRange; const index: Integer = 0): Integer; overload; cdecl;
+    function Pos(const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const item: TRange; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: TRange; const index: Integer = 0): TIntegerArray; overload; cdecl;
@@ -1417,23 +1449,6 @@ function Swap(var A, B: Boolean): Boolean; overload; inline;
 function Swap(var A, B: TPoint): Boolean; overload; inline;
 function Swap(var A, B: TBox): Boolean; overload; inline;
 function Swap(var A, B: TRange): Boolean; overload; inline;
-
-function TArray_Pos(const arr: TIntegerArray; const item: Integer; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TDoubleArray; const item: Double; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TStringArray; const item: string; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TCharArray; const item: Char; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TBooleanArray; const item: Boolean; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TPointArray; const item: TPoint; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TBoxArray; const item: TBox; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TRangeArray; const item: TRange; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TIntegerArray; const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TDoubleArray; const items: TDoubleArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TStringArray; const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TCharArray; const items: TCharArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TBooleanArray; const items: TBooleanArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TPointArray; const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TBoxArray; const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl;
-function TArray_Pos(const arr: TRangeArray; const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl;
 
 function T2DArray_Blank(const arr: T2DIntegerArray): Boolean; overload; cdecl;
 function T2DArray_Blank(const arr: T2DDoubleArray): Boolean; overload; cdecl;

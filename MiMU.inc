@@ -686,6 +686,28 @@ function TBoxArrayHelper.Len(const aSize: Integer; const null: TBox): Integer; o
 function TRangeArrayHelper.Len(const aSize: Integer; const null: TRange): Integer; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Len3}
 
+{$DEFINE TArray_Loc1}
+function TIntegerArrayHelper.Loc(const item: Integer; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Loc(const item: Double; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Loc(const item: string; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Loc(const item: Char; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Loc(const item: Boolean; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Loc(const item: TPoint; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Loc(const item: TBox; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Loc(const item: TRange; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Loc1}
+
+{$DEFINE TArray_Loc2}
+function TIntegerArrayHelper.Loc(const items: TIntegerArray; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Loc(const items: TDoubleArray; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Loc(const items: TStringArray; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Loc(const items: TCharArray; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Loc(const items: TBooleanArray; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Loc(const items: TPointArray; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Loc(const items: TBoxArray; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Loc(const items: TRangeArray; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Loc2}
+
 {$DEFINE TArray_Location1}
 function TIntegerArrayHelper.Location(const item: Integer; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
 function TDoubleArrayHelper.Location(const item: Double; const index: Integer = 2147483647): Integer; overload; cdecl; {$I MIMU\TArray.inc}
@@ -819,25 +841,25 @@ function TRangeArrayHelper.Pop(const null: TRange): TRange; overload; cdecl; {$I
 {$UNDEF TArray_Pop2}
 
 {$DEFINE TArray_Pos1}
-function TArray_Pos(const arr: TIntegerArray; const item: Integer; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TDoubleArray; const item: Double; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TStringArray; const item: string; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TCharArray; const item: Char; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TBooleanArray; const item: Boolean; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TPointArray; const item: TPoint; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TBoxArray; const item: TBox; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TRangeArray; const item: TRange; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.Pos(const item: Integer; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Pos(const item: Double; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Pos(const item: string; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Pos(const item: Char; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Pos(const item: Boolean; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Pos(const item: TPoint; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Pos(const item: TBox; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Pos(const item: TRange; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Pos1}
 
 {$DEFINE TArray_Pos2}
-function TArray_Pos(const arr: TIntegerArray; const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TDoubleArray; const items: TDoubleArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TStringArray; const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TCharArray; const items: TCharArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TBooleanArray; const items: TBooleanArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TPointArray; const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TBoxArray; const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
-function TArray_Pos(const arr: TRangeArray; const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TIntegerArrayHelper.Pos(const items: TIntegerArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Pos(const items: TDoubleArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Pos(const items: TStringArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Pos(const items: TCharArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Pos(const items: TBooleanArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Pos(const items: TPointArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Pos(const items: TBoxArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Pos(const items: TRangeArray; const index: Integer = 0): Integer; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Pos2}
 
 {$DEFINE TArray_Position1}
