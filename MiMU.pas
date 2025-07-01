@@ -54,6 +54,18 @@ type
   end;
   TBox = record
     X1, Y1, X2, Y2: Integer;
+    constructor Create(const minX, minY, maxX, maxY: Integer); overload;
+    constructor Create(const top, bottom: TPoint); overload;
+    constructor Create(const valueX, valueY: Integer); overload;
+    constructor Create(const target: TPoint); overload;
+    constructor Create(const value: Integer); overload;
+    function Build(const minX, minY, maxX, maxY: Integer): Integer; overload; cdecl;
+    function Build(const top, bottom: TPoint): Integer; overload; cdecl;
+    function Build(const valueX, valueY: Integer): Integer; overload; cdecl;
+    function Build(const target: TPoint): Integer; overload; cdecl;
+    function Build(const value: Integer = 0): Integer; overload; cdecl;
+    function Form(const pt: TPoint; const size: Integer = 1): TBox; overload; cdecl;
+    function Form(const pt: TPoint; const width, height: Integer): TBox; overload; cdecl;
   end;
   TRange = record
     start, stop: Integer;
@@ -270,16 +282,8 @@ type
     function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DPointArray; overload cdecl;	
   end;
   TBoxHelper = type helper for TBox
-    function Build(const X1, Y1, X2, Y2: Integer): TBox; overload; cdecl;
-    function Build(const a, b: TPoint): TBox; overload; cdecl;
-    function Create(const X1, Y1, X2, Y2: Integer): TBox; overload; cdecl;
-    function Create(const a, b: TPoint): TBox; overload; cdecl;
-    function Form(const XY: Integer = 0): TBox; overload; cdecl;
-    function Form(const XY: TPoint): TBox; overload; cdecl;
     function Make(const pt: TPoint; const radius: Integer = 0): TBox; overload; cdecl;
     function Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload; cdecl;
-    function Yield(const pt: TPoint; const size: Integer = 1): TBox; overload; cdecl;
-    function Yield(const pt: TPoint; const width, height: Integer): TBox; overload; cdecl;
     function Size(var width, height: Integer): Integer; cdecl; inline;
     function Area: Integer; cdecl; inline;
     function Diagonal: Double; cdecl;

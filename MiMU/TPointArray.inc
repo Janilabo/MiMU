@@ -8,7 +8,7 @@ var
   i: Integer;
 begin
   if (High(Self) = -1) then
-    Exit(Result.Form(-2147483648));
+    Exit(Result.Create(-2147483648));
   Result.Make(Self[0]);
   for i := 1 to High(Self) do
   begin
@@ -40,7 +40,7 @@ begin
     end;
     True:
     begin
-      Result.Form(-2147483648);
+      Result.Create(-2147483648);
       width := 0;
       height := 0;
     end;

@@ -1,15 +1,80 @@
 {==============================================================================]
-  <TBoxHelper.Build>
-  @action: Builds TBox using X1, Y1, X2, Y2.
-  @note: Unsafe, fast.
+  <TBox.Create>
+  @action: Creates TBox using minX, minY, maxX, maxY 
+  @note: Constructor.
 [==============================================================================}
-function TBoxHelper.Build(const X1, Y1, X2, Y2: Integer): TBox; overload; cdecl;
+constructor TBox.Create(const minX, minY, maxX, maxY: Integer); overload;
 begin
-  Self.X1 := X1;
-  Self.Y1 := Y1;
-  Self.X2 := X2;
-  Self.Y2 := Y2;
-  Result := Self;
+  X1 := minX;
+  Y1 := minY;
+  X2 := maxX;
+  Y2 := maxY;
+end;
+
+{==============================================================================]
+  <TBox.Create>
+  @action: Creates TBox using top and bottom TPoint (top contains minX,minY and bottom contains maxX,maxY) 
+  @note: Constructor.
+[==============================================================================}
+constructor TBox.Create(const top, bottom: TPoint); overload;
+begin
+  X1 := top.X;
+  Y1 := top.Y;
+  X2 := bottom.X;
+  Y2 := bottom.Y;
+end;
+
+{==============================================================================]
+  <TBox.Create>
+  @action: We simply build using  
+  @note: Constructor.
+[==============================================================================}
+constructor TBox.Create(const valueX, valueY: Integer); overload;
+begin
+  X1 := valueX;
+  Y1 := valueY;
+  X2 := valueX;
+  Y2 := valueY;
+end;
+
+{==============================================================================]
+  <TBox.Create>
+  @action: Creates TBox using target TPoint 
+  @note: Constructor.
+[==============================================================================}
+constructor TBox.Create(const target: TPoint); overload;
+begin
+  X1 := target.X;
+  Y1 := target.Y;
+  X2 := target.X;
+  Y2 := target.Y;
+end;
+
+{==============================================================================]
+  <TBox.Create>
+  @action: We simply build using value. 
+  @note: Constructor.
+[==============================================================================}
+constructor TBox.Create(const value: Integer); overload;
+begin
+  X1 := value;
+  Y1 := value;
+  X2 := value;
+  Y2 := value;  
+end;
+
+{==============================================================================]
+  <TBoxHelper.Build>
+  @action: Creates TBox using minX, minY, maxX, maxY 
+  @note: Min-Maxed. Creates only valid TBoxes. Returns area.
+[==============================================================================}
+function TBox.Build(const minX, minY, maxX, maxY: Integer): Integer; overload; cdecl;
+begin
+  Self.X1 := Min(minX, maxX);
+  Self.Y1 := Min(minY, maxY);
+  Self.X2 := Max(maxX, minX);
+  Self.Y2 := Max(maxY, minY);
+  Result := (((Self.X2 - Self.X1) + 1) * ((Self.Y2 - Self.Y1) + 1));
 end;
 
 {==============================================================================]
@@ -17,69 +82,39 @@ end;
   @action: Builds TBox using 2 points (a = start point, b = end point)..
   @note: Make sure start and end points are correct!
 [==============================================================================}
-function TBoxHelper.Build(const a, b: TPoint): TBox; overload; cdecl;
+function TBox.Build(const top, bottom: TPoint): Integer; overload; cdecl;
 begin
-  Self.X1 := a.X;
-  Self.Y1 := a.Y;
-  Self.X2 := b.X;
-  Self.Y2 := b.Y;
-  Result := Self;
+  Result := Self.Build(top.X, top.Y, bottom.X, bottom.Y);
 end;
 
 {==============================================================================]
-  <TBoxHelper.Create>
-  @action: Creates TBox using X1, Y1, X2, Y2.
-  @note: Min-Maxed. Creates only valid TBoxes.
+  <TBox.Build>
+  @action: We simply build using  
+  @note: Constructor.
 [==============================================================================}
-function TBoxHelper.Create(const X1, Y1, X2, Y2: Integer): TBox; overload; cdecl;
+function TBox.Build(const valueX, valueY: Integer): Integer; overload; cdecl;
 begin
-  Self.X1 := Min(X1, X2);
-  Self.Y1 := Min(Y1, Y2);
-  Self.X2 := Max(X2, X1);
-  Self.Y2 := Max(Y2, Y1);
-  Result := Self;
+  Result := Self.Build(valueX, valueY, valueX, valueY);
 end;
 
 {==============================================================================]
-  <TBoxHelper.Create>
-  @action: Creates a TBox with 2 points (a, b)..
-  @note: Automatically corrects/fixes the incorrect values.
+  <TBox.Build>
+  @action: Creates TBox using target TPoint
+  @note: Constructor.
 [==============================================================================}
-function TBoxHelper.Create(const a, b: TPoint): TBox; overload; cdecl;
+function TBox.Build(const target: TPoint): Integer; overload; cdecl;
 begin
-  Self.X1 := Min(a.X, b.X);
-  Self.Y1 := Min(a.Y, b.Y);
-  Self.X2 := Max(a.X, b.X);
-  Self.Y2 := Max(a.Y, b.Y);
-  Result := Self;
+  Result := Self.Build(target.X, target.Y, target.X, target.Y)
 end;
 
 {==============================================================================]
-  <TBoxHelper.Form>
-  @action: Forms TBox using XY for all X1, Y1, X2, Y2.
-  @note: Unsafe, fast.
+  <TBox.Build>
+  @action: We simply build using value.
+  @note: Constructor.
 [==============================================================================}
-function TBoxHelper.Form(const XY: Integer = 0): TBox; overload; cdecl;
+function TBox.Build(const value: Integer = 0): Integer; overload; cdecl;
 begin
-  Self.X1 := XY;
-  Self.Y1 := XY;
-  Self.X2 := XY;
-  Self.Y2 := XY;
-  Result := Self;
-end;
-
-{==============================================================================]
-  <TBoxHelper.Form>
-  @action: Forms TBox using XY for all X1, Y1, X2, Y2.
-  @note: Unsafe, fast.
-[==============================================================================}
-function TBoxHelper.Form(const XY: TPoint): TBox; overload; cdecl;
-begin
-  Self.X1 := XY.X;
-  Self.Y1 := XY.Y;
-  Self.X2 := XY.X;
-  Self.Y2 := XY.Y;
-  Result := Self;
+  Result := Self.Build(value, value, value, value);
 end;
 
 {==============================================================================]
@@ -111,11 +146,11 @@ begin
 end;
 
 {==============================================================================]
-  <TBoxHelper.Yield>
+  <TBox.Form>
   @action: Creates box to point, with size for width and height.
   @note: None.
 [==============================================================================}
-function TBoxHelper.Yield(const pt: TPoint; const size: Integer = 1): TBox; overload; cdecl;
+function TBox.Form(const pt: TPoint; const size: Integer = 1): TBox; overload; cdecl;
 begin
   Self.X1 := pt.X;
   Self.Y1 := pt.Y;
@@ -125,11 +160,11 @@ begin
 end;
 
 {==============================================================================]
-  <TBoxHelper.Yield>
+  <TBoxHelper.Form>
   @action: Creates box to point, with width and height.
   @note: None.
 [==============================================================================}
-function TBoxHelper.Yield(const pt: TPoint; const width, height: Integer): TBox; overload; cdecl;
+function TBox.Form(const pt: TPoint; const width, height: Integer): TBox; overload; cdecl;
 begin
   Self.X1 := pt.X;
   Self.Y1 := pt.Y;
