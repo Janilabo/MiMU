@@ -1,67 +1,74 @@
 {==============================================================================]
-  <TPointHelper.Create>
+  <TPoint.Create>
   @action: Returns TPoint with X and Y.
   @note: None.
 [==============================================================================}
-function TPointHelper.Create(const X, Y: Integer): TPoint; cdecl; inline;
+constructor TPoint.Create(const pX, pY: Integer); overload;
 begin
-  Self.X := X;
-  Self.Y := Y;
-  Result.X := X;
-  Result.Y := Y;
+  Self.X := pX;
+  Self.Y := pY;
 end;
 
 {==============================================================================]
-  <TPointHelper.Build>
+  <TPoint.Create>
   @action: Returns TPoint with X and Y.
   @note: None.
 [==============================================================================}
-function TPointHelper.Build(const X, Y: Integer): TPoint; cdecl; inline;
+constructor TPoint.Create(const value: Integer); overload;
 begin
-  Self.X := X;
-  Self.Y := Y;
-  Result.X := X;
-  Result.Y := Y;
+  Self.Create(value, value);
 end;
 
 {==============================================================================]
-  <TPointHelper.InBox>
+  <TPoint.Build>
+  @action: Returns TPoint with X and Y.
+  @note: None.
+[==============================================================================}
+function TPoint.Build(const pX, pY: Integer): TPoint; cdecl; inline;
+begin
+  Self.X := pX;
+  Self.Y := pY;
+  Result := Self;
+end;
+
+{==============================================================================]
+  <TPoint.Inside>
   @action: Returns true if pt is inside the given box (bx).
   @note: None.
 [==============================================================================}
-function TPointHelper.InBox(const bx: TBox): Boolean; cdecl; inline;
+function TPointHelper.Inside(const bx: TBox): Boolean; cdecl; inline;
 begin
   Result := ((Self.X >= bx.X1) and (Self.Y >= bx.Y1) and (Self.X <= bx.X2) and (Self.Y <= bx.Y2));
 end;
 
 {==============================================================================]
-  <TPointHelper.InCircle>
+  <TPoint.InCircle>
   @action: Returns true if pt is inside the given circle,
           that is defined by the center point and radius.
   @note: None.
 [==============================================================================}
-function TPointHelper.InCircle(const center: TPoint; const radius: Double): Boolean; cdecl; inline;
+function TPoint.InCircle(const center: TPoint; const radius: Double): Boolean; cdecl; inline;
 begin
   Result := (Sqr((Self.X - center.X) / radius) + Sqr((Self.Y - center.Y) / radius) <= 1);
 end;
 
 {==============================================================================]
-  <TPointHelper.InEllipse>
+  <TPoint.InEllipse>
   @action: Returns true if pt is inside the given ellipse,
           defined by the center point and X-radius and Y-radius.
   @note: None.
 [==============================================================================}
-function TPointHelper.InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; cdecl; inline;
+function TPoint.InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; cdecl; inline;
 begin
   Result := (Sqr((Self.X - center.X) / XRadius) + Sqr((Self.Y - center.Y) / YRadius) <= 1);
 end;
 
 {==============================================================================]
- <TPointHelper.AngleDegrees>
+ <TPoint.AngleDegrees>
  @action: Calculates the angle in degrees from source to target.
  @note: None
 [==============================================================================}
-function TPointHelper.AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; cdecl;
+function TPoint.AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; cdecl;
 var
   a: Double;
 begin
@@ -73,11 +80,11 @@ begin
 end;
 
 {==============================================================================]
- <TPointHelper.AngleRadians>
+ <TPoint.AngleRadians>
  @action: Calculates the angle in degrees from source to target.
  @note: None
 [==============================================================================}
-function TPointHelper.AngleRadians(const target: TPoint): Double; cdecl;
+function TPoint.AngleRadians(const target: TPoint): Double; cdecl;
 var
   a: Double;
 begin
@@ -86,53 +93,65 @@ begin
 end;
 
 {==============================================================================]
- <TPointHelper.DistEuclidean>
+ <TPoint.DistEuclidean>
  @action: Calculates the distance from source to target.
  @note: Euclidean.
 [==============================================================================}
-function TPointHelper.DistEuclidean(const target: TPoint): Double; cdecl;
+function TPoint.DistEuclidean(const target: TPoint): Double; cdecl;
 begin
   Result := Sqrt(Power((Self.x - target.x), 2) + Power((Self.y - target.y), 2));
 end;
 
 {==============================================================================]
- <TPointHelper.DistEuclidean2>
+ <TPoint.DistEuclidean2>
  @action: Calculates the distance from source to target.
  @note: Euclidean v2
 [==============================================================================}
-function TPointHelper.DistEuclidean2(const target: TPoint): Double; cdecl;
+function TPoint.DistEuclidean2(const target: TPoint): Double; cdecl;
 begin
   Result := Sqrt(Sqr(Self.X - target.X) + Sqr(Self.Y - target.Y));
 end;
 
 {==============================================================================]
- <TPointHelper.DistSquaredEuclidean>
+ <TPoint.DistSquaredEuclidean>
  @action: Calculates the distance from source to target.
  @note: Squared Euclidean
 [==============================================================================}
-function TPointHelper.DistSquaredEuclidean(const target: TPoint): Double; cdecl;
+function TPoint.DistSquaredEuclidean(const target: TPoint): Double; cdecl;
 begin
   Result := (((Self.X - target.X) * (Self.X - target.X)) + ((Self.Y - target.Y) * (Self.Y - target.Y)));
 end;
 
 {==============================================================================]
- <TPointHelper.DistManhattan>
+ <TPoint.DistManhattan>
  @action: Calculates the distance from source to target.
  @note: Manhattan
 [==============================================================================}
-function TPointHelper.DistManhattan(const target: TPoint): Double; cdecl;
+function TPoint.DistManhattan(const target: TPoint): Double; cdecl;
 begin
   Result := (Abs(Self.X - target.X) + Abs(Self.Y - target.Y));
 end;
 
 {==============================================================================]
- <TPointHelper.DistChebyshev>
+ <TPoint.DistChebyshev>
  @action: Calculates the distance from source to target.
  @note: Chebyshev
 [==============================================================================}
-function TPointHelper.DistChebyshev(const target: TPoint): Double; cdecl;
+function TPoint.DistChebyshev(const target: TPoint): Double; cdecl;
 begin
   Result := Max(Abs(Self.X - target.X), Abs(Self.Y - target.Y));
+end;
+
+{==============================================================================]
+  <TPointHelper.Create>
+  @action: Returns TPoint 0,0.
+  @note: None.
+[==============================================================================}
+function TPointHelper.Create: TPoint; overload; cdecl;
+begin
+  Self.X := 0;
+  Self.Y := 0;
+  Result := Self;
 end;
 
 {==============================================================================]

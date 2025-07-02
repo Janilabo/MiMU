@@ -900,7 +900,7 @@ var
 begin
   m := Min(High(Self), index);
   a.Build(0, High(Self));
-  if ((count > 0) and a.Intersect(r.Build((m - count), (m - 1)), i)) then
+  if ((count > 0) and a.Intersect(r.Create((m - count), (m - 1)), i)) then
     Result := Self.Copy(i.start, ((i.stop - i.start) + 1))
   else
     SetLength(Result, 0);
@@ -919,7 +919,7 @@ var
 begin
   m := Max(0, index);
   a.Build(0, High(Self));
-  if ((count > 0) and a.Intersect(r.Build((m + 1), (m + count)), i)) then
+  if ((count > 0) and a.Intersect(r.Create((m + 1), (m + count)), i)) then
     Result := Self.Copy(i.start, ((i.stop - i.start) + 1))
   else
     SetLength(Result, 0);

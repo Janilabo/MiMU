@@ -18,10 +18,7 @@ end;
 [==============================================================================}
 class function _TBox.Create(const top, bottom: TPoint): TBox; overload; cdecl;
 begin
-  Result.X1 := top.X;
-  Result.Y1 := top.Y;
-  Result.X2 := bottom.X;
-  Result.Y2 := bottom.Y;
+  Result := _TBox.Create(top.X, top.Y, bottom.X, bottom.Y);
 end;
 
 {==============================================================================]
@@ -31,10 +28,7 @@ end;
 [==============================================================================}
 class function _TBox.Create(const valueX, valueY: Integer): TBox; overload; cdecl;
 begin
-  Result.X1 := valueX;
-  Result.Y1 := valueY;
-  Result.X2 := valueX;
-  Result.Y2 := valueY;
+  Result := _TBox.Create(valueX, valueY, valueX, valueY);
 end;
 
 {==============================================================================]
@@ -44,10 +38,7 @@ end;
 [==============================================================================}
 class function _TBox.Create(const target: TPoint): TBox; overload; cdecl;
 begin
-  Result.X1 := target.X;
-  Result.Y1 := target.Y;
-  Result.X2 := target.X;
-  Result.Y2 := target.Y;
+  Result := _TBox.Create(target.X, target.Y, target.X, target.Y);
 end;
 
 {==============================================================================]
@@ -57,10 +48,7 @@ end;
 [==============================================================================}
 class function _TBox.Create(const value: Integer = 0): TBox; overload; cdecl;
 begin
-  Result.X1 := value;
-  Result.Y1 := value;
-  Result.X2 := value;
-  Result.Y2 := value;  
+  Result := _TBox.Create(value, value, value, value);
 end;
 
 {==============================================================================]
@@ -83,10 +71,7 @@ end;
 [==============================================================================}
 constructor TBox.Create(const top, bottom: TPoint); overload;
 begin
-  X1 := top.X;
-  Y1 := top.Y;
-  X2 := bottom.X;
-  Y2 := bottom.Y;
+  Self.Create(top.X, top.Y, bottom.X, bottom.Y);
 end;
 
 {==============================================================================]
@@ -96,10 +81,7 @@ end;
 [==============================================================================}
 constructor TBox.Create(const valueX, valueY: Integer); overload;
 begin
-  X1 := valueX;
-  Y1 := valueY;
-  X2 := valueX;
-  Y2 := valueY;
+  Self.Create(valueX, valueY, valueX, valueY);
 end;
 
 {==============================================================================]
@@ -109,10 +91,7 @@ end;
 [==============================================================================}
 constructor TBox.Create(const target: TPoint); overload;
 begin
-  X1 := target.X;
-  Y1 := target.Y;
-  X2 := target.X;
-  Y2 := target.Y;
+  Self.Create(target.X, target.Y, target.X, target.Y);
 end;
 
 {==============================================================================]
@@ -122,10 +101,7 @@ end;
 [==============================================================================}
 constructor TBox.Create(const value: Integer); overload;
 begin
-  X1 := value;
-  Y1 := value;
-  X2 := value;
-  Y2 := value;  
+  Self.Create(value, value, value, value); 
 end;
 
 {==============================================================================]
@@ -187,12 +163,12 @@ end;
   @action: Creates TBox from pt by radius used for width and height.
   @note: None.
 [==============================================================================}
-function TBox.Make(const pt: TPoint; const radius: Integer = 0): TBox; overload; cdecl;
+function TBox.Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload; cdecl;
 begin
-  Self.X1 := (pt.X - radius);
-  Self.Y1 := (pt.Y - radius);
-  Self.X2 := (pt.X + radius);
-  Self.Y2 := (pt.Y + radius);
+  Self.X1 := (pt.X - wRadius);
+  Self.Y1 := (pt.Y - hRadius);
+  Self.X2 := (pt.X + wRadius);
+  Self.Y2 := (pt.Y + hRadius);
   Result := Self;
 end;
 
@@ -201,13 +177,9 @@ end;
   @action: Creates TBox from pt by radius used for width and height.
   @note: None.
 [==============================================================================}
-function TBox.Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload; cdecl;
+function TBox.Make(const pt: TPoint; const radius: Integer = 0): TBox; overload; cdecl;
 begin
-  Self.X1 := (pt.X - wRadius);
-  Self.Y1 := (pt.Y - hRadius);
-  Self.X2 := (pt.X + wRadius);
-  Self.Y2 := (pt.Y + hRadius);
-  Result := Self;
+  Result := Self.Make(pt, radius, radius);
 end;
 
 {==============================================================================]
@@ -517,54 +489,43 @@ begin
 end;
 
 {==============================================================================]
-  <TBoxHelper.InArea>
-  @action: Returns true if bx is in/within area boundaries.
+  <TBoxHelper.Create>
+  @action: Creates TBox(0,0,0,0).
   @note: None
 [==============================================================================}
-function TBoxHelper.InArea(const area: TBox): Boolean; overload; cdecl;
+function TBoxHelper.Create: TBox; overload; cdecl;
 begin
-  Result := not ((Self.X2 < area.X1) or (Self.Y2 < area.Y1) or (Self.X1 > area.X2) or (Self.Y1 > area.Y2)); 
-end;
-
-{==============================================================================]
-  <TBoxHelper.InArea>
-  @action: Returns true if bx is in/within any area boundaries by areas.
-  @note: None
-[==============================================================================}
-function TBoxHelper.InArea(const areas: TBoxArray): Boolean; overload; cdecl;
-var
-  i: Integer;
-begin
-  for i := 0 to High(areas) do
-    if not ((Self.X2 < areas[i].X1) or (Self.X1 > areas[i].X2) or (Self.Y2 < areas[i].Y1) or (Self.Y1 > areas[i].Y2)) then
-      Exit(True);
-  Result := False;
+  Self.X1 := 0;
+  Self.Y1 := 0;
+  Self.X2 := 0;
+  Self.Y2 := 0;
+  Result := Self;  
 end;
 
 {==============================================================================]
   <TBoxHelper.Inside>
-  @action: Returns true if bx is INSIDE area boundaries.
-  @note: Performs different action than TBox_In!
+  @action: Returns true if bx is INSIDE target boundaries.
+  @note: None.
 [==============================================================================}
-function TBoxHelper.Inside(const area: TBox): Boolean; overload; cdecl;
+function TBox.Inside(const target: TBox): Boolean; overload; cdecl;
 begin
-  Result := ((Self.X1 > area.X1) and (Self.X1 < area.X2) and (Self.X2 > area.X1) and (Self.X2 < area.X2) and (Self.Y1 > area.Y1) and (Self.Y1 < area.Y2) and (Self.Y2 > area.Y1) and (Self.Y2 < area.Y2));
+  Result := not ((Self.X2 < target.X1) or (Self.Y2 < target.Y1) or (Self.X1 > target.X2) or (Self.Y1 > target.Y2));
 end;
 
 {==============================================================================]
   <TBoxHelper.Inside>
-  @action: Returns true if bx is INSIDE area boundaries by areas.
-  @note: Performs different action than TBox_In!
+  @action: Returns true if bx is in/within any area boundaries by target areas.
+  @note: None.
 [==============================================================================}
-function TBoxHelper.Inside(const areas: TBoxArray): Boolean; overload; cdecl;
+function TBoxHelper.Inside(const targets: TBoxArray): Boolean; overload; cdecl;
 var
   i: Integer;
 begin
-  for i := 0 to High(areas) do
-    if ((Self.X1 > areas[i].X1) and (Self.X1 < areas[i].X2) and (Self.X2 > areas[i].X1) and (Self.X2 < areas[i].X2) and (Self.Y1 > areas[i].Y1) and (Self.Y1 < areas[i].Y2) and (Self.Y2 > areas[i].Y1) and (Self.Y2 < areas[i].Y2)) then
+  for i := 0 to High(targets) do
+    if not ((Self.X2 < targets[i].X1) or (Self.X1 > targets[i].X2) or (Self.Y2 < targets[i].Y1) or (Self.Y1 > targets[i].Y2)) then
       Exit(True);
   Result := False;
-end; 
+end;
 
 {==============================================================================]
   <TBoxHelper.Center>
