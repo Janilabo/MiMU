@@ -221,3 +221,24 @@ begin
   end else
     SetLength(Result, 0);
 end;
+
+{==============================================================================]
+  <_TPoint.Create>
+  @action: Creates TPoint using pX, pY 
+  @note: function version
+[==============================================================================}
+class function _TPoint.Create(const pX, pY: Integer): TPoint; overload; cdecl;
+begin
+  Result.X := pX;
+  Result.Y := pY;
+end;
+
+{==============================================================================]
+  <_TPoint.Create>
+  @action: Creates TPoint using value 
+  @note: function version
+[==============================================================================}
+class function _TPoint.Create(const value: Integer = 0): TPoint; overload; cdecl;
+begin
+  Result := _TPoint.Create(value, value);
+end;

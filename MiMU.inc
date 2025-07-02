@@ -1347,67 +1347,67 @@ function TRangeArrayHelper.Unshift(const items: TRangeArray): Integer; overload;
 {$UNDEF TArray_Unshift2}
 
 {$DEFINE T2DArray_Blank}
-function T2DArray_Blank(const arr: T2DIntegerArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Blank(const arr: T2DDoubleArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Blank(const arr: T2DStringArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Blank(const arr: T2DCharArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Blank(const arr: T2DBooleanArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Blank(const arr: T2DPointArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Blank(const arr: T2DBoxArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Blank(const arr: T2DRangeArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DIntegerArrayHelper.Blank: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DDoubleArrayHelper.Blank: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DStringArrayHelper.Blank: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DCharArrayHelper.Blank: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DBooleanArrayHelper.Blank: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DPointArrayHelper.Blank: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DBoxArrayHelper.Blank: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DRangeArrayHelper.Blank: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
 {$UNDEF T2DArray_Blank}
 
-{$DEFINE T2DArray_Create}
-function T2DArray_Create(const size1D, size2D: Integer; const item: Integer): T2DIntegerArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Create(const size1D, size2D: Integer; const item: Double): T2DDoubleArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Create(const size1D, size2D: Integer; const item: string): T2DStringArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Create(const size1D, size2D: Integer; const item: Char): T2DCharArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Create(const size1D, size2D: Integer; const item: Boolean): T2DBooleanArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Create(const size1D, size2D: Integer; const item: TPoint): T2DPointArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Create(const size1D, size2D: Integer; const item: TBox): T2DBoxArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Create(const size1D, size2D: Integer; const item: TRange): T2DRangeArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-{$UNDEF T2DArray_Create}
+{$DEFINE T2D_Create}
+class function T2D.Create(const size1D, size2D: Integer; const item: Integer): T2DIntegerArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+class function T2D.Create(const size1D, size2D: Integer; const item: Double): T2DDoubleArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+class function T2D.Create(const size1D, size2D: Integer; const item: string): T2DStringArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+class function T2D.Create(const size1D, size2D: Integer; const item: Char): T2DCharArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+class function T2D.Create(const size1D, size2D: Integer; const item: Boolean): T2DBooleanArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+class function T2D.Create(const size1D, size2D: Integer; const item: TPoint): T2DPointArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+class function T2D.Create(const size1D, size2D: Integer; const item: TBox): T2DBoxArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+class function T2D.Create(const size1D, size2D: Integer; const item: TRange): T2DRangeArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+{$UNDEF T2D_Create}
 
 {$DEFINE T2DArray_Empty}
-function T2DArray_Empty(const arr: T2DIntegerArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Empty(const arr: T2DDoubleArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Empty(const arr: T2DStringArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Empty(const arr: T2DCharArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Empty(const arr: T2DBooleanArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Empty(const arr: T2DPointArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Empty(const arr: T2DBoxArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Empty(const arr: T2DRangeArray): Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DIntegerArrayHelper.Empty: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DDoubleArrayHelper.Empty: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DStringArrayHelper.Empty: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DCharArrayHelper.Empty: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DBooleanArrayHelper.Empty: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DPointArrayHelper.Empty: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DBoxArrayHelper.Empty: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DRangeArrayHelper.Empty: Boolean; overload; cdecl; {$I MIMU\T2DArray.inc}
 {$UNDEF T2DArray_Empty}
 
-{$DEFINE T2DArray_Length1}
-function T2DArray_Length(const arr: T2DIntegerArray; var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DDoubleArray; var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DStringArray; var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DCharArray; var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DBooleanArray; var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DPointArray; var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DBoxArray; var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DRangeArray; var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-{$UNDEF T2DArray_Length1}
+{$DEFINE T2DArray_Size1}
+function T2DIntegerArrayHelper.Size(var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DDoubleArrayHelper.Size(var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DStringArrayHelper.Size(var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DCharArrayHelper.Size(var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DBooleanArrayHelper.Size(var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DPointArrayHelper.Size(var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DBoxArrayHelper.Size(var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DRangeArrayHelper.Size(var lengths: TIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+{$UNDEF T2DArray_Size1}
 
-{$DEFINE T2DArray_Length2}
-function T2DArray_Length(const arr: T2DIntegerArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DDoubleArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DStringArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DCharArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DBooleanArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DPointArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DBoxArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Length(const arr: T2DRangeArray): Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
-{$UNDEF T2DArray_Length2}
+{$DEFINE T2DArray_Size2}
+function T2DIntegerArrayHelper.Size: Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DDoubleArrayHelper.Size: Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DStringArrayHelper.Size: Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DCharArrayHelper.Size: Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DBooleanArrayHelper.Size: Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DPointArrayHelper.Size: Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DBoxArrayHelper.Size: Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DRangeArrayHelper.Size: Int64; overload; cdecl; {$I MIMU\T2DArray.inc}
+{$UNDEF T2DArray_Size2}
 
 {$DEFINE T2DArray_Merge}
-function T2DArray_Merge(const arr: T2DIntegerArray): TIntegerArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Merge(const arr: T2DDoubleArray): TDoubleArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Merge(const arr: T2DStringArray): TStringArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Merge(const arr: T2DCharArray): TCharArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Merge(const arr: T2DBooleanArray): TBooleanArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Merge(const arr: T2DPointArray): TPointArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Merge(const arr: T2DBoxArray): TBoxArray; overload; cdecl; {$I MIMU\T2DArray.inc}
-function T2DArray_Merge(const arr: T2DRangeArray): TRangeArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DIntegerArrayHelper.Merge: TIntegerArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DDoubleArrayHelper.Merge: TDoubleArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DStringArrayHelper.Merge: TStringArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DCharArrayHelper.Merge: TCharArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DBooleanArrayHelper.Merge: TBooleanArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DPointArrayHelper.Merge: TPointArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DBoxArrayHelper.Merge: TBoxArray; overload; cdecl; {$I MIMU\T2DArray.inc}
+function T2DRangeArrayHelper.Merge: TRangeArray; overload; cdecl; {$I MIMU\T2DArray.inc}
 {$UNDEF T2DArray_Merge}

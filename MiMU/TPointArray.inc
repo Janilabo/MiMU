@@ -8,7 +8,7 @@ var
   i: Integer;
 begin
   if (High(Self) = -1) then
-    Exit(_TBox.Create(-2147483648));
+    Exit(Box(-2147483648));
   Result.Make(Self[0]);
   for i := 1 to High(Self) do
   begin
@@ -73,7 +73,7 @@ begin
   if (l > 0) then
   begin
     b := Self.Bounds(w, h);
-    m := T2DArray_Create(w, h, False);
+    m := T2D.Create(w, h, False);
     SetLength(Result, l);
     for i := 0 to (l - 1) do
       if m[Self[i].X - b.X1][Self[i].Y - b.Y1].Enable then
@@ -98,7 +98,7 @@ begin
   if (High(Self) > 0) then
   begin
     b := Self.Bounds(w, h);
-	m := T2DArray_Create(w, h, False);
+	m := T2D.Create(w, h, False);
     x := 0;
     for i := 0 to High(Self) do
       if m[Self[i].X - b.X1][Self[i].Y - b.Y1].Enable then
@@ -132,7 +132,7 @@ begin
     b := Self.Bounds;
     b := b.Expand;
     b.Size(w, h);
-    m := T2DArray_Create(w, h, False);
+    m := T2D.Create(w, h, False);
     for i := 0 to (l - 1) do
       m[Self[i].X - b.X1][Self[i].Y - b.Y1] := True;
     SetLength(Result, (w * h));
@@ -192,7 +192,7 @@ begin
   begin
     o := False;
     area.Size(w, h);
-    c := T2DArray_Create(w, h, False);
+    c := T2D.Create(w, h, False);
     for i := 0 to (l - 1) do
     begin
       if not o then
@@ -207,7 +207,7 @@ begin
       f := 3;
     SetLength(a, (f + 1));
     SetLength(q, (w * h));
-    z := T2DArray_Create(w, h, False);
+    z := T2D.Create(w, h, False);
     q[0] := start;
     l := 0;
     while (l > -1) do

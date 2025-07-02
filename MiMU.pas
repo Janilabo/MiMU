@@ -1452,6 +1452,62 @@ type
     function TIA: TIntegerArray; cdecl;
     function T2DIA: T2DIntegerArray; cdecl;  
   end;
+  T2DIntegerArrayHelper = type helper for T2DIntegerArray
+    function Blank: Boolean; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
+    function Size: Int64; overload; cdecl;
+    function Merge: TIntegerArray; overload; cdecl;  
+  end;
+  T2DDoubleArrayHelper = type helper for T2DDoubleArray
+    function Blank: Boolean; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
+    function Size: Int64; overload; cdecl;
+    function Merge: TDoubleArray; overload; cdecl;  
+  end;
+  T2DStringArrayHelper = type helper for T2DStringArray
+    function Blank: Boolean; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
+    function Size: Int64; overload; cdecl;
+    function Merge: TStringArray; overload; cdecl;  
+  end;
+  T2DCharArrayHelper = type helper for T2DCharArray
+    function Blank: Boolean; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
+    function Size: Int64; overload; cdecl;
+    function Merge: TCharArray; overload; cdecl;  
+  end;
+  T2DBooleanArrayHelper = type helper for T2DBooleanArray
+    function Blank: Boolean; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
+    function Size: Int64; overload; cdecl;
+    function Merge: TBooleanArray; overload; cdecl;  
+  end;
+  T2DPointArrayHelper = type helper for T2DPointArray
+    function Blank: Boolean; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
+    function Size: Int64; overload; cdecl;
+    function Merge: TPointArray; overload; cdecl;  
+  end;
+  T2DBoxArrayHelper = type helper for T2DBoxArray
+    function Blank: Boolean; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
+    function Size: Int64; overload; cdecl;
+    function Merge: TBoxArray; overload; cdecl;  
+  end;
+  T2DRangeArrayHelper = type helper for T2DRangeArray
+    function Blank: Boolean; overload; cdecl;
+    function Empty: Boolean; overload; cdecl;
+    function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
+    function Size: Int64; overload; cdecl;
+    function Merge: TRangeArray; overload; cdecl;  
+  end;
   T1D = class
   public
     class function Init(var arr: TIntegerArray): Integer; overload; cdecl;
@@ -1460,6 +1516,22 @@ type
     class function Unique(var arr: TIntegerArray): Integer; overload; cdecl;
     class function Unique(var arr: TPointArray): Integer; overload; cdecl;
   end;
+  T2D = class
+  public
+    class function Create(const size1D, size2D: Integer; const item: Integer): T2DIntegerArray; overload; cdecl;
+    class function Create(const size1D, size2D: Integer; const item: Double): T2DDoubleArray; overload; cdecl;
+    class function Create(const size1D, size2D: Integer; const item: string): T2DStringArray; overload; cdecl;
+    class function Create(const size1D, size2D: Integer; const item: Char): T2DCharArray; overload; cdecl;
+    class function Create(const size1D, size2D: Integer; const item: Boolean): T2DBooleanArray; overload; cdecl;
+    class function Create(const size1D, size2D: Integer; const item: TPoint): T2DPointArray; overload; cdecl;
+    class function Create(const size1D, size2D: Integer; const item: TBox): T2DBoxArray; overload; cdecl;
+    class function Create(const size1D, size2D: Integer; const item: TRange): T2DRangeArray; overload; cdecl;
+  end;
+  _TPoint = class
+  public
+    class function Create(const pX, pY: Integer): TPoint; overload; cdecl;
+    class function Create(const value: Integer = 0): TPoint; overload; cdecl;
+  end;
   _TBox = class
   public
     class function Create(const minX, minY, maxX, maxY: Integer): TBox; overload; cdecl;
@@ -1467,6 +1539,11 @@ type
     class function Create(const valueX, valueY: Integer): TBox; overload; cdecl;
     class function Create(const target: TPoint): TBox; overload; cdecl;
     class function Create(const value: Integer = 0): TBox; overload; cdecl;
+  end;
+  _TRange = class
+  public
+    class function Create(const rStart, rStop: Integer): TRange; overload; cdecl;
+    class function Create(const value: Integer = 0): TRange; overload; cdecl;
   end;
 
 function MiMU_Version: Double; cdecl;
@@ -1487,6 +1564,13 @@ operator<>(const a, b: TPoint): Boolean;
 operator<>(const a, b: TBox): Boolean;
 operator<>(const a, b: TRange): Boolean;
 
+function Point(const pX, pY: Integer): TPoint; overload; inline;
+function Point(const val: Integer = 0): TPoint; overload; inline;
+function Range(const rStart, rStop: Integer): TRange; overload; inline;
+function Range(const val: Integer = 0): TRange; overload; inline;
+function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
+function Box(const val: Integer = 0): TBox; overload; inline;
+
 function Swap(var A, B: Integer): Boolean; overload; inline;
 function Swap(var A, B: Int64): Boolean; overload; inline;
 function Swap(var A, B: Double): Boolean; overload; inline;
@@ -1496,59 +1580,6 @@ function Swap(var A, B: Boolean): Boolean; overload; inline;
 function Swap(var A, B: TPoint): Boolean; overload; inline;
 function Swap(var A, B: TBox): Boolean; overload; inline;
 function Swap(var A, B: TRange): Boolean; overload; inline;
-
-function T2DArray_Blank(const arr: T2DIntegerArray): Boolean; overload; cdecl;
-function T2DArray_Blank(const arr: T2DDoubleArray): Boolean; overload; cdecl;
-function T2DArray_Blank(const arr: T2DStringArray): Boolean; overload; cdecl;
-function T2DArray_Blank(const arr: T2DCharArray): Boolean; overload; cdecl;
-function T2DArray_Blank(const arr: T2DBooleanArray): Boolean; overload; cdecl;
-function T2DArray_Blank(const arr: T2DPointArray): Boolean; overload; cdecl;
-function T2DArray_Blank(const arr: T2DBoxArray): Boolean; overload; cdecl;
-function T2DArray_Blank(const arr: T2DRangeArray): Boolean; overload; cdecl;
-
-function T2DArray_Create(const size1D, size2D: Integer; const item: Integer): T2DIntegerArray; overload; cdecl;
-function T2DArray_Create(const size1D, size2D: Integer; const item: Double): T2DDoubleArray; overload; cdecl;
-function T2DArray_Create(const size1D, size2D: Integer; const item: string): T2DStringArray; overload; cdecl;
-function T2DArray_Create(const size1D, size2D: Integer; const item: Char): T2DCharArray; overload; cdecl;
-function T2DArray_Create(const size1D, size2D: Integer; const item: Boolean): T2DBooleanArray; overload; cdecl;
-function T2DArray_Create(const size1D, size2D: Integer; const item: TPoint): T2DPointArray; overload; cdecl;
-function T2DArray_Create(const size1D, size2D: Integer; const item: TBox): T2DBoxArray; overload; cdecl;
-function T2DArray_Create(const size1D, size2D: Integer; const item: TRange): T2DRangeArray; overload; cdecl;
-
-function T2DArray_Empty(const arr: T2DIntegerArray): Boolean; overload; cdecl;
-function T2DArray_Empty(const arr: T2DDoubleArray): Boolean; overload; cdecl;
-function T2DArray_Empty(const arr: T2DStringArray): Boolean; overload; cdecl;
-function T2DArray_Empty(const arr: T2DCharArray): Boolean; overload; cdecl;
-function T2DArray_Empty(const arr: T2DBooleanArray): Boolean; overload; cdecl;
-function T2DArray_Empty(const arr: T2DPointArray): Boolean; overload; cdecl;
-function T2DArray_Empty(const arr: T2DBoxArray): Boolean; overload; cdecl;
-function T2DArray_Empty(const arr: T2DRangeArray): Boolean; overload; cdecl;
-
-function T2DArray_Length(const arr: T2DIntegerArray; var lengths: TIntegerArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DDoubleArray; var lengths: TIntegerArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DStringArray; var lengths: TIntegerArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DCharArray; var lengths: TIntegerArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DBooleanArray; var lengths: TIntegerArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DPointArray; var lengths: TIntegerArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DBoxArray; var lengths: TIntegerArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DRangeArray; var lengths: TIntegerArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DIntegerArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DDoubleArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DStringArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DCharArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DBooleanArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DPointArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DBoxArray): Int64; overload; cdecl;
-function T2DArray_Length(const arr: T2DRangeArray): Int64; overload; cdecl;
-
-function T2DArray_Merge(const arr: T2DIntegerArray): TIntegerArray; overload; cdecl;
-function T2DArray_Merge(const arr: T2DDoubleArray): TDoubleArray; overload; cdecl;
-function T2DArray_Merge(const arr: T2DStringArray): TStringArray; overload; cdecl;
-function T2DArray_Merge(const arr: T2DCharArray): TCharArray; overload; cdecl;
-function T2DArray_Merge(const arr: T2DBooleanArray): TBooleanArray; overload; cdecl;
-function T2DArray_Merge(const arr: T2DPointArray): TPointArray; overload; cdecl;
-function T2DArray_Merge(const arr: T2DBoxArray): TBoxArray; overload; cdecl;
-function T2DArray_Merge(const arr: T2DRangeArray): TRangeArray; overload; cdecl;
   
 implementation
 
@@ -1625,6 +1656,46 @@ end;
 operator<>(const a, b: TRange): Boolean;
 begin
   Result := not ((a.start = b.start) and (a.stop = b.stop));
+end;
+
+function Point(const pX, pY: Integer): TPoint; overload; inline;
+begin
+  Result.X := pX;
+  Result.Y := pY;
+end;
+
+function Point(const val: Integer = 0): TPoint; overload; inline;
+begin
+  Result.X := val;
+  Result.Y := val;
+end;
+
+function Range(const rStart, rStop: Integer): TRange; overload; inline;
+begin
+  Result.start := rStart;
+  Result.stop := rStop;
+end;
+
+function Range(const val: Integer = 0): TRange; overload; inline;
+begin
+  Result.start := val;
+  Result.stop := val;
+end;
+
+function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
+begin
+  Result.X1 := bX1;
+  Result.Y1 := bY1;
+  Result.X2 := bX2;
+  Result.Y2 := bY2;
+end;
+
+function Box(const val: Integer = 0): TBox; overload; inline;
+begin
+  Result.X1 := val;
+  Result.Y1 := val;
+  Result.X2 := val;
+  Result.Y2 := val;
 end;  
 
 function Swap(var A, B: Integer): Boolean; overload; inline;
@@ -1771,7 +1842,7 @@ begin
   begin
     r := 0;
     b := arr.Bounds(w, h);
-    m := T2DArray_Create(w, h, False);
+    m := T2D.Create(w, h, False);
     for i := 0 to (l - 1) do
       if m[arr[i].X - b.X1][arr[i].Y - b.Y1].Enable then
         arr[r.Increase] := arr[i];

@@ -744,3 +744,24 @@ function TRange.Str: string; cdecl;
 begin
   Result := ('[' + IntToStr(Self.start) + '..' + IntToStr(Self.stop) + ']');
 end;
+
+{==============================================================================]
+  <_TRange.Create>
+  @action: Creates TPoint using pX, pY 
+  @note: function version
+[==============================================================================}
+class function _TRange.Create(const rStart, rStop: Integer): TRange; overload; cdecl;
+begin
+  Result.start := rStart;
+  Result.stop := rStop;
+end;
+
+{==============================================================================]
+  <_TRange.Create>
+  @action: Creates TPoint using value 
+  @note: function version
+[==============================================================================}
+class function _TRange.Create(const value: Integer = 0): TRange; overload; cdecl;
+begin
+  Result := _TRange.Create(value, value);
+end;
