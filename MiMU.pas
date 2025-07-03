@@ -1457,6 +1457,8 @@ type
     function Empty: Boolean; overload; cdecl;
     function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
     function Size: Int64; overload; cdecl;
+    function Size(const aSize: Integer): Int64; overload; cdecl;
+    function Size(const size1D, size2D: Integer): Int64; overload; cdecl;
     function Merge: TIntegerArray; overload; cdecl;  
   end;
   T2DDoubleArrayHelper = type helper for T2DDoubleArray
@@ -1464,6 +1466,8 @@ type
     function Empty: Boolean; overload; cdecl;
     function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
     function Size: Int64; overload; cdecl;
+    function Size(const aSize: Integer): Int64; overload; cdecl;
+    function Size(const size1D, size2D: Integer): Int64; overload; cdecl;
     function Merge: TDoubleArray; overload; cdecl;  
   end;
   T2DStringArrayHelper = type helper for T2DStringArray
@@ -1471,6 +1475,8 @@ type
     function Empty: Boolean; overload; cdecl;
     function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
     function Size: Int64; overload; cdecl;
+    function Size(const aSize: Integer): Int64; overload; cdecl;
+    function Size(const size1D, size2D: Integer): Int64; overload; cdecl;
     function Merge: TStringArray; overload; cdecl;  
   end;
   T2DCharArrayHelper = type helper for T2DCharArray
@@ -1478,6 +1484,8 @@ type
     function Empty: Boolean; overload; cdecl;
     function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
     function Size: Int64; overload; cdecl;
+    function Size(const aSize: Integer): Int64; overload; cdecl;
+    function Size(const size1D, size2D: Integer): Int64; overload; cdecl;
     function Merge: TCharArray; overload; cdecl;  
   end;
   T2DBooleanArrayHelper = type helper for T2DBooleanArray
@@ -1485,6 +1493,8 @@ type
     function Empty: Boolean; overload; cdecl;
     function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
     function Size: Int64; overload; cdecl;
+    function Size(const aSize: Integer): Int64; overload; cdecl;
+    function Size(const size1D, size2D: Integer): Int64; overload; cdecl;
     function Merge: TBooleanArray; overload; cdecl;  
   end;
   T2DPointArrayHelper = type helper for T2DPointArray
@@ -1492,6 +1502,8 @@ type
     function Empty: Boolean; overload; cdecl;
     function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
     function Size: Int64; overload; cdecl;
+    function Size(const aSize: Integer): Int64; overload; cdecl;
+    function Size(const size1D, size2D: Integer): Int64; overload; cdecl;
     function Merge: TPointArray; overload; cdecl;  
   end;
   T2DBoxArrayHelper = type helper for T2DBoxArray
@@ -1499,6 +1511,8 @@ type
     function Empty: Boolean; overload; cdecl;
     function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
     function Size: Int64; overload; cdecl;
+    function Size(const aSize: Integer): Int64; overload; cdecl;
+    function Size(const size1D, size2D: Integer): Int64; overload; cdecl;
     function Merge: TBoxArray; overload; cdecl;  
   end;
   T2DRangeArrayHelper = type helper for T2DRangeArray
@@ -1506,6 +1520,8 @@ type
     function Empty: Boolean; overload; cdecl;
     function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
     function Size: Int64; overload; cdecl;
+    function Size(const aSize: Integer): Int64; overload; cdecl;
+    function Size(const size1D, size2D: Integer): Int64; overload; cdecl;
     function Merge: TRangeArray; overload; cdecl;  
   end;
   T1D = class

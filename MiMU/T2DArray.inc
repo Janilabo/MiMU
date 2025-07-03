@@ -83,7 +83,7 @@ end;
 
 
 {==============================================================================]
- <arr.Size(arr: T2DArray): Int64>
+ <arr.Size: Int64>
  @action: Returns actual Length for 2D array.
  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
@@ -98,6 +98,34 @@ end;
 {$ENDIF}
 
 {==============================================================================]
+ <arr.Size(aSize: Integer): Int64>
+ @action: Sets length to 1D part of the 2D array and returns the actual size of arr (element count)
+ @note: None.
+[==============================================================================}
+{$IFDEF T2DArray_Size3}
+var
+  i: Integer;
+begin
+  SetLength(Self, aSize);
+  Result := 0;
+  for i := 0 to High(Self) do
+    Result := (Result + Length(Self[i]));
+end;
+{$ENDIF}
+
+{==============================================================================]
+ <arr.Size(size1D, size2D: Integer): Int64>
+ @action: Returns actual Length for 2D array.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+[==============================================================================}
+{$IFDEF T2DArray_Size4}
+begin
+  SetLength(Self, size1D, size2D);
+  Result := (Max(0, size1D) * Max(0, size2D));
+end;
+{$ENDIF}
+
+{==============================================================================]
  <arr.Merge: TArray>
  @action: Merges 2D array to 1D.
  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
@@ -106,10 +134,8 @@ end;
 var
   i, j, l: Integer;
 begin
-  l := 0;
-  for i := 0 to High(Self) do
-    l := (l + Length(Self[i]));
-  SetLength(Result, l);
+  l := Result.Size(Self.Size);
+  if (l > 0) then
   for i := High(Self) downto 0 do
     for j := High(Self[i]) downto 0 do
       Result[l.Decrement] := Self[i][j];
