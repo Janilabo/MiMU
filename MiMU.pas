@@ -43,7 +43,7 @@
 interface
 
 uses
-  Classes, SysUtils, Math;
+  Classes, SysUtils, Math, Generics.Collections;
 
 const
   MiMU_VERSION_NUMBER = 0.42;
@@ -430,6 +430,7 @@ type
     function Duplicate(const xTimes: Integer = 1): TIntegerArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TIntegerArray): Boolean; overload; cdecl;
+    function Excessive: Boolean; overload; cdecl;
     function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: Integer): TIntegerArray; overload; cdecl;
@@ -621,6 +622,7 @@ type
     function Duplicate(const xTimes: Integer = 1): TDoubleArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TDoubleArray): Boolean; overload; cdecl;
+    function Excessive: Boolean; overload; cdecl;
     function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: Double): TDoubleArray; overload; cdecl;
@@ -742,6 +744,7 @@ type
     function Duplicate(const xTimes: Integer = 1): TStringArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TStringArray): Boolean; overload; cdecl;
+    function Excessive: Boolean; overload; cdecl;
     function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: string): TStringArray; overload; cdecl;
@@ -863,6 +866,7 @@ type
     function Duplicate(const xTimes: Integer = 1): TCharArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TCharArray): Boolean; overload; cdecl;
+    function Excessive: Boolean; overload; cdecl;
     function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
 	function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: Char): TCharArray; overload; cdecl;
@@ -984,6 +988,7 @@ type
     function Duplicate(const xTimes: Integer = 1): TBooleanArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TBooleanArray): Boolean; overload; cdecl;
+    function Excessive: Boolean; overload; cdecl;
     function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: Boolean): TBooleanArray; overload; cdecl;
@@ -1105,6 +1110,7 @@ type
     function Duplicate(const xTimes: Integer = 1): TPointArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TPointArray): Boolean; overload; cdecl;
+    function Excessive: Boolean; overload; cdecl;
     function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: TPoint): TPointArray; overload; cdecl;
@@ -1235,6 +1241,7 @@ type
     function Duplicate(const xTimes: Integer = 1): TBoxArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TBoxArray): Boolean; overload; cdecl;
+    function Excessive: Boolean; overload; cdecl;
     function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: TBox): TBoxArray; overload; cdecl;
@@ -1356,6 +1363,7 @@ type
     function Duplicate(const xTimes: Integer = 1): TRangeArray; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TRangeArray): Boolean; overload; cdecl;
+    function Excessive: Boolean; overload; cdecl;
     function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Extend(const item: TRange): TRangeArray; overload; cdecl;

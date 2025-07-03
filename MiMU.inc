@@ -334,6 +334,17 @@ function TBoxArrayHelper.Equal(const target: TBoxArray): Boolean; overload; cdec
 function TRangeArrayHelper.Equal(const target: TRangeArray): Boolean; overload; cdecl; {$I MIMU\TArray.inc}
 {$UNDEF TArray_Equal}
 
+{$DEFINE TArray_Excessive}
+function TIntegerArrayHelper.Excessive: Boolean; overload; cdecl; type TDict = specialize TDictionary<Integer, Boolean>; var d: TDict; {$I MIMU\TArray.inc}
+function TDoubleArrayHelper.Excessive: Boolean; overload; cdecl; type TDict = specialize TDictionary<Double, Boolean>; var d: TDict; {$I MIMU\TArray.inc}
+function TStringArrayHelper.Excessive: Boolean; overload; cdecl; type TDict = specialize TDictionary<string, Boolean>; var d: TDict; {$I MIMU\TArray.inc}
+function TCharArrayHelper.Excessive: Boolean; overload; cdecl; type TDict = specialize TDictionary<Char, Boolean>; var d: TDict; {$I MIMU\TArray.inc}
+function TBooleanArrayHelper.Excessive: Boolean; overload; cdecl; type TDict = specialize TDictionary<Boolean, Boolean>; var d: TDict; {$I MIMU\TArray.inc}
+function TPointArrayHelper.Excessive: Boolean; overload; cdecl; type TDict = specialize TDictionary<TPoint, Boolean>; var d: TDict; {$I MIMU\TArray.inc}
+function TBoxArrayHelper.Excessive: Boolean; overload; cdecl; type TDict = specialize TDictionary<TBox, Boolean>; var d: TDict; {$I MIMU\TArray.inc}
+function TRangeArrayHelper.Excessive: Boolean; overload; cdecl; type TDict = specialize TDictionary<TRange, Boolean>; var d: TDict; {$I MIMU\TArray.inc}
+{$UNDEF TArray_Excessive}
+
 {$DEFINE TArray_Exch}
 function TIntegerArrayHelper.Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Integer; {$I MIMU\TArray.inc}
 function TDoubleArrayHelper.Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl; var c: Double; {$I MIMU\TArray.inc}

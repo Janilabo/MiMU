@@ -552,6 +552,29 @@ end;
 {$ENDIF}
 
 {==============================================================================]
+ <arr.Excessive: Boolean>
+ @action: Returns true if arr contains any duplicates in it.
+ @note: None.
+[==============================================================================}
+{$IFDEF TArray_Excessive}
+var
+  i: Integer;
+begin
+  d := TDict.Create;
+  try
+    for i := Low(Self) to High(Self) do
+      if not d.ContainsKey(Self[i]) then
+        d.Add(Self[i], True)
+      else
+        Exit(True);
+  finally
+    d.Free;
+  end;
+  Result := False;
+end;
+{$ENDIF}
+
+{==============================================================================]
  <arr.Exch(aIndex, bIndex: Integer): Boolean>
  @action: Fast version of Exchange().
  @note: Unsafe, no checking.
