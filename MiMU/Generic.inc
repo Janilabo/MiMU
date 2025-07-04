@@ -3,7 +3,7 @@
  @action: Creates TArray with Self.
  @note: aSize will be Length of the created array.
 [==============================================================================}
-{$IFDEF var_TArray}
+function XVarHelp.TArray(const aSize: Integer = 1): XArr; overload cdecl;
 var
   i: Integer;
 begin
@@ -11,14 +11,13 @@ begin
   for i := 0 to High(Result) do
     Result[i] := Self;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Add(item: VarType; duplicates: Boolean): TArray>
  @action: Appends arr with item. Returns the array with added item.
  @note: Adds item to the right side of the array.
 [==============================================================================}
-{$IFDEF TArray_Add1}
+function XArrHelp.Add(const item: XVar; const duplicates: Boolean = True): XArr; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -31,14 +30,13 @@ begin
   else
     Result[l] := item;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Add(items: TArray; duplicates: Boolean): TArray>
  @action: Appends arr with items. Returns the array with added items.
  @note: Adds item to the right side of the array.
 [==============================================================================}
-{$IFDEF TArray_Add2}
+function XArrHelp.Add(const items: XArr; const duplicates: Boolean = True): XArr; overload; cdecl;
 var
   a, h, i, l: Integer;
 begin
@@ -63,14 +61,13 @@ begin
       Result[l + i] := items[i];
   end;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.AllEqual: Boolean>
  @action: Returns true if all values in arr are equal (arr contains only equal values).
  @note: Returns FALSE with empty array!
 [==============================================================================}
-{$IFDEF TArray_AllEqual}
+function XArrHelp.AllEqual: Boolean; overload; cdecl;
 var
   h, i, l: Integer;
 begin
@@ -81,14 +78,13 @@ begin
       Exit(False);
   Result := (Length(Self) > 0);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.AllSame: Boolean>
  @action: Returns true if all values in arr are the same (arr contains only equal values).
  @note: Returns FALSE with empty array!
 [==============================================================================}
-{$IFDEF TArray_AllSame}
+function XArrHelp.AllSame: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -97,14 +93,13 @@ begin
       Exit(False);
   Result := (Length(Self) > 0);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.AllUnique: Boolean>
  @action: Returns true if all values in arr are unique (arr contains ONLY unique values).
  @note: None
 [==============================================================================}
-{$IFDEF TArray_AllUnique}
+function XArrHelp.AllUnique: Boolean; overload; cdecl;
 var
   h, a, b: Integer;
 begin
@@ -115,14 +110,13 @@ begin
         Exit(False);
   Result := (h > -1);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Append(item: VarType; duplicates: Boolean): Integer>
  @action: Appends arr with item. Returns the index of added item.
  @note: Adds item to the right side of the array.
 [==============================================================================}
-{$IFDEF TArray_Append1}
+function XArrHelp.Append(const item: XVar; const duplicates: Boolean = True): Integer; overload; cdecl;
 begin
   if ((not duplicates) and Self.Contains(item)) then
     Exit(High(Self));
@@ -130,14 +124,13 @@ begin
   SetLength(Self, (Result + 1));
   Self[Result] := item;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Append(items: TArray; duplicates; Boolean): Integer>
  @action: Adds all items items to arr.
  @note: Returns the highest index in the end.
 [==============================================================================}
-{$IFDEF TArray_Append2}
+function XArrHelp.Append(const items: XArr; const duplicates: Boolean = True): Integer; overload; cdecl;
 var
   h, i: Integer;
 begin
@@ -159,25 +152,23 @@ begin
       Self[Result.Increment] := items[i];
   end;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Build(item: VarType; aSize: Integer): TArray> 
  @action: Creates array with item where aSize is length of the array.
  @note: item is placed on every index in result.
 [==============================================================================}
-{$IFDEF TArray_Build}
+function XArrHelp.Build(const item: XVar; const aSize: Integer = 1): XArr; overload; cdecl;
 begin
   Result := Self.Create(aSize, item);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.BuiltWith(allowed: TArray): Boolean> 
  @action: Checks if array arr contains only allowed items.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_BuiltWith}
+function XArrHelp.BuiltWith(const allowed: XArr): Boolean; overload; cdecl;
 var
   i, x, y: Integer;
 begin
@@ -194,14 +185,13 @@ begin
      i := (i - 1);
   until ((i < 0) or (not Result));
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.BuiltWithout(forbidden: TArray): Boolean> 
  @action: Checks if array arr does not have any forbidden items.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_BuiltWithout}
+function XArrHelp.BuiltWithout(const forbidden: XArr): Boolean; overload; cdecl;
 var
   i, x, y: Integer;
 begin
@@ -222,26 +212,24 @@ begin
   end else
     Result := True;
 end;
-{$ENDIF}
 
 {==============================================================================]
   <arr.Clear: Boolean>
   @action: SetLength(arr, 0) and returns true if items existed before doing it.
   @note: None.
 [==============================================================================}
-{$IFDEF TArray_Clear}
+function XArrHelp.Clear: Boolean; cdecl;
 begin
   Result := (Length(Self) > 0);
   SetLength(Self, 0);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Clone(index: Integer; count: Integer): TArray>
  @action: Returns copy of an array arr.
  @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
-{$IFDEF TArray_Clone1}
+function XArrHelp.Clone(const index: Integer = 0; const count: Integer = 2147483647): XArr; cdecl;
 var
   i, s, c: Integer;
 begin
@@ -258,7 +246,6 @@ begin
   end else
     SetLength(Result, 0);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Clone(ID: TIntegerArray): TArray>
@@ -266,7 +253,7 @@ end;
  @note: Ignores invalid ID's (doesn't include those to result, they will be left out).
 [====================
 ==========================================================}
-{$IFDEF TArray_Clone2}
+function XArrHelp.Clone(const ID: TIntegerArray): XArr; overload; cdecl;
 var
   i, h, l, r: Integer;
 begin
@@ -282,27 +269,25 @@ begin
   end;
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Combine(b: TArray): TArray>
  @action: Combines arrays arr and b together as single array.
  @note: This is an alternative method. :)
 [==============================================================================}
-{$IFDEF TArray_Combine}
+function XArrHelp.Combine(const b: XArr): XArr; overload; cdecl;
 begin
   SetLength(Result, 0);
   Insert(Self, Result, 0);
   Insert(b, Result, Length(Self));
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Contains(item: VarType; index: Integer): Boolean>
  @action: Looks array for item starting from start index. If found, Result will be True.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Contains}
+function XArrHelp.Contains(const item: XVar; const index: Integer = 0): Boolean; cdecl;
 var
   i: Integer;
 begin
@@ -311,14 +296,13 @@ begin
       Exit(True);
   Result := False;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Copy(index: Integer; count: Integer): TArray>
  @action: Returns copy of an array arr.
  @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
-{$IFDEF TArray_Copy}
+function XArrHelp.Copy(const index: Integer = 0; const count: Integer = 2147483647): XArr; overload; cdecl;
 var
   i, c, l: Integer;
 begin
@@ -335,27 +319,25 @@ begin
   end else
     SetLength(Result, 0);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Create(item: VarType): TArray> 
  @action: Creates array with item, size as 1. Returns old Self.
  @note: [item]
 [==============================================================================}
-{$IFDEF TArray_Create1}
+function XArrHelp.Create(const item: XVar): XArr; overload; cdecl;
 begin
   Result := Self.Clone;
   SetLength(Self, 1);
   Self[0] := item;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Create(aSize: Integer; item: VarType): TArray> 
  @action: Creates array with item where aSize is length of the array. Returns old Self.
  @note: item is placed on every index in result.
 [==============================================================================}
-{$IFDEF TArray_Create2}
+function XArrHelp.Create(const aSize: Integer; const item: XVar): XArr; overload; cdecl;
 var
   i: Integer;
 begin
@@ -364,14 +346,13 @@ begin
   for i := 0 to High(Self) do
     Self[i] := item;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Delete(index: Integer): Boolean>
  @action: Deletes array item from arr by index.
  @note: Returns true with success (index existed in arr).
 [==============================================================================}
-{$IFDEF TArray_Delete1}
+function XArrHelp.Delete(const index: Integer = 0): Boolean; overload; cdecl;
 var
   i, h: Integer;
 begin
@@ -383,14 +364,13 @@ begin
     Self[i] := Self[i + 1];
   SetLength(Self, h);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Delete(ID: TIntegerArray): Integer>
  @action: Deletes array items from arr by indexes (ID).
  @note: Returns amount of items that were deleted succesfully by ID's.
 [==============================================================================}
-{$IFDEF TArray_Delete2}
+function XArrHelp.Delete(const ID: TIntegerArray): Integer; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -403,14 +383,13 @@ begin
       Result := (Result + 1);
   SetLength(Self, (l - Result));
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Differ(target: TArray): Boolean>
  @action: Returns true if arr differs from target.
  @note: None
 [==============================================================================}
-{$IFDEF TArray_Differ}
+function XArrHelp.Differ(const target: XArr): Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -420,14 +399,13 @@ begin
     if (Self[i] <> target[i]) then
       Exit(True);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Distribute(parts: Integer): T2DArray>
  @action: Distributes array arr to 2D array by number of parts.
  @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5][6,7]
  [==============================================================================}
-{$IFDEF TArray_Distribute}
+function XArrHelp.Distribute(const parts: Integer): X2DArr; overload; cdecl;
 var
   l, p, b, r, i, j, s, c: Integer;
 begin
@@ -451,14 +429,13 @@ begin
   end else
     SetLength(Result, 0);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <TArray_Dump(items: TArray; index: Integer): Integer>
  @action: Deletes items from array, keeps others. Returns array length (after action).
  @note: Supports custom start index!
 [==============================================================================}
-{$IFDEF TArray_Dump}
+function XArrHelp.Dump(const items: XArr; const index: Integer = 0): Integer; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -474,14 +451,13 @@ begin
   if (Result < l) then
     SetLength(Self, Result);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Dupe: TArray>
  @action: Returns copy of an array arr.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Dupe}
+function XArrHelp.Dupe: XArr; overload; cdecl;
 var
   i, l, j: Integer;
 begin
@@ -502,14 +478,13 @@ begin
     Result[j] := Self[j];
   end;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Duplicate(xTimes: Integer): TArray>
  @action: Returns copy of an array arr.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Duplicate}
+function XArrHelp.Duplicate(const xTimes: Integer = 1): XArr; overload; cdecl;
 var
   m, i, j, l: Integer;
 begin
@@ -521,25 +496,23 @@ begin
     for j := 0 to (l - 1) do
       Result[(i * l) + j] := Self[j];
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Empty: Boolean>
  @action: Returns true if array is empty (Length = 0).
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Empty1}
+function XArrHelp.Empty: Boolean; overload; cdecl;
 begin
   Result := (Length(Self) = 0);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Equal(target: TArray): Boolean>
  @action: Returns true if arr equals target (identical arrays)
  @note: None
 [==============================================================================}
-{$IFDEF TArray_Equal}
+function XArrHelp.Equal(const target: XArr): Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -549,15 +522,17 @@ begin
     if (Self[i] <> target[i]) then
       Exit(False);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Excessive: Boolean>
  @action: Returns true if arr contains any duplicates in it.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Excessive}
+function XArrHelp.Excessive: Boolean; overload; cdecl; 
+type
+  TDict = specialize TDictionary<XVar, Boolean>;
 var
+  d: TDict;
   i: Integer;
 begin
   d := TDict.Create;
@@ -572,29 +547,30 @@ begin
   end;
   Result := False;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Exch(aIndex, bIndex: Integer): Boolean>
  @action: Fast version of Exchange().
  @note: Unsafe, no checking.
 [==============================================================================}
-{$IFDEF TArray_Exch}
+function XArrHelp.Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
+var
+  c: XVar;
 begin
   Result := (Self[aIndex] <> Self[bIndex]);
   c := Self[aIndex];
   Self[aIndex] := Self[bIndex];
   Self[bIndex] := c;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Exchange(aIndex, bIndex: Integer): Boolean>
  @action: Swap items aIndex and bIndex in array arr.
  @note: Returns true with success.
 [==============================================================================}
-{$IFDEF TArray_Exchange}
+function XArrHelp.Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
 var
+  c: XVar;
   h: Integer;
 begin
   h := High(Self);
@@ -606,14 +582,13 @@ begin
     Self[bIndex] := c;
   end;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Extend(item: VarType): TArray>
  @action: Extends arr with item. Returns it.
  @note: Places item to the left side of the array.
 [==============================================================================}
-{$IFDEF TArray_Extend1}
+function XArrHelp.Extend(const item: XVar): XArr; overload; cdecl;
 var
   i, h: Integer;
 begin
@@ -623,14 +598,13 @@ begin
     Result[i + 1] := Self[i];
   Result[0] := item;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Extend(items: TArray): TArray>
  @action: Extends arr with items. Returns it.
  @note: Places items to the left side of the array.
 [==============================================================================}
-{$IFDEF TArray_Extend2}
+function XArrHelp.Extend(const items: XArr): XArr; overload; cdecl;
 var
   i, h, l: Integer;
 begin
@@ -642,14 +616,13 @@ begin
   for i := 0 to (l - 1) do
     Result[i] := items[i];
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Extract(item: VarType; index: Integer): TArray>
  @action: Keeps (extracts) all values in arr that are item. Starts scan from start index.
  @note: Returns the items.
 [==============================================================================} 
-{$IFDEF TArray_Extract1}
+function XArrHelp.Extract(const item: XVar; const index: Integer = 0): XArr; overload; cdecl;
 var
   i, l, r: Integer;
 begin
@@ -661,14 +634,13 @@ begin
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Extract(items: TArray; index: Integer): TArray>
  @action: Keeps (extracts) all values in arr that are in items. Starts scan from start index.
  @note: Returns the items.
 [==============================================================================}
-{$IFDEF TArray_Extract2}
+function XArrHelp.Extract(const items: XArr; const index: Integer = 0): XArr; overload; cdecl;
 var
   i, l, r: Integer;
 begin
@@ -683,14 +655,13 @@ begin
   end;
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.ExtractEvery(X: Integer; index: Integer): TArray>
  @action: Keeps (extracts) all X values from array. Starts scan from start index.
  @note: Returns the items.
 [==============================================================================} 
-{$IFDEF TArray_ExtractEvery}
+function XArrHelp.ExtractEvery(const X: Integer = 1; const index: Integer = 0): XArr; overload; cdecl;
 var
   i, h, l: Integer;
 begin
@@ -704,14 +675,13 @@ begin
       Result[h.Increase] := Self[i];
   SetLength(Result, h);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Fill(item: VarType; index: Integer; count: Integer): TArray>
  @action: Fills whole arr with item.
  @note: Returns the filled array.
 [==============================================================================}
-{$IFDEF TArray_Fill1}
+function XArrHelp.Fill(const item: XVar; const index: Integer = 0; const count: Integer = 2147483647): XArr; overload; cdecl;
 var
   h, i, s, t: Integer;
 begin
@@ -726,14 +696,13 @@ begin
   for i := (t + 1) to h do
     Result[i] := Self[i];
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Fill(items: TArray; index: Integer; count: Integer): TArray>
  @action: Fills whole arr with items.
  @note: None
 [==============================================================================}
-{$IFDEF TArray_Fill2}
+function XArrHelp.Fill(const items: XArr; const index: Integer = 0; const count: Integer = 2147483647): XArr; overload; cdecl;
 var
   h, i, s, t, l: Integer;
 begin
@@ -753,14 +722,13 @@ begin
   for i := (t + 1) to h do
     Result[i] := Self[i];
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Filter(item: VarType; index: Integer): TArray>
  @action: Removes all values from arr that are found in items.
  @note: None
 [==============================================================================}
-{$IFDEF TArray_Filter1}
+function XArrHelp.Filter(const item: XVar; const index: Integer = 0): XArr; overload; cdecl;
 var
   i, l, r: Integer;
 begin
@@ -772,14 +740,13 @@ begin
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Filter(items: TArray; index: Integer): TArray>
  @action: Removes all values from arr that are found in items.
  @note: None
 [==============================================================================}
-{$IFDEF TArray_Filter2}
+function XArrHelp.Filter(const items: XArr; const index: Integer = 0): XArr; overload; cdecl;
 var
   i, l, r: Integer;
 begin
@@ -793,14 +760,13 @@ begin
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.FilterEvery(X: Integer; index: Integer): TArray>
  @action: Filters every/each X item from arr.
  @note: Custom index
 [==============================================================================}
-{$IFDEF TArray_FilterEvery}
+function XArrHelp.FilterEvery(const X: Integer = 1; const index: Integer = 0): XArr; overload; cdecl;
 var
   i, h, l: Integer;
 begin
@@ -814,14 +780,13 @@ begin
       Result[h.Increase] := Self[i];
   SetLength(Result, h);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Find(item: VarType; ID: TRange): Integer>
  @action: Scans array for item by IDs. Returns position if found.
  @note: Unsafe method! No safety checking.
 [==============================================================================}
-{$IFDEF TArray_Find1}
+function XArrHelp.Find(const ID: TRange; const item: XVar): Integer; overload; cdecl;
 begin
   if (High(Self) > -1) then
   case ID.Ascending of
@@ -836,14 +801,13 @@ begin
   end;
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Find(item: VarType; ID: TIntegerArray): Integer>
  @action: Scans array for item by IDs. Returns position if found.
  @note: Unsafe method! No safety checking.
 [==============================================================================}
-{$IFDEF TArray_Find2}
+function XArrHelp.Find(const ID: TIntegerArray; const item: XVar): Integer; overload; cdecl;
 var
   i: Integer;
 begin
@@ -853,14 +817,13 @@ begin
       Exit(ID[i]);
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Find(items: TArray; ID: TRange): Integer>
  @action: Scans array for items by IDs. Returns position if found.
  @note: Unsafe method! No safety checking.
 [==============================================================================}
-{$IFDEF TArray_Find3}
+function XArrHelp.Find(const ID: TRange; const items: XArr): Integer; overload; cdecl;
 begin
   if ((High(Self) > -1) and (High(items) > -1)) then
   case ID.Ascending of
@@ -875,14 +838,13 @@ begin
   end;
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Find(items: TArray; ID: TIntegerArray): Integer>
  @action: Scans array for items by IDs. Returns position if found.
  @note: Unsafe method! No safety checking.
 [==============================================================================}
-{$IFDEF TArray_Find4}
+function XArrHelp.Find(const ID: TIntegerArray; const items: XArr): Integer; overload; cdecl;
 var
   i: Integer;
 begin
@@ -892,14 +854,13 @@ begin
       Exit(ID[i]);
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Flip: Boolean>
  @action: Reverses array arr.
  @note: Alternative for TArray_Reverse
 [==============================================================================}
-{$IFDEF TArray_Flip}
+function XArrHelp.Flip: Boolean; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -909,14 +870,13 @@ begin
   while (i < l) do
     Exchange(i.Increase, l.Decrease);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.FromLeft(count, index): TArray>
  @action: Returns count of array items from left-side by index.
  @note: None
 [==============================================================================}
-{$IFDEF TArray_FromLeft}
+function XArrHelp.FromLeft(const count: Integer; const index: Integer = 2147483647): XArr; overload; cdecl;
 var
   m: Integer;
   a, r, i: TRange;
@@ -928,14 +888,13 @@ begin
   else
     SetLength(Result, 0);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.FromRight(count, index): TArray>
  @action: Returns count of array items from right-side by index.
  @note: None
 [==============================================================================}
-{$IFDEF TArray_FromRight}
+function XArrHelp.FromRight(const count: Integer; const index: Integer = 0): XArr; overload; cdecl;
 var
   m: Integer;
   a, r, i: TRange;
@@ -947,30 +906,29 @@ begin
   else
     SetLength(Result, 0);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Get: TArray>
  @action: Copy of an array arr.
  @note: Just an alternative.
 [==============================================================================}
-{$IFDEF TArray_Get1}
+function XArrHelp.Get: XArr; overload; cdecl;
 var
+  a: XVar;
   i: Integer;
 begin
   SetLength(Result, Length(Self));
   i := 0;
   for a in Self do
     Result[i.Increase] := a;
- end;  
-{$ENDIF}
+ end;
 
 {==============================================================================]
  <arr.Get(ID: TIntegerArray): TArray>
  @action: Outputs array of items from arr by indexes (IDs).
  @note: Unsafe method! No safety checking.
 [==============================================================================}
-{$IFDEF TArray_Get2}
+function XArrHelp.Get(const ID: TIntegerArray): XArr; overload; cdecl;
 var
   i: Integer;
 begin
@@ -978,14 +936,13 @@ begin
   for i := 0 to High(ID) do
     Result[i] := Self[ID[i]];
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Get(ID: TRange): TArray>
  @action: Outputs array of items from arr by indexes (IDs).
  @note: Unsafe method! No safety checking.
 [==============================================================================}
-{$IFDEF TArray_Get3}
+function XArrHelp.Get(const ID: TRange): XArr; overload; cdecl;
 var
   i, a: Integer;
 begin
@@ -1000,14 +957,13 @@ begin
       Result[a.Increase] := Self[i];
   end;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Group: T2DArray>
  @action: Groups array arr to 2D array by items.
  @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
 [==============================================================================}
-{$IFDEF TArray_Group}
+function XArrHelp.Group: X2DArr; overload; cdecl;
 var
   a, h, i, r, g, l: Integer;
   f: Boolean;
@@ -1039,14 +995,13 @@ begin
   end;
   SetLength(Result, (g + 1));
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Holds(chain: TArray): Boolean>
  @action: Returns true if arr contains (holds) WHOLE chain of items in it.
  @note: Starting from any index and ending to any index!
 [==============================================================================}
-{$IFDEF TArray_Holds}
+function XArrHelp.Holds(const chain: XArr): Boolean; overload; cdecl;
 var
   a, b, x, y, z: Integer;
   n: Boolean;
@@ -1068,14 +1023,13 @@ begin
     Result := not n;
   until ((a = b) or Result);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.IDs(ascending: Boolean): TIntegerArray>
  @action: Returns IDs of arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_IDs1}
+function XArrHelp.IDs(const ascending: Boolean = True): TIntegerArray; overload; cdecl;
 var
   h, i: Integer;
 begin
@@ -1090,14 +1044,13 @@ begin
       Result[(h - i)] := i;
   end;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.IDs(IDs: TIntegerArray): TArray>
  @action: Returns items from arr by IDs.
  @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array.
 [==============================================================================}
-{$IFDEF TArray_IDs2}
+function XArrHelp.IDs(const ID: TIntegerArray): XArr; overload; cdecl;
 var
   i: Integer;
 begin
@@ -1105,14 +1058,13 @@ begin
   for i := 0 to High(Result) do
     Result[i] := Self[ID[i]];
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.IDs(IDs: TIntegerArray; item: VarType): TArray>
  @action: Returns arr with IDs replaced as item.
  @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array.
 [==============================================================================}
-{$IFDEF TArray_IDs3}
+function XArrHelp.IDs(const ID: TIntegerArray; const item: XVar): XArr; overload; cdecl;
 var
   i: Integer;
 begin
@@ -1120,14 +1072,13 @@ begin
   for i := 0 to High(ID) do
     Result[ID[i]] := item;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.IDs(IDs: TIntegerArray; items: TArray): TArray>
  @action: Returns arr with IDs replaced as items.
  @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array and ALSO item[s].
 [==============================================================================}
-{$IFDEF TArray_IDs4}
+function XArrHelp.IDs(const ID: TIntegerArray; const items: XArr): XArr; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -1136,14 +1087,13 @@ begin
   for i := 0 to High(ID) do
     Result[ID[i]] := items[i mod l];
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Includes(item: VarType; index: Integer): Boolean>
  @action: Looks array for item starting from start index down to index 0. If found, Result will be True.
  @note: Alternative to TArray_Contains, but this scans in opposite direction.
 [==============================================================================}
-{$IFDEF TArray_Includes}
+function XArrHelp.Includes(const item: XVar; const index: Integer = 2147483647): Boolean; cdecl;
 var
   i: Integer;
 begin
@@ -1152,14 +1102,13 @@ begin
       Exit(True);
   Result := False;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Keep(items: TArray; index: Integer): Integer>
  @action: Keeps items in array, removes others. Returns array length (after action).
  @note: Supports custom start index!
 [==============================================================================}
-{$IFDEF TArray_Keep}
+function XArrHelp.Keep(const items: XArr; const index: Integer = 0): Integer; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -1180,14 +1129,13 @@ begin
   if (Result < l) then
     SetLength(Self, Result);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.LeastFrequent: VarType> 
  @action: Returns the least frequent arr item.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_LeastFrequent}
+function XArrHelp.LeastFrequent: XVar; overload; cdecl;
 var
   i, j, c, m: Integer;
   f: Boolean;
@@ -1218,18 +1166,16 @@ begin
     end;
   end;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Len: Integer>
  @action: Simply Result := Length(arr);
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Len1}
+function XArrHelp.Len: Integer; overload; cdecl;
 begin
   Result := Length(Self);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Len(aSize: Integer): Integer>
@@ -1238,7 +1184,7 @@ end;
         aSize < Length(arr) => Result will give how many elements got deleted (it will be negative value!)
 		aSize = Length(arr) => Returns 0.
 [==============================================================================}
-{$IFDEF TArray_Len2}
+function XArrHelp.Len(const aSize: Integer): Integer; overload; cdecl;
 var
   l: Integer;
 begin
@@ -1246,14 +1192,13 @@ begin
   SetLength(Self, aSize);
   Result := (Length(Self) - l);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Len(arr: TArray; aSize: Integer; null: VarType): Integer>
  @action: Set's arr length to size.
  @note: Uses null for created indexes.
 [==============================================================================}
-{$IFDEF TArray_Len3}
+function XArrHelp.Len(const aSize: Integer; const null: XVar): Integer; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -1263,28 +1208,26 @@ begin
   for i := 0 to (Result - 1) do
     Self[l + i] := null;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Loc(item: VarType; index: Integer): Integer>
  @action: Returns last index position from arr which matched with item.
  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
-{$IFDEF TArray_Loc1}
+function XArrHelp.Loc(const item: XVar; const index: Integer = 2147483647): Integer; overload; cdecl;
 begin
   for Result := Min(High(Self), index) downto 0 do
     if (Self[Result] = item) then
       Exit;
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Loc(items: TArray; index: Integer): Integer>
  @action: Returns index position from arr which matches with items.
  @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
-{$IFDEF TArray_Loc2}
+function XArrHelp.Loc(const items: XArr; const index: Integer = 2147483647): Integer; overload; cdecl;
 var
   h, i: Integer;
 begin
@@ -1296,14 +1239,13 @@ begin
         Exit;
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Location(item: VarType; index: Integer): Integer>
  @action: Returns index position from arr which matched with item.
  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
-{$IFDEF TArray_Location1}
+function XArrHelp.Location(const item: XVar; const index: Integer = 2147483647): Integer; overload; cdecl;
 var
   l: Integer;
 begin
@@ -1314,14 +1256,13 @@ begin
       Exit;
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Location(items: TArray; index: Integer): Integer>
  @action: Returns index position from arr which matches with items.
  @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
-{$IFDEF TArray_Location2}
+function XArrHelp.Location(const items: XArr; const index: Integer = 2147483647): Integer; overload; cdecl;
 var
   h, i, l: Integer;
 begin
@@ -1337,14 +1278,13 @@ begin
   end;
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Locations(item: VarType; index: Integer): TIntegerArray>
  @action: Returns last index positions from arr which matched with item.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Locations1}
+function XArrHelp.Locations(const item: XVar; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
 var
   i, r, h, s: Integer;
 begin
@@ -1360,14 +1300,13 @@ begin
   end;
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Locations(items: TArray; index: Integer): TIntegerArray>
  @action: Returns last index positions from arr which matches with items.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Locations2}
+function XArrHelp.Locations(const items: XArr; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
 var
   i, r, h, s: Integer;
 begin
@@ -1383,14 +1322,13 @@ begin
   end;
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Mix(shuffles: Integer): Boolean>
  @action: Ramdomizes array with custom shuffles.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Mix}
+function XArrHelp.Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
 var
   l, i, s: Integer;
 begin
@@ -1402,14 +1340,13 @@ begin
     for i := 0 to (l - 1) do
       Exchange(Random(l), Random(l));
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.MostFrequent: VarType> 
  @action: Returns the most frequent arr item.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_MostFrequent}
+function XArrHelp.MostFrequent: XVar; overload; cdecl;
 var
   i, j, c, m: Integer;
 begin
@@ -1430,22 +1367,22 @@ begin
     end;
   end;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Move(oldIndex, newIndex: Integer): Boolean>
  @action: Moves item from oldIndex to newIndex in array arr.
  @note: Returns true with success.
 [==============================================================================}
-{$IFDEF TArray_Move}
+function XArrHelp.Move(const oldIndex, newIndex: Integer): Boolean; overload; cdecl;
 var
+  s: XVar;
   h, i: Integer;
 begin
   h := High(Self);
   Result := ((h > 0) and (oldIndex <> newIndex) and InRange(oldIndex, 0, h) and InRange(newIndex, 0, h));
   if Result then
   begin
-    t := Self[oldIndex];
+    s := Self[oldIndex];
     case (oldIndex > newIndex) of
       True:
       for i := oldIndex downto (newIndex + 1) do
@@ -1454,17 +1391,16 @@ begin
       for i := oldIndex to (newIndex - 1) do
         Self[i] := Self[(i + 1)];
     end;
-    Self[newIndex] := t;
+    Self[newIndex] := s;
   end;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Next(index: Integer; count: Integer): TArray>
  @action: Returns next items from array by index and count.
  @note: None.	
 [==============================================================================}
-{$IFDEF TArray_Next}
+function XArrHelp.Next(const index: Integer; const count: Integer = 2147483647): XArr; overload; cdecl;
 var
   m, i: Integer;
 begin
@@ -1477,25 +1413,23 @@ begin
   end else
     SetLength(Result, 0);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Oversize(limit: Integer): Boolean>
  @action: Returns true if size of arr is OVER the limit.
  @note: None.	
 [==============================================================================}
-{$IFDEF TArray_Oversize}
+function XArrHelp.Oversize(const limit: Integer): Boolean; overload; cdecl;
 begin
   Result := (Length(Self) > limit);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Partition(pSize: Integer): T2DArray>
  @action: Partitions array arr to 2D array by size of parts.
  @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5,6][7]
 [==============================================================================}
-{$IFDEF TArray_Partition}
+function XArrHelp.Partition(const pSize: Integer): X2DArr; overload; cdecl;
 var
   p, i, j, s, r, l: Integer;
 begin
@@ -1518,7 +1452,6 @@ begin
   end else
     SetLength(Result, 0);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Pick(ID: TIntegerArray): TArray>
@@ -1526,7 +1459,7 @@ end;
  @note: Ignores invalid ID's (doesn't include those to output, they will be left out).
         DYNAMIC - you might need to set indexes in reversed order, in order to get em correctly!
 [==============================================================================}
-{$IFDEF TArray_Pick}
+function XArrHelp.Pick(const ID: TIntegerArray): XArr; overload; cdecl;
 var
   l, h, t, i, r: Integer;
 begin
@@ -1550,14 +1483,13 @@ begin
   end;
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Pop: VarType>
  @action: Returns and removes item from highest array index from arr.
  @note: UNSAFE! Make sure array has enough items..
 [==============================================================================}
-{$IFDEF TArray_Pop1}
+function XArrHelp.Pop: XVar; overload; cdecl;
 var
   h: Integer;
 begin
@@ -1567,14 +1499,13 @@ begin
   Result := Self[h];
   SetLength(Self, h);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Pop(null: VarType): VarType>
  @action: Returns and removes item from highest array index from arr.
  @note: Returns null if array contains no items.
 [==============================================================================}
-{$IFDEF TArray_Pop2}
+function XArrHelp.Pop(const null: XVar): XVar; overload; cdecl;
 var
   h: Integer;
 begin
@@ -1584,28 +1515,26 @@ begin
   Result := Self[h];
   SetLength(Self, h);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Pos(item: VarType; index: Integer): Integer>
  @action: Returns index position from arr which matched with item.
  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
-{$IFDEF TArray_Pos1}
+function XArrHelp.Pos(const item: XVar; const index: Integer = 0): Integer; overload; cdecl;
 begin
   for Result := Max(0, index) to High(Self) do
     if (Self[Result] = item) then
       Exit;
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Pos(items: TArray; index: Integer): Integer>
  @action: Returns index position from arr which matches with items.
  @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
-{$IFDEF TArray_Pos2}
+function XArrHelp.Pos(const items: XArr; const index: Integer = 0): Integer; overload; cdecl;
 var
   h, i: Integer;
 begin
@@ -1617,14 +1546,13 @@ begin
         Exit;
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Position(item: VarType; index: Integer): Integer>
  @action: Returns index position from arr which matched with item.
  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
-{$IFDEF TArray_Position1}
+function XArrHelp.Position(const item: XVar; const index: Integer = 0): Integer; overload; cdecl;
 var
   l: Integer;
 begin
@@ -1635,14 +1563,13 @@ begin
       Exit;
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Position(items: TArray; index: Integer): Integer>
  @action: Returns index position from arr which matches with items.
  @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
-{$IFDEF TArray_Position2}
+function XArrHelp.Position(const items: XArr; const index: Integer = 0): Integer; overload; cdecl;
 var
   h, i, l: Integer;
 begin
@@ -1658,14 +1585,13 @@ begin
   end;
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Positions(item: VarType; index: Integer): TIntegerArray>
  @action: Returns index positions from arr which matched with item.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Positions1}
+function XArrHelp.Positions(const item: XVar; const index: Integer = 0): TIntegerArray; overload; cdecl;
 var
   i, r, h, s: Integer;
 begin
@@ -1681,14 +1607,13 @@ begin
   end;
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Positions(items: TArray; index: Integer): TIntegerArray>
  @action: Returns index positions from arr which matches with items.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Positions2}
+function XArrHelp.Positions(const items: XArr; const index: Integer = 0): TIntegerArray; overload; cdecl;
 var
   i, r, h, s: Integer;
 begin
@@ -1704,14 +1629,13 @@ begin
   end;
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Previous(index: Integer; count: Integer): TIntegerArray>
  @action: Returns previous array items from index by count.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Previous}
+function XArrHelp.Previous(const index: Integer; const count: Integer = 2147483647): XArr; overload; cdecl;
 var
   m, l, i: Integer;
 begin
@@ -1725,14 +1649,13 @@ begin
   end else
     SetLength(Result, 0);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Put(ID: TIntegerArray; item: VarType): TArray>
  @action: Returns array arr filled with item to indexes (ID).
  @note: Unsafe method! No safety checking.
 [==============================================================================}
-{$IFDEF TArray_Put1}
+function XArrHelp.Put(const ID: TIntegerArray; const item: XVar): XArr; overload; cdecl;
 var
   i: Integer;
 begin
@@ -1742,14 +1665,13 @@ begin
   for i := 0 to High(ID) do
     Result[ID[i]] := item;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Put(ID: TIntegerArray; items: TArray): TArray>
  @action: Returns array arr filled with items to indexes (ID).
  @note: Unsafe method! No safety checking.
 [==============================================================================}
-{$IFDEF TArray_Put2}
+function XArrHelp.Put(const ID: TIntegerArray; const items: XArr): XArr; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -1760,14 +1682,13 @@ begin
   for i := 0 to High(ID) do
     Result[ID[i]] := items[i mod l];
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Put(index: Integer; items: TArray): TArray>
  @action: Returns array arr filled with items to starting from custom start index.
  @note: Unsafe method! No safety checking.
 [==============================================================================}
-{$IFDEF TArray_Put3}
+function XArrHelp.Put(const index: Integer; const items: XArr): XArr; overload; cdecl;
 var
   i: Integer;
 begin
@@ -1777,27 +1698,25 @@ begin
   for i := 0 to High(items) do
     Result[index + i] := items[i];
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Push(item: VarType): Integer>
  @action: Places item in array with arr.
  @note: Returns array (arr+item) length.
 [==============================================================================}
-{$IFDEF TArray_Push1}
+function XArrHelp.Push(const item: XVar): Integer; overload; cdecl;
 begin
   Result := (Length(Self) + 1);
   SetLength(Self, Result);
   Self[Result - 1] := item;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Push(items: TArray): Integer>
  @action: Places items in array with arr.
  @note: Returns array (arr+item) length.
 [==============================================================================}
-{$IFDEF TArray_Push2}
+function XArrHelp.Push(const items: XArr): Integer; overload; cdecl;
 var
   h, i, l: Integer;
 begin
@@ -1810,14 +1729,13 @@ begin
   for i := 0 to h do
     Self[l + i] := items[i];
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Remove(item: VarType; index: Integer; all: Boolean): Integer>
  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
  @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
-{$IFDEF TArray_Remove1}
+function XArrHelp.Remove(const item: XVar; const index: Integer = 0; const all: Boolean = True): Integer; overload; cdecl;
 var
   l, i, r, m: Integer;
   s: Boolean;
@@ -1836,25 +1754,23 @@ begin
   SetLength(Self, (r + m));
   Result := (l - Length(Self));
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Remove(item: VarType; all: Boolean): Integer>
  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
  @note: Returns amount of items that were removed.
 [==============================================================================}
-{$IFDEF TArray_Remove2}
+function XArrHelp.Remove(const item: XVar; const all: Boolean): Integer; overload; cdecl;
 begin
   Result := Self.Remove(item, 0, all);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Remove(items: TArray; index: Integer; all: Boolean): Integer>
  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
  @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
-{$IFDEF TArray_Remove3}
+function XArrHelp.Remove(const items: XArr; const index: Integer = 0; const all: Boolean = True): Integer; overload; cdecl;
 var
   a, b, l, i, r, m: Integer;
   d, s: Boolean;
@@ -1886,18 +1802,16 @@ begin
   SetLength(Self, (r + m));
   Result := (l - Length(Self));
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Remove(items: TArray; all: Boolean): Integer>
  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
  @note: Returns amount of items that were removed.
 [==============================================================================}
-{$IFDEF TArray_Remove4}
+function XArrHelp.Remove(const items: XArr; const all: Boolean): Integer; overload; cdecl;
 begin
   Result := Self.Remove(items, 0, all);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Resize(aChange: Integer): Integer>
@@ -1906,7 +1820,7 @@ end;
         aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
 		aChange = 0 => Returns 0.
 [==============================================================================}
-{$IFDEF TArray_Resize1}
+function XArrHelp.Resize(const aChange: Integer): Integer; overload; cdecl;
 var
   l: Integer;
 begin
@@ -1914,7 +1828,6 @@ begin
   SetLength(Self, (l + aChange));
   Result := (Length(Self) - l);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Resize(aChange: Integer; null: VarType): Integer>
@@ -1924,7 +1837,7 @@ end;
 		aChange = 0 => Returns 0.
 		Supports null for filling created indexes.
 [==============================================================================}
-{$IFDEF TArray_Resize2}
+function XArrHelp.Resize(const aChange: Integer; const null: XVar): Integer; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -1934,14 +1847,13 @@ begin
   for i := 0 to (Result - 1) do
     Self[l + i] := null;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Reverse: Boolean>
  @action: Reverses items in array.
  @note: Returns true with success (array contains 2 or more items)
 [==============================================================================}
-{$IFDEF TArray_Reverse}
+function XArrHelp.Reverse: Boolean; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -1951,14 +1863,13 @@ begin
   for i := 0 to ((l div 2) - 1) do
     Exchange(i, ((l - i) - 1));
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Reversed: TArray>
  @action: Returns reversed version of array arr.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Reversed}
+function XArrHelp.Reversed: XArr; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -1967,14 +1878,13 @@ begin
   for i := 0 to (l - 1) do
     Result[i] := Self[(l - i) - 1];
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Scan(item: VarType; ID: TRange; limit: Integer): TIntegerArray>
  @action: Scans array for item by ID. Returns all the positions.
  @note: Unsafe method! No safety checking.
 [==============================================================================}
-{$IFDEF TArray_Scan1}
+function XArrHelp.Scan(const ID: TRange; const item: XVar; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
 var
   i, r: Integer;
 begin
@@ -2001,14 +1911,13 @@ begin
   end;
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Scan(item: VarType; ID: TIntegerArray): TIntegerArray>
  @action: Scans array for item by ID. Returns all the positions.
  @note: Unsafe method! No safety checking.
 [==============================================================================}
-{$IFDEF TArray_Scan2}
+function XArrHelp.Scan(const ID: TIntegerArray; const item: XVar; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
 var
   i, r: Integer;
 begin
@@ -2025,14 +1934,13 @@ begin
   end;
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Scan(items: TArray; ID: TRange; limit: Integer): TIntegerArray>
  @action: Scans array for items by ID. Returns all the positions.
  @note: Unsafe method! No safety checking.
 [==============================================================================}
-{$IFDEF TArray_Scan3}
+function XArrHelp.Scan(const ID: TRange; const items: XArr; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
 var
   i, r: Integer;
 begin
@@ -2059,14 +1967,13 @@ begin
   end;
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Scan(item: VarType; ID: TIntegerArray): TIntegerArray>
  @action: Scans array for items by ID. Returns all the positions.
  @note: Unsafe method! No safety checking.
 [==============================================================================}
-{$IFDEF TArray_Scan4}
+function XArrHelp.Scan(const ID: TIntegerArray; const items: XArr; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
 var
   i, r: Integer;
 begin
@@ -2083,14 +1990,13 @@ begin
   end;
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Shift: VarType>
  @action: Shortens the array with first element.
  @note: Returns the removed arr[0].
 [==============================================================================}
-{$IFDEF TArray_Shift1}
+function XArrHelp.Shift: XVar; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -2102,14 +2008,13 @@ begin
     Self[i] := Self[i + 1];
   SetLength(Self, l);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Shift(sCount: Integer): TArray>
  @action: Shortens the array with first SCOUNT element(s).
  @note: Returns the removed arr[x]s.
 [==============================================================================}
-{$IFDEF TArray_Shift2}
+function XArrHelp.Shift(const sCount: Integer): XArr; overload; cdecl;
 var
   i, l, s: Integer;
 begin
@@ -2124,70 +2029,64 @@ begin
     Self[i - s] := Self[i];
   SetLength(Self, (Length(Self) - s));
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Size(aSize: Integer): Integer> 
  @action: Sets array size as aSize and then returns the size using Length call.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Size1}
+function XArrHelp.Size(const aSize: Integer): Integer; overload; cdecl;
 begin
   SetLength(Self, aSize);
   Result := Length(Self);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Size: Integer> 
  @action: Returns array length.
  @note: Simply Result := Length(arr);
 [==============================================================================}
-{$IFDEF TArray_Size2}
+function XArrHelp.Size: Integer; overload; cdecl;
 begin
   Result := Length(Self);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.SizeBetween(arr: TArray; sMin, sMax: Integer): Boolean>
  @action: Returns true if size is at equal/greater than sMin and equal/lesser than sMax.
  @note: 	
 [==============================================================================}
-{$IFDEF TArray_SizeBetween}
+function XArrHelp.SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl;
 begin
   Result := InRange(Length(Self), sMin, sMax);
-end;      
-{$ENDIF}
+end;
 
 {==============================================================================]
  <arr.SizeMax(target: Integer): Boolean>
  @action: Returns true if size is at equal/lesser than target.
  @note: 	
 [==============================================================================}
-{$IFDEF TArray_SizeMax}
+function XArrHelp.SizeMax(const target: Integer): Boolean; overload; cdecl;
 begin
   Result := (Length(Self) <= target);
-end;    
-{$ENDIF}
+end;
 
 {==============================================================================]
  <arr.SizeMin(target: Integer): Boolean>
  @action: Returns true if size is at equal/greater than target.
  @note: 	
 [==============================================================================}
-{$IFDEF TArray_SizeMin}
+function XArrHelp.SizeMin(const target: Integer): Boolean; overload; cdecl;
 begin
   Result := (Length(Self) >= target);
-end;   
-{$ENDIF}
+end;
 
 {==============================================================================]
  <arr.SubarrayLocation(pattern: TArray): Integer>
  @action: Returns subarray position in arr that match pattern exactly.
  @note: arr[0,1,2,0,1,2,3].([1,2]) => 4	
 [==============================================================================}
-{$IFDEF TArray_SubarrayLocation}
+function XArrHelp.SubarrayLocation(const pattern: XArr): Integer; overload; cdecl;
 var
   i, j, l, s, p: Integer;
 begin
@@ -2207,14 +2106,13 @@ begin
   end;
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.SubarrayLocations(pattern: TArray): TIntegerArray>
  @action: Returns subarray positions in arr that match pattern exactly.
  @note: arr[0,1,2,0,1,2,3].([1,2]) => [4,1]	
 [==============================================================================}
-{$IFDEF TArray_SubarrayLocations}
+function XArrHelp.SubarrayLocations(const pattern: XArr): TIntegerArray; overload; cdecl;
 var
   i, j, l, s, r, p: Integer;
 begin
@@ -2239,14 +2137,13 @@ begin
   end;
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.SubarrayPosition(pattern: TArray): Integer>
  @action: Returns subarray position in arr that match pattern exactly.
  @note: arr[0,1,2,0,1,2,3].([1,2]) => 1	
 [==============================================================================}
-{$IFDEF TArray_SubarrayPosition}
+function XArrHelp.SubarrayPosition(const pattern: XArr): Integer; overload; cdecl;
 var
   i, j, l, p: Integer;
   f: Boolean;
@@ -2268,14 +2165,13 @@ begin
   end;
   Result := -1;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.SubarrayPositions(pattern: TArray): TIntegerArray>
  @action: Returns subarray positions in arr that match pattern exactly.
  @note: arr[0,1,2,0,1,2,3].([1,2]) => [1,4]	
 [==============================================================================}
-{$IFDEF TArray_SubarrayPositions}
+function XArrHelp.SubarrayPositions(const pattern: XArr): TIntegerArray; overload; cdecl;
 var
   i, j, l, p, r: Integer;
   f: Boolean;
@@ -2302,14 +2198,15 @@ begin
   end;
   SetLength(Result, r);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Swap(b: TArray): Integer> 
  @action: Swaps array arr and array b.
  @note: arr will be b and b will be arr.
 [==============================================================================}
-{$IFDEF TArray_Swap}
+function XArrHelp.Swap(var b: XArr): Integer; overload; cdecl;
+var
+  a: XArr;
 begin
   Result := (Length(Self) + Length(b));
   if (Result = 0) then
@@ -2318,15 +2215,16 @@ begin
   Self := b.Dupe;
   b := a.Dupe;
   SetLength(a, 0);
-end; 
-{$ENDIF}
+end;
 
 {==============================================================================]
  <arr.Trade(b: TArray): Integer> 
  @action: Swaps array arr and array b.
  @note: arr will be b and b will be arr.
 [==============================================================================}
-{$IFDEF TArray_Trade}
+function XArrHelp.Trade(var b: XArr): Integer; overload; cdecl;
+var
+  a: XArr;
 begin
   Result := (Length(Self) + Length(b));
   if (Result > 0) then
@@ -2337,25 +2235,23 @@ begin
     SetLength(a, 0);
   end;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Undersize(limit: Integer): Boolean>
  @action: Returns true if size of arr is UNDER the limit.
  @note: None.	
 [==============================================================================} 
-{$IFDEF TArray_Undersize}
+function XArrHelp.Undersize(const limit: Integer): Boolean; overload; cdecl;
 begin
   Result := (Length(Self) < limit);
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Unique: Integer>
  @action: Removes all duplicates from arr.
  @note: Returns the number of items that were removed.
 [==============================================================================}
-{$IFDEF TArray_Unique}
+function XArrHelp.Unique: Integer; overload; cdecl;
 var
   a, l, i, j: Integer;
   m: Boolean;
@@ -2380,14 +2276,13 @@ begin
   if (Result > 0) then
     SetLength(Self, (a + 1));
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Uniqued: TArray>
  @action: Removes all duplicates from arr.
  @note: Returns the unique version of arr.
 [==============================================================================}
-{$IFDEF TArray_Uniqued}
+function XArrHelp.Uniqued: XArr; overload; cdecl;
 var
   i, j, l, c: Integer;
 begin
@@ -2411,14 +2306,13 @@ begin
     SetLength(Result, c);
   end;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Uniques: TIntegerArray>
  @action: Returns the indexes of unique array (arr) items.
  @note: None.
 [==============================================================================}
-{$IFDEF TArray_Uniques}
+function XArrHelp.Uniques: TIntegerArray; overload; cdecl;
 var
   h, r, x, y: Integer;
   m: Boolean;
@@ -2444,14 +2338,13 @@ begin
   if (h = 0) then
     Result[0] := 0;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Unshift(item: VarType): Integer>
  @action: Grows arr with item. Returns the index of added item.
  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
-{$IFDEF TArray_Unshift1}
+function XArrHelp.Unshift(const item: XVar): Integer; overload; cdecl;
 var
   i: Integer;
 begin
@@ -2461,14 +2354,13 @@ begin
     Self[i] := Self[i - 1];
   Self[0] := item;
 end;
-{$ENDIF}
 
 {==============================================================================]
  <arr.Unshift(items: TArray): Integer>
  @action: Grows arr with items. Returns the index of last added item.
  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
-{$IFDEF TArray_Unshift2}
+function XArrHelp.Unshift(const items: XArr): Integer; overload; cdecl;
 var
   h, l, i: Integer;
 begin
@@ -2483,4 +2375,137 @@ begin
   for i := 0 to h do
     Self[i] := items[i];
 end;
-{$ENDIF}
+
+{==============================================================================]
+ <var.T2DArray(size1D, size2D: Integer): T2DArray>
+ @action: Creates 2D array with Self.
+ @note: None.
+[==============================================================================}
+function XVarHelp.T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): X2DArr; overload cdecl;
+var
+  i, j: Integer;
+begin
+  SetLength(Result, size1D);
+  for i := 0 to High(Result) do
+  begin
+    SetLength(Result[i], size2D);
+    for j := 0 to High(Result[i]) do
+      Result[i][j] := Self;
+  end;
+end;
+
+{==============================================================================]
+ <arr.Blank(parts: Integer): T2DArray>
+ @action: Returns true if array is blank (no inventory, only empty indexes of []).
+ @note: Blank array could be for example [[], [], []]. Returns false if array contains any items.
+        NOTE: Returns false if array is empty (1D Length = 0)!
+ [==============================================================================}
+function X2DArrHelp.Blank: Boolean; overload; cdecl;
+var
+  i: Integer;
+begin
+  for i := 0 to High(Self) do
+    if (Length(Self[i]) > 0) then
+	  Exit(False);
+  Result := (Length(Self) > 0);
+end;
+
+{==============================================================================]
+ <T2D.Create(size1D, size2D: Integer; item: VarType)>
+ @action: Creates array with item where size is length of the array.
+ @note: item is placed on every index in result.
+[==============================================================================}
+class function T2D.Create(const size1D, size2D: Integer; const item: XVar): X2DArr; overload; cdecl;
+var
+  i, j, s: Integer;
+begin
+  s := (Max(0, size2D) - 1);
+  SetLength(Result, Max(0, size1D), (s + 1));
+  for i := 0 to High(Result) do
+    for j := 0 to s do
+      Result[i][j] := item;
+end;
+
+{==============================================================================]
+ <arr.Empty: Boolean>
+ @action: Returns true if array is empty (Length = 0).
+ @note: None.
+[==============================================================================}
+function X2DArrHelp.Empty: Boolean; overload; cdecl;
+begin
+  Result := (Length(Self) = 0);
+end;
+
+{==============================================================================]
+ <arr.Size(lengths: TIntegerArray): Int64>
+ @action: Returns actual Length for 2D array. Stores Length's of 2D part, of the arr, to lengths variable.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+[==============================================================================}
+function X2DArrHelp.Size(var lengths: TIntegerArray): Int64; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := 0;
+  SetLength(lengths, Length(Self));
+  for i := 0 to High(Self) do
+  begin
+    lengths[i] := Length(Self[i]);
+    Result := (Result + lengths[i]);
+  end;
+end;
+
+{==============================================================================]
+ <arr.Size: Int64>
+ @action: Returns actual Length for 2D array.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+[==============================================================================}
+function X2DArrHelp.Size: Int64; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Result := (Result + Length(Self[i]));
+end;
+
+{==============================================================================]
+ <arr.Size(aSize: Integer): Int64>
+ @action: Sets length to 1D part of the 2D array and returns the actual size of arr (element count)
+ @note: None.
+[==============================================================================}
+function X2DArrHelp.Size(const aSize: Integer): Int64; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Self, aSize);
+  Result := 0;
+  for i := 0 to High(Self) do
+    Result := (Result + Length(Self[i]));
+end;
+
+{==============================================================================]
+ <arr.Size(size1D, size2D: Integer): Int64>
+ @action: Returns actual Length for 2D array.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+[==============================================================================}
+function X2DArrHelp.Size(const size1D, size2D: Integer): Int64; overload; cdecl;
+begin
+  SetLength(Self, size1D, size2D);
+  Result := (Max(0, size1D) * Max(0, size2D));
+end;
+
+{==============================================================================]
+ <arr.Merge: TArray>
+ @action: Merges 2D array to 1D.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+[==============================================================================}
+function X2DArrHelp.Merge: XArr; overload; cdecl;
+var
+  i, j, l: Integer;
+begin
+  l := Result.Size(Self.Size);
+  if (l > 0) then
+  for i := High(Self) downto 0 do
+    for j := High(Self[i]) downto 0 do
+      Result[l.Decrement] := Self[i][j];
+end;
