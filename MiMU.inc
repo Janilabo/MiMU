@@ -276,6 +276,7 @@
       function Copy(const index: Integer = 0; const count: Integer = 2147483647): XArr; overload; cdecl;
       function Create(const item: XVar): XArr; overload; cdecl;
       function Create(const aSize: Integer; const item: XVar): XArr; overload; cdecl;
+	  function Deduplicate: Integer; overload; cdecl;
       function Delete(const index: Integer = 0): Boolean; overload; cdecl;
       function Delete(const ID: TIntegerArray): Integer; overload; cdecl;
       function Differ(const target: XArr): Boolean; overload; cdecl;

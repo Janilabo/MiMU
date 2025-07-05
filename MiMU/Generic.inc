@@ -348,6 +348,38 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Deduplicate: Integer>
+ @action: Removes all duplicates from arr.
+ @note: Returns the number of items that were removed.
+[==============================================================================}
+function XArrHelp.Deduplicate: Integer; overload; cdecl;
+type
+  TDict = specialize TDictionary<XVar, Boolean>;
+var
+  d: TDict;
+  r, i, l: Integer;
+begin
+  l := Length(Self);
+  if (l < 2) then
+    Exit(0);
+  d := TDict.Create;
+  try
+    r := 0;
+    for i := 0 to (l - 1) do
+      if not d.ContainsKey(Self[i]) then
+      begin
+        d.Add(Self[i], True);
+        Self[r.Increase] := Self[i];
+      end;
+    Result := (l - r);
+    if (Result > 0) then
+      SetLength(Self, r);
+  finally
+    d.Free;
+  end;
+end;
+
+{==============================================================================]
  <arr.Delete(index: Integer): Boolean>
  @action: Deletes array item from arr by index.
  @note: Returns true with success (index existed in arr).
