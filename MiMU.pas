@@ -46,7 +46,7 @@ uses
   Classes, SysUtils, Math, Generics.Collections;
 
 const
-  MiMU_VERSION_NUMBER = 0.42;
+  MiMU_VERSION_NUMBER = 0.5;
 
 type
   TIntegerArray = array of Integer;
@@ -198,219 +198,18 @@ type
   end;
   TRangeArray = array of TRange;
   T2DRangeArray = array of TRangeArray;
-  TIntegerHelper = type helper for Integer
-    function Even: Boolean; cdecl; inline;
-    function Odd: Boolean; cdecl; inline;
-    function Increase(const N: Integer = 1): Integer; cdecl;
-    function Decrease(const N: Integer = 1): Integer; cdecl;
-    function Increment(const N: Integer = 1): Integer; cdecl;
-    function Decrement(const N: Integer = 1): Integer; cdecl;
-    function DigitCount: Integer; cdecl;
-    function Digitz: TIntegerArray; cdecl;
-    function Digits: TIntegerArray; cdecl;
-    function NegA: Integer; cdecl; inline;
-    function Neg: Integer; cdecl; inline;
-    function Negative: Boolean; cdecl; inline;
-    function Positive: Boolean; cdecl; inline;
-    function Neutral: Boolean; cdecl; inline;
-    function Compare(const T: Integer): Integer; cdecl; inline;
-    function Distance(const T: Integer): Integer; cdecl; inline;
-    function Difference(const T: Integer): Integer; cdecl; inline;
-    function Opposite: Integer; cdecl; inline;
-    function Sign: Integer; cdecl; inline;
-    function Shuffle: Integer; cdecl;
-    function Oversize(const limit: Integer): Boolean; cdecl; inline;
-    function Undersize(const limit: Integer): Boolean; cdecl; inline;
-	
-    function TArray(const aSize: Integer = 1): TIntegerArray; overload cdecl;
-    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DIntegerArray; overload cdecl;
-  end;
-  TInt64Helper = type helper for Int64
-    function Even: Boolean; cdecl; inline;
-    function Odd: Boolean; cdecl; inline;
-    function Increase(const N: Int64 = 1): Int64; cdecl;
-    function Decrease(const N: Int64 = 1): Int64; cdecl;
-    function Increment(const N: Int64 = 1): Int64; cdecl;
-    function Decrement(const N: Int64 = 1): Int64; cdecl;
-    function DigitCount: Integer; cdecl;
-    function Digitz: TIntegerArray; cdecl;
-    function Digits: TIntegerArray; cdecl;
-    function Compare(const T: Int64): Integer; cdecl; inline;
-    function Distance(const T: Int64): Int64; cdecl; inline;
-    function Difference(const T: Int64): Int64; cdecl; inline;
-    function Opposite: Int64; cdecl; inline;
-    function Sign: Integer; cdecl; inline;
-    function Shuffle: Int64; cdecl;
-    function Oversize(const limit: Int64): Boolean; cdecl; inline;
-    function Undersize(const limit: Int64): Boolean; cdecl; inline;
-  end;
-  TDoubleHelper = type helper for Double
-    function Increase(const N: Double = 1): Double; cdecl;
-    function Decrease(const N: Double = 1): Double; cdecl;
-    function Increment(const N: Double = 1): Double; cdecl;
-    function Decrement(const N: Double = 1): Double; cdecl;
-    function Digits: TIntegerArray; cdecl;
-    function NegA: Double; cdecl; inline;
-    function Neg: Double; cdecl; inline;
-    function Negative: Boolean; cdecl; inline;
-    function Positive: Boolean; cdecl; inline;
-    function Neutral: Boolean; cdecl; inline;
-    function MinDecimal: Double; cdecl;
-    function MaxDecimal: Double; cdecl;
-    function Accuracy(const a: Int32): Double; cdecl;
-    function Compare(const T: Double): Int32; cdecl; inline;
-    function Distance(const T: Double): Double; cdecl; inline;
-    function Difference(const T: Double): Double; cdecl; inline;
-    function Opposite: Double; cdecl; inline;
-    function Sign: Int32; cdecl; inline;
-    function FixDegrees: Double; cdecl;
-    function Degrees: Double; cdecl;
-    function FixRadians: Double; cdecl;
-    function Radians(const compass: Boolean = False): Double; cdecl;
-    function Percent(const position: Double): Double; cdecl; inline;
-    function Percentage(const percent: Double): Double; cdecl; inline;
-    function Oversize(const limit: Double): Boolean; cdecl;
-    function Undersize(const limit: Double): Boolean; cdecl;
-	
-    function TArray(const aSize: Integer = 1): TDoubleArray; overload cdecl;
-    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DDoubleArray; overload cdecl;
-  end;
-  TStringHelper = type helper for string
-    function After(const s: string; const index: Integer = 1): string; overload;
-    function After(const index: Integer; const count: Integer = 2147483647): string; overload;
-    function Ahead(const s: string; const index: Integer = 2147483647): string; overload;
-    function Ahead(const index: Integer; const count: Integer = 2147483647): string; overload;
-    function Before(const s: string; const index: Integer = 1): string; overload;
-    function Before(const index: Integer; const count: Integer = 2147483647): string; overload;
-    function Behind(const s: string; const index: Integer = 2147483647): string; overload;
-    function Behind(const index: Integer; const count: Integer = 2147483647): string; overload;
-    function Amount(const s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer; cdecl;
-    function At(const s: string; const index: Integer = 1): Boolean; cdecl; inline;
-    function Between(const s1, s2: string; const index: Integer = 1): string; cdecl;
-    function Chars: TCharArray; cdecl;
-    function Chunk(const a, b: Integer): string; cdecl;
-    function Center(const size: Integer; const fill: Char = #32): string; cdecl;
-    function Compare(const s: string): Integer; cdecl; inline;
-    function Contains(const s: string; const index: Integer = 1): Boolean; cdecl;
-    function Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer; cdecl;
-    function Duplicate(const x: Integer = 2): string; cdecl;
-    function Duplicated(const x: Integer; const glue: string): string; cdecl;
-    function EndsWith(const s: string): Boolean; cdecl;
-    function EndWith(const s: string; const index: Integer = 2147483647): Boolean; cdecl;
-    function Exch(const aIndex, bIndex: Integer): Boolean; cdecl;
-    function Exchange(const aIndex, bIndex: Integer): Boolean; cdecl;
-    function Explode(const d: string; const limit: Integer = -1): TStringArray; overload; cdecl;
-    function Explode(const d: TStringArray; const limit: Integer = -1): TStringArray; overload; cdecl;
-    function Find(const s: string; const index: Integer = 1): Integer; cdecl;
-    function Flip: string; cdecl;
-    function FromLeft(const count: Integer; const index: Integer = 1): string; cdecl;
-    function FromRight(const count: Integer; const index: Integer = 2147483647): string; cdecl;
-    function Get(const index: Integer; const count: Integer): string; cdecl; inline;
-    function IDs: TIntegerArray; overload; cdecl;
-    function IDs(const ID: TIntegerArray): TCharArray; overload; cdecl;
-    function IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
-    function IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
-    function Includes(const s: string; const index: Integer = 2147483647): Boolean; cdecl;
-    function Loc(const s: string; const index: Integer = 2147483647): Integer; cdecl;
-    function Location(const s: string; const index: Integer = 2147483647): Integer; cdecl;
-    function Pick(const index: Integer; const count: Integer = 2147483647): string; cdecl;
-    function Pos(const s: string; const index: Integer = 1): Integer; cdecl;
-    function Position(const s: string; const index: Integer = 1): Integer; cdecl;
-    function PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string; cdecl;
-    function Reverse: Boolean; cdecl;  
-    function Reversed: string; cdecl;
-    function Slice(const a, b: Integer): string; cdecl;
-    function StartsWith(const s: string): Boolean; cdecl;
-    function StartWith(const s: string; const index: Integer = 1): Boolean; cdecl;
-    function Stuff(const s: string; const iFrom, iCount: Integer): string; cdecl;
-    function TrimLeft(const t: Char = #32): string; cdecl;
-    function TrimRight(const t: Char = #32): string; cdecl;
-    function Trim(const t: Char = #32): string; cdecl;
-    function ToTRange: TRange; cdecl;
-    function Quotatation: string; cdecl;
-
-    function TArray(const aSize: Integer = 1): TStringArray; overload cdecl;
-    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DStringArray; overload cdecl;	
-  end;
-  TCharHelper = type helper for Char
-    function TArray(const aSize: Integer = 1): TCharArray; overload cdecl;
-    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DCharArray; overload cdecl;
-  end;
-  TBooleanHelper = type helper for Boolean
-    function ToString: string; cdecl;
-    function ToInteger: Integer; cdecl;
-    function AsInteger: Integer; cdecl;
-    function Toggle: Boolean; cdecl;
-    function Opposite: Boolean; cdecl;
-    function Switch: Boolean; cdecl;
-    function Flip: Boolean; cdecl;
-    function Shuffle: Boolean; cdecl;
-    function Select(const bTrue, bFalse: Integer): Integer; overload; cdecl;
-    function Select(const bTrue, bFalse: Int64): Int64; overload; cdecl;
-    function Select(const bTrue, bFalse: Double): Double; overload; cdecl;
-    function Select(const bTrue, bFalse: string): string; overload; cdecl;
-    function Select(const bTrue, bFalse: Char): Char; overload; cdecl;
-    function Select(const bTrue, bFalse: Boolean): Boolean; overload; cdecl;
-    function Select(const bTrue, bFalse: TPoint): TPoint; overload; cdecl;
-    function Select(const bTrue, bFalse: TBox): TBox; overload; cdecl;
-    function Select(const bTrue, bFalse: TRange): TRange; overload; cdecl;
-    function Evaluate(const bTrue, bFalse: Integer): Integer; overload; cdecl;
-    function Evaluate(const bTrue, bFalse: Int64): Int64; overload; cdecl;
-    function Evaluate(const bTrue, bFalse: Double): Double; overload; cdecl;
-    function Evaluate(const bTrue, bFalse: string): string; overload; cdecl;
-    function Evaluate(const bTrue, bFalse: Char): Char; overload; cdecl;
-    function Evaluate(const bTrue, bFalse: Boolean): Boolean; overload; cdecl;
-    function Evaluate(const bTrue, bFalse: TPoint): TPoint; overload; cdecl;
-    function Evaluate(const bTrue, bFalse: TBox): TBox; overload; cdecl;
-    function Evaluate(const bTrue, bFalse: TRange): TRange; overload; cdecl;
-    function Enable: Boolean; cdecl;
-    function Disable: Boolean; cdecl;
-    function SetFalse: Integer; cdecl;
-    function SetTrue: Integer; cdecl;
-    function SwitchOn(const state: Boolean): Boolean; cdecl;
-    function SwitchOff(const state: Boolean): Boolean; cdecl;
-	
-    function TArray(const aSize: Integer = 1): TBooleanArray; overload cdecl;
-    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DBooleanArray; overload cdecl;	
-  end;
-  TPointHelper = type helper for TPoint
-    function Inside(const bx: TBox): Boolean; cdecl; inline;
-    function Create: TPoint; overload; cdecl;
-    function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray; cdecl;
-    function Row(const cells: Integer; const space: Integer = 0): TPointArray; cdecl;
-    function Column(const cells: Integer; const space: Integer = 0): TPointArray; cdecl;
-	
-    function TArray(const aSize: Integer = 1): TPointArray; overload cdecl;
-    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DPointArray; overload cdecl;	
-  end;
-  TBoxHelper = type helper for TBox
-    function Create: TBox; overload; cdecl;
-    function Inside(const targets: TBoxArray): Boolean; overload; cdecl;
-    function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray; cdecl;
-    function Row(const cells: Integer; const space: Integer = 0): TBoxArray; cdecl;
-    function Column(const cells: Integer; const space: Integer = 0): TBoxArray; cdecl;
-
-    function TArray(const aSize: Integer = 1): TBoxArray; overload cdecl;
-    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DBoxArray; overload cdecl;
-  end;
-  TRangeHelper = type helper for TRange
-    function Create: TRange; overload; cdecl;
-    function Distribute(const parts: Integer): TRangeArray; cdecl;
-    function Partition(const size: Integer): TRangeArray; cdecl;
-    function Divide(const size: Integer): TRangeArray; cdecl;
-	
-    function TArray(const aSize: Integer = 1): TRangeArray; overload cdecl;
-    function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DRangeArray; overload cdecl;	
-  end;
- 
-{$DEFINE Integer}{$I Config.inc}{$I Types.inc}{$UNDEF Integer}
-{$DEFINE Double}{$I Config.inc}{$I Types.inc}{$UNDEF Double}
-{$DEFINE string}{$I Config.inc}{$I Types.inc}{$UNDEF string}
-{$DEFINE Char}{$I Config.inc}{$I Types.inc}{$UNDEF Char}
-{$DEFINE Boolean}{$I Config.inc}{$I Types.inc}{$UNDEF Boolean}
-{$DEFINE TPoint}{$I Config.inc}{$I Types.inc}{$UNDEF TPoint}
-{$DEFINE TBox}{$I Config.inc}{$I Types.inc}{$UNDEF TBox}
-{$DEFINE TRange}{$I Config.inc}{$I Types.inc}{$UNDEF TRange}
+  
+{$DEFINE Helpers}
+  {$DEFINE Integer}{$I MiMU.inc}{$UNDEF Integer}
+  {$DEFINE Int64}{$I MiMU.inc}{$UNDEF Int64}
+  {$DEFINE Double}{$I MiMU.inc}{$UNDEF Double}
+  {$DEFINE string}{$I MiMU.inc}{$UNDEF string}
+  {$DEFINE Char}{$I MiMU.inc}{$UNDEF Char}
+  {$DEFINE Boolean}{$I MiMU.inc}{$UNDEF Boolean}
+  {$DEFINE TPoint}{$I MiMU.inc}{$UNDEF TPoint}
+  {$DEFINE TBox}{$I MiMU.inc}{$UNDEF TBox}
+  {$DEFINE TRange}{$I MiMU.inc}{$UNDEF TRange}
+{$UNDEF Helpers}
   
 type
   T1D = class
@@ -759,7 +558,20 @@ end;
 
 {$mode objfpc}{$H+}
 
+{$DEFINE implementation}
 {$I MiMU.inc}
+{$UNDEF implementation}
+
+{$DEFINE Generic}
+  {$DEFINE Integer}{$I MiMU.inc}{$UNDEF Integer}
+  {$DEFINE Double}{$I MiMU.inc}{$UNDEF Double}
+  {$DEFINE string}{$I MiMU.inc}{$UNDEF string}
+  {$DEFINE Char}{$I MiMU.inc}{$UNDEF Char}
+  {$DEFINE Boolean}{$I MiMU.inc}{$UNDEF Boolean}
+  {$DEFINE TPoint}{$I MiMU.inc}{$UNDEF TPoint}
+  {$DEFINE TBox}{$I MiMU.inc}{$UNDEF TBox}
+  {$DEFINE TRange}{$I MiMU.inc}{$UNDEF TRange}
+{$UNDEF Generic}
 
 initialization
 
