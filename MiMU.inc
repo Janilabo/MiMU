@@ -336,6 +336,8 @@
       function Pick(const ID: TIntegerArray): XArr; overload; cdecl;
       function Pop: XVar; overload; cdecl;
       function Pop(const null: XVar): XVar; overload; cdecl;
+      function Populate(const items: XArr; const times: Integer = 1): Boolean; overload; cdecl;
+      function Populate(const item: XVar; const times: Integer = 1): Boolean; overload; cdecl;
       function Pos(const item: XVar; const index: Integer = 0): Integer; overload; cdecl;
       function Pos(const items: XArr; const index: Integer = 0): Integer; overload; cdecl;
       function Position(const item: XVar; const index: Integer = 0): Integer; overload; cdecl;

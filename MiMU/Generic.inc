@@ -13,6 +13,24 @@ begin
 end;
 
 {==============================================================================]
+ <var.T2DArray(size1D, size2D: Integer): T2DArray>
+ @action: Creates 2D array with Self.
+ @note: None.
+[==============================================================================}
+function XVarHelp.T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): X2DArr; overload cdecl;
+var
+  i, j: Integer;
+begin
+  SetLength(Result, size1D);
+  for i := 0 to High(Result) do
+  begin
+    SetLength(Result[i], size2D);
+    for j := 0 to High(Result[i]) do
+      Result[i][j] := Self;
+  end;
+end;
+
+{==============================================================================]
  <arr.Add(item: VarType; duplicates: Boolean): TArray>
  @action: Appends arr with item. Returns the array with added item.
  @note: Adds item to the right side of the array.
@@ -1549,6 +1567,40 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Populate(items: TArray; times: Integer): Boolean>
+ @action: Populates array with items, x-times.
+ @note: Returns true if items is not empty and times is more than 0.
+[==============================================================================}
+function XArrHelp.Populate(const items: XArr; const times: Integer = 1): Boolean; overload; cdecl;
+var
+  i, j, l: Integer;
+begin
+  l := Length(items);
+  SetLength(Self, (l * times));
+  Result := (Length(Self) > 0);
+  if Result then
+  for i := 0 to (l - 1) do
+    for j := 0 to (times - 1) do
+      Self[i + (j * l)] := items[i];
+end;
+
+{==============================================================================]
+ <arr.Populate(item: VarType; times: Integer): Boolean>
+ @action: Populates array with item, x-times.
+ @note: Returns true if times is more than 0.
+[==============================================================================}
+function XArrHelp.Populate(const item: XVar; const times: Integer = 1): Boolean; overload; cdecl;
+var
+  i: Integer;
+begin;
+  SetLength(Self, times);
+  Result := (Length(Self) > 0);
+  if Result then
+  for i := 0 to (times - 1) do
+    Self[i] := item;
+end;  
+
+{==============================================================================]
  <arr.Pos(item: VarType; index: Integer): Integer>
  @action: Returns index position from arr which matched with item.
  @note: Returns -1 if any of arr items doesnt match with item!
@@ -2406,24 +2458,6 @@ begin
     Self[i] := Self[i - (h + 1)];
   for i := 0 to h do
     Self[i] := items[i];
-end;
-
-{==============================================================================]
- <var.T2DArray(size1D, size2D: Integer): T2DArray>
- @action: Creates 2D array with Self.
- @note: None.
-[==============================================================================}
-function XVarHelp.T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): X2DArr; overload cdecl;
-var
-  i, j: Integer;
-begin
-  SetLength(Result, size1D);
-  for i := 0 to High(Result) do
-  begin
-    SetLength(Result[i], size2D);
-    for j := 0 to High(Result[i]) do
-      Result[i][j] := Self;
-  end;
 end;
 
 {==============================================================================]
