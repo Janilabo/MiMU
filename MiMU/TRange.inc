@@ -9,6 +9,28 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Ascend>
+  @action: Returns asscending TRange of Self.
+  @note: None.
+[==============================================================================}
+function TRange.Ascend: TRange; cdecl;
+begin
+  Result.start := Min(Self.start, Self.stop);
+  Result.stop := Max(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <TRange.Descend>
+  @action: Returns descending TRange of Self.
+  @note: None.
+[==============================================================================}
+function TRange.Descend: TRange; cdecl;
+begin
+  Result.start := Max(Self.stop, Self.start);
+  Result.stop := Min(Self.start, Self.stop);
+end;
+
+{==============================================================================]
   <TRange.Ascending>
   @action: Returns true if range start is lower than stop
   @note: None.
@@ -26,6 +48,26 @@ end;
 function TRange.Descending: Boolean; cdecl;
 begin
   Result := (Self.start > Self.stop);
+end;
+
+{==============================================================================]
+  <TRange.Increasing>
+  @action: Returns true if range start is lower or equal with stop
+  @note: Different logic compared to TRange.Ascending!
+[==============================================================================}
+function TRange.Increasing: Boolean; cdecl;
+begin
+  Result := not (Self.start > Self.stop);
+end;
+
+{==============================================================================]
+  <TRange.Decreasing>
+  @action: Returns true if range start is higher or equal with stop
+  @note: Different logic compared to TRange.Descending!
+[==============================================================================}
+function TRange.Decreasing: Boolean; cdecl;
+begin
+  Result := not (Self.start < Self.stop);
 end;
 
 {==============================================================================]

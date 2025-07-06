@@ -148,8 +148,12 @@ type
     constructor Create(const rStart, rStop: Integer); overload;
 	constructor Create(const value: Integer); overload;
     function Neutral: Boolean; cdecl;
+    function Ascend: TRange; cdecl;
     function Ascending: Boolean; cdecl;
+    function Descend: TRange; cdecl;
     function Descending: Boolean; cdecl;
+	function Increasing: Boolean; cdecl;
+	function Decreasing: Boolean; cdecl;
     function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
     function Grab: TRange; cdecl;
     function Size: Integer; cdecl;

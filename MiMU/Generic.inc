@@ -1172,17 +1172,17 @@ begin
 end;
 
 {==============================================================================]
- <arr.IDs(ascending: Boolean): TIntegerArray>
+ <arr.IDs(aAscending: Boolean): TIntegerArray>
  @action: Returns IDs of arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-function XArrHelp.IDs(const ascending: Boolean = True): TIntegerArray; overload; cdecl;
+function XArrHelp.IDs(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
 var
   h, i: Integer;
 begin
   SetLength(Result, Length(Self));
   h := High(Self);
-  case ascending of
+  case aAscending of
     True:
     for i := 0 to h do
       Result[i] := i;
