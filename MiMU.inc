@@ -386,6 +386,7 @@
       function Unshift(const item: XVar): Integer; overload; cdecl;
       function Unshift(const items: XArr): Integer; overload; cdecl;
     {$IFDEF Integer}
+	  function InOrder(const aAscending: Boolean = True): Boolean; cdecl;
 	  function Ascend: TIntegerArray; cdecl;
 	  function Descend: TIntegerArray; cdecl;
       function Ascending: Boolean; cdecl;

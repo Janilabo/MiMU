@@ -1,4 +1,29 @@
 {==============================================================================]
+  <TIntegerArrayHelper.InOrder>
+  @action: Returns true if array arr is in ascending/descending order by aAscending.
+  @note: By default checking for ascending order.
+[==============================================================================}
+function TIntegerArrayHelper.InOrder(const aAscending: Boolean = True): Boolean; cdecl;
+var
+  i, l: Integer;
+begin
+  i := -1;
+  l := Length(Self);
+  Result := (l > 0);
+  if (l > 1) then
+  case aAscending of
+    True:
+    while (i.Increment < l.Decrement) do
+      if ((Self[i] > Self[i + 1]) or (Self[l - 1] > Self[l])) then
+        Exit(False);
+    False:
+    while (i.Increment < l.Decrement) do
+      if ((Self[i] < Self[i + 1]) or (Self[l - 1] < Self[l])) then
+        Exit(False);
+  end;
+end;
+
+{==============================================================================]
   <TIntegerArrayHelper.Descend>
   @action: Returns true if array arr is in descending order.
   @note: None.
