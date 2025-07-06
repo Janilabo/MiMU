@@ -286,6 +286,10 @@
       function Duplicate(const xTimes: Integer = 1): XArr; overload; cdecl;
       function Empty: Boolean; overload; cdecl;
       function Equal(const target: XArr): Boolean; overload; cdecl;
+      function Erase(const item: XVar; const index: Integer = 2147483647; const all: Boolean = True): Integer; overload; cdecl;
+      function Erase(const item: XVar; const all: Boolean): Integer; overload; cdecl;
+      function Erase(const items: XArr; const index: Integer = 2147483647; const all: Boolean = True): Integer; overload; cdecl;
+      function Erase(const items: XArr; const all: Boolean): Integer; overload; cdecl;
       function Excessive: Boolean; overload; cdecl; 
       function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
       function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;

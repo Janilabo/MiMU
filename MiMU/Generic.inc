@@ -574,6 +574,103 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Erase(item: VarType; index: Integer; all: Boolean): Integer>
+ @action: Deletes item(s) from array arr. Only 1 if all is set as False.
+ @note: Returns amount of items that were removed. Supports start index position.
+[==============================================================================}
+function XArrHelp.Erase(const item: XVar; const index: Integer = 2147483647; const all: Boolean = True): Integer; overload; cdecl;
+var
+  j, i, m, l: Integer;
+  f: Boolean;
+  r: TBooleanArray;
+begin
+  Result := 0;
+  l := Length(Self);
+  if ((l = 0) or (index < 0)) then
+    Exit;
+  SetLength(r, l);
+  m := Min(index, (l - 1));
+  for i := m downto 0 do
+  begin
+    f := False;
+    if (Self[i] = item) then
+    begin
+      r[i] := True;
+      Inc(Result);
+      f := True;
+    end;
+    if f and not all then
+      Break;
+  end;
+  j := 0;
+  for i := 0 to (l - 1) do
+    if not r[i] then
+      Self[j.Increase] := Self[i];
+  SetLength(Self, j);
+end;
+
+{==============================================================================]
+ <arr.Erase(item: VarType; all: Boolean): Integer>
+ @action: Deletes item(s) from array arr. Only 1 if all is set as False.
+ @note: Returns amount of items that were removed.
+[==============================================================================}
+function XArrHelp.Erase(const item: XVar; const all: Boolean): Integer; overload; cdecl;
+begin
+  Result := Self.Erase(item, 2147483647, all);
+end;
+
+{==============================================================================]
+ <arr.Erase(items: TArray; index: Integer; all: Boolean): Integer>
+ @action: Deletes item(s) from array arr. Only 1 if all is set as False.
+ @note: Returns amount of items that were removed. Supports start index position.
+[==============================================================================}
+function XArrHelp.Erase(const items: XArr; const index: Integer = 2147483647; const all: Boolean = True): Integer; overload; cdecl;
+var
+  h, i, j, m, l: Integer;
+  f: Boolean;
+  r: TBooleanArray;
+begin
+  Result := 0;
+  l := Length(Self);
+  h := High(items);
+  if ((l = 0) or (h < 0) or (index < 0)) then
+    Exit;
+  SetLength(r, l);
+  m := Min(index, (l - 1));
+  for i := m downto 0 do
+  begin
+    f := False;
+    for j := 0 to h do
+    begin
+      if (Self[i] = items[j]) then
+      begin
+        r[i] := True;
+        Inc(Result);
+        f := True;
+        Break;
+      end;
+    end;
+    if f and not all then
+      Break;
+  end;
+  j := 0;
+  for i := 0 to (l - 1) do
+    if not r[i] then
+      Self[j.Increase] := Self[i];
+  SetLength(Self, j);
+end;
+
+{==============================================================================]
+ <arr.Erase(items: TArray; all: Boolean): Integer>
+ @action: Deletes item(s) from array arr. Only 1 if all is set as False.
+ @note: Returns amount of items that were removed.
+[==============================================================================}
+function XArrHelp.Erase(const items: XArr; const all: Boolean): Integer; overload; cdecl;
+begin
+  Result := Self.Erase(items, 2147483647, all);
+end;
+
+{==============================================================================]
  <arr.Excessive: Boolean>
  @action: Returns true if arr contains any duplicates in it.
  @note: None.
