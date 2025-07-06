@@ -386,8 +386,10 @@
       function Unshift(const item: XVar): Integer; overload; cdecl;
       function Unshift(const items: XArr): Integer; overload; cdecl;
     {$IFDEF Integer}
-      function Descending: Boolean; cdecl;
+	  function Ascend: TIntegerArray; cdecl;
+	  function Descend: TIntegerArray; cdecl;
       function Ascending: Boolean; cdecl;
+	  function Descending: Boolean; cdecl;
       function Bounds: TRange; overload; cdecl;
       function Bounds(var aSize: Integer): TRange; overload; cdecl;
       function Range: TRange; cdecl;

@@ -4,6 +4,32 @@
   @note: CAUTION! Does not work with arrays that contain only unique values.
          [0,1] = False | [0,0] = False | [1,0] = True |
 [==============================================================================}
+function TIntegerArrayHelper.Descend: TIntegerArray; cdecl;
+begin
+  Result := Self.Copy;
+  if (Length(Result) > 1) then
+    Result.QuickSort(False);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Ascending>
+  @action: Returns true if array arr is in asscending order.
+  @note: CAUTION! Does not work with arrays that contain only unique values.
+         [0,1] = True | [0,0] = False | [1,0] = False |
+[==============================================================================}
+function TIntegerArrayHelper.Ascend: TIntegerArray; cdecl;
+begin
+  Result := Self.Copy;
+  if (Length(Result) > 1) then
+    Result.QuickSort;
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Descending>
+  @action: Returns true if array arr is in descending order.
+  @note: CAUTION! Does not work with arrays that contain only unique values.
+         [0,1] = False | [0,0] = False | [1,0] = True |
+[==============================================================================}
 function TIntegerArrayHelper.Descending: Boolean; cdecl;
 var
   i: Integer;
