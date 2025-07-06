@@ -390,6 +390,8 @@
 	  function Descend: TIntegerArray; cdecl;
       function Ascending: Boolean; cdecl;
 	  function Descending: Boolean; cdecl;
+	  function Decreasing: Boolean; cdecl;
+	  function Increasing: Boolean; cdecl;
       function Bounds: TRange; overload; cdecl;
       function Bounds(var aSize: Integer): TRange; overload; cdecl;
       function Range: TRange; cdecl;
