@@ -276,7 +276,6 @@
       function Copy(const index: Integer = 0; const count: Integer = 2147483647): XArr; overload; cdecl;
       function Create(const item: XVar): XArr; overload; cdecl;
       function Create(const aSize: Integer; const item: XVar): XArr; overload; cdecl;
-	  function Deduplicate: Integer; overload; cdecl;
       function Delete(const index: Integer = 0): Boolean; overload; cdecl;
       function Delete(const ID: TIntegerArray): Integer; overload; cdecl;
       function Differ(const target: XArr): Boolean; overload; cdecl;
@@ -380,11 +379,13 @@
       function Swap(var b: XArr): Integer; overload; cdecl;
       function Trade(var b: XArr): Integer; overload; cdecl;
       function Undersize(const limit: Integer): Boolean; overload; cdecl;
+	  function Unduplicate: Integer; overload; cdecl;
       function Unique: Integer; overload; cdecl;
       function Uniqued: XArr; overload; cdecl;
       function Uniques: TIntegerArray; overload; cdecl;
       function Unshift(const item: XVar): Integer; overload; cdecl;
       function Unshift(const items: XArr): Integer; overload; cdecl;
+	  function Waste: Integer; overload; cdecl;
     {$IFDEF Integer}
 	  function InOrder(const aAscending: Boolean = True): Boolean; cdecl;
 	  function Ascend: TIntegerArray; cdecl;
