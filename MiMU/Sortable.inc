@@ -40,11 +40,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Descend>
+  <XArrHelp.Ascend>
   @action: Returns true if array arr is in descending order.
   @note: None.
 [==============================================================================}
-function XArrHelp.Descend: XArr; overload; cdecl;
+function XArrHelp.Ascend: XArr; overload; cdecl;
 procedure QS(var arr: XArr; const valLow, valHigh: Integer);
 var
   i, j: Integer;
@@ -77,11 +77,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Ascend>
+  <XArrHelp.Descend>
   @action: Returns array arr sorted to ascending order.
   @note: None.
 [==============================================================================}
-function XArrHelp.Ascend: XArr; overload; cdecl;
+function XArrHelp.Descend: XArr; overload; cdecl;
 procedure QS(var arr: XArr; const valLow, valHigh: Integer);
 var
   i, j: Integer;
@@ -122,12 +122,10 @@ function XArrHelp.Descending: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
-  Result := False;
   for i := 1 to High(Self) do
-    if (Self[i] > Self[i - 1]) then
-      Exit(False)
-    else
-      Result := (Result or (Self[i] < Self[i - 1]));
+    if (Self[i - 1] < Self[i]) then
+      Exit(False);
+  Result := (High(Self) > -1);
 end;
 
 {$I Defines.inc}
@@ -141,12 +139,10 @@ function XArrHelp.Ascending: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
-  Result := False;
   for i := 1 to High(Self) do
-    if (Self[i] < Self[i - 1]) then
-      Exit(False)
-    else
-      Result := (Result or (Self[i] > Self[i - 1]));
+    if (Self[i - 1] > Self[i]) then
+      Exit(False);
+  Result := (High(Self) > -1);
 end;
 
 {==============================================================================]
@@ -158,12 +154,10 @@ function XArrHelp.Decreasing: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
-  Result := False;
-  for i := High(Self) to 1 do
+  for i := High(Self) downto 1 do
     if (Self[i] > Self[i - 1]) then
-      Exit(False)
-    else
-      Result := (Result or (Self[i] <= Self[i - 1]));
+      Exit(False);
+  Result := (High(Self) > -1);
 end;
 
 {==============================================================================]
@@ -175,12 +169,10 @@ function XArrHelp.Increasing: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
-  Result := False;
   for i := High(Self) downto 1 do
     if (Self[i] < Self[i - 1]) then
-      Exit(False)
-    else
-      Result := (Result or (Self[i] >= Self[i - 1]));
+      Exit(False);
+  Result := (High(Self) > -1);
 end;
 
 
