@@ -1,3 +1,5 @@
+{$I Defines.inc}
+
 {==============================================================================]
  <var.TArray(aSize: Integer): TArray>
  @action: Creates TArray with Self.

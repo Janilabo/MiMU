@@ -202,18 +202,35 @@ type
   end;
   TRangeArray = array of TRange;
   T2DRangeArray = array of TRangeArray;
-  
-{$DEFINE Helpers}
-  {$DEFINE Integer}{$I MiMU.inc}{$UNDEF Integer}
-  {$DEFINE Int64}{$I MiMU.inc}{$UNDEF Int64}
-  {$DEFINE Double}{$I MiMU.inc}{$UNDEF Double}
-  {$DEFINE string}{$I MiMU.inc}{$UNDEF string}
-  {$DEFINE Char}{$I MiMU.inc}{$UNDEF Char}
-  {$DEFINE Boolean}{$I MiMU.inc}{$UNDEF Boolean}
-  {$DEFINE TPoint}{$I MiMU.inc}{$UNDEF TPoint}
-  {$DEFINE TBox}{$I MiMU.inc}{$UNDEF TBox}
-  {$DEFINE TRange}{$I MiMU.inc}{$UNDEF TRange}
-{$UNDEF Helpers}
+  {$DEFINE Sortable}
+    {$DEFINE Integer}{$I MiMU\Helpers.inc}{$UNDEF Integer}
+    {$DEFINE Double}{$I MiMU\Helpers.inc}{$UNDEF Double}
+    {$DEFINE string}{$I MiMU\Helpers.inc}{$UNDEF string}
+    {$DEFINE Char}{$I MiMU\Helpers.inc}{$UNDEF Char}
+  {$UNDEF Sortable}
+  {$DEFINE Boolean}{$I MiMU\Helpers.inc}{$UNDEF Boolean}
+  {$DEFINE TPoint}{$I MiMU\Helpers.inc}{$UNDEF TPoint}
+  {$DEFINE TBox}{$I MiMU\Helpers.inc}{$UNDEF TBox}
+  {$DEFINE TRange}{$I MiMU\Helpers.inc}{$UNDEF TRange}
+  type TInt64Helper = type helper for Int64
+    function Even: Boolean; cdecl; inline;
+    function Odd: Boolean; cdecl; inline;
+    function Increase(const N: Int64 = 1): Int64; cdecl;
+    function Decrease(const N: Int64 = 1): Int64; cdecl;
+    function Increment(const N: Int64 = 1): Int64; cdecl;
+    function Decrement(const N: Int64 = 1): Int64; cdecl;
+    function DigitCount: Integer; cdecl;
+    function Digitz: TIntegerArray; cdecl;
+    function Digits: TIntegerArray; cdecl;
+    function Compare(const T: Int64): Integer; cdecl; inline;
+    function Distance(const T: Int64): Int64; cdecl; inline;
+    function Difference(const T: Int64): Int64; cdecl; inline;
+    function Opposite: Int64; cdecl; inline;
+    function Sign: Integer; cdecl; inline;
+    function Shuffle: Int64; cdecl;
+    function Oversize(const limit: Int64): Boolean; cdecl; inline;
+    function Undersize(const limit: Int64): Boolean; cdecl; inline;
+  end;
   
 type
   T1D = class
@@ -271,6 +288,11 @@ operator=(const a, b: TRange): Boolean;
 operator<>(const a, b: TPoint): Boolean;
 operator<>(const a, b: TBox): Boolean;
 operator<>(const a, b: TRange): Boolean;
+
+function Max(a, b: string): string; overload; inline;
+function Max(a, b: Char): Char; overload; inline;
+function Min(a, b: string): string; overload; inline;
+function Min(a, b: Char): Char; overload; inline;
 
 function Point(const pX, pY: Integer): TPoint; overload; inline;
 function Point(const val: Integer = 0): TPoint; overload; inline;
@@ -496,6 +518,38 @@ begin
   B := T;
 end;
 
+function Max(a, b: string): string; overload; inline;
+begin
+  if (a > b) then
+    Result := a
+  else
+    Result := b;
+end;
+
+function Max(a, b: Char): Char; overload; inline;
+begin
+  if (a > b) then
+    Result := a
+  else
+    Result := b;
+end;
+
+function Min(a, b: string): string; overload; inline;
+begin
+  if (a < b) then
+    Result := a
+  else
+    Result := b;
+end;
+
+function Min(a, b: Char): Char; overload; inline;
+begin
+  if (a < b) then
+    Result := a
+  else
+    Result := b;
+end;
+
 class function T1D.Init(var arr: TIntegerArray): Integer; overload; cdecl;
 begin
   Result := Length(arr);
@@ -562,20 +616,7 @@ end;
 
 {$mode objfpc}{$H+}
 
-{$DEFINE implementation}
 {$I MiMU.inc}
-{$UNDEF implementation}
-
-{$DEFINE Generic}
-  {$DEFINE Integer}{$I MiMU.inc}{$UNDEF Integer}
-  {$DEFINE Double}{$I MiMU.inc}{$UNDEF Double}
-  {$DEFINE string}{$I MiMU.inc}{$UNDEF string}
-  {$DEFINE Char}{$I MiMU.inc}{$UNDEF Char}
-  {$DEFINE Boolean}{$I MiMU.inc}{$UNDEF Boolean}
-  {$DEFINE TPoint}{$I MiMU.inc}{$UNDEF TPoint}
-  {$DEFINE TBox}{$I MiMU.inc}{$UNDEF TBox}
-  {$DEFINE TRange}{$I MiMU.inc}{$UNDEF TRange}
-{$UNDEF Generic}
 
 initialization
 

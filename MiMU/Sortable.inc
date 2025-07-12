@@ -1,0 +1,361 @@
+{==============================================================================]
+  <XArrHelp.Sorted>
+  @action: Returns true if array arr is in ascending/descending order by aAscending.
+  @note: By default checking for ascending order.
+[==============================================================================}
+function XArrHelp.Sorted(const aAscending: Boolean = True): Boolean; overload; cdecl;
+var
+  h, i: Integer;
+begin
+  h := High(Self);
+  for i := 0 to (h - 1) do
+    if (aAscending and (Self[i] > Self[i + 1])) or ((not aAscending) and (Self[i] < Self[i + 1])) then
+      Exit(False);
+  Result := (h > -1);
+end;
+
+{==============================================================================]
+  <XArrHelp.InOrder>
+  @action: Returns true if array arr is in ascending/descending order by aAscending.
+  @note: By default checking for ascending order.
+[==============================================================================}
+function XArrHelp.InOrder(const aAscending: Boolean = True): Boolean; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  i := -1;
+  l := Length(Self);
+  Result := (l > 0);
+  if (l > 1) then
+  case aAscending of
+    True:
+    while (i.Increment < l.Decrement) do
+      if ((Self[i] > Self[i + 1]) or (Self[l - 1] > Self[l])) then
+        Exit(False);
+    False:
+    while (i.Increment < l.Decrement) do
+      if ((Self[i] < Self[i + 1]) or (Self[l - 1] < Self[l])) then
+        Exit(False);
+  end;
+end;
+
+{==============================================================================]
+  <XArrHelp.Descend>
+  @action: Returns true if array arr is in descending order.
+  @note: None.
+[==============================================================================}
+function XArrHelp.Descend: XArr; overload; cdecl;
+procedure QS(var arr: XArr; const valLow, valHigh: Integer);
+var
+  i, j: Integer;
+  p, s: XVar;
+begin
+  i := valLow;
+  j := valHigh;
+  p := arr[(valLow + valHigh) div 2];
+  repeat
+    while (arr[i] < p) do
+      Inc(i);
+    while (arr[j] > p) do
+      Dec(j);
+    if (i <= j) then
+    begin
+      s := arr[i];
+      arr[i.Increase] := arr[j];
+      arr[j.Decrease] := s;
+    end;
+  until (i > j);
+  if (valLow < j) then
+    QS(arr, valLow, j);
+  if (i < valHigh) then
+    QS(arr, i, valHigh);
+end;
+begin
+  Result := Self.Copy;
+  if (Length(Result) > 1) then
+    QS(Result, 0, High(Result));
+end;
+
+{==============================================================================]
+  <XArrHelp.Ascend>
+  @action: Returns array arr sorted to ascending order.
+  @note: None.
+[==============================================================================}
+function XArrHelp.Ascend: XArr; overload; cdecl;
+procedure QS(var arr: XArr; const valLow, valHigh: Integer);
+var
+  i, j: Integer;
+  p, s: XVar;
+begin
+  i := valLow;
+  j := valHigh;
+  p := arr[(valLow + valHigh) div 2];
+  repeat
+    while (arr[i] > p) do
+      Inc(i);
+    while (arr[j] < p) do
+      Dec(j);
+    if (i <= j) then
+    begin
+      s := arr[i];
+      arr[i.Increase] := arr[j];
+      arr[j.Decrease] := s;
+    end;
+  until (i > j);
+  if (valLow < j) then
+    QS(arr, valLow, j);
+  if (i < valHigh) then
+    QS(arr, i, valHigh);
+end;
+begin
+  Result := Self.Copy;
+  if (Length(Result) > 1) then
+    QS(Result, 0, High(Result));
+end;
+
+{==============================================================================]
+  <XArrHelp.Descending>
+  @action: Returns true if array arr is in descending order.
+  @note: [0,1] = False | [0,0] = False | [1,0] = True |
+[==============================================================================}
+function XArrHelp.Descending: Boolean; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := False;
+  for i := 1 to High(Self) do
+    if (Self[i] > Self[i - 1]) then
+      Exit(False)
+    else
+      Result := (Result or (Self[i] < Self[i - 1]));
+end;
+
+{$I Defines.inc}
+
+{==============================================================================]
+  <XArrHelp.Ascending>
+  @action: Returns true if array arr is in asscending order.
+  @note: [0,1] = True | [0,0] = False | [1,0] = False |
+[==============================================================================}
+function XArrHelp.Ascending: Boolean; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := False;
+  for i := 1 to High(Self) do
+    if (Self[i] < Self[i - 1]) then
+      Exit(False)
+    else
+      Result := (Result or (Self[i] > Self[i - 1]));
+end;
+
+{==============================================================================]
+  <XArrHelp.Decreasing>
+  @action: Returns true if array arr is in descending order.
+  @note: [0,1] = False | [0,0] = True | [1,0] = True |
+[==============================================================================}
+function XArrHelp.Decreasing: Boolean; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := False;
+  for i := High(Self) to 1 do
+    if (Self[i] > Self[i - 1]) then
+      Exit(False)
+    else
+      Result := (Result or (Self[i] <= Self[i - 1]));
+end;
+
+{==============================================================================]
+  <XArrHelp.Increasing>
+  @action: Returns true if array arr is in asscending order.
+  @note: [0,1] = True | [0,0] = True | [1,0] = False |
+[==============================================================================}
+function XArrHelp.Increasing: Boolean; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := False;
+  for i := High(Self) downto 1 do
+    if (Self[i] < Self[i - 1]) then
+      Exit(False)
+    else
+      Result := (Result or (Self[i] >= Self[i - 1]));
+end;
+
+
+{==============================================================================]
+  <XArrHelp.Lowest>
+  @action: Returns array minimum value.
+  @note: None.
+[==============================================================================}
+function XArrHelp.Lowest: XVar; overload; cdecl;
+var
+  i: Integer;
+begin
+  if (High(Self) > -1) then
+    Result := Self[0];
+  for i := 1 to High(Self) do
+    if (Self[i] < Result) then
+      Result := Self[i];
+end;
+
+{==============================================================================]
+  <XArrHelp.Highest>
+  @action: Returns array maximum value.
+  @note: None.
+[==============================================================================}
+function XArrHelp.Highest: XVar; overload; cdecl;
+var
+  i: Integer;
+begin
+  if (High(Self) > -1) then
+    Result := Self[0];
+  for i := 1 to High(Self) do
+    if (Self[i] < Result) then
+      Result := Self[i];
+end;
+
+{==============================================================================]
+  <XArrHelp.Mini>
+  @action: Returns array INDEX with minimum value.
+  @note: Supports reversed order (last min index) with aAscending as False.
+[==============================================================================}
+function XArrHelp.Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
+var
+  h, i, s: Integer;
+begin
+  h := High(Self);
+  if ((h = -1) or (aAscending and (start > h)) or ((not aAscending) and (start < 0))) then
+    Exit(-1);
+  case aAscending of
+    True:
+    begin
+      s := Max(0, start);
+      Result := s;
+      for i := (s + 1) to h do
+        if (Self[i] < Self[Result]) then
+          Result := i;
+    end;
+    False:
+    begin
+      s := Min(h, start);
+      Result := s;
+      for i := (s - 1) downto 0 do
+        if (Self[i] < Self[Result]) then
+          Result := i;
+    end;
+  end;
+end;
+
+function XArrHelp.Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload; cdecl;
+begin
+  Result := Self.Mini(aAscending, start);
+end;
+
+{==============================================================================]
+  <XArrHelp.Maxi>
+  @action: Returns array INDEX with maximum value.
+  @note: Supports reversed order (last max index) with aAscending as False.
+[==============================================================================}
+function XArrHelp.Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
+var
+  h, i, s: Integer;
+begin
+  h := High(Self);
+  if ((h = -1) or (aAscending and (start > h)) or ((not aAscending) and (start < 0))) then
+    Exit(-1);
+  case aAscending of
+    True:
+    begin
+      s := Max(0, start);
+      Result := s;
+      for i := (s + 1) to h do
+        if (Self[i] > Self[Result]) then
+          Result := i;
+    end;
+    False:
+    begin
+      s := Min(h, start);
+      Result := s;
+      for i := (s - 1) downto 0 do
+        if (Self[i] > Self[Result]) then
+          Result := i;
+    end;
+  end;
+end;
+
+function XArrHelp.Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload; cdecl;
+begin
+  Result := Self.Maxi(aAscending, start);
+end;
+
+{==============================================================================]
+ <XArrHelp.Mode>
+ @action: The value that occurs most frequently in arr.
+ @note: None
+[==============================================================================}
+function XArrHelp.Mode: XVar; overload; cdecl;
+var
+  a: XArr;
+  c: TIntegerArray;
+  h, i, j, l: Integer;
+begin
+  h := High(Self);
+  if (h > -1) then
+  case (h = 0) of
+    False:
+    begin
+      SetLength(c, 0);
+      SetLength(a, 0);
+      for i := 0 to High(Self) do
+      begin
+        l := -1;
+        for j := 0 to High(a) do
+        begin
+          if (Self[i] = a[j]) then
+          begin
+            l := j;
+            Break;
+          end;
+        end;
+        if (l = -1) then
+        begin
+          a.Append(Self[i]);
+          c.Append(1);
+        end else
+          Inc(c[l]);
+      end;
+      Result := a[c.Maxi];
+    end;
+    True: Result := Self[0];
+  end;
+end;
+
+{==============================================================================]
+ <XArrHelp.Center>
+ @action: The value at the center position of a sorted or unsorted arr.
+ @note: None
+[==============================================================================}
+function XArrHelp.Center: XVar; overload; cdecl;
+begin
+  if (Length(Self) > 0) then
+    Result := Self[Length(Self) div 2];
+end;
+
+{==============================================================================]
+  <XArrHelp.BubbleSort>
+  @action: Sorts arr with BubbleSort algorithm
+  @note: Supports sorting to aAscending and descending order. Returns High(arr)!
+[==============================================================================}
+function XArrHelp.BubbleSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+var
+  a, b: Integer;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+  for a := 0 to (Result - 1) do
+    for b := 1 to Result do
+      if ((aAscending and (Self[b - 1] > Self[b])) or (not aAscending and (Self[b - 1] < Self[b]))) then
+        Exchange(b, (b - 1));
+end;
