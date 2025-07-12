@@ -306,6 +306,8 @@ type
       function Ascending: Boolean; overload; cdecl;
       function Decreasing: Boolean; overload; cdecl;
       function Increasing: Boolean; overload; cdecl;
+	  function Downward: Boolean; overload; cdecl;
+      function Upward: Boolean; overload; cdecl;
       function Lowest: XVar; overload; cdecl;
       function Highest: XVar; overload; cdecl;
       function Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;

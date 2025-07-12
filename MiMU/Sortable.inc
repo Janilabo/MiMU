@@ -175,6 +175,37 @@ begin
   Result := (High(Self) > -1);
 end;
 
+{==============================================================================]
+  <XArrHelp.Downward>
+  @action: Returns true if array arr is in descending order.
+  @note: Returns true with empty []array! Unlike Descending, Decreasing.
+[==============================================================================}
+function XArrHelp.Downward: Boolean; overload; cdecl;
+var
+  h: Integer;
+begin
+  h := High(Self);
+  while (h.Decrement > -1) do
+    if (Self[h] < Self[h + 1]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <XArrHelp.Upward>
+  @action: Returns true if array arr is in ascending order.
+  @note: Returns true with empty [] array! Unlike Ascending, Increasing.
+[==============================================================================}
+function XArrHelp.Upward: Boolean; overload; cdecl;
+var
+  h: Integer;
+begin
+  h := High(Self);
+  while (h.Decrement > -1) do
+    if (Self[h] > Self[h + 1]) then
+      Exit(False);
+  Result := True;
+end;
 
 {==============================================================================]
   <XArrHelp.Lowest>
@@ -342,12 +373,12 @@ end;
 [==============================================================================}
 function XArrHelp.BubbleSort(const aAscending: Boolean = True): Integer; overload; cdecl;
 var
-  a, b: Integer;
+  i, j: Integer;
 begin
   Result := High(Self);
   if (Result > 0) then
-  for a := 0 to (Result - 1) do
-    for b := 1 to Result do
-      if ((aAscending and (Self[b - 1] > Self[b])) or (not aAscending and (Self[b - 1] < Self[b]))) then
-        Exchange(b, (b - 1));
+  for i := 0 to (Result - 1) do
+    for j := 0 to ((Result - i) - 1) do
+      if ((aAscending and (Self[j] > Self[j + 1])) or ((not aAscending) and (Self[j] < Self[j + 1]))) then
+        Exchange(j, (j + 1));
 end;
