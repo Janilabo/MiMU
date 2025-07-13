@@ -300,6 +300,7 @@ type
     {$IFDEF Sortable}
       function Sorted(const aAscending: Boolean = True): Boolean; overload; cdecl;
       function InOrder(const aAscending: Boolean = True): Boolean; overload; cdecl;
+      function Orderly: Boolean; overload; cdecl;
       function Descend: XArr; overload; cdecl;
       function Ascend: XArr; overload; cdecl;
       function Descending: Boolean; overload; cdecl;
@@ -406,5 +407,7 @@ type
     function Size: Int64; overload; cdecl;
     function Size(const aSize: Integer): Int64; overload; cdecl;
     function Size(const size1D, size2D: Integer): Int64; overload; cdecl;
-    function Merge: XArr; overload; cdecl;  
+    function Merge: XArr; overload; cdecl;
+    function TArray: XArr; overload; cdecl;
+	function Flat: XArr; overload; cdecl;
   end;

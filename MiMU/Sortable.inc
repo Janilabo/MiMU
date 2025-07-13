@@ -40,6 +40,30 @@ begin
 end;
 
 {==============================================================================]
+  <XArrHelp.Orderly>
+  @action: Returns true if array arr is in ascending AND/OR descending order.
+  @note: None.
+[==============================================================================}
+function XArrHelp.Orderly: Boolean; overload; cdecl;
+var
+  i: Integer;
+  a, d: Boolean;
+begin
+  a := True;
+  d := True;
+  for i := 0 to (High(Self) - 1) do
+  begin
+    if (Self[i] > Self[i + 1]) then
+      a := False;
+    if (Self[i] < Self[i + 1]) then
+      d := False;
+    if not (a or d) then
+      Break;
+  end;
+  Result := (a or d);
+end;
+
+{==============================================================================]
   <XArrHelp.Ascend>
   @action: Returns true if array arr is in descending order.
   @note: None.

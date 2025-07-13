@@ -2705,3 +2705,36 @@ begin
     for j := High(Self[i]) downto 0 do
       Result[l.Decrement] := Self[i][j];
 end;
+
+{==============================================================================]
+ <arr.TArray: TArray>
+ @action: Merges 2D array to 1D.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+[==============================================================================}
+function X2DArrHelp.TArray: XArr; overload; cdecl;
+var
+  i, j, l: Integer;
+begin
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+  begin
+    l := Length(Result);
+    SetLength(Result, (l + Length(Self[i])));
+    for j := 0 to High(Self[i]) do
+      Result[l + j] := Self[i][j];
+  end;
+end;
+
+{==============================================================================]
+ <arr.Flat: TArray>
+ @action: Merges 2D array to 1D.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+[==============================================================================}
+function X2DArrHelp.Flat: XArr; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+    Result := Concat(Result, Self[i]);
+end;
