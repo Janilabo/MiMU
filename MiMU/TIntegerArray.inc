@@ -255,7 +255,7 @@ begin
       r := Self.Bounds;
       b.Create(r.Size, 0);
       for x := 0 to High(Self) do
-        Inc(b[(Self[x] - r.start)]);
+        Inc(b[Self[x] - r.start]);
       t := 0;
       for x := 0 to (r.stop - r.start) do
         if (b[x] > b[t]) then
@@ -287,7 +287,7 @@ begin
       r := Self.Bounds;
       b.Create(r.Size, 0);
       for x := 0 to High(Self) do
-        Inc(b[(Self[x] - r.start)]);
+        Inc(b[Self[x] - r.start]);
       t := 0;
       for x := 0 to (r.stop - r.start) do
         if ((b[x] > 0) and (b[x] < b[t])) then

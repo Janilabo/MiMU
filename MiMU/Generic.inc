@@ -73,7 +73,7 @@ begin
 	  a := 0;
 	  for i := 0 to h do
 	    if not Result.Contains(items[i]) then
-        Result[l + a.Increase] := items[i];
+          Result[l + a.Increase] := items[i];
       SetLength(Result, (l + a));
     end;
     True:
@@ -164,7 +164,7 @@ begin
     begin
       for i := 0 to h do
         if not Self.Contains(items[i]) then
-          Self[(Result.Increment)] := items[i];
+          Self[Result.Increment] := items[i];
       SetLength(Self, (Result + 1));
     end;
     True:
@@ -197,13 +197,11 @@ begin
   if ((i < 0) or (y < 1)) then
     Exit(False);
   repeat
-     x := 0;
-     repeat
-       Result := (Self[i] = allowed[x]);
-       x := (x + 1);
-     until (Result or (x = y));
-     i := (i - 1);
-  until ((i < 0) or (not Result));
+    x := 0;
+    repeat
+      Result := (Self[i] = allowed[x]);
+    until (Result or (x.Increment = y));
+  until ((i.Decrement < 0) or (not Result));
 end;
 
 {==============================================================================]
@@ -225,10 +223,8 @@ begin
        x := 0;
        repeat
          Result := not (Self[i] = forbidden[x]);
-         x := (x + 1);
-       until ((x = y) or (not Result));
-       i := (i - 1);
-    until ((i < 0) or (not Result));
+       until ((x.Increment = y) or (not Result));
+    until ((i.Decrement < 0) or (not Result));
   end else
     Result := True;
 end;
@@ -569,7 +565,7 @@ begin
       Inc(Result);
       f := True;
     end;
-    if f and not all then
+    if (f and (not all)) then
       Break;
   end;
   j := 0;
@@ -620,7 +616,7 @@ begin
         Break;
       end;
     end;
-    if f and not all then
+    if (f and (not all)) then
       Break;
   end;
   j := 0;
@@ -1133,7 +1129,7 @@ begin
     a := (a + 1);
     for x := 0 to y do
     begin
-      n := (Self[(a + x)] <> chain[x]);
+      n := (Self[a + x] <> chain[x]);
       if n then
         Break;
     end;
@@ -1158,7 +1154,7 @@ begin
       Result[i] := i;
     False:
     for i := h downto 0 do
-      Result[(h - i)] := i;
+      Result[h - i] := i;
   end;
 end;
 
@@ -1503,10 +1499,10 @@ begin
     case (oldIndex > newIndex) of
       True:
       for i := oldIndex downto (newIndex + 1) do
-        Self[i] := Self[(i - 1)];
+        Self[i] := Self[i - 1];
       False:
       for i := oldIndex to (newIndex - 1) do
-        Self[i] := Self[(i + 1)];
+        Self[i] := Self[i + 1];
     end;
     Self[newIndex] := s;
   end;
@@ -1594,8 +1590,7 @@ begin
       Result[r.Increase] := Self[ID[i]];
       for t := ID[i] to (h - 1) do
         Self[t] := Self[t + 1];
-      Dec(h);
-    until ((i = (l - 1)) or (h < 0));
+    until ((h.Decrement < 0) or (i = (l - 1)));
     SetLength(Self, (h + 1));
   end;
   SetLength(Result, r);
@@ -1946,7 +1941,7 @@ begin
       end;
     end;
     if not d then
-      Self[(r.Increase + m)] := Self[i]
+      Self[r.Increase + m] := Self[i]
     else
       d := not s;
   end;
@@ -2251,7 +2246,7 @@ begin
       if (Self[i + j] <> pattern[j]) then
         Break
       else
-        s := s + 1;
+        s := (s + 1);
     if (s = p) then
       Exit(i);
   end;
@@ -2281,7 +2276,7 @@ begin
         if (Self[i + j] <> pattern[j]) then
           Break
         else
-          s := s + 1;
+          s := (s + 1);
       if (s = p) then
         Result[r.Increase] := i;
     end;

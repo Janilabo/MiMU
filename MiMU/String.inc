@@ -423,7 +423,7 @@ begin
       m := True;
       for b := 1 to s do
       begin
-        if (Self[((a + b) - 1)] <> d[b]) then
+        if (Self[(a + b) - 1] <> d[b]) then
         begin
           m := False;
           Break;

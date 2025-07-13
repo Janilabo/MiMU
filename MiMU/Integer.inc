@@ -77,9 +77,8 @@ begin
   m := 10;
   repeat
     n := (a mod m);
-    Result := (Result + 1);
     m := (m * 10);
-  until ((Result = 10) or (n = a));
+  until ((Result.Increment = 10) or (n = a));
 end;
 
 {==============================================================================]
@@ -101,9 +100,8 @@ begin
   repeat
     n := (a mod m);
     Result[r] := (n div (m div 10));
-    r := (r + 1);
     m := (m * 10);
-  until ((r = 10) or (n = a));
+  until ((r.Increment = 10) or (n = a));
   SetLength(Result, r);
   for i := 0 to ((r div 2) - 1) do
     Swap(Result[i], Result[(r - i) - 1]);

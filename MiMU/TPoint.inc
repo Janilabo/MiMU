@@ -165,7 +165,7 @@ end;
 [==============================================================================}
 function TPointHelper.Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray; cdecl;
 var
-  r, c, i, x, y: Integer;
+  r, c, x, y: Integer;
 begin
   if (((rows > -1) and (columns > -1)) and ((rows * columns) > 0)) then
   begin
@@ -175,9 +175,8 @@ begin
       y := (Self.Y + (r * (spaceVertical + 1)));
       for c := 0 to (columns - 1) do
       begin
-        i := ((r * columns) + c);
         x := (Self.X + (c * (spaceHorizontal + 1)));
-		Result[i].Create(x, y);
+		Result[((r * columns) + c)].Create(x, y);
       end;
     end;
   end else
