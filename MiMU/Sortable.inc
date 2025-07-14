@@ -359,13 +359,11 @@ begin
       begin
         l := -1;
         for j := 0 to High(a) do
-        begin
           if (Self[i] = a[j]) then
           begin
             l := j;
             Break;
           end;
-        end;
         if (l = -1) then
         begin
           a.Append(Self[i]);
