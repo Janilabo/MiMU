@@ -1230,30 +1230,29 @@ begin
 end;
 
 {==============================================================================]
- <arr.Keep(items: TArray; index: Integer): Integer>
+ <arr.Keep(items: TArray; index: Integer): TArray>
  @action: Keeps items in array, removes others. Returns array length (after action).
  @note: Supports custom start index!
 [==============================================================================}
-function XArrHelp.Keep(const items: XArr; const index: Integer = 0): Integer; overload; cdecl;
+function XArrHelp.Keep(const items: XArr; const index: Integer = 0): XArr; overload; cdecl;
 var
-  i, l: Integer;
+  m, i, l, r: Integer;
 begin
   l := Length(Self);
+  m := Max(0, index);
   case (High(items) > -1) of
     True:
     begin
-      Result := 0;
-      for i := Max(0, index) to (l - 1) do
+      r := 0;
+	  SetLength(Result, (l - m));
+      for i := m to (l - 1) do
         if items.Contains(Self[i]) then
-          Self[i - Result] := Self[i]
+          Result[i - r] := Self[i]
         else
-          Inc(Result);
+          Inc(r);
     end;
-    False: Result := (l - Max(0, index));
+    False: Result := Self.Copy(m, (l - m));
   end;
-  Result := (l - Result);
-  if (Result < l) then
-    SetLength(Self, Result);
 end;
 
 {==============================================================================]
@@ -1301,38 +1300,6 @@ end;
 function XArrHelp.Len: Integer; overload; cdecl;
 begin
   Result := Length(Self);
-end;
-
-{==============================================================================]
- <arr.Len(aSize: Integer): Integer>
- @action: Set's arr length to aSize.
- @note: aSize > Length(arr) => Result will give how many elements were added
-        aSize < Length(arr) => Result will give how many elements got deleted (it will be negative value!)
-		aSize = Length(arr) => Returns 0.
-[==============================================================================}
-function XArrHelp.Len(const aSize: Integer): Integer; overload; cdecl;
-var
-  l: Integer;
-begin
-  l := Length(Self);
-  SetLength(Self, aSize);
-  Result := (Length(Self) - l);
-end;
-
-{==============================================================================]
- <arr.Len(arr: TArray; aSize: Integer; null: VarType): Integer>
- @action: Set's arr length to size.
- @note: Uses null for created indexes.
-[==============================================================================}
-function XArrHelp.Len(const aSize: Integer; const null: XVar): Integer; overload; cdecl;
-var
-  i, l: Integer;
-begin
-  l := Length(Self);
-  SetLength(Self, aSize);
-  Result := (Length(Self) - l);
-  for i := 0 to (Result - 1) do
-    Self[l + i] := null;
 end;
 
 {==============================================================================]
@@ -2190,17 +2157,6 @@ begin
 end;
 
 {==============================================================================]
- <arr.Size(aSize: Integer): Integer> 
- @action: Sets array size as aSize and then returns the size using Length call.
- @note: None.
-[==============================================================================}
-function XArrHelp.Size(const aSize: Integer): Integer; overload; cdecl;
-begin
-  SetLength(Self, aSize);
-  Result := Length(Self);
-end;
-
-{==============================================================================]
  <arr.Size: Integer> 
  @action: Returns array length.
  @note: Simply Result := Length(arr);
@@ -2208,6 +2164,38 @@ end;
 function XArrHelp.Size: Integer; overload; cdecl;
 begin
   Result := Length(Self);
+end;
+
+{==============================================================================]
+ <arr.Size(aSize: Integer): TArray>
+ @action: Set's arr length to aSize.
+ @note: None.
+[==============================================================================}
+function XArrHelp.Size(const aSize: Integer): XArr; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, aSize);
+  for i := 0 to (Min(l, aSize) - 1) do
+    Result[i] := Self[i];
+end;
+
+{==============================================================================]
+ <arr.Size(arr: TArray; aSize: Integer; null: VarType): TArray>
+ @action: Set's arr length to size.
+ @note: Uses null for created indexes.
+[==============================================================================}
+function XArrHelp.Size(const aSize: Integer; const null: XVar): XArr; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, aSize);
+  for i := 0 to (Min(l, aSize) - 1) do
+    Result[i] := Self[i];
+  for i := l to (aSize - 1) do
+    Result[i] := null;
 end;
 
 {==============================================================================]
@@ -2707,7 +2695,8 @@ function X2DArrHelp.Merge: XArr; overload; cdecl;
 var
   i, j, l: Integer;
 begin
-  l := Result.Size(Self.Size);
+  SetLength(Result, Self.Size);
+  l := Length(Result);
   if (l > 0) then
   for i := High(Self) downto 0 do
     for j := High(Self[i]) downto 0 do

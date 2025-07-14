@@ -614,6 +614,7 @@ begin
   Result := (l - Length(arr));
 end;
 
+
 {$mode objfpc}{$H+}
 
 {$I MiMU.inc}

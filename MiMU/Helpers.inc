@@ -230,11 +230,9 @@ type
     function IDs(const ID: TIntegerArray; const item: XVar): XArr; overload; cdecl;
     function IDs(const ID: TIntegerArray; const items: XArr): XArr; overload; cdecl;
     function Includes(const item: XVar; const index: Integer = 2147483647): Boolean; cdecl;
-    function Keep(const items: XArr; const index: Integer = 0): Integer; overload; cdecl;
+    function Keep(const items: XArr; const index: Integer = 0): XArr; overload; cdecl;
     function LeastFrequent: XVar; overload; cdecl;
     function Len: Integer; overload; cdecl;
-    function Len(const aSize: Integer): Integer; overload; cdecl;
-    function Len(const aSize: Integer; const null: XVar): Integer; overload; cdecl;
     function Loc(const item: XVar; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Loc(const items: XArr; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Location(const item: XVar; const index: Integer = 2147483647): Integer; overload; cdecl;
@@ -278,8 +276,9 @@ type
     function Scan(const ID: TIntegerArray; const items: XArr; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Shift: XVar; overload; cdecl;
     function Shift(const sCount: Integer): XArr; overload; cdecl;
-    function Size(const aSize: Integer): Integer; overload; cdecl;
     function Size: Integer; overload; cdecl;
+	function Size(const aSize: Integer): XArr; overload; cdecl;
+    function Size(const aSize: Integer; const null: XVar): XArr; overload; cdecl;
     function SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl;
     function SizeMax(const target: Integer): Boolean; overload; cdecl;
     function SizeMin(const target: Integer): Boolean; overload; cdecl;
