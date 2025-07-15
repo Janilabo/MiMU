@@ -1231,8 +1231,8 @@ end;
 
 {==============================================================================]
  <arr.Keep(items: TArray; index: Integer): TArray>
- @action: Keeps items in array, removes others. Returns array length (after action).
- @note: Supports custom start index!
+ @action: Keeps items in array, removes others.
+ @note: Supports custom start index! Returns the modified arr.
 [==============================================================================}
 function XArrHelp.Keep(const items: XArr; const index: Integer = 0): XArr; overload; cdecl;
 var
@@ -1240,18 +1240,21 @@ var
 begin
   l := Length(Self);
   m := Max(0, index);
-  case (High(items) > -1) of
+  case ((High(items) > -1) and (m < l)) of
     True:
     begin
       r := 0;
-	  SetLength(Result, (l - m));
+	  SetLength(Result, l);
+	  for i := 0 to (m - 1) do
+	    Result[i] := Self[i];
       for i := m to (l - 1) do
         if items.Contains(Self[i]) then
           Result[i - r] := Self[i]
         else
           Inc(r);
+	  SetLength(Result, (l - r));
     end;
-    False: Result := Self.Copy(m, (l - m));
+    False: Result := Self.Copy;
   end;
 end;
 
@@ -1547,33 +1550,31 @@ begin
 end;
 
 {==============================================================================]
- <arr.Pick(ID: TIntegerArray): TArray>
- @action: Outputs items with indexes (ID) from arr and deletes while picking em.
- @note: Ignores invalid ID's (doesn't include those to output, they will be left out).
-        DYNAMIC - you might need to set indexes in reversed order, in order to get em correctly!
+ <arr.Pick(items: TArray; index: Integer): TArray>
+ @action: Alternative method for arr.Keep
+ @note: None.
 [==============================================================================}
-function XArrHelp.Pick(const ID: TIntegerArray): XArr; overload; cdecl;
+function XArrHelp.Pick(const items: XArr; const index: Integer = 0): XArr; overload; cdecl;
 var
-  l, h, t, i, r: Integer;
+  i, m, l: Integer;
 begin
-  h := High(Self);
-  l := Length(ID);
-  r := 0;
-  if ((h > -1) and (l > 0)) then
-  begin
-    SetLength(Result, (h + 1));
-    i := -1;
-    repeat
-      i := (i + 1);
-      if ((ID[i] > h) or (ID[i] < 0)) then
-        Continue;
-      Result[r.Increase] := Self[ID[i]];
-      for t := ID[i] to (h - 1) do
-        Self[t] := Self[t + 1];
-    until ((h.Decrement < 0) or (i = (l - 1)));
-    SetLength(Self, (h + 1));
+  l := Length(Self);
+  m := Max(0, index);
+  case ((High(items) > -1) and (m < l)) of
+    True:
+    begin
+      SetLength(Result, m);
+      for i := 0 to (m - 1) do
+        Result[i] := Self[i];
+      for i := m to (l - 1) do
+        if items.Contains(Self[i]) then
+        begin
+          SetLength(Result, (Length(Result) + 1));
+          Result[High(Result)] := Self[i];
+        end;
+    end;
+    False: Result := Self.Copy;
   end;
-  SetLength(Result, r);
 end;
 
 {==============================================================================]

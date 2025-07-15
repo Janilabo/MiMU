@@ -245,7 +245,7 @@ type
     function Next(const index: Integer; const count: Integer = 2147483647): XArr; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): X2DArr; overload; cdecl;
-    function Pick(const ID: TIntegerArray): XArr; overload; cdecl;
+    function Pick(const items: XArr; const index: Integer = 0): XArr; overload; cdecl;
     function Pop: XVar; overload; cdecl;
     function Pop(const null: XVar): XVar; overload; cdecl;
     function Populate(const items: XArr; const times: Integer = 1): Boolean; overload; cdecl;
