@@ -710,6 +710,33 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Exclude(items: TArray; index: Integer): TArray>
+ @action: Returns a new array with elements from items excluded, up to and including the specified index.
+ @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
+         The default index filters the entire array.
+[==============================================================================}
+function XArrHelp.Exclude(const items: XArr; const index: Integer = 2147483647): XArr; overload; cdecl;
+var
+  i, l, m, d: Integer;
+begin
+  l := Length(Self);
+  if ((High(items) = -1) or (l = 0)) then
+    Exit(Self.Copy);
+  m := Min(index, (l - 1));
+  SetLength(Result, l);
+  d := 0;
+  for i := 0 to m do
+    if not items.Contains(Self[i]) then
+      Result[i - d] := Self[i]
+    else
+      Inc(d);
+  for i := (m + 1) to (l - 1) do
+    Result[i - d] := Self[i];
+  if (d > 0) then
+    SetLength(Result, (l - d));
+end;
+
+{==============================================================================]
  <arr.Extend(item: VarType): TArray>
  @action: Extends arr with item. Returns it.
  @note: Places item to the left side of the array.
@@ -1856,6 +1883,34 @@ begin
   for i := 0 to h do
     Self[l + i] := items[i];
 end;
+
+{==============================================================================]
+ <arr.Reject(items: TArray; index: Integer): TArray>
+ @action: Returns a new array with elements from items excluded, up to and including the specified index.
+ @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
+         The default index filters the entire array.
+[==============================================================================}
+function XArrHelp.Reject(const items: XArr; const index: Integer = 2147483647): XArr; overload; cdecl;
+var
+  i, l, m, c: Integer;
+begin
+  l := Length(Self);
+  if ((High(items) = -1) or (l = 0)) then
+    Exit(Self.Copy);
+  m := Min(index, (l - 1));
+  c := 0;
+  for i := 0 to m do
+    if not items.Contains(Self[i]) then
+      Inc(c);
+  SetLength(Result, (c + (l - (m + 1))));
+  c := 0;
+  for i := 0 to m do
+    if not items.Contains(Self[i]) then
+      Result[c.Increase] := Self[i];
+  for i := (m + 1) to (l - 1) do
+    Result[c.Increase] := Self[i];
+end;
+
 
 {==============================================================================]
  <arr.Remove(item: VarType; index: Integer; all: Boolean): Integer>

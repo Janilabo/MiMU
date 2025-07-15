@@ -203,6 +203,7 @@ type
     function Excessive: Boolean; overload; cdecl; 
     function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
+	function Exclude(const items: XArr; const index: Integer = 2147483647): XArr; overload; cdecl;
     function Extend(const item: XVar): XArr; overload; cdecl;
     function Extend(const items: XArr): XArr; overload; cdecl;
     function Extract(const item: XVar; const index: Integer = 0): XArr; overload; cdecl;
@@ -262,6 +263,7 @@ type
     function Put(const ID: TIntegerArray; const item: XVar): XArr; overload; cdecl;
     function Put(const ID: TIntegerArray; const items: XArr): XArr; overload; cdecl;
     function Put(const index: Integer; const items: XArr): XArr; overload; cdecl;
+	function Reject(const items: XArr; const index: Integer = 2147483647): XArr; overload; cdecl;
     function Remove(const item: XVar; const index: Integer = 0; const all: Boolean = True): Integer; overload; cdecl;
     function Remove(const item: XVar; const all: Boolean): Integer; overload; cdecl;
     function Remove(const items: XArr; const index: Integer = 0; const all: Boolean = True): Integer; overload; cdecl;
