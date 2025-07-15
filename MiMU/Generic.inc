@@ -2575,40 +2575,39 @@ begin
 end;
 
 {==============================================================================]
- <arr.Unshift(item: VarType): Integer>
- @action: Grows arr with item. Returns the index of added item.
+ <arr.Unshift(item: VarType): TArray>
+ @action: Grows arr with item.
  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
-function XArrHelp.Unshift(const item: XVar): Integer; overload; cdecl;
+function XArrHelp.Unshift(const item: XVar): XArr; overload; cdecl;
 var
-  i: Integer;
+  i, l: Integer;
 begin
-  Result := Length(Self);
-  SetLength(Self, (Result + 1));
-  for i := Result downto 1 do
-    Self[i] := Self[i - 1];
-  Self[0] := item;
+  l := Length(Self);
+  SetLength(Result, (l + 1));
+  for i := l downto 1 do
+    Result[i] := Self[i - 1];
+  Result[0] := item;
 end;
 
 {==============================================================================]
- <arr.Unshift(items: TArray): Integer>
+ <arr.Unshift(items: TArray): TArray>
  @action: Grows arr with items. Returns the index of last added item.
  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
-function XArrHelp.Unshift(const items: XArr): Integer; overload; cdecl;
+function XArrHelp.Unshift(const items: XArr): XArr; overload; cdecl;
 var
-  h, l, i: Integer;
+  h, l, i, r: Integer;
 begin
-  h := High(items);
-  if (h = -1) then
-    Exit(High(Self));
-  l := Length(Self);
-  Result := (l + h);
-  SetLength(Self, (Result + 1));
-  for i := Result downto (h + 1) do
-    Self[i] := Self[i - (h + 1)];
-  for i := 0 to h do
-    Self[i] := items[i];
+  l := Length(items);
+  if (l = 0) then
+    Exit(Self.Copy);
+  r := (Length(Self) + l);
+  SetLength(Result, r);
+  for i := (r - 1) downto l do
+    Result[i] := Self[i - l];
+  for i := 0 to (l - 1) do
+    Result[i] := items[i];
 end;
 
 {==============================================================================]

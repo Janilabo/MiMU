@@ -295,8 +295,8 @@ type
     function Unique: Integer; overload; cdecl;
     function Uniqued: XArr; overload; cdecl;
     function Uniques: TIntegerArray; overload; cdecl;
-    function Unshift(const item: XVar): Integer; overload; cdecl;
-    function Unshift(const items: XArr): Integer; overload; cdecl;
+    function Unshift(const item: XVar): XArr; overload; cdecl;
+    function Unshift(const items: XArr): XArr; overload; cdecl;
     function Waste: Integer; overload; cdecl;
     {$IFDEF Sortable}
       function Sorted(const aAscending: Boolean = True): Boolean; overload; cdecl;
