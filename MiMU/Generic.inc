@@ -1858,11 +1858,15 @@ end;
  @action: Places item in array with arr.
  @note: Returns array (arr+item) length.
 [==============================================================================}
-function XArrHelp.Push(const item: XVar): Integer; overload; cdecl;
+function XArrHelp.Push(const item: XVar): XArr; overload; cdecl;
+var
+  i, l: Integer;
 begin
-  Result := (Length(Self) + 1);
-  SetLength(Self, Result);
-  Self[Result - 1] := item;
+  l := Length(Self);
+  SetLength(Result, (l + 1));
+  for i := 0 to (l - 1) do
+    Result[i] := Self[i];
+  Result[l] := item;
 end;
 
 {==============================================================================]
@@ -1870,18 +1874,17 @@ end;
  @action: Places items in array with arr.
  @note: Returns array (arr+item) length.
 [==============================================================================}
-function XArrHelp.Push(const items: XArr): Integer; overload; cdecl;
+function XArrHelp.Push(const items: XArr): XArr; overload; cdecl;
 var
   h, i, l: Integer;
 begin
   h := High(items);
   l := Length(Self);
-  Result := (l + (h + 1));
-  if (h < 0) then
-    Exit;
-  SetLength(Self, Result);
+  SetLength(Result, (l + (h + 1)));
+  for i := 0 to (l - 1) do
+    Result[i] := Self[i];
   for i := 0 to h do
-    Self[l + i] := items[i];
+    Result[l + i] := items[i];
 end;
 
 {==============================================================================]
@@ -2454,7 +2457,7 @@ end;
  @action: Removes all duplicates from arr.
  @note: Returns the number of items that were removed.
 [==============================================================================}
-function XArrHelp.Unduplicate: Integer; overload; cdecl;
+function XArrHelp.Unduplicate: XArr; overload; cdecl;
 type
   TDict = specialize TDictionary<XVar, Boolean>;
 var
@@ -2463,53 +2466,53 @@ var
 begin
   l := Length(Self);
   if (l < 2) then
-    Exit(0);
+    Exit(Self.Copy);
   d := TDict.Create;
   try
+    SetLength(Result, l);
     r := 0;
     for i := 0 to (l - 1) do
       if not d.ContainsKey(Self[i]) then
       begin
         d.Add(Self[i], True);
-        Self[r.Increase] := Self[i];
+        Result[r.Increase] := Self[i];
       end;
-    Result := (l - r);
-    if (Result > 0) then
-      SetLength(Self, r);
+    if ((l - r) > 0) then
+      SetLength(Result, r);
   finally
     d.Free;
   end;
 end;
 
 {==============================================================================]
- <arr.Unique: Integer>
+ <arr.Unique: TArray>
  @action: Removes all duplicates from arr.
  @note: Returns the number of items that were removed.
 [==============================================================================}
-function XArrHelp.Unique: Integer; overload; cdecl;
+function XArrHelp.Unique: XArr; overload; cdecl;
 var
   a, l, i, j: Integer;
   m: Boolean;
 begin
-  l := Length(Self);
+  Result := Self.Copy;
+  l := Length(Result);
   if (l < 2) then
-    Exit(0);
+    Exit;
   a := 0;
   for i := 1 to (l - 1) do
   begin
     for j := 0 to a do
     begin
-      m := (Self[i] = Self[j]);
+      m := (Result[i] = Result[j]);
       if m then
         Break;
     end;
     if m then
       Continue;
-    Self[a.Increment] := Self[i];
+    Result[a.Increment] := Result[i];
   end;
-  Result := (l - (a + 1));
-  if (Result > 0) then
-    SetLength(Self, (a + 1));
+  if ((l - (a + 1)) > 0) then
+    SetLength(Result, (a + 1));
 end;
 
 {==============================================================================]
@@ -2713,32 +2716,6 @@ begin
   Result := 0;
   for i := 0 to High(Self) do
     Result := (Result + Length(Self[i]));
-end;
-
-{==============================================================================]
- <arr.Size(aSize: Integer): Int64>
- @action: Sets length to 1D part of the 2D array and returns the actual size of arr (element count)
- @note: None.
-[==============================================================================}
-function X2DArrHelp.Size(const aSize: Integer): Int64; overload; cdecl;
-var
-  i: Integer;
-begin
-  SetLength(Self, aSize);
-  Result := 0;
-  for i := 0 to High(Self) do
-    Result := (Result + Length(Self[i]));
-end;
-
-{==============================================================================]
- <arr.Size(size1D, size2D: Integer): Int64>
- @action: Returns actual Length for 2D array.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
-[==============================================================================}
-function X2DArrHelp.Size(const size1D, size2D: Integer): Int64; overload; cdecl;
-begin
-  SetLength(Self, size1D, size2D);
-  Result := (Max(0, size1D) * Max(0, size2D));
 end;
 
 {==============================================================================]
