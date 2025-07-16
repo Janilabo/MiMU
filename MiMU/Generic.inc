@@ -2002,41 +2002,6 @@ begin
 end;
 
 {==============================================================================]
- <arr.Resize(aChange: Integer): Integer>
- @action: Updates's arr length with aChange.
- @note: aChange > 0 => Result will give how many elements were added
-        aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
-		aChange = 0 => Returns 0.
-[==============================================================================}
-function XArrHelp.Resize(const aChange: Integer): Integer; overload; cdecl;
-var
-  l: Integer;
-begin
-  l := Length(Self);
-  SetLength(Self, (l + aChange));
-  Result := (Length(Self) - l);
-end;
-
-{==============================================================================]
- <arr.Resize(aChange: Integer; null: VarType): Integer>
- @action: Updates's arr length with aChange.
- @note: aChange > 0 => Result will give how many elements were added
-        aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
-		aChange = 0 => Returns 0.
-		Supports null for filling created indexes.
-[==============================================================================}
-function XArrHelp.Resize(const aChange: Integer; const null: XVar): Integer; overload; cdecl;
-var
-  i, l: Integer;
-begin
-  l := Length(Self);
-  SetLength(Self, aChange);
-  Result := (Length(Self) - l);
-  for i := 0 to (Result - 1) do
-    Self[l + i] := null;
-end;
-
-{==============================================================================]
  <arr.Reverse: Boolean>
  @action: Reverses items in array.
  @note: Returns true with success (array contains 2 or more items)
@@ -2769,4 +2734,39 @@ begin
   SetLength(Result, 0);
   for i := 0 to High(Self) do
     Result := Concat(Result, Self[i]);
+end;
+
+{==============================================================================]
+ <T1D.Resize(arr: TArray; aChange: Integer): Integer>
+ @action: Updates's arr length with aChange.
+ @note: aChange > 0 => Result will give how many elements were added
+        aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
+		aChange = 0 => Returns 0.
+[==============================================================================}
+class function T1D.Resize(var arr: XArr; const aChange: Integer): Integer; overload; cdecl;
+var
+  l: Integer;
+begin
+  l := Length(arr);
+  SetLength(arr, (l + aChange));
+  Result := (Length(arr) - l);
+end;
+
+{==============================================================================]
+ <T1D.Resize(arr: TArray; aChange: Integer; null: VarType): Integer>
+ @action: Updates's arr length with aChange.
+ @note: aChange > 0 => Result will give how many elements were added
+        aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
+		aChange = 0 => Returns 0.
+		Supports null for filling created indexes.
+[==============================================================================}
+class function T1D.Resize(var arr: XArr; const aChange: Integer; const null: XVar): Integer; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  l := Length(arr);
+  SetLength(arr, aChange);
+  Result := (Length(arr) - l);
+  for i := 0 to (Result - 1) do
+    arr[l + i] := null;
 end;

@@ -60,9 +60,10 @@ end;
   @action: Removes duplicates from array arr and returns the count of deleted items.
   @note: Not recommended with very large arrays
 [==============================================================================}
-function TIntegerArrayHelper.Undupe: Integer; cdecl;
+function TIntegerArrayHelper.Undupe: TIntegerArray; cdecl;
 begin
-  Result := T1D.Unique(Self);
+  Result := Self.Copy;
+  TIA.Unique(Result);
 end;
 
 {==============================================================================]

@@ -52,9 +52,10 @@ end;
   @action: Removes duplicates from arr.
   @note: Returns number of duplicate items that were removed from arr.
 [==============================================================================}
-function TPointArrayHelper.Undupe: Integer; cdecl;
+function TPointArrayHelper.Undupe: TPointArray; cdecl;
 begin
-  Result := T1D.Unique(Self);
+  Result := Self.Copy;
+  TPA.Unique(Result);
 end;
 
 {==============================================================================]

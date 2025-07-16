@@ -212,7 +212,8 @@ type
   {$DEFINE TPoint}{$I MiMU\Helpers.inc}{$UNDEF TPoint}
   {$DEFINE TBox}{$I MiMU\Helpers.inc}{$UNDEF TBox}
   {$DEFINE TRange}{$I MiMU\Helpers.inc}{$UNDEF TRange}
-  type TInt64Helper = type helper for Int64
+type
+  TInt64Helper = type helper for Int64
     function Even: Boolean; cdecl; inline;
     function Odd: Boolean; cdecl; inline;
     function Increase(const N: Int64 = 1): Int64; cdecl;
@@ -231,16 +232,33 @@ type
     function Oversize(const limit: Int64): Boolean; cdecl; inline;
     function Undersize(const limit: Int64): Boolean; cdecl; inline;
   end;
-  
-type
-  T1D = class
+  TIA = class
   public
     class function Init(var arr: TIntegerArray): Integer; overload; cdecl;
-    class function Init(var arr: TPointArray): Integer; overload; cdecl;
-    class function Init(var arr: TBooleanArray): Integer; overload; cdecl;
-    class function Unique(var arr: TIntegerArray): Integer; overload; cdecl;
-    class function Unique(var arr: TPointArray): Integer; overload; cdecl;
+	class function Unique(var arr: TIntegerArray): Integer; overload; cdecl;
   end;
+  TPA = class
+    class function Init(var arr: TPointArray): Integer; overload; cdecl;
+	class function Unique(var arr: TPointArray): Integer; overload; cdecl;
+  end;
+  TBA = class
+    class function Init(var arr: TBooleanArray): Integer; overload; cdecl;
+  end;
+{$DEFINE T1D}
+  T1D = class
+  public
+  {$DEFINE Sortable}
+    {$DEFINE Integer}{$I MiMU\Classes.inc}{$UNDEF Integer}
+    {$DEFINE Double}{$I MiMU\Classes.inc}{$UNDEF Double}
+    {$DEFINE string}{$I MiMU\Classes.inc}{$UNDEF string}
+    {$DEFINE Char}{$I MiMU\Classes.inc}{$UNDEF Char}
+  {$UNDEF Sortable}
+  {$DEFINE Boolean}{$I MiMU\Classes.inc}{$UNDEF Boolean}
+  {$DEFINE TPoint}{$I MiMU\Classes.inc}{$UNDEF TPoint}
+  {$DEFINE TBox}{$I MiMU\Classes.inc}{$UNDEF TBox}
+  {$DEFINE TRange}{$I MiMU\Classes.inc}{$UNDEF TRange}
+  end;
+{$UNDEF T1D}
   T2D = class
   public
     class function Create(const size1D, size2D: Integer; const item: Integer): T2DIntegerArray; overload; cdecl;
@@ -550,28 +568,28 @@ begin
     Result := b;
 end;
 
-class function T1D.Init(var arr: TIntegerArray): Integer; overload; cdecl;
+class function TIA.Init(var arr: TIntegerArray): Integer; overload; cdecl;
 begin
   Result := Length(arr);
   if (Result > 0) then
     FillChar(arr[0], (Result * SizeOf(Integer)), 0);
 end;
 
-class function T1D.Init(var arr: TPointArray): Integer; overload; cdecl;
+class function TPA.Init(var arr: TPointArray): Integer; overload; cdecl;
 begin
   Result := Length(arr);
   if (Result > 0) then
     FillChar(arr[0], (Result * SizeOf(TPoint)), 0);
 end;
 
-class function T1D.Init(var arr: TBooleanArray): Integer; overload; cdecl;
+class function TBA.Init(var arr: TBooleanArray): Integer; overload; cdecl;
 begin
   Result := Length(arr);
   if (Result > 0) then
     FillChar(arr[0], Result, 0);
 end;
 
-class function T1D.Unique(var arr: TIntegerArray): Integer; overload; cdecl;
+class function TIA.Unique(var arr: TIntegerArray): Integer; overload; cdecl;
 var
   x, y, z: Integer;
   r: TRange;
@@ -593,7 +611,7 @@ begin
     Result := 0;
 end;
 
-class function T1D.Unique(var arr: TPointArray): Integer; overload; cdecl;
+class function TPA.Unique(var arr: TPointArray): Integer; overload; cdecl;
 var
   i, r, l, w, h: Integer;
   m: T2DBooleanArray;

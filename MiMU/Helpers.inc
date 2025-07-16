@@ -263,13 +263,11 @@ type
     function Put(const ID: TIntegerArray; const item: XVar): XArr; overload; cdecl;
     function Put(const ID: TIntegerArray; const items: XArr): XArr; overload; cdecl;
     function Put(const index: Integer; const items: XArr): XArr; overload; cdecl;
-	function Reject(const items: XArr; const index: Integer = 2147483647): XArr; overload; cdecl;
+    function Reject(const items: XArr; const index: Integer = 2147483647): XArr; overload; cdecl;
     function Remove(const item: XVar; const index: Integer = 0; const all: Boolean = True): XArr; overload; cdecl;
     function Remove(const item: XVar; const all: Boolean): XArr; overload; cdecl;
     function Remove(const items: XArr; const index: Integer = 0; const all: Boolean = True): XArr; overload; cdecl;
     function Remove(const items: XArr; const all: Boolean): XArr; overload; cdecl;
-    function Resize(const aChange: Integer): Integer; overload; cdecl;
-    function Resize(const aChange: Integer; const null: XVar): Integer; overload; cdecl;
     function Reverse: Boolean; overload; cdecl;
     function Reversed: XArr; overload; cdecl;
     function Scan(const ID: TRange; const item: XVar; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
@@ -279,7 +277,7 @@ type
     function Shift: XVar; overload; cdecl;
     function Shift(const sCount: Integer): XArr; overload; cdecl;
     function Size: Integer; overload; cdecl;
-	function Size(const aSize: Integer): XArr; overload; cdecl;
+    function Size(const aSize: Integer): XArr; overload; cdecl;
     function Size(const aSize: Integer; const null: XVar): XArr; overload; cdecl;
     function SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl;
     function SizeMax(const target: Integer): Boolean; overload; cdecl;
@@ -324,7 +322,7 @@ type
       function Bounds: TRange; overload; cdecl;
       function Bounds(var aSize: Integer): TRange; overload; cdecl;
       function Range: TRange; cdecl;
-      function Undupe: Integer; cdecl;
+      function Undupe: TIntegerArray; cdecl;
       function Unduped: TIntegerArray; cdecl;
       function Numberline: TIntegerArray; cdecl;
       function Sum: Int64; cdecl;
@@ -389,7 +387,7 @@ type
     {$IFDEF TPoint}
       function Bounds: TBox; overload; cdecl;
       function Bounds(var width, height: Integer): TBox; overload; cdecl;
-      function Undupe: Integer; cdecl;
+      function Undupe: TPointArray; cdecl;
       function Unduped: TPointArray; cdecl;
       function Invert: TPointArray; cdecl;
       function Edge(const scan8W: Boolean = False): TPointArray; cdecl;
