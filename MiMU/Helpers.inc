@@ -264,10 +264,10 @@ type
     function Put(const ID: TIntegerArray; const items: XArr): XArr; overload; cdecl;
     function Put(const index: Integer; const items: XArr): XArr; overload; cdecl;
 	function Reject(const items: XArr; const index: Integer = 2147483647): XArr; overload; cdecl;
-    function Remove(const item: XVar; const index: Integer = 0; const all: Boolean = True): Integer; overload; cdecl;
-    function Remove(const item: XVar; const all: Boolean): Integer; overload; cdecl;
-    function Remove(const items: XArr; const index: Integer = 0; const all: Boolean = True): Integer; overload; cdecl;
-    function Remove(const items: XArr; const all: Boolean): Integer; overload; cdecl;
+    function Remove(const item: XVar; const index: Integer = 0; const all: Boolean = True): XArr; overload; cdecl;
+    function Remove(const item: XVar; const all: Boolean): XArr; overload; cdecl;
+    function Remove(const items: XArr; const index: Integer = 0; const all: Boolean = True): XArr; overload; cdecl;
+    function Remove(const items: XArr; const all: Boolean): XArr; overload; cdecl;
     function Resize(const aChange: Integer): Integer; overload; cdecl;
     function Resize(const aChange: Integer; const null: XVar): Integer; overload; cdecl;
     function Reverse: Boolean; overload; cdecl;

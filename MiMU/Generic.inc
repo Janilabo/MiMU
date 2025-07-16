@@ -1914,48 +1914,49 @@ begin
     Result[c.Increase] := Self[i];
 end;
 
-
 {==============================================================================]
- <arr.Remove(item: VarType; index: Integer; all: Boolean): Integer>
+ <arr.Remove(item: VarType; index: Integer; all: Boolean): TArray>
  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
  @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
-function XArrHelp.Remove(const item: XVar; const index: Integer = 0; const all: Boolean = True): Integer; overload; cdecl;
+function XArrHelp.Remove(const item: XVar; const index: Integer = 0; const all: Boolean = True): XArr; overload; cdecl;
 var
   l, i, r, m: Integer;
   s: Boolean;
 begin
   l := Length(Self);
   if ((l = 0) or (index >= l)) then
-    Exit(0);
+    Exit(Self.Copy);
   m := Max(0, index);
   s := False;
   r := 0;
+  SetLength(Result, l);
+  for i := 0 to (m - 1) do
+    Result[i] := Self[i];
   for i := m to (l - 1) do
     if (s or (Self[i] <> item)) then
-      Self[r.Increase + m] := Self[i]
+      Result[r.Increase + m] := Self[i]
     else
       s := not all;
-  SetLength(Self, (r + m));
-  Result := (l - Length(Self));
+  SetLength(Result, (r + m));
 end;
 
 {==============================================================================]
- <arr.Remove(item: VarType; all: Boolean): Integer>
+ <arr.Remove(item: VarType; all: Boolean): TArray>
  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
  @note: Returns amount of items that were removed.
 [==============================================================================}
-function XArrHelp.Remove(const item: XVar; const all: Boolean): Integer; overload; cdecl;
+function XArrHelp.Remove(const item: XVar; const all: Boolean): XArr; overload; cdecl;
 begin
   Result := Self.Remove(item, 0, all);
 end;
 
 {==============================================================================]
- <arr.Remove(items: TArray; index: Integer; all: Boolean): Integer>
+ <arr.Remove(items: TArray; index: Integer; all: Boolean): TArray>
  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
  @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
-function XArrHelp.Remove(const items: XArr; const index: Integer = 0; const all: Boolean = True): Integer; overload; cdecl;
+function XArrHelp.Remove(const items: XArr; const index: Integer = 0; const all: Boolean = True): XArr; overload; cdecl;
 var
   a, b, l, i, r, m: Integer;
   d, s: Boolean;
@@ -1963,10 +1964,13 @@ begin
   l := Length(Self);
   b := High(items);
   if ((l = 0) or (index >= l) or (b = -1)) then
-    Exit(0);
+    Exit(Self.Copy);
   m := Max(0, index);
   r := 0;
   s := False;
+  SetLength(Result, l);
+  for i := 0 to (m - 1) do
+    Result[i] := Self[i];
   for i := m to (l - 1) do
   begin
     if not s then
@@ -1980,20 +1984,19 @@ begin
       end;
     end;
     if not d then
-      Self[r.Increase + m] := Self[i]
+      Result[r.Increase + m] := Self[i]
     else
       d := not s;
   end;
-  SetLength(Self, (r + m));
-  Result := (l - Length(Self));
+  SetLength(Result, (r + m));
 end;
 
 {==============================================================================]
- <arr.Remove(items: TArray; all: Boolean): Integer>
+ <arr.Remove(items: TArray; all: Boolean): TArray>
  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
  @note: Returns amount of items that were removed.
 [==============================================================================}
-function XArrHelp.Remove(const items: XArr; const all: Boolean): Integer; overload; cdecl;
+function XArrHelp.Remove(const items: XArr; const all: Boolean): XArr; overload; cdecl;
 begin
   Result := Self.Remove(items, 0, all);
 end;
