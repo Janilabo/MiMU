@@ -259,17 +259,21 @@ type
   {$DEFINE TRange}{$I MiMU\Classes.inc}{$UNDEF TRange}
   end;
 {$UNDEF T1D}
+{$DEFINE T2D}
   T2D = class
   public
-    class function Create(const size1D, size2D: Integer; const item: Integer): T2DIntegerArray; overload; cdecl;
-    class function Create(const size1D, size2D: Integer; const item: Double): T2DDoubleArray; overload; cdecl;
-    class function Create(const size1D, size2D: Integer; const item: string): T2DStringArray; overload; cdecl;
-    class function Create(const size1D, size2D: Integer; const item: Char): T2DCharArray; overload; cdecl;
-    class function Create(const size1D, size2D: Integer; const item: Boolean): T2DBooleanArray; overload; cdecl;
-    class function Create(const size1D, size2D: Integer; const item: TPoint): T2DPointArray; overload; cdecl;
-    class function Create(const size1D, size2D: Integer; const item: TBox): T2DBoxArray; overload; cdecl;
-    class function Create(const size1D, size2D: Integer; const item: TRange): T2DRangeArray; overload; cdecl;
+   {$DEFINE Sortable}
+    {$DEFINE Integer}{$I MiMU\Classes.inc}{$UNDEF Integer}
+    {$DEFINE Double}{$I MiMU\Classes.inc}{$UNDEF Double}
+    {$DEFINE string}{$I MiMU\Classes.inc}{$UNDEF string}
+    {$DEFINE Char}{$I MiMU\Classes.inc}{$UNDEF Char}
+  {$UNDEF Sortable}
+  {$DEFINE Boolean}{$I MiMU\Classes.inc}{$UNDEF Boolean}
+  {$DEFINE TPoint}{$I MiMU\Classes.inc}{$UNDEF TPoint}
+  {$DEFINE TBox}{$I MiMU\Classes.inc}{$UNDEF TBox}
+  {$DEFINE TRange}{$I MiMU\Classes.inc}{$UNDEF TRange}
   end;
+{$UNDEF T2D}
   _TPoint = class
   public
     class function Create(const pX, pY: Integer): TPoint; overload; cdecl;

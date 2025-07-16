@@ -2629,22 +2629,6 @@ begin
 end;
 
 {==============================================================================]
- <T2D.Create(size1D, size2D: Integer; item: VarType)>
- @action: Creates array with item where size is length of the array.
- @note: item is placed on every index in result.
-[==============================================================================}
-class function T2D.Create(const size1D, size2D: Integer; const item: XVar): X2DArr; overload; cdecl;
-var
-  i, j, s: Integer;
-begin
-  s := (Max(0, size2D) - 1);
-  SetLength(Result, Max(0, size1D), (s + 1));
-  for i := 0 to High(Result) do
-    for j := 0 to s do
-      Result[i][j] := item;
-end;
-
-{==============================================================================]
  <arr.Empty: Boolean>
  @action: Returns true if array is empty (Length = 0).
  @note: None.
@@ -2734,6 +2718,22 @@ begin
   SetLength(Result, 0);
   for i := 0 to High(Self) do
     Result := Concat(Result, Self[i]);
+end;
+
+{==============================================================================]
+ <T2D.Create(size1D, size2D: Integer; item: VarType)>
+ @action: Creates array with item where size is length of the array.
+ @note: item is placed on every index in result.
+[==============================================================================}
+class function T2D.Create(const size1D, size2D: Integer; const item: XVar): X2DArr; overload; cdecl;
+var
+  i, j, s: Integer;
+begin
+  s := (Max(0, size2D) - 1);
+  SetLength(Result, Max(0, size1D), (s + 1));
+  for i := 0 to High(Result) do
+    for j := 0 to s do
+      Result[i][j] := item;
 end;
 
 {==============================================================================]
