@@ -1257,6 +1257,43 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Indexed(aAscending: Boolean): TIntegerArray>
+ @action: Returns IDs of arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function XArrHelp.Indexed(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  if (l > 0) then
+  case aAscending of
+    True:
+    while (l.Decrement > -1) do
+      Result[l] := l;
+    False:
+    while (l.Decrement > -1) do
+      Result[(Length(Self) - l) - 1] := l;
+  end;
+end;
+
+{==============================================================================]
+ <arr.Indexes(aAscending: Boolean): TIntegerArray>
+ @action: Returns IDs of arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function XArrHelp.Indexes(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  for i := 0 to (l - 1) do
+    Result[i] := IfThen(aAscending, i, ((l - i) - 1));
+end;    
+
+{==============================================================================]
  <arr.Keep(items: TArray; index: Integer): TArray>
  @action: Keeps items in array, removes others.
  @note: Supports custom start index! Returns the modified arr.

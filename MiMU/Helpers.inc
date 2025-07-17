@@ -231,6 +231,8 @@ type
     function IDs(const ID: TIntegerArray; const item: XVar): XArr; overload; cdecl;
     function IDs(const ID: TIntegerArray; const items: XArr): XArr; overload; cdecl;
     function Includes(const item: XVar; const index: Integer = 2147483647): Boolean; cdecl;
+	function Indexed(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+	function Indexes(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
     function Keep(const items: XArr; const index: Integer = 0): XArr; overload; cdecl;
     function LeastFrequent: XVar; overload; cdecl;
     function Len: Integer; overload; cdecl;
