@@ -626,7 +626,7 @@ begin
   begin
     r := 0;
     b := arr.Bounds(w, h);
-    m := T2D.Create(w, h, False);
+    m := T2D.Create(False, w, h);
     for i := 0 to (l - 1) do
       if m[arr[i].X - b.X1][arr[i].Y - b.Y1].Enable then
         arr[r.Increase] := arr[i];

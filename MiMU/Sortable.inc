@@ -398,9 +398,33 @@ var
   i, j: Integer;
 begin
   Result := High(Self);
-  if (Result > 0) then
-  for i := 0 to (Result - 1) do
-    for j := 0 to ((Result - i) - 1) do
+  for i := Result downto 1 do
+    for j := 0 to (i - 1) do
       if ((aAscending and (Self[j] > Self[j + 1])) or ((not aAscending) and (Self[j] < Self[j + 1]))) then
         Exchange(j, (j + 1));
+end;
+
+{==============================================================================]
+  <XArrHelp.BubbleSortOptimized>
+  @action: Sorts arr with optimized BubbleSort algorithm
+  @note: Supports sorting to aAscending and descending order. Returns High(arr)!
+[==============================================================================}
+function XArrHelp.BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
+var
+  i, j: Integer;
+  s: Boolean;
+begin
+  Result := High(Self);
+  for i := Result downto 1 do
+  begin
+    s := False;
+    for j := 0 to (i - 1) do
+      if ((aAscending and (Self[j] > Self[j + 1])) or ((not aAscending) and (Self[j] < Self[j + 1]))) then
+      begin
+        Exchange(j, (j + 1));
+        s := True;
+      end;
+    if not s then
+      Break;
+  end;
 end;

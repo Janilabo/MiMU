@@ -322,34 +322,6 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.BubbleSortOptimized>
-  @action: Sorts arr with BubbleSort algorithm
-  @note: Supports sorting to aAscending and descending order. Returns High(arr)!
-[==============================================================================}
-function TIntegerArrayHelper.BubbleSortOptimized(const aAscending: Boolean = True): Integer; cdecl;
-var
-  i, j, o: Integer;
-  s: Boolean;
-begin
-  Result := High(Self);
-  if (Result < 1) then
-    Exit;
-  o := aAscending.Select(-1, 1);
-  for i := 0 to (Result - 1) do
-  begin
-    s := False;
-    for j := 1 to (Result - i) do
-      if (Sign(Self[j] - Self[j - 1]) = o) then
-      begin
-        Exchange((j - 1), j);
-        s := True;
-      end;
-    if not s then
-      Break;
-  end;
-end;
-
-{==============================================================================]
   <TIntegerArrayHelper.QuickSort>
   @action: QuickSort algorithm that is NOT based on recursion.
   @note: non-recursive. Returns High(arr).

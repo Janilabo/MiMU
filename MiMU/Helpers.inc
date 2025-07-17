@@ -179,8 +179,8 @@ type
     function Build(const item: XVar; const aSize: Integer = 1): XArr; overload; cdecl;
     function BuiltWith(const allowed: XArr): Boolean; overload; cdecl;
     function BuiltWithout(const forbidden: XArr): Boolean; overload; cdecl;
-    function Clear: Boolean; cdecl;
-    function Clone(const index: Integer = 0; const count: Integer = 2147483647): XArr; cdecl;
+    function Clear: Boolean; overload; cdecl;
+    function Clone(const index: Integer = 0; const count: Integer = 2147483647): XArr; overload; cdecl;
     function Clone(const ID: TIntegerArray): XArr; overload; cdecl;
     function Combine(const b: XArr): XArr; overload; cdecl;
     function Contains(const item: XVar; const index: Integer = 0): Boolean; cdecl;
@@ -268,6 +268,8 @@ type
     function Remove(const item: XVar; const all: Boolean): XArr; overload; cdecl;
     function Remove(const items: XArr; const index: Integer = 0; const all: Boolean = True): XArr; overload; cdecl;
     function Remove(const items: XArr; const all: Boolean): XArr; overload; cdecl;
+    function Resize(const aChange: Integer): Integer; overload; cdecl;
+    function Resize(const aChange: Integer; const null: XVar): Integer; overload; cdecl;
     function Reverse: Boolean; overload; cdecl;
     function Reversed: XArr; overload; cdecl;
     function Scan(const ID: TRange; const item: XVar; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
@@ -317,6 +319,7 @@ type
       function Mode: XVar; overload; cdecl;
       function Center: XVar; overload; cdecl;
       function BubbleSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+	  function BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
     {$ENDIF}
     {$IFDEF Integer}
       function Bounds: TRange; overload; cdecl;
@@ -333,7 +336,6 @@ type
       function MostFreq(const null: Integer = -2147483648): Integer; cdecl;
       function LeastFreq(const null: Integer = -2147483648): Integer; cdecl;
       function BubbleSort2(const aAscending: Boolean = True): Integer; cdecl;
-      function BubbleSortOptimized(const aAscending: Boolean = True): Integer; cdecl;
       function QuickSort(const aAscending: Boolean = True): Integer; cdecl;
       function QuickSort3W(const aAscending: Boolean = True): Integer; cdecl;
       function QSort(const aAscending: Boolean = True): Integer; cdecl;
