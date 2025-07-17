@@ -1178,6 +1178,23 @@ begin
 end;
 
 {==============================================================================]
+ <arr.ID(aAscending: Boolean): TIntegerArray>
+ @action: Returns indexes of arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function XArrHelp.ID(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+var
+  i, l, b, s: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  b := (Integer(not aAscending) * (l - 1));
+  s := IfThen(aAscending, 1, -1);
+  for i := 0 to (l - 1) do
+    Result[i] := (b + (s * i));
+end;
+
+{==============================================================================]
  <arr.IDs(aAscending: Boolean): TIntegerArray>
  @action: Returns IDs of arr as TIntegerArray.
  @note: None.
@@ -1481,6 +1498,21 @@ begin
         Result[r.Increase] := i;
   end;
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+ <arr.Locations: TIntegerArray>
+ @action: Simply returns arr indexes.
+ @note: None.
+[==============================================================================}
+function XArrHelp.Locations: TIntegerArray; overload; cdecl;
+var
+  i, r: Integer;
+begin
+  SetLength(Result, Length(Self));
+  r := 0;
+  for i := High(Result) downto 0 do
+    Result[r.Increase] := i;  
 end;
 
 {==============================================================================]
@@ -1819,6 +1851,20 @@ begin
         Result[r.Increase] := i;
   end;
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+ <arr.Positions: TIntegerArray>
+ @action: Simply returns arr indexes.
+ @note: None.
+[==============================================================================}
+function XArrHelp.Positions: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Result) do
+    Result[i] := i;  
 end;
 
 {==============================================================================]

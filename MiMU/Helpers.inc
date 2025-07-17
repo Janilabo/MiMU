@@ -226,6 +226,7 @@ type
     function Get(const ID: TRange): XArr; overload; cdecl;
     function Group: X2DArr; overload; cdecl;
     function Holds(const chain: XArr): Boolean; overload; cdecl;
+	function ID(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
     function IDs(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
     function IDs(const ID: TIntegerArray): XArr; overload; cdecl;
     function IDs(const ID: TIntegerArray; const item: XVar): XArr; overload; cdecl;
@@ -242,6 +243,7 @@ type
     function Location(const items: XArr; const index: Integer = 2147483647): Integer; overload; cdecl;
     function Locations(const item: XVar; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Locations(const items: XArr; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
+	function Locations: TIntegerArray; overload; cdecl;
     function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: XVar; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload; cdecl;
@@ -259,6 +261,7 @@ type
     function Position(const items: XArr; const index: Integer = 0): Integer; overload; cdecl;
     function Positions(const item: XVar; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: XArr; const index: Integer = 0): TIntegerArray; overload; cdecl;
+	function Positions: TIntegerArray; overload; cdecl;
     function Previous(const index: Integer; const count: Integer = 2147483647): XArr; overload; cdecl;
     function Push(const item: XVar): XArr; overload; cdecl;
     function Push(const items: XArr): XArr; overload; cdecl;
