@@ -710,6 +710,24 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Exchange(b: TArray): Integer> 
+ @action: Swaps array arr and array b.
+ @note: arr will be b and b will be arr.
+[==============================================================================}
+function XArrHelp.Exchange(var b: XArr): Integer; overload; cdecl;
+var
+  a: XArr;
+begin
+  Result := (Length(Self) + Length(b));
+  if (Result = 0) then
+    Exit;
+  a := Self.Dupe;
+  Self := b.Dupe;
+  b := a.Dupe;
+  SetLength(a, 0);
+end;
+
+{==============================================================================]
  <arr.Exclude(items: TArray; index: Integer): TArray>
  @action: Returns a new array with elements from items excluded, up to and including the specified index.
  @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
@@ -2489,24 +2507,6 @@ begin
     end;
   end;
   SetLength(Result, r);
-end;
-
-{==============================================================================]
- <arr.Swap(b: TArray): Integer> 
- @action: Swaps array arr and array b.
- @note: arr will be b and b will be arr.
-[==============================================================================}
-function XArrHelp.Swap(var b: XArr): Integer; overload; cdecl;
-var
-  a: XArr;
-begin
-  Result := (Length(Self) + Length(b));
-  if (Result = 0) then
-    Exit;
-  a := Self.Dupe;
-  Self := b.Dupe;
-  b := a.Dupe;
-  SetLength(a, 0);
 end;
 
 {==============================================================================]

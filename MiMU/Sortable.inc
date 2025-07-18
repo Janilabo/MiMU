@@ -428,3 +428,130 @@ begin
       Break;
   end;
 end;
+
+{==============================================================================]
+  <XArrHelp.QuickSorted(aAscending: Boolean): XArr>
+  @action: Returns array sorted by its own values, based on QuickSort algorithm.
+  @note: None.
+[==============================================================================}
+function XArrHelp.QuickSorted(const aAscending: Boolean = True): XArr; overload; cdecl;
+  procedure QS(var arr: XArr; const L, R: Integer);
+  var
+    i, j: Integer;
+    p: XVar;
+  begin
+    i := L;
+    j := R;
+    p := arr[(L + R) shr 1];
+    repeat
+      while (aAscending and (arr[i] < p)) or ((not aAscending) and (arr[i] > p)) do
+        Inc(i);
+      while (aAscending and (arr[j] > p)) or ((not aAscending) and (arr[j] < p)) do
+        Dec(j);
+      if (i <= j) then
+        Swap(arr[i.Increase], arr[j.Decrease]);
+    until (i > j);
+    if (L < j) then
+      QS(arr, L, j);
+    if (i < R) then
+      QS(arr, i, R);
+  end;
+var
+  a: Integer;
+begin
+  a := Length(Self);
+  Result := Self.Copy(0, a);
+  if (a > 1) then
+    QS(Result, 0, (a - 1));
+end;
+
+{==============================================================================]
+  <XArrHelp.QuickSorted(weight: TIntegerArray; aAscending: Boolean): TArray>
+  @action: Returns arr sorted by weight, based on QuickSort algorithm.
+  @note: Weight and arr must be the same length! Otherwise returns empty array.
+[==============================================================================}
+function XArrHelp.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): XArr; overload; cdecl;
+  procedure QS_IDs(var aID: TIntegerArray; const L, R: Integer);
+  var
+    i, j, p: Integer;
+  begin
+    i := L;
+    j := R;
+    p := weight[aID[(L + R) shr 1]];
+    repeat
+      while (aAscending and (weight[aID[i]] < p)) or ((not aAscending) and (weight[aID[i]] > p)) do
+        Inc(i);
+      while ((aAscending and (weight[aID[j]] > p)) or ((not aAscending) and  (weight[aID[j]] < p))) do
+        Dec(j);
+      if (i <= j) then
+        Swap(aID[i.Increase], aID[j.Decrease]);
+    until (i > j);
+    if (L < j) then
+      QS_IDs(aID, L, j);
+    if (i < R) then
+      QS_IDs(aID, i, R);
+  end;
+var
+  s, i: Integer;
+  r: TIntegerArray;
+begin
+  s := Length(Self);
+  if (s = Length(weight)) then
+  begin
+    SetLength(r, s);
+    for i := 0 to (s - 1) do
+      r[i] := i;
+    QS_IDs(r, 0, (s - 1));
+    SetLength(Result, s);
+    for i := 0 to (s - 1) do
+      Result[i] := Self[r[i]];
+    SetLength(r, 0);
+  end else
+    SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <XArrHelp.QuickSorted(weight: TIntegerArray; aAscending: Boolean): TArray>
+  @action: Returns arr sorted by weight, based on QuickSort algorithm.
+  @note: Weight and arr must be the same length! Otherwise returns empty array.
+[==============================================================================}
+function XArrHelp.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): XArr; overload; cdecl;
+  procedure QS_IDs(var aID: TIntegerArray; const L, R: Integer);
+  var
+    i, j: Integer;
+	p: Double;
+  begin
+    i := L;
+    j := R;
+    p := weight[aID[(L + R) shr 1]];
+    repeat
+      while (aAscending and (weight[aID[i]] < p)) or ((not aAscending) and (weight[aID[i]] > p)) do
+        Inc(i);
+      while ((aAscending and (weight[aID[j]] > p)) or ((not aAscending) and  (weight[aID[j]] < p))) do
+        Dec(j);
+      if (i <= j) then
+        Swap(aID[i.Increase], aID[j.Decrease]);
+    until (i > j);
+    if (L < j) then
+      QS_IDs(aID, L, j);
+    if (i < R) then
+      QS_IDs(aID, i, R);
+  end;
+var
+  s, i: Integer;
+  r: TIntegerArray;
+begin
+  s := Length(Self);
+  if (s = Length(weight)) then
+  begin
+    SetLength(r, s);
+    for i := 0 to (s - 1) do
+      r[i] := i;
+    QS_IDs(r, 0, (s - 1));
+    SetLength(Result, s);
+    for i := 0 to (s - 1) do
+      Result[i] := Self[r[i]];
+    SetLength(r, 0);
+  end else
+    SetLength(Result, 0);
+end;

@@ -200,6 +200,48 @@ type
     function Center: Integer; cdecl;
     function Str: string; cdecl;
   end;
+  
+function MiMU_Version: Double; cdecl;
+
+operator+(const a, b: TPoint): TPoint;
+operator+(const a, b: TBox): TBox;
+operator+(const a, b: TRange): TRange;
+
+operator-(const a, b: TPoint): TPoint;
+operator-(const a, b: TBox): TBox;
+operator-(const a, b: TRange): TRange;
+
+operator=(const a, b: TPoint): Boolean;
+operator=(const a, b: TBox): Boolean;
+operator=(const a, b: TRange): Boolean;
+
+operator<>(const a, b: TPoint): Boolean;
+operator<>(const a, b: TBox): Boolean;
+operator<>(const a, b: TRange): Boolean;
+
+function Max(a, b: string): string; overload; inline;
+function Max(a, b: Char): Char; overload; inline;
+function Min(a, b: string): string; overload; inline;
+function Min(a, b: Char): Char; overload; inline;
+
+function Point(const pX, pY: Integer): TPoint; overload; inline;
+function Point(const val: Integer = 0): TPoint; overload; inline;
+function Range(const rStart, rStop: Integer): TRange; overload; inline;
+function Range(const val: Integer = 0): TRange; overload; inline;
+function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
+function Box(const val: Integer = 0): TBox; overload; inline;
+
+function Swap(var A, B: Integer): Boolean; overload; inline;
+function Swap(var A, B: Int64): Boolean; overload; inline;
+function Swap(var A, B: Double): Boolean; overload; inline;
+function Swap(var A, B: string): Boolean; overload; inline;
+function Swap(var A, B: Char): Boolean; overload; inline;
+function Swap(var A, B: Boolean): Boolean; overload; inline;
+function Swap(var A, B: TPoint): Boolean; overload; inline;
+function Swap(var A, B: TBox): Boolean; overload; inline;
+function Swap(var A, B: TRange): Boolean; overload; inline;
+  
+type
   TRangeArray = array of TRange;
   T2DRangeArray = array of TRangeArray;
   {$DEFINE Sortable}
@@ -292,46 +334,6 @@ type
     class function Create(const rStart, rStop: Integer): TRange; overload; cdecl;
     class function Create(const value: Integer = 0): TRange; overload; cdecl;
   end;
-
-function MiMU_Version: Double; cdecl;
-
-operator+(const a, b: TPoint): TPoint;
-operator+(const a, b: TBox): TBox;
-operator+(const a, b: TRange): TRange;
-
-operator-(const a, b: TPoint): TPoint;
-operator-(const a, b: TBox): TBox;
-operator-(const a, b: TRange): TRange;
-
-operator=(const a, b: TPoint): Boolean;
-operator=(const a, b: TBox): Boolean;
-operator=(const a, b: TRange): Boolean;
-
-operator<>(const a, b: TPoint): Boolean;
-operator<>(const a, b: TBox): Boolean;
-operator<>(const a, b: TRange): Boolean;
-
-function Max(a, b: string): string; overload; inline;
-function Max(a, b: Char): Char; overload; inline;
-function Min(a, b: string): string; overload; inline;
-function Min(a, b: Char): Char; overload; inline;
-
-function Point(const pX, pY: Integer): TPoint; overload; inline;
-function Point(const val: Integer = 0): TPoint; overload; inline;
-function Range(const rStart, rStop: Integer): TRange; overload; inline;
-function Range(const val: Integer = 0): TRange; overload; inline;
-function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
-function Box(const val: Integer = 0): TBox; overload; inline;
-
-function Swap(var A, B: Integer): Boolean; overload; inline;
-function Swap(var A, B: Int64): Boolean; overload; inline;
-function Swap(var A, B: Double): Boolean; overload; inline;
-function Swap(var A, B: string): Boolean; overload; inline;
-function Swap(var A, B: Char): Boolean; overload; inline;
-function Swap(var A, B: Boolean): Boolean; overload; inline;
-function Swap(var A, B: TPoint): Boolean; overload; inline;
-function Swap(var A, B: TBox): Boolean; overload; inline;
-function Swap(var A, B: TRange): Boolean; overload; inline;
   
 implementation
 

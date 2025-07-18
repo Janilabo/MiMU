@@ -203,6 +203,7 @@ type
     function Excessive: Boolean; overload; cdecl; 
     function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
+	function Exchange(var b: XArr): Integer; overload; cdecl;
 	function Exclude(const items: XArr; const index: Integer = 2147483647): XArr; overload; cdecl;
     function Extend(const item: XVar): XArr; overload; cdecl;
     function Extend(const items: XArr): XArr; overload; cdecl;
@@ -293,7 +294,6 @@ type
     function SubarrayLocations(const pattern: XArr): TIntegerArray; overload; cdecl;
     function SubarrayPosition(const pattern: XArr): Integer; overload; cdecl;
     function SubarrayPositions(const pattern: XArr): TIntegerArray; overload; cdecl;
-    function Swap(var b: XArr): Integer; overload; cdecl;
     function Trade(var b: XArr): Integer; overload; cdecl;
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
     function Unduplicate: XArr; overload; cdecl;
@@ -325,6 +325,9 @@ type
       function Center: XVar; overload; cdecl;
       function BubbleSort(const aAscending: Boolean = True): Integer; overload; cdecl;
 	  function BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
+	  function QuickSorted(const aAscending: Boolean = True): XArr; overload; cdecl;
+	  function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): XArr; overload; cdecl;
+	  function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): XArr; overload; cdecl;
     {$ENDIF}
     {$IFDEF Integer}
       function Bounds: TRange; overload; cdecl;
