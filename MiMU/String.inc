@@ -247,14 +247,14 @@ end;
 
 {==============================================================================]
   <TStringHelper.Compare>
-  @action: Compares str with s.
-  @note: Results: 0=EQUAL, 1=str>T, -1=str<T
+  @action: Compares str with target.
+  @note: Results: 0=EQUAL, 1=str>target, -1=str<target
 [==============================================================================}
-function TStringHelper.Compare(const s: string): Integer; cdecl; inline;
+function TStringHelper.Compare(const target: string): Integer; cdecl; inline;
 begin
-  if (Self = s) then
+  if (Self = target) then
     Exit(0);
-  if (Self > s) then
+  if (Self > target) then
     Result := 1
   else
     Result := -1;

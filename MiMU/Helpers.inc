@@ -19,7 +19,7 @@ type
       function Negative: Boolean; cdecl; inline;
       function Positive: Boolean; cdecl; inline;
       function Neutral: Boolean; cdecl; inline;
-      function Compare(const T: Integer): Integer; cdecl; inline;
+      function Compare(const target: Integer): Integer; cdecl; inline;
       function Distance(const T: Integer): Integer; cdecl; inline;
       function Difference(const T: Integer): Integer; cdecl; inline;
       function Opposite: Integer; cdecl; inline;
@@ -42,7 +42,7 @@ type
       function MinDecimal: Double; cdecl;
       function MaxDecimal: Double; cdecl;
       function Accuracy(const a: Int32): Double; cdecl;
-      function Compare(const T: Double): Int32; cdecl; inline;
+      function Compare(const target: Double): Int32; cdecl; inline;
       function Distance(const T: Double): Double; cdecl; inline;
       function Difference(const T: Double): Double; cdecl; inline;
       function Opposite: Double; cdecl; inline;
@@ -71,7 +71,7 @@ type
       function Chars: TCharArray; cdecl;
       function Chunk(const a, b: Integer): string; cdecl;
       function Center(const size: Integer; const fill: Char = #32): string; cdecl;
-      function Compare(const s: string): Integer; cdecl; inline;
+      function Compare(const target: string): Integer; cdecl; inline;
       function Contains(const s: string; const index: Integer = 1): Boolean; cdecl;
       function Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer; cdecl;
       function Duplicate(const x: Integer = 2): string; cdecl;
@@ -111,7 +111,7 @@ type
       function Quotatation: string; cdecl;
     {$ENDIF}
     {$IFDEF Char}
-      // Nothing special yet :(
+      function Compare(const target: Char): Integer; cdecl; inline;
     {$ENDIF}
     {$IFDEF Boolean}
       function ToString: string; cdecl;

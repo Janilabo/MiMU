@@ -1,6 +1,7 @@
 {$I MiMU\Integer.inc}
 {$I MiMU\Double.inc}
 {$I MiMU\String.inc}
+{$I MiMU\Char.inc}
 {$I MiMU\Boolean.inc}
 {$I MiMU\TPoint.inc}
 {$I MiMU\TBox.inc}

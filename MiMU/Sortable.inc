@@ -473,39 +473,41 @@ end;
 function XArrHelp.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): XArr; overload; cdecl;
   procedure QS_IDs(var aID: TIntegerArray; const L, R: Integer);
   var
-    i, j, p: Integer;
+    i, j, c, w: Integer;
   begin
     i := L;
     j := R;
-    p := weight[aID[(L + R) shr 1]];
+    w := weight[aID[(L + R) shr 1]];
     repeat
-      while (aAscending and (weight[aID[i]] < p)) or ((not aAscending) and (weight[aID[i]] > p)) do
-        Inc(i);
-      while ((aAscending and (weight[aID[j]] > p)) or ((not aAscending) and  (weight[aID[j]] < p))) do
-        Dec(j);
+      c := weight[aID[i]].Compare(w);
+      while (aAscending and (c < 0)) or ((not aAscending) and (c > 0)) do
+        c := weight[aID[i.Increment]].Compare(w);
+      c := weight[aID[j]].Compare(w);
+      while (aAscending and (c > 0)) or ((not aAscending) and (c < 0)) do
+        c := weight[aID[j.Decrement]].Compare(w);
       if (i <= j) then
         Swap(aID[i.Increase], aID[j.Decrease]);
     until (i > j);
     if (L < j) then
-      QS_IDs(aID, L, j);
+	  QS_IDs(aID, L, j);
     if (i < R) then
-      QS_IDs(aID, i, R);
+	  QS_IDs(aID, i, R);
   end;
 var
-  s, i: Integer;
+  n, i: Integer;
   r: TIntegerArray;
 begin
-  s := Length(Self);
-  if (s = Length(weight)) then
+  n := Length(Self);
+  if ((n > 0) and (n = Length(weight))) then
   begin
-    SetLength(r, s);
-    for i := 0 to (s - 1) do
+    SetLength(Result, n);
+    Result := Self.Copy;
+    SetLength(r, n);
+    for i := 0 to (n - 1) do
       r[i] := i;
-    QS_IDs(r, 0, (s - 1));
-    SetLength(Result, s);
-    for i := 0 to (s - 1) do
+    QS_IDs(r, 0, (n - 1));
+    for i := 0 to (n - 1) do
       Result[i] := Self[r[i]];
-    SetLength(r, 0);
   end else
     SetLength(Result, 0);
 end;
@@ -518,40 +520,42 @@ end;
 function XArrHelp.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): XArr; overload; cdecl;
   procedure QS_IDs(var aID: TIntegerArray; const L, R: Integer);
   var
-    i, j: Integer;
-	p: Double;
+    i, j, c: Integer;
+	w: Double;
   begin
     i := L;
     j := R;
-    p := weight[aID[(L + R) shr 1]];
+    w := weight[aID[(L + R) shr 1]];
     repeat
-      while (aAscending and (weight[aID[i]] < p)) or ((not aAscending) and (weight[aID[i]] > p)) do
-        Inc(i);
-      while ((aAscending and (weight[aID[j]] > p)) or ((not aAscending) and  (weight[aID[j]] < p))) do
-        Dec(j);
+      c := weight[aID[i]].Compare(w);
+      while (aAscending and (c < 0)) or ((not aAscending) and (c > 0)) do
+        c := weight[aID[i.Increment]].Compare(w);
+      c := weight[aID[j]].Compare(w);
+      while (aAscending and (c > 0)) or ((not aAscending) and (c < 0)) do
+        c := weight[aID[j.Decrement]].Compare(w);
       if (i <= j) then
         Swap(aID[i.Increase], aID[j.Decrease]);
     until (i > j);
     if (L < j) then
-      QS_IDs(aID, L, j);
+	  QS_IDs(aID, L, j);
     if (i < R) then
-      QS_IDs(aID, i, R);
+	  QS_IDs(aID, i, R);
   end;
 var
-  s, i: Integer;
+  n, i: Integer;
   r: TIntegerArray;
 begin
-  s := Length(Self);
-  if (s = Length(weight)) then
+  n := Length(Self);
+  if ((n > 0) and (n = Length(weight))) then
   begin
-    SetLength(r, s);
-    for i := 0 to (s - 1) do
+    SetLength(Result, n);
+    Result := Self.Copy;
+    SetLength(r, n);
+    for i := 0 to (n - 1) do
       r[i] := i;
-    QS_IDs(r, 0, (s - 1));
-    SetLength(Result, s);
-    for i := 0 to (s - 1) do
+    QS_IDs(r, 0, (n - 1));
+    for i := 0 to (n - 1) do
       Result[i] := Self[r[i]];
-    SetLength(r, 0);
   end else
     SetLength(Result, 0);
 end;

@@ -265,7 +265,7 @@ type
     function DigitCount: Integer; cdecl;
     function Digitz: TIntegerArray; cdecl;
     function Digits: TIntegerArray; cdecl;
-    function Compare(const T: Int64): Integer; cdecl; inline;
+    function Compare(const target: Int64): Integer; cdecl; inline;
     function Distance(const T: Int64): Int64; cdecl; inline;
     function Difference(const T: Int64): Int64; cdecl; inline;
     function Opposite: Int64; cdecl; inline;

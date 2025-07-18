@@ -181,15 +181,15 @@ end;
 
 {==============================================================================]
  <TDoubleHelper.Compare>
- @action: Compares x with target T.
-          Results: 0=EQUAL, 1=x>T, -1=x<T
+ @action: Compares x with target target.
+          Results: 0=EQUAL, 1=x>target, -1=x<target
  @note: None
 [==============================================================================}
-function TDoubleHelper.Compare(const T: Double): Int32; cdecl; inline;
+function TDoubleHelper.Compare(const target: Double): Int32; cdecl; inline;
 begin
-  if (Self = T) then
+  if (Self = target) then
     Exit(0);
-  if (Self > T) then
+  if (Self > target) then
     Result := 1
   else
     Result := -1;
