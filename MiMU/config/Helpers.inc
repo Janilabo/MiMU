@@ -235,6 +235,7 @@ type
     function Includes(const item: XVar; const index: Integer = 2147483647): Boolean; cdecl;
 	function Indexed(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
 	function Indexes(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+	function Indices(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
     function Keep(const items: XArr; const index: Integer = 0): XArr; overload; cdecl;
     function LeastFrequent: XVar; overload; cdecl;
     function Len: Integer; overload; cdecl;
@@ -326,9 +327,9 @@ type
       function BubbleSort(const aAscending: Boolean = True): Integer; overload; cdecl;
 	  function BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
 	  function QuickSorted(const aAscending: Boolean = True): XArr; overload; cdecl;
-	  function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): XArr; overload; cdecl;
-	  function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): XArr; overload; cdecl;
     {$ENDIF}
+    function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): XArr; overload; cdecl;
+	function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): XArr; overload; cdecl;
     {$IFDEF Integer}
       function Bounds: TRange; overload; cdecl;
       function Bounds(var aSize: Integer): TRange; overload; cdecl;

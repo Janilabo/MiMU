@@ -1,4 +1,4 @@
-{$I Defines.inc}
+{$I config\Defines.inc}
 
 {==============================================================================]
  <var.TArray(aSize: Integer): TArray>
@@ -1326,6 +1326,28 @@ begin
   SetLength(Result, l);
   for i := 0 to (l - 1) do
     Result[i] := IfThen(aAscending, i, ((l - i) - 1));
+end;
+
+{==============================================================================]
+ <arr.Indices(aAscending: Boolean): TIntegerArray>
+ @action: Returns IDs of arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function XArrHelp.Indices(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+var
+  i, l, h: Integer;
+begin
+  l := Low(Self);
+  h := High(Self);
+  SetLength(Result, ((h - l) + 1));
+  case aAscending of
+    False:  
+    for i := l to h do
+      Result[h - i] := i;
+	True:
+    for i := l to h do
+      Result[i - l] := i;
+  end;
 end;    
 
 {==============================================================================]
@@ -1987,6 +2009,14 @@ begin
   for i := 0 to h do
     Result[l + i] := items[i];
 end;
+
+{==============================================================================]
+  <XArrHelp.QuickSorted(weight: TIntegerArray/TDoubleArray; aAscending: Boolean): TArray>
+  @action: Returns arr sorted by weight, based on QuickSort algorithm.
+  @note: Weight and arr must be the same length! Otherwise returns empty array.
+[==============================================================================}
+function XArrHelp.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): XArr; overload; cdecl; var w: Integer; {$DEFINE QuickSorted}{$I config\Skeletons.inc}{$DEFINE QuickSorted}
+function XArrHelp.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): XArr; overload; cdecl; var w: Double; {$DEFINE QuickSorted}{$I config\Skeletons.inc}{$DEFINE QuickSorted}
 
 {==============================================================================]
  <arr.Reject(items: TArray; index: Integer): TArray>

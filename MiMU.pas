@@ -245,15 +245,15 @@ type
   TRangeArray = array of TRange;
   T2DRangeArray = array of TRangeArray;
   {$DEFINE Sortable}
-    {$DEFINE Integer}{$I MiMU\Helpers.inc}{$UNDEF Integer}
-    {$DEFINE Double}{$I MiMU\Helpers.inc}{$UNDEF Double}
-    {$DEFINE string}{$I MiMU\Helpers.inc}{$UNDEF string}
-    {$DEFINE Char}{$I MiMU\Helpers.inc}{$UNDEF Char}
+    {$DEFINE Integer}{$I MiMU\config\Helpers.inc}{$UNDEF Integer}
+    {$DEFINE Double}{$I MiMU\config\Helpers.inc}{$UNDEF Double}
+    {$DEFINE string}{$I MiMU\config\Helpers.inc}{$UNDEF string}
+    {$DEFINE Char}{$I MiMU\config\Helpers.inc}{$UNDEF Char}
   {$UNDEF Sortable}
-  {$DEFINE Boolean}{$I MiMU\Helpers.inc}{$UNDEF Boolean}
-  {$DEFINE TPoint}{$I MiMU\Helpers.inc}{$UNDEF TPoint}
-  {$DEFINE TBox}{$I MiMU\Helpers.inc}{$UNDEF TBox}
-  {$DEFINE TRange}{$I MiMU\Helpers.inc}{$UNDEF TRange}
+  {$DEFINE Boolean}{$I MiMU\config\Helpers.inc}{$UNDEF Boolean}
+  {$DEFINE TPoint}{$I MiMU\config\Helpers.inc}{$UNDEF TPoint}
+  {$DEFINE TBox}{$I MiMU\config\Helpers.inc}{$UNDEF TBox}
+  {$DEFINE TRange}{$I MiMU\config\Helpers.inc}{$UNDEF TRange}
 type
   TInt64Helper = type helper for Int64
     function Even: Boolean; cdecl; inline;
@@ -290,30 +290,30 @@ type
   T1D = class
   public
   {$DEFINE Sortable}
-    {$DEFINE Integer}{$I MiMU\Classes.inc}{$UNDEF Integer}
-    {$DEFINE Double}{$I MiMU\Classes.inc}{$UNDEF Double}
-    {$DEFINE string}{$I MiMU\Classes.inc}{$UNDEF string}
-    {$DEFINE Char}{$I MiMU\Classes.inc}{$UNDEF Char}
+    {$DEFINE Integer}{$I MiMU\config\Classes.inc}{$UNDEF Integer}
+    {$DEFINE Double}{$I MiMU\config\Classes.inc}{$UNDEF Double}
+    {$DEFINE string}{$I MiMU\config\Classes.inc}{$UNDEF string}
+    {$DEFINE Char}{$I MiMU\config\Classes.inc}{$UNDEF Char}
   {$UNDEF Sortable}
-  {$DEFINE Boolean}{$I MiMU\Classes.inc}{$UNDEF Boolean}
-  {$DEFINE TPoint}{$I MiMU\Classes.inc}{$UNDEF TPoint}
-  {$DEFINE TBox}{$I MiMU\Classes.inc}{$UNDEF TBox}
-  {$DEFINE TRange}{$I MiMU\Classes.inc}{$UNDEF TRange}
+  {$DEFINE Boolean}{$I MiMU\config\Classes.inc}{$UNDEF Boolean}
+  {$DEFINE TPoint}{$I MiMU\config\Classes.inc}{$UNDEF TPoint}
+  {$DEFINE TBox}{$I MiMU\config\Classes.inc}{$UNDEF TBox}
+  {$DEFINE TRange}{$I MiMU\config\Classes.inc}{$UNDEF TRange}
   end;
 {$UNDEF T1D}
 {$DEFINE T2D}
   T2D = class
   public
    {$DEFINE Sortable}
-    {$DEFINE Integer}{$I MiMU\Classes.inc}{$UNDEF Integer}
-    {$DEFINE Double}{$I MiMU\Classes.inc}{$UNDEF Double}
-    {$DEFINE string}{$I MiMU\Classes.inc}{$UNDEF string}
-    {$DEFINE Char}{$I MiMU\Classes.inc}{$UNDEF Char}
+    {$DEFINE Integer}{$I MiMU\config\Classes.inc}{$UNDEF Integer}
+    {$DEFINE Double}{$I MiMU\config\Classes.inc}{$UNDEF Double}
+    {$DEFINE string}{$I MiMU\config\Classes.inc}{$UNDEF string}
+    {$DEFINE Char}{$I MiMU\config\Classes.inc}{$UNDEF Char}
   {$UNDEF Sortable}
-  {$DEFINE Boolean}{$I MiMU\Classes.inc}{$UNDEF Boolean}
-  {$DEFINE TPoint}{$I MiMU\Classes.inc}{$UNDEF TPoint}
-  {$DEFINE TBox}{$I MiMU\Classes.inc}{$UNDEF TBox}
-  {$DEFINE TRange}{$I MiMU\Classes.inc}{$UNDEF TRange}
+  {$DEFINE Boolean}{$I MiMU\config\Classes.inc}{$UNDEF Boolean}
+  {$DEFINE TPoint}{$I MiMU\config\Classes.inc}{$UNDEF TPoint}
+  {$DEFINE TBox}{$I MiMU\config\Classes.inc}{$UNDEF TBox}
+  {$DEFINE TRange}{$I MiMU\config\Classes.inc}{$UNDEF TRange}
   end;
 {$UNDEF T2D}
   _TPoint = class
