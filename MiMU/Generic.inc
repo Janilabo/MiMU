@@ -2823,6 +2823,33 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Irregular: Boolean>
+ @action: Returns true if array contains arrays with different lengths (array not symmetrict)
+ @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
+[==============================================================================}
+function X2DArrHelp.Irregular: Boolean; overload; cdecl;
+var
+  i, a, l, h: Integer;
+begin
+  if (Length(Self) = 0) then
+    Exit(False);
+  l := Length(Self[0]);
+  h := l;
+  for i := 1 to High(Self) do
+  begin
+    a := Length(Self[i]);
+    if (a < l) then
+      l := a
+	else
+      if (a > h) then
+        h := a;
+    if (l <> h) then
+      Exit(True);
+  end;
+  Result := False;
+end;
+
+{==============================================================================]
  <arr.Jagged: Boolean>
  @action: Returns true if array contains arrays with different lengths (array not symmetrict)
  @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True

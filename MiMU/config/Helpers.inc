@@ -415,6 +415,7 @@ type
     function Empty: Boolean; overload; cdecl;
 	function Flat: XArr; overload; cdecl;
 	function Flatten: XArr; overload; cdecl;
+	function Irregular: Boolean; overload; cdecl;
 	function Jagged: Boolean; overload; cdecl;
     function Merge: XArr; overload; cdecl;
 	function Ragged: Boolean; overload; cdecl;
