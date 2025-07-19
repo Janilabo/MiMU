@@ -452,127 +452,21 @@ begin
   Result.Y2 := val;
 end;  
 
-function Swap(var A, B: Integer): Boolean; overload; inline;
-var
-  T: Integer;
-begin
-  Result := (A <> B);
-  T := A;
-  A := B;
-  B := T;
-end;
+function Swap(var A, B: Integer): Boolean; overload; inline; var C: Integer; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: Int64): Boolean; overload; inline; var C: Int64; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: Double): Boolean; overload; inline; var C: Double; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: string): Boolean; overload; inline; var C: string; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: Char): Boolean; overload; inline; var C: Char; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: Boolean): Boolean; overload; inline; var C: Boolean; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: TPoint): Boolean; overload; inline; var C: TPoint; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: TBox): Boolean; overload; inline; var C: TBox; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: TRange): Boolean; overload; inline; var C: TRange; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
 
-function Swap(var A, B: Int64): Boolean; overload; inline;
-var
-  T: Int64;
-begin
-  Result := (A <> B);
-  T := A;
-  A := B;
-  B := T;
-end;
+function Max(A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Max}
+function Max(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Max}
 
-function Swap(var A, B: Double): Boolean; overload; inline;
-var
-  T: Double;
-begin
-  Result := (A <> B);
-  T := A;
-  A := B;
-  B := T;
-end;
-
-function Swap(var A, B: string): Boolean; overload; inline;
-var
-  T: string;
-begin
-  Result := (A <> B);
-  T := A;
-  A := B;
-  B := T;
-end;
-
-function Swap(var A, B: Char): Boolean; overload; inline;
-var
-  T: Char;
-begin
-  Result := (A <> B);
-  T := A;
-  A := B;
-  B := T;
-end;
-
-function Swap(var A, B: Boolean): Boolean; overload; inline;
-var
-  T: Boolean;
-begin
-  Result := (A <> B);
-  T := A;
-  A := B;
-  B := T;
-end;
-
-function Swap(var A, B: TPoint): Boolean; overload; inline;
-var
-  T: TPoint;
-begin
-  Result := (A <> B);
-  T := A;
-  A := B;
-  B := T;
-end;
-
-function Swap(var A, B: TBox): Boolean; overload; inline;
-var
-  T: TBox;
-begin
-  Result := (A <> B);
-  T := A;
-  A := B;
-  B := T;
-end;
-
-function Swap(var A, B: TRange): Boolean; overload; inline;
-var
-  T: TRange;
-begin
-  Result := (A <> B);
-  T := A;
-  A := B;
-  B := T;
-end;
-
-function Max(a, b: string): string; overload; inline;
-begin
-  if (a > b) then
-    Result := a
-  else
-    Result := b;
-end;
-
-function Max(a, b: Char): Char; overload; inline;
-begin
-  if (a > b) then
-    Result := a
-  else
-    Result := b;
-end;
-
-function Min(a, b: string): string; overload; inline;
-begin
-  if (a < b) then
-    Result := a
-  else
-    Result := b;
-end;
-
-function Min(a, b: Char): Char; overload; inline;
-begin
-  if (a < b) then
-    Result := a
-  else
-    Result := b;
-end;
+function Min(A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Min}
+function Min(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Min}
 
 class function TIA.Init(var arr: TIntegerArray): Integer; overload; cdecl;
 begin
@@ -637,7 +531,6 @@ begin
   end;
   Result := (l - Length(arr));
 end;
-
 
 {$mode objfpc}{$H+}
 

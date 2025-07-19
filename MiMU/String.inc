@@ -250,15 +250,7 @@ end;
   @action: Compares str with target.
   @note: Results: 0=EQUAL, 1=str>target, -1=str<target
 [==============================================================================}
-function TStringHelper.Compare(const target: string): Integer; cdecl; inline;
-begin
-  if (Self = target) then
-    Exit(0);
-  if (Self > target) then
-    Result := 1
-  else
-    Result := -1;
-end;
+function TStringHelper.Compare(const target: string): Integer; cdecl; inline; {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
 
 {==============================================================================]
   <TStringHelper.Contains>

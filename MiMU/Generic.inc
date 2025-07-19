@@ -2015,8 +2015,8 @@ end;
   @action: Returns arr sorted by weight, based on QuickSort algorithm.
   @note: Weight and arr must be the same length! Otherwise returns empty array.
 [==============================================================================}
-function XArrHelp.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): XArr; overload; cdecl; var w: Integer; {$DEFINE QuickSorted}{$I config\Skeletons.inc}{$DEFINE QuickSorted}
-function XArrHelp.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): XArr; overload; cdecl; var w: Double; {$DEFINE QuickSorted}{$I config\Skeletons.inc}{$DEFINE QuickSorted}
+function XArrHelp.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): XArr; overload; cdecl; var w: Integer; {$DEFINE Skeleton_QuickSorted}{$I config\Skeletons.inc}{$DEFINE Skeleton_QuickSorted}
+function XArrHelp.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): XArr; overload; cdecl; var w: Double; {$DEFINE Skeleton_QuickSorted}{$I config\Skeletons.inc}{$DEFINE Skeleton_QuickSorted}
 
 {==============================================================================]
  <arr.Reject(items: TArray; index: Integer): TArray>

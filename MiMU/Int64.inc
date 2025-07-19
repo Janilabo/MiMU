@@ -132,15 +132,7 @@ end;
           Results: 0=EQUAL, 1=x>target, -1=x<target
  @note: None
 [==============================================================================}
-function TInt64Helper.Compare(const target: Int64): Integer; cdecl; inline;
-begin
-  if (Self = target) then
-    Exit(0);
-  if (Self > target) then
-    Result := 1
-  else
-    Result := -1;
-end;
+function TInt64Helper.Compare(const target: Int64): Integer; cdecl; inline;  {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
 
 {==============================================================================]
  <TInt64Helper.Distance>

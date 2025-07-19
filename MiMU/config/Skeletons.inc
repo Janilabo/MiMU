@@ -1,4 +1,42 @@
-{$IFDEF QuickSorted}
+{$IFDEF Skeleton_Swap}
+begin
+  Result := (A <> B);
+  C := A;
+  A := B;
+  B := C;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_Max}
+begin
+  if (A > B) then
+    Result := A
+  else
+    Result := B;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_Min}
+begin
+  if (A < B) then
+    Result := A
+  else
+    Result := B;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_Compare}
+begin
+  if (Self = target) then
+    Exit(0);
+  if (Self > target) then
+    Result := 1
+  else
+    Result := -1;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_QuickSorted}
   procedure QS_IDs(var aID: TIntegerArray; const L, R: Integer);
   var
     i, j, c: Integer;

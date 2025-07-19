@@ -185,15 +185,7 @@ end;
           Results: 0=EQUAL, 1=x>target, -1=x<target
  @note: None
 [==============================================================================}
-function TDoubleHelper.Compare(const target: Double): Int32; cdecl; inline;
-begin
-  if (Self = target) then
-    Exit(0);
-  if (Self > target) then
-    Result := 1
-  else
-    Result := -1;
-end;
+function TDoubleHelper.Compare(const target: Double): Int32; cdecl; inline; {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
 
 {==============================================================================]
  <Double_Distance>
