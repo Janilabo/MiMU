@@ -413,9 +413,12 @@ type
   X2DArrHelp = type helper for X2DArr
     function Blank: Boolean; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
-    function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
-    function Size: Int64; overload; cdecl;
-    function Merge: XArr; overload; cdecl;
-    function TArray: XArr; overload; cdecl;
 	function Flat: XArr; overload; cdecl;
+	function Flatten: XArr; overload; cdecl;
+	function Jagged: Boolean; overload; cdecl;
+    function Merge: XArr; overload; cdecl;
+	function Ragged: Boolean; overload; cdecl;
+	function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
+    function Size: Int64; overload; cdecl;
+	function TArray: XArr; overload; cdecl;
   end;

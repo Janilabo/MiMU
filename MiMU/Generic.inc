@@ -2214,18 +2214,18 @@ begin
     case ID.Ascending of
       True:
       for i := ID.start to ID.stop do
-	    if (r >= limit) then
-		  Break
-		else
+        if (r >= limit) then
+	  Break
+        else
           if (Self[i] = item) then
             Result[r.Increase] := i;
       False:
       for i := ID.start downto ID.stop do
-	    if (r >= limit) then
-		  Break
-		else
+        if (r >= limit) then
+          Break
+        else
           if (Self[i] = item) then
-		    Result[r.Increase] := i;
+	    Result[r.Increase] := i;
     end;
   end;
   SetLength(Result, r);
@@ -2245,11 +2245,11 @@ begin
   begin
     SetLength(Result, Length(ID));
     for i := 0 to High(ID) do
-	  if (r >= limit) then
-	    Break
-	  else
+      if (r >= limit) then
+        Break
+      else
         if (Self[ID[i]] = item) then
-	      Result[r.Increase] := ID[i];
+	  Result[r.Increase] := ID[i];
   end;
   SetLength(Result, r);
 end;
@@ -2772,7 +2772,7 @@ var
 begin
   for i := 0 to High(Self) do
     if (Length(Self[i]) > 0) then
-	  Exit(False);
+      Exit(False);
   Result := (Length(Self) > 0);
 end;
 
@@ -2784,6 +2784,99 @@ end;
 function X2DArrHelp.Empty: Boolean; overload; cdecl;
 begin
   Result := (Length(Self) = 0);
+end;
+
+{==============================================================================]
+ <arr.Flat: TArray>
+ @action: Merges 2D array to 1D.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+[==============================================================================}
+function X2DArrHelp.Flat: XArr; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+    Result := Concat(Result, Self[i]);
+end;
+
+{==============================================================================]
+ <arr.Flatten: TArray>
+ @action: Merges 2D array to 1D.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+[==============================================================================}
+function X2DArrHelp.Flatten: XArr; overload; cdecl;
+var
+  r, c, i, j, l: Integer;
+begin
+  r := Length(Self);
+  if (r = 0) then
+    Exit([]);
+  c := 0;
+  for i := 0 to (r - 1) do
+    c := (c + Length(Self[i]));
+  SetLength(Result, c);
+  l := 0;
+  for i := 0 to (r - 1) do
+    for j := 0 to (Length(Self[i]) - 1) do
+      Result[l.Increase] := Self[i][j];
+end;
+
+{==============================================================================]
+ <arr.Jagged: Boolean>
+ @action: Returns true if array contains arrays with different lengths (array not symmetrict)
+ @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
+[==============================================================================}
+function X2DArrHelp.Jagged: Boolean; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  if (Length(Self) > 0) then
+    l := Length(Self[0]);
+  for i := 1 to High(Self) do
+    if (Length(Self[i]) <> l) then
+      Exit(True);
+  Result := False;
+end;
+
+{==============================================================================]
+ <arr.Merge: TArray>
+ @action: Merges 2D array to 1D.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+[==============================================================================}
+function X2DArrHelp.Merge: XArr; overload; cdecl;
+var
+  i, j, l: Integer;
+begin
+  SetLength(Result, Self.Size);
+  l := Length(Result);
+  if (l > 0) then
+  for i := High(Self) downto 0 do
+    for j := High(Self[i]) downto 0 do
+      Result[l.Decrement] := Self[i][j];
+end;
+
+{==============================================================================]
+ <arr.Ragged: Boolean>
+ @action: Returns true if array contains arrays with different lengths (array not symmetrict)
+ @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
+[==============================================================================}
+function X2DArrHelp.Ragged: Boolean; overload; cdecl;
+var
+  i: Integer;
+  h: specialize THashSet<Integer>;
+begin
+  h := specialize THashSet<Integer>.Create;
+  try
+    for i := 0 to High(Self) do
+      if (h.Count < 2) then
+        h.Add(Length(Self[i]))
+      else
+        Exit(True);
+  finally
+    h.Free;
+  end;
+  Result := False;
 end;
 
 {==============================================================================]
@@ -2819,23 +2912,6 @@ begin
 end;
 
 {==============================================================================]
- <arr.Merge: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
-[==============================================================================}
-function X2DArrHelp.Merge: XArr; overload; cdecl;
-var
-  i, j, l: Integer;
-begin
-  SetLength(Result, Self.Size);
-  l := Length(Result);
-  if (l > 0) then
-  for i := High(Self) downto 0 do
-    for j := High(Self[i]) downto 0 do
-      Result[l.Decrement] := Self[i][j];
-end;
-
-{==============================================================================]
  <arr.TArray: TArray>
  @action: Merges 2D array to 1D.
  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
@@ -2852,20 +2928,6 @@ begin
     for j := 0 to High(Self[i]) do
       Result[l + j] := Self[i][j];
   end;
-end;
-
-{==============================================================================]
- <arr.Flat: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
-[==============================================================================}
-function X2DArrHelp.Flat: XArr; overload; cdecl;
-var
-  i: Integer;
-begin
-  SetLength(Result, 0);
-  for i := 0 to High(Self) do
-    Result := Concat(Result, Self[i]);
 end;
 
 {==============================================================================]
