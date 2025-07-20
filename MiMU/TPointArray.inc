@@ -252,3 +252,31 @@ function TPointArrayHelper.FloodFill(const start: TPoint; const scan8W: Boolean 
 begin
   Result := Self.FloodFill(start, Self.Bounds, scan8W);
 end;
+
+{==============================================================================]
+ <TPointArrayHelper.Xs>
+ @action: Returns X-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.Xs: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := Self[i].X;
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Ys>
+ @action: Returns Y-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.Ys: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := Self[i].Y;
+end;

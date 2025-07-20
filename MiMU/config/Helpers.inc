@@ -404,10 +404,16 @@ type
       function Edge(const scan8W: Boolean = False): TPointArray; cdecl;
       function FloodFill(const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; cdecl;
       function FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; cdecl;
+	  function Xs: TIntegerArray; overload; cdecl;
+	  function Ys: TIntegerArray; overload; cdecl;
     {$ENDIF}	
     {$IFDEF TRange}
+	  function Bounds: TRange; overload; cdecl;
+	  function Range: TRange; overload; cdecl;
       function TIA: TIntegerArray; cdecl;
       function T2DIA: T2DIntegerArray; cdecl;
+	  function Starting: TIntegerArray; overload; cdecl;
+	  function Stopping: TIntegerArray; overload; cdecl;
     {$ENDIF}	
     end;
   X2DArrHelp = type helper for X2DArr
