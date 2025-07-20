@@ -1442,18 +1442,17 @@ begin
         for a := 0 to (r - 1) do
         begin
           l := Length(Result[a]);
-          m := True;
           for b := 0 to (l - 1) do
-            if ((Self[i] = Result[a][b]) or (not m)) then
-              Break
-            else
-              m := s.Value(Abs(Self[i] - Result[a][b]));
-          if m then
-          begin
-            SetLength(Result[a], (l + 1));
+		  begin
+		    m := ((Self[i] = Result[a][b]) or s.Value(Abs(Self[i] - Result[a][b])));
+			if not m then
+              Continue;
+		    SetLength(Result[a], (l + 1));
             Result[a][l] := Self[i];
             Break;
           end;
+		  if m then
+		    Break;
         end;
         if not m then
         begin
@@ -1504,19 +1503,18 @@ begin
       m := False;
       for j := 0 to (r - 1) do
       begin
-        m := True;
         l := Length(Result[j]);
         for k := 0 to (l - 1) do
-          if ((a[i] = Result[j][k]) or (not m)) then
-            Break
-          else
-            m := s.Value(Abs(a[i] - Result[j][k]));
-        if m then
-        begin
+		begin
+          m := ((a[i] = Result[j][k]) or s.Value(Abs(a[i] - Result[j][k])));
+          if not m then
+            Continue;
           SetLength(Result[j], (l + 1));
           Result[j][l] := a[i];
           Break;
         end;
+		if m then
+		  Break;
       end;
       if not m then
       begin
@@ -1652,6 +1650,133 @@ end;
 function TIntegerArrayHelper.Groub(const diff: Integer): T2DIntegerArray; overload; cdecl;
 begin
   Result := Self.Groub(0, diff);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Clique>
+  @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
+          that are within a given difference range (minDiff, maxDiff).
+  @note: Strict splitting!
+[==============================================================================}
+function TIntegerArrayHelper.Clique(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+var
+  a, b, h, l, i, r: Integer;
+  m: Boolean;
+  s: TRange;
+begin
+  r := 0;
+  h := High(Self);
+  if (h > -1) then
+  begin
+    SetLength(Result, (h + 1));
+    SetLength(Result[0], 1);
+    Result[0][0] := Self[0];
+    if (h > 0) then
+    begin
+      r := 1;
+      s.Build(minDiff, maxDiff);
+      for i := 1 to h do
+      begin
+        m := False;
+        for a := 0 to (r - 1) do
+        begin
+          l := Length(Result[a]);
+          m := True;
+          for b := 0 to (l - 1) do
+            if ((Self[i] = Result[a][b]) or (not m)) then
+              Break
+            else
+              m := s.Value(Abs(Self[i] - Result[a][b]));
+          if m then
+          begin
+            SetLength(Result[a], (l + 1));
+            Result[a][l] := Self[i];
+            Break;
+          end;
+        end;
+        if not m then
+        begin
+          SetLength(Result[r], 1);
+          Result[r.Increase][0] := Self[i];
+        end;
+      end;
+    end;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Clique>
+  @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
+          that are within a given difference/distance (diff).
+  @note: None
+[==============================================================================}
+function TIntegerArrayHelper.Clique(const diff: Integer): T2DIntegerArray; overload; cdecl;
+begin
+  Result := Self.Clique(0, diff);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Knit>
+  @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
+          that are within a given difference range (minDiff, maxDiff).
+  @note: Alternative for TIntegerArray_Clique. Based on Binary Sorted array.
+[==============================================================================}
+function TIntegerArrayHelper.Knit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+var
+  a: TIntegerArray;
+  h, i, j, r, l, k: Integer;
+  m: Boolean;
+  s: TRange;
+begin
+  h := High(Self);
+  if (h > -1) then
+  begin
+    a := Self.BinarySorted;
+    SetLength(Result, Length(a));
+    SetLength(Result[0], 1);
+    Result[0][0] := a[0];
+    r := 1;
+    s.Build(minDiff, maxDiff);
+    for i := 1 to h do
+    begin
+      m := False;
+      for j := 0 to (r - 1) do
+      begin
+        m := True;
+        l := Length(Result[j]);
+        for k := 0 to (l - 1) do
+          if ((a[i] = Result[j][k]) or (not m)) then
+            Break
+          else
+            m := s.Value(Abs(a[i] - Result[j][k]));
+        if m then
+        begin
+          SetLength(Result[j], (l + 1));
+          Result[j][l] := a[i];
+          Break;
+        end;
+      end;
+      if not m then
+      begin
+        SetLength(Result[r], 1);
+        Result[r.Increase][0] := a[i];
+      end;
+    end;
+    SetLength(a, 0);
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Knit>
+  @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
+          that are within a given difference/distance (diff).
+  @note: Alternative for TIntegerArray_Clique. Based on Binary Sorted array.
+[==============================================================================}
+function TIntegerArrayHelper.Knit(const diff: Integer): T2DIntegerArray; overload; cdecl;
+begin
+  Result := Self.Knit(0, diff);
 end;
 
 {==============================================================================]
