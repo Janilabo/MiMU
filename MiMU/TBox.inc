@@ -233,6 +233,28 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Horizontal>
+  @action: Returns bx.X1 and bx.X2 as TRange.
+  @note: Horitonzal-axis.
+[==============================================================================}
+function TBox.Horizontal: TRange; cdecl;
+begin
+  Result.start := Self.X1;
+  Result.stop := Self.X2;
+end;
+
+{==============================================================================]
+  <TBox.Vertical>
+  @action: Returns bx.Y1 and bx.Y2 as TRange.
+  @note: Vertical-axis.
+[==============================================================================}
+function TBox.Vertical: TRange; cdecl;
+begin
+  Result.start := Self.Y1;
+  Result.stop := Self.Y2;
+end;
+
+{==============================================================================]
   <TBox.Expand>
   @action: Returns bx that has been expanded fully by change.
   @note: Works with positive values only.

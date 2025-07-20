@@ -280,3 +280,47 @@ begin
   for i := 0 to High(Self) do
     Result[i] := Self[i].Y;
 end;
+
+{==============================================================================]
+ <TPointArrayHelper.Horizontal>
+ @action: Returns Horizontal-axis from TPointArray as TRange.
+ @note: MinMax X-values.
+[==============================================================================}
+function TPointArrayHelper.Horizontal: TRange; overload; cdecl;
+var
+  i: Integer;
+begin
+  if (Length(Self) > 0) then
+  begin
+    Result.Create(Self[0].X, Self[0].X);
+    for i := 0 to High(Self) do
+      if (Self[i].X < Result.start) then
+        Result.start := Self[i].X
+      else
+        if (Self[i].X > Result.stop) then
+          Result.stop := Self[i].X;
+  end else
+    Result := Default(TRange);
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Vertical>
+ @action: Returns Vertical-axis from TPointArray as TRange.
+ @note: MinMax Y-values.
+[==============================================================================}
+function TPointArrayHelper.Vertical: TRange; overload; cdecl;
+var
+  i: Integer;
+begin
+  if (Length(Self) > 0) then
+  begin
+    Result.Create(Self[0].Y, Self[0].Y);
+    for i := 0 to High(Self) do
+      if (Self[i].Y < Result.start) then
+        Result.start := Self[i].Y
+      else
+        if (Self[i].Y > Result.stop) then
+          Result.stop := Self[i].Y;
+  end else
+    Result := Default(TRange);
+end;

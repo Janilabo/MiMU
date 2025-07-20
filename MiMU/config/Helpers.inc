@@ -406,6 +406,10 @@ type
       function FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; cdecl;
 	  function Xs: TIntegerArray; overload; cdecl;
 	  function Ys: TIntegerArray; overload; cdecl;
+	  function Vertical: TRange; overload; cdecl;
+	  function Horizontal: TRange; overload; cdecl;
+    {$ENDIF}
+    {$IFDEF TBox}
     {$ENDIF}	
     {$IFDEF TRange}
 	  function Bounds: TRange; overload; cdecl;
