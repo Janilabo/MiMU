@@ -52,6 +52,19 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Construct>
+  @action: Constructs TBox with XS, YS, XE, YE.
+  @note: None.
+[==============================================================================}
+class function TBox.Construct(const XS, YS, XE, YE: Integer): TBox; overload; cdecl;
+begin
+  Result.X1 := XS;
+  Result.Y1 := YS;
+  Result.X2 := XE;
+  Result.Y2 := YE;
+end;
+
+{==============================================================================]
   <TBox.Build>
   @action: Creates TBox using minX, minY, maxX, maxY 
   @note: Min-Maxed. Creates only valid TBoxes. Returns area.
@@ -992,6 +1005,7 @@ end;
   <_TBox.Create>
   @action: We simply build using value. 
   @note: Constructor.
+ 
 [==============================================================================}
 class function _TBox.Create(const value: Integer = 0): TBox; overload; cdecl;
 begin

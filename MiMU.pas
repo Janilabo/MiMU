@@ -63,6 +63,7 @@ type
     X, Y: Integer;
     constructor Create(const pX, pY: Integer); overload;
     constructor Create(const value: Integer); overload;
+    class function Construct(const pX, pY: Integer): TPoint; overload; cdecl; static;
     function Build(const pX, pY: Integer): TPoint; cdecl; inline;
     function InCircle(const center: TPoint; const radius: Double): Boolean; cdecl; inline;
     function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; cdecl; inline;
@@ -80,6 +81,7 @@ type
     start, stop: Integer;
     constructor Create(const rStart, rStop: Integer); overload;
     constructor Create(const value: Integer); overload;
+    class function Construct(const rStart, rStop: Integer): TRange; overload; cdecl; static;
     function Neutral: Boolean; cdecl;
     function Ascend: TRange; cdecl;
     function Ascending: Boolean; cdecl;
@@ -140,6 +142,7 @@ type
     constructor Create(const valueX, valueY: Integer); overload;
     constructor Create(const target: TPoint); overload;
     constructor Create(const value: Integer); overload;
+    class function Construct(const XS, YS, XE, YE: Integer): TBox; overload; cdecl; static;
     function Build(const minX, minY, maxX, maxY: Integer): Integer; overload; cdecl;
     function Build(const top, bottom: TPoint): Integer; overload; cdecl;
     function Build(const valueX, valueY: Integer): Integer; overload; cdecl;
@@ -198,7 +201,7 @@ type
     function Centered(const toArea: TBox): TBox; cdecl;
     function CenterVertically(const toArea: TBox): TBox; cdecl;
     function CenterHorizontally(const toArea: TBox): TBox; cdecl;
-	function Inside(const target: TBox): Boolean; overload; cdecl;
+    function Inside(const target: TBox): Boolean; overload; cdecl;
   end;
   TBoxArray = array of TBox;
   T2DBoxArray = array of TBoxArray;

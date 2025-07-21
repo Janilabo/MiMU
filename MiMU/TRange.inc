@@ -92,6 +92,17 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Construct>
+  @action: Constructs TRange with rStart and rStop.
+  @note: None.
+[==============================================================================}
+class function TRange.Construct(const rStart, rStop: Integer): TRange; overload; cdecl;
+begin
+  Result.start := rStart;
+  Result.stop := rStop;
+end;
+
+{==============================================================================]
   <TRange.Build>
   @action: Create a TRange with rStart and rStop, using Min and Max for safety.
   @note: None.

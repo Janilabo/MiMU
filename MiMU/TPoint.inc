@@ -20,6 +20,17 @@ begin
 end;
 
 {==============================================================================]
+  <TPoint.Create>
+  @action: Constructs new TPoint with pX and pY.
+  @note: None.
+[==============================================================================}
+class function TPoint.Construct(const pX, pY: Integer): TPoint; overload; cdecl;
+begin
+  Result.X := pX;
+  Result.Y := pY;
+end;
+
+{==============================================================================]
   <TPoint.Build>
   @action: Returns TPoint with X and Y.
   @note: None.
@@ -176,7 +187,7 @@ begin
       for c := 0 to (columns - 1) do
       begin
         x := (Self.X + (c * (spaceHorizontal + 1)));
-		Result[((r * columns) + c)].Create(x, y);
+		Result[(r * columns) + c].Create(x, y);
       end;
     end;
   end else
