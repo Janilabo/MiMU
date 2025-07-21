@@ -282,6 +282,36 @@ begin
 end;
 
 {==============================================================================]
+ <TPointArrayHelper.X>
+ @action: Returns X-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.XValues: TIntegerArray; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  while (l.Decrement > -1) do
+    Result[l] := Self[l].X;
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Y>
+ @action: Returns Y-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.YValues: TIntegerArray; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  while (l.Decrement > -1) do
+    Result[l] := Self[l].Y;
+end;
+
+{==============================================================================]
  <TPointArrayHelper.Horizontal>
  @action: Returns Horizontal-axis from TPointArray as TRange.
  @note: MinMax X-values.

@@ -109,3 +109,12 @@ begin
   for i := 0 to High(Self) do
     Result[i] := Self[i].stop;
 end;
+
+function TRangeArrayHelper.Normalized: TRangeArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i].Create(Min(Self[i].start, Self[i].stop), Max(Self[i].start, Self[i].stop));
+end;

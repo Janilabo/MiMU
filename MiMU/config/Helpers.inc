@@ -410,6 +410,8 @@ type
       function FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; cdecl;
 	  function Xs: TIntegerArray; overload; cdecl;
 	  function Ys: TIntegerArray; overload; cdecl;
+	  function XValues: TIntegerArray; overload; cdecl;
+	  function YValues: TIntegerArray; overload; cdecl;
 	  function Vertical: TRange; overload; cdecl;
 	  function Horizontal: TRange; overload; cdecl;
     {$ENDIF}
@@ -422,6 +424,7 @@ type
       function T2DIA: T2DIntegerArray; cdecl;
 	  function Starting: TIntegerArray; overload; cdecl;
 	  function Stopping: TIntegerArray; overload; cdecl;
+	  function Normalized: TRangeArray; overload; cdecl;
     {$ENDIF}	
     end;
   X2DArrHelp = type helper for X2DArr
