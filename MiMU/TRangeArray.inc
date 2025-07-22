@@ -1,4 +1,32 @@
 {==============================================================================]
+  <Start(arr: TRangeArray): TIntegerArray>
+  @action: Returns start values from TRangeArray arr.
+  @note: None.
+[==============================================================================}
+function Start(const arr: TRangeArray): TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(arr));
+  for i := 0 to High(Result) do
+    Result[i] := arr[i].start;
+end;
+
+{==============================================================================]
+  <Stop(arr: TRangeArray): TIntegerArray>
+  @action: Returns stop values from TRangeArray arr.
+  @note: None.
+[==============================================================================}
+function Stop(const arr: TRangeArray): TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(arr));
+  for i := 0 to High(Result) do
+    Result[i] := arr[i].stop;
+end;
+
+{==============================================================================]
   <TRangeArrayHelper.Bounds: TRange>
   @action: Returns the bounds of TRange array as TRange.
   @note: None.

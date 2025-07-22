@@ -1,4 +1,32 @@
 {==============================================================================]
+  <X(arr: TPointArray): TIntegerArray>
+  @action: Returns X values from TPointArray arr.
+  @note: None.
+[==============================================================================}
+function X(const arr: TPointArray): TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(arr));
+  for i := 0 to High(Result) do
+    Result[i] := arr[i].X;
+end;
+
+{==============================================================================]
+  <Y(arr: TPointArray): TIntegerArray>
+  @action: Returns Y values from TPointArray arr.
+  @note: None.
+[==============================================================================}
+function Y(const arr: TPointArray): TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(arr));
+  for i := 0 to High(Result) do
+    Result[i] := arr[i].Y;
+end;
+
+{==============================================================================]
   <TPointArrayHelper.Bounds>
   @action: Returns bounding box around TPointArray arr.
   @note: None.

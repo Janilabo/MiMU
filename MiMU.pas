@@ -205,7 +205,7 @@ type
   end;
   TBoxArray = array of TBox;
   T2DBoxArray = array of TBoxArray;
-  
+
 function MiMU_Version: Double; cdecl;
 
 operator+(const a, b: TPoint): TPoint;
@@ -339,6 +339,15 @@ type
     class function Create(const rStart, rStop: Integer): TRange; overload; cdecl;
     class function Create(const value: Integer = 0): TRange; overload; cdecl;
   end;
+
+function X(const arr: TPointArray): TIntegerArray; overload; cdecl;
+function Y(const arr: TPointArray): TIntegerArray; overload; cdecl;
+function X1(const arr: TBoxArray): TIntegerArray; overload; cdecl;
+function Y1(const arr: TBoxArray): TIntegerArray; overload; cdecl;
+function X2(const arr: TBoxArray): TIntegerArray; overload; cdecl;
+function Y2(const arr: TBoxArray): TIntegerArray; overload; cdecl;
+function Start(const arr: TRangeArray): TIntegerArray; overload; cdecl;
+function Stop(const arr: TRangeArray): TIntegerArray; overload; cdecl;
   
 implementation
 
