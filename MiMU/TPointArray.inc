@@ -38,16 +38,24 @@ end;
 [==============================================================================}
 function X(const arr: TPointArray; const xVals: TIntegerArray): TIntegerArray; overload; cdecl;
 var
-  i, r, l: Integer;
+  l, i, r: Integer;
+  d: specialize TDictionary<Integer, Boolean>;
 begin
   r := 0;
   l := Length(arr);
-  if ((High(xVals) > -1) and (l > 0)) then
+  if ((l > 0) or (Length(xVals) > 0)) then
   begin
-    SetLength(Result, l);
-    for i := 0 to (l - 1) do
-      if xVals.Contains(arr[i].X) then
-        Result[r.Increase] := i;
+    d := specialize TDictionary<Integer, Boolean>.Create;
+    try
+      for i := 0 to High(xVals) do
+        d.TryAdd(xVals[i], True);
+      SetLength(Result, l);
+      for i := 0 to High(arr) do
+        if d.ContainsKey(arr[i].X) then
+          Result[r.Increase] := i;
+    finally
+      d.Free;
+    end;
   end;
   SetLength(Result, r);
 end;
@@ -92,16 +100,24 @@ end;
 [==============================================================================}
 function Y(const arr: TPointArray; const yVals: TIntegerArray): TIntegerArray; overload; cdecl;
 var
-  i, r, l: Integer;
+  l, i, r: Integer;
+  d: specialize TDictionary<Integer, Boolean>;
 begin
   r := 0;
   l := Length(arr);
-  if ((High(yVals) > -1) and (l > 0)) then
+  if ((l > 0) or (Length(yVals) > 0)) then
   begin
-    SetLength(Result, l);
-    for i := 0 to (l - 1) do
-      if yVals.Contains(arr[i].Y) then
-        Result[r.Increase] := i;
+    d := specialize TDictionary<Integer, Boolean>.Create;
+    try
+      for i := 0 to High(yVals) do
+        d.TryAdd(yVals[i], True);
+      SetLength(Result, l);
+      for i := 0 to High(arr) do
+        if d.ContainsKey(arr[i].Y) then
+          Result[r.Increase] := i;
+    finally
+      d.Free;
+    end;
   end;
   SetLength(Result, r);
 end;
