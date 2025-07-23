@@ -43,7 +43,7 @@ var
 begin
   r := 0;
   l := Length(arr);
-  if ((l > 0) or (Length(xVals) > 0)) then
+  if ((l > 0) and (Length(xVals) > 0)) then
   begin
     d := specialize TDictionary<Integer, Boolean>.Create;
     try
@@ -105,7 +105,7 @@ var
 begin
   r := 0;
   l := Length(arr);
-  if ((l > 0) or (Length(yVals) > 0)) then
+  if ((l > 0) and (Length(yVals) > 0)) then
   begin
     d := specialize TDictionary<Integer, Boolean>.Create;
     try
