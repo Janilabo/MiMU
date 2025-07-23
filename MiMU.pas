@@ -341,7 +341,11 @@ type
   end;
 
 function X(const arr: TPointArray): TIntegerArray; overload; cdecl;
+function X(const arr: TPointArray; const xVal: Integer): TIntegerArray; overload; cdecl;
+function X(const arr: TPointArray; const xVals: TIntegerArray): TIntegerArray; overload; cdecl;
 function Y(const arr: TPointArray): TIntegerArray; overload; cdecl;
+function Y(const arr: TPointArray; const yVal: Integer): TIntegerArray; overload; cdecl;
+function Y(const arr: TPointArray; const yVals: TIntegerArray): TIntegerArray; overload; cdecl;
 function X1(const arr: TBoxArray): TIntegerArray; overload; cdecl;
 function Y1(const arr: TBoxArray): TIntegerArray; overload; cdecl;
 function X2(const arr: TBoxArray): TIntegerArray; overload; cdecl;

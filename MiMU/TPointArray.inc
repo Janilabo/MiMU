@@ -13,6 +13,46 @@ begin
 end;
 
 {==============================================================================]
+  <X(arr: TPointArray; xVal: Integer): TIntegerArray>
+  @action: Returns arr indexes from TPointArray as TIntegerArray where X values match xVal.
+  @note: None.
+[==============================================================================}
+function X(const arr: TPointArray; const xVal: Integer): TIntegerArray; overload; cdecl;
+var
+  i, r, l: Integer;
+begin
+  r := 0;
+  l := Length(arr);
+  if (l > 0) then
+    SetLength(Result, l);
+  for i := 0 to (l - 1) do
+    if (arr[i].X = xVal) then
+      Result[r.Increase] := i;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <X(arr: TPointArray; xVals: TIntegerArray): TIntegerArray>
+  @action: Returns arr indexes from TPointArray as TIntegerArray where X values match xVals.
+  @note: None.
+[==============================================================================}
+function X(const arr: TPointArray; const xVals: TIntegerArray): TIntegerArray; overload; cdecl;
+var
+  i, r, l: Integer;
+begin
+  r := 0;
+  l := Length(arr);
+  if ((High(xVals) > -1) and (l > 0)) then
+  begin
+    SetLength(Result, l);
+    for i := 0 to (l - 1) do
+      if xVals.Contains(arr[i].X) then
+        Result[r.Increase] := i;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
   <Y(arr: TPointArray): TIntegerArray>
   @action: Returns Y values from TPointArray arr.
   @note: None.
@@ -24,6 +64,46 @@ begin
   SetLength(Result, Length(arr));
   for i := 0 to High(Result) do
     Result[i] := arr[i].Y;
+end;
+
+{==============================================================================]
+  <Y(arr: TPointArray; yVal: Integer): TIntegerArray>
+  @action: Returns arr indexes from TPointArray as TIntegerArray where Y values match yVal.
+  @note: None.
+[==============================================================================}
+function Y(const arr: TPointArray; const yVal: Integer): TIntegerArray; overload; cdecl;
+var
+  i, r, l: Integer;
+begin
+  r := 0;
+  l := Length(arr);
+  if (l > 0) then
+    SetLength(Result, l);
+  for i := 0 to (l - 1) do
+    if (arr[i].Y = yVal) then
+      Result[r.Increase] := i;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <Y(arr: TPointArray; yVals: TIntegerArray): TIntegerArray>
+  @action: Returns arr indexes from TPointArray as TIntegerArray where Y values match yVals.
+  @note: None.
+[==============================================================================}
+function Y(const arr: TPointArray; const yVals: TIntegerArray): TIntegerArray; overload; cdecl;
+var
+  i, r, l: Integer;
+begin
+  r := 0;
+  l := Length(arr);
+  if ((High(yVals) > -1) and (l > 0)) then
+  begin
+    SetLength(Result, l);
+    for i := 0 to (l - 1) do
+      if yVals.Contains(arr[i].Y) then
+        Result[r.Increase] := i;
+  end;
+  SetLength(Result, r);
 end;
 
 {==============================================================================]
