@@ -35,3 +35,5 @@
 {$DEFINE TPoint}{$I MiMU\Generic.inc}{$UNDEF TPoint}
 {$DEFINE TBox}{$I MiMU\Generic.inc}{$UNDEF TBox}
 {$DEFINE TRange}{$I MiMU\Generic.inc}{$UNDEF TRange}
+
+{$INCLUDE MiMU\config\Templates\D.inc}

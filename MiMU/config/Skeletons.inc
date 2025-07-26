@@ -78,3 +78,28 @@ begin
     SetLength(Result, 0);
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_ScanParameter1}
+function Start(const arr: TRangeArray): TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(arr));
+  for i := 0 to High(Result) do
+    Result[i] := arr[i].start;
+end;
+
+function Start(const arr: TRangeArray; const val: Integer): TIntegerArray; overload; cdecl;
+var
+  i, r, l: Integer;
+begin
+  r := 0;
+  l := Length(arr);
+  if (l > 0) then
+    SetLength(Result, l);
+  for i := 0 to (l - 1) do
+    if (arr[i].start = val) then
+      Result[r.Increase] := i;
+  SetLength(Result, r);
+end;
+{$ENDIF}
