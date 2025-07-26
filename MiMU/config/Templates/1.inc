@@ -3,7 +3,7 @@
   @action: Returns arr indexes from array as TIntegerArray where values match val.
   @note: None.
 [==============================================================================}
-function XFUNC(const arr: XARRAY; const val: XVALUE): TIntegerArray; overload; cdecl;
+function XFIELD(const arr: XARRAY; const val: XVALUE): TIntegerArray; overload; cdecl;
 {$IFNDEF IMPLEMENT}
 var
   i, r, l: Integer;
@@ -24,7 +24,7 @@ end;
   @action: Returns arr indexes from array as TIntegerArray where values match vals.
   @note: None.
 [==============================================================================}
-function XFUNC(const arr: XARRAY; const vals: XVALUES): TIntegerArray; overload; cdecl;
+function XFIELD(const arr: XARRAY; const vals: XVALUES): TIntegerArray; overload; cdecl;
 {$IFNDEF IMPLEMENT}
 var
   l, i, r: Integer;

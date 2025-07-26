@@ -3,7 +3,7 @@
   @action: Returns X values from TPointArray arr.
   @note: None.
 [==============================================================================}
-function XFUNC(const arr: XARRAY): XRETURN; overload; cdecl;
+function XFIELD(const arr: XARRAY): XRETURN; overload; cdecl;
 {$IFNDEF IMPLEMENT}
 var
   i: Integer;
