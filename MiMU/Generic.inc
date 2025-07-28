@@ -155,9 +155,9 @@ var
   a, h, i: Integer;
 begin
   Result := Self.Copy;
-  h := High(items);
-  if (h = -1) then
+  if Items.Empty then
     Exit;
+  h := High(items);
   a := High(Self);
   SetLength(Result, ((a + h) + 2));
   case duplicates of
@@ -214,7 +214,7 @@ function XArrHelp.BuiltWithout(const forbidden: XArr): Boolean; overload; cdecl;
 var
   i, x, y: Integer;
 begin
-  if (Length(Self) < 1) then
+  if Self.Empty then
     Exit(False);
   y := Length(forbidden);
   if not (y < 1) then
@@ -392,7 +392,7 @@ function XArrHelp.Delete(const ID: TIntegerArray): XArr; overload; cdecl;
 var
   i, l, r: Integer;
 begin
-  if (Length(ID) = 0) then
+  if ID.Empty then
     Exit(Self.Copy);
   l := Length(Self);
   SetLength(Result, l);
@@ -461,7 +461,7 @@ var
   i, l, m, d: Integer;
 begin
   l := Length(Self);
-  if ((High(items) = -1) or (l = 0)) then
+  if (items.Empty or (l = 0)) then
     Exit(Self.Copy);
   SetLength(Result, l);
   d := 0;
@@ -559,9 +559,9 @@ var
   f: Boolean;
   r: TBooleanArray;
 begin
-  l := Length(Self);
-  if not ((l = 0) or (index < 0)) then
+  if not (Self.Empty or (index < 0)) then
   begin
+    l := Length(Self);
     SetLength(r, l);
     m := Min(index, (l - 1));
 	d := 0;
@@ -607,11 +607,11 @@ var
   h, i, j, m, l, d: Integer;
   f: Boolean;
   r: TBooleanArray;
-begin
-  h := High(items);
-  l := Length(Self); 
-  if not ((l = 0) or (h < 0) or (index < 0)) then
+begin 
+  if not (Self.Empty or items.Empty or (index < 0)) then
   begin
+    h := High(items);
+    l := Length(Self);
     SetLength(r, l);
     m := Min(index, (l - 1));
 	d := 0;
@@ -737,9 +737,9 @@ function XArrHelp.Exclude(const items: XArr; const index: Integer = 2147483647):
 var
   i, l, m, d: Integer;
 begin
-  l := Length(Self);
-  if ((High(items) = -1) or (l = 0)) then
+  if (items.Empty or Self.Empty) then
     Exit(Self.Copy);
+  l := Length(Self);
   m := Min(index, (l - 1));
   SetLength(Result, l);
   d := 0;
@@ -816,7 +816,7 @@ var
   i, l, r: Integer;
 begin
   r := 0;
-  if (Length(items) > 0) then
+  if not items.Empty then
   begin
     l := Length(Self);
     SetLength(Result, (l - index));
@@ -922,7 +922,7 @@ var
   i, l, r: Integer;
 begin
   l := Length(Self);
-  if (Length(items) = 0) then
+  if items.Empty then
     Exit(Self.Copy(index, (l - index)));
   r := 0;
   SetLength(Result, (l - index));
@@ -1139,11 +1139,11 @@ var
   a, h, i, r, g, l: Integer;
   f: Boolean;
 begin
+  if Self.Empty then
+    Exit([]);
+  g := -1;
   h := High(Self);
   SetLength(Result, (h + 1));
-  if (h = -1) then
-    Exit;
-  g := -1;
   for i := 0 to h do
   begin
     f := False;
@@ -1389,7 +1389,7 @@ var
   i, j, c, m: Integer;
   f: Boolean;
 begin
-  if (Length(Self) = 0) then
+  if Self.Empty then
     Exit;
   m := 2147483647;
   Result := Self[0];
@@ -1582,7 +1582,7 @@ function XArrHelp.MostFrequent: XVar; overload; cdecl;
 var
   i, j, c, m: Integer;
 begin
-  if (High(Self) = -1) then
+  if Self.Empty then
     Exit;
   m := 0;
   Result := Self[0];
@@ -2208,7 +2208,7 @@ var
   i, r: Integer;
 begin
   r := 0;
-  if (High(Self) > -1) then
+  if not Self.Empty then
   begin
     SetLength(Result, ID.Size);
     case ID.Ascending of
@@ -2241,7 +2241,7 @@ var
   i, r: Integer;
 begin
   r := 0;
-  if (High(Self) > -1) then
+  if Self.Empty then
   begin
     SetLength(Result, Length(ID));
     for i := 0 to High(ID) do
@@ -2264,7 +2264,7 @@ var
   i, r: Integer;
 begin
   r := 0;
-  if ((High(Self) > -1) and (High(items) > -1)) then
+  if not (Self.Empty or items.Empty) then
   begin
     SetLength(Result, ID.Size);
     case ID.Ascending of
@@ -2297,7 +2297,7 @@ var
   i, r: Integer;
 begin
   r := 0;
-  if ((High(Self) > -1) and (High(items) > -1)) then
+  if not (Self.Empty or items.Empty) then
   begin
     SetLength(Result, Length(ID));
     for i := 0 to High(ID) do
@@ -2718,9 +2718,9 @@ function XArrHelp.Unshift(const items: XArr): XArr; overload; cdecl;
 var
   h, l, i, r: Integer;
 begin
-  l := Length(items);
-  if (l = 0) then
+  if items.Empty then
     Exit(Self.Copy);
+  l := Length(items);
   r := (Length(Self) + l);
   SetLength(Result, r);
   for i := (r - 1) downto l do
@@ -2743,7 +2743,7 @@ var
   v: XVar;
 begin
   Result := 0;
-  if (Length(Self) < 1) then
+  if Self.Empty then
     Exit;
   d := TDict.Create;
   try
@@ -2809,9 +2809,9 @@ function X2DArrHelp.Flatten: XArr; overload; cdecl;
 var
   r, c, i, j, l: Integer;
 begin
-  r := Length(Self);
-  if (r = 0) then
+  if Self.Empty then
     Exit([]);
+  r := Length(Self);
   c := 0;
   for i := 0 to (r - 1) do
     c := (c + Length(Self[i]));
@@ -2831,7 +2831,7 @@ function X2DArrHelp.Irregular: Boolean; overload; cdecl;
 var
   i, a, l, h: Integer;
 begin
-  if (Length(Self) = 0) then
+  if Self.Empty then
     Exit(False);
   l := Length(Self[0]);
   h := l;
