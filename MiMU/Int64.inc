@@ -194,6 +194,16 @@ begin
 end;
 
 {==============================================================================]
+ <TInt64Helper.Over>
+ @action: Returns true if x is higher than target.
+ @note: None
+[==============================================================================}
+function TInt64Helper.Over(const target: Int64): Boolean; cdecl; inline;
+begin
+  Result := not (target <= Self);
+end;
+
+{==============================================================================]
  <TInt64Helper.Oversize>
  @action: Returns true if x is higher than limit.
  @note: None
@@ -201,6 +211,16 @@ end;
 function TInt64Helper.Oversize(const limit: Int64): Boolean; cdecl; inline;
 begin
   Result := (Self > limit);
+end;
+
+{==============================================================================]
+ <TInt64Helper.Under>
+ @action: Returns true if x is lower than target.
+ @note: None
+[==============================================================================}
+function TInt64Helper.Under(const target: Int64): Boolean; cdecl; inline;
+begin
+  Result := not (target >= Self);
 end;
 
 {==============================================================================]

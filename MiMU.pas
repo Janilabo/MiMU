@@ -276,6 +276,8 @@ type
     function Opposite: Int64; cdecl; inline;
     function Sign: Integer; cdecl; inline;
     function Shuffle: Int64; cdecl;
+	function Over(const target: Int64): Boolean; cdecl; inline;
+    function Under(const target: Int64): Boolean; cdecl; inline;
     function Oversize(const limit: Int64): Boolean; cdecl; inline;
     function Undersize(const limit: Int64): Boolean; cdecl; inline;
   end;

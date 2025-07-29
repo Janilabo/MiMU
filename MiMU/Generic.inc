@@ -1027,6 +1027,26 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Fits(maxValue: Integer): Integer>
+ @action: Returns true if arr size is at maximum maxValue.
+ @note: None.
+[==============================================================================}
+function XArrHelp.Fits(const maxValue: Integer): Boolean; overload; cdecl;
+begin
+  Result := (Length(Self) <= maxValue);
+end;
+
+{==============================================================================]
+ <arr.Fits(target: TRange): Integer>
+ @action: Returns true if arr size is between target start and stop.
+ @note: None.
+[==============================================================================}
+function XArrHelp.Fits(const target: TRange): Boolean; overload; cdecl;
+begin
+  Result := not ((Length(Self) < Min(target.start, target.stop)) or (Length(Self) > Max(target.start, target.stop)));
+end;
+
+{==============================================================================]
  <arr.Flip: Boolean>
  @action: Reverses array arr.
  @note: Alternative for TArray_Reverse
@@ -1777,6 +1797,26 @@ begin;
   if Result then
   for i := 0 to (times - 1) do
     Self[i] := item;
+end;
+
+{==============================================================================]
+ <arr.Populated(population: TRange): Boolean>
+ @action: Returns true if arr Length is between population TRange (start, stop).
+ @note: None.
+[==============================================================================}
+function XArrHelp.Populated(const population: TRange): Boolean; overload; cdecl;
+begin
+  Result := InRange(Length(Self), population.Minimum, population.Maximum);
+end;
+
+{==============================================================================]
+ <arr.Populated(populationMin, populationMax: Integer): Boolean>
+ @action: Returns true if arr Length is between populationMin and populationMax.
+ @note: Strict! Min should NOT be higher than Max.
+[==============================================================================}
+function XArrHelp.Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload; cdecl;
+begin
+  Result := InRange(Length(Self), populationMin, populationMax);
 end;  
 
 {==============================================================================]

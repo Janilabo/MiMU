@@ -151,29 +151,6 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Lowest>
-  @action: Returns minimum value of the given range.
-  @note: None.
-[==============================================================================}
-function TRange.Lowest: Integer; cdecl;
-begin
-  Result := Min(Self.start, Self.stop);
-end;
-
-{==============================================================================]
-  <TRange.Minimum>
-  @action: Returns minimum value of the given range.
-  @note: None.
-[==============================================================================}
-function TRange.Minimum: Integer; cdecl;
-begin
-  if (Self.stop > Self.start) then
-    Result := Self.start
-  else
-    Result := Self.stop;
-end;
-
-{==============================================================================]
   <TRange.Highest>
   @action: Returns maximum value of the given range.
   @note: None.
@@ -181,6 +158,16 @@ end;
 function TRange.Highest: Integer; cdecl;
 begin
   Result := Max(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <TRange.Lowest>
+  @action: Returns minimum value of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Lowest: Integer; cdecl;
+begin
+  Result := Min(Self.start, Self.stop);
 end;
 
 {==============================================================================]
@@ -194,6 +181,19 @@ begin
     Result := Self.stop
   else
     Result := Self.start;
+end;
+
+{==============================================================================]
+  <TRange.Minimum>
+  @action: Returns minimum value of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Minimum: Integer; cdecl;
+begin
+  if (Self.stop > Self.start) then
+    Result := Self.start
+  else
+    Result := Self.stop;
 end;
 
 {==============================================================================]

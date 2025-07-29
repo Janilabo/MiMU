@@ -249,6 +249,16 @@ begin
 end;
 
 {==============================================================================]
+ <TIntegerHelper.Over>
+ @action: Returns true if x is higher than target.
+ @note: None
+[==============================================================================}
+function TIntegerHelper.Over(const target: Integer): Boolean; cdecl; inline;
+begin
+  Result := not (target <= Self);
+end;
+
+{==============================================================================]
  <TIntegerHelper.Oversize>
  @action: Returns true if x is higher than limit.
  @note: None
@@ -256,6 +266,16 @@ end;
 function TIntegerHelper.Oversize(const limit: Integer): Boolean; cdecl; inline;
 begin
   Result := (Self > limit);
+end;
+
+{==============================================================================]
+ <TIntegerHelper.Under>
+ @action: Returns true if x is lower than target.
+ @note: None
+[==============================================================================}
+function TIntegerHelper.Under(const target: Integer): Boolean; cdecl; inline;
+begin
+  Result := not (target >= Self);
 end;
 
 {==============================================================================]

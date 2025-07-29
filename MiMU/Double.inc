@@ -321,6 +321,16 @@ begin
 end;
 
 {==============================================================================]
+ <TDoubleHelper.Over>
+ @action: Returns true if x is higher than target.
+ @note: None
+[==============================================================================}
+function TDoubleHelper.Over(const target: Double): Boolean; cdecl; inline;
+begin
+  Result := not (target <= Self);
+end;
+
+{==============================================================================]
  <TDoubleHelper.Oversize>
  @action: Returns true if x is higher than limit.
  @note: None
@@ -328,6 +338,16 @@ end;
 function TDoubleHelper.Oversize(const limit: Double): Boolean; cdecl;
 begin
   Result := (Self > limit);
+end;
+
+{==============================================================================]
+ <TDoubleHelper.Under>
+ @action: Returns true if x is lower than target.
+ @note: None
+[==============================================================================}
+function TDoubleHelper.Under(const target: Double): Boolean; cdecl; inline;
+begin
+  Result := not (target >= Self);
 end;
 
 {==============================================================================]

@@ -25,6 +25,8 @@ type
       function Opposite: Integer; cdecl; inline;
       function Sign: Integer; cdecl; inline;
       function Shuffle: Integer; cdecl;
+	  function Over(const target: Integer): Boolean; cdecl; inline;
+      function Under(const target: Integer): Boolean; cdecl; inline;
       function Oversize(const limit: Integer): Boolean; cdecl; inline;
       function Undersize(const limit: Integer): Boolean; cdecl; inline;
     {$ENDIF}
@@ -53,6 +55,8 @@ type
       function Radians(const compass: Boolean = False): Double; cdecl;
       function Percent(const position: Double): Double; cdecl; inline;
       function Percentage(const percent: Double): Double; cdecl; inline;
+	  function Over(const target: Double): Boolean; cdecl; inline;
+      function Under(const target: Double): Boolean; cdecl; inline;
       function Oversize(const limit: Double): Boolean; cdecl;
       function Undersize(const limit: Double): Boolean; cdecl;
     {$ENDIF}
@@ -219,6 +223,8 @@ type
     function Find(const ID: TIntegerArray; const item: XVar): Integer; overload; cdecl;
     function Find(const ID: TRange; const items: XArr): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: XArr): Integer; overload; cdecl;
+    function Fits(const maxValue: Integer): Boolean; overload; cdecl;
+    function Fits(const target: TRange): Boolean; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
     function FromLeft(const count: Integer; const index: Integer = 2147483647): XArr; overload; cdecl;
     function FromRight(const count: Integer; const index: Integer = 0): XArr; overload; cdecl;
@@ -257,6 +263,8 @@ type
     function Pop(const null: XVar): XVar; overload; cdecl;
     function Populate(const items: XArr; const times: Integer = 1): Boolean; overload; cdecl;
     function Populate(const item: XVar; const times: Integer = 1): Boolean; overload; cdecl;
+    function Populated(const population: TRange): Boolean; overload; cdecl;
+    function Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload; cdecl;
     function Pos(const item: XVar; const index: Integer = 0): Integer; overload; cdecl;
     function Pos(const items: XArr; const index: Integer = 0): Integer; overload; cdecl;
     function Position(const item: XVar; const index: Integer = 0): Integer; overload; cdecl;
