@@ -209,6 +209,7 @@ type
     function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
 	function Exchange(var b: XArr): Integer; overload; cdecl;
 	function Exclude(const items: XArr; const index: Integer = 2147483647): XArr; overload; cdecl;
+	function Exists: Boolean; overload; cdecl;
     function Extend(const item: XVar): XArr; overload; cdecl;
     function Extend(const items: XArr): XArr; overload; cdecl;
     function Extract(const item: XVar; const index: Integer = 0): XArr; overload; cdecl;
@@ -256,6 +257,7 @@ type
     function MostFrequent: XVar; overload; cdecl;
     function Move(const oldIndex, newIndex: Integer): Boolean; overload; cdecl;
     function Next(const index: Integer; const count: Integer = 2147483647): XArr; overload; cdecl;
+	function Occurs(const item: XVar; const occurrence: Integer = 1): Boolean; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): X2DArr; overload; cdecl;
     function Pick(const items: XArr; const index: Integer = 0): XArr; overload; cdecl;
@@ -272,7 +274,8 @@ type
     function Positions(const item: XVar; const index: Integer = 0): TIntegerArray; overload; cdecl;
     function Positions(const items: XArr; const index: Integer = 0): TIntegerArray; overload; cdecl;
 	function Positions: TIntegerArray; overload; cdecl;
-    function Previous(const index: Integer; const count: Integer = 2147483647): XArr; overload; cdecl;
+    function Presence(const item: XVar; const occurrence: Integer = 1): Boolean; overload; cdecl;
+	function Previous(const index: Integer; const count: Integer = 2147483647): XArr; overload; cdecl;
     function Push(const item: XVar): XArr; overload; cdecl;
     function Push(const items: XArr): XArr; overload; cdecl;
     function Put(const ID: TIntegerArray; const item: XVar): XArr; overload; cdecl;

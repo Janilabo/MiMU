@@ -275,10 +275,10 @@ var
   i, h, l, r: Integer;
 begin
   r := 0;
-  h := High(Self);
-  l := Length(ID);
-  if ((l > 0) and (h > -1)) then
+  if (ID.Populated and Self.Populated) then
   begin
+    h := High(Self);
+    l := Length(ID);
     SetLength(Result, l);
     for i := 0 to (l - 1) do
       if ((ID[i] <= h) and (ID[i] > -1)) then
@@ -460,9 +460,9 @@ function XArrHelp.Dump(const items: XArr; const index: Integer = 0): XArr; overl
 var
   i, l, m, d: Integer;
 begin
-  l := Length(Self);
-  if (items.Empty or (l = 0)) then
+  if (items.Empty or Self.Empty) then
     Exit(Self.Copy);
+  l := Length(Self);
   SetLength(Result, l);
   d := 0;
   m := Max(0, index);
@@ -608,7 +608,7 @@ var
   f: Boolean;
   r: TBooleanArray;
 begin 
-  if not (Self.Empty or items.Empty or (index < 0)) then
+  if (Self.Populated and items.Populated and (index >= 0)) then
   begin
     h := High(items);
     l := Length(Self);
@@ -755,6 +755,16 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Exists: Boolean>
+ @action: Returns true if array length is not 0.
+ @note: Alternative for arr.Populated.
+[==============================================================================}
+function XArrHelp.Exists: Boolean; overload; cdecl;
+begin
+  Result := (Length(Self) > 0);
+end;
+
+{==============================================================================]
  <arr.Extend(item: VarType): TArray>
  @action: Extends arr with item. Returns it.
  @note: Places item to the left side of the array.
@@ -816,7 +826,7 @@ var
   i, l, r: Integer;
 begin
   r := 0;
-  if not items.Empty then
+  if items.Populated then
   begin
     l := Length(Self);
     SetLength(Result, (l - index));
@@ -959,7 +969,7 @@ end;
 [==============================================================================}
 function XArrHelp.Find(const ID: TRange; const item: XVar): Integer; overload; cdecl;
 begin
-  if (High(Self) > -1) then
+  if Self.Populated then
   case ID.Ascending of
     True:
     for Result := ID.start to ID.stop do
@@ -982,7 +992,7 @@ function XArrHelp.Find(const ID: TIntegerArray; const item: XVar): Integer; over
 var
   i: Integer;
 begin
-  if (High(Self) > -1) then
+  if Self.Populated then
   for i := 0 to High(ID) do
     if (Self[ID[i]] = item) then
       Exit(ID[i]);
@@ -996,7 +1006,7 @@ end;
 [==============================================================================}
 function XArrHelp.Find(const ID: TRange; const items: XArr): Integer; overload; cdecl;
 begin
-  if ((High(Self) > -1) and (High(items) > -1)) then
+  if (Self.Populated and items.Populated) then
   case ID.Ascending of
     True:
     for Result := ID.start to ID.stop do
@@ -1019,7 +1029,7 @@ function XArrHelp.Find(const ID: TIntegerArray; const items: XArr): Integer; ove
 var
   i: Integer;
 begin
-  if ((High(Self) > -1) and (High(items) > -1)) then
+  if (Self.Populated and items.Populated) then
   for i := 0 to High(ID) do
     if items.Contains(Self[ID[i]]) then
       Exit(ID[i]);
@@ -1322,7 +1332,7 @@ var
 begin
   l := Length(Self);
   SetLength(Result, l);
-  if (l > 0) then
+  if Self.Populated then
   case aAscending of
     True:
     while (l.Decrement > -1) do
@@ -1381,7 +1391,7 @@ var
 begin
   l := Length(Self);
   m := Max(0, index);
-  case ((High(items) > -1) and (m < l)) of
+  case (items.Populated and (m < l)) of
     True:
     begin
       r := 0;
@@ -1469,7 +1479,7 @@ var
   h, i: Integer;
 begin
   h := High(items);
-  if (h > -1) then
+  if items.Populated then
   for Result := Min(High(Self), index) downto 0 do
     for i := 0 to h do
       if (Self[Result] = items[i]) then
@@ -1503,9 +1513,9 @@ function XArrHelp.Location(const items: XArr; const index: Integer = 2147483647)
 var
   h, i, l: Integer;
 begin
-  h := High(items);
-  if (h > -1) then
+  if items.Populated then
   begin
+    h := High(items);
     l := Length(Self);
     Result := Min(l, (index + 1));
     while (Result.Decrement > -1) do
@@ -1584,10 +1594,10 @@ function XArrHelp.Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
 var
   l, i, s: Integer;
 begin
-  l := Length(Self);
-  Result := ((l > 1) and (shuffles > 0));
+  Result := ((shuffles > 0) and Self.Populated);
   if not Result then
     Exit;
+  l := Length(Self);
   for s := 1 to shuffles do
     for i := 0 to (l - 1) do
       Exchange(Random(l), Random(l));
@@ -1667,6 +1677,35 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Occurs(item: VarType; occurrence: Integer): Boolean>
+ @action: Returns true item exists in arr EXACTLY(!) occurrence amount of times.
+ @note: Supports lookup for 0 items. Loops array through from beginning to end.	
+[==============================================================================}
+function XArrHelp.Occurs(const item: XVar; const occurrence: Integer = 1): Boolean; overload; cdecl;
+var
+  o, p: Integer;
+begin
+  if (occurrence < 0) then
+    Exit(False);
+  case (occurrence = 0) of
+    False:
+    begin
+      o := 0;
+      p := -1;
+      while (o <= occurrence) do
+      begin
+        p := Self.Pos(item, (p + 1));
+        if (p = -1) then
+          Break;
+        o := (o + 1);
+      end;
+      Result := (o = occurrence);
+    end;
+    True: Result := (Self.Pos(item) = -1);
+  end;
+end;
+
+{==============================================================================]
  <arr.Oversize(limit: Integer): Boolean>
  @action: Returns true if size of arr is OVER the limit.
  @note: None.	
@@ -1685,9 +1724,9 @@ function XArrHelp.Partition(const pSize: Integer): X2DArr; overload; cdecl;
 var
   p, i, j, s, r, l: Integer;
 begin
-  l := Length(Self);
-  if ((pSize > 0) and (l > 0)) then
+  if ((pSize > 0) and Self.Populated) then
   begin
+    l := Length(Self);
     p := ((l + (pSize - 1)) div pSize);
     SetLength(Result, p);
     for i := 0 to (p - 1) do
@@ -1716,7 +1755,7 @@ var
 begin
   l := Length(Self);
   m := Max(0, index);
-  case ((High(items) > -1) and (m < l)) of
+  case (items.Populated and (m < l)) of
     True:
     begin
       SetLength(Result, m);
@@ -1742,9 +1781,9 @@ function XArrHelp.Pop: XVar; overload; cdecl;
 var
   h: Integer;
 begin
-  h := High(Self);
-  if (h = -1) then
+  if Self.Empty then
     Exit;
+  h := High(Self);
   Result := Self[h];
   SetLength(Self, h);
 end;
@@ -1758,9 +1797,9 @@ function XArrHelp.Pop(const null: XVar): XVar; overload; cdecl;
 var
   h: Integer;
 begin
-  h := High(Self);
-  if (h = -1) then
+  if Self.Empty then
     Exit(null);
+  h := High(Self);
   Result := Self[h];
   SetLength(Self, h);
 end;
@@ -1876,9 +1915,9 @@ function XArrHelp.Position(const items: XArr; const index: Integer = 0): Integer
 var
   h, i, l: Integer;
 begin
-  h := High(items);
-  if (h > -1) then
+  if items.Populated then
   begin
+    h := High(items);
     Result := Max(-1, (index - 1));
     l := Length(Self);
     while (Result.Increment < l) do
@@ -1923,7 +1962,7 @@ begin
   r := 0;
   h := High(Self);
   s := Max(0, index);
-  if ((h > -1) and (s <= h) and (Length(items) > 0)) then
+  if ((h > -1) and (s <= h) and items.Populated) then
   begin
     SetLength(Result, ((h + 1) - s));
     for i := s to h do
@@ -1945,6 +1984,35 @@ begin
   SetLength(Result, Length(Self));
   for i := 0 to High(Result) do
     Result[i] := i;  
+end;
+
+{==============================================================================]
+ <arr.Presence(item: VarType; occurrence: Integer): Boolean>
+ @action: Returns true item exists in arr EXACTLY(!) occurrence amount of times.
+ @note: Supports lookup for 0 items. Loops array through from end to beginning.	
+[==============================================================================}
+function XArrHelp.Presence(const item: XVar; const occurrence: Integer = 1): Boolean; overload; cdecl;
+var
+  l, o: Integer;
+begin
+  if (occurrence < 0) then
+    Exit(False);
+  case (occurrence = 0) of
+    False:
+    begin
+      o := 0;
+      l := Length(Self);
+      while (o <= occurrence) do
+      begin
+        l := Self.Loc(item, (l - 1));
+        if (l = -1) then
+          Break;
+        o := (o + 1);
+      end;
+      Result := (o = occurrence);
+    end;
+    True: Result := (Self.Loc(item) = -1);
+  end;
 end;
 
 {==============================================================================]
@@ -2068,9 +2136,9 @@ function XArrHelp.Reject(const items: XArr; const index: Integer = 2147483647): 
 var
   i, l, m, c: Integer;
 begin
-  l := Length(Self);
-  if ((High(items) = -1) or (l = 0)) then
+  if (items.Empty or Self.Empty) then
     Exit(Self.Copy);
+  l := Length(Self);
   m := Min(index, (l - 1));
   c := 0;
   for i := 0 to m do
@@ -2248,7 +2316,7 @@ var
   i, r: Integer;
 begin
   r := 0;
-  if not Self.Empty then
+  if Self.Populated then
   begin
     SetLength(Result, ID.Size);
     case ID.Ascending of
@@ -2304,7 +2372,7 @@ var
   i, r: Integer;
 begin
   r := 0;
-  if not (Self.Empty or items.Empty) then
+  if (Self.Populated and items.Populated) then
   begin
     SetLength(Result, ID.Size);
     case ID.Ascending of
@@ -2337,7 +2405,7 @@ var
   i, r: Integer;
 begin
   r := 0;
-  if not (Self.Empty or items.Empty) then
+  if (Self.Populated and items.Populated) then
   begin
     SetLength(Result, Length(ID));
     for i := 0 to High(ID) do
@@ -2811,7 +2879,7 @@ var
   i: Integer;
 begin
   for i := 0 to High(Self) do
-    if (Length(Self[i]) > 0) then
+    if Self[i].Populated then
       Exit(False);
   Result := (Length(Self) > 0);
 end;
