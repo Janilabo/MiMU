@@ -799,6 +799,20 @@ begin
 end;
 
 {==============================================================================]
+ <TRange.Sum>
+ @action: Returns the sum of all TRange values (start..stop)
+ @note: None
+[==============================================================================}
+function TRange.Sum: Int64; cdecl;
+var
+  a, b: Int64;
+begin
+  a := Min(Self.start, Self.stop);
+  b := Max(Self.start, Self.stop);
+  Result := ((((b - a) + 1) * (a + b)) div 2);
+end;
+
+{==============================================================================]
   <_TRange.Create>
   @action: Creates TPoint using pX, pY 
   @note: function version

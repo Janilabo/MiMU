@@ -134,6 +134,7 @@ type
     function Middle: Double; cdecl;
     function Center: Integer; cdecl;
     function Str: string; cdecl;
+	function Sum: Int64; cdecl;
   end;
   TBox = record
     X1, Y1, X2, Y2: Integer;

@@ -436,6 +436,7 @@ type
 	  function Starting: TIntegerArray; overload; cdecl;
 	  function Stopping: TIntegerArray; overload; cdecl;
 	  function Normalized: TRangeArray; overload; cdecl;
+	  function Gaps: TRangeArray; overload; cdecl;
     {$ENDIF}	
     end;
   X2DArrHelp = type helper for X2DArr

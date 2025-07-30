@@ -118,3 +118,36 @@ begin
   for i := 0 to High(Self) do
     Result[i].Create(Min(Self[i].start, Self[i].stop), Max(Self[i].start, Self[i].stop));
 end;
+
+function TRangeArrayHelper.Gaps: TRangeArray; overload; cdecl;
+var
+  i, g: Integer;
+  n: TRangeArray;
+  a, b: Integer;
+  procedure SortNormRanges(var r: TRangeArray);
+  var
+    a, b: Integer;
+  begin
+    for a := 0 to (High(r) - 1) do
+      for b := (a + 1) to High(r) do
+        if (r[a].start > r[b].start) then
+	  Swap(r[a], r[b])
+  end;
+begin
+  g := 0;
+  if (Length(Self) > 1) then
+  begin
+    SetLength(n, Length(Self));
+    n := Self.Normalized;
+    SortNormRanges(n);
+    SetLength(Result, (Length(Self) - 1));
+    for i := 0 to (High(n) - 1) do
+    begin
+      a := (n[i].stop + 1);
+      b := (n[i + 1].start - 1);
+      if (a <= b) then
+        Result[g.Increase].Create(a, b);
+    end;
+  end;
+  SetLength(Result, g);
+end;
