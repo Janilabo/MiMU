@@ -134,7 +134,8 @@ type
     function Middle: Double; cdecl;
     function Center: Integer; cdecl;
     function Str: string; cdecl;
-	function Sum: Int64; cdecl;
+    function Sum: Int64; cdecl;
+    function Extract: TIntegerArray; overload; cdecl;
   end;
   TBox = record
     X1, Y1, X2, Y2: Integer;
@@ -246,6 +247,16 @@ function Swap(var A, B: Boolean): Boolean; overload; inline;
 function Swap(var A, B: TPoint): Boolean; overload; inline;
 function Swap(var A, B: TBox): Boolean; overload; inline;
 function Swap(var A, B: TRange): Boolean; overload; inline;
+
+function IfThen(const state: Boolean; const sTrue, sFalse: Integer): Integer; overload; cdecl;
+function IfThen(const state: Boolean; const sTrue, sFalse: Int64): Int64; overload; cdecl;
+function IfThen(const state: Boolean; const sTrue, sFalse: Double): Double; overload; cdecl;
+function IfThen(const state: Boolean; const sTrue, sFalse: string): string; overload; cdecl;
+function IfThen(const state: Boolean; const sTrue, sFalse: Char): Char; overload; cdecl;
+function IfThen(const state: Boolean; const sTrue, sFalse: Boolean): Boolean; overload; cdecl;
+function IfThen(const state: Boolean; const sTrue, sFalse: TPoint): TPoint; overload; cdecl;
+function IfThen(const state: Boolean; const sTrue, sFalse: TBox): TBox; overload; cdecl;
+function IfThen(const state: Boolean; const sTrue, sFalse: TRange): TRange; overload; cdecl;
   
 type
   TRangeArray = array of TRange;
@@ -471,6 +482,16 @@ function Swap(var A, B: Boolean): Boolean; overload; inline; var C: Boolean; {$D
 function Swap(var A, B: TPoint): Boolean; overload; inline; var C: TPoint; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
 function Swap(var A, B: TBox): Boolean; overload; inline; var C: TBox; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
 function Swap(var A, B: TRange): Boolean; overload; inline; var C: TRange; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
+
+function IfThen(const state: Boolean; const sTrue, sFalse: Integer): Integer; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Int64): Int64; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Double): Double; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: string): string; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Char): Char; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Boolean): Boolean; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TPoint): TPoint; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TBox): TBox; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TRange): TRange; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
 
 function Max(A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Max}
 function Max(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Max}

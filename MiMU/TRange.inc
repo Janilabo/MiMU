@@ -813,6 +813,24 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Extract>
+  @action: Extracts TRange as TIntegerArray. 
+  @note: None.
+[==============================================================================}
+function TRange.Extract: TIntegerArray; overload; cdecl;
+var
+  i, c, s: Integer;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  s := IfThen((Self.stop > Self.start), 1, -1);
+  c := (Abs(Self.stop - Self.start) + 1);
+  SetLength(Result, c);
+  for i := 0 to (c - 1) do
+    Result[i] := (Self.start + (i * s));
+end;
+
+{==============================================================================]
   <_TRange.Create>
   @action: Creates TPoint using pX, pY 
   @note: function version

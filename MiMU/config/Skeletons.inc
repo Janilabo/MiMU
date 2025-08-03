@@ -36,6 +36,15 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_IfThen}
+begin
+  if state then
+    Result := sTrue
+  else
+    Result := sFalse;
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_QuickSorted}
   procedure QS_IDs(var aID: TIntegerArray; const L, R: Integer);
   var
