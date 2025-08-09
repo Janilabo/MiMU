@@ -180,6 +180,7 @@ type
     function AllUnique: Boolean; overload; cdecl;
     function Append(const item: XVar; const duplicates: Boolean = True): XArr; overload; cdecl;
     function Append(const items: XArr; const duplicates: Boolean = True): XArr; overload; cdecl;
+	function Backwards: XArr; overload; cdecl;
     function Build(const item: XVar; const aSize: Integer = 1): XArr; overload; cdecl;
     function BuiltWith(const allowed: XArr): Boolean; overload; cdecl;
     function BuiltWithout(const forbidden: XArr): Boolean; overload; cdecl;
@@ -306,6 +307,7 @@ type
     function SubarrayLocations(const pattern: XArr): TIntegerArray; overload; cdecl;
     function SubarrayPosition(const pattern: XArr): Integer; overload; cdecl;
     function SubarrayPositions(const pattern: XArr): TIntegerArray; overload; cdecl;
+    function Subset(const items: XArr): Boolean; overload; cdecl;
     function Trade(var b: XArr): Integer; overload; cdecl;
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
     function Unduplicate: XArr; overload; cdecl;

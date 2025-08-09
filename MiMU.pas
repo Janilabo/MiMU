@@ -233,8 +233,10 @@ function Min(a, b: Char): Char; overload; inline;
 
 function Point(const pX, pY: Integer): TPoint; overload; inline;
 function Point(const val: Integer = 0): TPoint; overload; inline;
+
 function Range(const rStart, rStop: Integer): TRange; overload; inline;
 function Range(const val: Integer = 0): TRange; overload; inline;
+
 function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
 function Box(const val: Integer = 0): TBox; overload; inline;
 
@@ -288,7 +290,7 @@ type
     function Opposite: Int64; cdecl; inline;
     function Sign: Integer; cdecl; inline;
     function Shuffle: Int64; cdecl;
-	function Over(const target: Int64): Boolean; cdecl; inline;
+    function Over(const target: Int64): Boolean; cdecl; inline;
     function Under(const target: Int64): Boolean; cdecl; inline;
     function Oversize(const limit: Int64): Boolean; cdecl; inline;
     function Undersize(const limit: Int64): Boolean; cdecl; inline;
@@ -296,11 +298,11 @@ type
   TIA = class
   public
     class function Init(var arr: TIntegerArray): Integer; overload; cdecl;
-	class function Unique(var arr: TIntegerArray): Integer; overload; cdecl;
+    class function Unique(var arr: TIntegerArray): Integer; overload; cdecl;
   end;
   TPA = class
     class function Init(var arr: TPointArray): Integer; overload; cdecl;
-	class function Unique(var arr: TPointArray): Integer; overload; cdecl;
+    class function Unique(var arr: TPointArray): Integer; overload; cdecl;
   end;
   TBA = class
     class function Init(var arr: TBooleanArray): Integer; overload; cdecl;

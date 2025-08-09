@@ -52,6 +52,20 @@ begin
 end;
 
 {==============================================================================]
+  <TBoxHelper.Create>
+  @action: Creates TBox(0,0,0,0).
+  @note: None
+[==============================================================================}
+function TBoxHelper.Create: TBox; overload; cdecl;
+begin
+  Self.X1 := 0;
+  Self.Y1 := 0;
+  Self.X2 := 0;
+  Self.Y2 := 0;
+  Result := Self;  
+end;
+
+{==============================================================================]
   <TBox.Construct>
   @action: Constructs TBox with XS, YS, XE, YE.
   @note: None.
@@ -471,20 +485,6 @@ begin
 end;
 
 {==============================================================================]
-  <TBoxHelper.Create>
-  @action: Creates TBox(0,0,0,0).
-  @note: None
-[==============================================================================}
-function TBoxHelper.Create: TBox; overload; cdecl;
-begin
-  Self.X1 := 0;
-  Self.Y1 := 0;
-  Self.X2 := 0;
-  Self.Y2 := 0;
-  Result := Self;  
-end;
-
-{==============================================================================]
   <TBoxHelper.Inside>
   @action: Returns true if bx is INSIDE target boundaries.
   @note: None.
@@ -756,7 +756,7 @@ begin
   r := 0;
   for y := Self.Y1 to Self.Y2 do
     for x := Self.X1 to Self.X2 do
-	  Result[r.Increase].Create(x, y);
+      Result[r.Increase].Create(x, y);
 end;
 
 {==============================================================================]

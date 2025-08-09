@@ -69,10 +69,10 @@ begin
     Result[i] := Self[i];
   case duplicates of
     False:
-	begin
-	  a := 0;
-	  for i := 0 to h do
-	    if not Result.Contains(items[i]) then
+    begin
+      a := 0;
+      for i := 0 to h do
+        if not Result.Contains(items[i]) then
           Result[l + a.Increase] := items[i];
       SetLength(Result, (l + a));
     end;
@@ -175,6 +175,22 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Backwards: TArray>
+ @action: Returns arr as reversed.
+ @note: Alternative for Reversed methods
+[==============================================================================}
+function XArrHelp.Backwards: XArr; overload; cdecl;
+var
+  h, i: Integer;
+begin
+  h := High(Self);
+  SetLength(Result, (h + 1));
+  i := 0;
+  while (h > -1) do
+    Result[i.Increase] := Self[h.Decrease];
+end;
+
+{==============================================================================]
  <arr.Build(item: VarType; aSize: Integer): TArray> 
  @action: Creates array with item where aSize is length of the array.
  @note: item is placed on every index in result.
@@ -221,10 +237,10 @@ begin
   begin
     i := High(Self);
     repeat
-       x := 0;
-       repeat
-         Result := not (Self[i] = forbidden[x]);
-       until ((x.Increment = y) or (not Result));
+      x := 0;
+      repeat
+        Result := not (Self[i] = forbidden[x]);
+      until ((x.Increment = y) or (not Result));
     until ((i.Decrement < 0) or (not Result));
   end else
     Result := True;
@@ -2645,6 +2661,21 @@ begin
     end;
   end;
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+ <arr.Subset(items: TArray): Boolean>
+ @action: Returns true if arr is subset of items.
+ @note: None.
+[==============================================================================}
+function XArrHelp.Subset(const items: XArr): Boolean; overload; cdecl;
+var
+  i: Integer;
+begin
+  for i := 0 to High(Self) do
+    if not items.Contains(Self[i]) then
+      Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]
