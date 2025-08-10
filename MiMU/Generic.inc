@@ -316,6 +316,36 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Consists(items: TArray): Boolean>
+ @action: Returns true if arr consists of items.
+ @note: arr must contain ALL the items for this function to return True.
+        Any extra items will cause Result to be False also.
+		items[1,2,3]
+		arr[1,2,3,1,2,3] => True
+		arr[2,3,2,3] => False
+		arr[2,1,3,4] => False
+		This function requires items array to be unique. No duplicates allowed for it!
+[==============================================================================}
+function XArrHelp.Consists(const items: XArr): Boolean; overload; cdecl;
+var
+  i, j: Integer;
+  f: TBooleanArray;
+begin
+  if (Length(items) = 0) then
+    Exit(Length(Self) = 0);
+  SetLength(f, Length(items));
+  f.Create(Length(items), False);
+  for i := 0 to High(Self) do
+  begin
+    j := items.Pos(Self[i]);
+    if (j = -1) then
+      Exit(False);
+    f[j] := True;
+  end;
+  Result := f.Uniform(True);
+end;
+
+{==============================================================================]
  <arr.Contains(item: VarType; index: Integer): Boolean>
  @action: Looks array for item starting from start index. If found, Result will be True.
  @note: None.
@@ -2737,6 +2767,36 @@ begin
   finally
     d.Free;
   end;
+end;
+
+{==============================================================================]
+ <arr.Uniform: Boolean>
+ @action: Returns true if arr is consistent with only 1 item.
+ @note: Returns True with empty arrays!
+[==============================================================================}
+function XArrHelp.Uniform: Boolean; overload; cdecl;
+var
+  i: Integer;
+begin
+  for i := 1 to High(Self) do
+    if (Self[i] <> Self[0]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+ <arr.Uniform(item: VarType): Boolean>
+ @action: Returns true if arr is consistent with only custom item.
+ @note: Returns True with empty arrays!
+[==============================================================================}
+function XArrHelp.Uniform(const item: XVar): Boolean; overload; cdecl;
+var
+  i: Integer;
+begin
+  for i := 0 to High(Self) do
+    if (Self[i] <> item) then
+      Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]

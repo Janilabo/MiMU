@@ -188,6 +188,7 @@ type
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): XArr; overload; cdecl;
     function Clone(const ID: TIntegerArray): XArr; overload; cdecl;
     function Combine(const b: XArr): XArr; overload; cdecl;
+	function Consists(const items: XArr): Boolean; overload; cdecl;
     function Contains(const item: XVar; const index: Integer = 0): Boolean; cdecl;
     function Copy(const index: Integer = 0; const count: Integer = 2147483647): XArr; overload; cdecl;
     function Create(const item: XVar): XArr; overload; cdecl;
@@ -311,6 +312,8 @@ type
     function Trade(var b: XArr): Integer; overload; cdecl;
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
     function Unduplicate: XArr; overload; cdecl;
+	function Uniform: Boolean; overload; cdecl;
+	function Uniform(const item: XVar): Boolean; overload; cdecl;
     function Unique: XArr; overload; cdecl;
     function Uniqued: XArr; overload; cdecl;
     function Uniques: TIntegerArray; overload; cdecl;
@@ -412,6 +415,9 @@ type
     {$ENDIF}
     {$IFDEF Char}
     {$ENDIF}
+	{$IFDEF Boolean}
+	  function Invert: TBooleanArray; overload; cdecl;
+	{$ENDIF}
     {$IFDEF TPoint}
       function Bounds: TBox; overload; cdecl;
       function Bounds(var width, height: Integer): TBox; overload; cdecl;
