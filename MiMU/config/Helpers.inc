@@ -422,10 +422,18 @@ type
     {$ENDIF}
 	{$IFDEF Boolean}
 	  function Falsed: Boolean; overload; cdecl;
+	  function Falseless: Boolean; overload; cdecl;
+	  function Falseless(const maxFalse: Integer): Boolean; overload; cdecl;
 	  function Falses: TIntegerArray; overload; cdecl;
+	  function Falsesome: Boolean; overload; cdecl;
+	  function Falsesome(const minFalse: Integer): Boolean; overload; cdecl;
 	  function Toggle: TBooleanArray; overload; cdecl;
 	  function Trued: Boolean; overload; cdecl;
+	  function Trueless: Boolean; overload; cdecl;
+	  function Trueless(const maxTrue: Integer): Boolean; overload; cdecl;
 	  function Trues: TIntegerArray; overload; cdecl;
+	  function Truesome: Boolean; overload; cdecl;
+	  function Truesome(const minTrue: Integer): Boolean; overload; cdecl;
 	  function Opposite: TBooleanArray; overload; cdecl;
 	{$ENDIF}
     {$IFDEF TPoint}
