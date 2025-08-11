@@ -421,8 +421,10 @@ type
     {$IFDEF Char}
     {$ENDIF}
 	{$IFDEF Boolean}
+	  function Falsed: Boolean; overload; cdecl;
 	  function Falses: TIntegerArray; overload; cdecl;
 	  function Toggle: TBooleanArray; overload; cdecl;
+	  function Trued: Boolean; overload; cdecl;
 	  function Trues: TIntegerArray; overload; cdecl;
 	  function Opposite: TBooleanArray; overload; cdecl;
 	{$ENDIF}

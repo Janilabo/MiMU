@@ -1,4 +1,19 @@
 {==============================================================================]
+  <TBooleanArrayHelper.Falsed>
+  @action: Returns true if ALL values in arr are False.
+  @note: [False, False, False] => True.
+[==============================================================================}
+function TBooleanArrayHelper.Falsed: Boolean; overload; cdecl;
+var
+  i: Integer;
+begin
+  for i := 0 to High(Self) do
+    if not (Self[i] = False) then
+      Exit(False);
+  Result := Self.Exists;
+end;
+
+{==============================================================================]
   <TBooleanArrayHelper.Falses>
   @action: Returns Indexes of arr where state is True.
   @note: [True, False, True, False] => [1,3]
@@ -27,6 +42,21 @@ begin
   SetLength(Result, Length(Self));
   for i := 0 to High(Self) do
     Result[i] := not Self[i];
+end;
+
+{==============================================================================]
+  <TBooleanArrayHelper.Trued>
+  @action: Returns true if ALL values in arr are True.
+  @note: [True, True, True] => True.
+[==============================================================================}
+function TBooleanArrayHelper.Trued: Boolean; overload; cdecl;
+var
+  i: Integer;
+begin
+  for i := 0 to High(Self) do
+    if not (Self[i] = True) then
+      Exit(False);
+  Result := Self.Exists;
 end;
 
 {==============================================================================]
