@@ -316,6 +316,21 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Comprised(items: TArray): Boolean>
+ @action: Returns true if arr is built of items only.
+ @note: 
+[==============================================================================}
+function XArrHelp.Comprised(const items: XArr): Boolean; overload; cdecl;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  Result := (l > 0);
+  while (Result and (l.Decrease > 0)) do
+    Result := items.Contains(Self[l]);
+end;
+
+{==============================================================================]
  <arr.Consists(items: TArray): Boolean>
  @action: Returns true if arr consists of items.
  @note: arr must contain ALL the items for this function to return True.
@@ -343,6 +358,31 @@ begin
     f[j] := True;
   end;
   Result := f.Uniform(True);
+end;
+
+{==============================================================================]
+ <arr.Constant(item: VarType): Boolean>
+ @action: Returns true if arr consists of item ONLY.
+ @note: Requires at least single item. Otherwise returns False. (With empty arrays)
+[==============================================================================}
+function XArrHelp.Constant(const item: XVar): Boolean; overload; cdecl;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  Result := (l > 0);
+  while (Result and (l.Decrease > 0)) do
+    Result := (Self[l] = item);
+end;
+
+{==============================================================================]
+ <arr.Constant: Boolean>
+ @action: Returns true if arr consists of ONLY same items.
+ @note: Requires at least single item. Otherwise returns False. (With empty arrays)
+[==============================================================================}
+function XArrHelp.Constant: Boolean; overload; cdecl;
+begin
+  Result := ((Length(Self) > 0) and Constant(Self[0]));
 end;
 
 {==============================================================================]
@@ -1269,6 +1309,32 @@ begin
     end;
     Result := not n;
   until ((a = b) or Result);
+end;
+
+{==============================================================================]
+ <arr.Homogeneous(item: VarType): Boolean>
+ @action: Returns true if arr consists of ONLY same items.
+ @note: Requires at least single item. Otherwise returns False. (With empty arrays)
+[==============================================================================}
+function XArrHelp.Homogeneous(const item: XVar): Boolean; overload; cdecl;
+var
+  h, i: Integer;
+begin
+  i := -1;
+  h := High(Self);
+  Result := (h > -1);
+  while (Result and (i.Increase < h)) do
+    Result := (Self[i] = item);
+end;
+
+{==============================================================================]
+ <arr.Homogeneous: Boolean>
+ @action: Returns true if arr consists of ONLY same items.
+ @note: Requires at least single item. Otherwise returns False. (With empty arrays)
+[==============================================================================}
+function XArrHelp.Homogeneous: Boolean; overload; cdecl;
+begin
+  Result := ((Length(Self) > 0) and Homogeneous(Self[0]));
 end;
 
 {==============================================================================]

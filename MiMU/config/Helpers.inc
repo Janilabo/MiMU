@@ -188,7 +188,10 @@ type
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): XArr; overload; cdecl;
     function Clone(const ID: TIntegerArray): XArr; overload; cdecl;
     function Combine(const b: XArr): XArr; overload; cdecl;
+	function Comprised(const items: XArr): Boolean; overload; cdecl;
 	function Consists(const items: XArr): Boolean; overload; cdecl;
+	function Constant(const item: XVar): Boolean; overload; cdecl;
+	function Constant: Boolean; overload; cdecl;
     function Contains(const item: XVar; const index: Integer = 0): Boolean; cdecl;
     function Copy(const index: Integer = 0; const count: Integer = 2147483647): XArr; overload; cdecl;
     function Create(const item: XVar): XArr; overload; cdecl;
@@ -236,6 +239,8 @@ type
     function Get(const ID: TRange): XArr; overload; cdecl;
     function Group: X2DArr; overload; cdecl;
     function Holds(const chain: XArr): Boolean; overload; cdecl;
+	function Homogeneous(const item: XVar): Boolean; overload; cdecl;
+	function Homogeneous: Boolean; overload; cdecl;
 	function ID(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
     function IDs(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
     function IDs(const ID: TIntegerArray): XArr; overload; cdecl;
@@ -416,7 +421,10 @@ type
     {$IFDEF Char}
     {$ENDIF}
 	{$IFDEF Boolean}
-	  function Invert: TBooleanArray; overload; cdecl;
+	  function Falses: TIntegerArray; overload; cdecl;
+	  function Toggle: TBooleanArray; overload; cdecl;
+	  function Trues: TIntegerArray; overload; cdecl;
+	  function Opposite: TBooleanArray; overload; cdecl;
 	{$ENDIF}
     {$IFDEF TPoint}
       function Bounds: TBox; overload; cdecl;
