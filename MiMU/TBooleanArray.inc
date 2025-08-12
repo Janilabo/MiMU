@@ -114,6 +114,73 @@ begin
 end;
 
 {==============================================================================]
+  <TBooleanArrayHelper.Str(separator, strTrue, strFalse: string): string>
+  @action: Returns TBooleanArray as string.
+  @note: Supports custom separator & True / False strings.
+[==============================================================================}
+function TBooleanArrayHelper.Str(const separator: string; const strTrue: string = 'True'; strFalse: string = 'False'): string; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := '[';
+  for i := 0 to High(Self) do
+    if Self[i] then
+      Result := (Result + strTrue + separator)
+    else
+      Result := (Result + strFalse + separator);
+  if not (separator = '') then
+    SetLength(Result, (Length(Result) - Length(separator)));
+  Result := (Result + ']');
+end;
+
+function TBooleanArrayHelper.Str: string; overload; cdecl;
+begin
+  Result := Self.Str(', ');
+end;
+
+{==============================================================================]
+  <TBooleanArrayHelper.Text(strTrue, strFalse, separator: string): string>
+  @action: Returns TBooleanArray as string.
+  @note: Supports custom separator & True / False strings.
+[==============================================================================}
+function TBooleanArrayHelper.Text(const strTrue, strFalse, separator: string): string; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := '[';
+  for i := 0 to High(Self) do
+    if Self[i] then
+      Result := (Result + strTrue + separator)
+    else
+      Result := (Result + strFalse + separator);
+  if not (separator = '') then
+    SetLength(Result, (Length(Result) - Length(separator)));
+  Result := (Result + ']');
+end;
+
+function TBooleanArrayHelper.Text(const strTrue: string = 'True'; strFalse: string = 'False'): string; overload; cdecl;
+begin
+  Result := Self.Text(strTrue, strFalse, ', ');
+end;
+
+{==============================================================================]
+  <TBooleanArrayHelper.TIA>
+  @action: Returns opposite version of arr.
+  @note: [True, False] => [False, True].
+[==============================================================================}
+function TBooleanArrayHelper.TIA(const valTrue: Integer = 1; const valFalse: Integer = 0): TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    if Self[i] then
+      Result[i] := valTrue
+    else
+      Result[i] := valFalse;
+end;
+
+{==============================================================================]
   <TBooleanArrayHelper.Toggle>
   @action: Returns opposite version of arr.
   @note: [True, False] => [False, True].

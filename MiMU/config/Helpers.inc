@@ -428,6 +428,11 @@ type
 	  function Falses: TIntegerArray; overload; cdecl;
 	  function Falsesome: Boolean; overload; cdecl;
 	  function Falsesome(const minFalse: Integer): Boolean; overload; cdecl;
+      function Str(const separator: string; const strTrue: string = 'True'; strFalse: string = 'False'): string; overload; cdecl;
+      function Str: string; overload; cdecl;
+      function Text(const strTrue, strFalse, separator: string): string; overload; cdecl;
+      function Text(const strTrue: string = 'True'; strFalse: string = 'False'): string; overload; cdecl;
+      function TIA(const valTrue: Integer = 1; const valFalse: Integer = 0): TIntegerArray; overload; cdecl;
 	  function Toggle: TBooleanArray; overload; cdecl;
 	  function Trued: Boolean; overload; cdecl;
 	  function Trueless: Boolean; overload; cdecl;
