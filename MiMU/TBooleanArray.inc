@@ -46,6 +46,21 @@ begin
 end;
 
 {==============================================================================]
+  <TBooleanArrayHelper.Falseness: Integer>
+  @action: Returns count of False values arr has got.
+  @note: [False, False, True, True, False] => 3
+[==============================================================================}
+function TBooleanArrayHelper.Falseness: Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    if not Self[i] then
+      Inc(Result);
+end;
+
+{==============================================================================]
   <TBooleanArrayHelper.Falses>
   @action: Returns Indexes of arr where state is False.
   @note: [True, False, True, False] => [1,3]
@@ -157,6 +172,21 @@ begin
     if (Self[i] and (c.Increment > maxTrue)) then
       Exit(False);
   Result := True;
+end;
+
+{==============================================================================]
+  <TBooleanArrayHelper.Trueness: Integer>
+  @action: Returns count of True values arr has got.
+  @note: [False, False, True, True, False] => 2
+[==============================================================================}
+function TBooleanArrayHelper.Trueness: Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    if Self[i] then
+      Inc(Result);
 end;
 
 {==============================================================================]
