@@ -7,7 +7,7 @@ function TPointArrayHelper.Bounds: TBox; overload; cdecl;
 var
   i: Integer;
 begin
-  if (High(Self) = -1) then
+  if Self.Empty then
     Exit(Box(-2147483648));
   Result.Make(Self[0]);
   for i := 1 to High(Self) do
@@ -32,7 +32,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.Bounds(var width, height: Integer): TBox; overload; cdecl;
 begin
-  case (High(Self) = -1) of
+  case Self.Empty of
     False:
     begin
       Result := Self.Bounds;
@@ -65,18 +65,17 @@ end;
 [==============================================================================}
 function TPointArrayHelper.Unduped: TPointArray; cdecl;
 var
-  i, r, l, w, h: Integer;
+  i, r, w, h: Integer;
   m: T2DBooleanArray;
   b: TBox;
 begin
   r := 0;
-  l := Length(Self);
-  if (l > 0) then
+  if Self.Exists then
   begin
     b := Self.Bounds(w, h);
     m := T2D.Create(False, w, h);
-    SetLength(Result, l);
-    for i := 0 to (l - 1) do
+    SetLength(Result, Length(Self));
+    for i := 0 to High(Self) do
       if m[Self[i].X - b.X1][Self[i].Y - b.Y1].Enable then
         Result[r.Increase] := Self[i];
     SetLength(m, 0);
@@ -320,7 +319,7 @@ function TPointArrayHelper.Horizontal: TRange; overload; cdecl;
 var
   i: Integer;
 begin
-  if (Length(Self) > 0) then
+  if Self.Exists then
   begin
     Result.Create(Self[0].X, Self[0].X);
     for i := 0 to High(Self) do
@@ -342,7 +341,7 @@ function TPointArrayHelper.Vertical: TRange; overload; cdecl;
 var
   i: Integer;
 begin
-  if (Length(Self) > 0) then
+  if Self.Exists then
   begin
     Result.Create(Self[0].Y, Self[0].Y);
     for i := 0 to High(Self) do

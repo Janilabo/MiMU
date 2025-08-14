@@ -7,7 +7,7 @@ function TIntegerArrayHelper.Bounds: TRange; overload; cdecl;
 var
   i: Integer;
 begin
-  if (High(Self) = -1) then
+  if Self.Empty then
     Exit(Result.Create(-2147483648, -2147483648));
   Result.Create(Self[0], Self[0]);
   for i := 1 to High(Self) do
@@ -22,7 +22,7 @@ function TIntegerArrayHelper.Bounds(var aSize: Integer): TRange; overload; cdecl
 var
   i: Integer;
 begin
-  case (High(Self) = -1) of
+  case Self.Empty of
     False:
 	begin
 	  Result := Self.Bounds;
@@ -45,7 +45,7 @@ function TIntegerArrayHelper.Range: TRange; cdecl;
 var
   i: Integer;
 begin
-  if (High(Self) = -1) then
+  if Self.Empty then
     Exit(Result.Create(-2147483648, -2147483648));
   Result := Result.Create(Self[0], Self[0]);
   for i := 1 to High(Self) do
@@ -73,23 +73,22 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Unduped: TIntegerArray; cdecl;
 var
-  x, y, z: Integer;
+  i, l: Integer;
   r: TRange;
   b: TBooleanArray;
 begin
-  z := 0;
-  y := High(Self);
-  if (y > 0) then
+  l := 0;
+  if Self.Exists then
   begin
-    SetLength(Result, (y + 1));
+    SetLength(Result, Self.Size);
     r := Self.Bounds;
 	b.Create(r.Size, False);
-    for x := 0 to y do
-      if b[Self[x] - r.start].Enable then
-        Result[z.Increase] := Self[x];
+    for i := 0 to High(Self) do
+      if b[Self[i] - r.start].Enable then
+        Result[l.Increase] := Self[i];
     SetLength(b, 0);
   end;
-  SetLength(Result, z);
+  SetLength(Result, l);
 end;
 
 {==============================================================================]
@@ -151,7 +150,7 @@ var
   c, i, j, h, l: Integer;
   u: Boolean;
 begin
-  if (Length(Self) = 0) then
+  if Self.Empty then
     Exit(0.0);
   l := Self[0];
   h := Self[0];
@@ -1382,7 +1381,7 @@ var
   i, o: Integer;
 begin
   Result := 0;
-  if (High(Self) = -1) then
+  if Self.Empty then
     Exit;
   o := aAscending.Select(-1, 1);
   for i := 1 to High(Self) do
@@ -1402,7 +1401,7 @@ var
   i, o, r: Integer;
 begin
   SetLength(Result, Length(Self));
-  if (High(Self) = -1) then
+  if Self.Empty then
     Exit;
   r := 0;
   o := aAscending.Select(-1, 1);
@@ -1485,12 +1484,11 @@ end;
 function TIntegerArrayHelper.Sblit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
 var
   a: TIntegerArray;
-  h, i, j, r, l, k: Integer;
+  i, j, r, l, k: Integer;
   m: Boolean;
   s: TRange;
 begin
-  h := High(Self);
-  if (h > -1) then
+  if Self.Exists then
   begin
     a := Self.BinarySorted;
     SetLength(Result, Length(a));
@@ -1498,7 +1496,7 @@ begin
     Result[0][0] := a[0];
     r := 1;
     s.Build(minDiff, maxDiff);
-    for i := 1 to h do
+    for i := 1 to High(Self) do
     begin
       m := False;
       for j := 0 to (r - 1) do
@@ -1523,7 +1521,8 @@ begin
       end;
     end;
     SetLength(a, 0);
-  end;
+  end else
+    r := 0;
   SetLength(Result, r);
 end;
 
@@ -1604,20 +1603,19 @@ end;
 function TIntegerArrayHelper.Groub(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
 var
   a: TIntegerArray;
-  h, i, j, r, l: Integer;
+  i, j, r, l: Integer;
   s: TRange;
   m: Boolean;
 begin
-  h := High(Self);
-  if (h > -1) then
+  if Self.Exists then
   begin
     a := Self.BinarySorted;
-    SetLength(Result, (h + 1));
+    SetLength(Result, Self.Size);
     SetLength(Result[0], 1);
     Result[0][0] := a[0];
     r := 1;
     s.Build(minDiff, maxDiff);
-    for i := 1 to h do
+    for i := 1 to High(Self) do
     begin
       m := False;
       for j := 0 to (r - 1) do
@@ -1637,7 +1635,8 @@ begin
         Result[r.Increase][0] := a[i];
       end;
     end;
-  end;
+  end else
+    r := 0;
   SetLength(Result, r);
 end;
 
@@ -1725,12 +1724,11 @@ end;
 function TIntegerArrayHelper.Knit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
 var
   a: TIntegerArray;
-  h, i, j, r, l, k: Integer;
+  i, j, r, l, k: Integer;
   m: Boolean;
   s: TRange;
 begin
-  h := High(Self);
-  if (h > -1) then
+  if Self.Exists then
   begin
     a := Self.BinarySorted;
     SetLength(Result, Length(a));
@@ -1738,7 +1736,7 @@ begin
     Result[0][0] := a[0];
     r := 1;
     s.Build(minDiff, maxDiff);
-    for i := 1 to h do
+    for i := 1 to High(Self) do
     begin
       m := False;
       for j := 0 to (r - 1) do
@@ -1764,7 +1762,8 @@ begin
       end;
     end;
     SetLength(a, 0);
-  end;
+  end else
+    r := 0;
   SetLength(Result, r);
 end;
 
@@ -1786,13 +1785,12 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Invert: TIntegerArray; cdecl;
 var
-  c, l, i, x, y, r: Integer;
+  c, l, i, x, r: Integer;
   b: TBooleanArray;
   a: TRange;
 begin
   r := 0;
-  y := High(Self);
-  if (y > 0) then
+  if Self.Exists then
   begin
     a := Self.Bounds;
     if (a.start <> a.stop) then
@@ -1800,7 +1798,7 @@ begin
       c := 0;
       l := a.Size;
       b.Create(l, False);
-      for x := 0 to y do
+      for x := 0 to High(Self) do
         if b[Self[x] - a.start].Enable then
           Inc(c);
       SetLength(Result, (l - c));

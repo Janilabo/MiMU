@@ -421,6 +421,7 @@ type
     {$IFDEF Char}
     {$ENDIF}
 	{$IFDEF Boolean}
+      function Digits: TIntegerArray; overload; cdecl;
 	  function Falsed: Boolean; overload; cdecl;
 	  function Falseless: Boolean; overload; cdecl;
 	  function Falseless(const maxFalse: Integer): Boolean; overload; cdecl;

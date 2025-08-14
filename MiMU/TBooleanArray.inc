@@ -1,4 +1,18 @@
 {==============================================================================]
+  <TBooleanArrayHelper.Digits>
+  @action: Returns TBooleanArray as Integers.
+  @note: [True, False] => [1, 0].
+[==============================================================================}
+function TBooleanArrayHelper.Digits: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := Ord(Self[i]);
+end;
+
+{==============================================================================]
   <TBooleanArrayHelper.Falsed>
   @action: Returns true if ALL values in arr are False.
   @note: [False, False, False] => True.
@@ -165,8 +179,8 @@ end;
 
 {==============================================================================]
   <TBooleanArrayHelper.TIA>
-  @action: Returns opposite version of arr.
-  @note: [True, False] => [False, True].
+  @action: Returns TBooleanArray as Integers.
+  @note: [True, False] => [1, 0].
 [==============================================================================}
 function TBooleanArrayHelper.TIA(const valTrue: Integer = 1; const valFalse: Integer = 0): TIntegerArray; overload; cdecl;
 var
