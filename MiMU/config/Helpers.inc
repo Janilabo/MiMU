@@ -69,6 +69,7 @@ type
       function Before(const index: Integer; const count: Integer = 2147483647): string; overload;
       function Behind(const s: string; const index: Integer = 2147483647): string; overload;
       function Behind(const index: Integer; const count: Integer = 2147483647): string; overload;
+	  function Blank: Boolean; cdecl;
       function Amount(const s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer; cdecl;
       function At(const s: string; const index: Integer = 1): Boolean; cdecl; inline;
       function Between(const s1, s2: string; const index: Integer = 1): string; cdecl;
@@ -80,6 +81,7 @@ type
       function Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer; cdecl;
       function Duplicate(const x: Integer = 2): string; cdecl;
       function Duplicated(const x: Integer; const glue: string): string; cdecl;
+	  function Empty: Boolean; cdecl;
       function EndsWith(const s: string): Boolean; cdecl;
       function EndWith(const s: string; const index: Integer = 2147483647): Boolean; cdecl;
       function Exch(const aIndex, bIndex: Integer): Boolean; cdecl;
@@ -102,7 +104,8 @@ type
       function Pos(const s: string; const index: Integer = 1): Integer; cdecl;
       function Position(const s: string; const index: Integer = 1): Integer; cdecl;
       function PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string; cdecl;
-      function Reverse: Boolean; cdecl;  
+      function Quotatation: string; cdecl;
+	  function Reverse: Boolean; cdecl;  
       function Reversed: string; cdecl;
       function Slice(const a, b: Integer): string; cdecl;
       function StartsWith(const s: string): Boolean; cdecl;
@@ -112,7 +115,7 @@ type
       function TrimRight(const t: Char = #32): string; cdecl;
       function Trim(const t: Char = #32): string; cdecl;
       function ToTRange: TRange; cdecl;
-      function Quotatation: string; cdecl;
+	  function Void: Boolean; cdecl;
     {$ENDIF}
     {$IFDEF Char}
       function Compare(const target: Char): Integer; cdecl; inline;
@@ -229,6 +232,7 @@ type
     function Find(const ID: TIntegerArray; const item: XVar): Integer; overload; cdecl;
     function Find(const ID: TRange; const items: XArr): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: XArr): Integer; overload; cdecl;
+	function First: Integer; overload; cdecl;
     function Fits(const maxValue: Integer): Boolean; overload; cdecl;
     function Fits(const target: TRange): Boolean; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
@@ -251,6 +255,7 @@ type
 	function Indexes(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
 	function Indices(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
     function Keep(const items: XArr; const index: Integer = 0): XArr; overload; cdecl;
+	function Last: Integer; overload; cdecl;
     function LeastFrequent: XVar; overload; cdecl;
     function Len: Integer; overload; cdecl;
     function Loc(const item: XVar; const index: Integer = 2147483647): Integer; overload; cdecl;
@@ -324,6 +329,7 @@ type
     function Uniques: TIntegerArray; overload; cdecl;
     function Unshift(const item: XVar): XArr; overload; cdecl;
     function Unshift(const items: XArr): XArr; overload; cdecl;
+	function Void: Boolean; overload; cdecl;
     function Waste: Integer; overload; cdecl;
     {$IFDEF Sortable}
       function Sorted(const aAscending: Boolean = True): Boolean; overload; cdecl;

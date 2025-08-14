@@ -179,6 +179,41 @@ begin
 end;
 
 {==============================================================================]
+  <TStringHelper.Void>
+  @action: Returns true if string is empty (Length is 0).
+  @note: None.
+[==============================================================================}
+function TStringHelper.Void: Boolean; cdecl;
+begin
+  Result := (Self = '');
+end;
+
+{==============================================================================]
+  <TStringHelper.Empty>
+  @action: Returns true if string is empty (Length is 0).
+  @note: None.
+[==============================================================================}
+function TStringHelper.Empty: Boolean; cdecl;
+begin
+  Result := (Length(Self) = 0);
+end;
+
+{==============================================================================]
+  <TStringHelper.Blank>
+  @action: Returns true if string is empty or consists of whitespaces only.
+  @note: None.
+[==============================================================================}
+function TStringHelper.Blank: Boolean; cdecl;
+var
+  i: Integer;
+begin
+  for i := 1 to Length(Self) do
+    if not CharInSet(Self[i], [' ', #9, #10, #13]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
   <TStringHelper.Center>
   @action: Returns str centered with fill characters where size is the length of the Result.
   @note: Supports custom filling character by fill!

@@ -1123,6 +1123,16 @@ begin
 end;
 
 {==============================================================================]
+ <arr.First: Integer>
+ @action: Returns the first index of arr.
+ @note: With empty array result will be -1!
+[==============================================================================}
+function XArrHelp.First: Integer; overload; cdecl;
+begin
+  Result := IfThen(Self.Empty, -1, 0);
+end;
+
+{==============================================================================]
  <arr.Fits(maxValue: Integer): Integer>
  @action: Returns true if arr size is at maximum maxValue.
  @note: None.
@@ -1519,6 +1529,16 @@ begin
     end;
     False: Result := Self.Copy;
   end;
+end;
+
+{==============================================================================]
+ <arr.Last: Integer>
+ @action: Returns the last index of arr.
+ @note: With empty array result will be -1!
+[==============================================================================}
+function XArrHelp.Last: Integer; overload; cdecl;
+begin
+  Result := IfThen(Self.Empty, -1, (Self.Size - 1));
 end;
 
 {==============================================================================]
@@ -2992,6 +3012,16 @@ begin
     Result[i] := Self[i - l];
   for i := 0 to (l - 1) do
     Result[i] := items[i];
+end;
+
+{==============================================================================]
+ <arr.Void: Boolean>
+ @action: Returns true if array is void (empty)
+ @note: Alternative for Empty.
+[==============================================================================}
+function XArrHelp.Void: Boolean; overload; cdecl;
+begin
+  Result := (Low(Self) > High(Self));
 end;
 
 {==============================================================================]
