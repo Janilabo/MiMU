@@ -1133,6 +1133,32 @@ begin
 end;
 
 {==============================================================================]
+ <arr.First(item: VarType): Integer>
+ @action: Returns the first index that matches item in arr.
+ @note: Unmatch will be -1!
+[==============================================================================}
+function XArrHelp.First(const item: XVar): Integer; overload; cdecl;
+begin
+  for Result := 0 to High(Self) do
+    if (Self[Result] = item) then
+      Exit;
+  Result := -1;
+end;
+
+{==============================================================================]
+ <arr.First(items: TArray): Integer>
+ @action: Returns the first arr index that matches any of the items.
+ @note: Unmatch will be -1!
+[==============================================================================}
+function XArrHelp.First(const items: XArr): Integer; overload; cdecl;
+begin
+  for Result := 0 to High(Self) do
+    if items.Contains(Self[Result]) then
+      Exit;
+  Result := -1;
+end;
+
+{==============================================================================]
  <arr.Fits(maxValue: Integer): Integer>
  @action: Returns true if arr size is at maximum maxValue.
  @note: None.
@@ -1539,6 +1565,32 @@ end;
 function XArrHelp.Last: Integer; overload; cdecl;
 begin
   Result := IfThen(Self.Empty, -1, (Self.Size - 1));
+end;
+
+{==============================================================================]
+ <arr.Last(item: VarType): Integer>
+ @action: Returns the last index that matches item in arr.
+ @note: Unmatch will be -1!
+[==============================================================================}
+function XArrHelp.Last(const item: XVar): Integer; overload; cdecl;
+begin
+  for Result := High(Self) downto 0 do
+    if (Self[Result] = item) then
+      Exit;
+  Result := -1;
+end;
+
+{==============================================================================]
+ <arr.Last(items: TArray): Integer>
+ @action: Returns the last arr index that matches any of the items.
+ @note: Unmatch will be -1!
+[==============================================================================}
+function XArrHelp.Last(const items: XArr): Integer; overload; cdecl;
+begin
+  for Result := High(Self) downto 0 do
+    if items.Contains(Self[Result]) then
+      Exit;
+  Result := -1;
 end;
 
 {==============================================================================]

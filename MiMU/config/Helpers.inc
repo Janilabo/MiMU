@@ -233,6 +233,8 @@ type
     function Find(const ID: TRange; const items: XArr): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const items: XArr): Integer; overload; cdecl;
 	function First: Integer; overload; cdecl;
+	function First(const item: XVar): Integer; overload; cdecl;
+	function First(const items: XArr): Integer; overload; cdecl;
     function Fits(const maxValue: Integer): Boolean; overload; cdecl;
     function Fits(const target: TRange): Boolean; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
@@ -256,6 +258,8 @@ type
 	function Indices(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
     function Keep(const items: XArr; const index: Integer = 0): XArr; overload; cdecl;
 	function Last: Integer; overload; cdecl;
+	function Last(const item: XVar): Integer; overload; cdecl;
+	function Last(const items: XArr): Integer; overload; cdecl;
     function LeastFrequent: XVar; overload; cdecl;
     function Len: Integer; overload; cdecl;
     function Loc(const item: XVar; const index: Integer = 2147483647): Integer; overload; cdecl;
