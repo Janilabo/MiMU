@@ -527,24 +527,6 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Find>
-  @action: Returns last position of s string in str.
-  @note: Starts search from index position.!
-[==============================================================================}
-function TStringHelper.Find(const s: string; const index: Integer = 1): Integer; cdecl;
-var
-  a, b: Integer;
-begin
-  a := Length(Self);
-  b := Length(s);
-  if ((a > 0) and (b > 0) and (b <= a)) then
-  for Result := Max(1, index) to ((a - b) + 1) do
-    if Self.At(s, Result) then
-      Exit;
-  Result := 0;
-end;
-
-{==============================================================================]
   <TStringHelper.Flip>
   @action: Returns reversed str.
   @note: None
@@ -691,12 +673,9 @@ end;
   @note: Starts search from index position.!
 [==============================================================================}
 function TStringHelper.Pos(const s: string; const index: Integer = 1): Integer; cdecl;
-var
-  l: Integer;
 begin
-  l := Length(s);
-  for Result := Max(1, index) to ((Length(Self) - l) + 1) do
-    if (Copy(Self, Result, l) = s) then
+  for Result := Max(1, index) to ((Length(Self) - Length(s)) + 1) do
+    if Self.At(s, Result) then
       Exit;
   Result := 0;
 end;
@@ -707,12 +686,9 @@ end;
   @note: Starts search from index position.!
 [==============================================================================}
 function TStringHelper.Loc(const s: string; const index: Integer = 2147483647): Integer; cdecl;
-var
-  l: Integer;
 begin
-  l := Length(s);
-  for Result := Min(index, ((Length(Self) - l) + 1)) downto 1 do
-    if (Copy(Self, Result, l) = s) then
+  for Result := Min(index, ((Length(Self) - Length(s)) + 1)) downto 1 do
+    if Self.At(s, Result) then
       Exit;
   Result := 0;
 end;
@@ -763,6 +739,55 @@ begin
       Exit;
   end;
   Result := 0;
+end;
+
+{==============================================================================]
+  <TStringHelper.Find>
+  @action: Returns first position of s string in str.
+  @note: Alternative for Pos().
+[==============================================================================}
+function TStringHelper.Find(const s: string; const index: Integer = 1): Integer; cdecl;
+var
+  i, j, a, b: Integer;
+begin
+  Result := 0;
+  a := Length(Self);
+  b := Length(s);
+  if ((a = 0) or (b = 0) or (b > a) or (index < 1) or (index > ((a - b) + 1))) then
+    Exit;
+  for i := index to (a - b + 1) do
+    for j := 1 to b do
+      if (Self[(i + j) - 1] <> s[j]) then
+        Break
+      else
+        if (j = b) then
+          Exit(i);
+end;
+
+{==============================================================================]
+  <TStringHelper.Search>
+  @action: Returns first position of s string in str.
+  @note: Alternative for Pos().
+[==============================================================================}
+function TStringHelper.Search(const s: string; const index: Integer = 1): Integer; cdecl;
+var
+  i, j, a, b: Integer;
+begin
+  Result := 0;
+  a := Length(Self);
+  b := Length(s);
+  if ((a = 0) or (b = 0) or (b > a) or (index < 1) or (index > ((a - b) + 1))) then
+    Exit;
+  i := index;
+  while (i <= ((a - b) + 1)) do
+  begin
+    j := 1;
+    while ((j <= b) and (Self[(i + j) - 1] = s[j])) do
+      Inc(j);
+    if (j > b) then
+      Exit(i);
+    Inc(i);
+  end;
 end;
 
 {==============================================================================]

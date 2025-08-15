@@ -103,6 +103,7 @@ type
       function Pick(const index: Integer; const count: Integer = 2147483647): string; cdecl;
       function Pos(const s: string; const index: Integer = 1): Integer; cdecl;
       function Position(const s: string; const index: Integer = 1): Integer; cdecl;
+	  function Search(const s: string; const index: Integer = 1): Integer; cdecl;
       function PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string; cdecl;
       function Quotatation: string; cdecl;
 	  function Reverse: Boolean; cdecl;  
