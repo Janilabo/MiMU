@@ -89,7 +89,7 @@ begin
   Self.Y1 := Min(minY, maxY);
   Self.X2 := Max(maxX, minX);
   Self.Y2 := Max(maxY, minY);
-  Result := (((Self.X2 - Self.X1) + 1) * ((Self.Y2 - Self.Y1) + 1));
+  Result := Self.Area;
 end;
 
 {==============================================================================]
@@ -191,9 +191,9 @@ end;
 [==============================================================================}
 function TBox.Size(var width, height: Integer): Integer; cdecl; inline;
 begin
-  width := ((Self.X2 - Self.X1) + 1);
-  height := ((Self.Y2 - Self.Y1) + 1);
-  Result := (width * height);
+  width := Self.Width;
+  height := Self.Height;
+  Result := Self.Area;
 end;
 
 {==============================================================================]
@@ -204,7 +204,7 @@ end;
 [==============================================================================}
 function TBox.Area: Integer; cdecl; inline;
 begin
-  Result := (((Self.X2 - Self.X1) + 1) * ((Self.Y2 - Self.Y1) + 1));
+  Result := (Self.Width * Self.Height);
 end;
 
 {==============================================================================]
@@ -214,7 +214,7 @@ end;
 [==============================================================================}
 function TBox.Diagonal: Double; cdecl;
 begin
-  Result := Sqrt(Sqr((Self.X2 - Self.X1) + 1) + Sqr((Self.Y2 - Self.Y1) + 1));
+  Result := Sqrt(Sqr(Self.Width) + Sqr(Self.Height));
 end;
 
 {==============================================================================]
@@ -516,8 +516,8 @@ end;
 [==============================================================================}
 function TBox.Center: TPoint; cdecl;
 begin
-  Result.X := Round(Self.X1 + ((Self.X2 - Self.X1) div 2));
-  Result.Y := Round(Self.Y1 + ((Self.Y2 - Self.Y1) div 2));
+  Result.X := Round(Self.X1 + ((Self.Width - 1) div 2));
+  Result.Y := Round(Self.Y1 + ((Self.Height - 1) div 2));
 end;
 
 {==============================================================================]
@@ -608,7 +608,7 @@ end;
 [==============================================================================}
 function TBox.Similar(const b: TBox; const maxWDiff, maxHDiff: Integer): Boolean; overload; cdecl;
 begin
-  Result := ((Abs(((b.X2 - b.X1) + 1) - ((Self.X2 - Self.X1) + 1)) <= maxWDiff) and (Abs(((b.Y2 - b.Y1) + 1) - ((Self.Y2 - Self.Y1) + 1)) <= maxHDiff));
+  Result := ((Abs(b.Width - Self.Width) <= maxWDiff) and (Abs(b.Height- Self.Height) <= maxHDiff));
 end;
 
 {==============================================================================]
@@ -619,7 +619,7 @@ end;
 [==============================================================================}
 function TBox.Similar(const b: TBox; const diff: Integer): Boolean; overload; cdecl;
 begin
-  Result := ((Abs(((b.X2 - b.X1) + 1) - ((Self.X2 - Self.X1) + 1)) <= diff) and (Abs(((b.Y2 - b.Y1) + 1) - ((Self.Y2 - Self.Y1) + 1)) <= diff));
+  Result := ((Abs(b.Width - Self.Width) <= diff) and (Abs(b.Height - Self.Height) <= diff));
 end;
 
 {==============================================================================]
@@ -752,7 +752,7 @@ function TBox.Points: TPointArray; cdecl;
 var
   x, y, r: Integer;
 begin
-  SetLength(Result, (((Self.X2 - Self.X1) + 1) * ((Self.Y2 - Self.Y1) + 1)));
+  SetLength(Result, Self.Area);
   r := 0;
   for y := Self.Y1 to Self.Y2 do
     for x := Self.X1 to Self.X2 do
@@ -766,12 +766,10 @@ end;
 [==============================================================================}
 function TBox.TPA: TPointArray; cdecl;
 var
-  i, w, h, x, y: Integer;
+  i, w, h: Integer;
 begin
-  w := ((Self.X2 - Self.X1) + 1);
-  h := ((Self.Y2 - Self.Y1) + 1);
-  SetLength(Result, (w * h));
-  for i := 0 to ((w * h) - 1) do
+  SetLength(Result, Self.Size(w, h));
+  for i := 0 to High(Result) do
     Result[i].Create((Self.X1 + (i mod w)), (Self.Y1 + (i div w)));
 end;
 
@@ -896,7 +894,7 @@ end;
 [==============================================================================}
 function TBox.SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload; cdecl;
 begin
-  Result := ((Abs(((b.X2 - b.X1) + 1) - ((Self.X2 - Self.X1) + 1)) <= widthDifferency) and (Abs(((b.Y2 - b.Y1) + 1) - ((Self.Y2 - Self.Y1) + 1)) <= heightDifferency));
+  Result := ((Abs(b.Width - Self.Width) <= widthDifferency) and (Abs(b.Height - Self.Height) <= heightDifferency));
 end;
 
 {==============================================================================]
@@ -907,7 +905,7 @@ end;
 [==============================================================================}
 function TBox.SimilarSize(const b: TBox; const differency: Integer): Boolean; overload; cdecl;
 begin
-  Result := ((Abs(((b.X2 - b.X1) + 1) - ((Self.X2 - Self.X1) + 1)) <= differency) and (Abs(((b.Y2 - b.Y1) + 1) - ((Self.Y2 - Self.Y1) + 1)) <= differency));
+  Result := ((Abs(b.Width - Self.Width) <= differency) and (Abs(b.Width - Self.Width) <= differency));
 end;
 
 {==============================================================================]

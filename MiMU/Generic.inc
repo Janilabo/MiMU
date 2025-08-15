@@ -1288,7 +1288,7 @@ end;
 [==============================================================================}
 function XArrHelp.Group: X2DArr; overload; cdecl;
 var
-  a, h, i, r, g, l: Integer;
+  h, i, r, g, l: Integer;
   f: Boolean;
 begin
   if Self.Empty then
@@ -3053,7 +3053,7 @@ end;
 [==============================================================================}
 function XArrHelp.Unshift(const items: XArr): XArr; overload; cdecl;
 var
-  h, l, i, r: Integer;
+  l, i, r: Integer;
 begin
   if items.Empty then
     Exit(Self.Copy);
