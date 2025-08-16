@@ -23,44 +23,28 @@ end;
  @action: Increases the Int64 value x by N.
  @note: Returns x before increasing it with N!
 [==============================================================================}
-function TInt64Helper.Increase(const N: Int64 = 1): Int64; cdecl;
-begin
-  Result := Self;
-  Self := (Self + N);
-end;
+function TInt64Helper.Increase(const N: Int64 = 1): Int64; cdecl; {$DEFINE Skeleton_Increase}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increase}
 
 {==============================================================================]
   <TInt64Helper.Decrease>
  @action: Decreases the Int64 value x by N.
  @note: Returns x before decreasing it with N!
 [==============================================================================}
-function TInt64Helper.Decrease(const N: Int64 = 1): Int64; cdecl;
-begin
-  Result := Self;
-  Self := (Self - N);
-end;
+function TInt64Helper.Decrease(const N: Int64 = 1): Int64; cdecl; {$DEFINE Skeleton_Decrease}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrease}
 
 {==============================================================================]
  <TInt64Helper.Increment>
  @action: Increases the Int64 value x by N.
  @note: Returns the increased x!
 [==============================================================================}
-function TInt64Helper.Increment(const N: Int64 = 1): Int64; cdecl;
-begin
-  Self := (Self + N);
-  Result := Self;
-end;
+function TInt64Helper.Increment(const N: Int64 = 1): Int64; cdecl; {$DEFINE Skeleton_Increment}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increment}
 
 {==============================================================================]
   <TInt64Helper.Decrement>
  @action: Decreases the Int64 value x by N.
  @note: Returns the decreased x!
 [==============================================================================}
-function TInt64Helper.Decrement(const N: Int64 = 1): Int64; cdecl;
-begin
-  Self := (Self - N);
-  Result := Self;
-end;
+function TInt64Helper.Decrement(const N: Int64 = 1): Int64; cdecl; {$DEFINE Skeleton_Decrement}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrement}
 
 {==============================================================================]
  <TInt64Helper.DigitCount>

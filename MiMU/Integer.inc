@@ -32,6 +32,89 @@ begin
 end;
 
 {==============================================================================]
+ <TIntegerHelper.BoundMin>
+ @action: Returns Integer bounded by minimum limit
+ @note: None
+[==============================================================================}
+function TIntegerHelper.BoundMin(const limit: Integer): Integer; cdecl;
+begin
+  Result := (((Self + limit) + Abs(Self - limit)) div 2);
+end;
+
+{==============================================================================]
+ <TIntegerHelper.BoundMax>
+ @action: Returns Integer bounded by maximum limit
+ @note: None
+[==============================================================================}
+function TIntegerHelper.BoundMax(const limit: Integer): Integer; cdecl;
+begin
+  Result := (((Self + limit) - Abs(Self - limit)) div 2);
+end;
+
+{==============================================================================]
+ <TIntegerHelper.Bound>
+ @action: Returns Integer bounded by minimum and maximum limits
+ @note: None
+[==============================================================================}
+function TIntegerHelper.Bound(const minimum, maximum: Integer): Integer; cdecl;
+begin
+  Result := (((Self + minimum) + Abs(Self - minimum)) div 2);
+  Result := (((Result + maximum) - Abs(Result - maximum)) div 2);
+end;
+
+{==============================================================================]
+ <TIntegerHelper.RestrictMin>
+ @action: Returns Integer bounded by minimum limit
+ @note: None
+[==============================================================================}
+function TIntegerHelper.RestrictMin(const limit: Integer): Integer; cdecl;
+begin
+  Result := (Self - ((Self - limit) - Abs(Self - limit)) div 2);
+end;
+
+{==============================================================================]
+ <TIntegerHelper.RestrictMax>
+ @action: Returns Integer bounded by maximum limit
+ @note: None
+[==============================================================================}
+function TIntegerHelper.RestrictMax(const limit: Integer): Integer; cdecl;
+begin
+  Result := (Self - ((Self - limit) + Abs(Self - limit)) div 2);
+end;
+
+{==============================================================================]
+ <TIntegerHelper.Restrict>
+ @action: Returns Integer bounded by minimum and maximum limits
+ @note: None
+[==============================================================================}
+function TIntegerHelper.Restrict(const minimum, maximum: Integer): Integer; cdecl;
+begin
+  Result := (Self - ((Self - minimum) - Abs(Self - minimum)) div 2);
+  Result := (Result - ((Result - maximum) + Abs(Result - maximum)) div 2);
+end;
+
+{==============================================================================]
+ <TIntegerHelper.LimitMin>
+ @action: Returns Integer with minimum limit
+ @note: Max() call.
+[==============================================================================}
+function TIntegerHelper.LimitMin(const limit: Integer): Integer; cdecl; {$DEFINE Skeleton_LimitMin}{$I config\Skeletons.inc}{$UNDEF Skeleton_LimitMin}
+
+{==============================================================================]
+ <TIntegerHelper.LimitMax>
+ @action: Returns Integer with maximum limit
+ @note: Min() call.
+[==============================================================================}
+function TIntegerHelper.LimitMax(const limit: Integer): Integer; cdecl; {$DEFINE Skeleton_LimitMax}{$I config\Skeletons.inc}{$UNDEF Skeleton_LimitMax}
+
+{==============================================================================]
+ <TIntegerHelper.Limit>
+ @action: Returns Integer with minimum and maximum limits
+ @note: EnsureRange() call.
+[==============================================================================}
+function TIntegerHelper.Limit(const minimum, maximum: Integer): Integer; cdecl; {$DEFINE Skeleton_Limit}{$I config\Skeletons.inc}{$UNDEF Skeleton_Limit}
+
+{==============================================================================]
  <TIntegerHelper.ConstraintMin>
  @action: Returns true if Integer is constrainted with minimum limit
  @note: None
@@ -87,44 +170,28 @@ end;
  @action: Increases the Integer value x by N.
  @note: Returns x before increasing it with N!
 [==============================================================================}
-function TIntegerHelper.Increase(const N: Integer = 1): Integer; cdecl;
-begin
-  Result := Self;
-  Self := (Self + N);
-end;
+function TIntegerHelper.Increase(const N: Integer = 1): Integer; cdecl; {$DEFINE Skeleton_Increase}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increase}
 
 {==============================================================================]
   <TIntegerHelper.Decrease>
  @action: Decreases the Integer value x by N.
  @note: Returns x before decreasing it with N!
 [==============================================================================}
-function TIntegerHelper.Decrease(const N: Integer = 1): Integer; cdecl;
-begin
-  Result := Self;
-  Self := (Self - N);
-end;
+function TIntegerHelper.Decrease(const N: Integer = 1): Integer; cdecl; {$DEFINE Skeleton_Decrease}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrease}
 
 {==============================================================================]
  <TIntegerHelper.Increment>
  @action: Increases the Integer value x by N.
  @note: Returns the increased x!
 [==============================================================================}
-function TIntegerHelper.Increment(const N: Integer = 1): Integer; cdecl;
-begin
-  Self := (Self + N);
-  Result := Self;
-end;
+function TIntegerHelper.Increment(const N: Integer = 1): Integer; cdecl; {$DEFINE Skeleton_Increment}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increment}
 
 {==============================================================================]
   <TIntegerHelper.Decrement>
  @action: Decreases the Integer value x by N.
  @note: Returns the decreased x!
 [==============================================================================}
-function TIntegerHelper.Decrement(const N: Integer = 1): Integer; cdecl;
-begin
-  Self := (Self - N);
-  Result := Self;
-end;
+function TIntegerHelper.Decrement(const N: Integer = 1): Integer; cdecl; {$DEFINE Skeleton_Decrement}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrement} 
 
 {==============================================================================]
  <TIntegerHelper.DigitCount>

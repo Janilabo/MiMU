@@ -20,21 +20,104 @@ function TDoubleHelper.ClampMax(const limit: Double): Double; cdecl; {$DEFINE Sk
 function TDoubleHelper.Clamp(const minimum, maximum: Double): Double; cdecl; {$DEFINE Skeleton_Clamp}{$I config\Skeletons.inc}{$UNDEF Skeleton_Clamp}
 
 {==============================================================================]
- <TDoubleHelper.ContstraintMin>
+ <TDoubleHelper.BoundMin>
+ @action: Returns Double bounded by minimum limit
+ @note: None
+[==============================================================================}
+function TDoubleHelper.BoundMin(const limit: Double): Double; cdecl;
+begin
+  Result := (((Self + limit) + Abs(Self - limit)) / 2);
+end;
+
+{==============================================================================]
+ <TDoubleHelper.BoundMax>
+ @action: Returns Double bounded by maximum limit
+ @note: None
+[==============================================================================}
+function TDoubleHelper.BoundMax(const limit: Double): Double; cdecl;
+begin
+  Result := (((Self + limit) - Abs(Self - limit)) / 2);
+end;
+
+{==============================================================================]
+ <TDoubleHelper.Bound>
+ @action: Returns Double bounded by minimum and maximum limits
+ @note: None
+[==============================================================================}
+function TDoubleHelper.Bound(const minimum, maximum: Double): Double; cdecl;
+begin
+  Result := (((Self + minimum) + Abs(Self - minimum)) / 2);
+  Result := (((Result + maximum) - Abs(Result - maximum)) / 2);
+end;
+
+{==============================================================================]
+ <TDoubleHelper.RestrictMin>
+ @action: Returns Double bounded by minimum limit
+ @note: None
+[==============================================================================}
+function TDoubleHelper.RestrictMin(const limit: Double): Double; cdecl;
+begin
+  Result := (Self - ((Self - limit) - Abs(Self - limit)) / 2);
+end;
+
+{==============================================================================]
+ <TDoubleHelper.RestrictMax>
+ @action: Returns Double bounded by maximum limit
+ @note: None
+[==============================================================================}
+function TDoubleHelper.RestrictMax(const limit: Double): Double; cdecl;
+begin
+  Result := (Self - ((Self - limit) + Abs(Self - limit)) / 2);
+end;
+
+{==============================================================================]
+ <TDoubleHelper.Restrict>
+ @action: Returns Double bounded by minimum and maximum limits
+ @note: None
+[==============================================================================}
+function TDoubleHelper.Restrict(const minimum, maximum: Double): Double; cdecl;
+begin
+  Result := (Self - ((Self - minimum) - Abs(Self - minimum)) / 2);
+  Result := (Result - ((Result - maximum) + Abs(Result - maximum)) / 2);
+end;
+
+{==============================================================================]
+ <TDoubleHelper.LimitMin>
+ @action: Returns Double with minimum limit
+ @note: Max() call.
+[==============================================================================}
+function TDoubleHelper.LimitMin(const limit: Double): Double; cdecl; {$DEFINE Skeleton_LimitMin}{$I config\Skeletons.inc}{$UNDEF Skeleton_LimitMin}
+
+{==============================================================================]
+ <TDoubleHelper.LimitMax>
+ @action: Returns Double with maximum limit
+ @note: Min() call.
+[==============================================================================}
+function TDoubleHelper.LimitMax(const limit: Double): Double; cdecl; {$DEFINE Skeleton_LimitMax}{$I config\Skeletons.inc}{$UNDEF Skeleton_LimitMax}
+
+{==============================================================================]
+ <TDoubleHelper.Limit>
+ @action: Returns Double with minimum and maximum limits
+ @note: EnsureRange() call.
+[==============================================================================}
+function TDoubleHelper.Limit(const minimum, maximum: Double): Double; cdecl; {$DEFINE Skeleton_Limit}{$I config\Skeletons.inc}{$UNDEF Skeleton_Limit}
+
+{==============================================================================]
+ <TDoubleHelper.ConstraintMin>
  @action: Returns true if Double is constrainted with minimum limit
  @note: None
 [==============================================================================}
 function TDoubleHelper.ConstraintMin(const limit: Double): Boolean; cdecl; {$DEFINE Skeleton_ConstraintMin}{$I config\Skeletons.inc}{$UNDEF Skeleton_ConstraintMin}
 
 {==============================================================================]
- <TDoubleHelper.ContstraintMax>
+ <TDoubleHelper.ConstraintMax>
  @action: Returns true if Double is constrainted with maximum limit
  @note: None
 [==============================================================================}
 function TDoubleHelper.ConstraintMax(const limit: Double): Boolean; cdecl; {$DEFINE Skeleton_ConstraintMax}{$I config\Skeletons.inc}{$UNDEF Skeleton_ConstraintMax}
 
 {==============================================================================]
- <TDoubleHelper.Contstraint>
+ <TDoubleHelper.Constraint>
  @action: Returns true if Double is constrainted with minimum or maximum limit
  @note: None
 [==============================================================================}
@@ -45,44 +128,28 @@ function TDoubleHelper.Constraint(const minimum, maximum: Double): Boolean; cdec
  @action: Increases the Double value x by N.
  @note: Returns x before increasing it with N!
 [==============================================================================}
-function TDoubleHelper.Increase(const N: Double = 1): Double; cdecl;
-begin
-  Result := Self;
-  Self := (Self + N);
-end;
+function TDoubleHelper.Increase(const N: Double = 1): Double; cdecl; {$DEFINE Skeleton_Increase}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increase}
 
 {==============================================================================]
   <TDoubleHelper.Decrease>
  @action: Decreases the Double value x by N.
  @note: Returns x before decreasing it with N!
 [==============================================================================}
-function TDoubleHelper.Decrease(const N: Double = 1): Double; cdecl;
-begin
-  Result := Self;
-  Self := (Self - N);
-end;
+function TDoubleHelper.Decrease(const N: Double = 1): Double; cdecl; {$DEFINE Skeleton_Decrease}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrease}
 
 {==============================================================================]
  <TDoubleHelper.Increment>
  @action: Increases the Double value x by N.
  @note: Returns the increased x!
 [==============================================================================}
-function TDoubleHelper.Increment(const N: Double = 1): Double; cdecl;
-begin
-  Self := (Self + N);
-  Result := Self;
-end;
+function TDoubleHelper.Increment(const N: Double = 1): Double; cdecl; {$DEFINE Skeleton_Increment}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increment}
 
 {==============================================================================]
   <TDoubleHelper.Decrement>
  @action: Decreases the Double value x by N.
  @note: Returns the decreased x!
 [==============================================================================}
-function TDoubleHelper.Decrement(const N: Double = 1): Double; cdecl;
-begin
-  Self := (Self - N);
-  Result := Self;
-end;
+function TDoubleHelper.Decrement(const N: Double = 1): Double; cdecl; {$DEFINE Skeleton_Decrement}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrement}
 
 {==============================================================================]
  <TDoubleHelper.Digits>

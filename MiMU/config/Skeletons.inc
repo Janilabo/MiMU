@@ -45,6 +45,34 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_Increase}
+begin
+  Result := Self;
+  Self := (Self + N);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_Decrease}
+begin
+  Result := Self;
+  Self := (Self - N);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_Increment}
+begin
+  Self := (Self + N);
+  Result := Self;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_Decrement}
+begin
+  Self := (Self - N);
+  Result := Self;
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_ClampMin}
 begin
   if (Self < limit) then
@@ -72,6 +100,24 @@ begin
       Result := maximum
     else
       Result := Self;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_LimitMin}
+begin
+  Result := Max(Self, limit);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_LimitMax}
+begin
+  Result := Min(Self, limit);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_Limit}
+begin
+  Result := EnsureRange(Self, minimum, maximum);
 end;
 {$ENDIF}
 
