@@ -1,4 +1,68 @@
 {==============================================================================]
+ <TIntegerHelper.ClampMin>
+ @action: Returns Integer clamped by minimum limit
+ @note: None
+[==============================================================================}
+function TIntegerHelper.ClampMin(const limit: Integer): Integer; cdecl; {$DEFINE Skeleton_ClampMin}{$I config\Skeletons.inc}{$UNDEF Skeleton_ClampMin}
+
+{==============================================================================]
+ <TIntegerHelper.ClampMax>
+ @action: Returns Integer clamped by maximum limit
+ @note: None
+[==============================================================================}
+function TIntegerHelper.ClampMax(const limit: Integer): Integer; cdecl; {$DEFINE Skeleton_ClampMax}{$I config\Skeletons.inc}{$UNDEF Skeleton_ClampMax}
+
+{==============================================================================]
+ <TIntegerHelper.Clamp>
+ @action: Returns Integer clamped by minimum and maximum limit
+ @note: None
+[==============================================================================}
+function TIntegerHelper.Clamp(const minimum, maximum: Integer): Integer; overload; cdecl; {$DEFINE Skeleton_Clamp}{$I config\Skeletons.inc}{$UNDEF Skeleton_Clamp}
+
+{==============================================================================]
+ <TIntegerHelper.Clamp>
+ @action: Returns Integer clamped by minimum and maximum limit
+ @note: None
+[==============================================================================}
+function TIntegerHelper.Clamp(const range: TRange): Integer; overload; cdecl;
+begin
+  Result := Self.ClampMin(range.Minimum);
+  if (Self = Result) then
+    Result := Self.ClampMax(range.Maximum);
+end;
+
+{==============================================================================]
+ <TIntegerHelper.ConstraintMin>
+ @action: Returns true if Integer is constrainted with minimum limit
+ @note: None
+[==============================================================================}
+function TIntegerHelper.ConstraintMin(const limit: Integer): Boolean; cdecl; {$DEFINE Skeleton_ConstraintMin}{$I config\Skeletons.inc}{$UNDEF Skeleton_ConstraintMin}
+
+{==============================================================================]
+ <TIntegerHelper.ConstraintMax>
+ @action: Returns true if Integer is constrainted with maximum limit
+ @note: None
+[==============================================================================}
+function TIntegerHelper.ConstraintMax(const limit: Integer): Boolean; cdecl; {$DEFINE Skeleton_ConstraintMax}{$I config\Skeletons.inc}{$UNDEF Skeleton_ConstraintMax}
+
+{==============================================================================]
+ <TIntegerHelper.Constraint>
+ @action: Returns true if Integer is constrainted with minimum or maximum limit
+ @note: None
+[==============================================================================}
+function TIntegerHelper.Constraint(const minimum, maximum: Integer): Boolean; overload; cdecl; {$DEFINE Skeleton_Constraint}{$I config\Skeletons.inc}{$UNDEF Skeleton_Constraint}
+
+{==============================================================================]
+ <TIntegerHelper.Contstraint>
+ @action: Returns true if Integer is constrainted with range
+ @note: None
+[==============================================================================}
+function TIntegerHelper.Constraint(const range: TRange): Boolean; overload; cdecl;
+begin
+  Result := (Self.ConstraintMin(range.Minimum) or Self.ConstraintMax(range.Maximum));
+end;
+
+{==============================================================================]
  <TIntegerHelper.Even>
  @action: Returns true if Integer value x is an even number.
  @note: None

@@ -45,6 +45,58 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_ClampMin}
+begin
+  if (Self < limit) then
+    Result := limit
+  else
+    Result := Self;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_ClampMax}
+begin
+  if (Self > limit) then
+    Result := limit
+  else
+    Result := Self;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_Clamp}
+begin
+  if (Self < minimum) then
+    Result := minimum
+  else
+    if(Self > maximum) then
+      Result := maximum
+    else
+      Result := Self;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_ConstraintMin}
+begin
+  Result := (Self < limit);
+  if Result then
+    Self := limit;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_ConstraintMax}
+begin
+  Result := (Self > limit);
+  if Result then
+    Self := limit;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_Constraint}
+begin
+  Result := (Self.ConstraintMin(minimum) or Self.ConstraintMax(maximum));
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_QuickSorted}
   procedure QS_IDs(var aID: TIntegerArray; const L, R: Integer);
   var

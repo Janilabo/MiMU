@@ -5,6 +5,14 @@ type
     function TArray(const aSize: Integer = 1): XArr; overload cdecl;
     function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): X2DArr; overload cdecl;
    {$IFDEF Integer}
+      function ClampMin(const limit: Integer): Integer; cdecl;
+      function ClampMax(const limit: Integer): Integer; cdecl;
+      function Clamp(const minimum, maximum: Integer): Integer; overload; cdecl;
+      function Clamp(const range: TRange): Integer; overload; cdecl;
+      function ConstraintMin(const limit: Integer): Boolean; cdecl;
+      function ConstraintMax(const limit: Integer): Boolean; cdecl;
+      function Constraint(const minimum, maximum: Integer): Boolean; overload; cdecl;
+      function Constraint(const range: TRange): Boolean; overload; cdecl;
       function Even: Boolean; cdecl; inline;
       function Odd: Boolean; cdecl; inline;
       function Increase(const N: Integer = 1): Integer; cdecl;
@@ -31,6 +39,12 @@ type
       function Undersize(const limit: Integer): Boolean; cdecl; inline;
     {$ENDIF}
     {$IFDEF Double}
+      function ClampMin(const limit: Double): Double; cdecl;
+      function ClampMax(const limit: Double): Double; cdecl;
+      function Clamp(const minimum, maximum: Double): Double; cdecl;
+      function ConstraintMin(const limit: Double): Boolean; cdecl;
+      function ConstraintMax(const limit: Double): Boolean; cdecl;
+      function Constraint(const minimum, maximum: Double): Boolean; cdecl;
       function Increase(const N: Double = 1): Double; cdecl;
       function Decrease(const N: Double = 1): Double; cdecl;
       function Increment(const N: Double = 1): Double; cdecl;
@@ -207,6 +221,7 @@ type
     function Dump(const items: XArr; const index: Integer = 0): XArr; overload; cdecl;
     function Dupe: XArr; overload; cdecl;
     function Duplicate(const xTimes: Integer = 1): XArr; overload; cdecl;
+    function Emplace(const item: XVar; const index: Integer = 0): Integer; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: XArr): Boolean; overload; cdecl;
     function Erase(const item: XVar; const index: Integer = 2147483647; const all: Boolean = True): XArr; overload; cdecl;
@@ -272,7 +287,6 @@ type
 	function Locations: TIntegerArray; overload; cdecl;
     function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
     function MostFrequent: XVar; overload; cdecl;
-    function Move(const oldIndex, newIndex: Integer): Boolean; overload; cdecl;
     function Next(const index: Integer; const count: Integer = 2147483647): XArr; overload; cdecl;
 	function Occurs(const item: XVar; const occurrence: Integer = 1): Boolean; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
@@ -303,6 +317,7 @@ type
     function Remove(const item: XVar; const all: Boolean): XArr; overload; cdecl;
     function Remove(const items: XArr; const index: Integer = 0; const all: Boolean = True): XArr; overload; cdecl;
     function Remove(const items: XArr; const all: Boolean): XArr; overload; cdecl;
+	function Reposition(const oldIndex, newIndex: Integer): Boolean; overload; cdecl;
     function Resize(const aChange: Integer): Integer; overload; cdecl;
     function Resize(const aChange: Integer; const null: XVar): Integer; overload; cdecl;
     function Reverse: Boolean; overload; cdecl;
@@ -430,6 +445,12 @@ type
     {$IFDEF string}
     {$ENDIF}
     {$IFDEF Char}
+      function Str: string; cdecl;
+      function ToStr: string; cdecl;
+      function Join: string; overload; cdecl;
+      function Join(const glue: string): string; overload; cdecl;
+      function Stringify: string; overload; cdecl;
+      function Stringify(const glue: string): string; overload; cdecl;
     {$ENDIF}
 	{$IFDEF Boolean}
       function Digits: TIntegerArray; overload; cdecl;

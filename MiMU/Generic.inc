@@ -609,6 +609,22 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Emplace(item: VarType; index: Integer): Integer>
+ @action: Inserts item to index in arr. Returns the index it was inserted to.
+ @note: Alternative for Insert().
+[==============================================================================}
+function XArrHelp.Emplace(const item: XVar; const index: Integer = 0): Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Self, (Length(Self) + 1));
+  Result := index.Clamp(0, High(Self));
+  for i := High(Self) downto (Result + 1) do
+    Self[i] := Self[i - 1];
+  Self[Result] := item;
+end;
+
+{==============================================================================]
  <arr.Empty: Boolean>
  @action: Returns true if array is empty (Length = 0).
  @note: None.
@@ -1815,33 +1831,6 @@ begin
 end;
 
 {==============================================================================]
- <arr.Move(oldIndex, newIndex: Integer): Boolean>
- @action: Moves item from oldIndex to newIndex in array arr.
- @note: Returns true with success.
-[==============================================================================}
-function XArrHelp.Move(const oldIndex, newIndex: Integer): Boolean; overload; cdecl;
-var
-  s: XVar;
-  h, i: Integer;
-begin
-  h := High(Self);
-  Result := ((h > 0) and (oldIndex <> newIndex) and InRange(oldIndex, 0, h) and InRange(newIndex, 0, h));
-  if Result then
-  begin
-    s := Self[oldIndex];
-    case (oldIndex > newIndex) of
-      True:
-      for i := oldIndex downto (newIndex + 1) do
-        Self[i] := Self[i - 1];
-      False:
-      for i := oldIndex to (newIndex - 1) do
-        Self[i] := Self[i + 1];
-    end;
-    Self[newIndex] := s;
-  end;
-end;
-
-{==============================================================================]
  <arr.Next(index: Integer; count: Integer): TArray>
  @action: Returns next items from array by index and count.
  @note: None.	
@@ -2307,8 +2296,8 @@ end;
   @action: Returns arr sorted by weight, based on QuickSort algorithm.
   @note: Weight and arr must be the same length! Otherwise returns empty array.
 [==============================================================================}
-function XArrHelp.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): XArr; overload; cdecl; var w: Integer; {$DEFINE Skeleton_QuickSorted}{$I config\Skeletons.inc}{$DEFINE Skeleton_QuickSorted}
-function XArrHelp.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): XArr; overload; cdecl; var w: Double; {$DEFINE Skeleton_QuickSorted}{$I config\Skeletons.inc}{$DEFINE Skeleton_QuickSorted}
+function XArrHelp.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): XArr; overload; cdecl; var w: Integer; {$DEFINE Skeleton_QuickSorted}{$I config\Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
+function XArrHelp.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): XArr; overload; cdecl; var w: Double; {$DEFINE Skeleton_QuickSorted}{$I config\Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
 
 {==============================================================================]
  <arr.Reject(items: TArray; index: Integer): TArray>
@@ -2422,6 +2411,33 @@ end;
 function XArrHelp.Remove(const items: XArr; const all: Boolean): XArr; overload; cdecl;
 begin
   Result := Self.Remove(items, 0, all);
+end;
+
+{==============================================================================]
+ <arr.Reposition(oldIndex, newIndex: Integer): Boolean>
+ @action: Moves item from oldIndex to newIndex in array arr.
+ @note: Returns true with success.
+[==============================================================================}
+function XArrHelp.Reposition(const oldIndex, newIndex: Integer): Boolean; overload; cdecl;
+var
+  s: XVar;
+  h, i: Integer;
+begin
+  h := High(Self);
+  Result := ((h > 0) and (oldIndex <> newIndex) and InRange(oldIndex, 0, h) and InRange(newIndex, 0, h));
+  if Result then
+  begin
+    s := Self[oldIndex];
+    case (oldIndex > newIndex) of
+      True:
+      for i := oldIndex downto (newIndex + 1) do
+        Self[i] := Self[i - 1];
+      False:
+      for i := oldIndex to (newIndex - 1) do
+        Self[i] := Self[i + 1];
+    end;
+    Self[newIndex] := s;
+  end;
 end;
 
 {==============================================================================]
