@@ -166,6 +166,17 @@ begin
 end;
 
 {==============================================================================]
+  <TPointHelper.Clamp>
+  @action: Clamps pt in area, if it is not inside area.
+  @note: None.
+[==============================================================================}
+function TPointHelper.Clamp(const area: TBox): TPoint; cdecl;
+begin
+  Result.X := specialize IfThenElse<Integer>((Self.X < area.X1), (Self.X > area.X2), area.X1, area.X2, Self.X);
+  Result.Y := specialize IfThenElse<Integer>((Self.Y < area.Y1), (Self.Y > area.Y2), area.Y1, area.Y2, Self.Y);
+end;
+
+{==============================================================================]
  <TPointHelper.Grid>
  @action: Outputs/builds grid of points with parameters;
           pt = starting point, used for starting coordinates.

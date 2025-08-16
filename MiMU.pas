@@ -210,6 +210,8 @@ type
 
 function MiMU_Version: Double; cdecl;
 
+generic function IfThenElse<T>(aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;
+
 operator+(const a, b: TPoint): TPoint;
 operator+(const a, b: TBox): TBox;
 operator+(const a, b: TRange): TRange;
@@ -363,6 +365,17 @@ implementation
 function MiMU_Version: Double; cdecl;
 begin
   Result := MiMU_VERSION_NUMBER;
+end;
+
+generic function IfThenElse<T>(aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;
+begin
+  if aBool then
+    Result := aResult
+  else
+    if bBool then
+      Result := bResult
+    else
+      Result := cResult;
 end;
 
 operator+(const a, b: TPoint): TPoint;

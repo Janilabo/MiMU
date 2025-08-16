@@ -189,6 +189,7 @@ type
     {$ENDIF}
     {$IFDEF TPoint}
       function Inside(const bx: TBox): Boolean; cdecl; inline;
+	  function Clamp(const area: TBox): TPoint; cdecl;
       function Create: TPoint; overload; cdecl;
       function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray; cdecl;
       function Row(const cells: Integer; const space: Integer = 0): TPointArray; cdecl;
