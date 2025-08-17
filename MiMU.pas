@@ -105,6 +105,7 @@ type
 	function Enumerate: TIntegerArray; cdecl;
 	function Elements: TIntegerArray; cdecl;
 	function Numbers: TIntegerArray; cdecl;
+	function Items: TIntegerArray; cdecl;
     function Normalize: TRange; cdecl;
     function Overlapping(const b: TRange): Boolean; cdecl;
     function Overlap(const b: TRange): Boolean; cdecl;

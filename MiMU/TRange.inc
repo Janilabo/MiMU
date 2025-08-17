@@ -206,7 +206,7 @@ var
   i, s: Integer;
 begin
   s := Sign(Self.stop - Self.start);
-  SetLength(Result, (Abs(Self.stop - Self.start) + 1));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := (Self.start + (i * s));
 end;
@@ -220,7 +220,7 @@ function TRange.Ints: TIntegerArray; cdecl;
 var
   i, l: Integer;
 begin
-  l := (Abs(Self.stop - Self.start) + 1);
+  l := Self.Size;
   SetLength(Result, l);
   case (Self.start > Self.stop) of
     True:
@@ -335,12 +335,29 @@ var
 begin
   if (Self.start = Self.stop) then
     Exit([Self.start]);
-  s := IfThen((Self.start > Self.stop), -1, 1);
+  s := IfThen(Self.Descending, -1, 1);
   SetLength(Result, Self.Size);
   r := 0;
   i := Self.start;
   while (((s = 1) and (i <= Self.stop)) or ((s = -1) and (i >= Self.stop))) do
     Result[r.Increase] := i.Increase(s);
+end;
+
+{==============================================================================]
+  <TRange.Items>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Items: TIntegerArray; cdecl;
+var
+  i, s: Integer;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  s := IfThen(Self.Descending, -1, 1);
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Result) do
+    Result[i] := (Self.start + (s * i));
 end;
 
 {==============================================================================]
