@@ -77,6 +77,7 @@ type
   end;
   TPointArray = array of TPoint;
   T2DPointArray = array of TPointArray;
+  PPoint = ^TPoint;
   TRange = record
     start, stop: Integer;
     constructor Create(const rStart, rStop: Integer); overload;
@@ -101,6 +102,9 @@ type
     function Ints: TIntegerArray; cdecl;
     function Values: TIntegerArray; cdecl;
     function TIA: TIntegerArray; cdecl;
+	function Enumerate: TIntegerArray; cdecl;
+	function Elements: TIntegerArray; cdecl;
+	function Numbers: TIntegerArray; cdecl;
     function Normalize: TRange; cdecl;
     function Overlapping(const b: TRange): Boolean; cdecl;
     function Overlap(const b: TRange): Boolean; cdecl;
@@ -196,6 +200,10 @@ type
     function Clamp(const toArea: TBox): TBox; cdecl;
     function Points: TPointArray; cdecl;
     function TPA: TPointArray; cdecl;
+	function Contents: TPointArray; cdecl;
+	function Extract: TPointArray; cdecl;
+	function Enumerate: TPointArray; cdecl;
+	function Elements: TPointArray; cdecl;
     function CornerPoints: TPointArray; cdecl;
     function Corners: TPointArray; cdecl;
     function SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload; cdecl;

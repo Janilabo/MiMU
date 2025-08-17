@@ -277,6 +277,73 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Enumerate>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Enumerate: TIntegerArray; cdecl;
+var
+  i: Integer;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  SetLength(Result, 0);
+  case Self.Ascending of
+    True:
+    for i := Self.start to Self.stop do
+      Result := (Result + [i]);
+    False:
+    for i := Self.start downto Self.stop do
+      Result := (Result + [i]);
+  end;
+end;
+
+{==============================================================================]
+  <TBox.Elements>
+  Explanation: Returns TBox points as TPointArray.
+  Example: Alternative method.
+[==============================================================================}
+function TRange.Elements: TIntegerArray; cdecl;
+var
+  i: specialize TList<Integer>;
+  e: Integer;
+begin
+  i := specialize TList<Integer>.Create;
+  try
+    case Self.Ascending of
+      True:
+      for e := Self.start to Self.stop do
+        i.Add(e);
+      False:
+      for e := Self.start downto Self.stop do
+        i.Add(e);
+    end;
+    Result := i.ToArray;
+  finally
+    i.Free;
+  end;
+end;
+
+{==============================================================================]
+  <TRange.Elements>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Numbers: TIntegerArray; cdecl;
+var
+  i, r, s: Integer;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  s := IfThen((Self.start > Self.stop), -1, 1);
+  SetLength(Result, Self.Size);
+  r := 0;
+  i := Self.start;
+  while (((s = 1) and (i <= Self.stop)) or ((s = -1) and (i >= Self.stop))) do
+    Result[r.Increase] := i.Increase(s);
+end;
+
+{==============================================================================]
   <TRange.Normalize>
   @action: Using Min-Maxing this function returns "normal" range.
   @note: None.

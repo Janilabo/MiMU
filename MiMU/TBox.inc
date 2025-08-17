@@ -766,11 +766,88 @@ end;
 [==============================================================================}
 function TBox.TPA: TPointArray; cdecl;
 var
-  i, w, h: Integer;
+  i, j: Integer;
 begin
-  SetLength(Result, Self.Size(w, h));
+  SetLength(Result, Self.Size(j, i));
   for i := 0 to High(Result) do
-    Result[i].Create((Self.X1 + (i mod w)), (Self.Y1 + (i div w)));
+    Result[i].Create((Self.X1 + (i mod j)), (Self.Y1 + (i div j)));
+end;
+
+{==============================================================================]
+  <TBox.Contents>
+  Explanation: Returns TBox points as TPointArray.
+  Example: Fast, Pointer-based alternative
+[==============================================================================}
+function TBox.Contents: TPointArray; cdecl;
+var
+  p: PPoint;
+  x, y: Integer;
+begin
+  SetLength(Result, Self.Area);
+  p := @Result[0];
+  for y := Self.Y1 to Self.Y2 do
+    for x := Self.X1 to Self.X2 do
+    begin
+      p^.X := x;
+      p^.Y := y;
+      Inc(p);
+    end;
+end;
+
+{==============================================================================]
+  <TBox.Extract>
+  Explanation: Returns TBox points as TPointArray.
+  Example: Alternative method for Points(), TPA() and Contents().
+[==============================================================================}
+function TBox.Extract: TPointArray; cdecl;
+var
+  x, y, i: Integer;
+begin
+  SetLength(Result, Self.Area);
+  i := 0;
+  y := Self.Y1;
+  repeat
+    x := Self.X1;
+    repeat
+      Result[i.Increase] := Point(x, y);
+    until (x.Increment > Self.X2);
+  until (y.Increment > Self.Y2);
+end;
+
+{==============================================================================]
+  <TBox.Enumerate>
+  Explanation: Returns TBox points as TPointArray.
+  Example: Alternative method.
+[==============================================================================}
+function TBox.Enumerate: TPointArray; cdecl;
+var
+  x, y: Integer;
+begin
+  SetLength(Result, 0);
+  for y := Self.Y1 to Self.Y2 do
+    for x := Self.X1 to Self.X2 do
+      Result := (Result + [Point(x, y)]);
+end;
+
+{==============================================================================]
+  <TBox.Elements>
+  Explanation: Returns TBox points as TPointArray.
+  Example: Alternative method.
+[==============================================================================}
+function TBox.Elements: TPointArray; cdecl;
+var
+  p: specialize TList<TPoint>;
+  x, y: Integer;
+begin
+  p := specialize TList<TPoint>.Create;
+  try
+    for y := Self.Y1 to Self.Y2 do
+      for x := Self.X1 to Self.X2 do
+        p.Add(Point(x, y));
+    Result := p.ToArray;
+  finally
+    p.Free;
+  end;
 end;
 
 {==============================================================================]
