@@ -101,6 +101,8 @@ type
     function Minimum: Integer; cdecl;
     function Highest: Integer; cdecl;
     function Maximum: Integer; cdecl;
+    function Exceeds(const maxElements: Integer): Boolean; cdecl;
+    function Insufficient(const minElements: Integer): Boolean; cdecl;
     function Digits: TIntegerArray; cdecl;
     function Ints: TIntegerArray; cdecl;
     function Values: TIntegerArray; cdecl;
@@ -118,6 +120,10 @@ type
     function Shift(const delta: Integer): TRange; cdecl;
     function Contains(const x: Integer): Boolean; overload; cdecl;
     function Contains(const x: TRange): Boolean; overload; cdecl;
+    function Above(const target: Integer): Boolean; overload; cdecl;
+    function Above(const target: TRange): Boolean; overload; cdecl;
+    function Below(const target: Integer): Boolean; overload; cdecl;
+    function Below(const target: TRange): Boolean; overload; cdecl;
     function Reversed: TRange; cdecl;
     function Reverse: Boolean; cdecl;
     function Equals(const b: TRange): Boolean; cdecl;

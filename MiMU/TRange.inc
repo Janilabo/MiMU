@@ -227,6 +227,26 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Exceeds>
+  @action: Returns true if TRange contains more than maxElements.
+  @note: TRange Exceeds maximum elements.
+[==============================================================================}
+function TRange.Exceeds(const maxElements: Integer): Boolean; cdecl;
+begin
+  Result := (Self.Size > maxElements);
+end;
+
+{==============================================================================]
+  <TRange.Insufficient>
+  @action: Returns true if TRange contains less than minElements.
+  @note: TRange is behind minimum elements.
+[==============================================================================}
+function TRange.Insufficient(const minElements: Integer): Boolean; cdecl;
+begin
+  Result := (Self.Size < minElements);
+end;
+
+{==============================================================================]
   <TRange.Digits>
   @action: Returns digits of the given range.
   @note: None.
@@ -494,6 +514,36 @@ end;
 function TRange.Contains(const x: TRange): Boolean; overload; cdecl;
 begin
   Result := ((Min(x.start, x.stop) >= Min(Self.start, Self.stop)) and (Max(x.start, x.stop) <= Max(Self.start, Self.stop)));
+end;
+
+{==============================================================================]
+  <TRange.Above>
+  @action: Returns True if range is above target.
+  @note: None.
+[==============================================================================}
+function TRange.Above(const target: Integer): Boolean; overload; cdecl;
+begin
+  Result := (Self.Minimum > target);
+end;
+
+function TRange.Above(const target: TRange): Boolean; overload; cdecl;
+begin
+  Result := Self.Above(target.Maximum);
+end;
+
+{==============================================================================]
+  <TRange.Below>
+  @action: Returns True if range is below target.
+  @note: None.
+[==============================================================================}
+function TRange.Below(const target: Integer): Boolean; overload; cdecl;
+begin
+  Result := (Self.Maximum < target);
+end;
+
+function TRange.Below(const target: TRange): Boolean; overload; cdecl;
+begin
+  Result := Self.Below(target.Minimum);
 end;
 
 {==============================================================================]
