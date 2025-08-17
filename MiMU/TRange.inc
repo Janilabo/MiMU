@@ -1,11 +1,41 @@
 {==============================================================================]
-  <TRange.Neutral>
+  <TRange.Singular>
   @action: Returns true if range start equals stop
   @note: None.
 [==============================================================================}
-function TRange.Neutral: Boolean; cdecl;
+function TRange.Singular: Boolean; cdecl;
 begin
   Result := (Self.start = Self.stop);
+end;
+
+{==============================================================================]
+  <TRange.Atomic>
+  @action: Returns true if range start equals stop
+  @note: None.
+[==============================================================================}
+function TRange.Atomic: Boolean; cdecl;
+begin
+  Result := ((Self.start - Self.stop) = 0);
+end;
+
+{==============================================================================]
+  <TRange.Plural>
+  @action: Returns true if range start does NOT equal to stop
+  @note: None.
+[==============================================================================}
+function TRange.Plural: Boolean; cdecl;
+begin
+  Result := (Self.start <> Self.stop);
+end;
+
+{==============================================================================]
+  <TRange.Composite>
+  @action: Returns true if range start does NOT equal to stop
+  @note: None.
+[==============================================================================}
+function TRange.Composite: Boolean; cdecl;
+begin
+  Result := not (Self.start = Self.stop);
 end;
 
 {==============================================================================]
@@ -121,7 +151,7 @@ end;
 [==============================================================================}
 function TRange.Grab: TRange; cdecl;
 begin
-  if (Self.start > Self.stop) then
+  if Self.Descending then
     Result.Create(Self.stop, Self.start)
   else
     Result := Self;
@@ -144,7 +174,7 @@ end;
 [==============================================================================}
 function TRange.Length: Integer; cdecl;
 begin
-  if (Self.start > Self.stop) then
+  if Self.Descending then
     Result := ((Self.start - Self.stop) + 1)
   else
     Result := ((Self.stop - Self.start) + 1);
@@ -222,7 +252,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  case (Self.start > Self.stop) of
+  case Self.Descending of
     True:
     for i := 0 to High(Result) do
       Result[(l - i) - 1] := (i + Self.stop);
@@ -264,7 +294,7 @@ var
 begin
   l := Self.Length;
   SetLength(Result, l);
-  if (Self.start <> Self.stop) then
+  if Self.Plural then
   begin
     d := Sign(Self.stop - Self.start);
     for i := 0 to ((l - 1) div 2) do
@@ -285,7 +315,7 @@ function TRange.Enumerate: TIntegerArray; cdecl;
 var
   i: Integer;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit([Self.start]);
   SetLength(Result, 0);
   case Self.Ascending of
@@ -333,7 +363,7 @@ function TRange.Numbers: TIntegerArray; cdecl;
 var
   i, r, s: Integer;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit([Self.start]);
   s := IfThen(Self.Descending, -1, 1);
   SetLength(Result, Self.Size);
@@ -352,7 +382,7 @@ function TRange.Items: TIntegerArray; cdecl;
 var
   i, s: Integer;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit([Self.start]);
   s := IfThen(Self.Descending, -1, 1);
   SetLength(Result, Self.Size);
@@ -484,7 +514,7 @@ end;
 [==============================================================================}
 function TRange.Reverse: Boolean; cdecl;
 begin
-  Result := (Self.start <> Self.stop);
+  Result := Self.Plural;
   if Result then
     Swap(Self.start, Self.stop);
 end;
@@ -905,7 +935,7 @@ function TRange.Extract: TIntegerArray; overload; cdecl;
 var
   i, c, s: Integer;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit([Self.start]);
   s := IfThen((Self.stop > Self.start), 1, -1);
   c := (Abs(Self.stop - Self.start) + 1);

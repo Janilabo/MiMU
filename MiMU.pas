@@ -83,7 +83,10 @@ type
     constructor Create(const rStart, rStop: Integer); overload;
     constructor Create(const value: Integer); overload;
     class function Construct(const rStart, rStop: Integer): TRange; overload; cdecl; static;
-    function Neutral: Boolean; cdecl;
+    function Singular: Boolean; cdecl;
+    function Atomic: Boolean; cdecl;
+    function Plural: Boolean; cdecl;
+    function Composite: Boolean; cdecl;
     function Ascend: TRange; cdecl;
     function Ascending: Boolean; cdecl;
     function Descend: TRange; cdecl;
