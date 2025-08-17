@@ -799,27 +799,82 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Touch>
+  <TRange.Neighbor>
   @action: Returns true if 2 TRanges are right next to eachother.
   @note: (Distance is exactly 1 between em).
 [==============================================================================}
-function TRange.Touch(const b: TRange): Boolean; cdecl;
-begin
-  Result := (((Max(Self.start, Self.stop) + 1) = Min(b.start, b.stop)) or ((Max(b.start, b.stop) + 1) = Min(Self.start, Self.stop)));
-end;
-
-{==============================================================================]
-  <TRange.Touches>
-  @action: Returns true if 2 TRanges are right next to eachother.
-  @note: (Distance is exactly 1 between em).
-[==============================================================================}
-function TRange.Touches(const b: TRange): Boolean; cdecl;
+function TRange.Neighbor(const b: TRange): Boolean; cdecl;
 var
   i, j: TRange;
 begin
   i := Self.Normalize;
   j := b.Normalize;
   Result := ((i.stop + 1) = j.start) or ((j.stop + 1) = i.start);
+end;
+
+{==============================================================================]
+  <TRange.Neighbour>
+  @action: Returns true if 2 TRanges are right next to eachother.
+  @note: (Distance is exactly 1 between em).
+[==============================================================================}
+function TRange.Neighbour(const b: TRange): Boolean; cdecl;
+begin
+  Result := (((Max(Self.start, Self.stop) + 1) = Min(b.start, b.stop)) or ((Max(b.start, b.stop) + 1) = Min(Self.start, Self.stop)));
+end;
+
+{==============================================================================]
+  <TRange.Touch>
+  @action: Returns true if range touches b.
+  @note: Touch = only single value is shared between the ranges.
+[==============================================================================}
+function TRange.Touch(const b: TRange): Boolean; cdecl;
+var
+  l, h, r: TRange;
+begin
+  l := Self.Normalize;
+  h := b.Normalize;
+  r.Create(Max(l.start, h.start), Min(l.stop, h.stop));
+  Result := r.Singular;
+end;
+
+{==============================================================================]
+  <TRange.Touches>
+  @action: Returns true if range touches b with minimum and maximum contact.
+  @note: Touch = minimum/maximum shared values.
+[==============================================================================}
+function TRange.Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
+var
+  x, y: TRange;
+  i, s: Integer;
+begin
+  x := Self.Normalize;
+  y := b.Normalize;
+  s := 0;
+  for i := x.start to x.stop do
+    if ((i >= y.start) and (i <= y.stop)) then
+      if (s.Increment > maxTouch) then
+        Exit(False);
+  Result := (s >= minTouch);
+end;
+
+{==============================================================================]
+  <TRange.Touching>
+  @action: Returns true if range touches b with minimum and maximum contact.
+  @note: Touch = minimum/maximum shared values.
+[==============================================================================}
+function TRange.Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
+var
+  x, y: TRange;
+  s, i: Integer;
+begin
+  x := Self.Normalize;
+  y := b.Normalize;
+  s := 0;
+  for i := x.start to x.stop do
+    if ((i >= y.start) and (i <= y.stop)) then
+      if (s.Increment > maxTouch) then
+        Exit(False);
+  Result := (s >= minTouch);
 end;
 
 {==============================================================================]

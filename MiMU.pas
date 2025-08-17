@@ -133,8 +133,11 @@ type
     function Clip(const zone: TRange): TRange; cdecl;
     function ClipMin(const minValue: Integer): TRange; cdecl;
     function ClipMax(const maxValue: Integer): TRange; cdecl;
-    function Touch(const b: TRange): Boolean; cdecl;
-    function Touches(const b: TRange): Boolean; cdecl;
+	function Neighbor(const b: TRange): Boolean; cdecl;
+    function Neighbour(const b: TRange): Boolean; cdecl;
+	function Touch(const b: TRange): Boolean; cdecl;
+    function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
+    function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
     function Distance(const b: TRange): Integer; cdecl;
     function DistHausdorff(const b: TRange): Integer; cdecl;
     function Digit(const x: Integer): Boolean; cdecl; inline;
