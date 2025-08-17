@@ -254,7 +254,7 @@ begin
     begin
       r := Self.Bounds;
       b.Create(r.Size, 0);
-      for x := 0 to High(Self) do
+      for x := 0 to h do
         Inc(b[Self[x] - r.start]);
       t := 0;
       for x := 0 to (r.stop - r.start) do
@@ -286,7 +286,7 @@ begin
     begin
       r := Self.Bounds;
       b.Create(r.Size, 0);
-      for x := 0 to High(Self) do
+      for x := 0 to h do
         Inc(b[Self[x] - r.start]);
       t := 0;
       for x := 0 to (r.stop - r.start) do
@@ -355,8 +355,8 @@ begin
   begin
     o := aAscending.Select(-1, 1);
     t := -1;
-    qsPush(0, High(Self));
-    r.Create(0, High(Self));
+    qsPush(0, Result);
+    r.Create(0, Result);
     while qsPop(r.start, r.stop) do
     begin
       while (r.start < r.stop) do
@@ -591,7 +591,7 @@ begin
   begin
     o := aAscending.Select(-1, 1);
     p := 1;
-    while (p < (Result + 1)) do
+    while (p <= Result) do
       if (Sign(Self[p] - Self[p - 1]) = o) then
       begin
         Exchange(p, (p - 1));
@@ -617,7 +617,7 @@ begin
     o := aAscending.Select(-1, 1);
     p := 1;
     l := 0;
-    while (p < Length(Self)) do
+    while (p <= Result) do
       if (Sign(Self[p] - Self[p - 1]) = o) then
       begin
         Exchange(p, (p - 1));
@@ -746,18 +746,17 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.SelectionSortBidirectional(const aAscending: Boolean = True): Integer; cdecl;
 var
-  a, b, x, i, t, h, l, s, o: Integer;
+  a, b, x, i, h, l, s, o: Integer;
 begin
   Result := High(Self);
   if (Result > 0) then
   begin
     o := aAscending.Select(-1, 1);
-    t := Length(Self);
-    s := ((t - 1) div 2);
+    s := (Result div 2);
     for i := 0 to s do
     begin
       l := i;
-      h := ((t - 1) - i);
+      h := (Result - i);
       a := l;
       b := h;
       if (Sign(Self[l] - Self[h]) = -o) then
@@ -783,18 +782,17 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; cdecl;
 var
-  a, b, x, i, l, s, o: Integer;
+  a, b, x, i, s, o: Integer;
 begin
   Result := High(Self);
   if (Result > 0) then
   begin
     o := aAscending.Select(-1, 1);
-    l := Length(Self);
-    s := ((l - 1) div 2);
+    s := (Result div 2);
     for i := 0 to s do
     begin
       a := i;
-      b := ((l - 1) - i);
+      b := (Result - i);
       if (Sign(Self[b] - Self[a]) = o) then
         Exchange(a, b);
       for x := (a + 1) to (b - 1) do
@@ -969,6 +967,85 @@ begin
         Exchange(0, 1);
     end;
   end;
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.RadixSort>
+  @action: RadixSort for TIntegerArrays.
+  @note: Returns High(arr).
+[==============================================================================}
+function TIntegerArrayHelper.RadixSort(const aAscending: Boolean = True): Integer; cdecl;
+var
+  a, n: TIntegerArray;
+  c: array[0..9] of Integer;
+  x, y, p, i, j, m, e: Integer;
+begin
+  Result := High(Self);
+  if (Result < 1) then
+    Exit;
+  SetLength(n, (Result + 1));
+  SetLength(a, (Result + 1));
+  x := 0;
+  y := 0;
+  for i := 0 to Result do
+    if (Self[i] < 0) then
+      n[x.Increase] := -Self[i]
+    else
+      a[y.Increase] := Self[i];
+  SetLength(n, x);
+  SetLength(a, y);
+  if (x > 0) then
+  begin
+    m := n[0];
+    for i := 1 to (x - 1) do
+      if (n[i] > m) then
+        m := n[i];
+    e := 1;
+    while ((m div e) > 0) do
+    begin
+      for j := 0 to 9 do
+        c[j] := 0;
+      for i := 0 to (x - 1) do
+        Inc(c[(n[i] div e) mod 10]);
+      for j := 8 downto 0 do
+        c[j] := (c[j] + c[j + 1]);
+      SetLength(Self, x);
+      for i := (x - 1) downto 0 do
+        Self[c[((n[i] div e) mod 10)].Decrement] := n[i];
+      for i := 0 to (x - 1) do
+        n[i] := Self[i];
+      e := (e * 10);
+    end;
+    for i := 0 to (x - 1) do
+      n[i] := -n[i];
+  end;
+  if (y > 0) then
+  begin
+    m := a[0];
+    for i := 1 to (y - 1) do
+      if (a[i] > m) then
+        m := a[i];
+    e := 1;
+    while (m div e) > 0 do
+    begin
+      for j := 0 to 9 do
+        c[j] := 0;
+      for i := 0 to (y - 1) do
+        Inc(c[(a[i] div e) mod 10]);
+      for j := 1 to 9 do
+        c[j] := (c[j] + c[j - 1]);
+      SetLength(Self, y);
+      for i := (y - 1) downto 0 do
+        Self[c[(a[i] div e) mod 10].Decrement] := a[i];
+      for i := 0 to (y - 1) do
+        a[i] := Self[i];
+      e := (e * 10);
+    end;
+  end;
+  if aAscending then
+    Self := (n + a)
+  else
+    Self := (a.Reversed + n.Reversed);
 end;
 
 {==============================================================================]

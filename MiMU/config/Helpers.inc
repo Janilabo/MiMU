@@ -428,6 +428,7 @@ type
       function MergeSort(const aAscending: Boolean = True): Integer; cdecl;
       function MergeSortBU(const aAscending: Boolean = True): Integer; cdecl;
       function ShellSort(const aAscending: Boolean = True): Integer; cdecl;
+	  function RadixSort(const aAscending: Boolean = True): Integer; cdecl;
       function BSort(const aAscending: Boolean = True): Integer; cdecl;
       function BinarySort(const aAscending: Boolean = True): Integer; cdecl;
       function BinarySorted(const aAscending: Boolean = True): TIntegerArray; cdecl;
