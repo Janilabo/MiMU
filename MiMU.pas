@@ -162,6 +162,11 @@ type
     function Form(const pt: TPoint; const width, height: Integer): TBox; overload; cdecl;
     function Make(const pt: TPoint; const radius: Integer = 0): TBox; overload; cdecl;
     function Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload; cdecl;
+    function Singular: Boolean; cdecl;
+    function Plural: Boolean; cdecl;
+	function Rectangular: Boolean; cdecl;
+	function Equilateral: Boolean; cdecl;
+    function Square: Boolean; cdecl;
     function Size(var width, height: Integer): Integer; cdecl; inline;
     function Area: Integer; cdecl; inline;
     function Diagonal: Double; cdecl;

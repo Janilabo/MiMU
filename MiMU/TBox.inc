@@ -185,6 +185,57 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Singular>
+  @action: Returns true if TBox is just a single point.
+  @note: None.
+[==============================================================================}
+function TBox.Singular: Boolean; cdecl;
+begin
+  Result := ((Self.X1 = Self.X2) and (Self.Y1 = Self.Y2));
+end;
+
+{==============================================================================]
+  <TBox.Plural>
+  @action: Returns true if TBox contains more than single point.
+  @note: None.
+[==============================================================================}
+function TBox.Plural: Boolean; cdecl;
+begin
+  Result := ((Self.X2 > Self.X1) or (Self.Y2 > Self.Y1));
+end;
+
+{==============================================================================]
+  <TBox.Rectangular>
+  @action: Returns true if TBox width AND height are higher than 1.
+  @note: (X2 > X1 and Y2 > Y1).
+[==============================================================================}
+function TBox.Rectangular: Boolean; cdecl;
+begin
+  Result := ((Self.X2 > Self.X1) and (Self.Y2 > Self.Y1));
+end;
+
+{==============================================================================]
+  <TBox.Equilateral>
+  @action: Returns true if width equals height.
+  @note: (X2 - X1) = (Y2 - Y1), so WIDTH equals HEIGHT.
+[==============================================================================}
+function TBox.Equilateral: Boolean; cdecl;
+begin
+  Result := ((Self.X2 - Self.X1) = (Self.Y2 - Self.Y1));
+end;
+
+{==============================================================================]
+  <TBox.Square>
+  @action: Returns true if width equals height.
+  @note: (X2 - X1) = (Y2 - Y1), so WIDTH equals HEIGHT.
+[==============================================================================}
+function TBox.Square: Boolean; cdecl;
+begin
+  Result := (((Self.X2 > Self.X1) and (Self.Y2 > Self.Y1)) and ((Self.X2 - Self.X1) = (Self.Y2 - Self.Y1)));
+end;
+
+
+{==============================================================================]
   <TBox.Size>
   @action: Stores dimensions from TBox (bx) to width and height variables
   @note: Returns bx area.
