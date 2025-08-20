@@ -971,7 +971,6 @@ begin
   Result := (((x >= Self.start) and (x <= Self.stop)) or ((x >= Self.stop) and (x <= Self.start)));
 end;
 
-
 {==============================================================================]
  <TRange.Value>
  @action: Returns true if range contains x-value.
@@ -980,6 +979,19 @@ end;
 function TRange.Value(const x: Integer): Boolean; cdecl; inline;
 begin
   Result := not (((x < Self.start) and (x < Self.stop)) or ((x > Self.stop) and (x > Self.start)));
+end;
+
+{==============================================================================]
+ <TRange.Item>
+ @action: Returns true if range contains x-value.
+ @note: None.
+[==============================================================================}
+function TRange.Item(const x: Integer): Boolean; cdecl; inline;
+begin
+  if (Self.start <= Self.stop) then
+    Result := ((x >= Self.start) and (x <= Self.stop))
+  else
+    Result := ((x >= Self.stop) and (x <= Self.start));
 end;
 
 {==============================================================================]
@@ -1012,9 +1024,37 @@ end;
  @action: Converts TRange range to string.
  @note: None
 [==============================================================================}
-function TRange.Str: string; cdecl;
+function TRange.Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; cdecl;
 begin
-  Result := ('[' + IntToStr(Self.start) + '..' + IntToStr(Self.stop) + ']');
+  Result := ('[' + IntToStr(Self.start) + glueRange + IntToStr(Self.stop) + ']');
+end;
+
+{==============================================================================]
+ <TRange.ToStr>
+ @action: Converts TRange range to string.
+ @note: None
+[==============================================================================}
+function TRange.ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;
+begin
+  Result := '';
+  if (openRange <> '') then
+    Result := (Result + openRange);
+  Result := (Result + IntToStr(Self.start));
+  if (glueRange <> '') then
+    Result := (Result + glueRange);
+  Result := (Result + IntToStr(Self.stop));
+  if (closeRange <> '') then
+    Result := (Result + closeRange);
+end;
+
+{==============================================================================]
+ <TRange.Stringify>
+ @action: Converts TRange range to string.
+ @note: None
+[==============================================================================}
+function TRange.Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;
+begin
+  Result := Format(openRange + '%d' + glueRange + '%d' + closeRange, [Self.start, Self.stop]);
 end;
 
 {==============================================================================]

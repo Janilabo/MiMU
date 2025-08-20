@@ -1026,7 +1026,7 @@ begin
       if (a[i] > m) then
         m := a[i];
     e := 1;
-    while (m div e) > 0 do
+    while ((m div e) > 0) do
     begin
       for j := 0 to 9 do
         c[j] := 0;

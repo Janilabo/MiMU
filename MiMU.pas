@@ -148,9 +148,12 @@ type
     function DistHausdorff(const b: TRange): Integer; cdecl;
     function Digit(const x: Integer): Boolean; cdecl; inline;
     function Value(const x: Integer): Boolean; cdecl; inline;
+	function Item(const x: Integer): Boolean; cdecl; inline;
     function Middle: Double; cdecl;
     function Center: Integer; cdecl;
-    function Str: string; cdecl;
+    function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; cdecl;
+	function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;
+	function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;
     function Sum: Int64; cdecl;
     function Extract: TIntegerArray; overload; cdecl;
   end;
