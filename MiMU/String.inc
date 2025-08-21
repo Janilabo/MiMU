@@ -586,7 +586,7 @@ var
 begin
   if (Length(Self) > 0) then
   begin
-    r := Self.ToTRange;
+    r := Self.AsTRange;
     Result := r.TIA;
   end else
     SetLength(Result, 0);
@@ -1004,11 +1004,33 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.ToTRange>
+  <TStringHelper.AsTRange>
   @action: Returns indexes of string as TRange.
   @note: With empty string this function returns as 0..0!
 [==============================================================================}
-function TStringHelper.ToTRange: TRange; cdecl;
+function TStringHelper.AsTRange: TRange; cdecl;
 begin
   Result.Build(Min(1, Length(Self)), Length(Self));
+end;
+
+{==============================================================================]
+ <TStringHelper.ToTRange>
+ @action: Converts string to TRange.
+ @note: None
+[==============================================================================}
+function TStringHelper.ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange; cdecl;
+var
+  s: string;
+  p: Integer;
+  o, c: string;
+begin
+  s := Self.Trim;
+  if ((s <> '') and (s[1] in ['[', '(', '{', '<'])) then
+    Delete(s, 1, 1);
+  if ((s <> '') and (s[Length(s)] in [']', ')', '}', '>'])) then
+    Delete(s, Length(s), 1);
+  p := s.Pos(glueRange);
+  if (p = 0) then
+    Exit(Result.Create(-2147483648));
+  Result.Create(StrToInt(Copy(s, 1, (p - 1)).Trim), StrToInt(Copy(s, (p + Length(glueRange)), 2147483647).Trim));
 end;

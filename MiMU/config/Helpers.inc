@@ -147,8 +147,9 @@ type
       function TrimLeft(const t: Char = #32): string; cdecl;
       function TrimRight(const t: Char = #32): string; cdecl;
       function Trim(const t: Char = #32): string; cdecl;
-      function ToTRange: TRange; cdecl;
+      function AsTRange: TRange; cdecl;
 	  function Void: Boolean; cdecl;
+	  function ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange; cdecl;
     {$ENDIF}
     {$IFDEF Char}
       function Compare(const target: Char): Integer; cdecl; inline;
