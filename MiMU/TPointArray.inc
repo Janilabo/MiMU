@@ -8,7 +8,7 @@ var
   i: Integer;
 begin
   if Self.Empty then
-    Exit(Box(-2147483648));
+    Exit(Result.Create(-2147483648));
   Result.Make(Self[0]);
   for i := 1 to High(Self) do
   begin
@@ -44,6 +44,49 @@ begin
       width := 0;
       height := 0;
     end;
+  end;
+end;
+
+{==============================================================================]
+  <TPointArrayHelper.BoundingBox>
+  @action: Returns bounding box around TPointArray arr.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.BoundingBox: TBox; cdecl;
+var
+  i: Integer;
+  a, b: TIntegerArray;
+begin
+  if Self.Empty then
+    Exit(Result.Create(-2147483648));
+  SetLength(a, Length(Self));
+  SetLength(b, Length(Self));
+  for i := 0 to High(Self) do
+  begin
+    a[i] := Self[i].X;
+    b[i] := Self[i].Y;
+  end;
+  Result.Create(MinValue(a), MinValue(b), MaxValue(a), MaxValue(b));
+end;
+
+{==============================================================================]
+  <TPointArrayHelper.Box>
+  @action: Returns bounding box around TPointArray arr.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.Box: TBox; cdecl;
+var
+  P: TPoint;
+begin
+  if Self.Empty then
+    Exit(Result.Create(-2147483648));
+  Result.Create(Self[0]);
+  for P in Self do
+  begin
+    Result.X1 := Min(Result.X1, p.X);
+    Result.Y1 := Min(Result.Y1, p.Y);
+    Result.X2 := Max(Result.X2, p.X);
+    Result.Y2 := Max(Result.Y2, p.Y);
   end;
 end;
 

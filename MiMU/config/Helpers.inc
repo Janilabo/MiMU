@@ -460,6 +460,10 @@ type
 	  function Knit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
       function Knit(const diff: Integer): T2DIntegerArray; overload; cdecl;
       function Invert: TIntegerArray; cdecl;
+	  function Minimum(var index: Integer): Integer; overload; cdecl;
+	  function Minimum: Integer; overload; cdecl;
+	  function Maximum(var index: Integer): Integer; overload; cdecl;
+	  function Maximum: Integer; overload; cdecl;
     {$ENDIF}
     {$IFDEF Double}
     {$ENDIF}
@@ -500,6 +504,8 @@ type
     {$IFDEF TPoint}
       function Bounds: TBox; overload; cdecl;
       function Bounds(var width, height: Integer): TBox; overload; cdecl;
+	  function BoundingBox: TBox; cdecl;
+	  function Box: TBox; cdecl;
       function Undupe: TPointArray; cdecl;
       function Unduped: TPointArray; cdecl;
       function Invert: TPointArray; cdecl;

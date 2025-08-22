@@ -1888,3 +1888,73 @@ begin
   end;
   SetLength(Result, r);
 end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Minimum>
+  @action: Returns minimum value from arr and stores index to Integer variable.
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.Minimum(var index: Integer): Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  index := -1;
+  if Self.Empty then
+    Exit(2147483647);
+  index := 0;
+  for i := 1 to High(Self) do
+    if (Self[i] < Self[index]) then
+      index := i;
+  Result := Self[index];
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Minimum>
+  @action: Returns minimum value from arr.
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.Minimum: Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  if Self.Empty then
+    Exit(2147483647);
+  Result := Self[0];
+  for i := 1 to High(Self) do
+    Result := Min(Self[i], Result);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Maximum>
+  @action: Returns maximum value from arr and stores index to Integer variable.
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.Maximum(var index: Integer): Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  index := -1;
+  if Self.Empty then
+    Exit(-2147483648);
+  index := 0;
+  for i := 1 to High(Self) do
+    if (Self[i] > Self[index]) then
+      index := i;
+  Result := Self[index];
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Maximum>
+  @action: Returns maximum value from arr.
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.Maximum: Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  if Self.Empty then
+    Exit(2147483647);
+  Result := Self[0];
+  for i := 1 to High(Self) do
+    Result := Max(Self[i], Result);
+end;
