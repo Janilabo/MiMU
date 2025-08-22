@@ -811,6 +811,30 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Pixels>
+  Explanation: Returns TBox points as TPointArray.
+  Example: None.
+[==============================================================================}
+function TBox.Pixels: TPointArray; cdecl;
+var
+  w, h, s, x, y, i: Integer;
+  p: TPointArray;
+begin
+  SetLength(Result, Self.Size(w, h));
+  SetLength(p, w);
+  for x := 0 to (w - 1) do
+    p[x].X := (Self.X1 + x);
+  s := (w * SizeOf(TPoint));
+  i := 0;
+  for y := Self.Y1 to Self.Y2 do
+  begin
+    for x := 0 to (w - 1) do
+      p[x].Y := y;
+    Move(p[0], Result[i.Increase(w)], s);
+  end;
+end;
+
+{==============================================================================]
   <TBox.TPA>
   Explanation: Returns TBox points as TPointArray.
   Example: None.
@@ -898,6 +922,29 @@ begin
     Result := p.ToArray;
   finally
     p.Free;
+  end;
+end;
+
+{==============================================================================]
+  <TBox.Border>
+  Explanation: Returns TBox border points as TPointArray.
+  Example: Skips all the inside points.
+[==============================================================================}
+function TBox.Border: TPointArray; cdecl;
+var
+  x, y, i, w, h: Integer;
+begin
+  Self.Size(w, h);
+  SetLength(Result, ((2 * (w + h)) - 4));
+  i := 0;
+  for x := Self.X1 to Self.X2 do
+    Result[i.Increase] := Point(x, Self.Y1);
+  for x := Self.X1 to Self.X2 do
+    Result[i.Increase] := Point(x, Self.Y2);
+  for y := (Self.Y1 + 1) to (Self.Y2 - 1) do
+  begin
+    Result[i.Increase] := Point(Self.X1, y);
+    Result[i.Increase] := Point(Self.X2, y);
   end;
 end;
 

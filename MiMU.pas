@@ -220,11 +220,13 @@ type
     function Restrict(const toArea: TBox): Boolean; cdecl;
     function Clamp(const toArea: TBox): TBox; cdecl;
     function Points: TPointArray; cdecl;
+    function Pixels: TPointArray; cdecl;
     function TPA: TPointArray; cdecl;
 	function Contents: TPointArray; cdecl;
 	function Extract: TPointArray; cdecl;
 	function Enumerate: TPointArray; cdecl;
 	function Elements: TPointArray; cdecl;
+	function Border: TPointArray; cdecl;
     function CornerPoints: TPointArray; cdecl;
     function Corners: TPointArray; cdecl;
     function SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload; cdecl;
