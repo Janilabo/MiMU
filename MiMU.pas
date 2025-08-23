@@ -331,6 +331,8 @@ type
   TIA = class
   public
     class function Init(var arr: TIntegerArray): Integer; overload; cdecl;
+    class function Reverse(var arr: TIntegerArray): Boolean; overload; cdecl;
+    class function Reversed(const Arr: TIntegerArray): TIntegerArray; overload; cdecl;
     class function Unique(var arr: TIntegerArray): Integer; overload; cdecl;
   end;
   TPA = class
@@ -545,25 +547,18 @@ function Max(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU
 function Min(A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Min}
 function Min(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Min}
 
-class function TIA.Init(var arr: TIntegerArray): Integer; overload; cdecl;
-begin
-  Result := Length(arr);
-  if (Result > 0) then
-    FillChar(arr[0], (Result * SizeOf(Integer)), 0);
-end;
-
-class function TPA.Init(var arr: TPointArray): Integer; overload; cdecl;
-begin
-  Result := Length(arr);
-  if (Result > 0) then
-    FillChar(arr[0], (Result * SizeOf(TPoint)), 0);
-end;
-
 class function TBA.Init(var arr: TBooleanArray): Integer; overload; cdecl;
 begin
   Result := Length(arr);
   if (Result > 0) then
     FillChar(arr[0], Result, 0);
+end;
+
+class function TIA.Init(var arr: TIntegerArray): Integer; overload; cdecl;
+begin
+  Result := Length(arr);
+  if (Result > 0) then
+    FillChar(arr[0], (Result * SizeOf(Integer)), 0);
 end;
 
 class function TIA.Unique(var arr: TIntegerArray): Integer; overload; cdecl;
@@ -586,6 +581,43 @@ begin
     Result := ((y + 1) - z);
   end else
     Result := 0;
+end;
+
+class function TIA.Reverse(var arr: TIntegerArray): Boolean; overload; cdecl;
+var
+  a: TIntegerArray;
+  i: Integer;
+begin
+  Result := (Length(arr) > 1);
+  if not Result then
+    Exit;
+  SetLength(a, Length(arr));
+  for i := 0 to High(arr) do
+    a[i] := arr[High(arr) - i];
+  Move(a[0], arr[0], (Length(arr) * SizeOf(Integer)));
+end;
+
+class function TIA.Reversed(const Arr: TIntegerArray): TIntegerArray; overload; cdecl;
+var
+  i, r: Integer;
+begin
+  SetLength(Result, Length(arr));
+  if (Length(arr) = 0) then
+    Exit;
+  Move(arr[0], Result[0], (Length(arr) * SizeOf(Integer)));
+  for i := 0 to (High(Result) div 2) do
+  begin
+    r := Result[i];
+    Move(Result[High(Result) - i], Result[i], SizeOf(Integer));
+    Move(r, Result[High(Result) - i], SizeOf(Integer));
+  end;
+end;
+
+class function TPA.Init(var arr: TPointArray): Integer; overload; cdecl;
+begin
+  Result := Length(arr);
+  if (Result > 0) then
+    FillChar(arr[0], (Result * SizeOf(TPoint)), 0);
 end;
 
 class function TPA.Unique(var arr: TPointArray): Integer; overload; cdecl;

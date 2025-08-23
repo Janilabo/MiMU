@@ -2009,3 +2009,25 @@ var
 begin
   Result := Self.Maximum(i);
 end;
+
+{==============================================================================]
+ <TIntegerArrayHelper.Mirror>
+ @action: Mirrors arr
+ @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.Mirror: Boolean; cdecl;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  Result := (l > 1);
+  if not Result then
+    Exit;
+  i := -1;
+  while (i.Increment < l.Decrement) do
+  begin
+    Self[i] := (Self[i] xor Self[l]);
+    Self[l] := (Self[i] xor Self[l]);
+    Self[i] := (Self[i] xor Self[l]);
+  end;
+end;

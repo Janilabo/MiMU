@@ -462,6 +462,7 @@ type
 	  function Knit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
       function Knit(const diff: Integer): T2DIntegerArray; overload; cdecl;
       function Invert: TIntegerArray; cdecl;
+	  function Mirror: Boolean; cdecl;
 	  function MinVal: Integer; overload; cdecl;
 	  function MaxVal: Integer; overload; cdecl;
 	  function Minimum(var index: Integer): Integer; overload; cdecl;
