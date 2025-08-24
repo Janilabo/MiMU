@@ -82,11 +82,27 @@ begin
     Exit(Result.Create(-2147483648));
   Result.Create(Self[0]);
   for P in Self do
+    Result.Create(Min(Result.X1, p.X), Min(Result.Y1, p.Y), Max(Result.X2, p.X), Max(Result.Y2, p.Y));
+end;
+
+{==============================================================================]
+  <TPointArrayHelper.MinMax>
+  @action: Returns bounding box around TPointArray arr.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.MinMax: TBox; cdecl;
+var
+  i: Integer;
+begin
+  if Self.Empty then
+    Exit(Result.Create(-2147483648));
+  Result.Create(Self[0]);
+  for i := 0 to High(Self) do
   begin
-    Result.X1 := Min(Result.X1, p.X);
-    Result.Y1 := Min(Result.Y1, p.Y);
-    Result.X2 := Max(Result.X2, p.X);
-    Result.Y2 := Max(Result.Y2, p.Y);
+    Result.X1 := Min(Self[i].X, Result.X1);
+    Result.Y1 := Min(Self[i].Y, Result.Y1);
+    Result.X2 := Max(Self[i].X, Result.X2);
+    Result.Y2 := Max(Self[i].Y, Result.Y2);
   end;
 end;
 
@@ -356,7 +372,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.XValues: TIntegerArray; overload; cdecl;
 var
-  i, l: Integer;
+  l: Integer;
 begin
   l := Length(Self);
   SetLength(Result, l);
@@ -371,12 +387,65 @@ end;
 [==============================================================================}
 function TPointArrayHelper.YValues: TIntegerArray; overload; cdecl;
 var
-  i, l: Integer;
+  l: Integer;
 begin
   l := Length(Self);
   SetLength(Result, l);
   while (l.Decrement > -1) do
     Result[l] := Self[l].Y;
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Unzip>
+ @action: Stores arr X and Y values to xVals and yVals.
+ @note: Returns Length(arr).
+[==============================================================================}
+function TPointArrayHelper.Unzip(var xVals, yVals: TIntegerArray): Integer; cdecl;
+var
+  i: Integer;
+begin
+  Result := Length(Self);
+  SetLength(xVals, Result);
+  SetLength(yVals, Result);
+  for i := 0 to (Result - 1) do
+  begin
+    xVals[i] := Self[i].X;
+    yVals[i] := Self[i].Y;
+  end;
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Zip>
+ @action: Zips TPointArray with xArr and yArr.
+ @note: Uses minimum length(!), if xArr differs from yArr size.
+[==============================================================================}
+function TPointArrayHelper.Zip(const xVals, yVals: TIntegerArray): Integer; cdecl;
+var
+  i: Integer;
+begin
+  Result := Min(Length(xVals), Length(yVals));
+  SetLength(Self, Result);
+  for i := 0 to (Result - 1) do
+    Self[i] := Point(xVals[i], yVals[i]);
+end;
+
+{==============================================================================]
+  <TPointArrayHelper.Extent>
+  @action: Returns bounding box around TPointArray arr.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.Extent: TBox; cdecl;
+var
+  h, v: TIntegerArray;
+  z: Integer;
+begin
+  z := (Self.Unzip(h, v) - 1);
+  if (z > -1) then
+  begin
+    h.QuickSort;
+    v.QuickSort;
+    Result.Create(h[0], v[0], h[z], v[z]);
+  end;
 end;
 
 {==============================================================================]

@@ -153,6 +153,8 @@ type
     {$ENDIF}
     {$IFDEF Char}
       function Compare(const target: Char): Integer; cdecl; inline;
+	  function Str(const size: Integer = 1): string; cdecl;
+	  function ToStr(const size: Integer = 1): string; cdecl;
     {$ENDIF}
     {$IFDEF Boolean}
       function ToString: string; cdecl;
@@ -403,6 +405,8 @@ type
 	  function BoundingRange: TRange; cdecl;
       function Range: TRange; cdecl;
 	  function Ranged: TRange; cdecl;
+	  function MinMax: TRange; cdecl;
+	  function Extent: TRange; cdecl;
       function Undupe: TIntegerArray; cdecl;
       function Unduped: TIntegerArray; cdecl;
       function Numberline: TIntegerArray; cdecl;
@@ -512,6 +516,7 @@ type
 	  function BoundingBox: TBox; cdecl;
 	  function Box: TBox; cdecl;
       function Boxed: TBox; cdecl;
+	  function MinMax: TBox; cdecl;
       function Undupe: TPointArray; cdecl;
       function Unduped: TPointArray; cdecl;
       function Invert: TPointArray; cdecl;
@@ -522,6 +527,9 @@ type
 	  function Ys: TIntegerArray; overload; cdecl;
 	  function XValues: TIntegerArray; overload; cdecl;
 	  function YValues: TIntegerArray; overload; cdecl;
+	  function Unzip(var xVals, yVals: TIntegerArray): Integer; cdecl;
+	  function Zip(const xVals, yVals: TIntegerArray): Integer; cdecl;
+	  function Extent: TBox; cdecl;
 	  function Vertical: TRange; overload; cdecl;
 	  function Horizontal: TRange; overload; cdecl;
     {$ENDIF}

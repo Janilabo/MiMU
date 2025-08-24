@@ -60,13 +60,15 @@ begin
   if Self.Empty then
     Exit(Result.Create(-2147483648, -2147483648));
   Result := Result.Create(Self[0], Self[0]);
-  for i := 1 to High(Self) do
-  begin
-    Result.start := Min(Result.start, Self[i]);
-    Result.stop := Max(Result.stop, Self[i]);
-  end;
+  for i in Self do
+    Result.Create(Min(Result.start, i), Max(Result.stop, i));
 end;
 
+{==============================================================================]
+  <TIntegerArrayHelper.Ranged>
+  @action: Stores arr bounds to TRange.
+  @note: Returns -2147483648..-2147483648 with empty array.
+[==============================================================================}
 function TIntegerArrayHelper.Ranged: TRange; cdecl;
 var
   i: Integer;
@@ -80,6 +82,35 @@ begin
   for i := 1 to High(Self) do
     if (Self[i] > Result.stop) then
       Result.stop := Self[i];
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.MinMax>
+  @action: Stores arr bounds to TRange.
+  @note: Returns -2147483648..-2147483648 with empty array.
+[==============================================================================}
+function TIntegerArrayHelper.MinMax: TRange; cdecl;
+var
+  i: Integer;
+begin
+  if Self.Empty then
+    Exit(Result.Create(-2147483648, -2147483648));
+  Result := Result.Create(Self[0], Self[0]);
+  for i := 1 to High(Self) do
+  begin
+    Result.start := Min(Result.start, Self[i]);
+    Result.stop := Max(Result.stop, Self[i]);
+  end;
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Extent>
+  @action: Stores arr bounds to TRange.
+  @note: None
+[==============================================================================}
+function TIntegerArrayHelper.Extent: TRange; cdecl;
+begin
+  Result.Create(Self.MinVal, Self.MaxVal);
 end;
 
 {==============================================================================]
