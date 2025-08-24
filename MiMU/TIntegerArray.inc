@@ -1558,10 +1558,7 @@ begin
 		    Break;
         end;
         if not m then
-        begin
-          SetLength(Result[r], 1);
-          Result[r.Increase][0] := Self[i];
-        end;
+          Result[r.Increase] := [Self[i]];
       end;
     end;
   end;
@@ -1619,10 +1616,7 @@ begin
 		  Break;
       end;
       if not m then
-      begin
-        SetLength(Result[r], 1);
-        Result[r.Increase][0] := a[i];
-      end;
+        Result[r.Increase] := [a[i]];
     end;
     SetLength(a, 0);
   end else
@@ -1677,10 +1671,7 @@ begin
             Break;
           end;
         if not m then
-        begin
-          SetLength(Result[r], 1);
-          Result[r.Increase][0] := Self[i];
-        end;
+          Result[r.Increase] := [Self[i]];
       end;
     end;
   end;
@@ -1734,10 +1725,7 @@ begin
         end;
       end;
       if not m then
-      begin
-        SetLength(Result[r], 1);
-        Result[r.Increase][0] := a[i];
-      end;
+        Result[r.Increase] := [a[i]];
     end;
   end else
     r := 0;
@@ -1798,10 +1786,7 @@ begin
           end;
         end;
         if not m then
-        begin
-          SetLength(Result[r], 1);
-          Result[r.Increase][0] := Self[i];
-        end;
+          Result[r.Increase] := [Self[i]];
       end;
     end;
   end;
@@ -1860,10 +1845,7 @@ begin
         end;
       end;
       if not m then
-      begin
-        SetLength(Result[r], 1);
-        Result[r.Increase][0] := a[i];
-      end;
+        Result[r.Increase] := [a[i]];
     end;
     SetLength(a, 0);
   end else

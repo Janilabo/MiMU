@@ -1327,10 +1327,7 @@ begin
       end;
     end;
     if not f then
-    begin
-      SetLength(Result[g.Increment], 1);
-      Result[g][0] := Self[i];
-    end;
+      Result[g.Increment] := [Self[i]];
   end;
   SetLength(Result, (g + 1));
 end;
