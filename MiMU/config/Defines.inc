@@ -1,76 +1,76 @@
 {$IFDEF Integer}
-  {$DEFINE XVar := Integer}
-  {$DEFINE XVarHelp := TIntegerHelper}
-  {$DEFINE XArr := TIntegerArray}
-  {$DEFINE XArrHelp := TIntegerArrayHelper}
-  {$DEFINE X2DArr := T2DIntegerArray}
-  {$DEFINE X2DArrHelp := T2DIntegerArrayHelper}
+  {$DEFINE TVar := Integer}
+  {$DEFINE HVar := TIntegerHelper}
+  {$DEFINE TArr := TIntegerArray}
+  {$DEFINE HArr := TIntegerArrayHelper}
+  {$DEFINE T2DArr := T2DIntegerArray}
+  {$DEFINE H2DArr := T2DIntegerArrayHelper}
   {$DEFINE Sortable}
 {$ENDIF}
 {$IFDEF Double}
-  {$DEFINE XVar := Double}
-  {$DEFINE XVarHelp := TDoubleHelper}
-  {$DEFINE XArr := TDoubleArray}
-  {$DEFINE XArrHelp := TDoubleArrayHelper}
-  {$DEFINE X2DArr := T2DDoubleArray}
-  {$DEFINE X2DArrHelp := T2DDoubleArrayHelper}
+  {$DEFINE TVar := Double}
+  {$DEFINE HVar := TDoubleHelper}
+  {$DEFINE TArr := TDoubleArray}
+  {$DEFINE HArr := TDoubleArrayHelper}
+  {$DEFINE T2DArr := T2DDoubleArray}
+  {$DEFINE H2DArr := T2DDoubleArrayHelper}
   {$DEFINE Sortable}
 {$ENDIF}
 {$IFDEF string}
-  {$DEFINE XVar := string}
-  {$DEFINE XVarHelp := TStringHelper}
-  {$DEFINE XArr := TStringArray}
-  {$DEFINE XArrHelp := TStringArrayHelper}
-  {$DEFINE X2DArr := T2DStringArray}
-  {$DEFINE X2DArrHelp := T2DStringArrayHelper}
+  {$DEFINE TVar := string}
+  {$DEFINE HVar := TStringHelper}
+  {$DEFINE TArr := TStringArray}
+  {$DEFINE HArr := TStringArrayHelper}
+  {$DEFINE T2DArr := T2DStringArray}
+  {$DEFINE H2DArr := T2DStringArrayHelper}
   {$DEFINE Sortable}
 {$ENDIF}
 {$IFDEF Char}
-  {$DEFINE XVar := Char}
-  {$DEFINE XVarHelp := TCharHelper}
-  {$DEFINE XArr := TCharArray}
-  {$DEFINE XArrHelp := TCharArrayHelper}
-  {$DEFINE X2DArr := T2DCharArray}
-  {$DEFINE X2DArrHelp := T2DCharArrayHelper}
+  {$DEFINE TVar := Char}
+  {$DEFINE HVar := TCharHelper}
+  {$DEFINE TArr := TCharArray}
+  {$DEFINE HArr := TCharArrayHelper}
+  {$DEFINE T2DArr := T2DCharArray}
+  {$DEFINE H2DArr := T2DCharArrayHelper}
   {$DEFINE Sortable}
 {$ENDIF}
 {$IFDEF Boolean}
-  {$DEFINE XVar := Boolean}
-  {$DEFINE XVarHelp := TBooleanHelper}
-  {$DEFINE XArr := TBooleanArray}
-  {$DEFINE XArrHelp := TBooleanArrayHelper}
-  {$DEFINE X2DArr := T2DBooleanArray}
-  {$DEFINE X2DArrHelp := T2DBooleanArrayHelper}
+  {$DEFINE TVar := Boolean}
+  {$DEFINE HVar := TBooleanHelper}
+  {$DEFINE TArr := TBooleanArray}
+  {$DEFINE HArr := TBooleanArrayHelper}
+  {$DEFINE T2DArr := T2DBooleanArray}
+  {$DEFINE H2DArr := T2DBooleanArrayHelper}
   {$UNDEF Sortable}
 {$ENDIF}
 {$IFDEF TPoint}
-  {$DEFINE XVar := TPoint}
-  {$DEFINE XVarHelp := TPointHelper}
-  {$DEFINE XArr := TPointArray}
-  {$DEFINE XArrHelp := TPointArrayHelper}
-  {$DEFINE X2DArr := T2DPointArray}
-  {$DEFINE X2DArrHelp := T2DPointArrayHelper}
+  {$DEFINE TVar := TPoint}
+  {$DEFINE HVar := TPointHelper}
+  {$DEFINE TArr := TPointArray}
+  {$DEFINE HArr := TPointArrayHelper}
+  {$DEFINE T2DArr := T2DPointArray}
+  {$DEFINE H2DArr := T2DPointArrayHelper}
   {$UNDEF Sortable}
 {$ENDIF}
 {$IFDEF TBox}
-  {$DEFINE XVar := TBox}
-  {$DEFINE XVarHelp := TBoxHelper}
-  {$DEFINE XArr := TBoxArray}
-  {$DEFINE XArrHelp := TBoxArrayHelper}
-  {$DEFINE X2DArr := T2DBoxArray}
-  {$DEFINE X2DArrHelp := T2DBoxArrayHelper}
+  {$DEFINE TVar := TBox}
+  {$DEFINE HVar := TBoxHelper}
+  {$DEFINE TArr := TBoxArray}
+  {$DEFINE HArr := TBoxArrayHelper}
+  {$DEFINE T2DArr := T2DBoxArray}
+  {$DEFINE H2DArr := T2DBoxArrayHelper}
   {$UNDEF Sortable}
 {$ENDIF}
 {$IFDEF TRange}
-  {$DEFINE XVar := TRange}
-  {$DEFINE XVarHelp := TRangeHelper}
-  {$DEFINE XArr := TRangeArray}
-  {$DEFINE XArrHelp := TRangeArrayHelper}
-  {$DEFINE X2DArr := T2DRangeArray}
-  {$DEFINE X2DArrHelp := T2DRangeArrayHelper}
+  {$DEFINE TVar := TRange}
+  {$DEFINE HVar := TRangeHelper}
+  {$DEFINE TArr := TRangeArray}
+  {$DEFINE HArr := TRangeArrayHelper}
+  {$DEFINE T2DArr := T2DRangeArray}
+  {$DEFINE H2DArr := T2DRangeArrayHelper}
   {$UNDEF Sortable}
 {$ENDIF}
 {$IFDEF Int64}
-  {$DEFINE XVar := Int64}
-  {$DEFINE XVarHelp := TInt64Helper}
+  {$DEFINE TVar := Int64}
+  {$DEFINE HVar := TInt64Helper}
 {$ENDIF}

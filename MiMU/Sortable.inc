@@ -1,11 +1,11 @@
 {$I config\Defines.inc}
 
 {==============================================================================]
-  <XArrHelp.Sorted>
+  <HArr.Sorted>
   @action: Returns true if array arr is in ascending/descending order by aAscending.
   @note: By default checking for ascending order.
 [==============================================================================}
-function XArrHelp.Sorted(const aAscending: Boolean = True): Boolean; overload; cdecl;
+function HArr.Sorted(const aAscending: Boolean = True): Boolean; overload; cdecl;
 var
   h, i: Integer;
 begin
@@ -17,11 +17,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.InOrder>
+  <HArr.InOrder>
   @action: Returns true if array arr is in ascending/descending order by aAscending.
   @note: By default checking for ascending order.
 [==============================================================================}
-function XArrHelp.InOrder(const aAscending: Boolean = True): Boolean; overload; cdecl;
+function HArr.InOrder(const aAscending: Boolean = True): Boolean; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -42,11 +42,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Orderly>
+  <HArr.Orderly>
   @action: Returns true if array arr is in ascending AND/OR descending order.
   @note: None.
 [==============================================================================}
-function XArrHelp.Orderly: Boolean; overload; cdecl;
+function HArr.Orderly: Boolean; overload; cdecl;
 var
   i: Integer;
   a, d: Boolean;
@@ -66,15 +66,15 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Ascend>
+  <HArr.Ascend>
   @action: Returns true if array arr is in descending order.
   @note: None.
 [==============================================================================}
-function XArrHelp.Ascend: XArr; overload; cdecl;
-procedure QS(var arr: XArr; const valLow, valHigh: Integer);
+function HArr.Ascend: TArr; overload; cdecl;
+procedure QS(var arr: TArr; const valLow, valHigh: Integer);
 var
   i, j: Integer;
-  p, s: XVar;
+  p, s: TVar;
 begin
   i := valLow;
   j := valHigh;
@@ -103,15 +103,15 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Descend>
+  <HArr.Descend>
   @action: Returns array arr sorted to ascending order.
   @note: None.
 [==============================================================================}
-function XArrHelp.Descend: XArr; overload; cdecl;
-procedure QS(var arr: XArr; const valLow, valHigh: Integer);
+function HArr.Descend: TArr; overload; cdecl;
+procedure QS(var arr: TArr; const valLow, valHigh: Integer);
 var
   i, j: Integer;
-  p, s: XVar;
+  p, s: TVar;
 begin
   i := valLow;
   j := valHigh;
@@ -140,11 +140,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Descending>
+  <HArr.Descending>
   @action: Returns true if array arr is in descending order.
   @note: [0,1] = False | [0,0] = False | [1,0] = True |
 [==============================================================================}
-function XArrHelp.Descending: Boolean; overload; cdecl;
+function HArr.Descending: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -155,11 +155,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Ascending>
+  <HArr.Ascending>
   @action: Returns true if array arr is in asscending order.
   @note: [0,1] = True | [0,0] = False | [1,0] = False |
 [==============================================================================}
-function XArrHelp.Ascending: Boolean; overload; cdecl;
+function HArr.Ascending: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -170,11 +170,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Decreasing>
+  <HArr.Decreasing>
   @action: Returns true if array arr is in descending order.
   @note: [0,1] = False | [0,0] = True | [1,0] = True |
 [==============================================================================}
-function XArrHelp.Decreasing: Boolean; overload; cdecl;
+function HArr.Decreasing: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -185,11 +185,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Increasing>
+  <HArr.Increasing>
   @action: Returns true if array arr is in asscending order.
   @note: [0,1] = True | [0,0] = True | [1,0] = False |
 [==============================================================================}
-function XArrHelp.Increasing: Boolean; overload; cdecl;
+function HArr.Increasing: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -200,11 +200,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Downward>
+  <HArr.Downward>
   @action: Returns true if array arr is in descending order.
   @note: Returns true with empty []array! Unlike Descending, Decreasing.
 [==============================================================================}
-function XArrHelp.Downward: Boolean; overload; cdecl;
+function HArr.Downward: Boolean; overload; cdecl;
 var
   h: Integer;
 begin
@@ -216,11 +216,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Upward>
+  <HArr.Upward>
   @action: Returns true if array arr is in ascending order.
   @note: Returns true with empty [] array! Unlike Ascending, Increasing.
 [==============================================================================}
-function XArrHelp.Upward: Boolean; overload; cdecl;
+function HArr.Upward: Boolean; overload; cdecl;
 var
   h: Integer;
 begin
@@ -232,11 +232,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Lowest>
+  <HArr.Lowest>
   @action: Returns array minimum value.
   @note: None.
 [==============================================================================}
-function XArrHelp.Lowest: XVar; overload; cdecl;
+function HArr.Lowest: TVar; overload; cdecl;
 var
   i: Integer;
 begin
@@ -248,11 +248,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Highest>
+  <HArr.Highest>
   @action: Returns array maximum value.
   @note: None.
 [==============================================================================}
-function XArrHelp.Highest: XVar; overload; cdecl;
+function HArr.Highest: TVar; overload; cdecl;
 var
   i: Integer;
 begin
@@ -264,11 +264,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.Mini>
+  <HArr.Mini>
   @action: Returns array INDEX with minimum value.
   @note: Supports reversed order (last min index) with aAscending as False.
 [==============================================================================}
-function XArrHelp.Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
+function HArr.Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
 var
   h, i, s: Integer;
 begin
@@ -295,17 +295,17 @@ begin
   end;
 end;
 
-function XArrHelp.Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload; cdecl;
 begin
   Result := Self.Mini(aAscending, start);
 end;
 
 {==============================================================================]
-  <XArrHelp.Maxi>
+  <HArr.Maxi>
   @action: Returns array INDEX with maximum value.
   @note: Supports reversed order (last max index) with aAscending as False.
 [==============================================================================}
-function XArrHelp.Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
+function HArr.Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
 var
   h, i, s: Integer;
 begin
@@ -332,19 +332,19 @@ begin
   end;
 end;
 
-function XArrHelp.Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload; cdecl;
 begin
   Result := Self.Maxi(aAscending, start);
 end;
 
 {==============================================================================]
- <XArrHelp.Mode>
+ <HArr.Mode>
  @action: The value that occurs most frequently in arr.
  @note: None
 [==============================================================================}
-function XArrHelp.Mode: XVar; overload; cdecl;
+function HArr.Mode: TVar; overload; cdecl;
 var
-  a: XArr;
+  a: TArr;
   c: TIntegerArray;
   h, i, j, l: Integer;
 begin
@@ -378,22 +378,22 @@ begin
 end;
 
 {==============================================================================]
- <XArrHelp.Center>
+ <HArr.Center>
  @action: The value at the center position of a sorted or unsorted arr.
  @note: None
 [==============================================================================}
-function XArrHelp.Center: XVar; overload; cdecl;
+function HArr.Center: TVar; overload; cdecl;
 begin
   if (Length(Self) > 0) then
     Result := Self[Length(Self) div 2];
 end;
 
 {==============================================================================]
-  <XArrHelp.BubbleSort>
+  <HArr.BubbleSort>
   @action: Sorts arr with BubbleSort algorithm
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
-function XArrHelp.BubbleSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.BubbleSort(const aAscending: Boolean = True): Integer; overload; cdecl;
 var
   i, j: Integer;
 begin
@@ -405,11 +405,11 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.BubbleSortOptimized>
+  <HArr.BubbleSortOptimized>
   @action: Sorts arr with optimized BubbleSort algorithm
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
-function XArrHelp.BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
 var
   i, j: Integer;
   s: Boolean;
@@ -430,15 +430,15 @@ begin
 end;
 
 {==============================================================================]
-  <XArrHelp.QuickSorted(aAscending: Boolean): XArr>
+  <HArr.QuickSorted(aAscending: Boolean): TArr>
   @action: Returns array sorted by its own values, based on QuickSort algorithm.
   @note: None.
 [==============================================================================}
-function XArrHelp.QuickSorted(const aAscending: Boolean = True): XArr; overload; cdecl;
-  procedure QS(var arr: XArr; const L, R: Integer);
+function HArr.QuickSorted(const aAscending: Boolean = True): TArr; overload; cdecl;
+  procedure QS(var arr: TArr; const L, R: Integer);
   var
     i, j: Integer;
-    p: XVar;
+    p: TVar;
   begin
     i := L;
     j := R;
