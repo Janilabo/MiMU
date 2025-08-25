@@ -1,0 +1,153 @@
+{==============================================================================]
+ <TBoxArrayHelper.X1s>
+ @action: Returns X1-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TBoxArrayHelper.X1s: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := Self[i].X1;
+end;
+
+{==============================================================================]
+ <TBoxArrayHelper.X2s>
+ @action: Returns X2-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TBoxArrayHelper.X2s: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := Self[i].X2;
+end;
+
+{==============================================================================]
+ <TBoxArrayHelper.Y1s>
+ @action: Returns Y1-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TBoxArrayHelper.Y1s: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := Self[i].Y1;
+end;
+
+{==============================================================================]
+ <TBoxArrayHelper.Y2s>
+ @action: Returns Y2-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TBoxArrayHelper.Y2s: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := Self[i].Y2;
+end;
+
+{==============================================================================]
+ <TBoxArrayHelper.X1Values>
+ @action: Returns X1-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TBoxArrayHelper.X1Values: TIntegerArray; overload; cdecl;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  while (l.Decrement > -1) do
+    Result[l] := Self[l].X1;
+end;
+
+{==============================================================================]
+ <TBoxArrayHelper.X2Values>
+ @action: Returns X2-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TBoxArrayHelper.X2Values: TIntegerArray; overload; cdecl;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  while (l.Decrement > -1) do
+    Result[l] := Self[l].X2;
+end;
+
+{==============================================================================]
+ <TBoxArrayHelper.Y1Values>
+ @action: Returns Y1-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TBoxArrayHelper.Y1Values: TIntegerArray; overload; cdecl;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  while (l.Decrement > -1) do
+    Result[l] := Self[l].Y1;
+end;
+
+{==============================================================================]
+ <TBoxArrayHelper.Y2Values>
+ @action: Returns Y2-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TBoxArrayHelper.Y2Values: TIntegerArray; overload; cdecl;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  while (l.Decrement > -1) do
+    Result[l] := Self[l].Y2;
+end;
+
+{==============================================================================]
+ <TBoxArrayHelper.Unzip>
+ @action: Stores arr X1/X2 and Y1/Y2 values to x1/x2Arr and y1/y2Arr.
+ @note: Returns Length(arr).
+[==============================================================================}
+function TBoxArrayHelper.Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer; cdecl;
+var
+  i: Integer;
+begin
+  Result := Length(Self);
+  SetLength(x1Arr, Result);
+  SetLength(y1Arr, Result);
+  SetLength(x2Arr, Result);
+  SetLength(y2Arr, Result);
+  for i := 0 to (Result - 1) do
+  begin
+    x1Arr[i] := Self[i].X1;
+    y1Arr[i] := Self[i].Y1;
+	x2Arr[i] := Self[i].X2;
+    y2Arr[i] := Self[i].Y2;
+  end;
+end;
+
+{==============================================================================]
+ <TBoxArrayHelper.Zip>
+ @action: Zips TBoxArray with x1/x2Arr and y1/y2Arr.
+ @note: Uses minimum length(!), if xArr differs from yArr size.
+[==============================================================================}
+function TBoxArrayHelper.Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer; cdecl;
+var
+  i: Integer;
+begin
+  Result := Min(Min(Length(x1Arr), Length(x2Arr)), Min(Length(y1Arr), Length(y2Arr)));
+  SetLength(Self, Result);
+  for i := 0 to (Result - 1) do
+    Self[i] := Box(x1Arr[i], y1Arr[i], x2Arr[i], y2Arr[i]);
+end;

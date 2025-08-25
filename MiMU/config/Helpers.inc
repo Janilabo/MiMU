@@ -527,13 +527,23 @@ type
 	  function Ys: TIntegerArray; overload; cdecl;
 	  function XValues: TIntegerArray; overload; cdecl;
 	  function YValues: TIntegerArray; overload; cdecl;
-	  function Unzip(var xVals, yVals: TIntegerArray): Integer; cdecl;
-	  function Zip(const xVals, yVals: TIntegerArray): Integer; cdecl;
+	  function Unzip(var xArr, yArr: TIntegerArray): Integer; cdecl;
+	  function Zip(const xArr, yArr: TIntegerArray): Integer; cdecl;
 	  function Extent: TBox; cdecl;
 	  function Vertical: TRange; overload; cdecl;
 	  function Horizontal: TRange; overload; cdecl;
     {$ENDIF}
     {$IFDEF TBox}
+      function X1s: TIntegerArray; overload; cdecl;
+      function X2s: TIntegerArray; overload; cdecl;
+      function Y1s: TIntegerArray; overload; cdecl;
+      function Y2s: TIntegerArray; overload; cdecl;
+      function X1Values: TIntegerArray; overload; cdecl;
+      function X2Values: TIntegerArray; overload; cdecl;
+      function Y1Values: TIntegerArray; overload; cdecl;
+      function Y2Values: TIntegerArray; overload; cdecl;
+      function Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer; cdecl;
+      function Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer; cdecl;
     {$ENDIF}	
     {$IFDEF TRange}
 	  function Bounds: TRange; overload; cdecl;
@@ -544,6 +554,12 @@ type
 	  function Stopping: TIntegerArray; overload; cdecl;
 	  function Normalized: TRangeArray; overload; cdecl;
 	  function Gaps: TRangeArray; overload; cdecl;
+      function Starts: TIntegerArray; overload; cdecl;
+      function Stops: TIntegerArray; overload; cdecl;
+      function StartValues: TIntegerArray; overload; cdecl;
+      function StopValues: TIntegerArray; overload; cdecl;
+      function Unzip(var startArr, stopArr: TIntegerArray): Integer; cdecl;
+      function Zip(const startArr, stopArr: TIntegerArray): Integer; cdecl;
     {$ENDIF}	
     end;
   H2DArr = type helper for T2DArr

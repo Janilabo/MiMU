@@ -151,3 +151,98 @@ begin
   end;
   SetLength(Result, g);
 end;
+
+{==============================================================================]
+ <TRangeArrayHelper.Starts>
+ @action: Returns start-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TRangeArrayHelper.Starts: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := Self[i].start;
+end;
+
+{==============================================================================]
+ <TRangeArrayHelper.Stops>
+ @action: Returns stop-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TRangeArrayHelper.Stops: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := Self[i].stop;
+end;
+
+{==============================================================================]
+ <TRangeArrayHelper.StartValues>
+ @action: Returns start-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TRangeArrayHelper.StartValues: TIntegerArray; overload; cdecl;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  while (l.Decrement > -1) do
+    Result[l] := Self[l].start;
+end;
+
+{==============================================================================]
+ <TRangeArrayHelper.StopValues>
+ @action: Returns stop-values from arr as TIntegerArray.
+ @note: None.
+[==============================================================================}
+function TRangeArrayHelper.StopValues: TIntegerArray; overload; cdecl;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  while (l.Decrement > -1) do
+    Result[l] := Self[l].stop;
+end;
+
+{==============================================================================]
+ <TRangeArrayHelper.Unzip>
+ @action: Stores arr start and stop values to startArr and stopArr.
+ @note: Returns Length(arr).
+[==============================================================================}
+function TRangeArrayHelper.Unzip(var startArr, stopArr: TIntegerArray): Integer; cdecl;
+var
+  i: Integer;
+begin
+  Result := Length(Self);
+  SetLength(startArr, Result);
+  SetLength(stopArr, Result);
+  for i := 0 to (Result - 1) do
+  begin
+    startArr[i] := Self[i].start;
+    stopArr[i] := Self[i].stop;
+  end;
+end;
+
+{==============================================================================]
+ <TRangeArrayHelper.Zip>
+ @action: Zips TPointArray with startArr and stopArr.
+ @note: Uses minimum length(!), if startArr differs from stopArr size.
+[==============================================================================}
+function TRangeArrayHelper.Zip(const startArr, stopArr: TIntegerArray): Integer; cdecl;
+var
+  i: Integer;
+begin
+  Result := Min(Length(startArr), Length(stopArr));
+  SetLength(Self, Result);
+  for i := 0 to (Result - 1) do
+  begin
+    Self[i].start := startArr[i];
+    Self[i].stop := stopArr[i];
+  end;
+end;

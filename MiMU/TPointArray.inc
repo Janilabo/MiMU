@@ -397,20 +397,20 @@ end;
 
 {==============================================================================]
  <TPointArrayHelper.Unzip>
- @action: Stores arr X and Y values to xVals and yVals.
+ @action: Stores arr X and Y values to xArr and yArr.
  @note: Returns Length(arr).
 [==============================================================================}
-function TPointArrayHelper.Unzip(var xVals, yVals: TIntegerArray): Integer; cdecl;
+function TPointArrayHelper.Unzip(var xArr, yArr: TIntegerArray): Integer; cdecl;
 var
   i: Integer;
 begin
   Result := Length(Self);
-  SetLength(xVals, Result);
-  SetLength(yVals, Result);
+  SetLength(xArr, Result);
+  SetLength(yArr, Result);
   for i := 0 to (Result - 1) do
   begin
-    xVals[i] := Self[i].X;
-    yVals[i] := Self[i].Y;
+    xArr[i] := Self[i].X;
+    yArr[i] := Self[i].Y;
   end;
 end;
 
@@ -419,14 +419,14 @@ end;
  @action: Zips TPointArray with xArr and yArr.
  @note: Uses minimum length(!), if xArr differs from yArr size.
 [==============================================================================}
-function TPointArrayHelper.Zip(const xVals, yVals: TIntegerArray): Integer; cdecl;
+function TPointArrayHelper.Zip(const xArr, yArr: TIntegerArray): Integer; cdecl;
 var
   i: Integer;
 begin
-  Result := Min(Length(xVals), Length(yVals));
+  Result := Min(Length(xArr), Length(yArr));
   SetLength(Self, Result);
   for i := 0 to (Result - 1) do
-    Self[i] := Point(xVals[i], yVals[i]);
+    Self[i] := Point(xArr[i], yArr[i]);
 end;
 
 {==============================================================================]
