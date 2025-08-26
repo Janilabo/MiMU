@@ -1,4 +1,107 @@
 {==============================================================================]
+  <TCircle.Create>
+  @action: Create a TCircle with center point and radius
+  @note: None.
+[==============================================================================}
+constructor TCircle.Create(const cCenter: TPoint; const cRadius: Double); overload;
+begin
+  Self.center := cCenter;
+  Self.radius := cRadius;
+end;
+
+{==============================================================================]
+  <TCircle.Create>
+  @action: Create a TCircle with center point and radius
+  @note: None.
+[==============================================================================}
+constructor TCircle.Create(const centerX, centerY: Integer; const cRadius: Double); overload;
+begin
+  Self.center := Point(centerX, centerY);
+  Self.radius := cRadius;
+end;
+
+{==============================================================================]
+  <TCircle.Construct>
+  @action: Constructs TCircle with cCenter and cRadius.
+  @note: None.
+[==============================================================================}
+class function TCircle.Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload; cdecl;
+begin
+  Result.center := cCenter;
+  Result.radius := cRadius;
+end;
+
+{==============================================================================]
+  <TCircle.Construct>
+  @action: Constructs TCircle with centerX, centerY and radius.
+  @note: None.
+[==============================================================================}
+class function TCircle.Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload; cdecl;
+begin
+  Result.center := Point(centerX, centerY);
+  Result.radius := cRadius;
+end;
+
+{==============================================================================]
+  <TCircle.Contains>
+  @action: Returns true if TCircle contains pt.
+  @note: None.
+[==============================================================================}
+function TCircle.Contains(const pt: TPoint): Boolean; cdecl;
+begin
+  Result := ((Sqr(pt.X - Self.Center.X) + Sqr(pt.Y - Self.Center.Y)) <= Sqr(Self.Radius));
+end;
+
+{==============================================================================]
+  <TCircle.Item>
+  @action: Returns true if TCircle contains pt.
+  @note: None.
+[==============================================================================}
+function TCircle.Item(const pt: TPoint): Boolean; cdecl;
+begin
+  Result := (Hypot((pt.X - Self.Center.X), (pt.Y - Self.Center.Y)) <= Self.Radius);
+end;
+
+{==============================================================================]
+  <TCircle.Pixel>
+  @action: Returns true if TCircle contains pt.
+  @note: None.
+[==============================================================================}
+function TCircle.Pixel(const pt: TPoint): Boolean; cdecl;
+begin
+  Result := ((((pt.X - Self.Center.X) * (pt.X - Self.Center.X)) + ((pt.Y - Self.Center.Y) * (pt.Y - Self.Center.Y))) <= (Self.Radius * Self.Radius));
+end;
+
+{==============================================================================]
+  <TCircle.Bounds>
+  @action: Returns TCircle boundaries as TBox.
+  @note: None.
+[==============================================================================}
+function TCircle.Bounds: TBox; cdecl;
+begin
+  Result := Box(Floor(Self.Center.X - Self.Radius), Floor(Self.Center.Y - Self.Radius), Ceil(Self.Center.X + Self.Radius), Ceil(Self.Center.Y + Self.Radius));
+end;
+
+{==============================================================================]
+  <TCircle.TPA>
+  @action: Returns TCircle points as TPointArray.
+  @note: None.
+[==============================================================================}
+function TCircle.TPA: TPointArray; cdecl;
+var
+  b: TBox;
+  x, y, p: Integer;
+begin
+  b := Self.Bounds;
+  SetLength(Result, b.Area);
+  p := 0;
+  for y := b.Y1 to b.Y2 do
+    for x := b.X1 to b.X2 do
+      if Self.Contains(Point(x, y)) then
+        Result[p.Increase] := Point(x, y);
+end;
+
+{==============================================================================]
  <TCircle.Points>
  @action: Returns all the points of TCircle.
  @note: None.

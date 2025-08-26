@@ -176,8 +176,8 @@ type
     function Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload; cdecl;
     function Singular: Boolean; cdecl;
     function Plural: Boolean; cdecl;
-	function Rectangular: Boolean; cdecl;
-	function Equilateral: Boolean; cdecl;
+    function Rectangular: Boolean; cdecl;
+    function Equilateral: Boolean; cdecl;
     function Square: Boolean; cdecl;
     function Size(var width, height: Integer): Integer; cdecl; inline;
     function Area: Integer; cdecl; inline;
@@ -222,11 +222,11 @@ type
     function Points: TPointArray; cdecl;
     function Pixels: TPointArray; cdecl;
     function TPA: TPointArray; cdecl;
-	function Contents: TPointArray; cdecl;
-	function Extract: TPointArray; cdecl;
-	function Enumerate: TPointArray; cdecl;
-	function Elements: TPointArray; cdecl;
-	function Border: TPointArray; cdecl;
+    function Contents: TPointArray; cdecl;
+    function Extract: TPointArray; cdecl;
+    function Enumerate: TPointArray; cdecl;
+    function Elements: TPointArray; cdecl;
+    function Border: TPointArray; cdecl;
     function CornerPoints: TPointArray; cdecl;
     function Corners: TPointArray; cdecl;
     function SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload; cdecl;
@@ -240,12 +240,25 @@ type
   T2DBoxArray = array of TBoxArray;
   TSegment = record
     A, B: TPoint;
+    constructor Create(const sA, sB: TPoint); overload;
+    constructor Create(const aX, aY, bX, bY: Integer); overload;
+    class function Construct(const sA, sB: TPoint): TSegment; overload; cdecl; static;
+    class function Construct(const aX, aY, bX, bY: Integer): TSegment; overload; cdecl; static;
     function Points(const steps: Integer = 2147483647): TPointArray; cdecl;
     function Pixels: TPointArray; cdecl;
   end;
   TCircle = record
     Center: TPoint;
     Radius: Double;
+    constructor Create(const cCenter: TPoint; const cRadius: Double); overload;
+    constructor Create(const centerX, centerY: Integer; const cRadius: Double); overload;
+    class function Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload; cdecl; static;
+    class function Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload; cdecl; static;
+	function Contains(const pt: TPoint): Boolean; cdecl;
+    function Item(const pt: TPoint): Boolean; cdecl;
+    function Pixel(const pt: TPoint): Boolean; cdecl;
+    function Bounds: TBox; cdecl;
+    function TPA: TPointArray; cdecl;
     function Points: TPointArray; cdecl;
     function BorderPoints(const count: Integer): TPointArray; cdecl;
     function Border: TPointArray; cdecl;

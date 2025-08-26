@@ -234,7 +234,6 @@ begin
   Result := (((Self.X2 > Self.X1) and (Self.Y2 > Self.Y1)) and ((Self.X2 - Self.X1) = (Self.Y2 - Self.Y1)));
 end;
 
-
 {==============================================================================]
   <TBox.Size>
   @action: Stores dimensions from TBox (bx) to width and height variables
