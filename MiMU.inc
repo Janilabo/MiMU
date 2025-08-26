@@ -15,6 +15,8 @@
 {$I MiMU\TPointArray.inc}
 {$I MiMU\TBoxArray.inc}
 {$I MiMU\TRangeArray.inc}
+{$I MiMU\TCircle.inc}
+{$I MiMU\TSegment.inc}
 {$DEFINE Integer}
   {$I MiMU\Generic.inc}
   {$I MiMU\Sortable.inc}

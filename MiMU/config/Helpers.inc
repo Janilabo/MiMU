@@ -560,6 +560,12 @@ type
       function StopValues: TIntegerArray; overload; cdecl;
       function Unzip(var startArr, stopArr: TIntegerArray): Integer; cdecl;
       function Zip(const startArr, stopArr: TIntegerArray): Integer; cdecl;
+    {$ENDIF}
+    {$IFDEF TSegment}
+    {$ENDIF}
+    {$IFDEF TCircle}
+    {$ENDIF}
+    {$IFDEF TTriangle}
     {$ENDIF}	
     end;
   H2DArr = type helper for T2DArr

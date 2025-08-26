@@ -238,6 +238,21 @@ type
   end;
   TBoxArray = array of TBox;
   T2DBoxArray = array of TBoxArray;
+  TSegment = record
+    A, B: TPoint;
+    function Points(const steps: Integer = 2147483647): TPointArray; cdecl;
+    function Pixels: TPointArray; cdecl;
+  end;
+  TCircle = record
+    Center: TPoint;
+    Radius: Double;
+    function Points: TPointArray; cdecl;
+    function BorderPoints(const count: Integer): TPointArray; cdecl;
+    function Border: TPointArray; cdecl;
+  end;
+  TTriangle = record
+    A, B, C: TPoint;
+  end;
 
 function MiMU_Version: Double; cdecl;
 
