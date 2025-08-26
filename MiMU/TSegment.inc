@@ -64,6 +64,21 @@ begin
 end;
 
 {==============================================================================]
+  <TSegment.Envelope>
+  @action: Returns the bounds of TSegment as TBox.
+  @note: None.
+[==============================================================================}
+function TSegment.Envelope: TBox; cdecl;
+begin
+  case Bitify((Self.A.X < Self.B.X), (Self.A.Y < Self.B.Y)) of
+    0: Result.Create(Self.B.X, Self.B.Y, Self.A.X, Self.A.Y);
+    1: Result.Create(Self.B.X, Self.A.Y, Self.A.X, Self.B.Y);
+    2: Result.Create(Self.A.X, Self.B.Y, Self.B.X, Self.A.Y);
+    3: Result.Create(Self.A.X, Self.A.Y, Self.B.X, Self.B.Y);
+  end;
+end;
+
+{==============================================================================]
  <TSegment.Points>
  @action: Returns all the points of TSegment.
  @note: None.

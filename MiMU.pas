@@ -246,6 +246,7 @@ type
     class function Construct(const aX, aY, bX, bY: Integer): TSegment; overload; cdecl; static;
     function Bounds: TBox; cdecl;
     function Boundaries: TBox; cdecl;
+	function Envelope: TBox; cdecl;
 	function Points: TPointArray; cdecl;
     function Pixels(const steps: Integer = 2147483647): TPointArray; cdecl;
   end;
@@ -262,6 +263,9 @@ type
     function Item(const pt: TPoint): Boolean; cdecl;
     function Pixel(const pt: TPoint): Boolean; cdecl;
     function Bounds: TBox; cdecl;
+	function Boundaries: TBox; cdecl;
+	function BoundingBox: TBox; cdecl;
+	function Envelope: TBox; cdecl;
 	function Points: TPointArray; cdecl;
     function TPA: TPointArray; cdecl;
     function BorderPoints(const count: Integer): TPointArray; cdecl;
@@ -340,6 +344,11 @@ function IfThen(const state: Boolean; const sTrue, sFalse: TRange): TRange; over
 function IfThen(const state: Boolean; const sTrue, sFalse: TSegment): TSegment; overload; cdecl;
 function IfThen(const state: Boolean; const sTrue, sFalse: TCircle): TCircle; overload; cdecl;
 function IfThen(const state: Boolean; const sTrue, sFalse: TTriangle): TTriangle; overload; cdecl;
+
+function Bitify(const a: Boolean): Integer; overload; inline;
+function Bitify(const a, b: Boolean): Integer; overload;
+function Bitify(const a, b, c: Boolean): Integer; overload;
+function Bitify(const a, b, c, d: Boolean): Integer; overload;
   
 type
   TRangeArray = array of TRange;
@@ -624,6 +633,29 @@ function IfThen(const state: Boolean; const sTrue, sFalse: TRange): TRange; over
 function IfThen(const state: Boolean; const sTrue, sFalse: TSegment): TSegment; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
 function IfThen(const state: Boolean; const sTrue, sFalse: TCircle): TCircle; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
 function IfThen(const state: Boolean; const sTrue, sFalse: TTriangle): TTriangle; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+
+function Bitify(const a: Boolean): Integer; overload; inline;
+begin
+  if a then
+    Result := 1
+  else
+    Result := 0;
+end;
+
+function Bitify(const a, b: Boolean): Integer; overload;
+begin
+  Result := ((Bitify(a) shl 1) or Bitify(b));
+end;
+
+function Bitify(const a, b, c: Boolean): Integer; overload;
+begin
+  Result := ((Bitify(a) shl 2) or (Bitify(b) shl 1) or Bitify(c));
+end;
+
+function Bitify(const a, b, c, d: Boolean): Integer; overload;
+begin
+  Result := ((Bitify(a) shl 3) or (Bitify(b) shl 2) or (Bitify(c) shl 1) or Bitify(d));
+end;
 
 function Max(A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Max}
 function Max(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Max}

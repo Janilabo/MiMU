@@ -12,16 +12,39 @@ begin
 end;
 
 {==============================================================================]
+ <TBooleanHelper.Bit>
+ @action: Bit for helper booleans.
+ @note: True => 1 | False => 0
+[==============================================================================}
+function TBooleanHelper.Bit: Integer; cdecl; inline;
+begin
+  Result := (Integer(Self) and 1);
+end;
+
+{==============================================================================]
+ <TBooleanHelper.Bitify>
+ @action: Bitify for helper booleans.
+ @note: True => 1 | False => 0
+[==============================================================================}
+function TBooleanHelper.Bitify: Integer; cdecl; inline;
+begin
+  if Self then
+    Result := 1
+  else
+    Result := 0;
+end;
+
+{==============================================================================]
  <TBooleanHelper.ToInteger>
  @action: Returns integer based on state of Self.
  @note: True => 1 | False => 0
 [==============================================================================}
 function TBooleanHelper.ToInteger: Integer; cdecl;
 begin
-  if Self then
-    Result := 1
-  else
-    Result := 0;
+  case Self of
+    True: Result := 1;
+    False: Result := 0;
+  end;
 end;
 
 {==============================================================================]

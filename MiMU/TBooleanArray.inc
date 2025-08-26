@@ -1,4 +1,36 @@
 {==============================================================================]
+  <TBooleanArrayHelper.Bitify>
+  @action: Returns TBooleanArray as bits.
+  @note: [True, False, True] => 5.
+[==============================================================================}
+function TBooleanArrayHelper.Bitify: Integer; cdecl;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+  begin
+    Result := (Result shl 1);
+    if Self[i] then
+      Inc(Result);
+  end;
+end;
+
+{==============================================================================]
+  <TBooleanArrayHelper.Bits>
+  @action: Returns TBooleanArray as bits.
+  @note: [True, False, True] => 5.
+[==============================================================================}
+function TBooleanArrayHelper.Bits: Integer; cdecl;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Result := ((Result shl 1) or Self[i].Bit);
+end;
+
+{==============================================================================]
   <TBooleanArrayHelper.Digits>
   @action: Returns TBooleanArray as Integers.
   @note: [True, False] => [1, 0].

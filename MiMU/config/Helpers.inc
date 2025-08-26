@@ -158,6 +158,8 @@ type
     {$ENDIF}
     {$IFDEF Boolean}
       function ToString: string; cdecl;
+      function Bit: Integer; cdecl; inline;
+	  function Bitify: Integer; cdecl; inline;
       function ToInteger: Integer; cdecl;
       function AsInteger: Integer; cdecl;
       function Toggle: Boolean; cdecl;
@@ -487,6 +489,8 @@ type
       function Stringify(const glue: string): string; overload; cdecl;
     {$ENDIF}
 	{$IFDEF Boolean}
+      function Bits: Integer; cdecl;
+	  function Bitify: Integer; cdecl;
       function Digits: TIntegerArray; overload; cdecl;
 	  function Falsed: Boolean; overload; cdecl;
 	  function Falseless: Boolean; overload; cdecl;
