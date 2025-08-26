@@ -43,26 +43,32 @@ begin
 end;
 
 {==============================================================================]
- <TSegment.Points>
- @action: Returns the points of TSegment.
- @note: Supports custom steps.
+  <TSegment.Bounds>
+  @action: Returns the bounds of TSegment as TBox.
+  @note: None.
 [==============================================================================}
-function TSegment.Points(const steps: Integer = 2147483647): TPointArray; cdecl;
-var
-  i, h: Integer;
+function TSegment.Bounds: TBox; cdecl;
 begin
-  h := (Max(2, Min(steps, (Max(Abs(Self.B.X - Self.A.X), Abs(Self.B.Y - Self.A.Y)) + 1))) - 1);
-  SetLength(Result, (h + 1));
-  for i := 0 to h do
-    Result[i] := Point(Round(Self.A.X + ((i / h) * (Self.B.X - Self.A.X))), Round(Self.A.Y + ((i / h) * (Self.B.Y - Self.A.Y))));
+  Result.Create(Min(Self.A.X, Self.B.X), Min(Self.A.Y, Self.B.Y), Max(Self.A.X, Self.B.X), Max(Self.A.Y, Self.B.Y));
 end;
 
 {==============================================================================]
- <TSegment.Pixels>
+  <TSegment.Boundaries>
+  @action: Returns the bounds of TSegment as TBox.
+  @note: None.
+[==============================================================================}
+function TSegment.Boundaries: TBox; cdecl;
+begin
+  with Self do
+  Result := Box(IfThen((A.X < B.X), A.X, B.X), IfThen((A.Y < B.Y), A.Y, B.Y), IfThen((A.X > B.X), A.X, B.X), IfThen((A.Y > B.Y), A.Y, B.Y));
+end;
+
+{==============================================================================]
+ <TSegment.Points>
  @action: Returns all the points of TSegment.
  @note: None.
 [==============================================================================}
-function TSegment.Pixels: TPointArray; cdecl;
+function TSegment.Points: TPointArray; cdecl;
 var
   l: TBox;
   s, i: Integer;
@@ -86,4 +92,19 @@ begin
     for i := 0 to s do
       Result[i] := Point(Round(x.Increase(h)), Round(y.Increase(v)));
   end;
+end;
+
+{==============================================================================]
+ <TSegment.Pixels>
+ @action: Returns the points of TSegment.
+ @note: Supports custom steps.
+[==============================================================================}
+function TSegment.Pixels(const steps: Integer = 2147483647): TPointArray; cdecl;
+var
+  i, h: Integer;
+begin
+  h := (Max(2, Min(steps, (Max(Abs(Self.B.X - Self.A.X), Abs(Self.B.Y - Self.A.Y)) + 1))) - 1);
+  SetLength(Result, (h + 1));
+  for i := 0 to h do
+    Result[i] := Point(Round(Self.A.X + ((i / h) * (Self.B.X - Self.A.X))), Round(Self.A.Y + ((i / h) * (Self.B.Y - Self.A.Y))));
 end;

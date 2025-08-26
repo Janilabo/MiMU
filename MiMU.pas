@@ -244,9 +244,13 @@ type
     constructor Create(const aX, aY, bX, bY: Integer); overload;
     class function Construct(const sA, sB: TPoint): TSegment; overload; cdecl; static;
     class function Construct(const aX, aY, bX, bY: Integer): TSegment; overload; cdecl; static;
-    function Points(const steps: Integer = 2147483647): TPointArray; cdecl;
-    function Pixels: TPointArray; cdecl;
+    function Bounds: TBox; cdecl;
+    function Boundaries: TBox; cdecl;
+	function Points: TPointArray; cdecl;
+    function Pixels(const steps: Integer = 2147483647): TPointArray; cdecl;
   end;
+  TSegmentArray = array of TSegment;
+  T2DSegmentArray = array of TSegmentArray;
   TCircle = record
     Center: TPoint;
     Radius: Double;
@@ -258,14 +262,18 @@ type
     function Item(const pt: TPoint): Boolean; cdecl;
     function Pixel(const pt: TPoint): Boolean; cdecl;
     function Bounds: TBox; cdecl;
+	function Points: TPointArray; cdecl;
     function TPA: TPointArray; cdecl;
-    function Points: TPointArray; cdecl;
     function BorderPoints(const count: Integer): TPointArray; cdecl;
     function Border: TPointArray; cdecl;
   end;
+  TCircleArray = array of TCircle;
+  T2DCircleArray = array of TCircleArray;
   TTriangle = record
     A, B, C: TPoint;
   end;
+  TTriangleArray = array of TTriangle;
+  T2DTriangleArray = array of TTriangleArray;
 
 function MiMU_Version: Double; cdecl;
 
@@ -282,10 +290,16 @@ operator-(const a, b: TRange): TRange;
 operator=(const a, b: TPoint): Boolean;
 operator=(const a, b: TBox): Boolean;
 operator=(const a, b: TRange): Boolean;
+operator=(const a, b: TSegment): Boolean;
+operator=(const a, b: TCircle): Boolean;
+operator=(const a, b: TTriangle): Boolean;
 
 operator<>(const a, b: TPoint): Boolean;
 operator<>(const a, b: TBox): Boolean;
 operator<>(const a, b: TRange): Boolean;
+operator<>(const a, b: TSegment): Boolean;
+operator<>(const a, b: TCircle): Boolean;
+operator<>(const a, b: TTriangle): Boolean;
 
 function Max(a, b: string): string; overload; inline;
 function Max(a, b: Char): Char; overload; inline;
@@ -310,6 +324,9 @@ function Swap(var A, B: Boolean): Boolean; overload; inline;
 function Swap(var A, B: TPoint): Boolean; overload; inline;
 function Swap(var A, B: TBox): Boolean; overload; inline;
 function Swap(var A, B: TRange): Boolean; overload; inline;
+function Swap(var A, B: TSegment): Boolean; overload; inline;
+function Swap(var A, B: TCircle): Boolean; overload; inline;
+function Swap(var A, B: TTriangle): Boolean; overload; inline;
 
 function IfThen(const state: Boolean; const sTrue, sFalse: Integer): Integer; overload; cdecl;
 function IfThen(const state: Boolean; const sTrue, sFalse: Int64): Int64; overload; cdecl;
@@ -320,6 +337,9 @@ function IfThen(const state: Boolean; const sTrue, sFalse: Boolean): Boolean; ov
 function IfThen(const state: Boolean; const sTrue, sFalse: TPoint): TPoint; overload; cdecl;
 function IfThen(const state: Boolean; const sTrue, sFalse: TBox): TBox; overload; cdecl;
 function IfThen(const state: Boolean; const sTrue, sFalse: TRange): TRange; overload; cdecl;
+function IfThen(const state: Boolean; const sTrue, sFalse: TSegment): TSegment; overload; cdecl;
+function IfThen(const state: Boolean; const sTrue, sFalse: TCircle): TCircle; overload; cdecl;
+function IfThen(const state: Boolean; const sTrue, sFalse: TTriangle): TTriangle; overload; cdecl;
   
 type
   TRangeArray = array of TRange;
@@ -494,6 +514,21 @@ begin
   Result := ((a.start = b.start) and (a.stop = b.stop));
 end;
 
+operator=(const a, b: TSegment): Boolean;
+begin
+  Result := ((a.A.X = b.A.X) and (a.A.Y = b.A.Y) and (a.B.X = b.B.X) and (a.B.Y = b.B.Y));
+end;
+
+operator=(const a, b: TCircle): Boolean;
+begin
+  Result := ((a.Center = b.Center) and (a.Radius = b.Radius));
+end;
+
+operator=(const a, b: TTriangle): Boolean;
+begin
+  Result := ((a.A = b.A) and (a.B = b.B) and (a.C = b.C));
+end;
+
 operator<>(const a, b: TPoint): Boolean;
 begin
   Result := not ((a.X = b.X) and (a.Y = b.Y));
@@ -507,6 +542,21 @@ end;
 operator<>(const a, b: TRange): Boolean;
 begin
   Result := not ((a.start = b.start) and (a.stop = b.stop));
+end;
+
+operator<>(const a, b: TSegment): Boolean;
+begin
+  Result := not (a = b);
+end;
+
+operator<>(const a, b: TCircle): Boolean;
+begin
+  Result := not (a = b);
+end;
+
+operator<>(const a, b: TTriangle): Boolean;
+begin
+  Result := not (a = b);
 end;
 
 function Point(const pX, pY: Integer): TPoint; overload; inline;
@@ -558,6 +608,9 @@ function Swap(var A, B: Boolean): Boolean; overload; inline; var C: Boolean; {$D
 function Swap(var A, B: TPoint): Boolean; overload; inline; var C: TPoint; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
 function Swap(var A, B: TBox): Boolean; overload; inline; var C: TBox; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
 function Swap(var A, B: TRange): Boolean; overload; inline; var C: TRange; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: TSegment): Boolean; overload; inline; var C: TSegment; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: TCircle): Boolean; overload; inline; var C: TCircle; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: TTriangle): Boolean; overload; inline; var C: TTriangle; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
 
 function IfThen(const state: Boolean; const sTrue, sFalse: Integer): Integer; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
 function IfThen(const state: Boolean; const sTrue, sFalse: Int64): Int64; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
@@ -568,6 +621,9 @@ function IfThen(const state: Boolean; const sTrue, sFalse: Boolean): Boolean; ov
 function IfThen(const state: Boolean; const sTrue, sFalse: TPoint): TPoint; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
 function IfThen(const state: Boolean; const sTrue, sFalse: TBox): TBox; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
 function IfThen(const state: Boolean; const sTrue, sFalse: TRange): TRange; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TSegment): TSegment; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TCircle): TCircle; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TTriangle): TTriangle; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
 
 function Max(A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Max}
 function Max(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Max}
