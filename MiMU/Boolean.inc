@@ -12,6 +12,16 @@ begin
 end;
 
 {==============================================================================]
+ <TBooleanHelper.Binary>
+ @action: Returns binary char based on boolean state.
+ @note: True => '1', False => '0'.
+[==============================================================================}
+function TBooleanHelper.Binary: Char; cdecl;
+begin
+  Result := IfThen(Self, '1', '0');
+end;
+
+{==============================================================================]
  <TBooleanHelper.Bit>
  @action: Bit for helper booleans.
  @note: True => 1 | False => 0
@@ -26,12 +36,9 @@ end;
  @action: Bitify for helper booleans.
  @note: True => 1 | False => 0
 [==============================================================================}
-function TBooleanHelper.Bitify: Integer; cdecl; inline;
+function TBooleanHelper.Bitify: Integer; cdecl;
 begin
-  if Self then
-    Result := 1
-  else
-    Result := 0;
+  Result := IfThen(Self, 1, 0);
 end;
 
 {==============================================================================]

@@ -399,3 +399,17 @@ begin
   for i := 0 to High(Self) do
     Result := (Result + IfThen(Self[i], '1', '0'));  
 end;
+
+{==============================================================================]
+  <TBooleanArrayHelper.Binary>
+  @action: Returns binary string from Boolean Array
+  @note: [True, False] => '10' & [False, True] => '01'
+[==============================================================================}
+function TBooleanArrayHelper.Binary: string; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i + 1] := Self[i].Binary;  
+end;

@@ -163,8 +163,9 @@ type
     {$ENDIF}
     {$IFDEF Boolean}
       function ToString: string; cdecl;
+	  function Binary: Char; cdecl;
       function Bit: Integer; cdecl; inline;
-	  function Bitify: Integer; cdecl; inline;
+	  function Bitify: Integer; cdecl;
       function ToInteger: Integer; cdecl;
       function AsInteger: Integer; cdecl;
       function Toggle: Boolean; cdecl;
@@ -520,6 +521,7 @@ type
 	  function Truesome(const minTrue: Integer): Boolean; overload; cdecl;
 	  function Opposite: TBooleanArray; overload; cdecl;
 	  function BinaryStr: string; cdecl;
+	  function Binary: string; cdecl;
 	{$ENDIF}
     {$IFDEF TPoint}
       function Bounds: TBox; overload; cdecl;

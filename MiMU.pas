@@ -713,7 +713,7 @@ begin
   Move(a[0], arr[0], (Length(arr) * SizeOf(Integer)));
 end;
 
-class function TIA.Reversed(const Arr: TIntegerArray): TIntegerArray; overload; cdecl;
+class function TIA.Reversed(const arr: TIntegerArray): TIntegerArray; overload; cdecl;
 var
   i, r: Integer;
 begin
