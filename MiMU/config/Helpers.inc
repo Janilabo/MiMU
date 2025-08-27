@@ -46,6 +46,9 @@ type
       function Under(const target: Integer): Boolean; cdecl; inline;
       function Oversize(const limit: Integer): Boolean; cdecl; inline;
       function Undersize(const limit: Integer): Boolean; cdecl; inline;
+      function BitMax: Integer; cdecl;
+      function Unbitify: TBooleanArray; overload; cdecl;
+	  function Unbitify(const bCount: Integer): TBooleanArray; overload; cdecl;
     {$ENDIF}
     {$IFDEF Double}
       function ClampMin(const limit: Double): Double; cdecl;
@@ -150,6 +153,8 @@ type
       function AsTRange: TRange; cdecl;
 	  function Void: Boolean; cdecl;
 	  function ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange; cdecl;
+	  function IsBinary(const emptyTrue: Boolean = True): Boolean; cdecl;
+	  function BoolifyBinary: TBooleanArray; cdecl;
     {$ENDIF}
     {$IFDEF Char}
       function Compare(const target: Char): Integer; cdecl; inline;
@@ -491,6 +496,7 @@ type
 	{$IFDEF Boolean}
       function Bits: Integer; cdecl;
 	  function Bitify: Integer; cdecl;
+      function ToBits: Integer; cdecl;
       function Digits: TIntegerArray; overload; cdecl;
 	  function Falsed: Boolean; overload; cdecl;
 	  function Falseless: Boolean; overload; cdecl;
@@ -513,6 +519,7 @@ type
 	  function Truesome: Boolean; overload; cdecl;
 	  function Truesome(const minTrue: Integer): Boolean; overload; cdecl;
 	  function Opposite: TBooleanArray; overload; cdecl;
+	  function BinaryStr: string; cdecl;
 	{$ENDIF}
     {$IFDEF TPoint}
       function Bounds: TBox; overload; cdecl;

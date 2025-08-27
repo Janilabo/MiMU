@@ -1034,3 +1034,34 @@ begin
     Exit(Result.Create(-2147483648));
   Result.Create(StrToInt(Copy(s, 1, (p - 1)).Trim), StrToInt(Copy(s, (p + Length(glueRange)), 2147483647).Trim));
 end;
+
+{==============================================================================]
+  <TStringHelper.IsBinary>
+  @action: Returns true if str contains only 0's and 1's
+  @note: If str is empty and emptyTrue is True, then this function returns True with empty strings.
+[==============================================================================}
+function TStringHelper.IsBinary(const emptyTrue: Boolean = True): Boolean; cdecl;
+var
+  i: Integer;
+begin
+  if (Self = '') then
+    Exit(emptyTrue);
+  for i := 1 to Length(Self) do
+    if not (Self[i] in ['0', '1']) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <TStringHelper.BoolifyBinary>
+  @action: '10101' => [True, False, True, False, True]
+  @note: Considers only '1' as True, everything else as False.
+[==============================================================================}
+function TStringHelper.BoolifyBinary: TBooleanArray; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 1 to Length(Self) do
+    Result[i - 1] := (Self[i] = '1');
+end;

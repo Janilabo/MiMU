@@ -31,6 +31,20 @@ begin
 end;
 
 {==============================================================================]
+  <TBooleanArrayHelper.ToBits>
+  @action: Returns TBooleanArray as bits.
+  @note: [True, False, True] => 5.
+[==============================================================================}
+function TBooleanArrayHelper.ToBits: Integer; cdecl;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Result := ((Result shl 1) or Byte(Self[i]));
+end;
+
+{==============================================================================]
   <TBooleanArrayHelper.Digits>
   @action: Returns TBooleanArray as Integers.
   @note: [True, False] => [1, 0].
@@ -370,4 +384,18 @@ begin
       Result[i] := False
 	else
 	  Result[i] := True;
+end;
+
+{==============================================================================]
+  <TBooleanArrayHelper.BinaryStr>
+  @action: Returns binary string from Boolean Array
+  @note: [True, False] => '10' & [False, True] => '01'
+[==============================================================================}
+function TBooleanArrayHelper.BinaryStr: string; cdecl;
+var
+  i: Integer;
+begin
+  Result := '';
+  for i := 0 to High(Self) do
+    Result := (Result + IfThen(Self[i], '1', '0'));  
 end;
