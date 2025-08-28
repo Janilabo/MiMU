@@ -90,3 +90,42 @@ begin
   end;
   Result[l] := Self[a - 1];
 end;
+
+{==============================================================================]
+  <TCharArrayHelper.Ordinals>
+  @action: Returns Ord() of every array items as TIntegerArray.
+  @note: None.
+[==============================================================================}
+function TCharArrayHelper.Ordinals: TIntegerArray; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := Ord(Self[i]);
+end;
+
+{==============================================================================]
+  <TCharArrayHelper.Unduped>
+  @action: Returns TCharArray with unique chars. 
+  @note: Works with ASCII.
+[==============================================================================}
+function TCharArrayHelper.Unduped: TCharArray; cdecl;
+var
+  s: set of Char;
+  i, l: Integer;
+begin
+  if (Length(Self) < 2) then
+    Exit(Self.Clone);
+  s := [];
+  l := 0;
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+  begin
+    if (Self[i] in s) then
+      Continue;
+    Include(s, Self[i]);
+    Result[l.Increase] := Self[i];
+  end;
+  SetLength(Result, l);
+end;

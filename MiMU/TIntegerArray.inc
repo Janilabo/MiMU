@@ -2044,3 +2044,20 @@ begin
     Self[i] := (Self[i] xor Self[l]);
   end;
 end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Pure>
+  @action: Returns true if arr is made with only allowed items.
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.Pure(const allowed: TIntegerArray): Boolean; cdecl;
+var
+  a: TIntegerArray;
+  i: Integer;
+begin
+  a := allowed.QuickSorted;
+  for i := 0 to High(Self) do
+    if not a.BinaryContains(Self[i]) then
+      Exit(False);
+  Result := True;
+end;

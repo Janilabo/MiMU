@@ -331,7 +331,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Consists(items: TArray): Boolean>
+ <arr.Exact(items: TArray): Boolean>
  @action: Returns true if arr consists of items.
  @note: arr must contain ALL the items for this function to return True.
         Any extra items will cause Result to be False also.
@@ -341,7 +341,7 @@ end;
 		arr[2,1,3,4] => False
 		This function requires items array to be unique. No duplicates allowed for it!
 [==============================================================================}
-function HArr.Consists(const items: TArr): Boolean; overload; cdecl;
+function HArr.Exact(const items: TArr): Boolean; overload; cdecl;
 var
   i, j: Integer;
   f: TBooleanArray;
@@ -358,6 +358,32 @@ begin
     f[j] := True;
   end;
   Result := f.Uniform(True);
+end;
+
+{==============================================================================]
+  <arr.BuiltWith(blocks TArray): Boolean>
+  @action: Returns true is arr is built with blocks.
+  @note: This function requires blocks array to be unique (no duplicates allowed for it).
+[==============================================================================}
+function HArr.BuiltWith(const blocks: TArr): Boolean; cdecl;
+var
+  i, p: Integer;
+  u: TBooleanArray;
+begin
+  if (Self.Empty or blocks.Empty) then
+    Exit(False);
+  SetLength(u, Length(blocks));
+  for i := 0 to High(Self) do
+  begin
+    p := blocks.Pos(Self[i]);
+    if (p = -1) then
+      Exit(False);
+    u[p] := True;
+  end;
+  for i := 0 to High(blocks) do
+    if not u[i] then
+      Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]

@@ -158,6 +158,9 @@ type
 	  function BoolifyBinary: TBooleanArray; cdecl;
       function MadeOf(const allowed: TCharArray): Boolean; cdecl;
 	  function FreeOf(const forbidden: TCharArray): Boolean; cdecl;
+      function Consists(const allowed: TCharArray): Boolean; cdecl;
+      function Pure(const allowed: TCharArray): Boolean; cdecl;
+      function BuiltWith(const blocks: TCharArray): Boolean; cdecl;
     {$ENDIF}
     {$IFDEF Char}
       function Compare(const target: Char): Integer; cdecl; inline;
@@ -233,6 +236,7 @@ type
     function Append(const items: TArr; const duplicates: Boolean = True): TArr; overload; cdecl;
 	function Backwards: TArr; overload; cdecl;
     function Build(const item: TVar; const aSize: Integer = 1): TArr; overload; cdecl;
+	function BuiltWith(const blocks: TArr): Boolean; cdecl;
     function MadeOf(const allowed: TArr): Boolean; overload; cdecl;
     function FreeOf(const forbidden: TArr): Boolean; overload; cdecl;
     function Clear: Boolean; overload; cdecl;
@@ -240,7 +244,6 @@ type
     function Clone(const ID: TIntegerArray): TArr; overload; cdecl;
     function Combine(const b: TArr): TArr; overload; cdecl;
 	function Comprised(const items: TArr): Boolean; overload; cdecl;
-	function Consists(const items: TArr): Boolean; overload; cdecl;
 	function Constant(const item: TVar): Boolean; overload; cdecl;
 	function Constant: Boolean; overload; cdecl;
     function Contains(const item: TVar; const index: Integer = 0): Boolean; cdecl;
@@ -261,6 +264,7 @@ type
     function Erase(const item: TVar; const all: Boolean): TArr; overload; cdecl;
     function Erase(const items: TArr; const index: Integer = 2147483647; const all: Boolean = True): TArr; overload; cdecl;
     function Erase(const items: TArr; const all: Boolean): TArr; overload; cdecl;
+	function Exact(const items: TArr): Boolean; overload; cdecl;
     function Excessive: Boolean; overload; cdecl; 
     function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
     function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
@@ -484,6 +488,7 @@ type
 	  function Minimum: Integer; overload; cdecl;
 	  function Maximum(var index: Integer): Integer; overload; cdecl;
 	  function Maximum: Integer; overload; cdecl;
+      function Pure(const allowed: TIntegerArray): Boolean; cdecl;
     {$ENDIF}
     {$IFDEF Double}
     {$ENDIF}
@@ -496,6 +501,8 @@ type
       function Join(const glue: string): string; overload; cdecl;
       function Stringify: string; overload; cdecl;
       function Stringify(const glue: string): string; overload; cdecl;
+      function Ordinals: TIntegerArray; cdecl;
+      function Unduped: TCharArray; cdecl;
     {$ENDIF}
 	{$IFDEF Boolean}
       function Bits: Integer; cdecl;
