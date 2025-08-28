@@ -214,6 +214,16 @@ begin
 end;
 
 {==============================================================================]
+  <TStringHelper.Exists>
+  @action: Returns true if string is not empty.
+  @note: Length(str) > 0.
+[==============================================================================}
+function TStringHelper.Exists: Boolean; cdecl;
+begin
+  Result := (Length(Self) > 0);
+end;
+
+{==============================================================================]
   <TStringHelper.Center>
   @action: Returns str centered with fill characters where size is the length of the Result.
   @note: Supports custom filling character by fill!
@@ -1064,4 +1074,37 @@ begin
   SetLength(Result, Length(Self));
   for i := 1 to Length(Self) do
     Result[i - 1] := (Self[i] = '1');
+end;
+
+{==============================================================================]
+  <TStringHelper.BuiltWith>
+  @action: Returns true if str is built with only allowed characters.
+  @note: None.
+[==============================================================================}
+function TStringHelper.BuiltWith(const allowed: TCharArray): Boolean; cdecl;
+var
+  i: Integer;
+begin
+  if allowed.Empty then
+    Exit(False);
+  for i := 1 to Length(Self) do
+    if not allowed.Contains(Self[i]) then
+      Exit(False);
+  Result := Self.Exists;
+end;
+
+{==============================================================================]
+  <TStringHelper.BuiltWithout>
+  @action: Returns true if str is built without forbidden characters.
+  @note: None.
+[==============================================================================}
+function TStringHelper.BuiltWithout(const forbidden: TCharArray): Boolean; cdecl;
+var
+  i: Integer;
+begin
+  if forbidden.Exists then
+  for i := 1 to Length(Self) do
+    if forbidden.Contains(Self[i]) then
+      Exit(False);
+  Result := Self.Exists;
 end;

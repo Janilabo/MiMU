@@ -121,6 +121,7 @@ type
       function EndWith(const s: string; const index: Integer = 2147483647): Boolean; cdecl;
       function Exch(const aIndex, bIndex: Integer): Boolean; cdecl;
       function Exchange(const aIndex, bIndex: Integer): Boolean; cdecl;
+      function Exists: Boolean; cdecl;
       function Explode(const d: string; const limit: Integer = -1): TStringArray; overload; cdecl;
       function Explode(const d: TStringArray; const limit: Integer = -1): TStringArray; overload; cdecl;
       function Find(const s: string; const index: Integer = 1): Integer; cdecl;
@@ -155,6 +156,8 @@ type
 	  function ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange; cdecl;
 	  function IsBinary(const emptyTrue: Boolean = True): Boolean; cdecl;
 	  function BoolifyBinary: TBooleanArray; cdecl;
+      function BuiltWith(const allowed: TCharArray): Boolean; cdecl;
+	  function BuiltWithout(const forbidden: TCharArray): Boolean; cdecl;
     {$ENDIF}
     {$IFDEF Char}
       function Compare(const target: Char): Integer; cdecl; inline;
