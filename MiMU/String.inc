@@ -1077,11 +1077,11 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.BuiltWith>
-  @action: Returns true if str is built with only allowed characters.
+  <TStringHelper.MadeOf>
+  @action: Returns true if str is made with only allowed characters.
   @note: None.
 [==============================================================================}
-function TStringHelper.BuiltWith(const allowed: TCharArray): Boolean; cdecl;
+function TStringHelper.MadeOf(const allowed: TCharArray): Boolean; cdecl;
 var
   i: Integer;
 begin
@@ -1094,11 +1094,11 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.BuiltWithout>
+  <TStringHelper.FreeOf>
   @action: Returns true if str is built without forbidden characters.
   @note: None.
 [==============================================================================}
-function TStringHelper.BuiltWithout(const forbidden: TCharArray): Boolean; cdecl;
+function TStringHelper.FreeOf(const forbidden: TCharArray): Boolean; cdecl;
 var
   i: Integer;
 begin

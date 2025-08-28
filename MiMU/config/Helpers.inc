@@ -156,8 +156,8 @@ type
 	  function ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange; cdecl;
 	  function IsBinary(const emptyTrue: Boolean = True): Boolean; cdecl;
 	  function BoolifyBinary: TBooleanArray; cdecl;
-      function BuiltWith(const allowed: TCharArray): Boolean; cdecl;
-	  function BuiltWithout(const forbidden: TCharArray): Boolean; cdecl;
+      function MadeOf(const allowed: TCharArray): Boolean; cdecl;
+	  function FreeOf(const forbidden: TCharArray): Boolean; cdecl;
     {$ENDIF}
     {$IFDEF Char}
       function Compare(const target: Char): Integer; cdecl; inline;
@@ -233,8 +233,8 @@ type
     function Append(const items: TArr; const duplicates: Boolean = True): TArr; overload; cdecl;
 	function Backwards: TArr; overload; cdecl;
     function Build(const item: TVar; const aSize: Integer = 1): TArr; overload; cdecl;
-    function BuiltWith(const allowed: TArr): Boolean; overload; cdecl;
-    function BuiltWithout(const forbidden: TArr): Boolean; overload; cdecl;
+    function MadeOf(const allowed: TArr): Boolean; overload; cdecl;
+    function FreeOf(const forbidden: TArr): Boolean; overload; cdecl;
     function Clear: Boolean; overload; cdecl;
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
     function Clone(const ID: TIntegerArray): TArr; overload; cdecl;

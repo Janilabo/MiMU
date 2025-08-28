@@ -201,11 +201,11 @@ begin
 end;
 
 {==============================================================================]
- <arr.BuiltWith(allowed: TArray): Boolean> 
+ <arr.MadeOf(allowed: TArray): Boolean> 
  @action: Checks if array arr contains only allowed items.
  @note: None.
 [==============================================================================}
-function HArr.BuiltWith(const allowed: TArr): Boolean; overload; cdecl;
+function HArr.MadeOf(const allowed: TArr): Boolean; overload; cdecl;
 var
   i, x, y: Integer;
 begin
@@ -222,11 +222,11 @@ begin
 end;
 
 {==============================================================================]
- <arr.BuiltWithout(forbidden: TArray): Boolean> 
+ <arr.FreeOf(forbidden: TArray): Boolean> 
  @action: Checks if array arr does not have any forbidden items.
  @note: None.
 [==============================================================================}
-function HArr.BuiltWithout(const forbidden: TArr): Boolean; overload; cdecl;
+function HArr.FreeOf(const forbidden: TArr): Boolean; overload; cdecl;
 var
   i, x, y: Integer;
 begin
