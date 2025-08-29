@@ -109,6 +109,7 @@ type
       function At(const s: string; const index: Integer = 1): Boolean; cdecl; inline;
       function Between(const s1, s2: string; const index: Integer = 1): string; cdecl;
       function Chars: TCharArray; cdecl;
+      function Charify: TCharArray; cdecl;
       function Chunk(const a, b: Integer): string; cdecl;
       function Center(const size: Integer; const fill: Char = #32): string; cdecl;
       function Compare(const target: string): Integer; cdecl; inline;
@@ -495,6 +496,10 @@ type
       function NoneOf(const forbidden: TIntegerArray): Boolean; cdecl;
       function AnyOf(const candidates: TIntegerArray): Boolean; cdecl;
       function AllOf(const candidates: TIntegerArray): Boolean; cdecl;
+      function Charify: TCharArray; overload; cdecl;
+      function Charify(var str: string): TCharArray; overload; cdecl;
+      function Stringify: string; overload; cdecl;
+      function Stringify(var chars: TCharArray): string; overload; cdecl;
     {$ENDIF}
     {$IFDEF Double}
     {$ENDIF}

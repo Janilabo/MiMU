@@ -259,6 +259,19 @@ begin
 end;
 
 {==============================================================================]
+  <TStringHelper.Charify>
+  @action: Returns characters of string as TCharArray.
+  @note: None.
+[==============================================================================}
+function TStringHelper.Charify: TCharArray; cdecl;
+begin
+  SetLength(Result, Length(Self));
+  if not Self.Empty then
+    Move(Self[1], Result[0], (Length(Self) * SizeOf(Char)));
+end;
+
+
+{==============================================================================]
   <TStringHelper.Chunk>
   @action: Returns chunk of string between a and b.
   @note: Supports reversed chunk, when a is higher than b.

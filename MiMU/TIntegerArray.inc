@@ -2138,3 +2138,69 @@ begin
     d.Free;
   end;
 end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Charify>
+  @action: Converts TIntegerArray to Chars.
+  @note: Make sure the values in array are correct!
+[==============================================================================}
+function TIntegerArrayHelper.Charify: TCharArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := Chr(Self[i]);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Charify>
+  @action: Converts TIntegerArray to Chars.
+  @note: Make sure the values in array are correct!
+         Stores str version to variable.
+[==============================================================================}
+function TIntegerArrayHelper.Charify(var str: string): TCharArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  SetLength(str, Length(Self));
+  for i := 0 to High(Self) do
+  begin
+    Result[i] := Chr(Self[i]);
+    str[i + 1] := Result[i];
+  end;
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Stringify>
+  @action: Converts TIntegerArray to string.
+  @note: Make sure the values in array are correct!
+[==============================================================================}
+function TIntegerArrayHelper.Stringify: string; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i + 1] := Chr(Self[i]);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Stringify>
+  @action: Converts TIntegerArray to Chars.
+  @note: Make sure the values in array are correct!
+         Stores charset version to variable.
+[==============================================================================}
+function TIntegerArrayHelper.Stringify(var chars: TCharArray): string; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  SetLength(chars, Length(Self));
+  for i := 0 to High(Self) do
+  begin
+    Result[i + 1] := Chr(Self[i]);
+    chars[i] := Result[i];
+  end;
+end;
