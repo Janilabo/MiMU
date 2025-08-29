@@ -158,6 +158,7 @@ type
 	  function BoolifyBinary: TBooleanArray; cdecl;
       function MadeOf(const allowed: TCharArray): Boolean; cdecl;
 	  function FreeOf(const forbidden: TCharArray): Boolean; cdecl;
+      function BuiltWithout(const forbidden: TCharArray): Boolean; cdecl;
       function Consists(const allowed: TCharArray): Boolean; cdecl;
       function Pure(const allowed: TCharArray): Boolean; cdecl;
       function BuiltWith(const blocks: TCharArray): Boolean; cdecl;
@@ -170,6 +171,7 @@ type
     {$IFDEF Boolean}
       function ToString: string; cdecl;
 	  function Binary: Char; cdecl;
+      function BinaryDigit: Integer; cdecl;
       function Bit: Integer; cdecl; inline;
 	  function Bitify: Integer; cdecl;
       function ToInteger: Integer; cdecl;
@@ -239,6 +241,7 @@ type
 	function BuiltWith(const blocks: TArr): Boolean; cdecl;
     function MadeOf(const allowed: TArr): Boolean; overload; cdecl;
     function FreeOf(const forbidden: TArr): Boolean; overload; cdecl;
+    function BuiltWithout(const forbidden: TArr): Boolean; overload; cdecl;
     function Clear: Boolean; overload; cdecl;
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
     function Clone(const ID: TIntegerArray): TArr; overload; cdecl;
@@ -489,6 +492,9 @@ type
 	  function Maximum(var index: Integer): Integer; overload; cdecl;
 	  function Maximum: Integer; overload; cdecl;
       function Pure(const allowed: TIntegerArray): Boolean; cdecl;
+      function NoneOf(const forbidden: TIntegerArray): Boolean; cdecl;
+      function AnyOf(const candidates: TIntegerArray): Boolean; cdecl;
+      function AllOf(const candidates: TIntegerArray): Boolean; cdecl;
     {$ENDIF}
     {$IFDEF Double}
     {$ENDIF}
@@ -531,6 +537,7 @@ type
 	  function Truesome(const minTrue: Integer): Boolean; overload; cdecl;
 	  function Opposite: TBooleanArray; overload; cdecl;
 	  function BinaryStr: string; cdecl;
+	  function BinaryDigits: TIntegerArray; cdecl;
 	  function Binary: string; cdecl;
 	{$ENDIF}
     {$IFDEF TPoint}

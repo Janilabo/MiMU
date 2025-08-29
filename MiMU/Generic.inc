@@ -230,20 +230,33 @@ function HArr.FreeOf(const forbidden: TArr): Boolean; overload; cdecl;
 var
   i, x, y: Integer;
 begin
-  if Self.Empty then
-    Exit(False);
+  if (Self.Empty or forbidden.Empty) then
+    Exit(True);
   y := Length(forbidden);
-  if not (y < 1) then
-  begin
-    i := High(Self);
+  i := High(Self);
+  repeat
+    x := 0;
     repeat
-      x := 0;
-      repeat
-        Result := not (Self[i] = forbidden[x]);
-      until ((x.Increment = y) or (not Result));
-    until ((i.Decrement < 0) or (not Result));
-  end else
-    Result := True;
+      Result := not (Self[i] = forbidden[x]);
+    until ((x.Increment = y) or (not Result));
+  until ((i.Decrement < 0) or (not Result));
+end;
+
+{==============================================================================]
+ <arr.BuiltWithout(forbidden: TArray): Boolean> 
+ @action: Checks if array arr does not have any forbidden items.
+ @note: None.
+[==============================================================================}
+function HArr.BuiltWithout(const forbidden: TArr): Boolean; overload; cdecl;
+var
+  i, j: Integer;
+begin
+  if not (Self.Empty or forbidden.Empty) then
+  for i := 0 to High(Self) do
+    for j := 0 to High(forbidden) do
+      if (Self[i] = forbidden[j]) then
+        Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]

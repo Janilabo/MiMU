@@ -22,6 +22,16 @@ begin
 end;
 
 {==============================================================================]
+  <TBooleanHelper.BinaryDigit>
+  @action: Returns binary char from Boolean
+  @note: True => 1 & False => 0
+[==============================================================================}
+function TBooleanHelper.BinaryDigit: Integer; cdecl;
+begin
+  Result := IfThen(Self, 1, 0);  
+end;
+
+{==============================================================================]
  <TBooleanHelper.Bit>
  @action: Bit for helper booleans.
  @note: True => 1 | False => 0

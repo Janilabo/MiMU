@@ -1103,10 +1103,27 @@ var
   i: Integer;
 begin
   if forbidden.Exists then
-  for i := 1 to Length(Self) do
+  for i := Length(Self) downto 1 do
     if forbidden.Contains(Self[i]) then
       Exit(False);
   Result := Self.Exists;
+end;
+
+{==============================================================================]
+ <TStringHelper.BuiltWithout> 
+ @action: Checks if array arr does not have any forbidden items.
+ @note: None.
+[==============================================================================}
+function TStringHelper.BuiltWithout(const forbidden: TCharArray): Boolean; cdecl;
+var
+  i, j: Integer;
+begin
+  if forbidden.Exists then
+  for i := 1 to Length(Self) do
+    for j := 0 to High(forbidden) do
+      if (Self[i] = forbidden[j]) then
+        Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]

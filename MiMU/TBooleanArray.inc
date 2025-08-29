@@ -401,6 +401,20 @@ begin
 end;
 
 {==============================================================================]
+  <TBooleanArrayHelper.BinaryDigits>
+  @action: Returns binary digits from Boolean Array
+  @note: [True, False] => [1, 0] & [False, True] => [0, 1]
+[==============================================================================}
+function TBooleanArrayHelper.BinaryDigits: TIntegerArray; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := IfThen(Self[i], 1, 0);  
+end;
+
+{==============================================================================]
   <TBooleanArrayHelper.Binary>
   @action: Returns binary string from Boolean Array
   @note: [True, False] => '10' & [False, True] => '01'
