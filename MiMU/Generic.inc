@@ -3206,18 +3206,12 @@ end;
 [==============================================================================}
 function H2DArr.Flatten: TArr; overload; cdecl;
 var
-  r, c, i, j, l: Integer;
+  i, j, l: Integer;
 begin
-  if Self.Empty then
-    Exit([]);
-  r := Length(Self);
-  c := 0;
-  for i := 0 to (r - 1) do
-    c := (c + Length(Self[i]));
-  SetLength(Result, c);
+  SetLength(Result, Self.Total);
   l := 0;
-  for i := 0 to (r - 1) do
-    for j := 0 to (Length(Self[i]) - 1) do
+  for i := 0 to High(Self) do
+    for j := 0 to High(Self[i]) do
       Result[l.Increase] := Self[i][j];
 end;
 
@@ -3335,6 +3329,20 @@ begin
   Result := 0;
   for i := 0 to High(Self) do
     Result := (Result + Length(Self[i]));
+end;
+
+{==============================================================================]
+ <arr.Total: Int64>
+ @action: Returns actual Length for 2D array.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+[==============================================================================}
+function H2DArr.Total: Int64; overload; cdecl;
+var
+  a: TArr;
+begin
+  Result := 0;
+  for a in Self do
+    Result.Increase(Length(a));
 end;
 
 {==============================================================================]

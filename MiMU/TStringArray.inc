@@ -64,3 +64,25 @@ begin
   for i := 0 to High(Self) do
     Result := (Result + Self[i]);
 end;
+
+{==============================================================================]
+  <TStringArrayHelper.Glue>
+  @action: Joins all the strings of array as single string.
+  @note: Chaining.
+[==============================================================================}
+function TStringArrayHelper.Glue: string; cdecl;
+var
+  c: TCharArray;
+  i, p, l: Integer;
+begin
+  l := Self.Span;
+  SetLength(c, l);
+  p := 0;
+  for i := 0 to High(Self) do
+    if (Self[i] <> '') then
+    begin
+      Move(Self[i][1], c[p], Length(Self[i]) * SizeOf(Char));
+      Inc(p, Length(Self[i]));
+    end;
+  SetString(Result, PChar(@c[0]), l);
+end;

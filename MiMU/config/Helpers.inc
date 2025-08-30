@@ -510,6 +510,7 @@ type
       function Concat: string; cdecl;
       function Concatenate: string; cdecl;
       function Flatten: string; cdecl;
+      function Glue: string; cdecl;
     {$ENDIF}
     {$IFDEF Char}
       function Str: string; cdecl;
@@ -621,5 +622,6 @@ type
 	function Ragged: Boolean; overload; cdecl;
 	function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
     function Size: Int64; overload; cdecl;
+	function Total: Int64; overload; cdecl;
 	function TArray: TArr; overload; cdecl;
   end;

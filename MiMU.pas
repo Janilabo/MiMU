@@ -107,10 +107,10 @@ type
     function Ints: TIntegerArray; cdecl;
     function Values: TIntegerArray; cdecl;
     function TIA: TIntegerArray; cdecl;
-	function Enumerate: TIntegerArray; cdecl;
-	function Elements: TIntegerArray; cdecl;
-	function Numbers: TIntegerArray; cdecl;
-	function Items: TIntegerArray; cdecl;
+    function Enumerate: TIntegerArray; cdecl;
+    function Elements: TIntegerArray; cdecl;
+    function Numbers: TIntegerArray; cdecl;
+    function Items: TIntegerArray; cdecl;
     function Normalize: TRange; cdecl;
     function Overlapping(const b: TRange): Boolean; cdecl;
     function Overlap(const b: TRange): Boolean; cdecl;
@@ -139,21 +139,21 @@ type
     function Clip(const zone: TRange): TRange; cdecl;
     function ClipMin(const minValue: Integer): TRange; cdecl;
     function ClipMax(const maxValue: Integer): TRange; cdecl;
-	function Neighbor(const b: TRange): Boolean; cdecl;
+    function Neighbor(const b: TRange): Boolean; cdecl;
     function Neighbour(const b: TRange): Boolean; cdecl;
-	function Touch(const b: TRange): Boolean; cdecl;
+    function Touch(const b: TRange): Boolean; cdecl;
     function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
     function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
     function Distance(const b: TRange): Integer; cdecl;
     function DistHausdorff(const b: TRange): Integer; cdecl;
     function Digit(const x: Integer): Boolean; cdecl; inline;
     function Value(const x: Integer): Boolean; cdecl; inline;
-	function Item(const x: Integer): Boolean; cdecl; inline;
+    function Item(const x: Integer): Boolean; cdecl; inline;
     function Middle: Double; cdecl;
     function Center: Integer; cdecl;
     function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; cdecl;
-	function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;
-	function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;
+    function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;
+    function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;
     function Sum: Int64; cdecl;
     function Extract: TIntegerArray; overload; cdecl;
   end;
@@ -246,8 +246,8 @@ type
     class function Construct(const aX, aY, bX, bY: Integer): TSegment; overload; cdecl; static;
     function Bounds: TBox; cdecl;
     function Boundaries: TBox; cdecl;
-	function Envelope: TBox; cdecl;
-	function Points: TPointArray; cdecl;
+    function Envelope: TBox; cdecl;
+    function Points: TPointArray; cdecl;
     function Pixels(const steps: Integer = 2147483647): TPointArray; cdecl;
   end;
   TSegmentArray = array of TSegment;
@@ -259,14 +259,14 @@ type
     constructor Create(const centerX, centerY: Integer; const cRadius: Double); overload;
     class function Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload; cdecl; static;
     class function Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload; cdecl; static;
-	function Contains(const pt: TPoint): Boolean; cdecl;
+    function Contains(const pt: TPoint): Boolean; cdecl;
     function Item(const pt: TPoint): Boolean; cdecl;
     function Pixel(const pt: TPoint): Boolean; cdecl;
     function Bounds: TBox; cdecl;
-	function Boundaries: TBox; cdecl;
-	function BoundingBox: TBox; cdecl;
-	function Envelope: TBox; cdecl;
-	function Points: TPointArray; cdecl;
+    function Boundaries: TBox; cdecl;
+    function BoundingBox: TBox; cdecl;
+    function Envelope: TBox; cdecl;
+    function Points: TPointArray; cdecl;
     function TPA: TPointArray; cdecl;
     function BorderPoints(const count: Integer): TPointArray; cdecl;
     function Border: TPointArray; cdecl;
@@ -281,7 +281,11 @@ type
 
 function MiMU_Version: Double; cdecl;
 
-generic function IfThenElse<T>(aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;
+generic function Contains<T>(const arr: array of T; const item: T): Boolean;
+generic function Includes<T>(const arr: array of T; const item: T): Boolean;
+generic function Position<T>(const arr: array of T; const item: T): Integer;
+generic function Location<T>(const arr: array of T; const item: T): Integer;
+generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;
 
 operator+(const a, b: TPoint): TPoint;
 operator+(const a, b: TBox): TBox;
@@ -457,7 +461,47 @@ begin
   Result := MiMU_VERSION_NUMBER;
 end;
 
-generic function IfThenElse<T>(aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;
+generic function Contains<T>(const arr: array of T; const item: T): Boolean;
+var
+  i: Integer;
+begin
+  for i := 0 to High(arr) do
+    if (arr[i] = item) then
+      Exit(True);
+  Result := False;
+end;
+
+generic function Includes<T>(const arr: array of T; const item: T): Boolean;
+var
+  i: Integer;
+begin
+  for i := High(arr) downto 0 do
+    if (arr[i] = item) then
+      Exit(True);
+  Result := False;
+end;
+
+generic function Position<T>(const arr: array of T; const item: T): Integer;
+var
+  i: Integer;
+begin
+  for i := 0 to High(arr) do
+    if (arr[i] = item) then
+      Exit(i);
+  Result := -1;
+end;
+
+generic function Location<T>(const arr: array of T; const item: T): Integer;
+var
+  i: Integer;
+begin
+  for i := High(arr) downto 0 do
+    if (arr[i] = item) then
+      Exit(i);
+  Result := -1;
+end;
+
+generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;
 begin
   if aBool then
     Result := aResult
