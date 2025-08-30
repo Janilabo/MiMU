@@ -129,3 +129,17 @@ begin
   end;
   SetLength(Result, l);
 end;
+
+{==============================================================================]
+  <TCharArrayHelper.TSA>
+  @action: Returns TCharArray as TStringArray. 
+  @note: None.
+[==============================================================================}
+function TCharArrayHelper.TSA: TStringArray; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := Self[i];
+end;

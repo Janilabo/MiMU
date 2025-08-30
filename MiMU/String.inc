@@ -270,6 +270,25 @@ begin
     Move(Self[1], Result[0], (Length(Self) * SizeOf(Char)));
 end;
 
+{==============================================================================]
+  <TStringHelper.Chop>
+  @action: Returns characters of string as TCharArray.
+  @note: None.
+[==============================================================================}
+function TStringHelper.Chop: TCharArray; cdecl;
+var
+  p: PChar;
+  i, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  p := PChar(Self);
+  for i := 0 to (l - 1) do
+  begin
+    Result[i] := p^;
+    Inc(p);
+  end;
+end;
 
 {==============================================================================]
   <TStringHelper.Chunk>
@@ -443,6 +462,26 @@ begin
     c := Self[aIndex];
     Self[aIndex] := Self[bIndex];
     Self[bIndex] := c;
+  end;
+end;
+
+{==============================================================================]
+  <TStringHelper.Explode>
+  @action: Simply "explodes" string to TCharArray.
+  @note: None.
+[==============================================================================}
+function TStringHelper.Explode: TCharArray; overload; cdecl;
+var
+  p: PChar;
+  i, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  p := PChar(Self);
+  for i := 0 to (l - 1) do
+  begin
+    Result[i] := p^;
+    Inc(p);
   end;
 end;
 

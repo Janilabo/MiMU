@@ -110,6 +110,7 @@ type
       function Between(const s1, s2: string; const index: Integer = 1): string; cdecl;
       function Chars: TCharArray; cdecl;
       function Charify: TCharArray; cdecl;
+      function Chop: TCharArray; cdecl;
       function Chunk(const a, b: Integer): string; cdecl;
       function Center(const size: Integer; const fill: Char = #32): string; cdecl;
       function Compare(const target: string): Integer; cdecl; inline;
@@ -123,7 +124,8 @@ type
       function Exch(const aIndex, bIndex: Integer): Boolean; cdecl;
       function Exchange(const aIndex, bIndex: Integer): Boolean; cdecl;
       function Exists: Boolean; cdecl;
-      function Explode(const d: string; const limit: Integer = -1): TStringArray; overload; cdecl;
+      function Explode: TCharArray; overload; cdecl;
+	  function Explode(const d: string; const limit: Integer = -1): TStringArray; overload; cdecl;
       function Explode(const d: TStringArray; const limit: Integer = -1): TStringArray; overload; cdecl;
       function Find(const s: string; const index: Integer = 1): Integer; cdecl;
       function Flip: string; cdecl;
@@ -504,6 +506,10 @@ type
     {$IFDEF Double}
     {$ENDIF}
     {$IFDEF string}
+      function Span: Integer; cdecl;
+      function Concat: string; cdecl;
+      function Concatenate: string; cdecl;
+      function Flatten: string; cdecl;
     {$ENDIF}
     {$IFDEF Char}
       function Str: string; cdecl;
@@ -514,6 +520,7 @@ type
       function Stringify(const glue: string): string; overload; cdecl;
       function Ordinals: TIntegerArray; cdecl;
       function Unduped: TCharArray; cdecl;
+      function TSA: TStringArray; cdecl;
     {$ENDIF}
 	{$IFDEF Boolean}
       function Bits: Integer; cdecl;
