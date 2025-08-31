@@ -260,6 +260,7 @@ type
     function Delete(const ID: TIntegerArray): TArr; overload; cdecl;
     function Differ(const target: TArr): Boolean; overload; cdecl;
     function Distribute(const parts: Integer): T2DArr; overload; cdecl;
+	function Drop(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
     function Dump(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
     function Dupe: TArr; overload; cdecl;
     function Duplicate(const xTimes: Integer = 1): TArr; overload; cdecl;
@@ -282,7 +283,8 @@ type
     function Extract(const item: TVar; const index: Integer = 0): TArr; overload; cdecl;
     function Extract(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
     function ExtractEvery(const X: Integer = 1; const index: Integer = 0): TArr; overload; cdecl;
-    function Fill(const item: TVar; const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
+    function Feed(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload; cdecl;
+	function Fill(const item: TVar; const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
     function Fill(const items: TArr; const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
     function Filter(const item: TVar; const index: Integer = 0): TArr; overload; cdecl;
     function Filter(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
@@ -303,6 +305,7 @@ type
     function Get(const ID: TIntegerArray): TArr; overload; cdecl;
     function Get(const ID: TRange): TArr; overload; cdecl;
     function Group: T2DArr; overload; cdecl;
+    function Grow(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload; cdecl;
     function Holds(const chain: TArr): Boolean; overload; cdecl;
 	function Homogeneous(const item: TVar): Boolean; overload; cdecl;
 	function Homogeneous: Boolean; overload; cdecl;
@@ -377,6 +380,7 @@ type
     function SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl;
     function SizeMax(const target: Integer): Boolean; overload; cdecl;
     function SizeMin(const target: Integer): Boolean; overload; cdecl;
+    function Strip(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
     function SubarrayLocation(const pattern: TArr): Integer; overload; cdecl;
     function SubarrayLocations(const pattern: TArr): TIntegerArray; overload; cdecl;
     function SubarrayPosition(const pattern: TArr): Integer; overload; cdecl;
@@ -487,6 +491,8 @@ type
 	  function Knit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
       function Knit(const diff: Integer): T2DIntegerArray; overload; cdecl;
       function Invert: TIntegerArray; cdecl;
+      function Inverted(const arrBounds: TRange): TIntegerArray; overload; cdecl;
+      function Inverted: TIntegerArray; overload; cdecl;
 	  function Mirror: Boolean; cdecl;
 	  function MinVal: Integer; overload; cdecl;
 	  function MaxVal: Integer; overload; cdecl;

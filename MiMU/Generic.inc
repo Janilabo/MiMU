@@ -577,6 +577,27 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Drop(item: VarType; eraseDuplicates: Boolean): TArray>
+ @action: Removes item(s) from arr and returns it.
+ @note: 	
+[==============================================================================}
+function HArr.Drop(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
+var
+  p: TIntegerArray;
+  i: Integer;
+  r: TRange;
+begin
+  if Self.Empty then
+    Exit([]);
+  if eraseDuplicates then
+    p := Self.Positions(item)
+  else
+    p := [Self.Pos(item)];
+  r.Create(0, High(Self));
+  Result := Self.Get(p.Inverted(r));
+end;
+
+{==============================================================================]
  <TArray_Dump(items: TArray; index: Integer): TArray>
  @action: Deletes items from array, keeps others. Returns array length (after action).
  @note: Supports custom start index!
@@ -999,6 +1020,20 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Feed(item: VarType; allowDuplicates: Boolean): Integer>
+ @action: Feeds item to array and returns the index position it was added to.
+ @note: Returns -1 if duplicates are not allowed and array already includes item.
+[==============================================================================}
+function HArr.Feed(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload; cdecl;
+begin
+  if ((not allowDuplicates) and Self.Includes(item)) then
+    Exit(-1);
+  Result := Length(Self);
+  SetLength(Self, (Result + 1));
+  Self[Result] := item;
+end;
+
+{==============================================================================]
  <arr.Fill(item: VarType; index: Integer; count: Integer): TArray>
  @action: Fills whole arr with item.
  @note: Returns the filled array.
@@ -1369,6 +1404,20 @@ begin
       Result[g.Increment] := [Self[i]];
   end;
   SetLength(Result, (g + 1));
+end;
+
+{==============================================================================]
+ <arr.Grow(item: VarType; allowDuplicates: Boolean): Integer>
+ @action: Feeds item to array and returns the index position it was added to.
+ @note: Returns -1 if duplicates are not allowed and array already contains item.
+[==============================================================================}
+function HArr.Grow(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload; cdecl;
+begin
+  if ((not allowDuplicates) and Self.Contains(item)) then
+    Exit(-1);
+  Result := Length(Self);
+  SetLength(Self, (Result + 1));
+  Self[Result] := item;
 end;
 
 {==============================================================================]
@@ -2763,6 +2812,27 @@ end;
 function HArr.SizeMin(const target: Integer): Boolean; overload; cdecl;
 begin
   Result := (Length(Self) >= target);
+end;
+
+{==============================================================================]
+ <arr.Strip(item: VarType; eraseDuplicates: Boolean): TArray>
+ @action: Removes item(s) from arr and returns it.
+ @note: 	
+[==============================================================================}
+function HArr.Strip(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
+var
+  p: TIntegerArray;
+  i: Integer;
+  r: TRange;
+begin
+  if Self.Empty then
+    Exit([]);
+  if eraseDuplicates then
+    p := Self.Locations(item)
+  else
+    p := [Self.Loc(item)];
+  r.Create(0, High(Self));
+  Result := Self.Get(p.Inverted(r));
 end;
 
 {==============================================================================]

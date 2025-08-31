@@ -1930,6 +1930,31 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArrayHelper.Inverted>
+  @action: Returns inverted arr.
+  @note: Arr = [0,2,4,6,8,10] => Result := [1, 3, 5, 7, 9]
+         Supports custom bounds!
+[==============================================================================}
+function TIntegerArrayHelper.Inverted(const arrBounds: TRange): TIntegerArray; overload; cdecl;
+var
+  i, r: Integer;
+  b: TRange;
+begin
+  b := arrBounds.Normalize;
+  SetLength(Result, b.Size);
+  r := 0;
+  for i := b.Start to b.Stop do
+    if not Self.Contains(i) then
+      Result[r.Increase] := i;
+  SetLength(Result, r);
+end;
+
+function TIntegerArrayHelper.Inverted: TIntegerArray; overload; cdecl;
+begin
+  Result := Self.Inverted(Self.Bounds);
+end;
+
+{==============================================================================]
   <TIntegerArrayHelper.MinVal>
   @action: Returns minimum value from arr.
   @note: None.
