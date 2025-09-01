@@ -170,7 +170,7 @@ end;
 
 {==============================================================================]
   <TPointArrayHelper.Invert>
-  @action: Returns arr without duplicates.
+  @action: Returns inverted version of arr.
   @note: None.
 [==============================================================================}
 function TPointArrayHelper.Invert: TPointArray; cdecl;
@@ -197,6 +197,29 @@ begin
     SetLength(m, 0);
   end;
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TPointArrayHelper.Inverted>
+  @action: Returns inverted version of arr.
+  @note: Supports custom bounds.
+[==============================================================================}
+function TPointArrayHelper.Inverted(const arrBounds: TBox): TPointArray; overload; cdecl;
+var
+  x, y, r: Integer;
+begin
+  SetLength(Result, arrBounds.Area);
+  r := 0;
+  for y := arrBounds.Y1 to arrBounds.Y2 do
+    for x := arrBounds.X1 to arrBounds.X2 do
+      if not Self.Contains(Point(x, y)) then
+        Result[r.Increase] := Point(x, y);
+  SetLength(Result, r);
+end;
+
+function TPointArrayHelper.Inverted: TPointArray; overload; cdecl;
+begin
+  Result := Self.Inverted(Self.Bounds);
 end;
 
 {==============================================================================]

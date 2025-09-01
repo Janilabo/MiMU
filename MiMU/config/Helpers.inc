@@ -569,6 +569,8 @@ type
       function Undupe: TPointArray; cdecl;
       function Unduped: TPointArray; cdecl;
       function Invert: TPointArray; cdecl;
+      function Inverted(const arrBounds: TBox): TPointArray; overload; cdecl;
+	  function Inverted: TPointArray; overload; cdecl;
       function Edge(const scan8W: Boolean = False): TPointArray; cdecl;
       function FloodFill(const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; cdecl;
       function FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; cdecl;
