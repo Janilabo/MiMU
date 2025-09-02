@@ -223,6 +223,36 @@ begin
 end;
 
 {==============================================================================]
+  <TPointArrayHelper.Inverse>
+  @action: Returns inverted version of arr.
+  @note: Supports custom bounds.
+[==============================================================================}
+function TPointArrayHelper.Inverse(const arrBounds: TBox): TPointArray; overload; cdecl;
+var
+  w, h, l, i, x, y: Integer;
+  b: T2DBooleanArray;
+begin
+  if (Length(Self) < 2) then
+    Exit([]);
+  SetLength(Result, arrBounds.Size(w, h));
+  b := T2D.Create(False, h, w);
+  for i := 0 to High(Self) do
+    if arrBounds.Contains(Self[i]) then
+      b[Self[i].Y - arrBounds.Y1][Self[i].X - arrBounds.X1] := True;
+  l := 0;
+  for y := arrBounds.Y1 to arrBounds.Y2 do
+    for x := arrBounds.X1 to arrBounds.X2 do
+      if not b[y - arrBounds.Y1][x - arrBounds.X1] then
+        Result[l.Increase] := Point(x, y);
+  SetLength(Result, l);
+end;
+
+function TPointArrayHelper.Inverse: TPointArray; overload; cdecl;
+begin
+  Result := Self.Inverse(Self.Bounds);
+end;
+
+{==============================================================================]
  <TPointArrayHelper.Edge>
  @action: Returns with all the edge-points from arr.
           Supports both, 4-way and 8-way direction scanning styles.

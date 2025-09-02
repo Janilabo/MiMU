@@ -493,6 +493,8 @@ type
       function Invert: TIntegerArray; cdecl;
       function Inverted(const arrBounds: TRange): TIntegerArray; overload; cdecl;
       function Inverted: TIntegerArray; overload; cdecl;
+      function Inverse(const arrBounds: TRange): TIntegerArray; overload; cdecl;
+      function Inverse: TIntegerArray; overload; cdecl;
 	  function Mirror: Boolean; cdecl;
 	  function MinVal: Integer; overload; cdecl;
 	  function MaxVal: Integer; overload; cdecl;
@@ -571,6 +573,8 @@ type
       function Invert: TPointArray; cdecl;
       function Inverted(const arrBounds: TBox): TPointArray; overload; cdecl;
 	  function Inverted: TPointArray; overload; cdecl;
+      function Inverse(const arrBounds: TBox): TPointArray; overload; cdecl;
+	  function Inverse: TPointArray; overload; cdecl;
       function Edge(const scan8W: Boolean = False): TPointArray; cdecl;
       function FloodFill(const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; cdecl;
       function FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; cdecl;
