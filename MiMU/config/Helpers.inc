@@ -587,6 +587,12 @@ type
 	  function Extent: TBox; cdecl;
 	  function Vertical: TRange; overload; cdecl;
 	  function Horizontal: TRange; overload; cdecl;
+      function Split(const xRadius, yRadius: Double): T2DPointArray; overload; cdecl;
+      function Split(const radius: Double): T2DPointArray; overload; cdecl;
+      function Segment(const radius: Double): T2DPointArray; overload; cdecl;
+      function Fragment(const radius: Double): T2DPointArray; overload; cdecl;
+      function Clusterize(const radius: Double): T2DPointArray; overload; cdecl;
+      function Clusterize(const xRadius, yRadius: Double): T2DPointArray; overload; cdecl;
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload; cdecl;
