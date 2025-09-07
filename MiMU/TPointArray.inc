@@ -615,6 +615,7 @@ begin
     v[i] := False;
   SetLength(Result, l);
   r := 0;
+  p := 0;
   for i := 0 to (l - 1) do
   begin
     if v[i] then
