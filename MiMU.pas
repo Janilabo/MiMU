@@ -209,7 +209,6 @@ type
     function Overlap(const b: TBox): Boolean; cdecl; inline;
     function Intersect(const b: TBox): TBox; overload; cdecl;
     function Intersect(const b: TBox; var iArea: TBox): Boolean; overload; cdecl;
-    function Union(const b: TBox): TBox; cdecl;
     function Valid: Boolean; cdecl; inline;
     function Invalid: Boolean; cdecl;
     function Similar(const b: TBox; const maxWDiff, maxHDiff: Integer): Boolean; overload; cdecl;
@@ -235,6 +234,13 @@ type
     function CenterVertically(const toArea: TBox): TBox; cdecl;
     function CenterHorizontally(const toArea: TBox): TBox; cdecl;
     function Inside(const target: TBox): Boolean; overload; cdecl;
+    function ExtendX(const xCoord: Integer): Boolean; cdecl;
+    function ExtendY(const yCoord: Integer): Boolean; cdecl;
+    function Extend(const pt: TPoint): Boolean; cdecl;
+    function UnionX(const xCoord: Integer): TBox; cdecl;
+    function Uniony(const yCoord: Integer): TBox; cdecl;
+    function Union(const pt: TPoint): TBox; overload; cdecl;
+	function Union(const b: TBox): TBox; overload; cdecl;
   end;
   TBoxArray = array of TBox;
   T2DBoxArray = array of TBoxArray;

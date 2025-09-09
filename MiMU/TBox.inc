@@ -618,19 +618,6 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Union>
-  @action: Returns true if a and b are in anykind of contact with each other.
-  @note: None
-[==============================================================================}
-function TBox.Union(const b: TBox): TBox; cdecl;
-begin
-  Result.X1 := Min(Self.X1, b.X1);
-  Result.Y1 := Min(Self.Y1, b.Y1);
-  Result.X2 := Max(Self.X2, b.X2);
-  Result.Y2 := Max(Self.Y2, b.Y2);
-end;
-
-{==============================================================================]
   <TBox_Valid>
   Explanation: Returns true if TBox is valid (X1 <= X2 and Y1 <= Y2)
   Example: None.
@@ -1128,6 +1115,109 @@ begin
   Result.X2 := (Result.X1 + (w - 1));
   Result.Y1 := Self.Y1;
   Result.Y2 := Self.Y2;
+end;
+
+{==============================================================================]
+  <TBox.ExtendX>
+  Explanation: Returns true if TBox is changed with xCoord (X1 or X2)
+  @note: Modifies the Self!
+[==============================================================================}
+function TBox.ExtendX(const xCoord: Integer): Boolean; cdecl;
+begin
+  if (xCoord < Self.X1) then
+    Self.X1 := xCoord
+  else
+    if (xCoord > Self.X2) then
+      Self.X2 := xCoord
+    else
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <TBox.ExtendY>
+  Explanation: Returns true if TBox is changed with yCoord (Y1 or Y2)
+  @note: Modifies the Self!
+[==============================================================================}
+function TBox.ExtendY(const yCoord: Integer): Boolean; cdecl;
+begin
+  if (yCoord < Self.Y1) then
+    Self.Y1 := yCoord
+  else
+    if (yCoord > Self.Y2) then
+      Self.Y2 := yCoord
+    else
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <TBox.Extend>
+  Explanation: Returns true if TBox is changed with pt (X1, X2, Y1 or Y2)
+  @note: Modifies the Self!
+[==============================================================================}
+function TBox.Extend(const pt: TPoint): Boolean; cdecl;
+var
+  w, h: Boolean;
+begin
+  w := Self.ExtendX(pt.X);
+  h := Self.ExtendY(pt.Y);
+  Result := (w or h);
+end;
+
+{==============================================================================]
+  <TBox.UnionX>
+  Explanation: Returns the TBox Self with X-value extended (if xCoord falls outside bounds)
+  @note: None.
+[==============================================================================}
+function TBox.UnionX(const xCoord: Integer): TBox; cdecl;
+begin
+  if (xCoord < Self.X1) then
+    Result := Box(xCoord, Self.Y1, Self.X2, Self.Y2)
+  else
+    if (xCoord > Self.X2) then
+      Result := Box(Self.X1, Self.Y1, xCoord, Self.Y2)
+    else
+      Result := Self;
+end;
+
+{==============================================================================]
+  <TBox.UnionY>
+  Explanation: Returns the TBox Self with Y-value extended (if yCoord falls outside bounds)
+  @note: None.
+[==============================================================================}
+function TBox.UnionY(const yCoord: Integer): TBox; cdecl;
+begin
+  if (yCoord < Self.Y1) then
+    Result := Box(Self.X1, yCoord, Self.X2, Self.Y2)
+  else
+    if (yCoord > Self.Y2) then
+      Result := Box(Self.X1, Self.Y1, Self.X2, yCoord)
+    else
+      Result := Self;
+end;
+
+{==============================================================================]
+  <TBox.Union>
+  Explanation: Returns the Self extended
+  @note: None.
+[==============================================================================}
+function TBox.Union(const pt: TPoint): TBox; overload; cdecl;
+begin
+  Result := Self.UnionX(pt.X).UnionY(pt.Y);
+end;
+
+{==============================================================================]
+  <TBox.Union>
+  @action: Returns true if a and b are in anykind of contact with each other.
+  @note: None
+[==============================================================================}
+function TBox.Union(const b: TBox): TBox; overload; cdecl;
+begin
+  Result.X1 := Min(Self.X1, b.X1);
+  Result.Y1 := Min(Self.Y1, b.Y1);
+  Result.X2 := Max(Self.X2, b.X2);
+  Result.Y2 := Max(Self.Y2, b.Y2);
 end;
 
 {==============================================================================]
