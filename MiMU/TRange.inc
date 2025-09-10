@@ -151,10 +151,7 @@ end;
 [==============================================================================}
 function TRange.Grab: TRange; cdecl;
 begin
-  if Self.Descending then
-    Result.Create(Self.stop, Self.start)
-  else
-    Result := Self;
+  Result := IfThen(Self.Descending, Result.Create(Self.stop, Self.start), Self);
 end;
 
 {==============================================================================]
@@ -174,10 +171,7 @@ end;
 [==============================================================================}
 function TRange.Length: Integer; cdecl;
 begin
-  if Self.Descending then
-    Result := ((Self.start - Self.stop) + 1)
-  else
-    Result := ((Self.stop - Self.start) + 1);
+  Result := IfThen(Self.Descending, ((Self.start - Self.stop) + 1), ((Self.stop - Self.start) + 1));
 end;
 
 {==============================================================================]
@@ -979,6 +973,26 @@ end;
 function TRange.Value(const x: Integer): Boolean; cdecl; inline;
 begin
   Result := not (((x < Self.start) and (x < Self.stop)) or ((x > Self.stop) and (x > Self.start)));
+end;
+
+{==============================================================================]
+ <TRange.Lacks>
+ @action: Returns true if x-value is out of range.
+ @note: None.
+[==============================================================================}
+function TRange.Lacks(const x: Integer): Boolean; cdecl; inline;
+begin
+  Result := (((x < Self.start) and (x < Self.stop)) or ((x > Self.stop) and (x > Self.start)));
+end;
+
+{==============================================================================]
+ <TRange.Outside>
+ @action: Returns true if x-value is outside the range.
+ @note: None.
+[==============================================================================}
+function TRange.Outside(const x: Integer): Boolean; cdecl; inline;
+begin
+  Result := not (((x >= Self.start) and (x <= Self.stop)) or ((x >= Self.stop) and (x <= Self.start)));
 end;
 
 {==============================================================================]

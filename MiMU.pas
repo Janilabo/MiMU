@@ -156,6 +156,8 @@ type
     function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;
     function Sum: Int64; cdecl;
     function Extract: TIntegerArray; overload; cdecl;
+	function Lacks(const x: Integer): Boolean; cdecl; inline;
+    function Outside(const x: Integer): Boolean; cdecl; inline;
   end;
   TBox = record
     X1, Y1, X2, Y2: Integer;
@@ -241,6 +243,8 @@ type
     function Uniony(const yCoord: Integer): TBox; cdecl;
     function Union(const pt: TPoint): TBox; overload; cdecl;
 	function Union(const b: TBox): TBox; overload; cdecl;
+    function Disjoint(const target: TBox): Boolean; overload; cdecl;
+    function Lacks(const pt: TPoint): Boolean; overload; cdecl;
   end;
   TBoxArray = array of TBox;
   T2DBoxArray = array of TBoxArray;

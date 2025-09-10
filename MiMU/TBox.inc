@@ -535,7 +535,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBoxHelper.Inside>
+  <TBox.Inside>
   @action: Returns true if bx is INSIDE target boundaries.
   @note: None.
 [==============================================================================}
@@ -557,6 +557,26 @@ begin
     if not ((Self.X2 < targets[i].X1) or (Self.X1 > targets[i].X2) or (Self.Y2 < targets[i].Y1) or (Self.Y1 > targets[i].Y2)) then
       Exit(True);
   Result := False;
+end;
+
+{==============================================================================]
+  <TBox.Disjoint>
+  @action: Returns true if target TBox is outside the target boundaries.
+  @note: None.
+[==============================================================================}
+function TBox.Disjoint(const target: TBox): Boolean; overload; cdecl;
+begin
+  Result := ((Self.X2 < target.X1) or (Self.Y2 < target.Y1) or (Self.X1 > target.X2) or (Self.Y1 > target.Y2));
+end;
+
+{==============================================================================]
+  <TBox.Lacks>
+  @action: Returns true if pt TPoint is OUTSIDE the TBox boundaries.
+  @note: None.
+[==============================================================================}
+function TBox.Lacks(const pt: TPoint): Boolean; overload; cdecl;
+begin
+  Result := ((pt.X > Self.X2) or (pt.Y > Self.Y2) or (pt.X < Self.X1) or (pt.Y < Self.Y1));
 end;
 
 {==============================================================================]
