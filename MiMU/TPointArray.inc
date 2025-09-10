@@ -70,6 +70,27 @@ begin
 end;
 
 {==============================================================================]
+  <TPointArrayHelper.Boundaries>
+  @action: Returns bounding box around TPointArray arr.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.Boundaries: TBox; cdecl;
+  function BR(const arr: TPointArray; const L, R: Integer): TBox;
+  var
+    M: Integer;
+  begin
+    if (L = R) then
+      Exit(Result.Create(arr[L].X, arr[L].Y, arr[L].X, arr[L].Y));
+    M := ((L + R) div 2);
+    Result := BR(arr, L, M).Union(BR(arr, (M + 1), R));
+  end;
+begin
+  if Self.Empty then
+    Exit(Default(TBox));
+  Result := BR(Self, 0, High(Self));
+end;
+
+{==============================================================================]
   <TPointArrayHelper.Box>
   @action: Returns bounding box around TPointArray arr.
   @note: None.

@@ -1219,7 +1219,7 @@ end;
 
 {==============================================================================]
   <TBox.Union>
-  Explanation: Returns the Self extended
+  Explanation: Returns the Self unioned with pt.
   @note: None.
 [==============================================================================}
 function TBox.Union(const pt: TPoint): TBox; overload; cdecl;
@@ -1229,7 +1229,7 @@ end;
 
 {==============================================================================]
   <TBox.Union>
-  @action: Returns true if a and b are in anykind of contact with each other.
+  @action: Returns union of a and b TBoxes
   @note: None
 [==============================================================================}
 function TBox.Union(const b: TBox): TBox; overload; cdecl;

@@ -49,6 +49,27 @@ begin
 end;
 
 {==============================================================================]
+  <TPointArrayHelper.Boundaries>
+  @action: Returns bounding box around TPointArray arr.
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.Boundaries: TRange; cdecl;
+  function BR(const arr: TIntegerArray; const L, R: Integer): TRange;
+  var
+    M: Integer;
+  begin
+    if (L = R) then
+      Exit(Result.Create(arr[L], arr[L]));
+    M := ((L + R) div 2);
+    Result := BR(arr, L, M).Union(BR(arr, (M + 1), R));
+  end;
+begin
+  if Self.Empty then
+    Exit(Default(TRange));
+  Result := BR(Self, 0, High(Self));
+end;
+
+{==============================================================================]
   <TIntegerArrayHelper.Range>
   @action: Stores arr bounds to TRange.
   @note: Returns -2147483648..-2147483648 with empty array.

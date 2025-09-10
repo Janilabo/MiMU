@@ -470,14 +470,66 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Extend>
+  @action: Returns true TRange is extended with val (val is not yet in range)
+  @note: None.
+[==============================================================================}
+function TRange.Extend(const val: Integer): Boolean; cdecl;
+begin
+  case Self.Descending of
+    True:
+    if (val > Self.start) then
+      Self.start := val
+    else
+      if (val < Self.stop) then
+        Self.stop := val
+      else
+        Exit(False);
+    False:
+    if (val < Self.start) then
+      Self.start := val
+    else
+      if (val > Self.stop) then
+        Self.stop := val
+      else
+        Exit(False);
+  end;
+  Result := True;
+end;
+
+{==============================================================================]
   <TRange.Union>
   @action: Returns union of ranges a and b.
   @note: None.
 [==============================================================================}
-function TRange.Union(const b: TRange): TRange; cdecl;
+function TRange.Union(const b: TRange): TRange; overload; cdecl;
 begin
   Result.start := Min(Min(Self.start, Self.stop), Min(b.start, b.stop));
   Result.stop := Max(Max(Self.start, Self.stop), Max(b.start, b.stop));
+end;
+
+{==============================================================================]
+  <TRange.Union>
+  @action: Returns union of range and val.
+  @note: None.
+[==============================================================================}
+function TRange.Union(const val: Integer): TRange; overload; cdecl;
+begin
+  Result := Self;
+  case Self.Descending of
+    True:
+	if (val > Self.start) then
+	  Result.start := val
+	else
+	  if (val < Self.stop) then
+	    Result.stop := val;
+    False:
+	if (val < Self.start) then
+	  Result.start := val
+	else
+	  if (val > Self.stop) then
+	    Result.stop := val;
+  end;
 end;
 
 {==============================================================================]

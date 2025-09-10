@@ -428,6 +428,7 @@ type
       function Bounds: TRange; overload; cdecl;
       function Bounds(var aSize: Integer): TRange; overload; cdecl;
 	  function BoundingRange: TRange; cdecl;
+      function Boundaries: TRange; cdecl;
       function Range: TRange; cdecl;
 	  function Ranged: TRange; cdecl;
 	  function MinMax: TRange; cdecl;
@@ -565,6 +566,7 @@ type
       function Bounds: TBox; overload; cdecl;
       function Bounds(var width, height: Integer): TBox; overload; cdecl;
 	  function BoundingBox: TBox; cdecl;
+      function Boundaries: TBox; cdecl;
 	  function Box: TBox; cdecl;
       function Boxed: TBox; cdecl;
 	  function MinMax: TBox; cdecl;

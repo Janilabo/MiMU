@@ -116,7 +116,9 @@ type
     function Overlap(const b: TRange): Boolean; cdecl;
     function Intersect(const b: TRange): TRange; overload; cdecl;
     function Intersect(const b: TRange; var iZone: TRange): Boolean; overload; cdecl;
-    function Union(const b: TRange): TRange; cdecl;
+    function Union(const b: TRange): TRange; overload; cdecl;
+	function Union(const val: Integer): TRange; overload; cdecl;
+	function Extend(const val: Integer): Boolean; cdecl;
     function Shift(const delta: Integer): TRange; cdecl;
     function Contains(const x: Integer): Boolean; overload; cdecl;
     function Contains(const x: TRange): Boolean; overload; cdecl;
