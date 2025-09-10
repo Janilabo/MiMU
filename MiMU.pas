@@ -95,8 +95,11 @@ type
     function Decreasing: Boolean; cdecl;
     function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
     function Grab: TRange; cdecl;
+    function Area: Integer; cdecl;
+    function Span: Integer; cdecl;
     function Size: Integer; cdecl;
     function Length: Integer; cdecl;
+    function Delta: Integer; cdecl;
     function Lowest: Integer; cdecl;
     function Minimum: Integer; cdecl;
     function Highest: Integer; cdecl;
@@ -117,9 +120,9 @@ type
     function Intersect(const b: TRange): TRange; overload; cdecl;
     function Intersect(const b: TRange; var iZone: TRange): Boolean; overload; cdecl;
     function Union(const b: TRange): TRange; overload; cdecl;
-	function Union(const val: Integer): TRange; overload; cdecl;
-	function Extend(const val: Integer): Boolean; cdecl;
-    function Shift(const delta: Integer): TRange; cdecl;
+    function Union(const val: Integer): TRange; overload; cdecl;
+    function Extend(const val: Integer): Boolean; cdecl;
+    function Shift(const sDelta: Integer): TRange; cdecl;
     function Contains(const x: Integer): Boolean; overload; cdecl;
     function Contains(const x: TRange): Boolean; overload; cdecl;
     function Above(const target: Integer): Boolean; overload; cdecl;

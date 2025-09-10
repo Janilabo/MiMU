@@ -155,6 +155,28 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Area>
+  @action: Returns span of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Area: Integer; cdecl;
+begin
+  Result := ((Self.stop - Self.start) + 1);
+  if (Self.stop < Self.start) then
+    Result := (-Result + 2);
+end;
+
+{==============================================================================]
+  <TRange.Span>
+  @action: Returns span of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Span: Integer; cdecl;
+begin
+  Result := Abs(Self.stop - Self.start);
+end;
+
+{==============================================================================]
   <TRange.Size>
   @action: Returns size of the given range.
   @note: None.
@@ -171,7 +193,17 @@ end;
 [==============================================================================}
 function TRange.Length: Integer; cdecl;
 begin
-  Result := IfThen(Self.Descending, ((Self.start - Self.stop) + 1), ((Self.stop - Self.start) + 1));
+  Result := (IfThen(Self.Descending, (Self.start - Self.stop), (Self.stop - Self.start)) + 1);
+end;
+
+{==============================================================================]
+  <TRange.Delta>
+  @action: Returns the change from start to stop.
+  @note: Negative result if Descending TRange.
+[==============================================================================}
+function TRange.Delta: Integer; cdecl;
+begin
+  Result := ((Self.stop - Self.start) + Sign(Self.stop - Self.start));
 end;
 
 {==============================================================================]
@@ -537,7 +569,7 @@ end;
   @action: Returns shift of range r by delta.
   @note: None.
 [==============================================================================}
-function TRange.Shift(const delta: Integer): TRange; cdecl;
+function TRange.Shift(const sDelta: Integer): TRange; cdecl;
 begin
   Result.Create((Self.start + delta), (Self.stop + delta));
 end;
