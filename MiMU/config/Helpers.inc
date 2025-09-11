@@ -23,7 +23,9 @@ type
       function Constraint(const minimum, maximum: Integer): Boolean; overload; cdecl;
       function Constraint(const range: TRange): Boolean; overload; cdecl;
       function Even: Boolean; cdecl; inline;
+	  function IsEven: Boolean; cdecl; inline;
       function Odd: Boolean; cdecl; inline;
+      function IsOdd: Boolean; cdecl; inline;
       function Increase(const N: Integer = 1): Integer; cdecl;
       function Decrease(const N: Integer = 1): Integer; cdecl;
       function Increment(const N: Integer = 1): Integer; cdecl;

@@ -165,6 +165,8 @@ type
     function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;
     function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;
     function Sum: Int64; cdecl;
+	function Summation: Int64; cdecl;
+	function Total: Int64; cdecl;
     function Extract: TIntegerArray; overload; cdecl;
 	function Lacks(const x: Integer): Boolean; cdecl; inline;
     function Outside(const x: Integer): Boolean; cdecl; inline;

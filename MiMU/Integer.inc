@@ -155,6 +155,11 @@ begin
   Result := ((Self mod 2) = 0);
 end;
 
+function TIntegerHelper.IsEven: Boolean; cdecl; inline;
+begin
+  Result := ((Self and 1) = 0);
+end;
+
 {==============================================================================]
  <TIntegerHelper.Odd>
  @action: Returns true if Integer value x is an odd number.
@@ -163,6 +168,16 @@ end;
 function TIntegerHelper.Odd: Boolean; cdecl; inline;
 begin
   Result := ((Self mod 2) <> 0);
+end;
+
+{==============================================================================]
+ <TIntegerHelper.Odd>
+ @action: Returns true if Integer value x is an odd number.
+ @note: None
+[==============================================================================}
+function TIntegerHelper.IsOdd: Boolean; cdecl; inline;
+begin
+  Result := ((Self and 1) = 1);
 end;
 
 {==============================================================================]
