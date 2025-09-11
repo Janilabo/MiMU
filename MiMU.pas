@@ -95,6 +95,7 @@ type
     function Decreasing: Boolean; cdecl;
     function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
     function Grab: TRange; cdecl;
+	function Count: Integer; cdecl;
     function Area: Integer; cdecl;
     function Span: Integer; cdecl;
     function Size: Integer; cdecl;
@@ -160,6 +161,8 @@ type
     function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;
     function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;
     function Sum: Int64; cdecl;
+	function Summation: Int64; cdecl;
+	function Total: Int64; cdecl;
     function Extract: TIntegerArray; overload; cdecl;
 	function Lacks(const x: Integer): Boolean; cdecl; inline;
     function Outside(const x: Integer): Boolean; cdecl; inline;

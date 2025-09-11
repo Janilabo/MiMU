@@ -155,8 +155,18 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Count>
+  @action: Returns count values in the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Count: Integer; cdecl;
+begin
+  Result := ((Max(Self.start, Self.stop) - Min(Self.start, Self.stop)) + 1);
+end;
+
+{==============================================================================]
   <TRange.Area>
-  @action: Returns span of the given range.
+  @action: Returns area of the given range.
   @note: None.
 [==============================================================================}
 function TRange.Area: Integer; cdecl;
@@ -1167,6 +1177,38 @@ begin
   a := Min(Self.start, Self.stop);
   b := Max(Self.start, Self.stop);
   Result := ((((b - a) + 1) * (a + b)) div 2);
+end;
+
+{==============================================================================]
+ <TRange.Summation>
+ @action: Returns the sum of all TRange values (start..stop)
+ @note: None
+[==============================================================================}
+function TRange.Summation: Int64; cdecl;
+var
+  a, b, c, s, n: Int64;
+begin
+  a := Min(Self.start, Self.stop);
+  b := Max(Self.start, Self.stop);
+  n := ((b - a) + 1);
+  s := (a + b);
+  c := (s div 2);
+  Result := (n * c);
+  if ((s and 1) = 1) then
+    Result := (Result + (n div 2));
+end;
+
+{==============================================================================]
+ <TRange.Total>
+ @action: Returns the sum of all TRange values (start..stop)
+ @note: None
+[==============================================================================}
+function TRange.Total: Int64; cdecl;
+begin
+  if Self.Descending then
+    Result := (((Int64(Self.start) * (Self.start + 1)) div 2) - ((Int64(Self.stop - 1) * Self.stop) div 2))
+  else
+    Result := (((Int64(Self.stop) * (Self.stop + 1)) div 2) - ((Int64(Self.start - 1) * Self.start) div 2));
 end;
 
 {==============================================================================]
