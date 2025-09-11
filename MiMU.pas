@@ -95,6 +95,7 @@ type
     function Decreasing: Boolean; cdecl;
     function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
     function Grab: TRange; cdecl;
+	function Count: Integer; cdecl;
     function Area: Integer; cdecl;
     function Span: Integer; cdecl;
     function Size: Integer; cdecl;
@@ -114,6 +115,7 @@ type
     function Elements: TIntegerArray; cdecl;
     function Numbers: TIntegerArray; cdecl;
     function Items: TIntegerArray; cdecl;
+    function ToArray: TIntegerArray; cdecl;
     function Normalize: TRange; cdecl;
     function Overlapping(const b: TRange): Boolean; cdecl;
     function Overlap(const b: TRange): Boolean; cdecl;
@@ -155,6 +157,9 @@ type
     function Value(const x: Integer): Boolean; cdecl; inline;
     function Item(const x: Integer): Boolean; cdecl; inline;
     function Middle: Double; cdecl;
+	function MidValue: Double; cdecl;
+	function MidVal: Double; cdecl;
+	function Average: Double; cdecl;
     function Center: Integer; cdecl;
     function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; cdecl;
     function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;

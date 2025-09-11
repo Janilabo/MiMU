@@ -155,8 +155,18 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Count>
+  @action: Returns count values in the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Count: Integer; cdecl;
+begin
+  Result := ((Max(Self.start, Self.stop) - Min(Self.start, Self.stop)) + 1);
+end;
+
+{==============================================================================]
   <TRange.Area>
-  @action: Returns span of the given range.
+  @action: Returns area of the given range.
   @note: None.
 [==============================================================================}
 function TRange.Area: Integer; cdecl;
@@ -434,6 +444,26 @@ begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := (Self.start + (s * i));
+end;
+
+{==============================================================================]
+  <TRange.ToArray>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.ToArray: TIntegerArray; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  case Self.Descending of
+    False:
+    for i := Self.start to Self.stop do
+      Result[i - Self.start] := i;
+    True:
+    for i := Self.start downto Self.stop do
+      Result[Self.start - i] := i;
+  end;
 end;
 
 {==============================================================================]
@@ -1098,6 +1128,16 @@ end;
  @note: None
 [==============================================================================}
 function TRange.Middle: Double; cdecl;
+begin
+  Result := ((Self.start + Self.stop) / 2.0);
+end;
+
+{==============================================================================]
+ <TRange.MidVal>
+ @action: The value(s) at the center position(s) of given range.
+ @note: None
+[==============================================================================}
+function TRange.MidVal: Double; cdecl;
 var
   s: Integer;
 begin
@@ -1105,6 +1145,34 @@ begin
   Result := (s div 2);
   if ((s mod 2) = 1) then
     Result := (((Result + 1) + Result) / 2.0);
+end;
+
+{==============================================================================]
+ <TRange.MidValue>
+ @action: The value(s) at the center position(s) of given range.
+ @note: None
+[==============================================================================}
+function TRange.MidValue: Double; cdecl;
+var
+  s: Integer;
+begin
+  s := (Self.start + Self.stop);
+  Result := (s div 2);
+  if ((s mod 2) <> 0) then
+    Result := (Result + 0.5);
+end;
+
+{==============================================================================]
+ <TRange.Average>
+ @action: Average value from TRange.
+ @note: None
+[==============================================================================}
+function TRange.Average: Double; cdecl;
+var
+  c: Int64;
+begin
+  c := Self.Size;
+  Result := ((c * (Self.start + Self.stop) div 2) / c);
 end;
 
 {==============================================================================]
