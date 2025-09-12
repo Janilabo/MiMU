@@ -1,4 +1,18 @@
 {==============================================================================]
+  <TBooleanArrayHelper.Select>
+  @action: IfThen method for TBooleanArray.
+  @note: [True, False, True] => 5.
+[==============================================================================}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: Integer): TIntegerArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: Double): TDoubleArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: string): TStringArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: Char): TCharArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: Boolean): TBooleanArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: TPoint): TPointArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: TBox): TBoxArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: TRange): TRangeArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+
+{==============================================================================]
   <TBooleanArrayHelper.Bitify>
   @action: Returns TBooleanArray as bits.
   @note: [True, False, True] => 5.

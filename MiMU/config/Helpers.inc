@@ -535,6 +535,14 @@ type
       function TSA: TStringArray; cdecl;
     {$ENDIF}
 	{$IFDEF Boolean}
+      function Select(const sTrue, sFalse: Integer): TIntegerArray; overload; cdecl;
+	  function Select(const sTrue, sFalse: Double): TDoubleArray; overload; cdecl;
+	  function Select(const sTrue, sFalse: string): TStringArray; overload; cdecl;
+	  function Select(const sTrue, sFalse: Char): TCharArray; overload; cdecl;
+	  function Select(const sTrue, sFalse: Boolean): TBooleanArray; overload; cdecl;
+	  function Select(const sTrue, sFalse: TPoint): TPointArray; overload; cdecl;
+	  function Select(const sTrue, sFalse: TBox): TBoxArray; overload; cdecl;
+	  function Select(const sTrue, sFalse: TRange): TRangeArray; overload; cdecl;
       function Bits: Integer; cdecl;
 	  function Bitify: Integer; cdecl;
       function ToBits: Integer; cdecl;

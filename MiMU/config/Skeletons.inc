@@ -45,6 +45,37 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_Select}
+begin
+  if Self then
+    Result := bTrue
+  else
+    Result := bFalse;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_Select2}
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    if Self[i] then
+      Result[i] := sTrue
+    else
+      Result[i] := sFalse;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_Evaluate}
+begin
+  case Self of
+    True: Result := bTrue;
+    False: Result := bFalse;
+  end;
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_Increase}
 begin
   Result := Self;
@@ -183,30 +214,5 @@ begin
       Result[i] := Self[r[i]];
   end else
     SetLength(Result, 0);
-end;
-{$ENDIF}
-
-{$IFDEF Skeleton_ScanParameter1}
-function Start(const arr: TRangeArray): TIntegerArray; overload; cdecl;
-var
-  i: Integer;
-begin
-  SetLength(Result, Length(arr));
-  for i := 0 to High(Result) do
-    Result[i] := arr[i].start;
-end;
-
-function Start(const arr: TRangeArray; const val: Integer): TIntegerArray; overload; cdecl;
-var
-  i, r, l: Integer;
-begin
-  r := 0;
-  l := Length(arr);
-  if (l > 0) then
-    SetLength(Result, l);
-  for i := 0 to (l - 1) do
-    if (arr[i].start = val) then
-      Result[r.Increase] := i;
-  SetLength(Result, r);
 end;
 {$ENDIF}

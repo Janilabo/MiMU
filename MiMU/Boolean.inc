@@ -139,77 +139,15 @@ end;
  @note: Returns T or F based on the Self-condition.
 [==============================================================================}
 
-function TBooleanHelper.Select(const bTrue, bFalse: Integer): Integer; overload; cdecl;
-begin
-  if Self then
-    Result := bTrue
-  else
-    Result := bFalse;
-end;
-
-function TBooleanHelper.Select(const bTrue, bFalse: Int64): Int64; overload; cdecl;
-begin
-  if Self then
-    Result := bTrue
-  else
-    Result := bFalse;
-end;
-
-function TBooleanHelper.Select(const bTrue, bFalse: Double): Double; overload; cdecl;
-begin
-  if Self then
-    Result := bTrue
-  else
-    Result := bFalse;
-end;
-
-function TBooleanHelper.Select(const bTrue, bFalse: string): string; overload; cdecl;
-begin
-  if Self then
-    Result := bTrue
-  else
-    Result := bFalse;
-end;
-
-function TBooleanHelper.Select(const bTrue, bFalse: Char): Char; overload; cdecl;
-begin
-  if Self then
-    Result := bTrue
-  else
-    Result := bFalse;
-end;
-
-function TBooleanHelper.Select(const bTrue, bFalse: Boolean): Boolean; overload; cdecl;
-begin
-  if Self then
-    Result := bTrue
-  else
-    Result := bFalse;
-end;
-
-function TBooleanHelper.Select(const bTrue, bFalse: TPoint): TPoint; overload; cdecl;
-begin
-  if Self then
-    Result := bTrue
-  else
-    Result := bFalse;
-end;
-
-function TBooleanHelper.Select(const bTrue, bFalse: TBox): TBox; overload; cdecl;
-begin
-  if Self then
-    Result := bTrue
-  else
-    Result := bFalse;
-end;
-
-function TBooleanHelper.Select(const bTrue, bFalse: TRange): TRange; overload; cdecl;
-begin
-  if Self then
-    Result := bTrue
-  else
-    Result := bFalse;
-end;
+function TBooleanHelper.Select(const bTrue, bFalse: Integer): Integer; overload; cdecl; {$DEFINE Skeleton_Select}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: Int64): Int64; overload; cdecl; {$DEFINE Skeleton_Select}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: Double): Double; overload; cdecl; {$DEFINE Skeleton_Select}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: string): string; overload; cdecl; {$DEFINE Skeleton_Select}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: Char): Char; overload; cdecl; {$DEFINE Skeleton_Select}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: Boolean): Boolean; overload; cdecl; {$DEFINE Skeleton_Select}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: TPoint): TPoint; overload; cdecl; {$DEFINE Skeleton_Select}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: TBox): TBox; overload; cdecl; {$DEFINE Skeleton_Select}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: TRange): TRange; overload; cdecl; {$DEFINE Skeleton_Select}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Select}
 
 {==============================================================================]
  <TBooleanHelper.Evaluate>
@@ -217,77 +155,15 @@ end;
  @note: Returns bTrue or bFalse based on the Self-condition.
 [==============================================================================}
 
-function TBooleanHelper.Evaluate(const bTrue, bFalse: Integer): Integer; overload; cdecl;
-begin
-  case Self of
-    True: Result := bTrue;
-    False: Result := bFalse;
-  end;
-end;
-
-function TBooleanHelper.Evaluate(const bTrue, bFalse: Int64): Int64; overload; cdecl;
-begin
-  case Self of
-    True: Result := bTrue;
-    False: Result := bFalse;
-  end;
-end;
-
-function TBooleanHelper.Evaluate(const bTrue, bFalse: Double): Double; overload; cdecl;
-begin
-  case Self of
-    True: Result := bTrue;
-    False: Result := bFalse;
-  end;
-end;
-
-function TBooleanHelper.Evaluate(const bTrue, bFalse: string): string; overload; cdecl;
-begin
-  case Self of
-    True: Result := bTrue;
-    False: Result := bFalse;
-  end;
-end;
-
-function TBooleanHelper.Evaluate(const bTrue, bFalse: Char): Char; overload; cdecl;
-begin
-  case Self of
-    True: Result := bTrue;
-    False: Result := bFalse;
-  end;
-end;
-
-function TBooleanHelper.Evaluate(const bTrue, bFalse: Boolean): Boolean; overload; cdecl;
-begin
-  case Self of
-    True: Result := bTrue;
-    False: Result := bFalse;
-  end;
-end;
-
-function TBooleanHelper.Evaluate(const bTrue, bFalse: TPoint): TPoint; overload; cdecl;
-begin
-  case Self of
-    True: Result := bTrue;
-    False: Result := bFalse;
-  end;
-end;
-
-function TBooleanHelper.Evaluate(const bTrue, bFalse: TBox): TBox; overload; cdecl;
-begin
-  case Self of
-    True: Result := bTrue;
-    False: Result := bFalse;
-  end;
-end;
-
-function TBooleanHelper.Evaluate(const bTrue, bFalse: TRange): TRange; overload; cdecl;
-begin
-  case Self of
-    True: Result := bTrue;
-    False: Result := bFalse;
-  end;
-end;
+function TBooleanHelper.Evaluate(const bTrue, bFalse: Integer): Integer; overload; cdecl; {$DEFINE Skeleton_Evaluate}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: Int64): Int64; overload; cdecl; {$DEFINE Skeleton_Evaluate}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: Double): Double; overload; cdecl; {$DEFINE Skeleton_Evaluate}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: string): string; overload; cdecl; {$DEFINE Skeleton_Evaluate}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: Char): Char; overload; cdecl; {$DEFINE Skeleton_Evaluate}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: Boolean): Boolean; overload; cdecl; {$DEFINE Skeleton_Evaluate}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: TPoint): TPoint; overload; cdecl; {$DEFINE Skeleton_Evaluate}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: TBox): TBox; overload; cdecl; {$DEFINE Skeleton_Evaluate}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: TRange): TRange; overload; cdecl; {$DEFINE Skeleton_Evaluate}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
 
 {==============================================================================]
   <TBooleanHelper.Enable>
