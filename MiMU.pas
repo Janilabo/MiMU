@@ -193,6 +193,9 @@ type
     function IsHorizontalLine: Boolean; cdecl;
     function IsVerticalLine: Boolean; cdecl;
     function IsLine: Boolean; cdecl;
+    function Linear: Boolean; cdecl;
+	function Is2D: Boolean; cdecl;
+	function Collapsed: Boolean; cdecl;
     function Boxy: Boolean; cdecl;
     function Plural: Boolean; cdecl;
     function Rectangular: Boolean; cdecl;
@@ -205,6 +208,7 @@ type
     function Width(const w: Integer): Integer; overload; cdecl;
     function Height: Integer; overload; cdecl;
     function Height(const h: Integer): Integer; overload; cdecl;
+	function Ratio: Double; cdecl;
     function Horizontal: TRange; cdecl;
     function Vertical: TRange; cdecl;
     function Expand(const change: Integer = 1): TBox; cdecl;

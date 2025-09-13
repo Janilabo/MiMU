@@ -235,6 +235,36 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Linear>
+  @action: Returns true if TBox is horizontal or vertical line.
+  @note: None.
+[==============================================================================}
+function TBox.Linear: Boolean; cdecl;
+begin
+  Result := (((Self.X1 = Self.X2) xor (Self.Y1 = Self.Y2)) and (not Self.IsPoint));
+end;
+
+{==============================================================================]
+  <TBox.Is2D>
+  @action: Returns true if TBox is valid rectangle with area.
+  @note: None.
+[==============================================================================}
+function TBox.Is2D: Boolean; cdecl;
+begin
+  Result := ((Self.Width > 1) and (Self.Height > 1));
+end;
+
+{==============================================================================]
+  <TBox.Collapsed>
+  @action: Returns true if TBox is either point or a horizontal/vertical line.
+  @note: Returns False if TBox is rectangle with workable area.
+[==============================================================================}
+function TBox.Collapsed: Boolean; cdecl;
+begin
+  Result := ((Self.X1 = Self.X2) or (Self.Y1 = Self.Y2));
+end;
+
+{==============================================================================]
   <TBox.Boxy>
   @action: Returns true if TBox is valid rectangle
   @note: None.
@@ -368,6 +398,16 @@ function TBox.Horizontal: TRange; cdecl;
 begin
   Result.start := Self.X1;
   Result.stop := Self.X2;
+end;
+
+{==============================================================================]
+  <TBox.Ratio>
+  @action: Returns ratio of Width to Height.
+  @note: None.
+[==============================================================================}
+function TBox.Ratio: Double; cdecl;
+begin
+  Result := (Self.Width / Self.Height);
 end;
 
 {==============================================================================]
