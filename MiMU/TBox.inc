@@ -195,6 +195,56 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.IsPoint>
+  @action: Returns true if TBox is just a single point.
+  @note: None.
+[==============================================================================}
+function TBox.IsPoint: Boolean; cdecl;
+begin
+  Result := not ((Self.X1 <> Self.X2) or (Self.Y1 <> Self.Y2));
+end;
+
+{==============================================================================]
+  <TBox.IsHorizontalLine>
+  @action: Returns true if TBox is horizontal line. (Width <> 1) and (Height = 1)
+  @note: None.
+[==============================================================================}
+function TBox.IsHorizontalLine: Boolean; cdecl;
+begin
+  Result := ((Y1 = Y2) and (X1 <> X2));
+end;
+
+{==============================================================================]
+  <TBox.IsVerticalLine>
+  @action: Returns true if TBox is vertical line. (Width = 1) and (Height <> 1)
+  @note: None.
+[==============================================================================}
+function TBox.IsVerticalLine: Boolean; cdecl;
+begin
+  Result := ((X1 = X2) and (Y1 <> Y2));
+end;
+
+{==============================================================================]
+  <TBox.IsLine>
+  @action: Returns true if TBox is horizontal or vertical line.
+  @note: None.
+[==============================================================================}
+function TBox.IsLine: Boolean; cdecl;
+begin
+  Result := (Self.IsHorizontalLine or Self.IsVerticalLine);
+end;
+
+{==============================================================================]
+  <TBox.Boxy>
+  @action: Returns true if TBox is valid rectangle
+  @note: None.
+[==============================================================================}
+function TBox.Boxy: Boolean; cdecl;
+begin
+  Result := ((Self.X1 <> Self.X2) and (Self.Y1 <> Self.Y2));
+end;
+
+{==============================================================================]
   <TBox.Plural>
   @action: Returns true if TBox contains more than single point.
   @note: None.
@@ -941,12 +991,72 @@ var
   x, y, i, w, h: Integer;
 begin
   Self.Size(w, h);
+  if ((w = 1) or (h = 1)) then
+    Exit(Self.Points);
   SetLength(Result, ((2 * (w + h)) - 4));
   i := 0;
   for x := Self.X1 to Self.X2 do
     Result[i.Increase] := Point(x, Self.Y1);
-  for x := Self.X1 to Self.X2 do
+  for y := (Self.Y1 + 1) to (Self.Y2 - 1) do
+    Result[i.Increase] := Point(Self.X2, y);
+  for x := Self.X2 downto Self.X1 do
     Result[i.Increase] := Point(x, Self.Y2);
+  for y := (Self.Y2 - 1) downto (Self.Y1 + 1) do
+    Result[i.Increase] := Point(Self.X1, y);
+end;
+
+{==============================================================================]
+  <TBox.Edge>
+  Explanation: Returns TBox edge points as TPointArray.
+  Example: Skips all the inside points.
+[==============================================================================}
+function TBox.Edge: TPointArray; cdecl;
+var
+  i, d, s: Integer;
+  p: TPoint;
+  c: TPointArray;
+begin
+  Self.Size(i, d);
+  if ((i = 1) or (d = 1)) then
+    Exit(Self.Points);
+  SetLength(Result, ((2 * (i + d)) - 4));
+  p := Point(Self.X1, Self.Y1);
+  i := 0;
+  c := [Point(1, 0), Point(0, 1), Point(-1, 0), Point(0, -1)];
+  for d := 0 to 3 do
+  begin
+    if ((d mod 2) = 0) then
+      s := (Self.X2 - Self.X1)
+    else
+      s := (Self.Y2 - Self.Y1);
+    while (s > 0) do
+    begin
+      Result[i.Increase] := p;
+      if (s.Decrease >= 0) then
+        p := Point(p.X + c[d].X, p.Y + c[d].Y);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <TBox.Outline>
+  Explanation: Returns TBox outline points as TPointArray.
+  Example: Skips all the inside points.
+[==============================================================================}
+function TBox.Outline: TPointArray; cdecl;
+var
+  x, y, i, w, h: Integer;
+begin
+  Self.Size(w, h);
+  if ((w = 1) or (h = 1)) then
+    Exit(Self.Points);
+  SetLength(Result, ((2 * (w + h)) - 4));
+  i := 0;
+  for x := Self.X1 to Self.X2 do
+  begin
+    Result[i.Increase] := Point(x, Self.Y1);
+    Result[i.Increase] := Point(x, Self.Y2);
+  end;
   for y := (Self.Y1 + 1) to (Self.Y2 - 1) do
   begin
     Result[i.Increase] := Point(Self.X1, y);
