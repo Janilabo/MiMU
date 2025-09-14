@@ -207,6 +207,8 @@ type
 	function Size: TPoint; overload; cdecl;
     function Area: Integer; cdecl; inline;
     function Perimeter: Integer; cdecl;
+    function Perim: Integer; cdecl;
+    function Circumference: Integer; cdecl;
     function Diagonal: Double; cdecl;
     function Width: Integer; overload; cdecl;
     function Width(const w: Integer): Integer; overload; cdecl;
@@ -252,9 +254,15 @@ type
     function Extract: TPointArray; cdecl;
     function Enumerate: TPointArray; cdecl;
     function Elements: TPointArray; cdecl;
-    function Border: TPointArray; cdecl;
-    function Edge: TPointArray; cdecl;
-	function Outline: TPointArray; cdecl;
+    function Border: TPointArray; overload; cdecl;
+	function Border(const X, Y: Integer): Boolean; overload; cdecl;
+    function Border(const pt: TPoint): Boolean; overload; cdecl;
+    function Edge: TPointArray; overload; cdecl;
+	function Edge(const X, Y: Integer): Boolean; overload; cdecl;
+    function Edge(const pt: TPoint): Boolean; overload; cdecl;
+	function Outline: TPointArray; overload; cdecl;
+	function Outline(const X, Y: Integer): Boolean; overload; cdecl;
+    function Outline(const pt: TPoint): Boolean; overload; cdecl;
     function Spiral: TPointArray; cdecl;
     function Traverse: TPointArray; cdecl;
     function CornerPoints: TPointArray; cdecl;
