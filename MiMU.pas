@@ -188,6 +188,8 @@ type
     function Form(const pt: TPoint; const width, height: Integer): TBox; overload; cdecl;
     function Make(const pt: TPoint; const radius: Integer = 0): TBox; overload; cdecl;
     function Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload; cdecl;
+    function Frame(var width, height: Integer): TBox; overload; cdecl;
+    function Frame: TBox; overload; cdecl;
     function Singular: Boolean; cdecl;
     function IsPoint: Boolean; cdecl;
     function IsHorizontalLine: Boolean; cdecl;
@@ -201,7 +203,8 @@ type
     function Rectangular: Boolean; cdecl;
     function Equilateral: Boolean; cdecl;
     function Square: Boolean; cdecl;
-    function Size(var width, height: Integer): Integer; cdecl; inline;
+    function Size(var width, height: Integer): Integer; overload; cdecl; inline;
+	function Size: TPoint; overload; cdecl;
     function Area: Integer; cdecl; inline;
     function Diagonal: Double; cdecl;
     function Width: Integer; overload; cdecl;
@@ -251,6 +254,8 @@ type
     function Border: TPointArray; cdecl;
     function Edge: TPointArray; cdecl;
 	function Outline: TPointArray; cdecl;
+    function Spiral: TPointArray; cdecl;
+    function Traverse: TPointArray; cdecl;
     function CornerPoints: TPointArray; cdecl;
     function Corners: TPointArray; cdecl;
     function SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload; cdecl;
