@@ -112,10 +112,16 @@ type
     function Values: TIntegerArray; cdecl;
     function TIA: TIntegerArray; cdecl;
     function Enumerate: TIntegerArray; cdecl;
+    function Enumerated: TIntegerArray; cdecl;
     function Elements: TIntegerArray; cdecl;
     function Numbers: TIntegerArray; cdecl;
     function Items: TIntegerArray; cdecl;
     function ToArray: TIntegerArray; cdecl;
+    function Materialize: TIntegerArray; cdecl;
+	function Shuffle: TIntegerArray; cdecl;
+    function Any: Integer; cdecl;
+	function Something: TIntegerArray; overload; cdecl;
+    function Something(const amount: Integer): TIntegerArray; overload; cdecl;
     function Normalize: TRange; cdecl;
     function Overlapping(const b: TRange): Boolean; cdecl;
     function Overlap(const b: TRange): Boolean; cdecl;

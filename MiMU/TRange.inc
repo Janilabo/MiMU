@@ -385,6 +385,22 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Enumerated>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Enumerated: TIntegerArray; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Result) do
+    Result[i] := (Self.Start + i);
+  if Self.Descending then
+    Result.Reverse;
+end;
+
+{==============================================================================]
   <TBox.Elements>
   Explanation: Returns TBox points as TPointArray.
   Example: Alternative method.
@@ -465,6 +481,74 @@ begin
       Result[Self.start - i] := i;
   end;
 end;
+
+{==============================================================================]
+  <TRange.Materialize>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Materialize: TIntegerArray; cdecl;
+var
+  i, s, v: Integer;
+  p: PInteger;
+begin
+  s := IfThen(Self.Ascending, 1, -1);
+  SetLength(Result, Self.Size);
+  v := Self.Start;
+  p := @Result[0];
+  for i := 0 to High(Result) do
+  begin
+    p^ := v.Increase(s);
+    Inc(p);
+  end;
+end;
+
+{==============================================================================]
+  <TRange.Shuffle>
+  @action: Returns TRange randomly shuffled as TIntegerArray.
+  @note: None.
+[==============================================================================}
+function TRange.Shuffle: TIntegerArray; cdecl;
+var
+  i, s: Integer;
+begin
+  s := IfThen(Self.Ascending, 1, -1);
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Result) do
+    Result[i] := ((Self.Start + i) * s);
+  for i := High(Result) downto 1 do
+    Swap(Result[i], Result[Random(i + 1)]);
+end;
+
+{==============================================================================]
+  <TRange.Any>
+  @action: Returns random TRange item.
+  @note: None.
+[==============================================================================}
+function TRange.Any: Integer; cdecl;
+begin
+  Result := ((Self.Start + Random(Self.Size)) * IfThen(Self.Ascending, 1, -1));
+end;
+
+{==============================================================================]
+  <TRange.Something>
+  @action: Returns random amount of random TRange items.
+  @note: Does not return empty arrays.
+[==============================================================================}
+function TRange.Something: TIntegerArray; overload; cdecl;
+begin
+  Result := Copy(Self.Shuffle, 0, Max(Random(Self.Size + 1), 1))
+end;
+
+{==============================================================================]
+  <TRange.Something>
+  @action: Returns random amount of random TRange items.
+  @note: Does not return empty arrays.
+[==============================================================================}
+function TRange.Something(const amount: Integer): TIntegerArray; overload; cdecl;
+begin
+  Result := Copy(Self.Shuffle, 0, Max(1, Min(amount, Self.Size)));
+end; 
 
 {==============================================================================]
   <TRange.Normalize>
