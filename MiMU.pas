@@ -206,6 +206,7 @@ type
     function Size(var width, height: Integer): Integer; overload; cdecl; inline;
 	function Size: TPoint; overload; cdecl;
     function Area: Integer; cdecl; inline;
+    function Perimeter: Integer; cdecl;
     function Diagonal: Double; cdecl;
     function Width: Integer; overload; cdecl;
     function Width(const w: Integer): Integer; overload; cdecl;

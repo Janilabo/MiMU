@@ -808,8 +808,8 @@ var
   end;
 begin
   SetLength(Result, 0);
-  if Length(Self) = 0 then
-    Exit([]);
+  if Self.Empty then
+    Exit;
   SetLength(p, Length(Self));
   for i := 0 to High(Self) do
     p[i] := i;

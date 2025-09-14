@@ -370,6 +370,16 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Perimeter>
+  @action: Returns the length of TBox edge/border.
+  @note: None
+[==============================================================================}
+function TBox.Perimeter: Integer; cdecl;
+begin
+  Result := ((2 * (Self.Width + Self.Height)) - 4);
+end;
+
+{==============================================================================]
   <TBox.Diagonal>
   @action: Returns diagonal size of bx.
   @note: None.
