@@ -1280,6 +1280,68 @@ begin
 end;
 
 {==============================================================================]
+ <TBox.Rows>
+ @action: Returns TBox as its rows of TPoints.
+ @note: Row-major. Dimensions = [Height][Width].
+[==============================================================================}
+function TBox.Rows: T2DPointArray; cdecl;
+var
+  x, y: Integer;
+begin
+  Result := T2D.Create(Point(0, 0), Self.Height, Self.Width);
+  for y := Self.Y1 to Self.Y2 do
+    for x := Self.X1 to Self.X2 do
+      Result[y - Self.Y1][x - Self.X1] := Point(x, y);
+end;
+
+{==============================================================================]
+ <TBox.Columns>
+ @action: Returns TBox as its columns of TPoints.
+ @note: Column-major. Dimensions = [Width][Height].
+[==============================================================================}
+function TBox.Columns: T2DPointArray; cdecl;
+var
+  x, y: Integer;
+begin
+  Result := T2D.Create(Point(0, 0), Self.Width, Self.Height);
+  for x := Self.X1 to Self.X2 do
+    for y := Self.Y1 to Self.Y2 do
+      Result[x - Self.X1][y - Self.Y1] := Point(x, y);
+end;
+
+{==============================================================================]
+ <TBox.Rowwise>
+ @action: Returns all TBox TPoints as Row-wise.
+ @note: None.
+[==============================================================================}
+function TBox.Rowwise: TPointArray; cdecl;
+var
+  x, y, r: Integer;
+begin
+  SetLength(Result, Self.Area);
+  r := 0;
+  for y := Y1 to Y2 do
+    for x := X1 to X2 do
+      Result[r.Increase] := Point(x, y);
+end;
+
+{==============================================================================]
+ <TBox.Columnwise>
+ @action: Returns all TBox TPoints as Column-wise.
+ @note: None.
+[==============================================================================}
+function TBox.Columnwise: TPointArray; cdecl;
+var
+  x, y, r: Integer;
+begin
+  SetLength(Result, Self.Area);
+  r := 0;
+  for x := X1 to X2 do
+    for y := Y1 to Y2 do
+      Result[r.Increase] := Point(x, y);
+end;
+
+{==============================================================================]
  <TBox.CornerPoints>
  @action: Returns all 4 corner points of bx.
  @note: None

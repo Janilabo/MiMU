@@ -258,6 +258,10 @@ type
     function Traverse: TPointArray; cdecl;
     function CornerPoints: TPointArray; cdecl;
     function Corners: TPointArray; cdecl;
+	function Rows: T2DPointArray; cdecl;
+    function Columns: T2DPointArray; cdecl;
+    function Rowwise: TPointArray; cdecl;
+    function Columnwise: TPointArray; cdecl;
     function SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload; cdecl;
     function SimilarSize(const b: TBox; const differency: Integer): Boolean; overload; cdecl;
     function Centered(const toArea: TBox): TBox; cdecl;
