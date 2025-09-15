@@ -191,6 +191,20 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Blit(items: TArray; index: Integer: Integer>
+ @action: Simply puts items to array index, fast.
+ @note: No safety checks. Make sure buffer is enough!
+[==============================================================================}
+function HArr.Blit(const items: TArr; const index: Integer = 0): Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := (index + Length(items));
+  for i := 0 to High(items) do
+    Self[index + i] := items[i]; 
+end;
+
+{==============================================================================]
  <arr.Build(item: VarType; aSize: Integer): TArray> 
  @action: Creates array with item where aSize is length of the array.
  @note: item is placed on every index in result.
@@ -2000,6 +2014,26 @@ begin
     end;
   end else
     SetLength(Result, 0);
+end;
+
+{==============================================================================]
+ <arr.Patch(index: Integer; items: TArray): Integer>
+ @action: Simply puts items to array index.
+ @note: Uses SetLength incase index + items goes over the current length.
+        If index is below 0 it will automatically set max length.
+[==============================================================================}
+function HArr.Patch(const index: Integer; const items: TArr): Integer; overload; cdecl;
+var
+  j, i: Integer;
+begin
+  if items.Empty then
+    Exit(index);
+  i := IfThen((index < 0), Length(Self), index);
+  Result := (i + Length(items));
+  if (Result > Length(Self)) then
+    SetLength(Self, Result);
+  for j := 0 to High(items) do
+    Self[i + j] := items[j];
 end;
 
 {==============================================================================]

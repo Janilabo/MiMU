@@ -1199,6 +1199,26 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Contour>
+  Explanation: Returns TBox contour points as TPointArray.
+  Example: Skips all the inside points.
+[==============================================================================}
+function TBox.Contour: TPointArray; cdecl;
+var
+  z: TIntegerArray;
+  s: TSegment;
+  i, l: Integer;
+begin
+  if not Self.Rectangular then
+    Exit(Self.Points);
+  SetLength(Result, Self.Circumference);
+  z := [Self.X1, Self.Y1, Self.X2, Self.Y1, Self.X2, (Self.Y1 + 1), Self.X2, Self.Y2, (Self.X2 - 1), Self.Y2, Self.X1, Self.Y2, Self.X1, (Self.Y2 - 1), Self.X1, (Self.Y1 + 1)];
+  l := 0;
+  for i := 0 to 3 do
+    l := Result.Blit(s.Create(z[(i * 4)], z[(i * 4) + 1], z[(i * 4) + 2], z[(i * 4) + 3]).Points, l);
+end;
+
+{==============================================================================]
   <TBox.Spiral>
   Explanation: Returns TBox TPoints as spiral shaped TPointArray.
   Example: Alternative for TBox.Traverse.
@@ -1419,6 +1439,16 @@ begin
   Result[2].Y := Self.Y2;
   Result[3].X := Self.X1;
   Result[3].Y := Self.Y2;
+end;
+
+{==============================================================================]
+ <TBox.CornerPts>
+ @action: Returns all 4 corner points of bx.
+ @note: Gives also duplicates, if TBox is not rectangular.
+[==============================================================================}
+function TBox.CornerPts: TPointArray; cdecl;
+begin
+  Result := [Point(Self.X1, Self.Y1), Point(Self.X2, Self.Y1), Point(Self.X2, Self.Y2), Point(Self.X1, Self.Y2)];
 end;
 
 {==============================================================================]

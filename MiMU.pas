@@ -269,9 +269,11 @@ type
 	function Outline: TPointArray; overload; cdecl;
 	function Outline(const X, Y: Integer): Boolean; overload; cdecl;
     function Outline(const pt: TPoint): Boolean; overload; cdecl;
+    function Contour: TPointArray; cdecl;
     function Spiral: TPointArray; cdecl;
     function Traverse: TPointArray; cdecl;
     function CornerPoints: TPointArray; cdecl;
+    function CornerPts: TPointArray; cdecl;
     function Corners: TPointArray; cdecl;
 	function Rows: T2DPointArray; cdecl;
     function Columns: T2DPointArray; cdecl;

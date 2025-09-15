@@ -247,6 +247,7 @@ type
     function MadeOf(const allowed: TArr): Boolean; overload; cdecl;
     function FreeOf(const forbidden: TArr): Boolean; overload; cdecl;
     function BuiltWithout(const forbidden: TArr): Boolean; overload; cdecl;
+    function Blit(const items: TArr; const index: Integer = 0): Integer; overload; cdecl;
     function Clear: Boolean; overload; cdecl;
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
     function Clone(const ID: TIntegerArray): TArr; overload; cdecl;
@@ -339,6 +340,7 @@ type
 	function Occurs(const item: TVar; const occurrence: Integer = 1): Boolean; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DArr; overload; cdecl;
+    function Patch(const index: Integer; const items: TArr): Integer; overload; cdecl;
     function Pick(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
     function Pop: TVar; overload; cdecl;
     function Pop(const null: TVar): TVar; overload; cdecl;
