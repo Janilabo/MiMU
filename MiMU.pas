@@ -120,8 +120,8 @@ type
     function Materialize: TIntegerArray; cdecl;
 	function Shuffle: TIntegerArray; cdecl;
     function Any: Integer; cdecl;
-	function Something: TIntegerArray; overload; cdecl;
-    function Something(const amount: Integer): TIntegerArray; overload; cdecl;
+	function Some: TIntegerArray; overload; cdecl;
+    function Some(const amount: Integer): TIntegerArray; overload; cdecl;
     function Normalize: TRange; cdecl;
     function Overlapping(const b: TRange): Boolean; cdecl;
     function Overlap(const b: TRange): Boolean; cdecl;
@@ -292,6 +292,10 @@ type
 	function Union(const b: TBox): TBox; overload; cdecl;
     function Disjoint(const target: TBox): Boolean; overload; cdecl;
     function Lacks(const pt: TPoint): Boolean; overload; cdecl;
+    function Shuffle: TPointArray; cdecl;
+    function Any: TPoint; cdecl;
+    function Some: TPointArray; overload; cdecl;
+    function Some(const amount: Integer): TPointArray; overload; cdecl;
   end;
   TBoxArray = array of TBox;
   T2DBoxArray = array of TBoxArray;

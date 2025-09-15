@@ -1613,6 +1613,50 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Shuffle>
+  @action: Returns TBox randomly shuffled as TPointArray.
+  @note: None.
+[==============================================================================}
+function TBox.Shuffle: TPointArray; cdecl;
+var
+  i: Integer;
+begin
+  Result := Self.Points;
+  for i := 0 to High(Result) do
+    Swap(Result[i], Result[Random(i + 1)]);
+end;
+
+{==============================================================================]
+  <TBox.Any>
+  @action: Returns random TBox point.
+  @note: None.
+[==============================================================================}
+function TBox.Any: TPoint; cdecl;
+begin
+  Result := Point((Self.X1 + Random(Self.Width)), (Self.X1 + Random(Self.Height)));
+end;
+
+{==============================================================================]
+  <TBox.Some>
+  @action: Returns random amount of random TBox points.
+  @note: Does not return empty arrays.
+[==============================================================================}
+function TBox.Some: TPointArray; overload; cdecl;
+begin
+  Result := Copy(Self.Shuffle, 0, Max(Random(Self.Area + 1), 1));
+end;
+
+{==============================================================================]
+  <TBox.Some>
+  @action: Returns random amount of random TBox points.
+  @note: Does not return empty arrays.
+[==============================================================================}
+function TBox.Some(const amount: Integer): TPointArray; overload; cdecl;
+begin
+  Result := Copy(Self.Shuffle, 0, Max(1, Min(amount, Self.Area)));
+end;
+
+{==============================================================================]
   <_TBox.Create>
   @action: Creates TBox using minX, minY, maxX, maxY 
   @note: function version

@@ -516,7 +516,7 @@ begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := ((Self.Start + i) * s);
-  for i := High(Result) downto 1 do
+  for i := High(Result) downto 0 do
     Swap(Result[i], Result[Random(i + 1)]);
 end;
 
@@ -531,21 +531,21 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Something>
+  <TRange.Some>
   @action: Returns random amount of random TRange items.
   @note: Does not return empty arrays.
 [==============================================================================}
-function TRange.Something: TIntegerArray; overload; cdecl;
+function TRange.Some: TIntegerArray; overload; cdecl;
 begin
   Result := Copy(Self.Shuffle, 0, Max(Random(Self.Size + 1), 1))
 end;
 
 {==============================================================================]
-  <TRange.Something>
+  <TRange.Some>
   @action: Returns random amount of random TRange items.
   @note: Does not return empty arrays.
 [==============================================================================}
-function TRange.Something(const amount: Integer): TIntegerArray; overload; cdecl;
+function TRange.Some(const amount: Integer): TIntegerArray; overload; cdecl;
 begin
   Result := Copy(Self.Shuffle, 0, Max(1, Min(amount, Self.Size)));
 end; 
