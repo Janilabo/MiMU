@@ -257,6 +257,49 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Blend(items: TArray; index: Integer): TArray> 
+ @action: Blends items with array, cleverly.
+ @note: None.
+[==============================================================================}
+function Harr.Blend(const items: TArr; const index: Integer = 2147483647): TArr; overload; cdecl;
+var
+  s, l, p, r, i: Integer;
+begin
+  s := Length(Self);
+  if (s = 0) then
+    Exit(items.Copy);
+  l := Length(items);
+  if (l = 0) then
+    Exit(Self.Copy);
+  case (index > 0) of
+    True:
+    begin
+      p := index;
+      if (p > s) then
+        p := s;
+      r := (p + l);
+      SetLength(Result, r);
+      for i := 0 to (p - 1) do
+        Result[i] := Self[i];
+      for i := 0 to (l - 1) do
+        Result[p + i] := items[i];
+    end;
+	False:
+    begin
+      p := ((s + index) - 1);
+      if (p < 0) then
+        p := 0;
+      r := (l + (s - p));
+      SetLength(Result, r);
+      for i := 0 to (l - 1) do
+        Result[i] := items[i];
+      for i := p to (s - 1) do
+        Result[l + (i - p)] := Self[i];
+    end;
+  end;
+end;
+
+{==============================================================================]
  <arr.BuiltWithout(forbidden: TArray): Boolean> 
  @action: Checks if array arr does not have any forbidden items.
  @note: None.
@@ -1975,6 +2018,43 @@ begin
     end;
     True: Result := (Self.Pos(item) = -1);
   end;
+end;
+
+{==============================================================================]
+ <arr.Overlay(items: TArray; index: Integer; init: VarType): TArray>
+ @action: Overlays items to array index.
+ @note: Returns the array with overlay action.		
+[==============================================================================}
+function HArr.Overlay(const items: TArr; const index: Integer; const init: TVar): TArr; overload; cdecl;
+var
+  s, l, r, i, a, j: Integer;
+begin
+  l := Length(items);
+  if (l = 0) then
+    Exit(Self.Copy);
+  s := Length(Self);
+  r := IfThen((index < 0), Max((Abs(index) + s), l), Max(s, (index + l)));
+  SetLength(Result, r);
+  for i := 0 to (r - 1) do
+    if not ((index <= 0) and (i < l)) then
+    begin
+      j := (i - index);
+      if not ((index >= 0) and (j >= 0) and (j < l)) then
+      begin
+        a := IfThen((index < 0), (i - Abs(index)), i);
+        if ((a >= 0) and (a < s)) then
+          Result[i] := Self[a]
+        else
+          Result[i] := init;
+      end else
+        Result[i] := items[j];
+    end else
+      Result[i] := items[i];
+end;
+
+function HArr.Overlay(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
+begin
+  Result := Self.Overlay(items, index, Default(TVar));
 end;
 
 {==============================================================================]

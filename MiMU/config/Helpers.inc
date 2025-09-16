@@ -242,6 +242,7 @@ type
     function Append(const item: TVar; const duplicates: Boolean = True): TArr; overload; cdecl;
     function Append(const items: TArr; const duplicates: Boolean = True): TArr; overload; cdecl;
 	function Backwards: TArr; overload; cdecl;
+    function Blend(const items: TArr; const index: Integer = 2147483647): TArr; overload; cdecl;
     function Build(const item: TVar; const aSize: Integer = 1): TArr; overload; cdecl;
 	function BuiltWith(const blocks: TArr): Boolean; cdecl;
     function MadeOf(const allowed: TArr): Boolean; overload; cdecl;
@@ -338,6 +339,8 @@ type
     function MostFrequent: TVar; overload; cdecl;
     function Next(const index: Integer; const count: Integer = 2147483647): TArr; overload; cdecl;
 	function Occurs(const item: TVar; const occurrence: Integer = 1): Boolean; overload; cdecl;
+    function Overlay(const items: TArr; const index: Integer; const init: TVar): TArr; overload; cdecl;
+    function Overlay(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DArr; overload; cdecl;
     function Patch(const index: Integer; const items: TArr): Integer; overload; cdecl;
