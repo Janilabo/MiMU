@@ -1643,6 +1643,22 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Mixed>
+  @action: Returns TBox randomly mixed as TPointArray.
+  @note: None.
+[==============================================================================}
+function TBox.Mixed(const mixings: Integer = 1): TPointArray; cdecl;
+var
+  i, m: Integer;
+begin
+  Result := Self.Points;
+  if (Result.Size > 1) then
+  for m := 1 to mixings do
+    for i := 0 to High(Result) do
+      Swap(Result[Random(Result.Size)], Result[Random(Result.Size)]);
+end;
+
+{==============================================================================]
   <TBox.Shake>
   @action: Returns TBox randomly shaked as TPointArray.
   @note: None.
@@ -1652,6 +1668,7 @@ var
   i, s: Integer;
 begin
   Result := Self.Points;
+  if (Result.Size > 1) then
   for s := 1 to shakes do
     for i := 0 to Random(Result.Size) do
       Swap(Result[i], Result[Random(Result.Size)]);
@@ -1667,6 +1684,7 @@ var
   i, s: Integer;
 begin
   Result := Self.Points;
+  if (Result.Size > 1) then
   for s := 1 to shuffles do
     for i := 0 to High(Result) do
       Swap(Result[i], Result[Random(Result.Size)]);

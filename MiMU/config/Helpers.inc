@@ -338,7 +338,8 @@ type
     function Locations(const item: TVar; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Locations(const items: TArr; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
 	function Locations: TIntegerArray; overload; cdecl;
-    function Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
+    function Mix(const mixings: Integer = 1): Boolean; overload; cdecl;
+    function Mixed(const mixings: Integer = 1): TArr; overload; cdecl;
     function MostFrequent: TVar; overload; cdecl;
     function Next(const index: Integer; const count: Integer = 2147483647): TArr; overload; cdecl;
 	function Occurs(const item: TVar; const occurrence: Integer = 1): Boolean; overload; cdecl;

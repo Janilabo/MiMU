@@ -1950,21 +1950,39 @@ begin
 end;
 
 {==============================================================================]
- <arr.Mix(shuffles: Integer): Boolean>
- @action: Ramdomizes array with custom shuffles.
+ <arr.Mix(mixings: Integer): Boolean>
+ @action: Ramdomizes array with custom mixings.
  @note: None.
 [==============================================================================}
-function HArr.Mix(const shuffles: Integer = 1): Boolean; overload; cdecl;
+function HArr.Mix(const mixings: Integer = 1): Boolean; overload; cdecl;
 var
-  l, i, s: Integer;
+  l, i, m: Integer;
 begin
-  Result := ((shuffles > 0) and Self.Populated);
+  Result := ((mixings > 0) and Self.Populated);
   if not Result then
     Exit;
   l := Length(Self);
-  for s := 1 to shuffles do
+  if (l > 1) then
+  for m := 1 to mixings do
     for i := 0 to (l - 1) do
       Exchange(Random(l), Random(l));
+end;
+
+{==============================================================================]
+ <arr.Mixed(mixings: Integer): TArray>
+ @action: Returns ramdomized array by mixing.
+ @note: None.
+[==============================================================================}
+function HArr.Mixed(const mixings: Integer = 1): TArr; overload; cdecl;
+var
+  l, i, m: Integer;
+begin
+  l := Length(Self);
+  Result := Self.Copy;
+  if (l > 1) then
+  for m := 1 to mixings do
+    for i := 0 to (l - 1) do
+      Swap(Result[Random(l)], Result[Random(l)]);
 end;
 
 {==============================================================================]
@@ -2849,6 +2867,7 @@ var
   i, s: Integer;
 begin
   Result := Self.Copy;
+  if (Result.Size > 1) then
   for s := 1 to shakes do
     for i := 0 to Random(Self.Size) do
       Swap(Result[i], Result[Random(Self.Size)]);
@@ -2903,6 +2922,7 @@ var
   i, s: Integer;
 begin
   Result := Self.Copy;
+  if (Result.Size > 1) then
   for s := 1 to shuffles do
     for i := 0 to High(Result) do
       Swap(Result[i], Result[Random(Self.Size)]);

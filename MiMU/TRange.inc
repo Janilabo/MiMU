@@ -504,6 +504,25 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Mixed>
+  @action: Returns TRange randomly mixed as TIntegerArray.
+  @note: None.
+[==============================================================================}
+function TRange.Mixed(const mixings: Integer = 1): TIntegerArray; cdecl;
+var
+  i, s, r: Integer;
+begin
+  s := IfThen(Self.Ascending, 1, -1);
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Result) do
+    Result[i] := ((Self.Start + i) * s);
+  if (Result.Size > 1) then
+  for r := 1 to mixings do
+    for i := High(Result) downto 0 do
+      Swap(Result[Random(Result.Size)], Result[Random(Result.Size)]);
+end;
+
+{==============================================================================]
   <TRange.Shake>
   @action: Returns TRange randomly shaked as TIntegerArray.
   @note: None.
@@ -516,6 +535,7 @@ begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := ((Self.Start + i) * s);
+  if (Result.Size > 1) then
   for r := 1 to shakes do
     for i := Random(Result.Size) downto 0 do
       Swap(Result[i], Result[Random(Result.Size)]);
@@ -534,6 +554,7 @@ begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := ((Self.Start + i) * s);
+  if (Result.Size > 1) then
   for r := 1 to shuffles do
     for i := High(Result) downto 0 do
       Swap(Result[i], Result[Random(Result.Size)]);
