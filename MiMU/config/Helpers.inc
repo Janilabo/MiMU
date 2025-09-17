@@ -22,7 +22,8 @@ type
       function ConstraintMax(const limit: Integer): Boolean; cdecl;
       function Constraint(const minimum, maximum: Integer): Boolean; overload; cdecl;
       function Constraint(const range: TRange): Boolean; overload; cdecl;
-      function Even: Boolean; cdecl; inline;
+      function Parity: Byte; cdecl; inline;
+	  function Even: Boolean; cdecl; inline;
 	  function IsEven: Boolean; cdecl; inline;
       function Odd: Boolean; cdecl; inline;
       function IsOdd: Boolean; cdecl; inline;
@@ -518,6 +519,7 @@ type
       function Charify(var str: string): TCharArray; overload; cdecl;
       function Stringify: string; overload; cdecl;
       function Stringify(var chars: TCharArray): string; overload; cdecl;
+      function Special: Boolean; cdecl;
     {$ENDIF}
     {$IFDEF Double}
     {$ENDIF}

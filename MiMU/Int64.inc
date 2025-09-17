@@ -1,4 +1,36 @@
 {==============================================================================]
+ <TInt64Helper.Prime>
+ @action: Returns true if N is prime.
+ @note: None.
+[==============================================================================}
+function TInt64Helper.Prime: Boolean; cdecl;
+var
+  i: Int64;
+begin
+  if ((Self = 2) or (Self = 3)) then
+    Exit(True);
+  if ((Self < 2) or ((Self mod 2) = 0) or ((Self mod 3) = 0)) then
+    Exit(False);
+  i := 5;
+  repeat
+    if (((Self mod i) = 0) or ((Self mod (i + 2)) = 0)) then
+      Exit(False);
+    i := (i + 6);
+  until ((i * i) > Self);
+  Result := True;
+end;
+
+{==============================================================================]
+ <TInt64Helper.Parity>
+ @action: Returns the Int64 Parity Bit as Byte.
+ @note: 0 = even, 1 = odd.
+[==============================================================================}
+function TInt64Helper.Parity: Byte; cdecl; inline;
+begin
+  Result := (Self mod 2);
+end;
+
+{==============================================================================]
  <TInt64Helper.Even>
  @action: Returns true if Int64 value x is an even number.
  @note: None

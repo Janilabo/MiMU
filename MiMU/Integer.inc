@@ -146,6 +146,16 @@ begin
 end;
 
 {==============================================================================]
+ <TIntegerHelper.Parity>
+ @action: Returns the Integer Parity Bit as Byte.
+ @note: 0 = even, 1 = odd.
+[==============================================================================}
+function TIntegerHelper.Parity: Byte; cdecl; inline;
+begin
+  Result := (Self mod 2);
+end;
+
+{==============================================================================]
  <TIntegerHelper.Even>
  @action: Returns true if Integer value x is an even number.
  @note: None

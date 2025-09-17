@@ -432,6 +432,8 @@ type
   {$DEFINE TRange}{$I MiMU\config\Helpers.inc}{$UNDEF TRange}
 type
   TInt64Helper = type helper for Int64
+    function Prime: Boolean; cdecl;
+    function Parity: Byte; cdecl; inline;
     function Even: Boolean; cdecl; inline;
     function Odd: Boolean; cdecl; inline;
     function Increase(const N: Int64 = 1): Int64; cdecl;
@@ -456,8 +458,9 @@ type
   public
     class function Init(var arr: TIntegerArray): Integer; overload; cdecl;
     class function Reverse(var arr: TIntegerArray): Boolean; overload; cdecl;
-    class function Reversed(const Arr: TIntegerArray): TIntegerArray; overload; cdecl;
+    class function Reversed(const arr: TIntegerArray): TIntegerArray; overload; cdecl;
     class function Unique(var arr: TIntegerArray): Integer; overload; cdecl;
+	class function Combine(const A, B: TIntegerArray): TIntegerArray; overload; cdecl;
   end;
   TPA = class
     class function Init(var arr: TPointArray): Integer; overload; cdecl;
@@ -465,6 +468,10 @@ type
   end;
   TBA = class
     class function Init(var arr: TBooleanArray): Integer; overload; cdecl;
+  end;
+  ATIA = class
+  public
+    class function Merge(const arr: T2DIntegerArray): TIntegerArray; overload; cdecl;
   end;
 {$DEFINE T1D}
   T1D = class
@@ -834,6 +841,32 @@ begin
     Move(Result[High(Result) - i], Result[i], SizeOf(Integer));
     Move(r, Result[High(Result) - i], SizeOf(Integer));
   end;
+end;
+
+class function TIA.Combine(const A, B: TIntegerArray): TIntegerArray; overload; cdecl;
+var
+  x, y: Integer;
+begin
+  x := Length(A);
+  y := Length(B);
+  SetLength(Result, (x + y));
+  if (x > 0) then
+    Move(A[0], Result[0], (x * SizeOf(Integer)));
+  if (y > 0) then
+    Move(B[0], Result[x], (y * SizeOf(Integer)));
+end;
+
+class function ATIA.Merge(const arr: T2DIntegerArray): TIntegerArray; overload; cdecl;
+var
+  i, r: Integer;
+begin
+  SetLength(Result, arr.Size);
+  if Result.Empty then
+    Exit;
+  r := 0;
+  for i := 0 to High(arr) do
+    if (arr[i].Size > 0) then
+	  Move(arr[i][0], Result[r.Increase(arr[i].Size)], (arr[i].Size * SizeOf(Integer))); 
 end;
 
 class function TPA.Init(var arr: TPointArray): Integer; overload; cdecl;
