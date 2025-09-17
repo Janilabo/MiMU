@@ -132,6 +132,28 @@ begin
 end;
 
 {==============================================================================]
+  <arr.Any>
+  @action: Returns random array item from Self.
+  @note: Returns null with empty arrays.
+[==============================================================================}
+function HArr.Any(const null: TVar): TVar; overload; cdecl;
+begin
+  if Self.Empty then
+    Exit(null);
+  Result := Self[Random(Self.Size)];
+end;
+
+{==============================================================================]
+  <arr.Any>
+  @action: Returns random array item from Self.
+  @note: Make sure array has at least 1 item! This one is unsafe and returns error else.
+[==============================================================================}
+function HArr.Any: TVar; overload; cdecl;
+begin
+  Result := Self[Random(Self.Size)];
+end;
+
+{==============================================================================]
  <arr.Append(item: VarType; duplicates: Boolean): TArray>
  @action: Appends arr with item. Returns the index of added item.
  @note: Adds item to the right side of the array.
@@ -2857,6 +2879,20 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Shuffle: TArray>
+ @action: Returns array as randomized with shuffling it.
+ @note: None.
+[==============================================================================}
+function HArr.Shuffle: TArr; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := Self.Copy;
+  for i := 0 to High(Result) do
+    Swap(Result[i], Result[Random(Self.Size)]);
+end;
+
+{==============================================================================]
  <arr.Size: Integer> 
  @action: Returns array length.
  @note: Simply Result := Length(arr);
@@ -2926,6 +2962,26 @@ end;
 function HArr.SizeMin(const target: Integer): Boolean; overload; cdecl;
 begin
   Result := (Length(Self) >= target);
+end;
+
+{==============================================================================]
+  <arr.Some>
+  @action: Returns random amount of random array items from Self.
+  @note: Does not return empty arrays.
+[==============================================================================}
+function HArr.Some: TArr; overload; cdecl;
+begin
+  Result := Self.Shuffle.Copy(0, Max(Random(Self.Size + 1), 1));
+end;
+
+{==============================================================================]
+  <arr.Some>
+  @action: Returns amount of random array items from Self.
+  @note: Does not return empty arrays.
+[==============================================================================}
+function HArr.Some(const amount: Integer): TArr; overload; cdecl;
+begin
+  Result := Self.Shuffle.Copy(0, Max(1, Min(amount, Self.Size)));
 end;
 
 {==============================================================================]

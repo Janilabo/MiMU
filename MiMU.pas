@@ -433,6 +433,7 @@ type
 type
   TInt64Helper = type helper for Int64
     function Prime: Boolean; cdecl;
+    function IsPrime: Boolean; cdecl;
     function Parity: Byte; cdecl; inline;
     function Even: Boolean; cdecl; inline;
     function Odd: Boolean; cdecl; inline;

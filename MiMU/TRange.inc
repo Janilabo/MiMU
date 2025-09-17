@@ -517,7 +517,7 @@ begin
   for i := 0 to High(Result) do
     Result[i] := ((Self.Start + i) * s);
   for i := High(Result) downto 0 do
-    Swap(Result[i], Result[Random(i + 1)]);
+    Swap(Result[i], Result[Random(Result.Size)]);
 end;
 
 {==============================================================================]

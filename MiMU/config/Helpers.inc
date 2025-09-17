@@ -240,6 +240,8 @@ type
     function AllEqual: Boolean; overload; cdecl;
     function AllSame: Boolean; overload; cdecl;
     function AllUnique: Boolean; overload; cdecl;
+    function Any(const null: TVar): TVar; overload; cdecl;
+    function Any: TVar; overload; cdecl;
     function Append(const item: TVar; const duplicates: Boolean = True): TArr; overload; cdecl;
     function Append(const items: TArr; const duplicates: Boolean = True): TArr; overload; cdecl;
 	function Backwards: TArr; overload; cdecl;
@@ -382,12 +384,15 @@ type
     function Scan(const ID: TIntegerArray; const items: TArr; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Shift: TVar; overload; cdecl;
     function Shift(const sCount: Integer): TArr; overload; cdecl;
+    function Shuffle: TArr; overload; cdecl;
     function Size: Integer; overload; cdecl;
     function Size(const aSize: Integer): TArr; overload; cdecl;
     function Size(const aSize: Integer; const null: TVar): TArr; overload; cdecl;
     function SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl;
     function SizeMax(const target: Integer): Boolean; overload; cdecl;
     function SizeMin(const target: Integer): Boolean; overload; cdecl;
+    function Some: TArr; overload; cdecl;
+    function Some(const amount: Integer): TArr; overload; cdecl;
     function Strip(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
     function SubarrayLocation(const pattern: TArr): Integer; overload; cdecl;
     function SubarrayLocations(const pattern: TArr): TIntegerArray; overload; cdecl;

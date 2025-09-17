@@ -21,6 +21,35 @@ begin
 end;
 
 {==============================================================================]
+ <TInt64Helper.IsPrime>
+ @action: Returns true if N is prime.
+ @note: None.
+[==============================================================================}
+function TInt64Helper.IsPrime: Boolean; cdecl;
+var
+  p: array of Int64;
+  i: Integer;
+  j: Int64;
+begin
+  if (Self < 2) then
+    Exit(False);
+  p := [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31];
+  for i := 0 to High(p) do
+    if (Self = p[i]) then
+      Exit(True)
+    else
+      if ((Self mod p[i]) = 0) then
+        Exit(False);
+  j := 30;
+  repeat
+    if (((Self mod j) = 0) or ((Self mod (j + 2)) = 0)) then
+      Exit(False);
+    Inc(j, 6);
+  until ((j * j) > Self);
+  Result := True;
+end;
+
+{==============================================================================]
  <TInt64Helper.Parity>
  @action: Returns the Int64 Parity Bit as Byte.
  @note: 0 = even, 1 = odd.

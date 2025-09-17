@@ -1653,7 +1653,7 @@ var
 begin
   Result := Self.Points;
   for i := 0 to High(Result) do
-    Swap(Result[i], Result[Random(i + 1)]);
+    Swap(Result[i], Result[Random(Result.Size)]);
 end;
 
 {==============================================================================]
