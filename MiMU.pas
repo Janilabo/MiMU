@@ -118,7 +118,8 @@ type
     function Items: TIntegerArray; cdecl;
     function ToArray: TIntegerArray; cdecl;
     function Materialize: TIntegerArray; cdecl;
-	function Shuffle: TIntegerArray; cdecl;
+    function Shake(const shakes: Integer = 1): TIntegerArray; cdecl;
+	function Shuffle(const shuffles: Integer = 1): TIntegerArray; cdecl;
     function Any: Integer; cdecl;
 	function Some: TIntegerArray; overload; cdecl;
     function Some(const amount: Integer): TIntegerArray; overload; cdecl;
@@ -294,7 +295,8 @@ type
 	function Union(const b: TBox): TBox; overload; cdecl;
     function Disjoint(const target: TBox): Boolean; overload; cdecl;
     function Lacks(const pt: TPoint): Boolean; overload; cdecl;
-    function Shuffle: TPointArray; cdecl;
+    function Shake(const shakes: Integer = 1): TPointArray; cdecl;
+    function Shuffle(const shuffles: Integer = 1): TPointArray; cdecl;
     function Any: TPoint; cdecl;
     function Some: TPointArray; overload; cdecl;
     function Some(const amount: Integer): TPointArray; overload; cdecl;

@@ -382,9 +382,10 @@ type
     function Scan(const ID: TIntegerArray; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Scan(const ID: TRange; const items: TArr; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Scan(const ID: TIntegerArray; const items: TArr; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
-    function Shift: TVar; overload; cdecl;
+    function Shake(const shakes: Integer = 1): TArr; overload; cdecl;
+	function Shift: TVar; overload; cdecl;
     function Shift(const sCount: Integer): TArr; overload; cdecl;
-    function Shuffle: TArr; overload; cdecl;
+	function Shuffle(const shuffles: Integer = 1): TArr; overload; cdecl;
     function Size: Integer; overload; cdecl;
     function Size(const aSize: Integer): TArr; overload; cdecl;
     function Size(const aSize: Integer; const null: TVar): TArr; overload; cdecl;

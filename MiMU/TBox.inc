@@ -1643,17 +1643,33 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Shake>
+  @action: Returns TBox randomly shaked as TPointArray.
+  @note: None.
+[==============================================================================}
+function TBox.Shake(const shakes: Integer = 1): TPointArray; cdecl;
+var
+  i, s: Integer;
+begin
+  Result := Self.Points;
+  for s := 1 to shakes do
+    for i := 0 to Random(Result.Size) do
+      Swap(Result[i], Result[Random(Result.Size)]);
+end;
+
+{==============================================================================]
   <TBox.Shuffle>
   @action: Returns TBox randomly shuffled as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Shuffle: TPointArray; cdecl;
+function TBox.Shuffle(const shuffles: Integer = 1): TPointArray; cdecl;
 var
-  i: Integer;
+  i, s: Integer;
 begin
   Result := Self.Points;
-  for i := 0 to High(Result) do
-    Swap(Result[i], Result[Random(Result.Size)]);
+  for s := 1 to shuffles do
+    for i := 0 to High(Result) do
+      Swap(Result[i], Result[Random(Result.Size)]);
 end;
 
 {==============================================================================]

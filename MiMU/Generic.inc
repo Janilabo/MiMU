@@ -2840,6 +2840,21 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Shake: TArray>
+ @action: Returns array as randomized with shaking it.
+ @note: None.
+[==============================================================================}
+function HArr.Shake(const shakes: Integer = 1): TArr; overload; cdecl;
+var
+  i, s: Integer;
+begin
+  Result := Self.Copy;
+  for s := 1 to shakes do
+    for i := 0 to Random(Self.Size) do
+      Swap(Result[i], Result[Random(Self.Size)]);
+end;
+
+{==============================================================================]
  <arr.Shift: VarType>
  @action: Shortens the array with first element.
  @note: Returns the removed arr[0].
@@ -2883,13 +2898,14 @@ end;
  @action: Returns array as randomized with shuffling it.
  @note: None.
 [==============================================================================}
-function HArr.Shuffle: TArr; overload; cdecl;
+function HArr.Shuffle(const shuffles: Integer = 1): TArr; overload; cdecl;
 var
-  i: Integer;
+  i, s: Integer;
 begin
   Result := Self.Copy;
-  for i := 0 to High(Result) do
-    Swap(Result[i], Result[Random(Self.Size)]);
+  for s := 1 to shuffles do
+    for i := 0 to High(Result) do
+      Swap(Result[i], Result[Random(Self.Size)]);
 end;
 
 {==============================================================================]
