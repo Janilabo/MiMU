@@ -369,7 +369,8 @@ type
     function Put(const ID: TIntegerArray; const item: TVar): TArr; overload; cdecl;
     function Put(const ID: TIntegerArray; const items: TArr): TArr; overload; cdecl;
     function Put(const index: Integer; const items: TArr): TArr; overload; cdecl;
-    function Reject(const items: TArr; const index: Integer = 2147483647): TArr; overload; cdecl;
+    function Randomized: TArr; overload; cdecl;
+	function Reject(const items: TArr; const index: Integer = 2147483647): TArr; overload; cdecl;
     function Remove(const item: TVar; const index: Integer = 0; const all: Boolean = True): TArr; overload; cdecl;
     function Remove(const item: TVar; const all: Boolean): TArr; overload; cdecl;
     function Remove(const items: TArr; const index: Integer = 0; const all: Boolean = True): TArr; overload; cdecl;

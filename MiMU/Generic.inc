@@ -2539,6 +2539,29 @@ function HArr.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean
 function HArr.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): TArr; overload; cdecl; var w: Double; {$DEFINE Skeleton_QuickSorted}{$I config\Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
 
 {==============================================================================]
+  <arr.Randomized(>
+  @action: Returns randomized copy of array
+  @note: None.
+[==============================================================================}
+function HArr.Randomized: TArr; overload; cdecl;
+var
+  s, l, r: Integer;
+  i: TIntegerArray;
+begin
+  l := Length(Self);
+  if (l < 2) then
+    Exit(Self.Copy);
+  SetLength(Result, l);
+  i := Self.Indexes;
+  for s := 0 to High(Self) do
+  begin
+    r := Random(l);
+    Result[i[r]] := Self[s];
+    i[r] := i[l.Decrement];
+  end;
+end;
+
+{==============================================================================]
  <arr.Reject(items: TArray; index: Integer): TArray>
  @action: Returns a new array with elements from items excluded, up to and including the specified index.
  @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
