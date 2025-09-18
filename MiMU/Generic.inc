@@ -626,6 +626,31 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Disordered>
+ @action: Returns array with randomized order (disorder)
+ @note: [1,2,3] => [1,3,2] | [2,1,3] | [2,3,1] | [3,2,1] ...
+ [==============================================================================}
+function HArr.Disordered: TArr; overload; cdecl;
+var
+  m: TBooleanArray;
+  i, r, l: Integer;
+begin
+  l := Length(Self);
+  if (l < 2) then
+    Exit(Self.Copy);
+  SetLength(Result, l);
+  m.Create(l, False);
+  for i := 0 to (l - 1) do
+  begin
+    repeat
+      r := Random(l);
+    until (not m[r]);
+    Result[i] := Self[r];
+    m[r] := True;
+  end;
+end;
+
+{==============================================================================]
  <arr.Distribute(parts: Integer): T2DArray>
  @action: Distributes array arr to 2D array by number of parts.
  @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5][6,7]
@@ -2881,6 +2906,23 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Scramble: TIntegerArray>
+ @action: Returns scrambled array, that is randomized with offset and swapping. 
+ @note: Supports custom swaps.
+[==============================================================================}
+function HArr.Scramble(const swaps: Integer = -1): TArr; overload; cdecl;
+var
+  o, i, l, s: Integer;
+begin
+  l := Length(Self);
+  o := Random(l);
+  s := IfThen((swaps < 0), l, swaps);
+  Result := Self.Copy(o, (l - o)) + Self.Copy(0, o);
+  for i := 1 to s do
+    Swap(Result[Random(l)], Result[Random(l)]);
+end;
+
+{==============================================================================]
  <arr.Shake: TArray>
  @action: Returns array as randomized with shaking it.
  @note: None.
@@ -3021,6 +3063,20 @@ end;
 function HArr.SizeMin(const target: Integer): Boolean; overload; cdecl;
 begin
   Result := (Length(Self) >= target);
+end;
+
+{==============================================================================]
+ <arr.Slots: TIntegerArray>
+ @action: Returns indexes of array.
+ @note: None.
+[==============================================================================}
+function HArr.Slots: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to (Length(Self) - 1) do
+    Result[i] := i;
 end;
 
 {==============================================================================]
@@ -3195,6 +3251,21 @@ begin
     if not items.Contains(Self[i]) then
       Exit(False);
   Result := True;
+end;
+
+{==============================================================================]
+ <arr.ToIndexes: TIntegerArray>
+ @action: Returns indexes of array.
+ @note: None.
+[==============================================================================}
+function HArr.ToIndexes: TIntegerArray; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  SetLength(Result, Length(Self));
+  l := Low(Self);
+  for i := l to High(Self) do
+    Result[i - l] := i;
 end;
 
 {==============================================================================]

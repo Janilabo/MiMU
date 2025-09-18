@@ -266,7 +266,8 @@ type
     function Delete(const index: Integer = 0): TArr; overload; cdecl;
     function Delete(const ID: TIntegerArray): TArr; overload; cdecl;
     function Differ(const target: TArr): Boolean; overload; cdecl;
-    function Distribute(const parts: Integer): T2DArr; overload; cdecl;
+    function Disordered: TArr; overload; cdecl;
+	function Distribute(const parts: Integer): T2DArr; overload; cdecl;
 	function Drop(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
     function Dump(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
     function Dupe: TArr; overload; cdecl;
@@ -384,7 +385,8 @@ type
     function Scan(const ID: TIntegerArray; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Scan(const ID: TRange; const items: TArr; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Scan(const ID: TIntegerArray; const items: TArr; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
-    function Shake(const shakes: Integer = 1): TArr; overload; cdecl;
+    function Scramble(const swaps: Integer = -1): TArr; overload; cdecl;
+	function Shake(const shakes: Integer = 1): TArr; overload; cdecl;
 	function Shift: TVar; overload; cdecl;
     function Shift(const sCount: Integer): TArr; overload; cdecl;
 	function Shuffle(const shuffles: Integer = 1): TArr; overload; cdecl;
@@ -394,6 +396,7 @@ type
     function SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl;
     function SizeMax(const target: Integer): Boolean; overload; cdecl;
     function SizeMin(const target: Integer): Boolean; overload; cdecl;
+    function Slots: TIntegerArray; overload; cdecl;
     function Some: TArr; overload; cdecl;
     function Some(const amount: Integer): TArr; overload; cdecl;
     function Strip(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
@@ -402,6 +405,7 @@ type
     function SubarrayPosition(const pattern: TArr): Integer; overload; cdecl;
     function SubarrayPositions(const pattern: TArr): TIntegerArray; overload; cdecl;
     function Subset(const items: TArr): Boolean; overload; cdecl;
+    function ToIndexes: TIntegerArray; overload; cdecl;
     function Trade(var b: TArr): Integer; overload; cdecl;
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
     function Unduplicate: TArr; overload; cdecl;
