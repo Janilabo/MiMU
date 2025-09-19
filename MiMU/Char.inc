@@ -34,3 +34,127 @@ begin
   for i := 1 to size do
     Result := (Result + Self);
 end;
+
+{==============================================================================]
+  <TCharHelper.IsNumber>
+  @action: Returns true if Char is a number.
+  @note: None.
+[==============================================================================}
+function TCharHelper.IsNumber: Boolean; cdecl;
+begin
+  Result := ((Self >= '0') and (Self <= '9'));
+end;
+
+{==============================================================================]
+  <TCharHelper.IsNumeric>
+  @action: Returns true if Char is a number.
+  @note: None.
+[==============================================================================}
+function TCharHelper.IsNumeric: Boolean; cdecl;
+begin
+  Result := InRange(Ord(Self), 48, 57);
+end;
+
+{==============================================================================]
+  <TCharHelper.IsLower>
+  @action: Returns true if Char is part of lowercased characters
+  @note: Limited to ASCII.
+[==============================================================================}
+function TCharHelper.IsLower: Boolean; cdecl;
+begin
+  Result := InRange(Ord(Self), 97, 122);
+end;
+
+{==============================================================================]
+  <TCharHelper.IsUpper>
+  @action: Returns true if Char is part of uppercased characters
+  @note: Limited to ASCII.
+[==============================================================================}
+function TCharHelper.IsUpper: Boolean; cdecl;
+begin
+  Result := InRange(Ord(Self), 65, 90);
+end;
+
+{==============================================================================]
+  <TCharHelper.IsLowercase>
+  @action: Returns true if Char is part of lowercased characters
+  @note: Limited to ASCII.
+[==============================================================================}
+function TCharHelper.IsLowercase: Boolean; cdecl;
+begin
+  Result := ((Self >= 'a') and (Self <= 'z'));
+end;
+
+{==============================================================================]
+  <TCharHelper.IsUppercase>
+  @action: Returns true if Char is part of uppercased characters
+  @note: Limited to ASCII.
+[==============================================================================}
+function TCharHelper.IsUppercase: Boolean; cdecl;
+begin
+  Result := ((Self >= 'A') and (Self <= 'Z'));
+end;
+
+{==============================================================================]
+  <TCharHelper.IsLetter>
+  @action: Returns true if Char is part of lowercased or uppercased characters
+  @note: Limited to ASCII.
+[==============================================================================}
+function TCharHelper.IsLetter: Boolean; cdecl;
+var
+  o: Integer;
+begin
+  o := Ord(Self);
+  Result := (InRange(o, 65, 90) or InRange(o, 97, 122));
+end;
+
+{==============================================================================]
+  <TCharHelper.Swapcase>
+  @action: Swaps casing of Char, if it is part of letters
+  @note: Limited to ASCII.
+[==============================================================================}
+function TCharHelper.Swapcase: Char; cdecl;
+var
+  o: Integer;
+begin
+  o := Ord(Self);
+  if InRange(o, 65, 90) then
+    Result := Char(o + 32)
+  else
+    if InRange(o, 97, 122) then
+      Result := Char(o - 32)
+    else
+      Result := Self;
+end;
+
+{==============================================================================]
+  <TCharHelper.Upper>
+  @action: Uppers char casing if Char is part of lowercased characters
+  @note: Limited to ASCII.
+[==============================================================================}
+function TCharHelper.Upper: Char; cdecl;
+var
+  o: Integer;
+begin
+  o := Ord(Self);
+  if InRange(o, 97, 122) then
+    Result := Char(o - 32)
+  else
+    Result := Self;
+end;
+
+{==============================================================================]
+  <TCharHelper.Lower>
+  @action: Lowers char casing if Char is part of uppercased characters
+  @note: Limited to ASCII.
+[==============================================================================}
+function TCharHelper.Lower: Char; cdecl;
+var
+  o: Integer;
+begin
+  o := Ord(Self);
+  if InRange(o, 65, 90) then
+    Result := Char(o + 32)
+  else
+    Result := Self;
+end;

@@ -173,6 +173,17 @@ type
       function Compare(const target: Char): Integer; cdecl; inline;
 	  function Str(const size: Integer = 1): string; cdecl;
 	  function ToStr(const size: Integer = 1): string; cdecl;
+	  
+      function IsNumber: Boolean; cdecl;
+      function IsNumeric: Boolean; cdecl;
+      function IsLower: Boolean; cdecl;
+      function IsUpper: Boolean; cdecl;
+      function IsLowercase: Boolean; cdecl;
+      function IsUppercase: Boolean; cdecl;
+      function IsLetter: Boolean; cdecl;
+      function Swapcase: Char; cdecl;
+      function Upper: Char; cdecl;
+      function Lower: Char; cdecl;
     {$ENDIF}
     {$IFDEF Boolean}
       function ToString: string; cdecl;
