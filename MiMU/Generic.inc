@@ -3716,6 +3716,50 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Population: Int64>
+ @action: Returns actual Length for 2D array.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+[==============================================================================}
+function H2DArr.Population: Int64; overload; cdecl;
+var
+  i: Integer;
+  s, e: PInteger;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+  begin
+    if Self[i].Empty then
+      Continue;
+    s := PInteger(Self[i]);
+    e := (s + Length(Self[i]));
+    Result := (Result + (e - s));
+  end;
+end;
+
+{==============================================================================]
+ <arr.Census: Int64>
+ @action: Returns actual Length for 2D array.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+[==============================================================================}
+function H2DArr.Census: Int64; overload; cdecl;
+var
+  i: Integer;
+  s, e: PInteger;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+  begin
+    s := PInteger(Self[i]);
+    if (s <> nil) then
+    begin
+      e := s;
+      Inc(e, Length(Self[i]));
+      Result := Result + (e - s);
+    end;
+  end;
+end; 
+
+{==============================================================================]
  <arr.TArray: TArray>
  @action: Merges 2D array to 1D.
  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].

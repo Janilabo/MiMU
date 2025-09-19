@@ -352,6 +352,8 @@ generic function Contains<T>(const arr: array of T; const item: T): Boolean;
 generic function Includes<T>(const arr: array of T; const item: T): Boolean;
 generic function Position<T>(const arr: array of T; const item: T): Integer;
 generic function Location<T>(const arr: array of T; const item: T): Integer;
+generic function Indexes<T>(const arr: array of T): TIntegerArray;
+
 generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;
 
 operator+(const a, b: TPoint): TPoint;
@@ -574,6 +576,16 @@ begin
     if (arr[i] = item) then
       Exit(i);
   Result := -1;
+end;
+
+generic function Indexes<T>(const arr: array of T): TIntegerArray;
+var
+  i, l: Integer;
+begin
+  SetLength(Result, Length(arr));
+  l := Low(arr);
+  for i := l to High(arr) do
+    Result[i - l] := i;
 end;
 
 generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;

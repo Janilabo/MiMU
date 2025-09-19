@@ -173,7 +173,6 @@ type
       function Compare(const target: Char): Integer; cdecl; inline;
 	  function Str(const size: Integer = 1): string; cdecl;
 	  function ToStr(const size: Integer = 1): string; cdecl;
-	  
       function IsNumber: Boolean; cdecl;
       function IsNumeric: Boolean; cdecl;
       function IsLower: Boolean; cdecl;
@@ -543,6 +542,10 @@ type
       function Stringify: string; overload; cdecl;
       function Stringify(var chars: TCharArray): string; overload; cdecl;
       function Special: Boolean; cdecl;
+      function ExtractEven: TIntegerArray; overload; cdecl;
+      function FilterEven: TIntegerArray; overload; cdecl;
+      function ExtractOdd: TIntegerArray; overload; cdecl;
+      function FilterOdd: TIntegerArray; overload; cdecl;
     {$ENDIF}
     {$IFDEF Double}
     {$ENDIF}
@@ -683,5 +686,7 @@ type
 	function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
     function Size: Int64; overload; cdecl;
 	function Total: Int64; overload; cdecl;
+	function Population: Int64; overload; cdecl;
+	function Census: Int64; overload; cdecl;
 	function TArray: TArr; overload; cdecl;
   end;

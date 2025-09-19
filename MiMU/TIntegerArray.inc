@@ -2296,4 +2296,80 @@ begin
     if (Self[i].Parity = Self[i - 1].Parity) then
 	  Exit(False);
   Result := True;
-end; 
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.ExtractEven>
+  @action: Returns even values from array
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.ExtractEven: TIntegerArray; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  SetLength(Result, Length(Self));
+  if Self.Empty then
+    Exit;
+  l := 0;
+  for i := 0 to High(Self) do
+    if ((Self[i] mod 2) = 0) then
+      Result[l.Increase] := Self[i];
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.FilterEven>
+  @action: Returns array without even values
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.FilterEven: TIntegerArray; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  SetLength(Result, Length(Self));
+  if Self.Empty then
+    Exit;
+  l := 0;
+  for i := 0 to High(Self) do
+    if not ((Self[i] mod 2) = 0) then
+      Result[l.Increase] := Self[i];
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.ExtractOdd>
+  @action: Returns odd values from array
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.ExtractOdd: TIntegerArray; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  SetLength(Result, Length(Self));
+  if Self.Empty then
+    Exit;
+  l := 0;
+  for i := 0 to High(Self) do
+    if ((Self[i] mod 2) <> 0) then
+      Result[l.Increase] := Self[i];
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.FilterOdd>
+  @action: Returns array without odd values
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.FilterOdd: TIntegerArray; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  SetLength(Result, Length(Self));
+  if Self.Empty then
+    Exit;
+  l := 0;
+  for i := 0 to High(Self) do
+    if not ((Self[i] mod 2) <> 0) then
+      Result[l.Increase] := Self[i];
+  SetLength(Result, l);
+end;
