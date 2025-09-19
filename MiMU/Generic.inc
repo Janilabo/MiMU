@@ -3839,6 +3839,41 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Inventory(items: TArray): Int64>
+ @action: Returns actual Length for 2D array.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+        Stores 2D array items as 1D to items.
+[==============================================================================}
+function H2DArr.Inventory(var items: TArr): Int64; overload; cdecl;
+var
+  i, j: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Inc(Result, Length(Self[i]));
+  SetLength(items, Result);
+  if (Result > 0) then
+  for i := High(Self) downto 0 do
+    for j := High(Self[i]) downto 0 do
+      items[Result.Decrement] := Self[i][j];
+  Result := Length(items);
+end;
+
+{==============================================================================]
+ <arr.Inventory: Int64>
+ @action: Returns actual Length for 2D array.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+[==============================================================================}
+function H2DArr.Inventory: Int64; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Inc(Result, Length(Self[i]));
+end;
+
+{==============================================================================]
  <arr.Census: Int64>
  @action: Returns actual Length for 2D array.
  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.

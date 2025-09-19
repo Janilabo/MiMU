@@ -692,5 +692,7 @@ type
 	function Total: Int64; overload; cdecl;
 	function Population: Int64; overload; cdecl;
 	function Census: Int64; overload; cdecl;
+    function Inventory(var items: TArr): Int64; overload; cdecl;
+    function Inventory: Int64; overload; cdecl;
 	function TArray: TArr; overload; cdecl;
   end;
