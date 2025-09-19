@@ -282,6 +282,7 @@ type
     function Dump(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
     function Dupe: TArr; overload; cdecl;
     function Duplicate(const xTimes: Integer = 1): TArr; overload; cdecl;
+    function Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): TArr; overload; cdecl;
     function Emplace(const item: TVar; const index: Integer = 0): Integer; overload; cdecl;
     function Empty: Boolean; overload; cdecl;
     function Equal(const target: TArr): Boolean; overload; cdecl;
@@ -344,6 +345,7 @@ type
 	function Last: Integer; overload; cdecl;
 	function Last(const item: TVar): Integer; overload; cdecl;
 	function Last(const items: TArr): Integer; overload; cdecl;
+    function LeastCommon: TVar; overload; cdecl;
     function LeastFrequent: TVar; overload; cdecl;
     function Len: Integer; overload; cdecl;
     function Loc(const item: TVar; const index: Integer = 2147483647): Integer; overload; cdecl;
@@ -355,6 +357,7 @@ type
 	function Locations: TIntegerArray; overload; cdecl;
     function Mix(const mixings: Integer = 1): Boolean; overload; cdecl;
     function Mixed(const mixings: Integer = 1): TArr; overload; cdecl;
+    function MostCommon: TVar; overload; cdecl;
     function MostFrequent: TVar; overload; cdecl;
     function Next(const index: Integer; const count: Integer = 2147483647): TArr; overload; cdecl;
 	function Occurs(const item: TVar; const occurrence: Integer = 1): Boolean; overload; cdecl;

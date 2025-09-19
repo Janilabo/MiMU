@@ -314,7 +314,6 @@ begin
     Result := ((Self[(l div 2) - 1] + Self[l div 2]) / 2.0);
 end;
 
-
 {==============================================================================]
  <TIntegerArrayHelper.MostFreq>
  @action: Returns the most frequent/common value from arr.
