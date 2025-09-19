@@ -301,12 +301,16 @@ type
     function Extract(const item: TVar; const index: Integer = 0): TArr; overload; cdecl;
     function Extract(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
     function ExtractEvery(const X: Integer = 1; const index: Integer = 0): TArr; overload; cdecl;
+    function ExtractIDs(const allowed: TIntegerArray): TArr; overload; cdecl;
+    function ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): TArr; overload; cdecl;
     function Feed(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload; cdecl;
 	function Fill(const item: TVar; const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
     function Fill(const items: TArr; const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
     function Filter(const item: TVar; const index: Integer = 0): TArr; overload; cdecl;
     function Filter(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
     function FilterEvery(const X: Integer = 1; const index: Integer = 0): TArr; overload; cdecl;
+    function FilterIDs(const forbidden: TIntegerArray): TArr; overload; cdecl;
+    function FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): TArr; overload; cdecl;
     function Find(const ID: TRange; const item: TVar): Integer; overload; cdecl;
     function Find(const ID: TIntegerArray; const item: TVar): Integer; overload; cdecl;
     function Find(const ID: TRange; const items: TArr): Integer; overload; cdecl;

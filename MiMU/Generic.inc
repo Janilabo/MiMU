@@ -1124,6 +1124,56 @@ begin
 end;
 
 {==============================================================================]
+ <arr.ExtractIDs(allowed: TIntegerArray): TArray>
+ @action: Keeps (extracts) all allowed index values from array.
+ @note: None.
+[==============================================================================}
+function HArr.ExtractIDs(const allowed: TIntegerArray): TArr; overload; cdecl;
+var
+  h, i, l: Integer;
+  m: TBooleanArray;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  m.Create(l, False);
+  for i := 0 to High(allowed) do
+    if ((allowed[i] > -1) and (allowed[i] < l)) then
+      m[allowed[i]] := True;
+  h := 0;
+  for i := 0 to (l - 1) do
+    if m[i] then
+      Result[h.Increase] := Self[i];
+  SetLength(Result, h);
+end;
+
+{==============================================================================]
+ <arr.ExtractIndexes(allowed: TIntegerArray; aSorted: Boolean): TArray>
+ @action: Keeps (extracts) all allowed index values from array.
+ @note: If allowed is not in ascending order, aSorted needs to be False.
+[==============================================================================}
+function HArr.ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): TArr; overload; cdecl;
+var
+  h, i, l: Integer;
+  a: TIntegerArray;
+begin
+  l := Length(Self);
+  if ((l = 0) or allowed.Empty) then
+    Exit([]);
+  SetLength(Result, l);
+  if not aSorted then
+    a := allowed.QuickSorted
+  else
+    a := allowed.Copy;
+  h := 0;
+  for i := 0 to (l - 1) do
+    if a.BinaryContains(i) then
+      Result[h.Increase] := Self[i];
+  SetLength(Result, h);
+end;
+
+{==============================================================================]
  <arr.Feed(item: VarType; allowDuplicates: Boolean): Integer>
  @action: Feeds item to array and returns the index position it was added to.
  @note: Returns -1 if duplicates are not allowed and array already includes item.
@@ -1238,6 +1288,58 @@ begin
   h := 0;
   for i := index to (l - 1) do
     if not (((i - index) mod X) = 0) then
+      Result[h.Increase] := Self[i];
+  SetLength(Result, h);
+end;
+
+{==============================================================================]
+ <arr.FilterIDs(forbidden: TIntegerArray): TArray>
+ @action: Returns the array without values from forbidden indexes.
+ @note: None.
+[==============================================================================}
+function HArr.FilterIDs(const forbidden: TIntegerArray): TArr; overload; cdecl;
+var
+  h, i, l: Integer;
+  m: TBooleanArray;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  m.Create(l, False);
+  for i := 0 to High(forbidden) do
+    if ((forbidden[i] > -1) and (forbidden[i] < l)) then
+      m[forbidden[i]] := True;
+  h := 0;
+  for i := 0 to (l - 1) do
+    if not m[i] then
+      Result[h.Increase] := Self[i];
+  SetLength(Result, h);
+end;
+
+{==============================================================================]
+ <arr.FilterIndexes(forbidden: TIntegerArray; fSorted: Boolean): TArray>
+ @action: Returns the array without values from forbidden indexes.
+ @note: If forbidden is not in ascending order, fSorted needs to be False.
+[==============================================================================}
+function HArr.FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): TArr; overload; cdecl;
+var
+  h, i, l: Integer;
+  f: TIntegerArray;
+begin
+  if forbidden.Empty then
+    Exit(Self.Copy);
+  l := Length(Self);
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  if not fSorted then
+    f := forbidden.QuickSorted
+  else
+    f := forbidden.Copy;
+  h := 0;
+  for i := 0 to (l - 1) do
+    if not f.BinaryContains(i) then
       Result[h.Increase] := Self[i];
   SetLength(Result, h);
 end;
