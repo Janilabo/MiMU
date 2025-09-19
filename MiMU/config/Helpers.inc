@@ -262,6 +262,12 @@ type
     function FreeOf(const forbidden: TArr): Boolean; overload; cdecl;
     function BuiltWithout(const forbidden: TArr): Boolean; overload; cdecl;
     function Blit(const items: TArr; const index: Integer = 0): Integer; overload; cdecl;
+    function Classes: T2DArr; overload; cdecl;
+	function Classes(const weight: TIntegerArray): T2DArr; overload; cdecl;
+	function Classes(const weight: TDoubleArray): T2DArr; overload; cdecl;
+    function Classify: T2DArr; overload; cdecl;
+	function Classify(const weight: TIntegerArray): T2DArr; overload; cdecl;
+	function Classify(const weight: TDoubleArray): T2DArr; overload; cdecl;
     function Clear: Boolean; overload; cdecl;
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
     function Clone(const ID: TIntegerArray): TArr; overload; cdecl;
@@ -508,6 +514,7 @@ type
       function BinaryPosR(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
       function BinarySearch(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
       function BinaryContains(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl;
+      function BinaryCount(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
       function BinaryLocate(const x: Integer; const aAscending: Boolean = True): TRange; cdecl;
       function BinaryLocation(const x: Integer; const aAscending: Boolean = True): TRange; cdecl;
       function BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
@@ -645,6 +652,8 @@ type
       function Fragment(const radius: Double): T2DPointArray; overload; cdecl;
       function Clusterize(const radius: Double): T2DPointArray; overload; cdecl;
       function Clusterize(const xRadius, yRadius: Double): T2DPointArray; overload; cdecl;
+      function XClassify(const pSorted: Boolean = False): T2DPointArray; overload; cdecl;
+      function YClassify(const pSorted: Boolean = False): T2DPointArray; overload; cdecl;
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload; cdecl;

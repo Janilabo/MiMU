@@ -833,3 +833,35 @@ begin
     Result[m[r]] := (Result[m[r]] + [Self[i]]);
   end;
 end;
+
+{==============================================================================]
+ <TPointArrayHelper.XClassify>
+ @action: Classifies TPointArray to groups by X-value
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.XClassify(const pSorted: Boolean = False): T2DPointArray; overload; cdecl;
+var
+  p: TPointArray;
+begin
+  if not pSorted then
+    p := Self.QuickSorted(Self.Xs)
+  else
+    p := Self.Copy;
+  Result := p.Classes(p.Xs);
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.YClassify>
+ @action: Classifies TPointArray to groups by X-value
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.YClassify(const pSorted: Boolean = False): T2DPointArray; overload; cdecl;
+var
+  p: TPointArray;
+begin
+  if not pSorted then
+    p := Self.QuickSorted(Self.Ys)
+  else
+    p := Self.Copy;
+  Result := p.Classes(p.Ys);
+end;

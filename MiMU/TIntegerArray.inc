@@ -1360,6 +1360,19 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArrayHelper.BinaryCount>
+  @action: Binary Count function for TIntegerArrays.
+  @note: Works with sorted arrays! (aAscending or descending)
+[==============================================================================}
+function TIntegerArrayHelper.BinaryCount(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
+var
+  r: TRange;
+begin
+  r := Self.BinaryLocate(x, aAscending);
+  Result := IfThen((r.start > -1), r.Size, 0);
+end;
+
+{==============================================================================]
   <TIntegerArrayHelper.BinaryLocate>
   @action: Returns Binary Search left and right index as TRange based on x value.
   @note: Works with sorted arrays! (supports both aAscending and descending order)

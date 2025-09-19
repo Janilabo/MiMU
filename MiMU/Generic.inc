@@ -479,6 +479,186 @@ begin
 end;
 
 {==============================================================================]
+  <TArray.Classes: T2DArray>
+  @action: Groups consecutive identical array items into sub-arrays (classes).
+  @note: Works on any array. Each run of identical values becomes a class; 
+         duplicate classes can exist if values repeat non-consecutively.
+[==============================================================================}
+function HArr.Classes: T2DArr; overload; cdecl;
+var
+  i, g: Integer;
+  v: TVar;
+begin
+  if Self.Empty then
+    Exit([]);
+  g := 0;
+  v := Self[0];
+  SetLength(Result, 1);
+  SetLength(Result[0], 0);
+  for i := 0 to High(Self) do
+  begin
+    if not (Self[i] = v) then
+    begin
+      v := Self[i];
+      SetLength(Result, (g.Increment + 1));
+      SetLength(Result[g], 0);
+    end;
+    SetLength(Result[g], (Length(Result[g]) + 1));
+    Result[g][High(Result[g])] := Self[i];
+  end;
+end;
+
+function HArr.Classes(const weight: TIntegerArray): T2DArr; overload; cdecl;
+var
+  i, g: Integer;
+  w: Integer;
+begin
+  if ((Length(Self) = 0) or (Length(Self) <> Length(weight))) then
+    Exit([]);
+  g := 0;
+  w := weight[0];
+  SetLength(Result, 1);
+  SetLength(Result[0], 0);
+  for i := 0 to High(Self) do
+  begin
+    if (weight[i] <> w) then
+    begin
+      w := weight[i];
+      SetLength(Result, (g.Increment + 1));
+      SetLength(Result[g], 0);
+    end;
+    SetLength(Result[g], (Length(Result[g]) + 1));
+    Result[g][High(Result[g])] := Self[i];
+  end;
+end;
+
+function HArr.Classes(const weight: TDoubleArray): T2DArr; overload; cdecl;
+var
+  i, g: Integer;
+  w: Double;
+begin
+  if ((Length(Self) = 0) or (Length(Self) <> Length(weight))) then
+    Exit([]);
+  g := 0;
+  w := weight[0];
+  SetLength(Result, 1);
+  SetLength(Result[0], 0);
+  for i := 0 to High(Self) do
+  begin
+    if (weight[i] <> w) then
+    begin
+      w := weight[i];
+      SetLength(Result, (g.Increment + 1));
+      SetLength(Result[g], 0);
+    end;
+    SetLength(Result[g], (Length(Result[g]) + 1));
+    Result[g][High(Result[g])] := Self[i];
+  end;
+end;
+
+{==============================================================================]
+  <TArray.Classify: T2DArray>
+  @action: Groups consecutive identical array items into sub-arrays (classes).
+  @note: Works on any array. Each run of identical values becomes a class; 
+         duplicate classes can exist if values repeat non-consecutively.
+[==============================================================================}
+function HArr.Classify: T2DArr; overload; cdecl;
+var
+  i, h, g, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  SetLength(Result[0], l);
+  Result[0][0] := Self[0];
+  g := 0;
+  h := 0;
+  for i := 1 to High(Self) do
+  case (Self[i] = Result[g][0]) of
+    False:
+    begin
+      SetLength(Result[g], (h + 1));
+      Result[g][h] := Result[g][0];
+      h := 0;
+      SetLength(Result[g.Increment], (l - i));
+      Result[g][0] := Self[i];
+    end;
+	True: Result[g][h.Increase] := Self[i];
+  end;
+  SetLength(Result[g], (h + 1));
+  SetLength(Result, (g + 1));
+end;
+
+function HArr.Classify(const weight: TIntegerArray): T2DArr; overload; cdecl;
+var
+  i, h, g, l: Integer;
+  w: TIntegerArray;
+begin
+  l := Length(Self);
+  if ((l = 0) or (l <> Length(weight))) then
+    Exit([]);
+  SetLength(w, l);
+  w[0] := weight[0];
+  SetLength(Result, l);
+  SetLength(Result[0], 1);
+  Result[0][0] := Self[0];
+  g := 0;
+  h := 1;
+  for i := 1 to High(Self) do
+  case (weight[i] <> w[g]) of
+    True:
+    begin
+      SetLength(Result[g.Increase], h);
+      w[g] := weight[i];
+      SetLength(Result[g], 1);
+      Result[g][0] := Self[i];
+      h := 1;
+    end;
+	False:
+    begin
+      SetLength(Result[g], (h + 1));
+      Result[g][h.Increase] := Self[i];
+    end;
+  end;
+  SetLength(Result, (g + 1));
+end;
+
+function HArr.Classify(const weight: TDoubleArray): T2DArr; overload; cdecl;
+var
+  i, h, g, l: Integer;
+  w: TDoubleArray;
+begin
+  l := Length(Self);
+  if ((l = 0) or (l <> Length(weight))) then
+    Exit([]);
+  SetLength(w, l);
+  w[0] := weight[0];
+  SetLength(Result, l);
+  SetLength(Result[0], 1);
+  Result[0][0] := Self[0];
+  g := 0;
+  h := 1;
+  for i := 1 to High(Self) do
+  case (weight[i] <> w[g]) of
+    True:
+    begin
+      SetLength(Result[g.Increase], h);
+      w[g] := weight[i];
+      SetLength(Result[g], 1);
+      Result[g][0] := Self[i];
+      h := 1;
+    end;
+	False:
+    begin
+      SetLength(Result[g], (h + 1));
+      Result[g][h.Increase] := Self[i];
+    end;
+  end;
+  SetLength(Result, (g + 1));
+end;
+
+{==============================================================================]
  <arr.Constant(item: VarType): Boolean>
  @action: Returns true if arr consists of item ONLY.
  @note: Requires at least single item. Otherwise returns False. (With empty arrays)
