@@ -328,12 +328,15 @@ type
     function Fits(const maxValue: Integer): Boolean; overload; cdecl;
     function Fits(const target: TRange): Boolean; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
+    function Free: Integer; overload; cdecl;
     function FromLeft(const count: Integer; const index: Integer = 2147483647): TArr; overload; cdecl;
     function FromRight(const count: Integer; const index: Integer = 0): TArr; overload; cdecl;
     function Get: TArr; overload; cdecl;
     function Get(const ID: TIntegerArray): TArr; overload; cdecl;
     function Get(const ID: TRange): TArr; overload; cdecl;
     function Group: T2DArr; overload; cdecl;
+    function Group(const weight: TIntegerArray; const wSorted: Boolean = False): T2DArr; overload; cdecl;
+    function Group(const weight: TDoubleArray; const wSorted: Boolean = False): T2DArr; overload; cdecl;
     function Grow(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload; cdecl;
     function Holds(const chain: TArr): Boolean; overload; cdecl;
 	function Homogeneous(const item: TVar): Boolean; overload; cdecl;
@@ -348,6 +351,7 @@ type
 	function Indexes(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
 	function Indices(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
     function Keep(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
+    function Kill: Integer; overload; cdecl;
 	function Last: Integer; overload; cdecl;
 	function Last(const item: TVar): Integer; overload; cdecl;
 	function Last(const items: TArr): Integer; overload; cdecl;
@@ -394,12 +398,14 @@ type
     function Put(const ID: TIntegerArray; const items: TArr): TArr; overload; cdecl;
     function Put(const index: Integer; const items: TArr): TArr; overload; cdecl;
     function Randomized: TArr; overload; cdecl;
+    function Recreate(const arrSize: Integer): Boolean; overload; cdecl;
 	function Reject(const items: TArr; const index: Integer = 2147483647): TArr; overload; cdecl;
     function Remove(const item: TVar; const index: Integer = 0; const all: Boolean = True): TArr; overload; cdecl;
     function Remove(const item: TVar; const all: Boolean): TArr; overload; cdecl;
     function Remove(const items: TArr; const index: Integer = 0; const all: Boolean = True): TArr; overload; cdecl;
     function Remove(const items: TArr; const all: Boolean): TArr; overload; cdecl;
 	function Reposition(const oldIndex, newIndex: Integer): Boolean; overload; cdecl;
+    function Reset: Integer; overload; cdecl;
     function Resize(const aChange: Integer): Integer; overload; cdecl;
     function Resize(const aChange: Integer; const null: TVar): Integer; overload; cdecl;
     function Reverse: Boolean; overload; cdecl;
@@ -527,6 +533,7 @@ type
       function Split(const diff: Integer): T2DIntegerArray; overload; cdecl;
       function Sblit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
       function Sblit(const diff: Integer): T2DIntegerArray; overload; cdecl;
+	  function Groups(const aSorted: Boolean = False): T2DIntegerArray; overload; cdecl;
       function Group(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
       function Group(const diff: Integer): T2DIntegerArray; overload; cdecl;
       function Groub(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
@@ -562,6 +569,24 @@ type
       function FilterOdd: TIntegerArray; overload; cdecl;
     {$ENDIF}
     {$IFDEF Double}
+      function BSort(const aAscending: Boolean = True): Integer; cdecl;
+      function BinarySort(const aAscending: Boolean = True): Integer; cdecl;
+      function BinarySorted(const aAscending: Boolean = True): TDoubleArray; cdecl;
+      function BinaryBoundL(const x: Double; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryBoundR(const x: Double; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryPosL(const x: Double; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryPosR(const x: Double; const aAscending: Boolean = True): Integer; cdecl;
+      function BinarySearch(const x: Double; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryContains(const x: Double; const aAscending: Boolean = True): Boolean; cdecl;
+      function BinaryCount(const x: Double; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryLocate(const x: Double; const aAscending: Boolean = True): TRange; cdecl;
+      function BinaryLocation(const x: Double; const aAscending: Boolean = True): TRange; cdecl;
+      function BinaryAppend(const x: Double; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryAdd(const x: Double; const aAscending: Boolean = True): TDoubleArray; cdecl;
+      function BinarySearchF(const x: TRange; const aAscending: Boolean = True): Integer; cdecl;
+      function BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryUnique(const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryUniqued(const aAscending: Boolean = True): TDoubleArray; cdecl;
     {$ENDIF}
     {$IFDEF string}
       function Span: Integer; cdecl;
@@ -707,4 +732,9 @@ type
     function Inventory(var items: TArr): Int64; overload; cdecl;
     function Inventory: Int64; overload; cdecl;
 	function TArray: TArr; overload; cdecl;
+    function Kill: Integer; overload; cdecl;
+    function Kill(const k2D: TIntegerArray): Int64; overload; cdecl;
+    function Free: Int64; overload; cdecl;
+    function Recreate(const arrSize: Integer): Boolean; overload; cdecl;
+    function Reset: Int64; overload; cdecl;
   end;

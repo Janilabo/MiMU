@@ -1612,6 +1612,17 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Free: Integer>
+ @action: Result := Length(Self) + SetLength(Self, 0) combo. 
+ @note: None.
+[==============================================================================}
+function HArr.Free: Integer; overload; cdecl;
+begin
+  Result := Length(Self);
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
  <arr.FromLeft(count, index): TArray>
  @action: Returns count of array items from left-side by index.
  @note: None
@@ -1732,6 +1743,14 @@ begin
   end;
   SetLength(Result, (g + 1));
 end;
+
+{==============================================================================]
+ <arr.Group: T2DArray>
+ @action: Groups array arr to 2D array by items.
+ @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
+[==============================================================================}
+function HArr.Group(const weight: TIntegerArray; const wSorted: Boolean = False): T2DArr; overload; cdecl; var w: TIntegerArray; {$DEFINE Skeleton_Group}{$I config\Skeletons.inc}{$UNDEF Skeleton_Group}
+function HArr.Group(const weight: TDoubleArray; const wSorted: Boolean = False): T2DArr; overload; cdecl; var w: TDoubleArray; {$DEFINE Skeleton_Group}{$I config\Skeletons.inc}{$UNDEF Skeleton_Group}
 
 {==============================================================================]
  <arr.Grow(item: VarType; allowDuplicates: Boolean): Integer>
@@ -1983,6 +2002,17 @@ begin
     end;
     False: Result := Self.Copy;
   end;
+end;
+
+{==============================================================================]
+ <arr.Kill: Integer>
+ @action: Combination of Length(arr) + SetLength(arr, 0).
+ @note: Returns the length of the arr!
+[==============================================================================}
+function HArr.Kill: Integer; overload; cdecl;
+begin
+  Result := Length(Self);
+  SetLength(Self, 0);
 end;
 
 {==============================================================================]
@@ -2874,6 +2904,25 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Recreate: Boolean>
+ @action: Clear the array and reallocate to arrSize (negative = previous length).
+ @note: Returns True if array was non-empty and arrSize <> 0.
+[==============================================================================}
+function HArr.Recreate(const arrSize: Integer): Boolean; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  Result := ((Length(Self) > 0) or (arrSize <> 0));
+  SetLength(Self, 0);
+  if Result then
+    if (arrSize < 0) then
+      SetLength(Self, l)
+    else
+      SetLength(Self, arrSize);
+end;
+
+{==============================================================================]
  <arr.Reject(items: TArray; index: Integer): TArray>
  @action: Returns a new array with elements from items excluded, up to and including the specified index.
  @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
@@ -3013,6 +3062,18 @@ begin
     Self[newIndex] := s;
   end;
 end;
+
+{==============================================================================]
+ <arr.Reset: Integer>
+ @action: Resets all elements of the array to default values while preserving its structure.
+ @note: Returns the number of elements that were reset.
+[==============================================================================}
+function HArr.Reset: Integer; overload; cdecl;
+begin
+  Result := Length(Self);
+  SetLength(Self, 0);
+  SetLength(Self, Result);
+end; 
 
 {==============================================================================]
  <arr.Resize(aChange: Integer): Integer>
@@ -4097,6 +4158,87 @@ begin
     SetLength(Result, (l + Length(Self[i])));
     for j := 0 to High(Self[i]) do
       Result[l + j] := Self[i][j];
+  end;
+end;
+
+{==============================================================================]
+ <arr.Kill: Integer>
+ @action: Combination of Length(arr) + SetLength(arr, 0).
+ @note: Returns the length of main array (1st dimension)!
+[==============================================================================}
+function H2DArr.Kill: Integer; overload; cdecl;
+begin
+  Result := Length(Self);
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
+ <arr.Kill(k2D: TIntegerArray): Int64>
+ @action: Combination of Length(arr) + SetLength(arr, 0) for array indexes by k2D.
+ @note: Supports custom start index! Returns the modified arr.
+        Unsafe, simply goes through the given indexes, no safety checks!
+		Use with caution, correctly.
+[==============================================================================}
+function H2DArr.Kill(const k2D: TIntegerArray): Int64; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(k2D) do
+  begin
+    Result := (Result + Length(Self[k2D[i]]));
+    SetLength(Self[k2D[i]], 0);	
+  end;
+end;
+
+{==============================================================================]
+ <arr.Free: Int64>
+ @action: Result := Length(Self) + SetLength(Self, 0) combo for 2D array
+ @note: None.
+[==============================================================================}
+function H2DArr.Free: Int64; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Result := (Result + Length(Self[i]));
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
+ <arr.Recreate: Int64>
+ @action: Clear the array and reallocate to arrSize (negative = previous length).
+ @note: Returns True if array was non-empty and/or arrSize <> 0.
+[==============================================================================}
+function H2DArr.Recreate(const arrSize: Integer): Boolean; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  Result := ((Length(Self) > 0) or (arrSize <> 0));
+  SetLength(Self, 0);
+  if Result then
+    if (arrSize < 0) then
+      SetLength(Self, l)
+    else
+      SetLength(Self, arrSize);
+end;
+
+{==============================================================================]
+ <arr.Reset: Int64>
+ @action: Resets all elements of the array to default values while preserving its structure.
+ @note: Returns the number of elements that were reset.
+[==============================================================================}
+function H2DArr.Reset: Int64; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+  begin
+    Result := (Result + Length(Self[i]));
+    SetLength(Self[i], 0);
   end;
 end;
 

@@ -269,3 +269,408 @@ begin
   SetLength(Result, (c + 1));
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_Group}
+var
+  i, l, g: Integer;
+begin
+  l := Length(Self);
+  if ((l = 0) or (Length(weight) <> l))then
+    Exit([]);
+  if not wSorted then
+    w := weight.QuickSorted
+  else
+    w := weight.Copy;
+  w.BinaryUnique;
+  Result.Recreate(Length(w));
+  for i := 0 to High(Self) do
+  begin
+    g := w.BinarySearch(weight[i]);
+    l := Length(Result[g]);
+    SetLength(Result[g], (l + 1));
+    Result[g][l] := Self[i];
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BSort}
+var
+  i, j, l, r, m, o: Integer;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+    o := aAscending.Select(-1, 1);
+  for i := 1 to Result do
+  begin
+    a := Self[i];
+    l := 0;
+    r := (i - 1);
+    while (l <= r) do
+    begin
+      m := ((l + r) div 2);
+      if (Sign(a - Self[m]) = o) then
+        r := (m - 1)
+      else
+        l := (m + 1);
+    end;
+    for j := (i - 1) downto l do
+      Self[j + 1] := Self[j];
+    Self[l] := a;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinarySort}
+var
+  j, l, h, m, p, i, o: Integer;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+  begin
+    o := aAscending.Select(-1, 1);
+    for j := 1 to Result do
+    begin
+      a := Self[j];
+      l := 0;
+      h := j;
+      while (l < h) do
+      begin
+        m := ((l + h) div 2);
+        if (Sign(Self[m] - a) = o) then
+          l := (m + 1)
+        else
+          h := m;
+      end;
+      p := l;
+      for i := j downto (p + 1) do
+        Self[i] := Self[i - 1];
+      Self[p] := a;
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinarySorted}
+var
+  j, l, h, m, p, i, n, o: Integer;
+begin
+  n := Length(Self);
+  SetLength(Result, n);
+  if (n > 0) then
+  begin
+    o := aAscending.Select(-1, 1);
+    Result[0] := Self[0];
+    for j := 1 to (n - 1) do
+    begin
+      a := Self[j];
+      l := 0;
+      h := j;
+      while (l < h) do
+      begin
+        m := ((l + h) div 2);
+        if (Sign(Result[m] - a) = o) then
+          l := (m + 1)
+        else
+          h := m;
+      end;
+      p := l;
+      for i := j downto (p + 1) do
+        Result[i] := Result[i - 1];
+      Result[p] := a;
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryBoundL}
+var
+  l, m, h, o: Integer;
+begin
+  l := 0;
+  h := Length(Self);
+  o := aAscending.Select(1, -1);
+  while (l < h) do
+  begin
+    m := ((l + h) div 2);
+    if ((o * Self[m]) < (o * x)) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  Result := l;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryBoundR}
+var
+  l, m, h, o: Integer;
+begin
+  l := 0;
+  h := Length(Self);
+  o := aAscending.Select(1, -1);
+  while (l < h) do
+  begin
+    m := ((l + h) div 2);
+    if ((o * Self[m]) <= (o * x)) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  Result := l;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryPosL}
+var
+  l, m, h, o: Integer;
+begin
+  Result := -1;
+  l := 0;
+  h := Length(Self);
+  o := aAscending.Select(1, -1);
+  while (l < h) do
+  begin
+    m := ((l + h) div 2);
+    if ((o * Self[m]) < (o * x)) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  if ((l < Length(Self)) and (Self[l] = x)) then
+    Result := l;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryPosR}
+var
+  l, m, h, o: Integer;
+begin
+  Result := -1;
+  l := 0;
+  h := Length(Self);
+  o := aAscending.Select(1, -1);
+  while (l < h) do
+  begin
+    m := ((l + h) div 2);
+    if ((o * Self[m]) <= (o * x)) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  if ((l > 0) and (Self[l - 1] = x)) then
+    Result := (l - 1);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinarySearch}
+var
+  l, h, m, o: Integer;
+begin
+  Result := -1;
+  l := 0;
+  h := High(Self);
+  o := aAscending.Select(1, -1);
+  while ((l <= h) and (Result = -1)) do
+  begin
+    m := ((l + h) div 2);
+    if ((o * Self[m]) = (o * x)) then
+      Result := m
+    else
+      if ((o * Self[m]) < (o * x)) then
+        l := (m + 1)
+      else
+        h := (m - 1);
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryContains}
+begin
+  Result := (Self.BinarySearch(x, aAscending) > -1);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryCount}
+var
+  r: TRange;
+begin
+  r := Self.BinaryLocate(x, aAscending);
+  Result := IfThen((r.start > -1), r.Size, 0);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryLocate}
+begin
+  Result.start := Self.BinaryPosL(x, aAscending);
+  if (Result.start > -1) then
+    Result.stop := Self.BinaryPosR(x, aAscending)
+  else
+    Result.stop := -1;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryLocation}
+var
+  s, l, h, m, o: Integer;
+  r: Boolean;
+begin
+  r := False;
+  l := 0;
+  h := High(Self);
+  s := h;
+  o := aAscending.Select(1, -1);
+  while ((l <= h) and (not r)) do
+  begin
+    m := ((l + h) div 2);
+    r := ((o * Self[m]) = (o * x));
+    if r then
+	begin
+      Result.Create(m, m);
+      while ((Result.start > 0) and (Self[Result.start - 1] = x)) do
+        Dec(Result.start);
+      while ((Result.stop < s) and (Self[Result.stop + 1] = x)) do
+        Inc(Result.stop);
+    end else
+      if ((o * Self[m]) < (o * x)) then
+        l := (m + 1)
+      else
+        h := (m - 1);
+  end;
+  if not r then
+    Result.Create(-1, -1);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryAppend}
+var
+  h, m, i, o: Integer;
+begin
+  Result := 0;
+  h := High(Self);
+  o := aAscending.Select(1, -1);
+  while (Result <= h) do
+  begin
+    m := ((Result + h) div 2);
+    if ((o * Self[m]) < (o * x)) then
+      Result := (m + 1)
+    else
+      h := (m - 1);
+  end;
+  SetLength(Self, (Length(Self) + 1));
+  for i := High(Self) downto (Result + 1) do
+    Self[i] := Self[i - 1];
+  Self[Result] := x;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryAdd}
+var
+  l, h, m, p, i, o: Integer;
+begin
+  l := 0;
+  h := High(Self);
+  o := aAscending.Select(1, -1);
+  while (l <= h) do
+  begin
+    m := ((l + h) div 2);
+    if ((o * Self[m]) < (o * x)) then
+      l := (m + 1)
+    else
+      h := (m - 1);
+  end;
+  p := l;
+  SetLength(Result, (Length(Self) + 1));
+  for i := 0 to (p - 1) do
+    Result[i] := Self[i];
+  Result[p] := x;
+  for i := p to High(Self) do
+    Result[i + 1] := Self[i];
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinarySearchF}
+var
+  l, h, m, o: Integer;
+  f: TRange;
+begin
+  Result := -1;
+  f := x.Normalize;
+  l := 0;
+  h := High(Self);
+  o := aAscending.Select(1, -1);
+  while (l <= h) do
+  begin
+    m := ((l + h) div 2);
+    if ((o * Self[m]) < (o * f.start)) then
+      l := (m + 1)
+    else
+      if ((o * Self[m]) > (o * f.stop)) then
+        h := (m - 1)
+    else
+    begin
+      Result := m;
+      h := (m - 1);
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinarySearchL}
+var
+  l, h, m, o: Integer;
+  f: TRange;
+begin
+  Result := -1;
+  f := x.Normalize;
+  l := 0;
+  h := High(Self);
+  o := aAscending.Select(1, -1);
+  while (l <= h) do
+  begin
+    m := ((l + h) div 2);
+    if ((o * Self[m]) < (o * f.start)) then
+      l := (m + 1)
+    else
+      if ((o * Self[m]) > (o * f.stop)) then
+        h := (m - 1)
+      else
+      begin
+        Result := m;
+        l := (m + 1);
+      end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUnique}
+var
+  i, o: Integer;
+begin
+  Result := 0;
+  if Self.Empty then
+    Exit;
+  o := aAscending.Select(-1, 1);
+  for i := 1 to High(Self) do
+    if (Sign(Self[Result] - Self[i]) = o) then
+      Self[Result.Increment] := Self[i];
+  Result := (Result + 1);
+  SetLength(Self, Result);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUniqued}
+var
+  i, o, r: Integer;
+begin
+  SetLength(Result, Length(Self));
+  if Self.Empty then
+    Exit;
+  r := 0;
+  o := aAscending.Select(-1, 1);
+  Result[0] := Self[0];
+  for i := 1 to High(Self) do
+    if (Sign(Result[r] - Self[i]) = o) then
+      Result[r.Increment] := Self[i];
+  SetLength(Result, (r + 1));
+end;
+{$ENDIF}
