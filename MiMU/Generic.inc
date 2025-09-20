@@ -508,53 +508,16 @@ begin
   end;
 end;
 
-function HArr.Classes(const weight: TIntegerArray): T2DArr; overload; cdecl;
-var
-  i, g: Integer;
-  w: Integer;
-begin
-  if ((Length(Self) = 0) or (Length(Self) <> Length(weight))) then
-    Exit([]);
-  g := 0;
-  w := weight[0];
-  SetLength(Result, 1);
-  SetLength(Result[0], 0);
-  for i := 0 to High(Self) do
-  begin
-    if (weight[i] <> w) then
-    begin
-      w := weight[i];
-      SetLength(Result, (g.Increment + 1));
-      SetLength(Result[g], 0);
-    end;
-    SetLength(Result[g], (Length(Result[g]) + 1));
-    Result[g][High(Result[g])] := Self[i];
-  end;
-end;
+{==============================================================================]
+  <TArray.Classes: T2DArray>
+  @action: Groups consecutive identical array items into sub-arrays (classes).
+  @note: Works on any array. Each run of identical values becomes a class; 
+         duplicate classes can exist if values repeat non-consecutively.
+		 Custom weight.
+[==============================================================================}
+function HArr.Classes(const weight: TIntegerArray): T2DArr; overload; cdecl; var w: Integer; {$DEFINE Skeleton_Classes}{$I config\Skeletons.inc}{$UNDEF Skeleton_Classes}
+function HArr.Classes(const weight: TDoubleArray): T2DArr; overload; cdecl; var w: Double; {$DEFINE Skeleton_Classes}{$I config\Skeletons.inc}{$UNDEF Skeleton_Classes}
 
-function HArr.Classes(const weight: TDoubleArray): T2DArr; overload; cdecl;
-var
-  i, g: Integer;
-  w: Double;
-begin
-  if ((Length(Self) = 0) or (Length(Self) <> Length(weight))) then
-    Exit([]);
-  g := 0;
-  w := weight[0];
-  SetLength(Result, 1);
-  SetLength(Result[0], 0);
-  for i := 0 to High(Self) do
-  begin
-    if (weight[i] <> w) then
-    begin
-      w := weight[i];
-      SetLength(Result, (g.Increment + 1));
-      SetLength(Result[g], 0);
-    end;
-    SetLength(Result[g], (Length(Result[g]) + 1));
-    Result[g][High(Result[g])] := Self[i];
-  end;
-end;
 
 {==============================================================================]
   <TArray.Classify: T2DArray>
@@ -590,73 +553,15 @@ begin
   SetLength(Result, (g + 1));
 end;
 
-function HArr.Classify(const weight: TIntegerArray): T2DArr; overload; cdecl;
-var
-  i, h, g, l: Integer;
-  w: TIntegerArray;
-begin
-  l := Length(Self);
-  if ((l = 0) or (l <> Length(weight))) then
-    Exit([]);
-  SetLength(w, l);
-  w[0] := weight[0];
-  SetLength(Result, l);
-  SetLength(Result[0], 1);
-  Result[0][0] := Self[0];
-  g := 0;
-  h := 1;
-  for i := 1 to High(Self) do
-  case (weight[i] <> w[g]) of
-    True:
-    begin
-      SetLength(Result[g.Increase], h);
-      w[g] := weight[i];
-      SetLength(Result[g], 1);
-      Result[g][0] := Self[i];
-      h := 1;
-    end;
-	False:
-    begin
-      SetLength(Result[g], (h + 1));
-      Result[g][h.Increase] := Self[i];
-    end;
-  end;
-  SetLength(Result, (g + 1));
-end;
-
-function HArr.Classify(const weight: TDoubleArray): T2DArr; overload; cdecl;
-var
-  i, h, g, l: Integer;
-  w: TDoubleArray;
-begin
-  l := Length(Self);
-  if ((l = 0) or (l <> Length(weight))) then
-    Exit([]);
-  SetLength(w, l);
-  w[0] := weight[0];
-  SetLength(Result, l);
-  SetLength(Result[0], 1);
-  Result[0][0] := Self[0];
-  g := 0;
-  h := 1;
-  for i := 1 to High(Self) do
-  case (weight[i] <> w[g]) of
-    True:
-    begin
-      SetLength(Result[g.Increase], h);
-      w[g] := weight[i];
-      SetLength(Result[g], 1);
-      Result[g][0] := Self[i];
-      h := 1;
-    end;
-	False:
-    begin
-      SetLength(Result[g], (h + 1));
-      Result[g][h.Increase] := Self[i];
-    end;
-  end;
-  SetLength(Result, (g + 1));
-end;
+{==============================================================================]
+  <TArray.Classify: T2DArray>
+  @action: Groups consecutive identical array items into sub-arrays (classes).
+  @note: Works on any array. Each run of identical values becomes a class; 
+         duplicate classes can exist if values repeat non-consecutively.
+		 Custom weight.
+[==============================================================================}
+function HArr.Classify(const weight: TIntegerArray): T2DArr; overload; cdecl; var w: Integer; {$DEFINE Skeleton_Classify}{$I config\Skeletons.inc}{$UNDEF Skeleton_Classify}
+function HArr.Classify(const weight: TDoubleArray): T2DArr; overload; cdecl; var w: Double; {$DEFINE Skeleton_Classify}{$I config\Skeletons.inc}{$UNDEF Skeleton_Classify}
 
 {==============================================================================]
  <arr.Constant(item: VarType): Boolean>
