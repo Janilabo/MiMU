@@ -272,6 +272,8 @@ type
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
     function Clone(const ID: TIntegerArray): TArr; overload; cdecl;
     function Combine(const b: TArr): TArr; overload; cdecl;
+    function Compress: TArr; overload; cdecl;
+    function Compressed: TArr; overload; cdecl;
 	function Comprised(const items: TArr): Boolean; overload; cdecl;
 	function Constant(const item: TVar): Boolean; overload; cdecl;
 	function Constant: Boolean; overload; cdecl;
@@ -392,6 +394,7 @@ type
 	function Positions: TIntegerArray; overload; cdecl;
     function Presence(const item: TVar; const occurrence: Integer = 1): Boolean; overload; cdecl;
 	function Previous(const index: Integer; const count: Integer = 2147483647): TArr; overload; cdecl;
+    function Pull: TArr; overload; cdecl;
     function Push(const item: TVar): TArr; overload; cdecl;
     function Push(const items: TArr): TArr; overload; cdecl;
     function Put(const ID: TIntegerArray; const item: TVar): TArr; overload; cdecl;
@@ -558,6 +561,7 @@ type
       function NoneOf(const forbidden: TIntegerArray): Boolean; cdecl;
       function AnyOf(const candidates: TIntegerArray): Boolean; cdecl;
       function AllOf(const candidates: TIntegerArray): Boolean; cdecl;
+	  function Reinit: Integer; overload; cdecl;
       function Charify: TCharArray; overload; cdecl;
       function Charify(var str: string): TCharArray; overload; cdecl;
       function Stringify: string; overload; cdecl;
@@ -587,6 +591,7 @@ type
       function BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; cdecl;
       function BinaryUnique(const aAscending: Boolean = True): Integer; cdecl;
       function BinaryUniqued(const aAscending: Boolean = True): TDoubleArray; cdecl;
+      function Reinit: Integer; overload; cdecl;
     {$ENDIF}
     {$IFDEF string}
       function Span: Integer; cdecl;
@@ -643,6 +648,7 @@ type
 	  function BinaryStr: string; cdecl;
 	  function BinaryDigits: TIntegerArray; cdecl;
 	  function Binary: string; cdecl;
+      function Reinit: Integer; overload; cdecl;
 	{$ENDIF}
     {$IFDEF TPoint}
       function Bounds: TBox; overload; cdecl;
@@ -679,6 +685,7 @@ type
       function Clusterize(const xRadius, yRadius: Double): T2DPointArray; overload; cdecl;
       function XClassify(const pSorted: Boolean = False): T2DPointArray; overload; cdecl;
       function YClassify(const pSorted: Boolean = False): T2DPointArray; overload; cdecl;
+      function Reinit: Integer; overload; cdecl;
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload; cdecl;
@@ -737,4 +744,6 @@ type
     function Free: Int64; overload; cdecl;
     function Recreate(const arrSize: Integer): Boolean; overload; cdecl;
     function Reset: Int64; overload; cdecl;
+    function Destroy: Int64; overload; cdecl;
+    function Pull: T2DArr; overload; cdecl;
   end;

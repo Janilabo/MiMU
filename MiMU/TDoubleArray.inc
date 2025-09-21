@@ -124,3 +124,16 @@ function TDoubleArrayHelper.BinaryUnique(const aAscending: Boolean = True): Inte
   @note: Alternative for TArray_Uniqued, for TDoubleArrays.
 [==============================================================================}
 function TDoubleArrayHelper.BinaryUniqued(const aAscending: Boolean = True): TDoubleArray; cdecl; {$DEFINE Skeleton_BinaryUniqued}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUniqued}
+
+{==============================================================================]
+  <TDoubleArrayHelper.Reinit>
+  @action: Clears all elements of the array by zero-filling the underlying memory,
+           while keeping the current length unchanged.
+  @note: None.
+[==============================================================================}
+function TDoubleArrayHelper.Reinit: Integer; overload; cdecl;
+begin
+  Result := Length(Self);
+  if (Result > 0) then
+    FillChar(Pointer(Self)^, (Result * SizeOf(Double)), 0);
+end;

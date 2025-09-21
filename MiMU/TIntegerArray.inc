@@ -2086,3 +2086,16 @@ begin
       Result[l.Increase] := Self[i];
   SetLength(Result, l);
 end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Reinit>
+  @action: Clears all elements of the array by zero-filling the underlying memory,
+           while keeping the current length unchanged.
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.Reinit: Integer; overload; cdecl;
+begin
+  Result := Length(Self);
+  if (Result > 0) then
+    FillChar(Pointer(Self)^, (Result * SizeOf(Integer)), 0);
+end;

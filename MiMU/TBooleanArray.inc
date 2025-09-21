@@ -441,3 +441,16 @@ begin
   for i := 0 to High(Self) do
     Result[i + 1] := Self[i].Binary;  
 end;
+
+{==============================================================================]
+  <TBooleanArrayHelper.Reinit>
+  @action: Clears all elements of the array by zero-filling the underlying memory,
+           setting all booleans to False, while keeping the current length unchanged.
+  @note: Works safely because Boolean is an unmanaged type (1 byte per element).
+[==============================================================================}
+function TBooleanArrayHelper.Reinit: Integer; overload; cdecl;
+begin
+  Result := Length(Self);
+  if Result > 0 then
+    FillChar(Pointer(Self)^, (Result * SizeOf(Boolean)), 0);
+end;

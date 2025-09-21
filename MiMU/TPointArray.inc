@@ -865,3 +865,16 @@ begin
     p := Self.Copy;
   Result := p.Classes(p.Ys);
 end;
+
+{==============================================================================]
+  <TPointArrayHelper.Reinit>
+  @action: Clears all elements of the array by zero-filling the underlying memory,
+           setting all TPoint elements to (0,0), while keeping the current length unchanged.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.Reinit: Integer; cdecl;
+begin
+  Result := Length(Self);
+  if Result > 0 then
+    FillChar(Pointer(Self)^, (Result * SizeOf(TPoint)), 0); // all points become (0,0)
+end;

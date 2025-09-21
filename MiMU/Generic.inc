@@ -408,6 +408,59 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Compress: TArray>
+ @action: Produces a new array by removing all immediately repeated values,
+          effectively run-length–compressing the input.
+ @note: Only consecutive duplicates are removed; values separated by others
+        are left untouched. The relative order of the remaining elements
+        is unchanged.
+[==============================================================================}
+function HArr.Compress: TArr; overload; cdecl;
+var
+  i, l, r: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  Result[0] := Self[0];
+  if (l = 1) then
+    Exit;
+  r := 0;
+  for i := 1 to High(Self) do
+    if not (Self[i] = Self[i - 1]) then
+      Result[r.Increment] := Self[i];
+  SetLength(Result, (r + 1));
+end;
+
+{==============================================================================]
+ <arr.Compressed: TArray>
+ @action: Produces a new array by removing all immediately repeated values,
+          effectively run-length–compressing the input.
+ @note: Only consecutive duplicates are removed; values separated by others
+        are left untouched. The relative order of the remaining elements
+        is unchanged.
+[==============================================================================}
+function HArr.Compressed: TArr; overload; cdecl;
+var
+  r, i, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  Result[0] := Self[0];
+  if (l > 1) then
+  begin
+    r := 0;
+    for i := 1 to (l - 1) do
+      if not (Self[i] = Result[r]) then
+        Result[r.Increment] := Self[i];
+    SetLength(Result, (r + 1));
+  end;
+end;
+
+{==============================================================================]
  <arr.Comprised(items: TArray): Boolean>
  @action: Returns true if arr is built of items only.
  @note: 
@@ -2790,6 +2843,21 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Pull: TArr>
+ @action: Returns the contents of the array and leaves it empty.
+ @note: After calling Pull, Self.Length = 0.
+[==============================================================================}
+function HArr.Pull: TArr; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := Self[i];
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
  <arr.Put(ID: TIntegerArray; item: VarType): TArray>
  @action: Returns array arr filled with item to indexes (ID).
  @note: Unsafe method! No safety checking.
@@ -4192,6 +4260,24 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Destroy(k2D: TIntegerArray): Int64>
+ @action: Combination of Length(arr) + SetLength(arr, 0) for array indexes by k2D.
+ @note: Completely wipes the array.
+[==============================================================================}
+function H2DArr.Destroy: Int64; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+  begin
+    Result := (Result + Length(Self[i]));
+    SetLength(Self[i], 0);	
+  end;
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
  <arr.Free: Int64>
  @action: Result := Length(Self) + SetLength(Self, 0) combo for 2D array
  @note: None.
@@ -4240,6 +4326,25 @@ begin
     Result := (Result + Length(Self[i]));
     SetLength(Self[i], 0);
   end;
+end;
+
+{==============================================================================]
+ <arr.Pull: T2DArr>
+ @action: Returns the contents of the array and leaves it empty.
+ @note: After calling Pull, Self.Length = 0.
+[==============================================================================}
+function H2DArr.Pull: T2DArr; overload; cdecl;
+var
+  i, j: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+  begin
+    SetLength(Result[i], Length(Self[i]));
+    for j := 0 to High(Self[i]) do
+      Result[i][j] := Self[i][j];
+  end;
+  SetLength(Self, 0);
 end;
 
 {==============================================================================]
