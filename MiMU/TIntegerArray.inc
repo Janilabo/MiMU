@@ -1253,6 +1253,28 @@ function TIntegerArrayHelper.BinaryUnique(const aAscending: Boolean = True): Int
 function TIntegerArrayHelper.BinaryUniqued(const aAscending: Boolean = True): TIntegerArray; cdecl; {$DEFINE Skeleton_BinaryUniqued}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUniqued}
 
 {==============================================================================]
+  <TIntegerArrayHelper.BinaryUndupe>
+  @action: Binary Search-based Undupe method.
+  @note: None
+[==============================================================================}
+function TIntegerArrayHelper.BinaryUndupe(const aAscending: Boolean = True): TIntegerArray; cdecl; {$DEFINE Skeleton_BinaryUndupe}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUndupe}
+
+{==============================================================================]
+  <TIntegerArrayHelper.BinaryGrow>
+  @action: Inserts an integer x into the array while maintaining sorted order.
+           Works with ascending or descending order based on aAscending.
+  @note: Returns True if the value was inserted, False if it already exists.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl; {$DEFINE Skeleton_BinaryGrow}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryGrow}
+
+{==============================================================================]
+  <TIntegerArrayHelper.BinaryShrink>
+  @action: Removes an integer x from the array while maintaining sorted order.
+  @note: Returns True if the value was removed, False if it was not found.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl; {$DEFINE Skeleton_BinaryShrink}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryShrink}
+
+{==============================================================================]
   <TIntegerArrayHelper.Split>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference range (minDiff, maxDiff) from each other.

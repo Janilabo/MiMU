@@ -674,3 +674,66 @@ begin
   SetLength(Result, (r + 1));
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryGrow}
+var
+  h, m, i, o, r: Integer;
+begin
+  r := 0;
+  h := High(Self);
+  o := aAscending.Select(1, -1);
+  while (r <= h) do
+  begin
+    m := ((r + h) div 2);
+    if ((o * Self[m]) < (o * x)) then
+      r := (m + 1)
+    else
+      h := (m - 1);
+  end;
+  Result := ((Length(Self) = r) or (Self[r] <> x));
+  if not Result then
+    Exit;
+  SetLength(Self, (Length(Self) + 1));
+  for i := High(Self) downto (r + 1) do
+    Self[i] := Self[i - 1];
+  Self[r] := x;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryShrink}
+var
+  h, m, i, o, r: Integer;
+begin
+  r := 0;
+  h := High(Self);
+  o := aAscending.Select(1, -1);
+  while (r <= h) do
+  begin
+    m := ((r + h) div 2);
+    if ((o * Self[m]) < (o * x)) then
+      r := (m + 1)
+    else
+      h := (m - 1);
+  end;
+  Result := ((Length(Self) > r) and (Self[r] = x));
+  if not Result then
+    Exit;
+  for i := r to (High(Self) - 1) do
+    Self[i] := Self[i + 1];
+  SetLength(Self, (Length(Self) - 1));
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUndupe}
+var
+  i, l, p: Integer;
+begin
+  if Self.Empty then
+    Exit([]);
+  SetLength(Result, 1);
+  Result[0] := Self[0];
+  l := 1;
+  for i := 1 to High(Self) do
+    Result.BinaryGrow(Self[i]);
+end;
+{$ENDIF}

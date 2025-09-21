@@ -464,3 +464,19 @@ begin
   if (a > 1) then
     QS(Result, 0, (a - 1));
 end;
+
+{==============================================================================]
+  <HArr.Uniq: TArr>
+  @action: Unique method for sortable types.
+  @note: None.
+[==============================================================================}
+function HArr.Uniq(const sSorted: Boolean = False): TArr; overload; cdecl;
+begin
+  if Self.Empty then
+    SetLength(Result, 0)
+  else
+    if not sSorted then
+      Result := Self.QuickSorted.Compress
+    else
+      Result := Self.Compress;
+end;

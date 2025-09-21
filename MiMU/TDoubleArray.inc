@@ -126,6 +126,28 @@ function TDoubleArrayHelper.BinaryUnique(const aAscending: Boolean = True): Inte
 function TDoubleArrayHelper.BinaryUniqued(const aAscending: Boolean = True): TDoubleArray; cdecl; {$DEFINE Skeleton_BinaryUniqued}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUniqued}
 
 {==============================================================================]
+  <TDoubleArrayHelper.BinaryUndupe>
+  @action: Binary Search-based Undupe method.
+  @note: None
+[==============================================================================}
+function TDoubleArrayHelper.BinaryUndupe(const aAscending: Boolean = True): TDoubleArray; cdecl; {$DEFINE Skeleton_BinaryUndupe}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUndupe}
+
+{==============================================================================]
+  <TDoubleArrayHelper.BinaryGrow>
+  @action: Inserts an integer x into the array while maintaining sorted order.
+           Works with ascending or descending order based on aAscending.
+  @note: Returns True if the value was inserted, False if it already exists.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryGrow(const x: Double; const aAscending: Boolean = True): Boolean; cdecl; {$DEFINE Skeleton_BinaryGrow}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryGrow}
+
+{==============================================================================]
+  <TDoubleArrayHelper.BinaryShrink>
+  @action: Removes an integer x from the array while maintaining sorted order.
+  @note: Returns True if the value was removed, False if it was not found.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryShrink(const x: Double; const aAscending: Boolean = True): Boolean; cdecl; {$DEFINE Skeleton_BinaryShrink}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryShrink}
+
+{==============================================================================]
   <TDoubleArrayHelper.Reinit>
   @action: Clears all elements of the array by zero-filling the underlying memory,
            while keeping the current length unchanged.

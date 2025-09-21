@@ -617,6 +617,43 @@ function HArr.Classify(const weight: TIntegerArray): T2DArr; overload; cdecl; va
 function HArr.Classify(const weight: TDoubleArray): T2DArr; overload; cdecl; var w: Double; {$DEFINE Skeleton_Classify}{$I config\Skeletons.inc}{$UNDEF Skeleton_Classify}
 
 {==============================================================================]
+ <arr.Compact: TArray>
+ @action: Removes adjacent duplicates and returns a new compacted array.
+ @note: Original order is preserved and non-adjacent duplicates remain.
+[==============================================================================}
+function HArr.Compact: TArr; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  SetLength(Result, Length(Self));
+  if Self.Empty then
+    Exit();
+  l := 0;
+  for i := 0 to High(Self) do
+    if ((i = 0) or (Self[i] <> Self[i - 1])) then
+      Result[l.Increase] := Self[i];
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+ <arr.Compacted: TArray>
+ @action: Removes adjacent duplicates and returns a new compacted array.
+ @note: Original order is preserved and non-adjacent duplicates remain.
+[==============================================================================}
+function HArr.Compacted: TArr; overload; cdecl;
+var
+  i: Integer;
+begin
+  if (Length(Self) = 0) then
+    Exit([]);
+  SetLength(Result, 1);
+  Result[0] := Self[0];
+  for i := 1 to High(Self) do
+    if (Self[i] <> Self[i - 1]) then
+	  Result.Supply(Self[i]);
+end;
+
+{==============================================================================]
  <arr.Constant(item: VarType): Boolean>
  @action: Returns true if arr consists of item ONLY.
  @note: Requires at least single item. Otherwise returns False. (With empty arrays)
@@ -3667,6 +3704,35 @@ begin
     if not items.Contains(Self[i]) then
       Exit(False);
   Result := True;
+end;
+
+{==============================================================================]
+ <arr.Supply(item: VarType): Integer>
+ @action: Adds item to the end of the array.
+ @note: Returns the index where item was inserted.
+[==============================================================================}
+function HArr.Supply(const item: TVar): Integer; overload; cdecl;
+begin
+  Result := Length(Self);
+  SetLength(Self, (Result + 1));
+  Self[Result] := item;
+end;
+
+{==============================================================================]
+ <arr.Supply(item: TArray): Integer>
+ @action: Adds items to the end of the array.
+ @note: Returns the index where items were inserted.
+[==============================================================================}
+function HArr.Supply(const items: TArr): Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  if items.Empty then
+    Exit(-1);
+  Result := Length(Self);
+  SetLength(Self, (Result + Length(items)));
+  for i := 0 to High(items) do
+    Self[Result + i] := items[i];
 end;
 
 {==============================================================================]
