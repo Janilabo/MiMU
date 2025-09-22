@@ -86,11 +86,11 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Ranged>
+  <TIntegerArrayHelper.Coverage>
   @action: Stores arr bounds to TRange.
   @note: Returns -2147483648..-2147483648 with empty array.
 [==============================================================================}
-function TIntegerArrayHelper.Ranged: TRange; cdecl;
+function TIntegerArrayHelper.Coverage: TRange; cdecl;
 var
   i: Integer;
 begin

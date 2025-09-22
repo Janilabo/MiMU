@@ -287,7 +287,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Digits: TIntegerArray; cdecl;
+function TRange.Digits: TIntegerArray; overload; cdecl;
 var
   i, s: Integer;
 begin
@@ -295,6 +295,85 @@ begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := (Self.start + (i * s));
+end;
+
+{==============================================================================]
+  <TRange.Digits>
+  @action: Returns digit from TRange by index.
+  @note: None.
+[==============================================================================}
+function TRange.Digits(const dIndex: Integer): Integer; overload; cdecl;
+begin
+  if ((dIndex < 0) or (dIndex >= Self.Area)) then
+    Result := -2147483648
+  else
+    if Self.Ascending then
+      Result := (Self.start + dIndex)
+    else
+      Result := (Self.start - dIndex);
+end;
+
+{==============================================================================]
+  <TRange.Digits>
+  @action: Returns digits from TRange by indexes.
+  @note: None.
+[==============================================================================}
+function TRange.Digits(const dIDs: TIntegerArray): TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, (High(dIDs) + 1));
+  for i := 0 to High(dIDs) do
+    Result[i] := Self.Digits(dIDs[i]);
+end;
+
+{==============================================================================]
+  <TRange.IDs>
+  @action: Returns TRange indexes.
+  @note: None.
+[==============================================================================}
+function TRange.IDs: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Area);
+  for i := 0 to High(Result) do
+    Result[i] := i;
+end;
+
+{==============================================================================]
+  <TRange.IDs>
+  @action: Returns TRange index by TRange value.
+  @note: Returns -2147483648 if dValue does not exist in TRange.
+[==============================================================================}
+function TRange.IDs(const dValue: Integer): Integer; overload; cdecl;
+begin
+  case Self.Ascending of
+    True:
+    if ((dValue < Self.start) or (dValue > Self.stop)) then
+      Result := -2147483648
+    else
+      Result := (dValue - Self.start);
+    False:
+    if ((dValue > Self.start) or (dValue < Self.stop)) then
+      Result := -2147483648
+    else
+      Result := (Self.start - dValue);
+  end;
+end;
+
+{==============================================================================]
+  <TRange.IDs>
+  @action: Returns TRange index by TRange value.
+  @note: Returns -2147483648 if dValue does not exist in TRange.
+[==============================================================================}
+function TRange.IDs(const dVals: TIntegerArray): TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, (High(dVals) + 1));
+  for i := 0 to High(dVals) do
+    Result[i] := Self.IDs(dVals[i]);
 end;
 
 {==============================================================================]

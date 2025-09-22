@@ -957,7 +957,7 @@ end;
   Explanation: Returns TBox points as TPointArray.
   Example: None.
 [==============================================================================}
-function TBox.Points: TPointArray; cdecl;
+function TBox.Points: TPointArray; overload; cdecl;
 var
   x, y, r: Integer;
 begin
@@ -966,6 +966,52 @@ begin
   for y := Self.Y1 to Self.Y2 do
     for x := Self.X1 to Self.X2 do
       Result[r.Increase].Create(x, y);
+end;
+
+{==============================================================================]
+  <TBox_Points>
+  Explanation: Returns TBox point with index (pIndex).
+  Example: None.
+[==============================================================================}
+function TBox.Points(const pIndex: Integer): TPoint; overload; cdecl;
+begin
+  if not InRange(pIndex, 0, (Self.Area - 1)) then
+    Exit(Result.Create(-2147483648));
+  Result := Point((Self.X1 + (pIndex mod Self.Width)), (Self.Y1 + (pIndex div Self.Width)));
+end;
+
+{==============================================================================]
+  <TBox_Points>
+  Explanation: Returns TBox points with indexes (pIDs).
+  Example: None.
+[==============================================================================}
+function TBox.Points(const pIDs: TIntegerArray): TPointArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(pIDs));
+  for i := 0 to High(pIDs) do
+    Result[i] := Self.Points(pIDs[i]);
+end;
+
+{==============================================================================]
+  <TBox_Points>
+  Explanation: Stores TBox points to xArray and yArray.
+  Example: Returns area (length of TPointArray in box)
+[==============================================================================}
+function TBox.Points(var xArray, yArray: TIntegerArray): Integer; overload; cdecl;
+var
+  i, w: Integer;
+begin
+  w := Self.Width;
+  Result := (w * Self.Height);
+  SetLength(xArray, Result);
+  SetLength(yArray, Result);
+  for i := 0 to (Result - 1) do
+  begin
+    xArray[i] := (Self.X1 + (i mod w));
+    yArray[i] := (Self.Y1 + (i div w));
+  end;
 end;
 
 {==============================================================================]
@@ -1081,6 +1127,64 @@ begin
   finally
     p.Free;
   end;
+end;
+
+{==============================================================================]
+  <TBox.Pts>
+  Explanation: Returns TBox points as TPointArray.
+  Example: Alternative method.
+[==============================================================================}
+function TBox.Pts: TPointArray; overload; cdecl;
+var
+  x, y, i, w, h: Integer;
+begin
+  Self.Size(w, h);
+  SetLength(Result, (w * h));
+  for y := 0 to (h - 1) do
+    for x := 0 to (w - 1) do
+      Result[(y * w) + x] := Point((Self.X1 + x), (Self.Y1 + y));
+end;
+
+{==============================================================================]
+  <TBox.IDs>
+  Explanation: Returns TBox indexes as TIntegerArray
+  Example: None.
+[==============================================================================}
+function TBox.IDs: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Area);
+  for i := 0 to (Self.Area - 1) do
+    Result[i] := i;
+end;
+
+{==============================================================================]
+  <TBox.IDs>
+  Explanation: Returns TBox index with TPoint p.
+  Example: -1 if p is not part of TBox.
+[==============================================================================}
+function TBox.IDs(const p: TPoint): Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  if not Self.Contains(p) then
+    Exit(-1);
+  Result := (((p.Y - Self.Y1) * Self.Width) + (p.X - Self.X1));
+end;
+
+{==============================================================================]
+  <TBox.IDs>
+  Explanation: Returns TBox indexes with TPointArray p.
+  Example: -1 if p is not part of TBox.
+[==============================================================================}
+function TBox.IDs(const p: TPointArray): TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(p));
+  for i := 0 to High(p) do
+    Result[i] := Self.IDs(p[i]);
 end;
 
 {==============================================================================]

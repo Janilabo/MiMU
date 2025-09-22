@@ -493,7 +493,7 @@ type
 	  function BoundingRange: TRange; cdecl;
       function Boundaries: TRange; cdecl;
       function Range: TRange; cdecl;
-	  function Ranged: TRange; cdecl;
+	  function Coverage: TRange; cdecl;
 	  function MinMax: TRange; cdecl;
       function Region: TRange; overload; cdecl;
 	  function Extent: TRange; cdecl;
@@ -685,6 +685,7 @@ type
       function Boxed: TBox; cdecl;
 	  function MinMax: TBox; cdecl;
       function Region: TBox; overload; cdecl;
+      function Coverage: TBox; overload; cdecl;
       function Undupe: TPointArray; cdecl;
       function Unduped: TPointArray; cdecl;
       function Invert: TPointArray; cdecl;

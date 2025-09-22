@@ -107,7 +107,9 @@ type
     function Maximum: Integer; cdecl;
     function Exceeds(const maxElements: Integer): Boolean; cdecl;
     function Insufficient(const minElements: Integer): Boolean; cdecl;
-    function Digits: TIntegerArray; cdecl;
+    function Digits: TIntegerArray; overload; cdecl;
+	function Digits(const dIndex: Integer): Integer; overload; cdecl;
+    function Digits(const dIDs: TIntegerArray): TIntegerArray; overload; cdecl;
     function Ints: TIntegerArray; cdecl;
     function Values: TIntegerArray; cdecl;
     function TIA: TIntegerArray; cdecl;
@@ -116,6 +118,9 @@ type
     function Elements: TIntegerArray; cdecl;
     function Numbers: TIntegerArray; cdecl;
     function Items: TIntegerArray; cdecl;
+    function IDs: TIntegerArray; overload; cdecl;
+    function IDs(const dValue: Integer): Integer; overload; cdecl;
+    function IDs(const dVals: TIntegerArray): TIntegerArray; overload; cdecl;
     function ToArray: TIntegerArray; cdecl;
     function Materialize: TIntegerArray; cdecl;
     function Mixed(const mixings: Integer = 1): TIntegerArray; cdecl;
@@ -255,8 +260,15 @@ type
     function Clip(const toArea: TBox): TBox; cdecl;
     function Restrict(const toArea: TBox): Boolean; cdecl;
     function Clamp(const toArea: TBox): TBox; cdecl;
-    function Points: TPointArray; cdecl;
+    function Points: TPointArray; overload; cdecl;
+    function Points(const pIndex: Integer): TPoint; overload; cdecl;
+    function Points(const pIDs: TIntegerArray): TPointArray; overload; cdecl;
+    function Points(var xArray, yArray: TIntegerArray): Integer; overload; cdecl;
     function Pixels: TPointArray; cdecl;
+	function Pts: TPointArray; overload; cdecl;
+    function IDs: TIntegerArray; overload; cdecl;
+    function IDs(const p: TPoint): Integer; overload; cdecl;
+    function IDs(const p: TPointArray): TIntegerArray; overload; cdecl;
     function TPA: TPointArray; cdecl;
     function Contents: TPointArray; cdecl;
     function Extract: TPointArray; cdecl;

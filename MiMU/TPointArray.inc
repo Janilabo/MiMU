@@ -180,6 +180,36 @@ begin
 end;
 
 {==============================================================================]
+  <TPointArrayHelper.Coverage>
+  @action: Returns bounding box around TPointArray arr.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.Coverage: TBox; overload; cdecl;
+var
+  i: Integer;
+  a, b: TPoint;
+begin
+  if Self.Empty then
+    Exit(Result.Create(-2147483648));
+  a := Point(High(Integer), High(Integer));
+  b := Point(Low(Integer), Low(Integer));
+  for i := 0 to High(Self) do
+  begin
+    if (Self[i].X < a.X) then
+      a.X := Self[i].X
+    else
+      if (Self[i].X > b.X) then
+        b.X := Self[i].X;
+    if (Self[i].Y < a.Y) then
+      a.Y := Self[i].Y
+    else
+      if (Self[i].Y > b.Y) then
+        b.Y := Self[i].Y;
+  end;
+  Result.Create(a.X, a.Y, b.X, b.Y);
+end;
+
+{==============================================================================]
   <TPointArrayHelper.Undupe>
   @action: Removes duplicates from arr.
   @note: Returns number of duplicate items that were removed from arr.
