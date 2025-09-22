@@ -2986,7 +2986,7 @@ function HArr.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean
 function HArr.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): TArr; overload; cdecl; var w: Double; {$DEFINE Skeleton_QuickSorted}{$I config\Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
 
 {==============================================================================]
-  <arr.Randomized(>
+  <arr.Randomized>
   @action: Returns randomized copy of array
   @note: None.
 [==============================================================================}
@@ -3005,6 +3005,38 @@ begin
     r := Random(l);
     Result[i[r]] := Self[s];
     i[r] := i[l.Decrement];
+  end;
+end;
+
+{==============================================================================]
+  <arr.Range>
+  @action: Returns the indexes as TRange where subArray exists in array (Self)
+  @note: (-1, -1) if subArray is not found.
+         Loops array from index to max.
+[==============================================================================}
+function HArr.Range(const subArray: TArr; const index: Integer = 0): TRange; overload; cdecl;
+var
+  i, j, a, s, p: Integer;
+  f: Boolean;
+begin
+  Result.start := -1;
+  Result.stop  := -1;
+  a := Length(Self);
+  s := Length(subArray);
+  if ((s = 0) or (a = 0) or (s > a) or (p >= a) or (index >= a)) then
+    Exit;
+  p := Max(0, index);
+  for i := p to (a - s) do
+  begin
+    f := True;
+    for j := 0 to (s - 1) do
+      if (Self[i + j] <> subArray[j]) then
+      begin
+        f := False;
+        Break;
+      end;
+    if f then
+      Exit(Result.Construct(i, ((i + s) - 1)));
   end;
 end;
 
@@ -3550,6 +3582,38 @@ end;
 function HArr.Some(const amount: Integer): TArr; overload; cdecl;
 begin
   Result := Self.Shuffle.Copy(0, Max(1, Min(amount, Self.Size)));
+end;
+
+{==============================================================================]
+  <arr.Span>
+  @action: Returns the indexes as TRange where subArray exists in array (Self)
+  @note: (-1, -1) if subArray is not found.
+         Loops array from index downto min.
+[==============================================================================}
+function HArr.Span(const subArray: TArr; const index: Integer = 2147483647): TRange; overload; cdecl;
+var
+  i, j, a, s, p: Integer;
+  f: Boolean;
+begin
+  Result.start := -1;
+  Result.stop  := -1;
+  a := Length(Self);
+  s := Length(subArray);
+  if ((s = 0) or (a = 0) or (s > a) or (index < 0)) then
+    Exit;
+  p := Min(index, (a - s));
+  for i := p downto 0 do
+  begin
+    f := True;
+    for j := 0 to (s - 1) do
+      if (Self[i + j] <> subArray[j]) then
+      begin
+        f := False;
+        Break;
+      end;
+    if f then
+      Exit(Result.Construct(i, ((i + s) - 1)));
+  end;
 end;
 
 {==============================================================================]

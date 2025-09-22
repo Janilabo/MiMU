@@ -148,6 +148,46 @@ function TDoubleArrayHelper.BinaryGrow(const x: Double; const aAscending: Boolea
 function TDoubleArrayHelper.BinaryShrink(const x: Double; const aAscending: Boolean = True): Boolean; cdecl; {$DEFINE Skeleton_BinaryShrink}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryShrink}
 
 {==============================================================================]
+  <TDoubleArrayHelper.BinaryLowerBound>
+  @action: Return the index of the first element in the sorted array
+           that is greater than or equal to x.
+           Works with ascending or descending order depending on aAscending.
+  @note:   Returns -1 if all elements are less than x (or greater when
+           searching a descending array).
+[==============================================================================}
+function TDoubleArrayHelper.BinaryLowerBound(const x: Double; const aAscending: Boolean): Integer; cdecl; {$DEFINE Skeleton_BinaryLowerBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLowerBound}
+
+{==============================================================================]
+  <TDoubleArrayHelper.BinaryUpperBound>
+  @action: Return the index of the last element in the sorted array
+           that is less than or equal to x.
+           Honors the aAscending flag for array order.
+  @note:   Returns -1 if all elements are greater than x (or less when
+           searching a descending array).
+[==============================================================================}
+function TDoubleArrayHelper.BinaryUpperBound(const x: Double; const aAscending: Boolean): Integer; cdecl; {$DEFINE Skeleton_BinaryUpperBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUpperBound}
+
+{==============================================================================]
+  <TDoubleArrayHelper.BinaryRange>
+  @action:  Return the index range (start..stop) of all elements whose
+            values lie within the value interval x.start..x.stop.
+            Uses binary search for look-ups in an ascending or descending sorted array.
+  @note:    Returns (-1,-1) when no elements fall in the interval or when
+            the array is empty.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload; cdecl; {$DEFINE Skeleton_BinaryRange1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRange1}
+
+{==============================================================================]
+  <TDoubleArrayHelper.BinaryRange>
+  @action:  Return the index range (start..stop) of all elements whose
+            value equals x. Uses binary search to find the leftmost
+            and rightmost matching indexes.
+  @note:    Returns (-1,-1) if x is not present. Works for arrays sorted
+            ascending or descending as controlled by aAscending.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryRange(const x: Double; const aAscending: Boolean = True): TRange; overload; cdecl; {$DEFINE Skeleton_BinaryRange2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRange2}
+
+{==============================================================================]
   <TDoubleArrayHelper.Reinit>
   @action: Clears all elements of the array by zero-filling the underlying memory,
            while keeping the current length unchanged.

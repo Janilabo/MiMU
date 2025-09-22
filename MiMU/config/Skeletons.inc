@@ -737,3 +737,76 @@ begin
     Result.BinaryGrow(Self[i]);
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryLowerBound}
+var
+  l, h, m, o: Integer;
+begin
+  Result := -1;
+  l := 0;
+  h := High(Self);
+  o := aAscending.Select(1, -1);
+  while (l <= h) do
+  begin
+    m := ((l + h) div 2);
+    case ((o * Self[m]) < (o * x)) of
+      False:
+      begin
+        Result := m;
+        h := (m - 1);
+      end;
+      True: l := (m + 1);
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUpperBound}
+var
+  l, h, m, o: Integer;
+begin
+  Result := -1;
+  l := 0;
+  h := High(Self);
+  o := aAscending.Select(1, -1);
+  while (l <= h) do
+  begin
+    m := ((l + h) div 2);
+    case ((o * Self[m]) > (o * x)) of
+      False:
+      begin
+        Result := m;
+        l := (m + 1);
+      end;
+      True: h := (m - 1);
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryRange1}
+var
+  r: TRange;
+begin
+  if (Length(Self) = 0) then
+    Exit(Result.Create(-1, -1));
+  r := x.Normalize;
+  Result.start := Self.BinaryLowerBound(r.start, aAscending);
+  if (Result.start > -1) then
+    Result.stop := Self.BinaryUpperBound(r.stop, aAscending)
+  else
+    Result.stop := -1;
+  if ((Result.start = -1) or (Result.stop = -1) or (Result.start > Result.stop)) then
+    Result.Create(-1, -1);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryRange2}
+begin
+  Result.start := Self.BinaryPosL(x, aAscending);
+  if (Result.start > -1) then
+    Result.stop := Self.BinaryPosR(x, aAscending)
+  else
+    Result.stop := -1;
+end;
+{$ENDIF}

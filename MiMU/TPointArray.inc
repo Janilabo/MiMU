@@ -875,6 +875,6 @@ end;
 function TPointArrayHelper.Reinit: Integer; cdecl;
 begin
   Result := Length(Self);
-  if Result > 0 then
-    FillChar(Pointer(Self)^, (Result * SizeOf(TPoint)), 0); // all points become (0,0)
+  if (Result > 0) then
+    FillChar(Pointer(Self)^, (Result * SizeOf(TPoint)), 0);
 end;

@@ -403,6 +403,7 @@ type
     function Put(const ID: TIntegerArray; const items: TArr): TArr; overload; cdecl;
     function Put(const index: Integer; const items: TArr): TArr; overload; cdecl;
     function Randomized: TArr; overload; cdecl;
+    function Range(const subArray: TArr; const index: Integer = 0): TRange; overload; cdecl;
     function Recreate(const arrSize: Integer): Boolean; overload; cdecl;
 	function Reject(const items: TArr; const index: Integer = 2147483647): TArr; overload; cdecl;
     function Remove(const item: TVar; const index: Integer = 0; const all: Boolean = True): TArr; overload; cdecl;
@@ -433,6 +434,7 @@ type
     function Slots: TIntegerArray; overload; cdecl;
     function Some: TArr; overload; cdecl;
     function Some(const amount: Integer): TArr; overload; cdecl;
+    function Span(const subArray: TArr; const index: Integer = 2147483647): TRange; overload; cdecl;
     function Strip(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
     function SubarrayLocation(const pattern: TArr): Integer; overload; cdecl;
     function SubarrayLocations(const pattern: TArr): TIntegerArray; overload; cdecl;
@@ -519,27 +521,6 @@ type
       function MergeSortBU(const aAscending: Boolean = True): Integer; cdecl;
       function ShellSort(const aAscending: Boolean = True): Integer; cdecl;
 	  function RadixSort(const aAscending: Boolean = True): Integer; cdecl;
-      function BSort(const aAscending: Boolean = True): Integer; cdecl;
-      function BinarySort(const aAscending: Boolean = True): Integer; cdecl;
-      function BinarySorted(const aAscending: Boolean = True): TIntegerArray; cdecl;
-      function BinaryBoundL(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
-      function BinaryBoundR(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
-      function BinaryPosL(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
-      function BinaryPosR(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
-      function BinarySearch(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
-      function BinaryContains(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl;
-      function BinaryCount(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
-      function BinaryLocate(const x: Integer; const aAscending: Boolean = True): TRange; cdecl;
-      function BinaryLocation(const x: Integer; const aAscending: Boolean = True): TRange; cdecl;
-      function BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
-      function BinaryAdd(const x: Integer; const aAscending: Boolean = True): TIntegerArray; cdecl;
-      function BinarySearchF(const x: TRange; const aAscending: Boolean = True): Integer; cdecl;
-      function BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; cdecl;
-      function BinaryUnique(const aAscending: Boolean = True): Integer; cdecl;
-      function BinaryUniqued(const aAscending: Boolean = True): TIntegerArray; cdecl;
-      function BinaryUndupe(const aAscending: Boolean = True): TIntegerArray; cdecl;
-      function BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl;
-      function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl;
       function Split(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
       function Split(const diff: Integer): T2DIntegerArray; overload; cdecl;
       function Sblit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
@@ -579,6 +560,31 @@ type
       function FilterEven: TIntegerArray; overload; cdecl;
       function ExtractOdd: TIntegerArray; overload; cdecl;
       function FilterOdd: TIntegerArray; overload; cdecl;
+      function BSort(const aAscending: Boolean = True): Integer; cdecl;
+      function BinarySort(const aAscending: Boolean = True): Integer; cdecl;
+      function BinarySorted(const aAscending: Boolean = True): TIntegerArray; cdecl;
+      function BinaryBoundL(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryBoundR(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryPosL(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryPosR(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
+      function BinarySearch(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryContains(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl;
+      function BinaryCount(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryLocate(const x: Integer; const aAscending: Boolean = True): TRange; cdecl;
+      function BinaryLocation(const x: Integer; const aAscending: Boolean = True): TRange; cdecl;
+      function BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryAdd(const x: Integer; const aAscending: Boolean = True): TIntegerArray; cdecl;
+      function BinarySearchF(const x: TRange; const aAscending: Boolean = True): Integer; cdecl;
+      function BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryUnique(const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryUniqued(const aAscending: Boolean = True): TIntegerArray; cdecl;
+      function BinaryUndupe(const aAscending: Boolean = True): TIntegerArray; cdecl;
+      function BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl;
+      function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl;
+      function BinaryLowerBound(const x: Integer; const aAscending: Boolean): Integer; overload; cdecl;
+      function BinaryUpperBound(const x: Integer; const aAscending: Boolean): Integer; overload; cdecl;
+      function BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload; cdecl;
+      function BinaryRange(const x: Integer; const aAscending: Boolean = True): TRange; overload; cdecl;
     {$ENDIF}
     {$IFDEF Double}
       function BSort(const aAscending: Boolean = True): Integer; cdecl;
@@ -602,6 +608,10 @@ type
       function BinaryUndupe(const aAscending: Boolean = True): TDoubleArray; cdecl;
       function BinaryGrow(const x: Double; const aAscending: Boolean = True): Boolean; cdecl;
       function BinaryShrink(const x: Double; const aAscending: Boolean = True): Boolean; cdecl;
+      function BinaryLowerBound(const x: Double; const aAscending: Boolean): Integer; overload; cdecl;
+      function BinaryUpperBound(const x: Double; const aAscending: Boolean): Integer; overload; cdecl;
+      function BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload; cdecl;
+      function BinaryRange(const x: Double; const aAscending: Boolean = True): TRange; overload; cdecl;
       function Reinit: Integer; overload; cdecl;
     {$ENDIF}
     {$IFDEF string}
