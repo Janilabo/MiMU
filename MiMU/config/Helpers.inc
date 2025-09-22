@@ -404,6 +404,7 @@ type
     function Put(const index: Integer; const items: TArr): TArr; overload; cdecl;
     function Randomized: TArr; overload; cdecl;
     function Range(const subArray: TArr; const index: Integer = 0): TRange; overload; cdecl;
+    function Ranges(const subArray: TArr; const index: Integer = 0): TRangeArray; overload; cdecl;
     function Recreate(const arrSize: Integer): Boolean; overload; cdecl;
 	function Reject(const items: TArr; const index: Integer = 2147483647): TArr; overload; cdecl;
     function Remove(const item: TVar; const index: Integer = 0; const all: Boolean = True): TArr; overload; cdecl;
@@ -435,6 +436,7 @@ type
     function Some: TArr; overload; cdecl;
     function Some(const amount: Integer): TArr; overload; cdecl;
     function Span(const subArray: TArr; const index: Integer = 2147483647): TRange; overload; cdecl;
+    function Spans(const subArray: TArr; const index: Integer = 2147483647): TRangeArray; overload; cdecl;
     function Strip(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
     function SubarrayLocation(const pattern: TArr): Integer; overload; cdecl;
     function SubarrayLocations(const pattern: TArr): TIntegerArray; overload; cdecl;
@@ -491,6 +493,7 @@ type
       function Range: TRange; cdecl;
 	  function Ranged: TRange; cdecl;
 	  function MinMax: TRange; cdecl;
+      function Region: TRange; overload; cdecl;
 	  function Extent: TRange; cdecl;
       function Undupe: TIntegerArray; cdecl;
       function Unduped: TIntegerArray; cdecl;
@@ -679,6 +682,7 @@ type
 	  function Box: TBox; cdecl;
       function Boxed: TBox; cdecl;
 	  function MinMax: TBox; cdecl;
+      function Region: TBox; overload; cdecl;
       function Undupe: TPointArray; cdecl;
       function Unduped: TPointArray; cdecl;
       function Invert: TPointArray; cdecl;

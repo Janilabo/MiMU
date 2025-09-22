@@ -3023,7 +3023,7 @@ begin
   Result.stop  := -1;
   a := Length(Self);
   s := Length(subArray);
-  if ((s = 0) or (a = 0) or (s > a) or (p >= a) or (index >= a)) then
+  if ((s = 0) or (a = 0) or (s > a) or (index >= a)) then
     Exit;
   p := Max(0, index);
   for i := p to (a - s) do
@@ -3037,6 +3037,41 @@ begin
       end;
     if f then
       Exit(Result.Construct(i, ((i + s) - 1)));
+  end;
+end;
+
+{==============================================================================]
+  <arr.Ranges>
+  @action: Returns the indexes as TRanges where subArray exists in array (Self)
+  @note: [] if not a single subArray is not found.
+         Loops array from index to max.
+[==============================================================================}
+function HArr.Ranges(const subArray: TArr; const index: Integer = 0): TRangeArray; overload; cdecl;
+var
+  i, j, a, s, p, l: Integer;
+  f: Boolean;
+begin
+  SetLength(Result, 0);
+  a := Length(Self);
+  s := Length(subArray);
+  if ((s = 0) or (a = 0) or (s > a) or (index >= a)) then
+    Exit;
+  p := Max(0, index);
+  l := 0;
+  for i := p to (a - s) do
+  begin
+    f := True;
+    for j := 0 to (s - 1) do
+      if (Self[i + j] <> subArray[j]) then
+      begin
+        f := False;
+        Break;
+      end;
+    if f then
+    begin
+      SetLength(Result, l.Increment);
+      Result[l - 1].Create(i, ((i + s) - 1));
+    end;
   end;
 end;
 
@@ -3613,6 +3648,41 @@ begin
       end;
     if f then
       Exit(Result.Construct(i, ((i + s) - 1)));
+  end;
+end;
+
+{==============================================================================]
+  <arr.Spans>
+  @action: Returns the indexes as TRanges where subArray exists in array (Self)
+  @note: [] if not a single subArray is not found.
+         Loops array from index downto min.
+[==============================================================================}
+function HArr.Spans(const subArray: TArr; const index: Integer = 2147483647): TRangeArray; overload; cdecl;
+var
+  i, j, a, s, p, l: Integer;
+  f: Boolean;
+begin
+  SetLength(Result, 0);
+  a := Length(Self);
+  s := Length(subArray);
+  if ((s = 0) or (a = 0) or (s > a) or (index < 0)) then
+    Exit;
+  p := Min(index, (a - s));
+  l := 0;
+  for i := p downto 0 do
+  begin
+    f := True;
+    for j := 0 to (s - 1) do
+      if (Self[i + j] <> subArray[j]) then
+      begin
+        f := False;
+        Break;
+      end;
+    if f then
+    begin
+      SetLength(Result, l.Increment);
+      Result[l - 1].Create(i, ((i + s) - 1));
+    end;
   end;
 end;
 

@@ -154,6 +154,32 @@ begin
 end;
 
 {==============================================================================]
+  <TPointArrayHelper.Region>
+  @action: Returns bounding box around TPointArray arr.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.Region: TBox; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit(Result.Create(-2147483648));
+  Result.Create(MaxInt, MaxInt, -MaxInt, -MaxInt);
+  for i := 0 to (l - 1) do
+  begin
+    if (Self[i].X < Result.X1) then
+      Result.X1 := Self[i].X;
+    if (Self[i].Y < Result.Y1) then
+      Result.Y1 := Self[i].Y;
+    if (Self[i].X > Result.X2) then
+      Result.X2 := Self[i].X;
+    if (Self[i].Y > Result.Y2) then
+      Result.Y2 := Self[i].Y;
+  end;
+end;
+
+{==============================================================================]
   <TPointArrayHelper.Undupe>
   @action: Removes duplicates from arr.
   @note: Returns number of duplicate items that were removed from arr.
