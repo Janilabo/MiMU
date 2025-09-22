@@ -3586,6 +3586,54 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Slice>
+ @action: Returns array slice with TRange r.
+ @note: Make sure you use correct indexes and there is enough buffer in array!
+        No safety checks for this function. 
+[==============================================================================}
+function HArr.Slice(const r: TRange): TArr; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, r.Size);
+  case r.Ascending of
+    True:
+    for i := r.start to r.stop do
+      Result[i - r.start] := Self[i];
+    False:
+    for i := r.start downto r.stop do
+      Result[i - r.start] := Self[i];
+  end;
+end;
+
+{==============================================================================]
+ <arr.Slice>
+ @action: Returns array slice with multiple TRanges by r.
+ @note: Make sure you use correct indexes and there is enough buffer in array!
+        No safety checks for this function. 
+[==============================================================================}
+function HArr.Slice(const r: TRangeArray): TArr; overload; cdecl;
+var
+  i, j, l: Integer;
+begin
+  if r.Empty then
+    Exit([]);
+  l := 0;
+  for i := 0 to High(r) do
+    l := (l + r[i].Size);
+  SetLength(Result, l);
+  for i := High(r) downto 0 do
+  case r[i].Ascending of
+    True:
+    for j := r[i].stop downto r[i].start do
+      Result[l.Decrement] := Self[j];
+    False:
+    for j := r[i].stop to r[i].start do
+      Result[l.Decrement] := Self[j];
+  end;
+end;
+
+{==============================================================================]
  <arr.Slots: TIntegerArray>
  @action: Returns indexes of array.
  @note: None.

@@ -432,6 +432,8 @@ type
     function SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl;
     function SizeMax(const target: Integer): Boolean; overload; cdecl;
     function SizeMin(const target: Integer): Boolean; overload; cdecl;
+	function Slice(const r: TRange): TArr; overload; cdecl;
+    function Slice(const r: TRangeArray): TArr; overload; cdecl;
     function Slots: TIntegerArray; overload; cdecl;
     function Some: TArr; overload; cdecl;
     function Some(const amount: Integer): TArr; overload; cdecl;
