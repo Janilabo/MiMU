@@ -373,6 +373,8 @@ type
     function Mixed(const mixings: Integer = 1): TArr; overload; cdecl;
     function MostCommon: TVar; overload; cdecl;
     function MostFrequent: TVar; overload; cdecl;
+    function Multi(const threshold: Integer = 2): Boolean; overload; cdecl;
+    function Multi(const threshold: TRange): Boolean; overload; cdecl;
     function Next(const index: Integer; const count: Integer = 2147483647): TArr; overload; cdecl;
 	function Occurs(const item: TVar; const occurrence: Integer = 1): Boolean; overload; cdecl;
     function Overlay(const items: TArr; const index: Integer; const init: TVar): TArr; overload; cdecl;

@@ -2445,6 +2445,29 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Multi(threshold: Integer): Boolean>
+ @action: Returns true if array contains at least threshold of items in it.
+ @note: None.	
+[==============================================================================}
+function HArr.Multi(const threshold: Integer = 2): Boolean; overload; cdecl;
+begin
+  Result := (Length(Self) >= threshold);
+end;
+
+{==============================================================================]
+ <arr.Multi(threshold: Integer): Boolean>
+ @action: Returns true if array contains at least threshold of items in it.
+ @note: None.	
+[==============================================================================}
+function HArr.Multi(const threshold: TRange): Boolean; overload; cdecl;
+var
+  r: TRange;
+begin
+  r:= threshold.Normalize;
+  Result := InRange(Length(Self), r.start, r.stop);
+end;
+
+{==============================================================================]
  <arr.Next(index: Integer; count: Integer): TArray>
  @action: Returns next items from array by index and count.
  @note: None.	
