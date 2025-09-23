@@ -463,9 +463,13 @@ type
 	function Void: Boolean; overload; cdecl;
     function Waste: Integer; overload; cdecl;
     {$IFDEF Sortable}
+      function Sortable: Boolean; overload; cdecl;
       function Sorted(const aAscending: Boolean = True): Boolean; overload; cdecl;
       function InOrder(const aAscending: Boolean = True): Boolean; overload; cdecl;
       function Orderly: Boolean; overload; cdecl;
+      function Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload; cdecl;
+      function Order: Integer; overload; cdecl;
+      function Orientation: Integer; overload; cdecl;
       function Descend: TArr; overload; cdecl;
       function Ascend: TArr; overload; cdecl;
       function Descending: Boolean; overload; cdecl;
