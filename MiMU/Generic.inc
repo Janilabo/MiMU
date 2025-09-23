@@ -883,6 +883,31 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Diversify: TArray>
+ @action: Alternative for Unique methods
+ @note: None.
+ [==============================================================================}
+function HArr.Diversify: TArr; overload; cdecl;
+var
+  d: specialize TDictionary<TVar, Boolean>;
+  i: Integer;
+  k: TVar;
+begin
+  d := specialize TDictionary<TVar, Boolean>.Create;
+  try
+    for i := 0 to High(Self) do
+      if not d.ContainsKey(Self[i]) then
+        d.Add(Self[i], True);
+    SetLength(Result, d.Count);
+    i := 0;
+    for k in d.Keys do
+      Result[i.Increase] := k;
+  finally
+    d.Free;
+  end;
+end;
+
+{==============================================================================]
  <arr.Drop(item: VarType; eraseDuplicates: Boolean): TArray>
  @action: Removes item(s) from arr and returns it.
  @note: 	

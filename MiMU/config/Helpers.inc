@@ -289,6 +289,7 @@ type
     function Disordered: TArr; overload; cdecl;
     function Distinct: Integer; overload; cdecl;
     function Distribute(const parts: Integer): T2DArr; overload; cdecl;
+    function Diversify: TArr; overload; cdecl;
     function Drop(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
     function Dump(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
     function Dupe: TArr; overload; cdecl;
