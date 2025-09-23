@@ -43,7 +43,7 @@
 interface
 
 uses
-  Classes, SysUtils, Math, Generics.Collections;
+  Classes, SysUtils, Math, Generics.Collections, FGL;
 
 const
   MiMU_VERSION_NUMBER = 0.5;

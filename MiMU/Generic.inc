@@ -801,6 +801,33 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Distinct>
+ @action: Returns the number of unique elements in array 
+ @note: None.
+ [==============================================================================}
+function HArr.Distinct: Integer; overload; cdecl;
+var
+  i, j: Integer;
+  u: Boolean;
+begin
+  Result := 0;
+  if Self.Empty then
+    Exit;
+  for i := 0 to High(Self) do
+  begin
+    u := True;
+    for j := 0 to (i - 1) do
+      if (Self[i] = Self[j]) then
+      begin
+        u := False;
+        Break;
+      end;
+    if u then
+      Inc(Result);
+  end;
+end;
+
+{==============================================================================]
  <arr.Disordered>
  @action: Returns array with randomized order (disorder)
  @note: [1,2,3] => [1,3,2] | [2,1,3] | [2,3,1] | [3,2,1] ...
@@ -863,7 +890,6 @@ end;
 function HArr.Drop(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
 var
   p: TIntegerArray;
-  i: Integer;
   r: TRange;
 begin
   if Self.Empty then
@@ -3105,7 +3131,7 @@ end;
 [==============================================================================}
 function HArr.Recreate(const arrSize: Integer): Boolean; overload; cdecl;
 var
-  i, l: Integer;
+  l: Integer;
 begin
   l := Length(Self);
   Result := ((Length(Self) > 0) or (arrSize <> 0));
@@ -3537,6 +3563,21 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Singular: Boolean>
+ @action: Returns true if all array items are identical.
+ @note: None.
+[==============================================================================}
+function HArr.Singular: Boolean; overload; cdecl;
+var
+  i: Integer;
+begin
+  for i := 1 to High(Self) do
+    if (Self[i] <> Self[i - 1]) then
+      Exit(False);
+  Result := True;
+end; 
+
+{==============================================================================]
  <arr.Size: Integer> 
  @action: Returns array length.
  @note: Simply Result := Length(arr);
@@ -3765,7 +3806,6 @@ end;
 function HArr.Strip(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
 var
   p: TIntegerArray;
-  i: Integer;
   r: TRange;
 begin
   if Self.Empty then
@@ -4044,6 +4084,20 @@ begin
     if (Self[i] <> item) then
       Exit(False);
   Result := True;
+end;
+
+{==============================================================================]
+ <arr.Uniformity>
+ @action: Returns 1.0 if all elements equal, 0.0 if all different,
+          or something in between based on unique-value ratio. 
+ @note: None.
+ [==============================================================================}
+function HArr.Uniformity: Double; overload; cdecl;
+begin
+  if not Self.Empty then
+    Result := (1.0 / Self.Distinct)
+  else
+    Result := 0.0;
 end;
 
 {==============================================================================]
@@ -4570,7 +4624,7 @@ end;
 [==============================================================================}
 function H2DArr.Recreate(const arrSize: Integer): Boolean; overload; cdecl;
 var
-  i, l: Integer;
+  l: Integer;
 begin
   l := Length(Self);
   Result := ((Length(Self) > 0) or (arrSize <> 0));
