@@ -908,6 +908,31 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Diversified: TArray>
+ @action: Alternative for Unique methods
+ @note: None.
+ [==============================================================================}
+function HArr.Diversified: TArr; overload; cdecl;
+var
+  d: specialize TDictionary<TVar, Byte>;
+  i: TVar;
+  r: Integer;
+begin
+  d := specialize TDictionary<TVar, Byte>.Create;
+  try
+    for i in Self do
+      if not d.ContainsKey(i) then
+        d.Add(i, 0);
+    SetLength(Result, d.Count);
+    r := 0;
+    for i in d.Keys do
+      Result[r.Increase] := i;
+  finally
+    d.Free;
+  end;
+end;
+
+{==============================================================================]
  <arr.Drop(item: VarType; eraseDuplicates: Boolean): TArray>
  @action: Removes item(s) from arr and returns it.
  @note: 	
@@ -4123,6 +4148,32 @@ begin
     Result := (1.0 / Self.Distinct)
   else
     Result := 0.0;
+end;
+
+{==============================================================================]
+ <arr.Unify>
+ @action: Uniques array
+ @note: None.
+ [==============================================================================}
+function HArr.Unify: TArr; overload; cdecl;
+var
+  d: specialize TDictionary<TVar, Byte>;
+  i, n: Integer;
+begin
+  d := specialize TDictionary<TVar, Byte>.Create;
+  try
+    SetLength(Result, Length(Self));
+    n := 0;
+    for i := 0 to High(Self) do
+      if not d.ContainsKey(Self[i]) then
+      begin
+        d.Add(Self[i], 0);
+        Result[n.Increase] := Self[i];
+      end;
+    SetLength(Result, n);
+  finally
+    d.Free;
+  end;
 end;
 
 {==============================================================================]

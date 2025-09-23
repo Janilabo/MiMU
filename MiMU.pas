@@ -219,6 +219,8 @@ type
     function Size(var width, height: Integer): Integer; overload; cdecl; inline;
     function Size: TPoint; overload; cdecl;
     function Area: Integer; cdecl; inline;
+    function Capacity: Integer; cdecl;
+    function Footprint: Double; cdecl;
     function Perimeter: Integer; cdecl;
     function Perim: Integer; cdecl;
     function Circumference: Integer; cdecl;

@@ -361,12 +361,32 @@ end;
 {==============================================================================]
   <TBox.Area>
   @action: Calculates the amount of pixels in TBox (bx).
-           Returns -1 with invalid TBox.
   @note: None
 [==============================================================================}
 function TBox.Area: Integer; cdecl; inline;
 begin
   Result := (Self.Width * Self.Height);
+end;
+
+{==============================================================================]
+  <TBox.Capacity>
+  @action: Calculates the amount of pixels in TBox (bx).
+  @note: None
+[==============================================================================}
+function TBox.Capacity: Integer; cdecl; inline;
+begin
+  with Self do
+    Result := (((Max(X1, X2) - Min(X1, X2)) + 1) * ((Max(Y1, Y2) - Min(Y1, Y2)) + 1));
+end;
+
+{==============================================================================]
+  <TRange.Footprint>
+  @action: Returns length of the given range.
+  @note: None.
+[==============================================================================}
+function TBox.Footprint: Double; cdecl;
+begin
+  Result := ((Abs(Self.X2 - Self.X1) + 1) * (Abs(Self.Y2 - Self.Y1) + 1));
 end;
 
 {==============================================================================]

@@ -290,6 +290,7 @@ type
     function Distinct: Integer; overload; cdecl;
     function Distribute(const parts: Integer): T2DArr; overload; cdecl;
     function Diversify: TArr; overload; cdecl;
+    function Diversified: TArr; overload; cdecl;
     function Drop(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
     function Dump(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
     function Dupe: TArr; overload; cdecl;
@@ -459,6 +460,7 @@ type
     function Uniform: Boolean; overload; cdecl;
     function Uniform(const item: TVar): Boolean; overload; cdecl;
     function Uniformity: Double; overload; cdecl;
+    function Unify: TArr; overload; cdecl;
     function Unique: TArr; overload; cdecl;
     function Uniqued: TArr; overload; cdecl;
     function Uniques: TIntegerArray; overload; cdecl;
