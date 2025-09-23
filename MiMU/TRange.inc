@@ -197,11 +197,11 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Length>
+  <TRange.Capacity>
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Length: Integer; cdecl;
+function TRange.Capacity: Integer; cdecl;
 begin
   Result := (IfThen(Self.Descending, (Self.start - Self.stop), (Self.stop - Self.start)) + 1);
 end;
@@ -427,7 +427,7 @@ function TRange.TIA: TIntegerArray; cdecl;
 var
   i, l, d: Integer;
 begin
-  l := Self.Length;
+  l := Self.Capacity;
   SetLength(Result, l);
   if Self.Plural then
   begin

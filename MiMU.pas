@@ -99,7 +99,7 @@ type
     function Area: Integer; cdecl;
     function Span: Integer; cdecl;
     function Size: Integer; cdecl;
-    function Length: Integer; cdecl;
+    function Capacity: Integer; cdecl;
     function Delta: Integer; cdecl;
     function Lowest: Integer; cdecl;
     function Minimum: Integer; cdecl;
