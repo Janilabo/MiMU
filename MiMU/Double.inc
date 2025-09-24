@@ -160,7 +160,7 @@ function TDoubleHelper.Decrement(const N: Double = 1): Double; cdecl; {$DEFINE S
 function TDoubleHelper.Digits: TIntegerArray; cdecl;
 var
   s: string;
-  l, i: Int32;
+  l, i: Integer;
 begin
   s := FloatToStr(Abs(Self));
   l := Length(s);
@@ -271,7 +271,7 @@ end;
           123   123.4   123.45   123.456   123.4567   123.45678
  @note: None
 [==============================================================================}
-function TDoubleHelper.Accuracy(const a: Int32): Double; cdecl;
+function TDoubleHelper.Accuracy(const a: Integer): Double; cdecl;
 var
   d: Double;
   z: Boolean;
@@ -294,7 +294,14 @@ end;
           Results: 0=EQUAL, 1=x>target, -1=x<target
  @note: None
 [==============================================================================}
-function TDoubleHelper.Compare(const target: Double): Int32; cdecl; inline; {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
+function TDoubleHelper.Compare(const target: Double): Integer; cdecl; inline; {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
+
+{==============================================================================]
+ <TDoubleHelper.Precede>
+ @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
+ @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
+[==============================================================================}
+function TDoubleHelper.Precede(const target: Double; const aAscending: Boolean): Boolean; overload; cdecl; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
 
 {==============================================================================]
  <Double_Distance>
@@ -333,7 +340,7 @@ end;
           x < 0 = -1            x = 0 = 0             x > 0 = 1
  @note: None
 [==============================================================================}
-function TDoubleHelper.Sign: Int32; cdecl; inline;
+function TDoubleHelper.Sign: Integer; cdecl; inline;
 begin
   if (Self = 0) then
     Exit(0);
@@ -350,7 +357,7 @@ end;
 [==============================================================================}
 function TDoubleHelper.FixDegrees: Double; cdecl;
 var
-  t: Int32;
+  t: Integer;
 begin
   t := -1;
   if (Self > -1) then

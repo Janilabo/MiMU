@@ -465,6 +465,7 @@ type
     function Digitz: TIntegerArray; cdecl;
     function Digits: TIntegerArray; cdecl;
     function Compare(const target: Int64): Integer; cdecl; inline;
+    function Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; cdecl;
     function Distance(const T: Int64): Int64; cdecl; inline;
     function Difference(const T: Int64): Int64; cdecl; inline;
     function Opposite: Int64; cdecl; inline;

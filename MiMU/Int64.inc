@@ -180,6 +180,13 @@ end;
 function TInt64Helper.Compare(const target: Int64): Integer; cdecl; inline;  {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
 
 {==============================================================================]
+ <TInt64Helper.Precede>
+ @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
+ @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
+[==============================================================================}
+function TInt64Helper.Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; cdecl; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
+
+{==============================================================================]
  <TInt64Helper.Distance>
  @action: Returns the distance between x and T.
  @note: None

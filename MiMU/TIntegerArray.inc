@@ -2184,4 +2184,77 @@ function TIntegerArrayHelper.BinaryRange(const x: TRange; const aAscending: Bool
 [==============================================================================}
 function TIntegerArrayHelper.BinaryRange(const x: Integer; const aAscending: Boolean = True): TRange; overload; cdecl; {$DEFINE Skeleton_BinaryRange2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRange2}
 
+{==============================================================================]
+  <TIntegerArray.BinaryMerge>
+  @action: Merges two sorted integer arrays (Self and items) into a new sorted array based on the specified order by aAscending.
+  @note: Assumes both Self and items are already sorted in the same order.
+[==============================================================================}
 function TIntegerArrayHelper.BinaryMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl; {$DEFINE Skeleton_BinaryMerge}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryMerge}
+
+{==============================================================================]
+  <TIntegerArray.BinaryMerged>
+  @action: Merges two sorted integer arrays (Self and items) into a new sorted array based on the specified order by aAscending.
+  @note: Assumes both Self and items are already sorted in the same order.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl; {$DEFINE Skeleton_BinaryMerged}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryMerged}
+
+{==============================================================================]
+  <TIntegerArray.BMerge>
+  @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
+  @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
+[==============================================================================}
+function TIntegerArrayHelper.BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+var
+  a, b, i, j, l: Integer;
+begin
+  a := Length(Self);
+  b := Length(items);
+  SetLength(Result, (a + b));
+  i := 0;
+  j := 0;
+  l := 0;
+  case aAscending of
+    True:
+    while ((i < a) and (j < b)) do
+      if (Self[i] <= items[j]) then
+        Result[l.Increase] := Self[i.Increase]
+      else
+        Result[l.Increase] := items[j.Increase];
+    False:
+    while ((i < a) and (j < b)) do
+      if (Self[i] >= items[j]) then
+        Result[l.Increase] := Self[i.Increase]
+      else
+        Result[l.Increase] := items[j.Increase];
+  end;
+  if (i < a) then
+    Move(Self[i], Result[l.Increase(a - i)], ((a - i) * SizeOf(Integer)));
+  if (j < b) then
+    Move(items[j], Result[l], ((b - j) * SizeOf(Integer)));
+end;
+
+{==============================================================================]
+  <TIntegerArray.BMerged>
+  @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
+  @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
+[==============================================================================}
+function TIntegerArrayHelper.BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+var
+  a, b, i, j, l: Integer;
+begin
+  a := Length(Self);
+  b := Length(items);
+  SetLength(Result, (a + b));
+  i := 0;
+  j := 0;
+  l := 0;
+  while ((i < a) and (j < b)) do
+    if Self[i].Precede(items[j], aAscending) then
+      Result[l.Increase] := Self[i.Increase]
+    else
+      Result[l.Increase] := items[j.Increase];
+  if (i < a) then
+    Move(Self[i], Result[l.Increase(a - i)], ((a - i) * SizeOf(Integer)));
+  if (j < b) then
+    Move(items[j], Result[l], ((b - j) * SizeOf(Integer)));
+end;

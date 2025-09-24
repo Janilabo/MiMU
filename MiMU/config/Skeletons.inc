@@ -36,6 +36,12 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_Precede}
+begin
+  Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_IfThen}
 begin
   if state then
@@ -829,12 +835,34 @@ begin
       else
         Result[l.Increase] := items[j.Increase];
     False:
-    while (i < a) and (j < b) do
+    while ((i < a) and (j < b)) do
       if (Self[i] >= items[j]) then
         Result[l.Increase] := Self[i.Increase]
       else
         Result[l.Increase] := items[j.Increase];
   end;
+  while (i < a) do
+    Result[l.Increase] := Self[i.Increase];
+  while (j < b) do
+    Result[l.Increase] := items[j.Increase];
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryMerged}
+var
+  a, b, i, j, l: Integer;
+begin
+  a := Length(Self);
+  b := Length(items);
+  SetLength(Result, (a + b));
+  i := 0;
+  j := 0;
+  l := 0;
+  while ((i < a) and (j < b)) do
+    if Self[i].Precede(items[j], aAscending) then
+      Result[l.Increase] := Self[i.Increase]
+    else
+      Result[l.Increase] := items[j.Increase];
   while (i < a) do
     Result[l.Increase] := Self[i.Increase];
   while (j < b) do

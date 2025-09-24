@@ -330,6 +330,13 @@ end;
 function TStringHelper.Compare(const target: string): Integer; cdecl; inline; {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
 
 {==============================================================================]
+ <TStringHelper.Precede>
+ @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
+ @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
+[==============================================================================}
+function TStringHelper.Precede(const target: string; const aAscending: Boolean): Boolean; overload; cdecl; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
+
+{==============================================================================]
   <TStringHelper.Contains>
   @action: Returns true if s can be found in str.
   @note: Starts search from index position.!
