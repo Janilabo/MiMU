@@ -1,3 +1,5 @@
+{$DEFINE string}{$I config\Defines.inc}
+
 {==============================================================================]
   <TStringArrayHelper.Span>
   @action: Returns total length of TStringArray strings combined together.
@@ -86,3 +88,5 @@ begin
     end;
   SetString(Result, PChar(@c[0]), l);
 end;
+
+{$UNDEF string}

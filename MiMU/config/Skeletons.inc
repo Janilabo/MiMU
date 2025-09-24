@@ -42,6 +42,18 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_Ascending}
+begin
+  Result := (Self <= target);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_Descending}
+begin
+  Result := (Self >= target);
+end;
+{$ENDIF} 
+
 {$IFDEF Skeleton_IfThen}
 begin
   if state then
@@ -867,5 +879,34 @@ begin
     Result[l.Increase] := Self[i.Increase];
   while (j < b) do
     Result[l.Increase] := items[j.Increase];
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryCombine}
+var
+  l: specialize TFPGList<TVar>;
+  a, b, i, j: Integer;
+begin
+  l := specialize TFPGList<TVar>.Create;
+  try
+    i := 0;
+    j := 0;
+    a := Length(Self);
+    b := Length(items);
+    while ((i < a) and (j < b)) do
+      if ((aAscending and (Self[i] <= items[j])) or ((not aAscending) and (Self[i] >= items[j]))) then
+        l.Add(Self[i.Increase])
+      else
+        l.Add(items[j.Increase]);
+    while (i < a) do
+      l.Add(Self[i.Increase]);
+    while (j < b) do
+      l.Add(items[j.Increase]);
+    SetLength(Result, l.Count);
+    for i := 0 to (l.Count - 1) do
+      Result[i] := l[i];
+  finally
+    l.Free;
+  end;
 end;
 {$ENDIF}

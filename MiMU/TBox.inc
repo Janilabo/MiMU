@@ -1,3 +1,5 @@
+{$DEFINE TBox}{$I config\Defines.inc}
+
 {==============================================================================]
   <TBox.Create>
   @action: Creates TBox using minX, minY, maxX, maxY 
@@ -1897,3 +1899,5 @@ class function _TBox.Create(const value: Integer = 0): TBox; overload; cdecl;
 begin
   Result := _TBox.Create(value, value, value, value);
 end;
+
+{$UNDEF TBox}

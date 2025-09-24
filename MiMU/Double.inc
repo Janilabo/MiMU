@@ -1,3 +1,5 @@
+{$DEFINE Double}{$I config\Defines.inc}
+
 {==============================================================================]
  <TDoubleHelper.ClampMin>
  @action: Returns Double clamped by minimum limit
@@ -304,6 +306,24 @@ function TDoubleHelper.Compare(const target: Double): Integer; cdecl; inline; {$
 function TDoubleHelper.Precede(const target: Double; const aAscending: Boolean): Boolean; overload; cdecl; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
 
 {==============================================================================]
+ <TDoubleHelper.Ascending>
+ @action  Returns True if the helper’s value is less than or equal to         
+          the given target value. Useful as a comparison predicate when        
+          sorting or merging arrays in ascending order.
+ @note: This method does not modify either value; it simply performs a <= comparison.
+[==============================================================================}
+function TDoubleHelper.Ascending(const target: Double): Boolean; cdecl; inline; {$DEFINE Skeleton_Ascending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Ascending}
+
+{==============================================================================]
+ <TDoubleHelper.Descending>
+ @action: Returns True if the helper’s value is greater than or equal to
+          the given target value. Use as a comparison predicate when
+          sorting or merging arrays in descending order.
+ @note: Pure comparison only; equivalent to Self >= target.
+[==============================================================================}
+function TDoubleHelper.Descending(const target: Double): Boolean; cdecl; inline; {$DEFINE Skeleton_Descending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Descending}
+
+{==============================================================================]
  <Double_Distance>
  @action: Returns the distance between x and T.
  @note: None
@@ -475,3 +495,5 @@ function TDoubleHelper.Undersize(const limit: Double): Boolean; cdecl;
 begin
   Result := (Self < limit);
 end;
+
+{$UNDEF Double}

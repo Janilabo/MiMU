@@ -1,3 +1,5 @@
+{$DEFINE Integer}{$I config\Defines.inc}
+
 {==============================================================================]
   <TIntegerArrayHelper.Bounds>
   @action: Stores arr bounds to TRange.
@@ -2199,6 +2201,13 @@ function TIntegerArrayHelper.BinaryMerge(const items: TIntegerArray; const aAsce
 function TIntegerArrayHelper.BinaryMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl; {$DEFINE Skeleton_BinaryMerged}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryMerged}
 
 {==============================================================================]
+  <TIntegerArray.BinaryCombine>
+  @action: Merges two sorted integer arrays (Self and items) into a new sorted array based on the specified order by aAscending.
+  @note: Assumes both Self and items are already sorted in the same order.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryCombine(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl; {$DEFINE Skeleton_BinaryCombine}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryCombine}
+
+{==============================================================================]
   <TIntegerArray.BMerge>
   @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
   @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
@@ -2258,3 +2267,5 @@ begin
   if (j < b) then
     Move(items[j], Result[l], ((b - j) * SizeOf(Integer)));
 end;
+
+{$UNDEF Integer}

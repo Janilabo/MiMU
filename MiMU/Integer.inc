@@ -1,3 +1,5 @@
+{$DEFINE Integer}{$I config\Defines.inc}
+
 {==============================================================================]
  <TIntegerHelper.ClampMin>
  @action: Returns Integer clamped by minimum limit
@@ -353,6 +355,24 @@ function TIntegerHelper.Compare(const target: Integer): Integer; cdecl; inline; 
 function TIntegerHelper.Precede(const target: Integer; const aAscending: Boolean): Boolean; overload; cdecl; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
 
 {==============================================================================]
+ <TIntegerHelper.Ascending>
+ @action  Returns True if the helper’s value is less than or equal to         
+          the given target value. Useful as a comparison predicate when        
+          sorting or merging arrays in ascending order.
+ @note: This method does not modify either value; it simply performs a <= comparison.
+[==============================================================================}
+function TIntegerHelper.Ascending(const target: Integer): Boolean; cdecl; inline; {$DEFINE Skeleton_Ascending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Ascending}
+
+{==============================================================================]
+ <TIntegerHelper.Descending>
+ @action: Returns True if the helper’s value is greater than or equal to
+          the given target value. Use as a comparison predicate when
+          sorting or merging arrays in descending order.
+ @note: Pure comparison only; equivalent to Self >= target.
+[==============================================================================}
+function TIntegerHelper.Descending(const target: Integer): Boolean; cdecl; inline; {$DEFINE Skeleton_Descending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Descending}
+
+{==============================================================================]
  <TIntegerHelper.Distance>
  @action: Returns the distance between x and T.
  @note: None
@@ -509,3 +529,5 @@ begin
     s := (s shr 1);
   end;
 end;
+
+{$UNDEF Integer}

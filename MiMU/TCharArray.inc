@@ -1,3 +1,5 @@
+{$DEFINE Char}{$I config\Defines.inc}
+
 {==============================================================================]
   <TCharArrayHelper.Str>
   @action: Returns arr joined together as string.
@@ -143,3 +145,5 @@ begin
   for i := 0 to High(Self) do
     Result[i] := Self[i];
 end;
+
+{$UNDEF Char}

@@ -1,3 +1,5 @@
+{$DEFINE TPoint}{$I config\Defines.inc}
+
 {==============================================================================]
   <TPointArrayHelper.Bounds>
   @action: Returns bounding box around TPointArray arr.
@@ -934,3 +936,5 @@ begin
   if (Result > 0) then
     FillChar(Pointer(Self)^, (Result * SizeOf(TPoint)), 0);
 end;
+
+{$UNDEF TPoint}

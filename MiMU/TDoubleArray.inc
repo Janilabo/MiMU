@@ -1,3 +1,5 @@
+{$DEFINE Double}{$I config\Defines.inc}
+
 {==============================================================================]
   <TDoubleArrayHelper.Reinit>
   @action: Clears all elements of the array by zero-filling the underlying memory,
@@ -203,3 +205,7 @@ function TDoubleArrayHelper.BinaryRange(const x: Double; const aAscending: Boole
 function TDoubleArrayHelper.BinaryMerge(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload; cdecl; {$DEFINE Skeleton_BinaryMerge}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryMerge}
 
 function TDoubleArrayHelper.BinaryMerged(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload; cdecl; {$DEFINE Skeleton_BinaryMerged}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryMerged}
+
+function TDoubleArrayHelper.BinaryCombine(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload; cdecl; {$DEFINE Skeleton_BinaryCombine}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryCombine}
+
+{$UNDEF Double}

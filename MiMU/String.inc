@@ -1,3 +1,5 @@
+{$DEFINE string}{$I config\Defines.inc}
+
 {==============================================================================]
   <TStringHelper.After>
   @action: Returns string that is found after s in str.
@@ -335,6 +337,24 @@ function TStringHelper.Compare(const target: string): Integer; cdecl; inline; {$
  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
 function TStringHelper.Precede(const target: string; const aAscending: Boolean): Boolean; overload; cdecl; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
+
+{==============================================================================]
+ <TStringHelper.Ascending>
+ @action  Returns True if the helper’s value is less than or equal to         
+          the given target value. Useful as a comparison predicate when        
+          sorting or merging arrays in ascending order.
+ @note: This method does not modify either value; it simply performs a <= comparison.
+[==============================================================================}
+function TStringHelper.Ascending(const target: string): Boolean; cdecl; inline; {$DEFINE Skeleton_Ascending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Ascending}
+
+{==============================================================================]
+ <TStringHelper.Descending>
+ @action: Returns True if the helper’s value is greater than or equal to
+          the given target value. Use as a comparison predicate when
+          sorting or merging arrays in descending order.
+ @note: Pure comparison only; equivalent to Self >= target.
+[==============================================================================}
+function TStringHelper.Descending(const target: string): Boolean; cdecl; inline; {$DEFINE Skeleton_Descending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Descending}
 
 {==============================================================================]
   <TStringHelper.Contains>
@@ -1242,3 +1262,5 @@ begin
       Exit(False);
   Result := True;
 end;
+
+{$UNDEF string}

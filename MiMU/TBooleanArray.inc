@@ -1,3 +1,5 @@
+{$DEFINE Boolean}{$I config\Defines.inc}
+
 {==============================================================================]
   <TBooleanArrayHelper.Select>
   @action: IfThen method for TBooleanArray.
@@ -454,3 +456,5 @@ begin
   if Result > 0 then
     FillChar(Pointer(Self)^, (Result * SizeOf(Boolean)), 0);
 end;
+
+{$UNDEF Boolean}

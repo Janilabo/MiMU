@@ -1,3 +1,5 @@
+{$DEFINE TRange}{$I config\Defines.inc}
+
 {==============================================================================]
   <TRange.Singular>
   @action: Returns true if range start equals stop
@@ -1510,3 +1512,5 @@ class function _TRange.Create(const value: Integer = 0): TRange; overload; cdecl
 begin
   Result := _TRange.Create(value, value);
 end;
+
+{$UNDEF TRange}

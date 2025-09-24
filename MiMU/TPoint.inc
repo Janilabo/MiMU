@@ -1,3 +1,5 @@
+{$DEFINE TPoint}{$I config\Defines.inc}
+
 {==============================================================================]
   <TPoint.Create>
   @action: Returns TPoint with X and Y.
@@ -263,3 +265,5 @@ class function _TPoint.Create(const value: Integer = 0): TPoint; overload; cdecl
 begin
   Result := _TPoint.Create(value, value);
 end;
+
+{$UNDEF TPoint}

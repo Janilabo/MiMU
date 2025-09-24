@@ -1,3 +1,5 @@
+{$DEFINE Char}{$I config\Defines.inc}
+
 {==============================================================================]
   <TCharHelper.Compare>
   @action: Compares char with target.
@@ -11,6 +13,24 @@ function TCharHelper.Compare(const target: Char): Integer; cdecl; inline; {$DEFI
  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
 function TCharHelper.Precede(const target: Char; const aAscending: Boolean): Boolean; overload; cdecl; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
+
+{==============================================================================]
+ <TCharHelper.Ascending>
+ @action  Returns True if the helper’s value is less than or equal to         
+          the given target value. Useful as a comparison predicate when        
+          sorting or merging arrays in ascending order.
+ @note: This method does not modify either value; it simply performs a <= comparison.
+[==============================================================================}
+function TCharHelper.Ascending(const target: Char): Boolean; cdecl; inline; {$DEFINE Skeleton_Ascending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Ascending}
+
+{==============================================================================]
+ <TCharHelper.Descending>
+ @action: Returns True if the helper’s value is greater than or equal to
+          the given target value. Use as a comparison predicate when
+          sorting or merging arrays in descending order.
+ @note: Pure comparison only; equivalent to Self >= target.
+[==============================================================================}
+function TCharHelper.Descending(const target: Char): Boolean; cdecl; inline; {$DEFINE Skeleton_Descending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Descending}
 
 {==============================================================================]
   <TCharHelper.Str>
@@ -165,3 +185,5 @@ begin
   else
     Result := Self;
 end;
+
+{$UNDEF Char}

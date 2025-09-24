@@ -41,6 +41,8 @@ type
       function Neutral: Boolean; cdecl; inline;
       function Compare(const target: Integer): Integer; cdecl; inline;
       function Precede(const target: Integer; const aAscending: Boolean): Boolean; overload; cdecl;
+      function Ascending(const target: Integer): Boolean; cdecl; inline;
+      function Descending(const target: Integer): Boolean; cdecl; inline;
       function Distance(const T: Integer): Integer; cdecl; inline;
       function Difference(const T: Integer): Integer; cdecl; inline;
       function Opposite: Integer; cdecl; inline;
@@ -85,6 +87,8 @@ type
       function Accuracy(const a: Integer): Double; cdecl;
       function Compare(const target: Double): Integer; cdecl; inline;
       function Precede(const target: Double; const aAscending: Boolean): Boolean; overload; cdecl;
+      function Ascending(const target: Double): Boolean; cdecl; inline;
+      function Descending(const target: Double): Boolean; cdecl; inline;
       function Distance(const T: Double): Double; cdecl; inline;
       function Difference(const T: Double): Double; cdecl; inline;
       function Opposite: Double; cdecl; inline;
@@ -120,6 +124,8 @@ type
       function Center(const size: Integer; const fill: Char = #32): string; cdecl;
       function Compare(const target: string): Integer; cdecl; inline;
       function Precede(const target: string; const aAscending: Boolean): Boolean; overload; cdecl;
+      function Ascending(const target: string): Boolean; cdecl; inline;
+      function Descending(const target: string): Boolean; cdecl; inline;
       function Contains(const s: string; const index: Integer = 1): Boolean; cdecl;
       function Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer; cdecl;
       function Duplicate(const x: Integer = 2): string; cdecl;
@@ -175,6 +181,8 @@ type
     {$IFDEF Char}
       function Compare(const target: Char): Integer; cdecl; inline;
       function Precede(const target: Char; const aAscending: Boolean): Boolean; overload; cdecl;
+      function Ascending(const target: Char): Boolean; cdecl; inline;
+      function Descending(const target: Char): Boolean; cdecl; inline;
       function Str(const size: Integer = 1): string; cdecl;
       function ToStr(const size: Integer = 1): string; cdecl;
       function IsNumber: Boolean; cdecl;
@@ -608,6 +616,7 @@ type
       function BinaryRange(const x: Integer; const aAscending: Boolean = True): TRange; overload; cdecl;
       function BinaryMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
       function BinaryMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+      function BinaryCombine(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
     {$ENDIF}
@@ -640,6 +649,7 @@ type
       function BinaryRange(const x: Double; const aAscending: Boolean = True): TRange; overload; cdecl;
       function BinaryMerge(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload; cdecl;
       function BinaryMerged(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload; cdecl;
+      function BinaryCombine(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload; cdecl;
     {$ENDIF}
     {$IFDEF string}
       function Span: Integer; cdecl;

@@ -1,3 +1,5 @@
+{$DEFINE TBox}{$I config\Defines.inc}
+
 {==============================================================================]
  <TBoxArrayHelper.X1s>
  @action: Returns X1-values from arr as TIntegerArray.
@@ -151,3 +153,5 @@ begin
   for i := 0 to (Result - 1) do
     Self[i] := Box(x1Arr[i], y1Arr[i], x2Arr[i], y2Arr[i]);
 end;
+
+{$UNDEF TBox}
