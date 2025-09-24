@@ -392,6 +392,14 @@ operator<>(const a, b: TSegment): Boolean;
 operator<>(const a, b: TCircle): Boolean;
 operator<>(const a, b: TTriangle): Boolean;
 
+function RandomB: Boolean; overload; cdecl;
+function RandomBit: Byte; overload; cdecl;
+function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload; cdecl;
+function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload; cdecl;
+function Random2(const x: Integer; const r: Integer = 2): Integer; overload; cdecl;
+function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload; cdecl;
+function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload; cdecl;
+
 function Max(a, b: string): string; overload; inline;
 function Max(a, b: Char): Char; overload; inline;
 function Min(a, b: string): string; overload; inline;
@@ -712,6 +720,57 @@ end;
 operator<>(const a, b: TTriangle): Boolean;
 begin
   Result := not (a = b);
+end;
+
+function RandomB: Boolean; overload; cdecl;
+begin
+  Result := (Random(2) = 1);
+end;
+
+function RandomBit: Byte; overload; cdecl;
+begin
+  Result := Random(2);
+end;
+
+function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, size);
+  for i := 0 to High(Result) do
+    Result[i] := Random(x);
+end;
+
+function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload; cdecl;
+begin
+  Result := Round(RandomSample(x, sample).Mean);
+end;
+
+function Random2(const x: Integer; const r: Integer = 2): Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  for i := 1 to Random(r + 1) do
+    Random(x);
+  Result := Random(x);
+end;
+
+function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := -2147483648;
+  for i := 1 to r do
+    Result := Max(Result, Random(x));
+end;
+
+function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := 2147483647;
+  for i := 1 to r do
+    Result := Min(Result, Random(x));
 end;
 
 function Point(const pX, pY: Integer): TPoint; overload; inline;

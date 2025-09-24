@@ -468,8 +468,8 @@ begin
           end;
         if (l = -1) then
         begin
-          a.Append(Self[i]);
-          c.Append(1);
+          a := a.Append(Self[i]);
+          c := c.Append(1);
         end else
           Inc(c[l]);
       end;
