@@ -1,4 +1,17 @@
 {==============================================================================]
+  <TDoubleArrayHelper.Reinit>
+  @action: Clears all elements of the array by zero-filling the underlying memory,
+           while keeping the current length unchanged.
+  @note: None.
+[==============================================================================}
+function TDoubleArrayHelper.Reinit: Integer; overload; cdecl;
+begin
+  Result := Length(Self);
+  if (Result > 0) then
+    FillChar(Pointer(Self)^, (Result * SizeOf(Double)), 0);
+end;
+
+{==============================================================================]
   <TDoubleArrayHelper.BSort>
   @action: BinarySort algorithm for TDoubleArrays (based on Binary Search).
   @note: Returns High(arr).
@@ -187,15 +200,4 @@ function TDoubleArrayHelper.BinaryRange(const x: TRange; const aAscending: Boole
 [==============================================================================}
 function TDoubleArrayHelper.BinaryRange(const x: Double; const aAscending: Boolean = True): TRange; overload; cdecl; {$DEFINE Skeleton_BinaryRange2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRange2}
 
-{==============================================================================]
-  <TDoubleArrayHelper.Reinit>
-  @action: Clears all elements of the array by zero-filling the underlying memory,
-           while keeping the current length unchanged.
-  @note: None.
-[==============================================================================}
-function TDoubleArrayHelper.Reinit: Integer; overload; cdecl;
-begin
-  Result := Length(Self);
-  if (Result > 0) then
-    FillChar(Pointer(Self)^, (Result * SizeOf(Double)), 0);
-end;
+function TDoubleArrayHelper.BinaryMerge(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload; cdecl; {$DEFINE Skeleton_BinaryMerge}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryMerge}

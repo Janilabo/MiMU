@@ -810,3 +810,34 @@ begin
     Result.stop := -1;
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryMerge}
+var
+  a, b, i, j, l: Integer;
+begin
+  a := Length(Self);
+  b := Length(items);
+  SetLength(Result, (a + b));
+  i := 0;
+  j := 0;
+  l := 0;
+  case aAscending of
+    True:
+    while ((i < a) and (j < b)) do
+      if (Self[i] <= items[j]) then
+        Result[l.Increase] := Self[i.Increase]
+      else
+        Result[l.Increase] := items[j.Increase];
+    False:
+    while (i < a) and (j < b) do
+      if (Self[i] >= items[j]) then
+        Result[l.Increase] := Self[i.Increase]
+      else
+        Result[l.Increase] := items[j.Increase];
+  end;
+  while (i < a) do
+    Result[l.Increase] := Self[i.Increase];
+  while (j < b) do
+    Result[l.Increase] := items[j.Increase];
+end;
+{$ENDIF}

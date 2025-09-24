@@ -602,8 +602,10 @@ type
       function BinaryUpperBound(const x: Integer; const aAscending: Boolean): Integer; overload; cdecl;
       function BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload; cdecl;
       function BinaryRange(const x: Integer; const aAscending: Boolean = True): TRange; overload; cdecl;
+      function BinaryMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
     {$ENDIF}
     {$IFDEF Double}
+      function Reinit: Integer; overload; cdecl;
       function BSort(const aAscending: Boolean = True): Integer; cdecl;
       function BinarySort(const aAscending: Boolean = True): Integer; cdecl;
       function BinarySorted(const aAscending: Boolean = True): TDoubleArray; cdecl;
@@ -629,7 +631,7 @@ type
       function BinaryUpperBound(const x: Double; const aAscending: Boolean): Integer; overload; cdecl;
       function BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload; cdecl;
       function BinaryRange(const x: Double; const aAscending: Boolean = True): TRange; overload; cdecl;
-      function Reinit: Integer; overload; cdecl;
+      function BinaryMerge(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload; cdecl;
     {$ENDIF}
     {$IFDEF string}
       function Span: Integer; cdecl;
