@@ -1332,7 +1332,17 @@ end;
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
-function TRange.Middle: Double; cdecl;
+function TRange.Middle: Integer; cdecl;
+begin
+  Result := ((Self.start + Self.stop) div 2);
+end;
+
+{==============================================================================]
+ <TRange.Mid>
+ @action: The value(s) at the center position(s) of given range.
+ @note: None
+[==============================================================================}
+function TRange.Mid: Double; cdecl;
 begin
   Result := ((Self.start + Self.stop) / 2.0);
 end;

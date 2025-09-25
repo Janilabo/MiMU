@@ -2055,6 +2055,13 @@ function TIntegerArrayHelper.BinaryPosR(const x: Integer; const aAscending: Bool
 function TIntegerArrayHelper.BinarySearch(const x: Integer; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinarySearch}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearch}
 
 {==============================================================================]
+  <TIntegerArrayHelper.BinarySeek>
+  @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.
+  @note: Works with sorted arrays! (aAscending or descending)
+[==============================================================================}
+function TIntegerArrayHelper.BinarySeek(const x: Integer; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinarySeek}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySeek}
+
+{==============================================================================]
   <TIntegerArrayHelper.BinaryContains>
   @action: Binary Contains function for TIntegerArrays.
   @note: Works with sorted arrays! (aAscending or descending)

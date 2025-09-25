@@ -71,6 +71,13 @@ function TDoubleArrayHelper.BinaryPosR(const x: Double; const aAscending: Boolea
 function TDoubleArrayHelper.BinarySearch(const x: Double; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinarySearch}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearch}
 
 {==============================================================================]
+  <TDoubleArrayHelper.BinarySeek>
+  @action: Binary Search function for TDoubleArrays. Searches x from arr and returns the index.
+  @note: Works with sorted arrays! (aAscending or descending)
+[==============================================================================}
+function TDoubleArrayHelper.BinarySeek(const x: Double; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinarySeek}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySeek}
+
+{==============================================================================]
   <TDoubleArrayHelper.BinaryContains>
   @action: Binary Contains function for TDoubleArrays.
   @note: Works with sorted arrays! (aAscending or descending)

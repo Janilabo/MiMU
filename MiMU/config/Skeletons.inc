@@ -502,6 +502,26 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_BinarySeek}
+var
+  i: Integer;
+  r: TRange;
+begin
+  r.Create(0, High(Self));
+  while r.Ascending do
+  begin
+    i := (r.start + r.Middle);
+    if (Self[i] = x) then
+      Exit(i);
+    if ((aAscending and (Self[i] < x)) or ((not aAscending) and (Self[i] > x))) then
+      r.start := (i + 1)
+    else
+      r.stop := (i - 1);
+  end;
+  Result := -1;
+end; 
+{$ENDIF}
+
 {$IFDEF Skeleton_BinaryContains}
 begin
   Result := (Self.BinarySearch(x, aAscending) > -1);
