@@ -507,10 +507,11 @@ var
   i: Integer;
   r: TRange;
 begin
-  r.Create(0, High(Self));
-  while r.Ascending do
+  Result := -1;
+  r.Create(Low(Self), High(Self));
+  while r.Increasing do
   begin
-    i := (r.start + r.Middle);
+    i := r.Pivot;
     if (Self[i] = x) then
       Exit(i);
     if ((aAscending and (Self[i] < x)) or ((not aAscending) and (Self[i] > x))) then
@@ -518,8 +519,7 @@ begin
     else
       r.stop := (i - 1);
   end;
-  Result := -1;
-end; 
+end;
 {$ENDIF}
 
 {$IFDEF Skeleton_BinaryContains}

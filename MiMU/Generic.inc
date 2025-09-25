@@ -2716,6 +2716,24 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Plain: Boolean>
+ @action: Returns true if all array items are identical.
+ @note: None.
+[==============================================================================}
+function HArr.Plain: Boolean; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  if (l <= 1) then
+    Exit(True);
+  for i := 1 to (l - 1) do
+    if (Self[i] <> Self[i - 1]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
  <arr.Pop: VarType>
  @action: Returns and removes item from highest array index from arr.
  @note: UNSAFE! Make sure array has enough items..

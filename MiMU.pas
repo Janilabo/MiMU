@@ -169,6 +169,7 @@ type
     function Digit(const x: Integer): Boolean; cdecl; inline;
     function Value(const x: Integer): Boolean; cdecl; inline;
     function Item(const x: Integer): Boolean; cdecl; inline;
+    function Pivot: Integer; cdecl;
     function Middle: Integer; cdecl;
     function Mid: Double; cdecl;
     function MidValue: Double; cdecl;

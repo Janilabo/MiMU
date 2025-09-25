@@ -1328,6 +1328,16 @@ begin
 end;
 
 {==============================================================================]
+ <TRange.Pivot>
+ @action: The value(s) at the center position(s) of given range.
+ @note: None
+[==============================================================================}
+function TRange.Pivot: Integer; cdecl;
+begin
+  Result := (Self.start + ((Self.stop - Self.start) div 2));
+end;
+
+{==============================================================================]
  <TRange.Middle>
  @action: The value(s) at the center position(s) of given range.
  @note: None

@@ -397,6 +397,7 @@ type
     function Oversize(const limit: Integer): Boolean; overload; cdecl;
     function Partition(const pSize: Integer): T2DArr; overload; cdecl;
     function Patch(const index: Integer; const items: TArr): Integer; overload; cdecl;
+    function Plain: Boolean; overload; cdecl;
     function Pick(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
     function Pop: TVar; overload; cdecl;
     function Pop(const null: TVar): TVar; overload; cdecl;
