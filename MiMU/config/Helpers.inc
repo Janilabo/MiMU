@@ -597,6 +597,7 @@ type
       function BinaryPosL(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
       function BinaryPosR(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
       function BinarySearch(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
+      function BinarySeek(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
       function BinaryContains(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl;
       function BinaryCount(const x: Integer; const aAscending: Boolean = True): Integer; cdecl;
       function BinaryLocate(const x: Integer; const aAscending: Boolean = True): TRange; cdecl;
@@ -630,6 +631,7 @@ type
       function BinaryPosL(const x: Double; const aAscending: Boolean = True): Integer; cdecl;
       function BinaryPosR(const x: Double; const aAscending: Boolean = True): Integer; cdecl;
       function BinarySearch(const x: Double; const aAscending: Boolean = True): Integer; cdecl;
+      function BinarySeek(const x: Double; const aAscending: Boolean = True): Integer; cdecl;
       function BinaryContains(const x: Double; const aAscending: Boolean = True): Boolean; cdecl;
       function BinaryCount(const x: Double; const aAscending: Boolean = True): Integer; cdecl;
       function BinaryLocate(const x: Double; const aAscending: Boolean = True): TRange; cdecl;
