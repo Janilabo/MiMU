@@ -10,7 +10,7 @@ function TBooleanArrayHelper.Select(const sTrue, sFalse: Double): TDoubleArray; 
 function TBooleanArrayHelper.Select(const sTrue, sFalse: string): TStringArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
 function TBooleanArrayHelper.Select(const sTrue, sFalse: Char): TCharArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
 function TBooleanArrayHelper.Select(const sTrue, sFalse: Boolean): TBooleanArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TPoint): TPointArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I onfig\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: TPoint): TPointArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
 function TBooleanArrayHelper.Select(const sTrue, sFalse: TBox): TBoxArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
 function TBooleanArrayHelper.Select(const sTrue, sFalse: TRange): TRangeArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
 
