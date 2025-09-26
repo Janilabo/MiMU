@@ -505,11 +505,12 @@ end;
 {$IFDEF Skeleton_BinarySeek}
 var
   i: Integer;
-  r: TRange;
+  s, r: TRange;
 begin
   Result := -1;
-  r.Create(Low(Self), High(Self));
-  while r.Increasing do
+  s.Create(Low(Self), High(Self));
+  r := s;
+  while r.Ascends do
   begin
     i := r.Pivot;
     if (Self[i] = x) then
