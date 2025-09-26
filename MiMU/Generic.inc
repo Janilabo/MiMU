@@ -10,7 +10,7 @@ var
   i: Integer;
 begin
   SetLength(Result, aSize);
-  for i := 0 to High(Result) do
+  for i := Low(Result) to High(Result) do
     Result[i] := Self;
 end;
 
@@ -24,10 +24,10 @@ var
   i, j: Integer;
 begin
   SetLength(Result, size1D);
-  for i := 0 to High(Result) do
+  for i := Low(Result) to High(Result) do
   begin
     SetLength(Result[i], size2D);
-    for j := 0 to High(Result[i]) do
+    for j := Low(Result[i]) to High(Result[i]) do
       Result[i][j] := Self;
   end;
 end;
@@ -58,27 +58,29 @@ end;
 [==============================================================================}
 function HArr.Add(const items: TArr; const duplicates: Boolean = True): TArr; overload; cdecl;
 var
-  a, h, i, l: Integer;
+  a, h, i, l, s: Integer;
 begin
-  h := High(items);
-  l := Length(Self);
-  SetLength(Result, (l + (h + 1)));
-  if ((h = -1) and (l = 0)) then
+  s := Length(Self);
+  i := Length(items);
+  SetLength(Result, (s + i));
+  if ((i = 0) and (s = 0)) then
     Exit;
-  for i := 0 to (l - 1) do
-    Result[i] := Self[i];
+  l := Low(items);
+  h := High(items);
+  for i := 0 to (s - 1) do
+    Result[i] := Self[l + i];
   case duplicates of
     False:
     begin
       a := 0;
-      for i := 0 to h do
+      for i := l to h do
         if not Result.Contains(items[i]) then
-          Result[l + a.Increase] := items[i];
-      SetLength(Result, (l + a));
+          Result[s + a.Increase] := items[i];
+      SetLength(Result, (s + a));
     end;
     True:
-    for i := 0 to h do
-      Result[l + i] := items[i];
+    for i := l to h do
+      Result[i - l] := items[i];
   end;
 end;
 
@@ -106,10 +108,11 @@ end;
 [==============================================================================}
 function HArr.AllSame: Boolean; overload; cdecl;
 var
-  i: Integer;
+  i, l: Integer;
 begin
-  for i := 1 to High(Self) do
-    if (Self[0] <> Self[i]) then
+  l := Low(Self);
+  for i := (l + 1) to High(Self) do
+    if (Self[l] <> Self[i]) then
       Exit(False);
   Result := (Length(Self) > 0);
 end;
@@ -121,10 +124,11 @@ end;
 [==============================================================================}
 function HArr.AllUnique: Boolean; overload; cdecl;
 var
-  h, a, b: Integer;
+  h, l, a, b: Integer;
 begin
   h := High(Self);
-  for a := 0 to (h - 1) do
+  l := Low(Self);
+  for a := l to (h - 1) do
     for b := (a + 1) to h do
       if (Self[a] = Self[b]) then
         Exit(False);
@@ -150,7 +154,7 @@ end;
 [==============================================================================}
 function HArr.Any: TVar; overload; cdecl;
 begin
-  Result := Self[Random(Self.Size)];
+  Result := Self[Low(Self) + Random(Self.Size)];
 end;
 
 {==============================================================================]
@@ -174,24 +178,25 @@ end;
 [==============================================================================}
 function HArr.Append(const items: TArr; const duplicates: Boolean = True): TArr; overload; cdecl;
 var
-  a, h, i: Integer;
+  a, h, l, i: Integer;
 begin
   Result := Self.Copy;
   if Items.Empty then
     Exit;
+  l := Low(items);
   h := High(items);
   a := High(Self);
   SetLength(Result, ((a + h) + 2));
   case duplicates of
     False:
     begin
-      for i := 0 to h do
+      for i := l to h do
         if not Self.Contains(items[i]) then
           Result[a.Increment] := items[i];
       SetLength(Result, (a + 1));
     end;
     True:
-    for i := 0 to h do
+    for i := l to h do
       Result[a.Increment] := items[i];
   end;
 end;
@@ -203,13 +208,16 @@ end;
 [==============================================================================}
 function HArr.Backwards: TArr; overload; cdecl;
 var
-  h, i: Integer;
+  s, l, i: Integer;
 begin
-  h := High(Self);
-  SetLength(Result, (h + 1));
+  s := Length(Self);
+  SetLength(Result, s);
+  if (s = 0) then
+    Exit;
+  l := Low(Self);
   i := 0;
-  while (h > -1) do
-    Result[i.Increase] := Self[h.Decrease];
+  while (s.Decrement > -1) do
+    Result[i.Increase] := Self[l + s];
 end;
 
 {==============================================================================]
@@ -219,11 +227,12 @@ end;
 [==============================================================================}
 function HArr.Blit(const items: TArr; const index: Integer = 0): Integer; overload; cdecl;
 var
-  i: Integer;
+  i, s: Integer;
 begin
   Result := (index + Length(items));
-  for i := 0 to High(items) do
-    Self[index + i] := items[i]; 
+  s := 0;
+  for i := Low(items) to High(items) do
+    Self[index + s.Increase] := items[i]; 
 end;
 
 {==============================================================================]
@@ -243,18 +252,19 @@ end;
 [==============================================================================}
 function HArr.MadeOf(const allowed: TArr): Boolean; overload; cdecl;
 var
-  i, x, y: Integer;
+  a, s: TRange;
+  i: Integer;
 begin
-  y := Length(allowed);
-  i := High(Self);
-  if ((i < 0) or (y < 1)) then
+  if (Self.Empty or allowed.Empty) then
     Exit(False);
+  s.Create(Low(Self), High(Self));
+  a.Create(Low(allowed), High(allowed));
   repeat
-    x := 0;
+    i := a.start;
     repeat
-      Result := (Self[i] = allowed[x]);
-    until (Result or (x.Increment = y));
-  until ((i.Decrement < 0) or (not Result));
+      Result := (Self[s.stop] = allowed[i]);
+    until (Result or (i.Increment > a.stop));
+  until ((not Result) or (s.stop.Decrement < s.start));
 end;
 
 {==============================================================================]
@@ -264,18 +274,19 @@ end;
 [==============================================================================}
 function HArr.FreeOf(const forbidden: TArr): Boolean; overload; cdecl;
 var
-  i, x, y: Integer;
+  s, f: TRange;
+  i: Integer;
 begin
   if (Self.Empty or forbidden.Empty) then
     Exit(True);
-  y := Length(forbidden);
-  i := High(Self);
+  s.Create(Low(Self), High(Self));
+  f.Create(Low(forbidden), High(forbidden));	
   repeat
-    x := 0;
+    i := f.start;
     repeat
-      Result := not (Self[i] = forbidden[x]);
-    until ((x.Increment = y) or (not Result));
-  until ((i.Decrement < 0) or (not Result));
+      Result := not (Self[s.stop] = forbidden[i]);
+    until ((i.Increment > f.stop) or (not Result));
+  until ((not Result) or (s.stop.Decrement < s.start));
 end;
 
 {==============================================================================]
