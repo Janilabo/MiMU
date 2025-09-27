@@ -313,7 +313,8 @@ end;
 
 {$IFDEF Skeleton_BSort}
 var
-  i, j, l, r, m, o: Integer;
+  i, j, m, o: Integer;
+  r: TRange;
 begin
   Result := High(Self);
   if (Result > 0) then
@@ -321,26 +322,26 @@ begin
   for i := 1 to Result do
   begin
     a := Self[i];
-    l := 0;
-    r := (i - 1);
-    while (l <= r) do
+	r.Create(0, (i - 1));
+    while r.Ascending do
     begin
-      m := ((l + r) div 2);
+      m := r.Middle;
       if (Sign(a - Self[m]) = o) then
-        r := (m - 1)
+        r.stop := (m - 1)
       else
-        l := (m + 1);
+        r.start := (m + 1);
     end;
-    for j := (i - 1) downto l do
+    for j := (i - 1) downto r.start do
       Self[j + 1] := Self[j];
-    Self[l] := a;
+    Self[r.start] := a;
   end;
 end;
 {$ENDIF}
 
 {$IFDEF Skeleton_BinarySort}
 var
-  j, l, h, m, p, i, o: Integer;
+  j, m, i, o: Integer;
+  r: TRange;
 begin
   Result := High(Self);
   if (Result > 0) then
@@ -349,20 +350,18 @@ begin
     for j := 1 to Result do
     begin
       a := Self[j];
-      l := 0;
-      h := j;
-      while (l < h) do
+	  r.Create(0, j);
+      while r.Grows do
       begin
-        m := ((l + h) div 2);
+        m := r.Middle;
         if (Sign(Self[m] - a) = o) then
-          l := (m + 1)
+          r.start := (m + 1)
         else
-          h := m;
+          r.stop := m;
       end;
-      p := l;
-      for i := j downto (p + 1) do
+      for i := j downto (r.start + 1) do
         Self[i] := Self[i - 1];
-      Self[p] := a;
+      Self[r.start] := a;
     end;
   end;
 end;
@@ -370,7 +369,8 @@ end;
 
 {$IFDEF Skeleton_BinarySorted}
 var
-  j, l, h, m, p, i, n, o: Integer;
+  j, m, i, n, o: Integer;
+  r: TRange;
 begin
   n := Length(Self);
   SetLength(Result, n);
@@ -381,20 +381,18 @@ begin
     for j := 1 to (n - 1) do
     begin
       a := Self[j];
-      l := 0;
-      h := j;
-      while (l < h) do
+      r.Create(0, j);
+      while r.Grows do
       begin
-        m := ((l + h) div 2);
+        m := r.Middle;
         if (Sign(Result[m] - a) = o) then
-          l := (m + 1)
+          r.start := (m + 1)
         else
-          h := m;
+          r.stop := m;
       end;
-      p := l;
-      for i := j downto (p + 1) do
+      for i := j downto (r.start + 1) do
         Result[i] := Result[i - 1];
-      Result[p] := a;
+      Result[r.start] := a;
     end;
   end;
 end;
@@ -402,102 +400,102 @@ end;
 
 {$IFDEF Skeleton_BinaryBoundL}
 var
-  l, m, h, o: Integer;
+  m, o: Integer;
+  r: TRange;
 begin
-  l := 0;
-  h := Length(Self);
   o := aAscending.Select(1, -1);
-  while (l < h) do
+  r.Create(0, Length(Self));
+  while r.Grows do
   begin
-    m := ((l + h) div 2);
+    m := r.Middle;
     if ((o * Self[m]) < (o * x)) then
-      l := (m + 1)
+      r.Start := (m + 1)
     else
-      h := m;
+      r.Stop := m;
   end;
-  Result := l;
+  Result := r.Start;
 end;
 {$ENDIF}
 
 {$IFDEF Skeleton_BinaryBoundR}
 var
-  l, m, h, o: Integer;
+  m, o: Integer;
+  r: TRange;
 begin
-  l := 0;
-  h := Length(Self);
   o := aAscending.Select(1, -1);
-  while (l < h) do
+  r.Create(0, Length(Self));
+  while r.Grows do
   begin
-    m := ((l + h) div 2);
+    m := r.Middle;
     if ((o * Self[m]) <= (o * x)) then
-      l := (m + 1)
+      r.Start := (m + 1)
     else
-      h := m;
+      r.Stop := m;
   end;
-  Result := l;
+  Result := r.Start;
 end;
 {$ENDIF}
 
 {$IFDEF Skeleton_BinaryPosL}
 var
-  l, m, h, o: Integer;
+  m, o: Integer;
+  r: TRange;
 begin
   Result := -1;
-  l := 0;
-  h := Length(Self);
   o := aAscending.Select(1, -1);
-  while (l < h) do
+  r.Create(0, Length(Self));
+  while r.Grows do
   begin
-    m := ((l + h) div 2);
+    m := r.Middle;
     if ((o * Self[m]) < (o * x)) then
-      l := (m + 1)
+      r.Start := (m + 1)
     else
-      h := m;
+      r.Stop := m;
   end;
-  if ((l < Length(Self)) and (Self[l] = x)) then
-    Result := l;
+  if ((r.Start < Length(Self)) and (Self[r.Start] = x)) then
+    Result := r.Start;
 end;
 {$ENDIF}
 
 {$IFDEF Skeleton_BinaryPosR}
 var
-  l, m, h, o: Integer;
+  m, o: Integer;
+  r: TRange;
 begin
   Result := -1;
-  l := 0;
-  h := Length(Self);
   o := aAscending.Select(1, -1);
-  while (l < h) do
+  r.Create(0, Length(Self));
+  while r.Grows do
   begin
-    m := ((l + h) div 2);
+    m := r.Middle;
     if ((o * Self[m]) <= (o * x)) then
-      l := (m + 1)
+      r.Start := (m + 1)
     else
-      h := m;
+      r.Stop := m;
   end;
-  if ((l > 0) and (Self[l - 1] = x)) then
-    Result := (l - 1);
+  if ((r.Start > 0) and (Self[r.Start - 1] = x)) then
+    Result := (r.Start - 1);
 end;
 {$ENDIF}
 
 {$IFDEF Skeleton_BinarySearch}
 var
-  l, h, m, o: Integer;
+  m, o: Integer;
+  r: TRange;
 begin
   Result := -1;
-  l := 0;
-  h := High(Self);
   o := aAscending.Select(1, -1);
-  while ((l <= h) and (Result = -1)) do
+  r.Create(0, High(Self));
+  while (r.Ascending and (Result = -1)) do
   begin
-    m := ((l + h) div 2);
+    m := r.Middle;
     if ((o * Self[m]) = (o * x)) then
       Result := m
     else
       if ((o * Self[m]) < (o * x)) then
-        l := (m + 1)
+        r.Start := (m + 1)
       else
-        h := (m - 1);
+        r.Stop := (m - 1);
   end;
 end;
 {$ENDIF}
@@ -505,11 +503,10 @@ end;
 {$IFDEF Skeleton_BinarySeek}
 var
   i: Integer;
-  s, r: TRange;
+  r: TRange;
 begin
   Result := -1;
-  s.Create(Low(Self), High(Self));
-  r := s;
+  r.Create(0, High(Self));
   while r.Ascends do
   begin
     i := r.Pivot;
@@ -550,51 +547,51 @@ end;
 
 {$IFDEF Skeleton_BinaryLocation}
 var
-  s, l, h, m, o: Integer;
-  r: Boolean;
+  h, m, o: Integer;
+  f: Boolean;
 begin
-  r := False;
-  l := 0;
+  f := False;
   h := High(Self);
-  s := h;
+  Result.Create(0, h);
   o := aAscending.Select(1, -1);
-  while ((l <= h) and (not r)) do
+  while (Result.Ascending and (not f)) do
   begin
-    m := ((l + h) div 2);
-    r := ((o * Self[m]) = (o * x));
-    if r then
+    m := Result.Middle;
+    f := ((o * Self[m]) = (o * x));
+    if f then
 	begin
       Result.Create(m, m);
       while ((Result.start > 0) and (Self[Result.start - 1] = x)) do
         Dec(Result.start);
-      while ((Result.stop < s) and (Self[Result.stop + 1] = x)) do
+      while ((Result.stop < h) and (Self[Result.stop + 1] = x)) do
         Inc(Result.stop);
     end else
       if ((o * Self[m]) < (o * x)) then
-        l := (m + 1)
+        Result.start := (m + 1)
       else
-        h := (m - 1);
+        Result.stop := (m - 1);
   end;
-  if not r then
+  if not f then
     Result.Create(-1, -1);
 end;
 {$ENDIF}
 
 {$IFDEF Skeleton_BinaryAppend}
 var
-  h, m, i, o: Integer;
+  m, i, o: Integer;
+  r: TRange;
 begin
-  Result := 0;
-  h := High(Self);
   o := aAscending.Select(1, -1);
-  while (Result <= h) do
+  r.Create(0, High(Self));
+  while r.Ascending do
   begin
-    m := ((Result + h) div 2);
+    m := r.Middle;
     if ((o * Self[m]) < (o * x)) then
-      Result := (m + 1)
+      r.start := (m + 1)
     else
-      h := (m - 1);
+      r.stop := (m - 1);
   end;
+  Result := r.start;
   SetLength(Self, (Length(Self) + 1));
   for i := High(Self) downto (Result + 1) do
     Self[i] := Self[i - 1];
@@ -604,51 +601,49 @@ end;
 
 {$IFDEF Skeleton_BinaryAdd}
 var
-  l, h, m, p, i, o: Integer;
+  m, i, o: Integer;
+  r: TRange;
 begin
-  l := 0;
-  h := High(Self);
   o := aAscending.Select(1, -1);
-  while (l <= h) do
+  r.Create(0, High(Self));
+  while r.Ascending do
   begin
-    m := ((l + h) div 2);
+    m := r.Middle;
     if ((o * Self[m]) < (o * x)) then
-      l := (m + 1)
+      r.start := (m + 1)
     else
-      h := (m - 1);
+      r.stop := (m - 1);
   end;
-  p := l;
   SetLength(Result, (Length(Self) + 1));
-  for i := 0 to (p - 1) do
+  for i := 0 to (r.start - 1) do
     Result[i] := Self[i];
-  Result[p] := x;
-  for i := p to High(Self) do
+  Result[r.start] := x;
+  for i := r.start to High(Self) do
     Result[i + 1] := Self[i];
 end;
 {$ENDIF}
 
 {$IFDEF Skeleton_BinarySearchF}
 var
-  l, h, m, o: Integer;
-  f: TRange;
+  m, o: Integer;
+  f, r: TRange;
 begin
   Result := -1;
   f := x.Normalize;
-  l := 0;
-  h := High(Self);
   o := aAscending.Select(1, -1);
-  while (l <= h) do
+  r.Create(0, High(Self));
+  while r.Ascending do
   begin
-    m := ((l + h) div 2);
+    m := r.Middle;
     if ((o * Self[m]) < (o * f.start)) then
-      l := (m + 1)
+      r.start := (m + 1)
     else
       if ((o * Self[m]) > (o * f.stop)) then
-        h := (m - 1)
+        r.stop := (m - 1)
     else
     begin
       Result := m;
-      h := (m - 1);
+      r.stop := (m - 1);
     end;
   end;
 end;
@@ -656,26 +651,25 @@ end;
 
 {$IFDEF Skeleton_BinarySearchL}
 var
-  l, h, m, o: Integer;
-  f: TRange;
+  m, o: Integer;
+  f, r: TRange;
 begin
   Result := -1;
   f := x.Normalize;
-  l := 0;
-  h := High(Self);
   o := aAscending.Select(1, -1);
-  while (l <= h) do
+  r.Create(0, High(Self));
+  while r.Ascending do
   begin
-    m := ((l + h) div 2);
+    m := r.Middle;
     if ((o * Self[m]) < (o * f.start)) then
-      l := (m + 1)
+      r.start := (m + 1)
     else
       if ((o * Self[m]) > (o * f.stop)) then
-        h := (m - 1)
+        r.stop := (m - 1)
       else
       begin
         Result := m;
-        l := (m + 1);
+        r.start := (m + 1);
       end;
   end;
 end;
@@ -716,48 +710,48 @@ end;
 
 {$IFDEF Skeleton_BinaryGrow}
 var
-  h, m, i, o, r: Integer;
+  m, i, o: Integer;
+  r: TRange;
 begin
-  r := 0;
-  h := High(Self);
+  r.Create(0, High(Self));
   o := aAscending.Select(1, -1);
-  while (r <= h) do
+  while r.Ascending do
   begin
-    m := ((r + h) div 2);
+    m := r.Middle;
     if ((o * Self[m]) < (o * x)) then
-      r := (m + 1)
+      r.start := (m + 1)
     else
-      h := (m - 1);
+      r.stop := (m - 1);
   end;
-  Result := ((Length(Self) = r) or (Self[r] <> x));
+  Result := ((Length(Self) = r.start) or (Self[r.start] <> x));
   if not Result then
     Exit;
   SetLength(Self, (Length(Self) + 1));
-  for i := High(Self) downto (r + 1) do
+  for i := High(Self) downto (r.start + 1) do
     Self[i] := Self[i - 1];
-  Self[r] := x;
+  Self[r.start] := x;
 end;
 {$ENDIF}
 
 {$IFDEF Skeleton_BinaryShrink}
 var
-  h, m, i, o, r: Integer;
+  m, i, o: Integer;
+  r: TRange;
 begin
-  r := 0;
-  h := High(Self);
+  r.Create(0, High(Self));
   o := aAscending.Select(1, -1);
-  while (r <= h) do
+  while r.Ascending do
   begin
-    m := ((r + h) div 2);
+    m := r.Middle;
     if ((o * Self[m]) < (o * x)) then
-      r := (m + 1)
+      r.start := (m + 1)
     else
-      h := (m - 1);
+      r.stop := (m - 1);
   end;
-  Result := ((Length(Self) > r) and (Self[r] = x));
+  Result := ((Length(Self) > r.start) and (Self[r.start] = x));
   if not Result then
     Exit;
-  for i := r to (High(Self) - 1) do
+  for i := r.start to (High(Self) - 1) do
     Self[i] := Self[i + 1];
   SetLength(Self, (Length(Self) - 1));
 end;
@@ -765,13 +759,12 @@ end;
 
 {$IFDEF Skeleton_BinaryUndupe}
 var
-  i, l, p: Integer;
+  i: Integer;
 begin
   if Self.Empty then
     Exit([]);
   SetLength(Result, 1);
   Result[0] := Self[0];
-  l := 1;
   for i := 1 to High(Self) do
     Result.BinaryGrow(Self[i]);
 end;
@@ -779,22 +772,22 @@ end;
 
 {$IFDEF Skeleton_BinaryLowerBound}
 var
-  l, h, m, o: Integer;
+  m, o: Integer;
+  r: TRange;
 begin
   Result := -1;
-  l := 0;
-  h := High(Self);
+  r.Create(0, High(Self));
   o := aAscending.Select(1, -1);
-  while (l <= h) do
+  while r.Ascending do
   begin
-    m := ((l + h) div 2);
+    m := r.Middle;
     case ((o * Self[m]) < (o * x)) of
       False:
       begin
         Result := m;
-        h := (m - 1);
+        r.stop := (m - 1);
       end;
-      True: l := (m + 1);
+      True: r.start := (m + 1);
     end;
   end;
 end;
@@ -802,22 +795,22 @@ end;
 
 {$IFDEF Skeleton_BinaryUpperBound}
 var
-  l, h, m, o: Integer;
+  m, o: Integer;
+  r: TRange;
 begin
   Result := -1;
-  l := 0;
-  h := High(Self);
+  r.Create(0, High(Self));
   o := aAscending.Select(1, -1);
-  while (l <= h) do
+  while r.Ascending do
   begin
-    m := ((l + h) div 2);
+    m := r.Middle;
     case ((o * Self[m]) > (o * x)) of
       False:
       begin
         Result := m;
-        l := (m + 1);
+        r.start := (m + 1);
       end;
-      True: h := (m - 1);
+      True: r.stop := (m - 1);
     end;
   end;
 end;
