@@ -457,4 +457,22 @@ begin
     FillChar(Pointer(Self)^, (Result * SizeOf(Boolean)), 0);
 end;
 
+{==============================================================================]
+  <TBooleanArrayHelper.Occupancy>
+  @action: Returns the occupancy of the array: fraction of elements that are True.
+           1.0 = all val, 0.0 = no vals
+[==============================================================================}
+function TBooleanArrayHelper.Occupancy(const val: Boolean = True): Double; overload; cdecl;
+var
+  i, c: Integer;
+begin
+  if Self.Empty then
+    Exit(0.0);
+  c := 0;
+  for i := 0 to High(Self) do
+    if (Self[i] = val) then
+      Inc(c);
+  Result := (c / Length(Self));
+end;
+
 {$UNDEF Boolean}

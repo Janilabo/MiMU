@@ -531,6 +531,7 @@ type
       function Numberline: TIntegerArray; cdecl;
       function Sum: Int64; cdecl;
       function Density: Double; cdecl;
+      function Occupancy: Double; cdecl;
       function Mean: Double; cdecl;
       function Median: Double; cdecl;
       function Middle: Double; cdecl;
@@ -714,6 +715,7 @@ type
       function BinaryDigits: TIntegerArray; cdecl;
       function Binary: string; cdecl;
       function Reinit: Integer; overload; cdecl;
+      function Occupancy(const val: Boolean = True): Double; overload; cdecl;
     {$ENDIF}
     {$IFDEF TPoint}
       function Bounds: TBox; overload; cdecl;

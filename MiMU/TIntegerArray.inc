@@ -279,6 +279,20 @@ begin
 end;
 
 {==============================================================================]
+ <TIntegerArrayHelper.Occupancy>
+ @action: Returns the calculated density from given arr.
+ @note: None
+[==============================================================================}
+function TIntegerArrayHelper.Occupancy: Double; cdecl;
+var
+  r: TRange;
+begin
+  if Self.Empty then
+    Exit(0.0);
+  Result := (Self.QuickSorted.Distinct / r.Construct(0, High(Self)).Size);
+end;
+
+{==============================================================================]
  <TIntegerArrayHelper.Mean>
  @action: The sum of all arr values divided by the length of arr.
  @note: None
