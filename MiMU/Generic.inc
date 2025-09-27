@@ -934,6 +934,22 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Domain: TRange>
+  @action: Returns the valid index range of the array.
+  @note: 
+    - If the array is empty, start and stop are set to -1.
+    - Otherwise, start = 0 and stop = Length(Self) - 1.
+[==============================================================================}
+function HArr.Domain: TRange; overload; cdecl;
+begin
+  Result.stop := (Length(Self) - 1);
+  if (Result.stop = -1) then
+    Result.start := -1
+  else
+    Result.start := 0;
+end;
+
+{==============================================================================]
  <arr.Drop(item: VarType; eraseDuplicates: Boolean): TArray>
  @action: Removes item(s) from arr and returns it.
  @note: 	
@@ -1740,6 +1756,55 @@ begin
     if items.Contains(Self[Result]) then
       Exit;
   Result := -1;
+end;
+
+{==============================================================================]
+ <arr.Fit: Integer>
+  @action: Returns array length.
+  @note: Alternative.
+[==============================================================================}
+function HArr.Fit: Integer; overload; cdecl;
+begin
+  Result := ((High(Self) - Low(Self)) + 1);
+end;
+
+{==============================================================================]
+ <arr.Fit: Integer>
+  @action: Resizes the array to aSize (sets length safely).
+  @note: Returns the length that was set to Self. Negative sizes are clamped to 0.
+[==============================================================================}
+function HArr.Fit(const aSize: Integer): Integer; overload; cdecl;
+begin
+  Result := Max(0, aSize);
+  SetLength(Self, Result);
+end;
+
+{==============================================================================]
+ <arr.Fit: Integer>
+  @action: Resizes the array to fit within the specified range.
+  @note: 
+    - Returns the final array length. 
+    - If current length is below b.start → array grows to b.start.
+    - If current length is above b.stop → array shrinks to b.stop.
+    - If current length is within the range → no change.
+    - Negative lengths are clamped to 0.
+[==============================================================================}
+function HArr.Fit(const aBounds: TRange): Integer; overload; cdecl;
+var
+  l: Integer;
+  b: TRange;
+begin
+  l := Length(Self);
+  b := aBounds.Normalize.ClampMin(0);
+  if (l < b.start) then
+    Result := b.start
+  else
+    if (l > b.stop) then
+      Result := b.stop
+    else
+      Result := l;	
+  if (Result <> l) then
+    SetLength(Self, Result);
 end;
 
 {==============================================================================]
@@ -4503,6 +4568,55 @@ begin
     h.Free;
   end;
   Result := False;
+end;
+
+{==============================================================================]
+ <arr.Fit: Integer>
+  @action: Returns array length.
+  @note: Alternative.
+[==============================================================================}
+function H2DArr.Fit: Integer; overload; cdecl;
+begin
+  Result := ((High(Self) - Low(Self)) + 1);
+end;
+
+{==============================================================================]
+ <arr.Fit: Integer>
+  @action: Resizes the array to aSize (sets length safely).
+  @note: Returns the length that was set to Self. Negative sizes are clamped to 0.
+[==============================================================================}
+function H2DArr.Fit(const aSize: Integer): Integer; overload; cdecl;
+begin
+  Result := Max(0, aSize);
+  SetLength(Self, Result);
+end;
+
+{==============================================================================]
+ <arr.Fit: Integer>
+  @action: Resizes the array to fit within the specified range.
+  @note: 
+    - Returns the final array length. 
+    - If current length is below b.start → array grows to b.start.
+    - If current length is above b.stop → array shrinks to b.stop.
+    - If current length is within the range → no change.
+    - Negative lengths are clamped to 0.
+[==============================================================================}
+function H2DArr.Fit(const aBounds: TRange): Integer; overload; cdecl;
+var
+  l: Integer;
+  b: TRange;
+begin
+  l := Length(Self);
+  b := aBounds.Normalize.ClampMin(0);
+  if (l < b.start) then
+    Result := b.start
+  else
+    if (l > b.stop) then
+      Result := b.stop
+    else
+      Result := l;	
+  if (Result <> l) then
+    SetLength(Self, Result);
 end;
 
 {==============================================================================]

@@ -303,6 +303,7 @@ type
     function Distribute(const parts: Integer): T2DArr; overload; cdecl;
     function Diversify: TArr; overload; cdecl;
     function Diversified: TArr; overload; cdecl;
+    function Domain: TRange; overload; cdecl;
     function Drop(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
     function Dump(const items: TArr; const index: Integer = 0): TArr; overload; cdecl;
     function Dupe: TArr; overload; cdecl;
@@ -344,6 +345,9 @@ type
     function First: Integer; overload; cdecl;
     function First(const item: TVar): Integer; overload; cdecl;
     function First(const items: TArr): Integer; overload; cdecl;
+    function Fit: Integer; overload; cdecl;
+    function Fit(const aSize: Integer): Integer; overload; cdecl;
+    function Fit(const aBounds: TRange): Integer; overload; cdecl;
     function Fits(const maxValue: Integer): Boolean; overload; cdecl;
     function Fits(const target: TRange): Boolean; overload; cdecl;
     function Flip: Boolean; overload; cdecl;
@@ -794,6 +798,9 @@ type
     function Jagged: Boolean; overload; cdecl;
     function Merge: TArr; overload; cdecl;
     function Ragged: Boolean; overload; cdecl;
+    function Fit: Integer; overload; cdecl;
+    function Fit(const aSize: Integer): Integer; overload; cdecl;
+    function Fit(const aBounds: TRange): Integer; overload; cdecl;
     function Size(var lengths: TIntegerArray): Int64; overload; cdecl;
     function Size: Int64; overload; cdecl;
     function Total: Int64; overload; cdecl;

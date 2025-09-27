@@ -381,9 +381,9 @@ generic function Position<T>(const arr: array of T; const item: T): Integer;
 generic function Location<T>(const arr: array of T; const item: T): Integer;
 generic function Indexes<T>(const arr: array of T): TIntegerArray;
 generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;
-generic procedure SetSize<T>(var A, B: specialize TArray<T>; const size: SizeInt); overload;
-generic procedure SetSize<T>(var A, B, C: specialize TArray<T>; const size: SizeInt); overload;
-generic procedure SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: SizeInt); overload;
+generic function SetSize<T>(var A, B: specialize TArray<T>; const size: Integer = 1): Integer; overload;
+generic function SetSize<T>(var A, B, C: specialize TArray<T>; const size: Integer = 1): Integer; overload;
+generic function SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 
 operator+(const a, b: TPoint): TPoint;
 operator+(const a, b: TBox): TBox;
@@ -637,25 +637,28 @@ begin
       Result := cResult;
 end;
 
-generic procedure SetSize<T>(var A, B: specialize TArray<T>; const size: SizeInt); overload;
+generic function SetSize<T>(var A, B: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 begin
-  SetLength(A, size);
-  SetLength(B, size);
+  Result := Max(0, size);
+  SetLength(A, Result);
+  SetLength(B, Result);
 end;
 
-generic procedure SetSize<T>(var A, B, C: specialize TArray<T>; const size: SizeInt); overload;
+generic function SetSize<T>(var A, B, C: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 begin
-  SetLength(A, size);
-  SetLength(B, size);
-  SetLength(C, size);
+  Result := Max(0, size);
+  SetLength(A, Result);
+  SetLength(B, Result);
+  SetLength(C, Result);
 end;
 
-generic procedure SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: SizeInt); overload;
+generic function SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 begin
-  SetLength(A, size);
-  SetLength(B, size);
-  SetLength(C, size);
-  SetLength(D, size);
+  Result := Max(0, size);
+  SetLength(A, Result);
+  SetLength(B, Result);
+  SetLength(C, Result);
+  SetLength(D, Result);
 end;
 
 operator+(const a, b: TPoint): TPoint;
