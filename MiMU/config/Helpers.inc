@@ -532,6 +532,7 @@ type
       function Sum: Int64; cdecl;
       function Density: Double; cdecl;
       function Occupancy: Double; cdecl;
+      function Saturated: Double; cdecl;
       function Mean: Double; cdecl;
       function Median: Double; cdecl;
       function Middle: Double; cdecl;

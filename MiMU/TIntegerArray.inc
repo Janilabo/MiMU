@@ -293,6 +293,39 @@ begin
 end;
 
 {==============================================================================]
+ <TIntegerArrayHelper.Saturated>
+ @action: Returns the saturation of the integer array: fraction of the range
+          covered by unique elements.
+          0.0 = empty / no values, 1.0 = all possible values in range present.
+ @note: None
+[==============================================================================}
+function TIntegerArrayHelper.Saturated: Double; cdecl;
+var
+  m: specialize TFPGMap<Integer, Boolean>;
+  i: Integer;
+  r: TRange;
+begin
+  if Length(Self) = 0 then
+    Exit(0.0);
+  m := specialize TFPGMap<Integer, Boolean>.Create;
+  r.Create(Self[0], Self[0]);
+  try
+    for i := 0 to High(Self) do
+    begin
+      r.Absorb(Self[i]);
+      if (not m.IndexOf(Self[i]) >= 0) then
+        m.Add(Self[i], True);
+    end;
+    if (r.Size = 0) then
+      Result := 0.0
+    else
+      Result := (m.Count / r.Size);
+  finally
+    m.Free;
+  end;
+end;
+
+{==============================================================================]
  <TIntegerArrayHelper.Mean>
  @action: The sum of all arr values divided by the length of arr.
  @note: None
