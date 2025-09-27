@@ -160,7 +160,7 @@ type
     function Differs(const b: TRange): Boolean; cdecl;
     function Equal(const b: TRange): Boolean; cdecl;
     function Differ(const b: TRange): Boolean; cdecl;
-    function Clamp(const zone: TRange): TRange; cdecl;
+    function Clamp(const zone: TRange): TRange; overload; cdecl;
     function ClampMax(const maxValue: Integer): TRange; cdecl;
     function ClampMin(const minValue: Integer): TRange; cdecl;
     function Restrict(const zone: TRange): Boolean; cdecl;
@@ -169,6 +169,8 @@ type
     function Clip(const zone: TRange): TRange; cdecl;
     function ClipMin(const minValue: Integer): TRange; cdecl;
     function ClipMax(const maxValue: Integer): TRange; cdecl;
+	function Absorb(const val: Integer): Boolean; overload; cdecl;
+	function Include(const val: Integer): TRange; overload; cdecl;
     function Neighbor(const b: TRange): Boolean; cdecl;
     function Neighbour(const b: TRange): Boolean; cdecl;
     function Touch(const b: TRange): Boolean; cdecl;

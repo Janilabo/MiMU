@@ -1160,6 +1160,58 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Include>
+  @action: Expands the range to include the given value while preserving ascending/descending order.
+  @note: If the value is already inside the range, the range remains unchanged.
+[==============================================================================}
+function TRange.Include(const val: Integer): TRange; overload; cdecl;
+begin
+  Result := Self;
+  case Result.Ascending of
+    True:
+    if (val < Result.start) then
+      Result.start := val
+    else
+      if (val > Result.stop) then
+        Result.stop := val;
+    False:
+    if (val < Result.stop) then
+      Result.stop := val
+    else
+      if (val > Result.start) then
+        Result.start := val;
+  end;
+end;
+
+{==============================================================================]
+  <TRange.Absorb>
+  @action: Expands the range to include the given value while preserving ascending/descending order.
+  @note: If the value is already inside the range, the range remains unchanged.
+         Returns true if value was added in.
+[==============================================================================}
+function TRange.Absorb(const val: Integer): Boolean; overload; cdecl;
+var
+  s: TRange;
+begin
+  s := Self;
+  case Self.Ascending of
+    True:
+    if (val < Self.start) then
+      Self.start := val
+    else
+      if (val > Self.stop) then
+        Self.stop := val;
+    False:
+    if (val > Self.start) then
+      Self.start := val
+    else
+      if (val < Self.stop) then
+        Self.stop := val;
+  end;
+  Result := (Self <> s); 
+end;
+
+{==============================================================================]
   <TRangeHelper.Create>
   @action: TRange 0..0.
   @note: None.
@@ -1513,6 +1565,11 @@ begin
   Result := ((Self.Highest + Self.Lowest) div 2);
 end;
 
+{==============================================================================]
+ <TRange.Central>
+ @action: The value(s) at the center position(s) of given range.
+ @note: None
+[==============================================================================}
 function TRange.Central: Integer; cdecl; inline;
 begin
   Result := ((Self.start + self.stop) shr 1);

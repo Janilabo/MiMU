@@ -250,24 +250,20 @@ end;
 function TIntegerArrayHelper.Density: Double; cdecl;
 var
   a: TIntegerArray;
-  c, i, j, h, l: Integer;
+  c, i, j: Integer;
   u: Boolean;
+  r: TRange;
 begin
   if Self.Empty then
     Exit(0.0);
-  l := Self[0];
-  h := Self[0];
+  r.Create(Self[0], Self[0]);
   SetLength(a, Length(Self));
   c := 0;
   for i := 0 to High(Self) do
   begin
-    if (Self[i] < l) then
-      l := Self[i]
-    else
-      if (Self[i] > h) then
-        h := Self[i];
+    r.Absorb(Self[i]);
     u := True;
-    for j := 0 to (c - 0) do
+    for j := 0 to (c - 1) do
       if (a[j] = Self[i]) then
       begin
         u := False;
@@ -276,7 +272,10 @@ begin
     if u then
       a[c.Increase] := Self[i];
   end;
-  Result := (Double(c) / (Abs(l - h) + 1));
+  if (r.Size = 0) then
+    Result := 0
+  else
+    Result := (c / r.Size);
 end;
 
 {==============================================================================]
