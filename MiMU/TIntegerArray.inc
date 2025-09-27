@@ -593,19 +593,15 @@ function TIntegerArrayHelper.QSort(const aAscending: Boolean = True): Integer; c
     if (start < stop) then
     begin
       o := aAscending.Select(-1, 1);
-      p := arr[(start + stop) div 2];
-      s.Create(start, stop);
+	  s.Create(start, stop);
+      p := arr[s.Middle];
       repeat
         while (Sign(arr[s.start] - p) = o) do
           Inc(s.start);
         while (Sign(arr[s.stop] - p) = -o) do
           Dec(s.stop);
         if (s.start <= s.stop) then
-        begin
-          Exchange(s.start, s.stop);
-          Inc(s.start);
-          Dec(s.stop);
-        end;
+          Exchange(s.start.Increase, s.stop.Decrease);
       until (s.start > s.stop);
       if (start < s.stop) then
         _QuickSort(arr, start, s.stop, aAscending);
