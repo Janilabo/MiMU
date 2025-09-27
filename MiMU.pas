@@ -215,6 +215,7 @@ type
     function Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload; cdecl;
     function Frame(var width, height: Integer): TBox; overload; cdecl;
     function Frame: TBox; overload; cdecl;
+    function Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload; cdecl;
     function Singular: Boolean; cdecl;
     function IsPoint: Boolean; cdecl;
     function IsHorizontalLine: Boolean; cdecl;
@@ -379,8 +380,10 @@ generic function Includes<T>(const arr: array of T; const item: T): Boolean;
 generic function Position<T>(const arr: array of T; const item: T): Integer;
 generic function Location<T>(const arr: array of T; const item: T): Integer;
 generic function Indexes<T>(const arr: array of T): TIntegerArray;
-
 generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;
+generic procedure SetSize<T>(var A, B: specialize TArray<T>; const size: SizeInt); overload;
+generic procedure SetSize<T>(var A, B, C: specialize TArray<T>; const size: SizeInt); overload;
+generic procedure SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: SizeInt); overload;
 
 operator+(const a, b: TPoint): TPoint;
 operator+(const a, b: TBox): TBox;
@@ -577,7 +580,7 @@ generic function Contains<T>(const arr: array of T; const item: T): Boolean;
 var
   i: Integer;
 begin
-  for i := 0 to High(arr) do
+  for i := Low(arr) to High(arr) do
     if (arr[i] = item) then
       Exit(True);
   Result := False;
@@ -587,7 +590,7 @@ generic function Includes<T>(const arr: array of T; const item: T): Boolean;
 var
   i: Integer;
 begin
-  for i := High(arr) downto 0 do
+  for i := High(arr) downto Low(arr) do
     if (arr[i] = item) then
       Exit(True);
   Result := False;
@@ -597,7 +600,7 @@ generic function Position<T>(const arr: array of T; const item: T): Integer;
 var
   i: Integer;
 begin
-  for i := 0 to High(arr) do
+  for i := Low(arr) to High(arr) do
     if (arr[i] = item) then
       Exit(i);
   Result := -1;
@@ -607,7 +610,7 @@ generic function Location<T>(const arr: array of T; const item: T): Integer;
 var
   i: Integer;
 begin
-  for i := High(arr) downto 0 do
+  for i := High(arr) downto Low(arr) do
     if (arr[i] = item) then
       Exit(i);
   Result := -1;
@@ -632,6 +635,27 @@ begin
       Result := bResult
     else
       Result := cResult;
+end;
+
+generic procedure SetSize<T>(var A, B: specialize TArray<T>; const size: SizeInt); overload;
+begin
+  SetLength(A, size);
+  SetLength(B, size);
+end;
+
+generic procedure SetSize<T>(var A, B, C: specialize TArray<T>; const size: SizeInt); overload;
+begin
+  SetLength(A, size);
+  SetLength(B, size);
+  SetLength(C, size);
+end;
+
+generic procedure SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: SizeInt); overload;
+begin
+  SetLength(A, size);
+  SetLength(B, size);
+  SetLength(C, size);
+  SetLength(D, size);
 end;
 
 operator+(const a, b: TPoint): TPoint;

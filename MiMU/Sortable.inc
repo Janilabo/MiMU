@@ -24,13 +24,12 @@ end;
 [==============================================================================}
 function HArr.Sorted(const aAscending: Boolean = True): Boolean; overload; cdecl;
 var
-  h, i: Integer;
+  i: Integer;
 begin
-  h := High(Self);
-  for i := 0 to (h - 1) do
+  for i := 0 to (High(Self) - 1) do
     if (aAscending and (Self[i] > Self[i + 1])) or ((not aAscending) and (Self[i] < Self[i + 1])) then
       Exit(False);
-  Result := (h > -1);
+  Result := (not Self.Empty);
 end;
 
 {==============================================================================]
@@ -372,7 +371,7 @@ end;
 [==============================================================================}
 function HArr.Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
 var
-  h, i, s: Integer;
+  h, i: Integer;
 begin
   h := High(Self);
   if ((h = -1) or (aAscending and (start > h)) or ((not aAscending) and (start < 0))) then
@@ -380,17 +379,15 @@ begin
   case aAscending of
     True:
     begin
-      s := Max(0, start);
-      Result := s;
-      for i := (s + 1) to h do
+      Result := Max(0, start);
+      for i := (Result + 1) to h do
         if (Self[i] < Self[Result]) then
           Result := i;
     end;
     False:
     begin
-      s := Min(h, start);
-      Result := s;
-      for i := (s - 1) downto 0 do
+      Result := Min(h, start);
+      for i := (Result - 1) downto 0 do
         if (Self[i] < Self[Result]) then
           Result := i;
     end;
@@ -409,7 +406,7 @@ end;
 [==============================================================================}
 function HArr.Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
 var
-  h, i, s: Integer;
+  h, i: Integer;
 begin
   h := High(Self);
   if ((h = -1) or (aAscending and (start > h)) or ((not aAscending) and (start < 0))) then
@@ -417,17 +414,15 @@ begin
   case aAscending of
     True:
     begin
-      s := Max(0, start);
-      Result := s;
-      for i := (s + 1) to h do
+      Result := Max(0, start);
+      for i := (Result + 1) to h do
         if (Self[i] > Self[Result]) then
           Result := i;
     end;
     False:
     begin
-      s := Min(h, start);
-      Result := s;
-      for i := (s - 1) downto 0 do
+      Result := Min(h, start);
+      for i := (Result - 1) downto 0 do
         if (Self[i] > Self[Result]) then
           Result := i;
     end;

@@ -187,6 +187,20 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Unzip>
+  @action: Unzips TBox X1, Y1, X2, Y2 and returns the area.
+  @note: None.
+[==============================================================================}
+function TBox.Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload; cdecl;
+begin
+  bX1 := Self.X1;
+  bY1 := Self.Y1;
+  bX2 := Self.X2;
+  bY2 := Self.Y2;
+  Result := Self.Area;
+end;
+
+{==============================================================================]
   <TBox.Frame>
   @action: Returns the frame of TBox 
   @note: Dimensional box of the TBox. Based on Width and Height.

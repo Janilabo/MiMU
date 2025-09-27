@@ -267,7 +267,7 @@ var
 begin
   SetLength(Result, Length(Self));
   for i := 0 to High(Self) do
-    Result[i] := not Self[i];
+    Result[i] := (not Self[i]);
 end;
 
 {==============================================================================]
@@ -441,7 +441,7 @@ var
 begin
   SetLength(Result, Length(Self));
   for i := 0 to High(Self) do
-    Result[i + 1] := Self[i].Binary;  
+    Result[i] := Self[i].Binary;  
 end;
 
 {==============================================================================]
@@ -453,7 +453,7 @@ end;
 function TBooleanArrayHelper.Reinit: Integer; overload; cdecl;
 begin
   Result := Length(Self);
-  if Result > 0 then
+  if (Result > 0) then
     FillChar(Pointer(Self)^, (Result * SizeOf(Boolean)), 0);
 end;
 

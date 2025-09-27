@@ -10,7 +10,7 @@ var
   i: Integer;
 begin
   SetLength(Result, aSize);
-  for i := Low(Result) to High(Result) do
+  for i := 0 to High(Result) do
     Result[i] := Self;
 end;
 
@@ -24,10 +24,10 @@ var
   i, j: Integer;
 begin
   SetLength(Result, size1D);
-  for i := Low(Result) to High(Result) do
+  for i := 0 to High(Result) do
   begin
     SetLength(Result[i], size2D);
-    for j := Low(Result[i]) to High(Result[i]) do
+    for j := 0 to High(Result[i]) do
       Result[i][j] := Self;
   end;
 end;
@@ -58,29 +58,28 @@ end;
 [==============================================================================}
 function HArr.Add(const items: TArr; const duplicates: Boolean = True): TArr; overload; cdecl;
 var
-  a, h, i, l, s: Integer;
+  a, h, i, s: Integer;
 begin
   s := Length(Self);
   i := Length(items);
   SetLength(Result, (s + i));
   if ((i = 0) and (s = 0)) then
     Exit;
-  l := Low(items);
   h := High(items);
   for i := 0 to (s - 1) do
-    Result[i] := Self[l + i];
+    Result[i] := Self[i];
   case duplicates of
     False:
     begin
       a := 0;
-      for i := l to h do
+      for i := 0 to h do
         if not Result.Contains(items[i]) then
           Result[s + a.Increase] := items[i];
       SetLength(Result, (s + a));
     end;
     True:
-    for i := l to h do
-      Result[i - l] := items[i];
+    for i := 0 to h do
+      Result[i] := items[i];
   end;
 end;
 
@@ -91,12 +90,10 @@ end;
 [==============================================================================}
 function HArr.AllEqual: Boolean; overload; cdecl;
 var
-  h, i, l: Integer;
+  i: Integer;
 begin
-  l := Low(Self);
-  h := High(Self);
-  for i := (l + 1) to h do
-    if (Self[l] <> Self[i]) then
+  for i := 1 to High(Self) do
+    if (Self[0] <> Self[i]) then
       Exit(False);
   Result := (Length(Self) > 0);
 end;
@@ -108,11 +105,10 @@ end;
 [==============================================================================}
 function HArr.AllSame: Boolean; overload; cdecl;
 var
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Low(Self);
-  for i := (l + 1) to High(Self) do
-    if (Self[l] <> Self[i]) then
+  for i := 1 to High(Self) do
+    if (Self[0] <> Self[i]) then
       Exit(False);
   Result := (Length(Self) > 0);
 end;
@@ -124,11 +120,10 @@ end;
 [==============================================================================}
 function HArr.AllUnique: Boolean; overload; cdecl;
 var
-  h, l, a, b: Integer;
+  h, a, b: Integer;
 begin
   h := High(Self);
-  l := Low(Self);
-  for a := l to (h - 1) do
+  for a := 0 to (h - 1) do
     for b := (a + 1) to h do
       if (Self[a] = Self[b]) then
         Exit(False);
@@ -178,25 +173,24 @@ end;
 [==============================================================================}
 function HArr.Append(const items: TArr; const duplicates: Boolean = True): TArr; overload; cdecl;
 var
-  a, h, l, i: Integer;
+  a, h, i: Integer;
 begin
   Result := Self.Copy;
   if Items.Empty then
     Exit;
-  l := Low(items);
   h := High(items);
   a := High(Self);
   SetLength(Result, ((a + h) + 2));
   case duplicates of
     False:
     begin
-      for i := l to h do
+      for i := 0 to h do
         if not Self.Contains(items[i]) then
           Result[a.Increment] := items[i];
       SetLength(Result, (a + 1));
     end;
     True:
-    for i := l to h do
+    for i := 0 to h do
       Result[a.Increment] := items[i];
   end;
 end;
@@ -208,16 +202,13 @@ end;
 [==============================================================================}
 function HArr.Backwards: TArr; overload; cdecl;
 var
-  s, l, i: Integer;
+  l, i: Integer;
 begin
-  s := Length(Self);
-  SetLength(Result, s);
-  if (s = 0) then
-    Exit;
-  l := Low(Self);
+  l := Length(Self);
+  SetLength(Result, l);
   i := 0;
-  while (s.Decrement > -1) do
-    Result[i.Increase] := Self[l + s];
+  while (l > 0) do
+    Result[i.Increase] := Self[l.Decrement];
 end;
 
 {==============================================================================]
@@ -227,12 +218,11 @@ end;
 [==============================================================================}
 function HArr.Blit(const items: TArr; const index: Integer = 0): Integer; overload; cdecl;
 var
-  i, s: Integer;
+  i: Integer;
 begin
   Result := (index + Length(items));
-  s := 0;
-  for i := Low(items) to High(items) do
-    Self[index + s.Increase] := items[i]; 
+  for i := 0 to High(items) do
+    Self[index + i] := items[i]; 
 end;
 
 {==============================================================================]
@@ -257,8 +247,8 @@ var
 begin
   if (Self.Empty or allowed.Empty) then
     Exit(False);
-  s.Create(Low(Self), High(Self));
-  a.Create(Low(allowed), High(allowed));
+  s.Create(0, High(Self));
+  a.Create(0, High(allowed));
   repeat
     i := a.start;
     repeat
@@ -279,8 +269,8 @@ var
 begin
   if (Self.Empty or forbidden.Empty) then
     Exit(True);
-  s.Create(Low(Self), High(Self));
-  f.Create(Low(forbidden), High(forbidden));	
+  s.Create(0, High(Self));
+  f.Create(0, High(forbidden));	
   repeat
     i := f.start;
     repeat
