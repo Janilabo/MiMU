@@ -186,6 +186,7 @@ type
     function MidVal: Double; cdecl;
     function Average: Double; cdecl;
     function Center: Integer; cdecl;
+    function Central: Integer; cdecl; inline;
     function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; cdecl;
     function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;
     function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;

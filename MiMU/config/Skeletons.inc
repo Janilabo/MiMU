@@ -195,25 +195,25 @@ end;
 {$IFDEF Skeleton_QuickSorted}
   procedure QS_IDs(var aID: TIntegerArray; const L, R: Integer);
   var
-    i, j, c: Integer;
+    c: Integer;
+    a: TRange;
   begin
-    i := L;
-    j := R;
-    w := weight[aID[(L + R) shr 1]];
+    a.Create(L, R);
+    w := weight[aID[a.Central]];
     repeat
-      c := weight[aID[i]].Compare(w);
+      c := weight[aID[a.start]].Compare(w);
       while (aAscending and (c < 0)) or ((not aAscending) and (c > 0)) do
-        c := weight[aID[i.Increment]].Compare(w);
-      c := weight[aID[j]].Compare(w);
+        c := weight[aID[a.start.Increment]].Compare(w);
+      c := weight[aID[a.stop]].Compare(w);
       while (aAscending and (c > 0)) or ((not aAscending) and (c < 0)) do
-        c := weight[aID[j.Decrement]].Compare(w);
-      if (i <= j) then
-        Swap(aID[i.Increase], aID[j.Decrease]);
-    until (i > j);
-    if (L < j) then
-	  QS_IDs(aID, L, j);
-    if (i < R) then
-	  QS_IDs(aID, i, R);
+        c := weight[aID[a.stop.Decrement]].Compare(w);
+      if a.Ascending then
+        Swap(aID[a.start.Increase], aID[a.stop.Decrease]);
+    until a.Drops;
+    if (L < a.stop) then
+      QS_IDs(aID, L, a.stop);
+    if (a.start < R) then
+      QS_IDs(aID, a.start, R);
   end;
 var
   n, i: Integer;

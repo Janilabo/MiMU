@@ -1513,6 +1513,11 @@ begin
   Result := ((Self.Highest + Self.Lowest) div 2);
 end;
 
+function TRange.Central: Integer; cdecl; inline;
+begin
+  Result := ((Self.start + self.stop) shr 1);
+end;
+
 {==============================================================================]
  <TRange.Str>
  @action: Converts TRange range to string.
