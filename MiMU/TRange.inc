@@ -309,16 +309,6 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Delta>
-  @action: Returns the change from start to stop.
-  @note: Negative result if Descending TRange.
-[==============================================================================}
-function TRange.Delta: Integer; cdecl;
-begin
-  Result := ((Self.stop - Self.start) + Sign(Self.stop - Self.start));
-end;
-
-{==============================================================================]
   <TRange.Highest>
   @action: Returns maximum value of the given range.
   @note: None.
@@ -1427,6 +1417,61 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Delta>
+  @action: Delta returns the signed difference from start to stop; the sign indicates the range’s orientation.
+  @note: None.
+[==============================================================================}
+function TRange.Delta: Integer; cdecl; inline;
+begin
+  Result := (Self.stop - Self.start);
+end;
+
+{==============================================================================]
+  <TRange.Direction>
+  @action: Returns the orientation of the range.
+  @note: 1  => descending (stop > start)
+        -1  => ascending  (start > stop)
+         0  => degenerate (start = stop)
+[==============================================================================}
+function TRange.Direction: Integer; cdecl;
+begin
+  Result := Sign(Self.Delta);
+end;
+
+{==============================================================================]
+  <TRange.Magnitude>
+  @action: Returns the magnitude (non-negative size) of the range, ignoring orientation.
+  @note: Computed as the absolute value of Delta (Abs(Stop - Start)).
+         Always ≥ 0, regardless of whether the range is ascending or descending.
+[==============================================================================}
+function TRange.Magnitude: Integer; cdecl;
+begin
+  Result := Abs(Self.Delta);
+end;
+
+{==============================================================================]
+  <TRange.Orientation>
+  @action: Returns +1 if the range is ascending or degenerate (Stop >= Start),
+           and -1 if the range is descending (Stop < Start).
+  @note: Useful for determining iteration direction or orientation of the range.
+[==============================================================================}
+function TRange.Orientation: Integer; cdecl;
+begin
+  Result := IfThen((Self.Stop < Self.Start), -1, 1);
+end;
+
+{==============================================================================]
+  <TRange.Deficit>
+  @action: Returns the negative absolute distance between Start and Stop.
+  @note: Computed as Min(Start, Stop) - Max(Start, Stop).
+         Always ≤ 0. Ignores orientation; useful when a negative “shortfall” value is needed.
+[==============================================================================}
+function TRange.Deficit: Integer; cdecl;
+begin
+  Result := (Min(Self.start, Self.stop) - Max(Self.start, Self.stop));
+end;
+
+{==============================================================================]
  <TRange.Digit>
  @action: Returns true if range contains x-value.
  @note: None.
@@ -1676,6 +1721,52 @@ begin
   for i := 0 to (c - 1) do
     Result[i] := (Self.start + (i * s));
 end;
+
+{==============================================================================]
+  <TRange.Limit>
+  @action: Restricts a value to lie within the range defined by Start and Stop.
+  @note: Equivalent to clamping value to the inclusive range [Min(start, stop), Max(start, stop)].
+         Returns Min(start, stop) if val is below the range.
+         Returns Max(start, stop) if val is above the range.
+         Otherwise returns value itself.
+[==============================================================================}
+function TRange.Limit(const val: Integer): Integer; cdecl;
+var
+  r: TRange;
+begin
+  r.Create(Min(Self.Start, Self.Stop), Max(Self.start, Self.stop));
+  if (val < r.start) then
+    Result := r.start
+  else
+    if (val > r.stop) then
+      Result := r.stop
+    else
+      Result := val;
+end;
+
+{==============================================================================]
+  <TRange.MinLimit>
+  @action: Ensures a value is not less than the range minimum.
+  @note: Returns Max(val, Min(start, stop)).
+         Values above the range maximum are allowed.
+         Useful when you only want to enforce a lower bound.
+[==============================================================================}
+function TRange.MinLimit(const val: Integer): Integer; cdecl;
+begin
+  Result := Max(val, Min(Self.start, Self.stop));
+end;
+
+{==============================================================================]
+  <TRange.MaxLimit>
+  @action: Ensures a value is not greater than the range maximum.
+  @note: Returns Min(val, Max(start, stop)).
+         Values below the range minimum are allowed.
+         Useful when you only want to enforce an upper bound.
+[==============================================================================}
+function TRange.MaxLimit(const val: Integer): Integer; cdecl;
+begin
+  Result := Min(val, Max(Self.start, Self.stop));
+end; 
 
 {==============================================================================]
   <_TRange.Create>

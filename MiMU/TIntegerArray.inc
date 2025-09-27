@@ -1640,8 +1640,6 @@ var
   r: TRange;
   b: TBooleanArray;
 begin
-  if (Length(Self) < 2) then
-    Exit;
   r := arrBounds.Normalize;
   b.Create(arrBounds.Size, False);
   for i := 0 to High(Self) do
@@ -1657,7 +1655,10 @@ end;
 
 function TIntegerArrayHelper.Inverse: TIntegerArray; overload; cdecl;
 begin
-  Result := Self.Inverse(Self.Bounds);
+  if (Length(Self) > 1) then
+    Result := Self.Inverse(Self.Bounds)
+  else
+    SetLength(Result, 0);
 end;
 
 {==============================================================================]
@@ -1786,6 +1787,8 @@ var
   a: TIntegerArray;
   i: Integer;
 begin
+  if allowed.Empty then
+    Exit(False);
   a := allowed.QuickSorted;
   for i := 0 to High(Self) do
     if not a.BinaryContains(Self[i]) then
@@ -1965,7 +1968,7 @@ begin
     Exit;
   l := 0;
   for i := 0 to High(Self) do
-    if ((Self[i] mod 2) = 0) then
+    if Self[i].Even then
       Result[l.Increase] := Self[i];
   SetLength(Result, l);
 end;
@@ -1984,7 +1987,7 @@ begin
     Exit;
   l := 0;
   for i := 0 to High(Self) do
-    if not ((Self[i] mod 2) = 0) then
+    if not Self[i].Even then
       Result[l.Increase] := Self[i];
   SetLength(Result, l);
 end;
@@ -2003,7 +2006,7 @@ begin
     Exit;
   l := 0;
   for i := 0 to High(Self) do
-    if ((Self[i] mod 2) <> 0) then
+    if Self[i].Odd then
       Result[l.Increase] := Self[i];
   SetLength(Result, l);
 end;
@@ -2022,7 +2025,7 @@ begin
     Exit;
   l := 0;
   for i := 0 to High(Self) do
-    if not ((Self[i] mod 2) <> 0) then
+    if not Self[i].Odd then
       Result[l.Increase] := Self[i];
   SetLength(Result, l);
 end;
@@ -2263,32 +2266,31 @@ function TIntegerArrayHelper.BinaryCombine(const items: TIntegerArray; const aAs
 [==============================================================================}
 function TIntegerArrayHelper.BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
 var
-  a, b, i, j, l: Integer;
+  a, b, l: Integer;
+  s, i: TRange;
 begin
-  a := Length(Self);
-  b := Length(items);
-  SetLength(Result, (a + b));
-  i := 0;
-  j := 0;
   l := 0;
+  i.Create(0, Length(items));
+  s.Create(0, Length(Self));
+  SetLength(Result, (i.stop + s.stop));
   case aAscending of
     True:
-    while ((i < a) and (j < b)) do
-      if (Self[i] <= items[j]) then
-        Result[l.Increase] := Self[i.Increase]
+    while ((s.start < s.stop) and (i.start < i.stop)) do
+      if (Self[s.start] <= items[i.start]) then
+        Result[l.Increase] := Self[s.start.Increase]
       else
-        Result[l.Increase] := items[j.Increase];
+        Result[l.Increase] := items[i.start.Increase];
     False:
-    while ((i < a) and (j < b)) do
-      if (Self[i] >= items[j]) then
-        Result[l.Increase] := Self[i.Increase]
+    while ((s.start < s.stop) and (i.start < i.stop)) do
+      if (Self[s.start] >= items[i.start]) then
+        Result[l.Increase] := Self[s.start.Increase]
       else
-        Result[l.Increase] := items[j.Increase];
+        Result[l.Increase] := items[i.start.Increase];
   end;
-  if (i < a) then
-    Move(Self[i], Result[l.Increase(a - i)], ((a - i) * SizeOf(Integer)));
-  if (j < b) then
-    Move(items[j], Result[l], ((b - j) * SizeOf(Integer)));
+  if (s.start < s.stop) then
+    Move(Self[s.start], Result[l.Increase(s.Delta)], (s.Delta * SizeOf(Integer)));
+  if (i.start < i.stop) then
+    Move(items[i.start], Result[l], (i.Delta * SizeOf(Integer)));
 end;
 
 {==============================================================================]
