@@ -409,11 +409,11 @@ begin
   begin
     m := r.Middle;
     if ((o * Self[m]) < (o * x)) then
-      r.Start := (m + 1)
+      r.start := (m + 1)
     else
-      r.Stop := m;
+      r.stop := m;
   end;
-  Result := r.Start;
+  Result := r.start;
 end;
 {$ENDIF}
 
@@ -428,11 +428,11 @@ begin
   begin
     m := r.Middle;
     if ((o * Self[m]) <= (o * x)) then
-      r.Start := (m + 1)
+      r.start := (m + 1)
     else
-      r.Stop := m;
+      r.stop := m;
   end;
-  Result := r.Start;
+  Result := r.start;
 end;
 {$ENDIF}
 
@@ -448,11 +448,11 @@ begin
   begin
     m := r.Middle;
     if ((o * Self[m]) < (o * x)) then
-      r.Start := (m + 1)
+      r.start := (m + 1)
     else
-      r.Stop := m;
+      r.stop := m;
   end;
-  if ((r.Start < Length(Self)) and (Self[r.Start] = x)) then
+  if ((r.start < Length(Self)) and (Self[r.start] = x)) then
     Result := r.Start;
 end;
 {$ENDIF}
@@ -469,11 +469,11 @@ begin
   begin
     m := r.Middle;
     if ((o * Self[m]) <= (o * x)) then
-      r.Start := (m + 1)
+      r.start := (m + 1)
     else
-      r.Stop := m;
+      r.stop := m;
   end;
-  if ((r.Start > 0) and (Self[r.Start - 1] = x)) then
+  if ((r.start > 0) and (Self[r.start - 1] = x)) then
     Result := (r.Start - 1);
 end;
 {$ENDIF}
@@ -493,9 +493,9 @@ begin
       Result := m
     else
       if ((o * Self[m]) < (o * x)) then
-        r.Start := (m + 1)
+        r.start := (m + 1)
       else
-        r.Stop := (m - 1);
+        r.stop := (m - 1);
   end;
 end;
 {$ENDIF}

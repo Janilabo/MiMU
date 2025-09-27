@@ -168,34 +168,29 @@ end;
 
 {==============================================================================]
   <HArr.Ascend>
-  @action: Returns true if array arr is in descending order.
+  @action: Returns array arr sorted to asscending order.
   @note: None.
 [==============================================================================}
 function HArr.Ascend: TArr; overload; cdecl;
 procedure QS(var arr: TArr; const valLow, valHigh: Integer);
 var
-  i, j: Integer;
-  p, s: TVar;
+  p: TVar;
+  r: TRange;
 begin
-  i := valLow;
-  j := valHigh;
-  p := arr[(valLow + valHigh) div 2];
+  r.Create(valLow, valHigh);
+  p := arr[r.Middle];
   repeat
-    while (arr[i] < p) do
-      Inc(i);
-    while (arr[j] > p) do
-      Dec(j);
-    if (i <= j) then
-    begin
-      s := arr[i];
-      arr[i.Increase] := arr[j];
-      arr[j.Decrease] := s;
-    end;
-  until (i > j);
-  if (valLow < j) then
-    QS(arr, valLow, j);
-  if (i < valHigh) then
-    QS(arr, i, valHigh);
+    while (arr[r.start] < p) do
+      Inc(r.start);
+    while (arr[r.stop] > p) do
+      Dec(r.stop);
+    if r.Ascending then
+      arr.Exchange(r.start.Increase, r.stop.Decrease);
+  until (r.start > r.stop);
+  if (valLow < r.stop) then
+    QS(arr, valLow, r.stop);
+  if (r.start < valHigh) then
+    QS(arr, r.start, valHigh);
 end;
 begin
   Result := Self.Copy;
@@ -205,34 +200,29 @@ end;
 
 {==============================================================================]
   <HArr.Descend>
-  @action: Returns array arr sorted to ascending order.
+  @action: Returns array arr sorted to descending order.
   @note: None.
 [==============================================================================}
 function HArr.Descend: TArr; overload; cdecl;
 procedure QS(var arr: TArr; const valLow, valHigh: Integer);
 var
-  i, j: Integer;
   p, s: TVar;
+  r: TRange;
 begin
-  i := valLow;
-  j := valHigh;
-  p := arr[(valLow + valHigh) div 2];
+  r.Create(valLow, valHigh);
+  p := arr[r.Middle];
   repeat
-    while (arr[i] > p) do
-      Inc(i);
-    while (arr[j] < p) do
-      Dec(j);
-    if (i <= j) then
-    begin
-      s := arr[i];
-      arr[i.Increase] := arr[j];
-      arr[j.Decrease] := s;
-    end;
-  until (i > j);
-  if (valLow < j) then
-    QS(arr, valLow, j);
-  if (i < valHigh) then
-    QS(arr, i, valHigh);
+    while (arr[r.start] > p) do
+      Inc(r.start);
+    while (arr[r.stop] < p) do
+      Dec(r.stop);
+    if r.Ascending then
+      arr.Exchange(r.start.Increase, r.stop.Decrease);
+  until (r.start > r.stop);
+  if (valLow < r.stop) then
+    QS(arr, valLow, r.stop);
+  if (r.start < valHigh) then
+    QS(arr, r.start, valHigh);
 end;
 begin
   Result := Self.Copy;
