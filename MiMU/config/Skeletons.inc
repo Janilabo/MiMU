@@ -820,7 +820,7 @@ end;
 var
   r: TRange;
 begin
-  if (Length(Self) = 0) then
+  if Self.Empty then
     Exit(Result.Create(-1, -1));
   r := x.Normalize;
   Result.start := Self.BinaryLowerBound(r.start, aAscending);
@@ -845,80 +845,77 @@ end;
 
 {$IFDEF Skeleton_BinaryMerge}
 var
-  a, b, i, j, l: Integer;
+  l: Integer;
+  s, i: TRange;
 begin
-  a := Length(Self);
-  b := Length(items);
-  SetLength(Result, (a + b));
-  i := 0;
-  j := 0;
   l := 0;
+  s.Create(0, Length(Self));
+  i.Create(0, Length(items));
+  SetLength(Result, (s.stop + i.stop));
   case aAscending of
     True:
-    while ((i < a) and (j < b)) do
-      if (Self[i] <= items[j]) then
-        Result[l.Increase] := Self[i.Increase]
+    while ((s.start < s.stop) and (i.start < i.stop)) do
+      if (Self[s.start] <= items[i.start]) then
+        Result[l.Increase] := Self[s.start.Increase]
       else
-        Result[l.Increase] := items[j.Increase];
+        Result[l.Increase] := items[i.start.Increase];
     False:
-    while ((i < a) and (j < b)) do
-      if (Self[i] >= items[j]) then
-        Result[l.Increase] := Self[i.Increase]
+    while ((s.start < s.stop) and (i.start < i.stop)) do
+      if (Self[s.start] >= items[i.start]) then
+        Result[l.Increase] := Self[s.start.Increase]
       else
-        Result[l.Increase] := items[j.Increase];
+        Result[l.Increase] := items[i.start.Increase];
   end;
-  while (i < a) do
-    Result[l.Increase] := Self[i.Increase];
-  while (j < b) do
-    Result[l.Increase] := items[j.Increase];
+  while (s.start < s.stop) do
+    Result[l.Increase] := Self[s.start.Increase];
+  while (i.start < i.stop) do
+    Result[l.Increase] := items[i.start.Increase];
 end;
 {$ENDIF}
 
 {$IFDEF Skeleton_BinaryMerged}
 var
-  a, b, i, j, l: Integer;
+  l: Integer;
+  s, i: TRange;
 begin
-  a := Length(Self);
-  b := Length(items);
-  SetLength(Result, (a + b));
-  i := 0;
-  j := 0;
   l := 0;
-  while ((i < a) and (j < b)) do
-    if Self[i].Precede(items[j], aAscending) then
-      Result[l.Increase] := Self[i.Increase]
+  s.Create(0, Length(Self));
+  i.Create(0, Length(items));
+  SetLength(Result, (s.stop + i.stop));
+  while ((s.start < s.stop) and (i.start < i.stop)) do
+    if Self[s.start].Precede(items[i.start], aAscending) then
+      Result[l.Increase] := Self[s.start.Increase]
     else
-      Result[l.Increase] := items[j.Increase];
-  while (i < a) do
-    Result[l.Increase] := Self[i.Increase];
-  while (j < b) do
-    Result[l.Increase] := items[j.Increase];
+      Result[l.Increase] := items[i.start.Increase];
+  while (s.start < s.stop) do
+    Result[l.Increase] := Self[s.start.Increase];
+  while (i.start < i.stop) do
+    Result[l.Increase] := items[i.start.Increase];
 end;
 {$ENDIF}
 
 {$IFDEF Skeleton_BinaryCombine}
 var
   l: specialize TFPGList<TVar>;
-  a, b, i, j: Integer;
+  r: Integer;
+  s, i: TRange;
 begin
   l := specialize TFPGList<TVar>.Create;
   try
-    i := 0;
-    j := 0;
-    a := Length(Self);
-    b := Length(items);
-    while ((i < a) and (j < b)) do
-      if ((aAscending and (Self[i] <= items[j])) or ((not aAscending) and (Self[i] >= items[j]))) then
-        l.Add(Self[i.Increase])
+    i.Create(0, Length(items));
+    s.Create(0, Length(Self));
+    while ((s.start < s.stop) and (i.start < i.stop)) do
+      if ((aAscending and (Self[s.start] <= items[i.start])) or ((not aAscending) and (Self[s.start] >= items[i.start]))) then
+        l.Add(Self[s.start.Increase])
       else
-        l.Add(items[j.Increase]);
-    while (i < a) do
-      l.Add(Self[i.Increase]);
-    while (j < b) do
-      l.Add(items[j.Increase]);
+        l.Add(items[i.start.Increase]);
+    while (s.start < s.stop) do
+      l.Add(Self[s.start.Increase]);
+    while (i.start < i.stop) do
+      l.Add(items[i.start.Increase]);
     SetLength(Result, l.Count);
-    for i := 0 to (l.Count - 1) do
-      Result[i] := l[i];
+    for r := 0 to (l.Count - 1) do
+      Result[r] := l[r];
   finally
     l.Free;
   end;

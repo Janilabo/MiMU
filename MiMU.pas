@@ -83,6 +83,10 @@ type
     constructor Create(const rStart, rStop: Integer); overload;
     constructor Create(const value: Integer); overload;
     class function Construct(const rStart, rStop: Integer): TRange; overload; cdecl; static;
+	function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
+	function Init(const rStart, rStop: Integer): TRange; overload; cdecl;
+    function Init(const r: TRange): TRange; overload; cdecl;
+    function Init(const val: Integer = 0): TRange; overload; cdecl;
     function Singular: Boolean; cdecl;
     function Atomic: Boolean; cdecl;
     function Plural: Boolean; cdecl;
@@ -103,7 +107,6 @@ type
     function Rises: Boolean; cdecl;
     function Dropping: Boolean; cdecl;
     function Drops: Boolean; cdecl;
-    function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
     function Grab: TRange; cdecl;
     function Count: Integer; cdecl;
     function Area: Integer; cdecl;
@@ -219,6 +222,11 @@ type
     function Build(const valueX, valueY: Integer): Integer; overload; cdecl;
     function Build(const target: TPoint): Integer; overload; cdecl;
     function Build(const value: Integer = 0): Integer; overload; cdecl;
+    function Init(const bX1, bY1, bX2, bY2: Integer): TBox; overload; cdecl;
+    function Init(const b: TBox): TBox; overload; cdecl;
+    function Init(const val: Integer = 0): TBox; overload; cdecl;
+    function Init(const p: TPoint): TBox; overload; cdecl;
+    function Init(const TL, BR: TPoint): TBox; overload; cdecl;
     function Form(const pt: TPoint; const size: Integer = 1): TBox; overload; cdecl;
     function Form(const pt: TPoint; const width, height: Integer): TBox; overload; cdecl;
     function Make(const pt: TPoint; const radius: Integer = 0): TBox; overload; cdecl;

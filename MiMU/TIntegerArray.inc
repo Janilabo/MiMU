@@ -890,31 +890,28 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.SelectionSortBidirectional(const aAscending: Boolean = True): Integer; cdecl;
 var
-  a, b, x, i, h, l, s, o: Integer;
+  i, s, o: Integer;
+  x, y: TRange;
 begin
   Result := High(Self);
   if (Result > 0) then
   begin
     o := aAscending.Select(-1, 1);
-    s := (Result div 2);
-    for i := 0 to s do
+    for i := 0 to (Result div 2) do
     begin
-      l := i;
-      h := (Result - i);
-      a := l;
-      b := h;
-      if (Sign(Self[l] - Self[h]) = -o) then
-        Exchange(h, l);
-      for x := (a + 1) to (b - 1) do
-        if (Sign(Self[x] - Self[l]) = o) then
-          l := x
+      y := x.Init(i, (Result - i));
+      if (Sign(Self[x.start] - Self[x.stop]) = -o) then
+        Exchange(x.stop, x.start);
+      for s := (y.start + 1) to (y.stop - 1) do
+        if (Sign(Self[s] - Self[x.start]) = o) then
+          x.start := s
         else
-          if (Sign(Self[x] - Self[h]) = -o) then
-            h := x;
-      if (l <> a) then
-        Exchange(a, l);
-      if (h <> b) then
-        Exchange(b, h);
+          if (Sign(Self[s] - Self[x.stop]) = -o) then
+            x.stop := s;
+      if (x.start <> y.start) then
+        Exchange(y.start, x.start);
+      if (x.stop <> y.stop) then
+        Exchange(y.stop, x.stop);
     end;
   end;
 end;
@@ -926,25 +923,24 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; cdecl;
 var
-  a, b, x, i, s, o: Integer;
+  s, i, o: Integer;
+  r: TRange;
 begin
   Result := High(Self);
   if (Result > 0) then
   begin
     o := aAscending.Select(-1, 1);
-    s := (Result div 2);
-    for i := 0 to s do
+    for i := 0 to (Result div 2) do
     begin
-      a := i;
-      b := (Result - i);
-      if (Sign(Self[b] - Self[a]) = o) then
-        Exchange(a, b);
-      for x := (a + 1) to (b - 1) do
-        if (Sign(Self[x] - Self[a]) = o) then
-          Exchange(a, x)
+      r.Create(i, (Result - i));
+      if (Sign(Self[r.stop] - Self[r.start]) = o) then
+        Exchange(r.start, r.stop);
+      for s := (r.start + 1) to (r.stop - 1) do
+        if (Sign(Self[s] - Self[r.start]) = o) then
+          Exchange(r.start, s)
         else
-          if (Sign(Self[x] - Self[b]) = -o) then
-            Exchange(x, b);
+          if (Sign(Self[s] - Self[r.stop]) = -o) then
+            Exchange(s, r.stop);
       end;
   end;
 end;
@@ -1032,40 +1028,34 @@ end;
 function TIntegerArrayHelper.MergeSortBU(const aAscending: Boolean = True): Integer; cdecl;
 var
   t: TIntegerArray;
-  n, w, i, a, b, m, l, r, k: Integer;
+  w, i, s: Integer;
+  l, r: TRange;
 begin
   Result := High(Self);
   if (Result > 0) then
   begin
-    n := (Result + 1);
-    SetLength(t, n);
     w := 1;
-    while (w < n) do
+	SetLength(t, (Result + 1));
+    while (w <= Result) do
     begin
       i := 0;
-      while (i < n) do
+      while (i <= Result) do
       begin
-        a := i;
-        m := Min((i + (w - 1)), (n - 1));
-        b := Min((i + (2 * w) - 1), (n - 1));
-        for k := a to b do
-          t[k] := Self[k];
-        L := a;
-        R := (m + 1);
-        k := a;
-        while ((l <= m) and (r <= b)) do
-        begin
-          if ((aAscending and (t[l] <= t[r])) or (not aAscending and (t[l] >= t[r]))) then
-            Self[k] := t[l.Increase]
+	    l.Create(i, Min((i + (w - 1)), Result));
+	    r.Create((l.stop + 1), Min((l.start + (2 * w) - 1), Result)); 
+        for s := l.start to r.stop do
+          t[s] := Self[s];
+		s := i;
+        while (l.Ascending and r.Ascending) do
+		  if ((aAscending and (t[l.start] <= t[r.start])) or (not aAscending and (t[l.start] >= t[r.start]))) then
+            Self[s.Increase] := t[l.start.Increase]
           else
-            Self[k] := t[r.Increase];
-          Inc(k);
-        end;
-        while (l <= m) do
-          Self[k.Increase] := t[l.Increase];
-        while (r <= b) do
-          Self[k.Increase] := t[r.Increase];
-        i := (i + (2 * w));
+            Self[s.Increase] := t[r.start.Increase];
+        while l.Ascending do
+          Self[s.Increase] := t[l.start.Increase];
+        while r.Ascending do
+          Self[s.Increase] := t[r.start.Increase];
+        i.Increase(2 * w);
       end;
       w := (w * 2);
     end;
@@ -2266,7 +2256,7 @@ function TIntegerArrayHelper.BinaryCombine(const items: TIntegerArray; const aAs
 [==============================================================================}
 function TIntegerArrayHelper.BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
 var
-  a, b, l: Integer;
+  l: Integer;
   s, i: TRange;
 begin
   l := 0;
@@ -2300,23 +2290,22 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
 var
-  a, b, i, j, l: Integer;
+  l: Integer;
+  s, i: TRange;
 begin
-  a := Length(Self);
-  b := Length(items);
-  SetLength(Result, (a + b));
-  i := 0;
-  j := 0;
   l := 0;
-  while ((i < a) and (j < b)) do
-    if Self[i].Precede(items[j], aAscending) then
-      Result[l.Increase] := Self[i.Increase]
+  s.Create(0, Length(Self));
+  i.Create(0, Length(items));
+  SetLength(Result, (s.stop + i.stop));
+  while ((s.start < s.stop) and (i.start < i.stop)) do
+    if Self[s.start].Precede(items[i.start], aAscending) then
+      Result[l.Increase] := Self[s.start.Increase]
     else
-      Result[l.Increase] := items[j.Increase];
-  if (i < a) then
-    Move(Self[i], Result[l.Increase(a - i)], ((a - i) * SizeOf(Integer)));
-  if (j < b) then
-    Move(items[j], Result[l], ((b - j) * SizeOf(Integer)));
+      Result[l.Increase] := items[i.start.Increase];
+  if (s.start < s.stop) then
+    Move(Self[s.start], Result[l.Increase(s.Delta)], (s.Delta * SizeOf(Integer)));
+  if (i.start < i.stop) then
+    Move(items[i.start], Result[l], (i.Delta * SizeOf(Integer)));
 end;
 
 {$UNDEF Integer}

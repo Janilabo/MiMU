@@ -135,6 +135,95 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Init>
+  @action: Initializes the current TRange with the specified X1, Y1, X2, Y2 values.
+           Also returns the initialized record so it can be assigned in-line.
+  @note: Useful for initializing a TBox instance and simultaneously returning it
+         for assignment. Example: a := b.Init(2,2,8,8);
+[==============================================================================}
+function TBox.Init(const bX1, bY1, bX2, bY2: Integer): TBox; overload; cdecl;
+begin
+  Self.X1 := bX1;
+  Self.Y1 := bY1;
+  Self.X2 := bX2;
+  Self.Y2 := bY2;
+  Result.X1 := bX1;
+  Result.Y1 := bY1;
+  Result.X2 := bX2;
+  Result.Y2 := bY2;
+end;
+
+{==============================================================================]
+  <TBox.Init>
+  @action: Initializes the current TBox as a copy of another TBox.
+           Also returns the copied record.
+  @note: Useful for copying values from an existing TBox while allowing in-line assignment.
+         Example: a := b.Init(c);
+[==============================================================================}
+function TBox.Init(const b: TBox): TBox; overload; cdecl;
+begin
+  Self := b;
+  Result := b;
+end;
+
+{==============================================================================]
+  <TBox.Init>
+  @action: Initializes the current TBox with all X1, Y1, X2, Y2 set to the same value.
+           Also returns the initialized record.
+  @note: The parameter has a default of 0, allowing zero-initialization.
+         Example: a := b.Init; or a := b.Init(5);
+[==============================================================================}
+function TBox.Init(const val: Integer = 0): TBox; overload; cdecl;
+begin
+  Self.X1 := val;
+  Self.Y1 := val;
+  Self.X2 := val;
+  Self.Y2 := val;
+  Result.X1 := val;
+  Result.Y1 := val;
+  Result.X1 := val;
+  Result.Y2 := val;
+end;
+
+{==============================================================================]
+  <TBox.Init>
+  @action: Initializes the current TBox as a copy with TPoint.
+           Also returns the copied record.
+  @note: Useful for copying values from an existing TBox while allowing in-line assignment.
+         Example: a := b.Init(p);
+[==============================================================================}
+function TBox.Init(const p: TPoint): TBox; overload; cdecl;
+begin
+  Self.X1 := p.X;
+  Self.Y1 := p.Y;
+  Self.X2 := p.X;
+  Self.Y2 := p.Y;
+  Result.X1 := p.X;
+  Result.Y1 := p.Y;
+  Result.X1 := p.X;
+  Result.Y2 := p.Y;
+end;
+
+{==============================================================================]
+  <TBox.Init>
+  @action: Initializes the current TBox as a copy with Top-Left and Bottom-Right TPoints.
+           Also returns the copied record.
+  @note: Useful for copying values from an existing TBox while allowing in-line assignment.
+         Example: a := b.Init(c, d);
+[==============================================================================}
+function TBox.Init(const TL, BR: TPoint): TBox; overload; cdecl;
+begin
+  Self.X1 := TL.X;
+  Self.Y1 := TL.Y;
+  Self.X2 := BR.X;
+  Self.Y2 := BR.Y;
+  Result.X1 := TL.X;
+  Result.Y1 := TL.Y;
+  Result.X1 := BR.X;
+  Result.Y2 := BR.Y;
+end;
+
+{==============================================================================]
   <TBox.Make>
   @action: Creates TBox from pt by radius used for width and height.
   @note: None.

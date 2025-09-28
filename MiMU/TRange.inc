@@ -1,6 +1,93 @@
 {$DEFINE TRange}{$I config\Defines.inc}
 
 {==============================================================================]
+  <TRange.Create>
+  @action: Create a TRange with start and stop
+  @note: None.
+[==============================================================================}
+constructor TRange.Create(const rStart, rStop: Integer); overload;
+begin
+  Self.start := rStart;
+  Self.stop := rStop;
+end;
+
+{==============================================================================]
+  <TRange.Create>
+  @action: Create a TRange with value
+  @note: None.
+[==============================================================================}
+constructor TRange.Create(const value: Integer); overload;
+begin
+  Self.Create(value, value);
+end;
+
+{==============================================================================]
+  <TRange.Construct>
+  @action: Constructs TRange with rStart and rStop.
+  @note: None.
+[==============================================================================}
+class function TRange.Construct(const rStart, rStop: Integer): TRange; overload; cdecl;
+begin
+  Result.start := rStart;
+  Result.stop := rStop;
+end;
+
+{==============================================================================]
+  <TRange.Build>
+  @action: Create a TRange with rStart and rStop, using Min and Max for safety.
+  @note: None.
+[==============================================================================}
+function TRange.Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
+begin
+  Self.start := Min(rStart, rStop);
+  Self.stop := Max(rStop, rStart);
+  Result := (Abs(rStop - rStart) + 1);
+end;
+
+{==============================================================================]
+  <TRange.Init>
+  @action: Initializes the current TRange with the specified start and stop values.
+           Also returns the initialized record so it can be assigned in-line.
+  @note: Useful for initializing a TRange instance and simultaneously returning it
+         for assignment. Example: a := b.Init(1, 10);
+[==============================================================================}
+function TRange.Init(const rStart, rStop: Integer): TRange; overload; cdecl;
+begin
+  Self.start := rStart;
+  Self.stop := rStop;
+  Result.start := rStart;
+  Result.stop := rStop;
+end;
+
+{==============================================================================]
+  <TRange.Init>
+  @action: Initializes the current TRange as a copy of another TRange.
+           Also returns the copied record.
+  @note: Useful for copying values from an existing TRange while allowing in-line assignment.
+         Example: a := b.Init(c);
+[==============================================================================}
+function TRange.Init(const r: TRange): TRange; overload; cdecl;
+begin
+  Self := r;
+  Result := r;
+end;
+
+{==============================================================================]
+  <TRange.Init>
+  @action: Initializes the current TRange with both start and stop set to the same value.
+           Also returns the initialized record.
+  @note: The parameter has a default of 0, allowing zero-initialization.
+         Example: a := b.Init; or a := b.Init(5);
+[==============================================================================}
+function TRange.Init(const val: Integer = 0): TRange; overload; cdecl;
+begin
+  Self.start := val;
+  Self.stop := val;
+  Result.start := val;
+  Result.stop := val;
+end;
+
+{==============================================================================]
   <TRange.Singular>
   @action: Returns true if range start equals stop
   @note: None.
@@ -200,50 +287,6 @@ end;
 function TRange.Drops: Boolean; cdecl;
 begin
   Result := not (Self.start <= Self.stop);
-end;
-
-{==============================================================================]
-  <TRange.Create>
-  @action: Create a TRange with start and stop
-  @note: None.
-[==============================================================================}
-constructor TRange.Create(const rStart, rStop: Integer); overload;
-begin
-  Self.start := rStart;
-  Self.stop := rStop;
-end;
-
-{==============================================================================]
-  <TRange.Create>
-  @action: Create a TRange with value
-  @note: None.
-[==============================================================================}
-constructor TRange.Create(const value: Integer); overload;
-begin
-  Self.Create(value, value);
-end;
-
-{==============================================================================]
-  <TRange.Construct>
-  @action: Constructs TRange with rStart and rStop.
-  @note: None.
-[==============================================================================}
-class function TRange.Construct(const rStart, rStop: Integer): TRange; overload; cdecl;
-begin
-  Result.start := rStart;
-  Result.stop := rStop;
-end;
-
-{==============================================================================]
-  <TRange.Build>
-  @action: Create a TRange with rStart and rStop, using Min and Max for safety.
-  @note: None.
-[==============================================================================}
-function TRange.Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
-begin
-  Self.start := Min(rStart, rStop);
-  Self.stop := Max(rStop, rStart);
-  Result := (Abs(rStop - rStart) + 1);
 end;
 
 {==============================================================================]
