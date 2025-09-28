@@ -512,6 +512,323 @@ begin
 end;
 
 {==============================================================================]
+  <arr.QuickSort>
+  @action: QuickSort algorithm that is NOT based on recursion.
+  @note: non-recursive. Returns High(arr).
+[==============================================================================}
+function HArr.QuickSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+var
+  p: TVar;
+  t, o: Integer;
+  s: TRangeArray;
+  x, r: TRange;
+  procedure qsPush(const start, stop: Integer);
+  begin
+    Inc(t);
+    SetLength(s, (t + 1));
+    s[t].start := start;
+    s[t].stop := stop;
+  end;
+  function qsPop(out start, stop: Integer): Boolean;
+  begin
+    if (t < 0) then
+    begin
+      Result := False;
+      Exit;
+    end;
+    start := s[t].start;
+    stop := s[t].stop;
+    Dec(t);
+    Result := True;
+  end;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+  begin
+    o := aAscending.Select(-1, 1);
+    t := -1;
+    qsPush(0, Result);
+    r.Create(0, Result);
+    while qsPop(r.start, r.stop) do
+    begin
+      while (r.start < r.stop) do
+      begin
+        x := r;
+        p := Self[(r.start + r.stop) div 2];
+        while (x.start <= x.stop) do
+        begin
+          while (Sign(Self[x.start].Compare(p)) = o) do
+            Inc(x.start);
+          while (Sign(Self[x.stop].Compare(p)) = -o) do
+            Dec(x.stop);
+          if (x.start <= x.stop) then
+          begin
+            Exchange(x.start, x.stop);
+            Inc(x.start);
+            Dec(x.stop);
+          end;
+        end;
+        if ((x.stop - r.start) < (r.stop - x.start)) then
+        begin
+          if (x.start < r.stop) then
+            qsPush(x.start, r.stop);
+          r.stop := x.stop;
+        end else
+        begin
+          if (r.start < x.stop) then
+            qsPush(r.start, x.stop);
+          r.start := x.start;
+        end;
+      end;
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <arr.QuickSort3W>
+  @action: 3-way QuickSort algorithm that is NOT based on recursion.
+  @note: recursive. Returns High(arr).
+[==============================================================================}
+function HArr.QuickSort3W(const aAscending: Boolean = True): Integer; overload; cdecl;
+  procedure SortLH(var arr: TArr; const L, H: Integer; const aAscending: Boolean = True);
+  var
+    x: TVar;
+    a, b, p, o: Integer;
+  begin
+    if (L >= H) then
+      Exit;
+    o := aAscending.Select(-1, 1);
+    x := arr[L];
+    a := L;
+    b := H;
+    p := (L + 1);
+    while (p <= b) do
+      if (Sign(arr[p].Compare(x)) = o) then
+      begin
+        Exchange(a, p);
+        Inc(p);
+        Inc(a);
+      end else
+      if (Sign(arr[p].Compare(x)) = -o) then
+      begin
+        Exchange(b, p);
+        Dec(b);
+      end else
+        Inc(p);
+    SortLH(arr, L, (a - 1), aAscending);
+    SortLH(arr, (b + 1), H, aAscending);
+  end;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+    SortLH(Self, 0, Result, aAscending);
+end;
+
+{==============================================================================]
+  <arr.QSort>
+  @action: QuickSort algorithm that IS based on recursion.
+  @note: recursive. Returns High(arr).
+[==============================================================================}
+function HArr.QSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+  procedure _QuickSort(var arr: TArr; const start, stop: Integer; const aAscending: Boolean = True);
+  var
+    p: TVar;
+	o: Integer;
+    s: TRange;
+  begin
+    if (start < stop) then
+    begin
+      o := aAscending.Select(-1, 1);
+	  s.Create(start, stop);
+      p := arr[s.Middle];
+      repeat
+        while (Sign(arr[s.start].Compare(p)) = o) do
+          Inc(s.start);
+        while (Sign(arr[s.stop].Compare(p)) = -o) do
+          Dec(s.stop);
+        if (s.start <= s.stop) then
+          Exchange(s.start.Increase, s.stop.Decrease);
+      until (s.start > s.stop);
+      if (start < s.stop) then
+        _QuickSort(arr, start, s.stop, aAscending);
+      if (s.start < stop) then
+        _QuickSort(arr, s.start, stop, aAscending);
+    end;
+  end;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+    _QuickSort(Self, 0, Result, aAscending);
+end;
+
+{==============================================================================]
+  <arr.CoctailSort>
+  @action: CoctailSort algorithm.
+  @note: Returns High(arr).
+[==============================================================================}
+function HArr.CoctailSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+var
+  i, o: Integer;
+  s: Boolean;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+  begin
+    o := aAscending.Select(-1, 1);
+    repeat
+      s := False;
+      for i := 0 to (Result - 1) do
+        if (Sign(Self[i + 1].Compare(Self[i])) = o) then
+        begin
+          Exchange(i, (i + 1));
+          s := True;
+        end;
+      if not s then
+        Break;
+      s := False;
+      for i := (Result - 1) downto 0 do
+         if (Sign(Self[i + 1].Compare(Self[i])) = o) then
+        begin
+          Exchange(i, (i + 1));
+          s := True;
+        end;
+    until not s;
+  end;
+end;
+
+{==============================================================================]
+  <arr.CoctailSort2>
+  @action: CoctailSort algorithm.
+  @note: CoctailSort v2. Returns High(arr).
+[==============================================================================}
+function HArr.CoctailSort2(const aAscending: Boolean = True): Integer; overload; cdecl;
+var
+  b, e, i, o: Integer;
+  s: Boolean;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+  begin
+    o := aAscending.Select(-1, 1);
+    b := -1;
+    e := (Length(Self) - 2);
+    repeat
+      s := False;
+      Inc(b);
+      for i := b to e do
+        if not (Sign(Self[i].Compare(Self[i + 1])) = o) then
+        begin
+          Exchange(i, (i + 1));
+          s := True;
+        end;
+      if not s then
+        Break;
+      s := False;
+      Dec(e);
+      for i := e downto b do
+        if not (Sign(Self[i].Compare(Self[i + 1])) = o) then
+        begin
+          Exchange(i, (i + 1));
+          s := True;
+        end;
+    until not s;
+  end;
+end;
+
+{==============================================================================]
+  <arr.GnomeSort>
+  @action: GnomeSort algorithm.
+  @note: Returns High(arr).
+[==============================================================================}
+function HArr.GnomeSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+var
+  o, p, t: Integer;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+  begin
+    o := aAscending.Select(-1, 1);
+    p := 1;
+    while (p <= Result) do
+      if (Sign(Self[p].Compare(Self[p - 1])) = o) then
+      begin
+        Exchange(p, (p - 1));
+        if (p > 1) then
+          Dec(p);
+      end else
+        Inc(p);
+  end;
+end;
+
+{==============================================================================]
+  <arr.GnomeSortOptimized>
+  @action: Optimized GnomeSort algorithm.
+  @note: Returns High(arr).
+[==============================================================================}
+function HArr.GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
+var
+  p, l, o: Integer;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+  begin
+    o := aAscending.Select(-1, 1);
+    p := 1;
+    l := 0;
+    while (p <= Result) do
+      if (Sign(Self[p].Compare(Self[p - 1])) = o) then
+      begin
+        Exchange(p, (p - 1));
+        if (p > 1) then
+        begin
+          if (l <> 0) then
+            l := p
+          else
+            Dec(p);
+        end else
+          Inc(p);
+      end else
+        if (l <> 0) then
+        begin
+          p := l;
+          l := 0;
+        end else
+          Inc(p);
+  end;
+end;
+
+{==============================================================================]
+  <arr.PancakeSort>
+  @action: PancakeSort algorithm.
+  @note: Returns High(arr).
+[==============================================================================}
+function HArr.PancakeSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+var
+  i, j, l, m, x, o: Integer;
+begin
+  Result := High(Self);
+  if (Result > 0 )then
+  begin
+    o := aAscending.Select(-1, 1);
+    l := 0;
+    for i := Result downto l do
+    begin
+      m := i;
+      for j := l to (i - 1) do
+        if (Sign(Self[m].Compare(Self[j])) = o) then
+          m := j;
+      if (m = i) then
+        Continue;
+      if (m <> l) then
+      for x := l to (((m - l) - 1) div 2) do
+        Exchange(x, (m - (x - l)));
+      for x := l to (((i - l) - 1) div 2) do
+        Exchange(x, (i - (x - l)));
+    end;
+  end;
+end;
+
+{==============================================================================]
   <HArr.BubbleSort>
   @action: Sorts arr with BubbleSort algorithm
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
@@ -525,6 +842,26 @@ begin
     for j := 0 to (i - 1) do
       if ((aAscending and (Self[j] > Self[j + 1])) or ((not aAscending) and (Self[j] < Self[j + 1]))) then
         Exchange(j, (j + 1));
+end;
+
+{==============================================================================]
+  <arr.BubbleSort2>
+  @action: Sorts arr with BubbleSort algorithm - contains some optimization.
+  @note: Supports sorting to aAscending and descending order. Returns High(arr)!
+[==============================================================================}
+function HArr.BubbleSort2(const aAscending: Boolean = True): Integer; overload; cdecl;
+var
+  a, b, o: Integer;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+  begin
+    o := aAscending.Select(-1, 1);
+    for a := 0 to (Result - 1) do
+      for b := 1 to (Result - a) do
+        if (Sign(Self[b].Compare(Self[b - 1])) = o) then
+          Exchange(b, (b - 1));
+  end;
 end;
 
 {==============================================================================]
