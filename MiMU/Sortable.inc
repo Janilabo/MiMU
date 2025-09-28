@@ -524,22 +524,18 @@ var
   x, r: TRange;
   procedure qsPush(const start, stop: Integer);
   begin
-    Inc(t);
-    SetLength(s, (t + 1));
+    SetLength(s, (t.Increment + 1));
     s[t].start := start;
     s[t].stop := stop;
   end;
   function qsPop(out start, stop: Integer): Boolean;
   begin
-    if (t < 0) then
-    begin
-      Result := False;
+    Result := (t >= 0);
+    if not Result then
       Exit;
-    end;
     start := s[t].start;
     stop := s[t].stop;
-    Dec(t);
-    Result := True;
+    Dec(t); 
   end;
 begin
   Result := High(Self);
@@ -550,23 +546,18 @@ begin
     qsPush(0, Result);
     r.Create(0, Result);
     while qsPop(r.start, r.stop) do
-    begin
-      while (r.start < r.stop) do
+      while r.Growing do
       begin
         x := r;
-        p := Self[(r.start + r.stop) div 2];
-        while (x.start <= x.stop) do
+        p := Self[r.Middle];
+        while x.Ascending do
         begin
           while (Sign(Self[x.start].Compare(p)) = o) do
             Inc(x.start);
           while (Sign(Self[x.stop].Compare(p)) = -o) do
             Dec(x.stop);
-          if (x.start <= x.stop) then
-          begin
-            Exchange(x.start, x.stop);
-            Inc(x.start);
-            Dec(x.stop);
-          end;
+          if x.Ascending then
+            Exchange(x.start.Increase, x.stop.Decrease);
         end;
         if ((x.stop - r.start) < (r.stop - x.start)) then
         begin
@@ -580,7 +571,6 @@ begin
           r.start := x.start;
         end;
       end;
-    end;
   end;
 end;
 
@@ -592,31 +582,26 @@ end;
 function HArr.QuickSort3W(const aAscending: Boolean = True): Integer; overload; cdecl;
   procedure SortLH(var arr: TArr; const L, H: Integer; const aAscending: Boolean = True);
   var
-    x: TVar;
-    a, b, p, o: Integer;
+    a: TVar;
+    p, o: Integer;
+    r: TRange;
   begin
     if (L >= H) then
       Exit;
     o := aAscending.Select(-1, 1);
-    x := arr[L];
-    a := L;
-    b := H;
+    a := arr[L];
+	r.Create(L, H);
     p := (L + 1);
-    while (p <= b) do
-      if (Sign(arr[p].Compare(x)) = o) then
-      begin
-        Exchange(a, p);
-        Inc(p);
-        Inc(a);
-      end else
-      if (Sign(arr[p].Compare(x)) = -o) then
-      begin
-        Exchange(b, p);
-        Dec(b);
-      end else
-        Inc(p);
-    SortLH(arr, L, (a - 1), aAscending);
-    SortLH(arr, (b + 1), H, aAscending);
+    while (p <= r.stop) do
+      if (Sign(arr[p].Compare(a)) = o) then
+        Exchange(r.start.Increase, p.Increase)
+      else
+        if (Sign(arr[p].Compare(a)) = -o) then
+          Exchange(r.stop.Decrease, p)
+        else
+          Inc(p);
+    SortLH(arr, L, (r.start - 1), aAscending);
+    SortLH(arr, (r.stop + 1), H, aAscending);
   end;
 begin
   Result := High(Self);
