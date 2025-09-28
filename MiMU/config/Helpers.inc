@@ -509,9 +509,18 @@ type
       function Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload; cdecl;
       function Mode: TVar; overload; cdecl;
       function Center: TVar; overload; cdecl;
+	  function QuickSorted(const aAscending: Boolean = True): TArr; overload; cdecl;
       function BubbleSort(const aAscending: Boolean = True): Integer; overload; cdecl;
       function BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
-      function QuickSorted(const aAscending: Boolean = True): TArr; overload; cdecl;
+      function CombSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+      function HeapSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+      function InsertionSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+      function SelectionSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+      function SelectionSortBidirectional(const aAscending: Boolean = True): Integer; overload; cdecl;
+      function SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; overload; cdecl;
+      function ShellSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+      function MergeSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+      function MergeSortBU(const aAscending: Boolean = True): Integer; overload; cdecl;
       function Uniq(const sSorted: Boolean = False): TArr; overload; cdecl;
     {$ENDIF}
     function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): TArr; overload; cdecl;
@@ -544,18 +553,9 @@ type
       function QSort(const aAscending: Boolean = True): Integer; cdecl;
       function CoctailSort(const aAscending: Boolean = True): Integer; cdecl;
       function CoctailSort2(const aAscending: Boolean = True): Integer; cdecl;
-      function CombSort(const aAscending: Boolean = True): Integer; cdecl;
       function GnomeSort(const aAscending: Boolean = True): Integer; cdecl;
       function GnomeSortOptimized(const aAscending: Boolean = True): Integer; cdecl;
-      function HeapSort(const aAscending: Boolean = True): Integer; cdecl;
-      function InsertionSort(const aAscending: Boolean = True): Integer; cdecl;
-      function SelectionSort(const aAscending: Boolean = True): Integer; cdecl;
-      function SelectionSortBidirectional(const aAscending: Boolean = True): Integer; cdecl;
-      function SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; cdecl;
       function PancakeSort(const aAscending: Boolean = True): Integer; cdecl;
-      function MergeSort(const aAscending: Boolean = True): Integer; cdecl;
-      function MergeSortBU(const aAscending: Boolean = True): Integer; cdecl;
-      function ShellSort(const aAscending: Boolean = True): Integer; cdecl;
       function RadixSort(const aAscending: Boolean = True): Integer; cdecl;
       function Split(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
       function Split(const diff: Integer): T2DIntegerArray; overload; cdecl;
