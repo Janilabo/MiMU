@@ -615,7 +615,9 @@ type
       function BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; cdecl;
       function BinaryUnique(const aAscending: Boolean = True): Integer; cdecl;
       function BinaryUniqued(const aAscending: Boolean = True): TIntegerArray; cdecl;
-      function BinaryUndupe(const aAscending: Boolean = True): TIntegerArray; cdecl;
+      function BinaryUndupe: Integer; cdecl;
+      function BinaryUnduped: TIntegerArray; cdecl;
+	  function BinaryUnduplicated(const dAscending: Boolean = True): TIntegerArray; cdecl;
       function BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl;
       function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl;
       function BinaryLowerBound(const x: Integer; const aAscending: Boolean): Integer; overload; cdecl;
@@ -649,7 +651,9 @@ type
       function BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; cdecl;
       function BinaryUnique(const aAscending: Boolean = True): Integer; cdecl;
       function BinaryUniqued(const aAscending: Boolean = True): TDoubleArray; cdecl;
-      function BinaryUndupe(const aAscending: Boolean = True): TDoubleArray; cdecl;
+	  function BinaryUndupe: Integer; cdecl;
+      function BinaryUnduped: TDoubleArray; cdecl;
+	  function BinaryUnduplicated(const dAscending: Boolean = True): TDoubleArray; cdecl;
       function BinaryGrow(const x: Double; const aAscending: Boolean = True): Boolean; cdecl;
       function BinaryShrink(const x: Double; const aAscending: Boolean = True): Boolean; cdecl;
       function BinaryLowerBound(const x: Double; const aAscending: Boolean): Integer; overload; cdecl;

@@ -761,12 +761,48 @@ end;
 var
   i: Integer;
 begin
+  if (Length(Self) < 2) then
+    Exit(Length(Self));
+  Result := 0;
+  for i := 0 to High(Self) do
+    if u.BinaryGrow(Self[i]) then
+      Self[Result.Increase] := Self[i];
+  SetLength(Self, Result);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUnduped}
+var
+  i: Integer;
+begin
   if Self.Empty then
     Exit([]);
   SetLength(Result, 1);
   Result[0] := Self[0];
   for i := 1 to High(Self) do
     Result.BinaryGrow(Self[i]);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUnduplicated}
+var
+  i, l: Integer;
+begin
+  if (Length(Self) < 2) then
+    Exit(Self.Copy);
+  SetLength(Result, Length(Self));
+  l := 0;
+  case dAscending of
+    True:
+    for i := 0 to High(Self) do
+      if u.BinaryGrow(Self[i]) then
+        Result[l.Increase] := Self[i];
+    False:
+    for i := High(Self) downto 0 do
+      if u.BinaryGrow(Self[i]) then
+        Result[l.Increase] := Self[i];
+  end;
+  SetLength(Result, l);
 end;
 {$ENDIF}
 

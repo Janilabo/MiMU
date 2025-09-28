@@ -114,6 +114,8 @@ type
     function Size: Integer; cdecl;
     function Capacity: Integer; cdecl;
     function Delta: Integer; cdecl;
+    function Frame(var rSize: Integer): TRange; overload; cdecl;
+    function Frame: TRange; overload; cdecl;
     function Lowest: Integer; cdecl;
     function Minimum: Integer; cdecl;
     function Highest: Integer; cdecl;

@@ -1516,7 +1516,21 @@ function TIntegerArrayHelper.BinaryUniqued(const aAscending: Boolean = True): TI
   @action: Binary Search-based Undupe method.
   @note: None
 [==============================================================================}
-function TIntegerArrayHelper.BinaryUndupe(const aAscending: Boolean = True): TIntegerArray; cdecl; {$DEFINE Skeleton_BinaryUndupe}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUndupe}
+function TIntegerArrayHelper.BinaryUndupe: Integer; cdecl; var u: TIntegerArray; {$DEFINE Skeleton_BinaryUndupe}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUndupe}
+
+{==============================================================================]
+  <TIntegerArrayHelper.BinaryUnduped>
+  @action: Binary Search-based Unduped method.
+  @note: None
+[==============================================================================}
+function TIntegerArrayHelper.BinaryUnduped: TIntegerArray; cdecl; {$DEFINE Skeleton_BinaryUnduped}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnduped}
+
+{==============================================================================]
+  <TIntegerArrayHelper.BinaryUnduplicated>
+  @action: Binary Search-based Unduplicated method.
+  @note: None
+[==============================================================================}
+function TIntegerArrayHelper.BinaryUnduplicated(const dAscending: Boolean = True): TIntegerArray; cdecl; var u: TIntegerArray; {$DEFINE Skeleton_BinaryUnduplicated}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnduplicated}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryGrow>

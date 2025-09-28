@@ -352,6 +352,29 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Frame>
+  @action Returns a TRange covering the full extent of this instance,
+          starting at 0 and ending at Size - 1.
+  @note   None.
+[==============================================================================}
+function TRange.Frame(var rSize: Integer): TRange; overload; cdecl;
+begin
+  rSize := Self.Size;
+  Result := Range(0, (rSize - 1));
+end;
+
+{==============================================================================]
+  <TRange.Frame>
+  @action Returns a TRange covering the full extent of this instance,
+          starting at 0 and ending at Size - 1.
+  @note   None.
+[==============================================================================}
+function TRange.Frame: TRange; overload; cdecl;
+begin
+  Result := Range(0, (Self.Size - 1));
+end;
+
+{==============================================================================]
   <TRange.Highest>
   @action: Returns maximum value of the given range.
   @note: None.

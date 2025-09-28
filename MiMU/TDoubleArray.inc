@@ -152,7 +152,21 @@ function TDoubleArrayHelper.BinaryUniqued(const aAscending: Boolean = True): TDo
   @action: Binary Search-based Undupe method.
   @note: None
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUndupe(const aAscending: Boolean = True): TDoubleArray; cdecl; {$DEFINE Skeleton_BinaryUndupe}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUndupe}
+function TDoubleArrayHelper.BinaryUndupe: Integer; cdecl; var u: TDoubleArray; {$DEFINE Skeleton_BinaryUndupe}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUndupe}
+
+{==============================================================================]
+  <TDoubleArrayHelper.BinaryUnduped>
+  @action: Binary Search-based Unduped method.
+  @note: None
+[==============================================================================}
+function TDoubleArrayHelper.BinaryUnduped: TDoubleArray; cdecl; {$DEFINE Skeleton_BinaryUnduped}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnduped}
+
+{==============================================================================]
+  <TDoubleArrayHelper.BinaryUnduplicated>
+  @action: Binary Search-based Unduplicated method.
+  @note: None
+[==============================================================================}
+function TDoubleArrayHelper.BinaryUnduplicated(const dAscending: Boolean = True): TDoubleArray; cdecl; var u: TDoubleArray; {$DEFINE Skeleton_BinaryUnduplicated}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnduplicated}
 
 {==============================================================================]
   <TDoubleArrayHelper.BinaryGrow>
