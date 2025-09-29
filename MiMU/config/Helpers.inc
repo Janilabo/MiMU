@@ -473,12 +473,13 @@ type
     function ToIndexes: TIntegerArray; overload; cdecl;
     function Trade(var b: TArr): Integer; overload; cdecl;
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
-    function Unduplicate: TArr; overload; cdecl;
+    function Uncluttered: TArr; overload; cdecl;
     function Uniform: Boolean; overload; cdecl;
     function Uniform(const item: TVar): Boolean; overload; cdecl;
     function Uniformity: Double; overload; cdecl;
-    function Unify: TArr; overload; cdecl;
-    function Unique: TArr; overload; cdecl;
+	function Unified(const dAscending: Boolean = True): TArr; overload; cdecl;
+    function Unify(const dAscending: Boolean = True): Integer; overload; cdecl;
+    function Unduplicated: TArr; overload; cdecl;
     function Uniqued: TArr; overload; cdecl;
     function Uniques: TIntegerArray; overload; cdecl;
     function Unshift(const item: TVar): TArr; overload; cdecl;
@@ -617,7 +618,7 @@ type
       function BinaryUniqued(const aAscending: Boolean = True): TIntegerArray; cdecl;
       function BinaryUndupe: Integer; cdecl;
       function BinaryUnduped: TIntegerArray; cdecl;
-	  function BinaryUnduplicated(const dAscending: Boolean = True): TIntegerArray; cdecl;
+	  function BinaryUnified(const dAscending: Boolean = True): TIntegerArray; cdecl;
       function BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl;
       function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl;
       function BinaryLowerBound(const x: Integer; const aAscending: Boolean): Integer; overload; cdecl;
@@ -653,7 +654,7 @@ type
       function BinaryUniqued(const aAscending: Boolean = True): TDoubleArray; cdecl;
 	  function BinaryUndupe: Integer; cdecl;
       function BinaryUnduped: TDoubleArray; cdecl;
-	  function BinaryUnduplicated(const dAscending: Boolean = True): TDoubleArray; cdecl;
+	  function BinaryUnified(const dAscending: Boolean = True): TDoubleArray; cdecl;
       function BinaryGrow(const x: Double; const aAscending: Boolean = True): Boolean; cdecl;
       function BinaryShrink(const x: Double; const aAscending: Boolean = True): Boolean; cdecl;
       function BinaryLowerBound(const x: Double; const aAscending: Boolean): Integer; overload; cdecl;

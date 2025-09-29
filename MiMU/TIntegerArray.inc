@@ -1526,11 +1526,11 @@ function TIntegerArrayHelper.BinaryUndupe: Integer; cdecl; var u: TIntegerArray;
 function TIntegerArrayHelper.BinaryUnduped: TIntegerArray; cdecl; {$DEFINE Skeleton_BinaryUnduped}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnduped}
 
 {==============================================================================]
-  <TIntegerArrayHelper.BinaryUnduplicated>
-  @action: Binary Search-based Unduplicated method.
+  <TIntegerArrayHelper.BinaryUnified>
+  @action: Binary Search-based Unified method.
   @note: None
 [==============================================================================}
-function TIntegerArrayHelper.BinaryUnduplicated(const dAscending: Boolean = True): TIntegerArray; cdecl; var u: TIntegerArray; {$DEFINE Skeleton_BinaryUnduplicated}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnduplicated}
+function TIntegerArrayHelper.BinaryUnified(const dAscending: Boolean = True): TIntegerArray; cdecl; var u: TIntegerArray; {$DEFINE Skeleton_BinaryUnified}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnified}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryGrow>

@@ -784,7 +784,7 @@ begin
 end;
 {$ENDIF}
 
-{$IFDEF Skeleton_BinaryUnduplicated}
+{$IFDEF Skeleton_BinaryUnified}
 var
   i, l: Integer;
 begin

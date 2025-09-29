@@ -4159,11 +4159,11 @@ begin
 end;
 
 {==============================================================================]
- <arr.Unduplicate: Integer>
+ <arr.Uncluttered: TArray>
  @action: Removes all duplicates from arr.
  @note: Returns the number of items that were removed.
 [==============================================================================}
-function HArr.Unduplicate: TArr; overload; cdecl;
+function HArr.Uncluttered: TArr; overload; cdecl;
 type
   TDict = specialize TDictionary<TVar, Boolean>;
 var
@@ -4235,11 +4235,11 @@ begin
 end;
 
 {==============================================================================]
- <arr.Unify>
+ <arr.Unified>
  @action: Uniques array
  @note: None.
  [==============================================================================}
-function HArr.Unify: TArr; overload; cdecl;
+function HArr.Unified(const dAscending: Boolean = True): TArr; overload; cdecl;
 var
   d: specialize TDictionary<TVar, Byte>;
   i, n: Integer;
@@ -4248,12 +4248,22 @@ begin
   try
     SetLength(Result, Length(Self));
     n := 0;
-    for i := 0 to High(Self) do
-      if not d.ContainsKey(Self[i]) then
-      begin
-        d.Add(Self[i], 0);
-        Result[n.Increase] := Self[i];
-      end;
+    case dAscending of
+      True:
+      for i := 0 to High(Self) do
+        if not d.ContainsKey(Self[i]) then
+        begin
+          d.Add(Self[i], 0);
+          Result[n.Increase] := Self[i];
+        end;
+      False:
+      for i := High(Self) downto 0 do
+        if not d.ContainsKey(Self[i]) then
+        begin
+          d.Add(Self[i], 0);
+          Result[n.Increase] := Self[i];
+        end;
+    end;
     SetLength(Result, n);
   finally
     d.Free;
@@ -4261,11 +4271,51 @@ begin
 end;
 
 {==============================================================================]
- <arr.Unique: TArray>
+ <arr.Unify>
+ @action: Uniques array
+ @note: None.
+ [==============================================================================}
+function HArr.Unify(const dAscending: Boolean = True): Integer; overload; cdecl;
+var
+  s: TArr;
+  d: specialize TDictionary<TVar, Byte>;
+  l, i: Integer;
+begin
+  d := specialize TDictionary<TVar, Byte>.Create;
+  Result := 0;
+  try
+    l := Length(Self);
+    case dAscending of
+      False:
+      begin
+        s := Self.Copy;
+ 	for i := (l - 1) downto 0 do
+        if not d.ContainsKey(Self[i]) then
+        begin
+          d.Add(Self[i], 0);
+          Self[Result.Increase] := s[i];
+        end;
+      end;
+      True:
+      for i := 0 to (l - 1) do
+        if not d.ContainsKey(Self[i]) then
+        begin
+          d.Add(Self[i], 0);
+          Self[Result.Increase] := Self[i];
+        end;
+    end;
+    SetLength(Self, Result);
+  finally
+    d.Free;
+  end;
+end;
+
+{==============================================================================]
+ <arr.Unduplicated: TArray>
  @action: Removes all duplicates from arr.
  @note: Returns the number of items that were removed.
 [==============================================================================}
-function HArr.Unique: TArr; overload; cdecl;
+function HArr.Unduplicated: TArr; overload; cdecl;
 var
   a, l, i, j: Integer;
   m: Boolean;
