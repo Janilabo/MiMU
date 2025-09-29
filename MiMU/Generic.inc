@@ -544,6 +544,40 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Compacted: TArray>
+ @action: Removes adjacent duplicates and returns a new compacted array.
+ @note: Custom threshold possibility.
+[==============================================================================}
+function HArr.Compacted(const threshold: Integer): TArr; overload; cdecl;
+var
+  i, j: Integer;
+  k: Boolean;
+  r: Integer;
+begin
+  if (Self.Empty or (threshold < 1)) then
+    Exit(Self.Copy);
+  r := 0;
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+  begin
+    k := True;
+    for j := Max(0, (r - threshold)) to (r - 1) do
+      if (Result[j] = Self[i]) then
+      begin
+        k := False;
+        Break;
+      end;
+    if k then
+    begin
+      if (Length(Result) <= r) then
+        SetLength(Result, (r + 1));
+      Result[r.Increase] := Self[i];
+    end;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
  <arr.Combine(b: TArray): TArray>
  @action: Combines arrays arr and b together as single array.
  @note: This is an alternative method. :)
@@ -580,6 +614,36 @@ begin
         Result[r.Increment] := Self[i];
     SetLength(Result, (r + 1));
   end;
+end;
+
+{==============================================================================]
+ <arr.Compressed: TArray>
+ @action: Produces a new array by removing all immediately repeated values,
+          effectively run-length–compressing the input.
+ @note: Custom threshold possibility.
+[==============================================================================}
+function HArr.Compressed(const threshold: Integer): TArr; overload; cdecl;
+var
+  w, r, i: Integer;
+  d: Boolean;
+begin
+  Result := Self.Copy;
+  if (Self.Empty or (threshold < 1)) then
+    Exit;
+  w := 0;
+  for r := 0 to High(Result) do
+  begin
+    d := False;
+    for i := Max(0, (w - threshold)) to (w - 1) do
+      if (Result[i] = Result[r]) then
+      begin
+        d := True;
+        Break;
+      end;
+    if not d then
+      Result[w.Increase] := Result[r];
+  end;
+  SetLength(Result, w);
 end;
 
 {==============================================================================]
@@ -3112,6 +3176,70 @@ begin
       Result[r.Increment] := Self[i];
   SetLength(Result, (r + 1));
 end;
+
+{==============================================================================]
+ <arr.Pruned: TArray>
+ @action: Produces a new array by removing all immediately repeated values,
+          effectively run-length–compressing the input.
+ @note: Custom threshold possibility.
+[==============================================================================}
+function HArr.Pruned(const threshold: Integer): TArr; overload; cdecl;
+var
+  w: TArr;
+  e: TVar;
+  h, t, c, i, j: Integer;
+  d: Boolean;
+begin
+  if (Self.Empty or (threshold < 1)) then
+    Exit(Self.Copy);
+  SetLength(Result, 0);
+  SetLength(w, threshold);
+  h := 0;
+  t := 0;
+  c := 0;
+  for i := 0 to High(Self) do
+  begin
+    e := Self[i];
+    d := False;
+    for j := 0 to (c - 1) do
+      if (w[(h + j) mod threshold] = e) then
+      begin
+        d := True;
+        Break;
+      end;
+    if not d then
+    begin
+      SetLength(Result, (Length(Result) + 1));
+      Result[High(Result)] := e;
+      w[t] := e;
+      t := ((t + 1) mod threshold);
+      if (c < threshold) then
+        Inc(c)
+      else
+        h := ((h + 1) mod threshold);
+    end;
+  end;
+end;
+
+{==============================================================================]
+ <arr.Prune: Integer>
+ @action: Removes all immediately repeated values,
+          effectively run-length–compressing the input.
+ @note: Only consecutive duplicates are removed; values separated by others
+        are left untouched. The relative order of the remaining elements
+        is unchanged.
+[==============================================================================}
+function HArr.Prune: Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 1 to High(Self) do
+    if (Self[i] <> Self[Result]) then
+      Self[Result.Increment] := Self[i];
+  if not Self.Empty then
+    SetLength(Self, Result.Increment);
+end; 
 
 {==============================================================================]
  <arr.Pull: TArr>

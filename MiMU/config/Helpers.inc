@@ -286,8 +286,10 @@ type
     function Combine(const b: TArr): TArr; overload; cdecl;
     function Compact: Integer; overload; cdecl;
     function Compacted: TArr; overload; cdecl;
+    function Compacted(const threshold: Integer): TArr; overload; cdecl;
 	function Compress: Integer; overload; cdecl;
     function Compressed: TArr; overload; cdecl;
+    function Compressed(const threshold: Integer): TArr; overload; cdecl;
     function Comprised(const items: TArr): Boolean; overload; cdecl;
     function Constant(const item: TVar): Boolean; overload; cdecl;
     function Constant: Boolean; overload; cdecl;
@@ -419,7 +421,9 @@ type
     function Positions: TIntegerArray; overload; cdecl;
     function Presence(const item: TVar; const occurrence: Integer = 1): Boolean; overload; cdecl;
     function Previous(const index: Integer; const count: Integer = 2147483647): TArr; overload; cdecl;
-    function Pruned: TArr; overload; cdecl;
+    function Prune: Integer; overload; cdecl;
+	function Pruned: TArr; overload; cdecl;
+    function Pruned(const threshold: Integer): TArr; overload; cdecl;
 	function Pull: TArr; overload; cdecl;
     function Push(const item: TVar): TArr; overload; cdecl;
     function Push(const items: TArr): TArr; overload; cdecl;
