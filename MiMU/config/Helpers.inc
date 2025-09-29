@@ -614,8 +614,8 @@ type
       function BinaryAdd(const x: Integer; const aAscending: Boolean = True): TIntegerArray; cdecl;
       function BinarySearchF(const x: TRange; const aAscending: Boolean = True): Integer; cdecl;
       function BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; cdecl;
-      function BinaryUnique(const aAscending: Boolean = True): Integer; cdecl;
-      function BinaryUniqued(const aAscending: Boolean = True): TIntegerArray; cdecl;
+      function BinaryPrune(const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryPruned(const aAscending: Boolean = True): TIntegerArray; cdecl;
       function BinaryUndupe: Integer; cdecl;
       function BinaryUnduped: TIntegerArray; cdecl;
 	  function BinaryUnified(const dAscending: Boolean = True): TIntegerArray; cdecl;
@@ -650,8 +650,8 @@ type
       function BinaryAdd(const x: Double; const aAscending: Boolean = True): TDoubleArray; cdecl;
       function BinarySearchF(const x: TRange; const aAscending: Boolean = True): Integer; cdecl;
       function BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; cdecl;
-      function BinaryUnique(const aAscending: Boolean = True): Integer; cdecl;
-      function BinaryUniqued(const aAscending: Boolean = True): TDoubleArray; cdecl;
+      function BinaryPrune(const aAscending: Boolean = True): Integer; cdecl;
+      function BinaryPruned(const aAscending: Boolean = True): TDoubleArray; cdecl;
 	  function BinaryUndupe: Integer; cdecl;
       function BinaryUnduped: TDoubleArray; cdecl;
 	  function BinaryUnified(const dAscending: Boolean = True): TDoubleArray; cdecl;

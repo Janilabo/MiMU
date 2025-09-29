@@ -134,18 +134,18 @@ function TDoubleArrayHelper.BinarySearchF(const x: TRange; const aAscending: Boo
 function TDoubleArrayHelper.BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinarySearchL}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchL}
 
 {==============================================================================]
-  <TDoubleArrayHelper.BinaryUnique>
-  @action: Binary Search-based Unique method.
-  @note: Alternative for TArray_Unique, for TDoubleArrays.
+  <TDoubleArrayHelper.BinaryPrune>
+  @action: Binary Search-based Prune method.
+  @note: None.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUnique(const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinaryUnique}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnique}
+function TDoubleArrayHelper.BinaryPrune(const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinaryPrune}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPrune}
 
 {==============================================================================]
-  <TDoubleArrayHelper.BinaryUniqued>
-  @action: Binary Search-based Uniqued method.
-  @note: Alternative for TArray_Uniqued, for TDoubleArrays.
+  <TDoubleArrayHelper.BinaryPruned>
+  @action: Binary Search-based Pruned method.
+  @note: None.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUniqued(const aAscending: Boolean = True): TDoubleArray; cdecl; {$DEFINE Skeleton_BinaryUniqued}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUniqued}
+function TDoubleArrayHelper.BinaryPruned(const aAscending: Boolean = True): TDoubleArray; cdecl; {$DEFINE Skeleton_BinaryPruned}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPruned}
 
 {==============================================================================]
   <TDoubleArrayHelper.BinaryUndupe>

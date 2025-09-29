@@ -299,7 +299,7 @@ begin
     w := weight.QuickSorted
   else
     w := weight.Copy;
-  w.BinaryUnique;
+  w.BinaryPrune;
   Result.Recreate(Length(w));
   for i := 0 to High(Self) do
   begin
@@ -675,7 +675,7 @@ begin
 end;
 {$ENDIF}
 
-{$IFDEF Skeleton_BinaryUnique}
+{$IFDEF Skeleton_BinaryPrune}
 var
   i, o: Integer;
 begin
@@ -691,7 +691,7 @@ begin
 end;
 {$ENDIF}
 
-{$IFDEF Skeleton_BinaryUniqued}
+{$IFDEF Skeleton_BinaryPruned}
 var
   i, o, r: Integer;
 begin

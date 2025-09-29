@@ -663,7 +663,7 @@ begin
     a := Self.QuickSorted
   else
     a := Self.Copy;
-  a.BinaryUnique;
+  a.BinaryPrune;
   SetLength(Result, 0);
   SetLength(Result, Length(a));
   for i := 0 to High(Self) do
@@ -1498,18 +1498,18 @@ function TIntegerArrayHelper.BinarySearchF(const x: TRange; const aAscending: Bo
 function TIntegerArrayHelper.BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinarySearchL}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchL}
 
 {==============================================================================]
-  <TIntegerArrayHelper.BinaryUnique>
-  @action: Binary Search-based Unique method.
-  @note: Alternative for TArray_Unique, for TIntegerArrays.
+  <TIntegerArrayHelper.BinaryPrune>
+  @action: Binary Search-based Prune method.
+  @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryUnique(const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinaryUnique}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnique}
+function TIntegerArrayHelper.BinaryPrune(const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinaryPrune}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPrune}
 
 {==============================================================================]
-  <TIntegerArrayHelper.BinaryUniqued>
-  @action: Binary Search-based Uniqued method.
-  @note: Alternative for TArray_Uniqued, for TIntegerArrays.
+  <TIntegerArrayHelper.BinaryPruned>
+  @action: Binary Search-based Pruned method.
+  @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryUniqued(const aAscending: Boolean = True): TIntegerArray; cdecl; {$DEFINE Skeleton_BinaryUniqued}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUniqued}
+function TIntegerArrayHelper.BinaryPruned(const aAscending: Boolean = True): TIntegerArray; cdecl; {$DEFINE Skeleton_BinaryPruned}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPruned}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryUndupe>
