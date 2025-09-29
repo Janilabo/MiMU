@@ -884,11 +884,11 @@ begin
 end;
 
 {==============================================================================]
- <arr.Diversify: TArray>
+ <arr.Diversified: TArray>
  @action: Alternative for Unique methods
  @note: None.
  [==============================================================================}
-function HArr.Diversify: TArr; overload; cdecl;
+function HArr.Diversified: TArr; overload; cdecl;
 var
   d: specialize TDictionary<TVar, Boolean>;
   i: Integer;
@@ -909,27 +909,39 @@ begin
 end;
 
 {==============================================================================]
- <arr.Diversified: TArray>
+ <arr.DiversifiedEx: TArray>
  @action: Alternative for Unique methods
  @note: None.
  [==============================================================================}
-function HArr.Diversified: TArr; overload; cdecl;
+function HArr.DiversifiedEx(const dAscending: Boolean = True): TArr; overload; cdecl;
 var
-  d: specialize TDictionary<TVar, Byte>;
-  i: TVar;
-  r: Integer;
+  l: specialize TList<TVar>;
+  d: specialize TDictionary<TVar, Boolean>;
+  i: Integer;
 begin
-  d := specialize TDictionary<TVar, Byte>.Create;
+  l := specialize TList<TVar>.Create;
+  d := specialize TDictionary<TVar, Boolean>.Create;
   try
-    for i in Self do
-      if not d.ContainsKey(i) then
-        d.Add(i, 0);
-    SetLength(Result, d.Count);
-    r := 0;
-    for i in d.Keys do
-      Result[r.Increase] := i;
+    case dAscending of
+      True:
+      for i := 0 to High(Self) do
+        if not d.ContainsKey(Self[i]) then
+        begin
+          d.Add(Self[i], True);
+          l.Add(Self[i]);
+        end;
+      False:
+      for i := High(Self) downto 0 do
+        if not d.ContainsKey(Self[i]) then
+        begin
+          d.Add(Self[i], True);
+          l.Add(Self[i]);
+        end;
+    end;
+    Result := l.ToArray;
   finally
     d.Free;
+    l.Free;
   end;
 end;
 
