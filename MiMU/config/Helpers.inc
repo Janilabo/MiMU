@@ -823,6 +823,7 @@ type
     function Inventory(var items: TArr): Int64; overload; cdecl;
     function Inventory: Int64; overload; cdecl;
     function TArray: TArr; overload; cdecl;
+    function Unwrap: TArr; overload; cdecl;
     function Kill: Integer; overload; cdecl;
     function Kill(const k2D: TIntegerArray): Int64; overload; cdecl;
     function Free: Int64; overload; cdecl;
@@ -830,4 +831,6 @@ type
     function Reset: Int64; overload; cdecl;
     function Destroy: Int64; overload; cdecl;
     function Pull: T2DArr; overload; cdecl;
+    function To1D: TArr; overload; cdecl;
+    function Linearize: TArr; overload; cdecl;
   end;

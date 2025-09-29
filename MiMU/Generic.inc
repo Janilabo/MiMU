@@ -4716,6 +4716,41 @@ begin
 end;
 
 {==============================================================================]
+ <arr.To1D: TArray>
+ @action: Merges 2D array to 1D.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+[==============================================================================}
+function H2DArr.To1D: TArr; overload; cdecl;
+var
+  i, j: Integer;
+  l: specialize TList<TVar>;
+begin
+  l := specialize TList<TVar>.Create;
+  try
+    for i := 0 to High(Self) do
+      for j := 0 to High(Self[i]) do
+        l.Add(Self[i][j]);
+    Result := l.ToArray;
+  finally
+    l.Free;
+  end;
+end;
+
+{==============================================================================]
+ <arr.Linearize: TArray>
+ @action: Merges 2D array to 1D.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+[==============================================================================}
+function H2DArr.Linearize: TArr; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+    Result := (Result + Self[i]);
+end;
+
+{==============================================================================]
  <arr.Irregular: Boolean>
  @action: Returns true if array contains arrays with different lengths (array not symmetrict)
  @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
@@ -4990,6 +5025,21 @@ begin
     for j := 0 to High(Self[i]) do
       Result[l + j] := Self[i][j];
   end;
+end;
+
+{==============================================================================]
+ <arr.TArray: TArray>
+ @action: Merges 2D array to 1D.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+[==============================================================================}
+function H2DArr.Unwrap: TArr; overload; cdecl;
+var
+  i, j: Integer;
+begin
+  Result := [];
+  for i := 0 to High(Self) do
+    for j := 0 to High(Self[i]) do
+      Result := (Result + [Self[i][j]]);
 end;
 
 {==============================================================================]
