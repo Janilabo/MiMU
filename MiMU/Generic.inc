@@ -340,173 +340,6 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Clear: Boolean>
-  @action: SetLength(arr, 0) and returns true if items existed before doing it.
-  @note: None.
-[==============================================================================}
-function HArr.Clear: Boolean; overload; cdecl;
-begin
-  Result := (Length(Self) > 0);
-  SetLength(Self, 0);
-end;
-
-{==============================================================================]
- <arr.Clone(index: Integer; count: Integer): TArray>
- @action: Returns copy of an array arr.
- @note: Contains support for starting index and count. -1 count uses Length(arr)!
-[==============================================================================}
-function HArr.Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
-var
-  i, s, c: Integer;
-begin
-  if (count > 0) then
-  begin
-    if (index < 0) then
-      c := (index + count)
-    else
-      c := Min(count, (Length(Self) - index));
-    s := Max(0, index);
-    SetLength(Result, c);
-    for i := s to ((s + c) - 1) do
-      Result[i - s] := Self[i];
-  end else
-    SetLength(Result, 0);
-end;
-
-{==============================================================================]
- <arr.Clone(ID: TIntegerArray): TArray>
- @action: Outputs array of items from arr by indexes (ID).
- @note: Ignores invalid ID's (doesn't include those to result, they will be left out).
-[====================
-==========================================================}
-function HArr.Clone(const ID: TIntegerArray): TArr; overload; cdecl;
-var
-  i, h, l, r: Integer;
-begin
-  r := 0;
-  if (ID.Populated and Self.Populated) then
-  begin
-    h := High(Self);
-    l := Length(ID);
-    SetLength(Result, l);
-    for i := 0 to (l - 1) do
-      if ((ID[i] <= h) and (ID[i] > -1)) then
-        Result[r.Increase] := Self[ID[i]];
-  end;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
- <arr.Combine(b: TArray): TArray>
- @action: Combines arrays arr and b together as single array.
- @note: This is an alternative method. :)
-[==============================================================================}
-function HArr.Combine(const b: TArr): TArr; overload; cdecl;
-begin
-  SetLength(Result, 0);
-  Insert(Self, Result, 0);
-  Insert(b, Result, Length(Self));
-end;
-
-{==============================================================================]
- <arr.Compress: TArray>
- @action: Produces a new array by removing all immediately repeated values,
-          effectively run-length–compressing the input.
- @note: Only consecutive duplicates are removed; values separated by others
-        are left untouched. The relative order of the remaining elements
-        is unchanged.
-[==============================================================================}
-function HArr.Compress: TArr; overload; cdecl;
-var
-  i, l, r: Integer;
-begin
-  l := Length(Self);
-  SetLength(Result, l);
-  if (l = 0) then
-    Exit;
-  Result[0] := Self[0];
-  if (l = 1) then
-    Exit;
-  r := 0;
-  for i := 1 to High(Self) do
-    if not (Self[i] = Self[i - 1]) then
-      Result[r.Increment] := Self[i];
-  SetLength(Result, (r + 1));
-end;
-
-{==============================================================================]
- <arr.Compressed: TArray>
- @action: Produces a new array by removing all immediately repeated values,
-          effectively run-length–compressing the input.
- @note: Only consecutive duplicates are removed; values separated by others
-        are left untouched. The relative order of the remaining elements
-        is unchanged.
-[==============================================================================}
-function HArr.Compressed: TArr; overload; cdecl;
-var
-  r, i, l: Integer;
-begin
-  l := Length(Self);
-  SetLength(Result, l);
-  if (l = 0) then
-    Exit;
-  Result[0] := Self[0];
-  if (l > 1) then
-  begin
-    r := 0;
-    for i := 1 to (l - 1) do
-      if not (Self[i] = Result[r]) then
-        Result[r.Increment] := Self[i];
-    SetLength(Result, (r + 1));
-  end;
-end;
-
-{==============================================================================]
- <arr.Comprised(items: TArray): Boolean>
- @action: Returns true if arr is built of items only.
- @note: 
-[==============================================================================}
-function HArr.Comprised(const items: TArr): Boolean; overload; cdecl;
-var
-  l: Integer;
-begin
-  l := Length(Self);
-  Result := (l > 0);
-  while (Result and (l.Decrease > 0)) do
-    Result := items.Contains(Self[l]);
-end;
-
-{==============================================================================]
- <arr.Exact(items: TArray): Boolean>
- @action: Returns true if arr consists of items.
- @note: arr must contain ALL the items for this function to return True.
-        Any extra items will cause Result to be False also.
-		items[1,2,3]
-		arr[1,2,3,1,2,3] => True
-		arr[2,3,2,3] => False
-		arr[2,1,3,4] => False
-		This function requires items array to be unique. No duplicates allowed for it!
-[==============================================================================}
-function HArr.Exact(const items: TArr): Boolean; overload; cdecl;
-var
-  i, j: Integer;
-  f: TBooleanArray;
-begin
-  if (Length(items) = 0) then
-    Exit(Length(Self) = 0);
-  SetLength(f, Length(items));
-  f.Create(Length(items), False);
-  for i := 0 to High(Self) do
-  begin
-    j := items.Pos(Self[i]);
-    if (j = -1) then
-      Exit(False);
-    f[j] := True;
-  end;
-  Result := f.Uniform(True);
-end;
-
-{==============================================================================]
   <arr.BuiltWith(blocks TArray): Boolean>
   @action: Returns true is arr is built with blocks.
   @note: This function requires blocks array to be unique (no duplicates allowed for it).
@@ -618,22 +451,78 @@ function HArr.Classify(const weight: TIntegerArray): T2DArr; overload; cdecl; va
 function HArr.Classify(const weight: TDoubleArray): T2DArr; overload; cdecl; var w: Double; {$DEFINE Skeleton_Classify}{$I config\Skeletons.inc}{$UNDEF Skeleton_Classify}
 
 {==============================================================================]
- <arr.Compact: TArray>
- @action: Removes adjacent duplicates and returns a new compacted array.
+  <arr.Clear: Boolean>
+  @action: SetLength(arr, 0) and returns true if items existed before doing it.
+  @note: None.
+[==============================================================================}
+function HArr.Clear: Boolean; overload; cdecl;
+begin
+  Result := (Length(Self) > 0);
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
+ <arr.Clone(index: Integer; count: Integer): TArray>
+ @action: Returns copy of an array arr.
+ @note: Contains support for starting index and count. -1 count uses Length(arr)!
+[==============================================================================}
+function HArr.Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
+var
+  i, s, c: Integer;
+begin
+  if (count > 0) then
+  begin
+    if (index < 0) then
+      c := (index + count)
+    else
+      c := Min(count, (Length(Self) - index));
+    s := Max(0, index);
+    SetLength(Result, c);
+    for i := s to ((s + c) - 1) do
+      Result[i - s] := Self[i];
+  end else
+    SetLength(Result, 0);
+end;
+
+{==============================================================================]
+ <arr.Clone(ID: TIntegerArray): TArray>
+ @action: Outputs array of items from arr by indexes (ID).
+ @note: Ignores invalid ID's (doesn't include those to result, they will be left out).
+[====================
+==========================================================}
+function HArr.Clone(const ID: TIntegerArray): TArr; overload; cdecl;
+var
+  i, h, l, r: Integer;
+begin
+  r := 0;
+  if (ID.Populated and Self.Populated) then
+  begin
+    h := High(Self);
+    l := Length(ID);
+    SetLength(Result, l);
+    for i := 0 to (l - 1) do
+      if ((ID[i] <= h) and (ID[i] > -1)) then
+        Result[r.Increase] := Self[ID[i]];
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+ <arr.Compact: Integer>
+ @action: Removes adjacent duplicates.
  @note: Original order is preserved and non-adjacent duplicates remain.
 [==============================================================================}
-function HArr.Compact: TArr; overload; cdecl;
+function HArr.Compact: Integer; overload; cdecl;
 var
-  i, l: Integer;
+  i: Integer;
 begin
-  SetLength(Result, Length(Self));
-  if Self.Empty then
-    Exit();
-  l := 0;
-  for i := 0 to High(Self) do
-    if ((i = 0) or (Self[i] <> Self[i - 1])) then
-      Result[l.Increase] := Self[i];
-  SetLength(Result, l);
+  if (Length(Self) < 2) then
+    Exit(Length(Self));
+  Result := 1;
+  for i := 1 to High(Self) do
+    if (Self[i] <> Self[i - 1]) then
+      Self[Result.Increase] := Self[i];
+  SetLength(Self, Result);
 end;
 
 {==============================================================================]
@@ -652,6 +541,81 @@ begin
   for i := 1 to High(Self) do
     if (Self[i] <> Self[i - 1]) then
 	  Result.Supply(Self[i]);
+end;
+
+{==============================================================================]
+ <arr.Combine(b: TArray): TArray>
+ @action: Combines arrays arr and b together as single array.
+ @note: This is an alternative method. :)
+[==============================================================================}
+function HArr.Combine(const b: TArr): TArr; overload; cdecl;
+begin
+  SetLength(Result, 0);
+  Insert(Self, Result, 0);
+  Insert(b, Result, Length(Self));
+end;
+
+{==============================================================================]
+ <arr.Compressed: TArray>
+ @action: Produces a new array by removing all immediately repeated values,
+          effectively run-length–compressing the input.
+ @note: Only consecutive duplicates are removed; values separated by others
+        are left untouched. The relative order of the remaining elements
+        is unchanged.
+[==============================================================================}
+function HArr.Compressed: TArr; overload; cdecl;
+var
+  r, i, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  Result[0] := Self[0];
+  if (l > 1) then
+  begin
+    r := 0;
+    for i := 1 to (l - 1) do
+      if not (Self[i] = Result[r]) then
+        Result[r.Increment] := Self[i];
+    SetLength(Result, (r + 1));
+  end;
+end;
+
+{==============================================================================]
+ <arr.Compress: Integer>
+ @action: Removes all immediately repeated values,
+          effectively run-length–compressing the input.
+ @note: Only consecutive duplicates are removed; values separated by others
+        are left untouched. The relative order of the remaining elements
+        is unchanged.
+[==============================================================================}
+function HArr.Compress: Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  if (Length(Self) < 2) then
+    Exit(Length(Self));
+  Result := 1;
+  for i := 1 to High(Self) do
+    if not (Self[i] = Self[Result - 1]) then
+      Self[Result.Increase] := Self[i];
+  SetLength(Self, Result);
+end;
+
+{==============================================================================]
+ <arr.Comprised(items: TArray): Boolean>
+ @action: Returns true if arr is built of items only.
+ @note: 
+[==============================================================================}
+function HArr.Comprised(const items: TArr): Boolean; overload; cdecl;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  Result := (l > 0);
+  while (Result and (l.Decrease > 0)) do
+    Result := items.Contains(Self[l]);
 end;
 
 {==============================================================================]
@@ -742,6 +706,25 @@ begin
   SetLength(Self, Max(0, aSize));
   for i := 0 to High(Self) do
     Self[i] := item;
+end;
+
+{==============================================================================]
+ <arr.Deduplicated: TArray>
+ @action: Removes adjacent duplicates and returns a new compacted array.
+ @note: Original order is preserved and non-adjacent duplicates remain.
+[==============================================================================}
+function HArr.Deduplicated: TArr; overload; cdecl;
+var
+  i, l: Integer;
+begin
+  SetLength(Result, Length(Self));
+  if Self.Empty then
+    Exit();
+  l := 0;
+  for i := 0 to High(Self) do
+    if ((i = 0) or (Self[i] <> Self[i - 1])) then
+      Result[l.Increase] := Self[i];
+  SetLength(Result, l);
 end;
 
 {==============================================================================]
@@ -1229,6 +1212,36 @@ end;
 function HArr.Erase(const items: TArr; const all: Boolean): TArr; overload; cdecl;
 begin
   Result := Self.Erase(items, 2147483647, all);
+end;
+
+{==============================================================================]
+ <arr.Exact(items: TArray): Boolean>
+ @action: Returns true if arr consists of items.
+ @note: arr must contain ALL the items for this function to return True.
+        Any extra items will cause Result to be False also.
+		items[1,2,3]
+		arr[1,2,3,1,2,3] => True
+		arr[2,3,2,3] => False
+		arr[2,1,3,4] => False
+		This function requires items array to be unique. No duplicates allowed for it!
+[==============================================================================}
+function HArr.Exact(const items: TArr): Boolean; overload; cdecl;
+var
+  i, j: Integer;
+  f: TBooleanArray;
+begin
+  if (Length(items) = 0) then
+    Exit(Length(Self) = 0);
+  SetLength(f, Length(items));
+  f.Create(Length(items), False);
+  for i := 0 to High(Self) do
+  begin
+    j := items.Pos(Self[i]);
+    if (j = -1) then
+      Exit(False);
+    f[j] := True;
+  end;
+  Result := f.Uniform(True);
 end;
 
 {==============================================================================]
@@ -3072,6 +3085,32 @@ begin
       Result[i] := Self[m + i];
   end else
     SetLength(Result, 0);
+end;
+
+{==============================================================================]
+ <arr.Pruned: TArray>
+ @action: Produces a new array by removing all immediately repeated values,
+          effectively run-length–compressing the input.
+ @note: Only consecutive duplicates are removed; values separated by others
+        are left untouched. The relative order of the remaining elements
+        is unchanged.
+[==============================================================================}
+function HArr.Pruned: TArr; overload; cdecl;
+var
+  i, l, r: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  Result[0] := Self[0];
+  if (l = 1) then
+    Exit;
+  r := 0;
+  for i := 1 to High(Self) do
+    if not (Self[i] = Self[i - 1]) then
+      Result[r.Increment] := Self[i];
+  SetLength(Result, (r + 1));
 end;
 
 {==============================================================================]

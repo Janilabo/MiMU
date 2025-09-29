@@ -284,9 +284,9 @@ type
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
     function Clone(const ID: TIntegerArray): TArr; overload; cdecl;
     function Combine(const b: TArr): TArr; overload; cdecl;
-    function Compact: TArr; overload; cdecl;
+    function Compact: Integer; overload; cdecl;
     function Compacted: TArr; overload; cdecl;
-    function Compress: TArr; overload; cdecl;
+	function Compress: Integer; overload; cdecl;
     function Compressed: TArr; overload; cdecl;
     function Comprised(const items: TArr): Boolean; overload; cdecl;
     function Constant(const item: TVar): Boolean; overload; cdecl;
@@ -295,6 +295,7 @@ type
     function Copy(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
     function Create(const item: TVar): TArr; overload; cdecl;
     function Create(const aSize: Integer; const item: TVar): TArr; overload; cdecl;
+    function Deduplicated: TArr; overload; cdecl;
     function Delete(const index: Integer = 0): TArr; overload; cdecl;
     function Delete(const ID: TIntegerArray): TArr; overload; cdecl;
     function Differ(const target: TArr): Boolean; overload; cdecl;
@@ -418,7 +419,8 @@ type
     function Positions: TIntegerArray; overload; cdecl;
     function Presence(const item: TVar; const occurrence: Integer = 1): Boolean; overload; cdecl;
     function Previous(const index: Integer; const count: Integer = 2147483647): TArr; overload; cdecl;
-    function Pull: TArr; overload; cdecl;
+    function Pruned: TArr; overload; cdecl;
+	function Pull: TArr; overload; cdecl;
     function Push(const item: TVar): TArr; overload; cdecl;
     function Push(const items: TArr): TArr; overload; cdecl;
     function Put(const ID: TIntegerArray; const item: TVar): TArr; overload; cdecl;

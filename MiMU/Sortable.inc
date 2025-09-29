@@ -1204,7 +1204,7 @@ begin
     SetLength(Result, 0)
   else
     if not sSorted then
-      Result := Self.QuickSorted.Compress
+      Result := Self.QuickSorted.Pruned
     else
-      Result := Self.Compress;
+      Result := Self.Pruned;
 end;
