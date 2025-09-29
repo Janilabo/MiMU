@@ -811,6 +811,7 @@ type
     function Irregular: Boolean; overload; cdecl;
     function Jagged: Boolean; overload; cdecl;
     function Merge: TArr; overload; cdecl;
+    function Merged: TArr; overload; cdecl;
     function Ragged: Boolean; overload; cdecl;
     function Fit: Integer; overload; cdecl;
     function Fit(const aSize: Integer): Integer; overload; cdecl;

@@ -4812,6 +4812,30 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Merged: TArray>
+ @action: Merges 2D array to 1D.
+ @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+[==============================================================================}
+function H2DArr.Merged: TArr; overload; cdecl;
+var
+  i, r, s: Integer;
+  a: TArr;
+begin
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+  begin
+    s := Length(Self[i]);
+    if (s > 0) then
+    begin
+      a := Copy(Self[i], 0, s);
+      r := Length(Result);
+      SetLength(Result, (r + s));
+      Move(a[0], Result[r], (s * SizeOf(TVar)));
+    end;
+  end;
+end;
+
+{==============================================================================]
  <arr.Ragged: Boolean>
  @action: Returns true if array contains arrays with different lengths (array not symmetrict)
  @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
