@@ -196,6 +196,43 @@ begin
 end;
 
 {==============================================================================]
+ <arr.As2D(rows, columns: Integer): T2DArray>
+ @action: Converts 1D array to 2D by rows and columns.
+ @note: TIA := [1,2,3,4,5,6];
+		TIA.To2D(2, 3) = [[1, 2, 3], [4, 5, 6]]
+        TIA.To2D(3, 2) = [[1, 2], [3, 4], [5, 6]]
+[==============================================================================}
+function HArr.As2D(const rows, columns: Integer): T2DArr; overload;
+var
+  l, i: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, rows, columns);
+  for i := 0 to ((rows * columns) - 1) do
+    if (i < l) then
+      Result[i div columns][i mod columns] := Self[i];
+end;
+
+{==============================================================================]
+ <arr.As2D(width: Integer): T2DArray>
+ @action: Converts 1D array to 2D by width.
+ @note: None.
+[==============================================================================}
+function HArr.As2D(const width: Integer): T2DArr; overload;
+var
+  l, h, i, r, c: Integer;
+begin
+  l := Length(Self);
+  h := Ceil(l / width);
+  SetLength(Result, h, width);
+  i := 0;
+  for r := 0 to (h - 1) do
+    for c := 0 to (width - 1) do
+      if (i < l) then
+        Result[r][c] := Self[i.Increase];
+end;
+
+{==============================================================================]
  <arr.Backwards: TArray>
  @action: Returns arr as reversed.
  @note: Alternative for Reversed methods
@@ -3257,6 +3294,82 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Purified: TArr>
+ @action: Returns array with unique items
+ @note: None.
+[==============================================================================}
+function HArr.Purified(const dAscending: Boolean = True): TArr; overload; cdecl;
+var
+  d: specialize TDictionary<TVar, Boolean>;
+  l: specialize TList<TVar>;
+  i: Integer;
+begin
+  d := specialize TDictionary<TVar, Boolean>.Create;
+  l := specialize TList<TVar>.Create;
+  try
+    case dAscending of
+      True:
+      for i := 0 to High(Self) do
+        if not d.ContainsKey(Self[i]) then
+        begin
+          d.Add(Self[i], True);
+          l.Add(Self[i]);
+        end;
+      False:
+      for i := High(Self) downto 0 do
+        if not d.ContainsKey(Self[i]) then
+        begin
+          d.Add(Self[i], True);
+          l.Add(Self[i]);
+        end;
+    end;
+    Result := l.ToArray;
+  finally
+    d.Free;
+    l.Free;
+  end;
+end;
+
+{==============================================================================]
+ <arr.Purify: Integer>
+ @action: Removes duplicates
+ @note: None
+[==============================================================================}
+function HArr.Purify(const dAscending: Boolean = True): Integer; overload; cdecl;
+var
+  d: specialize TDictionary<TVar, Boolean>;
+  c: TArr;
+  i: Integer;
+begin
+  d := specialize TDictionary<TVar, Boolean>.Create;
+  Result := 0;
+  try
+    case dAscending of
+      True:
+      for i := 0 to High(Self) do
+        if not d.ContainsKey(Self[i]) then
+        begin
+          d.Add(Self[i], True);
+	  Self[Result.Increase] := Self[i];
+        end;
+      False:
+      begin
+        c := Self.Copy;
+        for i := High(c) downto 0 do
+          if not d.ContainsKey(c[i]) then
+          begin
+            d.Add(c[i], True);
+	    Self[Result.Increase] := c[i];
+          end;
+      end;
+    end;
+  finally
+    d.Free;
+  end;
+  SetLength(Self, Result);
+end;
+
+{==============================================================================]
  <arr.Put(ID: TIntegerArray; item: VarType): TArray>
  @action: Returns array arr filled with item to indexes (ID).
  @note: Unsafe method! No safety checking.
@@ -4294,6 +4407,46 @@ begin
 end;
 
 {==============================================================================]
+ <arr.To2D(rows, columns: Integer): T2DArray>
+ @action: Converts 1D array to 2D by rows and columns.
+ @note: Make sure Length(array) equals rows*columns (otherwise returns [])! Working examples below.
+		TIA := [1,2,3,4,5,6];
+		TIA.To2D(2, 3) = [[1, 2, 3], [4, 5, 6]]
+        TIA.To2D(3, 2) = [[1, 2], [3, 4], [5, 6]]
+[==============================================================================}
+function HArr.To2D(const rows, columns: Integer): T2DArr; overload; cdecl;
+var
+  i, r, c, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, rows, columns);
+  i := 0;
+  for r := 0 to (rows - 1) do
+    for c := 0 to (columns - 1) do
+      if (i < l) then
+        Result[r][c] := Self[i.Increase];
+end;
+
+{==============================================================================]
+ <arr.To2D(height: Integer): T2DArray>
+ @action: Converts 1D array to 2D by height.
+ @note: 
+[==============================================================================}
+function HArr.To2D(const height: Integer): T2DArr; overload;
+var
+  l, w, i, r, c: Integer;
+begin
+  l := Length(Self);
+  w := Ceil(l / height);
+  SetLength(Result, height, w);
+  i := 0;
+  for r := 0 to (height - 1) do
+    for c := 0 to (w - 1) do
+      if (i < l) then
+        Result[r][c] := Self[i.Increase];
+end;
+
+{==============================================================================]
  <arr.ToIndexes: TIntegerArray>
  @action: Returns indexes of array.
  @note: None.
@@ -4468,12 +4621,12 @@ begin
       False:
       begin
         s := Self.Copy;
- 	for i := (l - 1) downto 0 do
-        if not d.ContainsKey(Self[i]) then
-        begin
-          d.Add(Self[i], 0);
-          Self[Result.Increase] := s[i];
-        end;
+        for i := (l - 1) downto 0 do
+          if not d.ContainsKey(Self[i]) then
+          begin
+            d.Add(Self[i], 0);
+            Self[Result.Increase] := s[i];
+          end;
       end;
       True:
       for i := 0 to (l - 1) do

@@ -266,6 +266,8 @@ type
     function Any: TVar; overload; cdecl;
     function Append(const item: TVar; const duplicates: Boolean = True): TArr; overload; cdecl;
     function Append(const items: TArr; const duplicates: Boolean = True): TArr; overload; cdecl;
+    function As2D(const rows, columns: Integer): T2DArr; overload;
+    function As2D(const width: Integer): T2DArr; overload;
     function Backwards: TArr; overload; cdecl;
     function Blend(const items: TArr; const index: Integer = 2147483647): TArr; overload; cdecl;
     function Build(const item: TVar; const aSize: Integer = 1): TArr; overload; cdecl;
@@ -425,6 +427,8 @@ type
 	function Pruned: TArr; overload; cdecl;
     function Pruned(const threshold: Integer): TArr; overload; cdecl;
 	function Pull: TArr; overload; cdecl;
+    function Purified(const dAscending: Boolean = True): TArr; overload; cdecl;
+    function Purify(const dAscending: Boolean = True): Integer; overload; cdecl;
     function Push(const item: TVar): TArr; overload; cdecl;
     function Push(const items: TArr): TArr; overload; cdecl;
     function Put(const ID: TIntegerArray; const item: TVar): TArr; overload; cdecl;
@@ -476,6 +480,8 @@ type
     function Subset(const items: TArr): Boolean; overload; cdecl;
     function Supply(const item: TVar): Integer; overload; cdecl;
     function Supply(const items: TArr): Integer; overload; cdecl;
+	function To2D(const rows, columns: Integer): T2DArr; overload; cdecl;
+    function To2D(const height: Integer): T2DArr; overload;
     function ToIndexes: TIntegerArray; overload; cdecl;
     function Trade(var b: TArr): Integer; overload; cdecl;
     function Undersize(const limit: Integer): Boolean; overload; cdecl;
