@@ -774,6 +774,9 @@ type
       function Clusterize(const xRadius, yRadius: Double): T2DPointArray; overload; cdecl;
       function XClassify(const pSorted: Boolean = False): T2DPointArray; overload; cdecl;
       function YClassify(const pSorted: Boolean = False): T2DPointArray; overload; cdecl;
+      function SortByRow(const aAscending: Boolean = True): Integer; overload; cdecl;
+      function SortByColumn(const aAscending: Boolean = True): Integer; overload; cdecl;
+      function SortedByIndex(const aAscending: Boolean = True): TPointArray; overload; cdecl;
       function Reinit: Integer; overload; cdecl;
     {$ENDIF}
     {$IFDEF TBox}

@@ -1071,4 +1071,105 @@ begin
     FillChar(Pointer(Self)^, (Result * SizeOf(TPoint)), 0);
 end;
 
+{==============================================================================]
+  <TPointArrayHelper.SortByRow>
+  @action: Sorts array Row-by-Row.
+  @note: Returns Length().
+[==============================================================================}
+function TPointArrayHelper.SortByRow(const aAscending: Boolean = True): Integer; overload; cdecl;
+var
+  x, y, w, h, r, i: Integer;
+  c: T2DIntegerArray;
+  b: TBox;
+begin
+  Result := Length(Self);
+  if (Result > 1) then
+  begin
+    r := 0;
+    b := Self.Bounds(w, h);
+    c := T2D.Create(0, w, h);
+    for i := 0 to High(Self) do
+      Inc(c[(Self[i].X - b.X1)][(Self[i].Y - b.Y1)]);
+	case aAscending of
+	  True:
+      for y := 0 to (b.Y2 - b.Y1) do
+        for x := 0 to (b.X2 - b.X1) do
+        begin
+          if (c[x][y] = 0) then
+            Continue;
+          for i := 0 to (c[x][y] - 1) do
+            Self[r + i] := Point((x + b.X1), (y + b.Y1));
+          r := (r + c[x][y]);
+        end;
+	  False:
+      for y := (b.Y2 - b.Y1) downto 0 do
+        for x := (b.X2 - b.X1) downto 0 do
+        begin
+          if (c[x][y] = 0) then
+            Continue;
+          for i := (c[x][y] - 1) downto 0 do
+            Self[r + i] := Point((x + b.X1), (y + b.Y1));
+          r := (r + c[x][y]);
+        end;
+	end;
+    SetLength(c, 0);
+  end;
+end;
+
+{==============================================================================]
+  <TPointArrayHelper.SortByColumn>
+  @action: Sorts array Column-by-Column.
+  @note: Returns Length().
+[==============================================================================}
+function TPointArrayHelper.SortByColumn(const aAscending: Boolean = True): Integer; overload; cdecl;
+var
+  x, y, w, h, r, i: Integer;
+  c: T2DIntegerArray;
+  b: TBox;
+begin
+  Result := Length(Self);
+  if (Result > 1) then
+  begin
+    r := 0;
+    b := Self.Bounds(w, h);
+    c := T2D.Create(0, w, h);
+    for i := 0 to High(Self) do
+      Inc(c[(Self[i].X - b.X1)][(Self[i].Y - b.Y1)]);
+	case aAscending of
+	  True:
+      for x := 0 to (b.X2 - b.X1) do
+        for y := 0 to (b.Y2 - b.Y1) do
+          if (c[x][y] > 0) then
+          begin
+            for i := 0 to (c[x][y] - 1) do
+              Self[r + i] := Point((x + b.X1), (y + b.Y1));
+            r := (r + c[x][y]);
+          end;
+	  False:
+      for x := (b.X2 - b.X1) downto 0 do
+        for y := (b.Y2 - b.Y1) downto 0 do
+          if (c[x][y] > 0) then
+          begin
+            for i := (c[x][y] - 1) downto 0 do
+              Self[r + i] := Point((x + b.X1), (y + b.Y1));
+            r := (r + c[x][y]);
+          end;
+    end;		  
+    SetLength(c, 0);
+  end;
+end;
+
+{==============================================================================]
+  <TPointArrayHelper.SortedByIndex>
+  @action: Returns array sorted by indexes in array bounding box.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.SortedByIndex(const aAscending: Boolean = True): TPointArray; overload; cdecl;
+begin
+  if Self.Empty then
+    SetLength(Result, 0)
+  else
+    Result := Self.QuickSorted(Self.Bounds.IDs(Self), aAscending);
+end; 
+
 {$UNDEF TPoint}
