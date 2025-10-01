@@ -675,6 +675,140 @@ begin
   Result := Self.Split(radius, radius);
 end;
 
+function TPointArrayHelper.Cluster(const dist: Integer): T2DPointArray; overload; cdecl;
+var
+  w, h, i, j, l, g, p, x, y, r, d: Integer;
+  s: T2DBooleanArray;
+  c: T2DIntegerArray;
+  q: TPointArray;
+  a, b: TBox;
+  z: TPoint;
+  v: Boolean;
+begin
+  SetLength(Result, 0);
+  case Length(Self) of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  r := 0;
+  b := Self.Bounds(w, h);
+  c := T2D.Create(0, w, h);
+  s := T2D.Create(False, w, h);
+  d := Min(Ceil(Max(dist, 0.0)), Max(w, h));
+  for i := 0 to High(Self) do
+    Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
+  for i := 0 to High(Self) do
+  begin
+    if (c[Self[i].X - b.X1][Self[i].Y - b.Y1] = 0) then
+      Continue;
+    g := Length(Result);
+    SetLength(Result, (g + 1));
+    SetLength(Result[g], c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
+    for j := 0 to (c[Self[i].X - b.X1][Self[i].Y - b.Y1] - 1) do
+      Result[g][j] := Self[i];
+    if (r.Increment(c[Self[i].X - b.X1][Self[i].Y - b.Y1]) > High(Self)) then
+      Exit;
+    q := [Self[i]];
+    c[Self[i].X - b.X1][Self[i].Y - b.Y1] := 0;
+    p := 1;
+    while (p > 0) do
+    begin
+      p := High(q);
+      z := q[p];
+      a.Create((z.X - d), (z.Y - d), (z.X + d), (z.Y + d));
+      SetLength(q, p);
+      a.Constraint(b);
+      for y := a.Y1 to a.Y2 do
+      begin
+        if s[a.X2 - b.X1][y - b.Y1] then
+          Continue;
+        v := True;
+        for x := a.X1 to a.X2 do
+          if ((c[x - b.X1][y - b.Y1] > 0) and (Round(Sqrt(Sqr(z.X - x) + Sqr(z.Y - y))) <= dist)) then
+          begin
+            l := Length(Result[g]);
+            SetLength(Result[g], (l + c[x - b.X1][y - b.Y1]));
+            for j := 0 to (c[x - b.X1][y - b.Y1] - 1) do
+              Result[g][l + j] := Point(x, y);
+            if (r.Increment(c[x - b.X1][y - b.Y1]) > h) then
+              Exit;
+            c[x - b.X1][y - b.Y1] := 0;
+            SetLength(q, (p + 1));
+            q[p.Increase] := Result[g][l];
+          end else
+            v := False;
+        if v then
+          s[a.X2 - b.X1][y - b.Y1] := True;
+      end;
+    end;
+  end;
+end;
+
+function TPointArrayHelper.Cluster(const width, height: Integer): T2DPointArray; overload; cdecl;
+var
+  w, h, i, l, g, p, x, y, o, r: Integer;
+  s: T2DBooleanArray;
+  c: T2DIntegerArray;
+  q: TPointArray;
+  a, b: TBox;
+  z: TPoint;
+begin
+  case Length(Self) of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  r := 0;
+  b := Self.Bounds(w, h);
+  c := T2D.Create(0, w, h);
+  s := T2D.Create(False, w, h);
+  w := Min(width, w);
+  h := Min(height, h);
+  for i := 0 to High(Self) do
+    Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
+  for i := 0 to High(Self) do
+  begin
+    if (c[Self[i].X - b.X1][Self[i].Y - b.Y1] = 0) then
+      Continue;
+    g := Length(Result);
+    SetLength(Result, (g + 1));
+    SetLength(Result[g], c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
+    for o := 0 to (c[Self[i].X - b.X1][Self[i].Y - b.Y1] - 1) do
+      Result[g][o] := Self[i];
+    if (r.Increment(c[Self[i].X - b.X1][Self[i].Y - b.Y1]) > High(Self)) then
+      Exit;
+    q := [Self[i]];
+    c[Self[i].X - b.X1][Self[i].Y - b.Y1] := 0;
+    p := 1;
+    while (p > 0) do
+    begin
+      p := High(q);
+      z := q[p];
+      a.Create((z.X - w), (z.Y - h), (z.X + w), (z.Y + h));
+      SetLength(q, p);
+      a.Constraint(b);
+      for y := a.Y1 to a.Y2 do
+      begin
+        if s[a.X2 - b.X1][y - b.Y1] then
+          Continue;
+        for x := a.X1 to a.X2 do
+          if (c[x - b.X1][y - b.Y1] > 0) then
+          begin
+            l := Length(Result[g]);
+            SetLength(Result[g], (l + c[x - b.X1][y - b.Y1]));
+            for o := 0 to (c[x - b.X1][y - b.Y1] - 1) do
+              Result[g][l + o] := Point(x, y);
+            if (r.Increment(c[x - b.X1][y - b.Y1]) > High(Self)) then
+              Exit;
+            c[x - b.X1][y - b.Y1] := 0;
+            SetLength(q, (p + 1));
+            q[p.Increase] := Result[g][l];
+          end;
+        s[a.X2 - b.X1][y - b.Y1] := True;
+      end;
+    end;
+  end;
+end;
+
 {==============================================================================]
  <TPointArrayHelper.Segment>
  @action: Splits TPointArray to groups by radius.
