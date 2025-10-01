@@ -265,8 +265,10 @@ type
     function Ratio: Double; cdecl;
     function Horizontal: TRange; cdecl;
     function Vertical: TRange; cdecl;
-    function Expand(const change: Integer = 1): TBox; cdecl;
-    function Shrink(const change: Integer = 1): TBox; cdecl;
+    function Expand(const change: Integer = 1): TBox; overload; cdecl;
+    function Expand(const target: TBox): TBox; overload; cdecl;
+    function Shrink(const change: Integer = 1): TBox; overload; cdecl;
+    function Shrink(const target: TBox): TBox; overload; cdecl;
     function Resize(const change: Integer): TBox; cdecl;
     function ResizeVertically(const change: Integer): TBox; cdecl;
     function ResizeHorizontally(const change: Integer): TBox; cdecl;

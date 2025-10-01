@@ -790,6 +790,8 @@ type
       function Y2Values: TIntegerArray; overload; cdecl;
       function Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer; cdecl;
       function Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer; cdecl;
+      function Bounds: TBox; overload; cdecl;
+      function Boundaries: TBox; overload; cdecl;
     {$ENDIF}	
     {$IFDEF TRange}
       function Bounds: TRange; overload; cdecl;
