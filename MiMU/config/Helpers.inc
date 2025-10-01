@@ -766,6 +766,8 @@ type
       function Horizontal: TRange; overload; cdecl;
       function Split(const xRadius, yRadius: Double): T2DPointArray; overload; cdecl;
       function Split(const radius: Double): T2DPointArray; overload; cdecl;
+	  function Cluster(const dist: Integer): T2DPointArray; overload; cdecl;
+	  function Cluster(const width, height: Integer): T2DPointArray; overload; cdecl;
       function Segment(const radius: Double): T2DPointArray; overload; cdecl;
       function Fragment(const radius: Double): T2DPointArray; overload; cdecl;
       function Clusterize(const radius: Double): T2DPointArray; overload; cdecl;
