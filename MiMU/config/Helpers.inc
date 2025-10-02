@@ -257,6 +257,9 @@ type
       function Distribute(const parts: Integer): TRangeArray; cdecl;
       function Partition(const size: Integer): TRangeArray; cdecl;
       function Divide(const size: Integer): TRangeArray; cdecl;
+      function Windows(const target: TRange): TRangeArray; overload; cdecl;
+      function Sectioned(const target: TRange): TRangeArray; overload; cdecl;
+      function Binned(const target: TRange): TRangeArray; overload; cdecl;
     {$ENDIF}
   end;
   HArr = type helper for TArr

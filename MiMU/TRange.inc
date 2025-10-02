@@ -1832,6 +1832,77 @@ end;
 function TRange.MaxLimit(const val: Integer): Integer; cdecl;
 begin
   Result := Min(val, Max(Self.start, Self.stop));
+end;
+
+{==============================================================================]
+  <TRange.Windows>
+  @action: Generate all possible subranges (sliding windows) of Self inside
+           the target range. These windows may overlap.
+  @note:   The number of results is (TargetSize - SelfSize + 1).
+[==============================================================================}
+function TRangeHelper.Windows(const target: TRange): TRangeArray; overload; cdecl;
+var
+  r, s: Integer;
+  f, t: TRange;
+begin
+  s := Self.Size;
+  if (target.Size < s) then
+    Exit([]);
+  t.Create(Min(target.start, target.stop), ((Max(target.start, target.stop) - s) + 1));
+  SetLength(Result, t.Size);
+  r := 0;
+  f := Self.Frame;
+  for s := t.start to t.stop do
+    Result[r.Increase].Create((f.start + s), (f.stop + s));
+end;
+
+{==============================================================================]
+  <TRange.Sectioned>                                                             
+  @action: Divide the target range into sequential, non-overlapping subranges
+           of the same size as Self.
+  @note:   Any remainder at the end of the target range is discarded.
+[==============================================================================}
+function TRangeHelper.Sectioned(const target: TRange): TRangeArray; overload; cdecl;
+var
+  p, r, s, m: Integer;
+  f, t: TRange;
+begin
+  s := Self.Size;
+  t := target.Normalize;
+  if (s > t.Size) then
+    Exit([]);
+  f := Self.Frame;
+  m := ((t.stop - s) + 1);
+  SetLength(Result, (t.Size div s));
+  r := 0;
+  p := (t.start - s);
+  while (p.Increment(s) <= m) do
+    Result[r.Increase].Create((f.start + p), (f.stop + p));
+end;
+
+{==============================================================================]
+  <TRange.Binned>
+  @action: Generate grid-aligned subranges (bins) of the same size as Self
+           inside the target range.
+  @note:   Subranges are aligned in steps of SelfSize from the start of target.
+           Any remainder that does not fit evenly is ignored.
+[==============================================================================}
+function TRangeHelper.Binned(const target: TRange): TRangeArray; overload; cdecl;
+var
+  i, s: Integer;
+  f, t: TRange;
+begin
+  t := target.Normalize;
+  s := Self.Size;
+  if (s > t.Size) then
+    Exit([]);
+  f := Self.Frame;
+  SetLength(Result, (t.Size div s));
+  for i := 0 to High(Result) do
+  begin
+    Result[i].start := (t.start + (s * i));
+    Result[i].stop := (Result[i].start + (s - 1));
+  end;
 end; 
 
 {==============================================================================]
