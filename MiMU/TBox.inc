@@ -1966,6 +1966,77 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Placements>
+  @action: Generate all possible translations of Self fully contained within target.
+  @note: Returns an array of boxes representing every valid placement;
+         order is row-major (y first, then x). Returns empty array if no fit.
+[==============================================================================}
+function TBoxHelper.Placements(const target: TBox): TBoxArray; overload; cdecl;
+var
+  y, x, r: Integer;
+  f, t: TBox;
+begin
+  t := Box(target.X1, target.Y1, ((target.X2 - Self.Width) + 1), ((target.Y2 - Self.Height) + 1));
+  SetLength(Result, t.Area);
+  if Result.Empty then
+    Exit;
+  r := 0;
+  f := Self.Frame;
+  for y := t.Y1 to t.Y2 do
+    for x := t.X1 to t.X2 do
+      Result[r.Increase] := Box((f.X1 + x), (f.Y1 + y), (f.X2 + x), (f.Y2 + y));
+end;
+
+{==============================================================================]
+  <TBox.Tiled>
+  @action: Generate non-overlapping, grid-aligned positions of Self inside target.
+  @note: Steps by Self Width and Height. Returns empty array if Self does not fit.
+[==============================================================================}
+function TBoxHelper.Tiled(const target: TBox): TBoxArray; overload; cdecl;
+var
+  y, x, r, w, h: Integer;
+  m: TPoint;
+  f: TBox;
+begin
+  Self.Size(w, h);
+  if ((w > target.Width) or (h > target.Height)) then
+    Exit([]);
+  f := Self.Frame;
+  m := Point(((target.X2 - w) + 1), ((target.Y2 - h) + 1));
+  SetLength(Result, ((target.Width div w) * (target.Height div h)));
+  r := 0;
+  y := target.Y1;
+  repeat
+    x := (target.X1 - w);
+    while (x.Increment(w) <= m.X) do
+      Result[r.Increase] := Box((f.X1 + x), (f.Y1 + y), (f.X2 + x), (f.Y2 + y));
+  until (y.Increment(h) > m.Y);
+end;
+
+{==============================================================================]
+  <TBox.Gridded>
+  @action: Generate non-overlapping, grid-aligned positions of Self inside target.
+  @note: Steps by Self Width and Height. Returns empty array if Self does not fit.
+[==============================================================================}
+function TBoxHelper.Gridded(const target: TBox): TBoxArray; overload; cdecl;
+var
+  l, y, x, r, c, w, h: Integer;
+  f: TBox;
+begin
+  Self.Size(w, h);
+  if ((w > target.Width) or (h > target.Height)) then
+    Exit([]);
+  f := Self.Frame;
+  c := (target.Width div w);
+  r := (target.Height div h);
+  SetLength(Result, (r * c));
+  l := 0;
+  for y := 0 to (r - 1) do
+    for x := 0 to (c - 1) do
+      Result[l.Increase].Form(Point((target.X1 + (w * x)), (target.Y1 + (h * y))), w, h);
+end;
+
+{==============================================================================]
   <_TBox.Create>
   @action: Creates TBox using minX, minY, maxX, maxY 
   @note: function version
