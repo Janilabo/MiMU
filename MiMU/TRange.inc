@@ -1835,6 +1835,26 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Sample>
+  @action: Return evenly spaced integer samples across the range.
+  @note: Always includes both start and stop values of the range (if sSize > 1).
+         Uses rounding to map floating step positions to integers.
+         If sSize = 1, returns only the start value.
+[==============================================================================}
+function TRange.Sample(const sSize: Integer): TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+  s: Double;
+begin
+  if (sSize < 1) then
+    Exit([]);
+  SetLength(Result, sSize);
+  s := (Self.Delta / (sSize - 1));
+  for i := 0 to (sSize - 1) do
+    Result[i] := Round(Self.start + (i * s));
+end;
+
+{==============================================================================]
   <TRange.Windows>
   @action: Generate all possible subranges (sliding windows) of Self inside
            the target range. These windows may overlap.

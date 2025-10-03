@@ -3789,6 +3789,26 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Sample(sSize): TArray>
+ @action: Returns sample from array by sSize.
+ @note: None.
+[==============================================================================}
+function HArr.Sample(const sSize: Integer): TArr; overload; cdecl;
+var
+  i: Integer;
+  s: TRange;
+  r: TIntegerArray;
+begin
+  if Self.Empty then
+    Exit([]);
+  s.Create(0, High(Self));
+  r := s.Sample(sSize);
+  SetLength(Result, Length(r));
+  for i := 0 to High(Result) do
+    Result[i] := Self[r[i]];
+end;
+
+{==============================================================================]
  <arr.Scan(item: VarType; ID: TRange; limit: Integer): TIntegerArray>
  @action: Scans array for item by ID. Returns all the positions.
  @note: Unsafe method! No safety checking.

@@ -210,6 +210,7 @@ type
     function MaxLimit(const val: Integer): Integer; cdecl;
     function Lacks(const x: Integer): Boolean; cdecl; inline;
     function Outside(const x: Integer): Boolean; cdecl; inline;
+    function Sample(const sSize: Integer): TIntegerArray; overload; cdecl;
   end;
   TBox = record
     X1, Y1, X2, Y2: Integer;
