@@ -1,11 +1,11 @@
 {$DEFINE string}{$I config\Defines.inc}
 
 {==============================================================================]
-  <TStringArrayHelper.Span>
+  <TStringArrayHelper.Tally>
   @action: Returns total length of TStringArray strings combined together.
   @note: None.
 [==============================================================================}
-function TStringArrayHelper.Span: Integer; cdecl;
+function TStringArrayHelper.Tally: Int64; cdecl;
 var
   i: Integer;
 begin
@@ -24,7 +24,7 @@ var
   i, j, l: Integer;
 begin
   l := 0;
-  SetLength(Result, Self.Span);
+  SetLength(Result, Self.Tally);
   for i := 0 to High(Self) do
     for j := 1 to Length(Self[i]) do
       Result[l.Increment] := Self[i][j];
@@ -42,7 +42,7 @@ var
 begin
   s := TStringBuilder.Create;
   try
-    s.Capacity := Self.Span;
+    s.Capacity := Self.Tally;
     for i := 0 to High(Self) do
       s.Append(Self[i]);
     Result := s.ToString;
@@ -77,7 +77,7 @@ var
   c: TCharArray;
   i, p, l: Integer;
 begin
-  l := Self.Span;
+  l := Self.Tally;
   SetLength(c, l);
   p := 0;
   for i := 0 to High(Self) do

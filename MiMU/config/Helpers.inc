@@ -477,6 +477,7 @@ type
     function Slots: TIntegerArray; overload; cdecl;
     function Some: TArr; overload; cdecl;
     function Some(const amount: Integer): TArr; overload; cdecl;
+    function Span: TRange; overload; cdecl;
     function Span(const subArray: TArr; const index: Integer = 2147483647): TRange; overload; cdecl;
     function Spans(const subArray: TArr; const index: Integer = 2147483647): TRangeArray; overload; cdecl;
     function Strip(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload; cdecl;
@@ -685,7 +686,7 @@ type
       function BinaryCombine(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload; cdecl;
     {$ENDIF}
     {$IFDEF string}
-      function Span: Integer; cdecl;
+      function Tally: Int64; cdecl;
       function Concat: string; cdecl;
       function Concatenate: string; cdecl;
       function Flatten: string; cdecl;

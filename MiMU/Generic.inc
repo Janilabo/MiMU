@@ -3796,13 +3796,11 @@ end;
 function HArr.Sample(const sSize: Integer): TArr; overload; cdecl;
 var
   i: Integer;
-  s: TRange;
   r: TIntegerArray;
 begin
   if Self.Empty then
     Exit([]);
-  s.Create(0, High(Self));
-  r := s.Sample(sSize);
+  r := Self.Domain.Sample(sSize);
   SetLength(Result, Length(r));
   for i := 0 to High(Result) do
     Result[i] := Self[r[i]];
@@ -4175,6 +4173,18 @@ end;
 function HArr.Some(const amount: Integer): TArr; overload; cdecl;
 begin
   Result := Self.Shuffle.Copy(0, Max(1, Min(amount, Self.Size)));
+end;
+
+{==============================================================================]
+  <arr.Span>
+  @action: Returns the indexes as TRange where subArray exists in array (Self)
+  @note: (-1, -1) if subArray is not found.
+         Loops array from index downto min.
+[==============================================================================}
+function HArr.Span: TRange; overload; cdecl;
+begin
+  Result.stop := High(Self);
+  Result.start := IfThen((Result.stop = -1), -1, 0);
 end;
 
 {==============================================================================]
