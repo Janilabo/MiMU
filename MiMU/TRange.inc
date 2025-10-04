@@ -628,13 +628,12 @@ end;
 [==============================================================================}
 function TRange.Enumerated: TIntegerArray; cdecl;
 var
-  i: Integer;
+  n, i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Result) do
-    Result[i] := (Self.Start + i);
-  if Self.Descending then
-    Result.Reverse;
+  Result := Self.Reserve;
+  i := 0;
+  for n in Self do
+    Result[i.Increase] := n;
 end;
 
 {==============================================================================]
@@ -1771,6 +1770,29 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Reserve>
+  @action: Allocate an integer array sized to fit the full range.
+  @note: The array is preallocated with the correct length but is not filled 
+         with values from start..stop. Elements are default-initialized to 0.
+[==============================================================================}
+function TRange.Reserve: TIntegerArray; overload; cdecl;
+begin
+  SetLength(Result, Self.Size);
+end;
+
+{==============================================================================]
+  <TRange.Reserve>
+  @action: Allocate an integer array sized to fit the full range.
+  @note: The array is preallocated with the correct length but is not filled 
+         with values from start..stop. Elements are default-initialized to 0.
+[==============================================================================}
+function TRange.Reserve(var aRange: TIntegerArray): Integer; overload; cdecl;
+begin
+  Result := Self.Size;
+  SetLength(aRange, Result);
+end;
+
+{==============================================================================]
   <TRange.Extract>
   @action: Extracts TRange as TIntegerArray. 
   @note: None.
@@ -1786,6 +1808,62 @@ begin
   SetLength(Result, c);
   for i := 0 to (c - 1) do
     Result[i] := (Self.start + (i * s));
+end;
+
+{==============================================================================]
+  <TRange.Extracted>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Extracted: TIntegerArray; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Result) do
+    Result[i] := (Self.Start + i);
+  if Self.Descending then
+    Result.Reverse;
+end;
+
+{==============================================================================]
+  <TRange.Steps>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Steps: TIntegerArray; overload; cdecl;
+var
+  i, s: Integer;
+  p: PInteger;
+begin
+  s := IfThen((Self.start < Self.stop), 1, -1);
+  Result := Self.Reserve;
+  p := @Result[0];
+  p^ := Self.start;
+  Inc(p);
+  for i := 1 to High(Result) do
+  begin
+    p^ := ((p - 1)^ + s);
+    Inc(p);
+  end;
+end;
+
+{==============================================================================]
+  <TRange.Recursed>
+  @action: Returns digits of the given range.
+  @note: Recursion-based.
+[==============================================================================}
+function TRange.Recursed: TIntegerArray; overload; cdecl;
+  function BR(const rStart, rStop: Integer): TIntegerArray;
+  begin
+    if (rStart = rStop) then
+      Exit([rStart]);
+    Result := BR(rStart, (rStop - Sign(rStop - rStart)));
+    SetLength(Result, (Length(Result) + 1));
+    Result[High(Result)] := rStop;
+  end;
+begin
+  Result := BR(Self.start, Self.stop);
 end;
 
 {==============================================================================]

@@ -78,13 +78,23 @@ type
   TPointArray = array of TPoint;
   T2DPointArray = array of TPointArray;
   PPoint = ^TPoint;
+  TRangeEnumerator = record
+  private
+    FCurrent, FStop, FStep: Integer;
+    FFirst: Boolean;
+  public
+    constructor Init(const AStart, AStop: Integer);
+    function MoveNext: Boolean;
+    property Current: Integer read FCurrent;
+  end;
   TRange = record
     start, stop: Integer;
+    function GetEnumerator: TRangeEnumerator;
     constructor Create(const rStart, rStop: Integer); overload;
     constructor Create(const value: Integer); overload;
     class function Construct(const rStart, rStop: Integer): TRange; overload; cdecl; static;
-	function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
-	function Init(const rStart, rStop: Integer): TRange; overload; cdecl;
+    function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
+    function Init(const rStart, rStop: Integer): TRange; overload; cdecl;
     function Init(const r: TRange): TRange; overload; cdecl;
     function Init(const val: Integer = 0): TRange; overload; cdecl;
     function Singular: Boolean; cdecl;
@@ -204,7 +214,12 @@ type
     function Sum: Int64; cdecl;
     function Summation: Int64; cdecl;
     function Total: Int64; cdecl;
+    function Reserve: TIntegerArray; overload; cdecl;
+    function Reserve(var aRange: TIntegerArray): Integer; overload; cdecl;
     function Extract: TIntegerArray; overload; cdecl;
+    function Extracted: TIntegerArray; overload; cdecl;
+    function Steps: TIntegerArray; overload; cdecl;
+    function Recursed: TIntegerArray; overload; cdecl;
     function Limit(const val: Integer): Integer; cdecl;
     function MinLimit(const val: Integer): Integer; cdecl;
     function MaxLimit(const val: Integer): Integer; cdecl;
@@ -593,6 +608,28 @@ type
 {$DEFINE IMPLEMENT}{$INCLUDE MiMU\config\Templates\D.inc}{$UNDEF IMPLEMENT} 
  
 implementation
+
+constructor TRangeEnumerator.Init(const AStart, AStop: Integer);
+begin
+  FStop := AStop;
+  if (AStart <= AStop) then
+    FStep := 1
+  else
+    FStep := -1;
+  FCurrent := (AStart - FStep);
+  FFirst := True;
+end;
+
+function TRangeEnumerator.MoveNext: Boolean;
+begin
+  Inc(FCurrent, FStep);
+  Result := ((FStep > 0) and (FCurrent <= FStop) or (FStep < 0) and (FCurrent >= FStop));
+end;
+
+function TRange.GetEnumerator: TRangeEnumerator;
+begin
+  Result.Init(start, stop);
+end;
 
 function MiMU_Version: Double; cdecl;
 begin
