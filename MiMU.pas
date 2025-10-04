@@ -154,6 +154,7 @@ type
     function Any: Integer; cdecl;
     function Some: TIntegerArray; overload; cdecl;
     function Some(const amount: Integer): TIntegerArray; overload; cdecl;
+    function All: TIntegerArray; overload; cdecl;
     function Normalize: TRange; cdecl;
     function Overlapping(const b: TRange): Boolean; cdecl;
     function Overlap(const b: TRange): Boolean; cdecl;
@@ -367,6 +368,7 @@ type
     function Any: TPoint; cdecl;
     function Some: TPointArray; overload; cdecl;
     function Some(const amount: Integer): TPointArray; overload; cdecl;
+    function All: TPointArray; overload; cdecl;
   end;
   TBoxArray = array of TBox;
   T2DBoxArray = array of TBoxArray;

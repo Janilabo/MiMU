@@ -1966,6 +1966,26 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.All>
+  @action: Returns ALL points of TBox as TPointArray.
+  @note: None.
+[==============================================================================}
+function TBox.All: TPointArray; overload; cdecl;
+var
+  x, y: Integer;
+  p: PPoint;
+begin
+  SetLength(Result, Self.Area);
+  p := PPoint(Result);
+  for y := Self.Y1 to Self.Y2 do
+    for x := Self.X1 to Self.X2 do
+    begin
+      p^ := Point(x, y);
+      Inc(p);
+    end;
+end;
+
+{==============================================================================]
   <TBox.Placements>
   @action: Generate all possible translations of Self fully contained within target.
   @note: Returns an array of boxes representing every valid placement;

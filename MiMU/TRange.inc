@@ -824,6 +824,30 @@ end;
 function TRange.Some(const amount: Integer): TIntegerArray; overload; cdecl;
 begin
   Result := Copy(Self.Shuffle, 0, Max(1, Min(amount, Self.Size)));
+end;
+
+{==============================================================================]
+  <TRange.All>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: None.
+[==============================================================================}
+function TRange.All: TIntegerArray; overload; cdecl;
+var
+  i, j: Integer;
+  p: PInteger;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  SetLength(Result, Self.Size);
+  j := IfThen((Self.start <= Self.stop), 1, -1);
+  p := PInteger(Result);
+  i := Self.start;
+  while (i <> (Self.stop + j)) do
+  begin
+    p^ := i;
+    Inc(p);
+    Inc(i, j);
+  end;
 end; 
 
 {==============================================================================]
