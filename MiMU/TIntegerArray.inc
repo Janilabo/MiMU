@@ -905,6 +905,52 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArrayHelper.Reflect>
+  @action: Returns reversed array
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.Reflected: TIntegerArray; overload; cdecl;
+var
+  i: Integer;
+  s: SizeInt;
+begin
+  SetLength(Result, Length(Self));
+  s := SizeOf(Integer);
+  for i := 0 to High(Self) do
+    Move(Self[High(Self) - i], Result[i], s);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Reflect>
+  @action: Reverses array.
+  @note: Returns Length(Self)
+[==============================================================================}
+function TIntegerArrayHelper.Reflect: Integer; overload; cdecl;
+var
+  r: TRange;
+  s: SizeInt;
+  b: array of Byte;
+  x, y: PByte;
+begin
+  Result := Length(Self);
+  if (Result < 2) then
+    Exit;
+  s := SizeOf(Integer);
+  SetLength(b, s);
+  r.Create(-1, Result);
+  x := PByte(@Self[r.start + 1]);
+  y := PByte(@Self[r.stop - 1]);
+  while (r.start.Increment < r.stop.Decrement) do
+  begin
+    Move(x^, b[0], s);
+    Move(y^, x^, s);
+    Move(b[0], y^, s);
+    Inc(x, s);
+    Dec(y, s);
+  end;
+end;
+
+{==============================================================================]
   <TIntegerArrayHelper.Invert>
   @action: Returns inverted arr.
   @note: Arr = [0,2,4,6,8,10] => Result := [1, 3, 5, 7, 9]

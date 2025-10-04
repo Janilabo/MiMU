@@ -228,8 +228,19 @@ type
     function Outside(const x: Integer): Boolean; cdecl; inline;
     function Sample(const sSize: Integer): TIntegerArray; overload; cdecl;
   end;
+  TBoxEnumerator = record
+  private
+    FX, FY, XStart, YStart, XStop, YStop: Integer;
+    FFirst: Boolean;
+  public
+    constructor Init(const AX1, AY1, AX2, AY2: Integer);
+    function MoveNext: Boolean;
+    function GetCurrent: TPoint;
+    property Current: TPoint read GetCurrent;
+  end;
   TBox = record
     X1, Y1, X2, Y2: Integer;
+    function GetEnumerator: TBoxEnumerator;
     constructor Create(const minX, minY, maxX, maxY: Integer); overload;
     constructor Create(const top, bottom: TPoint); overload;
     constructor Create(const valueX, valueY: Integer); overload;
@@ -327,6 +338,7 @@ type
     function Contents: TPointArray; cdecl;
     function Extract: TPointArray; cdecl;
     function Enumerate: TPointArray; cdecl;
+    function Enumerated: TPointArray; cdecl;
     function Elements: TPointArray; cdecl;
     function Border: TPointArray; overload; cdecl;
     function Border(const X, Y: Integer): Boolean; overload; cdecl;
@@ -369,6 +381,8 @@ type
     function Some: TPointArray; overload; cdecl;
     function Some(const amount: Integer): TPointArray; overload; cdecl;
     function All: TPointArray; overload; cdecl;
+    function Reserve: TPointArray; overload; cdecl;
+    function Reserve(var aBox: TPointArray): Integer; overload; cdecl;
   end;
   TBoxArray = array of TBox;
   T2DBoxArray = array of TBoxArray;
@@ -631,6 +645,46 @@ end;
 function TRange.GetEnumerator: TRangeEnumerator;
 begin
   Result.Init(start, stop);
+end;
+
+constructor TBoxEnumerator.Init(const AX1, AY1, AX2, AY2: Integer);
+begin
+  XStart := AX1;
+  XStop := AX2;
+  YStart := AY1;
+  YStop := AY2;
+  FX := (XStart - 1);
+  FY := YStart;
+  FFirst := True;
+end;
+
+function TBoxEnumerator.MoveNext: Boolean;
+begin
+  if FFirst then
+  begin
+    FFirst := False;
+    FX := XStart;
+    Result := True;
+    Exit;
+  end;
+  Inc(FX);
+  if (FX > XStop) then
+  begin
+    FX := XStart;
+    Inc(FY);
+  end;
+  Result := (FY <= YStop);
+end;
+
+function TBoxEnumerator.GetCurrent: TPoint;
+begin
+  Result := Point(FX, FY);
+end;
+
+
+function TBox.GetEnumerator: TBoxEnumerator;
+begin
+  Result.Init(X1, Y1, X2, Y2);
 end;
 
 function MiMU_Version: Double; cdecl;

@@ -591,6 +591,8 @@ type
       function Clique(const diff: Integer): T2DIntegerArray; overload; cdecl;
       function Knit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
       function Knit(const diff: Integer): T2DIntegerArray; overload; cdecl;
+      function Reflected: TIntegerArray; overload; cdecl;
+      function Reflect: Integer; overload; cdecl;
       function Invert: TIntegerArray; cdecl;
       function Inverted(const arrBounds: TRange): TIntegerArray; overload; cdecl;
       function Inverted: TIntegerArray; overload; cdecl;

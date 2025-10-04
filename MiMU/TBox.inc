@@ -1094,6 +1094,28 @@ begin
 end;
 
 {==============================================================================]
+  <TBox_Reserve>
+  Explanation: Reselve function for TBox.
+  Example: None.
+[==============================================================================}
+function TBox.Reserve: TPointArray; overload; cdecl;
+begin
+  SetLength(Result, Self.Area);
+end;
+
+{==============================================================================]
+  <TBox.Reserve>
+  @action: Allocate an TPoint array sized to fit the full box.
+  @note: The array is preallocated with the correct length but is not filled 
+         with values from X1,Y1..X2,Y2. Elements are default-initialized to 0,0.
+[==============================================================================}
+function TBox.Reserve(var aBox: TPointArray): Integer; overload; cdecl;
+begin
+  Result := Self.Area;
+  SetLength(aBox, Result);
+end;
+
+{==============================================================================]
   <TBox_Points>
   Explanation: Returns TBox points as TPointArray.
   Example: None.
@@ -1247,6 +1269,22 @@ begin
   for y := Self.Y1 to Self.Y2 do
     for x := Self.X1 to Self.X2 do
       Result := (Result + [Point(x, y)]);
+end;
+
+{==============================================================================]
+  <TBox.Enumerated>
+  @action: Returns all points of the given box as TPointArray.
+  @note: Uses the TBox enumerator (for-in).
+[==============================================================================}
+function TBox.Enumerated: TPointArray; cdecl;
+var
+  p: TPoint;
+  i: Integer;
+begin
+  SetLength(Result, Self.Area);
+  i := 0;
+  for p in Self do
+    Result[i.Increase] := p;
 end;
 
 {==============================================================================]
