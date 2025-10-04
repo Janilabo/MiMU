@@ -1960,13 +1960,12 @@ end;
 [==============================================================================}
 function HArr.Flip: Boolean; overload; cdecl;
 var
-  i, l: Integer;
+  r: TRange;
 begin
-  i := 0;
-  l := (Length(Self) - 1);
-  Result := (l > 0);
-  while (i < l) do
-    Exchange(i.Increase, l.Decrease);
+  r.Create(0, (Length(Self) - 1));
+  Result := (r.stop > 0);
+  while (r.start < r.stop) do
+    Exchange(r.start.Increase, r.stop.Decrease);
 end;
 
 {==============================================================================]
