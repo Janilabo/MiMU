@@ -1207,17 +1207,50 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Pixeled>
+  Explanation: Returns TBox points as TPointArray.
+  Example: None.
+[==============================================================================}
+function TBox.Pixeled: TPointArray; overload; cdecl;
+var
+  w, h, l, i: Integer;
+  r: TRange;
+begin
+  l := Self.Area;
+  SetLength(Result, l);
+  w := Self.Width;
+  h := (l div 2);
+  r.Create(0, (l - 1));
+  for i := 0 to (h - 1) do
+  begin
+    Result[r.start.Increase] := Point((Self.X1 + (i mod w)), (Self.Y1 + (i div w)));
+    Result[r.stop.Decrease] := Point((Self.X1 + (((l - 1) - i) mod w)), (Self.Y1 + (((l - 1) - i) div w)));
+  end;
+  if l.Odd then
+    Result[h] := Point((Self.X1 + (h mod w)), (Self.Y1 + (h div w)));
+end;
+
+{==============================================================================]
   <TBox.TPA>
   Explanation: Returns TBox points as TPointArray.
   Example: None.
 [==============================================================================}
-function TBox.TPA: TPointArray; cdecl;
+function TBox.TPA: TPointArray; overload; cdecl;
 var
   i, j: Integer;
 begin
   SetLength(Result, Self.Size(j, i));
   for i := 0 to High(Result) do
     Result[i].Create((Self.X1 + (i mod j)), (Self.Y1 + (i div j)));
+end;
+
+function TBox.TPA(const index: Integer): TPoint; overload; cdecl;
+var
+  x, y: Integer;
+begin
+  y := (index div Self.Width);
+  x := (index - (y * Self.Width));
+  Result := Point((Self.X1 + x), (Self.Y1 + y));
 end;
 
 {==============================================================================]

@@ -719,6 +719,37 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.AsArray>
+  @action: Two-way alternative for extracting items from TRange.
+  @note: None.
+[==============================================================================}
+function TRange.AsArray: TIntegerArray; overload; cdecl;
+var
+  h, i, l: Integer;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  SetLength(Result, Self.Size);
+  h := High(Result);
+  l := ((h + 1) div 2);
+  i := 0;
+  case Self.Ascending of
+    True:
+    repeat
+      Result[i] := (Self.start + i);
+      Result[h - i] := (Self.stop - i);
+    until (i.Increment > l);
+    False:
+    repeat
+      Result[i] := (Self.start - i);
+      Result[h - i] := (Self.stop + i);
+    until (i.Increment > l);
+  end;
+  if h.Even then
+    Result[i] := IfThen(Self.Ascending, (Self.start + i), (Self.start - i));
+end;
+
+{==============================================================================]
   <TRange.Materialize>
   @action: Returns digits of the given range.
   @note: None.

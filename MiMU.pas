@@ -147,6 +147,7 @@ type
     function IDs(const dValue: Integer): Integer; overload; cdecl;
     function IDs(const dVals: TIntegerArray): TIntegerArray; overload; cdecl;
     function ToArray: TIntegerArray; cdecl;
+    function AsArray: TIntegerArray; overload; cdecl;
     function Materialize: TIntegerArray; cdecl;
     function Mixed(const mixings: Integer = 1): TIntegerArray; cdecl;
     function Shake(const shakes: Integer = 1): TIntegerArray; cdecl;
@@ -331,11 +332,13 @@ type
     function Points(var xArray, yArray: TIntegerArray): Integer; overload; cdecl;
     function Pixels: TPointArray; overload; cdecl;
     function Pixels(const index: Integer): TPoint; overload; cdecl;
+    function Pixeled: TPointArray; overload; cdecl;
     function Pts: TPointArray; overload; cdecl;
     function IDs: TIntegerArray; overload; cdecl;
     function IDs(const p: TPoint): Integer; overload; cdecl;
     function IDs(const p: TPointArray): TIntegerArray; overload; cdecl;
-    function TPA: TPointArray; cdecl;
+    function TPA: TPointArray; overload; cdecl;
+    function TPA(const index: Integer): TPoint; overload; cdecl;
     function Contents: TPointArray; cdecl;
     function Extract: TPointArray; cdecl;
     function Enumerate: TPointArray; cdecl;
