@@ -247,6 +247,7 @@ type
     constructor Create(const target: TPoint); overload;
     constructor Create(const value: Integer); overload;
     class function Construct(const XS, YS, XE, YE: Integer): TBox; overload; cdecl; static;
+    class function Points(const xRange, yRange: TRange): TPointArray; overload; cdecl; static;
     function Build(const minX, minY, maxX, maxY: Integer): Integer; overload; cdecl;
     function Build(const top, bottom: TPoint): Integer; overload; cdecl;
     function Build(const valueX, valueY: Integer): Integer; overload; cdecl;
@@ -329,7 +330,8 @@ type
     function Points(const pIndex: Integer): TPoint; overload; cdecl;
     function Points(const pIDs: TIntegerArray): TPointArray; overload; cdecl;
     function Points(var xArray, yArray: TIntegerArray): Integer; overload; cdecl;
-    function Pixels: TPointArray; cdecl;
+    function Pixels: TPointArray; overload; cdecl;
+    function Pixels(const index: Integer): TPoint; overload; cdecl;
     function Pts: TPointArray; overload; cdecl;
     function IDs: TIntegerArray; overload; cdecl;
     function IDs(const p: TPoint): Integer; overload; cdecl;

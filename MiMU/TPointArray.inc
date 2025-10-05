@@ -1059,6 +1059,73 @@ begin
 end;
 
 {==============================================================================]
+ <TPointArrayHelper.Axes>
+ @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.Axes(var X, Y: TIntegerArray): Integer; overload; cdecl;
+var
+  sX, sY, dX, dY: Pointer;
+  p, c: SizeInt;
+  i: Integer;
+begin
+  Result := Length(Self);
+  specialize SetSize<Integer>(X, Y, Result);
+  if (Result = 0) then
+    Exit;
+  c := SizeOf(Integer);
+  p := SizeOf(TPoint);
+  sX := @Self[0].X;
+  sY := Pointer(PByte(sX) + c);
+  dX := @X[0];
+  dY := @Y[0];
+  for i := 0 to High(Self) do
+  begin
+    Move(sX^, dX^, c);
+    Move(sY^, dY^, c);
+    Inc(PByte(sX), p);
+    Inc(PByte(sY), p);
+    Inc(PByte(dX), c);
+    Inc(PByte(dY), c);
+  end;
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Axed>
+ @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.Axed: T2DIntegerArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, 2, Length(Self));
+  for i := 0 to High(Self) do
+  begin
+    Result[0][i] := Self[i].X;
+    Result[1][i] := Self[i].Y;
+  end;
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Axed>
+ @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.Axed(var X, Y: TIntegerArray): Integer; overload; cdecl;
+var
+  i: Integer;
+begin
+  Result := Length(Self);
+  specialize SetSize<Integer>(X, Y, Result);
+  for i := 0 to High(Self) do
+  begin
+    X[i] := Self[i].X;
+    Y[i] := Self[i].Y;
+  end;
+end;
+
+{==============================================================================]
   <TPointArrayHelper.Reinit>
   @action: Clears all elements of the array by zero-filling the underlying memory,
            setting all TPoint elements to (0,0), while keeping the current length unchanged.
