@@ -1177,17 +1177,6 @@ begin
   end;
 end;
 
-class function TBox.Points(const xRange, yRange: TRange): TPointArray; overload; cdecl;
-var
-  x, y, i: Integer;
-begin
-  SetLength(Result, (xRange.Size * yRange.Size));
-  i := 0;
-  for y in yRange do
-    for x in xRange do
-      Result[i.Increase] := Point(x, y);
-end;
-
 {==============================================================================]
   <TBox.Pixels>
   Explanation: Returns TBox points as TPointArray.

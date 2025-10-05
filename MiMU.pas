@@ -247,7 +247,6 @@ type
     constructor Create(const target: TPoint); overload;
     constructor Create(const value: Integer); overload;
     class function Construct(const XS, YS, XE, YE: Integer): TBox; overload; cdecl; static;
-    class function Points(const xRange, yRange: TRange): TPointArray; overload; cdecl; static;
     function Build(const minX, minY, maxX, maxY: Integer): Integer; overload; cdecl;
     function Build(const top, bottom: TPoint): Integer; overload; cdecl;
     function Build(const valueX, valueY: Integer): Integer; overload; cdecl;
@@ -566,6 +565,10 @@ type
   TPA = class
     class function Init(var arr: TPointArray): Integer; overload; cdecl;
     class function Unique(var arr: TPointArray): Integer; overload; cdecl;
+    class function Create(const xRange, yRange: TRange): TPointArray; overload; cdecl;
+    class function Create(const xRange, yRange: TRange; const offset: TPoint): TPointArray; overload; cdecl;
+    class function Create(const xValues, yValues: TIntegerArray): TPointArray; overload; cdecl;
+    class function Create(const xValues, yValues: TIntegerArray; const offset: TPoint): TPointArray; overload; cdecl;
   end;
   TBA = class
     class function Init(var arr: TBooleanArray): Integer; overload; cdecl;
@@ -1143,6 +1146,46 @@ begin
     SetLength(m, 0);
   end;
   Result := (l - Length(arr));
+end;
+
+class function TPA.Create(const xRange, yRange: TRange): TPointArray; overload; cdecl;
+var
+  x, y, i: Integer;
+begin
+  SetLength(Result, (xRange.Size * yRange.Size));
+  i := 0;
+  for y in yRange do
+    for x in xRange do
+      Result[i.Increase] := Point(x, y);
+end;
+
+class function TPA.Create(const xRange, yRange: TRange; const offset: TPoint): TPointArray; overload; cdecl;
+var
+  x, y, i: Integer;
+begin
+  SetLength(Result, (xRange.Size * yRange.Size));
+  i := 0;
+  for y in yRange do
+    for x in xRange do
+      Result[i.Increase] := Point((x + offset.X), (y + offset.Y));
+end;
+
+class function TPA.Create(const xValues, yValues: TIntegerArray): TPointArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Min(Length(xValues), Length(yValues)));
+  for i := 0 to High(Result) do
+    Result[i] := Point(xValues[i], yValues[i]);	
+end;
+
+class function TPA.Create(const xValues, yValues: TIntegerArray; const offset: TPoint): TPointArray; overload; cdecl;
+var
+  i: Integer;
+begin
+  SetLength(Result, Min(Length(xValues), Length(yValues)));
+  for i := 0 to High(Result) do
+    Result[i] := Point((xValues[i] + offset.X), (yValues[i] + offset.Y));	
 end;
 
 {$mode objfpc}{$H+}
