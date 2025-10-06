@@ -291,6 +291,7 @@ type
     function Clear: Boolean; overload; cdecl;
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
     function Clone(const ID: TIntegerArray): TArr; overload; cdecl;
+    function Cloned: TArr; overload; cdecl;
     function Combine(const b: TArr): TArr; overload; cdecl;
     function Compact: Integer; overload; cdecl;
     function Compacted: TArr; overload; cdecl;
@@ -302,6 +303,7 @@ type
     function Constant(const item: TVar): Boolean; overload; cdecl;
     function Constant: Boolean; overload; cdecl;
     function Contains(const item: TVar; const index: Integer = 0): Boolean; cdecl;
+    function Copied: TArr; overload; cdecl;
     function Copy(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload; cdecl;
     function Create(const item: TVar): TArr; overload; cdecl;
     function Create(const aSize: Integer; const item: TVar): TArr; overload; cdecl;

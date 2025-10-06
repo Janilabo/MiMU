@@ -525,8 +525,7 @@ end;
  <arr.Clone(ID: TIntegerArray): TArray>
  @action: Outputs array of items from arr by indexes (ID).
  @note: Ignores invalid ID's (doesn't include those to result, they will be left out).
-[====================
-==========================================================}
+[==============================================================================}
 function HArr.Clone(const ID: TIntegerArray): TArr; overload; cdecl;
 var
   i, h, l, r: Integer;
@@ -542,6 +541,30 @@ begin
         Result[r.Increase] := Self[ID[i]];
   end;
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+ <arr.Cloned: TArray>
+ @action: Simply returns a clone of array.
+ @note: None.
+[==============================================================================}
+function HArr.Cloned: TArr; overload; cdecl;
+var
+  n: Integer;
+  r: TRange;
+begin
+  case Length(Self) of
+    0: Exit([]);
+    1: Exit([Self[0]]);
+  end;
+  SetLength(Result, Length(Self));
+  r.Create(-1, Length(Result));
+  while (r.start.Increment <= r.stop.Decrement) do
+  begin
+    Result[r.start] := Self[r.start];
+    if (r.start <> r.stop) then
+      Result[r.stop] := Self[r.stop];
+  end;
 end;
 
 {==============================================================================]
@@ -780,6 +803,31 @@ begin
       Result[l] := Self[l + i];
   end else
     SetLength(Result, 0);
+end;
+
+{==============================================================================]
+ <arr.Copied: TArray>
+ @action: Simply returns a copy of array.
+ @note: None.
+[==============================================================================}
+function HArr.Copied: TArr; overload; cdecl;
+var
+  h, i, l: Integer;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self[0]]);
+  end;
+  SetLength(Result, l);
+  h := (l div 2);
+  for i := 0 to (h - 1) do
+  begin
+    Result[i] := Self[i];
+    Result[(l - i) - 1] := Self[(l - i) - 1];
+  end;
+  if l.Odd then
+    Result[h] := Self[h];
 end;
 
 {==============================================================================]
