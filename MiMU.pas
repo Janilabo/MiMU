@@ -156,6 +156,11 @@ type
     function Some: TIntegerArray; overload; cdecl;
     function Some(const amount: Integer): TIntegerArray; overload; cdecl;
     function All: TIntegerArray; overload; cdecl;
+    function Unzip: TIntegerArray; overload; cdecl;
+    function Unpack: TIntegerArray; overload; cdecl;
+    function Unwrap: TIntegerArray; overload; cdecl;
+	function Unfold: TIntegerArray; overload; cdecl;
+	function ZigZag: TIntegerArray; overload; cdecl;
     function Normalize: TRange; cdecl;
     function Overlapping(const b: TRange): Boolean; cdecl;
     function Overlap(const b: TRange): Boolean; cdecl;
@@ -579,6 +584,8 @@ type
   ATIA = class
   public
     class function Merge(const arr: T2DIntegerArray): TIntegerArray; overload; cdecl;
+    class function Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; cdecl;
+    class function Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload; cdecl;
   end;
 {$DEFINE T1D}
   T1D = class
@@ -1122,6 +1129,27 @@ begin
     if (arr[i].Size > 0) then
 	  Move(arr[i][0], Result[r.Increase(arr[i].Size)], (arr[i].Size * SizeOf(Integer))); 
 end;
+
+class function ATIA.Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; cdecl;
+var
+  x, y: Integer;
+begin
+  SetLength(Result, height, width);
+  for y := 0 to High(Result) do
+    for x := 0 to High(Result[y]) do
+      Result[y][x] := value;
+end;
+
+class function ATIA.Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload; cdecl;
+var
+  r, c: Integer;
+begin
+  SetLength(Result, rows, columns);
+  for r := 0 to High(Result) do
+    for c := 0 to High(Result[r]) do
+      Result[r][c] := value;
+end;
+
 
 class function TPA.Init(var arr: TPointArray): Integer; overload; cdecl;
 begin

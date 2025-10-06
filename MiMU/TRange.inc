@@ -750,6 +750,143 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Unzip>
+  @action: Two-way alternative for extracting items from TRange.
+  @note: None.
+[==============================================================================}
+function TRange.Unzip: TIntegerArray; overload; cdecl;
+var
+  r: TRange;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  SetLength(Result, Self.Size);
+  r.Create(0, High(Result));
+  case Self.Ascending of
+    True:
+    repeat
+      Result[r.start] := (Self.start + r.start);
+      Result[r.stop] := (Self.stop - r.start);
+    until (r.start.Increment > r.stop.Decrement);
+    False:
+    repeat
+      Result[r.start] := (Self.start - r.start);
+      Result[r.stop] := (Self.stop + r.start);
+    until (r.start.Increment > r.stop.Decrement);
+  end;
+end;
+
+{==============================================================================]
+  <TRange.Unpack>
+  @action: Two-way alternative for extracting items from TRange.
+  @note: None.
+[==============================================================================}
+function TRange.Unpack: TIntegerArray; overload; cdecl;
+var
+  s, i: Integer;
+  o: Boolean;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  o := Self.Ascending;
+  for i := 0 to (s - 1) do
+    if (i < (s div 2)) then
+      Result[i] := o.Select((Self.start + i), (Self.start - i))
+    else
+      Result[i] := o.Select((Self.stop - ((s - 1) - i)), (Self.stop + ((s - 1) - i)));
+end;
+
+{==============================================================================]
+  <TRange.Unwrap>
+  @action: Two-way alternative for extracting items from TRange.
+  @note: None.
+[==============================================================================}
+function TRange.Unwrap: TIntegerArray; overload; cdecl;
+var
+  s, h, i: Integer;
+  a: Boolean;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  h := ((s + 1) div 2);
+  a := Self.Ascending;
+  for i := 0 to (h - 1) do
+  case a of
+    True:
+    begin
+      Result[i] := (Self.start + i);
+      Result[(s - 1) - i] := (Self.stop - i);
+    end;
+    False:
+    begin
+      Result[i] := (Self.start - i);
+      Result[(s - 1) - i] := (Self.stop + i);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <TRange.Unfold>
+  @action: Recursion-based alternative for extracting items from TRange.
+  @note: None.
+[==============================================================================}
+function TRange.Unfold: TIntegerArray; overload; cdecl;
+  procedure F2W(const R: TRange; const L, H: Integer; const A: Boolean; var arr: TIntegerArray);
+  begin
+    if (L > H) then
+      Exit;
+    case A of
+      True:
+      begin
+        arr[L] := (R.start + L);
+        arr[H] := (R.stop - L);
+      end;
+      False:
+      begin
+        arr[L] := (R.start - L);
+        arr[H] := (R.stop + L);
+      end;
+    end;
+    F2W(R, (L + 1), (H - 1), A, arr);
+  end;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  SetLength(Result, Self.Size);
+  F2W(Self, 0, High(Result), Self.Ascending, Result);
+end;
+
+{==============================================================================]
+  <TRange.ZigZag>
+  @action: Returns the integer values of the range in an alternating “zig-zag” order,
+           taking elements from the start and end of the range alternately.
+           For example, for a range 1..5, the result is [1,5,2,4,3].
+  @note:   Works for ascending and descending ranges. 
+           If the range contains a single value, returns an array with that single value.
+           Internally uses two arrays (ascending and reversed) to construct the pattern.
+[==============================================================================}
+function TRange.ZigZag: TIntegerArray; overload; cdecl;
+var
+  a, d: TIntegerArray;
+  l, i, j, r: Integer;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  a := Self.ToArray;
+  d := a.Reversed;
+  l := Length(a);
+  SetLength(Result, l);
+  i := 0;
+  j := 0;
+  r := -1;
+  while ((i + j) < l) do
+    if ((r.Increment mod 2) = 0) then
+      Result[r] := a[i.Increase]
+    else
+      Result[r] := d[j.Increase];
+end;
+
+{==============================================================================]
   <TRange.Materialize>
   @action: Returns digits of the given range.
   @note: None.
