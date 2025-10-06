@@ -455,8 +455,10 @@ type
     function Reset: Integer; overload; cdecl;
     function Resize(const aChange: Integer): Integer; overload; cdecl;
     function Resize(const aChange: Integer; const null: TVar): Integer; overload; cdecl;
-    function Reverse: Boolean; overload; cdecl;
+    function Reversal: TArr; overload; cdecl;
+	function Reverse: Boolean; overload; cdecl;
     function Reversed: TArr; overload; cdecl;
+    function Reversion: TArr; overload; cdecl;
     function Sample(const sSize: Integer): TArr; overload; cdecl;
     function Scan(const ID: TRange; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
     function Scan(const ID: TIntegerArray; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;

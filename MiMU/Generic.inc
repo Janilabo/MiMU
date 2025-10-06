@@ -3805,6 +3805,30 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Reversal>
+ @action: Returns array with items in reversed order.
+ @note: None.
+[==============================================================================}
+function HArr.Reversal: TArr; overload; cdecl;
+var
+  n: Integer;
+  r: TRange;
+begin
+  case Length(Self) of
+    0: Exit([]);
+    1: Exit([Self[0]]);
+  end;
+  SetLength(Result, Length(Self));
+  r.Create(-1, Length(Result));
+  while (r.start.Increment <= r.stop.Decrement) do
+  begin
+    Result[r.start] := Self[r.stop];
+    if (r.start <> r.stop) then
+      Result[r.stop] := Self[r.start];
+  end;
+end;
+
+{==============================================================================]
  <arr.Reverse: Boolean>
  @action: Reverses items in array.
  @note: Returns true with success (array contains 2 or more items)
@@ -3833,6 +3857,31 @@ begin
   SetLength(Result, l);
   for i := 0 to (l - 1) do
     Result[i] := Self[(l - i) - 1];
+end;
+
+{==============================================================================]
+ <arr.Reversion>
+ @action: Returns array with items in reversed order.
+ @note: None.
+[==============================================================================}
+function HArr.Reversion: TArr; overload; cdecl;
+var
+  h, i, l: Integer;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self[0]]);
+  end;
+  SetLength(Result, l);
+  h := (l div 2);
+  for i := 0 to (h - 1) do
+  begin
+    Result[i] := Self[(l - i) - 1];
+    Result[(l - i) - 1] := Self[i];
+  end;
+  if l.Odd then
+    Result[h] := Self[h];
 end;
 
 {==============================================================================]
