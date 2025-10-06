@@ -4939,6 +4939,41 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Zigzag>
+ @action  Creates a new array whose elements are taken alternately from the
+          start and end of the source array, producing an outside-in “zigzag” order.
+ @note    For odd-length arrays, the middle element appears last.
+[==============================================================================}
+function HArr.Zigzag(const zAscending: Boolean = True): TArr; overload; cdecl;
+var
+  l, r: Integer;
+  s: TRange;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self[0]]);
+  end;
+  SetLength(Result, l);
+  r := 0;
+  s.Create(0, (l - 1));
+  case zAscending of
+    True:
+    repeat
+      Result[r.Increase] := Self[s.start];
+      Result[r.Increase] := Self[s.stop];
+    until (s.start.Increment >= s.stop.Decrement);
+    False:
+    repeat
+      Result[r.Increase] := Self[s.stop];
+      Result[r.Increase] := Self[s.start];
+    until (s.start.Increment >= s.stop.Decrement);
+  end;
+  if (s.start = s.stop) then
+    Result[r] := Self[s.stop];
+end;
+
+{==============================================================================]
  <arr.Blank(parts: Integer): T2DArray>
  @action: Returns true if array is blank (no inventory, only empty indexes of []).
  @note: Blank array could be for example [[], [], []]. Returns false if array contains any items.

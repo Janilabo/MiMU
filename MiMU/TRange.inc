@@ -857,7 +857,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.ZigZag>
+  <TRange.Zigzag>
   @action: Returns the integer values of the range in an alternating “zig-zag” order,
            taking elements from the start and end of the range alternately.
            For example, for a range 1..5, the result is [1,5,2,4,3].
@@ -865,10 +865,10 @@ end;
            If the range contains a single value, returns an array with that single value.
            Internally uses two arrays (ascending and reversed) to construct the pattern.
 [==============================================================================}
-function TRange.ZigZag: TIntegerArray; overload; cdecl;
+function TRange.Zigzag(const zAscending: Boolean = True): TIntegerArray; overload; cdecl;
 var
   a, d: TIntegerArray;
-  l, i, j, r: Integer;
+  l, i, j, r, z: Integer;
 begin
   if (Self.start = Self.stop) then
     Exit([Self.start]);
@@ -879,8 +879,9 @@ begin
   i := 0;
   j := 0;
   r := -1;
+  z := IfThen(zAscending, 0, 1);
   while ((i + j) < l) do
-    if ((r.Increment mod 2) = 0) then
+    if ((r.Increment mod 2) = z) then
       Result[r] := a[i.Increase]
     else
       Result[r] := d[j.Increase];
@@ -1147,13 +1148,13 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Shift>
+  <TRange.Offset>
   @action: Returns shift of range r by delta.
   @note: None.
 [==============================================================================}
-function TRange.Shift(const sDelta: Integer): TRange; cdecl;
+function TRange.Offset(const sDelta: Integer): TRange; cdecl;
 begin
-  Result.Create((Self.start + delta), (Self.stop + delta));
+  Result.Create((Self.start + sDelta), (Self.stop + sDelta));
 end;
 
 {==============================================================================]
@@ -2193,7 +2194,115 @@ begin
     Result[i].start := (t.start + (s * i));
     Result[i].stop := (Result[i].start + (s - 1));
   end;
-end; 
+end;
+
+{==============================================================================]
+  <TRange.Shift>
+  @action: Adds the given offset N to both Start and Stop of the range, 
+           modifying Self in place. Returns a copy of the original range 
+           before the shift.
+  @note:   Useful when you need the previous state while mutating the range.
+[==============================================================================}
+function TRange.Shift(const N: Integer = 1): TRange; overload; cdecl;
+begin
+  Result := Self;
+  Inc(Self.start, N);
+  Inc(Self.stop, N);
+end;
+
+{==============================================================================]
+  <TRange.Shifted>
+  @action: Returns a new TRange offset N by the given value, without modifying Self.
+  @note:   Functional style; Self remains unchanged. Can be used for expression-style 
+           or fluent programming.
+[==============================================================================}
+function TRange.Shifted(const N: Integer = 1): TRange; overload; cdecl;
+begin
+  Result.start := (Self.start + N);
+  Result.stop := (Self.stop + N);
+end;
+
+{==============================================================================]
+  <TRange.Back>
+  @action: Subtracts the given offset N from both Start and Stop of the range,
+           modifying Self in place. Returns a copy of the original range 
+           before the backward shift.
+  @note:   Default offset = 1. Useful when you need the previous state while 
+           moving the range backward.
+[==============================================================================}
+function TRange.Back(const N: Integer = 1): TRange; overload; cdecl;
+begin
+  Result := Self;
+  Dec(Self.start, N);
+  Dec(Self.stop, N);
+end;
+
+{==============================================================================]
+  <TRange.Backed>
+  @action: Returns a new TRange shifted backward by the given offset N, without 
+           modifying Self.
+  @note:   Default offset = 1. Functional style; Self remains unchanged. Can 
+           be used for expression-style or fluent programming.
+[==============================================================================}
+function TRange.Backed(const N: Integer = 1): TRange; overload; cdecl;
+begin
+  Result.start := (Self.start - N);
+  Result.stop := (Self.stop - N);
+end;
+
+{==============================================================================]
+  <TRange.Increase>
+  @action: Adds the given amount (default = 1) to both Start and Stop of the range,
+           modifying Self in place. Returns a copy of the original range 
+           before the increase.
+  @note:   Useful when you want to capture the previous state while mutating the range forward.
+[==============================================================================}
+function TRange.Increase(const N: Integer = 1): TRange; overload; cdecl;
+begin
+  Result := Self;
+  Self.start := (Self.start + N);
+  Self.stop := (Self.stop + N);
+end;
+
+{==============================================================================]
+  <TRange.Decrease>
+  @action: Subtracts the given amount (default = 1) from both Start and Stop of the range,
+           modifying Self in place. Returns a copy of the original range 
+           before the decrease.
+  @note:   Useful when you want to capture the previous state while mutating the range backward.
+[==============================================================================}
+function TRange.Decrease(const N: Integer = 1): TRange; overload; cdecl;
+begin
+  Result := Self;
+  Self.start := (Self.start - N);
+  Self.stop := (Self.stop - N);
+end;
+
+{==============================================================================]
+  <TRange.Increment>
+  @action: Adds the given amount (default = 1) to both Start and Stop of the range,
+           modifying Self in place. Returns the updated range after the increase.
+  @note:   Functional-style usage: Self is modified, and the returned range reflects the new values.
+[==============================================================================}
+function TRange.Increment(const N: Integer = 1): TRange; overload; cdecl;
+begin
+  Self.start := (Self.start + N);
+  Self.stop := (Self.stop + N);
+  Result := Self;
+end;
+
+{==============================================================================]
+  <TRange.Decrement>
+  @action: Subtracts the given amount (default = 1) from both Start and Stop of the range,
+           modifying Self in place. Returns the updated range after the decrease.
+  @note:   Functional-style usage: Self is modified, and the returned range reflects the new values.
+[==============================================================================}
+function TRange.Decrement(const N: Integer = 1): TRange; overload; cdecl;
+begin
+  Self.start := (Self.start - N);
+  Self.stop := (Self.stop - N);
+  Result := Self;
+end;
 
 {==============================================================================]
   <_TRange.Create>

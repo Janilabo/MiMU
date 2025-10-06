@@ -160,7 +160,7 @@ type
     function Unpack: TIntegerArray; overload; cdecl;
     function Unwrap: TIntegerArray; overload; cdecl;
 	function Unfold: TIntegerArray; overload; cdecl;
-	function ZigZag: TIntegerArray; overload; cdecl;
+	function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload; cdecl;
     function Normalize: TRange; cdecl;
     function Overlapping(const b: TRange): Boolean; cdecl;
     function Overlap(const b: TRange): Boolean; cdecl;
@@ -169,7 +169,7 @@ type
     function Union(const b: TRange): TRange; overload; cdecl;
     function Union(const val: Integer): TRange; overload; cdecl;
     function Extend(const val: Integer): Boolean; cdecl;
-    function Shift(const sDelta: Integer): TRange; cdecl;
+    function Offset(const sDelta: Integer): TRange; cdecl;
     function Contains(const x: Integer): Boolean; overload; cdecl;
     function Contains(const x: TRange): Boolean; overload; cdecl;
     function Above(const target: Integer): Boolean; overload; cdecl;
@@ -233,6 +233,14 @@ type
     function Lacks(const x: Integer): Boolean; cdecl; inline;
     function Outside(const x: Integer): Boolean; cdecl; inline;
     function Sample(const sSize: Integer): TIntegerArray; overload; cdecl;
+    function Shift(const N: Integer = 1): TRange; overload; cdecl;
+    function Shifted(const N: Integer = 1): TRange; overload; cdecl;
+    function Back(const N: Integer = 1): TRange; overload; cdecl;
+    function Backed(const N: Integer = 1): TRange; overload; cdecl;
+    function Increase(const N: Integer = 1): TRange; overload; cdecl;
+    function Decrease(const N: Integer = 1): TRange; overload; cdecl;
+    function Increment(const N: Integer = 1): TRange; overload; cdecl;
+    function Decrement(const N: Integer = 1): TRange; overload; cdecl;
   end;
   TBoxEnumerator = record
   private

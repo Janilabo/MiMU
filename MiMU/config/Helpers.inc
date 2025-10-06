@@ -510,6 +510,7 @@ type
     function Unshift(const items: TArr): TArr; overload; cdecl;
     function Void: Boolean; overload; cdecl;
     function Waste: Integer; overload; cdecl;
+    function Zigzag(const zAscending: Boolean = True): TArr; overload; cdecl;
     {$IFDEF Sortable}
       function Sortable: Boolean; overload; cdecl;
       function Sorted(const aAscending: Boolean = True): Boolean; overload; cdecl;
