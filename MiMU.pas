@@ -215,6 +215,8 @@ type
     function Average: Double; cdecl;
     function Center: Integer; cdecl;
     function Central: Integer; cdecl; inline;
+    function Half: Integer; overload; cdecl;
+    function Halfway: Integer; overload; cdecl;
     function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; cdecl;
     function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;
     function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;
@@ -233,6 +235,7 @@ type
     function Lacks(const x: Integer): Boolean; cdecl; inline;
     function Outside(const x: Integer): Boolean; cdecl; inline;
     function Sample(const sSize: Integer): TIntegerArray; overload; cdecl;
+    function Centered(const rCenter: Integer): TRange; overload; cdecl;
     function Shift(const N: Integer = 1): TRange; overload; cdecl;
     function Shifted(const N: Integer = 1): TRange; overload; cdecl;
     function Back(const N: Integer = 1): TRange; overload; cdecl;
@@ -245,6 +248,8 @@ type
     function Modified(const mStart, mStop: Integer): TRange; overload; cdecl;
     function Contract(const N: Integer = 1): TRange; overload; cdecl;
     function Contracted(const N: Integer = 1): TRange; overload; cdecl;
+    function Expand(const N: Integer = 1): TRange; overload; cdecl;
+    function Expanded(const N: Integer = 1): TRange; overload; cdecl;
   end;
   TBoxEnumerator = record
   private

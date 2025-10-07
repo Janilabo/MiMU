@@ -1879,6 +1879,33 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Half>
+  @action: Returns half the length of the range as an integer, calculated as the
+           absolute difference between Stop and Start divided by two.
+  @note:   Direction-agnostic; works for both ascending and descending ranges.
+           Useful for offset calculations, contraction, or expansion operations.
+[==============================================================================}
+function TRange.Half: Integer; overload; cdecl;
+begin
+  Result := (Abs(Self.stop - Self.start) div 2);
+end;
+
+{==============================================================================]
+  <TRange.Halfway>
+  @action: Returns half the distance between Start and Stop, explicitly handling
+           ascending and descending ranges.
+  @note:   Functionally identical to Half; uses conditional logic instead of Abs().
+           Can be used interchangeably where explicit branch logic is preferred.
+[==============================================================================}
+function TRange.Halfway: Integer; overload; cdecl;
+begin
+  if (Self.start > Self.stop) then
+    Result := ((Self.start - Self.stop) div 2)
+  else
+    Result := ((Self.stop - Self.start) div 2);
+end;
+
+{==============================================================================]
  <TRange.Str>
  @action: Converts TRange range to string.
  @note: None
@@ -2197,6 +2224,25 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Centered>
+  @action: Returns a new TRange that has the same length as Self but is
+           repositioned so that its midpoint equals the specified Center value.
+           Self remains unchanged.
+  @note:   Direction-aware; preserves ascending or descending order.
+           Useful for geometric or data range realignment.
+[==============================================================================}
+function TRange.Centered(const rCenter: Integer): TRange; overload; cdecl;
+var
+  h: Integer;
+begin
+  h := Self.Half;
+  if Self.Ascending then
+    Result.Create((rCenter - h), (rCenter + h))
+  else
+    Result.Create((rCenter + h), (rCenter - h));
+end;
+
+{==============================================================================]
   <TRange.Shift>
   @action: Adds the given offset N to both Start and Stop of the range, 
            modifying Self in place. Returns a copy of the original range 
@@ -2361,6 +2407,39 @@ begin
     Result.Create((Self.start + N), (Self.stop - N))
   else
     Result.Create((Self.start - N), (Self.stop + N));
+end;
+
+{==============================================================================]
+  <TRange.Expand>
+  @action: Moves both bounds of the range away from each other by the given
+           amount N, effectively increasing the span of the range. Modifies Self
+           in place and returns the original (pre-expanded) range.
+  @note:   Direction-aware; expands correctly for both ascending and descending
+           ranges. Used when the current range should grow outward.
+[==============================================================================}
+function TRange.Expand(const N: Integer = 1): TRange; overload; cdecl;
+begin
+  Result := Self;
+  if Self.Ascending then
+    Self.Modify(-N, N)
+  else
+    Self.Modify(N, -N);
+end;
+
+{==============================================================================]
+  <TRange.Expanded>
+  @action: Returns a new TRange expanded by the given amount N without modifying
+           Self.
+  @note:   Functional version of Expand. Preserves the original range and can
+           be used in expression-style or chainable operations. Handles both
+           ascending and descending ranges.
+[==============================================================================}
+function TRange.Expanded(const N: Integer = 1): TRange; overload; cdecl;
+begin
+  if Self.Ascending then
+    Result.Create((Self.start - N), (Self.stop + N))
+  else
+    Result.Create((Self.start + N), (Self.stop - N));
 end;
 
 {==============================================================================]
