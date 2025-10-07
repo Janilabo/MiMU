@@ -241,6 +241,10 @@ type
     function Decrease(const N: Integer = 1): TRange; overload; cdecl;
     function Increment(const N: Integer = 1): TRange; overload; cdecl;
     function Decrement(const N: Integer = 1): TRange; overload; cdecl;
+    function Modify(const mStart, mStop: Integer): TRange; overload; cdecl;
+    function Modified(const mStart, mStop: Integer): TRange; overload; cdecl;
+    function Contract(const N: Integer = 1): TRange; overload; cdecl;
+    function Contracted(const N: Integer = 1): TRange; overload; cdecl;
   end;
   TBoxEnumerator = record
   private

@@ -2305,6 +2305,65 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Modify>
+  @action: Adds the given mStart and mStop offsets to the current range bounds,
+           modifying Self in place. Returns the original range before modification.
+  @note:   Used internally by operations like Contract or Expand for direct bound
+           adjustment while preserving the previous state.
+[==============================================================================}
+function TRange.Modify(const mStart, mStop: Integer): TRange; overload; cdecl;
+begin
+  Result := Self;
+  Self.start := (Self.start + mStart);
+  Self.stop := (Self.stop + mStop);
+end;
+
+{==============================================================================]
+  <TRange.Modified>
+  @action: Returns a new TRange with Start and Stop adjusted by the specified
+           mStart and mStop offsets, without modifying Self.
+  @note:   Functional version of Modify. Useful for expression-style or
+           fluent programming where immutability is preferred.
+[==============================================================================}
+function TRange.Modified(const mStart, mStop: Integer): TRange; overload; cdecl;
+begin
+  Result.start := (Self.start + mStart);
+  Result.stop := (Self.stop + mStop);
+end;
+
+{==============================================================================]
+  <TRange.Contract>
+  @action: Moves both range bounds toward each other by the given amount N,
+           effectively reducing the range span. Modifies Self in place and
+           returns the original (pre-contracted) range.
+  @note:   Direction-aware; contracts correctly for both ascending and
+           descending ranges.
+[==============================================================================}
+function TRange.Contract(const N: Integer = 1): TRange; overload; cdecl;
+begin
+  Result := Self;
+  if Self.Ascending then
+    Self.Modify(N, -N)
+  else
+    Self.Modify(-N, N);
+end;
+
+{==============================================================================]
+  <TRange.Contracted>
+  @action: Returns a new TRange contracted by the given amount N without
+           modifying Self.
+  @note:   Functional style version of Contract; preserves Self and is safe
+           for use in expressions or chainable operations.
+[==============================================================================}
+function TRange.Contracted(const N: Integer = 1): TRange; overload; cdecl;
+begin
+  if Self.Ascending then
+    Result.Create((Self.start + N), (Self.stop - N))
+  else
+    Result.Create((Self.start - N), (Self.stop + N));
+end;
+
+{==============================================================================]
   <_TRange.Create>
   @action: Creates TPoint using pX, pY 
   @note: function version
