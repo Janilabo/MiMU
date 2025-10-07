@@ -1796,6 +1796,16 @@ begin
 end;
 
 {==============================================================================]
+ <TRange.Mean>
+ @action: Returns the arithmetic mean (midpoint) of the range's Start and Stop values as a Double.
+ @note: Uses floating-point division to avoid integer truncation and to handle large integer values safely.
+[==============================================================================}
+function TRange.Mean: Double; overload; cdecl;
+begin
+  Result := ((Self.start / 2.0) + (Self.stop / 2.0));
+end;
+
+{==============================================================================]
  <TRange.Middle>
  @action: The value(s) at the center position(s) of given range.
  @note: None
@@ -1843,6 +1853,17 @@ begin
   Result := (s div 2);
   if ((s mod 2) <> 0) then
     Result := (Result + 0.5);
+end;
+
+{==============================================================================]
+ <TRange.Midpoint>
+  @action: Computes the weighted midpoint (center) of the range using given weights.
+  @note: Returns a Double. Weighted midpoint formula: ((Start * wStart) + (Stop * wStop)) / (wStart + wStop).
+         Useful when one bound of the range has more importance than the other.
+[==============================================================================}
+function TRange.Midpoint(const wStart: Double = 1; const wStop: Double = 1): Double; overload;
+begin
+  Result := (((Self.start * wStart) + (Self.stop * wStop)) / (wStart + wStop));
 end;
 
 {==============================================================================]
@@ -1903,6 +1924,48 @@ begin
     Result := ((Self.start - Self.stop) div 2)
   else
     Result := ((Self.stop - Self.start) div 2);
+end;
+
+{==============================================================================]
+  <TRange.Halved>
+  @action: Returns half the distance between Start and Stop, explicitly handling
+           ascending and descending ranges.
+  @note:   EnsureRange-based.
+[==============================================================================}
+function TRange.Halved: Integer; overload; cdecl;
+begin
+  Result := EnsureRange((Abs(Self.stop - Self.start) div 2), 0, High(Integer));
+end;
+
+{==============================================================================]
+  <TRange.Radius>
+  @action: Returns half the total span (distance) between Start and Stop.
+  @note: Equivalent to (RangeLength / 2); independent of which value is greater.
+[==============================================================================}
+function TRange.Radius: Integer; overload; cdecl;
+begin
+  Result := ((Self.Maximum - Self.Minimum) div 2);
+end;
+
+{==============================================================================]
+  <TRange.Rad>
+  @action: Returns the half-length (radius) of the range as an integer value.
+  @note: Computed as Abs(Stop - Start) shr 1; equivalent to (|Stop - Start| div 2).
+[==============================================================================}
+function TRange.Rad: Integer; overload; cdecl;
+begin
+  Result := (Abs(Self.stop - Self.start) shr 1);
+end;
+
+{==============================================================================]
+  <TRange.Radiar>
+  @action: Returns half the absolute distance between Start and Stop, rounded to the nearest integer.
+  @note: Computed as Round(Abs(Stop - Start) * 0.5). Useful when a midpoint-to-edge distance is needed
+         and rounding is preferred over truncation. Order of Start and Stop does not matter.
+[==============================================================================}
+function TRange.Radiar: Integer; overload; cdecl;
+begin
+  Result := Round(Abs(Self.stop - Self.start) * 0.5);
 end;
 
 {==============================================================================]

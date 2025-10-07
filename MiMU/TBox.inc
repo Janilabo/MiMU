@@ -1459,15 +1459,12 @@ begin
   c := [Point(1, 0), Point(0, 1), Point(-1, 0), Point(0, -1)];
   for d := 0 to 3 do
   begin
-    if ((d mod 2) = 0) then
-      s := (Self.X2 - Self.X1)
-    else
-      s := (Self.Y2 - Self.Y1);
+    s := IfThen(d.Even, (Self.X2 - Self.X1), (Self.Y2 - Self.Y1));
     while (s > 0) do
     begin
       Result[i.Increase] := p;
       if (s.Decrease >= 0) then
-        p := Point(p.X + c[d].X, p.Y + c[d].Y);
+        p := Point((p.X + c[d].X), (p.Y + c[d].Y));
     end;
   end;
 end;
