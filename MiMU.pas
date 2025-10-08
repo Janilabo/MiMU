@@ -161,7 +161,11 @@ type
     function Unwrap: TIntegerArray; overload; cdecl;
 	function Unfold: TIntegerArray; overload; cdecl;
 	function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload; cdecl;
+    function Normed: TRange; cdecl;
+    function Norm: TRange; cdecl;
+	function Normal: TRange; cdecl;
     function Normalize: TRange; cdecl;
+    function Normalized: TRange; cdecl;
     function Overlapping(const b: TRange): Boolean; cdecl;
     function Overlap(const b: TRange): Boolean; cdecl;
     function Intersect(const b: TRange): TRange; overload; cdecl;
@@ -530,18 +534,18 @@ function Swap(var A, B: TSegment): Boolean; overload; inline;
 function Swap(var A, B: TCircle): Boolean; overload; inline;
 function Swap(var A, B: TTriangle): Boolean; overload; inline;
 
-function IfThen(const state: Boolean; const sTrue, sFalse: Integer): Integer; overload; cdecl;
-function IfThen(const state: Boolean; const sTrue, sFalse: Int64): Int64; overload; cdecl;
-function IfThen(const state: Boolean; const sTrue, sFalse: Double): Double; overload; cdecl;
-function IfThen(const state: Boolean; const sTrue, sFalse: string): string; overload; cdecl;
-function IfThen(const state: Boolean; const sTrue, sFalse: Char): Char; overload; cdecl;
-function IfThen(const state: Boolean; const sTrue, sFalse: Boolean): Boolean; overload; cdecl;
-function IfThen(const state: Boolean; const sTrue, sFalse: TPoint): TPoint; overload; cdecl;
-function IfThen(const state: Boolean; const sTrue, sFalse: TBox): TBox; overload; cdecl;
-function IfThen(const state: Boolean; const sTrue, sFalse: TRange): TRange; overload; cdecl;
-function IfThen(const state: Boolean; const sTrue, sFalse: TSegment): TSegment; overload; cdecl;
-function IfThen(const state: Boolean; const sTrue, sFalse: TCircle): TCircle; overload; cdecl;
-function IfThen(const state: Boolean; const sTrue, sFalse: TTriangle): TTriangle; overload; cdecl;
+function IfThen(const state: Boolean; const sTrue, sFalse: Integer): Integer; overload; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: Int64): Int64; overload; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: Double): Double; overload; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: string): string; overload; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: Char): Char; overload; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: Boolean): Boolean; overload; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: TPoint): TPoint; overload; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: TBox): TBox; overload; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: TRange): TRange; overload; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: TSegment): TSegment; overload; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: TCircle): TCircle; overload; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: TTriangle): TTriangle; overload; inline;
 
 function Bitify(const a: Boolean): Integer; overload; inline;
 function Bitify(const a, b: Boolean): Integer; overload;
@@ -1021,18 +1025,18 @@ function Swap(var A, B: TSegment): Boolean; overload; inline; var C: TSegment; {
 function Swap(var A, B: TCircle): Boolean; overload; inline; var C: TCircle; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
 function Swap(var A, B: TTriangle): Boolean; overload; inline; var C: TTriangle; {$DEFINE Skeleton_Swap}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Swap}
 
-function IfThen(const state: Boolean; const sTrue, sFalse: Integer): Integer; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: Int64): Int64; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: Double): Double; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: string): string; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: Char): Char; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: Boolean): Boolean; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: TPoint): TPoint; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: TBox): TBox; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: TRange): TRange; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: TSegment): TSegment; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: TCircle): TCircle; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: TTriangle): TTriangle; overload; cdecl; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Integer): Integer; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Int64): Int64; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Double): Double; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: string): string; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Char): Char; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Boolean): Boolean; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TPoint): TPoint; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TBox): TBox; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TRange): TRange; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TSegment): TSegment; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TCircle): TCircle; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TTriangle): TTriangle; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_IfThen}
 
 function Bitify(const a: Boolean): Integer; overload; inline;
 begin

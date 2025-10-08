@@ -1017,7 +1017,42 @@ begin
     Inc(p);
     Inc(i, j);
   end;
-end; 
+end;
+
+{==============================================================================]
+  <TRange.Normed>
+  @action: Using if-then comparison this function returns "normal" range.
+  @note: None.
+[==============================================================================}
+function TRange.Normed: TRange; cdecl;
+begin
+  Result.Create(IfThen((Self.start < Self.stop), Self.start, Self.stop), IfThen((Self.start < Self.stop), Self.stop, Self.start));
+end;
+
+{==============================================================================]
+  <TRange.Norm>
+  @action: Using if-then comparison this function returns "normal" range.
+  @note: None.
+[==============================================================================}
+function TRange.Norm: TRange; cdecl;
+begin
+  Result := IfThen((Self.start > Self.stop), Self.Reversed, Self);
+end;
+
+{==============================================================================]
+  <TRange.Normal>
+  @action: XOR-swap based.
+  @note: None.
+[==============================================================================}
+ function TRange.Normal: TRange; cdecl;
+begin
+  Result := Self;
+  if (Result.start <= Result.stop) then
+    Exit;
+  Result.start := (Result.start xor Result.stop);
+  Result.stop := (Result.start xor Result.stop);
+  Result.start := (Result.start xor Result.stop);
+end;
 
 {==============================================================================]
   <TRange.Normalize>
@@ -1028,6 +1063,19 @@ function TRange.Normalize: TRange; cdecl;
 begin
   Result.start := Min(Self.start, Self.stop);
   Result.stop := Max(Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <TRange.Normalized>
+  @action: Using if-then comparison this function returns "normal" range.
+  @note: None.
+[==============================================================================}
+function TRange.Normalized: TRange; cdecl;
+begin
+  if (Self.start < Self.stop) then
+    Result.Create(Self.start, Self.stop)
+  else
+    Result.Create(Self.stop, Self.start);
 end;
 
 {==============================================================================]
