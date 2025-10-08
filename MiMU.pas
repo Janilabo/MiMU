@@ -191,6 +191,8 @@ type
     function Clip(const zone: TRange): TRange; cdecl;
     function ClipMin(const minValue: Integer): TRange; cdecl;
     function ClipMax(const maxValue: Integer): TRange; cdecl;
+    function Ensured(const zone: TRange): TRange; overload; cdecl;
+    function Ensure(const zone: TRange): Boolean; overload; cdecl;
     function Absorb(const val: Integer): Boolean; overload; cdecl;
     function Include(const val: Integer): TRange; overload; cdecl;
     function Neighbor(const b: TRange): Boolean; cdecl;

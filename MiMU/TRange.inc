@@ -1408,6 +1408,35 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Ensured>
+  @action: Returns a new TRange with start and stop clamped to fit within zone.
+  @note: Preserves the direction (start > stop) of the original range.
+         Zone is normalized internally, so reversed zones are handled.
+[==============================================================================}
+function TRange.Ensured(const zone: TRange): TRange; overload; cdecl;
+begin
+  Result := zone.Normalize;
+  Result.Create(Max(Result.start, Min(Self.start, Result.stop)), Min(Result.stop,  Max(Self.stop,  Result.start)));
+end;
+
+{==============================================================================]
+  <TRange.Ensure>
+  @action: Clamps the current TRange (Self) to fit within zone.
+  @note: Preserves the direction (start > stop) of Self.
+         Returns True if Self was modified; False otherwise.
+         Zone is normalized internally, so reversed zones are handled.
+[==============================================================================}
+function TRange.Ensure(const zone: TRange): Boolean; overload; cdecl;
+var
+  s: TRange;
+begin
+  s := Self;
+  Self := zone.Normalize;
+  Self.Create(Max(Self.start, Min(s.start, Self.stop)), Min(Self.stop,  Max(s.stop,  Self.start)));
+  Result := (Self <> s);
+end;
+
+{==============================================================================]
   <TRange.Include>
   @action: Expands the range to include the given value while preserving ascending/descending order.
   @note: If the value is already inside the range, the range remains unchanged.
