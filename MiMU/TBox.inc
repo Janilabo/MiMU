@@ -276,20 +276,6 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Unzip>
-  @action: Unzips TBox X1, Y1, X2, Y2 and returns the area.
-  @note: None.
-[==============================================================================}
-function TBox.Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload;
-begin
-  bX1 := Self.X1;
-  bY1 := Self.Y1;
-  bX2 := Self.X2;
-  bY2 := Self.Y2;
-  Result := Self.Area;
-end;
-
-{==============================================================================]
   <TBox.Frame>
   @action: Returns the frame of TBox 
   @note: Dimensional box of the TBox. Based on Width and Height.
@@ -1116,6 +1102,84 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Unzip>
+  @action: Unzips TBox X1, Y1, X2, Y2 and returns the area.
+  @note: None.
+[==============================================================================}
+function TBox.Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload;
+begin
+  bX1 := Self.X1;
+  bY1 := Self.Y1;
+  bX2 := Self.X2;
+  bY2 := Self.Y2;
+  Result := Self.Area;
+end;
+
+{==============================================================================]
+  <TBox.Unzip>
+  @action: Unzips TBox as TPointArray.
+  @note: None.
+[==============================================================================}
+function TBox.Unzip: TPointArray; overload;
+var
+  r: TPointArray;
+  w, h, l, x, y: Integer;
+  p, s: PPoint;
+begin
+  l := Self.Size(w, h);
+  if (l < 1) then
+    Exit([]);
+  SetLength(r, w);
+  for x := 0 to (w - 1) do
+    r[x] := Point((Self.X1 + x), 0);
+  SetLength(Result, l);
+  p := @Result[0];
+  for y := Self.Y1 to Self.Y2 do
+  begin
+    Move(r[0], p^, (w * SizeOf(TPoint)));
+    s := p;
+    for x := 0 to (w - 1) do
+    begin
+      s^.Y := y;
+      Inc(s);
+    end;
+    Inc(p, w);
+  end;
+end;
+
+{==============================================================================]
+  <TBox.Unpack>
+  @action: Unpacks TBox as TPointArray.
+  @note: None.
+[==============================================================================}
+function TBox.Unpack: TPointArray; overload;
+var
+  r: TPointArray;
+  w, h, l, x, y: Integer;
+  p, s: PPoint;
+begin
+  l := Self.Size(w, h);
+  if (l < 1) then
+    Exit([]);
+  SetLength(r, w);
+  for x := 0 to (w - 1) do
+    r[x] := Point((Self.X1 + x), 0);
+  SetLength(Result, l);
+  p := @Result[0];
+  for y := Self.Y1 to Self.Y2 do
+  begin
+    Move(r[0], p^, (w * SizeOf(TPoint)));
+    s := p;
+    Inc(s, w);
+    while (p <> s) do
+    begin
+      p^.Y := y;
+      Inc(p);
+    end;
+  end;
+end;
+
+{==============================================================================]
   <TBox_Points>
   Explanation: Returns TBox points as TPointArray.
   Example: None.
@@ -1256,7 +1320,7 @@ end;
 {==============================================================================]
   <TBox.Contents>
   Explanation: Returns TBox points as TPointArray.
-  Example: Fast, Pointer-based alternative
+  Example: Fast, Pointer-based alternative. Double loop version.
 [==============================================================================}
 function TBox.Contents: TPointArray;
 var
@@ -1272,6 +1336,28 @@ begin
       p^.Y := y;
       Inc(p);
     end;
+end;
+
+{==============================================================================]
+  <TBox.Content>
+  Explanation: Returns TBox points as TPointArray.
+  Example: Fast, Pointer-based alternative single loop version.
+[==============================================================================}
+function TBox.Content: TPointArray;
+var
+  w, i: Integer;
+  p: PPoint;
+begin
+  SetLength(Result, Self.Size(w, i));
+  if Result.Empty then
+    Exit;
+  p := @Result[0];
+  for i := 0 to High(Result) do
+  begin
+    p^.X := (Self.X1 + (i mod w));
+    p^.Y := (Self.Y1 + (i div w));
+    Inc(p);
+  end;
 end;
 
 {==============================================================================]
@@ -1360,6 +1446,46 @@ begin
   for y := 0 to (h - 1) do
     for x := 0 to (w - 1) do
       Result[(y * w) + x] := Point((Self.X1 + x), (Self.Y1 + y));
+end;
+
+{==============================================================================]
+  <TBox.Explode>
+  Explanation: Returns TBox points as TPointArray.
+  Example: Alternative method.
+[==============================================================================}
+function TBox.Explode: TPointArray; overload;
+var
+  l, i: Integer;
+begin
+  SetLength(Result, Self.Area);
+  Result[0] := Point(Self.X1, Self.Y1);
+  for i := 1 to High(Result) do
+    if ((Result[i - 1].X + 1) > Self.X2) then
+      Result[i] := Point(Self.X1, (Result[i - 1].Y + 1))
+    else
+      Result[i] := Point((Result[i - 1].X + 1), Result[i - 1].Y);
+end;
+
+{==============================================================================]
+  <TBox.Flat>
+  Explanation: Returns TBox points as TPointArray.
+  Example: Alternative method.
+[==============================================================================}
+function TBox.Flat: TPointArray; overload;
+var
+  i: Integer;
+  p: TPoint;
+begin
+  SetLength(Result, Self.Area);
+  p := Point(Self.X1, Self.Y1);
+  for i := 0 to High(Result) do
+  begin
+    Result[i] := p;
+    if (p.X < Self.X2) then
+      Inc(p.X)
+    else
+      p := Point(Self.X1, (p.Y + 1));
+  end;
 end;
 
 {==============================================================================]
