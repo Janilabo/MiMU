@@ -128,6 +128,61 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Sorted>
+  @action: Returns a new TRange with Start and Stop ordered according to aAscending.
+           Does NOT modify the current record.
+  @note: If aAscending=True, ensures Start <= Stop; if False, Start >= Stop.
+[==============================================================================}
+function TRange.Sorted(const oAscending: Boolean = True): TRange; overload; cdecl;
+begin
+  if ((oAscending and (Self.start > Self.stop)) or ((not oAscending) and (Self.start < Self.stop))) then
+    Result.Create(Self.stop, Self.start)
+  else
+    Result.Create(Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <TRange.Sort>
+  @action: Sorts the current TRange in-place according to oAscending.
+           Returns True if a swap of Start and Stop was performed.
+  @note: If oAscending=True, Start <= Stop after call; if False, Start >= Stop.
+[==============================================================================}
+function TRange.Sort(const oAscending: Boolean = True): Boolean; overload; cdecl;
+begin
+  Result := ((oAscending and (Self.start > Self.stop)) or ((not oAscending) and (Self.stop > Self.start)));
+  if Result then
+    Swap(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <TRange.Ordered>
+  @action: Returns a new TRange with Start and Stop ordered according to oAscending.
+           Uses arithmetic trick with Ord() to determine order.
+  @note: Functional version; does NOT modify the current record. Works for both ascending and descending.
+[==============================================================================}
+function TRange.Ordered(const oAscending: Boolean = True): TRange; overload; cdecl;
+begin
+  if (((Ord(oAscending) * 2 - 1) * (Self.Stop - Self.Start)) >= 0) then
+    Result.Create(Self.Start, Self.Stop)
+  else
+    Result.Create(Self.Stop, Self.Start);
+end;
+
+{==============================================================================]
+  <TRange.Order>
+  @action: Sorts the current TRange in-place according to oAscending.
+           Returns True if a swap of Start and Stop was performed.
+           Uses arithmetic trick with Ord() to determine order.
+  @note: In-place version of Ordered; efficient, works for both ascending and descending.
+[==============================================================================}
+function TRange.Order(const oAscending: Boolean = True): Boolean; overload; cdecl;
+begin
+  Result := (((Ord(oAscending) * 2 - 1) * (Self.Stop - Self.Start)) < 0);
+  if Result then
+    Swap(Self.start, Self.stop);
+end;
+
+{==============================================================================]
   <TRange.Asc>
   @action: Returns an ascending sequence of integers from Start to Stop.
   @note: If Start > Stop, the order is still ascending (from the smaller to the larger value).
@@ -2117,6 +2172,19 @@ end;
 function TRange.Radiar: Integer; overload; cdecl;
 begin
   Result := Round(Abs(Self.stop - Self.start) * 0.5);
+end;
+
+{==============================================================================]
+ <TRange.AsStr>
+ @action: Converts TRange range to string.
+ @note: From..To or To..From.
+[==============================================================================}
+function TRange.AsStr(const rReversed: Boolean = False): string; overload; cdecl;
+begin
+  if not rReversed then
+    Result := Format('%d..%d', [Self.start, Self.stop])
+  else
+    Result := Format('%d..%d', [Self.stop, Self.start]);
 end;
 
 {==============================================================================]

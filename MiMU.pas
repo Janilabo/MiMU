@@ -101,6 +101,10 @@ type
     function Atomic: Boolean; cdecl;
     function Plural: Boolean; cdecl;
     function Composite: Boolean; cdecl;
+    function Sorted(const oAscending: Boolean = True): TRange; overload; cdecl;
+    function Sort(const oAscending: Boolean = True): Boolean; overload; cdecl;
+    function Ordered(const oAscending: Boolean = True): TRange; overload; cdecl;
+    function Order(const oAscending: Boolean = True): Boolean; overload; cdecl;
     function Asc: TIntegerArray; overload; cdecl;
     function Ascend: TRange; cdecl;
     function Ascended: TRange; cdecl;
@@ -235,7 +239,8 @@ type
     function Radius: Integer; overload; cdecl;
     function Rad: Integer; overload; cdecl;
     function Radiar: Integer; overload; cdecl;
-    function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; cdecl;
+    function AsStr(const rReversed: Boolean = False): string; overload; cdecl;
+	function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; cdecl;
     function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;
     function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;
     function Sum: Int64; cdecl;
