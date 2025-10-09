@@ -102,9 +102,11 @@ type
     function Plural: Boolean; cdecl;
     function Composite: Boolean; cdecl;
     function Ascend: TRange; cdecl;
+    function Ascended: TRange; cdecl;
     function Ascending: Boolean; cdecl;
     function Ascends: Boolean; cdecl;
     function Descend: TRange; cdecl;
+    function Descended: TRange; cdecl;
     function Descending: Boolean; cdecl;
     function Descends: Boolean; cdecl;
     function Increasing: Boolean; cdecl;
@@ -164,6 +166,7 @@ type
     function Normed: TRange; cdecl;
     function Norm: TRange; cdecl;
 	function Normal: TRange; cdecl;
+    function Normally: TRange; cdecl;
     function Normalize: TRange; cdecl;
     function Normalized: TRange; cdecl;
     function Overlapping(const b: TRange): Boolean; cdecl;

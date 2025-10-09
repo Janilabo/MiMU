@@ -150,6 +150,32 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Descended>
+  @action: Returns TRange in descending order.
+  @note: None.
+[==============================================================================}
+function TRange.Descended: TRange; cdecl;
+begin
+  if (Self.start > Self.stop) then
+    Result.Create(Self.start, Self.stop)
+  else
+    Result.Create(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <TRange.Ascended>
+  @action: Returns TRange in ascending order.
+  @note: None.
+[==============================================================================}
+function TRange.Ascended: TRange; cdecl;
+begin
+  if (Self.stop > Self.start) then
+    Result.Create(Self.start, Self.stop)
+  else
+    Result.Create(Self.stop, Self.start);
+end;
+
+{==============================================================================]
   <TRange.Ascending>
   @action: Returns true if range start is lower or equal than stop
   @note: Non-strict.
@@ -1054,6 +1080,15 @@ begin
   Result.start := (Result.start xor Result.stop);
 end;
 
+
+function TRange.Normally: TRange; cdecl;
+var
+  a: TIntegerArray;
+begin
+  a := [Self.start, Self.stop];
+  Result.Create(a[Ord(Self.start > Self.stop)], a[Ord(Self.start <= Self.stop)]);
+end;
+
 {==============================================================================]
   <TRange.Normalize>
   @action: Using Min-Maxing this function returns "normal" range.
@@ -1072,10 +1107,9 @@ end;
 [==============================================================================}
 function TRange.Normalized: TRange; cdecl;
 begin
-  if (Self.start < Self.stop) then
-    Result.Create(Self.start, Self.stop)
-  else
-    Result.Create(Self.stop, Self.start);
+  Result.start := ((Self.start + Self.stop) shr 1);
+  Result.stop := (Abs(Self.start - Self.stop) shr 1);
+  Result.Create((Result.start - Result.stop), (Result.start + Result.stop));
 end;
 
 {==============================================================================]
