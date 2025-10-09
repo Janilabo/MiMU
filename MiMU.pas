@@ -101,10 +101,12 @@ type
     function Atomic: Boolean; cdecl;
     function Plural: Boolean; cdecl;
     function Composite: Boolean; cdecl;
+    function Asc: TIntegerArray; overload; cdecl;
     function Ascend: TRange; cdecl;
     function Ascended: TRange; cdecl;
     function Ascending: Boolean; cdecl;
     function Ascends: Boolean; cdecl;
+    function Desc: TIntegerArray; overload; cdecl;
     function Descend: TRange; cdecl;
     function Descended: TRange; cdecl;
     function Descending: Boolean; cdecl;
@@ -123,7 +125,8 @@ type
     function Count: Integer; cdecl;
     function Area: Integer; cdecl;
     function Span: Integer; cdecl;
-    function Size: Integer; cdecl;
+    function Size: Integer; overload; cdecl;
+    function Size(var minVal, maxVal: Integer): Integer; overload; cdecl;
     function Capacity: Integer; cdecl;
     function Delta: Integer; cdecl;
     function Frame(var rSize: Integer): TRange; overload; cdecl;

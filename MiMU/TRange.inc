@@ -128,6 +128,34 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Asc>
+  @action: Returns an ascending sequence of integers from Start to Stop.
+  @note: If Start > Stop, the order is still ascending (from the smaller to the larger value).
+[==============================================================================}
+function TRange.Asc: TIntegerArray; overload; cdecl;
+var
+  l, h, i: Integer;
+begin
+  SetLength(Result, Self.Size(l, h));
+  for i := 0 to (h - l) do
+    Result[i] := (l + i);
+end;
+
+{==============================================================================]
+  <TRange.Desc>
+  @action: Returns a descending sequence of integers from Stop down to Start.
+  @note: If Start < Stop, the order is still descending (from the larger to the smaller value).
+[==============================================================================}
+function TRange.Desc: TIntegerArray; overload; cdecl;
+var
+  l, h, i: Integer;
+begin
+  SetLength(Result, Self.Size(l, h));
+  for i := 0 to (h - l) do
+    Result[i] := (h - i);
+end;
+
+{==============================================================================]
   <TRange.Ascend>
   @action: Returns ascending TRange of Self.
   @note: None.
@@ -362,9 +390,21 @@ end;
   @action: Returns size of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Size: Integer; cdecl;
+function TRange.Size: Integer; overload; cdecl;
 begin
   Result := (Abs(Self.stop - Self.start) + 1);
+end;
+
+{==============================================================================]
+  <TRange.Size>
+  @action: Returns size of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Size(var minVal, maxVal: Integer): Integer; overload; cdecl;
+begin
+  minVal := Min(Self.start, Self.stop);
+  maxVal := Max(Self.start, Self.stop);
+  Result := ((maxVal - minVal) + 1);
 end;
 
 {==============================================================================]
