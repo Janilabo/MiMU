@@ -25,7 +25,7 @@ end;
   @action: Constructs TCircle with cCenter and cRadius.
   @note: None.
 [==============================================================================}
-class function TCircle.Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload; cdecl;
+class function TCircle.Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload;
 begin
   Result.center := cCenter;
   Result.radius := cRadius;
@@ -36,7 +36,7 @@ end;
   @action: Constructs TCircle with centerX, centerY and radius.
   @note: None.
 [==============================================================================}
-class function TCircle.Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload; cdecl;
+class function TCircle.Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload;
 begin
   Result.center := Point(centerX, centerY);
   Result.radius := cRadius;
@@ -47,7 +47,7 @@ end;
   @action: Returns true if TCircle contains pt.
   @note: None.
 [==============================================================================}
-function TCircle.Contains(const pt: TPoint): Boolean; cdecl;
+function TCircle.Contains(const pt: TPoint): Boolean;
 begin
   Result := ((Sqr(pt.X - Self.Center.X) + Sqr(pt.Y - Self.Center.Y)) <= Sqr(Self.Radius));
 end;
@@ -57,7 +57,7 @@ end;
   @action: Returns true if TCircle contains pt.
   @note: None.
 [==============================================================================}
-function TCircle.Item(const pt: TPoint): Boolean; cdecl;
+function TCircle.Item(const pt: TPoint): Boolean;
 begin
   Result := (Hypot((pt.X - Self.Center.X), (pt.Y - Self.Center.Y)) <= Self.Radius);
 end;
@@ -67,7 +67,7 @@ end;
   @action: Returns true if TCircle contains pt.
   @note: None.
 [==============================================================================}
-function TCircle.Pixel(const pt: TPoint): Boolean; cdecl;
+function TCircle.Pixel(const pt: TPoint): Boolean;
 begin
   Result := ((((pt.X - Self.Center.X) * (pt.X - Self.Center.X)) + ((pt.Y - Self.Center.Y) * (pt.Y - Self.Center.Y))) <= (Self.Radius * Self.Radius));
 end;
@@ -77,7 +77,7 @@ end;
   @action: Returns TCircle boundaries as TBox.
   @note: None.
 [==============================================================================}
-function TCircle.Bounds: TBox; cdecl;
+function TCircle.Bounds: TBox;
 begin
   Result := Box(Floor(Self.Center.X - Self.Radius), Floor(Self.Center.Y - Self.Radius), Ceil(Self.Center.X + Self.Radius), Ceil(Self.Center.Y + Self.Radius));
 end;
@@ -87,7 +87,7 @@ end;
   @action: Returns TCircle boundaries as TBox.
   @note: None.
 [==============================================================================}
-function TCircle.Boundaries: TBox; cdecl;
+function TCircle.Boundaries: TBox;
 begin
   Result := Box(Trunc(Self.Center.X - Self.Radius), Trunc(Self.Center.Y - Self.Radius), (Trunc(Self.Center.X + Self.Radius) + 1), (Trunc(Self.Center.Y + Self.Radius) + 1));
 end;
@@ -97,7 +97,7 @@ end;
   @action: Returns TCircle boundaries as TBox.
   @note: None.
 [==============================================================================}
-function TCircle.BoundingBox: TBox; cdecl;
+function TCircle.BoundingBox: TBox;
 var
   r: Integer;
 begin
@@ -110,7 +110,7 @@ end;
   @action: Returns TCircle boundaries as TBox.
   @note: None.
 [==============================================================================}
-function TCircle.Envelope: TBox; cdecl;
+function TCircle.Envelope: TBox;
 var
   r: Integer;
 begin
@@ -129,7 +129,7 @@ end;
   @action: Returns TCircle points as TPointArray.
   @note: None.
 [==============================================================================}
-function TCircle.TPA: TPointArray; cdecl;
+function TCircle.TPA: TPointArray;
 var
   b: TBox;
   x, y, p: Integer;
@@ -148,7 +148,7 @@ end;
  @action: Returns all the points of TCircle.
  @note: None.
 [==============================================================================}
-function TCircle.Points: TPointArray; cdecl;
+function TCircle.Points: TPointArray;
 var
   x, y: Integer;
   p: TPointArray;
@@ -165,7 +165,7 @@ end;
  @action: Returns border points of TCircle.
  @note: Supports custom count.
 [==============================================================================}
-function TCircle.BorderPoints(const count: Integer): TPointArray; cdecl;
+function TCircle.BorderPoints(const count: Integer): TPointArray;
 var
   i: Integer;
   a: Double;
@@ -184,7 +184,7 @@ end;
  @action: Returns border points of TCircle.
  @note: None.
 [==============================================================================}
-function TCircle.Border: TPointArray; cdecl;
+function TCircle.Border: TPointArray;
 var
   x, y, d: Integer;
   c: TPoint;

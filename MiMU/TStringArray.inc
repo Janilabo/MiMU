@@ -5,7 +5,7 @@
   @action: Returns total length of TStringArray strings combined together.
   @note: None.
 [==============================================================================}
-function TStringArrayHelper.Tally: Int64; cdecl;
+function TStringArrayHelper.Tally: Int64;
 var
   i: Integer;
 begin
@@ -19,7 +19,7 @@ end;
   @action: Joins all the strings of array as single string.
   @note: Chaining.
 [==============================================================================}
-function TStringArrayHelper.Concat: string; cdecl;
+function TStringArrayHelper.Concat: string;
 var
   i, j, l: Integer;
 begin
@@ -35,7 +35,7 @@ end;
   @action: Joins all the strings of array as single string.
   @note: Chaining.
 [==============================================================================}
-function TStringArrayHelper.Concatenate: string; cdecl;
+function TStringArrayHelper.Concatenate: string;
 var
   s: TStringBuilder;
   i: Integer;
@@ -58,7 +58,7 @@ end;
          Warning: This algorithm is not recommended for lengthy string arrays!
 		          Very inefficient...
 [==============================================================================}
-function TStringArrayHelper.Flatten: string; cdecl;
+function TStringArrayHelper.Flatten: string;
 var
   i: SizeInt;
 begin
@@ -72,7 +72,7 @@ end;
   @action: Joins all the strings of array as single string.
   @note: Chaining.
 [==============================================================================}
-function TStringArrayHelper.Glue: string; cdecl;
+function TStringArrayHelper.Glue: string;
 var
   c: TCharArray;
   i, p, l: Integer;

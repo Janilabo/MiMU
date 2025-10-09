@@ -67,7 +67,7 @@ end;
   @action: Simply returns the amount of s in str.
   @note: Contains support for overlapping (overlap)
 [==============================================================================}
-function TStringHelper.Amount(const s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer; cdecl;
+function TStringHelper.Amount(const s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer;
 var
   p, o: Integer;
   c: string;
@@ -88,7 +88,7 @@ end;
   @action: Checks if string s is at index position in str.
   @note: UNSAFE: Minimal checking for efficiency!
 [==============================================================================}
-function TStringHelper.At(const s: string; const index: Integer = 1): Boolean; cdecl; inline;
+function TStringHelper.At(const s: string; const index: Integer = 1): Boolean; inline;
 var
   i, l: Integer;
 begin
@@ -166,7 +166,7 @@ end;
  @action: Returns the string between s1 and s2 in str.
  @note: Supports offset (index).
 [==============================================================================}
-function TStringHelper.Between(const s1, s2: string; const index: Integer = 1): string; cdecl;
+function TStringHelper.Between(const s1, s2: string; const index: Integer = 1): string;
 var
   b, e, l: Integer;
 begin
@@ -185,7 +185,7 @@ end;
   @action: Returns true if string is empty (Length is 0).
   @note: None.
 [==============================================================================}
-function TStringHelper.Void: Boolean; cdecl;
+function TStringHelper.Void: Boolean;
 begin
   Result := (Self = '');
 end;
@@ -195,7 +195,7 @@ end;
   @action: Returns true if string is empty (Length is 0).
   @note: None.
 [==============================================================================}
-function TStringHelper.Empty: Boolean; cdecl;
+function TStringHelper.Empty: Boolean;
 begin
   Result := (Length(Self) = 0);
 end;
@@ -205,7 +205,7 @@ end;
   @action: Returns true if string is empty or consists of whitespaces only.
   @note: None.
 [==============================================================================}
-function TStringHelper.Blank: Boolean; cdecl;
+function TStringHelper.Blank: Boolean;
 var
   i: Integer;
 begin
@@ -220,7 +220,7 @@ end;
   @action: Returns true if string is not empty.
   @note: Length(str) > 0.
 [==============================================================================}
-function TStringHelper.Exists: Boolean; cdecl;
+function TStringHelper.Exists: Boolean;
 begin
   Result := (Length(Self) > 0);
 end;
@@ -230,7 +230,7 @@ end;
   @action: Returns str centered with fill characters where size is the length of the Result.
   @note: Supports custom filling character by fill!
 [==============================================================================}
-function TStringHelper.Center(const size: Integer; const fill: Char = #32): string; cdecl;
+function TStringHelper.Center(const size: Integer; const fill: Char = #32): string;
 var
   l, p: Integer;
 begin
@@ -251,7 +251,7 @@ end;
   @action: Returns characters of string as TCharArray.
   @note: None.
 [==============================================================================}
-function TStringHelper.Chars: TCharArray; cdecl;
+function TStringHelper.Chars: TCharArray;
 var
   i: Integer;
 begin
@@ -265,7 +265,7 @@ end;
   @action: Returns characters of string as TCharArray.
   @note: None.
 [==============================================================================}
-function TStringHelper.Charify: TCharArray; cdecl;
+function TStringHelper.Charify: TCharArray;
 begin
   SetLength(Result, Length(Self));
   if not Self.Empty then
@@ -277,7 +277,7 @@ end;
   @action: Returns characters of string as TCharArray.
   @note: None.
 [==============================================================================}
-function TStringHelper.Chop: TCharArray; cdecl;
+function TStringHelper.Chop: TCharArray;
 var
   p: PChar;
   i, l: Integer;
@@ -297,7 +297,7 @@ end;
   @action: Returns chunk of string between a and b.
   @note: Supports reversed chunk, when a is higher than b.
 [==============================================================================}
-function TStringHelper.Chunk(const a, b: Integer): string; cdecl;
+function TStringHelper.Chunk(const a, b: Integer): string;
 var
   i, l, x, y: Integer;
 begin
@@ -329,14 +329,14 @@ end;
   @action: Compares str with target.
   @note: Results: 0=EQUAL, 1=str>target, -1=str<target
 [==============================================================================}
-function TStringHelper.Compare(const target: string): Integer; cdecl; inline; {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
+function TStringHelper.Compare(const target: string): Integer; inline; {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
 
 {==============================================================================]
  <TStringHelper.Precede>
  @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
-function TStringHelper.Precede(const target: string; const aAscending: Boolean): Boolean; overload; cdecl; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
+function TStringHelper.Precede(const target: string; const aAscending: Boolean): Boolean; overload; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
 
 {==============================================================================]
  <TStringHelper.Ascending>
@@ -345,7 +345,7 @@ function TStringHelper.Precede(const target: string; const aAscending: Boolean):
           sorting or merging arrays in ascending order.
  @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}
-function TStringHelper.Ascending(const target: string): Boolean; cdecl; inline; {$DEFINE Skeleton_Ascending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Ascending}
+function TStringHelper.Ascending(const target: string): Boolean; inline; {$DEFINE Skeleton_Ascending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Ascending}
 
 {==============================================================================]
  <TStringHelper.Descending>
@@ -354,14 +354,14 @@ function TStringHelper.Ascending(const target: string): Boolean; cdecl; inline; 
           sorting or merging arrays in descending order.
  @note: Pure comparison only; equivalent to Self >= target.
 [==============================================================================}
-function TStringHelper.Descending(const target: string): Boolean; cdecl; inline; {$DEFINE Skeleton_Descending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Descending}
+function TStringHelper.Descending(const target: string): Boolean; inline; {$DEFINE Skeleton_Descending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Descending}
 
 {==============================================================================]
   <TStringHelper.Contains>
   @action: Returns true if s can be found in str.
   @note: Starts search from index position.!
 [==============================================================================}
-function TStringHelper.Contains(const s: string; const index: Integer = 1): Boolean; cdecl;
+function TStringHelper.Contains(const s: string; const index: Integer = 1): Boolean;
 var
   i, l: Integer;
 begin
@@ -377,7 +377,7 @@ end;
   @action: Simply returns the count of s in str.
   @note: Contains support for overlapping (overlap)
 [==============================================================================}
-function TStringHelper.Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer; cdecl;
+function TStringHelper.Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer;
 var
   p, o: Integer;
   c: string;
@@ -398,7 +398,7 @@ end;
   @action: Returns str * x (duplicated) times. Example: ('ha', 3) => 'hahaha'
   @note: None
 [==============================================================================}
-function TStringHelper.Duplicate(const x: Integer = 2): string; cdecl;
+function TStringHelper.Duplicate(const x: Integer = 2): string;
 var
   i: Integer;
 begin
@@ -413,7 +413,7 @@ end;
            Places glue between the str positions to result.
   @note: Supports custom glue addition between duplicated str's.
 [==============================================================================}
-function TStringHelper.Duplicated(const x: Integer; const glue: string): string; cdecl;
+function TStringHelper.Duplicated(const x: Integer; const glue: string): string;
 var
   i: Integer;
 begin
@@ -433,7 +433,7 @@ end;
   @action: Returns True if str ends with s.
   @note: None
 [==============================================================================}
-function TStringHelper.EndsWith(const s: string): Boolean; cdecl;
+function TStringHelper.EndsWith(const s: string): Boolean;
 var
   l, t: Integer;
 begin
@@ -447,7 +447,7 @@ end;
   @action: Returns true if s was found in str and it was set as the ending of the str.
   @note: Supports offset.
 [==============================================================================}
-function TStringHelper.EndWith(const s: string; const index: Integer = 2147483647): Boolean; cdecl;
+function TStringHelper.EndWith(const s: string; const index: Integer = 2147483647): Boolean;
 var
   p: Integer;
 begin
@@ -462,7 +462,7 @@ end;
  @action: Fast version of Exchange().
  @note: Unsafe, no checking.
 [==============================================================================}
-function TStringHelper.Exch(const aIndex, bIndex: Integer): Boolean; cdecl;
+function TStringHelper.Exch(const aIndex, bIndex: Integer): Boolean;
 var
   c: Char;
 begin
@@ -477,7 +477,7 @@ end;
  @action: Swap items aIndex and bIndex in string.
  @note: Returns true with success.
 [==============================================================================}
-function TStringHelper.Exchange(const aIndex, bIndex: Integer): Boolean; cdecl;
+function TStringHelper.Exchange(const aIndex, bIndex: Integer): Boolean;
 var
   l: Integer;
   c: Char;
@@ -497,7 +497,7 @@ end;
   @action: Simply "explodes" string to TCharArray.
   @note: None.
 [==============================================================================}
-function TStringHelper.Explode: TCharArray; overload; cdecl;
+function TStringHelper.Explode: TCharArray; overload;
 var
   p: PChar;
   i, l: Integer;
@@ -517,7 +517,7 @@ end;
   @action: Explodes str with delimiter (d).
   @note: Explodes up to (maximum) limit. Limit as -1 means no limits.
 [==============================================================================}
-function TStringHelper.Explode(const d: string; const limit: Integer = -1): TStringArray; overload; cdecl;
+function TStringHelper.Explode(const d: string; const limit: Integer = -1): TStringArray; overload;
 var
   a, b, l, p, r, s, t: Integer;
   m: Boolean;
@@ -564,7 +564,7 @@ end;
   @action: Explodes str with delimiters (d).
   @note: Explodes up to (maximum) limit. Limit as -1 means no limits.
 [==============================================================================}
-function TStringHelper.Explode(const d: TStringArray; const limit: Integer = -1): TStringArray; overload; cdecl;
+function TStringHelper.Explode(const d: TStringArray; const limit: Integer = -1): TStringArray; overload;
 var
   i, j, p, l, f, c: Integer;
   s, x: string;
@@ -620,7 +620,7 @@ end;
   @action: Returns reversed str.
   @note: None
 [==============================================================================}
-function TStringHelper.Flip: string; cdecl;
+function TStringHelper.Flip: string;
 var
   i, l: Integer;
 begin
@@ -635,7 +635,7 @@ end;
   @action: Returns string from left with count of characters.
   @note: None
 [==============================================================================}
-function TStringHelper.FromLeft(const count: Integer; const index: Integer = 1): string; cdecl;
+function TStringHelper.FromLeft(const count: Integer; const index: Integer = 1): string;
 begin
   Result := Copy(Self, index, count);
 end;
@@ -645,7 +645,7 @@ end;
   @action: Returns string from right with count of characters.
   @note: None
 [==============================================================================}
-function TStringHelper.FromRight(const count: Integer; const index: Integer = 2147483647): string; cdecl;
+function TStringHelper.FromRight(const count: Integer; const index: Integer = 2147483647): string;
 begin
   Result := Copy(Self, ((Min(Length(Self), index) - count) + 1), count);
 end;
@@ -655,7 +655,7 @@ end;
   @action: Fast method for getting substring from string index position by size.
   @note: UNSAFE! Minimal checks for efficiency.
 [==============================================================================}
-function TStringHelper.Get(const index: Integer; const count: Integer): string; cdecl; inline;
+function TStringHelper.Get(const index: Integer; const count: Integer): string; inline;
 var
   i: Integer;
 begin
@@ -669,7 +669,7 @@ end;
   @action: Returns indexes of string as TIntegerArray.
   @note: With empty string this function returns as []!
 [==============================================================================}
-function TStringHelper.IDs: TIntegerArray; overload; cdecl;
+function TStringHelper.IDs: TIntegerArray; overload;
 var
   r: TRange;
 begin
@@ -686,7 +686,7 @@ end;
   @action: Returns indexes of string as TCharArray.
   @note: Unsafe method without failsafes, use with care!
 [==============================================================================}
-function TStringHelper.IDs(const ID: TIntegerArray): TCharArray; overload; cdecl;
+function TStringHelper.IDs(const ID: TIntegerArray): TCharArray; overload;
 var
   i: Integer;
 begin
@@ -700,7 +700,7 @@ end;
   @action: Returns indexes of string as TCharArray. Replaces character of str from IDs with item.
   @note: Unsafe method without failsafes, use with care!
 [==============================================================================}
-function TStringHelper.IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
+function TStringHelper.IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload;
 var
   i: Integer;
 begin
@@ -714,7 +714,7 @@ end;
   @action: Returns indexes of string as TCharArray. Replaces character of str from IDs with item.
   @note: Unsafe method without failsafes, use with care!
 [==============================================================================}
-function TStringHelper.IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
+function TStringHelper.IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload;
 var
   i, l: Integer;
 begin
@@ -729,7 +729,7 @@ end;
   @action: Returns true if s can be found in str.
   @note: Starts backwards search from index position.!
 [==============================================================================}
-function TStringHelper.Includes(const s: string; const index: Integer = 2147483647): Boolean; cdecl;
+function TStringHelper.Includes(const s: string; const index: Integer = 2147483647): Boolean;
 var
   i, l: Integer;
 begin
@@ -745,7 +745,7 @@ end;
   @action: Method for getting substring from string index position by count.
   @note: Contains some failsafes, alternative for String_Get.
 [==============================================================================}
-function TStringHelper.Pick(const index: Integer; const count: Integer = 2147483647): string; cdecl;
+function TStringHelper.Pick(const index: Integer; const count: Integer = 2147483647): string;
 var
   s, i, p: Integer;
 begin
@@ -761,7 +761,7 @@ end;
   @action: Returns first position of s string in str.
   @note: Starts search from index position.!
 [==============================================================================}
-function TStringHelper.Pos(const s: string; const index: Integer = 1): Integer; cdecl;
+function TStringHelper.Pos(const s: string; const index: Integer = 1): Integer;
 begin
   for Result := Max(1, index) to ((Length(Self) - Length(s)) + 1) do
     if Self.At(s, Result) then
@@ -774,7 +774,7 @@ end;
   @action: Returns last position of s string in str.
   @note: Starts search from index position.!
 [==============================================================================}
-function TStringHelper.Loc(const s: string; const index: Integer = 2147483647): Integer; cdecl;
+function TStringHelper.Loc(const s: string; const index: Integer = 2147483647): Integer;
 begin
   for Result := Min(index, ((Length(Self) - Length(s)) + 1)) downto 1 do
     if Self.At(s, Result) then
@@ -787,7 +787,7 @@ end;
   @action: Returns last position of s string in str.
   @note: Starts search from index position. -1 means str length!
 [==============================================================================}
-function TStringHelper.Location(const s: string; const index: Integer = 2147483647): Integer; cdecl;
+function TStringHelper.Location(const s: string; const index: Integer = 2147483647): Integer;
 var
   a, b, o: Integer;
 begin
@@ -810,7 +810,7 @@ end;
            If s doesn't exist in str, Result will be set as 0.
   @note: Supports custom index as scan start.
 [==============================================================================}
-function TStringHelper.Position(const s: string; const index: Integer = 1): Integer; cdecl;
+function TStringHelper.Position(const s: string; const index: Integer = 1): Integer;
 var
   a, b, i: Integer;
 begin
@@ -835,7 +835,7 @@ end;
   @action: Returns first position of s string in str.
   @note: Alternative for Pos().
 [==============================================================================}
-function TStringHelper.Find(const s: string; const index: Integer = 1): Integer; cdecl;
+function TStringHelper.Find(const s: string; const index: Integer = 1): Integer;
 var
   i, j, a, b: Integer;
 begin
@@ -858,7 +858,7 @@ end;
   @action: Returns first position of s string in str.
   @note: Alternative for Pos().
 [==============================================================================}
-function TStringHelper.Search(const s: string; const index: Integer = 1): Integer; cdecl;
+function TStringHelper.Search(const s: string; const index: Integer = 1): Integer;
 var
   i, j, a, b: Integer;
 begin
@@ -884,7 +884,7 @@ end;
   @action: Returns reversed str.
   @note: None
 [==============================================================================}
-function TStringHelper.Reverse: Boolean; cdecl;
+function TStringHelper.Reverse: Boolean;
 var
   i, l: Integer;
   c: Char;
@@ -905,7 +905,7 @@ end;
   @action: Returns reversed str.
   @note: None
 [==============================================================================}
-function TStringHelper.Reversed: string; cdecl;
+function TStringHelper.Reversed: string;
 var
   i, l, m: Integer;
 begin
@@ -930,7 +930,7 @@ end;
   @action: Returns slice of string with a and b.
   @note: Supports reversed slice, when a is higher than b.
 [==============================================================================}
-function TStringHelper.Slice(const a, b: Integer): string; cdecl;
+function TStringHelper.Slice(const a, b: Integer): string;
 var
   i, l, x, y: Integer;
 begin
@@ -966,7 +966,7 @@ end;
   @action: Returns True if str starts with s.
   @note: None
 [==============================================================================}
-function TStringHelper.StartsWith(const s: string): Boolean; cdecl;
+function TStringHelper.StartsWith(const s: string): Boolean;
 begin
   Result := ((s <> '') and (Length(Self) >= Length(s)) and Self.At(s));
 end;
@@ -976,7 +976,7 @@ end;
   @action: Returns true if s was found in str and it was set as the beginning of the str.
   @note: None
 [==============================================================================}
-function TStringHelper.StartWith(const s: string; const index: Integer = 1): Boolean; cdecl;
+function TStringHelper.StartWith(const s: string; const index: Integer = 1): Boolean;
 var
   p: Integer;
 begin
@@ -991,7 +991,7 @@ end;
   @action: Returns str stuffed with s. Starting from iFrom and ending to iFrom + iCount.
   @note: Places s to iFrom position and replaces iCount amount of next characters in str with s.
 [==============================================================================}
-function TStringHelper.Stuff(const s: string; const iFrom, iCount: Integer): string; cdecl;
+function TStringHelper.Stuff(const s: string; const iFrom, iCount: Integer): string;
 begin
   Result := Copy(Self, 1, Length(Self));
   Delete(Result, iFrom, iCount);
@@ -1003,7 +1003,7 @@ end;
   @action: Returns the quoted version of str.
   @note: None
 [==============================================================================}
-function TStringHelper.Quotatation: string; cdecl;
+function TStringHelper.Quotatation: string;
 begin
   Result := ('''' + StringReplace(Self, '''', '''''', [rfReplaceAll]) + '''');
 end;
@@ -1013,7 +1013,7 @@ end;
   @action: Returns string with all characters escaped that are part of the regular expression syntax.
   @note: Based on the character set...
 [==============================================================================}
-function TStringHelper.PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string; cdecl;
+function TStringHelper.PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string;
 var
   l, i: Integer;
 begin
@@ -1030,7 +1030,7 @@ end;
   @action: Returns str with left-side trimmed/cleaned of t.
   @note: None
 [==============================================================================}
-function TStringHelper.TrimLeft(const t: Char = #32): string; cdecl;
+function TStringHelper.TrimLeft(const t: Char = #32): string;
 var
   i, l: Integer;
 begin
@@ -1046,7 +1046,7 @@ end;
   @action: Returns str with right-side trimmed/cleaned of t.
   @note: None
 [==============================================================================}
-function TStringHelper.TrimRight(const t: Char = #32): string; cdecl;
+function TStringHelper.TrimRight(const t: Char = #32): string;
 var
   i, l: Integer;
 begin
@@ -1062,7 +1062,7 @@ end;
   @action: Returns str with left-side and right-side trimmed/cleaned of t.
   @note: None
 [==============================================================================}
-function TStringHelper.Trim(const t: Char = #32): string; cdecl;
+function TStringHelper.Trim(const t: Char = #32): string;
 var
   i, l, x, y: Integer;
 begin
@@ -1097,7 +1097,7 @@ end;
   @action: Returns indexes of string as TRange.
   @note: With empty string this function returns as 0..0!
 [==============================================================================}
-function TStringHelper.AsTRange: TRange; cdecl;
+function TStringHelper.AsTRange: TRange;
 begin
   Result.Build(Min(1, Length(Self)), Length(Self));
 end;
@@ -1107,7 +1107,7 @@ end;
  @action: Converts string to TRange.
  @note: None
 [==============================================================================}
-function TStringHelper.ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange; cdecl;
+function TStringHelper.ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange;
 var
   s: string;
   p: Integer;
@@ -1129,7 +1129,7 @@ end;
   @action: Returns true if str contains only 0's and 1's
   @note: If str is empty and emptyTrue is True, then this function returns True with empty strings.
 [==============================================================================}
-function TStringHelper.IsBinary(const emptyTrue: Boolean = True): Boolean; cdecl;
+function TStringHelper.IsBinary(const emptyTrue: Boolean = True): Boolean;
 var
   i: Integer;
 begin
@@ -1146,7 +1146,7 @@ end;
   @action: '10101' => [True, False, True, False, True]
   @note: Considers only '1' as True, everything else as False.
 [==============================================================================}
-function TStringHelper.BoolifyBinary: TBooleanArray; cdecl;
+function TStringHelper.BoolifyBinary: TBooleanArray;
 var
   i: Integer;
 begin
@@ -1160,7 +1160,7 @@ end;
   @action: Returns true if str is made with only allowed characters.
   @note: None.
 [==============================================================================}
-function TStringHelper.MadeOf(const allowed: TCharArray): Boolean; cdecl;
+function TStringHelper.MadeOf(const allowed: TCharArray): Boolean;
 var
   i: Integer;
 begin
@@ -1177,7 +1177,7 @@ end;
   @action: Returns true if str is built without forbidden characters.
   @note: None.
 [==============================================================================}
-function TStringHelper.FreeOf(const forbidden: TCharArray): Boolean; cdecl;
+function TStringHelper.FreeOf(const forbidden: TCharArray): Boolean;
 var
   i: Integer;
 begin
@@ -1193,7 +1193,7 @@ end;
  @action: Checks if array arr does not have any forbidden items.
  @note: None.
 [==============================================================================}
-function TStringHelper.BuiltWithout(const forbidden: TCharArray): Boolean; cdecl;
+function TStringHelper.BuiltWithout(const forbidden: TCharArray): Boolean;
 var
   i, j: Integer;
 begin
@@ -1210,7 +1210,7 @@ end;
   @action: Returns true if str is made with only allowed characters.
   @note: None.
 [==============================================================================}
-function TStringHelper.Consists(const allowed: TCharArray): Boolean; cdecl;
+function TStringHelper.Consists(const allowed: TCharArray): Boolean;
 var
   i: Integer;
   m: TBooleanArray;
@@ -1231,7 +1231,7 @@ end;
   @action: Returns true if str is made with only allowed characters.
   @note: None.
 [==============================================================================}
-function TStringHelper.Pure(const allowed: TCharArray): Boolean; cdecl;
+function TStringHelper.Pure(const allowed: TCharArray): Boolean;
 begin
   Result := Self.Chars.Ordinals.Pure(allowed.Ordinals);
 end;
@@ -1241,7 +1241,7 @@ end;
   @action: Returns true is string is built with blocks.
   @note: This function requires blocks array to be unique (no duplicates allowed for it).
 [==============================================================================}
-function TStringHelper.BuiltWith(const blocks: TCharArray): Boolean; cdecl;
+function TStringHelper.BuiltWith(const blocks: TCharArray): Boolean;
 var
   i, p: Integer;
   u: TBooleanArray;

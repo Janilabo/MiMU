@@ -7,7 +7,7 @@
   @note: Arrays with all equal elements, a single element, or empty arrays
          return False.
 [==============================================================================}
-function HArr.Sortable: Boolean; overload; cdecl;
+function HArr.Sortable: Boolean; overload;
 var
   i: Integer;
 begin
@@ -22,7 +22,7 @@ end;
   @action: Returns true if array arr is in ascending/descending order by aAscending.
   @note: By default checking for ascending order.
 [==============================================================================}
-function HArr.Sorted(const aAscending: Boolean = True): Boolean; overload; cdecl;
+function HArr.Sorted(const aAscending: Boolean = True): Boolean; overload;
 var
   i: Integer;
 begin
@@ -37,7 +37,7 @@ end;
   @action: Returns true if array arr is in ascending/descending order by aAscending.
   @note: By default checking for ascending order.
 [==============================================================================}
-function HArr.InOrder(const aAscending: Boolean = True): Boolean; overload; cdecl;
+function HArr.InOrder(const aAscending: Boolean = True): Boolean; overload;
 var
   i, l: Integer;
 begin
@@ -62,7 +62,7 @@ end;
   @action: Returns true if array arr is in ascending AND/OR descending order.
   @note: None.
 [==============================================================================}
-function HArr.Orderly: Boolean; overload; cdecl;
+function HArr.Orderly: Boolean; overload;
 var
   i: Integer;
   a, d: Boolean;
@@ -86,7 +86,7 @@ end;
   @action: Returns true if array arr is in ascending AND/OR descending order by aAscending.
   @note: Recursive alternative.
 [==============================================================================}
-function HArr.Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload; cdecl;
+function HArr.Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload;
 begin
   if (index >= High(Self)) then
     Exit(True);
@@ -101,7 +101,7 @@ end;
   @note: -1 = DESCENDING, 0=NO ORDER OR MIXED ARRAY, 1=ASCENDING
          [1,2,3] => 1 [1,1,1] => 1 [1,0,1] => 0 [3,2,1] => -1
 [==============================================================================}
-function HArr.Order: Integer; overload; cdecl;
+function HArr.Order: Integer; overload;
 var
   i, l: Integer;
   a, d: Boolean;
@@ -138,7 +138,7 @@ end;
   @note: -1 = DESCENDING, 0=NO ORDER OR MIXED ARRAY, 1=ASCENDING
          [1,2,3] => 1 [1,1,1] => 0 [1,0,1] => 0 [3,2,1] => -1
 [==============================================================================}
-function HArr.Orientation: Integer; overload; cdecl;
+function HArr.Orientation: Integer; overload;
 var
   i: Integer;
   a, d: Boolean;
@@ -171,7 +171,7 @@ end;
   @action: Returns array arr sorted to asscending order.
   @note: None.
 [==============================================================================}
-function HArr.Ascend: TArr; overload; cdecl;
+function HArr.Ascend: TArr; overload;
 procedure QS(var arr: TArr; const valLow, valHigh: Integer);
 var
   p: TVar;
@@ -203,7 +203,7 @@ end;
   @action: Returns array arr sorted to descending order.
   @note: None.
 [==============================================================================}
-function HArr.Descend: TArr; overload; cdecl;
+function HArr.Descend: TArr; overload;
 procedure QS(var arr: TArr; const valLow, valHigh: Integer);
 var
   p, s: TVar;
@@ -235,7 +235,7 @@ end;
   @action: Returns true if array arr is in descending order.
   @note: [0,1] = False | [0,0] = False | [1,0] = True |
 [==============================================================================}
-function HArr.Descending: Boolean; overload; cdecl;
+function HArr.Descending: Boolean; overload;
 var
   i: Integer;
 begin
@@ -250,7 +250,7 @@ end;
   @action: Returns true if array arr is in asscending order.
   @note: [0,1] = True | [0,0] = False | [1,0] = False |
 [==============================================================================}
-function HArr.Ascending: Boolean; overload; cdecl;
+function HArr.Ascending: Boolean; overload;
 var
   i: Integer;
 begin
@@ -265,7 +265,7 @@ end;
   @action: Returns true if array arr is in descending order.
   @note: [0,1] = False | [0,0] = True | [1,0] = True |
 [==============================================================================}
-function HArr.Decreasing: Boolean; overload; cdecl;
+function HArr.Decreasing: Boolean; overload;
 var
   i: Integer;
 begin
@@ -280,7 +280,7 @@ end;
   @action: Returns true if array arr is in asscending order.
   @note: [0,1] = True | [0,0] = True | [1,0] = False |
 [==============================================================================}
-function HArr.Increasing: Boolean; overload; cdecl;
+function HArr.Increasing: Boolean; overload;
 var
   i: Integer;
 begin
@@ -295,7 +295,7 @@ end;
   @action: Returns true if array arr is in descending order.
   @note: Returns true with empty []array! Unlike Descending, Decreasing.
 [==============================================================================}
-function HArr.Downward: Boolean; overload; cdecl;
+function HArr.Downward: Boolean; overload;
 var
   h: Integer;
 begin
@@ -311,7 +311,7 @@ end;
   @action: Returns true if array arr is in ascending order.
   @note: Returns true with empty [] array! Unlike Ascending, Increasing.
 [==============================================================================}
-function HArr.Upward: Boolean; overload; cdecl;
+function HArr.Upward: Boolean; overload;
 var
   h: Integer;
 begin
@@ -327,7 +327,7 @@ end;
   @action: Returns array minimum value.
   @note: None.
 [==============================================================================}
-function HArr.Lowest: TVar; overload; cdecl;
+function HArr.Lowest: TVar; overload;
 var
   i: Integer;
 begin
@@ -343,7 +343,7 @@ end;
   @action: Returns array maximum value.
   @note: None.
 [==============================================================================}
-function HArr.Highest: TVar; overload; cdecl;
+function HArr.Highest: TVar; overload;
 var
   i: Integer;
 begin
@@ -359,7 +359,7 @@ end;
   @action: Returns array INDEX with minimum value.
   @note: Supports reversed order (last min index) with aAscending as False.
 [==============================================================================}
-function HArr.Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
+function HArr.Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
 var
   h, i: Integer;
 begin
@@ -384,7 +384,7 @@ begin
   end;
 end;
 
-function HArr.Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload;
 begin
   Result := Self.Mini(aAscending, start);
 end;
@@ -394,7 +394,7 @@ end;
   @action: Returns array INDEX with maximum value.
   @note: Supports reversed order (last max index) with aAscending as False.
 [==============================================================================}
-function HArr.Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
+function HArr.Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
 var
   h, i: Integer;
 begin
@@ -419,7 +419,7 @@ begin
   end;
 end;
 
-function HArr.Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload;
 begin
   Result := Self.Maxi(aAscending, start);
 end;
@@ -429,7 +429,7 @@ end;
  @action: The value that occurs most frequently in arr.
  @note: None
 [==============================================================================}
-function HArr.Mode: TVar; overload; cdecl;
+function HArr.Mode: TVar; overload;
 var
   a: TArr;
   c: TIntegerArray;
@@ -469,7 +469,7 @@ end;
  @action: The value at the center position of a sorted or unsorted arr.
  @note: None
 [==============================================================================}
-function HArr.Center: TVar; overload; cdecl;
+function HArr.Center: TVar; overload;
 begin
   if (Length(Self) > 0) then
     Result := Self[Length(Self) div 2];
@@ -480,7 +480,7 @@ end;
   @action: Returns array sorted by its own values, based on QuickSort algorithm.
   @note: None.
 [==============================================================================}
-function HArr.QuickSorted(const aAscending: Boolean = True): TArr; overload; cdecl;
+function HArr.QuickSorted(const aAscending: Boolean = True): TArr; overload;
   procedure QS(var arr: TArr; const L, R: Integer);
   var
     i, j: Integer;
@@ -516,7 +516,7 @@ end;
   @action: QuickSort algorithm that is NOT based on recursion.
   @note: non-recursive. Returns High(arr).
 [==============================================================================}
-function HArr.QuickSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.QuickSort(const aAscending: Boolean = True): Integer; overload;
 var
   p: TVar;
   t, o: Integer;
@@ -579,7 +579,7 @@ end;
   @action: 3-way QuickSort algorithm that is NOT based on recursion.
   @note: recursive. Returns High(arr).
 [==============================================================================}
-function HArr.QuickSort3W(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.QuickSort3W(const aAscending: Boolean = True): Integer; overload;
   procedure SortLH(var arr: TArr; const L, H: Integer; const aAscending: Boolean = True);
   var
     a: TVar;
@@ -614,7 +614,7 @@ end;
   @action: QuickSort algorithm that IS based on recursion.
   @note: recursive. Returns High(arr).
 [==============================================================================}
-function HArr.QSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.QSort(const aAscending: Boolean = True): Integer; overload;
   procedure _QuickSort(var arr: TArr; const start, stop: Integer; const aAscending: Boolean = True);
   var
     p: TVar;
@@ -651,7 +651,7 @@ end;
   @action: CoctailSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function HArr.CoctailSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.CoctailSort(const aAscending: Boolean = True): Integer; overload;
 var
   i, o: Integer;
   s: Boolean;
@@ -686,7 +686,7 @@ end;
   @action: CoctailSort algorithm.
   @note: CoctailSort v2. Returns High(arr).
 [==============================================================================}
-function HArr.CoctailSort2(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.CoctailSort2(const aAscending: Boolean = True): Integer; overload;
 var
   b, e, i, o: Integer;
   s: Boolean;
@@ -725,7 +725,7 @@ end;
   @action: GnomeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function HArr.GnomeSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.GnomeSort(const aAscending: Boolean = True): Integer; overload;
 var
   o, p, t: Integer;
 begin
@@ -750,7 +750,7 @@ end;
   @action: Optimized GnomeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function HArr.GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload;
 var
   p, l, o: Integer;
 begin
@@ -787,7 +787,7 @@ end;
   @action: PancakeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function HArr.PancakeSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.PancakeSort(const aAscending: Boolean = True): Integer; overload;
 var
   i, j, l, m, x, o: Integer;
 begin
@@ -818,7 +818,7 @@ end;
   @action: Sorts arr with BubbleSort algorithm
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
-function HArr.BubbleSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.BubbleSort(const aAscending: Boolean = True): Integer; overload;
 var
   i, j: Integer;
 begin
@@ -834,7 +834,7 @@ end;
   @action: Sorts arr with BubbleSort algorithm - contains some optimization.
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
-function HArr.BubbleSort2(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.BubbleSort2(const aAscending: Boolean = True): Integer; overload;
 var
   a, b, o: Integer;
 begin
@@ -854,7 +854,7 @@ end;
   @action: Sorts arr with optimized BubbleSort algorithm
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
-function HArr.BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload;
 var
   i, j: Integer;
   s: Boolean;
@@ -879,7 +879,7 @@ end;
   @action: CombSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function HArr.CombSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.CombSort(const aAscending: Boolean = True): Integer; overload;
 var
   i, g, o: Integer;
   s: Boolean;
@@ -911,7 +911,7 @@ end;
   @action: HeapSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function HArr.HeapSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.HeapSort(const aAscending: Boolean = True): Integer; overload;
 var
   a, b, r, c, o: Integer;
 begin
@@ -964,7 +964,7 @@ end;
   @action: InsertionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function HArr.InsertionSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.InsertionSort(const aAscending: Boolean = True): Integer; overload;
 var
   a, b, o: Integer;
 begin
@@ -986,7 +986,7 @@ end;
   @action: SelectionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function HArr.SelectionSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.SelectionSort(const aAscending: Boolean = True): Integer; overload;
 var
   c, t, m, o: Integer;
 begin
@@ -1010,7 +1010,7 @@ end;
   @action: Bidirectional SelectionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function HArr.SelectionSortBidirectional(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.SelectionSortBidirectional(const aAscending: Boolean = True): Integer; overload;
 var
   i, s, o: Integer;
   x, y: TRange;
@@ -1043,7 +1043,7 @@ end;
   @action: Bidirectional SelectionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function HArr.SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; overload;
 var
   s, i, o: Integer;
   r: TRange;
@@ -1072,7 +1072,7 @@ end;
   @action: ShellSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function HArr.ShellSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.ShellSort(const aAscending: Boolean = True): Integer; overload;
 var
   x, a, b, l, o: Integer;
 begin
@@ -1113,7 +1113,7 @@ end;
   @action: MergeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function HArr.MergeSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.MergeSort(const aAscending: Boolean = True): Integer; overload;
   procedure Merge(var arr, tmp: TArr; const Lo, Hi: Integer; const aAscending: Boolean = True);
   var
     l, r, i, m, o: Integer;
@@ -1156,7 +1156,7 @@ end;
   @action: Bottom-up MergeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function HArr.MergeSortBU(const aAscending: Boolean = True): Integer; overload; cdecl;
+function HArr.MergeSortBU(const aAscending: Boolean = True): Integer; overload;
 var
   t: TArr;
   w, i, s: Integer;
@@ -1198,7 +1198,7 @@ end;
   @action: Unique method for sortable types.
   @note: None.
 [==============================================================================}
-function HArr.Uniq(const sSorted: Boolean = False): TArr; overload; cdecl;
+function HArr.Uniq(const sSorted: Boolean = False): TArr; overload;
 begin
   if Self.Empty then
     SetLength(Result, 0)

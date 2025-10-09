@@ -5,21 +5,21 @@
   @action: IfThen method for TBooleanArray.
   @note: [True, False, True] => 5.
 [==============================================================================}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: Integer): TIntegerArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: Double): TDoubleArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: string): TStringArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: Char): TCharArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: Boolean): TBooleanArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TPoint): TPointArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TBox): TBoxArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TRange): TRangeArray; overload; cdecl; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: Integer): TIntegerArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: Double): TDoubleArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: string): TStringArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: Char): TCharArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: Boolean): TBooleanArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: TPoint): TPointArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: TBox): TBoxArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: TRange): TRangeArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
 
 {==============================================================================]
   <TBooleanArrayHelper.Bitify>
   @action: Returns TBooleanArray as bits.
   @note: [True, False, True] => 5.
 [==============================================================================}
-function TBooleanArrayHelper.Bitify: Integer; cdecl;
+function TBooleanArrayHelper.Bitify: Integer;
 var
   i: Integer;
 begin
@@ -37,7 +37,7 @@ end;
   @action: Returns TBooleanArray as bits.
   @note: [True, False, True] => 5.
 [==============================================================================}
-function TBooleanArrayHelper.Bits: Integer; cdecl;
+function TBooleanArrayHelper.Bits: Integer;
 var
   i: Integer;
 begin
@@ -51,7 +51,7 @@ end;
   @action: Returns TBooleanArray as bits.
   @note: [True, False, True] => 5.
 [==============================================================================}
-function TBooleanArrayHelper.ToBits: Integer; cdecl;
+function TBooleanArrayHelper.ToBits: Integer;
 var
   i: Integer;
 begin
@@ -65,7 +65,7 @@ end;
   @action: Returns TBooleanArray as Integers.
   @note: [True, False] => [1, 0].
 [==============================================================================}
-function TBooleanArrayHelper.Digits: TIntegerArray; overload; cdecl;
+function TBooleanArrayHelper.Digits: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -79,7 +79,7 @@ end;
   @action: Returns true if ALL values in arr are False.
   @note: [False, False, False] => True.
 [==============================================================================}
-function TBooleanArrayHelper.Falsed: Boolean; overload; cdecl;
+function TBooleanArrayHelper.Falsed: Boolean; overload;
 var
   i: Integer;
 begin
@@ -94,7 +94,7 @@ end;
   @action: Returns true if arr is full of True values or is empty.
   @note: [True, True, True] / [] => True.
 [==============================================================================}
-function TBooleanArrayHelper.Falseless: Boolean; overload; cdecl;
+function TBooleanArrayHelper.Falseless: Boolean; overload;
 var
   i: Integer;
 begin
@@ -109,7 +109,7 @@ end;
   @action: Support for requirement amount of Falses.
   @note: [True, False, True, True] (1) => True / (0) => False.
 [==============================================================================}
-function TBooleanArrayHelper.Falseless(const maxFalse: Integer): Boolean; overload; cdecl;
+function TBooleanArrayHelper.Falseless(const maxFalse: Integer): Boolean; overload;
 var
   i, c: Integer;
 begin
@@ -126,7 +126,7 @@ end;
   @action: Returns count of False values arr has got.
   @note: [False, False, True, True, False] => 3
 [==============================================================================}
-function TBooleanArrayHelper.Falseness: Integer; overload; cdecl;
+function TBooleanArrayHelper.Falseness: Integer; overload;
 var
   i: Integer;
 begin
@@ -141,7 +141,7 @@ end;
   @action: Returns Indexes of arr where state is False.
   @note: [True, False, True, False] => [1,3]
 [==============================================================================}
-function TBooleanArrayHelper.Falses: TIntegerArray; overload; cdecl;
+function TBooleanArrayHelper.Falses: TIntegerArray; overload;
 var
   i, r: Integer;
 begin
@@ -158,7 +158,7 @@ end;
   @action: Returns true if arr contains any False value(s).
   @note: [False, False, True] => True.
 [==============================================================================}
-function TBooleanArrayHelper.Falsesome: Boolean; overload; cdecl;
+function TBooleanArrayHelper.Falsesome: Boolean; overload;
 var
   i: Integer;
 begin
@@ -173,7 +173,7 @@ end;
   @action: Support for minFalse.
   @note: None.
 [==============================================================================}
-function TBooleanArrayHelper.Falsesome(const minFalse: Integer): Boolean; overload; cdecl;
+function TBooleanArrayHelper.Falsesome(const minFalse: Integer): Boolean; overload;
 var
   i, c: Integer;
 begin
@@ -194,7 +194,7 @@ end;
   @action: Returns TBooleanArray as string.
   @note: Supports custom separator & True / False strings.
 [==============================================================================}
-function TBooleanArrayHelper.Str(const separator: string; const strTrue: string = 'True'; strFalse: string = 'False'): string; overload; cdecl;
+function TBooleanArrayHelper.Str(const separator: string; const strTrue: string = 'True'; strFalse: string = 'False'): string; overload;
 var
   i: Integer;
 begin
@@ -209,7 +209,7 @@ begin
   Result := (Result + ']');
 end;
 
-function TBooleanArrayHelper.Str: string; overload; cdecl;
+function TBooleanArrayHelper.Str: string; overload;
 begin
   Result := Self.Str(', ');
 end;
@@ -219,7 +219,7 @@ end;
   @action: Returns TBooleanArray as string.
   @note: Supports custom separator & True / False strings.
 [==============================================================================}
-function TBooleanArrayHelper.Text(const strTrue, strFalse, separator: string): string; overload; cdecl;
+function TBooleanArrayHelper.Text(const strTrue, strFalse, separator: string): string; overload;
 var
   i: Integer;
 begin
@@ -234,7 +234,7 @@ begin
   Result := (Result + ']');
 end;
 
-function TBooleanArrayHelper.Text(const strTrue: string = 'True'; strFalse: string = 'False'): string; overload; cdecl;
+function TBooleanArrayHelper.Text(const strTrue: string = 'True'; strFalse: string = 'False'): string; overload;
 begin
   Result := Self.Text(strTrue, strFalse, ', ');
 end;
@@ -244,7 +244,7 @@ end;
   @action: Returns TBooleanArray as Integers.
   @note: [True, False] => [1, 0].
 [==============================================================================}
-function TBooleanArrayHelper.TIA(const valTrue: Integer = 1; const valFalse: Integer = 0): TIntegerArray; overload; cdecl;
+function TBooleanArrayHelper.TIA(const valTrue: Integer = 1; const valFalse: Integer = 0): TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -261,7 +261,7 @@ end;
   @action: Returns opposite version of arr.
   @note: [True, False] => [False, True].
 [==============================================================================}
-function TBooleanArrayHelper.Toggle: TBooleanArray; overload; cdecl;
+function TBooleanArrayHelper.Toggle: TBooleanArray; overload;
 var
   i: Integer;
 begin
@@ -275,7 +275,7 @@ end;
   @action: Returns true if ALL values in arr are True.
   @note: [True, True, True] => True.
 [==============================================================================}
-function TBooleanArrayHelper.Trued: Boolean; overload; cdecl;
+function TBooleanArrayHelper.Trued: Boolean; overload;
 var
   i: Integer;
 begin
@@ -290,7 +290,7 @@ end;
   @action: Returns true if arr is full of False values or is empty.
   @note: [False, False, False] / [] => True.
 [==============================================================================}
-function TBooleanArrayHelper.Trueless: Boolean; overload; cdecl;
+function TBooleanArrayHelper.Trueless: Boolean; overload;
 var
   i: Integer;
 begin
@@ -305,7 +305,7 @@ end;
   @action: Support for requirement amount of Trues.
   @note: [False, True, False, False] (1) => True / (0) => False.
 [==============================================================================}
-function TBooleanArrayHelper.Trueless(const maxTrue: Integer): Boolean; overload; cdecl;
+function TBooleanArrayHelper.Trueless(const maxTrue: Integer): Boolean; overload;
 var
   i, c: Integer;
 begin
@@ -322,7 +322,7 @@ end;
   @action: Returns count of True values arr has got.
   @note: [False, False, True, True, False] => 2
 [==============================================================================}
-function TBooleanArrayHelper.Trueness: Integer; overload; cdecl;
+function TBooleanArrayHelper.Trueness: Integer; overload;
 var
   i: Integer;
 begin
@@ -337,7 +337,7 @@ end;
   @action: Returns Indexes of arr where state is True.
   @note: [True, False, True, False] => [0,2]
 [==============================================================================}
-function TBooleanArrayHelper.Trues: TIntegerArray; overload; cdecl;
+function TBooleanArrayHelper.Trues: TIntegerArray; overload;
 var
   i, r: Integer;
 begin
@@ -354,7 +354,7 @@ end;
   @action: Returns true if arr contains any True value(s).
   @note: [False, False, True] => True.
 [==============================================================================}
-function TBooleanArrayHelper.Truesome: Boolean; overload; cdecl;
+function TBooleanArrayHelper.Truesome: Boolean; overload;
 var
   i: Integer;
 begin
@@ -369,7 +369,7 @@ end;
   @action: Support for minTrue.
   @note: None.
 [==============================================================================}
-function TBooleanArrayHelper.Truesome(const minTrue: Integer): Boolean; overload; cdecl;
+function TBooleanArrayHelper.Truesome(const minTrue: Integer): Boolean; overload;
 var
   i, c: Integer;
 begin
@@ -390,7 +390,7 @@ end;
   @action: Returns opposite version of arr.
   @note: [True, False] => [False, True].
 [==============================================================================}
-function TBooleanArrayHelper.Opposite: TBooleanArray; overload; cdecl;
+function TBooleanArrayHelper.Opposite: TBooleanArray; overload;
 var
   i: Integer;
 begin
@@ -407,7 +407,7 @@ end;
   @action: Returns binary string from Boolean Array
   @note: [True, False] => '10' & [False, True] => '01'
 [==============================================================================}
-function TBooleanArrayHelper.BinaryStr: string; cdecl;
+function TBooleanArrayHelper.BinaryStr: string;
 var
   i: Integer;
 begin
@@ -421,7 +421,7 @@ end;
   @action: Returns binary digits from Boolean Array
   @note: [True, False] => [1, 0] & [False, True] => [0, 1]
 [==============================================================================}
-function TBooleanArrayHelper.BinaryDigits: TIntegerArray; cdecl;
+function TBooleanArrayHelper.BinaryDigits: TIntegerArray;
 var
   i: Integer;
 begin
@@ -435,7 +435,7 @@ end;
   @action: Returns binary string from Boolean Array
   @note: [True, False] => '10' & [False, True] => '01'
 [==============================================================================}
-function TBooleanArrayHelper.Binary: string; cdecl;
+function TBooleanArrayHelper.Binary: string;
 var
   i: Integer;
 begin
@@ -450,7 +450,7 @@ end;
            setting all booleans to False, while keeping the current length unchanged.
   @note: Works safely because Boolean is an unmanaged type (1 byte per element).
 [==============================================================================}
-function TBooleanArrayHelper.Reinit: Integer; overload; cdecl;
+function TBooleanArrayHelper.Reinit: Integer; overload;
 begin
   Result := Length(Self);
   if (Result > 0) then
@@ -462,7 +462,7 @@ end;
   @action: Returns the occupancy of the array: fraction of elements that are True.
            1.0 = all val, 0.0 = no vals
 [==============================================================================}
-function TBooleanArrayHelper.Occupancy(const val: Boolean = True): Double; overload; cdecl;
+function TBooleanArrayHelper.Occupancy(const val: Boolean = True): Double; overload;
 var
   i, c: Integer;
 begin

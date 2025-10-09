@@ -25,7 +25,7 @@ end;
   @action: Constructs TSegment with sA and sB points.
   @note: None.
 [==============================================================================}
-class function TSegment.Construct(const sA, sB: TPoint): TSegment; overload; cdecl;
+class function TSegment.Construct(const sA, sB: TPoint): TSegment; overload;
 begin
   Result.A := sA;
   Result.B := sB;
@@ -36,7 +36,7 @@ end;
   @action: Constructs TSegment with aX, aY, bX, bY.
   @note: None.
 [==============================================================================}
-class function TSegment.Construct(const aX, aY, bX, bY: Integer): TSegment; overload; cdecl;
+class function TSegment.Construct(const aX, aY, bX, bY: Integer): TSegment; overload;
 begin
   Result.A := Point(aX, aY);
   Result.B := Point(bX, bY);
@@ -47,7 +47,7 @@ end;
   @action: Returns the bounds of TSegment as TBox.
   @note: None.
 [==============================================================================}
-function TSegment.Bounds: TBox; cdecl;
+function TSegment.Bounds: TBox;
 begin
   Result.Create(Min(Self.A.X, Self.B.X), Min(Self.A.Y, Self.B.Y), Max(Self.A.X, Self.B.X), Max(Self.A.Y, Self.B.Y));
 end;
@@ -57,7 +57,7 @@ end;
   @action: Returns the bounds of TSegment as TBox.
   @note: None.
 [==============================================================================}
-function TSegment.Boundaries: TBox; cdecl;
+function TSegment.Boundaries: TBox;
 begin
   with Self do
   Result := Box(IfThen((A.X < B.X), A.X, B.X), IfThen((A.Y < B.Y), A.Y, B.Y), IfThen((A.X > B.X), A.X, B.X), IfThen((A.Y > B.Y), A.Y, B.Y));
@@ -68,7 +68,7 @@ end;
   @action: Returns the bounds of TSegment as TBox.
   @note: None.
 [==============================================================================}
-function TSegment.Envelope: TBox; cdecl;
+function TSegment.Envelope: TBox;
 begin
   case Bitify((Self.A.X < Self.B.X), (Self.A.Y < Self.B.Y)) of
     0: Result.Create(Self.B.X, Self.B.Y, Self.A.X, Self.A.Y);
@@ -83,7 +83,7 @@ end;
  @action: Returns all the points of TSegment.
  @note: None.
 [==============================================================================}
-function TSegment.Points: TPointArray; cdecl;
+function TSegment.Points: TPointArray;
 var
   l: TBox;
   s, i: Integer;
@@ -114,7 +114,7 @@ end;
  @action: Returns the points of TSegment.
  @note: Supports custom steps.
 [==============================================================================}
-function TSegment.Pixels(const steps: Integer = 2147483647): TPointArray; cdecl;
+function TSegment.Pixels(const steps: Integer = 2147483647): TPointArray;
 var
   i, h: Integer;
 begin

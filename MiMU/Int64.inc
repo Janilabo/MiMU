@@ -3,7 +3,7 @@
  @action: Returns true if N is prime.
  @note: None.
 [==============================================================================}
-function TInt64Helper.Prime: Boolean; cdecl;
+function TInt64Helper.Prime: Boolean;
 var
   i: Int64;
 begin
@@ -25,7 +25,7 @@ end;
  @action: Returns true if N is prime.
  @note: None.
 [==============================================================================}
-function TInt64Helper.IsPrime: Boolean; cdecl;
+function TInt64Helper.IsPrime: Boolean;
 var
   p: array of Int64;
   i: Integer;
@@ -54,7 +54,7 @@ end;
  @action: Returns the Int64 Parity Bit as Byte.
  @note: 0 = even, 1 = odd.
 [==============================================================================}
-function TInt64Helper.Parity: Byte; cdecl; inline;
+function TInt64Helper.Parity: Byte; inline;
 begin
   Result := (Self mod 2);
 end;
@@ -64,7 +64,7 @@ end;
  @action: Returns true if Int64 value x is an even number.
  @note: None
 [==============================================================================}
-function TInt64Helper.Even: Boolean; cdecl; inline;
+function TInt64Helper.Even: Boolean; inline;
 begin
   Result := ((Self mod 2) = 0);
 end;
@@ -74,7 +74,7 @@ end;
  @action: Returns true if Int64 value x is an odd number.
  @note: None
 [==============================================================================}
-function TInt64Helper.Odd: Boolean; cdecl; inline;
+function TInt64Helper.Odd: Boolean; inline;
 begin
   Result := ((Self mod 2) <> 0);
 end;
@@ -84,28 +84,28 @@ end;
  @action: Increases the Int64 value x by N.
  @note: Returns x before increasing it with N!
 [==============================================================================}
-function TInt64Helper.Increase(const N: Int64 = 1): Int64; cdecl; {$DEFINE Skeleton_Increase}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increase}
+function TInt64Helper.Increase(const N: Int64 = 1): Int64; {$DEFINE Skeleton_Increase}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increase}
 
 {==============================================================================]
   <TInt64Helper.Decrease>
  @action: Decreases the Int64 value x by N.
  @note: Returns x before decreasing it with N!
 [==============================================================================}
-function TInt64Helper.Decrease(const N: Int64 = 1): Int64; cdecl; {$DEFINE Skeleton_Decrease}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrease}
+function TInt64Helper.Decrease(const N: Int64 = 1): Int64; {$DEFINE Skeleton_Decrease}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrease}
 
 {==============================================================================]
  <TInt64Helper.Increment>
  @action: Increases the Int64 value x by N.
  @note: Returns the increased x!
 [==============================================================================}
-function TInt64Helper.Increment(const N: Int64 = 1): Int64; cdecl; {$DEFINE Skeleton_Increment}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increment}
+function TInt64Helper.Increment(const N: Int64 = 1): Int64; {$DEFINE Skeleton_Increment}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increment}
 
 {==============================================================================]
   <TInt64Helper.Decrement>
  @action: Decreases the Int64 value x by N.
  @note: Returns the decreased x!
 [==============================================================================}
-function TInt64Helper.Decrement(const N: Int64 = 1): Int64; cdecl; {$DEFINE Skeleton_Decrement}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrement}
+function TInt64Helper.Decrement(const N: Int64 = 1): Int64; {$DEFINE Skeleton_Decrement}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrement}
 
 {==============================================================================]
  <TInt64Helper.DigitCount>
@@ -113,7 +113,7 @@ function TInt64Helper.Decrement(const N: Int64 = 1): Int64; cdecl; {$DEFINE Skel
  @note: If x is negative value, the negative sign is ignored.
         Works with -9223372036854775808 - 9223372036854775807! 
 [==============================================================================}
-function TInt64Helper.DigitCount: Integer; cdecl;
+function TInt64Helper.DigitCount: Integer;
 var
   a, n, m: Int64;
 begin
@@ -133,7 +133,7 @@ end;
  @note: If x is negative value, the negative sign is ignored.
         Works with -9223372036854775808 - 9223372036854775807! 
 [==============================================================================}
-function TInt64Helper.Digitz: TIntegerArray; cdecl;
+function TInt64Helper.Digitz: TIntegerArray;
 var
   a, n, m: Int64;
   i, r: Integer;
@@ -159,7 +159,7 @@ end;
  @note: If x is negative value, the negative sign is ignored.
         Works with -9223372036854775808 - 9223372036854775807! 
 [==============================================================================}
-function TInt64Helper.Digits: TIntegerArray; cdecl;
+function TInt64Helper.Digits: TIntegerArray;
 var
   s: string;
   l, i: Integer;
@@ -177,21 +177,21 @@ end;
           Results: 0=EQUAL, 1=x>target, -1=x<target
  @note: None
 [==============================================================================}
-function TInt64Helper.Compare(const target: Int64): Integer; cdecl; inline;  {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
+function TInt64Helper.Compare(const target: Int64): Integer; inline; {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
 
 {==============================================================================]
  <TInt64Helper.Precede>
  @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
-function TInt64Helper.Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; cdecl; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
+function TInt64Helper.Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
 
 {==============================================================================]
  <TInt64Helper.Distance>
  @action: Returns the distance between x and T.
  @note: None
 [==============================================================================}
-function TInt64Helper.Distance(const T: Int64): Int64; cdecl; inline;
+function TInt64Helper.Distance(const T: Int64): Int64; inline;
 begin
   Result := Abs(T - Self);
 end;
@@ -201,7 +201,7 @@ end;
  @action: Returns the difference from x to T.
  @note: None
 [==============================================================================}
-function TInt64Helper.Difference(const T: Int64): Int64; cdecl; inline;
+function TInt64Helper.Difference(const T: Int64): Int64; inline;
 begin
   Result := (T - Self);
 end;
@@ -212,7 +212,7 @@ end;
           -9999 to 9999 OR 9999 to -9999 (- <=> +) 
  @note: None
 [==============================================================================}
-function TInt64Helper.Opposite: Int64; cdecl; inline;
+function TInt64Helper.Opposite: Int64; inline;
 begin
   Result := (Self * -1);
 end;
@@ -223,7 +223,7 @@ end;
           x < 0 = -1            x = 0 = 0             x > 0 = 1
  @note: None
 [==============================================================================}
-function TInt64Helper.Sign: Integer; cdecl; inline;
+function TInt64Helper.Sign: Integer; inline;
 begin
   if (Self = 0) then
     Exit(0);
@@ -238,7 +238,7 @@ end;
  @action: Random() with support for negative Range.
  @note: None
 [==============================================================================}
-function TInt64Helper.Shuffle: Int64; cdecl;
+function TInt64Helper.Shuffle: Int64;
 begin
   Result := Random(Abs(Self));
   if (Self < 0) then
@@ -250,7 +250,7 @@ end;
  @action: Returns true if x is higher than target.
  @note: None
 [==============================================================================}
-function TInt64Helper.Over(const target: Int64): Boolean; cdecl; inline;
+function TInt64Helper.Over(const target: Int64): Boolean; inline;
 begin
   Result := not (target <= Self);
 end;
@@ -260,7 +260,7 @@ end;
  @action: Returns true if x is higher than limit.
  @note: None
 [==============================================================================}
-function TInt64Helper.Oversize(const limit: Int64): Boolean; cdecl; inline;
+function TInt64Helper.Oversize(const limit: Int64): Boolean; inline;
 begin
   Result := (Self > limit);
 end;
@@ -270,7 +270,7 @@ end;
  @action: Returns true if x is lower than target.
  @note: None
 [==============================================================================}
-function TInt64Helper.Under(const target: Int64): Boolean; cdecl; inline;
+function TInt64Helper.Under(const target: Int64): Boolean; inline;
 begin
   Result := not (target >= Self);
 end;
@@ -280,7 +280,7 @@ end;
  @action: Returns true if x is lower than limit.
  @note: None
 [==============================================================================}
-function TInt64Helper.Undersize(const limit: Int64): Boolean; cdecl; inline;
+function TInt64Helper.Undersize(const limit: Int64): Boolean; inline;
 begin
   Result := (Self < limit);
 end;

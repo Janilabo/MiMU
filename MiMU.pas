@@ -63,17 +63,17 @@ type
     X, Y: Integer;
     constructor Create(const pX, pY: Integer); overload;
     constructor Create(const value: Integer); overload;
-    class function Construct(const pX, pY: Integer): TPoint; overload; cdecl; static;
-    function Build(const pX, pY: Integer): TPoint; cdecl; inline;
-    function InCircle(const center: TPoint; const radius: Double): Boolean; cdecl; inline;
-    function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; cdecl; inline;
-    function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; cdecl;
-    function AngleRadians(const target: TPoint): Double; cdecl;
-    function DistEuclidean(const target: TPoint): Double; cdecl;
-    function DistEuclidean2(const target: TPoint): Double; cdecl;
-    function DistSquaredEuclidean(const target: TPoint): Double; cdecl;
-    function DistManhattan(const target: TPoint): Double; cdecl;
-    function DistChebyshev(const target: TPoint): Double; cdecl;
+    class function Construct(const pX, pY: Integer): TPoint; overload;  static;
+    function Build(const pX, pY: Integer): TPoint;  inline;
+    function InCircle(const center: TPoint; const radius: Double): Boolean;  inline;
+    function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean;  inline;
+    function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; 
+    function AngleRadians(const target: TPoint): Double; 
+    function DistEuclidean(const target: TPoint): Double; 
+    function DistEuclidean2(const target: TPoint): Double; 
+    function DistSquaredEuclidean(const target: TPoint): Double; 
+    function DistManhattan(const target: TPoint): Double; 
+    function DistChebyshev(const target: TPoint): Double; 
   end;
   TPointArray = array of TPoint;
   T2DPointArray = array of TPointArray;
@@ -92,187 +92,187 @@ type
     function GetEnumerator: TRangeEnumerator;
     constructor Create(const rStart, rStop: Integer); overload;
     constructor Create(const value: Integer); overload;
-    class function Construct(const rStart, rStop: Integer): TRange; overload; cdecl; static;
-    function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
-    function Init(const rStart, rStop: Integer): TRange; overload; cdecl;
-    function Init(const r: TRange): TRange; overload; cdecl;
-    function Init(const val: Integer = 0): TRange; overload; cdecl;
-    function Singular: Boolean; cdecl;
-    function Atomic: Boolean; cdecl;
-    function Plural: Boolean; cdecl;
-    function Composite: Boolean; cdecl;
-    function Sorted(const oAscending: Boolean = True): TRange; overload; cdecl;
-    function Sort(const oAscending: Boolean = True): Boolean; overload; cdecl;
-    function Ordered(const oAscending: Boolean = True): TRange; overload; cdecl;
-    function Order(const oAscending: Boolean = True): Boolean; overload; cdecl;
-    function Asc: TIntegerArray; overload; cdecl;
-    function Ascend: TRange; cdecl;
-    function Ascended: TRange; cdecl;
-    function Ascending: Boolean; cdecl;
-    function Ascends: Boolean; cdecl;
-    function Desc: TIntegerArray; overload; cdecl;
-    function Descend: TRange; cdecl;
-    function Descended: TRange; cdecl;
-    function Descending: Boolean; cdecl;
-    function Descends: Boolean; cdecl;
-    function Increasing: Boolean; cdecl;
-    function Decreasing: Boolean; cdecl;
-    function Growing: Boolean; cdecl;
-    function Grows: Boolean; cdecl;
-    function Shrinking: Boolean; cdecl;
-    function Shrinks: Boolean; cdecl;
-    function Rising: Boolean; cdecl;
-    function Rises: Boolean; cdecl;
-    function Dropping: Boolean; cdecl;
-    function Drops: Boolean; cdecl;
-    function Grab: TRange; cdecl;
-    function Count: Integer; cdecl;
-    function Area: Integer; cdecl;
-    function Span: Integer; cdecl;
-    function Size: Integer; overload; cdecl;
-    function Size(var minVal, maxVal: Integer): Integer; overload; cdecl;
-    function Capacity: Integer; cdecl;
-    function Delta: Integer; cdecl;
-    function Frame(var rSize: Integer): TRange; overload; cdecl;
-    function Frame: TRange; overload; cdecl;
-    function Lowest: Integer; cdecl;
-    function Minimum: Integer; cdecl;
-    function Highest: Integer; cdecl;
-    function Maximum: Integer; cdecl;
-    function Exceeds(const maxElements: Integer): Boolean; cdecl;
-    function Insufficient(const minElements: Integer): Boolean; cdecl;
-    function Digits: TIntegerArray; overload; cdecl;
-    function Digits(const dIndex: Integer): Integer; overload; cdecl;
-    function Digits(const dIDs: TIntegerArray): TIntegerArray; overload; cdecl;
-    function Ints: TIntegerArray; cdecl;
-    function Values: TIntegerArray; cdecl;
-    function TIA: TIntegerArray; cdecl;
-    function Enumerate: TIntegerArray; cdecl;
-    function Enumerated: TIntegerArray; cdecl;
-    function Elements: TIntegerArray; cdecl;
-    function Numbers: TIntegerArray; cdecl;
-    function Items: TIntegerArray; cdecl;
-    function IDs: TIntegerArray; overload; cdecl;
-    function IDs(const dValue: Integer): Integer; overload; cdecl;
-    function IDs(const dVals: TIntegerArray): TIntegerArray; overload; cdecl;
-    function ToArray: TIntegerArray; cdecl;
-    function AsArray: TIntegerArray; overload; cdecl;
-    function Materialize: TIntegerArray; cdecl;
-    function Mixed(const mixings: Integer = 1): TIntegerArray; cdecl;
-    function Shake(const shakes: Integer = 1): TIntegerArray; cdecl;
-    function Shuffle(const shuffles: Integer = 1): TIntegerArray; cdecl;
-    function Any: Integer; cdecl;
-    function Some: TIntegerArray; overload; cdecl;
-    function Some(const amount: Integer): TIntegerArray; overload; cdecl;
-    function All: TIntegerArray; overload; cdecl;
-    function Unzip: TIntegerArray; overload; cdecl;
-    function Unpack: TIntegerArray; overload; cdecl;
-    function Unwrap: TIntegerArray; overload; cdecl;
-	function Unfold: TIntegerArray; overload; cdecl;
-	function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload; cdecl;
-    function Normed: TRange; cdecl;
-    function Norm: TRange; cdecl;
-	function Normal: TRange; cdecl;
-    function Normally: TRange; cdecl;
-    function Normalize: TRange; cdecl;
-    function Normalized: TRange; cdecl;
-    function Overlapping(const b: TRange): Boolean; cdecl;
-    function Overlap(const b: TRange): Boolean; cdecl;
-    function Intersect(const b: TRange): TRange; overload; cdecl;
-    function Intersect(const b: TRange; var iZone: TRange): Boolean; overload; cdecl;
-    function Union(const b: TRange): TRange; overload; cdecl;
-    function Union(const val: Integer): TRange; overload; cdecl;
-    function Extend(const val: Integer): Boolean; cdecl;
-    function Offset(const sDelta: Integer): TRange; cdecl;
-    function Contains(const x: Integer): Boolean; overload; cdecl;
-    function Contains(const x: TRange): Boolean; overload; cdecl;
-    function Above(const target: Integer): Boolean; overload; cdecl;
-    function Above(const target: TRange): Boolean; overload; cdecl;
-    function Below(const target: Integer): Boolean; overload; cdecl;
-    function Below(const target: TRange): Boolean; overload; cdecl;
-    function Reversed: TRange; cdecl;
-    function Reverse: Boolean; cdecl;
-    function Equals(const b: TRange): Boolean; cdecl;
-    function Differs(const b: TRange): Boolean; cdecl;
-    function Equal(const b: TRange): Boolean; cdecl;
-    function Differ(const b: TRange): Boolean; cdecl;
-    function Clamp(const zone: TRange): TRange; overload; cdecl;
-    function ClampMax(const maxValue: Integer): TRange; cdecl;
-    function ClampMin(const minValue: Integer): TRange; cdecl;
-    function Restrict(const zone: TRange): Boolean; cdecl;
-    function RestrictMin(const minValue: Integer): Boolean; cdecl;
-    function RestrictMax(const maxValue: Integer): Boolean; cdecl;
-    function Clip(const zone: TRange): TRange; cdecl;
-    function ClipMin(const minValue: Integer): TRange; cdecl;
-    function ClipMax(const maxValue: Integer): TRange; cdecl;
-    function Ensured(const zone: TRange): TRange; overload; cdecl;
-    function Ensure(const zone: TRange): Boolean; overload; cdecl;
-    function Absorb(const val: Integer): Boolean; overload; cdecl;
-    function Include(const val: Integer): TRange; overload; cdecl;
-    function Neighbor(const b: TRange): Boolean; cdecl;
-    function Neighbour(const b: TRange): Boolean; cdecl;
-    function Touch(const b: TRange): Boolean; cdecl;
-    function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
-    function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
-    function Distance(const b: TRange): Integer; cdecl;
-    function DistHausdorff(const b: TRange): Integer; cdecl;
-    function Direction: Integer; cdecl;
-    function Orientation: Integer; cdecl;
-    function Magnitude: Integer; cdecl;
-    function Deficit: Integer; cdecl;
-    function Digit(const x: Integer): Boolean; cdecl; inline;
-    function Value(const x: Integer): Boolean; cdecl; inline;
-    function Item(const x: Integer): Boolean; cdecl; inline;
-    function Pivot: Integer; cdecl;
-    function Mean: Double; overload; cdecl;
-    function Middle: Integer; cdecl;
-    function Mid: Double; cdecl;
-    function MidValue: Double; cdecl;
-    function MidVal: Double; cdecl;
+    class function Construct(const rStart, rStop: Integer): TRange; overload;  static;
+    function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; 
+    function Init(const rStart, rStop: Integer): TRange; overload; 
+    function Init(const r: TRange): TRange; overload; 
+    function Init(const val: Integer = 0): TRange; overload; 
+    function Singular: Boolean; 
+    function Atomic: Boolean; 
+    function Plural: Boolean; 
+    function Composite: Boolean; 
+    function Sorted(const oAscending: Boolean = True): TRange; overload; 
+    function Sort(const oAscending: Boolean = True): Boolean; overload; 
+    function Ordered(const oAscending: Boolean = True): TRange; overload; 
+    function Order(const oAscending: Boolean = True): Boolean; overload; 
+    function Asc: TIntegerArray; overload; 
+    function Ascend: TRange; 
+    function Ascended: TRange; 
+    function Ascending: Boolean; 
+    function Ascends: Boolean; 
+    function Desc: TIntegerArray; overload; 
+    function Descend: TRange; 
+    function Descended: TRange; 
+    function Descending: Boolean; 
+    function Descends: Boolean; 
+    function Increasing: Boolean; 
+    function Decreasing: Boolean; 
+    function Growing: Boolean; 
+    function Grows: Boolean; 
+    function Shrinking: Boolean; 
+    function Shrinks: Boolean; 
+    function Rising: Boolean; 
+    function Rises: Boolean; 
+    function Dropping: Boolean; 
+    function Drops: Boolean; 
+    function Grab: TRange; 
+    function Count: Integer; 
+    function Area: Integer; 
+    function Span: Integer; 
+    function Size: Integer; overload; 
+    function Size(var minVal, maxVal: Integer): Integer; overload; 
+    function Capacity: Integer; 
+    function Delta: Integer; 
+    function Frame(var rSize: Integer): TRange; overload; 
+    function Frame: TRange; overload; 
+    function Lowest: Integer; 
+    function Minimum: Integer; 
+    function Highest: Integer; 
+    function Maximum: Integer; 
+    function Exceeds(const maxElements: Integer): Boolean; 
+    function Insufficient(const minElements: Integer): Boolean; 
+    function Digits: TIntegerArray; overload; 
+    function Digits(const dIndex: Integer): Integer; overload; 
+    function Digits(const dIDs: TIntegerArray): TIntegerArray; overload; 
+    function Ints: TIntegerArray; 
+    function Values: TIntegerArray; 
+    function TIA: TIntegerArray; 
+    function Enumerate: TIntegerArray; 
+    function Enumerated: TIntegerArray; 
+    function Elements: TIntegerArray; 
+    function Numbers: TIntegerArray; 
+    function Items: TIntegerArray; 
+    function IDs: TIntegerArray; overload; 
+    function IDs(const dValue: Integer): Integer; overload; 
+    function IDs(const dVals: TIntegerArray): TIntegerArray; overload; 
+    function ToArray: TIntegerArray; 
+    function AsArray: TIntegerArray; overload; 
+    function Materialize: TIntegerArray; 
+    function Mixed(const mixings: Integer = 1): TIntegerArray; 
+    function Shake(const shakes: Integer = 1): TIntegerArray; 
+    function Shuffle(const shuffles: Integer = 1): TIntegerArray; 
+    function Any: Integer; 
+    function Some: TIntegerArray; overload; 
+    function Some(const amount: Integer): TIntegerArray; overload; 
+    function All: TIntegerArray; overload; 
+    function Unzip: TIntegerArray; overload; 
+    function Unpack: TIntegerArray; overload; 
+    function Unwrap: TIntegerArray; overload; 
+	function Unfold: TIntegerArray; overload; 
+	function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload; 
+    function Normed: TRange; 
+    function Norm: TRange; 
+	function Normal: TRange; 
+    function Normally: TRange; 
+    function Normalize: TRange; 
+    function Normalized: TRange; 
+    function Overlapping(const b: TRange): Boolean; 
+    function Overlap(const b: TRange): Boolean; 
+    function Intersect(const b: TRange): TRange; overload; 
+    function Intersect(const b: TRange; var iZone: TRange): Boolean; overload; 
+    function Union(const b: TRange): TRange; overload; 
+    function Union(const val: Integer): TRange; overload; 
+    function Extend(const val: Integer): Boolean; 
+    function Offset(const sDelta: Integer): TRange; 
+    function Contains(const x: Integer): Boolean; overload; 
+    function Contains(const x: TRange): Boolean; overload; 
+    function Above(const target: Integer): Boolean; overload; 
+    function Above(const target: TRange): Boolean; overload; 
+    function Below(const target: Integer): Boolean; overload; 
+    function Below(const target: TRange): Boolean; overload; 
+    function Reversed: TRange; 
+    function Reverse: Boolean; 
+    function Equals(const b: TRange): Boolean; 
+    function Differs(const b: TRange): Boolean; 
+    function Equal(const b: TRange): Boolean; 
+    function Differ(const b: TRange): Boolean; 
+    function Clamp(const zone: TRange): TRange; overload; 
+    function ClampMax(const maxValue: Integer): TRange; 
+    function ClampMin(const minValue: Integer): TRange; 
+    function Restrict(const zone: TRange): Boolean; 
+    function RestrictMin(const minValue: Integer): Boolean; 
+    function RestrictMax(const maxValue: Integer): Boolean; 
+    function Clip(const zone: TRange): TRange; 
+    function ClipMin(const minValue: Integer): TRange; 
+    function ClipMax(const maxValue: Integer): TRange; 
+    function Ensured(const zone: TRange): TRange; overload; 
+    function Ensure(const zone: TRange): Boolean; overload; 
+    function Absorb(const val: Integer): Boolean; overload; 
+    function Include(const val: Integer): TRange; overload; 
+    function Neighbor(const b: TRange): Boolean; 
+    function Neighbour(const b: TRange): Boolean; 
+    function Touch(const b: TRange): Boolean; 
+    function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; 
+    function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; 
+    function Distance(const b: TRange): Integer; 
+    function DistHausdorff(const b: TRange): Integer; 
+    function Direction: Integer; 
+    function Orientation: Integer; 
+    function Magnitude: Integer; 
+    function Deficit: Integer; 
+    function Digit(const x: Integer): Boolean;  inline;
+    function Value(const x: Integer): Boolean;  inline;
+    function Item(const x: Integer): Boolean;  inline;
+    function Pivot: Integer; 
+    function Mean: Double; overload; 
+    function Middle: Integer; 
+    function Mid: Double; 
+    function MidValue: Double; 
+    function MidVal: Double; 
     function Midpoint(const wStart: Double = 1; const wStop: Double = 1): Double; overload;
-    function Average: Double; cdecl;
-    function Center: Integer; cdecl;
-    function Central: Integer; cdecl; inline;
-    function Half: Integer; overload; cdecl;
-    function Halfway: Integer; overload; cdecl;
-    function Halved: Integer; overload; cdecl;
-    function Radius: Integer; overload; cdecl;
-    function Rad: Integer; overload; cdecl;
-    function Radiar: Integer; overload; cdecl;
-    function AsStr(const rReversed: Boolean = False): string; overload; cdecl;
-	function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; cdecl;
-    function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;
-    function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;
-    function Sum: Int64; cdecl;
-    function Summation: Int64; cdecl;
-    function Total: Int64; cdecl;
-    function Reserve: TIntegerArray; overload; cdecl;
-    function Reserve(var aRange: TIntegerArray): Integer; overload; cdecl;
-    function Extract: TIntegerArray; overload; cdecl;
-    function Extracted: TIntegerArray; overload; cdecl;
-    function Steps: TIntegerArray; overload; cdecl;
-    function Recursed: TIntegerArray; overload; cdecl;
-    function Limit(const val: Integer): Integer; cdecl;
-    function MinLimit(const val: Integer): Integer; cdecl;
-    function MaxLimit(const val: Integer): Integer; cdecl;
-    function Lacks(const x: Integer): Boolean; cdecl; inline;
-    function Outside(const x: Integer): Boolean; cdecl; inline;
-    function Sample(const sSize: Integer): TIntegerArray; overload; cdecl;
-    function Centered(const rCenter: Integer): TRange; overload; cdecl;
-    function Shift(const N: Integer = 1): TRange; overload; cdecl;
-    function Shifted(const N: Integer = 1): TRange; overload; cdecl;
-    function Back(const N: Integer = 1): TRange; overload; cdecl;
-    function Backed(const N: Integer = 1): TRange; overload; cdecl;
-    function Increase(const N: Integer = 1): TRange; overload; cdecl;
-    function Decrease(const N: Integer = 1): TRange; overload; cdecl;
-    function Increment(const N: Integer = 1): TRange; overload; cdecl;
-    function Decrement(const N: Integer = 1): TRange; overload; cdecl;
-    function Modify(const mStart, mStop: Integer): TRange; overload; cdecl;
-    function Modified(const mStart, mStop: Integer): TRange; overload; cdecl;
-    function Contract(const N: Integer = 1): TRange; overload; cdecl;
-    function Contracted(const N: Integer = 1): TRange; overload; cdecl;
-    function Expand(const N: Integer = 1): TRange; overload; cdecl;
-    function Expanded(const N: Integer = 1): TRange; overload; cdecl;
+    function Average: Double; 
+    function Center: Integer; 
+    function Central: Integer;  inline;
+    function Half: Integer; overload; 
+    function Halfway: Integer; overload; 
+    function Halved: Integer; overload; 
+    function Radius: Integer; overload; 
+    function Rad: Integer; overload; 
+    function Radiar: Integer; overload; 
+    function AsStr(const rReversed: Boolean = False): string; overload; 
+	function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; 
+    function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; 
+    function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; 
+    function Sum: Int64; 
+    function Summation: Int64; 
+    function Total: Int64; 
+    function Reserve: TIntegerArray; overload; 
+    function Reserve(var aRange: TIntegerArray): Integer; overload; 
+    function Extract: TIntegerArray; overload; 
+    function Extracted: TIntegerArray; overload; 
+    function Steps: TIntegerArray; overload; 
+    function Recursed: TIntegerArray; overload; 
+    function Limit(const val: Integer): Integer; 
+    function MinLimit(const val: Integer): Integer; 
+    function MaxLimit(const val: Integer): Integer; 
+    function Lacks(const x: Integer): Boolean;  inline;
+    function Outside(const x: Integer): Boolean;  inline;
+    function Sample(const sSize: Integer): TIntegerArray; overload; 
+    function Centered(const rCenter: Integer): TRange; overload; 
+    function Shift(const N: Integer = 1): TRange; overload; 
+    function Shifted(const N: Integer = 1): TRange; overload; 
+    function Back(const N: Integer = 1): TRange; overload; 
+    function Backed(const N: Integer = 1): TRange; overload; 
+    function Increase(const N: Integer = 1): TRange; overload; 
+    function Decrease(const N: Integer = 1): TRange; overload; 
+    function Increment(const N: Integer = 1): TRange; overload; 
+    function Decrement(const N: Integer = 1): TRange; overload; 
+    function Modify(const mStart, mStop: Integer): TRange; overload; 
+    function Modified(const mStart, mStop: Integer): TRange; overload; 
+    function Contract(const N: Integer = 1): TRange; overload; 
+    function Contracted(const N: Integer = 1): TRange; overload; 
+    function Expand(const N: Integer = 1): TRange; overload; 
+    function Expanded(const N: Integer = 1): TRange; overload; 
   end;
   TBoxEnumerator = record
   private
@@ -292,146 +292,146 @@ type
     constructor Create(const valueX, valueY: Integer); overload;
     constructor Create(const target: TPoint); overload;
     constructor Create(const value: Integer); overload;
-    class function Construct(const XS, YS, XE, YE: Integer): TBox; overload; cdecl; static;
-    function Build(const minX, minY, maxX, maxY: Integer): Integer; overload; cdecl;
-    function Build(const top, bottom: TPoint): Integer; overload; cdecl;
-    function Build(const valueX, valueY: Integer): Integer; overload; cdecl;
-    function Build(const target: TPoint): Integer; overload; cdecl;
-    function Build(const value: Integer = 0): Integer; overload; cdecl;
-    function Init(const bX1, bY1, bX2, bY2: Integer): TBox; overload; cdecl;
-    function Init(const b: TBox): TBox; overload; cdecl;
-    function Init(const val: Integer = 0): TBox; overload; cdecl;
-    function Init(const p: TPoint): TBox; overload; cdecl;
-    function Init(const TL, BR: TPoint): TBox; overload; cdecl;
-    function Form(const pt: TPoint; const size: Integer = 1): TBox; overload; cdecl;
-    function Form(const pt: TPoint; const width, height: Integer): TBox; overload; cdecl;
-    function Make(const pt: TPoint; const radius: Integer = 0): TBox; overload; cdecl;
-    function Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload; cdecl;
-    function Frame(var width, height: Integer): TBox; overload; cdecl;
-    function Frame: TBox; overload; cdecl;
-    function Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload; cdecl;
-    function Singular: Boolean; cdecl;
-    function IsPoint: Boolean; cdecl;
-    function IsHorizontalLine: Boolean; cdecl;
-    function IsVerticalLine: Boolean; cdecl;
-    function IsLine: Boolean; cdecl;
-    function Linear: Boolean; cdecl;
-    function Is2D: Boolean; cdecl;
-    function Collapsed: Boolean; cdecl;
-    function Boxy: Boolean; cdecl;
-    function Plural: Boolean; cdecl;
-    function Rectangular: Boolean; cdecl;
-    function Equilateral: Boolean; cdecl;
-    function Square: Boolean; cdecl;
-    function Size(var width, height: Integer): Integer; overload; cdecl; inline;
-    function Size: TPoint; overload; cdecl;
-    function Area: Integer; cdecl; inline;
-    function Capacity: Integer; cdecl;
-    function Footprint: Double; cdecl;
-    function Perimeter: Integer; cdecl;
-    function Perim: Integer; cdecl;
-    function Circumference: Integer; cdecl;
-    function Diagonal: Double; cdecl;
-    function Width: Integer; overload; cdecl;
-    function Width(const w: Integer): Integer; overload; cdecl;
-    function Height: Integer; overload; cdecl;
-    function Height(const h: Integer): Integer; overload; cdecl;
-    function Ratio: Double; cdecl;
-    function Horizontal: TRange; cdecl;
-    function Vertical: TRange; cdecl;
-    function Expand(const change: Integer = 1): TBox; overload; cdecl;
-    function Expand(const target: TBox): TBox; overload; cdecl;
-    function Shrink(const change: Integer = 1): TBox; overload; cdecl;
-    function Shrink(const target: TBox): TBox; overload; cdecl;
-    function Resize(const change: Integer): TBox; cdecl;
-    function ResizeVertically(const change: Integer): TBox; cdecl;
-    function ResizeHorizontally(const change: Integer): TBox; cdecl;
-    function ResizeTop(const change: Integer): TBox; cdecl;
-    function ResizeBottom(const change: Integer): TBox; cdecl;
-    function ResizeLeft(const change: Integer): TBox; cdecl;
-    function ResizeRight(const change: Integer): TBox; cdecl;
-    function ResizeTopLeft(const change: Integer): TBox; cdecl;
-    function ResizeTopRight(const change: Integer): TBox; cdecl;
-    function ResizeBottomRight(const change: Integer): TBox; cdecl;
-    function ResizeBottomLeft(const change: Integer): TBox; cdecl;
-    function Equal(const b: TBox): Boolean; cdecl; inline;
-    function Contains(const pt: TPoint): Boolean; overload; cdecl;
-    function Contains(const b: TBox): Boolean; overload; cdecl;
-    function Center: TPoint; cdecl;
-    function Envelope(const b: TBox): TBox; cdecl;
-    function Overlap(const b: TBox): Boolean; cdecl; inline;
-    function Intersect(const b: TBox): TBox; overload; cdecl;
-    function Intersect(const b: TBox; var iArea: TBox): Boolean; overload; cdecl;
-    function Valid: Boolean; cdecl; inline;
-    function Invalid: Boolean; cdecl;
-    function Similar(const b: TBox; const maxWDiff, maxHDiff: Integer): Boolean; overload; cdecl;
-    function Similar(const b: TBox; const diff: Integer): Boolean; overload; cdecl;
-    function Fix: Boolean; cdecl;
-    function Constraint(const toArea: TBox): Boolean; cdecl;
-    function Clip(const toArea: TBox): TBox; cdecl;
-    function Restrict(const toArea: TBox): Boolean; cdecl;
-    function Clamp(const toArea: TBox): TBox; cdecl;
-    function Points: TPointArray; overload; cdecl;
-    function Points(const pIndex: Integer): TPoint; overload; cdecl;
-    function Points(const pIDs: TIntegerArray): TPointArray; overload; cdecl;
-    function Points(var xArray, yArray: TIntegerArray): Integer; overload; cdecl;
-    function Pixels: TPointArray; overload; cdecl;
-    function Pixels(const index: Integer): TPoint; overload; cdecl;
-    function Pixeled: TPointArray; overload; cdecl;
-    function Pts: TPointArray; overload; cdecl;
-    function IDs: TIntegerArray; overload; cdecl;
-    function IDs(const p: TPoint): Integer; overload; cdecl;
-    function IDs(const p: TPointArray): TIntegerArray; overload; cdecl;
-    function TPA: TPointArray; overload; cdecl;
-    function TPA(const index: Integer): TPoint; overload; cdecl;
-    function Contents: TPointArray; cdecl;
-    function Extract: TPointArray; cdecl;
-    function Enumerate: TPointArray; cdecl;
-    function Enumerated: TPointArray; cdecl;
-    function Elements: TPointArray; cdecl;
-    function Border: TPointArray; overload; cdecl;
-    function Border(const X, Y: Integer): Boolean; overload; cdecl;
-    function Border(const pt: TPoint): Boolean; overload; cdecl;
-    function Edge: TPointArray; overload; cdecl;
-    function Edge(const X, Y: Integer): Boolean; overload; cdecl;
-    function Edge(const pt: TPoint): Boolean; overload; cdecl;
-    function Outline: TPointArray; overload; cdecl;
-    function Outline(const X, Y: Integer): Boolean; overload; cdecl;
-    function Outline(const pt: TPoint): Boolean; overload; cdecl;
-    function Contour: TPointArray; cdecl;
-    function Spiral: TPointArray; cdecl;
-    function Traverse: TPointArray; cdecl;
-    function CornerPoints: TPointArray; cdecl;
-    function CornerPts: TPointArray; cdecl;
-    function Corners: TPointArray; cdecl;
-    function Rows: T2DPointArray; cdecl;
-    function Columns: T2DPointArray; cdecl;
-    function Rowwise: TPointArray; cdecl;
-    function Columnwise: TPointArray; cdecl;
-    function SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload; cdecl;
-    function SimilarSize(const b: TBox; const differency: Integer): Boolean; overload; cdecl;
-    function Centered(const toArea: TBox): TBox; cdecl;
-    function CenterVertically(const toArea: TBox): TBox; cdecl;
-    function CenterHorizontally(const toArea: TBox): TBox; cdecl;
-    function Inside(const target: TBox): Boolean; overload; cdecl;
-    function ExtendX(const xCoord: Integer): Boolean; cdecl;
-    function ExtendY(const yCoord: Integer): Boolean; cdecl;
-    function Extend(const pt: TPoint): Boolean; cdecl;
-    function UnionX(const xCoord: Integer): TBox; cdecl;
-    function Uniony(const yCoord: Integer): TBox; cdecl;
-    function Union(const pt: TPoint): TBox; overload; cdecl;
-    function Union(const b: TBox): TBox; overload; cdecl;
-    function Disjoint(const target: TBox): Boolean; overload; cdecl;
-    function Lacks(const pt: TPoint): Boolean; overload; cdecl;
-    function Mixed(const mixings: Integer = 1): TPointArray; cdecl;
-    function Shake(const shakes: Integer = 1): TPointArray; cdecl;
-    function Shuffle(const shuffles: Integer = 1): TPointArray; cdecl;
-    function Any: TPoint; cdecl;
-    function Some: TPointArray; overload; cdecl;
-    function Some(const amount: Integer): TPointArray; overload; cdecl;
-    function All: TPointArray; overload; cdecl;
-    function Reserve: TPointArray; overload; cdecl;
-    function Reserve(var aBox: TPointArray): Integer; overload; cdecl;
+    class function Construct(const XS, YS, XE, YE: Integer): TBox; overload;  static;
+    function Build(const minX, minY, maxX, maxY: Integer): Integer; overload; 
+    function Build(const top, bottom: TPoint): Integer; overload; 
+    function Build(const valueX, valueY: Integer): Integer; overload; 
+    function Build(const target: TPoint): Integer; overload; 
+    function Build(const value: Integer = 0): Integer; overload; 
+    function Init(const bX1, bY1, bX2, bY2: Integer): TBox; overload; 
+    function Init(const b: TBox): TBox; overload; 
+    function Init(const val: Integer = 0): TBox; overload; 
+    function Init(const p: TPoint): TBox; overload; 
+    function Init(const TL, BR: TPoint): TBox; overload; 
+    function Form(const pt: TPoint; const size: Integer = 1): TBox; overload; 
+    function Form(const pt: TPoint; const width, height: Integer): TBox; overload; 
+    function Make(const pt: TPoint; const radius: Integer = 0): TBox; overload; 
+    function Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload; 
+    function Frame(var width, height: Integer): TBox; overload; 
+    function Frame: TBox; overload; 
+    function Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload; 
+    function Singular: Boolean; 
+    function IsPoint: Boolean; 
+    function IsHorizontalLine: Boolean; 
+    function IsVerticalLine: Boolean; 
+    function IsLine: Boolean; 
+    function Linear: Boolean; 
+    function Is2D: Boolean; 
+    function Collapsed: Boolean; 
+    function Boxy: Boolean; 
+    function Plural: Boolean; 
+    function Rectangular: Boolean; 
+    function Equilateral: Boolean; 
+    function Square: Boolean; 
+    function Size(var width, height: Integer): Integer; overload;  inline;
+    function Size: TPoint; overload; 
+    function Area: Integer;  inline;
+    function Capacity: Integer; 
+    function Footprint: Double; 
+    function Perimeter: Integer; 
+    function Perim: Integer; 
+    function Circumference: Integer; 
+    function Diagonal: Double; 
+    function Width: Integer; overload; 
+    function Width(const w: Integer): Integer; overload; 
+    function Height: Integer; overload; 
+    function Height(const h: Integer): Integer; overload; 
+    function Ratio: Double; 
+    function Horizontal: TRange; 
+    function Vertical: TRange; 
+    function Expand(const change: Integer = 1): TBox; overload; 
+    function Expand(const target: TBox): TBox; overload; 
+    function Shrink(const change: Integer = 1): TBox; overload; 
+    function Shrink(const target: TBox): TBox; overload; 
+    function Resize(const change: Integer): TBox; 
+    function ResizeVertically(const change: Integer): TBox; 
+    function ResizeHorizontally(const change: Integer): TBox; 
+    function ResizeTop(const change: Integer): TBox; 
+    function ResizeBottom(const change: Integer): TBox; 
+    function ResizeLeft(const change: Integer): TBox; 
+    function ResizeRight(const change: Integer): TBox; 
+    function ResizeTopLeft(const change: Integer): TBox; 
+    function ResizeTopRight(const change: Integer): TBox; 
+    function ResizeBottomRight(const change: Integer): TBox; 
+    function ResizeBottomLeft(const change: Integer): TBox; 
+    function Equal(const b: TBox): Boolean;  inline;
+    function Contains(const pt: TPoint): Boolean; overload; 
+    function Contains(const b: TBox): Boolean; overload; 
+    function Center: TPoint; 
+    function Envelope(const b: TBox): TBox; 
+    function Overlap(const b: TBox): Boolean;  inline;
+    function Intersect(const b: TBox): TBox; overload; 
+    function Intersect(const b: TBox; var iArea: TBox): Boolean; overload; 
+    function Valid: Boolean;  inline;
+    function Invalid: Boolean; 
+    function Similar(const b: TBox; const maxWDiff, maxHDiff: Integer): Boolean; overload; 
+    function Similar(const b: TBox; const diff: Integer): Boolean; overload; 
+    function Fix: Boolean; 
+    function Constraint(const toArea: TBox): Boolean; 
+    function Clip(const toArea: TBox): TBox; 
+    function Restrict(const toArea: TBox): Boolean; 
+    function Clamp(const toArea: TBox): TBox; 
+    function Points: TPointArray; overload; 
+    function Points(const pIndex: Integer): TPoint; overload; 
+    function Points(const pIDs: TIntegerArray): TPointArray; overload; 
+    function Points(var xArray, yArray: TIntegerArray): Integer; overload; 
+    function Pixels: TPointArray; overload; 
+    function Pixels(const index: Integer): TPoint; overload; 
+    function Pixeled: TPointArray; overload; 
+    function Pts: TPointArray; overload; 
+    function IDs: TIntegerArray; overload; 
+    function IDs(const p: TPoint): Integer; overload; 
+    function IDs(const p: TPointArray): TIntegerArray; overload; 
+    function TPA: TPointArray; overload; 
+    function TPA(const index: Integer): TPoint; overload; 
+    function Contents: TPointArray; 
+    function Extract: TPointArray; 
+    function Enumerate: TPointArray; 
+    function Enumerated: TPointArray; 
+    function Elements: TPointArray; 
+    function Border: TPointArray; overload; 
+    function Border(const X, Y: Integer): Boolean; overload; 
+    function Border(const pt: TPoint): Boolean; overload; 
+    function Edge: TPointArray; overload; 
+    function Edge(const X, Y: Integer): Boolean; overload; 
+    function Edge(const pt: TPoint): Boolean; overload; 
+    function Outline: TPointArray; overload; 
+    function Outline(const X, Y: Integer): Boolean; overload; 
+    function Outline(const pt: TPoint): Boolean; overload; 
+    function Contour: TPointArray; 
+    function Spiral: TPointArray; 
+    function Traverse: TPointArray; 
+    function CornerPoints: TPointArray; 
+    function CornerPts: TPointArray; 
+    function Corners: TPointArray; 
+    function Rows: T2DPointArray; 
+    function Columns: T2DPointArray; 
+    function Rowwise: TPointArray; 
+    function Columnwise: TPointArray; 
+    function SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload; 
+    function SimilarSize(const b: TBox; const differency: Integer): Boolean; overload; 
+    function Centered(const toArea: TBox): TBox; 
+    function CenterVertically(const toArea: TBox): TBox; 
+    function CenterHorizontally(const toArea: TBox): TBox; 
+    function Inside(const target: TBox): Boolean; overload; 
+    function ExtendX(const xCoord: Integer): Boolean; 
+    function ExtendY(const yCoord: Integer): Boolean; 
+    function Extend(const pt: TPoint): Boolean; 
+    function UnionX(const xCoord: Integer): TBox; 
+    function Uniony(const yCoord: Integer): TBox; 
+    function Union(const pt: TPoint): TBox; overload; 
+    function Union(const b: TBox): TBox; overload; 
+    function Disjoint(const target: TBox): Boolean; overload; 
+    function Lacks(const pt: TPoint): Boolean; overload; 
+    function Mixed(const mixings: Integer = 1): TPointArray; 
+    function Shake(const shakes: Integer = 1): TPointArray; 
+    function Shuffle(const shuffles: Integer = 1): TPointArray; 
+    function Any: TPoint; 
+    function Some: TPointArray; overload; 
+    function Some(const amount: Integer): TPointArray; overload; 
+    function All: TPointArray; overload; 
+    function Reserve: TPointArray; overload; 
+    function Reserve(var aBox: TPointArray): Integer; overload; 
   end;
   TBoxArray = array of TBox;
   T2DBoxArray = array of TBoxArray;
@@ -439,13 +439,13 @@ type
     A, B: TPoint;
     constructor Create(const sA, sB: TPoint); overload;
     constructor Create(const aX, aY, bX, bY: Integer); overload;
-    class function Construct(const sA, sB: TPoint): TSegment; overload; cdecl; static;
-    class function Construct(const aX, aY, bX, bY: Integer): TSegment; overload; cdecl; static;
-    function Bounds: TBox; cdecl;
-    function Boundaries: TBox; cdecl;
-    function Envelope: TBox; cdecl;
-    function Points: TPointArray; cdecl;
-    function Pixels(const steps: Integer = 2147483647): TPointArray; cdecl;
+    class function Construct(const sA, sB: TPoint): TSegment; overload;  static;
+    class function Construct(const aX, aY, bX, bY: Integer): TSegment; overload;  static;
+    function Bounds: TBox; 
+    function Boundaries: TBox; 
+    function Envelope: TBox; 
+    function Points: TPointArray; 
+    function Pixels(const steps: Integer = 2147483647): TPointArray; 
   end;
   TSegmentArray = array of TSegment;
   T2DSegmentArray = array of TSegmentArray;
@@ -454,19 +454,19 @@ type
     Radius: Double;
     constructor Create(const cCenter: TPoint; const cRadius: Double); overload;
     constructor Create(const centerX, centerY: Integer; const cRadius: Double); overload;
-    class function Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload; cdecl; static;
-    class function Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload; cdecl; static;
-    function Contains(const pt: TPoint): Boolean; cdecl;
-    function Item(const pt: TPoint): Boolean; cdecl;
-    function Pixel(const pt: TPoint): Boolean; cdecl;
-    function Bounds: TBox; cdecl;
-    function Boundaries: TBox; cdecl;
-    function BoundingBox: TBox; cdecl;
-    function Envelope: TBox; cdecl;
-    function Points: TPointArray; cdecl;
-    function TPA: TPointArray; cdecl;
-    function BorderPoints(const count: Integer): TPointArray; cdecl;
-    function Border: TPointArray; cdecl;
+    class function Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload;  static;
+    class function Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload;  static;
+    function Contains(const pt: TPoint): Boolean; 
+    function Item(const pt: TPoint): Boolean; 
+    function Pixel(const pt: TPoint): Boolean; 
+    function Bounds: TBox; 
+    function Boundaries: TBox; 
+    function BoundingBox: TBox; 
+    function Envelope: TBox; 
+    function Points: TPointArray; 
+    function TPA: TPointArray; 
+    function BorderPoints(const count: Integer): TPointArray; 
+    function Border: TPointArray; 
   end;
   TCircleArray = array of TCircle;
   T2DCircleArray = array of TCircleArray;
@@ -476,7 +476,7 @@ type
   TTriangleArray = array of TTriangle;
   T2DTriangleArray = array of TTriangleArray;
 
-function MiMU_Version: Double; cdecl;
+function MiMU_Version: Double; 
 
 generic function Contains<T>(const arr: array of T; const item: T): Boolean;
 generic function Includes<T>(const arr: array of T; const item: T): Boolean;
@@ -510,13 +510,13 @@ operator<>(const a, b: TSegment): Boolean;
 operator<>(const a, b: TCircle): Boolean;
 operator<>(const a, b: TTriangle): Boolean;
 
-function RandomB: Boolean; overload; cdecl;
-function RandomBit: Byte; overload; cdecl;
-function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload; cdecl;
-function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload; cdecl;
-function Random2(const x: Integer; const r: Integer = 2): Integer; overload; cdecl;
-function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload; cdecl;
-function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload; cdecl;
+function RandomB: Boolean; overload; 
+function RandomBit: Byte; overload; 
+function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload; 
+function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload; 
+function Random2(const x: Integer; const r: Integer = 2): Integer; overload; 
+function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload; 
+function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload; 
 
 function Max(a, b: string): string; overload; inline;
 function Max(a, b: Char): Char; overload; inline;
@@ -578,54 +578,54 @@ type
   {$DEFINE TRange}{$I MiMU\config\Helpers.inc}{$UNDEF TRange}
 type
   TInt64Helper = type helper for Int64
-    function Prime: Boolean; cdecl;
-    function IsPrime: Boolean; cdecl;
-    function Parity: Byte; cdecl; inline;
-    function Even: Boolean; cdecl; inline;
-    function Odd: Boolean; cdecl; inline;
-    function Increase(const N: Int64 = 1): Int64; cdecl;
-    function Decrease(const N: Int64 = 1): Int64; cdecl;
-    function Increment(const N: Int64 = 1): Int64; cdecl;
-    function Decrement(const N: Int64 = 1): Int64; cdecl;
-    function DigitCount: Integer; cdecl;
-    function Digitz: TIntegerArray; cdecl;
-    function Digits: TIntegerArray; cdecl;
-    function Compare(const target: Int64): Integer; cdecl; inline;
-    function Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; cdecl;
-    function Distance(const T: Int64): Int64; cdecl; inline;
-    function Difference(const T: Int64): Int64; cdecl; inline;
-    function Opposite: Int64; cdecl; inline;
-    function Sign: Integer; cdecl; inline;
-    function Shuffle: Int64; cdecl;
-    function Over(const target: Int64): Boolean; cdecl; inline;
-    function Under(const target: Int64): Boolean; cdecl; inline;
-    function Oversize(const limit: Int64): Boolean; cdecl; inline;
-    function Undersize(const limit: Int64): Boolean; cdecl; inline;
+    function Prime: Boolean; 
+    function IsPrime: Boolean; 
+    function Parity: Byte;  inline;
+    function Even: Boolean;  inline;
+    function Odd: Boolean;  inline;
+    function Increase(const N: Int64 = 1): Int64; 
+    function Decrease(const N: Int64 = 1): Int64; 
+    function Increment(const N: Int64 = 1): Int64; 
+    function Decrement(const N: Int64 = 1): Int64; 
+    function DigitCount: Integer; 
+    function Digitz: TIntegerArray; 
+    function Digits: TIntegerArray; 
+    function Compare(const target: Int64): Integer;  inline;
+    function Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; 
+    function Distance(const T: Int64): Int64;  inline;
+    function Difference(const T: Int64): Int64;  inline;
+    function Opposite: Int64;  inline;
+    function Sign: Integer;  inline;
+    function Shuffle: Int64; 
+    function Over(const target: Int64): Boolean;  inline;
+    function Under(const target: Int64): Boolean;  inline;
+    function Oversize(const limit: Int64): Boolean;  inline;
+    function Undersize(const limit: Int64): Boolean;  inline;
   end;
   TIA = class
   public
-    class function Init(var arr: TIntegerArray): Integer; overload; cdecl;
-    class function Reverse(var arr: TIntegerArray): Boolean; overload; cdecl;
-    class function Reversed(const arr: TIntegerArray): TIntegerArray; overload; cdecl;
-    class function Unique(var arr: TIntegerArray): Integer; overload; cdecl;
-	class function Combine(const A, B: TIntegerArray): TIntegerArray; overload; cdecl;
+    class function Init(var arr: TIntegerArray): Integer; overload; 
+    class function Reverse(var arr: TIntegerArray): Boolean; overload; 
+    class function Reversed(const arr: TIntegerArray): TIntegerArray; overload; 
+    class function Unique(var arr: TIntegerArray): Integer; overload; 
+	class function Combine(const A, B: TIntegerArray): TIntegerArray; overload; 
   end;
   TPA = class
-    class function Init(var arr: TPointArray): Integer; overload; cdecl;
-    class function Unique(var arr: TPointArray): Integer; overload; cdecl;
-    class function Create(const xRange, yRange: TRange): TPointArray; overload; cdecl;
-    class function Create(const xRange, yRange: TRange; const offset: TPoint): TPointArray; overload; cdecl;
-    class function Create(const xValues, yValues: TIntegerArray): TPointArray; overload; cdecl;
-    class function Create(const xValues, yValues: TIntegerArray; const offset: TPoint): TPointArray; overload; cdecl;
+    class function Init(var arr: TPointArray): Integer; overload; 
+    class function Unique(var arr: TPointArray): Integer; overload; 
+    class function Create(const xRange, yRange: TRange): TPointArray; overload; 
+    class function Create(const xRange, yRange: TRange; const offset: TPoint): TPointArray; overload; 
+    class function Create(const xValues, yValues: TIntegerArray): TPointArray; overload; 
+    class function Create(const xValues, yValues: TIntegerArray; const offset: TPoint): TPointArray; overload; 
   end;
   TBA = class
-    class function Init(var arr: TBooleanArray): Integer; overload; cdecl;
+    class function Init(var arr: TBooleanArray): Integer; overload; 
   end;
   ATIA = class
   public
-    class function Merge(const arr: T2DIntegerArray): TIntegerArray; overload; cdecl;
-    class function Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; cdecl;
-    class function Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload; cdecl;
+    class function Merge(const arr: T2DIntegerArray): TIntegerArray; overload; 
+    class function Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
+    class function Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
   end;
 {$DEFINE T1D}
   T1D = class
@@ -659,21 +659,21 @@ type
 {$UNDEF T2D}
   _TPoint = class
   public
-    class function Create(const pX, pY: Integer): TPoint; overload; cdecl;
-    class function Create(const value: Integer = 0): TPoint; overload; cdecl;
+    class function Create(const pX, pY: Integer): TPoint; overload; 
+    class function Create(const value: Integer = 0): TPoint; overload; 
   end;
   _TBox = class
   public
-    class function Create(const minX, minY, maxX, maxY: Integer): TBox; overload; cdecl;
-    class function Create(const top, bottom: TPoint): TBox; overload; cdecl;
-    class function Create(const valueX, valueY: Integer): TBox; overload; cdecl;
-    class function Create(const target: TPoint): TBox; overload; cdecl;
-    class function Create(const value: Integer = 0): TBox; overload; cdecl;
+    class function Create(const minX, minY, maxX, maxY: Integer): TBox; overload; 
+    class function Create(const top, bottom: TPoint): TBox; overload; 
+    class function Create(const valueX, valueY: Integer): TBox; overload; 
+    class function Create(const target: TPoint): TBox; overload; 
+    class function Create(const value: Integer = 0): TBox; overload; 
   end;
   _TRange = class
   public
-    class function Create(const rStart, rStop: Integer): TRange; overload; cdecl;
-    class function Create(const value: Integer = 0): TRange; overload; cdecl;
+    class function Create(const rStart, rStop: Integer): TRange; overload; 
+    class function Create(const value: Integer = 0): TRange; overload; 
   end;
 
 {$DEFINE IMPLEMENT}{$INCLUDE MiMU\config\Templates\D.inc}{$UNDEF IMPLEMENT} 
@@ -742,7 +742,7 @@ begin
   Result.Init(X1, Y1, X2, Y2);
 end;
 
-function MiMU_Version: Double; cdecl;
+function MiMU_Version: Double; 
 begin
   Result := MiMU_VERSION_NUMBER;
 end;
@@ -932,17 +932,17 @@ begin
   Result := not (a = b);
 end;
 
-function RandomB: Boolean; overload; cdecl;
+function RandomB: Boolean; overload; 
 begin
   Result := (Random(2) = 1);
 end;
 
-function RandomBit: Byte; overload; cdecl;
+function RandomBit: Byte; overload; 
 begin
   Result := Random(2);
 end;
 
-function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload; cdecl;
+function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload; 
 var
   i: Integer;
 begin
@@ -951,12 +951,12 @@ begin
     Result[i] := Random(x);
 end;
 
-function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload; cdecl;
+function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload; 
 begin
   Result := Round(RandomSample(x, sample).Mean);
 end;
 
-function Random2(const x: Integer; const r: Integer = 2): Integer; overload; cdecl;
+function Random2(const x: Integer; const r: Integer = 2): Integer; overload; 
 var
   i: Integer;
 begin
@@ -965,7 +965,7 @@ begin
   Result := Random(x);
 end;
 
-function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload; cdecl;
+function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload; 
 var
   i: Integer;
 begin
@@ -974,7 +974,7 @@ begin
     Result := Max(Result, Random(x));
 end;
 
-function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload; cdecl;
+function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload; 
 var
   i: Integer;
 begin
@@ -1078,21 +1078,21 @@ function Max(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU
 function Min(A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Min}
 function Min(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Min}
 
-class function TBA.Init(var arr: TBooleanArray): Integer; overload; cdecl;
+class function TBA.Init(var arr: TBooleanArray): Integer; overload; 
 begin
   Result := Length(arr);
   if (Result > 0) then
     FillChar(arr[0], Result, 0);
 end;
 
-class function TIA.Init(var arr: TIntegerArray): Integer; overload; cdecl;
+class function TIA.Init(var arr: TIntegerArray): Integer; overload; 
 begin
   Result := Length(arr);
   if (Result > 0) then
     FillChar(arr[0], (Result * SizeOf(Integer)), 0);
 end;
 
-class function TIA.Unique(var arr: TIntegerArray): Integer; overload; cdecl;
+class function TIA.Unique(var arr: TIntegerArray): Integer; overload; 
 var
   x, y, z: Integer;
   r: TRange;
@@ -1114,7 +1114,7 @@ begin
     Result := 0;
 end;
 
-class function TIA.Reverse(var arr: TIntegerArray): Boolean; overload; cdecl;
+class function TIA.Reverse(var arr: TIntegerArray): Boolean; overload; 
 var
   a: TIntegerArray;
   i: Integer;
@@ -1128,7 +1128,7 @@ begin
   Move(a[0], arr[0], (Length(arr) * SizeOf(Integer)));
 end;
 
-class function TIA.Reversed(const arr: TIntegerArray): TIntegerArray; overload; cdecl;
+class function TIA.Reversed(const arr: TIntegerArray): TIntegerArray; overload; 
 var
   i, r: Integer;
 begin
@@ -1144,7 +1144,7 @@ begin
   end;
 end;
 
-class function TIA.Combine(const A, B: TIntegerArray): TIntegerArray; overload; cdecl;
+class function TIA.Combine(const A, B: TIntegerArray): TIntegerArray; overload; 
 var
   x, y: Integer;
 begin
@@ -1157,7 +1157,7 @@ begin
     Move(B[0], Result[x], (y * SizeOf(Integer)));
 end;
 
-class function ATIA.Merge(const arr: T2DIntegerArray): TIntegerArray; overload; cdecl;
+class function ATIA.Merge(const arr: T2DIntegerArray): TIntegerArray; overload; 
 var
   i, r: Integer;
 begin
@@ -1170,7 +1170,7 @@ begin
 	  Move(arr[i][0], Result[r.Increase(arr[i].Size)], (arr[i].Size * SizeOf(Integer))); 
 end;
 
-class function ATIA.Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; cdecl;
+class function ATIA.Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
 var
   x, y: Integer;
 begin
@@ -1180,7 +1180,7 @@ begin
       Result[y][x] := value;
 end;
 
-class function ATIA.Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload; cdecl;
+class function ATIA.Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
 var
   r, c: Integer;
 begin
@@ -1191,14 +1191,14 @@ begin
 end;
 
 
-class function TPA.Init(var arr: TPointArray): Integer; overload; cdecl;
+class function TPA.Init(var arr: TPointArray): Integer; overload; 
 begin
   Result := Length(arr);
   if (Result > 0) then
     FillChar(arr[0], (Result * SizeOf(TPoint)), 0);
 end;
 
-class function TPA.Unique(var arr: TPointArray): Integer; overload; cdecl;
+class function TPA.Unique(var arr: TPointArray): Integer; overload; 
 var
   i, r, l, w, h: Integer;
   m: T2DBooleanArray;
@@ -1219,7 +1219,7 @@ begin
   Result := (l - Length(arr));
 end;
 
-class function TPA.Create(const xRange, yRange: TRange): TPointArray; overload; cdecl;
+class function TPA.Create(const xRange, yRange: TRange): TPointArray; overload; 
 var
   x, y, i: Integer;
 begin
@@ -1230,7 +1230,7 @@ begin
       Result[i.Increase] := Point(x, y);
 end;
 
-class function TPA.Create(const xRange, yRange: TRange; const offset: TPoint): TPointArray; overload; cdecl;
+class function TPA.Create(const xRange, yRange: TRange; const offset: TPoint): TPointArray; overload; 
 var
   x, y, i: Integer;
 begin
@@ -1241,7 +1241,7 @@ begin
       Result[i.Increase] := Point((x + offset.X), (y + offset.Y));
 end;
 
-class function TPA.Create(const xValues, yValues: TIntegerArray): TPointArray; overload; cdecl;
+class function TPA.Create(const xValues, yValues: TIntegerArray): TPointArray; overload; 
 var
   i: Integer;
 begin
@@ -1250,7 +1250,7 @@ begin
     Result[i] := Point(xValues[i], yValues[i]);	
 end;
 
-class function TPA.Create(const xValues, yValues: TIntegerArray; const offset: TPoint): TPointArray; overload; cdecl;
+class function TPA.Create(const xValues, yValues: TIntegerArray; const offset: TPoint): TPointArray; overload; 
 var
   i: Integer;
 begin
