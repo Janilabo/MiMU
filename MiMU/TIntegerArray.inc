@@ -5,7 +5,7 @@
   @action: Stores arr bounds to TRange.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.Bounds: TRange; overload; cdecl;
+function TIntegerArrayHelper.Bounds: TRange; overload;
 var
   i: Integer;
 begin
@@ -20,7 +20,7 @@ begin
         Result.stop := Self[i];
 end;
 
-function TIntegerArrayHelper.Bounds(var aSize: Integer): TRange; overload; cdecl;
+function TIntegerArrayHelper.Bounds(var aSize: Integer): TRange; overload;
 var
   i: Integer;
 begin
@@ -43,7 +43,7 @@ end;
   @action: Returns bounding range around TIntegerArray arr.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.BoundingRange: TRange; cdecl;
+function TIntegerArrayHelper.BoundingRange: TRange;
 begin
   if Self.Empty then
     Exit(Result.Create(-2147483648, -2147483648));
@@ -55,7 +55,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.Boundaries: TRange; cdecl;
+function TIntegerArrayHelper.Boundaries: TRange;
   function BR(const arr: TIntegerArray; const L, R: Integer): TRange;
   var
     M: Integer;
@@ -76,7 +76,7 @@ end;
   @action: Stores arr bounds to TRange.
   @note: Returns -2147483648..-2147483648 with empty array.
 [==============================================================================}
-function TIntegerArrayHelper.Range: TRange; cdecl;
+function TIntegerArrayHelper.Range: TRange;
 var
   i: Integer;
 begin
@@ -92,7 +92,7 @@ end;
   @action: Stores arr bounds to TRange.
   @note: Returns -2147483648..-2147483648 with empty array.
 [==============================================================================}
-function TIntegerArrayHelper.Coverage: TRange; cdecl;
+function TIntegerArrayHelper.Coverage: TRange;
 var
   i: Integer;
 begin
@@ -112,7 +112,7 @@ end;
   @action: Stores arr bounds to TRange.
   @note: Returns -2147483648..-2147483648 with empty array.
 [==============================================================================}
-function TIntegerArrayHelper.MinMax: TRange; cdecl;
+function TIntegerArrayHelper.MinMax: TRange;
 var
   i: Integer;
 begin
@@ -131,7 +131,7 @@ end;
   @action: Stores arr bounds to TRange.
   @note: Returns -2147483648..-2147483648 with empty array.
 [==============================================================================}
-function TIntegerArrayHelper.Region: TRange; overload; cdecl;
+function TIntegerArrayHelper.Region: TRange; overload;
 var
   i, l: Integer;
 begin
@@ -153,7 +153,7 @@ end;
   @action: Stores arr bounds to TRange.
   @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Extent: TRange; cdecl;
+function TIntegerArrayHelper.Extent: TRange;
 begin
   Result.Create(Self.MinVal, Self.MaxVal);
 end;
@@ -163,7 +163,7 @@ end;
   @action: Removes duplicates from array arr and returns the count of deleted items.
   @note: Not recommended with very large arrays
 [==============================================================================}
-function TIntegerArrayHelper.Undupe: TIntegerArray; cdecl;
+function TIntegerArrayHelper.Undupe: TIntegerArray;
 begin
   Result := Self.Copy;
   TIA.Unique(Result);
@@ -174,7 +174,7 @@ end;
   @action: Removes duplicates from array arr and returns it.
   @note: Not recommended with very large arrays
 [==============================================================================}
-function TIntegerArrayHelper.Unduped: TIntegerArray; cdecl;
+function TIntegerArrayHelper.Unduped: TIntegerArray;
 var
   i, l: Integer;
   r: TRange;
@@ -199,7 +199,7 @@ end;
   @action: Returns numberline of array arr.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.Numberline: TIntegerArray; cdecl;
+function TIntegerArrayHelper.Numberline: TIntegerArray;
 var
   i, x, y: Integer;
   r: TRange;
@@ -233,7 +233,7 @@ end;
  @action: Returns the sum of all arr values together.
  @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Sum: Int64; cdecl;
+function TIntegerArrayHelper.Sum: Int64;
 var
   i: Integer;
 begin
@@ -247,7 +247,7 @@ end;
  @action: Returns the calculated density from given arr.
  @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Density: Double; cdecl;
+function TIntegerArrayHelper.Density: Double;
 var
   a: TIntegerArray;
   c, i, j: Integer;
@@ -283,7 +283,7 @@ end;
  @action: Returns the calculated density from given arr.
  @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Occupancy: Double; cdecl;
+function TIntegerArrayHelper.Occupancy: Double;
 var
   r: TRange;
 begin
@@ -299,7 +299,7 @@ end;
           0.0 = empty / no values, 1.0 = all possible values in range present.
  @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Saturated: Double; cdecl;
+function TIntegerArrayHelper.Saturated: Double;
 var
   m: specialize TFPGMap<Integer, Boolean>;
   i: Integer;
@@ -330,7 +330,7 @@ end;
  @action: The sum of all arr values divided by the length of arr.
  @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Mean: Double; cdecl;
+function TIntegerArrayHelper.Mean: Double;
 begin
   Result := (Self.Sum / Length(Self));
 end;
@@ -342,7 +342,7 @@ end;
           -Even number => the average of the two middle elements.
  @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Median: Double; cdecl;
+function TIntegerArrayHelper.Median: Double;
 var
   a: TIntegerArray;
   i, j, n, s: Integer;
@@ -371,7 +371,7 @@ end;
  @action: The value(s) at the center position(s) of a sorted or unsorted arr.
  @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Middle: Double; cdecl;
+function TIntegerArrayHelper.Middle: Double;
 var
   l: Integer;
 begin
@@ -390,7 +390,7 @@ end;
  @note: Be careful with values! Try to avoid using too low or high values!
         Such as: -200,000,000 or +200,000,000. Heavy memory-usage could possibly cause crashing.
 [==============================================================================}
-function TIntegerArrayHelper.MostFreq(const null: Integer = -2147483648): Integer; cdecl;
+function TIntegerArrayHelper.MostFreq(const null: Integer = -2147483648): Integer;
 var
   h, x, t: Integer;
   b: TIntegerArray;
@@ -422,7 +422,7 @@ end;
  @note: Be careful with values! Try to avoid using too low or high values!
         Such as: -200,000,000 or +200,000,000. Heavy memory-usage could possibly cause crashing.
 [==============================================================================}
-function TIntegerArrayHelper.LeastFreq(const null: Integer = -2147483648): Integer; cdecl;
+function TIntegerArrayHelper.LeastFreq(const null: Integer = -2147483648): Integer;
 var
   h, x, t: Integer;
   b: TIntegerArray;
@@ -453,7 +453,7 @@ end;
   @action: RadixSort for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArrayHelper.RadixSort(const aAscending: Boolean = True): Integer; cdecl;
+function TIntegerArrayHelper.RadixSort(const aAscending: Boolean = True): Integer;
 var
   a, n: TIntegerArray;
   c: array[0..9] of Integer;
@@ -533,7 +533,7 @@ end;
           that are within a given difference range (minDiff, maxDiff) from each other.
   @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Split(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Split(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
 var
   a, b, h, l, i, r: Integer;
   m: Boolean;
@@ -582,7 +582,7 @@ end;
           that are within a given difference/distance (diff) from each other.
   @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Split(const diff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Split(const diff: Integer): T2DIntegerArray; overload;
 begin
   Result := Self.Split(0, diff);
 end;
@@ -593,7 +593,7 @@ end;
           that are within a given difference range (minDiff, maxDiff) from each other.
   @note: Alternative for TIntegerArray_Split. Based on Binary Sorted array.
 [==============================================================================}
-function TIntegerArrayHelper.Sblit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Sblit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
 var
   a: TIntegerArray;
   i, j, r, l, k: Integer;
@@ -641,7 +641,7 @@ end;
           that are within a given difference/distance (diff) from each other.
   @note: Alternative for TIntegerArray_Split. Based on Binary Sorted array.
 [==============================================================================}
-function TIntegerArrayHelper.Sblit(const diff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Sblit(const diff: Integer): T2DIntegerArray; overload;
 begin
   Result := Self.Sblit(0, diff);
 end;
@@ -651,7 +651,7 @@ end;
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the ones with same values.
   @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Groups(const aSorted: Boolean = False): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Groups(const aSorted: Boolean = False): T2DIntegerArray; overload;
 var
   i, l, g: Integer;
   a: TIntegerArray;
@@ -681,7 +681,7 @@ end;
           that are within a given difference range (minDiff, maxDiff) of the first integer value in the sub-array.
   @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Group(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Group(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
 var
   a, h, l, i, r: Integer;
   m: Boolean;
@@ -724,7 +724,7 @@ end;
            that are within a given difference/distance (diff) of the first integer value in the sub-array.
   @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Group(const diff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Group(const diff: Integer): T2DIntegerArray; overload;
 begin
   Result := Self.Group(0, diff);
 end;
@@ -735,7 +735,7 @@ end;
           that are within a given difference range (minDiff, maxDiff) of the first integer value in the sub-array.
   @note: Alternative for TIntegerArray_Group, based on array Binary Sorting.
 [==============================================================================}
-function TIntegerArrayHelper.Groub(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Groub(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
 var
   a: TIntegerArray;
   i, j, r, l: Integer;
@@ -778,7 +778,7 @@ end;
            that are within a given difference/distance (diff) of the first integer value in the sub-array.
   @note: Alternative for TIntegerArray_Group, based on array Binary Sorting.
 [==============================================================================}
-function TIntegerArrayHelper.Groub(const diff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Groub(const diff: Integer): T2DIntegerArray; overload;
 begin
   Result := Self.Groub(0, diff);
 end;
@@ -789,7 +789,7 @@ end;
           that are within a given difference range (minDiff, maxDiff).
   @note: Strict splitting!
 [==============================================================================}
-function TIntegerArrayHelper.Clique(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Clique(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
 var
   a, b, h, l, i, r: Integer;
   m: Boolean;
@@ -839,7 +839,7 @@ end;
           that are within a given difference/distance (diff).
   @note: None
 [==============================================================================}
-function TIntegerArrayHelper.Clique(const diff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Clique(const diff: Integer): T2DIntegerArray; overload;
 begin
   Result := Self.Clique(0, diff);
 end;
@@ -850,7 +850,7 @@ end;
           that are within a given difference range (minDiff, maxDiff).
   @note: Alternative for TIntegerArray_Clique. Based on Binary Sorted array.
 [==============================================================================}
-function TIntegerArrayHelper.Knit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Knit(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
 var
   a: TIntegerArray;
   i, j, r, l, k: Integer;
@@ -899,9 +899,55 @@ end;
           that are within a given difference/distance (diff).
   @note: Alternative for TIntegerArray_Clique. Based on Binary Sorted array.
 [==============================================================================}
-function TIntegerArrayHelper.Knit(const diff: Integer): T2DIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Knit(const diff: Integer): T2DIntegerArray; overload;
 begin
   Result := Self.Knit(0, diff);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Reflect>
+  @action: Returns reversed array
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.Reflected: TIntegerArray; overload;
+var
+  i: Integer;
+  s: SizeInt;
+begin
+  SetLength(Result, Length(Self));
+  s := SizeOf(Integer);
+  for i := 0 to High(Self) do
+    Move(Self[High(Self) - i], Result[i], s);
+end;
+
+{==============================================================================]
+  <TIntegerArrayHelper.Reflect>
+  @action: Reverses array.
+  @note: Returns Length(Self)
+[==============================================================================}
+function TIntegerArrayHelper.Reflect: Integer; overload;
+var
+  r: TRange;
+  s: SizeInt;
+  b: array of Byte;
+  x, y: PByte;
+begin
+  Result := Length(Self);
+  if (Result < 2) then
+    Exit;
+  s := SizeOf(Integer);
+  SetLength(b, s);
+  r.Create(-1, Result);
+  x := PByte(@Self[r.start + 1]);
+  y := PByte(@Self[r.stop - 1]);
+  while (r.start.Increment < r.stop.Decrement) do
+  begin
+    Move(x^, b[0], s);
+    Move(y^, x^, s);
+    Move(b[0], y^, s);
+    Inc(x, s);
+    Dec(y, s);
+  end;
 end;
 
 {==============================================================================]
@@ -909,7 +955,7 @@ end;
   @action: Returns inverted arr.
   @note: Arr = [0,2,4,6,8,10] => Result := [1, 3, 5, 7, 9]
 [==============================================================================}
-function TIntegerArrayHelper.Invert: TIntegerArray; cdecl;
+function TIntegerArrayHelper.Invert: TIntegerArray;
 var
   c, l, i, x, r: Integer;
   b: TBooleanArray;
@@ -944,7 +990,7 @@ end;
   @note: Arr = [0,2,4,6,8,10] => Result := [1, 3, 5, 7, 9]
          Supports custom bounds!
 [==============================================================================}
-function TIntegerArrayHelper.Inverted(const arrBounds: TRange): TIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Inverted(const arrBounds: TRange): TIntegerArray; overload;
 var
   i, r: Integer;
   b: TRange;
@@ -958,7 +1004,7 @@ begin
   SetLength(Result, r);
 end;
 
-function TIntegerArrayHelper.Inverted: TIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Inverted: TIntegerArray; overload;
 begin
   Result := Self.Inverted(Self.Bounds);
 end;
@@ -969,7 +1015,7 @@ end;
   @note: Arr = [0,2,4,6,8,10] => Result := [1, 3, 5, 7, 9]
          Supports custom bounds!
 [==============================================================================}
-function TIntegerArrayHelper.Inverse(const arrBounds: TRange): TIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Inverse(const arrBounds: TRange): TIntegerArray; overload;
 var
   l, i: Integer;
   r: TRange;
@@ -988,7 +1034,7 @@ begin
   SetLength(Result, l);
 end;
 
-function TIntegerArrayHelper.Inverse: TIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.Inverse: TIntegerArray; overload;
 begin
   if (Length(Self) > 1) then
     Result := Self.Inverse(Self.Bounds)
@@ -1001,7 +1047,7 @@ end;
   @action: Returns minimum value from arr.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.MinVal: Integer; overload; cdecl;
+function TIntegerArrayHelper.MinVal: Integer; overload;
 var
   i: Integer;
 begin
@@ -1017,7 +1063,7 @@ end;
   @action: Returns maximum value from arr.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.MaxVal: Integer; overload; cdecl;
+function TIntegerArrayHelper.MaxVal: Integer; overload;
 var
   i: Integer;
 begin
@@ -1033,7 +1079,7 @@ end;
   @action: Returns minimum value from arr and stores index to Integer variable.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.Minimum(var index: Integer): Integer; overload; cdecl;
+function TIntegerArrayHelper.Minimum(var index: Integer): Integer; overload;
 var
   i: Integer;
 begin
@@ -1052,7 +1098,7 @@ end;
   @action: Returns minimum value from arr.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.Minimum: Integer; overload; cdecl;
+function TIntegerArrayHelper.Minimum: Integer; overload;
 var
   i: Integer;
 begin
@@ -1064,7 +1110,7 @@ end;
   @action: Returns maximum value from arr and stores index to Integer variable.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.Maximum(var index: Integer): Integer; overload; cdecl;
+function TIntegerArrayHelper.Maximum(var index: Integer): Integer; overload;
 var
   i: Integer;
 begin
@@ -1083,7 +1129,7 @@ end;
   @action: Returns maximum value from arr.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.Maximum: Integer; overload; cdecl;
+function TIntegerArrayHelper.Maximum: Integer; overload;
 var
   i: Integer;
 begin
@@ -1095,7 +1141,7 @@ end;
  @action: Mirrors arr
  @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.Mirror: Boolean; cdecl;
+function TIntegerArrayHelper.Mirror: Boolean;
 var
   i, l: Integer;
 begin
@@ -1117,7 +1163,7 @@ end;
   @action: Returns true if arr is made with only allowed items.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.Pure(const allowed: TIntegerArray): Boolean; cdecl;
+function TIntegerArrayHelper.Pure(const allowed: TIntegerArray): Boolean;
 var
   a: TIntegerArray;
   i: Integer;
@@ -1136,7 +1182,7 @@ end;
   @action: Returns true if arr does not contain any items from forbidden.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.NoneOf(const forbidden: TIntegerArray): Boolean; cdecl;
+function TIntegerArrayHelper.NoneOf(const forbidden: TIntegerArray): Boolean;
 var
   d: specialize TDictionary<Integer, Boolean>;
   i: Integer;
@@ -1161,7 +1207,7 @@ end;
   @action: Returns True if arr contains at least one item from candidates.
   @note: Always False if arr or candidates is empty.
 [==============================================================================}
-function TIntegerArrayHelper.AnyOf(const candidates: TIntegerArray): Boolean; cdecl;
+function TIntegerArrayHelper.AnyOf(const candidates: TIntegerArray): Boolean;
 var
   d: specialize TDictionary<Integer, Boolean>;
   i: Integer;
@@ -1186,7 +1232,7 @@ end;
   @action: Returns True if arr contains all items from candidates.
   @note: Always True if candidates is empty. False if arr is empty but candidates is not.
 [==============================================================================}
-function TIntegerArrayHelper.AllOf(const candidates: TIntegerArray): Boolean; cdecl;
+function TIntegerArrayHelper.AllOf(const candidates: TIntegerArray): Boolean;
 var
   d: specialize TDictionary<Integer, Boolean>;
   i: Integer;
@@ -1213,7 +1259,7 @@ end;
   @action: Converts TIntegerArray to Chars.
   @note: Make sure the values in array are correct!
 [==============================================================================}
-function TIntegerArrayHelper.Charify: TCharArray; overload; cdecl;
+function TIntegerArrayHelper.Charify: TCharArray; overload;
 var
   i: Integer;
 begin
@@ -1228,7 +1274,7 @@ end;
   @note: Make sure the values in array are correct!
          Stores str version to variable.
 [==============================================================================}
-function TIntegerArrayHelper.Charify(var str: string): TCharArray; overload; cdecl;
+function TIntegerArrayHelper.Charify(var str: string): TCharArray; overload;
 var
   i: Integer;
 begin
@@ -1246,7 +1292,7 @@ end;
   @action: Converts TIntegerArray to string.
   @note: Make sure the values in array are correct!
 [==============================================================================}
-function TIntegerArrayHelper.Stringify: string; overload; cdecl;
+function TIntegerArrayHelper.Stringify: string; overload;
 var
   i: Integer;
 begin
@@ -1261,7 +1307,7 @@ end;
   @note: Make sure the values in array are correct!
          Stores charset version to variable.
 [==============================================================================}
-function TIntegerArrayHelper.Stringify(var chars: TCharArray): string; overload; cdecl;
+function TIntegerArrayHelper.Stringify(var chars: TCharArray): string; overload;
 var
   i: Integer;
 begin
@@ -1279,7 +1325,7 @@ end;
   @action: Returns true if parity of every pair of adjacent element differs each other.
   @note: An element in each pair must be even and other must be odd.
 [==============================================================================}
-function TIntegerArrayHelper.Special: Boolean; cdecl;
+function TIntegerArrayHelper.Special: Boolean;
 var
   i: Integer;
 begin
@@ -1294,7 +1340,7 @@ end;
   @action: Returns even values from array
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.ExtractEven: TIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.ExtractEven: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -1313,7 +1359,7 @@ end;
   @action: Returns array without even values
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.FilterEven: TIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.FilterEven: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -1332,7 +1378,7 @@ end;
   @action: Returns odd values from array
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.ExtractOdd: TIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.ExtractOdd: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -1351,7 +1397,7 @@ end;
   @action: Returns array without odd values
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.FilterOdd: TIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.FilterOdd: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -1371,7 +1417,7 @@ end;
            while keeping the current length unchanged.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.Reinit: Integer; overload; cdecl;
+function TIntegerArrayHelper.Reinit: Integer; overload;
 begin
   Result := Length(Self);
   if (Result > 0) then
@@ -1383,154 +1429,154 @@ end;
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArrayHelper.BSort(const aAscending: Boolean = True): Integer; cdecl; var a: Integer; {$DEFINE Skeleton_BSort}{$I config\Skeletons.inc}{$UNDEF Skeleton_BSort}
+function TIntegerArrayHelper.BSort(const aAscending: Boolean = True): Integer; var a: Integer; {$DEFINE Skeleton_BSort}{$I config\Skeletons.inc}{$UNDEF Skeleton_BSort}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinarySort>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).
 [==============================================================================}
-function TIntegerArrayHelper.BinarySort(const aAscending: Boolean = True): Integer; cdecl; var a: Integer; {$DEFINE Skeleton_BinarySort}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySort}
+function TIntegerArrayHelper.BinarySort(const aAscending: Boolean = True): Integer; var a: Integer; {$DEFINE Skeleton_BinarySort}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySort}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinarySorted>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns sorted array arr.
 [==============================================================================}
-function TIntegerArrayHelper.BinarySorted(const aAscending: Boolean = True): TIntegerArray; cdecl; var a: Integer; {$DEFINE Skeleton_BinarySorted}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySorted}
+function TIntegerArrayHelper.BinarySorted(const aAscending: Boolean = True): TIntegerArray; var a: Integer; {$DEFINE Skeleton_BinarySorted}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySorted}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryBoundL>
   @action: Returns Binary Search Lower Bound based on x-value.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryBoundL(const x: Integer; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinaryBoundL}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryBoundL}
+function TIntegerArrayHelper.BinaryBoundL(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryBoundL}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryBoundL}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryBoundR>
   @action: Returns Binary Search Upper Bound based on x-value.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryBoundR(const x: Integer; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinaryBoundR}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryBoundR}
+function TIntegerArrayHelper.BinaryBoundR(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryBoundR}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryBoundR}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryPosL>
   @action: Returns L-side pos of x in arr with Binary Search. -1 if x does not exist.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryPosL(const x: Integer; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinaryPosL}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPosL}
+function TIntegerArrayHelper.BinaryPosL(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryPosL}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPosL}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryPosR>
   @action: Returns R-side pos of x in arr with Binary Search. -1 if x does not exist.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryPosR(const x: Integer; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinaryPosR}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPosR}
+function TIntegerArrayHelper.BinaryPosR(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryPosR}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPosR}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinarySearch>
   @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinarySearch(const x: Integer; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinarySearch}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearch}
+function TIntegerArrayHelper.BinarySearch(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinarySearch}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearch}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinarySeek>
   @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinarySeek(const x: Integer; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinarySeek}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySeek}
+function TIntegerArrayHelper.BinarySeek(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinarySeek}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySeek}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryContains>
   @action: Binary Contains function for TIntegerArrays.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryContains(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl; {$DEFINE Skeleton_BinaryContains}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryContains}
+function TIntegerArrayHelper.BinaryContains(const x: Integer; const aAscending: Boolean = True): Boolean; {$DEFINE Skeleton_BinaryContains}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryContains}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryCount>
   @action: Binary Count function for TIntegerArrays.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryCount(const x: Integer; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinaryCount}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryCount}
+function TIntegerArrayHelper.BinaryCount(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryCount}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryCount}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryLocate>
   @action: Returns Binary Search left and right index as TRange based on x value.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryLocate(const x: Integer; const aAscending: Boolean = True): TRange; cdecl; {$DEFINE Skeleton_BinaryLocate}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLocate}
+function TIntegerArrayHelper.BinaryLocate(const x: Integer; const aAscending: Boolean = True): TRange; {$DEFINE Skeleton_BinaryLocate}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLocate}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryLocation>
   @action: Binary Contains function for TIntegerArrays. Contains location storage variable. With Result as False it will be -1..-1.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryLocation(const x: Integer; const aAscending: Boolean = True): TRange; cdecl; {$DEFINE Skeleton_BinaryLocation}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLocation}
+function TIntegerArrayHelper.BinaryLocation(const x: Integer; const aAscending: Boolean = True): TRange; {$DEFINE Skeleton_BinaryLocation}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLocation}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryAppend>
   @action: Binary Append method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the index x was added to.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinaryAppend}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryAppend}
+function TIntegerArrayHelper.BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryAppend}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryAppend}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryAdd>
   @action: Binary Add method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the arr with x.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryAdd(const x: Integer; const aAscending: Boolean = True): TIntegerArray; cdecl; {$DEFINE Skeleton_BinaryAdd}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryAdd}
+function TIntegerArrayHelper.BinaryAdd(const x: Integer; const aAscending: Boolean = True): TIntegerArray; {$DEFINE Skeleton_BinaryAdd}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryAdd}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinarySearchF>
   @action: Binary Search which supports TRange search, uses first match from x-range.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinarySearchF(const x: TRange; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinarySearchF}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchF}
+function TIntegerArrayHelper.BinarySearchF(const x: TRange; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinarySearchF}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchF}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinarySearchL>
   @action: Binary Search which supports TRange search, uses last match from x-range.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinarySearchL}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchL}
+function TIntegerArrayHelper.BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinarySearchL}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchL}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryPrune>
   @action: Binary Search-based Prune method.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryPrune(const aAscending: Boolean = True): Integer; cdecl; {$DEFINE Skeleton_BinaryPrune}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPrune}
+function TIntegerArrayHelper.BinaryPrune(const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryPrune}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPrune}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryPruned>
   @action: Binary Search-based Pruned method.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryPruned(const aAscending: Boolean = True): TIntegerArray; cdecl; {$DEFINE Skeleton_BinaryPruned}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPruned}
+function TIntegerArrayHelper.BinaryPruned(const aAscending: Boolean = True): TIntegerArray; {$DEFINE Skeleton_BinaryPruned}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPruned}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryUndupe>
   @action: Binary Search-based Undupe method.
   @note: None
 [==============================================================================}
-function TIntegerArrayHelper.BinaryUndupe: Integer; cdecl; var u: TIntegerArray; {$DEFINE Skeleton_BinaryUndupe}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUndupe}
+function TIntegerArrayHelper.BinaryUndupe: Integer; var u: TIntegerArray; {$DEFINE Skeleton_BinaryUndupe}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUndupe}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryUnduped>
   @action: Binary Search-based Unduped method.
   @note: None
 [==============================================================================}
-function TIntegerArrayHelper.BinaryUnduped: TIntegerArray; cdecl; {$DEFINE Skeleton_BinaryUnduped}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnduped}
+function TIntegerArrayHelper.BinaryUnduped: TIntegerArray; {$DEFINE Skeleton_BinaryUnduped}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnduped}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryUnified>
   @action: Binary Search-based Unified method.
   @note: None
 [==============================================================================}
-function TIntegerArrayHelper.BinaryUnified(const dAscending: Boolean = True): TIntegerArray; cdecl; var u: TIntegerArray; {$DEFINE Skeleton_BinaryUnified}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnified}
+function TIntegerArrayHelper.BinaryUnified(const dAscending: Boolean = True): TIntegerArray; var u: TIntegerArray; {$DEFINE Skeleton_BinaryUnified}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnified}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryGrow>
@@ -1538,14 +1584,14 @@ function TIntegerArrayHelper.BinaryUnified(const dAscending: Boolean = True): TI
            Works with ascending or descending order based on aAscending.
   @note: Returns True if the value was inserted, False if it already exists.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl; {$DEFINE Skeleton_BinaryGrow}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryGrow}
+function TIntegerArrayHelper.BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean; {$DEFINE Skeleton_BinaryGrow}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryGrow}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryShrink>
   @action: Removes an integer x from the array while maintaining sorted order.
   @note: Returns True if the value was removed, False if it was not found.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean; cdecl; {$DEFINE Skeleton_BinaryShrink}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryShrink}
+function TIntegerArrayHelper.BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean; {$DEFINE Skeleton_BinaryShrink}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryShrink}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryLowerBound>
@@ -1555,7 +1601,7 @@ function TIntegerArrayHelper.BinaryShrink(const x: Integer; const aAscending: Bo
   @note:   Returns -1 if all elements are less than x (or greater when
            searching a descending array).
 [==============================================================================}
-function TIntegerArrayHelper.BinaryLowerBound(const x: Integer; const aAscending: Boolean): Integer; cdecl; {$DEFINE Skeleton_BinaryLowerBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLowerBound}
+function TIntegerArrayHelper.BinaryLowerBound(const x: Integer; const aAscending: Boolean): Integer; {$DEFINE Skeleton_BinaryLowerBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLowerBound}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryUpperBound>
@@ -1565,7 +1611,7 @@ function TIntegerArrayHelper.BinaryLowerBound(const x: Integer; const aAscending
   @note:   Returns -1 if all elements are greater than x (or less when
            searching a descending array).
 [==============================================================================}
-function TIntegerArrayHelper.BinaryUpperBound(const x: Integer; const aAscending: Boolean): Integer; cdecl; {$DEFINE Skeleton_BinaryUpperBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUpperBound}
+function TIntegerArrayHelper.BinaryUpperBound(const x: Integer; const aAscending: Boolean): Integer; {$DEFINE Skeleton_BinaryUpperBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUpperBound}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryRange>
@@ -1575,7 +1621,7 @@ function TIntegerArrayHelper.BinaryUpperBound(const x: Integer; const aAscending
   @note:    Returns (-1,-1) when no elements fall in the interval or when
             the array is empty.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload; cdecl; {$DEFINE Skeleton_BinaryRange1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRange1}
+function TIntegerArrayHelper.BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinaryRange1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRange1}
 
 {==============================================================================]
   <TIntegerArrayHelper.BinaryRange>
@@ -1585,35 +1631,35 @@ function TIntegerArrayHelper.BinaryRange(const x: TRange; const aAscending: Bool
   @note:    Returns (-1,-1) if x is not present. Works for arrays sorted
             ascending or descending as controlled by aAscending.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryRange(const x: Integer; const aAscending: Boolean = True): TRange; overload; cdecl; {$DEFINE Skeleton_BinaryRange2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRange2}
+function TIntegerArrayHelper.BinaryRange(const x: Integer; const aAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinaryRange2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRange2}
 
 {==============================================================================]
   <TIntegerArray.BinaryMerge>
   @action: Merges two sorted integer arrays (Self and items) into a new sorted array based on the specified order by aAscending.
   @note: Assumes both Self and items are already sorted in the same order.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl; {$DEFINE Skeleton_BinaryMerge}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryMerge}
+function TIntegerArrayHelper.BinaryMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryMerge}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryMerge}
 
 {==============================================================================]
   <TIntegerArray.BinaryMerged>
   @action: Merges two sorted integer arrays (Self and items) into a new sorted array based on the specified order by aAscending.
   @note: Assumes both Self and items are already sorted in the same order.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl; {$DEFINE Skeleton_BinaryMerged}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryMerged}
+function TIntegerArrayHelper.BinaryMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryMerged}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryMerged}
 
 {==============================================================================]
   <TIntegerArray.BinaryCombine>
   @action: Merges two sorted integer arrays (Self and items) into a new sorted array based on the specified order by aAscending.
   @note: Assumes both Self and items are already sorted in the same order.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryCombine(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl; {$DEFINE Skeleton_BinaryCombine}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryCombine}
+function TIntegerArrayHelper.BinaryCombine(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryCombine}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryCombine}
 
 {==============================================================================]
   <TIntegerArray.BMerge>
   @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
   @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
 [==============================================================================}
-function TIntegerArrayHelper.BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
 var
   l: Integer;
   s, i: TRange;
@@ -1647,7 +1693,7 @@ end;
   @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
   @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
 [==============================================================================}
-function TIntegerArrayHelper.BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function TIntegerArrayHelper.BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
 var
   l: Integer;
   s, i: TRange;

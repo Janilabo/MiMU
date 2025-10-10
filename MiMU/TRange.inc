@@ -26,7 +26,7 @@ end;
   @action: Constructs TRange with rStart and rStop.
   @note: None.
 [==============================================================================}
-class function TRange.Construct(const rStart, rStop: Integer): TRange; overload; cdecl;
+class function TRange.Construct(const rStart, rStop: Integer): TRange; overload;
 begin
   Result.start := rStart;
   Result.stop := rStop;
@@ -37,7 +37,7 @@ end;
   @action: Create a TRange with rStart and rStop, using Min and Max for safety.
   @note: None.
 [==============================================================================}
-function TRange.Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
+function TRange.Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer;
 begin
   Self.start := Min(rStart, rStop);
   Self.stop := Max(rStop, rStart);
@@ -51,7 +51,7 @@ end;
   @note: Useful for initializing a TRange instance and simultaneously returning it
          for assignment. Example: a := b.Init(1, 10);
 [==============================================================================}
-function TRange.Init(const rStart, rStop: Integer): TRange; overload; cdecl;
+function TRange.Init(const rStart, rStop: Integer): TRange; overload;
 begin
   Self.start := rStart;
   Self.stop := rStop;
@@ -66,7 +66,7 @@ end;
   @note: Useful for copying values from an existing TRange while allowing in-line assignment.
          Example: a := b.Init(c);
 [==============================================================================}
-function TRange.Init(const r: TRange): TRange; overload; cdecl;
+function TRange.Init(const r: TRange): TRange; overload;
 begin
   Self := r;
   Result := r;
@@ -79,7 +79,7 @@ end;
   @note: The parameter has a default of 0, allowing zero-initialization.
          Example: a := b.Init; or a := b.Init(5);
 [==============================================================================}
-function TRange.Init(const val: Integer = 0): TRange; overload; cdecl;
+function TRange.Init(const val: Integer = 0): TRange; overload;
 begin
   Self.start := val;
   Self.stop := val;
@@ -92,7 +92,7 @@ end;
   @action: Returns true if range start equals stop
   @note: None.
 [==============================================================================}
-function TRange.Singular: Boolean; cdecl;
+function TRange.Singular: Boolean;
 begin
   Result := (Self.start = Self.stop);
 end;
@@ -102,7 +102,7 @@ end;
   @action: Returns true if range start equals stop
   @note: None.
 [==============================================================================}
-function TRange.Atomic: Boolean; cdecl;
+function TRange.Atomic: Boolean;
 begin
   Result := ((Self.start - Self.stop) = 0);
 end;
@@ -112,7 +112,7 @@ end;
   @action: Returns true if range start does NOT equal to stop
   @note: None.
 [==============================================================================}
-function TRange.Plural: Boolean; cdecl;
+function TRange.Plural: Boolean;
 begin
   Result := (Self.start <> Self.stop);
 end;
@@ -122,9 +122,92 @@ end;
   @action: Returns true if range start does NOT equal to stop
   @note: None.
 [==============================================================================}
-function TRange.Composite: Boolean; cdecl;
+function TRange.Composite: Boolean;
 begin
   Result := not (Self.start = Self.stop);
+end;
+
+{==============================================================================]
+  <TRange.Sorted>
+  @action: Returns a new TRange with Start and Stop ordered according to aAscending.
+           Does NOT modify the current record.
+  @note: If aAscending=True, ensures Start <= Stop; if False, Start >= Stop.
+[==============================================================================}
+function TRange.Sorted(const oAscending: Boolean = True): TRange; overload;
+begin
+  if ((oAscending and (Self.start > Self.stop)) or ((not oAscending) and (Self.start < Self.stop))) then
+    Result.Create(Self.stop, Self.start)
+  else
+    Result.Create(Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <TRange.Sort>
+  @action: Sorts the current TRange in-place according to oAscending.
+           Returns True if a swap of Start and Stop was performed.
+  @note: If oAscending=True, Start <= Stop after call; if False, Start >= Stop.
+[==============================================================================}
+function TRange.Sort(const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((oAscending and (Self.start > Self.stop)) or ((not oAscending) and (Self.stop > Self.start)));
+  if Result then
+    Swap(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <TRange.Ordered>
+  @action: Returns a new TRange with Start and Stop ordered according to oAscending.
+           Uses arithmetic trick with Ord() to determine order.
+  @note: Functional version; does NOT modify the current record. Works for both ascending and descending.
+[==============================================================================}
+function TRange.Ordered(const oAscending: Boolean = True): TRange; overload;
+begin
+  if (((Ord(oAscending) * 2 - 1) * (Self.Stop - Self.Start)) >= 0) then
+    Result.Create(Self.Start, Self.Stop)
+  else
+    Result.Create(Self.Stop, Self.Start);
+end;
+
+{==============================================================================]
+  <TRange.Order>
+  @action: Sorts the current TRange in-place according to oAscending.
+           Returns True if a swap of Start and Stop was performed.
+           Uses arithmetic trick with Ord() to determine order.
+  @note: In-place version of Ordered; efficient, works for both ascending and descending.
+[==============================================================================}
+function TRange.Order(const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := (((Ord(oAscending) * 2 - 1) * (Self.Stop - Self.Start)) < 0);
+  if Result then
+    Swap(Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <TRange.Asc>
+  @action: Returns an ascending sequence of integers from Start to Stop.
+  @note: If Start > Stop, the order is still ascending (from the smaller to the larger value).
+[==============================================================================}
+function TRange.Asc: TIntegerArray; overload;
+var
+  l, h, i: Integer;
+begin
+  SetLength(Result, Self.Size(l, h));
+  for i := 0 to (h - l) do
+    Result[i] := (l + i);
+end;
+
+{==============================================================================]
+  <TRange.Desc>
+  @action: Returns a descending sequence of integers from Stop down to Start.
+  @note: If Start < Stop, the order is still descending (from the larger to the smaller value).
+[==============================================================================}
+function TRange.Desc: TIntegerArray; overload;
+var
+  l, h, i: Integer;
+begin
+  SetLength(Result, Self.Size(l, h));
+  for i := 0 to (h - l) do
+    Result[i] := (h - i);
 end;
 
 {==============================================================================]
@@ -132,7 +215,7 @@ end;
   @action: Returns ascending TRange of Self.
   @note: None.
 [==============================================================================}
-function TRange.Ascend: TRange; cdecl;
+function TRange.Ascend: TRange;
 begin
   Result.start := Min(Self.start, Self.stop);
   Result.stop := Max(Self.stop, Self.start);
@@ -143,10 +226,36 @@ end;
   @action: Returns descending TRange of Self.
   @note: None.
 [==============================================================================}
-function TRange.Descend: TRange; cdecl;
+function TRange.Descend: TRange;
 begin
   Result.start := Max(Self.stop, Self.start);
   Result.stop := Min(Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <TRange.Descended>
+  @action: Returns TRange in descending order.
+  @note: None.
+[==============================================================================}
+function TRange.Descended: TRange;
+begin
+  if (Self.start > Self.stop) then
+    Result.Create(Self.start, Self.stop)
+  else
+    Result.Create(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <TRange.Ascended>
+  @action: Returns TRange in ascending order.
+  @note: None.
+[==============================================================================}
+function TRange.Ascended: TRange;
+begin
+  if (Self.stop > Self.start) then
+    Result.Create(Self.start, Self.stop)
+  else
+    Result.Create(Self.stop, Self.start);
 end;
 
 {==============================================================================]
@@ -154,7 +263,7 @@ end;
   @action: Returns true if range start is lower or equal than stop
   @note: Non-strict.
 [==============================================================================}
-function TRange.Ascending: Boolean; cdecl;
+function TRange.Ascending: Boolean;
 begin
   Result := (Self.start <= Self.stop);
 end;
@@ -164,7 +273,7 @@ end;
   @action: Returns true if range start is lower or equal than stop
   @note: Non-strict.
 [==============================================================================}
-function TRange.Ascends: Boolean; cdecl;
+function TRange.Ascends: Boolean;
 begin
   Result := not (Self.start > Self.stop);
 end;
@@ -174,7 +283,7 @@ end;
   @action: Returns true if range start is higher or equal than stop
   @note: Non-strict.
 [==============================================================================}
-function TRange.Descending: Boolean; cdecl;
+function TRange.Descending: Boolean;
 begin
   Result := (Self.start >= Self.stop);
 end;
@@ -184,7 +293,7 @@ end;
   @action: Returns true if range start is higher or equal than stop
   @note: Non-strict.
 [==============================================================================}
-function TRange.Descends: Boolean; cdecl;
+function TRange.Descends: Boolean;
 begin
   Result := not (Self.start < Self.stop);
 end;
@@ -194,7 +303,7 @@ end;
   @action: Returns true if range start is lower or equal with stop
   @note: Non-strict.
 [==============================================================================}
-function TRange.Increasing: Boolean; cdecl;
+function TRange.Increasing: Boolean;
 begin
   Result := not (Self.start > Self.stop);
 end;
@@ -204,7 +313,7 @@ end;
   @action: Returns true if range start is higher or equal with stop
   @note: Different logic compared to TRange.Descending!
 [==============================================================================}
-function TRange.Decreasing: Boolean; cdecl;
+function TRange.Decreasing: Boolean;
 begin
   Result := not (Self.start < Self.stop);
 end;
@@ -214,7 +323,7 @@ end;
   @action: Returns true if range start is lower or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Growing: Boolean; cdecl;
+function TRange.Growing: Boolean;
 begin
   Result := (Self.start < Self.stop);
 end;
@@ -224,7 +333,7 @@ end;
   @action: Returns true if range start is lower or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Grows: Boolean; cdecl;
+function TRange.Grows: Boolean;
 begin
   Result := not (Self.start >= Self.stop);
 end;
@@ -234,7 +343,7 @@ end;
   @action: Returns true if range start is higher or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Shrinking: Boolean; cdecl;
+function TRange.Shrinking: Boolean;
 begin
   Result := (Self.start > Self.stop);
 end;
@@ -244,7 +353,7 @@ end;
   @action: Returns true if range start is higher or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Shrinks: Boolean; cdecl;
+function TRange.Shrinks: Boolean;
 begin
   Result := not (Self.start <= Self.stop);
 end;
@@ -254,7 +363,7 @@ end;
   @action: Returns true if range start is lower or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Rising: Boolean; cdecl;
+function TRange.Rising: Boolean;
 begin
   Result := (Self.start < Self.stop);
 end;
@@ -264,7 +373,7 @@ end;
   @action: Returns true if range start is lower or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Rises: Boolean; cdecl;
+function TRange.Rises: Boolean;
 begin
   Result := not (Self.start >= Self.stop);
 end;
@@ -274,7 +383,7 @@ end;
   @action: Returns true if range start is higher or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Dropping: Boolean; cdecl;
+function TRange.Dropping: Boolean;
 begin
   Result := (Self.start > Self.stop);
 end;
@@ -284,7 +393,7 @@ end;
   @action: Returns true if range start is higher or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Drops: Boolean; cdecl;
+function TRange.Drops: Boolean;
 begin
   Result := not (Self.start <= Self.stop);
 end;
@@ -294,7 +403,7 @@ end;
   @action: Returns TRange with range, swaps range.stop and range.start if they are in reversed order.
   @note: None.
 [==============================================================================}
-function TRange.Grab: TRange; cdecl;
+function TRange.Grab: TRange;
 begin
   Result := IfThen(Self.Descending, Result.Create(Self.stop, Self.start), Self);
 end;
@@ -304,7 +413,7 @@ end;
   @action: Returns count values in the given range.
   @note: None.
 [==============================================================================}
-function TRange.Count: Integer; cdecl;
+function TRange.Count: Integer;
 begin
   Result := ((Max(Self.start, Self.stop) - Min(Self.start, Self.stop)) + 1);
 end;
@@ -314,7 +423,7 @@ end;
   @action: Returns area of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Area: Integer; cdecl;
+function TRange.Area: Integer;
 begin
   Result := ((Self.stop - Self.start) + 1);
   if (Self.stop < Self.start) then
@@ -326,7 +435,7 @@ end;
   @action: Returns span of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Span: Integer; cdecl;
+function TRange.Span: Integer;
 begin
   Result := Abs(Self.stop - Self.start);
 end;
@@ -336,9 +445,21 @@ end;
   @action: Returns size of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Size: Integer; cdecl;
+function TRange.Size: Integer; overload;
 begin
   Result := (Abs(Self.stop - Self.start) + 1);
+end;
+
+{==============================================================================]
+  <TRange.Size>
+  @action: Returns size of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Size(var minVal, maxVal: Integer): Integer; overload;
+begin
+  minVal := Min(Self.start, Self.stop);
+  maxVal := Max(Self.start, Self.stop);
+  Result := ((maxVal - minVal) + 1);
 end;
 
 {==============================================================================]
@@ -346,7 +467,7 @@ end;
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Capacity: Integer; cdecl;
+function TRange.Capacity: Integer;
 begin
   Result := (IfThen(Self.Descending, (Self.start - Self.stop), (Self.stop - Self.start)) + 1);
 end;
@@ -357,7 +478,7 @@ end;
           starting at 0 and ending at Size - 1.
   @note   None.
 [==============================================================================}
-function TRange.Frame(var rSize: Integer): TRange; overload; cdecl;
+function TRange.Frame(var rSize: Integer): TRange; overload;
 begin
   rSize := Self.Size;
   Result := Range(0, (rSize - 1));
@@ -369,7 +490,7 @@ end;
           starting at 0 and ending at Size - 1.
   @note   None.
 [==============================================================================}
-function TRange.Frame: TRange; overload; cdecl;
+function TRange.Frame: TRange; overload;
 begin
   Result := Range(0, (Self.Size - 1));
 end;
@@ -379,7 +500,7 @@ end;
   @action: Returns maximum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Highest: Integer; cdecl;
+function TRange.Highest: Integer;
 begin
   Result := Max(Self.stop, Self.start);
 end;
@@ -389,7 +510,7 @@ end;
   @action: Returns minimum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Lowest: Integer; cdecl;
+function TRange.Lowest: Integer;
 begin
   Result := Min(Self.start, Self.stop);
 end;
@@ -399,7 +520,7 @@ end;
   @action: Returns maximum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Maximum: Integer; cdecl;
+function TRange.Maximum: Integer;
 begin
   if (Self.start < Self.stop) then
     Result := Self.stop
@@ -412,7 +533,7 @@ end;
   @action: Returns minimum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Minimum: Integer; cdecl;
+function TRange.Minimum: Integer;
 begin
   if (Self.stop > Self.start) then
     Result := Self.start
@@ -425,7 +546,7 @@ end;
   @action: Returns true if TRange contains more than maxElements.
   @note: TRange Exceeds maximum elements.
 [==============================================================================}
-function TRange.Exceeds(const maxElements: Integer): Boolean; cdecl;
+function TRange.Exceeds(const maxElements: Integer): Boolean;
 begin
   Result := (Self.Size > maxElements);
 end;
@@ -435,7 +556,7 @@ end;
   @action: Returns true if TRange contains less than minElements.
   @note: TRange is behind minimum elements.
 [==============================================================================}
-function TRange.Insufficient(const minElements: Integer): Boolean; cdecl;
+function TRange.Insufficient(const minElements: Integer): Boolean;
 begin
   Result := (Self.Size < minElements);
 end;
@@ -445,7 +566,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Digits: TIntegerArray; overload; cdecl;
+function TRange.Digits: TIntegerArray; overload;
 var
   i, s: Integer;
 begin
@@ -460,7 +581,7 @@ end;
   @action: Returns digit from TRange by index.
   @note: None.
 [==============================================================================}
-function TRange.Digits(const dIndex: Integer): Integer; overload; cdecl;
+function TRange.Digits(const dIndex: Integer): Integer; overload;
 begin
   if ((dIndex < 0) or (dIndex >= Self.Area)) then
     Result := -2147483648
@@ -476,7 +597,7 @@ end;
   @action: Returns digits from TRange by indexes.
   @note: None.
 [==============================================================================}
-function TRange.Digits(const dIDs: TIntegerArray): TIntegerArray; overload; cdecl;
+function TRange.Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -490,7 +611,7 @@ end;
   @action: Returns TRange indexes.
   @note: None.
 [==============================================================================}
-function TRange.IDs: TIntegerArray; overload; cdecl;
+function TRange.IDs: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -504,7 +625,7 @@ end;
   @action: Returns TRange index by TRange value.
   @note: Returns -2147483648 if dValue does not exist in TRange.
 [==============================================================================}
-function TRange.IDs(const dValue: Integer): Integer; overload; cdecl;
+function TRange.IDs(const dValue: Integer): Integer; overload;
 begin
   case Self.Ascending of
     True:
@@ -525,7 +646,7 @@ end;
   @action: Returns TRange index by TRange value.
   @note: Returns -2147483648 if dValue does not exist in TRange.
 [==============================================================================}
-function TRange.IDs(const dVals: TIntegerArray): TIntegerArray; overload; cdecl;
+function TRange.IDs(const dVals: TIntegerArray): TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -539,7 +660,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Ints: TIntegerArray; cdecl;
+function TRange.Ints: TIntegerArray;
 var
   i, l: Integer;
 begin
@@ -560,7 +681,7 @@ end;
   @action: Returns values of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Values: TIntegerArray; cdecl;
+function TRange.Values: TIntegerArray;
 var
   i, r: Integer;
 begin
@@ -581,7 +702,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.TIA: TIntegerArray; cdecl;
+function TRange.TIA: TIntegerArray;
 var
   i, l, d: Integer;
 begin
@@ -604,7 +725,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Enumerate: TIntegerArray; cdecl;
+function TRange.Enumerate: TIntegerArray;
 var
   i: Integer;
 begin
@@ -626,15 +747,14 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Enumerated: TIntegerArray; cdecl;
+function TRange.Enumerated: TIntegerArray;
 var
-  i: Integer;
+  n, i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Result) do
-    Result[i] := (Self.Start + i);
-  if Self.Descending then
-    Result.Reverse;
+  Result := Self.Reserve;
+  i := 0;
+  for n in Self do
+    Result[i.Increase] := n;
 end;
 
 {==============================================================================]
@@ -642,7 +762,7 @@ end;
   Explanation: Returns TBox points as TPointArray.
   Example: Alternative method.
 [==============================================================================}
-function TRange.Elements: TIntegerArray; cdecl;
+function TRange.Elements: TIntegerArray;
 var
   i: specialize TList<Integer>;
   e: Integer;
@@ -668,7 +788,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Numbers: TIntegerArray; cdecl;
+function TRange.Numbers: TIntegerArray;
 var
   i, r, s: Integer;
 begin
@@ -687,7 +807,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Items: TIntegerArray; cdecl;
+function TRange.Items: TIntegerArray;
 var
   i, s: Integer;
 begin
@@ -704,7 +824,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.ToArray: TIntegerArray; cdecl;
+function TRange.ToArray: TIntegerArray;
 var
   i: Integer;
 begin
@@ -720,11 +840,180 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.AsArray>
+  @action: Two-way alternative for extracting items from TRange.
+  @note: None.
+[==============================================================================}
+function TRange.AsArray: TIntegerArray; overload;
+var
+  h, i, l: Integer;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  SetLength(Result, Self.Size);
+  h := High(Result);
+  l := ((h + 1) div 2);
+  i := 0;
+  case Self.Ascending of
+    True:
+    repeat
+      Result[i] := (Self.start + i);
+      Result[h - i] := (Self.stop - i);
+    until (i.Increment > l);
+    False:
+    repeat
+      Result[i] := (Self.start - i);
+      Result[h - i] := (Self.stop + i);
+    until (i.Increment > l);
+  end;
+  if h.Even then
+    Result[i] := IfThen(Self.Ascending, (Self.start + i), (Self.start - i));
+end;
+
+{==============================================================================]
+  <TRange.Unzip>
+  @action: Two-way alternative for extracting items from TRange.
+  @note: None.
+[==============================================================================}
+function TRange.Unzip: TIntegerArray; overload;
+var
+  r: TRange;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  SetLength(Result, Self.Size);
+  r.Create(0, High(Result));
+  case Self.Ascending of
+    True:
+    repeat
+      Result[r.start] := (Self.start + r.start);
+      Result[r.stop] := (Self.stop - r.start);
+    until (r.start.Increment > r.stop.Decrement);
+    False:
+    repeat
+      Result[r.start] := (Self.start - r.start);
+      Result[r.stop] := (Self.stop + r.start);
+    until (r.start.Increment > r.stop.Decrement);
+  end;
+end;
+
+{==============================================================================]
+  <TRange.Unpack>
+  @action: Two-way alternative for extracting items from TRange.
+  @note: None.
+[==============================================================================}
+function TRange.Unpack: TIntegerArray; overload;
+var
+  s, i: Integer;
+  o: Boolean;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  o := Self.Ascending;
+  for i := 0 to (s - 1) do
+    if (i < (s div 2)) then
+      Result[i] := o.Select((Self.start + i), (Self.start - i))
+    else
+      Result[i] := o.Select((Self.stop - ((s - 1) - i)), (Self.stop + ((s - 1) - i)));
+end;
+
+{==============================================================================]
+  <TRange.Unwrap>
+  @action: Two-way alternative for extracting items from TRange.
+  @note: None.
+[==============================================================================}
+function TRange.Unwrap: TIntegerArray; overload;
+var
+  s, h, i: Integer;
+  a: Boolean;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  h := ((s + 1) div 2);
+  a := Self.Ascending;
+  for i := 0 to (h - 1) do
+  case a of
+    True:
+    begin
+      Result[i] := (Self.start + i);
+      Result[(s - 1) - i] := (Self.stop - i);
+    end;
+    False:
+    begin
+      Result[i] := (Self.start - i);
+      Result[(s - 1) - i] := (Self.stop + i);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <TRange.Unfold>
+  @action: Recursion-based alternative for extracting items from TRange.
+  @note: None.
+[==============================================================================}
+function TRange.Unfold: TIntegerArray; overload;
+  procedure F2W(const R: TRange; const L, H: Integer; const A: Boolean; var arr: TIntegerArray);
+  begin
+    if (L > H) then
+      Exit;
+    case A of
+      True:
+      begin
+        arr[L] := (R.start + L);
+        arr[H] := (R.stop - L);
+      end;
+      False:
+      begin
+        arr[L] := (R.start - L);
+        arr[H] := (R.stop + L);
+      end;
+    end;
+    F2W(R, (L + 1), (H - 1), A, arr);
+  end;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  SetLength(Result, Self.Size);
+  F2W(Self, 0, High(Result), Self.Ascending, Result);
+end;
+
+{==============================================================================]
+  <TRange.Zigzag>
+  @action: Returns the integer values of the range in an alternating “zig-zag” order,
+           taking elements from the start and end of the range alternately.
+           For example, for a range 1..5, the result is [1,5,2,4,3].
+  @note:   Works for ascending and descending ranges. 
+           If the range contains a single value, returns an array with that single value.
+           Internally uses two arrays (ascending and reversed) to construct the pattern.
+[==============================================================================}
+function TRange.Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
+var
+  a, d: TIntegerArray;
+  l, i, j, r, z: Integer;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  a := Self.ToArray;
+  d := a.Reversed;
+  l := Length(a);
+  SetLength(Result, l);
+  i := 0;
+  j := 0;
+  r := -1;
+  z := IfThen(zAscending, 0, 1);
+  while ((i + j) < l) do
+    if ((r.Increment mod 2) = z) then
+      Result[r] := a[i.Increase]
+    else
+      Result[r] := d[j.Increase];
+end;
+
+{==============================================================================]
   <TRange.Materialize>
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Materialize: TIntegerArray; cdecl;
+function TRange.Materialize: TIntegerArray;
 var
   i, s, v: Integer;
   p: PInteger;
@@ -745,7 +1034,7 @@ end;
   @action: Returns TRange randomly mixed as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TRange.Mixed(const mixings: Integer = 1): TIntegerArray; cdecl;
+function TRange.Mixed(const mixings: Integer = 1): TIntegerArray;
 var
   i, s, r: Integer;
 begin
@@ -764,7 +1053,7 @@ end;
   @action: Returns TRange randomly shaked as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TRange.Shake(const shakes: Integer = 1): TIntegerArray; cdecl;
+function TRange.Shake(const shakes: Integer = 1): TIntegerArray;
 var
   i, s, r: Integer;
 begin
@@ -783,7 +1072,7 @@ end;
   @action: Returns TRange randomly shuffled as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TRange.Shuffle(const shuffles: Integer = 1): TIntegerArray; cdecl;
+function TRange.Shuffle(const shuffles: Integer = 1): TIntegerArray;
 var
   i, s, r: Integer;
 begin
@@ -802,7 +1091,7 @@ end;
   @action: Returns random TRange item.
   @note: None.
 [==============================================================================}
-function TRange.Any: Integer; cdecl;
+function TRange.Any: Integer;
 begin
   Result := ((Self.Start + Random(Self.Size)) * IfThen(Self.Ascending, 1, -1));
 end;
@@ -812,7 +1101,7 @@ end;
   @action: Returns random amount of random TRange items.
   @note: Does not return empty arrays.
 [==============================================================================}
-function TRange.Some: TIntegerArray; overload; cdecl;
+function TRange.Some: TIntegerArray; overload;
 begin
   Result := Copy(Self.Shuffle, 0, Max(Random(Self.Size + 1), 1))
 end;
@@ -822,20 +1111,100 @@ end;
   @action: Returns random amount of random TRange items.
   @note: Does not return empty arrays.
 [==============================================================================}
-function TRange.Some(const amount: Integer): TIntegerArray; overload; cdecl;
+function TRange.Some(const amount: Integer): TIntegerArray; overload;
 begin
   Result := Copy(Self.Shuffle, 0, Max(1, Min(amount, Self.Size)));
-end; 
+end;
+
+{==============================================================================]
+  <TRange.All>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: None.
+[==============================================================================}
+function TRange.All: TIntegerArray; overload;
+var
+  i, j: Integer;
+  p: PInteger;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  SetLength(Result, Self.Size);
+  j := IfThen((Self.start <= Self.stop), 1, -1);
+  p := PInteger(Result);
+  i := Self.start;
+  while (i <> (Self.stop + j)) do
+  begin
+    p^ := i;
+    Inc(p);
+    Inc(i, j);
+  end;
+end;
+
+{==============================================================================]
+  <TRange.Normed>
+  @action: Using if-then comparison this function returns "normal" range.
+  @note: None.
+[==============================================================================}
+function TRange.Normed: TRange;
+begin
+  Result.Create(IfThen((Self.start < Self.stop), Self.start, Self.stop), IfThen((Self.start < Self.stop), Self.stop, Self.start));
+end;
+
+{==============================================================================]
+  <TRange.Norm>
+  @action: Using if-then comparison this function returns "normal" range.
+  @note: None.
+[==============================================================================}
+function TRange.Norm: TRange;
+begin
+  Result := IfThen((Self.start > Self.stop), Self.Reversed, Self);
+end;
+
+{==============================================================================]
+  <TRange.Normal>
+  @action: XOR-swap based.
+  @note: None.
+[==============================================================================}
+ function TRange.Normal: TRange;
+begin
+  Result := Self;
+  if (Result.start <= Result.stop) then
+    Exit;
+  Result.start := (Result.start xor Result.stop);
+  Result.stop := (Result.start xor Result.stop);
+  Result.start := (Result.start xor Result.stop);
+end;
+
+
+function TRange.Normally: TRange;
+var
+  a: TIntegerArray;
+begin
+  a := [Self.start, Self.stop];
+  Result.Create(a[Ord(Self.start > Self.stop)], a[Ord(Self.start <= Self.stop)]);
+end;
 
 {==============================================================================]
   <TRange.Normalize>
   @action: Using Min-Maxing this function returns "normal" range.
   @note: None.
 [==============================================================================}
-function TRange.Normalize: TRange; cdecl;
+function TRange.Normalize: TRange;
 begin
   Result.start := Min(Self.start, Self.stop);
   Result.stop := Max(Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <TRange.Normalized>
+  @action: Using if-then comparison this function returns "normal" range.
+  @note: None.
+[==============================================================================}
+function TRange.Normalized: TRange;
+begin
+  Result.start := ((Self.start + Self.stop) shr 1);
+  Result.stop := (Abs(Self.start - Self.stop) shr 1);
+  Result.Create((Result.start - Result.stop), (Result.start + Result.stop));
 end;
 
 {==============================================================================]
@@ -843,7 +1212,7 @@ end;
   @action: Checks if a and b overlap eachother.
   @note: Returns true if overlap is found.
 [==============================================================================}
-function TRange.Overlapping(const b: TRange): Boolean; cdecl;
+function TRange.Overlapping(const b: TRange): Boolean;
 begin
   Result := ((Min(Self.start, Self.stop) <= Max(b.start, b.stop)) and (Min(b.start, b.stop) <= Max(Self.start, Self.stop)));
 end;
@@ -853,7 +1222,7 @@ end;
   @action: Checks if a and b overlap eachother.
   @note: Returns true if overlap is found.
 [==============================================================================}
-function TRange.Overlap(const b: TRange): Boolean; cdecl;
+function TRange.Overlap(const b: TRange): Boolean;
 begin
   Result := not ((Min(Self.start, Self.stop) > Max(b.start, b.stop)) or (Min(b.start, b.stop) > Max(Self.start, Self.stop)));
 end;
@@ -863,7 +1232,7 @@ end;
   @action: Returns intersection of a and b.
   @note: Returns null if there is no intersection for a and b.
 [==============================================================================}
-function TRange.Intersect(const b: TRange): TRange; overload; cdecl;
+function TRange.Intersect(const b: TRange): TRange; overload;
 var
   s, t: TRange;
 begin
@@ -878,7 +1247,7 @@ end;
   @action: Returns true if of a and b contains intersection.
   @note: Stores intersection to variable, if Result is True.
 [==============================================================================}
-function TRange.Intersect(const b: TRange; var iZone: TRange): Boolean; overload; cdecl;
+function TRange.Intersect(const b: TRange; var iZone: TRange): Boolean; overload;
 var
   s, t: TRange;
   x, y: Integer;
@@ -897,7 +1266,7 @@ end;
   @action: Returns true TRange is extended with val (val is not yet in range)
   @note: None.
 [==============================================================================}
-function TRange.Extend(const val: Integer): Boolean; cdecl;
+function TRange.Extend(const val: Integer): Boolean;
 begin
   case Self.Descending of
     True:
@@ -925,7 +1294,7 @@ end;
   @action: Returns union of ranges a and b.
   @note: None.
 [==============================================================================}
-function TRange.Union(const b: TRange): TRange; overload; cdecl;
+function TRange.Union(const b: TRange): TRange; overload;
 begin
   Result.start := Min(Min(Self.start, Self.stop), Min(b.start, b.stop));
   Result.stop := Max(Max(Self.start, Self.stop), Max(b.start, b.stop));
@@ -936,7 +1305,7 @@ end;
   @action: Returns union of range and val.
   @note: None.
 [==============================================================================}
-function TRange.Union(const val: Integer): TRange; overload; cdecl;
+function TRange.Union(const val: Integer): TRange; overload;
 begin
   Result := Self;
   case Self.Descending of
@@ -956,13 +1325,13 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Shift>
+  <TRange.Offset>
   @action: Returns shift of range r by delta.
   @note: None.
 [==============================================================================}
-function TRange.Shift(const sDelta: Integer): TRange; cdecl;
+function TRange.Offset(const sDelta: Integer): TRange;
 begin
-  Result.Create((Self.start + delta), (Self.stop + delta));
+  Result.Create((Self.start + sDelta), (Self.stop + sDelta));
 end;
 
 {==============================================================================]
@@ -970,7 +1339,7 @@ end;
   @action: Returns True if range contains x-value.
   @note: None.
 [==============================================================================}
-function TRange.Contains(const x: Integer): Boolean; overload; cdecl;
+function TRange.Contains(const x: Integer): Boolean; overload;
 begin
   Result := ((x >= Min(Self.start, Self.stop)) and (x <= Max(Self.stop, Self.start)));
 end;
@@ -980,7 +1349,7 @@ end;
   @action: Returns True if range contains x.
   @note: Meaning x is completely part of range.
 [==============================================================================}
-function TRange.Contains(const x: TRange): Boolean; overload; cdecl;
+function TRange.Contains(const x: TRange): Boolean; overload;
 begin
   Result := ((Min(x.start, x.stop) >= Min(Self.start, Self.stop)) and (Max(x.start, x.stop) <= Max(Self.start, Self.stop)));
 end;
@@ -990,12 +1359,12 @@ end;
   @action: Returns True if range is above target.
   @note: None.
 [==============================================================================}
-function TRange.Above(const target: Integer): Boolean; overload; cdecl;
+function TRange.Above(const target: Integer): Boolean; overload;
 begin
   Result := (Self.Minimum > target);
 end;
 
-function TRange.Above(const target: TRange): Boolean; overload; cdecl;
+function TRange.Above(const target: TRange): Boolean; overload;
 begin
   Result := Self.Above(target.Maximum);
 end;
@@ -1005,12 +1374,12 @@ end;
   @action: Returns True if range is below target.
   @note: None.
 [==============================================================================}
-function TRange.Below(const target: Integer): Boolean; overload; cdecl;
+function TRange.Below(const target: Integer): Boolean; overload;
 begin
   Result := (Self.Maximum < target);
 end;
 
-function TRange.Below(const target: TRange): Boolean; overload; cdecl;
+function TRange.Below(const target: TRange): Boolean; overload;
 begin
   Result := Self.Below(target.Minimum);
 end;
@@ -1020,7 +1389,7 @@ end;
   @action: Returns reversed range.
   @note: None.
 [==============================================================================}
-function TRange.Reversed: TRange; cdecl;
+function TRange.Reversed: TRange;
 begin
   Result.start := Self.stop;
   Result.stop := Self.start;
@@ -1031,7 +1400,7 @@ end;
   @action: Reverses range, returns True if range was reversed.
   @note: None.
 [==============================================================================}
-function TRange.Reverse: Boolean; cdecl;
+function TRange.Reverse: Boolean;
 begin
   Result := Self.Plural;
   if Result then
@@ -1043,7 +1412,7 @@ end;
   @action: Checks if a matches b.
   @note: 0..3 and 3..0 will be treated as match.
 [==============================================================================}
-function TRange.Equals(const b: TRange): Boolean; cdecl;
+function TRange.Equals(const b: TRange): Boolean;
 begin
   Result := ((Min(Self.start, Self.stop) = Min(b.start, b.stop)) and (Max(Self.start, Self.stop) = Max(b.start, b.stop)));
 end;
@@ -1053,7 +1422,7 @@ end;
   @action: Checks if a unmatches b.
   @note: 0..3 and 3..0 will be treated as match.
 [==============================================================================}
-function TRange.Differs(const b: TRange): Boolean; cdecl;
+function TRange.Differs(const b: TRange): Boolean;
 begin
   Result := ((Min(Self.start, Self.stop) <> Min(b.start, b.stop)) or (Max(Self.start, Self.stop) <> Max(b.start, b.stop)));
 end;
@@ -1063,7 +1432,7 @@ end;
   @action: Checks if a matches b exactly.
   @note: 0..3 and 3..0 will NOT be treated as match.
 [==============================================================================}
-function TRange.Equal(const b: TRange): Boolean; cdecl;
+function TRange.Equal(const b: TRange): Boolean;
 begin
   Result := ((Self.start = b.start) and (Self.stop = b.stop));
 end;
@@ -1073,7 +1442,7 @@ end;
   @action: Checks if a unmatches b exactly.
   @note: 0..3 and 3..0 will NOT be treated as match.
 [==============================================================================}
-function TRange.Differ(const b: TRange): Boolean; cdecl;
+function TRange.Differ(const b: TRange): Boolean;
 begin
   Result := ((Self.start <> b.start) or (Self.stop <> b.stop));
 end;
@@ -1083,7 +1452,7 @@ end;
   @action: Returns range clamped inside zone range.
   @note: Makes sure Result is range fitted in zone bounds.
 [==============================================================================}
-function TRange.Clamp(const zone: TRange): TRange; cdecl;
+function TRange.Clamp(const zone: TRange): TRange;
 var
   z: TRange;
 begin
@@ -1108,7 +1477,7 @@ end;
   @action: Returns range with start and stop with maximum value.
   @note: Makes sure neither start or stop is higher than maximum.
 [==============================================================================}
-function TRange.ClampMax(const maxValue: Integer): TRange; cdecl;
+function TRange.ClampMax(const maxValue: Integer): TRange;
 begin
   if (Self.start > maxValue) then
     Result.start := maxValue
@@ -1125,7 +1494,7 @@ end;
   @action: Returns range with start and stop with minimum value.
   @note: Makes sure neither start or stop is lower than minimum.
 [==============================================================================}
-function TRange.ClampMin(const minValue: Integer): TRange; cdecl;
+function TRange.ClampMin(const minValue: Integer): TRange;
 begin
   if (Self.start < minValue) then
     Result.start := minValue
@@ -1142,7 +1511,7 @@ end;
   @action: Ensures range start and stop stays within zone.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
-function TRange.Restrict(const zone: TRange): Boolean; cdecl;
+function TRange.Restrict(const zone: TRange): Boolean;
 var
   e: TRange;
 begin
@@ -1157,7 +1526,7 @@ end;
   @action: Ensures range start and stop stays within minimum.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
-function TRange.RestrictMin(const minValue: Integer): Boolean; cdecl;
+function TRange.RestrictMin(const minValue: Integer): Boolean;
 var
   e: TRange;
 begin
@@ -1172,7 +1541,7 @@ end;
   @action: Ensures range start and stop stays within maximum.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
-function TRange.RestrictMax(const maxValue: Integer): Boolean; cdecl;
+function TRange.RestrictMax(const maxValue: Integer): Boolean;
 var
   e: TRange;
 begin
@@ -1187,7 +1556,7 @@ end;
   @action: Ensures range start and stop stays within zone.
   @note: Alternative for TRange_Clamp.
 [==============================================================================}
-function TRange.Clip(const zone: TRange): TRange; cdecl;
+function TRange.Clip(const zone: TRange): TRange;
 begin
   Result.start := Max(zone.start, Min(Self.start, zone.stop));
   Result.stop := Min(zone.stop, Max(Self.stop, zone.start));
@@ -1198,7 +1567,7 @@ end;
   @action: Ensures range start and stop stays within minimum.
   @note: Alternative for TRange_ClampMin.
 [==============================================================================}
-function TRange.ClipMin(const minValue: Integer): TRange; cdecl;
+function TRange.ClipMin(const minValue: Integer): TRange;
 begin
   Result.start := Max(Self.start, minValue);
   Result.stop := Max(Self.stop, minValue);
@@ -1209,10 +1578,39 @@ end;
   @action: Ensures range start and stop stays within maximum.
   @note: Alternative for TRange_ClampMax.
 [==============================================================================}
-function TRange.ClipMax(const maxValue: Integer): TRange; cdecl;
+function TRange.ClipMax(const maxValue: Integer): TRange;
 begin
   Result.start := Min(Self.start, maxValue);
   Result.stop := Min(Self.stop, maxValue);
+end;
+
+{==============================================================================]
+  <TRange.Ensured>
+  @action: Returns a new TRange with start and stop clamped to fit within zone.
+  @note: Preserves the direction (start > stop) of the original range.
+         Zone is normalized internally, so reversed zones are handled.
+[==============================================================================}
+function TRange.Ensured(const zone: TRange): TRange; overload;
+begin
+  Result := zone.Normalize;
+  Result.Create(Max(Result.start, Min(Self.start, Result.stop)), Min(Result.stop,  Max(Self.stop,  Result.start)));
+end;
+
+{==============================================================================]
+  <TRange.Ensure>
+  @action: Clamps the current TRange (Self) to fit within zone.
+  @note: Preserves the direction (start > stop) of Self.
+         Returns True if Self was modified; False otherwise.
+         Zone is normalized internally, so reversed zones are handled.
+[==============================================================================}
+function TRange.Ensure(const zone: TRange): Boolean; overload;
+var
+  s: TRange;
+begin
+  s := Self;
+  Self := zone.Normalize;
+  Self.Create(Max(Self.start, Min(s.start, Self.stop)), Min(Self.stop,  Max(s.stop,  Self.start)));
+  Result := (Self <> s);
 end;
 
 {==============================================================================]
@@ -1220,7 +1618,7 @@ end;
   @action: Expands the range to include the given value while preserving ascending/descending order.
   @note: If the value is already inside the range, the range remains unchanged.
 [==============================================================================}
-function TRange.Include(const val: Integer): TRange; overload; cdecl;
+function TRange.Include(const val: Integer): TRange; overload;
 begin
   Result := Self;
   case Result.Ascending of
@@ -1245,7 +1643,7 @@ end;
   @note: If the value is already inside the range, the range remains unchanged.
          Returns true if value was added in.
 [==============================================================================}
-function TRange.Absorb(const val: Integer): Boolean; overload; cdecl;
+function TRange.Absorb(const val: Integer): Boolean; overload;
 var
   s: TRange;
 begin
@@ -1272,7 +1670,7 @@ end;
   @action: TRange 0..0.
   @note: None.
 [==============================================================================}
-function TRangeHelper.Create: TRange; cdecl;
+function TRangeHelper.Create: TRange;
 begin
   Self.start := 0;
   Self.stop := 0;
@@ -1284,7 +1682,7 @@ end;
   @action: Distributes range to TRangeArray by amount of parts
   @note: None.
 [==============================================================================}
-function TRangeHelper.Distribute(const parts: Integer): TRangeArray; cdecl;
+function TRangeHelper.Distribute(const parts: Integer): TRangeArray;
 var
   i, s, e, a, b, p: Integer;
   r: TRange;
@@ -1317,7 +1715,7 @@ end;
   @action: Partitions range to TRangeArray by size of parts
   @note: None.
 [==============================================================================}
-function TRangeHelper.Partition(const size: Integer): TRangeArray; cdecl;
+function TRangeHelper.Partition(const size: Integer): TRangeArray;
 var
   a, b, l: Integer;
   r: TRange;
@@ -1346,7 +1744,7 @@ end;
   @action: Partitions range to TRangeArray by size of parts
   @note: Alternative for TRange_Partition.
 [==============================================================================}
-function TRangeHelper.Divide(const size: Integer): TRangeArray; cdecl;
+function TRangeHelper.Divide(const size: Integer): TRangeArray;
 var
   a, b, i: Integer;
   r: TRange;
@@ -1374,7 +1772,7 @@ end;
   @action: Returns true if 2 TRanges are right next to eachother.
   @note: (Distance is exactly 1 between em).
 [==============================================================================}
-function TRange.Neighbor(const b: TRange): Boolean; cdecl;
+function TRange.Neighbor(const b: TRange): Boolean;
 var
   i, j: TRange;
 begin
@@ -1388,7 +1786,7 @@ end;
   @action: Returns true if 2 TRanges are right next to eachother.
   @note: (Distance is exactly 1 between em).
 [==============================================================================}
-function TRange.Neighbour(const b: TRange): Boolean; cdecl;
+function TRange.Neighbour(const b: TRange): Boolean;
 begin
   Result := (((Max(Self.start, Self.stop) + 1) = Min(b.start, b.stop)) or ((Max(b.start, b.stop) + 1) = Min(Self.start, Self.stop)));
 end;
@@ -1398,7 +1796,7 @@ end;
   @action: Returns true if range touches b.
   @note: Touch = only single value is shared between the ranges.
 [==============================================================================}
-function TRange.Touch(const b: TRange): Boolean; cdecl;
+function TRange.Touch(const b: TRange): Boolean;
 var
   l, h, r: TRange;
 begin
@@ -1413,7 +1811,7 @@ end;
   @action: Returns true if range touches b with minimum and maximum contact.
   @note: Touch = minimum/maximum shared values.
 [==============================================================================}
-function TRange.Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
+function TRange.Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
 var
   x, y: TRange;
   i, s: Integer;
@@ -1433,7 +1831,7 @@ end;
   @action: Returns true if range touches b with minimum and maximum contact.
   @note: Touch = minimum/maximum shared values.
 [==============================================================================}
-function TRange.Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
+function TRange.Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
 var
   x, y: TRange;
   s, i: Integer;
@@ -1453,7 +1851,7 @@ end;
   @action: Returns minimum distance between ranges a and b.
   @note: If ranges overlap, distance is 0.
 [==============================================================================}
-function TRange.Distance(const b: TRange): Integer; cdecl;
+function TRange.Distance(const b: TRange): Integer;
 var
   r1, r2: TRange;
 begin
@@ -1473,7 +1871,7 @@ end;
   @action: Returns Hausdorff-based distance between ranges a and b.
   @note: None.
 [==============================================================================}
-function TRange.DistHausdorff(const b: TRange): Integer; cdecl;
+function TRange.DistHausdorff(const b: TRange): Integer;
 var
   i, j: TRange;
 begin
@@ -1487,7 +1885,7 @@ end;
   @action: Delta returns the signed difference from start to stop; the sign indicates the range’s orientation.
   @note: None.
 [==============================================================================}
-function TRange.Delta: Integer; cdecl; inline;
+function TRange.Delta: Integer; inline;
 begin
   Result := (Self.stop - Self.start);
 end;
@@ -1499,7 +1897,7 @@ end;
         -1  => ascending  (start > stop)
          0  => degenerate (start = stop)
 [==============================================================================}
-function TRange.Direction: Integer; cdecl;
+function TRange.Direction: Integer;
 begin
   Result := Sign(Self.Delta);
 end;
@@ -1510,7 +1908,7 @@ end;
   @note: Computed as the absolute value of Delta (Abs(Stop - Start)).
          Always ≥ 0, regardless of whether the range is ascending or descending.
 [==============================================================================}
-function TRange.Magnitude: Integer; cdecl;
+function TRange.Magnitude: Integer;
 begin
   Result := Abs(Self.Delta);
 end;
@@ -1521,7 +1919,7 @@ end;
            and -1 if the range is descending (Stop < Start).
   @note: Useful for determining iteration direction or orientation of the range.
 [==============================================================================}
-function TRange.Orientation: Integer; cdecl;
+function TRange.Orientation: Integer;
 begin
   Result := IfThen((Self.Stop < Self.Start), -1, 1);
 end;
@@ -1532,7 +1930,7 @@ end;
   @note: Computed as Min(Start, Stop) - Max(Start, Stop).
          Always ≤ 0. Ignores orientation; useful when a negative “shortfall” value is needed.
 [==============================================================================}
-function TRange.Deficit: Integer; cdecl;
+function TRange.Deficit: Integer;
 begin
   Result := (Min(Self.start, Self.stop) - Max(Self.start, Self.stop));
 end;
@@ -1542,7 +1940,7 @@ end;
  @action: Returns true if range contains x-value.
  @note: None.
 [==============================================================================}
-function TRange.Digit(const x: Integer): Boolean; cdecl; inline;
+function TRange.Digit(const x: Integer): Boolean; inline;
 begin
   Result := (((x >= Self.start) and (x <= Self.stop)) or ((x >= Self.stop) and (x <= Self.start)));
 end;
@@ -1552,7 +1950,7 @@ end;
  @action: Returns true if range contains x-value.
  @note: None.
 [==============================================================================}
-function TRange.Value(const x: Integer): Boolean; cdecl; inline;
+function TRange.Value(const x: Integer): Boolean; inline;
 begin
   Result := not (((x < Self.start) and (x < Self.stop)) or ((x > Self.stop) and (x > Self.start)));
 end;
@@ -1562,7 +1960,7 @@ end;
  @action: Returns true if x-value is out of range.
  @note: None.
 [==============================================================================}
-function TRange.Lacks(const x: Integer): Boolean; cdecl; inline;
+function TRange.Lacks(const x: Integer): Boolean; inline;
 begin
   Result := (((x < Self.start) and (x < Self.stop)) or ((x > Self.stop) and (x > Self.start)));
 end;
@@ -1572,7 +1970,7 @@ end;
  @action: Returns true if x-value is outside the range.
  @note: None.
 [==============================================================================}
-function TRange.Outside(const x: Integer): Boolean; cdecl; inline;
+function TRange.Outside(const x: Integer): Boolean; inline;
 begin
   Result := not (((x >= Self.start) and (x <= Self.stop)) or ((x >= Self.stop) and (x <= Self.start)));
 end;
@@ -1582,7 +1980,7 @@ end;
  @action: Returns true if range contains x-value.
  @note: None.
 [==============================================================================}
-function TRange.Item(const x: Integer): Boolean; cdecl; inline;
+function TRange.Item(const x: Integer): Boolean; inline;
 begin
   if (Self.start <= Self.stop) then
     Result := ((x >= Self.start) and (x <= Self.stop))
@@ -1595,7 +1993,7 @@ end;
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
-function TRange.Pivot: Integer; cdecl;
+function TRange.Pivot: Integer;
 begin
   if Self.Ascending then
     Result := (Self.start + ((Self.stop - Self.start) div 2))
@@ -1604,11 +2002,21 @@ begin
 end;
 
 {==============================================================================]
+ <TRange.Mean>
+ @action: Returns the arithmetic mean (midpoint) of the range's Start and Stop values as a Double.
+ @note: Uses floating-point division to avoid integer truncation and to handle large integer values safely.
+[==============================================================================}
+function TRange.Mean: Double; overload;
+begin
+  Result := ((Self.start / 2.0) + (Self.stop / 2.0));
+end;
+
+{==============================================================================]
  <TRange.Middle>
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
-function TRange.Middle: Integer; cdecl;
+function TRange.Middle: Integer;
 begin
   Result := ((Self.start + Self.stop) div 2);
 end;
@@ -1618,7 +2026,7 @@ end;
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
-function TRange.Mid: Double; cdecl;
+function TRange.Mid: Double;
 begin
   Result := ((Self.start + Self.stop) / 2.0);
 end;
@@ -1628,7 +2036,7 @@ end;
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
-function TRange.MidVal: Double; cdecl;
+function TRange.MidVal: Double;
 var
   s: Integer;
 begin
@@ -1643,7 +2051,7 @@ end;
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
-function TRange.MidValue: Double; cdecl;
+function TRange.MidValue: Double;
 var
   s: Integer;
 begin
@@ -1654,11 +2062,22 @@ begin
 end;
 
 {==============================================================================]
+ <TRange.Midpoint>
+  @action: Computes the weighted midpoint (center) of the range using given weights.
+  @note: Returns a Double. Weighted midpoint formula: ((Start * wStart) + (Stop * wStop)) / (wStart + wStop).
+         Useful when one bound of the range has more importance than the other.
+[==============================================================================}
+function TRange.Midpoint(const wStart: Double = 1; const wStop: Double = 1): Double; overload;
+begin
+  Result := (((Self.start * wStart) + (Self.stop * wStop)) / (wStart + wStop));
+end;
+
+{==============================================================================]
  <TRange.Average>
  @action: Average value from TRange.
  @note: None
 [==============================================================================}
-function TRange.Average: Double; cdecl;
+function TRange.Average: Double;
 var
   c: Int64;
 begin
@@ -1671,7 +2090,7 @@ end;
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
-function TRange.Center: Integer; cdecl;
+function TRange.Center: Integer;
 begin
   Result := ((Self.Highest + Self.Lowest) div 2);
 end;
@@ -1681,9 +2100,91 @@ end;
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
-function TRange.Central: Integer; cdecl; inline;
+function TRange.Central: Integer; inline;
 begin
   Result := ((Self.start + self.stop) shr 1);
+end;
+
+{==============================================================================]
+  <TRange.Half>
+  @action: Returns half the length of the range as an integer, calculated as the
+           absolute difference between Stop and Start divided by two.
+  @note:   Direction-agnostic; works for both ascending and descending ranges.
+           Useful for offset calculations, contraction, or expansion operations.
+[==============================================================================}
+function TRange.Half: Integer; overload;
+begin
+  Result := (Abs(Self.stop - Self.start) div 2);
+end;
+
+{==============================================================================]
+  <TRange.Halfway>
+  @action: Returns half the distance between Start and Stop, explicitly handling
+           ascending and descending ranges.
+  @note:   Functionally identical to Half; uses conditional logic instead of Abs().
+           Can be used interchangeably where explicit branch logic is preferred.
+[==============================================================================}
+function TRange.Halfway: Integer; overload;
+begin
+  if (Self.start > Self.stop) then
+    Result := ((Self.start - Self.stop) div 2)
+  else
+    Result := ((Self.stop - Self.start) div 2);
+end;
+
+{==============================================================================]
+  <TRange.Halved>
+  @action: Returns half the distance between Start and Stop, explicitly handling
+           ascending and descending ranges.
+  @note:   EnsureRange-based.
+[==============================================================================}
+function TRange.Halved: Integer; overload;
+begin
+  Result := EnsureRange((Abs(Self.stop - Self.start) div 2), 0, High(Integer));
+end;
+
+{==============================================================================]
+  <TRange.Radius>
+  @action: Returns half the total span (distance) between Start and Stop.
+  @note: Equivalent to (RangeLength / 2); independent of which value is greater.
+[==============================================================================}
+function TRange.Radius: Integer; overload;
+begin
+  Result := ((Self.Maximum - Self.Minimum) div 2);
+end;
+
+{==============================================================================]
+  <TRange.Rad>
+  @action: Returns the half-length (radius) of the range as an integer value.
+  @note: Computed as Abs(Stop - Start) shr 1; equivalent to (|Stop - Start| div 2).
+[==============================================================================}
+function TRange.Rad: Integer; overload;
+begin
+  Result := (Abs(Self.stop - Self.start) shr 1);
+end;
+
+{==============================================================================]
+  <TRange.Radiar>
+  @action: Returns half the absolute distance between Start and Stop, rounded to the nearest integer.
+  @note: Computed as Round(Abs(Stop - Start) * 0.5). Useful when a midpoint-to-edge distance is needed
+         and rounding is preferred over truncation. Order of Start and Stop does not matter.
+[==============================================================================}
+function TRange.Radiar: Integer; overload;
+begin
+  Result := Round(Abs(Self.stop - Self.start) * 0.5);
+end;
+
+{==============================================================================]
+ <TRange.AsStr>
+ @action: Converts TRange range to string.
+ @note: From..To or To..From.
+[==============================================================================}
+function TRange.AsStr(const rReversed: Boolean = False): string; overload;
+begin
+  if not rReversed then
+    Result := Format('%d..%d', [Self.start, Self.stop])
+  else
+    Result := Format('%d..%d', [Self.stop, Self.start]);
 end;
 
 {==============================================================================]
@@ -1691,7 +2192,7 @@ end;
  @action: Converts TRange range to string.
  @note: None
 [==============================================================================}
-function TRange.Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; cdecl;
+function TRange.Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string;
 begin
   Result := ('[' + IntToStr(Self.start) + glueRange + IntToStr(Self.stop) + ']');
 end;
@@ -1701,7 +2202,7 @@ end;
  @action: Converts TRange range to string.
  @note: None
 [==============================================================================}
-function TRange.ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;
+function TRange.ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string;
 begin
   Result := '';
   if (openRange <> '') then
@@ -1719,7 +2220,7 @@ end;
  @action: Converts TRange range to string.
  @note: None
 [==============================================================================}
-function TRange.Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;
+function TRange.Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string;
 begin
   Result := Format(openRange + '%d' + glueRange + '%d' + closeRange, [Self.start, Self.stop]);
 end;
@@ -1729,7 +2230,7 @@ end;
  @action: Returns the sum of all TRange values (start..stop)
  @note: None
 [==============================================================================}
-function TRange.Sum: Int64; cdecl;
+function TRange.Sum: Int64;
 var
   a, b: Int64;
 begin
@@ -1743,7 +2244,7 @@ end;
  @action: Returns the sum of all TRange values (start..stop)
  @note: None
 [==============================================================================}
-function TRange.Summation: Int64; cdecl;
+function TRange.Summation: Int64;
 var
   a, b, c, s, n: Int64;
 begin
@@ -1762,7 +2263,7 @@ end;
  @action: Returns the sum of all TRange values (start..stop)
  @note: None
 [==============================================================================}
-function TRange.Total: Int64; cdecl;
+function TRange.Total: Int64;
 begin
   if Self.Descending then
     Result := (((Int64(Self.start) * (Self.start + 1)) div 2) - ((Int64(Self.stop - 1) * Self.stop) div 2))
@@ -1771,11 +2272,34 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Reserve>
+  @action: Allocate an integer array sized to fit the full range.
+  @note: The array is preallocated with the correct length but is not filled 
+         with values from start..stop. Elements are default-initialized to 0.
+[==============================================================================}
+function TRange.Reserve: TIntegerArray; overload;
+begin
+  SetLength(Result, Self.Size);
+end;
+
+{==============================================================================]
+  <TRange.Reserve>
+  @action: Allocate an integer array sized to fit the full range.
+  @note: The array is preallocated with the correct length but is not filled 
+         with values from start..stop. Elements are default-initialized to 0.
+[==============================================================================}
+function TRange.Reserve(var aRange: TIntegerArray): Integer; overload;
+begin
+  Result := Self.Size;
+  SetLength(aRange, Result);
+end;
+
+{==============================================================================]
   <TRange.Extract>
   @action: Extracts TRange as TIntegerArray. 
   @note: None.
 [==============================================================================}
-function TRange.Extract: TIntegerArray; overload; cdecl;
+function TRange.Extract: TIntegerArray; overload;
 var
   i, c, s: Integer;
 begin
@@ -1789,6 +2313,62 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Extracted>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Extracted: TIntegerArray;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Result) do
+    Result[i] := (Self.Start + i);
+  if Self.Descending then
+    Result.Reverse;
+end;
+
+{==============================================================================]
+  <TRange.Steps>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Steps: TIntegerArray; overload;
+var
+  i, s: Integer;
+  p: PInteger;
+begin
+  s := IfThen((Self.start < Self.stop), 1, -1);
+  Result := Self.Reserve;
+  p := @Result[0];
+  p^ := Self.start;
+  Inc(p);
+  for i := 1 to High(Result) do
+  begin
+    p^ := ((p - 1)^ + s);
+    Inc(p);
+  end;
+end;
+
+{==============================================================================]
+  <TRange.Recursed>
+  @action: Returns digits of the given range.
+  @note: Recursion-based.
+[==============================================================================}
+function TRange.Recursed: TIntegerArray; overload;
+  function BR(const rStart, rStop: Integer): TIntegerArray;
+  begin
+    if (rStart = rStop) then
+      Exit([rStart]);
+    Result := BR(rStart, (rStop - Sign(rStop - rStart)));
+    SetLength(Result, (Length(Result) + 1));
+    Result[High(Result)] := rStop;
+  end;
+begin
+  Result := BR(Self.start, Self.stop);
+end;
+
+{==============================================================================]
   <TRange.Limit>
   @action: Restricts a value to lie within the range defined by Start and Stop.
   @note: Equivalent to clamping value to the inclusive range [Min(start, stop), Max(start, stop)].
@@ -1796,7 +2376,7 @@ end;
          Returns Max(start, stop) if val is above the range.
          Otherwise returns value itself.
 [==============================================================================}
-function TRange.Limit(const val: Integer): Integer; cdecl;
+function TRange.Limit(const val: Integer): Integer;
 var
   r: TRange;
 begin
@@ -1817,7 +2397,7 @@ end;
          Values above the range maximum are allowed.
          Useful when you only want to enforce a lower bound.
 [==============================================================================}
-function TRange.MinLimit(const val: Integer): Integer; cdecl;
+function TRange.MinLimit(const val: Integer): Integer;
 begin
   Result := Max(val, Min(Self.start, Self.stop));
 end;
@@ -1829,17 +2409,327 @@ end;
          Values below the range minimum are allowed.
          Useful when you only want to enforce an upper bound.
 [==============================================================================}
-function TRange.MaxLimit(const val: Integer): Integer; cdecl;
+function TRange.MaxLimit(const val: Integer): Integer;
 begin
   Result := Min(val, Max(Self.start, Self.stop));
-end; 
+end;
+
+{==============================================================================]
+  <TRange.Sample>
+  @action: Return evenly spaced integer samples across the range.
+  @note: Always includes both start and stop values of the range (if sSize > 1).
+         Uses rounding to map floating step positions to integers.
+         If sSize = 1, returns only the start value.
+[==============================================================================}
+function TRange.Sample(const sSize: Integer): TIntegerArray; overload;
+var
+  i: Integer;
+  s: Double;
+begin
+  if (sSize < 1) then
+    Exit([]);
+  SetLength(Result, sSize);
+  s := (Self.Delta / (sSize - 1));
+  for i := 0 to (sSize - 1) do
+    Result[i] := Round(Self.start + (i * s));
+end;
+
+{==============================================================================]
+  <TRange.Windows>
+  @action: Generate all possible subranges (sliding windows) of Self inside
+           the target range. These windows may overlap.
+  @note:   The number of results is (TargetSize - SelfSize + 1).
+[==============================================================================}
+function TRangeHelper.Windows(const target: TRange): TRangeArray; overload;
+var
+  r, s: Integer;
+  f, t: TRange;
+begin
+  s := Self.Size;
+  if (target.Size < s) then
+    Exit([]);
+  t.Create(Min(target.start, target.stop), ((Max(target.start, target.stop) - s) + 1));
+  SetLength(Result, t.Size);
+  r := 0;
+  f := Self.Frame;
+  for s := t.start to t.stop do
+    Result[r.Increase].Create((f.start + s), (f.stop + s));
+end;
+
+{==============================================================================]
+  <TRange.Sectioned>                                                             
+  @action: Divide the target range into sequential, non-overlapping subranges
+           of the same size as Self.
+  @note:   Any remainder at the end of the target range is discarded.
+[==============================================================================}
+function TRangeHelper.Sectioned(const target: TRange): TRangeArray; overload;
+var
+  p, r, s, m: Integer;
+  f, t: TRange;
+begin
+  s := Self.Size;
+  t := target.Normalize;
+  if (s > t.Size) then
+    Exit([]);
+  f := Self.Frame;
+  m := ((t.stop - s) + 1);
+  SetLength(Result, (t.Size div s));
+  r := 0;
+  p := (t.start - s);
+  while (p.Increment(s) <= m) do
+    Result[r.Increase].Create((f.start + p), (f.stop + p));
+end;
+
+{==============================================================================]
+  <TRange.Binned>
+  @action: Generate grid-aligned subranges (bins) of the same size as Self
+           inside the target range.
+  @note:   Subranges are aligned in steps of SelfSize from the start of target.
+           Any remainder that does not fit evenly is ignored.
+[==============================================================================}
+function TRangeHelper.Binned(const target: TRange): TRangeArray; overload;
+var
+  i, s: Integer;
+  f, t: TRange;
+begin
+  t := target.Normalize;
+  s := Self.Size;
+  if (s > t.Size) then
+    Exit([]);
+  f := Self.Frame;
+  SetLength(Result, (t.Size div s));
+  for i := 0 to High(Result) do
+  begin
+    Result[i].start := (t.start + (s * i));
+    Result[i].stop := (Result[i].start + (s - 1));
+  end;
+end;
+
+{==============================================================================]
+  <TRange.Centered>
+  @action: Returns a new TRange that has the same length as Self but is
+           repositioned so that its midpoint equals the specified Center value.
+           Self remains unchanged.
+  @note:   Direction-aware; preserves ascending or descending order.
+           Useful for geometric or data range realignment.
+[==============================================================================}
+function TRange.Centered(const rCenter: Integer): TRange; overload;
+var
+  h: Integer;
+begin
+  h := Self.Half;
+  if Self.Ascending then
+    Result.Create((rCenter - h), (rCenter + h))
+  else
+    Result.Create((rCenter + h), (rCenter - h));
+end;
+
+{==============================================================================]
+  <TRange.Shift>
+  @action: Adds the given offset N to both Start and Stop of the range, 
+           modifying Self in place. Returns a copy of the original range 
+           before the shift.
+  @note:   Useful when you need the previous state while mutating the range.
+[==============================================================================}
+function TRange.Shift(const N: Integer = 1): TRange; overload;
+begin
+  Result := Self;
+  Inc(Self.start, N);
+  Inc(Self.stop, N);
+end;
+
+{==============================================================================]
+  <TRange.Shifted>
+  @action: Returns a new TRange offset N by the given value, without modifying Self.
+  @note:   Functional style; Self remains unchanged. Can be used for expression-style 
+           or fluent programming.
+[==============================================================================}
+function TRange.Shifted(const N: Integer = 1): TRange; overload;
+begin
+  Result.start := (Self.start + N);
+  Result.stop := (Self.stop + N);
+end;
+
+{==============================================================================]
+  <TRange.Back>
+  @action: Subtracts the given offset N from both Start and Stop of the range,
+           modifying Self in place. Returns a copy of the original range 
+           before the backward shift.
+  @note:   Default offset = 1. Useful when you need the previous state while 
+           moving the range backward.
+[==============================================================================}
+function TRange.Back(const N: Integer = 1): TRange; overload;
+begin
+  Result := Self;
+  Dec(Self.start, N);
+  Dec(Self.stop, N);
+end;
+
+{==============================================================================]
+  <TRange.Backed>
+  @action: Returns a new TRange shifted backward by the given offset N, without 
+           modifying Self.
+  @note:   Default offset = 1. Functional style; Self remains unchanged. Can 
+           be used for expression-style or fluent programming.
+[==============================================================================}
+function TRange.Backed(const N: Integer = 1): TRange; overload;
+begin
+  Result.start := (Self.start - N);
+  Result.stop := (Self.stop - N);
+end;
+
+{==============================================================================]
+  <TRange.Increase>
+  @action: Adds the given amount (default = 1) to both Start and Stop of the range,
+           modifying Self in place. Returns a copy of the original range 
+           before the increase.
+  @note:   Useful when you want to capture the previous state while mutating the range forward.
+[==============================================================================}
+function TRange.Increase(const N: Integer = 1): TRange; overload;
+begin
+  Result := Self;
+  Self.start := (Self.start + N);
+  Self.stop := (Self.stop + N);
+end;
+
+{==============================================================================]
+  <TRange.Decrease>
+  @action: Subtracts the given amount (default = 1) from both Start and Stop of the range,
+           modifying Self in place. Returns a copy of the original range 
+           before the decrease.
+  @note:   Useful when you want to capture the previous state while mutating the range backward.
+[==============================================================================}
+function TRange.Decrease(const N: Integer = 1): TRange; overload;
+begin
+  Result := Self;
+  Self.start := (Self.start - N);
+  Self.stop := (Self.stop - N);
+end;
+
+{==============================================================================]
+  <TRange.Increment>
+  @action: Adds the given amount (default = 1) to both Start and Stop of the range,
+           modifying Self in place. Returns the updated range after the increase.
+  @note:   Functional-style usage: Self is modified, and the returned range reflects the new values.
+[==============================================================================}
+function TRange.Increment(const N: Integer = 1): TRange; overload;
+begin
+  Self.start := (Self.start + N);
+  Self.stop := (Self.stop + N);
+  Result := Self;
+end;
+
+{==============================================================================]
+  <TRange.Decrement>
+  @action: Subtracts the given amount (default = 1) from both Start and Stop of the range,
+           modifying Self in place. Returns the updated range after the decrease.
+  @note:   Functional-style usage: Self is modified, and the returned range reflects the new values.
+[==============================================================================}
+function TRange.Decrement(const N: Integer = 1): TRange; overload;
+begin
+  Self.start := (Self.start - N);
+  Self.stop := (Self.stop - N);
+  Result := Self;
+end;
+
+{==============================================================================]
+  <TRange.Modify>
+  @action: Adds the given mStart and mStop offsets to the current range bounds,
+           modifying Self in place. Returns the original range before modification.
+  @note:   Used internally by operations like Contract or Expand for direct bound
+           adjustment while preserving the previous state.
+[==============================================================================}
+function TRange.Modify(const mStart, mStop: Integer): TRange; overload;
+begin
+  Result := Self;
+  Self.start := (Self.start + mStart);
+  Self.stop := (Self.stop + mStop);
+end;
+
+{==============================================================================]
+  <TRange.Modified>
+  @action: Returns a new TRange with Start and Stop adjusted by the specified
+           mStart and mStop offsets, without modifying Self.
+  @note:   Functional version of Modify. Useful for expression-style or
+           fluent programming where immutability is preferred.
+[==============================================================================}
+function TRange.Modified(const mStart, mStop: Integer): TRange; overload;
+begin
+  Result.start := (Self.start + mStart);
+  Result.stop := (Self.stop + mStop);
+end;
+
+{==============================================================================]
+  <TRange.Contract>
+  @action: Moves both range bounds toward each other by the given amount N,
+           effectively reducing the range span. Modifies Self in place and
+           returns the original (pre-contracted) range.
+  @note:   Direction-aware; contracts correctly for both ascending and
+           descending ranges.
+[==============================================================================}
+function TRange.Contract(const N: Integer = 1): TRange; overload;
+begin
+  Result := Self;
+  if Self.Ascending then
+    Self.Modify(N, -N)
+  else
+    Self.Modify(-N, N);
+end;
+
+{==============================================================================]
+  <TRange.Contracted>
+  @action: Returns a new TRange contracted by the given amount N without
+           modifying Self.
+  @note:   Functional style version of Contract; preserves Self and is safe
+           for use in expressions or chainable operations.
+[==============================================================================}
+function TRange.Contracted(const N: Integer = 1): TRange; overload;
+begin
+  if Self.Ascending then
+    Result.Create((Self.start + N), (Self.stop - N))
+  else
+    Result.Create((Self.start - N), (Self.stop + N));
+end;
+
+{==============================================================================]
+  <TRange.Expand>
+  @action: Moves both bounds of the range away from each other by the given
+           amount N, effectively increasing the span of the range. Modifies Self
+           in place and returns the original (pre-expanded) range.
+  @note:   Direction-aware; expands correctly for both ascending and descending
+           ranges. Used when the current range should grow outward.
+[==============================================================================}
+function TRange.Expand(const N: Integer = 1): TRange; overload;
+begin
+  Result := Self;
+  if Self.Ascending then
+    Self.Modify(-N, N)
+  else
+    Self.Modify(N, -N);
+end;
+
+{==============================================================================]
+  <TRange.Expanded>
+  @action: Returns a new TRange expanded by the given amount N without modifying
+           Self.
+  @note:   Functional version of Expand. Preserves the original range and can
+           be used in expression-style or chainable operations. Handles both
+           ascending and descending ranges.
+[==============================================================================}
+function TRange.Expanded(const N: Integer = 1): TRange; overload;
+begin
+  if Self.Ascending then
+    Result.Create((Self.start - N), (Self.stop + N))
+  else
+    Result.Create((Self.start + N), (Self.stop - N));
+end;
 
 {==============================================================================]
   <_TRange.Create>
   @action: Creates TPoint using pX, pY 
   @note: function version
 [==============================================================================}
-class function _TRange.Create(const rStart, rStop: Integer): TRange; overload; cdecl;
+class function _TRange.Create(const rStart, rStop: Integer): TRange; overload;
 begin
   Result.start := rStart;
   Result.stop := rStop;
@@ -1850,7 +2740,7 @@ end;
   @action: Creates TPoint using value 
   @note: function version
 [==============================================================================}
-class function _TRange.Create(const value: Integer = 0): TRange; overload; cdecl;
+class function _TRange.Create(const value: Integer = 0): TRange; overload;
 begin
   Result := _TRange.Create(value, value);
 end;

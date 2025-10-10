@@ -1,11 +1,11 @@
 {$DEFINE string}{$I config\Defines.inc}
 
 {==============================================================================]
-  <TStringArrayHelper.Span>
+  <TStringArrayHelper.Tally>
   @action: Returns total length of TStringArray strings combined together.
   @note: None.
 [==============================================================================}
-function TStringArrayHelper.Span: Integer; cdecl;
+function TStringArrayHelper.Tally: Int64;
 var
   i: Integer;
 begin
@@ -19,12 +19,12 @@ end;
   @action: Joins all the strings of array as single string.
   @note: Chaining.
 [==============================================================================}
-function TStringArrayHelper.Concat: string; cdecl;
+function TStringArrayHelper.Concat: string;
 var
   i, j, l: Integer;
 begin
   l := 0;
-  SetLength(Result, Self.Span);
+  SetLength(Result, Self.Tally);
   for i := 0 to High(Self) do
     for j := 1 to Length(Self[i]) do
       Result[l.Increment] := Self[i][j];
@@ -35,14 +35,14 @@ end;
   @action: Joins all the strings of array as single string.
   @note: Chaining.
 [==============================================================================}
-function TStringArrayHelper.Concatenate: string; cdecl;
+function TStringArrayHelper.Concatenate: string;
 var
   s: TStringBuilder;
   i: Integer;
 begin
   s := TStringBuilder.Create;
   try
-    s.Capacity := Self.Span;
+    s.Capacity := Self.Tally;
     for i := 0 to High(Self) do
       s.Append(Self[i]);
     Result := s.ToString;
@@ -58,7 +58,7 @@ end;
          Warning: This algorithm is not recommended for lengthy string arrays!
 		          Very inefficient...
 [==============================================================================}
-function TStringArrayHelper.Flatten: string; cdecl;
+function TStringArrayHelper.Flatten: string;
 var
   i: SizeInt;
 begin
@@ -72,12 +72,12 @@ end;
   @action: Joins all the strings of array as single string.
   @note: Chaining.
 [==============================================================================}
-function TStringArrayHelper.Glue: string; cdecl;
+function TStringArrayHelper.Glue: string;
 var
   c: TCharArray;
   i, p, l: Integer;
 begin
-  l := Self.Span;
+  l := Self.Tally;
   SetLength(c, l);
   p := 0;
   for i := 0 to High(Self) do

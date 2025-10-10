@@ -5,7 +5,7 @@
  @action: Returns X1-values from arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-function TBoxArrayHelper.X1s: TIntegerArray; overload; cdecl;
+function TBoxArrayHelper.X1s: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -19,7 +19,7 @@ end;
  @action: Returns X2-values from arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-function TBoxArrayHelper.X2s: TIntegerArray; overload; cdecl;
+function TBoxArrayHelper.X2s: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -33,7 +33,7 @@ end;
  @action: Returns Y1-values from arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-function TBoxArrayHelper.Y1s: TIntegerArray; overload; cdecl;
+function TBoxArrayHelper.Y1s: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -47,7 +47,7 @@ end;
  @action: Returns Y2-values from arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-function TBoxArrayHelper.Y2s: TIntegerArray; overload; cdecl;
+function TBoxArrayHelper.Y2s: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -61,7 +61,7 @@ end;
  @action: Returns X1-values from arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-function TBoxArrayHelper.X1Values: TIntegerArray; overload; cdecl;
+function TBoxArrayHelper.X1Values: TIntegerArray; overload;
 var
   l: Integer;
 begin
@@ -76,7 +76,7 @@ end;
  @action: Returns X2-values from arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-function TBoxArrayHelper.X2Values: TIntegerArray; overload; cdecl;
+function TBoxArrayHelper.X2Values: TIntegerArray; overload;
 var
   l: Integer;
 begin
@@ -91,7 +91,7 @@ end;
  @action: Returns Y1-values from arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-function TBoxArrayHelper.Y1Values: TIntegerArray; overload; cdecl;
+function TBoxArrayHelper.Y1Values: TIntegerArray; overload;
 var
   l: Integer;
 begin
@@ -106,7 +106,7 @@ end;
  @action: Returns Y2-values from arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-function TBoxArrayHelper.Y2Values: TIntegerArray; overload; cdecl;
+function TBoxArrayHelper.Y2Values: TIntegerArray; overload;
 var
   l: Integer;
 begin
@@ -121,7 +121,7 @@ end;
  @action: Stores arr X1/X2 and Y1/Y2 values to x1/x2Arr and y1/y2Arr.
  @note: Returns Length(arr).
 [==============================================================================}
-function TBoxArrayHelper.Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer; cdecl;
+function TBoxArrayHelper.Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
 var
   i: Integer;
 begin
@@ -136,7 +136,7 @@ end;
  @action: Zips TBoxArray with x1/x2Arr and y1/y2Arr.
  @note: Uses minimum length(!), if xArr differs from yArr size.
 [==============================================================================}
-function TBoxArrayHelper.Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer; cdecl;
+function TBoxArrayHelper.Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
 var
   i: Integer;
 begin
@@ -144,6 +144,52 @@ begin
   SetLength(Self, Result);
   for i := 0 to (Result - 1) do
     Self[i] := Box(x1Arr[i], y1Arr[i], x2Arr[i], y2Arr[i]);
+end;
+
+{==============================================================================]
+ <TBoxArrayHelper.Bounds>
+ @action: Returns bounds of all boxes in array
+ @note: None.
+[==============================================================================}
+function TBoxArrayHelper.Bounds: TBox; overload;
+var
+  i: Integer;
+begin
+  if Self.Empty then
+    Exit(Result.Create(-2147483648));
+  Result := Self[0];
+  for i := 1 to High(Self) do
+  begin
+    Result.X1 := Min(Self[i].X1, Result.X1);
+    Result.Y1 := Min(Self[i].Y1, Result.Y1);
+    Result.X2 := Max(Self[i].X2, Result.X2);
+    Result.Y2 := Max(Self[i].Y2, Result.Y2);
+  end;
+end;
+
+{==============================================================================]
+ <TBoxArrayHelper.Boundaries>
+ @action: Returns bounds of all boxes in array
+ @note: None.
+[==============================================================================}
+function TBoxArrayHelper.Boundaries: TBox; overload;
+var
+  i: Integer;
+begin
+  if Self.Empty then
+    Exit(Result.Create(-2147483648));
+  Result := Self[0];
+  for i := 1 to High(Self) do
+  begin
+    if (Result.X1 > Self[i].X1) then
+	  Result.X1 := Self[i].X1;
+    if (Result.Y1 > Self[i].Y1) then
+	  Result.Y1 := Self[i].Y1;
+	if (Result.X2 < Self[i].X2) then
+	  Result.X2 := Self[i].X2;
+    if (Result.Y2 < Self[i].Y2) then
+	  Result.Y2 := Self[i].Y2;
+  end;
 end;
 
 {$UNDEF TBox}

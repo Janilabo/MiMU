@@ -58,7 +58,7 @@ end;
   @action: Creates TBox(0,0,0,0).
   @note: None
 [==============================================================================}
-function TBoxHelper.Create: TBox; overload; cdecl;
+function TBoxHelper.Create: TBox; overload;
 begin
   Self.X1 := 0;
   Self.Y1 := 0;
@@ -72,7 +72,7 @@ end;
   @action: Constructs TBox with XS, YS, XE, YE.
   @note: None.
 [==============================================================================}
-class function TBox.Construct(const XS, YS, XE, YE: Integer): TBox; overload; cdecl;
+class function TBox.Construct(const XS, YS, XE, YE: Integer): TBox; overload;
 begin
   Result.X1 := XS;
   Result.Y1 := YS;
@@ -85,7 +85,7 @@ end;
   @action: Creates TBox using minX, minY, maxX, maxY 
   @note: Min-Maxed. Creates only valid TBoxes. Returns area.
 [==============================================================================}
-function TBox.Build(const minX, minY, maxX, maxY: Integer): Integer; overload; cdecl;
+function TBox.Build(const minX, minY, maxX, maxY: Integer): Integer; overload;
 begin
   Self.X1 := Min(minX, maxX);
   Self.Y1 := Min(minY, maxY);
@@ -99,7 +99,7 @@ end;
   @action: Builds TBox using 2 points (a = start point, b = end point)..
   @note: Make sure start and end points are correct!
 [==============================================================================}
-function TBox.Build(const top, bottom: TPoint): Integer; overload; cdecl;
+function TBox.Build(const top, bottom: TPoint): Integer; overload;
 begin
   Result := Self.Build(top.X, top.Y, bottom.X, bottom.Y);
 end;
@@ -109,7 +109,7 @@ end;
   @action: We simply build using  
   @note: Constructor.
 [==============================================================================}
-function TBox.Build(const valueX, valueY: Integer): Integer; overload; cdecl;
+function TBox.Build(const valueX, valueY: Integer): Integer; overload;
 begin
   Result := Self.Build(valueX, valueY, valueX, valueY);
 end;
@@ -119,7 +119,7 @@ end;
   @action: Creates TBox using target TPoint
   @note: Constructor.
 [==============================================================================}
-function TBox.Build(const target: TPoint): Integer; overload; cdecl;
+function TBox.Build(const target: TPoint): Integer; overload;
 begin
   Result := Self.Build(target.X, target.Y, target.X, target.Y)
 end;
@@ -129,7 +129,7 @@ end;
   @action: We simply build using value.
   @note: Constructor.
 [==============================================================================}
-function TBox.Build(const value: Integer = 0): Integer; overload; cdecl;
+function TBox.Build(const value: Integer = 0): Integer; overload;
 begin
   Result := Self.Build(value, value, value, value);
 end;
@@ -141,7 +141,7 @@ end;
   @note: Useful for initializing a TBox instance and simultaneously returning it
          for assignment. Example: a := b.Init(2,2,8,8);
 [==============================================================================}
-function TBox.Init(const bX1, bY1, bX2, bY2: Integer): TBox; overload; cdecl;
+function TBox.Init(const bX1, bY1, bX2, bY2: Integer): TBox; overload;
 begin
   Self.X1 := bX1;
   Self.Y1 := bY1;
@@ -160,7 +160,7 @@ end;
   @note: Useful for copying values from an existing TBox while allowing in-line assignment.
          Example: a := b.Init(c);
 [==============================================================================}
-function TBox.Init(const b: TBox): TBox; overload; cdecl;
+function TBox.Init(const b: TBox): TBox; overload;
 begin
   Self := b;
   Result := b;
@@ -173,7 +173,7 @@ end;
   @note: The parameter has a default of 0, allowing zero-initialization.
          Example: a := b.Init; or a := b.Init(5);
 [==============================================================================}
-function TBox.Init(const val: Integer = 0): TBox; overload; cdecl;
+function TBox.Init(const val: Integer = 0): TBox; overload;
 begin
   Self.X1 := val;
   Self.Y1 := val;
@@ -192,7 +192,7 @@ end;
   @note: Useful for copying values from an existing TBox while allowing in-line assignment.
          Example: a := b.Init(p);
 [==============================================================================}
-function TBox.Init(const p: TPoint): TBox; overload; cdecl;
+function TBox.Init(const p: TPoint): TBox; overload;
 begin
   Self.X1 := p.X;
   Self.Y1 := p.Y;
@@ -211,7 +211,7 @@ end;
   @note: Useful for copying values from an existing TBox while allowing in-line assignment.
          Example: a := b.Init(c, d);
 [==============================================================================}
-function TBox.Init(const TL, BR: TPoint): TBox; overload; cdecl;
+function TBox.Init(const TL, BR: TPoint): TBox; overload;
 begin
   Self.X1 := TL.X;
   Self.Y1 := TL.Y;
@@ -228,7 +228,7 @@ end;
   @action: Creates TBox from pt by radius used for width and height.
   @note: None.
 [==============================================================================}
-function TBox.Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload; cdecl;
+function TBox.Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload;
 begin
   Self.X1 := (pt.X - wRadius);
   Self.Y1 := (pt.Y - hRadius);
@@ -242,7 +242,7 @@ end;
   @action: Creates TBox from pt by radius used for width and height.
   @note: None.
 [==============================================================================}
-function TBox.Make(const pt: TPoint; const radius: Integer = 0): TBox; overload; cdecl;
+function TBox.Make(const pt: TPoint; const radius: Integer = 0): TBox; overload;
 begin
   Result := Self.Make(pt, radius, radius);
 end;
@@ -252,7 +252,7 @@ end;
   @action: Creates box to point, with size for width and height.
   @note: None.
 [==============================================================================}
-function TBox.Form(const pt: TPoint; const size: Integer = 1): TBox; overload; cdecl;
+function TBox.Form(const pt: TPoint; const size: Integer = 1): TBox; overload;
 begin
   Self.X1 := pt.X;
   Self.Y1 := pt.Y;
@@ -266,7 +266,7 @@ end;
   @action: Creates box to point, with width and height.
   @note: None.
 [==============================================================================}
-function TBox.Form(const pt: TPoint; const width, height: Integer): TBox; overload; cdecl;
+function TBox.Form(const pt: TPoint; const width, height: Integer): TBox; overload;
 begin
   Self.X1 := pt.X;
   Self.Y1 := pt.Y;
@@ -276,25 +276,11 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Unzip>
-  @action: Unzips TBox X1, Y1, X2, Y2 and returns the area.
-  @note: None.
-[==============================================================================}
-function TBox.Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload; cdecl;
-begin
-  bX1 := Self.X1;
-  bY1 := Self.Y1;
-  bX2 := Self.X2;
-  bY2 := Self.Y2;
-  Result := Self.Area;
-end;
-
-{==============================================================================]
   <TBox.Frame>
   @action: Returns the frame of TBox 
   @note: Dimensional box of the TBox. Based on Width and Height.
 [==============================================================================}
-function TBox.Frame(var width, height: Integer): TBox; overload; cdecl;
+function TBox.Frame(var width, height: Integer): TBox; overload;
 begin
   width := Self.Width;
   height := Self.Height;
@@ -306,7 +292,7 @@ end;
   @action: Returns the frame of TBox 
   @note: Dimensional box of the TBox. Based on Width and Height.
 [==============================================================================}
-function TBox.Frame: TBox; overload; cdecl;
+function TBox.Frame: TBox; overload;
 begin
   Result := Box(0, 0, (Self.Width - 1), (Self.Height - 1));
 end;
@@ -316,7 +302,7 @@ end;
   @action: Returns true if TBox is just a single point.
   @note: None.
 [==============================================================================}
-function TBox.Singular: Boolean; cdecl;
+function TBox.Singular: Boolean;
 begin
   Result := ((Self.X1 = Self.X2) and (Self.Y1 = Self.Y2));
 end;
@@ -326,7 +312,7 @@ end;
   @action: Returns true if TBox is just a single point.
   @note: None.
 [==============================================================================}
-function TBox.IsPoint: Boolean; cdecl;
+function TBox.IsPoint: Boolean;
 begin
   Result := not ((Self.X1 <> Self.X2) or (Self.Y1 <> Self.Y2));
 end;
@@ -336,7 +322,7 @@ end;
   @action: Returns true if TBox is horizontal line. (Width <> 1) and (Height = 1)
   @note: None.
 [==============================================================================}
-function TBox.IsHorizontalLine: Boolean; cdecl;
+function TBox.IsHorizontalLine: Boolean;
 begin
   Result := ((Y1 = Y2) and (X1 <> X2));
 end;
@@ -346,7 +332,7 @@ end;
   @action: Returns true if TBox is vertical line. (Width = 1) and (Height <> 1)
   @note: None.
 [==============================================================================}
-function TBox.IsVerticalLine: Boolean; cdecl;
+function TBox.IsVerticalLine: Boolean;
 begin
   Result := ((X1 = X2) and (Y1 <> Y2));
 end;
@@ -356,7 +342,7 @@ end;
   @action: Returns true if TBox is horizontal or vertical line.
   @note: None.
 [==============================================================================}
-function TBox.IsLine: Boolean; cdecl;
+function TBox.IsLine: Boolean;
 begin
   Result := (Self.IsHorizontalLine or Self.IsVerticalLine);
 end;
@@ -366,7 +352,7 @@ end;
   @action: Returns true if TBox is horizontal or vertical line.
   @note: None.
 [==============================================================================}
-function TBox.Linear: Boolean; cdecl;
+function TBox.Linear: Boolean;
 begin
   Result := (((Self.X1 = Self.X2) xor (Self.Y1 = Self.Y2)) and (not Self.IsPoint));
 end;
@@ -376,7 +362,7 @@ end;
   @action: Returns true if TBox is valid rectangle with area.
   @note: None.
 [==============================================================================}
-function TBox.Is2D: Boolean; cdecl;
+function TBox.Is2D: Boolean;
 begin
   Result := ((Self.Width > 1) and (Self.Height > 1));
 end;
@@ -386,7 +372,7 @@ end;
   @action: Returns true if TBox is either point or a horizontal/vertical line.
   @note: Returns False if TBox is rectangle with workable area.
 [==============================================================================}
-function TBox.Collapsed: Boolean; cdecl;
+function TBox.Collapsed: Boolean;
 begin
   Result := ((Self.X1 = Self.X2) or (Self.Y1 = Self.Y2));
 end;
@@ -396,7 +382,7 @@ end;
   @action: Returns true if TBox is valid rectangle
   @note: None.
 [==============================================================================}
-function TBox.Boxy: Boolean; cdecl;
+function TBox.Boxy: Boolean;
 begin
   Result := ((Self.X1 <> Self.X2) and (Self.Y1 <> Self.Y2));
 end;
@@ -406,7 +392,7 @@ end;
   @action: Returns true if TBox contains more than single point.
   @note: None.
 [==============================================================================}
-function TBox.Plural: Boolean; cdecl;
+function TBox.Plural: Boolean;
 begin
   Result := ((Self.X2 > Self.X1) or (Self.Y2 > Self.Y1));
 end;
@@ -416,7 +402,7 @@ end;
   @action: Returns true if TBox width AND height are higher than 1.
   @note: (X2 > X1 and Y2 > Y1).
 [==============================================================================}
-function TBox.Rectangular: Boolean; cdecl;
+function TBox.Rectangular: Boolean;
 begin
   Result := ((Self.X2 > Self.X1) and (Self.Y2 > Self.Y1));
 end;
@@ -426,7 +412,7 @@ end;
   @action: Returns true if width equals height.
   @note: (X2 - X1) = (Y2 - Y1), so WIDTH equals HEIGHT.
 [==============================================================================}
-function TBox.Equilateral: Boolean; cdecl;
+function TBox.Equilateral: Boolean;
 begin
   Result := ((Self.X2 - Self.X1) = (Self.Y2 - Self.Y1));
 end;
@@ -436,7 +422,7 @@ end;
   @action: Returns true if width equals height.
   @note: (X2 - X1) = (Y2 - Y1), so WIDTH equals HEIGHT.
 [==============================================================================}
-function TBox.Square: Boolean; cdecl;
+function TBox.Square: Boolean;
 begin
   Result := (((Self.X2 > Self.X1) and (Self.Y2 > Self.Y1)) and ((Self.X2 - Self.X1) = (Self.Y2 - Self.Y1)));
 end;
@@ -446,7 +432,7 @@ end;
   @action: Stores dimensions from TBox (bx) to width and height variables
   @note: Returns bx area.
 [==============================================================================}
-function TBox.Size(var width, height: Integer): Integer; overload; cdecl; inline;
+function TBox.Size(var width, height: Integer): Integer; overload; inline;
 begin
   width := Self.Width;
   height := Self.Height;
@@ -458,7 +444,7 @@ end;
   @action: Returns TBox dimensions (Width and Height) as TPoint.
   @note: X = Width, Y = Height.
 [==============================================================================}
-function TBox.Size: TPoint; overload; cdecl;
+function TBox.Size: TPoint; overload;
 begin
   Result := Point(Self.Width, Self.Height);
 end;
@@ -468,7 +454,7 @@ end;
   @action: Calculates the amount of pixels in TBox (bx).
   @note: None
 [==============================================================================}
-function TBox.Area: Integer; cdecl; inline;
+function TBox.Area: Integer; inline;
 begin
   Result := (Self.Width * Self.Height);
 end;
@@ -478,7 +464,7 @@ end;
   @action: Calculates the amount of pixels in TBox (bx).
   @note: None
 [==============================================================================}
-function TBox.Capacity: Integer; cdecl; inline;
+function TBox.Capacity: Integer; inline;
 begin
   with Self do
     Result := (((Max(X1, X2) - Min(X1, X2)) + 1) * ((Max(Y1, Y2) - Min(Y1, Y2)) + 1));
@@ -489,7 +475,7 @@ end;
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
-function TBox.Footprint: Double; cdecl;
+function TBox.Footprint: Double;
 begin
   Result := ((Abs(Self.X2 - Self.X1) + 1) * (Abs(Self.Y2 - Self.Y1) + 1));
 end;
@@ -499,7 +485,7 @@ end;
   @action: Returns the length of TBox edge/border.
   @note: None
 [==============================================================================}
-function TBox.Perimeter: Integer; cdecl;
+function TBox.Perimeter: Integer;
 begin
   Result := ((2 * (Self.Width + Self.Height)) - 4);
 end;
@@ -509,7 +495,7 @@ end;
   @action: Returns the length of TBox edge/border.
   @note: None
 [==============================================================================}
-function TBox.Perim: Integer; cdecl;
+function TBox.Perim: Integer;
 begin
   Result := (2 * (Pred(Self.Width) + Pred(Self.Height)));
 end;
@@ -519,7 +505,7 @@ end;
   @action: Returns the length of TBox edge/border.
   @note: None
 [==============================================================================}
-function TBox.Circumference: Integer; cdecl;
+function TBox.Circumference: Integer;
 begin
   Result := ((Self.Width - 1) shl 1) + ((Self.Height - 1) shl 1);
 end;
@@ -529,7 +515,7 @@ end;
   @action: Returns diagonal size of bx.
   @note: None.
 [==============================================================================}
-function TBox.Diagonal: Double; cdecl;
+function TBox.Diagonal: Double;
 begin
   Result := Sqrt(Sqr(Self.Width) + Sqr(Self.Height));
 end;
@@ -539,7 +525,7 @@ end;
   @action: Returns bx width.
   @note: Fast, works with only valid TBoxes.
 [==============================================================================}
-function TBox.Width: Integer; overload; cdecl;
+function TBox.Width: Integer; overload;
 begin
   Result := ((Self.X2 - Self.X1) + 1);
 end;
@@ -549,7 +535,7 @@ end;
   @action: Sets bx width.
   @note: Returns old width.
 [==============================================================================}
-function TBox.Width(const w: Integer): Integer; overload; cdecl;
+function TBox.Width(const w: Integer): Integer; overload;
 begin
   Result := ((Self.X2 - Self.X1) + 1);
   Self.X2 := (Self.X1 + (w - 1));
@@ -560,7 +546,7 @@ end;
   @action: Returns bx height.
   @note: Fast, works with only valid TBoxes.
 [==============================================================================}
-function TBox.Height: Integer; overload; cdecl;
+function TBox.Height: Integer; overload;
 begin
   Result := ((Self.Y2 - Self.Y1) + 1);
 end;
@@ -570,7 +556,7 @@ end;
   @action: Sets bx height.
   @note: Returns old height.
 [==============================================================================}
-function TBox.Height(const h: Integer): Integer; overload; cdecl;
+function TBox.Height(const h: Integer): Integer; overload;
 begin
   Result := ((Self.Y2 - Self.Y1) + 1);
   Self.Y2 := (Self.Y1 + (h - 1));
@@ -581,7 +567,7 @@ end;
   @action: Returns bx.X1 and bx.X2 as TRange.
   @note: Horitonzal-axis.
 [==============================================================================}
-function TBox.Horizontal: TRange; cdecl;
+function TBox.Horizontal: TRange;
 begin
   Result.start := Self.X1;
   Result.stop := Self.X2;
@@ -592,7 +578,7 @@ end;
   @action: Returns ratio of Width to Height.
   @note: None.
 [==============================================================================}
-function TBox.Ratio: Double; cdecl;
+function TBox.Ratio: Double;
 begin
   Result := (Self.Width / Self.Height);
 end;
@@ -602,7 +588,7 @@ end;
   @action: Returns bx.Y1 and bx.Y2 as TRange.
   @note: Vertical-axis.
 [==============================================================================}
-function TBox.Vertical: TRange; cdecl;
+function TBox.Vertical: TRange;
 begin
   Result.start := Self.Y1;
   Result.stop := Self.Y2;
@@ -613,7 +599,7 @@ end;
   @action: Returns bx that has been expanded fully by change.
   @note: Works with positive values only.
 [==============================================================================}
-function TBox.Expand(const change: Integer = 1): TBox; cdecl;
+function TBox.Expand(const change: Integer = 1): TBox; overload;
 begin
   if (change < 1) then
     Exit(Self);
@@ -623,12 +609,20 @@ begin
   Result.Y2 := (Self.Y2 + change);
 end;
 
+function TBox.Expand(const target: TBox): TBox; overload;
+begin
+  Result.X1 := Min(Self.X1, target.X1);
+  Result.Y1 := Min(Self.Y1, target.Y1);
+  Result.X2 := Max(Self.X2, target.X2);
+  Result.Y2 := Max(Self.Y2, target.Y2);
+end;
+
 {==============================================================================]
   <TBox.Shrink>
   @action: Returns bx that has been shrinked fully by change.
   @note: Works with positive values only. UNSAFE method, no checks!
 [==============================================================================}
-function TBox.Shrink(const change: Integer = 1): TBox; cdecl;
+function TBox.Shrink(const change: Integer = 1): TBox; overload;
 begin
   if (change < 1) then
     Exit(Self);
@@ -638,12 +632,20 @@ begin
   Result.Y2 := (Self.Y2 - change);
 end;
 
+function TBox.Shrink(const target: TBox): TBox; overload;
+begin
+  Result.X1 := Max(Self.X1, target.X1);
+  Result.Y1 := Max(Self.Y1, target.Y1);
+  Result.X2 := Min(Self.X2, target.X2);
+  Result.Y2 := Min(Self.Y2, target.Y2);
+end;
+
 {==============================================================================]
   <TBox.Resize>
   @action: Returns bx that has been resized fully by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.Resize(const change: Integer): TBox; cdecl;
+function TBox.Resize(const change: Integer): TBox;
 begin
   Result.X1 := (Self.X1 - change);
   Result.Y1 := (Self.Y1 - change);
@@ -656,7 +658,7 @@ end;
   @action: Returns bx that has been resized vertically by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeVertically(const change: Integer): TBox; cdecl;
+function TBox.ResizeVertically(const change: Integer): TBox;
 begin
   Result.X1 := Self.X1;
   Result.Y1 := (Self.Y1 - change);
@@ -669,7 +671,7 @@ end;
   @action: Returns bx that has been resized horizontally by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeHorizontally(const change: Integer): TBox; cdecl;
+function TBox.ResizeHorizontally(const change: Integer): TBox;
 begin
   Result.X1 := (Self.X1 - change);
   Result.Y1 := Self.Y1;
@@ -682,7 +684,7 @@ end;
   @action: Returns bx that has been resized horizontally by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeTop(const change: Integer): TBox; cdecl;
+function TBox.ResizeTop(const change: Integer): TBox;
 begin
   Result.X1 := Self.X1;
   Result.Y1 := (Self.Y1 - change);
@@ -695,7 +697,7 @@ end;
   @action: Returns bx that has been resized from bottom by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeBottom(const change: Integer): TBox; cdecl;
+function TBox.ResizeBottom(const change: Integer): TBox;
 begin
   Result.X1 := Self.X1;
   Result.Y1 := Self.Y1;
@@ -708,7 +710,7 @@ end;
   @action: Returns bx that has been resized from left-side by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeLeft(const change: Integer): TBox; cdecl;
+function TBox.ResizeLeft(const change: Integer): TBox;
 begin
   Result.X1 := (Self.X1 - change);
   Result.Y1 := Self.Y1;
@@ -721,7 +723,7 @@ end;
   @action: Returns bx that has been resized from right-side by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeRight(const change: Integer): TBox; cdecl;
+function TBox.ResizeRight(const change: Integer): TBox;
 begin
   Result.X1 := Self.X1;
   Result.Y1 := Self.Y1;
@@ -734,7 +736,7 @@ end;
   @action: Returns bx that has been resized from top-left by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeTopLeft(const change: Integer): TBox; cdecl;
+function TBox.ResizeTopLeft(const change: Integer): TBox;
 begin
   Result.X1 := (Self.X1 - change);
   Result.Y1 := (Self.Y1 - change);
@@ -747,7 +749,7 @@ end;
   @action: Returns bx that has been resized from top-right by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeTopRight(const change: Integer): TBox; cdecl;
+function TBox.ResizeTopRight(const change: Integer): TBox;
 begin
   Result.X1 := Self.X1;
   Result.Y1 := (Self.Y1 - change);
@@ -760,7 +762,7 @@ end;
   @action: Returns bx that has been resized from bottom-right by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeBottomRight(const change: Integer): TBox; cdecl;
+function TBox.ResizeBottomRight(const change: Integer): TBox;
 begin
   Result.X1 := Self.X1;
   Result.Y1 := Self.Y1;
@@ -773,7 +775,7 @@ end;
   @action: Returns bx that has been resized from bottom-left by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeBottomLeft(const change: Integer): TBox; cdecl;
+function TBox.ResizeBottomLeft(const change: Integer): TBox;
 begin
   Result.X1 := (Self.X1 - change);
   Result.Y1 := Self.Y1;
@@ -786,7 +788,7 @@ end;
   @action: Returns true if bx1 and bx2 are identical.
   @note: None
 [==============================================================================}
-function TBox.Equal(const b: TBox): Boolean; cdecl; inline;
+function TBox.Equal(const b: TBox): Boolean; inline;
 begin
   Result := ((Self.X1 = b.X1) and (Self.Y1 = b.Y1) and (Self.X2 = b.X2) and (Self.Y2 = b.Y2));
 end;  
@@ -796,7 +798,7 @@ end;
   @action: Returns true if pt is inside the given box (bx).
   @note: None.
 [==============================================================================}
-function TBox.Contains(const pt: TPoint): Boolean; overload; cdecl;
+function TBox.Contains(const pt: TPoint): Boolean; overload;
 begin
   Result := not ((pt.X < Self.X1) or (pt.Y < Self.Y1) or (pt.X > Self.X2) or (pt.Y > Self.Y2));
 end;
@@ -806,7 +808,7 @@ end;
   @action: Returns true if x is in/within bx boundaries.
   @note: None
 [==============================================================================}
-function TBox.Contains(const b: TBox): Boolean; overload; cdecl;
+function TBox.Contains(const b: TBox): Boolean; overload;
 begin
   Result := ((b.X1 >= Self.X1) and (b.X1 <= Self.X2) and (b.X2 >= Self.X1) and (b.X2 <= Self.X2) and (b.Y1 >= Self.Y1) and (b.Y1 <= Self.Y2) and (b.Y2 >= Self.Y1) and (b.Y2 <= Self.Y2));
 end;
@@ -816,7 +818,7 @@ end;
   @action: Returns true if bx is INSIDE target boundaries.
   @note: None.
 [==============================================================================}
-function TBox.Inside(const target: TBox): Boolean; overload; cdecl;
+function TBox.Inside(const target: TBox): Boolean; overload;
 begin
   Result := not ((Self.X2 < target.X1) or (Self.Y2 < target.Y1) or (Self.X1 > target.X2) or (Self.Y1 > target.Y2));
 end;
@@ -826,7 +828,7 @@ end;
   @action: Returns true if bx is in/within any area boundaries by target areas.
   @note: None.
 [==============================================================================}
-function TBoxHelper.Inside(const targets: TBoxArray): Boolean; overload; cdecl;
+function TBoxHelper.Inside(const targets: TBoxArray): Boolean; overload;
 var
   i: Integer;
 begin
@@ -841,7 +843,7 @@ end;
   @action: Returns true if target TBox is outside the target boundaries.
   @note: None.
 [==============================================================================}
-function TBox.Disjoint(const target: TBox): Boolean; overload; cdecl;
+function TBox.Disjoint(const target: TBox): Boolean; overload;
 begin
   Result := ((Self.X2 < target.X1) or (Self.Y2 < target.Y1) or (Self.X1 > target.X2) or (Self.Y1 > target.Y2));
 end;
@@ -851,7 +853,7 @@ end;
   @action: Returns true if pt TPoint is OUTSIDE the TBox boundaries.
   @note: None.
 [==============================================================================}
-function TBox.Lacks(const pt: TPoint): Boolean; overload; cdecl;
+function TBox.Lacks(const pt: TPoint): Boolean; overload;
 begin
   Result := ((pt.X > Self.X2) or (pt.Y > Self.Y2) or (pt.X < Self.X1) or (pt.Y < Self.Y1));
 end;
@@ -861,7 +863,7 @@ end;
   @action: Returns Center point from bx.
   @note: None.
 [==============================================================================}
-function TBox.Center: TPoint; cdecl;
+function TBox.Center: TPoint;
 begin
   Result.X := Round(Self.X1 + ((Self.Width - 1) div 2));
   Result.Y := Round(Self.Y1 + ((Self.Height - 1) div 2));
@@ -872,7 +874,7 @@ end;
   @action: Bounds 2 boxes (a and b) to 1 box.
   @note: Based on lowest / highest coordinate values.
 [==============================================================================}
-function TBox.Envelope(const b: TBox): TBox; cdecl;
+function TBox.Envelope(const b: TBox): TBox;
 begin
   Result.X1 := Min(Min(Self.X1, Self.X2), Min(b.X1, b.X2));
   Result.Y1 := Min(Min(Self.Y1, Self.Y2), Min(b.Y1, b.Y2));
@@ -885,7 +887,7 @@ end;
   @action: Returns true if a and b are in anykind of contact with each other.
   @note: None
 [==============================================================================}
-function TBox.Overlap(const b: TBox): Boolean; cdecl; inline;
+function TBox.Overlap(const b: TBox): Boolean; inline;
 begin
   Result := not ((Self.X1 > b.X2) or (Self.X2 < b.X1) or (Self.Y1 > b.Y2) or (Self.Y2 < b.Y1));
 end;
@@ -895,7 +897,7 @@ end;
   @action: Returns true if a and b are in anykind of contact with each other.
   @note: None
 [==============================================================================}
-function TBox.Intersect(const b: TBox): TBox; overload; cdecl;
+function TBox.Intersect(const b: TBox): TBox; overload;
 begin
   Result.X1 := Max(Self.X1, b.X1);
   Result.Y1 := Max(Self.Y1, b.Y1);
@@ -908,7 +910,7 @@ end;
   @action: Returns true if a and b are in anykind of contact with each other.
   @note: None
 [==============================================================================}
-function TBox.Intersect(const b: TBox; var iArea: TBox): Boolean; overload; cdecl;
+function TBox.Intersect(const b: TBox; var iArea: TBox): Boolean; overload;
 begin
   iArea := Self.Intersect(b);
   Result := not ((iArea.X1 > iArea.X2) or (iArea.Y1 > iArea.Y2));
@@ -919,7 +921,7 @@ end;
   Explanation: Returns true if TBox is valid (X1 <= X2 and Y1 <= Y2)
   Example: None.
 [==============================================================================}
-function TBox.Valid: Boolean; cdecl; inline;
+function TBox.Valid: Boolean; inline;
 begin
   Result := ((Self.X1 <= Self.X2) and (Self.Y1 <= Self.Y2));
 end;
@@ -929,7 +931,7 @@ end;
   Explanation: Returns true if TBox is invalid (X1 > X2 or Y1 > Y2)
   Example: None.
 [==============================================================================}
-function TBox.Invalid: Boolean; cdecl;
+function TBox.Invalid: Boolean;
 begin
   Result := ((Self.X1 > Self.X2) or (Self.Y1 > Self.Y2));
 end;
@@ -940,7 +942,7 @@ end;
            are within maxWDiff (max width differency) and maxHDiff (max height differency).
   @note: None
 [==============================================================================}
-function TBox.Similar(const b: TBox; const maxWDiff, maxHDiff: Integer): Boolean; overload; cdecl;
+function TBox.Similar(const b: TBox; const maxWDiff, maxHDiff: Integer): Boolean; overload;
 begin
   Result := ((Abs(b.Width - Self.Width) <= maxWDiff) and (Abs(b.Height- Self.Height) <= maxHDiff));
 end;
@@ -951,7 +953,7 @@ end;
            are within diff (max width and height differency).
   @note: None
 [==============================================================================}
-function TBox.Similar(const b: TBox; const diff: Integer): Boolean; overload; cdecl;
+function TBox.Similar(const b: TBox; const diff: Integer): Boolean; overload;
 begin
   Result := ((Abs(b.Width - Self.Width) <= diff) and (Abs(b.Height - Self.Height) <= diff));
 end;
@@ -962,7 +964,7 @@ end;
                Returns true if bx was fixed.
   Example: (200*, 100, 100*, 200) => (100, 100, 200, 200)
 [==============================================================================}
-function TBox.Fix: Boolean; cdecl;
+function TBox.Fix: Boolean;
 var
   x, y: Boolean;
 begin
@@ -982,7 +984,7 @@ end;
   Explanation: Constraints bx to area.
   Example: None.
 [==============================================================================}
-function TBox.Constraint(const toArea: TBox): Boolean; cdecl;
+function TBox.Constraint(const toArea: TBox): Boolean;
 var
   b: TBox;
 begin
@@ -999,7 +1001,7 @@ end;
   Explanation: Returns bx that has been constrained to area.
   Example: None.
 [==============================================================================}
-function TBox.Clip(const toArea: TBox): TBox; cdecl;
+function TBox.Clip(const toArea: TBox): TBox;
 begin
   Result.X1 := Max(toArea.X1, Min(toArea.X2, Self.X1));
   Result.Y1 := Max(toArea.Y1, Min(toArea.Y2, Self.Y1));
@@ -1012,7 +1014,7 @@ end;
   Explanation: Restricts bx to area.
   Example: None.
 [==============================================================================}
-function TBox.Restrict(const toArea: TBox): Boolean; cdecl;
+function TBox.Restrict(const toArea: TBox): Boolean;
 var
   b: TBox;
 begin
@@ -1045,7 +1047,7 @@ end;
   Explanation: Returns bx that has been restricted to area.
   Example: None.
 [==============================================================================}
-function TBox.Clamp(const toArea: TBox): TBox; cdecl;
+function TBox.Clamp(const toArea: TBox): TBox;
 begin
   if (Self.X1 < toArea.X1) then
     Result.X1 := toArea.X1
@@ -1078,11 +1080,111 @@ begin
 end;
 
 {==============================================================================]
+  <TBox_Reserve>
+  Explanation: Reselve function for TBox.
+  Example: None.
+[==============================================================================}
+function TBox.Reserve: TPointArray; overload;
+begin
+  SetLength(Result, Self.Area);
+end;
+
+{==============================================================================]
+  <TBox.Reserve>
+  @action: Allocate an TPoint array sized to fit the full box.
+  @note: The array is preallocated with the correct length but is not filled 
+         with values from X1,Y1..X2,Y2. Elements are default-initialized to 0,0.
+[==============================================================================}
+function TBox.Reserve(var aBox: TPointArray): Integer; overload;
+begin
+  Result := Self.Area;
+  SetLength(aBox, Result);
+end;
+
+{==============================================================================]
+  <TBox.Unzip>
+  @action: Unzips TBox X1, Y1, X2, Y2 and returns the area.
+  @note: None.
+[==============================================================================}
+function TBox.Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload;
+begin
+  bX1 := Self.X1;
+  bY1 := Self.Y1;
+  bX2 := Self.X2;
+  bY2 := Self.Y2;
+  Result := Self.Area;
+end;
+
+{==============================================================================]
+  <TBox.Unzip>
+  @action: Unzips TBox as TPointArray.
+  @note: None.
+[==============================================================================}
+function TBox.Unzip: TPointArray; overload;
+var
+  r: TPointArray;
+  w, h, l, x, y: Integer;
+  p, s: PPoint;
+begin
+  l := Self.Size(w, h);
+  if (l < 1) then
+    Exit([]);
+  SetLength(r, w);
+  for x := 0 to (w - 1) do
+    r[x] := Point((Self.X1 + x), 0);
+  SetLength(Result, l);
+  p := @Result[0];
+  for y := Self.Y1 to Self.Y2 do
+  begin
+    Move(r[0], p^, (w * SizeOf(TPoint)));
+    s := p;
+    for x := 0 to (w - 1) do
+    begin
+      s^.Y := y;
+      Inc(s);
+    end;
+    Inc(p, w);
+  end;
+end;
+
+{==============================================================================]
+  <TBox.Unpack>
+  @action: Unpacks TBox as TPointArray.
+  @note: None.
+[==============================================================================}
+function TBox.Unpack: TPointArray; overload;
+var
+  r: TPointArray;
+  w, h, l, x, y: Integer;
+  p, s: PPoint;
+begin
+  l := Self.Size(w, h);
+  if (l < 1) then
+    Exit([]);
+  SetLength(r, w);
+  for x := 0 to (w - 1) do
+    r[x] := Point((Self.X1 + x), 0);
+  SetLength(Result, l);
+  p := @Result[0];
+  for y := Self.Y1 to Self.Y2 do
+  begin
+    Move(r[0], p^, (w * SizeOf(TPoint)));
+    s := p;
+    Inc(s, w);
+    while (p <> s) do
+    begin
+      p^.Y := y;
+      Inc(p);
+    end;
+  end;
+end;
+
+{==============================================================================]
   <TBox_Points>
   Explanation: Returns TBox points as TPointArray.
   Example: None.
 [==============================================================================}
-function TBox.Points: TPointArray; overload; cdecl;
+function TBox.Points: TPointArray; overload;
 var
   x, y, r: Integer;
 begin
@@ -1098,7 +1200,7 @@ end;
   Explanation: Returns TBox point with index (pIndex).
   Example: None.
 [==============================================================================}
-function TBox.Points(const pIndex: Integer): TPoint; overload; cdecl;
+function TBox.Points(const pIndex: Integer): TPoint; overload;
 begin
   if not InRange(pIndex, 0, (Self.Area - 1)) then
     Exit(Result.Create(-2147483648));
@@ -1110,7 +1212,7 @@ end;
   Explanation: Returns TBox points with indexes (pIDs).
   Example: None.
 [==============================================================================}
-function TBox.Points(const pIDs: TIntegerArray): TPointArray; overload; cdecl;
+function TBox.Points(const pIDs: TIntegerArray): TPointArray; overload;
 var
   i: Integer;
 begin
@@ -1124,7 +1226,7 @@ end;
   Explanation: Stores TBox points to xArray and yArray.
   Example: Returns area (length of TPointArray in box)
 [==============================================================================}
-function TBox.Points(var xArray, yArray: TIntegerArray): Integer; overload; cdecl;
+function TBox.Points(var xArray, yArray: TIntegerArray): Integer; overload;
 var
   i, w: Integer;
 begin
@@ -1144,7 +1246,7 @@ end;
   Explanation: Returns TBox points as TPointArray.
   Example: None.
 [==============================================================================}
-function TBox.Pixels: TPointArray; cdecl;
+function TBox.Pixels: TPointArray; overload;
 var
   w, h, s, x, y, i: Integer;
   p: TPointArray;
@@ -1163,12 +1265,41 @@ begin
   end;
 end;
 
+function TBox.Pixels(const index: Integer): TPoint; overload;
+begin
+  Result := Point((Self.X1 + (index mod Self.Width)), (Self.Y1 + (index div Self.Width)));
+end;
+
+{==============================================================================]
+  <TBox.Pixeled>
+  Explanation: Returns TBox points as TPointArray.
+  Example: None.
+[==============================================================================}
+function TBox.Pixeled: TPointArray; overload;
+var
+  w, h, l, i: Integer;
+  r: TRange;
+begin
+  l := Self.Area;
+  SetLength(Result, l);
+  w := Self.Width;
+  h := (l div 2);
+  r.Create(0, (l - 1));
+  for i := 0 to (h - 1) do
+  begin
+    Result[r.start.Increase] := Point((Self.X1 + (i mod w)), (Self.Y1 + (i div w)));
+    Result[r.stop.Decrease] := Point((Self.X1 + (((l - 1) - i) mod w)), (Self.Y1 + (((l - 1) - i) div w)));
+  end;
+  if l.Odd then
+    Result[h] := Point((Self.X1 + (h mod w)), (Self.Y1 + (h div w)));
+end;
+
 {==============================================================================]
   <TBox.TPA>
   Explanation: Returns TBox points as TPointArray.
   Example: None.
 [==============================================================================}
-function TBox.TPA: TPointArray; cdecl;
+function TBox.TPA: TPointArray; overload;
 var
   i, j: Integer;
 begin
@@ -1177,12 +1308,21 @@ begin
     Result[i].Create((Self.X1 + (i mod j)), (Self.Y1 + (i div j)));
 end;
 
+function TBox.TPA(const index: Integer): TPoint; overload;
+var
+  x, y: Integer;
+begin
+  y := (index div Self.Width);
+  x := (index - (y * Self.Width));
+  Result := Point((Self.X1 + x), (Self.Y1 + y));
+end;
+
 {==============================================================================]
   <TBox.Contents>
   Explanation: Returns TBox points as TPointArray.
-  Example: Fast, Pointer-based alternative
+  Example: Fast, Pointer-based alternative. Double loop version.
 [==============================================================================}
-function TBox.Contents: TPointArray; cdecl;
+function TBox.Contents: TPointArray;
 var
   p: PPoint;
   x, y: Integer;
@@ -1199,11 +1339,33 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Content>
+  Explanation: Returns TBox points as TPointArray.
+  Example: Fast, Pointer-based alternative single loop version.
+[==============================================================================}
+function TBox.Content: TPointArray;
+var
+  w, i: Integer;
+  p: PPoint;
+begin
+  SetLength(Result, Self.Size(w, i));
+  if Result.Empty then
+    Exit;
+  p := @Result[0];
+  for i := 0 to High(Result) do
+  begin
+    p^.X := (Self.X1 + (i mod w));
+    p^.Y := (Self.Y1 + (i div w));
+    Inc(p);
+  end;
+end;
+
+{==============================================================================]
   <TBox.Extract>
   Explanation: Returns TBox points as TPointArray.
   Example: Alternative method for Points(), TPA() and Contents().
 [==============================================================================}
-function TBox.Extract: TPointArray; cdecl;
+function TBox.Extract: TPointArray;
 var
   x, y, i: Integer;
 begin
@@ -1223,7 +1385,7 @@ end;
   Explanation: Returns TBox points as TPointArray.
   Example: Alternative method.
 [==============================================================================}
-function TBox.Enumerate: TPointArray; cdecl;
+function TBox.Enumerate: TPointArray;
 var
   x, y: Integer;
 begin
@@ -1234,11 +1396,27 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Enumerated>
+  @action: Returns all points of the given box as TPointArray.
+  @note: Uses the TBox enumerator (for-in).
+[==============================================================================}
+function TBox.Enumerated: TPointArray;
+var
+  p: TPoint;
+  i: Integer;
+begin
+  SetLength(Result, Self.Area);
+  i := 0;
+  for p in Self do
+    Result[i.Increase] := p;
+end;
+
+{==============================================================================]
   <TBox.Elements>
   Explanation: Returns TBox points as TPointArray.
   Example: Alternative method.
 [==============================================================================}
-function TBox.Elements: TPointArray; cdecl;
+function TBox.Elements: TPointArray;
 var
   p: specialize TList<TPoint>;
   x, y: Integer;
@@ -1259,7 +1437,7 @@ end;
   Explanation: Returns TBox points as TPointArray.
   Example: Alternative method.
 [==============================================================================}
-function TBox.Pts: TPointArray; overload; cdecl;
+function TBox.Pts: TPointArray; overload;
 var
   x, y, i, w, h: Integer;
 begin
@@ -1271,11 +1449,51 @@ begin
 end;
 
 {==============================================================================]
+  <TBox.Explode>
+  Explanation: Returns TBox points as TPointArray.
+  Example: Alternative method.
+[==============================================================================}
+function TBox.Explode: TPointArray; overload;
+var
+  l, i: Integer;
+begin
+  SetLength(Result, Self.Area);
+  Result[0] := Point(Self.X1, Self.Y1);
+  for i := 1 to High(Result) do
+    if ((Result[i - 1].X + 1) > Self.X2) then
+      Result[i] := Point(Self.X1, (Result[i - 1].Y + 1))
+    else
+      Result[i] := Point((Result[i - 1].X + 1), Result[i - 1].Y);
+end;
+
+{==============================================================================]
+  <TBox.Flat>
+  Explanation: Returns TBox points as TPointArray.
+  Example: Alternative method.
+[==============================================================================}
+function TBox.Flat: TPointArray; overload;
+var
+  i: Integer;
+  p: TPoint;
+begin
+  SetLength(Result, Self.Area);
+  p := Point(Self.X1, Self.Y1);
+  for i := 0 to High(Result) do
+  begin
+    Result[i] := p;
+    if (p.X < Self.X2) then
+      Inc(p.X)
+    else
+      p := Point(Self.X1, (p.Y + 1));
+  end;
+end;
+
+{==============================================================================]
   <TBox.IDs>
   Explanation: Returns TBox indexes as TIntegerArray
   Example: None.
 [==============================================================================}
-function TBox.IDs: TIntegerArray; overload; cdecl;
+function TBox.IDs: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -1289,7 +1507,7 @@ end;
   Explanation: Returns TBox index with TPoint p.
   Example: -1 if p is not part of TBox.
 [==============================================================================}
-function TBox.IDs(const p: TPoint): Integer; overload; cdecl;
+function TBox.IDs(const p: TPoint): Integer; overload;
 var
   i: Integer;
 begin
@@ -1303,7 +1521,7 @@ end;
   Explanation: Returns TBox indexes with TPointArray p.
   Example: -1 if p is not part of TBox.
 [==============================================================================}
-function TBox.IDs(const p: TPointArray): TIntegerArray; overload; cdecl;
+function TBox.IDs(const p: TPointArray): TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -1317,7 +1535,7 @@ end;
   Explanation: Returns TBox border points as TPointArray.
   Example: Skips all the inside points.
 [==============================================================================}
-function TBox.Border: TPointArray; overload; cdecl;
+function TBox.Border: TPointArray; overload;
 var
   x, y, i, w, h: Integer;
 begin
@@ -1336,13 +1554,13 @@ begin
     Result[i.Increase] := Point(Self.X1, y);
 end;
 
-function TBox.Border(const X, Y: Integer): Boolean; overload; cdecl;
+function TBox.Border(const X, Y: Integer): Boolean; overload;
 begin
   with Self do
     Result := ((((X = X1) or (X = X2)) and ((Y >= Y1) and (Y <= Y2))) or (((Y = Y1) or (Y = Y2)) and ((X >= X1) and (X <= X2))));
 end;
 
-function TBox.Border(const pt: TPoint): Boolean; overload; cdecl;
+function TBox.Border(const pt: TPoint): Boolean; overload;
 begin
   Result := Self.Border(pt.X, pt.Y);
 end;
@@ -1352,7 +1570,7 @@ end;
   Explanation: Returns TBox edge points as TPointArray.
   Example: Skips all the inside points.
 [==============================================================================}
-function TBox.Edge: TPointArray; overload; cdecl;
+function TBox.Edge: TPointArray; overload;
 var
   i, d, s: Integer;
   p: TPoint;
@@ -1367,26 +1585,23 @@ begin
   c := [Point(1, 0), Point(0, 1), Point(-1, 0), Point(0, -1)];
   for d := 0 to 3 do
   begin
-    if ((d mod 2) = 0) then
-      s := (Self.X2 - Self.X1)
-    else
-      s := (Self.Y2 - Self.Y1);
+    s := IfThen(d.Even, (Self.X2 - Self.X1), (Self.Y2 - Self.Y1));
     while (s > 0) do
     begin
       Result[i.Increase] := p;
       if (s.Decrease >= 0) then
-        p := Point(p.X + c[d].X, p.Y + c[d].Y);
+        p := Point((p.X + c[d].X), (p.Y + c[d].Y));
     end;
   end;
 end;
 
-function TBox.Edge(const X, Y: Integer): Boolean; overload; cdecl;
+function TBox.Edge(const X, Y: Integer): Boolean; overload;
 begin
   with Self do
     Result := (((X = X1) or (X = X2) or (Y = Y1) or (Y = Y2)) and ((X >= X1) and (X <= X2) and (Y >= Y1) and (Y <= Y2)));
 end;
 
-function TBox.Edge(const pt: TPoint): Boolean; overload; cdecl;
+function TBox.Edge(const pt: TPoint): Boolean; overload;
 begin
   Result := Self.Edge(pt.X, pt.Y);
 end;
@@ -1396,7 +1611,7 @@ end;
   Explanation: Returns TBox outline points as TPointArray.
   Example: Skips all the inside points.
 [==============================================================================}
-function TBox.Outline: TPointArray; overload; cdecl;
+function TBox.Outline: TPointArray; overload;
 var
   x, y, i, w, h: Integer;
 begin
@@ -1417,12 +1632,12 @@ begin
   end;
 end;
 
-function TBox.Outline(const X, Y: Integer): Boolean; overload; cdecl;
+function TBox.Outline(const X, Y: Integer): Boolean; overload;
 begin
   Result := ((not ((X < X1) or (X > X2) or (Y < Y1) or (Y > Y2))) and ((X = X1) or (X = X2) or (Y = Y1) or (Y = Y2)));
 end;
 
-function TBox.Outline(const pt: TPoint): Boolean; overload; cdecl;
+function TBox.Outline(const pt: TPoint): Boolean; overload;
 begin
   Result := Self.Outline(pt.X, pt.Y);
 end;
@@ -1432,7 +1647,7 @@ end;
   Explanation: Returns TBox contour points as TPointArray.
   Example: Skips all the inside points.
 [==============================================================================}
-function TBox.Contour: TPointArray; cdecl;
+function TBox.Contour: TPointArray;
 var
   z: TIntegerArray;
   s: TSegment;
@@ -1452,7 +1667,7 @@ end;
   Explanation: Returns TBox TPoints as spiral shaped TPointArray.
   Example: Alternative for TBox.Traverse.
 [==============================================================================}
-function TBox.Spiral: TPointArray; cdecl;
+function TBox.Spiral: TPointArray;
 var
   b: TBox;
   x, y, r: Integer;
@@ -1487,7 +1702,7 @@ end;
   Explanation: Returns TBox TPoints as spiral shaped TPointArray.
   Example: Alternative for TBox.Spiral.
 [==============================================================================}
-function TBox.Traverse: TPointArray; cdecl;
+function TBox.Traverse: TPointArray;
 var
   m: T2DBooleanArray;
   c: TPoint;
@@ -1522,7 +1737,7 @@ end;
           spaceVertical = space between rows
  @note: None.
 [==============================================================================}
-function TBoxHelper.Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray; cdecl;
+function TBoxHelper.Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;
 var
   w, h, r, c, i, x, y: Integer;
 begin
@@ -1550,7 +1765,7 @@ end;
           where space is the amount of space between each cell.
  @note: None
 [==============================================================================}
-function TBoxHelper.Row(const cells: Integer; const space: Integer = 0): TBoxArray; cdecl;
+function TBoxHelper.Row(const cells: Integer; const space: Integer = 0): TBoxArray;
 var
   w, h, i, z: Integer;
 begin
@@ -1573,7 +1788,7 @@ end;
           where space is the amount of space between each cell.
  @note: None
 [==============================================================================}
-function TBoxHelper.Column(const cells: Integer; const space: Integer = 0): TBoxArray; cdecl;
+function TBoxHelper.Column(const cells: Integer; const space: Integer = 0): TBoxArray;
 var
   w, h, i, z: Integer;
 begin
@@ -1595,7 +1810,7 @@ end;
  @action: Returns TBox as its rows of TPoints.
  @note: Row-major. Dimensions = [Height][Width].
 [==============================================================================}
-function TBox.Rows: T2DPointArray; cdecl;
+function TBox.Rows: T2DPointArray;
 var
   x, y: Integer;
 begin
@@ -1610,7 +1825,7 @@ end;
  @action: Returns TBox as its columns of TPoints.
  @note: Column-major. Dimensions = [Width][Height].
 [==============================================================================}
-function TBox.Columns: T2DPointArray; cdecl;
+function TBox.Columns: T2DPointArray;
 var
   x, y: Integer;
 begin
@@ -1625,7 +1840,7 @@ end;
  @action: Returns all TBox TPoints as Row-wise.
  @note: None.
 [==============================================================================}
-function TBox.Rowwise: TPointArray; cdecl;
+function TBox.Rowwise: TPointArray;
 var
   x, y, r: Integer;
 begin
@@ -1641,7 +1856,7 @@ end;
  @action: Returns all TBox TPoints as Column-wise.
  @note: None.
 [==============================================================================}
-function TBox.Columnwise: TPointArray; cdecl;
+function TBox.Columnwise: TPointArray;
 var
   x, y, r: Integer;
 begin
@@ -1657,7 +1872,7 @@ end;
  @action: Returns all 4 corner points of bx.
  @note: None
 [==============================================================================}
-function TBox.CornerPoints: TPointArray; cdecl;
+function TBox.CornerPoints: TPointArray;
 begin
   SetLength(Result, 4);
   Result[0].X := Self.X1;
@@ -1675,7 +1890,7 @@ end;
  @action: Returns all 4 corner points of bx.
  @note: Gives also duplicates, if TBox is not rectangular.
 [==============================================================================}
-function TBox.CornerPts: TPointArray; cdecl;
+function TBox.CornerPts: TPointArray;
 begin
   Result := [Point(Self.X1, Self.Y1), Point(Self.X2, Self.Y1), Point(Self.X2, Self.Y2), Point(Self.X1, Self.Y2)];
 end;
@@ -1685,7 +1900,7 @@ end;
  @action: Returns corner points of bx.
  @note: Outputs only unique TPoints.
 [==============================================================================}
-function TBox.Corners: TPointArray; cdecl;
+function TBox.Corners: TPointArray;
 var
   p: TPoint;
 begin
@@ -1704,7 +1919,7 @@ end;
            are within widthDifferency and heightDifferency.
   @note: None.
 [==============================================================================}
-function TBox.SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload; cdecl;
+function TBox.SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload;
 begin
   Result := ((Abs(b.Width - Self.Width) <= widthDifferency) and (Abs(b.Height - Self.Height) <= heightDifferency));
 end;
@@ -1715,7 +1930,7 @@ end;
                are within differency.
   @note: None.
 [==============================================================================}
-function TBox.SimilarSize(const b: TBox; const differency: Integer): Boolean; overload; cdecl;
+function TBox.SimilarSize(const b: TBox; const differency: Integer): Boolean; overload;
 begin
   Result := ((Abs(b.Width - Self.Width) <= differency) and (Abs(b.Width - Self.Width) <= differency));
 end;
@@ -1725,7 +1940,7 @@ end;
   Explanation: Returns bx (by the dimensions) centered to area.
   @note: None.
 [==============================================================================}
-function TBox.Centered(const toArea: TBox): TBox; cdecl;
+function TBox.Centered(const toArea: TBox): TBox;
 var
   w, h: Integer;
 begin
@@ -1741,7 +1956,7 @@ end;
   Explanation: Returns bx centered vertically to area.
   @note: None.
 [==============================================================================}
-function TBox.CenterVertically(const toArea: TBox): TBox; cdecl;
+function TBox.CenterVertically(const toArea: TBox): TBox;
 var
   h: Integer;
 begin
@@ -1757,7 +1972,7 @@ end;
   Explanation: Returns bx centered horizontally to area.
   @note: None.
 [==============================================================================}
-function TBox.CenterHorizontally(const toArea: TBox): TBox; cdecl;
+function TBox.CenterHorizontally(const toArea: TBox): TBox;
 var
   w: Integer;
 begin
@@ -1773,7 +1988,7 @@ end;
   Explanation: Returns true if TBox is changed with xCoord (X1 or X2)
   @note: Modifies the Self!
 [==============================================================================}
-function TBox.ExtendX(const xCoord: Integer): Boolean; cdecl;
+function TBox.ExtendX(const xCoord: Integer): Boolean;
 begin
   if (xCoord < Self.X1) then
     Self.X1 := xCoord
@@ -1790,7 +2005,7 @@ end;
   Explanation: Returns true if TBox is changed with yCoord (Y1 or Y2)
   @note: Modifies the Self!
 [==============================================================================}
-function TBox.ExtendY(const yCoord: Integer): Boolean; cdecl;
+function TBox.ExtendY(const yCoord: Integer): Boolean;
 begin
   if (yCoord < Self.Y1) then
     Self.Y1 := yCoord
@@ -1807,7 +2022,7 @@ end;
   Explanation: Returns true if TBox is changed with pt (X1, X2, Y1 or Y2)
   @note: Modifies the Self!
 [==============================================================================}
-function TBox.Extend(const pt: TPoint): Boolean; cdecl;
+function TBox.Extend(const pt: TPoint): Boolean;
 var
   w, h: Boolean;
 begin
@@ -1821,7 +2036,7 @@ end;
   Explanation: Returns the TBox Self with X-value extended (if xCoord falls outside bounds)
   @note: None.
 [==============================================================================}
-function TBox.UnionX(const xCoord: Integer): TBox; cdecl;
+function TBox.UnionX(const xCoord: Integer): TBox;
 begin
   if (xCoord < Self.X1) then
     Result := Box(xCoord, Self.Y1, Self.X2, Self.Y2)
@@ -1837,7 +2052,7 @@ end;
   Explanation: Returns the TBox Self with Y-value extended (if yCoord falls outside bounds)
   @note: None.
 [==============================================================================}
-function TBox.UnionY(const yCoord: Integer): TBox; cdecl;
+function TBox.UnionY(const yCoord: Integer): TBox;
 begin
   if (yCoord < Self.Y1) then
     Result := Box(Self.X1, yCoord, Self.X2, Self.Y2)
@@ -1853,7 +2068,7 @@ end;
   Explanation: Returns the Self unioned with pt.
   @note: None.
 [==============================================================================}
-function TBox.Union(const pt: TPoint): TBox; overload; cdecl;
+function TBox.Union(const pt: TPoint): TBox; overload;
 begin
   Result := Self.UnionX(pt.X).UnionY(pt.Y);
 end;
@@ -1863,7 +2078,7 @@ end;
   @action: Returns union of a and b TBoxes
   @note: None
 [==============================================================================}
-function TBox.Union(const b: TBox): TBox; overload; cdecl;
+function TBox.Union(const b: TBox): TBox; overload;
 begin
   Result.X1 := Min(Self.X1, b.X1);
   Result.Y1 := Min(Self.Y1, b.Y1);
@@ -1876,7 +2091,7 @@ end;
   @action: Returns TBox randomly mixed as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Mixed(const mixings: Integer = 1): TPointArray; cdecl;
+function TBox.Mixed(const mixings: Integer = 1): TPointArray;
 var
   i, m: Integer;
 begin
@@ -1892,7 +2107,7 @@ end;
   @action: Returns TBox randomly shaked as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Shake(const shakes: Integer = 1): TPointArray; cdecl;
+function TBox.Shake(const shakes: Integer = 1): TPointArray;
 var
   i, s: Integer;
 begin
@@ -1908,7 +2123,7 @@ end;
   @action: Returns TBox randomly shuffled as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Shuffle(const shuffles: Integer = 1): TPointArray; cdecl;
+function TBox.Shuffle(const shuffles: Integer = 1): TPointArray;
 var
   i, s: Integer;
 begin
@@ -1924,7 +2139,7 @@ end;
   @action: Returns random TBox point.
   @note: None.
 [==============================================================================}
-function TBox.Any: TPoint; cdecl;
+function TBox.Any: TPoint;
 begin
   Result := Point((Self.X1 + Random(Self.Width)), (Self.X1 + Random(Self.Height)));
 end;
@@ -1934,7 +2149,7 @@ end;
   @action: Returns random amount of random TBox points.
   @note: Does not return empty arrays.
 [==============================================================================}
-function TBox.Some: TPointArray; overload; cdecl;
+function TBox.Some: TPointArray; overload;
 begin
   Result := Copy(Self.Shuffle, 0, Max(Random(Self.Area + 1), 1));
 end;
@@ -1944,9 +2159,100 @@ end;
   @action: Returns random amount of random TBox points.
   @note: Does not return empty arrays.
 [==============================================================================}
-function TBox.Some(const amount: Integer): TPointArray; overload; cdecl;
+function TBox.Some(const amount: Integer): TPointArray; overload;
 begin
   Result := Copy(Self.Shuffle, 0, Max(1, Min(amount, Self.Area)));
+end;
+
+{==============================================================================]
+  <TBox.All>
+  @action: Returns ALL points of TBox as TPointArray.
+  @note: None.
+[==============================================================================}
+function TBox.All: TPointArray; overload;
+var
+  x, y: Integer;
+  p: PPoint;
+begin
+  SetLength(Result, Self.Area);
+  p := PPoint(Result);
+  for y := Self.Y1 to Self.Y2 do
+    for x := Self.X1 to Self.X2 do
+    begin
+      p^ := Point(x, y);
+      Inc(p);
+    end;
+end;
+
+{==============================================================================]
+  <TBox.Placements>
+  @action: Generate all possible translations of Self fully contained within target.
+  @note: Returns an array of boxes representing every valid placement;
+         order is row-major (y first, then x). Returns empty array if no fit.
+[==============================================================================}
+function TBoxHelper.Placements(const target: TBox): TBoxArray; overload;
+var
+  y, x, r: Integer;
+  f, t: TBox;
+begin
+  t := Box(target.X1, target.Y1, ((target.X2 - Self.Width) + 1), ((target.Y2 - Self.Height) + 1));
+  SetLength(Result, t.Area);
+  if Result.Empty then
+    Exit;
+  r := 0;
+  f := Self.Frame;
+  for y := t.Y1 to t.Y2 do
+    for x := t.X1 to t.X2 do
+      Result[r.Increase] := Box((f.X1 + x), (f.Y1 + y), (f.X2 + x), (f.Y2 + y));
+end;
+
+{==============================================================================]
+  <TBox.Tiled>
+  @action: Generate non-overlapping, grid-aligned positions of Self inside target.
+  @note: Steps by Self Width and Height. Returns empty array if Self does not fit.
+[==============================================================================}
+function TBoxHelper.Tiled(const target: TBox): TBoxArray; overload;
+var
+  y, x, r, w, h: Integer;
+  m: TPoint;
+  f: TBox;
+begin
+  Self.Size(w, h);
+  if ((w > target.Width) or (h > target.Height)) then
+    Exit([]);
+  f := Self.Frame;
+  m := Point(((target.X2 - w) + 1), ((target.Y2 - h) + 1));
+  SetLength(Result, ((target.Width div w) * (target.Height div h)));
+  r := 0;
+  y := target.Y1;
+  repeat
+    x := (target.X1 - w);
+    while (x.Increment(w) <= m.X) do
+      Result[r.Increase] := Box((f.X1 + x), (f.Y1 + y), (f.X2 + x), (f.Y2 + y));
+  until (y.Increment(h) > m.Y);
+end;
+
+{==============================================================================]
+  <TBox.Gridded>
+  @action: Generate non-overlapping, grid-aligned positions of Self inside target.
+  @note: Steps by Self Width and Height. Returns empty array if Self does not fit.
+[==============================================================================}
+function TBoxHelper.Gridded(const target: TBox): TBoxArray; overload;
+var
+  l, y, x, r, c, w, h: Integer;
+  f: TBox;
+begin
+  Self.Size(w, h);
+  if ((w > target.Width) or (h > target.Height)) then
+    Exit([]);
+  f := Self.Frame;
+  c := (target.Width div w);
+  r := (target.Height div h);
+  SetLength(Result, (r * c));
+  l := 0;
+  for y := 0 to (r - 1) do
+    for x := 0 to (c - 1) do
+      Result[l.Increase].Form(Point((target.X1 + (w * x)), (target.Y1 + (h * y))), w, h);
 end;
 
 {==============================================================================]
@@ -1954,7 +2260,7 @@ end;
   @action: Creates TBox using minX, minY, maxX, maxY 
   @note: function version
 [==============================================================================}
-class function _TBox.Create(const minX, minY, maxX, maxY: Integer): TBox; overload; cdecl;
+class function _TBox.Create(const minX, minY, maxX, maxY: Integer): TBox; overload;
 begin
   Result.X1 := minX;
   Result.Y1 := minY;
@@ -1967,7 +2273,7 @@ end;
   @action: Creates TBox using top and bottom TPoint (top contains minX,minY and bottom contains maxX,maxY) 
   @note: Constructor.
 [==============================================================================}
-class function _TBox.Create(const top, bottom: TPoint): TBox; overload; cdecl;
+class function _TBox.Create(const top, bottom: TPoint): TBox; overload;
 begin
   Result := _TBox.Create(top.X, top.Y, bottom.X, bottom.Y);
 end;
@@ -1977,7 +2283,7 @@ end;
   @action: We simply build using  
   @note: Function.
 [==============================================================================}
-class function _TBox.Create(const valueX, valueY: Integer): TBox; overload; cdecl;
+class function _TBox.Create(const valueX, valueY: Integer): TBox; overload;
 begin
   Result := _TBox.Create(valueX, valueY, valueX, valueY);
 end;
@@ -1987,7 +2293,7 @@ end;
   @action: Creates TBox using target TPoint 
   @note: Function.
 [==============================================================================}
-class function _TBox.Create(const target: TPoint): TBox; overload; cdecl;
+class function _TBox.Create(const target: TPoint): TBox; overload;
 begin
   Result := _TBox.Create(target.X, target.Y, target.X, target.Y);
 end;
@@ -1998,7 +2304,7 @@ end;
   @note: Constructor.
  
 [==============================================================================}
-class function _TBox.Create(const value: Integer = 0): TBox; overload; cdecl;
+class function _TBox.Create(const value: Integer = 0): TBox; overload;
 begin
   Result := _TBox.Create(value, value, value, value);
 end;

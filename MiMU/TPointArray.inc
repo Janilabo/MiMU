@@ -5,7 +5,7 @@
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Bounds: TBox; overload; cdecl;
+function TPointArrayHelper.Bounds: TBox; overload; 
 var
   i: Integer;
 begin
@@ -32,7 +32,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: Stores width and height of bounds to width and height variables.
 [==============================================================================}
-function TPointArrayHelper.Bounds(var width, height: Integer): TBox; overload; cdecl;
+function TPointArrayHelper.Bounds(var width, height: Integer): TBox; overload; 
 begin
   case Self.Empty of
     False:
@@ -54,7 +54,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.BoundingBox: TBox; cdecl;
+function TPointArrayHelper.BoundingBox: TBox; 
 var
   i: Integer;
   a, b: TIntegerArray;
@@ -76,7 +76,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Boundaries: TBox; cdecl;
+function TPointArrayHelper.Boundaries: TBox; 
   function BR(const arr: TPointArray; const L, R: Integer): TBox;
   var
     M: Integer;
@@ -97,7 +97,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Box: TBox; cdecl;
+function TPointArrayHelper.Box: TBox; 
 var
   P: TPoint;
 begin
@@ -113,7 +113,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.MinMax: TBox; cdecl;
+function TPointArrayHelper.MinMax: TBox; 
 var
   i: Integer;
 begin
@@ -134,7 +134,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Boxed: TBox; cdecl;
+function TPointArrayHelper.Boxed: TBox; 
 var
   i: Integer;
 begin
@@ -160,7 +160,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Region: TBox; overload; cdecl;
+function TPointArrayHelper.Region: TBox; overload; 
 var
   i, l: Integer;
 begin
@@ -186,7 +186,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Coverage: TBox; overload; cdecl;
+function TPointArrayHelper.Coverage: TBox; overload; 
 var
   i: Integer;
   a, b: TPoint;
@@ -216,7 +216,7 @@ end;
   @action: Removes duplicates from arr.
   @note: Returns number of duplicate items that were removed from arr.
 [==============================================================================}
-function TPointArrayHelper.Undupe: TPointArray; cdecl;
+function TPointArrayHelper.Undupe: TPointArray; 
 begin
   Result := Self.Copy;
   TPA.Unique(Result);
@@ -227,7 +227,7 @@ end;
   @action: Returns arr without duplicates.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Unduped: TPointArray; cdecl;
+function TPointArrayHelper.Unduped: TPointArray; 
 var
   i, r, w, h: Integer;
   m: T2DBooleanArray;
@@ -252,7 +252,7 @@ end;
   @action: Returns inverted version of arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Invert: TPointArray; cdecl;
+function TPointArrayHelper.Invert: TPointArray; 
 var
   i, x, y, w, h, r, l: Integer;
   m: T2DBooleanArray;
@@ -283,7 +283,7 @@ end;
   @action: Returns inverted version of arr.
   @note: Supports custom bounds.
 [==============================================================================}
-function TPointArrayHelper.Inverted(const arrBounds: TBox): TPointArray; overload; cdecl;
+function TPointArrayHelper.Inverted(const arrBounds: TBox): TPointArray; overload; 
 var
   x, y, r: Integer;
 begin
@@ -296,7 +296,7 @@ begin
   SetLength(Result, r);
 end;
 
-function TPointArrayHelper.Inverted: TPointArray; overload; cdecl;
+function TPointArrayHelper.Inverted: TPointArray; overload; 
 begin
   Result := Self.Inverted(Self.Bounds);
 end;
@@ -306,7 +306,7 @@ end;
   @action: Returns inverted version of arr.
   @note: Supports custom bounds.
 [==============================================================================}
-function TPointArrayHelper.Inverse(const arrBounds: TBox): TPointArray; overload; cdecl;
+function TPointArrayHelper.Inverse(const arrBounds: TBox): TPointArray; overload; 
 var
   w, h, l, i, x, y: Integer;
   b: T2DBooleanArray;
@@ -326,7 +326,7 @@ begin
   SetLength(Result, l);
 end;
 
-function TPointArrayHelper.Inverse: TPointArray; overload; cdecl;
+function TPointArrayHelper.Inverse: TPointArray; overload; 
 begin
   Result := Self.Inverse(Self.Bounds);
 end;
@@ -337,7 +337,7 @@ end;
           Supports both, 4-way and 8-way direction scanning styles.
  @note: Edge-points are points that are on the edge of the TPointArray, not completely surrounded by other points.
 [==============================================================================}
-function TPointArrayHelper.Edge(const scan8W: Boolean = False): TPointArray; cdecl;
+function TPointArrayHelper.Edge(const scan8W: Boolean = False): TPointArray; 
 var
   i, l, x, y, w, h, r: Integer;
   m: T2DBooleanArray;
@@ -381,7 +381,7 @@ end;
             Supports custom area by area as TBox.
   note: Make sure start is inside your area. Doesn't pay attention to ANYTHING outside area. :)
 [==============================================================================}
-function TPointArrayHelper.FloodFill(const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; cdecl;
+function TPointArrayHelper.FloodFill(const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; 
   procedure GetAdjacent(var adj: TPointArray; const n: TPoint; const FF8W: Boolean);
   begin
     adj[0].Create(n.x, (n.y - 1));
@@ -464,7 +464,7 @@ end;
  @note: Make sure start is inside TPA Bounds.
         Doesn't pay attention to ANYTHING outside those boundaries. :)
 [==============================================================================}
-function TPointArrayHelper.FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; cdecl;
+function TPointArrayHelper.FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; 
 begin
   Result := Self.FloodFill(start, Self.Bounds, scan8W);
 end;
@@ -474,7 +474,7 @@ end;
  @action: Returns X-values from arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.Xs: TIntegerArray; overload; cdecl;
+function TPointArrayHelper.Xs: TIntegerArray; overload; 
 var
   i: Integer;
 begin
@@ -488,7 +488,7 @@ end;
  @action: Returns Y-values from arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.Ys: TIntegerArray; overload; cdecl;
+function TPointArrayHelper.Ys: TIntegerArray; overload; 
 var
   i: Integer;
 begin
@@ -502,7 +502,7 @@ end;
  @action: Returns X-values from arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.XValues: TIntegerArray; overload; cdecl;
+function TPointArrayHelper.XValues: TIntegerArray; overload; 
 var
   l: Integer;
 begin
@@ -517,7 +517,7 @@ end;
  @action: Returns Y-values from arr as TIntegerArray.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.YValues: TIntegerArray; overload; cdecl;
+function TPointArrayHelper.YValues: TIntegerArray; overload; 
 var
   l: Integer;
 begin
@@ -532,7 +532,7 @@ end;
  @action: Stores arr X and Y values to xArr and yArr.
  @note: Returns Length(arr).
 [==============================================================================}
-function TPointArrayHelper.Unzip(var xArr, yArr: TIntegerArray): Integer; cdecl;
+function TPointArrayHelper.Unzip(var xArr, yArr: TIntegerArray): Integer; 
 var
   i: Integer;
 begin
@@ -551,7 +551,7 @@ end;
  @action: Zips TPointArray with xArr and yArr.
  @note: Uses minimum length(!), if xArr differs from yArr size.
 [==============================================================================}
-function TPointArrayHelper.Zip(const xArr, yArr: TIntegerArray): Integer; cdecl;
+function TPointArrayHelper.Zip(const xArr, yArr: TIntegerArray): Integer; 
 var
   i: Integer;
 begin
@@ -566,7 +566,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Extent: TBox; cdecl;
+function TPointArrayHelper.Extent: TBox; 
 var
   h, v: TIntegerArray;
   z: Integer;
@@ -585,7 +585,7 @@ end;
  @action: Returns Horizontal-axis from TPointArray as TRange.
  @note: MinMax X-values.
 [==============================================================================}
-function TPointArrayHelper.Horizontal: TRange; overload; cdecl;
+function TPointArrayHelper.Horizontal: TRange; overload; 
 var
   i: Integer;
 begin
@@ -607,7 +607,7 @@ end;
  @action: Returns Vertical-axis from TPointArray as TRange.
  @note: MinMax Y-values.
 [==============================================================================}
-function TPointArrayHelper.Vertical: TRange; overload; cdecl;
+function TPointArrayHelper.Vertical: TRange; overload; 
 var
   i: Integer;
 begin
@@ -629,7 +629,7 @@ end;
  @action: Splits TPointArray to groups by xRadius and yRadius.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.Split(const xRadius, yRadius: Double): T2DPointArray; overload; cdecl;
+function TPointArrayHelper.Split(const xRadius, yRadius: Double): T2DPointArray; overload; 
 var
   i, j, k, l, g: Integer;
   p: TPointArray;
@@ -670,12 +670,12 @@ end;
  @action: Splits TPointArray to groups by radius.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.Split(const radius: Double): T2DPointArray; overload; cdecl;
+function TPointArrayHelper.Split(const radius: Double): T2DPointArray; overload; 
 begin
   Result := Self.Split(radius, radius);
 end;
 
-function TPointArrayHelper.Cluster(const dist: Integer): T2DPointArray; overload; cdecl;
+function TPointArrayHelper.Cluster(const dist: Integer): T2DPointArray; overload; 
 var
   w, h, i, j, l, g, p, x, y, r, d: Integer;
   s: T2DBooleanArray;
@@ -744,7 +744,7 @@ begin
   end;
 end;
 
-function TPointArrayHelper.Cluster(const width, height: Integer): T2DPointArray; overload; cdecl;
+function TPointArrayHelper.Cluster(const width, height: Integer): T2DPointArray; overload; 
 var
   w, h, i, l, g, p, x, y, o, r: Integer;
   s: T2DBooleanArray;
@@ -814,7 +814,7 @@ end;
  @action: Splits TPointArray to groups by radius.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.Segment(const radius: Double): T2DPointArray; overload; cdecl;
+function TPointArrayHelper.Segment(const radius: Double): T2DPointArray; overload; 
 var
   b, f, l, i, j, k, p, r, c: Integer;
   v: TBooleanArray;
@@ -863,7 +863,7 @@ end;
  @action: Splits TPointArray to groups by radius.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.Fragment(const radius: Double): T2DPointArray; overload; cdecl;
+function TPointArrayHelper.Fragment(const radius: Double): T2DPointArray; overload; 
 var
   h, l, i, j, k, r, p, c: Integer;
   v: TBooleanArray;
@@ -911,7 +911,7 @@ end;
  @action: Splits TPointArray to groups by radius.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.Clusterize(const radius: Double): T2DPointArray; overload; cdecl;
+function TPointArrayHelper.Clusterize(const radius: Double): T2DPointArray; overload; 
 var
   m, p: TIntegerArray;
   r, l, i, j: Integer;
@@ -971,7 +971,7 @@ end;
  @action: Splits TPointArray to groups by xRadius and yRadius.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.Clusterize(const xRadius, yRadius: Double): T2DPointArray; overload; cdecl;
+function TPointArrayHelper.Clusterize(const xRadius, yRadius: Double): T2DPointArray; overload; 
 var
   m, p: TIntegerArray;
   i, j, r, c: Integer;
@@ -1031,7 +1031,7 @@ end;
  @action: Classifies TPointArray to groups by X-value
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.XClassify(const pSorted: Boolean = False): T2DPointArray; overload; cdecl;
+function TPointArrayHelper.XClassify(const pSorted: Boolean = False): T2DPointArray; overload; 
 var
   p: TPointArray;
 begin
@@ -1047,7 +1047,7 @@ end;
  @action: Classifies TPointArray to groups by X-value
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.YClassify(const pSorted: Boolean = False): T2DPointArray; overload; cdecl;
+function TPointArrayHelper.YClassify(const pSorted: Boolean = False): T2DPointArray; overload; 
 var
   p: TPointArray;
 begin
@@ -1059,16 +1059,184 @@ begin
 end;
 
 {==============================================================================]
+ <TPointArrayHelper.Axes>
+ @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.Axes(var X, Y: TIntegerArray): Integer; overload; 
+var
+  sX, sY, dX, dY: Pointer;
+  p, c: SizeInt;
+  i: Integer;
+begin
+  Result := Length(Self);
+  specialize SetSize<Integer>(X, Y, Result);
+  if (Result = 0) then
+    Exit;
+  c := SizeOf(Integer);
+  p := SizeOf(TPoint);
+  sX := @Self[0].X;
+  sY := Pointer(PByte(sX) + c);
+  dX := @X[0];
+  dY := @Y[0];
+  for i := 0 to High(Self) do
+  begin
+    Move(sX^, dX^, c);
+    Move(sY^, dY^, c);
+    Inc(PByte(sX), p);
+    Inc(PByte(sY), p);
+    Inc(PByte(dX), c);
+    Inc(PByte(dY), c);
+  end;
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Axed>
+ @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.Axed: T2DIntegerArray; overload; 
+var
+  i: Integer;
+begin
+  SetLength(Result, 2, Length(Self));
+  for i := 0 to High(Self) do
+  begin
+    Result[0][i] := Self[i].X;
+    Result[1][i] := Self[i].Y;
+  end;
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Axed>
+ @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.Axed(var X, Y: TIntegerArray): Integer; overload; 
+var
+  i: Integer;
+begin
+  Result := Length(Self);
+  specialize SetSize<Integer>(X, Y, Result);
+  for i := 0 to High(Self) do
+  begin
+    X[i] := Self[i].X;
+    Y[i] := Self[i].Y;
+  end;
+end;
+
+{==============================================================================]
   <TPointArrayHelper.Reinit>
   @action: Clears all elements of the array by zero-filling the underlying memory,
            setting all TPoint elements to (0,0), while keeping the current length unchanged.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Reinit: Integer; cdecl;
+function TPointArrayHelper.Reinit: Integer; 
 begin
   Result := Length(Self);
   if (Result > 0) then
     FillChar(Pointer(Self)^, (Result * SizeOf(TPoint)), 0);
 end;
+
+{==============================================================================]
+  <TPointArrayHelper.SortByRow>
+  @action: Sorts array Row-by-Row.
+  @note: Returns Length().
+[==============================================================================}
+function TPointArrayHelper.SortByRow(const aAscending: Boolean = True): Integer; overload; 
+var
+  x, y, w, h, r, i: Integer;
+  c: T2DIntegerArray;
+  b: TBox;
+begin
+  Result := Length(Self);
+  if (Result > 1) then
+  begin
+    r := 0;
+    b := Self.Bounds(w, h);
+    c := T2D.Create(0, w, h);
+    for i := 0 to High(Self) do
+      Inc(c[(Self[i].X - b.X1)][(Self[i].Y - b.Y1)]);
+	case aAscending of
+	  True:
+      for y := 0 to (b.Y2 - b.Y1) do
+        for x := 0 to (b.X2 - b.X1) do
+        begin
+          if (c[x][y] = 0) then
+            Continue;
+          for i := 0 to (c[x][y] - 1) do
+            Self[r + i] := Point((x + b.X1), (y + b.Y1));
+          r := (r + c[x][y]);
+        end;
+	  False:
+      for y := (b.Y2 - b.Y1) downto 0 do
+        for x := (b.X2 - b.X1) downto 0 do
+        begin
+          if (c[x][y] = 0) then
+            Continue;
+          for i := (c[x][y] - 1) downto 0 do
+            Self[r + i] := Point((x + b.X1), (y + b.Y1));
+          r := (r + c[x][y]);
+        end;
+	end;
+    SetLength(c, 0);
+  end;
+end;
+
+{==============================================================================]
+  <TPointArrayHelper.SortByColumn>
+  @action: Sorts array Column-by-Column.
+  @note: Returns Length().
+[==============================================================================}
+function TPointArrayHelper.SortByColumn(const aAscending: Boolean = True): Integer; overload; 
+var
+  x, y, w, h, r, i: Integer;
+  c: T2DIntegerArray;
+  b: TBox;
+begin
+  Result := Length(Self);
+  if (Result > 1) then
+  begin
+    r := 0;
+    b := Self.Bounds(w, h);
+    c := T2D.Create(0, w, h);
+    for i := 0 to High(Self) do
+      Inc(c[(Self[i].X - b.X1)][(Self[i].Y - b.Y1)]);
+	case aAscending of
+	  True:
+      for x := 0 to (b.X2 - b.X1) do
+        for y := 0 to (b.Y2 - b.Y1) do
+          if (c[x][y] > 0) then
+          begin
+            for i := 0 to (c[x][y] - 1) do
+              Self[r + i] := Point((x + b.X1), (y + b.Y1));
+            r := (r + c[x][y]);
+          end;
+	  False:
+      for x := (b.X2 - b.X1) downto 0 do
+        for y := (b.Y2 - b.Y1) downto 0 do
+          if (c[x][y] > 0) then
+          begin
+            for i := (c[x][y] - 1) downto 0 do
+              Self[r + i] := Point((x + b.X1), (y + b.Y1));
+            r := (r + c[x][y]);
+          end;
+    end;		  
+    SetLength(c, 0);
+  end;
+end;
+
+{==============================================================================]
+  <TPointArrayHelper.SortedByIndex>
+  @action: Returns array sorted by indexes in array bounding box.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.SortedByIndex(const aAscending: Boolean = True): TPointArray; overload; 
+begin
+  if Self.Empty then
+    SetLength(Result, 0)
+  else
+    Result := Self.QuickSorted(Self.Bounds.IDs(Self), aAscending);
+end; 
 
 {$UNDEF TPoint}

@@ -5,7 +5,7 @@
   @action: Returns arr joined together as string.
   @note: None.
 [==============================================================================}
-function TCharArrayHelper.Str: string; cdecl;
+function TCharArrayHelper.Str: string;
 begin
   if Self.Empty then
     Exit('');
@@ -17,7 +17,7 @@ end;
   @action: Returns arr joined together as string.
   @note: None.
 [==============================================================================}
-function TCharArrayHelper.ToStr: string; cdecl;
+function TCharArrayHelper.ToStr: string;
 begin
   SetLength(Result, Length(Self));
   if Self.Exists then
@@ -29,7 +29,7 @@ end;
   @action: Returns arr joined together as string.
   @note: None.
 [==============================================================================}
-function TCharArrayHelper.Join: string; overload; cdecl;
+function TCharArrayHelper.Join: string; overload;
 var
   i: Integer;
 begin
@@ -43,7 +43,7 @@ end;
   @action: Returns arr joined together as string.
   @note: Joins arr together with glue.
 [==============================================================================}
-function TCharArrayHelper.Join(const glue: string): string; overload; cdecl;
+function TCharArrayHelper.Join(const glue: string): string; overload;
 var
   i: Integer;
 begin
@@ -60,7 +60,7 @@ end;
   @action: Returns arr joined together as string.
   @note: None.
 [==============================================================================}
-function TCharArrayHelper.Stringify: string; overload; cdecl;
+function TCharArrayHelper.Stringify: string; overload;
 var
   i: Integer;
 begin
@@ -74,7 +74,7 @@ end;
   @action: Returns arr joined together as string.
   @note: Joins arr together with glue.
 [==============================================================================}
-function TCharArrayHelper.Stringify(const glue: string): string; overload; cdecl;
+function TCharArrayHelper.Stringify(const glue: string): string; overload;
 var
   a, i, j, l, g: Integer;
 begin
@@ -98,7 +98,7 @@ end;
   @action: Returns Ord() of every array items as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TCharArrayHelper.Ordinals: TIntegerArray; cdecl;
+function TCharArrayHelper.Ordinals: TIntegerArray;
 var
   i: Integer;
 begin
@@ -112,7 +112,7 @@ end;
   @action: Returns TCharArray with unique chars. 
   @note: Works with ASCII.
 [==============================================================================}
-function TCharArrayHelper.Unduped: TCharArray; cdecl;
+function TCharArrayHelper.Unduped: TCharArray;
 var
   s: set of Char;
   i, l: Integer;
@@ -137,7 +137,7 @@ end;
   @action: Returns TCharArray as TStringArray. 
   @note: None.
 [==============================================================================}
-function TCharArrayHelper.TSA: TStringArray; cdecl;
+function TCharArrayHelper.TSA: TStringArray;
 var
   i: Integer;
 begin
