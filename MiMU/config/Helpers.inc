@@ -241,6 +241,9 @@ type
       function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray;
       function Row(const cells: Integer; const space: Integer = 0): TPointArray;
       function Column(const cells: Integer; const space: Integer = 0): TPointArray;
+      function Adjacent(const adjacency8: Boolean = True): TPointArray; overload; 
+      function Neighbours(const adjacency8: Boolean = True): TPointArray; overload;
+      function Neighbors(const adjacency8: Boolean = True): TPointArray; overload; 
     {$ENDIF}
     {$IFDEF TBox}
       function Create: TBox; overload;

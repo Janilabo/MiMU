@@ -73,7 +73,10 @@ type
     function DistEuclidean2(const target: TPoint): Double; 
     function DistSquaredEuclidean(const target: TPoint): Double; 
     function DistManhattan(const target: TPoint): Double; 
-    function DistChebyshev(const target: TPoint): Double; 
+    function DistChebyshev(const target: TPoint): Double;
+    function Neighbour(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
+    function Neighbor(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
+    function Adjacent(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;   	
   end;
   TPointArray = array of TPoint;
   T2DPointArray = array of TPointArray;
