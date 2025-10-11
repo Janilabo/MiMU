@@ -167,15 +167,15 @@ type
     function Any: Integer; 
     function Some: TIntegerArray; overload; 
     function Some(const amount: Integer): TIntegerArray; overload; 
-    function All: TIntegerArray; overload; 
+    function All: TIntegerArray; overload;
     function Unzip: TIntegerArray; overload; 
     function Unpack: TIntegerArray; overload; 
     function Unwrap: TIntegerArray; overload; 
-	function Unfold: TIntegerArray; overload; 
-	function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload; 
+    function Unfold: TIntegerArray; overload;
+    function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
     function Normed: TRange; 
     function Norm: TRange; 
-	function Normal: TRange; 
+    function Normal: TRange;
     function Normally: TRange; 
     function Normalize: TRange; 
     function Normalized: TRange; 
@@ -243,7 +243,7 @@ type
     function Rad: Integer; overload; 
     function Radiar: Integer; overload; 
     function AsStr(const rReversed: Boolean = False): string; overload; 
-	function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; 
+    function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string;
     function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; 
     function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; 
     function Sum: Int64; 
@@ -437,7 +437,9 @@ type
     function Any: TPoint; 
     function Some: TPointArray; overload; 
     function Some(const amount: Integer): TPointArray; overload; 
-    function All: TPointArray; overload; 
+    function All: TPointArray; overload;
+    function Places(const target: TBox; const o: TPoint): TPointArray; overload;
+    function Places(const target: TBox): TPointArray; overload;
     function Reserve: TPointArray; overload; 
     function Reserve(var aBox: TPointArray): Integer; overload; 
   end;
@@ -616,7 +618,7 @@ type
     class function Reverse(var arr: TIntegerArray): Boolean; overload; 
     class function Reversed(const arr: TIntegerArray): TIntegerArray; overload; 
     class function Unique(var arr: TIntegerArray): Integer; overload; 
-	class function Combine(const A, B: TIntegerArray): TIntegerArray; overload; 
+    class function Combine(const A, B: TIntegerArray): TIntegerArray; overload;
   end;
   TPA = class
     class function Init(var arr: TPointArray): Integer; overload; 

@@ -251,6 +251,7 @@ type
       function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;
       function Row(const cells: Integer; const space: Integer = 0): TBoxArray;
       function Column(const cells: Integer; const space: Integer = 0): TBoxArray;
+      function Placements(const target: TBox; const o: TPoint): TBoxArray; overload;
       function Placements(const target: TBox): TBoxArray; overload;
       function Tiled(const target: TBox): TBoxArray; overload;
       function Gridded(const target: TBox): TBoxArray; overload;
