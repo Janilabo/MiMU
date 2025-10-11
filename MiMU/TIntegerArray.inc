@@ -1425,6 +1425,27 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArrayHelper.Attach>
+  @action: Appends all points from the given array to the end of Self.
+           Returns the new total length of the array after appending.
+  @note:   Uses Move() for efficiency since Integer is an unmanaged type.
+           If the input array is empty, the function returns the current length
+           of Self without modification.
+[==============================================================================}
+function TIntegerArrayHelper.Attach(const items: TIntegerArray): Integer; overload;
+var
+  l, i: Integer;
+begin
+  l := Length(Self);
+  i := Length(items);
+  if (i = 0) then
+    Exit(l);
+  Result := (l + i);
+  SetLength(Self, Result);
+  Move(items[0], Self[l], (i * SizeOf(Integer)));
+end;
+
+{==============================================================================]
   <TIntegerArrayHelper.BSort>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).

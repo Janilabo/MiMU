@@ -243,7 +243,10 @@ type
       function Column(const cells: Integer; const space: Integer = 0): TPointArray;
       function Adjacent(const adjacency8: Boolean = True): TPointArray; overload; 
       function Neighbours(const adjacency8: Boolean = True): TPointArray; overload;
-      function Neighbors(const adjacency8: Boolean = True): TPointArray; overload; 
+      function Neighbors(const adjacency8: Boolean = True): TPointArray; overload;
+      function ToY(const yGoal: Integer): TPointArray; overload;
+      function ToX(const xGoal: Integer): TPointArray; overload;
+      function Linked(const p: TPoint; const link: TPointArray): Boolean; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function Create: TBox; overload;
@@ -628,6 +631,7 @@ type
       function FilterEven: TIntegerArray; overload;
       function ExtractOdd: TIntegerArray; overload;
       function FilterOdd: TIntegerArray; overload;
+      function Attach(const items: TIntegerArray): Integer; overload;
       function BSort(const aAscending: Boolean = True): Integer;
       function BinarySort(const aAscending: Boolean = True): Integer;
       function BinarySorted(const aAscending: Boolean = True): TIntegerArray;
@@ -664,6 +668,7 @@ type
     {$ENDIF}
     {$IFDEF Double}
       function Reinit: Integer; overload;
+      function Attach(const items: TDoubleArray): Integer; overload;
       function BSort(const aAscending: Boolean = True): Integer;
       function BinarySort(const aAscending: Boolean = True): Integer;
       function BinarySorted(const aAscending: Boolean = True): TDoubleArray;
@@ -753,6 +758,7 @@ type
       function Binary: string;
       function Reinit: Integer; overload;
       function Occupancy(const val: Boolean = True): Double; overload;
+      function Attach(const items: TBooleanArray): Integer; overload;
     {$ENDIF}
     {$IFDEF TPoint}
       function Bounds: TBox; overload;
@@ -799,6 +805,9 @@ type
       function SortByRow(const aAscending: Boolean = True): Integer; overload;
       function SortByColumn(const aAscending: Boolean = True): Integer; overload;
       function SortedByIndex(const aAscending: Boolean = True): TPointArray; overload;
+      function Attach(const items: TPointArray): Integer; overload;
+      function FrameLinks(const dist: Integer; const area: TBox): TPointArray; overload;
+      function FrameLinks(const dist: Integer = 1): TPointArray; overload;
       function Reinit: Integer; overload;
     {$ENDIF}
     {$IFDEF TBox}

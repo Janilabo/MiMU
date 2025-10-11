@@ -475,4 +475,25 @@ begin
   Result := (c / Length(Self));
 end;
 
+{==============================================================================]
+  <TBooleanArrayHelper.Attach>
+  @action: Appends all points from the given array to the end of Self.
+           Returns the new total length of the array after appending.
+  @note:   Uses Move() for efficiency since Boolean is an unmanaged type.
+           If the input array is empty, the function returns the current length
+           of Self without modification.
+[==============================================================================}
+function TBooleanArrayHelper.Attach(const items: TBooleanArray): Integer; overload;
+var
+  l, i: Integer;
+begin
+  l := Length(Self);
+  i := Length(items);
+  if (i = 0) then
+    Exit(l);
+  Result := (l + i);
+  SetLength(Self, Result);
+  Move(items[0], Self[l], (i * SizeOf(Boolean)));
+end;
+
 {$UNDEF Boolean}

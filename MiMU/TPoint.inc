@@ -246,6 +246,48 @@ begin
 end;
 
 {==============================================================================]
+ <TPointHelper.ToY>
+ @action: Returns an array of points forming a vertical line from Self to yGoal.
+ @note:   X remains constant; Y increments or decrements depending on yGoal.
+[==============================================================================}
+function TPointHelper.ToY(const yGoal: Integer): TPointArray; overload;
+var
+  i, r: Integer;
+begin
+  SetLength(Result, (Abs(yGoal - Self.Y) + 1));
+  r := 0;
+  case (Self.Y > yGoal) of
+    True:
+    for i := Self.Y downto yGoal do
+      Result[r.Increase] := Point(Self.X, i);
+    False:
+    for i := Self.Y to yGoal do
+      Result[r.Increase] := Point(Self.X, i);
+  end;
+end;
+
+{==============================================================================]
+ <TPointHelper.ToX>
+ @action: Returns an array of points forming a horizontal line from Self to xGoal.
+ @note:   Y remains constant; X increments or decrements depending on xGoal.
+[==============================================================================}
+function TPointHelper.ToX(const xGoal: Integer): TPointArray; overload;
+var
+  i, r: Integer;
+begin
+  SetLength(Result, (Abs(xGoal - Self.X) + 1));
+  r := 0;
+  case (Self.X > xGoal) of
+    True:
+    for i := Self.X downto xGoal do
+      Result[r.Increase] := Point(i, Self.Y);
+    False:
+    for i := Self.X to xGoal do
+      Result[r.Increase] := Point(i, Self.Y);
+  end;
+end;
+
+{==============================================================================]
   <_TPoint.Create>
   @action: Creates TPoint using pX, pY 
   @note: function version
@@ -366,5 +408,19 @@ begin
                Point((X + 1), (Y + 1)), Point((X + 1), (Y - 1)), Point((X - 1), (Y + 1)), Point((X - 1), (Y - 1))];
   if not adjacency8 then
     SetLength(Result, 4);
+end;
+
+{==============================================================================]
+  <TPoint.Linked>
+  @action: Determines whether both the current point (Self) and the given point p
+           are present in the provided TPointArray. Returns True if both points
+           are contained in the array, False otherwise.
+  @note:   Uses the Contains helper of TPointArray for membership checks. This
+           method only checks array membership; it does not imply any geometric
+           connection or adjacency between the points.
+[==============================================================================}
+function TPointHelper.Linked(const p: TPoint; const link: TPointArray): Boolean; overload;
+begin
+  Result := (link.Contains(Self) and link.Contains(p));
 end;
 {$UNDEF TPoint}
