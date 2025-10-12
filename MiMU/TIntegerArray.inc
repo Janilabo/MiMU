@@ -1446,6 +1446,32 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArrayHelper.Embed>
+  @action: Inserts the contents of another integer array into the current array
+           at the specified index. Existing elements from that position onward
+           are shifted to make room for the new items.
+  @note: If the index exceeds the current length, the items are appended.
+         Passing an empty array leaves the original array unchanged.
+         The function returns the new total element count.
+[==============================================================================}
+function TIntegerArrayHelper.Embed(const items: TIntegerArray; const index: Integer = 2147483647): Integer; overload;
+var
+  s, l, p, t: Integer;
+begin
+  s := Length(Self);
+  l := Length(items);
+  if (l = 0) then
+    Exit(s);
+  p := EnsureRange(index, 0, s);
+  t := (s - p);
+  SetLength(Self, (s + l));
+  if (t > 0) then
+    Move(Self[p], Self[p + l], (t * SizeOf(Integer)));
+  Move(items[0], Self[p], (l * SizeOf(Integer)));
+  Result := Length(Self);
+end;
+
+{==============================================================================]
   <TIntegerArrayHelper.BSort>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).

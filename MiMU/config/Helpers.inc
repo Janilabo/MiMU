@@ -303,7 +303,7 @@ type
     function Compact: Integer; overload;
     function Compacted: TArr; overload;
     function Compacted(const threshold: Integer): TArr; overload;
-	function Compress: Integer; overload;
+    function Compress: Integer; overload;
     function Compressed: TArr; overload;
     function Compressed(const threshold: Integer): TArr; overload;
     function Comprised(const items: TArr): Boolean; overload;
@@ -393,6 +393,7 @@ type
     function Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
     function Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
     function Indices(const aAscending: Boolean = True): TIntegerArray; overload;
+    function Inject(const items: TArr; const index: Integer = 2147483647): Integer; overload;
     function Keep(const items: TArr; const index: Integer = 0): TArr; overload;
     function Kill: Integer; overload;
     function Last: Integer; overload;
@@ -436,12 +437,13 @@ type
     function Positions(const item: TVar; const index: Integer = 0): TIntegerArray; overload;
     function Positions(const items: TArr; const index: Integer = 0): TIntegerArray; overload;
     function Positions: TIntegerArray; overload;
+    function Prepend(const items: TArr; const index: Integer = 0): Integer; overload;
     function Presence(const item: TVar; const occurrence: Integer = 1): Boolean; overload;
     function Previous(const index: Integer; const count: Integer = 2147483647): TArr; overload;
     function Prune: Integer; overload;
-	function Pruned: TArr; overload;
+    function Pruned: TArr; overload;
     function Pruned(const threshold: Integer): TArr; overload;
-	function Pull: TArr; overload;
+    function Pull: TArr; overload;
     function Purified(const dAscending: Boolean = True): TArr; overload;
     function Purify(const dAscending: Boolean = True): Integer; overload;
     function Push(const item: TVar): TArr; overload;
@@ -463,7 +465,7 @@ type
     function Resize(const aChange: Integer): Integer; overload;
     function Resize(const aChange: Integer; const null: TVar): Integer; overload;
     function Reversal: TArr; overload;
-	function Reverse: Boolean; overload;
+    function Reverse: Boolean; overload;
     function Reversed: TArr; overload;
     function Reversion: TArr; overload;
     function Sample(const sSize: Integer): TArr; overload;
@@ -499,7 +501,7 @@ type
     function Subset(const items: TArr): Boolean; overload;
     function Supply(const item: TVar): Integer; overload;
     function Supply(const items: TArr): Integer; overload;
-	function To2D(const rows, columns: Integer): T2DArr; overload;
+    function To2D(const rows, columns: Integer): T2DArr; overload;
     function To2D(const height: Integer): T2DArr; overload;
     function ToIndexes: TIntegerArray; overload;
     function Trade(var b: TArr): Integer; overload;
@@ -508,7 +510,7 @@ type
     function Uniform: Boolean; overload;
     function Uniform(const item: TVar): Boolean; overload;
     function Uniformity: Double; overload;
-	function Unified(const dAscending: Boolean = True): TArr; overload;
+    function Unified(const dAscending: Boolean = True): TArr; overload;
     function Unify(const dAscending: Boolean = True): Integer; overload;
     function Unduplicated: TArr; overload;
     function Uniqued: TArr; overload;
@@ -542,7 +544,7 @@ type
       function Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload;
       function Mode: TVar; overload;
       function Center: TVar; overload;
-	  function QuickSorted(const aAscending: Boolean = True): TArr; overload;
+      function QuickSorted(const aAscending: Boolean = True): TArr; overload;
       function QuickSort(const aAscending: Boolean = True): Integer; overload;
       function QuickSort3W(const aAscending: Boolean = True): Integer; overload;
       function QSort(const aAscending: Boolean = True): Integer; overload;  
@@ -552,7 +554,7 @@ type
       function GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload;
       function PancakeSort(const aAscending: Boolean = True): Integer; overload;
       function BubbleSort(const aAscending: Boolean = True): Integer; overload;
-	  function BubbleSort2(const aAscending: Boolean = True): Integer; overload;
+      function BubbleSort2(const aAscending: Boolean = True): Integer; overload;
       function BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload;
       function CombSort(const aAscending: Boolean = True): Integer; overload;
       function HeapSort(const aAscending: Boolean = True): Integer; overload;
@@ -632,6 +634,7 @@ type
       function ExtractOdd: TIntegerArray; overload;
       function FilterOdd: TIntegerArray; overload;
       function Attach(const items: TIntegerArray): Integer; overload;
+      function Embed(const items: TIntegerArray; const index: Integer = 2147483647): Integer; overload;
       function BSort(const aAscending: Boolean = True): Integer;
       function BinarySort(const aAscending: Boolean = True): Integer;
       function BinarySorted(const aAscending: Boolean = True): TIntegerArray;
@@ -653,7 +656,7 @@ type
       function BinaryPruned(const aAscending: Boolean = True): TIntegerArray;
       function BinaryUndupe: Integer;
       function BinaryUnduped: TIntegerArray;
-	  function BinaryUnified(const dAscending: Boolean = True): TIntegerArray;
+      function BinaryUnified(const dAscending: Boolean = True): TIntegerArray;
       function BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean;
       function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean;
       function BinaryLowerBound(const x: Integer; const aAscending: Boolean): Integer; overload;
@@ -669,6 +672,7 @@ type
     {$IFDEF Double}
       function Reinit: Integer; overload;
       function Attach(const items: TDoubleArray): Integer; overload;
+      function Embed(const items: TDoubleArray; const index: Integer = 2147483647): Integer; overload;
       function BSort(const aAscending: Boolean = True): Integer;
       function BinarySort(const aAscending: Boolean = True): Integer;
       function BinarySorted(const aAscending: Boolean = True): TDoubleArray;
@@ -688,9 +692,9 @@ type
       function BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer;
       function BinaryPrune(const aAscending: Boolean = True): Integer;
       function BinaryPruned(const aAscending: Boolean = True): TDoubleArray;
-	  function BinaryUndupe: Integer;
+      function BinaryUndupe: Integer;
       function BinaryUnduped: TDoubleArray;
-	  function BinaryUnified(const dAscending: Boolean = True): TDoubleArray;
+      function BinaryUnified(const dAscending: Boolean = True): TDoubleArray;
       function BinaryGrow(const x: Double; const aAscending: Boolean = True): Boolean;
       function BinaryShrink(const x: Double; const aAscending: Boolean = True): Boolean;
       function BinaryLowerBound(const x: Double; const aAscending: Boolean): Integer; overload;
@@ -759,6 +763,7 @@ type
       function Reinit: Integer; overload;
       function Occupancy(const val: Boolean = True): Double; overload;
       function Attach(const items: TBooleanArray): Integer; overload;
+      function Embed(const items: TBooleanArray; const index: Integer = 2147483647): Integer; overload;
     {$ENDIF}
     {$IFDEF TPoint}
       function Bounds: TBox; overload;
@@ -791,8 +796,8 @@ type
       function Horizontal: TRange; overload;
       function Split(const xRadius, yRadius: Double): T2DPointArray; overload;
       function Split(const radius: Double): T2DPointArray; overload;
-	  function Cluster(const dist: Integer): T2DPointArray; overload;
-	  function Cluster(const width, height: Integer): T2DPointArray; overload;
+      function Cluster(const dist: Integer): T2DPointArray; overload;
+      function Cluster(const width, height: Integer): T2DPointArray; overload;
       function Segment(const radius: Double): T2DPointArray; overload;
       function Fragment(const radius: Double): T2DPointArray; overload;
       function Clusterize(const radius: Double): T2DPointArray; overload;
@@ -806,6 +811,7 @@ type
       function SortByColumn(const aAscending: Boolean = True): Integer; overload;
       function SortedByIndex(const aAscending: Boolean = True): TPointArray; overload;
       function Attach(const items: TPointArray): Integer; overload;
+      function Embed(const items: TPointArray; const index: Integer = 2147483647): Integer; overload;
       function FrameLinks(const dist: Integer; const area: TBox): TPointArray; overload;
       function FrameLinks(const dist: Integer = 1): TPointArray; overload;
       function Reinit: Integer; overload;

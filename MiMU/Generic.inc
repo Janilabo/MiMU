@@ -2378,6 +2378,32 @@ begin
     for i := l to h do
       Result[i - l] := i;
   end;
+end;
+
+{==============================================================================]
+ <arr.Inject>
+  @action: Inserts the specified items into the current array at the given index.
+           Elements at and after that index are shifted to make room for the
+           inserted items.
+  @note: If the index exceeds the current length, the items are appended.
+         If the index is less than zero, insertion occurs at the beginning.
+         Passing an empty array leaves the original array unchanged.
+         Returns the new total number of elements after insertion.
+[==============================================================================}
+function HArr.Inject(const items: TArr; const index: Integer = 2147483647): Integer; overload;
+var
+  i, s, l, p: Integer;
+begin
+  s := Length(Self);
+  l := Length(items);
+  if (l = 0) then
+    Exit(s);
+  p := Max(Min(s, index), 0);
+  SetLength(Self, (s + l));
+  for i := (s - 1) downto p do
+    Self[i + l] := Self[i];
+  for i := 0 to (l - 1) do
+    Self[p + i] := items[i];
 end;    
 
 {==============================================================================]
@@ -3184,6 +3210,24 @@ begin
   SetLength(Result, Length(Self));
   for i := 0 to High(Result) do
     Result[i] := i;  
+end;
+
+{==============================================================================]
+ <arr.Prepend>
+  @action: Inserts the specified items into the current array starting at the
+           given index (default = 0). Elements at and after that index are
+           shifted to follow the newly inserted items.
+  @note: If the index is less than 0, insertion occurs at the beginning.
+         If the index exceeds the array length, the items are appended.
+         Returns the new total number of elements after insertion.
+[==============================================================================}
+function HArr.Prepend(const items: TArr; const index: Integer = 0): Integer; overload;
+var
+  i: Integer;
+begin
+  i := Max(Min(index, Length(Self)), 0);
+  Self := (Self.Copy(0, i) + items + Self.Copy(i, (Length(Self) - i)));
+  Result := Length(Self);
 end;
 
 {==============================================================================]
@@ -5132,19 +5176,19 @@ end;
 [==============================================================================}
 function H2DArr.Merged: TArr; overload;
 var
-  i, r, s: Integer;
-  a: TArr;
+  i, j, o, s: Integer;
 begin
   SetLength(Result, 0);
+  o := 0;
   for i := 0 to High(Self) do
   begin
     s := Length(Self[i]);
     if (s > 0) then
     begin
-      a := Copy(Self[i], 0, s);
-      r := Length(Result);
-      SetLength(Result, (r + s));
-      Move(a[0], Result[r], (s * SizeOf(TVar)));
+      SetLength(Result, (o + s));
+      for j := 0 to (s - 1) do
+        Result[o + j] := Self[i][j];
+      Inc(o, s);
     end;
   end;
 end;
@@ -5250,7 +5294,7 @@ var
 begin
   Result := 0;
   for i := 0 to High(Self) do
-    Result := (Result + Length(Self[i]));
+    Result.Increase(Length(Self[i]));
 end;
 
 {==============================================================================]
