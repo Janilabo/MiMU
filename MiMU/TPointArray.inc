@@ -824,138 +824,240 @@ begin
   Result := Self.SplitEx(radius, @Euclidean);
 end;
 
-function TPointArrayHelper.Cluster(const dist: Integer): T2DPointArray; overload; 
+function TPointArrayHelper.Cluster(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
 var
-  w, h, i, j, l, g, p, x, y, r, d: Integer;
-  s: T2DBooleanArray;
-  c: T2DIntegerArray;
+  w, h, i, j, c, r, x, y: Integer;
+  d: Double;
+  b, a: TBox;
+  e: Boolean;
+  v: T2DBooleanArray;
+  g: array of T2DPointArray;
   q: TPointArray;
-  a, b: TBox;
-  z: TPoint;
-  v: Boolean;
+  z, p, n: TPoint;
 begin
-  SetLength(Result, 0);
   case Length(Self) of
     0: Exit([]);
     1: Exit([Self]);
   end;
-  r := 0;
+  SetLength(Result, 0);
+  SetLength(Result, Length(Self));
   b := Self.Bounds(w, h);
-  c := T2D.Create(0, w, h);
-  s := T2D.Create(False, w, h);
-  d := Min(Ceil(Max(dist, 0.0)), Max(w, h));
-  for i := 0 to High(Self) do
-    Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
+  d := Max(0, radius);
+  c := Ceil(d);
+  SetLength(g, (w + 1), (h + 1));
+  SetLength(v, (w + 1), (h + 1));
   for i := 0 to High(Self) do
   begin
-    if (c[Self[i].X - b.X1][Self[i].Y - b.Y1] = 0) then
-      Continue;
-    g := Length(Result);
-    SetLength(Result, (g + 1));
-    SetLength(Result[g], c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
-    for j := 0 to (c[Self[i].X - b.X1][Self[i].Y - b.Y1] - 1) do
-      Result[g][j] := Self[i];
-    if (r.Increment(c[Self[i].X - b.X1][Self[i].Y - b.Y1]) > High(Self)) then
-      Exit;
-    q := [Self[i]];
-    c[Self[i].X - b.X1][Self[i].Y - b.Y1] := 0;
-    p := 1;
-    while (p > 0) do
-    begin
-      p := High(q);
-      z := q[p];
-      a.Create((z.X - d), (z.Y - d), (z.X + d), (z.Y + d));
-      SetLength(q, p);
-      a.Constraint(b);
-      for y := a.Y1 to a.Y2 do
-      begin
-        if s[a.X2 - b.X1][y - b.Y1] then
-          Continue;
-        v := True;
-        for x := a.X1 to a.X2 do
-          if ((c[x - b.X1][y - b.Y1] > 0) and (Round(Sqrt(Sqr(z.X - x) + Sqr(z.Y - y))) <= dist)) then
-          begin
-            l := Length(Result[g]);
-            SetLength(Result[g], (l + c[x - b.X1][y - b.Y1]));
-            for j := 0 to (c[x - b.X1][y - b.Y1] - 1) do
-              Result[g][l + j] := Point(x, y);
-            if (r.Increment(c[x - b.X1][y - b.Y1]) > h) then
-              Exit;
-            c[x - b.X1][y - b.Y1] := 0;
-            SetLength(q, (p + 1));
-            q[p.Increase] := Result[g][l];
-          end else
-            v := False;
-        if v then
-          s[a.X2 - b.X1][y - b.Y1] := True;
-      end;
-    end;
+    n := Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
+    SetLength(g[n.X][n.Y], (Length(g[n.X][n.Y]) + 1));
+    g[n.X][n.Y][High(g[n.X][n.Y])] := Self[i];
   end;
+  r := 0;
+  for i := 0 to High(Self) do
+  begin
+    n := Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
+    if (v[n.X][n.Y] or (Length(g[n.X][n.Y]) = 0)) then
+      Continue;
+    SetLength(q, 1);
+    q[0] := Self[i];
+    while (Length(q) > 0) do
+    begin
+      z := q[High(q)];
+      SetLength(q, High(q));
+      a.Create((z.X - c), (z.Y - c), (z.X + c), (z.Y + c)).Constraint(b);
+      for y := a.Y1 to a.Y2 do
+        for x := a.X1 to a.X2 do
+        begin
+          if v[x - b.X1][y - b.Y1] then
+            Continue;
+          for j := 0 to High(g[x - b.X1][y - b.Y1]) do
+          begin
+            p := g[x - b.X1][y - b.Y1][j];
+            if (distFunc(z, p) <= d) then
+            begin
+              SetLength(Result[r], (Length(Result[r]) + 1));
+              Result[r][High(Result[r])] := p;
+              SetLength(q, (Length(q) + 1));
+              q[High(q)] := p;
+              g[x - b.X1][y - b.Y1][j] := Point(-1, -1);
+            end;
+          end;
+          e := True;
+          for j := 0 to High(g[x - b.X1][y - b.Y1]) do
+            if (g[x - b.X1][y - b.Y1][j].X <> -1) then
+              e := False;
+          if e then
+            v[x - b.X1][y - b.Y1] := True;
+        end;
+    end;
+    if (Length(Result[r]) > 0) then
+      Inc(r);
+  end;
+  SetLength(Result, r);
 end;
 
-function TPointArrayHelper.Cluster(const width, height: Integer): T2DPointArray; overload; 
+function TPointArrayHelper.Cluster(const radius: Double = 1.0): T2DPointArray; overload;
+begin
+  Result := Self.Cluster(radius, @Euclidean);
+end;
+
+function TPointArrayHelper.Cluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
-  w, h, i, l, g, p, x, y, o, r: Integer;
-  s: T2DBooleanArray;
-  c: T2DIntegerArray;
+  w, h, i, j, r, x, y: Integer;
+  b, a: TBox;
+  e: Boolean;
+  v: T2DBooleanArray;
+  g: array of T2DPointArray;
   q: TPointArray;
-  a, b: TBox;
-  z: TPoint;
+  z, p, n, d, c: TPoint;
 begin
   case Length(Self) of
     0: Exit([]);
     1: Exit([Self]);
   end;
-  r := 0;
+  SetLength(Result, 0);
+  SetLength(Result, Length(Self));
   b := Self.Bounds(w, h);
-  c := T2D.Create(0, w, h);
-  s := T2D.Create(False, w, h);
-  w := Min(width, w);
-  h := Min(height, h);
-  for i := 0 to High(Self) do
-    Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
+  d := Point(Max(0, xRadius), Max(0, yRadius));
+  SetLength(g, (w + 1), (h + 1));
+  SetLength(v, (w + 1), (h + 1));
   for i := 0 to High(Self) do
   begin
-    if (c[Self[i].X - b.X1][Self[i].Y - b.Y1] = 0) then
-      Continue;
-    g := Length(Result);
-    SetLength(Result, (g + 1));
-    SetLength(Result[g], c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
-    for o := 0 to (c[Self[i].X - b.X1][Self[i].Y - b.Y1] - 1) do
-      Result[g][o] := Self[i];
-    if (r.Increment(c[Self[i].X - b.X1][Self[i].Y - b.Y1]) > High(Self)) then
-      Exit;
-    q := [Self[i]];
-    c[Self[i].X - b.X1][Self[i].Y - b.Y1] := 0;
-    p := 1;
-    while (p > 0) do
-    begin
-      p := High(q);
-      z := q[p];
-      a.Create((z.X - w), (z.Y - h), (z.X + w), (z.Y + h));
-      SetLength(q, p);
-      a.Constraint(b);
-      for y := a.Y1 to a.Y2 do
-      begin
-        if s[a.X2 - b.X1][y - b.Y1] then
-          Continue;
-        for x := a.X1 to a.X2 do
-          if (c[x - b.X1][y - b.Y1] > 0) then
-          begin
-            l := Length(Result[g]);
-            SetLength(Result[g], (l + c[x - b.X1][y - b.Y1]));
-            for o := 0 to (c[x - b.X1][y - b.Y1] - 1) do
-              Result[g][l + o] := Point(x, y);
-            if (r.Increment(c[x - b.X1][y - b.Y1]) > High(Self)) then
-              Exit;
-            c[x - b.X1][y - b.Y1] := 0;
-            SetLength(q, (p + 1));
-            q[p.Increase] := Result[g][l];
-          end;
-        s[a.X2 - b.X1][y - b.Y1] := True;
-      end;
-    end;
+    n := Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
+    SetLength(g[n.X][n.Y], (Length(g[n.X][n.Y]) + 1));
+    g[n.X][n.Y][High(g[n.X][n.Y])] := Self[i];
   end;
+  r := 0;
+  for i := 0 to High(Self) do
+  begin
+    n := Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
+    if (v[n.X][n.Y] or (Length(g[n.X][n.Y]) = 0)) then
+      Continue;
+    SetLength(q, 1);
+    q[0] := Self[i];
+    while (Length(q) > 0) do
+    begin
+      z := q[High(q)];
+      SetLength(q, High(q));
+      a.Create((z.X - d.X), (z.Y - d.Y), (z.X + d.X), (z.Y + d.Y)).Constraint(b);
+      for y := a.Y1 to a.Y2 do
+        for x := a.X1 to a.X2 do
+        begin
+          if v[x - b.X1][y - b.Y1] then
+            Continue;
+          for j := 0 to High(g[x - b.X1][y - b.Y1]) do
+          begin
+            p := g[x - b.X1][y - b.Y1][j];
+            if ((Abs(z.X - p.X) <= xRadius) and (Abs(z.Y - p.Y) <= yRadius)) then
+            begin
+              SetLength(Result[r], (Length(Result[r]) + 1));
+              Result[r][High(Result[r])] := p;
+              SetLength(q, (Length(q) + 1));
+              q[High(q)] := p;
+              g[x - b.X1][y - b.Y1][j] := Point(-1, -1);
+            end;
+          end;
+          e := True;
+          for j := 0 to High(g[x - b.X1][y - b.Y1]) do
+            if (g[x - b.X1][y - b.Y1][j].X <> -1) then
+              e := False;
+          if e then
+            v[x - b.X1][y - b.Y1] := True;
+        end;
+    end;
+    if (Length(Result[r]) > 0) then
+      Inc(r);
+  end;
+  SetLength(Result, r);
+end;
+
+function TPointArrayHelper.Clump(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+var
+  i, j, r: Integer;
+  v: TBooleanArray;
+  q: TPointArray;
+  p: TPoint;
+begin
+  case Length(Self) of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  SetLength(v, Length(Self));
+  r := 0;
+  SetLength(Result, 0);
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+  begin
+    if v[i] then
+      Continue;
+    SetLength(q, 1);
+    q[0] := Self[i];
+    v[i] := True;
+    while (Length(q) > 0) do
+    begin
+      p := q[High(q)];
+      SetLength(q, High(q));
+      for j := 0 to High(Self) do
+        if ((not v[j]) and (distFunc(p, Self[j]) <= radius)) then
+        begin
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := Self[j];
+          SetLength(q, (Length(q) + 1));
+          q[High(q)] := Self[j];
+          v[j] := True;
+        end;
+    end;
+    if (Length(Result[r]) > 0) then
+      Inc(r);
+  end;
+  SetLength(Result, r);
+end;
+
+function TPointArrayHelper.Clump(const radius: Double = 1.0): T2DPointArray; overload;
+begin
+  Result := Self.Clump(radius, @Euclidean);
+end;
+
+function TPointArrayHelper.Clump(const xRadius, yRadius: Integer): T2DPointArray; overload;
+var
+  i, j, r: Integer;
+  v: TBooleanArray;
+  q: TPointArray;
+  p: TPoint;
+begin
+  case Length(Self) of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  SetLength(v, Length(Self));
+  r := 0;
+  SetLength(Result, 0);
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+  begin
+    if v[i] then
+      Continue;
+    SetLength(q, 1);
+    q[0] := Self[i];
+    v[i] := True;
+    while (Length(q) > 0) do
+    begin
+      p := q[High(q)];
+      SetLength(q, High(q));
+      for j := 0 to High(Self) do
+        if ((not v[j]) and ((Abs(p.X - Self[j].X) <= xRadius) and (Abs(p.Y - Self[j].Y) <= yRadius))) then
+        begin
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := Self[j];
+          SetLength(q, (Length(q) + 1));
+          q[High(q)] := Self[j];
+          v[j] := True;
+        end;
+    end;
+    if (Length(Result[r]) > 0) then
+      Inc(r);
+  end;
+  SetLength(Result, r);
 end;
 
 {==============================================================================]

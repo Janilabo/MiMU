@@ -800,8 +800,12 @@ type
       function SplitEx(const xRadius, yRadius: Integer): T2DPointArray; overload;
       function SplitEx(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
       function SplitEx(const radius: Double = 1.0): T2DPointArray; overload;
-      function Cluster(const dist: Integer): T2DPointArray; overload;
-      function Cluster(const width, height: Integer): T2DPointArray; overload;
+      function Cluster(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+      function Cluster(const radius: Double = 1.0): T2DPointArray; overload;
+      function Cluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
+      function Clump(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+      function Clump(const radius: Double = 1.0): T2DPointArray; overload;
+      function Clump(const xRadius, yRadius: Integer): T2DPointArray; overload;
       function Segment(const radius: Double): T2DPointArray; overload;
       function Fragment(const radius: Double): T2DPointArray; overload;
       function Clusterize(const radius: Double): T2DPointArray; overload;
