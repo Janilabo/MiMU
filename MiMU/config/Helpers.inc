@@ -794,8 +794,12 @@ type
       function Extent: TBox;
       function Vertical: TRange; overload;
       function Horizontal: TRange; overload;
-      function Split(const xRadius, yRadius: Double): T2DPointArray; overload;
-      function Split(const radius: Double): T2DPointArray; overload;
+      function Split(const xRadius, yRadius: Integer): T2DPointArray; overload;
+      function Split(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+      function Split(const radius: Double = 1.0): T2DPointArray; overload;
+      function SplitEx(const xRadius, yRadius: Integer): T2DPointArray; overload;
+      function SplitEx(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+      function SplitEx(const radius: Double = 1.0): T2DPointArray; overload;
       function Cluster(const dist: Integer): T2DPointArray; overload;
       function Cluster(const width, height: Integer): T2DPointArray; overload;
       function Segment(const radius: Double): T2DPointArray; overload;

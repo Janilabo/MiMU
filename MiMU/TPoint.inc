@@ -112,7 +112,7 @@ end;
 [==============================================================================}
 function TPoint.DistEuclidean(const target: TPoint): Double;
 begin
-  Result := Sqrt(Power((Self.x - target.x), 2) + Power((Self.y - target.y), 2));
+  Result := Euclidean(Self, target);
 end;
 
 {==============================================================================]
@@ -122,7 +122,7 @@ end;
 [==============================================================================}
 function TPoint.DistEuclidean2(const target: TPoint): Double;
 begin
-  Result := Sqrt(Sqr(Self.X - target.X) + Sqr(Self.Y - target.Y));
+  Result := Euclidean2(Self, target);
 end;
 
 {==============================================================================]
@@ -132,7 +132,7 @@ end;
 [==============================================================================}
 function TPoint.DistSquaredEuclidean(const target: TPoint): Double;
 begin
-  Result := (((Self.X - target.X) * (Self.X - target.X)) + ((Self.Y - target.Y) * (Self.Y - target.Y)));
+  Result := SquaredEuclidean(Self, target);
 end;
 
 {==============================================================================]
@@ -142,7 +142,7 @@ end;
 [==============================================================================}
 function TPoint.DistManhattan(const target: TPoint): Double;
 begin
-  Result := (Abs(Self.X - target.X) + Abs(Self.Y - target.Y));
+  Result := Manhattan(Self, target);
 end;
 
 {==============================================================================]
@@ -152,7 +152,7 @@ end;
 [==============================================================================}
 function TPoint.DistChebyshev(const target: TPoint): Double;
 begin
-  Result := Max(Abs(Self.X - target.X), Abs(Self.Y - target.Y));
+  Result := Chebyshev(Self, target);
 end;
 
 {==============================================================================]

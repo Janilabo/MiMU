@@ -277,6 +277,8 @@ type
     function Expand(const N: Integer = 1): TRange; overload; 
     function Expanded(const N: Integer = 1): TRange; overload; 
   end;
+  TRangeArray = array of TRange;
+  T2DRangeArray = array of TRangeArray;
   TBoxEnumerator = record
   private
     FX, FY, XStart, YStart, XStop, YStop: Integer;
@@ -572,10 +574,16 @@ function Bitify(const a: Boolean): Integer; overload; inline;
 function Bitify(const a, b: Boolean): Integer; overload;
 function Bitify(const a, b, c: Boolean): Integer; overload;
 function Bitify(const a, b, c, d: Boolean): Integer; overload;
+
+function Manhattan(const A, B: TPoint): Double;
+function Chebyshev(const A, B: TPoint): Double;
+function Euclidean(const A, B: TPoint): Double;
+function Euclidean2(const A, B: TPoint): Double;
+function SquaredEuclidean(const A, B: TPoint): Double;
+function Minkowski(const A, B: TPoint; const P: Double = 2.0): Double;
   
 type
-  TRangeArray = array of TRange;
-  T2DRangeArray = array of TRangeArray;
+  TDistanceFunction = function(const A, B: TPoint): Double;
   {$DEFINE Sortable}
     {$DEFINE Integer}{$I MiMU\config\Helpers.inc}{$UNDEF Integer}
     {$DEFINE Double}{$I MiMU\config\Helpers.inc}{$UNDEF Double}
@@ -1087,6 +1095,36 @@ function Max(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU
 
 function Min(A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Min}
 function Min(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Min}
+
+function Manhattan(const A, B: TPoint): Double;
+begin
+  Result := (Abs(A.X - B.X) + Abs(A.Y - B.Y));
+end;
+
+function Chebyshev(const A, B: TPoint): Double;
+begin
+  Result := Max(Abs(A.X - B.X), Abs(A.Y - B.Y));
+end;
+
+function Euclidean(const A, B: TPoint): Double;
+begin
+  Result := (Sqrt(Sqr(A.X - B.X) + Sqr(A.Y - B.Y)));
+end;
+
+function Euclidean2(const A, B: TPoint): Double;
+begin
+  Result := Sqrt(Power((A.X - B.X), 2) + Power((A.Y - B.Y), 2));
+end;
+
+function SquaredEuclidean(const A, B: TPoint): Double;
+begin
+  Result := (Sqr(A.X - B.X) + Sqr(A.Y - B.Y));
+end;
+
+function Minkowski(const A, B: TPoint; const P: Double = 2.0): Double;
+begin
+  Result := Power(Power(Abs(A.X - B.X), P) + Power(Abs(A.Y - B.Y), P), (1 / P));
+end;
 
 class function TBA.Init(var arr: TBooleanArray): Integer; overload; 
 begin

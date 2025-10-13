@@ -629,40 +629,93 @@ end;
  @action: Splits TPointArray to groups by xRadius and yRadius.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.Split(const xRadius, yRadius: Double): T2DPointArray; overload; 
+function TPointArrayHelper.Split(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
-  i, j, k, l, g: Integer;
+  l, s, c, e, r, h: Integer;
   p: TPointArray;
 begin
-  SetLength(Result, Length(Self));
-  if Self.Empty then
-    Exit;
-  p := Self.QuickSorted(Self.Xs);
-  l := 0;
-  Result[0] := [p[0]];
-  for i := 1 to High(p) do
-  begin
-    g := -1;
-    for j := 0 to l do
-    begin
-      for k := 0 to High(Result[j]) do
-        if (Abs(p[i].X - Result[j][k].X) > xRadius) then
-          Break
-        else
-          if (Abs(p[i].Y - Result[j][k].Y) <= yRadius) then
-          begin
-            g := l;
-            Break;
-          end;
-      if (g > -1) then
-        Break;
-    end;
-    if (g = -1) then
-      Result[l.Increment] := [p[i]]
-    else
-      Result[g] := (Result[g] + [p[i]]);
+  h := High(Self);
+  case h of
+    -1: Exit([]);
+    0: Exit([Self]);
   end;
-  SetLength(Result, (l + 1));
+  p := Self.Copy;
+  SetLength(Result, (h + 1));
+  c := 0;
+  e := 0;
+  while ((h - e) >= 0) do
+  begin
+    SetLength(Result[c], 1);
+    Result[c][0] := p[0];
+    p[0] := p[h - e];
+    Inc(e);
+    l := 1;
+    r := 0;
+    while (r < l) do
+    begin
+      s := 0;
+      while (s <= (h - e)) do
+      begin
+        if ((Abs(Result[c][r].X - p[s].X) <= xRadius) and (Abs(Result[c][r].Y - p[s].Y) <= yRadius)) then
+        begin
+          SetLength(Result[c], (l + 1));
+          Result[c][l.Increase] := p[s];
+          p[s.Decrease] := p[h - e.Increase];
+        end;
+        Inc(s);
+      end;
+      Inc(r);
+    end;
+    Inc(c);
+  end;
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Split>
+ @action: Splits TPointArray to groups by radius.
+ @note: Supports custom distance function.
+[==============================================================================}
+function TPointArrayHelper.Split(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+var
+  l, s, c, e, r, h: Integer;
+  p: TPointArray;
+begin
+  h := High(Self);
+  case h of
+    -1: Exit([]);
+    0: Exit([Self]);
+  end;
+  p := Self.Copy;
+  SetLength(Result, (h + 1));
+  c := 0;
+  e := 0;
+  while ((h - e) >= 0) do
+  begin
+    SetLength(Result[c], 1);
+    Result[c][0] := p[0];
+    p[0] := p[h - e];
+    Inc(e);
+    l := 1;
+    r := 0;
+    while (r < l) do
+    begin
+      s := 0;
+      while (s <= (h - e)) do
+      begin
+        if (distFunc(Result[c][r], p[s]) <= radius) then
+        begin
+          SetLength(Result[c], (l + 1));
+          Result[c][l.Increase] := p[s];
+          p[s.Decrease] := p[h - e.Increase];
+        end;
+        Inc(s);
+      end;
+      Inc(r);
+    end;
+    Inc(c);
+  end;
+  SetLength(Result, c);
 end;
 
 {==============================================================================]
@@ -670,9 +723,105 @@ end;
  @action: Splits TPointArray to groups by radius.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.Split(const radius: Double): T2DPointArray; overload; 
+function TPointArrayHelper.Split(const radius: Double = 1.0): T2DPointArray; overload;
 begin
-  Result := Self.Split(radius, radius);
+  Result := Self.Split(radius, @Euclidean);
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.SplitEx>
+ @action: Splits TPointArray to groups by xRadius and yRadius.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.SplitEx(const xRadius, yRadius: Integer): T2DPointArray; overload;
+var
+  i, j, k, r, l: Integer;
+  u: TBooleanArray;
+  p: TPoint;
+begin
+  l := Length(Self);
+  case l of
+    -1: Exit([]);
+    0: Exit([Self]);
+  end;
+  u.Create(l, False);
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    r := High(Result);
+    SetLength(Result[r], 1);
+    Result[r][0] := Self[i];
+    u[i] := True;
+    j := 0;
+    while (j < Length(Result[r])) do
+    begin
+      p := Result[r][j];
+      for k := 0 to (l - 1) do
+        if ((not u[k]) and (Abs(p.X - Self[k].X) <= xRadius) and (Abs(p.Y - Self[k].Y) <= yRadius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := Self[k];
+        end;
+      Inc(j);
+    end;
+  end;
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.SplitEx>
+ @action: Splits TPointArray to groups by radius.
+ @note: Supports custom distance function.
+[==============================================================================}
+function TPointArrayHelper.SplitEx(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+var
+  i, j, k, r, l: Integer;
+  u: TBooleanArray;
+  p: TPoint;
+begin
+  l := Length(Self);
+  case l of
+    -1: Exit([]);
+    0: Exit([Self]);
+  end;
+  u.Create(l, False);
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    r := High(Result);
+    SetLength(Result[r], 1);
+    Result[r][0] := Self[i];
+    u[i] := True;
+    j := 0;
+    while (j < Length(Result[r])) do
+    begin
+      p := Result[r][j];
+      for k := 0 to (l - 1) do
+        if ((not u[k]) and (distFunc(p, Self[k]) <= radius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := Self[k];
+        end;
+      Inc(j);
+    end;
+  end;
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.SplitEx>
+ @action: Splits TPointArray to groups by radius.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.SplitEx(const radius: Double = 1.0): T2DPointArray; overload;
+begin
+  Result := Self.SplitEx(radius, @Euclidean);
 end;
 
 function TPointArrayHelper.Cluster(const dist: Integer): T2DPointArray; overload; 
