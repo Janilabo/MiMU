@@ -990,9 +990,11 @@ begin
   begin
     if v[i] then
       Continue;
+    SetLength(Result[r], 1);
+    Result[r][0] := Self[i];
+    v[i] := True;
     SetLength(q, 1);
     q[0] := Self[i];
-    v[i] := True;
     while (Length(q) > 0) do
     begin
       p := q[High(q)];
@@ -1007,8 +1009,7 @@ begin
           v[j] := True;
         end;
     end;
-    if (Length(Result[r]) > 0) then
-      Inc(r);
+    Inc(r);
   end;
   SetLength(Result, r);
 end;
@@ -1037,9 +1038,11 @@ begin
   begin
     if v[i] then
       Continue;
+    SetLength(Result[r], 1);
+    Result[r][0] := Self[i];
+    v[i] := True;
     SetLength(q, 1);
     q[0] := Self[i];
-    v[i] := True;
     while (Length(q) > 0) do
     begin
       p := q[High(q)];
@@ -1054,8 +1057,7 @@ begin
           v[j] := True;
         end;
     end;
-    if (Length(Result[r]) > 0) then
-      Inc(r);
+    Inc(r);
   end;
   SetLength(Result, r);
 end;
