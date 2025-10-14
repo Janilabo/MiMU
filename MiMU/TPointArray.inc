@@ -1778,4 +1778,56 @@ begin
   Result := Self.FrameLinks(dist, Self.Bounds);
 end;
 
+{==============================================================================]
+  <TPointArray.XVals>
+  @action: Returns an array of all X coordinates from the point array,
+           optionally sorted in ascending or descending order.
+  @note: Uses TIntegerArray_BinaryAppend to maintain the order efficiently.
+[==============================================================================}
+function TPointArrayHelper.XVals(const aAscending: Boolean = True): TIntegerArray;
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+    Result.BinaryAppend(Self[i].X, aAscending);
+end;
+
+{==============================================================================]
+  <TPointArray.YVals>
+  @action:  Returns an array of all Y coordinates from the point array,
+            optionally sorted in ascending or descending order.
+  @note:    Uses TIntegerArray_BinaryAppend to maintain the order efficiently.
+[==============================================================================}
+function TPointArrayHelper.YVals(const aAscending: Boolean = True): TIntegerArray;
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+    Result.BinaryAppend(Self[i].Y, aAscending);
+end;
+
+{==============================================================================]
+  <TPointArray.XArr>
+  @action: Returns an array of all X coordinates from the point array,
+           optionally sorted in ascending or descending order.
+  @note: Uses Quicksorting to maintain the order efficiently.
+[==============================================================================}
+function TPointArrayHelper.XArr(const aAscending: Boolean = True): TIntegerArray;
+begin
+  Result := Self.Xs.QuickSorted(aAscending);
+end;
+
+{==============================================================================]
+  <TPointArray.YArr>
+  @action: Returns an array of all Y coordinates from the point array,
+           optionally sorted in ascending or descending order.
+  @note: Uses Quicksorting to maintain the order efficiently.
+[==============================================================================}
+function TPointArrayHelper.YArr(const aAscending: Boolean = True): TIntegerArray;
+begin
+  Result := Self.Ys.QuickSorted(aAscending);
+end;
+
 {$UNDEF TPoint}

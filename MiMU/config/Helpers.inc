@@ -246,7 +246,13 @@ type
       function Neighbors(const adjacency8: Boolean = True): TPointArray; overload;
       function ToY(const yGoal: Integer): TPointArray; overload;
       function ToX(const xGoal: Integer): TPointArray; overload;
-      function Linked(const p: TPoint; const link: TPointArray): Boolean; overload;	  
+      function Linked(const p: TPoint; const link: TPointArray): Boolean; overload;
+      function Boxed(const xRadius, yRadius: Integer): TBox; overload;
+      function Boxed(const radius: Integer = 0): TBox; overload;
+      function ToBox(const width, height: Integer): TBox; overload;
+      function ToBox(const size: Integer = 0): TBox; overload;
+      function Boxify(const width, height: Integer): TBox; overload;
+      function Boxify(const size: Integer = 0): TBox; overload;
     {$ENDIF}
     {$IFDEF TBox}
       function Create: TBox; overload;
@@ -831,6 +837,10 @@ type
       function FrameLinks(const dist: Integer; const area: TBox): TPointArray; overload;
       function FrameLinks(const dist: Integer = 1): TPointArray; overload;
       function Reinit: Integer; overload;
+      function XVals(const aAscending: Boolean = True): TIntegerArray;
+      function YVals(const aAscending: Boolean = True): TIntegerArray;
+      function XArr(const aAscending: Boolean = True): TIntegerArray;
+      function YArr(const aAscending: Boolean = True): TIntegerArray;
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
