@@ -971,7 +971,7 @@ begin
   SetLength(Result, r);
 end;
 
-function TPointArrayHelper.Clump(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+function TPointArrayHelper.Clustered(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
 var
   i, j, r: Integer;
   v: TBooleanArray;
@@ -1014,12 +1014,12 @@ begin
   SetLength(Result, r);
 end;
 
-function TPointArrayHelper.Clump(const radius: Double = 1.0): T2DPointArray; overload;
+function TPointArrayHelper.Clustered(const radius: Double = 1.0): T2DPointArray; overload;
 begin
-  Result := Self.Clump(radius, @Euclidean);
+  Result := Self.Clustered(radius, @Euclidean);
 end;
 
-function TPointArrayHelper.Clump(const xRadius, yRadius: Integer): T2DPointArray; overload;
+function TPointArrayHelper.Clustered(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
   i, j, r: Integer;
   v: TBooleanArray;
@@ -1062,99 +1062,101 @@ begin
   SetLength(Result, r);
 end;
 
-{==============================================================================]
- <TPointArrayHelper.Segment>
- @action: Splits TPointArray to groups by radius.
- @note: None.
-[==============================================================================}
-function TPointArrayHelper.Segment(const radius: Double): T2DPointArray; overload; 
+function TPointArrayHelper.Clusterify(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
 var
-  b, f, l, i, j, k, p, r, c: Integer;
+  i, j, r: Integer;
   v: TBooleanArray;
   q: TIntegerArray;
+  s, l, c: Integer;
+  p: TPoint;
 begin
-  l := Length(Self);
-  if (l = 0) then
-    Exit([]);
-  SetLength(v, l);
-  for i := 0 to (l - 1) do
-    v[i] := False;
-  SetLength(Result, l);
+  case Length(Self) of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  SetLength(v, Length(Self));
+  SetLength(Result, Length(Self));
   r := 0;
-  p := 0;
-  for i := 0 to (l - 1) do
+  for i := 0 to High(Self) do
   begin
     if v[i] then
       Continue;
-    SetLength(q, l);
-    f := 0;
-    b := 0;
-    q[b.Increase] := i;
+    SetLength(Result[r], 1);
+    Result[r][0] := Self[i];
+    l := 1;
     v[i] := True;
-    c := 0;
-    SetLength(Result[r], (l - p));
-    while (f < b) do
+    SetLength(q, 1);
+    q[0] := i;
+    s := 1;
+    while (s > 0) do
     begin
-      j := q[f.Increase];
-      Result[r][c.Increase] := Self[j];
-      for k := 0 to (l - 1) do
-        if not v[k] then
-          if (Hypot((Self[j].X - Self[k].X), (Self[j].Y - Self[k].Y)) <= radius) then
-          begin
-            v[k] := True;
-            q[b.Increase] := k;
-          end;
+      c := q[s - 1];
+      Dec(s);
+      SetLength(q, s);
+      p := Self[c];
+      for j := 0 to High(Self) do
+        if ((not v[j]) and (distFunc(p, Self[j]) <= radius)) then
+        begin
+          v[j] := True;
+          SetLength(Result[r], (l + 1));
+          Result[r][l.Increase] := Self[j];
+          SetLength(q, (s + 1));
+          q[s.Increase] := j;
+        end;
     end;
-    Inc(p, c);
-    SetLength(Result[r.Increase], c);
+    Inc(r);
   end;
   SetLength(Result, r);
 end;
 
-{==============================================================================]
- <TPointArrayHelper.Fragment>
- @action: Splits TPointArray to groups by radius.
- @note: None.
-[==============================================================================}
-function TPointArrayHelper.Fragment(const radius: Double): T2DPointArray; overload; 
-var
-  h, l, i, j, k, r, p, c: Integer;
-  v: TBooleanArray;
-  s: TIntegerArray;
+function TPointArrayHelper.Clusterify(const radius: Double = 1.0): T2DPointArray; overload;
 begin
-  l := Length(Self);
-  if (l = 0) then
-    Exit([]);
-  SetLength(v, l);
-  for i := 0 to (l - 1) do
-    v[i] := False;
-  SetLength(Result, l);
+  Result := Self.Clusterify(radius, @Euclidean);
+end;
+
+function TPointArrayHelper.Clusterify(const xRadius, yRadius: Integer): T2DPointArray; overload;
+var
+  i, j, r: Integer;
+  v: TBooleanArray;
+  q: TIntegerArray;
+  s, l, c: Integer;
+  p: TPoint;
+begin
+  case Length(Self) of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  SetLength(v, Length(Self));
+  SetLength(Result, Length(Self));
   r := 0;
-  p := 0;
-  for i := 0 to (l - 1) do
+  for i := 0 to High(Self) do
   begin
     if v[i] then
       Continue;
-    SetLength(s, l);
-    h := 0;
-    s[h.Increase] := i;
+    SetLength(Result[r], 1);
+    Result[r][0] := Self[i];
+    l := 1;
     v[i] := True;
-    c := 0;
-    SetLength(Result[r], (l - p));
-    while (h > 0) do
+    SetLength(q, 1);
+    q[0] := i;
+    s := 1;
+    while (s > 0) do
     begin
-      j := s[h.Decrement];
-      Result[r][c.Increase] := Self[j];
-      for k := 0 to (l - 1) do
-        if not v[k] then
-          if (Hypot((Self[j].X - Self[k].X), (Self[j].Y - Self[k].Y)) <= radius) then
-          begin
-            v[k] := True;
-            s[h.Increase] := k;
-          end;
+      c := q[s - 1];
+      Dec(s);
+      SetLength(q, s);
+      p := Self[c];
+      for j := 0 to High(Self) do
+        if ((not v[j]) and ((Abs(p.X - Self[j].X) <= xRadius) and (Abs(p.Y - Self[j].Y) <= yRadius))) then
+        begin
+          v[j] := True;
+          SetLength(Result[r], (l + 1));
+          Result[r][l.Increase] := Self[j];
+          SetLength(q, (s + 1));
+          q[s.Increase] := j;
+        end;
     end;
-    Inc(p, c);
-    SetLength(Result[r.Increase], c);
+    Inc(r);
   end;
   SetLength(Result, r);
 end;
@@ -1164,7 +1166,7 @@ end;
  @action: Splits TPointArray to groups by radius.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.Clusterize(const radius: Double): T2DPointArray; overload; 
+function TPointArrayHelper.Clusterize(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload; 
 var
   m, p: TIntegerArray;
   r, l, i, j: Integer;
@@ -1200,7 +1202,7 @@ begin
     p[i] := i;
   for i := 0 to (l - 1) do
     for j := (i + 1) to (l - 1) do
-      if (Hypot((Self[i].X - Self[j].X), (Self[i].Y - Self[j].Y)) <= radius) then
+	  if (distFunc(Self[i], Self[j]) <= radius) then
         PUnioned(i, j);
   SetLength(m, l);
   for i := 0 to (l - 1) do
@@ -1219,12 +1221,17 @@ begin
   end;
 end;
 
+function TPointArrayHelper.Clusterize(const radius: Double = 1.0): T2DPointArray; overload;
+begin
+  Result := Self.Clusterize(radius, @Distance);
+end;
+
 {==============================================================================]
  <TPointArrayHelper.Clusterize>
  @action: Splits TPointArray to groups by xRadius and yRadius.
  @note: None.
 [==============================================================================}
-function TPointArrayHelper.Clusterize(const xRadius, yRadius: Double): T2DPointArray; overload; 
+function TPointArrayHelper.Clusterize(const xRadius, yRadius: Integer): T2DPointArray; overload; 
 var
   m, p: TIntegerArray;
   i, j, r, c: Integer;
@@ -1277,6 +1284,206 @@ begin
     end;
     Result[m[r]] := (Result[m[r]] + [Self[i]]);
   end;
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Segment>
+ @action: Splits TPointArray to groups by radius.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.Segment(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload; 
+var
+  b, f, l, i, j, k, p, r, c: Integer;
+  v: TBooleanArray;
+  q: TIntegerArray;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit([]);
+  SetLength(v, l);
+  for i := 0 to (l - 1) do
+    v[i] := False;
+  SetLength(Result, l);
+  r := 0;
+  p := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if v[i] then
+      Continue;
+    SetLength(q, l);
+    f := 0;
+    b := 0;
+    q[b.Increase] := i;
+    v[i] := True;
+    c := 0;
+    SetLength(Result[r], (l - p));
+    while (f < b) do
+    begin
+      j := q[f.Increase];
+      Result[r][c.Increase] := Self[j];
+      for k := 0 to (l - 1) do
+        if ((not v[k]) and (distFunc(Self[j], Self[k]) <= radius)) then
+        begin
+          v[k] := True;
+          q[b.Increase] := k;
+        end;
+    end;
+    Inc(p, c);
+    SetLength(Result[r.Increase], c);
+  end;
+  SetLength(Result, r);
+end;
+
+function TPointArrayHelper.Segment(const radius: Double = 1.0): T2DPointArray; overload;
+begin
+  Result := Self.Segment(radius, @Distance);
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Segment>
+ @action: Splits TPointArray to groups by xRadius and yRadius.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.Segment(const xRadius, yRadius: Integer): T2DPointArray; overload; 
+var
+  b, f, l, i, j, k, p, r, c: Integer;
+  v: TBooleanArray;
+  q: TIntegerArray;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit([]);
+  SetLength(v, l);
+  for i := 0 to (l - 1) do
+    v[i] := False;
+  SetLength(Result, l);
+  r := 0;
+  p := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if v[i] then
+      Continue;
+    SetLength(q, l);
+    f := 0;
+    b := 0;
+    q[b.Increase] := i;
+    v[i] := True;
+    c := 0;
+    SetLength(Result[r], (l - p));
+    while (f < b) do
+    begin
+      j := q[f.Increase];
+      Result[r][c.Increase] := Self[j];
+      for k := 0 to (l - 1) do
+        if ((not v[k]) and ((Abs(Self[j].X - Self[k].X) <= xRadius) and (Abs(Self[j].Y - Self[k].Y) <= yRadius))) then
+        begin
+          v[k] := True;
+          q[b.Increase] := k;
+        end;
+    end;
+    Inc(p, c);
+    SetLength(Result[r.Increase], c);
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Fragment>
+ @action: Splits TPointArray to groups by radius.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.Fragment(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload; 
+var
+  h, l, i, j, k, r, p, c: Integer;
+  v: TBooleanArray;
+  s: TIntegerArray;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit([]);
+  SetLength(v, l);
+  for i := 0 to (l - 1) do
+    v[i] := False;
+  SetLength(Result, l);
+  r := 0;
+  p := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if v[i] then
+      Continue;
+    SetLength(s, l);
+    h := 0;
+    s[h.Increase] := i;
+    v[i] := True;
+    c := 0;
+    SetLength(Result[r], (l - p));
+    while (h > 0) do
+    begin
+      j := s[h.Decrement];
+      Result[r][c.Increase] := Self[j];
+      for k := 0 to (l - 1) do
+        if ((not v[k]) and (distFunc(Self[j], Self[k]) <= radius)) then
+        begin
+          v[k] := True;
+          s[h.Increase] := k;
+        end;
+    end;
+    Inc(p, c);
+    SetLength(Result[r.Increase], c);
+  end;
+  SetLength(Result, r);
+end;
+
+function TPointArrayHelper.Fragment(const radius: Double = 1.0): T2DPointArray; overload;
+begin
+  Result := Self.Fragment(radius, @Distance);
+end;
+
+{==============================================================================]
+ <TPointArrayHelper.Fragment>
+ @action: Splits TPointArray to groups by xRadius and yRadius.
+ @note: None.
+[==============================================================================}
+function TPointArrayHelper.Fragment(const xRadius, yRadius: Integer): T2DPointArray; overload; 
+var
+  h, l, i, j, k, r, p, c: Integer;
+  v: TBooleanArray;
+  s: TIntegerArray;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit([]);
+  SetLength(v, l);
+  for i := 0 to (l - 1) do
+    v[i] := False;
+  SetLength(Result, l);
+  r := 0;
+  p := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if v[i] then
+      Continue;
+    SetLength(s, l);
+    h := 0;
+    s[h.Increase] := i;
+    v[i] := True;
+    c := 0;
+    SetLength(Result[r], (l - p));
+    while (h > 0) do
+    begin
+      j := s[h.Decrement];
+      Result[r][c.Increase] := Self[j];
+      for k := 0 to (l - 1) do
+        if ((not v[k]) and ((Abs(Self[j].X - Self[k].X) <= xRadius) and (Abs(Self[j].Y - Self[k].Y) <= yRadius))) then
+        begin
+          v[k] := True;
+          s[h.Increase] := k;
+        end;
+    end;
+    Inc(p, c);
+    SetLength(Result[r.Increase], c);
+  end;
+  SetLength(Result, r);
 end;
 
 {==============================================================================]

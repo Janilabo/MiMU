@@ -575,11 +575,12 @@ function Bitify(const a, b: Boolean): Integer; overload;
 function Bitify(const a, b, c: Boolean): Integer; overload;
 function Bitify(const a, b, c, d: Boolean): Integer; overload;
 
-function Manhattan(const A, B: TPoint): Double;
-function Chebyshev(const A, B: TPoint): Double;
+function Distance(const A, B: TPoint): Double;
 function Euclidean(const A, B: TPoint): Double;
 function Euclidean2(const A, B: TPoint): Double;
 function SquaredEuclidean(const A, B: TPoint): Double;
+function Manhattan(const A, B: TPoint): Double;
+function Chebyshev(const A, B: TPoint): Double;
 function Minkowski(const A, B: TPoint; const P: Double = 2.0): Double;
   
 type
@@ -1096,14 +1097,9 @@ function Max(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU
 function Min(A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Min}
 function Min(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Min}
 
-function Manhattan(const A, B: TPoint): Double;
+function Distance(const A, B: TPoint): Double;
 begin
-  Result := (Abs(A.X - B.X) + Abs(A.Y - B.Y));
-end;
-
-function Chebyshev(const A, B: TPoint): Double;
-begin
-  Result := Max(Abs(A.X - B.X), Abs(A.Y - B.Y));
+  Result := Hypot(A.X - B.X, A.Y - B.Y);
 end;
 
 function Euclidean(const A, B: TPoint): Double;
@@ -1119,6 +1115,16 @@ end;
 function SquaredEuclidean(const A, B: TPoint): Double;
 begin
   Result := (Sqr(A.X - B.X) + Sqr(A.Y - B.Y));
+end;
+
+function Manhattan(const A, B: TPoint): Double;
+begin
+  Result := (Abs(A.X - B.X) + Abs(A.Y - B.Y));
+end;
+
+function Chebyshev(const A, B: TPoint): Double;
+begin
+  Result := Max(Abs(A.X - B.X), Abs(A.Y - B.Y));
 end;
 
 function Minkowski(const A, B: TPoint; const P: Double = 2.0): Double;
