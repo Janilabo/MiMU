@@ -625,6 +625,292 @@ begin
 end;
 
 {==============================================================================]
+ <TPointArray.XSplit>
+ @action: Splits the point array into clusters based on X/Y coordinate proximity.
+ @note: Optimized for arrays sorted by X (ascending). 
+        Each group contains points within |ΔX| ≤ xRadius and |ΔY| ≤ yRadius.
+        If sSorted = True, sorting is skipped to save time.
+[==============================================================================}
+function TPointArrayHelper.XSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
+var
+  i, j, k, r, l: Integer;
+  u: TBooleanArray;
+  p: TPoint;
+  a: TPointArray;
+  m: TRange;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  u := T1D.Create(False, l);
+  SetLength(Result, 0);
+  a := Self.Copy;
+  if not sSorted then
+    a.SortByColumn;
+  for i := 0 to High(a) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    r := High(Result);
+    SetLength(Result[r], 1);
+    Result[r][0] := a[i];
+    u[i] := True;
+    j := 0;
+    while (j < Length(Result[r])) do
+    begin
+      p := Result[r][j];
+      m.Create((p.X - xRadius), (p.X + xRadius));
+      k := i;
+      while ((k < l) and (a[k].X <= m.stop)) do
+      begin
+        if ((not u[k]) and (Abs(a[k].Y - p.Y) <= yRadius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := a[k];
+        end;
+        Inc(k);
+      end;
+      k := (i - 1);
+      while ((k >= 0) and (a[k].X >= m.start)) do
+      begin
+        if ((not u[k]) and (Abs(a[k].Y - p.Y) <= yRadius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := a[k];
+        end;
+        Dec(k);
+      end;
+      Inc(j);
+    end;
+  end;
+end;
+
+{==============================================================================]
+ <TPointArray.XSplit>
+ @action: Splits the point array into clusters using a custom distance function.
+ @note: Efficient for data already sorted by X.
+        Points are grouped if distFunc(p, q) ≤ radius.
+        The X-range window limits comparisons for performance (O(n log n) typical).
+[==============================================================================}
+function TPointArrayHelper.XSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+var
+  i, j, k, r, l: Integer;
+  u: TBooleanArray;
+  p: TPoint;
+  m: TRange;
+  a: TPointArray;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  u := T1D.Create(False, l);
+  SetLength(Result, 0);
+  a := Self.Copy;
+  if not sSorted then
+    a.SortByColumn;
+  for i := 0 to High(a) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    r := High(Result);
+    SetLength(Result[r], 1);
+    Result[r][0] := a[i];
+    u[i] := True;
+    j := 0;
+    while (j < Length(Result[r])) do
+    begin
+      p := Result[r][j];
+      m.Create(Trunc(p.X - radius), Trunc(p.X + radius));
+      k := i;
+      while ((k < l) and (a[k].X <= m.stop)) do
+      begin
+        if ((not u[k]) and (distFunc(p, a[k]) <= radius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := a[k];
+        end;
+        Inc(k);
+      end;
+      k := (i - 1);
+      while ((k >= 0) and (a[k].X >= m.start)) do
+      begin
+        if ((not u[k]) and (distFunc(p, a[k]) <= radius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := a[k];
+        end;
+        Dec(k);
+      end;
+      Inc(j);
+    end;
+  end;
+end;
+
+{==============================================================================]
+ <TPointArray.XSplit>
+ @action: Splits the point array into clusters using Euclidean distance.
+ @note: Shorthand for XSplit(radius, @Euclidean, sSorted).
+        Groups points if their Euclidean distance ≤ radius.
+[==============================================================================}
+function TPointArrayHelper.XSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
+begin
+  Result := Self.XSplit(radius, @Euclidean, sSorted);
+end;
+
+{==============================================================================]
+ <TPointArray.YSplit>
+ @action: Splits the point array into clusters based on Y/X coordinate proximity.
+ @note: Optimized for arrays sorted by Y (ascending).
+        Each group contains points within |ΔY| ≤ yRadius and |ΔX| ≤ xRadius.
+        If sSorted = True, sorting is skipped to save time.
+[==============================================================================}
+function TPointArrayHelper.YSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
+var
+  i, j, k, r, l: Integer;
+  u: TBooleanArray;
+  p: TPoint;
+  a: TPointArray;
+  m: TRange;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  u := T1D.Create(False, l);
+  SetLength(Result, 0);
+  a := Self.Copy;
+  if not sSorted then
+    a.SortByRow;
+  for i := 0 to High(a) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    r := High(Result);
+    SetLength(Result[r], 1);
+    Result[r][0] := a[i];
+    u[i] := True;
+    j := 0;
+    while (j < Length(Result[r])) do
+    begin
+      p := Result[r][j];
+      m.Create((p.Y - yRadius), (p.Y + yRadius));
+      k := i;
+      while ((k < l) and (a[k].Y <= m.stop)) do
+      begin
+        if ((not u[k]) and (Abs(a[k].X - p.X) <= xRadius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := a[k];
+        end;
+        Inc(k);
+      end;
+      k := (i - 1);
+      while ((k >= 0) and (a[k].Y >= m.start)) do
+      begin
+        if ((not u[k]) and (Abs(a[k].X - p.X) <= xRadius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := a[k];
+        end;
+        Dec(k);
+      end;
+      Inc(j);
+    end;
+  end;
+end;
+
+{==============================================================================]
+ <TPointArray.YSplit>
+ @action: Splits the point array into clusters using a custom distance function.
+ @note: Efficient for data already sorted by Y.
+        Points are grouped if distFunc(p, q) ≤ radius.
+        Y-sorted scanning limits comparisons for faster clustering.
+[==============================================================================}
+function TPointArrayHelper.YSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+var
+  i, j, k, r, l: Integer;
+  u: TBooleanArray;
+  p: TPoint;
+  m: TRange;
+  a: TPointArray;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  u := T1D.Create(False, l);
+  SetLength(Result, 0);
+  a := Self.Copy;
+  if not sSorted then
+    a.SortByRow;
+  for i := 0 to High(a) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    r := High(Result);
+    SetLength(Result[r], 1);
+    Result[r][0] := a[i];
+    u[i] := True;
+    j := 0;
+    while (j < Length(Result[r])) do
+    begin
+      p := Result[r][j];
+      m.Create(Trunc(p.Y - radius), Trunc(p.Y + radius));
+      k := i;
+      while ((k < l) and (a[k].Y <= m.stop)) do
+      begin
+        if ((not u[k]) and (distFunc(p, a[k]) <= radius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := a[k];
+        end;
+        Inc(k);
+      end;
+      k := (i - 1);
+      while ((k >= 0) and (a[k].Y >= m.start)) do
+      begin
+        if ((not u[k]) and (distFunc(p, a[k]) <= radius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := a[k];
+        end;
+        Dec(k);
+      end;
+      Inc(j);
+    end;
+  end;
+end;
+
+{==============================================================================]
+ <TPointArray.YSplit>
+ @action: Splits the point array into clusters using Euclidean distance.
+ @note: Shorthand for YSplit(radius, @Euclidean, sSorted).
+        Groups points if their Euclidean distance ≤ radius.
+[==============================================================================}
+function TPointArrayHelper.YSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
+begin
+  Result := Self.YSplit(radius, @Euclidean, sSorted);
+end;
+
+{==============================================================================]
  <TPointArrayHelper.Split>
  @action: Splits TPointArray to groups by xRadius and yRadius.
  @note: None.
