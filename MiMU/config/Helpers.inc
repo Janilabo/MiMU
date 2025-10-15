@@ -806,6 +806,9 @@ type
       function SplitEx(const xRadius, yRadius: Integer): T2DPointArray; overload;
       function SplitEx(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
       function SplitEx(const radius: Double = 1.0): T2DPointArray; overload;
+      function Clusters(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+      function Clusters(const radius: Double = 1.0): T2DPointArray; overload;
+      function Clusters(const xRadius, yRadius: Integer): T2DPointArray; overload;
       function Cluster(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
       function Cluster(const radius: Double = 1.0): T2DPointArray; overload;
       function Cluster(const xRadius, yRadius: Integer): T2DPointArray; overload;

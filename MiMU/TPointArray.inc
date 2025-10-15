@@ -824,6 +824,188 @@ begin
   Result := Self.SplitEx(radius, @Euclidean);
 end;
 
+{==============================================================================]
+  <TPointArray.Clusters>
+  @action: Group points in the array into clusters based on a distance threshold.
+  @note: Uses a breadth-first region-growing approach.
+         Each cluster contains points whose pairwise distances are within radius.
+         Uses the provided distance function.
+[==============================================================================}
+function TPointArrayHelper.Clusters(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+var
+  i, w, h, e, v, z, r, n, t, x, y: Integer;
+  c: T2DIntegerArray;
+  s: T2DBooleanArray;
+  q: TPointArray;
+  b, f: TBox;
+  g, k, p, u: TPoint;
+  a: Boolean;
+  l: TRange;
+  d, m, o: Double;
+begin
+  z := Length(Self);
+  case z of
+    0: Exit([]);
+    1: ExiT([Self]);
+  end;
+  SetLength(Result, 0);
+  b := Self.Bounds(w, h);
+  p := Point(b.X1, b.Y1);
+  c := T2D.Create(0, w, h);
+  s := T2D.Create(False, w, h);
+  for i := 0 to High(Self) do
+    Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
+  SetLength(q, z);
+  d := Max(radius, 0);
+  o := (d * d);
+  m := Min(d, Max(w, h));
+  r := 0;
+  e := 0;
+  for i := 0 to (z - 1) do
+  begin
+    g:= Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
+    if (c[g.X][g.Y] <= 0) then
+      Continue;
+    n := c[g.X][g.Y];
+    SetLength(Result, (r + 1));
+    SetLength(Result[r], n);
+    for v := 0 to (n - 1) do
+      Result[r][v] := Self[i];
+    if (e.Increment(n) > (z - 1)) then
+      Exit;
+    l.Create(0);
+    q[l.stop.Increase] := Result[r][0];
+    c[g.X][g.Y] := 0;
+    while (l.start < l.stop) do
+    begin
+      k := q[l.start.Increase];
+      f := k.Boxed(Ceil(m)).Clamp(b);
+      for y := f.Y1 to f.Y2 do
+      begin
+        if s[f.X2 - b.X1][y - b.Y1] then
+          Continue;
+        a := True;
+        for x := f.X1 to f.X2 do
+        begin
+          u := Point((x - b.X1), (y - b.Y1));
+          if not (c[u.X][u.Y] > 0) then
+            Continue;
+          if (distFunc(k, Point(x, y)) <= o) then
+          begin
+            t := Length(Result[r]);
+            SetLength(Result[r], (t + c[u.X][u.Y]));
+            for v := 0 to (c[u.X][u.Y] - 1) do
+              Result[r][t + v] := Point(x, y);
+            q[l.stop.Increase] := Result[r][t];
+            if (e.Increment(c[u.X][u.Y]) > (z - 1)) then
+              Exit;
+            c[u.X][u.Y] := 0;
+          end else
+            a := False;
+        end;
+        if a then
+          s[f.X2 - b.X1][y - b.Y1] := True;
+      end;
+    end;
+    Inc(r);
+  end;
+end;
+
+function TPointArrayHelper.Clusters(const radius: Double = 1.0): T2DPointArray; overload;
+begin
+  Result := Self.Clusters(radius, @Euclidean);
+end;
+
+{==============================================================================]
+  <TPointArray.Clusters>
+  @action: Group points in the array into rectangular clusters based on X and Y radii.
+  @note: Clustering is anisotropic — points are grouped if their |ΔX| ≤ xRadius and |ΔY| ≤ yRadius.
+         No distance function is used.
+[==============================================================================}
+function TPointArrayHelper.Clusters(const xRadius, yRadius: Integer): T2DPointArray; overload;
+var
+  i, w, h, e, v, z, r, n, t, o, x, y: Integer;
+  c: T2DIntegerArray;
+  s: T2DBooleanArray;
+  q: TPointArray;
+  b, f: TBox;
+  g, k, p, u, m: TPoint;
+  a: Boolean;
+  l: TRange;
+begin
+  z := Length(Self);
+  case z of
+    0: Exit([]);
+    1: ExiT([Self]);
+  end;
+  SetLength(Result, 0);
+  b := Self.Bounds(w, h);
+  p := Point(b.X1, b.Y1);
+  c := T2D.Create(0, w, h);
+  s := T2D.Create(False, w, h);
+  for i := 0 to High(Self) do
+    Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
+  SetLength(q, z);
+  m := Point(Min(Max(0, xRadius), w), Min(Max(0, yRadius), h));
+  r := 0;
+  e := 0;
+  for i := 0 to (z - 1) do
+  begin
+    g:= Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
+    if (c[g.X][g.Y] <= 0) then
+      Continue;
+    n := c[g.X][g.Y];
+    SetLength(Result, (r + 1));
+    SetLength(Result[r], n);
+    for v := 0 to (n - 1) do
+      Result[r][v] := Self[i];
+    if (e.Increment(n) > (z - 1)) then
+      Exit;
+    l.Create(0);
+    q[l.stop.Increase] := Result[r][0];
+    c[g.X][g.Y] := 0;
+    while (l.start < l.stop) do
+    begin
+      k := q[l.start.Increase];
+      f := k.Boxed(Max(m.X, m.Y)).Clamp(b);
+      for y := f.Y1 to f.Y2 do
+      begin
+        if s[f.X2 - b.X1][y - b.Y1] then
+          Continue;
+        a := True;
+        for x := f.X1 to f.X2 do
+        begin
+          u := Point((x - b.X1), (y - b.Y1));
+          if not (c[u.X][u.Y] > 0) then
+            Continue;
+          if ((Abs(k.X - x) <= m.X) and (Abs(k.Y - y) <= m.Y)) then
+          begin
+            t := Length(Result[r]);
+            SetLength(Result[r], (t + c[u.X][u.Y]));
+            for v := 0 to (c[u.X][u.Y] - 1) do
+              Result[r][t + v] := Point(x, y);
+            q[l.stop.Increase] := Result[r][t];
+            if (e.Increment(c[u.X][u.Y]) > (z - 1)) then
+              Exit;
+            c[u.X][u.Y] := 0;
+          end else
+            a := False;
+        end;
+        if a then
+          s[f.X2 - b.X1][y - b.Y1] := True;
+      end;
+    end;
+    Inc(r);
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.Cluster>
+  @action: Groups the points in the array into clusters based on a given distance threshold.
+  @note: Uses a grid-based breadth-first search (BFS) approach; points are added to a cluster 
+         if their distance from any member is less than or equal to radius.
+		 Supports custom distance functions via distFunc (default is Euclidean).
+[==============================================================================}
 function TPointArrayHelper.Cluster(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
 var
   w, h, i, j, c, r, x, y: Integer;
@@ -901,6 +1083,13 @@ begin
   Result := Self.Cluster(radius, @Euclidean);
 end;
 
+{==============================================================================]
+  <TPointArray.Cluster>
+  @action: Groups points into clusters using separate X and Y distance limits.
+  @note: Clusters are formed within rectangular (axis-aligned) bounds where the 
+         absolute difference in X and Y coordinates does not exceed xRadius and yRadius. 
+         Faster than the distance-function version but not rotation invariant.
+[==============================================================================}
 function TPointArrayHelper.Cluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
   w, h, i, j, r, x, y: Integer;
