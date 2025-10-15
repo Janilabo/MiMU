@@ -625,6 +625,233 @@ begin
 end;
 
 {==============================================================================]
+ <TPointArray.Neighborify>
+ @action: Groups points into clusters of connected neighbors based on 4- or 8-directional adjacency.
+ @note: Uses a flood-fill algorithm on a bounding-box grid. Returns a T2DPointArray where each sub-array is a connected component.
+        Empty arrays return [] and single-point arrays return [Self].
+[==============================================================================}
+function TPointArrayHelper.Neighborify(const adjacency8: Boolean = True): T2DPointArray; overload;
+var
+  w, h, l: Integer;
+  v, g: T2DBooleanArray;
+  d, q: TPointArray;
+  s: TRange;
+  i, j, x, y, z, r: Integer;
+  p: TPoint;
+  b: TBox;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  b := Self.Bounds(w, h);
+  SetLength(g, w, h);
+  SetLength(v, w, h);
+  for i := 0 to (l - 1) do
+    g[Self[i].X - b.X1][Self[i].Y - b.Y1] := True;
+  if adjacency8 then
+    d := [Point(-1, -1), Point(-1, 0), Point(-1, 1), Point(0, 1), Point(1, 1), Point(1, 0), Point(1, -1), Point(0, -1)]
+  else
+    d := [Point(-1, 0), Point(0, -1), Point(1, 0), Point(0, 1)];
+  r := 0;
+  SetLength(Result, l);
+  for i := 0 to (w - 1) do
+    for j := 0 to (h - 1) do
+      if (g[i][j] and (not v[i][j])) then
+      begin
+        SetLength(q, 1);
+        q[0] := Point(i, j);
+        s.Create(0, 1);
+        while (s.start < s.stop) do
+        begin
+          p := q[s.start.Increase];
+          if v[p.X][p.Y] then
+            Continue;
+          v[p.X][p.Y] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := Point((p.X + b.X1), (p.Y + b.Y1));
+          for z := 0 to High(d) do
+          begin
+            x := (p.X + d[z].X);
+            y := (p.Y + d[z].Y);
+            if ((x >= 0) and (x < w) and (y >= 0) and (y < h) and g[x][y] and (not v[x][y])) then
+            begin
+              if (s.stop >= Length(q)) then
+                SetLength(q, (Length(q) * 2));
+              q[s.stop.Increase] := Point(x, y);
+            end;
+          end;
+        end;
+        if (Length(Result[r]) > 0) then
+          Inc(r);
+      end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+ <TPointArray.Regionize>
+ @action: Groups points in the array into clusters based on rectangular neighborhoods
+          defined by X and Y radii.
+ @note: Clusters are formed by examining a box of size XRadius x YRadius around each
+        point. Points within the same box are grouped together. This version does not
+        use a distance function; it is grid/box-based.
+[==============================================================================}
+function TPointArrayHelper.Regionize(const xRadius, yRadius: Integer): T2DPointArray; overload;
+var
+  x, y, i, l, r, c, t, f: Integer;
+  g, d: TStringList;
+  p, n: TPoint;
+  q: TPointArray;
+  k: string;
+  a, b: TBox;
+  function KeyStr(const p: TPoint): string; inline;
+  begin
+    Result := (IntToStr(p.X) + ',' + IntToStr(p.Y));
+  end;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  b := Self.Bounds;
+  g := TStringList.Create;
+  g.Sorted := False;
+  g.Duplicates := dupIgnore;
+  d := TStringList.Create;
+  d.Sorted := True;
+  d.Duplicates := dupIgnore;
+  r := 0;
+  SetLength(Result, l);
+  try
+    for i := 0 to (l - 1) do
+      g.Add(KeyStr(Self[i]));
+    g.Sorted := True;
+    g.Sort;
+    for i := 0 to (l - 1) do
+    begin
+      if d.Find(KeyStr(Self[i]), f) then
+        Continue;
+      SetLength(Result[r], 0);
+      SetLength(q, 1);
+      q[0] := Self[i];
+      t := 0;
+      c := 1;
+      while (t < c) do
+      begin
+        p := q[t.Increase];
+        k := KeyStr(p);
+        if d.Find(k, f) then
+          Continue;
+        d.Add(k);
+        SetLength(Result[r], (Length(Result[r]) + 1));
+        Result[r][High(Result[r])] := p;
+        a := p.Boxed(xRadius, yRadius).Clamp(b);
+        for y := a.Y1 to a.Y2 do
+          for x := a.X1 to a.X2 do
+          begin
+            n := Point(x, y);
+            k := KeyStr(n);
+            if (g.Find(k, f) and (not d.Find(k, f))) then
+            begin
+              SetLength(q, (c + 1));
+              q[c.Increase] := n;
+            end;
+          end;
+      end;
+      if Length(Result[r]) > 0 then
+        Inc(r);
+    end;
+  finally
+    g.Free;
+    d.Free;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+ <TPointArray.Regionize>
+ @action: Groups points in the array into clusters based on a distance threshold.
+ @note: Clusters are formed by examining all points within the array using the
+        provided distance function. Points within the specified radius (Double)
+        of any cluster member are added to the same cluster. This version supports
+        arbitrary distance metrics via the TDistanceFunction parameter.
+[==============================================================================}
+function TPointArrayHelper.Regionize(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+var
+  i, j, l, r, c, t, f: Integer;
+  g, d: TStringList;
+  p, n: TPoint;
+  q: TPointArray;
+  k: string;
+  function KeyStr(const p: TPoint): string; inline;
+  begin
+    Result := (IntToStr(p.X) + ',' + IntToStr(p.Y));
+  end;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  g := TStringList.Create;
+  g.Sorted := False;
+  g.Duplicates := dupIgnore;
+  d := TStringList.Create;
+  d.Sorted := True;
+  d.Duplicates := dupIgnore;
+  r := 0;
+  SetLength(Result, l);
+  try
+    for i := 0 to (l - 1) do
+      g.Add(KeyStr(Self[i]));
+    g.Sorted := True;
+    g.Sort;
+    for i := 0 to (l - 1) do
+    begin
+      if d.Find(KeyStr(Self[i]), f) then
+        Continue;
+      SetLength(Result[r], 0);
+      SetLength(q, 1);
+      q[0] := Self[i];
+      t := 0;
+      c := 1;
+      while (t < c) do
+      begin
+        p := q[t.Increase];
+        k := KeyStr(p);
+        if d.Find(k, f) then
+          Continue;
+        d.Add(k);
+        SetLength(Result[r], (Length(Result[r]) + 1));
+        Result[r][High(Result[r])] := p;
+        for j := 0 to (l - 1) do
+        begin
+          n := Self[j];
+          if ((not d.Find(KeyStr(n), f)) and (distFunc(p, n) <= radius)) then
+          begin
+            SetLength(q, (c + 1));
+            q[c.Increase] := n;
+          end;
+        end;
+      end;
+      if (Length(Result[r]) > 0) then
+        Inc(r);
+    end;
+  finally
+    g.Free;
+    d.Free;
+  end;
+  SetLength(Result, r);
+end;
+
+function TPointArrayHelper.Regionize(const radius: Double = 1.0): T2DPointArray; overload;
+begin
+  Result := Self.Regionize(radius, @Euclidean);
+end;
+
+{==============================================================================]
  <TPointArray.CSplit>
  @action: Groups points into clusters based on horizontal (X-axis) proximity.
  @note: Sorts by column (X) unless already sorted. Uses distance function or fixed x/y radii.

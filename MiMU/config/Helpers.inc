@@ -800,6 +800,10 @@ type
       function Extent: TBox;
       function Vertical: TRange; overload;
       function Horizontal: TRange; overload;
+      function Neighborify(const adjacency8: Boolean = True): T2DPointArray; overload;
+      function Regionize(const xRadius, yRadius: Integer): T2DPointArray; overload;
+      function Regionize(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+      function Regionize(const radius: Double = 1.0): T2DPointArray; overload;
       function RSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
       function RSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
       function RSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
