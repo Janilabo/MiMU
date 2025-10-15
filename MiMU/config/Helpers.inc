@@ -800,6 +800,12 @@ type
       function Extent: TBox;
       function Vertical: TRange; overload;
       function Horizontal: TRange; overload;
+      function RSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
+      function RSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+      function RSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
+      function CSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
+      function CSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+      function CSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;  
       function XSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
       function XSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
       function XSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;

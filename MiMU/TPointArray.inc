@@ -625,6 +625,218 @@ begin
 end;
 
 {==============================================================================]
+ <TPointArray.CSplit>
+ @action: Groups points into clusters based on horizontal (X-axis) proximity.
+ @note: Sorts by column (X) unless already sorted. Uses distance function or fixed x/y radii.
+[==============================================================================}
+function TPointArrayHelper.CSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+var
+  i, j, k, r, l: Integer;
+  u: TBooleanArray;
+  p: TPoint;
+  m: TRange;
+  a: TPointArray;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  u := T1D.Create(False, l);
+  SetLength(Result, 0);
+  a := Self.Copy;
+  if not sSorted then
+    a.SortByColumn;
+  for i := 0 to High(a) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    r := High(Result);
+    SetLength(Result[r], 1);
+    Result[r][0] := a[i];
+    u[i] := True;
+    j := 0;
+    while (j < Length(Result[r])) do
+    begin
+      for k := 0 to High(a) do
+      begin
+        if u[k] then
+          Continue;
+        p := Result[r][j];
+        m.Create(Trunc(p.X - radius), Trunc(p.X + radius));
+        if (((a[k].X >= m.start) and (a[k].X <= m.stop)) and (distFunc(p, a[k]) <= radius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := a[k];
+        end;
+      end;
+      Inc(j);
+    end;
+  end;
+end;
+
+function TPointArrayHelper.CSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
+begin
+  Result := Self.CSplit(radius, @Euclidean, sSorted);
+end;
+
+function TPointArrayHelper.CSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
+var
+  i, j, k, r, l: Integer;
+  u: TBooleanArray;
+  p: TPoint;
+  m: TRange;
+  a: TPointArray;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  u := T1D.Create(False, l);
+  SetLength(Result, 0);
+  a := Self.Copy;
+  if not sSorted then
+    a.SortByColumn;
+  for i := 0 to High(a) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    r := High(Result);
+    SetLength(Result[r], 1);
+    Result[r][0] := a[i];
+    u[i] := True;
+    j := 0;
+    while (j < Length(Result[r])) do
+    begin
+      for k := 0 to High(a) do
+      begin
+        if u[k] then
+          Continue;
+        p := Result[r][j];
+        m.Create((p.X - xRadius), (p.X + xRadius));
+        if (((a[k].X >= m.start) and (a[k].X <= m.stop)) and (Abs(a[k].Y - p.Y) <= yRadius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := a[k];
+        end;
+      end;
+      Inc(j);
+    end;
+  end;
+end;
+
+{==============================================================================]
+ <TPointArray.RSplit>
+ @action: Groups points into clusters based on vertical (Y-axis) proximity.
+ @note: Sorts by row (Y) unless already sorted. Uses distance function or fixed x/y radii.
+[==============================================================================}
+function TPointArrayHelper.RSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+var
+  i, j, k, r, l: Integer;
+  u: TBooleanArray;
+  p: TPoint;
+  m: TRange;
+  a: TPointArray;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  u := T1D.Create(False, l);
+  SetLength(Result, 0);
+  a := Self.Copy;
+  if not sSorted then
+    a.SortByRow;
+  for i := 0 to High(a) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    r := High(Result);
+    SetLength(Result[r], 1);
+    Result[r][0] := a[i];
+    u[i] := True;
+    j := 0;
+    while (j < Length(Result[r])) do
+    begin
+      p := Result[r][j];
+      for k := 0 to High(a) do
+      begin
+        if u[k] then
+          Continue;
+        m.Create(Trunc(p.Y - radius), Trunc(p.Y + radius));
+        if (((a[k].Y >= m.start) and (a[k].Y <= m.stop)) and (distFunc(p, a[k]) <= radius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := a[k];
+        end;
+      end;
+      Inc(j);
+    end;
+  end;
+end;
+
+function TPointArrayHelper.RSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
+begin
+  Result := Self.RSplit(radius, @Euclidean, sSorted);
+end;
+
+function TPointArrayHelper.RSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
+var
+  i, j, k, r, l: Integer;
+  u: TBooleanArray;
+  p: TPoint;
+  m: TRange;
+  a: TPointArray;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  u := T1D.Create(False, l);
+  SetLength(Result, 0);
+  a := Self.Copy;
+  if not sSorted then
+    a.SortByRow;
+  for i := 0 to High(a) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    r := High(Result);
+    SetLength(Result[r], 1);
+    Result[r][0] := a[i];
+    u[i] := True;
+    j := 0;
+    while (j < Length(Result[r])) do
+    begin
+      p := Result[r][j];
+      for k := 0 to High(a) do
+      begin
+        if u[k] then
+          Continue;
+        m.Create((p.Y - yRadius), (p.Y + yRadius));
+        if (((a[k].Y >= m.start) and (a[k].Y <= m.stop)) and (Abs(a[k].X - p.X) <= xRadius)) then
+        begin
+          u[k] := True;
+          SetLength(Result[r], (Length(Result[r]) + 1));
+          Result[r][High(Result[r])] := a[k];
+        end;
+      end;
+      Inc(j);
+    end;
+  end;
+end;
+
+{==============================================================================]
  <TPointArray.XSplit>
  @action: Splits the point array into clusters based on X/Y coordinate proximity.
  @note: Optimized for arrays sorted by X (ascending). 
