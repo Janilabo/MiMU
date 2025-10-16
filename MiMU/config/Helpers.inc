@@ -845,6 +845,9 @@ type
       function Fragment(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
       function Fragment(const radius: Double = 1.0): T2DPointArray; overload;
 	  function Fragment(const xRadius, yRadius: Integer): T2DPointArray; overload;
+      function Groups(const adjacency8: Boolean = True): T2DPointArray; overload;
+      function Grouping(const adjacency8: Boolean = True): T2DPointArray; overload;
+      function Grouped(const adjacency8: Boolean = True): T2DPointArray; overload;
       function Groupify(const adjacency8: Boolean = True): T2DPointArray; overload;
       function XClassify(const pSorted: Boolean = False): T2DPointArray; overload;
       function YClassify(const pSorted: Boolean = False): T2DPointArray; overload;
