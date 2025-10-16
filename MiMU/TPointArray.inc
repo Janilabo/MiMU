@@ -2201,6 +2201,79 @@ begin
 end;
 
 {==============================================================================]
+ <TPointArray.Groupify>
+ @action: Partitions the points in the array into connected groups (clusters)
+          based on adjacency. Two points are considered connected if they
+          are neighbors according to 4- or 8-connectivity.
+ @note: The adjacency method is determined by the 'adjacency8' parameter:
+        - True  => 8-connectivity (including diagonals)
+        - False => 4-connectivity (orthogonal neighbors only)
+        Returns a T2DPointArray where each element is a group of connected points.
+        Uses a union-find (disjoint-set) algorithm internally for efficiency.
+[==============================================================================}
+function TPointArrayHelper.Groupify(const adjacency8: Boolean = True): T2DPointArray; overload;
+var
+  p: TIntegerArray;
+  i, j, k, l: Integer;
+  d: TPointArray;
+  c, n: Integer;
+  r, m: TIntegerArray;
+  function FindRoot(const x: Integer): Integer;
+  begin
+    if (p[x] = x) then
+      Exit(x);
+    p[x] := FindRoot(p[x]);
+    Exit(p[x]);
+  end;
+  procedure Unioned(const x, y: Integer);
+  var
+    h, v: Integer;
+  begin
+    h := FindRoot(x);
+    v := FindRoot(y);
+    if (h <> v) then
+      p[v] := h;
+  end;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  p := Self.IDs;
+  d := Point(0, 0).Surrounding(adjacency8);
+  for i := 0 to (l - 1) do
+    for j := 0 to High(d) do
+    begin
+      k := Self.Pos(Point((Self[i].X + d[j].X), (Self[i].Y + d[j].Y)));
+      if (k <> -1) then
+        Unioned(i, k);
+    end;
+  c := 0;
+  SetLength(r, l);
+  for i := 0 to (l - 1) do
+  begin
+    r[i] := FindRoot(i);
+    if (r[i] = i) then
+      Inc(c);
+  end;
+  SetLength(m, l);
+  n := 0;
+  for i := 0 to (l - 1) do
+    if (r[i] = i) then
+      m[i] := n.Increase
+    else
+      m[i] := m[r[i]];
+  SetLength(Result, c);
+  for i := 0 to (l - 1) do
+  begin
+    c := m[r[i]];
+    SetLength(Result[c], (Length(Result[c]) + 1));
+    Result[c][High(Result[c])] := Self[i];
+  end;
+end;
+
+{==============================================================================]
  <TPointArrayHelper.Segment>
  @action: Splits TPointArray to groups by radius.
  @note: None.

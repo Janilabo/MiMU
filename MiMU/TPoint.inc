@@ -309,6 +309,29 @@ begin
 end;
 
 {==============================================================================]
+  <TPoint.Surrounding>
+  @action: Returns an array of points surrounding the current point (Self)
+           within a 3×3 neighborhood.
+           Includes diagonal neighbors when adjacency8 = True.
+  @note: Each point in the result represents an absolute position relative
+         to the current point. The center point (Self) is excluded.
+         Useful for grid traversal, flood fill, pathfinding, or image
+         processing algorithms where nearby cells must be evaluated.
+[==============================================================================}
+function TPointHelper.Surrounding(const adjacency8: Boolean = True): TPointArray; overload;
+var
+  r, c, i: Integer;
+begin
+  SetLength(Result, IfThen(adjacency8, 8, 4));
+  i := 0;
+  for r := -1 to 1 do
+    for c := -1 to 1 do
+      if not ((r = 0) and (c = 0)) then
+        if (adjacency8 or (Abs(r) + Abs(c) = 1)) then
+          Result[i.Increase] := Point((Self.X + c), (Self.Y + r));
+end;
+
+{==============================================================================]
   <TPoint.Neighbour>
   @action: Determines whether the given point `p` is a neighbor of `Self`.
            Considers either 8-way (including diagonals) or 4-way (orthogonal) adjacency.
@@ -376,6 +399,22 @@ begin
   if adjacency8 then
     Exit([Point((Self.X + 1), Self.Y), Point(Self.X, (Self.Y + 1)), Point((Self.X - 1), Self.Y), Point(Self.X, (Self.Y - 1)), Point((Self.X + 1), (Self.Y + 1)), Point((Self.X + 1), (Self.Y - 1)), Point((Self.X - 1), (Self.Y + 1)), Point((Self.X - 1), (Self.Y - 1))]);
   Result := [Point((Self.X + 1), Self.Y), Point(Self.X, (Self.Y + 1)), Point((Self.X - 1), Self.Y), Point(Self.X, (Self.Y - 1))];
+end;
+
+{==============================================================================]
+  <TPoint.Adjacency>
+  @action: Returns an array of points adjacent to the current point (Self).
+           When adjacency8 is True, diagonal neighbors are included.
+  @note: The resulting points are absolute coordinates on the same grid.
+         Useful for operations like pathfinding, image processing, and
+         grid traversal where nearby cells must be inspected.
+[==============================================================================}
+function TPointHelper.Adjacency(const adjacency8: Boolean = True): TPointArray; overload;
+begin
+  if adjacency8 then
+    Result := [Point((Self.X - 1), (Self.Y - 1)), Point((Self.X - 1), Self.Y), Point((Self.X - 1), (Self.X + 1)), Point(Self.X, (Self.X + 1)), Point((Self.X + 1), (Self.Y + 1)), Point((Self.X + 1), Self.Y), Point((Self.X + 1), (Self.Y - 1)), Point(Self.X, (Self.Y - 1))]
+  else
+    Result := [Point((Self.X - 1), Self.Y), Point(Self.X, (Self.Y - 1)), Point((Self.X + 1), Self.Y), Point(Self.X, (Self.Y + 1))];
 end;
 
 {==============================================================================]

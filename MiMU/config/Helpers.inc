@@ -241,7 +241,9 @@ type
       function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray;
       function Row(const cells: Integer; const space: Integer = 0): TPointArray;
       function Column(const cells: Integer; const space: Integer = 0): TPointArray;
-      function Adjacent(const adjacency8: Boolean = True): TPointArray; overload; 
+      function Surrounding(const adjacency8: Boolean = True): TPointArray; overload;
+      function Adjacent(const adjacency8: Boolean = True): TPointArray; overload;
+      function Adjacency(const adjacency8: Boolean = True): TPointArray; overload;	  
       function Neighbours(const adjacency8: Boolean = True): TPointArray; overload;
       function Neighbors(const adjacency8: Boolean = True): TPointArray; overload;
       function ToY(const yGoal: Integer): TPointArray; overload;
@@ -843,6 +845,7 @@ type
       function Fragment(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
       function Fragment(const radius: Double = 1.0): T2DPointArray; overload;
 	  function Fragment(const xRadius, yRadius: Integer): T2DPointArray; overload;
+      function Groupify(const adjacency8: Boolean = True): T2DPointArray; overload;
       function XClassify(const pSorted: Boolean = False): T2DPointArray; overload;
       function YClassify(const pSorted: Boolean = False): T2DPointArray; overload;
       function Axes(var X, Y: TIntegerArray): Integer; overload;
