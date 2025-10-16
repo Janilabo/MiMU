@@ -866,6 +866,10 @@ type
       function YVals(const aAscending: Boolean = True): TIntegerArray;
       function XArr(const aAscending: Boolean = True): TIntegerArray;
       function YArr(const aAscending: Boolean = True): TIntegerArray;
+      function XAxis(const rUnique: Boolean = True): TIntegerArray; overload;
+      function YAxis(const rUnique: Boolean = True): TIntegerArray; overload;
+      function X2D(var yArr: TIntegerArray; const xOrder: Boolean = True; const xAscending: Boolean = True): T2DIntegerArray; overload;
+      function Y2D(var xArr: TIntegerArray; const yOrder: Boolean = True; const yAscending: Boolean = True): T2DIntegerArray; overload;
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;

@@ -2968,4 +2968,118 @@ begin
   Result := Self.Ys.QuickSorted(aAscending);
 end;
 
+{==============================================================================]
+ <TPointArray.XAxis>
+ @action: Extracts all X-coordinate values from the point array.
+ @note: When rUnique = True, the resulting array is sorted and contains
+        only unique X values (duplicates removed).
+        When rUnique = False, all X values are included in order of appearance.
+[==============================================================================}
+function TPointArrayHelper.XAxis(const rUnique: Boolean = True): TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  case rUnique of
+    True:
+    for i := 0 to High(Self) do
+      Result.BinaryGrow(Self[i].X);
+    False:
+    for i := 0 to High(Self) do
+      Result.BinaryAppend(Self[i].X);
+  end;
+end;
+
+{==============================================================================]
+ <TPointArray.YAxis>
+ @action: Extracts all Y-coordinate values from the point array.
+ @note: When rUnique = True, the resulting array is sorted and contains
+        only unique Y values (duplicates removed).
+        When rUnique = False, all Y values are included in order of appearance.
+[==============================================================================}
+function TPointArrayHelper.YAxis(const rUnique: Boolean = True): TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  case rUnique of
+    True:
+    for i := 0 to High(Self) do
+      Result.BinaryGrow(Self[i].Y);
+    False:
+    for i := 0 to High(Self) do
+      Result.BinaryAppend(Self[i].Y);
+  end;
+end;
+
+{==============================================================================]
+ <TPointArray.X2D>
+ @action: Groups all X-coordinates by their corresponding Y-coordinate.
+ @note: Returns 2D array of X values where Result[i] contains all X's for Y = yArr[i].
+   - The output parameter yArr receives the sorted list of unique Y values.
+   - If no points exist, Result = [].
+   - If only one Y value exists, Result = [yArr].
+   - When xOrder = True (default), X values are inserted in sorted order
+     using BinaryAppend.
+   - The xAscending flag determines the sorting direction when xOrder = True.
+     (True = ascending, False = descending)
+   - When xOrder = False, X values are appended in input order using Supply
+     (unsorted grouping).
+[==============================================================================}
+function TPointArrayHelper.X2D(var yArr: TIntegerArray; const xOrder: Boolean = True; const xAscending: Boolean = True): T2DIntegerArray; overload;
+var
+  i, l: Integer;
+begin
+  yArr := Self.YAxis;
+  l := Length(yArr);
+  case l of
+    0: Exit([]);
+    1: Exit([yArr]);
+  end;
+  SetLength(Result, Length(yArr));
+  case xOrder of 
+    True:
+    for i := 0 to High(Self) do
+      Result[yArr.BinarySearch(Self[i].Y)].BinaryAppend(Self[i].X, xAscending);
+	False:
+	for i := 0 to High(Self) do
+      Result[yArr.BinarySearch(Self[i].Y)].Supply(Self[i].X);
+  end;
+end;
+
+{==============================================================================]
+ <TPointArray.Y2D>
+ @action: Groups all Y-coordinates by their corresponding X-coordinate.
+ @note: Returns 2D array of Y values where Result[i] contains all Y's for X = xArr[i].
+   - The output parameter xArr receives the sorted list of unique X values.
+   - If no points exist, Result = [].
+   - If only one X value exists, Result = [xArr].
+   - When yOrder = True (default), Y values are inserted in sorted order
+     using BinaryAppend.
+   - The yAscending flag determines the sorting direction when yOrder = True.
+     (True = ascending, False = descending)
+   - When yOrder = False, Y values are appended in input order using Supply
+     (unsorted grouping).
+[==============================================================================}
+function TPointArrayHelper.Y2D(var xArr: TIntegerArray; const yOrder: Boolean = True; const yAscending: Boolean = True): T2DIntegerArray; overload;
+var
+  i, l: Integer;
+begin
+  xArr := Self.XAxis;
+  l := Length(xArr);
+  case l of
+    0: Exit([]);
+    1: Exit([xArr]);
+  end;
+  SetLength(Result, Length(xArr));
+  case yOrder of
+    True:
+    for i := 0 to High(Self) do
+      Result[xArr.BinarySearch(Self[i].X)].BinaryAppend(Self[i].Y, yAscending);
+    False:
+    for i := 0 to High(Self) do
+      Result[xArr.BinarySearch(Self[i].X)].Supply(Self[i].Y);
+  end;
+end;
+
 {$UNDEF TPoint}
