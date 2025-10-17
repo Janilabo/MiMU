@@ -59,14 +59,22 @@ type
   T2DCharArray = array of TCharArray;
   TBooleanArray = array of Boolean;
   T2DBooleanArray = array of TBooleanArray;
+  TConnection = record
+    id1, id2: Integer;
+    constructor Create(const index1, index2: Integer); overload;
+    class function Construct(const index1, index2: Integer): TConnection; overload; static;
+    function Build(const index1, index2: Integer): TConnection; overload;
+  end;
+  TConnectionArray = array of TConnection;
   TPoint = record
     X, Y: Integer;
     constructor Create(const pX, pY: Integer); overload;
     constructor Create(const value: Integer); overload;
-    class function Construct(const pX, pY: Integer): TPoint; overload;  static;
+    class function Construct(const pX, pY: Integer): TPoint; overload; static;
     function Build(const pX, pY: Integer): TPoint;  inline;
-    function InCircle(const center: TPoint; const radius: Double): Boolean;  inline;
-    function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean;  inline;
+    function Compare(const target: TPoint): Integer; overload; inline;
+    function InCircle(const center: TPoint; const radius: Double): Boolean; inline;
+    function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; inline;
     function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; 
     function AngleRadians(const target: TPoint): Double; 
     function DistEuclidean(const target: TPoint): Double; 
@@ -522,6 +530,11 @@ operator<>(const a, b: TSegment): Boolean;
 operator<>(const a, b: TCircle): Boolean;
 operator<>(const a, b: TTriangle): Boolean;
 
+operator>(const a, b: TPoint): Boolean;
+operator<(const a, b: TPoint): Boolean;
+operator>=(const a, b: TPoint): Boolean;
+operator<=(const a, b: TPoint): Boolean;
+
 function RandomB: Boolean; overload; 
 function RandomBit: Byte; overload; 
 function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload; 
@@ -698,6 +711,30 @@ type
 {$DEFINE IMPLEMENT}{$INCLUDE MiMU\config\Templates\D.inc}{$UNDEF IMPLEMENT} 
  
 implementation
+
+{==============================================================================]
+  <TConnection.Create>
+  @action: Creates TConnection with index1 and index2.
+  @note: None.
+[==============================================================================}
+constructor TConnection.Create(const index1, index2: Integer); overload;
+begin
+  Self.id1 := index1;
+  Self.id2 := index2;
+end;
+
+class function TConnection.Construct(const index1, index2: Integer): TConnection; overload;
+begin
+  Result.id1 := index1;
+  Result.id2 := index2;
+end;
+
+function TConnection.Build(const index1, index2: Integer): TConnection; overload;
+begin
+  Self.id1 := index1;
+  Self.id2 := index2;
+  Result := Self;
+end;
 
 constructor TRangeEnumerator.Init(const AStart, AStop: Integer);
 begin
@@ -949,6 +986,26 @@ end;
 operator<>(const a, b: TTriangle): Boolean;
 begin
   Result := not (a = b);
+end;
+
+operator>(const a, b: TPoint): Boolean;
+begin
+  Result := ((a.Y > b.Y) or ((a.Y = b.Y) and (a.X > b.X)));
+end;
+
+operator<(const a, b: TPoint): Boolean;
+begin
+  Result := ((a.Y < b.Y) or ((a.Y = b.Y) and (a.X < b.X)));
+end;
+
+operator >=(const a, b: TPoint): Boolean;
+begin
+  Result := ((a > b) or (a = b));
+end;
+
+operator <=(const a, b: TPoint): Boolean;
+begin
+  Result := ((a < b) or (a = b));
 end;
 
 function RandomB: Boolean; overload; 

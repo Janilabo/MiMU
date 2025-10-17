@@ -45,6 +45,22 @@ begin
 end;
 
 {==============================================================================]
+  <TPoint.Compare>
+  @action: Comparison method for TPoint.
+  @note: None.
+[==============================================================================}
+function TPoint.Compare(const target: TPoint): Integer; overload; inline;
+begin
+  if (Self.X < target.X) then
+    Result := -1
+  else
+    if (Self.X > target.X) then
+	  Result := 1
+    else
+	  Result := 0;
+end;
+
+{==============================================================================]
   <TPoint.Inside>
   @action: Returns true if pt is inside the given box (bx).
   @note: None.

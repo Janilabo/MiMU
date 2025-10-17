@@ -308,6 +308,7 @@ type
     function Clone(const ID: TIntegerArray): TArr; overload;
     function Cloned: TArr; overload;
     function Combine(const b: TArr): TArr; overload;
+    function Components(const connections: TConnectionArray): T2DArr; overload;
     function Compact: Integer; overload;
     function Compacted: TArr; overload;
     function Compacted(const threshold: Integer): TArr; overload;

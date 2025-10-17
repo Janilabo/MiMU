@@ -650,6 +650,67 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Components>
+  @action: Groups elements of the array into connected components based on provided connections.
+           Each connection is treated as undirected. Returns a 2D array where each inner array
+           represents one group of connected elements.
+  @param: connections - an array of TConnection, each containing two indices (Id1, Id2) 
+           in Self that are connected.
+  @returns: T2DArr - 2D array of grouped elements from Self.
+  @note: Duplicate connections are ignored. Self must contain at least as many elements as
+         the maximum index in any connection.
+[==============================================================================}
+function HArr.Components(const connections: TConnectionArray): T2DArr; overload;
+var
+  i, l: Integer;
+  v: TBooleanArray;
+  n: T2DIntegerArray;
+  s: TIntegerArray;
+  procedure DFS(const startPos: Integer; var group: TArr);
+  var
+    h, c, k: Integer;
+  begin
+    SetLength(s, 0);
+    s := s + [startPos];
+    while (Length(s) > 0) do
+    begin
+      h := High(s);
+      c := s[h];
+      SetLength(s, h);
+      if v[c] then
+        Continue;
+      v[c] := True;
+      group := (group + [Self[c]]);
+      for k := 0 to High(n[c]) do
+        if not v[n[c][k]] then
+          s := (s + [n[c][k]]);
+    end;
+  end;
+begin
+  l := Length(Self);
+  if l = 0 then
+    Exit([]);
+  SetLength(n, l);
+  SetLength(v, l);
+  for i := 0 to High(connections) do
+    if (InRange(connections[i].id1, 0, (l - 1)) and InRange(connections[i].id2, 0, (l - 1))) then
+    begin
+      n[connections[i].id1] := (n[connections[i].id1] + [connections[i].id2]);
+      n[connections[i].id2] := (n[connections[i].id2] + [connections[i].id1]);
+    end;
+  SetLength(Result, 0);
+  for i := 0 to (l - 1) do
+  begin
+    if not v[i] then
+    begin
+      SetLength(Result, (Length(Result) + 1));
+      SetLength(Result[High(Result)], 0);
+      DFS(i, Result[High(Result)]);
+    end;
+  end;
+end;
+
+{==============================================================================]
  <arr.Compressed: TArray>
  @action: Produces a new array by removing all immediately repeated values,
           effectively run-length–compressing the input.
