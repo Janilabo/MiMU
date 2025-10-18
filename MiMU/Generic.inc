@@ -3605,6 +3605,125 @@ begin
 end;
 
 {==============================================================================]
+  <arr.QuickSortWeighted>
+  @action: Sorts the array Self in-place according to the values in the weight array.
+           Both Self and weight are swapped together so that each element in Self
+           maintains correspondence with its weight. Comparisons and pivot selection
+           are determined by the weight array.
+  @note: Supports ascending or descending order based on weight (controlled by aAscending).
+         Returns the length of Self. Useful when you want to reorder an array according
+         to external weights while preserving pairings.
+[==============================================================================}
+function HArr.QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+  procedure QS(var A: TArr; var W: TIntegerArray; const L, R: Integer);
+  var
+    i, j, p: Integer;
+  begin
+    i := L;
+    j := R;
+    p := W[(L + R) div 2];
+    case aAscending of
+      True:
+      repeat
+        while (W[i] < p) do
+          Inc(i);
+        while (W[j] > p) do
+          Dec(j);
+        if (i <= j) then
+        begin
+          Swap(A[i], A[j]);
+          Swap(W[i], W[j]);
+          Inc(i);
+          Dec(j);
+        end;
+      until (i > j);
+      False:
+      repeat
+        while (W[i] > p) do
+          Inc(i);
+        while (W[j] < p) do
+          Dec(j);
+        if (i <= j) then
+        begin
+          Swap(A[i], A[j]);
+          Swap(W[i], W[j]);
+          Inc(i);
+          Dec(j);
+        end;
+      until (i > j);
+    end;
+    if (L < j) then
+      QS(A, W, L, j);
+    if (i < R) then
+      QS(A, W, i, R);
+  end;
+begin
+  Result := Length(Self);
+  if ((Result > 0) and (Result = Length(weight))) then
+    QS(Self, weight, 0, (Result - 1));
+end;
+
+{==============================================================================]
+  <arr.QuickSortWeighted>
+  @action: Sorts the array Self in-place according to the values in the weight array.
+           Both Self and weight are swapped together so that each element in Self
+           maintains correspondence with its weight. Comparisons and pivot selection
+           are determined by the weight array.
+  @note: Supports ascending or descending order based on weight (controlled by aAscending).
+         Returns the length of Self. Useful when you want to reorder an array according
+         to external weights while preserving pairings.
+[==============================================================================}
+function HArr.QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
+  procedure QS(var A: TArr; var W: TDoubleArray; const L, R: Integer);
+  var
+    p: Double;
+    i, j: Integer;
+  begin
+    i := L;
+    j := R;
+    p := W[(L + R) div 2];
+    case aAscending of
+      True:
+      repeat
+        while (W[i] < p) do
+          Inc(i);
+        while (W[j] > p) do
+          Dec(j);
+        if (i <= j) then
+        begin
+          Swap(A[i], A[j]);
+          Swap(W[i], W[j]);
+          Inc(i);
+          Dec(j);
+        end;
+      until (i > j);
+      False:
+      repeat
+        while (W[i] > p) do
+          Inc(i);
+        while (W[j] < p) do
+          Dec(j);
+        if (i <= j) then
+        begin
+          Swap(A[i], A[j]);
+          Swap(W[i], W[j]);
+          Inc(i);
+          Dec(j);
+        end;
+      until (i > j);
+    end;
+    if (L < j) then
+      QS(A, W, L, j);
+    if (i < R) then
+      QS(A, W, i, R);
+  end;
+begin
+  Result := Length(Self);
+  if ((Result > 0) and (Result = Length(weight))) then
+    QS(Self, weight, 0, (Result - 1));
+end;
+
+{==============================================================================]
   <HArr.QuickSorted(weight: TIntegerArray/TDoubleArray; aAscending: Boolean): TArray>
   @action: Returns arr sorted by weight, based on QuickSort algorithm.
   @note: Weight and arr must be the same length! Otherwise returns empty array.

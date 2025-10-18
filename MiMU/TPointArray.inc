@@ -3369,4 +3369,174 @@ begin
   Result := Self.Blobify(radius, @Euclidean);
 end;
 
+{==============================================================================]
+ <TPointArray.YTo2D>
+ @action: Converts the point array into a 2D integer array of Y-coordinates grouped by unique X-coordinates.
+          Each sub-array contains the Y values of points sharing the same X.
+          Also returns a 2D array of original indices (selfIDs) aligned with the grouped and sorted Y values.
+ @note: The Y values in each group are sorted in ascending order.
+[==============================================================================}
+function TPointArrayHelper.YTo2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+var
+  l, i, j, k, c, p, s, m: Integer;
+begin
+  l := Length(Self);
+  SetLength(xArr, 0);
+  SetLength(selfIDs, 0);
+  SetLength(Result, 0);
+  if (l = 0) then
+    Exit;
+  xArr := Self.XAxis;
+  c := Length(xArr);
+  SetLength(Result, c);
+  SetLength(selfIDs, c);
+  for i := 0 to (c - 1) do
+  begin
+    k := 0;
+    for j := 0 to (l - 1) do
+      if (Self[j].X = xArr[i]) then
+        Inc(k);
+    SetLength(Result[i], k);
+    SetLength(selfIDs[i], k);
+    k := 0;
+    for j := 0 to (l - 1) do
+      if (Self[j].X = xArr[i]) then
+      begin
+        Result[i][k] := Self[j].Y;
+        selfIDs[i][k.Increase] := j;
+      end;
+    for j := 1 to (k - 1) do
+    begin
+      p := Result[i][j];
+      s := selfIDs[i][j];
+      m := (j - 1);
+      while ((m >= 0) and (Result[i][m] > p)) do
+      begin
+        Result[i][m + 1] := Result[i][m];
+        selfIDs[i][m + 1] := selfIDs[i][m];
+        Dec(m);
+      end;
+      Result[i][m + 1] := p;
+      selfIDs[i][m + 1] := s;
+    end;
+  end;
+end;
+
+{==============================================================================]
+ <TPointArray.YTo2D>
+ @action: Converts the point array into a 2D integer array of Y-coordinates grouped by unique X-coordinates.
+          Each sub-array contains the Y values of points sharing the same X.
+ @note: Original order of points is preserved; no selfIDs tracking and no sorting.
+[==============================================================================}
+function TPointArrayHelper.YTo2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
+var
+  l, i, j, k, c: Integer;
+begin
+  l := Length(Self);
+  SetLength(xArr, 0);
+  SetLength(Result, 0);
+  if (l = 0) then
+    Exit;
+  xArr := Self.XAxis;
+  c := Length(xArr);
+  SetLength(Result, c);
+  for i := 0 to (c - 1) do
+  begin
+    k := 0;
+    for j := 0 to (l - 1) do
+      if (Self[j].X = xArr[i]) then
+        Inc(k);
+    SetLength(Result[i], k);
+    k := 0;
+    for j := 0 to (l - 1) do
+      if (Self[j].X = xArr[i]) then
+        Result[i][k.Increase] := Self[j].Y;
+  end;
+end;
+
+{==============================================================================]
+ <TPointArray.XTo2D>
+ @action: Converts the point array into a 2D integer array of X-coordinates grouped by unique Y-coordinates.
+          Each sub-array contains the X values of points sharing the same Y.
+          Also returns a 2D array of original indices (selfIDs) aligned with the grouped and sorted X values.
+ @note: The X values in each group are sorted in ascending order.
+[==============================================================================}
+function TPointArrayHelper.XTo2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+var
+  l, i, j, k, c, p, s, m: Integer;
+begin
+  l := Length(Self);
+  SetLength(yArr, 0);
+  SetLength(selfIDs, 0);
+  SetLength(Result, 0);
+  if (l = 0) then
+    Exit;
+  yArr := Self.YAxis;
+  c := Length(yArr);
+  SetLength(Result, c);
+  SetLength(selfIDs, c);
+  for i := 0 to (c - 1) do
+  begin
+    k := 0;
+    for j := 0 to (l - 1) do
+      if (Self[j].Y = yArr[i]) then
+        Inc(k);
+    SetLength(Result[i], k);
+    SetLength(selfIDs[i], k);
+    k := 0;
+    for j := 0 to (l - 1) do
+      if (Self[j].Y = yArr[i]) then
+      begin
+        Result[i][k] := Self[j].X;
+        selfIDs[i][k.Increase] := j;
+      end;
+    for j := 1 to (k - 1) do
+    begin
+      p := Result[i][j];
+      s := selfIDs[i][j];
+      m := (j - 1);
+      while ((m >= 0) and (Result[i][m] > p)) do
+      begin
+        Result[i][m + 1] := Result[i][m];
+        selfIDs[i][m + 1] := selfIDs[i][m];
+        Dec(m);
+      end;
+      Result[i][m + 1] := p;
+      selfIDs[i][m + 1] := s;
+    end;
+  end;
+end;
+
+{==============================================================================]
+ <TPointArray.XTo2D>
+ @action: Converts the point array into a 2D integer array of X-coordinates grouped by unique Y-coordinates.
+          Each sub-array contains the X values of points sharing the same Y.
+ @note: Original order of points is preserved; no selfIDs tracking and no sorting.
+[==============================================================================}
+function TPointArrayHelper.XTo2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
+var
+  l, i, j, k, c: Integer;
+begin
+  l := Length(Self);
+  SetLength(yArr, 0);
+  SetLength(Result, 0);
+  if (l = 0) then
+    Exit;
+  yArr := Self.YAxis;
+  c := Length(yArr);
+  SetLength(Result, c);
+  for i := 0 to (c - 1) do
+  begin
+    k := 0;
+    for j := 0 to (l - 1) do
+      if (Self[j].Y = yArr[i]) then
+        Inc(k);
+    SetLength(Result[i], k);
+    k := 0;
+    for j := 0 to (l - 1) do
+      if (Self[j].Y = yArr[i]) then
+        Result[i][k.Increase] := Self[j].X;
+  end;
+end;
+
 {$UNDEF TPoint}

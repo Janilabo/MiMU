@@ -476,6 +476,63 @@ begin
 end;
 
 {==============================================================================]
+  <arr.QuickSortPair>
+  @action: Sorts the array in-place while simultaneously reordering a partner array 
+           to maintain element correspondence. Supports ascending or descending order.
+  @note: Useful when you have a key array and a related value array that must stay paired.
+         The method returns the length of the array.
+[==============================================================================}
+function HArr.QuickSortPair(var partner: TArr; const aAscending: Boolean = True): Integer; overload;
+  procedure QS2(var A, B: TArr; const L, R: Integer);
+  var
+    p: TVar;
+    i, j: Integer;
+  begin
+    i := L;
+    j := R;
+    p := A[(L + R) div 2];
+    case aAscending of
+      True:
+      repeat
+        while (A[i] < p) do
+          Inc(i);
+        while (A[j] > p) do
+          Dec(j);
+        if (i <= j) then
+        begin
+          Swap(A[i], A[j]);
+          Swap(B[i], B[j]);
+          Inc(i);
+          Dec(j);
+        end;
+      until (i > j);
+      False:
+      repeat
+        while (A[i] > p) do
+          Inc(i);
+        while (A[j] < p) do
+          Dec(j);
+        if (i <= j) then
+        begin
+          Swap(A[i], A[j]);
+          Swap(B[i], B[j]);
+          Inc(i);
+          Dec(j);
+        end;
+      until (i > j);
+    end;
+    if (L < j) then
+      QS2(A, B, L, j);
+    if (i < R) then
+      QS2(A, B, i, R);
+  end;
+begin
+  Result := Length(Self);
+  if (Result > 0) then
+    QS2(Self, partner, 0, (Result - 1));
+end;
+
+{==============================================================================]
   <arr.QuickSortSwapped>
   @action: Sorts the array in ascending or descending order and records all swaps performed.
   @note: Returns a dynamic array of TConnection records, each representing the indices of elements swapped during the sort.

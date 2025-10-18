@@ -553,6 +553,7 @@ type
       function Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload;
       function Mode: TVar; overload;
       function Center: TVar; overload;
+      function QuickSortPair(var partner: TArr; const aAscending: Boolean = True): Integer; overload;
       function QuickSortSwapped(const aAscending: Boolean = True): TConnectionArray; overload;
       function QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
       function QuickSortedly(const aAscending: Boolean = True): TIntegerArray; overload;
@@ -579,6 +580,8 @@ type
       function MergeSortBU(const aAscending: Boolean = True): Integer; overload;
       function Uniq(const sSorted: Boolean = False): TArr; overload;
     {$ENDIF}
+    function QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+    function QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
     function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): TArr; overload;
     function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): TArr; overload;
     {$IFDEF Integer}
@@ -880,6 +883,10 @@ type
       function Blobify(const xRadius, yRadius: Integer): T2DPointArray; overload;
       function Blobify(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
       function Blobify(const radius: Double = 1.0): T2DPointArray; overload;
+      function YTo2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+      function YTo2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
+      function XTo2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+      function XTo2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
