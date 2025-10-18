@@ -553,6 +553,9 @@ type
       function Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload;
       function Mode: TVar; overload;
       function Center: TVar; overload;
+      function QuickSortSwapped(const aAscending: Boolean = True): TConnectionArray; overload;
+      function QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
+      function QuickSortedly(const aAscending: Boolean = True): TIntegerArray; overload;
       function QuickSorted(const aAscending: Boolean = True): TArr; overload;
       function QuickSort(const aAscending: Boolean = True): Integer; overload;
       function QuickSort3W(const aAscending: Boolean = True): Integer; overload;
@@ -871,6 +874,12 @@ type
       function YAxis(const rUnique: Boolean = True): TIntegerArray; overload;
       function X2D(var yArr: TIntegerArray; const xOrder: Boolean = True; const xAscending: Boolean = True): T2DIntegerArray; overload;
       function Y2D(var xArr: TIntegerArray; const yOrder: Boolean = True; const yAscending: Boolean = True): T2DIntegerArray; overload;
+      function Blobs(const xRadius, yRadius: Integer): T2DPointArray; overload;
+      function Blobs(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+      function Blobs(const radius: Double = 1.0): T2DPointArray; overload;
+      function Blobify(const xRadius, yRadius: Integer): T2DPointArray; overload;
+      function Blobify(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+      function Blobify(const radius: Double = 1.0): T2DPointArray; overload;
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;

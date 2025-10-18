@@ -476,6 +476,168 @@ begin
 end;
 
 {==============================================================================]
+  <arr.QuickSortSwapped>
+  @action: Sorts the array in ascending or descending order and records all swaps performed.
+  @note: Returns a dynamic array of TConnection records, each representing the indices of elements swapped during the sort.
+         Useful for visualizations or undoing the sort.
+[==============================================================================}
+function HArr.QuickSortSwapped(const aAscending: Boolean = True): TConnectionArray; overload;
+  procedure QuickSortRec(const L, R: Integer; var swaps: TConnectionArray);
+  var
+    p: TVar;
+    i, j: Integer;
+  begin
+    i := L;
+    j := R;
+    p := Self[(L + R) div 2];
+    case aAscending of
+      True:
+      repeat
+        while (Self[i] < p) do
+          Inc(i);
+        while (Self[j] > p) do
+          Dec(j);
+        if (i <= j) then
+        begin
+          Swap(Self[i], Self[j]);
+          SetLength(swaps, (Length(swaps) + 1));
+          swaps[High(swaps)].Create(i.Increase, j.Decrease);
+        end;
+      until (i > j);
+      False:
+      repeat
+        while (Self[i] > p) do
+          Inc(i);
+        while (Self[j] < p) do
+          Dec(j);
+        if (i <= j) then
+        begin
+          Swap(Self[i], Self[j]);
+          SetLength(swaps, (Length(swaps) + 1));
+          swaps[High(swaps)].Create(i.Increase, j.Decrease);
+        end;
+      until (i > j);
+    end;
+    if (L < j) then
+      QuickSortRec(L, j, swaps);
+    if (i < R) then
+      QuickSortRec(i, R, swaps);
+  end;
+begin
+  SetLength(Result, 0);
+  if Length(Self) > 1 then
+    QuickSortRec(0, High(Self), Result);
+end;
+
+{==============================================================================]
+  <arr.QuickSortIndexed>
+  @action: Sorts the array while tracking the original indices.
+  @note: Returns an array of indices representing the order of elements in the sorted array.
+         The original array is modified.
+         Useful when you want to know how elements move rather than just sorting the values.
+[==============================================================================}
+function HArr.QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
+  procedure QuickSortRec(const L, R: Integer; var indexes: TIntegerArray);
+  var
+    p: TVar;
+    i, j: Integer;
+  begin
+    i := L;
+    j := R;
+    p := Self[(L + R) div 2];
+    case aAscending of
+      True:
+      repeat
+        while (Self[i] < p) do
+          Inc(i);
+        while (Self[j] > p) do
+          Dec(j);
+        if (i <= j) then
+        begin
+          Swap(Self[i], Self[j]);
+          Swap(indexes[i.Increase], indexes[j.Decrease]);
+        end;
+      until (i > j);
+      False:
+      repeat
+        while (Self[i] > p) do
+          Inc(i);
+        while (Self[j] < p) do
+          Dec(j);
+        if (i <= j) then
+        begin
+          Swap(Self[i], Self[j]);
+          Swap(indexes[i.Increase], indexes[j.Decrease]);
+        end;
+      until (i > j);
+    end;
+    if (L < j) then
+      QuickSortRec(L, j, indexes);
+    if (i < R) then
+      QuickSortRec(i, R, indexes);
+  end;
+var
+  l, i: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  for i := 0 to (l - 1) do
+    Result[i] := i;
+  if (l > 1) then
+    QuickSortRec(0, (l - 1), Result);
+end;
+
+{==============================================================================]
+  <arr.QuickSortedly>
+  @action: Returns the indices of the array elements in sorted order without modifying the original array.
+  @note: Purely functional: the original array stays unchanged.
+         The result is an array of indices indicating the sorted order.
+[==============================================================================}
+function HArr.QuickSortedly(const aAscending: Boolean = True): TIntegerArray; overload;
+  procedure QuickSortIndexedHelper(const arr: TArr; var indexes: TIntegerArray; const L, R: Integer; const aAscending: Boolean);
+  var
+    p: TVar;
+    i, j: Integer;
+  begin
+    i := L;
+    j := R;
+    p := arr[indexes[(L + R) div 2]];
+    case aAscending of
+      True:
+      repeat
+        while (arr[indexes[i]] < p) do
+          Inc(i);
+        while (arr[indexes[j]] > p) do
+          Dec(j);
+        if (i <= j) then
+          Swap(indexes[i.Increase], indexes[j.Decrease]);
+      until (i > j);
+      False:
+      repeat
+        while (arr[indexes[i]] > p) do
+          Inc(i);
+        while (arr[indexes[j]] < p) do
+          Dec(j);
+        if (i <= j) then
+          Swap(indexes[i.Increase], indexes[j.Decrease]);
+      until (i > j);
+    end;
+    if (L < j) then
+      QuickSortIndexedHelper(arr, indexes, L, j, aAscending);
+    if (i < R) then
+      QuickSortIndexedHelper(arr, indexes, i, R, aAscending);
+  end;
+var
+  l, i: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  for i := 0 to (l - 1) do
+    Result[i] := i;
+  QuickSortIndexedHelper(Self, Result, 0, (l - 1), aAscending);
+end;
+
+{==============================================================================]
   <HArr.QuickSorted(aAscending: Boolean): TArr>
   @action: Returns array sorted by its own values, based on QuickSort algorithm.
   @note: None.
