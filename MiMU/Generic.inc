@@ -1533,6 +1533,55 @@ begin
 end;
 
 {==============================================================================]
+  <arr.Exchange>
+  @action: Applies a sequence of swaps (from <arr.Exchanges>) to the current
+           array (Self), producing a new array reflecting all swaps performed.
+  @note: - Each swap exchanges two indices (id1,id2).
+         - The input swap list must be compatible with the array length.
+         - Commonly used to replay sorting animations or verify transformations.
+[==============================================================================}
+function HArr.Exchange(const swaps: TConnectionArray): TArr; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Copy;
+  for i := 0 to High(swaps) do
+    Swap(Result[swaps[i].id1], Result[swaps[i].id2]);
+end;
+
+{==============================================================================]
+  <arr.Exchanges>
+  @action: Generates a sequence of adjacent swaps (id1,id2) required to
+           transform the current array (Self) into the target array.
+           Each swap exchanges two neighboring elements.
+  @note: - Returns an array of TConnection records (id1,id2 swapped).
+         - The swaps are replayable with <arr.Exchange>.
+         - Ideal for sorting visualizations or swap-based replay systems.
+         - All swaps are adjacent, producing stable step-by-step transitions.
+[==============================================================================}
+function HArr.Exchanges(const target: TArr): TConnectionArray; overload;
+var
+  i, j: Integer;
+  s: TArr;
+begin
+  s := Self.Copy;
+  SetLength(Result, 0);
+  for i := 0 to High(target) do
+  begin
+    for j := i to High(s) do
+      if (s[j] = target[i]) then
+        Break;
+    while (j > i) do
+    begin
+      SetLength(Result, (Length(Result) + 1));
+      Result[High(Result)].Create((j - 1), j);
+      s[j] := s[j - 1];
+      s[j.Decrement] := target[i];
+    end;
+  end;
+end;
+
+{==============================================================================]
  <arr.Exclude(items: TArray; index: Integer): TArray>
  @action: Returns a new array with elements from items excluded, up to and including the specified index.
  @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
@@ -2749,6 +2798,138 @@ begin
   r := 0;
   for i := High(Result) downto 0 do
     Result[r.Increase] := i;  
+end; 
+
+{==============================================================================]
+ <arr.MergeSortWeighted>
+ @action: Performs an in-place merge sort on the current integer array (Self),
+          ordering both Self and the given weight array according to the
+          weight values. Supports ascending or descending order.
+ @note: - Self and weight must be of equal length.
+        - Sorting is stable (preserves relative order of equal weights).
+        - Returns the length of Self after sorting.
+        - When aAscending = True, smaller weights appear first.
+[==============================================================================}
+function HArr.MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+  procedure MSW(var arr: TArr; var wgt: TIntegerArray; const L, R: Integer);
+  var
+    s: TArr;
+    w: TIntegerArray;
+    i, j, k, m: Integer;
+  begin
+    if (L >= R) then
+      Exit;
+    m := ((L + R) div 2);
+    MSW(arr, wgt, L, m);
+    MSW(arr, wgt, (m + 1), R);
+    SetLength(s, ((R - L) + 1));
+    SetLength(w, ((R - L) + 1));
+    i := L;
+    j := (m + 1);
+    k := 0;
+    while ((i <= m) and (j <= R)) do
+    begin
+      case ((aAscending and (wgt[i] <= wgt[j])) or ((not aAscending) and (wgt[i] >= wgt[j]))) of
+        True:
+        begin
+          s[k] := arr[i];
+          w[k] := wgt[i];
+          Inc(i);
+        end;
+        False:
+        begin
+          s[k] := arr[j];
+          w[k] := wgt[j];
+          Inc(j);
+        end;
+      end;
+      Inc(k);
+    end;
+    while (i <= m) do
+    begin
+      s[k] := arr[i];
+      w[k] := wgt[i];
+      Inc(i);
+      Inc(k);
+    end;
+    while (j <= R) do
+    begin
+      s[k] := arr[j];
+      w[k] := wgt[j];
+      Inc(j);
+      Inc(k);
+    end;
+    for k := 0 to High(s) do
+    begin
+      arr[L + k] := s[k];
+      wgt[L + k] := w[k];
+    end;
+  end;
+begin
+  Result := Length(Self);
+  if (Result > 1) then
+    MSW(Self, weight, 0, (Result - 1));
+end;
+
+function HArr.MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
+  procedure MSW(var arr: TArr; var wgt: TDoubleArray; const L, R: Integer);
+  var
+    s: TArr;
+    w: TDoubleArray;
+    i, j, k, m: Integer;
+  begin
+    if (L >= R) then
+      Exit;
+    m := ((L + R) div 2);
+    MSW(arr, wgt, L, m);
+    MSW(arr, wgt, (m + 1), R);
+    SetLength(s, ((R - L) + 1));
+    SetLength(w, ((R - L) + 1));
+    i := L;
+    j := (m + 1);
+    k := 0;
+    while ((i <= m) and (j <= R)) do
+    begin
+      case ((aAscending and (wgt[i] <= wgt[j])) or ((not aAscending) and (wgt[i] >= wgt[j]))) of
+        True:
+        begin
+          s[k] := arr[i];
+          w[k] := wgt[i];
+          Inc(i);
+        end;
+        False:
+        begin
+          s[k] := arr[j];
+          w[k] := wgt[j];
+          Inc(j);
+        end;
+      end;
+      Inc(k);
+    end;
+    while (i <= m) do
+    begin
+      s[k] := arr[i];
+      w[k] := wgt[i];
+      Inc(i);
+      Inc(k);
+    end;
+    while (j <= R) do
+    begin
+      s[k] := arr[j];
+      w[k] := wgt[j];
+      Inc(j);
+      Inc(k);
+    end;
+    for k := 0 to High(s) do
+    begin
+      arr[L + k] := s[k];
+      wgt[L + k] := w[k];
+    end;
+  end;
+begin
+  Result := Length(Self);
+  if (Result > 1) then
+    MSW(Self, weight, 0, (Result - 1));
 end;
 
 {==============================================================================]
@@ -2842,6 +3023,80 @@ begin
     begin
       m := c;
       Result := Self[i];
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <arr.Movement>
+  @action: Applies a sequence of movements (from <arr.Movements>) to the
+           current array (Self), returning the resulting array.
+  @note: - Each movement shifts elements between indices, not just swapping.
+         - Movements preserve the array’s relative ordering behavior.
+         - The input move set is assumed valid for the given array.
+[==============================================================================}
+function HArr.Movement(const moves: TConnectionArray): TArr; overload;
+var
+  t: TVar;
+  i, j, c: Integer;
+begin
+  Result := Self.Copy;
+  for i := 0 to High(moves) do
+  begin
+    c := moves[i].id1.Compare(moves[i].id2);
+    if (c = 0) then
+      Continue;
+    t := Result[moves[i].id1];
+    case c of
+      -1:
+      for j := moves[i].id1 to (moves[i].id2 - 1) do
+        Result[j] := Result[j + 1];
+      1:
+      for j := moves[i].id1 downto (moves[i].id2 + 1) do
+        Result[j] := Result[j - 1];
+    end;
+    Result[moves[i].id2] := t;
+  end;
+end;
+
+{==============================================================================]
+  <arr.Movements>
+  @action: Generates a list of element movements required to transform the
+           current array (Self) into the target array. Each movement represents
+           relocating an element from one index to another, shifting intervening
+           elements accordingly (like insertion).
+  @note: - Returns an array of TConnection records (id1 = from, id2 = to).
+         - The operations are positional (preserve relative order of others).
+         - Can be reversed/applied using <arr.Movement>.
+         - Useful for visualizing "element movement" sorting.
+[==============================================================================}
+function HArr.Movements(const target: TArr): TConnectionArray; overload;
+var
+  t: TVar;
+  i, j, k: Integer;
+  s: TArr;
+begin
+  s := Self.Copy;
+  SetLength(Result, 0);
+  for i := 0 to High(target) do
+  begin
+    for j := i to High(s) do
+      if (s[j] = target[i]) then
+        Break;
+    if (j <> i) then
+    begin
+      SetLength(Result, (Length(Result) + 1));
+      Result[High(Result)].Create(j, i);
+      t := s[j];
+      case (j > i) of
+        True:
+        for k := j downto (i + 1) do
+          s[k] := s[k - 1];
+        False:
+        for k := j to (i - 1) do
+          s[k] := s[k + 1];
+      end;
+      s[i] := t;
     end;
   end;
 end;

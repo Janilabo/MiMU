@@ -350,6 +350,8 @@ type
     function Exch(const aIndex, bIndex: Integer): Boolean; overload;
     function Exchange(const aIndex, bIndex: Integer): Boolean; overload;
     function Exchange(var b: TArr): Integer; overload;
+    function Exchange(const swaps: TConnectionArray): TArr; overload;
+    function Exchanges(const target: TArr): TConnectionArray; overload;
     function Exclude(const items: TArr; const index: Integer = 2147483647): TArr; overload;
     function Exists: Boolean; overload;
     function Extend(const item: TVar): TArr; overload;
@@ -422,6 +424,8 @@ type
     function Mixed(const mixings: Integer = 1): TArr; overload;
     function MostCommon: TVar; overload;
     function MostFrequent: TVar; overload;
+    function Movement(const moves: TConnectionArray): TArr; overload;
+    function Movements(const target: TArr): TConnectionArray; overload;
     function Multi(const threshold: Integer = 2): Boolean; overload;
     function Multi(const threshold: TRange): Boolean; overload;
     function Next(const index: Integer; const count: Integer = 2147483647): TArr; overload;
@@ -553,6 +557,8 @@ type
       function Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload;
       function Mode: TVar; overload;
       function Center: TVar; overload;
+      function MergeSortPair(var partner: TArr; const aAscending: Boolean = True): Integer; overload;
+      function MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
       function QuickSortPair(var partner: TArr; const aAscending: Boolean = True): Integer; overload;
       function QuickSortSwapped(const aAscending: Boolean = True): TConnectionArray; overload;
       function QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
@@ -580,6 +586,8 @@ type
       function MergeSortBU(const aAscending: Boolean = True): Integer; overload;
       function Uniq(const sSorted: Boolean = False): TArr; overload;
     {$ENDIF}
+    function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+    function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
     function QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
     function QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
     function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): TArr; overload;
