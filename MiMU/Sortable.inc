@@ -678,6 +678,62 @@ begin
 end;
 
 {==============================================================================]
+  <arr.PartitionSort>
+  @action: Sorts the array (Self) in ascending or descending order using a
+           stable partition-based recursive sorting algorithm.
+  @note:   - Returns Length(Self)
+           - The algorithm is conceptually similar to QuickSort but uses
+             stable partitioning (no in-place swaps).
+           - Equal elements preserve their original order (stable).
+           - Uses auxiliary arrays, trading memory for stability.
+           - Also known as "Stable QuickSort".
+[==============================================================================}
+function HArr.PartitionSort(const aAscending: Boolean = True): Integer; overload;
+  procedure PS(var A: TArr; const L, R: Integer);
+  var
+    p: TVar;
+	i, t: Integer;
+    s, e, b: TArr;
+  begin
+    if (L >= R) then
+      Exit;
+    p := A[(L + R) div 2];
+    SetLength(s, 0);
+    SetLength(e, 0);
+    SetLength(b, 0);
+    for i := L to R do
+    case A[i].Compare(p) of
+      -1:
+      if aAscending then
+        s.Supply(A[i])
+      else
+        b.Supply(A[i]);
+      1:
+      if aAscending then
+        b.Supply(A[i])
+      else
+        s.Supply(A[i]);
+      0: e.Supply(A[i]);
+    end;
+    if (Length(s) > 1) then
+      PS(s, 0, High(s));
+    if (Length(b) > 1) then
+      PS(b, 0, High(b));
+    t := L;
+    for i := 0 to High(s) do
+      A[t.Increase] := s[i];
+    for i := 0 to High(e) do
+      A[t.Increase] := e[i];
+    for i := 0 to High(b) do
+      A[t.Increase] := b[i];
+  end;
+begin
+  Result := Length(Self);
+  if (Result > 1) then
+    PS(Self, 0, (Result - 1));
+end;
+
+{==============================================================================]
   <arr.QuickSortSwapped>
   @action: Sorts the array in ascending or descending order and records all swaps performed.
   @note: Returns a dynamic array of TConnection records, each representing the indices of elements swapped during the sort.

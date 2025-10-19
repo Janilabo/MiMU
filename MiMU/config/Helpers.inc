@@ -566,8 +566,9 @@ type
       function QuickSorted(const aAscending: Boolean = True): TArr; overload;
       function QuickSort(const aAscending: Boolean = True): Integer; overload;
       function QuickSort3W(const aAscending: Boolean = True): Integer; overload;
-      function QSort(const aAscending: Boolean = True): Integer; overload;  
-      function CoctailSort(const aAscending: Boolean = True): Integer; overload;
+	  function QSort(const aAscending: Boolean = True): Integer; overload;  
+      function PartitionSort(const aAscending: Boolean = True): Integer; overload;
+	  function CoctailSort(const aAscending: Boolean = True): Integer; overload;
       function CoctailSort2(const aAscending: Boolean = True): Integer; overload;
       function GnomeSort(const aAscending: Boolean = True): Integer; overload;
       function GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload;
