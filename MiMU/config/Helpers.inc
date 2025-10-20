@@ -616,6 +616,15 @@ type
       function Middle: Double;
       function MostFreq(const null: Integer = -2147483648): Integer;
       function LeastFreq(const null: Integer = -2147483648): Integer;
+      function Succ(const currentIndex: Integer; const range: TRange): Integer; overload;
+      function Pred(const currentIndex: Integer; const range: TRange): Integer; overload;
+      function Successor(const currentIndex: Integer; const range: TRange; const aAscending: Boolean = True): Integer; overload;
+      function Predecessor(const currentIndex: Integer; const range: TRange; const aAscending: Boolean = True): Integer; overload;
+      function Next(const currentIndex: Integer; const range: TRange): Integer; overload;
+      function Previous(const currentIndex: Integer; const range: TRange): Integer; overload;
+      function Navigate(const currentIndex: Integer; const range: TRange; const aAscending: Boolean = True): Integer; overload;
+      function Advance(const currentIndex: Integer; const range: TRange; const aAscending: Boolean = True): Integer; overload;
+      function Retreat(const currentIndex: Integer; const range: TRange; const aAscending: Boolean = True): Integer; overload;
       function RadixSort(const aAscending: Boolean = True): Integer;
       function Split(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
       function Split(const diff: Integer): T2DIntegerArray; overload;

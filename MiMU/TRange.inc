@@ -1175,7 +1175,6 @@ begin
   Result.start := (Result.start xor Result.stop);
 end;
 
-
 function TRange.Normally: TRange;
 var
   a: TIntegerArray;
@@ -1352,6 +1351,53 @@ end;
 function TRange.Contains(const x: TRange): Boolean; overload;
 begin
   Result := ((Min(x.start, x.stop) >= Min(Self.start, Self.stop)) and (Max(x.start, x.stop) <= Max(Self.start, Self.stop)));
+end;
+
+{==============================================================================]
+  <TRange.Holds>
+  @action: Determines whether a given integer value lies within the range.
+  @note: Returns True if the value is greater than or equal to the lower bound
+         and less than or equal to the upper bound, regardless of whether
+         start > stop. Complementary to Missing.
+[==============================================================================}
+function TRange.Holds(const val: Integer): Boolean; overload;
+begin
+  Result := ((val >= Min(Self.start, Self.stop)) and (val <= Max(Self.start, Self.stop)));
+end;
+
+{==============================================================================]
+  <TRange.Holds>
+  @action: Determines whether a given integer value lies within the range.
+  @note: Returns True if the value is greater than or equal to the lower bound
+         and less than or equal to the upper bound, regardless of whether
+         start > stop. Complementary to Missing.
+[==============================================================================}
+function TRange.Holds(const vals: TRange): Boolean; overload;
+begin
+  Result := (Min(vals.start, vals.stop) >= Min(Self.start, Self.stop)) and (Max(vals.start, vals.stop) <= Max(Self.start, Self.stop));
+end;
+
+{==============================================================================]
+  <TRange.Missing>
+  @action: Determines whether a given integer value lies outside the range.
+  @note: Returns True if the value is less than the lower bound or greater than
+         the upper bound, regardless of start/stop order. Complementary to Holds.
+[==============================================================================}
+function TRange.Missing(const val: Integer): Boolean; overload;
+begin
+  Result := ((val < Min(Self.start, Self.stop)) or (val > Max(Self.start, Self.stop)));
+end;
+
+{==============================================================================]
+  <TRange.Missing>
+  @action: Determines whether another range lies entirely outside this range.
+  @note: Returns True if the input range is completely disjoint from this range,
+         i.e., there is no overlap between the ranges. Works correctly for both
+         ascending and descending ranges by normalizing start and stop values.
+[==============================================================================}
+function TRange.Missing(const vals: TRange): Boolean; overload;
+begin
+  Result := ((Max(vals.start, vals.stop) < Min(Self.start, Self.stop)) or (Min(vals.start, vals.stop) > Max(Self.start, Self.stop)));
 end;
 
 {==============================================================================]
