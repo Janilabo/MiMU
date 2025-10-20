@@ -1656,6 +1656,70 @@ begin
 end;
 
 {==============================================================================]
+ <TIntegerArray.Broaden>
+ @action: Expands outward from the specified starting index to find the
+          contiguous range of indexes whose values are contained within
+          the given numeric range (rValues).
+ @note: Returns <-1..-1> if the array is empty, the starting index is invalid,
+        or the value at the starting index is not within rValues.
+        The returned TRange represents indexes in the array, not values.
+[==============================================================================}
+function TIntegerArrayHelper.Broaden(const rValues: TRange; const aIndex: Integer): TRange; overload;
+var
+  i: Integer;
+begin
+  if (Self.Empty or (not InRange(aIndex, 0, High(Self))) or (not rValues.Contains(Self[aIndex]))) then
+    Exit(TRange.Construct(-1, -1));
+  Result.Create(aIndex);
+  for i := (aIndex - 1) downto 0 do
+    if rValues.Contains(Self[i]) then
+      Result.start := i
+    else
+      Break;
+  for i := (aIndex + 1) to High(Self) do
+    if rValues.Contains(Self[i]) then
+      Result.stop := i
+    else
+      Break;
+end;
+
+{==============================================================================]
+ <TIntegerArray.Broaden>
+ @action: Searches the array for the first element contained within rValues
+          and returns the contiguous range of indexes around it that are
+          also within rValues. Supports optimized search if the array is
+          sorted.
+ @note: Returns <-1..-1> if the array is empty or no elements match rValues.
+        If sSorted is True, performs a binary search for each value in the
+        numeric range; if False, performs a linear search. The returned
+        TRange represents indexes in the array, not values.
+[==============================================================================}
+function TIntegerArrayHelper.Broaden(const rValues: TRange; const sSorted: Boolean = False): TRange; overload;
+var
+  a: Boolean;
+  i, p: Integer;
+begin
+  if not Self.Empty then
+  case sSorted of
+    True:
+    begin
+      a := (Self[0] <= Self[High(Self)]);
+      for i := rValues.Minimum to rValues.Maximum do
+      begin
+        p := Self.BinarySearch(i, a);
+        if (p > -1) then
+          Exit(Self.Broaden(rValues, p));
+      end;
+    end;
+    False:
+    for i := 0 to High(Self) do
+      if rValues.Contains(Self[i]) then
+        Exit(Self.Broaden(rValues, i));
+  end;
+  Result.Create(-1);
+end;
+
+{==============================================================================]
   <TIntegerArrayHelper.BSort>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).

@@ -669,7 +669,9 @@ type
       function FilterOdd: TIntegerArray; overload;
       function Attach(const items: TIntegerArray): Integer; overload;
       function Embed(const items: TIntegerArray; const index: Integer = 2147483647): Integer; overload;
-      function BSort(const aAscending: Boolean = True): Integer;
+      function Broaden(const rValues: TRange; const aIndex: Integer): TRange; overload;
+      function Broaden(const rValues: TRange; const sSorted: Boolean = False): TRange; overload;
+	  function BSort(const aAscending: Boolean = True): Integer;
       function BinarySort(const aAscending: Boolean = True): Integer;
       function BinarySorted(const aAscending: Boolean = True): TIntegerArray;
       function BinaryBoundL(const x: Integer; const aAscending: Boolean = True): Integer;
