@@ -1776,3 +1776,80 @@ function HArr.Trending: Boolean; overload;
 begin
   Result := (Self.Trend <> 0);
 end;
+
+{==============================================================================]
+  <arr.Rising>
+  @action: Returns True if the array is monotonically non-decreasing,
+           i.e., each element is less than or equal to the next.
+  @note: Arrays with 0 or 1 element are considered Rising by default.
+         Checks all elements, not just the first and last.
+[==============================================================================}
+function HArr.Rising: Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := Low(Self) to (High(Self) - 1) do
+    if (Self[i] > Self[i + 1]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <arr.Falling>
+  @action: Returns True if the array is monotonically non-increasing,
+           i.e., each element is greater than or equal to the next.
+  @note: Arrays with 0 or 1 element are considered Falling by default.
+         Checks all elements, not just the first and last.
+[==============================================================================}
+function HArr.Falling: Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := Low(Self) to (High(Self) - 1) do
+    if (Self[i] < Self[i + 1]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <arr.Direction>
+  @action: Returns numeric trend across the entire array:
+           1 = Rising (monotonically non-decreasing),
+          -1 = Falling (monotonically non-increasing),
+           0 = Notrending (mixed sequence or empty/single element).
+  @note: Checks all elements. Inclusive comparisons (≤ / ≥).
+[==============================================================================}
+function HArr.Direction: Integer; overload;
+begin
+  if Self.Notrending then
+    Result := 0
+  else
+    if Rising then
+      Result := 1
+    else
+      Result := -1;
+end;
+
+{==============================================================================]
+  <arr.TrendFalling>
+  @action: Returns True if the first element of the array is greater than or equal to the last element,
+           indicating a non-increasing trend from start to end.
+  @note: Only meaningful for arrays with at least 2 elements.
+         This checks only the first and last elements, not the full array.
+[==============================================================================}
+function HArr.TrendFalling: Boolean; overload;
+begin
+  Result := ((Length(Self) > 1) and (Self[Low(Self)] >= Self[High(Self)]));
+end;
+
+{==============================================================================]
+  <arr.TrendRising>
+  @action: Returns True if the first element of the array is less than or equal to the last element,
+           indicating a non-decreasing trend from start to end.
+  @note: Only meaningful for arrays with at least 2 elements.
+         This checks only the first and last elements, not the full array.
+[==============================================================================}
+function HArr.TrendRising: Boolean; overload;
+begin
+  Result := ((Length(Self) > 1) and (Self[Low(Self)] <= Self[High(Self)]));
+end;

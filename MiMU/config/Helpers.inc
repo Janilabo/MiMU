@@ -592,6 +592,11 @@ type
       function Notrending: Boolean; overload;
       function Trend: Integer; overload;
       function Trending: Boolean; overload;
+      function Rising: Boolean; overload;
+      function Falling: Boolean; overload;
+      function Direction: Integer; overload;
+      function TrendFalling: Boolean; overload;
+      function TrendRising: Boolean; overload;
     {$ENDIF}
     function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
     function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
