@@ -1715,3 +1715,64 @@ begin
     else
       Result := Self.Pruned;
 end;
+
+{==============================================================================]
+  <arr.Downtrending>
+  @action: Returns True if the first element of the array is greater than the last element.
+  @note: Only meaningful for arrays with at least 2 elements. Indicates a “falling” trend.
+[==============================================================================}
+function HArr.Downtrending: Boolean; overload;
+begin
+  Result := ((Length(Self) > 1) and (Self[Low(Self)] > Self[High(Self)]));
+end;
+
+{==============================================================================]
+  <arr.Uptrending>
+  @action: Returns True if the first element of the array is less than the last element.
+  @note: Only meaningful for arrays with at least 2 elements. Indicates a “rising” trend.
+[==============================================================================}
+function HArr.Uptrending: Boolean; overload;
+begin
+  Result := ((Length(Self) > 1) and (Self[Low(Self)] < Self[High(Self)]));
+end;
+
+{==============================================================================]
+  <arr.Notrending>
+  @action: Returns True if the first element of the array is equal to the last element.
+  @note: Only meaningful for arrays with at least 2 elements. Indicates no significant trend.
+[==============================================================================}
+function HArr.Notrending: Boolean; overload;
+begin
+  Result := ((Length(Self) > 1) and (Self[Low(Self)] = Self[High(Self)]));
+end;
+
+{==============================================================================]
+  <arr.Trend>
+  @action: Returns the trend of the array’s endpoints:
+            1 = Uptrend (first < last),
+           -1 = Downtrend (first > last),
+            0 = Notrend (first = last or array too short).
+  @note: Only meaningful for arrays with at least 2 elements.
+         Comparison is done between the first and last elements only.
+[==============================================================================}
+function HArr.Trend: Integer; overload;
+begin
+  if ((Length(Self) < 2) or (Self[Low(Self)] = Self[High(Self)])) then
+    Result := 0
+  else
+    if (Self[Low(Self)] > Self[High(Self)]) then
+      Result := -1
+    else
+      Result := 1;
+end;
+
+{==============================================================================]
+  <arr.Trending>
+  @action: Returns True if the array is either Uptrending or Downtrending.
+  @note: Only meaningful for arrays with at least 2 elements.
+         Returns False if the array has no trend (Notrending).
+[==============================================================================}
+function HArr.Trending: Boolean; overload;
+begin
+  Result := (Self.Trend <> 0);
+end;

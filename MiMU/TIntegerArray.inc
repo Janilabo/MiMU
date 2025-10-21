@@ -1703,7 +1703,7 @@ begin
   case sSorted of
     True:
     begin
-      a := (Self[0] <= Self[High(Self)]);
+      a := not Self.Downtrending;
       for i := rValues.Minimum to rValues.Maximum do
       begin
         p := Self.BinarySearch(i, a);

@@ -587,6 +587,11 @@ type
       function MergeSortBU(const aAscending: Boolean = True): Integer; overload;
       function HybridSort(const aAscending: Boolean = True): Integer; overload;
       function Uniq(const sSorted: Boolean = False): TArr; overload;
+      function Downtrending: Boolean; overload;
+      function Uptrending: Boolean; overload;
+      function Notrending: Boolean; overload;
+      function Trend: Integer; overload;
+      function Trending: Boolean; overload;
     {$ENDIF}
     function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
     function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
