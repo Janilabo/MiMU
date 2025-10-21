@@ -3414,7 +3414,7 @@ begin
       begin
         Result[i][m + 1] := Result[i][m];
         selfIDs[i][m + 1] := selfIDs[i][m];
-        Dec(m);
+        Dec(m);	
       end;
       Result[i][m + 1] := p;
       selfIDs[i][m + 1] := s;
@@ -3536,6 +3536,221 @@ begin
     for j := 0 to (l - 1) do
       if (Self[j].Y = yArr[i]) then
         Result[i][k.Increase] := Self[j].X;
+  end;
+end;
+
+{==============================================================================]
+  <TPointArrayHelper.YAs2D>
+  @action: Groups Y-coordinates by unique X values and sorts each Y-group ascending.
+           Also returns 2D array of self-indices (original point indices).
+  @note: Each subarray of Result corresponds to one unique X in xArr.
+         Result[i][*] = sorted Y values for X = xArr[i].
+         selfIDs[i][*] = original indices of those points.
+[==============================================================================}
+function TPointArrayHelper.YAs2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+var
+  i, j, k: Integer;
+  g, d: specialize TDictionary<Integer, specialize TList<Integer>>;
+  y, p: specialize TList<Integer>;
+begin
+  SetLength(Result, 0);
+  SetLength(xArr, 0);
+  SetLength(selfIDs, 0);
+  if Self.Empty then
+    Exit;
+  g := specialize TDictionary<Integer, specialize TList<Integer>>.Create;
+  d := specialize TDictionary<Integer, specialize TList<Integer>>.Create;
+  try
+    for i := 0 to High(Self) do
+    begin
+      if not g.TryGetValue(Self[i].X, y) then
+      begin
+        y := specialize TList<Integer>.Create;
+        p := specialize TList<Integer>.Create;
+        g.Add(Self[i].X, y);
+        d.Add(Self[i].X, p);
+      end else
+        p := d[Self[i].X];
+      y.Add(Self[i].Y);
+      p.Add(i);
+    end;
+    SetLength(xArr, g.Count);
+    SetLength(Result, g.Count);
+    SetLength(selfIDs, g.Count);
+    i := 0;
+    for k in g.Keys do
+    begin
+      xArr[i] := k;
+      y := g[k];
+      p := d[k];
+      y.Sort;
+      SetLength(Result[i], y.Count);
+      SetLength(selfIDs[i], y.Count);
+      for j := 0 to (y.Count - 1) do
+      begin
+        Result[i][j] := y[j];
+        selfIDs[i][j] := p[j];
+      end;
+      Inc(i);
+    end;
+  finally
+    for y in g.Values do
+      y.Free;
+    for p in d.Values do
+      p.Free;
+    g.Free;
+    d.Free;
+  end;
+end;
+
+{==============================================================================]
+  <TPointArrayHelper.YAs2D>
+  @action: Groups Y-coordinates by unique X values (no sorting or index tracking).
+  @note: Each subarray of Result corresponds to one unique X in xArr.
+         Order of Y values matches original point order.
+[==============================================================================}
+function TPointArrayHelper.YAs2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
+var
+  i, k: Integer;
+  g: specialize TDictionary<Integer, specialize TList<Integer>>;
+  y: specialize TList<Integer>;
+begin
+  SetLength(Result, 0);
+  SetLength(xArr, 0);
+  if Self.Empty then
+    Exit;
+  g := specialize TDictionary<Integer, specialize TList<Integer>>.Create;
+  try
+    for i := 0 to High(Self) do
+    begin
+      if not g.TryGetValue(Self[i].X, y) then
+      begin
+        y := specialize TList<Integer>.Create;
+        g.Add(Self[i].X, y);
+      end;
+      y.Add(Self[i].Y);
+    end;
+    SetLength(xArr, g.Count);
+    SetLength(Result, g.Count);
+    i := 0;
+    for k in g.Keys do
+    begin
+      xArr[i] := k;
+      y := g[k];
+      Result[i.Increase] := y.ToArray;
+    end;
+  finally
+    for y in g.Values do
+      y.Free;
+    g.Free;
+  end;
+end;
+
+{==============================================================================]
+  <TPointArrayHelper.XAs2D>
+  @action: Groups X-coordinates by unique Y values and sorts each X-group ascending.
+           Also returns 2D array of self-indices (original point indices).
+  @note: Each subarray of Result corresponds to one unique Y in yArr.
+         Result[i][*] = sorted X values for Y = yArr[i].
+         selfIDs[i][*] = original indices of those points.
+[==============================================================================}
+function TPointArrayHelper.XAs2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+var
+  i, j, k: Integer;
+  g: specialize TDictionary<Integer, specialize TList<Integer>>;
+  d: specialize TDictionary<Integer, specialize TList<Integer>>;
+  x, p: specialize TList<Integer>;
+begin
+  SetLength(Result, 0);
+  SetLength(yArr, 0);
+  SetLength(selfIDs, 0);
+  if Self.Empty then
+    Exit;
+  g := specialize TDictionary<Integer, specialize TList<Integer>>.Create;
+  d := specialize TDictionary<Integer, specialize TList<Integer>>.Create;
+  try
+    for i := 0 to High(Self) do
+    begin
+      if not g.TryGetValue(Self[i].Y, x) then
+      begin
+        x := specialize TList<Integer>.Create;
+        p := specialize TList<Integer>.Create;
+        g.Add(Self[i].Y, x);
+        d.Add(Self[i].Y, p);
+      end else
+        p := d[Self[i].Y];
+      x.Add(Self[i].X);
+      p.Add(i);
+    end;
+    SetLength(yArr, g.Count);
+    SetLength(Result, g.Count);
+    SetLength(selfIDs, g.Count);
+    i := 0;
+    for k in g.Keys do
+    begin
+      yArr[i] := k;
+      x := g[k];
+      p := d[k];
+      x.Sort;
+      SetLength(Result[i], x.Count);
+      SetLength(selfIDs[i], x.Count);
+      for j := 0 to (x.Count - 1) do
+      begin
+        Result[i][j] := x[j];
+        selfIDs[i][j] := p[j];
+      end;
+      Inc(i);
+    end;
+  finally
+    for x in g.Values do
+      x.Free;
+    for p in d.Values do
+      p.Free;
+    g.Free;
+    d.Free;
+  end;
+end;
+
+{==============================================================================]
+  <TPointArrayHelper.XAs2D>
+  @action: Groups X-coordinates by unique Y values (no sorting or index tracking).
+  @note: Each subarray of Result corresponds to one unique Y in yArr.
+         Order of X values matches original point order.
+[==============================================================================}
+function TPointArrayHelper.XAs2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
+var
+  i, k: Integer;
+  g: specialize TDictionary<Integer, specialize TList<Integer>>;
+  x: specialize TList<Integer>;
+begin
+  SetLength(Result, 0);
+  SetLength(yArr, 0);
+  if Self.Empty then
+    Exit;
+  g := specialize TDictionary<Integer, specialize TList<Integer>>.Create;
+  try
+    for i := 0 to High(Self) do
+    begin
+      if not g.TryGetValue(Self[i].Y, x) then
+      begin
+        x := specialize TList<Integer>.Create;
+        g.Add(Self[i].Y, x);
+      end;
+      x.Add(Self[i].X);
+    end;
+    SetLength(yArr, g.Count);
+    SetLength(Result, g.Count);
+    i := 0;
+    for k in g.Keys do
+    begin
+      yArr[i] := k;
+      x := g[k];
+      Result[i.Increase] := x.ToArray;
+    end;
+  finally
+    for x in g.Values do
+      x.Free;
+    g.Free;
   end;
 end;
 

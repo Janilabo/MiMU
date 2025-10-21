@@ -918,6 +918,10 @@ type
       function YTo2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
       function XTo2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
       function XTo2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
+      function YAs2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+      function YAs2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
+      function XAs2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+      function XAs2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
