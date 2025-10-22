@@ -172,6 +172,30 @@ begin
 end;
 
 {==============================================================================]
+ <TPoint.Within>
+ @action: Determines whether this point lies within a given distance (radius)
+          of another point, using the specified distance function.
+ @note: If no distance function is provided, Euclidean distance should be
+        used as the default metric.
+[==============================================================================}
+function TPointHelper.Within(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction = nil): Boolean; overload;
+begin
+  Result := (distFunc(Self, target) <= radius);
+end;
+
+{==============================================================================]
+ <TPoint.Within>
+ @action: Determines whether this point lies within a rectangular area centered
+          on another point, defined by horizontal and vertical radii.
+ @note: Useful for grid or axis-aligned range checks where separate X/Y
+        tolerances are used instead of a circular radius.
+[==============================================================================}
+function TPoint.Within(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
+begin
+  Result := ((Abs(Self.X - target.X) <= xRadius) and (Abs(Self.Y - target.Y) <= yRadius));
+end; 
+
+{==============================================================================]
   <TPointHelper.Create>
   @action: Returns TPoint 0,0.
   @note: None.

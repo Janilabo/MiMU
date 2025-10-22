@@ -3765,20 +3765,21 @@ end;
   @returns: T2DPointArray where each sub-array represents a cluster.
   @note: Points not belonging to any cluster are ignored (treated as noise).
 [==============================================================================}
-function TPointArrayHelper.DBSCAN(const radius: Double; const minPts: Integer; const distFunc: TDistanceFunction): T2DPointArray; overload;
+function TPointArrayHelper.DBSCAN(const radius: Double = 1.0; const minPts: Integer = 2; const distFunc: TDistanceFunction = nil): T2DPointArray; overload;
 const
   NOISE = -1;
   UNVISITED = 0;
 var
   c, i, s: Integer;
   l: TIntegerArray;
+  d: TDistanceFunction;
   function RegionQuery(const index: Integer): TIntegerArray;
   var
     i: Integer;
   begin
     SetLength(Result, 0);
     for i := 0 to (s - 1) do
-      if ((i <> index) and (distFunc(Self[index], Self[i]) <= radius)) then
+      if ((i <> index) and (d(Self[index], Self[i]) <= radius)) then
         Result.Supply(i);
   end;
   procedure ExpandCluster(const index: Integer);
@@ -3809,6 +3810,7 @@ var
     end;
   end;
 begin
+  d := DistanceFunction(distFunc);
   s := Length(Self);
   case s of
     0: Exit([]);
@@ -3834,21 +3836,6 @@ end;
 
 {==============================================================================]
   <TPointArray.DBSCAN>
-  @action: Convenience overload that performs DBSCAN using standard Euclidean
-           distance.
-  @params:
-    radius - Maximum neighbor distance.
-    minPts - Minimum number of points to form a cluster.
-  @returns: T2DPointArray of clusters.
-  @note: Internally calls the main DBSCAN method with Euclidean distance.
-[==============================================================================}
-function TPointArrayHelper.DBSCAN(const radius: Double; const minPts: Integer): T2DPointArray; overload;
-begin
-  Result := Self.DBSCAN(radius, minPts, @Euclidean);
-end;
-
-{==============================================================================]
-  <TPointArray.DBSCAN>
   @action: Performs density-based clustering using separate X and Y radii,
            allowing anisotropic neighborhoods.
   @params:
@@ -3866,17 +3853,13 @@ const
 var
   c, i, s: Integer;
   l: TIntegerArray;
-  function InRange(const A, B: TPoint): Boolean;
-  begin
-    Result := ((Abs(A.X - B.X) <= xRadius) and (Abs(A.Y - B.Y) <= yRadius));
-  end;
   function RegionQuery(const index: Integer): TIntegerArray;
   var
     i: Integer;
   begin
     SetLength(Result, 0);
     for i := 0 to (s - 1) do
-      if ((i <> index) and InRange(Self[index], Self[i])) then
+      if ((i <> index) and Self[index].Within(Self[i], xRadius, yRadius)) then
         Result.Supply(i);
   end;
   procedure ExpandCluster(const index: Integer);

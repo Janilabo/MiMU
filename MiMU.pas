@@ -82,13 +82,15 @@ type
     function DistSquaredEuclidean(const target: TPoint): Double; 
     function DistManhattan(const target: TPoint): Double; 
     function DistChebyshev(const target: TPoint): Double;
+	function Within(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
     function Neighbour(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
     function Neighbor(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
-    function Adjacent(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;   	
+    function Adjacent(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;  	
   end;
   TPointArray = array of TPoint;
   T2DPointArray = array of TPointArray;
   PPoint = ^TPoint;
+  TDistanceFunction = function(const A, B: TPoint): Double;
   TRangeEnumerator = record
   private
     FCurrent, FStop, FStep: Integer;
@@ -592,6 +594,8 @@ function Bitify(const a, b: Boolean): Integer; overload;
 function Bitify(const a, b, c: Boolean): Integer; overload;
 function Bitify(const a, b, c, d: Boolean): Integer; overload;
 
+function DistanceFunction(const distFunc: TDistanceFunction): TDistanceFunction; overload;
+function DistanceFunction(const method: Integer = 0): TDistanceFunction; overload;
 function Distance(const A, B: TPoint): Double;
 function Euclidean(const A, B: TPoint): Double;
 function Euclidean2(const A, B: TPoint): Double;
@@ -600,18 +604,16 @@ function Manhattan(const A, B: TPoint): Double;
 function Chebyshev(const A, B: TPoint): Double;
 function Minkowski(const A, B: TPoint; const P: Double = 2.0): Double;
   
-type
-  TDistanceFunction = function(const A, B: TPoint): Double;
-  {$DEFINE Sortable}
-    {$DEFINE Integer}{$I MiMU\config\Helpers.inc}{$UNDEF Integer}
-    {$DEFINE Double}{$I MiMU\config\Helpers.inc}{$UNDEF Double}
-    {$DEFINE string}{$I MiMU\config\Helpers.inc}{$UNDEF string}
-    {$DEFINE Char}{$I MiMU\config\Helpers.inc}{$UNDEF Char}
-  {$UNDEF Sortable}
-  {$DEFINE Boolean}{$I MiMU\config\Helpers.inc}{$UNDEF Boolean}
-  {$DEFINE TPoint}{$I MiMU\config\Helpers.inc}{$UNDEF TPoint}
-  {$DEFINE TBox}{$I MiMU\config\Helpers.inc}{$UNDEF TBox}
-  {$DEFINE TRange}{$I MiMU\config\Helpers.inc}{$UNDEF TRange}
+{$DEFINE Sortable}
+  {$DEFINE Integer}{$I MiMU\config\Helpers.inc}{$UNDEF Integer}
+  {$DEFINE Double}{$I MiMU\config\Helpers.inc}{$UNDEF Double}
+  {$DEFINE string}{$I MiMU\config\Helpers.inc}{$UNDEF string}
+  {$DEFINE Char}{$I MiMU\config\Helpers.inc}{$UNDEF Char}
+{$UNDEF Sortable}
+{$DEFINE Boolean}{$I MiMU\config\Helpers.inc}{$UNDEF Boolean}
+{$DEFINE TPoint}{$I MiMU\config\Helpers.inc}{$UNDEF TPoint}
+{$DEFINE TBox}{$I MiMU\config\Helpers.inc}{$UNDEF TBox}
+{$DEFINE TRange}{$I MiMU\config\Helpers.inc}{$UNDEF TRange}
 type
   TInt64Helper = type helper for Int64
     function Prime: Boolean; 
@@ -1191,6 +1193,27 @@ end;
 function Minkowski(const A, B: TPoint; const P: Double = 2.0): Double;
 begin
   Result := Power(Power(Abs(A.X - B.X), P) + Power(Abs(A.Y - B.Y), P), (1 / P));
+end;
+
+function DistanceFunction(const distFunc: TDistanceFunction): TDistanceFunction; overload;
+begin
+  Result := distFunc;
+  if not Assigned(Result) then
+    Result := @Euclidean;
+end;
+
+function DistanceFunction(const method: Integer = 0): TDistanceFunction; overload;
+begin
+  if not InRange(method, 0, 6) then
+    Exit(@Euclidean);
+  case method of
+    0: Result := @Distance;
+    1: Result := @Euclidean;
+    2: Result := @Euclidean2;
+    3: Result := @SquaredEuclidean;
+    4: Result := @Manhattan;
+    5: Result := @Chebyshev;
+  end;
 end;
 
 class function TBA.Init(var arr: TBooleanArray): Integer; overload; 

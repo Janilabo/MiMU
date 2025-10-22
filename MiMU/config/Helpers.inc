@@ -255,6 +255,7 @@ type
       function ToBox(const size: Integer = 0): TBox; overload;
       function Boxify(const width, height: Integer): TBox; overload;
       function Boxify(const size: Integer = 0): TBox; overload;
+	  function Within(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction = nil): Boolean; overload;
     {$ENDIF}
     {$IFDEF TBox}
       function Create: TBox; overload;
@@ -922,8 +923,7 @@ type
       function YAs2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
       function XAs2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
       function XAs2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
-      function DBSCAN(const radius: Double; const minPts: Integer; const distFunc: TDistanceFunction): T2DPointArray; overload;
-      function DBSCAN(const radius: Double; const minPts: Integer): T2DPointArray; overload;
+      function DBSCAN(const radius: Double = 1.0; const minPts: Integer = 2; const distFunc: TDistanceFunction = nil): T2DPointArray; overload;
       function DBSCAN(const xRadius, yRadius: Integer; const minPts: Integer): T2DPointArray; overload;
     {$ENDIF}
     {$IFDEF TBox}
