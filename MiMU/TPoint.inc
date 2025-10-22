@@ -172,6 +172,26 @@ begin
 end;
 
 {==============================================================================]
+ <TPoint.DistMinkowski>
+ @action: Calculates the distance from source to target.
+ @note: Minkowski
+[==============================================================================}
+function TPoint.DistMinkowski(const target: TPoint): Double; overload;
+begin
+  Result := Minkowski(Self, target);
+end;
+
+{==============================================================================]
+ <TPoint.DistMinkowski>
+ @action: Calculates the distance from source to target.
+ @note: Minkowski
+[==============================================================================}
+function TPoint.DistMinkowski(const target: TPoint; const P: Double): Double; overload;
+begin
+  Result := Minkowski(Self, target, P);
+end;
+
+{==============================================================================]
  <TPoint.Within>
  @action: Determines whether this point lies within a given distance (radius)
           of another point, using the specified distance function.

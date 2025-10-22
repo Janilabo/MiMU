@@ -82,6 +82,8 @@ type
     function DistSquaredEuclidean(const target: TPoint): Double; 
     function DistManhattan(const target: TPoint): Double; 
     function DistChebyshev(const target: TPoint): Double;
+    function DistMinkowski(const target: TPoint): Double; overload;
+    function DistMinkowski(const target: TPoint; const P: Double): Double; overload;
     function Within(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
     function Neighbour(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
     function Neighbor(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
@@ -91,7 +93,7 @@ type
   T2DPointArray = array of TPointArray;
   PPoint = ^TPoint;
   TDistanceFunction = function(const A, B: TPoint): Double;
-  TDistanceMetric = (dmDistance, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev);
+  TDistanceMetric = (dmDistance, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev, dmMinkowski);
   TRangeEnumerator = record
   private
     FCurrent, FStop, FStep: Integer;
@@ -604,7 +606,8 @@ function Euclidean2(const A, B: TPoint): Double;
 function SquaredEuclidean(const A, B: TPoint): Double;
 function Manhattan(const A, B: TPoint): Double;
 function Chebyshev(const A, B: TPoint): Double;
-function Minkowski(const A, B: TPoint; const P: Double = 2.0): Double;
+function Minkowski(const A, B: TPoint): Double; overload;
+function Minkowski(const A, B: TPoint; const P: Double): Double; overload;
   
 {$DEFINE Sortable}
   {$DEFINE Integer}{$I MiMU\config\Helpers.inc}{$UNDEF Integer}
@@ -1192,7 +1195,12 @@ begin
   Result := Max(Abs(A.X - B.X), Abs(A.Y - B.Y));
 end;
 
-function Minkowski(const A, B: TPoint; const P: Double = 2.0): Double;
+function Minkowski(const A, B: TPoint): Double; overload;
+begin
+  Result := Power(Power(Abs(A.X - B.X), 2.0) + Power(Abs(A.Y - B.Y), 2.0), (1 / 2.0));
+end;
+
+function Minkowski(const A, B: TPoint; const P: Double): Double; overload;
 begin
   Result := Power(Power(Abs(A.X - B.X), P) + Power(Abs(A.Y - B.Y), P), (1 / P));
 end;
@@ -1215,6 +1223,7 @@ begin
     3: Result := @SquaredEuclidean;
     4: Result := @Manhattan;
     5: Result := @Chebyshev;
+    6: Result := @Minkowski;
   end;
 end;
 
@@ -1227,6 +1236,7 @@ begin
     dmSquaredEuclidean: Result := @SquaredEuclidean;
     dmManhattan: Result := @Manhattan;
     dmChebyshev: Result := @Chebyshev;
+    dmMinkowski: Result := @Minkowski
   end;
 end;
 
