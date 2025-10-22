@@ -82,7 +82,7 @@ type
     function DistSquaredEuclidean(const target: TPoint): Double; 
     function DistManhattan(const target: TPoint): Double; 
     function DistChebyshev(const target: TPoint): Double;
-	function Within(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
+    function Within(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
     function Neighbour(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
     function Neighbor(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
     function Adjacent(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;  	
@@ -91,6 +91,7 @@ type
   T2DPointArray = array of TPointArray;
   PPoint = ^TPoint;
   TDistanceFunction = function(const A, B: TPoint): Double;
+  TDistanceMetric = (dmDistance, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev);
   TRangeEnumerator = record
   private
     FCurrent, FStop, FStep: Integer;
@@ -596,6 +597,7 @@ function Bitify(const a, b, c, d: Boolean): Integer; overload;
 
 function DistanceFunction(const distFunc: TDistanceFunction): TDistanceFunction; overload;
 function DistanceFunction(const method: Integer = 0): TDistanceFunction; overload;
+function DistanceFunction(const metric: TDistanceMetric): TDistanceFunction; overload;
 function Distance(const A, B: TPoint): Double;
 function Euclidean(const A, B: TPoint): Double;
 function Euclidean2(const A, B: TPoint): Double;
@@ -1213,6 +1215,18 @@ begin
     3: Result := @SquaredEuclidean;
     4: Result := @Manhattan;
     5: Result := @Chebyshev;
+  end;
+end;
+
+function DistanceFunction(const metric: TDistanceMetric): TDistanceFunction; overload;
+begin
+  case metric of
+    dmDistance: Result := @Distance;
+    dmEuclidean: Result := @Euclidean;
+    dmEuclidean2: Result := @Euclidean2;
+    dmSquaredEuclidean: Result := @SquaredEuclidean;
+    dmManhattan: Result := @Manhattan;
+    dmChebyshev: Result := @Chebyshev;
   end;
 end;
 

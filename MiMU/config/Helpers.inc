@@ -923,8 +923,15 @@ type
       function YAs2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
       function XAs2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
       function XAs2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
-      function DBSCAN(const radius: Double = 1.0; const minPts: Integer = 2; const distFunc: TDistanceFunction = nil): T2DPointArray; overload;
+      function DBSCAN(const radius: Double; const minPts: Integer; const distFunc: TDistanceFunction): T2DPointArray; overload;
+      function DBSCAN(const radius: Double = 1.0; const minPts: Integer = 2; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
       function DBSCAN(const xRadius, yRadius: Integer; const minPts: Integer): T2DPointArray; overload;
+      function Nearby(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): TPointArray; overload;
+      function Nearby(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+      function Nearby(const target: TPoint; const xRadius, yRadius: Integer): TPointArray; overload;
+      function Nearby(const targets: TPointArray; const radius: Double; const distFunc: TDistanceFunction): TPointArray; overload;
+	  function Nearby(const targets: TPointArray; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+      function Nearby(const targets: TPointArray; const xRadius, yRadius: Integer): TPointArray; overload; 
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
