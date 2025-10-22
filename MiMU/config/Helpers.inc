@@ -259,6 +259,7 @@ type
       function Within(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): Boolean; overload;
       function Near(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
       function Near(const target: TPoint; const radius: Double; const metric: TDistanceMetric): Boolean; overload;
+      function Dist(const target: TPoint; const metric: TDistanceMetric = dmEuclidean): Double;
     {$ENDIF}
     {$IFDEF TBox}
       function Create: TBox; overload;

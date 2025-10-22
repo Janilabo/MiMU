@@ -122,6 +122,16 @@ begin
 end;
 
 {==============================================================================]
+ <TPoint.DistHypotEuclidean>
+ @action: Calculates the distance from source to target.
+ @note: Euclidean.
+[==============================================================================}
+function TPoint.DistHypotEuclidean(const target: TPoint): Double;
+begin
+  Result := HypotEuclidean(Self, target);
+end;
+
+{==============================================================================]
  <TPoint.DistEuclidean>
  @action: Calculates the distance from source to target.
  @note: Euclidean.
@@ -199,6 +209,26 @@ end;
 function TPoint.DistMaxMinChebyshev(const target: TPoint): Double;
 begin
   Result := MaxMinChebyshev(Self, target);
+end;
+
+{==============================================================================]
+ <TPoint.DistOctile>
+ @action: Calculates the distance from source to target.
+ @note: Octile
+[==============================================================================}
+function TPoint.DistOctile(const target: TPoint): Double;
+begin
+  Result := Octile(Self, target);
+end;
+
+{==============================================================================]
+ <TPoint.Dist>
+ @action: Calculates the distance from source to target.
+ @note: Octile
+[==============================================================================}
+function TPointHelper.Dist(const target: TPoint; const metric: TDistanceMetric = dmEuclidean): Double;
+begin
+  Result := Distance(Self, target, metric);
 end;
 
 {==============================================================================]
@@ -323,34 +353,6 @@ begin
     Result := (Self.Y - target.Y)
   else
     Result := (target.Y - Self.Y);
-end;
-
-{==============================================================================]
- <TPoint.DistXBranchless>
- @action: Returns the absolute horizontal distance between this point and the target point using a branchless absolute value computation.
- @note: Implements the two's complement absolute value trick via XOR and right-shift;
-        equivalent to Abs(Self.X - Target.X) without conditional branches for better performance in loops.
-[==============================================================================}
-function TPoint.DistXBranchless(const target: TPoint): Integer;
-var
-  d: Integer;
-begin
-  d := (X - target.X);
-  Result := ((d xor (d shr 31)) - (d shr 31));
-end;
-
-{==============================================================================]
- <TPoint.DistYBranchless>
- @action: Returns the absolute vertical distance between this point and the target point using a branchless absolute value computation.
- @note: Implements the two's complement absolute value trick via XOR and right-shift;
-        equivalent to Abs(Self.Y - Target.Y) without conditional branches for better performance in loops.
-[==============================================================================}
-function TPoint.DistYBranchless(const target: TPoint): Integer;
-var
-  d: Integer;
-begin
-  d := (Y - target.Y);
-  Result := ((d xor (d shr 31)) - (d shr 31));
 end;
 
 {==============================================================================]

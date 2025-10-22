@@ -76,7 +76,8 @@ type
     function InCircle(const center: TPoint; const radius: Double): Boolean; inline;
     function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; inline;
     function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; 
-    function AngleRadians(const target: TPoint): Double; 
+    function AngleRadians(const target: TPoint): Double;
+    function DistHypotEuclidean(const target: TPoint): Double; 	
     function DistEuclidean(const target: TPoint): Double; 
     function DistEuclidean2(const target: TPoint): Double; 
     function DistSquaredEuclidean(const target: TPoint): Double; 
@@ -85,6 +86,7 @@ type
     function DistMinkowski(const target: TPoint): Double; overload;
     function DistMinkowski(const target: TPoint; const P: Double): Double; overload;
     function DistMaxMinChebyshev(const target: TPoint): Double;
+    function DistOctile(const target: TPoint): Double;
     function Within(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
     function Near(const target: TPoint; const radius: Double = 1.0): Boolean; overload;
     function Near(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
@@ -95,8 +97,6 @@ type
     function DistY(const target: TPoint): Integer;
     function DistanceX(const target: TPoint): Integer;
     function DistanceY(const target: TPoint): Integer;
-    function DistXBranchless(const Target: TPoint): Integer;
-    function DistYBranchless(const Target: TPoint): Integer;
     function DistMaxMinX(const Target: TPoint): Integer;
     function DistMaxMinY(const Target: TPoint): Integer;
     function DeltaX(const target: TPoint): Integer;
@@ -109,7 +109,7 @@ type
   T2DPointArray = array of TPointArray;
   PPoint = ^TPoint;
   TDistanceFunction = function(const A, B: TPoint): Double;
-  TDistanceMetric = (dmDistance, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev, dmMinkowski, dmMaxMinChebyshev);
+  TDistanceMetric = (dmHypotEuclidean, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev, dmMinkowski, dmMaxMinChebyshev, dmOctile);
   TRangeEnumerator = record
   private
     FCurrent, FStop, FStep: Integer;
@@ -616,7 +616,7 @@ function Bitify(const a, b, c, d: Boolean): Integer; overload;
 function DistanceFunction(const distFunc: TDistanceFunction): TDistanceFunction; overload;
 function DistanceFunction(const method: Integer = 0): TDistanceFunction; overload;
 function DistanceFunction(const metric: TDistanceMetric): TDistanceFunction; overload;
-function Distance(const A, B: TPoint): Double;
+function HypotEuclidean(const A, B: TPoint): Double;
 function Euclidean(const A, B: TPoint): Double;
 function Euclidean2(const A, B: TPoint): Double;
 function SquaredEuclidean(const A, B: TPoint): Double;
@@ -625,6 +625,9 @@ function Chebyshev(const A, B: TPoint): Double;
 function Minkowski(const A, B: TPoint): Double; overload;
 function Minkowski(const A, B: TPoint; const P: Double): Double; overload;
 function MaxMinChebyshev(const A, B: TPoint): Double;
+function Octile(const A, B: TPoint): Double;
+function Distance(const A, B: TPoint; const distFunc: TDistanceFunction): Double; overload;
+function Distance(const A, B: TPoint; const metric: TDistanceMetric = dmEuclidean): Double; overload;
   
 {$DEFINE Sortable}
   {$DEFINE Integer}{$I MiMU\config\Helpers.inc}{$UNDEF Integer}
@@ -1182,7 +1185,7 @@ function Max(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU
 function Min(A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Min}
 function Min(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Min}
 
-function Distance(const A, B: TPoint): Double;
+function HypotEuclidean(const A, B: TPoint): Double;
 begin
   Result := Hypot(A.X - B.X, A.Y - B.Y);
 end;
@@ -1227,6 +1230,15 @@ begin
   Result := Max(Max(A.X, B.X) - Min(A.X, B.X), Max(A.Y, B.Y) - Min(A.Y, B.Y));
 end;
 
+function Octile(const A, B: TPoint): Double;
+var
+  h, v: Integer;
+begin
+  h := Abs(A.X - B.X);
+  v := Abs(A.Y - B.Y);
+  Result := (Max(h, v) + (Sqrt(2) - 1) * Min(h, v));
+end;
+
 function DistanceFunction(const distFunc: TDistanceFunction): TDistanceFunction; overload;
 begin
   Result := distFunc;
@@ -1236,10 +1248,10 @@ end;
 
 function DistanceFunction(const method: Integer = 0): TDistanceFunction; overload;
 begin
-  if not InRange(method, 0, 7) then
+  if not InRange(method, 0, 8) then
     Exit(@Euclidean);
   case method of
-    0: Result := @Distance;
+    0: Result := @HypotEuclidean;
     1: Result := @Euclidean;
     2: Result := @Euclidean2;
     3: Result := @SquaredEuclidean;
@@ -1247,13 +1259,14 @@ begin
     5: Result := @Chebyshev;
     6: Result := @Minkowski;
     7: Result := @MaxMinChebyshev;
+    8: Result := @Octile;
   end;
 end;
 
 function DistanceFunction(const metric: TDistanceMetric): TDistanceFunction; overload;
 begin
   case metric of
-    dmDistance: Result := @Distance;
+    dmHypotEuclidean: Result := @HypotEuclidean;
     dmEuclidean: Result := @Euclidean;
     dmEuclidean2: Result := @Euclidean2;
     dmSquaredEuclidean: Result := @SquaredEuclidean;
@@ -1261,9 +1274,20 @@ begin
     dmChebyshev: Result := @Chebyshev;
     dmMinkowski: Result := @Minkowski;
     dmMaxMinChebyshev: Result := @MaxMinChebyshev;
+    dmOctile: Result := @Octile;
   else
     Result := @Euclidean;
   end;
+end;
+
+function Distance(const A, B: TPoint; const distFunc: TDistanceFunction): Double; overload;
+begin
+  Result := distFunc(A, B);
+end;
+
+function Distance(const A, B: TPoint; const metric: TDistanceMetric = dmEuclidean): Double; overload;
+begin
+  Result := Distance(A, B, DistanceFunction(metric));
 end;
 
 class function TBA.Init(var arr: TBooleanArray): Integer; overload; 

@@ -2137,7 +2137,7 @@ end;
 
 function TPointArrayHelper.Clusterize(const radius: Double = 1.0): T2DPointArray; overload;
 begin
-  Result := Self.Clusterize(radius, @Distance);
+  Result := Self.Clusterize(radius, @HypotEuclidean);
 end;
 
 {==============================================================================]
@@ -2474,7 +2474,7 @@ end;
 
 function TPointArrayHelper.Segment(const radius: Double = 1.0): T2DPointArray; overload;
 begin
-  Result := Self.Segment(radius, @Distance);
+  Result := Self.Segment(radius, @HypotEuclidean);
 end;
 
 {==============================================================================]
@@ -2574,7 +2574,7 @@ end;
 
 function TPointArrayHelper.Fragment(const radius: Double = 1.0): T2DPointArray; overload;
 begin
-  Result := Self.Fragment(radius, @Distance);
+  Result := Self.Fragment(radius, @HypotEuclidean);
 end;
 
 {==============================================================================]
