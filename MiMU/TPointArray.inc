@@ -405,7 +405,7 @@ var
 begin
   r := 0;
   l := Length(Self);
-  if ((l > 0) and ((start.X >= area.X1) and (start.Y >= area.Y1) and (start.X <= area.X2) and (start.Y <= area.Y2))) then
+  if ((l > 0) and area.Contains(start)) then
   begin
     o := False;
     area.Size(w, h);
@@ -413,7 +413,7 @@ begin
     for i := 0 to (l - 1) do
     begin
       if not o then
-        o := ((start.X = Self[i].X) and (start.Y = Self[i].Y));
+        o := (start = Self[i]);
       if (((Self[i].X - area.X1) > -1) and ((Self[i].Y - area.Y1) > -1) and ((Self[i].Y - area.Y1) < h) and ((Self[i].X - area.X1) < w)) then
         c[Self[i].X - area.X1][Self[i].Y - area.Y1] := True;
     end;
@@ -782,7 +782,7 @@ function TPointArrayHelper.Regionize(const radius: Double; const distFunc: TDist
 var
   i, j, l, r, c, t, f: Integer;
   g, d: TStringList;
-  p, n: TPoint;
+  p: TPoint;
   q: TPointArray;
   k: string;
   function KeyStr(const p: TPoint): string; inline;
@@ -827,14 +827,11 @@ begin
         SetLength(Result[r], (Length(Result[r]) + 1));
         Result[r][High(Result[r])] := p;
         for j := 0 to (l - 1) do
-        begin
-          n := Self[j];
-          if ((not d.Find(KeyStr(n), f)) and (distFunc(p, n) <= radius)) then
+          if ((not d.Find(KeyStr(Self[j]), f)) and p.Within(Self[j], radius, distFunc)) then
           begin
             SetLength(q, (c + 1));
-            q[c.Increase] := n;
+            q[c.Increase] := Self[j];
           end;
-        end;
       end;
       if (Length(Result[r]) > 0) then
         Inc(r);
@@ -892,7 +889,7 @@ begin
           Continue;
         p := Result[r][j];
         m.Create(Trunc(p.X - radius), Trunc(p.X + radius));
-        if (((a[k].X >= m.start) and (a[k].X <= m.stop)) and (distFunc(p, a[k]) <= radius)) then
+        if (((a[k].X >= m.start) and (a[k].X <= m.stop)) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -998,7 +995,7 @@ begin
         if u[k] then
           Continue;
         m.Create(Trunc(p.Y - radius), Trunc(p.Y + radius));
-        if (((a[k].Y >= m.start) and (a[k].Y <= m.stop)) and (distFunc(p, a[k]) <= radius)) then
+        if (((a[k].Y >= m.start) and (a[k].Y <= m.stop)) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1171,7 +1168,7 @@ begin
       k := i;
       while ((k < l) and (a[k].X <= m.stop)) do
       begin
-        if ((not u[k]) and (distFunc(p, a[k]) <= radius)) then
+        if ((not u[k]) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1182,7 +1179,7 @@ begin
       k := (i - 1);
       while ((k >= 0) and (a[k].X >= m.start)) do
       begin
-        if ((not u[k]) and (distFunc(p, a[k]) <= radius)) then
+        if ((not u[k]) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1314,7 +1311,7 @@ begin
       k := i;
       while ((k < l) and (a[k].Y <= m.stop)) do
       begin
-        if ((not u[k]) and (distFunc(p, a[k]) <= radius)) then
+        if ((not u[k]) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1325,7 +1322,7 @@ begin
       k := (i - 1);
       while ((k >= 0) and (a[k].Y >= m.start)) do
       begin
-        if ((not u[k]) and (distFunc(p, a[k]) <= radius)) then
+        if ((not u[k]) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1381,7 +1378,7 @@ begin
       s := 0;
       while (s <= (h - e)) do
       begin
-        if ((Abs(Result[c][r].X - p[s].X) <= xRadius) and (Abs(Result[c][r].Y - p[s].Y) <= yRadius)) then
+        if Result[c][r].Within(p[s], xRadius, yRadius) then
         begin
           SetLength(Result[c], (l + 1));
           Result[c][l.Increase] := p[s];
@@ -1428,7 +1425,7 @@ begin
       s := 0;
       while (s <= (h - e)) do
       begin
-        if (distFunc(Result[c][r], p[s]) <= radius) then
+        if Result[c][r].Within(p[s], radius, distFunc) then
         begin
           SetLength(Result[c], (l + 1));
           Result[c][l.Increase] := p[s];
@@ -1485,7 +1482,7 @@ begin
     begin
       p := Result[r][j];
       for k := 0 to (l - 1) do
-        if ((not u[k]) and (Abs(p.X - Self[k].X) <= xRadius) and (Abs(p.Y - Self[k].Y) <= yRadius)) then
+        if ((not u[k]) and p.Within(Self[k], xRadius, yRadius)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1528,7 +1525,7 @@ begin
     begin
       p := Result[r][j];
       for k := 0 to (l - 1) do
-        if ((not u[k]) and (distFunc(p, Self[k]) <= radius)) then
+        if ((not u[k]) and p.Within(Self[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1615,7 +1612,7 @@ begin
           u := Point((x - b.X1), (y - b.Y1));
           if not (c[u.X][u.Y] > 0) then
             Continue;
-          if (distFunc(k, Point(x, y)) <= o) then
+          if k.Within(Point(x, y), o, distFunc) then
           begin
             t := Length(Result[r]);
             SetLength(Result[r], (t + c[u.X][u.Y]));
@@ -1703,7 +1700,7 @@ begin
           u := Point((x - b.X1), (y - b.Y1));
           if not (c[u.X][u.Y] > 0) then
             Continue;
-          if ((Abs(k.X - x) <= m.X) and (Abs(k.Y - y) <= m.Y)) then
+          if k.Within(Point(x, y), m.X, m.Y) then
           begin
             t := Length(Result[r]);
             SetLength(Result[r], (t + c[u.X][u.Y]));
@@ -1862,7 +1859,7 @@ begin
           for j := 0 to High(g[x - b.X1][y - b.Y1]) do
           begin
             p := g[x - b.X1][y - b.Y1][j];
-            if ((Abs(z.X - p.X) <= xRadius) and (Abs(z.Y - p.Y) <= yRadius)) then
+            if z.Within(p, xRadius, yRadius) then
             begin
               SetLength(Result[r], (Length(Result[r]) + 1));
               Result[r][High(Result[r])] := p;
@@ -1914,7 +1911,7 @@ begin
       p := q[High(q)];
       SetLength(q, High(q));
       for j := 0 to High(Self) do
-        if ((not v[j]) and (distFunc(p, Self[j]) <= radius)) then
+        if ((not v[j]) and p.Within(Self[j], radius, distFunc)) then
         begin
           SetLength(Result[r], (Length(Result[r]) + 1));
           Result[r][High(Result[r])] := Self[j];
@@ -1962,7 +1959,7 @@ begin
       p := q[High(q)];
       SetLength(q, High(q));
       for j := 0 to High(Self) do
-        if ((not v[j]) and ((Abs(p.X - Self[j].X) <= xRadius) and (Abs(p.Y - Self[j].Y) <= yRadius))) then
+        if ((not v[j]) and p.Within(Self[j], xRadius, yRadius)) then
         begin
           SetLength(Result[r], (Length(Result[r]) + 1));
           Result[r][High(Result[r])] := Self[j];
@@ -2009,7 +2006,7 @@ begin
       SetLength(q, s);
       p := Self[c];
       for j := 0 to High(Self) do
-        if ((not v[j]) and (distFunc(p, Self[j]) <= radius)) then
+        if ((not v[j]) and p.Within(Self[j], radius, distFunc)) then
         begin
           v[j] := True;
           SetLength(Result[r], (l + 1));
@@ -2061,7 +2058,7 @@ begin
       SetLength(q, s);
       p := Self[c];
       for j := 0 to High(Self) do
-        if ((not v[j]) and ((Abs(p.X - Self[j].X) <= xRadius) and (Abs(p.Y - Self[j].Y) <= yRadius))) then
+        if ((not v[j]) and (p.Within(Self[j], xRadius, yRadius))) then
         begin
           v[j] := True;
           SetLength(Result[r], (l + 1));
@@ -2116,7 +2113,7 @@ begin
     p[i] := i;
   for i := 0 to (l - 1) do
     for j := (i + 1) to (l - 1) do
-	  if (distFunc(Self[i], Self[j]) <= radius) then
+	  if Self[i].Within(Self[j], radius, distFunc) then
         PUnioned(i, j);
   SetLength(m, l);
   for i := 0 to (l - 1) do
@@ -2181,7 +2178,7 @@ begin
     p[i] := i;
   for i := 0 to (High(Self) - 1) do
     for j := (i + 1) to High(Self) do
-      if ((Abs(Self[i].X - Self[j].X) <= xRadius) and (Abs(Self[i].Y - Self[j].Y) <= yRadius)) then
+      if Self[i].Within(Self[j], xRadius, yRadius) then
         PUnioned(i, j);
   SetLength(m, Length(Self));
   for i := 0 to High(m) do
@@ -2243,7 +2240,7 @@ begin
       Result[g][High(Result[g])] := Self[p];
       for j := 0 to High(d) do
         for k := 0 to (l - 1) do
-          if ((not v[k]) and ((Self[k].X = (Self[p].X + d[j].X)) and (Self[k].Y = (Self[p].Y + d[j].Y)))) then
+          if ((not v[k]) and (Self[k] = (Self[p] + d[j]))) then
           begin
             v[k] := True;
             q[r.stop.Increase] := k;
@@ -2368,7 +2365,7 @@ begin
       Result[g][High(Result[g])] := Self[c];
       for j := 0 to High(d) do
         for n := 0 to (l - 1) do
-          if ((not v[n]) and (Self[n].X = Self[c].X + d[j].X) and (Self[n].Y = Self[c].Y + d[j].Y)) then
+          if ((not v[n]) and (Self[n] = (Self[c] + d[j]))) then
           begin
             v[n] := True;
             s[t.Increase] := n;
@@ -2400,7 +2397,7 @@ function TPointArrayHelper.Grouping(const adjacency8: Boolean = True): T2DPointA
     group[High(group)] := arr[index];
     for i := 0 to High(directions) do
       for j := 0 to High(arr) do
-        if (not visited[j]) and (arr[j].X = (arr[index].X + directions[i].X)) and (arr[j].Y = (arr[index].Y + directions[i].Y)) then
+        if ((not visited[j]) and (arr[j] = (arr[index] + directions[i]))) then
           DFS(arr, j, directions, visited, group);
   end;
 var
@@ -2460,7 +2457,7 @@ begin
       j := q[f.Increase];
       Result[r][c.Increase] := Self[j];
       for k := 0 to (l - 1) do
-        if ((not v[k]) and (distFunc(Self[j], Self[k]) <= radius)) then
+        if ((not v[k]) and Self[j].Within(Self[k], radius, distFunc)) then
         begin
           v[k] := True;
           q[b.Increase] := k;
@@ -2513,7 +2510,7 @@ begin
       j := q[f.Increase];
       Result[r][c.Increase] := Self[j];
       for k := 0 to (l - 1) do
-        if ((not v[k]) and ((Abs(Self[j].X - Self[k].X) <= xRadius) and (Abs(Self[j].Y - Self[k].Y) <= yRadius))) then
+        if ((not v[k]) and Self[j].Within(Self[k], xRadius, yRadius)) then
         begin
           v[k] := True;
           q[b.Increase] := k;
@@ -2560,7 +2557,7 @@ begin
       j := s[h.Decrement];
       Result[r][c.Increase] := Self[j];
       for k := 0 to (l - 1) do
-        if ((not v[k]) and (distFunc(Self[j], Self[k]) <= radius)) then
+        if ((not v[k]) and Self[j].Within(Self[k], radius, distFunc)) then
         begin
           v[k] := True;
           s[h.Increase] := k;
@@ -2612,7 +2609,7 @@ begin
       j := s[h.Decrement];
       Result[r][c.Increase] := Self[j];
       for k := 0 to (l - 1) do
-        if ((not v[k]) and ((Abs(Self[j].X - Self[k].X) <= xRadius) and (Abs(Self[j].Y - Self[k].Y) <= yRadius))) then
+        if ((not v[k]) and Self[j].Within(Self[k], xRadius, yRadius)) then
         begin
           v[k] := True;
           s[h.Increase] := k;
@@ -2754,7 +2751,7 @@ begin
     b := Self.Bounds(w, h);
     c := T2D.Create(0, w, h);
     for i := 0 to High(Self) do
-      Inc(c[(Self[i].X - b.X1)][(Self[i].Y - b.Y1)]);
+      Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
 	case aAscending of
 	  True:
       for y := 0 to (b.Y2 - b.Y1) do
@@ -2799,7 +2796,7 @@ begin
     b := Self.Bounds(w, h);
     c := T2D.Create(0, w, h);
     for i := 0 to High(Self) do
-      Inc(c[(Self[i].X - b.X1)][(Self[i].Y - b.Y1)]);
+      Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
 	case aAscending of
 	  True:
       for x := 0 to (b.X2 - b.X1) do
@@ -3138,7 +3135,7 @@ begin
         begin
           n.Create(x[j][p], y[j]);
           for z := 0 to l - 1 do
-            if ((Self[z].X = n.X) and (Self[z].Y = n.Y)) then
+            if (Self[z] = n) then
               Break;
           if ((z < l) and (not m[z])) then
           begin
@@ -3202,9 +3199,9 @@ begin
         begin
           n.Create(x[j][p], y[j]);
           for z := 0 to (l - 1) do
-            if ((Self[z].X = n.X) and (Self[z].Y = n.Y)) then
-	      Break;
-          if ((z < l) and (not m[z]) and (distFunc(a, n) <= radius)) then
+            if (Self[z] = n) then
+	          Break;
+          if ((z < l) and (not m[z]) and a.Within(n, radius, distFunc)) then
           begin
             m[z] := True;
             SetLength(q, (Length(q) + 1));
@@ -3282,7 +3279,7 @@ begin
         begin
           n.Create(x[j][p], y[j]);
           for z := 0 to (l - 1) do
-            if ((Self[z].X = n.X) and (Self[z].Y = n.Y)) then
+            if (Self[z] = n) then
               Break;
           if ((z < l) and (not m[z])) then
           begin
@@ -3346,9 +3343,9 @@ begin
         begin
           n.Create(x[j][p], y[j]);
           for z := 0 to (l - 1) do
-            if ((Self[z].X = n.X) and (Self[z].Y = n.Y)) then
+            if (Self[z] = n) then
               Break;
-          if ((z < l) and (not m[z]) and (distFunc(a, n) <= radius)) then
+          if ((z < l) and (not m[z]) and a.Within(n, radius, distFunc)) then
           begin
             m[z] := True;
             if (k.stop >= Length(q)) then
