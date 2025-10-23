@@ -2771,6 +2771,46 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Uniform>
+  @action: Checks whether both endpoints of the range equal the specified value.
+  @note: Returns True only if (Start = Stop = val).
+[==============================================================================}
+function TRange.Uniform(const val: Integer): Boolean; overload;
+begin
+  Result := ((Self.start = val) and (Self.stop = val));
+end;
+
+{==============================================================================]
+  <TRange.Uniform>
+  @action: Checks whether the range’s start and stop positions are equal.
+  @note: Returns True if (Start = Stop).
+[==============================================================================}
+function TRange.Uniform: Boolean; overload;
+begin
+  Result := (Self.start = Self.stop);
+end;
+
+{==============================================================================]
+  <TRange.Employs>
+  @action: Checks if the given integer value matches either the start or stop of the range.
+  @note: Useful for quickly verifying if a value is an endpoint of the range.
+[==============================================================================}
+function TRange.Employs(const val: Integer): Boolean;
+begin
+  Result := ((Self.start = val) or (Self.stop = val));
+end;
+
+{==============================================================================]
+  <TRange.Omits>
+  @action: Checks if the given integer value is NOT present as either the start or stop of the range.
+  @note: Logical inverse of TRange.Employs; returns True if the value is absent from the range endpoints.
+[==============================================================================}
+function TRange.Omits(const val: Integer): Boolean;
+begin
+  Result := not ((Self.start = val) or (Self.stop = val));
+end;
+
+{==============================================================================]
   <_TRange.Create>
   @action: Creates TPoint using pX, pY 
   @note: function version

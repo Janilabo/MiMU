@@ -103,7 +103,11 @@ type
     function DeltaY(const target: TPoint): Integer;
     function Delta(const target: TPoint): TPoint;
     function HorizontalDist(const target: TPoint): Integer;
-    function VerticalDist(const target: TPoint): Integer; 	
+    function VerticalDist(const target: TPoint): Integer;
+    function Uniform(const val: Integer): Boolean; overload;
+    function Uniform: Boolean; overload;
+    function Employs(const val: Integer): Boolean;
+    function Omits(const val: Integer): Boolean; 	
   end;
   TPointArray = array of TPoint;
   T2DPointArray = array of TPointArray;
@@ -308,7 +312,11 @@ type
     function Contract(const N: Integer = 1): TRange; overload; 
     function Contracted(const N: Integer = 1): TRange; overload; 
     function Expand(const N: Integer = 1): TRange; overload; 
-    function Expanded(const N: Integer = 1): TRange; overload; 
+    function Expanded(const N: Integer = 1): TRange; overload;
+    function Uniform(const val: Integer): Boolean; overload;
+    function Uniform: Boolean; overload;
+    function Employs(const val: Integer): Boolean;
+    function Omits(const val: Integer): Boolean; 	
   end;
   TRangeArray = array of TRange;
   T2DRangeArray = array of TRangeArray;
@@ -476,7 +484,11 @@ type
     function Places(const target: TBox; const o: TPoint): TPointArray; overload;
     function Places(const target: TBox): TPointArray; overload;
     function Reserve: TPointArray; overload; 
-    function Reserve(var aBox: TPointArray): Integer; overload; 
+    function Reserve(var aBox: TPointArray): Integer; overload;
+    function Uniform(const val: Integer): Boolean; overload;
+    function Uniform: Boolean; overload;
+    function Employs(const val: Integer): Boolean;
+    function Omits(const val: Integer): Boolean; 
   end;
   TBoxArray = array of TBox;
   T2DBoxArray = array of TBoxArray;

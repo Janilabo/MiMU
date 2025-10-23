@@ -3124,12 +3124,12 @@ begin
       h.Create((a.X - xRadius), (a.X + xRadius));
       v.Create((a.Y - yRadius), (a.Y + yRadius));
       r := y.BinaryRange(v);
-      if ((r.start = -1) or (r.stop = -1)) then
+      if r.Employs(-1) then
         Continue;
       for j := r.start to r.stop do
       begin
         c := x[j].BinaryRange(h);
-        if ((c.start = -1) or (c.stop = -1)) then
+        if c.Employs(-1) then
           Continue;
         for p := c.start to c.stop do
         begin
@@ -3188,12 +3188,12 @@ begin
       h.Create((a.X - d), (a.X + d));
       v.Create((a.Y - d), (a.Y + d));
       r := y.BinaryRange(v);
-      if ((r.start = -1) or (r.stop = -1)) then
+      if r.Employs(-1) then
         Continue;
       for j := r.start to r.stop do
       begin
         c := x[j].BinaryRange(h);
-        if ((c.start = -1) or (c.stop = -1)) then
+        if c.Employs(-1) then
 	      Continue;
         for p := c.start to c.stop do
         begin
@@ -3268,12 +3268,12 @@ begin
       h.Create((a.X - xRadius), (a.X + xRadius));
       v.Create((a.Y - yRadius), (a.Y + yRadius));
       r := y.BinaryRange(v);
-      if ((r.start = -1) or (r.stop = -1)) then
+      if r.Employs(-1) then
         Continue;
       for j := r.start to r.stop do
       begin
         c := x[j].BinaryRange(h);
-        if ((c.start = -1) or (c.stop = -1)) then
+        if c.Employs(-1) then
           Continue;
         for p := c.start to c.stop do
         begin
@@ -3332,12 +3332,12 @@ begin
       h.Create((a.X - d), (a.X + d));
       v.Create((a.Y - d), (a.Y + d));
       r := y.BinaryRange(v);
-      if ((r.start = -1) or (r.stop = -1)) then
+      if r.Employs(-1) then
         Continue;
       for j := r.start to r.stop do
       begin
         c := x[j].BinaryRange(h);
-        if ((c.start = -1) or (c.stop = -1)) then
+        if c.Employs(-1) then
 		  Continue;
         for p := c.start to c.stop do
         begin
