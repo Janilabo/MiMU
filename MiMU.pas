@@ -254,10 +254,16 @@ type
     function Touch(const b: TRange): Boolean; 
     function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; 
     function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; 
-    function Distance(const b: TRange): Integer; 
+    function Distance(const b: TRange): Integer; overload;
+    function Distance: Integer; overload;
+    function Dist: Integer;
+    function Difference: Integer;
+    function Diff: Integer;
     function DistHausdorff(const b: TRange): Integer; 
     function Direction: Integer; 
-    function Orientation: Integer; 
+    function Orientation: Integer;
+    function Signum: Integer;
+    function Slope: Integer;	
     function Magnitude: Integer; 
     function Deficit: Integer; 
     function Digit(const x: Integer): Boolean;  inline;
