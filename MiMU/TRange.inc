@@ -2227,7 +2227,7 @@ end;
 [==============================================================================}
 function TRange.Center: Integer;
 begin
-  Result := ((Self.Highest + Self.Lowest) div 2);
+  Result := ((Self.start + Self.stop) div 2);
 end;
 
 {==============================================================================]
