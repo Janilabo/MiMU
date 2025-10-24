@@ -879,6 +879,65 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_BinarySpan}
+var
+  m: Integer;
+  n, r: TRange;
+begin
+  if (Length(Self) = 0) then
+    Exit(Result.Create(-1, -1));
+  n := x.Normalize;
+  r.Create(0, High(Self));
+  case aAscending of
+    True:
+    while (r.start <= r.stop) do
+    begin
+      m := r.Center;
+      if (Self[m] < n.start) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+    False:
+    while (r.start <= r.stop) do
+    begin
+      m := r.Center;
+      if (Self[m] > n.stop) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+  if ((r.start > High(Self)) or (r.start < 0)) then
+    Exit(Result.Create(-1, -1));
+  Result.start := r.start;
+  r.stop := High(Self);
+  case aAscending of
+    True:
+    while (r.start <= r.stop) do
+    begin
+      m := r.Center;
+      if (Self[m] <= n.stop) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+    False:
+    while (r.start <= r.stop) do
+    begin
+      m := r.Center;
+      if (Self[m] >= n.start) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+  Result.stop := r.stop;
+  if ((Result.start > Result.stop) or (Result.start < 0) or (Result.stop > High(Self))) then
+    Result.Create(-1, -1);
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_BinaryMerge}
 var
   l: Integer;

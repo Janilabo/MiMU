@@ -1897,7 +1897,7 @@ end;
   @action: Returns minimum distance between ranges a and b.
   @note: If ranges overlap, distance is 0.
 [==============================================================================}
-function TRange.Distance(const b: TRange): Integer;
+function TRange.Distance(const b: TRange): Integer; overload;
 var
   r1, r2: TRange;
 begin
@@ -1910,6 +1910,58 @@ begin
       Result := (r1.start - r2.stop)
     else
       Result := 0;
+end;
+
+{==============================================================================]
+  <TRange.Distance>
+  @action: Returns the distance between the start and stop values of the range.
+           Accounts for the direction of the range (descending or ascending).
+  @note: Distance is exclusive of endpoints. Use this if you want the signed
+         difference based on the range direction (negative if descending?).
+[==============================================================================}
+function TRange.Distance: Integer; overload;
+begin
+  if Self.Descending then
+    Result := (Self.start - Self.stop)
+  else
+    Result := (Self.stop - Self.start);
+end;
+
+{==============================================================================]
+  <TRange.Dist>
+  @action: Returns the distance between the start and stop values of the range.
+           Uses a compact conditional expression to handle descending ranges.
+  @note: Same as Distance but written using IfThen for brevity. Still exclusive
+         of endpoints and sensitive to the Descending flag.
+[==============================================================================}
+function TRange.Dist: Integer;
+begin
+  Result := IfThen(Self.Descending, (Self.start - Self.stop), (Self.stop - Self.start));
+end;
+
+{==============================================================================]
+  <TRange.Difference>
+  @action: Returns the absolute difference between the start and stop values,
+           ignoring the direction of the range.
+  @note: Diff is always non-negative and exclusive of endpoints. Use this if
+         you only care about the magnitude of the gap, not whether the range
+         is ascending or descending.
+[==============================================================================}
+function TRange.Difference: Integer;
+begin
+  Result := Abs(Self.stop - Self.start);
+end;
+
+{==============================================================================]
+  <TRange.Diff>
+  @action: Returns the absolute difference (magnitude) between start and stop,
+           ignoring the direction of the range.
+  @note: The result is always non-negative. Equivalent to Abs(stop - start).
+         Does not include endpoints; useful when only the gap between values matters.
+[==============================================================================}
+function TRange.Diff: Integer;
+begin
+  Result := (Max(Self.start, Self.stop) - Min(Self.start, Self.stop));
 end;
 
 {==============================================================================]
@@ -1949,6 +2001,23 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Signum>
+  @action: Returns the directional sign of the range. 
+           +1 if the range is ascending (stop > start), 
+           -1 if descending (stop < start), 
+           0 if start = stop.
+  @note: Useful for determining the trend or direction of the range without
+         caring about the magnitude. Does not include endpoints count.
+[==============================================================================}
+function TRange.Signum: Integer;
+begin
+  if (Self.start = Self.stop) then
+    Result := 0
+  else
+    Result := ((Self.stop - Self.start) div Abs(Self.start - Self.stop));
+end;
+
+{==============================================================================]
   <TRange.Magnitude>
   @action: Returns the magnitude (non-negative size) of the range, ignoring orientation.
   @note: Computed as the absolute value of Delta (Abs(Stop - Start)).
@@ -1968,6 +2037,26 @@ end;
 function TRange.Orientation: Integer;
 begin
   Result := IfThen((Self.Stop < Self.Start), -1, 1);
+end;
+
+{==============================================================================]
+  <TRange.Slope>
+  @action: Returns the slope (direction) of the range.
+           +1 if the range is ascending (stop > start),
+           -1 if descending (stop < start),
+           0 if start = stop.
+  @note: Useful for determining the trend of the range without considering magnitude.
+         Equivalent to Signum in behavior; purely indicates direction.
+[==============================================================================}
+function TRange.Slope: Integer;
+begin
+  if (Self.start = Self.stop) then
+    Result := 0
+  else
+    if (Self.stop > Self.start) then
+      Result := 1
+    else
+      Result := -1;
 end;
 
 {==============================================================================]
@@ -2138,7 +2227,7 @@ end;
 [==============================================================================}
 function TRange.Center: Integer;
 begin
-  Result := ((Self.Highest + Self.Lowest) div 2);
+  Result := ((Self.start + Self.stop) div 2);
 end;
 
 {==============================================================================]
@@ -2768,6 +2857,46 @@ begin
     Result.Create((Self.start - N), (Self.stop + N))
   else
     Result.Create((Self.start + N), (Self.stop - N));
+end;
+
+{==============================================================================]
+  <TRange.Uniform>
+  @action: Checks whether both endpoints of the range equal the specified value.
+  @note: Returns True only if (Start = Stop = val).
+[==============================================================================}
+function TRange.Uniform(const val: Integer): Boolean; overload;
+begin
+  Result := ((Self.start = val) and (Self.stop = val));
+end;
+
+{==============================================================================]
+  <TRange.Uniform>
+  @action: Checks whether the range’s start and stop positions are equal.
+  @note: Returns True if (Start = Stop).
+[==============================================================================}
+function TRange.Uniform: Boolean; overload;
+begin
+  Result := (Self.start = Self.stop);
+end;
+
+{==============================================================================]
+  <TRange.Employs>
+  @action: Checks if the given integer value matches either the start or stop of the range.
+  @note: Useful for quickly verifying if a value is an endpoint of the range.
+[==============================================================================}
+function TRange.Employs(const val: Integer): Boolean;
+begin
+  Result := ((Self.start = val) or (Self.stop = val));
+end;
+
+{==============================================================================]
+  <TRange.Omits>
+  @action: Checks if the given integer value is NOT present as either the start or stop of the range.
+  @note: Logical inverse of TRange.Employs; returns True if the value is absent from the range endpoints.
+[==============================================================================}
+function TRange.Omits(const val: Integer): Boolean;
+begin
+  Result := not ((Self.start = val) or (Self.stop = val));
 end;
 
 {==============================================================================]

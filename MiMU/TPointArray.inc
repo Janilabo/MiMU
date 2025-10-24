@@ -405,7 +405,7 @@ var
 begin
   r := 0;
   l := Length(Self);
-  if ((l > 0) and ((start.X >= area.X1) and (start.Y >= area.Y1) and (start.X <= area.X2) and (start.Y <= area.Y2))) then
+  if ((l > 0) and area.Contains(start)) then
   begin
     o := False;
     area.Size(w, h);
@@ -413,7 +413,7 @@ begin
     for i := 0 to (l - 1) do
     begin
       if not o then
-        o := ((start.X = Self[i].X) and (start.Y = Self[i].Y));
+        o := (start = Self[i]);
       if (((Self[i].X - area.X1) > -1) and ((Self[i].Y - area.Y1) > -1) and ((Self[i].Y - area.Y1) < h) and ((Self[i].X - area.X1) < w)) then
         c[Self[i].X - area.X1][Self[i].Y - area.Y1] := True;
     end;
@@ -782,7 +782,7 @@ function TPointArrayHelper.Regionize(const radius: Double; const distFunc: TDist
 var
   i, j, l, r, c, t, f: Integer;
   g, d: TStringList;
-  p, n: TPoint;
+  p: TPoint;
   q: TPointArray;
   k: string;
   function KeyStr(const p: TPoint): string; inline;
@@ -827,14 +827,11 @@ begin
         SetLength(Result[r], (Length(Result[r]) + 1));
         Result[r][High(Result[r])] := p;
         for j := 0 to (l - 1) do
-        begin
-          n := Self[j];
-          if ((not d.Find(KeyStr(n), f)) and (distFunc(p, n) <= radius)) then
+          if ((not d.Find(KeyStr(Self[j]), f)) and p.Within(Self[j], radius, distFunc)) then
           begin
             SetLength(q, (c + 1));
-            q[c.Increase] := n;
+            q[c.Increase] := Self[j];
           end;
-        end;
       end;
       if (Length(Result[r]) > 0) then
         Inc(r);
@@ -892,7 +889,7 @@ begin
           Continue;
         p := Result[r][j];
         m.Create(Trunc(p.X - radius), Trunc(p.X + radius));
-        if (((a[k].X >= m.start) and (a[k].X <= m.stop)) and (distFunc(p, a[k]) <= radius)) then
+        if (((a[k].X >= m.start) and (a[k].X <= m.stop)) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -998,7 +995,7 @@ begin
         if u[k] then
           Continue;
         m.Create(Trunc(p.Y - radius), Trunc(p.Y + radius));
-        if (((a[k].Y >= m.start) and (a[k].Y <= m.stop)) and (distFunc(p, a[k]) <= radius)) then
+        if (((a[k].Y >= m.start) and (a[k].Y <= m.stop)) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1171,7 +1168,7 @@ begin
       k := i;
       while ((k < l) and (a[k].X <= m.stop)) do
       begin
-        if ((not u[k]) and (distFunc(p, a[k]) <= radius)) then
+        if ((not u[k]) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1182,7 +1179,7 @@ begin
       k := (i - 1);
       while ((k >= 0) and (a[k].X >= m.start)) do
       begin
-        if ((not u[k]) and (distFunc(p, a[k]) <= radius)) then
+        if ((not u[k]) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1314,7 +1311,7 @@ begin
       k := i;
       while ((k < l) and (a[k].Y <= m.stop)) do
       begin
-        if ((not u[k]) and (distFunc(p, a[k]) <= radius)) then
+        if ((not u[k]) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1325,7 +1322,7 @@ begin
       k := (i - 1);
       while ((k >= 0) and (a[k].Y >= m.start)) do
       begin
-        if ((not u[k]) and (distFunc(p, a[k]) <= radius)) then
+        if ((not u[k]) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1381,7 +1378,7 @@ begin
       s := 0;
       while (s <= (h - e)) do
       begin
-        if ((Abs(Result[c][r].X - p[s].X) <= xRadius) and (Abs(Result[c][r].Y - p[s].Y) <= yRadius)) then
+        if Result[c][r].Within(p[s], xRadius, yRadius) then
         begin
           SetLength(Result[c], (l + 1));
           Result[c][l.Increase] := p[s];
@@ -1428,7 +1425,7 @@ begin
       s := 0;
       while (s <= (h - e)) do
       begin
-        if (distFunc(Result[c][r], p[s]) <= radius) then
+        if Result[c][r].Within(p[s], radius, distFunc) then
         begin
           SetLength(Result[c], (l + 1));
           Result[c][l.Increase] := p[s];
@@ -1485,7 +1482,7 @@ begin
     begin
       p := Result[r][j];
       for k := 0 to (l - 1) do
-        if ((not u[k]) and (Abs(p.X - Self[k].X) <= xRadius) and (Abs(p.Y - Self[k].Y) <= yRadius)) then
+        if ((not u[k]) and p.Within(Self[k], xRadius, yRadius)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1528,7 +1525,7 @@ begin
     begin
       p := Result[r][j];
       for k := 0 to (l - 1) do
-        if ((not u[k]) and (distFunc(p, Self[k]) <= radius)) then
+        if ((not u[k]) and p.Within(Self[k], radius, distFunc)) then
         begin
           u[k] := True;
           SetLength(Result[r], (Length(Result[r]) + 1));
@@ -1615,7 +1612,7 @@ begin
           u := Point((x - b.X1), (y - b.Y1));
           if not (c[u.X][u.Y] > 0) then
             Continue;
-          if (distFunc(k, Point(x, y)) <= o) then
+          if k.Within(Point(x, y), o, distFunc) then
           begin
             t := Length(Result[r]);
             SetLength(Result[r], (t + c[u.X][u.Y]));
@@ -1703,7 +1700,7 @@ begin
           u := Point((x - b.X1), (y - b.Y1));
           if not (c[u.X][u.Y] > 0) then
             Continue;
-          if ((Abs(k.X - x) <= m.X) and (Abs(k.Y - y) <= m.Y)) then
+          if k.Within(Point(x, y), m.X, m.Y) then
           begin
             t := Length(Result[r]);
             SetLength(Result[r], (t + c[u.X][u.Y]));
@@ -1862,7 +1859,7 @@ begin
           for j := 0 to High(g[x - b.X1][y - b.Y1]) do
           begin
             p := g[x - b.X1][y - b.Y1][j];
-            if ((Abs(z.X - p.X) <= xRadius) and (Abs(z.Y - p.Y) <= yRadius)) then
+            if z.Within(p, xRadius, yRadius) then
             begin
               SetLength(Result[r], (Length(Result[r]) + 1));
               Result[r][High(Result[r])] := p;
@@ -1914,7 +1911,7 @@ begin
       p := q[High(q)];
       SetLength(q, High(q));
       for j := 0 to High(Self) do
-        if ((not v[j]) and (distFunc(p, Self[j]) <= radius)) then
+        if ((not v[j]) and p.Within(Self[j], radius, distFunc)) then
         begin
           SetLength(Result[r], (Length(Result[r]) + 1));
           Result[r][High(Result[r])] := Self[j];
@@ -1962,7 +1959,7 @@ begin
       p := q[High(q)];
       SetLength(q, High(q));
       for j := 0 to High(Self) do
-        if ((not v[j]) and ((Abs(p.X - Self[j].X) <= xRadius) and (Abs(p.Y - Self[j].Y) <= yRadius))) then
+        if ((not v[j]) and p.Within(Self[j], xRadius, yRadius)) then
         begin
           SetLength(Result[r], (Length(Result[r]) + 1));
           Result[r][High(Result[r])] := Self[j];
@@ -2009,7 +2006,7 @@ begin
       SetLength(q, s);
       p := Self[c];
       for j := 0 to High(Self) do
-        if ((not v[j]) and (distFunc(p, Self[j]) <= radius)) then
+        if ((not v[j]) and p.Within(Self[j], radius, distFunc)) then
         begin
           v[j] := True;
           SetLength(Result[r], (l + 1));
@@ -2061,7 +2058,7 @@ begin
       SetLength(q, s);
       p := Self[c];
       for j := 0 to High(Self) do
-        if ((not v[j]) and ((Abs(p.X - Self[j].X) <= xRadius) and (Abs(p.Y - Self[j].Y) <= yRadius))) then
+        if ((not v[j]) and (p.Within(Self[j], xRadius, yRadius))) then
         begin
           v[j] := True;
           SetLength(Result[r], (l + 1));
@@ -2116,7 +2113,7 @@ begin
     p[i] := i;
   for i := 0 to (l - 1) do
     for j := (i + 1) to (l - 1) do
-	  if (distFunc(Self[i], Self[j]) <= radius) then
+	  if Self[i].Within(Self[j], radius, distFunc) then
         PUnioned(i, j);
   SetLength(m, l);
   for i := 0 to (l - 1) do
@@ -2137,7 +2134,7 @@ end;
 
 function TPointArrayHelper.Clusterize(const radius: Double = 1.0): T2DPointArray; overload;
 begin
-  Result := Self.Clusterize(radius, @Distance);
+  Result := Self.Clusterize(radius, @HypotEuclidean);
 end;
 
 {==============================================================================]
@@ -2181,7 +2178,7 @@ begin
     p[i] := i;
   for i := 0 to (High(Self) - 1) do
     for j := (i + 1) to High(Self) do
-      if ((Abs(Self[i].X - Self[j].X) <= xRadius) and (Abs(Self[i].Y - Self[j].Y) <= yRadius)) then
+      if Self[i].Within(Self[j], xRadius, yRadius) then
         PUnioned(i, j);
   SetLength(m, Length(Self));
   for i := 0 to High(m) do
@@ -2243,7 +2240,7 @@ begin
       Result[g][High(Result[g])] := Self[p];
       for j := 0 to High(d) do
         for k := 0 to (l - 1) do
-          if ((not v[k]) and ((Self[k].X = (Self[p].X + d[j].X)) and (Self[k].Y = (Self[p].Y + d[j].Y)))) then
+          if ((not v[k]) and (Self[k] = (Self[p] + d[j]))) then
           begin
             v[k] := True;
             q[r.stop.Increase] := k;
@@ -2368,7 +2365,7 @@ begin
       Result[g][High(Result[g])] := Self[c];
       for j := 0 to High(d) do
         for n := 0 to (l - 1) do
-          if ((not v[n]) and (Self[n].X = Self[c].X + d[j].X) and (Self[n].Y = Self[c].Y + d[j].Y)) then
+          if ((not v[n]) and (Self[n] = (Self[c] + d[j]))) then
           begin
             v[n] := True;
             s[t.Increase] := n;
@@ -2400,7 +2397,7 @@ function TPointArrayHelper.Grouping(const adjacency8: Boolean = True): T2DPointA
     group[High(group)] := arr[index];
     for i := 0 to High(directions) do
       for j := 0 to High(arr) do
-        if (not visited[j]) and (arr[j].X = (arr[index].X + directions[i].X)) and (arr[j].Y = (arr[index].Y + directions[i].Y)) then
+        if ((not visited[j]) and (arr[j] = (arr[index] + directions[i]))) then
           DFS(arr, j, directions, visited, group);
   end;
 var
@@ -2460,7 +2457,7 @@ begin
       j := q[f.Increase];
       Result[r][c.Increase] := Self[j];
       for k := 0 to (l - 1) do
-        if ((not v[k]) and (distFunc(Self[j], Self[k]) <= radius)) then
+        if ((not v[k]) and Self[j].Within(Self[k], radius, distFunc)) then
         begin
           v[k] := True;
           q[b.Increase] := k;
@@ -2474,7 +2471,7 @@ end;
 
 function TPointArrayHelper.Segment(const radius: Double = 1.0): T2DPointArray; overload;
 begin
-  Result := Self.Segment(radius, @Distance);
+  Result := Self.Segment(radius, @HypotEuclidean);
 end;
 
 {==============================================================================]
@@ -2513,7 +2510,7 @@ begin
       j := q[f.Increase];
       Result[r][c.Increase] := Self[j];
       for k := 0 to (l - 1) do
-        if ((not v[k]) and ((Abs(Self[j].X - Self[k].X) <= xRadius) and (Abs(Self[j].Y - Self[k].Y) <= yRadius))) then
+        if ((not v[k]) and Self[j].Within(Self[k], xRadius, yRadius)) then
         begin
           v[k] := True;
           q[b.Increase] := k;
@@ -2560,7 +2557,7 @@ begin
       j := s[h.Decrement];
       Result[r][c.Increase] := Self[j];
       for k := 0 to (l - 1) do
-        if ((not v[k]) and (distFunc(Self[j], Self[k]) <= radius)) then
+        if ((not v[k]) and Self[j].Within(Self[k], radius, distFunc)) then
         begin
           v[k] := True;
           s[h.Increase] := k;
@@ -2574,7 +2571,7 @@ end;
 
 function TPointArrayHelper.Fragment(const radius: Double = 1.0): T2DPointArray; overload;
 begin
-  Result := Self.Fragment(radius, @Distance);
+  Result := Self.Fragment(radius, @HypotEuclidean);
 end;
 
 {==============================================================================]
@@ -2612,7 +2609,7 @@ begin
       j := s[h.Decrement];
       Result[r][c.Increase] := Self[j];
       for k := 0 to (l - 1) do
-        if ((not v[k]) and ((Abs(Self[j].X - Self[k].X) <= xRadius) and (Abs(Self[j].Y - Self[k].Y) <= yRadius))) then
+        if ((not v[k]) and Self[j].Within(Self[k], xRadius, yRadius)) then
         begin
           v[k] := True;
           s[h.Increase] := k;
@@ -2754,7 +2751,7 @@ begin
     b := Self.Bounds(w, h);
     c := T2D.Create(0, w, h);
     for i := 0 to High(Self) do
-      Inc(c[(Self[i].X - b.X1)][(Self[i].Y - b.Y1)]);
+      Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
 	case aAscending of
 	  True:
       for y := 0 to (b.Y2 - b.Y1) do
@@ -2799,7 +2796,7 @@ begin
     b := Self.Bounds(w, h);
     c := T2D.Create(0, w, h);
     for i := 0 to High(Self) do
-      Inc(c[(Self[i].X - b.X1)][(Self[i].Y - b.Y1)]);
+      Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
 	case aAscending of
 	  True:
       for x := 0 to (b.X2 - b.X1) do
@@ -3127,18 +3124,18 @@ begin
       h.Create((a.X - xRadius), (a.X + xRadius));
       v.Create((a.Y - yRadius), (a.Y + yRadius));
       r := y.BinaryRange(v);
-      if ((r.start = -1) or (r.stop = -1)) then
+      if r.Employs(-1) then
         Continue;
       for j := r.start to r.stop do
       begin
         c := x[j].BinaryRange(h);
-        if ((c.start = -1) or (c.stop = -1)) then
+        if c.Employs(-1) then
           Continue;
         for p := c.start to c.stop do
         begin
           n.Create(x[j][p], y[j]);
           for z := 0 to l - 1 do
-            if ((Self[z].X = n.X) and (Self[z].Y = n.Y)) then
+            if (Self[z] = n) then
               Break;
           if ((z < l) and (not m[z])) then
           begin
@@ -3191,20 +3188,20 @@ begin
       h.Create((a.X - d), (a.X + d));
       v.Create((a.Y - d), (a.Y + d));
       r := y.BinaryRange(v);
-      if ((r.start = -1) or (r.stop = -1)) then
+      if r.Employs(-1) then
         Continue;
       for j := r.start to r.stop do
       begin
         c := x[j].BinaryRange(h);
-        if ((c.start = -1) or (c.stop = -1)) then
+        if c.Employs(-1) then
 	      Continue;
         for p := c.start to c.stop do
         begin
           n.Create(x[j][p], y[j]);
           for z := 0 to (l - 1) do
-            if ((Self[z].X = n.X) and (Self[z].Y = n.Y)) then
-	      Break;
-          if ((z < l) and (not m[z]) and (distFunc(a, n) <= radius)) then
+            if (Self[z] = n) then
+	          Break;
+          if ((z < l) and (not m[z]) and a.Within(n, radius, distFunc)) then
           begin
             m[z] := True;
             SetLength(q, (Length(q) + 1));
@@ -3271,18 +3268,18 @@ begin
       h.Create((a.X - xRadius), (a.X + xRadius));
       v.Create((a.Y - yRadius), (a.Y + yRadius));
       r := y.BinaryRange(v);
-      if ((r.start = -1) or (r.stop = -1)) then
+      if r.Employs(-1) then
         Continue;
       for j := r.start to r.stop do
       begin
         c := x[j].BinaryRange(h);
-        if ((c.start = -1) or (c.stop = -1)) then
+        if c.Employs(-1) then
           Continue;
         for p := c.start to c.stop do
         begin
           n.Create(x[j][p], y[j]);
           for z := 0 to (l - 1) do
-            if ((Self[z].X = n.X) and (Self[z].Y = n.Y)) then
+            if (Self[z] = n) then
               Break;
           if ((z < l) and (not m[z])) then
           begin
@@ -3335,20 +3332,20 @@ begin
       h.Create((a.X - d), (a.X + d));
       v.Create((a.Y - d), (a.Y + d));
       r := y.BinaryRange(v);
-      if ((r.start = -1) or (r.stop = -1)) then
+      if r.Employs(-1) then
         Continue;
       for j := r.start to r.stop do
       begin
         c := x[j].BinaryRange(h);
-        if ((c.start = -1) or (c.stop = -1)) then
+        if c.Employs(-1) then
 		  Continue;
         for p := c.start to c.stop do
         begin
           n.Create(x[j][p], y[j]);
           for z := 0 to (l - 1) do
-            if ((Self[z].X = n.X) and (Self[z].Y = n.Y)) then
+            if (Self[z] = n) then
               Break;
-          if ((z < l) and (not m[z]) and (distFunc(a, n) <= radius)) then
+          if ((z < l) and (not m[z]) and a.Within(n, radius, distFunc)) then
           begin
             m[z] := True;
             if (k.stop >= Length(q)) then
@@ -3753,5 +3750,528 @@ begin
     g.Free;
   end;
 end;
+
+{==============================================================================]
+  <TPointArray.DBSCAN>
+  @action: Performs density-based clustering on a TPointArray using a fixed
+           radius and custom distance function.
+  @params:
+    radius   - The maximum distance between points to be considered neighbors.
+    minPts   - Minimum number of points required to form a dense region (core point).
+    distFunc - Function used to compute distance between two TPoints.
+  @returns: T2DPointArray where each sub-array represents a cluster.
+  @note: Points not belonging to any cluster are ignored (treated as noise).
+[==============================================================================}
+function TPointArrayHelper.DBSCAN(const radius: Double; const minPts: Integer; const distFunc: TDistanceFunction): T2DPointArray; overload;
+const
+  NOISE = -1;
+  UNVISITED = 0;
+var
+  c, i, s: Integer;
+  l: TIntegerArray;
+  d: TDistanceFunction;
+  function RegionQuery(const index: Integer): TIntegerArray;
+  var
+    i: Integer;
+  begin
+    SetLength(Result, 0);
+    for i := 0 to (s - 1) do
+      if ((i <> index) and Self[index].Within(Self[i], radius, d)) then
+        Result.Supply(i);
+  end;
+  procedure ExpandCluster(const index: Integer);
+  var
+    r, n: TIntegerArray;
+    i, j: Integer;
+  begin
+    r := RegionQuery(index);
+    if (Length(r) < minPts) then
+    begin
+      l[index] := NOISE;
+      Exit;
+    end;
+    for i := 0 to High(r) do
+      l[r[i]] := (c + 1);
+    i := -1;
+    while (i.Increment < Length(r)) do
+    begin
+      n := RegionQuery(r[i]);
+      if (Length(n) >= minPts) then
+      for j := 0 to High(n) do
+        if l[n[j]] in [UNVISITED, NOISE] then
+        begin
+          if (l[n[j]] = UNVISITED) then
+            r.Supply(n[j]);
+          l[n[j]] := (c + 1);
+        end;
+    end;
+  end;
+begin
+  d := DistanceFunction(distFunc);
+  s := Length(Self);
+  case s of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  SetLength(l, s);
+  for i := 0 to (s - 1) do
+    l[i] := UNVISITED;
+  c := 0;
+  for i := 0 to (s - 1) do
+  begin
+    if (l[i] <> UNVISITED) then
+      Continue;
+    ExpandCluster(i);
+    if (l[i] <> NOISE) then
+      Inc(c);
+  end;
+  SetLength(Result, c);
+  for i := 0 to (s - 1) do
+    if (l[i] > 0) then
+      Result[l[i] - 1].Supply(Self[i]);
+end;
+
+function TPointArrayHelper.DBSCAN(const radius: Double = 1.0; const minPts: Integer = 2; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+begin
+  Result := Self.DBSCAN(radius, minPts, DistanceFunction(metric));
+end;
+
+{==============================================================================]
+  <TPointArray.DBSCAN>
+  @action: Performs density-based clustering using separate X and Y radii,
+           allowing anisotropic neighborhoods.
+  @params:
+    xRadius - Maximum horizontal distance to consider points neighbors.
+    yRadius - Maximum vertical distance to consider points neighbors.
+    minPts  - Minimum number of points to form a cluster.
+  @returns: T2DPointArray where each sub-array represents a cluster.
+  @note: Useful for clustering pixel-based data or TPAs where horizontal and
+         vertical spacing differs. Rectangular neighborhood used for efficiency.
+[==============================================================================}
+function TPointArrayHelper.DBSCAN(const xRadius, yRadius: Integer; const minPts: Integer): T2DPointArray; overload;
+const
+  NOISE = -1;
+  UNVISITED = 0;
+var
+  c, i, s: Integer;
+  l: TIntegerArray;
+  function RegionQuery(const index: Integer): TIntegerArray;
+  var
+    i: Integer;
+  begin
+    SetLength(Result, 0);
+    for i := 0 to (s - 1) do
+      if ((i <> index) and Self[index].Within(Self[i], xRadius, yRadius)) then
+        Result.Supply(i);
+  end;
+  procedure ExpandCluster(const index: Integer);
+  var
+    r, n: TIntegerArray;
+    i, j: Integer;
+  begin
+    r := RegionQuery(index);
+    if (Length(r) < minPts) then
+    begin
+      l[index] := NOISE;
+      Exit;
+    end;
+    for i := 0 to High(r) do
+      l[r[i]] := (c + 1);
+    i := -1;
+    while (i.Increment < Length(r)) do
+    begin
+      n := RegionQuery(r[i]);
+      if (Length(n) >= minPts) then
+      for j := 0 to High(n) do
+        if l[n[j]] in [UNVISITED, NOISE] then
+        begin
+          if (l[n[j]] = UNVISITED) then
+            r.Supply(n[j]);
+          l[n[j]] := (c + 1);
+        end;
+    end;
+  end;
+begin
+  s := Length(Self);
+  case s of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  SetLength(l, s);
+  for i := 0 to (s - 1) do
+    l[i] := UNVISITED;
+  c := 0;
+  for i := 0 to (s - 1) do
+  begin
+    if (l[i] <> UNVISITED) then
+      Continue;
+    ExpandCluster(i);
+    if (l[i] <> NOISE) then
+      Inc(c);
+  end;
+  SetLength(Result, c);
+  for i := 0 to (s - 1) do
+    if (l[i] > 0) then
+      Result[l[i] - 1].Supply(Self[i]);
+end;
+
+{==============================================================================]
+  <TPointArray.Nearby>
+  @action: Returns all points from this array that lie within a given radius
+           of a specified target point, using the provided distance function.
+  @note: If no distance function is provided, a default (Euclidean) distance
+         function is used. This checks distance from each point in Self to
+         the target point.
+[==============================================================================}
+function TPointArrayHelper.Nearby(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): TPointArray; overload;
+var
+  i: Integer;
+  f: TDistanceFunction;
+begin
+  f := DistanceFunction(distFunc);
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+    if Self[i].Within(target, radius, f) then
+      Result.Supply(Self[i]);
+end;
+
+function TPointArrayHelper.Nearby(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+begin
+  Result := Self.Nearby(target, radius, DistanceFunction(metric));
+end;
+
+{==============================================================================]
+  <TPointArray.Nearby>
+  @action: Returns all points from this array that lie within a rectangular
+           area centered on a specified target point, defined by horizontal
+           and vertical radii.
+  @note: Checks each point in Self for inclusion using separate X and Y
+         tolerances instead of a circular distance metric.
+[==============================================================================}
+function TPointArrayHelper.Nearby(const target: TPoint; const xRadius, yRadius: Integer): TPointArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+    if Self[i].Within(target, xRadius, yRadius) then
+      Result.Supply(Self[i]);
+end;
+
+{==============================================================================]
+  <TPointArray.Nearby>
+  @action: Returns all points from this array that lie within a given radius
+           of any point in the specified array of target points, using the
+           provided distance function.
+  @note: If no distance function is provided, a default (Euclidean) distance
+         function is used. Each point in Self is included if it is within
+         the radius of at least one target point.
+[==============================================================================}
+function TPointArrayHelper.Nearby(const targets: TPointArray; const radius: Double; const distFunc: TDistanceFunction): TPointArray; overload;
+var
+  i, j: Integer;
+  f: TDistanceFunction;
+begin
+  if targets.Empty then
+    Exit([]);
+  f := DistanceFunction(distFunc);
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+    for j := 0 to High(targets) do
+      if Self[i].Within(targets[j], radius, f) then
+      begin
+        Result.Supply(Self[i]);
+	    Break;
+      end;
+end;
+
+function TPointArrayHelper.Nearby(const targets: TPointArray; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+begin
+  Result := Self.Nearby(targets, radius, DistanceFunction(metric));
+end;
+
+{==============================================================================]
+  <TPointArray.Nearby>
+  @action: Returns all points from this array that lie within rectangular
+           areas around any point in the specified array of target points,
+           defined by horizontal and vertical radii.
+  @note: Each point in Self is included if it lies within the rectangular
+         bounds of at least one target point. Useful for grid or axis-aligned
+         proximity checks.
+[==============================================================================}
+function TPointArrayHelper.Nearby(const targets: TPointArray; const xRadius, yRadius: Integer): TPointArray; overload;
+var
+  i, j: Integer;
+begin
+  if targets.Empty then
+    Exit([]);
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+    for j := 0 to High(targets) do
+      if Self[i].Within(targets[j], xRadius, yRadius) then
+      begin
+        Result.Supply(Self[i]);
+	    Break;
+      end;
+end;
+
+{==============================================================================]
+  <TPointArray.CorePointsMax>
+  @action: Returns all points that have **no more than `maximumNeighbours`** 
+           within the specified rectangular or metric radius.
+  @note: Used to detect *sparse* points or "edge" points in a spatial 
+         distribution. Early-breaks when neighbour count exceeds the limit.
+[==============================================================================}
+function TPointArrayHelper.CorePointsMax(const maximumNeighbours: Integer; const xRadius, yRadius: Integer): TPointArray; overload;
+var
+  i, j, l, r, c: Integer;
+  x: T2DIntegerArray;
+  z, y: TIntegerArray;
+  b, s: TRange;
+begin
+  l := Length(Self);
+  if ((maximumNeighbours < 0) or (l = 0)) then
+    Exit([]);
+  SetLength(Result, l);
+  r := 0;
+  x := Self.X2D(y);
+  for i := 0 to High(Self) do
+  begin
+    c := 0;
+    b := y.BinarySpan(TRange.Construct((Self[i].Y - yRadius), (Self[i].Y + yRadius)));
+    for j := b.start to b.stop do
+    begin
+      s := x[j].BinarySpan(TRange.Construct((Self[i].X - xRadius), (Self[i].X + xRadius)));
+      if ((not s.Employs(-1)) and (c.Increment(s.Size) > maximumNeighbours)) then
+        Break;
+    end;
+    if (c <= maximumNeighbours) then
+      Result[r.Increase] := Self[i];
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TPointArray.CorePointsMax>
+  @action: Returns all points that have **no more than `maximumNeighbours`** 
+           within the specified rectangular or metric radius.
+  @note: Used to detect *sparse* points or "edge" points in a spatial 
+         distribution. Early-breaks when neighbour count exceeds the limit.
+[==============================================================================}
+function TPointArrayHelper.CorePointsMax(const maximumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric): TPointArray; overload;
+var
+  i, j, k, l, r, c, z: Integer;
+  x: T2DIntegerArray;
+  q, y: TIntegerArray;
+  b, s, t: TRange;
+  p: TPoint;
+begin
+  l := Length(Self);
+  if ((maximumNeighbours < 0) or (l = 0)) then
+    Exit([]);
+  SetLength(Result, l);
+  r := 0;
+  x := Self.X2D(y);
+  z := Ceil(radius);
+  for i := 0 to High(Self) do
+  begin
+    c := 0;
+    p := Self[i];
+    b := y.BinarySpan(TRange.Construct((p.Y - z), (p.Y + z)));
+    for j := b.start to b.stop do
+    begin
+      q := x[j];
+      s := q.BinarySpan(TRange.Construct((p.X - z), (p.X + z)));
+      if s.Employs(-1) then
+        Continue;
+      for k := s.start to s.stop do
+        if (p.Within(Point(q[k], y[j]), radius, metric) and (c.Increment > maximumNeighbours)) then
+          Break;
+      if (c > maximumNeighbours) then
+        Break;
+    end;
+    if (c <= maximumNeighbours) then
+      Result[r.Increase] := p;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TPointArray.CorePointsMin>
+  @action: Returns all points that have **at least `minimumNeighbours`** 
+           within the specified rectangular or metric radius.
+  @note: Used to detect *core* points in a density-based clustering context 
+         (e.g. DBSCAN). Early-breaks when minimum is reached.
+[==============================================================================}
+function TPointArrayHelper.CorePointsMin(const minimumNeighbours: Integer; const xRadius, yRadius: Integer): TPointArray; overload;
+var
+  i, j, l, r, c: Integer;
+  x: T2DIntegerArray;
+  z, y: TIntegerArray;
+  b, s: TRange;
+begin
+  l := Length(Self);
+  if ((minimumNeighbours > l) or (l = 0)) then
+    Exit([]);
+  SetLength(Result, l);
+  r := 0;
+  x := Self.X2D(y);
+  for i := 0 to High(Self) do
+  begin
+    c := 0;
+    b := y.BinarySpan(TRange.Construct((Self[i].Y - yRadius), (Self[i].Y + yRadius)));
+    for j := b.start to b.stop do
+    begin
+      s := x[j].BinarySpan(TRange.Construct((Self[i].X - xRadius), (Self[i].X + xRadius)));
+      if ((not s.Employs(-1)) and (c.Increment(s.Size) >= minimumNeighbours)) then
+      begin
+        Result[r.Increase] := Self[i];
+        Break;
+      end;
+    end;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TPointArray.CorePointsMin>
+  @action: Returns all points that have **at least `minimumNeighbours`** 
+           within the specified rectangular or metric radius.
+  @note: Used to detect *core* points in a density-based clustering context 
+         (e.g. DBSCAN). Early-breaks when minimum is reached.
+[==============================================================================}
+function TPointArrayHelper.CorePointsMin(const minimumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric): TPointArray; overload;
+var
+  i, j, k, l, r, c, z: Integer;
+  x: T2DIntegerArray;
+  q, y: TIntegerArray;
+  b, s: TRange;
+  p: TPoint;
+begin
+  l := Length(Self);
+  if ((minimumNeighbours > l) or (l = 0)) then
+    Exit([]);
+  SetLength(Result, l);
+  r := 0;
+  x := Self.X2D(y);
+  z := Ceil(radius);
+  for i := 0 to High(Self) do
+  begin
+    c := 0;
+    p := Self[i];
+    b := y.BinarySpan(TRange.Construct((p.Y - z), (p.Y + z)));
+    for j := b.start to b.stop do
+    begin
+      q := x[j];
+      s := q.BinarySpan(TRange.Construct((p.X - z), (p.X + z)));
+      if s.Employs(-1) then
+        Continue;
+      for k := s.start to s.stop do
+        if (p.Within(Point(q[k], y[j]), radius, metric) and (c.Increment >= minimumNeighbours)) then
+        begin
+          Result[r.Increase] := p;
+          Break;
+        end;
+      if (c >= minimumNeighbours) then
+        Break;
+    end;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TPointArray.CorePoints>
+  @action: Returns all points whose number of neighbours lies **within the 
+           inclusive range `allowedNeighbours`** for the given rectangular or 
+           metric radius.
+  @note: Generalized version of `CorePointsMin` and `CorePointsMax`. 
+         Supports both integer radii (grid-based) and floating-point radii 
+         with custom distance metrics. Automatically ignores points outside 
+         the defined neighbour range.
+[==============================================================================}
+function TPointArrayHelper.CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TDistanceMetric): TPointArray; overload;
+var
+  i, j, k, l, r, c, z, t: Integer;
+  x: T2DIntegerArray;
+  q, y: TIntegerArray;
+  b, s, n: TRange;
+  p: TPoint;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit([]);
+  n := allowedNeighbours.Normalize;
+  r := 0;
+  if (n.start < l) then
+  begin
+    SetLength(Result, l);
+    x := Self.X2D(y);
+    z := Ceil(radius);
+    for i := 0 to High(Self) do
+    begin
+      c := 0;
+      p := Self[i];
+      b := y.BinarySpan(TRange.Construct((p.Y - z), (p.Y + z)));
+      for j := b.start to b.stop do
+      begin
+        q := x[j];
+        s := q.BinarySpan(TRange.Construct((p.X - z), (p.X + z)));
+        if s.Employs(-1) then
+          Continue;
+        for k := s.start to s.stop do
+          if (p.Within(Point(q[k], y[j]), radius, metric) and (c.Increment > n.stop)) then
+            Break;
+        if (c > n.stop) then
+          Break;
+      end;
+      if InRange(c, n.start, n.stop) then
+        Result[r.Increase] := p;
+    end;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TPointArray.CorePoints>
+  @action: Returns all points whose number of neighbours lies **within the 
+           inclusive range `allowedNeighbours`** for the given rectangular or 
+           metric radius.
+  @note: Generalized version of `CorePointsMin` and `CorePointsMax`. 
+         Supports both integer radii (grid-based) and floating-point radii 
+         with custom distance metrics. Automatically ignores points outside 
+         the defined neighbour range.
+[==============================================================================}
+function TPointArrayHelper.CorePoints(const allowedNeighbours: TRange; const xRadius, yRadius: Integer): TPointArray; overload;
+var
+  i, j, l, r, c: Integer;
+  x: T2DIntegerArray;
+  z, y: TIntegerArray;
+  b, n, s: TRange;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit([]);
+  n := allowedNeighbours.Normalize;
+  r := 0;
+  if (n.start < l) then
+  begin
+    SetLength(Result, l);
+    x := Self.X2D(y);
+    for i := 0 to High(Self) do
+    begin
+      c := 0;
+      b := y.BinarySpan(TRange.Construct((Self[i].Y - yRadius), (Self[i].Y + yRadius)));
+      for j := b.start to b.stop do
+      begin
+        s := x[j].BinarySpan(TRange.Construct((Self[i].X - xRadius), (Self[i].X + xRadius)));
+        if ((not s.Employs(-1)) and (c.Increment(s.Size) > n.stop)) then
+          Break;
+      end;
+      if InRange(c, n.start, n.stop) then
+        Result[r.Increase] := Self[i];
+    end;
+  end;
+  SetLength(Result, r);
+end; 
 
 {$UNDEF TPoint}

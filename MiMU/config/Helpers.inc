@@ -255,6 +255,11 @@ type
       function ToBox(const size: Integer = 0): TBox; overload;
       function Boxify(const width, height: Integer): TBox; overload;
       function Boxify(const size: Integer = 0): TBox; overload;
+	  function Within(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
+      function Within(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): Boolean; overload;
+      function Near(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
+      function Near(const target: TPoint; const radius: Double; const metric: TDistanceMetric): Boolean; overload;
+      function Dist(const target: TPoint; const metric: TDistanceMetric = dmEuclidean): Double;
     {$ENDIF}
     {$IFDEF TBox}
       function Create: TBox; overload;
@@ -709,6 +714,7 @@ type
       function BinaryUpperBound(const x: Integer; const aAscending: Boolean): Integer; overload;
       function BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload;
       function BinaryRange(const x: Integer; const aAscending: Boolean = True): TRange; overload;
+      function BinarySpan(const x: TRange; const aAscending: Boolean = True): TRange; overload;
       function BinaryMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BinaryMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BinaryCombine(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
@@ -747,6 +753,7 @@ type
       function BinaryUpperBound(const x: Double; const aAscending: Boolean): Integer; overload;
       function BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload;
       function BinaryRange(const x: Double; const aAscending: Boolean = True): TRange; overload;
+      function BinarySpan(const x: TRange; const aAscending: Boolean = True): TRange; overload;
       function BinaryMerge(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
       function BinaryMerged(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
       function BinaryCombine(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
@@ -922,6 +929,21 @@ type
       function YAs2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
       function XAs2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
       function XAs2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
+      function DBSCAN(const radius: Double; const minPts: Integer; const distFunc: TDistanceFunction): T2DPointArray; overload;
+      function DBSCAN(const radius: Double = 1.0; const minPts: Integer = 2; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+      function DBSCAN(const xRadius, yRadius: Integer; const minPts: Integer): T2DPointArray; overload;
+      function Nearby(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): TPointArray; overload;
+      function Nearby(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+      function Nearby(const target: TPoint; const xRadius, yRadius: Integer): TPointArray; overload;
+      function Nearby(const targets: TPointArray; const radius: Double; const distFunc: TDistanceFunction): TPointArray; overload;
+	  function Nearby(const targets: TPointArray; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+      function Nearby(const targets: TPointArray; const xRadius, yRadius: Integer): TPointArray; overload;
+      function CorePointsMax(const maximumNeighbours: Integer; const xRadius, yRadius: Integer): TPointArray; overload;
+      function CorePointsMax(const maximumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric): TPointArray; overload;
+      function CorePointsMin(const minimumNeighbours: Integer; const xRadius, yRadius: Integer): TPointArray; overload;
+      function CorePointsMin(const minimumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric): TPointArray; overload;
+      function CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TDistanceMetric): TPointArray; overload;
+      function CorePoints(const allowedNeighbours: TRange; const xRadius, yRadius: Integer): TPointArray; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
