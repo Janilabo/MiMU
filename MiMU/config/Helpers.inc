@@ -829,7 +829,9 @@ type
     {$ENDIF}
     {$IFDEF TPoint}
       function Binify(const xRadius, yRadius: Integer): T2DPointArray; overload;
-      function Binify(const radius: Double; const metric: TDistanceMetric): T2DPointArray; overload;
+      function Binify(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+      function Binified(const xRadius, yRadius: Integer): T2DPointArray; overload;
+      function Binified(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
       function Bounds: TBox; overload;
       function Bounds(var width, height: Integer): TBox; overload;
       function BoundingBox: TBox;
@@ -950,10 +952,10 @@ type
 	  function Nearby(const targets: TPointArray; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
       function Nearby(const targets: TPointArray; const xRadius, yRadius: Integer): TPointArray; overload;
       function CorePointsMax(const maximumNeighbours: Integer; const xRadius, yRadius: Integer): TPointArray; overload;
-      function CorePointsMax(const maximumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric): TPointArray; overload;
+      function CorePointsMax(const maximumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
       function CorePointsMin(const minimumNeighbours: Integer; const xRadius, yRadius: Integer): TPointArray; overload;
-      function CorePointsMin(const minimumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric): TPointArray; overload;
-      function CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TDistanceMetric): TPointArray; overload;
+      function CorePointsMin(const minimumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+      function CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
       function CorePoints(const allowedNeighbours: TRange; const xRadius, yRadius: Integer): TPointArray; overload;	  
     {$ENDIF}
     {$IFDEF TBox}

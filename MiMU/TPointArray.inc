@@ -4058,7 +4058,7 @@ end;
   @note: Used to detect *sparse* points or "edge" points in a spatial 
          distribution. Early-breaks when neighbour count exceeds the limit.
 [==============================================================================}
-function TPointArrayHelper.CorePointsMax(const maximumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric): TPointArray; overload;
+function TPointArrayHelper.CorePointsMax(const maximumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
 var
   i, j, k, l, r, c, z: Integer;
   x: T2DIntegerArray;
@@ -4140,7 +4140,7 @@ end;
   @note: Used to detect *core* points in a density-based clustering context 
          (e.g. DBSCAN). Early-breaks when minimum is reached.
 [==============================================================================}
-function TPointArrayHelper.CorePointsMin(const minimumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric): TPointArray; overload;
+function TPointArrayHelper.CorePointsMin(const minimumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
 var
   i, j, k, l, r, c, z: Integer;
   x: T2DIntegerArray;
@@ -4189,7 +4189,7 @@ end;
          with custom distance metrics. Automatically ignores points outside 
          the defined neighbour range.
 [==============================================================================}
-function TPointArrayHelper.CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TDistanceMetric): TPointArray; overload;
+function TPointArrayHelper.CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
 var
   i, j, k, l, r, c, z, t: Integer;
   x: T2DIntegerArray;
@@ -4359,7 +4359,7 @@ end;
          The metric can be Euclidean, Manhattan, or any user-defined TDistanceMetric.
          Efficient for large point sets due to spatial partitioning and union-find.
 [==============================================================================}
-function TPointArrayHelper.Binify(const radius: Double; const metric: TDistanceMetric): T2DPointArray; overload;
+function TPointArrayHelper.Binify(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
 var
   n, i, c, r, k, d: Integer;
   h, z: T2DIntegerArray;
@@ -4430,6 +4430,130 @@ begin
   begin
     r := m[FindRoot(i)];
     Result[r][p[r].Increase] := Self[i];
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.Binified>
+  @action: Performs spatial clustering of points using separate integer radii
+           for X and Y axes. Points that are within xRadius horizontally and
+           yRadius vertically are grouped into the same cluster.
+  @note: Uses binary-search arrays (h and v) for fast neighbor lookup. BFS-style
+         propagation ensures that all connected points are included in the cluster.
+         Deterministic and works entirely with integer distances.
+[==============================================================================}
+function TPointArrayHelper.Binified(const xRadius, yRadius: Integer): T2DPointArray; overload;
+var
+  l, i, j, r, c, a, n: Integer;
+  h, z: T2DIntegerArray;
+  v, p, q: TIntegerArray;
+  x, y, s: TRange;
+begin
+  a := Length(Self);
+  if (a = 0) then
+    Exit([]);
+  h := Self.XTo2D(v, z);
+  SetLength(p, a);
+  for i := 0 to (a - 1) do
+    p[i] := -1;
+  SetLength(Result, 0);
+  SetLength(Result, a);
+  l := 0;
+  for i := 0 to (a - 1) do
+  begin
+    if (p[i] <> -1) then
+      Continue;
+    SetLength(Result[l], 0);
+    SetLength(q, a);
+    s.Create(0, 0);
+    q[s.start.Increase] := i;
+    p[i] := Length(Result);
+    while (s.stop < s.start) do
+    begin
+      j := q[s.stop.Increase];
+      SetLength(Result[l], (Length(Result[l]) + 1));
+      Result[l][High(Result[l])] := Self[j];
+      y := v.BinaryRange(TRange.Construct((Self[j].Y - yRadius), (Self[j].Y + yRadius)));
+      if not y.Employs(-1) then
+      for r := y.start to y.stop do
+      begin
+        x := h[r].BinaryRange(TRange.Construct((Self[j].X - xRadius), (Self[j].X + xRadius)));
+        if not x.Employs(-1) then
+        for c := x.start to x.stop do
+        begin
+          n := z[r][c];
+          if (p[n] = -1) then
+          begin
+            p[n] := Length(Result);
+            q[s.start.Increase] := n;
+          end;
+        end;
+      end;
+    end;
+    Inc(l);
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.Binified>
+  @action: Performs spatial clustering of points using a floating-point radius
+           and a distance metric. Points within the specified radius according
+           to the metric are grouped into the same cluster.
+  @note: Uses binary-search arrays (h and v) for fast neighbor lookup. BFS-style
+         propagation ensures transitive connectivity. Deterministic and metric-aware.
+         The integer value d = Ceil(radius) is used for approximate bounding during
+         binary search. Suitable for Euclidean, Manhattan, or custom distance metrics.
+[==============================================================================}
+function TPointArrayHelper.Binified(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+var
+  l, i, j, r, c, a, n, d: Integer;
+  h, z: T2DIntegerArray;
+  v, p, q: TIntegerArray;
+  x, y, s: TRange;
+begin
+  a := Length(Self);
+  if (a = 0) then
+    Exit([]);
+  d := Ceil(radius);
+  h := Self.XTo2D(v, z);
+  SetLength(p, a);
+  for i := 0 to (a - 1) do
+    p[i] := -1;
+  SetLength(Result, 0);
+  SetLength(Result, a);
+  l := 0;
+  for i := 0 to (a - 1) do
+  begin
+    if (p[i] <> -1) then
+      Continue;
+    SetLength(Result[l], 0);
+    SetLength(q, a);
+    s.Create(0, 0);
+    q[s.start.Increase] := i;
+    p[i] := Length(Result);
+    while (s.stop < s.start) do
+    begin
+      j := q[s.stop.Increase];
+      SetLength(Result[l], (Length(Result[l]) + 1));
+      Result[l][High(Result[l])] := Self[j];
+      y := v.BinaryRange(TRange.Construct((Self[j].Y - d), (Self[j].Y + d)));
+      if not y.Employs(-1) then
+      for r := y.start to y.stop do
+      begin
+        x := h[r].BinaryRange(TRange.Construct((Self[j].X - d), (Self[j].X + d)));
+        if not x.Employs(-1) then
+        for c := x.start to x.stop do
+        begin
+          n := z[r][c];
+          if ((p[n] = -1) and Self[j].Within(Self[n], radius, metric)) then
+          begin
+            p[n] := Length(Result);
+            q[s.start.Increase] := n;
+          end;
+        end;
+      end;
+    end;
+    Inc(l);
   end;
 end; 
 
