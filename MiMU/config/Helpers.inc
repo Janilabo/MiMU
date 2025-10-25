@@ -828,6 +828,8 @@ type
       function Embed(const items: TBooleanArray; const index: Integer = 2147483647): Integer; overload;
     {$ENDIF}
     {$IFDEF TPoint}
+      function Binify(const xRadius, yRadius: Integer): T2DPointArray; overload;
+      function Binify(const radius: Double; const metric: TDistanceMetric): T2DPointArray; overload;
       function Bounds: TBox; overload;
       function Bounds(var width, height: Integer): TBox; overload;
       function BoundingBox: TBox;

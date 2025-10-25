@@ -4399,7 +4399,7 @@ begin
   for i := 0 to (n - 1) do
   begin
     y := v.BinaryRange(TRange.Construct((Self[i].Y - d), (Self[i].Y + d)));
-    if not y.Employs(-1) then
+    if not y.Employs(y, -1) then
     for r := y.start to y.stop do
     begin
       x := h[r].BinaryRange(TRange.Construct((Self[i].X - d), (Self[i].X + d)));
