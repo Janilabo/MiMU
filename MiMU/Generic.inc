@@ -979,6 +979,40 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Devein>
+ @action: Creates a copy of the current array with elements at the specified indices removed.
+          Elements at the positions listed in dIDs are excluded, and the resulting array is compacted.
+ @note:   The optional dValue parameter is used as a sentinel to mark elements for removal.
+          The original array (Self) is not modified.
+          If dIDs contains indices out of range, they are ignored. Empty arrays for Self or dIDs result in an unchanged copy.
+[==============================================================================}
+function HArr.Devein(const dIDs: TIntegerArray; const dValue: TVar): TArr; overload;
+var
+  i, l: Integer;
+  s: TRange;
+begin
+  Result := Self.Copy;
+  if Self.Empty then
+    Exit;
+  if dIDs.Empty then
+    Exit;
+  s.Create(0, High(Self));
+  for i := 0 to High(dIDs) do
+    if s.Contains(dIDs[i]) then
+      Result[dIDs[i]] := dValue;
+  l := 0;
+  for i := 0 to High(Result) do
+    if (Result[i] <> dValue) then
+      Result[l.Increase] := Result[i];
+  SetLength(Result, l);
+end;
+
+function HArr.Devein(const dIDs: TIntegerArray): TArr; overload;
+begin
+  Result := Self.Devein(dIDs, Default(TVar));
+end;
+
+{==============================================================================]
  <arr.Differ(target: TArray): Boolean>
  @action: Returns true if arr differs from target.
  @note: None
@@ -1616,6 +1650,38 @@ end;
 function HArr.Exists: Boolean; overload;
 begin
   Result := (Length(Self) > 0);
+end;
+
+{==============================================================================]
+ <arr.Expel>
+ @action: Returns a copy of the current array (Self) with elements at the specified indices removed.
+          The resulting array is compacted, excluding all elements listed in eIDs.
+ @note: If the current array is empty, returns an empty array.
+        If eIDs is empty, returns a copy of the original array.
+        Indices in eIDs that are out of range are ignored.
+        Uses -2147483648 as an internal sentinel to mark elements for removal.
+[==============================================================================}
+function HArr.Expel(const eIDs: TIntegerArray): TArr; overload;
+var
+  i, l: Integer;
+  s: TRange;
+  r: TIntegerArray;
+begin
+  if Self.Empty then
+    Exit([]);
+  if eIDs.Empty then
+    Exit(Self);
+  r := Self.IDs;
+  s.Create(Low(Self), High(Self));
+  for i := 0 to High(eIDs) do
+    if s.Contains(eIDs[i]) then
+      r[eIDs[i]] := -2147483648;
+  l := 0;
+  SetLength(Result, s.Size);
+  for i := s.start to s.stop do
+    if (r[i] <> -2147483648) then
+      Result[l.Increase] := Self[i];
+  SetLength(Result, l);
 end;
 
 {==============================================================================]

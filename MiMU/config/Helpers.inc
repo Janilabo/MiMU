@@ -359,6 +359,9 @@ type
     function Exchanges(const target: TArr): TConnectionArray; overload;
     function Exclude(const items: TArr; const index: Integer = 2147483647): TArr; overload;
     function Exists: Boolean; overload;
+    function Devein(const dIDs: TIntegerArray; const dValue: TVar): TArr; overload;
+    function Devein(const dIDs: TIntegerArray): TArr; overload;
+    function Expel(const eIDs: TIntegerArray): TArr; overload;
     function Extend(const item: TVar): TArr; overload;
     function Extend(const items: TArr): TArr; overload;
     function Extract(const item: TVar; const index: Integer = 0): TArr; overload;
@@ -718,6 +721,9 @@ type
       function BinaryMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BinaryMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BinaryCombine(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
+      function BinaryRemove(const val: Integer; const all: Boolean = True; const aAscending: Boolean = True): Integer; overload;
+      function BinaryFind(const val: Integer; const aAscending: Boolean): Integer; overload;
+      function BinarySearchEx(const x: Integer; const ignore: Integer = -2147483648; const aAscending: Boolean = True): Integer; overload;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
     {$ENDIF}
@@ -757,6 +763,9 @@ type
       function BinaryMerge(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
       function BinaryMerged(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
       function BinaryCombine(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
+      function BinaryRemove(const val: Double; const all: Boolean = True; const aAscending: Boolean = True): Integer; overload;
+      function BinaryFind(const val: Double; const aAscending: Boolean): Integer; overload;
+      function BinarySearchEx(const x: Double; const ignore: Double = -2147483648; const aAscending: Boolean = True): Integer; overload;
     {$ENDIF}
     {$IFDEF string}
       function Tally: Int64;

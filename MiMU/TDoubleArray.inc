@@ -288,4 +288,34 @@ function TDoubleArrayHelper.BinaryMerged(const items: TDoubleArray; const aAscen
 
 function TDoubleArrayHelper.BinaryCombine(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinaryCombine}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryCombine}
 
+{==============================================================================]
+  <arr.BinaryRemove>
+  @action: Removes one or all occurrences of a specified value from a sorted double array.
+  @note: The array must be sorted in either ascending or descending order,
+         depending on the `aAscending` flag. The method uses binary search
+         to quickly locate the value, then shifts remaining elements and
+         resizes the array accordingly. Returns the number of removed items.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryRemove(const val: Double; const all: Boolean = True; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryRemove}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRemove}
+
+{==============================================================================]
+  <arr.BinaryFind>
+  @action: Performs a binary search on a sorted double array to locate a specific value.
+  @note:   The array must be sorted in either ascending or descending order, 
+           as specified by `aAscending`. If the value is found, its index is 
+           returned; otherwise, -1 is returned. This function assumes there are 
+           no ignored or placeholder values in the array.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryFind(const val: Double; const aAscending: Boolean): Integer; overload; {$DEFINE Skeleton_BinaryFind}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryFind}
+
+{==============================================================================]
+  <arr.BinarySearchEx>
+  @action: Performs a binary search on a sorted double array to locate a specific value,
+           skipping over ignored elements and supporting both ascending and descending order.
+  @note:   The array must be pre-sorted according to the `aAscending` flag. Elements equal
+           to `ignore` are bypassed when searching. Returns the index of the first matching
+           element, or -1 if the value is not found or if all elements are ignored.
+[==============================================================================}
+function TDoubleArrayHelper.BinarySearchEx(const x: Double; const ignore: Double = -2147483648; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchEx}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchEx}
+
 {$UNDEF Double}

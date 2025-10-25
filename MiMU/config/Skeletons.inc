@@ -1016,3 +1016,104 @@ begin
   end;
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryRemove}
+var
+  l, p, i, j: Integer;
+  s: TRange;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit(0);
+  p := Self.BinarySearch(val, aAscending);
+  if (p > -1) then
+  case all of
+    True:
+    begin
+      s.start := p;
+      while ((s.start > 0) and (Self[s.start - 1] = val)) do
+        Dec(s.start);
+      s.stop := p;
+      while ((s.stop < High(Self)) and (Self[s.stop + 1] = val)) do
+        Inc(s.stop);
+      j := s.start;
+      for i := (s.stop + 1) to High(Self) do
+        Self[j.Increase] := Self[i];
+      SetLength(Self, j);
+    end;
+    False:
+    begin
+      for i := p to (High(Self) - 1) do
+        Self[i] := Self[i + 1];
+      SetLength(Self, (High(Self)));
+    end;
+  end;
+  Result := (l - Length(Self));
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryFind}
+var
+  m: Integer;
+  s: TRange;
+begin
+  Result := -1;
+  s.Create(0, High(Self));
+  while (s.start <= s.stop) do
+  begin
+    m := s.Center;
+    if (Self[m] = val) then
+      Exit(m);
+    if (IfThen(aAscending, Ord(Self[m] < val), Ord(Self[m] > val)) <> 0) then
+      s.start := (m + 1)
+    else
+      s.stop := (m - 1);
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinarySearchEx}
+var
+  m, l, r: Integer;
+  s: TRange;
+begin
+  Result := -1;
+  if (Length(Self) = 0) then
+    Exit;
+  s.Create(0, High(Self));
+  while (s.start <= s.stop) do
+  begin
+    m := s.Center;
+    if (Self[m] = ignore) then
+    begin
+      l := (m - 1);
+      r := (m + 1);
+      while ((l >= s.start) or (r <= s.stop)) do
+      begin
+        if ((l >= s.start) and (Self[l] <> ignore)) then
+        begin
+          m := l;
+          Break;
+        end;
+        if ((r <= s.stop) and (Self[r] <> ignore)) then
+        begin
+          m := r;
+          Break;
+        end;
+        Dec(l);
+        Inc(r);
+      end;
+      if ((l < s.start) and (r > s.stop)) then
+        Exit(-1);
+    end;
+    case (Self[m] = x) of
+      False:
+      if IfThen(aAscending, (Self[m] < x), (Self[m] > x)) then
+        s.start := (m + 1)
+      else
+        s.stop := (m - 1);
+      True: Exit(m);
+    end;
+  end;
+end;
+{$ENDIF}
