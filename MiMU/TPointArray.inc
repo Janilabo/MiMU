@@ -4567,7 +4567,7 @@ end;
            enumerating disjoint-set roots.
   @note:  Uses d := Ceil(radius) as an integer search bound to limit the
           binary-range queries; the precise inclusion test is performed with
-          TPoint_Within(Self[i], Self[j], radius, metric). Implementation uses
+          pt.Within(Self[i], Self[j], radius, metric). Implementation uses
           path compression and union-by-size for near-constant amortized
           union/find cost. Complexity dominated by neighbor lookups (≈ O(n log n)
           for spatial indexing) and O(n) memory for helper arrays. Deterministic
@@ -4772,6 +4772,65 @@ begin
   SetLength(Result, (m + 1));
   for i := 0 to High(Self) do
     Result[Self[i].Y div bHeight].Supply(Self[i]);
+end;
+
+{==============================================================================]
+  <TPointArray.Buckets>
+  @action: Divides the TPointArray into a rectangular grid of boxes of size bWidth x bHeight.
+           Returns a T2DPointArray where each bucket contains all points falling
+           into that box. The buckets are stored as a flattened 1D array:
+           bucketIndex = col + row * numCols.
+           Empty buckets are removed at the end.
+  @note: - Computes the bounds of the points automatically (Self.Bounds).
+         - Supports multiple points per bucket.
+         - Uses arr.Supply to append points to each bucket.
+         - Returns only non-empty buckets for convenience.
+[==============================================================================}
+function TPointArrayHelper.Buckets(const bWidth, bHeight: Integer): T2DPointArray; overload;
+var
+  i, h, v: Integer;
+  b: TBox;
+begin
+  if Self.Empty then
+    Exit([]);
+  b := Self.Bounds;
+  h := (((b.X2 - b.X1) div bWidth) + 1);
+  v := (((b.Y2 - b.Y1) div bHeight) + 1);
+  SetLength(Result, (h * v));
+  for i := 0 to High(Self) do
+    Result[((Self[i].X - b.X1) div bWidth) + (((Self[i].Y - b.Y1) div bHeight) * h)].Supply(Self[i]);
+  v := 0;
+  for i := 0 to High(Result) do
+    if not Result[i].Empty then
+	  Result[v.Increase] := Result[i];
+  SetLength(Result, v);
+end;
+
+{==============================================================================]
+  <TPointArray.Buckets>
+  @action: Divides the TPointArray into a square grid of boxes of size bSize x bSize.
+           Internally calls the same algorithm as the rectangular version.
+  @note: - bSize defines both width and height of the grid cells.
+         - Empty buckets are removed at the end.
+[==============================================================================}
+function TPointArrayHelper.Buckets(const bSize: Integer = 1): T2DPointArray; overload;
+var
+  i, h, v: Integer;
+  b: TBox;
+begin
+  if Self.Empty then
+    Exit([]);
+  b := Self.Bounds;
+  h := (((b.X2 - b.X1) div bSize) + 1);
+  v := (((b.Y2 - b.Y1) div bSize) + 1);
+  SetLength(Result, (h * v));
+  for i := 0 to High(Self) do
+    Result[((Self[i].X - b.X1) div bSize) + (((Self[i].Y - b.Y1) div bSize) * h)].Supply(Self[i]);
+  v := 0;
+  for i := 0 to High(Result) do
+    if not Result[i].Empty then
+	  Result[v.Increase] := Result[i];
+  SetLength(Result, v);
 end; 
 
 {$UNDEF TPoint}

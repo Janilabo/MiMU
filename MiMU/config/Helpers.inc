@@ -960,7 +960,9 @@ type
       function Bins(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
       function Bins(const xRadius, yRadius: Integer): T2DPointArray; overload;
       function XBuckets(const bWidth: Integer = 1): T2DPointArray;
-      function YBuckets(const bHeight: Integer = 1): T2DPointArray;	  
+      function YBuckets(const bHeight: Integer = 1): T2DPointArray;
+      function Buckets(const bWidth, bHeight: Integer): T2DPointArray; overload;
+      function Buckets(const bSize: Integer = 1): T2DPointArray; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
