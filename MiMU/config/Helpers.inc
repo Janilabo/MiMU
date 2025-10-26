@@ -962,7 +962,9 @@ type
       function XBuckets(const bWidth: Integer = 1): T2DPointArray;
       function YBuckets(const bHeight: Integer = 1): T2DPointArray;
       function Buckets(const bWidth, bHeight: Integer): T2DPointArray; overload;
-      function Buckets(const bSize: Integer = 1): T2DPointArray; overload;	  
+      function Buckets(const bSize: Integer = 1): T2DPointArray; overload;
+      function Bucketed(const bWidth, bHeight: Integer): T2DPointArray; overload;
+      function Bucketed(const bSize: Integer = 1): T2DPointArray; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
@@ -1032,4 +1034,6 @@ type
     function Pull: T2DArr; overload;
     function To1D: TArr; overload;
     function Linearize: TArr; overload;
+    function Squeeze: Integer; overload;
+    function Squeezed: T2DArr; overload;
   end;

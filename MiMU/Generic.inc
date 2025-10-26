@@ -6044,6 +6044,44 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Squeeze>
+ @action: Removes empty subarrays from the current 2D point array (in place).
+ @note: Returns the number of removed (empty) subarrays; the array itself is resized.
+[==============================================================================}
+function H2DArr.Squeeze: Integer; overload;
+var
+  i, r, l: Integer;
+begin
+  l := Length(Self);
+  r := 0;
+  for i := 0 to High(Self) do
+    if (Length(Self[i]) > 0) then
+      Self[r.Increase] := Self[i];
+  Result := (l - r);
+  if (Result > 0) then
+    SetLength(Self, r);
+end;
+
+{==============================================================================]
+ <arr.Squeezed>
+ @action: Creates and returns a copy of the array with all empty subarrays removed.
+ @note: The original array remains unchanged; the result is the squeezed copy.
+[==============================================================================}
+function H2DArr.Squeezed: T2DArr; overload;
+var
+  i, r: Integer;
+begin
+  SetLength(Result, Length(Self));
+  if Result.Empty then
+    Exit;
+  r := 0;
+  for i := 0 to High(Self) do
+    if (Length(Self[i]) > 0) then
+      Result[r.Increase] := Self[i];
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
  <T1D.Create(item: VarType; aSize: Integer)>
  @action: Creates array with item where size is length of the array.
  @note: item is placed on every index in result.

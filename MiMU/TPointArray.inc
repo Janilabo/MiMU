@@ -4799,11 +4799,7 @@ begin
   SetLength(Result, (h * v));
   for i := 0 to High(Self) do
     Result[((Self[i].X - b.X1) div bWidth) + (((Self[i].Y - b.Y1) div bHeight) * h)].Supply(Self[i]);
-  v := 0;
-  for i := 0 to High(Result) do
-    if not Result[i].Empty then
-	  Result[v.Increase] := Result[i];
-  SetLength(Result, v);
+  Result.Squeeze;
 end;
 
 {==============================================================================]
@@ -4826,11 +4822,43 @@ begin
   SetLength(Result, (h * v));
   for i := 0 to High(Self) do
     Result[((Self[i].X - b.X1) div bSize) + (((Self[i].Y - b.Y1) div bSize) * h)].Supply(Self[i]);
-  v := 0;
-  for i := 0 to High(Result) do
-    if not Result[i].Empty then
-	  Result[v.Increase] := Result[i];
-  SetLength(Result, v);
-end; 
+  Result.Squeeze;
+end;
+
+{==============================================================================]
+  <TPointArray.Bucketed>
+  @action: Splits the point array into a 2D grid of buckets, each containing points
+           that fall within a specific rectangular region of the bounding box.
+  @note: Each bucket’s dimensions are defined by (bWidth, bHeight). Empty buckets
+         are removed using Squeeze. Returns an empty array if input or bounds are invalid.
+[==============================================================================}
+function TPointArrayHelper.Bucketed(const bWidth, bHeight: Integer): T2DPointArray; overload;
+var
+  i, w, h, x, y: Integer;
+  b: TBox;
+begin
+  if (Self.Empty or (bWidth < 1) or (bHeight < 1)) then
+    Exit([]);
+  b := Self.Bounds(w, h);
+  if ((w < 1) or (h < 1)) then
+    Exit([]);
+  y := (((h + bHeight) - 1) div bHeight);
+  x := (((w + bWidth) - 1) div bWidth);
+  SetLength(Result, 0);
+  SetLength(Result, (y * x));
+  for i := 0 to High(Self) do
+    Result[Integer((Self[i].Y - b.Y1) div bHeight).Clamp(0, (y - 1)) + (Integer((Self[i].X - b.X1) div bWidth).Clamp(0, (x - 1)) * y)].Supply(Self[i]);
+  Result.Squeeze;
+end;
+
+{==============================================================================]
+  <TPointArray.Bucketed>
+  @action: Creates a 2D grid of buckets using a uniform bucket size for both width and height.
+  @note: Equivalent to calling Bucketed(bSize, bSize). Returns an empty array if input or size is invalid.
+[==============================================================================}
+function TPointArrayHelper.Bucketed(const bSize: Integer = 1): T2DPointArray; overload;
+begin
+  Result := Self.Bucketed(bSize, bSize);
+end;
 
 {$UNDEF TPoint}
