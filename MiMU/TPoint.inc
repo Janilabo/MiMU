@@ -232,6 +232,27 @@ begin
 end;
 
 {==============================================================================]
+ <TPoint.Reflected>
+ @action: Reflects the point across the line y = x.
+ @note: Swaps the X and Y coordinates. (x, y) → (y, x)
+[==============================================================================}
+function TPoint.Reflected: TPoint; inline;
+begin
+  Result.X := Self.Y;
+  Result.Y := Self.X;
+end;
+
+{==============================================================================]
+ <TPoint.Flipped>
+ @action: Returns the point with its coordinates flipped (same as Reflected).
+ @note: This is a shorthand, stylistically different version of Reflected.
+[==============================================================================}
+function TPoint.Flipped: TPoint; inline;
+begin
+  Result := Point(Self.Y, Self.X);
+end;
+
+{==============================================================================]
  <TPoint.Within>
  @action: Determines whether this point lies within a given distance (radius)
           of another point, using the specified distance function.

@@ -4555,6 +4555,183 @@ begin
     end;
     Inc(l);
   end;
+end;
+
+{==============================================================================]
+  <TPointArray.Bins>
+  @action: Cluster points into bins (clusters) using a floating-point radius and
+           a distance metric. For each point, candidate neighbors are found via
+           binary-range lookups on precomputed X/Y index arrays (h and v). Pairs
+           within the radius (according to Metric) are unioned using a
+           disjoint-set (union–find) structure; final clusters are produced by
+           enumerating disjoint-set roots.
+  @note:  Uses d := Ceil(radius) as an integer search bound to limit the
+          binary-range queries; the precise inclusion test is performed with
+          TPoint_Within(Self[i], Self[j], radius, metric). Implementation uses
+          path compression and union-by-size for near-constant amortized
+          union/find cost. Complexity dominated by neighbor lookups (≈ O(n log n)
+          for spatial indexing) and O(n) memory for helper arrays. Deterministic
+          and suitable for large point sets.
+[==============================================================================}
+function TPointArrayHelper.Bins(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+var
+  i, j, r, c, n, d, g: Integer;
+  v, p, s, m, k, t: TIntegerArray;
+  h, z: T2DIntegerArray;
+  x, y: TRange;
+  function FindRoot(i: Integer): Integer;
+  begin
+    if (p[i] <> i) then
+      p[i] := FindRoot(p[i]);
+    Result := p[i];
+  end;
+  procedure Unioned(i, j: Integer);
+  var
+    a, b: TPoint;
+  begin
+    a := Point(FindRoot(i), FindRoot(j));
+    if (a.X = a.Y) then
+      Exit;
+    b := IfThen((s[a.X] < s[a.Y]), a, a.Reflected);
+    p[b.X] := b.Y;
+    Inc(s[b.Y], s[b.X]);
+  end;
+begin
+  n := Length(Self);
+  if (n = 0) then
+    Exit([]);
+  d := Ceil(radius);
+  h := Self.XTo2D(v, z);
+  SetLength(p, n);
+  SetLength(s, n);
+  for i := 0 to (n - 1) do
+  begin
+    p[i] := i;
+    s[i] := 1;
+  end;
+  for i := 0 to (n - 1) do
+  begin
+    y := v.BinaryRange(TRange.Construct((Self[i].Y - d), (Self[i].Y + d)));
+    if not y.Employs(-1) then
+    for r := y.start to y.stop do
+    begin
+      x := h[r].BinaryRange(TRange.Construct((Self[i].X - d), (Self[i].X + d)));
+      if not x.Employs(-1) then
+      for c := x.start to x.stop do
+        if Self[i].Within(Self[z[r][c]], radius, metric) then
+          Unioned(i, z[r][c]);
+    end;
+  end;
+  SetLength(m, n);
+  for i := 0 to (n - 1) do
+    m[i] := -1;
+  g := 0;
+  for i := 0 to (n - 1) do
+  begin
+    r := FindRoot(i);
+    if (m[r] = -1) then
+      m[r] := g.Increase;
+  end;
+  SetLength(k, g);
+  for i := 0 to (n - 1) do
+    Inc(k[m[FindRoot(i)]]);
+  SetLength(Result, g);
+  for i := 0 to (g - 1) do
+    SetLength(Result[i], k[i]);
+  SetLength(t, g);
+  for i := 0 to (n - 1) do
+  begin
+    r := m[FindRoot(i)];
+    Result[r][t[r].Increase] := Self[i];
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.Bins>
+  @action: Cluster points into bins using separate axis-aligned radii (xRadius,
+           yRadius). Candidate neighbors are located with binary-range queries on
+           the precomputed X/Y index arrays (h and v). Pairs whose X and Y
+           separations satisfy the rectangular neighborhood check are merged
+           with a disjoint-set (union–find) structure; final clusters are
+           collected from the union–find roots.
+  @note:  This overload performs axis-aligned (rectangular) neighborhood checks
+          and therefore does not use a distance metric. It uses binary-range
+          indexing to avoid O(n²) pairwise checks and union-by-size + path
+          compression for efficient merging. Complexity is dominated by the
+          binary-range searches; memory is O(n). Use this overload when you
+          want fast, axis-aligned binning instead of metric (circular) grouping.
+[==============================================================================}
+function TPointArrayHelper.Bins(const xRadius, yRadius: Integer): T2DPointArray; overload;
+var
+  i, j, r, c, n, g: Integer;
+  p, s, m, k, t: TIntegerArray;
+  h, z: T2DIntegerArray;
+  v: TIntegerArray;
+  x, y: TRange;
+  function FindRoot(i: Integer): Integer;
+  begin
+    if (p[i] <> i) then
+      p[i] := FindRoot(p[i]);
+    Result := p[i];
+  end;
+  procedure Unioned(i, j: Integer);
+  var
+    a, b: TPoint;
+  begin
+    a := Point(FindRoot(i), FindRoot(j));
+    if (a.X = a.Y) then
+      Exit;
+    b := IfThen((s[a.X] < s[a.Y]), a, a.Reflected);
+    p[b.X] := b.Y;
+    Inc(s[b.Y], s[b.X]);
+  end;
+begin
+  n := Length(Self);
+  if (n = 0) then
+    Exit([]);
+  h := Self.XTo2D(v, z);
+  SetLength(p, n);
+  SetLength(s, n);
+  for i := 0 to (n - 1) do
+  begin
+    p[i] := i;
+    s[i] := 1;
+  end;
+  for i := 0 to (n - 1) do
+  begin
+    y := v.BinaryRange(TRange.Construct((Self[i].Y - yRadius), (Self[i].Y + yRadius)));
+    if not y.Employs(-1) then
+    for r := y.start to y.stop do
+    begin
+      x := h[r].BinaryRange(TRange.Construct((Self[i].X - xRadius), (Self[i].X + xRadius)));
+      if not x.Employs(-1) then
+      for c := x.start to x.stop do
+        if Self[i].Within(Self[z[r][c]], xRadius, yRadius) then
+          Unioned(i, z[r][c]);
+    end;
+  end;
+  SetLength(m, n);
+  for i := 0 to (n - 1) do
+    m[i] := -1;
+  g := 0;
+  for i := 0 to (n - 1) do
+  begin
+    r := FindRoot(i);
+    if (m[r] = -1) then
+      m[r] := g.Increase;
+  end;
+  SetLength(k, g);
+  for i := 0 to (n - 1) do
+    Inc(k[m[FindRoot(i)]]);
+  SetLength(Result, g);
+  for i := 0 to (g - 1) do
+    SetLength(Result[i], k[i]);
+  SetLength(t, g);
+  for i := 0 to (n - 1) do
+  begin
+    r := m[FindRoot(i)];
+    Result[r][t[r].Increase] := Self[i];
+  end;
 end; 
 
 {$UNDEF TPoint}
