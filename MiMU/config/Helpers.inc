@@ -958,7 +958,9 @@ type
       function CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
       function CorePoints(const allowedNeighbours: TRange; const xRadius, yRadius: Integer): TPointArray; overload;
       function Bins(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
-      function Bins(const xRadius, yRadius: Integer): T2DPointArray; overload;	  
+      function Bins(const xRadius, yRadius: Integer): T2DPointArray; overload;
+      function XBuckets(const bWidth: Integer = 1): T2DPointArray;
+      function YBuckets(const bHeight: Integer = 1): T2DPointArray;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;

@@ -4732,6 +4732,46 @@ begin
     r := m[FindRoot(i)];
     Result[r][t[r].Increase] := Self[i];
   end;
+end;
+
+{==============================================================================]
+  <TPointArray.XBuckets>
+  @action: Groups the points in the array into buckets (columns) based on their X-coordinate.
+           Each bucket contains all points whose X-value falls within the range
+           [BucketIndex * bWidth .. (BucketIndex+1) * bWidth - 1].
+  @note: Returns a 2D array (T2DPointArray) where each element is a bucket (array of points).
+         The default bucket width is 1. Use a larger value to group points into wider columns.
+[==============================================================================}
+function TPointArrayHelper.XBuckets(const bWidth: Integer = 1): T2DPointArray;
+var
+  i, m: Integer;
+begin
+  m := 0;
+  for i := 0 to High(Self) do
+    m := Max(m, (Self[i].X div bWidth));
+  SetLength(Result, (m + 1));
+  for i := 0 to High(Self) do
+    Result[Self[i].X div bWidth].Supply(Self[i]);
+end;
+
+{==============================================================================]
+  <TPointArray.YBuckets>
+  @action: Groups the points in the array into buckets (rows) based on their Y-coordinate.
+           Each bucket contains all points whose Y-value falls within the range
+           [BucketIndex * bHeight .. (BucketIndex+1) * bHeight - 1].
+  @note: Returns a 2D array (T2DPointArray) where each element is a bucket (array of points).
+         The default bucket height is 1. Use a larger value to group points into taller rows.
+[==============================================================================}
+function TPointArrayHelper.YBuckets(const bHeight: Integer = 1): T2DPointArray;
+var
+  i, m: Integer;
+begin
+  m := 0;
+  for i := 0 to High(Self) do
+    m := Max(m, (Self[i].Y div bHeight));
+  SetLength(Result, (m + 1));
+  for i := 0 to High(Self) do
+    Result[Self[i].Y div bHeight].Supply(Self[i]);
 end; 
 
 {$UNDEF TPoint}
