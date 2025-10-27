@@ -964,7 +964,13 @@ type
       function Buckets(const bWidth, bHeight: Integer): T2DPointArray; overload;
       function Buckets(const bSize: Integer = 1): T2DPointArray; overload;
       function Bucketed(const bWidth, bHeight: Integer): T2DPointArray; overload;
-      function Bucketed(const bSize: Integer = 1): T2DPointArray; overload;	  
+      function Bucketed(const bSize: Integer = 1): T2DPointArray; overload;
+      function Boxify(const bWidth, bHeight: Integer): T2DPointArray; overload;
+      function Boxify(const bSize: Integer = 1): T2DPointArray; overload;
+      function Boxified(const bWidth, bHeight: Integer): T2DPointArray; overload;
+      function Boxified(const bSize: Integer = 1): T2DPointArray; overload;
+      function BinBox(const bWidth, bHeight: Integer): T2DPointArray; overload;
+      function BinBox(const bSize: Integer = 1): T2DPointArray; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
@@ -1036,4 +1042,8 @@ type
     function Linearize: TArr; overload;
     function Squeeze: Integer; overload;
     function Squeezed: T2DArr; overload;
+    {$IFDEF TPoint}
+      function AllBounds: TBoxArray; overload;
+      function AllBounds(var aBounds: TBox): TBoxArray; overload;
+    {$ENDIF}
   end;

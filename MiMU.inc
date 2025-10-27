@@ -17,6 +17,7 @@
 {$UNDEF Sortable}
 {$I MiMU\TBooleanArray.inc}
 {$I MiMU\TPointArray.inc}
+{$I MiMU\T2DPointArray.inc}
 {$I MiMU\TBoxArray.inc}
 {$I MiMU\TRangeArray.inc}
 {$I MiMU\TCircle.inc}
