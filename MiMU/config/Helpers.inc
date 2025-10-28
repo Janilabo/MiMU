@@ -970,7 +970,11 @@ type
       function Boxified(const bWidth, bHeight: Integer): T2DPointArray; overload;
       function Boxified(const bSize: Integer = 1): T2DPointArray; overload;
       function BinBox(const bWidth, bHeight: Integer): T2DPointArray; overload;
-      function BinBox(const bSize: Integer = 1): T2DPointArray; overload;	  
+      function BinBox(const bSize: Integer = 1): T2DPointArray; overload;
+      function BinaryFloodFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
+      function BinaryFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
+      function BinaryFilled(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
+      function BFloodFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
