@@ -974,7 +974,8 @@ type
       function BinaryFloodFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
       function BinaryFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
       function BinaryFilled(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
-      function BFloodFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;	  
+      function BFloodFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
+      function AdjFill(const scan8W: Boolean = True): T2DPointArray;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;

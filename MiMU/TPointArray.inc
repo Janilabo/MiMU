@@ -5413,4 +5413,80 @@ begin
   SetLength(Result, c);
 end;
 
+{==============================================================================]
+  <TPointArray.AdjFill>
+  @action:
+    Groups points into connected components based on grid adjacency.
+    Supports 4-way (N, S, E, W) or 8-way (adds diagonals) connectivity.
+  @note:
+    • Assumes all points have integer coordinates.
+    • Uses binary search within pre-sorted 2D index for O(log N) neighbor lookup.
+    • Much faster than radius-based flood fills when only adjacent cells connect.
+    • Returns: T2DPointArray of adjacency-connected clusters.
+    • Complexity: O(N · log N) (binary searches dominate), O(N) for dense grids.
+    • Memory: boolean visited array + BFS queue.
+[==============================================================================}
+function TPointArrayHelper.AdjFill(const scan8W: Boolean = True): T2DPointArray;
+var
+  a, l, i, k, r, c, f, g: Integer;
+  h, z: T2DIntegerArray;
+  v, q, x, y: TIntegerArray;
+  u: TBooleanArray;
+  n, p: TPoint;
+  s: TRange;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit([]);
+  case scan8W of
+    True:
+    begin
+      X := [1, -1,  0,  0,  1,  1, -1, -1];
+      Y := [0,  0,  1, -1,  1, -1,  1, -1];
+    end;
+    False:
+    begin
+      X := [1, -1,  0,  0];
+      Y := [0,  0,  1, -1];
+    end;
+  end;
+  a := Length(X);
+  h := Self.XTo2D(v, z);
+  SetLength(u, l);
+  SetLength(Result, l);
+  SetLength(q, l);
+  g := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if u[i] then
+      Continue;
+    s.Create(0, 1);
+    q[0] := i;
+    u[i] := True;
+    SetLength(Result[g], 0);
+    while (s.start < s.stop) do
+    begin
+      f := q[s.start.Increase];
+      p := Self[f];
+      Result[g].Supply(p);
+      for k := 0 to (a - 1) do
+      begin
+        n := Point((p.X + x[k]), (p.Y + y[k]));
+        r := v.BinarySearch(n.Y);
+        if InRange(r, 0, High(v)) then
+        begin
+          c := h[r].BinarySearch(n.X);
+          if (InRange(c, 0, High(h[r])) and (not u[z[r][c]])) then
+          begin
+            u[z[r][c]] := True;
+            q[s.stop.Increase] := z[r][c];
+          end;
+        end;
+      end;
+    end;
+    Inc(g);
+  end;
+  SetLength(Result, g);
+end;
+
 {$UNDEF TPoint}
