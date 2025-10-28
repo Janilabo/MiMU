@@ -5489,4 +5489,359 @@ begin
   SetLength(Result, g);
 end;
 
+{==============================================================================]
+  <TPointArray.NFill>
+  @action: Performs adjacency-based flood fill using binary search for neighbor detection.
+           Groups connected points (4-way or 8-way) into separate clusters.
+  @note: "N" stands for Neighbor Fill.
+         - When scan8W = True → uses 8-way connectivity (includes diagonals).
+         - When scan8W = False → uses 4-way connectivity (up, down, left, right).
+         The method uses binary search on sorted X/Y axes via TPointArray.XTo2D
+         for efficient detection of neighboring points without spatial hashing.
+[==============================================================================}
+function TPointArrayHelper.NFill(const scan8W: Boolean = True): T2DPointArray;
+var
+  i, j, k, r, c, l, d, t: Integer;
+  h, z: T2DIntegerArray;
+  v, q: TIntegerArray;
+  u: TBooleanArray;
+  p, n: TPoint;
+  x, y, s: TRange;
+  o: TPointArray;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit([]);
+  if scan8W then
+    o := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1), Point(1, 1), Point(-1, -1), Point(1, -1), Point(-1, 1)]
+  else
+    o := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1)];
+  h := Self.XTo2D(v, z);
+  SetLength(Result, l);
+  SetLength(u, l);
+  SetLength(q, l);
+  c := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if u[i] then
+      Continue;
+    s.Create(0, 0);
+    q[0] := i;
+    u[i] := True;
+    while (s.start <= s.stop) do
+    begin
+      p := Self[q[s.start.Increase]];
+      Result[c].Supply(p);
+      for k := 0 to High(o) do
+      begin
+        n := Point((p.X + o[k].X), (p.Y + o[k].Y));
+        y := v.BinaryRange(TRange.Construct(n.Y, n.Y));
+        if not y.Employs(-1) then
+        for r := y.start to y.stop do
+        begin
+          x := h[r].BinaryRange(TRange.Construct(n.X, n.X));
+          if not x.Employs(-1) then
+          for j := x.start to x.stop do
+          begin
+            t := z[r][j];
+            if not u[t] and (Self[t].X = n.X) and (Self[t].Y = n.Y) then
+            begin
+              u[t] := True;
+              q[s.stop.Increment] := t;
+            end;
+          end;
+        end;
+      end;
+    end;
+    Inc(c);
+  end;
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <TPointArray.AFill>
+  @action: Performs adjacency-based flood fill over a bounded 2D grid.
+           Groups connected points (4-way or 8-way) into separate clusters
+           using a boolean occupancy map for constant-time neighbor lookup.
+  @note: "A" stands for Adjacent Fill.
+         - When scan8W = True → 8-way connectivity (includes diagonals).
+         - When scan8W = False → 4-way connectivity (orthogonal only).
+         This version is grid-optimized and typically faster than NFill
+         for dense or uniformly spaced point sets.
+[==============================================================================}
+function TPointArrayHelper.AFill(const scan8W: Boolean = True): T2DPointArray;
+var
+  m: T2DBooleanArray;
+  w, h, i, j, c: Integer;
+  q, d: TPointArray;
+  s: TRange;
+  b: TBox;
+  p, n: TPoint;
+begin
+  if (Length(Self) = 0) then
+    Exit([]);
+  b := Self.Bounds(w, h);
+  SetLength(m, h, w);
+  m := T2D.Create(False, h, w);
+  for i := 0 to High(Self) do
+    m[Self[i].Y - b.Y1][Self[i].X - b.X1] := True;
+  if scan8W then
+    d := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1), Point(1, 1), Point(1, -1), Point(-1, 1), Point(-1, -1)]
+  else
+    d := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1)];
+  SetLength(Result, Length(Self));
+  c := 0;
+  for i := 0 to High(Self) do
+  begin
+    if not m[Self[i].Y - b.Y1][Self[i].X - b.X1] then
+      Continue;
+    s.Create(0, 0);
+    SetLength(q, Length(Self));
+    q[0] := Self[i];
+    m[q[0].Y - b.Y1][q[0].X - b.X1] := False;
+    while (s.start <= s.stop) do
+    begin
+      p := q[s.start.Increase];
+      Result[c].Supply(p);
+      for j := 0 to High(d) do
+      begin
+        n := Point((p.X + d[j].X), (p.Y + d[j].Y));
+        if not (b.Contains(n) and m[n.Y - b.Y1][n.X - b.X1]) then
+          Continue;
+        m[n.Y - b.Y1, n.X - b.X1] := False;
+        q[s.stop.Increment] := n;
+      end;
+    end;
+    Inc(c);
+  end;
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <TPointArray.CFill>
+  @action: Groups adjacent points (4-way or 8-way) using a Union-Find
+           (disjoint set) structure for efficient neighbor merging.
+  @note: "C" stands for Cell/Connectivity Fill.
+         - scan8W = True  →  8-way connectivity
+         - scan8W = False →  4-way connectivity
+         Unlike AFill, this method does not perform a flood search — it
+         merges connected cells directly using disjoint sets.
+[==============================================================================}
+function TPointArrayHelper.CFill(const scan8W: Boolean = True): T2DPointArray;
+var
+  b: TBox;
+  m: T2DIntegerArray;
+  w, h, i, j, id, u, c, x, y: Integer;
+  a, n: TPoint;
+  d: TPointArray;
+  p, s, l: TIntegerArray;
+  function FindRoot(a: Integer): Integer;
+  begin
+    while (p[a] <> a) do
+    begin
+      p[a] := p[p[a]];
+      a := p[a];
+    end;
+    Result := a;
+  end;
+  procedure UnionSets(a, b: Integer);
+  var
+    x, y: Integer;
+  begin
+    x := FindRoot(a);
+    y := FindRoot(b);
+    if (x <> y) then
+    case (s[x] < s[y]) of
+      True:
+      begin
+        p[x] := y;
+        Inc(s[y], s[x]);
+      end;
+      False:
+      begin
+        p[y] := x;
+        Inc(s[x], s[y]);
+      end;
+    end;
+  end;
+begin
+  if Self.Empty then
+    Exit([]);
+  b := Self.Bounds(w, h);
+  SetLength(m, h, w);
+  for i := 0 to High(m) do
+    for j := 0 to High(m[i]) do
+      m[i, j] := -1;
+  for i := 0 to High(Self) do
+    m[Self[i].Y - b.Y1][Self[i].X - b.X1] := i;
+  if scan8W then
+    d := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1), Point(1, 1), Point(1, -1), Point(-1, 1), Point(-1, -1)]
+  else
+    d := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1)];
+  SetLength(p, Length(Self));
+  SetLength(s, Length(Self));
+  for i := 0 to High(Self) do
+  begin
+    p[i] := i;
+    s[i] := 1;
+  end;
+  for i := 0 to High(Self) do
+    for j := 0 to High(d) do
+    begin
+      a := Point((Self[i].X + d[j].X), (Self[i].Y + d[j].Y));
+      if (b.Contains(a) and (m[a.Y - b.Y1][a.X - b.X1] <> -1)) then
+        UnionSets(i, m[a.Y - b.Y1][a.X - b.X1]);
+    end;
+  SetLength(l, Length(Self));
+  for i := 0 to High(Self) do
+    l[i] := -1;
+  c := 0;
+  for i := 0 to High(Self) do
+  begin
+    id := FindRoot(i);
+    if (l[id] = -1) then
+      l[id] := c.Increase;
+  end;
+  SetLength(Result, c);
+  for i := 0 to High(Self) do
+    Result[l[FindRoot(i)]].Supply(Self[i]);
+end;
+
+{==============================================================================]
+  <TPointArray.BCluster>
+  @action: Performs radius-based clustering using binary search.
+           Each point is assigned to a cluster based on proximity.
+  @params:
+    radius: Maximum distance for points to be considered neighbors.
+    metric: Distance metric (Chebyshev, Euclidean, Manhattan, etc.)
+  @result: T2DPointArray where each subarray contains points of one cluster
+[==============================================================================}
+function TPointArrayHelper.BCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+var
+  h, z: T2DIntegerArray;
+  d, l, i, j, r, g: Integer;
+  x, y, s: TRange;
+  t, n: TPoint;
+  c, q, p, v: TIntegerArray;
+  procedure Enqueue(const index: Integer);
+  begin
+    q[s.stop.Increment] := index;
+    c[index] := g;
+  end;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit([]);
+  d := Ceil(radius);
+  SetLength(c, l);
+  for i := 0 to (l - 1) do
+    c[i] := -1;
+  h := Self.XTo2D(v, z);
+  SetLength(q, l);
+  g := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if (c[i] <> -1) then
+      Continue;
+    s.Create(0, 0);
+    q[0] := i;
+    c[i] := g;
+    while (s.start <= s.stop) do
+    begin
+      t := Self[q[s.start.Increase]];
+      y := v.BinaryRange(TRange.Construct((t.Y - d), (t.Y + d)));
+      if not y.Employs(-1) then
+      for r := y.start to y.stop do
+      begin
+        x := h[r].BinaryRange(TRange.Construct((t.X - d), (t.X + d)));
+        if not x.Employs(-1) then
+        for j := x.start to x.stop do
+          if ((c[z[r][j]] = -1) and t.Within(Self[z[r][j]], radius, metric)) then
+            Enqueue(z[r][j]);
+      end;
+    end;
+    Inc(g);
+  end;
+  SetLength(p, g);
+  for i := 0 to (g - 1) do
+    p[i] := 0;
+  for i := 0 to (l - 1) do
+    Inc(p[c[i]]);
+  SetLength(Result, g);
+  for i := 0 to (g - 1) do
+    SetLength(Result[i], p[i]);
+  for i := 0 to (g - 1) do
+    p[i] := 0;
+  for i := 0 to (l - 1) do
+    Result[c[i]][p[c[i]].Increase] := Self[i];
+end;
+
+{==============================================================================]
+  <TPointArray.BCluster>
+  @action: Performs radius-based clustering using binary search.
+           Each point is assigned to a cluster based on proximity.
+  @params:
+    radius: Maximum distance for points to be considered neighbors.
+    metric: Distance metric (Chebyshev, Euclidean, Manhattan, etc.)
+  @result: T2DPointArray where each subarray contains points of one cluster
+[==============================================================================}
+function TPointArrayHelper.BCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
+var
+  h, z: T2DIntegerArray;
+  l, i, j, r, g: Integer;
+  x, y, s: TRange;
+  t, n: TPoint;
+  c, q, p, v: TIntegerArray;
+  procedure Enqueue(const index: Integer);
+  begin
+    q[s.stop.Increment] := index;
+    c[index] := g;
+  end;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit([]);
+  SetLength(c, l);
+  for i := 0 to (l - 1) do
+    c[i] := -1;
+  h := Self.XTo2D(v, z);
+  SetLength(q, l);
+  g := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if (c[i] <> -1) then
+      Continue;
+    s.Create(0, 0);
+    q[0] := i;
+    c[i] := g;
+    while (s.start <= s.stop) do
+    begin
+      t := Self[q[s.start.Increase]];
+      y := v.BinaryRange(TRange.Construct((t.Y - yRadius), (t.Y + yRadius)));
+      if not y.Employs(-1) then
+      for r := y.start to y.stop do
+      begin
+        x := h[r].BinaryRange(TRange.Construct((t.X - xRadius), (t.X + xRadius)));
+        if not x.Employs(-1) then
+        for j := x.start to x.stop do
+          if ((c[z[r][j]] = -1) and t.Within(Self[z[r][j]], xRadius, yRadius)) then
+            Enqueue(z[r][j]);
+      end;
+    end;
+    Inc(g);
+  end;
+  SetLength(p, g);
+  for i := 0 to (g - 1) do
+    p[i] := 0;
+  for i := 0 to (l - 1) do
+    Inc(p[c[i]]);
+  SetLength(Result, g);
+  for i := 0 to (g - 1) do
+    SetLength(Result[i], p[i]);
+  for i := 0 to (g - 1) do
+    p[i] := 0;
+  for i := 0 to (l - 1) do
+    Result[c[i]][p[c[i]].Increase] := Self[i];
+end;
+
 {$UNDEF TPoint}

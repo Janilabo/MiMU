@@ -975,7 +975,12 @@ type
       function BinaryFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
       function BinaryFilled(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
       function BFloodFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
-      function AdjFill(const scan8W: Boolean = True): T2DPointArray;	  
+      function AdjFill(const scan8W: Boolean = True): T2DPointArray;
+      function NFill(const scan8W: Boolean = True): T2DPointArray;
+      function AFill(const scan8W: Boolean = True): T2DPointArray;
+      function CFill(const scan8W: Boolean = True): T2DPointArray;
+      function BCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+      function BCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
