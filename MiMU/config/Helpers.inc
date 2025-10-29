@@ -980,7 +980,11 @@ type
       function AFill(const scan8W: Boolean = True): T2DPointArray;
       function CFill(const scan8W: Boolean = True): T2DPointArray;
       function BCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
-      function BCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;	  
+      function BCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
+      function QuickSortByX(const aAscending: Boolean = True): Integer;
+      function QuickSortByY(const aAscending: Boolean = True): Integer;
+      function QuickSortByXY(const aAscending: Boolean = True): Integer;
+      function QuickSortByYX(const aAscending: Boolean = True): Integer;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
