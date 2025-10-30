@@ -729,6 +729,8 @@ type
       function BinarySearchEx(const x: Integer; const ignore: Integer = -2147483648; const aAscending: Boolean = True): Integer; overload;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
+      function CountingSort(const aAscending: Boolean = True): Integer;
+      function BinaryCountingSort(const aAscending: Boolean = True; const maxRange: Integer = 2000): Integer;
     {$ENDIF}
     {$IFDEF Double}
       function Reinit: Integer; overload;

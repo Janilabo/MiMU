@@ -2051,4 +2051,115 @@ begin
     Move(items[i.start], Result[l], (i.Delta * SizeOf(Integer)));
 end;
 
+{==============================================================================]
+  <TIntegerArray.CountingSort>
+  @action: Sorts the integer array using the classical counting sort algorithm.
+           Works efficiently when the range of integer values is relatively small.
+  @note: 
+    - This method handles negative and positive integers.
+    - The algorithm counts the occurrences of each integer and writes them back
+      in sorted order.
+    - Always sorts in ascending order; descending order is not supported in this version.
+    - Counting array size is based on the range of values in the array, so large
+      ranges may use significant memory.
+[==============================================================================}
+function TIntegerArrayHelper.CountingSort(const aAscending: Boolean = True): Integer;
+var
+  c: TIntegerArray;
+  i, j, s, o: Integer;
+  m: TRange;
+begin
+  Result := Length(Self);
+  if (Result = 0) then
+    Exit;
+  m := Self.Bounds;
+  o := -m.start;
+  SetLength(c, m.Size);
+  for i := 0 to High(Self) do
+    Inc(c[Self[i] + o]);
+  s := 0;
+  for i := 0 to m.Span do
+    for j := 1 to c[i] do
+      Self[s.Increase] := (i - o);
+  if not aAscending then
+    Self.Reverse;
+end;
+
+{==============================================================================]
+  <TIntegerArray.BinaryCountingSort>
+  @action: Sorts the integer array using a hybrid approach that combines counting sort
+           for densely clustered values with binary insertion for outliers.
+           Automatically adapts to the data distribution based on the maxRange parameter.
+  @note: 
+    - If the range of array values is smaller than or equal to maxRange, a full counting
+      sort is applied.
+    - If the range exceeds maxRange, the method counts values within a central cluster
+      (centered at the array’s midpoint) and uses binary insertion for values outside
+      that cluster.
+    - Supports ascending (default) or descending order.
+    - Handles negative and positive integers.
+    - The counting array size is bounded by maxRange + 1 to avoid excessive memory usage.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryCountingSort(const aAscending: Boolean = True; const maxRange: Integer = 2000): Integer;
+var
+  c, l: TIntegerArray;
+  i, j, v, r, o: Integer;
+  m: TRange;
+begin
+  Result := Length(Self);
+  if (Result = 0) then
+    Exit;
+  m := Self.Bounds(r);
+  case (r <= maxRange) of
+    True:
+    begin
+      SetLength(c, r);
+      for i := 0 to High(Self) do
+        Inc(c[Self[i] - m.start]);
+      j := 0;
+      case aAscending of
+        True:
+        for i := 0 to (r - 1) do
+          while (c[i].Decrease > 0) do
+            Self[j.Increase] := (i + m.start);
+        False:
+        for i := r - 1 downto 0 do
+          while (c[i].Decrease > 0) do
+            Self[j.Increase] := (i + m.start);
+      end;
+    end;
+    False:
+    begin
+      o := m.Center;
+      r := 200;
+      SetLength(c, ((r * 2) + 1));
+      SetLength(l, 0);
+      for i := 0 to High(Self) do
+        if InRange(Self[i], (o - r), (o + r)) then
+          Inc(c[Self[i] - (o - r)])
+        else
+          l.BinaryAppend(Self[i]);
+      j := 0;
+      case aAscending of
+        True:
+        begin
+          for i := 0 to High(c) do
+            while (c[i].Decrease > 0) do
+              Self[j.Increase] := ((o - r) + i);
+          for i := 0 to High(l) do
+            Self[j.Increase] := l[i];
+        end;
+        False:
+        begin
+          for i := High(c) downto 0 do
+            while (c[i].Decrease > 0) do
+              Self[j.Increase] := ((o - r) + i);
+          for i := High(l) downto 0 do
+            Self[j.Increase] := l[i];
+        end;
+      end;
+    end;
+  end;
+end;
+
 {$UNDEF Integer}
