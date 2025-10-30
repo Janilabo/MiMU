@@ -243,9 +243,12 @@ type
       function Column(const cells: Integer; const space: Integer = 0): TPointArray;
       function Surrounding(const adjacency8: Boolean = True): TPointArray; overload;
       function Adjacent(const adjacency8: Boolean = True): TPointArray; overload;
+      procedure Adjacent(var adj: TPointArray; const adjacency8: Boolean = True); overload;
       function Adjacency(const adjacency8: Boolean = True): TPointArray; overload;	  
       function Neighbours(const adjacency8: Boolean = True): TPointArray; overload;
+      procedure Neighbours(var adj: TPointArray); overload;
       function Neighbors(const adjacency8: Boolean = True): TPointArray; overload;
+      procedure Neighbors(var adj: TPointArray); overload;
       function ToY(const yGoal: Integer): TPointArray; overload;
       function ToX(const xGoal: Integer): TPointArray; overload;
       function Linked(const p: TPoint; const link: TPointArray): Boolean; overload;

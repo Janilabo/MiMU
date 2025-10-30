@@ -695,6 +695,26 @@ begin
 end;
 
 {==============================================================================]
+  <TPoint.Adjacent>
+  @action: Fills the given point array with the 4 or 8 adjacent points around Self.
+  @note: If adjacency8 is True, diagonal neighbors are also included.
+[==============================================================================}
+procedure TPointHelper.Adjacent(var adj: TPointArray; const adjacency8: Boolean = True); overload;
+begin
+  adj[0].Create(Self.x, (Self.y - 1));
+  adj[3].Create(Self.x, (Self.y + 1));
+  adj[1].Create((Self.x + 1), Self.y);
+  adj[2].Create((Self.x - 1), Self.y);
+  if adjacency8 then
+  begin
+    adj[4].Create((Self.x - 1), (Self.y - 1));
+    adj[5].Create((Self.x + 1), (Self.y - 1));
+    adj[6].Create((Self.x - 1), (Self.y + 1));
+    adj[7].Create((Self.x + 1), (Self.y + 1));
+  end;
+end;
+
+{==============================================================================]
   <TPoint.Adjacency>
   @action: Returns an array of points adjacent to the current point (Self).
            When adjacency8 is True, diagonal neighbors are included.
@@ -728,6 +748,27 @@ begin
 end;
 
 {==============================================================================]
+  <TPoint.Neighbours>
+  @action:  Populates the provided array with adjacent points in 4 or 8 directions.
+  @note:    Uses 8-way adjacency if the array length is greater than 4; 
+            otherwise only the 4 cardinal directions are filled.
+[==============================================================================}
+procedure TPointHelper.Neighbours(var adj: TPointArray); overload;
+begin
+  adj[0] := Point(Self.x, (Self.y - 1));
+  adj[3] := Point(Self.x, (Self.y + 1));
+  adj[1] := Point((Self.x + 1), Self.y);
+  adj[2] := Point((Self.x - 1), Self.y);
+  if (Length(adj) > 4) then
+  begin
+    adj[4] := Point((Self.x - 1), (Self.y - 1));
+    adj[5] := Point((Self.x + 1), (Self.y - 1));
+    adj[6] := Point((Self.x - 1), (Self.y + 1));
+    adj[7] := Point((Self.x + 1), (Self.y + 1));
+  end;
+end;
+
+{==============================================================================]
   <TPoint.Neighbors>
   @action: Returns all neighboring points of Self as a TPointArray (alternative spelling).
            Supports 4-way or 8-way adjacency.
@@ -740,6 +781,27 @@ begin
                Point((X + 1), (Y + 1)), Point((X + 1), (Y - 1)), Point((X - 1), (Y + 1)), Point((X - 1), (Y - 1))];
   if not adjacency8 then
     SetLength(Result, 4);
+end;
+
+{==============================================================================]
+  <TPoint.Neighbors>
+  @action:  Populates the provided array with adjacent points in 4 or 8 directions.
+  @note:    Uses 8-way adjacency if the array length is greater than 4; 
+            otherwise only the 4 cardinal directions are filled.
+[==============================================================================}
+procedure TPointHelper.Neighbors(var adj: TPointArray); overload;
+begin
+  adj[0].Create(Self.x, (Self.y - 1));
+  adj[3].Create(Self.x, (Self.y + 1));
+  adj[1].Create((Self.x + 1), Self.y);
+  adj[2].Create((Self.x - 1), Self.y);
+  if (Length(adj) > 4) then
+  begin
+    adj[4].Create((Self.x - 1), (Self.y - 1));
+    adj[5].Create((Self.x + 1), (Self.y - 1));
+    adj[6].Create((Self.x - 1), (Self.y + 1));
+    adj[7].Create((Self.x + 1), (Self.y + 1));
+  end;
 end;
 
 {==============================================================================]

@@ -382,20 +382,6 @@ end;
   note: Make sure start is inside your area. Doesn't pay attention to ANYTHING outside area. :)
 [==============================================================================}
 function TPointArrayHelper.FloodFill(const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; 
-  procedure GetAdjacent(var adj: TPointArray; const n: TPoint; const FF8W: Boolean);
-  begin
-    adj[0].Create(n.x, (n.y - 1));
-    adj[3].Create(n.x, (n.y + 1));
-    adj[1].Create((n.x + 1), n.y);
-    adj[2].Create((n.x - 1), n.y);
-    if FF8W then
-    begin
-      adj[4].Create((n.x - 1), (n.y - 1));
-      adj[5].Create((n.x + 1), (n.y - 1));
-      adj[6].Create((n.x - 1), (n.y + 1));
-      adj[7].Create((n.x + 1), (n.y + 1));
-    end;
-  end;
 var
   l, i, w, h, x, y, f, t, r: Integer;
   q, a: TPointArray;
@@ -429,7 +415,7 @@ begin
     l := 0;
     while (l > -1) do
     begin
-      GetAdjacent(a, q[l], scan8W);
+      q[l].Adjacent(a, scan8W);
       for i := 0 to f do
       begin
         p := a[i];
