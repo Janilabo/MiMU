@@ -55,6 +55,18 @@ type
       function BitMax: Integer;
       function Unbitify: TBooleanArray; overload;
       function Unbitify(const bCount: Integer): TBooleanArray; overload;
+      function Adjust(const cValue: Integer; const limits: TRange): Boolean;
+      function AdjustMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean;
+      function AdjustMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean;
+      function Adjusted(const cValue: Integer; const limits: TRange): Integer;
+      function AdjustedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer;
+      function AdjustedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer;
+      function Update(const cValue: Integer; const limits: TRange): Boolean;
+      function UpdateMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean;
+      function UpdateMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean;
+      function Updated(const cValue: Integer; const limits: TRange): Integer;
+      function UpdatedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer;
+      function UpdatedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer;
     {$ENDIF}
     {$IFDEF Double}
       function ClampMin(const limit: Double): Double;
@@ -730,6 +742,7 @@ type
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function CountingSort(const aAscending: Boolean = True): Integer;
+      function SegmentedCountingSort(const aAscending: Boolean = True; const bucketSize: Integer = 1024): Integer;
       function BinaryCountingSort(const aAscending: Boolean = True; const maxRange: Integer = 2000): Integer;
     {$ENDIF}
     {$IFDEF Double}

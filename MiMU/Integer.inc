@@ -530,4 +530,188 @@ begin
   end;
 end;
 
+{==============================================================================]
+ <Integer.Adjust>
+ @action: Attempts to adjust the current value by cValue if the resulting value
+          stays within the specified limits range.
+ @note: Returns True if the value was adjusted, False if it would go out of range.
+[==============================================================================}
+function TIntegerHelper.Adjust(const cValue: Integer; const limits: TRange): Boolean;
+begin
+  Result := limits.Contains(Self + cValue);
+  if Result then
+    Self := (Self + cValue);
+end;
+
+{==============================================================================]
+ <Integer.AdjustMin>
+ @action: Attempts to increase or decrease the integer by cValue, but prevents
+          it from going below limit.
+ @note: Returns True if the value stayed above or equal to limit.
+[==============================================================================}
+function TIntegerHelper.AdjustMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean;
+begin
+  Result := ((Self + cValue) >= limit);
+  if Result then
+    Self := (Self + cValue);
+end;
+
+{==============================================================================]
+ <Integer.AdjustMax>
+ @action: Attempts to adjust by cValue but prevents exceeding the upper limit.
+ @note: Returns True if the new value remains <= limit.
+[==============================================================================}
+function TIntegerHelper.AdjustMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean;
+begin
+  Result := ((Self + cValue) <= limit);
+  if Result then
+    Self := (Self + cValue);
+end;
+
+{==============================================================================]
+ <Integer.Adjusted>
+ @action: Returns a potentially adjusted copy of the integer, adding cValue
+          only if it stays within limits.
+ @note: Non-mutating version of Adjust.
+[==============================================================================}
+function TIntegerHelper.Adjusted(const cValue: Integer; const limits: TRange): Integer;
+begin
+  Result := Self;
+  if limits.Contains(Self + cValue) then
+    Result := (Result + cValue);
+end;
+
+{==============================================================================]
+ <Integer.AdjustedMin>
+ @action: Returns Self + cValue if above limit; otherwise returns Self.
+ @note: Non-mutating version of AdjustMin.
+[==============================================================================}
+function TIntegerHelper.AdjustedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer;
+begin
+  Result := Self;
+  if ((Self + cValue) >= limit) then
+    Result := (Result + cValue);
+end;
+
+{==============================================================================]
+ <Integer.AdjustedMax>
+ @action: Returns Self + cValue if below limit; otherwise returns Self.
+ @note:   Non-mutating version of AdjustMax.
+[==============================================================================}
+function TIntegerHelper.AdjustedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer;
+begin
+  Result := Self;
+  if ((Self + cValue) <= limit) then
+    Result := (Result + cValue);
+end;
+
+{==============================================================================]
+ <Integer.Update>
+ @action: Adjusts the integer by cValue and clamps it within the specified limits.
+ @note: Returns True if the result was within the range and assigned without clamping.
+[==============================================================================}
+function TIntegerHelper.Update(const cValue: Integer; const limits: TRange): Boolean;
+var
+  r: TRange;
+  n: Integer;
+begin
+  r := limits.Normalized;
+  n := (Self + cValue);
+  if (n < r.start) then
+    Self := r.start
+  else
+    if (n > r.stop) then
+      Self := r.stop
+    else
+      Self := n;
+  Result := (n = Self);
+end;
+
+{==============================================================================]
+ <Integer.UpdateMin>
+ @action: Adjusts the integer by cValue, ensuring it does not fall below limit.
+ @note: Returns True if the result was above or equal to limit (no clamping).
+[==============================================================================}
+function TIntegerHelper.UpdateMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean;
+var
+  n: Integer;
+begin
+  n := (Self + cValue);
+  if (n < limit) then
+    Self := limit
+  else
+    Self := n;
+  Result := (n = Self);
+end;
+
+{==============================================================================]
+ <Integer.UpdateMax>
+ @action: Adjusts the integer by cValue, ensuring it does not exceed limit.
+ @note: Returns True if the result was below or equal to limit (no clamping).
+[==============================================================================}
+function TIntegerHelper.UpdateMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean;
+var
+  n: Integer;
+begin
+  n := (Self + cValue);
+  if (n > limit) then
+    Self := limit
+  else
+    Self := n;
+  Result := (n = Self);
+end;
+
+{==============================================================================]
+ <Integer.Updated>
+ @action: Returns a new value equal to Self + cValue, clamped within the specified limits.
+ @note: Does not modify Self.
+[==============================================================================}
+function TIntegerHelper.Updated(const cValue: Integer; const limits: TRange): Integer;
+var
+  r: TRange;
+  n: Integer;
+begin
+  r := limits.Normalized;
+  n := (Self + cValue);
+  if (n < limits.start) then
+    Result := limits.start
+  else
+    if (n > limits.stop) then
+      Result := limits.stop
+    else
+      Result := n;
+end;
+
+{==============================================================================]
+ <Integer.UpdatedMin>
+ @action: Returns Self + cValue, ensuring the result is not below limit.
+ @note: Does not modify Self.
+[==============================================================================}
+function TIntegerHelper.UpdatedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer;
+var
+  n: Integer;
+begin
+  n := (Self + cValue);
+  if (n < limit) then
+    Result := limit
+  else
+    Result := n;
+end;
+
+{==============================================================================]
+ <Integer.UpdatedMax>
+ @action: Returns Self + cValue, ensuring the result is not above limit.
+ @note: Does not modify Self.
+[==============================================================================}
+function TIntegerHelper.UpdatedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer;
+var
+  n: Integer;
+begin
+  n := (Self + cValue);
+  if (n > limit) then
+    Result := limit
+  else
+    Result := n;
+end;
+
 {$UNDEF Integer}

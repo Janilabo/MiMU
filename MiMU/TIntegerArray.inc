@@ -2070,7 +2070,7 @@ var
   m: TRange;
 begin
   Result := Length(Self);
-  if (Result = 0) then
+  if (Result < 2) then
     Exit;
   m := Self.Bounds;
   o := -m.start;
@@ -2084,6 +2084,62 @@ begin
   if not aAscending then
     Self.Reverse;
 end;
+
+{==============================================================================]
+ <TIntegerArray.SegmentedCountingSort>
+ @action: Performs a counting sort over the integer array using a small
+          bucket-based approach. Supports ascending or descending order.
+ @note:   Returns the number of elements in the array (Length(Self)).
+          Sorting is done in-place using an auxiliary array.
+          Efficient for moderate-sized integer ranges with many repeated values.
+[==============================================================================}
+function TIntegerArrayHelper.SegmentedCountingSort(const aAscending: Boolean = True; const bucketSize: Integer = 1024): Integer;
+var
+  i, j, l: Integer;
+  c, s: TIntegerArray;
+  m, r: TRange;
+begin
+  Result := Length(Self);
+  if (Result < 2) then
+    Exit;
+  m := Self.Bounds;
+  SetLength(s, Length(Self));
+  l := 0;
+  if aAscending then
+  begin
+    r.start := m.start;
+    while (r.start <= m.stop) do
+    begin
+      r.stop := Integer((r.start + bucketSize) - 1).ClampMax(m.stop);
+      SetLength(c, ((r.stop - r.start) + 1));
+      for i := 0 to High(Self) do
+        if (Self[i] >= r.start) and (Self[i] <= r.stop) then
+          Inc(c[Self[i] - r.start]);
+      for i := 0 to High(c) do
+        while c[i].AdjustMin(-1, 0) do
+          s[l.Increase] := (r.start + i);
+      Inc(r.start, bucketSize);
+    end;
+  end
+  else
+  begin
+    r.start := m.stop;
+    while (r.start >= m.start) do
+    begin
+      r.stop := Integer((r.start - bucketSize) + 1).ClampMin(m.start);
+      SetLength(c, ((r.start - r.stop) + 1));
+      for i := 0 to High(Self) do
+        if (Self[i] >= r.stop) and (Self[i] <= r.start) then
+          Inc(c[Self[i] - r.stop]);
+      for i := High(c) downto 0 do
+        while c[i].AdjustMin(-1, 0) do
+          s[l.Increase] := (r.stop + i);
+      Dec(r.start, bucketSize);
+    end;
+  end;
+  for i := 0 to High(Self) do
+    Self[i] := s[i];
+end; 
 
 {==============================================================================]
   <TIntegerArray.BinaryCountingSort>
@@ -2107,7 +2163,7 @@ var
   m: TRange;
 begin
   Result := Length(Self);
-  if (Result = 0) then
+  if (Result < 2) then
     Exit;
   m := Self.Bounds(r);
   case (r <= maxRange) of
