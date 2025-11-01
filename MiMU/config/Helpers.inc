@@ -740,6 +740,11 @@ type
       function BinaryFind(const val: Integer; const aAscending: Boolean): Integer; overload;
       function BinaryInsert(const x: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinarySearchEx(const x: Integer; const ignore: Integer = -2147483648; const aAscending: Boolean = True): Integer; overload;
+      function BinarySearchRange(const x: Integer; const rLeft, rRight: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinaryDeduplicate(const aAscending: Boolean = True): Integer; overload;
+      function BinaryUnduplicate(const aAscending: Boolean = True): Integer; overload;
+      function BinaryDeduplicated(const aAscending: Boolean = True): TIntegerArray; overload;
+      function BinaryUnduplicated(const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function CountingSort(const aAscending: Boolean = True): Integer;
@@ -786,6 +791,11 @@ type
       function BinaryFind(const val: Double; const aAscending: Boolean): Integer; overload;
       function BinarySearchEx(const x: Double; const ignore: Double = -2147483648; const aAscending: Boolean = True): Integer; overload;
       function BinaryInsert(const x: Double; const aAscending: Boolean = True): Integer; overload;
+      function BinarySearchRange(const x: Double; const rLeft, rRight: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinaryDeduplicate(const aAscending: Boolean = True): Integer; overload;
+      function BinaryUnduplicate(const aAscending: Boolean = True): Integer; overload;
+      function BinaryDeduplicated(const aAscending: Boolean = True): TDoubleArray; overload;
+      function BinaryUnduplicated(const aAscending: Boolean = True): TDoubleArray; overload;
     {$ENDIF}
     {$IFDEF string}
       function Tally: Int64;

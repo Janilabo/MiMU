@@ -325,4 +325,49 @@ function TDoubleArrayHelper.BinarySearchEx(const x: Double; const ignore: Double
 [==============================================================================}
 function TDoubleArrayHelper.BinaryInsert(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryInsert}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryInsert}
 
+{==============================================================================]
+ <arr.BinarySearchRange>
+ @action: Perform a binary search for a value within a specific index range.
+ @note: Returns the index of the found element or -1 if not present.
+        Works on ascending or descending arrays, depending on aAscending.
+[==============================================================================}
+function TDoubleArrayHelper.BinarySearchRange(const x: Double; const rLeft, rRight: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchRange}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchRange}
+
+{==============================================================================]
+ <arr.BinaryDeduplicate>
+ @action: Rebuilds the array in place by removing duplicate elements using binary search.
+ @note: Creates a temporary copy of the original array and appends only unique values back.
+        Returns the number of elements removed.
+        Requires the array to be sorted (ascending or descending according to aAscending).
+        Runs in O(n log n) time with O(n) additional memory usage.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryDeduplicate(const aAscending: Boolean = True): Integer; overload; var u: TDoubleArray; {$DEFINE Skeleton_BinaryDeduplicate}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryDeduplicate}
+
+{==============================================================================]
+ <arr.BinaryUnduplicate>
+ @action: Removes duplicate elements from the array in place using binary search.
+ @note: Keeps only the first occurrence of each unique value.
+        Returns the number of elements removed.
+        Requires the array to be sorted (ascending or descending as specified).
+        Operates in O(n log n) time and O(1) extra space.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryUnduplicate(const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryUnduplicate}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnduplicate}
+
+{==============================================================================]
+ <arr.BinaryDeduplicated>
+ @action: Return a new array containing unique elements from the current one.
+ @note: The original array remains unchanged.
+        Uses binary search to avoid inserting duplicates.
+        Sorting is recommended before calling for best results.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryDeduplicated(const aAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinaryDeduplicated}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryDeduplicated}
+
+{==============================================================================]
+ <arr.BinaryUnduplicated>
+ @action: Return a deduplicated copy of the current array using in-place logic.
+ @note: Works like BinaryUnduplicate but produces a new array instead of modifying Self.
+        Requires sorted input for correct results.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryUnduplicated(const aAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinaryUnduplicated}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnduplicated}
+
 {$UNDEF Double}

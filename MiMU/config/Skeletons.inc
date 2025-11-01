@@ -1145,3 +1145,83 @@ begin
     Self[0] := x;
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinarySearchRange}
+var
+  L, M, R: Integer;
+begin
+  Result := -1;
+  L := rLeft;
+  R := rRight;
+  while (L <= R) do
+  begin
+    M := ((L + R) div 2);
+    if (Self[M] = x) then
+      Exit(M)
+    else
+      if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
+        L := (M + 1)
+      else
+        R := (M - 1);
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryDeduplicate}
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  if (l < 2) then
+    Exit(0);
+  u := Self.Copy;
+  SetLength(Self, 0);
+  for i := 0 to (l - 1) do
+    if (Self.BinarySearch(u[i], aAscending) = -1) then
+      Self.Supply(u[i]);
+  Result := (l - Length(Self));
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUnduplicate}
+var
+  i, u, l: Integer;
+begin
+  l := Length(Self);
+  if (l < 2) then
+    Exit(0);
+  u := 0;
+  for i := 1 to (l - 1) do
+    if (Self.BinarySearchRange(Self[i], 0, u, aAscending) = -1) then
+      Self[u.Increment] := Self[i];
+  Result := (l - (u + 1));
+  if (Result > 0) then
+    SetLength(Self, (u + 1)); 
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryDeduplicated}
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+    if (Result.BinarySearch(Self[i], aAscending) = -1) then
+      Result.Supply(Self[i]);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUnduplicated}
+var
+  i, u: Integer;
+begin
+  Result := Self.Copy;
+  if (Length(Self) < 2) then
+    Exit;
+  u := 0;
+  for i := 1 to High(Self) do
+    if (Result.BinarySearchRange(Result[i], 0, u, aAscending) = -1) then
+      Result[u.Increment] := Result[i];
+  SetLength(Result, (u + 1));
+end;
+{$ENDIF}
