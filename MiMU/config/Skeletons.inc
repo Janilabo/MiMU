@@ -1117,3 +1117,31 @@ begin
   end;
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryInsert}
+var
+  l, r, m, i: Integer;
+begin
+  Result := Length(Self);
+  SetLength(Self, (Result + 1));
+  if (Result > 0) then
+  begin
+    l := 0;
+    r := (Result - 1);
+    while (l <= r) do
+    begin
+      m := ((l + r) div 2);
+      if ((aAscending and (Self[m] >= x)) or ((not aAscending) and (Self[m] <= x))) then
+      begin
+        Result := m;
+        r := (m - 1);
+      end else
+        l := (m + 1);
+    end;
+    for i := High(Self) downto (Result + 1) do
+      Self[i] := Self[i - 1];
+    Self[Result] := x;
+  end else
+    Self[0] := x;
+end;
+{$ENDIF}

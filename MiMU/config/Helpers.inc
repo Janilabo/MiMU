@@ -738,6 +738,7 @@ type
       function BinaryCombine(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BinaryRemove(const val: Integer; const all: Boolean = True; const aAscending: Boolean = True): Integer; overload;
       function BinaryFind(const val: Integer; const aAscending: Boolean): Integer; overload;
+      function BinaryInsert(const x: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinarySearchEx(const x: Integer; const ignore: Integer = -2147483648; const aAscending: Boolean = True): Integer; overload;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
@@ -784,6 +785,7 @@ type
       function BinaryRemove(const val: Double; const all: Boolean = True; const aAscending: Boolean = True): Integer; overload;
       function BinaryFind(const val: Double; const aAscending: Boolean): Integer; overload;
       function BinarySearchEx(const x: Double; const ignore: Double = -2147483648; const aAscending: Boolean = True): Integer; overload;
+      function BinaryInsert(const x: Double; const aAscending: Boolean = True): Integer; overload;
     {$ENDIF}
     {$IFDEF string}
       function Tally: Int64;

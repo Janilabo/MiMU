@@ -1993,6 +1993,13 @@ function TIntegerArrayHelper.BinaryFind(const val: Integer; const aAscending: Bo
 function TIntegerArrayHelper.BinarySearchEx(const x: Integer; const ignore: Integer = -2147483648; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchEx}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchEx}
 
 {==============================================================================]
+  <arr.BinaryInsert>
+  @action: Insert an integer into a sorted array using binary search, preserving order.
+  @note: Returns the index where the element was inserted. Supports ascending or descending order.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryInsert(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryInsert}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryInsert}
+
+{==============================================================================]
   <TIntegerArray.BMerge>
   @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
   @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).

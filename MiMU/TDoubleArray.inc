@@ -318,4 +318,11 @@ function TDoubleArrayHelper.BinaryFind(const val: Double; const aAscending: Bool
 [==============================================================================}
 function TDoubleArrayHelper.BinarySearchEx(const x: Double; const ignore: Double = -2147483648; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchEx}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchEx}
 
+{==============================================================================]
+  <arr.BinaryInsert>
+  @action: Insert an double into a sorted array using binary search, preserving order.
+  @note: Returns the index where the element was inserted. Supports ascending or descending order.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryInsert(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryInsert}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryInsert}
+
 {$UNDEF Double}
