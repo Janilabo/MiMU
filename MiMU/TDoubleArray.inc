@@ -370,4 +370,24 @@ function TDoubleArrayHelper.BinaryDeduplicated(const aAscending: Boolean = True)
 [==============================================================================}
 function TDoubleArrayHelper.BinaryUnduplicated(const aAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinaryUnduplicated}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnduplicated}
 
+{==============================================================================]
+ <arr.BinaryCombined>
+ @action: Merge two sorted arrays into one sorted array.
+ @note: Both arrays must be sorted in the same order (ascending or descending).
+        The result is a new array that combines both inputs, preserving order.
+        Complexity: O(n + m)
+[==============================================================================}
+function TDoubleArrayHelper.BinaryCombined(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinaryCombined}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryCombined}
+
+{==============================================================================]
+ <arr.BinaryRank>
+ @action: Returns the insertion index (rank) of a value in the sorted array.
+ @note: If the value exists, its first occurrence index is returned.
+        If not found, returns the position where it should be inserted
+        to maintain sort order.
+        Works for ascending or descending arrays.
+        Complexity: O(log n)
+[==============================================================================}
+function TDoubleArrayHelper.BinaryRank(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryRank}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRank}
+
 {$UNDEF Double}

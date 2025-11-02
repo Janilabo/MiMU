@@ -2045,11 +2045,31 @@ function TIntegerArrayHelper.BinaryDeduplicated(const aAscending: Boolean = True
 function TIntegerArrayHelper.BinaryUnduplicated(const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryUnduplicated}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnduplicated}
 
 {==============================================================================]
+ <arr.BinaryCombined>
+ @action: Merge two sorted arrays into one sorted array.
+ @note: Both arrays must be sorted in the same order (ascending or descending).
+        The result is a new array that combines both inputs, preserving order.
+        Complexity: O(n + m)
+[==============================================================================}
+function TIntegerArrayHelper.BinaryCombined(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryCombined}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryCombined}
+
+{==============================================================================]
+ <arr.BinaryRank>
+ @action: Returns the insertion index (rank) of a value in the sorted array.
+ @note: If the value exists, its first occurrence index is returned.
+        If not found, returns the position where it should be inserted
+        to maintain sort order.
+        Works for ascending or descending arrays.
+        Complexity: O(log n)
+[==============================================================================}
+function TIntegerArrayHelper.BinaryRank(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryRank}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRank}
+
+{==============================================================================]
   <TIntegerArray.BMerge>
   @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
   @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
 [==============================================================================}
-function TIntegerArrayHelper.BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryPrevious}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPrevious}
+function TIntegerArrayHelper.BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
 var
   l: Integer;
   s, i: TRange;

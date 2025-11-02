@@ -1225,3 +1225,54 @@ begin
   SetLength(Result, (u + 1));
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryCombined}
+var
+  i, j, k, s, o: Integer;
+begin
+  s := Length(Self);
+  o := Length(items);
+  SetLength(Result, (s + o));
+  i := 0;
+  j := 0;
+  k := 0;
+  while ((i < s) and (j < o)) do
+    if ((aAscending and (Self[i] <= items[j])) or ((not aAscending) and (Self[i] >= items[j]))) then
+       Result[k.Increase] := Self[i.Increase]
+     else
+       Result[k.Increase] := items[j.Increase];
+  while (i < s) do
+    Result[k.Increase] := Self[i.Increase];
+  while (j < o) do
+    Result[k.Increase] := items[j.Increase];
+  if (k < Length(Result)) then
+    SetLength(Result, k);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryRank}
+var
+  l, r, m: Integer;
+begin
+  l := 0;
+  r := High(Self);
+  while (l <= r) do
+  begin
+    m := ((l + r) div 2);
+    case (Self[m] = x) of
+      True:
+      begin
+        while ((m > 0) and (Self[m - 1] = x)) do
+          Dec(m);
+        Exit(m);
+      end;
+      False:
+      if ((aAscending and (Self[m] < x)) or ((not aAscending) and (Self[m] > x))) then
+        l := (m + 1)
+      else
+        r := (m - 1);
+    end;
+  end;
+  Result := l;
+end;
+{$ENDIF}

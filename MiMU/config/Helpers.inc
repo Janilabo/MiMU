@@ -745,6 +745,8 @@ type
       function BinaryUnduplicate(const aAscending: Boolean = True): Integer; overload;
       function BinaryDeduplicated(const aAscending: Boolean = True): TIntegerArray; overload;
       function BinaryUnduplicated(const aAscending: Boolean = True): TIntegerArray; overload;
+      function BinaryCombined(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
+      function BinaryRank(const x: Integer; const aAscending: Boolean = True): Integer; overload;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function CountingSort(const aAscending: Boolean = True): Integer;
@@ -796,6 +798,8 @@ type
       function BinaryUnduplicate(const aAscending: Boolean = True): Integer; overload;
       function BinaryDeduplicated(const aAscending: Boolean = True): TDoubleArray; overload;
       function BinaryUnduplicated(const aAscending: Boolean = True): TDoubleArray; overload;
+      function BinaryCombined(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
+      function BinaryRank(const x: Double; const aAscending: Boolean = True): Integer; overload;
     {$ENDIF}
     {$IFDEF string}
       function Tally: Int64;
