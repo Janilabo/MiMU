@@ -559,6 +559,10 @@ type
     {$IFDEF Sortable}
       function Sortable: Boolean; overload;
       function Sorted(const aAscending: Boolean = True): Boolean; overload;
+      function IsSorted(const aAscending: Boolean = True): Boolean; overload;
+      function IsSorted(const iStart, iStop: Integer; const aAscending: Boolean = True): Boolean; overload;
+      function IsSorted(const indexes: TRange; const aAscending: Boolean = True): Boolean; overload;
+      function IsSorted(const index: Integer; const aAscending: Boolean = True): Boolean; overload;
       function InOrder(const aAscending: Boolean = True): Boolean; overload;
       function Orderly: Boolean; overload;
       function Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload;
@@ -620,6 +624,7 @@ type
       function Direction: Integer; overload;
       function TrendFalling: Boolean; overload;
       function TrendRising: Boolean; overload;
+      function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
     {$ENDIF}
     function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
     function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
@@ -747,6 +752,11 @@ type
       function BinaryUnduplicated(const aAscending: Boolean = True): TIntegerArray; overload;
       function BinaryCombined(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BinaryRank(const x: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinaryIndex(const x: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinaryUpdate(const oValue, nValue: Integer; const aAscending: Boolean = True): Boolean; overload;
+      function BinaryDelete(const x: Integer; const aAscending: Boolean = True): Boolean; overload;
+      function BinaryReplace(const oValue, nValue: Integer; const aAscending: Boolean = True): Boolean; overload;
+      function BinaryReplaceAll(const oValue, nValue: Integer; const aAscending: Boolean = True): Integer; overload;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function CountingSort(const aAscending: Boolean = True): Integer;
@@ -800,6 +810,11 @@ type
       function BinaryUnduplicated(const aAscending: Boolean = True): TDoubleArray; overload;
       function BinaryCombined(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
       function BinaryRank(const x: Double; const aAscending: Boolean = True): Integer; overload;
+      function BinaryIndex(const x: Double; const aAscending: Boolean = True): Integer; overload;
+      function BinaryUpdate(const oValue, nValue: Double; const aAscending: Boolean = True): Boolean; overload;
+      function BinaryDelete(const x: Double; const aAscending: Boolean = True): Boolean; overload;
+      function BinaryReplace(const oValue, nValue: Double; const aAscending: Boolean = True): Boolean; overload;
+      function BinaryReplaceAll(const oValue, nValue: Double; const aAscending: Boolean = True): Integer; overload;
     {$ENDIF}
     {$IFDEF string}
       function Tally: Int64;

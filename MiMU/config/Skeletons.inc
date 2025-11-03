@@ -1276,3 +1276,79 @@ begin
   Result := l;
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryIndex}
+var
+  l, r, m: Integer;
+begin
+  Result := -1;
+  l := 0;
+  r := High(Self);
+  while (l <= r) do
+  begin
+    m := ((l + r) div 2);
+    if (Self[m] = x) then
+      Exit(m)
+    else
+	  if ((aAscending and (Self[m] < x)) or ((not aAscending) and (Self[m] > x))) then
+        l := (m + 1)
+      else
+        r := (m - 1);
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUpdate}
+var
+  p: Integer;
+begin
+  Result := False;
+  p := Self.BinaryIndex(oValue, aAscending);
+  Result := (p <> -1);
+  if Result then
+    Self[p] := nValue;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryDelete}
+var
+  p, l, i: Integer;
+begin
+  p := Self.BinaryIndex(x, aAscending);
+  Result := (p <> -1);
+  if not Result then
+    Exit;
+  l := Length(Self);
+  for i := p to (l - 2) do
+    Self[i] := Self[i + 1];
+  SetLength(Self, (l - 1));
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryReplace}
+begin
+  Result := Self.BinaryDelete(oValue, aAscending);
+  if (Result and (oValue <> nValue)) then
+    Self.BinaryInsert(nValue, aAscending);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryReplaceAll}
+var
+  i: Integer;
+  r: Boolean;
+begin
+  Result := 0;
+  r := False;
+  for i := 0 to High(Self) do
+    if (Self[i] = oValue) then
+    begin
+      Self[i] := nValue;
+      Inc(Result);
+      if ((not r) and (not Self.IsSorted(i, aAscending))) then
+        r := True;
+    end;
+  if r then
+    Self.BinaryInsertionSort(aAscending);
+end;
+{$ENDIF}

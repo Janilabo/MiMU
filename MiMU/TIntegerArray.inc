@@ -2065,6 +2065,52 @@ function TIntegerArrayHelper.BinaryCombined(const items: TIntegerArray; const aA
 function TIntegerArrayHelper.BinaryRank(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryRank}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRank}
 
 {==============================================================================]
+ <arr.BinaryIndex>
+ @action: Returns the index of a given value in the sorted array using binary search.
+ @note: If the value is not found, returns -1.
+        Works for both ascending and descending arrays.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryIndex(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryIndex}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryIndex}
+
+{==============================================================================]
+ <arr.BinaryUpdate>
+ @action: Updates the first occurrence of an element in the sorted array.
+ @note: Searches for old_value using binary search. If found, replaces it with new_value.
+        Returns True if updated, False if the value was not found.
+        After replacement, sorting may be violated if new_value changes order.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryUpdate(const oValue, nValue: Integer; const aAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryUpdate}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUpdate}
+
+{==============================================================================]
+ <arr.BinaryDelete>
+ @action: Removes the first occurrence of a specific value from a sorted array.
+ @note: Uses binary search to locate the target efficiently.
+        Returns True if the value was found and deleted, otherwise False.
+        Works for ascending or descending arrays.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryDelete(const x: Integer; const aAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryDelete}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryDelete}
+
+{==============================================================================]
+ <arr.BinaryReplace>
+ @action: Replaces a specific value in a sorted array with a new one.
+ @note:   Uses binary search to locate and delete the old value,
+          then reinserts the new one while maintaining sorted order.
+          Returns True if the old value was found and replaced, otherwise False.
+          Complexity: O(log n + n)
+[==============================================================================}
+function TIntegerArrayHelper.BinaryReplace(const oValue, nValue: Integer; const aAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryReplace}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryReplace}
+
+{==============================================================================]
+ <arr.BinaryReplaceAll>
+ @action: Replaces all occurrences of a specified value (oValue) with another
+          value (nValue) in the array, preserving binary order if necessary.
+ @note:   Returns the number of replacements performed. If any substitution
+          breaks sorted order, the array is re-sorted automatically using
+          BinaryInsertionSort. The comparison order is determined by aAscending.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryReplaceAll(const oValue, nValue: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryReplaceAll}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryReplaceAll}
+
+{==============================================================================]
   <TIntegerArray.BMerge>
   @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
   @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).

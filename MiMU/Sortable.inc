@@ -33,6 +33,84 @@ begin
 end;
 
 {==============================================================================]
+ <arr.IsSorted>
+ @action: Checks whether the entire array is sorted in ascending or descending order.
+ @note:   Returns True if all elements are in the correct order according to aAscending.
+[==============================================================================}
+function HArr.IsSorted(const aAscending: Boolean = True): Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 1 to High(Self) do
+    if ((aAscending and (Self[i] < Self[i - 1])) or ((not aAscending) and (Self[i] > Self[i - 1]))) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+ <arr.IsSorted>
+ @action: Checks whether the elements between iStart and iStop are in correct
+          ascending or descending order.
+ @note: The range [iStart..iStop] is automatically normalized and clamped to
+        valid array bounds. Returns True if all elements within the range
+        follow the specified order.
+[==============================================================================}
+function HArr.IsSorted(const iStart, iStop: Integer; const aAscending: Boolean = True): Boolean; overload;
+var
+  i, s, e, h: Integer;
+begin
+  h := High(Self);
+  if (h <= 0) then
+    Exit(True);
+  s := Max(0, Min(iStart, iStop));
+  e := Min(Max(iStart, iStop), h);
+  if (s >= e) then
+    Exit(True);
+  for i := (s + 1) to e do
+    if ((aAscending and (Self[i] < Self[i - 1])) or ((not aAscending) and (Self[i] > Self[i - 1]))) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+ <arr.IsSorted>
+ @action: Determines whether the array elements within the specified range
+          (given as TRange) are ordered in ascending or descending order.
+ @note: Internally calls the (iStart, iStop) overload. The range is
+        automatically normalized and clamped to valid array bounds.
+        Returns True if all elements within the range follow the specified order.
+[==============================================================================}
+function HArr.IsSorted(const indexes: TRange; const aAscending: Boolean = True): Boolean; overload;
+begin
+  Result := Self.IsSorted(indexes.start, indexes.stop, aAscending);
+end;
+
+{==============================================================================]
+ <arr.IsSorted>
+ @action: Checks whether the element at the specified index is correctly
+          positioned relative to its immediate neighbors according to
+          ascending or descending order.
+ @note: Returns True if the element at the given index maintains proper
+        order with adjacent elements. Boundary or single-element arrays are
+        considered sorted. Returns False for out-of-range indices.
+[==============================================================================}
+function HArr.IsSorted(const index: Integer; const aAscending: Boolean = True): Boolean; overload;
+var
+  h: Integer;
+begin
+  h := High(Self);
+  if (index < 0) or (index > h) then
+    Exit(False);
+  if (h = 0) then
+    Exit(True);
+  if ((index < h) and (aAscending and (Self[index] > Self[index + 1])) or ((not aAscending) and (Self[index] < Self[index + 1]))) then
+    Exit(False);
+  if ((index > 0) and (aAscending and (Self[index] < Self[index - 1])) or ((not aAscending) and (Self[index] > Self[index - 1]))) then
+    Exit(False);
+  Result := True;
+end; 
+
+{==============================================================================]
   <HArr.InOrder>
   @action: Returns true if array arr is in ascending/descending order by aAscending.
   @note: By default checking for ascending order.
@@ -1852,4 +1930,47 @@ end;
 function HArr.TrendRising: Boolean; overload;
 begin
   Result := ((Length(Self) > 1) and (Self[Low(Self)] <= Self[High(Self)]));
+end;
+
+{==============================================================================]
+ <arr.BinaryInsertionSort>
+ @action: Sorts the array in ascending or descending order using binary
+          insertion sort, which combines binary search and insertion.
+ @note: This algorithm runs in O(n²) time in the worst case but uses binary
+        search to minimize comparisons. It performs well on small or
+        partially sorted datasets. Returns the number of elements sorted.
+[==============================================================================}
+function HArr.BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
+  function BP(const value: TVar; const hIndex: Integer): Integer;
+  var
+    L, R, M: Integer;
+  begin
+    L := 0;
+    R := hIndex;
+    while (L <= R) do
+    begin
+      M := ((L + R) div 2);
+      if ((aAscending and (Self[M] > value)) or ((not aAscending) and (Self[M] < value))) then
+        R := (M - 1)
+      else
+        L := (M + 1);
+    end;
+    Result := L;
+  end;
+var
+  k: TVar;
+  i, j, p: Integer;
+begin
+  Result := Length(Self);
+  if (Result < 2) then
+    Exit;
+  for i := 1 to (Result - 1) do
+  begin
+    k := Self[i];
+    p := BP(k, (i - 1));
+    j := (i + 1);
+    while (j.Decrement > p) do
+      Self[j] := Self[j - 1];
+    Self[p] := k;
+  end;
 end;
