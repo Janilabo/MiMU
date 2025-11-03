@@ -1181,8 +1181,8 @@ end;
 
 {==============================================================================]
   <TBox_Points>
-  Explanation: Returns TBox points as TPointArray.
-  Example: None.
+  @action: Returns TBox points as TPointArray.
+  @note: None.
 [==============================================================================}
 function TBox.Points: TPointArray; overload;
 var
@@ -1197,8 +1197,8 @@ end;
 
 {==============================================================================]
   <TBox_Points>
-  Explanation: Returns TBox point with index (pIndex).
-  Example: None.
+  @action: Returns TBox point with index (pIndex).
+  @note: None.
 [==============================================================================}
 function TBox.Points(const pIndex: Integer): TPoint; overload;
 begin
@@ -1209,8 +1209,8 @@ end;
 
 {==============================================================================]
   <TBox_Points>
-  Explanation: Returns TBox points with indexes (pIDs).
-  Example: None.
+  @action: Returns TBox points with indexes (pIDs).
+  @note: None.
 [==============================================================================}
 function TBox.Points(const pIDs: TIntegerArray): TPointArray; overload;
 var
@@ -1223,8 +1223,8 @@ end;
 
 {==============================================================================]
   <TBox_Points>
-  Explanation: Stores TBox points to xArray and yArray.
-  Example: Returns area (length of TPointArray in box)
+  @action: Stores TBox points to xArray and yArray.
+  @note: Returns area (length of TPointArray in box)
 [==============================================================================}
 function TBox.Points(var xArray, yArray: TIntegerArray): Integer; overload;
 var
@@ -1243,8 +1243,8 @@ end;
 
 {==============================================================================]
   <TBox.Pixels>
-  Explanation: Returns TBox points as TPointArray.
-  Example: None.
+  @action: Returns TBox points as TPointArray.
+  @note: None.
 [==============================================================================}
 function TBox.Pixels: TPointArray; overload;
 var
@@ -1272,8 +1272,8 @@ end;
 
 {==============================================================================]
   <TBox.Pixeled>
-  Explanation: Returns TBox points as TPointArray.
-  Example: None.
+  @action: Returns TBox points as TPointArray.
+  @note: None.
 [==============================================================================}
 function TBox.Pixeled: TPointArray; overload;
 var
@@ -1296,8 +1296,8 @@ end;
 
 {==============================================================================]
   <TBox.TPA>
-  Explanation: Returns TBox points as TPointArray.
-  Example: None.
+  @action: Returns TBox points as TPointArray.
+  @note: None.
 [==============================================================================}
 function TBox.TPA: TPointArray; overload;
 var
@@ -1319,8 +1319,8 @@ end;
 
 {==============================================================================]
   <TBox.Contents>
-  Explanation: Returns TBox points as TPointArray.
-  Example: Fast, Pointer-based alternative. Double loop version.
+  @action: Returns TBox points as TPointArray.
+  @note: Fast, Pointer-based alternative. Double loop version.
 [==============================================================================}
 function TBox.Contents: TPointArray;
 var
@@ -1340,8 +1340,8 @@ end;
 
 {==============================================================================]
   <TBox.Content>
-  Explanation: Returns TBox points as TPointArray.
-  Example: Fast, Pointer-based alternative single loop version.
+  @action: Returns TBox points as TPointArray.
+  @note: Fast, Pointer-based alternative single loop version.
 [==============================================================================}
 function TBox.Content: TPointArray;
 var
@@ -1362,8 +1362,8 @@ end;
 
 {==============================================================================]
   <TBox.Extract>
-  Explanation: Returns TBox points as TPointArray.
-  Example: Alternative method for Points(), TPA() and Contents().
+  @action: Returns TBox points as TPointArray.
+  @note: Alternative method for Points(), TPA() and Contents().
 [==============================================================================}
 function TBox.Extract: TPointArray;
 var
@@ -1382,8 +1382,8 @@ end;
 
 {==============================================================================]
   <TBox.Enumerate>
-  Explanation: Returns TBox points as TPointArray.
-  Example: Alternative method.
+  @action: Returns TBox points as TPointArray.
+  @note: Alternative method.
 [==============================================================================}
 function TBox.Enumerate: TPointArray;
 var
@@ -1413,8 +1413,8 @@ end;
 
 {==============================================================================]
   <TBox.Elements>
-  Explanation: Returns TBox points as TPointArray.
-  Example: Alternative method.
+  @action: Returns TBox points as TPointArray.
+  @note: Alternative method.
 [==============================================================================}
 function TBox.Elements: TPointArray;
 var
@@ -1434,8 +1434,8 @@ end;
 
 {==============================================================================]
   <TBox.Pts>
-  Explanation: Returns TBox points as TPointArray.
-  Example: Alternative method.
+  @action: Returns TBox points as TPointArray.
+  @note: Alternative method.
 [==============================================================================}
 function TBox.Pts: TPointArray; overload;
 var
@@ -1450,8 +1450,8 @@ end;
 
 {==============================================================================]
   <TBox.Explode>
-  Explanation: Returns TBox points as TPointArray.
-  Example: Alternative method.
+  @action: Returns TBox points as TPointArray.
+  @note: Alternative method.
 [==============================================================================}
 function TBox.Explode: TPointArray; overload;
 var
@@ -1468,8 +1468,8 @@ end;
 
 {==============================================================================]
   <TBox.Flat>
-  Explanation: Returns TBox points as TPointArray.
-  Example: Alternative method.
+  @action: Returns TBox points as TPointArray.
+  @note: Alternative method.
 [==============================================================================}
 function TBox.Flat: TPointArray; overload;
 var
@@ -1490,8 +1490,8 @@ end;
 
 {==============================================================================]
   <TBox.IDs>
-  Explanation: Returns TBox indexes as TIntegerArray
-  Example: None.
+  @action: Returns TBox indexes as TIntegerArray
+  @note: None.
 [==============================================================================}
 function TBox.IDs: TIntegerArray; overload;
 var
@@ -1504,8 +1504,8 @@ end;
 
 {==============================================================================]
   <TBox.IDs>
-  Explanation: Returns TBox index with TPoint p.
-  Example: -1 if p is not part of TBox.
+  @action: Returns TBox index with TPoint p.
+  @note: -1 if p is not part of TBox.
 [==============================================================================}
 function TBox.IDs(const p: TPoint): Integer; overload;
 var
@@ -1518,8 +1518,8 @@ end;
 
 {==============================================================================]
   <TBox.IDs>
-  Explanation: Returns TBox indexes with TPointArray p.
-  Example: -1 if p is not part of TBox.
+  @action: Returns TBox indexes with TPointArray p.
+  @note: -1 if p is not part of TBox.
 [==============================================================================}
 function TBox.IDs(const p: TPointArray): TIntegerArray; overload;
 var
@@ -1532,8 +1532,8 @@ end;
 
 {==============================================================================]
   <TBox.Border>
-  Explanation: Returns TBox border points as TPointArray.
-  Example: Skips all the inside points.
+  @action: Returns TBox border points as TPointArray.
+  @note: Skips all the inside points.
 [==============================================================================}
 function TBox.Border: TPointArray; overload;
 var
@@ -1567,8 +1567,8 @@ end;
 
 {==============================================================================]
   <TBox.Edge>
-  Explanation: Returns TBox edge points as TPointArray.
-  Example: Skips all the inside points.
+  @action: Returns TBox edge points as TPointArray.
+  @note: Skips all the inside points.
 [==============================================================================}
 function TBox.Edge: TPointArray; overload;
 var
@@ -1608,8 +1608,8 @@ end;
 
 {==============================================================================]
   <TBox.Outline>
-  Explanation: Returns TBox outline points as TPointArray.
-  Example: Skips all the inside points.
+  @action: Returns TBox outline points as TPointArray.
+  @note: Skips all the inside points.
 [==============================================================================}
 function TBox.Outline: TPointArray; overload;
 var
@@ -1644,8 +1644,8 @@ end;
 
 {==============================================================================]
   <TBox.Contour>
-  Explanation: Returns TBox contour points as TPointArray.
-  Example: Skips all the inside points.
+  @action: Returns TBox contour points as TPointArray.
+  @note: Skips all the inside points.
 [==============================================================================}
 function TBox.Contour: TPointArray;
 var
@@ -1664,8 +1664,8 @@ end;
 
 {==============================================================================]
   <TBox.Spiral>
-  Explanation: Returns TBox TPoints as spiral shaped TPointArray.
-  Example: Alternative for TBox.Traverse.
+  @action: Returns TBox TPoints as spiral shaped TPointArray.
+  @note: Alternative for TBox.Traverse.
 [==============================================================================}
 function TBox.Spiral: TPointArray;
 var
@@ -1699,8 +1699,8 @@ end;
 
 {==============================================================================]
   <TBox.Traverse>
-  Explanation: Returns TBox TPoints as spiral shaped TPointArray.
-  Example: Alternative for TBox.Spiral.
+  @action: Returns TBox TPoints as spiral shaped TPointArray.
+  @note: Alternative for TBox.Spiral.
 [==============================================================================}
 function TBox.Traverse: TPointArray;
 var

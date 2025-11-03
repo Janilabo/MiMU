@@ -5968,4 +5968,114 @@ begin
     QSYX(Self, 0, (Result - 1), aAscending);
 end;
 
+{==============================================================================]
+ <TPointArray.SortByIndex>
+ @action: Sorts the point array by a calculated linear index within the given bounding box.
+ @note: Each point is mapped from (X,Y) to a single 1D index value and sorted
+        using TArray_QuickSortWeighted. Returns the number of points in the array.
+[==============================================================================}
+function TPointArrayHelper.SortByIndex(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
+var
+  i: Integer;
+  w: TIntegerArray;
+begin
+  Result := Length(Self);
+  if (Result < 2) then
+    Exit;
+  SetLength(w, Result);
+  for i := 0 to (Result - 1) do
+    w[i] := (((Self[i].Y - aBounds.Y1) * ((aBounds.X2 - aBounds.X1) + 1)) + (Self[i].X - aBounds.X1));
+  Self.QuickSortWeighted(w, aAscending);
+end;
+
+{==============================================================================]
+ <TPointArray.SortByIndex>
+ @action: Sorts the point array by index using a default large bounding box.
+ @note: Calls SortByIndex(Box(-23169, -23169, 23169, 23169), aAscending).
+        Useful when explicit bounds are not needed.
+[==============================================================================}
+function TPointArrayHelper.SortByIndex(const aAscending: Boolean = True): Integer; overload;
+begin
+  Result := Self.SortByIndex(TBox.Construct(-23169, -23169, 23169, 23169), aAscending);
+end;
+
+{==============================================================================]
+ <TPointArray.SortByScanline>
+ @action:
+   Reorders all points in the array into strict row-to-column (scanline)
+   sequence within the specified bounding box. The sort scans from the
+   top-left corner to the bottom-right (ascending = True), or the reverse
+   direction if ascending = False. The operation is performed by iterating
+   through every coordinate in raster order and moving matching points into
+   the output array.
+ @note:
+   - This is a *deterministic, stable* traversal-based ordering, not a
+     comparison sort.
+   - Complexity is O(W × H × N) in the worst case, so it is best used when
+     the bounding box is small or the coordinate grid is discrete and bounded.
+   - Points that fall outside the bounding box are discarded.
+   - The method modifies the array in place and returns the number of points
+     remaining after sorting.
+[==============================================================================}
+function TPointArrayHelper.SortByScanline(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
+var
+  s: TPointArray;
+  x, y, i, l, h: Integer;
+begin
+  Result := Length(Self);
+  if (Result < 2) then
+    Exit;
+  s := Self.Copy;
+  l := 0;
+  h := (Result - 1);
+  case aAscending of
+    True:
+    for y := aBounds.Y1 to aBounds.Y2 do
+      for x := aBounds.X1 to aBounds.X2 do
+      begin
+        i := 0;
+	while (i <= h) do
+          if ((s[i].X = x) and (s[i].Y = y)) then
+          begin
+            Self[l.Increase] := s[i];
+            Swap(s[i], s[h.Decrease]);
+            if (h = -1) then
+              Exit;
+          end else
+	    Inc(i);
+       end;
+    False:
+    for y := aBounds.Y2 downto aBounds.Y1 do
+      for x := aBounds.X2 downto aBounds.X1 do
+      begin
+        i := 0;
+	while (i <= h) do
+          if ((s[i].X = x) and (s[i].Y = y)) then
+          begin
+            Self[l.Increase] := s[i];
+            Swap(s[i], s[h.Decrease]);
+            if (h = -1) then
+              Exit;
+          end else
+	    Inc(i);
+       end;
+  end;
+  SetLength(Self, l);
+end;
+
+{==============================================================================]
+ <TPointArray.SortByScanline>
+ @action:
+   Convenience overload that calls SortByScanline using the array’s own
+   bounding box (Self.Bounds) as the region to scan.
+ @note:
+   Equivalent to SortByScanline(Self.Bounds, aAscending).
+   Produces identical ordering but automatically derives the limits from the
+   data set.
+[==============================================================================}
+function TPointArrayHelper.SortByScanline(const aAscending: Boolean = True): Integer; overload;
+begin
+  Result := Self.SortByScanline(Self.Bounds, aAscending);
+end;
+
 {$UNDEF TPoint}

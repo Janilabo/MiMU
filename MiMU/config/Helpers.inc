@@ -1033,7 +1033,11 @@ type
       function QuickSortByX(const aAscending: Boolean = True): Integer;
       function QuickSortByY(const aAscending: Boolean = True): Integer;
       function QuickSortByXY(const aAscending: Boolean = True): Integer;
-      function QuickSortByYX(const aAscending: Boolean = True): Integer;	  
+      function QuickSortByYX(const aAscending: Boolean = True): Integer;
+      function SortByIndex(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
+      function SortByIndex(const aAscending: Boolean = True): Integer; overload;
+      function SortByScanline(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
+      function SortByScanline(const aAscending: Boolean = True): Integer; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
