@@ -736,8 +736,8 @@ type
       function BinaryUnified(const dAscending: Boolean = True): TIntegerArray;
       function BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean;
       function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean;
-      function BinaryLowerBound(const x: Integer; const aAscending: Boolean): Integer; overload;
-      function BinaryUpperBound(const x: Integer; const aAscending: Boolean): Integer; overload;
+      function BinaryLowerBound(const x: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinaryUpperBound(const x: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload;
       function BinaryRange(const x: Integer; const aAscending: Boolean = True): TRange; overload;
       function BinarySpan(const x: TRange; const aAscending: Boolean = True): TRange; overload;
@@ -794,8 +794,8 @@ type
       function BinaryUnified(const dAscending: Boolean = True): TDoubleArray;
       function BinaryGrow(const x: Double; const aAscending: Boolean = True): Boolean;
       function BinaryShrink(const x: Double; const aAscending: Boolean = True): Boolean;
-      function BinaryLowerBound(const x: Double; const aAscending: Boolean): Integer; overload;
-      function BinaryUpperBound(const x: Double; const aAscending: Boolean): Integer; overload;
+      function BinaryLowerBound(const x: Double; const aAscending: Boolean = True): Integer; overload;
+      function BinaryUpperBound(const x: Double; const aAscending: Boolean = True): Integer; overload;
       function BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload;
       function BinaryRange(const x: Double; const aAscending: Boolean = True): TRange; overload;
       function BinarySpan(const x: TRange; const aAscending: Boolean = True): TRange; overload;
@@ -1040,7 +1040,11 @@ type
       function SortByIndex(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
       function SortByIndex(const aAscending: Boolean = True): Integer; overload;
       function SortByScanline(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
-      function SortByScanline(const aAscending: Boolean = True): Integer; overload;	  
+      function SortByScanline(const aAscending: Boolean = True): Integer; overload;
+      function ProximityCluster(const xRadius, yRadius: Integer; const method: Integer = 0): T2DPointArray; overload;
+      function ProximityCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const method: Integer = 0): T2DPointArray; overload;
+      function Linked(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 1): T2DPointArray; overload;
+      function Linked(const xRadius, yRadius: Integer; const check: Integer = 1): T2DPointArray; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;

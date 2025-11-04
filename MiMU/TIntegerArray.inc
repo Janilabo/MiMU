@@ -1896,7 +1896,7 @@ function TIntegerArrayHelper.BinaryShrink(const x: Integer; const aAscending: Bo
   @note:   Returns -1 if all elements are less than x (or greater when
            searching a descending array).
 [==============================================================================}
-function TIntegerArrayHelper.BinaryLowerBound(const x: Integer; const aAscending: Boolean): Integer; {$DEFINE Skeleton_BinaryLowerBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLowerBound}
+function TIntegerArrayHelper.BinaryLowerBound(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryLowerBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLowerBound}
 
 {==============================================================================]
   <TIntegerArray.BinaryUpperBound>
@@ -1906,7 +1906,7 @@ function TIntegerArrayHelper.BinaryLowerBound(const x: Integer; const aAscending
   @note:   Returns -1 if all elements are greater than x (or less when
            searching a descending array).
 [==============================================================================}
-function TIntegerArrayHelper.BinaryUpperBound(const x: Integer; const aAscending: Boolean): Integer; {$DEFINE Skeleton_BinaryUpperBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUpperBound}
+function TIntegerArrayHelper.BinaryUpperBound(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryUpperBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUpperBound}
 
 {==============================================================================]
   <TIntegerArray.BinaryRange>

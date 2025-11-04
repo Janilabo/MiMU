@@ -6034,7 +6034,7 @@ begin
       for x := aBounds.X1 to aBounds.X2 do
       begin
         i := 0;
-	while (i <= h) do
+	    while (i <= h) do
           if ((s[i].X = x) and (s[i].Y = y)) then
           begin
             Self[l.Increase] := s[i];
@@ -6042,14 +6042,14 @@ begin
             if (h = -1) then
               Exit;
           end else
-	    Inc(i);
-       end;
+	        Inc(i);
+    end;
     False:
     for y := aBounds.Y2 downto aBounds.Y1 do
       for x := aBounds.X2 downto aBounds.X1 do
       begin
         i := 0;
-	while (i <= h) do
+	    while (i <= h) do
           if ((s[i].X = x) and (s[i].Y = y)) then
           begin
             Self[l.Increase] := s[i];
@@ -6057,7 +6057,7 @@ begin
             if (h = -1) then
               Exit;
           end else
-	    Inc(i);
+	        Inc(i);
        end;
   end;
   SetLength(Self, l);
@@ -6076,6 +6076,408 @@ end;
 function TPointArrayHelper.SortByScanline(const aAscending: Boolean = True): Integer; overload;
 begin
   Result := Self.SortByScanline(Self.Bounds, aAscending);
+end;
+
+{==============================================================================]
+  <TPointArray.ProximityCluster>
+  @action:
+    Groups points into spatial clusters based on rectangular proximity.
+    Two points belong to the same cluster if their X and Y differences are
+    both within the specified radii.
+  @params:
+    xRadius : Integer
+      Maximum horizontal distance (in coordinate units) between two points
+      to be considered neighbors.
+    yRadius : Integer
+      Maximum vertical distance (in coordinate units) between two points
+      to be considered neighbors.
+    method  : Integer = 0
+      Determines the output grouping method:
+        0 - Use Groupify
+        1 - Use Grouping
+        2 - Use Grouped
+  @returns:
+    T2DPointArray containing one subarray per detected cluster.
+[==============================================================================}
+function TPointArrayHelper.ProximityCluster(const xRadius, yRadius: Integer; const method: Integer = 0): T2DPointArray; overload;
+var
+  i, j, k, c, l: Integer;
+  g, y: TIntegerArray;
+  x, s: T2DIntegerArray;
+  h, v: TRange;
+  procedure MC(const a, b: Integer);
+  var
+    o, n, m: Integer;
+  begin
+    if (a = b) then
+      Exit;
+    o := g[b];
+    n := g[a];
+    for m := 0 to High(g) do
+      if (g[m] = o) then
+        g[m] := n;
+  end;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  g := Self.IDs;
+  x := Self.XTo2D(y, s);
+  for c := 0 to High(x) do
+  begin
+    h.Create(c);
+    while ((h.start > 0) and (Abs(y[h.start - 1] - y[c]) <= xRadius)) do
+      Dec(h.start);
+    while ((h.stop < High(x)) and (Abs(y[h.stop + 1] - y[c]) <= xRadius)) do
+      Inc(h.stop);
+    for i := 0 to High(x[c]) do
+      for j := h.start to h.stop do
+      begin
+        v.start := x[j].BinaryLowerBound(x[c][i] - yRadius);
+        if not (v.start = -1) then
+          v.stop := x[j].BinaryUpperBound(x[c][i] + yRadius);
+        if not v.Employs(-1) then
+        for k := v.start to v.stop do
+          if Self[s[c][i]].Within(Self[s[j][k]], xRadius, yRadius) then
+            MC(s[c][i], s[j][k]);
+      end;
+  end;
+  case method of
+    0: Result := Self.Groupify(g);
+    1: Result := Self.Grouping(g);
+    2: Result := Self.Grouped(g);
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.ProximityCluster>
+  @action:
+    Clusters points in the array based on geometric proximity using a
+    distance metric. Points closer than the given radius are merged
+    into the same cluster.
+  @params:
+    radius : Double = 1.0
+      Maximum distance between two points (according to the selected metric)
+      for them to belong to the same cluster.
+    metric : TDistanceMetric = dmEuclidean
+      Distance metric used to compute proximity:
+        dmEuclidean - standard geometric distance
+        dmManhattan - sum of absolute component differences
+        dmChebyshev - maximum component difference
+    method : Integer = 0
+      Determines which grouping procedure is used to construct the result:
+        0 - Groupify
+        1 - Grouping
+        2 - Grouped
+  @returns:
+    T2DPointArray in which each subarray represents one proximity-based cluster.
+[==============================================================================}
+function TPointArrayHelper.ProximityCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const method: Integer = 0): T2DPointArray; overload;
+var
+  i, j, k, c, l, d: Integer;
+  g, y: TIntegerArray;
+  x, s: T2DIntegerArray;
+  h, v: TRange;
+  procedure MC(const a, b: Integer);
+  var
+    o, n, m: Integer;
+  begin
+    if (a = b) then Exit;
+    o := g[b];
+    n := g[a];
+    for m := 0 to High(g) do
+      if (g[m] = o) then
+        g[m] := n;
+  end;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  g := Self.IDs;
+  x := Self.XTo2D(y, s);
+  d := Ceil(radius);
+  for c := 0 to High(x) do
+  begin
+    h.Create(c);
+    while ((h.start > 0) and (Abs(y[h.start - 1] - y[c]) <= d)) do
+      Dec(h.start);
+    while ((h.stop < High(x)) and (Abs(y[h.stop + 1] - y[c]) <= d)) do
+      Inc(h.stop);
+    for i := 0 to High(x[c]) do
+      for j := h.start to h.stop do
+      begin
+        v.start := x[j].BinaryLowerBound(x[c][i] - d);
+        if not (v.start = -1) then
+          v.stop := x[j].BinaryUpperBound(x[c][i] + d);
+        if not v.Employs(-1) then
+          for k := v.start to v.stop do
+            if Self[s[c][i]].Within(Self[s[j][k]], radius, metric) then
+              MC(s[c][i], s[j][k]);
+      end;
+  end;
+  case method of
+    0: Result := Self.Groupify(g);
+    1: Result := Self.Grouping(g);
+    2: Result := Self.Grouped(g);
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.Linked>
+  @action: Build neighbour-based clusters by linking each point to up to check
+           nearest neighbours inside radius (using metric). Candidate
+           neighbours are discovered quickly via binary-range lookups on the
+           precomputed X/Y index arrays (XTo2D + BinaryRange).
+           Matching neighbour pairs are merged with a disjoint-set (union–find)
+           so clusters are transitively connected: if A→B and B→C then A, B, C
+           belong to the same cluster.
+  @note: - radius is the floating-point distance threshold used to select
+           candidate neighbours; the integer search bound d := Ceil(radius)
+           is used to restrict binary-range queries for speed.
+         - check limits how many nearest neighbours (per point) are
+           examined/linked; larger values increase connectivity and cost.
+         - Uses Euclidean or other `metric` only for the final Within/Dist
+           test and for ordering neighbours by distance.
+         - Union–find uses path compression and union-by-size for near-
+           constant amortized cost; overall runtime is dominated by the
+           spatial index lookups (≈ O(n log n) to build/scan) and the
+           average-local-candidate work.
+         - Deterministic: same input → same clusters. Returns array of
+           clusters (T2DPointArray); cluster ordering is implementation-
+           dependent.
+[==============================================================================}
+function TPointArrayHelper.Linked(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 1): T2DPointArray; overload;
+var
+  i, j, r, c, l, g, d, e: Integer;
+  f: Double;
+  v, p, s, k, t, o: TIntegerArray;
+  h, z: T2DIntegerArray;
+  y, x: TRange;
+  n: array of record
+    index: Integer;
+    distance: Double;
+  end;
+  function FindRoot(const a: Integer): Integer;
+  begin
+    if (p[a] <> a) then
+      p[a] := FindRoot(p[a]);
+    Result := p[a];
+  end;
+  procedure Unioned(const a, b: Integer);
+  var
+    r: TRange;
+  begin
+    r.Create(FindRoot(a), FindRoot(b));
+    if (r.start = r.stop) then
+      Exit;
+    if (s[r.start] < s[r.stop]) then
+      Swap(r.start, r.stop);
+    p[r.stop] := r.start;
+    Inc(s[r.start], s[r.stop]);
+  end;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  d := Ceil(radius);
+  h := Self.XTo2D(v, z);
+  SetLength(p, l);
+  SetLength(s, l);
+  for i := 0 to (l - 1) do
+  begin
+    p[i] := i;
+    s[i] := 1;
+  end;
+  for i := 0 to (l - 1) do
+  begin
+    y := v.BinaryRange(TRange.Construct((Self[i].Y - d), (Self[i].Y + d)));
+    if not y.Employs(-1) then
+    for r := y.start to y.stop do
+    begin
+      x := h[r].BinaryRange(TRange.Construct((Self[i].X - d), (Self[i].X + d)));
+      if not x.Employs(-1) then
+      begin
+        SetLength(n, 0);
+        for c := x.start to x.stop do
+        begin
+          j := z[r][c];
+          if ((i <> j) and Self[i].Within(Self[j], radius, metric)) then
+          begin
+            SetLength(n, (Length(n) + 1));
+            n[High(n)].index := j;
+            n[High(n)].distance := Self[i].Dist(Self[j], metric);
+          end;
+        end;
+        for j := 0 to (High(n) - 1) do
+          for c := (j + 1) to High(n) do
+            if (n[j].distance > n[c].distance) then
+            begin
+              e := n[j].index;
+              n[j].index := n[c].index;
+              n[c].index := e;
+              f := n[j].distance;
+              n[j].distance := n[c].distance;
+              n[c].distance := f;
+            end;
+        for j := 0 to Min(High(n), (check - 1)) do
+          Unioned(i, n[j].index);
+      end;
+    end;
+  end;
+  SetLength(k, l);
+  for i := 0 to (l - 1) do
+    k[i] := -1;
+  g := 0;
+  for i := 0 to (l - 1) do
+  begin
+    r := FindRoot(i);
+    if (k[r] = -1) then
+      k[r] := g.Increase;
+  end;
+  SetLength(t, g);
+  for i := 0 to (l - 1) do
+    Inc(t[k[FindRoot(i)]]);
+  SetLength(Result, g);
+  for i := 0 to (g - 1) do
+    SetLength(Result[i], t[i]);
+  SetLength(o, g);
+  for i := 0 to (l - 1) do
+  begin
+    r := k[FindRoot(i)];
+    Result[r][o[r].Increase] := Self[i];
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.Linked>
+  @action: Build neighbour-based clusters by linking each point to up to check
+           nearest neighbours inside an axis-aligned box given by
+           xRadius/yRadius. Candidate neighbours are located via binary-
+           range queries on the X/Y index arrays produced by
+           XTo2D, and nearest candidates are ranked by
+           Euclidean distance (Hypot) before linking.
+           Matching neighbour pairs are merged using a disjoint-set
+           (union–find) so clusters are transitively connected.
+  @note: - This overload uses rectangular neighbourhoods: a candidate is
+           considered only if its X/Y deltas are inside xRadius/yRadius;
+           distance is used only to sort nearest candidates.
+         - check limits how many nearest neighbours (per point) are
+           considered/linked; increasing it increases connectivity and cost.
+         - Uses binary-range lookups to avoid global O(n²) scanning — great
+           for large point sets (expected ≈ O(n log n) dominated by indexing).
+         - Union–find uses path compression and union-by-size for near-
+           constant amortized cost; final clusters are produced by grouping
+           points by their disjoint-set roots.
+         - Deterministic: same input → same clusters. Returns a T2DPointArray
+           (array of clusters); cluster ordering is implementation-dependent.
+[==============================================================================}
+function TPointArrayHelper.Linked(const xRadius, yRadius: Integer; const check: Integer = 1): T2DPointArray; overload;
+var
+  i, j, r, c, l, g, e: Integer;
+  f: Double;
+  v, p, s, k, t, o: TIntegerArray;
+  h, z: T2DIntegerArray;
+  y, x: TRange;
+  n: array of record
+    index: Integer;
+    distance: Double;
+  end;
+  function FindRoot(const a: Integer): Integer;
+  begin
+    if (p[a] <> a) then
+      p[a] := FindRoot(p[a]);
+    Result := p[a];
+  end;
+  procedure Unioned(const a, b: Integer);
+  var
+    r: TRange;
+  begin
+    r.Create(FindRoot(a), FindRoot(b));
+    if (r.start = r.stop) then
+      Exit;
+    if (s[r.start] < s[r.stop]) then
+      Swap(r.start, r.stop);
+    p[r.stop] := r.start;
+    Inc(s[r.start], s[r.stop]);
+  end;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  h := Self.XTo2D(v, z);
+  SetLength(p, l);
+  SetLength(s, l);
+  for i := 0 to (l - 1) do
+  begin
+    p[i] := i;
+    s[i] := 1;
+  end;
+  for i := 0 to (l - 1) do
+  begin
+    y := v.BinaryRange(TRange.Construct((Self[i].Y - yRadius), (Self[i].Y + yRadius)));
+    if not y.Employs(-1) then
+    for r := y.start to y.stop do
+    begin
+      x := h[r].BinaryRange(TRange.Construct((Self[i].X - xRadius), (Self[i].X + xRadius)));
+      if not x.Employs(-1) then
+      begin
+        SetLength(n, 0);
+        for c := x.start to x.stop do
+        begin
+          j := z[r][c];
+          if ((i <> j) and Self[i].Within(Self[j], xRadius, yRadius)) then
+          begin
+            SetLength(n, (Length(n) + 1));
+            n[High(n)].index := j;
+            n[High(n)].distance := Hypot((Self[i].X - Self[j].X), (Self[i].Y - Self[j].Y));
+          end;
+        end;
+        for j := 0 to (High(n) - 1) do
+          for c := (j + 1) to High(n) do
+            if (n[j].distance > n[c].distance) then
+            begin
+              e := n[j].index;
+              n[j].index := n[c].index;
+              n[c].index := e;
+              f := n[j].distance;
+              n[j].distance := n[c].distance;
+              n[c].distance := f;
+            end;
+        for j := 0 to Min(High(n), (check - 1)) do
+          Unioned(i, n[j].index);
+      end;
+    end;
+  end;
+  SetLength(k, l);
+  for i := 0 to (l - 1) do
+    k[i] := -1;
+  g := 0;
+  for i := 0 to (l - 1) do
+  begin
+    r := FindRoot(i);
+    if (k[r] = -1) then
+      k[r] := g.Increase;
+  end;
+  SetLength(t, g);
+  for i := 0 to (l - 1) do
+    Inc(t[k[FindRoot(i)]]);
+  SetLength(Result, g);
+  for i := 0 to (g - 1) do
+    SetLength(Result[i], t[i]);
+  SetLength(o, g);
+  for i := 0 to (l - 1) do
+  begin
+    r := k[FindRoot(i)];
+    Result[r][o[r].Increase] := Self[i];
+  end;
 end;
 
 {$UNDEF TPoint}
