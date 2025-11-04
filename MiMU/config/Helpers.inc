@@ -414,6 +414,9 @@ type
     function Group: T2DArr; overload;
     function Group(const weight: TIntegerArray; const wSorted: Boolean = False): T2DArr; overload;
     function Group(const weight: TDoubleArray; const wSorted: Boolean = False): T2DArr; overload;
+    function Grouped(const groups: TIntegerArray): T2DArr; overload;
+    function Groupify(const groups: TIntegerArray): T2DArr; overload;
+    function Grouping(const groups: TIntegerArray): T2DArr; overload;
     function Grow(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload;
     function Holds(const chain: TArr): Boolean; overload;
     function Homogeneous(const item: TVar): Boolean; overload;

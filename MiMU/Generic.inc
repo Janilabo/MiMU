@@ -2334,6 +2334,135 @@ function HArr.Group(const weight: TIntegerArray; const wSorted: Boolean = False)
 function HArr.Group(const weight: TDoubleArray; const wSorted: Boolean = False): T2DArr; overload; var w: TDoubleArray; {$DEFINE Skeleton_Group}{$I config\Skeletons.inc}{$UNDEF Skeleton_Group}
 
 {==============================================================================]
+ <arr.Grouped>
+ @action: Groups the current array (Self) into sub-arrays based on the
+          integer group IDs provided in groups, without performing any
+          sorting. Unique group IDs are detected in the order they first
+          appear, and each corresponding sub-array is filled accordingly.
+ @note: • Requires Length(Self) = Length(groups).
+        • Preserves the first-appearance order of groups.
+        • Simpler but slower: overall O(n²) due to nested lookups.
+        • Uses arr.Supply to dynamically append unique IDs and points.
+        • Best suited for small datasets or when original group order must
+          be maintained.
+[==============================================================================}
+function HArr.Grouped(const groups: TIntegerArray): T2DArr; overload;
+var
+  u: TIntegerArray;
+  g, i, j, k, l: Integer;
+  f: Boolean;
+begin
+  SetLength(Result, 0);
+  l := Length(Self);
+  if ((l = 0) or (l <> Length(groups))) then
+    Exit;
+  SetLength(u, 0);
+  for i := 0 to (l - 1) do
+  begin
+    f := False;
+    for j := 0 to High(u) do
+      if (groups[i] = u[j]) then
+      begin
+        f := True;
+        Break;
+      end;
+    if not f then
+      u.Supply(groups[i]);
+  end;
+  SetLength(Result, Length(u));
+  for i := 0 to (l - 1) do
+    for j := 0 to High(u) do
+      if (groups[i] = u[j]) then
+      begin
+        Result[j].Supply(Self[i]);
+        Break;
+      end;
+end;
+
+{==============================================================================]
+ <arr.Grouping>
+ @action: Groups the current array (Self) into sub-arrays based on the
+          integer group IDs provided in groups. Items that share the same
+          group value are placed in the same sub-array. The operation first
+          sorts all item indices by their group ID using arr.QuickSorted,
+          then builds the resulting cluster list in a single forward pass.
+ @note: • Requires Length(Self) = Length(groups).
+        • Runs in O(n log n) time due to sorting.
+        • The resulting clusters are ordered by ascending group ID.
+        • Uses dynamic array resizing during construction.
+        • Suitable for large datasets where grouping speed matters more
+          than preserving the original order.
+[==============================================================================}
+function HArr.Grouping(const groups: TIntegerArray): T2DArr; overload;
+var
+  i, l, g, c: Integer;
+  p: TIntegerArray;
+begin
+  l := Length(Self);
+  SetLength(Result, 0);
+  if ((l = 0) or (l <> Length(groups))) then
+    Exit;
+  SetLength(p, l);
+  for i := 0 to (l - 1) do
+    p[i] := i;
+  p := p.QuickSorted(groups);
+  g := groups[p[0]];
+  c := 0;
+  SetLength(Result, 1);
+  SetLength(Result[0], 0);
+  for i := 0 to (l - 1) do
+  begin
+    if (groups[p[i]] <> g) then
+    begin
+      g := groups[p[i]];
+      SetLength(Result, (c.Increment + 1));
+      SetLength(Result[c], 0);
+    end;
+	Result[c].Supply(Self[p[i]]);
+  end;
+end;
+
+{==============================================================================]
+ <arr.Groupify>
+ @action: Groups the current array (Self) into sub-arrays according to the
+          integer group identifiers provided in groups. Each unique group value
+          becomes a separate sub-array in the result, containing all elements
+          from Self whose corresponding index in groups matches that group.
+ @note: • Requires `Length(Self) = Length(groups).
+        • Returns an empty result if the input is empty or lengths differ.
+        • Uses a TDictionary<Integer, TArr> internally for O(1) average
+          grouping performance.
+        • The resulting order of groups in Result is **not deterministic**
+          because TDictionary.Values does not preserve insertion or sorted
+          order.
+        • Best suited for large datasets where grouping speed is more
+          important than predictable output order.
+[==============================================================================}
+function HArr.Groupify(const groups: TIntegerArray): T2DArr; overload;
+var
+  m: specialize TDictionary<Integer, TArr>;
+  l, i, g: Integer;
+begin
+  SetLength(Result, 0);
+  l := Length(Self);
+  if ((l = 0) or (l <> Length(groups))) then
+    Exit;
+  m := specialize TDictionary<Integer, TArr>.Create;
+  try
+    for i := 0 to (l - 1) do
+    begin
+      g := groups[i];
+      if not m.ContainsKey(g) then
+        m.Add(g, []);
+      m[g] := (m[g] + [Self[i]]);
+    end;
+    Result := m.Values.ToArray;
+  finally
+    m.Free;
+  end;
+end;
+
+{==============================================================================]
  <arr.Grow(item: VarType; allowDuplicates: Boolean): Integer>
  @action: Feeds item to array and returns the index position it was added to.
  @note: Returns -1 if duplicates are not allowed and array already contains item.
