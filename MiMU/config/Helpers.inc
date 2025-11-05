@@ -1048,7 +1048,15 @@ type
       function Chain(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
       function Chain(const xRadius, yRadius: Integer; const check: Integer = 5): T2DPointArray; overload;
       function Attach(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
-      function Attach(const xRadius, yRadius: Integer; const check: Integer = 5): T2DPointArray; overload;	  
+      function Attach(const xRadius, yRadius: Integer; const check: Integer = 5): T2DPointArray; overload;
+      function RCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
+      function RCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+      function ToRows: T2DPointArray;
+      function ToColumns: T2DPointArray;
+      function AsRows: T2DPointArray;
+      function AsColumns: T2DPointArray;
+      function Rows: T2DPointArray;
+      function Columns: T2DPointArray;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;

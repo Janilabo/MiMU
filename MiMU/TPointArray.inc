@@ -6767,4 +6767,320 @@ begin
   end;
 end;
 
+{==============================================================================]
+  <TPointArray.RCluster>
+  @action: Groups points into rectangular clusters based on X/Y radius thresholds.
+  @note: Uses a grid-based flood-fill algorithm; points are considered connected 
+         if their absolute X and Y distances are within (xRadius, yRadius).
+[==============================================================================}
+function TPointArrayHelper.RCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
+type
+  TCell = record
+    indices: TIntegerArray;
+  end;
+  TCellArray = array of TCell;
+  TGrid = array of TCellArray;
+var
+  v: TBooleanArray;
+  g: TGrid;
+  e, f, w, h, i, j, l, t, r, x, y, z: Integer;
+  s: TIntegerArray;
+  b: TBox;
+  c, p, d: TPoint;
+begin
+  SetLength(Result, 0);
+  l := Length(Self);
+  case l of
+    0: Exit;
+    1: Exit([Self]);
+  end;
+  b := Self.Bounds;
+  e := (xRadius * 2 + 1);
+  f := (yRadius * 2 + 1);
+  w := ((b.X2 - b.X1) div e + 1);
+  h := ((b.Y2 - b.Y1) div f + 1);
+  SetLength(g, w, h);
+  for i := 0 to High(Self) do
+    g[((Self[i].X - b.X1) div e)][((Self[i].Y - b.Y1) div f)].indices.Supply(i);
+  SetLength(v, l);
+  SetLength(s, l);
+  SetLength(Result, l);
+  r := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if v[i] then
+      Continue;
+    t := 0;
+    s[t.Increase] := i;
+    v[i] := True;
+    z := 0;
+    SetLength(Result[r], 0);
+    while (t > 0) do
+    begin
+      c := Self[s[t.Decrement]];
+      SetLength(Result[r], z.Increment);
+      Result[r][z - 1] := c;
+      p := Point(((c.X - b.X1) div e), ((c.Y - b.Y1) div f));
+      for x := Max(0, (p.X - 1)) to Min((w - 1), (p.X + 1)) do
+        for y := Max(0, (p.Y - 1)) to Min((h - 1), (p.Y + 1)) do
+          for j := 0 to High(g[x, y].indices) do
+          begin
+            if v[g[x, y].indices[j]] then
+              Continue;
+            d := Point(Abs(c.X - Self[g[x, y].indices[j]].X), Abs(c.Y - Self[g[x, y].indices[j]].Y));
+            if ((d.X <= xRadius) and (d.Y <= yRadius)) then
+            begin
+              v[g[x, y].indices[j]] := True;
+              s[t.Increase] := g[x, y].indices[j];
+            end;
+          end;
+    end;
+    Inc(r);
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TPointArray.RCluster>
+  @action: Groups points into clusters based on a custom distance metric and radius.
+  @note: Supports user-defined metrics (e.g. Euclidean, Manhattan, Chebyshev).
+         Uses grid partitioning for spatial acceleration and a stack-based region grow.
+[==============================================================================}
+function TPointArrayHelper.RCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+type
+  TCell = record
+    indices: TIntegerArray;
+  end;
+  TCellArray = array of TCell;
+  TGrid = array of TCellArray;
+var
+  v: TBooleanArray;
+  g: TGrid;
+  k, w, h, i, j, l, t, r, x, y, z: Integer;
+  s: TIntegerArray;
+  b: TBox;
+  c, p: TPoint;
+begin
+  SetLength(Result, 0);
+  l := Length(Self);
+  case l of
+    0: Exit;
+    1: Exit([Self]);
+  end;
+  k := (Trunc(Radius * 2) + 1);
+  b := Self.Bounds;
+  w := ((b.X2 - b.X1) div k + 1);
+  h := ((b.Y2 - b.Y1) div k + 1);
+  SetLength(g, w, h);
+  for i := 0 to High(Self) do
+    g[((Self[i].X - b.X1) div k)][((Self[i].Y - b.Y1) div k)].indices.Supply(i);
+  SetLength(v, l);
+  SetLength(s, l);
+  SetLength(Result, l);
+  r := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if v[i] then
+      Continue;
+    t := 0;
+    s[t.Increase] := i;
+    v[i] := True;
+    z := 0;
+    SetLength(Result[r], 0);
+    while (t > 0) do
+    begin
+      c := Self[s[t.Decrement]];
+      SetLength(Result[r], z.Increment);
+      Result[r][z - 1] := c;
+      p := Point(((c.X - b.X1) div k), ((c.Y - b.Y1) div k));
+      for x := Max(0, (p.X - 1)) to Min((w - 1), (p.X + 1)) do
+        for y := Max(0, (p.Y - 1)) to Min((h - 1), (p.Y + 1)) do
+          for j := 0 to High(g[x, y].indices) do
+          begin
+            if v[g[x, y].indices[j]] then
+              Continue;
+            if c.Within(Self[g[x, y].indices[j]], radius, metric) then
+            begin
+              v[g[x, y].indices[j]] := True;
+              s[t.Increase] := g[x, y].indices[j];
+            end;
+          end;
+    end;
+    Inc(r);
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TPointArray.ToRows>
+  @action: Groups all points in the array into rows based on their Y coordinates.
+  @note: The Y values are sorted and deduplicated before grouping, so the resulting
+         row order follows ascending Y. Each subarray of the result contains all
+         points that share the same Y value.
+[==============================================================================}
+function TPointArrayHelper.ToRows: T2DPointArray;
+var
+  i: Integer;
+  y: TIntegerArray;
+begin
+  y := Self.Ys.QuickSorted.BinaryPruned;
+  SetLength(Result, Length(y));
+  for i := 0 to High(Self) do
+    Result[y.BinarySearch(Self[i].Y)].Supply(Self[i]);
+end;
+
+{==============================================================================]
+  <TPointArray.ToColumns>
+  @action: Groups all points in the array into columns based on their X coordinates.
+  @note: The X values are sorted and deduplicated before grouping, so the resulting
+         column order follows ascending X. Each subarray of the result contains all
+         points that share the same X value.
+[==============================================================================}
+function TPointArrayHelper.ToColumns: T2DPointArray;
+var
+  i: Integer;
+  x: TIntegerArray;
+begin
+  x := Self.Xs.QuickSorted.BinaryPruned;
+  SetLength(Result, Length(x));
+  for i := 0 to High(Self) do
+    Result[x.BinarySearch(Self[i].x)].Supply(Self[i]);
+end;
+
+{==============================================================================]
+  <TPointArray.AsRows>
+  @action: Groups all points in the array into rows based on their Y coordinates.
+  @note: The original order of Y values is preserved — rows are created in the
+         order each Y first appears in the source array. No sorting or pruning
+         is performed.
+[==============================================================================}
+function TPointArrayHelper.AsRows: T2DPointArray;
+var
+  i, j: Integer;
+  y: TIntegerArray;
+  p: Integer;
+begin
+  SetLength(Result, 0);
+  SetLength(y, 0);
+  for i := 0 to High(Self) do
+  begin
+    p := -1;
+    for j := 0 to High(y) do
+      if (y[j] = Self[i].Y) then
+      begin
+        p := j;
+        Break;
+      end;
+    if (p = -1) then
+    begin
+      p := Length(y);
+      SetLength(y, (p + 1));
+      y[p] := Self[i].Y;
+      SetLength(Result, (p + 1));
+    end;
+    Result[p].Supply(Self[i]);
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.AsColumns>
+  @action: Groups all points in the array into columns based on their X coordinates.
+  @note: The original order of X values is preserved — columns are created in the
+         order each X first appears in the source array. No sorting or pruning
+         is performed.
+[==============================================================================}
+function TPointArrayHelper.AsColumns: T2DPointArray;
+var
+  i, j: Integer;
+  x: TIntegerArray;
+  p: Integer;
+begin
+  SetLength(Result, 0);
+  SetLength(x, 0);
+  for i := 0 to High(Self) do
+  begin
+    p := -1;
+    for j := 0 to High(x) do
+      if (x[j] = Self[i].X) then
+      begin
+        p := j;
+        Break;
+      end;
+    if (p = -1) then
+    begin
+      p := Length(x);
+      SetLength(x, (p + 1));
+      x[p] := Self[i].X;
+      SetLength(Result, (p + 1));
+    end;
+    Result[p].Supply(Self[i]);
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.Rows>
+  @action: Groups all points in the array into rows based on their Y coordinates.
+  @note: Each unique Y value defines one row. The order of rows matches the order
+         in which distinct Y values first appear in the source array (unsorted).
+         Uses a dictionary for O(1) coordinate lookup, providing fast grouping
+         while preserving the original encounter order.
+[==============================================================================}
+function TPointArrayHelper.Rows: T2DPointArray;
+var
+  i, p: Integer;
+  m: specialize TDictionary<Integer, Integer>;
+  o: TIntegerArray;
+begin
+  m := specialize TDictionary<Integer, Integer>.Create;
+  try
+    for i := 0 to High(Self) do
+    begin
+      if not m.TryGetValue(Self[i].Y, p) then
+      begin
+        p := Length(o);
+        SetLength(o, (p + 1));
+        o[p] := Self[i].Y;
+        m.Add(Self[i].Y, p);
+        SetLength(Result, (p + 1));
+      end;
+      Result[p].Supply(Self[i]);
+    end;
+  finally
+    m.Free;
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.Columns>
+  @action: Groups all points in the array into columns based on their X coordinates.
+  @note: Each unique X value defines one column. The order of columns matches the
+         order in which distinct X values first appear in the source array (unsorted).
+         Uses a dictionary for O(1) coordinate lookup, providing fast grouping
+         while preserving the original encounter order.
+[==============================================================================}
+function TPointArrayHelper.Columns: T2DPointArray;
+var
+  i, p: Integer;
+  m: specialize TDictionary<Integer, Integer>;
+  o: TIntegerArray;
+begin
+  m := specialize TDictionary<Integer, Integer>.Create;
+  try
+    for i := 0 to High(Self) do
+    begin
+      if not m.TryGetValue(Self[i].X, p) then
+      begin
+        p := Length(o);
+        SetLength(o, (p + 1));
+        o[p] := Self[i].X;
+        m.Add(Self[i].X, p);
+        SetLength(Result, (p + 1));
+      end;
+      Result[p].Supply(Self[i]);
+    end;
+  finally
+    m.Free;
+  end;
+end;
+
 {$UNDEF TPoint}
