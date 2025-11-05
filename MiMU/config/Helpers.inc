@@ -1044,7 +1044,11 @@ type
       function ProximityCluster(const xRadius, yRadius: Integer; const method: Integer = 0): T2DPointArray; overload;
       function ProximityCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const method: Integer = 0): T2DPointArray; overload;
       function Linked(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 1): T2DPointArray; overload;
-      function Linked(const xRadius, yRadius: Integer; const check: Integer = 1): T2DPointArray; overload;	  
+      function Linked(const xRadius, yRadius: Integer; const check: Integer = 1): T2DPointArray; overload;
+      function Chain(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
+      function Chain(const xRadius, yRadius: Integer; const check: Integer = 5): T2DPointArray; overload;
+      function Attach(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
+      function Attach(const xRadius, yRadius: Integer; const check: Integer = 5): T2DPointArray; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;

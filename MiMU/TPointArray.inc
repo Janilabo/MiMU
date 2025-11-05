@@ -6480,4 +6480,291 @@ begin
   end;
 end;
 
+{==============================================================================]
+  <TPointArray.Chain>
+  @action: Groups nearby points into connected chains using radius-based neighbor linking.
+  @note: Each new chain starts from an unvisited point and expands by iteratively
+         linking up to `check` nearest unlinked neighbors within the given radius.
+         The process continues recursively until no further points can be connected.
+         This version uses a simple full-scan distance check (no spatial indexing).
+[==============================================================================}
+function TPointArrayHelper.Chain(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
+var
+  i, j, k, c, l, q: Integer;
+  u: TBooleanArray;
+  s: TIntegerArray;
+  n: array of record
+    index: Integer;
+    distance: Double;
+  end;
+begin
+  SetLength(Result, 0);
+  l := Length(Self);
+  case l of
+    0: Exit;
+    1: Exit([Self]);
+  end;
+  SetLength(u, l);
+  c := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result[c], 0);
+    SetLength(s, 1);
+    s[0] := i;
+    u[i] := True;
+    while (Length(s) > 0) do
+    begin
+      q := s[High(s)];
+      SetLength(s, High(s));
+      Result[c].Supply(Self[q]);
+      SetLength(n, 0);
+      for j := 0 to (l - 1) do
+        if ((not u[j]) and Self[q].Within(Self[j], radius, metric)) then
+        begin
+          SetLength(n, (Length(n) + 1));
+          n[High(n)].index := j;
+          n[High(n)].distance := Self[q].Dist(Self[j], metric);
+        end;
+      for j := 0 to (High(n) - 1) do
+        for k := (j + 1) to High(n) do
+          if (n[j].distance > n[k].distance) then
+	  begin
+            Swap(n[j].index, n[k].index);
+	    Swap(n[j].distance, n[k].distance);
+	  end;
+      for j := 0 to Min(High(n), (check - 1)) do
+        if not u[n[j].index] then
+        begin
+          u[n[j].index] := True;
+          s.Supply(n[j].index);
+        end;
+    end;
+    Inc(c);
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.Chain>
+  @action: Groups nearby points into connected chains using rectangular X/Y radii.
+  @note: Similar to the distance-based Chain but uses axis-aligned rectangular bounds
+         (xRadius, yRadius) for neighborhood checks instead of circular distance.
+         Efficient for grid-aligned or anisotropic data where X and Y scales differ.
+[==============================================================================}
+function TPointArrayHelper.Chain(const xRadius, yRadius: Integer; const check: Integer = 5): T2DPointArray; overload;
+var
+  i, j, k, c, l, q: Integer;
+  u: TBooleanArray;
+  s: TIntegerArray;
+  n: array of record
+    index: Integer;
+    distance: Double;
+  end;
+begin
+  SetLength(Result, 0);
+  l := Length(Self);
+  case l of
+    0: Exit;
+    1: Exit([Self]);
+  end;
+  SetLength(u, l);
+  c := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result[c], 0);
+    SetLength(s, 1);
+    s[0] := i;
+    u[i] := True;
+    while (Length(s) > 0) do
+    begin
+      q := s[High(s)];
+      SetLength(s, High(s));
+      Result[c].Supply(Self[q]);
+      SetLength(n, 0);
+      for j := 0 to (l - 1) do
+        if ((not u[j]) and Self[q].Within(Self[j], xRadius, yRadius)) then
+        begin
+          SetLength(n, (Length(n) + 1));
+          n[High(n)].index := j;
+          n[High(n)].distance := Hypot((Self[q].X - Self[j].X), (Self[q].Y - Self[j].Y));
+        end;
+      for j := 0 to (High(n) - 1) do
+        for k := (j + 1) to High(n) do
+          if (n[j].distance > n[k].distance) then
+	  begin
+            Swap(n[j].index, n[k].index);
+	    Swap(n[j].distance, n[k].distance);
+	  end;
+      for j := 0 to Min(High(n), (check - 1)) do
+        if not u[n[j].index] then
+        begin
+          u[n[j].index] := True;
+          s.Supply(n[j].index);
+        end;
+    end;
+    Inc(c);
+  end;
+end;
+
+
+{==============================================================================]
+  <TPointArray.Attach>
+  @action: Connects points into clusters using spatial indexing (binary search + grid).
+  @note: Uses precomputed X/Y grid slices (via TPointArray_XTo2D) and binary range
+         search to quickly find neighbors within `radius`. Each cluster grows by
+         recursively attaching up to `check` nearest neighbors that fall within range.
+         Much faster than Chain for large point sets due to reduced search scope.
+[==============================================================================}
+function TPointArrayHelper.Attach(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
+var
+  i, j, r, c, l, d, q, p: Integer;
+  u: TBooleanArray;
+  s: TIntegerArray;
+  v: TIntegerArray;
+  h, z: T2DIntegerArray;
+  y, x: TRange;
+  n: array of record
+    index: Integer;
+    distance: Double;
+  end;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit;
+    1: Exit([Self]);
+  end;
+  d := Ceil(radius);
+  h := Self.XTo2D(v, z);
+  SetLength(u, l);
+  SetLength(Result, 0);
+  for i := 0 to (l - 1) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result[High(Result)], 0);
+    SetLength(s, 1);
+    s[0] := i;
+    u[i] := True;
+    while (Length(s) > 0) do
+    begin
+      q := s[High(s)];
+      SetLength(s, High(s));
+      Result[High(Result)].Supply(Self[q]);
+      y := v.BinaryRange(TRange.Construct((Self[q].Y - d), (Self[q].Y + d)));
+      if y.Employs(-1) then
+        Continue;
+      SetLength(n, 0);
+      for r := y.start to y.stop do
+      begin
+        x := h[r].BinaryRange(TRange.Construct((Self[q].X - d), (Self[q].X + d)));
+        if not x.Employs(-1) then
+        for c := x.start to x.stop do
+          if (not u[z[r][c]]) and Self[q].Within(Self[z[r][c]], radius, metric) then
+          begin
+            SetLength(n, (Length(n) + 1));
+            n[High(n)].index := z[r][c];
+            n[High(n)].distance := Self[q].Dist(Self[z[r][c]], metric);
+          end;
+      end;
+      for j := 0 to (High(n) - 1) do
+        for c := (j + 1) to High(n) do
+          if (n[j].distance > n[c].distance) then
+	  begin
+            Swap(n[j].index, n[c].index);
+	    Swap(n[j].distance, n[c].distance);
+	  end;
+      for j := 0 to Min(High(n), (check - 1)) do
+      begin
+        if u[n[j].index] then
+          Continue;
+        u[n[j].index] := True;
+        s.Supply(n[j].index);
+      end;
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.Attach>
+  @action: Connects points into clusters using rectangular X/Y radii and spatial indexing.
+  @note: Combines grid-based search (TPointArray_XTo2D) with axis-aligned neighbor
+         bounds (xRadius, yRadius). Finds and links nearby points efficiently while
+         respecting separate X and Y proximity limits. Ideal for non-uniform spacing.
+[==============================================================================}
+function TPointArrayHelper.Attach(const xRadius, yRadius: Integer; const check: Integer = 5): T2DPointArray; overload;
+var
+  i, j, r, c, l, q: Integer;
+  u: TBooleanArray;
+  s: TIntegerArray;
+  v: TIntegerArray;
+  h, z: T2DIntegerArray;
+  y, x: TRange;
+  n: array of record
+    index: Integer;
+    distance: Double;
+  end;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit;
+    1: Exit([Self]);
+  end;
+  h := Self.XTo2D(v, z);
+  SetLength(u, l);
+  SetLength(Result, 0);
+  for i := 0 to (l - 1) do
+  begin
+    if u[i] then
+      Continue;
+    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result[High(Result)], 0);
+    SetLength(s, 1);
+    s[0] := i;
+    u[i] := True;
+    while (Length(s) > 0) do
+    begin
+      q := s[High(s)];
+      SetLength(s, High(s));
+      Result[High(Result)].Supply(Self[q]);
+      y := v.BinaryRange(TRange.Construct((Self[q].Y - yRadius), (Self[q].Y + yRadius)));
+      if y.Employs(-1) then
+        Continue;
+      SetLength(n, 0);
+      for r := y.start to y.stop do
+      begin
+        x := h[r].BinaryRange(TRange.Construct((Self[q].X - xRadius), (Self[q].X + xRadius)));
+        if x.Employs(-1) then
+          Continue;
+        for c := x.start to x.stop do
+          if ((not u[z[r][c]]) and Self[q].Within(Self[z[r][c]], xRadius, yRadius)) then
+          begin
+            SetLength(n, (Length(n) + 1));
+            n[High(n)].index := z[r][c];
+            n[High(n)].distance := Hypot((Self[q].X - Self[z[r][c]].X), (Self[q].Y - Self[z[r][c]].Y));
+          end;
+      end;
+      for j := 0 to (High(n) - 1) do
+        for c := (j + 1) to High(n) do
+          if (n[j].distance > n[c].distance) then
+	  begin
+	    Swap(n[j].index, n[c].index);
+	    Swap(n[j].distance, n[c].distance);
+          end;  
+      for j := 0 to Min(High(n), (check - 1)) do
+      begin
+        if u[n[j].index] then
+          Continue;
+        u[n[j].index] := True;
+        s.Supply(n[j].index);
+      end;
+    end;
+  end;
+end;
+
 {$UNDEF TPoint}
