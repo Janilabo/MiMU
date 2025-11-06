@@ -2111,6 +2111,24 @@ function TIntegerArrayHelper.BinaryReplace(const oValue, nValue: Integer; const 
 function TIntegerArrayHelper.BinaryReplaceAll(const oValue, nValue: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryReplaceAll}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryReplaceAll}
 
 {==============================================================================]
+  <arr.BinarySinglify>
+  @action: Removes consecutive duplicates of the specified value in a sorted array,
+           keeping only one occurrence.
+  @note: The array must be sorted (ascending or descending as specified).
+         Uses binary search for fast location. Returns the number of removed items.
+[==============================================================================}
+function TIntegerArrayHelper.BinarySinglify(const item: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySinglify}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySinglify}
+
+{==============================================================================]
+  <arr.BinarySinglified>
+  @action: Returns a new array where consecutive duplicates of the specified value
+           are collapsed into a single instance.
+  @note: The source array must be sorted. The order is preserved, and if the value
+         does not exist, a full copy of the array is returned unchanged.
+[==============================================================================}
+function TIntegerArrayHelper.BinarySinglified(const item: Integer; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinarySinglified}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySinglified}
+
+{==============================================================================]
   <TIntegerArray.BMerge>
   @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
   @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).

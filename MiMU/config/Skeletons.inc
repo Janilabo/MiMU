@@ -1364,3 +1364,37 @@ begin
     Self.BinaryInsertionSort(aAscending);
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinarySinglify}
+var
+  i, l, s, p: Integer;
+begin
+  p := Self.BinaryPosL(item, aAscending);
+  if (p = -1) then
+    Exit(0);
+  s := Length(Self);
+  l := p;
+  for i := (p + 1) to (s - 1) do
+    if (Self[i] <> item) then
+      Self[l.Increment] := Self[i];
+  Result := (s - (l + 1));
+  if (Result > 0) then
+    SetLength(Self, (l + 1));
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinarySinglified}
+var
+  i, l, p: Integer;
+begin
+  p := Self.BinaryPosL(item, aAscending);
+  if (p = -1) then
+    Exit(Self.Copy);
+  SetLength(Result, Length(Self));
+  l := 0;
+  for i := 0 to High(Self) do
+    if ((i = p) or (Self[i] <> item)) then
+      Result[l.Increase] := Self[i];
+  SetLength(Result, l);
+end;
+{$ENDIF}

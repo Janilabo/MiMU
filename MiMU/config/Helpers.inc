@@ -517,7 +517,13 @@ type
     function Shift: TVar; overload;
     function Shift(const sCount: Integer): TArr; overload;
     function Shuffle(const shuffles: Integer = 1): TArr; overload;
+    function Singlify(const item: TVar): Integer; overload;
+    function Singlified(const item: TVar): TArr; overload;
     function Singular: Boolean; overload;
+    function Singularize(const item: TVar): Integer; overload;
+    function Singularized(const item: TVar): TArr; overload;
+    function Soloize(const item: TVar): Integer; overload;
+    function Soloized(const item: TVar): TArr; overload;
     function Size: Integer; overload;
     function Size(const aSize: Integer): TArr; overload;
     function Size(const aSize: Integer; const null: TVar): TArr; overload;
@@ -760,6 +766,8 @@ type
       function BinaryDelete(const x: Integer; const aAscending: Boolean = True): Boolean; overload;
       function BinaryReplace(const oValue, nValue: Integer; const aAscending: Boolean = True): Boolean; overload;
       function BinaryReplaceAll(const oValue, nValue: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinarySinglify(const item: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinarySinglified(const item: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function CountingSort(const aAscending: Boolean = True): Integer;
@@ -818,6 +826,8 @@ type
       function BinaryDelete(const x: Double; const aAscending: Boolean = True): Boolean; overload;
       function BinaryReplace(const oValue, nValue: Double; const aAscending: Boolean = True): Boolean; overload;
       function BinaryReplaceAll(const oValue, nValue: Double; const aAscending: Boolean = True): Integer; overload;
+      function BinarySinglify(const item: Double; const aAscending: Boolean = True): Integer; overload;
+      function BinarySinglified(const item: Double; const aAscending: Boolean = True): TDoubleArray; overload;
     {$ENDIF}
     {$IFDEF string}
       function Tally: Int64;
@@ -1058,7 +1068,9 @@ type
       function Rows: T2DPointArray;
       function Columns: T2DPointArray;
       function BinarySearch(const item: TPoint): Integer; overload;
-      function BinaryContains(const item: TPoint): Boolean; overload;	  
+      function BinaryContains(const item: TPoint): Boolean; overload;
+      function BinaryInsert(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
+      function BinaryAppend(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;

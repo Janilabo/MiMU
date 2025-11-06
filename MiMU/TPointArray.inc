@@ -7094,7 +7094,6 @@ function TPointArrayHelper.BinarySearch(const item: TPoint): Integer; overload;
 var
   L, H, M, C: Integer;
 begin
-  Result := -1;
   L := 0;
   H := High(Self);
   while (L <= H) do
@@ -7109,6 +7108,7 @@ begin
     else
       Exit(M);
   end;
+  Result := -1;
 end;
 
 {==============================================================================]
@@ -7116,11 +7116,60 @@ end;
   @action: Performs a binary search for a specified point in a sorted TPointArray.
   @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
            consistent with TPoint.Compare.
-          - Returns the index of the matching point if found, or -1 if not found.
+         - Returns the index of the matching point if found, or -1 if not found.
 [==============================================================================}
 function TPointArrayHelper.BinaryContains(const item: TPoint): Boolean; overload;
 begin
   Result := (Self.BinarySearch(item) > -1);
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryInsert>
+  @action: Inserts a specified point into a sorted TPointArray while maintaining
+           lexicographic order.
+  @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
+           consistent with TPoint.Compare.
+         - If allowDuplicates = False, no insertion occurs if the point already exists.
+         - Returns the index of the inserted or existing point.
+[==============================================================================}
+function TPointArrayHelper.BinaryInsert(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
+var
+  L, H, M: Integer;
+begin
+  L := 0;
+  H := High(Self);
+  while (L <= H) do
+  begin
+    M := ((L + H) div 2);
+	case Self[M].Compare(item) of
+	  0:
+	  if allowDuplicates then
+        L := (M + 1)
+      else
+        Exit(M);
+      -1: L := (M + 1);
+	  1: H := (M - 1);
+    end;
+  end;
+  Insert(item, Self, L);
+  Result := L;
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryAppend>
+  @action: Appends a specified point to the end of a sorted TPointArray if it is greater
+           than the last point, otherwise performs a BinaryInsert.
+  @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
+           consistent with TPoint.Compare.
+         - If allowDuplicates = False, duplicates are ignored.
+         - Returns the index of the inserted or existing point.
+[==============================================================================}
+function TPointArrayHelper.BinaryAppend(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
+begin
+  if not (Self.Empty or (Self[High(Self)].Compare(item) < 0)) then
+    Exit(Self.BinaryInsert(item, allowDuplicates));
+  Result := Length(Self);
+  Self.Supply(item);
 end;
 
 {$UNDEF TPoint}

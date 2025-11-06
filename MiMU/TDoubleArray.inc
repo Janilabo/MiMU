@@ -436,4 +436,22 @@ function TDoubleArrayHelper.BinaryReplace(const oValue, nValue: Double; const aA
 [==============================================================================}
 function TDoubleArrayHelper.BinaryReplaceAll(const oValue, nValue: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryReplaceAll}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryReplaceAll}
 
+{==============================================================================]
+  <arr.BinarySinglify>
+  @action: Removes consecutive duplicates of the specified value in a sorted array,
+           keeping only one occurrence.
+  @note: The array must be sorted (ascending or descending as specified).
+         Uses binary search for fast location. Returns the number of removed items.
+[==============================================================================}
+function TDoubleArrayHelper.BinarySinglify(const item: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySinglify}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySinglify}
+
+{==============================================================================]
+  <arr.BinarySinglified>
+  @action: Returns a new array where consecutive duplicates of the specified value
+           are collapsed into a single instance.
+  @note: The source array must be sorted. The order is preserved, and if the value
+         does not exist, a full copy of the array is returned unchanged.
+[==============================================================================}
+function TDoubleArrayHelper.BinarySinglified(const item: Double; const aAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinarySinglified}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySinglified}
+
 {$UNDEF Double}
