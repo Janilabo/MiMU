@@ -7083,4 +7083,44 @@ begin
   end;
 end;
 
+{==============================================================================]
+  <TPointArray.BinarySearch>
+  @action: Performs a binary search for a specified point in a sorted TPointArray.
+  @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
+           consistent with TPoint.Compare.
+          - Returns the index of the matching point if found, or -1 if not found.
+[==============================================================================}
+function TPointArrayHelper.BinarySearch(const item: TPoint): Integer; overload;
+var
+  L, H, M, C: Integer;
+begin
+  Result := -1;
+  L := 0;
+  H := High(Self);
+  while (L <= H) do
+  begin
+    M := ((L + H) div 2);
+    C := Self[M].Compare(item);
+    if (C < 0) then
+      L := (M + 1)
+    else
+      if (C > 0) then
+      H := (M - 1)
+    else
+      Exit(M);
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.BinarySearch>
+  @action: Performs a binary search for a specified point in a sorted TPointArray.
+  @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
+           consistent with TPoint.Compare.
+          - Returns the index of the matching point if found, or -1 if not found.
+[==============================================================================}
+function TPointArrayHelper.BinaryContains(const item: TPoint): Boolean; overload;
+begin
+  Result := (Self.BinarySearch(item) > -1);
+end;
+
 {$UNDEF TPoint}

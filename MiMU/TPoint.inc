@@ -45,19 +45,146 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Compare>
-  @action: Comparison method for TPoint.
-  @note: None.
+  <TPoint.Comparison>
+  @action: Compares two points lexicographically by X then Y.
+  @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
 [==============================================================================}
-function TPoint.Compare(const target: TPoint): Integer; overload; inline;
+function TPoint.Comparison(const target: TPoint): Integer; overload;
+begin
+  if ((Self.X = target.X) and (Self.Y = target.Y)) then
+    Exit(0);
+  if (Self.X < target.X) then
+    Exit(-1);
+  if (Self.X > target.X) then
+    Exit(1);
+  if (Self.Y < target.Y) then
+    Exit(-1);
+  if (Self.Y > target.Y) then
+    Exit(1);
+end;
+
+{==============================================================================]
+  <TPoint.Compared>
+  @action: Compares two points lexicographically by X then Y.
+  @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
+[==============================================================================}
+function TPoint.Compared(const target: TPoint): Integer; overload;
+begin
+  if (X <> target.X) then
+    Exit(Ord(X > target.X) - Ord(X < target.X));
+  if (Y <> target.Y) then
+    Exit(Ord(Y > target.Y) - Ord(Y < target.Y));
+  Result := 0;
+end;
+
+{==============================================================================]
+  <TPoint.Comp>
+  @action: Compares two points lexicographically by X then Y.
+  @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
+[==============================================================================}
+function TPoint.Comp(const target: TPoint): Integer; overload;
+begin
+  Result := IfThen((X <> target.X), (Ord(X > target.X) - Ord(X < target.X)), (Ord(Y > target.Y) - Ord(Y < target.Y)));
+end;
+
+{==============================================================================]
+  <TPoint.Cmp>
+  @action: Compares two points lexicographically by X then Y.
+  @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
+[==============================================================================}
+function TPoint.Cmp(const target: TPoint): Integer; overload;
+begin
+  Result := Sign(X - target.X);
+  if (Result = 0) then
+    Result := Sign(Y - target.Y);
+end;
+
+{==============================================================================]
+  <TPoint.Compare>
+  @action: Compares two points lexicographically by X then Y.
+  @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
+[==============================================================================}
+function TPoint.Compare(const target: TPoint): Integer; overload;
+begin
+  if (Self = target) then
+    Exit(0);
+  if (Self < target) then
+    Exit(-1);
+  Result := 1;
+end;
+
+{==============================================================================]
+  <TPoint.XComp>
+  @action: Compares two points by their X coordinates only.
+  @note: Returns -1 if Self.X < target.X, 1 if Self.X > target.X, or 0 if equal.
+[==============================================================================}
+function TPoint.XComp(const target: TPoint): Integer; inline;
 begin
   if (Self.X < target.X) then
     Result := -1
   else
     if (Self.X > target.X) then
-	  Result := 1
+	    Result := 1
     else
-	  Result := 0;
+	    Result := 0;
+end;
+
+{==============================================================================]
+  <TPoint.YComp>
+  @action: Compares two points by their Y coordinates only.
+  @note: Returns -1 if Self.Y < target.Y, 1 if Self.Y > target.Y, or 0 if equal.
+[==============================================================================}
+function TPoint.YComp(const target: TPoint): Integer; inline;
+begin
+  if (Self.Y < target.Y) then
+    Result := -1
+  else
+    if (Self.Y > target.Y) then
+	    Result := 1
+    else
+	    Result := 0;
+end;
+
+{==============================================================================]
+  <TPoint.XCompare>
+  @action: Compares two points primarily by X coordinate, then by Y as a tiebreaker.
+  @note: Useful for X-major ordering or sorting points left-to-right, then top-to-bottom.
+[==============================================================================}
+function TPoint.XCompare(const target: TPoint): Integer;
+begin
+  if (Self.X < target.X) then
+    Exit(-1)
+  else
+    if (Self.X > target.X) then
+      Exit(1)
+    else
+      if (Self.Y < target.Y) then
+        Exit(-1)
+      else
+        if (Self.Y > target.Y) then
+          Exit(1);
+  Result := 0;
+end;
+
+{==============================================================================]
+  <TPoint.YCompare>
+  @action: Compares two points primarily by Y coordinate, then by X as a tiebreaker.
+  @note: Useful for Y-major ordering or sorting points top-to-bottom, then left-to-right.
+[==============================================================================}
+function TPoint.YCompare(const target: TPoint): Integer;
+begin
+  if (Self.Y < target.Y) then
+    Exit(-1)
+  else
+    if (Self.Y > target.Y) then
+      Exit(1)
+    else
+      if (Self.X < target.X) then
+        Exit(-1)
+      else
+        if (Self.X > target.X) then
+          Exit(1);
+  Result := 0;
 end;
 
 {==============================================================================]

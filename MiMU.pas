@@ -72,7 +72,15 @@ type
     constructor Create(const value: Integer); overload;
     class function Construct(const pX, pY: Integer): TPoint; overload; static;
     function Build(const pX, pY: Integer): TPoint;  inline;
-    function Compare(const target: TPoint): Integer; overload; inline;
+    function Comparison(const target: TPoint): Integer; overload;
+    function Compare(const target: TPoint): Integer; overload;
+    function Compared(const target: TPoint): Integer; overload;
+    function Comp(const target: TPoint): Integer; overload;
+    function Cmp(const target: TPoint): Integer; overload;
+    function XComp(const target: TPoint): Integer; inline;
+    function YComp(const target: TPoint): Integer; inline;
+    function XCompare(const target: TPoint): Integer;
+    function YCompare(const target: TPoint): Integer;
     function InCircle(const center: TPoint; const radius: Double): Boolean; inline;
     function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; inline;
     function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; 

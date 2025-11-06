@@ -1056,7 +1056,9 @@ type
       function AsRows: T2DPointArray;
       function AsColumns: T2DPointArray;
       function Rows: T2DPointArray;
-      function Columns: T2DPointArray;	  
+      function Columns: T2DPointArray;
+      function BinarySearch(const item: TPoint): Integer; overload;
+      function BinaryContains(const item: TPoint): Boolean; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
