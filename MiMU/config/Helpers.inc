@@ -46,7 +46,7 @@ type
       function Distance(const T: Integer): Integer; inline;
       function Difference(const T: Integer): Integer; inline;
       function Opposite: Integer; inline;
-      function Sign: Integer; inline;
+      function Sign(const target: Integer = 0): Integer; inline;
       function Shuffle: Integer;
       function Over(const target: Integer): Boolean; inline;
       function Under(const target: Integer): Boolean; inline;
@@ -98,13 +98,13 @@ type
       function MaxDecimal: Double;
       function Accuracy(const a: Integer): Double;
       function Compare(const target: Double): Integer; inline;
+      function Sign(const target: Double = 0): Integer; inline;
       function Precede(const target: Double; const aAscending: Boolean): Boolean; overload;
       function Ascending(const target: Double): Boolean; inline;
       function Descending(const target: Double): Boolean; inline;
       function Distance(const T: Double): Double; inline;
       function Difference(const T: Double): Double; inline;
       function Opposite: Double; inline;
-      function Sign: Integer; inline;
       function FixDegrees: Double;
       function Degrees: Double;
       function FixRadians: Double;

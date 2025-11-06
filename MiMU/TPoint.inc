@@ -188,6 +188,50 @@ begin
 end;
 
 {==============================================================================]
+  <TPoint.CompareX>
+  @action: Compares two points by their Y coordinate only.
+  @note: - Returns -1 if Self.Y < target.Y, 1 if Self.Y > target.Y, and 0 if equal.
+         - The X coordinate is ignored.
+[==============================================================================}
+function TPoint.CompareX(const target: TPoint): Integer;
+begin
+  Result := (Ord(Self.X > target.X) - Ord(Self.X < target.X));
+end;
+
+{==============================================================================]
+  <TPoint.CompareY>
+  @action: Compares two points by their Y coordinate only.
+  @note: - Returns -1 if Self.Y < target.Y, 1 if Self.Y > target.Y, and 0 if equal.
+         - The X coordinate is ignored.
+[==============================================================================}
+function TPoint.CompareY(const target: TPoint): Integer;
+begin
+  Result := (Ord(Self.Y > target.Y) - Ord(Self.Y < target.Y));
+end;
+
+{==============================================================================]
+  <TPoint.CompX>
+  @action: Compares two points by their X coordinate only.
+  @note: - Returns -1 if Self.X < target.X, 1 if Self.X > target.X, and 0 if equal.
+         - The Y coordinate is ignored.
+[==============================================================================}
+function TPoint.CompX(const target: TPoint): Integer;
+begin
+  Result := Sign(Self.X - target.X);
+end;
+
+{==============================================================================]
+  <TPoint.CompY>
+  @action: Compares two points by their Y coordinate only.
+  @note: - Returns -1 if Self.Y < target.Y, 1 if Self.Y > target.Y, and 0 if equal.
+         - The X coordinate is ignored.
+[==============================================================================}
+function TPoint.CompY(const target: TPoint): Integer;
+begin
+  Result := Sign(Self.Y - target.Y);
+end;
+
+{==============================================================================]
   <TPoint.Inside>
   @action: Returns true if pt is inside the given box (bx).
   @note: None.

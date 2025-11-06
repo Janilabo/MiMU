@@ -36,6 +36,18 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_Sign}
+begin
+  if (Self = target) then
+    Result := 0
+  else
+    if (Self < target) then
+      Result := -1
+    else
+      Result := 1;
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_Precede}
 begin
   Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));

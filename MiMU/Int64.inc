@@ -223,15 +223,7 @@ end;
           x < 0 = -1            x = 0 = 0             x > 0 = 1
  @note: None
 [==============================================================================}
-function TInt64Helper.Sign: Integer; inline;
-begin
-  if (Self = 0) then
-    Exit(0);
-  if (Self > 0) then
-    Result := 1
-  else
-    Result := -1;
-end;
+function TInt64Helper.Sign(const target: Int64 = 0): Integer; inline; {$DEFINE Skeleton_Sign}{$I config\Skeletons.inc}{$UNDEF Skeleton_Sign}
 
 {==============================================================================]
  <TInt64Helper.Shuffle>

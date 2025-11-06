@@ -227,6 +227,14 @@ begin
 end;
 
 {==============================================================================]
+ <TDoubleHelper.Sign>
+ @action: Indicates whether x value is positive, negative or zero.
+          x < 0 = -1            x = 0 = 0             x > 0 = 1
+ @note: None
+[==============================================================================}
+function TDoubleHelper.Sign(const target: Double = 0): Integer; inline;  {$DEFINE Skeleton_Sign}{$I config\Skeletons.inc}{$UNDEF Skeleton_Sign}
+
+{==============================================================================]
  <TDoubleHelper.MinDecimal>
  @action: Returns the minimum decimal value.
           0.12345 => 0.00001
@@ -352,22 +360,6 @@ end;
 function TDoubleHelper.Opposite: Double; inline;
 begin
   Result := (Self * -1);
-end;
-
-{==============================================================================]
- <Double_Sign>
- @action: Indicates whether x value is positive, negative or zero.
-          x < 0 = -1            x = 0 = 0             x > 0 = 1
- @note: None
-[==============================================================================}
-function TDoubleHelper.Sign: Integer; inline;
-begin
-  if (Self = 0) then
-    Exit(0);
-  if (Self > 0) then
-    Result := 1
-  else
-    Result := -1;
 end;
 
 {==============================================================================]

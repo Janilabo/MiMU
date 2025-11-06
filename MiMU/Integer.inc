@@ -409,15 +409,7 @@ end;
           x < 0 = -1            x = 0 = 0             x > 0 = 1
  @note: None
 [==============================================================================}
-function TIntegerHelper.Sign: Integer; inline;
-begin
-  if (Self = 0) then
-    Exit(0);
-  if (Self > 0) then
-    Result := 1
-  else
-    Result := -1;
-end;
+function TIntegerHelper.Sign(const target: Integer = 0): Integer; inline;  {$DEFINE Skeleton_Sign}{$I config\Skeletons.inc}{$UNDEF Skeleton_Sign}
 
 {==============================================================================]
  <TIntegerHelper.Shuffle>

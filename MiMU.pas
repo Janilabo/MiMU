@@ -81,6 +81,10 @@ type
     function YComp(const target: TPoint): Integer; inline;
     function XCompare(const target: TPoint): Integer;
     function YCompare(const target: TPoint): Integer;
+    function CompareX(const target: TPoint): Integer;
+    function CompareY(const target: TPoint): Integer;
+    function CompX(const target: TPoint): Integer;
+    function CompY(const target: TPoint): Integer;
     function InCircle(const center: TPoint; const radius: Double): Boolean; inline;
     function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; inline;
     function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; 
@@ -671,9 +675,9 @@ type
   TInt64Helper = type helper for Int64
     function Prime: Boolean; 
     function IsPrime: Boolean; 
-    function Parity: Byte;  inline;
-    function Even: Boolean;  inline;
-    function Odd: Boolean;  inline;
+    function Parity: Byte; inline;
+    function Even: Boolean; inline;
+    function Odd: Boolean; inline;
     function Increase(const N: Int64 = 1): Int64; 
     function Decrease(const N: Int64 = 1): Int64; 
     function Increment(const N: Int64 = 1): Int64; 
@@ -681,17 +685,17 @@ type
     function DigitCount: Integer; 
     function Digitz: TIntegerArray; 
     function Digits: TIntegerArray; 
-    function Compare(const target: Int64): Integer;  inline;
+    function Compare(const target: Int64): Integer; inline;
     function Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; 
-    function Distance(const T: Int64): Int64;  inline;
-    function Difference(const T: Int64): Int64;  inline;
-    function Opposite: Int64;  inline;
-    function Sign: Integer;  inline;
+    function Distance(const T: Int64): Int64; inline;
+    function Difference(const T: Int64): Int64; inline;
+    function Opposite: Int64; inline;
+    function Sign(const target: Int64 = 0): Integer; inline;
     function Shuffle: Int64; 
-    function Over(const target: Int64): Boolean;  inline;
-    function Under(const target: Int64): Boolean;  inline;
-    function Oversize(const limit: Int64): Boolean;  inline;
-    function Undersize(const limit: Int64): Boolean;  inline;
+    function Over(const target: Int64): Boolean; inline;
+    function Under(const target: Int64): Boolean; inline;
+    function Oversize(const limit: Int64): Boolean; inline;
+    function Undersize(const limit: Int64): Boolean; inline;
   end;
   TIA = class
   public
