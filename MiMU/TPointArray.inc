@@ -7109,6 +7109,80 @@ begin
 end;
 
 {==============================================================================]
+  <TPointArray.BinaryPosL>
+  @action: Finds the leftmost index at which a given point could be inserted
+           in sorted order (first element >= item).
+  @note: - The array must be sorted in ascending lexicographic order by X, then Y.
+          - Returns the insertion index (0..Length(Self)).
+[==============================================================================}
+function TPointArrayHelper.BinaryPosL(const item: TPoint): Integer; overload;
+var
+  L, H, M: Integer;
+begin
+  L := 0;
+  H := Length(Self);
+  while (L < H) do
+  begin
+    M := ((L + H) div 2);
+    if (Self[M].Compare(item) < 0) then
+      L := (M + 1)
+    else
+      H := M;
+  end;
+  Result := L;
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryPosR>
+  @action: Finds the rightmost index at which a given point could be inserted
+           in sorted order (last element <= item).
+  @note: - The array must be sorted in ascending lexicographic order by X, then Y.
+          - Returns the index of the last element <= item,
+            or -1 if all elements are greater than item.
+[==============================================================================}
+function TPointArrayHelper.BinaryPosR(const item: TPoint): Integer; overload;
+var
+  L, H, M: Integer;
+begin
+  L := 0;
+  H := Length(Self);
+  while (L < H) do
+  begin
+    M := ((L + H) div 2);
+    if (Self[M].Compare(item) <= 0) then
+      L := (M + 1)
+    else
+      H := M;
+  end;
+  Result := (L - 1);
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryRank>
+  @action: Returns the rank (0-based index) of a point within a sorted TPointArray.
+           The rank is the position at which the point would be inserted to
+           maintain ascending lexicographic order by X, then Y.
+  @note: - Equivalent to the index of the first element >= item.
+         - If the item exists, returns the index of its first occurrence.
+         - The array must be sorted ascending, consistent with TPoint.Compare.
+[==============================================================================}
+function TPointArrayHelper.BinaryRank(const item: TPoint): Integer; overload;
+var
+  R, M: Integer;
+begin
+  Result := 0;
+  R := Length(Self);
+  while (Result < R) do
+  begin
+    M := ((Result + R) div 2);
+    if (Self[M].Compare(item) < 0) then
+      Result := (M + 1)
+    else
+      R := M;
+  end;
+end;
+
+{==============================================================================]
   <TPointArray.BinarySearch>
   @action: Performs a binary search for a specified point in a sorted TPointArray.
   @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
@@ -7166,6 +7240,27 @@ begin
     Exit(Self.BinaryInsert(item, allowDuplicates));
   Result := Length(Self);
   Self.Supply(item);
+end;
+
+{==============================================================================]
+  <TPointArray.BinarySupply>
+  @action: Inserts a specified point into the sorted TPointArray while preserving
+           ascending lexicographic order by X, then Y.
+  @note: - The array must already be sorted in ascending order consistent with
+           TPoint.Compare.
+         - Uses BinaryPosL to determine the correct insertion position.
+         - Shifts subsequent elements to make room for the new point.
+         - Returns the index at which the point was inserted.
+[==============================================================================}
+function TPointArrayHelper.BinarySupply(const item: TPoint): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.BinaryPosL(item);
+  SetLength(Self, (Length(Self) + 1));
+  for i := High(Self) downto (Result + 1) do
+    Self[i] := Self[i - 1];
+  Self[Result] := item;
 end;
 
 {==============================================================================]
@@ -7296,6 +7391,25 @@ begin
 end;
 
 {==============================================================================]
+  <TPointArray.BinaryAmount>
+  @action: Returns the number of elements in the sorted TPointArray that are
+           equal to the specified point.
+  @note: - The array must be sorted in ascending lexicographic order by X, then Y,
+           consistent with TPoint.Compare.
+         - Returns 0 if the point does not exist in the array.
+         - Internally uses BinaryRangeOf to determine the index range.
+[==============================================================================}
+function TPointArrayHelper.BinaryAmount(const item: TPoint): Integer; overload;
+var
+  r: TRange;
+begin
+  r := Self.BinaryRangeOf(item);
+  if (r.start > r.stop) then
+    Exit(0);
+  Result := ((r.stop - r.start) + 1);
+end;
+
+{==============================================================================]
   <TPointArray.BinaryRange>
   @action: Performs a binary search to find the contiguous index range of all
            points equal to the specified item.
@@ -7339,6 +7453,21 @@ begin
       1: H := (M - 1);
     end;
   end;
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryRangeOf>
+  @action: Returns the range of indices that correspond to all elements
+           equal to a specified point within a sorted TPointArray.
+  @note: - The array must be sorted in ascending lexicographic order by X, then Y,
+           consistent with TPoint.Compare.
+         - If the point is not found, Result.start > Result.stop.
+         - Result.start is the index of the first element >= item.
+         - Result.stop  is the index of the last element <= item.
+[==============================================================================}
+function TPointArrayHelper.BinaryRangeOf(const item: TPoint): TRange; overload;
+begin
+  Result.Create(Self.BinaryPosL(item), Self.BinaryPosR(item));
 end;
 
 {==============================================================================]
@@ -7448,6 +7577,55 @@ begin
       SetLength(Self, (l - Result));
     end;
   end;
+end;
+
+{==============================================================================]
+  <TPointArray.BinarySinglify>
+  @action: Removes all occurrences of a specified point from the sorted TPointArray
+           in place, preserving ascending lexicographic order by X, then Y.
+  @note: - The array must be sorted ascending by X, then Y, consistent with TPoint.Compare.
+         - Uses BinaryPosL to locate the first occurrence efficiently.
+         - Shifts subsequent elements left to fill removed entries.
+         - Returns the number of points removed.
+		 - KEEPS ONLY ONE!
+[==============================================================================}
+function TPointArrayHelper.BinarySinglify(const item: TPoint): Integer; overload;
+var
+  i, l, s, p: Integer;
+begin
+  p := Self.BinaryPosL(item);
+  if (p = -1) then
+    Exit(0);
+  s := Length(Self);
+  l := p;
+  for i := (p + 1) to (s - 1) do
+    if (Self[i] <> item)then
+      Self[l.Increment] := Self[i];
+  Result := (s - (l + 1));
+  if (Result > 0) then
+    SetLength(Self, (l + 1));
+end;
+
+{==============================================================================]
+  <TPointArray.BinarySinglified>
+  @action: Returns a copy of the array with all occurrences of a specified point
+           removed, preserving the original order.
+  @note: - The array must be sorted ascending by X then Y, consistent with TPoint.Compare.
+         - Uses BinaryPosL to locate the first occurrence efficiently.
+[==============================================================================}
+function TPointArrayHelper.BinarySinglified(const item: TPoint): TPointArray; overload;
+var
+  i, l, p: Integer;
+begin
+  p := Self.BinaryPosL(item);
+  if (p = -1) then
+    Exit(Self.Copy);
+  SetLength(Result, Length(Self));
+  l := 0;
+  for i := 0 to High(Self) do
+    if ((i = p) or (Self[i] <> item)) then
+      Result[l.Increase] := Self[i];
+  SetLength(Result, l);
 end;
 
 {$UNDEF TPoint}

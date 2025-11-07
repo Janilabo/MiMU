@@ -1068,16 +1068,24 @@ type
       function Rows: T2DPointArray;
       function Columns: T2DPointArray;
       function BinarySearch(const item: TPoint): Integer; overload;
+      function BinaryPosL(const item: TPoint): Integer; overload;
+      function BinaryPosR(const item: TPoint): Integer; overload;
+      function BinaryRank(const item: TPoint): Integer; overload;
       function BinaryContains(const item: TPoint): Boolean; overload;
       function BinaryInsert(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
       function BinaryAppend(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
+      function BinarySupply(const item: TPoint): Integer; overload;
       function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
       function BinaryInsertionSorted(const aAscending: Boolean = True): TPointArray; overload;
       function BinaryCount(const item: TPoint): Integer; overload;
+      function BinaryAmount(const item: TPoint): Integer; overload;
       function BinaryRange(const item: TPoint): TRange; overload;
+      function BinaryRangeOf(const item: TPoint): TRange; overload;
       function BinaryScan(const area: TBox): TIntegerArray; overload;
       function BinaryDelete(const item: TPoint): Boolean; overload;
-      function BinaryRemove(const item: TPoint; const all: Boolean = True): Integer; overload;	  
+      function BinaryRemove(const item: TPoint; const all: Boolean = True): Integer; overload;
+      function BinarySinglify(const item: TPoint): Integer; overload;
+      function BinarySinglified(const item: TPoint): TPointArray; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
