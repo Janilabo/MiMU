@@ -7293,6 +7293,161 @@ begin
       end;
     end;
   end;
-end; 
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryRange>
+  @action: Performs a binary search to find the contiguous index range of all
+           points equal to the specified item.
+  @note:   Assumes the array is sorted according to TPoint_Compare.
+           Returns (-1,-1) if no matching point is found.
+[==============================================================================}
+function TPointArrayHelper.BinaryRange(const item: TPoint): TRange; overload;
+var
+  L, H, M, C: Integer;
+begin
+  Result.Create(-1);
+  if (Length(Self) = 0) then
+    Exit;
+  L := 0;
+  H := High(Self);
+  while (L <= H) do
+  begin
+    M := ((L + H) div 2);
+    case Self[M].Compare(item) of
+      0:
+      begin
+        Result.start := M;
+        H := (M - 1);
+      end;
+      -1: L := (M + 1);
+      1: H := (M - 1);
+    end;
+  end;
+  L := 0;
+  H := High(Self);
+  while (L <= H) do
+  begin
+    M := ((L + H) div 2);
+    case Self[M].Compare(item) of
+      0:
+      begin
+        Result.stop := M;
+        L := (M + 1);
+      end;
+      -1: L := (M + 1);
+      1: H := (M - 1);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryScan>
+  @action: Performs a vertical binary scan on a Y-sorted point array to locate
+           all points whose coordinates lie within the specified TBox.
+  @note:   Array must be sorted by Y ascending. Uses binary search on Y to find
+           the vertical range and linearly filters by X within that range.
+           Returns indexes of all matching points.
+[==============================================================================}
+function TPointArrayHelper.BinaryScan(const area: TBox): TIntegerArray; overload;
+var
+  L, H, M, i: Integer;
+  r: TRange;
+begin
+  SetLength(Result, 0);
+  if Self.Empty then
+    Exit;
+  L := 0;
+  H := High(Self);
+  r.Create(-1);
+  while (L <= H) do
+  begin
+    M := ((L + H) div 2);
+    case (Self[M].Y < area.Y1) of
+      False:
+      begin
+        r.start := M;
+        H := (M - 1);
+      end;
+      True: L := (M + 1);
+    end;
+  end;
+  if (r.start = -1) then
+    Exit;
+  L := r.start;
+  H := High(Self);
+  while (L <= H) do
+  begin
+    M := ((L + H) div 2);
+    case (Self[M].Y > area.Y2) of
+      False:
+      begin
+        r.stop := M;
+        L := (M + 1);
+      end;
+      True: H := (M - 1);
+    end;
+  end;
+  if (r.stop = -1) then
+    Exit;
+  for i := r.start to r.stop do
+    if ((Self[i].X >= area.X1) and (Self[i].X <= area.X2)) then
+      Result.Supply(i);
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryDelete>
+  @action: Removes the specified TPoint from the array using binary search.
+           If found, the element is deleted and the array is resized.
+  @note: - The array must be sorted according to the same ordering rule
+           used by TPointArray.BinarySearch.
+         - All elements after the deleted item are shifted left by one.
+         - Returns True if the point was found and removed, False otherwise.
+[==============================================================================}
+function TPointArrayHelper.BinaryDelete(const item: TPoint): Boolean; overload;
+var
+  i, p: Integer;
+begin
+  p := Self.BinarySearch(item);
+  Result := (p > -1);
+  if not Result then
+    Exit;
+  for i := p to (High(Self) - 1) do
+    Self[i] := Self[i + 1];
+  SetLength(Self, (Length(Self) - 1));
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryRemove>
+  @action: Removes one or all occurrences of a specified TPoint from the array
+           using binary search. If 'all' is True, every matching element is
+           deleted; otherwise, only the first found instance is removed.
+  @note: - The array must be sorted using the same ordering as
+           TPointArray.BinarySearch and TPointArray.BinaryRange.
+         - When 'all' is True, deletion shifts the remaining elements left.
+         - Returns the number of elements removed (0 if none found).
+[==============================================================================}
+function TPointArrayHelper.BinaryRemove(const item: TPoint; const all: Boolean = True): Integer; overload;
+var
+  i, l: Integer;
+  r: TRange;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit(0);
+  case all of
+    False: Result := IfThen(Self.BinaryDelete(item), 1, 0);
+    True:
+    begin
+      r := Self.BinaryRange(item);
+      if r.Employs(-1) then
+        Exit(0);
+      Result := r.Size;
+      for i := r.start to ((l - Result) - 1) do
+        Self[i] := Self[i + Result];
+      SetLength(Self, (l - Result));
+    end;
+  end;
+end;
 
 {$UNDEF TPoint}

@@ -1073,7 +1073,11 @@ type
       function BinaryAppend(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
       function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
       function BinaryInsertionSorted(const aAscending: Boolean = True): TPointArray; overload;
-      function BinaryCount(const item: TPoint): Integer; overload;	  
+      function BinaryCount(const item: TPoint): Integer; overload;
+      function BinaryRange(const item: TPoint): TRange; overload;
+      function BinaryScan(const area: TBox): TIntegerArray; overload;
+      function BinaryDelete(const item: TPoint): Boolean; overload;
+      function BinaryRemove(const item: TPoint; const all: Boolean = True): Integer; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
