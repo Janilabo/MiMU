@@ -768,6 +768,10 @@ type
       function BinaryReplaceAll(const oValue, nValue: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinarySinglify(const item: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinarySinglified(const item: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
+      function BinaryInterpolationSearch(const x: Integer; const aAscending: Boolean = True): Integer;
+      function BinaryProbabilisticSearch(const x: Integer; const bias: Double = 0.0; const aAscending: Boolean = True): Integer; overload;
+      function BinaryProbabilisticSearch(const x: Integer; const aAscending: Boolean; const bias: Double = 0.0): Integer; overload;
+      function BinaryPinpoint(const x: Integer; const aAscending: Boolean = True): Integer;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function CountingSort(const aAscending: Boolean = True): Integer;

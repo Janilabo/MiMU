@@ -2129,6 +2129,134 @@ function TIntegerArrayHelper.BinarySinglify(const item: Integer; const aAscendin
 function TIntegerArrayHelper.BinarySinglified(const item: Integer; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinarySinglified}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySinglified}
 
 {==============================================================================]
+  <TIntegerArray.BinaryInterpolationSearch>
+  @action: Performs an interpolation search on a sorted integer array to find the index of a given value.
+  @note: This algorithm estimates the probable position of the target using linear interpolation
+         between the low and high bounds, resulting in faster performance than binary search
+         for uniformly distributed data. Returns -1 if the element is not found.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryInterpolationSearch(const x: Integer; const aAscending: Boolean = True): Integer;
+var
+  L, H, M: Integer;
+begin
+  L := 0;
+  H := High(Self);
+  while (L <= H) do
+  begin
+    case aAscending of
+	  True:
+      begin
+        if ((x < Self[L]) or (x > Self[H])) then
+		  Break;
+        if (Self[L] = Self[H]) then
+          if (Self[L] = x) then
+		    Exit(L)
+          else
+		    Break;
+        M := (L + ((x - Self[L]) * (H - L)) div (Self[H] - Self[L]));
+      end;
+      False:
+      begin
+        if ((x > Self[L]) or (x < Self[H])) then
+		  Break;
+        if (Self[L] = Self[H]) then
+          if (Self[L] = x) then
+		    Exit(L)
+          else
+		    Break;
+        M := (L + ((Self[L] - x) * (H - L)) div (Self[L] - Self[H]));
+      end;
+    end;
+    if (Self[M] = x) then
+      Exit(M)
+    else
+	  if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
+        L := (M + 1)
+      else
+        H := (M - 1);
+  end;
+  Result := -1;
+end;
+
+
+{==============================================================================]
+  <TIntegerArray.BinaryProbabilisticSearch>
+  @action: Performs a probabilistic variant of binary interpolation search, introducing a random bias
+           to the estimated midpoint to improve robustness on non-uniform or noisy data.
+  @note: The optional `bias` parameter (default = 0.0) adjusts how much random variation is applied
+         to the interpolation estimate. A small bias can prevent worst-case patterns and clustering effects.
+         Returns -1 if the element is not found.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryProbabilisticSearch(const x: Integer; const bias: Double = 0.0; const aAscending: Boolean = True): Integer;
+var
+  L, H, M: Integer;
+begin
+  L := 0;
+  H := High(Self);
+  while (L <= H) do
+  begin
+    if (Self[L] = Self[H]) then
+	  M := ((L + H) div 2)
+    else
+      if aAscending then
+        M := (L + Trunc(EnsureRange((((x - Self[L]) / (Self[H] - Self[L])) + bias * (Random - 0.5)), 0.0, 1.0) * (H - L)))
+      else
+        M := (L + Trunc(EnsureRange((((Self[L] - x) / (Self[L] - Self[H])) + bias * (Random - 0.5)), 0.0, 1.0) * (H - L)));
+    if (Self[M] = x) then
+      Exit(M)
+    else
+	  if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
+        L := (M + 1)
+      else
+        H := (M - 1);
+  end;
+  Result := -1;
+end;
+
+
+function TIntegerArrayHelper.BinaryProbabilisticSearch(const x: Integer; const aAscending: Boolean; const bias: Double = 0.0): Integer; overload;
+begin
+  Result := Self.BinaryProbabilisticSearch(x, bias, aAscending);
+end;
+
+{==============================================================================]
+  <TIntegerArray.BinaryPinpoint>
+  @action: Finds the index of the element closest in value to the specified integer.
+  @note: - The array must be sorted in ascending or descending order as specified by aAscending.
+         - Returns the index of the exact match if found, otherwise the index of the nearest element
+           by absolute distance to x.
+         - Runs in O(log n) time using BinaryRank to locate the insertion position and then compares
+           adjacent elements to choose the closest one.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryPinpoint(const x: Integer; const aAscending: Boolean = True): Integer;
+var
+  H, L, R, D: Integer;
+begin
+  H := High(Self);
+  case H of
+    -1: Exit(-1);
+    0: Exit(0);
+  end;
+  Result := Self.BinaryRank(x, aAscending);
+  if (Result > H) then
+    Exit(H);
+  if (Result < 0) then
+    Exit(0);
+  if (Self[Result] = x) then
+    Exit;
+  D := x.Distance(Self[Result]);
+  if (Result = 0) then
+     Exit(IfThen((D < x.Distance(Self[Result + 1])), Result, (Result + 1)));
+  if (Result = H) then
+    Exit(IfThen((D < x.Distance(Self[Result - 1])), Result, (Result - 1)));
+  if (D > x.Distance(Self[Result - 1])) then
+    Dec(Result)
+  else
+    if (D > x.Distance(Self[Result + 1])) then
+      Inc(Result);
+end;
+
+{==============================================================================]
   <TIntegerArray.BMerge>
   @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
   @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
