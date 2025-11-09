@@ -2257,6 +2257,168 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArray.BinaryScan>
+  @action: Performs a binary range scan on a sorted integer array to locate
+           all indexes whose values lie within the specified TRange.
+  @note: - The array must be sorted in either ascending or descending order,
+           as indicated by the aAscending flag (default = True).
+         - Uses two binary searches to determine the first and last matching
+           indexes that fall inside the range boundaries.
+         - Returns an index list (TIntegerArray) identifying all matching
+           elements.
+         - Efficient O(log n + k) performance, where k is the number of
+           matching elements.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryScan(const area: TRange; const aAscending: Boolean = True): TIntegerArray;
+var
+  L, H, M, i: Integer;
+  a, r: TRange;
+begin
+  a := area.Normalize;
+  SetLength(Result, 0);
+  H := High(Self);
+  L := 0;
+  r.Create(-1);
+  if (H > -1) then
+  case aAscending of
+    True:
+    if not ((a.stop > Self[H]) or (a.start < Self[L])) then
+    begin
+      while (L <= H) do
+      begin
+        M := ((L + H) div 2);
+        if (Self[M] >= a.start) then
+        begin
+          r.start := M;
+          H := (M - 1);
+        end else
+          L := (M + 1);
+      end;
+      if (r.start = -1) then
+        Exit;
+      L := r.start;
+      H := High(Self);
+      while (L <= H) do
+      begin
+        M := ((L + H) div 2);
+        if (Self[M] <= a.stop) then
+        begin
+          r.stop := M;
+          L := (M + 1);
+        end else
+          H := (M - 1);
+      end;
+    end;
+    False:
+    if not ((a.stop > Self[L]) or (a.start < Self[H])) then
+    begin
+      r.Create(-1);
+      while (L <= H) do
+      begin
+        M := ((L + H) div 2);
+        if (Self[M] <= a.stop) then
+        begin
+          r.start := M;
+          H := (M - 1);
+        end else
+          L := (M + 1);
+      end;
+      if (r.start = -1) then
+        Exit;
+      L := r.start;
+      H := High(Self);
+      while (L <= H) do
+      begin
+        M := ((L + H) div 2);
+        if (Self[M] >= a.start) then
+        begin
+          r.stop := M;
+          L := (M + 1);
+        end else
+          H := (M - 1);
+      end;
+    end;
+  end;
+  if not r.Employs(-1) then
+  for i := r.start to r.stop do
+    Result.Supply(i);
+end;
+
+{==============================================================================]
+  <TIntegerArray.BinaryScanned>
+  @action: Performs a binary range scan on a sorted integer array to locate
+           all values lying within the specified TRange.
+  @note: - The array must be sorted in either ascending or descending order,
+           as indicated by the aAscending flag (default = True).
+         - Uses a single binary search to locate any element inside the range,
+           then expands linearly in both directions to include all adjacent
+           elements that also satisfy the range condition.
+         - Returns a TIntegerArray containing the actual matching values
+           (not indexes).
+         - Offers O(log n + k) complexity and is well-suited for contiguous
+           numeric segments.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryScanned(const area: TRange; const aAscending: Boolean = True): TIntegerArray;
+var
+  L, H, M, i, S: Integer;
+  a, r: TRange;
+begin
+  a := area.Normalize;
+  SetLength(Result, 0);
+  H := High(Self);
+  S := H;
+  L := 0;
+  r.Create(-1);
+  if (H > -1) then
+  case aAscending of
+    True:
+    if not ((a.stop > Self[H]) or (a.start < Self[L])) then
+    while (L <= H) do
+    begin
+      M := ((L + H) div 2);
+      case a.Contains(Self[M]) of
+        True:
+        begin
+          r.Create(M);
+          while ((r.start > 0) and (Self[r.start - 1] >= a.start)) do
+            Dec(r.start);
+          while ((r.stop < S) and (Self[r.stop + 1] <= a.stop)) do
+            Inc(r.stop);
+          Exit(r.ToArray);
+        end;
+        False:
+        if (Self[M] > a.stop) then
+          H := (M - 1)
+        else
+          L := (M + 1);
+      end;
+    end;
+    False:
+    if not ((a.stop > Self[L]) or (a.start < Self[H])) then
+    while (L <= H) do
+    begin
+      M := ((L + H) div 2);
+      case a.Contains(Self[M]) of
+        True:
+        begin
+          r.Create(M);
+          while ((r.start > 0) and (Self[r.start - 1] <= a.stop)) do
+            Dec(r.start);
+          while ((r.stop < S) and (Self[r.stop + 1] >= a.start)) do
+            Inc(r.stop);
+          Exit(r.ToArray);
+        end;
+        False:
+        if (Self[M] < a.start) then
+          H := (M - 1)
+        else
+          L := (M + 1);
+      end;
+    end;
+  end;
+end;
+
+{==============================================================================]
   <TIntegerArray.BMerge>
   @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
   @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).

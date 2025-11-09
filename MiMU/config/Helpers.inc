@@ -772,6 +772,8 @@ type
       function BinaryProbabilisticSearch(const x: Integer; const bias: Double = 0.0; const aAscending: Boolean = True): Integer; overload;
       function BinaryProbabilisticSearch(const x: Integer; const aAscending: Boolean; const bias: Double = 0.0): Integer; overload;
       function BinaryPinpoint(const x: Integer; const aAscending: Boolean = True): Integer;
+      function BinaryScan(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
+      function BinaryScanned(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function CountingSort(const aAscending: Boolean = True): Integer;
@@ -1086,6 +1088,7 @@ type
       function BinaryRange(const item: TPoint): TRange; overload;
       function BinaryRangeOf(const item: TPoint): TRange; overload;
       function BinaryScan(const area: TBox): TIntegerArray; overload;
+      function BinaryScanned(const area: TBox): TIntegerArray; overload;
       function BinaryDelete(const item: TPoint): Boolean; overload;
       function BinaryRemove(const item: TPoint; const all: Boolean = True): Integer; overload;
       function BinarySinglify(const item: TPoint): Integer; overload;
