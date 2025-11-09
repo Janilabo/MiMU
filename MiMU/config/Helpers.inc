@@ -135,6 +135,7 @@ type
       function Chunk(const a, b: Integer): string;
       function Center(const size: Integer; const fill: Char = #32): string;
       function Compare(const target: string): Integer; inline;
+      function Sign(const target: string): Integer; inline;
       function Precede(const target: string; const aAscending: Boolean): Boolean; overload;
       function Ascending(const target: string): Boolean; inline;
       function Descending(const target: string): Boolean; inline;
@@ -192,6 +193,7 @@ type
     {$ENDIF}
     {$IFDEF Char}
       function Compare(const target: Char): Integer; inline;
+      function Sign(const target: Char): Integer; inline;
       function Precede(const target: Char; const aAscending: Boolean): Boolean; overload;
       function Ascending(const target: Char): Boolean; inline;
       function Descending(const target: Char): Boolean; inline;
@@ -634,6 +636,10 @@ type
       function TrendFalling: Boolean; overload;
       function TrendRising: Boolean; overload;
       function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
+      function Sortedness: Boolean; overload;
+      function SortednessEx(const stride: Integer = 16): Boolean; overload;
+      function Monotonic: Boolean; overload;
+      function Monotone: Boolean; overload;
     {$ENDIF}
     function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
     function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;

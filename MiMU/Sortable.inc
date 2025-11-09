@@ -1974,3 +1974,148 @@ begin
     Self[p] := k;
   end;
 end;
+
+{==============================================================================]
+  <arr.Sortedness>
+  @action: Checks whether the array is monotonic (either ascending or descending).
+           Performs a two-phase check: a fast global trend detection from both ends,
+           followed by a full local adjacency check to ensure strict monotonicity.
+  @note: Returns True for arrays of length 0 or 1.
+         Uses Integer_Sign(Self[L], Self[R]) to detect initial trend.
+         Efficient for large arrays due to early exit if disorder is detected.
+         This version checks every element in both phases.
+[==============================================================================}
+function HArr.Sortedness: Boolean; overload;
+var
+  L, R, D: Integer;
+begin
+  L := 0;
+  R := High(Self);
+  Result := True;
+  if (R <= L) then
+    Exit;
+  D := 0;
+  repeat
+    case D of
+      0: D := Self[L].Sign(Self[R]);
+      1: Result := (Self[L] <= Self[R]);
+      -1: Result := (Self[L] >= Self[R]);
+    end;
+  until ((not Result) or ((L.Increment > R.Decrement)));
+  if (not Result) then
+    Exit;
+  L := -1;
+  case (D > 0) of
+    False:
+    while (L.Increment < R) do
+      if (Self[L] < Self[L + 1]) then
+        Exit(False);
+    True:
+    while (L.Increment < R) do
+      if (Self[L] > Self[L + 1]) then
+        Exit(False);
+  end;
+end;
+
+{==============================================================================]
+  <arr.SortednessEx>
+  @action: Enhanced version of Sortedness with configurable stride.
+           Performs a subsampled global trend check (using left and right indices
+           at intervals of "stride") to quickly detect gross disorder,
+           followed by a full local adjacency check if the array passes the global phase.
+  @note: Default stride = 16; larger values reduce global comparisons but may delay detection
+         of small local disorder. Returns True for arrays of length 0 or 1.
+         Useful for extremely large arrays where global trend violation is likely.
+[==============================================================================}
+function HArr.SortednessEx(const stride: Integer = 16): Boolean; overload;
+var
+  L, R, D: Integer;
+begin
+  L := 0;
+  R := High(Self);
+  Result := True;
+  if (R <= L) then
+    Exit;
+  D := 0;
+  repeat
+    case D of
+      0: D := Self[L].Sign(Self[R]);
+      1: Result := (Self[L] <= Self[R]);
+      -1: Result := (Self[L] >= Self[R]);
+    end;
+  until ((not Result) or (L.Increment(stride) >= R.Decrement(stride)));
+  if not Result then
+    Exit;
+  L := -1;
+  R := High(Self);
+  case (D >= 0) of
+    False:
+    while (L.Increment < R) do
+      if (Self[L] < Self[L + 1]) then
+        Exit(False);
+    True:
+    while (L.Increment < R) do
+      if (Self[L] > Self[L + 1]) then
+        Exit(False);
+  end;
+end;
+
+{==============================================================================]
+  <arr.Monotonic>
+  @action: Checks whether the array is globally monotonic by simultaneously comparing
+           elements from both ends toward the center, while also validating adjacent pairs.
+           Detects ascending or descending trends dynamically based on endpoints.
+  @note: Returns True for arrays of length 0 or 1.
+         This approach may detect global disorder slightly earlier than adjacent-only checks.
+         Performs both global and local comparisons in a single loop.
+         Uses Integer_Increment and Integer_Decrement for safe index movement.
+[==============================================================================}
+function HArr.Monotonic: Boolean; overload;
+var
+  L, R: Integer;
+begin
+  L := -1;
+  R := Length(Self);
+  if (R > 1) then
+  case (Self[L + 1] <= Self[R - 1]) of
+    True:
+    while (L.Increment < R.Decrement) do
+      if ((Self[R] < Self[L]) or (Self[L] > Self[L + 1]) or (Self[R - 1] > Self[R])) then
+        Exit(False);
+    False:
+    while (L.Increment < R.Decrement) do
+      if ((Self[R] > Self[L]) or (Self[L] < Self[L + 1]) or (Self[R - 1] < Self[R])) then
+        Exit(False);
+  end;
+  Result := True;
+end;
+
+{==============================================================================]
+  <arr.Monotone>
+  @action: Checks whether the array is monotonic (ascending or descending) by performing
+           a symmetric two-way scan from both ends toward the middle.
+           Repeatedly evaluates adjacent pairs and global trend to determine monotonicity.
+  @note: Returns True for arrays of length 0 or 1.
+         Uses a repeat-until loop with early exit if a violation is detected.
+         This function is a slightly simpler alternative to Sortedness, but checks both
+         global and local conditions for each iteration.
+[==============================================================================}
+function HArr.Monotone: Boolean; overload;
+var
+  L, R: Integer;
+begin
+  L := 0;
+  R := High(Self);
+  if (R <= L) then
+    Exit(True);
+  case (Self[L] <= Self[R]) of
+    True:
+    repeat
+      Result := not ((Self[L] > Self[L + 1]) or (Self[R - 1] > Self[R]));
+    until ((not Result) or ((L.Increment > R.Decrement)));
+    False:
+    repeat
+      Result := not ((Self[L] < Self[L + 1]) or (Self[R - 1] < Self[R]));
+    until ((not Result) or ((L.Increment > R.Decrement)));
+  end;
+end;

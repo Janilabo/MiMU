@@ -8,6 +8,19 @@
 function TCharHelper.Compare(const target: Char): Integer; inline; {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
 
 {==============================================================================]
+  <TCharHelper.Sign>
+  @action: Compares the current string (Self) with a target string and returns
+           a directional sign indicating whether the target is greater, equal,
+           or smaller than Self.
+  @note: Returns:
+         1  if Self < target (target is larger → ascending)
+         0  if Self = target (no change)
+         -1  if Self > target (target is smaller → descending)
+         Useful for detecting sequence direction, ordering, or range computation.
+[==============================================================================}
+function TCharHelper.Sign(const target: Char): Integer; inline; {$DEFINE Skeleton_Sign}{$I config\Skeletons.inc}{$UNDEF Skeleton_Sign}
+
+{==============================================================================]
  <TCharHelper.Precede>
  @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
