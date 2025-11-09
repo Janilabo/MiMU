@@ -228,11 +228,16 @@ end;
 
 {==============================================================================]
  <TDoubleHelper.Sign>
- @action: Indicates whether x value is positive, negative or zero.
-          x < 0 = -1            x = 0 = 0             x > 0 = 1
- @note: None
+ @action: Compares the current double (Self) with a target double and returns
+          a directional sign indicating whether the target is greater, equal,
+          or smaller than Self.
+ @note:   Returns:
+            1  if Self < target (target is larger → ascending)
+            0  if Self = target (no change)
+           -1  if Self > target (target is smaller → descending)
+          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TDoubleHelper.Sign(const target: Double = 0): Integer; inline;  {$DEFINE Skeleton_Sign}{$I config\Skeletons.inc}{$UNDEF Skeleton_Sign}
+function TDoubleHelper.Sign(const target: Double = 0): Integer; inline; {$DEFINE Skeleton_Sign}{$I config\Skeletons.inc}{$UNDEF Skeleton_Sign}
 
 {==============================================================================]
  <TDoubleHelper.MinDecimal>

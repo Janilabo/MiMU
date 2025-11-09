@@ -42,9 +42,9 @@ begin
     Result := 0
   else
     if (Self < target) then
-      Result := -1
+      Result := 1
     else
-      Result := 1;
+      Result := -1;
 end;
 {$ENDIF}
 
