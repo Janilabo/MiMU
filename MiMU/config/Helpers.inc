@@ -772,6 +772,9 @@ type
       function BinaryReplaceAll(const oValue, nValue: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinarySinglify(const item: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinarySinglified(const item: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
+      function BinarySearchFirst(const value: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinarySearchLast(const value: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinaryLocalize(const value: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinaryInterpolationSearch(const x: Integer; const aAscending: Boolean = True): Integer;
       function BinaryProbabilisticSearch(const x: Integer; const bias: Double = 0.0; const aAscending: Boolean = True): Integer; overload;
       function BinaryProbabilisticSearch(const x: Integer; const aAscending: Boolean; const bias: Double = 0.0): Integer; overload;
@@ -838,6 +841,9 @@ type
       function BinaryReplaceAll(const oValue, nValue: Double; const aAscending: Boolean = True): Integer; overload;
       function BinarySinglify(const item: Double; const aAscending: Boolean = True): Integer; overload;
       function BinarySinglified(const item: Double; const aAscending: Boolean = True): TDoubleArray; overload;
+      function BinarySearchFirst(const value: Double; const aAscending: Boolean = True): Integer; overload;
+      function BinarySearchLast(const value: Double; const aAscending: Boolean = True): Integer; overload;
+      function BinaryLocalize(const value: Double; const aAscending: Boolean = True): Integer; overload;
     {$ENDIF}
     {$IFDEF string}
       function Tally: Int64;

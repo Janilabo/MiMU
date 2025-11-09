@@ -2295,6 +2295,37 @@ function TIntegerArrayHelper.BinarySinglify(const item: Integer; const aAscendin
 function TIntegerArrayHelper.BinarySinglified(const item: Integer; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinarySinglified}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySinglified}
 
 {==============================================================================]
+ <TIntegerArray.BinarySearchFirst>
+  @action: Performs a binary search to find the first (lowest) index of a specified
+           integer value within a sorted TIntegerArray.
+  @note: - The array must be sorted in ascending order.
+         - If the value occurs multiple times, the index of its first occurrence is returned.
+         - If the value is not found, returns -1.
+[==============================================================================}
+function TIntegerArrayHelper.BinarySearchFirst(const value: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchFirst}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchFirst}
+
+{==============================================================================]
+ <TIntegerArray.BinarySearchLast>
+  @action: Performs a binary search to find the last (highest) index of a specified
+           integer value within a sorted TIntegerArray.
+  @note: - The array must be sorted in ascending order.
+         - If the value occurs multiple times, the index of its last occurrence is returned.
+         - If the value is not found, returns -1.
+[==============================================================================}
+function TIntegerArrayHelper.BinarySearchLast(const value: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchLast}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchLast}
+
+{==============================================================================]
+ <TIntegerArray.BinaryLocalize>
+  @action: Determines the insertion position for a specified integer value within
+           a sorted TIntegerArray.
+  @note: - The array must be sorted in ascending order.
+         - Returns the index where the value should be inserted to maintain sort order.
+         - If the value already exists, returns the index of its first occurrence.
+         - Commonly used to find insertion points for sorted inserts or range lookups.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryLocalize(const value: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLocalize}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLocalize}
+
+{==============================================================================]
   <TIntegerArray.BinaryInterpolationSearch>
   @action: Performs an interpolation search on a sorted integer array to find the index of a given value.
   @note: This algorithm estimates the probable position of the target using linear interpolation

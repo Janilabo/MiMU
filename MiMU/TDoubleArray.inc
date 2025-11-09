@@ -454,4 +454,35 @@ function TDoubleArrayHelper.BinarySinglify(const item: Double; const aAscending:
 [==============================================================================}
 function TDoubleArrayHelper.BinarySinglified(const item: Double; const aAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinarySinglified}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySinglified}
 
+{==============================================================================]
+ <TDoubleArray.BinarySearchFirst>
+  @action: Performs a binary search to find the first (lowest) index of a specified
+           double value within a sorted TDoubleArray.
+  @note: - The array must be sorted in ascending order.
+         - If the value occurs multiple times, the index of its first occurrence is returned.
+         - If the value is not found, returns -1.
+[==============================================================================}
+function TDoubleArrayHelper.BinarySearchFirst(const value: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchFirst}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchFirst}
+
+{==============================================================================]
+ <TDoubleArray.BinarySearchLast>
+  @action: Performs a binary search to find the last (highest) index of a specified
+           double value within a sorted TDoubleArray.
+  @note: - The array must be sorted in ascending order.
+         - If the value occurs multiple times, the index of its last occurrence is returned.
+         - If the value is not found, returns -1.
+[==============================================================================}
+function TDoubleArrayHelper.BinarySearchLast(const value: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchLast}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchLast}
+
+{==============================================================================]
+ <TDoubleArray.BinaryLocalize>
+  @action: Determines the insertion position for a specified double value within
+           a sorted TDoubleArray.
+  @note: - The array must be sorted in ascending order.
+         - Returns the index where the value should be inserted to maintain sort order.
+         - If the value already exists, returns the index of its first occurrence.
+         - Commonly used to find insertion points for sorted inserts or range lookups.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryLocalize(const value: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLocalize}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLocalize}
+
 {$UNDEF Double}

@@ -1398,3 +1398,72 @@ begin
   SetLength(Result, l);
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinarySearchFirst}
+var
+  L, R, M: Integer;
+begin
+  L := 0;
+  R := High(Self);
+  Result := -1;
+  while (L <= R) do
+  begin
+    M := ((L + R) div 2);
+    case (Self[M] = value) of
+      True:
+      begin
+        Result := M;
+        R := (M - 1);
+      end;
+      False:
+      if ((aAscending and (Self[M] < value)) or ((not aAscending) and (Self[M] > value))) then
+        L := (M + 1)
+      else
+        R := (M - 1);
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinarySearchLast}
+var
+  L, R, M: Integer;
+begin
+  L := 0;
+  R := High(Self);
+  Result := -1;
+  while (L <= R) do
+  begin
+    M := ((L + R) div 2);
+    case (Self[M] = value) of
+      True:
+      begin
+        Result := M;
+        L := (M + 1);
+      end;
+      False:
+      if ((aAscending and (Self[M] < value)) or ((not aAscending) and (Self[M] > value))) then
+        L := (M + 1)
+      else
+        R := (M - 1);
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryLocalize}
+var
+  R, M: Integer;
+begin
+  Result := 0;
+  R := Length(Self);
+  while (Result < R) do
+  begin
+    M := ((Result + R) div 2);
+    if ((aAscending and (Self[M] < value)) or ((not aAscending) and (Self[M] > value))) then
+      Result := (M + 1)
+    else
+      R := M;
+  end;
+end;
+{$ENDIF}
