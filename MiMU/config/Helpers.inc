@@ -718,6 +718,8 @@ type
       function Embed(const items: TIntegerArray; const index: Integer = 2147483647): Integer; overload;
       function Broaden(const rValues: TRange; const aIndex: Integer): TRange; overload;
       function Broaden(const rValues: TRange; const sSorted: Boolean = False): TRange; overload;
+      function ToRanges: TRangeArray; overload;
+      function ToRanges(const aAscending: Boolean): TRangeArray; overload;
 	  function BSort(const aAscending: Boolean = True): Integer;
       function BinarySort(const aAscending: Boolean = True): Integer;
       function BinarySorted(const aAscending: Boolean = True): TIntegerArray;

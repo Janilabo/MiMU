@@ -1720,6 +1720,88 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArray.ToRanges>
+  @action: Converts the integer array into an array of consecutive ranges (TRangeArray).
+           Each range represents a sequence of consecutive numbers (ascending or descending)
+           found in the array. A new range starts whenever the consecutive trend breaks.
+  @note: - Returns an empty array if the source array is empty.
+         - Single-element arrays produce a single range with identical Start and Stop.
+         - Two-element arrays produce a single range covering the two values.
+         - Direction of each range (ascending or descending) is determined automatically.
+         - Useful for compressing sequences or detecting consecutive runs in arrays.
+[==============================================================================}
+function TIntegerArrayHelper.ToRanges: TRangeArray; overload;
+var
+  h, l, d, s, i: Integer;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([TRange.Construct(Self[0], Self[0])]);
+    2: Exit([TRange.Construct(Self[0], Self[1])]);
+  end;
+  SetLength(Result, l);
+  h := 0;
+  Result[0].Create(Self[0], Self[1]);
+  d := Result[0].Direction;
+  for i := 2 to (l - 1) do
+  begin
+    s := Result[h].stop.Sign(Self[i]);
+    case ((d = 0) or ((s = 0) or (s = d))) of
+      True:
+      begin
+        if (d = 0) then
+          d := s;
+        Result[h].stop := Self[i];
+      end;
+      False:
+      begin
+        d := 0;
+        Result[h.Increment].Create(Self[i]);
+      end;
+    end;
+  end;
+  SetLength(Result, (h + 1));
+end;
+
+{==============================================================================]
+  <TIntegerArray.ToRanges>
+  @action: Converts the integer array into an array of ranges (TRangeArray) following
+           a specific direction as indicated by aAscending.
+           Each range extends in the requested direction until a break occurs.
+  @note: - If aAscending = True, only ascending sequences (+1) are allowed in a range.
+         - If aAscending = False, only descending sequences (-1) are allowed in a range.
+         - Sequences that match the specified direction or repeat the same value
+           are merged into the same range.
+         - Returns empty array for empty input and single-element array produces
+           a single-element range.
+         - Useful when you want ranges restricted to a specific direction.
+[==============================================================================}
+function TIntegerArrayHelper.ToRanges(const aAscending: Boolean): TRangeArray; overload;
+var
+  h, l, d, s, i: Integer;
+begin
+  l := Length(Self);
+  case l of
+    0: Exit([]);
+    1: Exit([TRange.Construct(Self[0], Self[0])]);
+  end;
+  SetLength(Result, l);
+  h := 0;
+  Result[0].Create(Self[0]);
+  d := IfThen(aAscending, 1, -1);
+  for i := 1 to (l - 1) do
+  begin
+    s := Result[h].stop.Sign(Self[i]);
+    if ((s = 0) or (s = d)) then
+      Result[h].stop := Self[i]
+    else
+      Result[h.Increment].Create(Self[i]);
+  end;
+  SetLength(Result, (h + 1));
+end;
+
+{==============================================================================]
   <TIntegerArray.BSort>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).
