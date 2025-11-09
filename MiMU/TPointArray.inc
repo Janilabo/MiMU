@@ -7677,4 +7677,40 @@ begin
   SetLength(Result, l);
 end;
 
+{==============================================================================]
+  <TPointArray.BinaryMerge>
+  @action: Merges the current sorted TPointArray with another sorted TPointArray,
+           producing a new sorted array.
+  @note: - Both arrays must be sorted in ascending lexicographic order by X, then by Y,
+           consistent with TPoint.Compare.
+         - The resulting array preserves sort order.
+         - Duplicate points are preserved.
+[==============================================================================}
+function TPointArrayHelper.BinaryMerge(const items: TPointArray): TPointArray; overload;
+var
+  i, j, k: Integer;
+  s, o: Integer;
+begin
+  s := Length(Self);
+  o := Length(items);
+  SetLength(Result, (s + o));
+  if (Length(Result) < 1) then
+    Exit;
+  i := 0;
+  j := 0;
+  k := 0;
+  while ((i < s) and (j < o)) do
+  begin
+    if (Self[i].Compare(items[j]) <= 0) then
+      Result[k] := Self[i.Increase]
+    else
+      Result[k] := items[j.Increase];
+    Inc(k);
+  end;
+  while (i < s) do
+    Result[k.Increase] := Self[i.Increase];
+  while (j < o) do
+    Result[k.Increase] := items[j.Increase];
+end;
+
 {$UNDEF TPoint}
