@@ -2326,6 +2326,17 @@ function TIntegerArrayHelper.BinarySearchLast(const value: Integer; const aAscen
 function TIntegerArrayHelper.BinaryLocalize(const value: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLocalize}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLocalize}
 
 {==============================================================================]
+ <TIntegerArray.BinaryLookup>
+  @action: Performs a binary search on the array to find the index of the specified value.
+           Automatically detects whether the array is sorted in ascending or descending order.
+           Returns the index of the value if found; otherwise returns -1.
+  @note:   The array must be monotonic (fully ascending or fully descending).  
+           If the array contains duplicates, the function returns an arbitrary occurrence.
+           This method does not modify the array.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryLookup(const value: Integer): Integer; overload; {$DEFINE Skeleton_BinaryLookup}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLookup}
+
+{==============================================================================]
   <TIntegerArray.BinaryInterpolationSearch>
   @action: Performs an interpolation search on a sorted integer array to find the index of a given value.
   @note: This algorithm estimates the probable position of the target using linear interpolation

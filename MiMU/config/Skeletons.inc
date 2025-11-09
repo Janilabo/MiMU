@@ -1467,3 +1467,40 @@ begin
   end;
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryLookup}
+var
+  L, R, M: Integer;
+begin
+  R := High(Self);
+  if (R > -1) then
+  begin
+    L := 0;
+    case (Self[L] <= Self[R]) of
+      True:
+      while (L <= R) do
+      begin
+        M := ((L + R) div 2);
+        if (Self[M] = value) then
+          Exit(M);
+        if (value < Self[M]) then
+          R := (M - 1)
+        else
+          L := (M + 1);
+      end;
+      False:
+      while (L <= R) do
+      begin
+        M := ((L + R) div 2);
+        if (Self[M] = value) then
+          Exit(M);
+        if (value > Self[M]) then
+          R := (M - 1)
+        else
+          L := (M + 1);
+      end;
+    end;
+  end;
+  Result := -1;
+end;
+{$ENDIF}

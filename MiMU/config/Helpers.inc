@@ -775,6 +775,7 @@ type
       function BinarySearchFirst(const value: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinarySearchLast(const value: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinaryLocalize(const value: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinaryLookup(const value: Integer): Integer; overload;
       function BinaryInterpolationSearch(const x: Integer; const aAscending: Boolean = True): Integer;
       function BinaryProbabilisticSearch(const x: Integer; const bias: Double = 0.0; const aAscending: Boolean = True): Integer; overload;
       function BinaryProbabilisticSearch(const x: Integer; const aAscending: Boolean; const bias: Double = 0.0): Integer; overload;
@@ -844,6 +845,7 @@ type
       function BinarySearchFirst(const value: Double; const aAscending: Boolean = True): Integer; overload;
       function BinarySearchLast(const value: Double; const aAscending: Boolean = True): Integer; overload;
       function BinaryLocalize(const value: Double; const aAscending: Boolean = True): Integer; overload;
+      function BinaryLookup(const value: Double): Integer; overload;
     {$ENDIF}
     {$IFDEF string}
       function Tally: Int64;

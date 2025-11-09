@@ -485,4 +485,15 @@ function TDoubleArrayHelper.BinarySearchLast(const value: Double; const aAscendi
 [==============================================================================}
 function TDoubleArrayHelper.BinaryLocalize(const value: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLocalize}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLocalize}
 
+{==============================================================================]
+ <TDoubleArray.BinaryLookup>
+  @action: Performs a binary search on the array to find the index of the specified value.
+           Automatically detects whether the array is sorted in ascending or descending order.
+           Returns the index of the value if found; otherwise returns -1.
+  @note:   The array must be monotonic (fully ascending or fully descending).  
+           If the array contains duplicates, the function returns an arbitrary occurrence.
+           This method does not modify the array.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryLookup(const value: Double): Integer; overload; {$DEFINE Skeleton_BinaryLookup}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLookup}
+
 {$UNDEF Double}
