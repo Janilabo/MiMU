@@ -720,6 +720,8 @@ type
       function Broaden(const rValues: TRange; const sSorted: Boolean = False): TRange; overload;
       function ToRanges: TRangeArray; overload;
       function ToRanges(const aAscending: Boolean): TRangeArray; overload;
+      function Ranges: TRangeArray; overload;
+      function Ranges(const aAscending: Boolean): TRangeArray; overload;
 	  function BSort(const aAscending: Boolean = True): Integer;
       function BinarySort(const aAscending: Boolean = True): Integer;
       function BinarySorted(const aAscending: Boolean = True): TIntegerArray;
