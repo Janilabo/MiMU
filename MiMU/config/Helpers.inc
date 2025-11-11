@@ -640,6 +640,8 @@ type
       function SortednessEx(const stride: Integer = 16): Boolean; overload;
       function Monotonic: Boolean; overload;
       function Monotone: Boolean; overload;
+      function IsMonotone: Boolean; overload;
+      function Monotonious: Boolean; overload;
     {$ENDIF}
     function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
     function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
@@ -728,6 +730,9 @@ type
       function ToRanges(const aAscending: Boolean): TRangeArray; overload;
       function Ranges: TRangeArray; overload;
       function Ranges(const aAscending: Boolean): TRangeArray; overload;
+      function IsMonotonic: Boolean; overload;
+      function Monotonicity: Boolean; overload;
+      function Monotony: Boolean; overload;
 	  function BSort(const aAscending: Boolean = True): Integer;
       function BinarySort(const aAscending: Boolean = True): Integer;
       function BinarySorted(const aAscending: Boolean = True): TIntegerArray;
@@ -798,6 +803,9 @@ type
       function Reinit: Integer; overload;
       function Attach(const items: TDoubleArray): Integer; overload;
       function Embed(const items: TDoubleArray; const index: Integer = 2147483647): Integer; overload;
+      function IsMonotonic: Boolean; overload;
+      function Monotonicity: Boolean; overload;
+      function Monotony: Boolean; overload;
       function BSort(const aAscending: Boolean = True): Integer;
       function BinarySort(const aAscending: Boolean = True): Integer;
       function BinarySorted(const aAscending: Boolean = True): TDoubleArray;

@@ -2119,3 +2119,77 @@ begin
     until ((not Result) or ((L.Increment > R.Decrement)));
   end;
 end;
+
+{==============================================================================]
+  <arr.IsMonotone>
+  @action: Determines whether the array is monotone — that is, entirely non-decreasing
+           or non-increasing throughout its elements.
+           Returns True if the array’s values either never decrease (monotone ascending)
+           or never increase (monotone descending). Equal adjacent values are allowed.
+           Returns False if the array changes direction (both rises and falls occur).
+  @note:
+    • Works correctly for arrays of any length.
+      (Empty or single-element arrays are considered monotone.)
+    • The function short-circuits for efficiency — exits early once a
+      non-monotone pattern is detected.
+[==============================================================================}
+function HArr.IsMonotone: Boolean; overload;
+var
+  i: Integer;
+  A, D: Boolean;
+begin
+  A := True;
+  D := True;
+  for i := 1 to High(Self) do
+  begin
+    case Self[i].Sign(Self[i - 1]) of
+      0: Continue;
+      1: D := False;
+      -1: A := False;
+    end;
+    if not (A or D) then
+      Exit(False);
+  end;
+  Result := (A or D);
+end;
+
+{==============================================================================]
+  <arr.Monotonious>
+  @action:
+    Determines whether the integer array is monotone — that is, entirely
+    non-decreasing or entirely non-increasing.
+
+    The function iterates through the array, comparing each element with its
+    predecessor. Two variables track whether any increases (`h`) or decreases
+    (`l`) have been observed. If both an increase and a decrease occur, the
+    array is not monotone, and the function immediately returns False. Otherwise,
+    it returns True.
+
+  @note:
+    • Empty or single-element arrays are considered monotone (trivially True).
+    • Equal adjacent elements do not affect monotonicity.
+    • Uses two integer flags (`h` for increases, `l` for decreases) instead of
+      a single accumulator or Boolean pair.
+    • Short-circuits for efficiency — exits as soon as both directions are seen.
+    • This is functionally equivalent to other “direction-lock” or “accumulator”
+      implementations but tracks high/low separately.
+[==============================================================================}
+function HArr.Monotonious: Boolean; overload;
+var
+  i, h, l: Integer;
+begin
+  l := 0;
+  h := 0;
+  for i := 1 to High(Self) do
+  begin
+    if (Self[i] = Self[i - 1]) then
+      Continue;
+    if (Self[i] > Self[i - 1]) then
+      h := 1
+    else if (Self[i] < Self[i - 1]) then
+      l := -1;
+    if ((h = 1) and (l = -1)) then
+      Exit(False);
+  end;
+  Result := True;
+end;
