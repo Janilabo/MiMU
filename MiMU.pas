@@ -560,6 +560,8 @@ generic function Sort<T>(var A, B, C: T; const oAscending: Boolean = True): Bool
 generic function Swap<T>(var A, B: T): Boolean; overload;
 generic function Swop<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Swop<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
+generic function Arrange<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
+generic function Arrange<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Contains<T>(const arr: array of T; const item: T): Boolean;
 generic function Includes<T>(const arr: array of T; const item: T): Boolean;
 generic function Position<T>(const arr: array of T; const item: T): Integer;
@@ -604,6 +606,12 @@ function RandomMean(const x: Integer; const sample: Integer = 10): Integer; over
 function Random2(const x: Integer; const r: Integer = 2): Integer; overload; 
 function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload; 
 function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload; 
+
+function XORSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
+function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
+
+function iSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
+function iSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
 
 function Max(a, b: string): string; overload; inline;
 function Max(a, b: Char): Char; overload; inline;
@@ -886,7 +894,6 @@ begin
   Result := Point(FX, FY);
 end;
 
-
 function TBox.GetEnumerator: TBoxEnumerator;
 begin
   Result.Init(X1, Y1, X2, Y2);
@@ -949,6 +956,34 @@ begin
     Result := DoSwap(A, C);
   if ((oAscending and (B > C)) or ((not oAscending) and (B < C))) then
     Result := DoSwap(B, C);
+end;
+
+{==============================================================================]
+  <Arrange>
+  @action: Ensures that the two items A and B are in the specified order (ascending or descending).
+           Performs a swap if necessary.
+  @note: Returns True if a swap occurred, False otherwise. 
+         This function only arranges the two values; it does not sort arrays or larger collections.
+[==============================================================================}
+generic function Arrange<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := IfThen(oAscending, (A > B), (B > A));
+  if Result then
+    specialize Swap<T>(A, B);
+end;
+
+{==============================================================================]
+  <Arrange>
+  @action: Ensures that the three items A, B, and C are arranged relative to each other according 
+           to the specified order (ascending or descending).
+           Performs minimal swaps to enforce ordering between the three items.
+  @note: Returns True if any swaps occurred, False otherwise.
+         This function does not perform a full sort; it only arranges the three values 
+         relative to each other.
+[==============================================================================}
+generic function Arrange<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := (Arrange(A, B) or Arrange(A, C) or Arrange(B, C));
 end;
 
 generic function Contains<T>(const arr: array of T; const item: T): Boolean;
@@ -1320,6 +1355,38 @@ end;
 function Bitify(const a, b, c, d: Boolean): Integer; overload;
 begin
   Result := ((Bitify(a) shl 3) or (Bitify(b) shl 2) or (Bitify(c) shl 1) or Bitify(d));
+end;
+
+function XORSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := (oAscending and (A > B)) or ((not oAscending) and (A < B));
+  if Result then
+  begin
+    A := (A xor B);
+    B := (A xor B);
+    A := (A xor B);
+  end;
+end;
+
+function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((Integer(XORSort(A, B)) + Integer(XORSort(A, C)) + Integer(XORSort(B, C))) > 0);
+end;
+
+function iSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((oAscending and (A > B)) or ((not oAscending) and (A < B)));
+  if Result then
+  begin
+    A := (A + B);
+    B := (A - B);
+    A := (A - B);
+  end;
+end;
+
+function iSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((Integer(iSort(A, B, oAscending)) + Integer(iSort(A, C, oAscending)) + Integer(iSort(B, C, oAscending))) > 0);
 end;
 
 function Max(A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\config\Skeletons.inc}{$UNDEF Skeleton_Max}
