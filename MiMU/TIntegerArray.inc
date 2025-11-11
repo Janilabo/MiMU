@@ -1970,7 +1970,7 @@ begin
       Exit(False);
   end;
   Result := True;
-end; 
+end;
 
 {==============================================================================]
   <TIntegerArray.BSort>
