@@ -113,10 +113,26 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_IncreaseB}
+begin
+  Result := Self;
+  if B then
+    Self := (Self + 1);
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_Decrease}
 begin
   Result := Self;
   Self := (Self - N);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_DecreaseB}
+begin
+  Result := Self;
+  if B then
+    Self := (Self - 1);
 end;
 {$ENDIF}
 
@@ -127,9 +143,25 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_IncrementB}
+begin
+  if B then
+    Self := (Self + 1);
+  Result := Self;
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_Decrement}
 begin
   Self := (Self - N);
+  Result := Self;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_DecrementB}
+begin
+  if B then
+    Self := (Self - 1);
   Result := Self;
 end;
 {$ENDIF}

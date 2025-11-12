@@ -2199,7 +2199,7 @@ end;
   @action: Checks if the array is monotonic (either non-decreasing or non-increasing).
   @note: Returns True if all elements move in one direction, False otherwise.
 [==============================================================================}
-function HArr.Unidirectional: Boolean;
+function HArr.Unidirectional: Boolean; overload;
 label
   D;
 var
@@ -2212,6 +2212,45 @@ begin
   D:
   for i := 1 to High(Self) do
     if (Self[i] > Self[i - 1]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <arr.Trendy>
+  @action: Checks whether the array is monotonic — either entirely non-decreasing,
+           non-increasing, or constant.
+  @note: Returns True if the array changes in only one direction; False otherwise.
+[==============================================================================}
+function HArr.Trendy: Boolean; overload;
+var
+  i, h, l: Integer;
+begin
+  h := 0;
+  l := 0;
+  for i := 1 to High(Self) do
+    if ((Self[i] > Self[i - 1]) and (h.Increment <= l)) then
+      Break
+    else if ((Self[i] < Self[i - 1]) and (l.Increment <= h)) then
+      Break;
+  Result := not ((h > 0) and (l > 0));
+end;
+
+{==============================================================================]
+  <arr.OnOrder>
+  @action: Determines whether the array elements remain consistently ordered,
+           either non-decreasing, non-increasing, or constant.
+  @note: Returns True if the sequence does not reverse direction (monotonic in
+         either direction). Returns False if the order changes (both rises and falls occur).
+[==============================================================================}
+function HArr.OnOrder: Boolean; overload;
+var
+  i, h, l: Integer;
+begin
+  h := 0;
+  l := 0;
+  for i := 1 to High(Self) do
+    if ((h.Increment(Self[i] > Self[i - 1]) * l.Increment(Self[i] < Self[i - 1])) > 0) then
       Exit(False);
   Result := True;
 end;

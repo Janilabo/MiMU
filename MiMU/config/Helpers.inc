@@ -27,10 +27,14 @@ type
       function IsEven: Boolean; inline;
       function Odd: Boolean; inline;
       function IsOdd: Boolean; inline;
-      function Increase(const N: Integer = 1): Integer;
-      function Decrease(const N: Integer = 1): Integer;
-      function Increment(const N: Integer = 1): Integer;
-      function Decrement(const N: Integer = 1): Integer;
+      function Increase(const N: Integer = 1): Integer; overload;
+      function Increase(const B: Boolean): Integer; overload;
+      function Decrease(const N: Integer = 1): Integer; overload;
+      function Decrease(const B: Boolean): Integer; overload;
+      function Increment(const N: Integer = 1): Integer; overload;
+      function Increment(const B: Boolean): Integer; overload;
+      function Decrement(const N: Integer = 1): Integer; overload;
+      function Decrement(const B: Boolean): Integer; overload;
       function DigitCount: Integer;
       function Digitz: TIntegerArray;
       function Digits: TIntegerArray;
@@ -84,10 +88,14 @@ type
       function ConstraintMin(const limit: Double): Boolean;
       function ConstraintMax(const limit: Double): Boolean;
       function Constraint(const minimum, maximum: Double): Boolean;
-      function Increase(const N: Double = 1): Double;
-      function Decrease(const N: Double = 1): Double;
-      function Increment(const N: Double = 1): Double;
-      function Decrement(const N: Double = 1): Double;
+      function Increase(const N: Double = 1): Double; overload;
+      function Increase(const B: Boolean): Double; overload;
+      function Decrease(const N: Double = 1): Double; overload;
+      function Decrease(const B: Boolean): Double; overload;
+      function Increment(const N: Double = 1): Double; overload;
+      function Increment(const B: Boolean): Double; overload;
+      function Decrement(const N: Double = 1): Double; overload;
+      function Decrement(const B: Boolean): Double; overload;
       function Digits: TIntegerArray;
       function NegA: Double; inline;
       function Neg: Double; inline;
@@ -643,6 +651,8 @@ type
       function IsMonotone: Boolean; overload;
       function Monotonious: Boolean; overload;
       function Unidirectional: Boolean; overload;
+      function Trendy: Boolean; overload;
+      function OnOrder: Boolean; overload;
     {$ENDIF}
     function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
     function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;

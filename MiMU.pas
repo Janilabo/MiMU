@@ -717,10 +717,14 @@ type
     function Parity: Byte; inline;
     function Even: Boolean; inline;
     function Odd: Boolean; inline;
-    function Increase(const N: Int64 = 1): Int64; 
-    function Decrease(const N: Int64 = 1): Int64; 
-    function Increment(const N: Int64 = 1): Int64; 
-    function Decrement(const N: Int64 = 1): Int64; 
+    function Increase(const N: Int64 = 1): Int64; overload;
+    function Increase(const B: Boolean): Int64; overload;
+    function Decrease(const N: Int64 = 1): Int64; overload;
+    function Decrease(const B: Boolean): Int64; overload;	
+    function Increment(const N: Int64 = 1): Int64; overload;
+    function Increment(const B: Boolean): Int64; overload;
+    function Decrement(const N: Int64 = 1): Int64; overload;
+    function Decrement(const B: Boolean): Int64; overload;
     function DigitCount: Integer; 
     function Digitz: TIntegerArray; 
     function Digits: TIntegerArray; 

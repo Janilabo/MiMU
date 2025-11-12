@@ -197,28 +197,56 @@ end;
  @action: Increases the Integer value x by N.
  @note: Returns x before increasing it with N!
 [==============================================================================}
-function TIntegerHelper.Increase(const N: Integer = 1): Integer; {$DEFINE Skeleton_Increase}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increase}
+function TIntegerHelper.Increase(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Increase}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increase}
+
+{==============================================================================]
+ <TIntegerHelper.Increase>
+ @action: Increases the Integer value x by 1 when B is true.
+ @note: Returns x before increasing!
+[==============================================================================}
+function TIntegerHelper.Increase(const B: Boolean): Integer; overload; {$DEFINE Skeleton_IncreaseB}{$I config\Skeletons.inc}{$UNDEF Skeleton_IncreaseB}
 
 {==============================================================================]
   <TIntegerHelper.Decrease>
  @action: Decreases the Integer value x by N.
  @note: Returns x before decreasing it with N!
 [==============================================================================}
-function TIntegerHelper.Decrease(const N: Integer = 1): Integer; {$DEFINE Skeleton_Decrease}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrease}
+function TIntegerHelper.Decrease(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Decrease}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrease}
+
+{==============================================================================]
+  <TIntegerHelper.Decrease>
+ @action: Decreases the Integer value x by 1 if B is true.
+ @note: Returns x before decreasing!
+[==============================================================================}
+function TIntegerHelper.Decrease(const B: Boolean): Integer; overload; {$DEFINE Skeleton_DecreaseB}{$I config\Skeletons.inc}{$UNDEF Skeleton_DecreaseB}
 
 {==============================================================================]
  <TIntegerHelper.Increment>
  @action: Increases the Integer value x by N.
  @note: Returns the increased x!
 [==============================================================================}
-function TIntegerHelper.Increment(const N: Integer = 1): Integer; {$DEFINE Skeleton_Increment}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increment}
+function TIntegerHelper.Increment(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Increment}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increment}
+
+{==============================================================================]
+ <TIntegerHelper.Increment>
+ @action: Increases the Integer value x by 1 if B is true.
+ @note: Returns the increased x!
+[==============================================================================}
+function TIntegerHelper.Increment(const B: Boolean): Integer; overload; {$DEFINE Skeleton_IncrementB}{$I config\Skeletons.inc}{$UNDEF Skeleton_IncrementB}
 
 {==============================================================================]
   <TIntegerHelper.Decrement>
  @action: Decreases the Integer value x by N.
  @note: Returns the decreased x!
 [==============================================================================}
-function TIntegerHelper.Decrement(const N: Integer = 1): Integer; {$DEFINE Skeleton_Decrement}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrement} 
+function TIntegerHelper.Decrement(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Decrement}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrement} 
+
+{==============================================================================]
+  <TIntegerHelper.Decrement>
+ @action: Decreases the Integer value x by 1 if B is true.
+ @note: Returns the decreased x!
+[==============================================================================}
+function TIntegerHelper.Decrement(const B: Boolean): Integer; overload; {$DEFINE Skeleton_DecrementB}{$I config\Skeletons.inc}{$UNDEF Skeleton_DecrementB} 
 
 {==============================================================================]
  <TIntegerHelper.DigitCount>

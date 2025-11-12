@@ -84,28 +84,56 @@ end;
  @action: Increases the Int64 value x by N.
  @note: Returns x before increasing it with N!
 [==============================================================================}
-function TInt64Helper.Increase(const N: Int64 = 1): Int64; {$DEFINE Skeleton_Increase}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increase}
+function TInt64Helper.Increase(const N: Int64 = 1): Int64; overload; {$DEFINE Skeleton_Increase}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increase}
+
+{==============================================================================]
+ <TInt64Helper.Increase>
+ @action: Increases the Int64 value x by 1 if B is true.
+ @note: Returns x before increasing it!
+[==============================================================================}
+function TInt64Helper.Increase(const B: Boolean): Int64; overload; {$DEFINE Skeleton_IncreaseB}{$I config\Skeletons.inc}{$UNDEF Skeleton_IncreaseB}
 
 {==============================================================================]
   <TInt64Helper.Decrease>
  @action: Decreases the Int64 value x by N.
  @note: Returns x before decreasing it with N!
 [==============================================================================}
-function TInt64Helper.Decrease(const N: Int64 = 1): Int64; {$DEFINE Skeleton_Decrease}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrease}
+function TInt64Helper.Decrease(const N: Int64 = 1): Int64; overload; {$DEFINE Skeleton_Decrease}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrease}
+
+{==============================================================================]
+  <TInt64Helper.Decrease>
+ @action: Decreases the Int64 value x by 1 if B is true.
+ @note: Returns x before decreasing it with N!
+[==============================================================================}
+function TInt64Helper.Decrease(const B: Boolean): Int64; overload; {$DEFINE Skeleton_DecreaseB}{$I config\Skeletons.inc}{$UNDEF Skeleton_DecreaseB}
 
 {==============================================================================]
  <TInt64Helper.Increment>
  @action: Increases the Int64 value x by N.
  @note: Returns the increased x!
 [==============================================================================}
-function TInt64Helper.Increment(const N: Int64 = 1): Int64; {$DEFINE Skeleton_Increment}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increment}
+function TInt64Helper.Increment(const N: Int64 = 1): Int64; overload; {$DEFINE Skeleton_Increment}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increment}
+
+{==============================================================================]
+ <TInt64Helper.Increment>
+ @action: Increases the Int64 value x by 1 if B is true.
+ @note: Returns the increased x!
+[==============================================================================}
+function TInt64Helper.Increment(const B: Boolean): Int64; overload; {$DEFINE Skeleton_IncrementB}{$I config\Skeletons.inc}{$UNDEF Skeleton_IncrementB}
 
 {==============================================================================]
   <TInt64Helper.Decrement>
  @action: Decreases the Int64 value x by N.
  @note: Returns the decreased x!
 [==============================================================================}
-function TInt64Helper.Decrement(const N: Int64 = 1): Int64; {$DEFINE Skeleton_Decrement}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrement}
+function TInt64Helper.Decrement(const N: Int64 = 1): Int64; overload; {$DEFINE Skeleton_Decrement}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrement}
+
+{==============================================================================]
+  <TInt64Helper.Decrement>
+ @action: Decreases the Int64 value x by 1 if B is true.
+ @note: Returns the decreased x!
+[==============================================================================}
+function TInt64Helper.Decrement(const B: Boolean): Int64; overload; {$DEFINE Skeleton_DecrementB}{$I config\Skeletons.inc}{$UNDEF Skeleton_DecrementB}
 
 {==============================================================================]
  <TInt64Helper.DigitCount>

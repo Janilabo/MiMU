@@ -130,28 +130,56 @@ function TDoubleHelper.Constraint(const minimum, maximum: Double): Boolean; {$DE
  @action: Increases the Double value x by N.
  @note: Returns x before increasing it with N!
 [==============================================================================}
-function TDoubleHelper.Increase(const N: Double = 1): Double; {$DEFINE Skeleton_Increase}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increase}
+function TDoubleHelper.Increase(const N: Double = 1): Double; overload; {$DEFINE Skeleton_Increase}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increase}
+
+{==============================================================================]
+ <TDoubleHelper.Increase>
+ @action: Increases the Double value x by 1 if B is true.
+ @note: Returns x before increasing it!
+[==============================================================================}
+function TDoubleHelper.Increase(const B: Boolean): Double; overload; {$DEFINE Skeleton_IncreaseB}{$I config\Skeletons.inc}{$UNDEF Skeleton_IncreaseB}
 
 {==============================================================================]
   <TDoubleHelper.Decrease>
  @action: Decreases the Double value x by N.
  @note: Returns x before decreasing it with N!
 [==============================================================================}
-function TDoubleHelper.Decrease(const N: Double = 1): Double; {$DEFINE Skeleton_Decrease}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrease}
+function TDoubleHelper.Decrease(const N: Double = 1): Double; overload; {$DEFINE Skeleton_Decrease}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrease}
+
+{==============================================================================]
+  <TDoubleHelper.Decrease>
+ @action: Decreases the Double value x by 1 if B is true.
+ @note: Returns x before decreasing it!
+[==============================================================================}
+function TDoubleHelper.Decrease(const B: Boolean): Double; overload; {$DEFINE Skeleton_DecreaseB}{$I config\Skeletons.inc}{$UNDEF Skeleton_DecreaseB}
 
 {==============================================================================]
  <TDoubleHelper.Increment>
  @action: Increases the Double value x by N.
  @note: Returns the increased x!
 [==============================================================================}
-function TDoubleHelper.Increment(const N: Double = 1): Double; {$DEFINE Skeleton_Increment}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increment}
+function TDoubleHelper.Increment(const N: Double = 1): Double; overload; {$DEFINE Skeleton_Increment}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increment}
+
+{==============================================================================]
+ <TDoubleHelper.Increment>
+ @action: Increases the Double value x by 1 if B is true.
+ @note: Returns the increased x!
+[==============================================================================}
+function TDoubleHelper.Increment(const B: Boolean): Double; overload; {$DEFINE Skeleton_IncrementB}{$I config\Skeletons.inc}{$UNDEF Skeleton_IncrementB}
 
 {==============================================================================]
   <TDoubleHelper.Decrement>
  @action: Decreases the Double value x by N.
  @note: Returns the decreased x!
 [==============================================================================}
-function TDoubleHelper.Decrement(const N: Double = 1): Double; {$DEFINE Skeleton_Decrement}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrement}
+function TDoubleHelper.Decrement(const N: Double = 1): Double; overload; {$DEFINE Skeleton_Decrement}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrement}
+
+{==============================================================================]
+  <TDoubleHelper.Decrement>
+ @action: Decreases the Double value x by 1 if B is true.
+ @note: Returns the decreased x!
+[==============================================================================}
+function TDoubleHelper.Decrement(const B: Boolean): Double; overload; {$DEFINE Skeleton_DecrementB}{$I config\Skeletons.inc}{$UNDEF Skeleton_DecrementB}
 
 {==============================================================================]
  <TDoubleHelper.Digits>
