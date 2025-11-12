@@ -1131,7 +1131,9 @@ type
       function BinaryRemove(const item: TPoint; const all: Boolean = True): Integer; overload;
       function BinarySinglify(const item: TPoint): Integer; overload;
       function BinarySinglified(const item: TPoint): TPointArray; overload;
-      function BinaryMerge(const items: TPointArray): TPointArray; overload;	  
+      function BinaryMerge(const items: TPointArray): TPointArray; overload;
+      function BinaryReplace(const oItem, nItem: TPoint): Boolean; overload;
+      function BinaryReplaceAll(const oItem, nItem: TPoint): Integer; overload;  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;

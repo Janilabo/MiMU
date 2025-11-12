@@ -7713,4 +7713,44 @@ begin
     Result[k.Increase] := items[j.Increase];
 end;
 
+{==============================================================================]
+  <TPointArray.BinaryReplace>
+  @action: BinaryReplace for TPointArray
+  @note: Only Ascending order.
+[==============================================================================}
+function TPointArrayHelper.BinaryReplace(const oItem, nItem: TPoint): Boolean; overload;
+begin
+  Result := Self.BinaryDelete(oItem);
+  if (Result and (oItem <> nItem)) then
+    Self.BinaryInsert(nItem);
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryReplaceAll>
+  @action: BinaryReplaceAll for TPointArray
+  @note: Only Ascending order.
+[==============================================================================}
+function TPointArrayHelper.BinaryReplaceAll(const oItem, nItem: TPoint): Integer; overload;
+var
+  i, p: Integer;
+  r: Boolean;
+begin
+  Result := 0;
+  p := Self.BinaryPosL(oItem);
+  if (p = -1) then
+    Exit;
+  r := False;
+  for i := p to High(Self) do
+    if (Self[i] = oItem) then
+    begin
+      Self[i] := nItem;
+      Inc(Result);
+      if ((not r) and (not Self.IsSorted(i))) then
+        r := True;
+    end else
+      Break;
+  if r then
+    Self.BinaryInsertionSort;
+end;
+
 {$UNDEF TPoint}

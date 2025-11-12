@@ -1379,19 +1379,23 @@ end;
 
 {$IFDEF Skeleton_BinaryReplaceAll}
 var
-  i: Integer;
+  i, p: Integer;
   r: Boolean;
 begin
   Result := 0;
+  p := Self.BinaryPosL(oValue);
+  if (p = -1) then
+    Exit;
   r := False;
-  for i := 0 to High(Self) do
+  for i := p to High(Self) do
     if (Self[i] = oValue) then
     begin
       Self[i] := nValue;
       Inc(Result);
       if ((not r) and (not Self.IsSorted(i, aAscending))) then
         r := True;
-    end;
+    end else
+	  Break;
   if r then
     Self.BinaryInsertionSort(aAscending);
 end;
