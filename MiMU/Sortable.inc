@@ -2193,3 +2193,25 @@ begin
   end;
   Result := True;
 end;
+
+{==============================================================================]
+  <arr.Unidirectional>
+  @action: Checks if the array is monotonic (either non-decreasing or non-increasing).
+  @note: Returns True if all elements move in one direction, False otherwise.
+[==============================================================================}
+function HArr.Unidirectional: Boolean;
+label
+  D;
+var
+  i: Integer;
+begin
+  for i := 1 to High(Self) do
+    if (Self[i] < Self[i - 1]) then
+      goto D;
+  Exit(True);
+  D:
+  for i := 1 to High(Self) do
+    if (Self[i] > Self[i - 1]) then
+      Exit(False);
+  Result := True;
+end;

@@ -967,7 +967,7 @@ end;
 [==============================================================================}
 generic function Arrange<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 begin
-  Result := IfThen(oAscending, (A > B), (B > A));
+  Result := ((oAscending and (A > B)) or ((not oAscending) and (A < B)));
   if Result then
     specialize Swap<T>(A, B);
 end;
@@ -983,7 +983,7 @@ end;
 [==============================================================================}
 generic function Arrange<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
 begin
-  Result := (Arrange(A, B) or Arrange(A, C) or Arrange(B, C));
+  Result := (specialize Arrange<T>(A, B) or specialize Arrange<T>(A, C) or specialize Arrange<T>(B, C));
 end;
 
 generic function Contains<T>(const arr: array of T; const item: T): Boolean;

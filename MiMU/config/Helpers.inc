@@ -642,6 +642,7 @@ type
       function Monotone: Boolean; overload;
       function IsMonotone: Boolean; overload;
       function Monotonious: Boolean; overload;
+      function Unidirectional: Boolean; overload;
     {$ENDIF}
     function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
     function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
