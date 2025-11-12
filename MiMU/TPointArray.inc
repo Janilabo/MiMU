@@ -7084,6 +7084,92 @@ begin
 end;
 
 {==============================================================================]
+  <TPointArray.BSort>
+  @action: Sorts the array of points in-place using the Binary Insertion Sort algorithm.
+  @note: - The sorting order is determined by the 'aAscending' flag.
+         - Comparison is performed using 'TPoint.Compare'.
+         - Uses binary search to find the insertion position for efficiency, but
+           shifting elements still makes it O(n²) in worst case.
+         - Returns the total number of elements in the array after sorting.
+[==============================================================================}
+function TPointArrayHelper.BSort(const aAscending: Boolean = True): Integer; overload;
+var
+  C, i, L, H, M: Integer;
+  s: TPointArray;
+begin
+  Result := Length(Self);
+  if (Result < 2) then
+    Exit;
+  s := Self.Copy;
+  SetLength(Self, 1);
+  for i := 1 to (Result - 1) do
+  begin
+    H := High(Self);
+    L := 0;
+    while (L <= H) do
+    begin
+      M := ((L + H) div 2);
+      if aAscending then
+        C := Self[M].Compare(s[i])
+      else
+        C := s[i].Compare(Self[M]);
+      case C of
+        -1: L := (M + 1);
+        1: H := (M - 1);
+	    0:
+	    begin
+          L := M;
+          Break;
+        end;
+      end;
+    end;
+    Insert(s[i], Self, L);
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.BSorted>
+  @action: Returns a new sorted copy of the current point array using Binary Insertion Sort.
+  @note: - The original array remains unchanged.
+         - Sorting order depends on the 'aAscending' parameter.
+         - Comparison uses 'TPoint_Compare' to determine ordering.
+         - Efficient for small arrays, but still O(n²) due to insertion shifting.
+         - Binary search minimizes comparisons when finding insertion points.
+[==============================================================================}
+function TPointArrayHelper.BSorted(const aAscending: Boolean = True): TPointArray; Overload;
+var
+  C, i, L, H, M: Integer;
+begin
+  if (Length(Self) < 2) then
+    Exit(Self.Copy);
+  SetLength(Result, 1);
+  Result[0] := Self[0];
+  for i := 1 to High(Self) do
+  begin
+    L := 0;
+    H := High(Result);
+    while (L <= H) do
+    begin
+      M := ((L + H) div 2);
+      if aAscending then
+        C := Result[M].Compare(Self[i])
+      else
+        C := Self[i].Compare(Result[M]);
+      case C of
+        -1: L := (M + 1);
+        1: H := (M - 1);
+	    0:
+        begin
+          L := M;
+          Break;
+        end;
+      end;
+    end;
+    Insert(Self[i], Result, L);
+  end;
+end;
+
+{==============================================================================]
   <TPointArray.BinarySearch>
   @action: Performs a binary search for a specified point in a sorted TPointArray.
   @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
@@ -7261,92 +7347,6 @@ begin
   for i := High(Self) downto (Result + 1) do
     Self[i] := Self[i - 1];
   Self[Result] := item;
-end;
-
-{==============================================================================]
-  <TPointArray.BinaryInsertionSort>
-  @action: Sorts the array of points in-place using the Binary Insertion Sort algorithm.
-  @note: - The sorting order is determined by the 'aAscending' flag.
-         - Comparison is performed using 'TPoint.Compare'.
-         - Uses binary search to find the insertion position for efficiency, but
-           shifting elements still makes it O(n²) in worst case.
-         - Returns the total number of elements in the array after sorting.
-[==============================================================================}
-function TPointArrayHelper.BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
-var
-  C, i, L, H, M: Integer;
-  s: TPointArray;
-begin
-  Result := Length(Self);
-  if (Result < 2) then
-    Exit;
-  s := Self.Copy;
-  SetLength(Self, 1);
-  for i := 1 to (Result - 1) do
-  begin
-    H := High(Self);
-    L := 0;
-    while (L <= H) do
-    begin
-      M := ((L + H) div 2);
-      if aAscending then
-        C := Self[M].Compare(s[i])
-      else
-        C := s[i].Compare(Self[M]);
-      case C of
-        -1: L := (M + 1);
-        1: H := (M - 1);
-	    0:
-	    begin
-          L := M;
-          Break;
-        end;
-      end;
-    end;
-    Insert(s[i], Self, L);
-  end;
-end;
-
-{==============================================================================]
-  <TPointArray.BinaryInsertionSorted>
-  @action: Returns a new sorted copy of the current point array using Binary Insertion Sort.
-  @note: - The original array remains unchanged.
-         - Sorting order depends on the 'aAscending' parameter.
-         - Comparison uses 'TPoint_Compare' to determine ordering.
-         - Efficient for small arrays, but still O(n²) due to insertion shifting.
-         - Binary search minimizes comparisons when finding insertion points.
-[==============================================================================}
-function TPointArrayHelper.BinaryInsertionSorted(const aAscending: Boolean = True): TPointArray; Overload;
-var
-  C, i, L, H, M: Integer;
-begin
-  if (Length(Self) < 2) then
-    Exit(Self.Copy);
-  SetLength(Result, 1);
-  Result[0] := Self[0];
-  for i := 1 to High(Self) do
-  begin
-    L := 0;
-    H := High(Result);
-    while (L <= H) do
-    begin
-      M := ((L + H) div 2);
-      if aAscending then
-        C := Result[M].Compare(Self[i])
-      else
-        C := Self[i].Compare(Result[M]);
-      case C of
-        -1: L := (M + 1);
-        1: H := (M - 1);
-	    0:
-        begin
-          L := M;
-          Break;
-        end;
-      end;
-    end;
-    Insert(Self[i], Result, L);
-  end;
 end;
 
 {==============================================================================]

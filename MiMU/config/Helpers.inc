@@ -260,6 +260,7 @@ type
       function Inside(const bx: TBox): Boolean; inline;
       function Clamp(const area: TBox): TPoint;
       function Create: TPoint; overload;
+      function Sign(const target: TPoint): Integer; overload; inline;
       function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray;
       function Row(const cells: Integer; const space: Integer = 0): TPointArray;
       function Column(const cells: Integer; const space: Integer = 0): TPointArray;
@@ -1110,6 +1111,8 @@ type
       function AsColumns: T2DPointArray;
       function Rows: T2DPointArray;
       function Columns: T2DPointArray;
+      function BSort(const aAscending: Boolean = True): Integer; overload;
+      function BSorted(const aAscending: Boolean = True): TPointArray; overload;
       function BinarySearch(const item: TPoint): Integer; overload;
       function BinaryPosL(const item: TPoint): Integer; overload;
       function BinaryPosR(const item: TPoint): Integer; overload;
@@ -1118,8 +1121,6 @@ type
       function BinaryInsert(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
       function BinaryAppend(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
       function BinarySupply(const item: TPoint): Integer; overload;
-      function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
-      function BinaryInsertionSorted(const aAscending: Boolean = True): TPointArray; overload;
       function BinaryCount(const item: TPoint): Integer; overload;
       function BinaryAmount(const item: TPoint): Integer; overload;
       function BinaryRange(const item: TPoint): TRange; overload;

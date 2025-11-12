@@ -50,7 +50,7 @@
   {$DEFINE HArr := TPointArrayHelper}
   {$DEFINE T2DArr := T2DPointArray}
   {$DEFINE H2DArr := T2DPointArrayHelper}
-  {$UNDEF Sortable}
+  {$DEFINE Sortable}
 {$ENDIF}
 {$IFDEF TBox}
   {$DEFINE TVar := TBox}

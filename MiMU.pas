@@ -773,9 +773,9 @@ type
     {$DEFINE Double}{$I MiMU\config\Classes.inc}{$UNDEF Double}
     {$DEFINE string}{$I MiMU\config\Classes.inc}{$UNDEF string}
     {$DEFINE Char}{$I MiMU\config\Classes.inc}{$UNDEF Char}
+    {$DEFINE TPoint}{$I MiMU\config\Classes.inc}{$UNDEF TPoint}
   {$UNDEF Sortable}
   {$DEFINE Boolean}{$I MiMU\config\Classes.inc}{$UNDEF Boolean}
-  {$DEFINE TPoint}{$I MiMU\config\Classes.inc}{$UNDEF TPoint}
   {$DEFINE TBox}{$I MiMU\config\Classes.inc}{$UNDEF TBox}
   {$DEFINE TRange}{$I MiMU\config\Classes.inc}{$UNDEF TRange}
   end;
@@ -788,9 +788,9 @@ type
     {$DEFINE Double}{$I MiMU\config\Classes.inc}{$UNDEF Double}
     {$DEFINE string}{$I MiMU\config\Classes.inc}{$UNDEF string}
     {$DEFINE Char}{$I MiMU\config\Classes.inc}{$UNDEF Char}
+    {$DEFINE TPoint}{$I MiMU\config\Classes.inc}{$UNDEF TPoint}
   {$UNDEF Sortable}
   {$DEFINE Boolean}{$I MiMU\config\Classes.inc}{$UNDEF Boolean}
-  {$DEFINE TPoint}{$I MiMU\config\Classes.inc}{$UNDEF TPoint}
   {$DEFINE TBox}{$I MiMU\config\Classes.inc}{$UNDEF TBox}
   {$DEFINE TRange}{$I MiMU\config\Classes.inc}{$UNDEF TRange}
   end;

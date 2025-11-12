@@ -45,6 +45,19 @@ begin
 end;
 
 {==============================================================================]
+  <TPoint.Sign>
+  @action: Compares the current TPoint (Self) with a target TPoint and returns
+           a directional sign indicating whether the target is greater, equal,
+           or smaller than Self.
+  @note: Returns:
+         1  if Self < target (target is larger → ascending)
+         0  if Self = target (no change)
+         -1  if Self > target (target is smaller → descending)
+         Useful for detecting sequence direction, ordering, or range computation.
+[==============================================================================}
+function TPointHelper.Sign(const target: TPoint): Integer; overload; inline; {$DEFINE Skeleton_Sign}{$I config\Skeletons.inc}{$UNDEF Skeleton_Sign}
+
+{==============================================================================]
   <TPoint.Comparison>
   @action: Compares two points lexicographically by X then Y.
   @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
@@ -124,9 +137,9 @@ begin
     Result := -1
   else
     if (Self.X > target.X) then
-	    Result := 1
+	  Result := 1
     else
-	    Result := 0;
+	  Result := 0;
 end;
 
 {==============================================================================]
@@ -140,9 +153,9 @@ begin
     Result := -1
   else
     if (Self.Y > target.Y) then
-	    Result := 1
+	  Result := 1
     else
-	    Result := 0;
+	  Result := 0;
 end;
 
 {==============================================================================]
