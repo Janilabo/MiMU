@@ -7753,4 +7753,162 @@ begin
     Self.BinaryInsertionSort;
 end;
 
+{==============================================================================]
+  <TPointArray.BinaryYs>
+  @action:
+    Returns all Y-values from the TPointArray, in the order they appear.
+    Optionally returns only unique values (no duplicates).
+  @note:
+    - The array must be sorted by Y ascending for the unique option to work correctly.
+    - If unique=True, repeated Y-values are ignored.
+    - If unique=False, all Y-values including duplicates are returned.
+[==============================================================================}
+function TPointArrayHelper.BinaryYs(const unique: Boolean = True): TIntegerArray; overload;
+var
+  i, c: Integer;
+begin
+  SetLength(Result, Length(Self));
+  if (Length(Self) = 0) then
+    Exit;
+  Result[0] := Self[0].Y;
+  c := 1;
+  case unique of
+    True:
+    for i := 1 to High(Self) do
+      if (Self[i].Y <> Self[i - 1].Y) then
+        Result[c.Increase] := Self[i].Y;
+    False:
+    for i := 1 to High(Self) do
+      Result[c.Increase] := Self[i].Y;
+  end;
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryYPoints>
+  @action:
+    Returns a TPointArray containing all points with the specified Y-value.
+    Uses binary search to locate the first and last indices with that Y.
+  @note:
+    - The array must be sorted by Y ascending.
+    - Returns an empty array if no points match the given Y-value.
+    - Efficient: O(log n) search to find the matching range.
+[==============================================================================}
+function TPointArrayHelper.BinaryYPoints(const yValue: Integer): TPointArray; overload;
+var
+  h, m, f, l, i: Integer;
+  r: TRange;
+begin
+  h := High(Self);
+  SetLength(Result, 0);
+  if (h < 0) then
+    Exit;
+  r.Create(0, h);
+  f := -1;
+  while (r.start <= r.stop) do
+  begin
+    m := r.Center;
+    if (Self[m].Y >= yValue) then
+    begin
+      if (Self[m].Y = yValue) then
+        f := m;
+      r.stop := (m - 1);
+    end else
+      r.start := (m + 1);
+  end;
+  if (f = -1) then
+    Exit;
+  r.Create(0, h);
+  l := -1;
+  while (r.start <= r.stop) do
+  begin
+    m := r.Center;
+    if (Self[m].Y <= yValue) then
+    begin
+      if (Self[m].Y = yValue) then
+        l := m;
+      r.start := (m + 1);
+    end else
+      r.stop := (m - 1);
+  end;
+  SetLength(Result, ((l - f) + 1));
+  for i := 0 to High(Result) do
+    Result[i] := Self[f + i];
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryXPoints>
+  @action:
+    Returns a TPointArray containing all points with the specified X-value.
+    For each Y-row in the array, it uses BinaryYPoints to get all points in that row,
+    then performs a binary search within the row to find points with X = XValue.
+  @note:
+    - The array must be sorted in **scanline order** (Y ascending, then X ascending within each Y).
+    - Returns an empty array if no points match the given X-value.
+    - Efficient: O(R * log N) where R = number of distinct Y-rows, N = points per row.
+    - Depends only on BinaryYPoints; does not rely on BinaryYRange or BinaryYs.
+[==============================================================================}
+function TPointArrayHelper.BinaryXPoints(const xValue: Integer): TPointArray; overload;
+var
+  h, i, a, c, y, m: Integer;
+  p: TPointArray;
+  r, s: TRange;
+begin
+  h := High(Self);
+  SetLength(Result, 0);
+  if (h < 0) then
+    Exit;
+  i := 0;
+  while (i <= h) do
+  begin
+    y := Self[i].Y;
+    p := Self.BinaryYPoints(y);
+    if (Length(p) = 0) then
+    begin
+      Inc(i);
+      Continue;
+    end;
+    s.Create(0, High(p));
+    r.start := -1;
+    while (s.start <= s.stop) do
+    begin
+      m := s.Center;
+      if (p[m].X >= xValue) then
+      begin
+        if (p[m].X = xValue) then
+          r.start := m;
+        s.stop := (m - 1);
+      end else
+        s.start := (m + 1);
+    end;
+    if (r.start = -1) then
+    begin
+      Inc(i);
+      Continue;
+    end;
+    s.Create(0, High(p));
+    r.stop := -1;
+    while (s.start <= s.stop) do
+    begin
+      m := s.Center;
+      if (p[m].X <= xValue) then
+      begin
+        if (p[m].X = xValue) then
+          r.stop := m;
+        s.start := (m + 1);
+      end else
+        s.stop := (m - 1);
+    end;
+    if (r.stop >= r.start) then
+    begin
+      a := ((r.stop - r.start) + 1);
+      c := Length(Result);
+      SetLength(Result, (c + a));
+      for m := 0 to (a - 1) do
+        Result[c + m] := p[r.start + m];
+    end;
+    Inc(i, Length(p));
+  end;
+end;
+
 {$UNDEF TPoint}

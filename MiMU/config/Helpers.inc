@@ -1133,7 +1133,10 @@ type
       function BinarySinglified(const item: TPoint): TPointArray; overload;
       function BinaryMerge(const items: TPointArray): TPointArray; overload;
       function BinaryReplace(const oItem, nItem: TPoint): Boolean; overload;
-      function BinaryReplaceAll(const oItem, nItem: TPoint): Integer; overload;  
+      function BinaryReplaceAll(const oItem, nItem: TPoint): Integer; overload;
+      function BinaryYs(const unique: Boolean = True): TIntegerArray; overload;
+      function BinaryYPoints(const yValue: Integer): TPointArray; overload;
+      function BinaryXPoints(const xValue: Integer): TPointArray; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
