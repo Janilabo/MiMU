@@ -1136,7 +1136,8 @@ type
       function BinaryReplaceAll(const oItem, nItem: TPoint): Integer; overload;
       function BinaryYs(const unique: Boolean = True): TIntegerArray; overload;
       function BinaryYPoints(const yValue: Integer): TPointArray; overload;
-      function BinaryXPoints(const xValue: Integer): TPointArray; overload;	  
+      function BinaryXPoints(const xValue: Integer): TPointArray; overload;
+      function BinaryGrouped: T2DPointArray; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
