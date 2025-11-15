@@ -771,6 +771,8 @@ type
       function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean;
       function BinaryLowerBound(const x: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinaryUpperBound(const x: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinaryLeftmost(const x: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinaryRightmost(const x: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload;
       function BinaryRange(const x: Integer; const aAscending: Boolean = True): TRange; overload;
       function BinarySpan(const x: TRange; const aAscending: Boolean = True): TRange; overload;
@@ -805,6 +807,8 @@ type
       function BinaryPinpoint(const x: Integer; const aAscending: Boolean = True): Integer;
       function BinaryScan(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
       function BinaryScanned(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
+      function BinaryFirst(const x: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinaryLast(const x: Integer; const aAscending: Boolean = True): Integer; overload;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function CountingSort(const aAscending: Boolean = True): Integer;
@@ -844,6 +848,8 @@ type
       function BinaryShrink(const x: Double; const aAscending: Boolean = True): Boolean;
       function BinaryLowerBound(const x: Double; const aAscending: Boolean = True): Integer; overload;
       function BinaryUpperBound(const x: Double; const aAscending: Boolean = True): Integer; overload;
+      function BinaryLeftmost(const x: Double; const aAscending: Boolean = True): Integer; overload;
+      function BinaryRightmost(const x: Double; const aAscending: Boolean = True): Integer; overload;
       function BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload;
       function BinaryRange(const x: Double; const aAscending: Boolean = True): TRange; overload;
       function BinarySpan(const x: TRange; const aAscending: Boolean = True): TRange; overload;
@@ -872,6 +878,8 @@ type
       function BinarySearchLast(const value: Double; const aAscending: Boolean = True): Integer; overload;
       function BinaryLocalize(const value: Double; const aAscending: Boolean = True): Integer; overload;
       function BinaryLookup(const value: Double): Integer; overload;
+      function BinaryFirst(const x: Double; const aAscending: Boolean = True): Integer; overload;
+      function BinaryLast(const x: Double; const aAscending: Boolean = True): Integer; overload;
     {$ENDIF}
     {$IFDEF string}
       function Tally: Int64;

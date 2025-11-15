@@ -6135,9 +6135,9 @@ begin
     for i := 0 to High(x[c]) do
       for j := h.start to h.stop do
       begin
-        v.start := x[j].BinaryLowerBound(x[c][i] - yRadius);
+        v.start := x[j].BinaryFirst(x[c][i] - yRadius);
         if not (v.start = -1) then
-          v.stop := x[j].BinaryUpperBound(x[c][i] + yRadius);
+          v.stop := x[j].BinaryLast(x[c][i] + yRadius);
         if not v.Employs(-1) then
         for k := v.start to v.stop do
           if Self[s[c][i]].Within(Self[s[j][k]], xRadius, yRadius) then
@@ -6210,9 +6210,9 @@ begin
     for i := 0 to High(x[c]) do
       for j := h.start to h.stop do
       begin
-        v.start := x[j].BinaryLowerBound(x[c][i] - d);
+        v.start := x[j].BinaryFirst(x[c][i] - d);
         if not (v.start = -1) then
-          v.stop := x[j].BinaryUpperBound(x[c][i] + d);
+          v.stop := x[j].BinaryLast(x[c][i] + d);
         if not v.Employs(-1) then
           for k := v.start to v.stop do
             if Self[s[c][i]].Within(Self[s[j][k]], radius, metric) then
@@ -7935,7 +7935,7 @@ begin
   if (h > -1) then
   begin
     r := 0;
-    l := ((Self[h].Y - Self[0].Y) + 1);
+    l := Min((h + 1), ((Self[h].Y - Self[0].Y) + 1));
     SetLength(Result, l);
     for i := Self[0].Y to Self[h].Y do
       if (Result[r].Supply(Self.BinaryYPoints(i)) > -1) then

@@ -337,23 +337,47 @@ function TDoubleArrayHelper.BinaryShrink(const x: Double; const aAscending: Bool
 
 {==============================================================================]
   <TDoubleArray.BinaryLowerBound>
-  @action: Return the index of the first element in the sorted array
-           that is greater than or equal to x.
-           Works with ascending or descending order depending on aAscending.
-  @note:   Returns -1 if all elements are less than x (or greater when
-           searching a descending array).
+  @action: Finds the first index where the array value is greater than or equal to x
+           (ascending) or less than or equal to x (descending).
+  @note:
+    - Returns Length(Self) if no element satisfies the condition.
+    - Equivalent to std::lower_bound in C++.
+    - Works correctly for arrays sorted either ascending or descending.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryLowerBound(const x: Double; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryLowerBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLowerBound}
+function TDoubleArrayHelper.BinaryLowerBound(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLowerBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLowerBound}
 
 {==============================================================================]
   <TDoubleArray.BinaryUpperBound>
-  @action: Return the index of the last element in the sorted array
-           that is less than or equal to x.
-           Honors the aAscending flag for array order.
-  @note:   Returns -1 if all elements are greater than x (or less when
-           searching a descending array).
+  @action: Finds the first index where the array value is strictly greater than x
+           (ascending) or strictly less than x (descending).
+  @note:
+    - Returns Length(Self) if no element satisfies the condition.
+    - Equivalent to std::upper_bound in C++.
+    - Works correctly for arrays sorted either ascending or descending.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUpperBound(const x: Double; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryUpperBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUpperBound}
+function TDoubleArrayHelper.BinaryUpperBound(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryUpperBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUpperBound}
+
+{==============================================================================]
+  <TDoubleArray.BinaryRightmost>
+  @action: Finds the last index where the array value is less than or equal to x
+           (ascending) or greater than or equal to x (descending).
+  @note:
+    - Returns -1 if no element satisfies the condition.
+    - Useful for “rightmost occurrence” searches.
+    - Differs from BinaryUpperBound: includes elements equal to x.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryRightmost(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryRightmost}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRightmost}
+
+{==============================================================================]
+  <TDoubleArray.BinaryLeftmost>
+  @action: Finds the first index where the array value is greater than or equal to x
+           (ascending) or less than or equal to x (descending).
+  @note:
+    - Returns -1 if no element satisfies the condition.
+    - Useful for “leftmost occurrence” searches.
+    - Equivalent to BinaryLowerBound but returns -1 when not found instead of Length(Self).
+[==============================================================================}
+function TDoubleArrayHelper.BinaryLeftmost(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLeftmost}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLeftmost}
 
 {==============================================================================]
   <TDoubleArray.BinaryRange>
@@ -601,5 +625,25 @@ function TDoubleArrayHelper.BinaryLocalize(const value: Double; const aAscending
            This method does not modify the array.
 [==============================================================================}
 function TDoubleArrayHelper.BinaryLookup(const value: Double): Integer; overload; {$DEFINE Skeleton_BinaryLookup}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLookup}
+
+{==============================================================================]
+  <TDoubleArray.BinaryFirst>
+  @action: Return the index of the first element in the sorted array
+           that is greater than or equal to x.
+           Works with ascending or descending order depending on aAscending.
+  @note:   Returns -1 if all elements are less than x (or greater when
+           searching a descending array).
+[==============================================================================}
+function TDoubleArrayHelper.BinaryFirst(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryFirst}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryFirst}
+
+{==============================================================================]
+  <TDoubleArray.BinaryLast>
+  @action: Return the index of the last element in the sorted array
+           that is less than or equal to x.
+           Honors the aAscending flag for array order.
+  @note:   Returns -1 if all elements are greater than x (or less when
+           searching a descending array).
+[==============================================================================}
+function TDoubleArrayHelper.BinaryLast(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLast}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLast}
 
 {$UNDEF Double}

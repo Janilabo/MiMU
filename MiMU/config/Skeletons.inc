@@ -852,45 +852,120 @@ end;
 
 {$IFDEF Skeleton_BinaryLowerBound}
 var
-  m, o: Integer;
-  r: TRange;
+  M: Integer;
+  R: TRange;
 begin
-  Result := -1;
-  r.Create(0, High(Self));
-  o := aAscending.Select(1, -1);
-  while r.Ascending do
+  Result := Length(Self);
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
   begin
-    m := r.Middle;
-    case ((o * Self[m]) < (o * x)) of
-      False:
+    M := R.Middle;
+    case aAscending of
+      True:
+      if (Self[M] >= x) then
       begin
-        Result := m;
-        r.stop := (m - 1);
-      end;
-      True: r.start := (m + 1);
+        Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
+      False:
+      if (Self[M] <= x) then
+      begin
+        Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
+    end;
+  end;
+end;
+
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUpperBound}
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := Length(Self);
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Middle;
+    case aAscending of
+      True:
+      if (Self[M] > x) then
+      begin
+        Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
+      False:
+      if (Self[M] < x) then
+      begin
+        Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
     end;
   end;
 end;
 {$ENDIF}
 
-{$IFDEF Skeleton_BinaryUpperBound}
+{$IFDEF Skeleton_BinaryRightmost}
 var
-  m, o: Integer;
-  r: TRange;
+  M: Integer;
+  R: TRange;
 begin
   Result := -1;
-  r.Create(0, High(Self));
-  o := aAscending.Select(1, -1);
-  while r.Ascending do
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
   begin
-    m := r.Middle;
-    case ((o * Self[m]) > (o * x)) of
-      False:
+    M := R.Central;
+    case aAscending of
+      True:
+      if (Self[M] <= x) then
       begin
-        Result := m;
-        r.start := (m + 1);
-      end;
-      True: r.stop := (m - 1);
+        Result := M;
+        R.start := (M + 1);
+      end else
+        R.stop := (M - 1);
+      False:
+      if (Self[M] >= x) then
+      begin
+        Result := M;
+        R.start := (M + 1);
+      end else
+        R.stop := (M - 1);
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryLeftmost}
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Central;
+    case aAscending of
+      True:
+      if (Self[M] >= x) then
+      begin
+        Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
+      False:
+      if (Self[M] <= x) then
+      begin
+        Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
     end;
   end;
 end;
@@ -903,9 +978,9 @@ begin
   if Self.Empty then
     Exit(Result.Create(-1, -1));
   r := x.Normalize;
-  Result.start := Self.BinaryLowerBound(r.start, aAscending);
+  Result.start := Self.BinaryFirst(r.start, aAscending);
   if (Result.start > -1) then
-    Result.stop := Self.BinaryUpperBound(r.stop, aAscending)
+    Result.stop := Self.BinaryLast(r.stop, aAscending)
   else
     Result.stop := -1;
   if ((Result.start = -1) or (Result.stop = -1) or (Result.start > Result.stop)) then
@@ -1538,5 +1613,51 @@ begin
     end;
   end;
   Result := -1;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryFirst}
+var
+  m, o: Integer;
+  r: TRange;
+begin
+  Result := -1;
+  r.Create(0, High(Self));
+  o := aAscending.Select(1, -1);
+  while r.Ascending do
+  begin
+    m := r.Middle;
+    case ((o * Self[m]) < (o * x)) of
+      False:
+      begin
+        Result := m;
+        r.stop := (m - 1);
+      end;
+      True: r.start := (m + 1);
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryLast}
+var
+  m, o: Integer;
+  r: TRange;
+begin
+  Result := -1;
+  r.Create(0, High(Self));
+  o := aAscending.Select(1, -1);
+  while r.Ascending do
+  begin
+    m := r.Middle;
+    case ((o * Self[m]) > (o * x)) of
+      False:
+      begin
+        Result := m;
+        r.start := (m + 1);
+      end;
+      True: r.stop := (m - 1);
+    end;
+  end;
 end;
 {$ENDIF}
