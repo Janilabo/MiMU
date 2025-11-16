@@ -809,6 +809,8 @@ type
       function BinaryScanned(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
       function BinaryFirst(const x: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinaryLast(const x: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinaryValues(const value: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
+      function BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function CountingSort(const aAscending: Boolean = True): Integer;
@@ -880,6 +882,8 @@ type
       function BinaryLookup(const value: Double): Integer; overload;
       function BinaryFirst(const x: Double; const aAscending: Boolean = True): Integer; overload;
       function BinaryLast(const x: Double; const aAscending: Boolean = True): Integer; overload;
+      function BinaryValues(const value: Double; const aAscending: Boolean = True): TDoubleArray; overload;
+      function BinaryValues(const values: TRange; const aAscending: Boolean = True): TDoubleArray; overload;
     {$ENDIF}
     {$IFDEF string}
       function Tally: Int64;

@@ -1670,3 +1670,38 @@ begin
   end;
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryValues1}
+var
+  i: Integer;
+  r: TRange;
+begin
+  r := Self.BinaryRange(value, aAscending);
+  if r.Employs(-1) then
+    Exit([]);
+  SetLength(Result, r.Size);
+  for i := 0 to High(Result) do
+    Result[i] := Self[r.start + i];
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryValues2}
+var
+  h, i: Integer;
+  r: TRange;
+begin
+  r := Self.BinaryRange(values, aAscending);
+  if r.Employs(-1) then
+    Exit([]);
+  SetLength(Result, r.Size);
+  h := High(Result);
+  case values.Ascending of
+    True:
+    for i := 0 to h do
+      Result[i] := Self[r.start + i];
+    False:
+    for i := h downto 0 do
+      Result[h - i] := Self[r.start + i];
+  end;
+end;
+{$ENDIF}

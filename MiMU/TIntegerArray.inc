@@ -2983,4 +2983,25 @@ function TIntegerArrayHelper.BinaryFirst(const x: Integer; const aAscending: Boo
 [==============================================================================}
 function TIntegerArrayHelper.BinaryLast(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLast}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLast}
 
+{==============================================================================]
+  <TIntegerArray.BinaryValues>
+  @action: Returns all items in the array that match a given value using binary search.
+  @note: The array must be sorted (ascending or descending) depending on
+         the value of aAscending. If the value does not occur in the array,
+         an empty array is returned.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryValues(const value: Integer; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryValues1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryValues1}
+
+{==============================================================================]
+  <TIntegerArray.BinaryValues>
+  @action: Returns all items in the array whose values fall within a given
+           numeric range, determined via binary search.
+  @note: The array must be sorted (ascending or descending) according to
+         aAscending. The order of the returned values matches the direction
+         of the input TRange: ascending input returns ascending results,
+         and descending input returns results in descending order. If no
+         items fall within the specified range, an empty array is returned.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryValues2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryValues2}
+
 {$UNDEF Integer}
