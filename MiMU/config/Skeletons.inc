@@ -976,14 +976,23 @@ var
   r: TRange;
 begin
   if Self.Empty then
-    Exit(Result.Create(-1, -1));
+    Exit(TRange.Construct(-1, -1));
   r := x.Normalize;
-  Result.start := Self.BinaryFirst(r.start, aAscending);
-  if (Result.start > -1) then
-    Result.stop := Self.BinaryLast(r.stop, aAscending)
-  else
-    Result.stop := -1;
-  if ((Result.start = -1) or (Result.stop = -1) or (Result.start > Result.stop)) then
+  case aAscending of
+    True:
+    begin
+      Result.start := Self.BinaryFirst(r.start, aAscending);
+      if (Result.start > -1) then
+        Result.stop := Self.BinaryLast(r.stop, aAscending);
+    end;
+    False:
+    begin
+      Result.start := Self.BinaryFirst(r.stop, aAscending);
+      if (Result.start > -1) then
+        Result.stop := Self.BinaryLast(r.start, aAscending);
+    end;
+  end;
+  if Result.Employs(-1) then
     Result.Create(-1, -1);
 end;
 {$ENDIF}
