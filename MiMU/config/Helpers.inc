@@ -338,6 +338,7 @@ type
     function Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
     function Clone(const ID: TIntegerArray): TArr; overload;
     function Cloned: TArr; overload;
+    function Collated: T2DArr; overload;
     function Combine(const b: TArr): TArr; overload;
     function Components(const connections: TConnectionArray): T2DArr; overload;
     function Compact: Integer; overload;
@@ -360,6 +361,7 @@ type
     function Differ(const target: TArr): Boolean; overload;
     function Disordered: TArr; overload;
     function Distinct: Integer; overload;
+    function Distincted: T2DArr; overload;
     function Distribute(const parts: Integer): T2DArr; overload;
     function Diversified: TArr; overload;
     function DiversifiedEx(const dAscending: Boolean = True): TArr; overload;
@@ -518,6 +520,7 @@ type
     function Reverse: Boolean; overload;
     function Reversed: TArr; overload;
     function Reversion: TArr; overload;
+    function Runs: T2DArr; overload;
     function Sample(const sSize: Integer): TArr; overload;
     function Scan(const ID: TRange; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload;
     function Scan(const ID: TIntegerArray; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload;
@@ -811,6 +814,8 @@ type
       function BinaryLast(const x: Integer; const aAscending: Boolean = True): Integer; overload;
       function BinaryValues(const value: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
       function BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
+      function BinaryGrouped(const aAscending: Boolean = True): T2DIntegerArray; overload;
+      function BinaryGroup(const aAscending: Boolean = True): T2DIntegerArray; overload;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function CountingSort(const aAscending: Boolean = True): Integer;

@@ -567,6 +567,31 @@ begin
   end;
 end;
 
+function HArr.Collated: T2DArr; overload;
+var
+  m: TDictionary<TVar, Integer>;
+  i, p: Integer;
+begin
+  m := TDictionary<TVar, Integer>.Create;
+  try
+    SetLength(Result, 0);
+    for i := 0 to High(Self) do
+    begin
+      if not m.TryGetValue(Self[i], p) then
+      begin
+        p := Length(Result);
+        m.Add(Self[i], p);
+        SetLength(Result, (p + 1));
+        SetLength(Result[p], 0);
+      end;
+      Result[p].Supply(Self[i]);
+    end;
+  finally
+    m.Free;
+  end;
+end;
+
+
 {==============================================================================]
  <arr.Compact: Integer>
  @action: Removes adjacent duplicates.
@@ -1052,6 +1077,37 @@ begin
       end;
     if u then
       Inc(Result);
+  end;
+end;
+
+{==============================================================================]
+ <arr.Distincted>
+  @action: Groups the integer array into subarrays by unique values. Each subarray
+           in the result contains all occurrences of one distinct integer from Self,
+           preserving the order of first appearance.
+  @note: The function preserves the original order of first occurrence for each unique
+         value. It uses an auxiliary array 'm' to track which values have already
+         been grouped. Duplicate values in Self are added to the same group.
+         The resulting 2D array has one group per unique value.
+[==============================================================================}
+function HArr.Distincted: T2DArr; overload;
+var
+  m: TArr;
+  i, l: Integer;
+begin
+  SetLength(m, 0);
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+  begin
+    l := m.Pos(Self[i]);
+    if (l = -1) then
+    begin
+      l := Length(m);
+      SetLength(m, (l + 1));
+      SetLength(Result, (l + 1));
+      m[l] := Self[i];
+    end;
+    Result[l].Supply(Self[i]);
   end;
 end;
 
@@ -4556,6 +4612,28 @@ begin
   end;
   if l.Odd then
     Result[h] := Self[h];
+end;
+
+{==============================================================================]
+ <arr.Runs>
+  @action: Groups consecutive identical values into sub-arrays.
+  @note: Input must be sorted for meaningful grouping; a new group is started
+         whenever the value differs from the previous element.
+[==============================================================================}
+function HArr.Runs: T2DArr; overload;
+var
+  i, r: Integer;
+begin
+  SetLength(Result, 0);
+  if Self.Empty then
+    Exit;
+  r := -1;
+  for i := 0 to High(Self) do
+  begin
+    if ((i = 0) or (Self[i] <> Self[i - 1])) then
+      SetLength(Result, (r.Increment + 1));
+    Result[r].Supply(Self[i]);
+  end;
 end;
 
 {==============================================================================]
