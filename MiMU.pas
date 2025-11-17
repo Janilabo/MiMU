@@ -571,6 +571,7 @@ generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResu
 generic function SetSize<T>(var A, B: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 generic function SetSize<T>(var A, B, C: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 generic function SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: Integer = 1): Integer; overload;
+generic function Trade<T>(var A, B: T): Boolean; overload;
 
 operator+(const a, b: TPoint): TPoint;
 operator+(const a, b: TBox): TBox;
@@ -1074,6 +1075,20 @@ begin
   SetLength(C, Result);
   SetLength(D, Result);
 end;
+
+generic function Trade<T>(var A, B: T): Boolean; overload;
+var
+  C: T;
+begin
+  Result := (@A <> @B);
+  if Result then
+  begin
+    C := A;
+    A := B;
+    B := C;
+  end;
+end;
+
 
 operator+(const a, b: TPoint): TPoint;
 begin

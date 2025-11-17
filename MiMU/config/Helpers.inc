@@ -519,6 +519,7 @@ type
     function Reversal: TArr; overload;
     function Reverse: Boolean; overload;
     function Reversed: TArr; overload;
+    function Reversify: Boolean; overload;
     function Reversion: TArr; overload;
     function Runs: T2DArr; overload;
     function Sample(const sSize: Integer): TArr; overload;
@@ -560,6 +561,9 @@ type
     function Subset(const items: TArr): Boolean; overload;
     function Supply(const item: TVar): Integer; overload;
     function Supply(const items: TArr): Integer; overload;
+    function Swapped(var target: TArr): Integer; overload;
+    function SwapMerged(var target: TArr): TArr; overload;
+    function SwappedMerge(var target: TArr): TArr; overload;
     function To2D(const rows, columns: Integer): T2DArr; overload;
     function To2D(const height: Integer): T2DArr; overload;
     function ToIndexes: TIntegerArray; overload;
@@ -1221,6 +1225,9 @@ type
     function Free: Int64; overload;
     function Recreate(const arrSize: Integer): Boolean; overload;
     function Reset: Int64; overload;
+    function Reverse: Boolean; overload;
+    function Reversed: T2DArr; overload;
+    function Reversify: Boolean; overload;
     function Destroy: Int64; overload;
     function Pull: T2DArr; overload;
     function To1D: TArr; overload;

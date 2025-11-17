@@ -4590,6 +4590,29 @@ begin
 end;
 
 {==============================================================================]
+ <arr.Reversify>
+  @action: Reverses the order of elements in a 1D array.
+           Works by creating a temporary array and copying elements in reverse order.
+  @note: - The operation modifies Self in place.
+         - Returns True if the array had 2 or more elements (reversal performed).
+         - Returns False if the array had 0 or 1 element (nothing changed).
+[==============================================================================}
+function HArr.Reversify: Boolean; overload;
+var
+  s: TArr;
+  i, l: Integer;
+begin
+  l := Length(Self);
+  Result := (l > 1);
+  if not Result then
+    Exit;
+  SetLength(s, l);
+  for i := 0 to (l - 1) do
+    s[i] := Self[(l - 1) - i];
+  Self := s;
+end;
+
+{==============================================================================]
  <arr.Reversion>
  @action: Returns array with items in reversed order.
  @note: None.
@@ -5429,6 +5452,82 @@ begin
   SetLength(Self, (Result + Length(items)));
   for i := 0 to High(items) do
     Self[Result + i] := items[i];
+end;
+
+{==============================================================================]
+ <arr.Swapped>
+ @action: Swaps the contents of this array with the given target array.
+ @note: The swap is O(1) because dynamic arrays are reference-counted.
+        Returns Length(Self) + Length(target) after the swap.
+[==============================================================================}
+function HArr.Swapped(var target: TArr): Integer; overload;
+var
+  t: TArr;
+begin
+  t := Self;
+  Self := target;
+  target := t;
+  Result := (Length(Self) + Length(target));
+end;
+
+{==============================================================================]
+ <arr.SwapMerged>
+  @action: Swaps the contents of Self and target arrays manually using an
+           auxiliary array, and returns a new array containing all elements
+           from both arrays combined in the **original order** (before swap).
+  @note: The swap is performed by copying elements from Self and target
+         into a temporary array in reverse order, then assigning them back.
+         This method works but is less efficient (O(n)) because every element
+         is copied. Use this if the merged array should reflect the **pre-swap
+         ordering**.
+[==============================================================================}
+function HArr.SwapMerged(var target: TArr): TArr; overload;
+var
+  r, t, s, i: Integer;
+begin
+  s := Length(Self);
+  t := Length(target);
+  r := (s + t);
+  SetLength(Result, r);
+  if (r = 0) then
+    Exit;
+  for i := High(target) downto 0 do
+    Result[r.Decrement] := target[i];
+  for i := High(Self) downto 0 do
+    Result[r.Decrement] := Self[i];
+  SetLength(Self, t);
+  SetLength(target, s);
+  for i := 0 to (t - 1) do
+    Self[i] := Result[s + i];
+  for i := 0 to (s - 1) do
+    target[i] := Result[i];
+end;
+
+{==============================================================================]
+ <arr.SwappedMerge>
+  @action: Swaps the contents of Self and target arrays using the reference
+           swap method (Self.Swapped), and returns a new array containing all
+           elements from both arrays combined in the **post-swap order**.
+  @note: This implementation is more efficient (O(1) for the swap) because
+         it swaps references rather than copying elements individually.
+         The merged array is then constructed by iterating over Self and
+         target. This is preferred for large dynamic arrays, and the
+         resulting array reflects the swapped positions of Self and target.
+[==============================================================================}
+function HArr.SwappedMerge(var target: TArr): TArr; overload;
+var
+  t, s, i: Integer;
+begin
+  s := Length(Self);
+  t := Length(target);
+  SetLength(Result, (s + t));
+  if ((s + t) = 0) then
+    Exit;
+  Self.Swapped(target);
+  for i := 0 to High(Self) do
+    Result[i] := Self[i];
+  for i := 0 to High(target) do
+    Result[t + i] := target[i];
 end;
 
 {==============================================================================]
@@ -6376,6 +6475,65 @@ begin
     Result := (Result + Length(Self[i]));
     SetLength(Self[i], 0);
   end;
+end;
+
+{==============================================================================]
+ <arr2d.Reverse>
+  @action: Reverses the 2D array in place.
+  @note: Returns True only if the array contained 2 or more elements.
+         Returns False if Length < 2 (no operation performed).
+[==============================================================================}
+function H2DArr.Reverse: Boolean; overload;
+var
+  r: TRange;
+begin
+  Result := (Length(Self) > 1);
+  if not Result then
+    Exit;
+  r.create(0, High(Self));
+  while (r.start < r.stop) do
+    Self[r.start.Increase].Swapped(Self[r.stop.Decrease]);
+end;
+
+{==============================================================================]
+ <arr.Reversify>
+  @action: Reverses the order of elements in a 2D array.
+           Works by creating a temporary array and copying elements in reverse order.
+  @note: - The operation modifies Self in place.
+         - Returns True if the array had 2 or more elements (reversal performed).
+         - Returns False if the array had 0 or 1 element (nothing changed).
+[==============================================================================}
+function H2DArr.Reversed: T2DArr; overload;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  for i := 0 to (l - 1) do
+    Result[i] := Self[(l - 1) - i];
+end;
+
+{==============================================================================]
+ <arr.Reversify>
+  @action: Reverses the order of elements in a 2D array.
+           Works by creating a temporary array and copying elements in reverse order.
+  @note: - The operation modifies Self in place.
+         - Returns True if the array had 2 or more elements (reversal performed).
+         - Returns False if the array had 0 or 1 element (nothing changed).
+[==============================================================================}
+function H2DArr.Reversify: Boolean; overload;
+var
+  s: T2DArr;
+  i, l: Integer;
+begin
+  l := Length(Self);
+  Result := (l > 1);
+  if not Result then
+    Exit;
+  SetLength(s, l);
+  for i := 0 to (l - 1) do
+    s[i] := Self[(l - 1) - i];
+  Self := s;
 end;
 
 {==============================================================================]
