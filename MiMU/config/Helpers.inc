@@ -816,6 +816,7 @@ type
       function BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
       function BinaryGrouped(const aAscending: Boolean = True): T2DIntegerArray; overload;
       function BinaryGroup(const aAscending: Boolean = True): T2DIntegerArray; overload;
+      function BinaryGroups(const aAscending: Boolean = True): T2DIntegerArray; overload;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function CountingSort(const aAscending: Boolean = True): Integer;

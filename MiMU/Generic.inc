@@ -569,10 +569,10 @@ end;
 
 function HArr.Collated: T2DArr; overload;
 var
-  m: TDictionary<TVar, Integer>;
+  m: specialize TDictionary<TVar, Integer>;
   i, p: Integer;
 begin
-  m := TDictionary<TVar, Integer>.Create;
+  m := specialize TDictionary<TVar, Integer>.Create;
   try
     SetLength(Result, 0);
     for i := 0 to High(Self) do

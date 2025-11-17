@@ -2859,6 +2859,47 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArray.BinaryGroups>
+  @action: Groups the integer array into binary-value groups, returning a 2D array where each row contains
+           the values belonging to a specific binary grouping. Iterates in ascending or descending order
+           depending on the aAscending flag.
+  @note: The input array (Self) must be sorted; otherwise the grouping order and bounds will be incorrect.
+         The resulting number of groups may be smaller than the preallocated size and is trimmed afterward.
+         Group determination relies on TIntegerArray_BinaryValues and successful insertion by TArray_Supply.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryGroups(const aAscending: Boolean = True): T2DIntegerArray; overload;
+var
+  r, h, i, l: Integer;
+begin
+  SetLength(Result, 0);
+  h := High(Self);
+  if (h > -1) then
+  begin
+    r := 0;
+    case aAscending of
+      True:
+      begin
+        l := Min((h + 1), ((Self[h] - Self[0]) + 1));
+        SetLength(Result, l);
+        for i := Self[0] to Self[h] do
+          if (Result[r].Supply(Self.BinaryValues(i, aAscending)) > -1) then
+            Inc(r);
+      end;
+      False:
+      begin
+        l := Min((h + 1), ((Self[0] - Self[h]) + 1));
+        SetLength(Result, l);
+        for i := Self[0] downto Self[h] do
+          if (Result[r].Supply(Self.BinaryValues(i, aAscending)) > -1) then
+            Inc(r);
+      end;
+    end;
+    if (r < l) then
+      SetLength(Result, r);
+  end;
+end;
+
+{==============================================================================]
   <TIntegerArray.BMerge>
   @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
   @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
