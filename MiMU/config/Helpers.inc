@@ -821,6 +821,10 @@ type
       function BinaryGrouped(const aAscending: Boolean = True): T2DIntegerArray; overload;
       function BinaryGroup(const aAscending: Boolean = True): T2DIntegerArray; overload;
       function BinaryGroups(const aAscending: Boolean = True): T2DIntegerArray; overload;
+      function BinaryExtract(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
+      function BinaryExtract(const values: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
+      function BinaryFilter(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
+      function BinaryFilter(const values: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
       function CountingSort(const aAscending: Boolean = True): Integer;
@@ -1159,7 +1163,9 @@ type
       function BinaryYs(const unique: Boolean = True): TIntegerArray; overload;
       function BinaryYPoints(const yValue: Integer): TPointArray; overload;
       function BinaryXPoints(const xValue: Integer): TPointArray; overload;
-      function BinaryGrouped: T2DPointArray; overload;	  
+      function BinaryGrouped: T2DPointArray; overload;
+      function BinaryExtract(const area: TBox): TPointArray; overload;
+      function BinaryFilter(const area: TBox): TPointArray; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;

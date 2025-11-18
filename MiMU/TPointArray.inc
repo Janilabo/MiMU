@@ -7945,4 +7945,129 @@ begin
   end;
 end;
 
+{==============================================================================]
+  <arr.BinaryExtract>
+  @action: Returns all points within the specified rectangular area, using
+           binary search on the Y-coordinate to minimize the scanned range.
+  @note:   The array must be sorted in ascending Y order (scanline order).
+           Only points satisfying:
+               area.X1 ≤ X ≤ area.X2
+               area.Y1 ≤ Y ≤ area.Y2
+           are included in the output. The returned array preserves the
+           original ordering of points with no duplicates.
+[==============================================================================}
+function TPointArrayHelper.BinaryExtract(const area: TBox): TPointArray; overload;
+var
+  R, Y: TRange;
+  h, M, i, p, q, s: Integer;
+begin
+  SetLength(Result, 0);
+  if (Length(Self) = 0) then
+    Exit;
+  h := High(Self);
+  R.Create(0, h);
+  y.Create(-1);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Central;
+    if (Self[M].Y >= area.Y1) then
+    begin
+      y.start := M;
+      R.stop := (M - 1);
+    end else
+      R.start := (M + 1);
+  end;
+  if (y.start = -1) then
+    Exit;
+  R.Create(y.start, h);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Central;
+    if (Self[M].Y <= area.Y2) then
+    begin
+      y.stop := M;
+      R.start := (M + 1);
+    end else
+      R.stop := (M - 1);
+  end;
+  if (y.stop = -1) then
+    Exit;
+  s := 0;
+  for i := y.start to y.stop do
+    if ((Self[i].X >= area.X1) and (Self[i].X <= area.X2)) then
+      Inc(s);
+  if (s = 0) then
+    Exit;
+  SetLength(Result, s);
+  p := 0;
+  for i := y.start to y.stop do
+    if ((Self[i].X >= area.X1) and (Self[i].X <= area.X2)) then
+      Result[p.Increase] := Self[i];
+end;
+
+{==============================================================================]
+  <arr.BinaryFilter>
+  @action: Returns a new array containing all points that lie outside the
+           specified rectangular area. The function uses binary search on the
+           Y-coordinate to exclude the interior scanline interval efficiently.
+  @note:   The array must be sorted in ascending Y order (scanline order).
+           Points are excluded if and only if they satisfy:
+               area.X1 ≤ X ≤ area.X2
+               area.Y1 ≤ Y ≤ area.Y2
+           All remaining points are preserved in their original order.
+[==============================================================================}
+function TPointArrayHelper.BinaryFilter(const area: TBox): TPointArray; overload;
+var
+  h, M, i, s, p: Integer;
+  R, Y: TRange;
+begin
+  SetLength(Result, 0);
+  if Self.Empty then
+    Exit;
+  h := High(Self);
+  R.Create(0, h);
+  Y.Create(-1);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Central;
+    if (Self[M].Y >= area.Y1) then
+    begin
+      Y.start := M;
+      R.stop := (M - 1);
+    end else
+      R.start := (M + 1);
+  end;
+  if (Y.start = -1) then
+    Exit(Self.Copy);
+  R.Create(Y.start, h);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Central;
+    if (Self[M].Y <= area.Y2) then
+    begin
+      Y.stop := M;
+      R.start := (M + 1);
+    end else
+      R.stop := (M - 1);
+  end;
+  if (Y.stop = -1) then
+    Exit(Self.Copy);
+  s := Y.start;
+  Inc(s, (h - Y.stop));
+  for i := Y.start to Y.stop do
+    if ((Self[i].X < area.X1) or (Self[i].X > area.X2)) then
+      Inc(s);
+  if (s = 0) then
+    Exit;
+  SetLength(Result, s);
+  p := 0;
+  for i := 0 to (Y.start - 1) do
+    Result[p.Increase] := Self[i];
+  for i := Y.start to Y.stop do
+    if ((Self[i].X < area.X1) or (Self[i].X > area.X2)) then
+      Result[p.Increase] := Self[i];
+  for i := (Y.stop + 1) to h do
+    Result[p.Increase] := Self[i];
+end;
+
 {$UNDEF TPoint}

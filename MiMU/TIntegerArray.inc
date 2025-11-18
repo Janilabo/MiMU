@@ -3166,4 +3166,100 @@ function TIntegerArrayHelper.BinaryValues(const value: Integer; const aAscending
 [==============================================================================}
 function TIntegerArrayHelper.BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryValues2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryValues2}
 
+{==============================================================================]
+  <TIntegerArray.BinaryExtract>
+  @action: Returns all integers from Self that lie within the specified range.
+           Uses binary search to minimize scanning. Supports ascending or descending arrays.
+  @note:   area.start ≤ area.stop → ascending range
+           area.start >  area.stop → descending range
+           aAscending specifies whether Self is sorted ascending (True) or descending (False).
+[==============================================================================}
+function TIntegerArrayHelper.BinaryExtract(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
+var
+  i: Integer;
+  n, R: TRange;
+begin
+  if Self.Empty then
+    Exit([]);
+  R := Self.BinaryRange(area.Normalize, aAscending);
+  if R.Employs(-1) then
+    Exit([]);
+  SetLength(Result, R.Size);
+  for i := R.start to R.stop do
+    Result[i - R.start] := Self[i];
+end;
+
+function TIntegerArrayHelper.BinaryExtract(const values: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
+var
+  v: TIntegerArray;
+  h, i, r: Integer;
+begin
+  if (Self.Empty or values.Empty) then
+    Exit([]);
+  v := values.QuickSorted;
+  h := High(v);
+  SetLength(Result, Length(Self));
+  r := 0;
+  case aAscending of
+    True:
+    for i := 0 to High(Self) do
+      if (Self[i] > v[h]) then
+        Break
+      else if ((Self[i] >= v[0]) and v.BinaryContains(Self[i])) then
+        Result[r.Increase] := Self[i];
+    False:
+    for i := 0 to High(Self) do
+      if (Self[i] < v[0]) then
+        Break
+      else if ((Self[i] <= v[h]) and v.BinaryContains(Self[i])) then
+        Result[r.Increase] := Self[i];
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TIntegerArray.BinaryFilter>
+  @action: Returns all integers from Self that lie outside the specified range.
+           Uses binary search to minimize scanning. Supports ascending or descending arrays.
+  @note:   area.start ≤ area.stop → ascending range
+           area.start >  area.stop → descending range
+           aAscending specifies whether Self is sorted ascending (True) or descending (False).
+[==============================================================================}
+function TIntegerArrayHelper.BinaryFilter(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, L, h: Integer;
+  n, R: TRange;
+begin
+  L := Length(Self);
+  if (L = 0) then
+    Exit([]);
+  R := Self.BinaryRange(area.Normalize, aAscending);
+  if R.Employs(-1) then
+    Exit([]);
+  SetLength(Result, (L - R.Size));
+  h := 0;
+  for i := 0 to (L - 1) do
+    if ((i < R.start) or (i > R.stop)) then
+      Result[h.Increase] := Self[i];
+end;
+
+function TIntegerArrayHelper.BinaryFilter(const values: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
+var
+  v: TIntegerArray;
+  h, i, r: Integer;
+begin
+  if Self.Empty then
+    Exit([]);
+  if values.Empty then
+    Exit(Self.Copy);
+  v := values.QuickSorted;
+  h := High(v);
+  SetLength(Result, Length(Self));
+  r := 0;
+  for i := 0 to High(Self) do
+    if (((Self[i] > v[h]) or (Self[i] < v[0])) or (not v.BinaryContains(Self[i]))) then
+      Result[r.Increase] := Self[i];
+  SetLength(Result, r);
+end;
+
 {$UNDEF Integer}
