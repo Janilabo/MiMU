@@ -552,6 +552,20 @@ type
   end;
   TTriangleArray = array of TTriangle;
   T2DTriangleArray = array of TTriangleArray;
+  TXLayer = record
+    X: TIntegerArray;
+    Y, IDs: T2DIntegerArray;
+	procedure Clear;
+    constructor Create(const xArr: TIntegerArray; const yArr, yIDs: T2DIntegerArray); overload;
+    constructor Create(const arr: TPointArray); overload;
+  end;
+  TYLayer = record
+    Y: TIntegerArray;
+    X, IDs: T2DIntegerArray;
+    procedure Clear;
+    constructor Create(const yArr: TIntegerArray; const xArr, xIDs: T2DIntegerArray); overload;
+    constructor Create(const arr: TPointArray); overload;
+  end;
 
 function MiMU_Version: Double; 
 
