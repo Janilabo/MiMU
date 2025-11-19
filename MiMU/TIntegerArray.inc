@@ -2590,71 +2590,70 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.BinaryScan(const area: TRange; const aAscending: Boolean = True): TIntegerArray;
 var
-  L, H, M, i: Integer;
-  a, r: TRange;
+  M, i: Integer;
+  a, r, o: TRange;
 begin
   a := area.Normalize;
   SetLength(Result, 0);
-  H := High(Self);
-  L := 0;
+  o.Create(0, High(Self));
   r.Create(-1);
-  if (H > -1) then
+  if (o.stop > -1) then
   case aAscending of
     True:
-    if not ((a.stop > Self[H]) or (a.start < Self[L])) then
+    if not ((a.stop > Self[o.stop]) or (a.start < Self[o.start])) then
     begin
-      while (L <= H) do
+      while (o.start <= o.stop) do
       begin
-        M := ((L + H) div 2);
+        M := o.Pivot;
         if (Self[M] >= a.start) then
         begin
           r.start := M;
-          H := (M - 1);
+          o.stop := (M - 1);
         end else
-          L := (M + 1);
+          o.start := (M + 1);
       end;
       if (r.start = -1) then
         Exit;
-      L := r.start;
-      H := High(Self);
-      while (L <= H) do
+      o.start := r.start;
+      o.stop := High(Self);
+      while (o.start <= o.stop) do
       begin
-        M := ((L + H) div 2);
+        M := o.Pivot;
         if (Self[M] <= a.stop) then
         begin
           r.stop := M;
-          L := (M + 1);
+          o.start := (M + 1);
         end else
-          H := (M - 1);
+          o.stop := (M - 1);
       end;
     end;
     False:
-    if not ((a.stop > Self[L]) or (a.start < Self[H])) then
+    if not ((a.stop > Self[o.start]) or (a.start < Self[o.stop])) then
     begin
       r.Create(-1);
-      while (L <= H) do
+      while (o.start <= o.stop) do
       begin
-        M := ((L + H) div 2);
+        M := o.Pivot;
         if (Self[M] <= a.stop) then
         begin
           r.start := M;
-          H := (M - 1);
+          o.stop := (M - 1);
         end else
-          L := (M + 1);
+          o.start := (M + 1);
       end;
       if (r.start = -1) then
         Exit;
-      L := r.start;
-      H := High(Self);
-      while (L <= H) do
+      o.start := r.start;
+      o.stop := High(Self);
+      while (o.start <= o.stop) do
       begin
-        M := ((L + H) div 2);
+        M := o.Pivot;
         if (Self[M] >= a.start) then
         begin
           r.stop := M;
-          L := (M + 1);
+          o.start := (M + 1);
         end else
-          H := (M - 1);
+          o.stop := (M - 1);
       end;
     end;
   end;
@@ -2679,22 +2678,21 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.BinaryScanned(const area: TRange; const aAscending: Boolean = True): TIntegerArray;
 var
-  L, H, M, i, S: Integer;
-  a, r: TRange;
+  M, i, S: Integer;
+  a, r, o: TRange;
 begin
   a := area.Normalize;
   SetLength(Result, 0);
-  H := High(Self);
-  S := H;
-  L := 0;
+  o.Create(0, High(Self));
+  S := o.stop;
   r.Create(-1);
-  if (H > -1) then
+  if (o.stop > -1) then
   case aAscending of
     True:
-    if not ((a.stop > Self[H]) or (a.start < Self[L])) then
-    while (L <= H) do
+    if not ((a.stop > Self[o.stop]) or (a.start < Self[o.start])) then
+    while (o.start <= o.stop) do
     begin
-      M := ((L + H) div 2);
+      M := o.Pivot;
       case a.Contains(Self[M]) of
         True:
         begin
@@ -2707,16 +2705,16 @@ begin
         end;
         False:
         if (Self[M] > a.stop) then
-          H := (M - 1)
+          o.stop := (M - 1)
         else
-          L := (M + 1);
+          o.start := (M + 1);
       end;
     end;
     False:
-    if not ((a.stop > Self[L]) or (a.start < Self[H])) then
-    while (L <= H) do
+    if not ((a.stop > Self[o.start]) or (a.start < Self[o.stop])) then
+    while (o.start <= o.stop) do
     begin
-      M := ((L + H) div 2);
+      M := o.Pivot;
       case a.Contains(Self[M]) of
         True:
         begin
@@ -2729,9 +2727,9 @@ begin
         end;
         False:
         if (Self[M] < a.start) then
-          H := (M - 1)
+          o.stop := (M - 1)
         else
-          L := (M + 1);
+          o.start := (M + 1);
       end;
     end;
   end;
@@ -2821,19 +2819,19 @@ end;
 function TIntegerArrayHelper.BinaryGroup(const aAscending: Boolean = True): T2DIntegerArray; overload;
 var
   k: TIntegerArray;
-  i, l, r, m, p: Integer;
+  i, m, p: Integer;
   f: Boolean;
+  r: TRange;
 begin
   SetLength(Result, 0);
   SetLength(k, 0);
   for i := 0 to High(Self) do
   begin
-    l := 0;
-    r := High(k);
+	r.Create(0, High(k));
     f := False;
-    while (l <= r) do
+    while (r.start <= r.stop) do
     begin
-      m := ((l + r) div 2);
+      m := r.Pivot;
       case (k[m] = Self[i]) of
         True:
         begin
@@ -2843,14 +2841,14 @@ begin
         end;
         False:
         if ((k[m] < Self[i]) xor (not aAscending)) then
-          l := (m + 1)
+          r.start := (m + 1)
         else
-          r := (m - 1);
+          r.stop := (m - 1);
       end;
     end;
     if not f then
     begin
-      p := l;
+      p := r.start;
       Insert(Self[i], k, p);
       Insert(nil, Result, p);
     end;

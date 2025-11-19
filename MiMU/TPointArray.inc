@@ -6214,9 +6214,9 @@ begin
         if not (v.start = -1) then
           v.stop := x[j].BinaryLast(x[c][i] + d);
         if not v.Employs(-1) then
-          for k := v.start to v.stop do
-            if Self[s[c][i]].Within(Self[s[j][k]], radius, metric) then
-              MC(s[c][i], s[j][k]);
+        for k := v.start to v.stop do
+          if Self[s[c][i]].Within(Self[s[j][k]], radius, metric) then
+            MC(s[c][i], s[j][k]);
       end;
   end;
   case method of
@@ -6531,10 +6531,10 @@ begin
       for j := 0 to (High(n) - 1) do
         for k := (j + 1) to High(n) do
           if (n[j].distance > n[k].distance) then
-	  begin
+	      begin
             Swap(n[j].index, n[k].index);
-	    Swap(n[j].distance, n[k].distance);
-	  end;
+	        Swap(n[j].distance, n[k].distance);
+	      end;
       for j := 0 to Min(High(n), (check - 1)) do
         if not u[n[j].index] then
         begin
@@ -6596,10 +6596,10 @@ begin
       for j := 0 to (High(n) - 1) do
         for k := (j + 1) to High(n) do
           if (n[j].distance > n[k].distance) then
-	  begin
+	      begin
             Swap(n[j].index, n[k].index);
-	    Swap(n[j].distance, n[k].distance);
-	  end;
+	        Swap(n[j].distance, n[k].distance);
+	      end;
       for j := 0 to Min(High(n), (check - 1)) do
         if not u[n[j].index] then
         begin
@@ -6675,10 +6675,10 @@ begin
       for j := 0 to (High(n) - 1) do
         for c := (j + 1) to High(n) do
           if (n[j].distance > n[c].distance) then
-	  begin
+	      begin
             Swap(n[j].index, n[c].index);
-	    Swap(n[j].distance, n[c].distance);
-	  end;
+	        Swap(n[j].distance, n[c].distance);
+	      end;
       for j := 0 to Min(High(n), (check - 1)) do
       begin
         if u[n[j].index] then
@@ -7094,8 +7094,9 @@ end;
 [==============================================================================}
 function TPointArrayHelper.BSort(const aAscending: Boolean = True): Integer; overload;
 var
-  C, i, L, H, M: Integer;
+  C, i, M: Integer;
   s: TPointArray;
+  R: TRange;
 begin
   Result := Length(Self);
   if (Result < 2) then
@@ -7104,26 +7105,25 @@ begin
   SetLength(Self, 1);
   for i := 1 to (Result - 1) do
   begin
-    H := High(Self);
-    L := 0;
-    while (L <= H) do
+    R.Create(0, High(Self));
+    while (R.start <= R.stop) do
     begin
-      M := ((L + H) div 2);
+      M := R.Pivot;
       if aAscending then
         C := Self[M].Compare(s[i])
       else
         C := s[i].Compare(Self[M]);
       case C of
-        -1: L := (M + 1);
-        1: H := (M - 1);
+        -1: R.start := (M + 1);
+        1: R.stop := (M - 1);
 	    0:
 	    begin
-          L := M;
+          R.start := M;
           Break;
         end;
       end;
     end;
-    Insert(s[i], Self, L);
+    Insert(s[i], Self, R.start);
   end;
 end;
 
@@ -7138,7 +7138,8 @@ end;
 [==============================================================================}
 function TPointArrayHelper.BSorted(const aAscending: Boolean = True): TPointArray; Overload;
 var
-  C, i, L, H, M: Integer;
+  C, i, M: Integer;
+  R: TRange;
 begin
   if (Length(Self) < 2) then
     Exit(Self.Copy);
@@ -7146,26 +7147,25 @@ begin
   Result[0] := Self[0];
   for i := 1 to High(Self) do
   begin
-    L := 0;
-    H := High(Result);
-    while (L <= H) do
+    R.Create(0, High(Result));
+    while (R.start <= R.stop) do
     begin
-      M := ((L + H) div 2);
+      M := R.Pivot;
       if aAscending then
         C := Result[M].Compare(Self[i])
       else
         C := Self[i].Compare(Result[M]);
       case C of
-        -1: L := (M + 1);
-        1: H := (M - 1);
+        -1: R.start := (M + 1);
+        1: R.stop := (M - 1);
 	    0:
         begin
-          L := M;
+          R.start := M;
           Break;
         end;
       end;
     end;
-    Insert(Self[i], Result, L);
+    Insert(Self[i], Result, R.start);
   end;
 end;
 
@@ -7178,16 +7178,16 @@ end;
 [==============================================================================}
 function TPointArrayHelper.BinarySearch(const item: TPoint): Integer; overload;
 var
-  L, H, M, C: Integer;
+  M: Integer;
+  R: TRange;
 begin
-  L := 0;
-  H := High(Self);
-  while (L <= H) do
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
   begin
-    M := ((L + H) div 2);
+    M := R.Pivot;
     case Self[M].Compare(item) of
-	  -1: L := (M + 1);
-      1: H := (M - 1);
+	  -1: R.start := (M + 1);
+      1: R.stop := (M - 1);
       0: Exit(M);
 	end;
   end;
@@ -7203,19 +7203,19 @@ end;
 [==============================================================================}
 function TPointArrayHelper.BinaryPosL(const item: TPoint): Integer; overload;
 var
-  L, H, M: Integer;
+  M: Integer;
+  R: TRange;
 begin
-  L := 0;
-  H := Length(Self);
-  while (L < H) do
+  R.Create(0, Length(Self));
+  while (R.start < R.stop) do
   begin
-    M := ((L + H) div 2);
+    M := R.Pivot;
     if (Self[M].Compare(item) < 0) then
-      L := (M + 1)
+      R.start := (M + 1)
     else
-      H := M;
+      R.stop := M;
   end;
-  Result := L;
+  Result := R.start;
 end;
 
 {==============================================================================]
@@ -7228,19 +7228,19 @@ end;
 [==============================================================================}
 function TPointArrayHelper.BinaryPosR(const item: TPoint): Integer; overload;
 var
-  L, H, M: Integer;
+  M: Integer;
+  R: TRange;
 begin
-  L := 0;
-  H := Length(Self);
-  while (L < H) do
+  R.Create(0, Length(Self));
+  while (R.start < R.stop) do
   begin
-    M := ((L + H) div 2);
+    M := R.Pivot;
     if (Self[M].Compare(item) <= 0) then
-      L := (M + 1)
+      R.start := (M + 1)
     else
-      H := M;
+      R.stop := M;
   end;
-  Result := (L - 1);
+  Result := (R.start - 1);
 end;
 
 {==============================================================================]
@@ -7359,17 +7359,17 @@ end;
 [==============================================================================}
 function TPointArrayHelper.BinaryCount(const item: TPoint): Integer; overload;
 var
-  L, H, M, i: Integer;
+  M, i: Integer;
+  R: TRange;
 begin
   Result := 0;
-  L := 0;
-  H := High(Self);
-  while (L <= H) do
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
   begin
-    M := ((L + H) div 2);
+    M := R.Pivot;
     case Self[M].Compare(item) of
-      -1: L := (M + 1);
-      1: H := (M - 1);
+      -1: R.start := (M + 1);
+      1: R.stop := (M - 1);
       0:
       begin
         i := M;
@@ -7418,39 +7418,38 @@ end;
 [==============================================================================}
 function TPointArrayHelper.BinaryRange(const item: TPoint): TRange; overload;
 var
-  L, H, M, C: Integer;
+  M, C: Integer;
+  R: TRange;
 begin
   Result.Create(-1);
   if (Length(Self) = 0) then
     Exit;
-  L := 0;
-  H := High(Self);
-  while (L <= H) do
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
   begin
-    M := ((L + H) div 2);
+    M := R.Pivot;
     case Self[M].Compare(item) of
       0:
       begin
         Result.start := M;
-        H := (M - 1);
+        R.stop := (M - 1);
       end;
-      -1: L := (M + 1);
-      1: H := (M - 1);
+      -1: R.start := (M + 1);
+      1: R.stop := (M - 1);
     end;
   end;
-  L := 0;
-  H := High(Self);
-  while (L <= H) do
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
   begin
-    M := ((L + H) div 2);
+    M := R.Pivot;
     case Self[M].Compare(item) of
       0:
       begin
         Result.stop := M;
-        L := (M + 1);
+        R.start := (M + 1);
       end;
-      -1: L := (M + 1);
-      1: H := (M - 1);
+      -1: R.start := (M + 1);
+      1: R.stop := (M - 1);
     end;
   end;
 end;
@@ -7480,41 +7479,40 @@ end;
 [==============================================================================}
 function TPointArrayHelper.BinaryScan(const area: TBox): TIntegerArray; overload;
 var
-  L, H, M, i: Integer;
-  r: TRange;
+  M, i: Integer;
+  s, r: TRange;
 begin
   SetLength(Result, 0);
-  L := 0;
-  H := High(Self);
-  if ((H = -1) or (area.Y2 < Self[L].Y) or (area.Y1 > Self[H].Y)) then
+  s.Create(0, High(Self));
+  if ((s.stop = -1) or (area.Y2 < Self[s.start].Y) or (area.Y1 > Self[s.stop].Y)) then
     Exit;
   r.Create(-1);
-  while (L <= H) do
+  while (s.start <= s.stop) do
   begin
-    M := ((L + H) div 2);
+    M := s.Pivot;
     case (Self[M].Y < area.Y1) of
       False:
       begin
         r.start := M;
-        H := (M - 1);
+        s.stop := (M - 1);
       end;
-      True: L := (M + 1);
+      True: s.start := (M + 1);
     end;
   end;
   if (r.start = -1) then
     Exit;
-  L := r.start;
-  H := High(Self);
-  while (L <= H) do
+  s.start := r.start;
+  s.stop := High(Self);
+  while (s.start <= s.stop) do
   begin
-    M := ((L + H) div 2);
+    M := s.Pivot;
     case (Self[M].Y > area.Y2) of
       False:
       begin
         r.stop := M;
-        L := (M + 1);
+        s.start := (M + 1);
       end;
-      True: H := (M - 1);
+      True: s.stop := (M - 1);
     end;
   end;
   if (r.stop = -1) then
@@ -7537,19 +7535,18 @@ end;
 [==============================================================================}
 function TPointArrayHelper.BinaryScanned(const area: TBox): TIntegerArray;
 var
-  L, H, M, i, S: Integer;
-  r: TRange;
+  M, i, S: Integer;
+  o, r: TRange;
 begin
   SetLength(Result, 0);
-  H := High(Self);
-  L := 0;
-  if ((H = -1) or (area.Y2 < Self[L].Y) or (area.Y1 > Self[H].Y)) then
+  o.Create(0, High(Self));
+  if ((o.stop = -1) or (area.Y2 < Self[O.start].Y) or (area.Y1 > Self[o.stop].Y)) then
     Exit;
-  S := H;
+  S := o.stop;
   r.Create(-1);
-  while (L <= H) do
+  while (o.start <= o.stop) do
   begin
-    M := (L + H) div 2;
+    M := o.Pivot;
     case ((Self[M].Y >= area.Y1) and (Self[M].Y <= area.Y2)) of
       True:
       begin
@@ -7562,9 +7559,9 @@ begin
       end;
       False:
       if (Self[M].Y > area.Y2) then
-        H := (M - 1)
+        o.stop := (M - 1)
       else
-        L := (M + 1);
+        o.start := (M + 1);
     end;
   end;
   if not r.Employs(-1) then
@@ -7807,7 +7804,7 @@ begin
   f := -1;
   while (r.start <= r.stop) do
   begin
-    m := r.Center;
+    m := r.Pivot;
     if (Self[m].Y >= yValue) then
     begin
       if (Self[m].Y = yValue) then
@@ -7822,7 +7819,7 @@ begin
   l := -1;
   while (r.start <= r.stop) do
   begin
-    m := r.Center;
+    m := r.Pivot;
     if (Self[m].Y <= yValue) then
     begin
       if (Self[m].Y = yValue) then
@@ -7872,7 +7869,7 @@ begin
     r.start := -1;
     while (s.start <= s.stop) do
     begin
-      m := s.Center;
+      m := s.Pivot;
       if (p[m].X >= xValue) then
       begin
         if (p[m].X = xValue) then
@@ -7890,7 +7887,7 @@ begin
     r.stop := -1;
     while (s.start <= s.stop) do
     begin
-      m := s.Center;
+      m := s.Pivot;
       if (p[m].X <= xValue) then
       begin
         if (p[m].X = xValue) then
@@ -7969,7 +7966,7 @@ begin
   y.Create(-1);
   while (R.start <= R.stop) do
   begin
-    M := R.Central;
+    M := R.Pivot;
     if (Self[M].Y >= area.Y1) then
     begin
       y.start := M;
@@ -7982,7 +7979,7 @@ begin
   R.Create(y.start, h);
   while (R.start <= R.stop) do
   begin
-    M := R.Central;
+    M := R.Pivot;
     if (Self[M].Y <= area.Y2) then
     begin
       y.stop := M;
@@ -8029,7 +8026,7 @@ begin
   Y.Create(-1);
   while (R.start <= R.stop) do
   begin
-    M := R.Central;
+    M := R.Pivot;
     if (Self[M].Y >= area.Y1) then
     begin
       Y.start := M;
@@ -8042,7 +8039,7 @@ begin
   R.Create(Y.start, h);
   while (R.start <= R.stop) do
   begin
-    M := R.Central;
+    M := R.Pivot;
     if (Self[M].Y <= area.Y2) then
     begin
       Y.stop := M;

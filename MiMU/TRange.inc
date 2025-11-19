@@ -2197,6 +2197,19 @@ begin
 end;
 
 {==============================================================================]
+ <TRange.MiddleValue>
+ @action: The value(s) at the center position(s) of given range.
+ @note: None
+[==============================================================================}
+function TRange.MiddleValue: Double;
+begin
+  if (Self.start <= Self.stop) then
+    Result := (Self.start + ((Self.stop - Self.start) / 2))
+  else
+    Result := (Self.stop + ((Self.start - Self.stop) / 2));
+end;
+
+{==============================================================================]
  <TRange.Midpoint>
   @action: Computes the weighted midpoint (center) of the range using given weights.
   @note: Returns a Double. Weighted midpoint formula: ((Start * wStart) + (Stop * wStop)) / (wStart + wStop).

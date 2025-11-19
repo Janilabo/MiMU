@@ -369,7 +369,7 @@ begin
 	r.Create(0, (i - 1));
     while r.Ascending do
     begin
-      m := r.Middle;
+      m := r.Pivot;
       if (Sign(a - Self[m]) = o) then
         r.stop := (m - 1)
       else
@@ -397,7 +397,7 @@ begin
 	  r.Create(0, j);
       while r.Grows do
       begin
-        m := r.Middle;
+        m := r.Pivot;
         if (Sign(Self[m] - a) = o) then
           r.start := (m + 1)
         else
@@ -428,7 +428,7 @@ begin
       r.Create(0, j);
       while r.Grows do
       begin
-        m := r.Middle;
+        m := r.Pivot;
         if (Sign(Result[m] - a) = o) then
           r.start := (m + 1)
         else
@@ -451,7 +451,7 @@ begin
   r.Create(0, Length(Self));
   while r.Grows do
   begin
-    m := r.Middle;
+    m := r.Pivot;
     if ((o * Self[m]) < (o * x)) then
       r.start := (m + 1)
     else
@@ -470,7 +470,7 @@ begin
   r.Create(0, Length(Self));
   while r.Grows do
   begin
-    m := r.Middle;
+    m := r.Pivot;
     if ((o * Self[m]) <= (o * x)) then
       r.start := (m + 1)
     else
@@ -490,7 +490,7 @@ begin
   r.Create(0, Length(Self));
   while r.Grows do
   begin
-    m := r.Middle;
+    m := r.Pivot;
     if ((o * Self[m]) < (o * x)) then
       r.start := (m + 1)
     else
@@ -511,7 +511,7 @@ begin
   r.Create(0, Length(Self));
   while r.Grows do
   begin
-    m := r.Middle;
+    m := r.Pivot;
     if ((o * Self[m]) <= (o * x)) then
       r.start := (m + 1)
     else
@@ -532,7 +532,7 @@ begin
   r.Create(0, High(Self));
   while (r.Ascending and (Result = -1)) do
   begin
-    m := r.Middle;
+    m := r.Pivot;
     if ((o * Self[m]) = (o * x)) then
       Result := m
     else
@@ -600,7 +600,7 @@ begin
   o := aAscending.Select(1, -1);
   while (Result.Ascending and (not f)) do
   begin
-    m := Result.Middle;
+    m := Result.Pivot;
     f := ((o * Self[m]) = (o * x));
     if f then
 	begin
@@ -629,7 +629,7 @@ begin
   r.Create(0, High(Self));
   while r.Ascending do
   begin
-    m := r.Middle;
+    m := r.Pivot;
     if ((o * Self[m]) < (o * x)) then
       r.start := (m + 1)
     else
@@ -652,7 +652,7 @@ begin
   r.Create(0, High(Self));
   while r.Ascending do
   begin
-    m := r.Middle;
+    m := r.Pivot;
     if ((o * Self[m]) < (o * x)) then
       r.start := (m + 1)
     else
@@ -678,7 +678,7 @@ begin
   r.Create(0, High(Self));
   while r.Ascending do
   begin
-    m := r.Middle;
+    m := r.Pivot;
     if ((o * Self[m]) < (o * f.start)) then
       r.start := (m + 1)
     else
@@ -704,7 +704,7 @@ begin
   r.Create(0, High(Self));
   while r.Ascending do
   begin
-    m := r.Middle;
+    m := r.Pivot;
     if ((o * Self[m]) < (o * f.start)) then
       r.start := (m + 1)
     else
@@ -761,7 +761,7 @@ begin
   o := aAscending.Select(1, -1);
   while r.Ascending do
   begin
-    m := r.Middle;
+    m := r.Pivot;
     if ((o * Self[m]) < (o * x)) then
       r.start := (m + 1)
     else
@@ -786,7 +786,7 @@ begin
   o := aAscending.Select(1, -1);
   while r.Ascending do
   begin
-    m := r.Middle;
+    m := r.Pivot;
     if ((o * Self[m]) < (o * x)) then
       r.start := (m + 1)
     else
@@ -859,7 +859,7 @@ begin
   R.Create(0, High(Self));
   while (R.start <= R.stop) do
   begin
-    M := R.Middle;
+    M := R.Pivot;
     case aAscending of
       True:
       if (Self[M] >= x) then
@@ -890,7 +890,7 @@ begin
   R.Create(0, High(Self));
   while (R.start <= R.stop) do
   begin
-    M := R.Middle;
+    M := R.Pivot;
     case aAscending of
       True:
       if (Self[M] > x) then
@@ -920,7 +920,7 @@ begin
   R.Create(0, High(Self));
   while (R.start <= R.stop) do
   begin
-    M := R.Central;
+    M := R.Pivot;
     case aAscending of
       True:
       if (Self[M] <= x) then
@@ -950,7 +950,7 @@ begin
   R.Create(0, High(Self));
   while (R.start <= R.stop) do
   begin
-    M := R.Central;
+    M := R.Pivot;
     case aAscending of
       True:
       if (Self[M] >= x) then
@@ -1020,7 +1020,7 @@ begin
     True:
     while (r.start <= r.stop) do
     begin
-      m := r.Center;
+      m := r.Pivot;
       if (Self[m] < n.start) then
         r.start := (m + 1)
       else
@@ -1029,7 +1029,7 @@ begin
     False:
     while (r.start <= r.stop) do
     begin
-      m := r.Center;
+      m := r.Pivot;
       if (Self[m] > n.stop) then
         r.start := (m + 1)
       else
@@ -1044,7 +1044,7 @@ begin
     True:
     while (r.start <= r.stop) do
     begin
-      m := r.Center;
+      m := r.Pivot;
       if (Self[m] <= n.stop) then
         r.start := (m + 1)
       else
@@ -1053,7 +1053,7 @@ begin
     False:
     while (r.start <= r.stop) do
     begin
-      m := r.Center;
+      m := r.Pivot;
       if (Self[m] >= n.start) then
         r.start := (m + 1)
       else
@@ -1189,7 +1189,7 @@ begin
   s.Create(0, High(Self));
   while (s.start <= s.stop) do
   begin
-    m := s.Center;
+    m := s.Pivot;
     if (Self[m] = val) then
       Exit(m);
     if (IfThen(aAscending, Ord(Self[m] < val), Ord(Self[m] > val)) <> 0) then
@@ -1248,23 +1248,23 @@ end;
 
 {$IFDEF Skeleton_BinaryInsert}
 var
-  l, r, m, i: Integer;
+  m, i: Integer;
+  r: TRange;
 begin
   Result := Length(Self);
   SetLength(Self, (Result + 1));
   if (Result > 0) then
   begin
-    l := 0;
-    r := (Result - 1);
-    while (l <= r) do
+    r.Create(0, (Result - 1));
+    while (r.start <= r.stop) do
     begin
-      m := ((l + r) div 2);
+      m := r.Pivot;
       if ((aAscending and (Self[m] >= x)) or ((not aAscending) and (Self[m] <= x))) then
       begin
         Result := m;
-        r := (m - 1);
+        r.stop := (m - 1);
       end else
-        l := (m + 1);
+        r.start := (m + 1);
     end;
     for i := High(Self) downto (Result + 1) do
       Self[i] := Self[i - 1];
@@ -1276,21 +1276,21 @@ end;
 
 {$IFDEF Skeleton_BinarySearchRange}
 var
-  L, M, R: Integer;
+  M: Integer;
+  R: TRange;
 begin
   Result := -1;
-  L := rLeft;
-  R := rRight;
-  while (L <= R) do
+  R.Create(rLeft, rRight);
+  while (R.start <= R.stop) do
   begin
-    M := ((L + R) div 2);
+    M := R.Pivot;
     if (Self[M] = x) then
       Exit(M)
     else
       if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
-        L := (M + 1)
+        R.start := (M + 1)
       else
-        R := (M - 1);
+        R.stop := (M - 1);
   end;
 end;
 {$ENDIF}
@@ -1380,13 +1380,13 @@ end;
 
 {$IFDEF Skeleton_BinaryRank}
 var
-  l, r, m: Integer;
+  m: Integer;
+  r: TRange;
 begin
-  l := 0;
-  r := High(Self);
-  while (l <= r) do
+  r.Create(0, High(Self));
+  while (r.start <= r.stop) do
   begin
-    m := ((l + r) div 2);
+    m := r.Pivot;
     case (Self[m] = x) of
       True:
       begin
@@ -1396,32 +1396,32 @@ begin
       end;
       False:
       if ((aAscending and (Self[m] < x)) or ((not aAscending) and (Self[m] > x))) then
-        l := (m + 1)
+        r.start := (m + 1)
       else
-        r := (m - 1);
+        r.stop := (m - 1);
     end;
   end;
-  Result := l;
+  Result := r.start;
 end;
 {$ENDIF}
 
 {$IFDEF Skeleton_BinaryIndex}
 var
-  l, r, m: Integer;
+  m: Integer;
+  r: TRange;
 begin
   Result := -1;
-  l := 0;
-  r := High(Self);
-  while (l <= r) do
+  r.Create(0, High(Self));
+  while (r.start <= r.stop) do
   begin
-    m := ((l + r) div 2);
+    m := r.Pivot;
     if (Self[m] = x) then
       Exit(m)
     else
 	  if ((aAscending and (Self[m] < x)) or ((not aAscending) and (Self[m] > x))) then
-        l := (m + 1)
+        r.start := (m + 1)
       else
-        r := (m - 1);
+        r.stop := (m - 1);
   end;
 end;
 {$ENDIF}
@@ -1521,25 +1521,25 @@ end;
 
 {$IFDEF Skeleton_BinarySearchFirst}
 var
-  L, R, M: Integer;
+  M: Integer;
+  R: TRange;
 begin
-  L := 0;
-  R := High(Self);
+  R.Create(0, High(Self));
   Result := -1;
-  while (L <= R) do
+  while (R.start <= R.stop) do
   begin
-    M := ((L + R) div 2);
+    M := R.Pivot;
     case (Self[M] = value) of
       True:
       begin
         Result := M;
-        R := (M - 1);
+        R.stop := (M - 1);
       end;
       False:
       if ((aAscending and (Self[M] < value)) or ((not aAscending) and (Self[M] > value))) then
-        L := (M + 1)
+        R.start := (M + 1)
       else
-        R := (M - 1);
+        R.stop := (M - 1);
     end;
   end;
 end;
@@ -1547,25 +1547,25 @@ end;
 
 {$IFDEF Skeleton_BinarySearchLast}
 var
-  L, R, M: Integer;
+  M: Integer;
+  R: TRange;
 begin
-  L := 0;
-  R := High(Self);
+  R.Create(0, High(Self));
   Result := -1;
-  while (L <= R) do
+  while (R.start <= R.stop) do
   begin
-    M := ((L + R) div 2);
+    M := R.Pivot;
     case (Self[M] = value) of
       True:
       begin
         Result := M;
-        L := (M + 1);
+        R.start := (M + 1);
       end;
       False:
       if ((aAscending and (Self[M] < value)) or ((not aAscending) and (Self[M] > value))) then
-        L := (M + 1)
+        R.start := (M + 1)
       else
-        R := (M - 1);
+        R.stop := (M - 1);
     end;
   end;
 end;
@@ -1590,35 +1590,33 @@ end;
 
 {$IFDEF Skeleton_BinaryLookup}
 var
-  L, R, M: Integer;
+  M: Integer;
+  R: TRange;
 begin
-  R := High(Self);
-  if (R > -1) then
-  begin
-    L := 0;
-    case (Self[L] <= Self[R]) of
-      True:
-      while (L <= R) do
-      begin
-        M := ((L + R) div 2);
-        if (Self[M] = value) then
-          Exit(M);
-        if (value < Self[M]) then
-          R := (M - 1)
-        else
-          L := (M + 1);
-      end;
-      False:
-      while (L <= R) do
-      begin
-        M := ((L + R) div 2);
-        if (Self[M] = value) then
-          Exit(M);
-        if (value > Self[M]) then
-          R := (M - 1)
-        else
-          L := (M + 1);
-      end;
+  R.Create(0, High(Self));
+  if (R.stop > -1) then
+  case (Self[R.start] <= Self[R.stop]) of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      if (Self[M] = value) then
+        Exit(M);
+      if (value < Self[M]) then
+        R.stop := (M - 1)
+      else
+        R.start := (M + 1);
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      if (Self[M] = value) then
+        Exit(M);
+      if (value > Self[M]) then
+        R.stop := (M - 1)
+      else
+        R.start := (M + 1);
     end;
   end;
   Result := -1;
@@ -1635,7 +1633,7 @@ begin
   o := aAscending.Select(1, -1);
   while r.Ascending do
   begin
-    m := r.Middle;
+    m := r.Pivot;
     case ((o * Self[m]) < (o * x)) of
       False:
       begin
@@ -1658,7 +1656,7 @@ begin
   o := aAscending.Select(1, -1);
   while r.Ascending do
   begin
-    m := r.Middle;
+    m := r.Pivot;
     case ((o * Self[m]) > (o * x)) of
       False:
       begin

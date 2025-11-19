@@ -285,7 +285,8 @@ type
     function Item(const x: Integer): Boolean; inline;
     function Pivot: Integer; 
     function Mean: Double; overload; 
-    function Middle: Integer; 
+    function Middle: Integer;
+    function MiddleValue: Double;	
     function Mid: Double; 
     function MidValue: Double; 
     function MidVal: Double; 
