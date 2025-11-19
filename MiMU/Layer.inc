@@ -1,18 +1,18 @@
-procedure TXLayer.Clear;
+procedure TLayerX.Clear;
 begin
   SetLength(Self.X, 0);
   SetLength(Self.Y, 0);
   SetLength(Self.IDs, 0);
 end;
 
-procedure TYLayer.Clear;
+procedure TLayerY.Clear;
 begin
   SetLength(Self.X, 0);
   SetLength(Self.Y, 0);
   SetLength(Self.IDs, 0);
 end;
 
-constructor TXLayer.Create(const xArr: TIntegerArray; const yArr, yIDs: T2DIntegerArray); overload;
+constructor TLayerX.Create(const xArr: TIntegerArray; const yArr, yIDs: T2DIntegerArray); overload;
 var
   i: Integer;
 begin
@@ -25,7 +25,7 @@ begin
     Self.IDs[i] := Copy(yIDs[i], 0, Length(yIDs[i]));
 end;
 
-constructor TXLayer.Create(const arr: TPointArray); overload;
+constructor TLayerX.Create(const arr: TPointArray); overload;
 var
   l, i, j, k, c, p, s, m: Integer;
 begin
@@ -70,7 +70,7 @@ begin
   end;
 end;
 
-constructor TYLayer.Create(const yArr: TIntegerArray; const xArr, xIDs: T2DIntegerArray); overload;
+constructor TLayerY.Create(const yArr: TIntegerArray; const xArr, xIDs: T2DIntegerArray); overload;
 var
   i: Integer;
 begin
@@ -83,7 +83,7 @@ begin
     Self.IDs[i] := Copy(xIDs[i], 0, Length(xIDs[i]));
 end;
 
-constructor TYLayer.Create(const arr: TPointArray); overload;
+constructor TLayerY.Create(const arr: TPointArray); overload;
 var
   l, i, j, k, c, p, s, m: Integer;
 begin
@@ -125,5 +125,118 @@ begin
       Self.X[i][m + 1] := p;
       Self.IDs[i][m + 1] := s;
     end;
+  end;
+end;
+
+class function TLayerX.Construct(const arr: TPointArray): TLayerX; overload;
+var
+  i, j, k: Integer;
+  g, d: specialize TDictionary<Integer, specialize TList<Integer>>;
+  r, p: specialize TList<Integer>;
+begin
+  SetLength(Result.Y, 0);
+  SetLength(Result.X, 0);
+  SetLength(Result.IDs, 0);
+  if arr.Empty then
+    Exit;
+  g := specialize TDictionary<Integer, specialize TList<Integer>>.Create;
+  d := specialize TDictionary<Integer, specialize TList<Integer>>.Create;
+  try
+    for i := 0 to High(arr) do
+    begin
+      if not g.TryGetValue(arr[i].X, r) then
+      begin
+        r := specialize TList<Integer>.Create;
+        p := specialize TList<Integer>.Create;
+        g.Add(arr[i].X, r);
+        d.Add(arr[i].X, p);
+      end else
+        p := d[arr[i].X];
+      r.Add(arr[i].Y);
+      p.Add(i);
+    end;
+    SetLength(Result.X, g.Count);
+    SetLength(Result.Y, g.Count);
+    SetLength(Result.IDs, g.Count);
+    i := 0;
+    for k in g.Keys do
+    begin
+      Result.X[i] := k;
+      r := g[k];
+      p := d[k];
+      r.Sort;
+      SetLength(Result.Y[i], r.Count);
+      SetLength(Result.IDs[i], r.Count);
+      for j := 0 to (r.Count - 1) do
+      begin
+        Result.Y[i][j] := r[j];
+        Result.IDS[i][j] := p[j];
+      end;
+      Inc(i);
+    end;
+  finally
+    for r in g.Values do
+      r.Free;
+    for p in d.Values do
+      p.Free;
+    g.Free;
+    d.Free;
+  end;
+end;
+
+class function TLayerY.Construct(const arr: TPointArray): TLayerY; overload;
+var
+  i, j, k: Integer;
+  g: specialize TDictionary<Integer, specialize TList<Integer>>;
+  d: specialize TDictionary<Integer, specialize TList<Integer>>;
+  c, p: specialize TList<Integer>;
+begin
+  SetLength(Result.X, 0);
+  SetLength(Result.Y, 0);
+  SetLength(Result.IDs, 0);
+  if arr.Empty then
+    Exit;
+  g := specialize TDictionary<Integer, specialize TList<Integer>>.Create;
+  d := specialize TDictionary<Integer, specialize TList<Integer>>.Create;
+  try
+    for i := 0 to High(arr) do
+    begin
+      if not g.TryGetValue(arr[i].Y, c) then
+      begin
+        c := specialize TList<Integer>.Create;
+        p := specialize TList<Integer>.Create;
+        g.Add(arr[i].Y, c);
+        d.Add(arr[i].Y, p);
+      end else
+        p := d[arr[i].Y];
+      c.Add(arr[i].X);
+      p.Add(i);
+    end;
+    SetLength(Result.Y, g.Count);
+    SetLength(Result.X, g.Count);
+    SetLength(Result.IDs, g.Count);
+    i := 0;
+    for k in g.Keys do
+    begin
+      Result.Y[i] := k;
+      c := g[k];
+      p := d[k];
+      c.Sort;
+      SetLength(Result.X[i], c.Count);
+      SetLength(Result.IDs[i], c.Count);
+      for j := 0 to (c.Count - 1) do
+      begin
+        Result.X[i][j] := c[j];
+        Result.IDs[i][j] := p[j];
+      end;
+      Inc(i);
+    end;
+  finally
+    for c in g.Values do
+      c.Free;
+    for p in d.Values do
+      p.Free;
+    g.Free;
+    d.Free;
   end;
 end;

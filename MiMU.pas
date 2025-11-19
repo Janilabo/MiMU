@@ -142,7 +142,7 @@ type
     function GetEnumerator: TRangeEnumerator;
     constructor Create(const rStart, rStop: Integer); overload;
     constructor Create(const value: Integer); overload;
-    class function Construct(const rStart, rStop: Integer): TRange; overload;  static;
+    class function Construct(const rStart, rStop: Integer): TRange; overload; static;
     function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; 
     function Init(const rStart, rStop: Integer): TRange; overload; 
     function Init(const r: TRange): TRange; overload; 
@@ -280,9 +280,9 @@ type
     function Slope: Integer;	
     function Magnitude: Integer; 
     function Deficit: Integer; 
-    function Digit(const x: Integer): Boolean;  inline;
-    function Value(const x: Integer): Boolean;  inline;
-    function Item(const x: Integer): Boolean;  inline;
+    function Digit(const x: Integer): Boolean; inline;
+    function Value(const x: Integer): Boolean; inline;
+    function Item(const x: Integer): Boolean; inline;
     function Pivot: Integer; 
     function Mean: Double; overload; 
     function Middle: Integer; 
@@ -292,7 +292,7 @@ type
     function Midpoint(const wStart: Double = 1; const wStop: Double = 1): Double; overload;
     function Average: Double; 
     function Center: Integer; 
-    function Central: Integer;  inline;
+    function Central: Integer; inline;
     function Half: Integer; overload; 
     function Halfway: Integer; overload; 
     function Halved: Integer; overload; 
@@ -315,8 +315,8 @@ type
     function Limit(const val: Integer): Integer; 
     function MinLimit(const val: Integer): Integer; 
     function MaxLimit(const val: Integer): Integer; 
-    function Lacks(const x: Integer): Boolean;  inline;
-    function Outside(const x: Integer): Boolean;  inline;
+    function Lacks(const x: Integer): Boolean; inline;
+    function Outside(const x: Integer): Boolean; inline;
     function Sample(const sSize: Integer): TIntegerArray; overload; 
     function Centered(const rCenter: Integer): TRange; overload; 
     function Shift(const N: Integer = 1): TRange; overload; 
@@ -358,7 +358,7 @@ type
     constructor Create(const valueX, valueY: Integer); overload;
     constructor Create(const target: TPoint); overload;
     constructor Create(const value: Integer); overload;
-    class function Construct(const XS, YS, XE, YE: Integer): TBox; overload;  static;
+    class function Construct(const XS, YS, XE, YE: Integer): TBox; overload; static;
     function Build(const minX, minY, maxX, maxY: Integer): Integer; overload; 
     function Build(const top, bottom: TPoint): Integer; overload; 
     function Build(const valueX, valueY: Integer): Integer; overload; 
@@ -388,9 +388,9 @@ type
     function Rectangular: Boolean; 
     function Equilateral: Boolean; 
     function Square: Boolean; 
-    function Size(var width, height: Integer): Integer; overload;  inline;
+    function Size(var width, height: Integer): Integer; overload; inline;
     function Size: TPoint; overload; 
-    function Area: Integer;  inline;
+    function Area: Integer; inline;
     function Capacity: Integer; 
     function Footprint: Double; 
     function Perimeter: Integer; 
@@ -419,15 +419,15 @@ type
     function ResizeTopRight(const change: Integer): TBox; 
     function ResizeBottomRight(const change: Integer): TBox; 
     function ResizeBottomLeft(const change: Integer): TBox; 
-    function Equal(const b: TBox): Boolean;  inline;
+    function Equal(const b: TBox): Boolean; inline;
     function Contains(const pt: TPoint): Boolean; overload; 
     function Contains(const b: TBox): Boolean; overload; 
     function Center: TPoint; 
     function Envelope(const b: TBox): TBox; 
-    function Overlap(const b: TBox): Boolean;  inline;
+    function Overlap(const b: TBox): Boolean; inline;
     function Intersect(const b: TBox): TBox; overload; 
     function Intersect(const b: TBox; var iArea: TBox): Boolean; overload; 
-    function Valid: Boolean;  inline;
+    function Valid: Boolean; inline;
     function Invalid: Boolean; 
     function Similar(const b: TBox; const maxWDiff, maxHDiff: Integer): Boolean; overload; 
     function Similar(const b: TBox; const diff: Integer): Boolean; overload; 
@@ -516,8 +516,8 @@ type
     A, B: TPoint;
     constructor Create(const sA, sB: TPoint); overload;
     constructor Create(const aX, aY, bX, bY: Integer); overload;
-    class function Construct(const sA, sB: TPoint): TSegment; overload;  static;
-    class function Construct(const aX, aY, bX, bY: Integer): TSegment; overload;  static;
+    class function Construct(const sA, sB: TPoint): TSegment; overload; static;
+    class function Construct(const aX, aY, bX, bY: Integer): TSegment; overload; static;
     function Bounds: TBox; 
     function Boundaries: TBox; 
     function Envelope: TBox; 
@@ -531,8 +531,8 @@ type
     Radius: Double;
     constructor Create(const cCenter: TPoint; const cRadius: Double); overload;
     constructor Create(const centerX, centerY: Integer; const cRadius: Double); overload;
-    class function Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload;  static;
-    class function Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload;  static;
+    class function Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload; static;
+    class function Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload; static;
     function Contains(const pt: TPoint): Boolean; 
     function Item(const pt: TPoint): Boolean; 
     function Pixel(const pt: TPoint): Boolean; 
@@ -552,19 +552,21 @@ type
   end;
   TTriangleArray = array of TTriangle;
   T2DTriangleArray = array of TTriangleArray;
-  TXLayer = record
+  TLayerX = record
     X: TIntegerArray;
     Y, IDs: T2DIntegerArray;
-	procedure Clear;
+    procedure Clear;
     constructor Create(const xArr: TIntegerArray; const yArr, yIDs: T2DIntegerArray); overload;
     constructor Create(const arr: TPointArray); overload;
+    class function Construct(const arr: TPointArray): TLayerX; overload; static;
   end;
-  TYLayer = record
+  TLayerY = record
     Y: TIntegerArray;
     X, IDs: T2DIntegerArray;
     procedure Clear;
     constructor Create(const yArr: TIntegerArray; const xArr, xIDs: T2DIntegerArray); overload;
     constructor Create(const arr: TPointArray); overload;
+    class function Construct(const arr: TPointArray): TLayerY; overload; static;
   end;
 
 function MiMU_Version: Double; 
