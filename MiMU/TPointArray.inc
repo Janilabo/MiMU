@@ -7195,6 +7195,34 @@ begin
 end;
 
 {==============================================================================]
+  <TPointArray.BinarySearch>
+  @action: Performs a binary search over the point array to locate any point contained within the specified bounding box (TBox). If a point lying inside the area is found, its index is returned; otherwise, the function returns –1.
+  @note: The array must be pre-sorted by Y coordinate (and implicitly by X for tie-breaking) in the same ordering implemented by TPoint_Compare. The initial boundary check short-circuits the search if the box vertically lies outside the array’s extents. The search returns the first matching point encountered during the binary-search traversal, not a guaranteed minimal or maximal spatial index. Execution is O(log n).
+[==============================================================================}
+function TPointArrayHelper.BinarySearch(const area: TBox): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+  t: TPoint;
+begin
+  R.Create(0, High(Self));
+  if ((R.stop = -1) or (area.Y2 < Self[R.start].Y) or (area.Y1 > Self[R.stop].Y)) then
+    Exit(-1);
+  t := Point(area.X1, area.Y1);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if area.Contains(Self[M]) then
+      Exit(M);
+    if (Self[M].Compare(t) = -1) then
+	  R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
   <TPointArray.BinaryPosL>
   @action: Finds the leftmost index at which a given point could be inserted
            in sorted order (first element >= item).

@@ -2026,7 +2026,39 @@ function TIntegerArrayHelper.BinaryPosR(const x: Integer; const aAscending: Bool
   @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinarySearch(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinarySearch}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearch}
+function TIntegerArrayHelper.BinarySearch(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearch}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearch}
+
+{==============================================================================]
+  <TIntegerArray.BinarySearch>
+  @action: Searches the integer array for any element whose value falls within the specified range.
+           The search is performed using a binary-search strategy based on the assumption that the array is sorted either ascending or descending.
+           If an element within the range is found, its index is returned; otherwise, the function returns –1.
+
+  @note: The routine returns the index of the first matching element encountered during the binary-search traversal,
+         not necessarily the lowest or highest index satisfying the range.
+[==============================================================================}
+function TIntegerArrayHelper.BinarySearch(const x: TRange; const aAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  r, s: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  r := x.Normalize;
+  s.Create(0, High(Self));
+  if TRange.Construct(Self[0], Self[s.stop]).Contains(r) then
+  while (s.start <= s.stop) do
+  begin
+    M := s.Pivot;
+    if InRange(Self[M], r.start, r.stop) then
+      Exit(M);
+    if ((aAscending and (r.stop < Self[M])) or ((not aAscending) and (r.start <= Self[M]))) then
+      s.stop := (M - 1)
+    else
+      s.start := (M + 1);
+  end;
+  Result := -1;
+end;
 
 {==============================================================================]
   <TIntegerArray.BinarySeek>
@@ -2047,7 +2079,21 @@ function TIntegerArrayHelper.BinaryContains(const x: Integer; const aAscending: 
   @action: Binary Count function for TIntegerArrays.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryCount(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryCount}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryCount}
+function TIntegerArrayHelper.BinaryCount(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryCount}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryCount}
+
+function TIntegerArrayHelper.BinaryCount(const x: TRange; const aAscending: Boolean = True): Integer; overload;
+var
+  r: TRange;
+begin
+  if Self.Empty then
+    Exit(0);
+  r := x.Normalize;
+  Result := Self.BinaryLeftmost(r, aAscending);
+  if (Result > -1) then
+    Result := ((Self.BinaryRightmost(r, aAscending) - Result) + 1)
+  else
+    Result := 0;
+end;
 
 {==============================================================================]
   <TIntegerArray.BinaryLocate>
@@ -2175,6 +2221,40 @@ function TIntegerArrayHelper.BinaryUpperBound(const x: Integer; const aAscending
 function TIntegerArrayHelper.BinaryRightmost(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryRightmost}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRightmost}
 
 {==============================================================================]
+  <TIntegerArray.BinarySearch>
+  @action: Searches the integer array for the last (highest-index) element whose value lies within the specified range.
+           The operation uses a binary-search strategy based on the assumption that the array is sorted either ascending or descending.
+           If a matching element is found, the index of the latest such occurrence is returned; otherwise the function returns –1.
+  @note: After detecting any in-range element, the routine performs a forward scan to reach the final contiguous match.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryRightmost(const x: TRange; const aAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  r, s: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  r := x.Normalize;
+  s.Create(0, High(Self));
+  if TRange.Construct(Self[0], Self[s.stop]).Contains(r) then
+  while (s.start <= s.stop) do
+  begin
+    M := s.Pivot;
+    if InRange(Self[M], r.start, r.stop) then
+    begin
+      while ((M < s.stop) and InRange(Self[M + 1], r.start, r.stop)) do
+        Inc(M);
+      Exit(M);
+    end;
+    if ((aAscending and (r.stop < Self[M])) or ((not aAscending) and (r.stop > Self[M]))) then
+      s.stop := (M - 1)
+    else
+      s.start := (M + 1);
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
   <TIntegerArray.BinaryLeftmost>
   @action: Finds the first index where the array value is greater than or equal to x
            (ascending) or less than or equal to x (descending).
@@ -2184,6 +2264,40 @@ function TIntegerArrayHelper.BinaryRightmost(const x: Integer; const aAscending:
     - Equivalent to BinaryLowerBound but returns -1 when not found instead of Length(Self).
 [==============================================================================}
 function TIntegerArrayHelper.BinaryLeftmost(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLeftmost}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLeftmost}
+
+{==============================================================================]
+  <TIntegerArray.BinaryLeftmost>
+  @action: Searches the integer array for the first (lowest-index) element whose value lies within the specified range.
+           The search uses a binary-search strategy under the assumption that the array is sorted either ascending or descending.
+           If a matching element is found, the index of the earliest such occurrence is returned; otherwise the function returns –1.
+  @note: After locating any in-range element, the routine performs a backward scan to reach the earliest contiguous match.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryLeftmost(const x: TRange; const aAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  r, s: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  r := x.Normalize;
+  s.Create(0, High(Self));
+  if TRange.Construct(Self[0], Self[s.stop]).Contains(r) then
+  while (s.start <= s.stop) do
+  begin
+    M := s.Pivot;
+    if InRange(Self[M], r.start, r.stop) then
+    begin
+      while ((M > 0) and InRange(Self[M - 1], r.start, r.stop)) do
+        Dec(M);
+      Exit(M);
+    end;
+    if ((aAscending and (r.stop < Self[M])) or ((not aAscending) and (r.stop > Self[M]))) then
+      s.stop := (M - 1)
+    else
+      s.start := (M + 1);
+  end;
+  Result := -1;
+end;
 
 {==============================================================================]
   <TIntegerArray.BinaryRange>
@@ -3258,6 +3372,110 @@ begin
     if (((Self[i] > v[h]) or (Self[i] < v[0])) or (not v.BinaryContains(Self[i]))) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <TIntegerArray.BinaryAmount>
+  @action: Returns count of x
+  @note: Alternative for BinaryCount
+[==============================================================================}
+function TIntegerArrayHelper.BinaryAmount(const x: Integer; const aAscending: Boolean = True): Integer; overload;
+var
+  s: TRange;
+  M, f, l: Integer;
+begin
+  Result := 0;
+  if Self.Empty then
+    Exit;
+  s.Create(0, High(Self));
+  f := -1;
+  while (s.start <= s.stop) do
+  begin
+    M := s.Pivot;
+    case (Self[M] = x) of
+      True:
+      begin
+        f := M;
+        s.stop := (M - 1);
+      end;
+      False:
+      if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
+        s.start := (M + 1)
+      else
+        s.stop := (M - 1);
+    end;
+  end;
+  if (f = -1) then
+    Exit(0);
+  s.Create(f, High(Self));
+  l := -1;
+  while (s.start <= s.stop) do
+  begin
+    M := s.Pivot;
+    case (Self[M] = x) of
+      True:
+      begin
+        l := M;
+        s.start := (M + 1);
+      end;
+      False:
+      if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
+        s.start := (M + 1)
+      else
+        s.stop := (M - 1);
+    end;
+  end;
+  Result := ((l - f) + 1);
+end;
+
+function TIntegerArrayHelper.BinaryAmount(const x: TRange; const aAscending: Boolean = True): Integer; overload;
+var
+  r, s: TRange;
+  M, f, l: Integer;
+begin
+  Result := 0;
+  if Self.Empty then
+    Exit;
+  r := x.Normalize;
+  s.Create(0, High(Self));
+  f := -1;
+  while (s.start <= s.stop) do
+  begin
+    M := s.Pivot;
+    case InRange(Self[M], r.start, r.stop) of
+      True:
+      begin
+        f := M;
+        s.stop := (M - 1);
+      end;
+      False:
+      if ((aAscending and (Self[M] < r.start)) or ((not aAscending) and (Self[M] > r.stop))) then
+        s.start := (M + 1)
+      else
+        s.stop := (M - 1);
+    end;
+  end;
+  if (f = -1) then
+    Exit(0);
+  s.Create(f, High(Self));
+  l := -1;
+  while (s.start <= s.stop) do
+  begin
+    M := s.Pivot;
+    case InRange(Self[M], r.start, r.stop) of
+      True:
+      begin
+        l := M;
+        s.start := (M + 1);
+      end;
+      False:
+      if ((aAscending and (Self[M] < r.start)) or ((not aAscending) and (Self[M] > r.stop))) then
+        s.start := (M + 1)
+      else
+        s.stop := (M - 1);
+    end;
+  end;
+  Result := ((l - f) + 1);
 end;
 
 {$UNDEF Integer}
