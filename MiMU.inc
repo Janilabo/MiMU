@@ -47,6 +47,5 @@
 {$DEFINE Boolean}{$I MiMU\Generic.inc}{$UNDEF Boolean}
 {$DEFINE TBox}{$I MiMU\Generic.inc}{$UNDEF TBox}
 {$DEFINE TRange}{$I MiMU\Generic.inc}{$UNDEF TRange}
-{$I MiMU\Layer.inc}
 
 {$INCLUDE MiMU\config\Templates\D.inc}
