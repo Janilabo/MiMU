@@ -1167,12 +1167,15 @@ type
       function BinaryMerge(const items: TPointArray): TPointArray; overload;
       function BinaryReplace(const oItem, nItem: TPoint): Boolean; overload;
       function BinaryReplaceAll(const oItem, nItem: TPoint): Integer; overload;
+      function BinaryXs(const unique: Boolean = True): TIntegerArray; overload;
       function BinaryYs(const unique: Boolean = True): TIntegerArray; overload;
       function BinaryYPoints(const yValue: Integer): TPointArray; overload;
       function BinaryXPoints(const xValue: Integer): TPointArray; overload;
       function BinaryGrouped: T2DPointArray; overload;
       function BinaryExtract(const area: TBox): TPointArray; overload;
-      function BinaryFilter(const area: TBox): TPointArray; overload;	  
+      function BinaryFilter(const area: TBox): TPointArray; overload;
+      function BinaryX: TIntegerArray; overload;
+      function BinaryY: TIntegerArray; overload;	  
     {$ENDIF}
     {$IFDEF TBox}
       function X1s: TIntegerArray; overload;
