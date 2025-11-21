@@ -1703,3 +1703,43 @@ begin
   end;
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryIndexOf}
+  function BS(const L, R: Integer): Integer;
+  var
+    M: Integer;
+  begin
+    if (L > R) then
+      Exit(-1);
+    M := (L + ((R - L) div 2));
+    if (Self[M] = value) then
+      Exit(M);
+    if ((oAscending and (value < Self[M])) or ((not oAscending) and (value > Self[M]))) then
+      Result := BS(L, (M - 1))
+    else
+      Result := BS((M + 1), R);
+  end;
+begin
+  Result := BS(0, High(Self));
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryExists}
+  function BS(const L, R: Integer): Boolean;
+  var
+    M: Integer;
+  begin
+    if (L > R) then
+      Exit(False);
+    M := (L + ((R - L) div 2));
+    if (Self[M] = value) then
+      Exit(True);
+    if ((oAscending and (value < Self[M])) or ((not oAscending) and (value > Self[M]))) then
+      Result := BS(L, (M - 1))
+    else
+      Result := BS((M + 1), R);
+  end;
+begin
+  Result := BS(0, High(Self));
+end;
+{$ENDIF}

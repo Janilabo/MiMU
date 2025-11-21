@@ -667,4 +667,8 @@ function TDoubleArrayHelper.BinaryValues(const value: Double; const aAscending: 
 [==============================================================================}
 function TDoubleArrayHelper.BinaryValues(const values: TRange; const aAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinaryValues2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryValues2}
 
+function TDoubleArrayHelper.BinaryIndexOf(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryIndexOf}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryIndexOf}
+
+function TDoubleArrayHelper.BinaryExists(const value: Double; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryExists}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryExists}
+
 {$UNDEF Double}

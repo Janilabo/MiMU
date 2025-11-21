@@ -752,6 +752,8 @@ type
       function IsMonotonic: Boolean; overload;
       function Monotonicity: Boolean; overload;
       function Monotony: Boolean; overload;
+      function Fuse(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
+      function Combinate(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
 	  function BSort(const aAscending: Boolean = True): Integer;
       function BinarySort(const aAscending: Boolean = True): Integer;
       function BinarySorted(const aAscending: Boolean = True): TIntegerArray;
@@ -836,6 +838,8 @@ type
       function CountingSort(const aAscending: Boolean = True): Integer;
       function SegmentedCountingSort(const aAscending: Boolean = True; const bucketSize: Integer = 1024): Integer;
       function BinaryCountingSort(const aAscending: Boolean = True; const maxRange: Integer = 2000): Integer;
+      function BinaryIndexOf(const value: Integer; const oAscending: Boolean = True): Integer; overload;
+      function BinaryExists(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
     {$ENDIF}
     {$IFDEF Double}
       function Reinit: Integer; overload;
@@ -904,6 +908,8 @@ type
       function BinaryLast(const x: Double; const aAscending: Boolean = True): Integer; overload;
       function BinaryValues(const value: Double; const aAscending: Boolean = True): TDoubleArray; overload;
       function BinaryValues(const values: TRange; const aAscending: Boolean = True): TDoubleArray; overload;
+      function BinaryIndexOf(const value: Double; const oAscending: Boolean = True): Integer; overload;
+      function BinaryExists(const value: Double; const oAscending: Boolean = True): Boolean; overload;
     {$ENDIF}
     {$IFDEF string}
       function Tally: Int64;
@@ -1147,6 +1153,8 @@ type
       function BSorted(const aAscending: Boolean = True): TPointArray; overload;
       function BinarySearch(const item: TPoint): Integer; overload;
       function BinarySearch(const area: TBox): Integer; overload;
+      function BinaryIndexOf(const item: TPoint): Integer; overload;
+      function BinaryExists(const item: TPoint): Boolean; overload;
       function BinaryPosL(const item: TPoint): Integer; overload;
       function BinaryPosR(const item: TPoint): Integer; overload;
       function BinaryRank(const item: TPoint): Integer; overload;

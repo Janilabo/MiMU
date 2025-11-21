@@ -607,6 +607,26 @@ begin
 end;
 
 {==============================================================================]
+  <TRange.Sequence>
+  @action: Returns digits from TRange.
+  @note: None.
+[==============================================================================}
+function TRange.Sequence: TIntegerArray;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  case Self.Descending of
+    False:
+    for i := 0 to High(Result) do
+      Result[i] := (Self.start + i);
+    True:
+    for i := 0 to High(Result) do
+      Result[i] := (Self.start - i);
+  end;
+end;
+
+{==============================================================================]
   <TRange.IDs>
   @action: Returns TRange indexes.
   @note: None.

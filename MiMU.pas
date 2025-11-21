@@ -201,7 +201,8 @@ type
     function Enumerated: TIntegerArray; 
     function Elements: TIntegerArray; 
     function Numbers: TIntegerArray; 
-    function Items: TIntegerArray; 
+    function Items: TIntegerArray;
+    function Sequence: TIntegerArray;
     function IDs: TIntegerArray; overload; 
     function IDs(const dValue: Integer): Integer; overload; 
     function IDs(const dVals: TIntegerArray): TIntegerArray; overload; 
