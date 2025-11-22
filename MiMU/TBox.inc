@@ -1,5 +1,86 @@
 {$DEFINE TBox}{$I config\Defines.inc}
 
+operator+(const a, b: TBox): TBox;
+begin
+  Result.X1 := (a.X1 + b.X1);
+  Result.Y1 := (a.Y1 + b.Y1);
+  Result.X2 := (a.X2 + b.X2);
+  Result.Y2 := (a.Y2 + b.Y2);
+end;
+
+operator-(const a, b: TBox): TBox;
+begin
+  Result.X1 := (a.X1 - b.X1);
+  Result.Y1 := (a.Y1 - b.Y1);
+  Result.X2 := (a.X2 - b.X2);
+  Result.Y2 := (a.Y2 - b.Y2);
+end;
+
+operator=(const a, b: TBox): Boolean;
+begin
+  Result := ((a.X1 = b.X1) and (a.Y1 = b.Y1) and (a.X2 = b.X2) and (a.Y2 = b.Y2));
+end;
+
+operator<>(const a, b: TBox): Boolean;
+begin
+  Result := not ((a.X1 = b.X1) and (a.Y1 = b.Y1) and (a.X2 = b.X2) and (a.Y2 = b.Y2));
+end;
+
+constructor TBoxEnumerator.Init(const AX1, AY1, AX2, AY2: Integer);
+begin
+  XStart := AX1;
+  XStop := AX2;
+  YStart := AY1;
+  YStop := AY2;
+  FX := (XStart - 1);
+  FY := YStart;
+  FFirst := True;
+end;
+
+function TBoxEnumerator.MoveNext: Boolean;
+begin
+  if FFirst then
+  begin
+    FFirst := False;
+    FX := XStart;
+    Result := True;
+    Exit;
+  end;
+  Inc(FX);
+  if (FX > XStop) then
+  begin
+    FX := XStart;
+    Inc(FY);
+  end;
+  Result := (FY <= YStop);
+end;
+
+function TBoxEnumerator.GetCurrent: TPoint;
+begin
+  Result := Point(FX, FY);
+end;
+
+function TBox.GetEnumerator: TBoxEnumerator;
+begin
+  Result.Init(X1, Y1, X2, Y2);
+end;
+
+function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
+begin
+  Result.X1 := bX1;
+  Result.Y1 := bY1;
+  Result.X2 := bX2;
+  Result.Y2 := bY2;
+end;
+
+function Box(const val: Integer = 0): TBox; overload; inline;
+begin
+  Result.X1 := val;
+  Result.Y1 := val;
+  Result.X2 := val;
+  Result.Y2 := val;
+end;
+
 {==============================================================================]
   <TBox.Create>
   @action: Creates TBox using minX, minY, maxX, maxY 

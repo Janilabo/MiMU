@@ -442,7 +442,6 @@ end;
 function HArr.Classes(const weight: TIntegerArray): T2DArr; overload; var w: Integer; {$DEFINE Skeleton_Classes}{$I config\Skeletons.inc}{$UNDEF Skeleton_Classes}
 function HArr.Classes(const weight: TDoubleArray): T2DArr; overload; var w: Double; {$DEFINE Skeleton_Classes}{$I config\Skeletons.inc}{$UNDEF Skeleton_Classes}
 
-
 {==============================================================================]
   <TArray.Classify: T2DArray>
   @action: Groups consecutive identical array items into sub-arrays (classes).
@@ -5972,6 +5971,20 @@ begin
 end;
 
 {==============================================================================]
+ <T1D.Create(item: VarType; aSize: Integer)>
+ @action: Creates array with item where size is length of the array.
+ @note: item is placed on every index in result.
+[==============================================================================}
+class function T1D.Create(const item: TVar; const aSize: Integer = 1): TArr; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Max(0, aSize));
+  for i := 0 to High(Result) do
+    Result[i] := item;
+end;
+
+{==============================================================================]
  <arr.Blank(parts: Integer): T2DArray>
  @action: Returns true if array is blank (no inventory, only empty indexes of []).
  @note: Blank array could be for example [[], [], []]. Returns false if array contains any items.
@@ -6591,20 +6604,6 @@ begin
     if (Length(Self[i]) > 0) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
-end;
-
-{==============================================================================]
- <T1D.Create(item: VarType; aSize: Integer)>
- @action: Creates array with item where size is length of the array.
- @note: item is placed on every index in result.
-[==============================================================================}
-class function T1D.Create(const item: TVar; const aSize: Integer = 1): TArr; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, Max(0, aSize));
-  for i := 0 to High(Result) do
-    Result[i] := item;
 end;
 
 {==============================================================================]

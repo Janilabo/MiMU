@@ -1,3 +1,13 @@
+operator=(const a, b: TCircle): Boolean;
+begin
+  Result := ((a.Center = b.Center) and (a.Radius = b.Radius));
+end;
+
+operator<>(const a, b: TCircle): Boolean;
+begin
+  Result := not (a = b);
+end;
+
 {==============================================================================]
   <TCircle.Create>
   @action: Create a TCircle with center point and radius

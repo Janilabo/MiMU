@@ -1,5 +1,61 @@
 {$DEFINE TRange}{$I config\Defines.inc}
 
+operator+(const a, b: TRange): TRange;
+begin
+  Result.start := (a.start + b.start);
+  Result.stop := (a.stop + b.stop);
+end;
+
+operator-(const a, b: TRange): TRange;
+begin
+  Result.start := (a.start - b.start);
+  Result.stop := (a.stop - b.stop);
+end;
+
+operator=(const a, b: TRange): Boolean;
+begin
+  Result := ((a.start = b.start) and (a.stop = b.stop));
+end;
+
+operator<>(const a, b: TRange): Boolean;
+begin
+  Result := not ((a.start = b.start) and (a.stop = b.stop));
+end;
+
+constructor TRangeEnumerator.Init(const AStart, AStop: Integer);
+begin
+  FStop := AStop;
+  if (AStart <= AStop) then
+    FStep := 1
+  else
+    FStep := -1;
+  FCurrent := (AStart - FStep);
+  FFirst := True;
+end;
+
+function TRangeEnumerator.MoveNext: Boolean;
+begin
+  Inc(FCurrent, FStep);
+  Result := ((FStep > 0) and (FCurrent <= FStop) or (FStep < 0) and (FCurrent >= FStop));
+end;
+
+function TRange.GetEnumerator: TRangeEnumerator;
+begin
+  Result.Init(start, stop);
+end;
+
+function Range(const rStart, rStop: Integer): TRange; overload; inline;
+begin
+  Result.start := rStart;
+  Result.stop := rStop;
+end;
+
+function Range(const val: Integer = 0): TRange; overload; inline;
+begin
+  Result.start := val;
+  Result.stop := val;
+end;
+
 {==============================================================================]
   <TRange.Create>
   @action: Create a TRange with start and stop

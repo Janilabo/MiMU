@@ -522,4 +522,11 @@ begin
   Result := Length(Self);
 end;
 
+class function TBA.Init(var arr: TBooleanArray): Integer; overload; 
+begin
+  Result := Length(arr);
+  if (Result > 0) then
+    FillChar(arr[0], Result, 0);
+end;
+
 {$UNDEF Boolean}

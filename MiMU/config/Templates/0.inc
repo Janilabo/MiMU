@@ -4,7 +4,7 @@
   @note: None.
 [==============================================================================}
 function XFIELD(const arr: XARRAY): XRETURN; overload;
-{$IFNDEF IMPLEMENT}
+{$IFDEF IMPLEMENT}
 var
   i: Integer;
 begin

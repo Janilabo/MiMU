@@ -8353,4 +8353,72 @@ begin
   SetLength(Result, l);
 end;
 
+class function TPA.Init(var arr: TPointArray): Integer; overload; 
+begin
+  Result := Length(arr);
+  if (Result > 0) then
+    FillChar(arr[0], (Result * SizeOf(TPoint)), 0);
+end;
+
+class function TPA.Unique(var arr: TPointArray): Integer; overload; 
+var
+  i, r, l, w, h: Integer;
+  m: T2DBooleanArray;
+  b: TBox;
+begin
+  l := Length(arr);
+  if (l > 1) then
+  begin
+    r := 0;
+    b := arr.Bounds(w, h);
+    m := T2D.Create(False, w, h);
+    for i := 0 to (l - 1) do
+      if m[arr[i].X - b.X1][arr[i].Y - b.Y1].Enable then
+        arr[r.Increase] := arr[i];
+    SetLength(arr, r);
+    SetLength(m, 0);
+  end;
+  Result := (l - Length(arr));
+end;
+
+class function TPA.Create(const xRange, yRange: TRange): TPointArray; overload; 
+var
+  x, y, i: Integer;
+begin
+  SetLength(Result, (xRange.Size * yRange.Size));
+  i := 0;
+  for y in yRange do
+    for x in xRange do
+      Result[i.Increase] := Point(x, y);
+end;
+
+class function TPA.Create(const xRange, yRange: TRange; const offset: TPoint): TPointArray; overload; 
+var
+  x, y, i: Integer;
+begin
+  SetLength(Result, (xRange.Size * yRange.Size));
+  i := 0;
+  for y in yRange do
+    for x in xRange do
+      Result[i.Increase] := Point((x + offset.X), (y + offset.Y));
+end;
+
+class function TPA.Create(const xValues, yValues: TIntegerArray): TPointArray; overload; 
+var
+  i: Integer;
+begin
+  SetLength(Result, Min(Length(xValues), Length(yValues)));
+  for i := 0 to High(Result) do
+    Result[i] := Point(xValues[i], yValues[i]);	
+end;
+
+class function TPA.Create(const xValues, yValues: TIntegerArray; const offset: TPoint): TPointArray; overload; 
+var
+  i: Integer;
+begin
+  SetLength(Result, Min(Length(xValues), Length(yValues)));
+  for i := 0 to High(Result) do
+    Result[i] := Point((xValues[i] + offset.X), (yValues[i] + offset.Y));	
+end;
+
 {$UNDEF TPoint}

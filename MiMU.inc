@@ -17,11 +17,14 @@
   {$I MiMU\TPointArray.inc}
 {$UNDEF Sortable}
 {$I MiMU\TBooleanArray.inc}
+{$I MiMU\T2DIntegerArray.inc}
 {$I MiMU\T2DPointArray.inc}
 {$I MiMU\TBoxArray.inc}
 {$I MiMU\TRangeArray.inc}
 {$I MiMU\TCircle.inc}
+{$I MiMU\TTriangle.inc}
 {$I MiMU\TSegment.inc}
+{$I MiMU\TConnection.inc}
 {$DEFINE Sortable}
   {$DEFINE Integer}
     {$I MiMU\Generic.inc}
