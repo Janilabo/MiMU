@@ -1,5 +1,11 @@
 {$DEFINE TBox}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 operator+(const a, b: TBox): TBox;
 begin
   Result.X1 := (a.X1 + b.X1);
@@ -2464,5 +2470,7 @@ class function _TBox.Create(const value: Integer = 0): TBox; overload;
 begin
   Result := _TBox.Create(value, value, value, value);
 end;
+
+{$ENDIF}
 
 {$UNDEF TBox}

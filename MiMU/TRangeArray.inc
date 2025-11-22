@@ -1,5 +1,11 @@
 {$DEFINE TRange}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
   <TRangeArrayHelper.Bounds: TRange>
   @action: Returns the bounds of TRange array as TRange.
@@ -248,5 +254,7 @@ begin
     Self[i].stop := stopArr[i];
   end;
 end;
+
+{$ENDIF}
 
 {$UNDEF TRange}

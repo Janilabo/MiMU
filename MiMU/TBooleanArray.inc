@@ -1,5 +1,11 @@
 {$DEFINE Boolean}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
   <TBooleanArrayHelper.Select>
   @action: IfThen method for TBooleanArray.
@@ -528,5 +534,7 @@ begin
   if (Result > 0) then
     FillChar(arr[0], Result, 0);
 end;
+
+{$ENDIF}
 
 {$UNDEF Boolean}

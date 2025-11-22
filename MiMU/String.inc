@@ -1,5 +1,11 @@
 {$DEFINE string}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
   <TStringHelper.After>
   @action: Returns string that is found after s in str.
@@ -1275,5 +1281,7 @@ begin
       Exit(False);
   Result := True;
 end;
+
+{$ENDIF}
 
 {$UNDEF string}

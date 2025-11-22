@@ -1,5 +1,11 @@
 {$DEFINE TPoint}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
   <T2DPointArray.AllBounds>
   @action: Returns an array containing the bounding box of each point in the array.
@@ -39,5 +45,7 @@ begin
   end else
     aBounds.Create(-2147483648);
 end;
+
+{$ENDIF}
 
 {$UNDEF TPoint}

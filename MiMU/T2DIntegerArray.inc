@@ -1,5 +1,11 @@
 {$DEFINE Integer}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 class function ATIA.Merge(const arr: T2DIntegerArray): TIntegerArray; overload; 
 var
   i, r: Integer;
@@ -32,5 +38,7 @@ begin
     for c := 0 to High(Result[r]) do
       Result[r][c] := value;
 end;
+
+{$ENDIF}
 
 {$UNDEF Integer}

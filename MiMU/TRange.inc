@@ -1,5 +1,11 @@
 {$DEFINE TRange}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 operator+(const a, b: TRange): TRange;
 begin
   Result.start := (a.start + b.start);
@@ -3008,5 +3014,7 @@ class function _TRange.Create(const value: Integer = 0): TRange; overload;
 begin
   Result := _TRange.Create(value, value);
 end;
+
+{$ENDIF}
 
 {$UNDEF TRange}

@@ -1,5 +1,11 @@
 {$DEFINE TBox}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
  <TBoxArrayHelper.X1s>
  @action: Returns X1-values from arr as TIntegerArray.
@@ -191,5 +197,7 @@ begin
 	  Result.Y2 := Self[i].Y2;
   end;
 end;
+
+{$ENDIF}
 
 {$UNDEF TBox}

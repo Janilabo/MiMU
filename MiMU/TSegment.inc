@@ -1,3 +1,11 @@
+{$DEFINE TSegment}{$I config\Defines.inc}
+
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 operator=(const a, b: TSegment): Boolean;
 begin
   Result := ((a.A.X = b.A.X) and (a.A.Y = b.A.Y) and (a.B.X = b.B.X) and (a.B.Y = b.B.Y));
@@ -133,3 +141,7 @@ begin
   for i := 0 to h do
     Result[i] := Point(Round(Self.A.X + ((i / h) * (Self.B.X - Self.A.X))), Round(Self.A.Y + ((i / h) * (Self.B.Y - Self.A.Y))));
 end;
+
+{$ENDIF}
+
+{$UNDEF TSegment}

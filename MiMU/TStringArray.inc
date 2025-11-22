@@ -1,5 +1,11 @@
 {$DEFINE string}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
   <TStringArrayHelper.Tally>
   @action: Returns total length of TStringArray strings combined together.
@@ -88,5 +94,7 @@ begin
     end;
   SetString(Result, PChar(@c[0]), l);
 end;
+
+{$ENDIF}
 
 {$UNDEF string}

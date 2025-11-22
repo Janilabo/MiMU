@@ -1,3 +1,11 @@
+{$DEFINE TCircle}{$I config\Defines.inc}
+
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 operator=(const a, b: TCircle): Boolean;
 begin
   Result := ((a.Center = b.Center) and (a.Radius = b.Radius));
@@ -226,3 +234,7 @@ begin
     Inc(c.X);
   end;
 end; 
+
+{$ENDIF}
+
+{$UNDEF TCircle}

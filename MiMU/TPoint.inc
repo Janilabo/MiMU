@@ -1,5 +1,11 @@
 {$DEFINE TPoint}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 operator+(const a, b: TPoint): TPoint;
 begin
   Result.X := (a.X + b.X);
@@ -1155,5 +1161,7 @@ function TPoint.Omits(const val: Integer): Boolean;
 begin
   Result := not ((Self.X = val) or (Self.Y = val));
 end;
+
+{$ENDIF}
 
 {$UNDEF TPoint}

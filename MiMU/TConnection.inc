@@ -1,3 +1,11 @@
+{$DEFINE TConnection}{$I config\Defines.inc}
+
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
   <TConnection.Create>
   @action: Creates TConnection with index1 and index2.
@@ -21,3 +29,7 @@ begin
   Self.id2 := index2;
   Result := Self;
 end;
+
+{$ENDIF}
+
+{$UNDEF TConnection}

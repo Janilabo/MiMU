@@ -1,5 +1,11 @@
 {$DEFINE Char}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
   <TCharHelper.Compare>
   @action: Compares char with target.
@@ -198,5 +204,7 @@ begin
   else
     Result := Self;
 end;
+
+{$ENDIF}
 
 {$UNDEF Char}

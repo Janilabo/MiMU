@@ -1,5 +1,11 @@
 {$DEFINE Char}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
   <TCharArrayHelper.Str>
   @action: Returns arr joined together as string.
@@ -145,5 +151,7 @@ begin
   for i := 0 to High(Self) do
     Result[i] := Self[i];
 end;
+
+{$ENDIF}
 
 {$UNDEF Char}

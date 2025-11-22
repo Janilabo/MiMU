@@ -1,5 +1,11 @@
 {$DEFINE Integer}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
  <TIntegerHelper.ClampMin>
  @action: Returns Integer clamped by minimum limit
@@ -738,5 +744,7 @@ begin
   else
     Result := n;
 end;
+
+{$ENDIF}
 
 {$UNDEF Integer}

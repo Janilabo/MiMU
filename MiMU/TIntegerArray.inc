@@ -1,7 +1,13 @@
 {$DEFINE Integer}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
-  <TIntegerArrayHelper.Bounds>
+  <TIntegerArray.Bounds>
   @action: Stores arr bounds to TRange.
   @note: None.
 [==============================================================================}
@@ -39,7 +45,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.BoundingRange>
+  <TIntegerArray.BoundingRange>
   @action: Returns bounding range around TIntegerArray arr.
   @note: None.
 [==============================================================================}
@@ -51,7 +57,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Boundaries>
+  <TIntegerArray.Boundaries>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
@@ -72,7 +78,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Range>
+  <TIntegerArray.Range>
   @action: Stores arr bounds to TRange.
   @note: Returns -2147483648..-2147483648 with empty array.
 [==============================================================================}
@@ -88,7 +94,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Coverage>
+  <TIntegerArray.Coverage>
   @action: Stores arr bounds to TRange.
   @note: Returns -2147483648..-2147483648 with empty array.
 [==============================================================================}
@@ -108,7 +114,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.MinMax>
+  <TIntegerArray.MinMax>
   @action: Stores arr bounds to TRange.
   @note: Returns -2147483648..-2147483648 with empty array.
 [==============================================================================}
@@ -127,7 +133,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Region>
+  <TIntegerArray.Region>
   @action: Stores arr bounds to TRange.
   @note: Returns -2147483648..-2147483648 with empty array.
 [==============================================================================}
@@ -149,7 +155,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Extent>
+  <TIntegerArray.Extent>
   @action: Stores arr bounds to TRange.
   @note: None
 [==============================================================================}
@@ -170,7 +176,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Unduped>
+  <TIntegerArray.Unduped>
   @action: Removes duplicates from array arr and returns it.
   @note: Not recommended with very large arrays
 [==============================================================================}
@@ -195,7 +201,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Numberline>
+  <TIntegerArray.Numberline>
   @action: Returns numberline of array arr.
   @note: None.
 [==============================================================================}
@@ -229,7 +235,7 @@ begin
 end;
 
 {==============================================================================]
- <TIntegerArrayHelper.Sum>
+ <TIntegerArray.Sum>
  @action: Returns the sum of all arr values together.
  @note: None
 [==============================================================================}
@@ -243,7 +249,7 @@ begin
 end;
 
 {==============================================================================]
- <TIntegerArrayHelper.Density>
+ <TIntegerArray.Density>
  @action: Returns the calculated density from given arr.
  @note: None
 [==============================================================================}
@@ -279,7 +285,7 @@ begin
 end;
 
 {==============================================================================]
- <TIntegerArrayHelper.Occupancy>
+ <TIntegerArray.Occupancy>
  @action: Returns the calculated density from given arr.
  @note: None
 [==============================================================================}
@@ -293,7 +299,7 @@ begin
 end;
 
 {==============================================================================]
- <TIntegerArrayHelper.Saturated>
+ <TIntegerArray.Saturated>
  @action: Returns the saturation of the integer array: fraction of the range
           covered by unique elements.
           0.0 = empty / no values, 1.0 = all possible values in range present.
@@ -326,7 +332,7 @@ begin
 end;
 
 {==============================================================================]
- <TIntegerArrayHelper.Mean>
+ <TIntegerArray.Mean>
  @action: The sum of all arr values divided by the length of arr.
  @note: None
 [==============================================================================}
@@ -336,7 +342,7 @@ begin
 end;
 
 {==============================================================================]
- <TIntegerArrayHelper.Median>
+ <TIntegerArray.Median>
  @action: The middle value when the arr is sorted:
           -Odd number of elements => the exact middle.
           -Even number => the average of the two middle elements.
@@ -367,7 +373,7 @@ begin
 end;
 
 {==============================================================================]
- <TIntegerArrayHelper.Middle>
+ <TIntegerArray.Middle>
  @action: The value(s) at the center position(s) of a sorted or unsorted arr.
  @note: None
 [==============================================================================}
@@ -385,7 +391,7 @@ begin
 end;
 
 {==============================================================================]
- <TIntegerArrayHelper.MostFreq>
+ <TIntegerArray.MostFreq>
  @action: Returns the most frequent/common value from arr.
  @note: Be careful with values! Try to avoid using too low or high values!
         Such as: -200,000,000 or +200,000,000. Heavy memory-usage could possibly cause crashing.
@@ -417,7 +423,7 @@ begin
 end;
 
 {==============================================================================]
- <TIntegerArrayHelper.LeastFreq>
+ <TIntegerArray.LeastFreq>
  @action: Returns the least frequent/common value from TIA.
  @note: Be careful with values! Try to avoid using too low or high values!
         Such as: -200,000,000 or +200,000,000. Heavy memory-usage could possibly cause crashing.
@@ -633,7 +639,7 @@ begin
 end;  
 
 {==============================================================================]
-  <TIntegerArrayHelper.RadixSort>
+  <TIntegerArray.RadixSort>
   @action: RadixSort for TIntegerArrays.
   @note: Returns High(arr).
 [==============================================================================}
@@ -712,7 +718,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Split>
+  <TIntegerArray.Split>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference range (minDiff, maxDiff) from each other.
   @note: None
@@ -761,7 +767,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Split>
+  <TIntegerArray.Split>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference/distance (diff) from each other.
   @note: None
@@ -772,7 +778,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Sblit>
+  <TIntegerArray.Sblit>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference range (minDiff, maxDiff) from each other.
   @note: Alternative for TIntegerArray_Split. Based on Binary Sorted array.
@@ -820,7 +826,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Sblit>
+  <TIntegerArray.Sblit>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference/distance (diff) from each other.
   @note: Alternative for TIntegerArray_Split. Based on Binary Sorted array.
@@ -831,7 +837,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Groups>
+  <TIntegerArray.Groups>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the ones with same values.
   @note: None
 [==============================================================================}
@@ -860,7 +866,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Group>
+  <TIntegerArray.Group>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference range (minDiff, maxDiff) of the first integer value in the sub-array.
   @note: None
@@ -903,7 +909,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Group>
+  <TIntegerArray.Group>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
            that are within a given difference/distance (diff) of the first integer value in the sub-array.
   @note: None
@@ -914,7 +920,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Groub>
+  <TIntegerArray.Groub>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference range (minDiff, maxDiff) of the first integer value in the sub-array.
   @note: Alternative for TIntegerArray_Group, based on array Binary Sorting.
@@ -957,7 +963,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Groub>
+  <TIntegerArray.Groub>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
            that are within a given difference/distance (diff) of the first integer value in the sub-array.
   @note: Alternative for TIntegerArray_Group, based on array Binary Sorting.
@@ -968,7 +974,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Clique>
+  <TIntegerArray.Clique>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference range (minDiff, maxDiff).
   @note: Strict splitting!
@@ -1018,7 +1024,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Clique>
+  <TIntegerArray.Clique>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference/distance (diff).
   @note: None
@@ -1029,7 +1035,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Knit>
+  <TIntegerArray.Knit>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference range (minDiff, maxDiff).
   @note: Alternative for TIntegerArray_Clique. Based on Binary Sorted array.
@@ -1078,7 +1084,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Knit>
+  <TIntegerArray.Knit>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference/distance (diff).
   @note: Alternative for TIntegerArray_Clique. Based on Binary Sorted array.
@@ -1089,7 +1095,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Reflect>
+  <TIntegerArray.Reflect>
   @action: Returns reversed array
   @note: None.
 [==============================================================================}
@@ -1105,7 +1111,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Reflect>
+  <TIntegerArray.Reflect>
   @action: Reverses array.
   @note: Returns Length(Self)
 [==============================================================================}
@@ -1135,7 +1141,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Invert>
+  <TIntegerArray.Invert>
   @action: Returns inverted arr.
   @note: Arr = [0,2,4,6,8,10] => Result := [1, 3, 5, 7, 9]
 [==============================================================================}
@@ -1169,7 +1175,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Inverted>
+  <TIntegerArray.Inverted>
   @action: Returns inverted arr.
   @note: Arr = [0,2,4,6,8,10] => Result := [1, 3, 5, 7, 9]
          Supports custom bounds!
@@ -1194,7 +1200,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Inverse>
+  <TIntegerArray.Inverse>
   @action: Returns inverted arr.
   @note: Arr = [0,2,4,6,8,10] => Result := [1, 3, 5, 7, 9]
          Supports custom bounds!
@@ -1227,7 +1233,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.MinVal>
+  <TIntegerArray.MinVal>
   @action: Returns minimum value from arr.
   @note: None.
 [==============================================================================}
@@ -1243,7 +1249,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.MaxVal>
+  <TIntegerArray.MaxVal>
   @action: Returns maximum value from arr.
   @note: None.
 [==============================================================================}
@@ -1259,7 +1265,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Minimum>
+  <TIntegerArray.Minimum>
   @action: Returns minimum value from arr and stores index to Integer variable.
   @note: None.
 [==============================================================================}
@@ -1278,7 +1284,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Minimum>
+  <TIntegerArray.Minimum>
   @action: Returns minimum value from arr.
   @note: None.
 [==============================================================================}
@@ -1290,7 +1296,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Maximum>
+  <TIntegerArray.Maximum>
   @action: Returns maximum value from arr and stores index to Integer variable.
   @note: None.
 [==============================================================================}
@@ -1309,7 +1315,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Maximum>
+  <TIntegerArray.Maximum>
   @action: Returns maximum value from arr.
   @note: None.
 [==============================================================================}
@@ -1321,7 +1327,7 @@ begin
 end;
 
 {==============================================================================]
- <TIntegerArrayHelper.Mirror>
+ <TIntegerArray.Mirror>
  @action: Mirrors arr
  @note: None.
 [==============================================================================}
@@ -1343,7 +1349,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Pure>
+  <TIntegerArray.Pure>
   @action: Returns true if arr is made with only allowed items.
   @note: None.
 [==============================================================================}
@@ -1362,7 +1368,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.NoneOf>
+  <TIntegerArray.NoneOf>
   @action: Returns true if arr does not contain any items from forbidden.
   @note: None.
 [==============================================================================}
@@ -1387,7 +1393,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.AnyOf>
+  <TIntegerArray.AnyOf>
   @action: Returns True if arr contains at least one item from candidates.
   @note: Always False if arr or candidates is empty.
 [==============================================================================}
@@ -1412,7 +1418,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.AllOf>
+  <TIntegerArray.AllOf>
   @action: Returns True if arr contains all items from candidates.
   @note: Always True if candidates is empty. False if arr is empty but candidates is not.
 [==============================================================================}
@@ -1439,7 +1445,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Charify>
+  <TIntegerArray.Charify>
   @action: Converts TIntegerArray to Chars.
   @note: Make sure the values in array are correct!
 [==============================================================================}
@@ -1453,7 +1459,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Charify>
+  <TIntegerArray.Charify>
   @action: Converts TIntegerArray to Chars.
   @note: Make sure the values in array are correct!
          Stores str version to variable.
@@ -1472,7 +1478,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Stringify>
+  <TIntegerArray.Stringify>
   @action: Converts TIntegerArray to string.
   @note: Make sure the values in array are correct!
 [==============================================================================}
@@ -1486,7 +1492,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Stringify>
+  <TIntegerArray.Stringify>
   @action: Converts TIntegerArray to Chars.
   @note: Make sure the values in array are correct!
          Stores charset version to variable.
@@ -1505,7 +1511,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Special>
+  <TIntegerArray.Special>
   @action: Returns true if parity of every pair of adjacent element differs each other.
   @note: An element in each pair must be even and other must be odd.
 [==============================================================================}
@@ -1520,7 +1526,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.ExtractEven>
+  <TIntegerArray.ExtractEven>
   @action: Returns even values from array
   @note: None.
 [==============================================================================}
@@ -1539,7 +1545,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.FilterEven>
+  <TIntegerArray.FilterEven>
   @action: Returns array without even values
   @note: None.
 [==============================================================================}
@@ -1558,7 +1564,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.ExtractOdd>
+  <TIntegerArray.ExtractOdd>
   @action: Returns odd values from array
   @note: None.
 [==============================================================================}
@@ -1577,7 +1583,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.FilterOdd>
+  <TIntegerArray.FilterOdd>
   @action: Returns array without odd values
   @note: None.
 [==============================================================================}
@@ -1596,7 +1602,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Reinit>
+  <TIntegerArray.Reinit>
   @action: Clears all elements of the array by zero-filling the underlying memory,
            while keeping the current length unchanged.
   @note: None.
@@ -1609,7 +1615,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Attach>
+  <TIntegerArray.Attach>
   @action: Appends all points from the given array to the end of Self.
            Returns the new total length of the array after appending.
   @note:   Uses Move() for efficiency since Integer is an unmanaged type.
@@ -1630,7 +1636,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArrayHelper.Embed>
+  <TIntegerArray.Embed>
   @action: Inserts the contents of another integer array into the current array
            at the specified index. Existing elements from that position onward
            are shifted to make room for the new items.
@@ -2723,7 +2729,6 @@ begin
   Result := -1;
 end;
 
-
 {==============================================================================]
   <TIntegerArray.BinaryProbabilisticSearch>
   @action: Performs a probabilistic variant of binary interpolation search, introducing a random bias
@@ -2757,7 +2762,6 @@ begin
   end;
   Result := -1;
 end;
-
 
 function TIntegerArrayHelper.BinaryProbabilisticSearch(const x: Integer; const aAscending: Boolean; const bias: Double = 0.0): Integer; overload;
 begin
@@ -3668,5 +3672,7 @@ begin
   if (y > 0) then
     Move(B[0], Result[x], (y * SizeOf(Integer)));
 end;
+
+{$ENDIF}
 
 {$UNDEF Integer}

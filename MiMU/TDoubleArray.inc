@@ -1,5 +1,11 @@
 {$DEFINE Double}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
   <TDoubleArrayHelper.Reinit>
   @action: Clears all elements of the array by zero-filling the underlying memory,
@@ -673,5 +679,7 @@ function TDoubleArrayHelper.BinaryExists(const value: Double; const oAscending: 
 
 function TDoubleArrayHelper.BinarySearchSpan(const value: Double; const L, R: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchSpan1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchSpan1}
 function TDoubleArrayHelper.BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchSpan2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchSpan2}
+
+{$ENDIF}
 
 {$UNDEF Double}

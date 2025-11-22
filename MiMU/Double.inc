@@ -1,5 +1,11 @@
 {$DEFINE Double}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
  <TDoubleHelper.ClampMin>
  @action: Returns Double clamped by minimum limit
@@ -520,5 +526,7 @@ function TDoubleHelper.Undersize(const limit: Double): Boolean;
 begin
   Result := (Self < limit);
 end;
+
+{$ENDIF}
 
 {$UNDEF Double}

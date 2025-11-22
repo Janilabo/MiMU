@@ -1,3 +1,11 @@
+{$DEFINE Boolean}{$I config\Defines.inc}
+
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
  <TBooleanHelper.ToString>
  @action: Returns string of Self.
@@ -232,3 +240,7 @@ begin
   if Result then
     Self := not state;
 end;
+
+{$ENDIF}
+
+{$UNDEF Boolean}

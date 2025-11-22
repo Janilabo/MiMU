@@ -1,5 +1,11 @@
 {$DEFINE TPoint}{$I config\Defines.inc}
 
+{$IFNDEF IMPLEMENT}
+
+{$ENDIF}
+
+{$IFDEF IMPLEMENT}
+
 {==============================================================================]
   <TPointArrayHelper.Bounds>
   @action: Returns bounding box around TPointArray arr.
@@ -8420,5 +8426,7 @@ begin
   for i := 0 to High(Result) do
     Result[i] := Point((xValues[i] + offset.X), (yValues[i] + offset.Y));	
 end;
+
+{$ENDIF}
 
 {$UNDEF TPoint}
