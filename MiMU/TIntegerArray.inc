@@ -3594,4 +3594,7 @@ function TIntegerArrayHelper.BinaryIndexOf(const value: Integer; const oAscendin
 
 function TIntegerArrayHelper.BinaryExists(const value: Integer; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryExists}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryExists}
 
+function TIntegerArrayHelper.BinarySearchSpan(const value: Integer; const L, R: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchSpan1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchSpan1}
+function TIntegerArrayHelper.BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchSpan2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchSpan2}
+
 {$UNDEF Integer}

@@ -840,6 +840,8 @@ type
       function BinaryCountingSort(const aAscending: Boolean = True; const maxRange: Integer = 2000): Integer;
       function BinaryIndexOf(const value: Integer; const oAscending: Boolean = True): Integer; overload;
       function BinaryExists(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
+      function BinarySearchSpan(const value: Integer; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
     {$ENDIF}
     {$IFDEF Double}
       function Reinit: Integer; overload;
@@ -910,6 +912,8 @@ type
       function BinaryValues(const values: TRange; const aAscending: Boolean = True): TDoubleArray; overload;
       function BinaryIndexOf(const value: Double; const oAscending: Boolean = True): Integer; overload;
       function BinaryExists(const value: Double; const oAscending: Boolean = True): Boolean; overload;
+      function BinarySearchSpan(const value: Double; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
+      function BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
     {$ENDIF}
     {$IFDEF string}
       function Tally: Int64;
@@ -1153,6 +1157,8 @@ type
       function BSorted(const aAscending: Boolean = True): TPointArray; overload;
       function BinarySearch(const item: TPoint): Integer; overload;
       function BinarySearch(const area: TBox): Integer; overload;
+      function BinaryFind(const item: TPoint): Integer; overload;
+      function BinaryFind(const area: TBox): Integer; overload;
       function BinaryIndexOf(const item: TPoint): Integer; overload;
       function BinaryExists(const item: TPoint): Boolean; overload;
       function BinaryPosL(const item: TPoint): Integer; overload;

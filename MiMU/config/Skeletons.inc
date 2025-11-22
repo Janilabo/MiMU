@@ -1743,3 +1743,41 @@ begin
   Result := BS(0, High(Self));
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinarySearchSpan1}
+var
+  M: Integer;
+begin
+  if ((L > R) or (L < 0) or (R > High(Self))) then
+    Exit(-1);
+  M := (L + ((R - L) div 2));
+  if (Self[M] = value) then
+    Exit(M);
+  if ((aAscending and (value < Self[M])) or ((not aAscending) and (value > Self[M]))) then
+    Result := Self.BinarySearchSpan(value, L, (M - 1), aAscending)
+  else
+    Result := Self.BinarySearchSpan(value, (M + 1), R, aAscending);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinarySearchSpan2}
+  function BSS(const range: TRange; const L, R: Integer; const aAscending: Boolean): Integer;
+  var
+    M: Integer;
+  begin
+    if (L > R) then
+      Exit(-1);
+    M := (L + ((R - L) div 2));
+    if InRange(Self[M], range.start, range.stop) then
+      Exit(M);
+    if ((aAscending and (range.stop < Self[M])) or ((not aAscending) and (range.start > Self[M]))) then
+      Result := BSS(range, L, (M - 1), aAscending)
+    else
+      Result := BSS(range, (M + 1), R, aAscending);
+  end;
+begin
+  if (L < 0) or (R > High(Self)) then
+    Exit(-1);
+  Result := BSS(range.Normalize, L, R, aAscending);
+end;
+{$ENDIF}

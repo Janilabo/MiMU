@@ -7202,24 +7202,94 @@ end;
 function TPointArrayHelper.BinarySearch(const area: TBox): Integer; overload;
 var
   M: Integer;
-  R: TRange;
-  t: TPoint;
+  Y, R: TRange;
 begin
+  Result := -1;
+  if (Length(Self) = 0) then
+    Exit;
+  Y.Create(area.Y1, area.Y2);
   R.Create(0, High(Self));
-  if ((R.stop = -1) or (area.Y2 < Self[R.start].Y) or (area.Y1 > Self[R.stop].Y)) then
-    Exit(-1);
-  t := Point(area.X1, area.Y1);
   while (R.start <= R.stop) do
   begin
     M := R.Pivot;
-    if area.Contains(Self[M]) then
-      Exit(M);
-    if (Self[M].Compare(t) = -1) then
-	  R.start := (M + 1)
+    if (Self[M].Y < Y.start) then
+      R.start := (M + 1)
     else
       R.stop := (M - 1);
   end;
+  while ((R.start <= High(Self)) and (Self[R.start].Y <= Y.stop)) do
+  begin
+    if ((Self[R.start].X >= area.X1) and (Self[R.start].X <= area.X2)) then
+      Exit(R.start);
+    Inc(R.start);
+  end;
+end;
+
+function TPointArrayHelper.BinaryFind(const item: TPoint): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
   Result := -1;
+  if Length(Self) = 0 then
+    Exit;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case (Self[M].Y < item.Y) of
+      True:
+      begin
+        R.start := (M + 1);
+        Continue;
+      end;
+      False:
+      if (Self[M].Y > item.Y) then
+      begin
+        R.stop := (M - 1);
+        Continue;
+      end;
+    end;
+    case (Self[M].X < item.X) of
+      True:
+      begin
+        R.start := (M + 1);
+        Continue;
+      end;
+      False:
+      if (Self[M].X > item.X) then
+      begin
+        R.stop := (M - 1);
+        Continue;
+      end;
+    end;
+    Exit(M);
+  end;
+end;
+
+function TPointArrayHelper.BinaryFind(const area: TBox): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  if (Length(Self) = 0) then
+    Exit;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M].Y < area.Y1) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  while ((R.start <= High(Self)) and (Self[R.start].Y <= area.Y2)) do
+  begin
+    if ((Self[R.start].X >= area.X1) and (Self[R.start].X <= area.X2)) then
+      Exit(R.start);
+    Inc(R.start);
+  end;
 end;
 
 {==============================================================================]
