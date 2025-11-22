@@ -703,17 +703,7 @@ function Octile(const A, B: TPoint): Double;
 function Distance(const A, B: TPoint; const distFunc: TDistanceFunction): Double; overload;
 function Distance(const A, B: TPoint; const metric: TDistanceMetric = dmEuclidean): Double; overload;
   
-{$DEFINE Sortable}
-  {$DEFINE Integer}{$I MiMU\config\Helpers.inc}{$UNDEF Integer}
-  {$DEFINE Double}{$I MiMU\config\Helpers.inc}{$UNDEF Double}
-  {$DEFINE string}{$I MiMU\config\Helpers.inc}{$UNDEF string}
-  {$DEFINE Char}{$I MiMU\config\Helpers.inc}{$UNDEF Char}
-{$UNDEF Sortable}
-{$DEFINE Boolean}{$I MiMU\config\Helpers.inc}{$UNDEF Boolean}
-{$DEFINE TPoint}{$I MiMU\config\Helpers.inc}{$UNDEF TPoint}
-{$DEFINE TBox}{$I MiMU\config\Helpers.inc}{$UNDEF TBox}
-{$DEFINE TRange}{$I MiMU\config\Helpers.inc}{$UNDEF TRange}
-{$I MiMU\Int64.inc}
+{$I MiMU.inc}
 
 type
   TIA = class
@@ -744,13 +734,11 @@ type
 {$DEFINE T1D}
   T1D = class
   public
-  {$DEFINE Sortable}
-    {$DEFINE Integer}{$I MiMU\config\Classes.inc}{$UNDEF Integer}
-    {$DEFINE Double}{$I MiMU\config\Classes.inc}{$UNDEF Double}
-    {$DEFINE string}{$I MiMU\config\Classes.inc}{$UNDEF string}
-    {$DEFINE Char}{$I MiMU\config\Classes.inc}{$UNDEF Char}
-    {$DEFINE TPoint}{$I MiMU\config\Classes.inc}{$UNDEF TPoint}
-  {$UNDEF Sortable}
+  {$DEFINE Integer}{$I MiMU\config\Classes.inc}{$UNDEF Integer}
+  {$DEFINE Double}{$I MiMU\config\Classes.inc}{$UNDEF Double}
+  {$DEFINE string}{$I MiMU\config\Classes.inc}{$UNDEF string}
+  {$DEFINE Char}{$I MiMU\config\Classes.inc}{$UNDEF Char}
+  {$DEFINE TPoint}{$I MiMU\config\Classes.inc}{$UNDEF TPoint}
   {$DEFINE Boolean}{$I MiMU\config\Classes.inc}{$UNDEF Boolean}
   {$DEFINE TBox}{$I MiMU\config\Classes.inc}{$UNDEF TBox}
   {$DEFINE TRange}{$I MiMU\config\Classes.inc}{$UNDEF TRange}
@@ -759,13 +747,11 @@ type
 {$DEFINE T2D}
   T2D = class
   public
-   {$DEFINE Sortable}
-    {$DEFINE Integer}{$I MiMU\config\Classes.inc}{$UNDEF Integer}
-    {$DEFINE Double}{$I MiMU\config\Classes.inc}{$UNDEF Double}
-    {$DEFINE string}{$I MiMU\config\Classes.inc}{$UNDEF string}
-    {$DEFINE Char}{$I MiMU\config\Classes.inc}{$UNDEF Char}
-    {$DEFINE TPoint}{$I MiMU\config\Classes.inc}{$UNDEF TPoint}
-  {$UNDEF Sortable}
+  {$DEFINE Integer}{$I MiMU\config\Classes.inc}{$UNDEF Integer}
+  {$DEFINE Double}{$I MiMU\config\Classes.inc}{$UNDEF Double}
+  {$DEFINE string}{$I MiMU\config\Classes.inc}{$UNDEF string}
+  {$DEFINE Char}{$I MiMU\config\Classes.inc}{$UNDEF Char}
+  {$DEFINE TPoint}{$I MiMU\config\Classes.inc}{$UNDEF TPoint}
   {$DEFINE Boolean}{$I MiMU\config\Classes.inc}{$UNDEF Boolean}
   {$DEFINE TBox}{$I MiMU\config\Classes.inc}{$UNDEF TBox}
   {$DEFINE TRange}{$I MiMU\config\Classes.inc}{$UNDEF TRange}

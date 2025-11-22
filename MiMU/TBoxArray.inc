@@ -1,10 +1,12 @@
 {$DEFINE TBox}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-
+  {$I config\Helpers.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}
+
+{$I Generic.inc}
 
 {==============================================================================]
  <TBoxArrayHelper.X1s>
