@@ -28,6 +28,6 @@
 {$I MiMU\T2DBoxArray.inc}
 {$I MiMU\T2DRangeArray.inc}
 
-{$IFNDEF HELPERS}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(INTERFACE)} 
   {$INCLUDE MiMU\config\Templates\D.inc}
 {$ENDIF}

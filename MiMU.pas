@@ -56,6 +56,34 @@ type
 {$DEFINE INTERFACE}{$I MiMU.inc}{$UNDEF INTERFACE}
 {$DEFINE HELPERS}{$I MiMU.inc}{$UNDEF HELPERS}
 
+type
+  T1D = class
+  public
+  {$DEFINE T1D}
+  {$DEFINE Integer}{$I MiMU\config\1D.inc}{$UNDEF Integer}
+  {$DEFINE Double}{$I MiMU\config\1D.inc}{$UNDEF Double}
+  {$DEFINE string}{$I MiMU\config\1D.inc}{$UNDEF string}
+  {$DEFINE Char}{$I MiMU\config\1D.inc}{$UNDEF Char}
+  {$DEFINE TPoint}{$I MiMU\config\1D.inc}{$UNDEF TPoint}
+  {$DEFINE Boolean}{$I MiMU\config\1D.inc}{$UNDEF Boolean}
+  {$DEFINE TBox}{$I MiMU\config\1D.inc}{$UNDEF TBox}
+  {$DEFINE TRange}{$I MiMU\config\1D.inc}{$UNDEF TRange}
+  {$UNDEF T1D}
+  end;
+  T2D = class
+  public
+  {$DEFINE T2D}
+  {$DEFINE Integer}{$I MiMU\config\2D.inc}{$UNDEF Integer}
+  {$DEFINE Double}{$I MiMU\config\2D.inc}{$UNDEF Double}
+  {$DEFINE string}{$I MiMU\config\2D.inc}{$UNDEF string}
+  {$DEFINE Char}{$I MiMU\config\2D.inc}{$UNDEF Char}
+  {$DEFINE TPoint}{$I MiMU\config\2D.inc}{$UNDEF TPoint}
+  {$DEFINE Boolean}{$I MiMU\config\2D.inc}{$UNDEF Boolean}
+  {$DEFINE TBox}{$I MiMU\config\2D.inc}{$UNDEF TBox}
+  {$DEFINE TRange}{$I MiMU\config\2D.inc}{$UNDEF TRange}
+  {$UNDEF T2D}
+  end;
+
 function DistanceFunction(const distFunc: TDistanceFunction): TDistanceFunction; overload;
 function DistanceFunction(const method: Integer = 0): TDistanceFunction; overload;
 function DistanceFunction(const metric: TDistanceMetric): TDistanceFunction; overload;
@@ -165,34 +193,6 @@ function Bitify(const a: Boolean): Integer; overload; inline;
 function Bitify(const a, b: Boolean): Integer; overload;
 function Bitify(const a, b, c: Boolean): Integer; overload;
 function Bitify(const a, b, c, d: Boolean): Integer; overload;
-
-type
-{$DEFINE T1D}
-  T1D = class
-  public
-  {$DEFINE Integer}{$I MiMU\config\Classes.inc}{$UNDEF Integer}
-  {$DEFINE Double}{$I MiMU\config\Classes.inc}{$UNDEF Double}
-  {$DEFINE string}{$I MiMU\config\Classes.inc}{$UNDEF string}
-  {$DEFINE Char}{$I MiMU\config\Classes.inc}{$UNDEF Char}
-  {$DEFINE TPoint}{$I MiMU\config\Classes.inc}{$UNDEF TPoint}
-  {$DEFINE Boolean}{$I MiMU\config\Classes.inc}{$UNDEF Boolean}
-  {$DEFINE TBox}{$I MiMU\config\Classes.inc}{$UNDEF TBox}
-  {$DEFINE TRange}{$I MiMU\config\Classes.inc}{$UNDEF TRange}
-  end;
-{$UNDEF T1D}
-{$DEFINE T2D}
-  T2D = class
-  public
-  {$DEFINE Integer}{$I MiMU\config\Classes.inc}{$UNDEF Integer}
-  {$DEFINE Double}{$I MiMU\config\Classes.inc}{$UNDEF Double}
-  {$DEFINE string}{$I MiMU\config\Classes.inc}{$UNDEF string}
-  {$DEFINE Char}{$I MiMU\config\Classes.inc}{$UNDEF Char}
-  {$DEFINE TPoint}{$I MiMU\config\Classes.inc}{$UNDEF TPoint}
-  {$DEFINE Boolean}{$I MiMU\config\Classes.inc}{$UNDEF Boolean}
-  {$DEFINE TBox}{$I MiMU\config\Classes.inc}{$UNDEF TBox}
-  {$DEFINE TRange}{$I MiMU\config\Classes.inc}{$UNDEF TRange}
-  end;
-{$UNDEF T2D}
  
 implementation
 

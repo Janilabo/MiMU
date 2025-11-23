@@ -365,6 +365,10 @@ function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = Tr
 function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): TArr; overload;
 {$ENDIF}
 
+{$IFDEF T1D}
+class function Create(const item: TVar; const aSize: Integer = 1): TArr; overload;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
  <arr.Add(item: VarType; duplicates: Boolean): TArray>
@@ -6304,20 +6308,6 @@ begin
     Result[r] := Self[s.stop];
 end;
 
-{==============================================================================]
- <T1D.Create(item: VarType; aSize: Integer)>
- @action: Creates array with item where size is length of the array.
- @note: item is placed on every index in result.
-[==============================================================================}
-class function T1D.Create(const item: TVar; const aSize: Integer = 1): TArr; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, Max(0, aSize));
-  for i := 0 to High(Result) do
-    Result[i] := item;
-end;
-
 {$IFDEF Sortable}
 {==============================================================================]
   <HArr.Sortable>
@@ -8574,4 +8564,18 @@ begin
   Result := True;
 end;
 {$ENDIF}
+
+{==============================================================================]
+ <T1D.Create(item: VarType; aSize: Integer)>
+ @action: Creates array with item where size is length of the array.
+ @note: item is placed on every index in result.
+[==============================================================================}
+class function T1D.Create(const item: TVar; const aSize: Integer = 1): TArr; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Max(0, aSize));
+  for i := 0 to High(Result) do
+    Result[i] := item;
+end;
 {$ENDIF}
