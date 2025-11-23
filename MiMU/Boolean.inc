@@ -1,7 +1,9 @@
 {$DEFINE Boolean}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-
+type
+  TBooleanArray = array of Boolean;
+  T2DBooleanArray = array of TBooleanArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}

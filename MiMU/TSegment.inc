@@ -1,7 +1,24 @@
 {$DEFINE TSegment}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-
+type
+  TSegment = record
+    A, B: TPoint;
+    constructor Create(const sA, sB: TPoint); overload;
+    constructor Create(const aX, aY, bX, bY: Integer); overload;
+    class function Construct(const sA, sB: TPoint): TSegment; overload; static;
+    class function Construct(const aX, aY, bX, bY: Integer): TSegment; overload; static;
+    function Bounds: TBox; 
+    function Boundaries: TBox; 
+    function Envelope: TBox; 
+    function Points: TPointArray; 
+    function Pixels(const steps: Integer = 2147483647): TPointArray; 
+  end;
+  TSegmentArray = array of TSegment;
+  T2DSegmentArray = array of TSegmentArray;
+  
+operator=(const a, b: TSegment): Boolean;
+operator<>(const a, b: TSegment): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}

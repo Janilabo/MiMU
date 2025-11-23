@@ -1,7 +1,12 @@
 {$DEFINE Boolean}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-  {$I config\Helpers.inc}
+{$I config\Helpers.inc}
+
+type
+  TBA = class
+    class function Init(var arr: TBooleanArray): Integer; overload; 
+  end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}

@@ -1,7 +1,17 @@
 {$DEFINE TPoint}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-  {$I config\Helpers.inc}
+{$I config\Helpers.inc}
+
+type
+  TPA = class
+    class function Init(var arr: TPointArray): Integer; overload; 
+    class function Unique(var arr: TPointArray): Integer; overload; 
+    class function Create(const xRange, yRange: TRange): TPointArray; overload; 
+    class function Create(const xRange, yRange: TRange; const offset: TPoint): TPointArray; overload; 
+    class function Create(const xValues, yValues: TIntegerArray): TPointArray; overload; 
+    class function Create(const xValues, yValues: TIntegerArray; const offset: TPoint): TPointArray; overload; 
+  end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}

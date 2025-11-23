@@ -1,6 +1,85 @@
 {$DEFINE TPoint}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
+type
+  TPoint = record
+    X, Y: Integer;
+    constructor Create(const pX, pY: Integer); overload;
+    constructor Create(const value: Integer); overload;
+    class function Construct(const pX, pY: Integer): TPoint; overload; static;
+    function Build(const pX, pY: Integer): TPoint;  inline;
+    function Comparison(const target: TPoint): Integer; overload;
+    function Compare(const target: TPoint): Integer; overload;
+    function Compared(const target: TPoint): Integer; overload;
+    function Comp(const target: TPoint): Integer; overload;
+    function Cmp(const target: TPoint): Integer; overload;
+    function XComp(const target: TPoint): Integer; inline;
+    function YComp(const target: TPoint): Integer; inline;
+    function XCompare(const target: TPoint): Integer;
+    function YCompare(const target: TPoint): Integer;
+    function CompareX(const target: TPoint): Integer;
+    function CompareY(const target: TPoint): Integer;
+    function CompX(const target: TPoint): Integer;
+    function CompY(const target: TPoint): Integer;
+    function InCircle(const center: TPoint; const radius: Double): Boolean; inline;
+    function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; inline;
+    function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; 
+    function AngleRadians(const target: TPoint): Double;
+    function DistHypotEuclidean(const target: TPoint): Double; 	
+    function DistEuclidean(const target: TPoint): Double; 
+    function DistEuclidean2(const target: TPoint): Double; 
+    function DistSquaredEuclidean(const target: TPoint): Double; 
+    function DistManhattan(const target: TPoint): Double; 
+    function DistChebyshev(const target: TPoint): Double;
+    function DistMinkowski(const target: TPoint): Double; overload;
+    function DistMinkowski(const target: TPoint; const P: Double): Double; overload;
+    function DistMaxMinChebyshev(const target: TPoint): Double;
+    function DistOctile(const target: TPoint): Double;
+    function Within(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
+    function Near(const target: TPoint; const radius: Double = 1.0): Boolean; overload;
+    function Near(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
+    function Neighbour(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
+    function Neighbor(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
+    function Adjacent(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
+    function DistX(const target: TPoint): Integer;
+    function DistY(const target: TPoint): Integer;
+    function DistanceX(const target: TPoint): Integer;
+    function DistanceY(const target: TPoint): Integer;
+    function DistMaxMinX(const Target: TPoint): Integer;
+    function DistMaxMinY(const Target: TPoint): Integer;
+    function Reflected: TPoint; inline;
+    function Flipped: TPoint; inline;
+    function DeltaX(const target: TPoint): Integer;
+    function DeltaY(const target: TPoint): Integer;
+    function Delta(const target: TPoint): TPoint;
+    function HorizontalDist(const target: TPoint): Integer;
+    function VerticalDist(const target: TPoint): Integer;
+    function Uniform(const val: Integer): Boolean; overload;
+    function Uniform: Boolean; overload;
+    function Employs(const val: Integer): Boolean;
+    function Omits(const val: Integer): Boolean; 	
+  end;
+  TPointArray = array of TPoint;
+  T2DPointArray = array of TPointArray;
+  PPoint = ^TPoint;
+  _TPoint = class
+  public
+    class function Create(const pX, pY: Integer): TPoint; overload; 
+    class function Create(const value: Integer = 0): TPoint; overload; 
+  end;
+  TDistanceFunction = function(const A, B: TPoint): Double;
+  
+operator+(const a, b: TPoint): TPoint;
+operator-(const a, b: TPoint): TPoint;
+operator=(const a, b: TPoint): Boolean;
+operator<>(const a, b: TPoint): Boolean;
+operator>(const a, b: TPoint): Boolean;
+operator<(const a, b: TPoint): Boolean;
+operator>=(const a, b: TPoint): Boolean;
+operator<=(const a, b: TPoint): Boolean;
+
+function Point(const pX, pY: Integer): TPoint; overload; inline;
+function Point(const val: Integer = 0): TPoint; overload; inline;
 
 {$ENDIF}
 

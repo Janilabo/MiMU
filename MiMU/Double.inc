@@ -1,7 +1,9 @@
 {$DEFINE Double}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-
+type
+  TDoubleArray = array of Double;
+  T2DDoubleArray = array of TDoubleArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}

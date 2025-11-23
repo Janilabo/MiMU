@@ -281,7 +281,7 @@ type
       function ToBox(const size: Integer = 0): TBox; overload;
       function Boxify(const width, height: Integer): TBox; overload;
       function Boxify(const size: Integer = 0): TBox; overload;
-	  function Within(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
+      function Within(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
       function Within(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): Boolean; overload;
       function Near(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
       function Near(const target: TPoint; const radius: Double; const metric: TDistanceMetric): Boolean; overload;

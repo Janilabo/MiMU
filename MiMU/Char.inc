@@ -1,7 +1,9 @@
 {$DEFINE Char}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-
+type
+  TCharArray = array of Char;
+  T2DCharArray = array of TCharArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}

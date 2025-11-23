@@ -1,7 +1,7 @@
 {$DEFINE TRange}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-  {$I config\Helpers.inc}
+{$I config\Helpers.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}

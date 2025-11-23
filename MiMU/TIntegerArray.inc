@@ -1,7 +1,17 @@
 {$DEFINE Integer}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-  {$I config\Helpers.inc}
+{$I config\Helpers.inc}
+
+type
+  TIA = class
+  public
+    class function Init(var arr: TIntegerArray): Integer; overload; 
+    class function Reverse(var arr: TIntegerArray): Boolean; overload; 
+    class function Reversed(const arr: TIntegerArray): TIntegerArray; overload; 
+    class function Unique(var arr: TIntegerArray): Integer; overload; 
+    class function Combine(const A, B: TIntegerArray): TIntegerArray; overload;
+  end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}

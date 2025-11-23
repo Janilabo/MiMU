@@ -1,7 +1,9 @@
 {$DEFINE Integer}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-
+type
+  TIntegerArray = array of Integer;
+  T2DIntegerArray = array of TIntegerArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}

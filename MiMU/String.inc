@@ -1,7 +1,9 @@
 {$DEFINE string}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-
+type
+  TStringArray = array of string;
+  T2DStringArray = array of TStringArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}

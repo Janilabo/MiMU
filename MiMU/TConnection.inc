@@ -1,7 +1,14 @@
 {$DEFINE TConnection}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-
+type
+  TConnection = record
+    id1, id2: Integer;
+    constructor Create(const index1, index2: Integer); overload;
+    class function Construct(const index1, index2: Integer): TConnection; overload; static;
+    function Build(const index1, index2: Integer): TConnection; overload;
+  end;
+  TConnectionArray = array of TConnection;
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}

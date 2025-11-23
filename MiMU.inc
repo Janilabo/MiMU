@@ -4,9 +4,13 @@
 {$I MiMU\Char.inc}
 {$I MiMU\TPoint.inc}
 {$I MiMU\Boolean.inc}
-{$I MiMU\TBox.inc}
 {$I MiMU\TRange.inc}
+{$I MiMU\TBox.inc}
 {$I MiMU\Int64.inc}
+{$I MiMU\TConnection.inc}
+{$I MiMU\TCircle.inc}
+{$I MiMU\TTriangle.inc}
+{$I MiMU\TSegment.inc}
 {$I MiMU\TIntegerArray.inc}
 {$I MiMU\TDoubleArray.inc}
 {$I MiMU\TStringArray.inc}
@@ -17,11 +21,5 @@
 {$I MiMU\T2DPointArray.inc}
 {$I MiMU\TBoxArray.inc}
 {$I MiMU\TRangeArray.inc}
-{$I MiMU\TCircle.inc}
-{$I MiMU\TTriangle.inc}
-{$I MiMU\TSegment.inc}
-{$I MiMU\TConnection.inc}
 
-{$IFDEF IMPLEMENT}
-  {$INCLUDE MiMU\config\Templates\D.inc}
-{$ENDIF}
+{$INCLUDE MiMU\config\Templates\D.inc}

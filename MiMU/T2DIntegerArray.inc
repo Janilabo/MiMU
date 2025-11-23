@@ -1,7 +1,13 @@
 {$DEFINE Integer}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-
+type
+  ATIA = class
+  public
+    class function Merge(const arr: T2DIntegerArray): TIntegerArray; overload; 
+    class function Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
+    class function Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
+  end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}

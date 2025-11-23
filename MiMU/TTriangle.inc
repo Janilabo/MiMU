@@ -1,7 +1,15 @@
 {$DEFINE TTriangle}{$I config\Defines.inc}
 
 {$IFNDEF IMPLEMENT}
-
+type
+  TTriangle = record
+    A, B, C: TPoint;
+  end;
+  TTriangleArray = array of TTriangle;
+  T2DTriangleArray = array of TTriangleArray;
+  
+operator=(const a, b: TTriangle): Boolean;
+operator<>(const a, b: TTriangle): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENT}
