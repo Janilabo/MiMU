@@ -1,12 +1,25 @@
 {$DEFINE Char}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
-  {$I config\Helpers.inc}
+{$IFDEF INTERFACE}
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+type
+  HArr = type helper for TArr {$I config\1D.inc}
+    function Str: string;
+    function ToStr: string;
+    function Join: string; overload;
+    function Join(const glue: string): string; overload;
+    function Stringify: string; overload;
+    function Stringify(const glue: string): string; overload;
+    function Ordinals: TIntegerArray;
+    function Unduped: TCharArray;
+    function TSA: TStringArray;
+  end;
+{$ENDIF}
 
-{$I Generic.inc}
+{$IFDEF IMPLEMENTATION}
+{$I config\1D.inc}
 
 {==============================================================================]
   <TCharArrayHelper.Str>
@@ -153,7 +166,6 @@ begin
   for i := 0 to High(Self) do
     Result[i] := Self[i];
 end;
-
 {$ENDIF}
 
 {$UNDEF Char}

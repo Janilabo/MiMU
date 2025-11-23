@@ -1,6 +1,6 @@
 {$DEFINE Integer}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
+{$IFDEF INTERFACE}
 type
   ATIA = class
   public
@@ -10,8 +10,14 @@ type
   end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+type
+  H2DArr = type helper for T2DArr {$I config\2D.inc}
+  end;
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
+{$I config\2D.inc}
 class function ATIA.Merge(const arr: T2DIntegerArray): TIntegerArray; overload; 
 var
   i, r: Integer;

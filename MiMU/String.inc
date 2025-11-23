@@ -1,12 +1,92 @@
 {$DEFINE string}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
+{$IFDEF INTERFACE}
 type
   TStringArray = array of string;
   T2DStringArray = array of TStringArray;
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+type
+  HVar = type helper for TVar {$I config\0D.inc}
+    function After(const s: string; const index: Integer = 1): string; overload;
+    function After(const index: Integer; const count: Integer = 2147483647): string; overload;
+    function Ahead(const s: string; const index: Integer = 2147483647): string; overload;
+    function Ahead(const index: Integer; const count: Integer = 2147483647): string; overload;
+    function Before(const s: string; const index: Integer = 1): string; overload;
+    function Before(const index: Integer; const count: Integer = 2147483647): string; overload;
+    function Behind(const s: string; const index: Integer = 2147483647): string; overload;
+    function Behind(const index: Integer; const count: Integer = 2147483647): string; overload;
+    function Blank: Boolean;
+    function Amount(const s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer;
+    function At(const s: string; const index: Integer = 1): Boolean; inline;
+    function Between(const s1, s2: string; const index: Integer = 1): string;
+    function Chars: TCharArray;
+    function Charify: TCharArray;
+    function Chop: TCharArray;
+    function Chunk(const a, b: Integer): string;
+    function Center(const size: Integer; const fill: Char = #32): string;
+    function Compare(const target: string): Integer; inline;
+    function Sign(const target: string): Integer; inline;
+    function Precede(const target: string; const aAscending: Boolean): Boolean; overload;
+    function Ascending(const target: string): Boolean; inline;
+    function Descending(const target: string): Boolean; inline;
+    function Contains(const s: string; const index: Integer = 1): Boolean;
+    function Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer;
+    function Duplicate(const x: Integer = 2): string;
+    function Duplicated(const x: Integer; const glue: string): string;
+    function Empty: Boolean;
+    function EndsWith(const s: string): Boolean;
+    function EndWith(const s: string; const index: Integer = 2147483647): Boolean;
+    function Exch(const aIndex, bIndex: Integer): Boolean;
+    function Exchange(const aIndex, bIndex: Integer): Boolean;
+    function Exists: Boolean;
+    function Explode: TCharArray; overload;
+    function Explode(const d: string; const limit: Integer = -1): TStringArray; overload;
+    function Explode(const d: TStringArray; const limit: Integer = -1): TStringArray; overload;
+    function Find(const s: string; const index: Integer = 1): Integer;
+    function Flip: string;
+    function FromLeft(const count: Integer; const index: Integer = 1): string;
+    function FromRight(const count: Integer; const index: Integer = 2147483647): string;
+    function Get(const index: Integer; const count: Integer): string; inline;
+    function IDs: TIntegerArray; overload;
+    function IDs(const ID: TIntegerArray): TCharArray; overload;
+    function IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload;
+    function IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload;
+    function Includes(const s: string; const index: Integer = 2147483647): Boolean;
+    function Loc(const s: string; const index: Integer = 2147483647): Integer;
+    function Location(const s: string; const index: Integer = 2147483647): Integer;
+    function Pick(const index: Integer; const count: Integer = 2147483647): string;
+    function Pos(const s: string; const index: Integer = 1): Integer;
+    function Position(const s: string; const index: Integer = 1): Integer;
+    function Search(const s: string; const index: Integer = 1): Integer;
+    function PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string;
+    function Quotatation: string;
+    function Reverse: Boolean;
+    function Reversed: string;
+    function Slice(const a, b: Integer): string;
+    function StartsWith(const s: string): Boolean;
+    function StartWith(const s: string; const index: Integer = 1): Boolean;
+    function Stuff(const s: string; const iFrom, iCount: Integer): string;
+    function TrimLeft(const t: Char = #32): string;
+    function TrimRight(const t: Char = #32): string;
+    function Trim(const t: Char = #32): string;
+    function AsTRange: TRange;
+    function Void: Boolean;
+    function ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange;
+    function IsBinary(const emptyTrue: Boolean = True): Boolean;
+    function BoolifyBinary: TBooleanArray;
+    function MadeOf(const allowed: TCharArray): Boolean;
+    function FreeOf(const forbidden: TCharArray): Boolean;
+    function BuiltWithout(const forbidden: TCharArray): Boolean;
+    function Consists(const allowed: TCharArray): Boolean;
+    function Pure(const allowed: TCharArray): Boolean;
+    function BuiltWith(const blocks: TCharArray): Boolean;
+  end;
+{$ENDIF}
+
+{$IFDEF IMPLEMENTATION}
+{$I config\0D.inc}
 
 {==============================================================================]
   <TStringHelper.After>
@@ -1283,7 +1363,6 @@ begin
       Exit(False);
   Result := True;
 end;
-
 {$ENDIF}
 
 {$UNDEF string}

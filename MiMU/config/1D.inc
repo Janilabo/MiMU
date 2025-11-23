@@ -1,37 +1,371 @@
-{$I config\Defines.inc}
+{$I Defines.inc}
 
-{==============================================================================]
- <var.TArray(aSize: Integer): TArray>
- @action: Creates TArray with Self.
- @note: aSize will be Length of the created array.
-[==============================================================================}
-function HVar.TArray(const aSize: Integer = 1): TArr; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, aSize);
-  for i := 0 to High(Result) do
-    Result[i] := Self;
-end;
+{$IFDEF INTERFACE}
+{$ENDIF}
 
-{==============================================================================]
- <var.T2DArray(size1D, size2D: Integer): T2DArray>
- @action: Creates 2D array with Self.
- @note: None.
-[==============================================================================}
-function HVar.T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
-var
-  i, j: Integer;
-begin
-  SetLength(Result, size1D);
-  for i := 0 to High(Result) do
-  begin
-    SetLength(Result[i], size2D);
-    for j := 0 to High(Result[i]) do
-      Result[i][j] := Self;
-  end;
-end;
+{$IFDEF HELPERS}
+function Add(const item: TVar; const duplicates: Boolean = True): TArr; overload;
+function Add(const items: TArr; const duplicates: Boolean = True): TArr; overload;
+function AllEqual: Boolean; overload;
+function AllSame: Boolean; overload;
+function AllUnique: Boolean; overload;
+function Any(const null: TVar): TVar; overload;
+function Any: TVar; overload;
+function Append(const item: TVar; const duplicates: Boolean = True): TArr; overload;
+function Append(const items: TArr; const duplicates: Boolean = True): TArr; overload;
+function As2D(const rows, columns: Integer): T2DArr; overload;
+function As2D(const width: Integer): T2DArr; overload;
+function Backwards: TArr; overload;
+function Blend(const items: TArr; const index: Integer = 2147483647): TArr; overload;
+function Build(const item: TVar; const aSize: Integer = 1): TArr; overload;
+function BuiltWith(const blocks: TArr): Boolean; overload;
+function MadeOf(const allowed: TArr): Boolean; overload;
+function FreeOf(const forbidden: TArr): Boolean; overload;
+function BuiltWithout(const forbidden: TArr): Boolean; overload;
+function Blit(const items: TArr; const index: Integer = 0): Integer; overload;
+function Classes: T2DArr; overload;
+function Classes(const weight: TIntegerArray): T2DArr; overload;
+function Classes(const weight: TDoubleArray): T2DArr; overload;
+function Classify: T2DArr; overload;
+function Classify(const weight: TIntegerArray): T2DArr; overload;
+function Classify(const weight: TDoubleArray): T2DArr; overload;
+function Clear: Boolean; overload;
+function Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
+function Clone(const ID: TIntegerArray): TArr; overload;
+function Cloned: TArr; overload;
+function Collated: T2DArr; overload;
+function Combine(const b: TArr): TArr; overload;
+function Components(const connections: TConnectionArray): T2DArr; overload;
+function Compact: Integer; overload;
+function Compacted: TArr; overload;
+function Compacted(const threshold: Integer): TArr; overload;
+function Compress: Integer; overload;
+function Compressed: TArr; overload;
+function Compressed(const threshold: Integer): TArr; overload;
+function Comprised(const items: TArr): Boolean; overload;
+function Constant(const item: TVar): Boolean; overload;
+function Constant: Boolean; overload;
+function Contains(const item: TVar; const index: Integer = 0): Boolean; overload;
+function Copied: TArr; overload;
+function Copy(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
+function Create(const item: TVar): TArr; overload;
+function Create(const aSize: Integer; const item: TVar): TArr; overload;
+function Deduplicated: TArr; overload;
+function Delete(const index: Integer = 0): TArr; overload;
+function Delete(const ID: TIntegerArray): TArr; overload;
+function Differ(const target: TArr): Boolean; overload;
+function Disordered: TArr; overload;
+function Distinct: Integer; overload;
+function Distincted: T2DArr; overload;
+function Distribute(const parts: Integer): T2DArr; overload;
+function Diversified: TArr; overload;
+function DiversifiedEx(const dAscending: Boolean = True): TArr; overload;
+function Domain: TRange; overload;
+function Drop(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload;
+function Dump(const items: TArr; const index: Integer = 0): TArr; overload;
+function Dupe: TArr; overload;
+function Duplicate(const xTimes: Integer = 1): TArr; overload;
+function Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): TArr; overload;
+function Emplace(const item: TVar; const index: Integer = 0): Integer; overload;
+function Empty: Boolean; overload;
+function Equal(const target: TArr): Boolean; overload;
+function Erase(const item: TVar; const index: Integer = 2147483647; const all: Boolean = True): TArr; overload;
+function Erase(const item: TVar; const all: Boolean): TArr; overload;
+function Erase(const items: TArr; const index: Integer = 2147483647; const all: Boolean = True): TArr; overload;
+function Erase(const items: TArr; const all: Boolean): TArr; overload;
+function Exact(const items: TArr): Boolean; overload;
+function Excessive: Boolean; overload; 
+function Exch(const aIndex, bIndex: Integer): Boolean; overload;
+function Exchange(const aIndex, bIndex: Integer): Boolean; overload;
+function Exchange(var b: TArr): Integer; overload;
+function Exchange(const swaps: TConnectionArray): TArr; overload;
+function Exchanges(const target: TArr): TConnectionArray; overload;
+function Exclude(const items: TArr; const index: Integer = 2147483647): TArr; overload;
+function Exists: Boolean; overload;
+function Devein(const dIDs: TIntegerArray; const dValue: TVar): TArr; overload;
+function Devein(const dIDs: TIntegerArray): TArr; overload;
+function Expel(const eIDs: TIntegerArray): TArr; overload;
+function Extend(const item: TVar): TArr; overload;
+function Extend(const items: TArr): TArr; overload;
+function Extract(const item: TVar; const index: Integer = 0): TArr; overload;
+function Extract(const items: TArr; const index: Integer = 0): TArr; overload;
+function ExtractEvery(const X: Integer = 1; const index: Integer = 0): TArr; overload;
+function ExtractIDs(const allowed: TIntegerArray): TArr; overload;
+function ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): TArr; overload;
+function Feed(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload;
+function Fill(const item: TVar; const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
+function Fill(const items: TArr; const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
+function Filter(const item: TVar; const index: Integer = 0): TArr; overload;
+function Filter(const items: TArr; const index: Integer = 0): TArr; overload;
+function FilterEvery(const X: Integer = 1; const index: Integer = 0): TArr; overload;
+function FilterIDs(const forbidden: TIntegerArray): TArr; overload;
+function FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): TArr; overload;
+function Find(const ID: TRange; const item: TVar): Integer; overload;
+function Find(const ID: TIntegerArray; const item: TVar): Integer; overload;
+function Find(const ID: TRange; const items: TArr): Integer; overload;
+function Find(const ID: TIntegerArray; const items: TArr): Integer; overload;
+function First: Integer; overload;
+function First(const item: TVar): Integer; overload;
+function First(const items: TArr): Integer; overload;
+function Fit: Integer; overload;
+function Fit(const aSize: Integer): Integer; overload;
+function Fit(const aBounds: TRange): Integer; overload;
+function Fits(const maxValue: Integer): Boolean; overload;
+function Fits(const target: TRange): Boolean; overload;
+function Flip: Boolean; overload;
+function Free: Integer; overload;
+function FromLeft(const count: Integer; const index: Integer = 2147483647): TArr; overload;
+function FromRight(const count: Integer; const index: Integer = 0): TArr; overload;
+function Get: TArr; overload;
+function Get(const ID: TIntegerArray): TArr; overload;
+function Get(const ID: TRange): TArr; overload;
+function Group: T2DArr; overload;
+function Group(const weight: TIntegerArray; const wSorted: Boolean = False): T2DArr; overload;
+function Group(const weight: TDoubleArray; const wSorted: Boolean = False): T2DArr; overload;
+function Grouped(const groups: TIntegerArray): T2DArr; overload;
+function Groupify(const groups: TIntegerArray): T2DArr; overload;
+function Grouping(const groups: TIntegerArray): T2DArr; overload;
+function Grow(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload;
+function Holds(const chain: TArr): Boolean; overload;
+function Homogeneous(const item: TVar): Boolean; overload;
+function Homogeneous: Boolean; overload;
+function ID(const aAscending: Boolean = True): TIntegerArray; overload;
+function IDs(const aAscending: Boolean = True): TIntegerArray; overload;
+function IDs(const ID: TIntegerArray): TArr; overload;
+function IDs(const ID: TIntegerArray; const item: TVar): TArr; overload;
+function IDs(const ID: TIntegerArray; const items: TArr): TArr; overload;
+function Includes(const item: TVar; const index: Integer = 2147483647): Boolean; overload;
+function Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
+function Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
+function Indices(const aAscending: Boolean = True): TIntegerArray; overload;
+function Inject(const items: TArr; const index: Integer = 2147483647): Integer; overload;
+function Keep(const items: TArr; const index: Integer = 0): TArr; overload;
+function Kill: Integer; overload;
+function Last: Integer; overload;
+function Last(const item: TVar): Integer; overload;
+function Last(const items: TArr): Integer; overload;
+function LeastCommon: TVar; overload;
+function LeastFrequent: TVar; overload;
+function Len: Integer; overload;
+function Loc(const item: TVar; const index: Integer = 2147483647): Integer; overload;
+function Loc(const items: TArr; const index: Integer = 2147483647): Integer; overload;
+function Location(const item: TVar; const index: Integer = 2147483647): Integer; overload;
+function Location(const items: TArr; const index: Integer = 2147483647): Integer; overload;
+function Locations(const item: TVar; const index: Integer = 2147483647): TIntegerArray; overload;
+function Locations(const items: TArr; const index: Integer = 2147483647): TIntegerArray; overload;
+function Locations: TIntegerArray; overload;
+function Mix(const mixings: Integer = 1): Boolean; overload;
+function Mixed(const mixings: Integer = 1): TArr; overload;
+function MostCommon: TVar; overload;
+function MostFrequent: TVar; overload;
+function Movement(const moves: TConnectionArray): TArr; overload;
+function Movements(const target: TArr): TConnectionArray; overload;
+function Multi(const threshold: Integer = 2): Boolean; overload;
+function Multi(const threshold: TRange): Boolean; overload;
+function Next(const index: Integer; const count: Integer = 2147483647): TArr; overload;
+function Occurs(const item: TVar; const occurrence: Integer = 1): Boolean; overload;
+function Overlay(const items: TArr; const index: Integer; const init: TVar): TArr; overload;
+function Overlay(const items: TArr; const index: Integer = 0): TArr; overload;
+function Oversize(const limit: Integer): Boolean; overload;
+function Partition(const pSize: Integer): T2DArr; overload;
+function Patch(const index: Integer; const items: TArr): Integer; overload;
+function Plain: Boolean; overload;
+function Pick(const items: TArr; const index: Integer = 0): TArr; overload;
+function Pop: TVar; overload;
+function Pop(const null: TVar): TVar; overload;
+function Populate(const items: TArr; const times: Integer = 1): Boolean; overload;
+function Populate(const item: TVar; const times: Integer = 1): Boolean; overload;
+function Populated(const population: TRange): Boolean; overload;
+function Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload;
+function Pos(const item: TVar; const index: Integer = 0): Integer; overload;
+function Pos(const items: TArr; const index: Integer = 0): Integer; overload;
+function Position(const item: TVar; const index: Integer = 0): Integer; overload;
+function Position(const items: TArr; const index: Integer = 0): Integer; overload;
+function Positions(const item: TVar; const index: Integer = 0): TIntegerArray; overload;
+function Positions(const items: TArr; const index: Integer = 0): TIntegerArray; overload;
+function Positions: TIntegerArray; overload;
+function Prepend(const items: TArr; const index: Integer = 0): Integer; overload;
+function Presence(const item: TVar; const occurrence: Integer = 1): Boolean; overload;
+function Previous(const index: Integer; const count: Integer = 2147483647): TArr; overload;
+function Prune: Integer; overload;
+function Pruned: TArr; overload;
+function Pruned(const threshold: Integer): TArr; overload;
+function Pull: TArr; overload;
+function Purified(const dAscending: Boolean = True): TArr; overload;
+function Purify(const dAscending: Boolean = True): Integer; overload;
+function Push(const item: TVar): TArr; overload;
+function Push(const items: TArr): TArr; overload;
+function Put(const ID: TIntegerArray; const item: TVar): TArr; overload;
+function Put(const ID: TIntegerArray; const items: TArr): TArr; overload;
+function Put(const index: Integer; const items: TArr): TArr; overload;
+function Randomized: TArr; overload;
+function Range(const subArray: TArr; const index: Integer = 0): TRange; overload;
+function Ranges(const subArray: TArr; const index: Integer = 0): TRangeArray; overload;
+function Recreate(const arrSize: Integer): Boolean; overload;
+function Reject(const items: TArr; const index: Integer = 2147483647): TArr; overload;
+function Remove(const item: TVar; const index: Integer = 0; const all: Boolean = True): TArr; overload;
+function Remove(const item: TVar; const all: Boolean): TArr; overload;
+function Remove(const items: TArr; const index: Integer = 0; const all: Boolean = True): TArr; overload;
+function Remove(const items: TArr; const all: Boolean): TArr; overload;
+function Reposition(const oldIndex, newIndex: Integer): Boolean; overload;
+function Reset: Integer; overload;
+function Resize(const aChange: Integer): Integer; overload;
+function Resize(const aChange: Integer; const null: TVar): Integer; overload;
+function Reversal: TArr; overload;
+function Reverse: Boolean; overload;
+function Reversed: TArr; overload;
+function Reversify: Boolean; overload;
+function Reversion: TArr; overload;
+function Runs: T2DArr; overload;
+function Sample(const sSize: Integer): TArr; overload;
+function Scan(const ID: TRange; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload;
+function Scan(const ID: TIntegerArray; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload;
+function Scan(const ID: TRange; const items: TArr; const limit: Integer = 2147483647): TIntegerArray; overload;
+function Scan(const ID: TIntegerArray; const items: TArr; const limit: Integer = 2147483647): TIntegerArray; overload;
+function Scramble(const swaps: Integer = -1): TArr; overload;
+function Shake(const shakes: Integer = 1): TArr; overload;
+function Shift: TVar; overload;
+function Shift(const sCount: Integer): TArr; overload;
+function Shuffle(const shuffles: Integer = 1): TArr; overload;
+function Singlify(const item: TVar): Integer; overload;
+function Singlified(const item: TVar): TArr; overload;
+function Singular: Boolean; overload;
+function Singularize(const item: TVar): Integer; overload;
+function Singularized(const item: TVar): TArr; overload;
+function Soloize(const item: TVar): Integer; overload;
+function Soloized(const item: TVar): TArr; overload;
+function Size: Integer; overload;
+function Size(const aSize: Integer): TArr; overload;
+function Size(const aSize: Integer; const null: TVar): TArr; overload;
+function SizeBetween(const sMin, sMax: Integer): Boolean; overload;
+function SizeMax(const target: Integer): Boolean; overload;
+function SizeMin(const target: Integer): Boolean; overload;
+function Slice(const r: TRange): TArr; overload;
+function Slice(const r: TRangeArray): TArr; overload;
+function Slots: TIntegerArray; overload;
+function Some: TArr; overload;
+function Some(const amount: Integer): TArr; overload;
+function Span: TRange; overload;
+function Span(const subArray: TArr; const index: Integer = 2147483647): TRange; overload;
+function Spans(const subArray: TArr; const index: Integer = 2147483647): TRangeArray; overload;
+function Strip(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload;
+function SubarrayLocation(const pattern: TArr): Integer; overload;
+function SubarrayLocations(const pattern: TArr): TIntegerArray; overload;
+function SubarrayPosition(const pattern: TArr): Integer; overload;
+function SubarrayPositions(const pattern: TArr): TIntegerArray; overload;
+function Subset(const items: TArr): Boolean; overload;
+function Supply(const item: TVar): Integer; overload;
+function Supply(const items: TArr): Integer; overload;
+function Swapped(var target: TArr): Integer; overload;
+function SwapMerged(var target: TArr): TArr; overload;
+function SwappedMerge(var target: TArr): TArr; overload;
+function To2D(const rows, columns: Integer): T2DArr; overload;
+function To2D(const height: Integer): T2DArr; overload;
+function ToIndexes: TIntegerArray; overload;
+function Trade(var b: TArr): Integer; overload;
+function Undersize(const limit: Integer): Boolean; overload;
+function Uncluttered: TArr; overload;
+function Uniform: Boolean; overload;
+function Uniform(const item: TVar): Boolean; overload;
+function Uniformity: Double; overload;
+function Unified(const dAscending: Boolean = True): TArr; overload;
+function Unify(const dAscending: Boolean = True): Integer; overload;
+function Unduplicated: TArr; overload;
+function Uniqued: TArr; overload;
+function Uniques: TIntegerArray; overload;
+function Unshift(const item: TVar): TArr; overload;
+function Unshift(const items: TArr): TArr; overload;
+function Void: Boolean; overload;
+function Waste: Integer; overload;
+function Zigzag(const zAscending: Boolean = True): TArr; overload;
+{$IFDEF Sortable}
+function Sortable: Boolean; overload;
+function Sorted(const aAscending: Boolean = True): Boolean; overload;
+function IsSorted(const aAscending: Boolean = True): Boolean; overload;
+function IsSorted(const iStart, iStop: Integer; const aAscending: Boolean = True): Boolean; overload;
+function IsSorted(const indexes: TRange; const aAscending: Boolean = True): Boolean; overload;
+function IsSorted(const index: Integer; const aAscending: Boolean = True): Boolean; overload;
+function InOrder(const aAscending: Boolean = True): Boolean; overload;
+function Orderly: Boolean; overload;
+function Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload;
+function Order: Integer; overload;
+function Orientation: Integer; overload;
+function Descend: TArr; overload;
+function Ascend: TArr; overload;
+function Descending: Boolean; overload;
+function Ascending: Boolean; overload;
+function Decreasing: Boolean; overload;
+function Increasing: Boolean; overload;
+function Downward: Boolean; overload;
+function Upward: Boolean; overload;
+function Lowest: TVar; overload;
+function Highest: TVar; overload;
+function Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
+function Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload;
+function Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
+function Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload;
+function Mode: TVar; overload;
+function Center: TVar; overload;
+function MergeSortPair(var partner: TArr; const aAscending: Boolean = True): Integer; overload;
+function MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
+function QuickSortPair(var partner: TArr; const aAscending: Boolean = True): Integer; overload;
+function QuickSortSwapped(const aAscending: Boolean = True): TConnectionArray; overload;
+function QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
+function QuickSortedly(const aAscending: Boolean = True): TIntegerArray; overload;
+function QuickSorted(const aAscending: Boolean = True): TArr; overload;
+function QuickSort(const aAscending: Boolean = True): Integer; overload;
+function QuickSort3W(const aAscending: Boolean = True): Integer; overload;
+function QSort(const aAscending: Boolean = True): Integer; overload;  
+function PartitionSort(const aAscending: Boolean = True): Integer; overload;
+function CoctailSort(const aAscending: Boolean = True): Integer; overload;
+function CoctailSort2(const aAscending: Boolean = True): Integer; overload;
+function GnomeSort(const aAscending: Boolean = True): Integer; overload;
+function GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload;
+function PancakeSort(const aAscending: Boolean = True): Integer; overload;
+function BubbleSort(const aAscending: Boolean = True): Integer; overload;
+function BubbleSort2(const aAscending: Boolean = True): Integer; overload;
+function BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload;
+function CombSort(const aAscending: Boolean = True): Integer; overload;
+function HeapSort(const aAscending: Boolean = True): Integer; overload;
+function InsertionSort(const aAscending: Boolean = True): Integer; overload;
+function SelectionSort(const aAscending: Boolean = True): Integer; overload;
+function SelectionSortBidirectional(const aAscending: Boolean = True): Integer; overload;
+function SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; overload;
+function ShellSort(const aAscending: Boolean = True): Integer; overload;
+function MergeSort(const aAscending: Boolean = True): Integer; overload;
+function MergeSortBU(const aAscending: Boolean = True): Integer; overload;
+function HybridSort(const aAscending: Boolean = True): Integer; overload;
+function Uniq(const sSorted: Boolean = False): TArr; overload;
+function Downtrending: Boolean; overload;
+function Uptrending: Boolean; overload;
+function Notrending: Boolean; overload;
+function Trend: Integer; overload;
+function Trending: Boolean; overload;
+function Rising: Boolean; overload;
+function Falling: Boolean; overload;
+function Direction: Integer; overload;
+function TrendFalling: Boolean; overload;
+function TrendRising: Boolean; overload;
+function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
+function Sortedness: Boolean; overload;
+function SortednessEx(const stride: Integer = 16): Boolean; overload;
+function Monotonic: Boolean; overload;
+function Monotone: Boolean; overload;
+function IsMonotone: Boolean; overload;
+function Monotonious: Boolean; overload;
+function Unidirectional: Boolean; overload;
+function Trendy: Boolean; overload;
+function OnOrder: Boolean; overload;
+{$ENDIF}
+function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
+function QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+function QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
+function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): TArr; overload;
+function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): TArr; overload;
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
  <arr.Add(item: VarType; duplicates: Boolean): TArray>
  @action: Appends arr with item. Returns the array with added item.
@@ -439,8 +773,8 @@ end;
          duplicate classes can exist if values repeat non-consecutively.
 		 Custom weight.
 [==============================================================================}
-function HArr.Classes(const weight: TIntegerArray): T2DArr; overload; var w: Integer; {$DEFINE Skeleton_Classes}{$I config\Skeletons.inc}{$UNDEF Skeleton_Classes}
-function HArr.Classes(const weight: TDoubleArray): T2DArr; overload; var w: Double; {$DEFINE Skeleton_Classes}{$I config\Skeletons.inc}{$UNDEF Skeleton_Classes}
+function HArr.Classes(const weight: TIntegerArray): T2DArr; overload; var w: Integer; {$DEFINE Skeleton_Classes}{$I Skeletons.inc}{$UNDEF Skeleton_Classes}
+function HArr.Classes(const weight: TDoubleArray): T2DArr; overload; var w: Double; {$DEFINE Skeleton_Classes}{$I Skeletons.inc}{$UNDEF Skeleton_Classes}
 
 {==============================================================================]
   <TArray.Classify: T2DArray>
@@ -483,8 +817,8 @@ end;
          duplicate classes can exist if values repeat non-consecutively.
 		 Custom weight.
 [==============================================================================}
-function HArr.Classify(const weight: TIntegerArray): T2DArr; overload; var w: Integer; {$DEFINE Skeleton_Classify}{$I config\Skeletons.inc}{$UNDEF Skeleton_Classify}
-function HArr.Classify(const weight: TDoubleArray): T2DArr; overload; var w: Double; {$DEFINE Skeleton_Classify}{$I config\Skeletons.inc}{$UNDEF Skeleton_Classify}
+function HArr.Classify(const weight: TIntegerArray): T2DArr; overload; var w: Integer; {$DEFINE Skeleton_Classify}{$I Skeletons.inc}{$UNDEF Skeleton_Classify}
+function HArr.Classify(const weight: TDoubleArray): T2DArr; overload; var w: Double; {$DEFINE Skeleton_Classify}{$I Skeletons.inc}{$UNDEF Skeleton_Classify}
 
 {==============================================================================]
   <arr.Clear: Boolean>
@@ -2385,8 +2719,8 @@ end;
  @action: Groups array arr to 2D array by items.
  @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
 [==============================================================================}
-function HArr.Group(const weight: TIntegerArray; const wSorted: Boolean = False): T2DArr; overload; var w: TIntegerArray; {$DEFINE Skeleton_Group}{$I config\Skeletons.inc}{$UNDEF Skeleton_Group}
-function HArr.Group(const weight: TDoubleArray; const wSorted: Boolean = False): T2DArr; overload; var w: TDoubleArray; {$DEFINE Skeleton_Group}{$I config\Skeletons.inc}{$UNDEF Skeleton_Group}
+function HArr.Group(const weight: TIntegerArray; const wSorted: Boolean = False): T2DArr; overload; var w: TIntegerArray; {$DEFINE Skeleton_Group}{$I Skeletons.inc}{$UNDEF Skeleton_Group}
+function HArr.Group(const weight: TDoubleArray; const wSorted: Boolean = False): T2DArr; overload; var w: TDoubleArray; {$DEFINE Skeleton_Group}{$I Skeletons.inc}{$UNDEF Skeleton_Group}
 
 {==============================================================================]
  <arr.Grouped>
@@ -4233,8 +4567,8 @@ end;
   @action: Returns arr sorted by weight, based on QuickSort algorithm.
   @note: Weight and arr must be the same length! Otherwise returns empty array.
 [==============================================================================}
-function HArr.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): TArr; overload; var w: Integer; {$DEFINE Skeleton_QuickSorted}{$I config\Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
-function HArr.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): TArr; overload; var w: Double; {$DEFINE Skeleton_QuickSorted}{$I config\Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
+function HArr.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): TArr; overload; var w: Integer; {$DEFINE Skeleton_QuickSorted}{$I Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
+function HArr.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): TArr; overload; var w: Double; {$DEFINE Skeleton_QuickSorted}{$I Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
 
 {==============================================================================]
   <arr.Randomized>
@@ -5984,646 +6318,7 @@ begin
     Result[i] := item;
 end;
 
-{==============================================================================]
- <arr.Blank(parts: Integer): T2DArray>
- @action: Returns true if array is blank (no inventory, only empty indexes of []).
- @note: Blank array could be for example [[], [], []]. Returns false if array contains any items.
-        NOTE: Returns false if array is empty (1D Length = 0)!
- [==============================================================================}
-function H2DArr.Blank: Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := 0 to High(Self) do
-    if Self[i].Populated then
-      Exit(False);
-  Result := (Length(Self) > 0);
-end;
-
-{==============================================================================]
- <arr.Empty: Boolean>
- @action: Returns true if array is empty (Length = 0).
- @note: None.
-[==============================================================================}
-function H2DArr.Empty: Boolean; overload;
-begin
-  Result := (Length(Self) = 0);
-end;
-
-{==============================================================================]
- <arr.Flat: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
-[==============================================================================}
-function H2DArr.Flat: TArr; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, 0);
-  for i := 0 to High(Self) do
-    Result := Concat(Result, Self[i]);
-end;
-
-{==============================================================================]
- <arr.Flatten: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
-[==============================================================================}
-function H2DArr.Flatten: TArr; overload;
-var
-  i, j, l: Integer;
-begin
-  SetLength(Result, Self.Total);
-  l := 0;
-  for i := 0 to High(Self) do
-    for j := 0 to High(Self[i]) do
-      Result[l.Increase] := Self[i][j];
-end;
-
-{==============================================================================]
- <arr.To1D: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
-[==============================================================================}
-function H2DArr.To1D: TArr; overload;
-var
-  i, j: Integer;
-  l: specialize TList<TVar>;
-begin
-  l := specialize TList<TVar>.Create;
-  try
-    for i := 0 to High(Self) do
-      for j := 0 to High(Self[i]) do
-        l.Add(Self[i][j]);
-    Result := l.ToArray;
-  finally
-    l.Free;
-  end;
-end;
-
-{==============================================================================]
- <arr.Linearize: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
-[==============================================================================}
-function H2DArr.Linearize: TArr; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, 0);
-  for i := 0 to High(Self) do
-    Result := (Result + Self[i]);
-end;
-
-{==============================================================================]
- <arr.Irregular: Boolean>
- @action: Returns true if array contains arrays with different lengths (array not symmetrict)
- @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
-[==============================================================================}
-function H2DArr.Irregular: Boolean; overload;
-var
-  i, a, l, h: Integer;
-begin
-  if Self.Empty then
-    Exit(False);
-  l := Length(Self[0]);
-  h := l;
-  for i := 1 to High(Self) do
-  begin
-    a := Length(Self[i]);
-    if (a < l) then
-      l := a
-	else
-      if (a > h) then
-        h := a;
-    if (l <> h) then
-      Exit(True);
-  end;
-  Result := False;
-end;
-
-{==============================================================================]
- <arr.Jagged: Boolean>
- @action: Returns true if array contains arrays with different lengths (array not symmetrict)
- @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
-[==============================================================================}
-function H2DArr.Jagged: Boolean; overload;
-var
-  i, l: Integer;
-begin
-  if (Length(Self) > 0) then
-    l := Length(Self[0]);
-  for i := 1 to High(Self) do
-    if (Length(Self[i]) <> l) then
-      Exit(True);
-  Result := False;
-end;
-
-{==============================================================================]
- <arr.Merge: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
-[==============================================================================}
-function H2DArr.Merge: TArr; overload;
-var
-  i, j, l: Integer;
-begin
-  SetLength(Result, Self.Size);
-  l := Length(Result);
-  if (l > 0) then
-  for i := High(Self) downto 0 do
-    for j := High(Self[i]) downto 0 do
-      Result[l.Decrement] := Self[i][j];
-end;
-
-{==============================================================================]
- <arr.Merged: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
-[==============================================================================}
-function H2DArr.Merged: TArr; overload;
-var
-  i, j, o, s: Integer;
-begin
-  SetLength(Result, 0);
-  o := 0;
-  for i := 0 to High(Self) do
-  begin
-    s := Length(Self[i]);
-    if (s > 0) then
-    begin
-      SetLength(Result, (o + s));
-      for j := 0 to (s - 1) do
-        Result[o + j] := Self[i][j];
-      Inc(o, s);
-    end;
-  end;
-end;
-
-{==============================================================================]
- <arr.Ragged: Boolean>
- @action: Returns true if array contains arrays with different lengths (array not symmetrict)
- @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
-[==============================================================================}
-function H2DArr.Ragged: Boolean; overload;
-var
-  i: Integer;
-  h: specialize THashSet<Integer>;
-begin
-  h := specialize THashSet<Integer>.Create;
-  try
-    for i := 0 to High(Self) do
-      if (h.Count < 2) then
-        h.Add(Length(Self[i]))
-      else
-        Exit(True);
-  finally
-    h.Free;
-  end;
-  Result := False;
-end;
-
-{==============================================================================]
- <arr.Fit: Integer>
-  @action: Returns array length.
-  @note: Alternative.
-[==============================================================================}
-function H2DArr.Fit: Integer; overload;
-begin
-  Result := ((High(Self) - Low(Self)) + 1);
-end;
-
-{==============================================================================]
- <arr.Fit: Integer>
-  @action: Resizes the array to aSize (sets length safely).
-  @note: Returns the length that was set to Self. Negative sizes are clamped to 0.
-[==============================================================================}
-function H2DArr.Fit(const aSize: Integer): Integer; overload;
-begin
-  Result := Max(0, aSize);
-  SetLength(Self, Result);
-end;
-
-{==============================================================================]
- <arr.Fit: Integer>
-  @action: Resizes the array to fit within the specified range.
-  @note: 
-    - Returns the final array length. 
-    - If current length is below b.start → array grows to b.start.
-    - If current length is above b.stop → array shrinks to b.stop.
-    - If current length is within the range → no change.
-    - Negative lengths are clamped to 0.
-[==============================================================================}
-function H2DArr.Fit(const aBounds: TRange): Integer; overload;
-var
-  l: Integer;
-  b: TRange;
-begin
-  l := Length(Self);
-  b := aBounds.Normalize.ClampMin(0);
-  if (l < b.start) then
-    Result := b.start
-  else
-    if (l > b.stop) then
-      Result := b.stop
-    else
-      Result := l;	
-  if (Result <> l) then
-    SetLength(Self, Result);
-end;
-
-{==============================================================================]
- <arr.Size(lengths: TIntegerArray): Int64>
- @action: Returns actual Length for 2D array. Stores Length's of 2D part, of the arr, to lengths variable.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
-[==============================================================================}
-function H2DArr.Size(var lengths: TIntegerArray): Int64; overload;
-var
-  i: Integer;
-begin
-  Result := 0;
-  SetLength(lengths, Length(Self));
-  for i := 0 to High(Self) do
-  begin
-    lengths[i] := Length(Self[i]);
-    Result := (Result + lengths[i]);
-  end;
-end;
-
-{==============================================================================]
- <arr.Size: Int64>
- @action: Returns actual Length for 2D array.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
-[==============================================================================}
-function H2DArr.Size: Int64; overload;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-    Result.Increase(Length(Self[i]));
-end;
-
-{==============================================================================]
- <arr.Total: Int64>
- @action: Returns actual Length for 2D array.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
-[==============================================================================}
-function H2DArr.Total: Int64; overload;
-var
-  a: TArr;
-begin
-  Result := 0;
-  for a in Self do
-    Result.Increase(Length(a));
-end;
-
-{==============================================================================]
- <arr.Population: Int64>
- @action: Returns actual Length for 2D array.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
-[==============================================================================}
-function H2DArr.Population: Int64; overload;
-var
-  i: Integer;
-  s, e: PInteger;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-  begin
-    if Self[i].Empty then
-      Continue;
-    s := PInteger(Self[i]);
-    e := (s + Length(Self[i]));
-    Result := (Result + (e - s));
-  end;
-end;
-
-{==============================================================================]
- <arr.Inventory(items: TArray): Int64>
- @action: Returns actual Length for 2D array.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
-        Stores 2D array items as 1D to items.
-[==============================================================================}
-function H2DArr.Inventory(var items: TArr): Int64; overload;
-var
-  i, j: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-    Inc(Result, Length(Self[i]));
-  SetLength(items, Result);
-  if (Result > 0) then
-  for i := High(Self) downto 0 do
-    for j := High(Self[i]) downto 0 do
-      items[Result.Decrement] := Self[i][j];
-  Result := Length(items);
-end;
-
-{==============================================================================]
- <arr.Inventory: Int64>
- @action: Returns actual Length for 2D array.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
-[==============================================================================}
-function H2DArr.Inventory: Int64; overload;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-    Inc(Result, Length(Self[i]));
-end;
-
-{==============================================================================]
- <arr.Census: Int64>
- @action: Returns actual Length for 2D array.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
-[==============================================================================}
-function H2DArr.Census: Int64; overload;
-var
-  i: Integer;
-  s, e: PInteger;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-  begin
-    s := PInteger(Self[i]);
-    if (s <> nil) then
-    begin
-      e := s;
-      Inc(e, Length(Self[i]));
-      Result := Result + (e - s);
-    end;
-  end;
-end; 
-
-{==============================================================================]
- <arr.TArray: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
-[==============================================================================}
-function H2DArr.TArray: TArr; overload;
-var
-  i, j, l: Integer;
-begin
-  SetLength(Result, 0);
-  for i := 0 to High(Self) do
-  begin
-    l := Length(Result);
-    SetLength(Result, (l + Length(Self[i])));
-    for j := 0 to High(Self[i]) do
-      Result[l + j] := Self[i][j];
-  end;
-end;
-
-{==============================================================================]
- <arr.TArray: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
-[==============================================================================}
-function H2DArr.Unwrap: TArr; overload;
-var
-  i, j: Integer;
-begin
-  Result := [];
-  for i := 0 to High(Self) do
-    for j := 0 to High(Self[i]) do
-      Result := (Result + [Self[i][j]]);
-end;
-
-{==============================================================================]
- <arr.Kill: Integer>
- @action: Combination of Length(arr) + SetLength(arr, 0).
- @note: Returns the length of main array (1st dimension)!
-[==============================================================================}
-function H2DArr.Kill: Integer; overload;
-begin
-  Result := Length(Self);
-  SetLength(Self, 0);
-end;
-
-{==============================================================================]
- <arr.Kill(k2D: TIntegerArray): Int64>
- @action: Combination of Length(arr) + SetLength(arr, 0) for array indexes by k2D.
- @note: Supports custom start index! Returns the modified arr.
-        Unsafe, simply goes through the given indexes, no safety checks!
-		Use with caution, correctly.
-[==============================================================================}
-function H2DArr.Kill(const k2D: TIntegerArray): Int64; overload;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(k2D) do
-  begin
-    Result := (Result + Length(Self[k2D[i]]));
-    SetLength(Self[k2D[i]], 0);	
-  end;
-end;
-
-{==============================================================================]
- <arr.Destroy(k2D: TIntegerArray): Int64>
- @action: Combination of Length(arr) + SetLength(arr, 0) for array indexes by k2D.
- @note: Completely wipes the array.
-[==============================================================================}
-function H2DArr.Destroy: Int64; overload;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-  begin
-    Result := (Result + Length(Self[i]));
-    SetLength(Self[i], 0);	
-  end;
-  SetLength(Self, 0);
-end;
-
-{==============================================================================]
- <arr.Free: Int64>
- @action: Result := Length(Self) + SetLength(Self, 0) combo for 2D array
- @note: None.
-[==============================================================================}
-function H2DArr.Free: Int64; overload;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-    Result := (Result + Length(Self[i]));
-  SetLength(Self, 0);
-end;
-
-{==============================================================================]
- <arr.Recreate: Int64>
- @action: Clear the array and reallocate to arrSize (negative = previous length).
- @note: Returns True if array was non-empty and/or arrSize <> 0.
-[==============================================================================}
-function H2DArr.Recreate(const arrSize: Integer): Boolean; overload;
-var
-  l: Integer;
-begin
-  l := Length(Self);
-  Result := ((Length(Self) > 0) or (arrSize <> 0));
-  SetLength(Self, 0);
-  if Result then
-    if (arrSize < 0) then
-      SetLength(Self, l)
-    else
-      SetLength(Self, arrSize);
-end;
-
-{==============================================================================]
- <arr.Reset: Int64>
- @action: Resets all elements of the array to default values while preserving its structure.
- @note: Returns the number of elements that were reset.
-[==============================================================================}
-function H2DArr.Reset: Int64; overload;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-  begin
-    Result := (Result + Length(Self[i]));
-    SetLength(Self[i], 0);
-  end;
-end;
-
-{==============================================================================]
- <arr2d.Reverse>
-  @action: Reverses the 2D array in place.
-  @note: Returns True only if the array contained 2 or more elements.
-         Returns False if Length < 2 (no operation performed).
-[==============================================================================}
-function H2DArr.Reverse: Boolean; overload;
-var
-  r: TRange;
-begin
-  Result := (Length(Self) > 1);
-  if not Result then
-    Exit;
-  r.create(0, High(Self));
-  while (r.start < r.stop) do
-    Self[r.start.Increase].Swapped(Self[r.stop.Decrease]);
-end;
-
-{==============================================================================]
- <arr.Reversify>
-  @action: Reverses the order of elements in a 2D array.
-           Works by creating a temporary array and copying elements in reverse order.
-  @note: - The operation modifies Self in place.
-         - Returns True if the array had 2 or more elements (reversal performed).
-         - Returns False if the array had 0 or 1 element (nothing changed).
-[==============================================================================}
-function H2DArr.Reversed: T2DArr; overload;
-var
-  i, l: Integer;
-begin
-  l := Length(Self);
-  SetLength(Result, l);
-  for i := 0 to (l - 1) do
-    Result[i] := Self[(l - 1) - i];
-end;
-
-{==============================================================================]
- <arr.Reversify>
-  @action: Reverses the order of elements in a 2D array.
-           Works by creating a temporary array and copying elements in reverse order.
-  @note: - The operation modifies Self in place.
-         - Returns True if the array had 2 or more elements (reversal performed).
-         - Returns False if the array had 0 or 1 element (nothing changed).
-[==============================================================================}
-function H2DArr.Reversify: Boolean; overload;
-var
-  s: T2DArr;
-  i, l: Integer;
-begin
-  l := Length(Self);
-  Result := (l > 1);
-  if not Result then
-    Exit;
-  SetLength(s, l);
-  for i := 0 to (l - 1) do
-    s[i] := Self[(l - 1) - i];
-  Self := s;
-end;
-
-{==============================================================================]
- <arr.Pull: T2DArr>
- @action: Returns the contents of the array and leaves it empty.
- @note: After calling Pull, Self.Length = 0.
-[==============================================================================}
-function H2DArr.Pull: T2DArr; overload;
-var
-  i, j: Integer;
-begin
-  SetLength(Result, Length(Self));
-  for i := 0 to High(Self) do
-  begin
-    SetLength(Result[i], Length(Self[i]));
-    for j := 0 to High(Self[i]) do
-      Result[i][j] := Self[i][j];
-  end;
-  SetLength(Self, 0);
-end;
-
-{==============================================================================]
- <arr.Squeeze>
- @action: Removes empty subarrays from the current 2D point array (in place).
- @note: Returns the number of removed (empty) subarrays; the array itself is resized.
-[==============================================================================}
-function H2DArr.Squeeze: Integer; overload;
-var
-  i, r, l: Integer;
-begin
-  l := Length(Self);
-  r := 0;
-  for i := 0 to High(Self) do
-    if (Length(Self[i]) > 0) then
-      Self[r.Increase] := Self[i];
-  Result := (l - r);
-  if (Result > 0) then
-    SetLength(Self, r);
-end;
-
-{==============================================================================]
- <arr.Squeezed>
- @action: Creates and returns a copy of the array with all empty subarrays removed.
- @note: The original array remains unchanged; the result is the squeezed copy.
-[==============================================================================}
-function H2DArr.Squeezed: T2DArr; overload;
-var
-  i, r: Integer;
-begin
-  SetLength(Result, Length(Self));
-  if Result.Empty then
-    Exit;
-  r := 0;
-  for i := 0 to High(Self) do
-    if (Length(Self[i]) > 0) then
-      Result[r.Increase] := Self[i];
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
- <T2D.Create(item: VarType; size1D, size2D: Integer)>
- @action: Creates array with item where size is length of the array.
- @note: item is placed on every index in result.
-[==============================================================================}
-class function T2D.Create(const item: TVar; const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
-var
-  i, j, s: Integer;
-begin
-  s := (Max(0, size2D) - 1);
-  SetLength(Result, Max(0, size1D), (s + 1));
-  for i := 0 to High(Result) do
-    for j := 0 to s do
-      Result[i][j] := item;
-end;
-
 {$IFDEF Sortable}
-
 {==============================================================================]
   <HArr.Sortable>
   @action: Checks whether the array contains at least two different elements.
@@ -8878,5 +8573,5 @@ begin
       Exit(False);
   Result := True;
 end;
-
+{$ENDIF}
 {$ENDIF}

@@ -1,6 +1,6 @@
 {$DEFINE TConnection}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
+{$IFDEF INTERFACE}
 type
   TConnection = record
     id1, id2: Integer;
@@ -11,8 +11,10 @@ type
   TConnectionArray = array of TConnection;
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <TConnection.Create>
   @action: Creates TConnection with index1 and index2.
@@ -36,7 +38,6 @@ begin
   Self.id2 := index2;
   Result := Self;
 end;
-
 {$ENDIF}
 
 {$UNDEF TConnection}

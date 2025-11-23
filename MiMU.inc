@@ -15,11 +15,19 @@
 {$I MiMU\TDoubleArray.inc}
 {$I MiMU\TStringArray.inc}
 {$I MiMU\TCharArray.inc}
-{$I MiMU\TPointArray.inc}
 {$I MiMU\TBooleanArray.inc}
-{$I MiMU\T2DIntegerArray.inc}
-{$I MiMU\T2DPointArray.inc}
+{$I MiMU\TPointArray.inc}
 {$I MiMU\TBoxArray.inc}
 {$I MiMU\TRangeArray.inc}
+{$I MiMU\T2DIntegerArray.inc}
+{$I MiMU\T2DDoubleArray.inc}
+{$I MiMU\T2DStringArray.inc}
+{$I MiMU\T2DCharArray.inc}
+{$I MiMU\T2DBooleanArray.inc}
+{$I MiMU\T2DPointArray.inc}
+{$I MiMU\T2DBoxArray.inc}
+{$I MiMU\T2DRangeArray.inc}
 
-{$INCLUDE MiMU\config\Templates\D.inc}
+{$IFNDEF HELPERS}
+  {$INCLUDE MiMU\config\Templates\D.inc}
+{$ENDIF}

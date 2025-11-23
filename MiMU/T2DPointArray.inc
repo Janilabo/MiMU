@@ -1,10 +1,18 @@
 {$DEFINE TPoint}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
-
+{$IFDEF INTERFACE}
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+type
+  H2DArr = type helper for T2DArr {$I config\2D.inc}
+    function AllBounds: TBoxArray; overload;
+    function AllBounds(var aBounds: TBox): TBoxArray; overload;
+  end;
+{$ENDIF}
+
+{$IFDEF IMPLEMENTATION}
+{$I config\2D.inc}
 
 {==============================================================================]
   <T2DPointArray.AllBounds>
@@ -45,7 +53,6 @@ begin
   end else
     aBounds.Create(-2147483648);
 end;
-
 {$ENDIF}
 
 {$UNDEF TPoint}

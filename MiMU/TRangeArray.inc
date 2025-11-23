@@ -1,12 +1,30 @@
 {$DEFINE TRange}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
-{$I config\Helpers.inc}
+{$IFDEF INTERFACE}
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+type
+  HArr = type helper for TArr {$I config\1D.inc}
+    function Bounds: TRange; overload;
+    function Range: TRange; overload;
+    function TIA: TIntegerArray;
+    function T2DIA: T2DIntegerArray;
+    function Starting: TIntegerArray; overload;
+    function Stopping: TIntegerArray; overload;
+    function Normalized: TRangeArray; overload;
+    function Gaps: TRangeArray; overload;
+    function Starts: TIntegerArray; overload;
+    function Stops: TIntegerArray; overload;
+    function StartValues: TIntegerArray; overload;
+    function StopValues: TIntegerArray; overload;
+    function Unzip(var startArr, stopArr: TIntegerArray): Integer;
+    function Zip(const startArr, stopArr: TIntegerArray): Integer; 
+  end;
+{$ENDIF}
 
-{$I Generic.inc}
+{$IFDEF IMPLEMENTATION}
+{$I config\1D.inc}
 
 {==============================================================================]
   <TRangeArrayHelper.Bounds: TRange>
@@ -256,7 +274,6 @@ begin
     Self[i].stop := stopArr[i];
   end;
 end;
-
 {$ENDIF}
 
 {$UNDEF TRange}

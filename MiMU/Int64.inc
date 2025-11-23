@@ -1,9 +1,11 @@
 {$DEFINE Int64}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
+{$IFDEF INTERFACE}
+{$ENDIF}
 
- type
-  TInt64Helper = type helper for Int64
+{$IFDEF HELPERS}
+type
+  HVar = type helper for TVar 
     function Prime: Boolean; 
     function IsPrime: Boolean; 
     function Parity: Byte; inline;
@@ -32,11 +34,9 @@
     function Oversize(const limit: Int64): Boolean; inline;
     function Undersize(const limit: Int64): Boolean; inline;
   end;
-  
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
-
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
  <TInt64Helper.Prime>
  @action: Returns true if N is prime.
@@ -348,7 +348,6 @@ function TInt64Helper.Undersize(const limit: Int64): Boolean; inline;
 begin
   Result := (Self < limit);
 end;
-
 {$ENDIF}
 
 {$UNDEF Int64}

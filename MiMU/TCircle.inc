@@ -1,6 +1,6 @@
 {$DEFINE TCircle}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
+{$IFDEF INTERFACE}
 type
   TCircle = record
     Center: TPoint;
@@ -28,8 +28,10 @@ operator=(const a, b: TCircle): Boolean;
 operator<>(const a, b: TCircle): Boolean;
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 operator=(const a, b: TCircle): Boolean;
 begin
   Result := ((a.Center = b.Center) and (a.Radius = b.Radius));
@@ -258,7 +260,6 @@ begin
     Inc(c.X);
   end;
 end; 
-
 {$ENDIF}
 
 {$UNDEF TCircle}

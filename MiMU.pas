@@ -53,7 +53,8 @@ function MiMU_Version: Double;
 type
   TDistanceMetric = (dmHypotEuclidean, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev, dmMinkowski, dmMaxMinChebyshev, dmOctile);
 
-{$I MiMU.inc}
+{$DEFINE INTERFACE}{$I MiMU.inc}{$UNDEF INTERFACE}
+{$DEFINE HELPERS}{$I MiMU.inc}{$UNDEF HELPERS}
 
 function DistanceFunction(const distFunc: TDistanceFunction): TDistanceFunction; overload;
 function DistanceFunction(const method: Integer = 0): TDistanceFunction; overload;
@@ -195,7 +196,7 @@ type
  
 implementation
 
-{$DEFINE IMPLEMENT} 
+{$DEFINE IMPLEMENTATION} 
 
 function MiMU_Version: Double; 
 begin
@@ -654,6 +655,8 @@ end;
 {$mode objfpc}{$H+}
 
 {$I MiMU.inc}
+
+{$UNDEF IMPLEMENTATION}
 
 initialization
 

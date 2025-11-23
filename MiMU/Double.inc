@@ -1,12 +1,69 @@
 {$DEFINE Double}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
+{$IFDEF INTERFACE}
 type
   TDoubleArray = array of Double;
   T2DDoubleArray = array of TDoubleArray;
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+type
+  HVar = type helper for TVar {$I config\0D.inc}
+    function ClampMin(const limit: Double): Double;
+    function ClampMax(const limit: Double): Double;
+    function Clamp(const minimum, maximum: Double): Double;
+    function BoundMin(const limit: Double): Double;
+    function BoundMax(const limit: Double): Double;
+    function Bound(const minimum, maximum: Double): Double;
+    function RestrictMin(const limit: Double): Double;
+    function RestrictMax(const limit: Double): Double;
+    function Restrict(const minimum, maximum: Double): Double;
+    function LimitMin(const limit: Double): Double;
+    function LimitMax(const limit: Double): Double;
+    function Limit(const minimum, maximum: Double): Double;
+    function ConstraintMin(const limit: Double): Boolean;
+    function ConstraintMax(const limit: Double): Boolean;
+    function Constraint(const minimum, maximum: Double): Boolean;
+    function Increase(const N: Double = 1): Double; overload;
+    function Increase(const B: Boolean): Double; overload;
+    function Decrease(const N: Double = 1): Double; overload;
+    function Decrease(const B: Boolean): Double; overload;
+    function Increment(const N: Double = 1): Double; overload;
+    function Increment(const B: Boolean): Double; overload;
+    function Decrement(const N: Double = 1): Double; overload;
+    function Decrement(const B: Boolean): Double; overload;
+    function Digits: TIntegerArray;
+    function NegA: Double; inline;
+    function Neg: Double; inline;
+    function Negative: Boolean; inline;
+    function Positive: Boolean; inline;
+    function Neutral: Boolean; inline;
+    function MinDecimal: Double;
+    function MaxDecimal: Double;
+    function Accuracy(const a: Integer): Double;
+    function Compare(const target: Double): Integer; inline;
+    function Sign(const target: Double = 0): Integer; inline;
+    function Precede(const target: Double; const aAscending: Boolean): Boolean; overload;
+    function Ascending(const target: Double): Boolean; inline;
+    function Descending(const target: Double): Boolean; inline;
+    function Distance(const T: Double): Double; inline;
+    function Difference(const T: Double): Double; inline;
+    function Opposite: Double; inline;
+    function FixDegrees: Double;
+    function Degrees: Double;
+    function FixRadians: Double;
+    function Radians(const compass: Boolean = False): Double;
+    function Percent(const position: Double): Double; inline;
+    function Percentage(const percent: Double): Double; inline;
+    function Over(const target: Double): Boolean; inline;
+    function Under(const target: Double): Boolean; inline;
+    function Oversize(const limit: Double): Boolean;
+    function Undersize(const limit: Double): Boolean;
+  end;
+{$ENDIF}
+
+{$IFDEF IMPLEMENTATION}
+{$I config\0D.inc}
 
 {==============================================================================]
  <TDoubleHelper.ClampMin>
@@ -528,7 +585,6 @@ function TDoubleHelper.Undersize(const limit: Double): Boolean;
 begin
   Result := (Self < limit);
 end;
-
 {$ENDIF}
 
 {$UNDEF Double}

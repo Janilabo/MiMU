@@ -1,6 +1,6 @@
 {$DEFINE TBox}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
+{$IFDEF INTERFACE}
 type
   TBoxEnumerator = record
   private
@@ -192,7 +192,23 @@ function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
 function Box(const val: Integer = 0): TBox; overload; inline;
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+type
+  HVar = type helper for TVar {$I config\0D.inc}
+    function Create: TBox; overload;
+    function Inside(const targets: TBoxArray): Boolean; overload;
+    function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;
+    function Row(const cells: Integer; const space: Integer = 0): TBoxArray;
+    function Column(const cells: Integer; const space: Integer = 0): TBoxArray;
+    function Placements(const target: TBox; const o: TPoint): TBoxArray; overload;
+    function Placements(const target: TBox): TBoxArray; overload;
+    function Tiled(const target: TBox): TBoxArray; overload;
+    function Gridded(const target: TBox): TBoxArray; overload;
+  end;
+{$ENDIF}
+
+{$IFDEF IMPLEMENTATION}
+{$I config\0D.inc}
 
 operator+(const a, b: TBox): TBox;
 begin
@@ -2658,7 +2674,6 @@ class function _TBox.Create(const value: Integer = 0): TBox; overload;
 begin
   Result := _TBox.Create(value, value, value, value);
 end;
-
 {$ENDIF}
 
 {$UNDEF TBox}

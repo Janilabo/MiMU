@@ -1,8 +1,6 @@
 {$DEFINE TPoint}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
-{$I config\Helpers.inc}
-
+{$IFDEF INTERFACE}
 type
   TPA = class
     class function Init(var arr: TPointArray): Integer; overload; 
@@ -14,9 +12,228 @@ type
   end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+type
+  HArr = type helper for TArr {$I config\1D.inc}
+    function Binify(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function Binify(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+    function Binified(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function Binified(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+    function Bounds: TBox; overload;
+    function Bounds(var width, height: Integer): TBox; overload;
+    function BoundingBox: TBox;
+    function Boundaries: TBox;
+    function Box: TBox;
+    function Boxed: TBox;
+    function MinMax: TBox;
+    function Region: TBox; overload;
+    function Coverage: TBox; overload;
+    function Undupe: TPointArray;
+    function Unduped: TPointArray;
+    function Invert: TPointArray;
+    function Inverted(const arrBounds: TBox): TPointArray; overload;
+    function Inverted: TPointArray; overload;
+    function Inverse(const arrBounds: TBox): TPointArray; overload;
+    function Inverse: TPointArray; overload;
+    function Edge(const scan8W: Boolean = False): TPointArray;
+    function FloodFill(const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload;
+    function FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointArray; overload;
+    function Xs: TIntegerArray; overload;
+    function Ys: TIntegerArray; overload;
+    function XValues: TIntegerArray; overload;
+    function YValues: TIntegerArray; overload;
+    function Unzip(var xArr, yArr: TIntegerArray): Integer;
+    function Zip(const xArr, yArr: TIntegerArray): Integer;
+    function Extent: TBox;
+    function Vertical: TRange; overload;
+    function Horizontal: TRange; overload;
+    function Neighborify(const adjacency8: Boolean = True): T2DPointArray; overload;
+    function Regionize(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function Regionize(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+    function Regionize(const radius: Double = 1.0): T2DPointArray; overload;
+    function RSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
+    function RSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+    function RSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
+    function CSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
+    function CSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+    function CSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;  
+    function XSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
+    function XSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+    function XSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
+    function YSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
+    function YSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+    function YSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
+    function Split(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function Split(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+    function Split(const radius: Double = 1.0): T2DPointArray; overload;
+    function SplitEx(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function SplitEx(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+    function SplitEx(const radius: Double = 1.0): T2DPointArray; overload;
+    function Clusters(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+    function Clusters(const radius: Double = 1.0): T2DPointArray; overload;
+    function Clusters(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function Cluster(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+    function Cluster(const radius: Double = 1.0): T2DPointArray; overload;
+    function Cluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function Clustered(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+    function Clustered(const radius: Double = 1.0): T2DPointArray; overload;
+    function Clustered(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function Clusterify(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+    function Clusterify(const radius: Double = 1.0): T2DPointArray; overload;
+    function Clusterify(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function Clusterize(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+    function Clusterize(const radius: Double = 1.0): T2DPointArray; overload;
+    function Clusterize(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function Segment(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+    function Segment(const radius: Double = 1.0): T2DPointArray; overload;
+    function Segment(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function Fragment(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+    function Fragment(const radius: Double = 1.0): T2DPointArray; overload;
+    function Fragment(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function Groups(const adjacency8: Boolean = True): T2DPointArray; overload;
+    function Grouping(const adjacency8: Boolean = True): T2DPointArray; overload;
+    function Grouped(const adjacency8: Boolean = True): T2DPointArray; overload;
+    function Groupify(const adjacency8: Boolean = True): T2DPointArray; overload;
+    function XClassify(const pSorted: Boolean = False): T2DPointArray; overload;
+    function YClassify(const pSorted: Boolean = False): T2DPointArray; overload;
+    function Axes(var X, Y: TIntegerArray): Integer; overload;
+    function Axed: T2DIntegerArray; overload;
+    function Axed(var X, Y: TIntegerArray): Integer; overload;
+    function SortByRow(const aAscending: Boolean = True): Integer; overload;
+    function SortByColumn(const aAscending: Boolean = True): Integer; overload;
+    function SortedByIndex(const aAscending: Boolean = True): TPointArray; overload;
+    function Attach(const items: TPointArray): Integer; overload;
+    function Embed(const items: TPointArray; const index: Integer = 2147483647): Integer; overload;
+    function FrameLinks(const dist: Integer; const area: TBox): TPointArray; overload;
+    function FrameLinks(const dist: Integer = 1): TPointArray; overload;
+    function Reinit: Integer; overload;
+    function XVals(const aAscending: Boolean = True): TIntegerArray;
+    function YVals(const aAscending: Boolean = True): TIntegerArray;
+    function XArr(const aAscending: Boolean = True): TIntegerArray;
+    function YArr(const aAscending: Boolean = True): TIntegerArray;
+    function XAxis(const rUnique: Boolean = True): TIntegerArray; overload;
+    function YAxis(const rUnique: Boolean = True): TIntegerArray; overload;
+    function X2D(var yArr: TIntegerArray; const xOrder: Boolean = True; const xAscending: Boolean = True): T2DIntegerArray; overload;
+    function Y2D(var xArr: TIntegerArray; const yOrder: Boolean = True; const yAscending: Boolean = True): T2DIntegerArray; overload;
+    function Blobs(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function Blobs(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+    function Blobs(const radius: Double = 1.0): T2DPointArray; overload;
+    function Blobify(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function Blobify(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+    function Blobify(const radius: Double = 1.0): T2DPointArray; overload;
+    function YTo2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+    function YTo2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
+    function XTo2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+    function XTo2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
+    function YAs2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+    function YAs2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
+    function XAs2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+    function XAs2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
+    function DBSCAN(const radius: Double; const minPts: Integer; const distFunc: TDistanceFunction): T2DPointArray; overload;
+    function DBSCAN(const radius: Double = 1.0; const minPts: Integer = 2; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+    function DBSCAN(const xRadius, yRadius: Integer; const minPts: Integer): T2DPointArray; overload;
+    function Nearby(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): TPointArray; overload;
+    function Nearby(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+    function Nearby(const target: TPoint; const xRadius, yRadius: Integer): TPointArray; overload;
+    function Nearby(const targets: TPointArray; const radius: Double; const distFunc: TDistanceFunction): TPointArray; overload;
+    function Nearby(const targets: TPointArray; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+    function Nearby(const targets: TPointArray; const xRadius, yRadius: Integer): TPointArray; overload;
+    function CorePointsMax(const maximumNeighbours: Integer; const xRadius, yRadius: Integer): TPointArray; overload;
+    function CorePointsMax(const maximumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+    function CorePointsMin(const minimumNeighbours: Integer; const xRadius, yRadius: Integer): TPointArray; overload;
+    function CorePointsMin(const minimumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+    function CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+    function CorePoints(const allowedNeighbours: TRange; const xRadius, yRadius: Integer): TPointArray; overload;
+    function Bins(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+    function Bins(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function XBuckets(const bWidth: Integer = 1): T2DPointArray;
+    function YBuckets(const bHeight: Integer = 1): T2DPointArray;
+    function Buckets(const bWidth, bHeight: Integer): T2DPointArray; overload;
+    function Buckets(const bSize: Integer = 1): T2DPointArray; overload;
+    function Bucketed(const bWidth, bHeight: Integer): T2DPointArray; overload;
+    function Bucketed(const bSize: Integer = 1): T2DPointArray; overload;
+    function Boxify(const bWidth, bHeight: Integer): T2DPointArray; overload;
+    function Boxify(const bSize: Integer = 1): T2DPointArray; overload;
+    function Boxified(const bWidth, bHeight: Integer): T2DPointArray; overload;
+    function Boxified(const bSize: Integer = 1): T2DPointArray; overload;
+    function BinBox(const bWidth, bHeight: Integer): T2DPointArray; overload;
+    function BinBox(const bSize: Integer = 1): T2DPointArray; overload;
+    function BinaryFloodFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
+    function BinaryFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
+    function BinaryFilled(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
+    function BFloodFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
+    function AdjFill(const scan8W: Boolean = True): T2DPointArray;
+    function NFill(const scan8W: Boolean = True): T2DPointArray;
+    function AFill(const scan8W: Boolean = True): T2DPointArray;
+    function CFill(const scan8W: Boolean = True): T2DPointArray;
+    function BCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+    function BCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function QuickSortByX(const aAscending: Boolean = True): Integer;
+    function QuickSortByY(const aAscending: Boolean = True): Integer;
+    function QuickSortByXY(const aAscending: Boolean = True): Integer;
+    function QuickSortByYX(const aAscending: Boolean = True): Integer;
+    function SortByIndex(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
+    function SortByIndex(const aAscending: Boolean = True): Integer; overload;
+    function SortByScanline(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
+    function SortByScanline(const aAscending: Boolean = True): Integer; overload;
+    function ProximityCluster(const xRadius, yRadius: Integer; const method: Integer = 0): T2DPointArray; overload;
+    function ProximityCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const method: Integer = 0): T2DPointArray; overload;
+    function Linked(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 1): T2DPointArray; overload;
+    function Linked(const xRadius, yRadius: Integer; const check: Integer = 1): T2DPointArray; overload;
+    function Chain(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
+    function Chain(const xRadius, yRadius: Integer; const check: Integer = 5): T2DPointArray; overload;
+    function Attach(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
+    function Attach(const xRadius, yRadius: Integer; const check: Integer = 5): T2DPointArray; overload;
+    function RCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
+    function RCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+    function ToRows: T2DPointArray;
+    function ToColumns: T2DPointArray;
+    function AsRows: T2DPointArray;
+    function AsColumns: T2DPointArray;
+    function Rows: T2DPointArray;
+    function Columns: T2DPointArray;
+    function BSort(const aAscending: Boolean = True): Integer; overload;
+    function BSorted(const aAscending: Boolean = True): TPointArray; overload;
+    function BinarySearch(const item: TPoint): Integer; overload;
+    function BinarySearch(const area: TBox): Integer; overload;
+    function BinaryFind(const item: TPoint): Integer; overload;
+    function BinaryFind(const area: TBox): Integer; overload;
+    function BinaryIndexOf(const item: TPoint): Integer; overload;
+    function BinaryExists(const item: TPoint): Boolean; overload;
+    function BinaryPosL(const item: TPoint): Integer; overload;
+    function BinaryPosR(const item: TPoint): Integer; overload;
+    function BinaryRank(const item: TPoint): Integer; overload;
+    function BinaryContains(const item: TPoint): Boolean; overload;
+    function BinaryInsert(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
+    function BinaryAppend(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
+    function BinarySupply(const item: TPoint): Integer; overload;
+    function BinaryCount(const item: TPoint): Integer; overload;
+    function BinaryAmount(const item: TPoint): Integer; overload;
+    function BinaryRange(const item: TPoint): TRange; overload;
+    function BinaryRangeOf(const item: TPoint): TRange; overload;
+    function BinaryScan(const area: TBox): TIntegerArray; overload;
+    function BinaryScanned(const area: TBox): TIntegerArray; overload;
+    function BinaryDelete(const item: TPoint): Boolean; overload;
+    function BinaryRemove(const item: TPoint; const all: Boolean = True): Integer; overload;
+    function BinarySinglify(const item: TPoint): Integer; overload;
+    function BinarySinglified(const item: TPoint): TPointArray; overload;
+    function BinaryMerge(const items: TPointArray): TPointArray; overload;
+    function BinaryReplace(const oItem, nItem: TPoint): Boolean; overload;
+    function BinaryReplaceAll(const oItem, nItem: TPoint): Integer; overload;
+    function BinaryXs(const unique: Boolean = True): TIntegerArray; overload;
+    function BinaryYs(const unique: Boolean = True): TIntegerArray; overload;
+    function BinaryYPoints(const yValue: Integer): TPointArray; overload;
+    function BinaryXPoints(const xValue: Integer): TPointArray; overload;
+    function BinaryGrouped: T2DPointArray; overload;
+    function BinaryExtract(const area: TBox): TPointArray; overload;
+    function BinaryFilter(const area: TBox): TPointArray; overload;
+    function BinaryX: TIntegerArray; overload;
+    function BinaryY: TIntegerArray; overload;
+  end;
+{$ENDIF}
 
-{$I Generic.inc}
+{$IFDEF IMPLEMENTATION}
+{$I config\1D.inc}
 
 {==============================================================================]
   <TPointArrayHelper.Bounds>
@@ -8438,7 +8655,6 @@ begin
   for i := 0 to High(Result) do
     Result[i] := Point((xValues[i] + offset.X), (yValues[i] + offset.Y));	
 end;
-
 {$ENDIF}
 
 {$UNDEF TPoint}

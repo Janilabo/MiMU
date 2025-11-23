@@ -1,12 +1,21 @@
 {$DEFINE string}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
-  {$I config\Helpers.inc}
+{$IFDEF INTERFACE}
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+type
+  HArr = type helper for TArr {$I config\1D.inc}
+    function Tally: Int64;
+    function Concat: string;
+    function Concatenate: string;
+    function Flatten: string;
+    function Glue: string;
+  end;
+{$ENDIF}
 
-{$I Generic.inc}
+{$IFDEF IMPLEMENTATION}
+{$I config\1D.inc}
 
 {==============================================================================]
   <TStringArrayHelper.Tally>
@@ -96,7 +105,6 @@ begin
     end;
   SetString(Result, PChar(@c[0]), l);
 end;
-
 {$ENDIF}
 
 {$UNDEF string}

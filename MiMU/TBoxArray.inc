@@ -1,12 +1,28 @@
 {$DEFINE TBox}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
-{$I config\Helpers.inc}
+{$IFDEF INTERFACE}
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+type
+  HArr = type helper for TArr {$I config\1D.inc}
+    function X1s: TIntegerArray; overload;
+    function X2s: TIntegerArray; overload;
+    function Y1s: TIntegerArray; overload;
+    function Y2s: TIntegerArray; overload;
+    function X1Values: TIntegerArray; overload;
+    function X2Values: TIntegerArray; overload;
+    function Y1Values: TIntegerArray; overload;
+    function Y2Values: TIntegerArray; overload;
+    function Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
+    function Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
+    function Bounds: TBox; overload;
+    function Boundaries: TBox; overload;
+  end;
+{$ENDIF}
 
-{$I Generic.inc}
+{$IFDEF IMPLEMENTATION}
+{$I config\1D.inc}
 
 {==============================================================================]
  <TBoxArrayHelper.X1s>
@@ -199,7 +215,6 @@ begin
 	  Result.Y2 := Self[i].Y2;
   end;
 end;
-
 {$ENDIF}
 
 {$UNDEF TBox}

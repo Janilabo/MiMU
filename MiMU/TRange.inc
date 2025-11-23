@@ -1,6 +1,6 @@
 {$DEFINE TRange}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
+{$IFDEF INTERFACE}
 type
   TRangeEnumerator = record
   private
@@ -231,7 +231,21 @@ function Range(const rStart, rStop: Integer): TRange; overload; inline;
 function Range(const val: Integer = 0): TRange; overload; inline;
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+type
+  HVar = type helper for TVar {$I config\0D.inc}
+    function Create: TRange; overload;
+    function Distribute(const parts: Integer): TRangeArray;
+    function Partition(const size: Integer): TRangeArray;
+    function Divide(const size: Integer): TRangeArray;
+    function Windows(const target: TRange): TRangeArray; overload;
+    function Sectioned(const target: TRange): TRangeArray; overload;
+    function Binned(const target: TRange): TRangeArray; overload;
+  end;
+{$ENDIF}
+
+{$IFDEF IMPLEMENTATION}
+{$I config\0D.inc}
 
 operator+(const a, b: TRange): TRange;
 begin
@@ -3241,7 +3255,6 @@ class function _TRange.Create(const value: Integer = 0): TRange; overload;
 begin
   Result := _TRange.Create(value, value);
 end;
-
 {$ENDIF}
 
 {$UNDEF TRange}

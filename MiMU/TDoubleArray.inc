@@ -1,12 +1,86 @@
 {$DEFINE Double}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
-{$I config\Helpers.inc}
+{$IFDEF INTERFACE}
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+type
+  HArr = type helper for TArr {$I config\1D.inc}
+    function Reinit: Integer; overload;
+    function Attach(const items: TDoubleArray): Integer; overload;
+    function Embed(const items: TDoubleArray; const index: Integer = 2147483647): Integer; overload;
+    function IsMonotonic: Boolean; overload;
+    function Monotonicity: Boolean; overload;
+    function Monotony: Boolean; overload;
+    function BSort(const aAscending: Boolean = True): Integer;
+    function BinarySort(const aAscending: Boolean = True): Integer;
+    function BinarySorted(const aAscending: Boolean = True): TDoubleArray;
+    function BinaryBoundL(const x: Double; const aAscending: Boolean = True): Integer;
+    function BinaryBoundR(const x: Double; const aAscending: Boolean = True): Integer;
+    function BinaryPosL(const x: Double; const aAscending: Boolean = True): Integer;
+    function BinaryPosR(const x: Double; const aAscending: Boolean = True): Integer;
+    function BinarySearch(const x: Double; const aAscending: Boolean = True): Integer;
+    function BinarySeek(const x: Double; const aAscending: Boolean = True): Integer;
+    function BinaryContains(const x: Double; const aAscending: Boolean = True): Boolean;
+    function BinaryCount(const x: Double; const aAscending: Boolean = True): Integer;
+    function BinaryLocate(const x: Double; const aAscending: Boolean = True): TRange;
+    function BinaryLocation(const x: Double; const aAscending: Boolean = True): TRange;
+    function BinaryAppend(const x: Double; const aAscending: Boolean = True): Integer;
+    function BinaryAdd(const x: Double; const aAscending: Boolean = True): TDoubleArray;
+    function BinarySearchF(const x: TRange; const aAscending: Boolean = True): Integer;
+    function BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer;
+    function BinaryPrune(const aAscending: Boolean = True): Integer;
+    function BinaryPruned(const aAscending: Boolean = True): TDoubleArray;
+    function BinaryUndupe: Integer;
+    function BinaryUnduped: TDoubleArray;
+    function BinaryUnified(const dAscending: Boolean = True): TDoubleArray;
+    function BinaryGrow(const x: Double; const aAscending: Boolean = True): Boolean;
+    function BinaryShrink(const x: Double; const aAscending: Boolean = True): Boolean;
+    function BinaryLowerBound(const x: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinaryUpperBound(const x: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinaryLeftmost(const x: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinaryRightmost(const x: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload;
+    function BinaryRange(const x: Double; const aAscending: Boolean = True): TRange; overload;
+    function BinarySpan(const x: TRange; const aAscending: Boolean = True): TRange; overload;
+    function BinaryMerge(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
+    function BinaryMerged(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
+    function BinaryCombine(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
+    function BinaryRemove(const val: Double; const all: Boolean = True; const aAscending: Boolean = True): Integer; overload;
+    function BinaryFind(const val: Double; const aAscending: Boolean): Integer; overload;
+    function BinarySearchEx(const x: Double; const ignore: Double = -2147483648; const aAscending: Boolean = True): Integer; overload;
+    function BinaryInsert(const x: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinarySearchRange(const x: Double; const rLeft, rRight: Integer; const aAscending: Boolean = True): Integer; overload;
+    function BinaryDeduplicate(const aAscending: Boolean = True): Integer; overload;
+    function BinaryUnduplicate(const aAscending: Boolean = True): Integer; overload;
+    function BinaryDeduplicated(const aAscending: Boolean = True): TDoubleArray; overload;
+    function BinaryUnduplicated(const aAscending: Boolean = True): TDoubleArray; overload;
+    function BinaryCombined(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
+    function BinaryRank(const x: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinaryIndex(const x: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinaryUpdate(const oValue, nValue: Double; const aAscending: Boolean = True): Boolean; overload;
+    function BinaryDelete(const x: Double; const aAscending: Boolean = True): Boolean; overload;
+    function BinaryReplace(const oValue, nValue: Double; const aAscending: Boolean = True): Boolean; overload;
+    function BinaryReplaceAll(const oValue, nValue: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinarySinglify(const item: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinarySinglified(const item: Double; const aAscending: Boolean = True): TDoubleArray; overload;
+    function BinarySearchFirst(const value: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinarySearchLast(const value: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinaryLocalize(const value: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinaryLookup(const value: Double): Integer; overload;
+    function BinaryFirst(const x: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinaryLast(const x: Double; const aAscending: Boolean = True): Integer; overload;
+    function BinaryValues(const value: Double; const aAscending: Boolean = True): TDoubleArray; overload;
+    function BinaryValues(const values: TRange; const aAscending: Boolean = True): TDoubleArray; overload;
+    function BinaryIndexOf(const value: Double; const oAscending: Boolean = True): Integer; overload;
+    function BinaryExists(const value: Double; const oAscending: Boolean = True): Boolean; overload;
+    function BinarySearchSpan(const value: Double; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
+    function BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
+  end;
+{$ENDIF}
 
-{$I Generic.inc}
+{$IFDEF IMPLEMENTATION}
+{$I config\1D.inc}
 
 {==============================================================================]
   <TDoubleArrayHelper.Reinit>
@@ -681,7 +755,6 @@ function TDoubleArrayHelper.BinaryExists(const value: Double; const oAscending: 
 
 function TDoubleArrayHelper.BinarySearchSpan(const value: Double; const L, R: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchSpan1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchSpan1}
 function TDoubleArrayHelper.BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchSpan2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchSpan2}
-
 {$ENDIF}
 
 {$UNDEF Double}

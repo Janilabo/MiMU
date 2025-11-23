@@ -1,6 +1,6 @@
 {$DEFINE TPoint}{$I config\Defines.inc}
 
-{$IFNDEF IMPLEMENT}
+{$IFDEF INTERFACE}
 type
   TPoint = record
     X, Y: Integer;
@@ -83,7 +83,43 @@ function Point(const val: Integer = 0): TPoint; overload; inline;
 
 {$ENDIF}
 
-{$IFDEF IMPLEMENT}
+{$IFDEF HELPERS}
+type
+  HVar = type helper for TVar {$I config\0D.inc}
+    function Inside(const bx: TBox): Boolean; inline;
+    function Clamp(const area: TBox): TPoint;
+    function Create: TPoint; overload;
+    function Sign(const target: TPoint): Integer; overload; inline;
+    function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray;
+    function Row(const cells: Integer; const space: Integer = 0): TPointArray;
+    function Column(const cells: Integer; const space: Integer = 0): TPointArray;
+    function Surrounding(const adjacency8: Boolean = True): TPointArray; overload;
+    function Adjacent(const adjacency8: Boolean = True): TPointArray; overload;
+    procedure Adjacent(var adj: TPointArray; const adjacency8: Boolean = True); overload;
+    function Adjacency(const adjacency8: Boolean = True): TPointArray; overload;	  
+    function Neighbours(const adjacency8: Boolean = True): TPointArray; overload;
+    procedure Neighbours(var adj: TPointArray); overload;
+    function Neighbors(const adjacency8: Boolean = True): TPointArray; overload;
+    procedure Neighbors(var adj: TPointArray); overload;
+    function ToY(const yGoal: Integer): TPointArray; overload;
+    function ToX(const xGoal: Integer): TPointArray; overload;
+    function Linked(const p: TPoint; const link: TPointArray): Boolean; overload;
+    function Boxed(const xRadius, yRadius: Integer): TBox; overload;
+    function Boxed(const radius: Integer = 0): TBox; overload;
+    function ToBox(const width, height: Integer): TBox; overload;
+    function ToBox(const size: Integer = 0): TBox; overload;
+    function Boxify(const width, height: Integer): TBox; overload;
+    function Boxify(const size: Integer = 0): TBox; overload;
+    function Within(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
+    function Within(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): Boolean; overload;
+    function Near(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
+    function Near(const target: TPoint; const radius: Double; const metric: TDistanceMetric): Boolean; overload;
+    function Dist(const target: TPoint; const metric: TDistanceMetric = dmEuclidean): Double;
+  end;
+{$ENDIF}
+
+{$IFDEF IMPLEMENTATION}
+{$I config\0D.inc}
 
 operator+(const a, b: TPoint): TPoint;
 begin

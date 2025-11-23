@@ -4,7 +4,7 @@
   @note: None.
 [==============================================================================}
 function XFIELD(const arr: XARRAY; const val: XVALUE): TIntegerArray; overload;
-{$IFDEF IMPLEMENT}
+{$IFDEF IMPLEMENTATION}
 var
   i, r: Integer;
 begin
@@ -24,7 +24,7 @@ end;
   @note: None.
 [==============================================================================}
 function XFIELD(const arr: XARRAY; const vals: XVALUES): TIntegerArray; overload;
-{$IFDEF IMPLEMENT}
+{$IFDEF IMPLEMENTATION}
 var
   i, r: Integer;
   d: specialize TDictionary<XVALUE, Boolean>;
