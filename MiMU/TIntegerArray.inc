@@ -103,6 +103,8 @@ type
     function BSort(const aAscending: Boolean = True): Integer;
     function BinarySort(const aAscending: Boolean = True): Integer;
     function BinarySorted(const aAscending: Boolean = True): TIntegerArray;
+    function BinaryInsertSort(const oAscending: Boolean = True): Integer; overload;
+    function BinaryInsertSorted(const oAscending: Boolean = True): TIntegerArray; overload;
     function BinaryBoundL(const x: Integer; const aAscending: Boolean = True): Integer;
     function BinaryBoundR(const x: Integer; const aAscending: Boolean = True): Integer;
     function BinaryPosL(const x: Integer; const aAscending: Boolean = True): Integer;
@@ -3788,6 +3790,9 @@ function TIntegerArrayHelper.BinaryExists(const value: Integer; const oAscending
 
 function TIntegerArrayHelper.BinarySearchSpan(const value: Integer; const L, R: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchSpan1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchSpan1}
 function TIntegerArrayHelper.BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchSpan2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchSpan2}
+
+function TIntegerArrayHelper.BinaryInsertSorted(const oAscending: Boolean = True): TIntegerArray; overload; var K: Integer; {$DEFINE Skeleton_BinaryInsertSorted}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryInsertSorted}
+function TIntegerArrayHelper.BinaryInsertSort(const oAscending: Boolean = True): Integer; overload; var K: Integer; {$DEFINE Skeleton_BinaryInsertSort}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryInsertSort}
 
 class function TIA.Init(var arr: TIntegerArray): Integer; overload; 
 begin

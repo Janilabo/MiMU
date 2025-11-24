@@ -1781,3 +1781,59 @@ begin
   Result := BSS(range.Normalize, L, R, aAscending);
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryInsertSorted}
+var
+  i, j, L, R, M, P: Integer;
+begin
+  Result := Self.Copy;
+  for i := 1 to High(Result) do
+  begin
+    K := Result[i];
+    P := 0;
+    L := 0;
+    R := (i - 1);
+    while (L <= R) do
+    begin
+      M := (L + ((R - L) div 2));
+      if ((oAscending and (K < Result[M])) or ((not oAscending) and (K > Result[M]))) then
+        R := (M - 1)
+      else
+        L := (M + 1);
+    end;
+    P := L;
+    j := (i - 1);
+    while (j >= P) do
+      Result[j + 1] := Result[j.Decrease];
+    Result[P] := K;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryInsertSort}
+var
+  i, j, L, R, M, P: Integer;
+begin
+  Result := Length(Self);
+  for i := 1 to (Result - 1) do
+  begin
+    K := Self[i];
+    P := 0;
+    L := 0;
+    R := (i - 1);
+    while (L <= R) do
+    begin
+      M := (L + ((R - L) div 2));
+      if ((oAscending and (K < Self[M])) or ((not oAscending) and (K > Self[M]))) then
+        R := (M - 1)
+      else
+        L := (M + 1);
+    end;
+    P := L;
+    j := (i - 1);
+    while (j >= P) do
+      Self[j + 1] := Self[j.Decrease];
+    Self[P] := K;
+  end;
+end;
+{$ENDIF}

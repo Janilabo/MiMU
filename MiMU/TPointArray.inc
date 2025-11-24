@@ -229,6 +229,8 @@ type
     function BinaryFilter(const area: TBox): TPointArray; overload;
     function BinaryX: TIntegerArray; overload;
     function BinaryY: TIntegerArray; overload;
+    function BinaryInsertSorted(const oAscending: Boolean = True): TPointArray; overload;
+    function BinaryInsertSort(const oAscending: Boolean = True): Integer; overload;
   end;
 {$ENDIF}
 
@@ -8586,6 +8588,78 @@ begin
     i := r.start;
   end;
   SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryInsertSorted>
+  @action: Performs an insertion sort on a copy of the TPointArray using binary search
+           to find the correct insertion position. Returns a new sorted TPointArray.
+  @param: oAscending - Boolean indicating sort order. True = ascending (top-to-bottom, left-to-right),
+                       False = descending (bottom-to-top, right-to-left).
+  @note: The original array is not modified. Sorting is based on scanline order:
+         first by Y coordinate, then by X if Y values are equal.
+[==============================================================================}
+function TPointArrayHelper.BinaryInsertSorted(const oAscending: Boolean = True): TPointArray; overload;
+var
+  K: TPoint;
+  i, j, L, R, M, P: Integer;
+begin
+  Result := Self.Copy;
+  for i := 1 to High(Result) do
+  begin
+    K := Result[i];
+    L := 0;
+    R := (i - 1);
+    while (L <= R) do
+    begin
+      M := (L + ((R - L) div 2));
+      if K.Lower(Result[M], oAscending) then
+        R := (M - 1)
+      else
+        L := (M + 1);
+    end;
+    P := L;
+    j := (i - 1);
+    while (j >= P) do
+      Result[j + 1] := Result[j.Decrease];
+    Result[P] := K;
+  end;
+end;
+
+{==============================================================================]
+  <TPointArray.BinaryInsertSort>
+  @action: Sorts the current TPointArray in-place using insertion sort with binary search
+           to find the insertion position.
+  @param: oAscending - Boolean indicating sort order. True = ascending (top-to-bottom, left-to-right),
+                       False = descending (bottom-to-top, right-to-left).
+  @return: Returns the length of the array after sorting (same as Length(Self)).
+  @note: Sorting is done in scanline order: first by Y coordinate, then by X if Y values are equal.
+[==============================================================================}
+function TPointArrayHelper.BinaryInsertSort(const oAscending: Boolean = True): Integer; overload;
+var
+  K: TPoint;
+  i, j, L, R, M, P: Integer;
+begin
+  Result := Length(Self);
+  for i := 1 to (Result - 1) do
+  begin
+    K := Self[i];
+    L := 0;
+    R := (i - 1);
+    while (L <= R) do
+    begin
+      M := (L + ((R - L) div 2));
+      if K.Lower(Self[M], oAscending) then
+        R := (M - 1)
+      else
+        L := (M + 1);
+    end;
+    P := L;
+    j := (i - 1);
+    while (j >= P) do
+      Self[j + 1] := Self[j.Decrease];
+    Self[P] := K;
+  end;
 end;
 
 class function TPA.Init(var arr: TPointArray): Integer; overload; 

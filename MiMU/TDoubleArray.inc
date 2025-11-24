@@ -15,6 +15,8 @@ type
     function BSort(const aAscending: Boolean = True): Integer;
     function BinarySort(const aAscending: Boolean = True): Integer;
     function BinarySorted(const aAscending: Boolean = True): TDoubleArray;
+    function BinaryInsertSort(const oAscending: Boolean = True): Integer; overload;
+    function BinaryInsertSorted(const oAscending: Boolean = True): TDoubleArray; overload;
     function BinaryBoundL(const x: Double; const aAscending: Boolean = True): Integer;
     function BinaryBoundR(const x: Double; const aAscending: Boolean = True): Integer;
     function BinaryPosL(const x: Double; const aAscending: Boolean = True): Integer;
@@ -755,6 +757,9 @@ function TDoubleArrayHelper.BinaryExists(const value: Double; const oAscending: 
 
 function TDoubleArrayHelper.BinarySearchSpan(const value: Double; const L, R: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchSpan1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchSpan1}
 function TDoubleArrayHelper.BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchSpan2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchSpan2}
+
+function TDoubleArrayHelper.BinaryInsertSorted(const oAscending: Boolean = True): TDoubleArray; overload; var K: Double; {$DEFINE Skeleton_BinaryInsertSorted}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryInsertSorted}
+function TDoubleArrayHelper.BinaryInsertSort(const oAscending: Boolean = True): Integer; overload; var K: Double; {$DEFINE Skeleton_BinaryInsertSort}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryInsertSort}
 {$ENDIF}
 
 {$UNDEF Double}

@@ -8,6 +8,12 @@ type
     constructor Create(const value: Integer); overload;
     class function Construct(const pX, pY: Integer): TPoint; overload; static;
     function Build(const pX, pY: Integer): TPoint;  inline;
+	function Lower(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+    function Higher(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+	function Under(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+    function Over(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+    function Behind(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+    function Ahead(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
     function Comparison(const target: TPoint): Integer; overload;
     function Compare(const target: TPoint): Integer; overload;
     function Compared(const target: TPoint): Integer; overload;
@@ -231,6 +237,92 @@ end;
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
 function TPointHelper.Sign(const target: TPoint): Integer; overload; inline; {$DEFINE Skeleton_Sign}{$I config\Skeletons.inc}{$UNDEF Skeleton_Sign}
+
+{==============================================================================]
+  <TPoint.Lower>
+  @action: Returns True if Self precedes target in scanline order.
+  @note: Comparison is Y-major, then X; ordering direction is controlled by oAscending.
+[==============================================================================}
+function TPoint.Lower(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if (Self.Y <> target.Y) then
+    Exit((oAscending and (Self.Y < target.Y)) or ((not oAscending) and (Self.Y > target.Y)));
+  Result := ((oAscending and (Self.X < target.X)) or ((not oAscending) and (Self.X > target.X)));
+end;
+
+{==============================================================================]
+  <TPoint.Higher>
+  @action: Returns True if Self follows target in scanline order.
+  @note: Comparison is Y-major, then X; ordering direction is controlled by oAscending.
+[==============================================================================}
+function TPoint.Higher(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if (Self.Y <> target.Y) then
+    Exit((oAscending and (Self.Y > target.Y)) or ((not oAscending) and (Self.Y < target.Y)));
+  Result := ((oAscending and (Self.X > target.X)) or ((not oAscending) and (Self.X < target.X)));
+end;
+
+{==============================================================================]
+  <TPoint.Under>
+  @action: Returns True if Self precedes target in scanline order.
+  @note: Comparison is Y-major then X; ordering direction is controlled by oAscending.
+[==============================================================================}
+function TPoint.Under(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if (Self.Y <> target.Y) then
+    Result := IfThen(oAscending, (Self.Y < target.Y), (Self.Y > target.Y))
+  else
+    Result := IfThen(oAscending, (Self.X < target.X), (Self.X > target.X));
+end;
+
+{==============================================================================]
+  <TPoint.Over>
+  @action: Returns True if Self follows target in scanline order.
+  @note: Comparison is Y-major then X; ordering direction is controlled by oAscending.
+[==============================================================================}
+function TPoint.Over(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if (Self.Y <> target.Y) then
+    Result := IfThen(oAscending, (Self.Y > target.Y), (Self.Y < target.Y))
+  else
+    Result := IfThen(oAscending, (Self.X > target.X), (Self.X < target.X));
+end;
+
+{==============================================================================]
+  <TPoint.Behind>
+  @action: Returns True if Self is "behind" the target in scanline order.
+  @note: "Behind" means lower Y (or X if Y equal) for ascending order, opposite for descending.
+[==============================================================================}
+function TPoint.Behind(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if (Self.Y <> target.Y) then
+  case oAscending of
+    True: Exit(Self.Y < target.Y);
+    False: Exit(Self.Y > target.Y);
+  end;
+  if oAscending then
+    Result := (Self.X < target.X)
+  else
+    Result := (Self.X > target.X);
+end;
+
+{==============================================================================]
+  <TPoint.Ahead>
+  @action: Returns True if Self is "ahead" of the target in scanline order.
+  @note: "Ahead" means higher Y (or X if Y equal) for ascending order, opposite for descending.
+[==============================================================================}
+function TPoint.Ahead(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if (Self.Y <> target.Y) then
+  case oAscending of
+    True: Exit(Self.Y > target.Y);
+    False: Exit(Self.Y < target.Y);
+  end;
+  if oAscending then
+    Result := (Self.X > target.X)
+  else
+    Result := (Self.X < target.X);
+end;
 
 {==============================================================================]
   <TPoint.Comparison>
