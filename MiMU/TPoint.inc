@@ -7,6 +7,7 @@ type
     constructor Create(const pX, pY: Integer); overload;
     constructor Create(const value: Integer); overload;
     class function Construct(const pX, pY: Integer): TPoint; overload; static;
+    class function Null(const value: Integer = -2147483648): TPoint; overload; static;
     function Build(const pX, pY: Integer): TPoint;  inline;
 	function Lower(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
     function Higher(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
@@ -223,6 +224,19 @@ begin
   Self.X := pX;
   Self.Y := pY;
   Result := Self;
+end;
+
+{==============================================================================]
+  <TPoint.Null>
+  @action: Returns a "null" or invalid point, with both X and Y set to the specified sentinel value.
+  @param: value - Optional integer to use as the sentinel for an empty point. Defaults 
+                  to Low(Integer) (-2147483648 for 32-bit integers).
+  @note:   This function is typically used to mark uninitialized or invalid points, 
+           such as the result of an intersection that yields no valid coordinates.
+[==============================================================================}
+class function TPoint.Null(const value: Integer = -2147483648): TPoint; overload; static;
+begin
+  Result := Point(value, value);
 end;
 
 {==============================================================================]

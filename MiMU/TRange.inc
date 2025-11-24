@@ -17,6 +17,7 @@ type
     constructor Create(const rStart, rStop: Integer); overload;
     constructor Create(const value: Integer); overload;
     class function Construct(const rStart, rStop: Integer): TRange; overload; static;
+    class function Null(const value: Integer = -2147483648): TRange; overload; static;
     function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; 
     function Init(const rStart, rStop: Integer): TRange; overload; 
     function Init(const r: TRange): TRange; overload; 
@@ -227,6 +228,8 @@ operator-(const a, b: TRange): TRange;
 operator=(const a, b: TRange): Boolean;
 operator<>(const a, b: TRange): Boolean;
 
+operator in(const I: Integer; const R: TRange): Boolean;
+
 function Range(const rStart, rStop: Integer): TRange; overload; inline;
 function Range(const val: Integer = 0): TRange; overload; inline;
 {$ENDIF}
@@ -247,16 +250,41 @@ type
 {$IFDEF IMPLEMENTATION}
 {$I config\0D.inc}
 
+{==============================================================================]
+  <operator+ (TRange+TRange)>
+  @action: Computes the union of two integer ranges. The result spans from the
+           smallest start value of either input range to the largest stop value.
+  @note:   Both ranges are internally normalized to ascending order before the
+           union is calculated. Descending ranges are fully supported.
+[==============================================================================}
 operator+(const a, b: TRange): TRange;
+var
+  x, y: TRange;
 begin
-  Result.start := (a.start + b.start);
-  Result.stop := (a.stop + b.stop);
+  x := a.Normalize;
+  y := b.Normalize;
+  Result.Create(Min(x.start, y.start), Max(x.stop,  y.stop));
 end;
 
+{==============================================================================]
+  <operator- (TRange-TRange)>
+  @action: Computes the intersection of two integer ranges. If the ranges
+           overlap, the result contains the overlapping interval. If they do
+           not overlap, the function returns an empty range marker.
+  @note:   Both ranges are normalized internally to ascending order before the
+           intersection is computed. A non-overlapping result is represented
+           by start = stop = Low(Integer).
+[==============================================================================}
 operator-(const a, b: TRange): TRange;
+var
+  x, y: TRange;
 begin
-  Result.start := (a.start - b.start);
-  Result.stop := (a.stop - b.stop);
+  x := a.Normalize;
+  y := b.Normalize;
+  if ((x.stop < y.start) or (y.stop < x.start)) then
+    Exit(TRange.Null);
+  Result.start := Max(x.start, y.start);
+  Result.stop := Min(x.stop, y.stop);
 end;
 
 operator=(const a, b: TRange): Boolean;
@@ -267,6 +295,11 @@ end;
 operator<>(const a, b: TRange): Boolean;
 begin
   Result := not ((a.start = b.start) and (a.stop = b.stop));
+end;
+
+operator in(const I: Integer; const R: TRange): Boolean;
+begin
+  Result := R.Contains(I);
 end;
 
 constructor TRangeEnumerator.Init(const AStart, AStop: Integer);
@@ -333,6 +366,21 @@ class function TRange.Construct(const rStart, rStop: Integer): TRange; overload;
 begin
   Result.start := rStart;
   Result.stop := rStop;
+end;
+
+{==============================================================================]
+  <TRange.Null>
+  @action: Returns a special "null" or empty range, represented by both start and stop
+           being set to the specified sentinel value.
+  @param: value - Optional integer to use as the sentinel for an empty range. Defaults
+                  to Low(Integer) (-2147483648 for 32-bit integers).
+  @note:   This function is typically used to represent non-overlapping ranges or
+           invalid ranges in operations like intersection. It provides a consistent
+           marker for "empty" ranges.
+[==============================================================================}
+class function TRange.Null(const value: Integer = -2147483648): TRange; overload;
+begin
+  Result := Range(value, value);
 end;
 
 {==============================================================================]

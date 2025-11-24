@@ -21,6 +21,7 @@ type
     constructor Create(const target: TPoint); overload;
     constructor Create(const value: Integer); overload;
     class function Construct(const XS, YS, XE, YE: Integer): TBox; overload; static;
+    class function Null(const value: Integer = -2147483648): TBox; overload; static;
     function Build(const minX, minY, maxX, maxY: Integer): Integer; overload; 
     function Build(const top, bottom: TPoint): Integer; overload; 
     function Build(const valueX, valueY: Integer): Integer; overload; 
@@ -188,6 +189,8 @@ operator-(const a, b: TBox): TBox;
 operator=(const a, b: TBox): Boolean;
 operator<>(const a, b: TBox): Boolean;
 
+operator in(const P: TPoint; const B: TBox): Boolean;
+
 function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
 function Box(const val: Integer = 0): TBox; overload; inline;
 {$ENDIF}
@@ -210,20 +213,37 @@ type
 {$IFDEF IMPLEMENTATION}
 {$I config\0D.inc}
 
+{==============================================================================]
+  <operator+ (TBox+TBox)>
+  @action: Computes the union of two boxes. The resulting box fully contains
+           both input boxes.
+  @note:   Supports any coordinate ordering; assumes X1 <= X2 and Y1 <= Y2 after normalization.
+[==============================================================================}
 operator+(const a, b: TBox): TBox;
 begin
-  Result.X1 := (a.X1 + b.X1);
-  Result.Y1 := (a.Y1 + b.Y1);
-  Result.X2 := (a.X2 + b.X2);
-  Result.Y2 := (a.Y2 + b.Y2);
+  Result.X1 := Min(a.X1, b.X1);
+  Result.Y1 := Min(a.Y1, b.Y1);
+  Result.X2 := Max(a.X2, b.X2);
+  Result.Y2 := Max(a.Y2, b.Y2);
 end;
 
+{==============================================================================]
+  <operator- (TBox-TBox)>
+  @action: Computes the intersection of two boxes. Returns a box representing the 
+           overlapping area of `a` and `b`. If the boxes do not overlap, returns 
+           a null box marker.
+  @note:   A null box can be represented by `TBox.Null` (e.g., all coordinates = Low(Integer)).
+           This function does not require the boxes to be normalized beforehand, but
+           you may normalize them for consistent behavior.
+[==============================================================================}
 operator-(const a, b: TBox): TBox;
 begin
-  Result.X1 := (a.X1 - b.X1);
-  Result.Y1 := (a.Y1 - b.Y1);
-  Result.X2 := (a.X2 - b.X2);
-  Result.Y2 := (a.Y2 - b.Y2);
+  if ((a.X2 < b.X1) or (b.X2 < a.X1) or (a.Y2 < b.Y1) or (b.Y2 < a.Y1)) then
+    Exit(TBox.Null);
+  Result.X1 := Max(a.X1, b.X1);
+  Result.Y1 := Max(a.Y1, b.Y1);
+  Result.X2 := Min(a.X2, b.X2);
+  Result.Y2 := Min(a.Y2, b.Y2);
 end;
 
 operator=(const a, b: TBox): Boolean;
@@ -234,6 +254,11 @@ end;
 operator<>(const a, b: TBox): Boolean;
 begin
   Result := not ((a.X1 = b.X1) and (a.Y1 = b.Y1) and (a.X2 = b.X2) and (a.Y2 = b.Y2));
+end;
+
+operator in(const P: TPoint; const B: TBox): Boolean;
+begin
+  Result := B.Contains(P);
 end;
 
 constructor TBoxEnumerator.Init(const AX1, AY1, AX2, AY2: Integer);
@@ -423,6 +448,21 @@ end;
 function TBox.Build(const value: Integer = 0): Integer; overload;
 begin
   Result := Self.Build(value, value, value, value);
+end;
+
+{==============================================================================]
+  <TBox.Null>
+  @action: Returns a "null" or empty box, represented by all coordinates set to 
+           the specified sentinel value.
+  @param: value - Optional integer to use as the sentinel for an empty box. 
+                  Defaults to Low(Integer) (-2147483648 for 32-bit integers).
+  @note:   This function is typically used to mark non-overlapping boxes resulting 
+           from intersection operations. It provides a consistent marker for 
+           "empty" boxes.
+[==============================================================================}
+class function TBox.Null(const value: Integer = -2147483648): TBox; overload;
+begin
+  Result := Box(value, value, value, value);
 end;
 
 {==============================================================================]
