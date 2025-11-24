@@ -1669,6 +1669,174 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_BinaryFindFirst1}
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] < value) of
+        False:
+        begin
+          R.stop := (M - 1);
+          if (Self[M] = value) then
+            Result := M;
+        end;
+        True: R.start := (M + 1);
+      end;
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] > value) of
+        False:
+        begin
+          R.stop := (M - 1);
+          if (Self[M] = value) then
+            Result := M;
+        end;
+        True: R.start := (M + 1);
+      end;
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryFindFirst2}
+var
+  M: Integer;
+  N, R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  if (R.stop > -1) then
+  begin
+    N := range.Normalize;
+    case oAscending of
+      True:
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        case (Self[M] < N.start) of
+          False:
+          begin
+            R.stop := (M - 1);
+            if InRange(Self[M], N.start, N.stop) then
+              Result := M;
+          end;
+          True: R.start := (M + 1);
+        end;
+      end;
+      False:
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        case (Self[M] > N.stop) of
+          False:
+          begin
+            R.stop := (M - 1);
+            if InRange(Self[M], N.start, N.stop) then
+              Result := M;
+          end;
+          True: R.start := (M + 1);
+        end;
+      end;
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryFindLast1}
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] > value) of
+        False:
+        begin
+          R.start := (M + 1);
+          if (Self[M] = value) then
+            Result := M;
+        end;
+        True: R.stop := (M - 1);
+      end;
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] < value) of
+        False:
+        begin
+          R.start := (M + 1);
+          if (Self[M] = value) then
+            Result := M;
+        end;
+        True: R.stop := (M - 1);
+      end;
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryFindLast2}
+var
+  M: Integer;
+  N, R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  if (R.stop > -1) then
+  begin
+    N := range.Normalize;
+    case oAscending of
+      True:
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        case (Self[M] > N.stop) of
+          False:
+          begin
+            R.start := (M + 1);
+            if InRange(Self[M], N.start, N.stop) then
+              Result := M;
+          end;
+          True: R.stop := (M - 1);
+        end;
+      end;
+      False:
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        case (Self[M] < N.start) of
+          False:
+          begin
+            R.start := (M + 1);
+            if InRange(Self[M], N.start, N.stop) then
+              Result := M;
+          end;
+          True: R.stop := (M - 1);
+        end;
+      end;
+    end;
+  end;
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_BinaryValues1}
 var
   i: Integer;
@@ -1837,3 +2005,123 @@ begin
   end;
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryFloor}
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] > value) of
+        False:
+        begin
+          Result := M;
+          R.start := (M + 1);
+        end;
+        True: R.stop := (M - 1);
+      end;
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] < value) of
+        False:
+        begin
+          Result := M;
+          R.start := (M + 1);
+        end;
+        True: R.stop := (M - 1);
+      end;
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryCeil}
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] < value) of
+        False:
+        begin
+          Result := M;
+          R.stop := (M - 1);
+        end;
+        True: R.start := (M + 1);
+      end;
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] > value) of
+        False:
+        begin
+          Result := M;
+          R.stop := (M - 1);
+        end;
+        True: R.start := (M + 1);
+      end;
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryPoint}
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := 0;
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    begin
+      Result := Length(Self);
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        case (Self[M] < value) of
+          False:
+          begin
+            Result := M;
+            R.stop := (M - 1);
+          end;
+          True: R.start := (M + 1);
+        end;
+      end;
+    end;
+    False:
+    begin
+      Result := Length(Self);
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        case (Self[M] > value) of
+          False:
+          begin
+            Result := M;
+            R.stop := (M - 1);
+          end;
+          True: R.start := (M + 1);
+        end;
+      end;
+    end;
+  end;
+end;
+{$ENDIF} 
