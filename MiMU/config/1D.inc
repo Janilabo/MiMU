@@ -154,6 +154,8 @@ function Location(const items: TArr; const index: Integer = 2147483647): Integer
 function Locations(const item: TVar; const index: Integer = 2147483647): TIntegerArray; overload;
 function Locations(const items: TArr; const index: Integer = 2147483647): TIntegerArray; overload;
 function Locations: TIntegerArray; overload;
+function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
 function Mix(const mixings: Integer = 1): Boolean; overload;
 function Mixed(const mixings: Integer = 1): TArr; overload;
 function MostCommon: TVar; overload;
@@ -198,6 +200,10 @@ function Push(const items: TArr): TArr; overload;
 function Put(const ID: TIntegerArray; const item: TVar): TArr; overload;
 function Put(const ID: TIntegerArray; const items: TArr): TArr; overload;
 function Put(const index: Integer; const items: TArr): TArr; overload;
+function QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+function QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
+function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): TArr; overload;
+function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): TArr; overload;
 function Randomized: TArr; overload;
 function Range(const subArray: TArr; const index: Integer = 0): TRange; overload;
 function Ranges(const subArray: TArr; const index: Integer = 0): TRangeArray; overload;
@@ -356,13 +362,9 @@ function Monotonious: Boolean; overload;
 function Unidirectional: Boolean; overload;
 function Trendy: Boolean; overload;
 function OnOrder: Boolean; overload;
+function Peaks: TIntegerArray; overload;
+function Valleys: TIntegerArray; overload;
 {$ENDIF}
-function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
-function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
-function QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
-function QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
-function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): TArr; overload;
-function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): TArr; overload;
 {$ENDIF}
 
 {$IFDEF T1D}
@@ -8562,6 +8564,60 @@ begin
     if ((h.Increment(Self[i] > Self[i - 1]) * l.Increment(Self[i] < Self[i - 1])) > 0) then
       Exit(False);
   Result := True;
+end;
+
+{==============================================================================]
+  <arr.Peaks>
+  @action: Returns the indices of all local maxima in the array.
+  @note: A local maximum is any element strictly greater than its immediate
+         neighbors. Edge elements (index 0 or index High) are included when
+         they satisfy the one-sided comparison. The result array is sized
+         exactly to the number of detected peaks.
+[==============================================================================}
+function HArr.Peaks: TIntegerArray; overload;
+var
+  h, l, i: Integer;
+begin
+  h := High(Self);
+  SetLength(Result, (h + 1));
+  if Self.Empty then
+    Exit;
+  l := 0;
+  if ((h = 0) or (Self[0] > Self[1])) then
+    Result[l.Increase] := 0;
+  for i := 1 to (h - 1) do
+    if ((Self[i] > Self[i - 1]) and (Self[i] > Self[i + 1])) then
+      Result[l.Increase] := i;
+  if ((h > 0) and (Self[h] > Self[h - 1])) then
+    Result[l.Increase] := h;
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <arr.Valleys>
+  @action: Returns the indices of all local minima in the array.
+  @note: A local minimum is any element strictly lower than its immediate
+         neighbors. Edge elements (index 0 or index High) are included when
+         they satisfy the one-sided comparison. The result array is sized
+         exactly to the number of detected valleys.
+[==============================================================================}
+function HArr.Valleys: TIntegerArray; overload;
+var
+  h, l, i: Integer;
+begin
+  h := High(Self);
+  SetLength(Result, (h + 1));
+  if Self.Empty then
+    Exit;
+  l := 0;
+  if ((h = 0) or (Self[0] < Self[1])) then
+    Result[l.Increase] := 0;
+  for i := 1 to (h - 1) do
+    if ((Self[i] < Self[i - 1]) and (Self[i] < Self[i + 1])) then
+      Result[l.Increase] := i;
+  if (h > 0) and (Self[h] < Self[h - 1]) then
+    Result[l.Increase] := h;
+  SetLength(Result, l);
 end;
 {$ENDIF}
 

@@ -355,6 +355,119 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_TernarySearch}
+var
+  L, R: Integer;
+  S: TRange;
+begin
+  Result := -1;
+  S.Create(0, High(Self));
+  while (S.start <= S.stop) do
+  begin
+    L := (S.start + ((S.stop - S.start) div 3));
+    R := (S.stop - ((S.stop - S.start) div 3));
+    if (Self[L] = value) then
+      Exit(L);
+    if (Self[R] = value) then
+      Exit(R);
+    if ((oAscending and (value < Self[L])) or ((not oAscending) and (value > Self[L]))) then
+      S.stop := (L - 1)
+    else if ((oAscending and (value > Self[R])) or ((not oAscending) and (value < Self[R]))) then
+      S.start := (R + 1)
+    else
+      S.Create((L + 1), (R - 1));
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_TernaryPeak}
+var
+  H, L, R: Integer;
+  S: TRange;
+begin
+  H := High(Self);
+  if (H < 1) then
+    Exit(H);
+  if (Self[0] > Self[1]) then
+    Exit(0);
+  if (Self[H] > Self[H - 1]) then
+    Exit(H);
+  S.Create(1, (H - 1));
+  while (S.start <= S.stop) do
+  begin
+    L := (S.start + ((S.stop - S.start) div 3));
+    R := (S.stop - ((S.stop - S.start) div 3));
+    if ((Self[L] > Self[L - 1]) and (Self[L] > Self[L + 1])) then
+      Exit(L);
+    if ((Self[R] > Self[R - 1]) and (Self[R] > Self[R + 1])) then
+      Exit(R);
+    if (Self[L] < Self[R]) then
+      S.start := (L + 1)
+    else
+      S.stop := (R - 1);
+  end;
+  for Result := S.start to S.stop do
+    if ((Self[Result] > Self[Result - 1]) and (Self[Result] > Self[Result + 1])) then
+      Exit;
+  Result := -1;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_TernaryValley}
+var
+  H, L, R: Integer;
+  S: TRange;
+begin
+  H := High(Self);
+  if (H < 1) then
+    Exit(H);
+  if (Self[0] < Self[1]) then
+    Exit(0);
+  if (Self[H] < Self[H - 1]) then
+    Exit(H);
+  S.Create(1, (H - 1));
+  while (S.start <= S.stop) do
+  begin
+    L := (S.start + ((S.stop - S.start) div 3));
+    R := (S.stop - ((S.stop - S.start) div 3));
+    if ((Self[L] < Self[L - 1]) and (Self[L] < Self[L + 1])) then
+      Exit(L);
+    if ((Self[R] < Self[R - 1]) and (Self[R] < Self[R + 1])) then
+      Exit(R);
+    if (Self[L] > Self[R]) then
+      S.start := (L + 1)
+    else
+      S.stop := (R - 1);
+  end;
+  for Result := S.start to S.stop do
+    if ((Self[Result] < Self[Result - 1]) and (Self[Result] < Self[Result + 1])) then
+      Exit;
+  Result := -1;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_TernaryMountain}
+var
+  H, L, R: Integer;
+  S: TRange;
+begin
+  H := High(Self);
+  if (H < 1) then
+    Exit(H);
+  S.Create(0, High(Self));
+  while (S.start < S.stop) do
+  begin
+    L := (S.start + ((S.stop - S.start) div 3));
+    R := (S.stop - ((S.stop - S.start) div 3));
+    if (Self[L] < Self[R]) then
+      S.start := (L + 1)
+    else
+      S.stop := (R - 1);
+  end;
+  Result := S.start;
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_BSort}
 var
   i, j, m, o: Integer;

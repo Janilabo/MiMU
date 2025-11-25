@@ -100,7 +100,15 @@ type
     function Monotony: Boolean; overload;
     function Fuse(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
     function Combinate(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
-    function BSort(const aAscending: Boolean = True): Integer;
+    function CountingSort(const aAscending: Boolean = True): Integer;
+    function SegmentedCountingSort(const aAscending: Boolean = True; const bucketSize: Integer = 1024): Integer;
+    function TernarySearch(const value: Integer; const oAscending: Boolean = True): Integer; overload;
+    function TernaryPeak: Integer; overload;
+    function TernaryValley: Integer; overload;
+    function TernaryMountain: Integer; overload;
+	function BSort(const aAscending: Boolean = True): Integer;
+    function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
+    function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
     function BinarySort(const aAscending: Boolean = True): Integer;
     function BinarySorted(const aAscending: Boolean = True): TIntegerArray;
     function BinaryInsertSort(const oAscending: Boolean = True): Integer; overload;
@@ -187,10 +195,6 @@ type
     function BinaryFilter(const values: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
     function BinaryAmount(const x: Integer; const aAscending: Boolean = True): Integer; overload;
     function BinaryAmount(const x: TRange; const aAscending: Boolean = True): Integer; overload;
-    function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
-    function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
-    function CountingSort(const aAscending: Boolean = True): Integer;
-    function SegmentedCountingSort(const aAscending: Boolean = True; const bucketSize: Integer = 1024): Integer;
     function BinaryCountingSort(const aAscending: Boolean = True; const maxRange: Integer = 2000): Integer;
     function BinaryIndexOf(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryExists(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
@@ -2293,6 +2297,205 @@ begin
 end;
 
 {==============================================================================]
+  <TIntegerArray.CountingSort>
+  @action: Sorts the integer array using the classical counting sort algorithm.
+           Works efficiently when the range of integer values is relatively small.
+  @note: 
+    - This method handles negative and positive integers.
+    - The algorithm counts the occurrences of each integer and writes them back
+      in sorted order.
+    - Always sorts in ascending order; descending order is not supported in this version.
+    - Counting array size is based on the range of values in the array, so large
+      ranges may use significant memory.
+[==============================================================================}
+function TIntegerArrayHelper.CountingSort(const aAscending: Boolean = True): Integer;
+var
+  c: TIntegerArray;
+  i, j, s, o: Integer;
+  m: TRange;
+begin
+  Result := Length(Self);
+  if (Result < 2) then
+    Exit;
+  m := Self.Bounds;
+  o := -m.start;
+  SetLength(c, m.Size);
+  for i := 0 to High(Self) do
+    Inc(c[Self[i] + o]);
+  s := 0;
+  for i := 0 to m.Span do
+    for j := 1 to c[i] do
+      Self[s.Increase] := (i - o);
+  if not aAscending then
+    Self.Reverse;
+end;
+
+{==============================================================================]
+ <TIntegerArray.SegmentedCountingSort>
+ @action: Performs a counting sort over the integer array using a small
+          bucket-based approach. Supports ascending or descending order.
+ @note:   Returns the number of elements in the array (Length(Self)).
+          Sorting is done in-place using an auxiliary array.
+          Efficient for moderate-sized integer ranges with many repeated values.
+[==============================================================================}
+function TIntegerArrayHelper.SegmentedCountingSort(const aAscending: Boolean = True; const bucketSize: Integer = 1024): Integer;
+var
+  i, j, l: Integer;
+  c, s: TIntegerArray;
+  m, r: TRange;
+begin
+  Result := Length(Self);
+  if (Result < 2) then
+    Exit;
+  m := Self.Bounds;
+  SetLength(s, Length(Self));
+  l := 0;
+  if aAscending then
+  begin
+    r.start := m.start;
+    while (r.start <= m.stop) do
+    begin
+      r.stop := Integer((r.start + bucketSize) - 1).ClampMax(m.stop);
+      SetLength(c, ((r.stop - r.start) + 1));
+      for i := 0 to High(Self) do
+        if (Self[i] >= r.start) and (Self[i] <= r.stop) then
+          Inc(c[Self[i] - r.start]);
+      for i := 0 to High(c) do
+        while c[i].AdjustMin(-1, 0) do
+          s[l.Increase] := (r.start + i);
+      Inc(r.start, bucketSize);
+    end;
+  end
+  else
+  begin
+    r.start := m.stop;
+    while (r.start >= m.start) do
+    begin
+      r.stop := Integer((r.start - bucketSize) + 1).ClampMin(m.start);
+      SetLength(c, ((r.start - r.stop) + 1));
+      for i := 0 to High(Self) do
+        if (Self[i] >= r.stop) and (Self[i] <= r.start) then
+          Inc(c[Self[i] - r.stop]);
+      for i := High(c) downto 0 do
+        while c[i].AdjustMin(-1, 0) do
+          s[l.Increase] := (r.stop + i);
+      Dec(r.start, bucketSize);
+    end;
+  end;
+  for i := 0 to High(Self) do
+    Self[i] := s[i];
+end;
+
+{==============================================================================]
+  <arr.TernarySearch>
+  @action: Performs a ternary search over the array to locate the specified value.
+           The routine splits the current search interval into three segments,
+           compares the target value against the two internal partition points,
+           and repeatedly narrows the interval until the value is found or the range is exhausted.
+
+  @note: Requires the array to be pre-sorted in either ascending or descending order depending on oAscending.
+         Returns the index of the matching element when found; otherwise returns -1.
+         This implementation executes in logarithmic time relative to array length,
+         but is generally not faster than binary search in practical scenarios due to the additional comparisons.
+[==============================================================================}
+function TIntegerArrayHelper.TernarySearch(const value: Integer; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_TernarySearch}{$I config\Skeletons.inc}{$UNDEF Skeleton_TernarySearch}
+
+{==============================================================================]
+  <arr.TernaryPeak>
+  @action: Performs a ternary-search-style scan to locate a single local maximum.
+  @note: The algorithm attempts to find any valid local maximum with
+         sublinear search behavior by iteratively narrowing the search
+         interval. Edge maxima are detected up front. If no valid local
+         maximum exists in the interior segment, the function returns -1.
+         The method guarantees O(log n) probe behavior in the expected case
+         but completes with a linear fallback scan when necessary.
+[==============================================================================}
+function TIntegerArrayHelper.TernaryPeak: Integer; overload; {$DEFINE Skeleton_TernaryPeak}{$I config\Skeletons.inc}{$UNDEF Skeleton_TernaryPeak}
+
+{==============================================================================]
+  <arr.TernaryValley>
+  @action: Performs a ternary-search-style scan to locate a single local minimum.
+  @note: The algorithm mirrors the logic used in TernaryPeak but inverts
+         all comparisons to detect a valley rather than a peak. Edge
+         minima are tested first. If no valid local minimum exists in the
+         narrowed search interval, the function returns -1. Expected
+         complexity is O(log n) with a linear fallback validation.
+[==============================================================================}
+function TIntegerArrayHelper.TernaryValley: Integer; overload; {$DEFINE Skeleton_TernaryValley}{$I config\Skeletons.inc}{$UNDEF Skeleton_TernaryValley}
+
+{==============================================================================]
+  <arr.TernaryMountain>
+  @action: Identifies an index at or near the global maximum by using a
+           ternary-search-inspired unimodal search.
+  @note: Assumes the array can be treated as unimodal (first rising,
+         eventually falling). The method contracts the search range by
+         comparing values at symmetric trisection points. No explicit
+         local-maximum validation is performed; the algorithm simply
+         converges to the region containing the highest value encountered.
+         Returns the index of the final converged position.
+[==============================================================================}
+function TIntegerArrayHelper.TernaryMountain: Integer; overload; {$DEFINE Skeleton_TernaryMountain}{$I config\Skeletons.inc}{$UNDEF Skeleton_TernaryMountain}
+
+{==============================================================================]
+  <TIntegerArray.BMerge>
+  @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
+  @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
+[==============================================================================}
+function TIntegerArrayHelper.BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
+var
+  l: Integer;
+  s, i: TRange;
+begin
+  l := 0;
+  i.Create(0, Length(items));
+  s.Create(0, Length(Self));
+  SetLength(Result, (i.stop + s.stop));
+  case aAscending of
+    True:
+    while ((s.start < s.stop) and (i.start < i.stop)) do
+      if (Self[s.start] <= items[i.start]) then
+        Result[l.Increase] := Self[s.start.Increase]
+      else
+        Result[l.Increase] := items[i.start.Increase];
+    False:
+    while ((s.start < s.stop) and (i.start < i.stop)) do
+      if (Self[s.start] >= items[i.start]) then
+        Result[l.Increase] := Self[s.start.Increase]
+      else
+        Result[l.Increase] := items[i.start.Increase];
+  end;
+  if (s.start < s.stop) then
+    Move(Self[s.start], Result[l.Increase(s.Delta)], (s.Delta * SizeOf(Integer)));
+  if (i.start < i.stop) then
+    Move(items[i.start], Result[l], (i.Delta * SizeOf(Integer)));
+end;
+
+{==============================================================================]
+  <TIntegerArray.BMerged>
+  @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
+  @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
+[==============================================================================}
+function TIntegerArrayHelper.BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
+var
+  l: Integer;
+  s, i: TRange;
+begin
+  l := 0;
+  s.Create(0, Length(Self));
+  i.Create(0, Length(items));
+  SetLength(Result, (s.stop + i.stop));
+  while ((s.start < s.stop) and (i.start < i.stop)) do
+    if Self[s.start].Precede(items[i.start], aAscending) then
+      Result[l.Increase] := Self[s.start.Increase]
+    else
+      Result[l.Increase] := items[i.start.Increase];
+  if (s.start < s.stop) then
+    Move(Self[s.start], Result[l.Increase(s.Delta)], (s.Delta * SizeOf(Integer)));
+  if (i.start < i.stop) then
+    Move(items[i.start], Result[l], (i.Delta * SizeOf(Integer)));
+end;
+
+{==============================================================================]
   <TIntegerArray.BSort>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).
@@ -3345,155 +3548,6 @@ begin
     if (r < l) then
       SetLength(Result, r);
   end;
-end;
-
-{==============================================================================]
-  <TIntegerArray.BMerge>
-  @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
-  @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
-[==============================================================================}
-function TIntegerArrayHelper.BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
-var
-  l: Integer;
-  s, i: TRange;
-begin
-  l := 0;
-  i.Create(0, Length(items));
-  s.Create(0, Length(Self));
-  SetLength(Result, (i.stop + s.stop));
-  case aAscending of
-    True:
-    while ((s.start < s.stop) and (i.start < i.stop)) do
-      if (Self[s.start] <= items[i.start]) then
-        Result[l.Increase] := Self[s.start.Increase]
-      else
-        Result[l.Increase] := items[i.start.Increase];
-    False:
-    while ((s.start < s.stop) and (i.start < i.stop)) do
-      if (Self[s.start] >= items[i.start]) then
-        Result[l.Increase] := Self[s.start.Increase]
-      else
-        Result[l.Increase] := items[i.start.Increase];
-  end;
-  if (s.start < s.stop) then
-    Move(Self[s.start], Result[l.Increase(s.Delta)], (s.Delta * SizeOf(Integer)));
-  if (i.start < i.stop) then
-    Move(items[i.start], Result[l], (i.Delta * SizeOf(Integer)));
-end;
-
-{==============================================================================]
-  <TIntegerArray.BMerged>
-  @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
-  @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
-[==============================================================================}
-function TIntegerArrayHelper.BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
-var
-  l: Integer;
-  s, i: TRange;
-begin
-  l := 0;
-  s.Create(0, Length(Self));
-  i.Create(0, Length(items));
-  SetLength(Result, (s.stop + i.stop));
-  while ((s.start < s.stop) and (i.start < i.stop)) do
-    if Self[s.start].Precede(items[i.start], aAscending) then
-      Result[l.Increase] := Self[s.start.Increase]
-    else
-      Result[l.Increase] := items[i.start.Increase];
-  if (s.start < s.stop) then
-    Move(Self[s.start], Result[l.Increase(s.Delta)], (s.Delta * SizeOf(Integer)));
-  if (i.start < i.stop) then
-    Move(items[i.start], Result[l], (i.Delta * SizeOf(Integer)));
-end;
-
-{==============================================================================]
-  <TIntegerArray.CountingSort>
-  @action: Sorts the integer array using the classical counting sort algorithm.
-           Works efficiently when the range of integer values is relatively small.
-  @note: 
-    - This method handles negative and positive integers.
-    - The algorithm counts the occurrences of each integer and writes them back
-      in sorted order.
-    - Always sorts in ascending order; descending order is not supported in this version.
-    - Counting array size is based on the range of values in the array, so large
-      ranges may use significant memory.
-[==============================================================================}
-function TIntegerArrayHelper.CountingSort(const aAscending: Boolean = True): Integer;
-var
-  c: TIntegerArray;
-  i, j, s, o: Integer;
-  m: TRange;
-begin
-  Result := Length(Self);
-  if (Result < 2) then
-    Exit;
-  m := Self.Bounds;
-  o := -m.start;
-  SetLength(c, m.Size);
-  for i := 0 to High(Self) do
-    Inc(c[Self[i] + o]);
-  s := 0;
-  for i := 0 to m.Span do
-    for j := 1 to c[i] do
-      Self[s.Increase] := (i - o);
-  if not aAscending then
-    Self.Reverse;
-end;
-
-{==============================================================================]
- <TIntegerArray.SegmentedCountingSort>
- @action: Performs a counting sort over the integer array using a small
-          bucket-based approach. Supports ascending or descending order.
- @note:   Returns the number of elements in the array (Length(Self)).
-          Sorting is done in-place using an auxiliary array.
-          Efficient for moderate-sized integer ranges with many repeated values.
-[==============================================================================}
-function TIntegerArrayHelper.SegmentedCountingSort(const aAscending: Boolean = True; const bucketSize: Integer = 1024): Integer;
-var
-  i, j, l: Integer;
-  c, s: TIntegerArray;
-  m, r: TRange;
-begin
-  Result := Length(Self);
-  if (Result < 2) then
-    Exit;
-  m := Self.Bounds;
-  SetLength(s, Length(Self));
-  l := 0;
-  if aAscending then
-  begin
-    r.start := m.start;
-    while (r.start <= m.stop) do
-    begin
-      r.stop := Integer((r.start + bucketSize) - 1).ClampMax(m.stop);
-      SetLength(c, ((r.stop - r.start) + 1));
-      for i := 0 to High(Self) do
-        if (Self[i] >= r.start) and (Self[i] <= r.stop) then
-          Inc(c[Self[i] - r.start]);
-      for i := 0 to High(c) do
-        while c[i].AdjustMin(-1, 0) do
-          s[l.Increase] := (r.start + i);
-      Inc(r.start, bucketSize);
-    end;
-  end
-  else
-  begin
-    r.start := m.stop;
-    while (r.start >= m.start) do
-    begin
-      r.stop := Integer((r.start - bucketSize) + 1).ClampMin(m.start);
-      SetLength(c, ((r.start - r.stop) + 1));
-      for i := 0 to High(Self) do
-        if (Self[i] >= r.stop) and (Self[i] <= r.start) then
-          Inc(c[Self[i] - r.stop]);
-      for i := High(c) downto 0 do
-        while c[i].AdjustMin(-1, 0) do
-          s[l.Increase] := (r.stop + i);
-      Dec(r.start, bucketSize);
-    end;
-  end;
-  for i := 0 to High(Self) do
-    Self[i] := s[i];
 end; 
 
 {==============================================================================]
