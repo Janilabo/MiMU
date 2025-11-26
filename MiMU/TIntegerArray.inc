@@ -208,6 +208,10 @@ type
     function BinaryClosest(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryFarthest(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinarySearchNth(const value: Integer; const N: Integer; const oAscending: Boolean = True): Integer; overload;
+    function BinaryApproximateSearch(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): Integer; overload;
+    function BinarySearchApproximate(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): Integer; overload;
+    function BinaryLowerCount(const value: Integer; const oAscending: Boolean = True): Integer; overload;
+    function BinaryHigherCount(const value: Integer; const oAscending: Boolean = True): Integer; overload;
   end;
 {$ENDIF}
 
@@ -4019,6 +4023,41 @@ function TIntegerArrayHelper.BinaryFarthest(const value: Integer; const oAscendi
     - Works for both ascending and descending sorted arrays (controlled by oAscending).
 [==============================================================================}
 function TIntegerArrayHelper.BinarySearchNth(const value: Integer; const N: Integer; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchNth}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchNth}
+
+{==============================================================================]
+  <arr.BinaryApproximateSearch>
+  @action: Performs a binary search over an ordered array (ascending or descending),
+           to locate the index of the element that exactly matches the target value,
+           or—if no exact match exists—the closest element whose absolute difference from the target does not exceed the specified tolerance.
+  @note: This implementation evaluates all candidate positions encountered during the binary-search traversal and selects the closest qualifying value.
+         It returns –1 when no element falls within the tolerance or when the array is empty or the tolerance is negative.
+[==============================================================================} 
+function TIntegerArrayHelper.BinaryApproximateSearch(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): Integer; overload; var H, D: Integer; {$DEFINE Skeleton_BinaryApproximateSearch}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryApproximateSearch}
+
+{==============================================================================]
+  <arr.BinarySearchApproximate>
+  @action: Retrieves the closest element to the specified value using arr.BinaryClosest,
+           and returns its index only if the element’s difference from the target value is within the specified tolerance.
+  @note: This is a higher-level wrapper around arr.BinaryClosest. It does not perform the comparison logic itself beyond tolerance validation.
+         Returns –1 when the closest element is outside tolerance, the array is empty, or no closest candidate is found.
+[==============================================================================}
+function TIntegerArrayHelper.BinarySearchApproximate(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchApproximate}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchApproximate}
+
+{==============================================================================]
+  <arr.BinaryLowerCount>
+  @action: Returns the number of elements in the array strictly less than `value`.
+  @note: - The array must be sorted according to `oAscending` (True = ascending, False = descending).
+         - Uses binary search for efficient calculation (O(log n)).
+[==============================================================================}
+function TIntegerArrayHelper.BinaryLowerCount(const value: Integer; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLowerCount}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLowerCount}
+
+{==============================================================================]
+  <arr.BinaryHigherCount>
+  @action: Returns the number of elements in the array strictly greater than `value`.
+  @note: - The array must be sorted according to `oAscending` (True = ascending, False = descending).
+         - Uses binary search for efficient calculation (O(log n)).
+[==============================================================================}
+function TIntegerArrayHelper.BinaryHigherCount(const value: Integer; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryHigherCount}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryHigherCount}
 
 class function TIA.Init(var arr: TIntegerArray): Integer; overload; 
 begin

@@ -2417,3 +2417,94 @@ begin
     Result := -1;
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryApproximateSearch}
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  if ((Length(Self) = 0) or (tolerance < 0)) then
+    Exit;
+  H := High(Integer);
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      D := Abs(Self[M] - value);
+      if (D = 0) then
+        Exit(M);
+      if ((D <= tolerance) and (D < H)) then
+      begin
+        Result := M;
+        H := D;
+      end;
+      if (Self[M] < value) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      D := Abs(Self[M] - value);
+      if (D = 0) then
+        Exit(M);
+      if ((D <= tolerance) and (D < H)) then
+      begin
+        Result := M;
+        H := D;
+      end;
+      if (Self[M] > value) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinarySearchApproximate}
+var
+  c: Integer;
+begin
+  c := Self.BinaryClosest(value, oAscending);
+  if ((c = -1) or (Abs(Self[c] - value) > tolerance)) then
+    Result := -1
+  else
+    Result := c;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryLowerCount}
+var
+  p, l: Integer;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit(0);
+  p := Self.BinaryBoundLeft(value, oAscending);
+  if ((p = -1) or (p > (l - 1))) then
+    Result := oAscending.Select(l, 0)
+  else
+    Result := oAscending.Select(p, (l - p));
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryHigherCount}
+var
+  p, l: Integer;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit(0);
+  p := Self.BinaryBoundRight(value, oAscending);
+  if ((p = -1) or (p > (l - 1))) then
+    Result := oAscending.Select(0, l)
+  else
+    Result := oAscending.Select((l - p), p);
+end;
+{$ENDIF}
