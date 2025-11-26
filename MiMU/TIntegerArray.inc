@@ -202,6 +202,8 @@ type
     function BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
     function BinaryFloor(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryCeil(const value: Integer; const oAscending: Boolean = True): Integer; overload;
+    function BinaryTrunc(const value: Integer; const oAscending: Boolean = True): Integer; overload;
+    function BinaryRound(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryPoint(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryClosest(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryFarthest(const value: Integer; const oAscending: Boolean = True): Integer; overload;
@@ -3948,6 +3950,28 @@ function TIntegerArrayHelper.BinaryFloor(const value: Integer; const oAscending:
          identifies the nearest upper-or-equal bound with respect to `value`.
 [==============================================================================}
 function TIntegerArrayHelper.BinaryCeil(const value: Integer; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryCeil}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryCeil}
+
+{==============================================================================]
+  <arr.BinaryTrunc>
+  @action: Returns the index of the array element closest to `value` when
+           truncating towards zero. For positive values, behaves like Floor
+           (rounds down). For negative values, behaves like Ceil (rounds up
+           towards zero). If no appropriate element exists, returns -1.
+  @note: The array must be sorted according to `oAscending`. This mimics the
+         behavior of mathematical truncation, which always rounds towards zero.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryTrunc(const value: Integer; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryTrunc}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryTrunc}
+
+{==============================================================================]
+  <arr.BinaryRound>
+  @action: Returns the index of the array element nearest to `value`. If two
+           elements are equidistant, returns the one with the lower index
+           (tie-breaking towards floor). If no elements exist, returns -1.
+  @note: The array must be sorted according to `oAscending`. This performs
+         rounding to the nearest element, similar to mathematical rounding
+         with ties going to the lower value.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryRound(const value: Integer; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryRound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRound}
 
 {==============================================================================]
   <arr.BinaryPoint>

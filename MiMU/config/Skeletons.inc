@@ -2271,6 +2271,31 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_BinaryTrunc}
+begin
+  if (value >= 0) then
+    Result := Self.BinaryFloor(value, oAscending)
+  else
+    Result := Self.BinaryCeil(value, oAscending);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryRound}
+var
+  c, f: Integer;
+begin
+  if (Length(Self) = 0) then
+    Exit(-1);
+  f := Self.BinaryFloor(value, oAscending);
+  c := Self.BinaryCeil(value, oAscending);
+  if (f = -1) then
+    Exit(c);
+  if ((c = -1) or (f = c))then
+    Exit(f);
+  Result := IfThen((Abs(Self[f] - value) <= Abs(Self[c] - value)), f, c);
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_BinaryPoint}
 var
   M: Integer;
