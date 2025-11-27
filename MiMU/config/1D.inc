@@ -364,6 +364,9 @@ function Trendy: Boolean; overload;
 function OnOrder: Boolean; overload;
 function Peaks: TIntegerArray; overload;
 function Valleys: TIntegerArray; overload;
+function Unionize(const items: TArr; const oAscending: Boolean = True): TArr; overload;
+function Subtract(const items: TArr; const oAscending: Boolean = True): TArr; overload;
+function Intersect(const items: TArr; const oAscending: Boolean = True): TArr; overload;
 {$ENDIF}
 {$ENDIF}
 
@@ -8617,6 +8620,175 @@ begin
       Result[l.Increase] := i;
   if (h > 0) and (Self[h] < Self[h - 1]) then
     Result[l.Increase] := h;
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <arr.Unionize>
+  @action: Produces the sorted set-union of two integer arrays, eliminating
+           duplicates while preserving the requested ordering direction.
+  @note: Both source arrays must already be sorted in the same direction
+         (ascending or descending). The result is returned as a newly
+         allocated array sized exactly to the number of distinct merged
+         elements.
+[==============================================================================}
+function HArr.Unionize(const items: TArr; const oAscending: Boolean = True): TArr; overload;
+var
+  v: TVar;
+  i, j, l, a, b: Integer;
+  e: Boolean;
+begin
+  a := Length(Self);
+  b := Length(items);
+  SetLength(Result, (a + b));
+  i := 0;
+  j := 0;
+  l := 0;
+  e := False;
+  while ((i < a) and (j < b)) do
+  begin
+    case ((oAscending and (Self[i] < items[j])) or ((not oAscending) and (Self[i] > items[j]))) of
+      True:
+      begin
+        if ((not e) or (Self[i] <> v)) then
+        begin
+          v := Self[i];
+          Result[l.Increase] := v;
+          e := True;
+        end;
+        Inc(i);
+      end;
+      False:
+      case ((oAscending and (Self[i] > items[j])) or ((not oAscending) and (Self[i] < items[j]))) of
+        True:
+        begin
+          if ((not e) or (items[j] <> v)) then
+          begin
+            v := items[j];
+            Result[l.Increase] := v;
+            e := True;
+          end;
+          Inc(j);
+        end;
+        False:
+        begin
+          if ((not e) or (Self[i] <> v)) then
+          begin
+            v := Self[i];
+            Result[l.Increase] := v;
+            e := True;
+          end;
+          Inc(i);
+          Inc(j);
+        end;
+      end;
+    end;
+  end;
+  while (i < a) do
+  begin
+    if ((not e) or (Self[i] <> v)) then
+    begin
+      v := Self[i];
+      Result[l.Increase] := v;
+      e := True;
+    end;
+    Inc(i);
+  end;
+  while (j < b) do
+  begin
+    if ((not e) or (items[j] <> v)) then
+    begin
+      v := items[j];
+      Result[l.Increase] := v;
+      e := True;
+    end;
+    Inc(j);
+  end;
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <arr.Subtract>
+  @action: Constructs and returns a new array representing the set difference
+           of this array minus `items`. Only values present in this array and
+           absent from `items` are included. The output is sorted according to
+           `oAscending` and contains no duplicate values.
+  @note: Both input arrays must be pre-sorted in the same direction specified
+         by `oAscending`. The implementation performs a linear pass over both
+         arrays and executes in O(m + n) time, where m and n are their
+         respective lengths. This is the standard A − B set-difference
+         operation.
+[==============================================================================}
+function HArr.Subtract(const items: TArr; const oAscending: Boolean = True): TArr; overload;
+var
+  v: TVar;
+  i, j, l: Integer;
+  a, b: Integer;
+  e: Boolean;
+begin
+  a := Length(Self);
+  b := Length(items);
+  SetLength(Result, a);
+  i := 0;
+  j := 0;
+  l := 0;
+  e := False;
+  while (i < a) do
+  begin
+    while ((j < b) and ((oAscending and (items[j] < Self[i])) or ((not oAscending) and (items[j] > Self[i])))) do
+      Inc(j);
+    if (((j >= b) or ((oAscending and (Self[i] < items[j])) or ((not oAscending) and (Self[i] > items[j])))) and ((not e) or (Self[i] <> v))) then
+    begin
+      v := Self[i];
+      Result[l.Increase] := v;
+      e := True;
+    end;
+    Inc(i);
+  end;
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <arr.Intersect>
+  @action: Returns a new array containing all elements that appear in BOTH this
+           array and `items`. The result is sorted according to `oAscending`
+           and contains no duplicates.
+  @note: Both arrays must be sorted in the same order specified by `oAscending`.
+         This implementation uses a linear merge approach with O(m + n) time
+         complexity, which is optimal for this operation.
+[==============================================================================}
+function HArr.Intersect(const items: TArr; const oAscending: Boolean = True): TArr; overload;
+var
+  v: TVar;
+  i, j, l, a, b: Integer;
+  e: Boolean;
+begin
+  a := Length(Self);
+  b := Length(items);
+  SetLength(Result, Min(a, b));
+  i := 0;
+  j := 0;
+  l := 0;
+  e := False;
+  while ((i < a) and (j < b)) do
+  case (Self[i] = items[j]) of
+    True:
+    begin
+      if ((not e) or (Self[i] <> v)) then
+      begin
+        v := Self[i];
+        Result[l.Increase] := v;
+        e := True;
+      end;
+      Inc(i);
+      Inc(j);
+    end;
+    False:
+    if ((oAscending and (Self[i] < items[j])) or ((not oAscending) and (Self[i] > items[j]))) then
+      Inc(i)
+    else
+      Inc(j);
+  end;
   SetLength(Result, l);
 end;
 {$ENDIF}

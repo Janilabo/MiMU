@@ -100,6 +100,9 @@ type
     function Monotony: Boolean; overload;
     function Fuse(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
     function Combinate(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
+    function ExpandTolerance(const index: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange;
+    function ExpandSmooth(const index: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange;
+    function ExpandGradient(const index: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange;
     function CountingSort(const aAscending: Boolean = True): Integer;
     function SegmentedCountingSort(const aAscending: Boolean = True; const bucketSize: Integer = 1024): Integer;
     function TernarySearch(const value: Integer; const oAscending: Boolean = True): Integer; overload;
@@ -212,6 +215,7 @@ type
     function BinarySearchApproximate(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryLowerCount(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryHigherCount(const value: Integer; const oAscending: Boolean = True): Integer; overload;
+    function BinaryRangeEx(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange; overload;
   end;
 {$ENDIF}
 
@@ -2303,6 +2307,130 @@ begin
 end;
 
 {==============================================================================]
+  <arr.ExpandTolerance>
+  @action: Expands from the given `index` to include all adjacent elements within
+           `tolerance` of the value at arr[index]. Returns a TRange with the
+           start and stop indices of all qualifying elements.
+  @note: The array must be sorted according to `oAscending`. The expansion is
+         contiguous - it stops at the first element outside the tolerance range.
+         Time complexity is O(k) where k is the size of the resulting range.
+  @example: arr=[10,12,13,15,20,25], index=1 (value 12), tolerance=3
+            → expands to include 10,12,13,15 → range(0,3)
+[==============================================================================}
+function TIntegerArrayHelper.ExpandTolerance(const index: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange;
+var
+  H: Integer;
+  m: TRange;
+begin
+  H := High(Self);
+  if ((index < 0) or (index > H) or (tolerance < 0)) then
+    Exit(TRange.Construct(-1, -1));
+  m.Create((Self[index] - tolerance), (Self[index] + tolerance));
+  Result.Create(index);
+  case oAscending of
+    True:
+    begin
+      while ((Result.start > 0) and (Self[Result.start - 1] >= m.start)) do
+        Dec(Result.start);
+      while ((Result.stop < H) and (Self[Result.stop + 1] <= m.stop)) do
+        Inc(Result.stop);
+    end;
+    False:
+    begin
+      while (Result.start > 0) and (Self[Result.start - 1] <= m.stop) do
+        Dec(Result.start);
+      while (Result.stop < High(Self)) and (Self[Result.stop + 1] >= m.start) do
+        Inc(Result.stop);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <arr.ExpandSmooth>
+  @action: Expands from `index` while adjacent elements differ by at most
+           `tolerance` from their immediate neighbor. Creates a "smooth" range
+           where no two consecutive elements have a gap larger than tolerance.
+  @note: The array must be sorted. This creates contiguous ranges where the
+         step between each pair is ≤ tolerance. Unlike absolute tolerance,
+         this allows gradual drift across the range.
+  @example: arr=[10,12,14,16,25,27,29], index=2, tolerance=3
+            → includes 10,12,14,16 (each step ≤3), stops at 25 (gap of 9)
+            → range(0,3)
+[==============================================================================}
+function TIntegerArrayHelper.ExpandSmooth(const index: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange;
+var
+  H: Integer;
+begin
+  H := High(Self);
+  if ((index < 0) or (index > H) or (tolerance < 0)) then
+    Exit(TRange.Construct(-1, -1));
+  Result.Create(index);
+  while (Result.start > 0) do
+    if (Abs(Self[Result.start] - Self[Result.start - 1]) <= tolerance) then
+      Dec(Result.start)
+    else
+      Break;
+  while (Result.stop < H) do
+    if (Abs(Self[Result.stop + 1] - Self[Result.stop]) <= tolerance) then
+      Inc(Result.stop)
+    else
+      Break;
+end;
+
+{==============================================================================]
+  <arr.ExpandGradient>
+  @action: Expands from `index` while the rate of change (gradient) between
+           consecutive elements stays within `tolerance`. Useful for finding
+           regions with similar slope.
+  @note: For sorted arrays, this finds ranges where values increase/decrease
+         at a consistent rate. Tolerance represents maximum allowed change in
+         gradient (second derivative).
+  @example: arr=[10,12,14,16,20,25,31], index=2, tolerance=1
+            → gradient changes: 2,2,2,4,5,6 → stops when gradient jumps by >1
+[==============================================================================}
+function TIntegerArrayHelper.ExpandGradient(const index: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange;
+var
+  H: Integer;
+  B, C: Integer;
+begin
+  Result.start := -1;
+  Result.stop := -1;
+  H := High(Self);
+  if ((index < 0) or (index > H) or (tolerance < 0)) then
+    Exit(TRange.Construct(-1, -1));
+  if (H < 1) then
+    Exit(TRange.Construct(index, index));
+  Result.start := index;
+  Result.stop := index;
+  if (index > 0) then
+    B := Abs(Self[index] - Self[index - 1])
+  else if (index < High(Self)) then
+    B := Abs(Self[index + 1] - Self[index])
+  else
+    B := 0;
+  while (Result.start > 1) do
+  begin
+    C := Abs(Self[Result.start] - Self[Result.start - 1]);
+    if (Abs(C - B) > tolerance) then
+      Break;
+    Dec(Result.start);
+    B := C;
+  end;
+  if (index < H) then
+    B := Abs(Self[index + 1] - Self[index])
+  else if (index > 0) then
+    B := Abs(Self[index] - Self[index - 1]);
+  while (Result.stop < (H - 1)) do
+  begin
+    C := Abs(Self[Result.stop + 1] - Self[Result.stop]);
+    if (Abs(C - B) > tolerance) then
+      Break;
+    Inc(Result.stop);
+    B := C;
+  end;
+end;
+
+{==============================================================================]
   <TIntegerArray.CountingSort>
   @action: Sorts the integer array using the classical counting sort algorithm.
            Works efficiently when the range of integer values is relatively small.
@@ -4058,6 +4186,31 @@ function TIntegerArrayHelper.BinaryLowerCount(const value: Integer; const oAscen
          - Uses binary search for efficient calculation (O(log n)).
 [==============================================================================}
 function TIntegerArrayHelper.BinaryHigherCount(const value: Integer; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryHigherCount}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryHigherCount}
+
+{==============================================================================]
+  <arr.BinaryRangeEx>
+  @action: Returns the range of indices containing values within `tolerance` of
+           `value`. Uses binary search to find boundaries efficiently.
+  @note: The array must be sorted according to `oAscending`. Unlike the expand
+         function, this searches the entire array for the range, not just from
+         a starting index. Time complexity is O(log n).
+  @example: arr=[10,15,20,25,30,35], value=22, tolerance=5
+            → includes 20,25 → range(2,3)
+[==============================================================================}
+function TIntegerArrayHelper.BinaryRangeEx(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange; overload;
+var
+  m: TRange;
+begin
+  if (tolerance < 0) then
+    Exit(TRange.Construct(-1, -1));
+  m.Create((value - tolerance), (value + tolerance));
+  Result.start := Self.BinaryBoundLeft(IfThen(oAscending, m.start, m.stop), oAscending);
+  Result.stop := Self.BinaryBoundRight(IfThen(oAscending, m.stop, m.start), oAscending);
+  if (Result.stop > 0) then
+    Dec(Result.stop);
+  if ((Result.start = -1) or (Result.start > High(Self)) or (Result.stop = -1) or (Result.stop < Result.start)) then
+    Result := TRange.Construct(-1, -1);
+end;
 
 class function TIA.Init(var arr: TIntegerArray): Integer; overload; 
 begin
