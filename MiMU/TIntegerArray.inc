@@ -100,8 +100,10 @@ type
     function Monotony: Boolean; overload;
     function Fuse(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
     function Combinate(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
-    function ExpandTolerance(const index: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange;
-    function ExpandSmooth(const index: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange;
+    function Splay(const index: Integer; const tolerance: Integer = 1; const oAscending: Boolean = True): TRange; overload;
+    function Splay(const index: Integer; const limits: TRange; const tolerance: Integer = 1; const oAscending: Boolean = True): TRange; overload;
+    function Trace(const index: Integer; const tolerance: Integer = 1): TRange; overload;
+    function Trace(const index: Integer; const limits: TRange; const tolerance: Integer = 1): TRange; overload;
     function ExpandGradient(const index: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange;
     function CountingSort(const aAscending: Boolean = True): Integer;
     function SegmentedCountingSort(const aAscending: Boolean = True; const bucketSize: Integer = 1024): Integer;
@@ -2307,7 +2309,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.ExpandTolerance>
+  <arr.Splay>
   @action: Expands from the given `index` to include all adjacent elements within
            `tolerance` of the value at arr[index]. Returns a TRange with the
            start and stop indices of all qualifying elements.
@@ -2317,7 +2319,7 @@ end;
   @example: arr=[10,12,13,15,20,25], index=1 (value 12), tolerance=3
             → expands to include 10,12,13,15 → range(0,3)
 [==============================================================================}
-function TIntegerArrayHelper.ExpandTolerance(const index: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange;
+function TIntegerArrayHelper.Splay(const index: Integer; const tolerance: Integer = 1; const oAscending: Boolean = True): TRange; overload;
 var
   H: Integer;
   m: TRange;
@@ -2346,18 +2348,63 @@ begin
 end;
 
 {==============================================================================]
-  <arr.ExpandSmooth>
+  <arr.BinaryExpandWithTolerance>
+  @action: Expands from the given `index` to include all adjacent elements within
+           `tolerance` of the value at arr[index], constrained by `limits`.
+           Returns a TRange with the start and stop indices of all qualifying
+           elements within the specified index bounds.
+  @note: The array must be sorted according to `oAscending`. The expansion is
+         contiguous and stops at the first element outside the tolerance range
+         or when reaching the limit boundaries. Time complexity is O(k) where
+         k is the size of the resulting range.
+  @param limits: TRange specifying the index boundaries (start and stop) within
+                 which to perform the expansion. Expansion will not go beyond
+                 these index limits.
+  @example: arr=[10,12,13,15,20,25,30], index=2 (value 13), limits=(1,5), tol=3
+            → expands within indices 1-5 to include 12,13,15 → range(1,3)
+            (stops at 20 even though in tolerance, due to index limit at 5)
+[==============================================================================}
+function TIntegerArrayHelper.Splay(const index: Integer; const limits: TRange; const tolerance: Integer = 1; const oAscending: Boolean = True): TRange; overload;
+var
+  m, r: TRange;
+begin
+  r.start := Max(0, Min(limits.start, limits.stop));
+  r.stop := Min(High(Self), Max(limits.start, limits.stop));
+  if ((tolerance < 0) or (index < r.start) or (index > r.stop)) then
+    Exit(TRange.Construct(-1, -1));
+  m.Create((Self[index] - tolerance), (Self[index] + tolerance));
+  Result.Create(index);
+  case oAscending of
+    True:
+    begin
+      while ((Result.start > r.start) and (Self[Result.start - 1] >= m.start)) do
+        Dec(Result.start);
+      while (Result.stop < r.stop) and (Self[Result.stop + 1] <= m.stop) do
+        Inc(Result.stop);
+    end;
+    False:
+    begin
+      while (Result.start > r.start) and (Self[Result.start - 1] <= m.stop) do
+        Dec(Result.start);
+      while (Result.stop < r.stop) and (Self[Result.stop + 1] >= m.start) do
+        Inc(Result.stop);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <arr.Trace>
   @action: Expands from `index` while adjacent elements differ by at most
            `tolerance` from their immediate neighbor. Creates a "smooth" range
            where no two consecutive elements have a gap larger than tolerance.
-  @note: The array must be sorted. This creates contiguous ranges where the
+  @note: This creates contiguous ranges where the
          step between each pair is ≤ tolerance. Unlike absolute tolerance,
          this allows gradual drift across the range.
   @example: arr=[10,12,14,16,25,27,29], index=2, tolerance=3
             → includes 10,12,14,16 (each step ≤3), stops at 25 (gap of 9)
             → range(0,3)
 [==============================================================================}
-function TIntegerArrayHelper.ExpandSmooth(const index: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange;
+function TIntegerArrayHelper.Trace(const index: Integer; const tolerance: Integer = 1): TRange; overload;
 var
   H: Integer;
 begin
@@ -2371,6 +2418,39 @@ begin
     else
       Break;
   while (Result.stop < H) do
+    if (Abs(Self[Result.stop + 1] - Self[Result.stop]) <= tolerance) then
+      Inc(Result.stop)
+    else
+      Break;
+end;
+
+{==============================================================================]
+  <arr.Trace>
+  @action: Expands from `index` while adjacent elements differ by at most
+           `tolerance`, constrained by `limits`. Creates a "smooth" range
+           where no two consecutive elements have a gap larger than tolerance.
+  @note: Expansion is constrained within the index
+         boundaries specified by `limits`. Time complexity is O(k) where k
+         is the size of the resulting range.
+  @param limits: TRange specifying the index boundaries (start and stop) within
+                 which to perform the expansion.
+  @example: arr=[10,12,14,16,25,27], index=2, tolerance=3, limits=(0,4)
+            → includes 10,12,14,16 (each step ≤3), stops at index 4 due to limit
+[==============================================================================}
+function TIntegerArrayHelper.Trace(const index: Integer; const limits: TRange; const tolerance: Integer = 1): TRange; overload;
+var
+  m: TRange;
+begin
+  m.Create(Max(0, Min(limits.start, limits.stop)), Min(High(Self), Max(limits.start, limits.stop)));
+  if ((tolerance < 0) or (index < m.start) or (index > m.stop)) then
+    Exit(TRange.Construct(-1, -1));
+  Result.Create(index);
+  while (Result.start > m.start) do
+    if (Abs(Self[Result.start] - Self[Result.start - 1]) <= tolerance) then
+      Dec(Result.start)
+    else
+      Break;
+  while (Result.stop < m.stop) do
     if (Abs(Self[Result.stop + 1] - Self[Result.stop]) <= tolerance) then
       Inc(Result.stop)
     else
