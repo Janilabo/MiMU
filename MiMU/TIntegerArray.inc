@@ -122,6 +122,7 @@ type
     function BinaryBoundR(const x: Integer; const aAscending: Boolean = True): Integer;
     function BinaryBoundLeft(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryBoundRight(const value: Integer; const oAscending: Boolean = True): Integer; overload;
+    function BinaryPos(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryPosL(const x: Integer; const aAscending: Boolean = True): Integer;
     function BinaryPosR(const x: Integer; const aAscending: Boolean = True): Integer;
     function BinarySearch(const x: Integer; const aAscending: Boolean = True): Integer; overload;
@@ -218,6 +219,8 @@ type
     function BinaryLowerCount(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryHigherCount(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryRangeEx(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange; overload;
+    function BinaryFit(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
+    function BinaryUnfit(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
     function BinaryIncludes(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
     function BinaryExcludes(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
   end;
@@ -2651,7 +2654,7 @@ function TIntegerArrayHelper.TernaryValley: Integer; overload; {$DEFINE Skeleton
 function TIntegerArrayHelper.TernaryMountain: Integer; overload; {$DEFINE Skeleton_TernaryMountain}{$I config\Skeletons.inc}{$UNDEF Skeleton_TernaryMountain}
 
 {==============================================================================]
-  <TIntegerArray.BMerge>
+  <arr.BMerge>
   @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
   @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
 [==============================================================================}
@@ -2685,7 +2688,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BMerged>
+  <arr.BMerged>
   @action: Combines two sorted integer arrays (Self and items) into a new sorted array based on the specified order.
   @note: Assumes both Self and items are sorted in the same order (ascending if aAscending is True, descending otherwise).
 [==============================================================================}
@@ -2710,35 +2713,35 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BSort>
+  <arr.BSort>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).
 [==============================================================================}
 function TIntegerArrayHelper.BSort(const aAscending: Boolean = True): Integer; var a: Integer; {$DEFINE Skeleton_BSort}{$I config\Skeletons.inc}{$UNDEF Skeleton_BSort}
 
 {==============================================================================]
-  <TIntegerArray.BinarySort>
+  <arr.BinarySort>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns High(arr).
 [==============================================================================}
 function TIntegerArrayHelper.BinarySort(const aAscending: Boolean = True): Integer; var a: Integer; {$DEFINE Skeleton_BinarySort}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySort}
 
 {==============================================================================]
-  <TIntegerArray.BinarySorted>
+  <arr.BinarySorted>
   @action: BinarySort algorithm for TIntegerArrays (based on Binary Search).
   @note: Returns sorted array arr.
 [==============================================================================}
 function TIntegerArrayHelper.BinarySorted(const aAscending: Boolean = True): TIntegerArray; var a: Integer; {$DEFINE Skeleton_BinarySorted}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySorted}
 
 {==============================================================================]
-  <TIntegerArray.BinaryBoundL>
+  <arr.BinaryBoundL>
   @action: Returns Binary Search Lower Bound based on x-value.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
 function TIntegerArrayHelper.BinaryBoundL(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryBoundL}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryBoundL}
 
 {==============================================================================]
-  <TIntegerArray.BinaryBoundR>
+  <arr.BinaryBoundR>
   @action: Returns Binary Search Upper Bound based on x-value.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
@@ -2763,28 +2766,35 @@ function TIntegerArrayHelper.BinaryBoundLeft(const value: Integer; const oAscend
 function TIntegerArrayHelper.BinaryBoundRight(const value: Integer; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryBoundRight}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryBoundRight}
 
 {==============================================================================]
-  <TIntegerArray.BinaryPosL>
+  <arr.BinaryPos>
+  @action: Binary Search
+  @note: Alternative.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryPos(const value: Integer; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryPos}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPos}
+
+{==============================================================================]
+  <arr.BinaryPosL>
   @action: Returns L-side pos of x in arr with Binary Search. -1 if x does not exist.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
 function TIntegerArrayHelper.BinaryPosL(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryPosL}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPosL}
 
 {==============================================================================]
-  <TIntegerArray.BinaryPosR>
+  <arr.BinaryPosR>
   @action: Returns R-side pos of x in arr with Binary Search. -1 if x does not exist.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
 function TIntegerArrayHelper.BinaryPosR(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryPosR}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPosR}
 
 {==============================================================================]
-  <TIntegerArray.BinarySearch>
+  <arr.BinarySearch>
   @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
 function TIntegerArrayHelper.BinarySearch(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearch}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearch}
 
 {==============================================================================]
-  <TIntegerArray.BinarySearch>
+  <arr.BinarySearch>
   @action: Searches the integer array for any element whose value falls within the specified range.
            The search is performed using a binary-search strategy based on the assumption that the array is sorted either ascending or descending.
            If an element within the range is found, its index is returned; otherwise, the function returns –1.
@@ -2816,21 +2826,21 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BinarySeek>
+  <arr.BinarySeek>
   @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
 function TIntegerArrayHelper.BinarySeek(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinarySeek}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySeek}
 
 {==============================================================================]
-  <TIntegerArray.BinaryContains>
+  <arr.BinaryContains>
   @action: Binary Contains function for TIntegerArrays.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
 function TIntegerArrayHelper.BinaryContains(const x: Integer; const aAscending: Boolean = True): Boolean; {$DEFINE Skeleton_BinaryContains}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryContains}
 
 {==============================================================================]
-  <TIntegerArray.BinaryCount>
+  <arr.BinaryCount>
   @action: Binary Count function for TIntegerArrays.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
@@ -2851,84 +2861,84 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BinaryLocate>
+  <arr.BinaryLocate>
   @action: Returns Binary Search left and right index as TRange based on x value.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
 function TIntegerArrayHelper.BinaryLocate(const x: Integer; const aAscending: Boolean = True): TRange; {$DEFINE Skeleton_BinaryLocate}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLocate}
 
 {==============================================================================]
-  <TIntegerArray.BinaryLocation>
+  <arr.BinaryLocation>
   @action: Binary Contains function for TIntegerArrays. Contains location storage variable. With Result as False it will be -1..-1.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
 function TIntegerArrayHelper.BinaryLocation(const x: Integer; const aAscending: Boolean = True): TRange; {$DEFINE Skeleton_BinaryLocation}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLocation}
 
 {==============================================================================]
-  <TIntegerArray.BinaryAppend>
+  <arr.BinaryAppend>
   @action: Binary Append method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the index x was added to.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
 function TIntegerArrayHelper.BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryAppend}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryAppend}
 
 {==============================================================================]
-  <TIntegerArray.BinaryAdd>
+  <arr.BinaryAdd>
   @action: Binary Add method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the arr with x.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
 function TIntegerArrayHelper.BinaryAdd(const x: Integer; const aAscending: Boolean = True): TIntegerArray; {$DEFINE Skeleton_BinaryAdd}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryAdd}
 
 {==============================================================================]
-  <TIntegerArray.BinarySearchF>
+  <arr.BinarySearchF>
   @action: Binary Search which supports TRange search, uses first match from x-range.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
 function TIntegerArrayHelper.BinarySearchF(const x: TRange; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinarySearchF}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchF}
 
 {==============================================================================]
-  <TIntegerArray.BinarySearchL>
+  <arr.BinarySearchL>
   @action: Binary Search which supports TRange search, uses last match from x-range.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
 function TIntegerArrayHelper.BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinarySearchL}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchL}
 
 {==============================================================================]
-  <TIntegerArray.BinaryPrune>
+  <arr.BinaryPrune>
   @action: Binary Search-based Prune method.
   @note: None.
 [==============================================================================}
 function TIntegerArrayHelper.BinaryPrune(const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryPrune}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPrune}
 
 {==============================================================================]
-  <TIntegerArray.BinaryPruned>
+  <arr.BinaryPruned>
   @action: Binary Search-based Pruned method.
   @note: None.
 [==============================================================================}
 function TIntegerArrayHelper.BinaryPruned(const aAscending: Boolean = True): TIntegerArray; {$DEFINE Skeleton_BinaryPruned}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPruned}
 
 {==============================================================================]
-  <TIntegerArray.BinaryUndupe>
+  <arr.BinaryUndupe>
   @action: Binary Search-based Undupe method.
   @note: None
 [==============================================================================}
 function TIntegerArrayHelper.BinaryUndupe: Integer; var u: TIntegerArray; {$DEFINE Skeleton_BinaryUndupe}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUndupe}
 
 {==============================================================================]
-  <TIntegerArray.BinaryUnduped>
+  <arr.BinaryUnduped>
   @action: Binary Search-based Unduped method.
   @note: None
 [==============================================================================}
 function TIntegerArrayHelper.BinaryUnduped: TIntegerArray; {$DEFINE Skeleton_BinaryUnduped}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnduped}
 
 {==============================================================================]
-  <TIntegerArray.BinaryUnified>
+  <arr.BinaryUnified>
   @action: Binary Search-based Unified method.
   @note: None
 [==============================================================================}
 function TIntegerArrayHelper.BinaryUnified(const dAscending: Boolean = True): TIntegerArray; var u: TIntegerArray; {$DEFINE Skeleton_BinaryUnified}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnified}
 
 {==============================================================================]
-  <TIntegerArray.BinaryGrow>
+  <arr.BinaryGrow>
   @action: Inserts an integer x into the array while maintaining sorted order.
            Works with ascending or descending order based on aAscending.
   @note: Returns True if the value was inserted, False if it already exists.
@@ -2936,14 +2946,14 @@ function TIntegerArrayHelper.BinaryUnified(const dAscending: Boolean = True): TI
 function TIntegerArrayHelper.BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean; {$DEFINE Skeleton_BinaryGrow}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryGrow}
 
 {==============================================================================]
-  <TIntegerArray.BinaryShrink>
+  <arr.BinaryShrink>
   @action: Removes an integer x from the array while maintaining sorted order.
   @note: Returns True if the value was removed, False if it was not found.
 [==============================================================================}
 function TIntegerArrayHelper.BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean; {$DEFINE Skeleton_BinaryShrink}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryShrink}
 
 {==============================================================================]
-  <TIntegerArray.BinaryLowerBound>
+  <arr.BinaryLowerBound>
   @action: Finds the first index where the array value is greater than or equal to x
            (ascending) or less than or equal to x (descending).
   @note: 
@@ -2954,7 +2964,7 @@ function TIntegerArrayHelper.BinaryShrink(const x: Integer; const aAscending: Bo
 function TIntegerArrayHelper.BinaryLowerBound(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLowerBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLowerBound}
 
 {==============================================================================]
-  <TIntegerArray.BinaryUpperBound>
+  <arr.BinaryUpperBound>
   @action: Finds the first index where the array value is strictly greater than x
            (ascending) or strictly less than x (descending).
   @note: 
@@ -2965,7 +2975,7 @@ function TIntegerArrayHelper.BinaryLowerBound(const x: Integer; const aAscending
 function TIntegerArrayHelper.BinaryUpperBound(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryUpperBound}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUpperBound}
 
 {==============================================================================]
-  <TIntegerArray.BinaryRightmost>
+  <arr.BinaryRightmost>
   @action: Finds the last index where the array value is less than or equal to x
            (ascending) or greater than or equal to x (descending).
   @note: 
@@ -2976,7 +2986,7 @@ function TIntegerArrayHelper.BinaryUpperBound(const x: Integer; const aAscending
 function TIntegerArrayHelper.BinaryRightmost(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryRightmost}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRightmost}
 
 {==============================================================================]
-  <TIntegerArray.BinarySearch>
+  <arr.BinarySearch>
   @action: Searches the integer array for the last (highest-index) element whose value lies within the specified range.
            The operation uses a binary-search strategy based on the assumption that the array is sorted either ascending or descending.
            If a matching element is found, the index of the latest such occurrence is returned; otherwise the function returns –1.
@@ -3010,7 +3020,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BinaryLeftmost>
+  <arr.BinaryLeftmost>
   @action: Finds the first index where the array value is greater than or equal to x
            (ascending) or less than or equal to x (descending).
   @note: 
@@ -3021,7 +3031,7 @@ end;
 function TIntegerArrayHelper.BinaryLeftmost(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLeftmost}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLeftmost}
 
 {==============================================================================]
-  <TIntegerArray.BinaryLeftmost>
+  <arr.BinaryLeftmost>
   @action: Searches the integer array for the first (lowest-index) element whose value lies within the specified range.
            The search uses a binary-search strategy under the assumption that the array is sorted either ascending or descending.
            If a matching element is found, the index of the earliest such occurrence is returned; otherwise the function returns –1.
@@ -3055,7 +3065,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BinaryRange>
+  <arr.BinaryRange>
   @action:  Return the index range (start..stop) of all elements whose
             values lie within the value interval x.start..x.stop.
             Uses binary search for look-ups in an ascending or descending sorted array.
@@ -3065,7 +3075,7 @@ end;
 function TIntegerArrayHelper.BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinaryRange1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRange1}
 
 {==============================================================================]
-  <TIntegerArray.BinaryRange>
+  <arr.BinaryRange>
   @action:  Return the index range (start..stop) of all elements whose
             value equals x. Uses binary search to find the leftmost
             and rightmost matching indexes.
@@ -3075,7 +3085,7 @@ function TIntegerArrayHelper.BinaryRange(const x: TRange; const aAscending: Bool
 function TIntegerArrayHelper.BinaryRange(const x: Integer; const aAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinaryRange2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRange2}
 
 {==============================================================================]
-  <TIntegerArray.BinarySpan>
+  <arr.BinarySpan>
   @action: Performs a binary search on a sorted integer array to find the index range
            (start..stop) of values that fall within a given numeric range.
            Works for both ascending and descending arrays.
@@ -3088,21 +3098,21 @@ function TIntegerArrayHelper.BinaryRange(const x: Integer; const aAscending: Boo
 function TIntegerArrayHelper.BinarySpan(const x: TRange; const aAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinarySpan}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySpan}
 
 {==============================================================================]
-  <TIntegerArray.BinaryMerge>
+  <arr.BinaryMerge>
   @action: Merges two sorted integer arrays (Self and items) into a new sorted array based on the specified order by aAscending.
   @note: Assumes both Self and items are already sorted in the same order.
 [==============================================================================}
 function TIntegerArrayHelper.BinaryMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryMerge}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryMerge}
 
 {==============================================================================]
-  <TIntegerArray.BinaryMerged>
+  <arr.BinaryMerged>
   @action: Merges two sorted integer arrays (Self and items) into a new sorted array based on the specified order by aAscending.
   @note: Assumes both Self and items are already sorted in the same order.
 [==============================================================================}
 function TIntegerArrayHelper.BinaryMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryMerged}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryMerged}
 
 {==============================================================================]
-  <TIntegerArray.BinaryCombine>
+  <arr.BinaryCombine>
   @action: Merges two sorted integer arrays (Self and items) into a new sorted array based on the specified order by aAscending.
   @note: Assumes both Self and items are already sorted in the same order.
 [==============================================================================}
@@ -3275,7 +3285,7 @@ function TIntegerArrayHelper.BinarySinglify(const item: Integer; const aAscendin
 function TIntegerArrayHelper.BinarySinglified(const item: Integer; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinarySinglified}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySinglified}
 
 {==============================================================================]
- <TIntegerArray.BinarySearchFirst>
+ <arr.BinarySearchFirst>
   @action: Performs a binary search to find the first (lowest) index of a specified
            integer value within a sorted TIntegerArray.
   @note: - The array must be sorted in ascending order.
@@ -3285,7 +3295,7 @@ function TIntegerArrayHelper.BinarySinglified(const item: Integer; const aAscend
 function TIntegerArrayHelper.BinarySearchFirst(const value: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchFirst}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchFirst}
 
 {==============================================================================]
- <TIntegerArray.BinarySearchLast>
+ <arr.BinarySearchLast>
   @action: Performs a binary search to find the last (highest) index of a specified
            integer value within a sorted TIntegerArray.
   @note: - The array must be sorted in ascending order.
@@ -3295,7 +3305,7 @@ function TIntegerArrayHelper.BinarySearchFirst(const value: Integer; const aAsce
 function TIntegerArrayHelper.BinarySearchLast(const value: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchLast}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySearchLast}
 
 {==============================================================================]
- <TIntegerArray.BinaryLocalize>
+ <arr.BinaryLocalize>
   @action: Determines the insertion position for a specified integer value within
            a sorted TIntegerArray.
   @note: - The array must be sorted in ascending order.
@@ -3306,7 +3316,7 @@ function TIntegerArrayHelper.BinarySearchLast(const value: Integer; const aAscen
 function TIntegerArrayHelper.BinaryLocalize(const value: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLocalize}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLocalize}
 
 {==============================================================================]
- <TIntegerArray.BinaryLookup>
+ <arr.BinaryLookup>
   @action: Performs a binary search on the array to find the index of the specified value.
            Automatically detects whether the array is sorted in ascending or descending order.
            Returns the index of the value if found; otherwise returns -1.
@@ -3317,7 +3327,7 @@ function TIntegerArrayHelper.BinaryLocalize(const value: Integer; const aAscendi
 function TIntegerArrayHelper.BinaryLookup(const value: Integer): Integer; overload; {$DEFINE Skeleton_BinaryLookup}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryLookup}
 
 {==============================================================================]
-  <TIntegerArray.BinaryInterpolationSearch>
+  <arr.BinaryInterpolationSearch>
   @action: Performs an interpolation search on a sorted integer array to find the index of a given value.
   @note: This algorithm estimates the probable position of the target using linear interpolation
          between the low and high bounds, resulting in faster performance than binary search
@@ -3367,7 +3377,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BinaryProbabilisticSearch>
+  <arr.BinaryProbabilisticSearch>
   @action: Performs a probabilistic variant of binary interpolation search, introducing a random bias
            to the estimated midpoint to improve robustness on non-uniform or noisy data.
   @note: The optional `bias` parameter (default = 0.0) adjusts how much random variation is applied
@@ -3406,7 +3416,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BinaryPinpoint>
+  <arr.BinaryPinpoint>
   @action: Finds the index of the element closest in value to the specified integer.
   @note: - The array must be sorted in ascending or descending order as specified by aAscending.
          - Returns the index of the exact match if found, otherwise the index of the nearest element
@@ -3443,7 +3453,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BinaryScan>
+  <arr.BinaryScan>
   @action: Performs a binary range scan on a sorted integer array to locate
            all indexes whose values lie within the specified TRange.
   @note: - The array must be sorted in either ascending or descending order,
@@ -3530,7 +3540,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BinaryScanned>
+  <arr.BinaryScanned>
   @action: Performs a binary range scan on a sorted integer array to locate
            all values lying within the specified TRange.
   @note: - The array must be sorted in either ascending or descending order,
@@ -3724,7 +3734,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BinaryGroups>
+  <arr.BinaryGroups>
   @action: Groups the integer array into binary-value groups, returning a 2D array where each row contains
            the values belonging to a specific binary grouping. Iterates in ascending or descending order
            depending on the aAscending flag.
@@ -3765,7 +3775,7 @@ begin
 end; 
 
 {==============================================================================]
-  <TIntegerArray.BinaryCountingSort>
+  <arr.BinaryCountingSort>
   @action: Sorts the integer array using a hybrid approach that combines counting sort
            for densely clustered values with binary insertion for outliers.
            Automatically adapts to the data distribution based on the maxRange parameter.
@@ -3842,7 +3852,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BinaryFirst>
+  <arr.BinaryFirst>
   @action: Return the index of the first element in the sorted array
            that is greater than or equal to x.
            Works with ascending or descending order depending on aAscending.
@@ -3852,7 +3862,7 @@ end;
 function TIntegerArrayHelper.BinaryFirst(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryFirst}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryFirst}
 
 {==============================================================================]
-  <TIntegerArray.BinaryLast>
+  <arr.BinaryLast>
   @action: Return the index of the last element in the sorted array
            that is less than or equal to x.
            Honors the aAscending flag for array order.
@@ -3910,7 +3920,7 @@ function TIntegerArrayHelper.BinaryFindLast(const value: Integer; const oAscendi
 function TIntegerArrayHelper.BinaryFindLast(const range: TRange; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryFindLast2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryFindLast2}
 
 {==============================================================================]
-  <TIntegerArray.BinaryValues>
+  <arr.BinaryValues>
   @action: Returns all items in the array that match a given value using binary search.
   @note: The array must be sorted (ascending or descending) depending on
          the value of aAscending. If the value does not occur in the array,
@@ -3919,7 +3929,7 @@ function TIntegerArrayHelper.BinaryFindLast(const range: TRange; const oAscendin
 function TIntegerArrayHelper.BinaryValues(const value: Integer; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryValues1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryValues1}
 
 {==============================================================================]
-  <TIntegerArray.BinaryValues>
+  <arr.BinaryValues>
   @action: Returns all items in the array whose values fall within a given
            numeric range, determined via binary search.
   @note: The array must be sorted (ascending or descending) according to
@@ -3931,7 +3941,7 @@ function TIntegerArrayHelper.BinaryValues(const value: Integer; const aAscending
 function TIntegerArrayHelper.BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryValues2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryValues2}
 
 {==============================================================================]
-  <TIntegerArray.BinaryExtract>
+  <arr.BinaryExtract>
   @action: Returns all integers from Self that lie within the specified range.
            Uses binary search to minimize scanning. Supports ascending or descending arrays.
   @note:   area.start ≤ area.stop → ascending range
@@ -3982,7 +3992,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BinaryFilter>
+  <arr.BinaryFilter>
   @action: Returns all integers from Self that lie outside the specified range.
            Uses binary search to minimize scanning. Supports ascending or descending arrays.
   @note:   area.start ≤ area.stop → ascending range
@@ -4024,7 +4034,7 @@ begin
 end;
 
 {==============================================================================]
-  <TIntegerArray.BinaryAmount>
+  <arr.BinaryAmount>
   @action: Returns count of x
   @note: Alternative for BinaryCount
 [==============================================================================}
@@ -4288,6 +4298,35 @@ begin
   if ((Result.start = -1) or (Result.start > High(Self)) or (Result.stop = -1) or (Result.stop < Result.start)) then
     Result := TRange.Construct(-1, -1);
 end;
+
+{==============================================================================]
+  <arr.BinaryFit>
+  @action: Returns True if the specified value falls within the sortable domain
+           represented by the current array. In other words, it verifies that
+           the value is within the inclusive bounds defined by the first and
+           last elements of the array, assuming that the array is sorted in the
+           direction indicated by oAscending.
+  @note: This function does not perform a binary search. It simply checks
+         whether the value is eligible for a binary lookup or insertion
+         attempt. For empty arrays, the function always returns False. When
+         oAscending = False, the comparison logic is inverted to support
+         descending-sorted arrays.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryFit(const value: Integer; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryFit}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryFit}
+
+{==============================================================================]
+  <arr.BinaryUnfit>
+  @action: Returns True if the specified value is outside the inclusive bounds
+           of the array, or if the array is empty. This indicates that the
+           value cannot exist in the array and is not a candidate for a binary
+           search within the current bounds.
+  @note: This routine is essentially the logical inverse of BinaryFit. It is
+         useful as a pre-check before performing binary search or before
+         attempting bounded insertion logic. When oAscending = False, the
+         boundary comparisons are reversed to support descending-sorted
+         arrays.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryUnfit(const value: Integer; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryUnfit}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnfit}
 
 {==============================================================================]
   <arr.BinaryIncludes>

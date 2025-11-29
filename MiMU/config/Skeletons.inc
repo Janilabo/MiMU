@@ -669,6 +669,40 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_BinaryPos}
+var
+  M: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      if (Self[M] = value) then
+        Exit(M);
+      if (value < Self[M]) then
+        R.stop := (M - 1)
+      else
+        R.start := (M + 1);
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      if (Self[M] = value) then
+        Exit(M);
+      if (value > Self[M]) then
+        R.stop := (M - 1)
+      else
+        R.start := (M + 1);
+    end;
+  end;
+  Result := -1;
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_BinaryPosL}
 var
   m, o: Integer;
@@ -2508,6 +2542,24 @@ begin
     Result := oAscending.Select((l - p), p);
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryFit}
+begin
+  if oAscending then
+    Result := ((not Self.Empty) and (value >= Self[0]) and (value <= Self[High(Self)]))
+  else
+    Result := ((not Self.Empty) and (value <= Self[0]) and (value >= Self[High(Self)]));
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUnfit}
+begin
+  if oAscending then
+    Result := (Self.Empty or (value < Self[0]) or (value > Self[High(Self)]))
+  else
+    Result := (Self.Empty or (value > Self[0]) or (value < Self[High(Self)]));
+end;
+{$ENDIF} 
 
 {$IFDEF Skeleton_BinaryIncludes}
 begin
