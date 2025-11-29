@@ -522,7 +522,7 @@ end;
 
 function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
 begin
-  Result := ((Integer(XORSort(A, B)) + Integer(XORSort(A, C)) + Integer(XORSort(B, C))) > 0);
+  Result := ((Integer(XORSort(A, B, oAscending)) + Integer(XORSort(A, C, oAscending)) + Integer(XORSort(B, C, oAscending))) > 0);
 end;
 
 function iSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;

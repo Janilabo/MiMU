@@ -1770,7 +1770,7 @@ end;
 [==============================================================================}
 function TBox.Pts: TPointArray; overload;
 var
-  x, y, i, w, h: Integer;
+  x, y, w, h: Integer;
 begin
   Self.Size(w, h);
   SetLength(Result, (w * h));
@@ -1786,7 +1786,7 @@ end;
 [==============================================================================}
 function TBox.Explode: TPointArray; overload;
 var
-  l, i: Integer;
+  i: Integer;
 begin
   SetLength(Result, Self.Area);
   Result[0] := Point(Self.X1, Self.Y1);
@@ -1839,8 +1839,6 @@ end;
   @note: -1 if p is not part of TBox.
 [==============================================================================}
 function TBox.IDs(const p: TPoint): Integer; overload;
-var
-  i: Integer;
 begin
   if not Self.Contains(p) then
     Exit(-1);
@@ -2605,12 +2603,10 @@ end;
 function TBoxHelper.Gridded(const target: TBox): TBoxArray; overload;
 var
   l, y, x, r, c, w, h: Integer;
-  f: TBox;
 begin
   Self.Size(w, h);
   if ((w > target.Width) or (h > target.Height)) then
     Exit([]);
-  f := Self.Frame;
   c := (target.Width div w);
   r := (target.Height div h);
   SetLength(Result, (r * c));

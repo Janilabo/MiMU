@@ -3009,13 +3009,12 @@ end;
 function TRangeHelper.Binned(const target: TRange): TRangeArray; overload;
 var
   i, s: Integer;
-  f, t: TRange;
+  t: TRange;
 begin
   t := target.Normalize;
   s := Self.Size;
   if (s > t.Size) then
     Exit([]);
-  f := Self.Frame;
   SetLength(Result, (t.Size div s));
   for i := 0 to High(Result) do
   begin

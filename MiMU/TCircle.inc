@@ -195,7 +195,6 @@ end;
 function TCircle.Points: TPointArray;
 var
   x, y: Integer;
-  p: TPointArray;
 begin
   SetLength(Result, 0);
   for x := Trunc(Self.Center.X - Self.Radius) to Trunc(Self.Center.X + Self.Radius) do
@@ -230,7 +229,7 @@ end;
 [==============================================================================}
 function TCircle.Border: TPointArray;
 var
-  x, y, d: Integer;
+  d: Integer;
   c: TPoint;
   procedure AddPoint(p: TPoint);
   begin

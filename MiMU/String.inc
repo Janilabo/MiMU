@@ -1212,7 +1212,6 @@ function TStringHelper.ToTRange(const glueRange: string = '..'; const openRange:
 var
   s: string;
   p: Integer;
-  o, c: string;
 begin
   s := Self.Trim;
   if ((s <> '') and (s[1] in ['[', '(', '{', '<'])) then
@@ -1346,7 +1345,6 @@ function TStringHelper.BuiltWith(const blocks: TCharArray): Boolean;
 var
   i, p: Integer;
   u: TBooleanArray;
-  f: Boolean;
 begin
   if (Self.Empty or blocks.Empty) then
     Exit(False);

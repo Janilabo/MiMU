@@ -779,11 +779,11 @@ var
 begin
   r := limits.Normalized;
   n := (Self + cValue);
-  if (n < limits.start) then
-    Result := limits.start
+  if (n < r.start) then
+    Result := r.start
   else
-    if (n > limits.stop) then
-      Result := limits.stop
+    if (n > r.stop) then
+      Result := r.stop
     else
       Result := n;
 end;

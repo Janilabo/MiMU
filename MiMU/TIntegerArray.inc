@@ -104,14 +104,14 @@ type
     function Splay(const index: Integer; const limits: TRange; const tolerance: Integer = 1; const oAscending: Boolean = True): TRange; overload;
     function Trace(const index: Integer; const tolerance: Integer = 1): TRange; overload;
     function Trace(const index: Integer; const limits: TRange; const tolerance: Integer = 1): TRange; overload;
-    function ExpandGradient(const index: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange;
+    function ExpandGradient(const index: Integer; const tolerance: Integer): TRange;
     function CountingSort(const aAscending: Boolean = True): Integer;
     function SegmentedCountingSort(const aAscending: Boolean = True; const bucketSize: Integer = 1024): Integer;
     function TernarySearch(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function TernaryPeak: Integer; overload;
     function TernaryValley: Integer; overload;
     function TernaryMountain: Integer; overload;
-	function BSort(const aAscending: Boolean = True): Integer;
+    function BSort(const aAscending: Boolean = True): Integer;
     function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
     function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
     function BinarySort(const aAscending: Boolean = True): Integer;
@@ -245,8 +245,6 @@ begin
 end;
 
 function TIntegerArrayHelper.Bounds(var aSize: Integer): TRange; overload;
-var
-  i: Integer;
 begin
   case Self.Empty of
     False:
@@ -865,7 +863,7 @@ function TIntegerArrayHelper.RadixSort(const aAscending: Boolean = True): Intege
 var
   a, n: TIntegerArray;
   c: array[0..9] of Integer;
-  x, y, p, i, j, m, e: Integer;
+  x, y, i, j, m, e: Integer;
 begin
   Result := High(Self);
   if (Result < 1) then
@@ -2468,7 +2466,7 @@ end;
   @example: arr=[10,12,14,16,20,25,31], index=2, tolerance=1
             → gradient changes: 2,2,2,4,5,6 → stops when gradient jumps by >1
 [==============================================================================}
-function TIntegerArrayHelper.ExpandGradient(const index: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange;
+function TIntegerArrayHelper.ExpandGradient(const index: Integer; const tolerance: Integer): TRange;
 var
   H: Integer;
   B, C: Integer;
@@ -2554,7 +2552,7 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.SegmentedCountingSort(const aAscending: Boolean = True; const bucketSize: Integer = 1024): Integer;
 var
-  i, j, l: Integer;
+  i, l: Integer;
   c, s: TIntegerArray;
   m, r: TRange;
 begin
@@ -3416,7 +3414,7 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.BinaryPinpoint(const x: Integer; const aAscending: Boolean = True): Integer;
 var
-  H, L, R, D: Integer;
+  H, D: Integer;
 begin
   H := High(Self);
   case H of
@@ -3545,7 +3543,7 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.BinaryScanned(const area: TRange; const aAscending: Boolean = True): TIntegerArray;
 var
-  M, i, S: Integer;
+  M, S: Integer;
   a, r, o: TRange;
 begin
   a := area.Normalize;
@@ -3782,7 +3780,7 @@ end;
 function TIntegerArrayHelper.BinaryCountingSort(const aAscending: Boolean = True; const maxRange: Integer = 2000): Integer;
 var
   c, l: TIntegerArray;
-  i, j, v, r, o: Integer;
+  i, j, r, o: Integer;
   m: TRange;
 begin
   Result := Length(Self);
@@ -3941,7 +3939,7 @@ function TIntegerArrayHelper.BinaryValues(const values: TRange; const aAscending
 function TIntegerArrayHelper.BinaryExtract(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
 var
   i: Integer;
-  n, R: TRange;
+  R: TRange;
 begin
   if Self.Empty then
     Exit([]);
@@ -3992,7 +3990,7 @@ end;
 function TIntegerArrayHelper.BinaryFilter(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
 var
   i, L, h: Integer;
-  n, R: TRange;
+  R: TRange;
 begin
   L := Length(Self);
   if (L = 0) then
@@ -4009,19 +4007,16 @@ end;
 
 function TIntegerArrayHelper.BinaryFilter(const values: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
 var
-  v: TIntegerArray;
   h, i, r: Integer;
 begin
   if Self.Empty then
     Exit([]);
   if values.Empty then
     Exit(Self.Copy);
-  v := values.QuickSorted;
-  h := High(v);
   SetLength(Result, Length(Self));
   r := 0;
   for i := 0 to High(Self) do
-    if (((Self[i] > v[h]) or (Self[i] < v[0])) or (not v.BinaryContains(Self[i]))) then
+    if not values.BinaryContains(Self[i], aAscending) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
 end;
