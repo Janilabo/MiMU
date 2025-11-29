@@ -491,7 +491,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.Invert: TPointArray; 
 var
-  i, x, y, w, h, r, l: Integer;
+  i, x, y, w, h, r: Integer;
   m: T2DBooleanArray;
   b: TBox;
 begin
@@ -620,7 +620,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.FloodFill(const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; 
 var
-  l, i, w, h, x, y, f, t, r: Integer;
+  l, i, w, h, x, y, f, r: Integer;
   q, a: TPointArray;
   p: TPoint;
   c, z: T2DBooleanArray;
@@ -1783,7 +1783,7 @@ var
   s: T2DBooleanArray;
   q: TPointArray;
   b, f: TBox;
-  g, k, p, u: TPoint;
+  g, k, u: TPoint;
   a: Boolean;
   l: TRange;
   d, m, o: Double;
@@ -1795,7 +1795,6 @@ begin
   end;
   SetLength(Result, 0);
   b := Self.Bounds(w, h);
-  p := Point(b.X1, b.Y1);
   c := T2D.Create(0, w, h);
   s := T2D.Create(False, w, h);
   for i := 0 to High(Self) do
@@ -1869,12 +1868,12 @@ end;
 [==============================================================================}
 function TPointArrayHelper.Clusters(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
-  i, w, h, e, v, z, r, n, t, o, x, y: Integer;
+  i, w, h, e, v, z, r, n, t, x, y: Integer;
   c: T2DIntegerArray;
   s: T2DBooleanArray;
   q: TPointArray;
   b, f: TBox;
-  g, k, p, u, m: TPoint;
+  g, k, u, m: TPoint;
   a: Boolean;
   l: TRange;
 begin
@@ -1885,7 +1884,6 @@ begin
   end;
   SetLength(Result, 0);
   b := Self.Bounds(w, h);
-  p := Point(b.X1, b.Y1);
   c := T2D.Create(0, w, h);
   s := T2D.Create(False, w, h);
   for i := 0 to High(Self) do
@@ -2043,7 +2041,7 @@ var
   v: T2DBooleanArray;
   g: array of T2DPointArray;
   q: TPointArray;
-  z, p, n, d, c: TPoint;
+  z, p, n, d: TPoint;
 begin
   case Length(Self) of
     0: Exit([]);
@@ -3314,7 +3312,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.Blobs(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
-  i, j, p, s, g, t, z, l: Integer;
+  i, j, p, g, t, z, l: Integer;
   h, v, r, c: TRange;
   x: T2DIntegerArray;
   y: TIntegerArray;
@@ -3457,7 +3455,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.Blobify(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
-  i, j, p, s, g, t, z, l: Integer;
+  i, j, p, g, z, l: Integer;
   h, v, r, c, k: TRange;
   x: T2DIntegerArray;
   y: TIntegerArray;
@@ -4249,7 +4247,7 @@ function TPointArrayHelper.CorePointsMax(const maximumNeighbours: Integer; const
 var
   i, j, l, r, c: Integer;
   x: T2DIntegerArray;
-  z, y: TIntegerArray;
+  y: TIntegerArray;
   b, s: TRange;
 begin
   l := Length(Self);
@@ -4286,7 +4284,7 @@ var
   i, j, k, l, r, c, z: Integer;
   x: T2DIntegerArray;
   q, y: TIntegerArray;
-  b, s, t: TRange;
+  b, s: TRange;
   p: TPoint;
 begin
   l := Length(Self);
@@ -4330,7 +4328,7 @@ function TPointArrayHelper.CorePointsMin(const minimumNeighbours: Integer; const
 var
   i, j, l, r, c: Integer;
   x: T2DIntegerArray;
-  z, y: TIntegerArray;
+  y: TIntegerArray;
   b, s: TRange;
 begin
   l := Length(Self);
@@ -4414,7 +4412,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
 var
-  i, j, k, l, r, c, z, t: Integer;
+  i, j, k, l, r, c, z: Integer;
   x: T2DIntegerArray;
   q, y: TIntegerArray;
   b, s, n: TRange;
@@ -4468,7 +4466,7 @@ function TPointArrayHelper.CorePoints(const allowedNeighbours: TRange; const xRa
 var
   i, j, l, r, c: Integer;
   x: T2DIntegerArray;
-  z, y: TIntegerArray;
+  y: TIntegerArray;
   b, n, s: TRange;
 begin
   l := Length(Self);
@@ -4507,7 +4505,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.Binify(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
-  n, i, c, r, k: Integer;
+  n, i, c, r: Integer;
   h, z: T2DIntegerArray;
   v, q: TIntegerArray;
   m, l, p: TIntegerArray;
@@ -4798,7 +4796,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.Bins(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
 var
-  i, j, r, c, n, d, g: Integer;
+  i, r, c, n, d, g: Integer;
   v, p, s, m, k, t: TIntegerArray;
   h, z: T2DIntegerArray;
   x, y: TRange;
@@ -4886,7 +4884,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.Bins(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
-  i, j, r, c, n, g: Integer;
+  i, r, c, n, g: Integer;
   p, s, m, k, t: TIntegerArray;
   h, z: T2DIntegerArray;
   v: TIntegerArray;
@@ -5308,7 +5306,7 @@ var
   q, v: TIntegerArray;
   u: TBooleanArray;
   x, y, s: TRange;
-  p, n: TPoint;
+  p: TPoint;
   procedure Enqueue(const index: Integer);
   begin
     if u[index] then
@@ -5724,7 +5722,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.NFill(const scan8W: Boolean = True): T2DPointArray;
 var
-  i, j, k, r, c, l, d, t: Integer;
+  i, j, k, r, c, l, t: Integer;
   h, z: T2DIntegerArray;
   v, q: TIntegerArray;
   u: TBooleanArray;
@@ -5854,8 +5852,8 @@ function TPointArrayHelper.CFill(const scan8W: Boolean = True): T2DPointArray;
 var
   b: TBox;
   m: T2DIntegerArray;
-  w, h, i, j, id, u, c, x, y: Integer;
-  a, n: TPoint;
+  w, h, i, j, r, c: Integer;
+  a: TPoint;
   d: TPointArray;
   p, s, l: TIntegerArray;
   function FindRoot(a: Integer): Integer;
@@ -5921,9 +5919,9 @@ begin
   c := 0;
   for i := 0 to High(Self) do
   begin
-    id := FindRoot(i);
-    if (l[id] = -1) then
-      l[id] := c.Increase;
+    r := FindRoot(i);
+    if (l[r] = -1) then
+      l[r] := c.Increase;
   end;
   SetLength(Result, c);
   for i := 0 to High(Self) do
@@ -5944,7 +5942,7 @@ var
   h, z: T2DIntegerArray;
   d, l, i, j, r, g: Integer;
   x, y, s: TRange;
-  t, n: TPoint;
+  t: TPoint;
   c, q, p, v: TIntegerArray;
   procedure Enqueue(const index: Integer);
   begin
@@ -6013,7 +6011,7 @@ var
   h, z: T2DIntegerArray;
   l, i, j, r, g: Integer;
   x, y, s: TRange;
-  t, n: TPoint;
+  t: TPoint;
   c, q, p, v: TIntegerArray;
   procedure Enqueue(const index: Integer);
   begin
@@ -6859,7 +6857,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.Attach(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
 var
-  i, j, r, c, l, d, q, p: Integer;
+  i, j, r, c, l, d, q: Integer;
   u: TBooleanArray;
   s: TIntegerArray;
   v: TIntegerArray;
@@ -6912,10 +6910,10 @@ begin
       for j := 0 to (High(n) - 1) do
         for c := (j + 1) to High(n) do
           if (n[j].distance > n[c].distance) then
-	      begin
+	  begin
             Swap(n[j].index, n[c].index);
-	        Swap(n[j].distance, n[c].distance);
-	      end;
+	    Swap(n[j].distance, n[c].distance);
+	  end;
       for j := 0 to Min(High(n), (check - 1)) do
       begin
         if u[n[j].index] then
@@ -7802,7 +7800,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.BinaryRange(const item: TPoint): TRange; overload;
 var
-  M, C: Integer;
+  M: Integer;
   R: TRange;
 begin
   Result.Create(-1);
@@ -8394,7 +8392,7 @@ end;
 function TPointArrayHelper.BinaryExtract(const area: TBox): TPointArray; overload;
 var
   R, Y: TRange;
-  h, M, i, p, q, s: Integer;
+  h, M, i, p, s: Integer;
 begin
   SetLength(Result, 0);
   if (Length(Self) = 0) then

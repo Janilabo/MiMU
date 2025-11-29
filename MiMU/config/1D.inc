@@ -892,7 +892,6 @@ end;
 [==============================================================================}
 function HArr.Cloned: TArr; overload;
 var
-  n: Integer;
   r: TRange;
 begin
   case Length(Self) of
@@ -2747,7 +2746,7 @@ function HArr.Group(const weight: TDoubleArray; const wSorted: Boolean = False):
 function HArr.Grouped(const groups: TIntegerArray): T2DArr; overload;
 var
   u: TIntegerArray;
-  g, i, j, k, l: Integer;
+  i, j, l: Integer;
   f: Boolean;
 begin
   SetLength(Result, 0);
@@ -4883,7 +4882,6 @@ end;
 [==============================================================================}
 function HArr.Reversal: TArr; overload;
 var
-  n: Integer;
   r: TRange;
 begin
   case Length(Self) of
@@ -6598,7 +6596,7 @@ end;
 function HArr.Descend: TArr; overload;
 procedure QS(var arr: TArr; const valLow, valHigh: Integer);
 var
-  p, s: TVar;
+  p: TVar;
   r: TRange;
 begin
   r.Create(valLow, valHigh);
@@ -7539,7 +7537,7 @@ end;
 [==============================================================================}
 function HArr.GnomeSort(const aAscending: Boolean = True): Integer; overload;
 var
-  o, p, t: Integer;
+  o, p: Integer;
 begin
   Result := High(Self);
   if (Result > 0) then

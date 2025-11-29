@@ -59,7 +59,7 @@ end;
 [==============================================================================}
 function TBoxArrayHelper.Y1s: TIntegerArray; overload;
 var
-  i, l: Integer;
+  i: Integer;
 begin
   SetLength(Result, Length(Self));
   for i := 0 to High(Self) do
@@ -73,7 +73,7 @@ end;
 [==============================================================================}
 function TBoxArrayHelper.Y2s: TIntegerArray; overload;
 var
-  i, l: Integer;
+  i: Integer;
 begin
   SetLength(Result, Length(Self));
   for i := 0 to High(Self) do

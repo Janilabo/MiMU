@@ -42,11 +42,10 @@ begin
     for i := 1 to High(Self) do
     begin
       r := Self[i].Normalize;
-	  if (r.start < Result.start) then
-	    Result.start := r.start
-	  else
-	    if (r.stop > Result.stop) then
-	      Result.stop := r.stop;
+      if (r.start < Result.start) then
+        Result.start := r.start
+      else if (r.stop > Result.stop) then
+        Result.stop := r.stop;
     end;
   end else
     Result := Default(TRange);
@@ -60,7 +59,6 @@ end;
 function TRangeArrayHelper.Range: TRange; overload;
 var
   i: Integer;
-  r: TRange;
 begin
   if (Length(Self) > 0) then
   begin
@@ -68,7 +66,7 @@ begin
     for i := 1 to High(Self) do
     begin
       Result.start := Min(Min(Self[i].start, Self[i].stop), Result.start);
-	  Result.stop := Max(Max(Self[i].start, Self[i].stop), Result.stop);
+      Result.stop := Max(Max(Self[i].start, Self[i].stop), Result.stop);
     end;
   end else
     Result := Default(TRange);
