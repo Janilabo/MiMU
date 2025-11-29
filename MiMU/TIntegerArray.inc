@@ -218,6 +218,8 @@ type
     function BinaryLowerCount(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryHigherCount(const value: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinaryRangeEx(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange; overload;
+    function BinaryIncludes(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
+    function BinaryExcludes(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
   end;
 {$ENDIF}
 
@@ -4286,6 +4288,29 @@ begin
   if ((Result.start = -1) or (Result.start > High(Self)) or (Result.stop = -1) or (Result.stop < Result.start)) then
     Result := TRange.Construct(-1, -1);
 end;
+
+{==============================================================================]
+  <arr.BinaryIncludes>
+  @action: Determines whether the specified value exists in this array by using
+           a binary search. The array is assumed to be pre-sorted in the order
+           specified by oAscending.
+  @note: Performs boundary checks before invoking the binary search for
+         efficiency. Returns True only if the array is non-empty, the value
+         lies within the array’s sorted bounds, and the binary search locates
+         the element.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryIncludes(const value: Integer; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryIncludes}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryIncludes}
+
+{==============================================================================]
+  <arr.BinaryExcludes>
+  @action: Determines whether the specified value does not exist in this array
+           by using a binary search. The array is assumed to be pre-sorted in
+           the order specified by oAscending.
+  @note: Performs boundary checks before invoking the binary search. Returns
+         True if the array is empty, if the value lies outside the array’s
+         sorted bounds, or if the binary search fails to locate the value.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryExcludes(const value: Integer; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryExcludes}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryExcludes}
 
 class function TIA.Init(var arr: TIntegerArray): Integer; overload; 
 begin

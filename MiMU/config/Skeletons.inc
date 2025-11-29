@@ -2508,3 +2508,21 @@ begin
     Result := oAscending.Select((l - p), p);
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryIncludes}
+begin
+  if oAscending then
+    Result := ((Length(Self) > 0) and (value >= Self[0]) and (value <= Self[High(Self)]) and (Self.BinarySearch(value, True) > -1))
+  else
+    Result := ((Length(Self) > 0) and (value <= Self[0]) and (value >= Self[High(Self)]) and (Self.BinarySearch(value, False) > -1));
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryExcludes}
+begin
+  if oAscending then
+    Result := ((Length(Self) = 0) or (value < Self[0]) or (value > Self[High(Self)]) or (Self.BinarySearch(value, True) = -1))
+  else
+    Result := ((Length(Self) = 0) or (value > Self[0]) or (value < Self[High(Self)]) or (Self.BinarySearch(value, False) = -1));
+end;
+{$ENDIF}

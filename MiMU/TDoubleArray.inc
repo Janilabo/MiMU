@@ -100,6 +100,8 @@ type
     function BinarySearchApproximate(const value: Double; const tolerance: Double; const oAscending: Boolean = True): Integer; overload;
     function BinaryLowerCount(const value: Double; const oAscending: Boolean = True): Integer; overload;
     function BinaryHigherCount(const value: Double; const oAscending: Boolean = True): Integer; overload;
+    function BinaryIncludes(const value: Double; const oAscending: Boolean = True): Boolean; overload;
+    function BinaryExcludes(const value: Double; const oAscending: Boolean = True): Boolean; overload;
   end;
 {$ENDIF}
 
@@ -1025,6 +1027,29 @@ function TDoubleArrayHelper.BinaryLowerCount(const value: Double; const oAscendi
          - Uses binary search for efficient calculation (O(log n)).
 [==============================================================================}
 function TDoubleArrayHelper.BinaryHigherCount(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryHigherCount}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryHigherCount}
+
+{==============================================================================]
+  <arr.BinaryIncludes>
+  @action: Determines whether the specified value exists in this array by using
+           a binary search. The array is assumed to be pre-sorted in the order
+           specified by oAscending.
+  @note: Performs boundary checks before invoking the binary search for
+         efficiency. Returns True only if the array is non-empty, the value
+         lies within the array’s sorted bounds, and the binary search locates
+         the element.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryIncludes(const value: Double; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryIncludes}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryIncludes}
+
+{==============================================================================]
+  <arr.BinaryExcludes>
+  @action: Determines whether the specified value does not exist in this array
+           by using a binary search. The array is assumed to be pre-sorted in
+           the order specified by oAscending.
+  @note: Performs boundary checks before invoking the binary search. Returns
+         True if the array is empty, if the value lies outside the array’s
+         sorted bounds, or if the binary search fails to locate the value.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryExcludes(const value: Double; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryExcludes}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryExcludes}
 {$ENDIF}
 
 {$UNDEF Double}
