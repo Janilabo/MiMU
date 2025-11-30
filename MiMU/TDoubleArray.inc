@@ -28,6 +28,10 @@ type
     function BinaryPos(const value: Double; const oAscending: Boolean = True): Integer; overload;
     function BinaryPosL(const x: Double; const aAscending: Boolean = True): Integer;
     function BinaryPosR(const x: Double; const aAscending: Boolean = True): Integer;
+    function BinaryPosOf(const value: Double; const oAscending: Boolean = True): Integer; overload;
+    function BinaryPosition(const value: Double; const oAscending: Boolean = True): Integer; overload;
+    function BinaryHybridSearch(const value: Double; const oAscending: Boolean = True; const threshold: Integer = 8): Integer; overload;
+    function BinaryHybridSearch(const value: Double; const threshold: Integer; const oAscending: Boolean = True): Integer; overload;
     function BinarySearch(const x: Double; const aAscending: Boolean = True): Integer;
     function BinarySeek(const x: Double; const aAscending: Boolean = True): Integer;
     function BinaryContains(const x: Double; const aAscending: Boolean = True): Boolean;
@@ -400,6 +404,23 @@ function TDoubleArrayHelper.BinaryPosL(const x: Double; const aAscending: Boolea
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
 function TDoubleArrayHelper.BinaryPosR(const x: Double; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryPosR}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPosR}
+
+{==============================================================================]
+  <arr.BinaryPosOf>
+  @action: Binary Search
+  @note: Alternative.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryPosOf(const value: Double; const oAscending: Boolean = True): Integer; overload; var C: Double; {$DEFINE Skeleton_BinaryPosOf}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPosOf}
+
+{==============================================================================]
+  <arr.BinaryPosition>
+  @action: Binary Search
+  @note: Alternative.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryPosition(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryPosition}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryPosition}
+
+function TDoubleArrayHelper.BinaryHybridSearch(const value: Double; const oAscending: Boolean = True; const threshold: Integer = 8): Integer; overload; {$DEFINE Skeleton_BinaryHybridSearch}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryHybridSearch}
+function TDoubleArrayHelper.BinaryHybridSearch(const value: Double; const threshold: Integer; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryHybridSearch}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryHybridSearch}
 
 {==============================================================================]
   <arr.BinarySearch>

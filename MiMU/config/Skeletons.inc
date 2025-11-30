@@ -745,6 +745,72 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_BinaryPosOf}
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    C := (value - Self[M]);
+    if (C = 0) then
+      Exit(M);
+    if not oAscending then
+      C := -C;
+    if (C < 0) then
+      R.stop := (M - 1)
+    else
+      R.start := (M + 1);
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryPosition}
+var
+  O, M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  O := IfThen(oAscending, 1, -1);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case (value.Compare(Self[M]) * O) of
+      0: Exit(M);
+      -1: R.stop := (M - 1);
+      1: R.start := (M + 1);
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryHybridSearch}
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  while ((R.stop - R.start) > threshold) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = value) then
+      Exit(M);
+    if ((oAscending and (value < Self[M])) or ((not oAscending) and (value > Self[M]))) then
+      R.stop := (M - 1)
+    else
+      R.start := (M + 1);
+  end;
+  for M := R.start to R.stop do
+    if (Self[M] = value) then
+      Exit(M);
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_BinarySearch}
 var
   m, o: Integer;
@@ -2563,18 +2629,12 @@ end;
 
 {$IFDEF Skeleton_BinaryIncludes}
 begin
-  if oAscending then
-    Result := ((Length(Self) > 0) and (value >= Self[0]) and (value <= Self[High(Self)]) and (Self.BinarySearch(value, True) > -1))
-  else
-    Result := ((Length(Self) > 0) and (value <= Self[0]) and (value >= Self[High(Self)]) and (Self.BinarySearch(value, False) > -1));
+  Result := (Self.BinaryFit(value, oAscending) and (Self.BinaryPos(value, oAscending) > -1));
 end;
 {$ENDIF}
 
 {$IFDEF Skeleton_BinaryExcludes}
 begin
-  if oAscending then
-    Result := ((Length(Self) = 0) or (value < Self[0]) or (value > Self[High(Self)]) or (Self.BinarySearch(value, True) = -1))
-  else
-    Result := ((Length(Self) = 0) or (value > Self[0]) or (value < Self[High(Self)]) or (Self.BinarySearch(value, False) = -1));
+  Result := (Self.BinaryUnfit(value, oAscending) or (Self.BinaryPos(value, oAscending) = -1));
 end;
 {$ENDIF}
