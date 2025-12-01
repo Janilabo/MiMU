@@ -184,10 +184,10 @@ type
     class function Create(const value: Integer = 0): TBox; overload; 
   end;
   
-operator+(const a, b: TBox): TBox;
-operator-(const a, b: TBox): TBox;
-operator=(const a, b: TBox): Boolean;
-operator<>(const a, b: TBox): Boolean;
+operator +(const a, b: TBox): TBox;
+operator -(const a, b: TBox): TBox;
+operator =(const a, b: TBox): Boolean;
+operator <>(const a, b: TBox): Boolean;
 
 operator in(const P: TPoint; const B: TBox): Boolean;
 
@@ -214,12 +214,12 @@ type
 {$I config\0D.inc}
 
 {==============================================================================]
-  <operator+ (TBox+TBox)>
+  <+>
   @action: Computes the union of two boxes. The resulting box fully contains
            both input boxes.
   @note:   Supports any coordinate ordering; assumes X1 <= X2 and Y1 <= Y2 after normalization.
 [==============================================================================}
-operator+(const a, b: TBox): TBox;
+operator +(const a, b: TBox): TBox;
 begin
   Result.X1 := Min(a.X1, b.X1);
   Result.Y1 := Min(a.Y1, b.Y1);
@@ -228,7 +228,7 @@ begin
 end;
 
 {==============================================================================]
-  <operator- (TBox-TBox)>
+  <->
   @action: Computes the intersection of two boxes. Returns a box representing the 
            overlapping area of `a` and `b`. If the boxes do not overlap, returns 
            a null box marker.
@@ -236,7 +236,7 @@ end;
            This function does not require the boxes to be normalized beforehand, but
            you may normalize them for consistent behavior.
 [==============================================================================}
-operator-(const a, b: TBox): TBox;
+operator -(const a, b: TBox): TBox;
 begin
   if ((a.X2 < b.X1) or (b.X2 < a.X1) or (a.Y2 < b.Y1) or (b.Y2 < a.Y1)) then
     Exit(TBox.Null);
@@ -246,12 +246,12 @@ begin
   Result.Y2 := Min(a.Y2, b.Y2);
 end;
 
-operator=(const a, b: TBox): Boolean;
+operator =(const a, b: TBox): Boolean;
 begin
   Result := ((a.X1 = b.X1) and (a.Y1 = b.Y1) and (a.X2 = b.X2) and (a.Y2 = b.Y2));
 end;
 
-operator<>(const a, b: TBox): Boolean;
+operator <>(const a, b: TBox): Boolean;
 begin
   Result := not ((a.X1 = b.X1) and (a.Y1 = b.Y1) and (a.X2 = b.X2) and (a.Y2 = b.Y2));
 end;
@@ -317,7 +317,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Create>
+  <Create>
   @action: Creates TBox using minX, minY, maxX, maxY 
   @note: Constructor.
 [==============================================================================}
@@ -330,7 +330,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Create>
+  <Create>
   @action: Creates TBox using top and bottom TPoint (top contains minX,minY and bottom contains maxX,maxY) 
   @note: Constructor.
 [==============================================================================}
@@ -340,7 +340,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Create>
+  <Create>
   @action: We simply build using  
   @note: Constructor.
 [==============================================================================}
@@ -350,7 +350,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Create>
+  <Create>
   @action: Creates TBox using target TPoint 
   @note: Constructor.
 [==============================================================================}
@@ -360,7 +360,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Create>
+  <Create>
   @action: We simply build using value. 
   @note: Constructor.
 [==============================================================================}
@@ -370,7 +370,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBoxHelper.Create>
+  <Create>
   @action: Creates TBox(0,0,0,0).
   @note: None
 [==============================================================================}
@@ -384,7 +384,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Construct>
+  <Construct>
   @action: Constructs TBox with XS, YS, XE, YE.
   @note: None.
 [==============================================================================}
@@ -397,7 +397,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Build>
+  <Build>
   @action: Creates TBox using minX, minY, maxX, maxY 
   @note: Min-Maxed. Creates only valid TBoxes. Returns area.
 [==============================================================================}
@@ -411,7 +411,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Build>
+  <Build>
   @action: Builds TBox using 2 points (a = start point, b = end point)..
   @note: Make sure start and end points are correct!
 [==============================================================================}
@@ -421,7 +421,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Build>
+  <Build>
   @action: We simply build using  
   @note: Constructor.
 [==============================================================================}
@@ -431,7 +431,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Build>
+  <Build>
   @action: Creates TBox using target TPoint
   @note: Constructor.
 [==============================================================================}
@@ -441,7 +441,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Build>
+  <Build>
   @action: We simply build using value.
   @note: Constructor.
 [==============================================================================}
@@ -451,7 +451,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Null>
+  <Null>
   @action: Returns a "null" or empty box, represented by all coordinates set to 
            the specified sentinel value.
   @param: value - Optional integer to use as the sentinel for an empty box. 
@@ -466,7 +466,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Init>
+  <Init>
   @action: Initializes the current TRange with the specified X1, Y1, X2, Y2 values.
            Also returns the initialized record so it can be assigned in-line.
   @note: Useful for initializing a TBox instance and simultaneously returning it
@@ -485,7 +485,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Init>
+  <Init>
   @action: Initializes the current TBox as a copy of another TBox.
            Also returns the copied record.
   @note: Useful for copying values from an existing TBox while allowing in-line assignment.
@@ -498,7 +498,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Init>
+  <Init>
   @action: Initializes the current TBox with all X1, Y1, X2, Y2 set to the same value.
            Also returns the initialized record.
   @note: The parameter has a default of 0, allowing zero-initialization.
@@ -517,7 +517,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Init>
+  <Init>
   @action: Initializes the current TBox as a copy with TPoint.
            Also returns the copied record.
   @note: Useful for copying values from an existing TBox while allowing in-line assignment.
@@ -536,7 +536,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Init>
+  <Init>
   @action: Initializes the current TBox as a copy with Top-Left and Bottom-Right TPoints.
            Also returns the copied record.
   @note: Useful for copying values from an existing TBox while allowing in-line assignment.
@@ -555,7 +555,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Make>
+  <Make>
   @action: Creates TBox from pt by radius used for width and height.
   @note: None.
 [==============================================================================}
@@ -569,7 +569,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Make>
+  <Make>
   @action: Creates TBox from pt by radius used for width and height.
   @note: None.
 [==============================================================================}
@@ -579,7 +579,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Form>
+  <Form>
   @action: Creates box to point, with size for width and height.
   @note: None.
 [==============================================================================}
@@ -593,7 +593,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Form>
+  <Form>
   @action: Creates box to point, with width and height.
   @note: None.
 [==============================================================================}
@@ -607,7 +607,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Frame>
+  <Frame>
   @action: Returns the frame of TBox 
   @note: Dimensional box of the TBox. Based on Width and Height.
 [==============================================================================}
@@ -619,7 +619,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Frame>
+  <Frame>
   @action: Returns the frame of TBox 
   @note: Dimensional box of the TBox. Based on Width and Height.
 [==============================================================================}
@@ -629,7 +629,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Singular>
+  <Singular>
   @action: Returns true if TBox is just a single point.
   @note: None.
 [==============================================================================}
@@ -639,7 +639,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.IsPoint>
+  <IsPoint>
   @action: Returns true if TBox is just a single point.
   @note: None.
 [==============================================================================}
@@ -649,7 +649,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.IsHorizontalLine>
+  <IsHorizontalLine>
   @action: Returns true if TBox is horizontal line. (Width <> 1) and (Height = 1)
   @note: None.
 [==============================================================================}
@@ -659,7 +659,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.IsVerticalLine>
+  <IsVerticalLine>
   @action: Returns true if TBox is vertical line. (Width = 1) and (Height <> 1)
   @note: None.
 [==============================================================================}
@@ -669,7 +669,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.IsLine>
+  <IsLine>
   @action: Returns true if TBox is horizontal or vertical line.
   @note: None.
 [==============================================================================}
@@ -679,7 +679,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Linear>
+  <Linear>
   @action: Returns true if TBox is horizontal or vertical line.
   @note: None.
 [==============================================================================}
@@ -689,7 +689,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Is2D>
+  <Is2D>
   @action: Returns true if TBox is valid rectangle with area.
   @note: None.
 [==============================================================================}
@@ -699,7 +699,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Collapsed>
+  <Collapsed>
   @action: Returns true if TBox is either point or a horizontal/vertical line.
   @note: Returns False if TBox is rectangle with workable area.
 [==============================================================================}
@@ -709,7 +709,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Boxy>
+  <Boxy>
   @action: Returns true if TBox is valid rectangle
   @note: None.
 [==============================================================================}
@@ -719,7 +719,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Plural>
+  <Plural>
   @action: Returns true if TBox contains more than single point.
   @note: None.
 [==============================================================================}
@@ -729,7 +729,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Rectangular>
+  <Rectangular>
   @action: Returns true if TBox width AND height are higher than 1.
   @note: (X2 > X1 and Y2 > Y1).
 [==============================================================================}
@@ -739,7 +739,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Equilateral>
+  <Equilateral>
   @action: Returns true if width equals height.
   @note: (X2 - X1) = (Y2 - Y1), so WIDTH equals HEIGHT.
 [==============================================================================}
@@ -749,7 +749,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Square>
+  <Square>
   @action: Returns true if width equals height.
   @note: (X2 - X1) = (Y2 - Y1), so WIDTH equals HEIGHT.
 [==============================================================================}
@@ -759,7 +759,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Size>
+  <Size>
   @action: Stores dimensions from TBox (bx) to width and height variables
   @note: Returns bx area.
 [==============================================================================}
@@ -771,7 +771,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Size>
+  <Size>
   @action: Returns TBox dimensions (Width and Height) as TPoint.
   @note: X = Width, Y = Height.
 [==============================================================================}
@@ -781,7 +781,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Area>
+  <Area>
   @action: Calculates the amount of pixels in TBox (bx).
   @note: None
 [==============================================================================}
@@ -791,7 +791,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Capacity>
+  <Capacity>
   @action: Calculates the amount of pixels in TBox (bx).
   @note: None
 [==============================================================================}
@@ -802,7 +802,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Footprint>
+  <Footprint>
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
@@ -812,7 +812,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Perimeter>
+  <Perimeter>
   @action: Returns the length of TBox edge/border.
   @note: None
 [==============================================================================}
@@ -822,7 +822,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Perim>
+  <Perim>
   @action: Returns the length of TBox edge/border.
   @note: None
 [==============================================================================}
@@ -832,7 +832,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Circumference>
+  <Circumference>
   @action: Returns the length of TBox edge/border.
   @note: None
 [==============================================================================}
@@ -842,7 +842,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Diagonal>
+  <Diagonal>
   @action: Returns diagonal size of bx.
   @note: None.
 [==============================================================================}
@@ -852,7 +852,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Width>
+  <Width>
   @action: Returns bx width.
   @note: Fast, works with only valid TBoxes.
 [==============================================================================}
@@ -862,7 +862,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Width>
+  <Width>
   @action: Sets bx width.
   @note: Returns old width.
 [==============================================================================}
@@ -873,7 +873,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Height>
+  <Height>
   @action: Returns bx height.
   @note: Fast, works with only valid TBoxes.
 [==============================================================================}
@@ -883,7 +883,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Height>
+  <Height>
   @action: Sets bx height.
   @note: Returns old height.
 [==============================================================================}
@@ -894,7 +894,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Horizontal>
+  <Horizontal>
   @action: Returns bx.X1 and bx.X2 as TRange.
   @note: Horitonzal-axis.
 [==============================================================================}
@@ -905,7 +905,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Ratio>
+  <Ratio>
   @action: Returns ratio of Width to Height.
   @note: None.
 [==============================================================================}
@@ -915,7 +915,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Vertical>
+  <Vertical>
   @action: Returns bx.Y1 and bx.Y2 as TRange.
   @note: Vertical-axis.
 [==============================================================================}
@@ -926,7 +926,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Expand>
+  <Expand>
   @action: Returns bx that has been expanded fully by change.
   @note: Works with positive values only.
 [==============================================================================}
@@ -949,7 +949,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Shrink>
+  <Shrink>
   @action: Returns bx that has been shrinked fully by change.
   @note: Works with positive values only. UNSAFE method, no checks!
 [==============================================================================}
@@ -972,7 +972,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Resize>
+  <Resize>
   @action: Returns bx that has been resized fully by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
@@ -985,7 +985,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.ResizeVertically>
+  <ResizeVertically>
   @action: Returns bx that has been resized vertically by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
@@ -998,7 +998,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox_ResizeHorizontally>
+  <ResizeHorizontally>
   @action: Returns bx that has been resized horizontally by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
@@ -1011,7 +1011,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.ResizeTop>
+  <ResizeTop>
   @action: Returns bx that has been resized horizontally by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
@@ -1024,7 +1024,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.ResizeBottom>
+  <ResizeBottom>
   @action: Returns bx that has been resized from bottom by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
@@ -1037,7 +1037,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.ResizeLeft>
+  <ResizeLeft>
   @action: Returns bx that has been resized from left-side by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
@@ -1050,7 +1050,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.ResizeRight>
+  <ResizeRight>
   @action: Returns bx that has been resized from right-side by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
@@ -1063,7 +1063,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.ResizeTopLeft>
+  <ResizeTopLeft>
   @action: Returns bx that has been resized from top-left by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
@@ -1076,7 +1076,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.ResizeTopRight>
+  <ResizeTopRight>
   @action: Returns bx that has been resized from top-right by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
@@ -1089,7 +1089,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.ResizeBottomRight>
+  <ResizeBottomRight>
   @action: Returns bx that has been resized from bottom-right by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
@@ -1102,7 +1102,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.ResizeBottomLeft>
+  <ResizeBottomLeft>
   @action: Returns bx that has been resized from bottom-left by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
@@ -1115,7 +1115,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Equal>
+  <Equal>
   @action: Returns true if bx1 and bx2 are identical.
   @note: None
 [==============================================================================}
@@ -1125,7 +1125,7 @@ begin
 end;  
 
 {==============================================================================]
-  <TBox.Contains>
+  <Contains>
   @action: Returns true if pt is inside the given box (bx).
   @note: None.
 [==============================================================================}
@@ -1135,7 +1135,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Contains>
+  <Contains>
   @action: Returns true if x is in/within bx boundaries.
   @note: None
 [==============================================================================}
@@ -1145,7 +1145,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Inside>
+  <Inside>
   @action: Returns true if bx is INSIDE target boundaries.
   @note: None.
 [==============================================================================}
@@ -1155,7 +1155,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBoxHelper.Inside>
+  <Inside>
   @action: Returns true if bx is in/within any area boundaries by target areas.
   @note: None.
 [==============================================================================}
@@ -1170,7 +1170,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Disjoint>
+  <Disjoint>
   @action: Returns true if target TBox is outside the target boundaries.
   @note: None.
 [==============================================================================}
@@ -1180,7 +1180,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Lacks>
+  <Lacks>
   @action: Returns true if pt TPoint is OUTSIDE the TBox boundaries.
   @note: None.
 [==============================================================================}
@@ -1190,7 +1190,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBoxHelper.Center>
+  <Center>
   @action: Returns Center point from bx.
   @note: None.
 [==============================================================================}
@@ -1201,7 +1201,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBoxHelper.Envelope>
+  <Envelope>
   @action: Bounds 2 boxes (a and b) to 1 box.
   @note: Based on lowest / highest coordinate values.
 [==============================================================================}
@@ -1214,7 +1214,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Overlap>
+  <Overlap>
   @action: Returns true if a and b are in anykind of contact with each other.
   @note: None
 [==============================================================================}
@@ -1224,7 +1224,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Intersect>
+  <Intersect>
   @action: Returns true if a and b are in anykind of contact with each other.
   @note: None
 [==============================================================================}
@@ -1237,7 +1237,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Intersect>
+  <Intersect>
   @action: Returns true if a and b are in anykind of contact with each other.
   @note: None
 [==============================================================================}
@@ -1248,7 +1248,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox_Valid>
+  <Valid>
   Explanation: Returns true if TBox is valid (X1 <= X2 and Y1 <= Y2)
   Example: None.
 [==============================================================================}
@@ -1258,7 +1258,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Invalid>
+  <Invalid>
   Explanation: Returns true if TBox is invalid (X1 > X2 or Y1 > Y2)
   Example: None.
 [==============================================================================}
@@ -1268,7 +1268,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox_Similar>
+  <Similar>
   @action: Returns true if the dimensions from boxes bx1 and bx2
            are within maxWDiff (max width differency) and maxHDiff (max height differency).
   @note: None
@@ -1279,7 +1279,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Similar>
+  <Similar>
   @action: Returns true if the dimensions from boxes bx1 and bx2
            are within diff (max width and height differency).
   @note: None
@@ -1290,7 +1290,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Fix>
+  <Fix>
   Explanation: Fixes the bx. Swaps incorrectly set values (XS/YS > XE/YE).
                Returns true if bx was fixed.
   Example: (200*, 100, 100*, 200) => (100, 100, 200, 200)
@@ -1311,7 +1311,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Constraint>
+  <Constraint>
   Explanation: Constraints bx to area.
   Example: None.
 [==============================================================================}
@@ -1328,7 +1328,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Clip>
+  <Clip>
   Explanation: Returns bx that has been constrained to area.
   Example: None.
 [==============================================================================}
@@ -1341,7 +1341,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox_Restrict>
+  <Restrict>
   Explanation: Restricts bx to area.
   Example: None.
 [==============================================================================}
@@ -1374,7 +1374,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox_Clamp>
+  <Clamp>
   Explanation: Returns bx that has been restricted to area.
   Example: None.
 [==============================================================================}
@@ -1411,7 +1411,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox_Reserve>
+  <Reserve>
   Explanation: Reselve function for TBox.
   Example: None.
 [==============================================================================}
@@ -1421,7 +1421,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Reserve>
+  <Reserve>
   @action: Allocate an TPoint array sized to fit the full box.
   @note: The array is preallocated with the correct length but is not filled 
          with values from X1,Y1..X2,Y2. Elements are default-initialized to 0,0.
@@ -1433,7 +1433,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Unzip>
+  <Unzip>
   @action: Unzips TBox X1, Y1, X2, Y2 and returns the area.
   @note: None.
 [==============================================================================}
@@ -1447,7 +1447,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Unzip>
+  <Unzip>
   @action: Unzips TBox as TPointArray.
   @note: None.
 [==============================================================================}
@@ -1479,7 +1479,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Unpack>
+  <Unpack>
   @action: Unpacks TBox as TPointArray.
   @note: None.
 [==============================================================================}
@@ -1511,7 +1511,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox_Points>
+  <Points>
   @action: Returns TBox points as TPointArray.
   @note: None.
 [==============================================================================}
@@ -1527,7 +1527,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox_Points>
+  <Points>
   @action: Returns TBox point with index (pIndex).
   @note: None.
 [==============================================================================}
@@ -1539,7 +1539,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox_Points>
+  <Points>
   @action: Returns TBox points with indexes (pIDs).
   @note: None.
 [==============================================================================}
@@ -1553,7 +1553,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox_Points>
+  <Points>
   @action: Stores TBox points to xArray and yArray.
   @note: Returns area (length of TPointArray in box)
 [==============================================================================}
@@ -1573,7 +1573,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Pixels>
+  <Pixels>
   @action: Returns TBox points as TPointArray.
   @note: None.
 [==============================================================================}
@@ -1602,7 +1602,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Pixeled>
+  <Pixeled>
   @action: Returns TBox points as TPointArray.
   @note: None.
 [==============================================================================}
@@ -1626,7 +1626,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.TPA>
+  <TPA>
   @action: Returns TBox points as TPointArray.
   @note: None.
 [==============================================================================}
@@ -1649,7 +1649,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Contents>
+  <Contents>
   @action: Returns TBox points as TPointArray.
   @note: Fast, Pointer-based alternative. Double loop version.
 [==============================================================================}
@@ -1670,7 +1670,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Content>
+  <Content>
   @action: Returns TBox points as TPointArray.
   @note: Fast, Pointer-based alternative single loop version.
 [==============================================================================}
@@ -1692,7 +1692,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Extract>
+  <Extract>
   @action: Returns TBox points as TPointArray.
   @note: Alternative method for Points(), TPA() and Contents().
 [==============================================================================}
@@ -1712,7 +1712,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Enumerate>
+  <Enumerate>
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
@@ -1727,7 +1727,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Enumerated>
+  <Enumerated>
   @action: Returns all points of the given box as TPointArray.
   @note: Uses the TBox enumerator (for-in).
 [==============================================================================}
@@ -1743,7 +1743,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Elements>
+  <Elements>
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
@@ -1764,7 +1764,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Pts>
+  <Pts>
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
@@ -1780,7 +1780,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Explode>
+  <Explode>
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
@@ -1798,7 +1798,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Flat>
+  <Flat>
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
@@ -1820,7 +1820,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.IDs>
+  <IDs>
   @action: Returns TBox indexes as TIntegerArray
   @note: None.
 [==============================================================================}
@@ -1834,7 +1834,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.IDs>
+  <IDs>
   @action: Returns TBox index with TPoint p.
   @note: -1 if p is not part of TBox.
 [==============================================================================}
@@ -1846,7 +1846,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.IDs>
+  <IDs>
   @action: Returns TBox indexes with TPointArray p.
   @note: -1 if p is not part of TBox.
 [==============================================================================}
@@ -1860,7 +1860,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Border>
+  <Border>
   @action: Returns TBox border points as TPointArray.
   @note: Skips all the inside points.
 [==============================================================================}
@@ -1895,7 +1895,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Edge>
+  <Edge>
   @action: Returns TBox edge points as TPointArray.
   @note: Skips all the inside points.
 [==============================================================================}
@@ -1936,7 +1936,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Outline>
+  <Outline>
   @action: Returns TBox outline points as TPointArray.
   @note: Skips all the inside points.
 [==============================================================================}
@@ -1972,7 +1972,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Contour>
+  <Contour>
   @action: Returns TBox contour points as TPointArray.
   @note: Skips all the inside points.
 [==============================================================================}
@@ -1992,7 +1992,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Spiral>
+  <Spiral>
   @action: Returns TBox TPoints as spiral shaped TPointArray.
   @note: Alternative for TBox.Traverse.
 [==============================================================================}
@@ -2027,7 +2027,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Traverse>
+  <Traverse>
   @action: Returns TBox TPoints as spiral shaped TPointArray.
   @note: Alternative for TBox.Spiral.
 [==============================================================================}
@@ -2058,13 +2058,13 @@ begin
 end;
 
 {==============================================================================]
- <TBoxHelper.Grid>
- @action: Outputs/builds grid of boxes with parameters;
-          bx = starting box, used for starting coordinates and also for dimensions (width & height) of the boxes.
-          rows, columns = count of rows and columns
-          spaceHorizontal = space between columns
-          spaceVertical = space between rows
- @note: None.
+  <Grid>
+  @action: Outputs/builds grid of boxes with parameters;
+           bx = starting box, used for starting coordinates and also for dimensions (width & height) of the boxes.
+           rows, columns = count of rows and columns
+           spaceHorizontal = space between columns
+           spaceVertical = space between rows
+  @note: None.
 [==============================================================================}
 function TBoxHelper.Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;
 var
@@ -2089,10 +2089,10 @@ begin
 end;
 
 {==============================================================================]
- <TBoxHelper.Row>
- @action: Outputs row of boxes. Starting from bx,
-          where space is the amount of space between each cell.
- @note: None
+  <Row>
+  @action: Outputs row of boxes. Starting from bx,
+           where space is the amount of space between each cell.
+  @note: None
 [==============================================================================}
 function TBoxHelper.Row(const cells: Integer; const space: Integer = 0): TBoxArray;
 var
@@ -2112,10 +2112,10 @@ begin
 end;
 
 {==============================================================================]
- <TBoxHelper.Column>
- @action: Outputs column of boxes. Starting from bx,
-          where space is the amount of space between each cell.
- @note: None
+  <Column>
+  @action: Outputs column of boxes. Starting from bx,
+           where space is the amount of space between each cell.
+  @note: None
 [==============================================================================}
 function TBoxHelper.Column(const cells: Integer; const space: Integer = 0): TBoxArray;
 var
@@ -2135,9 +2135,9 @@ begin
 end;
 
 {==============================================================================]
- <TBox.Rows>
- @action: Returns TBox as its rows of TPoints.
- @note: Row-major. Dimensions = [Height][Width].
+  <Rows>
+  @action: Returns TBox as its rows of TPoints.
+  @note: Row-major. Dimensions = [Height][Width].
 [==============================================================================}
 function TBox.Rows: T2DPointArray;
 var
@@ -2150,9 +2150,9 @@ begin
 end;
 
 {==============================================================================]
- <TBox.Columns>
- @action: Returns TBox as its columns of TPoints.
- @note: Column-major. Dimensions = [Width][Height].
+  <Columns>
+  @action: Returns TBox as its columns of TPoints.
+  @note: Column-major. Dimensions = [Width][Height].
 [==============================================================================}
 function TBox.Columns: T2DPointArray;
 var
@@ -2165,9 +2165,9 @@ begin
 end;
 
 {==============================================================================]
- <TBox.Rowwise>
- @action: Returns all TBox TPoints as Row-wise.
- @note: None.
+  <Rowwise>
+  @action: Returns all TBox TPoints as Row-wise.
+  @note: None.
 [==============================================================================}
 function TBox.Rowwise: TPointArray;
 var
@@ -2181,9 +2181,9 @@ begin
 end;
 
 {==============================================================================]
- <TBox.Columnwise>
- @action: Returns all TBox TPoints as Column-wise.
- @note: None.
+  <Columnwise>
+  @action: Returns all TBox TPoints as Column-wise.
+  @note: None.
 [==============================================================================}
 function TBox.Columnwise: TPointArray;
 var
@@ -2197,9 +2197,9 @@ begin
 end;
 
 {==============================================================================]
- <TBox.CornerPoints>
- @action: Returns all 4 corner points of bx.
- @note: None
+  <CornerPoints>
+  @action: Returns all 4 corner points of bx.
+  @note: None
 [==============================================================================}
 function TBox.CornerPoints: TPointArray;
 begin
@@ -2215,9 +2215,9 @@ begin
 end;
 
 {==============================================================================]
- <TBox.CornerPts>
- @action: Returns all 4 corner points of bx.
- @note: Gives also duplicates, if TBox is not rectangular.
+  <CornerPts>
+  @action: Returns all 4 corner points of bx.
+  @note: Gives also duplicates, if TBox is not rectangular.
 [==============================================================================}
 function TBox.CornerPts: TPointArray;
 begin
@@ -2225,9 +2225,9 @@ begin
 end;
 
 {==============================================================================]
- <TBox.Corners>
- @action: Returns corner points of bx.
- @note: Outputs only unique TPoints.
+  <Corners>
+  @action: Returns corner points of bx.
+  @note: Outputs only unique TPoints.
 [==============================================================================}
 function TBox.Corners: TPointArray;
 var
@@ -2243,7 +2243,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.SimilarSize>
+  <SimilarSize>
   @action: Returns true if the size from boxes a and b
            are within widthDifferency and heightDifferency.
   @note: None.
@@ -2254,7 +2254,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.SimilarSize>
+  <SimilarSize>
   Explanation: Returns true if the size from boxes a and b
                are within differency.
   @note: None.
@@ -2265,7 +2265,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Centered>
+  <Centered>
   Explanation: Returns bx (by the dimensions) centered to area.
   @note: None.
 [==============================================================================}
@@ -2281,7 +2281,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.CenterVertically>
+  <CenterVertically>
   Explanation: Returns bx centered vertically to area.
   @note: None.
 [==============================================================================}
@@ -2297,7 +2297,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.CenterHorizontally>
+  <CenterHorizontally>
   Explanation: Returns bx centered horizontally to area.
   @note: None.
 [==============================================================================}
@@ -2313,7 +2313,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.ExtendX>
+  <ExtendX>
   Explanation: Returns true if TBox is changed with xCoord (X1 or X2)
   @note: Modifies the Self!
 [==============================================================================}
@@ -2330,7 +2330,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.ExtendY>
+  <ExtendY>
   Explanation: Returns true if TBox is changed with yCoord (Y1 or Y2)
   @note: Modifies the Self!
 [==============================================================================}
@@ -2347,7 +2347,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Extend>
+  <Extend>
   Explanation: Returns true if TBox is changed with pt (X1, X2, Y1 or Y2)
   @note: Modifies the Self!
 [==============================================================================}
@@ -2361,7 +2361,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.UnionX>
+  <UnionX>
   Explanation: Returns the TBox Self with X-value extended (if xCoord falls outside bounds)
   @note: None.
 [==============================================================================}
@@ -2377,7 +2377,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.UnionY>
+  <UnionY>
   Explanation: Returns the TBox Self with Y-value extended (if yCoord falls outside bounds)
   @note: None.
 [==============================================================================}
@@ -2393,7 +2393,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Union>
+  <Union>
   Explanation: Returns the Self unioned with pt.
   @note: None.
 [==============================================================================}
@@ -2403,7 +2403,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Union>
+  <Union>
   @action: Returns union of a and b TBoxes
   @note: None
 [==============================================================================}
@@ -2416,7 +2416,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Mixed>
+  <Mixed>
   @action: Returns TBox randomly mixed as TPointArray.
   @note: None.
 [==============================================================================}
@@ -2432,7 +2432,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Shake>
+  <Shake>
   @action: Returns TBox randomly shaked as TPointArray.
   @note: None.
 [==============================================================================}
@@ -2448,7 +2448,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Shuffle>
+  <Shuffle>
   @action: Returns TBox randomly shuffled as TPointArray.
   @note: None.
 [==============================================================================}
@@ -2464,7 +2464,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Any>
+  <Any>
   @action: Returns random TBox point.
   @note: None.
 [==============================================================================}
@@ -2474,7 +2474,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Some>
+  <Some>
   @action: Returns random amount of random TBox points.
   @note: Does not return empty arrays.
 [==============================================================================}
@@ -2484,7 +2484,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Some>
+  <Some>
   @action: Returns random amount of random TBox points.
   @note: Does not return empty arrays.
 [==============================================================================}
@@ -2494,7 +2494,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.All>
+  <All>
   @action: Returns ALL points of TBox as TPointArray.
   @note: None.
 [==============================================================================}
@@ -2514,7 +2514,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Placements>
+  <Placements>
   @action: Generate all possible translations of Self fully contained within target.
   @note: Returns an array of boxes representing every valid placement;
          order is row-major (y first, then x). Returns empty array if no fit.
@@ -2541,7 +2541,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Places>
+  <Places>
   @action: Generate all possible translations of Self fully contained within target.
   @note: Returns an array of points representing every valid place;
          order is row-major (y first, then x). Returns empty array if no fit.
@@ -2570,7 +2570,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Tiled>
+  <Tiled>
   @action: Generate non-overlapping, grid-aligned positions of Self inside target.
   @note: Steps by Self Width and Height. Returns empty array if Self does not fit.
 [==============================================================================}
@@ -2596,7 +2596,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Gridded>
+  <Gridded>
   @action: Generate non-overlapping, grid-aligned positions of Self inside target.
   @note: Steps by Self Width and Height. Returns empty array if Self does not fit.
 [==============================================================================}
@@ -2617,7 +2617,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Uniform>
+  <Uniform>
   @action: Checks whether all four coordinates of the box equal the specified value.
   @note: Returns True only if (X1 = Y1 = X2 = Y2 = val).
 [==============================================================================}
@@ -2627,7 +2627,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Uniform>
+  <Uniform>
   @action: Checks whether all coordinates of the box are equal to each other.
   @note: Returns True if (X1 = Y1 = X2 = Y2). Indicates a fully uniform box.
 [==============================================================================}
@@ -2637,7 +2637,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Employs>
+  <Employs>
   @action: Checks if the given integer value matches any of the four coordinates of the box (X1, Y1, X2, Y2).
   @note: Useful for detecting if a value is part of the box’s defining corners.
 [==============================================================================}
@@ -2647,7 +2647,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Omits>
+  <Omits>
   @action: Checks if the given integer value is NOT present in any of the four coordinates of the box (X1, Y1, X2, Y2).
   @note: Logical inverse of TBox.Employs; returns True if the value is absent from all box corners.
 [==============================================================================}
@@ -2658,7 +2658,7 @@ end;
 
 
 {==============================================================================]
-  <_TBox.Create>
+  <Create>
   @action: Creates TBox using minX, minY, maxX, maxY 
   @note: function version
 [==============================================================================}
@@ -2671,7 +2671,7 @@ begin
 end;
 
 {==============================================================================]
-  <_TBox.Create>
+  <Create>
   @action: Creates TBox using top and bottom TPoint (top contains minX,minY and bottom contains maxX,maxY) 
   @note: Constructor.
 [==============================================================================}
@@ -2681,7 +2681,7 @@ begin
 end;
 
 {==============================================================================]
-  <_TBox.Create>
+  <Create>
   @action: We simply build using  
   @note: Function.
 [==============================================================================}
@@ -2691,7 +2691,7 @@ begin
 end;
 
 {==============================================================================]
-  <_TBox.Create>
+  <Create>
   @action: Creates TBox using target TPoint 
   @note: Function.
 [==============================================================================}
@@ -2701,7 +2701,7 @@ begin
 end;
 
 {==============================================================================]
-  <_TBox.Create>
+  <Create>
   @action: We simply build using value. 
   @note: Constructor.
  

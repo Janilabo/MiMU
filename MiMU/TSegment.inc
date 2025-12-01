@@ -17,26 +17,26 @@ type
   TSegmentArray = array of TSegment;
   T2DSegmentArray = array of TSegmentArray;
   
-operator=(const a, b: TSegment): Boolean;
-operator<>(const a, b: TSegment): Boolean;
+operator =(const a, b: TSegment): Boolean;
+operator <>(const a, b: TSegment): Boolean;
 {$ENDIF}
 
 {$IFDEF HELPERS}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-operator=(const a, b: TSegment): Boolean;
+operator =(const a, b: TSegment): Boolean;
 begin
   Result := ((a.A.X = b.A.X) and (a.A.Y = b.A.Y) and (a.B.X = b.B.X) and (a.B.Y = b.B.Y));
 end;
 
-operator<>(const a, b: TSegment): Boolean;
+operator <>(const a, b: TSegment): Boolean;
 begin
   Result := not (a = b);
 end;
 
 {==============================================================================]
-  <TSegment.Construct>
+  <Construct>
   @action: Constructs TSegment with sA and sB points.
   @note: None.
 [==============================================================================}
@@ -47,7 +47,7 @@ begin
 end;
 
 {==============================================================================]
-  <TSegment.Create>
+  <Create>
   @action: Create a TSegment with aX, aY and bX, bY coordinates.
   @note: None.
 [==============================================================================}
@@ -58,7 +58,7 @@ begin
 end;
 
 {==============================================================================]
-  <TSegment.Construct>
+  <Construct>
   @action: Constructs TSegment with sA and sB points.
   @note: None.
 [==============================================================================}
@@ -69,7 +69,7 @@ begin
 end;
 
 {==============================================================================]
-  <TSegment.Construct>
+  <Construct>
   @action: Constructs TSegment with aX, aY, bX, bY.
   @note: None.
 [==============================================================================}
@@ -80,7 +80,7 @@ begin
 end;
 
 {==============================================================================]
-  <TSegment.Bounds>
+  <Bounds>
   @action: Returns the bounds of TSegment as TBox.
   @note: None.
 [==============================================================================}
@@ -90,7 +90,7 @@ begin
 end;
 
 {==============================================================================]
-  <TSegment.Boundaries>
+  <Boundaries>
   @action: Returns the bounds of TSegment as TBox.
   @note: None.
 [==============================================================================}
@@ -101,7 +101,7 @@ begin
 end;
 
 {==============================================================================]
-  <TSegment.Envelope>
+  <Envelope>
   @action: Returns the bounds of TSegment as TBox.
   @note: None.
 [==============================================================================}
@@ -116,7 +116,7 @@ begin
 end;
 
 {==============================================================================]
- <TSegment.Points>
+ <Points>
  @action: Returns all the points of TSegment.
  @note: None.
 [==============================================================================}
@@ -147,7 +147,7 @@ begin
 end;
 
 {==============================================================================]
- <TSegment.Pixels>
+ <Pixels>
  @action: Returns the points of TSegment.
  @note: Supports custom steps.
 [==============================================================================}

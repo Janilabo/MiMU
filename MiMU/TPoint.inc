@@ -76,14 +76,14 @@ type
   end;
   TDistanceFunction = function(const A, B: TPoint): Double;
   
-operator+(const a, b: TPoint): TPoint;
-operator-(const a, b: TPoint): TPoint;
-operator=(const a, b: TPoint): Boolean;
-operator<>(const a, b: TPoint): Boolean;
-operator>(const a, b: TPoint): Boolean;
-operator<(const a, b: TPoint): Boolean;
-operator>=(const a, b: TPoint): Boolean;
-operator<=(const a, b: TPoint): Boolean;
+operator +(const a, b: TPoint): TPoint;
+operator -(const a, b: TPoint): TPoint;
+operator =(const a, b: TPoint): Boolean;
+operator <>(const a, b: TPoint): Boolean;
+operator >(const a, b: TPoint): Boolean;
+operator <(const a, b: TPoint): Boolean;
+operator >=(const a, b: TPoint): Boolean;
+operator <=(const a, b: TPoint): Boolean;
 
 function Point(const pX, pY: Integer): TPoint; overload; inline;
 function Point(const val: Integer = 0): TPoint; overload; inline;
@@ -128,34 +128,34 @@ type
 {$IFDEF IMPLEMENTATION}
 {$I config\0D.inc}
 
-operator+(const a, b: TPoint): TPoint;
+operator +(const a, b: TPoint): TPoint;
 begin
   Result.X := (a.X + b.X);
   Result.X := (a.Y + b.Y);
 end;
 
-operator-(const a, b: TPoint): TPoint;
+operator -(const a, b: TPoint): TPoint;
 begin
   Result.X := (a.X - b.X);
   Result.Y := (a.Y - b.Y);
 end;
 
-operator=(const a, b: TPoint): Boolean;
+operator =(const a, b: TPoint): Boolean;
 begin
   Result := ((a.X = b.X) and (a.Y = b.Y));
 end;
 
-operator<>(const a, b: TPoint): Boolean;
+operator <>(const a, b: TPoint): Boolean;
 begin
   Result := not ((a.X = b.X) and (a.Y = b.Y));
 end;
 
-operator>(const a, b: TPoint): Boolean;
+operator >(const a, b: TPoint): Boolean;
 begin
   Result := ((a.Y > b.Y) or ((a.Y = b.Y) and (a.X > b.X)));
 end;
 
-operator<(const a, b: TPoint): Boolean;
+operator <(const a, b: TPoint): Boolean;
 begin
   Result := ((a.Y < b.Y) or ((a.Y = b.Y) and (a.X < b.X)));
 end;
@@ -183,7 +183,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Create>
+  <Create>
   @action: Returns TPoint with X and Y.
   @note: None.
 [==============================================================================}
@@ -194,7 +194,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Create>
+  <Create>
   @action: Returns TPoint with X and Y.
   @note: None.
 [==============================================================================}
@@ -204,7 +204,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Create>
+  <Create>
   @action: Constructs new TPoint with pX and pY.
   @note: None.
 [==============================================================================}
@@ -215,7 +215,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Build>
+  <Build>
   @action: Returns TPoint with X and Y.
   @note: None.
 [==============================================================================}
@@ -227,7 +227,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Null>
+  <Null>
   @action: Returns a "null" or invalid point, with both X and Y set to the specified sentinel value.
   @param: value - Optional integer to use as the sentinel for an empty point. Defaults 
                   to Low(Integer) (-2147483648 for 32-bit integers).
@@ -240,7 +240,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Sign>
+  <Sign>
   @action: Compares the current TPoint (Self) with a target TPoint and returns
            a directional sign indicating whether the target is greater, equal,
            or smaller than Self.
@@ -253,7 +253,7 @@ end;
 function TPointHelper.Sign(const target: TPoint): Integer; overload; inline; {$DEFINE Skeleton_Sign}{$I config\Skeletons.inc}{$UNDEF Skeleton_Sign}
 
 {==============================================================================]
-  <TPoint.Lower>
+  <Lower>
   @action: Returns True if Self precedes target in scanline order.
   @note: Comparison is Y-major, then X; ordering direction is controlled by oAscending.
 [==============================================================================}
@@ -265,7 +265,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Higher>
+  <Higher>
   @action: Returns True if Self follows target in scanline order.
   @note: Comparison is Y-major, then X; ordering direction is controlled by oAscending.
 [==============================================================================}
@@ -277,7 +277,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Under>
+  <Under>
   @action: Returns True if Self precedes target in scanline order.
   @note: Comparison is Y-major then X; ordering direction is controlled by oAscending.
 [==============================================================================}
@@ -290,7 +290,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Over>
+  <Over>
   @action: Returns True if Self follows target in scanline order.
   @note: Comparison is Y-major then X; ordering direction is controlled by oAscending.
 [==============================================================================}
@@ -303,7 +303,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Behind>
+  <Behind>
   @action: Returns True if Self is "behind" the target in scanline order.
   @note: "Behind" means lower Y (or X if Y equal) for ascending order, opposite for descending.
 [==============================================================================}
@@ -321,7 +321,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Ahead>
+  <Ahead>
   @action: Returns True if Self is "ahead" of the target in scanline order.
   @note: "Ahead" means higher Y (or X if Y equal) for ascending order, opposite for descending.
 [==============================================================================}
@@ -339,7 +339,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Comparison>
+  <Comparison>
   @action: Compares two points lexicographically by X then Y.
   @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
 [==============================================================================}
@@ -358,7 +358,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Compared>
+  <Compared>
   @action: Compares two points lexicographically by X then Y.
   @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
 [==============================================================================}
@@ -372,7 +372,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Comp>
+  <Comp>
   @action: Compares two points lexicographically by X then Y.
   @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
 [==============================================================================}
@@ -382,7 +382,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Cmp>
+  <Cmp>
   @action: Compares two points lexicographically by X then Y.
   @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
 [==============================================================================}
@@ -394,7 +394,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Compare>
+  <Compare>
   @action: Compares two points lexicographically by X then Y.
   @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
 [==============================================================================}
@@ -408,7 +408,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.XComp>
+  <XComp>
   @action: Compares two points by their X coordinates only.
   @note: Returns -1 if Self.X < target.X, 1 if Self.X > target.X, or 0 if equal.
 [==============================================================================}
@@ -424,7 +424,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.YComp>
+  <YComp>
   @action: Compares two points by their Y coordinates only.
   @note: Returns -1 if Self.Y < target.Y, 1 if Self.Y > target.Y, or 0 if equal.
 [==============================================================================}
@@ -440,7 +440,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.XCompare>
+  <XCompare>
   @action: Compares two points primarily by X coordinate, then by Y as a tiebreaker.
   @note: Useful for X-major ordering or sorting points left-to-right, then top-to-bottom.
 [==============================================================================}
@@ -461,7 +461,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.YCompare>
+  <YCompare>
   @action: Compares two points primarily by Y coordinate, then by X as a tiebreaker.
   @note: Useful for Y-major ordering or sorting points top-to-bottom, then left-to-right.
 [==============================================================================}
@@ -482,7 +482,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.CompareX>
+  <CompareX>
   @action: Compares two points by their Y coordinate only.
   @note: - Returns -1 if Self.Y < target.Y, 1 if Self.Y > target.Y, and 0 if equal.
          - The X coordinate is ignored.
@@ -493,7 +493,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.CompareY>
+  <CompareY>
   @action: Compares two points by their Y coordinate only.
   @note: - Returns -1 if Self.Y < target.Y, 1 if Self.Y > target.Y, and 0 if equal.
          - The X coordinate is ignored.
@@ -504,7 +504,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.CompX>
+  <CompX>
   @action: Compares two points by their X coordinate only.
   @note: - Returns -1 if Self.X < target.X, 1 if Self.X > target.X, and 0 if equal.
          - The Y coordinate is ignored.
@@ -515,7 +515,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.CompY>
+  <CompY>
   @action: Compares two points by their Y coordinate only.
   @note: - Returns -1 if Self.Y < target.Y, 1 if Self.Y > target.Y, and 0 if equal.
          - The X coordinate is ignored.
@@ -526,7 +526,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Inside>
+  <Inside>
   @action: Returns true if pt is inside the given box (bx).
   @note: None.
 [==============================================================================}
@@ -536,7 +536,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.InCircle>
+  <InCircle>
   @action: Returns true if pt is inside the given circle,
           that is defined by the center point and radius.
   @note: None.
@@ -547,7 +547,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.InEllipse>
+  <InEllipse>
   @action: Returns true if pt is inside the given ellipse,
           defined by the center point and X-radius and Y-radius.
   @note: None.
@@ -558,9 +558,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.AngleDegrees>
- @action: Calculates the angle in degrees from source to target.
- @note: None
+  <AngleDegrees>
+  @action: Calculates the angle in degrees from source to target.
+  @note: None
 [==============================================================================}
 function TPoint.AngleDegrees(const target: TPoint; const compass: Boolean = False): Double;
 var
@@ -574,9 +574,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.AngleRadians>
- @action: Calculates the angle in degrees from source to target.
- @note: None
+  <AngleRadians>
+  @action: Calculates the angle in degrees from source to target.
+  @note: None
 [==============================================================================}
 function TPoint.AngleRadians(const target: TPoint): Double;
 var
@@ -587,9 +587,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistHypotEuclidean>
- @action: Calculates the distance from source to target.
- @note: Euclidean.
+  <DistHypotEuclidean>
+  @action: Calculates the distance from source to target.
+  @note: Euclidean.
 [==============================================================================}
 function TPoint.DistHypotEuclidean(const target: TPoint): Double;
 begin
@@ -597,9 +597,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistEuclidean>
- @action: Calculates the distance from source to target.
- @note: Euclidean.
+  <DistEuclidean>
+  @action: Calculates the distance from source to target.
+  @note: Euclidean.
 [==============================================================================}
 function TPoint.DistEuclidean(const target: TPoint): Double;
 begin
@@ -607,9 +607,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistEuclidean2>
- @action: Calculates the distance from source to target.
- @note: Euclidean v2
+  <DistEuclidean2>
+  @action: Calculates the distance from source to target.
+  @note: Euclidean v2
 [==============================================================================}
 function TPoint.DistEuclidean2(const target: TPoint): Double;
 begin
@@ -617,9 +617,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistSquaredEuclidean>
- @action: Calculates the distance from source to target.
- @note: Squared Euclidean
+  <DistSquaredEuclidean>
+  @action: Calculates the distance from source to target.
+  @note: Squared Euclidean
 [==============================================================================}
 function TPoint.DistSquaredEuclidean(const target: TPoint): Double;
 begin
@@ -627,9 +627,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistManhattan>
- @action: Calculates the distance from source to target.
- @note: Manhattan
+  <DistManhattan>
+  @action: Calculates the distance from source to target.
+  @note: Manhattan
 [==============================================================================}
 function TPoint.DistManhattan(const target: TPoint): Double;
 begin
@@ -637,9 +637,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistChebyshev>
- @action: Calculates the distance from source to target.
- @note: Chebyshev
+  <DistChebyshev>
+  @action: Calculates the distance from source to target.
+  @note: Chebyshev
 [==============================================================================}
 function TPoint.DistChebyshev(const target: TPoint): Double;
 begin
@@ -647,9 +647,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistMinkowski>
- @action: Calculates the distance from source to target.
- @note: Minkowski
+  <DistMinkowski>
+  @action: Calculates the distance from source to target.
+  @note: Minkowski
 [==============================================================================}
 function TPoint.DistMinkowski(const target: TPoint): Double; overload;
 begin
@@ -657,9 +657,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistMinkowski>
- @action: Calculates the distance from source to target.
- @note: Minkowski
+  <DistMinkowski>
+  @action: Calculates the distance from source to target.
+  @note: Minkowski
 [==============================================================================}
 function TPoint.DistMinkowski(const target: TPoint; const P: Double): Double; overload;
 begin
@@ -667,9 +667,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistMaxMinChebyshev>
- @action: Calculates the distance from source to target.
- @note: Max-Min Chebyshev
+  <DistMaxMinChebyshev>
+  @action: Calculates the distance from source to target.
+  @note: Max-Min Chebyshev
 [==============================================================================}
 function TPoint.DistMaxMinChebyshev(const target: TPoint): Double;
 begin
@@ -677,9 +677,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistOctile>
- @action: Calculates the distance from source to target.
- @note: Octile
+  <DistOctile>
+  @action: Calculates the distance from source to target.
+  @note: Octile
 [==============================================================================}
 function TPoint.DistOctile(const target: TPoint): Double;
 begin
@@ -687,9 +687,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.Dist>
- @action: Calculates the distance from source to target.
- @note: Octile
+  <Dist>
+  @action: Calculates the distance from source to target.
+  @note: Octile
 [==============================================================================}
 function TPointHelper.Dist(const target: TPoint; const metric: TDistanceMetric = dmEuclidean): Double;
 begin
@@ -697,9 +697,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.Reflected>
- @action: Reflects the point across the line y = x.
- @note: Swaps the X and Y coordinates. (x, y) → (y, x)
+  <Reflected>
+  @action: Reflects the point across the line y = x.
+  @note: Swaps the X and Y coordinates. (x, y) → (y, x)
 [==============================================================================}
 function TPoint.Reflected: TPoint; inline;
 begin
@@ -708,9 +708,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.Flipped>
- @action: Returns the point with its coordinates flipped (same as Reflected).
- @note: This is a shorthand, stylistically different version of Reflected.
+  <Flipped>
+  @action: Returns the point with its coordinates flipped (same as Reflected).
+  @note: This is a shorthand, stylistically different version of Reflected.
 [==============================================================================}
 function TPoint.Flipped: TPoint; inline;
 begin
@@ -718,11 +718,11 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.Within>
- @action: Determines whether this point lies within a given distance (radius)
-          of another point, using the specified distance function.
- @note: If no distance function is provided, Euclidean distance should be
-        used as the default metric.
+  <Within>
+  @action: Determines whether this point lies within a given distance (radius)
+           of another point, using the specified distance function.
+  @note: If no distance function is provided, Euclidean distance should be
+         used as the default metric.
 [==============================================================================}
 function TPointHelper.Within(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
 begin
@@ -730,9 +730,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.Within>
- @action: Determines whether the current point is within a given radius of the target point using a specified distance metric.
- @note: `metric` specifies a predefined distance metric (e.g., Euclidean, Manhattan, Chebyshev). Internally uses `DistanceFunction(metric)`.
+  <Within>
+  @action: Determines whether the current point is within a given radius of the target point using a specified distance metric.
+  @note: `metric` specifies a predefined distance metric (e.g., Euclidean, Manhattan, Chebyshev). Internally uses `DistanceFunction(metric)`.
 [==============================================================================}
 function TPointHelper.Within(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): Boolean; overload;
 begin
@@ -740,11 +740,11 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.Within>
- @action: Determines whether this point lies within a rectangular area centered
-          on another point, defined by horizontal and vertical radii.
- @note: Useful for grid or axis-aligned range checks where separate X/Y
-        tolerances are used instead of a circular radius.
+  <Within>
+  @action: Determines whether this point lies within a rectangular area centered
+           on another point, defined by horizontal and vertical radii.
+  @note: Useful for grid or axis-aligned range checks where separate X/Y
+         tolerances are used instead of a circular radius.
 [==============================================================================}
 function TPoint.Within(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
 begin
@@ -752,9 +752,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.Near>
- @action: Determines whether the current point is within a given radius of the target point using a custom distance function.
- @note: `distFunc` is a user-provided function that calculates the distance between two points. Useful for non-standard distance metrics.
+  <Near>
+  @action: Determines whether the current point is within a given radius of the target point using a custom distance function.
+  @note: `distFunc` is a user-provided function that calculates the distance between two points. Useful for non-standard distance metrics.
 [==============================================================================}
 function TPointHelper.Near(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
 begin
@@ -762,9 +762,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.Near>
- @action: Determines whether the current point is within a given radius of the target point using a specified distance metric.
- @note: `metric` specifies a predefined distance metric (e.g., Euclidean, Manhattan, Chebyshev). Internally uses `DistanceFunction(metric)`.
+  <Near>
+  @action: Determines whether the current point is within a given radius of the target point using a specified distance metric.
+  @note: `metric` specifies a predefined distance metric (e.g., Euclidean, Manhattan, Chebyshev). Internally uses `DistanceFunction(metric)`.
 [==============================================================================}
 function TPointHelper.Near(const target: TPoint; const radius: Double; const metric: TDistanceMetric): Boolean; overload;
 begin
@@ -772,9 +772,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.Near>
- @action: Determines whether the current point is within a circular radius of the target point using Euclidean distance.
- @note: Computes the squared Euclidean distance (`dx*dx + dy*dy`) and compares it to the squared radius for efficiency.
+  <Near>
+  @action: Determines whether the current point is within a circular radius of the target point using Euclidean distance.
+  @note: Computes the squared Euclidean distance (`dx*dx + dy*dy`) and compares it to the squared radius for efficiency.
 [==============================================================================}
 function TPoint.Near(const target: TPoint; const radius: Double = 1.0): Boolean; overload;
 var
@@ -786,9 +786,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.Near>
- @action: Determines whether the current point is within an axis-aligned rectangular area around the target point.
- @note: Checks whether the X and Y distances are within `xRadius` and `yRadius` respectively. Uses `DistanceX` and `DistanceY` for clarity.
+  <Near>
+  @action: Determines whether the current point is within an axis-aligned rectangular area around the target point.
+  @note: Checks whether the X and Y distances are within `xRadius` and `yRadius` respectively. Uses `DistanceX` and `DistanceY` for clarity.
 [==============================================================================}
 function TPoint.Near(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
 begin
@@ -796,9 +796,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistX>
- @action: Returns the absolute horizontal distance between this point and the target point.
- @note: Equivalent to Abs(Self.X - target.X). Useful for quick delta comparisons on the X-axis.
+  <DistX>
+  @action: Returns the absolute horizontal distance between this point and the target point.
+  @note: Equivalent to Abs(Self.X - target.X). Useful for quick delta comparisons on the X-axis.
 [==============================================================================}
 function TPoint.DistX(const target: TPoint): Integer;
 begin
@@ -806,9 +806,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistY>
- @action: Returns the absolute vertical distance between this point and the target point.
- @note: Equivalent to Abs(Self.Y - target.Y). Useful for quick delta comparisons on the Y-axis.
+  <DistY>
+  @action: Returns the absolute vertical distance between this point and the target point.
+  @note: Equivalent to Abs(Self.Y - target.Y). Useful for quick delta comparisons on the Y-axis.
 [==============================================================================}
 function TPoint.DistY(const target: TPoint): Integer;
 begin
@@ -816,9 +816,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistanceX>
- @action: Calculates the horizontal distance between this point and the target point.
- @note: Functionally identical to DistX; uses explicit conditional logic instead of Abs().
+  <DistanceX>
+  @action: Calculates the horizontal distance between this point and the target point.
+  @note: Functionally identical to DistX; uses explicit conditional logic instead of Abs().
 [==============================================================================}
 function TPoint.DistanceX(const target: TPoint): Integer;
 begin
@@ -829,9 +829,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistanceY>
- @action: Calculates the vertical distance between this point and the target point.
- @note: Functionally identical to DistY; uses explicit conditional logic instead of Abs().
+  <DistanceY>
+  @action: Calculates the vertical distance between this point and the target point.
+  @note: Functionally identical to DistY; uses explicit conditional logic instead of Abs().
 [==============================================================================}
 function TPoint.DistanceY(const target: TPoint): Integer;
 begin
@@ -842,10 +842,10 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistMaxMinX>
- @action: Returns the absolute horizontal distance between this point and the target point using Max/Min arithmetic.
- @note: Equivalent to Abs(Self.X - Target.X); employs the branchless Max(a,b) - Min(a,b) idiom,
-        which often compiles to conditional moves for efficiency.
+  <DistMaxMinX>
+  @action: Returns the absolute horizontal distance between this point and the target point using Max/Min arithmetic.
+  @note: Equivalent to Abs(Self.X - Target.X); employs the branchless Max(a,b) - Min(a,b) idiom,
+         which often compiles to conditional moves for efficiency.
 [==============================================================================}
 function TPoint.DistMaxMinX(const target: TPoint): Integer;
 begin
@@ -853,10 +853,10 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DistMaxMinY>
- @action: Returns the absolute vertical distance between this point and the target point using Max/Min arithmetic.
-@note: Equivalent to Abs(Self.Y - Target.Y); employs the branchless Max(a,b) - Min(a,b) idiom,
-       which often compiles to conditional moves for efficiency.
+  <DistMaxMinY>
+  @action: Returns the absolute vertical distance between this point and the target point using Max/Min arithmetic.
+  @note: Equivalent to Abs(Self.Y - Target.Y); employs the branchless Max(a,b) - Min(a,b) idiom,
+         which often compiles to conditional moves for efficiency.
 [==============================================================================}
 function TPoint.DistMaxMinY(const target: TPoint): Integer;
 begin
@@ -864,9 +864,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DeltaX>
- @action: Returns the signed horizontal delta from this point to the target point (positive if target is to the right).
- @note: Equivalent to Target.X - Self.X; useful for directional movement or vector calculations without absolute value.
+  <DeltaX>
+  @action: Returns the signed horizontal delta from this point to the target point (positive if target is to the right).
+  @note: Equivalent to Target.X - Self.X; useful for directional movement or vector calculations without absolute value.
 [==============================================================================}
 function TPoint.DeltaX(const target: TPoint): Integer;
 begin
@@ -874,9 +874,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.DeltaY>
- @action: Returns the signed vertical delta from this point to the target point (positive if target is below).
- @note: Equivalent to Target.Y - Self.Y; useful for directional movement or vector calculations without absolute value. Assumes Y increases downward in coordinate system.
+  <DeltaY>
+  @action: Returns the signed vertical delta from this point to the target point (positive if target is below).
+  @note: Equivalent to Target.Y - Self.Y; useful for directional movement or vector calculations without absolute value. Assumes Y increases downward in coordinate system.
 [==============================================================================}
 function TPoint.DeltaY(const target: TPoint): Integer;
 begin
@@ -884,9 +884,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.Delta>
- @action: Returns the signed vector delta from this point to the target point as a TPoint (dx, dy).
- @note: Equivalent to Point(Target.X - Self.X, Target.Y - Self.Y); useful for relative positioning, vector calculations, or directional offsets without absolute values.
+  <Delta>
+  @action: Returns the signed vector delta from this point to the target point as a TPoint (dx, dy).
+  @note: Equivalent to Point(Target.X - Self.X, Target.Y - Self.Y); useful for relative positioning, vector calculations, or directional offsets without absolute values.
 [==============================================================================}
 function TPoint.Delta(const target: TPoint): TPoint;
 begin
@@ -894,9 +894,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.HorizontalDist>
- @action: Returns the absolute horizontal distance between this point and the target point.
- @note: Equivalent to Abs(Self.X - target.X); useful for quick delta comparisons on the X-axis in UI, games, or grid systems.
+  <HorizontalDist>
+  @action: Returns the absolute horizontal distance between this point and the target point.
+  @note: Equivalent to Abs(Self.X - target.X); useful for quick delta comparisons on the X-axis in UI, games, or grid systems.
 [==============================================================================}
 function TPoint.HorizontalDist(const target: TPoint): Integer;
 begin
@@ -904,9 +904,9 @@ begin
 end;
 
 {==============================================================================]
- <TPoint.VerticalDist>
- @action: Returns the absolute vertical distance between this point and the target point.
- @note: Equivalent to Abs(Self.Y - target.Y); useful for quick delta comparisons on the Y-axis in UI, games, or grid systems.
+  <VerticalDist>
+  @action: Returns the absolute vertical distance between this point and the target point.
+  @note: Equivalent to Abs(Self.Y - target.Y); useful for quick delta comparisons on the Y-axis in UI, games, or grid systems.
 [==============================================================================}
 function TPoint.VerticalDist(const target: TPoint): Integer;
 begin
@@ -914,7 +914,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointHelper.Create>
+  <Create>
   @action: Returns TPoint 0,0.
   @note: None.
 [==============================================================================}
@@ -926,7 +926,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointHelper.Clamp>
+  <Clamp>
   @action: Clamps pt in area, if it is not inside area.
   @note: None.
 [==============================================================================}
@@ -937,13 +937,13 @@ begin
 end;
 
 {==============================================================================]
- <TPointHelper.Grid>
- @action: Outputs/builds grid of points with parameters;
-          pt = starting point, used for starting coordinates.
-          rows, columns = count of rows and columns
-          spaceHorizontal = space between columns
-          spaceVertical = space between rows
- @note: None.
+  <Grid>
+  @action: Outputs/builds grid of points with parameters;
+           pt = starting point, used for starting coordinates.
+           rows, columns = count of rows and columns
+           spaceHorizontal = space between columns
+           spaceVertical = space between rows
+  @note: None.
 [==============================================================================}
 function TPointHelper.Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray;
 var
@@ -966,10 +966,10 @@ begin
 end;
 
 {==============================================================================]
- <TPointHelper.Row>
- @action: Outputs column of points. Starting from pt,
-          where space is the amount of space between each cell.
- @note: None
+  <Row>
+  @action: Outputs column of points. Starting from pt,
+           where space is the amount of space between each cell.
+  @note: None
 [==============================================================================}
 function TPointHelper.Row(const cells: Integer; const space: Integer = 0): TPointArray;
 var
@@ -985,10 +985,10 @@ begin
 end;
 
 {==============================================================================]
- <TPointHelper.Column>
- @action: Outputs column of points. Starting from pt,
-          where space is the amount of space between each cell.
- @note: None
+  <Column>
+  @action: Outputs column of points. Starting from pt,
+           where space is the amount of space between each cell.
+  @note: None
 [==============================================================================}
 function TPointHelper.Column(const cells: Integer; const space: Integer = 0): TPointArray;
 var
@@ -1004,9 +1004,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointHelper.ToY>
- @action: Returns an array of points forming a vertical line from Self to yGoal.
- @note:   X remains constant; Y increments or decrements depending on yGoal.
+  <ToY>
+  @action: Returns an array of points forming a vertical line from Self to yGoal.
+  @note: X remains constant; Y increments or decrements depending on yGoal.
 [==============================================================================}
 function TPointHelper.ToY(const yGoal: Integer): TPointArray; overload;
 var
@@ -1025,9 +1025,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointHelper.ToX>
- @action: Returns an array of points forming a horizontal line from Self to xGoal.
- @note:   Y remains constant; X increments or decrements depending on xGoal.
+  <ToX>
+  @action: Returns an array of points forming a horizontal line from Self to xGoal.
+  @note: Y remains constant; X increments or decrements depending on xGoal.
 [==============================================================================}
 function TPointHelper.ToX(const xGoal: Integer): TPointArray; overload;
 var
@@ -1046,7 +1046,7 @@ begin
 end;
 
 {==============================================================================]
-  <_TPoint.Create>
+  <Create>
   @action: Creates TPoint using pX, pY 
   @note: function version
 [==============================================================================}
@@ -1057,7 +1057,7 @@ begin
 end;
 
 {==============================================================================]
-  <_TPoint.Create>
+  <Create>
   @action: Creates TPoint using value 
   @note: function version
 [==============================================================================}
@@ -1067,7 +1067,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Surrounding>
+  <Surrounding>
   @action: Returns an array of points surrounding the current point (Self)
            within a 3×3 neighborhood.
            Includes diagonal neighbors when adjacency8 = True.
@@ -1090,7 +1090,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Neighbour>
+  <Neighbour>
   @action: Determines whether the given point `p` is a neighbor of `Self`.
            Considers either 8-way (including diagonals) or 4-way (orthogonal) adjacency.
   @note:  Uses explicit comparisons of absolute differences.
@@ -1108,7 +1108,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Neighbor>
+  <Neighbor>
   @action: Determines whether the given point `p` is a neighbor of `Self`.
            Considers either 8-way (including diagonals) or 4-way (orthogonal) adjacency.
   @note: Uses a more concise method with Chebyshev distance (Max(dx, dy)) for 8-way
@@ -1127,7 +1127,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Adjacent>
+  <Adjacent>
   @action: Checks whether the given point p is directly adjacent to `Self`.
            Uses a precomputed offset array for 4- or 8-way adjacency.
   @note: Efficient exact comparison. Self is not considered adjacent.
@@ -1147,7 +1147,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Adjacent>
+  <Adjacent>
   @action: Returns all points adjacent to Self as a TPointArray.
            Can return either 4-way (orthogonal) or 8-way (including diagonals).
   @note: Creates a new dynamic array on each call.
@@ -1160,7 +1160,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Adjacent>
+  <Adjacent>
   @action: Fills the given point array with the 4 or 8 adjacent points around Self.
   @note: If adjacency8 is True, diagonal neighbors are also included.
 [==============================================================================}
@@ -1180,7 +1180,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Adjacency>
+  <Adjacency>
   @action: Returns an array of points adjacent to the current point (Self).
            When adjacency8 is True, diagonal neighbors are included.
   @note: The resulting points are absolute coordinates on the same grid.
@@ -1196,7 +1196,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Neighbours>
+  <Neighbours>
   @action: Returns all neighboring points of Self as a TPointArray.
            Uses a precomputed offset array for 4- or 8-way adjacency.
   @note: Dynamic array is allocated for each call. Offset array ensures correct order.
@@ -1213,7 +1213,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Neighbours>
+  <Neighbours>
   @action:  Populates the provided array with adjacent points in 4 or 8 directions.
   @note:    Uses 8-way adjacency if the array length is greater than 4; 
             otherwise only the 4 cardinal directions are filled.
@@ -1234,7 +1234,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Neighbors>
+  <Neighbors>
   @action: Returns all neighboring points of Self as a TPointArray (alternative spelling).
            Supports 4-way or 8-way adjacency.
   @note: The first 4 points are orthogonal neighbors; the next 4 (if adjacency8) are diagonals.
@@ -1249,7 +1249,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Neighbors>
+  <Neighbors>
   @action:  Populates the provided array with adjacent points in 4 or 8 directions.
   @note:    Uses 8-way adjacency if the array length is greater than 4; 
             otherwise only the 4 cardinal directions are filled.
@@ -1270,7 +1270,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Linked>
+  <Linked>
   @action: Determines whether both the current point (Self) and the given point p
            are present in the provided TPointArray. Returns True if both points
            are contained in the array, False otherwise.
@@ -1284,7 +1284,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Boxed>
+  <Boxed>
   @action: Creates a square/rectangular box centered on the point,
            extending by xRadius horizontally and yRadius vertically.
   @note: Useful for defining an area of influence around a point.
@@ -1303,7 +1303,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.ToBox>
+  <ToBox>
   @action: Creates a box using the point as the top-left corner (origin),
            extending rightward by width and downward by height.
   @note: Negative width/height make the box extend left/up instead.
@@ -1322,7 +1322,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Boxify>
+  <Boxify>
   @action: Returns a box centered on the point with the specified width and height.
   @note: The box expands equally in all directions from the point’s center.
 [==============================================================================}
@@ -1344,7 +1344,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Uniform>
+  <Uniform>
   @action: Checks whether both coordinates of the point equal the specified value.
   @note: Returns True only if (X = val) and (Y = val).
 [==============================================================================}
@@ -1354,7 +1354,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Uniform>
+  <Uniform>
   @action: Checks whether the point’s coordinates are equal to each other.
   @note: Returns True if (X = Y).
 [==============================================================================}
@@ -1364,7 +1364,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Employs>
+  <Employs>
   @action: Checks if the given integer value matches either the X or Y coordinate of the point.
   @note: Useful for determining if a specific value is present in a 2D point.
 [==============================================================================}
@@ -1374,7 +1374,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPoint.Omits>
+  <Omits>
   @action: Checks if the given integer value is NOT present in either the X or Y coordinate of the point.
   @note: Logical inverse of TPoint.Employs; returns True if the value is absent.
 [==============================================================================}
@@ -1382,7 +1382,6 @@ function TPoint.Omits(const val: Integer): Boolean;
 begin
   Result := not ((Self.X = val) or (Self.Y = val));
 end;
-
 {$ENDIF}
 
 {$UNDEF TPoint}

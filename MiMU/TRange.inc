@@ -107,6 +107,8 @@ type
     function Normally: TRange; 
     function Normalize: TRange; 
     function Normalized: TRange; 
+    function MinMax: TRange; overload;
+    function MaxMin: TRange; overload;
     function Overlapping(const b: TRange): Boolean; 
     function Overlap(const b: TRange): Boolean; 
     function Intersect(const b: TRange): TRange; overload; 
@@ -233,10 +235,10 @@ type
     class function Create(const value: Integer = 0): TRange; overload; 
   end;
   
-operator+(const a, b: TRange): TRange;
-operator-(const a, b: TRange): TRange;
-operator=(const a, b: TRange): Boolean;
-operator<>(const a, b: TRange): Boolean;
+operator +(const a, b: TRange): TRange;
+operator -(const a, b: TRange): TRange;
+operator =(const a, b: TRange): Boolean;
+operator <>(const a, b: TRange): Boolean;
 
 operator in(const I: Integer; const R: TRange): Boolean;
 
@@ -261,13 +263,13 @@ type
 {$I config\0D.inc}
 
 {==============================================================================]
-  <operator+ (TRange+TRange)>
+  <+>
   @action: Computes the union of two integer ranges. The result spans from the
            smallest start value of either input range to the largest stop value.
   @note:   Both ranges are internally normalized to ascending order before the
            union is calculated. Descending ranges are fully supported.
 [==============================================================================}
-operator+(const a, b: TRange): TRange;
+operator +(const a, b: TRange): TRange;
 var
   x, y: TRange;
 begin
@@ -277,7 +279,7 @@ begin
 end;
 
 {==============================================================================]
-  <operator- (TRange-TRange)>
+  <->
   @action: Computes the intersection of two integer ranges. If the ranges
            overlap, the result contains the overlapping interval. If they do
            not overlap, the function returns an empty range marker.
@@ -285,7 +287,7 @@ end;
            intersection is computed. A non-overlapping result is represented
            by start = stop = Low(Integer).
 [==============================================================================}
-operator-(const a, b: TRange): TRange;
+operator -(const a, b: TRange): TRange;
 var
   x, y: TRange;
 begin
@@ -297,16 +299,39 @@ begin
   Result.stop := Min(x.stop, y.stop);
 end;
 
-operator=(const a, b: TRange): Boolean;
+{==============================================================================]
+  <=>
+  @action: Compares two ranges for exact equality. Returns True when both start and stop
+           values are identical in both ranges.
+  @note: The comparison is structural; ordering is not normalized. A range (3, 7) is not
+         considered equal to a reversed range (7, 3).
+[==============================================================================}
+operator =(const a, b: TRange): Boolean;
 begin
   Result := ((a.start = b.start) and (a.stop = b.stop));
 end;
 
-operator<>(const a, b: TRange): Boolean;
+{==============================================================================]
+  <<>>
+  @action: Compares two ranges for inequality. Returns True when either start or stop
+           differs between the two ranges.
+  @note: This is the logical negation of the equality operator. Like '=', the test is
+         sensitive to value order and does not perform normalization.
+[==============================================================================}
+operator <>(const a, b: TRange): Boolean;
 begin
   Result := not ((a.start = b.start) and (a.stop = b.stop));
 end;
 
+{==============================================================================]
+  <in>
+  @action: Evaluates whether the given integer I lies within the bounds of the
+           specified range R. Returns True when I is contained inside R according
+           to the range's containment rules.
+  @note: The containment test follows TRange.Contains, including its handling of
+         ascending or descending ranges. No normalization is performed unless
+         Contains does so internally.
+[==============================================================================}
 operator in(const I: Integer; const R: TRange): Boolean;
 begin
   Result := R.Contains(I);
@@ -329,17 +354,42 @@ begin
   Result := ((FStep > 0) and (FCurrent <= FStop) or (FStep < 0) and (FCurrent >= FStop));
 end;
 
+{==============================================================================]
+  <GetEnumerator>
+  @action: Creates and returns an enumerator that iterates through all integer
+           values contained in the range, following the iteration rules defined
+           by TRangeEnumerator.
+  @note: The iteration order and behavior (ascending, descending, inclusive, or
+         normalized) are determined entirely by TRangeEnumerator.Init. This
+         function performs no normalization and passes the range endpoints
+         exactly as stored.
+[==============================================================================}
 function TRange.GetEnumerator: TRangeEnumerator;
 begin
   Result.Init(start, stop);
 end;
 
+{==============================================================================]
+  <Range>
+  @action: Constructs and returns a TRange whose start and stop values are set to
+           rStart and rStop respectively. No normalization or validation is
+           performed.
+  @note: The resulting range preserves the specified ordering. If rStart > rStop,
+         the function returns a descending range.
+[==============================================================================}
 function Range(const rStart, rStop: Integer): TRange; overload; inline;
 begin
   Result.start := rStart;
   Result.stop := rStop;
 end;
 
+{==============================================================================]
+  <Range>
+  @action: Constructs and returns a TRange representing a single-value range,
+           with both start and stop initialized to val.
+  @note: This overload is intended for convenience when creating point ranges.
+         The default value (0) is used when no argument is provided.
+[==============================================================================}
 function Range(const val: Integer = 0): TRange; overload; inline;
 begin
   Result.start := val;
@@ -347,7 +397,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Create>
+  <Create>
   @action: Create a TRange with start and stop
   @note: None.
 [==============================================================================}
@@ -358,7 +408,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Create>
+  <Create>
   @action: Create a TRange with value
   @note: None.
 [==============================================================================}
@@ -368,7 +418,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Construct>
+  <Construct>
   @action: Constructs TRange with rStart and rStop.
   @note: None.
 [==============================================================================}
@@ -379,7 +429,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Null>
+  <Null>
   @action: Returns a special "null" or empty range, represented by both start and stop
            being set to the specified sentinel value.
   @param: value - Optional integer to use as the sentinel for an empty range. Defaults
@@ -394,7 +444,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Build>
+  <Build>
   @action: Create a TRange with rStart and rStop, using Min and Max for safety.
   @note: None.
 [==============================================================================}
@@ -406,7 +456,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Init>
+  <Init>
   @action: Initializes the current TRange with the specified start and stop values.
            Also returns the initialized record so it can be assigned in-line.
   @note: Useful for initializing a TRange instance and simultaneously returning it
@@ -421,7 +471,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Init>
+  <Init>
   @action: Initializes the current TRange as a copy of another TRange.
            Also returns the copied record.
   @note: Useful for copying values from an existing TRange while allowing in-line assignment.
@@ -434,7 +484,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Init>
+  <Init>
   @action: Initializes the current TRange with both start and stop set to the same value.
            Also returns the initialized record.
   @note: The parameter has a default of 0, allowing zero-initialization.
@@ -449,7 +499,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Singular>
+  <Singular>
   @action: Returns true if range start equals stop
   @note: None.
 [==============================================================================}
@@ -459,7 +509,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Atomic>
+  <Atomic>
   @action: Returns true if range start equals stop
   @note: None.
 [==============================================================================}
@@ -469,7 +519,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Plural>
+  <Plural>
   @action: Returns true if range start does NOT equal to stop
   @note: None.
 [==============================================================================}
@@ -479,7 +529,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Composite>
+  <Composite>
   @action: Returns true if range start does NOT equal to stop
   @note: None.
 [==============================================================================}
@@ -489,7 +539,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Sorted>
+  <Sorted>
   @action: Returns a new TRange with Start and Stop ordered according to aAscending.
            Does NOT modify the current record.
   @note: If aAscending=True, ensures Start <= Stop; if False, Start >= Stop.
@@ -503,7 +553,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Sort>
+  <Sort>
   @action: Sorts the current TRange in-place according to oAscending.
            Returns True if a swap of Start and Stop was performed.
   @note: If oAscending=True, Start <= Stop after call; if False, Start >= Stop.
@@ -516,7 +566,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Ordered>
+  <Ordered>
   @action: Returns a new TRange with Start and Stop ordered according to oAscending.
            Uses arithmetic trick with Ord() to determine order.
   @note: Functional version; does NOT modify the current record. Works for both ascending and descending.
@@ -530,7 +580,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Order>
+  <Order>
   @action: Sorts the current TRange in-place according to oAscending.
            Returns True if a swap of Start and Stop was performed.
            Uses arithmetic trick with Ord() to determine order.
@@ -544,7 +594,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Asc>
+  <Asc>
   @action: Returns an ascending sequence of integers from Start to Stop.
   @note: If Start > Stop, the order is still ascending (from the smaller to the larger value).
 [==============================================================================}
@@ -558,7 +608,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Desc>
+  <Desc>
   @action: Returns a descending sequence of integers from Stop down to Start.
   @note: If Start < Stop, the order is still descending (from the larger to the smaller value).
 [==============================================================================}
@@ -572,7 +622,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Ascend>
+  <Ascend>
   @action: Returns ascending TRange of Self.
   @note: None.
 [==============================================================================}
@@ -583,7 +633,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Descend>
+  <Descend>
   @action: Returns descending TRange of Self.
   @note: None.
 [==============================================================================}
@@ -594,7 +644,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Descended>
+  <Descended>
   @action: Returns TRange in descending order.
   @note: None.
 [==============================================================================}
@@ -607,7 +657,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Ascended>
+  <Ascended>
   @action: Returns TRange in ascending order.
   @note: None.
 [==============================================================================}
@@ -620,7 +670,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Ascending>
+  <Ascending>
   @action: Returns true if range start is lower or equal than stop
   @note: Non-strict.
 [==============================================================================}
@@ -630,7 +680,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Ascends>
+  <Ascends>
   @action: Returns true if range start is lower or equal than stop
   @note: Non-strict.
 [==============================================================================}
@@ -640,7 +690,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Descending>
+  <Descending>
   @action: Returns true if range start is higher or equal than stop
   @note: Non-strict.
 [==============================================================================}
@@ -650,7 +700,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Descends>
+  <Descends>
   @action: Returns true if range start is higher or equal than stop
   @note: Non-strict.
 [==============================================================================}
@@ -660,7 +710,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Increasing>
+  <Increasing>
   @action: Returns true if range start is lower or equal with stop
   @note: Non-strict.
 [==============================================================================}
@@ -670,7 +720,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Decreasing>
+  <Decreasing>
   @action: Returns true if range start is higher or equal with stop
   @note: Different logic compared to TRange.Descending!
 [==============================================================================}
@@ -680,7 +730,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Growing>
+  <Growing>
   @action: Returns true if range start is lower or equal with stop
   @note: Strict.
 [==============================================================================}
@@ -690,7 +740,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Grows>
+  <Grows>
   @action: Returns true if range start is lower or equal with stop
   @note: Strict.
 [==============================================================================}
@@ -700,7 +750,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Shrinking>
+  <Shrinking>
   @action: Returns true if range start is higher or equal with stop
   @note: Strict.
 [==============================================================================}
@@ -710,7 +760,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Shrinks>
+  <Shrinks>
   @action: Returns true if range start is higher or equal with stop
   @note: Strict.
 [==============================================================================}
@@ -720,7 +770,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Rising>
+  <Rising>
   @action: Returns true if range start is lower or equal with stop
   @note: Strict.
 [==============================================================================}
@@ -730,7 +780,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Rises>
+  <Rises>
   @action: Returns true if range start is lower or equal with stop
   @note: Strict.
 [==============================================================================}
@@ -740,7 +790,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Dropping>
+  <Dropping>
   @action: Returns true if range start is higher or equal with stop
   @note: Strict.
 [==============================================================================}
@@ -750,7 +800,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Drops>
+  <Drops>
   @action: Returns true if range start is higher or equal with stop
   @note: Strict.
 [==============================================================================}
@@ -760,7 +810,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Grab>
+  <Grab>
   @action: Returns TRange with range, swaps range.stop and range.start if they are in reversed order.
   @note: None.
 [==============================================================================}
@@ -770,7 +820,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Count>
+  <Count>
   @action: Returns count values in the given range.
   @note: None.
 [==============================================================================}
@@ -780,7 +830,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Diameter>
+  <Diameter>
   @action: Returns area of the given range.
   @note: None.
 [==============================================================================}
@@ -792,7 +842,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Area>
+  <Area>
   @action: Returns area of the given range.
   @note: None.
 [==============================================================================}
@@ -805,7 +855,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Size>
+  <Size>
   @action: Returns size of the given range.
   @note: None.
 [==============================================================================}
@@ -815,7 +865,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Size>
+  <Size>
   @action: Returns size of the given range.
   @note: None.
 [==============================================================================}
@@ -827,7 +877,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Capacity>
+  <Capacity>
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
@@ -837,7 +887,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Reach>
+  <Reach>
   @action: Returns the size of TRange.
   @note: Alternative.
 [==============================================================================}
@@ -852,7 +902,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Extent>
+  <Extent>
   @action: Returns the size of TRange.
   @note: Alternative.
 [==============================================================================}
@@ -862,7 +912,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Reach>
+  <Reach>
   @action: Returns the size of TRange.
   @note: Alternative.
 [==============================================================================}
@@ -876,32 +926,17 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Population>
+  <Population>
   @action: Returns the size of TRange.
   @note: Alternative.
 [==============================================================================}
 function TRange.Population: Integer; overload;
-procedure MinMax(a, b: Integer; out minVal, maxVal: Integer);
 begin
-  if (a < b) then
-  begin
-    minVal := a;
-    maxVal := b;
-  end else
-  begin
-    minVal := b;
-    maxVal := a;
-  end;
-end;
-var
-  L, H: Integer;
-begin
-  MinMax(Self.start, Self.stop, L, H);
-  Result := ((H - L) + 1);
+  Result := ((Self.MinMax.stop - Self.MinMax.start) + 1);
 end;
 
 {==============================================================================]
-  <TRange.Span>
+  <Span>
   @action: Returns span of the given range.
   @note: None.
 [==============================================================================}
@@ -911,7 +946,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Frame>
+  <Frame>
   @action Returns a TRange covering the full extent of this instance,
           starting at 0 and ending at Size - 1.
   @note   None.
@@ -923,7 +958,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Frame>
+  <Frame>
   @action Returns a TRange covering the full extent of this instance,
           starting at 0 and ending at Size - 1.
   @note   None.
@@ -934,7 +969,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Highest>
+  <Highest>
   @action: Returns maximum value of the given range.
   @note: None.
 [==============================================================================}
@@ -944,7 +979,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Lowest>
+  <Lowest>
   @action: Returns minimum value of the given range.
   @note: None.
 [==============================================================================}
@@ -954,7 +989,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Maximum>
+  <Maximum>
   @action: Returns maximum value of the given range.
   @note: None.
 [==============================================================================}
@@ -967,7 +1002,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Minimum>
+  <Minimum>
   @action: Returns minimum value of the given range.
   @note: None.
 [==============================================================================}
@@ -980,7 +1015,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Exceeds>
+  <Exceeds>
   @action: Returns true if TRange contains more than maxElements.
   @note: TRange Exceeds maximum elements.
 [==============================================================================}
@@ -990,7 +1025,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Insufficient>
+  <Insufficient>
   @action: Returns true if TRange contains less than minElements.
   @note: TRange is behind minimum elements.
 [==============================================================================}
@@ -1000,7 +1035,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Digits>
+  <Digits>
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
@@ -1015,7 +1050,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Digits>
+  <Digits>
   @action: Returns digit from TRange by index.
   @note: None.
 [==============================================================================}
@@ -1031,7 +1066,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Digits>
+  <Digits>
   @action: Returns digits from TRange by indexes.
   @note: None.
 [==============================================================================}
@@ -1045,7 +1080,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Sequence>
+  <Sequence>
   @action: Returns digits from TRange.
   @note: None.
 [==============================================================================}
@@ -1065,7 +1100,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.IDs>
+  <IDs>
   @action: Returns TRange indexes.
   @note: None.
 [==============================================================================}
@@ -1079,7 +1114,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.IDs>
+  <IDs>
   @action: Returns TRange index by TRange value.
   @note: Returns -2147483648 if dValue does not exist in TRange.
 [==============================================================================}
@@ -1100,7 +1135,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.IDs>
+  <IDs>
   @action: Returns TRange index by TRange value.
   @note: Returns -2147483648 if dValue does not exist in TRange.
 [==============================================================================}
@@ -1114,7 +1149,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Ints>
+  <Ints>
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
@@ -1135,7 +1170,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Values>
+  <Values>
   @action: Returns values of the given range.
   @note: None.
 [==============================================================================}
@@ -1156,7 +1191,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.TIA>
+  <TIA>
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
@@ -1179,7 +1214,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Enumerate>
+  <Enumerate>
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
@@ -1201,7 +1236,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Enumerated>
+  <Enumerated>
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
@@ -1216,7 +1251,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBox.Elements>
+  <Elements>
   Explanation: Returns TBox points as TPointArray.
   Example: Alternative method.
 [==============================================================================}
@@ -1242,7 +1277,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Elements>
+  <Elements>
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
@@ -1261,7 +1296,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Items>
+  <Items>
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
@@ -1278,7 +1313,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.ToArray>
+  <ToArray>
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
@@ -1298,7 +1333,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.AsArray>
+  <AsArray>
   @action: Two-way alternative for extracting items from TRange.
   @note: None.
 [==============================================================================}
@@ -1329,7 +1364,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Unzip>
+  <Unzip>
   @action: Two-way alternative for extracting items from TRange.
   @note: None.
 [==============================================================================}
@@ -1356,7 +1391,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Unpack>
+  <Unpack>
   @action: Two-way alternative for extracting items from TRange.
   @note: None.
 [==============================================================================}
@@ -1376,7 +1411,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Unwrap>
+  <Unwrap>
   @action: Two-way alternative for extracting items from TRange.
   @note: None.
 [==============================================================================}
@@ -1405,7 +1440,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Unfold>
+  <Unfold>
   @action: Recursion-based alternative for extracting items from TRange.
   @note: None.
 [==============================================================================}
@@ -1436,7 +1471,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Zigzag>
+  <Zigzag>
   @action: Returns the integer values of the range in an alternating “zig-zag” order,
            taking elements from the start and end of the range alternately.
            For example, for a range 1..5, the result is [1,5,2,4,3].
@@ -1467,7 +1502,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Materialize>
+  <Materialize>
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
@@ -1488,7 +1523,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Mixed>
+  <Mixed>
   @action: Returns TRange randomly mixed as TIntegerArray.
   @note: None.
 [==============================================================================}
@@ -1507,7 +1542,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Shake>
+  <Shake>
   @action: Returns TRange randomly shaked as TIntegerArray.
   @note: None.
 [==============================================================================}
@@ -1526,7 +1561,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Shuffle>
+  <Shuffle>
   @action: Returns TRange randomly shuffled as TIntegerArray.
   @note: None.
 [==============================================================================}
@@ -1545,7 +1580,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Any>
+  <Any>
   @action: Returns random TRange item.
   @note: None.
 [==============================================================================}
@@ -1555,7 +1590,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Some>
+  <Some>
   @action: Returns random amount of random TRange items.
   @note: Does not return empty arrays.
 [==============================================================================}
@@ -1565,7 +1600,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Some>
+  <Some>
   @action: Returns random amount of random TRange items.
   @note: Does not return empty arrays.
 [==============================================================================}
@@ -1575,7 +1610,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.All>
+  <All>
   @action: Returns ALL TRange items as TIntegerArray.
   @note: None.
 [==============================================================================}
@@ -1599,7 +1634,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Normed>
+  <Normed>
   @action: Using if-then comparison this function returns "normal" range.
   @note: None.
 [==============================================================================}
@@ -1609,7 +1644,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Norm>
+  <Norm>
   @action: Using if-then comparison this function returns "normal" range.
   @note: None.
 [==============================================================================}
@@ -1619,7 +1654,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Normal>
+  <Normal>
   @action: XOR-swap based.
   @note: None.
 [==============================================================================}
@@ -1633,6 +1668,11 @@ begin
   Result.start := (Result.start xor Result.stop);
 end;
 
+{==============================================================================]
+  <Normally>
+  @action: Ord-based.
+  @note: None.
+[==============================================================================}
 function TRange.Normally: TRange;
 var
   a: TIntegerArray;
@@ -1642,7 +1682,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Normalize>
+  <Normalize>
   @action: Using Min-Maxing this function returns "normal" range.
   @note: None.
 [==============================================================================}
@@ -1653,7 +1693,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Normalized>
+  <Normalized>
   @action: Using if-then comparison this function returns "normal" range.
   @note: None.
 [==============================================================================}
@@ -1665,7 +1705,31 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Overlapping>
+  <MinMax>
+  @action: Returns a normalized ascending version of the range, ensuring start <= stop.
+  @note: If the current range is already ascending, the function returns Self unchanged.
+[==============================================================================}
+function TRange.MinMax: TRange; overload;
+begin
+  if (Self.start < Self.stop) then
+    Exit(Self);
+  Result.Create(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <MaxMin>
+  @action: Returns a normalized descending version of the range, ensuring start >= stop.
+  @note: If the current range is already descending, the function returns Self unchanged.
+[==============================================================================}
+function TRange.MaxMin: TRange; overload;
+begin
+  if (Self.start > Self.stop) then
+    Exit(Self);
+  Result.Create(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <Overlapping>
   @action: Checks if a and b overlap eachother.
   @note: Returns true if overlap is found.
 [==============================================================================}
@@ -1675,7 +1739,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Overlap>
+  <Overlap>
   @action: Checks if a and b overlap eachother.
   @note: Returns true if overlap is found.
 [==============================================================================}
@@ -1685,7 +1749,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Intersect>
+  <Intersect>
   @action: Returns intersection of a and b.
   @note: Returns null if there is no intersection for a and b.
 [==============================================================================}
@@ -1700,7 +1764,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Intersect>
+  <Intersect>
   @action: Returns true if of a and b contains intersection.
   @note: Stores intersection to variable, if Result is True.
 [==============================================================================}
@@ -1719,7 +1783,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Extend>
+  <Extend>
   @action: Returns true TRange is extended with val (val is not yet in range)
   @note: None.
 [==============================================================================}
@@ -1747,7 +1811,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Union>
+  <Union>
   @action: Returns union of ranges a and b.
   @note: None.
 [==============================================================================}
@@ -1758,7 +1822,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Union>
+  <Union>
   @action: Returns union of range and val.
   @note: None.
 [==============================================================================}
@@ -1782,7 +1846,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Offset>
+  <Offset>
   @action: Returns shift of range r by delta.
   @note: None.
 [==============================================================================}
@@ -1792,7 +1856,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Contains>
+  <Contains>
   @action: Returns True if range contains x-value.
   @note: None.
 [==============================================================================}
@@ -1802,7 +1866,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Contains>
+  <Contains>
   @action: Returns True if range contains x.
   @note: Meaning x is completely part of range.
 [==============================================================================}
@@ -1812,7 +1876,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Holds>
+  <Holds>
   @action: Determines whether a given integer value lies within the range.
   @note: Returns True if the value is greater than or equal to the lower bound
          and less than or equal to the upper bound, regardless of whether
@@ -1824,7 +1888,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Holds>
+  <Holds>
   @action: Determines whether a given integer value lies within the range.
   @note: Returns True if the value is greater than or equal to the lower bound
          and less than or equal to the upper bound, regardless of whether
@@ -1836,7 +1900,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Missing>
+  <Missing>
   @action: Determines whether a given integer value lies outside the range.
   @note: Returns True if the value is less than the lower bound or greater than
          the upper bound, regardless of start/stop order. Complementary to Holds.
@@ -1847,7 +1911,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Missing>
+  <Missing>
   @action: Determines whether another range lies entirely outside this range.
   @note: Returns True if the input range is completely disjoint from this range,
          i.e., there is no overlap between the ranges. Works correctly for both
@@ -1859,7 +1923,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Above>
+  <Above>
   @action: Returns True if range is above target.
   @note: None.
 [==============================================================================}
@@ -1874,7 +1938,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Below>
+  <Below>
   @action: Returns True if range is below target.
   @note: None.
 [==============================================================================}
@@ -1889,7 +1953,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Reversed>
+  <Reversed>
   @action: Returns reversed range.
   @note: None.
 [==============================================================================}
@@ -1900,7 +1964,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Reverse>
+  <Reverse>
   @action: Reverses range, returns True if range was reversed.
   @note: None.
 [==============================================================================}
@@ -1912,7 +1976,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Equals>
+  <Equals>
   @action: Checks if a matches b.
   @note: 0..3 and 3..0 will be treated as match.
 [==============================================================================}
@@ -1922,7 +1986,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Differs>
+  <Differs>
   @action: Checks if a unmatches b.
   @note: 0..3 and 3..0 will be treated as match.
 [==============================================================================}
@@ -1932,7 +1996,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Equal>
+  <Equal>
   @action: Checks if a matches b exactly.
   @note: 0..3 and 3..0 will NOT be treated as match.
 [==============================================================================}
@@ -1942,7 +2006,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Differ>
+  <Differ>
   @action: Checks if a unmatches b exactly.
   @note: 0..3 and 3..0 will NOT be treated as match.
 [==============================================================================}
@@ -1952,7 +2016,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Clamp>
+  <Clamp>
   @action: Returns range clamped inside zone range.
   @note: Makes sure Result is range fitted in zone bounds.
 [==============================================================================}
@@ -1977,7 +2041,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.ClampMax>
+  <ClampMax>
   @action: Returns range with start and stop with maximum value.
   @note: Makes sure neither start or stop is higher than maximum.
 [==============================================================================}
@@ -1994,7 +2058,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.ClampMin>
+  <ClampMin>
   @action: Returns range with start and stop with minimum value.
   @note: Makes sure neither start or stop is lower than minimum.
 [==============================================================================}
@@ -2011,7 +2075,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Restrict>
+  <Restrict>
   @action: Ensures range start and stop stays within zone.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
@@ -2026,7 +2090,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.RestrictMin>
+  <RestrictMin>
   @action: Ensures range start and stop stays within minimum.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
@@ -2041,7 +2105,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.RestrictMax>
+  <RestrictMax>
   @action: Ensures range start and stop stays within maximum.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
@@ -2056,7 +2120,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Clip>
+  <Clip>
   @action: Ensures range start and stop stays within zone.
   @note: Alternative for TRange_Clamp.
 [==============================================================================}
@@ -2067,7 +2131,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.ClipMin>
+  <ClipMin>
   @action: Ensures range start and stop stays within minimum.
   @note: Alternative for TRange_ClampMin.
 [==============================================================================}
@@ -2078,7 +2142,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.ClipMax>
+  <ClipMax>
   @action: Ensures range start and stop stays within maximum.
   @note: Alternative for TRange_ClampMax.
 [==============================================================================}
@@ -2089,7 +2153,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Ensured>
+  <Ensured>
   @action: Returns a new TRange with start and stop clamped to fit within zone.
   @note: Preserves the direction (start > stop) of the original range.
          Zone is normalized internally, so reversed zones are handled.
@@ -2101,7 +2165,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Ensure>
+  <Ensure>
   @action: Clamps the current TRange (Self) to fit within zone.
   @note: Preserves the direction (start > stop) of Self.
          Returns True if Self was modified; False otherwise.
@@ -2118,7 +2182,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Include>
+  <Include>
   @action: Expands the range to include the given value while preserving ascending/descending order.
   @note: If the value is already inside the range, the range remains unchanged.
 [==============================================================================}
@@ -2142,7 +2206,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Absorb>
+  <Absorb>
   @action: Expands the range to include the given value while preserving ascending/descending order.
   @note: If the value is already inside the range, the range remains unchanged.
          Returns true if value was added in.
@@ -2170,7 +2234,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRangeHelper.Create>
+  <Create>
   @action: TRange 0..0.
   @note: None.
 [==============================================================================}
@@ -2182,7 +2246,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRangeHelper.Distribute>
+  <Distribute>
   @action: Distributes range to TRangeArray by amount of parts
   @note: None.
 [==============================================================================}
@@ -2215,7 +2279,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRangeHelper.Partition>
+  <Partition>
   @action: Partitions range to TRangeArray by size of parts
   @note: None.
 [==============================================================================}
@@ -2244,7 +2308,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRangeHelper.Divide>
+  <Divide>
   @action: Partitions range to TRangeArray by size of parts
   @note: Alternative for TRange_Partition.
 [==============================================================================}
@@ -2272,7 +2336,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Neighbor>
+  <Neighbor>
   @action: Returns true if 2 TRanges are right next to eachother.
   @note: (Distance is exactly 1 between em).
 [==============================================================================}
@@ -2286,7 +2350,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Neighbour>
+  <Neighbour>
   @action: Returns true if 2 TRanges are right next to eachother.
   @note: (Distance is exactly 1 between em).
 [==============================================================================}
@@ -2296,7 +2360,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Touch>
+  <Touch>
   @action: Returns true if range touches b.
   @note: Touch = only single value is shared between the ranges.
 [==============================================================================}
@@ -2311,7 +2375,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Touches>
+  <Touches>
   @action: Returns true if range touches b with minimum and maximum contact.
   @note: Touch = minimum/maximum shared values.
 [==============================================================================}
@@ -2331,7 +2395,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Touching>
+  <Touching>
   @action: Returns true if range touches b with minimum and maximum contact.
   @note: Touch = minimum/maximum shared values.
 [==============================================================================}
@@ -2351,7 +2415,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Distance>
+  <Distance>
   @action: Returns minimum distance between ranges a and b.
   @note: If ranges overlap, distance is 0.
 [==============================================================================}
@@ -2371,7 +2435,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Distance>
+  <Distance>
   @action: Returns the distance between the start and stop values of the range.
            Accounts for the direction of the range (descending or ascending).
   @note: Distance is exclusive of endpoints. Use this if you want the signed
@@ -2386,7 +2450,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Dist>
+  <Dist>
   @action: Returns the distance between the start and stop values of the range.
            Uses a compact conditional expression to handle descending ranges.
   @note: Same as Distance but written using IfThen for brevity. Still exclusive
@@ -2398,7 +2462,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Difference>
+  <Difference>
   @action: Returns the absolute difference between the start and stop values,
            ignoring the direction of the range.
   @note: Diff is always non-negative and exclusive of endpoints. Use this if
@@ -2411,7 +2475,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Diff>
+  <Diff>
   @action: Returns the absolute difference (magnitude) between start and stop,
            ignoring the direction of the range.
   @note: The result is always non-negative. Equivalent to Abs(stop - start).
@@ -2423,7 +2487,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.DistHausdorff>
+  <DistHausdorff>
   @action: Returns Hausdorff-based distance between ranges a and b.
   @note: None.
 [==============================================================================}
@@ -2437,7 +2501,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Delta>
+  <Delta>
   @action: Delta returns the signed difference from start to stop; the sign indicates the range’s orientation.
   @note: None.
 [==============================================================================}
@@ -2447,7 +2511,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Direction>
+  <Direction>
   @action: Returns the orientation of the range.
   @note: 1  => descending (stop > start)
         -1  => ascending  (start > stop)
@@ -2459,7 +2523,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Signum>
+  <Signum>
   @action: Returns the directional sign of the range. 
            +1 if the range is ascending (stop > start), 
            -1 if descending (stop < start), 
@@ -2476,7 +2540,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Magnitude>
+  <Magnitude>
   @action: Returns the magnitude (non-negative size) of the range, ignoring orientation.
   @note: Computed as the absolute value of Delta (Abs(Stop - Start)).
          Always ≥ 0, regardless of whether the range is ascending or descending.
@@ -2487,7 +2551,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Orientation>
+  <Orientation>
   @action: Returns +1 if the range is ascending or degenerate (Stop >= Start),
            and -1 if the range is descending (Stop < Start).
   @note: Useful for determining iteration direction or orientation of the range.
@@ -2498,7 +2562,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Slope>
+  <Slope>
   @action: Returns the slope (direction) of the range.
            +1 if the range is ascending (stop > start),
            -1 if descending (stop < start),
@@ -2518,7 +2582,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Deficit>
+  <Deficit>
   @action: Returns the negative absolute distance between Start and Stop.
   @note: Computed as Min(Start, Stop) - Max(Start, Stop).
          Always ≤ 0. Ignores orientation; useful when a negative “shortfall” value is needed.
@@ -2529,7 +2593,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Digit>
+ <Digit>
  @action: Returns true if range contains x-value.
  @note: None.
 [==============================================================================}
@@ -2539,7 +2603,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Value>
+ <Value>
  @action: Returns true if range contains x-value.
  @note: None.
 [==============================================================================}
@@ -2549,7 +2613,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Lacks>
+ <Lacks>
  @action: Returns true if x-value is out of range.
  @note: None.
 [==============================================================================}
@@ -2559,7 +2623,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Outside>
+ <Outside>
  @action: Returns true if x-value is outside the range.
  @note: None.
 [==============================================================================}
@@ -2569,7 +2633,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Item>
+ <Item>
  @action: Returns true if range contains x-value.
  @note: None.
 [==============================================================================}
@@ -2582,7 +2646,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Pivot>
+ <Pivot>
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
@@ -2595,7 +2659,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Mean>
+ <Mean>
  @action: Returns the arithmetic mean (midpoint) of the range's Start and Stop values as a Double.
  @note: Uses floating-point division to avoid integer truncation and to handle large integer values safely.
 [==============================================================================}
@@ -2605,7 +2669,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Medium>
+ <Medium>
  @action: ?
  @note: ?
 [==============================================================================}
@@ -2615,7 +2679,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Middle>
+ <Middle>
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
@@ -2625,7 +2689,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Mid>
+ <Mid>
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
@@ -2635,7 +2699,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.MidVal>
+ <MidVal>
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
@@ -2650,7 +2714,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.MidValue>
+ <MidValue>
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
@@ -2665,7 +2729,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.MiddleValue>
+ <MiddleValue>
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
@@ -2678,7 +2742,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.MiddleVal>
+ <MiddleVal>
  @action: Middle value alternative
  @note: None
 [==============================================================================}
@@ -2688,7 +2752,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Midpoint>
+ <Midpoint>
   @action: Computes the weighted midpoint (center) of the range using given weights.
   @note: Returns a Double. Weighted midpoint formula: ((Start * wStart) + (Stop * wStop)) / (wStart + wStop).
          Useful when one bound of the range has more importance than the other.
@@ -2699,7 +2763,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Average>
+ <Average>
  @action: Average value from TRange.
  @note: None
 [==============================================================================}
@@ -2712,7 +2776,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Center>
+ <Center>
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
@@ -2722,7 +2786,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Central>
+ <Central>
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
@@ -2732,7 +2796,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Centre>
+ <Centre>
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
@@ -2742,7 +2806,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Centroid>
+ <Centroid>
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
@@ -2752,7 +2816,7 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Core>
+ <Core>
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
@@ -2764,7 +2828,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Half>
+  <Half>
   @action: Returns half the length of the range as an integer, calculated as the
            absolute difference between Stop and Start divided by two.
   @note:   Direction-agnostic; works for both ascending and descending ranges.
@@ -2776,7 +2840,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Halfway>
+  <Halfway>
   @action: Returns half the distance between Start and Stop, explicitly handling
            ascending and descending ranges.
   @note:   Functionally identical to Half; uses conditional logic instead of Abs().
@@ -2791,7 +2855,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Halved>
+  <Halved>
   @action: Returns half the distance between Start and Stop, explicitly handling
            ascending and descending ranges.
   @note:   EnsureRange-based.
@@ -2802,7 +2866,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Radius>
+  <Radius>
   @action: Returns half the total span (distance) between Start and Stop.
   @note: Equivalent to (RangeLength / 2); independent of which value is greater.
 [==============================================================================}
@@ -2812,7 +2876,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Rad>
+  <Rad>
   @action: Returns the half-length (radius) of the range as an integer value.
   @note: Computed as Abs(Stop - Start) shr 1; equivalent to (|Stop - Start| div 2).
 [==============================================================================}
@@ -2822,7 +2886,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Radiar>
+  <Radiar>
   @action: Returns half the absolute distance between Start and Stop, rounded to the nearest integer.
   @note: Computed as Round(Abs(Stop - Start) * 0.5). Useful when a midpoint-to-edge distance is needed
          and rounding is preferred over truncation. Order of Start and Stop does not matter.
@@ -2833,9 +2897,9 @@ begin
 end;
 
 {==============================================================================]
- <TRange.AsStr>
- @action: Converts TRange range to string.
- @note: From..To or To..From.
+  <AsStr>
+  @action: Converts TRange range to string.
+  @note: From..To or To..From.
 [==============================================================================}
 function TRange.AsStr(const rReversed: Boolean = False): string; overload;
 begin
@@ -2846,9 +2910,9 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Str>
- @action: Converts TRange range to string.
- @note: None
+  <Str>
+  @action: Converts TRange range to string.
+  @note: None
 [==============================================================================}
 function TRange.Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string;
 begin
@@ -2856,9 +2920,9 @@ begin
 end;
 
 {==============================================================================]
- <TRange.ToStr>
- @action: Converts TRange range to string.
- @note: None
+  <ToStr>
+  @action: Converts TRange range to string.
+  @note: None
 [==============================================================================}
 function TRange.ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string;
 begin
@@ -2874,9 +2938,9 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Stringify>
- @action: Converts TRange range to string.
- @note: None
+  <Stringify>
+  @action: Converts TRange range to string.
+  @note: None
 [==============================================================================}
 function TRange.Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string;
 begin
@@ -2884,9 +2948,9 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Sum>
- @action: Returns the sum of all TRange values (start..stop)
- @note: None
+  <Sum>
+  @action: Returns the sum of all TRange values (start..stop)
+  @note: None
 [==============================================================================}
 function TRange.Sum: Int64;
 var
@@ -2898,9 +2962,9 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Summation>
- @action: Returns the sum of all TRange values (start..stop)
- @note: None
+  <Summation>
+  @action: Returns the sum of all TRange values (start..stop)
+  @note: None
 [==============================================================================}
 function TRange.Summation: Int64;
 var
@@ -2917,9 +2981,9 @@ begin
 end;
 
 {==============================================================================]
- <TRange.Total>
- @action: Returns the sum of all TRange values (start..stop)
- @note: None
+  <Total>
+  @action: Returns the sum of all TRange values (start..stop)
+  @note: None
 [==============================================================================}
 function TRange.Total: Int64;
 begin
@@ -2930,7 +2994,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Reserve>
+  <Reserve>
   @action: Allocate an integer array sized to fit the full range.
   @note: The array is preallocated with the correct length but is not filled 
          with values from start..stop. Elements are default-initialized to 0.
@@ -2941,7 +3005,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Reserve>
+  <Reserve>
   @action: Allocate an integer array sized to fit the full range.
   @note: The array is preallocated with the correct length but is not filled 
          with values from start..stop. Elements are default-initialized to 0.
@@ -2953,7 +3017,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Extract>
+  <Extract>
   @action: Extracts TRange as TIntegerArray. 
   @note: None.
 [==============================================================================}
@@ -2971,7 +3035,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Extracted>
+  <Extracted>
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
@@ -2987,7 +3051,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Steps>
+  <Steps>
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
@@ -3009,7 +3073,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Recursed>
+  <Recursed>
   @action: Returns digits of the given range.
   @note: Recursion-based.
 [==============================================================================}
@@ -3027,7 +3091,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Limit>
+  <Limit>
   @action: Restricts a value to lie within the range defined by Start and Stop.
   @note: Equivalent to clamping value to the inclusive range [Min(start, stop), Max(start, stop)].
          Returns Min(start, stop) if val is below the range.
@@ -3049,7 +3113,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.MinLimit>
+  <MinLimit>
   @action: Ensures a value is not less than the range minimum.
   @note: Returns Max(val, Min(start, stop)).
          Values above the range maximum are allowed.
@@ -3061,7 +3125,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.MaxLimit>
+  <MaxLimit>
   @action: Ensures a value is not greater than the range maximum.
   @note: Returns Min(val, Max(start, stop)).
          Values below the range minimum are allowed.
@@ -3073,7 +3137,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Sample>
+  <Sample>
   @action: Return evenly spaced integer samples across the range.
   @note: Always includes both start and stop values of the range (if sSize > 1).
          Uses rounding to map floating step positions to integers.
@@ -3093,7 +3157,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Windows>
+  <Windows>
   @action: Generate all possible subranges (sliding windows) of Self inside
            the target range. These windows may overlap.
   @note:   The number of results is (TargetSize - SelfSize + 1).
@@ -3115,7 +3179,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Sectioned>                                                             
+  <Sectioned>                                                             
   @action: Divide the target range into sequential, non-overlapping subranges
            of the same size as Self.
   @note:   Any remainder at the end of the target range is discarded.
@@ -3139,7 +3203,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Binned>
+  <Binned>
   @action: Generate grid-aligned subranges (bins) of the same size as Self
            inside the target range.
   @note:   Subranges are aligned in steps of SelfSize from the start of target.
@@ -3163,7 +3227,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Centered>
+  <Centered>
   @action: Returns a new TRange that has the same length as Self but is
            repositioned so that its midpoint equals the specified Center value.
            Self remains unchanged.
@@ -3182,7 +3246,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Shift>
+  <Shift>
   @action: Adds the given offset N to both Start and Stop of the range, 
            modifying Self in place. Returns a copy of the original range 
            before the shift.
@@ -3196,7 +3260,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Shifted>
+  <Shifted>
   @action: Returns a new TRange offset N by the given value, without modifying Self.
   @note:   Functional style; Self remains unchanged. Can be used for expression-style 
            or fluent programming.
@@ -3208,7 +3272,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Back>
+  <Back>
   @action: Subtracts the given offset N from both Start and Stop of the range,
            modifying Self in place. Returns a copy of the original range 
            before the backward shift.
@@ -3223,7 +3287,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Backed>
+  <Backed>
   @action: Returns a new TRange shifted backward by the given offset N, without 
            modifying Self.
   @note:   Default offset = 1. Functional style; Self remains unchanged. Can 
@@ -3236,7 +3300,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Increase>
+  <Increase>
   @action: Adds the given amount (default = 1) to both Start and Stop of the range,
            modifying Self in place. Returns a copy of the original range 
            before the increase.
@@ -3250,7 +3314,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Decrease>
+  <Decrease>
   @action: Subtracts the given amount (default = 1) from both Start and Stop of the range,
            modifying Self in place. Returns a copy of the original range 
            before the decrease.
@@ -3264,7 +3328,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Increment>
+  <Increment>
   @action: Adds the given amount (default = 1) to both Start and Stop of the range,
            modifying Self in place. Returns the updated range after the increase.
   @note:   Functional-style usage: Self is modified, and the returned range reflects the new values.
@@ -3277,7 +3341,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Decrement>
+  <Decrement>
   @action: Subtracts the given amount (default = 1) from both Start and Stop of the range,
            modifying Self in place. Returns the updated range after the decrease.
   @note:   Functional-style usage: Self is modified, and the returned range reflects the new values.
@@ -3290,7 +3354,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Modify>
+  <Modify>
   @action: Adds the given mStart and mStop offsets to the current range bounds,
            modifying Self in place. Returns the original range before modification.
   @note:   Used internally by operations like Contract or Expand for direct bound
@@ -3304,7 +3368,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Modified>
+  <Modified>
   @action: Returns a new TRange with Start and Stop adjusted by the specified
            mStart and mStop offsets, without modifying Self.
   @note:   Functional version of Modify. Useful for expression-style or
@@ -3317,7 +3381,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Contract>
+  <Contract>
   @action: Moves both range bounds toward each other by the given amount N,
            effectively reducing the range span. Modifies Self in place and
            returns the original (pre-contracted) range.
@@ -3334,7 +3398,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Contracted>
+  <Contracted>
   @action: Returns a new TRange contracted by the given amount N without
            modifying Self.
   @note:   Functional style version of Contract; preserves Self and is safe
@@ -3349,7 +3413,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Expand>
+  <Expand>
   @action: Moves both bounds of the range away from each other by the given
            amount N, effectively increasing the span of the range. Modifies Self
            in place and returns the original (pre-expanded) range.
@@ -3366,7 +3430,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Expanded>
+  <Expanded>
   @action: Returns a new TRange expanded by the given amount N without modifying
            Self.
   @note:   Functional version of Expand. Preserves the original range and can
@@ -3382,7 +3446,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Uniform>
+  <Uniform>
   @action: Checks whether both endpoints of the range equal the specified value.
   @note: Returns True only if (Start = Stop = val).
 [==============================================================================}
@@ -3392,7 +3456,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Uniform>
+  <Uniform>
   @action: Checks whether the range’s start and stop positions are equal.
   @note: Returns True if (Start = Stop).
 [==============================================================================}
@@ -3402,7 +3466,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Employs>
+  <Employs>
   @action: Checks if the given integer value matches either the start or stop of the range.
   @note: Useful for quickly verifying if a value is an endpoint of the range.
 [==============================================================================}
@@ -3412,7 +3476,7 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Omits>
+  <Omits>
   @action: Checks if the given integer value is NOT present as either the start or stop of the range.
   @note: Logical inverse of TRange.Employs; returns True if the value is absent from the range endpoints.
 [==============================================================================}
@@ -3422,7 +3486,7 @@ begin
 end;
 
 {==============================================================================]
-  <_TRange.Create>
+  <Create>
   @action: Creates TPoint using pX, pY 
   @note: function version
 [==============================================================================}
@@ -3433,7 +3497,7 @@ begin
 end;
 
 {==============================================================================]
-  <_TRange.Create>
+  <Create>
   @action: Creates TPoint using value 
   @note: function version
 [==============================================================================}

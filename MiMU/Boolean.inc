@@ -52,9 +52,9 @@ type
 {$I config\0D.inc}
 
 {==============================================================================]
- <TBooleanHelper.ToString>
- @action: Returns string of Self.
- @note: True => 'True', False => 'False'.
+  <ToString>
+  @action: Returns string of Self.
+  @note: True => 'True', False => 'False'.
 [==============================================================================}
 function TBooleanHelper.ToString: string; 
 begin
@@ -65,9 +65,9 @@ begin
 end;
 
 {==============================================================================]
- <TBooleanHelper.Binary>
- @action: Returns binary char based on boolean state.
- @note: True => '1', False => '0'.
+  <Binary>
+  @action: Returns binary char based on boolean state.
+  @note: True => '1', False => '0'.
 [==============================================================================}
 function TBooleanHelper.Binary: Char; 
 begin
@@ -75,7 +75,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanHelper.BinaryDigit>
+  <BinaryDigit>
   @action: Returns binary char from Boolean
   @note: True => 1 & False => 0
 [==============================================================================}
@@ -85,9 +85,9 @@ begin
 end;
 
 {==============================================================================]
- <TBooleanHelper.Bit>
- @action: Bit for helper booleans.
- @note: True => 1 | False => 0
+  <Bit>
+  @action: Bit for helper booleans.
+  @note: True => 1 | False => 0
 [==============================================================================}
 function TBooleanHelper.Bit: Integer; inline;
 begin
@@ -95,9 +95,9 @@ begin
 end;
 
 {==============================================================================]
- <TBooleanHelper.Bitify>
- @action: Bitify for helper booleans.
- @note: True => 1 | False => 0
+  <Bitify>
+  @action: Bitify for helper booleans.
+  @note: True => 1 | False => 0
 [==============================================================================}
 function TBooleanHelper.Bitify: Integer; 
 begin
@@ -105,9 +105,9 @@ begin
 end;
 
 {==============================================================================]
- <TBooleanHelper.ToInteger>
- @action: Returns integer based on state of Self.
- @note: True => 1 | False => 0
+  <ToInteger>
+  @action: Returns integer based on state of Self.
+  @note: True => 1 | False => 0
 [==============================================================================}
 function TBooleanHelper.ToInteger: Integer; 
 begin
@@ -118,9 +118,9 @@ begin
 end;
 
 {==============================================================================]
- TBooleanHelper.AsInteger>
- @action: Returns Self as Integer.
- @note: False => 0 | True => 1
+  <AsInteger>
+  @action: Returns Self as Integer.
+  @note: False => 0 | True => 1
 [==============================================================================}
 function TBooleanHelper.AsInteger: Integer; 
 begin
@@ -128,9 +128,9 @@ begin
 end;
 
 {==============================================================================]
- <TBooleanHelper.Toggle>
- @action: Returns opposite of Self.
- @note: None
+  <Toggle>
+  @action: Returns opposite of Self.
+  @note: None
 [==============================================================================}
 function TBooleanHelper.Toggle: Boolean; 
 begin
@@ -138,9 +138,9 @@ begin
 end;
 
 {==============================================================================]
- <TBooleanHelper.Opposite>
- @action: Returns opposite of Self.
- @note: None
+  <Opposite>
+  @action: Returns opposite of Self.
+  @note: None
 [==============================================================================}
 function TBooleanHelper.Opposite: Boolean; 
 begin
@@ -151,9 +151,9 @@ begin
 end;
 
 {==============================================================================]
- <TBooleanHelper.Switch>
- @action: Reverses Self.
- @note: Also returns the reversed Self.
+  <Switch>
+  @action: Reverses Self.
+  @note: Also returns the reversed Self.
 [==============================================================================}
 function TBooleanHelper.Switch: Boolean; 
 begin
@@ -165,9 +165,9 @@ begin
 end;
 
 {==============================================================================]
- <TBooleanHelper.Flip>
- @action: Reverses Self.
- @note: Also returns the reversed Self.
+  <Flip>
+  @action: Reverses Self.
+  @note: Also returns the reversed Self.
 [==============================================================================}
 function TBooleanHelper.Flip: Boolean; 
 begin
@@ -176,9 +176,9 @@ begin
 end;
 
 {==============================================================================]
- <TBooleanHelper.Shuffle>
- @action: Randomizes Self and then returns it.
- @note: None
+  <Shuffle>
+  @action: Randomizes Self and then returns it.
+  @note: None
 [==============================================================================}
 function TBooleanHelper.Shuffle: Boolean; 
 begin
@@ -187,9 +187,9 @@ begin
 end;
 
 {==============================================================================]
- <TBooleanHelper.Select>
- @action: If (Self = True) then Result := T else Result := F; 
- @note: Returns T or F based on the Self-condition.
+  <Select>
+  @action: If (Self = True) then Result := T else Result := F; 
+  @note: Returns T or F based on the Self-condition.
 [==============================================================================}
 
 function TBooleanHelper.Select(const bTrue, bFalse: Integer): Integer; overload; {$DEFINE Skeleton_Select}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select}
@@ -203,9 +203,9 @@ function TBooleanHelper.Select(const bTrue, bFalse: TBox): TBox; overload; {$DEF
 function TBooleanHelper.Select(const bTrue, bFalse: TRange): TRange; overload; {$DEFINE Skeleton_Select}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select}
 
 {==============================================================================]
- <TBooleanHelper.Evaluate>
- @action: If (Self = True) then Result := bTrue else Result := bFalse;
- @note: Returns bTrue or bFalse based on the Self-condition.
+  <Evaluate>
+  @action: If (Self = True) then Result := bTrue else Result := bFalse;
+  @note: Returns bTrue or bFalse based on the Self-condition.
 [==============================================================================}
 
 function TBooleanHelper.Evaluate(const bTrue, bFalse: Integer): Integer; overload; {$DEFINE Skeleton_Evaluate}{$I config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
@@ -219,7 +219,7 @@ function TBooleanHelper.Evaluate(const bTrue, bFalse: TBox): TBox; overload; {$D
 function TBooleanHelper.Evaluate(const bTrue, bFalse: TRange): TRange; overload; {$DEFINE Skeleton_Evaluate}{$I config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
 
 {==============================================================================]
-  <TBooleanHelper.Enable>
+  <Enable>
   @action: Sets Self to True (enabled).
   @note: Returns True if Self was previously False.
 [==============================================================================}
@@ -230,7 +230,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanHelper.Disable>
+  <Disable>
   @action: Sets Self to False (disabled).
   @note: Returns True if Self was previously True.
 [==============================================================================}
@@ -241,7 +241,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanHelper.SetFalse>
+  <SetFalse>
   @action: Sets Self as False and returns 0.
   @note: None.
 [==============================================================================}
@@ -252,7 +252,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanHelper.SetTrue>
+  <SetTrue>
   @action: Sets Self as True and returns 1.
   @note: None.
 [==============================================================================}
@@ -263,7 +263,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanHelper.SwitchOn>
+  <SwitchOn>
   @action: Sets Self to the given state if different.
   @note: Returns True if Self was changed.
 [==============================================================================}
@@ -275,7 +275,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanHelper.SwitchOff>
+  <SwitchOff>
   @action: Inverts Self only if it equals the given state.
   @note: Returns True if Self was changed.
 [==============================================================================}

@@ -33,14 +33,14 @@ type
 {$I config\0D.inc}
 
 {==============================================================================]
-  <TCharHelper.Compare>
+  <Compare>
   @action: Compares char with target.
   @note: Results: 0=EQUAL, 1=char>target, -1=char<target
 [==============================================================================}
 function TCharHelper.Compare(const target: Char): Integer; inline; {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
 
 {==============================================================================]
-  <TCharHelper.Sign>
+  <Sign>
   @action: Compares the current string (Self) with a target string and returns
            a directional sign indicating whether the target is greater, equal,
            or smaller than Self.
@@ -53,32 +53,32 @@ function TCharHelper.Compare(const target: Char): Integer; inline; {$DEFINE Skel
 function TCharHelper.Sign(const target: Char): Integer; inline; {$DEFINE Skeleton_Sign}{$I config\Skeletons.inc}{$UNDEF Skeleton_Sign}
 
 {==============================================================================]
- <TCharHelper.Precede>
- @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
- @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
+  <Precede>
+  @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
+  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
 function TCharHelper.Precede(const target: Char; const aAscending: Boolean): Boolean; overload; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
 
 {==============================================================================]
- <TCharHelper.Ascending>
- @action  Returns True if the helper’s value is less than or equal to         
-          the given target value. Useful as a comparison predicate when        
-          sorting or merging arrays in ascending order.
- @note: This method does not modify either value; it simply performs a <= comparison.
+  <Ascending>
+  @action  Returns True if the helper’s value is less than or equal to         
+           the given target value. Useful as a comparison predicate when        
+           sorting or merging arrays in ascending order.
+  @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}
 function TCharHelper.Ascending(const target: Char): Boolean; inline; {$DEFINE Skeleton_Ascending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Ascending}
 
 {==============================================================================]
- <TCharHelper.Descending>
- @action: Returns True if the helper’s value is greater than or equal to
-          the given target value. Use as a comparison predicate when
-          sorting or merging arrays in descending order.
- @note: Pure comparison only; equivalent to Self >= target.
+  <Descending>
+  @action: Returns True if the helper’s value is greater than or equal to
+           the given target value. Use as a comparison predicate when
+           sorting or merging arrays in descending order.
+  @note: Pure comparison only; equivalent to Self >= target.
 [==============================================================================}
 function TCharHelper.Descending(const target: Char): Boolean; inline; {$DEFINE Skeleton_Descending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Descending}
 
 {==============================================================================]
-  <TCharHelper.Str>
+  <Str>
   @action: Returns Char as string with size.
   @note: size * Char.
 [==============================================================================}
@@ -94,7 +94,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharHelper.ToStr>
+  <ToStr>
   @action: Returns Char as string with size.
   @note: size * Char.
 [==============================================================================}
@@ -108,7 +108,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharHelper.IsNumber>
+  <IsNumber>
   @action: Returns true if Char is a number.
   @note: None.
 [==============================================================================}
@@ -118,7 +118,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharHelper.IsNumeric>
+  <IsNumeric>
   @action: Returns true if Char is a number.
   @note: None.
 [==============================================================================}
@@ -128,7 +128,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharHelper.IsLower>
+  <IsLower>
   @action: Returns true if Char is part of lowercased characters
   @note: Limited to ASCII.
 [==============================================================================}
@@ -138,7 +138,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharHelper.IsUpper>
+  <IsUpper>
   @action: Returns true if Char is part of uppercased characters
   @note: Limited to ASCII.
 [==============================================================================}
@@ -148,7 +148,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharHelper.IsLowercase>
+  <IsLowercase>
   @action: Returns true if Char is part of lowercased characters
   @note: Limited to ASCII.
 [==============================================================================}
@@ -158,7 +158,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharHelper.IsUppercase>
+  <IsUppercase>
   @action: Returns true if Char is part of uppercased characters
   @note: Limited to ASCII.
 [==============================================================================}
@@ -168,7 +168,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharHelper.IsLetter>
+  <IsLetter>
   @action: Returns true if Char is part of lowercased or uppercased characters
   @note: Limited to ASCII.
 [==============================================================================}
@@ -181,7 +181,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharHelper.Swapcase>
+  <Swapcase>
   @action: Swaps casing of Char, if it is part of letters
   @note: Limited to ASCII.
 [==============================================================================}
@@ -200,7 +200,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharHelper.Upper>
+  <Upper>
   @action: Uppers char casing if Char is part of lowercased characters
   @note: Limited to ASCII.
 [==============================================================================}
@@ -216,7 +216,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharHelper.Lower>
+  <Lower>
   @action: Lowers char casing if Char is part of uppercased characters
   @note: Limited to ASCII.
 [==============================================================================}

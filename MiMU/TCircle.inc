@@ -24,26 +24,26 @@ type
   TCircleArray = array of TCircle;
   T2DCircleArray = array of TCircleArray;
   
-operator=(const a, b: TCircle): Boolean;
-operator<>(const a, b: TCircle): Boolean;
+operator =(const a, b: TCircle): Boolean;
+operator <>(const a, b: TCircle): Boolean;
 {$ENDIF}
 
 {$IFDEF HELPERS}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-operator=(const a, b: TCircle): Boolean;
+operator =(const a, b: TCircle): Boolean;
 begin
   Result := ((a.Center = b.Center) and (a.Radius = b.Radius));
 end;
 
-operator<>(const a, b: TCircle): Boolean;
+operator <>(const a, b: TCircle): Boolean;
 begin
   Result := not (a = b);
 end;
 
 {==============================================================================]
-  <TCircle.Create>
+  <Create>
   @action: Create a TCircle with center point and radius
   @note: None.
 [==============================================================================}
@@ -54,7 +54,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCircle.Create>
+  <Create>
   @action: Create a TCircle with center point and radius
   @note: None.
 [==============================================================================}
@@ -65,7 +65,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCircle.Construct>
+  <Construct>
   @action: Constructs TCircle with cCenter and cRadius.
   @note: None.
 [==============================================================================}
@@ -76,7 +76,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCircle.Construct>
+  <Construct>
   @action: Constructs TCircle with centerX, centerY and radius.
   @note: None.
 [==============================================================================}
@@ -87,7 +87,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCircle.Contains>
+  <Contains>
   @action: Returns true if TCircle contains pt.
   @note: None.
 [==============================================================================}
@@ -97,7 +97,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCircle.Item>
+  <Item>
   @action: Returns true if TCircle contains pt.
   @note: None.
 [==============================================================================}
@@ -107,7 +107,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCircle.Pixel>
+  <Pixel>
   @action: Returns true if TCircle contains pt.
   @note: None.
 [==============================================================================}
@@ -117,7 +117,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCircle.Bounds>
+  <Bounds>
   @action: Returns TCircle boundaries as TBox.
   @note: None.
 [==============================================================================}
@@ -127,7 +127,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCircle.Boundaries>
+  <Boundaries>
   @action: Returns TCircle boundaries as TBox.
   @note: None.
 [==============================================================================}
@@ -137,7 +137,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCircle.BoundingBox>
+  <BoundingBox>
   @action: Returns TCircle boundaries as TBox.
   @note: None.
 [==============================================================================}
@@ -150,7 +150,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCircle.Envelope>
+  <Envelope>
   @action: Returns TCircle boundaries as TBox.
   @note: None.
 [==============================================================================}
@@ -169,7 +169,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCircle.TPA>
+  <TPA>
   @action: Returns TCircle points as TPointArray.
   @note: None.
 [==============================================================================}
@@ -188,7 +188,7 @@ begin
 end;
 
 {==============================================================================]
- <TCircle.Points>
+ <Points>
  @action: Returns all the points of TCircle.
  @note: None.
 [==============================================================================}
@@ -204,7 +204,7 @@ begin
 end;
 
 {==============================================================================]
- <TCircle.BorderPoints>
+ <BorderPoints>
  @action: Returns border points of TCircle.
  @note: Supports custom count.
 [==============================================================================}
@@ -223,7 +223,7 @@ begin
 end;
 
 {==============================================================================]
- <TCircle.Border>
+ <Border>
  @action: Returns border points of TCircle.
  @note: None.
 [==============================================================================}

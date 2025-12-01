@@ -38,9 +38,9 @@ type
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
- <TInt64Helper.Prime>
- @action: Returns true if N is prime.
- @note: None.
+  <Prime>
+  @action: Returns true if N is prime.
+  @note: None.
 [==============================================================================}
 function TInt64Helper.Prime: Boolean;
 var
@@ -60,9 +60,9 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.IsPrime>
- @action: Returns true if N is prime.
- @note: None.
+  <IsPrime>
+  @action: Returns true if N is prime.
+  @note: None.
 [==============================================================================}
 function TInt64Helper.IsPrime: Boolean;
 var
@@ -89,9 +89,9 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.Parity>
- @action: Returns the Int64 Parity Bit as Byte.
- @note: 0 = even, 1 = odd.
+  <Parity>
+  @action: Returns the Int64 Parity Bit as Byte.
+  @note: 0 = even, 1 = odd.
 [==============================================================================}
 function TInt64Helper.Parity: Byte; inline;
 begin
@@ -99,9 +99,9 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.Even>
- @action: Returns true if Int64 value x is an even number.
- @note: None
+  <Even>
+  @action: Returns true if Int64 value x is an even number.
+  @note: None
 [==============================================================================}
 function TInt64Helper.Even: Boolean; inline;
 begin
@@ -109,9 +109,9 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.Odd>
- @action: Returns true if Int64 value x is an odd number.
- @note: None
+  <Odd>
+  @action: Returns true if Int64 value x is an odd number.
+  @note: None
 [==============================================================================}
 function TInt64Helper.Odd: Boolean; inline;
 begin
@@ -119,65 +119,65 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.Increase>
- @action: Increases the Int64 value x by N.
- @note: Returns x before increasing it with N!
+  <Increase>
+  @action: Increases the Int64 value x by N.
+  @note: Returns x before increasing it with N!
 [==============================================================================}
 function TInt64Helper.Increase(const N: Int64 = 1): Int64; overload; {$DEFINE Skeleton_Increase}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increase}
 
 {==============================================================================]
- <TInt64Helper.Increase>
- @action: Increases the Int64 value x by 1 if B is true.
- @note: Returns x before increasing it!
+  <Increase>
+  @action: Increases the Int64 value x by 1 if B is true.
+  @note: Returns x before increasing it!
 [==============================================================================}
 function TInt64Helper.Increase(const B: Boolean): Int64; overload; {$DEFINE Skeleton_IncreaseB}{$I config\Skeletons.inc}{$UNDEF Skeleton_IncreaseB}
 
 {==============================================================================]
-  <TInt64Helper.Decrease>
- @action: Decreases the Int64 value x by N.
- @note: Returns x before decreasing it with N!
+  <Decrease>
+  @action: Decreases the Int64 value x by N.
+  @note: Returns x before decreasing it with N!
 [==============================================================================}
 function TInt64Helper.Decrease(const N: Int64 = 1): Int64; overload; {$DEFINE Skeleton_Decrease}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrease}
 
 {==============================================================================]
-  <TInt64Helper.Decrease>
- @action: Decreases the Int64 value x by 1 if B is true.
- @note: Returns x before decreasing it with N!
+  <Decrease>
+  @action: Decreases the Int64 value x by 1 if B is true.
+  @note: Returns x before decreasing it with N!
 [==============================================================================}
 function TInt64Helper.Decrease(const B: Boolean): Int64; overload; {$DEFINE Skeleton_DecreaseB}{$I config\Skeletons.inc}{$UNDEF Skeleton_DecreaseB}
 
 {==============================================================================]
- <TInt64Helper.Increment>
- @action: Increases the Int64 value x by N.
- @note: Returns the increased x!
+  <Increment>
+  @action: Increases the Int64 value x by N.
+  @note: Returns the increased x!
 [==============================================================================}
 function TInt64Helper.Increment(const N: Int64 = 1): Int64; overload; {$DEFINE Skeleton_Increment}{$I config\Skeletons.inc}{$UNDEF Skeleton_Increment}
 
 {==============================================================================]
- <TInt64Helper.Increment>
- @action: Increases the Int64 value x by 1 if B is true.
- @note: Returns the increased x!
+  <Increment>
+  @action: Increases the Int64 value x by 1 if B is true.
+  @note: Returns the increased x!
 [==============================================================================}
 function TInt64Helper.Increment(const B: Boolean): Int64; overload; {$DEFINE Skeleton_IncrementB}{$I config\Skeletons.inc}{$UNDEF Skeleton_IncrementB}
 
 {==============================================================================]
-  <TInt64Helper.Decrement>
- @action: Decreases the Int64 value x by N.
- @note: Returns the decreased x!
+  <Decrement>
+  @action: Decreases the Int64 value x by N.
+  @note: Returns the decreased x!
 [==============================================================================}
 function TInt64Helper.Decrement(const N: Int64 = 1): Int64; overload; {$DEFINE Skeleton_Decrement}{$I config\Skeletons.inc}{$UNDEF Skeleton_Decrement}
 
 {==============================================================================]
-  <TInt64Helper.Decrement>
- @action: Decreases the Int64 value x by 1 if B is true.
- @note: Returns the decreased x!
+  <Decrement>
+  @action: Decreases the Int64 value x by 1 if B is true.
+  @note: Returns the decreased x!
 [==============================================================================}
 function TInt64Helper.Decrement(const B: Boolean): Int64; overload; {$DEFINE Skeleton_DecrementB}{$I config\Skeletons.inc}{$UNDEF Skeleton_DecrementB}
 
 {==============================================================================]
- <TInt64Helper.DigitCount>
- @action: Returns count of digits Int64 x value contains.
- @note: If x is negative value, the negative sign is ignored.
+  <DigitCount>
+  @action: Returns count of digits Int64 x value contains.
+  @note: If x is negative value, the negative sign is ignored.
         Works with -9223372036854775808 - 9223372036854775807! 
 [==============================================================================}
 function TInt64Helper.DigitCount: Integer;
@@ -194,11 +194,11 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.Digitz>
- @action: Converts Int64 value (x) to digits of it.
-          Example: 1234 => 1,2,3,4, -999 => 9,9,9
- @note: If x is negative value, the negative sign is ignored.
-        Works with -9223372036854775808 - 9223372036854775807! 
+  <Digitz>
+  @action: Converts Int64 value (x) to digits of it.
+           Example: 1234 => 1,2,3,4, -999 => 9,9,9
+  @note: If x is negative value, the negative sign is ignored.
+         Works with -9223372036854775808 - 9223372036854775807! 
 [==============================================================================}
 function TInt64Helper.Digitz: TIntegerArray;
 var
@@ -220,11 +220,11 @@ begin
 end; 
 
 {==============================================================================]
- <TInt64Helper.Digits>
- @action: Converts Int64 value (x) to digits of it.
-          Example: 1234 => 1,2,3,4, -999 => 9,9,9
- @note: If x is negative value, the negative sign is ignored.
-        Works with -9223372036854775808 - 9223372036854775807! 
+  <Digits>
+  @action: Converts Int64 value (x) to digits of it.
+           Example: 1234 => 1,2,3,4, -999 => 9,9,9
+  @note: If x is negative value, the negative sign is ignored.
+         Works with -9223372036854775808 - 9223372036854775807! 
 [==============================================================================}
 function TInt64Helper.Digits: TIntegerArray;
 var
@@ -239,24 +239,24 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.Compare>
- @action: Compares x with target target.
-          Results: 0=EQUAL, 1=x>target, -1=x<target
- @note: None
+  <Compare>
+  @action: Compares x with target target.
+           Results: 0=EQUAL, 1=x>target, -1=x<target
+  @note: None
 [==============================================================================}
 function TInt64Helper.Compare(const target: Int64): Integer; inline; {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
 
 {==============================================================================]
- <TInt64Helper.Precede>
- @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
- @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
+  <Precede>
+  @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
+  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
 function TInt64Helper.Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
 
 {==============================================================================]
- <TInt64Helper.Distance>
- @action: Returns the distance between x and T.
- @note: None
+  <Distance>
+  @action: Returns the distance between x and T.
+  @note: None
 [==============================================================================}
 function TInt64Helper.Distance(const T: Int64): Int64; inline;
 begin
@@ -264,9 +264,9 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.Difference>
- @action: Returns the difference from x to T.
- @note: None
+  <Difference>
+  @action: Returns the difference from x to T.
+  @note: None
 [==============================================================================}
 function TInt64Helper.Difference(const T: Int64): Int64; inline;
 begin
@@ -274,10 +274,10 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.Opposite>
- @action: Returns the opposite number of x. 
-          -9999 to 9999 OR 9999 to -9999 (- <=> +) 
- @note: None
+  <Opposite>
+  @action: Returns the opposite number of x. 
+           -9999 to 9999 OR 9999 to -9999 (- <=> +) 
+  @note: None
 [==============================================================================}
 function TInt64Helper.Opposite: Int64; inline;
 begin
@@ -285,22 +285,22 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.Sign>
- @action: Compares the current double (Self) with a target double and returns
-          a directional sign indicating whether the target is greater, equal,
-          or smaller than Self.
- @note:   Returns:
-            1  if Self < target (target is larger → ascending)
-            0  if Self = target (no change)
-           -1  if Self > target (target is smaller → descending)
-          Useful for detecting sequence direction, ordering, or range computation.
+  <Sign>
+  @action: Compares the current double (Self) with a target double and returns
+           a directional sign indicating whether the target is greater, equal,
+           or smaller than Self.
+  @note: Returns:
+         1  if Self < target (target is larger → ascending)
+         0  if Self = target (no change)
+         -1  if Self > target (target is smaller → descending)
+         Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
 function TInt64Helper.Sign(const target: Int64 = 0): Integer; inline; {$DEFINE Skeleton_Sign}{$I config\Skeletons.inc}{$UNDEF Skeleton_Sign}
 
 {==============================================================================]
- <TInt64Helper.Shuffle>
- @action: Random() with support for negative Range.
- @note: None
+  <Shuffle>
+  @action: Random() with support for negative Range.
+  @note: None
 [==============================================================================}
 function TInt64Helper.Shuffle: Int64;
 begin
@@ -310,9 +310,9 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.Over>
- @action: Returns true if x is higher than target.
- @note: None
+  <Over>
+  @action: Returns true if x is higher than target.
+  @note: None
 [==============================================================================}
 function TInt64Helper.Over(const target: Int64): Boolean; inline;
 begin
@@ -320,9 +320,9 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.Oversize>
- @action: Returns true if x is higher than limit.
- @note: None
+  <Oversize>
+  @action: Returns true if x is higher than limit.
+  @note: None
 [==============================================================================}
 function TInt64Helper.Oversize(const limit: Int64): Boolean; inline;
 begin
@@ -330,9 +330,9 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.Under>
- @action: Returns true if x is lower than target.
- @note: None
+  <Under>
+  @action: Returns true if x is lower than target.
+  @note: None
 [==============================================================================}
 function TInt64Helper.Under(const target: Int64): Boolean; inline;
 begin
@@ -340,9 +340,9 @@ begin
 end;
 
 {==============================================================================]
- <TInt64Helper.Undersize>
- @action: Returns true if x is lower than limit.
- @note: None
+  <Undersize>
+  @action: Returns true if x is lower than limit.
+  @note: None
 [==============================================================================}
 function TInt64Helper.Undersize(const limit: Int64): Boolean; inline;
 begin

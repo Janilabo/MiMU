@@ -15,7 +15,7 @@ type
 {$I config\2D.inc}
 
 {==============================================================================]
-  <T2DPointArray.AllBounds>
+  <AllBounds>
   @action: Returns an array containing the bounding box of each point in the array.
   @note: Each element in the result corresponds to the bounds of a single point.
 [==============================================================================}
@@ -29,7 +29,7 @@ begin
 end;
 
 {==============================================================================]
-  <T2DPointArray.AllBounds(var aBounds)>
+  <AllBounds(var aBounds)>
   @action: Returns an array of per-point bounding boxes and outputs the overall bounding box covering all points.
   @note: The 'aBounds' parameter receives the minimal bounding box enclosing all individual boxes.
 [==============================================================================}

@@ -16,7 +16,7 @@ type
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <TConnection.Create>
+  <Create>
   @action: Creates TConnection with index1 and index2.
   @note: None.
 [==============================================================================}

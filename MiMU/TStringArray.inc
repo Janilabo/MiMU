@@ -18,7 +18,7 @@ type
 {$I config\1D.inc}
 
 {==============================================================================]
-  <TStringArrayHelper.Tally>
+  <Tally>
   @action: Returns total length of TStringArray strings combined together.
   @note: None.
 [==============================================================================}
@@ -32,7 +32,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringArrayHelper.Concat>
+  <Concat>
   @action: Joins all the strings of array as single string.
   @note: Chaining.
 [==============================================================================}
@@ -48,7 +48,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringArrayHelper.Concatenate>
+  <Concatenate>
   @action: Joins all the strings of array as single string.
   @note: Chaining.
 [==============================================================================}
@@ -69,7 +69,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringArrayHelper.Flatten>
+  <Flatten>
   @action: Joins all the strings of array as single string.
   @note: Chaining.
          Warning: This algorithm is not recommended for lengthy string arrays!
@@ -85,7 +85,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringArrayHelper.Glue>
+  <Glue>
   @action: Joins all the strings of array as single string.
   @note: Chaining.
 [==============================================================================}

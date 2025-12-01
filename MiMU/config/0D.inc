@@ -10,7 +10,7 @@ function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DArr;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
- <var.TArray(aSize: Integer): TArray>
+ <TArray>
  @action: Creates TArray with Self.
  @note: aSize will be Length of the created array.
 [==============================================================================}
@@ -24,7 +24,7 @@ begin
 end;
 
 {==============================================================================]
- <var.T2DArray(size1D, size2D: Integer): T2DArray>
+ <T2DArray>
  @action: Creates 2D array with Self.
  @note: None.
 [==============================================================================}

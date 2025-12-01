@@ -238,7 +238,7 @@ type
 {$I config\1D.inc}
 
 {==============================================================================]
-  <TPointArrayHelper.Bounds>
+  <Bounds>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
@@ -265,7 +265,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Bounds>
+  <Bounds>
   @action: Returns bounding box around TPointArray arr.
   @note: Stores width and height of bounds to width and height variables.
 [==============================================================================}
@@ -287,7 +287,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.BoundingBox>
+  <BoundingBox>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
@@ -309,7 +309,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Boundaries>
+  <Boundaries>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
@@ -330,7 +330,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Box>
+  <Box>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
@@ -346,7 +346,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.MinMax>
+  <MinMax>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
@@ -367,7 +367,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Boxed>
+  <Boxed>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
@@ -393,7 +393,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Region>
+  <Region>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
@@ -419,7 +419,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Coverage>
+  <Coverage>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
@@ -449,7 +449,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Undupe>
+  <Undupe>
   @action: Removes duplicates from arr.
   @note: Returns number of duplicate items that were removed from arr.
 [==============================================================================}
@@ -460,7 +460,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Unduped>
+  <Unduped>
   @action: Returns arr without duplicates.
   @note: None.
 [==============================================================================}
@@ -485,7 +485,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Invert>
+  <Invert>
   @action: Returns inverted version of arr.
   @note: None.
 [==============================================================================}
@@ -516,7 +516,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Inverted>
+  <Inverted>
   @action: Returns inverted version of arr.
   @note: Supports custom bounds.
 [==============================================================================}
@@ -539,7 +539,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Inverse>
+  <Inverse>
   @action: Returns inverted version of arr.
   @note: Supports custom bounds.
 [==============================================================================}
@@ -569,10 +569,10 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Edge>
- @action: Returns with all the edge-points from arr.
-          Supports both, 4-way and 8-way direction scanning styles.
- @note: Edge-points are points that are on the edge of the TPointArray, not completely surrounded by other points.
+  <Edge>
+  @action: Returns with all the edge-points from arr.
+           Supports both, 4-way and 8-way direction scanning styles.
+  @note: Edge-points are points that are on the edge of the TPointArray, not completely surrounded by other points.
 [==============================================================================}
 function TPointArrayHelper.Edge(const scan8W: Boolean = False): TPointArray; 
 var
@@ -612,7 +612,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.FloodFill>
+  <FloodFill>
   @action:: Outputs Flood Filled points from TPointArray or non-TPointArray points inside an area,
             starting from start, based on FloodFill() action.
             Supports custom area by area as TBox.
@@ -681,11 +681,11 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray_FloodFill
- @action: Outputs Flood Filled points from TPointArray or non-TPointArray points inside arr Bounds,
-          starting from start, based on FloodFill() action.
- @note: Make sure start is inside TPA Bounds.
-        Doesn't pay attention to ANYTHING outside those boundaries. :)
+  <FloodFill>
+  @action: Outputs Flood Filled points from TPointArray or non-TPointArray points inside arr Bounds,
+           starting from start, based on FloodFill() action.
+  @note: Make sure start is inside TPA Bounds.
+         Doesn't pay attention to ANYTHING outside those boundaries. :)
 [==============================================================================}
 function TPointArrayHelper.FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; 
 begin
@@ -693,9 +693,13 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Xs>
- @action: Returns X-values from arr as TIntegerArray.
- @note: None.
+  <Xs>
+  @action: Extracts the X-coordinates of all points in the array and returns
+           them as a TIntegerArray. The order of values in the result matches
+           the order of the points in the source array.
+  @note: This is a direct projection operation; no filtering, sorting, or
+         transformation is applied. The returned array always has the same
+         length as the source.
 [==============================================================================}
 function TPointArrayHelper.Xs: TIntegerArray; overload; 
 var
@@ -707,9 +711,11 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Ys>
- @action: Returns Y-values from arr as TIntegerArray.
- @note: None.
+  <Ys>
+  @action: Extracts the Y-coordinates of all points in the array and returns
+           them as a TIntegerArray, preserving the original element order.
+  @note: Performs a simple coordinate projection without any modification or
+         reordering. The returned array has the same length as the input.
 [==============================================================================}
 function TPointArrayHelper.Ys: TIntegerArray; overload; 
 var
@@ -721,9 +727,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.X>
- @action: Returns X-values from arr as TIntegerArray.
- @note: None.
+  <XValues>
+  @action: Returns X-values from arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.XValues: TIntegerArray; overload; 
 var
@@ -736,9 +742,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Y>
- @action: Returns Y-values from arr as TIntegerArray.
- @note: None.
+  <YValues>
+  @action: Returns Y-values from arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.YValues: TIntegerArray; overload; 
 var
@@ -751,9 +757,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Unzip>
- @action: Stores arr X and Y values to xArr and yArr.
- @note: Returns Length(arr).
+  <Unzip>
+  @action: Stores arr X and Y values to xArr and yArr.
+  @note: Returns Length(arr).
 [==============================================================================}
 function TPointArrayHelper.Unzip(var xArr, yArr: TIntegerArray): Integer; 
 var
@@ -770,9 +776,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Zip>
- @action: Zips TPointArray with xArr and yArr.
- @note: Uses minimum length(!), if xArr differs from yArr size.
+  <Zip>
+  @action: Zips TPointArray with xArr and yArr.
+  @note: Uses minimum length(!), if xArr differs from yArr size.
 [==============================================================================}
 function TPointArrayHelper.Zip(const xArr, yArr: TIntegerArray): Integer; 
 var
@@ -785,7 +791,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Extent>
+  <Extent>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
@@ -804,9 +810,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Horizontal>
- @action: Returns Horizontal-axis from TPointArray as TRange.
- @note: MinMax X-values.
+  <Horizontal>
+  @action: Returns Horizontal-axis from TPointArray as TRange.
+  @note: MinMax X-values.
 [==============================================================================}
 function TPointArrayHelper.Horizontal: TRange; overload; 
 var
@@ -826,9 +832,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Vertical>
- @action: Returns Vertical-axis from TPointArray as TRange.
- @note: MinMax Y-values.
+  <Vertical>
+  @action: Returns Vertical-axis from TPointArray as TRange.
+  @note: MinMax Y-values.
 [==============================================================================}
 function TPointArrayHelper.Vertical: TRange; overload; 
 var
@@ -848,10 +854,10 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.Neighborify>
- @action: Groups points into clusters of connected neighbors based on 4- or 8-directional adjacency.
- @note: Uses a flood-fill algorithm on a bounding-box grid. Returns a T2DPointArray where each sub-array is a connected component.
-        Empty arrays return [] and single-point arrays return [Self].
+  <Neighborify>
+  @action: Groups points into clusters of connected neighbors based on 4- or 8-directional adjacency.
+  @note: Uses a flood-fill algorithm on a bounding-box grid. Returns a T2DPointArray where each sub-array is a connected component.
+         Empty arrays return [] and single-point arrays return [Self].
 [==============================================================================}
 function TPointArrayHelper.Neighborify(const adjacency8: Boolean = True): T2DPointArray; overload;
 var
@@ -913,12 +919,12 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.Regionize>
- @action: Groups points in the array into clusters based on rectangular neighborhoods
-          defined by X and Y radii.
- @note: Clusters are formed by examining a box of size XRadius x YRadius around each
-        point. Points within the same box are grouped together. This version does not
-        use a distance function; it is grid/box-based.
+  <Regionize>
+  @action: Groups points in the array into clusters based on rectangular neighborhoods
+           defined by X and Y radii.
+  @note: Clusters are formed by examining a box of size XRadius x YRadius around each
+         point. Points within the same box are grouped together. This version does not
+         use a distance function; it is grid/box-based.
 [==============================================================================}
 function TPointArrayHelper.Regionize(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
@@ -994,12 +1000,12 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.Regionize>
- @action: Groups points in the array into clusters based on a distance threshold.
- @note: Clusters are formed by examining all points within the array using the
-        provided distance function. Points within the specified radius (Double)
-        of any cluster member are added to the same cluster. This version supports
-        arbitrary distance metrics via the TDistanceFunction parameter.
+  <Regionize>
+  @action: Groups points in the array into clusters based on a distance threshold.
+  @note: Clusters are formed by examining all points within the array using the
+         provided distance function. Points within the specified radius (Double)
+         of any cluster member are added to the same cluster. This version supports
+         arbitrary distance metrics via the TDistanceFunction parameter.
 [==============================================================================}
 function TPointArrayHelper.Regionize(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
 var
@@ -1072,9 +1078,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.CSplit>
- @action: Groups points into clusters based on horizontal (X-axis) proximity.
- @note: Sorts by column (X) unless already sorted. Uses distance function or fixed x/y radii.
+  <CSplit>
+  @action: Groups points into clusters based on horizontal (X-axis) proximity.
+  @note: Sorts by column (X) unless already sorted. Uses distance function or fixed x/y radii.
 [==============================================================================}
 function TPointArrayHelper.CSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
 var
@@ -1129,6 +1135,24 @@ begin
   Result := Self.CSplit(radius, @Euclidean, sSorted);
 end;
 
+{==============================================================================]
+  <CSplit>
+  @action: Splits the point set into disjoint clusters using a column-oriented
+           expansion rule. A working copy of the array is optionally sorted by
+           (X, then Y). Each cluster is formed by starting from an unassigned
+           seed point and adding all points whose horizontal separation from
+           the seed is within xRadius and whose vertical separation is within
+           yRadius. Newly added points become additional expansion sources until
+           no further points qualify.
+  @note: This method is the column-ordered analogue to RSplit. When sSorted
+         is False, the input is first sorted by column (X-major order), which
+         determines the order in which seeds are encountered but does not
+         affect cluster membership. The expansion process is a simple iterative
+         scan: for every point already in the cluster, all remaining points are
+         tested for axis-aligned proximity (rectangular window). Complexity is
+         O(N²) in the worst case. No metric distance is evaluated—only direct
+         coordinate comparisons.
+[==============================================================================}
 function TPointArrayHelper.CSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
 var
   i, j, k, r, l: Integer;
@@ -1178,9 +1202,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.RSplit>
- @action: Groups points into clusters based on vertical (Y-axis) proximity.
- @note: Sorts by row (Y) unless already sorted. Uses distance function or fixed x/y radii.
+  <RSplit>
+  @action: Groups points into clusters based on vertical (Y-axis) proximity.
+  @note: Sorts by row (Y) unless already sorted. Uses distance function or fixed x/y radii.
 [==============================================================================}
 function TPointArrayHelper.RSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
 var
@@ -1235,6 +1259,24 @@ begin
   Result := Self.RSplit(radius, @Euclidean, sSorted);
 end;
 
+{==============================================================================]
+  <RSplit>
+  @action: Partitions the point set into disjoint groups based on axis-aligned
+           proximity criteria, optionally assuming the input is already sorted
+           by (Y, then X). Each group is built by repeatedly expanding from a
+           seed point and adding all unassigned points whose vertical separation
+           from the seed is within yRadius and whose horizontal separation is
+           within xRadius. Returns an array of these groups.
+  @note: This procedure implements a row-oriented regional split. If sSorted
+         is False, the method first creates a working copy of the input and
+         sorts it by Y (and secondarily by X). The grouping uses a simple
+         expansion pass (not a queue-based BFS) in which newly added points
+         are appended to the cluster and subsequently used as additional
+         expansion seeds. Ordering of the sorted working array influences
+         cluster formation order but not final cluster membership. Worst-case
+         complexity is O(N²). No distance metric is used—only coordinate-wise
+         comparisons.
+[==============================================================================}
 function TPointArrayHelper.RSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
 var
   i, j, k, r, l: Integer;
@@ -1284,11 +1326,11 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.XSplit>
- @action: Splits the point array into clusters based on X/Y coordinate proximity.
- @note: Optimized for arrays sorted by X (ascending). 
-        Each group contains points within |ΔX| ≤ xRadius and |ΔY| ≤ yRadius.
-        If sSorted = True, sorting is skipped to save time.
+  <XSplit>
+  @action: Splits the point array into clusters based on X/Y coordinate proximity.
+  @note: Optimized for arrays sorted by X (ascending). 
+         Each group contains points within |ΔX| ≤ xRadius and |ΔY| ≤ yRadius.
+         If sSorted = True, sorting is skipped to save time.
 [==============================================================================}
 function TPointArrayHelper.XSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
 var
@@ -1350,11 +1392,11 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.XSplit>
- @action: Splits the point array into clusters using a custom distance function.
- @note: Efficient for data already sorted by X.
-        Points are grouped if distFunc(p, q) ≤ radius.
-        The X-range window limits comparisons for performance (O(n log n) typical).
+  <XSplit>
+  @action: Splits the point array into clusters using a custom distance function.
+  @note: Efficient for data already sorted by X.
+         Points are grouped if distFunc(p, q) ≤ radius.
+         The X-range window limits comparisons for performance (O(n log n) typical).
 [==============================================================================}
 function TPointArrayHelper.XSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
 var
@@ -1416,10 +1458,10 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.XSplit>
- @action: Splits the point array into clusters using Euclidean distance.
- @note: Shorthand for XSplit(radius, @Euclidean, sSorted).
-        Groups points if their Euclidean distance ≤ radius.
+  <XSplit>
+  @action: Splits the point array into clusters using Euclidean distance.
+  @note: Shorthand for XSplit(radius, @Euclidean, sSorted).
+         Groups points if their Euclidean distance ≤ radius.
 [==============================================================================}
 function TPointArrayHelper.XSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
 begin
@@ -1427,11 +1469,11 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.YSplit>
- @action: Splits the point array into clusters based on Y/X coordinate proximity.
- @note: Optimized for arrays sorted by Y (ascending).
-        Each group contains points within |ΔY| ≤ yRadius and |ΔX| ≤ xRadius.
-        If sSorted = True, sorting is skipped to save time.
+  <YSplit>
+  @action: Splits the point array into clusters based on Y/X coordinate proximity.
+  @note: Optimized for arrays sorted by Y (ascending).
+         Each group contains points within |ΔY| ≤ yRadius and |ΔX| ≤ xRadius.
+         If sSorted = True, sorting is skipped to save time.
 [==============================================================================}
 function TPointArrayHelper.YSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
 var
@@ -1493,11 +1535,11 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.YSplit>
- @action: Splits the point array into clusters using a custom distance function.
- @note: Efficient for data already sorted by Y.
-        Points are grouped if distFunc(p, q) ≤ radius.
-        Y-sorted scanning limits comparisons for faster clustering.
+  <YSplit>
+  @action: Splits the point array into clusters using a custom distance function.
+  @note: Efficient for data already sorted by Y.
+         Points are grouped if distFunc(p, q) ≤ radius.
+         Y-sorted scanning limits comparisons for faster clustering.
 [==============================================================================}
 function TPointArrayHelper.YSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
 var
@@ -1559,10 +1601,10 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.YSplit>
- @action: Splits the point array into clusters using Euclidean distance.
- @note: Shorthand for YSplit(radius, @Euclidean, sSorted).
-        Groups points if their Euclidean distance ≤ radius.
+  <YSplit>
+  @action: Splits the point array into clusters using Euclidean distance.
+  @note: Shorthand for YSplit(radius, @Euclidean, sSorted).
+         Groups points if their Euclidean distance ≤ radius.
 [==============================================================================}
 function TPointArrayHelper.YSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
 begin
@@ -1570,9 +1612,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Split>
- @action: Splits TPointArray to groups by xRadius and yRadius.
- @note: None.
+  <Split>
+  @action: Splits TPointArray to groups by xRadius and yRadius.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.Split(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
@@ -1617,9 +1659,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Split>
- @action: Splits TPointArray to groups by radius.
- @note: Supports custom distance function.
+  <Split>
+  @action: Splits TPointArray to groups by radius.
+  @note: Supports custom distance function.
 [==============================================================================}
 function TPointArrayHelper.Split(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
 var
@@ -1664,9 +1706,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Split>
- @action: Splits TPointArray to groups by radius.
- @note: None.
+  <Split>
+  @action: Splits TPointArray to groups by radius.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.Split(const radius: Double = 1.0): T2DPointArray; overload;
 begin
@@ -1674,9 +1716,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.SplitEx>
- @action: Splits TPointArray to groups by xRadius and yRadius.
- @note: None.
+  <SplitEx>
+  @action: Splits TPointArray to groups by xRadius and yRadius.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.SplitEx(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
@@ -1717,9 +1759,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.SplitEx>
- @action: Splits TPointArray to groups by radius.
- @note: Supports custom distance function.
+  <SplitEx>
+  @action: Splits TPointArray to groups by radius.
+  @note: Supports custom distance function.
 [==============================================================================}
 function TPointArrayHelper.SplitEx(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
 var
@@ -1760,9 +1802,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.SplitEx>
- @action: Splits TPointArray to groups by radius.
- @note: None.
+  <SplitEx>
+  @action: Splits TPointArray to groups by radius.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.SplitEx(const radius: Double = 1.0): T2DPointArray; overload;
 begin
@@ -1770,7 +1812,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Clusters>
+  <Clusters>
   @action: Group points in the array into clusters based on a distance threshold.
   @note: Uses a breadth-first region-growing approach.
          Each cluster contains points whose pairwise distances are within radius.
@@ -1861,7 +1903,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Clusters>
+  <Clusters>
   @action: Group points in the array into rectangular clusters based on X and Y radii.
   @note: Clustering is anisotropic — points are grouped if their |ΔX| ≤ xRadius and |ΔY| ≤ yRadius.
          No distance function is used.
@@ -1943,7 +1985,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Cluster>
+  <Cluster>
   @action: Groups the points in the array into clusters based on a given distance threshold.
   @note: Uses a grid-based breadth-first search (BFS) approach; points are added to a cluster 
          if their distance from any member is less than or equal to radius.
@@ -2027,7 +2069,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Cluster>
+  <Cluster>
   @action: Groups points into clusters using separate X and Y distance limits.
   @note: Clusters are formed within rectangular (axis-aligned) bounds where the 
          absolute difference in X and Y coordinates does not exceed xRadius and yRadius. 
@@ -2103,6 +2145,19 @@ begin
   SetLength(Result, r);
 end;
 
+{==============================================================================]
+  <Clustered>
+  @action: Groups points into clusters based on pairwise proximity using the
+           supplied distance function and radius threshold. Each cluster is a
+           connected component where every point is reachable from any other
+           through successive neighbor relationships.
+  @note: The algorithm performs a flood-fill/region-growing traversal. A point
+         joins a cluster if it lies within `radius` of any member of that
+         cluster according to `distFunc`. Complexity is O(N²) in the worst
+         case. Returns an array of clusters, each cluster being a dynamic
+         array of TPoint. Input array ordering is preserved in cluster
+         discovery; no sorting is performed.
+[==============================================================================}
 function TPointArrayHelper.Clustered(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
 var
   i, j, r: Integer;
@@ -2146,11 +2201,31 @@ begin
   SetLength(Result, r);
 end;
 
+{==============================================================================]
+  <Clustered>
+  @action: Groups points into proximity-based clusters using Euclidean distance
+           with a caller-specified radius.
+  @note: This overload is equivalent to calling the primary variant with the
+         built-in Euclidean distance function. See the primary documentation
+         for clustering semantics and performance considerations.
+[==============================================================================}
 function TPointArrayHelper.Clustered(const radius: Double = 1.0): T2DPointArray; overload;
 begin
   Result := Self.Clustered(radius, @Euclidean);
 end;
 
+{==============================================================================]
+  <Clustered>
+  @action: Generates clusters by treating two points as neighbors when their
+           coordinate-wise separations fall within the specified horizontal and
+           vertical radii. Clusters are constructed as connected components under
+           this axis-aligned proximity rule.
+  @note: Uses a rectangular neighborhood test (Chebyshev-like, but not metric)
+         rather than a general distance function. Points are aggregated via a
+         flood-fill process identical in structure to the radius-based
+         overload. Worst-case complexity is O(N²). Ordering of the input array
+         determines cluster enumeration order.
+[==============================================================================}
 function TPointArrayHelper.Clustered(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
   i, j, r: Integer;
@@ -2194,6 +2269,20 @@ begin
   SetLength(Result, r);
 end;
 
+{==============================================================================]
+  <Clusterify>
+  @action: Performs index-based clustering of the point array using a breadth-
+           first expansion. A point joins a cluster when its distance from any
+           existing cluster member is within the specified radius according to
+           the given distance function. Returns an array of clusters, each
+           represented as a TPoint array.
+  @note: The algorithm uses an integer queue referencing element indices,
+         avoiding redundant point copies during traversal. This variant is
+         functionally equivalent to `Clustered` but may offer clearer index
+         management and slightly reduced per-iteration overhead. Input order
+         determines the order in which clusters are discovered. Worst-case
+         complexity is O(N²).
+[==============================================================================}
 function TPointArrayHelper.Clusterify(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
 var
   i, j, r: Integer;
@@ -2241,11 +2330,31 @@ begin
   SetLength(Result, r);
 end;
 
+{==============================================================================]
+  <Clusterify>
+  @action: Creates proximity-based clusters using Euclidean distance and the
+           specified radius. Equivalent to the primary variant but uses the
+           built-in Euclidean metric by default.
+  @note: See the main overload for details regarding traversal, performance
+         profile, and cluster generation semantics.
+[==============================================================================}
 function TPointArrayHelper.Clusterify(const radius: Double = 1.0): T2DPointArray; overload;
 begin
   Result := Self.Clusterify(radius, @Euclidean);
 end;
 
+{==============================================================================]
+  <Clusterify>
+  @action: Produces clusters by treating two points as neighbors when their
+           coordinate differences fall within the specified horizontal and
+           vertical radii. Clusters are formed as connected components under
+           this axis-aligned proximity constraint.
+  @note: Uses an index queue and a rectangular neighborhood test, identical in
+         structure to the radius/distance-function variant. No sorting of the
+         input array is performed; clusters are emitted in the order in which
+         unvisited points are encountered. Complexity is O(N²) in the worst
+         case due to exhaustive neighbor checks.
+[==============================================================================}
 function TPointArrayHelper.Clusterify(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
   i, j, r: Integer;
@@ -2294,9 +2403,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Clusterize>
- @action: Splits TPointArray to groups by radius.
- @note: None.
+  <Clusterize>
+  @action: Splits TPointArray to groups by radius.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.Clusterize(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload; 
 var
@@ -2359,9 +2468,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Clusterize>
- @action: Splits TPointArray to groups by xRadius and yRadius.
- @note: None.
+  <Clusterize>
+  @action: Splits TPointArray to groups by xRadius and yRadius.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.Clusterize(const xRadius, yRadius: Integer): T2DPointArray; overload; 
 var
@@ -2419,15 +2528,15 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.Grouped>
- @action: Partitions the points in the array into groups of connected points
-          based on adjacency (4- or 8-connectivity). Each group is returned
-          as a separate T2DPointArray within the result array.
- @note: The adjacency method is determined by the 'adjacency8' parameter:
-        - True  => 8-connectivity (including diagonals)
-        - False => 4-connectivity (orthogonal neighbors only)
-        Returns a T2DPointArray where each element is a group of connected points.
-        Uses a BFS (breadth-first search) algorithm internally to find the groups.
+  <Grouped>
+  @action: Partitions the points in the array into groups of connected points
+           based on adjacency (4- or 8-connectivity). Each group is returned
+           as a separate T2DPointArray within the result array.
+  @note: The adjacency method is determined by the 'adjacency8' parameter:
+         - True  => 8-connectivity (including diagonals)
+         - False => 4-connectivity (orthogonal neighbors only)
+         Returns a T2DPointArray where each element is a group of connected points.
+         Uses a BFS (breadth-first search) algorithm internally to find the groups.
 [==============================================================================}
 function TPointArrayHelper.Grouped(const adjacency8: Boolean = True): T2DPointArray; overload;
 var
@@ -2471,15 +2580,15 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.Groupify>
- @action: Partitions the points in the array into connected groups (clusters)
-          based on adjacency. Two points are considered connected if they
-          are neighbors according to 4- or 8-connectivity.
- @note: The adjacency method is determined by the 'adjacency8' parameter:
-        - True  => 8-connectivity (including diagonals)
-        - False => 4-connectivity (orthogonal neighbors only)
-        Returns a T2DPointArray where each element is a group of connected points.
-        Uses a union-find (disjoint-set) algorithm internally for efficiency.
+  <Groupify>
+  @action: Partitions the points in the array into connected groups (clusters)
+           based on adjacency. Two points are considered connected if they
+           are neighbors according to 4- or 8-connectivity.
+  @note: The adjacency method is determined by the 'adjacency8' parameter:
+         - True  => 8-connectivity (including diagonals)
+         - False => 4-connectivity (orthogonal neighbors only)
+         Returns a T2DPointArray where each element is a group of connected points.
+         Uses a union-find (disjoint-set) algorithm internally for efficiency.
 [==============================================================================}
 function TPointArrayHelper.Groupify(const adjacency8: Boolean = True): T2DPointArray; overload;
 var
@@ -2544,15 +2653,15 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.Groups>
- @action: Partitions the points in the array into connected groups using
-          an iterative depth-first search (DFS). Each group is returned as
-          a TPointArray within the resulting T2DPointArray.
- @note: adjacency8 = True uses 8-connectivity (diagonals included),
-       False uses 4-connectivity (orthogonal neighbors only).
-       The function uses a manual stack to avoid recursion.
-       Returns a T2DPointArray where each element represents a group of
-       connected points.
+  <Groups>
+  @action: Partitions the points in the array into connected groups using
+           an iterative depth-first search (DFS). Each group is returned as
+           a TPointArray within the resulting T2DPointArray.
+  @note: adjacency8 = True uses 8-connectivity (diagonals included),
+         False uses 4-connectivity (orthogonal neighbors only).
+         The function uses a manual stack to avoid recursion.
+         Returns a T2DPointArray where each element represents a group of
+         connected points.
 [==============================================================================}
 function TPointArrayHelper.Groups(const adjacency8: Boolean = True): T2DPointArray; overload;
 var
@@ -2596,17 +2705,17 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.Grouping>
- @action: Partitions the points in the array into connected groups using a
-          recursive depth-first search (DFS). Each group is returned as a 
-          separate TPointArray within the resulting T2DPointArray.
- @note: The adjacency method is determined by the 'adjacency8' parameter:
-        - True  => 8-connectivity (includes diagonals)
-        - False => 4-connectivity (orthogonal neighbors only)
-        Returns a T2DPointArray where each element represents a group of 
-        connected points.
-        Internally uses DFS to traverse and collect all points belonging
-        to the same connected component.
+  <Grouping>
+  @action: Partitions the points in the array into connected groups using a
+           recursive depth-first search (DFS). Each group is returned as a 
+           separate TPointArray within the resulting T2DPointArray.
+  @note: The adjacency method is determined by the 'adjacency8' parameter:
+         - True  => 8-connectivity (includes diagonals)
+         - False => 4-connectivity (orthogonal neighbors only)
+         Returns a T2DPointArray where each element represents a group of 
+         connected points.
+         Internally uses DFS to traverse and collect all points belonging
+         to the same connected component.
 [==============================================================================}
 function TPointArrayHelper.Grouping(const adjacency8: Boolean = True): T2DPointArray; overload;
   procedure DFS(const arr: TPointArray; const index: Integer; const directions: TPointArray; var visited: TBooleanArray; var group: TPointArray);
@@ -2643,9 +2752,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Segment>
- @action: Splits TPointArray to groups by radius.
- @note: None.
+  <Segment>
+  @action: Splits TPointArray to groups by radius.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.Segment(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload; 
 var
@@ -2696,9 +2805,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Segment>
- @action: Splits TPointArray to groups by xRadius and yRadius.
- @note: None.
+  <Segment>
+  @action: Splits TPointArray to groups by xRadius and yRadius.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.Segment(const xRadius, yRadius: Integer): T2DPointArray; overload; 
 var
@@ -2744,9 +2853,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Fragment>
- @action: Splits TPointArray to groups by radius.
- @note: None.
+  <Fragment>
+  @action: Splits TPointArray to groups by radius.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.Fragment(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload; 
 var
@@ -2796,9 +2905,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Fragment>
- @action: Splits TPointArray to groups by xRadius and yRadius.
- @note: None.
+  <Fragment>
+  @action: Splits TPointArray to groups by xRadius and yRadius.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.Fragment(const xRadius, yRadius: Integer): T2DPointArray; overload; 
 var
@@ -2843,9 +2952,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.XClassify>
- @action: Classifies TPointArray to groups by X-value
- @note: None.
+  <XClassify>
+  @action: Classifies TPointArray to groups by X-value
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.XClassify(const pSorted: Boolean = False): T2DPointArray; overload; 
 var
@@ -2859,9 +2968,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.YClassify>
- @action: Classifies TPointArray to groups by X-value
- @note: None.
+  <YClassify>
+  @action: Classifies TPointArray to groups by X-value
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.YClassify(const pSorted: Boolean = False): T2DPointArray; overload; 
 var
@@ -2875,9 +2984,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Axes>
- @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
- @note: None.
+  <Axes>
+  @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.Axes(var X, Y: TIntegerArray): Integer; overload; 
 var
@@ -2907,9 +3016,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Axed>
- @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
- @note: None.
+  <Axed>
+  @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.Axed: T2DIntegerArray; overload; 
 var
@@ -2924,9 +3033,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArrayHelper.Axed>
- @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
- @note: None.
+  <Axed>
+  @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
+  @note: None.
 [==============================================================================}
 function TPointArrayHelper.Axed(var X, Y: TIntegerArray): Integer; overload; 
 var
@@ -2942,7 +3051,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Reinit>
+  <Reinit>
   @action: Clears all elements of the array by zero-filling the underlying memory,
            setting all TPoint elements to (0,0), while keeping the current length unchanged.
   @note: None.
@@ -2955,7 +3064,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.SortByRow>
+  <SortByRow>
   @action: Sorts array Row-by-Row.
   @note: Returns Length().
 [==============================================================================}
@@ -3000,7 +3109,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.SortByColumn>
+  <SortByColumn>
   @action: Sorts array Column-by-Column.
   @note: Returns Length().
 [==============================================================================}
@@ -3043,7 +3152,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.SortedByIndex>
+  <SortedByIndex>
   @action: Returns array sorted by indexes in array bounding box.
   @note: None.
 [==============================================================================}
@@ -3056,7 +3165,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Attach>
+  <Attach>
   @action: Appends all points from the given array to the end of Self.
            Returns the new total length of the array after appending.
   @note:   Uses Move() for efficiency since TPoint is an unmanaged type.
@@ -3077,7 +3186,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.Embed>
+  <Embed>
   @action: Inserts the contents of another TPoint array into the current array
            at the specified index. Existing elements from that position onward
            are shifted to make room for the new items.
@@ -3103,7 +3212,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.FrameLinks>
+  <FrameLinks>
   @action: For each point in the array that lies within the given area, generates
            a “frame” around the point (a box of size determined by dist) and a
            vertical line from the point to the top of the box. Returns a new
@@ -3135,7 +3244,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.XVals>
+  <XVals>
   @action: Returns an array of all X coordinates from the point array,
            optionally sorted in ascending or descending order.
   @note: Uses TIntegerArray_BinaryAppend to maintain the order efficiently.
@@ -3150,7 +3259,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.YVals>
+  <YVals>
   @action:  Returns an array of all Y coordinates from the point array,
             optionally sorted in ascending or descending order.
   @note:    Uses TIntegerArray_BinaryAppend to maintain the order efficiently.
@@ -3165,7 +3274,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.XArr>
+  <XArr>
   @action: Returns an array of all X coordinates from the point array,
            optionally sorted in ascending or descending order.
   @note: Uses Quicksorting to maintain the order efficiently.
@@ -3176,7 +3285,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.YArr>
+  <YArr>
   @action: Returns an array of all Y coordinates from the point array,
            optionally sorted in ascending or descending order.
   @note: Uses Quicksorting to maintain the order efficiently.
@@ -3187,11 +3296,11 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.XAxis>
- @action: Extracts all X-coordinate values from the point array.
- @note: When rUnique = True, the resulting array is sorted and contains
-        only unique X values (duplicates removed).
-        When rUnique = False, all X values are included in order of appearance.
+  <XAxis>
+  @action: Extracts all X-coordinate values from the point array.
+  @note: When rUnique = True, the resulting array is sorted and contains
+         only unique X values (duplicates removed).
+         When rUnique = False, all X values are included in order of appearance.
 [==============================================================================}
 function TPointArrayHelper.XAxis(const rUnique: Boolean = True): TIntegerArray; overload;
 var
@@ -3209,11 +3318,11 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.YAxis>
- @action: Extracts all Y-coordinate values from the point array.
- @note: When rUnique = True, the resulting array is sorted and contains
-        only unique Y values (duplicates removed).
-        When rUnique = False, all Y values are included in order of appearance.
+  <YAxis>
+  @action: Extracts all Y-coordinate values from the point array.
+  @note: When rUnique = True, the resulting array is sorted and contains
+         only unique Y values (duplicates removed).
+         When rUnique = False, all Y values are included in order of appearance.
 [==============================================================================}
 function TPointArrayHelper.YAxis(const rUnique: Boolean = True): TIntegerArray; overload;
 var
@@ -3231,9 +3340,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.X2D>
- @action: Groups all X-coordinates by their corresponding Y-coordinate.
- @note: Returns 2D array of X values where Result[i] contains all X's for Y = yArr[i].
+  <X2D>
+  @action: Groups all X-coordinates by their corresponding Y-coordinate.
+  @note: Returns 2D array of X values where Result[i] contains all X's for Y = yArr[i].
    - The output parameter yArr receives the sorted list of unique Y values.
    - If no points exist, Result = [].
    - If only one Y value exists, Result = [yArr].
@@ -3266,9 +3375,9 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.Y2D>
- @action: Groups all Y-coordinates by their corresponding X-coordinate.
- @note: Returns 2D array of Y values where Result[i] contains all Y's for X = xArr[i].
+  <Y2D>
+  @action: Groups all Y-coordinates by their corresponding X-coordinate.
+  @note: Returns 2D array of Y values where Result[i] contains all Y's for X = xArr[i].
    - The output parameter xArr receives the sorted list of unique X values.
    - If no points exist, Result = [].
    - If only one X value exists, Result = [xArr].
@@ -3301,14 +3410,14 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.Blobs>
- @action: Groups the points in the array into contiguous spatial clusters ("blobs")
-          based on the specified xRadius and yRadius. Each blob is a TPointArray
-          containing points that are all within the proximity ranges of each other.
- @note: Uses a breadth-first search style traversal combined with binary range
-        searches on sorted X/Y arrays for efficiency. The result is a T2DPointArray,
-        where each element represents a blob. Empty or single-element arrays are
-        handled specially. This method may allocate intermediate arrays.
+  <Blobs>
+  @action: Groups the points in the array into contiguous spatial clusters ("blobs")
+           based on the specified xRadius and yRadius. Each blob is a TPointArray
+           containing points that are all within the proximity ranges of each other.
+  @note: Uses a breadth-first search style traversal combined with binary range
+         searches on sorted X/Y arrays for efficiency. The result is a T2DPointArray,
+         where each element represents a blob. Empty or single-element arrays are
+         handled specially. This method may allocate intermediate arrays.
 [==============================================================================}
 function TPointArrayHelper.Blobs(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
@@ -3443,15 +3552,15 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.Blobify>
- @action: Similar to Blobs, but optimized with a pre-allocated queue to reduce
-          repeated memory allocations. Groups the points into spatially connected
-          blobs based on xRadius and yRadius.
- @note: Uses a breadth-first traversal combined with binary range searches on
-        sorted X/Y arrays. Internal queue is pre-sized for better performance.
-        Returns a T2DPointArray of blobs. Handles empty or single-element arrays
-        correctly. Consider using this version when processing large point sets
-        for efficiency.
+  <Blobify>
+  @action: Similar to Blobs, but optimized with a pre-allocated queue to reduce
+           repeated memory allocations. Groups the points into spatially connected
+           blobs based on xRadius and yRadius.
+  @note: Uses a breadth-first traversal combined with binary range searches on
+         sorted X/Y arrays. Internal queue is pre-sized for better performance.
+         Returns a T2DPointArray of blobs. Handles empty or single-element arrays
+         correctly. Consider using this version when processing large point sets
+         for efficiency.
 [==============================================================================}
 function TPointArrayHelper.Blobify(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
@@ -3588,7 +3697,7 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.YTo2D>
+ <YTo2D>
  @action: Converts the point array into a 2D integer array of Y-coordinates grouped by unique X-coordinates.
           Each sub-array contains the Y values of points sharing the same X.
           Also returns a 2D array of original indices (selfIDs) aligned with the grouped and sorted Y values.
@@ -3641,7 +3750,7 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.YTo2D>
+ <YTo2D>
  @action: Converts the point array into a 2D integer array of Y-coordinates grouped by unique X-coordinates.
           Each sub-array contains the Y values of points sharing the same X.
  @note: Original order of points is preserved; no selfIDs tracking and no sorting.
@@ -3673,7 +3782,7 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.XTo2D>
+ <XTo2D>
  @action: Converts the point array into a 2D integer array of X-coordinates grouped by unique Y-coordinates.
           Each sub-array contains the X values of points sharing the same Y.
           Also returns a 2D array of original indices (selfIDs) aligned with the grouped and sorted X values.
@@ -3726,7 +3835,7 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.XTo2D>
+ <XTo2D>
  @action: Converts the point array into a 2D integer array of X-coordinates grouped by unique Y-coordinates.
           Each sub-array contains the X values of points sharing the same Y.
  @note: Original order of points is preserved; no selfIDs tracking and no sorting.
@@ -3758,7 +3867,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.YAs2D>
+  <YAs2D>
   @action: Groups Y-coordinates by unique X values and sorts each Y-group ascending.
            Also returns 2D array of self-indices (original point indices).
   @note: Each subarray of Result corresponds to one unique X in xArr.
@@ -3822,7 +3931,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.YAs2D>
+  <YAs2D>
   @action: Groups Y-coordinates by unique X values (no sorting or index tracking).
   @note: Each subarray of Result corresponds to one unique X in xArr.
          Order of Y values matches original point order.
@@ -3865,7 +3974,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.XAs2D>
+  <XAs2D>
   @action: Groups X-coordinates by unique Y values and sorts each X-group ascending.
            Also returns 2D array of self-indices (original point indices).
   @note: Each subarray of Result corresponds to one unique Y in yArr.
@@ -3930,7 +4039,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArrayHelper.XAs2D>
+  <XAs2D>
   @action: Groups X-coordinates by unique Y values (no sorting or index tracking).
   @note: Each subarray of Result corresponds to one unique Y in yArr.
          Order of X values matches original point order.
@@ -3973,7 +4082,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.DBSCAN>
+  <DBSCAN>
   @action: Performs density-based clustering on a TPointArray using a fixed
            radius and custom distance function.
   @params:
@@ -4058,7 +4167,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.DBSCAN>
+  <DBSCAN>
   @action: Performs density-based clustering using separate X and Y radii,
            allowing anisotropic neighborhoods.
   @params:
@@ -4137,7 +4246,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Nearby>
+  <Nearby>
   @action: Returns all points from this array that lie within a given radius
            of a specified target point, using the provided distance function.
   @note: If no distance function is provided, a default (Euclidean) distance
@@ -4162,7 +4271,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Nearby>
+  <Nearby>
   @action: Returns all points from this array that lie within a rectangular
            area centered on a specified target point, defined by horizontal
            and vertical radii.
@@ -4180,7 +4289,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Nearby>
+  <Nearby>
   @action: Returns all points from this array that lie within a given radius
            of any point in the specified array of target points, using the
            provided distance function.
@@ -4212,7 +4321,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Nearby>
+  <Nearby>
   @action: Returns all points from this array that lie within rectangular
            areas around any point in the specified array of target points,
            defined by horizontal and vertical radii.
@@ -4237,7 +4346,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.CorePointsMax>
+  <CorePointsMax>
   @action: Returns all points that have **no more than `maximumNeighbours`** 
            within the specified rectangular or metric radius.
   @note: Used to detect *sparse* points or "edge" points in a spatial 
@@ -4273,7 +4382,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.CorePointsMax>
+  <CorePointsMax>
   @action: Returns all points that have **no more than `maximumNeighbours`** 
            within the specified rectangular or metric radius.
   @note: Used to detect *sparse* points or "edge" points in a spatial 
@@ -4318,7 +4427,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.CorePointsMin>
+  <CorePointsMin>
   @action: Returns all points that have **at least `minimumNeighbours`** 
            within the specified rectangular or metric radius.
   @note: Used to detect *core* points in a density-based clustering context 
@@ -4355,7 +4464,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.CorePointsMin>
+  <CorePointsMin>
   @action: Returns all points that have **at least `minimumNeighbours`** 
            within the specified rectangular or metric radius.
   @note: Used to detect *core* points in a density-based clustering context 
@@ -4401,7 +4510,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.CorePoints>
+  <CorePoints>
   @action: Returns all points whose number of neighbours lies **within the 
            inclusive range `allowedNeighbours`** for the given rectangular or 
            metric radius.
@@ -4453,7 +4562,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.CorePoints>
+  <CorePoints>
   @action: Returns all points whose number of neighbours lies **within the 
            inclusive range `allowedNeighbours`** for the given rectangular or 
            metric radius.
@@ -4496,7 +4605,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Binify>
+  <Binify>
   @action: Groups points into clusters using axis-aligned neighborhood radii.
            Uses a binary-search-optimized spatial indexing approach to
            efficiently merge points within (xRadius, yRadius) bounds.
@@ -4572,7 +4681,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Binify>
+  <Binify>
   @action: Groups points into clusters using a distance threshold and a specified metric.
            Uses binary-search-optimized spatial indexing and union-find to efficiently
            merge points within the given radius according to the metric.
@@ -4655,7 +4764,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Binified>
+  <Binified>
   @action: Performs spatial clustering of points using separate integer radii
            for X and Y axes. Points that are within xRadius horizontally and
            yRadius vertically are grouped into the same cluster.
@@ -4716,7 +4825,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Binified>
+  <Binified>
   @action: Performs spatial clustering of points using a floating-point radius
            and a distance metric. Points within the specified radius according
            to the metric are grouped into the same cluster.
@@ -4779,7 +4888,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Bins>
+  <Bins>
   @action: Cluster points into bins (clusters) using a floating-point radius and
            a distance metric. For each point, candidate neighbors are found via
            binary-range lookups on precomputed X/Y index arrays (h and v). Pairs
@@ -4868,7 +4977,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Bins>
+  <Bins>
   @action: Cluster points into bins using separate axis-aligned radii (xRadius,
            yRadius). Candidate neighbors are located with binary-range queries on
            the precomputed X/Y index arrays (h and v). Pairs whose X and Y
@@ -4956,7 +5065,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.XBuckets>
+  <XBuckets>
   @action: Groups the points in the array into buckets (columns) based on their X-coordinate.
            Each bucket contains all points whose X-value falls within the range
            [BucketIndex * bWidth .. (BucketIndex+1) * bWidth - 1].
@@ -4976,7 +5085,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.YBuckets>
+  <YBuckets>
   @action: Groups the points in the array into buckets (rows) based on their Y-coordinate.
            Each bucket contains all points whose Y-value falls within the range
            [BucketIndex * bHeight .. (BucketIndex+1) * bHeight - 1].
@@ -4996,7 +5105,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Buckets>
+  <Buckets>
   @action: Divides the TPointArray into a rectangular grid of boxes of size bWidth x bHeight.
            Returns a T2DPointArray where each bucket contains all points falling
            into that box. The buckets are stored as a flattened 1D array:
@@ -5024,7 +5133,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Buckets>
+  <Buckets>
   @action: Divides the TPointArray into a square grid of boxes of size bSize x bSize.
            Internally calls the same algorithm as the rectangular version.
   @note: - bSize defines both width and height of the grid cells.
@@ -5047,7 +5156,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Bucketed>
+  <Bucketed>
   @action: Splits the point array into a 2D grid of buckets, each containing points
            that fall within a specific rectangular region of the bounding box.
   @note: Each bucket’s dimensions are defined by (bWidth, bHeight). Empty buckets
@@ -5073,7 +5182,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Bucketed>
+  <Bucketed>
   @action: Creates a 2D grid of buckets using a uniform bucket size for both width and height.
   @note: Equivalent to calling Bucketed(bSize, bSize). Returns an empty array if input or size is invalid.
 [==============================================================================}
@@ -5083,7 +5192,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Boxify>
+  <Boxify>
   @action: Splits the current point array into a grid of rectangular cells 
            (boxes) of the specified width and height, returning a 2D array 
            of points grouped by their corresponding box.
@@ -5125,7 +5234,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Boxify>
+  <Boxify>
   @action: Splits the current point array into spatial groups using a uniform 
            box size (bSize). Each group contains points that fall within a 
            Chebyshev distance of bSize from the box's origin point.
@@ -5171,7 +5280,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Boxified>
+  <Boxified>
   @action: Groups the points of the current array into a grid of equally sized 
            square boxes of side length bSize, returning a 2D array where each 
            subarray contains the points belonging to its corresponding box.
@@ -5199,7 +5308,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Boxified>
+  <Boxified>
   @action: Groups the points of the current array into a grid of rectangular 
            boxes with dimensions bWidth × bHeight, returning a 2D array 
            where each element contains the points that fall within that box.
@@ -5226,7 +5335,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinBox>
+  <BinBox>
   @action: Groups all points in the array into a grid of rectangular boxes of
            size bWidth × bHeight. Uses a precomputed 2D X-index and binary
            search for fast assignment.
@@ -5271,7 +5380,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinBox>
+  <BinBox>
   @action: Convenience overload for square boxes. Groups points into boxes of
            size bSize × bSize by calling BinBox(bSize, bSize).
   @note: Calls the rectangular BinBox internally. Useful for uniform grids.
@@ -5282,7 +5391,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryFloodFill>
+  <BinaryFloodFill>
   @action:
     Performs a breadth-first flood fill (BFS) on the point array, grouping all
     points that lie within the specified radius (using the selected distance
@@ -5356,7 +5465,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryFill>
+  <BinaryFill>
   @action:
     Uses a Union–Find (Disjoint-Set) structure to group points into connected
     components.  Points within the given radius (and metric) are merged into
@@ -5453,7 +5562,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryFilled>
+  <BinaryFilled>
   @action:
     Optimized Union–Find flood fill that iterates directly over the 2D grid
     and unites only point pairs (f > e) within radius, eliminating duplicate
@@ -5561,7 +5670,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BFloodFill>
+  <BFloodFill>
   @action:
     Performs a breadth-first flood fill (BFS) similar to BinaryFloodFill but
     uses a pre-allocated queue sized to the total number of points, providing
@@ -5635,7 +5744,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.AdjFill>
+  <AdjFill>
   @action:
     Groups points into connected components based on grid adjacency.
     Supports 4-way (N, S, E, W) or 8-way (adds diagonals) connectivity.
@@ -5711,7 +5820,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.NFill>
+  <NFill>
   @action: Performs adjacency-based flood fill using binary search for neighbor detection.
            Groups connected points (4-way or 8-way) into separate clusters.
   @note: "N" stands for Neighbor Fill.
@@ -5780,7 +5889,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.AFill>
+  <AFill>
   @action: Performs adjacency-based flood fill over a bounded 2D grid.
            Groups connected points (4-way or 8-way) into separate clusters
            using a boolean occupancy map for constant-time neighbor lookup.
@@ -5839,7 +5948,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.CFill>
+  <CFill>
   @action: Groups adjacent points (4-way or 8-way) using a Union-Find
            (disjoint set) structure for efficient neighbor merging.
   @note: "C" stands for Cell/Connectivity Fill.
@@ -5929,12 +6038,11 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BCluster>
+  <BCluster>
   @action: Performs radius-based clustering using binary search.
            Each point is assigned to a cluster based on proximity.
-  @params:
-    radius: Maximum distance for points to be considered neighbors.
-    metric: Distance metric (Chebyshev, Euclidean, Manhattan, etc.)
+  @params: -radius: Maximum distance for points to be considered neighbors.
+           -metric: Distance metric (Chebyshev, Euclidean, Manhattan, etc.)
   @result: T2DPointArray where each subarray contains points of one cluster
 [==============================================================================}
 function TPointArrayHelper.BCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
@@ -5998,12 +6106,11 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BCluster>
+  <BCluster>
   @action: Performs radius-based clustering using binary search.
            Each point is assigned to a cluster based on proximity.
-  @params:
-    radius: Maximum distance for points to be considered neighbors.
-    metric: Distance metric (Chebyshev, Euclidean, Manhattan, etc.)
+  @params: -radius: Maximum distance for points to be considered neighbors.
+           -metric: Distance metric (Chebyshev, Euclidean, Manhattan, etc.)
   @result: T2DPointArray where each subarray contains points of one cluster
 [==============================================================================}
 function TPointArrayHelper.BCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
@@ -6066,7 +6173,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.QuickSortByX>
+  <QuickSortByX>
   @action: Sorts all points in ascending order based on their X coordinate.
   @note: Uses an in-place recursive QuickSort. Does not guarantee stability
          for equal X values. Complexity is O(n log n) on average.
@@ -6100,7 +6207,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.QuickSortByY>
+  <QuickSortByY>
   @action: Sorts all points in ascending order based on their Y coordinate.
   @note: In-place recursive QuickSort implementation. Equal Y values are not
          guaranteed to preserve original order (unstable sort).
@@ -6134,7 +6241,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.QuickSortByXY>
+  <QuickSortByXY>
   @action: Sorts all points by X coordinate first, and then by Y coordinate
            for points sharing the same X value.
   @note: Implements a dual-key QuickSort for consistent ordering by (X,Y).
@@ -6169,7 +6276,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.QuickSortByYX>
+  <QuickSortByYX>
   @action: Sorts all points by Y coordinate first, and then by X coordinate
            for points sharing the same Y value.
   @note: Commonly used for spatial clustering and grid-based sorting.
@@ -6204,10 +6311,10 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.SortByIndex>
- @action: Sorts the point array by a calculated linear index within the given bounding box.
- @note: Each point is mapped from (X,Y) to a single 1D index value and sorted
-        using TArray_QuickSortWeighted. Returns the number of points in the array.
+  <SortByIndex>
+  @action: Sorts the point array by a calculated linear index within the given bounding box.
+  @note: Each point is mapped from (X,Y) to a single 1D index value and sorted
+         using TArray_QuickSortWeighted. Returns the number of points in the array.
 [==============================================================================}
 function TPointArrayHelper.SortByIndex(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
 var
@@ -6224,10 +6331,10 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.SortByIndex>
- @action: Sorts the point array by index using a default large bounding box.
- @note: Calls SortByIndex(Box(-23169, -23169, 23169, 23169), aAscending).
-        Useful when explicit bounds are not needed.
+  <SortByIndex>
+  @action: Sorts the point array by index using a default large bounding box.
+  @note: Calls SortByIndex(Box(-23169, -23169, 23169, 23169), aAscending).
+         Useful when explicit bounds are not needed.
 [==============================================================================}
 function TPointArrayHelper.SortByIndex(const aAscending: Boolean = True): Integer; overload;
 begin
@@ -6235,22 +6342,20 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.SortByScanline>
- @action:
-   Reorders all points in the array into strict row-to-column (scanline)
-   sequence within the specified bounding box. The sort scans from the
-   top-left corner to the bottom-right (ascending = True), or the reverse
-   direction if ascending = False. The operation is performed by iterating
-   through every coordinate in raster order and moving matching points into
-   the output array.
- @note:
-   - This is a *deterministic, stable* traversal-based ordering, not a
-     comparison sort.
-   - Complexity is O(W × H × N) in the worst case, so it is best used when
-     the bounding box is small or the coordinate grid is discrete and bounded.
-   - Points that fall outside the bounding box are discarded.
-   - The method modifies the array in place and returns the number of points
-     remaining after sorting.
+  <SortByScanline>
+  @action: Reorders all points in the array into strict row-to-column (scanline)
+           sequence within the specified bounding box. The sort scans from the
+           top-left corner to the bottom-right (ascending = True), or the reverse
+           direction if ascending = False. The operation is performed by iterating
+           through every coordinate in raster order and moving matching points into
+           the output array.
+ @note: - This is a *deterministic, stable* traversal-based ordering, not a
+          comparison sort.
+        - Complexity is O(W × H × N) in the worst case, so it is best used when
+          the bounding box is small or the coordinate grid is discrete and bounded.
+        - Points that fall outside the bounding box are discarded.
+        - The method modifies the array in place and returns the number of points
+          remaining after sorting.
 [==============================================================================}
 function TPointArrayHelper.SortByScanline(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
 var
@@ -6299,14 +6404,12 @@ begin
 end;
 
 {==============================================================================]
- <TPointArray.SortByScanline>
- @action:
-   Convenience overload that calls SortByScanline using the array’s own
-   bounding box (Self.Bounds) as the region to scan.
- @note:
-   Equivalent to SortByScanline(Self.Bounds, aAscending).
-   Produces identical ordering but automatically derives the limits from the
-   data set.
+  <SortByScanline>
+  @action: Convenience overload that calls SortByScanline using the array’s own
+           bounding box (Self.Bounds) as the region to scan.
+  @note: Equivalent to SortByScanline(Self.Bounds, aAscending).
+         Produces identical ordering but automatically derives the limits from the
+         data set.
 [==============================================================================}
 function TPointArrayHelper.SortByScanline(const aAscending: Boolean = True): Integer; overload;
 begin
@@ -6314,7 +6417,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.ProximityCluster>
+  <ProximityCluster>
   @action:
     Groups points into spatial clusters based on rectangular proximity.
     Two points belong to the same cluster if their X and Y differences are
@@ -6387,7 +6490,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.ProximityCluster>
+  <ProximityCluster>
   @action:
     Clusters points in the array based on geometric proximity using a
     distance metric. Points closer than the given radius are merged
@@ -6462,7 +6565,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Linked>
+  <Linked>
   @action: Build neighbour-based clusters by linking each point to up to check
            nearest neighbours inside radius (using metric). Candidate
            neighbours are discovered quickly via binary-range lookups on the
@@ -6590,7 +6693,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Linked>
+  <Linked>
   @action: Build neighbour-based clusters by linking each point to up to check
            nearest neighbours inside an axis-aligned box given by
            xRadius/yRadius. Candidate neighbours are located via binary-
@@ -6716,7 +6819,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Chain>
+  <Chain>
   @action: Groups nearby points into connected chains using radius-based neighbor linking.
   @note: Each new chain starts from an unvisited point and expands by iteratively
          linking up to `check` nearest unlinked neighbors within the given radius.
@@ -6782,7 +6885,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Chain>
+  <Chain>
   @action: Groups nearby points into connected chains using rectangular X/Y radii.
   @note: Similar to the distance-based Chain but uses axis-aligned rectangular bounds
          (xRadius, yRadius) for neighborhood checks instead of circular distance.
@@ -6846,9 +6949,8 @@ begin
   end;
 end;
 
-
 {==============================================================================]
-  <TPointArray.Attach>
+  <Attach>
   @action: Connects points into clusters using spatial indexing (binary search + grid).
   @note: Uses precomputed X/Y grid slices (via TPointArray_XTo2D) and binary range
          search to quickly find neighbors within `radius`. Each cluster grows by
@@ -6926,7 +7028,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Attach>
+  <Attach>
   @action: Connects points into clusters using rectangular X/Y radii and spatial indexing.
   @note: Combines grid-based search (TPointArray_XTo2D) with axis-aligned neighbor
          bounds (xRadius, yRadius). Finds and links nearby points efficiently while
@@ -7003,7 +7105,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.RCluster>
+  <RCluster>
   @action: Groups points into rectangular clusters based on X/Y radius thresholds.
   @note: Uses a grid-based flood-fill algorithm; points are considered connected 
          if their absolute X and Y distances are within (xRadius, yRadius).
@@ -7076,7 +7178,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.RCluster>
+  <RCluster>
   @action: Groups points into clusters based on a custom distance metric and radius.
   @note: Supports user-defined metrics (e.g. Euclidean, Manhattan, Chebyshev).
          Uses grid partitioning for spatial acceleration and a stack-based region grow.
@@ -7147,7 +7249,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.ToRows>
+  <ToRows>
   @action: Groups all points in the array into rows based on their Y coordinates.
   @note: The Y values are sorted and deduplicated before grouping, so the resulting
          row order follows ascending Y. Each subarray of the result contains all
@@ -7165,7 +7267,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.ToColumns>
+  <ToColumns>
   @action: Groups all points in the array into columns based on their X coordinates.
   @note: The X values are sorted and deduplicated before grouping, so the resulting
          column order follows ascending X. Each subarray of the result contains all
@@ -7183,7 +7285,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.AsRows>
+  <AsRows>
   @action: Groups all points in the array into rows based on their Y coordinates.
   @note: The original order of Y values is preserved — rows are created in the
          order each Y first appears in the source array. No sorting or pruning
@@ -7218,7 +7320,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.AsColumns>
+  <AsColumns>
   @action: Groups all points in the array into columns based on their X coordinates.
   @note: The original order of X values is preserved — columns are created in the
          order each X first appears in the source array. No sorting or pruning
@@ -7253,7 +7355,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Rows>
+  <Rows>
   @action: Groups all points in the array into rows based on their Y coordinates.
   @note: Each unique Y value defines one row. The order of rows matches the order
          in which distinct Y values first appear in the source array (unsorted).
@@ -7286,7 +7388,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.Columns>
+  <Columns>
   @action: Groups all points in the array into columns based on their X coordinates.
   @note: Each unique X value defines one column. The order of columns matches the
          order in which distinct X values first appear in the source array (unsorted).
@@ -7319,7 +7421,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BSort>
+  <BSort>
   @action: Sorts the array of points in-place using the Binary Insertion Sort algorithm.
   @note: - The sorting order is determined by the 'aAscending' flag.
          - Comparison is performed using 'TPoint.Compare'.
@@ -7363,7 +7465,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BSorted>
+  <BSorted>
   @action: Returns a new sorted copy of the current point array using Binary Insertion Sort.
   @note: - The original array remains unchanged.
          - Sorting order depends on the 'aAscending' parameter.
@@ -7405,7 +7507,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinarySearch>
+  <BinarySearch>
   @action: Performs a binary search for a specified point in a sorted TPointArray.
   @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
            consistent with TPoint.Compare.
@@ -7430,9 +7532,13 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinarySearch>
-  @action: Performs a binary search over the point array to locate any point contained within the specified bounding box (TBox). If a point lying inside the area is found, its index is returned; otherwise, the function returns –1.
-  @note: The array must be pre-sorted by Y coordinate (and implicitly by X for tie-breaking) in the same ordering implemented by TPoint_Compare. The initial boundary check short-circuits the search if the box vertically lies outside the array’s extents. The search returns the first matching point encountered during the binary-search traversal, not a guaranteed minimal or maximal spatial index. Execution is O(log n).
+  <BinarySearch>
+  @action: Performs a binary search over the point array to locate any point contained within the specified bounding box (TBox).
+           If a point lying inside the area is found, its index is returned; otherwise, the function returns –1.
+  @note: The array must be pre-sorted by Y coordinate (and implicitly by X for tie-breaking) in the same ordering implemented by TPoint.Compare.
+         The initial boundary check short-circuits the search if the box vertically lies outside the array’s extents.
+		 The search returns the first matching point encountered during the binary-search traversal,
+		 not a guaranteed minimal or maximal spatial index. Execution is O(log n).
 [==============================================================================}
 function TPointArrayHelper.BinarySearch(const area: TBox): Integer; overload;
 var
@@ -7460,6 +7566,13 @@ begin
   end;
 end;
 
+{==============================================================================]
+  <BinaryFind>
+  @action: Performs binary search on the sorted point array to locate the exact TPoint whose coordinates match the specified item.
+           The search is lexicographical: first by Y, then by X.
+  @note: The array must be pre-sorted by Y ascending and, for identical Y values, by X ascending.
+         Returns the index of the matching element, or -1 if no match is found.
+[==============================================================================}
 function TPointArrayHelper.BinaryFind(const item: TPoint): Integer; overload;
 var
   M: Integer;
@@ -7502,6 +7615,14 @@ begin
   end;
 end;
 
+{==============================================================================]
+  <BinaryFind>
+  @action: Locates the first point within the array whose coordinates fall inside the given rectangular TBox by performing a binary search on the Y coordinate,
+           then scanning forward through the candidate range.
+  @note: The array must be sorted by Y ascending. The function first narrows the search to the lowest index where Y ≥ area.Y1,
+         then linearly scans forward until Y > area.Y2 or a qualifying point is found.
+		 Returns the index of the first point inside the box, or -1 if the area contains no points.
+[==============================================================================}
 function TPointArrayHelper.BinaryFind(const area: TBox): Integer; overload;
 var
   M: Integer;
@@ -7528,7 +7649,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryIndexOf>
+  <BinaryIndexOf>
   @action: Performs a binary search for a specified point in a sorted TPointArray.
   @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
            consistent with TPoint.Compare.
@@ -7554,7 +7675,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryExists>
+  <BinaryExists>
   @action: Performs a binary search for a specified point in a sorted TPointArray.
   @note: Returns True if the matching point is found.
 [==============================================================================}
@@ -7577,7 +7698,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryPosL>
+  <BinaryPosL>
   @action: Finds the leftmost index at which a given point could be inserted
            in sorted order (first element >= item).
   @note: - The array must be sorted in ascending lexicographic order by X, then Y.
@@ -7601,7 +7722,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryPosR>
+  <BinaryPosR>
   @action: Finds the rightmost index at which a given point could be inserted
            in sorted order (last element <= item).
   @note: - The array must be sorted in ascending lexicographic order by X, then Y.
@@ -7626,7 +7747,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryRank>
+  <BinaryRank>
   @action: Returns the rank (0-based index) of a point within a sorted TPointArray.
            The rank is the position at which the point would be inserted to
            maintain ascending lexicographic order by X, then Y.
@@ -7651,7 +7772,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinarySearch>
+  <BinarySearch>
   @action: Performs a binary search for a specified point in a sorted TPointArray.
   @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
            consistent with TPoint.Compare.
@@ -7663,7 +7784,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryInsert>
+  <BinaryInsert>
   @action: Inserts a specified point into a sorted TPointArray while maintaining
            lexicographic order.
   @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
@@ -7694,7 +7815,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryAppend>
+  <BinaryAppend>
   @action: Appends a specified point to the end of a sorted TPointArray if it is greater
            than the last point, otherwise performs a BinaryInsert.
   @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
@@ -7711,7 +7832,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinarySupply>
+  <BinarySupply>
   @action: Inserts a specified point into the sorted TPointArray while preserving
            ascending lexicographic order by X, then Y.
   @note: - The array must already be sorted in ascending order consistent with
@@ -7732,7 +7853,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryCount>
+  <BinaryCount>
   @action: Counts the total number of occurrences of a specified point in a
            sorted TPointArray using binary search for efficient lookup.
   @note: - The algorithm performs a binary search to locate one matching element,
@@ -7773,7 +7894,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryAmount>
+  <BinaryAmount>
   @action: Returns the number of elements in the sorted TPointArray that are
            equal to the specified point.
   @note: - The array must be sorted in ascending lexicographic order by X, then Y,
@@ -7792,7 +7913,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryRange>
+  <BinaryRange>
   @action: Performs a binary search to find the contiguous index range of all
            points equal to the specified item.
   @note:   Assumes the array is sorted according to TPoint_Compare.
@@ -7837,7 +7958,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryRangeOf>
+  <BinaryRangeOf>
   @action: Returns the range of indices that correspond to all elements
            equal to a specified point within a sorted TPointArray.
   @note: - The array must be sorted in ascending lexicographic order by X, then Y,
@@ -7852,7 +7973,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryScan>
+  <BinaryScan>
   @action: Performs a vertical binary scan on a Y-sorted point array to locate
            all points whose coordinates lie within the specified TBox.
   @note:   Array must be sorted by Y ascending. Uses binary search on Y to find
@@ -7905,7 +8026,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryScanned>
+  <BinaryScanned>
   @action: Performs a vertical binary scan on a Y-sorted point array to locate
            all point indexes lying within the specified TBox.
   @note: - The array must be sorted in ascending order by the Y coordinate.
@@ -7953,7 +8074,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryDelete>
+  <BinaryDelete>
   @action: Removes the specified TPoint from the array using binary search.
            If found, the element is deleted and the array is resized.
   @note: - The array must be sorted according to the same ordering rule
@@ -7975,7 +8096,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryRemove>
+  <BinaryRemove>
   @action: Removes one or all occurrences of a specified TPoint from the array
            using binary search. If 'all' is True, every matching element is
            deleted; otherwise, only the first found instance is removed.
@@ -8008,7 +8129,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinarySinglify>
+  <BinarySinglify>
   @action: Removes all occurrences of a specified point from the sorted TPointArray
            in place, preserving ascending lexicographic order by X, then Y.
   @note: - The array must be sorted ascending by X, then Y, consistent with TPoint.Compare.
@@ -8035,7 +8156,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinarySinglified>
+  <BinarySinglified>
   @action: Returns a copy of the array with all occurrences of a specified point
            removed, preserving the original order.
   @note: - The array must be sorted ascending by X then Y, consistent with TPoint.Compare.
@@ -8057,7 +8178,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryMerge>
+  <BinaryMerge>
   @action: Merges the current sorted TPointArray with another sorted TPointArray,
            producing a new sorted array.
   @note: - Both arrays must be sorted in ascending lexicographic order by X, then by Y,
@@ -8093,7 +8214,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryReplace>
+  <BinaryReplace>
   @action: BinaryReplace for TPointArray
   @note: Only Ascending order.
 [==============================================================================}
@@ -8105,7 +8226,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryReplaceAll>
+  <BinaryReplaceAll>
   @action: BinaryReplaceAll for TPointArray
   @note: Only Ascending order.
 [==============================================================================}
@@ -8133,7 +8254,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryXs>
+  <BinaryXs>
   @action:
     Returns all X-values from the TPointArray, grouped by their Y-value.
     Optionally returns only unique X-values within each Y-group.
@@ -8187,7 +8308,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryYs>
+  <BinaryYs>
   @action:
     Returns all Y-values from the TPointArray, in the order they appear.
     Optionally returns only unique values (no duplicates).
@@ -8218,7 +8339,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryYPoints>
+  <BinaryYPoints>
   @action:
     Returns a TPointArray containing all points with the specified Y-value.
     Uses binary search to locate the first and last indices with that Y.
@@ -8270,7 +8391,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryXPoints>
+  <BinaryXPoints>
   @action:
     Returns a TPointArray containing all points with the specified X-value.
     For each Y-row in the array, it uses BinaryYPoints to get all points in that row,
@@ -8345,7 +8466,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryGrouped>
+  <BinaryGrouped>
   @action:
     Groups all points in the TPointArray by their Y-coordinate using binary search.
     Returns a T2DPointArray where each element is a TPointArray containing all
@@ -8379,7 +8500,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.BinaryExtract>
+  <BinaryExtract>
   @action: Returns all points within the specified rectangular area, using
            binary search on the Y-coordinate to minimize the scanned range.
   @note:   The array must be sorted in ascending Y order (scanline order).
@@ -8439,7 +8560,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.BinaryFilter>
+  <BinaryFilter>
   @action: Returns a new array containing all points that lie outside the
            specified rectangular area. The function uses binary search on the
            Y-coordinate to exclude the interior scanline interval efficiently.
@@ -8504,12 +8625,11 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryX>
+  <BinaryX>
   @action: Returns a sequence of X-values grouped by contiguous segments of equal Y within the TPointArray
           (which is assumed to be sorted by Y). For each block of points sharing the same Y value,
           the routine extracts the unique X values (unique within that Y-block)
           and inserts them into the output array in ascending order through binary growth.
-
   @note: The method performs a binary search on Y to locate each contiguous Y-block,
          then processes X values within the block. Uniqueness is enforced only within the same Y-group.
 [==============================================================================}
@@ -8549,11 +8669,10 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryY>
+  <BinaryY>
   @action: Returns a sequence of Y-values extracted from a TPointArray that is already sorted by Y.
            The method performs a run-length–style scan that groups contiguous points having non-decreasing Y values
            and emits one representative Y value for each such monotonic block.
-
   @note: The resulting array contains unique Y values only with respect to contiguous runs.
          Uniqueness is not guaranteed globally unless the underlying TPointArray is fully sorted by Y
          and contains no duplicated Y values in non-contiguous positions.
@@ -8589,7 +8708,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryInsertSorted>
+  <BinaryInsertSorted>
   @action: Performs an insertion sort on a copy of the TPointArray using binary search
            to find the correct insertion position. Returns a new sorted TPointArray.
   @param: oAscending - Boolean indicating sort order. True = ascending (top-to-bottom, left-to-right),
@@ -8625,7 +8744,7 @@ begin
 end;
 
 {==============================================================================]
-  <TPointArray.BinaryInsertSort>
+  <BinaryInsertSort>
   @action: Sorts the current TPointArray in-place using insertion sort with binary search
            to find the insertion position.
   @param: oAscending - Boolean indicating sort order. True = ascending (top-to-bottom, left-to-right),

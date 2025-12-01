@@ -47,11 +47,11 @@ function Squeezed: T2DArr; overload;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
- <arr.Blank(parts: Integer): T2DArray>
- @action: Returns true if array is blank (no inventory, only empty indexes of []).
- @note: Blank array could be for example [[], [], []]. Returns false if array contains any items.
-        NOTE: Returns false if array is empty (1D Length = 0)!
- [==============================================================================}
+  <Blank>
+  @action: Returns true if array is blank (no inventory, only empty indexes of []).
+  @note: Blank array could be for example [[], [], []]. Returns false if array contains any items.
+         NOTE: Returns false if array is empty (1D Length = 0)!
+[==============================================================================}
 function H2DArr.Blank: Boolean; overload;
 var
   i: Integer;
@@ -63,9 +63,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Empty: Boolean>
- @action: Returns true if array is empty (Length = 0).
- @note: None.
+  <Empty>
+  @action: Returns true if array is empty (Length = 0).
+  @note: None.
 [==============================================================================}
 function H2DArr.Empty: Boolean; overload;
 begin
@@ -73,9 +73,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Flat: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+  <Flat>
+  @action: Merges 2D array to 1D.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
 function H2DArr.Flat: TArr; overload;
 var
@@ -87,9 +87,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Flatten: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+  <Flatten>
+  @action: Merges 2D array to 1D.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
 function H2DArr.Flatten: TArr; overload;
 var
@@ -103,9 +103,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.To1D: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+  <To1D>
+  @action: Merges 2D array to 1D.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
 function H2DArr.To1D: TArr; overload;
 var
@@ -124,9 +124,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Linearize: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+  <Linearize>
+  @action: Merges 2D array to 1D.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
 function H2DArr.Linearize: TArr; overload;
 var
@@ -138,9 +138,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Irregular: Boolean>
- @action: Returns true if array contains arrays with different lengths (array not symmetrict)
- @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
+  <Irregular>
+  @action: Returns true if array contains arrays with different lengths (array not symmetrict)
+  @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
 [==============================================================================}
 function H2DArr.Irregular: Boolean; overload;
 var
@@ -165,9 +165,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Jagged: Boolean>
- @action: Returns true if array contains arrays with different lengths (array not symmetrict)
- @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
+  <Jagged>
+  @action: Returns true if array contains arrays with different lengths (array not symmetrict)
+  @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
 [==============================================================================}
 function H2DArr.Jagged: Boolean; overload;
 var
@@ -182,9 +182,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Merge: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+  <Merge>
+  @action: Merges 2D array to 1D.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
 function H2DArr.Merge: TArr; overload;
 var
@@ -199,9 +199,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Merged: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+  <Merged>
+  @action: Merges 2D array to 1D.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
 function H2DArr.Merged: TArr; overload;
 var
@@ -223,9 +223,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Ragged: Boolean>
- @action: Returns true if array contains arrays with different lengths (array not symmetrict)
- @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
+  <Ragged>
+  @action: Returns true if array contains arrays with different lengths (array not symmetrict)
+  @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
 [==============================================================================}
 function H2DArr.Ragged: Boolean; overload;
 var
@@ -246,7 +246,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Fit: Integer>
+  <Fit>
   @action: Returns array length.
   @note: Alternative.
 [==============================================================================}
@@ -256,7 +256,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Fit: Integer>
+  <Fit>
   @action: Resizes the array to aSize (sets length safely).
   @note: Returns the length that was set to Self. Negative sizes are clamped to 0.
 [==============================================================================}
@@ -267,7 +267,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Fit: Integer>
+  <Fit>
   @action: Resizes the array to fit within the specified range.
   @note: 
     - Returns the final array length. 
@@ -295,7 +295,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Size(lengths: TIntegerArray): Int64>
+ <Size>
  @action: Returns actual Length for 2D array. Stores Length's of 2D part, of the arr, to lengths variable.
  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
@@ -313,9 +313,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Size: Int64>
- @action: Returns actual Length for 2D array.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+  <Size>
+  @action: Returns actual Length for 2D array.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
 function H2DArr.Size: Int64; overload;
 var
@@ -327,9 +327,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Total: Int64>
- @action: Returns actual Length for 2D array.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+  <Total>
+  @action: Returns actual Length for 2D array.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
 function H2DArr.Total: Int64; overload;
 var
@@ -341,9 +341,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Population: Int64>
- @action: Returns actual Length for 2D array.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+  <Population>
+  @action: Returns actual Length for 2D array.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
 function H2DArr.Population: Int64; overload;
 var
@@ -362,10 +362,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.Inventory(items: TArray): Int64>
- @action: Returns actual Length for 2D array.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
-        Stores 2D array items as 1D to items.
+  <Inventory>
+  @action: Returns actual Length for 2D array.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+         Stores 2D array items as 1D to items.
 [==============================================================================}
 function H2DArr.Inventory(var items: TArr): Int64; overload;
 var
@@ -383,9 +383,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Inventory: Int64>
- @action: Returns actual Length for 2D array.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+  <Inventory>
+  @action: Returns actual Length for 2D array.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
 function H2DArr.Inventory: Int64; overload;
 var
@@ -397,9 +397,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Census: Int64>
- @action: Returns actual Length for 2D array.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+  <Census>
+  @action: Returns actual Length for 2D array.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
 function H2DArr.Census: Int64; overload;
 var
@@ -420,9 +420,9 @@ begin
 end; 
 
 {==============================================================================]
- <arr.TArray: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+  <TArray>
+  @action: Merges 2D array to 1D.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
 function H2DArr.TArray: TArr; overload;
 var
@@ -439,9 +439,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.TArray: TArray>
- @action: Merges 2D array to 1D.
- @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
+  <TArray>
+  @action: Merges 2D array to 1D.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
 function H2DArr.Unwrap: TArr; overload;
 var
@@ -454,9 +454,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Kill: Integer>
- @action: Combination of Length(arr) + SetLength(arr, 0).
- @note: Returns the length of main array (1st dimension)!
+  <Kill>
+  @action: Combination of Length(arr) + SetLength(arr, 0).
+  @note: Returns the length of main array (1st dimension)!
 [==============================================================================}
 function H2DArr.Kill: Integer; overload;
 begin
@@ -465,9 +465,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Kill(k2D: TIntegerArray): Int64>
- @action: Combination of Length(arr) + SetLength(arr, 0) for array indexes by k2D.
- @note: Supports custom start index! Returns the modified arr.
+  <Kill>
+  @action: Combination of Length(arr) + SetLength(arr, 0) for array indexes by k2D.
+  @note: Supports custom start index! Returns the modified arr.
         Unsafe, simply goes through the given indexes, no safety checks!
 		Use with caution, correctly.
 [==============================================================================}
@@ -484,9 +484,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Destroy(k2D: TIntegerArray): Int64>
- @action: Combination of Length(arr) + SetLength(arr, 0) for array indexes by k2D.
- @note: Completely wipes the array.
+  <Destroy>
+  @action: Combination of Length(arr) + SetLength(arr, 0) for array indexes by k2D.
+  @note: Completely wipes the array.
 [==============================================================================}
 function H2DArr.Destroy: Int64; overload;
 var
@@ -502,9 +502,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Free: Int64>
- @action: Result := Length(Self) + SetLength(Self, 0) combo for 2D array
- @note: None.
+  <Free>
+  @action: Result := Length(Self) + SetLength(Self, 0) combo for 2D array
+  @note: None.
 [==============================================================================}
 function H2DArr.Free: Int64; overload;
 var
@@ -517,9 +517,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Recreate: Int64>
- @action: Clear the array and reallocate to arrSize (negative = previous length).
- @note: Returns True if array was non-empty and/or arrSize <> 0.
+  <Recreate>
+  @action: Clear the array and reallocate to arrSize (negative = previous length).
+  @note: Returns True if array was non-empty and/or arrSize <> 0.
 [==============================================================================}
 function H2DArr.Recreate(const arrSize: Integer): Boolean; overload;
 var
@@ -536,9 +536,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Reset: Int64>
- @action: Resets all elements of the array to default values while preserving its structure.
- @note: Returns the number of elements that were reset.
+  <Reset>
+  @action: Resets all elements of the array to default values while preserving its structure.
+  @note: Returns the number of elements that were reset.
 [==============================================================================}
 function H2DArr.Reset: Int64; overload;
 var
@@ -553,7 +553,7 @@ begin
 end;
 
 {==============================================================================]
- <arr2d.Reverse>
+  <Reverse>
   @action: Reverses the 2D array in place.
   @note: Returns True only if the array contained 2 or more elements.
          Returns False if Length < 2 (no operation performed).
@@ -571,7 +571,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Reversify>
+  <Reversify>
   @action: Reverses the order of elements in a 2D array.
            Works by creating a temporary array and copying elements in reverse order.
   @note: - The operation modifies Self in place.
@@ -589,7 +589,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Reversify>
+  <Reversify>
   @action: Reverses the order of elements in a 2D array.
            Works by creating a temporary array and copying elements in reverse order.
   @note: - The operation modifies Self in place.
@@ -612,9 +612,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Pull: T2DArr>
- @action: Returns the contents of the array and leaves it empty.
- @note: After calling Pull, Self.Length = 0.
+  <Pull>
+  @action: Returns the contents of the array and leaves it empty.
+  @note: After calling Pull, Self.Length = 0.
 [==============================================================================}
 function H2DArr.Pull: T2DArr; overload;
 var
@@ -631,9 +631,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Squeeze>
- @action: Removes empty subarrays from the current 2D point array (in place).
- @note: Returns the number of removed (empty) subarrays; the array itself is resized.
+  <Squeeze>
+  @action: Removes empty subarrays from the current 2D point array (in place).
+  @note: Returns the number of removed (empty) subarrays; the array itself is resized.
 [==============================================================================}
 function H2DArr.Squeeze: Integer; overload;
 var
@@ -650,9 +650,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Squeezed>
- @action: Creates and returns a copy of the array with all empty subarrays removed.
- @note: The original array remains unchanged; the result is the squeezed copy.
+  <Squeezed>
+  @action: Creates and returns a copy of the array with all empty subarrays removed.
+  @note: The original array remains unchanged; the result is the squeezed copy.
 [==============================================================================}
 function H2DArr.Squeezed: T2DArr; overload;
 var
@@ -669,9 +669,9 @@ begin
 end;
 
 {==============================================================================]
- <T2D.Create(item: VarType; size1D, size2D: Integer)>
- @action: Creates array with item where size is length of the array.
- @note: item is placed on every index in result.
+  <Create>
+  @action: Creates array with item where size is length of the array.
+  @note: item is placed on every index in result.
 [==============================================================================}
 class function T2D.Create(const item: TVar; const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
 var

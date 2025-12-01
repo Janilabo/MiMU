@@ -376,9 +376,9 @@ class function Create(const item: TVar; const aSize: Integer = 1): TArr; overloa
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
- <arr.Add(item: VarType; duplicates: Boolean): TArray>
- @action: Appends arr with item. Returns the array with added item.
- @note: Adds item to the right side of the array.
+  <Add>
+  @action: Appends arr with item. Returns the array with added item.
+  @note: Adds item to the right side of the array.
 [==============================================================================}
 function HArr.Add(const item: TVar; const duplicates: Boolean = True): TArr; overload;
 var
@@ -395,9 +395,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Add(items: TArray; duplicates: Boolean): TArray>
- @action: Appends arr with items. Returns the array with added items.
- @note: Adds item to the right side of the array.
+  <Add>
+  @action: Appends arr with items. Returns the array with added items.
+  @note: Adds item to the right side of the array.
 [==============================================================================}
 function HArr.Add(const items: TArr; const duplicates: Boolean = True): TArr; overload;
 var
@@ -427,9 +427,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.AllEqual: Boolean>
- @action: Returns true if all values in arr are equal (arr contains only equal values).
- @note: Returns FALSE with empty array!
+  <AllEqual>
+  @action: Returns true if all values in arr are equal (arr contains only equal values).
+  @note: Returns FALSE with empty array!
 [==============================================================================}
 function HArr.AllEqual: Boolean; overload;
 var
@@ -442,9 +442,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.AllSame: Boolean>
- @action: Returns true if all values in arr are the same (arr contains only equal values).
- @note: Returns FALSE with empty array!
+  <AllSame>
+  @action: Returns true if all values in arr are the same (arr contains only equal values).
+  @note: Returns FALSE with empty array!
 [==============================================================================}
 function HArr.AllSame: Boolean; overload;
 var
@@ -457,9 +457,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.AllUnique: Boolean>
- @action: Returns true if all values in arr are unique (arr contains ONLY unique values).
- @note: None
+  <AllUnique>
+  @action: Returns true if all values in arr are unique (arr contains ONLY unique values).
+  @note: None
 [==============================================================================}
 function HArr.AllUnique: Boolean; overload;
 var
@@ -474,7 +474,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Any>
+  <Any>
   @action: Returns random array item from Self.
   @note: Returns null with empty arrays.
 [==============================================================================}
@@ -486,7 +486,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Any>
+  <Any>
   @action: Returns random array item from Self.
   @note: Make sure array has at least 1 item! This one is unsafe and returns error else.
 [==============================================================================}
@@ -496,9 +496,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Append(item: VarType; duplicates: Boolean): TArray>
- @action: Appends arr with item. Returns the index of added item.
- @note: Adds item to the right side of the array.
+  <Append>
+  @action: Appends arr with item. Returns the index of added item.
+  @note: Adds item to the right side of the array.
 [==============================================================================}
 function HArr.Append(const item: TVar; const duplicates: Boolean = True): TArr; overload;
 begin
@@ -510,9 +510,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Append(items: TArray; duplicates; Boolean): TArray>
- @action: Adds all items items to arr.
- @note: Returns the highest index in the end.
+  <Append>
+  @action: Adds all items items to arr.
+  @note: Returns the highest index in the end.
 [==============================================================================}
 function HArr.Append(const items: TArr; const duplicates: Boolean = True): TArr; overload;
 var
@@ -539,11 +539,11 @@ begin
 end;
 
 {==============================================================================]
- <arr.As2D(rows, columns: Integer): T2DArray>
- @action: Converts 1D array to 2D by rows and columns.
- @note: TIA := [1,2,3,4,5,6];
-		TIA.To2D(2, 3) = [[1, 2, 3], [4, 5, 6]]
-        TIA.To2D(3, 2) = [[1, 2], [3, 4], [5, 6]]
+  <As2D>
+  @action: Converts 1D array to 2D by rows and columns.
+  @note: TIA := [1,2,3,4,5,6];
+         TIA.To2D(2, 3) = [[1, 2, 3], [4, 5, 6]]
+         TIA.To2D(3, 2) = [[1, 2], [3, 4], [5, 6]]
 [==============================================================================}
 function HArr.As2D(const rows, columns: Integer): T2DArr; overload;
 var
@@ -557,9 +557,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.As2D(width: Integer): T2DArray>
- @action: Converts 1D array to 2D by width.
- @note: None.
+  <As2D>
+  @action: Converts 1D array to 2D by width.
+  @note: None.
 [==============================================================================}
 function HArr.As2D(const width: Integer): T2DArr; overload;
 var
@@ -576,9 +576,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Backwards: TArray>
- @action: Returns arr as reversed.
- @note: Alternative for Reversed methods
+  <Backwards>
+  @action: Returns arr as reversed.
+  @note: Alternative for Reversed methods
 [==============================================================================}
 function HArr.Backwards: TArr; overload;
 var
@@ -592,9 +592,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Blit(items: TArray; index: Integer: Integer>
- @action: Simply puts items to array index, fast.
- @note: No safety checks. Make sure buffer is enough!
+  <Blit>
+  @action: Simply puts items to array index, fast.
+  @note: No safety checks. Make sure buffer is enough!
 [==============================================================================}
 function HArr.Blit(const items: TArr; const index: Integer = 0): Integer; overload;
 var
@@ -606,7 +606,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Build(item: VarType; aSize: Integer): TArray> 
+ <Build> 
  @action: Creates array with item where aSize is length of the array.
  @note: item is placed on every index in result.
 [==============================================================================}
@@ -616,9 +616,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.MadeOf(allowed: TArray): Boolean> 
- @action: Checks if array arr contains only allowed items.
- @note: None.
+  <MadeOf> 
+  @action: Checks if array arr contains only allowed items.
+  @note: None.
 [==============================================================================}
 function HArr.MadeOf(const allowed: TArr): Boolean; overload;
 var
@@ -638,9 +638,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.FreeOf(forbidden: TArray): Boolean> 
- @action: Checks if array arr does not have any forbidden items.
- @note: None.
+  <FreeOf> 
+  @action: Checks if array arr does not have any forbidden items.
+  @note: None.
 [==============================================================================}
 function HArr.FreeOf(const forbidden: TArr): Boolean; overload;
 var
@@ -660,9 +660,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Blend(items: TArray; index: Integer): TArray> 
- @action: Blends items with array, cleverly.
- @note: None.
+  <Blend> 
+  @action: Blends items with array, cleverly.
+  @note: None.
 [==============================================================================}
 function Harr.Blend(const items: TArr; const index: Integer = 2147483647): TArr; overload;
 var
@@ -703,9 +703,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.BuiltWithout(forbidden: TArray): Boolean> 
- @action: Checks if array arr does not have any forbidden items.
- @note: None.
+  <BuiltWithout> 
+  @action: Checks if array arr does not have any forbidden items.
+  @note: None.
 [==============================================================================}
 function HArr.BuiltWithout(const forbidden: TArr): Boolean; overload;
 var
@@ -720,7 +720,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.BuiltWith(blocks TArray): Boolean>
+  <BuiltWith>
   @action: Returns true is arr is built with blocks.
   @note: This function requires blocks array to be unique (no duplicates allowed for it).
 [==============================================================================}
@@ -746,7 +746,7 @@ begin
 end;
 
 {==============================================================================]
-  <TArray.Classes: T2DArray>
+  <Classes>
   @action: Groups consecutive identical array items into sub-arrays (classes).
   @note: Works on any array. Each run of identical values becomes a class; 
          duplicate classes can exist if values repeat non-consecutively.
@@ -776,7 +776,7 @@ begin
 end;
 
 {==============================================================================]
-  <TArray.Classes: T2DArray>
+  <Classes>
   @action: Groups consecutive identical array items into sub-arrays (classes).
   @note: Works on any array. Each run of identical values becomes a class; 
          duplicate classes can exist if values repeat non-consecutively.
@@ -786,7 +786,7 @@ function HArr.Classes(const weight: TIntegerArray): T2DArr; overload; var w: Int
 function HArr.Classes(const weight: TDoubleArray): T2DArr; overload; var w: Double; {$DEFINE Skeleton_Classes}{$I Skeletons.inc}{$UNDEF Skeleton_Classes}
 
 {==============================================================================]
-  <TArray.Classify: T2DArray>
+  <Classify>
   @action: Groups consecutive identical array items into sub-arrays (classes).
   @note: Works on any array. Each run of identical values becomes a class; 
          duplicate classes can exist if values repeat non-consecutively.
@@ -820,7 +820,7 @@ begin
 end;
 
 {==============================================================================]
-  <TArray.Classify: T2DArray>
+  <Classify>
   @action: Groups consecutive identical array items into sub-arrays (classes).
   @note: Works on any array. Each run of identical values becomes a class; 
          duplicate classes can exist if values repeat non-consecutively.
@@ -830,7 +830,7 @@ function HArr.Classify(const weight: TIntegerArray): T2DArr; overload; var w: In
 function HArr.Classify(const weight: TDoubleArray): T2DArr; overload; var w: Double; {$DEFINE Skeleton_Classify}{$I Skeletons.inc}{$UNDEF Skeleton_Classify}
 
 {==============================================================================]
-  <arr.Clear: Boolean>
+  <Clear>
   @action: SetLength(arr, 0) and returns true if items existed before doing it.
   @note: None.
 [==============================================================================}
@@ -841,9 +841,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Clone(index: Integer; count: Integer): TArray>
- @action: Returns copy of an array arr.
- @note: Contains support for starting index and count. -1 count uses Length(arr)!
+  <Clone>
+  @action: Returns copy of an array arr.
+  @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
 function HArr.Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
 var
@@ -864,9 +864,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Clone(ID: TIntegerArray): TArray>
- @action: Outputs array of items from arr by indexes (ID).
- @note: Ignores invalid ID's (doesn't include those to result, they will be left out).
+  <Clone>
+  @action: Outputs array of items from arr by indexes (ID).
+  @note: Ignores invalid ID's (doesn't include those to result, they will be left out).
 [==============================================================================}
 function HArr.Clone(const ID: TIntegerArray): TArr; overload;
 var
@@ -886,9 +886,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Cloned: TArray>
- @action: Simply returns a clone of array.
- @note: None.
+  <Cloned>
+  @action: Simply returns a clone of array.
+  @note: None.
 [==============================================================================}
 function HArr.Cloned: TArr; overload;
 var
@@ -908,6 +908,18 @@ begin
   end;
 end;
 
+{==============================================================================]
+  <Collated>
+  @action: Groups the elements of the array into subarrays keyed by their value.
+           Each distinct TVar value is assigned a unique group index, and all
+           occurrences of that value are collected into the corresponding
+           subarray. The result is a 2-dimensional array where each row contains
+           all instances of a specific TVar.
+  @note: Uses a dictionary to map each unique TVar to its group position,
+         preserving the order in which unique values first appear. The
+         original ordering of elements within each group is preserved as well.
+         This operation performs a stable categorization, not a clone.
+[==============================================================================}
 function HArr.Collated: T2DArr; overload;
 var
   m: specialize TDictionary<TVar, Integer>;
@@ -932,11 +944,10 @@ begin
   end;
 end;
 
-
 {==============================================================================]
- <arr.Compact: Integer>
- @action: Removes adjacent duplicates.
- @note: Original order is preserved and non-adjacent duplicates remain.
+  <Compact>
+  @action: Removes adjacent duplicates.
+  @note: Original order is preserved and non-adjacent duplicates remain.
 [==============================================================================}
 function HArr.Compact: Integer; overload;
 var
@@ -952,9 +963,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Compacted: TArray>
- @action: Removes adjacent duplicates and returns a new compacted array.
- @note: Original order is preserved and non-adjacent duplicates remain.
+  <Compacted>
+  @action: Removes adjacent duplicates and returns a new compacted array.
+  @note: Original order is preserved and non-adjacent duplicates remain.
 [==============================================================================}
 function HArr.Compacted: TArr; overload;
 var
@@ -970,9 +981,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Compacted: TArray>
- @action: Removes adjacent duplicates and returns a new compacted array.
- @note: Custom threshold possibility.
+  <Compacted>
+  @action: Removes adjacent duplicates and returns a new compacted array.
+  @note: Custom threshold possibility.
 [==============================================================================}
 function HArr.Compacted(const threshold: Integer): TArr; overload;
 var
@@ -1004,9 +1015,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Combine(b: TArray): TArray>
- @action: Combines arrays arr and b together as single array.
- @note: This is an alternative method. :)
+  <Combine>
+  @action: Combines arrays arr and b together as single array.
+  @note: This is an alternative method. :)
 [==============================================================================}
 function HArr.Combine(const b: TArr): TArr; overload;
 begin
@@ -1016,7 +1027,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Components>
+  <Components>
   @action: Groups elements of the array into connected components based on provided connections.
            Each connection is treated as undirected. Returns a 2D array where each inner array
            represents one group of connected elements.
@@ -1077,12 +1088,12 @@ begin
 end;
 
 {==============================================================================]
- <arr.Compressed: TArray>
- @action: Produces a new array by removing all immediately repeated values,
-          effectively run-length–compressing the input.
- @note: Only consecutive duplicates are removed; values separated by others
-        are left untouched. The relative order of the remaining elements
-        is unchanged.
+  <Compressed>
+  @action: Produces a new array by removing all immediately repeated values,
+           effectively run-length–compressing the input.
+  @note: Only consecutive duplicates are removed; values separated by others
+         are left untouched. The relative order of the remaining elements
+         is unchanged.
 [==============================================================================}
 function HArr.Compressed: TArr; overload;
 var
@@ -1104,10 +1115,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.Compressed: TArray>
- @action: Produces a new array by removing all immediately repeated values,
-          effectively run-length–compressing the input.
- @note: Custom threshold possibility.
+  <Compressed>
+  @action: Produces a new array by removing all immediately repeated values,
+           effectively run-length–compressing the input.
+  @note: Custom threshold possibility.
 [==============================================================================}
 function HArr.Compressed(const threshold: Integer): TArr; overload;
 var
@@ -1134,12 +1145,12 @@ begin
 end;
 
 {==============================================================================]
- <arr.Compress: Integer>
- @action: Removes all immediately repeated values,
-          effectively run-length–compressing the input.
- @note: Only consecutive duplicates are removed; values separated by others
-        are left untouched. The relative order of the remaining elements
-        is unchanged.
+  <Compress>
+  @action: Removes all immediately repeated values,
+           effectively run-length–compressing the input.
+  @note: Only consecutive duplicates are removed; values separated by others
+         are left untouched. The relative order of the remaining elements
+         is unchanged.
 [==============================================================================}
 function HArr.Compress: Integer; overload;
 var
@@ -1155,9 +1166,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Comprised(items: TArray): Boolean>
- @action: Returns true if arr is built of items only.
- @note: 
+  <Comprised>
+  @action: Returns true if arr is built of items only.
+  @note: 
 [==============================================================================}
 function HArr.Comprised(const items: TArr): Boolean; overload;
 var
@@ -1170,9 +1181,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Constant(item: VarType): Boolean>
- @action: Returns true if arr consists of item ONLY.
- @note: Requires at least single item. Otherwise returns False. (With empty arrays)
+  <Constant>
+  @action: Returns true if arr consists of item ONLY.
+  @note: Requires at least single item. Otherwise returns False. (With empty arrays)
 [==============================================================================}
 function HArr.Constant(const item: TVar): Boolean; overload;
 var
@@ -1185,9 +1196,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Constant: Boolean>
- @action: Returns true if arr consists of ONLY same items.
- @note: Requires at least single item. Otherwise returns False. (With empty arrays)
+  <Constant>
+  @action: Returns true if arr consists of ONLY same items.
+  @note: Requires at least single item. Otherwise returns False. (With empty arrays)
 [==============================================================================}
 function HArr.Constant: Boolean; overload;
 begin
@@ -1195,9 +1206,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Contains(item: VarType; index: Integer): Boolean>
- @action: Looks array for item starting from start index. If found, Result will be True.
- @note: None.
+  <Contains>
+  @action: Looks array for item starting from start index. If found, Result will be True.
+  @note: None.
 [==============================================================================}
 function HArr.Contains(const item: TVar; const index: Integer = 0): Boolean; overload;
 var
@@ -1210,9 +1221,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Copy(index: Integer; count: Integer): TArray>
- @action: Returns copy of an array arr.
- @note: Contains support for starting index and count. -1 count uses Length(arr)!
+  <Copy>
+  @action: Returns copy of an array arr.
+  @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
 function HArr.Copy(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
 var
@@ -1233,9 +1244,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Copied: TArray>
- @action: Simply returns a copy of array.
- @note: None.
+  <Copied>
+  @action: Simply returns a copy of array.
+  @note: None.
 [==============================================================================}
 function HArr.Copied: TArr; overload;
 var
@@ -1258,9 +1269,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Create(item: VarType): TArray> 
- @action: Creates array with item, size as 1. Returns old Self.
- @note: [item]
+  <Create> 
+  @action: Creates array with item, size as 1. Returns old Self.
+  @note: [item]
 [==============================================================================}
 function HArr.Create(const item: TVar): TArr; overload;
 begin
@@ -1270,9 +1281,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Create(aSize: Integer; item: VarType): TArray> 
- @action: Creates array with item where aSize is length of the array. Returns old Self.
- @note: item is placed on every index in result.
+  <Create> 
+  @action: Creates array with item where aSize is length of the array. Returns old Self.
+  @note: item is placed on every index in result.
 [==============================================================================}
 function HArr.Create(const aSize: Integer; const item: TVar): TArr; overload;
 var
@@ -1285,9 +1296,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Deduplicated: TArray>
- @action: Removes adjacent duplicates and returns a new compacted array.
- @note: Original order is preserved and non-adjacent duplicates remain.
+  <Deduplicated>
+  @action: Removes adjacent duplicates and returns a new compacted array.
+  @note: Original order is preserved and non-adjacent duplicates remain.
 [==============================================================================}
 function HArr.Deduplicated: TArr; overload;
 var
@@ -1304,9 +1315,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Delete(index: Integer): TArray>
- @action: Deletes array item from arr by index.
- @note: Returns true with success (index existed in arr).
+  <Delete>
+  @action: Deletes array item from arr by index.
+  @note: Returns true with success (index existed in arr).
 [==============================================================================}
 function HArr.Delete(const index: Integer = 0): TArr; overload;
 var
@@ -1323,9 +1334,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Delete(ID: TIntegerArray): Integer>
- @action: Deletes array items from arr by indexes (ID).
- @note: Returns amount of items that were deleted succesfully by ID's.
+  <Delete>
+  @action: Deletes array items from arr by indexes (ID).
+  @note: Returns amount of items that were deleted succesfully by ID's.
 [==============================================================================}
 function HArr.Delete(const ID: TIntegerArray): TArr; overload;
 var
@@ -1345,12 +1356,12 @@ begin
 end;
 
 {==============================================================================]
- <arr.Devein>
- @action: Creates a copy of the current array with elements at the specified indices removed.
-          Elements at the positions listed in dIDs are excluded, and the resulting array is compacted.
- @note:   The optional dValue parameter is used as a sentinel to mark elements for removal.
-          The original array (Self) is not modified.
-          If dIDs contains indices out of range, they are ignored. Empty arrays for Self or dIDs result in an unchanged copy.
+  <Devein>
+  @action: Creates a copy of the current array with elements at the specified indices removed.
+           Elements at the positions listed in dIDs are excluded, and the resulting array is compacted.
+  @note: The optional dValue parameter is used as a sentinel to mark elements for removal.
+         The original array (Self) is not modified.
+         If dIDs contains indices out of range, they are ignored. Empty arrays for Self or dIDs result in an unchanged copy.
 [==============================================================================}
 function HArr.Devein(const dIDs: TIntegerArray; const dValue: TVar): TArr; overload;
 var
@@ -1379,9 +1390,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Differ(target: TArray): Boolean>
- @action: Returns true if arr differs from target.
- @note: None
+  <Differ>
+  @action: Returns true if arr differs from target.
+  @note: None
 [==============================================================================}
 function HArr.Differ(const target: TArr): Boolean; overload;
 var
@@ -1395,10 +1406,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.Distinct>
- @action: Returns the number of unique elements in array 
- @note: None.
- [==============================================================================}
+  <Distinct>
+  @action: Returns the number of unique elements in array 
+  @note: None.
+[==============================================================================}
 function HArr.Distinct: Integer; overload;
 var
   i, j: Integer;
@@ -1422,7 +1433,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Distincted>
+  <Distincted>
   @action: Groups the integer array into subarrays by unique values. Each subarray
            in the result contains all occurrences of one distinct integer from Self,
            preserving the order of first appearance.
@@ -1453,10 +1464,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.Disordered>
- @action: Returns array with randomized order (disorder)
- @note: [1,2,3] => [1,3,2] | [2,1,3] | [2,3,1] | [3,2,1] ...
- [==============================================================================}
+  <Disordered>
+  @action: Returns array with randomized order (disorder)
+  @note: [1,2,3] => [1,3,2] | [2,1,3] | [2,3,1] | [3,2,1] ...
+[==============================================================================}
 function HArr.Disordered: TArr; overload;
 var
   m: TBooleanArray;
@@ -1478,10 +1489,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.Distribute(parts: Integer): T2DArray>
- @action: Distributes array arr to 2D array by number of parts.
- @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5][6,7]
- [==============================================================================}
+  <Distribute>
+  @action: Distributes array arr to 2D array by number of parts.
+  @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5][6,7]
+[==============================================================================}
 function HArr.Distribute(const parts: Integer): T2DArr; overload;
 var
   l, p, b, r, i, j, s, c: Integer;
@@ -1508,10 +1519,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.Diversified: TArray>
- @action: Alternative for Unique methods
- @note: None.
- [==============================================================================}
+  <Diversified>
+  @action: Alternative for Unique methods
+  @note: None.
+[==============================================================================}
 function HArr.Diversified: TArr; overload;
 var
   d: specialize TDictionary<TVar, Boolean>;
@@ -1533,10 +1544,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.DiversifiedEx: TArray>
- @action: Alternative for Unique methods
- @note: None.
- [==============================================================================}
+  <DiversifiedEx>
+  @action: Alternative for Unique methods
+  @note: None.
+[==============================================================================}
 function HArr.DiversifiedEx(const dAscending: Boolean = True): TArr; overload;
 var
   l: specialize TList<TVar>;
@@ -1570,7 +1581,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Domain: TRange>
+  <Domain>
   @action: Returns the valid index range of the array.
   @note: 
     - If the array is empty, start and stop are set to -1.
@@ -1586,9 +1597,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Drop(item: VarType; eraseDuplicates: Boolean): TArray>
- @action: Removes item(s) from arr and returns it.
- @note: 	
+  <Drop>
+  @action: Removes item(s) from arr and returns it.
+  @note: 	
 [==============================================================================}
 function HArr.Drop(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload;
 var
@@ -1606,9 +1617,9 @@ begin
 end;
 
 {==============================================================================]
- <TArray_Dump(items: TArray; index: Integer): TArray>
- @action: Deletes items from array, keeps others. Returns array length (after action).
- @note: Supports custom start index!
+  <Dump>
+  @action: Deletes items from array, keeps others. Returns array length (after action).
+  @note: Supports custom start index!
 [==============================================================================}
 function HArr.Dump(const items: TArr; const index: Integer = 0): TArr; overload;
 var
@@ -1632,9 +1643,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Dupe: TArray>
- @action: Returns copy of an array arr.
- @note: None.
+  <Dupe>
+  @action: Returns copy of an array arr.
+  @note: None.
 [==============================================================================}
 function HArr.Dupe: TArr; overload;
 var
@@ -1659,9 +1670,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Duplicate(xTimes: Integer): TArray>
- @action: Returns copy of an array arr.
- @note: None.
+  <Duplicate>
+  @action: Returns copy of an array arr.
+  @note: None.
 [==============================================================================}
 function HArr.Duplicate(const xTimes: Integer = 1): TArr; overload;
 var
@@ -1677,9 +1688,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Elements(returnIDs: Integer): TArray>
- @action: Returns copy of an array arr.
- @note: None.
+  <Elements>
+  @action: Returns copy of an array arr.
+  @note: None.
 [==============================================================================}
 function HArr.Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): TArr; overload;
 var
@@ -1713,9 +1724,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Emplace(item: VarType; index: Integer): Integer>
- @action: Inserts item to index in arr. Returns the index it was inserted to.
- @note: Alternative for Insert().
+  <Emplace>
+  @action: Inserts item to index in arr. Returns the index it was inserted to.
+  @note: Alternative for Insert().
 [==============================================================================}
 function HArr.Emplace(const item: TVar; const index: Integer = 0): Integer; overload;
 var
@@ -1729,9 +1740,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Empty: Boolean>
- @action: Returns true if array is empty (Length = 0).
- @note: None.
+  <Empty>
+  @action: Returns true if array is empty (Length = 0).
+  @note: None.
 [==============================================================================}
 function HArr.Empty: Boolean; overload;
 begin
@@ -1739,9 +1750,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Equal(target: TArray): Boolean>
- @action: Returns true if arr equals target (identical arrays)
- @note: None
+  <Equal>
+  @action: Returns true if arr equals target (identical arrays)
+  @note: None
 [==============================================================================}
 function HArr.Equal(const target: TArr): Boolean; overload;
 var
@@ -1755,9 +1766,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Erase(item: VarType; index: Integer; all: Boolean): TArray>
- @action: Deletes item(s) from array arr. Only 1 if all is set as False.
- @note: Returns amount of items that were removed. Supports start index position.
+  <Erase>
+  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
+  @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
 function HArr.Erase(const item: TVar; const index: Integer = 2147483647; const all: Boolean = True): TArr; overload;
 var
@@ -1794,9 +1805,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Erase(item: VarType; all: Boolean): TArray>
- @action: Deletes item(s) from array arr. Only 1 if all is set as False.
- @note: Returns amount of items that were removed.
+  <Erase>
+  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
+  @note: Returns amount of items that were removed.
 [==============================================================================}
 function HArr.Erase(const item: TVar; const all: Boolean): TArr; overload;
 begin
@@ -1804,9 +1815,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Erase(items: TArray; index: Integer; all: Boolean): TArray>
- @action: Deletes item(s) from array arr. Only 1 if all is set as False.
- @note: Returns amount of items that were removed. Supports start index position.
+  <Erase>
+  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
+  @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
 function HArr.Erase(const items: TArr; const index: Integer = 2147483647; const all: Boolean = True): TArr; overload;
 var
@@ -1846,9 +1857,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Erase(items: TArray; all: Boolean): TArray>
- @action: Deletes item(s) from array arr. Only 1 if all is set as False.
- @note: Returns amount of items that were removed.
+  <Erase>
+  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
+  @note: Returns amount of items that were removed.
 [==============================================================================}
 function HArr.Erase(const items: TArr; const all: Boolean): TArr; overload;
 begin
@@ -1856,15 +1867,15 @@ begin
 end;
 
 {==============================================================================]
- <arr.Exact(items: TArray): Boolean>
- @action: Returns true if arr consists of items.
- @note: arr must contain ALL the items for this function to return True.
-        Any extra items will cause Result to be False also.
-		items[1,2,3]
-		arr[1,2,3,1,2,3] => True
-		arr[2,3,2,3] => False
-		arr[2,1,3,4] => False
-		This function requires items array to be unique. No duplicates allowed for it!
+  <Exact>
+  @action: Returns true if arr consists of items.
+  @note: arr must contain ALL the items for this function to return True.
+         Any extra items will cause Result to be False also.
+         items[1,2,3]
+         arr[1,2,3,1,2,3] => True
+         arr[2,3,2,3] => False
+         arr[2,1,3,4] => False
+         This function requires items array to be unique. No duplicates allowed for it!
 [==============================================================================}
 function HArr.Exact(const items: TArr): Boolean; overload;
 var
@@ -1886,9 +1897,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Excessive: Boolean>
- @action: Returns true if arr contains any duplicates in it.
- @note: None.
+  <Excessive>
+  @action: Returns true if arr contains any duplicates in it.
+  @note: None.
 [==============================================================================}
 function HArr.Excessive: Boolean; overload; 
 type
@@ -1911,9 +1922,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Exch(aIndex, bIndex: Integer): Boolean>
- @action: Fast version of Exchange().
- @note: Unsafe, no checking.
+  <Exch>
+  @action: Fast version of Exchange().
+  @note: Unsafe, no checking.
 [==============================================================================}
 function HArr.Exch(const aIndex, bIndex: Integer): Boolean; overload;
 var
@@ -1926,9 +1937,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Exchange(aIndex, bIndex: Integer): Boolean>
- @action: Swap items aIndex and bIndex in array arr.
- @note: Returns true with success.
+  <Exchange>
+  @action: Swap items aIndex and bIndex in array arr.
+  @note: Returns true with success.
 [==============================================================================}
 function HArr.Exchange(const aIndex, bIndex: Integer): Boolean; overload;
 var
@@ -1946,9 +1957,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Exchange(b: TArray): Integer> 
- @action: Swaps array arr and array b.
- @note: arr will be b and b will be arr.
+  <Exchange> 
+  @action: Swaps array arr and array b.
+  @note: arr will be b and b will be arr.
 [==============================================================================}
 function HArr.Exchange(var b: TArr): Integer; overload;
 var
@@ -1964,7 +1975,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Exchange>
+  <Exchange>
   @action: Applies a sequence of swaps (from <arr.Exchanges>) to the current
            array (Self), producing a new array reflecting all swaps performed.
   @note: - Each swap exchanges two indices (id1,id2).
@@ -1981,7 +1992,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Exchanges>
+  <Exchanges>
   @action: Generates a sequence of adjacent swaps (id1,id2) required to
            transform the current array (Self) into the target array.
            Each swap exchanges two neighboring elements.
@@ -2013,9 +2024,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Exclude(items: TArray; index: Integer): TArray>
- @action: Returns a new array with elements from items excluded, up to and including the specified index.
- @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
+  <Exclude>
+  @action: Returns a new array with elements from items excluded, up to and including the specified index.
+  @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
          The default index filters the entire array.
 [==============================================================================}
 function HArr.Exclude(const items: TArr; const index: Integer = 2147483647): TArr; overload;
@@ -2040,9 +2051,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Exists: Boolean>
- @action: Returns true if array length is not 0.
- @note: Alternative for arr.Populated.
+  <Exists>
+  @action: Returns true if array length is not 0.
+  @note: Alternative for arr.Populated.
 [==============================================================================}
 function HArr.Exists: Boolean; overload;
 begin
@@ -2050,13 +2061,13 @@ begin
 end;
 
 {==============================================================================]
- <arr.Expel>
- @action: Returns a copy of the current array (Self) with elements at the specified indices removed.
-          The resulting array is compacted, excluding all elements listed in eIDs.
- @note: If the current array is empty, returns an empty array.
-        If eIDs is empty, returns a copy of the original array.
-        Indices in eIDs that are out of range are ignored.
-        Uses -2147483648 as an internal sentinel to mark elements for removal.
+  <Expel>
+  @action: Returns a copy of the current array (Self) with elements at the specified indices removed.
+           The resulting array is compacted, excluding all elements listed in eIDs.
+  @note: If the current array is empty, returns an empty array.
+         If eIDs is empty, returns a copy of the original array.
+         Indices in eIDs that are out of range are ignored.
+         Uses -2147483648 as an internal sentinel to mark elements for removal.
 [==============================================================================}
 function HArr.Expel(const eIDs: TIntegerArray): TArr; overload;
 var
@@ -2082,9 +2093,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Extend(item: VarType): TArray>
- @action: Extends arr with item. Returns it.
- @note: Places item to the left side of the array.
+  <Extend>
+  @action: Extends arr with item. Returns it.
+  @note: Places item to the left side of the array.
 [==============================================================================}
 function HArr.Extend(const item: TVar): TArr; overload;
 var
@@ -2098,9 +2109,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Extend(items: TArray): TArray>
- @action: Extends arr with items. Returns it.
- @note: Places items to the left side of the array.
+  <Extend>
+  @action: Extends arr with items. Returns it.
+  @note: Places items to the left side of the array.
 [==============================================================================}
 function HArr.Extend(const items: TArr): TArr; overload;
 var
@@ -2116,9 +2127,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Extract(item: VarType; index: Integer): TArray>
- @action: Keeps (extracts) all values in arr that are item. Starts scan from start index.
- @note: Returns the items.
+  <Extract>
+  @action: Keeps (extracts) all values in arr that are item. Starts scan from start index.
+  @note: Returns the items.
 [==============================================================================} 
 function HArr.Extract(const item: TVar; const index: Integer = 0): TArr; overload;
 var
@@ -2134,9 +2145,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Extract(items: TArray; index: Integer): TArray>
- @action: Keeps (extracts) all values in arr that are in items. Starts scan from start index.
- @note: Returns the items.
+  <Extract>
+  @action: Keeps (extracts) all values in arr that are in items. Starts scan from start index.
+  @note: Returns the items.
 [==============================================================================}
 function HArr.Extract(const items: TArr; const index: Integer = 0): TArr; overload;
 var
@@ -2155,9 +2166,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.ExtractEvery(X: Integer; index: Integer): TArray>
- @action: Keeps (extracts) all X values from array. Starts scan from start index.
- @note: Returns the items.
+  <ExtractEvery>
+  @action: Keeps (extracts) all X values from array. Starts scan from start index.
+  @note: Returns the items.
 [==============================================================================} 
 function HArr.ExtractEvery(const X: Integer = 1; const index: Integer = 0): TArr; overload;
 var
@@ -2175,9 +2186,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.ExtractIDs(allowed: TIntegerArray): TArray>
- @action: Keeps (extracts) all allowed index values from array.
- @note: None.
+  <ExtractIDs>
+  @action: Keeps (extracts) all allowed index values from array.
+  @note: None.
 [==============================================================================}
 function HArr.ExtractIDs(const allowed: TIntegerArray): TArr; overload;
 var
@@ -2200,9 +2211,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.ExtractIndexes(allowed: TIntegerArray; aSorted: Boolean): TArray>
- @action: Keeps (extracts) all allowed index values from array.
- @note: If allowed is not in ascending order, aSorted needs to be False.
+  <ExtractIndexes>
+  @action: Keeps (extracts) all allowed index values from array.
+  @note: If allowed is not in ascending order, aSorted needs to be False.
 [==============================================================================}
 function HArr.ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): TArr; overload;
 var
@@ -2225,9 +2236,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Feed(item: VarType; allowDuplicates: Boolean): Integer>
- @action: Feeds item to array and returns the index position it was added to.
- @note: Returns -1 if duplicates are not allowed and array already includes item.
+  <Feed>
+  @action: Feeds item to array and returns the index position it was added to.
+  @note: Returns -1 if duplicates are not allowed and array already includes item.
 [==============================================================================}
 function HArr.Feed(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload;
 begin
@@ -2239,9 +2250,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Fill(item: VarType; index: Integer; count: Integer): TArray>
- @action: Fills whole arr with item.
- @note: Returns the filled array.
+  <Fill>
+  @action: Fills whole arr with item.
+  @note: Returns the filled array.
 [==============================================================================}
 function HArr.Fill(const item: TVar; const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
 var
@@ -2260,9 +2271,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Fill(items: TArray; index: Integer; count: Integer): TArray>
- @action: Fills whole arr with items.
- @note: None
+  <Fill>
+  @action: Fills whole arr with items.
+  @note: None
 [==============================================================================}
 function HArr.Fill(const items: TArr; const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
 var
@@ -2286,9 +2297,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Filter(item: VarType; index: Integer): TArray>
- @action: Removes all values from arr that are found in items.
- @note: None
+  <Filter>
+  @action: Removes all values from arr that are found in items.
+  @note: None
 [==============================================================================}
 function HArr.Filter(const item: TVar; const index: Integer = 0): TArr; overload;
 var
@@ -2304,9 +2315,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Filter(items: TArray; index: Integer): TArray>
- @action: Removes all values from arr that are found in items.
- @note: None
+  <Filter>
+  @action: Removes all values from arr that are found in items.
+  @note: None
 [==============================================================================}
 function HArr.Filter(const items: TArr; const index: Integer = 0): TArr; overload;
 var
@@ -2324,9 +2335,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.FilterEvery(X: Integer; index: Integer): TArray>
- @action: Filters every/each X item from arr.
- @note: Custom index
+  <FilterEvery>
+  @action: Filters every/each X item from arr.
+  @note: Custom index
 [==============================================================================}
 function HArr.FilterEvery(const X: Integer = 1; const index: Integer = 0): TArr; overload;
 var
@@ -2344,9 +2355,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.FilterIDs(forbidden: TIntegerArray): TArray>
- @action: Returns the array without values from forbidden indexes.
- @note: None.
+  <FilterIDs>
+  @action: Returns the array without values from forbidden indexes.
+  @note: None.
 [==============================================================================}
 function HArr.FilterIDs(const forbidden: TIntegerArray): TArr; overload;
 var
@@ -2369,9 +2380,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.FilterIndexes(forbidden: TIntegerArray; fSorted: Boolean): TArray>
- @action: Returns the array without values from forbidden indexes.
- @note: If forbidden is not in ascending order, fSorted needs to be False.
+  <FilterIndexes>
+  @action: Returns the array without values from forbidden indexes.
+  @note: If forbidden is not in ascending order, fSorted needs to be False.
 [==============================================================================}
 function HArr.FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): TArr; overload;
 var
@@ -2396,9 +2407,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Find(item: VarType; ID: TRange): Integer>
- @action: Scans array for item by IDs. Returns position if found.
- @note: Unsafe method! No safety checking.
+  <Find>
+  @action: Scans array for item by IDs. Returns position if found.
+  @note: Unsafe method! No safety checking.
 [==============================================================================}
 function HArr.Find(const ID: TRange; const item: TVar): Integer; overload;
 begin
@@ -2417,9 +2428,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Find(item: VarType; ID: TIntegerArray): Integer>
- @action: Scans array for item by IDs. Returns position if found.
- @note: Unsafe method! No safety checking.
+  <Find>
+  @action: Scans array for item by IDs. Returns position if found.
+  @note: Unsafe method! No safety checking.
 [==============================================================================}
 function HArr.Find(const ID: TIntegerArray; const item: TVar): Integer; overload;
 var
@@ -2433,9 +2444,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Find(items: TArray; ID: TRange): Integer>
- @action: Scans array for items by IDs. Returns position if found.
- @note: Unsafe method! No safety checking.
+  <Find>
+  @action: Scans array for items by IDs. Returns position if found.
+  @note: Unsafe method! No safety checking.
 [==============================================================================}
 function HArr.Find(const ID: TRange; const items: TArr): Integer; overload;
 begin
@@ -2454,9 +2465,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Find(items: TArray; ID: TIntegerArray): Integer>
- @action: Scans array for items by IDs. Returns position if found.
- @note: Unsafe method! No safety checking.
+  <Find>
+  @action: Scans array for items by IDs. Returns position if found.
+  @note: Unsafe method! No safety checking.
 [==============================================================================}
 function HArr.Find(const ID: TIntegerArray; const items: TArr): Integer; overload;
 var
@@ -2470,9 +2481,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.First: Integer>
- @action: Returns the first index of arr.
- @note: With empty array result will be -1!
+  <First>
+  @action: Returns the first index of arr.
+  @note: With empty array result will be -1!
 [==============================================================================}
 function HArr.First: Integer; overload;
 begin
@@ -2480,9 +2491,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.First(item: VarType): Integer>
- @action: Returns the first index that matches item in arr.
- @note: Unmatch will be -1!
+  <First>
+  @action: Returns the first index that matches item in arr.
+  @note: Unmatch will be -1!
 [==============================================================================}
 function HArr.First(const item: TVar): Integer; overload;
 begin
@@ -2493,9 +2504,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.First(items: TArray): Integer>
- @action: Returns the first arr index that matches any of the items.
- @note: Unmatch will be -1!
+  <First>
+  @action: Returns the first arr index that matches any of the items.
+  @note: Unmatch will be -1!
 [==============================================================================}
 function HArr.First(const items: TArr): Integer; overload;
 begin
@@ -2506,7 +2517,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Fit: Integer>
+  <Fit>
   @action: Returns array length.
   @note: Alternative.
 [==============================================================================}
@@ -2516,7 +2527,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Fit: Integer>
+  <Fit>
   @action: Resizes the array to aSize (sets length safely).
   @note: Returns the length that was set to Self. Negative sizes are clamped to 0.
 [==============================================================================}
@@ -2527,7 +2538,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Fit: Integer>
+  <Fit>
   @action: Resizes the array to fit within the specified range.
   @note: 
     - Returns the final array length. 
@@ -2555,9 +2566,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Fits(maxValue: Integer): Integer>
- @action: Returns true if arr size is at maximum maxValue.
- @note: None.
+  <Fits>
+  @action: Returns true if arr size is at maximum maxValue.
+  @note: None.
 [==============================================================================}
 function HArr.Fits(const maxValue: Integer): Boolean; overload;
 begin
@@ -2565,9 +2576,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Fits(target: TRange): Integer>
- @action: Returns true if arr size is between target start and stop.
- @note: None.
+  <Fits>
+  @action: Returns true if arr size is between target start and stop.
+  @note: None.
 [==============================================================================}
 function HArr.Fits(const target: TRange): Boolean; overload;
 begin
@@ -2575,9 +2586,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Flip: Boolean>
- @action: Reverses array arr.
- @note: Alternative for TArray_Reverse
+  <Flip>
+  @action: Reverses array arr.
+  @note: Alternative for TArray_Reverse
 [==============================================================================}
 function HArr.Flip: Boolean; overload;
 var
@@ -2590,9 +2601,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Free: Integer>
- @action: Result := Length(Self) + SetLength(Self, 0) combo. 
- @note: None.
+  <Free>
+  @action: Result := Length(Self) + SetLength(Self, 0) combo. 
+  @note: None.
 [==============================================================================}
 function HArr.Free: Integer; overload;
 begin
@@ -2601,9 +2612,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.FromLeft(count, index): TArray>
- @action: Returns count of array items from left-side by index.
- @note: None
+  <FromLeft>
+  @action: Returns count of array items from left-side by index.
+  @note: None
 [==============================================================================}
 function HArr.FromLeft(const count: Integer; const index: Integer = 2147483647): TArr; overload;
 var
@@ -2619,9 +2630,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.FromRight(count, index): TArray>
- @action: Returns count of array items from right-side by index.
- @note: None
+  <FromRight>
+  @action: Returns count of array items from right-side by index.
+  @note: None
 [==============================================================================}
 function HArr.FromRight(const count: Integer; const index: Integer = 0): TArr; overload;
 var
@@ -2637,9 +2648,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Get: TArray>
- @action: Copy of an array arr.
- @note: Just an alternative.
+  <Get>
+  @action: Copy of an array arr.
+  @note: Just an alternative.
 [==============================================================================}
 function HArr.Get: TArr; overload;
 var
@@ -2653,9 +2664,9 @@ begin
  end;
 
 {==============================================================================]
- <arr.Get(ID: TIntegerArray): TArray>
- @action: Outputs array of items from arr by indexes (IDs).
- @note: Unsafe method! No safety checking.
+  <Get>
+  @action: Outputs array of items from arr by indexes (IDs).
+  @note: Unsafe method! No safety checking.
 [==============================================================================}
 function HArr.Get(const ID: TIntegerArray): TArr; overload;
 var
@@ -2667,9 +2678,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Get(ID: TRange): TArray>
- @action: Outputs array of items from arr by indexes (IDs).
- @note: Unsafe method! No safety checking.
+  <Get>
+  @action: Outputs array of items from arr by indexes (IDs).
+  @note: Unsafe method! No safety checking.
 [==============================================================================}
 function HArr.Get(const ID: TRange): TArr; overload;
 var
@@ -2688,9 +2699,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Group: T2DArray>
- @action: Groups array arr to 2D array by items.
- @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
+  <Group>
+  @action: Groups array arr to 2D array by items.
+  @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
 [==============================================================================}
 function HArr.Group: T2DArr; overload;
 var
@@ -2723,25 +2734,25 @@ begin
 end;
 
 {==============================================================================]
- <arr.Group: T2DArray>
- @action: Groups array arr to 2D array by items.
- @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
+  <Group>
+  @action: Groups array arr to 2D array by items.
+  @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
 [==============================================================================}
 function HArr.Group(const weight: TIntegerArray; const wSorted: Boolean = False): T2DArr; overload; var w: TIntegerArray; {$DEFINE Skeleton_Group}{$I Skeletons.inc}{$UNDEF Skeleton_Group}
 function HArr.Group(const weight: TDoubleArray; const wSorted: Boolean = False): T2DArr; overload; var w: TDoubleArray; {$DEFINE Skeleton_Group}{$I Skeletons.inc}{$UNDEF Skeleton_Group}
 
 {==============================================================================]
- <arr.Grouped>
- @action: Groups the current array (Self) into sub-arrays based on the
-          integer group IDs provided in groups, without performing any
-          sorting. Unique group IDs are detected in the order they first
-          appear, and each corresponding sub-array is filled accordingly.
- @note: • Requires Length(Self) = Length(groups).
-        • Preserves the first-appearance order of groups.
-        • Simpler but slower: overall O(n²) due to nested lookups.
-        • Uses arr.Supply to dynamically append unique IDs and points.
-        • Best suited for small datasets or when original group order must
-          be maintained.
+  <Grouped>
+  @action: Groups the current array (Self) into sub-arrays based on the
+           integer group IDs provided in groups, without performing any
+           sorting. Unique group IDs are detected in the order they first
+           appear, and each corresponding sub-array is filled accordingly.
+  @note: • Requires Length(Self) = Length(groups).
+         • Preserves the first-appearance order of groups.
+         • Simpler but slower: overall O(n²) due to nested lookups.
+         • Uses arr.Supply to dynamically append unique IDs and points.
+         • Best suited for small datasets or when original group order must
+           be maintained.
 [==============================================================================}
 function HArr.Grouped(const groups: TIntegerArray): T2DArr; overload;
 var
@@ -2777,18 +2788,18 @@ begin
 end;
 
 {==============================================================================]
- <arr.Grouping>
- @action: Groups the current array (Self) into sub-arrays based on the
-          integer group IDs provided in groups. Items that share the same
-          group value are placed in the same sub-array. The operation first
-          sorts all item indices by their group ID using arr.QuickSorted,
-          then builds the resulting cluster list in a single forward pass.
- @note: • Requires Length(Self) = Length(groups).
-        • Runs in O(n log n) time due to sorting.
-        • The resulting clusters are ordered by ascending group ID.
-        • Uses dynamic array resizing during construction.
-        • Suitable for large datasets where grouping speed matters more
-          than preserving the original order.
+  <Grouping>
+  @action: Groups the current array (Self) into sub-arrays based on the
+           integer group IDs provided in groups. Items that share the same
+           group value are placed in the same sub-array. The operation first
+           sorts all item indices by their group ID using arr.QuickSorted,
+           then builds the resulting cluster list in a single forward pass.
+  @note: • Requires Length(Self) = Length(groups).
+         • Runs in O(n log n) time due to sorting.
+         • The resulting clusters are ordered by ascending group ID.
+         • Uses dynamic array resizing during construction.
+         • Suitable for large datasets where grouping speed matters more
+           than preserving the original order.
 [==============================================================================}
 function HArr.Grouping(const groups: TIntegerArray): T2DArr; overload;
 var
@@ -2820,20 +2831,20 @@ begin
 end;
 
 {==============================================================================]
- <arr.Groupify>
- @action: Groups the current array (Self) into sub-arrays according to the
-          integer group identifiers provided in groups. Each unique group value
-          becomes a separate sub-array in the result, containing all elements
-          from Self whose corresponding index in groups matches that group.
- @note: • Requires `Length(Self) = Length(groups).
-        • Returns an empty result if the input is empty or lengths differ.
-        • Uses a TDictionary<Integer, TArr> internally for O(1) average
-          grouping performance.
-        • The resulting order of groups in Result is **not deterministic**
-          because TDictionary.Values does not preserve insertion or sorted
-          order.
-        • Best suited for large datasets where grouping speed is more
-          important than predictable output order.
+  <Groupify>
+  @action: Groups the current array (Self) into sub-arrays according to the
+           integer group identifiers provided in groups. Each unique group value
+           becomes a separate sub-array in the result, containing all elements
+           from Self whose corresponding index in groups matches that group.
+  @note: • Requires `Length(Self) = Length(groups).
+         • Returns an empty result if the input is empty or lengths differ.
+         • Uses a TDictionary<Integer, TArr> internally for O(1) average
+           grouping performance.
+         • The resulting order of groups in Result is **not deterministic**
+           because TDictionary.Values does not preserve insertion or sorted
+           order.
+         • Best suited for large datasets where grouping speed is more
+           important than predictable output order.
 [==============================================================================}
 function HArr.Groupify(const groups: TIntegerArray): T2DArr; overload;
 var
@@ -2860,9 +2871,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Grow(item: VarType; allowDuplicates: Boolean): Integer>
- @action: Feeds item to array and returns the index position it was added to.
- @note: Returns -1 if duplicates are not allowed and array already contains item.
+  <Grow>
+  @action: Feeds item to array and returns the index position it was added to.
+  @note: Returns -1 if duplicates are not allowed and array already contains item.
 [==============================================================================}
 function HArr.Grow(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload;
 begin
@@ -2874,9 +2885,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Holds(chain: TArray): Boolean>
- @action: Returns true if arr contains (holds) WHOLE chain of items in it.
- @note: Starting from any index and ending to any index!
+  <Holds>
+  @action: Returns true if arr contains (holds) WHOLE chain of items in it.
+  @note: Starting from any index and ending to any index!
 [==============================================================================}
 function HArr.Holds(const chain: TArr): Boolean; overload;
 var
@@ -2902,9 +2913,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Homogeneous(item: VarType): Boolean>
- @action: Returns true if arr consists of ONLY same items.
- @note: Requires at least single item. Otherwise returns False. (With empty arrays)
+  <Homogeneous>
+  @action: Returns true if arr consists of ONLY same items.
+  @note: Requires at least single item. Otherwise returns False. (With empty arrays)
 [==============================================================================}
 function HArr.Homogeneous(const item: TVar): Boolean; overload;
 var
@@ -2918,9 +2929,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Homogeneous: Boolean>
- @action: Returns true if arr consists of ONLY same items.
- @note: Requires at least single item. Otherwise returns False. (With empty arrays)
+  <Homogeneous>
+  @action: Returns true if arr consists of ONLY same items.
+  @note: Requires at least single item. Otherwise returns False. (With empty arrays)
 [==============================================================================}
 function HArr.Homogeneous: Boolean; overload;
 begin
@@ -2928,9 +2939,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.ID(aAscending: Boolean): TIntegerArray>
- @action: Returns indexes of arr as TIntegerArray.
- @note: None.
+  <ID>
+  @action: Returns indexes of arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function HArr.ID(const aAscending: Boolean = True): TIntegerArray; overload;
 var
@@ -2945,9 +2956,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.IDs(aAscending: Boolean): TIntegerArray>
- @action: Returns IDs of arr as TIntegerArray.
- @note: None.
+  <IDs>
+  @action: Returns IDs of arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function HArr.IDs(const aAscending: Boolean = True): TIntegerArray; overload;
 var
@@ -2966,9 +2977,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.IDs(IDs: TIntegerArray): TArray>
- @action: Returns items from arr by IDs.
- @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array.
+  <IDs>
+  @action: Returns items from arr by IDs.
+  @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array.
 [==============================================================================}
 function HArr.IDs(const ID: TIntegerArray): TArr; overload;
 var
@@ -2980,9 +2991,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.IDs(IDs: TIntegerArray; item: VarType): TArray>
- @action: Returns arr with IDs replaced as item.
- @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array.
+  <IDs>
+  @action: Returns arr with IDs replaced as item.
+  @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array.
 [==============================================================================}
 function HArr.IDs(const ID: TIntegerArray; const item: TVar): TArr; overload;
 var
@@ -2994,9 +3005,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.IDs(IDs: TIntegerArray; items: TArray): TArray>
- @action: Returns arr with IDs replaced as items.
- @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array and ALSO item[s].
+  <IDs>
+  @action: Returns arr with IDs replaced as items.
+  @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array and ALSO item[s].
 [==============================================================================}
 function HArr.IDs(const ID: TIntegerArray; const items: TArr): TArr; overload;
 var
@@ -3009,9 +3020,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Includes(item: VarType; index: Integer): Boolean>
- @action: Looks array for item starting from start index down to index 0. If found, Result will be True.
- @note: Alternative to TArray_Contains, but this scans in opposite direction.
+  <Includes>
+  @action: Looks array for item starting from start index down to index 0. If found, Result will be True.
+  @note: Alternative to TArray_Contains, but this scans in opposite direction.
 [==============================================================================}
 function HArr.Includes(const item: TVar; const index: Integer = 2147483647): Boolean; overload;
 var
@@ -3024,9 +3035,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Indexed(aAscending: Boolean): TIntegerArray>
- @action: Returns IDs of arr as TIntegerArray.
- @note: None.
+  <Indexed>
+  @action: Returns IDs of arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function HArr.Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
 var
@@ -3046,9 +3057,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Indexes(aAscending: Boolean): TIntegerArray>
- @action: Returns IDs of arr as TIntegerArray.
- @note: None.
+  <Indexes>
+  @action: Returns IDs of arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function HArr.Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
 var
@@ -3061,9 +3072,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Indices(aAscending: Boolean): TIntegerArray>
- @action: Returns IDs of arr as TIntegerArray.
- @note: None.
+  <Indices>
+  @action: Returns IDs of arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function HArr.Indices(const aAscending: Boolean = True): TIntegerArray; overload;
 var
@@ -3083,7 +3094,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Inject>
+  <Inject>
   @action: Inserts the specified items into the current array at the given index.
            Elements at and after that index are shifted to make room for the
            inserted items.
@@ -3109,9 +3120,9 @@ begin
 end;    
 
 {==============================================================================]
- <arr.Keep(items: TArray; index: Integer): TArray>
- @action: Keeps items in array, removes others.
- @note: Supports custom start index! Returns the modified arr.
+  <Keep>
+  @action: Keeps items in array, removes others.
+  @note: Supports custom start index! Returns the modified arr.
 [==============================================================================}
 function HArr.Keep(const items: TArr; const index: Integer = 0): TArr; overload;
 var
@@ -3138,9 +3149,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Kill: Integer>
- @action: Combination of Length(arr) + SetLength(arr, 0).
- @note: Returns the length of the arr!
+  <Kill>
+  @action: Combination of Length(arr) + SetLength(arr, 0).
+  @note: Returns the length of the arr!
 [==============================================================================}
 function HArr.Kill: Integer; overload;
 begin
@@ -3149,9 +3160,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Last: Integer>
- @action: Returns the last index of arr.
- @note: With empty array result will be -1!
+  <Last>
+  @action: Returns the last index of arr.
+  @note: With empty array result will be -1!
 [==============================================================================}
 function HArr.Last: Integer; overload;
 begin
@@ -3159,9 +3170,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Last(item: VarType): Integer>
- @action: Returns the last index that matches item in arr.
- @note: Unmatch will be -1!
+  <Last>
+  @action: Returns the last index that matches item in arr.
+  @note: Unmatch will be -1!
 [==============================================================================}
 function HArr.Last(const item: TVar): Integer; overload;
 begin
@@ -3172,9 +3183,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Last(items: TArray): Integer>
- @action: Returns the last arr index that matches any of the items.
- @note: Unmatch will be -1!
+  <Last>
+  @action: Returns the last arr index that matches any of the items.
+  @note: Unmatch will be -1!
 [==============================================================================}
 function HArr.Last(const items: TArr): Integer; overload;
 begin
@@ -3185,9 +3196,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.LeastCommon>
- @action: Returns the least common array item.
- @note: None
+  <LeastCommon>
+  @action: Returns the least common array item.
+  @note: None
 [==============================================================================}
 function HArr.LeastCommon: TVar; overload;
 var
@@ -3217,9 +3228,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.LeastFrequent: VarType> 
- @action: Returns the least frequent arr item.
- @note: None.
+  <LeastFrequent> 
+  @action: Returns the least frequent arr item.
+  @note: None.
 [==============================================================================}
 function HArr.LeastFrequent: TVar; overload;
 var
@@ -3254,9 +3265,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Len: Integer>
- @action: Simply Result := Length(arr);
- @note: None.
+  <Len>
+  @action: Simply Result := Length(arr);
+  @note: None.
 [==============================================================================}
 function HArr.Len: Integer; overload;
 begin
@@ -3264,9 +3275,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Loc(item: VarType; index: Integer): Integer>
- @action: Returns last index position from arr which matched with item.
- @note: Returns -1 if any of arr items doesnt match with item!
+  <Loc>
+  @action: Returns last index position from arr which matched with item.
+  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
 function HArr.Loc(const item: TVar; const index: Integer = 2147483647): Integer; overload;
 begin
@@ -3277,9 +3288,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Loc(items: TArray; index: Integer): Integer>
- @action: Returns index position from arr which matches with items.
- @note: Returns -1 if any of arr items doesnt match with items!
+  <Loc>
+  @action: Returns index position from arr which matches with items.
+  @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
 function HArr.Loc(const items: TArr; const index: Integer = 2147483647): Integer; overload;
 var
@@ -3295,9 +3306,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Location(item: VarType; index: Integer): Integer>
- @action: Returns index position from arr which matched with item.
- @note: Returns -1 if any of arr items doesnt match with item!
+  <Location>
+  @action: Returns index position from arr which matched with item.
+  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
 function HArr.Location(const item: TVar; const index: Integer = 2147483647): Integer; overload;
 var
@@ -3312,9 +3323,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Location(items: TArray; index: Integer): Integer>
- @action: Returns index position from arr which matches with items.
- @note: Returns -1 if any of arr items doesnt match with items!
+  <Location>
+  @action: Returns index position from arr which matches with items.
+  @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
 function HArr.Location(const items: TArr; const index: Integer = 2147483647): Integer; overload;
 var
@@ -3334,9 +3345,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Locations(item: VarType; index: Integer): TIntegerArray>
- @action: Returns last index positions from arr which matched with item.
- @note: None.
+  <Locations>
+  @action: Returns last index positions from arr which matched with item.
+  @note: None.
 [==============================================================================}
 function HArr.Locations(const item: TVar; const index: Integer = 2147483647): TIntegerArray; overload;
 var
@@ -3356,9 +3367,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Locations(items: TArray; index: Integer): TIntegerArray>
- @action: Returns last index positions from arr which matches with items.
- @note: None.
+  <Locations>
+  @action: Returns last index positions from arr which matches with items.
+  @note: None.
 [==============================================================================}
 function HArr.Locations(const items: TArr; const index: Integer = 2147483647): TIntegerArray; overload;
 var
@@ -3378,9 +3389,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Locations: TIntegerArray>
- @action: Simply returns arr indexes.
- @note: None.
+  <Locations>
+  @action: Simply returns arr indexes.
+  @note: None.
 [==============================================================================}
 function HArr.Locations: TIntegerArray; overload;
 var
@@ -3393,14 +3404,14 @@ begin
 end; 
 
 {==============================================================================]
- <arr.MergeSortWeighted>
- @action: Performs an in-place merge sort on the current integer array (Self),
-          ordering both Self and the given weight array according to the
-          weight values. Supports ascending or descending order.
- @note: - Self and weight must be of equal length.
-        - Sorting is stable (preserves relative order of equal weights).
-        - Returns the length of Self after sorting.
-        - When aAscending = True, smaller weights appear first.
+  <MergeSortWeighted>
+  @action: Performs an in-place merge sort on the current integer array (Self),
+           ordering both Self and the given weight array according to the
+           weight values. Supports ascending or descending order.
+  @note: - Self and weight must be of equal length.
+         - Sorting is stable (preserves relative order of equal weights).
+         - Returns the length of Self after sorting.
+         - When aAscending = True, smaller weights appear first.
 [==============================================================================}
 function HArr.MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
   procedure MSW(var arr: TArr; var wgt: TIntegerArray; const L, R: Integer);
@@ -3525,9 +3536,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Mix(mixings: Integer): Boolean>
- @action: Ramdomizes array with custom mixings.
- @note: None.
+  <Mix>
+  @action: Ramdomizes array with custom mixings.
+  @note: None.
 [==============================================================================}
 function HArr.Mix(const mixings: Integer = 1): Boolean; overload;
 var
@@ -3544,9 +3555,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Mixed(mixings: Integer): TArray>
- @action: Returns ramdomized array by mixing.
- @note: None.
+  <Mixed>
+  @action: Returns ramdomized array by mixing.
+  @note: None.
 [==============================================================================}
 function HArr.Mixed(const mixings: Integer = 1): TArr; overload;
 var
@@ -3561,9 +3572,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.MostCommon>
- @action: Returns the most common array item.
- @note: None
+  <MostCommon>
+  @action: Returns the most common array item.
+  @note: None
 [==============================================================================}
 function HArr.MostCommon: TVar; overload;
 var
@@ -3593,9 +3604,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.MostFrequent: VarType> 
- @action: Returns the most frequent arr item.
- @note: None.
+  <MostFrequent> 
+  @action: Returns the most frequent arr item.
+  @note: None.
 [==============================================================================}
 function HArr.MostFrequent: TVar; overload;
 var
@@ -3620,7 +3631,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Movement>
+  <Movement>
   @action: Applies a sequence of movements (from <arr.Movements>) to the
            current array (Self), returning the resulting array.
   @note: - Each movement shifts elements between indices, not just swapping.
@@ -3652,7 +3663,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Movements>
+  <Movements>
   @action: Generates a list of element movements required to transform the
            current array (Self) into the target array. Each movement represents
            relocating an element from one index to another, shifting intervening
@@ -3694,9 +3705,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Multi(threshold: Integer): Boolean>
- @action: Returns true if array contains at least threshold of items in it.
- @note: None.	
+  <Multi>
+  @action: Returns true if array contains at least threshold of items in it.
+  @note: None.	
 [==============================================================================}
 function HArr.Multi(const threshold: Integer = 2): Boolean; overload;
 begin
@@ -3704,9 +3715,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Multi(threshold: Integer): Boolean>
- @action: Returns true if array contains at least threshold of items in it.
- @note: None.	
+  <Multi>
+  @action: Returns true if array contains at least threshold of items in it.
+  @note: None.	
 [==============================================================================}
 function HArr.Multi(const threshold: TRange): Boolean; overload;
 var
@@ -3717,9 +3728,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Next(index: Integer; count: Integer): TArray>
- @action: Returns next items from array by index and count.
- @note: None.	
+  <Next>
+  @action: Returns next items from array by index and count.
+  @note: None.	
 [==============================================================================}
 function HArr.Next(const index: Integer; const count: Integer = 2147483647): TArr; overload;
 var
@@ -3736,9 +3747,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Occurs(item: VarType; occurrence: Integer): Boolean>
- @action: Returns true item exists in arr EXACTLY(!) occurrence amount of times.
- @note: Supports lookup for 0 items. Loops array through from beginning to end.	
+  <Occurs>
+  @action: Returns true item exists in arr EXACTLY(!) occurrence amount of times.
+  @note: Supports lookup for 0 items. Loops array through from beginning to end.	
 [==============================================================================}
 function HArr.Occurs(const item: TVar; const occurrence: Integer = 1): Boolean; overload;
 var
@@ -3765,9 +3776,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Overlay(items: TArray; index: Integer; init: VarType): TArray>
- @action: Overlays items to array index.
- @note: Returns the array with overlay action.		
+  <Overlay>
+  @action: Overlays items to array index.
+  @note: Returns the array with overlay action.		
 [==============================================================================}
 function HArr.Overlay(const items: TArr; const index: Integer; const init: TVar): TArr; overload;
 var
@@ -3802,9 +3813,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Oversize(limit: Integer): Boolean>
- @action: Returns true if size of arr is OVER the limit.
- @note: None.	
+  <Oversize>
+  @action: Returns true if size of arr is OVER the limit.
+  @note: None.	
 [==============================================================================}
 function HArr.Oversize(const limit: Integer): Boolean; overload;
 begin
@@ -3812,9 +3823,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Partition(pSize: Integer): T2DArray>
- @action: Partitions array arr to 2D array by size of parts.
- @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5,6][7]
+  <Partition>
+  @action: Partitions array arr to 2D array by size of parts.
+  @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5,6][7]
 [==============================================================================}
 function HArr.Partition(const pSize: Integer): T2DArr; overload;
 var
@@ -3841,10 +3852,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.Patch(index: Integer; items: TArray): Integer>
- @action: Simply puts items to array index.
- @note: Uses SetLength incase index + items goes over the current length.
-        If index is below 0 it will automatically set max length.
+  <Patch>
+  @action: Simply puts items to array index.
+  @note: Uses SetLength incase index + items goes over the current length.
+         If index is below 0 it will automatically set max length.
 [==============================================================================}
 function HArr.Patch(const index: Integer; const items: TArr): Integer; overload;
 var
@@ -3861,9 +3872,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Pick(items: TArray; index: Integer): TArray>
- @action: Alternative method for arr.Keep
- @note: None.
+  <Pick>
+  @action: Alternative method for arr.Keep
+  @note: None.
 [==============================================================================}
 function HArr.Pick(const items: TArr; const index: Integer = 0): TArr; overload;
 var
@@ -3889,9 +3900,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Plain: Boolean>
- @action: Returns true if all array items are identical.
- @note: None.
+  <Plain>
+  @action: Returns true if all array items are identical.
+  @note: None.
 [==============================================================================}
 function HArr.Plain: Boolean; overload;
 var
@@ -3907,9 +3918,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Pop: VarType>
- @action: Returns and removes item from highest array index from arr.
- @note: UNSAFE! Make sure array has enough items..
+  <Pop>
+  @action: Returns and removes item from highest array index from arr.
+  @note: UNSAFE! Make sure array has enough items..
 [==============================================================================}
 function HArr.Pop: TVar; overload;
 var
@@ -3923,9 +3934,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Pop(null: VarType): VarType>
- @action: Returns and removes item from highest array index from arr.
- @note: Returns null if array contains no items.
+  <Pop>
+  @action: Returns and removes item from highest array index from arr.
+  @note: Returns null if array contains no items.
 [==============================================================================}
 function HArr.Pop(const null: TVar): TVar; overload;
 var
@@ -3939,9 +3950,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Populate(items: TArray; times: Integer): Boolean>
- @action: Populates array with items, x-times.
- @note: Returns true if items is not empty and times is more than 0.
+  <Populate>
+  @action: Populates array with items, x-times.
+  @note: Returns true if items is not empty and times is more than 0.
 [==============================================================================}
 function HArr.Populate(const items: TArr; const times: Integer = 1): Boolean; overload;
 var
@@ -3957,9 +3968,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Populate(item: VarType; times: Integer): Boolean>
- @action: Populates array with item, x-times.
- @note: Returns true if times is more than 0.
+  <Populate>
+  @action: Populates array with item, x-times.
+  @note: Returns true if times is more than 0.
 [==============================================================================}
 function HArr.Populate(const item: TVar; const times: Integer = 1): Boolean; overload;
 var
@@ -3973,9 +3984,9 @@ begin;
 end;
 
 {==============================================================================]
- <arr.Populated(population: TRange): Boolean>
- @action: Returns true if arr Length is between population TRange (start, stop).
- @note: None.
+  <Populated(population: TRange)>
+  @action: Returns true if arr Length is between population TRange (start, stop).
+  @note: None.
 [==============================================================================}
 function HArr.Populated(const population: TRange): Boolean; overload;
 begin
@@ -3983,9 +3994,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Populated(populationMin, populationMax: Integer): Boolean>
- @action: Returns true if arr Length is between populationMin and populationMax.
- @note: Strict! Min should NOT be higher than Max.
+  <Populated>
+  @action: Returns true if arr Length is between populationMin and populationMax.
+  @note: Strict! Min should NOT be higher than Max.
 [==============================================================================}
 function HArr.Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload;
 begin
@@ -3993,9 +4004,9 @@ begin
 end;  
 
 {==============================================================================]
- <arr.Pos(item: VarType; index: Integer): Integer>
- @action: Returns index position from arr which matched with item.
- @note: Returns -1 if any of arr items doesnt match with item!
+  <Pos>
+  @action: Returns index position from arr which matched with item.
+  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
 function HArr.Pos(const item: TVar; const index: Integer = 0): Integer; overload;
 begin
@@ -4006,9 +4017,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Pos(items: TArray; index: Integer): Integer>
- @action: Returns index position from arr which matches with items.
- @note: Returns -1 if any of arr items doesnt match with items!
+  <Pos>
+  @action: Returns index position from arr which matches with items.
+  @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
 function HArr.Pos(const items: TArr; const index: Integer = 0): Integer; overload;
 var
@@ -4024,9 +4035,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Position(item: VarType; index: Integer): Integer>
- @action: Returns index position from arr which matched with item.
- @note: Returns -1 if any of arr items doesnt match with item!
+  <Position>
+  @action: Returns index position from arr which matched with item.
+  @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
 function HArr.Position(const item: TVar; const index: Integer = 0): Integer; overload;
 var
@@ -4041,9 +4052,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Position(items: TArray; index: Integer): Integer>
- @action: Returns index position from arr which matches with items.
- @note: Returns -1 if any of arr items doesnt match with items!
+  <Position>
+  @action: Returns index position from arr which matches with items.
+  @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
 function HArr.Position(const items: TArr; const index: Integer = 0): Integer; overload;
 var
@@ -4063,9 +4074,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Positions(item: VarType; index: Integer): TIntegerArray>
- @action: Returns index positions from arr which matched with item.
- @note: None.
+  <Positions>
+  @action: Returns index positions from arr which matched with item.
+  @note: None.
 [==============================================================================}
 function HArr.Positions(const item: TVar; const index: Integer = 0): TIntegerArray; overload;
 var
@@ -4085,9 +4096,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Positions(items: TArray; index: Integer): TIntegerArray>
- @action: Returns index positions from arr which matches with items.
- @note: None.
+  <Positions>
+  @action: Returns index positions from arr which matches with items.
+  @note: None.
 [==============================================================================}
 function HArr.Positions(const items: TArr; const index: Integer = 0): TIntegerArray; overload;
 var
@@ -4107,9 +4118,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Positions: TIntegerArray>
- @action: Simply returns arr indexes.
- @note: None.
+  <Positions>
+  @action: Simply returns arr indexes.
+  @note: None.
 [==============================================================================}
 function HArr.Positions: TIntegerArray; overload;
 var
@@ -4121,7 +4132,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Prepend>
+  <Prepend>
   @action: Inserts the specified items into the current array starting at the
            given index (default = 0). Elements at and after that index are
            shifted to follow the newly inserted items.
@@ -4139,9 +4150,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Presence(item: VarType; occurrence: Integer): Boolean>
- @action: Returns true item exists in arr EXACTLY(!) occurrence amount of times.
- @note: Supports lookup for 0 items. Loops array through from end to beginning.	
+  <Presence>
+  @action: Returns true item exists in arr EXACTLY(!) occurrence amount of times.
+  @note: Supports lookup for 0 items. Loops array through from end to beginning.	
 [==============================================================================}
 function HArr.Presence(const item: TVar; const occurrence: Integer = 1): Boolean; overload;
 var
@@ -4168,9 +4179,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Previous(index: Integer; count: Integer): TIntegerArray>
- @action: Returns previous array items from index by count.
- @note: None.
+  <Previous>
+  @action: Returns previous array items from index by count.
+  @note: None.
 [==============================================================================}
 function HArr.Previous(const index: Integer; const count: Integer = 2147483647): TArr; overload;
 var
@@ -4188,12 +4199,12 @@ begin
 end;
 
 {==============================================================================]
- <arr.Pruned: TArray>
- @action: Produces a new array by removing all immediately repeated values,
-          effectively run-length–compressing the input.
- @note: Only consecutive duplicates are removed; values separated by others
-        are left untouched. The relative order of the remaining elements
-        is unchanged.
+  <Pruned>
+  @action: Produces a new array by removing all immediately repeated values,
+           effectively run-length–compressing the input.
+  @note: Only consecutive duplicates are removed; values separated by others
+         are left untouched. The relative order of the remaining elements
+         is unchanged.
 [==============================================================================}
 function HArr.Pruned: TArr; overload;
 var
@@ -4214,10 +4225,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.Pruned: TArray>
- @action: Produces a new array by removing all immediately repeated values,
-          effectively run-length–compressing the input.
- @note: Custom threshold possibility.
+  <Pruned>
+  @action: Produces a new array by removing all immediately repeated values,
+           effectively run-length–compressing the input.
+  @note: Custom threshold possibility.
 [==============================================================================}
 function HArr.Pruned(const threshold: Integer): TArr; overload;
 var
@@ -4258,12 +4269,12 @@ begin
 end;
 
 {==============================================================================]
- <arr.Prune: Integer>
- @action: Removes all immediately repeated values,
-          effectively run-length–compressing the input.
- @note: Only consecutive duplicates are removed; values separated by others
-        are left untouched. The relative order of the remaining elements
-        is unchanged.
+  <Prune>
+  @action: Removes all immediately repeated values,
+           effectively run-length–compressing the input.
+  @note: Only consecutive duplicates are removed; values separated by others
+         are left untouched. The relative order of the remaining elements
+         is unchanged.
 [==============================================================================}
 function HArr.Prune: Integer; overload;
 var
@@ -4278,9 +4289,9 @@ begin
 end; 
 
 {==============================================================================]
- <arr.Pull: TArr>
- @action: Returns the contents of the array and leaves it empty.
- @note: After calling Pull, Self.Length = 0.
+  <Pull>
+  @action: Returns the contents of the array and leaves it empty.
+  @note: After calling Pull, Self.Length = 0.
 [==============================================================================}
 function HArr.Pull: TArr; overload;
 var
@@ -4293,9 +4304,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Purified: TArr>
- @action: Returns array with unique items
- @note: None.
+  <Purified>
+  @action: Returns array with unique items
+  @note: None.
 [==============================================================================}
 function HArr.Purified(const dAscending: Boolean = True): TArr; overload;
 var
@@ -4330,9 +4341,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Purify: Integer>
- @action: Removes duplicates
- @note: None
+  <Purify>
+  @action: Removes duplicates
+  @note: None
 [==============================================================================}
 function HArr.Purify(const dAscending: Boolean = True): Integer; overload;
 var
@@ -4369,9 +4380,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Put(ID: TIntegerArray; item: VarType): TArray>
- @action: Returns array arr filled with item to indexes (ID).
- @note: Unsafe method! No safety checking.
+  <Put>
+  @action: Returns array arr filled with item to indexes (ID).
+  @note: Unsafe method! No safety checking.
 [==============================================================================}
 function HArr.Put(const ID: TIntegerArray; const item: TVar): TArr; overload;
 var
@@ -4385,9 +4396,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Put(ID: TIntegerArray; items: TArray): TArray>
- @action: Returns array arr filled with items to indexes (ID).
- @note: Unsafe method! No safety checking.
+  <Put>
+  @action: Returns array arr filled with items to indexes (ID).
+  @note: Unsafe method! No safety checking.
 [==============================================================================}
 function HArr.Put(const ID: TIntegerArray; const items: TArr): TArr; overload;
 var
@@ -4402,9 +4413,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Put(index: Integer; items: TArray): TArray>
- @action: Returns array arr filled with items to starting from custom start index.
- @note: Unsafe method! No safety checking.
+  <Put>
+  @action: Returns array arr filled with items to starting from custom start index.
+  @note: Unsafe method! No safety checking.
 [==============================================================================}
 function HArr.Put(const index: Integer; const items: TArr): TArr; overload;
 var
@@ -4418,9 +4429,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Push(item: VarType): Integer>
- @action: Places item in array with arr.
- @note: Returns array (arr+item) length.
+  <Push>
+  @action: Places item in array with arr.
+  @note: Returns array (arr+item) length.
 [==============================================================================}
 function HArr.Push(const item: TVar): TArr; overload;
 var
@@ -4434,9 +4445,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Push(items: TArray): Integer>
- @action: Places items in array with arr.
- @note: Returns array (arr+item) length.
+  <Push>
+  @action: Places items in array with arr.
+  @note: Returns array (arr+item) length.
 [==============================================================================}
 function HArr.Push(const items: TArr): TArr; overload;
 var
@@ -4452,7 +4463,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.QuickSortWeighted>
+  <QuickSortWeighted>
   @action: Sorts the array Self in-place according to the values in the weight array.
            Both Self and weight are swapped together so that each element in Self
            maintains correspondence with its weight. Comparisons and pivot selection
@@ -4511,7 +4522,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.QuickSortWeighted>
+  <QuickSortWeighted>
   @action: Sorts the array Self in-place according to the values in the weight array.
            Both Self and weight are swapped together so that each element in Self
            maintains correspondence with its weight. Comparisons and pivot selection
@@ -4571,7 +4582,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.QuickSorted(weight: TIntegerArray/TDoubleArray; aAscending: Boolean): TArray>
+  <QuickSorted>
   @action: Returns arr sorted by weight, based on QuickSort algorithm.
   @note: Weight and arr must be the same length! Otherwise returns empty array.
 [==============================================================================}
@@ -4579,7 +4590,7 @@ function HArr.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean
 function HArr.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): TArr; overload; var w: Double; {$DEFINE Skeleton_QuickSorted}{$I Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
 
 {==============================================================================]
-  <arr.Randomized>
+  <Randomized>
   @action: Returns randomized copy of array
   @note: None.
 [==============================================================================}
@@ -4602,7 +4613,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Range>
+  <Range>
   @action: Returns the indexes as TRange where subArray exists in array (Self)
   @note: (-1, -1) if subArray is not found.
          Loops array from index to max.
@@ -4634,7 +4645,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Ranges>
+  <Ranges>
   @action: Returns the indexes as TRanges where subArray exists in array (Self)
   @note: [] if not a single subArray is not found.
          Loops array from index to max.
@@ -4669,9 +4680,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Recreate: Boolean>
- @action: Clear the array and reallocate to arrSize (negative = previous length).
- @note: Returns True if array was non-empty and arrSize <> 0.
+  <Recreate>
+  @action: Clear the array and reallocate to arrSize (negative = previous length).
+  @note: Returns True if array was non-empty and arrSize <> 0.
 [==============================================================================}
 function HArr.Recreate(const arrSize: Integer): Boolean; overload;
 var
@@ -4688,9 +4699,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Reject(items: TArray; index: Integer): TArray>
- @action: Returns a new array with elements from items excluded, up to and including the specified index.
- @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
+  <Reject>
+  @action: Returns a new array with elements from items excluded, up to and including the specified index.
+  @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
          The default index filters the entire array.
 [==============================================================================}
 function HArr.Reject(const items: TArr; const index: Integer = 2147483647): TArr; overload;
@@ -4715,9 +4726,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Remove(item: VarType; index: Integer; all: Boolean): TArray>
- @action: Deletes item(s) from array arr. Only 1 if all is set as False.
- @note: Returns amount of items that were removed. Supports start index position.
+  <Remove>
+  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
+  @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
 function HArr.Remove(const item: TVar; const index: Integer = 0; const all: Boolean = True): TArr; overload;
 var
@@ -4742,9 +4753,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Remove(item: VarType; all: Boolean): TArray>
- @action: Deletes item(s) from array arr. Only 1 if all is set as False.
- @note: Returns amount of items that were removed.
+  <Remove>
+  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
+  @note: Returns amount of items that were removed.
 [==============================================================================}
 function HArr.Remove(const item: TVar; const all: Boolean): TArr; overload;
 begin
@@ -4752,9 +4763,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Remove(items: TArray; index: Integer; all: Boolean): TArray>
- @action: Deletes item(s) from array arr. Only 1 if all is set as False.
- @note: Returns amount of items that were removed. Supports start index position.
+  <Remove>
+  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
+  @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
 function HArr.Remove(const items: TArr; const index: Integer = 0; const all: Boolean = True): TArr; overload;
 var
@@ -4792,9 +4803,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Remove(items: TArray; all: Boolean): TArray>
- @action: Deletes item(s) from array arr. Only 1 if all is set as False.
- @note: Returns amount of items that were removed.
+  <Remove>
+  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
+  @note: Returns amount of items that were removed.
 [==============================================================================}
 function HArr.Remove(const items: TArr; const all: Boolean): TArr; overload;
 begin
@@ -4802,9 +4813,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Reposition(oldIndex, newIndex: Integer): Boolean>
- @action: Moves item from oldIndex to newIndex in array arr.
- @note: Returns true with success.
+  <Reposition>
+  @action: Moves item from oldIndex to newIndex in array arr.
+  @note: Returns true with success.
 [==============================================================================}
 function HArr.Reposition(const oldIndex, newIndex: Integer): Boolean; overload;
 var
@@ -4829,9 +4840,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Reset: Integer>
- @action: Resets all elements of the array to default values while preserving its structure.
- @note: Returns the number of elements that were reset.
+  <Reset>
+  @action: Resets all elements of the array to default values while preserving its structure.
+  @note: Returns the number of elements that were reset.
 [==============================================================================}
 function HArr.Reset: Integer; overload;
 begin
@@ -4841,11 +4852,11 @@ begin
 end; 
 
 {==============================================================================]
- <arr.Resize(aChange: Integer): Integer>
- @action: Updates's arr length with aChange.
- @note: aChange > 0 => Result will give how many elements were added
-        aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
-		aChange = 0 => Returns 0.
+  <Resize>
+  @action: Updates's arr length with aChange.
+  @note: aChange > 0 => Result will give how many elements were added
+         aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
+         aChange = 0 => Returns 0.
 [==============================================================================}
 function HArr.Resize(const aChange: Integer): Integer; overload;
 var
@@ -4857,12 +4868,12 @@ begin
 end;
 
 {==============================================================================]
- <arr.Resize(aChange: Integer; null: VarType): Integer>
- @action: Updates's arr length with aChange.
- @note: aChange > 0 => Result will give how many elements were added
-        aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
-		aChange = 0 => Returns 0.
-		Supports null for filling created indexes.
+  <Resize>
+  @action: Updates's arr length with aChange.
+  @note: aChange > 0 => Result will give how many elements were added
+         aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
+         aChange = 0 => Returns 0.
+         Supports null for filling created indexes.
 [==============================================================================}
 function HArr.Resize(const aChange: Integer; const null: TVar): Integer; overload;
 var
@@ -4876,9 +4887,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Reversal>
- @action: Returns array with items in reversed order.
- @note: None.
+  <Reversal>
+  @action: Returns array with items in reversed order.
+  @note: None.
 [==============================================================================}
 function HArr.Reversal: TArr; overload;
 var
@@ -4899,9 +4910,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Reverse: Boolean>
- @action: Reverses items in array.
- @note: Returns true with success (array contains 2 or more items)
+  <Reverse>
+  @action: Reverses items in array.
+  @note: Returns true with success (array contains 2 or more items)
 [==============================================================================}
 function HArr.Reverse: Boolean; overload;
 var
@@ -4915,9 +4926,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Reversed: TArray>
- @action: Returns reversed version of array arr.
- @note: None.
+  <Reversed>
+  @action: Returns reversed version of array arr.
+  @note: None.
 [==============================================================================}
 function HArr.Reversed: TArr; overload;
 var
@@ -4930,7 +4941,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Reversify>
+  <Reversify>
   @action: Reverses the order of elements in a 1D array.
            Works by creating a temporary array and copying elements in reverse order.
   @note: - The operation modifies Self in place.
@@ -4953,9 +4964,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Reversion>
- @action: Returns array with items in reversed order.
- @note: None.
+  <Reversion>
+  @action: Returns array with items in reversed order.
+  @note: None.
 [==============================================================================}
 function HArr.Reversion: TArr; overload;
 var
@@ -4978,7 +4989,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.Runs>
+  <Runs>
   @action: Groups consecutive identical values into sub-arrays.
   @note: Input must be sorted for meaningful grouping; a new group is started
          whenever the value differs from the previous element.
@@ -5000,9 +5011,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Sample(sSize): TArray>
- @action: Returns sample from array by sSize.
- @note: None.
+  <Sample>
+  @action: Returns sample from array by sSize.
+  @note: None.
 [==============================================================================}
 function HArr.Sample(const sSize: Integer): TArr; overload;
 var
@@ -5018,9 +5029,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Scan(item: VarType; ID: TRange; limit: Integer): TIntegerArray>
- @action: Scans array for item by ID. Returns all the positions.
- @note: Unsafe method! No safety checking.
+  <Scan>
+  @action: Scans array for item by ID. Returns all the positions.
+  @note: Unsafe method! No safety checking.
 [==============================================================================}
 function HArr.Scan(const ID: TRange; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload;
 var
@@ -5034,7 +5045,7 @@ begin
       True:
       for i := ID.start to ID.stop do
         if (r >= limit) then
-	  Break
+	      Break
         else
           if (Self[i] = item) then
             Result[r.Increase] := i;
@@ -5051,9 +5062,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Scan(item: VarType; ID: TIntegerArray): TIntegerArray>
- @action: Scans array for item by ID. Returns all the positions.
- @note: Unsafe method! No safety checking.
+  <Scan>
+  @action: Scans array for item by ID. Returns all the positions.
+  @note: Unsafe method! No safety checking.
 [==============================================================================}
 function HArr.Scan(const ID: TIntegerArray; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload;
 var
@@ -5068,15 +5079,15 @@ begin
         Break
       else
         if (Self[ID[i]] = item) then
-	  Result[r.Increase] := ID[i];
+	      Result[r.Increase] := ID[i];
   end;
   SetLength(Result, r);
 end;
 
 {==============================================================================]
- <arr.Scan(items: TArray; ID: TRange; limit: Integer): TIntegerArray>
- @action: Scans array for items by ID. Returns all the positions.
- @note: Unsafe method! No safety checking.
+  <Scan>
+  @action: Scans array for items by ID. Returns all the positions.
+  @note: Unsafe method! No safety checking.
 [==============================================================================}
 function HArr.Scan(const ID: TRange; const items: TArr; const limit: Integer = 2147483647): TIntegerArray; overload;
 var
@@ -5107,9 +5118,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Scan(item: VarType; ID: TIntegerArray): TIntegerArray>
- @action: Scans array for items by ID. Returns all the positions.
- @note: Unsafe method! No safety checking.
+  <Scan>
+  @action: Scans array for items by ID. Returns all the positions.
+  @note: Unsafe method! No safety checking.
 [==============================================================================}
 function HArr.Scan(const ID: TIntegerArray; const items: TArr; const limit: Integer = 2147483647): TIntegerArray; overload;
 var
@@ -5130,9 +5141,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Scramble: TIntegerArray>
- @action: Returns scrambled array, that is randomized with offset and swapping. 
- @note: Supports custom swaps.
+  <Scramble>
+  @action: Returns scrambled array, that is randomized with offset and swapping. 
+  @note: Supports custom swaps.
 [==============================================================================}
 function HArr.Scramble(const swaps: Integer = -1): TArr; overload;
 var
@@ -5147,9 +5158,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Shake: TArray>
- @action: Returns array as randomized with shaking it.
- @note: None.
+  <Shake>
+  @action: Returns array as randomized with shaking it.
+  @note: None.
 [==============================================================================}
 function HArr.Shake(const shakes: Integer = 1): TArr; overload;
 var
@@ -5163,9 +5174,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Shift: VarType>
- @action: Shortens the array with first element.
- @note: Returns the removed arr[0].
+  <Shift>
+  @action: Shortens the array with first element.
+  @note: Returns the removed arr[0].
 [==============================================================================}
 function HArr.Shift: TVar; overload;
 var
@@ -5181,9 +5192,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Shift(sCount: Integer): TArray>
- @action: Shortens the array with first SCOUNT element(s).
- @note: Returns the removed arr[x]s.
+  <Shift>
+  @action: Shortens the array with first SCOUNT element(s).
+  @note: Returns the removed arr[x]s.
 [==============================================================================}
 function HArr.Shift(const sCount: Integer): TArr; overload;
 var
@@ -5202,9 +5213,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Shuffle: TArray>
- @action: Returns array as randomized with shuffling it.
- @note: None.
+  <Shuffle>
+  @action: Returns array as randomized with shuffling it.
+  @note: None.
 [==============================================================================}
 function HArr.Shuffle(const shuffles: Integer = 1): TArr; overload;
 var
@@ -5218,7 +5229,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Singlify>
+  <Singlify>
   @action: Removes duplicate occurrences of a specific item, keeping only the first.
   @note: Useful for ensuring a item appears exactly once in the array.
 [==============================================================================}
@@ -5242,7 +5253,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Singlified>
+  <Singlified>
   @action: Returns a new array containing only a single instance of the specified item.
   @note: Duplicates of item beyond the first occurrence are removed in the result.
          The original array remains unchanged.
@@ -5266,7 +5277,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Singularize>
+  <Singularize>
   @action: Removes duplicate items in the array, keeping only the first occurrence of each unique value.
   @note: The operation modifies the current array in-place. The order of the first appearances
          is preserved. Returns the number of items removed.
@@ -5295,7 +5306,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Singularized>
+  <Singularized>
   @action: Returns a new array containing only the first occurrence of each unique item.
   @note: The original array remains unchanged. The resulting array preserves
          the order of the first appearances.
@@ -5323,9 +5334,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Singular: Boolean>
- @action: Returns true if all array items are identical.
- @note: None.
+  <Singular>
+  @action: Returns true if all array items are identical.
+  @note: None.
 [==============================================================================}
 function HArr.Singular: Boolean; overload;
 var
@@ -5338,9 +5349,9 @@ begin
 end; 
 
 {==============================================================================]
- <arr.Size: Integer> 
- @action: Returns array length.
- @note: Simply Result := Length(arr);
+  <Size> 
+  @action: Returns array length.
+  @note: Simply Result := Length(arr);
 [==============================================================================}
 function HArr.Size: Integer; overload;
 begin
@@ -5348,9 +5359,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Size(aSize: Integer): TArray>
- @action: Set's arr length to aSize.
- @note: None.
+  <Size>
+  @action: Set's arr length to aSize.
+  @note: None.
 [==============================================================================}
 function HArr.Size(const aSize: Integer): TArr; overload;
 var
@@ -5363,9 +5374,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Size(arr: TArray; aSize: Integer; null: VarType): TArray>
- @action: Set's arr length to size.
- @note: Uses null for created indexes.
+  <Size>
+  @action: Set's arr length to size.
+  @note: Uses null for created indexes.
 [==============================================================================}
 function HArr.Size(const aSize: Integer; const null: TVar): TArr; overload;
 var
@@ -5380,9 +5391,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.SizeBetween(arr: TArray; sMin, sMax: Integer): Boolean>
- @action: Returns true if size is at equal/greater than sMin and equal/lesser than sMax.
- @note: 	
+  <SizeBetween>
+  @action: Returns true if size is at equal/greater than sMin and equal/lesser than sMax.
+  @note: 	
 [==============================================================================}
 function HArr.SizeBetween(const sMin, sMax: Integer): Boolean; overload;
 begin
@@ -5390,9 +5401,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.SizeMax(target: Integer): Boolean>
- @action: Returns true if size is at equal/lesser than target.
- @note: 	
+  <SizeMax>
+  @action: Returns true if size is at equal/lesser than target.
+  @note: 	
 [==============================================================================}
 function HArr.SizeMax(const target: Integer): Boolean; overload;
 begin
@@ -5400,9 +5411,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.SizeMin(target: Integer): Boolean>
- @action: Returns true if size is at equal/greater than target.
- @note: 	
+  <SizeMin>
+  @action: Returns true if size is at equal/greater than target.
+  @note: 	
 [==============================================================================}
 function HArr.SizeMin(const target: Integer): Boolean; overload;
 begin
@@ -5410,10 +5421,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.Slice>
- @action: Returns array slice with TRange r.
- @note: Make sure you use correct indexes and there is enough buffer in array!
-        No safety checks for this function. 
+  <Slice>
+  @action: Returns array slice with TRange r.
+  @note: Make sure you use correct indexes and there is enough buffer in array!
+         No safety checks for this function. 
 [==============================================================================}
 function HArr.Slice(const r: TRange): TArr; overload;
 var
@@ -5431,10 +5442,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.Slice>
- @action: Returns array slice with multiple TRanges by r.
- @note: Make sure you use correct indexes and there is enough buffer in array!
-        No safety checks for this function. 
+  <Slice>
+  @action: Returns array slice with multiple TRanges by r.
+  @note: Make sure you use correct indexes and there is enough buffer in array!
+         No safety checks for this function. 
 [==============================================================================}
 function HArr.Slice(const r: TRangeArray): TArr; overload;
 var
@@ -5458,9 +5469,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Slots: TIntegerArray>
- @action: Returns indexes of array.
- @note: None.
+  <Slots>
+  @action: Returns indexes of array.
+  @note: None.
 [==============================================================================}
 function HArr.Slots: TIntegerArray; overload;
 var
@@ -5472,7 +5483,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Soloize>
+  <Soloize>
   @action: Removes all occurrences of a specific item from the array.
   @note: Returns the number of items removed. If none found, the array is unchanged.
 [==============================================================================}
@@ -5492,7 +5503,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Soloized>
+  <Soloized>
   @action: Returns a new array containing only a single instance of the specified item.
   @note: Duplicates of item beyond the first occurrence are removed in the result.
          The original array remains unchanged.
@@ -5514,7 +5525,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Some>
+  <Some>
   @action: Returns random amount of random array items from Self.
   @note: Does not return empty arrays.
 [==============================================================================}
@@ -5524,7 +5535,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Some>
+  <Some>
   @action: Returns amount of random array items from Self.
   @note: Does not return empty arrays.
 [==============================================================================}
@@ -5534,7 +5545,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Span>
+  <Span>
   @action: Returns the indexes as TRange where subArray exists in array (Self)
   @note: (-1, -1) if subArray is not found.
          Loops array from index downto min.
@@ -5546,7 +5557,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Span>
+  <Span>
   @action: Returns the indexes as TRange where subArray exists in array (Self)
   @note: (-1, -1) if subArray is not found.
          Loops array from index downto min.
@@ -5578,7 +5589,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Spans>
+  <Spans>
   @action: Returns the indexes as TRanges where subArray exists in array (Self)
   @note: [] if not a single subArray is not found.
          Loops array from index downto min.
@@ -5613,9 +5624,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Strip(item: VarType; eraseDuplicates: Boolean): TArray>
- @action: Removes item(s) from arr and returns it.
- @note: 	
+  <Strip>
+  @action: Removes item(s) from arr and returns it.
+  @note: 	
 [==============================================================================}
 function HArr.Strip(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload;
 var
@@ -5633,9 +5644,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.SubarrayLocation(pattern: TArray): Integer>
- @action: Returns subarray position in arr that match pattern exactly.
- @note: arr[0,1,2,0,1,2,3].([1,2]) => 4	
+  <SubarrayLocation>
+  @action: Returns subarray position in arr that match pattern exactly.
+  @note: arr[0,1,2,0,1,2,3].([1,2]) => 4	
 [==============================================================================}
 function HArr.SubarrayLocation(const pattern: TArr): Integer; overload;
 var
@@ -5659,9 +5670,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.SubarrayLocations(pattern: TArray): TIntegerArray>
- @action: Returns subarray positions in arr that match pattern exactly.
- @note: arr[0,1,2,0,1,2,3].([1,2]) => [4,1]	
+  <SubarrayLocations>
+  @action: Returns subarray positions in arr that match pattern exactly.
+  @note: arr[0,1,2,0,1,2,3].([1,2]) => [4,1]	
 [==============================================================================}
 function HArr.SubarrayLocations(const pattern: TArr): TIntegerArray; overload;
 var
@@ -5690,9 +5701,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.SubarrayPosition(pattern: TArray): Integer>
- @action: Returns subarray position in arr that match pattern exactly.
- @note: arr[0,1,2,0,1,2,3].([1,2]) => 1	
+  <SubarrayPosition>
+  @action: Returns subarray position in arr that match pattern exactly.
+  @note: arr[0,1,2,0,1,2,3].([1,2]) => 1	
 [==============================================================================}
 function HArr.SubarrayPosition(const pattern: TArr): Integer; overload;
 var
@@ -5718,9 +5729,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.SubarrayPositions(pattern: TArray): TIntegerArray>
- @action: Returns subarray positions in arr that match pattern exactly.
- @note: arr[0,1,2,0,1,2,3].([1,2]) => [1,4]	
+  <SubarrayPositions>
+  @action: Returns subarray positions in arr that match pattern exactly.
+  @note: arr[0,1,2,0,1,2,3].([1,2]) => [1,4]	
 [==============================================================================}
 function HArr.SubarrayPositions(const pattern: TArr): TIntegerArray; overload;
 var
@@ -5751,9 +5762,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Subset(items: TArray): Boolean>
- @action: Returns true if arr is subset of items.
- @note: None.
+  <Subset>
+  @action: Returns true if arr is subset of items.
+  @note: None.
 [==============================================================================}
 function HArr.Subset(const items: TArr): Boolean; overload;
 var
@@ -5766,9 +5777,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Supply(item: VarType): Integer>
- @action: Adds item to the end of the array.
- @note: Returns the index where item was inserted.
+  <Supply>
+  @action: Adds item to the end of the array.
+  @note: Returns the index where item was inserted.
 [==============================================================================}
 function HArr.Supply(const item: TVar): Integer; overload;
 begin
@@ -5778,9 +5789,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Supply(item: TArray): Integer>
- @action: Adds items to the end of the array.
- @note: Returns the index where items were inserted.
+  <Supply>
+  @action: Adds items to the end of the array.
+  @note: Returns the index where items were inserted.
 [==============================================================================}
 function HArr.Supply(const items: TArr): Integer; overload;
 var
@@ -5795,10 +5806,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.Swapped>
- @action: Swaps the contents of this array with the given target array.
- @note: The swap is O(1) because dynamic arrays are reference-counted.
-        Returns Length(Self) + Length(target) after the swap.
+  <Swapped>
+  @action: Swaps the contents of this array with the given target array.
+  @note: The swap is O(1) because dynamic arrays are reference-counted.
+         Returns Length(Self) + Length(target) after the swap.
 [==============================================================================}
 function HArr.Swapped(var target: TArr): Integer; overload;
 var
@@ -5811,7 +5822,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.SwapMerged>
+  <SwapMerged>
   @action: Swaps the contents of Self and target arrays manually using an
            auxiliary array, and returns a new array containing all elements
            from both arrays combined in the **original order** (before swap).
@@ -5844,7 +5855,7 @@ begin
 end;
 
 {==============================================================================]
- <arr.SwappedMerge>
+  <SwappedMerge>
   @action: Swaps the contents of Self and target arrays using the reference
            swap method (Self.Swapped), and returns a new array containing all
            elements from both arrays combined in the **post-swap order**.
@@ -5871,12 +5882,12 @@ begin
 end;
 
 {==============================================================================]
- <arr.To2D(rows, columns: Integer): T2DArray>
- @action: Converts 1D array to 2D by rows and columns.
- @note: Make sure Length(array) equals rows*columns (otherwise returns [])! Working examples below.
-		TIA := [1,2,3,4,5,6];
-		TIA.To2D(2, 3) = [[1, 2, 3], [4, 5, 6]]
-        TIA.To2D(3, 2) = [[1, 2], [3, 4], [5, 6]]
+  <To2D>
+  @action: Converts 1D array to 2D by rows and columns.
+  @note: Make sure Length(array) equals rows*columns (otherwise returns [])! Working examples below.
+         TIA := [1,2,3,4,5,6];
+         TIA.To2D(2, 3) = [[1, 2, 3], [4, 5, 6]]
+         TIA.To2D(3, 2) = [[1, 2], [3, 4], [5, 6]]
 [==============================================================================}
 function HArr.To2D(const rows, columns: Integer): T2DArr; overload;
 var
@@ -5892,9 +5903,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.To2D(height: Integer): T2DArray>
- @action: Converts 1D array to 2D by height.
- @note: 
+  <To2D>
+  @action: Converts 1D array to 2D by height.
+  @note: 
 [==============================================================================}
 function HArr.To2D(const height: Integer): T2DArr; overload;
 var
@@ -5911,9 +5922,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.ToIndexes: TIntegerArray>
- @action: Returns indexes of array.
- @note: None.
+  <ToIndexes>
+  @action: Returns indexes of array.
+  @note: None.
 [==============================================================================}
 function HArr.ToIndexes: TIntegerArray; overload;
 var
@@ -5926,9 +5937,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Trade(b: TArray): Integer> 
- @action: Swaps array arr and array b.
- @note: arr will be b and b will be arr.
+  <Trade> 
+  @action: Swaps array arr and array b.
+  @note: arr will be b and b will be arr.
 [==============================================================================}
 function HArr.Trade(var b: TArr): Integer; overload;
 var
@@ -5945,9 +5956,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Undersize(limit: Integer): Boolean>
- @action: Returns true if size of arr is UNDER the limit.
- @note: None.	
+  <Undersize>
+  @action: Returns true if size of arr is UNDER the limit.
+  @note: None.	
 [==============================================================================} 
 function HArr.Undersize(const limit: Integer): Boolean; overload;
 begin
@@ -5955,9 +5966,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Uncluttered: TArray>
- @action: Removes all duplicates from arr.
- @note: Returns the number of items that were removed.
+  <Uncluttered>
+  @action: Removes all duplicates from arr.
+  @note: Returns the number of items that were removed.
 [==============================================================================}
 function HArr.Uncluttered: TArr; overload;
 type
@@ -5987,9 +5998,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Uniform: Boolean>
- @action: Returns true if arr is consistent with only 1 item.
- @note: Returns True with empty arrays!
+  <Uniform>
+  @action: Returns true if arr is consistent with only 1 item.
+  @note: Returns True with empty arrays!
 [==============================================================================}
 function HArr.Uniform: Boolean; overload;
 var
@@ -6002,9 +6013,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Uniform(item: VarType): Boolean>
- @action: Returns true if arr is consistent with only custom item.
- @note: Returns True with empty arrays!
+  <Uniform>
+  @action: Returns true if arr is consistent with only custom item.
+  @note: Returns True with empty arrays!
 [==============================================================================}
 function HArr.Uniform(const item: TVar): Boolean; overload;
 var
@@ -6017,10 +6028,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.Uniformity>
- @action: Returns 1.0 if all elements equal, 0.0 if all different,
-          or something in between based on unique-value ratio. 
- @note: None.
+  <Uniformity>
+  @action: Returns 1.0 if all elements equal, 0.0 if all different,
+           or something in between based on unique-value ratio. 
+  @note: None.
  [==============================================================================}
 function HArr.Uniformity: Double; overload;
 begin
@@ -6031,9 +6042,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Unified>
- @action: Uniques array
- @note: None.
+  <Unified>
+  @action: Uniques array
+  @note: None.
  [==============================================================================}
 function HArr.Unified(const dAscending: Boolean = True): TArr; overload;
 var
@@ -6067,9 +6078,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Unify>
- @action: Uniques array
- @note: None.
+  <Unify>
+  @action: Uniques array
+  @note: None.
  [==============================================================================}
 function HArr.Unify(const dAscending: Boolean = True): Integer; overload;
 var
@@ -6107,9 +6118,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Unduplicated: TArray>
- @action: Removes all duplicates from arr.
- @note: Returns the number of items that were removed.
+  <Unduplicated>
+  @action: Removes all duplicates from arr.
+  @note: Returns the number of items that were removed.
 [==============================================================================}
 function HArr.Unduplicated: TArr; overload;
 var
@@ -6138,9 +6149,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Uniqued: TArray>
- @action: Removes all duplicates from arr.
- @note: Returns the unique version of arr.
+  <Uniqued>
+  @action: Removes all duplicates from arr.
+  @note: Returns the unique version of arr.
 [==============================================================================}
 function HArr.Uniqued: TArr; overload;
 var
@@ -6168,9 +6179,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Uniques: TIntegerArray>
- @action: Returns the indexes of unique array (arr) items.
- @note: None.
+  <Uniques>
+  @action: Returns the indexes of unique array (arr) items.
+  @note: None.
 [==============================================================================}
 function HArr.Uniques: TIntegerArray; overload;
 var
@@ -6200,9 +6211,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Unshift(item: VarType): TArray>
- @action: Grows arr with item.
- @note: Adds item to the left side of the array. (Opposite to TArray_Append!
+  <Unshift>
+  @action: Grows arr with item.
+  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
 function HArr.Unshift(const item: TVar): TArr; overload;
 var
@@ -6216,9 +6227,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Unshift(items: TArray): TArray>
- @action: Grows arr with items. Returns the index of last added item.
- @note: Adds item to the left side of the array. (Opposite to TArray_Append!
+  <Unshift>
+  @action: Grows arr with items. Returns the index of last added item.
+  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
 function HArr.Unshift(const items: TArr): TArr; overload;
 var
@@ -6236,9 +6247,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Void: Boolean>
- @action: Returns true if array is void (empty)
- @note: Alternative for Empty.
+  <Void>
+  @action: Returns true if array is void (empty)
+  @note: Alternative for Empty.
 [==============================================================================}
 function HArr.Void: Boolean; overload;
 begin
@@ -6246,9 +6257,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.Waste: Integer>
- @action: Returns total count of Duplicates in array, which is "Waste"
- @note: None.
+  <Waste>
+  @action: Returns total count of Duplicates in array, which is considered as "Waste"
+  @note: None.
 [==============================================================================}
 function HArr.Waste: Integer; overload;
 type
@@ -6277,10 +6288,10 @@ begin
 end;
 
 {==============================================================================]
- <arr.Zigzag>
- @action  Creates a new array whose elements are taken alternately from the
-          start and end of the source array, producing an outside-in “zigzag” order.
- @note    For odd-length arrays, the middle element appears last.
+  <Zigzag>
+  @action: Creates a new array whose elements are taken alternately from the
+           start and end of the source array, producing an outside-in “zigzag” order.
+  @note: For odd-length arrays, the middle element appears last.
 [==============================================================================}
 function HArr.Zigzag(const zAscending: Boolean = True): TArr; overload;
 var
@@ -6313,7 +6324,7 @@ end;
 
 {$IFDEF Sortable}
 {==============================================================================]
-  <HArr.Sortable>
+  <Sortable>
   @action: Checks whether the array contains at least two different elements.
            Returns True if sorting would change the array order.
   @note: Arrays with all equal elements, a single element, or empty arrays
@@ -6330,7 +6341,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Sorted>
+  <Sorted>
   @action: Returns true if array arr is in ascending/descending order by aAscending.
   @note: By default checking for ascending order.
 [==============================================================================}
@@ -6345,9 +6356,9 @@ begin
 end;
 
 {==============================================================================]
- <arr.IsSorted>
- @action: Checks whether the entire array is sorted in ascending or descending order.
- @note:   Returns True if all elements are in the correct order according to aAscending.
+  <IsSorted>
+  @action: Checks whether the entire array is sorted in ascending or descending order.
+  @note:   Returns True if all elements are in the correct order according to aAscending.
 [==============================================================================}
 function HArr.IsSorted(const aAscending: Boolean = True): Boolean; overload;
 var
@@ -6360,12 +6371,12 @@ begin
 end;
 
 {==============================================================================]
- <arr.IsSorted>
- @action: Checks whether the elements between iStart and iStop are in correct
-          ascending or descending order.
- @note: The range [iStart..iStop] is automatically normalized and clamped to
-        valid array bounds. Returns True if all elements within the range
-        follow the specified order.
+  <IsSorted>
+  @action: Checks whether the elements between iStart and iStop are in correct
+           ascending or descending order.
+  @note: The range [iStart..iStop] is automatically normalized and clamped to
+         valid array bounds. Returns True if all elements within the range
+         follow the specified order.
 [==============================================================================}
 function HArr.IsSorted(const iStart, iStop: Integer; const aAscending: Boolean = True): Boolean; overload;
 var
@@ -6385,12 +6396,12 @@ begin
 end;
 
 {==============================================================================]
- <arr.IsSorted>
- @action: Determines whether the array elements within the specified range
-          (given as TRange) are ordered in ascending or descending order.
- @note: Internally calls the (iStart, iStop) overload. The range is
-        automatically normalized and clamped to valid array bounds.
-        Returns True if all elements within the range follow the specified order.
+  <IsSorted>
+  @action: Determines whether the array elements within the specified range
+           (given as TRange) are ordered in ascending or descending order.
+  @note: Internally calls the (iStart, iStop) overload. The range is
+         automatically normalized and clamped to valid array bounds.
+         Returns True if all elements within the range follow the specified order.
 [==============================================================================}
 function HArr.IsSorted(const indexes: TRange; const aAscending: Boolean = True): Boolean; overload;
 begin
@@ -6398,13 +6409,13 @@ begin
 end;
 
 {==============================================================================]
- <arr.IsSorted>
- @action: Checks whether the element at the specified index is correctly
-          positioned relative to its immediate neighbors according to
-          ascending or descending order.
- @note: Returns True if the element at the given index maintains proper
-        order with adjacent elements. Boundary or single-element arrays are
-        considered sorted. Returns False for out-of-range indices.
+  <IsSorted>
+  @action: Checks whether the element at the specified index is correctly
+           positioned relative to its immediate neighbors according to
+           ascending or descending order.
+  @note: Returns True if the element at the given index maintains proper
+         order with adjacent elements. Boundary or single-element arrays are
+         considered sorted. Returns False for out-of-range indices.
 [==============================================================================}
 function HArr.IsSorted(const index: Integer; const aAscending: Boolean = True): Boolean; overload;
 var
@@ -6423,7 +6434,7 @@ begin
 end; 
 
 {==============================================================================]
-  <HArr.InOrder>
+  <InOrder>
   @action: Returns true if array arr is in ascending/descending order by aAscending.
   @note: By default checking for ascending order.
 [==============================================================================}
@@ -6448,7 +6459,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Orderly>
+  <Orderly>
   @action: Returns true if array arr is in ascending AND/OR descending order.
   @note: None.
 [==============================================================================}
@@ -6472,7 +6483,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Ordered>
+  <Ordered>
   @action: Returns true if array arr is in ascending AND/OR descending order by aAscending.
   @note: Recursive alternative.
 [==============================================================================}
@@ -6486,7 +6497,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Order>
+  <Order>
   @action: Returns the direction which way array goes
   @note: -1 = DESCENDING, 0=NO ORDER OR MIXED ARRAY, 1=ASCENDING
          [1,2,3] => 1 [1,1,1] => 1 [1,0,1] => 0 [3,2,1] => -1
@@ -6523,7 +6534,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Orientation>
+  <Orientation>
   @action: Returns the direction which way array goes
   @note: -1 = DESCENDING, 0=NO ORDER OR MIXED ARRAY, 1=ASCENDING
          [1,2,3] => 1 [1,1,1] => 0 [1,0,1] => 0 [3,2,1] => -1
@@ -6557,7 +6568,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Ascend>
+  <Ascend>
   @action: Returns array arr sorted to asscending order.
   @note: None.
 [==============================================================================}
@@ -6589,7 +6600,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Descend>
+  <Descend>
   @action: Returns array arr sorted to descending order.
   @note: None.
 [==============================================================================}
@@ -6621,7 +6632,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Descending>
+  <Descending>
   @action: Returns true if array arr is in descending order.
   @note: [0,1] = False | [0,0] = False | [1,0] = True |
 [==============================================================================}
@@ -6636,7 +6647,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Ascending>
+  <Ascending>
   @action: Returns true if array arr is in asscending order.
   @note: [0,1] = True | [0,0] = False | [1,0] = False |
 [==============================================================================}
@@ -6651,7 +6662,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Decreasing>
+  <Decreasing>
   @action: Returns true if array arr is in descending order.
   @note: [0,1] = False | [0,0] = True | [1,0] = True |
 [==============================================================================}
@@ -6666,7 +6677,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Increasing>
+  <Increasing>
   @action: Returns true if array arr is in asscending order.
   @note: [0,1] = True | [0,0] = True | [1,0] = False |
 [==============================================================================}
@@ -6681,7 +6692,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Downward>
+  <Downward>
   @action: Returns true if array arr is in descending order.
   @note: Returns true with empty []array! Unlike Descending, Decreasing.
 [==============================================================================}
@@ -6697,7 +6708,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Upward>
+  <Upward>
   @action: Returns true if array arr is in ascending order.
   @note: Returns true with empty [] array! Unlike Ascending, Increasing.
 [==============================================================================}
@@ -6713,7 +6724,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Lowest>
+  <Lowest>
   @action: Returns array minimum value.
   @note: None.
 [==============================================================================}
@@ -6729,7 +6740,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Highest>
+  <Highest>
   @action: Returns array maximum value.
   @note: None.
 [==============================================================================}
@@ -6745,7 +6756,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Mini>
+  <Mini>
   @action: Returns array INDEX with minimum value.
   @note: Supports reversed order (last min index) with aAscending as False.
 [==============================================================================}
@@ -6780,7 +6791,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Maxi>
+  <Maxi>
   @action: Returns array INDEX with maximum value.
   @note: Supports reversed order (last max index) with aAscending as False.
 [==============================================================================}
@@ -6815,9 +6826,9 @@ begin
 end;
 
 {==============================================================================]
- <HArr.Mode>
- @action: The value that occurs most frequently in arr.
- @note: None
+  <Mode>
+  @action: The value that occurs most frequently in arr.
+  @note: None
 [==============================================================================}
 function HArr.Mode: TVar; overload;
 var
@@ -6855,9 +6866,9 @@ begin
 end;
 
 {==============================================================================]
- <HArr.Center>
- @action: The value at the center position of a sorted or unsorted arr.
- @note: None
+  <Center>
+  @action: The value at the center position of a sorted or unsorted arr.
+  @note: None
 [==============================================================================}
 function HArr.Center: TVar; overload;
 begin
@@ -6866,7 +6877,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.MergeSortIndexed>
+  <MergeSortIndexed>
   @action: Sorts the current integer array (Self) using merge sort while
            tracking the original indices of each element.
   @note: - Returns an array of indices representing the order of elements in the sorted array.
@@ -6940,15 +6951,15 @@ begin
 end;
 
 {==============================================================================]
- <arr.MergeSortPair>
- @action: Performs an in-place merge sort on the current array (Self),
-          reordering both Self and its associated partner array so that the
-          elements of partner remain paired with their corresponding elements
-          in Self. Sorting is based on the values in Self.
- @note: - Self and partner must have the same length.
-        - Sorting is stable: equal values in Self preserve their original order.
-        - Returns Length(Self).
-        - Set aAscending = False for descending order.
+  <MergeSortPair>
+  @action: Performs an in-place merge sort on the current array (Self),
+           reordering both Self and its associated partner array so that the
+           elements of partner remain paired with their corresponding elements
+           in Self. Sorting is based on the values in Self.
+  @note: - Self and partner must have the same length.
+         - Sorting is stable: equal values in Self preserve their original order.
+         - Returns Length(Self).
+         - Set aAscending = False for descending order.
 [==============================================================================}
 function HArr.MergeSortPair(var partner: TArr; const aAscending: Boolean = True): Integer; overload;
   procedure MSP(var arr, prt: TArr; const L, R: Integer);
@@ -7011,7 +7022,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.QuickSortPair>
+  <QuickSortPair>
   @action: Sorts the array in-place while simultaneously reordering a partner array 
            to maintain element correspondence. Supports ascending or descending order.
   @note: Useful when you have a key array and a related value array that must stay paired.
@@ -7068,7 +7079,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.PartitionSort>
+  <PartitionSort>
   @action: Sorts the array (Self) in ascending or descending order using a
            stable partition-based recursive sorting algorithm.
   @note:   - Returns Length(Self)
@@ -7124,7 +7135,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.QuickSortSwapped>
+  <QuickSortSwapped>
   @action: Sorts the array in ascending or descending order and records all swaps performed.
   @note: Returns a dynamic array of TConnection records, each representing the indices of elements swapped during the sort.
          Useful for visualizations or undoing the sort.
@@ -7178,7 +7189,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.QuickSortIndexed>
+  <QuickSortIndexed>
   @action: Sorts the array while tracking the original indices.
   @note: Returns an array of indices representing the order of elements in the sorted array.
          The original array is modified.
@@ -7236,7 +7247,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.QuickSortedly>
+  <QuickSortedly>
   @action: Returns the indices of the array elements in sorted order without modifying the original array.
   @note: Purely functional: the original array stays unchanged.
          The result is an array of indices indicating the sorted order.
@@ -7286,7 +7297,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.QuickSorted(aAscending: Boolean): TArr>
+  <QuickSorted(aAscending: Boolean): TArr>
   @action: Returns array sorted by its own values, based on QuickSort algorithm.
   @note: None.
 [==============================================================================}
@@ -7322,7 +7333,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.QuickSort>
+  <QuickSort>
   @action: QuickSort algorithm that is NOT based on recursion.
   @note: non-recursive. Returns High(arr).
 [==============================================================================}
@@ -7385,7 +7396,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.QuickSort3W>
+  <QuickSort3W>
   @action: 3-way QuickSort algorithm that is NOT based on recursion.
   @note: recursive. Returns High(arr).
 [==============================================================================}
@@ -7420,7 +7431,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.QSort>
+  <QSort>
   @action: QuickSort algorithm that IS based on recursion.
   @note: recursive. Returns High(arr).
 [==============================================================================}
@@ -7457,7 +7468,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.CoctailSort>
+  <CoctailSort>
   @action: CoctailSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
@@ -7492,7 +7503,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.CoctailSort2>
+  <CoctailSort2>
   @action: CoctailSort algorithm.
   @note: CoctailSort v2. Returns High(arr).
 [==============================================================================}
@@ -7531,7 +7542,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.GnomeSort>
+  <GnomeSort>
   @action: GnomeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
@@ -7556,7 +7567,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.GnomeSortOptimized>
+  <GnomeSortOptimized>
   @action: Optimized GnomeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
@@ -7593,7 +7604,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.PancakeSort>
+  <PancakeSort>
   @action: PancakeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
@@ -7624,7 +7635,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.BubbleSort>
+  <BubbleSort>
   @action: Sorts arr with BubbleSort algorithm
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
@@ -7640,7 +7651,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.BubbleSort2>
+  <BubbleSort2>
   @action: Sorts arr with BubbleSort algorithm - contains some optimization.
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
@@ -7660,7 +7671,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.BubbleSortOptimized>
+  <BubbleSortOptimized>
   @action: Sorts arr with optimized BubbleSort algorithm
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
@@ -7685,7 +7696,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.CombSort>
+  <CombSort>
   @action: CombSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
@@ -7717,7 +7728,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.HeapSort>
+  <HeapSort>
   @action: HeapSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
@@ -7770,7 +7781,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.InsertionSort>
+  <InsertionSort>
   @action: InsertionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
@@ -7792,7 +7803,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.SelectionSort>
+  <SelectionSort>
   @action: SelectionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
@@ -7816,7 +7827,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.SelectionSortBidirectional>
+  <SelectionSortBidirectional>
   @action: Bidirectional SelectionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
@@ -7849,7 +7860,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.SelectionSortBidirectional2>
+  <SelectionSortBidirectional2>
   @action: Bidirectional SelectionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
@@ -7878,7 +7889,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.ShellSort>
+  <ShellSort>
   @action: ShellSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
@@ -7919,7 +7930,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.MergeSort>
+  <MergeSort>
   @action: MergeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
@@ -7962,7 +7973,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.MergeSortBU>
+  <MergeSortBU>
   @action: Bottom-up MergeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
@@ -8004,7 +8015,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.HybridSort>
+  <HybridSort>
   @action: Sorts the integer array (Self) in ascending or descending order
            using algorithm close to TimSort — a stable hybrid sorting method that
            combines insertion sort and merge sort for optimal performance.
@@ -8091,7 +8102,7 @@ begin
 end;
 
 {==============================================================================]
-  <HArr.Uniq: TArr>
+  <Uniq>
   @action: Unique method for sortable types.
   @note: None.
 [==============================================================================}
@@ -8107,7 +8118,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Downtrending>
+  <Downtrending>
   @action: Returns True if the first element of the array is greater than the last element.
   @note: Only meaningful for arrays with at least 2 elements. Indicates a “falling” trend.
 [==============================================================================}
@@ -8117,7 +8128,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Uptrending>
+  <Uptrending>
   @action: Returns True if the first element of the array is less than the last element.
   @note: Only meaningful for arrays with at least 2 elements. Indicates a “rising” trend.
 [==============================================================================}
@@ -8127,7 +8138,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Notrending>
+  <Notrending>
   @action: Returns True if the first element of the array is equal to the last element.
   @note: Only meaningful for arrays with at least 2 elements. Indicates no significant trend.
 [==============================================================================}
@@ -8137,7 +8148,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Trend>
+  <Trend>
   @action: Returns the trend of the array’s endpoints:
             1 = Uptrend (first < last),
            -1 = Downtrend (first > last),
@@ -8157,7 +8168,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Trending>
+  <Trending>
   @action: Returns True if the array is either Uptrending or Downtrending.
   @note: Only meaningful for arrays with at least 2 elements.
          Returns False if the array has no trend (Notrending).
@@ -8168,7 +8179,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Rising>
+  <Rising>
   @action: Returns True if the array is monotonically non-decreasing,
            i.e., each element is less than or equal to the next.
   @note: Arrays with 0 or 1 element are considered Rising by default.
@@ -8185,7 +8196,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Falling>
+  <Falling>
   @action: Returns True if the array is monotonically non-increasing,
            i.e., each element is greater than or equal to the next.
   @note: Arrays with 0 or 1 element are considered Falling by default.
@@ -8202,7 +8213,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Direction>
+  <Direction>
   @action: Returns numeric trend across the entire array:
            1 = Rising (monotonically non-decreasing),
           -1 = Falling (monotonically non-increasing),
@@ -8221,7 +8232,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.TrendFalling>
+  <TrendFalling>
   @action: Returns True if the first element of the array is greater than or equal to the last element,
            indicating a non-increasing trend from start to end.
   @note: Only meaningful for arrays with at least 2 elements.
@@ -8233,7 +8244,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.TrendRising>
+  <TrendRising>
   @action: Returns True if the first element of the array is less than or equal to the last element,
            indicating a non-decreasing trend from start to end.
   @note: Only meaningful for arrays with at least 2 elements.
@@ -8245,12 +8256,12 @@ begin
 end;
 
 {==============================================================================]
- <arr.BinaryInsertionSort>
- @action: Sorts the array in ascending or descending order using binary
-          insertion sort, which combines binary search and insertion.
- @note: This algorithm runs in O(n²) time in the worst case but uses binary
-        search to minimize comparisons. It performs well on small or
-        partially sorted datasets. Returns the number of elements sorted.
+  <BinaryInsertionSort>
+  @action: Sorts the array in ascending or descending order using binary
+           insertion sort, which combines binary search and insertion.
+  @note: This algorithm runs in O(n²) time in the worst case but uses binary
+         search to minimize comparisons. It performs well on small or
+         partially sorted datasets. Returns the number of elements sorted.
 [==============================================================================}
 function HArr.BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
   function BP(const value: TVar; const hIndex: Integer): Integer;
@@ -8288,7 +8299,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Sortedness>
+  <Sortedness>
   @action: Checks whether the array is monotonic (either ascending or descending).
            Performs a two-phase check: a fast global trend detection from both ends,
            followed by a full local adjacency check to ensure strict monotonicity.
@@ -8330,7 +8341,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.SortednessEx>
+  <SortednessEx>
   @action: Enhanced version of Sortedness with configurable stride.
            Performs a subsampled global trend check (using left and right indices
            at intervals of "stride") to quickly detect gross disorder,
@@ -8373,7 +8384,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Monotonic>
+  <Monotonic>
   @action: Checks whether the array is globally monotonic by simultaneously comparing
            elements from both ends toward the center, while also validating adjacent pairs.
            Detects ascending or descending trends dynamically based on endpoints.
@@ -8403,7 +8414,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Monotone>
+  <Monotone>
   @action: Checks whether the array is monotonic (ascending or descending) by performing
            a symmetric two-way scan from both ends toward the middle.
            Repeatedly evaluates adjacent pairs and global trend to determine monotonicity.
@@ -8433,7 +8444,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.IsMonotone>
+  <IsMonotone>
   @action: Determines whether the array is monotone — that is, entirely non-decreasing
            or non-increasing throughout its elements.
            Returns True if the array’s values either never decrease (monotone ascending)
@@ -8466,7 +8477,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Monotonious>
+  <Monotonious>
   @action:
     Determines whether the integer array is monotone — that is, entirely
     non-decreasing or entirely non-increasing.
@@ -8476,7 +8487,6 @@ end;
     (`l`) have been observed. If both an increase and a decrease occur, the
     array is not monotone, and the function immediately returns False. Otherwise,
     it returns True.
-
   @note:
     • Empty or single-element arrays are considered monotone (trivially True).
     • Equal adjacent elements do not affect monotonicity.
@@ -8507,7 +8517,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Unidirectional>
+  <Unidirectional>
   @action: Checks if the array is monotonic (either non-decreasing or non-increasing).
   @note: Returns True if all elements move in one direction, False otherwise.
 [==============================================================================}
@@ -8529,7 +8539,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Trendy>
+  <Trendy>
   @action: Checks whether the array is monotonic — either entirely non-decreasing,
            non-increasing, or constant.
   @note: Returns True if the array changes in only one direction; False otherwise.
@@ -8549,7 +8559,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.OnOrder>
+  <OnOrder>
   @action: Determines whether the array elements remain consistently ordered,
            either non-decreasing, non-increasing, or constant.
   @note: Returns True if the sequence does not reverse direction (monotonic in
@@ -8568,7 +8578,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Peaks>
+  <Peaks>
   @action: Returns the indices of all local maxima in the array.
   @note: A local maximum is any element strictly greater than its immediate
          neighbors. Edge elements (index 0 or index High) are included when
@@ -8595,7 +8605,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Valleys>
+  <Valleys>
   @action: Returns the indices of all local minima in the array.
   @note: A local minimum is any element strictly lower than its immediate
          neighbors. Edge elements (index 0 or index High) are included when
@@ -8622,7 +8632,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Unionize>
+  <Unionize>
   @action: Produces the sorted set-union of two integer arrays, eliminating
            duplicates while preserving the requested ordering direction.
   @note: Both source arrays must already be sorted in the same direction
@@ -8706,7 +8716,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Subtract>
+  <Subtract>
   @action: Constructs and returns a new array representing the set difference
            of this array minus `items`. Only values present in this array and
            absent from `items` are included. The output is sorted according to
@@ -8747,7 +8757,7 @@ begin
 end;
 
 {==============================================================================]
-  <arr.Intersect>
+  <Intersect>
   @action: Returns a new array containing all elements that appear in BOTH this
            array and `items`. The result is sorted according to `oAscending`
            and contains no duplicates.
@@ -8792,9 +8802,9 @@ end;
 {$ENDIF}
 
 {==============================================================================]
- <T1D.Create(item: VarType; aSize: Integer)>
- @action: Creates array with item where size is length of the array.
- @note: item is placed on every index in result.
+  <Create>
+  @action: Creates array with item where size is length of the array.
+  @note: item is placed on every index in result.
 [==============================================================================}
 class function T1D.Create(const item: TVar; const aSize: Integer = 1): TArr; overload;
 var

@@ -57,7 +57,7 @@ type
 {$I config\1D.inc}
 
 {==============================================================================]
-  <TBooleanArrayHelper.Select>
+  <Select>
   @action: IfThen method for TBooleanArray.
   @note: [True, False, True] => 5.
 [==============================================================================}
@@ -71,7 +71,7 @@ function TBooleanArrayHelper.Select(const sTrue, sFalse: TBox): TBoxArray; overl
 function TBooleanArrayHelper.Select(const sTrue, sFalse: TRange): TRangeArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
 
 {==============================================================================]
-  <TBooleanArrayHelper.Bitify>
+  <Bitify>
   @action: Returns TBooleanArray as bits.
   @note: [True, False, True] => 5.
 [==============================================================================}
@@ -89,7 +89,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Bits>
+  <Bits>
   @action: Returns TBooleanArray as bits.
   @note: [True, False, True] => 5.
 [==============================================================================}
@@ -103,7 +103,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.ToBits>
+  <ToBits>
   @action: Returns TBooleanArray as bits.
   @note: [True, False, True] => 5.
 [==============================================================================}
@@ -117,7 +117,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Digits>
+  <Digits>
   @action: Returns TBooleanArray as Integers.
   @note: [True, False] => [1, 0].
 [==============================================================================}
@@ -131,7 +131,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Falsed>
+  <Falsed>
   @action: Returns true if ALL values in arr are False.
   @note: [False, False, False] => True.
 [==============================================================================}
@@ -146,7 +146,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Falseless>
+  <Falseless>
   @action: Returns true if arr is full of True values or is empty.
   @note: [True, True, True] / [] => True.
 [==============================================================================}
@@ -161,7 +161,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Falseless(maxFalse: Integer): Boolean>
+  <Falseless>
   @action: Support for requirement amount of Falses.
   @note: [True, False, True, True] (1) => True / (0) => False.
 [==============================================================================}
@@ -178,7 +178,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Falseness: Integer>
+  <Falseness>
   @action: Returns count of False values arr has got.
   @note: [False, False, True, True, False] => 3
 [==============================================================================}
@@ -193,7 +193,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Falses>
+  <Falses>
   @action: Returns Indexes of arr where state is False.
   @note: [True, False, True, False] => [1,3]
 [==============================================================================}
@@ -210,7 +210,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Falsesome>
+  <Falsesome>
   @action: Returns true if arr contains any False value(s).
   @note: [False, False, True] => True.
 [==============================================================================}
@@ -225,7 +225,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Falsesome(minFalse: Integer): Boolean>
+  <Falsesome>
   @action: Support for minFalse.
   @note: None.
 [==============================================================================}
@@ -246,7 +246,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Str(separator, strTrue, strFalse: string): string>
+  <Str>
   @action: Returns TBooleanArray as string.
   @note: Supports custom separator & True / False strings.
 [==============================================================================}
@@ -271,7 +271,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Text(strTrue, strFalse, separator: string): string>
+  <Text>
   @action: Returns TBooleanArray as string.
   @note: Supports custom separator & True / False strings.
 [==============================================================================}
@@ -296,7 +296,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.TIA>
+  <TIA>
   @action: Returns TBooleanArray as Integers.
   @note: [True, False] => [1, 0].
 [==============================================================================}
@@ -313,7 +313,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Toggle>
+  <Toggle>
   @action: Returns opposite version of arr.
   @note: [True, False] => [False, True].
 [==============================================================================}
@@ -327,7 +327,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Trued>
+  <Trued>
   @action: Returns true if ALL values in arr are True.
   @note: [True, True, True] => True.
 [==============================================================================}
@@ -342,7 +342,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Trueless>
+  <Trueless>
   @action: Returns true if arr is full of False values or is empty.
   @note: [False, False, False] / [] => True.
 [==============================================================================}
@@ -357,7 +357,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Trueless(maxTrue: Integer): Boolean>
+  <Trueless>
   @action: Support for requirement amount of Trues.
   @note: [False, True, False, False] (1) => True / (0) => False.
 [==============================================================================}
@@ -374,7 +374,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Trueness: Integer>
+  <Trueness>
   @action: Returns count of True values arr has got.
   @note: [False, False, True, True, False] => 2
 [==============================================================================}
@@ -389,7 +389,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Trues>
+  <Trues>
   @action: Returns Indexes of arr where state is True.
   @note: [True, False, True, False] => [0,2]
 [==============================================================================}
@@ -406,7 +406,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Truesome>
+  <Truesome>
   @action: Returns true if arr contains any True value(s).
   @note: [False, False, True] => True.
 [==============================================================================}
@@ -421,7 +421,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Truesome(minTrue: Integer): Boolean>
+  <Truesome>
   @action: Support for minTrue.
   @note: None.
 [==============================================================================}
@@ -442,7 +442,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Opposite>
+  <Opposite>
   @action: Returns opposite version of arr.
   @note: [True, False] => [False, True].
 [==============================================================================}
@@ -459,7 +459,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.BinaryStr>
+  <BinaryStr>
   @action: Returns binary string from Boolean Array
   @note: [True, False] => '10' & [False, True] => '01'
 [==============================================================================}
@@ -473,7 +473,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.BinaryDigits>
+  <BinaryDigits>
   @action: Returns binary digits from Boolean Array
   @note: [True, False] => [1, 0] & [False, True] => [0, 1]
 [==============================================================================}
@@ -487,7 +487,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Binary>
+  <Binary>
   @action: Returns binary string from Boolean Array
   @note: [True, False] => '10' & [False, True] => '01'
 [==============================================================================}
@@ -501,7 +501,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Reinit>
+  <Reinit>
   @action: Clears all elements of the array by zero-filling the underlying memory,
            setting all booleans to False, while keeping the current length unchanged.
   @note: Works safely because Boolean is an unmanaged type (1 byte per element).
@@ -514,7 +514,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Occupancy>
+  <Occupancy>
   @action: Returns the occupancy of the array: fraction of elements that are True.
            1.0 = all val, 0.0 = no vals
 [==============================================================================}
@@ -532,7 +532,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Attach>
+  <Attach>
   @action: Appends all points from the given array to the end of Self.
            Returns the new total length of the array after appending.
   @note:   Uses Move() for efficiency since Boolean is an unmanaged type.
@@ -553,7 +553,7 @@ begin
 end;
 
 {==============================================================================]
-  <TBooleanArrayHelper.Embed>
+  <Embed>
   @action: Inserts the contents of another boolean array into the current array
            at the specified index. Existing elements from that position onward
            are shifted to make room for the new items.

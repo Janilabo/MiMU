@@ -89,7 +89,7 @@ type
 {$I config\0D.inc}
 
 {==============================================================================]
-  <TStringHelper.After>
+  <After>
   @action: Returns string that is found after s in str.
   @note: None
 [==============================================================================}
@@ -105,7 +105,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.After>
+  <After>
   @action: Returns string that is found after index in str.
   @note: None
 [==============================================================================}
@@ -118,7 +118,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Ahead>
+  <Ahead>
   @action: Returns string that is ahead the s in str.
   @note: None
 [==============================================================================}
@@ -134,7 +134,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Ahead>
+  <Ahead>
   @action: Returns string that is ahead the index in str.
   @note: None
 [==============================================================================}
@@ -151,7 +151,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Amount>
+  <Amount>
   @action: Simply returns the amount of s in str.
   @note: Contains support for overlapping (overlap)
 [==============================================================================}
@@ -172,7 +172,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.At>
+  <At>
   @action: Checks if string s is at index position in str.
   @note: UNSAFE: Minimal checking for efficiency!
 [==============================================================================}
@@ -188,7 +188,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Before>
+  <Before>
   @action: Returns string that is found before s in str.
   @note: None
 [==============================================================================}
@@ -204,7 +204,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Before>
+  <Before>
   @action: Returns string that is found before index in str.
   @note: None
 [==============================================================================}
@@ -221,7 +221,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Behind>
+  <Behind>
   @action: Returns string (with count) that is behind the s in str.
   @note: None
 [==============================================================================}
@@ -237,7 +237,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Behind>
+  <Behind>
   @action: Returns string (with count) that is behind the index in str.
   @note: None
 [==============================================================================}
@@ -250,9 +250,9 @@ begin
 end;
 
 {==============================================================================]
- <TStringHelper.Between>
- @action: Returns the string between s1 and s2 in str.
- @note: Supports offset (index).
+  <Between>
+  @action: Returns the string between s1 and s2 in str.
+  @note: Supports offset (index).
 [==============================================================================}
 function TStringHelper.Between(const s1, s2: string; const index: Integer = 1): string;
 var
@@ -269,7 +269,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Void>
+  <Void>
   @action: Returns true if string is empty (Length is 0).
   @note: None.
 [==============================================================================}
@@ -279,7 +279,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Empty>
+  <Empty>
   @action: Returns true if string is empty (Length is 0).
   @note: None.
 [==============================================================================}
@@ -289,7 +289,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Blank>
+  <Blank>
   @action: Returns true if string is empty or consists of whitespaces only.
   @note: None.
 [==============================================================================}
@@ -304,7 +304,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Exists>
+  <Exists>
   @action: Returns true if string is not empty.
   @note: Length(str) > 0.
 [==============================================================================}
@@ -314,7 +314,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Center>
+  <Center>
   @action: Returns str centered with fill characters where size is the length of the Result.
   @note: Supports custom filling character by fill!
 [==============================================================================}
@@ -335,7 +335,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Chars>
+  <Chars>
   @action: Returns characters of string as TCharArray.
   @note: None.
 [==============================================================================}
@@ -349,7 +349,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Charify>
+  <Charify>
   @action: Returns characters of string as TCharArray.
   @note: None.
 [==============================================================================}
@@ -361,7 +361,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Chop>
+  <Chop>
   @action: Returns characters of string as TCharArray.
   @note: None.
 [==============================================================================}
@@ -381,7 +381,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Chunk>
+  <Chunk>
   @action: Returns chunk of string between a and b.
   @note: Supports reversed chunk, when a is higher than b.
 [==============================================================================}
@@ -413,14 +413,14 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Compare>
+  <Compare>
   @action: Compares str with target.
   @note: Results: 0=EQUAL, 1=str>target, -1=str<target
 [==============================================================================}
 function TStringHelper.Compare(const target: string): Integer; inline; {$DEFINE Skeleton_Compare}{$I config\Skeletons.inc}{$UNDEF Skeleton_Compare}
 
 {==============================================================================]
-  <TStringHelper.Sign>
+  <Sign>
   @action: Compares the current string (Self) with a target string and returns
           a directional sign indicating whether the target is greater, equal,
           or smaller than Self.
@@ -433,32 +433,32 @@ function TStringHelper.Compare(const target: string): Integer; inline; {$DEFINE 
 function TStringHelper.Sign(const target: string): Integer; inline; {$DEFINE Skeleton_Sign}{$I config\Skeletons.inc}{$UNDEF Skeleton_Sign}
 
 {==============================================================================]
- <TStringHelper.Precede>
- @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
- @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
+  <Precede>
+  @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
+  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
 function TStringHelper.Precede(const target: string; const aAscending: Boolean): Boolean; overload; {$DEFINE Skeleton_Precede}{$I config\Skeletons.inc}{$UNDEF Skeleton_Precede}
 
 {==============================================================================]
- <TStringHelper.Ascending>
- @action  Returns True if the helper’s value is less than or equal to         
-          the given target value. Useful as a comparison predicate when        
-          sorting or merging arrays in ascending order.
- @note: This method does not modify either value; it simply performs a <= comparison.
+  <Ascending>
+  @action  Returns True if the helper’s value is less than or equal to         
+           the given target value. Useful as a comparison predicate when        
+           sorting or merging arrays in ascending order.
+  @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}
 function TStringHelper.Ascending(const target: string): Boolean; inline; {$DEFINE Skeleton_Ascending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Ascending}
 
 {==============================================================================]
- <TStringHelper.Descending>
- @action: Returns True if the helper’s value is greater than or equal to
-          the given target value. Use as a comparison predicate when
-          sorting or merging arrays in descending order.
- @note: Pure comparison only; equivalent to Self >= target.
+  <Descending>
+  @action: Returns True if the helper’s value is greater than or equal to
+           the given target value. Use as a comparison predicate when
+           sorting or merging arrays in descending order.
+  @note: Pure comparison only; equivalent to Self >= target.
 [==============================================================================}
 function TStringHelper.Descending(const target: string): Boolean; inline; {$DEFINE Skeleton_Descending}{$I config\Skeletons.inc}{$UNDEF Skeleton_Descending}
 
 {==============================================================================]
-  <TStringHelper.Contains>
+  <Contains>
   @action: Returns true if s can be found in str.
   @note: Starts search from index position.!
 [==============================================================================}
@@ -474,7 +474,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Count>
+  <Count>
   @action: Simply returns the count of s in str.
   @note: Contains support for overlapping (overlap)
 [==============================================================================}
@@ -495,7 +495,7 @@ begin
 end;
 
 {==============================================================================]
-  <String_Duplicate>
+  <Duplicate>
   @action: Returns str * x (duplicated) times. Example: ('ha', 3) => 'hahaha'
   @note: None
 [==============================================================================}
@@ -509,7 +509,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Duplicated>
+  <Duplicated>
   @action: Returns str * x times. Example: ('ha', 3, ' ') => 'ha ha ha'
            Places glue between the str positions to result.
   @note: Supports custom glue addition between duplicated str's.
@@ -530,7 +530,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.EndsWith>
+  <EndsWith>
   @action: Returns True if str ends with s.
   @note: None
 [==============================================================================}
@@ -544,7 +544,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.EndWith>
+  <EndWith>
   @action: Returns true if s was found in str and it was set as the ending of the str.
   @note: Supports offset.
 [==============================================================================}
@@ -559,9 +559,9 @@ begin
 end;
 
 {==============================================================================]
- <TStringHelper.Exch(aIndex, bIndex: Integer): Boolean>
- @action: Fast version of Exchange().
- @note: Unsafe, no checking.
+  <Exch(aIndex, bIndex: Integer): Boolean>
+  @action: Fast version of Exchange().
+  @note: Unsafe, no checking.
 [==============================================================================}
 function TStringHelper.Exch(const aIndex, bIndex: Integer): Boolean;
 var
@@ -574,9 +574,9 @@ begin
 end;
 
 {==============================================================================]
- <TStringHelper.Exchange(aIndex, bIndex: Integer): Boolean>
- @action: Swap items aIndex and bIndex in string.
- @note: Returns true with success.
+  <Exchange(aIndex, bIndex: Integer): Boolean>
+  @action: Swap items aIndex and bIndex in string.
+  @note: Returns true with success.
 [==============================================================================}
 function TStringHelper.Exchange(const aIndex, bIndex: Integer): Boolean;
 var
@@ -594,7 +594,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Explode>
+  <Explode>
   @action: Simply "explodes" string to TCharArray.
   @note: None.
 [==============================================================================}
@@ -614,7 +614,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Explode>
+  <Explode>
   @action: Explodes str with delimiter (d).
   @note: Explodes up to (maximum) limit. Limit as -1 means no limits.
 [==============================================================================}
@@ -661,7 +661,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Explode>
+  <Explode>
   @action: Explodes str with delimiters (d).
   @note: Explodes up to (maximum) limit. Limit as -1 means no limits.
 [==============================================================================}
@@ -717,7 +717,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Flip>
+  <Flip>
   @action: Returns reversed str.
   @note: None
 [==============================================================================}
@@ -732,7 +732,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.FromLeft>
+  <FromLeft>
   @action: Returns string from left with count of characters.
   @note: None
 [==============================================================================}
@@ -742,7 +742,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.FromRight>
+  <FromRight>
   @action: Returns string from right with count of characters.
   @note: None
 [==============================================================================}
@@ -752,7 +752,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Get>
+  <Get>
   @action: Fast method for getting substring from string index position by size.
   @note: UNSAFE! Minimal checks for efficiency.
 [==============================================================================}
@@ -766,7 +766,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.IDs>
+  <IDs>
   @action: Returns indexes of string as TIntegerArray.
   @note: With empty string this function returns as []!
 [==============================================================================}
@@ -783,7 +783,7 @@ begin
 end;
 
 {==============================================================================]
-  <String_IDs>
+  <IDs>
   @action: Returns indexes of string as TCharArray.
   @note: Unsafe method without failsafes, use with care!
 [==============================================================================}
@@ -797,7 +797,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.IDs>
+  <IDs>
   @action: Returns indexes of string as TCharArray. Replaces character of str from IDs with item.
   @note: Unsafe method without failsafes, use with care!
 [==============================================================================}
@@ -811,7 +811,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.IDs>
+  <IDs>
   @action: Returns indexes of string as TCharArray. Replaces character of str from IDs with item.
   @note: Unsafe method without failsafes, use with care!
 [==============================================================================}
@@ -826,7 +826,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Includes>
+  <Includes>
   @action: Returns true if s can be found in str.
   @note: Starts backwards search from index position.!
 [==============================================================================}
@@ -842,7 +842,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Pick>
+  <Pick>
   @action: Method for getting substring from string index position by count.
   @note: Contains some failsafes, alternative for String_Get.
 [==============================================================================}
@@ -858,7 +858,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Pos>
+  <Pos>
   @action: Returns first position of s string in str.
   @note: Starts search from index position.!
 [==============================================================================}
@@ -871,7 +871,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Loc>
+  <Loc>
   @action: Returns last position of s string in str.
   @note: Starts search from index position.!
 [==============================================================================}
@@ -884,7 +884,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Location>
+  <Location>
   @action: Returns last position of s string in str.
   @note: Starts search from index position. -1 means str length!
 [==============================================================================}
@@ -906,7 +906,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Position>
+  <Position>
   @action: Returns s position from str. Starts scanning from start.
            If s doesn't exist in str, Result will be set as 0.
   @note: Supports custom index as scan start.
@@ -932,7 +932,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Find>
+  <Find>
   @action: Returns first position of s string in str.
   @note: Alternative for Pos().
 [==============================================================================}
@@ -955,7 +955,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Search>
+  <Search>
   @action: Returns first position of s string in str.
   @note: Alternative for Pos().
 [==============================================================================}
@@ -981,7 +981,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Reverse>
+  <Reverse>
   @action: Returns reversed str.
   @note: None
 [==============================================================================}
@@ -1002,7 +1002,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Reversed>
+  <Reversed>
   @action: Returns reversed str.
   @note: None
 [==============================================================================}
@@ -1027,7 +1027,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Slice>
+  <Slice>
   @action: Returns slice of string with a and b.
   @note: Supports reversed slice, when a is higher than b.
 [==============================================================================}
@@ -1063,7 +1063,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.StartsWith>
+  <StartsWith>
   @action: Returns True if str starts with s.
   @note: None
 [==============================================================================}
@@ -1073,7 +1073,7 @@ begin
 end;
 
 {==============================================================================]
-  <StringHelper.StartWith>
+  <StartWith>
   @action: Returns true if s was found in str and it was set as the beginning of the str.
   @note: None
 [==============================================================================}
@@ -1088,7 +1088,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Stuff>
+  <Stuff>
   @action: Returns str stuffed with s. Starting from iFrom and ending to iFrom + iCount.
   @note: Places s to iFrom position and replaces iCount amount of next characters in str with s.
 [==============================================================================}
@@ -1100,7 +1100,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Quotatation>
+  <Quotatation>
   @action: Returns the quoted version of str.
   @note: None
 [==============================================================================}
@@ -1110,7 +1110,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.PregQuote>
+  <PregQuote>
   @action: Returns string with all characters escaped that are part of the regular expression syntax.
   @note: Based on the character set...
 [==============================================================================}
@@ -1127,7 +1127,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.TrimLeft>
+  <TrimLeft>
   @action: Returns str with left-side trimmed/cleaned of t.
   @note: None
 [==============================================================================}
@@ -1143,7 +1143,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.TrimRight>
+  <TrimRight>
   @action: Returns str with right-side trimmed/cleaned of t.
   @note: None
 [==============================================================================}
@@ -1159,7 +1159,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Trim>
+  <Trim>
   @action: Returns str with left-side and right-side trimmed/cleaned of t.
   @note: None
 [==============================================================================}
@@ -1194,7 +1194,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.AsTRange>
+  <AsTRange>
   @action: Returns indexes of string as TRange.
   @note: With empty string this function returns as 0..0!
 [==============================================================================}
@@ -1204,7 +1204,7 @@ begin
 end;
 
 {==============================================================================]
- <TStringHelper.ToTRange>
+ <ToTRange>
  @action: Converts string to TRange.
  @note: None
 [==============================================================================}
@@ -1225,7 +1225,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.IsBinary>
+  <IsBinary>
   @action: Returns true if str contains only 0's and 1's
   @note: If str is empty and emptyTrue is True, then this function returns True with empty strings.
 [==============================================================================}
@@ -1242,7 +1242,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.BoolifyBinary>
+  <BoolifyBinary>
   @action: '10101' => [True, False, True, False, True]
   @note: Considers only '1' as True, everything else as False.
 [==============================================================================}
@@ -1256,7 +1256,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.MadeOf>
+  <MadeOf>
   @action: Returns true if str is made with only allowed characters.
   @note: None.
 [==============================================================================}
@@ -1273,7 +1273,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.FreeOf>
+  <FreeOf>
   @action: Returns true if str is built without forbidden characters.
   @note: None.
 [==============================================================================}
@@ -1289,9 +1289,9 @@ begin
 end;
 
 {==============================================================================]
- <TStringHelper.BuiltWithout> 
- @action: Checks if array arr does not have any forbidden items.
- @note: None.
+  <BuiltWithout> 
+  @action: Checks if array arr does not have any forbidden items.
+  @note: None.
 [==============================================================================}
 function TStringHelper.BuiltWithout(const forbidden: TCharArray): Boolean;
 var
@@ -1306,7 +1306,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.Consists>
+  <Consists>
   @action: Returns true if str is made with only allowed characters.
   @note: None.
 [==============================================================================}
@@ -1327,7 +1327,7 @@ begin
 end; 
 
 {==============================================================================]
-  <TStringHelper.Pure>
+  <Pure>
   @action: Returns true if str is made with only allowed characters.
   @note: None.
 [==============================================================================}
@@ -1337,7 +1337,7 @@ begin
 end;
 
 {==============================================================================]
-  <TStringHelper.BuiltWith>
+  <BuiltWith>
   @action: Returns true is string is built with blocks.
   @note: This function requires blocks array to be unique (no duplicates allowed for it).
 [==============================================================================}

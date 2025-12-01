@@ -22,7 +22,7 @@ type
 {$I config\1D.inc}
 
 {==============================================================================]
-  <TCharArrayHelper.Str>
+  <Str>
   @action: Returns arr joined together as string.
   @note: None.
 [==============================================================================}
@@ -34,7 +34,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharArrayHelper.ToStr>
+  <ToStr>
   @action: Returns arr joined together as string.
   @note: None.
 [==============================================================================}
@@ -46,7 +46,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharArrayHelper.Join>
+  <Join>
   @action: Returns arr joined together as string.
   @note: None.
 [==============================================================================}
@@ -60,7 +60,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharArrayHelper.Join(glue: string)>
+  <Join>
   @action: Returns arr joined together as string.
   @note: Joins arr together with glue.
 [==============================================================================}
@@ -77,7 +77,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharArrayHelper.Stringify>
+  <Stringify>
   @action: Returns arr joined together as string.
   @note: None.
 [==============================================================================}
@@ -91,7 +91,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharArrayHelper.Stringify(glue: string)>
+  <Stringify>
   @action: Returns arr joined together as string.
   @note: Joins arr together with glue.
 [==============================================================================}
@@ -115,7 +115,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharArrayHelper.Ordinals>
+  <Ordinals>
   @action: Returns Ord() of every array items as TIntegerArray.
   @note: None.
 [==============================================================================}
@@ -129,7 +129,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharArrayHelper.Unduped>
+  <Unduped>
   @action: Returns TCharArray with unique chars. 
   @note: Works with ASCII.
 [==============================================================================}
@@ -154,7 +154,7 @@ begin
 end;
 
 {==============================================================================]
-  <TCharArrayHelper.TSA>
+  <TSA>
   @action: Returns TCharArray as TStringArray. 
   @note: None.
 [==============================================================================}

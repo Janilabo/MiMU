@@ -25,9 +25,9 @@ type
 {$I config\1D.inc}
 
 {==============================================================================]
- <TBoxArrayHelper.X1s>
- @action: Returns X1-values from arr as TIntegerArray.
- @note: None.
+  <X1s>
+  @action: Returns X1-values from arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function TBoxArrayHelper.X1s: TIntegerArray; overload;
 var
@@ -39,9 +39,9 @@ begin
 end;
 
 {==============================================================================]
- <TBoxArrayHelper.X2s>
- @action: Returns X2-values from arr as TIntegerArray.
- @note: None.
+  <X2s>
+  @action: Returns X2-values from arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function TBoxArrayHelper.X2s: TIntegerArray; overload;
 var
@@ -53,9 +53,9 @@ begin
 end;
 
 {==============================================================================]
- <TBoxArrayHelper.Y1s>
- @action: Returns Y1-values from arr as TIntegerArray.
- @note: None.
+  <Y1s>
+  @action: Returns Y1-values from arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function TBoxArrayHelper.Y1s: TIntegerArray; overload;
 var
@@ -67,9 +67,9 @@ begin
 end;
 
 {==============================================================================]
- <TBoxArrayHelper.Y2s>
- @action: Returns Y2-values from arr as TIntegerArray.
- @note: None.
+  <Y2s>
+  @action: Returns Y2-values from arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function TBoxArrayHelper.Y2s: TIntegerArray; overload;
 var
@@ -81,9 +81,9 @@ begin
 end;
 
 {==============================================================================]
- <TBoxArrayHelper.X1Values>
- @action: Returns X1-values from arr as TIntegerArray.
- @note: None.
+  <X1Values>
+  @action: Returns X1-values from arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function TBoxArrayHelper.X1Values: TIntegerArray; overload;
 var
@@ -96,9 +96,9 @@ begin
 end;
 
 {==============================================================================]
- <TBoxArrayHelper.X2Values>
- @action: Returns X2-values from arr as TIntegerArray.
- @note: None.
+  <X2Values>
+  @action: Returns X2-values from arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function TBoxArrayHelper.X2Values: TIntegerArray; overload;
 var
@@ -111,9 +111,9 @@ begin
 end;
 
 {==============================================================================]
- <TBoxArrayHelper.Y1Values>
- @action: Returns Y1-values from arr as TIntegerArray.
- @note: None.
+  <Y1Values>
+  @action: Returns Y1-values from arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function TBoxArrayHelper.Y1Values: TIntegerArray; overload;
 var
@@ -126,9 +126,9 @@ begin
 end;
 
 {==============================================================================]
- <TBoxArrayHelper.Y2Values>
- @action: Returns Y2-values from arr as TIntegerArray.
- @note: None.
+  <Y2Values>
+  @action: Returns Y2-values from arr as TIntegerArray.
+  @note: None.
 [==============================================================================}
 function TBoxArrayHelper.Y2Values: TIntegerArray; overload;
 var
@@ -141,9 +141,9 @@ begin
 end;
 
 {==============================================================================]
- <TBoxArrayHelper.Unzip>
- @action: Stores arr X1/X2 and Y1/Y2 values to x1/x2Arr and y1/y2Arr.
- @note: Returns Length(arr).
+  <Unzip>
+  @action: Stores arr X1/X2 and Y1/Y2 values to x1/x2Arr and y1/y2Arr.
+  @note: Returns Length(arr).
 [==============================================================================}
 function TBoxArrayHelper.Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
 var
@@ -156,9 +156,9 @@ begin
 end;
 
 {==============================================================================]
- <TBoxArrayHelper.Zip>
- @action: Zips TBoxArray with x1/x2Arr and y1/y2Arr.
- @note: Uses minimum length(!), if xArr differs from yArr size.
+  <Zip>
+  @action: Zips TBoxArray with x1/x2Arr and y1/y2Arr.
+  @note: Uses minimum length(!), if xArr differs from yArr size.
 [==============================================================================}
 function TBoxArrayHelper.Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
 var
@@ -171,9 +171,9 @@ begin
 end;
 
 {==============================================================================]
- <TBoxArrayHelper.Bounds>
- @action: Returns bounds of all boxes in array
- @note: None.
+  <Bounds>
+  @action: Returns bounds of all boxes in array
+  @note: None.
 [==============================================================================}
 function TBoxArrayHelper.Bounds: TBox; overload;
 var
@@ -192,9 +192,9 @@ begin
 end;
 
 {==============================================================================]
- <TBoxArrayHelper.Boundaries>
- @action: Returns bounds of all boxes in array
- @note: None.
+  <Boundaries>
+  @action: Returns bounds of all boxes in array
+  @note: None.
 [==============================================================================}
 function TBoxArrayHelper.Boundaries: TBox; overload;
 var
