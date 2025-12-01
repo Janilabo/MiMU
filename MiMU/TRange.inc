@@ -160,9 +160,11 @@ type
     function Value(const x: Integer): Boolean; inline;
     function Item(const x: Integer): Boolean; inline;
     function Pivot: Integer; 
-    function Mean: Double; overload; 
+    function Mean: Double; overload;
+    function Medium: Double; overload;	
     function Middle: Integer;
-    function MiddleValue: Double;	
+    function MiddleValue: Double;
+    function MiddleVal: Integer; overload;	
     function Mid: Double; 
     function MidValue: Double; 
     function MidVal: Double; 
@@ -170,6 +172,9 @@ type
     function Average: Double; 
     function Center: Integer; 
     function Central: Integer; inline;
+    function Centre: Integer; overload;
+	function Centroid: Integer; overload;
+    function Core: Integer; overload;
     function Half: Integer; overload; 
     function Halfway: Integer; overload; 
     function Halved: Integer; overload; 
@@ -2518,6 +2523,16 @@ begin
 end;
 
 {==============================================================================]
+ <TRange.Medium>
+ @action: ?
+ @note: ?
+[==============================================================================}
+function TRange.Medium: Double; overload;
+begin
+  Result := ((Self.start + Self.stop) * 0.5);
+end;
+
+{==============================================================================]
  <TRange.Middle>
  @action: The value(s) at the center position(s) of given range.
  @note: None
@@ -2581,6 +2596,16 @@ begin
 end;
 
 {==============================================================================]
+ <TRange.MiddleVal>
+ @action: Middle value alternative
+ @note: None
+[==============================================================================}
+function TRange.MiddleVal: Integer; overload;
+begin
+  Result := ((Int64(Self.start) + Int64(Self.stop)) div 2);
+end;
+
+{==============================================================================]
  <TRange.Midpoint>
   @action: Computes the weighted midpoint (center) of the range using given weights.
   @note: Returns a Double. Weighted midpoint formula: ((Start * wStart) + (Stop * wStop)) / (wStart + wStop).
@@ -2622,6 +2647,38 @@ end;
 function TRange.Central: Integer; inline;
 begin
   Result := ((Self.start + self.stop) shr 1);
+end;
+
+{==============================================================================]
+ <TRange.Centre>
+ @action: The value(s) at the center position(s) of given range.
+ @note: None
+[==============================================================================}
+function TRange.Centre: Integer; overload;
+begin
+  Result := ((Min(Self.start, Self.stop)) + (Abs(Self.start - Self.stop) div 2));
+end;
+
+{==============================================================================]
+ <TRange.Centroid>
+ @action: The value(s) at the center position(s) of given range.
+ @note: None
+[==============================================================================}
+function TRange.Centroid: Integer; overload;
+begin
+  Result := (((Self.start div 2) + (Self.stop div 2)) + (((Self.start mod 2) + (Self.stop mod 2)) div 2));
+end;
+
+{==============================================================================]
+ <TRange.Core>
+ @action: The value(s) at the center position(s) of given range.
+ @note: None
+[==============================================================================}
+function TRange.Core: Integer; overload;
+begin
+  Result := (Self.stop - Self.start);
+  Result := (Result - (Result and 1));
+  Result := (Self.start + (Result div 2));
 end;
 
 {==============================================================================]
