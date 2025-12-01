@@ -56,7 +56,12 @@ type
     function Span: Integer; 
     function Size: Integer; overload; 
     function Size(var minVal, maxVal: Integer): Integer; overload; 
-    function Capacity: Integer; 
+    function Capacity: Integer;
+    function Extent: Integer; overload;
+    function Reach: Integer; overload;
+    function Coverage: Integer; overload;
+    function Diameter: Integer; overload;
+    function Population: Integer; overload;	
     function Delta: Integer; 
     function Frame(var rSize: Integer): TRange; overload; 
     function Frame: TRange; overload; 
@@ -775,11 +780,11 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Area>
+  <TRange.Diameter>
   @action: Returns area of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Area: Integer;
+function TRange.Diameter: Integer; overload;
 begin
   Result := ((Self.stop - Self.start) + 1);
   if (Self.stop < Self.start) then
@@ -787,13 +792,16 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Span>
-  @action: Returns span of the given range.
+  <TRange.Area>
+  @action: Returns area of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Span: Integer;
+function TRange.Area: Integer;
 begin
-  Result := Abs(Self.stop - Self.start);
+  if (Self.start > Self.stop) then
+    Result := ((Self.start - Self.stop) + 1)
+  else 
+    Result := ((Self.stop - Self.start) + 1);
 end;
 
 {==============================================================================]
@@ -826,6 +834,80 @@ end;
 function TRange.Capacity: Integer;
 begin
   Result := (IfThen(Self.Descending, (Self.start - Self.stop), (Self.stop - Self.start)) + 1);
+end;
+
+{==============================================================================]
+  <TRange.Reach>
+  @action: Returns the size of TRange.
+  @note: Alternative.
+[==============================================================================}
+function TRange.Reach: Integer; overload;
+begin
+  if (Self.start = Self.stop) then
+    Result := 1
+  else if (Self.stop < Self.start) then
+    Result := ((Self.start - Self.stop) + 1)
+  else
+    Result := ((Self.stop - Self.start) + 1);
+end;
+
+{==============================================================================]
+  <TRange.Extent>
+  @action: Returns the size of TRange.
+  @note: Alternative.
+[==============================================================================}
+function TRange.Extent: Integer; overload;
+begin
+  Result := Succ(Max(Self.start, Self.stop) - Min(Self.start, Self.stop));
+end;
+
+{==============================================================================]
+  <TRange.Reach>
+  @action: Returns the size of TRange.
+  @note: Alternative.
+[==============================================================================}
+function TRange.Coverage: Integer; overload;
+begin
+  case Self.start.Compare(Self.stop) of
+    0: Result := 1;
+	-1: Result := ((Self.stop - Self.start) + 1);
+	1: Result := ((Self.start - Self.stop) + 1);
+  end;
+end;
+
+{==============================================================================]
+  <TRange.Population>
+  @action: Returns the size of TRange.
+  @note: Alternative.
+[==============================================================================}
+function TRange.Population: Integer; overload;
+procedure MinMax(a, b: Integer; out minVal, maxVal: Integer);
+begin
+  if (a < b) then
+  begin
+    minVal := a;
+    maxVal := b;
+  end else
+  begin
+    minVal := b;
+    maxVal := a;
+  end;
+end;
+var
+  L, H: Integer;
+begin
+  MinMax(Self.start, Self.stop, L, H);
+  Result := ((H - L) + 1);
+end;
+
+{==============================================================================]
+  <TRange.Span>
+  @action: Returns span of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Span: Integer;
+begin
+  Result := Abs(Self.stop - Self.start);
 end;
 
 {==============================================================================]
