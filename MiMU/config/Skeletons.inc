@@ -88,7 +88,7 @@ end;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     if Self[i] then
       Result[i] := sTrue
@@ -263,8 +263,8 @@ var
   n, i: Integer;
   r: TIntegerArray;
 begin
-  n := Length(Self);
-  if ((n > 0) and (n = Length(weight))) then
+  n := Self.Size;
+  if ((n > 0) and (n = weight.Size)) then
   begin
     SetLength(Result, n);
     Result := Self.Copy;
@@ -283,7 +283,7 @@ end;
 var
   i, g: Integer;
 begin
-  if ((Length(Self) = 0) or (Length(Self) <> Length(weight))) then
+  if (Self.Empty or (Self.Length <> weight.Length)) then
     Exit([]);
   g := 0;
   w := weight[0];
@@ -297,7 +297,7 @@ begin
       SetLength(Result, (g.Increment + 1));
       SetLength(Result[g], 0);
     end;
-    SetLength(Result[g], (Length(Result[g]) + 1));
+    SetLength(Result[g], (Result[g].Length + 1));
     Result[g][High(Result[g])] := Self[i];
   end;
 end;
@@ -307,8 +307,8 @@ end;
 var
   i, c, l, s: Integer;
 begin
-  l := Length(Self);
-  if ((l = 0) or (l <> Length(weight))) then
+  l := Self.Length;
+  if ((l = 0) or (l <> weight.Length)) then
     Exit([]);
   c := 0;
   w := weight[0];
@@ -336,19 +336,19 @@ end;
 var
   i, l, g: Integer;
 begin
-  l := Length(Self);
-  if ((l = 0) or (Length(weight) <> l))then
+  l := Self.Length;
+  if ((l = 0) or (weight.Size <> l))then
     Exit([]);
   if not wSorted then
     w := weight.QuickSorted
   else
     w := weight.Copy;
   w.BinaryPrune;
-  Result.Recreate(Length(w));
+  Result.Recreate(w.Size);
   for i := 0 to High(Self) do
   begin
     g := w.BinarySearch(weight[i]);
-    l := Length(Result[g]);
+    l := Result[g].Length;
     SetLength(Result[g], (l + 1));
     Result[g][l] := Self[i];
   end;
@@ -479,7 +479,7 @@ begin
   for i := 1 to Result do
   begin
     a := Self[i];
-	r.Create(0, (i - 1));
+    r.Create(0, (i - 1));
     while r.Ascending do
     begin
       m := r.Pivot;
@@ -507,7 +507,7 @@ begin
     for j := 1 to Result do
     begin
       a := Self[j];
-	  r.Create(0, j);
+      r.Create(0, j);
       while r.Grows do
       begin
         m := r.Pivot;
@@ -529,7 +529,7 @@ var
   j, m, i, n, o: Integer;
   r: TRange;
 begin
-  n := Length(Self);
+  n := Self.Size;
   SetLength(Result, n);
   if (n > 0) then
   begin
@@ -561,7 +561,7 @@ var
   r: TRange;
 begin
   o := aAscending.Select(1, -1);
-  r.Create(0, Length(Self));
+  r.Create(0, Self.Size);
   while r.Grows do
   begin
     m := r.Pivot;
@@ -580,7 +580,7 @@ var
   r: TRange;
 begin
   o := aAscending.Select(1, -1);
-  r.Create(0, Length(Self));
+  r.Create(0, Self.Size);
   while r.Grows do
   begin
     m := r.Pivot;
@@ -598,7 +598,7 @@ var
   M: Integer;
   R: TRange;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   R.Create(0, High(Self));
   case oAscending of
     True:
@@ -636,7 +636,7 @@ var
   M: Integer;
   R: TRange;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   R.Create(0, High(Self));
   case oAscending of
     True:
@@ -710,7 +710,7 @@ var
 begin
   Result := -1;
   o := aAscending.Select(1, -1);
-  r.Create(0, Length(Self));
+  r.Create(0, Self.Size);
   while r.Grows do
   begin
     m := r.Pivot;
@@ -719,7 +719,7 @@ begin
     else
       r.stop := m;
   end;
-  if ((r.start < Length(Self)) and (Self[r.start] = x)) then
+  if ((r.start < Self.Size) and (Self[r.start] = x)) then
     Result := r.Start;
 end;
 {$ENDIF}
@@ -731,7 +731,7 @@ var
 begin
   Result := -1;
   o := aAscending.Select(1, -1);
-  r.Create(0, Length(Self));
+  r.Create(0, Self.Size);
   while r.Grows do
   begin
     m := r.Pivot;
@@ -925,7 +925,7 @@ begin
       r.stop := (m - 1);
   end;
   Result := r.start;
-  SetLength(Self, (Length(Self) + 1));
+  SetLength(Self, (Self.Size + 1));
   for i := High(Self) downto (Result + 1) do
     Self[i] := Self[i - 1];
   Self[Result] := x;
@@ -947,7 +947,7 @@ begin
     else
       r.stop := (m - 1);
   end;
-  SetLength(Result, (Length(Self) + 1));
+  SetLength(Result, (Self.Size + 1));
   for i := 0 to (r.start - 1) do
     Result[i] := Self[i];
   Result[r.start] := x;
@@ -1028,7 +1028,7 @@ end;
 var
   i, o, r: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   if Self.Empty then
     Exit;
   r := 0;
@@ -1056,10 +1056,10 @@ begin
     else
       r.stop := (m - 1);
   end;
-  Result := ((Length(Self) = r.start) or (Self[r.start] <> x));
+  Result := ((Self.Size = r.start) or (Self[r.start] <> x));
   if not Result then
     Exit;
-  SetLength(Self, (Length(Self) + 1));
+  SetLength(Self, (Self.Size + 1));
   for i := High(Self) downto (r.start + 1) do
     Self[i] := Self[i - 1];
   Self[r.start] := x;
@@ -1081,12 +1081,12 @@ begin
     else
       r.stop := (m - 1);
   end;
-  Result := ((Length(Self) > r.start) and (Self[r.start] = x));
+  Result := ((Self.Size > r.start) and (Self[r.start] = x));
   if not Result then
     Exit;
   for i := r.start to (High(Self) - 1) do
     Self[i] := Self[i + 1];
-  SetLength(Self, (Length(Self) - 1));
+  SetLength(Self, (Self.Size - 1));
 end;
 {$ENDIF}
 
@@ -1094,8 +1094,8 @@ end;
 var
   i: Integer;
 begin
-  if (Length(Self) < 2) then
-    Exit(Length(Self));
+  if (Self.Size < 2) then
+    Exit(Self.Size);
   Result := 0;
   for i := 0 to High(Self) do
     if u.BinaryGrow(Self[i]) then
@@ -1121,9 +1121,9 @@ end;
 var
   i, l: Integer;
 begin
-  if (Length(Self) < 2) then
+  if (Self.Size < 2) then
     Exit(Self.Copy);
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   l := 0;
   case dAscending of
     True:
@@ -1144,7 +1144,7 @@ var
   M: Integer;
   R: TRange;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   R.Create(0, High(Self));
   while (R.start <= R.stop) do
   begin
@@ -1175,7 +1175,7 @@ var
   M: Integer;
   R: TRange;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   R.Create(0, High(Self));
   while (R.start <= R.stop) do
   begin
@@ -1301,7 +1301,7 @@ var
   m: Integer;
   n, r: TRange;
 begin
-  if (Length(Self) = 0) then
+  if Self.Empty then
     Exit(Result.Create(-1, -1));
   n := x.Normalize;
   r.Create(0, High(Self));
@@ -1361,8 +1361,8 @@ var
   s, i: TRange;
 begin
   l := 0;
-  s.Create(0, Length(Self));
-  i.Create(0, Length(items));
+  s.Create(0, Self.Size);
+  i.Create(0, items.Size);
   SetLength(Result, (s.stop + i.stop));
   case aAscending of
     True:
@@ -1391,8 +1391,8 @@ var
   s, i: TRange;
 begin
   l := 0;
-  s.Create(0, Length(Self));
-  i.Create(0, Length(items));
+  s.Create(0, Self.Size);
+  i.Create(0, items.Size);
   SetLength(Result, (s.stop + i.stop));
   while ((s.start < s.stop) and (i.start < i.stop)) do
     if Self[s.start].Precede(items[i.start], aAscending) then
@@ -1414,8 +1414,8 @@ var
 begin
   l := specialize TFPGList<TVar>.Create;
   try
-    i.Create(0, Length(items));
-    s.Create(0, Length(Self));
+    i.Create(0, items.Size);
+    s.Create(0, Self.Size);
     while ((s.start < s.stop) and (i.start < i.stop)) do
       if ((aAscending and (Self[s.start] <= items[i.start])) or ((not aAscending) and (Self[s.start] >= items[i.start]))) then
         l.Add(Self[s.start.Increase])
@@ -1439,7 +1439,7 @@ var
   l, p, i, j: Integer;
   s: TRange;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit(0);
   p := Self.BinarySearch(val, aAscending);
@@ -1465,7 +1465,7 @@ begin
       SetLength(Self, (High(Self)));
     end;
   end;
-  Result := (l - Length(Self));
+  Result := (l - Self.Size);
 end;
 {$ENDIF}
 
@@ -1495,7 +1495,7 @@ var
   s: TRange;
 begin
   Result := -1;
-  if (Length(Self) = 0) then
+  if Self.Empty then
     Exit;
   s.Create(0, High(Self));
   while (s.start <= s.stop) do
@@ -1540,7 +1540,7 @@ var
   m, i: Integer;
   r: TRange;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   SetLength(Self, (Result + 1));
   if (Result > 0) then
   begin
@@ -1588,7 +1588,7 @@ end;
 var
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l < 2) then
     Exit(0);
   u := Self.Copy;
@@ -1596,7 +1596,7 @@ begin
   for i := 0 to (l - 1) do
     if (Self.BinarySearch(u[i], aAscending) = -1) then
       Self.Supply(u[i]);
-  Result := (l - Length(Self));
+  Result := (l - Self.Size);
 end;
 {$ENDIF}
 
@@ -1604,7 +1604,7 @@ end;
 var
   i, u, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l < 2) then
     Exit(0);
   u := 0;
@@ -1633,7 +1633,7 @@ var
   i, u: Integer;
 begin
   Result := Self.Copy;
-  if (Length(Self) < 2) then
+  if (Self.Size < 2) then
     Exit;
   u := 0;
   for i := 1 to High(Self) do
@@ -1647,22 +1647,22 @@ end;
 var
   i, j, k, s, o: Integer;
 begin
-  s := Length(Self);
-  o := Length(items);
+  s := Self.Size;
+  o := items.Size;
   SetLength(Result, (s + o));
   i := 0;
   j := 0;
   k := 0;
   while ((i < s) and (j < o)) do
     if ((aAscending and (Self[i] <= items[j])) or ((not aAscending) and (Self[i] >= items[j]))) then
-       Result[k.Increase] := Self[i.Increase]
-     else
-       Result[k.Increase] := items[j.Increase];
+      Result[k.Increase] := Self[i.Increase]
+    else
+      Result[k.Increase] := items[j.Increase];
   while (i < s) do
     Result[k.Increase] := Self[i.Increase];
   while (j < o) do
     Result[k.Increase] := items[j.Increase];
-  if (k < Length(Result)) then
+  if (k < Result.Size) then
     SetLength(Result, k);
 end;
 {$ENDIF}
@@ -1707,7 +1707,7 @@ begin
     if (Self[m] = x) then
       Exit(m)
     else
-	  if ((aAscending and (Self[m] < x)) or ((not aAscending) and (Self[m] > x))) then
+      if ((aAscending and (Self[m] < x)) or ((not aAscending) and (Self[m] > x))) then
         r.start := (m + 1)
       else
         r.stop := (m - 1);
@@ -1735,7 +1735,7 @@ begin
   Result := (p <> -1);
   if not Result then
     Exit;
-  l := Length(Self);
+  l := Self.Length;
   for i := p to (l - 2) do
     Self[i] := Self[i + 1];
   SetLength(Self, (l - 1));
@@ -1781,7 +1781,7 @@ begin
   p := Self.BinaryPosL(item, aAscending);
   if (p = -1) then
     Exit(0);
-  s := Length(Self);
+  s := Self.Size;
   l := p;
   for i := (p + 1) to (s - 1) do
     if (Self[i] <> item) then
@@ -1799,7 +1799,7 @@ begin
   p := Self.BinaryPosL(item, aAscending);
   if (p = -1) then
     Exit(Self.Copy);
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   l := 0;
   for i := 0 to High(Self) do
     if ((i = p) or (Self[i] <> item)) then
@@ -1865,7 +1865,7 @@ var
   R, M: Integer;
 begin
   Result := 0;
-  R := Length(Self);
+  R := Self.Size;
   while (Result < R) do
   begin
     M := ((Result + R) div 2);
@@ -2271,7 +2271,7 @@ end;
 var
   i, j, L, R, M, P: Integer;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   for i := 1 to (Result - 1) do
   begin
     K := Self[i];
@@ -2384,7 +2384,7 @@ end;
 var
   c, f: Integer;
 begin
-  if (Length(Self) = 0) then
+  if Self.Empty then
     Exit(-1);
   f := Self.BinaryFloor(value, oAscending);
   c := Self.BinaryCeil(value, oAscending);
@@ -2406,7 +2406,7 @@ begin
   case oAscending of
     True:
     begin
-      Result := Length(Self);
+      Result := Self.Size;
       while (R.start <= R.stop) do
       begin
         M := R.Pivot;
@@ -2422,7 +2422,7 @@ begin
     end;
     False:
     begin
-      Result := Length(Self);
+      Result := Self.Size;
       while (R.start <= R.stop) do
       begin
         M := R.Pivot;
@@ -2524,7 +2524,7 @@ var
   R: TRange;
 begin
   Result := -1;
-  if ((Length(Self) = 0) or (tolerance < 0)) then
+  if (Self.Empty or (tolerance < 0)) then
     Exit;
   H := High(Integer);
   R.Create(0, High(Self));
@@ -2583,7 +2583,7 @@ end;
 var
   p, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit(0);
   p := Self.BinaryBoundLeft(value, oAscending);
@@ -2598,7 +2598,7 @@ end;
 var
   p, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit(0);
   p := Self.BinaryBoundRight(value, oAscending);

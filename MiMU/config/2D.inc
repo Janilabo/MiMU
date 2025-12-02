@@ -16,8 +16,12 @@ function Ragged: Boolean; overload;
 function Fit: Integer; overload;
 function Fit(const aSize: Integer): Integer; overload;
 function Fit(const aBounds: TRange): Integer; overload;
-function Size(var lengths: TIntegerArray): Int64; overload;
-function Size: Int64; overload;
+function Length: Integer; overload;
+function Length(var lengths: TIntegerArray): Integer; overload;
+function Size: Integer; overload;
+function Size(var sizes: TIntegerArray): Integer; overload;
+function Sized(var lengths: TIntegerArray): Int64; overload;
+function Sized: Int64; overload;
 function Total: Int64; overload;
 function Population: Int64; overload;
 function Census: Int64; overload;
@@ -59,7 +63,7 @@ begin
   for i := 0 to High(Self) do
     if Self[i].Populated then
       Exit(False);
-  Result := (Length(Self) > 0);
+  Result := (Self.Length > 0);
 end;
 
 {==============================================================================]
@@ -69,7 +73,7 @@ end;
 [==============================================================================}
 function H2DArr.Empty: Boolean; overload;
 begin
-  Result := (Length(Self) = 0);
+  Result := (Self.Length = 0);
 end;
 
 {==============================================================================]
@@ -148,11 +152,11 @@ var
 begin
   if Self.Empty then
     Exit(False);
-  l := Length(Self[0]);
+  l := Self[0].Length;
   h := l;
   for i := 1 to High(Self) do
   begin
-    a := Length(Self[i]);
+    a := Self[i].Length;
     if (a < l) then
       l := a
 	else
@@ -173,10 +177,10 @@ function H2DArr.Jagged: Boolean; overload;
 var
   i, l: Integer;
 begin
-  if (Length(Self) > 0) then
-    l := Length(Self[0]);
+  if (Self.Length > 0) then
+    l := Self[0].Length;
   for i := 1 to High(Self) do
-    if (Length(Self[i]) <> l) then
+    if (Self[i].Length <> l) then
       Exit(True);
   Result := False;
 end;
@@ -190,8 +194,8 @@ function H2DArr.Merge: TArr; overload;
 var
   i, j, l: Integer;
 begin
-  SetLength(Result, Self.Size);
-  l := Length(Result);
+  SetLength(Result, Self.Sized);
+  l := Result.Length;
   if (l > 0) then
   for i := High(Self) downto 0 do
     for j := High(Self[i]) downto 0 do
@@ -211,7 +215,7 @@ begin
   o := 0;
   for i := 0 to High(Self) do
   begin
-    s := Length(Self[i]);
+    s := Self[i].Size;
     if (s > 0) then
     begin
       SetLength(Result, (o + s));
@@ -236,7 +240,7 @@ begin
   try
     for i := 0 to High(Self) do
       if (h.Count < 2) then
-        h.Add(Length(Self[i]))
+        h.Add(Self[i].Size)
       else
         Exit(True);
   finally
@@ -281,7 +285,7 @@ var
   l: Integer;
   b: TRange;
 begin
-  l := Length(Self);
+  l := Self.Length;
   b := aBounds.Normalize.ClampMin(0);
   if (l < b.start) then
     Result := b.start
@@ -295,35 +299,85 @@ begin
 end;
 
 {==============================================================================]
+  <Length>
+  @action: System.Length()
+  @note: None.
+[==============================================================================}
+function H2DArr.Length: Integer; overload;
+begin
+  Result := System.Length(Self);
+end;
+
+{==============================================================================]
+ <Length>
+ @action: System.Length()
+ @note: Stores Lengths of 2D part.
+[==============================================================================}
+function H2DArr.Length(var lengths: TIntegerArray): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Length;
+  SetLength(lengths, Result);
+  for i := 0 to (Result - 1) do
+    lengths[i] := Self[i].Length;
+end;
+
+{==============================================================================]
+  <Size>
+  @action: System.Length()
+  @note: None.
+[==============================================================================}
+function H2DArr.Size: Integer; overload;
+begin
+  Result := ((High(Self) - Low(Self)) + 1);
+end;
+
+{==============================================================================]
  <Size>
+ @action: System.Length()
+ @note: Stores Lengths of 2D part.
+[==============================================================================}
+function H2DArr.Size(var sizes: TIntegerArray): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Size;
+  SetLength(sizes, Result);
+  for i := 0 to (Result - 1) do
+    sizes[i] := Self[i].Size;
+end;
+
+{==============================================================================]
+ <Sized>
  @action: Returns actual Length for 2D array. Stores Length's of 2D part, of the arr, to lengths variable.
  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function H2DArr.Size(var lengths: TIntegerArray): Int64; overload;
+function H2DArr.Sized(var lengths: TIntegerArray): Int64; overload;
 var
   i: Integer;
 begin
   Result := 0;
-  SetLength(lengths, Length(Self));
+  SetLength(lengths, Self.Length);
   for i := 0 to High(Self) do
   begin
-    lengths[i] := Length(Self[i]);
+    lengths[i] := Self[i].Length;
     Result := (Result + lengths[i]);
   end;
 end;
 
 {==============================================================================]
-  <Size>
+  <Sized>
   @action: Returns actual Length for 2D array.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function H2DArr.Size: Int64; overload;
+function H2DArr.Sized: Int64; overload;
 var
   i: Integer;
 begin
   Result := 0;
   for i := 0 to High(Self) do
-    Result.Increase(Length(Self[i]));
+    Result.Increase(Self[i].Size);
 end;
 
 {==============================================================================]
@@ -337,7 +391,7 @@ var
 begin
   Result := 0;
   for a in Self do
-    Result.Increase(Length(a));
+    Result.Increase(a.Length);
 end;
 
 {==============================================================================]
@@ -356,7 +410,7 @@ begin
     if Self[i].Empty then
       Continue;
     s := PInteger(Self[i]);
-    e := (s + Length(Self[i]));
+    e := (s + Self[i].Size);
     Result := (Result + (e - s));
   end;
 end;
@@ -373,13 +427,13 @@ var
 begin
   Result := 0;
   for i := 0 to High(Self) do
-    Inc(Result, Length(Self[i]));
+    Inc(Result, Self[i].Size);
   SetLength(items, Result);
   if (Result > 0) then
   for i := High(Self) downto 0 do
     for j := High(Self[i]) downto 0 do
       items[Result.Decrement] := Self[i][j];
-  Result := Length(items);
+  Result := items.Size;
 end;
 
 {==============================================================================]
@@ -393,7 +447,7 @@ var
 begin
   Result := 0;
   for i := 0 to High(Self) do
-    Inc(Result, Length(Self[i]));
+    Inc(Result, Self[i].Size);
 end;
 
 {==============================================================================]
@@ -413,7 +467,7 @@ begin
     if (s <> nil) then
     begin
       e := s;
-      Inc(e, Length(Self[i]));
+      Inc(e, Self[i].Size);
       Result := Result + (e - s);
     end;
   end;
@@ -431,8 +485,8 @@ begin
   SetLength(Result, 0);
   for i := 0 to High(Self) do
   begin
-    l := Length(Result);
-    SetLength(Result, (l + Length(Self[i])));
+    l := Result.Length;
+    SetLength(Result, (l + Self[i].Size));
     for j := 0 to High(Self[i]) do
       Result[l + j] := Self[i][j];
   end;
@@ -460,7 +514,7 @@ end;
 [==============================================================================}
 function H2DArr.Kill: Integer; overload;
 begin
-  Result := Length(Self);
+  Result := Self.Length;
   SetLength(Self, 0);
 end;
 
@@ -478,7 +532,7 @@ begin
   Result := 0;
   for i := 0 to High(k2D) do
   begin
-    Result := (Result + Length(Self[k2D[i]]));
+    Result := (Result + Self[k2D[i]].Size);
     SetLength(Self[k2D[i]], 0);	
   end;
 end;
@@ -495,7 +549,7 @@ begin
   Result := 0;
   for i := 0 to High(Self) do
   begin
-    Result := (Result + Length(Self[i]));
+    Result := (Result + Self[i].Size);
     SetLength(Self[i], 0);	
   end;
   SetLength(Self, 0);
@@ -512,7 +566,7 @@ var
 begin
   Result := 0;
   for i := 0 to High(Self) do
-    Result := (Result + Length(Self[i]));
+    Result := (Result + Self[i].Size);
   SetLength(Self, 0);
 end;
 
@@ -525,8 +579,8 @@ function H2DArr.Recreate(const arrSize: Integer): Boolean; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
-  Result := ((Length(Self) > 0) or (arrSize <> 0));
+  l := Self.Length;
+  Result := ((l > 0) or (arrSize <> 0));
   SetLength(Self, 0);
   if Result then
     if (arrSize < 0) then
@@ -547,7 +601,7 @@ begin
   Result := 0;
   for i := 0 to High(Self) do
   begin
-    Result := (Result + Length(Self[i]));
+    Result := (Result + Self[i].Size);
     SetLength(Self[i], 0);
   end;
 end;
@@ -562,7 +616,7 @@ function H2DArr.Reverse: Boolean; overload;
 var
   r: TRange;
 begin
-  Result := (Length(Self) > 1);
+  Result := (Self.Length > 1);
   if not Result then
     Exit;
   r.create(0, High(Self));
@@ -582,7 +636,7 @@ function H2DArr.Reversed: T2DArr; overload;
 var
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   for i := 0 to (l - 1) do
     Result[i] := Self[(l - 1) - i];
@@ -601,7 +655,7 @@ var
   s: T2DArr;
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   Result := (l > 1);
   if not Result then
     Exit;
@@ -620,10 +674,10 @@ function H2DArr.Pull: T2DArr; overload;
 var
   i, j: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Length);
   for i := 0 to High(Self) do
   begin
-    SetLength(Result[i], Length(Self[i]));
+    SetLength(Result[i], Self[i].Size);
     for j := 0 to High(Self[i]) do
       Result[i][j] := Self[i][j];
   end;
@@ -639,10 +693,10 @@ function H2DArr.Squeeze: Integer; overload;
 var
   i, r, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   r := 0;
   for i := 0 to High(Self) do
-    if (Length(Self[i]) > 0) then
+    if (Self[i].Size > 0) then
       Self[r.Increase] := Self[i];
   Result := (l - r);
   if (Result > 0) then
@@ -658,12 +712,12 @@ function H2DArr.Squeezed: T2DArr; overload;
 var
   i, r: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Length);
   if Result.Empty then
     Exit;
   r := 0;
   for i := 0 to High(Self) do
-    if (Length(Self[i]) > 0) then
+    if (Self[i].Size > 0) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
 end;

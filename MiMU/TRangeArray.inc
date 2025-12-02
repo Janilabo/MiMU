@@ -41,7 +41,7 @@ var
   i: Integer;
   r: TRange;
 begin
-  if (Length(Self) > 0) then
+  if (Self.Size > 0) then
   begin
     Result := Self[0].Normalize;
     for i := 1 to High(Self) do
@@ -65,7 +65,7 @@ function TRangeArrayHelper.Range: TRange; overload;
 var
   i: Integer;
 begin
-  if (Length(Self) > 0) then
+  if (Self.Size > 0) then
   begin
     Result := Self[0].Normalize;
     for i := 1 to High(Self) do
@@ -108,7 +108,7 @@ function TRangeArrayHelper.T2DIA: T2DIntegerArray;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
    for i := 0 to High(Self) do
     Result[i] := Self[i].TIA;
 end;
@@ -122,7 +122,7 @@ function TRangeArrayHelper.Starting: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i].start;
 end;
@@ -136,7 +136,7 @@ function TRangeArrayHelper.Stopping: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i].stop;
 end;
@@ -145,7 +145,7 @@ function TRangeArrayHelper.Normalized: TRangeArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i].Create(Min(Self[i].start, Self[i].stop), Max(Self[i].start, Self[i].stop));
 end;
@@ -166,12 +166,12 @@ var
   end;
 begin
   g := 0;
-  if (Length(Self) > 1) then
+  if (Self.Size > 1) then
   begin
-    SetLength(n, Length(Self));
+    SetLength(n, Self.Size);
     n := Self.Normalized;
     SortNormRanges(n);
-    SetLength(Result, (Length(Self) - 1));
+    SetLength(Result, (Self.Size - 1));
     for i := 0 to (High(n) - 1) do
     begin
       a := (n[i].stop + 1);
@@ -192,7 +192,7 @@ function TRangeArrayHelper.Starts: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i].start;
 end;
@@ -206,7 +206,7 @@ function TRangeArrayHelper.Stops: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i].stop;
 end;
@@ -220,7 +220,7 @@ function TRangeArrayHelper.StartValues: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   while (l.Decrement > -1) do
     Result[l] := Self[l].start;
@@ -235,7 +235,7 @@ function TRangeArrayHelper.StopValues: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   while (l.Decrement > -1) do
     Result[l] := Self[l].stop;
@@ -250,7 +250,7 @@ function TRangeArrayHelper.Unzip(var startArr, stopArr: TIntegerArray): Integer;
 var
   i: Integer;
 begin
-  Result := Length(Self);
+  Result := Self.Length;
   SetLength(startArr, Result);
   SetLength(stopArr, Result);
   for i := 0 to (Result - 1) do
@@ -269,7 +269,7 @@ function TRangeArrayHelper.Zip(const startArr, stopArr: TIntegerArray): Integer;
 var
   i: Integer;
 begin
-  Result := Min(Length(startArr), Length(stopArr));
+  Result := Min(startArr.Size, stopArr.Size);
   SetLength(Self, Result);
   for i := 0 to (Result - 1) do
   begin

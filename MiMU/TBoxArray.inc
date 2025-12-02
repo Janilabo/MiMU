@@ -40,7 +40,7 @@ function TBoxArrayHelper.X1s: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i].X1;
 end;
@@ -54,7 +54,7 @@ function TBoxArrayHelper.X2s: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i].X2;
 end;
@@ -68,7 +68,7 @@ function TBoxArrayHelper.Y1s: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i].Y1;
 end;
@@ -82,7 +82,7 @@ function TBoxArrayHelper.Y2s: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i].Y2;
 end;
@@ -96,7 +96,7 @@ function TBoxArrayHelper.X1Values: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   while (l.Decrement > -1) do
     Result[l] := Self[l].X1;
@@ -111,7 +111,7 @@ function TBoxArrayHelper.X2Values: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   while (l.Decrement > -1) do
     Result[l] := Self[l].X2;
@@ -126,7 +126,7 @@ function TBoxArrayHelper.Y1Values: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   while (l.Decrement > -1) do
     Result[l] := Self[l].Y1;
@@ -141,7 +141,7 @@ function TBoxArrayHelper.Y2Values: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   while (l.Decrement > -1) do
     Result[l] := Self[l].Y2;
@@ -156,7 +156,7 @@ function TBoxArrayHelper.Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): I
 var
   i: Integer;
 begin
-  Result := Length(Self);
+  Result := Self.Length;
   specialize SetSize<Integer>(x1Arr, y1Arr, x2Arr, y2Arr, Result);
   for i := 0 to (Result - 1) do
     Self[i].Unzip(x1Arr[i], y1Arr[i], x2Arr[i], y2Arr[i]);
@@ -171,7 +171,7 @@ function TBoxArrayHelper.Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): I
 var
   i: Integer;
 begin
-  Result := Min(Min(Length(x1Arr), Length(x2Arr)), Min(Length(y1Arr), Length(y2Arr)));
+  Result := Min(Min(x1Arr.Size, x2Arr.Size), Min(y1Arr.Size, y2Arr.Size));
   SetLength(Self, Result);
   for i := 0 to (Result - 1) do
     Self[i] := Box(x1Arr[i], y1Arr[i], x2Arr[i], y2Arr[i]);
@@ -213,13 +213,13 @@ begin
   for i := 1 to High(Self) do
   begin
     if (Result.X1 > Self[i].X1) then
-	  Result.X1 := Self[i].X1;
+      Result.X1 := Self[i].X1;
     if (Result.Y1 > Self[i].Y1) then
-	  Result.Y1 := Self[i].Y1;
-	if (Result.X2 < Self[i].X2) then
-	  Result.X2 := Self[i].X2;
+      Result.Y1 := Self[i].Y1;
+    if (Result.X2 < Self[i].X2) then
+      Result.X2 := Self[i].X2;
     if (Result.Y2 < Self[i].Y2) then
-	  Result.Y2 := Self[i].Y2;
+      Result.Y2 := Self[i].Y2;
   end;
 end;
 {$ENDIF}

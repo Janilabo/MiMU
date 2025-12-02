@@ -123,7 +123,7 @@ type
 [==============================================================================}
 function TDoubleArrayHelper.Reinit: Integer; overload;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 0) then
     FillChar(Pointer(Self)^, (Result * SizeOf(Double)), 0);
 end;
@@ -140,8 +140,8 @@ function TDoubleArrayHelper.Attach(const items: TDoubleArray): Integer; overload
 var
   l, i: Integer;
 begin
-  l := Length(Self);
-  i := Length(items);
+  l := Self.Length;
+  i := items.Size;
   if (i = 0) then
     Exit(l);
   Result := (l + i);
@@ -162,8 +162,8 @@ function TDoubleArrayHelper.Embed(const items: TDoubleArray; const index: Intege
 var
   s, l, p, t: Integer;
 begin
-  s := Length(Self);
-  l := Length(items);
+  s := Self.Size;
+  l := items.Length;
   if (l = 0) then
     Exit(s);
   p := EnsureRange(index, 0, s);
@@ -172,7 +172,7 @@ begin
   if (t > 0) then
     Move(Self[p], Self[p + l], (t * SizeOf(Double)));
   Move(items[0], Self[p], (l * SizeOf(Double)));
-  Result := Length(Self);
+  Result := Self.Size;
 end;
 
 {==============================================================================]

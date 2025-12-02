@@ -303,8 +303,8 @@ var
 begin
   if Self.Empty then
     Exit(Result.Create(-2147483648));
-  SetLength(a, Length(Self));
-  SetLength(b, Length(Self));
+  SetLength(a, Self.Size);
+  SetLength(b, Self.Size);
   for i := 0 to High(Self) do
   begin
     a[i] := Self[i].X;
@@ -406,7 +406,7 @@ function TPointArrayHelper.Region: TBox; overload;
 var
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit(Result.Create(-2147483648));
   Result.Create(MaxInt, MaxInt, -MaxInt, -MaxInt);
@@ -480,7 +480,7 @@ begin
   begin
     b := Self.Bounds(w, h);
     m := T2D.Create(False, w, h);
-    SetLength(Result, Length(Self));
+    SetLength(Result, Self.Size);
     for i := 0 to High(Self) do
       if m[Self[i].X - b.X1][Self[i].Y - b.Y1].Enable then
         Result[r.Increase] := Self[i];
@@ -510,7 +510,7 @@ begin
       if m[Self[i].X - b.X1][Self[i].Y - b.Y1].Enable then
         Inc(x);
     SetLength(Result, ((w * h) - x));
-    if (Length(Result) > 0) then
+    if (Result.Size > 0) then
     for y := 0 to (h - 1) do
       for x := 0 to (w - 1) do
         if not m[x][y] then
@@ -553,7 +553,7 @@ var
   w, h, l, i, x, y: Integer;
   b: T2DBooleanArray;
 begin
-  if (Length(Self) < 2) then
+  if (Self.Size < 2) then
     Exit([]);
   SetLength(Result, arrBounds.Size(w, h));
   b := T2D.Create(False, h, w);
@@ -585,7 +585,7 @@ var
   m: T2DBooleanArray;
   b: TBox;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l > 4) then
   begin
     b := Self.Bounds;
@@ -632,7 +632,7 @@ var
   o, s: Boolean;
 begin
   r := 0;
-  l := Length(Self);
+  l := Self.Length;
   if ((l > 0) and area.Contains(start)) then
   begin
     o := False;
@@ -710,7 +710,7 @@ function TPointArrayHelper.Xs: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i].X;
 end;
@@ -726,7 +726,7 @@ function TPointArrayHelper.Ys: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i].Y;
 end;
@@ -740,7 +740,7 @@ function TPointArrayHelper.XValues: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   while (l.Decrement > -1) do
     Result[l] := Self[l].X;
@@ -755,7 +755,7 @@ function TPointArrayHelper.YValues: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   while (l.Decrement > -1) do
     Result[l] := Self[l].Y;
@@ -770,7 +770,7 @@ function TPointArrayHelper.Unzip(var xArr, yArr: TIntegerArray): Integer;
 var
   i: Integer;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   SetLength(xArr, Result);
   SetLength(yArr, Result);
   for i := 0 to (Result - 1) do
@@ -789,7 +789,7 @@ function TPointArrayHelper.Zip(const xArr, yArr: TIntegerArray): Integer;
 var
   i: Integer;
 begin
-  Result := Min(Length(xArr), Length(yArr));
+  Result := Min(xArr.Size, yArr.Size);
   SetLength(Self, Result);
   for i := 0 to (Result - 1) do
     Self[i] := Point(xArr[i], yArr[i]);
@@ -874,7 +874,7 @@ var
   p: TPoint;
   b: TBox;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -903,7 +903,7 @@ begin
           if v[p.X][p.Y] then
             Continue;
           v[p.X][p.Y] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := Point((p.X + b.X1), (p.Y + b.Y1));
           for z := 0 to High(d) do
           begin
@@ -911,13 +911,13 @@ begin
             y := (p.Y + d[z].Y);
             if ((x >= 0) and (x < w) and (y >= 0) and (y < h) and g[x][y] and (not v[x][y])) then
             begin
-              if (s.stop >= Length(q)) then
-                SetLength(q, (Length(q) * 2));
+              if (s.stop >= q.Size) then
+                SetLength(q, (q.Size * 2));
               q[s.stop.Increase] := Point(x, y);
             end;
           end;
         end;
-        if (Length(Result[r]) > 0) then
+        if (Result[r].Size > 0) then
           Inc(r);
       end;
   SetLength(Result, r);
@@ -944,7 +944,7 @@ var
     Result := (IntToStr(p.X) + ',' + IntToStr(p.Y));
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -979,7 +979,7 @@ begin
         if d.Find(k, f) then
           Continue;
         d.Add(k);
-        SetLength(Result[r], (Length(Result[r]) + 1));
+        SetLength(Result[r], (Result[r].Size + 1));
         Result[r][High(Result[r])] := p;
         a := p.Boxed(xRadius, yRadius).Clamp(b);
         for y := a.Y1 to a.Y2 do
@@ -994,7 +994,7 @@ begin
             end;
           end;
       end;
-      if Length(Result[r]) > 0 then
+      if (Result[r].Size > 0) then
         Inc(r);
     end;
   finally
@@ -1024,7 +1024,7 @@ var
     Result := (IntToStr(p.X) + ',' + IntToStr(p.Y));
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -1058,7 +1058,7 @@ begin
         if d.Find(k, f) then
           Continue;
         d.Add(k);
-        SetLength(Result[r], (Length(Result[r]) + 1));
+        SetLength(Result[r], (Result[r].Size + 1));
         Result[r][High(Result[r])] := p;
         for j := 0 to (l - 1) do
           if ((not d.Find(KeyStr(Self[j]), f)) and p.Within(Self[j], radius, distFunc)) then
@@ -1067,7 +1067,7 @@ begin
             q[c.Increase] := Self[j];
           end;
       end;
-      if (Length(Result[r]) > 0) then
+      if (Result[r].Size > 0) then
         Inc(r);
     end;
   finally
@@ -1095,7 +1095,7 @@ var
   m: TRange;
   a: TPointArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -1109,13 +1109,13 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     r := High(Result);
     SetLength(Result[r], 1);
     Result[r][0] := a[i];
     u[i] := True;
     j := 0;
-    while (j < Length(Result[r])) do
+    while (j < Result[r].Size) do
     begin
       for k := 0 to High(a) do
       begin
@@ -1126,7 +1126,7 @@ begin
         if (((a[k].X >= m.start) and (a[k].X <= m.stop)) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := a[k];
         end;
       end;
@@ -1166,7 +1166,7 @@ var
   m: TRange;
   a: TPointArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -1180,13 +1180,13 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     r := High(Result);
     SetLength(Result[r], 1);
     Result[r][0] := a[i];
     u[i] := True;
     j := 0;
-    while (j < Length(Result[r])) do
+    while (j < Result[r].Size) do
     begin
       for k := 0 to High(a) do
       begin
@@ -1197,7 +1197,7 @@ begin
         if (((a[k].X >= m.start) and (a[k].X <= m.stop)) and (Abs(a[k].Y - p.Y) <= yRadius)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := a[k];
         end;
       end;
@@ -1219,7 +1219,7 @@ var
   m: TRange;
   a: TPointArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -1233,13 +1233,13 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     r := High(Result);
     SetLength(Result[r], 1);
     Result[r][0] := a[i];
     u[i] := True;
     j := 0;
-    while (j < Length(Result[r])) do
+    while (j < Result[r].Size) do
     begin
       p := Result[r][j];
       for k := 0 to High(a) do
@@ -1250,7 +1250,7 @@ begin
         if (((a[k].Y >= m.start) and (a[k].Y <= m.stop)) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := a[k];
         end;
       end;
@@ -1290,7 +1290,7 @@ var
   m: TRange;
   a: TPointArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -1304,13 +1304,13 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     r := High(Result);
     SetLength(Result[r], 1);
     Result[r][0] := a[i];
     u[i] := True;
     j := 0;
-    while (j < Length(Result[r])) do
+    while (j < Result[r].Size) do
     begin
       p := Result[r][j];
       for k := 0 to High(a) do
@@ -1321,7 +1321,7 @@ begin
         if (((a[k].Y >= m.start) and (a[k].Y <= m.stop)) and (Abs(a[k].X - p.X) <= xRadius)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := a[k];
         end;
       end;
@@ -1345,7 +1345,7 @@ var
   a: TPointArray;
   m: TRange;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -1359,13 +1359,13 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     r := High(Result);
     SetLength(Result[r], 1);
     Result[r][0] := a[i];
     u[i] := True;
     j := 0;
-    while (j < Length(Result[r])) do
+    while (j < Result[r].Size) do
     begin
       p := Result[r][j];
       m.Create((p.X - xRadius), (p.X + xRadius));
@@ -1375,7 +1375,7 @@ begin
         if ((not u[k]) and (Abs(a[k].Y - p.Y) <= yRadius)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := a[k];
         end;
         Inc(k);
@@ -1386,7 +1386,7 @@ begin
         if ((not u[k]) and (Abs(a[k].Y - p.Y) <= yRadius)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := a[k];
         end;
         Dec(k);
@@ -1411,7 +1411,7 @@ var
   m: TRange;
   a: TPointArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -1425,13 +1425,13 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     r := High(Result);
     SetLength(Result[r], 1);
     Result[r][0] := a[i];
     u[i] := True;
     j := 0;
-    while (j < Length(Result[r])) do
+    while (j < Result[r].Size) do
     begin
       p := Result[r][j];
       m.Create(Trunc(p.X - radius), Trunc(p.X + radius));
@@ -1441,7 +1441,7 @@ begin
         if ((not u[k]) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := a[k];
         end;
         Inc(k);
@@ -1452,7 +1452,7 @@ begin
         if ((not u[k]) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := a[k];
         end;
         Dec(k);
@@ -1488,7 +1488,7 @@ var
   a: TPointArray;
   m: TRange;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -1502,13 +1502,13 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     r := High(Result);
     SetLength(Result[r], 1);
     Result[r][0] := a[i];
     u[i] := True;
     j := 0;
-    while (j < Length(Result[r])) do
+    while (j < Result[r].Size) do
     begin
       p := Result[r][j];
       m.Create((p.Y - yRadius), (p.Y + yRadius));
@@ -1518,7 +1518,7 @@ begin
         if ((not u[k]) and (Abs(a[k].X - p.X) <= xRadius)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := a[k];
         end;
         Inc(k);
@@ -1529,7 +1529,7 @@ begin
         if ((not u[k]) and (Abs(a[k].X - p.X) <= xRadius)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := a[k];
         end;
         Dec(k);
@@ -1554,7 +1554,7 @@ var
   m: TRange;
   a: TPointArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -1568,13 +1568,13 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     r := High(Result);
     SetLength(Result[r], 1);
     Result[r][0] := a[i];
     u[i] := True;
     j := 0;
-    while (j < Length(Result[r])) do
+    while (j < Result[r].Size) do
     begin
       p := Result[r][j];
       m.Create(Trunc(p.Y - radius), Trunc(p.Y + radius));
@@ -1584,7 +1584,7 @@ begin
         if ((not u[k]) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := a[k];
         end;
         Inc(k);
@@ -1595,7 +1595,7 @@ begin
         if ((not u[k]) and p.Within(a[k], radius, distFunc)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := a[k];
         end;
         Dec(k);
@@ -1731,7 +1731,7 @@ var
   u: TBooleanArray;
   p: TPoint;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     -1: Exit([]);
     0: Exit([Self]);
@@ -1742,20 +1742,20 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     r := High(Result);
     SetLength(Result[r], 1);
     Result[r][0] := Self[i];
     u[i] := True;
     j := 0;
-    while (j < Length(Result[r])) do
+    while (j < Result[r].Size) do
     begin
       p := Result[r][j];
       for k := 0 to (l - 1) do
         if ((not u[k]) and p.Within(Self[k], xRadius, yRadius)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := Self[k];
         end;
       Inc(j);
@@ -1774,7 +1774,7 @@ var
   u: TBooleanArray;
   p: TPoint;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     -1: Exit([]);
     0: Exit([Self]);
@@ -1785,20 +1785,20 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     r := High(Result);
     SetLength(Result[r], 1);
     Result[r][0] := Self[i];
     u[i] := True;
     j := 0;
-    while (j < Length(Result[r])) do
+    while (j < Result[r].Size) do
     begin
       p := Result[r][j];
       for k := 0 to (l - 1) do
         if ((not u[k]) and p.Within(Self[k], radius, distFunc)) then
         begin
           u[k] := True;
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := Self[k];
         end;
       Inc(j);
@@ -1835,7 +1835,7 @@ var
   l: TRange;
   d, m, o: Double;
 begin
-  z := Length(Self);
+  z := Self.Size;
   case z of
     0: Exit([]);
     1: ExiT([Self]);
@@ -1883,7 +1883,7 @@ begin
             Continue;
           if k.Within(Point(x, y), o, distFunc) then
           begin
-            t := Length(Result[r]);
+            t := Result[r].Size;
             SetLength(Result[r], (t + c[u.X][u.Y]));
             for v := 0 to (c[u.X][u.Y] - 1) do
               Result[r][t + v] := Point(x, y);
@@ -1924,7 +1924,7 @@ var
   a: Boolean;
   l: TRange;
 begin
-  z := Length(Self);
+  z := Self.Size;
   case z of
     0: Exit([]);
     1: ExiT([Self]);
@@ -1970,7 +1970,7 @@ begin
             Continue;
           if k.Within(Point(x, y), m.X, m.Y) then
           begin
-            t := Length(Result[r]);
+            t := Result[r].Size;
             SetLength(Result[r], (t + c[u.X][u.Y]));
             for v := 0 to (c[u.X][u.Y] - 1) do
               Result[r][t + v] := Point(x, y);
@@ -2007,12 +2007,12 @@ var
   q: TPointArray;
   z, p, n: TPoint;
 begin
-  case Length(Self) of
+  case Self.Size of
     0: Exit([]);
     1: Exit([Self]);
   end;
   SetLength(Result, 0);
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   b := Self.Bounds(w, h);
   d := Max(0, radius);
   c := Ceil(d);
@@ -2021,18 +2021,18 @@ begin
   for i := 0 to High(Self) do
   begin
     n := Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
-    SetLength(g[n.X][n.Y], (Length(g[n.X][n.Y]) + 1));
+    SetLength(g[n.X][n.Y], (g[n.X][n.Y].Size + 1));
     g[n.X][n.Y][High(g[n.X][n.Y])] := Self[i];
   end;
   r := 0;
   for i := 0 to High(Self) do
   begin
     n := Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
-    if (v[n.X][n.Y] or (Length(g[n.X][n.Y]) = 0)) then
+    if (v[n.X][n.Y] or g[n.X][n.Y].Empty) then
       Continue;
     SetLength(q, 1);
     q[0] := Self[i];
-    while (Length(q) > 0) do
+    while (q.Size > 0) do
     begin
       z := q[High(q)];
       SetLength(q, High(q));
@@ -2047,9 +2047,9 @@ begin
             p := g[x - b.X1][y - b.Y1][j];
             if (distFunc(z, p) <= d) then
             begin
-              SetLength(Result[r], (Length(Result[r]) + 1));
+              SetLength(Result[r], (Result[r].Size + 1));
               Result[r][High(Result[r])] := p;
-              SetLength(q, (Length(q) + 1));
+              SetLength(q, (q.Size + 1));
               q[High(q)] := p;
               g[x - b.X1][y - b.Y1][j] := Point(-1, -1);
             end;
@@ -2062,7 +2062,7 @@ begin
             v[x - b.X1][y - b.Y1] := True;
         end;
     end;
-    if (Length(Result[r]) > 0) then
+    if (Result[r].Size > 0) then
       Inc(r);
   end;
   SetLength(Result, r);
@@ -2090,12 +2090,12 @@ var
   q: TPointArray;
   z, p, n, d: TPoint;
 begin
-  case Length(Self) of
+  case Self.Size of
     0: Exit([]);
     1: Exit([Self]);
   end;
   SetLength(Result, 0);
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   b := Self.Bounds(w, h);
   d := Point(Max(0, xRadius), Max(0, yRadius));
   SetLength(g, (w + 1), (h + 1));
@@ -2103,18 +2103,18 @@ begin
   for i := 0 to High(Self) do
   begin
     n := Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
-    SetLength(g[n.X][n.Y], (Length(g[n.X][n.Y]) + 1));
+    SetLength(g[n.X][n.Y], (g[n.X][n.Y].Size + 1));
     g[n.X][n.Y][High(g[n.X][n.Y])] := Self[i];
   end;
   r := 0;
   for i := 0 to High(Self) do
   begin
     n := Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
-    if (v[n.X][n.Y] or (Length(g[n.X][n.Y]) = 0)) then
+    if (v[n.X][n.Y] or g[n.X][n.Y].Empty) then
       Continue;
     SetLength(q, 1);
     q[0] := Self[i];
-    while (Length(q) > 0) do
+    while (q.Size > 0) do
     begin
       z := q[High(q)];
       SetLength(q, High(q));
@@ -2129,9 +2129,9 @@ begin
             p := g[x - b.X1][y - b.Y1][j];
             if z.Within(p, xRadius, yRadius) then
             begin
-              SetLength(Result[r], (Length(Result[r]) + 1));
+              SetLength(Result[r], (Result[r].Size + 1));
               Result[r][High(Result[r])] := p;
-              SetLength(q, (Length(q) + 1));
+              SetLength(q, (q.Size + 1));
               q[High(q)] := p;
               g[x - b.X1][y - b.Y1][j] := Point(-1, -1);
             end;
@@ -2144,7 +2144,7 @@ begin
             v[x - b.X1][y - b.Y1] := True;
         end;
     end;
-    if (Length(Result[r]) > 0) then
+    if (Result[r].Size > 0) then
       Inc(r);
   end;
   SetLength(Result, r);
@@ -2170,14 +2170,14 @@ var
   q: TPointArray;
   p: TPoint;
 begin
-  case Length(Self) of
+  case Self.Size of
     0: Exit([]);
     1: Exit([Self]);
   end;
-  SetLength(v, Length(Self));
+  SetLength(v, Self.Size);
   r := 0;
   SetLength(Result, 0);
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
   begin
     if v[i] then
@@ -2187,16 +2187,16 @@ begin
     v[i] := True;
     SetLength(q, 1);
     q[0] := Self[i];
-    while (Length(q) > 0) do
+    while (q.Size > 0) do
     begin
       p := q[High(q)];
       SetLength(q, High(q));
       for j := 0 to High(Self) do
         if ((not v[j]) and p.Within(Self[j], radius, distFunc)) then
         begin
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := Self[j];
-          SetLength(q, (Length(q) + 1));
+          SetLength(q, (q.Size + 1));
           q[High(q)] := Self[j];
           v[j] := True;
         end;
@@ -2238,14 +2238,14 @@ var
   q: TPointArray;
   p: TPoint;
 begin
-  case Length(Self) of
+  case Self.Size of
     0: Exit([]);
     1: Exit([Self]);
   end;
-  SetLength(v, Length(Self));
+  SetLength(v, Self.Size);
   r := 0;
   SetLength(Result, 0);
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
   begin
     if v[i] then
@@ -2255,16 +2255,16 @@ begin
     v[i] := True;
     SetLength(q, 1);
     q[0] := Self[i];
-    while (Length(q) > 0) do
+    while (q.Size > 0) do
     begin
       p := q[High(q)];
       SetLength(q, High(q));
       for j := 0 to High(Self) do
         if ((not v[j]) and p.Within(Self[j], xRadius, yRadius)) then
         begin
-          SetLength(Result[r], (Length(Result[r]) + 1));
+          SetLength(Result[r], (Result[r].Size + 1));
           Result[r][High(Result[r])] := Self[j];
-          SetLength(q, (Length(q) + 1));
+          SetLength(q, (q.Size + 1));
           q[High(q)] := Self[j];
           v[j] := True;
         end;
@@ -2296,12 +2296,12 @@ var
   s, l, c: Integer;
   p: TPoint;
 begin
-  case Length(Self) of
+  case Self.Size of
     0: Exit([]);
     1: Exit([Self]);
   end;
-  SetLength(v, Length(Self));
-  SetLength(Result, Length(Self));
+  SetLength(v, Self.Size);
+  SetLength(Result, Self.Size);
   r := 0;
   for i := 0 to High(Self) do
   begin
@@ -2368,12 +2368,12 @@ var
   s, l, c: Integer;
   p: TPoint;
 begin
-  case Length(Self) of
+  case Self.Size of
     0: Exit([]);
     1: Exit([Self]);
   end;
-  SetLength(v, Length(Self));
-  SetLength(Result, Length(Self));
+  SetLength(v, Self.Size);
+  SetLength(Result, Self.Size);
   r := 0;
   for i := 0 to High(Self) do
   begin
@@ -2440,7 +2440,7 @@ var
       p[t] := f;
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   SetLength(p, l);
@@ -2459,8 +2459,8 @@ begin
     r := PFind(i);
     if (m[r] = -1) then
     begin
-      m[r] := Length(Result);
-      SetLength(Result, (Length(Result) + 1));
+      m[r] := System.Length(Result);
+      SetLength(Result, (System.Length(Result) + 1));
       Result[m[r]] := [];
     end;
     Result[m[r]] := (Result[m[r]] + [Self[i]]);
@@ -2508,14 +2508,14 @@ begin
   SetLength(Result, 0);
   if Self.Empty then
     Exit;
-  SetLength(p, Length(Self));
+  SetLength(p, Self.Size);
   for i := 0 to High(Self) do
     p[i] := i;
   for i := 0 to (High(Self) - 1) do
     for j := (i + 1) to High(Self) do
       if Self[i].Within(Self[j], xRadius, yRadius) then
         PUnioned(i, j);
-  SetLength(m, Length(Self));
+  SetLength(m, Self.Size);
   for i := 0 to High(m) do
     m[i] := -1;
   c := 0;
@@ -2551,7 +2551,7 @@ var
   r: TRange;
   i, j, p, g, k, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -2562,7 +2562,7 @@ begin
   begin
     if v[i] then
       Continue;
-    g := Length(Result);
+    g := System.Length(Result);
     SetLength(Result, (g + 1));
     SetLength(q, l);
     r.Create(0, 0);
@@ -2571,7 +2571,7 @@ begin
     while (r.start < r.stop) do
     begin
       p := q[r.start.Increase];
-      SetLength(Result[g], (Length(Result[g]) + 1));
+      SetLength(Result[g], (Result[g].Size + 1));
       Result[g][High(Result[g])] := Self[p];
       for j := 0 to High(d) do
         for k := 0 to (l - 1) do
@@ -2619,7 +2619,7 @@ var
       p[v] := h;
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -2652,7 +2652,7 @@ begin
   for i := 0 to (l - 1) do
   begin
     c := m[r[i]];
-    SetLength(Result[c], (Length(Result[c]) + 1));
+    SetLength(Result[c], (Result[c].Size + 1));
     Result[c][High(Result[c])] := Self[i];
   end;
 end;
@@ -2675,7 +2675,7 @@ var
   s: TIntegerArray;
   c, n, g, l, i, j, t: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -2687,7 +2687,7 @@ begin
   begin
     if v[i] then
       Continue;
-    g := Length(Result);
+    g := System.Length(Result);
     SetLength(Result, (g + 1));
     SetLength(s, l);
     t := 0;
@@ -2696,7 +2696,7 @@ begin
     while (t) > 0 do
     begin
       c := s[t.Decrement];
-      SetLength(Result[g], (Length(Result[g]) + 1));
+      SetLength(Result[g], (Result[g].Size + 1));
       Result[g][High(Result[g])] := Self[c];
       for j := 0 to High(d) do
         for n := 0 to (l - 1) do
@@ -2728,7 +2728,7 @@ function TPointArrayHelper.Grouping(const adjacency8: Boolean = True): T2DPointA
     i, j: Integer;
   begin
     visited[index] := True;
-    SetLength(group, (Length(group) + 1));
+    SetLength(group, (group.Size + 1));
     group[High(group)] := arr[index];
     for i := 0 to High(directions) do
       for j := 0 to High(arr) do
@@ -2740,7 +2740,7 @@ var
   d: TPointArray;
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -2751,7 +2751,7 @@ begin
   for i := 0 to (l - 1) do
     if not v[i] then
     begin
-      SetLength(Result, (Length(Result) + 1));
+      SetLength(Result, (System.Length(Result) + 1));
       DFS(Self, i, d, v, Result[High(Result)]);
     end;
 end;
@@ -2767,7 +2767,7 @@ var
   v: TBooleanArray;
   q: TIntegerArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   SetLength(v, l);
@@ -2820,7 +2820,7 @@ var
   v: TBooleanArray;
   q: TIntegerArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   SetLength(v, l);
@@ -2868,7 +2868,7 @@ var
   v: TBooleanArray;
   s: TIntegerArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   SetLength(v, l);
@@ -2920,7 +2920,7 @@ var
   v: TBooleanArray;
   s: TIntegerArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   SetLength(v, l);
@@ -2999,7 +2999,7 @@ var
   p, c: SizeInt;
   i: Integer;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   specialize SetSize<Integer>(X, Y, Result);
   if (Result = 0) then
     Exit;
@@ -3029,7 +3029,7 @@ function TPointArrayHelper.Axed: T2DIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, 2, Length(Self));
+  SetLength(Result, 2, Self.Size);
   for i := 0 to High(Self) do
   begin
     Result[0][i] := Self[i].X;
@@ -3046,7 +3046,7 @@ function TPointArrayHelper.Axed(var X, Y: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   specialize SetSize<Integer>(X, Y, Result);
   for i := 0 to High(Self) do
   begin
@@ -3063,7 +3063,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.Reinit: Integer; 
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 0) then
     FillChar(Pointer(Self)^, (Result * SizeOf(TPoint)), 0);
 end;
@@ -3079,7 +3079,7 @@ var
   c: T2DIntegerArray;
   b: TBox;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 1) then
   begin
     r := 0;
@@ -3124,7 +3124,7 @@ var
   c: T2DIntegerArray;
   b: TBox;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 1) then
   begin
     r := 0;
@@ -3181,8 +3181,8 @@ function TPointArrayHelper.Attach(const items: TPointArray): Integer; overload;
 var
   l, i: Integer;
 begin
-  l := Length(Self);
-  i := Length(items);
+  l := Self.Length;
+  i := items.Size;
   if (i = 0) then
     Exit(l);
   Result := (l + i);
@@ -3203,8 +3203,8 @@ function TPointArrayHelper.Embed(const items: TPointArray; const index: Integer 
 var
   s, l, p, t: Integer;
 begin
-  s := Length(Self);
-  l := Length(items);
+  s := Self.Size;
+  l := items.Length;
   if (l = 0) then
     Exit(s);
   p := EnsureRange(index, 0, s);
@@ -3213,7 +3213,7 @@ begin
   if (t > 0) then
     Move(Self[p], Self[p + l], (t * SizeOf(TPoint)));
   Move(items[0], Self[p], (l * SizeOf(TPoint)));
-  Result := Length(Self);
+  Result := Self.Size;
 end;
 
 {==============================================================================]
@@ -3363,12 +3363,12 @@ var
   i, l: Integer;
 begin
   yArr := Self.YAxis;
-  l := Length(yArr);
+  l := yArr.Length;
   case l of
     0: Exit([]);
     1: Exit([yArr]);
   end;
-  SetLength(Result, Length(yArr));
+  SetLength(Result, l);
   case xOrder of 
     True:
     for i := 0 to High(Self) do
@@ -3398,12 +3398,12 @@ var
   i, l: Integer;
 begin
   xArr := Self.XAxis;
-  l := Length(xArr);
+  l := xArr.Length;
   case l of
     0: Exit([]);
     1: Exit([xArr]);
   end;
-  SetLength(Result, Length(xArr));
+  SetLength(Result, l);
   case yOrder of
     True:
     for i := 0 to High(Self) do
@@ -3434,7 +3434,7 @@ var
   a, n: TPoint;
   m: TBooleanArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -3451,10 +3451,10 @@ begin
     q[0] := Self[i];
     m[i] := True;
     t := 0;
-    while (t < Length(q)) do
+    while (t < q.Size) do
     begin
       a := q[t.Increase];
-      SetLength(Result[g], (Length(Result[g]) + 1));
+      SetLength(Result[g], (Result[g].Size + 1));
       Result[g][High(Result[g])] := a;
       h.Create((a.X - xRadius), (a.X + xRadius));
       v.Create((a.Y - yRadius), (a.Y + yRadius));
@@ -3475,13 +3475,13 @@ begin
           if ((z < l) and (not m[z])) then
           begin
             m[z] := True;
-            SetLength(q, (Length(q) + 1));
+            SetLength(q, (q.Size + 1));
             q[High(q)] := n;
           end;
         end;
       end;
     end;
-    if (Length(Result[g]) > 0) then
+    if (Result[g].Size > 0) then
       Inc(g);
   end;
   SetLength(Result, g);
@@ -3497,7 +3497,7 @@ var
   a, n: TPoint;
   m: TBooleanArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -3515,10 +3515,10 @@ begin
     q[0] := Self[i];
     m[i] := True;
     t := 0;
-    while (t < Length(q)) do
+    while (t < q.Size) do
     begin
       a := q[t.Increase];
-      SetLength(Result[g], (Length(Result[g]) + 1));
+      SetLength(Result[g], (Result[g].Size + 1));
       Result[g][High(Result[g])] := a;
       h.Create((a.X - d), (a.X + d));
       v.Create((a.Y - d), (a.Y + d));
@@ -3539,13 +3539,13 @@ begin
           if ((z < l) and (not m[z]) and a.Within(n, radius, distFunc)) then
           begin
             m[z] := True;
-            SetLength(q, (Length(q) + 1));
+            SetLength(q, (q.Size + 1));
             q[High(q)] := n;
           end;
         end;
       end;
     end;
-    if (Length(Result[g]) > 0) then
+    if (Result[g].Size > 0) then
       Inc(g);
   end;
   SetLength(Result, g);
@@ -3577,7 +3577,7 @@ var
   a, n: TPoint;
   m: TBooleanArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -3598,7 +3598,7 @@ begin
     while (k.start < k.stop) do
     begin
       a := q[k.start.Increase];
-      SetLength(Result[g], (Length(Result[g]) + 1));
+      SetLength(Result[g], (Result[g].Size + 1));
       Result[g][High(Result[g])] := a;
       h.Create((a.X - xRadius), (a.X + xRadius));
       v.Create((a.Y - yRadius), (a.Y + yRadius));
@@ -3624,7 +3624,7 @@ begin
         end;
       end;
     end;
-    if (Length(Result[g]) > 0) then
+    if (Result[g].Size > 0) then
       Inc(g);
   end;
   SetLength(Result, g);
@@ -3640,7 +3640,7 @@ var
   a, n: TPoint;
   m: TBooleanArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -3662,7 +3662,7 @@ begin
     while (k.start < k.stop) do
     begin
       a := q[k.start.Increase];
-      SetLength(Result[g], (Length(Result[g]) + 1));
+      SetLength(Result[g], (Result[g].Size + 1));
       Result[g][High(Result[g])] := a;
       h.Create((a.X - d), (a.X + d));
       v.Create((a.Y - d), (a.Y + d));
@@ -3683,14 +3683,14 @@ begin
           if ((z < l) and (not m[z]) and a.Within(n, radius, distFunc)) then
           begin
             m[z] := True;
-            if (k.stop >= Length(q)) then
-              SetLength(q, (Length(q) * 2));
+            if (k.stop >= q.Size) then
+              SetLength(q, (q.Size * 2));
             q[k.stop.Increase] := n;
           end;
         end;
       end;
     end;
-    if (Length(Result[g]) > 0) then
+    if (Result[g].Size > 0) then
       Inc(g);
   end;
   SetLength(Result, g);
@@ -3712,14 +3712,14 @@ function TPointArrayHelper.YTo2D(var xArr: TIntegerArray; var selfIDs: T2DIntege
 var
   l, i, j, k, c, p, s, m: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(xArr, 0);
   SetLength(selfIDs, 0);
   SetLength(Result, 0);
   if (l = 0) then
     Exit;
   xArr := Self.XAxis;
-  c := Length(xArr);
+  c := xArr.Size;
   SetLength(Result, c);
   SetLength(selfIDs, c);
   for i := 0 to (c - 1) do
@@ -3764,13 +3764,13 @@ function TPointArrayHelper.YTo2D(var xArr: TIntegerArray): T2DIntegerArray; over
 var
   l, i, j, k, c: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(xArr, 0);
   SetLength(Result, 0);
   if (l = 0) then
     Exit;
   xArr := Self.XAxis;
-  c := Length(xArr);
+  c := xArr.Size;
   SetLength(Result, c);
   for i := 0 to (c - 1) do
   begin
@@ -3797,14 +3797,14 @@ function TPointArrayHelper.XTo2D(var yArr: TIntegerArray; var selfIDs: T2DIntege
 var
   l, i, j, k, c, p, s, m: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(yArr, 0);
   SetLength(selfIDs, 0);
   SetLength(Result, 0);
   if (l = 0) then
     Exit;
   yArr := Self.YAxis;
-  c := Length(yArr);
+  c := yArr.Size;
   SetLength(Result, c);
   SetLength(selfIDs, c);
   for i := 0 to (c - 1) do
@@ -3849,13 +3849,13 @@ function TPointArrayHelper.XTo2D(var yArr: TIntegerArray): T2DIntegerArray; over
 var
   l, i, j, k, c: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(yArr, 0);
   SetLength(Result, 0);
   if (l = 0) then
     Exit;
   yArr := Self.YAxis;
-  c := Length(yArr);
+  c := yArr.Size;
   SetLength(Result, c);
   for i := 0 to (c - 1) do
   begin
@@ -4120,7 +4120,7 @@ var
     i, j: Integer;
   begin
     r := RegionQuery(index);
-    if (Length(r) < minPts) then
+    if (r.Size < minPts) then
     begin
       l[index] := NOISE;
       Exit;
@@ -4128,10 +4128,10 @@ var
     for i := 0 to High(r) do
       l[r[i]] := (c + 1);
     i := -1;
-    while (i.Increment < Length(r)) do
+    while (i.Increment < r.Size) do
     begin
       n := RegionQuery(r[i]);
-      if (Length(n) >= minPts) then
+      if (n.Size >= minPts) then
       for j := 0 to High(n) do
         if l[n[j]] in [UNVISITED, NOISE] then
         begin
@@ -4143,7 +4143,7 @@ var
   end;
 begin
   d := DistanceFunction(distFunc);
-  s := Length(Self);
+  s := Self.Size;
   case s of
     0: Exit([]);
     1: Exit([Self]);
@@ -4205,7 +4205,7 @@ var
     i, j: Integer;
   begin
     r := RegionQuery(index);
-    if (Length(r) < minPts) then
+    if (r.Size < minPts) then
     begin
       l[index] := NOISE;
       Exit;
@@ -4213,10 +4213,10 @@ var
     for i := 0 to High(r) do
       l[r[i]] := (c + 1);
     i := -1;
-    while (i.Increment < Length(r)) do
+    while (i.Increment < r.Size) do
     begin
       n := RegionQuery(r[i]);
-      if (Length(n) >= minPts) then
+      if (n.Size >= minPts) then
       for j := 0 to High(n) do
         if l[n[j]] in [UNVISITED, NOISE] then
         begin
@@ -4227,7 +4227,7 @@ var
     end;
   end;
 begin
-  s := Length(Self);
+  s := Self.Size;
   case s of
     0: Exit([]);
     1: Exit([Self]);
@@ -4364,7 +4364,7 @@ var
   y: TIntegerArray;
   b, s: TRange;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if ((maximumNeighbours < 0) or (l = 0)) then
     Exit([]);
   SetLength(Result, l);
@@ -4401,7 +4401,7 @@ var
   b, s: TRange;
   p: TPoint;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if ((maximumNeighbours < 0) or (l = 0)) then
     Exit([]);
   SetLength(Result, l);
@@ -4445,7 +4445,7 @@ var
   y: TIntegerArray;
   b, s: TRange;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if ((minimumNeighbours > l) or (l = 0)) then
     Exit([]);
   SetLength(Result, l);
@@ -4483,7 +4483,7 @@ var
   b, s: TRange;
   p: TPoint;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if ((minimumNeighbours > l) or (l = 0)) then
     Exit([]);
   SetLength(Result, l);
@@ -4532,7 +4532,7 @@ var
   b, s, n: TRange;
   p: TPoint;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   n := allowedNeighbours.Normalize;
@@ -4583,7 +4583,7 @@ var
   y: TIntegerArray;
   b, n, s: TRange;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   n := allowedNeighbours.Normalize;
@@ -4642,7 +4642,7 @@ var
     q[j] := i;
   end;
 begin
-  n := Length(Self);
+  n := Self.Length;
   if (n = 0) then
     Exit([]);
   h := Self.XTo2D(v, z);
@@ -4725,7 +4725,7 @@ var
       q[j] := i;
   end;
 begin
-  n := Length(Self);
+  n := Self.Length;
   if (n = 0) then
     Exit([]);
   d := Ceil(radius);
@@ -4784,7 +4784,7 @@ var
   v, p, q: TIntegerArray;
   x, y, s: TRange;
 begin
-  a := Length(Self);
+  a := Self.Length;
   if (a = 0) then
     Exit([]);
   h := Self.XTo2D(v, z);
@@ -4802,11 +4802,11 @@ begin
     SetLength(q, a);
     s.Create(0, 0);
     q[s.start.Increase] := i;
-    p[i] := Length(Result);
+    p[i] := System.Length(Result);
     while (s.stop < s.start) do
     begin
       j := q[s.stop.Increase];
-      SetLength(Result[l], (Length(Result[l]) + 1));
+      SetLength(Result[l], (Result[l].Size + 1));
       Result[l][High(Result[l])] := Self[j];
       y := v.BinaryRange(TRange.Construct((Self[j].Y - yRadius), (Self[j].Y + yRadius)));
       if not y.Employs(-1) then
@@ -4819,7 +4819,7 @@ begin
           n := z[r][c];
           if (p[n] = -1) then
           begin
-            p[n] := Length(Result);
+            p[n] := System.Length(Result);
             q[s.start.Increase] := n;
           end;
         end;
@@ -4846,7 +4846,7 @@ var
   v, p, q: TIntegerArray;
   x, y, s: TRange;
 begin
-  a := Length(Self);
+  a := Self.Size;
   if (a = 0) then
     Exit([]);
   d := Ceil(radius);
@@ -4865,11 +4865,11 @@ begin
     SetLength(q, a);
     s.Create(0, 0);
     q[s.start.Increase] := i;
-    p[i] := Length(Result);
+    p[i] := System.Length(Result);
     while (s.stop < s.start) do
     begin
       j := q[s.stop.Increase];
-      SetLength(Result[l], (Length(Result[l]) + 1));
+      SetLength(Result[l], (Result[l].Size + 1));
       Result[l][High(Result[l])] := Self[j];
       y := v.BinaryRange(TRange.Construct((Self[j].Y - d), (Self[j].Y + d)));
       if not y.Employs(-1) then
@@ -4882,7 +4882,7 @@ begin
           n := z[r][c];
           if ((p[n] = -1) and Self[j].Within(Self[n], radius, metric)) then
           begin
-            p[n] := Length(Result);
+            p[n] := System.Length(Result);
             q[s.start.Increase] := n;
           end;
         end;
@@ -4932,7 +4932,7 @@ var
     Inc(s[b.Y], s[b.X]);
   end;
 begin
-  n := Length(Self);
+  n := Self.Size;
   if (n = 0) then
     Exit([]);
   d := Ceil(radius);
@@ -5021,7 +5021,7 @@ var
     Inc(s[b.Y], s[b.X]);
   end;
 begin
-  n := Length(Self);
+  n := Self.Size;
   if (n = 0) then
     Exit([]);
   h := Self.XTo2D(v, z);
@@ -5356,7 +5356,7 @@ var
   v: TIntegerArray;
   x, y: TRange;
 begin
-  if ((Length(Self) = 0) or (bWidth < 1) or (bHeight < 1)) then
+  if (Self.Empty or (bWidth < 1) or (bHeight < 1)) then
     Exit([]);
   b := Self.Bounds;
   r := Ceil(b.Height / bHeight);
@@ -5427,11 +5427,11 @@ var
       Exit;
     u[index] := True;
     if (s.stop.Increment > High(q)) then
-      SetLength(q, (Length(q) * 2));
+      SetLength(q, (q.Size * 2));
     q[s.stop] := index;
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   d := Ceil(Radius);
@@ -5463,7 +5463,7 @@ begin
             Enqueue(z[r][j]);
       end;
     end;
-    if (Length(Result[c]) > 0) then
+    if (Result[c].Size > 0) then
       Inc(c);
   end;
   SetLength(Result, c);
@@ -5519,7 +5519,7 @@ var
     end;
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   d := Ceil(radius);
@@ -5620,7 +5620,7 @@ var
     end;
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   d := Ceil(radius);
@@ -5702,7 +5702,7 @@ var
   x, y, r: TRange;
   a, b: TPoint;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   d := Ceil(Radius);
@@ -5742,7 +5742,7 @@ begin
         end;
       end;
     end;
-    if (Length(Result[c]) > 0) then
+    if (Result[c].Size > 0) then
       Inc(c);
   end;
   SetLength(Result, c);
@@ -5770,7 +5770,7 @@ var
   n, p: TPoint;
   s: TRange;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   case scan8W of
@@ -5785,7 +5785,7 @@ begin
       Y := [0,  0,  1, -1];
     end;
   end;
-  a := Length(X);
+  a := x.Size;
   h := Self.XTo2D(v, z);
   SetLength(u, l);
   SetLength(Result, l);
@@ -5844,7 +5844,7 @@ var
   x, y, s: TRange;
   o: TPointArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   if scan8W then
@@ -5913,7 +5913,7 @@ var
   b: TBox;
   p, n: TPoint;
 begin
-  if (Length(Self) = 0) then
+  if Self.Empty then
     Exit([]);
   b := Self.Bounds(w, h);
   SetLength(m, h, w);
@@ -5924,14 +5924,14 @@ begin
     d := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1), Point(1, 1), Point(1, -1), Point(-1, 1), Point(-1, -1)]
   else
     d := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1)];
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   c := 0;
   for i := 0 to High(Self) do
   begin
     if not m[Self[i].Y - b.Y1][Self[i].X - b.X1] then
       Continue;
     s.Create(0, 0);
-    SetLength(q, Length(Self));
+    SetLength(q, Self.Size);
     q[0] := Self[i];
     m[q[0].Y - b.Y1][q[0].X - b.X1] := False;
     while (s.start <= s.stop) do
@@ -6013,8 +6013,8 @@ begin
     d := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1), Point(1, 1), Point(1, -1), Point(-1, 1), Point(-1, -1)]
   else
     d := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1)];
-  SetLength(p, Length(Self));
-  SetLength(s, Length(Self));
+  SetLength(p, Self.Size);
+  SetLength(s, Self.Size);
   for i := 0 to High(Self) do
   begin
     p[i] := i;
@@ -6027,7 +6027,7 @@ begin
       if (b.Contains(a) and (m[a.Y - b.Y1][a.X - b.X1] <> -1)) then
         UnionSets(i, m[a.Y - b.Y1][a.X - b.X1]);
     end;
-  SetLength(l, Length(Self));
+  SetLength(l, Self.Size);
   for i := 0 to High(Self) do
     l[i] := -1;
   c := 0;
@@ -6063,7 +6063,7 @@ var
     c[index] := g;
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   d := Ceil(radius);
@@ -6131,7 +6131,7 @@ var
     c[index] := g;
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
   SetLength(c, l);
@@ -6206,7 +6206,7 @@ function TPointArrayHelper.QuickSortByX(const aAscending: Boolean = True): Integ
       QSX(arr, i, R, A);
   end;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 1) then
     QSX(Self, 0, (Result - 1), aAscending);
 end;
@@ -6240,7 +6240,7 @@ function TPointArrayHelper.QuickSortByY(const aAscending: Boolean = True): Integ
       QSY(arr, i, R, A);
   end;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 1) then
     QSY(Self, 0, (Result - 1), aAscending);
 end;
@@ -6275,7 +6275,7 @@ function TPointArrayHelper.QuickSortByXY(const aAscending: Boolean = True): Inte
       QSXY(arr, i, R, A);
   end;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 1) then
     QSXY(Self, 0, (Result - 1), aAscending);
 end;
@@ -6310,7 +6310,7 @@ function TPointArrayHelper.QuickSortByYX(const aAscending: Boolean = True): Inte
       QSYX(arr, i, R, A);
   end;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 1) then
     QSYX(Self, 0, (Result - 1), aAscending);
 end;
@@ -6326,7 +6326,7 @@ var
   i: Integer;
   w: TIntegerArray;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result < 2) then
     Exit;
   SetLength(w, Result);
@@ -6367,7 +6367,7 @@ var
   s: TPointArray;
   x, y, i, l, h: Integer;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result < 2) then
     Exit;
   s := Self.Copy;
@@ -6461,7 +6461,7 @@ var
         g[m] := n;
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -6535,7 +6535,7 @@ var
         g[m] := n;
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -6623,7 +6623,7 @@ var
     Inc(s[r.start], s[r.stop]);
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -6652,7 +6652,7 @@ begin
           j := z[r][c];
           if ((i <> j) and Self[i].Within(Self[j], radius, metric)) then
           begin
-            SetLength(n, (Length(n) + 1));
+            SetLength(n, (System.Length(n) + 1));
             n[High(n)].index := j;
             n[High(n)].distance := Self[i].Dist(Self[j], metric);
           end;
@@ -6750,7 +6750,7 @@ var
     Inc(s[r.start], s[r.stop]);
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self]);
@@ -6778,7 +6778,7 @@ begin
           j := z[r][c];
           if ((i <> j) and Self[i].Within(Self[j], xRadius, yRadius)) then
           begin
-            SetLength(n, (Length(n) + 1));
+            SetLength(n, (System.Length(n) + 1));
             n[High(n)].index := j;
             n[High(n)].distance := Hypot((Self[i].X - Self[j].X), (Self[i].Y - Self[j].Y));
           end;
@@ -6842,7 +6842,7 @@ var
   end;
 begin
   SetLength(Result, 0);
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit;
     1: Exit([Self]);
@@ -6853,12 +6853,12 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     SetLength(Result[c], 0);
     SetLength(s, 1);
     s[0] := i;
     u[i] := True;
-    while (Length(s) > 0) do
+    while (s.Size > 0) do
     begin
       q := s[High(s)];
       SetLength(s, High(s));
@@ -6867,7 +6867,7 @@ begin
       for j := 0 to (l - 1) do
         if ((not u[j]) and Self[q].Within(Self[j], radius, metric)) then
         begin
-          SetLength(n, (Length(n) + 1));
+          SetLength(n, (System.Length(n) + 1));
           n[High(n)].index := j;
           n[High(n)].distance := Self[q].Dist(Self[j], metric);
         end;
@@ -6907,7 +6907,7 @@ var
   end;
 begin
   SetLength(Result, 0);
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit;
     1: Exit([Self]);
@@ -6918,12 +6918,12 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     SetLength(Result[c], 0);
     SetLength(s, 1);
     s[0] := i;
     u[i] := True;
-    while (Length(s) > 0) do
+    while (s.Size > 0) do
     begin
       q := s[High(s)];
       SetLength(s, High(s));
@@ -6932,7 +6932,7 @@ begin
       for j := 0 to (l - 1) do
         if ((not u[j]) and Self[q].Within(Self[j], xRadius, yRadius)) then
         begin
-          SetLength(n, (Length(n) + 1));
+          SetLength(n, (System.Length(n) + 1));
           n[High(n)].index := j;
           n[High(n)].distance := Hypot((Self[q].X - Self[j].X), (Self[q].Y - Self[j].Y));
         end;
@@ -6975,7 +6975,7 @@ var
     distance: Double;
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit;
     1: Exit([Self]);
@@ -6988,12 +6988,12 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     SetLength(Result[High(Result)], 0);
     SetLength(s, 1);
     s[0] := i;
     u[i] := True;
-    while (Length(s) > 0) do
+    while (s.Size > 0) do
     begin
       q := s[High(s)];
       SetLength(s, High(s));
@@ -7009,7 +7009,7 @@ begin
         for c := x.start to x.stop do
           if (not u[z[r][c]]) and Self[q].Within(Self[z[r][c]], radius, metric) then
           begin
-            SetLength(n, (Length(n) + 1));
+            SetLength(n, (System.Length(n) + 1));
             n[High(n)].index := z[r][c];
             n[High(n)].distance := Self[q].Dist(Self[z[r][c]], metric);
           end;
@@ -7052,7 +7052,7 @@ var
     distance: Double;
   end;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit;
     1: Exit([Self]);
@@ -7064,12 +7064,12 @@ begin
   begin
     if u[i] then
       Continue;
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (System.Length(Result) + 1));
     SetLength(Result[High(Result)], 0);
     SetLength(s, 1);
     s[0] := i;
     u[i] := True;
-    while (Length(s) > 0) do
+    while (s.Size > 0) do
     begin
       q := s[High(s)];
       SetLength(s, High(s));
@@ -7086,7 +7086,7 @@ begin
         for c := x.start to x.stop do
           if ((not u[z[r][c]]) and Self[q].Within(Self[z[r][c]], xRadius, yRadius)) then
           begin
-            SetLength(n, (Length(n) + 1));
+            SetLength(n, (System.Length(n) + 1));
             n[High(n)].index := z[r][c];
             n[High(n)].distance := Hypot((Self[q].X - Self[z[r][c]].X), (Self[q].Y - Self[z[r][c]].Y));
           end;
@@ -7131,7 +7131,7 @@ var
   c, p, d: TPoint;
 begin
   SetLength(Result, 0);
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit;
     1: Exit([Self]);
@@ -7204,7 +7204,7 @@ var
   c, p: TPoint;
 begin
   SetLength(Result, 0);
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit;
     1: Exit([Self]);
@@ -7266,7 +7266,7 @@ var
   y: TIntegerArray;
 begin
   y := Self.Ys.QuickSorted.BinaryPruned;
-  SetLength(Result, Length(y));
+  SetLength(Result, y.Size);
   for i := 0 to High(Self) do
     Result[y.BinarySearch(Self[i].Y)].Supply(Self[i]);
 end;
@@ -7284,7 +7284,7 @@ var
   x: TIntegerArray;
 begin
   x := Self.Xs.QuickSorted.BinaryPruned;
-  SetLength(Result, Length(x));
+  SetLength(Result, x.Size);
   for i := 0 to High(Self) do
     Result[x.BinarySearch(Self[i].x)].Supply(Self[i]);
 end;
@@ -7315,7 +7315,7 @@ begin
       end;
     if (p = -1) then
     begin
-      p := Length(y);
+      p := y.Size;
       SetLength(y, (p + 1));
       y[p] := Self[i].Y;
       SetLength(Result, (p + 1));
@@ -7350,7 +7350,7 @@ begin
       end;
     if (p = -1) then
     begin
-      p := Length(x);
+      p := x.Size;
       SetLength(x, (p + 1));
       x[p] := Self[i].X;
       SetLength(Result, (p + 1));
@@ -7379,7 +7379,7 @@ begin
     begin
       if not m.TryGetValue(Self[i].Y, p) then
       begin
-        p := Length(o);
+        p := o.Size;
         SetLength(o, (p + 1));
         o[p] := Self[i].Y;
         m.Add(Self[i].Y, p);
@@ -7412,7 +7412,7 @@ begin
     begin
       if not m.TryGetValue(Self[i].X, p) then
       begin
-        p := Length(o);
+        p := o.Size;
         SetLength(o, (p + 1));
         o[p] := Self[i].X;
         m.Add(Self[i].X, p);
@@ -7440,7 +7440,7 @@ var
   s: TPointArray;
   R: TRange;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result < 2) then
     Exit;
   s := Self.Copy;
@@ -7483,7 +7483,7 @@ var
   C, i, M: Integer;
   R: TRange;
 begin
-  if (Length(Self) < 2) then
+  if (Self.Size < 2) then
     Exit(Self.Copy);
   SetLength(Result, 1);
   Result[0] := Self[0];
@@ -7551,7 +7551,7 @@ var
   Y, R: TRange;
 begin
   Result := -1;
-  if (Length(Self) = 0) then
+  if Self.Empty then
     Exit;
   Y.Create(area.Y1, area.Y2);
   R.Create(0, High(Self));
@@ -7584,7 +7584,7 @@ var
   R: TRange;
 begin
   Result := -1;
-  if Length(Self) = 0 then
+  if Self.Empty then
     Exit;
   R.Create(0, High(Self));
   while (R.start <= R.stop) do
@@ -7634,7 +7634,7 @@ var
   R: TRange;
 begin
   Result := -1;
-  if (Length(Self) = 0) then
+  if Self.Empty then
     Exit;
   R.Create(0, High(Self));
   while (R.start <= R.stop) do
@@ -7714,7 +7714,7 @@ var
   M: Integer;
   R: TRange;
 begin
-  R.Create(0, Length(Self));
+  R.Create(0, Self.Size);
   while (R.start < R.stop) do
   begin
     M := R.Pivot;
@@ -7739,7 +7739,7 @@ var
   M: Integer;
   R: TRange;
 begin
-  R.Create(0, Length(Self));
+  R.Create(0, Self.Size);
   while (R.start < R.stop) do
   begin
     M := R.Pivot;
@@ -7765,7 +7765,7 @@ var
   R, M: Integer;
 begin
   Result := 0;
-  R := Length(Self);
+  R := Self.Size;
   while (Result < R) do
   begin
     M := ((Result + R) div 2);
@@ -7806,11 +7806,11 @@ begin
   while (Result <= H) do
   begin
     M := ((Result + H) div 2);
-	case Self[M].Compare(item) of
+    case Self[M].Compare(item) of
       -1: Result := (M + 1);
-	  1: H := (M - 1);
-	  0:
-	  if allowDuplicates then
+      1: H := (M - 1);
+      0:
+      if allowDuplicates then
         Result := (M + 1)
       else
         Exit(M);
@@ -7832,7 +7832,7 @@ function TPointArrayHelper.BinaryAppend(const item: TPoint; const allowDuplicate
 begin
   if not (Self.Empty or (Self[High(Self)].Compare(item) < 0)) then
     Exit(Self.BinaryInsert(item, allowDuplicates));
-  Result := Length(Self);
+  Result := Self.Size;
   Self.Supply(item);
 end;
 
@@ -7851,7 +7851,7 @@ var
   i: Integer;
 begin
   Result := Self.BinaryPosL(item);
-  SetLength(Self, (Length(Self) + 1));
+  SetLength(Self, (Self.Size + 1));
   for i := High(Self) downto (Result + 1) do
     Self[i] := Self[i - 1];
   Self[Result] := item;
@@ -7930,7 +7930,7 @@ var
   R: TRange;
 begin
   Result.Create(-1);
-  if (Length(Self) = 0) then
+  if Self.Empty then
     Exit;
   R.Create(0, High(Self));
   while (R.start <= R.stop) do
@@ -8097,7 +8097,7 @@ begin
     Exit;
   for i := p to (High(Self) - 1) do
     Self[i] := Self[i + 1];
-  SetLength(Self, (Length(Self) - 1));
+  SetLength(Self, (Self.Size - 1));
 end;
 
 {==============================================================================]
@@ -8115,7 +8115,7 @@ var
   i, l: Integer;
   r: TRange;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l = 0) then
     Exit(0);
   case all of
@@ -8150,7 +8150,7 @@ begin
   p := Self.BinaryPosL(item);
   if (p = -1) then
     Exit(0);
-  s := Length(Self);
+  s := Self.Size;
   l := p;
   for i := (p + 1) to (s - 1) do
     if (Self[i] <> item)then
@@ -8174,7 +8174,7 @@ begin
   p := Self.BinaryPosL(item);
   if (p = -1) then
     Exit(Self.Copy);
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   l := 0;
   for i := 0 to High(Self) do
     if ((i = p) or (Self[i] <> item)) then
@@ -8196,10 +8196,10 @@ var
   i, j, k: Integer;
   s, o: Integer;
 begin
-  s := Length(Self);
-  o := Length(items);
+  s := Self.Size;
+  o := items.Size;
   SetLength(Result, (s + o));
-  if (Length(Result) < 1) then
+  if (Result.Size < 1) then
     Exit;
   i := 0;
   j := 0;
@@ -8326,8 +8326,8 @@ function TPointArrayHelper.BinaryYs(const unique: Boolean = True): TIntegerArray
 var
   i, c: Integer;
 begin
-  SetLength(Result, Length(Self));
-  if (Length(Self) = 0) then
+  SetLength(Result, Self.Size);
+  if Self.Empty then
     Exit;
   Result[0] := Self[0].Y;
   c := 1;
@@ -8422,7 +8422,7 @@ begin
   begin
     y := Self[i].Y;
     p := Self.BinaryYPoints(y);
-    if (Length(p) = 0) then
+    if p.Empty then
     begin
       Inc(i);
       Continue;
@@ -8461,12 +8461,12 @@ begin
     if (r.stop >= r.start) then
     begin
       a := ((r.stop - r.start) + 1);
-      c := Length(Result);
+      c := Result.Size;
       SetLength(Result, (c + a));
       for m := 0 to (a - 1) do
         Result[c + m] := p[r.start + m];
     end;
-    Inc(i, Length(p));
+    Inc(i, p.Size);
   end;
 end;
 
@@ -8521,7 +8521,7 @@ var
   h, M, i, p, s: Integer;
 begin
   SetLength(Result, 0);
-  if (Length(Self) = 0) then
+  if Self.Empty then
     Exit;
   h := High(Self);
   R.Create(0, h);
@@ -8693,7 +8693,7 @@ begin
     Exit;
   l := 0;
   i := 0;
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   while (i <= h) do
   begin
     y := Self[i].Y;
@@ -8762,7 +8762,7 @@ var
   K: TPoint;
   i, j, L, R, M, P: Integer;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   for i := 1 to (Result - 1) do
   begin
     K := Self[i];

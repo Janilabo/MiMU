@@ -146,7 +146,7 @@ function Last(const item: TVar): Integer; overload;
 function Last(const items: TArr): Integer; overload;
 function LeastCommon: TVar; overload;
 function LeastFrequent: TVar; overload;
-function Len: Integer; overload;
+function Length: Integer; overload;
 function Loc(const item: TVar; const index: Integer = 2147483647): Integer; overload;
 function Loc(const items: TArr; const index: Integer = 2147483647): Integer; overload;
 function Location(const item: TVar; const index: Integer = 2147483647): Integer; overload;
@@ -165,6 +165,7 @@ function Movements(const target: TArr): TConnectionArray; overload;
 function Multi(const threshold: Integer = 2): Boolean; overload;
 function Multi(const threshold: TRange): Boolean; overload;
 function Next(const index: Integer; const count: Integer = 2147483647): TArr; overload;
+function Occupied: Boolean; overload;
 function Occurs(const item: TVar; const occurrence: Integer = 1): Boolean; overload;
 function Overlay(const items: TArr; const index: Integer; const init: TVar): TArr; overload;
 function Overlay(const items: TArr; const index: Integer = 0): TArr; overload;
@@ -384,7 +385,7 @@ function HArr.Add(const item: TVar; const duplicates: Boolean = True): TArr; ove
 var
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, (l + 1));
   for i := 0 to (l - 1) do
     Result[i] := Self[i];
@@ -403,8 +404,8 @@ function HArr.Add(const items: TArr; const duplicates: Boolean = True): TArr; ov
 var
   a, h, i, s: Integer;
 begin
-  s := Length(Self);
-  i := Length(items);
+  s := Self.Length;
+  i := items.Length;
   SetLength(Result, (s + i));
   if ((i = 0) and (s = 0)) then
     Exit;
@@ -438,7 +439,7 @@ begin
   for i := 1 to High(Self) do
     if (Self[0] <> Self[i]) then
       Exit(False);
-  Result := (Length(Self) > 0);
+  Result := (Self.Length > 0);
 end;
 
 {==============================================================================]
@@ -453,7 +454,7 @@ begin
   for i := 1 to High(Self) do
     if (Self[0] <> Self[i]) then
       Exit(False);
-  Result := (Length(Self) > 0);
+  Result := (Self.Length > 0);
 end;
 
 {==============================================================================]
@@ -505,8 +506,8 @@ begin
   Result := Self.Copy;
   if ((not duplicates) and Self.Contains(item)) then
     Exit;
-  SetLength(Result, (Length(Self) + 1));
-  Result[Length(Self)] := item;
+  SetLength(Result, (Self.Size + 1));
+  Result[Self.Size] := item;
 end;
 
 {==============================================================================]
@@ -549,7 +550,7 @@ function HArr.As2D(const rows, columns: Integer): T2DArr; overload;
 var
   l, i: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, rows, columns);
   for i := 0 to ((rows * columns) - 1) do
     if (i < l) then
@@ -565,7 +566,7 @@ function HArr.As2D(const width: Integer): T2DArr; overload;
 var
   l, h, i, r, c: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   h := Ceil(l / width);
   SetLength(Result, h, width);
   i := 0;
@@ -584,7 +585,7 @@ function HArr.Backwards: TArr; overload;
 var
   l, i: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   i := 0;
   while (l > 0) do
@@ -600,7 +601,7 @@ function HArr.Blit(const items: TArr; const index: Integer = 0): Integer; overlo
 var
   i: Integer;
 begin
-  Result := (index + Length(items));
+  Result := (index + items.Size);
   for i := 0 to High(items) do
     Self[index + i] := items[i]; 
 end;
@@ -668,10 +669,10 @@ function Harr.Blend(const items: TArr; const index: Integer = 2147483647): TArr;
 var
   s, l, p, r, i: Integer;
 begin
-  s := Length(Self);
+  s := Self.Length;
   if (s = 0) then
     Exit(items.Copy);
-  l := Length(items);
+  l := items.Size;
   if (l = 0) then
     Exit(Self.Copy);
   case (index > 0) of
@@ -731,7 +732,7 @@ var
 begin
   if (Self.Empty or blocks.Empty) then
     Exit(False);
-  SetLength(u, Length(blocks));
+  SetLength(u, blocks.Size);
   for i := 0 to High(Self) do
   begin
     p := blocks.Pos(Self[i]);
@@ -770,7 +771,7 @@ begin
       SetLength(Result, (g.Increment + 1));
       SetLength(Result[g], 0);
     end;
-    SetLength(Result[g], (Length(Result[g]) + 1));
+    SetLength(Result[g], (Result[g].Size + 1));
     Result[g][High(Result[g])] := Self[i];
   end;
 end;
@@ -795,7 +796,7 @@ function HArr.Classify: T2DArr; overload;
 var
   i, h, g, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Size;
   SetLength(Result, l);
   if (l = 0) then
     Exit;
@@ -836,7 +837,7 @@ function HArr.Classify(const weight: TDoubleArray): T2DArr; overload; var w: Dou
 [==============================================================================}
 function HArr.Clear: Boolean; overload;
 begin
-  Result := (Length(Self) > 0);
+  Result := (Self.Length > 0);
   SetLength(Self, 0);
 end;
 
@@ -854,7 +855,7 @@ begin
     if (index < 0) then
       c := (index + count)
     else
-      c := Min(count, (Length(Self) - index));
+      c := Min(count, (Self.Size - index));
     s := Max(0, index);
     SetLength(Result, c);
     for i := s to ((s + c) - 1) do
@@ -876,7 +877,7 @@ begin
   if (ID.Populated and Self.Populated) then
   begin
     h := High(Self);
-    l := Length(ID);
+    l := ID.Size;
     SetLength(Result, l);
     for i := 0 to (l - 1) do
       if ((ID[i] <= h) and (ID[i] > -1)) then
@@ -894,12 +895,12 @@ function HArr.Cloned: TArr; overload;
 var
   r: TRange;
 begin
-  case Length(Self) of
+  case Self.Size of
     0: Exit([]);
     1: Exit([Self[0]]);
   end;
-  SetLength(Result, Length(Self));
-  r.Create(-1, Length(Result));
+  SetLength(Result, Self.Size);
+  r.Create(-1, Result.Size);
   while (r.start.Increment <= r.stop.Decrement) do
   begin
     Result[r.start] := Self[r.start];
@@ -932,7 +933,7 @@ begin
     begin
       if not m.TryGetValue(Self[i], p) then
       begin
-        p := Length(Result);
+        p := System.Length(Result);
         m.Add(Self[i], p);
         SetLength(Result, (p + 1));
         SetLength(Result[p], 0);
@@ -953,8 +954,8 @@ function HArr.Compact: Integer; overload;
 var
   i: Integer;
 begin
-  if (Length(Self) < 2) then
-    Exit(Length(Self));
+  if (Self.Size < 2) then
+    Exit(Self.Size);
   Result := 1;
   for i := 1 to High(Self) do
     if (Self[i] <> Self[i - 1]) then
@@ -971,13 +972,13 @@ function HArr.Compacted: TArr; overload;
 var
   i: Integer;
 begin
-  if (Length(Self) = 0) then
+  if Self.Empty then
     Exit([]);
   SetLength(Result, 1);
   Result[0] := Self[0];
   for i := 1 to High(Self) do
     if (Self[i] <> Self[i - 1]) then
-	  Result.Supply(Self[i]);
+      Result.Supply(Self[i]);
 end;
 
 {==============================================================================]
@@ -1006,7 +1007,7 @@ begin
       end;
     if k then
     begin
-      if (Length(Result) <= r) then
+      if (Result.Size <= r) then
         SetLength(Result, (r + 1));
       Result[r.Increase] := Self[i];
     end;
@@ -1023,7 +1024,7 @@ function HArr.Combine(const b: TArr): TArr; overload;
 begin
   SetLength(Result, 0);
   Insert(Self, Result, 0);
-  Insert(b, Result, Length(Self));
+  Insert(b, Result, Self.Size);
 end;
 
 {==============================================================================]
@@ -1049,7 +1050,7 @@ var
   begin
     SetLength(s, 0);
     s := s + [startPos];
-    while (Length(s) > 0) do
+    while s.Occupied do
     begin
       h := High(s);
       c := s[h];
@@ -1064,7 +1065,7 @@ var
     end;
   end;
 begin
-  l := Length(Self);
+  l := Self.Size;
   if l = 0 then
     Exit([]);
   SetLength(n, l);
@@ -1080,7 +1081,7 @@ begin
   begin
     if not v[i] then
     begin
-      SetLength(Result, (Length(Result) + 1));
+      SetLength(Result, (System.Length(Result) + 1));
       SetLength(Result[High(Result)], 0);
       DFS(i, Result[High(Result)]);
     end;
@@ -1099,7 +1100,7 @@ function HArr.Compressed: TArr; overload;
 var
   r, i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Size;
   SetLength(Result, l);
   if (l = 0) then
     Exit;
@@ -1156,8 +1157,8 @@ function HArr.Compress: Integer; overload;
 var
   i: Integer;
 begin
-  if (Length(Self) < 2) then
-    Exit(Length(Self));
+  if (Self.Size < 2) then
+    Exit(Self.Size);
   Result := 1;
   for i := 1 to High(Self) do
     if not (Self[i] = Self[Result - 1]) then
@@ -1174,7 +1175,7 @@ function HArr.Comprised(const items: TArr): Boolean; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Size;
   Result := (l > 0);
   while (Result and (l.Decrease > 0)) do
     Result := items.Contains(Self[l]);
@@ -1189,7 +1190,7 @@ function HArr.Constant(const item: TVar): Boolean; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Size;
   Result := (l > 0);
   while (Result and (l.Decrease > 0)) do
     Result := (Self[l] = item);
@@ -1202,7 +1203,7 @@ end;
 [==============================================================================}
 function HArr.Constant: Boolean; overload;
 begin
-  Result := ((Length(Self) > 0) and Constant(Self[0]));
+  Result := (Self.Occupied and Constant(Self[0]));
 end;
 
 {==============================================================================]
@@ -1229,7 +1230,7 @@ function HArr.Copy(const index: Integer = 0; const count: Integer = 2147483647):
 var
   i, c, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (index < l) then
   begin
     i := Max(index, 0);
@@ -1252,7 +1253,7 @@ function HArr.Copied: TArr; overload;
 var
   h, i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self[0]]);
@@ -1304,7 +1305,7 @@ function HArr.Deduplicated: TArr; overload;
 var
   i, l: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   if Self.Empty then
     Exit();
   l := 0;
@@ -1344,7 +1345,7 @@ var
 begin
   if ID.Empty then
     Exit(Self.Copy);
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   r := 0;
   for i := 0 to (l - 1) do
@@ -1398,7 +1399,7 @@ function HArr.Differ(const target: TArr): Boolean; overload;
 var
   i: Integer;
 begin
-  Result := (Length(Self) <> Length(target));
+  Result := (Self.Size <> target.Size);
   if not Result then
   for i := High(Self) downto 0 do
     if (Self[i] <> target[i]) then
@@ -1454,7 +1455,7 @@ begin
     l := m.Pos(Self[i]);
     if (l = -1) then
     begin
-      l := Length(m);
+      l := m.Length;
       SetLength(m, (l + 1));
       SetLength(Result, (l + 1));
       m[l] := Self[i];
@@ -1473,7 +1474,7 @@ var
   m: TBooleanArray;
   i, r, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l < 2) then
     Exit(Self.Copy);
   SetLength(Result, l);
@@ -1497,7 +1498,7 @@ function HArr.Distribute(const parts: Integer): T2DArr; overload;
 var
   l, p, b, r, i, j, s, c: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if ((parts > 0) and (l > 0)) then
   begin
     p := Min(parts, l);
@@ -1589,7 +1590,7 @@ end;
 [==============================================================================}
 function HArr.Domain: TRange; overload;
 begin
-  Result.stop := (Length(Self) - 1);
+  Result.stop := (Self.Size - 1);
   if (Result.stop = -1) then
     Result.start := -1
   else
@@ -1627,7 +1628,7 @@ var
 begin
   if (items.Empty or Self.Empty) then
     Exit(Self.Copy);
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   d := 0;
   m := Max(0, index);
@@ -1651,7 +1652,7 @@ function HArr.Dupe: TArr; overload;
 var
   i, l, j: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   if (l = 0) then
     Exit;
@@ -1678,7 +1679,7 @@ function HArr.Duplicate(const xTimes: Integer = 1): TArr; overload;
 var
   m, i, j, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   m := Max(0, xTimes);
   SetLength(Result, (m * l));
   if (l > 0) then
@@ -1705,7 +1706,7 @@ begin
     r := returnIDs.Copy;
   h := High(r);
   s := High(Self);
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   l := 0;
   c := 0;
   for i := 0 to s do
@@ -1732,7 +1733,7 @@ function HArr.Emplace(const item: TVar; const index: Integer = 0): Integer; over
 var
   i: Integer;
 begin
-  SetLength(Self, (Length(Self) + 1));
+  SetLength(Self, (Self.Size + 1));
   Result := index.Clamp(0, High(Self));
   for i := High(Self) downto (Result + 1) do
     Self[i] := Self[i - 1];
@@ -1746,7 +1747,7 @@ end;
 [==============================================================================}
 function HArr.Empty: Boolean; overload;
 begin
-  Result := (Length(Self) = 0);
+  Result := (Self.Size = 0);
 end;
 
 {==============================================================================]
@@ -1758,7 +1759,7 @@ function HArr.Equal(const target: TArr): Boolean; overload;
 var
   i: Integer;
 begin
-  Result := (Length(Self) = Length(target));
+  Result := (Self.Size = target.Size);
   if Result then
   for i := High(Self) downto 0 do
     if (Self[i] <> target[i]) then
@@ -1778,7 +1779,7 @@ var
 begin
   if not (Self.Empty or (index < 0)) then
   begin
-    l := Length(Self);
+    l := Self.Length;
     SetLength(r, l);
     m := Min(index, (l - 1));
 	d := 0;
@@ -1828,7 +1829,7 @@ begin
   if (Self.Populated and items.Populated and (index >= 0)) then
   begin
     h := High(items);
-    l := Length(Self);
+    l := Self.Length;
     SetLength(r, l);
     m := Min(index, (l - 1));
 	d := 0;
@@ -1882,10 +1883,9 @@ var
   i, j: Integer;
   f: TBooleanArray;
 begin
-  if (Length(items) = 0) then
-    Exit(Length(Self) = 0);
-  SetLength(f, Length(items));
-  f.Create(Length(items), False);
+  if items.Empty then
+    Exit(Self.Empty);
+  f.Create(items.Size, False);
   for i := 0 to High(Self) do
   begin
     j := items.Pos(Self[i]);
@@ -1965,7 +1965,7 @@ function HArr.Exchange(var b: TArr): Integer; overload;
 var
   a: TArr;
 begin
-  Result := (Length(Self) + Length(b));
+  Result := (Self.Size + b.Size);
   if (Result = 0) then
     Exit;
   a := Self.Dupe;
@@ -2015,7 +2015,7 @@ begin
         Break;
     while (j > i) do
     begin
-      SetLength(Result, (Length(Result) + 1));
+      SetLength(Result, (System.Length(Result) + 1));
       Result[High(Result)].Create((j - 1), j);
       s[j] := s[j - 1];
       s[j.Decrement] := target[i];
@@ -2035,7 +2035,7 @@ var
 begin
   if (items.Empty or Self.Empty) then
     Exit(Self.Copy);
-  l := Length(Self);
+  l := Self.Length;
   m := Min(index, (l - 1));
   SetLength(Result, l);
   d := 0;
@@ -2057,7 +2057,7 @@ end;
 [==============================================================================}
 function HArr.Exists: Boolean; overload;
 begin
-  Result := (Length(Self) > 0);
+  Result := (Self.Size > 0);
 end;
 
 {==============================================================================]
@@ -2118,7 +2118,7 @@ var
   i, h, l: Integer;
 begin
   h := High(Self);
-  l := Length(items);
+  l := items.Length;
   SetLength(Result, ((h + 1) + l));
   for i := 0 to h do
     Result[i + l] := Self[i];
@@ -2135,7 +2135,7 @@ function HArr.Extract(const item: TVar; const index: Integer = 0): TArr; overloa
 var
   i, l, r: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, (l - index));
   r := 0;
   for i := index to (l - 1) do
@@ -2156,7 +2156,7 @@ begin
   r := 0;
   if items.Populated then
   begin
-    l := Length(Self);
+    l := Self.Length;
     SetLength(Result, (l - index));
     for i := index to (l - 1) do
       if items.Contains(Self[i]) then
@@ -2174,7 +2174,7 @@ function HArr.ExtractEvery(const X: Integer = 1; const index: Integer = 0): TArr
 var
   i, h, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, (l - index));
   if ((l - index) < 1) then
     Exit;
@@ -2195,7 +2195,7 @@ var
   h, i, l: Integer;
   m: TBooleanArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   if (l = 0) then
     Exit;
@@ -2220,7 +2220,7 @@ var
   h, i, l: Integer;
   a: TIntegerArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if ((l = 0) or allowed.Empty) then
     Exit([]);
   SetLength(Result, l);
@@ -2244,7 +2244,7 @@ function HArr.Feed(const item: TVar; const allowDuplicates: Boolean = False): In
 begin
   if ((not allowDuplicates) and Self.Includes(item)) then
     Exit(-1);
-  Result := Length(Self);
+  Result := Self.Size;
   SetLength(Self, (Result + 1));
   Self[Result] := item;
 end;
@@ -2280,7 +2280,7 @@ var
   h, i, s, t, l: Integer;
 begin
   h := High(Self);
-  l := Length(items);
+  l := items.Length;
   case l of
     0: Exit(Self.Copy);
     1: Exit(Self.Fill(items[0], index, count));
@@ -2305,7 +2305,7 @@ function HArr.Filter(const item: TVar; const index: Integer = 0): TArr; overload
 var
   i, l, r: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, (l - index));
   r := 0;
   for i := index to (l - 1) do
@@ -2323,7 +2323,7 @@ function HArr.Filter(const items: TArr; const index: Integer = 0): TArr; overloa
 var
   i, l, r: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if items.Empty then
     Exit(Self.Copy(index, (l - index)));
   r := 0;
@@ -2343,7 +2343,7 @@ function HArr.FilterEvery(const X: Integer = 1; const index: Integer = 0): TArr;
 var
   i, h, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, (l - index));
   if ((l - index) < 1) then
     Exit;
@@ -2364,7 +2364,7 @@ var
   h, i, l: Integer;
   m: TBooleanArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   if (l = 0) then
     Exit;
@@ -2391,7 +2391,7 @@ var
 begin
   if forbidden.Empty then
     Exit(Self.Copy);
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   if (l = 0) then
     Exit;
@@ -2552,7 +2552,7 @@ var
   l: Integer;
   b: TRange;
 begin
-  l := Length(Self);
+  l := Self.Length;
   b := aBounds.Normalize.ClampMin(0);
   if (l < b.start) then
     Result := b.start
@@ -2572,7 +2572,7 @@ end;
 [==============================================================================}
 function HArr.Fits(const maxValue: Integer): Boolean; overload;
 begin
-  Result := (Length(Self) <= maxValue);
+  Result := (Self.Size <= maxValue);
 end;
 
 {==============================================================================]
@@ -2582,7 +2582,7 @@ end;
 [==============================================================================}
 function HArr.Fits(const target: TRange): Boolean; overload;
 begin
-  Result := not ((Length(Self) < Min(target.start, target.stop)) or (Length(Self) > Max(target.start, target.stop)));
+  Result := InRange(Self.Size, Min(target.start, target.stop), Max(target.start, target.stop));
 end;
 
 {==============================================================================]
@@ -2594,7 +2594,7 @@ function HArr.Flip: Boolean; overload;
 var
   r: TRange;
 begin
-  r.Create(0, (Length(Self) - 1));
+  r.Create(0, (Self.Size - 1));
   Result := (r.stop > 0);
   while (r.start < r.stop) do
     Exchange(r.start.Increase, r.stop.Decrease);
@@ -2607,7 +2607,7 @@ end;
 [==============================================================================}
 function HArr.Free: Integer; overload;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   SetLength(Self, 0);
 end;
 
@@ -2657,7 +2657,7 @@ var
   a: TVar;
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   i := 0;
   for a in Self do
     Result[i.Increase] := a;
@@ -2672,7 +2672,7 @@ function HArr.Get(const ID: TIntegerArray): TArr; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(ID));
+  SetLength(Result, ID.Size);
   for i := 0 to High(ID) do
     Result[i] := Self[ID[i]];
 end;
@@ -2721,7 +2721,7 @@ begin
       f := (Self[i] = Result[r][0]);
       if f then
       begin
-        l := Length(Result[r]);
+        l := Result[r].Length;
         SetLength(Result[r], (l + 1));
         Result[r][l] := Self[i];
         Break;
@@ -2761,8 +2761,8 @@ var
   f: Boolean;
 begin
   SetLength(Result, 0);
-  l := Length(Self);
-  if ((l = 0) or (l <> Length(groups))) then
+  l := Self.Length;
+  if ((l = 0) or (l <> groups.Size)) then
     Exit;
   SetLength(u, 0);
   for i := 0 to (l - 1) do
@@ -2777,7 +2777,7 @@ begin
     if not f then
       u.Supply(groups[i]);
   end;
-  SetLength(Result, Length(u));
+  SetLength(Result, u.Size);
   for i := 0 to (l - 1) do
     for j := 0 to High(u) do
       if (groups[i] = u[j]) then
@@ -2806,9 +2806,9 @@ var
   i, l, g, c: Integer;
   p: TIntegerArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, 0);
-  if ((l = 0) or (l <> Length(groups))) then
+  if ((l = 0) or (l <> groups.Size)) then
     Exit;
   SetLength(p, l);
   for i := 0 to (l - 1) do
@@ -2852,8 +2852,8 @@ var
   l, i, g: Integer;
 begin
   SetLength(Result, 0);
-  l := Length(Self);
-  if ((l = 0) or (l <> Length(groups))) then
+  l := Self.Length;
+  if ((l = 0) or (l <> groups.Size)) then
     Exit;
   m := specialize TDictionary<Integer, TArr>.Create;
   try
@@ -2879,7 +2879,7 @@ function HArr.Grow(const item: TVar; const allowDuplicates: Boolean = False): In
 begin
   if ((not allowDuplicates) and Self.Contains(item)) then
     Exit(-1);
-  Result := Length(Self);
+  Result := Self.Size;
   SetLength(Self, (Result + 1));
   Self[Result] := item;
 end;
@@ -2935,7 +2935,7 @@ end;
 [==============================================================================}
 function HArr.Homogeneous: Boolean; overload;
 begin
-  Result := ((Length(Self) > 0) and Homogeneous(Self[0]));
+  Result := (Self.Exists and Homogeneous(Self[0]));
 end;
 
 {==============================================================================]
@@ -2947,7 +2947,7 @@ function HArr.ID(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   i, l, b, s: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   b := (Integer(not aAscending) * (l - 1));
   s := IfThen(aAscending, 1, -1);
@@ -2964,7 +2964,7 @@ function HArr.IDs(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   h, i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   h := High(Self);
   case aAscending of
     True:
@@ -2985,7 +2985,7 @@ function HArr.IDs(const ID: TIntegerArray): TArr; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(ID));
+  SetLength(Result, ID.Size);
   for i := 0 to High(Result) do
     Result[i] := Self[ID[i]];
 end;
@@ -3014,7 +3014,7 @@ var
   i, l: Integer;
 begin
   Result := Self.Copy;
-  l := Length(items);
+  l := items.Length;
   for i := 0 to High(ID) do
     Result[ID[i]] := items[i mod l];
 end;
@@ -3043,7 +3043,7 @@ function HArr.Indexed(const aAscending: Boolean = True): TIntegerArray; overload
 var
   l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   if Self.Populated then
   case aAscending of
@@ -3052,7 +3052,7 @@ begin
       Result[l] := l;
     False:
     while (l.Decrement > -1) do
-      Result[(Length(Self) - l) - 1] := l;
+      Result[(Self.Size - l) - 1] := l;
   end;
 end;
 
@@ -3065,7 +3065,7 @@ function HArr.Indexes(const aAscending: Boolean = True): TIntegerArray; overload
 var
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   for i := 0 to (l - 1) do
     Result[i] := IfThen(aAscending, i, ((l - i) - 1));
@@ -3107,8 +3107,8 @@ function HArr.Inject(const items: TArr; const index: Integer = 2147483647): Inte
 var
   i, s, l, p: Integer;
 begin
-  s := Length(Self);
-  l := Length(items);
+  s := Self.Size;
+  l := items.Length;
   if (l = 0) then
     Exit(s);
   p := Max(Min(s, index), 0);
@@ -3128,21 +3128,21 @@ function HArr.Keep(const items: TArr; const index: Integer = 0): TArr; overload;
 var
   m, i, l, r: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   m := Max(0, index);
   case (items.Populated and (m < l)) of
     True:
     begin
       r := 0;
-	  SetLength(Result, l);
-	  for i := 0 to (m - 1) do
-	    Result[i] := Self[i];
+      SetLength(Result, l);
+      for i := 0 to (m - 1) do
+        Result[i] := Self[i];
       for i := m to (l - 1) do
         if items.Contains(Self[i]) then
           Result[i - r] := Self[i]
         else
           Inc(r);
-	  SetLength(Result, (l - r));
+      SetLength(Result, (l - r));
     end;
     False: Result := Self.Copy;
   end;
@@ -3155,7 +3155,7 @@ end;
 [==============================================================================}
 function HArr.Kill: Integer; overload;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   SetLength(Self, 0);
 end;
 
@@ -3266,12 +3266,12 @@ end;
 
 {==============================================================================]
   <Len>
-  @action: Simply Result := Length(arr);
+  @action: Simply Result := System.Length(arr);
   @note: None.
 [==============================================================================}
-function HArr.Len: Integer; overload;
+function HArr.Length: Integer; overload;
 begin
-  Result := Length(Self);
+  Result := System.Length(Self);
 end;
 
 {==============================================================================]
@@ -3314,7 +3314,7 @@ function HArr.Location(const item: TVar; const index: Integer = 2147483647): Int
 var
   l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   Result := Min(l, (index + 1));
   while (Result.Decrement > -1) do
     if (Self[Result] = item) then
@@ -3334,7 +3334,7 @@ begin
   if items.Populated then
   begin
     h := High(items);
-    l := Length(Self);
+    l := Self.Length;
     Result := Min(l, (index + 1));
     while (Result.Decrement > -1) do
       for i := 0 to h do
@@ -3378,7 +3378,7 @@ begin
   r := 0;
   h := High(Self);
   s := Min(index, h);
-  if ((h > -1) and (s > -1) and (Length(items) > 0)) then
+  if ((h > -1) and (s > -1) and items.Exists) then
   begin
     SetLength(Result, (s + 1));
     for i := s downto 0 do
@@ -3397,7 +3397,7 @@ function HArr.Locations: TIntegerArray; overload;
 var
   i, r: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   r := 0;
   for i := High(Result) downto 0 do
     Result[r.Increase] := i;  
@@ -3469,7 +3469,7 @@ function HArr.MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boo
     end;
   end;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 1) then
     MSW(Self, weight, 0, (Result - 1));
 end;
@@ -3530,7 +3530,7 @@ function HArr.MergeSortWeighted(var weight: TDoubleArray; const aAscending: Bool
     end;
   end;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 1) then
     MSW(Self, weight, 0, (Result - 1));
 end;
@@ -3547,7 +3547,7 @@ begin
   Result := ((mixings > 0) and Self.Populated);
   if not Result then
     Exit;
-  l := Length(Self);
+  l := Self.Length;
   if (l > 1) then
   for m := 1 to mixings do
     for i := 0 to (l - 1) do
@@ -3563,7 +3563,7 @@ function HArr.Mixed(const mixings: Integer = 1): TArr; overload;
 var
   l, i, m: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   Result := Self.Copy;
   if (l > 1) then
   for m := 1 to mixings do
@@ -3688,7 +3688,7 @@ begin
         Break;
     if (j <> i) then
     begin
-      SetLength(Result, (Length(Result) + 1));
+      SetLength(Result, (System.Length(Result) + 1));
       Result[High(Result)].Create(j, i);
       t := s[j];
       case (j > i) of
@@ -3711,7 +3711,7 @@ end;
 [==============================================================================}
 function HArr.Multi(const threshold: Integer = 2): Boolean; overload;
 begin
-  Result := (Length(Self) >= threshold);
+  Result := (Self.Size >= threshold);
 end;
 
 {==============================================================================]
@@ -3724,7 +3724,7 @@ var
   r: TRange;
 begin
   r:= threshold.Normalize;
-  Result := InRange(Length(Self), r.start, r.stop);
+  Result := InRange(Self.Size, r.start, r.stop);
 end;
 
 {==============================================================================]
@@ -3736,14 +3736,26 @@ function HArr.Next(const index: Integer; const count: Integer = 2147483647): TAr
 var
   m, i: Integer;
 begin
-  if ((index >= 0) and (index < (Length(Self) - 1)) and (count > 0)) then
+  if ((index >= 0) and (index < (Self.Size - 1)) and (count > 0)) then
   begin
-    m := Min((Length(Self) - (index + 1)), count);
+    m := Min((Self.Size - (index + 1)), count);
     SetLength(Result, m);
     for i := 0 to (m - 1) do
       Result[i] := Self[(index + 1) + i];
   end else
     SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <Occupied>
+  @action  Returns True if the dynamic array contains one or more elements; 
+           otherwise returns False.
+  @note    Uses Low(Self) <= High(Self) to determine occupancy. This is 
+           functionally equivalent to Length(Self) > 0.	
+[==============================================================================}
+function HArr.Occupied: Boolean; overload;
+begin
+  Result := (Low(Self) <= High(Self));
 end;
 
 {==============================================================================]
@@ -3784,10 +3796,10 @@ function HArr.Overlay(const items: TArr; const index: Integer; const init: TVar)
 var
   s, l, r, i, a, j: Integer;
 begin
-  l := Length(items);
+  l := items.Length;
   if (l = 0) then
     Exit(Self.Copy);
-  s := Length(Self);
+  s := Self.Size;
   r := IfThen((index < 0), Max((Abs(index) + s), l), Max(s, (index + l)));
   SetLength(Result, r);
   for i := 0 to (r - 1) do
@@ -3819,7 +3831,7 @@ end;
 [==============================================================================}
 function HArr.Oversize(const limit: Integer): Boolean; overload;
 begin
-  Result := (Length(Self) > limit);
+  Result := (Self.Size > limit);
 end;
 
 {==============================================================================]
@@ -3833,7 +3845,7 @@ var
 begin
   if ((pSize > 0) and Self.Populated) then
   begin
-    l := Length(Self);
+    l := Self.Length;
     p := ((l + (pSize - 1)) div pSize);
     SetLength(Result, p);
     for i := 0 to (p - 1) do
@@ -3863,9 +3875,9 @@ var
 begin
   if items.Empty then
     Exit(index);
-  i := IfThen((index < 0), Length(Self), index);
-  Result := (i + Length(items));
-  if (Result > Length(Self)) then
+  i := IfThen((index < 0), Self.Size, index);
+  Result := (i + items.Size);
+  if (Result > Self.Size) then
     SetLength(Self, Result);
   for j := 0 to High(items) do
     Self[i + j] := items[j];
@@ -3880,7 +3892,7 @@ function HArr.Pick(const items: TArr; const index: Integer = 0): TArr; overload;
 var
   i, m, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   m := Max(0, index);
   case (items.Populated and (m < l)) of
     True:
@@ -3891,7 +3903,7 @@ begin
       for i := m to (l - 1) do
         if items.Contains(Self[i]) then
         begin
-          SetLength(Result, (Length(Result) + 1));
+          SetLength(Result, (Result.Size + 1));
           Result[High(Result)] := Self[i];
         end;
     end;
@@ -3908,7 +3920,7 @@ function HArr.Plain: Boolean; overload;
 var
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l <= 1) then
     Exit(True);
   for i := 1 to (l - 1) do
@@ -3958,9 +3970,9 @@ function HArr.Populate(const items: TArr; const times: Integer = 1): Boolean; ov
 var
   i, j, l: Integer;
 begin
-  l := Length(items);
+  l := items.Length;
   SetLength(Self, (l * times));
-  Result := (Length(Self) > 0);
+  Result := (Self.Size > 0);
   if Result then
   for i := 0 to (l - 1) do
     for j := 0 to (times - 1) do
@@ -3977,7 +3989,7 @@ var
   i: Integer;
 begin;
   SetLength(Self, times);
-  Result := (Length(Self) > 0);
+  Result := (Self.Size > 0);
   if Result then
   for i := 0 to (times - 1) do
     Self[i] := item;
@@ -3990,7 +4002,7 @@ end;
 [==============================================================================}
 function HArr.Populated(const population: TRange): Boolean; overload;
 begin
-  Result := InRange(Length(Self), population.Minimum, population.Maximum);
+  Result := InRange(Self.Size, population.Minimum, population.Maximum);
 end;
 
 {==============================================================================]
@@ -4000,7 +4012,7 @@ end;
 [==============================================================================}
 function HArr.Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload;
 begin
-  Result := InRange(Length(Self), populationMin, populationMax);
+  Result := InRange(Self.Size, populationMin, populationMax);
 end;  
 
 {==============================================================================]
@@ -4044,7 +4056,7 @@ var
   l: Integer;
 begin
   Result := Max(-1, (index - 1));
-  l := Length(Self);
+  l := Self.Length;
   while (Result.Increment < l) do
     if (Self[Result] = item) then
       Exit;
@@ -4064,7 +4076,7 @@ begin
   begin
     h := High(items);
     Result := Max(-1, (index - 1));
-    l := Length(Self);
+    l := Self.Length;
     while (Result.Increment < l) do
       for i := 0 to h do
         if (Self[Result] = items[i]) then
@@ -4126,7 +4138,7 @@ function HArr.Positions: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := i;  
 end;
@@ -4144,9 +4156,9 @@ function HArr.Prepend(const items: TArr; const index: Integer = 0): Integer; ove
 var
   i: Integer;
 begin
-  i := Max(Min(index, Length(Self)), 0);
-  Self := (Self.Copy(0, i) + items + Self.Copy(i, (Length(Self) - i)));
-  Result := Length(Self);
+  i := Max(Min(index, Self.Size), 0);
+  Self := (Self.Copy(0, i) + items + Self.Copy(i, (Self.Size - i)));
+  Result := Self.Size;
 end;
 
 {==============================================================================]
@@ -4164,7 +4176,7 @@ begin
     False:
     begin
       o := 0;
-      l := Length(Self);
+      l := Self.Length;
       while (o <= occurrence) do
       begin
         l := Self.Loc(item, (l - 1));
@@ -4187,7 +4199,7 @@ function HArr.Previous(const index: Integer; const count: Integer = 2147483647):
 var
   m, l, i: Integer;
 begin
-  if ((index > 0) and (index < Length(Self)) and (count > 0)) then
+  if ((index > 0) and (index < Self.Size) and (count > 0)) then
   begin
     m := Max(0, (index - count));
     l := (((index - 1) - m) + 1);
@@ -4210,7 +4222,7 @@ function HArr.Pruned: TArr; overload;
 var
   i, l, r: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   if (l = 0) then
     Exit;
@@ -4256,7 +4268,7 @@ begin
       end;
     if not d then
     begin
-      SetLength(Result, (Length(Result) + 1));
+      SetLength(Result, (Result.Size + 1));
       Result[High(Result)] := e;
       w[t] := e;
       t := ((t + 1) mod threshold);
@@ -4297,7 +4309,7 @@ function HArr.Pull: TArr; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i];
   SetLength(Self, 0);
@@ -4388,7 +4400,7 @@ function HArr.Put(const ID: TIntegerArray; const item: TVar): TArr; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i];
   for i := 0 to High(ID) do
@@ -4404,8 +4416,8 @@ function HArr.Put(const ID: TIntegerArray; const items: TArr): TArr; overload;
 var
   i, l: Integer;
 begin
-  SetLength(Result, Length(Self));
-  l := Length(items);
+  SetLength(Result, Self.Size);
+  l := items.Length;
   for i := 0 to High(Self) do
     Result[i] := Self[i];
   for i := 0 to High(ID) do
@@ -4421,7 +4433,7 @@ function HArr.Put(const index: Integer; const items: TArr): TArr; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i];
   for i := 0 to High(items) do
@@ -4437,7 +4449,7 @@ function HArr.Push(const item: TVar): TArr; overload;
 var
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, (l + 1));
   for i := 0 to (l - 1) do
     Result[i] := Self[i];
@@ -4454,7 +4466,7 @@ var
   h, i, l: Integer;
 begin
   h := High(items);
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, (l + (h + 1)));
   for i := 0 to (l - 1) do
     Result[i] := Self[i];
@@ -4516,8 +4528,8 @@ function HArr.QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boo
       QS(A, W, i, R);
   end;
 begin
-  Result := Length(Self);
-  if ((Result > 0) and (Result = Length(weight))) then
+  Result := Self.Size;
+  if ((Result > 0) and (Result = weight.Size)) then
     QS(Self, weight, 0, (Result - 1));
 end;
 
@@ -4576,8 +4588,8 @@ function HArr.QuickSortWeighted(var weight: TDoubleArray; const aAscending: Bool
       QS(A, W, i, R);
   end;
 begin
-  Result := Length(Self);
-  if ((Result > 0) and (Result = Length(weight))) then
+  Result := Self.Size;
+  if ((Result > 0) and (Result = weight.Size)) then
     QS(Self, weight, 0, (Result - 1));
 end;
 
@@ -4599,7 +4611,7 @@ var
   s, l, r: Integer;
   i: TIntegerArray;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l < 2) then
     Exit(Self.Copy);
   SetLength(Result, l);
@@ -4625,8 +4637,8 @@ var
 begin
   Result.start := -1;
   Result.stop  := -1;
-  a := Length(Self);
-  s := Length(subArray);
+  a := Self.Size;
+  s := subArray.Size;
   if ((s = 0) or (a = 0) or (s > a) or (index >= a)) then
     Exit;
   p := Max(0, index);
@@ -4656,8 +4668,8 @@ var
   f: Boolean;
 begin
   SetLength(Result, 0);
-  a := Length(Self);
-  s := Length(subArray);
+  a := Self.Size;
+  s := subArray.Size;
   if ((s = 0) or (a = 0) or (s > a) or (index >= a)) then
     Exit;
   p := Max(0, index);
@@ -4688,8 +4700,8 @@ function HArr.Recreate(const arrSize: Integer): Boolean; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
-  Result := ((Length(Self) > 0) or (arrSize <> 0));
+  l := Self.Length;
+  Result := ((l > 0) or (arrSize <> 0));
   SetLength(Self, 0);
   if Result then
     if (arrSize < 0) then
@@ -4710,7 +4722,7 @@ var
 begin
   if (items.Empty or Self.Empty) then
     Exit(Self.Copy);
-  l := Length(Self);
+  l := Self.Length;
   m := Min(index, (l - 1));
   c := 0;
   for i := 0 to m do
@@ -4735,7 +4747,7 @@ var
   l, i, r, m: Integer;
   s: Boolean;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if ((l = 0) or (index >= l)) then
     Exit(Self.Copy);
   m := Max(0, index);
@@ -4772,7 +4784,7 @@ var
   a, b, l, i, r, m: Integer;
   d, s: Boolean;
 begin
-  l := Length(Self);
+  l := Self.Length;
   b := High(items);
   if ((l = 0) or (index >= l) or (b = -1)) then
     Exit(Self.Copy);
@@ -4846,7 +4858,7 @@ end;
 [==============================================================================}
 function HArr.Reset: Integer; overload;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   SetLength(Self, 0);
   SetLength(Self, Result);
 end; 
@@ -4862,9 +4874,9 @@ function HArr.Resize(const aChange: Integer): Integer; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Self, (l + aChange));
-  Result := (Length(Self) - l);
+  Result := (Self.Size - l);
 end;
 
 {==============================================================================]
@@ -4879,9 +4891,9 @@ function HArr.Resize(const aChange: Integer; const null: TVar): Integer; overloa
 var
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Self, aChange);
-  Result := (Length(Self) - l);
+  Result := (Self.Size - l);
   for i := 0 to (Result - 1) do
     Self[l + i] := null;
 end;
@@ -4895,12 +4907,12 @@ function HArr.Reversal: TArr; overload;
 var
   r: TRange;
 begin
-  case Length(Self) of
+  case Self.Size of
     0: Exit([]);
     1: Exit([Self[0]]);
   end;
-  SetLength(Result, Length(Self));
-  r.Create(-1, Length(Result));
+  SetLength(Result, Self.Size);
+  r.Create(-1, Result.Size);
   while (r.start.Increment <= r.stop.Decrement) do
   begin
     Result[r.start] := Self[r.stop];
@@ -4918,7 +4930,7 @@ function HArr.Reverse: Boolean; overload;
 var
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   Result := (l > 1);
   if Result then
   for i := 0 to ((l div 2) - 1) do
@@ -4934,7 +4946,7 @@ function HArr.Reversed: TArr; overload;
 var
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   for i := 0 to (l - 1) do
     Result[i] := Self[(l - i) - 1];
@@ -4953,7 +4965,7 @@ var
   s: TArr;
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   Result := (l > 1);
   if not Result then
     Exit;
@@ -4972,7 +4984,7 @@ function HArr.Reversion: TArr; overload;
 var
   h, i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self[0]]);
@@ -5023,7 +5035,7 @@ begin
   if Self.Empty then
     Exit([]);
   r := Self.Domain.Sample(sSize);
-  SetLength(Result, Length(r));
+  SetLength(Result, r.Size);
   for i := 0 to High(Result) do
     Result[i] := Self[r[i]];
 end;
@@ -5073,13 +5085,13 @@ begin
   r := 0;
   if Self.Empty then
   begin
-    SetLength(Result, Length(ID));
+    SetLength(Result, ID.Size);
     for i := 0 to High(ID) do
       if (r >= limit) then
         Break
       else
         if (Self[ID[i]] = item) then
-	      Result[r.Increase] := ID[i];
+	  Result[r.Increase] := ID[i];
   end;
   SetLength(Result, r);
 end;
@@ -5129,7 +5141,7 @@ begin
   r := 0;
   if (Self.Populated and items.Populated) then
   begin
-    SetLength(Result, Length(ID));
+    SetLength(Result, ID.Size);
     for i := 0 to High(ID) do
       if (r >= limit) then
         Break
@@ -5149,7 +5161,7 @@ function HArr.Scramble(const swaps: Integer = -1): TArr; overload;
 var
   o, i, l, s: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   o := Random(l);
   s := IfThen((swaps < 0), l, swaps);
   Result := Self.Copy(o, (l - o)) + Self.Copy(0, o);
@@ -5180,15 +5192,15 @@ end;
 [==============================================================================}
 function HArr.Shift: TVar; overload;
 var
-  i, l: Integer;
+  i, h: Integer;
 begin
-  l := (Length(Self) - 1);
-  if (l < 0) then
+  h := (Self.Size - 1);
+  if (h < 0) then
     Exit;
   Result := Self[0];
-  for i := 0 to (l - 1) do
-    Self[i] := Self[i + 1];
-  SetLength(Self, l);
+  for i := 0 to (h - 1) do
+    Self[i] := Self[i + h];
+  SetLength(Self, h);
 end;
 
 {==============================================================================]
@@ -5200,7 +5212,7 @@ function HArr.Shift(const sCount: Integer): TArr; overload;
 var
   i, l, s: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   s := Max(0, Min(sCount, l));
   SetLength(Result, s);
   if (l = 0) then
@@ -5209,7 +5221,7 @@ begin
     Result[i] := Self[i];
   for i := s to High(Self) do
     Self[i - s] := Self[i];
-  SetLength(Self, (Length(Self) - s));
+  SetLength(Self, (Self.Size - s));
 end;
 
 {==============================================================================]
@@ -5238,7 +5250,7 @@ var
   i, l: Integer;
   f: Boolean;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   l := 0;
   f := False;
   for i := 0 to (Result - 1) do
@@ -5263,7 +5275,7 @@ var
   i, l: Integer;
   f: Boolean;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   l := 0;
   f := False;
   for i := 0 to High(Self) do
@@ -5297,7 +5309,7 @@ begin
           d.Add(item, True);
         Self[l.Increase] := Self[i];
       end;
-    Result := (Length(Self) - l);
+    Result := (Self.Size - l);
     if (Result > 0) then
       SetLength(Self, l);
   finally
@@ -5318,12 +5330,12 @@ var
 begin
   d := specialize TDictionary<TVar, Boolean>.Create;
   try
-    SetLength(Result, Length(Self));
+    SetLength(Result, Self.Size);
     c := 0;
     for i := 0 to High(Self) do
       if ((Self[i] <> item) or (not d.ContainsKey(item))) then
       begin
-	    if (Self[i] = item) then
+        if (Self[i] = item) then
           d.Add(item, True);
         Result[c.Increase] := Self[i];
       end;
@@ -5355,7 +5367,7 @@ end;
 [==============================================================================}
 function HArr.Size: Integer; overload;
 begin
-  Result := Length(Self);
+  Result := ((High(Self) - Low(Self)) + 1);
 end;
 
 {==============================================================================]
@@ -5367,7 +5379,7 @@ function HArr.Size(const aSize: Integer): TArr; overload;
 var
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, aSize);
   for i := 0 to (Min(l, aSize) - 1) do
     Result[i] := Self[i];
@@ -5382,7 +5394,7 @@ function HArr.Size(const aSize: Integer; const null: TVar): TArr; overload;
 var
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, aSize);
   for i := 0 to (Min(l, aSize) - 1) do
     Result[i] := Self[i];
@@ -5397,7 +5409,7 @@ end;
 [==============================================================================}
 function HArr.SizeBetween(const sMin, sMax: Integer): Boolean; overload;
 begin
-  Result := InRange(Length(Self), sMin, sMax);
+  Result := InRange(Self.Size, sMin, sMax);
 end;
 
 {==============================================================================]
@@ -5407,7 +5419,7 @@ end;
 [==============================================================================}
 function HArr.SizeMax(const target: Integer): Boolean; overload;
 begin
-  Result := (Length(Self) <= target);
+  Result := (Self.Size <= target);
 end;
 
 {==============================================================================]
@@ -5417,7 +5429,7 @@ end;
 [==============================================================================}
 function HArr.SizeMin(const target: Integer): Boolean; overload;
 begin
-  Result := (Length(Self) >= target);
+  Result := (Self.Size >= target);
 end;
 
 {==============================================================================]
@@ -5477,8 +5489,8 @@ function HArr.Slots: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
-  for i := 0 to (Length(Self) - 1) do
+  SetLength(Result, Self.Size);
+  for i := 0 to (Self.Size - 1) do
     Result[i] := i;
 end;
 
@@ -5512,7 +5524,7 @@ function HArr.Soloized(const item: TVar): TArr; overload;
 var
   i, l, s: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   s := 0;
   l := 0;
   for i := 0 to High(Self) do
@@ -5569,8 +5581,8 @@ var
 begin
   Result.start := -1;
   Result.stop  := -1;
-  a := Length(Self);
-  s := Length(subArray);
+  a := Self.Size;
+  s := subArray.Size;
   if ((s = 0) or (a = 0) or (s > a) or (index < 0)) then
     Exit;
   p := Min(index, (a - s));
@@ -5600,8 +5612,8 @@ var
   f: Boolean;
 begin
   SetLength(Result, 0);
-  a := Length(Self);
-  s := Length(subArray);
+  a := Self.Size;
+  s := subArray.Size;
   if ((s = 0) or (a = 0) or (s > a) or (index < 0)) then
     Exit;
   p := Min(index, (a - s));
@@ -5652,8 +5664,8 @@ function HArr.SubarrayLocation(const pattern: TArr): Integer; overload;
 var
   i, j, l, s, p: Integer;
 begin
-  l := Length(Self);
-  p := Length(pattern);
+  l := Self.Length;
+  p := pattern.Size;
   if ((p > 0) and (p <= l)) then
   for i := (l - p) downto 0 do
   begin
@@ -5678,8 +5690,8 @@ function HArr.SubarrayLocations(const pattern: TArr): TIntegerArray; overload;
 var
   i, j, l, s, r, p: Integer;
 begin
-  l := Length(Self);
-  p := Length(pattern);
+  l := Self.Length;
+  p := pattern.Size;
   SetLength(Result, 0);
   r := 0;
   if ((p > 0) and (p <= l)) then
@@ -5710,8 +5722,8 @@ var
   i, j, l, p: Integer;
   f: Boolean;
 begin
-  l := Length(Self);
-  p := Length(pattern);
+  l := Self.Length;
+  p := pattern.Size;
   if ((p > 0) and (p <= l)) then
   for i := 0 to (l - p) do
   begin
@@ -5738,8 +5750,8 @@ var
   i, j, l, p, r: Integer;
   f: Boolean;
 begin
-  l := Length(Self);
-  p := Length(pattern);
+  l := Self.Length;
+  p := pattern.Size;
   SetLength(Result, 0);
   r := 0;
   if ((p > 0) and (p <= l)) then
@@ -5783,7 +5795,7 @@ end;
 [==============================================================================}
 function HArr.Supply(const item: TVar): Integer; overload;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   SetLength(Self, (Result + 1));
   Self[Result] := item;
 end;
@@ -5799,8 +5811,8 @@ var
 begin
   if items.Empty then
     Exit(-1);
-  Result := Length(Self);
-  SetLength(Self, (Result + Length(items)));
+  Result := Self.Size;
+  SetLength(Self, (Result + items.Size));
   for i := 0 to High(items) do
     Self[Result + i] := items[i];
 end;
@@ -5818,7 +5830,7 @@ begin
   t := Self;
   Self := target;
   target := t;
-  Result := (Length(Self) + Length(target));
+  Result := (Self.Size + target.Size);
 end;
 
 {==============================================================================]
@@ -5836,8 +5848,8 @@ function HArr.SwapMerged(var target: TArr): TArr; overload;
 var
   r, t, s, i: Integer;
 begin
-  s := Length(Self);
-  t := Length(target);
+  s := Self.Size;
+  t := target.Size;
   r := (s + t);
   SetLength(Result, r);
   if (r = 0) then
@@ -5869,8 +5881,8 @@ function HArr.SwappedMerge(var target: TArr): TArr; overload;
 var
   t, s, i: Integer;
 begin
-  s := Length(Self);
-  t := Length(target);
+  s := Self.Size;
+  t := target.Size;
   SetLength(Result, (s + t));
   if ((s + t) = 0) then
     Exit;
@@ -5893,7 +5905,7 @@ function HArr.To2D(const rows, columns: Integer): T2DArr; overload;
 var
   i, r, c, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, rows, columns);
   i := 0;
   for r := 0 to (rows - 1) do
@@ -5911,7 +5923,7 @@ function HArr.To2D(const height: Integer): T2DArr; overload;
 var
   l, w, i, r, c: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   w := Ceil(l / height);
   SetLength(Result, height, w);
   i := 0;
@@ -5930,7 +5942,7 @@ function HArr.ToIndexes: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Length);
   l := Low(Self);
   for i := l to High(Self) do
     Result[i - l] := i;
@@ -5945,7 +5957,7 @@ function HArr.Trade(var b: TArr): Integer; overload;
 var
   a: TArr;
 begin
-  Result := (Length(Self) + Length(b));
+  Result := (Self.Size + b.Size);
   if (Result > 0) then
   begin
     a := Self.Copy;
@@ -5962,7 +5974,7 @@ end;
 [==============================================================================} 
 function HArr.Undersize(const limit: Integer): Boolean; overload;
 begin
-  Result := (Length(Self) < limit);
+  Result := (Self.Size < limit);
 end;
 
 {==============================================================================]
@@ -5977,7 +5989,7 @@ var
   d: TDict;
   r, i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   if (l < 2) then
     Exit(Self.Copy);
   d := TDict.Create;
@@ -6053,7 +6065,7 @@ var
 begin
   d := specialize TDictionary<TVar, Byte>.Create;
   try
-    SetLength(Result, Length(Self));
+    SetLength(Result, Self.Size);
     n := 0;
     case dAscending of
       True:
@@ -6091,7 +6103,7 @@ begin
   d := specialize TDictionary<TVar, Byte>.Create;
   Result := 0;
   try
-    l := Length(Self);
+    l := Self.Length;
     case dAscending of
       False:
       begin
@@ -6128,7 +6140,7 @@ var
   m: Boolean;
 begin
   Result := Self.Copy;
-  l := Length(Result);
+  l := Result.Length;
   if (l < 2) then
     Exit;
   a := 0;
@@ -6157,7 +6169,7 @@ function HArr.Uniqued: TArr; overload;
 var
   i, j, l, c: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   if (l > 0) then
   begin
@@ -6219,7 +6231,7 @@ function HArr.Unshift(const item: TVar): TArr; overload;
 var
   i, l: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, (l + 1));
   for i := l downto 1 do
     Result[i] := Self[i - 1];
@@ -6237,8 +6249,8 @@ var
 begin
   if items.Empty then
     Exit(Self.Copy);
-  l := Length(items);
-  r := (Length(Self) + l);
+  l := items.Length;
+  r := (Self.Size + l);
   SetLength(Result, r);
   for i := (r - 1) downto l do
     Result[i] := Self[i - l];
@@ -6298,7 +6310,7 @@ var
   l, r: Integer;
   s: TRange;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit([]);
     1: Exit([Self[0]]);
@@ -6443,7 +6455,7 @@ var
   i, l: Integer;
 begin
   i := -1;
-  l := Length(Self);
+  l := Self.Length;
   Result := (l > 0);
   if (l > 1) then
   case aAscending of
@@ -6507,10 +6519,10 @@ var
   i, l: Integer;
   a, d: Boolean;
 begin
-  l := Length(Self);
+  l := Self.Length;
   case l of
     0: Exit(0);
-	1: Exit(1);
+    1: Exit(1);
   end;
   a := True;
   d := True;
@@ -6595,7 +6607,7 @@ begin
 end;
 begin
   Result := Self.Copy;
-  if (Length(Result) > 1) then
+  if (Result.Size > 1) then
     QS(Result, 0, High(Result));
 end;
 
@@ -6627,7 +6639,7 @@ begin
 end;
 begin
   Result := Self.Copy;
-  if (Length(Result) > 1) then
+  if (Result.Size > 1) then
     QS(Result, 0, High(Result));
 end;
 
@@ -6872,8 +6884,8 @@ end;
 [==============================================================================}
 function HArr.Center: TVar; overload;
 begin
-  if (Length(Self) > 0) then
-    Result := Self[Length(Self) div 2];
+  if (Self.Size > 0) then
+    Result := Self[Self.Size div 2];
 end;
 
 {==============================================================================]
@@ -6943,10 +6955,10 @@ function HArr.MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := i;
-  if (Length(Self) > 1) then
+  if (Self.Size > 1) then
     MSI(Self, Result, 0, High(Result));
 end;
 
@@ -7016,7 +7028,7 @@ function HArr.MergeSortPair(var partner: TArr; const aAscending: Boolean = True)
     end;
   end;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 1) then
     MSP(Self, partner, 0, (Result - 1));
 end;
@@ -7073,7 +7085,7 @@ function HArr.QuickSortPair(var partner: TArr; const aAscending: Boolean = True)
       QS2(A, B, i, R);
   end;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 0) then
     QS2(Self, partner, 0, (Result - 1));
 end;
@@ -7093,7 +7105,7 @@ function HArr.PartitionSort(const aAscending: Boolean = True): Integer; overload
   procedure PS(var A: TArr; const L, R: Integer);
   var
     p: TVar;
-	i, t: Integer;
+    i, t: Integer;
     s, e, b: TArr;
   begin
     if (L >= R) then
@@ -7116,9 +7128,9 @@ function HArr.PartitionSort(const aAscending: Boolean = True): Integer; overload
         s.Supply(A[i]);
       0: e.Supply(A[i]);
     end;
-    if (Length(s) > 1) then
+    if (s.Size > 1) then
       PS(s, 0, High(s));
-    if (Length(b) > 1) then
+    if (b.Size > 1) then
       PS(b, 0, High(b));
     t := L;
     for i := 0 to High(s) do
@@ -7129,7 +7141,7 @@ function HArr.PartitionSort(const aAscending: Boolean = True): Integer; overload
       A[t.Increase] := b[i];
   end;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 1) then
     PS(Self, 0, (Result - 1));
 end;
@@ -7159,7 +7171,7 @@ function HArr.QuickSortSwapped(const aAscending: Boolean = True): TConnectionArr
         if (i <= j) then
         begin
           Swap(Self[i], Self[j]);
-          SetLength(swaps, (Length(swaps) + 1));
+          SetLength(swaps, (System.Length(swaps) + 1));
           swaps[High(swaps)].Create(i.Increase, j.Decrease);
         end;
       until (i > j);
@@ -7172,7 +7184,7 @@ function HArr.QuickSortSwapped(const aAscending: Boolean = True): TConnectionArr
         if (i <= j) then
         begin
           Swap(Self[i], Self[j]);
-          SetLength(swaps, (Length(swaps) + 1));
+          SetLength(swaps, (System.Length(swaps) + 1));
           swaps[High(swaps)].Create(i.Increase, j.Decrease);
         end;
       until (i > j);
@@ -7184,7 +7196,7 @@ function HArr.QuickSortSwapped(const aAscending: Boolean = True): TConnectionArr
   end;
 begin
   SetLength(Result, 0);
-  if Length(Self) > 1 then
+  if (Self.Size > 1) then
     QuickSortRec(0, High(Self), Result);
 end;
 
@@ -7238,7 +7250,7 @@ function HArr.QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray;
 var
   l, i: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   for i := 0 to (l - 1) do
     Result[i] := i;
@@ -7289,7 +7301,7 @@ function HArr.QuickSortedly(const aAscending: Boolean = True): TIntegerArray; ov
 var
   l, i: Integer;
 begin
-  l := Length(Self);
+  l := Self.Length;
   SetLength(Result, l);
   for i := 0 to (l - 1) do
     Result[i] := i;
@@ -7326,7 +7338,7 @@ function HArr.QuickSorted(const aAscending: Boolean = True): TArr; overload;
 var
   a: Integer;
 begin
-  a := Length(Self);
+  a := Self.Length;
   Result := Self.Copy(0, a);
   if (a > 1) then
     QS(Result, 0, (a - 1));
@@ -7517,7 +7529,7 @@ begin
   begin
     o := aAscending.Select(-1, 1);
     b := -1;
-    e := (Length(Self) - 2);
+    e := (Self.Size - 2);
     repeat
       s := False;
       Inc(b);
@@ -7709,7 +7721,7 @@ begin
   if (Result > 0) then
   begin
     o := aAscending.Select(-1, 1);
-    g := Length(Self);
+    g := Self.Size;
     s := True;
     while ((g > 1) or s) do
     begin
@@ -7904,7 +7916,7 @@ begin
     case (Result > 1) of
       True:
       begin
-        l := Length(Self);
+        l := Self.Length;
         x := 0;
         while (x < (l div 3)) do
           x := ((x * 3) + 1);
@@ -7914,10 +7926,10 @@ begin
           begin
             b := a;
             while ((b >= x) and (Sign(Self[b].Compare(Self[b - x])) = o)) do
-			begin
+	    begin
               Exchange(b, (b - x));
-			  b.Decrease(x);
-			end;
+	      b.Decrease(x);
+	    end;
           end;
           x := (x div 3);
         end;
@@ -8071,7 +8083,7 @@ const
 var
   i, s, l, m, r: Integer;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result < 2) then
     Exit;
   i := 0;
@@ -8124,7 +8136,7 @@ end;
 [==============================================================================}
 function HArr.Downtrending: Boolean; overload;
 begin
-  Result := ((Length(Self) > 1) and (Self[Low(Self)] > Self[High(Self)]));
+  Result := ((Self.Size > 1) and (Self[Low(Self)] > Self[High(Self)]));
 end;
 
 {==============================================================================]
@@ -8134,7 +8146,7 @@ end;
 [==============================================================================}
 function HArr.Uptrending: Boolean; overload;
 begin
-  Result := ((Length(Self) > 1) and (Self[Low(Self)] < Self[High(Self)]));
+  Result := ((Self.Size > 1) and (Self[Low(Self)] < Self[High(Self)]));
 end;
 
 {==============================================================================]
@@ -8144,7 +8156,7 @@ end;
 [==============================================================================}
 function HArr.Notrending: Boolean; overload;
 begin
-  Result := ((Length(Self) > 1) and (Self[Low(Self)] = Self[High(Self)]));
+  Result := ((Self.Size > 1) and (Self[Low(Self)] = Self[High(Self)]));
 end;
 
 {==============================================================================]
@@ -8158,7 +8170,7 @@ end;
 [==============================================================================}
 function HArr.Trend: Integer; overload;
 begin
-  if ((Length(Self) < 2) or (Self[Low(Self)] = Self[High(Self)])) then
+  if ((Self.Size < 2) or (Self[Low(Self)] = Self[High(Self)])) then
     Result := 0
   else
     if (Self[Low(Self)] > Self[High(Self)]) then
@@ -8240,7 +8252,7 @@ end;
 [==============================================================================}
 function HArr.TrendFalling: Boolean; overload;
 begin
-  Result := ((Length(Self) > 1) and (Self[Low(Self)] >= Self[High(Self)]));
+  Result := ((Self.Size > 1) and (Self[Low(Self)] >= Self[High(Self)]));
 end;
 
 {==============================================================================]
@@ -8252,7 +8264,7 @@ end;
 [==============================================================================}
 function HArr.TrendRising: Boolean; overload;
 begin
-  Result := ((Length(Self) > 1) and (Self[Low(Self)] <= Self[High(Self)]));
+  Result := ((Self.Size > 1) and (Self[Low(Self)] <= Self[High(Self)]));
 end;
 
 {==============================================================================]
@@ -8284,7 +8296,7 @@ var
   k: TVar;
   i, j, p: Integer;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result < 2) then
     Exit;
   for i := 1 to (Result - 1) do
@@ -8398,7 +8410,7 @@ var
   L, R: Integer;
 begin
   L := -1;
-  R := Length(Self);
+  R := Self.Size;
   if (R > 1) then
   case (Self[L + 1] <= Self[R - 1]) of
     True:
@@ -8646,8 +8658,8 @@ var
   i, j, l, a, b: Integer;
   e: Boolean;
 begin
-  a := Length(Self);
-  b := Length(items);
+  a := Self.Size;
+  b := items.Size;
   SetLength(Result, (a + b));
   i := 0;
   j := 0;
@@ -8734,8 +8746,8 @@ var
   a, b: Integer;
   e: Boolean;
 begin
-  a := Length(Self);
-  b := Length(items);
+  a := Self.Size;
+  b := items.Size;
   SetLength(Result, a);
   i := 0;
   j := 0;
@@ -8771,8 +8783,8 @@ var
   i, j, l, a, b: Integer;
   e: Boolean;
 begin
-  a := Length(Self);
-  b := Length(items);
+  a := Self.Size;
+  b := items.Size;
   SetLength(Result, Min(a, b));
   i := 0;
   j := 0;

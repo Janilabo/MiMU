@@ -30,7 +30,7 @@ function TCharArrayHelper.Str: string;
 begin
   if Self.Empty then
     Exit('');
-  SetString(Result, PChar(@Self[0]), Length(Self));
+  SetString(Result, PChar(@Self[0]), Self.Size);
 end;
 
 {==============================================================================]
@@ -40,9 +40,9 @@ end;
 [==============================================================================}
 function TCharArrayHelper.ToStr: string;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   if Self.Exists then
-    Move(Self[0], Result[1], (Length(Self) * SizeOf(Char)));
+    Move(Self[0], Result[1], (Self.Size * SizeOf(Char)));
 end;
 
 {==============================================================================]
@@ -85,7 +85,7 @@ function TCharArrayHelper.Stringify: string; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i + 1] := Self[i];
 end;
@@ -101,8 +101,8 @@ var
 begin
   if Self.Empty then
     Exit('');
-  a := Length(Self);
-  g := Length(glue);
+  a := Self.Size;
+  g := System.Length(glue);
   SetLength(Result, (a + (g * (a - 1))));
   l := 1;
   for i := 0 to (a - 2) do
@@ -123,7 +123,7 @@ function TCharArrayHelper.Ordinals: TIntegerArray;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Ord(Self[i]);
 end;
@@ -138,11 +138,11 @@ var
   s: set of Char;
   i, l: Integer;
 begin
-  if (Length(Self) < 2) then
+  if (Self.Size < 2) then
     Exit(Self.Clone);
   s := [];
   l := 0;
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
   begin
     if (Self[i] in s) then
@@ -162,7 +162,7 @@ function TCharArrayHelper.TSA: TStringArray;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i];
 end;

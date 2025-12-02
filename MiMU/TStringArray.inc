@@ -28,7 +28,7 @@ var
 begin
   Result := 0;
   for i := 0 to High(Self) do
-    Result.Increase(Length(Self[i]));
+    Result.Increase(System.Length(Self[i]));
 end;
 
 {==============================================================================]
@@ -43,7 +43,7 @@ begin
   l := 0;
   SetLength(Result, Self.Tally);
   for i := 0 to High(Self) do
-    for j := 1 to Length(Self[i]) do
+    for j := 1 to System.Length(Self[i]) do
       Result[l.Increment] := Self[i][j];
 end;
 
@@ -100,8 +100,8 @@ begin
   for i := 0 to High(Self) do
     if (Self[i] <> '') then
     begin
-      Move(Self[i][1], c[p], Length(Self[i]) * SizeOf(Char));
-      Inc(p, Length(Self[i]));
+      Move(Self[i][1], c[p], System.Length(Self[i]) * SizeOf(Char));
+      Inc(p, System.Length(Self[i]));
     end;
   SetString(Result, PChar(@c[0]), l);
 end;

@@ -125,7 +125,7 @@ function TBooleanArrayHelper.Digits: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Ord(Self[i]);
 end;
@@ -170,7 +170,7 @@ var
   i, c: Integer;
 begin
   c := 0;
-  if (maxFalse < Length(Self)) then
+  if (maxFalse < Self.Size) then
   for i := 0 to High(Self) do
     if ((not Self[i]) and (c.Increment > maxFalse)) then
       Exit(False);
@@ -201,7 +201,7 @@ function TBooleanArrayHelper.Falses: TIntegerArray; overload;
 var
   i, r: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   r := 0;
   for i := 0 to High(Self) do
     if not Self[i] then
@@ -234,7 +234,7 @@ var
   i, c: Integer;
 begin
   c := 0;
-  if (minFalse < Length(Self)) then
+  if (minFalse < Self.Size) then
   for i := 0 to High(Self) do
   begin
     if not Self[i] then
@@ -261,7 +261,7 @@ begin
     else
       Result := (Result + strFalse + separator);
   if not (separator = '') then
-    SetLength(Result, (Length(Result) - Length(separator)));
+    SetLength(Result, (System.Length(Result) - System.Length(separator)));
   Result := (Result + ']');
 end;
 
@@ -286,7 +286,7 @@ begin
     else
       Result := (Result + strFalse + separator);
   if not (separator = '') then
-    SetLength(Result, (Length(Result) - Length(separator)));
+    SetLength(Result, (System.Length(Result) - System.Length(separator)));
   Result := (Result + ']');
 end;
 
@@ -304,7 +304,7 @@ function TBooleanArrayHelper.TIA(const valTrue: Integer = 1; const valFalse: Int
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     if Self[i] then
       Result[i] := valTrue
@@ -321,7 +321,7 @@ function TBooleanArrayHelper.Toggle: TBooleanArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := (not Self[i]);
 end;
@@ -366,7 +366,7 @@ var
   i, c: Integer;
 begin
   c := 0;
-  if (maxTrue < Length(Self)) then
+  if (maxTrue < Self.Size) then
   for i := 0 to High(Self) do
     if (Self[i] and (c.Increment > maxTrue)) then
       Exit(False);
@@ -397,7 +397,7 @@ function TBooleanArrayHelper.Trues: TIntegerArray; overload;
 var
   i, r: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   r := 0;
   for i := 0 to High(Self) do
     if (Self[i] = True) then
@@ -430,7 +430,7 @@ var
   i, c: Integer;
 begin
   c := 0;
-  if (minTrue < Length(Self)) then
+  if (minTrue < Self.Size) then
   for i := 0 to High(Self) do
   begin
     if Self[i] then
@@ -450,7 +450,7 @@ function TBooleanArrayHelper.Opposite: TBooleanArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     if Self[i] then
       Result[i] := False
@@ -481,7 +481,7 @@ function TBooleanArrayHelper.BinaryDigits: TIntegerArray;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := IfThen(Self[i], 1, 0);  
 end;
@@ -495,7 +495,7 @@ function TBooleanArrayHelper.Binary: string;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Self[i].Binary;  
 end;
@@ -508,7 +508,7 @@ end;
 [==============================================================================}
 function TBooleanArrayHelper.Reinit: Integer; overload;
 begin
-  Result := Length(Self);
+  Result := Self.Size;
   if (Result > 0) then
     FillChar(Pointer(Self)^, (Result * SizeOf(Boolean)), 0);
 end;
@@ -528,7 +528,7 @@ begin
   for i := 0 to High(Self) do
     if (Self[i] = val) then
       Inc(c);
-  Result := (c / Length(Self));
+  Result := (c / Self.Size);
 end;
 
 {==============================================================================]
@@ -543,8 +543,8 @@ function TBooleanArrayHelper.Attach(const items: TBooleanArray): Integer; overlo
 var
   l, i: Integer;
 begin
-  l := Length(Self);
-  i := Length(items);
+  l := Self.Length;
+  i := items.Size;
   if (i = 0) then
     Exit(l);
   Result := (l + i);
@@ -565,8 +565,8 @@ function TBooleanArrayHelper.Embed(const items: TBooleanArray; const index: Inte
 var
   s, l, p, t: Integer;
 begin
-  s := Length(Self);
-  l := Length(items);
+  s := Self.Size;
+  l := items.Length;
   if (l = 0) then
     Exit(s);
   p := EnsureRange(index, 0, s);
@@ -575,7 +575,7 @@ begin
   if (t > 0) then
     Move(Self[p], Self[p + l], (t * SizeOf(Boolean)));
   Move(items[0], Self[p], (l * SizeOf(Boolean)));
-  Result := Length(Self);
+  Result := Self.Size;
 end;
 
 class function TBA.Init(var arr: TBooleanArray): Integer; overload; 

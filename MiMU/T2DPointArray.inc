@@ -23,7 +23,7 @@ function T2DPointArrayHelper.AllBounds: TBoxArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
+  SetLength(Result, Self.Length);
   for i := 0 to High(Self) do
     Result[i] := Self[i].Bounds;
 end;
@@ -37,8 +37,8 @@ function T2DPointArrayHelper.AllBounds(var aBounds: TBox): TBoxArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
-  if (Length(Self) > 0) then
+  SetLength(Result, Self.Length);
+  if (Self.Length > 0) then
   begin
     aBounds := Self[0].Bounds;
     Result[0] := aBounds;
