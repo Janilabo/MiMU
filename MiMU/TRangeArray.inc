@@ -23,6 +23,11 @@ type
   end;
 {$ENDIF}
 
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(INTERFACE)} 
+{$DEFINE FField := start}{$I config\F.inc}
+{$DEFINE FField := stop}{$I config\F.inc}
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
 {$I config\1D.inc}
 

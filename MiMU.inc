@@ -27,7 +27,3 @@
 {$I MiMU\T2DPointArray.inc}
 {$I MiMU\T2DBoxArray.inc}
 {$I MiMU\T2DRangeArray.inc}
-
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(INTERFACE)} 
-  {$INCLUDE MiMU\config\Templates\D.inc}
-{$ENDIF}

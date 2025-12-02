@@ -21,6 +21,13 @@ type
   end;
 {$ENDIF}
 
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(INTERFACE)} 
+{$DEFINE FField := X1}{$I config\F.inc}
+{$DEFINE FField := Y1}{$I config\F.inc}
+{$DEFINE FField := X2}{$I config\F.inc}
+{$DEFINE FField := Y2}{$I config\F.inc}
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
 {$I config\1D.inc}
 

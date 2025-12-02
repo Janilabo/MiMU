@@ -51,6 +51,8 @@
   {$DEFINE T2DArr := T2DPointArray}
   {$DEFINE H2DArr := T2DPointArrayHelper}
   {$DEFINE Sortable}
+  {$DEFINE FVar := Integer}
+  {$DEFINE FArr := TIntegerArray}
 {$ENDIF}
 {$IFDEF TBox}
   {$DEFINE TVar := TBox}
@@ -60,6 +62,8 @@
   {$DEFINE T2DArr := T2DBoxArray}
   {$DEFINE H2DArr := T2DBoxArrayHelper}
   {$UNDEF Sortable}
+  {$DEFINE FVar := Integer}
+  {$DEFINE FArr := TIntegerArray}
 {$ENDIF}
 {$IFDEF TRange}
   {$DEFINE TVar := TRange}
@@ -69,6 +73,8 @@
   {$DEFINE T2DArr := T2DRangeArray}
   {$DEFINE H2DArr := T2DRangeArrayHelper}
   {$UNDEF Sortable}
+  {$DEFINE FVar := Integer}
+  {$DEFINE FArr := TIntegerArray}
 {$ENDIF}
 {$IFDEF Int64}
   {$DEFINE TVar := Int64}
