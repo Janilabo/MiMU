@@ -368,6 +368,7 @@ function Valleys: TIntegerArray; overload;
 function Unionize(const items: TArr; const oAscending: Boolean = True): TArr; overload;
 function Subtract(const items: TArr; const oAscending: Boolean = True): TArr; overload;
 function Intersect(const items: TArr; const oAscending: Boolean = True): TArr; overload;
+function Spanning(const item: TVar; const oAscending: Boolean = True): TRange; overload;
 {$ENDIF}
 {$ENDIF}
 
@@ -8810,6 +8811,38 @@ begin
       Inc(j);
   end;
   SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <Spanning>
+  @action: Searches the array for the specified `item` and returns a TRange
+           representing the inclusive index span where `item` occurs.
+           Works for both ascending and descending arrays, as specified by `oAscending`.
+           If the array is empty or the item is not found, returns a sentinel TRange
+           with both `start` and `stop` set to Low(Integer).
+  @note:
+    - `oAscending` indicates whether the array is sorted in ascending order (True)
+      or descending order (False).
+    - Scans from both ends of the array:
+        - `Result.start` increments until the first occurrence of `item` is found.
+        - `Result.stop` decrements until the last occurrence of `item` is found.
+    - Works correctly with negative numbers.
+    - Returned TRange:
+        - `Result.start <= Result.stop` → item found; range of indices inclusive.
+        - `Result.start > Result.stop` → item not found; sentinel range returned.
+    - Time complexity: O(n) (linear search).
+[==============================================================================}
+function HArr.Spanning(const item: TVar; const oAscending: Boolean = True): TRange; overload;
+begin
+  if Self.Empty then
+    Exit(TRange.Construct(Low(Integer), Low(Integer)));
+  Result.Create(0, High(Self));
+  while ((Result.start < Result.stop) and ((oAscending and (Self[Result.start] < item)) or ((not oAscending) and (Self[Result.start] > item)))) do
+    Inc(Result.start);
+  while ((Result.stop >= Result.start) and ((oAscending and (Self[Result.stop] > item)) or ((not oAscending) and (Self[Result.stop] < item)))) do
+    Dec(Result.stop);
+  if (Result.start > Result.stop) then
+    Result.Create(Low(Integer));
 end;
 {$ENDIF}
 

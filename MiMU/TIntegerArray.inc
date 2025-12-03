@@ -100,7 +100,8 @@ type
     function Monotony: Boolean; overload;
     function Fuse(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
     function Combinate(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
-    function Splay(const index: Integer; const tolerance: Integer = 1; const oAscending: Boolean = True): TRange; overload;
+    function Spanning(const range: TRange; const oAscending: Boolean = True): TRange; overload;
+	function Splay(const index: Integer; const tolerance: Integer = 1; const oAscending: Boolean = True): TRange; overload;
     function Splay(const index: Integer; const limits: TRange; const tolerance: Integer = 1; const oAscending: Boolean = True): TRange; overload;
     function Trace(const index: Integer; const tolerance: Integer = 1): TRange; overload;
     function Trace(const index: Integer; const limits: TRange; const tolerance: Integer = 1): TRange; overload;
@@ -2311,6 +2312,46 @@ begin
   if (k <> Self.Size) then
     SetLength(Self, k);
   Result := k;
+end;
+
+{==============================================================================]
+  <Spanning>
+  @action: Searches the integer array for elements that fall within the specified
+           `range` and returns a TRange representing the inclusive index span of
+           matching elements. Supports both ascending and descending arrays via
+           the `oAscending` parameter. If the array is empty or no elements match
+           the range, returns a sentinel TRange with both `start` and `stop` set
+           to Low(Integer).
+  @note:
+    - The input `range` is normalized first using Normalize, ensuring
+      that `range.start <= range.stop`.
+    - `oAscending` specifies the sort order of the array:
+        - True → ascending order
+        - False → descending order
+    - Scans from both ends:
+        - `Result.start` increments from the beginning until the first element
+          within the range is found.
+        - `Result.stop` decrements from the end until the last element within the
+          range is found.
+    - Returns:
+        - `Result.start <= Result.stop` → span found; inclusive index range of elements.
+        - `Result.start > Result.stop` → no elements in range; sentinel range returned.
+    - Works with negative numbers and handles both ascending and descending arrays.
+[==============================================================================}
+function TIntegerArrayHelper.Spanning(const range: TRange; const oAscending: Boolean = True): TRange; overload;
+var
+  r: TRange;
+begin
+  if Self.Empty then
+    Exit(TRange.Construct(Low(Integer), Low(Integer)));
+  r := range.Normalize;
+  Result.Create(0, High(Self));
+  while ((Result.start < Result.stop) and ((oAscending and (Self[Result.start] < r.start)) or ((not oAscending) and (Self[Result.start] > r.stop)))) do
+    Inc(Result.start);
+  while ((Result.stop >= Result.start) and ((oAscending and (Self[Result.stop] > r.stop)) or ((not oAscending) and (Self[Result.stop] < r.start)))) do
+    Dec(Result.stop);
+  if (Result.start > Result.stop) then
+    Result.Create(Low(Integer));
 end;
 
 {==============================================================================]
