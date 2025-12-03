@@ -70,7 +70,15 @@ type
     function Lowest: Integer; 
     function Minimum: Integer; 
     function Highest: Integer; 
-    function Maximum: Integer; 
+    function Maximum: Integer;
+    function Left: Integer; overload;
+    function Right: Integer; overload;
+    function First: Integer; overload;
+    function Last: Integer; overload;
+    function Lower: Integer; overload;
+    function Higher: Integer; overload;
+    function Bottom: Integer; overload;
+    function Top: Integer; overload;	
     function Exceeds(const maxElements: Integer): Boolean; 
     function Insufficient(const minElements: Integer): Boolean; 
     function Digits: TIntegerArray; overload; 
@@ -1038,6 +1046,109 @@ begin
   else
     Result := Self.stop;
 end;
+
+{==============================================================================]
+  <Left>
+  @action: Returns the lower endpoint of the range, regardless of whether the
+           original start/stop values form an ascending or descending range.
+  @note: This is a derived, normalized boundary. It does not reflect the
+         caller’s declared direction; it always represents the smaller value.
+[==============================================================================}
+function TRange.Left: Integer; overload;
+begin
+  Result := IfThen((Self.start <= Self.stop), Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <Right>
+  @action: Returns the upper endpoint of the range, independent of the direction
+           in which the range was specified.
+  @note: This value is always the larger of start/stop. It defines the
+         normalized right-hand boundary used for length calculations
+         and ordered interval operations.
+[==============================================================================}
+function TRange.Right: Integer; overload;
+begin
+  Result := IfThen((Self.start >= Self.stop), Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <First>
+  @action: Returns the smaller of start and stop, regardless of order.
+  @note: Can be computed branchlessly using arithmetic: (start + stop - Abs(start - stop)) div 2.
+         Equivalent to Low/Min. Watch for potential integer overflow.
+[==============================================================================}
+function TRange.First: Integer; overload;
+begin
+  Result := (((Self.start + Self.stop) - Abs(Self.start - Self.stop)) div 2);
+end;
+
+{==============================================================================]
+  <Last>
+  @action: Returns the larger of start and stop, regardless of order.
+  @note: Can be computed branchlessly using arithmetic: (start + stop + Abs(start - stop)) div 2.
+         Equivalent to High/Max. Watch for potential integer overflow.
+[==============================================================================}
+function TRange.Last: Integer; overload;
+begin
+  Result := (((Self.start + Self.stop) + Abs(Self.start - Self.stop)) div 2);
+end;
+
+{==============================================================================]
+  <Lower>
+  @action: Returns the smaller of `start` and `stop` (the lower bound of the range).
+  @note: Implemented using a branchless bitwise arithmetic trick.
+[==============================================================================}
+function TRange.Lower: Integer; overload;
+begin
+  Result := ((Self.start * Ord(Self.start <= Self.stop)) + (Self.stop * Ord(Self.start > Self.stop)));
+end;
+
+{==============================================================================]
+  <Higher>
+  @action: Returns the larger of `start` and `stop` (the upper bound of the range).
+  @note: Implemented using a branchless bitwise arithmetic trick.
+[==============================================================================}
+function TRange.Higher: Integer; overload;
+begin
+  Result := ((Self.start * Ord(Self.start >= Self.stop)) + (Self.stop * Ord(Self.start < Self.stop)));
+end;
+
+{==============================================================================]
+  <Bottom>
+  @action: Returns the smaller of `start` and `stop` (the lower bound of the range).
+  @note:
+    - Implemented using a `case` statement on the Boolean expression `(start < stop)`.
+    - Handles ascending and descending ranges, including negative numbers.
+    - Fully portable across Free Pascal, Delphi, and PascalScript.
+    - Equivalent in behavior to `if start <= stop then Result := start else Result := stop;` 
+      or `Result := Min(start, stop);`.
+[==============================================================================}
+function TRange.Bottom: Integer; overload;
+begin
+  case (Self.start < Self.stop) of
+    True:  Result := Self.start;
+    False: Result := Self.stop;
+  end;
+end;
+
+{==============================================================================]
+  <Top>
+  @action: Returns the larger of `start` and `stop` (the upper bound of the range).
+  @note:
+    - Implemented using a `case` statement on the Boolean expression `(stop > start)`.
+    - Handles ascending and descending ranges, including negative numbers.
+    - Fully portable across Free Pascal, Delphi, and PascalScript.
+    - Equivalent in behavior to `if start >= stop then Result := start else Result := stop;`
+      or `Result := Max(start, stop);`.
+[==============================================================================}
+function TRange.Top: Integer; overload;
+begin
+  case (Self.stop > Self.start) of
+    True: Result := Self.stop;
+    False: Result := Self.start;
+  end;
+end; 
 
 {==============================================================================]
   <Exceeds>
