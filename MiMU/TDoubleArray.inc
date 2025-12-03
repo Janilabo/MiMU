@@ -109,6 +109,8 @@ type
     function BinaryUnfit(const value: Double; const oAscending: Boolean = True): Boolean; overload;
     function BinaryIncludes(const value: Double; const oAscending: Boolean = True): Boolean; overload;
     function BinaryExcludes(const value: Double; const oAscending: Boolean = True): Boolean; overload;
+    function BinarySpanning(const value: Double; const oAscending: Boolean = True): TRange; overload;
+    function BinarySpanning(const range: TRange; const oAscending: Boolean = True): TRange; overload;
   end;
 {$ENDIF}
 
@@ -1110,6 +1112,32 @@ function TDoubleArrayHelper.BinaryIncludes(const value: Double; const oAscending
          sorted bounds, or if the binary search fails to locate the value.
 [==============================================================================}
 function TDoubleArrayHelper.BinaryExcludes(const value: Double; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryExcludes}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryExcludes}
+
+{==============================================================================]
+  <BinarySpanning>
+  @action: Finds the contiguous range (span) of a specific value in a sorted array.
+  @note:
+    - This function performs a binary search to find the first and last occurrences
+      of the given value in the array.
+    - The array must be sorted. Use `oAscending = False` if the array is sorted in descending order.
+    - Returns a TRange structure representing the start and stop indices of the value.
+    - If the value is not found, returns TRange(-1, -1).
+  @return: TRange containing start and stop indices of the value in the array.
+[==============================================================================}
+function TDoubleArrayHelper.BinarySpanning(const value: Double; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinarySpanning1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySpanning1}
+
+{==============================================================================]
+  <BinarySpanning>
+  @action: Finds the contiguous range (span) of values within a specified range in a sorted array.
+  @note:
+    - This function performs a binary search to find the first and last elements in the array
+      that lie within the given range.
+    - The array must be sorted. Use `oAscending = False` if the array is sorted in descending order.
+    - Returns a TRange structure representing the start and stop indices of elements within the range.
+    - If no elements fall within the range, returns TRange(-1, -1).
+  @return: TRange containing start and stop indices of elements in the array that are within the specified range.
+[==============================================================================}
+function TDoubleArrayHelper.BinarySpanning(const range: TRange; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinarySpanning2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySpanning2}
 {$ENDIF}
 
 {$UNDEF Double}

@@ -2638,3 +2638,98 @@ begin
   Result := (Self.BinaryUnfit(value, oAscending) or (Self.BinaryPos(value, oAscending) = -1));
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinarySpanning1}
+var
+  m: Integer;
+  r: TRange;
+begin
+  r.Create(0, High(Self));
+  Result.start := -1;
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case (Self[m] = value) of
+      True:
+      begin
+        Result.start := m;
+        r.stop := (m - 1);
+      end;
+      False:
+      if ((oAscending and (Self[m] < value)) or ((not oAscending) and (Self[m] > value))) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+  if (Result.start = -1) then
+    Exit(TRange.Construct(-1, -1));
+  r.start := Result.start;
+  r.stop := High(Self);
+  Result.stop := Result.start;
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case (Self[m] = value) of
+      True:
+      begin
+        Result.stop := m;
+        r.start := (m + 1);
+      end;
+      False:
+      if ((oAscending and (Self[m] < value)) or ((not oAscending) and (Self[m] > value))) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinarySpanning2}
+var
+  m: Integer;
+  n, r: TRange;
+begin
+  r.Create(0, High(Self));
+  n := range.Normalize;
+  Result.start := -1;
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case InRange(Self[m], n.start, n.stop) of
+      True:
+      begin
+        Result.start := m;
+        r.stop := (m - 1);
+      end;
+      False:
+      if ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.start))) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+  if (Result.start = -1) then
+    Exit(TRange.Construct(-1, -1));
+  r.start := Result.start;
+  r.stop := High(Self);
+  Result.stop := Result.start;
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case InRange(Self[m], n.start, n.stop) of
+      True:
+      begin
+        Result.stop := m;
+        r.start := (m + 1);
+      end;
+      False:
+      if ((oAscending and (Self[m] < n.stop)) or ((not oAscending) and (Self[m] > n.stop))) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+end;
+{$ENDIF}

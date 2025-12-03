@@ -58,7 +58,7 @@ type
     function Size: Integer; overload; 
     function Size(var minVal, maxVal: Integer): Integer; overload; 
     function Length: Integer; overload;
-	function Capacity: Integer;
+    function Capacity: Integer;
     function Extent: Integer; overload;
     function Reach: Integer; overload;
     function Coverage: Integer; overload;
@@ -67,10 +67,14 @@ type
     function Delta: Integer; 
     function Frame(var rSize: Integer): TRange; overload; 
     function Frame: TRange; overload; 
-    function Lowest: Integer; 
-    function Minimum: Integer; 
-    function Highest: Integer; 
+    function Lowest: Integer;  
+    function Highest: Integer;
+    function Minimum: Integer;	
     function Maximum: Integer;
+    function Minima: Integer;
+    function Maxima: Integer;
+    function Minimal: Integer;	
+    function Maximal: Integer;
     function Left: Integer; overload;
     function Right: Integer; overload;
     function First: Integer; overload;
@@ -190,7 +194,7 @@ type
     function Center: Integer; 
     function Central: Integer; inline;
     function Centre: Integer; overload;
-	function Centroid: Integer; overload;
+    function Centroid: Integer; overload;
     function Core: Integer; overload;
     function Half: Integer; overload; 
     function Halfway: Integer; overload; 
@@ -1045,6 +1049,60 @@ begin
     Result := Self.start
   else
     Result := Self.stop;
+end;
+
+{==============================================================================]
+  <Minima>
+  @action: Returns the smaller of `start` and `stop`, regardless of ordering.
+  @note: Implements a branchless minimum operation using bitwise arithmetic.
+[==============================================================================}
+function TRange.Minima: Integer;
+begin
+  Result := (Self.stop xor ((Self.start xor Self.stop) and ((Self.start - Self.stop) shr 31)));
+end;
+
+{==============================================================================]
+  <Maxima>
+  @action: Returns the larger of `start` and `stop`, regardless of ordering.
+  @note: Implements a branchless maximum operation using bitwise arithmetic.
+[==============================================================================}
+function TRange.Maxima: Integer;
+begin
+  Result := (Self.start xor ((Self.start xor Self.stop) and ((Self.start - Self.stop) shr 31)));
+end;
+
+{==============================================================================]
+  <Minimal>
+  @action: Returns the smaller of the two endpoints (`start` and `stop`) of the range.
+           Effectively, this is the left-side of the range on a number line.
+  @note:
+    - Uses a branchless array indexing trick.
+    - Works for ranges where start <= stop (ascending) or start > stop (descending).
+    - Equivalent to Min(Self.start, Self.stop) but written without a function call.
+[==============================================================================}
+function TRange.Minimal: Integer;
+var
+  v: TIntegerArray;
+begin
+  v := [Self.start, Self.stop];
+  Result := v[Integer(Self.start > Self.stop)];
+end;
+
+{==============================================================================]
+  <Maximal>
+  @action: Returns the larger of the two endpoints (`start` and `stop`) of the range.
+           Effectively, this is the right-side of the range on a number line.
+  @note:
+    - Uses a branchless array indexing trick.
+    - Works for ranges where start <= stop (ascending) or start > stop (descending).
+    - Equivalent to Max(Self.start, Self.stop) but written without a function call.
+[==============================================================================}
+function TRange.Maximal: Integer;
+var
+  v: TIntegerArray;
+begin
+  v := [Self.start, Self.stop];
+  Result := v[Integer(Self.start < Self.stop)];
 end;
 
 {==============================================================================]
