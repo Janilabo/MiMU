@@ -53,10 +53,12 @@ type
     function Grab: TRange; 
     function Count: Integer; 
     function Area: Integer; 
-    function Span: Integer; 
+    function Span: Integer;
+    function Sized: Integer; overload;	
     function Size: Integer; overload; 
     function Size(var minVal, maxVal: Integer): Integer; overload; 
-    function Capacity: Integer;
+    function Length: Integer; overload;
+	function Capacity: Integer;
     function Extent: Integer; overload;
     function Reach: Integer; overload;
     function Coverage: Integer; overload;
@@ -877,6 +879,31 @@ begin
 end;
 
 {==============================================================================]
+  <Sized>
+  @action: Returns size of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Sized: Integer; overload;
+begin
+  Result := ((Self.Maximum - Self.Minimum) + 1);
+end;
+
+{==============================================================================]
+  <Length>
+  @action: Returns length of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Length: Integer; overload;
+begin
+  if (Self.start = Self.stop) then
+    Result := 1
+  else if (Self.stop < Self.start) then
+    Result := ((Self.start - Self.stop) + 1)
+  else
+    Result := ((Self.stop - Self.start) + 1);
+end;
+
+{==============================================================================]
   <Capacity>
   @action: Returns length of the given range.
   @note: None.
@@ -893,12 +920,10 @@ end;
 [==============================================================================}
 function TRange.Reach: Integer; overload;
 begin
-  if (Self.start = Self.stop) then
-    Result := 1
-  else if (Self.stop < Self.start) then
-    Result := ((Self.start - Self.stop) + 1)
-  else
-    Result := ((Self.stop - Self.start) + 1);
+  Result := (Self.stop - Self.start);
+  if (Result < 0) then
+    Result := -Result;
+  Result := (Result + 1);
 end;
 
 {==============================================================================]
@@ -1488,7 +1513,7 @@ begin
     Exit([Self.start]);
   a := Self.ToArray;
   d := a.Reversed;
-  l := Length(a);
+  l := a.Length;
   SetLength(Result, l);
   i := 0;
   j := 0;
@@ -3083,7 +3108,7 @@ function TRange.Recursed: TIntegerArray; overload;
     if (rStart = rStop) then
       Exit([rStart]);
     Result := BR(rStart, (rStop - Sign(rStop - rStart)));
-    SetLength(Result, (Length(Result) + 1));
+    SetLength(Result, (Result.Size + 1));
     Result[High(Result)] := rStop;
   end;
 begin
