@@ -102,6 +102,7 @@ type
     function Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload;	
     function Unzip: TPointArray; overload;
     function Unpack: TPointArray; overload;
+    function Unbox: TPointArray; overload;
     function Points: TPointArray; overload; 
     function Points(const pIndex: Integer): TPoint; overload; 
     function Points(const pIDs: TIntegerArray): TPointArray; overload; 
@@ -138,8 +139,14 @@ type
     function CornerPoints: TPointArray; 
     function CornerPts: TPointArray; 
     function Corners: TPointArray; 
-    function Rows: T2DPointArray; 
-    function Columns: T2DPointArray; 
+    function Rows: Integer; overload;
+    function Rows(const index: Integer): TPointArray; overload;
+    function Columns: Integer; overload;
+    function Columns(const index: Integer): TPointArray; overload;
+    function Row(const index: Integer): TPointArray; overload;
+    function Row: T2DPointArray; overload;
+    function Column(const index: Integer): TPointArray; overload;
+    function Column: T2DPointArray; overload; 
     function Rowwise: TPointArray; 
     function Columnwise: TPointArray; 
     function SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload; 
@@ -200,9 +207,9 @@ type
   HVar = type helper for TVar {$I config\0D.inc}
     function Create: TBox; overload;
     function Inside(const targets: TBoxArray): Boolean; overload;
-    function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;
-    function Row(const cells: Integer; const space: Integer = 0): TBoxArray;
-    function Column(const cells: Integer; const space: Integer = 0): TBoxArray;
+    function AsGrid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;
+    function AsRow(const cells: Integer; const space: Integer = 0): TBoxArray;
+    function AsColumn(const cells: Integer; const space: Integer = 0): TBoxArray;
     function Placements(const target: TBox; const o: TPoint): TBoxArray; overload;
     function Placements(const target: TBox): TBoxArray; overload;
     function Tiled(const target: TBox): TBoxArray; overload;
@@ -1511,6 +1518,42 @@ begin
 end;
 
 {==============================================================================]
+  <Unpack>
+  @action: Unpacks TBox as TPointArray.
+  @note: None.
+[==============================================================================}
+function TBox.Unbox: TPointArray; overload;
+var
+  w, h, count: Integer;
+  x, y: Integer;
+  s: TPointArray;
+  p, r: PPoint;
+begin
+  SetLength(Result, Self.Size(w, h));
+  SetLength(s, w);
+  r := @s[0];
+  p := r;
+  for x := 0 to (w - 1) do
+  begin
+    p^.X := (Self.X1 + x);
+    p^.Y := Self.Y1;
+    Inc(p);
+  end;
+  P := @Result[0];
+  for y := 0 to (h - 1) do
+  begin
+    Move(s[0], p^, (w * SizeOf(TPoint)));
+    r := p;
+    for x := 0 to (w - 1) do
+    begin
+      r^.Y := (Self.Y1 + y);
+      Inc(r);
+    end;
+    Inc(p, w);
+  end;
+end;
+
+{==============================================================================]
   <Points>
   @action: Returns TBox points as TPointArray.
   @note: None.
@@ -2058,7 +2101,7 @@ begin
 end;
 
 {==============================================================================]
-  <Grid>
+  <AsGrid>
   @action: Outputs/builds grid of boxes with parameters;
            bx = starting box, used for starting coordinates and also for dimensions (width & height) of the boxes.
            rows, columns = count of rows and columns
@@ -2066,7 +2109,7 @@ end;
            spaceVertical = space between rows
   @note: None.
 [==============================================================================}
-function TBoxHelper.Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;
+function TBoxHelper.AsGrid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;
 var
   w, h, r, c, i, x, y: Integer;
 begin
@@ -2089,12 +2132,12 @@ begin
 end;
 
 {==============================================================================]
-  <Row>
+  <AsRow>
   @action: Outputs row of boxes. Starting from bx,
            where space is the amount of space between each cell.
   @note: None
 [==============================================================================}
-function TBoxHelper.Row(const cells: Integer; const space: Integer = 0): TBoxArray;
+function TBoxHelper.AsRow(const cells: Integer; const space: Integer = 0): TBoxArray;
 var
   w, h, i, z: Integer;
 begin
@@ -2112,12 +2155,12 @@ begin
 end;
 
 {==============================================================================]
-  <Column>
+  <AsColumn>
   @action: Outputs column of boxes. Starting from bx,
            where space is the amount of space between each cell.
   @note: None
 [==============================================================================}
-function TBoxHelper.Column(const cells: Integer; const space: Integer = 0): TBoxArray;
+function TBoxHelper.AsColumn(const cells: Integer; const space: Integer = 0): TBoxArray;
 var
   w, h, i, z: Integer;
 begin
@@ -2136,10 +2179,84 @@ end;
 
 {==============================================================================]
   <Rows>
+  @action: Returns the number of rows in the box (height)
+  @note: Zero-based row indexing is from top (Y1) to bottom (Y2)
+[==============================================================================}
+function TBox.Rows: Integer; overload;
+begin
+  Result := (Self.Height);
+end;
+
+{==============================================================================]
+  <Row>
+  @action: Returns all points in the specified row of the box, left-to-right.
+  @note: 'index' is zero-based relative to the top edge (Y1). Returns [] if index is out of bounds.
+[==============================================================================}
+function TBox.Rows(const index: Integer): TPointArray; overload;
+var
+  i: Integer;
+begin
+  if ((index < 0) or not (index < Self.Height)) then
+    Exit([]);
+  SetLength(Result, Self.Width);
+  for i := 0 to High(Result) do
+    Result[i] := Point((Self.X1 + i), (Self.Y1 + index));
+end;
+
+{==============================================================================]
+  <Columns>
+  @action: Returns the number of columns in the box (width)
+  @note: Zero-based column indexing is from left (X1) to right (X2)
+[==============================================================================}
+function TBox.Columns: Integer; overload;
+begin
+  Result := (Self.Width);
+end;
+
+{==============================================================================]
+  <Columns>
+  @action: Returns all points in the specified column of the box, top-to-bottom.
+  @note: 'index' is zero-based relative to the left edge (X1). Returns [] if index is out of bounds.
+[==============================================================================}
+function TBox.Columns(const index: Integer): TPointArray; overload;
+var
+  i: Integer;
+begin
+  if ((index < 0) or not (index < Self.Width)) then
+    Exit([]);
+  SetLength(Result, Self.Height);
+  for i := 0 to High(Result) do
+    Result[i] := Point((Self.X1 + index), (Self.Y1 + i));
+end;
+
+{==============================================================================]
+  <Row>
+  @action: Returns all points in the specified row (left-to-right)
+  @note: 'index' is zero-based relative to the top edge (Y1)
+[==============================================================================}
+function TBox.Row(const index: Integer): TPointArray; overload;
+var
+  i: Integer;
+  p: PPoint;
+begin
+  if ((index < 0) or (index >= Self.Height)) then
+    Exit([]);
+  SetLength(Result, Self.Width);
+  p := PPoint(Result);
+  for i := 0 to (Self.Width - 1) do
+  begin
+    p^.X := (Self.X1 + i);
+    p^.Y := (Self.Y1 + index);
+    Inc(p);
+  end;
+end;
+
+{==============================================================================]
+  <Row>
   @action: Returns TBox as its rows of TPoints.
   @note: Row-major. Dimensions = [Height][Width].
 [==============================================================================}
-function TBox.Rows: T2DPointArray;
+function TBox.Row: T2DPointArray; overload;
 var
   x, y: Integer;
 begin
@@ -2150,11 +2267,33 @@ begin
 end;
 
 {==============================================================================]
-  <Columns>
+  <Column>
+  @action: Returns all points in the specified column (top-to-bottom)
+  @note: 'index' is zero-based relative to the left edge (X1)
+[==============================================================================}
+function TBox.Column(const index: Integer): TPointArray; overload;
+var
+  i: Integer;
+  p: PPoint;
+begin
+  if ((index < 0) or (index >= Self.Width)) then
+    Exit([]);
+  SetLength(Result, Self.Height);
+  p := PPoint(Result);
+  for i := 0 to (Self.Height - 1) do
+  begin
+    p^.X := (Self.X1 + index);
+    p^.Y := (Self.Y1 + i);
+    Inc(p);
+  end;
+end;
+
+{==============================================================================]
+  <Column>
   @action: Returns TBox as its columns of TPoints.
   @note: Column-major. Dimensions = [Width][Height].
 [==============================================================================}
-function TBox.Columns: T2DPointArray;
+function TBox.Column: T2DPointArray; overload;
 var
   x, y: Integer;
 begin
