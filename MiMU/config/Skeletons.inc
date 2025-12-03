@@ -2733,3 +2733,66 @@ begin
   end;
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinarySpanOf1}
+var
+  m: Integer;
+  r: TRange;
+begin
+  Result.Create(-1, -1);
+  r.Create(0, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case (Self[m] = value) of
+      True:
+      begin
+        Result.start := m;
+        Result.stop := m;
+        while ((Result.start > 0) and (Self[Result.start - 1] = value)) do
+          Dec(Result.start);
+        while ((Result.stop < High(Self)) and (Self[Result.stop + 1] = value)) do
+          Inc(Result.stop);
+        Exit;
+      end;
+      False:
+      if ((oAscending and (Self[m] < value)) or ((not oAscending) and (Self[m] > value))) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinarySpanOf2}
+var
+  m: Integer;
+  n, r: TRange;
+begin
+  Result.Create(-1, -1);
+  n := range.Normalize;
+  r.Create(0, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case InRange(Self[m], n.start, n.stop) of
+      True:
+      begin
+        Result.start := m;
+        Result.stop := m;
+        while ((Result.start > 0) and (Self[Result.start - 1] >= n.start) and (Self[Result.start - 1] <= n.stop)) do
+          Dec(Result.start);
+        while ((Result.stop < High(Self)) and (Self[Result.stop + 1] >= n.start) and (Self[Result.stop + 1] <= n.stop)) do
+          Inc(Result.stop);
+        Exit;
+      end;
+      False:
+      if ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.stop))) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+end;
+{$ENDIF}

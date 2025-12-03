@@ -111,6 +111,8 @@ type
     function BinaryExcludes(const value: Double; const oAscending: Boolean = True): Boolean; overload;
     function BinarySpanning(const value: Double; const oAscending: Boolean = True): TRange; overload;
     function BinarySpanning(const range: TRange; const oAscending: Boolean = True): TRange; overload;
+    function BinarySpanOf(const value: Double; const oAscending: Boolean = True): TRange; overload;
+    function BinarySpanOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
   end;
 {$ENDIF}
 
@@ -1138,6 +1140,30 @@ function TDoubleArrayHelper.BinarySpanning(const value: Double; const oAscending
   @return: TRange containing start and stop indices of elements in the array that are within the specified range.
 [==============================================================================}
 function TDoubleArrayHelper.BinarySpanning(const range: TRange; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinarySpanning2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySpanning2}
+
+{==============================================================================]
+  <BinarySpanOf>
+  @action: Finds the contiguous range (span) of a specific value in a sorted array.
+  @note:
+    - Performs a binary search to locate any occurrence of the value.
+    - Once found, expands linearly left and right to determine the full span.
+    - Works on arrays sorted ascending or descending (controlled by oAscending).
+    - Returns TRange(-1, -1) if the value is not found.
+  @return: TRange containing start and stop indices of the value in the array.
+[==============================================================================}
+function TDoubleArrayHelper.BinarySpanOf(const value: Double; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinarySpanOf1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySpanOf1}
+
+{==============================================================================]
+  <BinarySpanOf>
+  @action: Finds the contiguous range (span) of elements within a specified value range in a sorted array.
+  @note:
+    - Performs a binary search to locate any element within the target range.
+    - Once found, expands linearly left and right to determine the full span of elements inside the range.
+    - Works on arrays sorted ascending or descending (controlled by oAscending).
+    - Returns TRange(-1, -1) if no elements are within the specified range.
+  @return: TRange containing start and stop indices of elements in the array within the range.
+[==============================================================================}
+function TDoubleArrayHelper.BinarySpanOf(const range: TRange; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinarySpanOf2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySpanOf2}
 {$ENDIF}
 
 {$UNDEF Double}
