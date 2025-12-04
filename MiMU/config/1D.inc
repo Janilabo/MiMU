@@ -137,7 +137,9 @@ function IDs(const ID: TIntegerArray; const items: TArr): TArr; overload;
 function Includes(const item: TVar; const index: Integer = 2147483647): Boolean; overload;
 function Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
+function Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indices(const aAscending: Boolean = True): TIntegerArray; overload;
+function Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
 function Inject(const items: TArr; const index: Integer = 2147483647): Integer; overload;
 function Keep(const items: TArr; const index: Integer = 0): TArr; overload;
 function Kill: Integer; overload;
@@ -3070,6 +3072,69 @@ begin
   SetLength(Result, l);
   for i := 0 to (l - 1) do
     Result[i] := IfThen(aAscending, i, ((l - i) - 1));
+end;
+
+{==============================================================================]
+  <Indexing>
+  @action: Returns an array of all valid indexes of the dynamic array.
+           Supports ascending or descending order.
+  @note:
+    - Ascending: [0..Length(Self)-1]
+    - Descending: [Length(Self)-1..0]
+    - Uses efficient two-pointer approach for small/medium arrays.
+    - Optional divide-and-conquer recursive variant can be used for huge arrays.
+[==============================================================================}
+function HArr.Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
+procedure RI(var return: TIntegerArray; const L, R: Integer);
+var
+  M: Integer;
+begin
+  if (L > R) then
+    Exit;
+  if (L = R) then
+  begin
+    if aAscending then
+      return[L] := L
+    else
+      return[L] := (High(return) - L);
+    Exit;
+  end;
+  M := (L + ((R - L) div 2));
+  RI(return, L, M);
+  RI(return, (M + 1), R);
+end;
+begin
+  SetLength(Result, Self.Size);
+  if (Result.Size >  0) then
+    RI(Result, 0, High(Self));
+end;
+
+{==============================================================================]
+  <Indices>
+  @action: Returns IDs of arr as TIntegerArray.
+  @note: None.
+[==============================================================================}
+function HArr.Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
+var
+  l: Integer;
+  r: TRange;
+begin
+  SetLength(Result, Self.Size);
+  if Self.Empty then
+    Exit;
+  r.Create(0, High(Self));
+  case aAscending of
+    True:
+    repeat
+      Result[r.start] := r.start;
+      Result[r.stop] := r.stop;
+    until (r.start.Increment > r.stop.Decrement);
+    False:
+    repeat
+      Result[r.start] := r.stop;
+      Result[r.stop] := r.start;
+    until (r.start.Increment > r.stop.Decrement);
+  end;
 end;
 
 {==============================================================================]
