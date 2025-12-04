@@ -234,6 +234,10 @@ type
     function BinarySpanOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
     function BinaryRangeOf(const value: Integer; const oAscending: Boolean = True): TRange; overload;
     function BinaryRangeOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
+    function BinaryUnique(const oAscending: Boolean = True): Integer; overload;
+	function BinaryUniqued(const oAscending: Boolean = True): TIntegerArray; overload;
+    function BinaryUniq(const oAscending: Boolean = True): Integer; overload;
+    function BinaryUniqd(const oAscending: Boolean = True): TIntegerArray; overload;
   end;
 {$ENDIF}
 
@@ -4488,6 +4492,53 @@ function TIntegerArrayHelper.BinaryRangeOf(const value: Integer; const oAscendin
   @return: TRange containing start and stop indices of elements in the array within the range.
 [==============================================================================}
 function TIntegerArrayHelper.BinaryRangeOf(const range: TRange; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinaryRangeOf2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRangeOf2}
+
+{==============================================================================]
+  <BinaryUnique>
+  @action: Sorts the array using binary sort, removes duplicate values in-place,
+           and returns the final number of unique elements.
+  @note: This routine always performs a full binary sort prior to uniqueness
+         filtering. After sorting, it compacts the array by overwriting
+         duplicates and truncating the underlying storage to the count of
+         uniques.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryUnique(const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryUnique}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUnique}
+
+{==============================================================================]
+  <BinaryUniqued>
+  @action: Returns a new array containing the unique values of the source array,
+           sorted according to the specified order, without modifying the
+           original array.
+  @note: The function makes a full copy of the source array, applies a binary
+         sort, removes duplicates by in-place compaction of the copy, and
+         trims the resulting array to the count of unique elements.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryUniqued(const oAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryUniqued}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUniqued}
+
+{==============================================================================]
+  <BinaryUniq>
+  @action: Removes duplicate values from an already monotonic array (ascending
+           or descending), preserving only unique values and returning the final
+           count.
+  @note: Unlike BinaryUnique, this routine does not sort the array. It assumes
+         the array is already ordered in the direction specified by oAscending.
+         It performs a linear scan to compact unique values and truncates the
+         array afterward.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryUniq(const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryUniq}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUniq}
+
+{==============================================================================]
+  <BinaryUniqd>
+  @action: Returns a new array containing only the unique values from the source
+           array, assuming the source is already ordered (ascending or descending),
+           without modifying the original array.
+  @note: This routine does not perform sorting. It creates a copy of the source
+         array and then performs a linear uniqueness pass based on the direction
+         specified by oAscending. Only strictly increasing (or strictly
+         decreasing) transitions are preserved. The result is compacted in-place
+         and truncated to the number of unique values.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryUniqd(const oAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryUniqd}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryUniqd}
 
 class function TIA.Init(var arr: TIntegerArray): Integer; overload; 
 begin

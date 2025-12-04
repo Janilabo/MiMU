@@ -2881,3 +2881,83 @@ begin
   end;
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_BinaryUnique}
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(l);
+  Self.BinarySort(oAscending);
+  Result := 1;
+  for i := 1 to (l - 1) do
+    if (Self[i] <> Self[Result - 1]) then
+      Self[Result.Increase] := Self[i];
+  if (Result < l) then
+    SetLength(Self, Result);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUniqued}
+var
+  i, l: Integer;
+begin
+  Result := Self.Copy;
+  if (Result.Size < 2) then
+    Exit;
+  Result.BinarySort(oAscending);
+  l := 1;
+  for i := 1 to High(Result) do
+    if (Result[i] <> Result[l - 1]) then
+      Result[l.Increase] := Result[i];
+  if (Result.Size > l) then
+    SetLength(Result, l);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUniq}
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(l);
+  Result := 1;
+  case oAscending of
+    True:
+    for i := 1 to (l - 1) do
+      if (Self[i] > Self[Result - 1]) then
+        Self[Result.Increase] := Self[i];
+    False:
+    for i := 1 to (l - 1) do
+      if (Self[i] < Self[Result - 1]) then
+        Self[Result.Increase] := Self[i];
+  end;
+  if (Result < l) then
+    SetLength(Self, Result);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_BinaryUniqd}
+var
+  i, l: Integer;
+begin
+  Result := Self.Copy;
+  if (Result.Size < 2) then
+    Exit;
+  l := 1;
+  case oAscending of
+    True:
+    for i := 1 to High(Result) do
+      if (Result[i] > Result[l - 1]) then
+        Result[l.Increase] := Result[i];
+    False:
+    for i := 1 to High(Result) do
+      if (Result[i] < Result[l - 1]) then
+        Result[l.Increase] := Result[i];
+  end;
+  if (Result.Size > l) then
+    SetLength(Result, l);
+end;
+{$ENDIF}
