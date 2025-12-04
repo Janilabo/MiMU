@@ -113,6 +113,8 @@ type
     function BinarySpanning(const range: TRange; const oAscending: Boolean = True): TRange; overload;
     function BinarySpanOf(const value: Double; const oAscending: Boolean = True): TRange; overload;
     function BinarySpanOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
+    function BinaryRangeOf(const value: Double; const oAscending: Boolean = True): TRange; overload;
+    function BinaryRangeOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
   end;
 {$ENDIF}
 
@@ -1164,6 +1166,28 @@ function TDoubleArrayHelper.BinarySpanOf(const value: Double; const oAscending: 
   @return: TRange containing start and stop indices of elements in the array within the range.
 [==============================================================================}
 function TDoubleArrayHelper.BinarySpanOf(const range: TRange; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinarySpanOf2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinarySpanOf2}
+
+{==============================================================================]
+  <BinaryRangeOf>
+  @action: Finds the contiguous range of a specific value in a sorted array.
+  @note:
+    - Fully binary search based; no linear expansion.
+    - Works with arrays sorted ascending or descending.
+    - Returns TRange(-1, -1) if the value is not found.
+  @return: TRange containing start and stop indices of the value in the array.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryRangeOf(const value: Double; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinaryRangeOf1}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRangeOf1}
+
+{==============================================================================]
+  <BinaryRangeOf>
+  @action: Finds the contiguous range of elements within a specified value range in a sorted array.
+  @note:
+    - Fully binary search based; no linear expansion.
+    - Works with arrays sorted ascending or descending.
+    - Returns TRange(-1, -1) if no elements fall within the range.
+  @return: TRange containing start and stop indices of elements in the array within the range.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryRangeOf(const range: TRange; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinaryRangeOf2}{$I config\Skeletons.inc}{$UNDEF Skeleton_BinaryRangeOf2}
 {$ENDIF}
 
 {$UNDEF Double}
