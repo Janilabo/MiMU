@@ -5,7 +5,8 @@
 
 {$IFDEF HELPERS}
 type
-  HArr = type helper for TArr {$I config\1D.inc}
+  TStringArrayHelper = type helper for TStringArray
+    {$I config\1D.inc}
     function Tally: Int64;
     function Concat: string;
     function Concatenate: string;

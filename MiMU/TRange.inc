@@ -262,7 +262,8 @@ function Range(const val: Integer = 0): TRange; overload; inline;
 
 {$IFDEF HELPERS}
 type
-  HVar = type helper for TVar {$I config\0D.inc}
+  TRangeHelper = type helper for TRange
+    {$I config\0D.inc}
     function Create: TRange; overload;
     function Distribute(const parts: Integer): TRangeArray;
     function Partition(const size: Integer): TRangeArray;

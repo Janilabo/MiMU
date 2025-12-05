@@ -5,7 +5,8 @@
 
 {$IFDEF HELPERS}
 type
-  HArr = type helper for TArr {$I config\1D.inc}
+  TBoxArrayHelper = type helper for TBoxArray
+    {$I config\1D.inc}
     function X1s: TIntegerArray; overload;
     function X2s: TIntegerArray; overload;
     function Y1s: TIntegerArray; overload;

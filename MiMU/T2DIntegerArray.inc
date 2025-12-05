@@ -12,7 +12,8 @@ type
 
 {$IFDEF HELPERS}
 type
-  H2DArr = type helper for T2DArr {$I config\2D.inc}
+  T2DIntegerArrayHelper = type helper for T2DIntegerArray
+    {$I config\2D.inc}
   end;
 {$ENDIF}
 

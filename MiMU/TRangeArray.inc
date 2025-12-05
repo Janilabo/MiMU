@@ -5,7 +5,8 @@
 
 {$IFDEF HELPERS}
 type
-  HArr = type helper for TArr {$I config\1D.inc}
+  TRangeArrayHelper = type helper for TRangeArray
+    {$I config\1D.inc}
     function Bounds: TRange; overload;
     function Range: TRange; overload;
     function TIA: TIntegerArray;

@@ -14,7 +14,8 @@ type
 
 {$IFDEF HELPERS}
 type
-  HArr = type helper for TArr {$I config\1D.inc}
+  TPointArrayHelper = type helper for TPointArray
+    {$I config\1D.inc}
     function Binify(const xRadius, yRadius: Integer): T2DPointArray; overload;
     function Binify(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
     function Binified(const xRadius, yRadius: Integer): T2DPointArray; overload;

@@ -5,7 +5,7 @@
 
 {$IFDEF HELPERS}
 type
-  HVar = type helper for TVar 
+  TInt64Helper = type helper for Int64 
     function Prime: Boolean; 
     function IsPrime: Boolean; 
     function Parity: Byte; inline;

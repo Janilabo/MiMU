@@ -204,7 +204,8 @@ function Box(const val: Integer = 0): TBox; overload; inline;
 
 {$IFDEF HELPERS}
 type
-  HVar = type helper for TVar {$I config\0D.inc}
+  TBoxHelper = type helper for TBox
+    {$I config\0D.inc}
     function Create: TBox; overload;
     function Inside(const targets: TBoxArray): Boolean; overload;
     function AsGrid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;

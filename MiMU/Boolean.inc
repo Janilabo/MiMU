@@ -8,7 +8,8 @@ type
 
 {$IFDEF HELPERS}
 type
-  HVar = type helper for TVar {$I config\0D.inc}
+  TBooleanHelper = type helper for Boolean
+    {$I config\0D.inc}
     function ToString: string;
     function Binary: Char;
     function BinaryDigit: Integer;

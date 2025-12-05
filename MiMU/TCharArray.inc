@@ -5,7 +5,8 @@
 
 {$IFDEF HELPERS}
 type
-  HArr = type helper for TArr {$I config\1D.inc}
+  TCharArrayHelper = type helper for TCharArray
+    {$I config\1D.inc}
     function Str: string;
     function ToStr: string;
     function Join: string; overload;

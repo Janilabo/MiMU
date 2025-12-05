@@ -9,7 +9,8 @@ type
 
 {$IFDEF HELPERS}
 type
-  HArr = type helper for TArr {$I config\1D.inc}
+  TBooleanArrayHelper = type helper for TBooleanArray
+    {$I config\1D.inc}
     function Select(const sTrue, sFalse: Integer): TIntegerArray; overload;
     function Select(const sTrue, sFalse: Double): TDoubleArray; overload;
     function Select(const sTrue, sFalse: string): TStringArray; overload;

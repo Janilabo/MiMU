@@ -8,7 +8,8 @@ type
 
 {$IFDEF HELPERS}
 type
-  HVar = type helper for TVar {$I config\0D.inc}
+  TIntegerHelper = type helper for Integer
+    {$I config\0D.inc}
     function ClampMin(const limit: Integer): Integer;
     function ClampMax(const limit: Integer): Integer;
     function Clamp(const minimum, maximum: Integer): Integer; overload;

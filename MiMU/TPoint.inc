@@ -92,7 +92,8 @@ function Point(const val: Integer = 0): TPoint; overload; inline;
 
 {$IFDEF HELPERS}
 type
-  HVar = type helper for TVar {$I config\0D.inc}
+  TPointHelper = type helper for TPoint
+    {$I config\0D.inc}
     function Inside(const bx: TBox): Boolean; inline;
     function Clamp(const area: TBox): TPoint;
     function Create: TPoint; overload;

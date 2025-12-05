@@ -8,7 +8,8 @@ type
 
 {$IFDEF HELPERS}
 type
-  HVar = type helper for TVar {$I config\0D.inc}
+  TStringHelper = type helper for string
+    {$I config\0D.inc}
     function After(const s: string; const index: Integer = 1): string; overload;
     function After(const index: Integer; const count: Integer = 2147483647): string; overload;
     function Ahead(const s: string; const index: Integer = 2147483647): string; overload;

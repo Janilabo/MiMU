@@ -14,7 +14,8 @@ type
 
 {$IFDEF HELPERS}
 type
-  HArr = type helper for TArr {$I config\1D.inc}
+  TIntegerArrayHelper = type helper for TIntegerArray
+    {$I config\1D.inc}
     function Bounds: TRange; overload;
     function Bounds(var aSize: Integer): TRange; overload;
     function BoundingRange: TRange;

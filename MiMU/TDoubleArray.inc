@@ -5,7 +5,8 @@
 
 {$IFDEF HELPERS}
 type
-  HArr = type helper for TArr {$I config\1D.inc}
+  TDoubleArrayHelper = type helper for TDoubleArray
+    {$I config\1D.inc}
     function Reinit: Integer; overload;
     function Attach(const items: TDoubleArray): Integer; overload;
     function Embed(const items: TDoubleArray; const index: Integer = 2147483647): Integer; overload;
