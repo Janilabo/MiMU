@@ -1,28 +1,24 @@
 {$DEFINE TBox}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-{$ENDIF}
-
 {$IFDEF HELPERS}
-type
-  TBoxArrayHelper = type helper for TBoxArray
-    {$I config\1D.inc}
-    function X1s: TIntegerArray; overload;
-    function X2s: TIntegerArray; overload;
-    function Y1s: TIntegerArray; overload;
-    function Y2s: TIntegerArray; overload;
-    function X1Values: TIntegerArray; overload;
-    function X2Values: TIntegerArray; overload;
-    function Y1Values: TIntegerArray; overload;
-    function Y2Values: TIntegerArray; overload;
-    function Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
-    function Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
-    function Bounds: TBox; overload;
-    function Boundaries: TBox; overload;
-  end;
+TBoxArrayHelper = type helper for TBoxArray
+  {$I config\1D.inc}
+  function X1s: TIntegerArray; overload;
+  function X2s: TIntegerArray; overload;
+  function Y1s: TIntegerArray; overload;
+  function Y2s: TIntegerArray; overload;
+  function X1Values: TIntegerArray; overload;
+  function X2Values: TIntegerArray; overload;
+  function Y1Values: TIntegerArray; overload;
+  function Y2Values: TIntegerArray; overload;
+  function Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
+  function Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
+  function Bounds: TBox; overload;
+  function Boundaries: TBox; overload;
+end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(INTERFACE)} 
+{$IF DEFINED(METHODS) OR DEFINED(IMPLEMENTATION)} 
 {$DEFINE FField := X1}{$I config\F.inc}
 {$DEFINE FField := Y1}{$I config\F.inc}
 {$DEFINE FField := X2}{$I config\F.inc}

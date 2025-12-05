@@ -1,18 +1,14 @@
 {$DEFINE string}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-{$ENDIF}
-
 {$IFDEF HELPERS}
-type
-  TStringArrayHelper = type helper for TStringArray
-    {$I config\1D.inc}
-    function Tally: Int64;
-    function Concat: string;
-    function Concatenate: string;
-    function Flatten: string;
-    function Glue: string;
-  end;
+TStringArrayHelper = type helper for TStringArray
+  {$I config\1D.inc}
+  function Tally: Int64;
+  function Concat: string;
+  function Concatenate: string;
+  function Flatten: string;
+  function Glue: string;
+end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

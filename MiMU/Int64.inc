@@ -1,39 +1,35 @@
 {$DEFINE Int64}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-{$ENDIF}
-
 {$IFDEF HELPERS}
-type
-  TInt64Helper = type helper for Int64 
-    function Prime: Boolean; 
-    function IsPrime: Boolean; 
-    function Parity: Byte; inline;
-    function Even: Boolean; inline;
-    function Odd: Boolean; inline;
-    function Increase(const N: Int64 = 1): Int64; overload;
-    function Increase(const B: Boolean): Int64; overload;
-    function Decrease(const N: Int64 = 1): Int64; overload;
-    function Decrease(const B: Boolean): Int64; overload;	
-    function Increment(const N: Int64 = 1): Int64; overload;
-    function Increment(const B: Boolean): Int64; overload;
-    function Decrement(const N: Int64 = 1): Int64; overload;
-    function Decrement(const B: Boolean): Int64; overload;
-    function DigitCount: Integer; 
-    function Digitz: TIntegerArray; 
-    function Digits: TIntegerArray; 
-    function Compare(const target: Int64): Integer; inline;
-    function Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; 
-    function Distance(const T: Int64): Int64; inline;
-    function Difference(const T: Int64): Int64; inline;
-    function Opposite: Int64; inline;
-    function Sign(const target: Int64 = 0): Integer; inline;
-    function Shuffle: Int64; 
-    function Over(const target: Int64): Boolean; inline;
-    function Under(const target: Int64): Boolean; inline;
-    function Oversize(const limit: Int64): Boolean; inline;
-    function Undersize(const limit: Int64): Boolean; inline;
-  end;
+TInt64Helper = type helper for Int64 
+  function Prime: Boolean; 
+  function IsPrime: Boolean; 
+  function Parity: Byte; inline;
+  function Even: Boolean; inline;
+  function Odd: Boolean; inline;
+  function Increase(const N: Int64 = 1): Int64; overload;
+  function Increase(const B: Boolean): Int64; overload;
+  function Decrease(const N: Int64 = 1): Int64; overload;
+  function Decrease(const B: Boolean): Int64; overload;	
+  function Increment(const N: Int64 = 1): Int64; overload;
+  function Increment(const B: Boolean): Int64; overload;
+  function Decrement(const N: Int64 = 1): Int64; overload;
+  function Decrement(const B: Boolean): Int64; overload;
+  function DigitCount: Integer; 
+  function Digitz: TIntegerArray; 
+  function Digits: TIntegerArray; 
+  function Compare(const target: Int64): Integer; inline;
+  function Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; 
+  function Distance(const T: Int64): Int64; inline;
+  function Difference(const T: Int64): Int64; inline;
+  function Opposite: Int64; inline;
+  function Sign(const target: Int64 = 0): Integer; inline;
+  function Shuffle: Int64; 
+  function Over(const target: Int64): Boolean; inline;
+  function Under(const target: Int64): Boolean; inline;
+  function Oversize(const limit: Int64): Boolean; inline;
+  function Undersize(const limit: Int64): Boolean; inline;
+end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

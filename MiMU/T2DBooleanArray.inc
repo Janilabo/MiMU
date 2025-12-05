@@ -1,13 +1,9 @@
 {$DEFINE Boolean}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-{$ENDIF}
-
 {$IFDEF HELPERS}
-type
-  T2DBooleanArrayHelper = type helper for T2DBooleanArray
-    {$I config\2D.inc}
-  end;
+T2DBooleanArrayHelper = type helper for T2DBooleanArray
+  {$I config\2D.inc}
+end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

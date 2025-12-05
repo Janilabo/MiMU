@@ -53,8 +53,10 @@ function MiMU_Version: Double;
 type
   TDistanceMetric = (dmHypotEuclidean, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev, dmMinkowski, dmMaxMinChebyshev, dmOctile);
 
-{$DEFINE INTERFACE}{$I MiMU.inc}{$UNDEF INTERFACE}
+{$DEFINE TYPES}{$I MiMU.inc}{$UNDEF TYPES}
 {$DEFINE HELPERS}{$I MiMU.inc}{$UNDEF HELPERS}
+{$DEFINE METHODS}{$I MiMU.inc}{$UNDEF METHODS}
+{$DEFINE OPERATORS}{$I MiMU.inc}{$UNDEF OPERATORS}
 
 type
   T1D = class

@@ -1,81 +1,87 @@
 {$DEFINE TPoint}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-type
-  TPoint = record
-    X, Y: Integer;
-    constructor Create(const pX, pY: Integer); overload;
-    constructor Create(const value: Integer); overload;
-    class function Construct(const pX, pY: Integer): TPoint; overload; static;
-    class function Null(const value: Integer = -2147483648): TPoint; overload; static;
-    function Build(const pX, pY: Integer): TPoint;  inline;
-	function Lower(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-    function Higher(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-	function Under(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-    function Over(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-    function Behind(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-    function Ahead(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-    function Comparison(const target: TPoint): Integer; overload;
-    function Compare(const target: TPoint): Integer; overload;
-    function Compared(const target: TPoint): Integer; overload;
-    function Comp(const target: TPoint): Integer; overload;
-    function Cmp(const target: TPoint): Integer; overload;
-    function XComp(const target: TPoint): Integer; inline;
-    function YComp(const target: TPoint): Integer; inline;
-    function XCompare(const target: TPoint): Integer;
-    function YCompare(const target: TPoint): Integer;
-    function CompareX(const target: TPoint): Integer;
-    function CompareY(const target: TPoint): Integer;
-    function CompX(const target: TPoint): Integer;
-    function CompY(const target: TPoint): Integer;
-    function InCircle(const center: TPoint; const radius: Double): Boolean; inline;
-    function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; inline;
-    function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; 
-    function AngleRadians(const target: TPoint): Double;
-    function DistHypotEuclidean(const target: TPoint): Double; 	
-    function DistEuclidean(const target: TPoint): Double; 
-    function DistEuclidean2(const target: TPoint): Double; 
-    function DistSquaredEuclidean(const target: TPoint): Double; 
-    function DistManhattan(const target: TPoint): Double; 
-    function DistChebyshev(const target: TPoint): Double;
-    function DistMinkowski(const target: TPoint): Double; overload;
-    function DistMinkowski(const target: TPoint; const P: Double): Double; overload;
-    function DistMaxMinChebyshev(const target: TPoint): Double;
-    function DistOctile(const target: TPoint): Double;
-    function Within(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
-    function Near(const target: TPoint; const radius: Double = 1.0): Boolean; overload;
-    function Near(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
-    function Neighbour(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
-    function Neighbor(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
-    function Adjacent(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
-    function DistX(const target: TPoint): Integer;
-    function DistY(const target: TPoint): Integer;
-    function DistanceX(const target: TPoint): Integer;
-    function DistanceY(const target: TPoint): Integer;
-    function DistMaxMinX(const Target: TPoint): Integer;
-    function DistMaxMinY(const Target: TPoint): Integer;
-    function Reflected: TPoint; inline;
-    function Flipped: TPoint; inline;
-    function DeltaX(const target: TPoint): Integer;
-    function DeltaY(const target: TPoint): Integer;
-    function Delta(const target: TPoint): TPoint;
-    function HorizontalDist(const target: TPoint): Integer;
-    function VerticalDist(const target: TPoint): Integer;
-    function Uniform(const val: Integer): Boolean; overload;
-    function Uniform: Boolean; overload;
-    function Employs(const val: Integer): Boolean;
-    function Omits(const val: Integer): Boolean; 	
-  end;
-  TPointArray = array of TPoint;
-  T2DPointArray = array of TPointArray;
-  PPoint = ^TPoint;
-  _TPoint = class
-  public
-    class function Create(const pX, pY: Integer): TPoint; overload; 
-    class function Create(const value: Integer = 0): TPoint; overload; 
-  end;
-  TDistanceFunction = function(const A, B: TPoint): Double;
-  
+{$IFDEF TYPES}
+TPoint = record
+  X, Y: Integer;
+  constructor Create(const pX, pY: Integer); overload;
+  constructor Create(const value: Integer); overload;
+  class function Construct(const pX, pY: Integer): TPoint; overload; static;
+  class function Null(const value: Integer = -2147483648): TPoint; overload; static;
+  function Build(const pX, pY: Integer): TPoint;  inline;
+  function Lower(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+  function Higher(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+  function Under(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+  function Over(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+  function Behind(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+  function Ahead(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+  function Comparison(const target: TPoint): Integer; overload;
+  function Compare(const target: TPoint): Integer; overload;
+  function Compared(const target: TPoint): Integer; overload;
+  function Comp(const target: TPoint): Integer; overload;
+  function Cmp(const target: TPoint): Integer; overload;
+  function XComp(const target: TPoint): Integer; inline;
+  function YComp(const target: TPoint): Integer; inline;
+  function XCompare(const target: TPoint): Integer;
+  function YCompare(const target: TPoint): Integer;
+  function CompareX(const target: TPoint): Integer;
+  function CompareY(const target: TPoint): Integer;
+  function CompX(const target: TPoint): Integer;
+  function CompY(const target: TPoint): Integer;
+  function InCircle(const center: TPoint; const radius: Double): Boolean; inline;
+  function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; inline;
+  function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; 
+  function AngleRadians(const target: TPoint): Double;
+  function DistHypotEuclidean(const target: TPoint): Double; 	
+  function DistEuclidean(const target: TPoint): Double; 
+  function DistEuclidean2(const target: TPoint): Double; 
+  function DistSquaredEuclidean(const target: TPoint): Double; 
+  function DistManhattan(const target: TPoint): Double; 
+  function DistChebyshev(const target: TPoint): Double;
+  function DistMinkowski(const target: TPoint): Double; overload;
+  function DistMinkowski(const target: TPoint; const P: Double): Double; overload;
+  function DistMaxMinChebyshev(const target: TPoint): Double;
+  function DistOctile(const target: TPoint): Double;
+  function Within(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
+  function Near(const target: TPoint; const radius: Double = 1.0): Boolean; overload;
+  function Near(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
+  function Neighbour(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
+  function Neighbor(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
+  function Adjacent(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
+  function DistX(const target: TPoint): Integer;
+  function DistY(const target: TPoint): Integer;
+  function DistanceX(const target: TPoint): Integer;
+  function DistanceY(const target: TPoint): Integer;
+  function DistMaxMinX(const Target: TPoint): Integer;
+  function DistMaxMinY(const Target: TPoint): Integer;
+  function Reflected: TPoint; inline;
+  function Flipped: TPoint; inline;
+  function DeltaX(const target: TPoint): Integer;
+  function DeltaY(const target: TPoint): Integer;
+  function Delta(const target: TPoint): TPoint;
+  function HorizontalDist(const target: TPoint): Integer;
+  function VerticalDist(const target: TPoint): Integer;
+  function Uniform(const val: Integer): Boolean; overload;
+  function Uniform: Boolean; overload;
+  function Employs(const val: Integer): Boolean;
+  function Omits(const val: Integer): Boolean; 	
+end;
+TPointArray = array of TPoint;
+T2DPointArray = array of TPointArray;
+PPoint = ^TPoint;
+_TPoint = class
+public
+  class function Create(const pX, pY: Integer): TPoint; overload; 
+  class function Create(const value: Integer = 0): TPoint; overload; 
+end;
+TDistanceFunction = function(const A, B: TPoint): Double;
+{$ENDIF}
+
+{$IFDEF METHODS}
+function Point(const pX, pY: Integer): TPoint; overload; inline;
+function Point(const val: Integer = 0): TPoint; overload; inline;
+{$ENDIF}
+
+{$IFDEF OPERATORS}
 operator +(const a, b: TPoint): TPoint;
 operator -(const a, b: TPoint): TPoint;
 operator =(const a, b: TPoint): Boolean;
@@ -84,46 +90,41 @@ operator >(const a, b: TPoint): Boolean;
 operator <(const a, b: TPoint): Boolean;
 operator >=(const a, b: TPoint): Boolean;
 operator <=(const a, b: TPoint): Boolean;
-
-function Point(const pX, pY: Integer): TPoint; overload; inline;
-function Point(const val: Integer = 0): TPoint; overload; inline;
-
 {$ENDIF}
 
 {$IFDEF HELPERS}
-type
-  TPointHelper = type helper for TPoint
-    {$I config\0D.inc}
-    function Inside(const bx: TBox): Boolean; inline;
-    function Clamp(const area: TBox): TPoint;
-    function Create: TPoint; overload;
-    function Sign(const target: TPoint): Integer; overload; inline;
-    function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray;
-    function Row(const cells: Integer; const space: Integer = 0): TPointArray;
-    function Column(const cells: Integer; const space: Integer = 0): TPointArray;
-    function Surrounding(const adjacency8: Boolean = True): TPointArray; overload;
-    function Adjacent(const adjacency8: Boolean = True): TPointArray; overload;
-    procedure Adjacent(var adj: TPointArray; const adjacency8: Boolean = True); overload;
-    function Adjacency(const adjacency8: Boolean = True): TPointArray; overload;	  
-    function Neighbours(const adjacency8: Boolean = True): TPointArray; overload;
-    procedure Neighbours(var adj: TPointArray); overload;
-    function Neighbors(const adjacency8: Boolean = True): TPointArray; overload;
-    procedure Neighbors(var adj: TPointArray); overload;
-    function ToY(const yGoal: Integer): TPointArray; overload;
-    function ToX(const xGoal: Integer): TPointArray; overload;
-    function Linked(const p: TPoint; const link: TPointArray): Boolean; overload;
-    function Boxed(const xRadius, yRadius: Integer): TBox; overload;
-    function Boxed(const radius: Integer = 0): TBox; overload;
-    function ToBox(const width, height: Integer): TBox; overload;
-    function ToBox(const size: Integer = 0): TBox; overload;
-    function Boxify(const width, height: Integer): TBox; overload;
-    function Boxify(const size: Integer = 0): TBox; overload;
-    function Within(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
-    function Within(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): Boolean; overload;
-    function Near(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
-    function Near(const target: TPoint; const radius: Double; const metric: TDistanceMetric): Boolean; overload;
-    function Dist(const target: TPoint; const metric: TDistanceMetric = dmEuclidean): Double;
-  end;
+TPointHelper = type helper for TPoint
+  {$I config\0D.inc}
+  function Inside(const bx: TBox): Boolean; inline;
+  function Clamp(const area: TBox): TPoint;
+  function Create: TPoint; overload;
+  function Sign(const target: TPoint): Integer; overload; inline;
+  function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray;
+  function Row(const cells: Integer; const space: Integer = 0): TPointArray;
+  function Column(const cells: Integer; const space: Integer = 0): TPointArray;
+  function Surrounding(const adjacency8: Boolean = True): TPointArray; overload;
+  function Adjacent(const adjacency8: Boolean = True): TPointArray; overload;
+  procedure Adjacent(var adj: TPointArray; const adjacency8: Boolean = True); overload;
+  function Adjacency(const adjacency8: Boolean = True): TPointArray; overload;	  
+  function Neighbours(const adjacency8: Boolean = True): TPointArray; overload;
+  procedure Neighbours(var adj: TPointArray); overload;
+  function Neighbors(const adjacency8: Boolean = True): TPointArray; overload;
+  procedure Neighbors(var adj: TPointArray); overload;
+  function ToY(const yGoal: Integer): TPointArray; overload;
+  function ToX(const xGoal: Integer): TPointArray; overload;
+  function Linked(const p: TPoint; const link: TPointArray): Boolean; overload;
+  function Boxed(const xRadius, yRadius: Integer): TBox; overload;
+  function Boxed(const radius: Integer = 0): TBox; overload;
+  function ToBox(const width, height: Integer): TBox; overload;
+  function ToBox(const size: Integer = 0): TBox; overload;
+  function Boxify(const width, height: Integer): TBox; overload;
+  function Boxify(const size: Integer = 0): TBox; overload;
+  function Within(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
+  function Within(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): Boolean; overload;
+  function Near(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
+  function Near(const target: TPoint; const radius: Double; const metric: TDistanceMetric): Boolean; overload;
+  function Dist(const target: TPoint; const metric: TDistanceMetric = dmEuclidean): Double;
+end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

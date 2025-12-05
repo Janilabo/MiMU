@@ -1,57 +1,55 @@
 {$DEFINE Boolean}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-type
-  TBA = class
-    class function Init(var arr: TBooleanArray): Integer; overload; 
-  end;
+{$IFDEF TYPES}
+TBA = class
+  class function Init(var arr: TBooleanArray): Integer; overload; 
+end;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-type
-  TBooleanArrayHelper = type helper for TBooleanArray
-    {$I config\1D.inc}
-    function Select(const sTrue, sFalse: Integer): TIntegerArray; overload;
-    function Select(const sTrue, sFalse: Double): TDoubleArray; overload;
-    function Select(const sTrue, sFalse: string): TStringArray; overload;
-    function Select(const sTrue, sFalse: Char): TCharArray; overload;
-    function Select(const sTrue, sFalse: Boolean): TBooleanArray; overload;
-    function Select(const sTrue, sFalse: TPoint): TPointArray; overload;
-    function Select(const sTrue, sFalse: TBox): TBoxArray; overload;
-    function Select(const sTrue, sFalse: TRange): TRangeArray; overload;
-    function Bits: Integer;
-    function Bitify: Integer;
-    function ToBits: Integer;
-    function Digits: TIntegerArray; overload;
-    function Falsed: Boolean; overload;
-    function Falseless: Boolean; overload;
-    function Falseless(const maxFalse: Integer): Boolean; overload;
-    function Falseness: Integer; overload;
-    function Falses: TIntegerArray; overload;
-    function Falsesome: Boolean; overload;
-    function Falsesome(const minFalse: Integer): Boolean; overload;
-    function Str(const separator: string; const strTrue: string = 'True'; strFalse: string = 'False'): string; overload;
-    function Str: string; overload;
-    function Text(const strTrue, strFalse, separator: string): string; overload;
-    function Text(const strTrue: string = 'True'; strFalse: string = 'False'): string; overload;
-    function TIA(const valTrue: Integer = 1; const valFalse: Integer = 0): TIntegerArray; overload;
-    function Toggle: TBooleanArray; overload;
-    function Trued: Boolean; overload;
-    function Trueless: Boolean; overload;
-    function Trueless(const maxTrue: Integer): Boolean; overload;
-    function Trueness: Integer; overload;
-    function Trues: TIntegerArray; overload;
-    function Truesome: Boolean; overload;
-    function Truesome(const minTrue: Integer): Boolean; overload;
-    function Opposite: TBooleanArray; overload;
-    function BinaryStr: string;
-    function BinaryDigits: TIntegerArray;
-    function Binary: string;
-    function Reinit: Integer; overload;
-    function Occupancy(const val: Boolean = True): Double; overload;
-    function Attach(const items: TBooleanArray): Integer; overload;
-    function Embed(const items: TBooleanArray; const index: Integer = 2147483647): Integer; overload;
-  end;
+TBooleanArrayHelper = type helper for TBooleanArray
+  {$I config\1D.inc}
+  function Select(const sTrue, sFalse: Integer): TIntegerArray; overload;
+  function Select(const sTrue, sFalse: Double): TDoubleArray; overload;
+  function Select(const sTrue, sFalse: string): TStringArray; overload;
+  function Select(const sTrue, sFalse: Char): TCharArray; overload;
+  function Select(const sTrue, sFalse: Boolean): TBooleanArray; overload;
+  function Select(const sTrue, sFalse: TPoint): TPointArray; overload;
+  function Select(const sTrue, sFalse: TBox): TBoxArray; overload;
+  function Select(const sTrue, sFalse: TRange): TRangeArray; overload;
+  function Bits: Integer;
+  function Bitify: Integer;
+  function ToBits: Integer;
+  function Digits: TIntegerArray; overload;
+  function Falsed: Boolean; overload;
+  function Falseless: Boolean; overload;
+  function Falseless(const maxFalse: Integer): Boolean; overload;
+  function Falseness: Integer; overload;
+  function Falses: TIntegerArray; overload;
+  function Falsesome: Boolean; overload;
+  function Falsesome(const minFalse: Integer): Boolean; overload;
+  function Str(const separator: string; const strTrue: string = 'True'; strFalse: string = 'False'): string; overload;
+  function Str: string; overload;
+  function Text(const strTrue, strFalse, separator: string): string; overload;
+  function Text(const strTrue: string = 'True'; strFalse: string = 'False'): string; overload;
+  function TIA(const valTrue: Integer = 1; const valFalse: Integer = 0): TIntegerArray; overload;
+  function Toggle: TBooleanArray; overload;
+  function Trued: Boolean; overload;
+  function Trueless: Boolean; overload;
+  function Trueless(const maxTrue: Integer): Boolean; overload;
+  function Trueness: Integer; overload;
+  function Trues: TIntegerArray; overload;
+  function Truesome: Boolean; overload;
+  function Truesome(const minTrue: Integer): Boolean; overload;
+  function Opposite: TBooleanArray; overload;
+  function BinaryStr: string;
+  function BinaryDigits: TIntegerArray;
+  function Binary: string;
+  function Reinit: Integer; overload;
+  function Occupancy(const val: Boolean = True): Double; overload;
+  function Attach(const items: TBooleanArray): Integer; overload;
+  function Embed(const items: TBooleanArray; const index: Integer = 2147483647): Integer; overload;
+end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

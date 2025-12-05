@@ -1,20 +1,18 @@
 {$DEFINE Integer}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-type
-  ATIA = class
-  public
-    class function Merge(const arr: T2DIntegerArray): TIntegerArray; overload; 
-    class function Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
-    class function Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
-  end;
+{$IFDEF TYPES}
+ATIA = class
+public
+  class function Merge(const arr: T2DIntegerArray): TIntegerArray; overload; 
+  class function Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
+  class function Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
+end;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-type
-  T2DIntegerArrayHelper = type helper for T2DIntegerArray
-    {$I config\2D.inc}
-  end;
+T2DIntegerArrayHelper = type helper for T2DIntegerArray
+  {$I config\2D.inc}
+end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

@@ -1,18 +1,16 @@
 {$DEFINE TTriangle}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-type
-  TTriangle = record
-    A, B, C: TPoint;
-  end;
-  TTriangleArray = array of TTriangle;
-  T2DTriangleArray = array of TTriangleArray;
-  
-operator =(const a, b: TTriangle): Boolean;
-operator <>(const a, b: TTriangle): Boolean;
+{$IFDEF TYPES}
+TTriangle = record
+  A, B, C: TPoint;
+end;
+TTriangleArray = array of TTriangle;
+T2DTriangleArray = array of TTriangleArray;
 {$ENDIF}
 
-{$IFDEF HELPERS}
+{$IFDEF OPERATORS}
+operator =(const a, b: TTriangle): Boolean;
+operator <>(const a, b: TTriangle): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

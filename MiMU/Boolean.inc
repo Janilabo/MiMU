@@ -1,52 +1,50 @@
 {$DEFINE Boolean}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-type
-  TBooleanArray = array of Boolean;
-  T2DBooleanArray = array of TBooleanArray;
+{$IFDEF TYPES}
+TBooleanArray = array of Boolean;
+T2DBooleanArray = array of TBooleanArray;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-type
-  TBooleanHelper = type helper for Boolean
-    {$I config\0D.inc}
-    function ToString: string;
-    function Binary: Char;
-    function BinaryDigit: Integer;
-    function Bit: Integer; inline;
-    function Bitify: Integer;
-    function ToInteger: Integer;
-    function AsInteger: Integer;
-    function Toggle: Boolean;
-    function Opposite: Boolean;
-    function Switch: Boolean;
-    function Flip: Boolean;
-    function Shuffle: Boolean;
-    function Select(const bTrue, bFalse: Integer): Integer; overload;
-    function Select(const bTrue, bFalse: Int64): Int64; overload;
-    function Select(const bTrue, bFalse: Double): Double; overload;
-    function Select(const bTrue, bFalse: string): string; overload;
-    function Select(const bTrue, bFalse: Char): Char; overload;
-    function Select(const bTrue, bFalse: Boolean): Boolean; overload;
-    function Select(const bTrue, bFalse: TPoint): TPoint; overload;
-    function Select(const bTrue, bFalse: TBox): TBox; overload;
-    function Select(const bTrue, bFalse: TRange): TRange; overload;
-    function Evaluate(const bTrue, bFalse: Integer): Integer; overload;
-    function Evaluate(const bTrue, bFalse: Int64): Int64; overload;
-    function Evaluate(const bTrue, bFalse: Double): Double; overload;
-    function Evaluate(const bTrue, bFalse: string): string; overload;
-    function Evaluate(const bTrue, bFalse: Char): Char; overload;
-    function Evaluate(const bTrue, bFalse: Boolean): Boolean; overload;
-    function Evaluate(const bTrue, bFalse: TPoint): TPoint; overload;
-    function Evaluate(const bTrue, bFalse: TBox): TBox; overload;
-    function Evaluate(const bTrue, bFalse: TRange): TRange; overload;
-    function Enable: Boolean;
-    function Disable: Boolean;
-    function SetFalse: Integer;
-    function SetTrue: Integer;
-    function SwitchOn(const state: Boolean): Boolean;
-    function SwitchOff(const state: Boolean): Boolean;
-  end;
+TBooleanHelper = type helper for Boolean
+  {$I config\0D.inc}
+  function ToString: string;
+  function Binary: Char;
+  function BinaryDigit: Integer;
+  function Bit: Integer; inline;
+  function Bitify: Integer;
+  function ToInteger: Integer;
+  function AsInteger: Integer;
+  function Toggle: Boolean;
+  function Opposite: Boolean;
+  function Switch: Boolean;
+  function Flip: Boolean;
+  function Shuffle: Boolean;
+  function Select(const bTrue, bFalse: Integer): Integer; overload;
+  function Select(const bTrue, bFalse: Int64): Int64; overload;
+  function Select(const bTrue, bFalse: Double): Double; overload;
+  function Select(const bTrue, bFalse: string): string; overload;
+  function Select(const bTrue, bFalse: Char): Char; overload;
+  function Select(const bTrue, bFalse: Boolean): Boolean; overload;
+  function Select(const bTrue, bFalse: TPoint): TPoint; overload;
+  function Select(const bTrue, bFalse: TBox): TBox; overload;
+  function Select(const bTrue, bFalse: TRange): TRange; overload;
+  function Evaluate(const bTrue, bFalse: Integer): Integer; overload;
+  function Evaluate(const bTrue, bFalse: Int64): Int64; overload;
+  function Evaluate(const bTrue, bFalse: Double): Double; overload;
+  function Evaluate(const bTrue, bFalse: string): string; overload;
+  function Evaluate(const bTrue, bFalse: Char): Char; overload;
+  function Evaluate(const bTrue, bFalse: Boolean): Boolean; overload;
+  function Evaluate(const bTrue, bFalse: TPoint): TPoint; overload;
+  function Evaluate(const bTrue, bFalse: TBox): TBox; overload;
+  function Evaluate(const bTrue, bFalse: TRange): TRange; overload;
+  function Enable: Boolean;
+  function Disable: Boolean;
+  function SetFalse: Integer;
+  function SetTrue: Integer;
+  function SwitchOn(const state: Boolean): Boolean;
+  function SwitchOff(const state: Boolean): Boolean;
+end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

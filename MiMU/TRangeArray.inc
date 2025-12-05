@@ -1,30 +1,26 @@
 {$DEFINE TRange}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-{$ENDIF}
-
 {$IFDEF HELPERS}
-type
-  TRangeArrayHelper = type helper for TRangeArray
-    {$I config\1D.inc}
-    function Bounds: TRange; overload;
-    function Range: TRange; overload;
-    function TIA: TIntegerArray;
-    function T2DIA: T2DIntegerArray;
-    function Starting: TIntegerArray; overload;
-    function Stopping: TIntegerArray; overload;
-    function Normalized: TRangeArray; overload;
-    function Gaps: TRangeArray; overload;
-    function Starts: TIntegerArray; overload;
-    function Stops: TIntegerArray; overload;
-    function StartValues: TIntegerArray; overload;
-    function StopValues: TIntegerArray; overload;
-    function Unzip(var startArr, stopArr: TIntegerArray): Integer;
-    function Zip(const startArr, stopArr: TIntegerArray): Integer; 
-  end;
+TRangeArrayHelper = type helper for TRangeArray
+  {$I config\1D.inc}
+  function Bounds: TRange; overload;
+  function Range: TRange; overload;
+  function TIA: TIntegerArray;
+  function T2DIA: T2DIntegerArray;
+  function Starting: TIntegerArray; overload;
+  function Stopping: TIntegerArray; overload;
+  function Normalized: TRangeArray; overload;
+  function Gaps: TRangeArray; overload;
+  function Starts: TIntegerArray; overload;
+  function Stops: TIntegerArray; overload;
+  function StartValues: TIntegerArray; overload;
+  function StopValues: TIntegerArray; overload;
+  function Unzip(var startArr, stopArr: TIntegerArray): Integer;
+  function Zip(const startArr, stopArr: TIntegerArray): Integer; 
+end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(INTERFACE)} 
+{$IF DEFINED(METHODS) OR DEFINED(IMPLEMENTATION)} 
 {$DEFINE FField := start}{$I config\F.inc}
 {$DEFINE FField := stop}{$I config\F.inc}
 {$ENDIF}

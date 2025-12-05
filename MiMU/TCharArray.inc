@@ -1,22 +1,18 @@
 {$DEFINE Char}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-{$ENDIF}
-
 {$IFDEF HELPERS}
-type
-  TCharArrayHelper = type helper for TCharArray
-    {$I config\1D.inc}
-    function Str: string;
-    function ToStr: string;
-    function Join: string; overload;
-    function Join(const glue: string): string; overload;
-    function Stringify: string; overload;
-    function Stringify(const glue: string): string; overload;
-    function Ordinals: TIntegerArray;
-    function Unduped: TCharArray;
-    function TSA: TStringArray;
-  end;
+TCharArrayHelper = type helper for TCharArray
+  {$I config\1D.inc}
+  function Str: string;
+  function ToStr: string;
+  function Join: string; overload;
+  function Join(const glue: string): string; overload;
+  function Stringify: string; overload;
+  function Stringify(const glue: string): string; overload;
+  function Ordinals: TIntegerArray;
+  function Unduped: TCharArray;
+  function TSA: TStringArray;
+end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

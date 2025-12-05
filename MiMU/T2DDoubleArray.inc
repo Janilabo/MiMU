@@ -1,13 +1,9 @@
 {$DEFINE Double}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-{$ENDIF}
-
 {$IFDEF HELPERS}
-type
-  T2DDoubleArrayHelper = type helper for T2DDoubleArray
-    {$I config\2D.inc}
-  end;
+T2DDoubleArrayHelper = type helper for T2DDoubleArray
+  {$I config\2D.inc}
+end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

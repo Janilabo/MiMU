@@ -1,34 +1,32 @@
 {$DEFINE TCircle}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-type
-  TCircle = record
-    Center: TPoint;
-    Radius: Double;
-    constructor Create(const cCenter: TPoint; const cRadius: Double); overload;
-    constructor Create(const centerX, centerY: Integer; const cRadius: Double); overload;
-    class function Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload; static;
-    class function Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload; static;
-    function Contains(const pt: TPoint): Boolean; 
-    function Item(const pt: TPoint): Boolean; 
-    function Pixel(const pt: TPoint): Boolean; 
-    function Bounds: TBox; 
-    function Boundaries: TBox; 
-    function BoundingBox: TBox; 
-    function Envelope: TBox; 
-    function Points: TPointArray; 
-    function TPA: TPointArray; 
-    function BorderPoints(const count: Integer): TPointArray; 
-    function Border: TPointArray; 
-  end;
-  TCircleArray = array of TCircle;
-  T2DCircleArray = array of TCircleArray;
-  
-operator =(const a, b: TCircle): Boolean;
-operator <>(const a, b: TCircle): Boolean;
+{$IFDEF TYPES}
+TCircle = record
+  Center: TPoint;
+  Radius: Double;
+  constructor Create(const cCenter: TPoint; const cRadius: Double); overload;
+  constructor Create(const centerX, centerY: Integer; const cRadius: Double); overload;
+  class function Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload; static;
+  class function Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload; static;
+  function Contains(const pt: TPoint): Boolean; 
+  function Item(const pt: TPoint): Boolean; 
+  function Pixel(const pt: TPoint): Boolean; 
+  function Bounds: TBox; 
+  function Boundaries: TBox; 
+  function BoundingBox: TBox; 
+  function Envelope: TBox; 
+  function Points: TPointArray; 
+  function TPA: TPointArray; 
+  function BorderPoints(const count: Integer): TPointArray; 
+  function Border: TPointArray; 
+end;
+TCircleArray = array of TCircle;
+T2DCircleArray = array of TCircleArray;
 {$ENDIF}
 
-{$IFDEF HELPERS}
+{$IFDEF OPERATORS}
+operator =(const a, b: TCircle): Boolean;
+operator <>(const a, b: TCircle): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

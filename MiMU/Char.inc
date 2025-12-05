@@ -1,33 +1,31 @@
 {$DEFINE Char}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-type
-  TCharArray = array of Char;
-  T2DCharArray = array of TCharArray;
+{$IFDEF TYPES}
+TCharArray = array of Char;
+T2DCharArray = array of TCharArray;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-type
-  TCharHelper = type helper for Char
-    {$I config\0D.inc}
-    function Compare(const target: Char): Integer; inline;
-    function Sign(const target: Char): Integer; inline;
-    function Precede(const target: Char; const aAscending: Boolean): Boolean; overload;
-    function Ascending(const target: Char): Boolean; inline;
-    function Descending(const target: Char): Boolean; inline;
-    function Str(const size: Integer = 1): string;
-    function ToStr(const size: Integer = 1): string;
-    function IsNumber: Boolean;
-    function IsNumeric: Boolean;
-    function IsLower: Boolean;
-    function IsUpper: Boolean;
-    function IsLowercase: Boolean;
-    function IsUppercase: Boolean;
-    function IsLetter: Boolean;
-    function Swapcase: Char;
-    function Upper: Char;
-    function Lower: Char;
-  end;
+TCharHelper = type helper for Char
+  {$I config\0D.inc}
+  function Compare(const target: Char): Integer; inline;
+  function Sign(const target: Char): Integer; inline;
+  function Precede(const target: Char; const aAscending: Boolean): Boolean; overload;
+  function Ascending(const target: Char): Boolean; inline;
+  function Descending(const target: Char): Boolean; inline;
+  function Str(const size: Integer = 1): string;
+  function ToStr(const size: Integer = 1): string;
+  function IsNumber: Boolean;
+  function IsNumeric: Boolean;
+  function IsLower: Boolean;
+  function IsUpper: Boolean;
+  function IsLowercase: Boolean;
+  function IsUppercase: Boolean;
+  function IsLetter: Boolean;
+  function Swapcase: Char;
+  function Upper: Char;
+  function Lower: Char;
+end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

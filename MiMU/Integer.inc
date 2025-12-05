@@ -1,86 +1,84 @@
 {$DEFINE Integer}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-type
-  TIntegerArray = array of Integer;
-  T2DIntegerArray = array of TIntegerArray;
+{$IFDEF TYPES}
+TIntegerArray = array of Integer;
+T2DIntegerArray = array of TIntegerArray;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-type
-  TIntegerHelper = type helper for Integer
-    {$I config\0D.inc}
-    function ClampMin(const limit: Integer): Integer;
-    function ClampMax(const limit: Integer): Integer;
-    function Clamp(const minimum, maximum: Integer): Integer; overload;
-    function Clamp(const range: TRange): Integer; overload;
-    function BoundMin(const limit: Integer): Integer;
-    function BoundMax(const limit: Integer): Integer;
-    function Bound(const minimum, maximum: Integer): Integer;
-    function RestrictMin(const limit: Integer): Integer;
-    function RestrictMax(const limit: Integer): Integer;
-    function Restrict(const minimum, maximum: Integer): Integer;
-    function LimitMin(const limit: Integer): Integer;
-    function LimitMax(const limit: Integer): Integer;
-    function Limit(const minimum, maximum: Integer): Integer;
-    function ConstraintMin(const limit: Integer): Boolean;
-    function ConstraintMax(const limit: Integer): Boolean;
-    function Constraint(const minimum, maximum: Integer): Boolean; overload;
-    function Constraint(const range: TRange): Boolean; overload;
-    function Parity: Byte; inline;
-    function Even: Boolean; inline;
-    function IsEven: Boolean; inline;
-    function Odd: Boolean; inline;
-    function IsOdd: Boolean; inline;
-    function Increase(const N: Integer = 1): Integer; overload;
-    function Increase(const B: Boolean): Integer; overload;
-    function Decrease(const N: Integer = 1): Integer; overload;
-    function Decrease(const B: Boolean): Integer; overload;
-    function Increment(const N: Integer = 1): Integer; overload;
-    function Increment(const B: Boolean): Integer; overload;
-    function Decrement(const N: Integer = 1): Integer; overload;
-    function Decrement(const B: Boolean): Integer; overload;
-    function DigitCount: Integer;
-    function Digitz: TIntegerArray;
-    function Digits: TIntegerArray;
-    function NegA: Integer; inline;
-    function Neg: Integer; inline;
-    function Negative: Boolean; inline;
-    function Positive: Boolean; inline;
-    function Neutral: Boolean; inline;
-    function Compare(const target: Integer): Integer; inline;
-    function Precede(const target: Integer; const aAscending: Boolean): Boolean; overload;
-    function Ascending(const target: Integer): Boolean; inline;
-    function Descending(const target: Integer): Boolean; inline;
-    function Distance(const T: Integer): Integer; inline;
-    function Difference(const T: Integer): Integer; inline;
-    function Opposite: Integer; inline;
-    function Sign(const target: Integer = 0): Integer; inline;
-    function Shuffle: Integer;
-    function Over(const target: Integer): Boolean; inline;
-    function Under(const target: Integer): Boolean; inline;
-    function Oversize(const limit: Integer): Boolean; inline;
-    function Undersize(const limit: Integer): Boolean; inline;
-    function BitMax: Integer;
-    function Unbitify: TBooleanArray; overload;
-    function Unbitify(const bCount: Integer): TBooleanArray; overload;
-    function Adjust(const cValue: Integer; const limits: TRange): Boolean;
-    function AdjustMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean;
-    function AdjustMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean;
-    function Adjusted(const cValue: Integer; const limits: TRange): Integer;
-    function AdjustedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer;
-    function AdjustedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer;
-    function Update(const cValue: Integer; const limits: TRange): Boolean;
-    function UpdateMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean;
-    function UpdateMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean;
-    function Updated(const cValue: Integer; const limits: TRange): Integer;
-    function UpdatedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer;
-    function UpdatedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer;
-    function Divisors: TIntegerArray;
-    function Factors: TIntegerArray;
-    function DivisibleBy(const value: Integer): Boolean;
-    function MultipleOf(const value: Integer): Boolean;
-  end;
+TIntegerHelper = type helper for Integer
+  {$I config\0D.inc}
+  function ClampMin(const limit: Integer): Integer;
+  function ClampMax(const limit: Integer): Integer;
+  function Clamp(const minimum, maximum: Integer): Integer; overload;
+  function Clamp(const range: TRange): Integer; overload;
+  function BoundMin(const limit: Integer): Integer;
+  function BoundMax(const limit: Integer): Integer;
+  function Bound(const minimum, maximum: Integer): Integer;
+  function RestrictMin(const limit: Integer): Integer;
+  function RestrictMax(const limit: Integer): Integer;
+  function Restrict(const minimum, maximum: Integer): Integer;
+  function LimitMin(const limit: Integer): Integer;
+  function LimitMax(const limit: Integer): Integer;
+  function Limit(const minimum, maximum: Integer): Integer;
+  function ConstraintMin(const limit: Integer): Boolean;
+  function ConstraintMax(const limit: Integer): Boolean;
+  function Constraint(const minimum, maximum: Integer): Boolean; overload;
+  function Constraint(const range: TRange): Boolean; overload;
+  function Parity: Byte; inline;
+  function Even: Boolean; inline;
+  function IsEven: Boolean; inline;
+  function Odd: Boolean; inline;
+  function IsOdd: Boolean; inline;
+  function Increase(const N: Integer = 1): Integer; overload;
+  function Increase(const B: Boolean): Integer; overload;
+  function Decrease(const N: Integer = 1): Integer; overload;
+  function Decrease(const B: Boolean): Integer; overload;
+  function Increment(const N: Integer = 1): Integer; overload;
+  function Increment(const B: Boolean): Integer; overload;
+  function Decrement(const N: Integer = 1): Integer; overload;
+  function Decrement(const B: Boolean): Integer; overload;
+  function DigitCount: Integer;
+  function Digitz: TIntegerArray;
+  function Digits: TIntegerArray;
+  function NegA: Integer; inline;
+  function Neg: Integer; inline;
+  function Negative: Boolean; inline;
+  function Positive: Boolean; inline;
+  function Neutral: Boolean; inline;
+  function Compare(const target: Integer): Integer; inline;
+  function Precede(const target: Integer; const aAscending: Boolean): Boolean; overload;
+  function Ascending(const target: Integer): Boolean; inline;
+  function Descending(const target: Integer): Boolean; inline;
+  function Distance(const T: Integer): Integer; inline;
+  function Difference(const T: Integer): Integer; inline;
+  function Opposite: Integer; inline;
+  function Sign(const target: Integer = 0): Integer; inline;
+  function Shuffle: Integer;
+  function Over(const target: Integer): Boolean; inline;
+  function Under(const target: Integer): Boolean; inline;
+  function Oversize(const limit: Integer): Boolean; inline;
+  function Undersize(const limit: Integer): Boolean; inline;
+  function BitMax: Integer;
+  function Unbitify: TBooleanArray; overload;
+  function Unbitify(const bCount: Integer): TBooleanArray; overload;
+  function Adjust(const cValue: Integer; const limits: TRange): Boolean;
+  function AdjustMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean;
+  function AdjustMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean;
+  function Adjusted(const cValue: Integer; const limits: TRange): Integer;
+  function AdjustedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer;
+  function AdjustedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer;
+  function Update(const cValue: Integer; const limits: TRange): Boolean;
+  function UpdateMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean;
+  function UpdateMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean;
+  function Updated(const cValue: Integer; const limits: TRange): Integer;
+  function UpdatedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer;
+  function UpdatedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer;
+  function Divisors: TIntegerArray;
+  function Factors: TIntegerArray;
+  function DivisibleBy(const value: Integer): Boolean;
+  function MultipleOf(const value: Integer): Boolean;
+end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

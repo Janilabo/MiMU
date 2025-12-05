@@ -1,15 +1,11 @@
 {$DEFINE TPoint}{$I config\Defines.inc}
 
-{$IFDEF INTERFACE}
-{$ENDIF}
-
 {$IFDEF HELPERS}
-type
-  T2DPointArrayHelper = type helper for T2DPointArray
-    {$I config\2D.inc}
-    function AllBounds: TBoxArray; overload;
-    function AllBounds(var aBounds: TBox): TBoxArray; overload;
-  end;
+T2DPointArrayHelper = type helper for T2DPointArray
+  {$I config\2D.inc}
+  function AllBounds: TBoxArray; overload;
+  function AllBounds(var aBounds: TBox): TBoxArray; overload;
+end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
