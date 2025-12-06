@@ -1,4 +1,4 @@
-{$DEFINE Boolean}{$I ..\config\Defines.inc}
+{$DEFINE Boolean}{$I config\Defines.inc}
 
 {$IFDEF TYPES}
 TBooleanArray = array of Boolean;
@@ -7,7 +7,7 @@ T2DBooleanArray = array of TBooleanArray;
 
 {$IFDEF HELPERS}
 TBooleanHelper = type helper for Boolean
-  {$I ..\config\0D.inc}
+  {$I config\0D.inc}
   function ToString: string;
   function Binary: Char;
   function BinaryDigit: Integer;
@@ -48,7 +48,7 @@ end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{$I ..\config\0D.inc}
+{$I config\0D.inc}
 
 {==============================================================================]
   <ToString>
@@ -191,15 +191,15 @@ end;
   @note: Returns T or F based on the Self-condition.
 [==============================================================================}
 
-function TBooleanHelper.Select(const bTrue, bFalse: Integer): Integer; overload; {$DEFINE Skeleton_Select}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Select}
-function TBooleanHelper.Select(const bTrue, bFalse: Int64): Int64; overload; {$DEFINE Skeleton_Select}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Select}
-function TBooleanHelper.Select(const bTrue, bFalse: Double): Double; overload; {$DEFINE Skeleton_Select}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Select}
-function TBooleanHelper.Select(const bTrue, bFalse: string): string; overload; {$DEFINE Skeleton_Select}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Select}
-function TBooleanHelper.Select(const bTrue, bFalse: Char): Char; overload; {$DEFINE Skeleton_Select}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Select}
-function TBooleanHelper.Select(const bTrue, bFalse: Boolean): Boolean; overload; {$DEFINE Skeleton_Select}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Select}
-function TBooleanHelper.Select(const bTrue, bFalse: TPoint): TPoint; overload; {$DEFINE Skeleton_Select}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Select}
-function TBooleanHelper.Select(const bTrue, bFalse: TBox): TBox; overload; {$DEFINE Skeleton_Select}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Select}
-function TBooleanHelper.Select(const bTrue, bFalse: TRange): TRange; overload; {$DEFINE Skeleton_Select}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: Integer): Integer; overload; {$DEFINE Skeleton_Select}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: Int64): Int64; overload; {$DEFINE Skeleton_Select}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: Double): Double; overload; {$DEFINE Skeleton_Select}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: string): string; overload; {$DEFINE Skeleton_Select}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: Char): Char; overload; {$DEFINE Skeleton_Select}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: Boolean): Boolean; overload; {$DEFINE Skeleton_Select}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: TPoint): TPoint; overload; {$DEFINE Skeleton_Select}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: TBox): TBox; overload; {$DEFINE Skeleton_Select}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select}
+function TBooleanHelper.Select(const bTrue, bFalse: TRange): TRange; overload; {$DEFINE Skeleton_Select}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select}
 
 {==============================================================================]
   <Evaluate>
@@ -207,15 +207,15 @@ function TBooleanHelper.Select(const bTrue, bFalse: TRange): TRange; overload; {
   @note: Returns bTrue or bFalse based on the Self-condition.
 [==============================================================================}
 
-function TBooleanHelper.Evaluate(const bTrue, bFalse: Integer): Integer; overload; {$DEFINE Skeleton_Evaluate}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
-function TBooleanHelper.Evaluate(const bTrue, bFalse: Int64): Int64; overload; {$DEFINE Skeleton_Evaluate}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
-function TBooleanHelper.Evaluate(const bTrue, bFalse: Double): Double; overload; {$DEFINE Skeleton_Evaluate}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
-function TBooleanHelper.Evaluate(const bTrue, bFalse: string): string; overload; {$DEFINE Skeleton_Evaluate}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
-function TBooleanHelper.Evaluate(const bTrue, bFalse: Char): Char; overload; {$DEFINE Skeleton_Evaluate}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
-function TBooleanHelper.Evaluate(const bTrue, bFalse: Boolean): Boolean; overload; {$DEFINE Skeleton_Evaluate}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
-function TBooleanHelper.Evaluate(const bTrue, bFalse: TPoint): TPoint; overload; {$DEFINE Skeleton_Evaluate}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
-function TBooleanHelper.Evaluate(const bTrue, bFalse: TBox): TBox; overload; {$DEFINE Skeleton_Evaluate}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
-function TBooleanHelper.Evaluate(const bTrue, bFalse: TRange): TRange; overload; {$DEFINE Skeleton_Evaluate}{$I ..\config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: Integer): Integer; overload; {$DEFINE Skeleton_Evaluate}{$I config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: Int64): Int64; overload; {$DEFINE Skeleton_Evaluate}{$I config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: Double): Double; overload; {$DEFINE Skeleton_Evaluate}{$I config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: string): string; overload; {$DEFINE Skeleton_Evaluate}{$I config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: Char): Char; overload; {$DEFINE Skeleton_Evaluate}{$I config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: Boolean): Boolean; overload; {$DEFINE Skeleton_Evaluate}{$I config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: TPoint): TPoint; overload; {$DEFINE Skeleton_Evaluate}{$I config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: TBox): TBox; overload; {$DEFINE Skeleton_Evaluate}{$I config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: TRange): TRange; overload; {$DEFINE Skeleton_Evaluate}{$I config\Skeletons.inc}{$UNDEF Skeleton_Evaluate}
 
 {==============================================================================]
   <Enable>
