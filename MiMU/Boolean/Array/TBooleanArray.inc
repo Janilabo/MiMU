@@ -1,4 +1,4 @@
-{$DEFINE Boolean}{$I config\Defines.inc}
+{$DEFINE Boolean}{$I ..\..\config\Defines.inc}
 
 {$IFDEF TYPES}
 TBA = class
@@ -8,7 +8,7 @@ end;
 
 {$IFDEF HELPERS}
 TBooleanArrayHelper = type helper for TBooleanArray
-  {$I config\1D.inc}
+  {$I ..\..\config\1D.inc}
   function Select(const sTrue, sFalse: Integer): TIntegerArray; overload;
   function Select(const sTrue, sFalse: Double): TDoubleArray; overload;
   function Select(const sTrue, sFalse: string): TStringArray; overload;
@@ -53,21 +53,21 @@ end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{$I config\1D.inc}
+{$I ..\..\config\1D.inc}
 
 {==============================================================================]
   <Select>
   @action: IfThen method for TBooleanArray.
   @note: [True, False, True] => 5.
 [==============================================================================}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: Integer): TIntegerArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: Double): TDoubleArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: string): TStringArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: Char): TCharArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: Boolean): TBooleanArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TPoint): TPointArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TBox): TBoxArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TRange): TRangeArray; overload; {$DEFINE Skeleton_Select2}{$I config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: Integer): TIntegerArray; overload; {$DEFINE Skeleton_Select2}{$I ..\..\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: Double): TDoubleArray; overload; {$DEFINE Skeleton_Select2}{$I ..\..\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: string): TStringArray; overload; {$DEFINE Skeleton_Select2}{$I ..\..\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: Char): TCharArray; overload; {$DEFINE Skeleton_Select2}{$I ..\..\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: Boolean): TBooleanArray; overload; {$DEFINE Skeleton_Select2}{$I ..\..\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: TPoint): TPointArray; overload; {$DEFINE Skeleton_Select2}{$I ..\..\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: TBox): TBoxArray; overload; {$DEFINE Skeleton_Select2}{$I ..\..\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
+function TBooleanArrayHelper.Select(const sTrue, sFalse: TRange): TRangeArray; overload; {$DEFINE Skeleton_Select2}{$I ..\..\config\Skeletons.inc}{$UNDEF Skeleton_Select2}
 
 {==============================================================================]
   <Bitify>

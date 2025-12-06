@@ -46,7 +46,7 @@ function Squeezed: T2DArr; overload;
 {$ENDIF}
 
 {$IFDEF T2D}
- class function Create(const item: TVar; const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
+class function Create(const item: TVar; const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
