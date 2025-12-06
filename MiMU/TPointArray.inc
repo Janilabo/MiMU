@@ -1,4 +1,4 @@
-{$DEFINE TPoint}{$I config\Defines.inc}
+{$DEFINE TPoint}{$DEFINE THelper := TPointArrayHelper}{$I config\Defines.inc}
 
 {$IFDEF TYPES}
 TPA = class

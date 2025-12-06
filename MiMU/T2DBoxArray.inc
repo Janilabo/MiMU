@@ -1,4 +1,4 @@
-{$DEFINE TBox}{$I config\Defines.inc}
+{$DEFINE TBox}{$DEFINE THelper := T2DBoxArrayHelper}{$I config\Defines.inc}
 
 {$IFDEF HELPERS}
 T2DBoxArrayHelper = type helper for T2DBoxArray

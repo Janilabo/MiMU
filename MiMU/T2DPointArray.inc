@@ -1,4 +1,4 @@
-{$DEFINE TPoint}{$I config\Defines.inc}
+{$DEFINE TPoint}{$DEFINE THelper := T2DPointArrayHelper}{$I config\Defines.inc}
 
 {$IFDEF HELPERS}
 T2DPointArrayHelper = type helper for T2DPointArray

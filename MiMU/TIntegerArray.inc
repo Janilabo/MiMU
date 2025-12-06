@@ -1,4 +1,4 @@
-{$DEFINE Integer}{$I config\Defines.inc}
+{$DEFINE Integer}{$DEFINE THelper := TIntegerArrayHelper}{$I config\Defines.inc}
 
 {$IFDEF TYPES}
 TIA = class

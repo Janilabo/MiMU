@@ -1,4 +1,4 @@
-{$DEFINE Char}{$I config\Defines.inc}
+{$DEFINE Char}{$DEFINE THelper := T2DCharArrayHelper}{$I config\Defines.inc}
 
 {$IFDEF HELPERS}
 T2DCharArrayHelper = type helper for T2DCharArray

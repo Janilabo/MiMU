@@ -1,4 +1,4 @@
-{$DEFINE Integer}{$I config\Defines.inc}
+{$DEFINE Integer}{$DEFINE THelper := TIntegerHelper}{$I config\Defines.inc}
 
 {$IFDEF TYPES}
 TIntegerArray = array of Integer;

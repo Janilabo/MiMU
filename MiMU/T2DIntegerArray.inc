@@ -1,4 +1,4 @@
-{$DEFINE Integer}{$I config\Defines.inc}
+{$DEFINE Integer}{$DEFINE THelper := T2DIntegerArrayHelper}{$I config\Defines.inc}
 
 {$IFDEF TYPES}
 ATIA = class
@@ -49,7 +49,6 @@ begin
     for c := 0 to High(Result[r]) do
       Result[r][c] := value;
 end;
-
 {$ENDIF}
 
 {$UNDEF Integer}

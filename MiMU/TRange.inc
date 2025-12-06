@@ -1,4 +1,4 @@
-{$DEFINE TRange}{$I config\Defines.inc}
+{$DEFINE TRange}{$DEFINE THelper := TRangeHelper}{$I config\Defines.inc}
 
 {$IFDEF TYPES}
 TRangeEnumerator = record

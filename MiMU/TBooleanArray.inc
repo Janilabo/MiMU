@@ -1,4 +1,4 @@
-{$DEFINE Boolean}{$I config\Defines.inc}
+{$DEFINE Boolean}{$DEFINE THelper := TBooleanArrayHelper}{$I config\Defines.inc}
 
 {$IFDEF TYPES}
 TBA = class

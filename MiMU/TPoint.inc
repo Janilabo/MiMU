@@ -1,4 +1,4 @@
-{$DEFINE TPoint}{$I config\Defines.inc}
+{$DEFINE TPoint}{$DEFINE THelper := TPointHelper}{$I config\Defines.inc}
 
 {$IFDEF TYPES}
 TPoint = record

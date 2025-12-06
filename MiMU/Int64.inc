@@ -1,4 +1,4 @@
-{$DEFINE Int64}{$I config\Defines.inc}
+{$DEFINE Int64}{$DEFINE THelper := TInt64Helper}{$I config\Defines.inc}
 
 {$IFDEF HELPERS}
 TInt64Helper = type helper for Int64 

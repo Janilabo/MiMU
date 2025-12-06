@@ -14,7 +14,7 @@ function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DArr;
  @action: Creates TArray with Self.
  @note: aSize will be Length of the created array.
 [==============================================================================}
-function HVar.TArray(const aSize: Integer = 1): TArr; overload;
+function THelper.TArray(const aSize: Integer = 1): TArr; overload;
 var
   i: Integer;
 begin
@@ -28,7 +28,7 @@ end;
  @action: Creates 2D array with Self.
  @note: None.
 [==============================================================================}
-function HVar.T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
+function THelper.T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
 var
   i, j: Integer;
 begin

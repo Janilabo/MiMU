@@ -1,4 +1,4 @@
-{$DEFINE Boolean}{$I config\Defines.inc}
+{$DEFINE Boolean}{$DEFINE THelper := TBooleanHelper}{$I config\Defines.inc}
 
 {$IFDEF TYPES}
 TBooleanArray = array of Boolean;

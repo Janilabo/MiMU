@@ -1,4 +1,4 @@
-{$DEFINE Char}{$I config\Defines.inc}
+{$DEFINE Char}{$DEFINE THelper := TCharHelper}{$I config\Defines.inc}
 
 {$IFDEF TYPES}
 TCharArray = array of Char;

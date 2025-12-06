@@ -1,4 +1,4 @@
-{$DEFINE string}{$I config\Defines.inc}
+{$DEFINE string}{$DEFINE THelper := T2DStringArrayHelper}{$I config\Defines.inc}
 
 {$IFDEF HELPERS}
 T2DStringArrayHelper = type helper for T2DStringArray
