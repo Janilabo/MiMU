@@ -100,18 +100,7 @@ function RandomSample(const x: Integer; const size: Integer): TIntegerArray; ove
 function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload; 
 function Random2(const x: Integer; const r: Integer = 2): Integer; overload; 
 function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload; 
-function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload; 
-
-function XORSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
-function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
-
-function iSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
-function iSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
-
-function Max(a, b: string): string; overload; inline;
-function Max(a, b: Char): Char; overload; inline;
-function Min(a, b: string): string; overload; inline;
-function Min(a, b: Char): Char; overload; inline;
+function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload;
 
 function Swop(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
 function Swop(var A, B: Int64; const oAscending: Boolean = True): Boolean; overload;
@@ -138,11 +127,6 @@ function Sort(var A, B, C: Double; const oAscending: Boolean = True): Boolean; o
 function Sort(var A, B, C: string; const oAscending: Boolean = True): Boolean; overload;
 function Sort(var A, B, C: Char; const oAscending: Boolean = True): Boolean; overload;
 function Sort(var A, B, C: TPoint; const oAscending: Boolean = True): Boolean; overload;
-
-function Bitify(const a: Boolean): Integer; overload; inline;
-function Bitify(const a, b: Boolean): Integer; overload;
-function Bitify(const a, b, c: Boolean): Integer; overload;
-function Bitify(const a, b, c, d: Boolean): Integer; overload;
  
 implementation
 
@@ -410,66 +394,6 @@ function Sort(var A, B, C: string; const oAscending: Boolean = True): Boolean; o
 function Sort(var A, B, C: Char; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Sort<Char>(A, B, C, oAscending); end;
 function Sort(var A, B, C: TPoint; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Sort<TPoint>(A, B, C, oAscending); end;
 
-function Bitify(const a: Boolean): Integer; overload; inline;
-begin
-  if a then
-    Result := 1
-  else
-    Result := 0;
-end;
-
-function Bitify(const a, b: Boolean): Integer; overload;
-begin
-  Result := ((Bitify(a) shl 1) or Bitify(b));
-end;
-
-function Bitify(const a, b, c: Boolean): Integer; overload;
-begin
-  Result := ((Bitify(a) shl 2) or (Bitify(b) shl 1) or Bitify(c));
-end;
-
-function Bitify(const a, b, c, d: Boolean): Integer; overload;
-begin
-  Result := ((Bitify(a) shl 3) or (Bitify(b) shl 2) or (Bitify(c) shl 1) or Bitify(d));
-end;
-
-function XORSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
-begin
-  Result := (oAscending and (A > B)) or ((not oAscending) and (A < B));
-  if Result then
-  begin
-    A := (A xor B);
-    B := (A xor B);
-    A := (A xor B);
-  end;
-end;
-
-function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
-begin
-  Result := ((Integer(XORSort(A, B, oAscending)) + Integer(XORSort(A, C, oAscending)) + Integer(XORSort(B, C, oAscending))) > 0);
-end;
-
-function iSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
-begin
-  Result := ((oAscending and (A > B)) or ((not oAscending) and (A < B)));
-  if Result then
-  begin
-    A := (A + B);
-    B := (A - B);
-    A := (A - B);
-  end;
-end;
-
-function iSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
-begin
-  Result := ((Integer(iSort(A, B, oAscending)) + Integer(iSort(A, C, oAscending)) + Integer(iSort(B, C, oAscending))) > 0);
-end;
-
-function Max(A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Max}
-function Max(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Max}
-
-function Min(A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Min}
-function Min(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Min}
 
 function HypotEuclidean(const A, B: TPoint): Double;
 begin

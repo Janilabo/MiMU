@@ -51,6 +51,13 @@ TBooleanHelper = type helper for Boolean
 end;
 {$ENDIF}
 
+{$IFDEF METHODS}
+function Bitify(const a: Boolean): Integer; overload; inline;
+function Bitify(const a, b: Boolean): Integer; overload;
+function Bitify(const a, b, c: Boolean): Integer; overload;
+function Bitify(const a, b, c, d: Boolean): Integer; overload;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
 {$I Core.inc}
 
@@ -287,5 +294,28 @@ begin
   Result := (Self = state);
   if Result then
     Self := not state;
+end;
+
+function Bitify(const a: Boolean): Integer; overload; inline;
+begin
+  if a then
+    Result := 1
+  else
+    Result := 0;
+end;
+
+function Bitify(const a, b: Boolean): Integer; overload;
+begin
+  Result := ((Bitify(a) shl 1) or Bitify(b));
+end;
+
+function Bitify(const a, b, c: Boolean): Integer; overload;
+begin
+  Result := ((Bitify(a) shl 2) or (Bitify(b) shl 1) or Bitify(c));
+end;
+
+function Bitify(const a, b, c, d: Boolean): Integer; overload;
+begin
+  Result := ((Bitify(a) shl 3) or (Bitify(b) shl 2) or (Bitify(c) shl 1) or Bitify(d));
 end;
 {$ENDIF}

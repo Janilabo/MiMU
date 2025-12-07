@@ -88,6 +88,11 @@ TStringHelper = type helper for string
 end;
 {$ENDIF}
 
+{$IFDEF METHODS}
+function Max(a, b: string): string; overload; inline;
+function Min(a, b: string): string; overload; inline;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
 {$I Core.inc}
 
@@ -1364,4 +1369,7 @@ begin
       Exit(False);
   Result := True;
 end;
+
+function Max(A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I Skeletons.inc}{$UNDEF Skeleton_Max}
+function Min(A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I Skeletons.inc}{$UNDEF Skeleton_Min}
 {$ENDIF}

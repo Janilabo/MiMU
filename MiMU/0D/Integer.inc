@@ -85,6 +85,14 @@ TIntegerHelper = type helper for Integer
 end;
 {$ENDIF}
 
+{$IFDEF METHODS}
+function XORSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
+function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
+
+function iSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
+function iSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
 {$I Core.inc}
 
@@ -922,5 +930,37 @@ end;
 function TIntegerHelper.MultipleOf(const value: Integer): Boolean;
 begin
   Result := (((value = 1) or (value = -1)) or ((value <> 0) and ((Self mod value) = 0)));
+end;
+
+function XORSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := (oAscending and (A > B)) or ((not oAscending) and (A < B));
+  if Result then
+  begin
+    A := (A xor B);
+    B := (A xor B);
+    A := (A xor B);
+  end;
+end;
+
+function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((Integer(XORSort(A, B, oAscending)) + Integer(XORSort(A, C, oAscending)) + Integer(XORSort(B, C, oAscending))) > 0);
+end;
+
+function iSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((oAscending and (A > B)) or ((not oAscending) and (A < B)));
+  if Result then
+  begin
+    A := (A + B);
+    B := (A - B);
+    A := (A - B);
+  end;
+end;
+
+function iSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((Integer(iSort(A, B, oAscending)) + Integer(iSort(A, C, oAscending)) + Integer(iSort(B, C, oAscending))) > 0);
 end;
 {$ENDIF}

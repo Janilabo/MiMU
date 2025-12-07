@@ -3111,7 +3111,6 @@ end;
 [==============================================================================}
 function THelper.Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
 var
-  l: Integer;
   r: TRange;
 begin
   SetLength(Result, Self.Size);
