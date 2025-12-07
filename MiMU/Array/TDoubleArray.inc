@@ -123,9 +123,11 @@ TDoubleArrayHelper = type helper for TDoubleArray
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(T1D)}
 {$I Core.inc}
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Reinit>
   @action: Clears all elements of the array by zero-filling the underlying memory,

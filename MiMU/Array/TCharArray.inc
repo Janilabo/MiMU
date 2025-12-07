@@ -19,9 +19,11 @@ TCharArrayHelper = type helper for TCharArray
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(T1D)}
 {$I Core.inc}
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Str>
   @action: Returns arr joined together as string.

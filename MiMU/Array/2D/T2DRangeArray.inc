@@ -10,6 +10,6 @@ T2DRangeArrayHelper = type helper for T2DRangeArray
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) or DEFINED(T2D)}
 {$I Core.inc}
 {$ENDIF}

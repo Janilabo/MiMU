@@ -24,7 +24,11 @@ TBoxArrayHelper = type helper for TBoxArray
 end;
 {$ENDIF}
 
-{$IF DEFINED(METHODS) OR DEFINED(IMPLEMENTATION)} 
+{$IF DEFINED(IMPLEMENTATION) or DEFINED(T1D)}
+{$I Core.inc}
+{$ENDIF}
+
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)} 
 {$DEFINE FField := X1}{$I F.inc}
 {$DEFINE FField := Y1}{$I F.inc}
 {$DEFINE FField := X2}{$I F.inc}
@@ -32,8 +36,6 @@ end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{$I Core.inc}
-
 {==============================================================================]
   <X1s>
   @action: Returns X1-values from arr as TIntegerArray.

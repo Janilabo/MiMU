@@ -10,6 +10,6 @@ T2DBoxArrayHelper = type helper for T2DBoxArray
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) or DEFINED(T2D)}
 {$I Core.inc}
 {$ENDIF}

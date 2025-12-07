@@ -19,8 +19,11 @@ T2DIntegerArrayHelper = type helper for T2DIntegerArray
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) or DEFINED(T2D)}
 {$I Core.inc}
+{$ENDIF}
+
+{$IFDEF IMPLEMENTATION}
 class function ATIA.Merge(const arr: T2DIntegerArray): TIntegerArray; overload; 
 var
   i, r: Integer;

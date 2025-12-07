@@ -26,14 +26,16 @@ TRangeArrayHelper = type helper for TRangeArray
 end;
 {$ENDIF}
 
-{$IF DEFINED(METHODS) OR DEFINED(IMPLEMENTATION)} 
+{$IF DEFINED(IMPLEMENTATION) or DEFINED(T1D)}
+{$I Core.inc}
+{$ENDIF}
+
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)} 
 {$DEFINE FField := start}{$I F.inc}
 {$DEFINE FField := stop}{$I F.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{$I Core.inc}
-
 {==============================================================================]
   <Bounds: TRange>
   @action: Returns the bounds of TRange array as TRange.

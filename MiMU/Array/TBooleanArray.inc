@@ -56,9 +56,11 @@ TBooleanArrayHelper = type helper for TBooleanArray
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) or DEFINED(T1D)}
 {$I Core.inc}
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Select>
   @action: IfThen method for TBooleanArray.

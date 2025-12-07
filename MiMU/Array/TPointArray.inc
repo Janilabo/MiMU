@@ -239,14 +239,16 @@ TPointArrayHelper = type helper for TPointArray
 end;
 {$ENDIF}
 
-{$IF DEFINED(METHODS) OR DEFINED(IMPLEMENTATION)} 
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(T1D)}
+{$I Core.inc}
+{$ENDIF}
+
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)} 
 {$DEFINE FField := X}{$I F.inc}
 {$DEFINE FField := Y}{$I F.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{$I Core.inc}
-
 {==============================================================================]
   <Bounds>
   @action: Returns bounding box around TPointArray arr.
@@ -8857,5 +8859,3 @@ begin
     Result[i] := Point((xValues[i] + offset.X), (yValues[i] + offset.Y));	
 end;
 {$ENDIF}
-
-{$UNDEF TPoint}

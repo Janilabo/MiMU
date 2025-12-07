@@ -10,6 +10,6 @@ T2DBooleanArrayHelper = type helper for T2DBooleanArray
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) or DEFINED(T2D)}
 {$I Core.inc}
 {$ENDIF}

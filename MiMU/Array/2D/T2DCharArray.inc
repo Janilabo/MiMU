@@ -10,6 +10,6 @@ T2DCharArrayHelper = type helper for T2DCharArray
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) or DEFINED(T2D)}
 {$I Core.inc}
 {$ENDIF}

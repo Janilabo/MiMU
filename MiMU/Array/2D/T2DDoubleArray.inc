@@ -10,6 +10,6 @@ T2DDoubleArrayHelper = type helper for T2DDoubleArray
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) or DEFINED(T2D)}
 {$I Core.inc}
 {$ENDIF}

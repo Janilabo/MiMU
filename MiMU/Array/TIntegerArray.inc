@@ -244,9 +244,11 @@ TIntegerArrayHelper = type helper for TIntegerArray
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(T1D)}
 {$I Core.inc}
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Bounds>
   @action: Stores arr bounds to TRange.

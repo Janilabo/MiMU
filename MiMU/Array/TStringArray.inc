@@ -15,9 +15,11 @@ TStringArrayHelper = type helper for TStringArray
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) or DEFINED(T1D)}
 {$I Core.inc}
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Tally>
   @action: Returns total length of TStringArray strings combined together.

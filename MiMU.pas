@@ -53,38 +53,12 @@ function MiMU_Version: Double;
 type
   TDistanceMetric = (dmHypotEuclidean, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev, dmMinkowski, dmMaxMinChebyshev, dmOctile);
 
-{$DEFINE TYPES}{$I MiMU.inc}{$UNDEF TYPES}
-{$DEFINE HELPERS}{$I MiMU.inc}{$UNDEF HELPERS}
-{$DEFINE METHODS}{$I MiMU.inc}{$UNDEF METHODS}
-{$DEFINE OPERATORS}{$I MiMU.inc}{$UNDEF OPERATORS}
-
-type
-  T1D = class
-  public
-  {$DEFINE T1D}
-  {$DEFINE TVar := Integer}{$DEFINE TArr := TIntegerArray}{$I MiMU\Array\Core.inc}
-  {$DEFINE TVar := Double}{$DEFINE TArr := TDoubleArray}{$I MiMU\Array\Core.inc}
-  {$DEFINE TVar := string}{$DEFINE TArr := TStringArray}{$I MiMU\Array\Core.inc}
-  {$DEFINE TVar := Char}{$DEFINE TArr := TCharArray}{$I MiMU\Array\Core.inc}
-  {$DEFINE TVar := TPoint}{$DEFINE TArr := TPointArray}{$I MiMU\Array\Core.inc}
-  {$DEFINE TVar := Boolean}{$DEFINE TArr := TBooleanArray}{$I MiMU\Array\Core.inc}
-  {$DEFINE TVar := TBox}{$DEFINE TArr := TBoxArray}{$I MiMU\Array\Core.inc}
-  {$DEFINE TVar := TRange}{$DEFINE TArr := TRangeArray}{$I MiMU\Array\Core.inc}
-  {$UNDEF T1D}
-  end;
-  T2D = class
-  public
-  {$DEFINE T2D}
-  {$DEFINE TVar := Integer}{$DEFINE T2DArr := T2DIntegerArray}{$I MiMU\Array\2D\Core.inc}
-  {$DEFINE TVar := Double}{$DEFINE T2DArr := T2DDoubleArray}{$I MiMU\Array\2D\Core.inc}
-  {$DEFINE TVar := string}{$DEFINE T2DArr := T2DStringArray}{$I MiMU\Array\2D\Core.inc}
-  {$DEFINE TVar := Char}{$DEFINE T2DArr := T2DCharArray}{$I MiMU\Array\2D\Core.inc}
-  {$DEFINE TVar := TPoint}{$DEFINE T2DArr := T2DPointArray}{$I MiMU\Array\2D\Core.inc}
-  {$DEFINE TVar := Boolean}{$DEFINE T2DArr := T2DBooleanArray}{$I MiMU\Array\2D\Core.inc}
-  {$DEFINE TVar := TBox}{$DEFINE T2DArr := T2DBoxArray}{$I MiMU\Array\2D\Core.inc}
-  {$DEFINE TVar := TRange}{$DEFINE T2DArr := T2DRangeArray}{$I MiMU\Array\2D\Core.inc}
-  {$UNDEF T2D}
-  end;
+{$DEFINE TYPES}{$I MiMU\MiMU.inc}{$UNDEF TYPES}
+{$DEFINE HELPERS}{$I MiMU\MiMU.inc}{$UNDEF HELPERS}
+{$DEFINE METHODS}{$I MiMU\MiMU.inc}{$UNDEF METHODS}
+{$DEFINE OPERATORS}{$I MiMU\MiMU.inc}{$UNDEF OPERATORS}
+{$DEFINE T1D}{$I MiMU\MiMU.inc}{$UNDEF T1D}
+{$DEFINE T2D}{$I MiMU\MiMU.inc}{$UNDEF T2D}
 
 function DistanceFunction(const distFunc: TDistanceFunction): TDistanceFunction; overload;
 function DistanceFunction(const method: Integer = 0): TDistanceFunction; overload;
@@ -656,7 +630,7 @@ end;
 
 {$mode objfpc}{$H+}
 
-{$I MiMU.inc}
+{$I MiMU\MiMU.inc}
 
 {$UNDEF IMPLEMENTATION}
 

@@ -12,9 +12,11 @@ T2DPointArrayHelper = type helper for T2DPointArray
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) or DEFINED(T2D)}
 {$I Core.inc}
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <AllBounds>
   @action: Returns an array containing the bounding box of each point in the array.
