@@ -1,33 +1,32 @@
 {$IF NOT (DEFINED(T1D) OR DEFINED(T2D))}
-  {$I Type\Integer.inc}
-  {$I Type\Double.inc}
-  {$I Type\String.inc}
-  {$I Type\Char.inc}
-  {$I Type\TPoint.inc}
-  {$I Type\Boolean.inc}
-  {$I Type\TRange.inc}
-  {$I Type\TBox.inc}
-  {$I Type\Int64.inc}
-  {$I Type\TConnection.inc}
-  {$I Type\TCircle.inc}
-  {$I Type\TTriangle.inc}
-  {$I Type\TSegment.inc}
+  {$I 0D\Integer.inc}
+  {$I 0D\Double.inc}
+  {$I 0D\String.inc}
+  {$I 0D\Char.inc}
+  {$I 0D\TPoint.inc}
+  {$I 0D\Boolean.inc}
+  {$I 0D\TRange.inc}
+  {$I 0D\TBox.inc}
+  {$I 0D\Int64.inc}
+  {$I 0D\TConnection.inc}
+  {$I 0D\TCircle.inc}
+  {$I 0D\TTriangle.inc}
+  {$I 0D\TSegment.inc}
 {$ENDIF}
 
 {$IFNDEF T2D}
   {$IFDEF T1D}
-  type
-    T1D = class
-    public
+  T1D = class
+  public
   {$ENDIF}
-  {$I Array\TIntegerArray.inc}
-  {$I Array\TDoubleArray.inc}
-  {$I Array\TStringArray.inc}
-  {$I Array\TCharArray.inc}
-  {$I Array\TBooleanArray.inc}
-  {$I Array\TPointArray.inc}
-  {$I Array\TBoxArray.inc}
-  {$I Array\TRangeArray.inc}
+  {$I 1D\TIntegerArray.inc}
+  {$I 1D\TDoubleArray.inc}
+  {$I 1D\TStringArray.inc}
+  {$I 1D\TCharArray.inc}
+  {$I 1D\TBooleanArray.inc}
+  {$I 1D\TPointArray.inc}
+  {$I 1D\TBoxArray.inc}
+  {$I 1D\TRangeArray.inc}
   {$IFDEF T1D}
   end;
   {$ENDIF}
@@ -35,18 +34,17 @@
 
 {$IFNDEF T1D}
   {$IFDEF T2D}
-  type
-    T2D = class
-    public
+  T2D = class
+  public
   {$ENDIF}
-  {$I Array\2D\T2DIntegerArray.inc}
-  {$I Array\2D\T2DDoubleArray.inc}
-  {$I Array\2D\T2DStringArray.inc}
-  {$I Array\2D\T2DCharArray.inc}
-  {$I Array\2D\T2DBooleanArray.inc}
-  {$I Array\2D\T2DPointArray.inc}
-  {$I Array\2D\T2DBoxArray.inc}
-  {$I Array\2D\T2DRangeArray.inc}
+  {$I 2D\T2DIntegerArray.inc}
+  {$I 2D\T2DDoubleArray.inc}
+  {$I 2D\T2DStringArray.inc}
+  {$I 2D\T2DCharArray.inc}
+  {$I 2D\T2DBooleanArray.inc}
+  {$I 2D\T2DPointArray.inc}
+  {$I 2D\T2DBoxArray.inc}
+  {$I 2D\T2DRangeArray.inc}
   {$IFDEF T2D}
   end;
   {$ENDIF}

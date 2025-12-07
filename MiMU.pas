@@ -55,10 +55,10 @@ type
 
 {$DEFINE TYPES}{$I MiMU\MiMU.inc}{$UNDEF TYPES}
 {$DEFINE HELPERS}{$I MiMU\MiMU.inc}{$UNDEF HELPERS}
-{$DEFINE METHODS}{$I MiMU\MiMU.inc}{$UNDEF METHODS}
-{$DEFINE OPERATORS}{$I MiMU\MiMU.inc}{$UNDEF OPERATORS}
 {$DEFINE T1D}{$I MiMU\MiMU.inc}{$UNDEF T1D}
 {$DEFINE T2D}{$I MiMU\MiMU.inc}{$UNDEF T2D}
+{$DEFINE METHODS}{$I MiMU\MiMU.inc}{$UNDEF METHODS}
+{$DEFINE OPERATORS}{$I MiMU\MiMU.inc}{$UNDEF OPERATORS}
 
 function DistanceFunction(const distFunc: TDistanceFunction): TDistanceFunction; overload;
 function DistanceFunction(const method: Integer = 0): TDistanceFunction; overload;
@@ -410,18 +410,18 @@ begin
     Result := Min(Result, Random(x));
 end; 
 
-function Swap(var A, B: Integer): Boolean; overload; inline; var C: Integer; {$DEFINE Skeleton_Swap}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Swap}
-function Swap(var A, B: Int64): Boolean; overload; inline; var C: Int64; {$DEFINE Skeleton_Swap}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Swap}
-function Swap(var A, B: Double): Boolean; overload; inline; var C: Double; {$DEFINE Skeleton_Swap}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Swap}
-function Swap(var A, B: string): Boolean; overload; inline; var C: string; {$DEFINE Skeleton_Swap}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Swap}
-function Swap(var A, B: Char): Boolean; overload; inline; var C: Char; {$DEFINE Skeleton_Swap}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Swap}
-function Swap(var A, B: Boolean): Boolean; overload; inline; var C: Boolean; {$DEFINE Skeleton_Swap}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Swap}
-function Swap(var A, B: TPoint): Boolean; overload; inline; var C: TPoint; {$DEFINE Skeleton_Swap}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Swap}
-function Swap(var A, B: TBox): Boolean; overload; inline; var C: TBox; {$DEFINE Skeleton_Swap}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Swap}
-function Swap(var A, B: TRange): Boolean; overload; inline; var C: TRange; {$DEFINE Skeleton_Swap}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Swap}
-function Swap(var A, B: TSegment): Boolean; overload; inline; var C: TSegment; {$DEFINE Skeleton_Swap}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Swap}
-function Swap(var A, B: TCircle): Boolean; overload; inline; var C: TCircle; {$DEFINE Skeleton_Swap}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Swap}
-function Swap(var A, B: TTriangle): Boolean; overload; inline; var C: TTriangle; {$DEFINE Skeleton_Swap}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: Integer): Boolean; overload; inline; var C: Integer; {$DEFINE Skeleton_Swap}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: Int64): Boolean; overload; inline; var C: Int64; {$DEFINE Skeleton_Swap}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: Double): Boolean; overload; inline; var C: Double; {$DEFINE Skeleton_Swap}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: string): Boolean; overload; inline; var C: string; {$DEFINE Skeleton_Swap}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: Char): Boolean; overload; inline; var C: Char; {$DEFINE Skeleton_Swap}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: Boolean): Boolean; overload; inline; var C: Boolean; {$DEFINE Skeleton_Swap}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: TPoint): Boolean; overload; inline; var C: TPoint; {$DEFINE Skeleton_Swap}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: TBox): Boolean; overload; inline; var C: TBox; {$DEFINE Skeleton_Swap}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: TRange): Boolean; overload; inline; var C: TRange; {$DEFINE Skeleton_Swap}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: TSegment): Boolean; overload; inline; var C: TSegment; {$DEFINE Skeleton_Swap}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: TCircle): Boolean; overload; inline; var C: TCircle; {$DEFINE Skeleton_Swap}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: TTriangle): Boolean; overload; inline; var C: TTriangle; {$DEFINE Skeleton_Swap}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Swap}
 
 function Swop(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Swop<Integer>(A, B, oAscending); end;
 function Swop(var A, B: Int64; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Swop<Int64>(A, B, oAscending); end;
@@ -449,18 +449,18 @@ function Sort(var A, B, C: string; const oAscending: Boolean = True): Boolean; o
 function Sort(var A, B, C: Char; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Sort<Char>(A, B, C, oAscending); end;
 function Sort(var A, B, C: TPoint; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Sort<TPoint>(A, B, C, oAscending); end;
 
-function IfThen(const state: Boolean; const sTrue, sFalse: Integer): Integer; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: Int64): Int64; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: Double): Double; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: string): string; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: Char): Char; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: Boolean): Boolean; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: TPoint): TPoint; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: TBox): TBox; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: TRange): TRange; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: TSegment): TSegment; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: TCircle): TCircle; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_IfThen}
-function IfThen(const state: Boolean; const sTrue, sFalse: TTriangle): TTriangle; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Integer): Integer; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Int64): Int64; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Double): Double; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: string): string; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Char): Char; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: Boolean): Boolean; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TPoint): TPoint; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TBox): TBox; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TRange): TRange; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TSegment): TSegment; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TCircle): TCircle; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: TTriangle): TTriangle; overload; inline; {$DEFINE Skeleton_IfThen}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_IfThen}
 
 function Bitify(const a: Boolean): Integer; overload; inline;
 begin
@@ -517,11 +517,11 @@ begin
   Result := ((Integer(iSort(A, B, oAscending)) + Integer(iSort(A, C, oAscending)) + Integer(iSort(B, C, oAscending))) > 0);
 end;
 
-function Max(A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Max}
-function Max(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Max}
+function Max(A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Max}
+function Max(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Max}
 
-function Min(A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Min}
-function Min(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\Type\Skeletons.inc}{$UNDEF Skeleton_Min}
+function Min(A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Min}
+function Min(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Min}{$I MiMU\0D\Skeletons.inc}{$UNDEF Skeleton_Min}
 
 function HypotEuclidean(const A, B: TPoint): Double;
 begin
