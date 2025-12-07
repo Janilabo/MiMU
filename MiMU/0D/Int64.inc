@@ -1,5 +1,17 @@
+{$DEFINE TVar := Int64}
+{$DEFINE TArr := TInt64Array}
+{$DEFINE T2DArr := T2DInt64Array}
+{$DEFINE THelper := TInt64Helper}
+{$DEFINE Sortable}
+
+{$IFDEF TYPES}
+TInt64Array = array of Int64;
+T2DInt64Array = array of TInt64Array;
+{$ENDIF}
+
 {$IFDEF HELPERS}
-TInt64Helper = type helper for Int64 
+TInt64Helper = type helper for Int64
+  {$I Core.inc} 
   function Prime: Boolean; 
   function IsPrime: Boolean; 
   function Parity: Byte; inline;
@@ -31,6 +43,7 @@ end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{$I Core.inc}
 {==============================================================================]
   <Prime>
   @action: Returns true if N is prime.

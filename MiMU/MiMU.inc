@@ -3,8 +3,8 @@
   {$I 0D\Double.inc}
   {$I 0D\String.inc}
   {$I 0D\Char.inc}
-  {$I 0D\TPoint.inc}
   {$I 0D\Boolean.inc}
+  {$I 0D\TPoint.inc}
   {$I 0D\TRange.inc}
   {$I 0D\TBox.inc}
   {$I 0D\Int64.inc}
@@ -27,6 +27,7 @@
   {$I 1D\TPointArray.inc}
   {$I 1D\TBoxArray.inc}
   {$I 1D\TRangeArray.inc}
+  {$I 1D\TInt64Array.inc}
   {$IFDEF T1D}
   end;
   {$ENDIF}
@@ -45,6 +46,7 @@
   {$I 2D\T2DPointArray.inc}
   {$I 2D\T2DBoxArray.inc}
   {$I 2D\T2DRangeArray.inc}
+  {$I 2D\T2DInt64Array.inc}
   {$IFDEF T2D}
   end;
   {$ENDIF}

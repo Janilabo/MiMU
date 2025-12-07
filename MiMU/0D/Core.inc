@@ -3,6 +3,11 @@ function TArray(const aSize: Integer = 1): TArr; overload;
 function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
 {$ENDIF}
 
+{$IFDEF METHODS}
+function IfThen(const state: Boolean; const sTrue, sFalse: TVar): TVar; overload; inline;
+function Swap(var A, B: TVar): Boolean; overload; inline;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
  <TArray>
@@ -35,4 +40,8 @@ begin
       Result[i][j] := Self;
   end;
 end;
+
+function Swap(var A, B: TVar): Boolean; overload; inline; var C: TVar; {$DEFINE Skeleton_Swap}{$I Skeletons.inc}{$UNDEF Skeleton_Swap}
+
+function IfThen(const state: Boolean; const sTrue, sFalse: TVar): TVar; overload; inline; {$DEFINE Skeleton_IfThen}{$I Skeletons.inc}{$UNDEF Skeleton_IfThen}
 {$ENDIF}
