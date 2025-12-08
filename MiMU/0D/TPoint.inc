@@ -35,16 +35,16 @@ TPoint = record
   function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; inline;
   function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; 
   function AngleRadians(const target: TPoint): Double;
-  function DistHypotEuclidean(const target: TPoint): Double; 	
-  function DistEuclidean(const target: TPoint): Double; 
-  function DistEuclidean2(const target: TPoint): Double; 
-  function DistSquaredEuclidean(const target: TPoint): Double; 
-  function DistManhattan(const target: TPoint): Double; 
-  function DistChebyshev(const target: TPoint): Double;
-  function DistMinkowski(const target: TPoint): Double; overload;
-  function DistMinkowski(const target: TPoint; const P: Double): Double; overload;
-  function DistMaxMinChebyshev(const target: TPoint): Double;
-  function DistOctile(const target: TPoint): Double;
+  function HypotEuclidean(const target: TPoint): Double; overload;	
+  function Euclidean(const target: TPoint): Double; overload;
+  function Euclidean2(const target: TPoint): Double; overload;
+  function SquaredEuclidean(const target: TPoint): Double; overload;
+  function Manhattan(const target: TPoint): Double; overload;
+  function Chebyshev(const target: TPoint): Double; overload;
+  function Minkowski(const target: TPoint): Double; overload;
+  function Minkowski(const target: TPoint; const P: Double): Double; overload;
+  function MaxMinChebyshev(const target: TPoint): Double; overload;
+  function Octile(const target: TPoint): Double; overload;
   function Within(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
   function Near(const target: TPoint; const radius: Double = 1.0): Boolean; overload;
   function Near(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
@@ -84,16 +84,16 @@ TDistance = function(const A, B: TPoint): Double;
 {$IFDEF METHODS}
 function Point(const pX, pY: Integer): TPoint; overload; inline;
 function Point(const val: Integer = 0): TPoint; overload; inline;
-function HypotEuclidean(const A, B: TPoint): Double;
-function Euclidean(const A, B: TPoint): Double;
-function Euclidean2(const A, B: TPoint): Double;
-function SquaredEuclidean(const A, B: TPoint): Double;
-function Manhattan(const A, B: TPoint): Double;
-function Chebyshev(const A, B: TPoint): Double;
+function HypotEuclidean(const A, B: TPoint): Double; overload;
+function Euclidean(const A, B: TPoint): Double; overload;
+function Euclidean2(const A, B: TPoint): Double; overload;
+function SquaredEuclidean(const A, B: TPoint): Double; overload;
+function Manhattan(const A, B: TPoint): Double; overload;
+function Chebyshev(const A, B: TPoint): Double; overload;
 function Minkowski(const A, B: TPoint): Double; overload;
 function Minkowski(const A, B: TPoint; const P: Double): Double; overload;
-function MaxMinChebyshev(const A, B: TPoint): Double;
-function Octile(const A, B: TPoint): Double;
+function MaxMinChebyshev(const A, B: TPoint): Double; overload;
+function Octile(const A, B: TPoint): Double; overload;
 function Distance(const distFunc: TDistance): TDistance; overload;
 function Distance(const method: Integer = 0): TDistance; overload;
 function Distance(const metric: TMetrics): TDistance; overload;
@@ -143,7 +143,7 @@ TPointHelper = type helper for TPoint
   function Within(const target: TPoint; const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): Boolean; overload;
   function Near(const target: TPoint; const radius: Double; const distFunc: TDistance): Boolean; overload;
   function Near(const target: TPoint; const radius: Double; const metric: TMetrics): Boolean; overload;
-  function Dist(const target: TPoint; const metric: TMetrics = dmEuclidean): Double;
+  function Dist(const target: TPoint; const metric: TMetrics = dmEuclidean): Double; overload;
 end;
 {$ENDIF}
 
@@ -600,7 +600,7 @@ end;
   @action: Calculates the angle in degrees from source to target.
   @note: None
 [==============================================================================}
-function TPoint.AngleRadians(const target: TPoint): Double;
+function TPoint.AngleRadians(const target: TPoint): Double; overload;
 var
   a: Double;
 begin
@@ -613,9 +613,9 @@ end;
   @action: Calculates the distance from source to target.
   @note: Euclidean.
 [==============================================================================}
-function TPoint.DistHypotEuclidean(const target: TPoint): Double;
+function TPoint.HypotEuclidean(const target: TPoint): Double; overload;
 begin
-  Result := HypotEuclidean(Self, target);
+  Result := Hypot((Self.X - target.X), (Self.Y - target.Y));
 end;
 
 {==============================================================================]
@@ -623,9 +623,9 @@ end;
   @action: Calculates the distance from source to target.
   @note: Euclidean.
 [==============================================================================}
-function TPoint.DistEuclidean(const target: TPoint): Double;
+function TPoint.Euclidean(const target: TPoint): Double; overload;
 begin
-  Result := Euclidean(Self, target);
+  Result := (Sqrt(Sqr(Self.X - target.X) + Sqr(Self.Y - target.Y)));
 end;
 
 {==============================================================================]
@@ -633,9 +633,9 @@ end;
   @action: Calculates the distance from source to target.
   @note: Euclidean v2
 [==============================================================================}
-function TPoint.DistEuclidean2(const target: TPoint): Double;
+function TPoint.Euclidean2(const target: TPoint): Double; overload;
 begin
-  Result := Euclidean2(Self, target);
+  Result := Sqrt(Power((Self.X - target.X), 2) + Power((Self.Y - target.Y), 2));
 end;
 
 {==============================================================================]
@@ -643,9 +643,9 @@ end;
   @action: Calculates the distance from source to target.
   @note: Squared Euclidean
 [==============================================================================}
-function TPoint.DistSquaredEuclidean(const target: TPoint): Double;
+function TPoint.SquaredEuclidean(const target: TPoint): Double; overload;
 begin
-  Result := SquaredEuclidean(Self, target);
+  Result := (Sqr(Self.X - target.X) + Sqr(Self.Y - target.Y));
 end;
 
 {==============================================================================]
@@ -653,9 +653,9 @@ end;
   @action: Calculates the distance from source to target.
   @note: Manhattan
 [==============================================================================}
-function TPoint.DistManhattan(const target: TPoint): Double;
+function TPoint.Manhattan(const target: TPoint): Double; overload;
 begin
-  Result := Manhattan(Self, target);
+  Result := (Abs(Self.X - target.X) + Abs(Self.Y - target.Y));
 end;
 
 {==============================================================================]
@@ -663,9 +663,9 @@ end;
   @action: Calculates the distance from source to target.
   @note: Chebyshev
 [==============================================================================}
-function TPoint.DistChebyshev(const target: TPoint): Double;
+function TPoint.Chebyshev(const target: TPoint): Double; overload;
 begin
-  Result := Chebyshev(Self, target);
+  Result := Max(Abs(Self.X - target.X), Abs(Self.Y - target.Y));
 end;
 
 {==============================================================================]
@@ -673,9 +673,9 @@ end;
   @action: Calculates the distance from source to target.
   @note: Minkowski
 [==============================================================================}
-function TPoint.DistMinkowski(const target: TPoint): Double; overload;
+function TPoint.Minkowski(const target: TPoint): Double; overload;
 begin
-  Result := Minkowski(Self, target);
+  Result := Power(Power(Abs(Self.X - target.X), 2.0) + Power(Abs(Self.Y - target.Y), 2.0), (1 / 2.0)); 
 end;
 
 {==============================================================================]
@@ -683,9 +683,9 @@ end;
   @action: Calculates the distance from source to target.
   @note: Minkowski
 [==============================================================================}
-function TPoint.DistMinkowski(const target: TPoint; const P: Double): Double; overload;
+function TPoint.Minkowski(const target: TPoint; const P: Double): Double; overload;
 begin
-  Result := Minkowski(Self, target, P);
+  Result := Power(Power(Abs(Self.X - target.X), P) + Power(Abs(Self.Y - target.Y), P), (1 / P));
 end;
 
 {==============================================================================]
@@ -693,9 +693,9 @@ end;
   @action: Calculates the distance from source to target.
   @note: Max-Min Chebyshev
 [==============================================================================}
-function TPoint.DistMaxMinChebyshev(const target: TPoint): Double;
+function TPoint.MaxMinChebyshev(const target: TPoint): Double; overload;
 begin
-  Result := MaxMinChebyshev(Self, target);
+  Result := Max(Max(Self.X, target.X) - Min(Self.X, target.X), Max(Self.Y, target.Y) - Min(Self.Y, target.Y));
 end;
 
 {==============================================================================]
@@ -703,9 +703,13 @@ end;
   @action: Calculates the distance from source to target.
   @note: Octile
 [==============================================================================}
-function TPoint.DistOctile(const target: TPoint): Double;
+function TPoint.Octile(const target: TPoint): Double; overload;
+var
+  h, v: Integer;
 begin
-  Result := Octile(Self, target);
+  h := Abs(Self.X - target.X);
+  v := Abs(Self.Y - target.Y);
+  Result := (Max(h, v) + (Sqrt(2) - 1) * Min(h, v));
 end;
 
 {==============================================================================]
@@ -713,7 +717,7 @@ end;
   @action: Calculates the distance from source to target.
   @note: Octile
 [==============================================================================}
-function TPointHelper.Dist(const target: TPoint; const metric: TMetrics = dmEuclidean): Double;
+function TPointHelper.Dist(const target: TPoint; const metric: TMetrics = dmEuclidean): Double; overload;
 begin
   Result := Distance(Self, target, metric);
 end;
@@ -1405,32 +1409,32 @@ begin
   Result := not ((Self.X = val) or (Self.Y = val));
 end;
 
-function HypotEuclidean(const A, B: TPoint): Double;
+function HypotEuclidean(const A, B: TPoint): Double; overload;
 begin
   Result := Hypot(A.X - B.X, A.Y - B.Y);
 end;
 
-function Euclidean(const A, B: TPoint): Double;
+function Euclidean(const A, B: TPoint): Double; overload;
 begin
   Result := (Sqrt(Sqr(A.X - B.X) + Sqr(A.Y - B.Y)));
 end;
 
-function Euclidean2(const A, B: TPoint): Double;
+function Euclidean2(const A, B: TPoint): Double; overload;
 begin
   Result := Sqrt(Power((A.X - B.X), 2) + Power((A.Y - B.Y), 2));
 end;
 
-function SquaredEuclidean(const A, B: TPoint): Double;
+function SquaredEuclidean(const A, B: TPoint): Double; overload;
 begin
   Result := (Sqr(A.X - B.X) + Sqr(A.Y - B.Y));
 end;
 
-function Manhattan(const A, B: TPoint): Double;
+function Manhattan(const A, B: TPoint): Double; overload;
 begin
   Result := (Abs(A.X - B.X) + Abs(A.Y - B.Y));
 end;
 
-function Chebyshev(const A, B: TPoint): Double;
+function Chebyshev(const A, B: TPoint): Double; overload;
 begin
   Result := Max(Abs(A.X - B.X), Abs(A.Y - B.Y));
 end;
@@ -1445,12 +1449,12 @@ begin
   Result := Power(Power(Abs(A.X - B.X), P) + Power(Abs(A.Y - B.Y), P), (1 / P));
 end;
 
-function MaxMinChebyshev(const A, B: TPoint): Double;
+function MaxMinChebyshev(const A, B: TPoint): Double; overload;
 begin
   Result := Max(Max(A.X, B.X) - Min(A.X, B.X), Max(A.Y, B.Y) - Min(A.Y, B.Y));
 end;
 
-function Octile(const A, B: TPoint): Double;
+function Octile(const A, B: TPoint): Double; overload;
 var
   h, v: Integer;
 begin
