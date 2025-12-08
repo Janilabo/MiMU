@@ -21,9 +21,9 @@ end;
 TPointArrayHelper = type helper for TPointArray
   {$I Core.inc}
   function Binify(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function Binify(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+  function Binify(const radius: Double; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
   function Binified(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function Binified(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+  function Binified(const radius: Double; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
   function Bounds: TBox; overload;
   function Bounds(var width, height: Integer): TBox; overload;
   function BoundingBox: TBox;
@@ -54,45 +54,45 @@ TPointArrayHelper = type helper for TPointArray
   function Horizontal: TRange; overload;
   function Neighborify(const adjacency8: Boolean = True): T2DPointArray; overload;
   function Regionize(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function Regionize(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+  function Regionize(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
   function Regionize(const radius: Double = 1.0): T2DPointArray; overload;
   function RSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
-  function RSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+  function RSplit(const radius: Double; const distFunc: TDistance; const sSorted: Boolean = False): T2DPointArray; overload;
   function RSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
   function CSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
-  function CSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+  function CSplit(const radius: Double; const distFunc: TDistance; const sSorted: Boolean = False): T2DPointArray; overload;
   function CSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;  
   function XSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
-  function XSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+  function XSplit(const radius: Double; const distFunc: TDistance; const sSorted: Boolean = False): T2DPointArray; overload;
   function XSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
   function YSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
-  function YSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+  function YSplit(const radius: Double; const distFunc: TDistance; const sSorted: Boolean = False): T2DPointArray; overload;
   function YSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
   function Split(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function Split(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+  function Split(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
   function Split(const radius: Double = 1.0): T2DPointArray; overload;
   function SplitEx(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function SplitEx(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+  function SplitEx(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
   function SplitEx(const radius: Double = 1.0): T2DPointArray; overload;
-  function Clusters(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+  function Clusters(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
   function Clusters(const radius: Double = 1.0): T2DPointArray; overload;
   function Clusters(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function Cluster(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+  function Cluster(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
   function Cluster(const radius: Double = 1.0): T2DPointArray; overload;
   function Cluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function Clustered(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+  function Clustered(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
   function Clustered(const radius: Double = 1.0): T2DPointArray; overload;
   function Clustered(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function Clusterify(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+  function Clusterify(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
   function Clusterify(const radius: Double = 1.0): T2DPointArray; overload;
   function Clusterify(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function Clusterize(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+  function Clusterize(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
   function Clusterize(const radius: Double = 1.0): T2DPointArray; overload;
   function Clusterize(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function Segment(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+  function Segment(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
   function Segment(const radius: Double = 1.0): T2DPointArray; overload;
   function Segment(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function Fragment(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+  function Fragment(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
   function Fragment(const radius: Double = 1.0): T2DPointArray; overload;
   function Fragment(const xRadius, yRadius: Integer): T2DPointArray; overload;
   function Groups(const adjacency8: Boolean = True): T2DPointArray; overload;
@@ -121,10 +121,10 @@ TPointArrayHelper = type helper for TPointArray
   function X2D(var yArr: TIntegerArray; const xOrder: Boolean = True; const xAscending: Boolean = True): T2DIntegerArray; overload;
   function Y2D(var xArr: TIntegerArray; const yOrder: Boolean = True; const yAscending: Boolean = True): T2DIntegerArray; overload;
   function Blobs(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function Blobs(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+  function Blobs(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
   function Blobs(const radius: Double = 1.0): T2DPointArray; overload;
   function Blobify(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function Blobify(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+  function Blobify(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
   function Blobify(const radius: Double = 1.0): T2DPointArray; overload;
   function YTo2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
   function YTo2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
@@ -134,22 +134,22 @@ TPointArrayHelper = type helper for TPointArray
   function YAs2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
   function XAs2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
   function XAs2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
-  function DBSCAN(const radius: Double; const minPts: Integer; const distFunc: TDistanceFunction): T2DPointArray; overload;
-  function DBSCAN(const radius: Double = 1.0; const minPts: Integer = 2; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+  function DBSCAN(const radius: Double; const minPts: Integer; const distFunc: TDistance): T2DPointArray; overload;
+  function DBSCAN(const radius: Double = 1.0; const minPts: Integer = 2; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
   function DBSCAN(const xRadius, yRadius: Integer; const minPts: Integer): T2DPointArray; overload;
-  function Nearby(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): TPointArray; overload;
-  function Nearby(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+  function Nearby(const target: TPoint; const radius: Double; const distFunc: TDistance): TPointArray; overload;
+  function Nearby(const target: TPoint; const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): TPointArray; overload;
   function Nearby(const target: TPoint; const xRadius, yRadius: Integer): TPointArray; overload;
-  function Nearby(const targets: TPointArray; const radius: Double; const distFunc: TDistanceFunction): TPointArray; overload;
-  function Nearby(const targets: TPointArray; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+  function Nearby(const targets: TPointArray; const radius: Double; const distFunc: TDistance): TPointArray; overload;
+  function Nearby(const targets: TPointArray; const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): TPointArray; overload;
   function Nearby(const targets: TPointArray; const xRadius, yRadius: Integer): TPointArray; overload;
   function CorePointsMax(const maximumNeighbours: Integer; const xRadius, yRadius: Integer): TPointArray; overload;
-  function CorePointsMax(const maximumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+  function CorePointsMax(const maximumNeighbours: Integer; const radius: Double; const metric: TMetrics = dmEuclidean): TPointArray; overload;
   function CorePointsMin(const minimumNeighbours: Integer; const xRadius, yRadius: Integer): TPointArray; overload;
-  function CorePointsMin(const minimumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
-  function CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+  function CorePointsMin(const minimumNeighbours: Integer; const radius: Double; const metric: TMetrics = dmEuclidean): TPointArray; overload;
+  function CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TMetrics = dmEuclidean): TPointArray; overload;
   function CorePoints(const allowedNeighbours: TRange; const xRadius, yRadius: Integer): TPointArray; overload;
-  function Bins(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+  function Bins(const radius: Double; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
   function Bins(const xRadius, yRadius: Integer): T2DPointArray; overload;
   function XBuckets(const bWidth: Integer = 1): T2DPointArray;
   function YBuckets(const bHeight: Integer = 1): T2DPointArray;
@@ -163,15 +163,15 @@ TPointArrayHelper = type helper for TPointArray
   function Boxified(const bSize: Integer = 1): T2DPointArray; overload;
   function BinBox(const bWidth, bHeight: Integer): T2DPointArray; overload;
   function BinBox(const bSize: Integer = 1): T2DPointArray; overload;
-  function BinaryFloodFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
-  function BinaryFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
-  function BinaryFilled(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
-  function BFloodFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
+  function BinaryFloodFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
+  function BinaryFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
+  function BinaryFilled(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
+  function BFloodFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
   function AdjFill(const scan8W: Boolean = True): T2DPointArray;
   function NFill(const scan8W: Boolean = True): T2DPointArray;
   function AFill(const scan8W: Boolean = True): T2DPointArray;
   function CFill(const scan8W: Boolean = True): T2DPointArray;
-  function BCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+  function BCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
   function BCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
   function QuickSortByX(const aAscending: Boolean = True): Integer;
   function QuickSortByY(const aAscending: Boolean = True): Integer;
@@ -182,15 +182,15 @@ TPointArrayHelper = type helper for TPointArray
   function SortByScanline(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
   function SortByScanline(const aAscending: Boolean = True): Integer; overload;
   function ProximityCluster(const xRadius, yRadius: Integer; const method: Integer = 0): T2DPointArray; overload;
-  function ProximityCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const method: Integer = 0): T2DPointArray; overload;
-  function Linked(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 1): T2DPointArray; overload;
+  function ProximityCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean; const method: Integer = 0): T2DPointArray; overload;
+  function Linked(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean; const check: Integer = 1): T2DPointArray; overload;
   function Linked(const xRadius, yRadius: Integer; const check: Integer = 1): T2DPointArray; overload;
-  function Chain(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
+  function Chain(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
   function Chain(const xRadius, yRadius: Integer; const check: Integer = 5): T2DPointArray; overload;
-  function Attach(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
+  function Attach(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
   function Attach(const xRadius, yRadius: Integer; const check: Integer = 5): T2DPointArray; overload;
   function RCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
-  function RCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+  function RCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
   function ToRows: T2DPointArray;
   function ToColumns: T2DPointArray;
   function AsRows: T2DPointArray;
@@ -1017,9 +1017,9 @@ end;
   @note: Clusters are formed by examining all points within the array using the
          provided distance function. Points within the specified radius (Double)
          of any cluster member are added to the same cluster. This version supports
-         arbitrary distance metrics via the TDistanceFunction parameter.
+         arbitrary distance metrics via the TDistance parameter.
 [==============================================================================}
-function TPointArrayHelper.Regionize(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+function TPointArrayHelper.Regionize(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 var
   i, j, l, r, c, t, f: Integer;
   g, d: TStringList;
@@ -1094,7 +1094,7 @@ end;
   @action: Groups points into clusters based on horizontal (X-axis) proximity.
   @note: Sorts by column (X) unless already sorted. Uses distance function or fixed x/y radii.
 [==============================================================================}
-function TPointArrayHelper.CSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+function TPointArrayHelper.CSplit(const radius: Double; const distFunc: TDistance; const sSorted: Boolean = False): T2DPointArray; overload;
 var
   i, j, k, r, l: Integer;
   u: TBooleanArray;
@@ -1218,7 +1218,7 @@ end;
   @action: Groups points into clusters based on vertical (Y-axis) proximity.
   @note: Sorts by row (Y) unless already sorted. Uses distance function or fixed x/y radii.
 [==============================================================================}
-function TPointArrayHelper.RSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+function TPointArrayHelper.RSplit(const radius: Double; const distFunc: TDistance; const sSorted: Boolean = False): T2DPointArray; overload;
 var
   i, j, k, r, l: Integer;
   u: TBooleanArray;
@@ -1410,7 +1410,7 @@ end;
          Points are grouped if distFunc(p, q) ≤ radius.
          The X-range window limits comparisons for performance (O(n log n) typical).
 [==============================================================================}
-function TPointArrayHelper.XSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+function TPointArrayHelper.XSplit(const radius: Double; const distFunc: TDistance; const sSorted: Boolean = False): T2DPointArray; overload;
 var
   i, j, k, r, l: Integer;
   u: TBooleanArray;
@@ -1553,7 +1553,7 @@ end;
          Points are grouped if distFunc(p, q) ≤ radius.
          Y-sorted scanning limits comparisons for faster clustering.
 [==============================================================================}
-function TPointArrayHelper.YSplit(const radius: Double; const distFunc: TDistanceFunction; const sSorted: Boolean = False): T2DPointArray; overload;
+function TPointArrayHelper.YSplit(const radius: Double; const distFunc: TDistance; const sSorted: Boolean = False): T2DPointArray; overload;
 var
   i, j, k, r, l: Integer;
   u: TBooleanArray;
@@ -1675,7 +1675,7 @@ end;
   @action: Splits TPointArray to groups by radius.
   @note: Supports custom distance function.
 [==============================================================================}
-function TPointArrayHelper.Split(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+function TPointArrayHelper.Split(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 var
   l, s, c, e, r, h: Integer;
   p: TPointArray;
@@ -1775,7 +1775,7 @@ end;
   @action: Splits TPointArray to groups by radius.
   @note: Supports custom distance function.
 [==============================================================================}
-function TPointArrayHelper.SplitEx(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+function TPointArrayHelper.SplitEx(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 var
   i, j, k, r, l: Integer;
   u: TBooleanArray;
@@ -1830,7 +1830,7 @@ end;
          Each cluster contains points whose pairwise distances are within radius.
          Uses the provided distance function.
 [==============================================================================}
-function TPointArrayHelper.Clusters(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+function TPointArrayHelper.Clusters(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 var
   i, w, h, e, v, z, r, n, t, x, y: Integer;
   c: T2DIntegerArray;
@@ -2003,7 +2003,7 @@ end;
          if their distance from any member is less than or equal to radius.
 		 Supports custom distance functions via distFunc (default is Euclidean).
 [==============================================================================}
-function TPointArrayHelper.Cluster(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+function TPointArrayHelper.Cluster(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 var
   w, h, i, j, c, r, x, y: Integer;
   d: Double;
@@ -2170,7 +2170,7 @@ end;
          array of TPoint. Input array ordering is preserved in cluster
          discovery; no sorting is performed.
 [==============================================================================}
-function TPointArrayHelper.Clustered(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+function TPointArrayHelper.Clustered(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 var
   i, j, r: Integer;
   v: TBooleanArray;
@@ -2295,7 +2295,7 @@ end;
          determines the order in which clusters are discovered. Worst-case
          complexity is O(N²).
 [==============================================================================}
-function TPointArrayHelper.Clusterify(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+function TPointArrayHelper.Clusterify(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 var
   i, j, r: Integer;
   v: TBooleanArray;
@@ -2419,7 +2419,7 @@ end;
   @action: Splits TPointArray to groups by radius.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Clusterize(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload; 
+function TPointArrayHelper.Clusterize(const radius: Double; const distFunc: TDistance): T2DPointArray; overload; 
 var
   m, p: TIntegerArray;
   r, l, i, j: Integer;
@@ -2768,7 +2768,7 @@ end;
   @action: Splits TPointArray to groups by radius.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Segment(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload; 
+function TPointArrayHelper.Segment(const radius: Double; const distFunc: TDistance): T2DPointArray; overload; 
 var
   b, f, l, i, j, k, p, r, c: Integer;
   v: TBooleanArray;
@@ -2869,7 +2869,7 @@ end;
   @action: Splits TPointArray to groups by radius.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Fragment(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload; 
+function TPointArrayHelper.Fragment(const radius: Double; const distFunc: TDistance): T2DPointArray; overload; 
 var
   h, l, i, j, k, r, p, c: Integer;
   v: TBooleanArray;
@@ -3494,7 +3494,7 @@ begin
   SetLength(Result, g);
 end;
 
-function TPointArrayHelper.Blobs(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+function TPointArrayHelper.Blobs(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 var
   i, j, p, g, t, z, l, d: Integer;
   h, v, r, c: TRange;
@@ -3637,7 +3637,7 @@ begin
   SetLength(Result, g);
 end;
 
-function TPointArrayHelper.Blobify(const radius: Double; const distFunc: TDistanceFunction): T2DPointArray; overload;
+function TPointArrayHelper.Blobify(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 var
   i, j, p, g, z, l, d: Integer;
   h, v, r, c, k: TRange;
@@ -4104,14 +4104,14 @@ end;
   @returns: T2DPointArray where each sub-array represents a cluster.
   @note: Points not belonging to any cluster are ignored (treated as noise).
 [==============================================================================}
-function TPointArrayHelper.DBSCAN(const radius: Double; const minPts: Integer; const distFunc: TDistanceFunction): T2DPointArray; overload;
+function TPointArrayHelper.DBSCAN(const radius: Double; const minPts: Integer; const distFunc: TDistance): T2DPointArray; overload;
 const
   NOISE = -1;
   UNVISITED = 0;
 var
   c, i, s: Integer;
   l: TIntegerArray;
-  d: TDistanceFunction;
+  d: TDistance;
   function RegionQuery(const index: Integer): TIntegerArray;
   var
     i: Integer;
@@ -4149,7 +4149,7 @@ var
     end;
   end;
 begin
-  d := DistanceFunction(distFunc);
+  d := Distance(distFunc);
   s := Self.Size;
   case s of
     0: Exit([]);
@@ -4173,9 +4173,9 @@ begin
       Result[l[i] - 1].Supply(Self[i]);
 end;
 
-function TPointArrayHelper.DBSCAN(const radius: Double = 1.0; const minPts: Integer = 2; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+function TPointArrayHelper.DBSCAN(const radius: Double = 1.0; const minPts: Integer = 2; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
 begin
-  Result := Self.DBSCAN(radius, minPts, DistanceFunction(metric));
+  Result := Self.DBSCAN(radius, minPts, Distance(metric));
 end;
 
 {==============================================================================]
@@ -4265,21 +4265,21 @@ end;
          function is used. This checks distance from each point in Self to
          the target point.
 [==============================================================================}
-function TPointArrayHelper.Nearby(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): TPointArray; overload;
+function TPointArrayHelper.Nearby(const target: TPoint; const radius: Double; const distFunc: TDistance): TPointArray; overload;
 var
   i: Integer;
-  f: TDistanceFunction;
+  f: TDistance;
 begin
-  f := DistanceFunction(distFunc);
+  f := Distance(distFunc);
   SetLength(Result, 0);
   for i := 0 to High(Self) do
     if Self[i].Within(target, radius, f) then
       Result.Supply(Self[i]);
 end;
 
-function TPointArrayHelper.Nearby(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+function TPointArrayHelper.Nearby(const target: TPoint; const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): TPointArray; overload;
 begin
-  Result := Self.Nearby(target, radius, DistanceFunction(metric));
+  Result := Self.Nearby(target, radius, Distance(metric));
 end;
 
 {==============================================================================]
@@ -4309,14 +4309,14 @@ end;
          function is used. Each point in Self is included if it is within
          the radius of at least one target point.
 [==============================================================================}
-function TPointArrayHelper.Nearby(const targets: TPointArray; const radius: Double; const distFunc: TDistanceFunction): TPointArray; overload;
+function TPointArrayHelper.Nearby(const targets: TPointArray; const radius: Double; const distFunc: TDistance): TPointArray; overload;
 var
   i, j: Integer;
-  f: TDistanceFunction;
+  f: TDistance;
 begin
   if targets.Empty then
     Exit([]);
-  f := DistanceFunction(distFunc);
+  f := Distance(distFunc);
   SetLength(Result, 0);
   for i := 0 to High(Self) do
     for j := 0 to High(targets) do
@@ -4327,9 +4327,9 @@ begin
       end;
 end;
 
-function TPointArrayHelper.Nearby(const targets: TPointArray; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+function TPointArrayHelper.Nearby(const targets: TPointArray; const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): TPointArray; overload;
 begin
-  Result := Self.Nearby(targets, radius, DistanceFunction(metric));
+  Result := Self.Nearby(targets, radius, Distance(metric));
 end;
 
 {==============================================================================]
@@ -4400,7 +4400,7 @@ end;
   @note: Used to detect *sparse* points or "edge" points in a spatial 
          distribution. Early-breaks when neighbour count exceeds the limit.
 [==============================================================================}
-function TPointArrayHelper.CorePointsMax(const maximumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+function TPointArrayHelper.CorePointsMax(const maximumNeighbours: Integer; const radius: Double; const metric: TMetrics = dmEuclidean): TPointArray; overload;
 var
   i, j, k, l, r, c, z: Integer;
   x: T2DIntegerArray;
@@ -4482,7 +4482,7 @@ end;
   @note: Used to detect *core* points in a density-based clustering context 
          (e.g. DBSCAN). Early-breaks when minimum is reached.
 [==============================================================================}
-function TPointArrayHelper.CorePointsMin(const minimumNeighbours: Integer; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+function TPointArrayHelper.CorePointsMin(const minimumNeighbours: Integer; const radius: Double; const metric: TMetrics = dmEuclidean): TPointArray; overload;
 var
   i, j, k, l, r, c, z: Integer;
   x: T2DIntegerArray;
@@ -4531,7 +4531,7 @@ end;
          with custom distance metrics. Automatically ignores points outside 
          the defined neighbour range.
 [==============================================================================}
-function TPointArrayHelper.CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TDistanceMetric = dmEuclidean): TPointArray; overload;
+function TPointArrayHelper.CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TMetrics = dmEuclidean): TPointArray; overload;
 var
   i, j, k, l, r, c, z: Integer;
   x: T2DIntegerArray;
@@ -4698,10 +4698,10 @@ end;
            Uses binary-search-optimized spatial indexing and union-find to efficiently
            merge points within the given radius according to the metric.
   @note: Overload for floating-point / metric-aware clustering. 
-         The metric can be Euclidean, Manhattan, or any user-defined TDistanceMetric.
+         The metric can be Euclidean, Manhattan, or any user-defined TMetrics.
          Efficient for large point sets due to spatial partitioning and union-find.
 [==============================================================================}
-function TPointArrayHelper.Binify(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+function TPointArrayHelper.Binify(const radius: Double; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
 var
   n, i, c, r, k, d: Integer;
   h, z: T2DIntegerArray;
@@ -4846,7 +4846,7 @@ end;
          The integer value d = Ceil(radius) is used for approximate bounding during
          binary search. Suitable for Euclidean, Manhattan, or custom distance metrics.
 [==============================================================================}
-function TPointArrayHelper.Binified(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+function TPointArrayHelper.Binified(const radius: Double; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
 var
   l, i, j, r, c, a, n, d: Integer;
   h, z: T2DIntegerArray;
@@ -4915,7 +4915,7 @@ end;
           for spatial indexing) and O(n) memory for helper arrays. Deterministic
           and suitable for large point sets.
 [==============================================================================}
-function TPointArrayHelper.Bins(const radius: Double; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+function TPointArrayHelper.Bins(const radius: Double; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
 var
   i, r, c, n, d, g: Integer;
   v, p, s, m, k, t: TIntegerArray;
@@ -5420,7 +5420,7 @@ end;
     • Memory: boolean visited array, integer queue, and spatial index buffers.
     • Recommended for small–medium point sets or when iterative BFS is preferred.
 [==============================================================================}
-function TPointArrayHelper.BinaryFloodFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
+function TPointArrayHelper.BinaryFloodFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
 var
   l, i, j, r, c, d: Integer;
   h, z: T2DIntegerArray;
@@ -5493,7 +5493,7 @@ end;
     • Fixed logic: component counter increments only when a new root is found.
     • Best suited for large datasets where BFS would be too expensive.
 [==============================================================================}
-function TPointArrayHelper.BinaryFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
+function TPointArrayHelper.BinaryFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
 var
   i, j, r, l, c, d: Integer;
   p, s, m: TIntegerArray;
@@ -5591,7 +5591,7 @@ end;
     • Returns: compact T2DPointArray of connected components.
     • Recommended for large point clouds—highest performance and scalability.
 [==============================================================================}
-function TPointArrayHelper.BinaryFilled(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
+function TPointArrayHelper.BinaryFilled(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
 var
   l, i, e, f, g, q, n, j, c, r, o, d: Integer;
   h, z: T2DIntegerArray;
@@ -5700,7 +5700,7 @@ end;
         – Slightly simpler and faster for large uniform point sets.
     • Ideal when deterministic memory footprint is desired.
 [==============================================================================}
-function TPointArrayHelper.BFloodFill(const radius: Double; const metric: TDistanceMetric = dmChebyshev): T2DPointArray;
+function TPointArrayHelper.BFloodFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
 var
   l, i, k, j, d, f, c: Integer;
   h, z: T2DIntegerArray;
@@ -6057,7 +6057,7 @@ end;
            -metric: Distance metric (Chebyshev, Euclidean, Manhattan, etc.)
   @result: T2DPointArray where each subarray contains points of one cluster
 [==============================================================================}
-function TPointArrayHelper.BCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+function TPointArrayHelper.BCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
 var
   h, z: T2DIntegerArray;
   d, l, i, j, r, g: Integer;
@@ -6511,7 +6511,7 @@ end;
     radius : Double = 1.0
       Maximum distance between two points (according to the selected metric)
       for them to belong to the same cluster.
-    metric : TDistanceMetric = dmEuclidean
+    metric : TMetrics = dmEuclidean
       Distance metric used to compute proximity:
         dmEuclidean - standard geometric distance
         dmManhattan - sum of absolute component differences
@@ -6524,7 +6524,7 @@ end;
   @returns:
     T2DPointArray in which each subarray represents one proximity-based cluster.
 [==============================================================================}
-function TPointArrayHelper.ProximityCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const method: Integer = 0): T2DPointArray; overload;
+function TPointArrayHelper.ProximityCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean; const method: Integer = 0): T2DPointArray; overload;
 var
   i, j, k, c, l, d: Integer;
   g, y: TIntegerArray;
@@ -6600,7 +6600,7 @@ end;
            clusters (T2DPointArray); cluster ordering is implementation-
            dependent.
 [==============================================================================}
-function TPointArrayHelper.Linked(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 1): T2DPointArray; overload;
+function TPointArrayHelper.Linked(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean; const check: Integer = 1): T2DPointArray; overload;
 var
   i, j, r, c, l, g, d, e: Integer;
   f: Double;
@@ -6838,7 +6838,7 @@ end;
          The process continues recursively until no further points can be connected.
          This version uses a simple full-scan distance check (no spatial indexing).
 [==============================================================================}
-function TPointArrayHelper.Chain(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
+function TPointArrayHelper.Chain(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
 var
   i, j, k, c, l, q: Integer;
   u: TBooleanArray;
@@ -6969,7 +6969,7 @@ end;
          recursively attaching up to `check` nearest neighbors that fall within range.
          Much faster than Chain for large point sets due to reduced search scope.
 [==============================================================================}
-function TPointArrayHelper.Attach(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
+function TPointArrayHelper.Attach(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean; const check: Integer = 5): T2DPointArray; overload;
 var
   i, j, r, c, l, d, q: Integer;
   u: TBooleanArray;
@@ -7195,7 +7195,7 @@ end;
   @note: Supports user-defined metrics (e.g. Euclidean, Manhattan, Chebyshev).
          Uses grid partitioning for spatial acceleration and a stack-based region grow.
 [==============================================================================}
-function TPointArrayHelper.RCluster(const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): T2DPointArray; overload;
+function TPointArrayHelper.RCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
 type
   TCell = record
     indices: TIntegerArray;

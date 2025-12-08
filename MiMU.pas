@@ -51,30 +51,12 @@ const
 function MiMU_Version: Double;
 
 type
-  TDistanceMetric = (dmHypotEuclidean, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev, dmMinkowski, dmMaxMinChebyshev, dmOctile);
-
 {$DEFINE TYPES}{$I MiMU\MiMU.inc}{$UNDEF TYPES}
 {$DEFINE HELPERS}{$I MiMU\MiMU.inc}{$UNDEF HELPERS}
 {$DEFINE T1D}{$I MiMU\MiMU.inc}{$UNDEF T1D}
 {$DEFINE T2D}{$I MiMU\MiMU.inc}{$UNDEF T2D}
 {$DEFINE METHODS}{$I MiMU\MiMU.inc}{$UNDEF METHODS}
 {$DEFINE OPERATORS}{$I MiMU\MiMU.inc}{$UNDEF OPERATORS}
-
-function DistanceFunction(const distFunc: TDistanceFunction): TDistanceFunction; overload;
-function DistanceFunction(const method: Integer = 0): TDistanceFunction; overload;
-function DistanceFunction(const metric: TDistanceMetric): TDistanceFunction; overload;
-function HypotEuclidean(const A, B: TPoint): Double;
-function Euclidean(const A, B: TPoint): Double;
-function Euclidean2(const A, B: TPoint): Double;
-function SquaredEuclidean(const A, B: TPoint): Double;
-function Manhattan(const A, B: TPoint): Double;
-function Chebyshev(const A, B: TPoint): Double;
-function Minkowski(const A, B: TPoint): Double; overload;
-function Minkowski(const A, B: TPoint; const P: Double): Double; overload;
-function MaxMinChebyshev(const A, B: TPoint): Double;
-function Octile(const A, B: TPoint): Double;
-function Distance(const A, B: TPoint; const distFunc: TDistanceFunction): Double; overload;
-function Distance(const A, B: TPoint; const metric: TDistanceMetric = dmEuclidean): Double; overload;
 
 generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Sort<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
@@ -393,112 +375,6 @@ function Sort(var A, B, C: Double; const oAscending: Boolean = True): Boolean; o
 function Sort(var A, B, C: string; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Sort<string>(A, B, C, oAscending); end;
 function Sort(var A, B, C: Char; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Sort<Char>(A, B, C, oAscending); end;
 function Sort(var A, B, C: TPoint; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Sort<TPoint>(A, B, C, oAscending); end;
-
-
-function HypotEuclidean(const A, B: TPoint): Double;
-begin
-  Result := Hypot(A.X - B.X, A.Y - B.Y);
-end;
-
-function Euclidean(const A, B: TPoint): Double;
-begin
-  Result := (Sqrt(Sqr(A.X - B.X) + Sqr(A.Y - B.Y)));
-end;
-
-function Euclidean2(const A, B: TPoint): Double;
-begin
-  Result := Sqrt(Power((A.X - B.X), 2) + Power((A.Y - B.Y), 2));
-end;
-
-function SquaredEuclidean(const A, B: TPoint): Double;
-begin
-  Result := (Sqr(A.X - B.X) + Sqr(A.Y - B.Y));
-end;
-
-function Manhattan(const A, B: TPoint): Double;
-begin
-  Result := (Abs(A.X - B.X) + Abs(A.Y - B.Y));
-end;
-
-function Chebyshev(const A, B: TPoint): Double;
-begin
-  Result := Max(Abs(A.X - B.X), Abs(A.Y - B.Y));
-end;
-
-function Minkowski(const A, B: TPoint): Double; overload;
-begin
-  Result := Power(Power(Abs(A.X - B.X), 2.0) + Power(Abs(A.Y - B.Y), 2.0), (1 / 2.0));
-end;
-
-function Minkowski(const A, B: TPoint; const P: Double): Double; overload;
-begin
-  Result := Power(Power(Abs(A.X - B.X), P) + Power(Abs(A.Y - B.Y), P), (1 / P));
-end;
-
-function MaxMinChebyshev(const A, B: TPoint): Double;
-begin
-  Result := Max(Max(A.X, B.X) - Min(A.X, B.X), Max(A.Y, B.Y) - Min(A.Y, B.Y));
-end;
-
-function Octile(const A, B: TPoint): Double;
-var
-  h, v: Integer;
-begin
-  h := Abs(A.X - B.X);
-  v := Abs(A.Y - B.Y);
-  Result := (Max(h, v) + (Sqrt(2) - 1) * Min(h, v));
-end;
-
-function DistanceFunction(const distFunc: TDistanceFunction): TDistanceFunction; overload;
-begin
-  Result := distFunc;
-  if not Assigned(Result) then
-    Result := @Euclidean;
-end;
-
-function DistanceFunction(const method: Integer = 0): TDistanceFunction; overload;
-begin
-  if not InRange(method, 0, 8) then
-    Exit(@Euclidean);
-  case method of
-    0: Result := @HypotEuclidean;
-    1: Result := @Euclidean;
-    2: Result := @Euclidean2;
-    3: Result := @SquaredEuclidean;
-    4: Result := @Manhattan;
-    5: Result := @Chebyshev;
-    6: Result := @Minkowski;
-    7: Result := @MaxMinChebyshev;
-    8: Result := @Octile;
-  end;
-end;
-
-function DistanceFunction(const metric: TDistanceMetric): TDistanceFunction; overload;
-begin
-  case metric of
-    dmHypotEuclidean: Result := @HypotEuclidean;
-    dmEuclidean: Result := @Euclidean;
-    dmEuclidean2: Result := @Euclidean2;
-    dmSquaredEuclidean: Result := @SquaredEuclidean;
-    dmManhattan: Result := @Manhattan;
-    dmChebyshev: Result := @Chebyshev;
-    dmMinkowski: Result := @Minkowski;
-    dmMaxMinChebyshev: Result := @MaxMinChebyshev;
-    dmOctile: Result := @Octile;
-  else
-    Result := @Euclidean;
-  end;
-end;
-
-function Distance(const A, B: TPoint; const distFunc: TDistanceFunction): Double; overload;
-begin
-  Result := distFunc(A, B);
-end;
-
-function Distance(const A, B: TPoint; const metric: TDistanceMetric = dmEuclidean): Double; overload;
-begin
-  Result := Distance(A, B, DistanceFunction(metric));
-end;
 
 {$mode objfpc}{$H+}
 

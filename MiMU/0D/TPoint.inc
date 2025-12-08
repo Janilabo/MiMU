@@ -77,12 +77,28 @@ public
   class function Create(const pX, pY: Integer): TPoint; overload; 
   class function Create(const value: Integer = 0): TPoint; overload; 
 end;
-TDistanceFunction = function(const A, B: TPoint): Double;
+TMetrics = (dmHypotEuclidean, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev, dmMinkowski, dmMaxMinChebyshev, dmOctile);
+TDistance = function(const A, B: TPoint): Double;
 {$ENDIF}
 
 {$IFDEF METHODS}
 function Point(const pX, pY: Integer): TPoint; overload; inline;
 function Point(const val: Integer = 0): TPoint; overload; inline;
+function HypotEuclidean(const A, B: TPoint): Double;
+function Euclidean(const A, B: TPoint): Double;
+function Euclidean2(const A, B: TPoint): Double;
+function SquaredEuclidean(const A, B: TPoint): Double;
+function Manhattan(const A, B: TPoint): Double;
+function Chebyshev(const A, B: TPoint): Double;
+function Minkowski(const A, B: TPoint): Double; overload;
+function Minkowski(const A, B: TPoint; const P: Double): Double; overload;
+function MaxMinChebyshev(const A, B: TPoint): Double;
+function Octile(const A, B: TPoint): Double;
+function Distance(const distFunc: TDistance): TDistance; overload;
+function Distance(const method: Integer = 0): TDistance; overload;
+function Distance(const metric: TMetrics): TDistance; overload;
+function Distance(const A, B: TPoint; const distFunc: TDistance): Double; overload;
+function Distance(const A, B: TPoint; const metric: TMetrics = dmEuclidean): Double; overload;
 {$ENDIF}
 
 {$IFDEF OPERATORS}
@@ -123,11 +139,11 @@ TPointHelper = type helper for TPoint
   function ToBox(const size: Integer = 0): TBox; overload;
   function Boxify(const width, height: Integer): TBox; overload;
   function Boxify(const size: Integer = 0): TBox; overload;
-  function Within(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
-  function Within(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): Boolean; overload;
-  function Near(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
-  function Near(const target: TPoint; const radius: Double; const metric: TDistanceMetric): Boolean; overload;
-  function Dist(const target: TPoint; const metric: TDistanceMetric = dmEuclidean): Double;
+  function Within(const target: TPoint; const radius: Double; const distFunc: TDistance): Boolean; overload;
+  function Within(const target: TPoint; const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): Boolean; overload;
+  function Near(const target: TPoint; const radius: Double; const distFunc: TDistance): Boolean; overload;
+  function Near(const target: TPoint; const radius: Double; const metric: TMetrics): Boolean; overload;
+  function Dist(const target: TPoint; const metric: TMetrics = dmEuclidean): Double;
 end;
 {$ENDIF}
 
@@ -697,7 +713,7 @@ end;
   @action: Calculates the distance from source to target.
   @note: Octile
 [==============================================================================}
-function TPointHelper.Dist(const target: TPoint; const metric: TDistanceMetric = dmEuclidean): Double;
+function TPointHelper.Dist(const target: TPoint; const metric: TMetrics = dmEuclidean): Double;
 begin
   Result := Distance(Self, target, metric);
 end;
@@ -730,7 +746,7 @@ end;
   @note: If no distance function is provided, Euclidean distance should be
          used as the default metric.
 [==============================================================================}
-function TPointHelper.Within(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
+function TPointHelper.Within(const target: TPoint; const radius: Double; const distFunc: TDistance): Boolean; overload;
 begin
   Result := (distFunc(Self, target) <= radius);
 end;
@@ -740,9 +756,9 @@ end;
   @action: Determines whether the current point is within a given radius of the target point using a specified distance metric.
   @note: `metric` specifies a predefined distance metric (e.g., Euclidean, Manhattan, Chebyshev). Internally uses `DistanceFunction(metric)`.
 [==============================================================================}
-function TPointHelper.Within(const target: TPoint; const radius: Double = 1.0; const metric: TDistanceMetric = dmEuclidean): Boolean; overload;
+function TPointHelper.Within(const target: TPoint; const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): Boolean; overload;
 begin
-  Result := Self.Within(target, radius, DistanceFunction(metric));
+  Result := Self.Within(target, radius, Distance(metric));
 end;
 
 {==============================================================================]
@@ -762,7 +778,7 @@ end;
   @action: Determines whether the current point is within a given radius of the target point using a custom distance function.
   @note: `distFunc` is a user-provided function that calculates the distance between two points. Useful for non-standard distance metrics.
 [==============================================================================}
-function TPointHelper.Near(const target: TPoint; const radius: Double; const distFunc: TDistanceFunction): Boolean; overload;
+function TPointHelper.Near(const target: TPoint; const radius: Double; const distFunc: TDistance): Boolean; overload;
 begin
   Result := (distFunc(Self, target) <= radius);
 end;
@@ -772,9 +788,9 @@ end;
   @action: Determines whether the current point is within a given radius of the target point using a specified distance metric.
   @note: `metric` specifies a predefined distance metric (e.g., Euclidean, Manhattan, Chebyshev). Internally uses `DistanceFunction(metric)`.
 [==============================================================================}
-function TPointHelper.Near(const target: TPoint; const radius: Double; const metric: TDistanceMetric): Boolean; overload;
+function TPointHelper.Near(const target: TPoint; const radius: Double; const metric: TMetrics): Boolean; overload;
 begin
-  Result := Self.Near(target, radius, DistanceFunction(metric));
+  Result := Self.Near(target, radius, Distance(metric));
 end;
 
 {==============================================================================]
@@ -1387,5 +1403,110 @@ end;
 function TPoint.Omits(const val: Integer): Boolean;
 begin
   Result := not ((Self.X = val) or (Self.Y = val));
+end;
+
+function HypotEuclidean(const A, B: TPoint): Double;
+begin
+  Result := Hypot(A.X - B.X, A.Y - B.Y);
+end;
+
+function Euclidean(const A, B: TPoint): Double;
+begin
+  Result := (Sqrt(Sqr(A.X - B.X) + Sqr(A.Y - B.Y)));
+end;
+
+function Euclidean2(const A, B: TPoint): Double;
+begin
+  Result := Sqrt(Power((A.X - B.X), 2) + Power((A.Y - B.Y), 2));
+end;
+
+function SquaredEuclidean(const A, B: TPoint): Double;
+begin
+  Result := (Sqr(A.X - B.X) + Sqr(A.Y - B.Y));
+end;
+
+function Manhattan(const A, B: TPoint): Double;
+begin
+  Result := (Abs(A.X - B.X) + Abs(A.Y - B.Y));
+end;
+
+function Chebyshev(const A, B: TPoint): Double;
+begin
+  Result := Max(Abs(A.X - B.X), Abs(A.Y - B.Y));
+end;
+
+function Minkowski(const A, B: TPoint): Double; overload;
+begin
+  Result := Power(Power(Abs(A.X - B.X), 2.0) + Power(Abs(A.Y - B.Y), 2.0), (1 / 2.0));
+end;
+
+function Minkowski(const A, B: TPoint; const P: Double): Double; overload;
+begin
+  Result := Power(Power(Abs(A.X - B.X), P) + Power(Abs(A.Y - B.Y), P), (1 / P));
+end;
+
+function MaxMinChebyshev(const A, B: TPoint): Double;
+begin
+  Result := Max(Max(A.X, B.X) - Min(A.X, B.X), Max(A.Y, B.Y) - Min(A.Y, B.Y));
+end;
+
+function Octile(const A, B: TPoint): Double;
+var
+  h, v: Integer;
+begin
+  h := Abs(A.X - B.X);
+  v := Abs(A.Y - B.Y);
+  Result := (Max(h, v) + (Sqrt(2) - 1) * Min(h, v));
+end;
+
+function Distance(const distFunc: TDistance): TDistance; overload;
+begin
+  Result := distFunc;
+  if not Assigned(Result) then
+    Result := @Euclidean;
+end;
+
+function Distance(const method: Integer = 0): TDistance; overload;
+begin
+  if not InRange(method, 0, 8) then
+    Exit(@Euclidean);
+  case method of
+    0: Result := @HypotEuclidean;
+    1: Result := @Euclidean;
+    2: Result := @Euclidean2;
+    3: Result := @SquaredEuclidean;
+    4: Result := @Manhattan;
+    5: Result := @Chebyshev;
+    6: Result := @Minkowski;
+    7: Result := @MaxMinChebyshev;
+    8: Result := @Octile;
+  end;
+end;
+
+function Distance(const metric: TMetrics): TDistance; overload;
+begin
+  case metric of
+    dmHypotEuclidean: Result := @HypotEuclidean;
+    dmEuclidean: Result := @Euclidean;
+    dmEuclidean2: Result := @Euclidean2;
+    dmSquaredEuclidean: Result := @SquaredEuclidean;
+    dmManhattan: Result := @Manhattan;
+    dmChebyshev: Result := @Chebyshev;
+    dmMinkowski: Result := @Minkowski;
+    dmMaxMinChebyshev: Result := @MaxMinChebyshev;
+    dmOctile: Result := @Octile;
+  else
+    Result := @Euclidean;
+  end;
+end;
+
+function Distance(const A, B: TPoint; const distFunc: TDistance): Double; overload;
+begin
+  Result := distFunc(A, B);
+end;
+
+function Distance(const A, B: TPoint; const metric: TMetrics = dmEuclidean): Double; overload;
+begin
+  Result := Distance(A, B, Distance(metric));
 end;
 {$ENDIF}
