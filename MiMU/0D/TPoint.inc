@@ -33,8 +33,8 @@ TPoint = record
   function CompY(const target: TPoint): Integer;
   function InCircle(const center: TPoint; const radius: Double): Boolean; inline;
   function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; inline;
-  function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; 
-  function AngleRadians(const target: TPoint): Double;
+  function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; overload;
+  function AngleRadians(const target: TPoint): Double; overload;
   function HypotEuclidean(const target: TPoint): Double; overload;	
   function Euclidean(const target: TPoint): Double; overload;
   function Euclidean2(const target: TPoint): Double; overload;

@@ -2,10 +2,12 @@
 function Add(const item: TVar; const duplicates: Boolean = True): TArr; overload;
 function Add(const items: TArr; const duplicates: Boolean = True): TArr; overload;
 function AllEqual: Boolean; overload;
+function AllOf(const candidates: TArr): Boolean; overload;
 function AllSame: Boolean; overload;
 function AllUnique: Boolean; overload;
 function Any(const null: TVar): TVar; overload;
 function Any: TVar; overload;
+function AnyOf(const candidates: TArr): Boolean; overload;
 function Append(const item: TVar; const duplicates: Boolean = True): TArr; overload;
 function Append(const items: TArr; const duplicates: Boolean = True): TArr; overload;
 function As2D(const rows, columns: Integer): T2DArr; overload;
@@ -162,6 +164,7 @@ function Movements(const target: TArr): TConnectionArray; overload;
 function Multi(const threshold: Integer = 2): Boolean; overload;
 function Multi(const threshold: TRange): Boolean; overload;
 function Next(const index: Integer; const count: Integer = 2147483647): TArr; overload;
+function NoneOf(const forbidden: TArr): Boolean; overload;
 function Occupied: Boolean; overload;
 function Occurs(const item: TVar; const occurrence: Integer = 1): Boolean; overload;
 function Overlay(const items: TArr; const index: Integer; const init: TVar): TArr; overload;
@@ -441,6 +444,33 @@ begin
 end;
 
 {==============================================================================]
+  <AllOf>
+  @action: Returns True if arr contains all items from candidates.
+  @note: Always True if candidates is empty. False if arr is empty but candidates is not.
+[==============================================================================}
+function THelper.AllOf(const candidates: TArr): Boolean; overload;
+var
+  d: specialize TDictionary<TVar, Boolean>;
+  i: Integer;
+begin
+  if candidates.Empty then
+    Exit(True);
+  if Self.Empty then
+    Exit(False);
+  d := specialize TDictionary<TVar, Boolean>.Create;
+  try
+    for i := 0 to High(Self) do
+      d.AddOrSetValue(Self[i], True);
+    for i := 0 to High(candidates) do
+      if not d.ContainsKey(candidates[i]) then
+        Exit(False);
+    Result := True;
+  finally
+    d.Free;
+  end;
+end;
+
+{==============================================================================]
   <AllSame>
   @action: Returns true if all values in arr are the same (arr contains only equal values).
   @note: Returns FALSE with empty array!
@@ -492,6 +522,31 @@ end;
 function THelper.Any: TVar; overload;
 begin
   Result := Self[Low(Self) + Random(Self.Size)];
+end;
+
+{==============================================================================]
+  <AnyOf>
+  @action: Returns True if arr contains at least one item from candidates.
+  @note: Always False if arr or candidates is empty.
+[==============================================================================}
+function THelper.AnyOf(const candidates: TArr): Boolean; overload;
+var
+  d: specialize TDictionary<TVar, Boolean>;
+  i: Integer;
+begin
+  Result := False;
+  if (Self.Empty or candidates.Empty) then
+    Exit;
+  d := specialize TDictionary<TVar, Boolean>.Create;
+  try
+    for i := 0 to High(candidates) do
+      d.AddOrSetValue(candidates[i], True);
+    for i := 0 to High(Self) do
+      if d.ContainsKey(Self[i]) then
+        Exit(True);
+  finally
+    d.Free;
+  end;
 end;
 
 {==============================================================================]
@@ -3804,6 +3859,31 @@ begin
       Result[i] := Self[(index + 1) + i];
   end else
     SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <NoneOf>
+  @action: Returns true if arr does not contain any items from forbidden.
+  @note: None.
+[==============================================================================}
+function THelper.NoneOf(const forbidden: TArr): Boolean; overload;
+var
+  d: specialize TDictionary<TVar, Boolean>;
+  i: Integer;
+begin
+  Result := True;
+  if (Self.Empty or forbidden.Empty) then
+    Exit;
+  d := specialize TDictionary<TVar, Boolean>.Create;
+  try
+    for i := 0 to High(forbidden) do
+      d.AddOrSetValue(forbidden[i], True);
+    for i := 0 to High(Self) do
+      if d.ContainsKey(Self[i]) then
+        Exit(False); 
+  finally
+    d.Free;
+  end;
 end;
 
 {==============================================================================]

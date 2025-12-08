@@ -77,9 +77,6 @@ TIntegerArrayHelper = type helper for TIntegerArray
   function Maximum(var index: Integer): Integer; overload;
   function Maximum: Integer; overload;
   function Pure(const allowed: TIntegerArray): Boolean;
-  function NoneOf(const forbidden: TIntegerArray): Boolean;
-  function AnyOf(const candidates: TIntegerArray): Boolean;
-  function AllOf(const candidates: TIntegerArray): Boolean;
   function Reinit: Integer; overload;
   function Charify: TCharArray; overload;
   function Charify(var str: string): TCharArray; overload;
@@ -1604,83 +1601,6 @@ begin
     if not a.BinaryContains(Self[i]) then
       Exit(False);
   Result := True;
-end;
-
-{==============================================================================]
-  <NoneOf>
-  @action: Returns true if arr does not contain any items from forbidden.
-  @note: None.
-[==============================================================================}
-function TIntegerArrayHelper.NoneOf(const forbidden: TIntegerArray): Boolean;
-var
-  d: specialize TDictionary<Integer, Boolean>;
-  i: Integer;
-begin
-  Result := True;
-  if (Self.Empty or forbidden.Empty) then
-    Exit;
-  d := specialize TDictionary<Integer, Boolean>.Create;
-  try
-    for i := 0 to High(forbidden) do
-      d[forbidden[i]] := True;
-    for i := 0 to High(Self) do
-      if d.ContainsKey(Self[i]) then
-        Exit(False); 
-  finally
-    d.Free;
-  end;
-end;
-
-{==============================================================================]
-  <AnyOf>
-  @action: Returns True if arr contains at least one item from candidates.
-  @note: Always False if arr or candidates is empty.
-[==============================================================================}
-function TIntegerArrayHelper.AnyOf(const candidates: TIntegerArray): Boolean;
-var
-  d: specialize TDictionary<Integer, Boolean>;
-  i: Integer;
-begin
-  Result := False;
-  if (Self.Empty or candidates.Empty) then
-    Exit;
-  d := specialize TDictionary<Integer, Boolean>.Create;
-  try
-    for i := 0 to High(candidates) do
-      d[candidates[i]] := True;
-    for i := 0 to High(Self) do
-      if d.ContainsKey(Self[i]) then
-        Exit(True);
-  finally
-    d.Free;
-  end;
-end;
-
-{==============================================================================]
-  <AllOf>
-  @action: Returns True if arr contains all items from candidates.
-  @note: Always True if candidates is empty. False if arr is empty but candidates is not.
-[==============================================================================}
-function TIntegerArrayHelper.AllOf(const candidates: TIntegerArray): Boolean;
-var
-  d: specialize TDictionary<Integer, Boolean>;
-  i: Integer;
-begin
-  if candidates.Empty then
-    Exit(True);
-  if Self.Empty then
-    Exit(False);
-  d := specialize TDictionary<Integer, Boolean>.Create;
-  try
-    for i := 0 to High(Self) do
-      d[Self[i]] := True;
-    for i := 0 to High(candidates) do
-      if not d.ContainsKey(candidates[i]) then
-        Exit(False);
-    Result := True;
-  finally
-    d.Free;
-  end;
 end;
 
 {==============================================================================]
