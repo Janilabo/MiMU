@@ -130,6 +130,20 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_Pure}
+var
+  i: Integer;
+begin
+  if allowed.Empty then
+    Exit(False);
+  a := allowed.QuickSorted;
+  for i := 0 to High(Self) do
+    if not a.BinaryContains(Self[i]) then
+      Exit(False);
+  Result := True;
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_TernarySearch}
 var
   L, R: Integer;

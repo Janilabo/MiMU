@@ -197,6 +197,7 @@ TPointArrayHelper = type helper for TPointArray
   function AsColumns: T2DPointArray;
   function Rows: T2DPointArray;
   function Columns: T2DPointArray;
+  function Pure(const allowed: TPointArray): Boolean; overload;
   function BSort(const aAscending: Boolean = True): Integer; overload;
   function BSorted(const aAscending: Boolean = True): TPointArray; overload;
   function BinarySearch(const item: TPoint): Integer; overload;
@@ -7431,6 +7432,8 @@ begin
     m.Free;
   end;
 end;
+
+function TPointArrayHelper.Pure(const allowed: TPointArray): Boolean; overload; var a: TPointArray; {$DEFINE Skeleton_Pure}{$I Skeletons.inc}{$UNDEF Skeleton_Pure}
 
 {==============================================================================]
   <BSort>

@@ -13,6 +13,7 @@ TDoubleArrayHelper = type helper for TDoubleArray
   function IsMonotonic: Boolean; overload;
   function Monotonicity: Boolean; overload;
   function Monotony: Boolean; overload;
+  function Pure(const allowed: TDoubleArray): Boolean; overload;
   function TernarySearch(const value: Double; const oAscending: Boolean = True): Integer; overload;
   function TernaryPeak: Integer; overload;
   function TernaryValley: Integer; overload;
@@ -293,6 +294,13 @@ begin
   end;
   Result := True;
 end;
+
+{==============================================================================]
+  <Pure>
+  @action: Returns true if arr is made with only allowed items.
+  @note: None.
+[==============================================================================}
+function TDoubleArrayHelper.Pure(const allowed: TDoubleArray): Boolean; var a: TDoubleArray; {$DEFINE Skeleton_Pure}{$I Skeletons.inc}{$UNDEF Skeleton_Pure}
 
 {==============================================================================]
   <TernarySearch>
