@@ -242,7 +242,13 @@ TRange = record
   function Uniform(const val: Integer): Boolean; overload;
   function Uniform: Boolean; overload;
   function Employs(const val: Integer): Boolean;
-  function Omits(const val: Integer): Boolean; 	
+  function Omits(const val: Integer): Boolean;
+  function Even: Boolean; overload;
+  function Odd: Boolean; overload;
+  function Evens: Integer; overload;
+  function Odds: Integer; overload;
+  function Evened: TIntegerArray; overload;
+  function Odded: TIntegerArray; overload;  
 end;
 TRangeArray = array of TRange;
 T2DRangeArray = array of TRangeArray;
@@ -3686,6 +3692,114 @@ function TRange.Omits(const val: Integer): Boolean;
 begin
   Result := not ((Self.start = val) or (Self.stop = val));
 end;
+
+{==============================================================================]
+  <Even>
+  @action: Returns True when the size of the range is an even integer.
+  @note: Delegates to Self.Size.Even; no side effects.
+[==============================================================================}
+function TRange.Even: Boolean; overload;
+begin
+  Result := Self.Size.Even;
+end;
+
+{==============================================================================]
+  <Odd>
+  @action: Returns True when the size of the range is an odd integer.
+  @note: Delegates to Self.Size.Odd; no side effects.
+[==============================================================================}
+function TRange.Odd: Boolean; overload;
+begin
+  Result := Self.Size.Odd;
+end;
+
+{==============================================================================]
+  <Evens>
+  @action: Computes the total number of even integers contained within the range.
+  @note: The computation is O(1) and works for both ascending and descending
+         ranges. The result is inclusive of both endpoints.
+[==============================================================================}
+function TRange.Evens: Integer; overload;
+var
+  r: TRange;
+begin
+  r := Self.Normalize;
+  if r.start.Odd then
+    Inc(r.start);
+  if r.stop.Odd then
+    Dec(r.stop);
+  if (r.start > r.stop) then
+    Result := 0
+  else
+    Result := (((r.stop - r.start) div 2) + 1);
+end;
+
+{==============================================================================]
+  <Odds>
+  @action: Computes the total number of odd integers contained within the range.
+  @note: Determined as (RangeSize - Evens), ensuring correctness regardless
+         of range direction or endpoint parity.
+[==============================================================================}
+function TRange.Odds: Integer; overload;
+begin
+  Result := (Self.Size - Self.Evens);
+end;
+
+{==============================================================================]
+  <Evened>
+  @action: Produces an array containing all even integers within the range,
+           ordered according to the range direction.
+  @note: The first element is aligned to the nearest even boundary starting
+         from `start`, then values progress by ±2 depending on whether the
+         range is ascending or descending.
+[==============================================================================}
+function TRange.Evened: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Evens);
+  if (Result.Length = 0) then
+    Exit;
+  Result[0] := Self.start;
+  if Self.start.Odd then
+    Result[0] := (Result[0] + Self.Direction);
+  case Self.Ascending of
+    True:
+    for i := 1 to High(Result) do
+      Result[i] := (Result[i - 1] + 2);
+    False:
+    for i := 1 to High(Result) do
+      Result[i] := (Result[i - 1] - 2);
+  end;
+end;
+
+{==============================================================================]
+  <Odded>
+  @action: Produces an array containing all odd integers within the range,
+           ordered according to the range direction.
+  @note: The first element is aligned to the nearest odd boundary starting
+         from `start`, then values progress by ±2 depending on the direction
+         of the range.
+[==============================================================================}
+function TRange.Odded: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Odds);
+  if (Result.Length = 0) then
+    Exit;
+  Result[0] := Self.start;
+  if Self.start.Even then
+    Result[0] := (Result[0] + Self.Direction);
+  case Self.Ascending of
+    True:
+    for i := 1 to High(Result) do
+      Result[i] := (Result[i - 1] + 2);
+    False:
+    for i := 1 to High(Result) do
+      Result[i] := (Result[i - 1] - 2);
+  end;
+end; 
 
 {==============================================================================]
   <Create>

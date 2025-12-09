@@ -99,6 +99,10 @@ function Distance(const method: Integer = 0): TDistance; overload;
 function Distance(const metric: TMetrics): TDistance; overload;
 function Distance(const A, B: TPoint; const distFunc: TDistance): Double; overload;
 function Distance(const A, B: TPoint; const metric: TMetrics = dmEuclidean): Double; overload;
+function Min(const A, B: TPoint): TPoint; overload;
+function Max(const A, B: TPoint): TPoint; overload;
+function Compare(const A, B: TPoint): Integer; overload;
+function Comparison(const A, B: TPoint): Integer; overload;
 {$ENDIF}
 
 {$IFDEF OPERATORS}
@@ -1513,4 +1517,35 @@ function Distance(const A, B: TPoint; const metric: TMetrics = dmEuclidean): Dou
 begin
   Result := Distance(A, B, Distance(metric));
 end;
+
+function Min(const A, B: TPoint): TPoint; overload;
+begin
+  if ((A.Y < B.Y) or ((A.Y = B.Y) and (A.X < B.X))) then
+    Result := A
+  else
+    Result := B;
+end;
+
+function Max(const A, B: TPoint): TPoint; overload;
+begin
+  if ((A.Y > B.Y) or ((A.Y = B.Y) and (A.X > B.X))) then
+    Result := A
+  else
+    Result := B;
+end;
+
+function Compare(const A, B: TPoint): Integer; overload;
+begin
+  if (A.Y < B.Y) then
+    Exit(-1);
+  if (A.Y > B.Y) then
+    Exit(1);
+  if (A.X < B.X) then
+    Exit(-1);
+  if (A.X > B.X) then
+    Exit(1);
+  Result := 0;
+end;
+
+function Comparison(const A, B: TPoint): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Skeletons.inc}{$UNDEF Skeleton_Comparison}
 {$ENDIF}

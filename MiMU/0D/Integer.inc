@@ -91,6 +91,8 @@ function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolea
 
 function iSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
 function iSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
+
+function Comparison(const A, B: Integer): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -963,4 +965,6 @@ function iSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean;
 begin
   Result := ((Integer(iSort(A, B, oAscending)) + Integer(iSort(A, C, oAscending)) + Integer(iSort(B, C, oAscending))) > 0);
 end;
+
+function Comparison(const A, B: Integer): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Skeletons.inc}{$UNDEF Skeleton_Comparison}
 {$ENDIF}

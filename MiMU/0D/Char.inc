@@ -33,8 +33,9 @@ end;
 {$ENDIF}
 
 {$IFDEF METHODS}
-function Max(a, b: Char): Char; overload; inline;
-function Min(a, b: Char): Char; overload; inline;
+function Max(const a, b: Char): Char; overload; inline;
+function Min(const a, b: Char): Char; overload; inline;
+function Comparison(const A, B: Char): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -239,6 +240,8 @@ begin
     Result := Self;
 end;
 
-function Max(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I Skeletons.inc}{$UNDEF Skeleton_Max}
-function Min(A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Min}{$I Skeletons.inc}{$UNDEF Skeleton_Min}
+function Max(const A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$I Skeletons.inc}{$UNDEF Skeleton_Max}
+function Min(const A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Min}{$I Skeletons.inc}{$UNDEF Skeleton_Min}
+
+function Comparison(const A, B: Char): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Skeletons.inc}{$UNDEF Skeleton_Comparison}
 {$ENDIF}

@@ -36,6 +36,16 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_Comparison}
+begin
+  if (A < B) then
+    Exit(-1);
+  if (A > B) then
+    Exit(1);
+  Result := 0;
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_Sign}
 begin
   if (Self = target) then

@@ -89,8 +89,9 @@ end;
 {$ENDIF}
 
 {$IFDEF METHODS}
-function Max(a, b: string): string; overload; inline;
-function Min(a, b: string): string; overload; inline;
+function Max(const a, b: string): string; overload; inline;
+function Min(const a, b: string): string; overload; inline;
+function Comparison(const A, B: string): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1370,6 +1371,7 @@ begin
   Result := True;
 end;
 
-function Max(A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I Skeletons.inc}{$UNDEF Skeleton_Max}
-function Min(A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I Skeletons.inc}{$UNDEF Skeleton_Min}
+function Max(const A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I Skeletons.inc}{$UNDEF Skeleton_Max}
+function Min(const A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I Skeletons.inc}{$UNDEF Skeleton_Min}
+function Comparison(const A, B: string): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Skeletons.inc}{$UNDEF Skeleton_Comparison}
 {$ENDIF}

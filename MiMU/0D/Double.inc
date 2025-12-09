@@ -65,6 +65,10 @@ TDoubleHelper = type helper for Double
 end;
 {$ENDIF}
 
+{$IFDEF METHODS}
+function Comparison(const A, B: Double): Integer; overload; 
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
 {$I Core.inc}
 
@@ -588,4 +592,6 @@ function TDoubleHelper.Undersize(const limit: Double): Boolean;
 begin
   Result := (Self < limit);
 end;
+
+function Comparison(const A, B: Double): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Skeletons.inc}{$UNDEF Skeleton_Comparison}
 {$ENDIF}
