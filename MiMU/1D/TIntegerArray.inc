@@ -70,12 +70,6 @@ TIntegerArrayHelper = type helper for TIntegerArray
   function Inverse(const arrBounds: TRange): TIntegerArray; overload;
   function Inverse: TIntegerArray; overload;
   function Mirror: Boolean;
-  function MinVal: Integer; overload;
-  function MaxVal: Integer; overload;
-  function Minimum(var index: Integer): Integer; overload;
-  function Minimum: Integer; overload;
-  function Maximum(var index: Integer): Integer; overload;
-  function Maximum: Integer; overload;
   function Pure(const allowed: TIntegerArray): Boolean;
   function Reinit: Integer; overload;
   function Charify: TCharArray; overload;
@@ -398,7 +392,7 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Extent: TRange;
 begin
-  Result.Create(Self.MinVal, Self.MaxVal);
+  Result.Create(Self.MinItem, Self.MaxItem);
 end;
 
 {==============================================================================]
@@ -1466,100 +1460,6 @@ begin
     Result := Self.Inverse(Self.Bounds)
   else
     SetLength(Result, 0);
-end;
-
-{==============================================================================]
-  <MinVal>
-  @action: Returns minimum value from arr.
-  @note: None.
-[==============================================================================}
-function TIntegerArrayHelper.MinVal: Integer; overload;
-var
-  i: Integer;
-begin
-  if Self.Empty then
-    Exit(2147483647);
-  Result := Self[0];
-  for i := 1 to High(Self) do
-    Result := Min(Self[i], Result);
-end;
-
-{==============================================================================]
-  <MaxVal>
-  @action: Returns maximum value from arr.
-  @note: None.
-[==============================================================================}
-function TIntegerArrayHelper.MaxVal: Integer; overload;
-var
-  i: Integer;
-begin
-  if Self.Empty then
-    Exit(-2147483648);
-  Result := Self[0];
-  for i := 1 to High(Self) do
-    Result := Max(Self[i], Result);
-end;
-
-{==============================================================================]
-  <Minimum>
-  @action: Returns minimum value from arr and stores index to Integer variable.
-  @note: None.
-[==============================================================================}
-function TIntegerArrayHelper.Minimum(var index: Integer): Integer; overload;
-var
-  i: Integer;
-begin
-  index := -1;
-  if Self.Empty then
-    Exit(2147483647);
-  index := 0;
-  for i := 1 to High(Self) do
-    if (Self[i] < Self[index]) then
-      index := i;
-  Result := Self[index];
-end;
-
-{==============================================================================]
-  <Minimum>
-  @action: Returns minimum value from arr.
-  @note: None.
-[==============================================================================}
-function TIntegerArrayHelper.Minimum: Integer; overload;
-var
-  i: Integer;
-begin
-  Result := Self.Minimum(i);
-end;
-
-{==============================================================================]
-  <Maximum>
-  @action: Returns maximum value from arr and stores index to Integer variable.
-  @note: None.
-[==============================================================================}
-function TIntegerArrayHelper.Maximum(var index: Integer): Integer; overload;
-var
-  i: Integer;
-begin
-  index := -1;
-  if Self.Empty then
-    Exit(-2147483648);
-  index := 0;
-  for i := 1 to High(Self) do
-    if (Self[i] > Self[index]) then
-      index := i;
-  Result := Self[index];
-end;
-
-{==============================================================================]
-  <Maximum>
-  @action: Returns maximum value from arr.
-  @note: None.
-[==============================================================================}
-function TIntegerArrayHelper.Maximum: Integer; overload;
-var
-  i: Integer;
-begin
-  Result := Self.Maximum(i);
 end;
 
 {==============================================================================]

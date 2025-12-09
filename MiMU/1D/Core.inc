@@ -369,6 +369,18 @@ function Unionize(const items: TArr; const oAscending: Boolean = True): TArr; ov
 function Subtract(const items: TArr; const oAscending: Boolean = True): TArr; overload;
 function Intersect(const items: TArr; const oAscending: Boolean = True): TArr; overload;
 function Spanning(const item: TVar; const oAscending: Boolean = True): TRange; overload;
+function MinItem: TVar; overload;
+function MinItem(const null: TVar): TVar; overload;
+function MaxItem: TVar; overload;
+function MaxItem(const null: TVar): TVar; overload;
+function Minimum(var index: Integer): TVar; overload;
+function Minimum: TVar; overload;
+function Maximum(var index: Integer): TVar; overload;
+function Maximum: TVar; overload;
+function Minim(var index: Integer): TVar; overload;
+function Minim: TVar; overload;
+function Maxim(var index: Integer): TVar; overload;
+function Maxim: TVar; overload;
 {$ENDIF}
 {$ENDIF}
 
@@ -8982,6 +8994,190 @@ begin
     Dec(Result.stop);
   if (Result.start > Result.stop) then
     Result.Create(Low(Integer));
+end;
+
+{==============================================================================]
+  <MinItem>
+  @action: Returns minimum item from arr.
+  @note: None.
+[==============================================================================}
+function THelper.MinItem: TVar; overload;
+var
+  i: Integer;
+begin
+  if not Self.Empty then
+    Result := Self[0];
+  for i := 1 to High(Self) do
+    Result := Min(Self[i], Result);
+end;
+
+{==============================================================================]
+  <MinItem>
+  @action: Returns minimum item from arr.
+  @note: None.
+[==============================================================================}
+function THelper.MinItem(const null: TVar): TVar; overload;
+var
+  i: Integer;
+begin
+  if Self.Empty then
+    Exit(null);
+  Result := Self[0];
+  for i := 1 to High(Self) do
+    Result := Min(Self[i], Result);
+end;
+
+{==============================================================================]
+  <MaxItem>
+  @action: Returns maximum item from arr.
+  @note: None.
+[==============================================================================}
+function THelper.MaxItem: TVar; overload;
+var
+  i: Integer;
+begin
+  if not Self.Empty then
+    Result := Self[0];
+  for i := 1 to High(Self) do
+    Result := Max(Self[i], Result);
+end;
+
+{==============================================================================]
+  <MaxItem>
+  @action: Returns maximum item from arr.
+  @note: None.
+[==============================================================================}
+function THelper.MaxItem(const null: TVar): TVar; overload;
+var
+  i: Integer;
+begin
+  if Self.Empty then
+    Exit(null);
+  Result := Self[0];
+  for i := 1 to High(Self) do
+    Result := Max(Self[i], Result);
+end;
+
+{==============================================================================]
+  <Minimum>
+  @action: Returns minimum value from arr and stores index to Integer variable.
+  @note: None.
+[==============================================================================}
+function THelper.Minimum(var index: Integer): TVar; overload;
+var
+  i: Integer;
+begin
+  if not Self.Empty then
+  begin
+    index := 0;
+    for i := 1 to High(Self) do
+      if (Self[i] < Self[index]) then
+        index := i;
+    Result := Self[index];
+  end else
+    index := -1;
+end;
+
+{==============================================================================]
+  <Minimum>
+  @action: Returns minimum value from arr.
+  @note: None.
+[==============================================================================}
+function THelper.Minimum: TVar; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Minimum(i);
+end;
+
+{==============================================================================]
+  <Maximum>
+  @action: Returns maximum value from arr and stores index to Integer variable.
+  @note: None.
+[==============================================================================}
+function THelper.Maximum(var index: Integer): TVar; overload;
+var
+  i: Integer;
+begin
+  if not Self.Empty then
+  begin
+    index := 0;
+    for i := 1 to High(Self) do
+      if (Self[i] > Self[index]) then
+        index := i;
+    Result := Self[index];
+  end else
+    index := -1;
+end;
+
+{==============================================================================]
+  <Maximum>
+  @action: Returns maximum value from arr.
+  @note: None.
+[==============================================================================}
+function THelper.Maximum: TVar; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Maximum(i);
+end;
+
+{==============================================================================]
+  <Minim>
+  @action: Returns minimum value from arr and stores index to Integer variable.
+  @note: None.
+[==============================================================================}
+function THelper.Minim(var index: Integer): TVar; overload;
+var
+  i: Integer;
+begin
+  index := IfThen(Self.Empty, -1, 0);
+  for i := 1 to High(Self) do
+    if (Self[i] < Self[index]) then
+      index := i;
+  if (index > -1) then
+    Result := Self[index];
+end;
+
+{==============================================================================]
+  <Minim>
+  @action: Returns minimum value from arr.
+  @note: None.
+[==============================================================================}
+function THelper.Minim: TVar; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Minim(i);
+end;
+
+{==============================================================================]
+  <Maxim>
+  @action: Returns maximum value from arr and stores index to Integer variable.
+  @note: None.
+[==============================================================================}
+function THelper.Maxim(var index: Integer): TVar; overload;
+var
+  i: Integer;
+begin
+  index := IfThen(Self.Empty, -1, 0);
+  for i := 1 to High(Self) do
+    if (Self[i] > Self[index]) then
+      index := i;
+  if (index > -1) then
+    Result := Self[index];
+end;
+
+{==============================================================================]
+  <Maxim>
+  @action: Returns maximum value from arr.
+  @note: None.
+[==============================================================================}
+function THelper.Maxim: TVar; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Maxim(i);
 end;
 {$ENDIF}
 
