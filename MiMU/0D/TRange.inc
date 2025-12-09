@@ -247,8 +247,12 @@ TRange = record
   function Odd: Boolean; overload;
   function Evens: Integer; overload;
   function Odds: Integer; overload;
+  function EvenCount: Integer; overload;
+  function OddCount: Integer; overload;
   function Evened: TIntegerArray; overload;
-  function Odded: TIntegerArray; overload;  
+  function Odded: TIntegerArray; overload;
+  function Evenz: TIntegerArray; overload;
+  function Oddz: TIntegerArray; overload;  
 end;
 TRangeArray = array of TRange;
 T2DRangeArray = array of TRangeArray;
@@ -3746,6 +3750,34 @@ begin
 end;
 
 {==============================================================================]
+  <EvenCount>
+  @action: Returns the number of even integers within the range (including both start and stop).
+  @note: Works for ascending, descending, and single-element ranges. Handles negative numbers correctly.
+[==============================================================================}
+function TRange.EvenCount: Integer; overload;
+var
+  f, l: Integer;
+begin
+  Result := Self.Direction;
+  if (Result = 0) then
+    Exit(IfThen(Self.start.Even, 1, 0));
+  f := IfThen(Self.start.Even, Self.start, (Self.start + Result));
+  l := IfThen(Self.stop.Even, Self.stop, (Self.stop - Result));
+  if not (((Result > 0) and (f > l)) or ((Result < 0) and (f < l))) then
+    Result := Abs((l - f) div 2) + 1;
+end;
+
+{==============================================================================]
+  <OddCount>
+  @action: Returns the number of odd integers within the range (including both start and stop).
+  @note: Calculated as the total range size minus the number of even numbers. Works for ascending, descending, and negative ranges.
+[==============================================================================}
+function TRange.OddCount: Integer; overload;
+begin
+  Result := (Self.Size - Self.EvenCount);
+end;
+
+{==============================================================================]
   <Evened>
   @action: Produces an array containing all even integers within the range,
            ordered according to the range direction.
@@ -3799,6 +3831,54 @@ begin
     for i := 1 to High(Result) do
       Result[i] := (Result[i - 1] - 2);
   end;
+end;
+
+{==============================================================================]
+  <TRange.Evenz>
+  @action: Returns an array of all even integers within the range (from start to stop).
+  @note:
+    - Works for ascending, descending, and single-element ranges.
+    - Handles negative numbers correctly.
+    - Uses Direction to step properly through the range.
+    - Skips the first element if it is odd.
+[==============================================================================}
+function TRange.Evenz: TIntegerArray; overload;
+var
+  i, s, d: Integer;
+begin
+  SetLength(Result, Self.EvenCount);
+  if (Result.Size = 0) then
+    Exit;
+  d := Self.Direction;
+  s := Self.start;
+  if s.Odd then
+    s := (s + d);
+  for i := 0 to High(Result) do
+    Result[i] := s.Increase(2 * d);
+end;
+
+{==============================================================================]
+  <TRange.Oddz>
+  @action: Returns an array of all odd integers within the range (from start to stop).
+  @note:
+    - Works for ascending, descending, and single-element ranges.
+    - Handles negative numbers correctly.
+    - Uses Direction to step properly through the range.
+    - Skips the first element if it is even.
+[==============================================================================}
+function TRange.Oddz: TIntegerArray; overload;
+var
+  i, s, d: Integer;
+begin
+  SetLength(Result, Self.OddCount);
+  if (Result.Size = 0) then
+    Exit;
+  d := Self.Direction;
+  s := Self.start;
+  if s.Even then
+    s := (s + d);
+  for i := 0 to High(Result) do
+    Result[i] := s.Increase(2 * d);
 end; 
 
 {==============================================================================]
