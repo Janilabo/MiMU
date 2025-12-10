@@ -69,9 +69,11 @@ end;
 function Comparison(const A, B: Double): Integer; overload; 
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I Core.inc}
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <ClampMin>
   @action: Returns Double clamped by minimum limit

@@ -94,9 +94,11 @@ function Min(const a, b: string): string; overload; inline;
 function Comparison(const A, B: string): Integer; overload;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I Core.inc}
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <After>
   @action: Returns string that is found after s in str.

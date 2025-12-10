@@ -76,32 +76,6 @@ generic function SetSize<T>(var A, B, C: specialize TArray<T>; const size: Integ
 generic function SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 generic function Trade<T>(var A, B: T): Boolean; overload;
 
-function Swop(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
-function Swop(var A, B: Int64; const oAscending: Boolean = True): Boolean; overload;
-function Swop(var A, B: Double; const oAscending: Boolean = True): Boolean; overload;
-function Swop(var A, B: string; const oAscending: Boolean = True): Boolean; overload;
-function Swop(var A, B: Char; const oAscending: Boolean = True): Boolean; overload;
-function Swop(var A, B: TPoint; const oAscending: Boolean = True): Boolean; overload;
-function Swop(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
-function Swop(var A, B, C: Int64; const oAscending: Boolean = True): Boolean; overload;
-function Swop(var A, B, C: Double; const oAscending: Boolean = True): Boolean; overload;
-function Swop(var A, B, C: string; const oAscending: Boolean = True): Boolean; overload;
-function Swop(var A, B, C: Char; const oAscending: Boolean = True): Boolean; overload;
-function Swop(var A, B, C: TPoint; const oAscending: Boolean = True): Boolean; overload;
-
-function Sort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
-function Sort(var A, B: Int64; const oAscending: Boolean = True): Boolean; overload;
-function Sort(var A, B: Double; const oAscending: Boolean = True): Boolean; overload;
-function Sort(var A, B: string; const oAscending: Boolean = True): Boolean; overload;
-function Sort(var A, B: Char; const oAscending: Boolean = True): Boolean; overload;
-function Sort(var A, B: TPoint; const oAscending: Boolean = True): Boolean; overload;
-function Sort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
-function Sort(var A, B, C: Int64; const oAscending: Boolean = True): Boolean; overload;
-function Sort(var A, B, C: Double; const oAscending: Boolean = True): Boolean; overload;
-function Sort(var A, B, C: string; const oAscending: Boolean = True): Boolean; overload;
-function Sort(var A, B, C: Char; const oAscending: Boolean = True): Boolean; overload;
-function Sort(var A, B, C: TPoint; const oAscending: Boolean = True): Boolean; overload;
- 
 implementation
 
 {$DEFINE IMPLEMENTATION} 
@@ -123,19 +97,34 @@ end;
 
 generic function Swop<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 var
-  C: T;
+ S: T;
 begin
   Result := ((oAscending and (A > B)) or ((not oAscending) and (B > A)));
   if not Result then
     Exit;
-  C := A;
+  S := A;
   A := B;
-  B := C;
+  B := S;
 end;
 
 generic function Swop<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
+var
+  S: T;
+procedure SwapIf(var X, Y: T);
 begin
-  Result := ((Integer(Swop(A, B, oAscending)) + Integer(Swop(A, C, oAscending)) + Integer(Swop(B, C, oAscending))) > 0);
+  if ((oAscending and (X > Y)) or ((not oAscending) and (X < Y))) then
+  begin
+    S := X;
+    X := Y;
+    Y := S;
+    Result := True;
+  end;
+end;
+begin
+  Result := False;
+  SwapIf(A, B);
+  SwapIf(A, C);
+  SwapIf(B, C);
 end;
 
 generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;

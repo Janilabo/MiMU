@@ -38,9 +38,11 @@ function Min(const a, b: Char): Char; overload; inline;
 function Comparison(const A, B: Char): Integer; overload;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I Core.inc}
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Compare>
   @action: Compares char with target.

@@ -151,9 +151,11 @@ TPointHelper = type helper for TPoint
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I Core.inc}
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 operator +(const a, b: TPoint): TPoint;
 begin
   Result.X := (a.X + b.X);

@@ -95,9 +95,11 @@ function iSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean;
 function Comparison(const A, B: Integer): Integer; overload;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I Core.inc}
+{$ENDIF}
 
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <ClampMin>
   @action: Returns Integer clamped by minimum limit

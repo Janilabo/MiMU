@@ -42,8 +42,11 @@ TInt64Helper = type helper for Int64
 end;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I Core.inc}
+{$ENDIF}
+
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Prime>
   @action: Returns true if N is prime.

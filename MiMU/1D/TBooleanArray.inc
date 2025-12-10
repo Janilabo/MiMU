@@ -56,7 +56,7 @@ TBooleanArrayHelper = type helper for TBooleanArray
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) or DEFINED(T1D)}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS) OR DEFINED(T1D)}
 {$I Core.inc}
 {$ENDIF}
 

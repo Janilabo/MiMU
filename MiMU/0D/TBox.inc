@@ -210,11 +210,6 @@ TBoxHelper = type helper for TBox
 end;
 {$ENDIF}
 
-{$IFDEF METHODS}
-function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
-function Box(const val: Integer = 0): TBox; overload; inline;
-{$ENDIF}
-
 {$IFDEF OPERATORS}
 operator +(const a, b: TBox): TBox;
 operator -(const a, b: TBox): TBox;
@@ -224,9 +219,16 @@ operator <>(const a, b: TBox): Boolean;
 operator in(const P: TPoint; const B: TBox): Boolean;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
-{$I Core.inc}
+{$IFDEF METHODS}
+function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
+function Box(const val: Integer = 0): TBox; overload; inline;
+{$ENDIF}
 
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$I Core.inc}
+{$ENDIF}
+
+{$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <+>
   @action: Computes the union of two boxes. The resulting box fully contains

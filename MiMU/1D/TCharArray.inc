@@ -19,7 +19,7 @@ TCharArrayHelper = type helper for TCharArray
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(T1D)}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS) OR DEFINED(T1D)}
 {$I Core.inc}
 {$ENDIF}
 

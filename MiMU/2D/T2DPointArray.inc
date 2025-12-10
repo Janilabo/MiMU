@@ -12,7 +12,7 @@ T2DPointArrayHelper = type helper for T2DPointArray
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) or DEFINED(T2D)}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS) OR DEFINED(T2D)}
 {$I Core.inc}
 {$ENDIF}
 
