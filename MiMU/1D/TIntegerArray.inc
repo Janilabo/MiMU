@@ -106,6 +106,7 @@ TIntegerArrayHelper = type helper for TIntegerArray
   function TernaryPeak: Integer; overload;
   function TernaryValley: Integer; overload;
   function TernaryMountain: Integer; overload;
+  function BSearch(const value: Integer; const oAscending: Boolean = True): Integer; overload;
   function BSort(const aAscending: Boolean = True): Integer;
   function BMerge(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
   function BMerged(const items: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
@@ -2518,6 +2519,38 @@ function TIntegerArrayHelper.TernaryValley: Integer; overload; {$DEFINE Skeleton
          Returns the index of the final converged position.
 [==============================================================================}
 function TIntegerArrayHelper.TernaryMountain: Integer; overload; {$DEFINE Skeleton_TernaryMountain}{$I Skeletons.inc}{$UNDEF Skeleton_TernaryMountain}
+
+{==============================================================================]
+  <BSearch>
+  @action: Performs a binary search on the current integer array using a 
+           branchless, arithmetic-driven search strategy. The routine locates 
+           the index of a target value within a sorted array, supporting both 
+           ascending and descending order based on the supplied flag.
+  @note: This implementation uses mask-based comparisons and branchless 
+         interval updates to avoid data-dependent branching. It is designed 
+         to provide predictable control flow and consistent performance 
+         regardless of input distribution. The function returns the index of 
+         one matching element if the value is present; otherwise, it returns 
+         -1. The input array must be pre-sorted in the specified order.
+[==============================================================================}
+function TIntegerArrayHelper.BSearch(const value: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  M, C, D, F: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  Result := -1;
+  F := Ord(not oAscending);
+  while (R.start <= R.stop) do
+  begin
+    M := ((R.start + R.stop) shr 1);
+    C := (Self[M] - value);
+    Result.Increase(Integer((((UInt32(C) or UInt32(-C)) shr 31) xor 1) and 1) * (M - Result));
+    D := (Integer(UInt32(C) shr 31) xor F);
+    R.start := (R.start + (D * ((M + 1) - R.start)));
+    R.stop := (R.stop - ((1 - D) * (R.stop - (M - 1))));
+  end;
+end;
 
 {==============================================================================]
   <BMerge>

@@ -381,6 +381,8 @@ function Minim(var index: Integer): TVar; overload;
 function Minim: TVar; overload;
 function Maxim(var index: Integer): TVar; overload;
 function Maxim: TVar; overload;
+function FibonacciSearch(const item: TVar; const oAscending: Boolean = True): Integer; overload;
+function BinarySearchBy(const item: TVar; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 {$ENDIF}
 
@@ -9179,6 +9181,99 @@ var
 begin
   Result := Self.Maxim(i);
 end;
+
+{==============================================================================]
+  <FibonacciSearch>
+  @action: Executes a Fibonacci Search over the array.
+           The routine locates the index of a target value using progressively
+           shrinking search intervals determined by the Fibonacci sequence.
+           The array may be sorted in ascending or descending order as
+           specified by the oAscending parameter. Returns the index of the 
+           matching element if found; otherwise returns -1.
+  @note: Fibonacci Search is an alternative to binary search that partitions
+         the search interval using Fibonacci ratios rather than powers of two.
+         It preserves ordered-search correctness while enabling searches that
+         favor sequential access patterns. Performance is comparable to 
+         binary search for random-access arrays and may offer advantages for 
+         memory-hierarchy–sensitive workloads. The input array must be
+         pre-sorted in the order defined by oAscending.
+[==============================================================================}
+function THelper.FibonacciSearch(const item: TVar; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  H, o, i: Integer;
+  F: TRange;
+begin
+  H := High(Self);
+  F.Create(0, 1);
+  M := (F.stop + F.start);
+  while (M < (H + 1)) do
+  begin
+    F.start := F.stop;
+    F.stop := M;
+    M := (F.stop + F.start);
+  end;
+  o := -1;
+  while (M > 1) do
+  begin
+    i := Integer(o + F.start).ClampMax(H);
+    case ((oAscending and (Self[i] < item)) or ((not oAscending) and (Self[i] > item))) of
+      True:
+      begin
+        M := F.stop;
+        F.stop := F.start;
+        F.start := (M - F.stop);
+        o := i;
+      end;
+      False:
+      case ((oAscending and (Self[i] > item)) or ((not oAscending) and (Self[i] < item))) of
+        True:
+        begin
+          M := F.start;
+          F.stop := (F.stop - F.start);
+          F.start := (M - F.stop);
+        end;
+        False: Exit(i);
+      end;
+    end;
+  end;
+  if ((F.stop = 1) and ((o + 1) <= H) and (Self[o + 1] = item)) then
+    Exit(o + 1);
+  Result := -1;
+end;
+
+{==============================================================================]
+  <BinarySearchBy>
+  @action: Performs a binary search over the array using a
+           comparator-based comparison. Returns the index of the specified
+           item if found, or -1 if the item is not present. Supports arrays
+           sorted in ascending or descending order.
+  @note: The input array must be pre-sorted according to the order specified
+         by the oAscending parameter. This function uses a standard binary
+         search algorithm: repeatedly divides the search interval in half
+         until the target item is found or the interval is empty.
+         Comparisons are performed using Integer_Compare, allowing for
+         consistent ordering and potential extension to other comparison logic.
+[==============================================================================}
+function THelper.BinarySearchBy(const item: TVar; const oAscending: Boolean = True): Integer; overload;
+var
+  R: TRange;
+  M, C: Integer;
+begin
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    C := Self[M].Compare(item);
+    if (C = 0) then
+      Exit(M);
+    if ((oAscending and (C < 0)) or ((not oAscending) and (C > 0))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  Result := -1;
+end;  
 {$ENDIF}
 
 {==============================================================================]
