@@ -16,6 +16,7 @@ type
   {$I 0D\TCircle.inc}
   {$I 0D\TTriangle.inc}
   {$I 0D\TSegment.inc}
+  {$I Randomness.inc}
 {$ENDIF}
 
 {$IFNDEF T2D}

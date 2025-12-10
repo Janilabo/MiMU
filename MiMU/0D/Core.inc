@@ -6,6 +6,12 @@ function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DArr;
 {$IFDEF METHODS}
 function IfThen(const state: Boolean; const sTrue, sFalse: TVar): TVar; overload; inline;
 function Swap(var A, B: TVar): Boolean; overload; inline;
+{$IFDEF Sortable}
+function Swop(var A, B: TVar; const oAscending: Boolean = True): Boolean; overload;
+function Swop(var A, B, C: TVar; const oAscending: Boolean = True): Boolean; overload;
+function Sort(var A, B: TVar; const oAscending: Boolean = True): Boolean; overload;
+function Sort(var A, B, C: TVar; const oAscending: Boolean = True): Boolean; overload;
+{$ENDIF}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -44,4 +50,12 @@ end;
 function Swap(var A, B: TVar): Boolean; overload; inline; var C: TVar; {$DEFINE Skeleton_Swap}{$I Skeletons.inc}{$UNDEF Skeleton_Swap}
 
 function IfThen(const state: Boolean; const sTrue, sFalse: TVar): TVar; overload; inline; {$DEFINE Skeleton_IfThen}{$I Skeletons.inc}{$UNDEF Skeleton_IfThen}
+
+{$IFDEF Sortable}
+function Swop(var A, B: TVar; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Swop<TVar>(A, B, oAscending); end;
+function Swop(var A, B, C: TVar; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Swop<TVar>(A, B, C, oAscending); end;
+
+function Sort(var A, B: TVar; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Sort<TVar>(A, B, oAscending); end;
+function Sort(var A, B, C: TVar; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Sort<TVar>(A, B, C, oAscending); end;
+{$ENDIF}
 {$ENDIF}
