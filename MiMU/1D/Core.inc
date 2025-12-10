@@ -9326,7 +9326,7 @@ begin
   if (L = 0) then
     Exit(-1);
   B := 1;
-  while ((B < L) and (Self[B] < item)) do
+  while ((B < L) and ((oAscending and (Self[B] < item)) or ((not oAscending) and (Self[B] > item)))) do
     B := (B * 2);
   R.Create((B div 2), Min(B, (L - 1)));
   while (R.start <= R.stop) do
