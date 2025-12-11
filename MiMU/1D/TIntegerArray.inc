@@ -233,6 +233,7 @@ TIntegerArrayHelper = type helper for TIntegerArray
   function BinaryUniqued(const oAscending: Boolean = True): TIntegerArray; overload;
   function BinaryUniq(const oAscending: Boolean = True): Integer; overload;
   function BinaryUniqd(const oAscending: Boolean = True): TIntegerArray; overload;
+  function BinaryExistent(const item: Integer; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 end;
 {$ENDIF}
 
@@ -4385,6 +4386,38 @@ function TIntegerArrayHelper.BinaryUniq(const oAscending: Boolean = True): Integ
          and truncated to the number of unique values.
 [==============================================================================}
 function TIntegerArrayHelper.BinaryUniqd(const oAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryUniqd}{$I Skeletons.inc}{$UNDEF Skeleton_BinaryUniqd}
+
+{==============================================================================]
+  <BinaryExistent>
+  @action: Performs a binary search on the integer array to determine if a
+           specified item exists. Returns True if found and provides the
+           item's index via the out parameter.
+  @note: Assumes the array is pre-sorted in ascending or descending order,
+         depending on the oAscending flag. Uses a directional multiplier
+         for handling sort order efficiently. Returns -1 in the index
+         parameter when the item is not found.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryExistent(const item: Integer; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
+var
+  C, D: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  D := ((Ord(oAscending) * 2) - 1);
+  while (R.start <= R.stop) do
+  begin
+    index := R.Pivot;
+    C := ((Self[index] - item) * D);
+    if (C = 0) then
+      Exit(True);
+    if (C < 0) then
+      R.start := (index + 1)
+    else
+      R.stop := (index - 1);
+  end;
+  index := -1;
+  Result := False;
+end;
 
 class function TIA.Init(var arr: TIntegerArray): Integer; overload; 
 begin

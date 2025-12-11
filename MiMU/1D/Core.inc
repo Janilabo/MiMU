@@ -384,6 +384,7 @@ function Maxim: TVar; overload;
 function FibonacciSearch(const item: TVar; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: TVar; const oAscending: Boolean = True): Integer; overload;
 function BinaryHas(const item: TVar; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
+function BinaryGot(const item: TVar; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExpSearch(const item: TVar; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 {$ENDIF}
@@ -9306,6 +9307,33 @@ begin
   Result := False;
   index := -1;
 end;
+
+{==============================================================================]
+  <BinaryGot>
+  @action: Performs a binary search on the array to determine
+           whether a specified value exists and returns its index if found.
+  @note: Assumes the array is pre-sorted in either ascending or descending
+         order, depending on the oAscending flag. Uses TRange utilities
+         for interval reduction; returns -1 when the item is not present.
+[==============================================================================}
+function THelper.BinaryGot(const item: TVar; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
+var
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    index := R.Pivot;
+    if (Self[index] = item) then
+      Exit(True);
+    if ((oAscending and (Self[index] < item)) or ((not oAscending) and (Self[index] > item))) then
+      R.start := (index + 1)
+    else
+      R.stop := (index - 1);
+  end;
+  index := -1;
+  Result := False;
+end; 
 
 {==============================================================================]
   <BinaryExpSearch>
