@@ -12,6 +12,10 @@ T2DStringArray = array of TStringArray;
 {$IFDEF HELPERS}
 TStringHelper = type helper for string
   {$I Core.inc}
+  function CountOf(const item: Char): Integer; overload;
+  function AmountOf(const item: Char): Integer; overload;
+  function Occurs(const item: Char): Integer; overload;
+  function Occurrences(const item: Char): Integer; overload;
   function After(const s: string; const index: Integer = 1): string; overload;
   function After(const index: Integer; const count: Integer = 2147483647): string; overload;
   function Ahead(const s: string; const index: Integer = 2147483647): string; overload;
@@ -99,6 +103,86 @@ function Comparison(const A, B: string): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <CountOf>
+  @action: Returns the number of occurrences of the specified character.
+  @note: Performs a straightforward linear scan. Suitable for general use.
+[==============================================================================}
+function TStringHelper.CountOf(const item: Char): Integer; overload;
+var
+  P, E: PChar;
+begin
+  Result := 0;
+  P := PChar(Self);
+  E := (P + Length(Self));
+  while (P < E) do
+  begin
+    if (P^ = item) then
+      Inc(Result);
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
+  <AmountOf>
+  @action: Returns how many times the specified character appears in the string.
+  @note: Equivalent to CountOf but expressed with repeat/until iteration.
+[==============================================================================}
+function TStringHelper.AmountOf(const item: Char): Integer; overload;
+var
+  P, E: PChar;
+begin
+  Result := 0;
+  P := PChar(Self);
+  E := (P + Length(Self));
+  if (P < E) then
+  repeat
+    if (P^ = item) then
+      Inc(Result);
+    Inc(P);
+  until (P = E);
+end;
+
+{==============================================================================]
+  <Occurs>
+  @action: Counts occurrences of the specified character using indexed access.
+  @note: Uses 1-based string indexing; clear and simple but slightly slower.
+[==============================================================================}
+function TStringHelper.Occurs(const item: Char): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 1 to Length(Self) do
+    if (Self[i] = item) then
+      Inc(Result);
+end;
+
+{==============================================================================]
+  <Occurrences>
+  @action: Returns the number of occurrences of the specified character.
+  @note: Optimized approach using loop unrolling for improved performance.
+[==============================================================================}
+function TStringHelper.Occurrences(const item: Char): Integer; overload;
+var
+  P, E: PChar;
+begin
+  Result := 0;
+  P := PChar(Self);
+  E := (P + Length(Self));
+  while ((PtrUInt(E) - PtrUInt(P)) >= 4) do
+  begin
+    Result := (Result + (Ord(P[0] = item)) + Ord(P[1] = item) + Ord(P[2] = item) + Ord(P[3] = item));
+    Inc(P, 4);
+  end;
+  while (P < E) do
+  begin
+    if (P^ = item) then
+      Inc(Result);
+    Inc(P);
+  end;
+end;
+
 {==============================================================================]
   <After>
   @action: Returns string that is found after s in str.
