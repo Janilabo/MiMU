@@ -29,6 +29,7 @@ TCharHelper = type helper for Char
   function Swapcase: Char;
   function Upper: Char;
   function Lower: Char;
+  function CountIn(const target: string): Integer; overload;
 end;
 {$ENDIF}
 
@@ -246,4 +247,20 @@ function Max(const A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Max}{$
 function Min(const A, B: Char): Char; overload; inline; {$DEFINE Skeleton_Min}{$I Skeletons.inc}{$UNDEF Skeleton_Min}
 
 function Comparison(const A, B: Char): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Skeletons.inc}{$UNDEF Skeleton_Comparison}
+
+{==============================================================================]
+  <CountIn>
+  @action: Returns the number of occurrences of this character (Self) within
+           the specified target string.
+  @note: Comparison is case-sensitive. No normalization or locale-specific
+         rules are applied.
+[==============================================================================}
+function TCharHelper.CountIn(const target: string): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 1 to Length(target) do
+    Inc(Result, Ord(target[i] = Self));
+end;
 {$ENDIF}

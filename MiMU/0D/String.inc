@@ -31,6 +31,9 @@ TStringHelper = type helper for string
   function Chars: TCharArray;
   function Charify: TCharArray;
   function Chop: TCharArray;
+  function CharSet: TCharArray; overload;
+  function CharacterSet: TCharArray; overload;
+  function UniqueChars: TCharArray; overload;
   function Chunk(const a, b: Integer): string;
   function Center(const size: Integer; const fill: Char = #32): string;
   function Compare(const target: string): Integer; inline;
@@ -40,6 +43,8 @@ TStringHelper = type helper for string
   function Descending(const target: string): Boolean; inline;
   function Contains(const s: string; const index: Integer = 1): Boolean;
   function Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer;
+  function CountIn(const target: string): Integer; overload;
+  function CountedIn(const target: string; const overlap: Boolean = True): Integer; overload;
   function Duplicate(const x: Integer = 2): string;
   function Duplicated(const x: Integer; const glue: string): string;
   function Empty: Boolean;
@@ -476,6 +481,94 @@ begin
 end;
 
 {==============================================================================]
+  <CharSet>
+  @action: Returns an array of all unique characters (0–255) present in this
+           string, using a fixed Boolean array of 256 elements for tracking.
+  @note: Works correctly only for 8-bit AnsiStrings. The order of characters
+         is ascending by ordinal value (0..255). May include control characters.
+[==============================================================================}
+function TStringHelper.CharSet: TCharArray; overload;
+var
+  i, l: Integer;
+  c: TBooleanArray;
+begin
+  if (Length(Self) = 0) then
+    Exit([]);
+  c := T1D.Create(False, 256);
+  for i := 1 to Length(Self) do
+    c[Ord(Self[i])] := True;
+  SetLength(Result, Min(Length(Self), 256));
+  l := 0;
+  for i := 0 to 255 do
+    if c[i] then
+      Result[l.Increase] := Char(i);
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <CharacterSet>
+  @action: Returns an array of all unique characters in this string. It first
+           counts the unique values and then allocates the result array exactly
+           once before populating it.
+  @note: Efficient for 8-bit strings. Characters are returned in ascending
+         ordinal order (0..255). Not suitable for UTF-8 strings.  
+         Uses two passes over a 256-element Boolean array to determine count.
+[==============================================================================}
+function TStringHelper.CharacterSet: TCharArray; overload;
+var
+  i, c: Integer;
+  u: TBooleanArray;
+begin
+  if (Length(Self) = 0) then
+    Exit([]);
+  u := T1D.Create(False, 256);
+  for i := 1 to Length(Self) do
+    u[Ord(Self[i])] := True;
+  c := 0;
+  for i := 0 to 255 do
+    if u[i] then
+      Inc(c);
+  SetLength(Result, c);
+  c := 0;
+  for i := 0 to 255 do
+    if u[i] then
+      Result[c.Increase] := Char(i);
+end;
+
+{==============================================================================]
+  <UniqueChars>
+  @action: Returns an array of unique characters found in the string, preserving
+           the **first-occurrence order**.
+  @note: Works for any string, but uses a nested loop (O(n²) complexity),
+         so it is less efficient for long strings. Suitable for small strings
+         or when character order matters.
+[==============================================================================}
+function TStringHelper.UniqueChars: TCharArray; overload;
+var
+  i, j, l: Integer;
+  f: Boolean;
+  c: Char;
+begin
+  if (Length(Self) = 0) then
+    Exit([]);
+  Result := T1D.Create(Self[1], 256);
+  l := 1;
+  for i := 2 to Length(Self) do
+  begin
+    f := False;
+    for j := 1 to l do
+    begin
+      f := (Self[i] = Result[j]);
+      if f then
+        Break;
+    end;
+    if not f then
+      Result[l.Increase] := Self[i];
+  end;
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
   <Chunk>
   @action: Returns chunk of string between a and b.
   @note: Supports reversed chunk, when a is higher than b.
@@ -570,8 +663,12 @@ end;
 
 {==============================================================================]
   <Count>
-  @action: Simply returns the count of s in str.
-  @note: Contains support for overlapping (overlap)
+  @action: Counts the number of occurrences of this string (`Self`) as a substring
+           within the specified target string. Overlapping occurrences are considered.
+  @note: The search is case-sensitive. If the length of Self is greater than
+         the length of the target, the result is zero. This implementation
+         uses a naive O(n*m) substring search algorithm, where n = Length(target)
+         and m = Length(Self), so it may be inefficient for long strings.
 [==============================================================================}
 function TStringHelper.Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer;
 var
@@ -587,6 +684,68 @@ begin
     if (p > 0) then
       Inc(Result);
   until (p < 1);
+end;
+
+{==============================================================================]
+  <CountIn>
+  @action: Counts the number of occurrences of this string (`Self`) as a substring
+           within the specified target string. Overlapping occurrences are considered.
+  @note: The search is case-sensitive. If the length of Self is greater than
+         the length of the target, the result is zero. This implementation
+         uses a naive O(n*m) substring search algorithm, where n = Length(target)
+         and m = Length(Self), so it may be inefficient for long strings.
+[==============================================================================}
+function TStringHelper.CountIn(const target: string): Integer; overload;
+var
+  i, j, l: Integer;
+begin
+  Result := 0;
+  l := Length(Self);
+  if InRange(l, 1, Length(target)) then
+  for i := 1 to ((Length(target) - l) + 1) do
+    for j := 1 to l do
+      if (Self[j] <> target[(i + j) - 1]) then
+        Break
+      else if ((j = l) and (Self[j] = target[(i + j) - 1])) then
+        Inc(Result);
+end;
+
+{==============================================================================]
+  <CountedIn>
+  @action: Counts the number of occurrences of this string (`Self`) as a substring
+           within the specified target string. Supports optional counting of
+           overlapping occurrences.
+  @note - The search is case-sensitive.
+        - If `overlap` is True, overlapping occurrences are counted.
+        - If `overlap` is False, occurrences are counted without overlaps
+          (i.e., the search skips ahead by the length of the substring after
+          each match).
+        - Uses a naive O(n*m) substring search algorithm (n = Length(target),
+          m = Length(Self)); may be inefficient for long strings.
+        - If Self is empty or longer than target, the result is 0.
+[==============================================================================}
+function TStringHelper.CountedIn(const target: string; const overlap: Boolean = True): Integer; overload;
+var
+  i, j, l, s, o: Integer;
+begin
+  Result := 0;
+  l := Length(Self);
+  if not InRange(l, 1, Length(target)) then
+    Exit;
+  s := ((Length(target) - l) + 1);
+  i := 0;
+  o := overlap.Select(0, (l - 1));
+  while (i.Increase < s) do
+    for j := 1 to l do
+    case (Self[j] <> target[(i + j) - 1]) of
+      False:
+      if ((j = l) and (Self[j] = target[(i + j) - 1])) then
+      begin
+        Inc(Result);
+        Inc(i, o);
+      end;
+      True: Break;
+    end;
 end;
 
 {==============================================================================]
