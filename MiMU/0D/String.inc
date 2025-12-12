@@ -30,10 +30,20 @@ TStringHelper = type helper for string
   function Between(const s1, s2: string; const index: Integer = 1): string;
   function Chars: TCharArray;
   function Charify: TCharArray;
-  function Chop: TCharArray;
+  function Chop: TCharArray; overload;
+  function Chop(const delimiter: Char): TStringArray; overload;
+  function Split: TCharArray; overload;
+  function Split(const delimiter: Char): TStringArray; overload;
   function CharSet: TCharArray; overload;
   function CharacterSet: TCharArray; overload;
+  function BinaryCharSet: TCharArray; overload;
+  function SetOfCharacters: TCharArray; overload;
+  function SetOfChars: TCharArray; overload;
   function UniqueChars: TCharArray; overload;
+  function UniqueCharacters(const oAscending: Boolean = True): TCharArray; overload;
+  function DistinctChars: TCharArray; overload;
+  function DistinctCharacters: TCharArray; overload;
+  function CharacterDict: TCharArray; overload;
   function Chunk(const a, b: Integer): string;
   function Center(const size: Integer; const fill: Char = #32): string;
   function Compare(const target: string): Integer; inline;
@@ -465,7 +475,7 @@ end;
   @action: Returns characters of string as TCharArray.
   @note: None.
 [==============================================================================}
-function TStringHelper.Chop: TCharArray;
+function TStringHelper.Chop: TCharArray; overload;
 var
   p: PChar;
   i, l: Integer;
@@ -479,6 +489,80 @@ begin
     Inc(p);
   end;
 end;
+
+{==============================================================================]
+  <Chop>
+  @action: Splits the string into substrings using the specified delimiter character.
+           Each occurrence of the delimiter divides the string, producing an array
+           of substrings. The delimiter itself is not included in the output.
+  @note: - Consecutive delimiters produce empty substrings.
+         - Leading or trailing delimiters result in empty strings at the start or end.
+         - Uses Self.Count(d) to determine the number of delimiters; ensure this helper exists.
+[==============================================================================}
+function TStringHelper.Chop(const delimiter: Char): TStringArray; overload;
+var
+  s, i, l: Integer;
+begin
+  if (Length(Self) = 0) then
+    Exit([]);
+  SetLength(Result, (Self.Count(delimiter) + 1));
+  s := 1;
+  l := 0;
+  for i := 1 to Length(Self) do
+    if (Self[i] = delimiter) then
+    begin
+      Result[l.Increase] := Copy(Self, s, (i - s));
+      s := (i + 1);
+    end;
+  Result[l] := Copy(Self, s, ((Length(Self) - s) + 1));
+end;
+
+{==============================================================================]
+  <Split>
+  @action: Converts the string into an array of characters (TCharArray),
+           where each element of the array is a single character from the string.
+  @note: - The resulting array length is equal to the length of the string.
+         - Characters are placed in the same order as in the original string.
+[==============================================================================}
+function TStringHelper.Split: TCharArray; overload;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  while (l.Decrement > -1) do
+    Result[l] := Self[l + 1];
+end;
+
+{==============================================================================]
+  <Split>
+  @action: Splits the string into substrings using the specified delimiter character.
+           Each occurrence of the delimiter separates the string, and the substrings
+           are returned as a TStringArray.
+  @note:   - If the string is empty, returns an empty array.
+           - Consecutive delimiters produce empty strings in the result array.
+           - The delimiter itself is not included in the resulting substrings.
+[==============================================================================}
+function TStringHelper.Split(const delimiter: Char): TStringArray; overload;
+var
+  p, r: Integer;
+  s: string;
+begin
+  if (Length(Self) = 0) then
+    Exit([]);
+  r := 0;
+  s := Copy(Self, 1, Length(Self));
+  p := s.Pos(delimiter);
+  while (p > 0) do
+  begin
+    SetLength(Result, (r + 1));
+    Result[r.Increase] := Copy(s, 1, (p - 1));
+    s := Copy(s, (p + 1), High(Integer));
+    p := s.Pos(delimiter);
+  end;
+  SetLength(Result, (r + 1));
+  Result[r] := s;
+end; 
 
 {==============================================================================]
   <CharSet>
@@ -536,6 +620,87 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryCharSet>
+  @action: Returns an array of unique characters present in the string (`Self`),
+           using a dynamic binary/integer array to track uniqueness. Characters
+           are stored in the result array in ascending ordinal order based on
+           their first insertion into the binary array.
+  @note: - Works for 8-bit AnsiStrings; may not produce correct results for
+           multibyte or UTF-8 strings.
+         - Uses `BinaryGrow` to insert characters without duplicates.
+         - May be less efficient than a fixed-size Boolean array for strings
+           with many repeated characters, due to dynamic array operations.
+         - Characters are returned in the order defined by the binary array
+           insertion logic, not necessarily by first occurrence in the string.
+[==============================================================================}
+function TStringHelper.BinaryCharSet: TCharArray; overload;
+var
+  i: Integer;
+  c: TIntegerArray;
+begin
+  if (Length(Self) = 0) then
+    Exit([]);
+  SetLength(c, 0);
+  for i := 1 to Length(Self) do
+    c.BinaryGrow(Ord(Self[i]));
+  SetLength(Result, Length(c));
+  for i := 0 to High(c) do
+    Result[i] := Char(c[i]);
+end;
+
+{==============================================================================]
+  <SetOfCharacters>
+  @action: Extracts the unique characters from the string while preserving the order of their first occurrence.
+  @note: Implements a simple O(n²) uniqueness check by scanning previously collected characters.
+         The result array is trimmed to the number of unique characters.
+[==============================================================================}
+function TStringHelper.SetOfCharacters: TCharArray; overload;
+var
+  i, j, l: Integer;
+  f: Boolean;
+begin
+  SetLength(Result, Length(Self));
+  l := 0;
+  for i := 1 to Length(Self) do
+  begin
+    f := False;
+    for j := 0 to (l - 1) do
+      if (Result[j] = Self[i]) then
+      begin
+        f := True;
+        Break;
+      end;
+    if not f then
+      Result[l.Increase] := Self[i];
+  end;
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <SetOfChars>
+  @action: Returns the set of unique characters contained in the string, preserving first-occurrence order.
+  @note: Uses a slightly different control flow from SetOfCharacters,
+         starting with the first character pre-initialized. Runtime characteristics are equivalent (O(n²)).
+[==============================================================================}
+function TStringHelper.SetOfChars: TCharArray; overload;
+var
+  i, j, h: Integer;
+begin
+  SetLength(Result, Length(Self));
+  if (Length(Self) = 0) then
+    Exit;
+  Result[0] := Self[1];
+  h := 0;
+  for i := 2 to Length(Self) do
+    for j := 0 to h do
+      if (Result[j] = Self[i]) then
+        Break
+      else if (j = h) then
+        Result[h.Increment] := Self[i];
+  SetLength(Result, (h + 1));
+end;
+
+{==============================================================================]
   <UniqueChars>
   @action: Returns an array of unique characters found in the string, preserving
            the **first-occurrence order**.
@@ -566,6 +731,95 @@ begin
       Result[l.Increase] := Self[i];
   end;
   SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <UniqueCharacters>
+  @action: Returns an array of unique characters extracted from the string.
+  @note: The characters are sorted ascending or descending (depending on the
+         parameter) before duplicate removal, so the result is ordered by
+         character code, not by the original string's order.
+[==============================================================================}
+function TStringHelper.UniqueCharacters(const oAscending: Boolean = True): TCharArray; overload;
+begin
+  Result := Self.Charify;
+  if (Result.Size > 1) then
+  begin
+    Result.QuickSort(oAscending);
+    Result.Compress;
+  end;
+end;
+
+{==============================================================================]
+  <DistinctChars>
+  @action: Returns an array containing all unique characters present in the string.
+  @note: Characters are deduplicated using a byte-level set and returned in
+         ascending ordinal (0..255) order.
+[==============================================================================}
+function TStringHelper.DistinctChars: TCharArray; overload;
+var
+  b: set of Byte;
+  i, c: Integer;
+begin
+  b := [];
+  for i := 1 to Length(Self) do
+    Include(b, Ord(Self[i]));
+  c := 0;
+  for i := 0 to 255 do
+    if i in b then
+      Inc(c);
+  SetLength(Result, c);
+  c := 0;
+  for i := 0 to 255 do
+    if i in b then
+      Result[c.Increase] := Char(i);
+end;
+
+{==============================================================================]
+  <CharacterDict>
+  @action: Returns an array containing all unique characters present in the string.
+  @note: Based on TDictionary
+[==============================================================================}
+function TStringHelper.DistinctCharacters: TCharArray; overload;
+var
+  s: set of Byte;
+  i, c: Integer;
+begin
+  s := [];
+  SetLength(Result, Length(Self));
+  c := 0;
+  for i := 1 to Length(Self) do
+    if not (Ord(Self[i]) in s) then
+    begin
+      Include(s, Ord(Self[i]));
+      Result[c.Increase] := Self[i];
+    end;
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <CharacterDict>
+  @action: Returns an array containing all unique characters present in the string.
+  @note: Based on TDictionary
+[==============================================================================}
+function TStringHelper.CharacterDict: TCharArray; overload;
+var
+  d: specialize TDictionary<Char, Boolean>;
+  c: Char;
+  i: Integer;
+begin
+  d := specialize TDictionary<Char, Boolean>.Create;
+  try
+    for c in Self do
+      if not d.ContainsKey(c) then
+        d.Add(c, True);
+    SetLength(Result, d.Count);
+    i := 0;
+    for c in d.Keys do
+      Result[i.Increase] := c;
+  finally
+    d.Free;
+  end;
 end;
 
 {==============================================================================]
