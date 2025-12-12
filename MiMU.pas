@@ -44,7 +44,7 @@
 interface
 
 uses
-  Classes, SysUtils, Math, Generics.Collections, Generics.Defaults, FGL;
+  Classes, SysUtils, StrUtils, Math, Generics.Collections, Generics.Defaults, FGL;
 
 const
   MiMU_VERSION_NUMBER = 0.5;
