@@ -122,6 +122,10 @@ TStringHelper = type helper for string
   function LineCount(const lineBreak: string): Integer; overload;
   function LineCount(const lineBreak: TStringArray): Integer; overload;
   function LineCount: Integer; overload;
+  function LineByPos(const position: Integer): Integer; overload;
+  function LineByPosition(const position: Integer): Integer; overload;
+  function LineToPos(const line: Integer): Integer; overload;
+  function LineToPosition(const line: Integer): Integer; overload;
 end;
 {$ENDIF}
 
@@ -2206,5 +2210,190 @@ end;
 function TStringHelper.LineCount: Integer; overload;
 begin
   Result := Self.LineCount([#13#10, #13, #10]);
+end;
+
+{==============================================================================]
+  <LineByPos>
+  @action: Returns the 1-based line number corresponding to a given 1-based character
+           position within the string.
+  @note:
+    - Line numbering is 1-based.
+    - The position parameter is interpreted as a 1-based character index.
+    - If position <= 0, the function returns 0 to indicate an invalid position.
+    - If position exceeds the string length, it is clamped to Length(Self).
+    - An empty string is treated as containing a single (empty) line and
+      therefore returns 1.
+    - Line breaks are detected using all common newline conventions:
+        * CRLF (#13#10)
+        * LF   (#10)
+        * CR   (#13)
+      CRLF sequences are counted as a single line break.
+    - This overload uses multiple substring scans and is less efficient than
+      LineByPosition for large strings.
+[==============================================================================}
+function TStringHelper.LineByPos(const position: Integer): Integer; overload;
+var
+  l: Integer;
+  s: string;
+begin
+  if (position <= 0) then
+    Exit(0);
+  l := IfThen((position > Length(Self)), Length(Self), position);
+  if (l < 1) then
+    Exit(1);
+  s := Copy(Self, 1, l);
+  Result := s.Count(#13#10);
+  Result := (Result + (s.Count(#10) - Result) + (s.Count(#13) - Result) + 1);
+end;
+
+{==============================================================================]
+  <LineByPosition>
+  @action: Returns the 1-based line number corresponding to a given 1-based character
+           position within the string, using a single-pass scan.
+  @note:
+    - Line numbering is 1-based.
+    - The position parameter is interpreted as a 1-based character index.
+    - If position <= 0, the function returns 0 to indicate an invalid position.
+    - If position exceeds the string length, it is clamped to Length(Self).
+    - An empty string is treated as containing a single (empty) line and
+      therefore returns 1.
+    - Line breaks are detected using all common newline conventions:
+        * CRLF (#13#10)
+        * LF   (#10)
+        * CR   (#13)
+      CRLF sequences are counted as a single line break.
+    - This overload performs a single linear pass up to the requested position
+      and is optimized for performance and low memory overhead.
+[==============================================================================}
+function TStringHelper.LineByPosition(const position: Integer): Integer; overload;
+var
+  i, l: Integer;
+begin
+  if (position <= 0) then
+    Exit(0);
+  Result := 1;
+  l := IfThen((position > Length(Self)), Length(Self), position);
+  if (l = 0) then
+    Exit;
+  i := 0;
+  while (i.Increment <= l) do
+  case Self[i] of
+    #13:
+    begin
+      Inc(Result);
+      if ((i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+    end;
+    #10: Inc(Result);
+  end;
+end;
+
+{==============================================================================]
+  <LineToPos>
+  @action: Returns the 1-based character position corresponding to the start of a
+           given 1-based line number within the string.
+  @note:
+    - Line numbering is 1-based.
+    - The returned position is the index of the first character of the
+      specified line.
+    - If line < 1, the function returns 0 to indicate an invalid line number.
+    - Line 1 always maps to position 1, even for an empty string.
+    - If the requested line number does not exist within the string,
+      the function returns 0.
+    - Line breaks are detected using all common newline conventions:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single line break.
+    - The function scans forward through the string, locating successive
+      line break sequences until the requested line is reached.
+    - The returned position points to the first character *after* the line
+      break sequence that terminates the previous line.
+[==============================================================================}
+function TStringHelper.LineToPos(const line: Integer): Integer; overload;
+var
+  s: TStringArray;
+  i, l, p, m, t, o: Integer;
+begin
+  if (line < 1) then
+    Exit(0);
+  Result := 1;
+  t := (Length(Self) + 1);
+  if ((t > 1) and (line > 1)) then
+  begin
+    l := 1;
+    s := [#13#10, #13, #10];
+    repeat
+      m := t;
+      for i := 0 to High(s) do
+      begin
+        p := Self.Position(s[i], Result);
+        if ((p > 0) and (p < m)) then
+        begin
+          m := p;
+          o := Length(s[i]);
+        end;
+      end;
+      if (m < t) then
+      begin
+        Result := (m + o);
+        Inc(l);
+      end;
+    until ((m = t) or (l >= line));
+    if (l < line) then
+      Result := 0;
+  end;
+end;
+
+{==============================================================================]
+  <LineToPosition>
+  @action: Returns the 1-based character position corresponding to the start of a
+           specified 1-based line number within the string.
+  @note:
+    - Line numbering is 1-based.
+    - The returned value is the index of the first character of the requested
+      line.
+    - If line = 1, the function always returns 1.
+    - If line < 1, the function returns 0 to indicate an invalid line number.
+    - If the string is empty and line > 1, the function returns 0.
+    - If the requested line does not exist within the string, the function
+      returns 0.
+    - Line breaks are recognized using all common newline conventions:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single logical line break.
+    - The function performs a single forward pass through the string and
+      does not allocate temporary strings.
+    - The returned position always refers to the first character *after*
+      the line break sequence terminating the previous line.
+[==============================================================================}
+function TStringHelper.LineToPosition(const line: Integer): Integer; overload;
+var
+  i, l, s, n: Integer;
+begin
+  if (line = 1) then
+    Exit(1);
+  s := Length(Self);
+  if ((line < 1) or (s = 0)) then
+    Exit(0);
+  l := 1;
+  i := 1;
+  while (i.Increment <= s) do
+  case Self[i] of
+    #13:
+    begin
+      if ((i < s) and (Self[i + 1] = #10)) then
+        n := (i.Increment + 1)
+      else
+        n := (i + 1);
+      if (l.Increment = line) then
+        Exit(n);
+    end;
+    #10:
+    if (l.Increment = line) then
+      Exit(i + 1);
+  end;
+  Result := 0;
 end;
 {$ENDIF}
