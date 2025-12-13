@@ -113,6 +113,15 @@ TStringHelper = type helper for string
   function Consists(const allowed: TCharArray): Boolean;
   function Pure(const allowed: TCharArray): Boolean;
   function BuiltWith(const blocks: TCharArray): Boolean;
+  function Line(const number: Integer; const lineBreak: string): string; overload;
+  function Line(const number: Integer; const lineBreak: TStringArray): string; overload;
+  function Line(const number: Integer): string; overload;
+  function Lines(const lineBreak: string): TStringArray; overload;
+  function Lines(const lineBreak: TStringArray): TStringArray; overload;
+  function Lines: TStringArray; overload;
+  function LineCount(const lineBreak: string): Integer; overload;
+  function LineCount(const lineBreak: TStringArray): Integer; overload;
+  function LineCount: Integer; overload;
 end;
 {$ENDIF}
 
@@ -2076,4 +2085,126 @@ end;
 function Max(const A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I Skeletons.inc}{$UNDEF Skeleton_Max}
 function Min(const A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I Skeletons.inc}{$UNDEF Skeleton_Min}
 function Comparison(const A, B: string): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Skeletons.inc}{$UNDEF Skeleton_Comparison}
+
+{==============================================================================]
+  <Line>
+  @action: Returns the specified line number from the string, using the
+           given line break delimiter string to split lines.
+  @note: Line numbers are 1-based. Returns an empty string if the number
+         is less than 1, the string is empty, or the line does not exist.
+[==============================================================================}
+function TStringHelper.Line(const number: Integer; const lineBreak: string): string; overload;
+var
+  r: TStringArray;
+begin
+  Result := '';
+  if ((number < 1) or (Self = '')) then
+    Exit;
+  r := Self.Explode(lineBreak, (number + 1));
+  if (r.Size >= number) then
+    Result := r[number - 1];
+end;
+
+{==============================================================================]
+  <Line>
+  @action: Returns the specified line number from the string, using one of
+           the provided line break delimiters in the TStringArray.
+  @note: Line numbers are 1-based. Returns an empty string if the number
+         is less than 1, the string is empty, or the line does not exist.
+[==============================================================================}
+function TStringHelper.Line(const number: Integer; const lineBreak: TStringArray): string; overload;
+var
+  r: TStringArray;
+begin
+  Result := '';
+  if ((number < 1) or (Self = '')) then
+    Exit;
+  r := Self.Explode(lineBreak, (number + 1));
+  if (r.Size >= number) then
+    Result := r[number - 1];
+end;
+
+{==============================================================================]
+  <Line>
+  @action: Returns the specified line number from the string, using common
+           line break sequences (#13#10, #13, #10) as delimiters.
+  @note: Line numbers are 1-based. Returns an empty string if the number
+         is less than 1 or the string is empty.
+[==============================================================================}
+function TStringHelper.Line(const number: Integer): string; overload;
+begin
+  Result := Self.Line(number, [#13#10, #13, #10]);
+end;
+
+{==============================================================================]
+  <Lines>
+  @action: Splits the string into an array of lines using the specified
+           line break string as delimiter.
+  @note: Returns an empty array if the string is empty or the delimiter
+         is empty. Preserves the order of lines.
+[==============================================================================}
+function TStringHelper.Lines(const lineBreak: string): TStringArray; overload;
+begin
+  if ((Self = '') or (Length(lineBreak) = 0)) then
+    Exit([]);
+  Result := Self.Explode(lineBreak);
+end;
+
+{==============================================================================]
+  <Lines>
+  @action: Splits the string into an array of lines using any of the provided
+           line break strings in the TStringArray as delimiters.
+  @note: Returns an empty array if the string is empty or the delimiter
+         array is empty. Preserves the order of lines.
+[==============================================================================}
+function TStringHelper.Lines(const lineBreak: TStringArray): TStringArray; overload;
+begin
+  if ((Self = '') or (lineBreak.Size = 0)) then
+    Exit([]);
+  Result := Self.Explode(lineBreak);
+end;
+
+{==============================================================================]
+  <Lines>
+  @action: Splits the string into lines using the default line breaks
+           (#13#10, #13, #10) as delimiters.
+  @note: Returns an empty array if the string is empty.
+[==============================================================================}
+function TStringHelper.Lines: TStringArray; overload;
+begin
+  Result := Self.Lines([#13#10, #13, #10]);
+end;
+
+{==============================================================================]
+  <LineCount>
+  @action: Returns the number of lines in the string, using the specified
+           line break string as delimiter.
+  @note: Returns 0 if the string is empty.
+[==============================================================================}
+function TStringHelper.LineCount(const lineBreak: string): Integer; overload;
+begin
+  Result := Self.Lines(lineBreak).Length;
+end;
+
+{==============================================================================]
+  <LineCount>
+  @action: Returns the number of lines in the string, using any of the provided
+           line break strings in the TStringArray as delimiters.
+  @note: Returns 0 if the string is empty or the delimiter array is empty.
+[==============================================================================}
+function TStringHelper.LineCount(const lineBreak: TStringArray): Integer; overload;
+begin
+  Result := Self.Lines(lineBreak).Length;
+end;
+
+{==============================================================================]
+  <LineCount>
+  @action: Returns the number of lines in the string, using the default line
+           breaks (#13#10, #13, #10) as delimiters.
+  @note:   Returns 0 if the string is empty.
+[==============================================================================}
+function TStringHelper.LineCount: Integer; overload;
+begin
+  Result := Self.LineCount([#13#10, #13, #10]);
+end;
 {$ENDIF}
