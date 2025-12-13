@@ -119,9 +119,13 @@ TStringHelper = type helper for string
   function LinesTotal: Integer; overload;
   function LineQuantity: Integer; overload;
   function LinePopulation: Integer; overload;
+  function LineCount: Integer; overload;
   function Lines: TStringArray; overload;
   function Lined: TStringArray; overload;
   function LineArray: TStringArray; overload;
+  function LineArr: TStringArray; overload;
+  function LineList: TStringArray; overload;
+  function LinesList: TStringArray; overload;
   function LineByPos(const position: Integer): Integer; overload;
   function LineByPosition(const position: Integer): Integer; overload;
   function LineToPos(const line: Integer): Integer; overload;
@@ -2301,7 +2305,109 @@ begin
   end;
   if (S <= E) then
     SetString(Result[R], S, (E - S));
-end; 
+end;
+
+{==============================================================================]
+  <LineArr>
+  @action:
+    Splits the string into an array of lines. Each line is extracted as a string
+    without including the line-ending characters. Handles all standard line
+    endings: CRLF (#13#10), CR (#13), and LF (#10).
+  @note:
+    - The function uses a single-pass pointer scan and dynamically grows the
+      result array as lines are found.
+    - CRLF sequences are treated as a single line break; lone CR or LF are also
+      correctly handled.
+    - For an empty string, the function returns an empty array.
+    - The line-ending characters are not included in the returned lines.
+    - This approach avoids pre-counting lines but may incur slight overhead
+      from repeated array resizing when the number of lines is large.
+[==============================================================================}
+function TStringHelper.LineArr: TStringArray; overload;
+var
+  P, S, E: PChar;
+begin
+  SetLength(Result, 0);
+  P := PChar(Self);
+  E := (P + Length(Self));
+  S := P;
+  while (P < E) do
+  case P^ of
+    #13, #10:
+    begin
+      SetLength(Result, (Length(Result) + 1));
+      SetString(Result[High(Result)], S, (P - S));
+      if ((P^ = #13) and ((P + 1) < E) and ((P + 1)^ = #10)) then
+        Inc(P);
+      Inc(P);
+      S := P;
+    end;
+  else
+    Inc(P);
+  end;
+  if (S <= E) then
+  begin
+    SetLength(Result, (Length(Result) + 1));
+    SetString(Result[High(Result)], S, (E - S));
+  end;
+end;
+
+{==============================================================================]
+  <LineList>
+  @action: Converts a multi-line string into an array of strings.
+           Each line in the string becomes an element in the resulting array.
+  @note: Supports Windows (#13#10), Mac (#13), and Unix (#10) line breaks.
+         Uses TStringList internally, which normalizes line endings to #13#10.
+  @warning: If the string ends with a line break, the trailing empty line
+            will be ignored. That is, an "empty last line" will not appear
+            in the resulting array when using this TStringList-based version.
+[==============================================================================}
+function TStringHelper.LineList: TStringArray; overload;
+var
+  s: TStringList;
+  i: Integer;
+begin
+  s := TStringList.Create;
+  try
+    s.Text := Self;
+    SetLength(Result, s.Count);
+    for i := 0 to (s.Count - 1) do
+      Result[i] := s[i];
+  finally
+    s.Free;
+  end;
+end;
+
+{==============================================================================]
+  <LinesList>
+  @action: Converts a multi-line string into an array of strings.
+           Each line in the string becomes an element in the resulting array.
+  @note: Supports Windows (#13#10), Mac (#13), and Unix (#10) line breaks.
+         Uses TStringList internally, which normalizes line endings to #13#10.
+  @warning: By default, TStringList.Text ignores a trailing empty line.
+            This version adds an empty string at the end if the original
+            string ends with a line break.
+[==============================================================================}
+function TStringHelper.LinesList: TStringArray; overload;
+var
+  s: TStringList;
+  i, l: Integer;
+begin
+  s := TStringList.Create;
+  try
+    s.Text := Self;
+    l := s.Count;
+    if ((Length(Self) > 0) and ((Self[Length(Self)] = #13) or (Self[Length(Self)] = #10))) then
+      Inc(l);
+    SetLength(Result, l);
+    for i := 0 to (s.Count - 1) do
+      Result[i] := s[i];
+    if (l > s.Count) then
+      Result[l - 1] := '';
+  finally
+    s.Free;
+  end;
+end;
 
 {==============================================================================]
   <LineAmount>
@@ -2443,6 +2549,38 @@ begin
         Inc(Result);
       p := False;
     end;
+  end;
+end;
+
+{==============================================================================]
+  <LineCount>
+  @action: Counts the number of lines in a string.
+           Each line is delimited by Windows (#13#10), Mac (#13), or Unix (#10) line breaks.
+           Lines that end with a line break are counted, including a trailing empty line.
+  @note: If the string is empty, it is considered to contain 1 line.
+         This function handles mixed line endings and ensures that
+         the last line is counted even if it does not end with a line break.
+[==============================================================================}
+function TStringHelper.LineCount: Integer; overload;
+var
+  i, l: Integer;
+begin
+  Result := 1;
+  l := Length(Self);
+  if (l = 0) then
+    Exit;
+  i := 0;
+  while (i.Increment <= l) do
+  case (Self[i] = #13) of
+    True:
+    begin
+      Inc(Result);
+      if ((i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+    end;
+    False:
+    if (Self[i] = #10) then
+      Inc(Result);
   end;
 end;
 
