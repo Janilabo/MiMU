@@ -113,6 +113,8 @@ TStringHelper = type helper for string
   function Consists(const allowed: TCharArray): Boolean;
   function Pure(const allowed: TCharArray): Boolean;
   function BuiltWith(const blocks: TCharArray): Boolean;
+  function LineAmount: Integer; overload;
+  function Lined: TStringArray; overload;
   function Line(const number: Integer; const lineBreak: string): string; overload;
   function Line(const number: Integer; const lineBreak: TStringArray): string; overload;
   function Line(const number: Integer): string; overload;
@@ -126,6 +128,10 @@ TStringHelper = type helper for string
   function LineByPosition(const position: Integer): Integer; overload;
   function LineToPos(const line: Integer): Integer; overload;
   function LineToPosition(const line: Integer): Integer; overload;
+  function LineRanges: TRangeArray; overload;
+  function LineEndingRanges: TRangeArray; overload;
+  function LinePositions: TIntegerArray; overload;
+  function LineEndingPositions: TIntegerArray; overload;
 end;
 {$ENDIF}
 
@@ -2091,6 +2097,72 @@ function Min(const A, B: string): string; overload; inline; {$DEFINE Skeleton_Mi
 function Comparison(const A, B: string): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Skeletons.inc}{$UNDEF Skeleton_Comparison}
 
 {==============================================================================]
+  <LineAmount>
+  @action: Returns the total number of lines in the string. Lines are determined by
+           standard newline characters: CR (#13), LF (#10), and CRLF (#13#10).
+  @note:
+    - For an empty string (''), the result is 1, representing a single
+      empty line.
+    - Consecutive line breaks are counted as separate lines, producing
+      multiple empty lines.
+    - CRLF sequences are treated as a single line break.
+    - The function performs a single forward scan of the string.
+[==============================================================================}
+function TStringHelper.LineAmount: Integer; overload;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  Result := 1;
+  i := 0;
+  while (i.Increment <= l) do
+    if ((Self[i] = #10) or (Self[i] = #13)) then
+    begin
+      Inc(Result);
+      if ((Self[i] = #13) and (i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+    end;
+end;
+
+{==============================================================================]
+  <Lined>
+  @action: Returns a TStringArray containing the text of each line in the string.
+           Each array element corresponds to one line, excluding the line-ending characters.
+  @note:
+    - Lines are separated using standard newline characters:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single line break.
+    - Empty lines are returned as empty strings.
+    - Consecutive line breaks produce multiple empty lines in the array.
+    - If the string is empty, the result is a single empty line.
+    - The function performs a single forward scan of the string and allocates
+      the result array once using LineAmount.
+[==============================================================================}
+function TStringHelper.Lined: TStringArray; overload;
+var
+  r, i, l, s: Integer;
+begin
+  SetLength(Result, Self.LineAmount);
+  l := Length(Self);
+  s := 1;
+  r := 0;
+  i := 0;
+  while (i.Increment <= l) do
+  case Self[i] of
+    #13, #10:
+    begin
+      Result[r.Increase] := Copy(Self, s, (i - s));
+      if ((Self[i] = #13) and (i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+      s := (i + 1);
+    end;
+  end;
+  Result[r] := Copy(Self, s, ((l - s) + 1));
+end;
+
+{==============================================================================]
   <Line>
   @action: Returns the specified line number from the string, using the
            given line break delimiter string to split lines.
@@ -2395,5 +2467,155 @@ begin
       Exit(i + 1);
   end;
   Result := 0;
+end;
+
+{==============================================================================]
+  <LineRanges>
+  @action: Returns a TRangeArray representing the **content ranges of all lines**
+           within the string. Each element corresponds to a single line’s content,
+           excluding the line-ending characters.
+  @note:
+    - Line numbering is 1-based; ranges are expressed as 1-based positions within the string.
+    - Empty lines produce **descending ranges**, where `start > stop`, to indicate zero-length content.
+    - Line breaks are recognized using all common newline conventions:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single logical line break.
+    - The function performs a single forward pass through the string.
+    - The final line (even if empty) is always included.
+    - Consumers should handle descending ranges appropriately when extracting
+      content (e.g., Copy(Self, start, stop - start + 1) may return an empty string).
+[==============================================================================}
+function TStringHelper.LineRanges: TRangeArray; overload;
+var
+  i, l, s: Integer;
+begin
+  l := Length(Self);
+  s := 1;
+  SetLength(Result, 0);
+  i := 0;
+  while (i.Increment <= l) do
+  case Self[i] of
+    #13:
+    begin
+      Result.Supply(TRange.Construct(s, (i - 1)));
+      if ((i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+      s := (i + 1);
+    end;
+    #10:
+    begin
+      Result.Supply(TRange.Construct(s, (i - 1)));
+      s := (i + 1);
+    end;
+  end;
+  Result.Supply(TRange.Construct(s, l));
+end;
+
+{==============================================================================]
+  <LineEndingRanges>
+  @action: Returns a TRangeArray representing the **line-ending ranges** within the
+           string. Each element corresponds to a single line-ending sequence.
+  @note:
+    - Line breaks are recognized using:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single range.
+    - Consecutive line breaks are represented as separate ranges.
+    - The function performs a single forward pass through the string.
+    - Returned ranges indicate the positions of the line-ending characters;
+      line content is not included.
+[==============================================================================}
+function TStringHelper.LineEndingRanges: TRangeArray; overload;
+var
+  i, l, s: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, 0);
+  i := 0;
+  while (i.Increment <= l) do
+  case Self[i] of
+    #13:
+    begin
+      s := i;
+      if ((i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+      Result.Supply(TRange.Construct(s, i));
+    end;
+    #10: Result.Supply(TRange.Construct(i, i));
+  end;
+end;
+
+{==============================================================================]
+  <LinePositions>
+  @action: Returns a TIntegerArray containing the 1-based starting positions of each
+           line in the string. Each entry corresponds to the first character of a line's content.
+  @note:
+    - For an empty string, the result is [1], representing a single empty line.
+    - Line breaks are recognized using all common newline conventions:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single line break.
+    - Consecutive line breaks produce multiple entries in the array.
+    - The function performs a single forward pass and dynamically grows the
+      result array via arr.Supply.
+[==============================================================================}
+function TStringHelper.LinePositions: TIntegerArray; overload;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  Result := [1];
+  if (l = 0) then
+    Exit;
+  i := 0;
+  while (i.Increment <= l) do
+  case Self[i] of
+    #13:
+    begin
+      if ((i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+      Result.Supply(i + 1);
+    end;
+    #10: Result.Supply(i + 1);
+  end;
+end;
+
+{==============================================================================]
+  <LineEndingPositions>
+  @action: Returns a TIntegerArray containing the 1-based starting positions of each
+           line-ending sequence in the string. Each entry corresponds to the first
+           character of a CR, LF, or CRLF sequence.
+  @note:
+    - For an empty string, the result is an empty array [].
+    - Line breaks are recognized using all common newline conventions:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single range.
+    - Consecutive line breaks produce multiple entries.
+    - The function performs a single forward pass and dynamically grows the
+      result array via arr.Supply.
+[==============================================================================}
+function TStringHelper.LineEndingPositions: TIntegerArray; overload;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, 0);
+  i := 0;
+  while (i.Increment <= l) do
+  case Self[i] of
+    #13:
+    begin
+      Result.Supply(i);
+      if ((i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+    end;
+    #10: Result.Supply(i);
+  end;
 end;
 {$ENDIF}
