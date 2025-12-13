@@ -113,7 +113,12 @@ TStringHelper = type helper for string
   function Consists(const allowed: TCharArray): Boolean;
   function Pure(const allowed: TCharArray): Boolean;
   function BuiltWith(const blocks: TCharArray): Boolean;
+  function CountTokens(const items: TStringArray): Integer; overload;
+  function TokensCount(const items: TStringArray): Integer; overload;
   function LineAmount: Integer; overload;
+  function LinesTotal: Integer; overload;
+  function LineQuantity: Integer; overload;
+  function LinePopulation: Integer; overload;
   function Lined: TStringArray; overload;
   function Line(const number: Integer; const lineBreak: string): string; overload;
   function Line(const number: Integer; const lineBreak: TStringArray): string; overload;
@@ -2092,9 +2097,85 @@ begin
   Result := True;
 end;
 
-function Max(const A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I Skeletons.inc}{$UNDEF Skeleton_Max}
-function Min(const A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I Skeletons.inc}{$UNDEF Skeleton_Min}
-function Comparison(const A, B: string): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Skeletons.inc}{$UNDEF Skeleton_Comparison}
+{==============================================================================]
+  <CountTokens>
+  @action: Counts the number of non-overlapping occurrences of the specified token
+           strings in the string. Scans left-to-right, matching the first token that
+           fits at each position.
+  @note:
+    - Tokens are tested in the order provided; first match wins.
+    - Overlapping tokens must be ordered from longest to shortest to avoid
+      double-counting (e.g., #13#10 before #13 and #10).
+    - Returns 0 if the string is empty or no tokens match.
+[==============================================================================}
+function TStringHelper.CountTokens(const items: TStringArray): Integer; overload;
+label
+  ContinueScan;
+var
+  i, l, j, s: Integer;
+begin
+  Result := 0;
+  s := Length(Self);
+  i := 1;
+  while (i <= s) do
+  begin
+    for j := 0 to High(items) do
+    begin
+      l := Length(items[j]);
+      if (((l > 0) and (i + l - 1 <= s)) and CompareMem(@Self[i], @items[j][1], (l * SizeOf(Char)))) then
+      begin
+        Inc(Result);
+        Inc(i, l);
+        goto ContinueScan;
+      end;
+    end;
+    Inc(i);
+    ContinueScan:
+  end;
+end;
+
+{==============================================================================]
+  <TokensCount>
+  @action: Counts the number of non-overlapping occurrences of the specified token
+           strings within the string. This version is provided for cases where a
+           noun-first style is preferred over the verb-first form CountTokens.
+  @note:
+    - Tokens are tested in the order provided; the first matching token is
+      counted at each position.
+    - Overlapping tokens must be ordered from longest to shortest to prevent
+      double-counting (e.g., #13#10 before #13 and #10).
+    - The function performs a single left-to-right scan and advances the
+      position by the full length of the matched token.
+    - Returns 0 if the string is empty or no tokens are matched.
+    - Matches are non-overlapping; once a token is matched, shorter tokens
+      starting at the same position are ignored.
+[==============================================================================}
+function TStringHelper.TokensCount(const items: TStringArray): Integer; overload;
+var
+  i, j, l, s: Integer;
+  m: Boolean;
+begin
+  Result := 0;
+  s := Length(Self);
+  i := 1;
+  while (i <= s) do
+  begin
+    m := False;
+    for j := 0 to High(items) do
+    begin
+      l := Length(items[j]);
+      if (((l > 0) and (i + l - 1 <= s)) and CompareMem(@Self[i], @items[j][1], (l * SizeOf(Char)))) then
+      begin
+        Inc(Result);
+        Inc(i, l);
+        m := True;
+        Break;
+      end;
+    end;
+    if not m then
+      Inc(i);
+  end;
+end;
 
 {==============================================================================]
   <LineAmount>
@@ -2122,6 +2203,121 @@ begin
       if ((Self[i] = #13) and (i < l) and (Self[i + 1] = #10)) then
         Inc(i);
     end;
+end;
+
+{==============================================================================]
+  <LinesTotal>
+  @action: Returns the total number of logical lines contained in the string.
+  @note:
+    - Lines are delimited using standard newline conventions:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single line break.
+    - Consecutive line breaks produce empty lines, each of which is counted.
+    - For an empty string, the result is 1, representing a single
+      empty line.
+    - The function performs a single forward scan of the string using indexed
+      access.
+[==============================================================================}
+function TStringHelper.LinesTotal: Integer; overload;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  Result := 1;
+  i := 0;
+  while (i.Increment <= l) do
+  case (Self[i] = #13) of
+    True:
+    begin
+      Inc(Result);
+      if ((i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+    end;
+    False:
+    if (Self[i] = #10) then
+      Inc(Result);
+  end;
+end;
+
+{==============================================================================]
+  <LineQuantity>
+  @action: Returns the total number of logical lines contained in the string.
+  @note:
+    - Lines are delimited using standard newline conventions:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single line break.
+    - Consecutive line breaks produce empty lines, each of which is counted.
+    - For an empty string, the result is 1, representing a single
+      empty line.
+    - The function performs a single forward scan using PChar pointers,
+      minimizing bounds checks and offering optimal performance for large
+      strings.
+[==============================================================================}
+function TStringHelper.LineQuantity: Integer; overload;
+var
+  P, E: PChar;
+begin
+  Result := 1;
+  P := PChar(Self);
+  E := (P + Length(Self));
+  while (P < E) do
+  begin
+    case P^ of
+      #13:
+      begin
+        Inc(Result);
+        Inc(P);
+        if ((P < E) and (P^ = #10)) then
+          Inc(P);
+        Continue;
+      end;
+      #10: Inc(Result);
+    end;
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
+  <LinePopulation>
+  @action: Returns the total number of logical lines contained in the string.
+  @note:
+    - Lines are delimited using standard newline characters:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single line break.
+    - Consecutive line breaks produce empty lines, each counted separately.
+    - For an empty string, the function returns 1, representing a
+      single empty line.
+    - The function uses a for loop and a boolean flag p to detect CRLF
+      sequences efficiently.
+[==============================================================================}
+function TStringHelper.LinePopulation: Integer; overload;
+var
+  i, l: Integer;
+  p: Boolean;
+begin
+  l := Length(Self);
+  Result := 1;
+  p := False;
+  for i := 1 to l do
+  case (Self[i] = #13) of
+    True:
+    begin
+      Inc(Result);
+      p := True;
+    end;
+    False:
+    begin
+      if ((Self[i] = #10) and (not p)) then
+        Inc(Result);
+      p := False;
+    end;
+  end;
 end;
 
 {==============================================================================]
@@ -2618,4 +2814,8 @@ begin
     #10: Result.Supply(i);
   end;
 end;
+
+function Max(const A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I Skeletons.inc}{$UNDEF Skeleton_Max}
+function Min(const A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I Skeletons.inc}{$UNDEF Skeleton_Min}
+function Comparison(const A, B: string): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Skeletons.inc}{$UNDEF Skeleton_Comparison}
 {$ENDIF}
