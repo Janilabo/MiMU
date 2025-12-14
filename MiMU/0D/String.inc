@@ -126,10 +126,12 @@ TStringHelper = type helper for string
   function LineArr: TStringArray; overload;
   function LineList: TStringArray; overload;
   function LinesList: TStringArray; overload;
+  function Line(const number: Integer): string; overload;
   function LineByPos(const position: Integer): Integer; overload;
   function LineByPosition(const position: Integer): Integer; overload;
   function LineToPos(const line: Integer): Integer; overload;
   function LineToPosition(const line: Integer): Integer; overload;
+  function LineIndexes: TIntegerArray; overload;
   function LineRanges: TRangeArray; overload;
   function LineEndingRanges: TRangeArray; overload;
   function LinePositions: TIntegerArray; overload;
@@ -2623,6 +2625,41 @@ begin
 end;
 
 {==============================================================================]
+  <Line>
+  @action: Returns the text of the specified line number from the string,
+           using standard text line break characters (#13, #10, or #13#10)
+           as delimiters.
+  @note: Line numbers are 1-based. Empty lines are valid and may be returned.
+         Returns an empty string if the requested line number is less than 1,
+         the string is empty, or the specified line does not exist. Handles
+         mixed line endings and treats CRLF (#13#10) as a single line break.
+[==============================================================================}
+function TStringHelper.Line(const number: Integer): string; overload;
+var
+  i, s, n, l: Integer;
+begin
+  l := Length(Self);
+  Result := '';
+  if ((number < 1) or (l = 0)) then
+    Exit;
+  n := 1;
+  s := 1;
+  i := 0;
+  while (i.Increment <= l) do
+    if ((Self[i] = #10) or (Self[i] = #13)) then
+    begin
+      if (n = number) then
+        Exit(Copy(Self, s, (i - s)));
+      Inc(n);
+      if ((Self[i] = #13) and (i < Length(Self)) and (Self[i + 1] = #10)) then
+        Inc(i);
+      s := (i + 1);
+    end;
+  if (n = number) then
+    Result := Copy(Self, s, ((Length(Self) - s) + 1));
+end; 
+
+{==============================================================================]
   <LineByPos>
   @action: Returns the 1-based line number corresponding to a given 1-based character
            position within the string.
@@ -2805,6 +2842,50 @@ begin
       Exit(i + 1);
   end;
   Result := 0;
+end;
+
+{==============================================================================]
+  <LineIndexes>
+  @action: Returns an array of 1-based character positions indicating the
+           starting position of each logical line in the string.
+  @note:
+    - The returned array contains one entry per line.
+    - Each element is a 1-based index into the string representing the first
+      character of a line.
+    - Line 1 always starts at position 1.
+    - An empty string is treated as containing a single empty line and returns
+      an array containing only [1].
+    - Line breaks are detected using all common newline conventions:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single logical line break.
+    - Empty lines are included and produce distinct entries in the array.
+    - The returned array may be safely used with Line, LineByPosition, and
+      LineToPosition helpers.
+[==============================================================================}
+function TStringHelper.LineIndexes: TIntegerArray; overload;
+var
+  i, l, r: Integer;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit([1]);
+  r := 1;
+  SetLength(Result, l);
+  Result[0] := 1;
+  i := 0;
+  while (i.Increment <= l) do
+  case Self[i] of
+    #13:
+    begin
+      if ((i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+      Result[r.Increase] := (i + 1);
+    end;
+    #10: Result[r.Increase] := (i + 1);
+  end;
+  SetLength(Result, r);
 end;
 
 {==============================================================================]
