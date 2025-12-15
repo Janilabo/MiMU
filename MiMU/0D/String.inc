@@ -119,6 +119,7 @@ TStringHelper = type helper for string
   function LinesTotal: Integer; overload;
   function LineQuantity: Integer; overload;
   function LinePopulation: Integer; overload;
+  function LinesCount: Integer; overload;
   function LineCount: Integer; overload;
   function Lines: TStringArray; overload;
   function Lined: TStringArray; overload;
@@ -2562,7 +2563,7 @@ begin
 end;
 
 {==============================================================================]
-  <LineCount>
+  <LinesCount>
   @action: Counts the number of lines in a string.
            Each line is delimited by Windows (#13#10), Mac (#13), or Unix (#10) line breaks.
            Lines that end with a line break are counted, including a trailing empty line.
@@ -2570,7 +2571,7 @@ end;
          This function handles mixed line endings and ensures that
          the last line is counted even if it does not end with a line break.
 [==============================================================================}
-function TStringHelper.LineCount: Integer; overload;
+function TStringHelper.LinesCount: Integer; overload;
 var
   i, l: Integer;
 begin
@@ -2590,6 +2591,50 @@ begin
     False:
     if (Self[i] = #10) then
       Inc(Result);
+  end;
+end;
+
+{==============================================================================]
+  <LineCount>
+  @action: Returns the total number of lines in the string.
+           Counts trailing line breaks as a separate line.
+  @note:
+    - Line numbering is 1-based.
+    - An empty string is considered to contain a single line.
+    - Line breaks are recognized using all common conventions:
+        * CRLF (#13#10)
+        * LF   (#10)
+        * CR   (#13)
+      CRLF sequences are counted as a single line break.
+    - A trailing line break adds an additional line.
+    - This implementation scans using a single-pass pointer loop with
+      case handling for CR and LF, skipping the LF of CRLF sequences.
+    - No temporary allocations are performed.
+[==============================================================================}
+function TStringHelper.LineCount: Integer; overload;
+var
+  S, C, E: PChar;
+  L: Integer;
+begin
+  L := Length(Self);
+  Result := 1;
+  if (L = 0) then
+    Exit;
+  S := PChar(Self);
+  C := S;
+  E := (S + (L - 1));
+  while (C <= E) do
+  begin
+    case C^ of
+      #10: Inc(Result);
+      #13:
+      begin
+        Inc(Result);
+        if ((C < E) and (C[1] = #10)) then
+          Inc(C);
+      end;
+    end;
+    Inc(C);
   end;
 end;
 
