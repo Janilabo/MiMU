@@ -128,10 +128,10 @@ TStringHelper = type helper for string
   function LinesList: TStringArray; overload;
   function Line(const number: Integer): string; overload;
   function LineWithPosition(const position: Integer): Integer; overload;
+  function LineFromPosition(const position: Integer): Integer; overload;
   function LineByPos(const position: Integer): Integer; overload;
   function LineByPosition(const position: Integer): Integer; overload;
   function LineByPosition2(const position: Integer): Integer; overload;
-  function LineFromPosition(const position: Integer): Integer; overload;
   function LineToPos(const line: Integer): Integer; overload;
   function LineToPosition(const line: Integer): Integer; overload;
   function LineIndexes: TIntegerArray; overload;
@@ -2707,40 +2707,6 @@ begin
 end;
 
 {==============================================================================]
-  <LineByPos>
-  @action: Returns the 1-based line number corresponding to a given 1-based character
-           position within the string.
-  @note:
-    - Line numbering is 1-based.
-    - The position parameter is interpreted as a 1-based character index.
-    - If position <= 0, the function returns 0 to indicate an invalid position.
-    - If position exceeds the string length, it is clamped to Length(Self).
-    - An empty string is treated as containing a single (empty) line and
-      therefore returns 1.
-    - Line breaks are detected using all common newline conventions:
-        * CRLF (#13#10)
-        * LF   (#10)
-        * CR   (#13)
-      CRLF sequences are counted as a single line break.
-    - This overload uses multiple substring scans and is less efficient than
-      LineByPosition for large strings.
-[==============================================================================}
-function TStringHelper.LineByPos(const position: Integer): Integer; overload;
-var
-  l: Integer;
-  s: string;
-begin
-  if (position <= 0) then
-    Exit(0);
-  l := IfThen((position > Length(Self)), Length(Self), position);
-  if (l < 1) then
-    Exit(1);
-  s := Copy(Self, 1, l);
-  Result := s.Count(#13#10);
-  Result := (Result + (s.Count(#10) - Result) + (s.Count(#13) - Result) + 1);
-end;
-
-{==============================================================================]
   <LineFromPosition>
   @action: Returns the 1-based line number that contains the character at the
            specified 1-based position within the string.
@@ -2796,6 +2762,40 @@ begin
 end;
 
 {==============================================================================]
+  <LineByPos>
+  @action: Returns the 1-based line number corresponding to a given 1-based character
+           position within the string.
+  @note:
+    - Line numbering is 1-based.
+    - The position parameter is interpreted as a 1-based character index.
+    - If position <= 0, the function returns 0 to indicate an invalid position.
+    - If position exceeds the string length, it is clamped to Length(Self).
+    - An empty string is treated as containing a single (empty) line and
+      therefore returns 1.
+    - Line breaks are detected using all common newline conventions:
+        * CRLF (#13#10)
+        * LF   (#10)
+        * CR   (#13)
+      CRLF sequences are counted as a single line break.
+    - This overload uses multiple substring scans and is less efficient than
+      LineByPosition for large strings.
+[==============================================================================}
+function TStringHelper.LineByPos(const position: Integer): Integer; overload;
+var
+  l: Integer;
+  s: string;
+begin
+  if (position <= 0) then
+    Exit(0);
+  l := IfThen((position > Length(Self)), Length(Self), position);
+  if (l < 1) then
+    Exit(1);
+  s := Copy(Self, 1, (l - 2));
+  Result := s.Count(#13#10);
+  Result := (Result + (s.Count(#10) - Result) + (s.Count(#13) - Result) + 1);
+end;
+
+{==============================================================================]
   <LineByPosition>
   @action: Returns the 1-based line number corresponding to a given 1-based character
            position within the string, using a single-pass scan.
@@ -2821,18 +2821,15 @@ begin
   if (position <= 0) then
     Exit(0);
   Result := 1;
-  l := IfThen((position > Length(Self)), Length(Self), position);
+  l := IfThen((position> Length(Self)), Length(Self), position);
   if (l = 0) then
     Exit;
   i := 0;
-  while (i.Increment <= l) do
+  while (i.Increment < l) do
   case Self[i] of
     #13:
-    begin
+    if not ((i < l) and (Self[i + 1] = #10)) then
       Inc(Result);
-      if ((i < l) and (Self[i + 1] = #10)) then
-        Inc(i);
-    end;
     #10: Inc(Result);
   end;
 end;
@@ -2868,14 +2865,11 @@ begin
   p := IfThen((position > s), s, position);
   Result := 1;
   i := 0;
-  while (i.Increment <= p) do
+  while (i.Increment < p) do
   case Self[i] of
     #13:
-    begin
+    if not ((i < s) and (Self[i + 1] = #10)) then
       Inc(Result);
-      if ((i < s) and (Self[i + 1] = #10)) then
-        Inc(i);
-    end;
     #10: Inc(Result);
   end;
 end;
