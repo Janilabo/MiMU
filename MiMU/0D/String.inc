@@ -121,13 +121,16 @@ TStringHelper = type helper for string
   function LinePopulation: Integer; overload;
   function LinesCount: Integer; overload;
   function LineCount: Integer; overload;
+  function LinesCounted: Integer; overload;
   function Lines: TStringArray; overload;
+  function LinesStr(const lineRange: TRange): string; overload;
   function Lined: TStringArray; overload;
   function LineArray: TStringArray; overload;
   function LineArr: TStringArray; overload;
   function LineList: TStringArray; overload;
   function LinesList: TStringArray; overload;
   function Line(const number: Integer): string; overload;
+  function LineStr(const lineNumber: Integer): string; overload;
   function LineAtPos(const position: Integer): Integer; overload;
   function LineAtPosition(const position: Integer): Integer; overload;
   function LineWithPosition(const position: Integer): Integer; overload;
@@ -144,6 +147,14 @@ TStringHelper = type helper for string
   function LineEndingRanges: TRangeArray; overload;
   function LinePositions: TIntegerArray; overload;
   function LineEndingPositions: TIntegerArray; overload;
+  function LineStartPosition(const lineNumber: Integer): Integer; overload;
+  function LineEndPosition(const lineNumber: Integer): Integer; overload;
+  function LineRange(const lineNumber: Integer): TRange; overload;
+  function LineInsert(const lineNumber: Integer; const text: string): string; overload;
+  function LineReplace(const lineNumber: Integer; const text: string): string; overload;
+  function LineDelete(const lineNumber: Integer): string; overload;
+  function LineIsEmpty(const lineNumber: Integer): Boolean; overload;
+  function LinesNormalized(const newLine: string = sLineBreak): string; overload;
   function LineEx(const number: Integer; const lineBreak: string): string; overload;
   function LineEx(const number: Integer; const lineBreak: TStringArray): string; overload;
   function LineEx(const number: Integer): string; overload;
@@ -2254,6 +2265,33 @@ begin
 end;
 
 {==============================================================================]
+  <LinesStr>
+  @action: Extracts and returns the substring spanning a contiguous range of lines,
+           identified by a line-number range.
+  @note:
+    - The line range is 1-based and inclusive (lineRange.start to lineRange.stop).
+    - Uses LineStartPosition to locate the first character of the starting line.
+    - Uses LineEndPosition to locate the final character of the ending line.
+    - If the starting line does not exist, an empty string is returned.
+    - If the computed end position precedes the start position, an empty string
+      is returned.
+    - Line-ending characters outside the specified range are not included.
+    - The original text within the specified line range is preserved verbatim.
+[==============================================================================}
+function TStringHelper.LinesStr(const lineRange: TRange): string; overload;
+var
+  S, E: Integer;
+begin
+  S := Self.LineStartPosition(lineRange.start);
+  if (S = 0) then
+    Exit('');
+  E := Self.LineEndPosition(lineRange.stop);
+  if E < S then
+    Exit('');
+  Result := Copy(Self, S, ((E - S) + 1));
+end;
+
+{==============================================================================]
   <LineArray>
   @action: Splits the string into an array of lines using a single-pass pointer-based
            scan. Handles all standard line endings (CRLF, CR, LF) correctly. Each
@@ -2639,6 +2677,31 @@ begin
 end;
 
 {==============================================================================]
+  <LinesCounted>
+  @action: Returns the total number of logical lines in the string.
+  @note:
+    - Line numbering is 1-based.
+    - An empty string is considered to contain a single (empty) line.
+    - Line breaks are detected using all common newline conventions:
+        * CRLF (#13#10)
+        * LF   (#10)
+        * CR   (#13)
+    - CRLF sequences are treated as a single logical line break.
+    - A trailing line break increases the line count by one.
+    - This implementation computes the result using character counting:
+        Result = 1 + (CR count + LF count) − CRLF count
+    - The function performs multiple passes over the string and is therefore
+      less efficient than single-pass implementations for large strings.
+    - No temporary strings are created, but the string is scanned three times.
+[==============================================================================}
+function TStringHelper.LinesCounted: Integer; overload;
+begin
+  if (Length(Self) = 0) then
+    Exit(1);
+  Result := ((1 + (Self.Count(#10) + Self.Count(#13))) - Self.Count(#13#10));
+end;
+
+{==============================================================================]
   <Lined>
   @action: Returns a TStringArray containing the text of each line in the string.
            Each array element corresponds to one line, excluding the line-ending characters.
@@ -2709,6 +2772,26 @@ begin
     end;
   if (n = number) then
     Result := Copy(Self, s, ((Length(Self) - s) + 1));
+end;
+
+{==============================================================================]
+  <LineStr>
+  @action: Returns the textual contents of the specified line from the string,
+           excluding any line break characters.
+  @note:
+    - Line numbering is 1-based.
+    - Internally uses LineRange to determine the line boundaries.
+    - If the requested line does not exist, an empty string is returned.
+    - Line terminators (#10, #13, or #13#10) are not included in the result.
+[==============================================================================}
+function TStringHelper.LineStr(const lineNumber: Integer): string; overload;
+var
+  R: TRange;
+begin
+  R := Self.LineRange(lineNumber);
+  if ((R.start < 1) or (R.stop < R.start)) then
+    Exit('');
+  Result := Copy(Self, R.start, R.Size);
 end;
 
 {==============================================================================]
@@ -3373,6 +3456,253 @@ begin
     #10: Result.Supply(i);
   end;
 end;
+
+{==============================================================================]
+  <LineStartPosition>
+  @action:
+    Returns the 1-based character index within the string where the specified
+    line begins. Line numbering is 1-based and lines are detected using standard
+    text line breaks.
+  @note:
+    - Supports LF (#10), CR (#13), and CRLF (#13#10) line endings.
+    - If lineNumber < 1, the function returns 0.
+    - If the string is empty, line 1 is considered to start at position 1.
+    - If the requested line does not exist, the function returns 0.
+    - The returned position is a character offset, not a byte offset.
+[==============================================================================}
+function TStringHelper.LineStartPosition(const lineNumber: Integer): Integer; overload;
+var
+  C, E: PChar;
+  L: Integer;
+begin
+  if (lineNumber < 1) then
+    Exit(0);
+  Result := 1;
+  if (Length(Self) = 0) then
+    Exit;
+  L := 1;
+  C := PChar(Self);
+  E := ((C + Length(Self)) - 1);
+  while (C <= E) do
+  begin
+    if (L = lineNumber) then
+      Exit(Result);
+    case C^ of
+      #10:
+      begin
+        Inc(L);
+        Inc(Result);
+      end;
+      #13:
+      begin
+        Inc(L);
+        Inc(Result);
+        if ((C < E) and (C[1] = #10)) then
+        begin
+          Inc(C);
+          Inc(Result);
+        end;
+      end;
+    else
+      Inc(Result);
+    end;
+    Inc(C);
+  end;
+  if (L = lineNumber) then
+    Exit(Result);
+  Result := 0;
+end;
+
+{==============================================================================]
+  <LineEndPosition>
+  @action:
+    Returns the 1-based character index of the final character of the specified
+    line, excluding any line break characters.
+  @note:
+    - Uses LineStartPosition to determine the beginning of the line.
+    - If the requested line does not exist, the function returns 0.
+    - If the line extends to the end of the string, the string length is returned.
+    - Line terminators (#10, #13, or #13#10) are not included in the result.
+[==============================================================================}
+function TStringHelper.LineEndPosition(const lineNumber: Integer): Integer; overload;
+var
+  L: Integer;
+begin
+  Result := Self.LineStartPosition(lineNumber);
+  if (Result = 0) then
+    Exit;
+  L := Length(Self);
+  if (Result > L) then
+    Exit(L);
+  while ((Result <= L) and not (Self[Result] in [#10, #13])) do
+    Inc(Result);
+  Result := (Result - 1);
+end;
+
+{==============================================================================]
+  <LineRange>
+  @action:
+    Returns the inclusive character range (start..stop) corresponding to the
+    specified line within the string.
+  @note:
+    - The range is 1-based and inclusive.
+    - If the requested line does not exist, both start and stop are set to 0.
+    - Internally relies on LineStartPosition and LineEndPosition for consistency.
+[==============================================================================}
+function TStringHelper.LineRange(const lineNumber: Integer): TRange; overload;
+begin
+  Result.start := Self.LineStartPosition(lineNumber);
+  if (Result.start > 0) then
+    Result.stop := Self.LineEndPosition(lineNumber)
+  else
+    Result.stop := 0;
+end;
+
+{==============================================================================]
+  <LineIsEmpty>
+  @action: Determines whether the specified line contains only whitespace or is completely empty.
+  @note:
+    - Line numbering is 1-based.
+    - Uses LineStr to extract the line content and Trim to remove leading and
+      trailing whitespace before checking emptiness.
+    - Returns True if the line is empty or contains only spaces, tabs, or other
+      whitespace characters; otherwise, returns False.
+    - If the specified line does not exist, the function returns True.
+[==============================================================================}
+function TStringHelper.LineIsEmpty(const lineNumber: Integer): Boolean; overload;
+begin
+  Result := (SysUtils.Trim(Self.LineStr(lineNumber)) = '');
+end;
+
+{==============================================================================]
+  <LinesNormalized>
+  @action:
+    Normalizes all line endings in the string to a consistent format specified
+    by the `newLine` parameter. Converts CR (#13), LF (#10), and CRLF (#13#10)
+    sequences into the specified line-ending string.
+  @note:
+    - By default, `newLine` uses the platform-dependent line break (sLineBreak).
+    - The function scans the string once and efficiently constructs a new string
+      with normalized line endings.
+    - Consecutive or mixed line endings in the original string are correctly
+      converted without duplication.
+    - The resulting string preserves all original text content, only adjusting
+      line terminators.
+    - An empty string input returns an empty string.
+[==============================================================================}
+function TStringHelper.LinesNormalized(const newLine: string = sLineBreak): string; overload;
+var
+  S, E: PChar;
+  L, N, R, i: Integer;
+begin
+  L := Length(Self);
+  if (L = 0) then
+    Exit('');
+  N := Length(newLine);
+  SetLength(Result, (L * N));
+  R := 0;
+  S := PChar(Self);
+  E := (S + L);
+  while (S < E) do
+  begin
+    case S^ of
+      #13:
+      begin
+        Inc(R, N);
+        for i := 1 to N do
+          Result[(R - N) + i] := newLine[i];
+        Inc(S);
+        if ((S < E) and (S^ = #10)) then
+          Inc(S);
+      end;
+      #10:
+      begin
+        Inc(R, N);
+        for i := 1 to N do
+          Result[(R - N) + i] := newLine[i];
+        Inc(S);
+      end;
+    else
+      begin
+        Inc(R);
+        Result[R] := S^;
+        Inc(S);
+      end;
+    end;
+  end;
+  SetLength(Result, R);
+end; 
+
+{==============================================================================]
+  <LineInsert>
+  @action: Inserts the specified text as a new line at the given line number and returns
+           the resulting string.
+  @note:
+    - Line numbering is 1-based.
+    - The text is inserted immediately before the specified line.
+    - A platform-dependent line break (sLineBreak) is automatically appended
+      after the inserted text.
+    - If the specified line does not exist, the text is appended to the end of
+      the string followed by a line break.
+    - Existing content is preserved and shifted as needed.
+[==============================================================================}
+function TStringHelper.LineInsert(const lineNumber: Integer; const text: string): string; overload;
+var
+  P: Integer;
+begin
+  P := Self.LineStartPosition(lineNumber);
+  if (P = 0) then
+    Exit(Self + text + sLineBreak);
+  Result := Copy(Self, 1, (P - 1)) + text + sLineBreak + Copy(Self, P, High(Integer));
+end;
+
+{==============================================================================]
+  <LineReplace>
+  @action: Replaces the contents of a specified logical line with the supplied text.
+  @note:
+    - Line numbering is 1-based.
+    - The line is identified using LineRange, and therefore follows the same
+      newline semantics (CR, LF, CRLF).
+    - Only the characters belonging to the line are replaced; the original
+      line break sequence (if any) following the line is preserved.
+    - If the specified line number does not exist, the original string is
+      returned unchanged.
+    - The replacement text is inserted verbatim and is not automatically
+      terminated with a line break.
+    - No normalization of line endings is performed.
+    - This function allocates a new string containing the modified content.
+[==============================================================================}
+function TStringHelper.LineReplace(const lineNumber: Integer; const text: string): string; overload;
+var
+  R: TRange;
+begin
+  R := Self.LineRange(lineNumber);
+  if (R.start = 0) then
+    Exit(Self);
+  Result := (Copy(Self, 1, (R.start - 1)) + text + Copy(Self, (R.stop + 1), High(Integer)));
+end;
+
+{==============================================================================]
+  <LineDelete>
+  @action: Deletes the specified line from the string and returns the resulting string.
+  @note:
+    - Line numbering is 1-based.
+    - Uses LineRange to determine the start and end positions of the line.
+    - If the specified line does not exist, the original string is returned
+      unchanged.
+    - Only the characters of the specified line are removed; line-ending
+      characters of other lines are preserved.
+    - Does not normalize or adjust remaining line breaks.
+[==============================================================================}
+function TStringHelper.LineDelete(const lineNumber: Integer): string; overload;
+var
+  R: TRange;
+begin
+  R := Self.LineRange(lineNumber);
+  if (R.start = 0) then
+    Exit(Self);
+  Result := Copy(Self, 1, (R.start - 1)) + Copy(Self, (R.stop + 1), High(Integer));
+end; 
 
 {==============================================================================]
   <LineEx>
