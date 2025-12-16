@@ -125,6 +125,7 @@ TStringHelper = type helper for string
   function LinesCount: Integer; overload;
   function LineCount: Integer; overload;
   function LinesCounted: Integer; overload;
+  function LineCountUpTo(const targetLine: Integer): Integer; overload;
   function Lines: TStringArray; overload;
   function LinesStr(const lineRange: TRange): string; overload;
   function Lined: TStringArray; overload;
@@ -136,6 +137,8 @@ TStringHelper = type helper for string
   function LinesList: TStringArray; overload;
   function Line(const number: Integer): string; overload;
   function LineStr(const lineNumber: Integer): string; overload;
+  function LineBreaks: TStringArray; overload;
+  function LineBreakArr: TStringArray; overload;
   function LineAtPos(const position: Integer): Integer; overload;
   function LineAtPosition(const position: Integer): Integer; overload;
   function LineWithPosition(const position: Integer): Integer; overload;
@@ -164,6 +167,8 @@ TStringHelper = type helper for string
   function LineFixed(const lineNumber: Integer): Integer; overload;
   function LineValid(const lineNumber: Integer): Boolean; overload;
   function LineExists(const lineNumber: Integer): Boolean; overload;
+  function LineExisting(const lineNumber: Integer): Boolean; overload;
+  function LineExtant(const lineNumber: Integer): Boolean; overload;
   function LineEx(const number: Integer; const lineBreak: string): string; overload;
   function LineEx(const number: Integer; const lineBreak: TStringArray): string; overload;
   function LineEx(const number: Integer): string; overload;
@@ -2892,6 +2897,63 @@ begin
 end;
 
 {==============================================================================]
+  <LineCountUpTo>
+  @action: Counts the number of lines in the string, stopping early once the specified
+           target line number is reached.
+  @note:
+    - Line numbering is 1-based.
+    - The function never returns a value greater than targetLine.
+    - Line breaks are recognized in the following forms:
+        * LF   (#10)
+        * CR   (#13)
+        * CRLF (#13#10) treated as a single line break
+    - If targetLine < 1, the function returns 0.
+    - If the string is empty, the function returns 1.
+    - Designed for efficient early-exit use cases such as LineExists,
+      LineClamp, or LineValid, avoiding a full line scan when unnecessary.
+[==============================================================================}
+function TStringHelper.LineCountUpTo(const targetLine: Integer): Integer; overload;
+var
+  i, l: Integer;
+begin
+  if (targetLine < 1) then
+    Exit(0);
+  l := Length(Self);
+  if (l = 0) then
+    Exit(1);
+  Result := 1;
+  i := 0;
+  while ((i.Increment <= l) and (Result < targetLine)) do
+  case Self[i] of
+    #10: Inc(Result);
+    #13:
+    begin
+      Inc(Result);
+      if ((i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <LineExtant>
+  @action: Determines whether the specified line number exists in the string.
+  @note:
+    - Line numbering is 1-based.
+    - Returns True if the string contains at least lineNumber lines.
+    - Returns False if lineNumber is less than 1 or exceeds the total number
+      of lines in the string.
+    - Uses LineCountUpTo internally to allow early termination and avoid a
+      full line scan when possible.
+    - Line breaks are recognized as LF (#10), CR (#13), and CRLF (#13#10),
+      with CRLF treated as a single line break.
+[==============================================================================}
+function TStringHelper.LineExtant(const lineNumber: Integer): Boolean; overload;
+begin
+  Result := ((lineNumber > 0) and (Self.LineCountUpTo(lineNumber) >= lineNumber));
+end;
+
+{==============================================================================]
   <Lined>
   @action: Returns a TStringArray containing the text of each line in the string.
            Each array element corresponds to one line, excluding the line-ending characters.
@@ -2983,6 +3045,105 @@ begin
     Exit('');
   Result := Copy(Self, R.start, R.Size);
 end;
+
+{==============================================================================]
+  <LineBreaks>
+  @action: Returns the line break sequence associated with each logical line in the string.
+  @note:
+    - The result array contains one element per line.
+    - Array index 0 corresponds to line 1, index 1 to line 2, and so on.
+    - Each element contains the exact line break sequence that terminates
+      that line:
+        * #13#10 (CRLF)
+        * #13     (CR)
+        * #10     (LF)
+    - If a line is not terminated by a line break (typically the last line),
+      the corresponding array element is an empty string.
+    - An empty string is treated as containing a single empty line and
+      returns an array with one empty element.
+    - Line breaks are detected using all common newline conventions.
+    - The function performs a single forward scan and does not allocate
+      temporary substrings.
+[==============================================================================}
+function TStringHelper.LineBreaks: TStringArray; overload;
+var
+  C, E: PChar;
+  L, S: Integer;
+begin
+  S := Length(Self);
+  if (S = 0) then
+    Exit(['']);
+  SetLength(Result, Self.LineCount);
+  L := 0;
+  C := PChar(Self);
+  E := (C + (S - 1));
+  while (C <= E) do
+  begin
+    case C^ of
+      #13:
+      if ((C < E) and (C[1] = #10)) then
+      begin
+        Result[L.Increase] := #13#10;
+        Inc(C);
+      end else
+        Result[L.Increase] := #13;
+      #10: Result[L.Increase] := #10;
+    end;
+    Inc(C);
+  end;
+  if (L < Length(Result)) then
+    Result[L] := '';
+end;
+
+{==============================================================================]
+  <LineBreakArr>
+  @action: Returns the line break sequence associated with each logical line
+           in the string.
+  @note:
+    - The result array contains one element per line.
+    - Array index 0 corresponds to line 1, index 1 to line 2, and so on.
+    - Each element contains the exact line break sequence that terminates
+      the corresponding line:
+        * #13#10 (CRLF)
+        * #13     (CR)
+        * #10     (LF)
+    - If a line is not terminated by a line break (typically the last line),
+      the corresponding array element is an empty string.
+    - An empty string is treated as containing a single empty line and
+      returns an array with one empty element.
+    - Line breaks are detected using all common newline conventions.
+    - The function performs a single forward scan and does not depend on
+      LineCount or any other helper.
+[==============================================================================}
+function TStringHelper.LineBreakArr: TStringArray; overload;
+var
+  C, E: PChar;
+  L, S: Integer;
+begin
+  S := Length(Self);
+  if (S = 0) then
+    Exit(['']);
+  SetLength(Result, (S + 1));
+  L := 0;
+  C := PChar(Self);
+  E := (C + (S - 1));
+  while (C <= E) do
+  begin
+    case C^ of
+      #13:
+      if ((C < E) and (C[1] = #10)) then
+      begin
+        Result[L.Increase] := #13#10;
+        Inc(C);
+      end else
+        Result[L.Increase] := #13;
+      #10: Result[L.Increase] := #10;
+    end;
+    Inc(C);
+  end;
+  Result[L] := '';
+  SetLength(Result, (L + 1));
+end;  
 
 {==============================================================================]
   <LineWithPosition>
@@ -3949,6 +4110,52 @@ function TStringHelper.LineValid(const lineNumber: Integer): Boolean; overload;
 begin
   Result := ((lineNumber >= 1) and (lineNumber <= Self.LineCount));
 end;
+
+{==============================================================================]
+  <LineExisting>
+  @action:
+    Determines whether the specified 1-based line number exists in the string.
+  @note:
+    - Line numbers are 1-based.
+    - Returns True if the line exists, False otherwise.
+    - An empty string is treated as containing exactly one (empty) line.
+    - Recognizes CR (#13), LF (#10), and CRLF (#13#10) line breaks.
+    - Uses early-exit optimization:
+        * Exits True as soon as the requested line is reached.
+        * Exits False when remaining characters cannot produce enough lines.
+    - Runs in O(n) worst case, often much faster in practice.
+[==============================================================================}
+function TStringHelper.LineExisting(const lineNumber: Integer): Boolean; overload;
+var
+  i, l, c, n, r: Integer;
+begin
+  if (lineNumber < 1) then
+    Exit(False);
+  l := Length(Self);
+  if (l = 0) then
+    Exit(lineNumber = 1);
+  c := 1;
+  i := 0;
+  while (i.Increment <= l) do
+  begin
+    if (c >= lineNumber) then
+      Exit(True);
+    n := (lineNumber - c);
+    r := ((l - i) + 1);
+    if (n > r) then
+      Exit(False);
+    case Self[i] of
+      #10: Inc(c);
+      #13:
+      begin
+        Inc(c);
+        if ((i < l) and (Self[i + 1] = #10)) then
+          Inc(i);
+      end;
+    end;
+  end;
+  Result := (c >= lineNumber);
+end; 
 
 {==============================================================================]
   <LineExists>

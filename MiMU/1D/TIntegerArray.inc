@@ -20,6 +20,7 @@ TIntegerArrayHelper = type helper for TIntegerArray
   {$I Core.inc}
   function Bounds: TRange; overload;
   function Bounds(var aSize: Integer): TRange; overload;
+  function BRange: TRange; overload;
   function BoundingRange: TRange;
   function Boundaries: TRange;
   function Range: TRange;
@@ -275,6 +276,41 @@ begin
       Result.Create(-2147483648, -2147483648);
       aSize := 0;
     end;
+  end;
+end;
+
+{==============================================================================]
+  <BRange>
+  @action: Computes the minimal and maximal values in a TIntegerArray and
+           returns them as a TRange record. start contains the minimum value,
+           stop contains the maximum value.
+  @note: - If the array is empty, the resulting TRange will be uninitialized.
+         - If the array has only one element, start and stop will be equal.
+         - Uses pointer-based iteration for efficiency.
+[==============================================================================}
+function TIntegerArrayHelper.BRange: TRange; overload;
+var
+  P, M: PInteger;
+  L: Integer;
+begin
+  L := Self.Length;
+  if (L > 0) then
+  with Result do
+  begin
+    P := @Self[0];
+    start := P^;
+    stop := P^;
+    if (L = 1) then
+      Exit;
+    M := @Self[0];
+    Inc(M, L);
+    repeat
+      if (start > P^) then
+        start := P^
+      else if (stop < P^) then
+        stop := P^;
+      Inc(P);
+    until (P = M);
   end;
 end;
 

@@ -29,6 +29,7 @@ TPointArrayHelper = type helper for TPointArray
   function BoundingBox: TBox;
   function Boundaries: TBox;
   function Box: TBox;
+  function BBox: TBox; overload;
   function Boxed: TBox;
   function MinMax: TBox;
   function Region: TBox; overload;
@@ -356,6 +357,48 @@ begin
   for P in Self do
     Result.Create(Min(Result.X1, p.X), Min(Result.Y1, p.Y), Max(Result.X2, p.X), Max(Result.Y2, p.Y));
 end;
+
+{==============================================================================]
+  <BBox>
+  @action: Computes the minimal bounding box (TBox) that encloses all points
+           in the TPointArray. It calculates the minimum and maximum X and Y
+           coordinates among the points to define the box.
+  @note:   - If the array is empty, the resulting TBox will be uninitialized.
+           - If the array has only one point, the bounding box will be a
+             degenerate box where X1=X2 and Y1=Y2.
+           - Uses pointer-based iteration for efficiency.
+[==============================================================================}
+function TPointArrayHelper.BBox: TBox; overload;
+var
+  P, M: PPoint;
+  L: Integer;
+begin
+  L := Self.Length;
+  if (L > 0) then
+  with Result do
+  begin
+    P := @Self[0];
+    X1 := P^.X;
+    Y1 := P^.Y;
+    X2 := P^.X;
+    Y2 := P^.Y;
+    if (L = 1) then
+      Exit;
+    M := @Self[0];
+    Inc(M, L);
+    repeat
+      if (X1 > P^.X) then
+        X1 := P^.X
+      else if (X2 < P^.X) then
+        X2 := P^.X;
+      if (Y1 > P^.Y) then
+        Y1 := P^.Y
+      else if (Y2 < P^.Y) then
+        Y2 := P^.Y;
+      Inc(P);
+    until (P = M);
+  end;
+end; 
 
 {==============================================================================]
   <MinMax>

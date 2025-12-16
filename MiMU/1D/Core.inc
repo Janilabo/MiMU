@@ -43,8 +43,13 @@ function Comprised(const items: TArr): Boolean; overload;
 function Constant(const item: TVar): Boolean; overload;
 function Constant: Boolean; overload;
 function Contains(const item: TVar; const index: Integer = 0): Boolean; overload;
+function Contains(const item: TVar; const limit: TRange): Boolean; overload;
+function ContainsAtLeast(const item: TVar; const limit: Integer): Boolean; overload;
+function ContainsAtMost(const item: TVar; const limit: Integer): Boolean; overload;
 function Copied: TArr; overload;
 function Copy(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
+function Count(const item: TVar): Integer; overload;
+function Count(const items: TArr): Integer; overload;
 function Create(const item: TVar): TArr; overload;
 function Create(const aSize: Integer; const item: TVar): TArr; overload;
 function Deduplicated: TArr; overload;
@@ -116,6 +121,9 @@ function FromRight(const count: Integer; const index: Integer = 0): TArr; overlo
 function Get: TArr; overload;
 function Get(const ID: TIntegerArray): TArr; overload;
 function Get(const ID: TRange): TArr; overload;
+function GotAtLeast(const item: TVar; const limit: Integer): Boolean; overload;
+function GotAtMost(const item: TVar; const limit: Integer): Boolean; overload;
+function Got(const item: TVar; const limit: TRange): Boolean; overload;
 function Group: T2DArr; overload;
 function Group(const weight: TIntegerArray; const wSorted: Boolean = False): T2DArr; overload;
 function Group(const weight: TDoubleArray; const wSorted: Boolean = False): T2DArr; overload;
@@ -123,6 +131,9 @@ function Grouped(const groups: TIntegerArray): T2DArr; overload;
 function Groupify(const groups: TIntegerArray): T2DArr; overload;
 function Grouping(const groups: TIntegerArray): T2DArr; overload;
 function Grow(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload;
+function HasAtLeast(const item: TVar; const limit: Integer): Boolean; overload;
+function HasAtMost(const item: TVar; const limit: Integer): Boolean; overload;
+function Has(const item: TVar; const limit: TRange): Boolean; overload;
 function Holds(const chain: TArr): Boolean; overload;
 function Homogeneous(const item: TVar): Boolean; overload;
 function Homogeneous: Boolean; overload;
@@ -1292,6 +1303,96 @@ begin
 end;
 
 {==============================================================================]
+  <Contains>
+  @action: Determines whether the array contains a number of occurrences of item
+           within the inclusive range specified by limit (normalized).
+  @note:
+    - Stops scanning early if occurrences exceed the maximum or cannot reach the minimum.
+    - Uses 0-based indexing for arrays.
+    - limit.Normalize ensures that limit.start <= limit.stop.
+[==============================================================================}
+function THelper.Contains(const item: TVar; const limit: TRange): Boolean; overload;
+var
+  i, c, r: Integer;
+  n: TRange;
+begin
+  n := limit.Normalize;
+  c := 0;
+  r := Self.Length;
+  for i := 0 to High(Self) do
+  begin
+    if (Self[i] = item) then
+      Inc(c);
+    Dec(r);
+    if (c > n.stop) then
+      Exit(False);
+    if ((c + r) < n.start) then
+      Exit(False);
+  end;
+  Result := InRange(c, n.start, n.stop);
+end;
+
+{==============================================================================]
+  <ContainsAtLeast>
+  @action: Determines whether the array contains at least limit occurrences of item.
+  @note:
+    - Returns True if limit < 1.
+    - Stops scanning early once the limit is reached.
+    - Performs early-exit optimization if remaining elements cannot reach the limit.
+    - Uses 0-based indexing for arrays.
+[==============================================================================}
+function THelper.ContainsAtLeast(const item: TVar; const limit: Integer): Boolean; overload;
+var
+  i, c, r: Integer;
+begin
+  if (limit < 1) then
+    Exit(True);
+  c := 0;
+  r := Self.Length;
+  for i := 0 to High(Self) do
+  begin
+    if (Self[i] = item) then
+      Inc(c);
+    Dec(r);
+    if (c >= limit) then
+      Exit(True);
+    if ((c + r) < limit) then
+      Exit(False);
+  end;
+  Result := False;
+end;
+
+{==============================================================================]
+  <ContainsAtMost>
+  @action: Determines whether the array contains at most limit occurrences of item.
+  @note:
+    - Returns False if limit < 0.
+    - Stops scanning early once the limit is exceeded.
+    - Performs early-exit optimization if remaining elements cannot exceed the limit.
+    - Uses 0-based indexing for arrays.
+[==============================================================================}
+function THelper.ContainsAtMost(const item: TVar; const limit: Integer): Boolean; overload;
+var
+  i, c, r: Integer;
+begin
+  if (limit < 0) then
+    Exit(False);
+  c := 0;
+  r := Self.Length;
+  for i := 0 to High(Self) do
+  begin
+    if (Self[i] = item) then
+      Inc(c);
+    Dec(r);
+    if (c > limit) then
+      Exit(False);
+    if ((c + r) <= limit) then
+      Exit(True);
+  end;
+  Result := True;
+end;
+
+{==============================================================================]
   <Copy>
   @action: Returns copy of an array arr.
   @note: Contains support for starting index and count. -1 count uses Length(arr)!
@@ -1337,6 +1438,44 @@ begin
   end;
   if l.Odd then
     Result[h] := Self[h];
+end;
+
+{==============================================================================]
+  <Count>
+  @action: Counts how many times the specified item appears in the array.
+  @note:
+    - Returns 0 if the array is empty or the item is not found.
+    - Uses zero-based indexing (0..High(Self)).
+    - Single-pass, no extra memory allocation.
+[==============================================================================}
+function THelper.Count(const item: TVar): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    if (Self[i] = item) then
+      Inc(Result);
+end;
+
+{==============================================================================]
+  <Count>
+  @action: Counts how many elements of the array appear in the given set of items.
+  @note:
+    - Returns 0 if either the array or the items array is empty.
+    - Each match increments the count once; duplicates in items are considered normally.
+    - Uses zero-based indexing (0..High(Self)).
+    - Single-pass over Self, but each element performs a search over items (O(n*m)).
+[==============================================================================}
+function THelper.Count(const items: TArr): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  if (items.Length > 0) then
+  for i := 0 to High(Self) do
+    if items.Contains(Self[i]) then
+      Inc(Result);
 end;
 
 {==============================================================================]
@@ -2769,6 +2908,46 @@ begin
 end;
 
 {==============================================================================]
+  <GotAtLeast>
+  @action: Determines if the array contains at least a specified number of occurrences of an item.
+  @note:
+    - Uses the Count(item) function internally.
+    - Returns False if limit is greater than the actual occurrences.
+    - Single-pass (delegated to Count) and zero-based indexing.
+[==============================================================================}
+function THelper.GotAtLeast(const item: TVar; const limit: Integer): Boolean; overload;
+begin
+  Result := (Self.Count(item) >= limit);
+end;
+
+{==============================================================================]
+  <GotAtMost>
+  @action: Determines if the array contains at most a specified number of occurrences of an item.
+  @note:
+    - Uses the Count(item) function internally.
+    - Returns False if the occurrences exceed the specified limit.
+    - Single-pass (delegated to Count) and zero-based indexing.
+[==============================================================================}
+function THelper.GotAtMost(const item: TVar; const limit: Integer): Boolean; overload;
+begin
+  Result := (Self.Count(item) <= limit);
+end;
+
+{==============================================================================]
+  <Got>
+  @action: Determines if the array contains a number of occurrences of an item within a specified inclusive range.
+  @note:
+    - Uses the Count(item) function internally.
+    - The range is represented by TRange, which must implement Contains.
+    - Returns True if Count(item) is within [limit.start, limit.stop].
+    - Single-pass (delegated to Count) and zero-based indexing.
+[==============================================================================}
+function THelper.Got(const item: TVar; const limit: TRange): Boolean; overload;
+begin
+  Result := limit.Contains(Self.Count(item));
+end; 
+
+{==============================================================================]
   <Group>
   @action: Groups array arr to 2D array by items.
   @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
@@ -2952,6 +3131,87 @@ begin
   Result := Self.Size;
   SetLength(Self, (Result + 1));
   Self[Result] := item;
+end;
+
+{==============================================================================]
+  <HasAtLeast>
+  @action: Determines whether the array contains at least limit occurrences of item.
+  @note:
+    - Returns True as soon as the count reaches limit (early exit).
+    - Returns False if the array contains fewer than limit occurrences.
+    - Uses zero-based indexing (0..High(Self)).
+    - Optimized for large arrays; no temporary allocations are made.
+[==============================================================================}
+function THelper.HasAtLeast(const item: TVar; const limit: Integer): Boolean; overload;
+var
+  i, c: Integer;
+begin
+  c := 0;
+  for i := 0 to High(Self) do
+    if (Self[i] = item) then
+    case (c >= limit) of
+      True: Exit(True);
+      False: Inc(c);
+    end;
+  Result := (c >= limit);
+end;
+
+{==============================================================================]
+  <HasAtMost>
+  @action: Determines whether the array contains at most limit occurrences of item.
+  @note:
+    - Returns False if the number of occurrences exceeds limit.
+    - Early exit is used for efficiency.
+    - Uses zero-based indexing (0..High(Self)).
+    - Optimized for large arrays; no temporary allocations are made.
+[==============================================================================}
+function THelper.HasAtMost(const item: TVar; const limit: Integer): Boolean; overload;
+var
+  i, c: Integer;
+begin
+  c := 0;
+  for i := 0 to High(Self) do
+    if (Self[i] = item) then
+    case (c > limit) of
+      True: Exit(False);
+      False: Inc(c);
+    end;
+  Result := (c <= limit);
+end;
+
+{==============================================================================]
+  <Has>
+  @action: Determines whether the number of occurrences of item in the array
+           falls within the inclusive range specified by limit.
+  @note:
+    - `limit` is normalized first, ensuring that limit.start <= limit.stop.
+    - Early exits are used for efficiency:
+        * Exits False if the count exceeds the upper bound (`limit.stop`).
+        * Exits False if it becomes impossible to reach the lower bound (limit.start)
+          given the remaining elements in the array.
+    - Uses zero-based indexing (0..High(Self)).
+    - Optimized for large arrays; no temporary allocations are made.
+[==============================================================================}
+function THelper.Has(const item: TVar; const limit: TRange): Boolean; overload;
+var
+  i, c, r: Integer;
+  n: TRange;
+begin
+  n := limit.Normalize;
+  c := 0;
+  r := Self.Length;
+  for i := 0 to High(Self) do
+  begin
+    if (Self[i] = item) then
+    case(c > n.stop) of
+      True: Exit(False);
+      False: Inc(c);
+    end;
+    Dec(r);
+    if ((c + r) < n.start) then
+      Exit(False);
+  end;
+  Result := InRange(c, n.start, n.stop);
 end;
 
 {==============================================================================]
