@@ -103,6 +103,9 @@ TStringHelper = type helper for string
   function TrimRight(const t: Char = #32): string;
   function Trim(const t: Char = #32): string;
   function AsTRange: TRange;
+  function ContainsAtLeast(const item: string; const limit: Integer): Boolean; overload;
+  function ContainsAtMost(const item: string; const limit: Integer): Boolean; overload;
+  function ContainsBetween(const item: string; const limit: TRange): Boolean; overload;
   function Void: Boolean;
   function ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange;
   function IsBinary(const emptyTrue: Boolean = True): Boolean;
@@ -127,6 +130,8 @@ TStringHelper = type helper for string
   function Lined: TStringArray; overload;
   function LineArray: TStringArray; overload;
   function LineArr: TStringArray; overload;
+  function LinesArray: TStringArray; overload;
+  function LinesArr: TStringArray; overload;
   function LineList: TStringArray; overload;
   function LinesList: TStringArray; overload;
   function Line(const number: Integer): string; overload;
@@ -155,6 +160,10 @@ TStringHelper = type helper for string
   function LineDelete(const lineNumber: Integer): string; overload;
   function LineIsEmpty(const lineNumber: Integer): Boolean; overload;
   function LinesNormalized(const newLine: string = sLineBreak): string; overload;
+  function LineClamp(const lineNumber: Integer): Integer; overload;
+  function LineFixed(const lineNumber: Integer): Integer; overload;
+  function LineValid(const lineNumber: Integer): Boolean; overload;
+  function LineExists(const lineNumber: Integer): Boolean; overload;
   function LineEx(const number: Integer; const lineBreak: string): string; overload;
   function LineEx(const number: Integer; const lineBreak: TStringArray): string; overload;
   function LineEx(const number: Integer): string; overload;
@@ -573,6 +582,114 @@ begin
   if (e = 0) then
     Exit('');
   Result := Self.Get((b + l), (e - (b + l)));
+end;
+
+{==============================================================================]
+  <ContainsAtLeast>
+  @action: Determines whether the string contains at least limit occurrences of item.
+  @note:
+    - Returns False if item is empty or limit < 1.
+    - Stops scanning early once the limit is reached.
+    - Performs an early-exit optimization if remaining characters cannot reach the limit.
+    - Uses 1-based indexing.
+[==============================================================================}
+function TStringHelper.ContainsAtLeast(const item: string; const limit: Integer): Boolean; overload;
+var
+  i, c, r, l, s: Integer;
+begin
+  l := Length(item);
+  if ((l = 0) or (limit < 1)) then
+    Exit(False);
+  c := 0;
+  i := 1;
+  s := Length(Self);
+  while (i <= s) do
+  begin
+    i := Self.Pos(item, i);
+    if (i = 0) then
+      Break;
+    Inc(c);
+    if (c >= limit) then
+      Exit(True);
+    r := (s - ((i + l) - 1));
+    if ((r + c) < limit) then
+      Exit(False);
+    Inc(i, l);
+  end;
+  Result := False;
+end;
+
+{==============================================================================]
+  <ContainsAtMost>
+  @action: Determines whether the string contains at most limit occurrences of item.
+  @note:
+    - Returns False if item is empty or limit < 0.
+    - Stops scanning early once the limit is exceeded.
+    - Performs an early-exit optimization if remaining characters cannot exceed the limit.
+    - Uses 1-based indexing.
+[==============================================================================}
+function TStringHelper.ContainsAtMost(const item: string; const limit: Integer): Boolean; overload;
+var
+  i, c, r, l, s: Integer;
+begin
+  l := Length(item);
+  if ((l = 0) or (limit < 0)) then
+    Exit(False);
+  c := 0;
+  i := 1;
+  s := Length(Self);
+  while (i <= s) do
+  begin
+    i := Self.Pos(item, i);
+    if (i = 0) then
+      Break;
+    Inc(c);
+    if (c > limit) then
+      Exit(False);
+    r := (s - ((i + l) - 1));
+    if ((r + c) <= limit) then
+      Exit(True);
+    Inc(i, l);
+  end;
+  Result := True;
+end;
+
+{==============================================================================]
+  <ContainsBetween>
+  @action: Determines whether the string contains a number of item occurrences
+           within the inclusive range specified by limit (normalized).
+  @note:
+    - Returns False if item is empty.
+    - Stops scanning early if occurrences exceed the maximum or cannot reach the minimum.
+    - Uses 1-based indexing.
+    - limit.Normalize ensures that limit.start <= limit.stop.
+[==============================================================================}
+function TStringHelper.ContainsBetween(const item: string; const limit: TRange): Boolean; overload;
+var
+  i, c, r, l, s: Integer;
+  n: TRange;
+begin
+  l := Length(item);
+  if (l = 0) then
+    Exit(False);
+  n := limit.Normalize;
+  c := 0;
+  i := 1;
+  s := Length(Self);
+  while (i <= s) do
+  begin
+    i := Self.Pos(item, i);
+    if (i = 0) then
+      Break;
+    Inc(c);
+    if (c > n.stop) then
+      Exit(False);
+    r := (s - ((i + l) - 1));
+    if ((c + (r div l)) < n.start) then
+      Exit(False);
+    Inc(i, l);
+  end;
+  Result := InRange(c, n.start, n.stop);
 end;
 
 {==============================================================================]
@@ -2401,6 +2518,79 @@ begin
 end;
 
 {==============================================================================]
+  <LinesArray>
+  @action: Splits the string into an array of lines, returning each line as a separate
+           string element. Supports CR (#13), LF (#10), and CRLF (#13#10) line endings.
+  @note:
+    - Line-ending characters are **not included** in the resulting array elements.
+    - Consecutive line breaks produce empty string elements in the array.
+    - If the string ends with a line-ending character, a final empty string is
+      included to represent the empty line.
+    - The function dynamically appends lines to the result array during iteration.
+    - Works correctly for empty strings (returns an empty array).
+[==============================================================================}
+function TStringHelper.LinesArray: TStringArray;
+var
+  S, P, L: Integer;
+begin
+  S := 1;
+  L := Length(Self);
+  while (S <= L) do
+  begin
+    P := S;
+    while ((P <= L) and (not (Self[P] in [#10, #13]))) do
+      Inc(P);
+    Result := (Result + [Copy(Self, S, (P - S))]);
+    if ((P <= L) and (Self[P] = #13) and (P < L) and (Self[P + 1] = #10)) then
+      Inc(P);
+    S := (P + 1);
+  end;
+  if ((L > 0) and (Self[L] in [#10, #13])) then
+    Result := (Result + ['']);
+end;
+
+{==============================================================================]
+  <LinesArr>
+  @action: Splits the string into an array of lines, returning each line as a separate
+           string element. Line-ending characters (CR, LF, or CRLF) are **not included**
+           in the resulting array.
+  @note:
+    - Handles all standard line endings: CR (#13), LF (#10), and CRLF (#13#10).
+    - Consecutive line breaks produce empty string elements in the array.
+    - For an empty string, the result is an empty array.
+    - The implementation preallocates the array for efficiency and fills it
+      while scanning the string once.
+    - Uses pointer arithmetic and indexing internally; the resulting array size
+      is trimmed to the actual number of lines.
+[==============================================================================}
+function TStringHelper.LinesArr: TStringArray; overload;
+var
+  L, I, S, R: Integer;
+begin
+  L := Length(Self);
+  S := 1;
+  R := 0;
+  SetLength(Result, (L + 1));
+  I := 1;
+  while (I <= L) do
+  begin
+    if ((Self[I] = #10) or (Self[I] = #13)) then
+    begin
+      Result[R.Increase] := Copy(Self, S, (I - S));
+      if ((Self[I] = #13) and (I < L) and (Self[I + 1] = #10)) then
+        Inc(I);
+      S := (I + 1);
+    end;
+    Inc(I);
+  end;
+  if (S <= L) then
+    Result[R.Increase] := Copy(Self, S, ((L - S) + 1))
+  else if ((L > 0) and (Self[L] in [#10, #13])) then
+    Result[R.Increase] := '';
+  SetLength(Result, R);
+end;
+
+{==============================================================================]
   <LineList>
   @action: Converts a multi-line string into an array of strings.
            Each line in the string becomes an element in the resulting array.
@@ -3631,6 +3821,48 @@ begin
     end;
   end;
   SetLength(Result, R);
+end;
+
+{==============================================================================]
+  <LineClamp>
+  @action: Returns a line number clamped to the valid range of the string.
+           If the requested line number is invalid (less than 1), returns 0.
+           If the requested line number exceeds the total number of lines, returns 0.
+           Otherwise, returns the requested line number.
+  @note:
+    - Line numbers are 1-based.
+    - 0 indicates an invalid or non-existent line.
+    - Useful for query functions that need to signal invalid lines.
+[==============================================================================}
+function TStringHelper.LineClamp(const lineNumber: Integer): Integer; overload;
+begin
+  if (lineNumber < 1) then
+    Exit(0);
+  Result := Self.LineCount;
+  if (lineNumber > Result) then
+    Exit;
+  Result := lineNumber;
+end;
+
+{==============================================================================]
+  <LineFixed>
+  @action: Returns a line number adjusted to the valid range of the string.
+           If the requested line number is less than 1, returns 1 (first line).
+           If the requested line number exceeds the total number of lines, returns the last line.
+           Otherwise, returns the requested line number.
+  @note:
+    - Line numbers are 1-based.
+    - Never returns 0; always returns a valid line.
+    - Useful for editor-like functions where a valid line must always be returned.
+[==============================================================================}
+function TStringHelper.LineFixed(const lineNumber: Integer): Integer; overload;
+begin
+  if (lineNumber < 1) then
+    Exit(1);
+  Result := Self.LineCount;
+  if (lineNumber > Result) then
+    Exit;
+  Result := lineNumber;
 end; 
 
 {==============================================================================]
@@ -3702,7 +3934,55 @@ begin
   if (R.start = 0) then
     Exit(Self);
   Result := Copy(Self, 1, (R.start - 1)) + Copy(Self, (R.stop + 1), High(Integer));
-end; 
+end;
+
+{==============================================================================]
+  <LineValid>
+  @action:
+    Checks whether the given 1-based line number exists in the string.
+  @note:
+    - Line numbers are 1-based.
+    - Returns True if 1 <= LineNumber <= LineCount.
+    - Returns False if LineNumber < 1 or LineNumber > LineCount.
+[==============================================================================}
+function TStringHelper.LineValid(const lineNumber: Integer): Boolean; overload;
+begin
+  Result := ((lineNumber >= 1) and (lineNumber <= Self.LineCount));
+end;
+
+{==============================================================================]
+  <LineExists>
+  @action:
+    Determines whether the given 1-based line number exists in the string.
+    Optimized: scans only until the requested line is found.
+  @note:
+    - Line numbers are 1-based.
+    - Returns True if the requested line exists, False otherwise.
+    - Efficient for large strings; does not count all lines.
+[==============================================================================}
+function TStringHelper.LineExists(const lineNumber: Integer): Boolean; overload;
+var
+  i, l, c: Integer;
+begin
+  if (lineNumber < 1) then
+    Exit(False);
+  l := Length(Self);
+  if (l = 0) then
+    Exit(lineNumber = 1);
+  c := 1;
+  i := 0;
+  while ((i.Increment <= l) and (c < lineNumber)) do
+  case Self[i] of
+    #10: Inc(c);
+    #13:
+    begin
+      Inc(c);
+      if ((i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+    end;
+  end;
+  Result := (c >= lineNumber);
+end;
 
 {==============================================================================]
   <LineEx>
