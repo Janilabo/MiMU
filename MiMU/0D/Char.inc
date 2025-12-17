@@ -30,6 +30,9 @@ TCharHelper = type helper for Char
   function Upper: Char;
   function Lower: Char;
   function CountIn(const target: string): Integer; overload;
+  function OccurrencesIn(const target: string): Integer; overload;
+  function Occurs(const target: string): Integer; overload;
+  function AmountIn(const target: string): Integer; overload;
   function Tokenize(const str: string): TStringArray; overload;
 end;
 {$ENDIF}
@@ -263,6 +266,67 @@ begin
   Result := 0;
   for i := 1 to Length(target) do
     Inc(Result, Ord(target[i] = Self));
+end;
+
+{==============================================================================]
+  <OccurrencesIn>
+  @action: Returns the number of times this character appears in the specified string.
+  @note: Performs a linear scan of the string. Operates on code units, not grapheme clusters.
+[==============================================================================}
+function TCharHelper.OccurrencesIn(const target: string): Integer; overload;
+var
+  P, E: PChar;
+begin
+  Result := 0;
+  P := PChar(target);
+  E := (P + Length(target));
+  while (P < E) do
+  begin
+    if (P^ = Self) then
+      Inc(Result);
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
+  <Occurs>
+  @action: Returns the number of times this character appears in the specified string.
+  @note: Performs a linear scan of the string. Operates on code units, not grapheme clusters.
+[==============================================================================}
+function TCharHelper.Occurs(const target: string): Integer; overload;
+var
+  P, E: PChar;
+begin
+  Result := 0;
+  P := PChar(target);
+  E := (P + Length(target));
+  while (P < E) do
+  begin
+    Result := (Result + Ord(P^ = Self));
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
+  <AmountIn>
+  @action: Returns the number of occurrences of this character in the specified string.
+  @note: Uses repeated StrScan calls; efficient when the character occurs infrequently.
+[==============================================================================}
+function TCharHelper.AmountIn(const target: string): Integer; overload;
+var
+  P, F: PChar;
+begin
+  Result := 0;
+  if (target = '') then
+    Exit;
+  P := PChar(target);
+  repeat
+    F := StrScan(P, Self);
+    if (F = nil) then
+	  Exit;
+    Inc(Result);
+    P := (F + 1);
+  until False;
 end;
 
 function TCharHelper.Tokenize(const str: string): TStringArray; overload;
