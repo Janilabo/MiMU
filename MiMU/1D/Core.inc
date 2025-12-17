@@ -380,6 +380,8 @@ function Unionize(const items: TArr; const oAscending: Boolean = True): TArr; ov
 function Subtract(const items: TArr; const oAscending: Boolean = True): TArr; overload;
 function Intersect(const items: TArr; const oAscending: Boolean = True): TArr; overload;
 function Spanning(const item: TVar; const oAscending: Boolean = True): TRange; overload;
+function CountOf(const items: TArr; const iAscending: Boolean = True): Integer; overload;
+function Counted(const items: TArr; const iSorted: Boolean = False): Integer; overload;
 function MinItem: TVar; overload;
 function MinItem(const null: TVar): TVar; overload;
 function MaxItem: TVar; overload;
@@ -9265,6 +9267,72 @@ begin
     Dec(Result.stop);
   if (Result.start > Result.stop) then
     Result.Create(Low(Integer));
+end;
+
+{==============================================================================]
+  <CountOf>
+  @action: Counts how many elements in Self are present in the array items, assuming
+           items is already sorted in either ascending or descending order.
+  @note:
+    - Membership testing is performed using binary search.
+    - Items must be sorted prior to calling this function.
+    - The iAscending flag specifies the sort direction of Items.
+    - Each element in Self is counted independently; duplicates in Self are
+      counted multiple times if present in Items.
+    - Time complexity: O(N log M), where N = Length(Self),
+      M = Length(Items).
+[==============================================================================}
+function THelper.CountOf(const items: TArr; const iAscending: Boolean = True): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  if (items.Length > 0) then
+  for i := 0 to High(Self) do
+    if (items.WithinBounds(Self[i], iAscending) and (items.BinarySearchBy(Self[i], iAscending) > -1)) then
+      Inc(Result);
+end;
+
+{==============================================================================]
+  <Counted>
+  @action: Counts how many elements in Self are present in the array items, optionally
+           sorting items internally if it is not already sorted.
+  @note:
+    - If iSorted = False, Items is copied and sorted before searching.
+    - If iSorted = True, Items is assumed to be pre-sorted.
+    - Binary search is used for membership testing.
+    - Sort order is automatically inferred when Items is sorted.
+    - Each element in Self is counted independently; duplicates in Self are
+      counted multiple times if present in Items.
+    - Time complexity:
+        * iSorted = False: O(M log M + N log M)
+        * iSorted = True : O(N log M)
+      where N = Length(Self), M = Length(Items).
+[==============================================================================}
+function THelper.Counted(const items: TArr; const iSorted: Boolean = False): Integer; overload;
+var
+  s: TArr;
+  i: Integer;
+  a: Boolean;
+begin
+  Result := 0;
+  if ((items.Length > 0) and (Self.Length > 0)) then
+  case iSorted of
+    False:
+	  begin
+	    s := items.QuickSorted;
+      for i := 0 to High(Self) do
+        if (items.WithinBounds(Self[i]) and (items.BinarySearchBy(Self[i]) > -1)) then
+          Inc(Result);
+    end;
+    True:
+    begin
+      a := (items[0] <= items[High(items)]);
+      for i := 0 to High(Self) do
+        if (items.WithinBounds(Self[i], a) and (items.BinarySearchBy(Self[i], a) > -1)) then
+          Inc(Result);
+    end;
+  end;
 end;
 
 {==============================================================================]
