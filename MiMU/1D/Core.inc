@@ -149,6 +149,7 @@ function Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indices(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
 function Inject(const items: TArr; const index: Integer = 2147483647): Integer; overload;
+function IntersectionCounted(const items: TArr): Integer; overload;
 function Keep(const items: TArr; const index: Integer = 0): TArr; overload;
 function Kill: Integer; overload;
 function Last: Integer; overload;
@@ -378,6 +379,7 @@ function Peaks: TIntegerArray; overload;
 function Valleys: TIntegerArray; overload;
 function Unionize(const items: TArr; const oAscending: Boolean = True): TArr; overload;
 function Subtract(const items: TArr; const oAscending: Boolean = True): TArr; overload;
+function IntersectionCount(const items: TArr; const oAscending: Boolean = True): Integer; overload;
 function Intersect(const items: TArr; const oAscending: Boolean = True): TArr; overload;
 function Spanning(const item: TVar; const oAscending: Boolean = True): TRange; overload;
 function CountOf(const items: TArr; const iAscending: Boolean = True): Integer; overload;
@@ -3517,7 +3519,43 @@ begin
     Self[i + l] := Self[i];
   for i := 0 to (l - 1) do
     Self[p + i] := items[i];
-end;    
+end;
+
+{==============================================================================]
+  <IntersectionCounted>
+  @action: Counts the number of distinct elements in Self that also exist in Items.
+           Each element is counted at most once, regardless of duplicates in either array.
+  @note:
+    - Does not require the arrays to be sorted.
+    - Uses a hash-based dictionary to track membership; time complexity is roughly O(N + M), 
+      where N = Length(Self), M = Length(Items).
+    - Works for any type supported by TVar that can be used as a dictionary key
+      (must support hashing and equality comparison).
+    - Each matched element is removed from the dictionary to ensure distinct counting.
+    - Returns 0 if either array is empty.
+[==============================================================================}
+function THelper.IntersectionCounted(const items: TArr): Integer; overload;
+var
+  S: specialize TDictionary<TVar, Byte>;
+  i: Integer;
+begin
+  Result := 0;
+  if (items.Empty or Self.Empty) then
+    Exit;
+  S := specialize TDictionary<TVar, Byte>.Create;
+  try
+    for i := 0 to High(items) do
+      S.TryAdd(items[i], 0);
+    for i := 0 to High(Self) do
+      if S.ContainsKey(Self[i]) then
+      begin
+        Inc(Result);
+        S.Remove(Self[i]);
+      end;
+  finally
+    S.Free;
+  end;
+end;
 
 {==============================================================================]
   <Keep>
@@ -9235,6 +9273,46 @@ begin
       Inc(j);
   end;
   SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <IntersectionCount>
+  @action: Counts the number of elements that appear in both Self and Items, treating
+           duplicates according to multiset semantics (each match consumes one element
+           from each array).
+  @note:
+    - Both Self and Items must be sorted in the same order (ascending or
+      descending) as indicated by oAscending.
+    - Uses a linear merge algorithm; time complexity is O(N + M), where N =
+      Length(Self), M = Length(Items).
+    - Each element in Self can match at most one element in Items.
+    - Duplicates in either array are handled pairwise:
+        e.g., Self = [2,2,2], Items = [2,2] → Result = 2
+    - Returns 0 if either array is empty.
+[==============================================================================}
+function THelper.IntersectionCount(const items: TArr; const oAscending: Boolean = True): Integer; overload;
+var
+  h, s, i, j: Integer;
+begin
+  Result := 0;
+  i := 0;
+  j := 0;
+  s := High(Self);
+  h := High(Items);
+  while ((i <= s) and (j <= h)) do
+  case (Self[i] = items[j]) of
+    True:
+    begin
+      Inc(Result);
+      Inc(i);
+      Inc(j);
+    end;
+    False:
+    if ((Self[i] < items[j]) xor (not oAscending)) then
+      Inc(i)
+    else
+      Inc(j);
+  end;
 end;
 
 {==============================================================================]
