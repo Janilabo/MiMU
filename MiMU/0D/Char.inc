@@ -33,6 +33,7 @@ TCharHelper = type helper for Char
   function OccurrencesIn(const target: string): Integer; overload;
   function Occurs(const target: string): Integer; overload;
   function AmountIn(const target: string): Integer; overload;
+  function AppearsIn(const target: string): Integer; overload;
   function Tokenize(const str: string): TStringArray; overload;
 end;
 {$ENDIF}
@@ -327,6 +328,30 @@ begin
     Inc(Result);
     P := (F + 1);
   until False;
+end;
+
+{==============================================================================]
+  <AppearsIn>
+  @action: Returns the number of times this character appears in the specified string.
+  @note: Uses a linear scan with loop unrolling for improved performance; operates on code units.
+[==============================================================================}
+function TCharHelper.AppearsIn(const target: string): Integer; overload;
+var
+  P, E: PChar;
+begin
+  Result := 0;
+  P := PChar(target);
+  E := (P + Length(target));
+  while ((PtrUInt(E) - PtrUInt(P)) > 3) do
+  begin
+    Inc(Result, (Ord(P[0] = Self) + Ord(P[1] = Self) + Ord(P[2] = Self) + Ord(P[3] = Self)));
+    Inc(P, 4);
+  end;
+  while (P < E) do
+  begin
+    Inc(Result, Ord(P^ = Self));
+    Inc(P);
+  end;
 end;
 
 function TCharHelper.Tokenize(const str: string): TStringArray; overload;

@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function TArray(const aSize: Integer = 1): TArr; overload;
 function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
+function AppearsIn(const target: TArr): Integer; overload;
 {$ENDIF}
 
 {$IFDEF METHODS}
@@ -45,6 +46,28 @@ begin
     for j := 0 to High(Result[i]) do
       Result[i][j] := Self;
   end;
+end;
+
+{==============================================================================]
+ <AppearsIn>
+ @action: Creates 2D array with Self.
+ @note: None.
+[==============================================================================}
+function THelper.AppearsIn(const target: TArr): Integer; overload;
+var
+  R: TRange;
+begin
+  Result := 0;
+  if target.Empty then
+    Exit;
+  R.Create(0, High(target));
+  while ((R.stop - R.start) > 3) do
+  begin
+    Inc(Result, (Ord(target[R.start] = Self) + Ord(target[R.start + 1] = Self) + Ord(target[R.start + 2] = Self) + Ord(target[R.start + 3] = Self)));
+    Inc(R.start, 4);
+  end;
+  while (R.start <= R.stop) do
+    Inc(Result, Ord(target[R.start.Increase] = Self));
 end;
 
 function Swap(var A, B: TVar): Boolean; overload; inline; var C: TVar; {$DEFINE Skeleton_Swap}{$I Skeletons.inc}{$UNDEF Skeleton_Swap}
