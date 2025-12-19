@@ -70,8 +70,7 @@ TPoint = record
   function Omits(const val: Integer): Boolean; 	
 end;
 TPointCompare = specialize TCompare<TPoint>;
-TPointArray = array of TPoint;
-T2DPointArray = array of TPointArray;
+{$I Core.inc}
 PPoint = ^TPoint;
 _TPoint = class
 public
@@ -118,8 +117,7 @@ operator <=(const a, b: TPoint): Boolean;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-TPointHelper = type helper for TPoint
-  {$I Core.inc}
+{$I Core.inc}
   function Inside(const bx: TBox): Boolean; inline;
   function Clamp(const area: TBox): TPoint;
   function Create: TPoint; overload;

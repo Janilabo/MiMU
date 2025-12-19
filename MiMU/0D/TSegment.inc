@@ -1,3 +1,9 @@
+{$DEFINE TVar := TSegment}
+{$DEFINE TArr := TSegmentArray}
+{$DEFINE T2DArr := T2DSegmentArray}
+{$DEFINE THelper := TSegmentHelper}
+{$UNDEF Sortable}
+
 {$IFDEF TYPES}
 TSegment = record
   A, B: TPoint;
@@ -11,13 +17,22 @@ TSegment = record
   function Points: TPointArray; 
   function Pixels(const steps: Integer = 2147483647): TPointArray; 
 end;
-TSegmentArray = array of TSegment;
-T2DSegmentArray = array of TSegmentArray;
+TSegmentCompare = specialize TCompare<TSegment>;
+{$I Core.inc}
+{$ENDIF}
+
+{$IFDEF HELPERS}
+{$I Core.inc}
+end;
 {$ENDIF}
 
 {$IFDEF OPERATORS}  
 operator =(const a, b: TSegment): Boolean;
 operator <>(const a, b: TSegment): Boolean;
+{$ENDIF}
+
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$I Core.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

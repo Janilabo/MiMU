@@ -184,8 +184,7 @@ TBox = record
   function Omits(const val: Integer): Boolean; 
 end;
 TBoxCompare = specialize TCompare<TBox>;
-TBoxArray = array of TBox;
-T2DBoxArray = array of TBoxArray;
+{$I Core.inc}
 _TBox = class
 public
   class function Create(const minX, minY, maxX, maxY: Integer): TBox; overload; 
@@ -197,8 +196,7 @@ end;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-TBoxHelper = type helper for TBox
-  {$I Core.inc}
+{$I Core.inc}
   function Create: TBox; overload;
   function Inside(const targets: TBoxArray): Boolean; overload;
   function AsGrid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;

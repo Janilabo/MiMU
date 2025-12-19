@@ -5,13 +5,12 @@
 {$UNDEF Sortable}
 
 {$IFDEF TYPES}
-TBooleanArray = array of Boolean;
-T2DBooleanArray = array of TBooleanArray;
+TBooleanCompare = specialize TCompare<Boolean>;
+{$I Core.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
-TBooleanHelper = type helper for Boolean
-  {$I Core.inc}
+{$I Core.inc}
   function ToString: string;
   function Binary: Char;
   function BinaryDigit: Integer;

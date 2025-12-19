@@ -11,8 +11,7 @@ end;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-TBooleanArrayHelper = type helper for TBooleanArray
-  {$I Core.inc}
+{$I Core.inc}
   function Select(const sTrue, sFalse: Integer): TIntegerArray; overload;
   function Select(const sTrue, sFalse: Double): TDoubleArray; overload;
   function Select(const sTrue, sFalse: string): TStringArray; overload;

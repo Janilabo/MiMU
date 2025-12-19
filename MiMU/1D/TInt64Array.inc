@@ -5,8 +5,7 @@
 {$DEFINE Sortable}
 
 {$IFDEF HELPERS}
-TInt64ArrayHelper = type helper for TInt64Array
-  {$I Core.inc}
+{$I Core.inc}
 end;
 {$ENDIF}
 

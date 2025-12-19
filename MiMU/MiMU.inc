@@ -37,6 +37,10 @@ type
   {$I 1D\TBoxArray.inc}
   {$I 1D\TRangeArray.inc}
   {$I 1D\TInt64Array.inc}
+  {$I 1D\TConnectionArray.inc}
+  {$I 1D\TCircleArray.inc}
+  {$I 1D\TTriangleArray.inc}
+  {$I 1D\TSegmentArray.inc}
 {$ENDIF}
 
 {$IFNDEF T1D}
@@ -53,6 +57,10 @@ type
   {$I 2D\T2DBoxArray.inc}
   {$I 2D\T2DRangeArray.inc}
   {$I 2D\T2DInt64Array.inc}
+  {$I 2D\T2DConnectionArray.inc}
+  {$I 2D\T2DCircleArray.inc}
+  {$I 2D\T2DTriangleArray.inc}
+  {$I 2D\T2DSegmentArray.inc}
 {$ENDIF}
 
 {$IFDEF CLASSES}

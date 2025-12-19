@@ -1,14 +1,29 @@
+{$DEFINE TVar := TTriangle}
+{$DEFINE TArr := TTriangleArray}
+{$DEFINE T2DArr := T2DTriangleArray}
+{$DEFINE THelper := TTriangleHelper}
+{$UNDEF Sortable}
+
 {$IFDEF TYPES}
 TTriangle = record
   A, B, C: TPoint;
 end;
-TTriangleArray = array of TTriangle;
-T2DTriangleArray = array of TTriangleArray;
+TTriangleCompare = specialize TCompare<TTriangle>;
+{$I Core.inc}
+{$ENDIF}
+
+{$IFDEF HELPERS}
+{$I Core.inc}
+end;
 {$ENDIF}
 
 {$IFDEF OPERATORS}
 operator =(const a, b: TTriangle): Boolean;
 operator <>(const a, b: TTriangle): Boolean;
+{$ENDIF}
+
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$I Core.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

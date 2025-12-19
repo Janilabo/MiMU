@@ -1,7 +1,7 @@
-{$DEFINE TVar := Boolean}
-{$DEFINE TArr := TBooleanArray}
-{$DEFINE T2DArr := T2DBooleanArray}
-{$DEFINE THelper := T2DBooleanArrayHelper}
+{$DEFINE TVar := TTriangle}
+{$DEFINE TArr := TTriangleArray}
+{$DEFINE T2DArr := T2DTriangleArray}
+{$DEFINE THelper := T2DTriangleArrayHelper}
 {$UNDEF Sortable}
 
 {$IFDEF HELPERS}

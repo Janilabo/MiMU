@@ -16,8 +16,7 @@ end;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-TIntegerArrayHelper = type helper for TIntegerArray
-  {$I Core.inc}
+{$I Core.inc}
   function Bounds: TRange; overload;
   function Bounds(var aSize: Integer): TRange; overload;
   function BRange: TRange; overload;

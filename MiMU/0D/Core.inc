@@ -1,13 +1,19 @@
+{$IFDEF TYPES}
+TArr = array of TVar;
+T2DArr = array of TArr;
+{$ENDIF}
+
 {$IFDEF HELPERS}
-function TArray(const aSize: Integer = 1): TArr; overload;
-function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
-function AppearsIn(const target: TArr): Integer; overload;
-function CountIn(const target: TArr): Integer; overload;
-function Scan(const target: TArr): TIntegerArray; overload;
-function PositionsIn(const target: TArr): TIntegerArray; overload;
-function LocationsIn(const target: TArr): TIntegerArray; overload;
-function Positions(const target: TArr): TIntegerArray; overload;
-function Locations(const target: TArr): TIntegerArray; overload;
+THelper = type helper for TVar
+  function TArray(const aSize: Integer = 1): TArr; overload;
+  function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
+  function AppearsIn(const target: TArr): Integer; overload;
+  function CountIn(const target: TArr): Integer; overload;
+  function Scan(const target: TArr): TIntegerArray; overload;
+  function PositionsIn(const target: TArr): TIntegerArray; overload;
+  function LocationsIn(const target: TArr): TIntegerArray; overload;
+  function Positions(const target: TArr): TIntegerArray; overload;
+  function Locations(const target: TArr): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF METHODS}

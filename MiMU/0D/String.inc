@@ -6,13 +6,11 @@
 
 {$IFDEF TYPES}
 TStringCompare = specialize TCompare<string>;
-TStringArray = array of string;
-T2DStringArray = array of TStringArray;
+{$I Core.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
-TStringHelper = type helper for string
-  {$I Core.inc}
+{$I Core.inc}
   function CountOf(const item: Char): Integer; overload;
   function AmountOf(const item: Char): Integer; overload;
   function Occurs(const item: Char): Integer; overload;

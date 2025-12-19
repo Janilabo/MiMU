@@ -6,13 +6,11 @@
 
 {$IFDEF TYPES}
 TCharCompare = specialize TCompare<Char>;
-TCharArray = array of Char;
-T2DCharArray = array of TCharArray;
+{$I Core.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
-TCharHelper = type helper for Char
-  {$I Core.inc}
+{$I Core.inc}
   function Compare(const target: Char): Integer; inline;
   function Sign(const target: Char): Integer; inline;
   function Precede(const target: Char; const aAscending: Boolean): Boolean; overload;

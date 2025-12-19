@@ -6,13 +6,11 @@
 
 {$IFDEF TYPES}
 TInt64Compare = specialize TCompare<Int64>;
-TInt64Array = array of Int64;
-T2DInt64Array = array of TInt64Array;
+{$I Core.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
-TInt64Helper = type helper for Int64
-  {$I Core.inc} 
+{$I Core.inc} 
   function Prime: Boolean; 
   function IsPrime: Boolean; 
   function Parity: Byte; inline;

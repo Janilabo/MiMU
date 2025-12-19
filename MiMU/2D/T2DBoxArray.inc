@@ -5,8 +5,7 @@
 {$UNDEF Sortable}
 
 {$IFDEF HELPERS}
-T2DBoxArrayHelper = type helper for T2DBoxArray
-  {$I Core.inc}
+{$I Core.inc}
 end;
 {$ENDIF}
 

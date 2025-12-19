@@ -1,43 +1,44 @@
 {$IFDEF HELPERS}
-function Blank: Boolean; overload;
-function Empty: Boolean; overload;
-function Flat: TArr; overload;
-function Flatten: TArr; overload;
-function Irregular: Boolean; overload;
-function Jagged: Boolean; overload;
-function Merge: TArr; overload;
-function Merged: TArr; overload;
-function Ragged: Boolean; overload;
-function Fit: Integer; overload;
-function Fit(const aSize: Integer): Integer; overload;
-function Fit(const aBounds: TRange): Integer; overload;
-function Length: Integer; overload;
-function Length(var lengths: TIntegerArray): Integer; overload;
-function Size: Integer; overload;
-function Size(var sizes: TIntegerArray): Integer; overload;
-function Sized(var lengths: TIntegerArray): Int64; overload;
-function Sized: Int64; overload;
-function Total: Int64; overload;
-function Population: Int64; overload;
-function Census: Int64; overload;
-function Inventory(var items: TArr): Int64; overload;
-function Inventory: Int64; overload;
-function TArray: TArr; overload;
-function Unwrap: TArr; overload;
-function Kill: Integer; overload;
-function Kill(const k2D: TIntegerArray): Int64; overload;
-function Free: Int64; overload;
-function Recreate(const arrSize: Integer): Boolean; overload;
-function Reset: Int64; overload;
-function Reverse: Boolean; overload;
-function Reversed: T2DArr; overload;
-function Reversify: Boolean; overload;
-function Destroy: Int64; overload;
-function Pull: T2DArr; overload;
-function To1D: TArr; overload;
-function Linearize: TArr; overload;
-function Squeeze: Integer; overload;
-function Squeezed: T2DArr; overload;
+THelper = type helper for T2DArr
+  function Blank: Boolean; overload;
+  function Empty: Boolean; overload;
+  function Flat: TArr; overload;
+  function Flatten: TArr; overload;
+  function Irregular: Boolean; overload;
+  function Jagged: Boolean; overload;
+  function Merge: TArr; overload;
+  function Merged: TArr; overload;
+  function Ragged: Boolean; overload;
+  function Fit: Integer; overload;
+  function Fit(const aSize: Integer): Integer; overload;
+  function Fit(const aBounds: TRange): Integer; overload;
+  function Length: Integer; overload;
+  function Length(var lengths: TIntegerArray): Integer; overload;
+  function Size: Integer; overload;
+  function Size(var sizes: TIntegerArray): Integer; overload;
+  function Sized(var lengths: TIntegerArray): Int64; overload;
+  function Sized: Int64; overload;
+  function Total: Int64; overload;
+  function Population: Int64; overload;
+  function Census: Int64; overload;
+  function Inventory(var items: TArr): Int64; overload;
+  function Inventory: Int64; overload;
+  function TArray: TArr; overload;
+  function Unwrap: TArr; overload;
+  function Kill: Integer; overload;
+  function Kill(const k2D: TIntegerArray): Int64; overload;
+  function Free: Int64; overload;
+  function Recreate(const arrSize: Integer): Boolean; overload;
+  function Reset: Int64; overload;
+  function Reverse: Boolean; overload;
+  function Reversed: T2DArr; overload;
+  function Reversify: Boolean; overload;
+  function Destroy: Int64; overload;
+  function Pull: T2DArr; overload;
+  function To1D: TArr; overload;
+  function Linearize: TArr; overload;
+  function Squeeze: Integer; overload;
+  function Squeezed: T2DArr; overload;
 {$ENDIF}
 
 {$IFDEF T2D}
@@ -108,7 +109,7 @@ end;
 [==============================================================================}
 function THelper.To1D: TArr; overload;
 var
-  i, j: Integer;
+  i, j, r: Integer;
   l: specialize TList<TVar>;
 begin
   l := specialize TList<TVar>.Create;
@@ -116,7 +117,9 @@ begin
     for i := 0 to High(Self) do
       for j := 0 to High(Self[i]) do
         l.Add(Self[i][j]);
-    Result := l.ToArray;
+    SetLength(Result, l.Count);
+    for r := 0 to (l.Count - 1) do
+      Result[r] := l[r];
   finally
     l.Free;
   end;

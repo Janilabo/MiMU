@@ -14,8 +14,7 @@ end;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-T2DIntegerArrayHelper = type helper for T2DIntegerArray
-  {$I Core.inc}
+{$I Core.inc}
 end;
 {$ENDIF}
 

@@ -18,8 +18,7 @@ end;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-TPointArrayHelper = type helper for TPointArray
-  {$I Core.inc}
+{$I Core.inc}
   function Binify(const xRadius, yRadius: Integer): T2DPointArray; overload;
   function Binify(const radius: Double; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
   function Binified(const xRadius, yRadius: Integer): T2DPointArray; overload;

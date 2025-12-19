@@ -5,8 +5,7 @@
 {$DEFINE Sortable}
 
 {$IFDEF HELPERS}
-T2DPointArrayHelper = type helper for T2DPointArray
-  {$I Core.inc}
+{$I Core.inc}
   function AllBounds: TBoxArray; overload;
   function AllBounds(var aBounds: TBox): TBoxArray; overload;
 end;

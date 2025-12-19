@@ -6,13 +6,11 @@
 
 {$IFDEF TYPES}
 TDoubleCompare = specialize TCompare<Double>;
-TDoubleArray = array of Double;
-T2DDoubleArray = array of TDoubleArray;
+{$I Core.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
-TDoubleHelper = type helper for Double
-  {$I Core.inc}
+{$I Core.inc}
   function ClampMin(const limit: Double): Double;
   function ClampMax(const limit: Double): Double;
   function Clamp(const minimum, maximum: Double): Double;

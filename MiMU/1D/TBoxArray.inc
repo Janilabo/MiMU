@@ -7,8 +7,7 @@
 {$UNDEF Sortable}
 
 {$IFDEF HELPERS}
-TBoxArrayHelper = type helper for TBoxArray
-  {$I Core.inc}
+{$I Core.inc}
   function X1s: TIntegerArray; overload;
   function X2s: TIntegerArray; overload;
   function Y1s: TIntegerArray; overload;

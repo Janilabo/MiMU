@@ -1,3 +1,9 @@
+{$DEFINE TVar := TCircle}
+{$DEFINE TArr := TCircleArray}
+{$DEFINE T2DArr := T2DCircleArray}
+{$DEFINE THelper := TCircleHelper}
+{$UNDEF Sortable}
+
 {$IFDEF TYPES}
 TCircle = record
   Center: TPoint;
@@ -18,13 +24,22 @@ TCircle = record
   function BorderPoints(const count: Integer): TPointArray; 
   function Border: TPointArray; 
 end;
-TCircleArray = array of TCircle;
-T2DCircleArray = array of TCircleArray;
+TCircleCompare = specialize TCompare<TCircle>;
+{$I Core.inc}
+{$ENDIF}
+
+{$IFDEF HELPERS}
+{$I Core.inc}
+end;
 {$ENDIF}
 
 {$IFDEF OPERATORS}
 operator =(const a, b: TCircle): Boolean;
 operator <>(const a, b: TCircle): Boolean;
+{$ENDIF}
+
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$I Core.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

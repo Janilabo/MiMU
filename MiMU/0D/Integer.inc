@@ -6,13 +6,11 @@
 
 {$IFDEF TYPES}
 TIntegerCompare = specialize TCompare<Integer>;
-TIntegerArray = array of Integer;
-T2DIntegerArray = array of TIntegerArray;
+{$I Core.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
-TIntegerHelper = type helper for Integer
-  {$I Core.inc}
+{$I Core.inc}
   function ClampMin(const limit: Integer): Integer;
   function ClampMax(const limit: Integer): Integer;
   function Clamp(const minimum, maximum: Integer): Integer; overload;
