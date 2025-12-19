@@ -18,7 +18,7 @@ end;
     a: TRange;
   begin
     a.Create(L, R);
-    w := weight[aID[a.Central]];
+    w := weight[aID[a.Pivot]];
     repeat
       c := weight[aID[a.start]].Compare(w);
       while (aAscending and (c < 0)) or ((not aAscending) and (c > 0)) do

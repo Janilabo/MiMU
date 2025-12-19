@@ -410,8 +410,14 @@ function BinaryExpSearch(const item: TVar; const oAscending: Boolean = True): In
 {$ENDIF}
 {$ENDIF}
 
+{$IFDEF CLASSES}
 {$IFDEF T1D}
 class function Create(const item: TVar; const aSize: Integer = 1): TArr; overload;
+{$ENDIF}
+
+{$IF DEFINED(TBS) AND DEFINED(Sortable)}
+class function Search(const arr: TArr; const item: TVar; const ascending: Boolean = True): Integer; overload;
+{$ENDIF}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9861,7 +9867,26 @@ begin
       R.stop := (Result - 1);
   end;
   Result := -1;
-end; 
+end;
+
+class function TBinarySearch.Search(const arr: TArr; const item: TVar; const ascending: Boolean = True): Integer; overload;
+var
+  L, R, M: Integer;
+begin
+  Result := -1;
+  L := 0;
+  R := High(arr);
+  while (L <= R) do
+  begin
+    M := (L + ((R - L) shr 1));
+    if (arr[M] = item) then
+      Exit(M);
+    if ((ascending and (arr[M] < item)) or ((not ascending) and (arr[M] > item))) then
+      L := (M + 1)
+    else
+      R := (M - 1);
+  end;
+end;
 {$ENDIF}
 
 {==============================================================================]

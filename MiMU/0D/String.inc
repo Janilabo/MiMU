@@ -3179,7 +3179,7 @@ begin
   R.Create(0, High(I));
   while (R.start <= R.stop) do
   begin
-    M := R.Central;
+    M := R.Pivot;
     if (I[M] <= position) then
     begin
       R.start := (M + 1);

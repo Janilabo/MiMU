@@ -55,8 +55,11 @@ function MiMU_Version: Double;
 {$DEFINE OPERATORS}{$I MiMU\MiMU.inc}{$UNDEF OPERATORS}
 {$DEFINE HELPERS}{$I MiMU\MiMU.inc}{$UNDEF HELPERS}
 {$DEFINE METHODS}{$I MiMU\MiMU.inc}{$UNDEF METHODS}
+{$DEFINE CLASSES}
+{$DEFINE TBS}{$I MiMU\MiMU.inc}{$UNDEF TBS}
 {$DEFINE T1D}{$I MiMU\MiMU.inc}{$UNDEF T1D}
 {$DEFINE T2D}{$I MiMU\MiMU.inc}{$UNDEF T2D}
+{$UNDEF CLASSES}
 
 generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Sort<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;

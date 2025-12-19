@@ -1,8 +1,8 @@
-{$IF DEFINED(TYPES) OR DEFINED(HELPERS) OR DEFINED(T1D) OR DEFINED(T2D)}
+{$IF DEFINED(TYPES) OR DEFINED(HELPERS) OR DEFINED(CLASSES)}
 type
 {$ENDIF}
 
-{$IF NOT (DEFINED(T1D) OR DEFINED(T2D))}
+{$IF (NOT DEFINED(TBS)) AND (NOT DEFINED(T1D)) AND (NOT DEFINED(T2D))}
   {$I 0D\Integer.inc}
   {$I 0D\Double.inc}
   {$I 0D\String.inc}
@@ -24,6 +24,10 @@ type
   T1D = class
   public
   {$ENDIF}
+  {$IFDEF TBS}
+  TBinarySearch = class
+  public
+  {$ENDIF}
   {$I 1D\TIntegerArray.inc}
   {$I 1D\TDoubleArray.inc}
   {$I 1D\TStringArray.inc}
@@ -33,9 +37,6 @@ type
   {$I 1D\TBoxArray.inc}
   {$I 1D\TRangeArray.inc}
   {$I 1D\TInt64Array.inc}
-  {$IFDEF T1D}
-  end;
-  {$ENDIF}
 {$ENDIF}
 
 {$IFNDEF T1D}
@@ -52,7 +53,8 @@ type
   {$I 2D\T2DBoxArray.inc}
   {$I 2D\T2DRangeArray.inc}
   {$I 2D\T2DInt64Array.inc}
-  {$IFDEF T2D}
-  end;
-  {$ENDIF}
 {$ENDIF}
+
+{$IFDEF CLASSES}
+end;
+{$ENDIF} 

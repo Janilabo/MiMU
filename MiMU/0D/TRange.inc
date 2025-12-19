@@ -185,10 +185,15 @@ TRange = record
   function Item(const x: Integer): Boolean; inline;
   function Pivot: Integer; 
   function Mean: Double; overload;
-  function Medium: Double; overload;	
+  function Medium: Double; overload;
+  function MiddleRight: Integer; overload;
+  function MiddleLeft: Integer; overload;
   function Middle: Integer;
   function MiddleValue: Double;
-  function MiddleVal: Integer; overload;	
+  function MiddleVal: Integer; overload;
+  function MiddleStep: Integer; overload;
+  function MiddleBit: Integer; overload;
+  function MidBit: Integer; overload;
   function Mid: Double; 
   function MidValue: Double; 
   function MidVal: Double; 
@@ -2884,12 +2889,39 @@ end;
 
 {==============================================================================]
  <Medium>
- @action: ?
- @note: ?
+ @action: Returns the arithmetic mean of the range bounds as a floating-point value.
+ @note: This represents a mathematical midpoint only. The result may be fractional.
 [==============================================================================}
 function TRange.Medium: Double; overload;
 begin
   Result := ((Self.start + Self.stop) * 0.5);
+end;
+
+{==============================================================================]
+ <MiddleRight>
+ @action: Returns the integer midpoint of the range, biased toward the higher index.
+ @note: Uses ceiling division. Suitable for binary search variants that advance the
+        lower bound and require guaranteed progress on even-length ranges. Supports
+        both ascending and descending ranges.
+[==============================================================================}
+function TRange.MiddleRight: Integer; overload;
+begin
+  if (Self.start > Self.stop) then
+    Exit(Self.stop + ((Self.start - Self.stop) + 1) div 2);
+  Result := (Self.start + ((Self.stop - Self.start) + 1) div 2);
+end;
+
+{==============================================================================]
+ <MiddleLeft>
+ @action: Returns the integer midpoint of the range, biased toward the lower index.
+ @note: Uses floor division. This is the classic binary search midpoint and is safe
+        for single-element, ascending, and descending ranges.
+[==============================================================================}
+function TRange.MiddleLeft: Integer; overload;
+begin
+  if (Self.start > Self.stop) then
+    Exit(Self.stop + (Self.start - Self.stop) div 2);
+  Result := (Self.start + (Self.stop - Self.start) div 2);
 end;
 
 {==============================================================================]
@@ -2900,6 +2932,47 @@ end;
 function TRange.Middle: Integer;
 begin
   Result := ((Self.start + Self.stop) div 2);
+end;
+
+{==============================================================================]
+ <MiddleStep>
+ @action: Returns the integer midpoint of the range, calculated by stepping halfway 
+          from start to stop. Works for both ascending and descending ranges.
+ @note: Neutral midpoint, unbiased toward lower or higher indices.
+[==============================================================================}
+function TRange.MiddleStep: Integer; overload;
+begin
+  if (Self.stop > Self.start) then
+    Result := (Self.start + (Abs(Self.stop - Self.start) div 2))
+  else
+    Result := (Self.start - (Abs(Self.stop - Self.start) div 2));
+end;
+
+{==============================================================================]
+ <MiddleBit>
+ @action: Returns the integer midpoint of the range using a bitwise shift for division by 2.
+ @note: Safe for ascending and descending ranges. Equivalent to a floor-biased midpoint
+        but uses low-level arithmetic for efficiency.
+[==============================================================================}
+function TRange.MiddleBit: Integer; overload;
+begin
+  if (Self.start <= Self.stop) then
+    Result := (Self.start + ((Self.stop - Self.start) shr 1))
+  else
+    Result := (Self.start - ((Self.start - Self.stop) shr 1));
+end;
+
+{==============================================================================]
+ <MidBit>
+ @action: Returns the integer midpoint of the range using a bitwise shift (shr 1) for division by 2.
+ @note: Safe for both ascending and descending ranges. This is a floor-biased midpoint,
+        equivalent to MiddleLeft, but implemented with a bit shift for efficiency.
+[==============================================================================}
+function TRange.MidBit: Integer; overload;
+begin
+  if (Self.start <= Self.stop) then
+    Exit(Self.start + ((Self.stop - Self.start) shr 1));
+  Result := TRange.Construct(Self.stop, Self.start).MidBit;
 end;
 
 {==============================================================================]
