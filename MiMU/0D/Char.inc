@@ -5,6 +5,7 @@
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}
+TCharCompare = specialize TCompare<Char>;
 TCharArray = array of Char;
 T2DCharArray = array of TCharArray;
 {$ENDIF}

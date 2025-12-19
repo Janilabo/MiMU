@@ -69,6 +69,7 @@ TPoint = record
   function Employs(const val: Integer): Boolean;
   function Omits(const val: Integer): Boolean; 	
 end;
+TPointCompare = specialize TCompare<TPoint>;
 TPointArray = array of TPoint;
 T2DPointArray = array of TPointArray;
 PPoint = ^TPoint;

@@ -5,6 +5,7 @@
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}
+TStringCompare = specialize TCompare<string>;
 TStringArray = array of string;
 T2DStringArray = array of TStringArray;
 {$ENDIF}

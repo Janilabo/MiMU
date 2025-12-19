@@ -22,7 +22,8 @@ TRangeArrayHelper = type helper for TRangeArray
   function StartValues: TIntegerArray; overload;
   function StopValues: TIntegerArray; overload;
   function Unzip(var startArr, stopArr: TIntegerArray): Integer;
-  function Zip(const startArr, stopArr: TIntegerArray): Integer; 
+  function Zip(const startArr, stopArr: TIntegerArray): Integer;
+  function SortBySize(const oAscending: Boolean = True): Integer;
 end;
 {$ENDIF}
 
@@ -279,6 +280,25 @@ begin
   begin
     Self[i].start := startArr[i];
     Self[i].stop := stopArr[i];
+  end;
+end;
+
+{==============================================================================]
+  <SortBySize>
+  @action: Sorts the TRangeArray in-place by the size of its elements.
+           The sorting order is determined by the oAscending parameter:
+             - True: ascending (smallest to largest)
+             - False: descending (largest to smallest)
+  @note: Returns the number of elements in the array.
+         If the array has fewer than 2 elements, no sorting is performed.
+[==============================================================================}
+function TRangeArrayHelper.SortBySize(const oAscending: Boolean = True): Integer;
+begin
+  Result := Self.Length;
+  if (Result > 1) then
+  case oAscending of
+    True: specialize QuickSort<TRange>(Self, @TRange.CompareSizeAscending);
+    False: specialize QuickSort<TRange>(Self, @TRange.CompareSizeDescending);
   end;
 end;
 {$ENDIF}

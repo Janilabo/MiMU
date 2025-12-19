@@ -183,6 +183,7 @@ TBox = record
   function Employs(const val: Integer): Boolean;
   function Omits(const val: Integer): Boolean; 
 end;
+TBoxCompare = specialize TCompare<TBox>;
 TBoxArray = array of TBox;
 T2DBoxArray = array of TBoxArray;
 _TBox = class

@@ -5,6 +5,7 @@
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}
+TIntegerCompare = specialize TCompare<Integer>;
 TIntegerArray = array of Integer;
 T2DIntegerArray = array of TIntegerArray;
 {$ENDIF}

@@ -5,6 +5,7 @@
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}
+TInt64Compare = specialize TCompare<Int64>;
 TInt64Array = array of Int64;
 T2DInt64Array = array of TInt64Array;
 {$ENDIF}
