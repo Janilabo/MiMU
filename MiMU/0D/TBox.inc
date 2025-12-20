@@ -1,6 +1,7 @@
 {$DEFINE TVar := TBox}
 {$DEFINE TArr := TBoxArray}
 {$DEFINE T2DArr := T2DBoxArray}
+{$DEFINE TCmp := TBoxCompare}
 {$DEFINE THelper := TBoxHelper}
 {$UNDEF Sortable}
 
@@ -183,7 +184,6 @@ TBox = record
   function Employs(const val: Integer): Boolean;
   function Omits(const val: Integer): Boolean; 
 end;
-TBoxCompare = specialize TCompare<TBox>;
 {$I Core.inc}
 _TBox = class
 public

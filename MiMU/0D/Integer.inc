@@ -1,11 +1,11 @@
 {$DEFINE TVar := Integer}
 {$DEFINE TArr := TIntegerArray}
 {$DEFINE T2DArr := T2DIntegerArray}
+{$DEFINE TCmp := TIntegerCompare}
 {$DEFINE THelper := TIntegerHelper}
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}
-TIntegerCompare = specialize TCompare<Integer>;
 {$I Core.inc}
 {$ENDIF}
 

@@ -1,4 +1,5 @@
 {$IFDEF TYPES}
+TCmp = specialize TCompare<TVar>;
 TArr = array of TVar;
 T2DArr = array of TArr;
 {$ENDIF}

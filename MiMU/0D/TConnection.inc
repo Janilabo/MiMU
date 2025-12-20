@@ -1,6 +1,7 @@
 {$DEFINE TVar := TConnection}
 {$DEFINE TArr := TConnectionArray}
 {$DEFINE T2DArr := T2DConnectionArray}
+{$DEFINE TCmp := TConnectionCompare}
 {$DEFINE THelper := TConnectionHelper}
 {$UNDEF Sortable}
 
@@ -11,7 +12,6 @@ TConnection = record
   class function Construct(const index1, index2: Integer): TConnection; overload; static;
   function Build(const index1, index2: Integer): TConnection; overload;
 end;
-TConnectionCompare = specialize TCompare<TConnection>;
 {$I Core.inc}
 {$ENDIF}
 

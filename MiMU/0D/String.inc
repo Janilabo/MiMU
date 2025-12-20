@@ -1,11 +1,11 @@
 {$DEFINE TVar := string}
 {$DEFINE TArr := TStringArray}
 {$DEFINE T2DArr := T2DStringArray}
+{$DEFINE TCmp := TStringCompare}
 {$DEFINE THelper := TStringHelper}
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}
-TStringCompare = specialize TCompare<string>;
 {$I Core.inc}
 {$ENDIF}
 

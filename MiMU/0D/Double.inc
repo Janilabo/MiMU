@@ -1,11 +1,11 @@
 {$DEFINE TVar := Double}
 {$DEFINE TArr := TDoubleArray}
 {$DEFINE T2DArr := T2DDoubleArray}
+{$DEFINE TCmp := TDoubleCompare}
 {$DEFINE THelper := TDoubleHelper}
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}
-TDoubleCompare = specialize TCompare<Double>;
 {$I Core.inc}
 {$ENDIF}
 

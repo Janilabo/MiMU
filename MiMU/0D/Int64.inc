@@ -1,11 +1,11 @@
 {$DEFINE TVar := Int64}
 {$DEFINE TArr := TInt64Array}
 {$DEFINE T2DArr := T2DInt64Array}
+{$DEFINE TCmp := TInt64Compare}
 {$DEFINE THelper := TInt64Helper}
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}
-TInt64Compare = specialize TCompare<Int64>;
 {$I Core.inc}
 {$ENDIF}
 

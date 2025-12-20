@@ -1,6 +1,7 @@
 {$DEFINE TVar := TRange}
 {$DEFINE TArr := TRangeArray}
 {$DEFINE T2DArr := T2DRangeArray}
+{$DEFINE TCmp := TRangeCompare}
 {$DEFINE THelper := TRangeHelper}
 {$UNDEF Sortable}
 
@@ -262,7 +263,6 @@ TRange = record
   class function CompareSizeAscending(const A, B: TRange): Integer; static;
   class function CompareSizeDescending(const A, B: TRange): Integer; static;
 end;
-TRangeCompare = specialize TCompare<TRange>;
 {$I Core.inc}
 _TRange = class
 public

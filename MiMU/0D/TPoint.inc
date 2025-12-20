@@ -1,6 +1,7 @@
 {$DEFINE TVar := TPoint}
 {$DEFINE TArr := TPointArray}
 {$DEFINE T2DArr := T2DPointArray}
+{$DEFINE TCmp := TPointCompare}
 {$DEFINE THelper := TPointHelper}
 {$DEFINE Sortable}
 
@@ -69,7 +70,6 @@ TPoint = record
   function Employs(const val: Integer): Boolean;
   function Omits(const val: Integer): Boolean; 	
 end;
-TPointCompare = specialize TCompare<TPoint>;
 {$I Core.inc}
 PPoint = ^TPoint;
 _TPoint = class

@@ -1,11 +1,11 @@
 {$DEFINE TVar := Boolean}
 {$DEFINE TArr := TBooleanArray}
 {$DEFINE T2DArr := T2DBooleanArray}
+{$DEFINE TCmp := TBooleanCompare}
 {$DEFINE THelper := TBooleanHelper}
 {$UNDEF Sortable}
 
 {$IFDEF TYPES}
-TBooleanCompare = specialize TCompare<Boolean>;
 {$I Core.inc}
 {$ENDIF}
 

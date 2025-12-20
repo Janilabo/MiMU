@@ -1,6 +1,7 @@
 {$DEFINE TVar := TSegment}
 {$DEFINE TArr := TSegmentArray}
 {$DEFINE T2DArr := T2DSegmentArray}
+{$DEFINE TCmp := TSegmentCompare}
 {$DEFINE THelper := TSegmentHelper}
 {$UNDEF Sortable}
 
@@ -17,7 +18,6 @@ TSegment = record
   function Points: TPointArray; 
   function Pixels(const steps: Integer = 2147483647): TPointArray; 
 end;
-TSegmentCompare = specialize TCompare<TSegment>;
 {$I Core.inc}
 {$ENDIF}
 

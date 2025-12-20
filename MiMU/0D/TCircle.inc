@@ -1,6 +1,7 @@
 {$DEFINE TVar := TCircle}
 {$DEFINE TArr := TCircleArray}
 {$DEFINE T2DArr := T2DCircleArray}
+{$DEFINE TCmp := TCircleCompare}
 {$DEFINE THelper := TCircleHelper}
 {$UNDEF Sortable}
 
@@ -24,7 +25,6 @@ TCircle = record
   function BorderPoints(const count: Integer): TPointArray; 
   function Border: TPointArray; 
 end;
-TCircleCompare = specialize TCompare<TCircle>;
 {$I Core.inc}
 {$ENDIF}
 

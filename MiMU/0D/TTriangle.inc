@@ -1,6 +1,7 @@
 {$DEFINE TVar := TTriangle}
 {$DEFINE TArr := TTriangleArray}
 {$DEFINE T2DArr := T2DTriangleArray}
+{$DEFINE TCmp := TTriangleCompare}
 {$DEFINE THelper := TTriangleHelper}
 {$UNDEF Sortable}
 
@@ -8,7 +9,6 @@
 TTriangle = record
   A, B, C: TPoint;
 end;
-TTriangleCompare = specialize TCompare<TTriangle>;
 {$I Core.inc}
 {$ENDIF}
 
