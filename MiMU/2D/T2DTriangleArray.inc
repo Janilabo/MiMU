@@ -5,7 +5,8 @@
 {$UNDEF Sortable}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+T2DTriangleArrayHelper = type helper for T2DTriangleArray
+  {$I Core.inc}
 end;
 {$ENDIF}
 

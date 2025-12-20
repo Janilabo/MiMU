@@ -5,16 +5,15 @@ M2DArray = array of MArray;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-MHelper = type helper for MType
-  function TArray(const aSize: Integer = 1): MArray; overload;
-  function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload;
-  function AppearsIn(const target: MArray): Integer; overload;
-  function CountIn(const target: MArray): Integer; overload;
-  function Scan(const target: MArray): TIntegerArray; overload;
-  function PositionsIn(const target: MArray): TIntegerArray; overload;
-  function LocationsIn(const target: MArray): TIntegerArray; overload;
-  function Positions(const target: MArray): TIntegerArray; overload;
-  function Locations(const target: MArray): TIntegerArray; overload;
+function TArray(const aSize: Integer = 1): MArray; overload;
+function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload;
+function AppearsIn(const target: MArray): Integer; overload;
+function CountIn(const target: MArray): Integer; overload;
+function Scan(const target: MArray): TIntegerArray; overload;
+function PositionsIn(const target: MArray): TIntegerArray; overload;
+function LocationsIn(const target: MArray): TIntegerArray; overload;
+function Positions(const target: MArray): TIntegerArray; overload;
+function Locations(const target: MArray): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF METHODS}

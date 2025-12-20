@@ -10,7 +10,8 @@
 {$ENDIF}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TDoubleHelper = type helper for Double
+  {$I Core.inc}
   function ClampMin(const limit: Double): Double;
   function ClampMax(const limit: Double): Double;
   function Clamp(const minimum, maximum: Double): Double;

@@ -22,7 +22,8 @@ end;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TSegmentHelper = type helper for TSegment
+  {$I Core.inc}
 end;
 {$ENDIF}
 

@@ -117,7 +117,8 @@ operator <=(const a, b: TPoint): Boolean;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TPointHelper = type helper for TPoint
+  {$I Core.inc}
   function Inside(const bx: TBox): Boolean; inline;
   function Clamp(const area: TBox): TPoint;
   function Create: TPoint; overload;

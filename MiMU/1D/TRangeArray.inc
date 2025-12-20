@@ -7,7 +7,8 @@
 {$UNDEF Sortable}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TRangeArrayHelper = type helper for TRangeArray
+  {$I Core.inc}
   function Bounds: TRange; overload;
   function Range: TRange; overload;
   function TIA: TIntegerArray;

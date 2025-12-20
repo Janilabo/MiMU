@@ -16,7 +16,8 @@ end;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TConnectionHelper = type helper for TConnection
+  {$I Core.inc}
 end;
 {$ENDIF}
 

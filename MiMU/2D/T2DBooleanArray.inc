@@ -5,7 +5,8 @@
 {$UNDEF Sortable}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+T2DBooleanArrayHelper = type helper for T2DBooleanArray
+  {$I Core.inc}
 end;
 {$ENDIF}
 

@@ -10,7 +10,8 @@
 {$ENDIF}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TCharHelper = type helper for Char
+  {$I Core.inc}
   function Compare(const target: Char): Integer; inline;
   function Sign(const target: Char): Integer; inline;
   function Precede(const target: Char; const aAscending: Boolean): Boolean; overload;

@@ -5,7 +5,8 @@
 {$UNDEF Sortable}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TSegmentArrayHelper = type helper for TSegmentArray
+  {$I Core.inc}
 end;
 {$ENDIF}
 

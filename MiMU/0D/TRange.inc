@@ -286,7 +286,8 @@ operator in(const I: Integer; const R: TRange): Boolean;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TRangeHelper = type helper for TRange
+  {$I Core.inc}
   function Create: TRange; overload;
   function Distribute(const parts: Integer): TRangeArray;
   function Partition(const size: Integer): TRangeArray;

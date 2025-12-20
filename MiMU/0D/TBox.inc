@@ -196,7 +196,8 @@ end;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TBoxHelper = type helper for TBox
+  {$I Core.inc}
   function Create: TBox; overload;
   function Inside(const targets: TBoxArray): Boolean; overload;
   function AsGrid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;

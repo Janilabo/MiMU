@@ -29,7 +29,8 @@ end;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TCircleHelper = type helper for TCircle
+  {$I Core.inc}
 end;
 {$ENDIF}
 

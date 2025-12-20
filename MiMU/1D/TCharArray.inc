@@ -5,7 +5,8 @@
 {$DEFINE Sortable}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TCharArrayHelper = type helper for TCharArray
+  {$I Core.inc}
   function Str: string;
   function ToStr: string;
   function Join: string; overload;

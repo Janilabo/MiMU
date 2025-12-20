@@ -10,7 +10,8 @@
 {$ENDIF}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TIntegerHelper = type helper for Integer
+  {$I Core.inc}
   function ClampMin(const limit: Integer): Integer;
   function ClampMax(const limit: Integer): Integer;
   function Clamp(const minimum, maximum: Integer): Integer; overload;

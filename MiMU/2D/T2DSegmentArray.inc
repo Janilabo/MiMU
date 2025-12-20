@@ -5,7 +5,8 @@
 {$UNDEF Sortable}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+T2DSegmentArrayHelper = type helper for T2DSegmentArray
+  {$I Core.inc}
 end;
 {$ENDIF}
 

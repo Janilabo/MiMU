@@ -10,7 +10,8 @@
 {$ENDIF}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TStringHelper = type helper for string
+  {$I Core.inc}
   function CountOf(const item: Char): Integer; overload;
   function AmountOf(const item: Char): Integer; overload;
   function Occurs(const item: Char): Integer; overload;

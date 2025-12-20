@@ -5,7 +5,8 @@
 {$DEFINE Sortable}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TDoubleArrayHelper = type helper for TDoubleArray
+  {$I Core.inc}
   function Reinit: Integer; overload;
   function Attach(const items: TDoubleArray): Integer; overload;
   function Embed(const items: TDoubleArray; const index: Integer = 2147483647): Integer; overload;

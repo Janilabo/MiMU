@@ -5,7 +5,8 @@
 {$UNDEF Sortable}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TConnectionArrayHelper = type helper for TConnectionArray
+  {$I Core.inc}
 end;
 {$ENDIF}
 

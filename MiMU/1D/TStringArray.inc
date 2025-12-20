@@ -5,7 +5,8 @@
 {$DEFINE Sortable}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TStringArrayHelper = type helper for TStringArray
+  {$I Core.inc}
   function Tally: Int64;
   function Concat: string;
   function Concatenate: string;

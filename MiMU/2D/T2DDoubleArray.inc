@@ -5,7 +5,8 @@
 {$DEFINE Sortable}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+T2DDoubleArrayHelper = type helper for T2DDoubleArray
+  {$I Core.inc}
 end;
 {$ENDIF}
 

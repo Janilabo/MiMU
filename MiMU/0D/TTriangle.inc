@@ -13,7 +13,8 @@ end;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-{$I Core.inc}
+TTriangleHelper = type helper for TTriangle
+  {$I Core.inc}
 end;
 {$ENDIF}
 

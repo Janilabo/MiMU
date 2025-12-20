@@ -10,7 +10,8 @@
 {$ENDIF}
 
 {$IFDEF HELPERS}
-{$I Core.inc} 
+TInt64Helper = type helper for Int64
+  {$I Core.inc} 
   function Prime: Boolean; 
   function IsPrime: Boolean; 
   function Parity: Byte; inline;
