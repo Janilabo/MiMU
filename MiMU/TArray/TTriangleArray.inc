@@ -1,4 +1,4 @@
-{$DEFINE TTriangle}{$I ..\Configuration\Defines.inc}
+{$DEFINE TTriangle}{$I ..\Type\Configuration\Defines.inc}
 
 {$IFDEF HELPERS}
 TTriangleArrayHelper = type helper for TTriangleArray

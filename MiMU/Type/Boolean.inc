@@ -1,4 +1,4 @@
-{$DEFINE Boolean}{$I ..\Configuration\Defines.inc}
+{$DEFINE Boolean}{$I Configuration\Defines.inc}
 
 {$IFDEF TYPES}
 {$I Core.inc}

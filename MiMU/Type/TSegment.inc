@@ -1,4 +1,4 @@
-{$DEFINE TSegment}{$I ..\Configuration\Defines.inc}
+{$DEFINE TSegment}{$I Configuration\Defines.inc}
 
 {$IFDEF TYPES}
 TSegment = record

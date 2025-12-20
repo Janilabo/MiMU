@@ -1,4 +1,4 @@
-{$DEFINE TBox}{$I ..\Configuration\Defines.inc}
+{$DEFINE TBox}{$I Configuration\Defines.inc}
 
 {$IFDEF TYPES}
 TBoxEnumerator = record

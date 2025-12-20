@@ -1,4 +1,4 @@
-{$DEFINE string}{$I ..\Configuration\Defines.inc}
+{$DEFINE string}{$I ..\Type\Configuration\Defines.inc}
 
 {$IFDEF HELPERS}
 TStringArrayHelper = type helper for TStringArray

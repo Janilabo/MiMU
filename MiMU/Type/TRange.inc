@@ -1,4 +1,4 @@
-{$DEFINE TRange}{$I ..\Configuration\Defines.inc}
+{$DEFINE TRange}{$I Configuration\Defines.inc}
 
 {$IFDEF TYPES}
 TRangeEnumerator = record

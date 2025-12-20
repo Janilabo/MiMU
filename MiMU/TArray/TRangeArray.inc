@@ -1,4 +1,4 @@
-{$DEFINE TRange}{$I ..\Configuration\Defines.inc}
+{$DEFINE TRange}{$I ..\Type\Configuration\Defines.inc}
 
 {$IFDEF HELPERS}
 TRangeArrayHelper = type helper for TRangeArray
@@ -24,8 +24,8 @@ end;
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS) OR DEFINED(CLASSES)}
 {$I Core.inc}
 {$IFNDEF CLASSES}
-{$DEFINE FField := start}{$I F.inc}
-{$DEFINE FField := stop}{$I F.inc}
+{$DEFINE FField := start}{$I Configuration\F.inc}
+{$DEFINE FField := stop}{$I Configuration\F.inc}
 {$ENDIF}
 {$ENDIF}
 

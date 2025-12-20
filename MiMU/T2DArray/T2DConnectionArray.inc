@@ -1,4 +1,4 @@
-{$DEFINE TConnection}{$I ..\Configuration\Defines.inc}
+{$DEFINE TConnection}{$I ..\Type\Configuration\Defines.inc}
 
 {$IFDEF HELPERS}
 T2DConnectionArrayHelper = type helper for T2DConnectionArray

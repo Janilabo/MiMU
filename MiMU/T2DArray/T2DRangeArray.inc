@@ -1,4 +1,4 @@
-{$DEFINE TRange}{$I ..\Configuration\Defines.inc}
+{$DEFINE TRange}{$I ..\Type\Configuration\Defines.inc}
 
 {$IFDEF HELPERS}
 T2DRangeArrayHelper = type helper for T2DRangeArray

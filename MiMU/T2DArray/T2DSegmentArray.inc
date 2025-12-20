@@ -1,4 +1,4 @@
-{$DEFINE TSegment}{$I ..\Configuration\Defines.inc}
+{$DEFINE TSegment}{$I ..\Type\Configuration\Defines.inc}
 
 {$IFDEF HELPERS}
 T2DSegmentArrayHelper = type helper for T2DSegmentArray

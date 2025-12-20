@@ -1,4 +1,4 @@
-{$DEFINE TCircle}{$I ..\Configuration\Defines.inc}
+{$DEFINE TCircle}{$I Configuration\Defines.inc}
 
 {$IFDEF TYPES}
 TCircle = record

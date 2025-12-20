@@ -1,4 +1,4 @@
-{$DEFINE TConnection}{$I ..\Configuration\Defines.inc}
+{$DEFINE TConnection}{$I Configuration\Defines.inc}
 
 {$IFDEF TYPES}
 TConnection = record

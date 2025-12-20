@@ -1,4 +1,4 @@
-{$DEFINE TCircle}{$I ..\Configuration\Defines.inc}
+{$DEFINE TCircle}{$I ..\Type\Configuration\Defines.inc}
 
 {$IFDEF HELPERS}
 TCircleArrayHelper = type helper for TCircleArray

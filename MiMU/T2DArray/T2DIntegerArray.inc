@@ -1,4 +1,4 @@
-{$DEFINE Integer}{$I ..\Configuration\Defines.inc}
+{$DEFINE Integer}{$I ..\Type\Configuration\Defines.inc}
 
 {$IFDEF TYPES}
 ATIA = class

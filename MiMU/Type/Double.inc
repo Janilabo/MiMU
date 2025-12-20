@@ -1,4 +1,4 @@
-{$DEFINE Double}{$I ..\Configuration\Defines.inc}
+{$DEFINE Double}{$I Configuration\Defines.inc}
 
 {$IFDEF TYPES}
 {$I Core.inc}
@@ -74,21 +74,21 @@ function Comparison(const A, B: Double): Integer; overload;
   @action: Returns Double clamped by minimum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.ClampMin(const limit: Double): Double; {$DEFINE Skeleton_ClampMin}{$I Skeletons.inc}{$UNDEF Skeleton_ClampMin}
+function TDoubleHelper.ClampMin(const limit: Double): Double; {$DEFINE Skeleton_ClampMin}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_ClampMin}
 
 {==============================================================================]
   <ClampMax>
   @action: Returns Double clamped by maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.ClampMax(const limit: Double): Double; {$DEFINE Skeleton_ClampMax}{$I Skeletons.inc}{$UNDEF Skeleton_ClampMax}
+function TDoubleHelper.ClampMax(const limit: Double): Double; {$DEFINE Skeleton_ClampMax}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_ClampMax}
 
 {==============================================================================]
   <Clamp>
   @action: Returns Double clamped by minimum and maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.Clamp(const minimum, maximum: Double): Double; {$DEFINE Skeleton_Clamp}{$I Skeletons.inc}{$UNDEF Skeleton_Clamp}
+function TDoubleHelper.Clamp(const minimum, maximum: Double): Double; {$DEFINE Skeleton_Clamp}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Clamp}
 
 {==============================================================================]
   <BoundMin>
@@ -157,98 +157,98 @@ end;
   @action: Returns Double with minimum limit
   @note: Max() call.
 [==============================================================================}
-function TDoubleHelper.LimitMin(const limit: Double): Double; {$DEFINE Skeleton_LimitMin}{$I Skeletons.inc}{$UNDEF Skeleton_LimitMin}
+function TDoubleHelper.LimitMin(const limit: Double): Double; {$DEFINE Skeleton_LimitMin}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_LimitMin}
 
 {==============================================================================]
   <LimitMax>
   @action: Returns Double with maximum limit
   @note: Min() call.
 [==============================================================================}
-function TDoubleHelper.LimitMax(const limit: Double): Double; {$DEFINE Skeleton_LimitMax}{$I Skeletons.inc}{$UNDEF Skeleton_LimitMax}
+function TDoubleHelper.LimitMax(const limit: Double): Double; {$DEFINE Skeleton_LimitMax}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_LimitMax}
 
 {==============================================================================]
   <Limit>
   @action: Returns Double with minimum and maximum limits
   @note: EnsureRange() call.
 [==============================================================================}
-function TDoubleHelper.Limit(const minimum, maximum: Double): Double; {$DEFINE Skeleton_Limit}{$I Skeletons.inc}{$UNDEF Skeleton_Limit}
+function TDoubleHelper.Limit(const minimum, maximum: Double): Double; {$DEFINE Skeleton_Limit}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Limit}
 
 {==============================================================================]
   <ConstraintMin>
   @action: Returns true if Double is constrainted with minimum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.ConstraintMin(const limit: Double): Boolean; {$DEFINE Skeleton_ConstraintMin}{$I Skeletons.inc}{$UNDEF Skeleton_ConstraintMin}
+function TDoubleHelper.ConstraintMin(const limit: Double): Boolean; {$DEFINE Skeleton_ConstraintMin}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_ConstraintMin}
 
 {==============================================================================]
   <ConstraintMax>
   @action: Returns true if Double is constrainted with maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.ConstraintMax(const limit: Double): Boolean; {$DEFINE Skeleton_ConstraintMax}{$I Skeletons.inc}{$UNDEF Skeleton_ConstraintMax}
+function TDoubleHelper.ConstraintMax(const limit: Double): Boolean; {$DEFINE Skeleton_ConstraintMax}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_ConstraintMax}
 
 {==============================================================================]
   <Constraint>
   @action: Returns true if Double is constrainted with minimum or maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.Constraint(const minimum, maximum: Double): Boolean; {$DEFINE Skeleton_Constraint}{$I Skeletons.inc}{$UNDEF Skeleton_Constraint}
+function TDoubleHelper.Constraint(const minimum, maximum: Double): Boolean; {$DEFINE Skeleton_Constraint}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Constraint}
 
 {==============================================================================]
   <Increase>
   @action: Increases the Double value x by N.
   @note: Returns x before increasing it with N!
 [==============================================================================}
-function TDoubleHelper.Increase(const N: Double = 1): Double; overload; {$DEFINE Skeleton_Increase}{$I Skeletons.inc}{$UNDEF Skeleton_Increase}
+function TDoubleHelper.Increase(const N: Double = 1): Double; overload; {$DEFINE Skeleton_Increase}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Increase}
 
 {==============================================================================]
   <Increase>
   @action: Increases the Double value x by 1 if B is true.
   @note: Returns x before increasing it!
 [==============================================================================}
-function TDoubleHelper.Increase(const B: Boolean): Double; overload; {$DEFINE Skeleton_IncreaseB}{$I Skeletons.inc}{$UNDEF Skeleton_IncreaseB}
+function TDoubleHelper.Increase(const B: Boolean): Double; overload; {$DEFINE Skeleton_IncreaseB}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_IncreaseB}
 
 {==============================================================================]
   <Decrease>
   @action: Decreases the Double value x by N.
   @note: Returns x before decreasing it with N!
 [==============================================================================}
-function TDoubleHelper.Decrease(const N: Double = 1): Double; overload; {$DEFINE Skeleton_Decrease}{$I Skeletons.inc}{$UNDEF Skeleton_Decrease}
+function TDoubleHelper.Decrease(const N: Double = 1): Double; overload; {$DEFINE Skeleton_Decrease}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Decrease}
 
 {==============================================================================]
   <Decrease>
   @action: Decreases the Double value x by 1 if B is true.
   @note: Returns x before decreasing it!
 [==============================================================================}
-function TDoubleHelper.Decrease(const B: Boolean): Double; overload; {$DEFINE Skeleton_DecreaseB}{$I Skeletons.inc}{$UNDEF Skeleton_DecreaseB}
+function TDoubleHelper.Decrease(const B: Boolean): Double; overload; {$DEFINE Skeleton_DecreaseB}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_DecreaseB}
 
 {==============================================================================]
   <Increment>
   @action: Increases the Double value x by N.
   @note: Returns the increased x!
 [==============================================================================}
-function TDoubleHelper.Increment(const N: Double = 1): Double; overload; {$DEFINE Skeleton_Increment}{$I Skeletons.inc}{$UNDEF Skeleton_Increment}
+function TDoubleHelper.Increment(const N: Double = 1): Double; overload; {$DEFINE Skeleton_Increment}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Increment}
 
 {==============================================================================]
   <Increment>
   @action: Increases the Double value x by 1 if B is true.
   @note: Returns the increased x!
 [==============================================================================}
-function TDoubleHelper.Increment(const B: Boolean): Double; overload; {$DEFINE Skeleton_IncrementB}{$I Skeletons.inc}{$UNDEF Skeleton_IncrementB}
+function TDoubleHelper.Increment(const B: Boolean): Double; overload; {$DEFINE Skeleton_IncrementB}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_IncrementB}
 
 {==============================================================================]
   <Decrement>
   @action: Decreases the Double value x by N.
   @note: Returns the decreased x!
 [==============================================================================}
-function TDoubleHelper.Decrement(const N: Double = 1): Double; overload; {$DEFINE Skeleton_Decrement}{$I Skeletons.inc}{$UNDEF Skeleton_Decrement}
+function TDoubleHelper.Decrement(const N: Double = 1): Double; overload; {$DEFINE Skeleton_Decrement}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Decrement}
 
 {==============================================================================]
   <Decrement>
   @action: Decreases the Double value x by 1 if B is true.
   @note: Returns the decreased x!
 [==============================================================================}
-function TDoubleHelper.Decrement(const B: Boolean): Double; overload; {$DEFINE Skeleton_DecrementB}{$I Skeletons.inc}{$UNDEF Skeleton_DecrementB}
+function TDoubleHelper.Decrement(const B: Boolean): Double; overload; {$DEFINE Skeleton_DecrementB}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_DecrementB}
 
 {==============================================================================]
   <Digits>
@@ -334,7 +334,7 @@ end;
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TDoubleHelper.Sign(const target: Double = 0): Integer; inline; {$DEFINE Skeleton_Sign}{$I Skeletons.inc}{$UNDEF Skeleton_Sign}
+function TDoubleHelper.Sign(const target: Double = 0): Integer; inline; {$DEFINE Skeleton_Sign}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Sign}
 
 {==============================================================================]
   <MinDecimal>
@@ -406,14 +406,14 @@ end;
            Results: 0=EQUAL, 1=x>target, -1=x<target
   @note: None
 [==============================================================================}
-function TDoubleHelper.Compare(const target: Double): Integer; inline; {$DEFINE Skeleton_Compare}{$I Skeletons.inc}{$UNDEF Skeleton_Compare}
+function TDoubleHelper.Compare(const target: Double): Integer; inline; {$DEFINE Skeleton_Compare}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Compare}
 
 {==============================================================================]
   <Precede>
   @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
   @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
-function TDoubleHelper.Precede(const target: Double; const aAscending: Boolean): Boolean; overload; {$DEFINE Skeleton_Precede}{$I Skeletons.inc}{$UNDEF Skeleton_Precede}
+function TDoubleHelper.Precede(const target: Double; const aAscending: Boolean): Boolean; overload; {$DEFINE Skeleton_Precede}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Precede}
 
 {==============================================================================]
   <Ascending>
@@ -422,7 +422,7 @@ function TDoubleHelper.Precede(const target: Double; const aAscending: Boolean):
            sorting or merging arrays in ascending order.
   @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}
-function TDoubleHelper.Ascending(const target: Double): Boolean; inline; {$DEFINE Skeleton_Ascending}{$I Skeletons.inc}{$UNDEF Skeleton_Ascending}
+function TDoubleHelper.Ascending(const target: Double): Boolean; inline; {$DEFINE Skeleton_Ascending}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Ascending}
 
 {==============================================================================]
   <Descending>
@@ -431,7 +431,7 @@ function TDoubleHelper.Ascending(const target: Double): Boolean; inline; {$DEFIN
            sorting or merging arrays in descending order.
   @note: Pure comparison only; equivalent to Self >= target.
 [==============================================================================}
-function TDoubleHelper.Descending(const target: Double): Boolean; inline; {$DEFINE Skeleton_Descending}{$I Skeletons.inc}{$UNDEF Skeleton_Descending}
+function TDoubleHelper.Descending(const target: Double): Boolean; inline; {$DEFINE Skeleton_Descending}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Descending}
 
 {==============================================================================]
   <Distance>
@@ -590,7 +590,7 @@ begin
   Result := (Self < limit);
 end;
 
-function Comparison(const A, B: Double): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Skeletons.inc}{$UNDEF Skeleton_Comparison}
+function Comparison(const A, B: Double): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Comparison}
 {$ENDIF}
 
 {$UNDEF Double}

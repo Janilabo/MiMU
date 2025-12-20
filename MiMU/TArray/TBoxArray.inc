@@ -1,4 +1,4 @@
-{$DEFINE TBox}{$I ..\Configuration\Defines.inc}
+{$DEFINE TBox}{$I ..\Type\Configuration\Defines.inc}
 
 
 {$IFDEF HELPERS}
@@ -22,10 +22,10 @@ end;
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS) OR DEFINED(CLASSES)}
 {$I Core.inc}
 {$IFNDEF CLASSES}
-{$DEFINE FField := X1}{$I F.inc}
-{$DEFINE FField := Y1}{$I F.inc}
-{$DEFINE FField := X2}{$I F.inc}
-{$DEFINE FField := Y2}{$I F.inc}
+{$DEFINE FField := X1}{$I Configuration\F.inc}
+{$DEFINE FField := Y1}{$I Configuration\F.inc}
+{$DEFINE FField := X2}{$I Configuration\F.inc}
+{$DEFINE FField := Y2}{$I Configuration\F.inc}
 {$ENDIF}
 {$ENDIF}
 
