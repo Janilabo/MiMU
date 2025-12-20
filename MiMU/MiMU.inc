@@ -3,20 +3,21 @@ type
 {$ENDIF}
 
 {$IF (NOT DEFINED(TBS)) AND (NOT DEFINED(T1D)) AND (NOT DEFINED(T2D))}
-  {$I 0D\Integer.inc}
-  {$I 0D\Double.inc}
-  {$I 0D\String.inc}
-  {$I 0D\Char.inc}
-  {$I 0D\Boolean.inc}
-  {$I 0D\TPoint.inc}
-  {$I 0D\TRange.inc}
-  {$I 0D\TBox.inc}
-  {$I 0D\Int64.inc}
-  {$I 0D\TConnection.inc}
-  {$I 0D\TCircle.inc}
-  {$I 0D\TTriangle.inc}
-  {$I 0D\TSegment.inc}
-  {$I Randomness.inc}
+  {$I Type\Integer.inc}
+  {$I Type\Double.inc}
+  {$I Type\String.inc}
+  {$I Type\Char.inc}
+  {$I Type\Boolean.inc}
+  {$I Type\TPoint.inc}
+  {$I Type\TRange.inc}
+  {$I Type\TBox.inc}
+  {$I Type\Int64.inc}
+  {$I Type\TConnection.inc}
+  {$I Type\TCircle.inc}
+  {$I Type\TTriangle.inc}
+  {$I Type\TSegment.inc}
+  
+  {$I Miscellaneous\Randomness.inc}
 {$ENDIF}
 
 {$IFNDEF T2D}
@@ -28,19 +29,19 @@ type
   TBinarySearch = class
   public
   {$ENDIF}
-  {$I 1D\TIntegerArray.inc}
-  {$I 1D\TDoubleArray.inc}
-  {$I 1D\TStringArray.inc}
-  {$I 1D\TCharArray.inc}
-  {$I 1D\TBooleanArray.inc}
-  {$I 1D\TPointArray.inc}
-  {$I 1D\TBoxArray.inc}
-  {$I 1D\TRangeArray.inc}
-  {$I 1D\TInt64Array.inc}
-  {$I 1D\TConnectionArray.inc}
-  {$I 1D\TCircleArray.inc}
-  {$I 1D\TTriangleArray.inc}
-  {$I 1D\TSegmentArray.inc}
+  {$I TArray\TIntegerArray.inc}
+  {$I TArray\TDoubleArray.inc}
+  {$I TArray\TStringArray.inc}
+  {$I TArray\TCharArray.inc}
+  {$I TArray\TBooleanArray.inc}
+  {$I TArray\TPointArray.inc}
+  {$I TArray\TBoxArray.inc}
+  {$I TArray\TRangeArray.inc}
+  {$I TArray\TInt64Array.inc}
+  {$I TArray\TConnectionArray.inc}
+  {$I TArray\TCircleArray.inc}
+  {$I TArray\TTriangleArray.inc}
+  {$I TArray\TSegmentArray.inc}
 {$ENDIF}
 
 {$IFNDEF T1D}
@@ -48,19 +49,19 @@ type
   T2D = class
   public
   {$ENDIF}
-  {$I 2D\T2DIntegerArray.inc}
-  {$I 2D\T2DDoubleArray.inc}
-  {$I 2D\T2DStringArray.inc}
-  {$I 2D\T2DCharArray.inc}
-  {$I 2D\T2DBooleanArray.inc}
-  {$I 2D\T2DPointArray.inc}
-  {$I 2D\T2DBoxArray.inc}
-  {$I 2D\T2DRangeArray.inc}
-  {$I 2D\T2DInt64Array.inc}
-  {$I 2D\T2DConnectionArray.inc}
-  {$I 2D\T2DCircleArray.inc}
-  {$I 2D\T2DTriangleArray.inc}
-  {$I 2D\T2DSegmentArray.inc}
+  {$I T2DArray\T2DIntegerArray.inc}
+  {$I T2DArray\T2DDoubleArray.inc}
+  {$I T2DArray\T2DStringArray.inc}
+  {$I T2DArray\T2DCharArray.inc}
+  {$I T2DArray\T2DBooleanArray.inc}
+  {$I T2DArray\T2DPointArray.inc}
+  {$I T2DArray\T2DBoxArray.inc}
+  {$I T2DArray\T2DRangeArray.inc}
+  {$I T2DArray\T2DInt64Array.inc}
+  {$I T2DArray\T2DConnectionArray.inc}
+  {$I T2DArray\T2DCircleArray.inc}
+  {$I T2DArray\T2DTriangleArray.inc}
+  {$I T2DArray\T2DSegmentArray.inc}
 {$ENDIF}
 
 {$IFDEF CLASSES}
