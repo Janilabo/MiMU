@@ -1,8 +1,8 @@
-{$DEFINE TVar := Double}
-{$DEFINE TArr := TDoubleArray}
-{$DEFINE T2DArr := T2DDoubleArray}
-{$DEFINE TCmp := TDoubleCompare}
-{$DEFINE THelper := TDoubleHelper}
+{$DEFINE MType := Double}
+{$DEFINE MArray := TDoubleArray}
+{$DEFINE M2DArray := T2DDoubleArray}
+{$DEFINE MCompare := TDoubleCompare}
+{$DEFINE MHelper := TDoubleHelper}
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}

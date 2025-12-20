@@ -3,7 +3,7 @@
   @action: Returns field values from array.
   @note: None.
 [==============================================================================}
-function FField(const arr: TArr): FArr; overload;
+function FField(const arr: MArray): FArray; overload;
 {$IFDEF IMPLEMENTATION}
 var
   i: Integer;
@@ -19,7 +19,7 @@ end;
   @action: Returns arr indexes from array as TIntegerArray where values match val.
   @note: None.
 [==============================================================================}
-function FField(const arr: TArr; const val: FVar): TIntegerArray; overload;
+function FField(const arr: MArray; const val: FType): TIntegerArray; overload;
 {$IFDEF IMPLEMENTATION}
 var
   i, r: Integer;
@@ -39,16 +39,16 @@ end;
   @action: Returns arr indexes from array as TIntegerArray where values match vals.
   @note: None.
 [==============================================================================}
-function FField(const arr: TArr; const vals: FArr): TIntegerArray; overload;
+function FField(const arr: MArray; const vals: FArray): TIntegerArray; overload;
 {$IFDEF IMPLEMENTATION}
 var
   i, r: Integer;
-  d: specialize TDictionary<FVar, Boolean>;
+  d: specialize TDictionary<FType, Boolean>;
 begin
   r := 0;
   if (arr.Exists and (Length(vals) > 0)) then
   begin
-    d := specialize TDictionary<FVar, Boolean>.Create;
+    d := specialize TDictionary<FType, Boolean>.Create;
     try
       for i := 0 to High(vals) do
         d.TryAdd(vals[i], True);

@@ -1,8 +1,8 @@
-{$DEFINE TVar := TCircle}
-{$DEFINE TArr := TCircleArray}
-{$DEFINE T2DArr := T2DCircleArray}
-{$DEFINE TCmp := TCircleCompare}
-{$DEFINE THelper := TCircleHelper}
+{$DEFINE MType := TCircle}
+{$DEFINE MArray := TCircleArray}
+{$DEFINE M2DArray := T2DCircleArray}
+{$DEFINE MCompare := TCircleCompare}
+{$DEFINE MHelper := TCircleHelper}
 {$UNDEF Sortable}
 
 {$IFDEF TYPES}

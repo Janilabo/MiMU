@@ -1,9 +1,9 @@
-{$DEFINE TVar := TBox}
-{$DEFINE TArr := TBoxArray}
-{$DEFINE T2DArr := T2DBoxArray}
-{$DEFINE THelper := TBoxArrayHelper}
-{$DEFINE FVar := Integer}
-{$DEFINE FArr := TIntegerArray}
+{$DEFINE MType := TBox}
+{$DEFINE MArray := TBoxArray}
+{$DEFINE M2DArray := T2DBoxArray}
+{$DEFINE MHelper := TBoxArrayHelper}
+{$DEFINE FType := Integer}
+{$DEFINE FArray := TIntegerArray}
 {$UNDEF Sortable}
 
 {$IFDEF HELPERS}

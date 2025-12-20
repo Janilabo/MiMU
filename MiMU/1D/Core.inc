@@ -1,115 +1,115 @@
 {$IFDEF HELPERS}
-THelper = type helper for TArr
-  function Add(const item: TVar; const duplicates: Boolean = True): TArr; overload;
-  function Add(const items: TArr; const duplicates: Boolean = True): TArr; overload;
+MHelper = type helper for MArray
+  function Add(const item: MType; const duplicates: Boolean = True): MArray; overload;
+  function Add(const items: MArray; const duplicates: Boolean = True): MArray; overload;
   function AllEqual: Boolean; overload;
-  function AllOf(const candidates: TArr): Boolean; overload;
+  function AllOf(const candidates: MArray): Boolean; overload;
   function AllSame: Boolean; overload;
   function AllUnique: Boolean; overload;
-  function Any(const null: TVar): TVar; overload;
-  function Any: TVar; overload;
-  function AnyOf(const candidates: TArr): Boolean; overload;
-  function Append(const item: TVar; const duplicates: Boolean = True): TArr; overload;
-  function Append(const items: TArr; const duplicates: Boolean = True): TArr; overload;
-  function As2D(const rows, columns: Integer): T2DArr; overload;
-  function As2D(const width: Integer): T2DArr; overload;
-  function Backwards: TArr; overload;
-  function Blend(const items: TArr; const index: Integer = 2147483647): TArr; overload;
-  function Build(const item: TVar; const aSize: Integer = 1): TArr; overload;
-  function BuiltWith(const blocks: TArr): Boolean; overload;
-  function MadeOf(const allowed: TArr): Boolean; overload;
-  function FreeOf(const forbidden: TArr): Boolean; overload;
-  function BuiltWithout(const forbidden: TArr): Boolean; overload;
-  function Blit(const items: TArr; const index: Integer = 0): Integer; overload;
-  function Classes: T2DArr; overload;
-  function Classes(const weight: TIntegerArray): T2DArr; overload;
-  function Classes(const weight: TDoubleArray): T2DArr; overload;
-  function Classify: T2DArr; overload;
-  function Classify(const weight: TIntegerArray): T2DArr; overload;
-  function Classify(const weight: TDoubleArray): T2DArr; overload;
+  function Any(const null: MType): MType; overload;
+  function Any: MType; overload;
+  function AnyOf(const candidates: MArray): Boolean; overload;
+  function Append(const item: MType; const duplicates: Boolean = True): MArray; overload;
+  function Append(const items: MArray; const duplicates: Boolean = True): MArray; overload;
+  function As2D(const rows, columns: Integer): M2DArray; overload;
+  function As2D(const width: Integer): M2DArray; overload;
+  function Backwards: MArray; overload;
+  function Blend(const items: MArray; const index: Integer = 2147483647): MArray; overload;
+  function Build(const item: MType; const aSize: Integer = 1): MArray; overload;
+  function BuiltWith(const blocks: MArray): Boolean; overload;
+  function MadeOf(const allowed: MArray): Boolean; overload;
+  function FreeOf(const forbidden: MArray): Boolean; overload;
+  function BuiltWithout(const forbidden: MArray): Boolean; overload;
+  function Blit(const items: MArray; const index: Integer = 0): Integer; overload;
+  function Classes: M2DArray; overload;
+  function Classes(const weight: TIntegerArray): M2DArray; overload;
+  function Classes(const weight: TDoubleArray): M2DArray; overload;
+  function Classify: M2DArray; overload;
+  function Classify(const weight: TIntegerArray): M2DArray; overload;
+  function Classify(const weight: TDoubleArray): M2DArray; overload;
   function Clear: Boolean; overload;
-  function Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
-  function Clone(const ID: TIntegerArray): TArr; overload;
-  function Cloned: TArr; overload;
-  function Collated: T2DArr; overload;
-  function Combine(const b: TArr): TArr; overload;
-  function Components(const connections: TConnectionArray): T2DArr; overload;
+  function Clone(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
+  function Clone(const ID: TIntegerArray): MArray; overload;
+  function Cloned: MArray; overload;
+  function Collated: M2DArray; overload;
+  function Combine(const b: MArray): MArray; overload;
+  function Components(const connections: TConnectionArray): M2DArray; overload;
   function Compact: Integer; overload;
-  function Compacted: TArr; overload;
-  function Compacted(const threshold: Integer): TArr; overload;
+  function Compacted: MArray; overload;
+  function Compacted(const threshold: Integer): MArray; overload;
   function Compress: Integer; overload;
-  function Compressed: TArr; overload;
-  function Compressed(const threshold: Integer): TArr; overload;
-  function Comprised(const items: TArr): Boolean; overload;
-  function Constant(const item: TVar): Boolean; overload;
+  function Compressed: MArray; overload;
+  function Compressed(const threshold: Integer): MArray; overload;
+  function Comprised(const items: MArray): Boolean; overload;
+  function Constant(const item: MType): Boolean; overload;
   function Constant: Boolean; overload;
-  function Contains(const item: TVar; const index: Integer = 0): Boolean; overload;
-  function Contains(const item: TVar; const limit: TRange): Boolean; overload;
-  function ContainsAtLeast(const item: TVar; const limit: Integer): Boolean; overload;
-  function ContainsAtMost(const item: TVar; const limit: Integer): Boolean; overload;
-  function Copied: TArr; overload;
-  function Copy(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
-  function Count(const item: TVar): Integer; overload;
-  function Count(const items: TArr): Integer; overload;
-  function Create(const item: TVar): TArr; overload;
-  function Create(const aSize: Integer; const item: TVar): TArr; overload;
-  function Deduplicated: TArr; overload;
-  function Delete(const index: Integer = 0): TArr; overload;
-  function Delete(const ID: TIntegerArray): TArr; overload;
-  function Differ(const target: TArr): Boolean; overload;
-  function Disordered: TArr; overload;
+  function Contains(const item: MType; const index: Integer = 0): Boolean; overload;
+  function Contains(const item: MType; const limit: TRange): Boolean; overload;
+  function ContainsAtLeast(const item: MType; const limit: Integer): Boolean; overload;
+  function ContainsAtMost(const item: MType; const limit: Integer): Boolean; overload;
+  function Copied: MArray; overload;
+  function Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
+  function Count(const item: MType): Integer; overload;
+  function Count(const items: MArray): Integer; overload;
+  function Create(const item: MType): MArray; overload;
+  function Create(const aSize: Integer; const item: MType): MArray; overload;
+  function Deduplicated: MArray; overload;
+  function Delete(const index: Integer = 0): MArray; overload;
+  function Delete(const ID: TIntegerArray): MArray; overload;
+  function Differ(const target: MArray): Boolean; overload;
+  function Disordered: MArray; overload;
   function Distinct: Integer; overload;
-  function Distincted: T2DArr; overload;
-  function Distribute(const parts: Integer): T2DArr; overload;
-  function Diversified: TArr; overload;
-  function DiversifiedEx(const dAscending: Boolean = True): TArr; overload;
+  function Distincted: M2DArray; overload;
+  function Distribute(const parts: Integer): M2DArray; overload;
+  function Diversified: MArray; overload;
+  function DiversifiedEx(const dAscending: Boolean = True): MArray; overload;
   function Domain: TRange; overload;
-  function Drop(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload;
-  function Dump(const items: TArr; const index: Integer = 0): TArr; overload;
-  function Dupe: TArr; overload;
-  function Duplicate(const xTimes: Integer = 1): TArr; overload;
-  function Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): TArr; overload;
-  function Emplace(const item: TVar; const index: Integer = 0): Integer; overload;
+  function Drop(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
+  function Dump(const items: MArray; const index: Integer = 0): MArray; overload;
+  function Dupe: MArray; overload;
+  function Duplicate(const xTimes: Integer = 1): MArray; overload;
+  function Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): MArray; overload;
+  function Emplace(const item: MType; const index: Integer = 0): Integer; overload;
   function Empty: Boolean; overload;
-  function Equal(const target: TArr): Boolean; overload;
-  function Erase(const item: TVar; const index: Integer = 2147483647; const all: Boolean = True): TArr; overload;
-  function Erase(const item: TVar; const all: Boolean): TArr; overload;
-  function Erase(const items: TArr; const index: Integer = 2147483647; const all: Boolean = True): TArr; overload;
-  function Erase(const items: TArr; const all: Boolean): TArr; overload;
-  function Exact(const items: TArr): Boolean; overload;
+  function Equal(const target: MArray): Boolean; overload;
+  function Erase(const item: MType; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
+  function Erase(const item: MType; const all: Boolean): MArray; overload;
+  function Erase(const items: MArray; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
+  function Erase(const items: MArray; const all: Boolean): MArray; overload;
+  function Exact(const items: MArray): Boolean; overload;
   function Excessive: Boolean; overload; 
   function Exch(const aIndex, bIndex: Integer): Boolean; overload;
   function Exchange(const aIndex, bIndex: Integer): Boolean; overload;
-  function Exchange(var b: TArr): Integer; overload;
-  function Exchange(const swaps: TConnectionArray): TArr; overload;
-  function Exchanges(const target: TArr): TConnectionArray; overload;
-  function Exclude(const items: TArr; const index: Integer = 2147483647): TArr; overload;
+  function Exchange(var b: MArray): Integer; overload;
+  function Exchange(const swaps: TConnectionArray): MArray; overload;
+  function Exchanges(const target: MArray): TConnectionArray; overload;
+  function Exclude(const items: MArray; const index: Integer = 2147483647): MArray; overload;
   function Exists: Boolean; overload;
-  function Devein(const dIDs: TIntegerArray; const dValue: TVar): TArr; overload;
-  function Devein(const dIDs: TIntegerArray): TArr; overload;
-  function Expel(const eIDs: TIntegerArray): TArr; overload;
-  function Extend(const item: TVar): TArr; overload;
-  function Extend(const items: TArr): TArr; overload;
-  function Extract(const item: TVar; const index: Integer = 0): TArr; overload;
-  function Extract(const items: TArr; const index: Integer = 0): TArr; overload;
-  function ExtractEvery(const X: Integer = 1; const index: Integer = 0): TArr; overload;
-  function ExtractIDs(const allowed: TIntegerArray): TArr; overload;
-  function ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): TArr; overload;
-  function Feed(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload;
-  function Fill(const item: TVar; const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
-  function Fill(const items: TArr; const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
-  function Filter(const item: TVar; const index: Integer = 0): TArr; overload;
-  function Filter(const items: TArr; const index: Integer = 0): TArr; overload;
-  function FilterEvery(const X: Integer = 1; const index: Integer = 0): TArr; overload;
-  function FilterIDs(const forbidden: TIntegerArray): TArr; overload;
-  function FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): TArr; overload;
-  function Find(const ID: TRange; const item: TVar): Integer; overload;
-  function Find(const ID: TIntegerArray; const item: TVar): Integer; overload;
-  function Find(const ID: TRange; const items: TArr): Integer; overload;
-  function Find(const ID: TIntegerArray; const items: TArr): Integer; overload;
+  function Devein(const dIDs: TIntegerArray; const dValue: MType): MArray; overload;
+  function Devein(const dIDs: TIntegerArray): MArray; overload;
+  function Expel(const eIDs: TIntegerArray): MArray; overload;
+  function Extend(const item: MType): MArray; overload;
+  function Extend(const items: MArray): MArray; overload;
+  function Extract(const item: MType; const index: Integer = 0): MArray; overload;
+  function Extract(const items: MArray; const index: Integer = 0): MArray; overload;
+  function ExtractEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
+  function ExtractIDs(const allowed: TIntegerArray): MArray; overload;
+  function ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): MArray; overload;
+  function Feed(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
+  function Fill(const item: MType; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
+  function Fill(const items: MArray; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
+  function Filter(const item: MType; const index: Integer = 0): MArray; overload;
+  function Filter(const items: MArray; const index: Integer = 0): MArray; overload;
+  function FilterEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
+  function FilterIDs(const forbidden: TIntegerArray): MArray; overload;
+  function FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): MArray; overload;
+  function Find(const ID: TRange; const item: MType): Integer; overload;
+  function Find(const ID: TIntegerArray; const item: MType): Integer; overload;
+  function Find(const ID: TRange; const items: MArray): Integer; overload;
+  function Find(const ID: TIntegerArray; const items: MArray): Integer; overload;
   function First: Integer; overload;
-  function First(const item: TVar): Integer; overload;
-  function First(const items: TArr): Integer; overload;
+  function First(const item: MType): Integer; overload;
+  function First(const items: MArray): Integer; overload;
   function Fit: Integer; overload;
   function Fit(const aSize: Integer): Integer; overload;
   function Fit(const aBounds: TRange): Integer; overload;
@@ -117,187 +117,187 @@ THelper = type helper for TArr
   function Fits(const target: TRange): Boolean; overload;
   function Flip: Boolean; overload;
   function Free: Integer; overload;
-  function FromLeft(const count: Integer; const index: Integer = 2147483647): TArr; overload;
-  function FromRight(const count: Integer; const index: Integer = 0): TArr; overload;
-  function Get: TArr; overload;
-  function Get(const ID: TIntegerArray): TArr; overload;
-  function Get(const ID: TRange): TArr; overload;
-  function GotAtLeast(const item: TVar; const limit: Integer): Boolean; overload;
-  function GotAtMost(const item: TVar; const limit: Integer): Boolean; overload;
-  function Got(const item: TVar; const limit: TRange): Boolean; overload;
-  function Group: T2DArr; overload;
-  function Group(const weight: TIntegerArray; const wSorted: Boolean = False): T2DArr; overload;
-  function Group(const weight: TDoubleArray; const wSorted: Boolean = False): T2DArr; overload;
-  function Grouped(const groups: TIntegerArray): T2DArr; overload;
-  function Groupify(const groups: TIntegerArray): T2DArr; overload;
-  function Grouping(const groups: TIntegerArray): T2DArr; overload;
-  function Grow(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload;
-  function HasAtLeast(const item: TVar; const limit: Integer): Boolean; overload;
-  function HasAtMost(const item: TVar; const limit: Integer): Boolean; overload;
-  function Has(const item: TVar; const limit: TRange): Boolean; overload;
-  function Holds(const chain: TArr): Boolean; overload;
-  function Homogeneous(const item: TVar): Boolean; overload;
+  function FromLeft(const count: Integer; const index: Integer = 2147483647): MArray; overload;
+  function FromRight(const count: Integer; const index: Integer = 0): MArray; overload;
+  function Get: MArray; overload;
+  function Get(const ID: TIntegerArray): MArray; overload;
+  function Get(const ID: TRange): MArray; overload;
+  function GotAtLeast(const item: MType; const limit: Integer): Boolean; overload;
+  function GotAtMost(const item: MType; const limit: Integer): Boolean; overload;
+  function Got(const item: MType; const limit: TRange): Boolean; overload;
+  function Group: M2DArray; overload;
+  function Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload;
+  function Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload;
+  function Grouped(const groups: TIntegerArray): M2DArray; overload;
+  function Groupify(const groups: TIntegerArray): M2DArray; overload;
+  function Grouping(const groups: TIntegerArray): M2DArray; overload;
+  function Grow(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
+  function HasAtLeast(const item: MType; const limit: Integer): Boolean; overload;
+  function HasAtMost(const item: MType; const limit: Integer): Boolean; overload;
+  function Has(const item: MType; const limit: TRange): Boolean; overload;
+  function Holds(const chain: MArray): Boolean; overload;
+  function Homogeneous(const item: MType): Boolean; overload;
   function Homogeneous: Boolean; overload;
   function ID(const aAscending: Boolean = True): TIntegerArray; overload;
   function IDs(const aAscending: Boolean = True): TIntegerArray; overload;
-  function IDs(const ID: TIntegerArray): TArr; overload;
-  function IDs(const ID: TIntegerArray; const item: TVar): TArr; overload;
-  function IDs(const ID: TIntegerArray; const items: TArr): TArr; overload;
-  function Includes(const item: TVar; const index: Integer = 2147483647): Boolean; overload;
+  function IDs(const ID: TIntegerArray): MArray; overload;
+  function IDs(const ID: TIntegerArray; const item: MType): MArray; overload;
+  function IDs(const ID: TIntegerArray; const items: MArray): MArray; overload;
+  function Includes(const item: MType; const index: Integer = 2147483647): Boolean; overload;
   function Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
   function Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
   function Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
   function Indices(const aAscending: Boolean = True): TIntegerArray; overload;
   function Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
-  function Inject(const items: TArr; const index: Integer = 2147483647): Integer; overload;
-  function IntersectionCounted(const items: TArr): Integer; overload;
-  function Keep(const items: TArr; const index: Integer = 0): TArr; overload;
+  function Inject(const items: MArray; const index: Integer = 2147483647): Integer; overload;
+  function IntersectionCounted(const items: MArray): Integer; overload;
+  function Keep(const items: MArray; const index: Integer = 0): MArray; overload;
   function Kill: Integer; overload;
   function Last: Integer; overload;
-  function Last(const item: TVar): Integer; overload;
-  function Last(const items: TArr): Integer; overload;
-  function LeastCommon: TVar; overload;
-  function LeastFrequent: TVar; overload;
+  function Last(const item: MType): Integer; overload;
+  function Last(const items: MArray): Integer; overload;
+  function LeastCommon: MType; overload;
+  function LeastFrequent: MType; overload;
   function Length: Integer; overload;
-  function Loc(const item: TVar; const index: Integer = 2147483647): Integer; overload;
-  function Loc(const items: TArr; const index: Integer = 2147483647): Integer; overload;
-  function Location(const item: TVar; const index: Integer = 2147483647): Integer; overload;
-  function Location(const items: TArr; const index: Integer = 2147483647): Integer; overload;
-  function Locations(const item: TVar; const index: Integer = 2147483647): TIntegerArray; overload;
-  function Locations(const items: TArr; const index: Integer = 2147483647): TIntegerArray; overload;
+  function Loc(const item: MType; const index: Integer = 2147483647): Integer; overload;
+  function Loc(const items: MArray; const index: Integer = 2147483647): Integer; overload;
+  function Location(const item: MType; const index: Integer = 2147483647): Integer; overload;
+  function Location(const items: MArray; const index: Integer = 2147483647): Integer; overload;
+  function Locations(const item: MType; const index: Integer = 2147483647): TIntegerArray; overload;
+  function Locations(const items: MArray; const index: Integer = 2147483647): TIntegerArray; overload;
   function Locations: TIntegerArray; overload;
   function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
   function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
   function Mix(const mixings: Integer = 1): Boolean; overload;
-  function Mixed(const mixings: Integer = 1): TArr; overload;
-  function MostCommon: TVar; overload;
-  function MostFrequent: TVar; overload;
-  function Movement(const moves: TConnectionArray): TArr; overload;
-  function Movements(const target: TArr): TConnectionArray; overload;
+  function Mixed(const mixings: Integer = 1): MArray; overload;
+  function MostCommon: MType; overload;
+  function MostFrequent: MType; overload;
+  function Movement(const moves: TConnectionArray): MArray; overload;
+  function Movements(const target: MArray): TConnectionArray; overload;
   function Multi(const threshold: Integer = 2): Boolean; overload;
   function Multi(const threshold: TRange): Boolean; overload;
-  function Next(const index: Integer; const count: Integer = 2147483647): TArr; overload;
-  function NoneOf(const forbidden: TArr): Boolean; overload;
+  function Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
+  function NoneOf(const forbidden: MArray): Boolean; overload;
   function Occupied: Boolean; overload;
-  function Occurs(const item: TVar; const occurrence: Integer = 1): Boolean; overload;
-  function Overlay(const items: TArr; const index: Integer; const init: TVar): TArr; overload;
-  function Overlay(const items: TArr; const index: Integer = 0): TArr; overload;
+  function Occurs(const item: MType; const occurrence: Integer = 1): Boolean; overload;
+  function Overlay(const items: MArray; const index: Integer; const init: MType): MArray; overload;
+  function Overlay(const items: MArray; const index: Integer = 0): MArray; overload;
   function Oversize(const limit: Integer): Boolean; overload;
-  function Partition(const pSize: Integer): T2DArr; overload;
-  function Patch(const index: Integer; const items: TArr): Integer; overload;
+  function Partition(const pSize: Integer): M2DArray; overload;
+  function Patch(const index: Integer; const items: MArray): Integer; overload;
   function Plain: Boolean; overload;
-  function Pick(const items: TArr; const index: Integer = 0): TArr; overload;
-  function Pop: TVar; overload;
-  function Pop(const null: TVar): TVar; overload;
-  function Populate(const items: TArr; const times: Integer = 1): Boolean; overload;
-  function Populate(const item: TVar; const times: Integer = 1): Boolean; overload;
+  function Pick(const items: MArray; const index: Integer = 0): MArray; overload;
+  function Pop: MType; overload;
+  function Pop(const null: MType): MType; overload;
+  function Populate(const items: MArray; const times: Integer = 1): Boolean; overload;
+  function Populate(const item: MType; const times: Integer = 1): Boolean; overload;
   function Populated(const population: TRange): Boolean; overload;
   function Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload;
-  function Pos(const item: TVar; const index: Integer = 0): Integer; overload;
-  function Pos(const items: TArr; const index: Integer = 0): Integer; overload;
-  function Position(const item: TVar; const index: Integer = 0): Integer; overload;
-  function Position(const items: TArr; const index: Integer = 0): Integer; overload;
-  function Positions(const item: TVar; const index: Integer = 0): TIntegerArray; overload;
-  function Positions(const items: TArr; const index: Integer = 0): TIntegerArray; overload;
+  function Pos(const item: MType; const index: Integer = 0): Integer; overload;
+  function Pos(const items: MArray; const index: Integer = 0): Integer; overload;
+  function Position(const item: MType; const index: Integer = 0): Integer; overload;
+  function Position(const items: MArray; const index: Integer = 0): Integer; overload;
+  function Positions(const item: MType; const index: Integer = 0): TIntegerArray; overload;
+  function Positions(const items: MArray; const index: Integer = 0): TIntegerArray; overload;
   function Positions: TIntegerArray; overload;
-  function Prepend(const items: TArr; const index: Integer = 0): Integer; overload;
-  function Presence(const item: TVar; const occurrence: Integer = 1): Boolean; overload;
-  function Previous(const index: Integer; const count: Integer = 2147483647): TArr; overload;
+  function Prepend(const items: MArray; const index: Integer = 0): Integer; overload;
+  function Presence(const item: MType; const occurrence: Integer = 1): Boolean; overload;
+  function Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
   function Prune: Integer; overload;
-  function Pruned: TArr; overload;
-  function Pruned(const threshold: Integer): TArr; overload;
-  function Pull: TArr; overload;
-  function Purified(const dAscending: Boolean = True): TArr; overload;
+  function Pruned: MArray; overload;
+  function Pruned(const threshold: Integer): MArray; overload;
+  function Pull: MArray; overload;
+  function Purified(const dAscending: Boolean = True): MArray; overload;
   function Purify(const dAscending: Boolean = True): Integer; overload;
-  function Push(const item: TVar): TArr; overload;
-  function Push(const items: TArr): TArr; overload;
-  function Put(const ID: TIntegerArray; const item: TVar): TArr; overload;
-  function Put(const ID: TIntegerArray; const items: TArr): TArr; overload;
-  function Put(const index: Integer; const items: TArr): TArr; overload;
+  function Push(const item: MType): MArray; overload;
+  function Push(const items: MArray): MArray; overload;
+  function Put(const ID: TIntegerArray; const item: MType): MArray; overload;
+  function Put(const ID: TIntegerArray; const items: MArray): MArray; overload;
+  function Put(const index: Integer; const items: MArray): MArray; overload;
   function QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
   function QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
-  function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): TArr; overload;
-  function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): TArr; overload;
-  function Randomized: TArr; overload;
-  function Range(const subArray: TArr; const index: Integer = 0): TRange; overload;
-  function Ranges(const subArray: TArr; const index: Integer = 0): TRangeArray; overload;
+  function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): MArray; overload;
+  function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): MArray; overload;
+  function Randomized: MArray; overload;
+  function Range(const subArray: MArray; const index: Integer = 0): TRange; overload;
+  function Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload;
   function Recreate(const arrSize: Integer): Boolean; overload;
-  function Reject(const items: TArr; const index: Integer = 2147483647): TArr; overload;
-  function Remove(const item: TVar; const index: Integer = 0; const all: Boolean = True): TArr; overload;
-  function Remove(const item: TVar; const all: Boolean): TArr; overload;
-  function Remove(const items: TArr; const index: Integer = 0; const all: Boolean = True): TArr; overload;
-  function Remove(const items: TArr; const all: Boolean): TArr; overload;
+  function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
+  function Remove(const item: MType; const index: Integer = 0; const all: Boolean = True): MArray; overload;
+  function Remove(const item: MType; const all: Boolean): MArray; overload;
+  function Remove(const items: MArray; const index: Integer = 0; const all: Boolean = True): MArray; overload;
+  function Remove(const items: MArray; const all: Boolean): MArray; overload;
   function Reposition(const oldIndex, newIndex: Integer): Boolean; overload;
   function Reset: Integer; overload;
   function Resize(const aChange: Integer): Integer; overload;
-  function Resize(const aChange: Integer; const null: TVar): Integer; overload;
-  function Reversal: TArr; overload;
+  function Resize(const aChange: Integer; const null: MType): Integer; overload;
+  function Reversal: MArray; overload;
   function Reverse: Boolean; overload;
-  function Reversed: TArr; overload;
+  function Reversed: MArray; overload;
   function Reversify: Boolean; overload;
-  function Reversion: TArr; overload;
-  function Runs: T2DArr; overload;
-  function Sample(const sSize: Integer): TArr; overload;
-  function Scan(const ID: TRange; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload;
-  function Scan(const ID: TIntegerArray; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload;
-  function Scan(const ID: TRange; const items: TArr; const limit: Integer = 2147483647): TIntegerArray; overload;
-  function Scan(const ID: TIntegerArray; const items: TArr; const limit: Integer = 2147483647): TIntegerArray; overload;
-  function Scramble(const swaps: Integer = -1): TArr; overload;
-  function Shake(const shakes: Integer = 1): TArr; overload;
-  function Shift: TVar; overload;
-  function Shift(const sCount: Integer): TArr; overload;
-  function Shuffle(const shuffles: Integer = 1): TArr; overload;
-  function Singlify(const item: TVar): Integer; overload;
-  function Singlified(const item: TVar): TArr; overload;
+  function Reversion: MArray; overload;
+  function Runs: M2DArray; overload;
+  function Sample(const sSize: Integer): MArray; overload;
+  function Scan(const ID: TRange; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload;
+  function Scan(const ID: TIntegerArray; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload;
+  function Scan(const ID: TRange; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
+  function Scan(const ID: TIntegerArray; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
+  function Scramble(const swaps: Integer = -1): MArray; overload;
+  function Shake(const shakes: Integer = 1): MArray; overload;
+  function Shift: MType; overload;
+  function Shift(const sCount: Integer): MArray; overload;
+  function Shuffle(const shuffles: Integer = 1): MArray; overload;
+  function Singlify(const item: MType): Integer; overload;
+  function Singlified(const item: MType): MArray; overload;
   function Singular: Boolean; overload;
-  function Singularize(const item: TVar): Integer; overload;
-  function Singularized(const item: TVar): TArr; overload;
-  function Soloize(const item: TVar): Integer; overload;
-  function Soloized(const item: TVar): TArr; overload;
+  function Singularize(const item: MType): Integer; overload;
+  function Singularized(const item: MType): MArray; overload;
+  function Soloize(const item: MType): Integer; overload;
+  function Soloized(const item: MType): MArray; overload;
   function Size: Integer; overload;
-  function Size(const aSize: Integer): TArr; overload;
-  function Size(const aSize: Integer; const null: TVar): TArr; overload;
+  function Size(const aSize: Integer): MArray; overload;
+  function Size(const aSize: Integer; const null: MType): MArray; overload;
   function SizeBetween(const sMin, sMax: Integer): Boolean; overload;
   function SizeMax(const target: Integer): Boolean; overload;
   function SizeMin(const target: Integer): Boolean; overload;
-  function Slice(const r: TRange): TArr; overload;
-  function Slice(const r: TRangeArray): TArr; overload;
+  function Slice(const r: TRange): MArray; overload;
+  function Slice(const r: TRangeArray): MArray; overload;
   function Slots: TIntegerArray; overload;
-  function Some: TArr; overload;
-  function Some(const amount: Integer): TArr; overload;
+  function Some: MArray; overload;
+  function Some(const amount: Integer): MArray; overload;
   function Span: TRange; overload;
-  function Span(const subArray: TArr; const index: Integer = 2147483647): TRange; overload;
-  function Spans(const subArray: TArr; const index: Integer = 2147483647): TRangeArray; overload;
-  function Strip(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload;
-  function SubarrayLocation(const pattern: TArr): Integer; overload;
-  function SubarrayLocations(const pattern: TArr): TIntegerArray; overload;
-  function SubarrayPosition(const pattern: TArr): Integer; overload;
-  function SubarrayPositions(const pattern: TArr): TIntegerArray; overload;
-  function Subset(const items: TArr): Boolean; overload;
-  function Supply(const item: TVar): Integer; overload;
-  function Supply(const items: TArr): Integer; overload;
-  function Swapped(var target: TArr): Integer; overload;
-  function SwapMerged(var target: TArr): TArr; overload;
-  function SwappedMerge(var target: TArr): TArr; overload;
-  function To2D(const rows, columns: Integer): T2DArr; overload;
-  function To2D(const height: Integer): T2DArr; overload;
+  function Span(const subArray: MArray; const index: Integer = 2147483647): TRange; overload;
+  function Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload;
+  function Strip(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
+  function SubarrayLocation(const pattern: MArray): Integer; overload;
+  function SubarrayLocations(const pattern: MArray): TIntegerArray; overload;
+  function SubarrayPosition(const pattern: MArray): Integer; overload;
+  function SubarrayPositions(const pattern: MArray): TIntegerArray; overload;
+  function Subset(const items: MArray): Boolean; overload;
+  function Supply(const item: MType): Integer; overload;
+  function Supply(const items: MArray): Integer; overload;
+  function Swapped(var target: MArray): Integer; overload;
+  function SwapMerged(var target: MArray): MArray; overload;
+  function SwappedMerge(var target: MArray): MArray; overload;
+  function To2D(const rows, columns: Integer): M2DArray; overload;
+  function To2D(const height: Integer): M2DArray; overload;
   function ToIndexes: TIntegerArray; overload;
-  function Trade(var b: TArr): Integer; overload;
+  function Trade(var b: MArray): Integer; overload;
   function Undersize(const limit: Integer): Boolean; overload;
-  function Uncluttered: TArr; overload;
+  function Uncluttered: MArray; overload;
   function Uniform: Boolean; overload;
-  function Uniform(const item: TVar): Boolean; overload;
+  function Uniform(const item: MType): Boolean; overload;
   function Uniformity: Double; overload;
-  function Unified(const dAscending: Boolean = True): TArr; overload;
+  function Unified(const dAscending: Boolean = True): MArray; overload;
   function Unify(const dAscending: Boolean = True): Integer; overload;
-  function Unduplicated: TArr; overload;
-  function Uniqued: TArr; overload;
+  function Unduplicated: MArray; overload;
+  function Uniqued: MArray; overload;
   function Uniques: TIntegerArray; overload;
-  function Unshift(const item: TVar): TArr; overload;
-  function Unshift(const items: TArr): TArr; overload;
+  function Unshift(const item: MType): MArray; overload;
+  function Unshift(const items: MArray): MArray; overload;
   function Void: Boolean; overload;
   function Waste: Integer; overload;
-  function Zigzag(const zAscending: Boolean = True): TArr; overload;
+  function Zigzag(const zAscending: Boolean = True): MArray; overload;
   {$IFDEF Sortable}
   function Sortable: Boolean; overload;
   function Sorted(const aAscending: Boolean = True): Boolean; overload;
@@ -310,29 +310,29 @@ THelper = type helper for TArr
   function Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload;
   function Order: Integer; overload;
   function Orientation: Integer; overload;
-  function Descend: TArr; overload;
-  function Ascend: TArr; overload;
+  function Descend: MArray; overload;
+  function Ascend: MArray; overload;
   function Descending: Boolean; overload;
   function Ascending: Boolean; overload;
   function Decreasing: Boolean; overload;
   function Increasing: Boolean; overload;
   function Downward: Boolean; overload;
   function Upward: Boolean; overload;
-  function Lowest: TVar; overload;
-  function Highest: TVar; overload;
+  function Lowest: MType; overload;
+  function Highest: MType; overload;
   function Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
   function Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload;
   function Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
   function Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload;
-  function Mode: TVar; overload;
-  function Center: TVar; overload;
-  function MergeSortPair(var partner: TArr; const aAscending: Boolean = True): Integer; overload;
+  function Mode: MType; overload;
+  function Center: MType; overload;
+  function MergeSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
   function MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
-  function QuickSortPair(var partner: TArr; const aAscending: Boolean = True): Integer; overload;
+  function QuickSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
   function QuickSortSwapped(const aAscending: Boolean = True): TConnectionArray; overload;
   function QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
   function QuickSortedly(const aAscending: Boolean = True): TIntegerArray; overload;
-  function QuickSorted(const aAscending: Boolean = True): TArr; overload;
+  function QuickSorted(const aAscending: Boolean = True): MArray; overload;
   function QuickSort(const aAscending: Boolean = True): Integer; overload;
   function QuickSort3W(const aAscending: Boolean = True): Integer; overload;
   function QSort(const aAscending: Boolean = True): Integer; overload;  
@@ -355,7 +355,7 @@ THelper = type helper for TArr
   function MergeSort(const aAscending: Boolean = True): Integer; overload;
   function MergeSortBU(const aAscending: Boolean = True): Integer; overload;
   function HybridSort(const aAscending: Boolean = True): Integer; overload;
-  function Uniq(const sSorted: Boolean = False): TArr; overload;
+  function Uniq(const sSorted: Boolean = False): MArray; overload;
   function Downtrending: Boolean; overload;
   function Uptrending: Boolean; overload;
   function Notrending: Boolean; overload;
@@ -378,46 +378,46 @@ THelper = type helper for TArr
   function OnOrder: Boolean; overload;
   function Peaks: TIntegerArray; overload;
   function Valleys: TIntegerArray; overload;
-  function Unionize(const items: TArr; const oAscending: Boolean = True): TArr; overload;
-  function Subtract(const items: TArr; const oAscending: Boolean = True): TArr; overload;
-  function IntersectionCount(const items: TArr; const oAscending: Boolean = True): Integer; overload;
-  function Intersect(const items: TArr; const oAscending: Boolean = True): TArr; overload;
-  function Spanning(const item: TVar; const oAscending: Boolean = True): TRange; overload;
-  function CountOf(const items: TArr; const iAscending: Boolean = True): Integer; overload;
-  function Counted(const items: TArr; const iSorted: Boolean = False): Integer; overload;
-  function MinItem: TVar; overload;
-  function MinItem(const null: TVar): TVar; overload;
-  function MaxItem: TVar; overload;
-  function MaxItem(const null: TVar): TVar; overload;
-  function Minimum(var index: Integer): TVar; overload;
-  function Minimum: TVar; overload;
-  function Maximum(var index: Integer): TVar; overload;
-  function Maximum: TVar; overload;
-  function Minim(var index: Integer): TVar; overload;
-  function Minim: TVar; overload;
-  function Maxim(var index: Integer): TVar; overload;
-  function Maxim: TVar; overload;
-  function WithinBounds(const item: TVar; const oAscending: Boolean = True): Boolean; overload;
-  function OutOfBounds(const item: TVar; const oAscending: Boolean = True): Boolean; overload;
-  function Accepts(const item: TVar; const oAscending: Boolean = True): Boolean; overload;
-  function Rejects(const item: TVar; const oAscending: Boolean = True): Boolean; overload;
-  function InsideBounds(const item: TVar; const oAscending: Boolean = True): Boolean; overload;
-  function OutsideBounds(const item: TVar; const oAscending: Boolean = True): Boolean; overload;
-  function FibonacciSearch(const item: TVar; const oAscending: Boolean = True): Integer; overload;
-  function BinarySearchBy(const item: TVar; const oAscending: Boolean = True): Integer; overload;
-  function BinaryHas(const item: TVar; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
-  function BinaryGot(const item: TVar; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
-  function BinaryExpSearch(const item: TVar; const oAscending: Boolean = True): Integer; overload;
+  function Unionize(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+  function Subtract(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+  function IntersectionCount(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+  function Intersect(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+  function Spanning(const item: MType; const oAscending: Boolean = True): TRange; overload;
+  function CountOf(const items: MArray; const iAscending: Boolean = True): Integer; overload;
+  function Counted(const items: MArray; const iSorted: Boolean = False): Integer; overload;
+  function MinItem: MType; overload;
+  function MinItem(const null: MType): MType; overload;
+  function MaxItem: MType; overload;
+  function MaxItem(const null: MType): MType; overload;
+  function Minimum(var index: Integer): MType; overload;
+  function Minimum: MType; overload;
+  function Maximum(var index: Integer): MType; overload;
+  function Maximum: MType; overload;
+  function Minim(var index: Integer): MType; overload;
+  function Minim: MType; overload;
+  function Maxim(var index: Integer): MType; overload;
+  function Maxim: MType; overload;
+  function WithinBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+  function OutOfBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+  function Accepts(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+  function Rejects(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+  function InsideBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+  function OutsideBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+  function FibonacciSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+  function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
+  function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
+  function BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
+  function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
   {$ENDIF}
 {$ENDIF}
 
 {$IFDEF CLASSES}
 {$IFDEF T1D}
-class function Create(const item: TVar; const aSize: Integer = 1): TArr; overload;
+class function Create(const item: MType; const aSize: Integer = 1): MArray; overload;
 {$ENDIF}
 
 {$IF DEFINED(TBS) AND DEFINED(Sortable)}
-class function Search(const arr: TArr; const item: TVar; const ascending: Boolean = True): Integer; overload;
+class function Search(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload;
 {$ENDIF}
 {$ENDIF}
 
@@ -427,7 +427,7 @@ class function Search(const arr: TArr; const item: TVar; const ascending: Boolea
   @action: Appends arr with item. Returns the array with added item.
   @note: Adds item to the right side of the array.
 [==============================================================================}
-function THelper.Add(const item: TVar; const duplicates: Boolean = True): TArr; overload;
+function MHelper.Add(const item: MType; const duplicates: Boolean = True): MArray; overload;
 var
   i, l: Integer;
 begin
@@ -446,7 +446,7 @@ end;
   @action: Appends arr with items. Returns the array with added items.
   @note: Adds item to the right side of the array.
 [==============================================================================}
-function THelper.Add(const items: TArr; const duplicates: Boolean = True): TArr; overload;
+function MHelper.Add(const items: MArray; const duplicates: Boolean = True): MArray; overload;
 var
   a, h, i, s: Integer;
 begin
@@ -478,7 +478,7 @@ end;
   @action: Returns true if all values in arr are equal (arr contains only equal values).
   @note: Returns FALSE with empty array!
 [==============================================================================}
-function THelper.AllEqual: Boolean; overload;
+function MHelper.AllEqual: Boolean; overload;
 var
   i: Integer;
 begin
@@ -493,16 +493,16 @@ end;
   @action: Returns True if arr contains all items from candidates.
   @note: Always True if candidates is empty. False if arr is empty but candidates is not.
 [==============================================================================}
-function THelper.AllOf(const candidates: TArr): Boolean; overload;
+function MHelper.AllOf(const candidates: MArray): Boolean; overload;
 var
-  d: specialize TDictionary<TVar, Boolean>;
+  d: specialize TDictionary<MType, Boolean>;
   i: Integer;
 begin
   if candidates.Empty then
     Exit(True);
   if Self.Empty then
     Exit(False);
-  d := specialize TDictionary<TVar, Boolean>.Create;
+  d := specialize TDictionary<MType, Boolean>.Create;
   try
     for i := 0 to High(Self) do
       d.AddOrSetValue(Self[i], True);
@@ -520,7 +520,7 @@ end;
   @action: Returns true if all values in arr are the same (arr contains only equal values).
   @note: Returns FALSE with empty array!
 [==============================================================================}
-function THelper.AllSame: Boolean; overload;
+function MHelper.AllSame: Boolean; overload;
 var
   i: Integer;
 begin
@@ -535,7 +535,7 @@ end;
   @action: Returns true if all values in arr are unique (arr contains ONLY unique values).
   @note: None
 [==============================================================================}
-function THelper.AllUnique: Boolean; overload;
+function MHelper.AllUnique: Boolean; overload;
 var
   h, a, b: Integer;
 begin
@@ -552,7 +552,7 @@ end;
   @action: Returns random array item from Self.
   @note: Returns null with empty arrays.
 [==============================================================================}
-function THelper.Any(const null: TVar): TVar; overload;
+function MHelper.Any(const null: MType): MType; overload;
 begin
   if Self.Empty then
     Exit(null);
@@ -564,7 +564,7 @@ end;
   @action: Returns random array item from Self.
   @note: Make sure array has at least 1 item! This one is unsafe and returns error else.
 [==============================================================================}
-function THelper.Any: TVar; overload;
+function MHelper.Any: MType; overload;
 begin
   Result := Self[Low(Self) + Random(Self.Size)];
 end;
@@ -574,15 +574,15 @@ end;
   @action: Returns True if arr contains at least one item from candidates.
   @note: Always False if arr or candidates is empty.
 [==============================================================================}
-function THelper.AnyOf(const candidates: TArr): Boolean; overload;
+function MHelper.AnyOf(const candidates: MArray): Boolean; overload;
 var
-  d: specialize TDictionary<TVar, Boolean>;
+  d: specialize TDictionary<MType, Boolean>;
   i: Integer;
 begin
   Result := False;
   if (Self.Empty or candidates.Empty) then
     Exit;
-  d := specialize TDictionary<TVar, Boolean>.Create;
+  d := specialize TDictionary<MType, Boolean>.Create;
   try
     for i := 0 to High(candidates) do
       d.AddOrSetValue(candidates[i], True);
@@ -599,7 +599,7 @@ end;
   @action: Appends arr with item. Returns the index of added item.
   @note: Adds item to the right side of the array.
 [==============================================================================}
-function THelper.Append(const item: TVar; const duplicates: Boolean = True): TArr; overload;
+function MHelper.Append(const item: MType; const duplicates: Boolean = True): MArray; overload;
 begin
   Result := Self.Copy;
   if ((not duplicates) and Self.Contains(item)) then
@@ -613,7 +613,7 @@ end;
   @action: Adds all items items to arr.
   @note: Returns the highest index in the end.
 [==============================================================================}
-function THelper.Append(const items: TArr; const duplicates: Boolean = True): TArr; overload;
+function MHelper.Append(const items: MArray; const duplicates: Boolean = True): MArray; overload;
 var
   a, h, i: Integer;
 begin
@@ -644,7 +644,7 @@ end;
          TIA.To2D(2, 3) = [[1, 2, 3], [4, 5, 6]]
          TIA.To2D(3, 2) = [[1, 2], [3, 4], [5, 6]]
 [==============================================================================}
-function THelper.As2D(const rows, columns: Integer): T2DArr; overload;
+function MHelper.As2D(const rows, columns: Integer): M2DArray; overload;
 var
   l, i: Integer;
 begin
@@ -660,7 +660,7 @@ end;
   @action: Converts 1D array to 2D by width.
   @note: None.
 [==============================================================================}
-function THelper.As2D(const width: Integer): T2DArr; overload;
+function MHelper.As2D(const width: Integer): M2DArray; overload;
 var
   l, h, i, r, c: Integer;
 begin
@@ -679,7 +679,7 @@ end;
   @action: Returns arr as reversed.
   @note: Alternative for Reversed methods
 [==============================================================================}
-function THelper.Backwards: TArr; overload;
+function MHelper.Backwards: MArray; overload;
 var
   l, i: Integer;
 begin
@@ -695,7 +695,7 @@ end;
   @action: Simply puts items to array index, fast.
   @note: No safety checks. Make sure buffer is enough!
 [==============================================================================}
-function THelper.Blit(const items: TArr; const index: Integer = 0): Integer; overload;
+function MHelper.Blit(const items: MArray; const index: Integer = 0): Integer; overload;
 var
   i: Integer;
 begin
@@ -709,7 +709,7 @@ end;
  @action: Creates array with item where aSize is length of the array.
  @note: item is placed on every index in result.
 [==============================================================================}
-function THelper.Build(const item: TVar; const aSize: Integer = 1): TArr; overload;
+function MHelper.Build(const item: MType; const aSize: Integer = 1): MArray; overload;
 begin
   Result := Self.Create(aSize, item);
 end;
@@ -719,7 +719,7 @@ end;
   @action: Checks if array arr contains only allowed items.
   @note: None.
 [==============================================================================}
-function THelper.MadeOf(const allowed: TArr): Boolean; overload;
+function MHelper.MadeOf(const allowed: MArray): Boolean; overload;
 var
   a, s: TRange;
   i: Integer;
@@ -741,7 +741,7 @@ end;
   @action: Checks if array arr does not have any forbidden items.
   @note: None.
 [==============================================================================}
-function THelper.FreeOf(const forbidden: TArr): Boolean; overload;
+function MHelper.FreeOf(const forbidden: MArray): Boolean; overload;
 var
   s, f: TRange;
   i: Integer;
@@ -763,7 +763,7 @@ end;
   @action: Blends items with array, cleverly.
   @note: None.
 [==============================================================================}
-function THelper.Blend(const items: TArr; const index: Integer = 2147483647): TArr; overload;
+function MHelper.Blend(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 var
   s, l, p, r, i: Integer;
 begin
@@ -806,7 +806,7 @@ end;
   @action: Checks if array arr does not have any forbidden items.
   @note: None.
 [==============================================================================}
-function THelper.BuiltWithout(const forbidden: TArr): Boolean; overload;
+function MHelper.BuiltWithout(const forbidden: MArray): Boolean; overload;
 var
   i, j: Integer;
 begin
@@ -823,7 +823,7 @@ end;
   @action: Returns true is arr is built with blocks.
   @note: This function requires blocks array to be unique (no duplicates allowed for it).
 [==============================================================================}
-function THelper.BuiltWith(const blocks: TArr): Boolean; overload;
+function MHelper.BuiltWith(const blocks: MArray): Boolean; overload;
 var
   i, p: Integer;
   u: TBooleanArray;
@@ -850,10 +850,10 @@ end;
   @note: Works on any array. Each run of identical values becomes a class; 
          duplicate classes can exist if values repeat non-consecutively.
 [==============================================================================}
-function THelper.Classes: T2DArr; overload;
+function MHelper.Classes: M2DArray; overload;
 var
   i, g: Integer;
-  v: TVar;
+  v: MType;
 begin
   if Self.Empty then
     Exit([]);
@@ -881,8 +881,8 @@ end;
          duplicate classes can exist if values repeat non-consecutively.
 		 Custom weight.
 [==============================================================================}
-function THelper.Classes(const weight: TIntegerArray): T2DArr; overload; var w: Integer; {$DEFINE Skeleton_Classes}{$I Skeletons.inc}{$UNDEF Skeleton_Classes}
-function THelper.Classes(const weight: TDoubleArray): T2DArr; overload; var w: Double; {$DEFINE Skeleton_Classes}{$I Skeletons.inc}{$UNDEF Skeleton_Classes}
+function MHelper.Classes(const weight: TIntegerArray): M2DArray; overload; var w: Integer; {$DEFINE Skeleton_Classes}{$I Skeletons.inc}{$UNDEF Skeleton_Classes}
+function MHelper.Classes(const weight: TDoubleArray): M2DArray; overload; var w: Double; {$DEFINE Skeleton_Classes}{$I Skeletons.inc}{$UNDEF Skeleton_Classes}
 
 {==============================================================================]
   <Classify>
@@ -890,7 +890,7 @@ function THelper.Classes(const weight: TDoubleArray): T2DArr; overload; var w: D
   @note: Works on any array. Each run of identical values becomes a class; 
          duplicate classes can exist if values repeat non-consecutively.
 [==============================================================================}
-function THelper.Classify: T2DArr; overload;
+function MHelper.Classify: M2DArray; overload;
 var
   i, h, g, l: Integer;
 begin
@@ -925,15 +925,15 @@ end;
          duplicate classes can exist if values repeat non-consecutively.
 		 Custom weight.
 [==============================================================================}
-function THelper.Classify(const weight: TIntegerArray): T2DArr; overload; var w: Integer; {$DEFINE Skeleton_Classify}{$I Skeletons.inc}{$UNDEF Skeleton_Classify}
-function THelper.Classify(const weight: TDoubleArray): T2DArr; overload; var w: Double; {$DEFINE Skeleton_Classify}{$I Skeletons.inc}{$UNDEF Skeleton_Classify}
+function MHelper.Classify(const weight: TIntegerArray): M2DArray; overload; var w: Integer; {$DEFINE Skeleton_Classify}{$I Skeletons.inc}{$UNDEF Skeleton_Classify}
+function MHelper.Classify(const weight: TDoubleArray): M2DArray; overload; var w: Double; {$DEFINE Skeleton_Classify}{$I Skeletons.inc}{$UNDEF Skeleton_Classify}
 
 {==============================================================================]
   <Clear>
   @action: SetLength(arr, 0) and returns true if items existed before doing it.
   @note: None.
 [==============================================================================}
-function THelper.Clear: Boolean; overload;
+function MHelper.Clear: Boolean; overload;
 begin
   Result := (Self.Length > 0);
   SetLength(Self, 0);
@@ -944,7 +944,7 @@ end;
   @action: Returns copy of an array arr.
   @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
-function THelper.Clone(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
+function MHelper.Clone(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 var
   i, s, c: Integer;
 begin
@@ -967,7 +967,7 @@ end;
   @action: Outputs array of items from arr by indexes (ID).
   @note: Ignores invalid ID's (doesn't include those to result, they will be left out).
 [==============================================================================}
-function THelper.Clone(const ID: TIntegerArray): TArr; overload;
+function MHelper.Clone(const ID: TIntegerArray): MArray; overload;
 var
   i, h, l, r: Integer;
 begin
@@ -989,7 +989,7 @@ end;
   @action: Simply returns a clone of array.
   @note: None.
 [==============================================================================}
-function THelper.Cloned: TArr; overload;
+function MHelper.Cloned: MArray; overload;
 var
   r: TRange;
 begin
@@ -1010,21 +1010,21 @@ end;
 {==============================================================================]
   <Collated>
   @action: Groups the elements of the array into subarrays keyed by their value.
-           Each distinct TVar value is assigned a unique group index, and all
+           Each distinct MType value is assigned a unique group index, and all
            occurrences of that value are collected into the corresponding
            subarray. The result is a 2-dimensional array where each row contains
-           all instances of a specific TVar.
-  @note: Uses a dictionary to map each unique TVar to its group position,
+           all instances of a specific MType.
+  @note: Uses a dictionary to map each unique MType to its group position,
          preserving the order in which unique values first appear. The
          original ordering of elements within each group is preserved as well.
          This operation performs a stable categorization, not a clone.
 [==============================================================================}
-function THelper.Collated: T2DArr; overload;
+function MHelper.Collated: M2DArray; overload;
 var
-  m: specialize TDictionary<TVar, Integer>;
+  m: specialize TDictionary<MType, Integer>;
   i, p: Integer;
 begin
-  m := specialize TDictionary<TVar, Integer>.Create;
+  m := specialize TDictionary<MType, Integer>.Create;
   try
     SetLength(Result, 0);
     for i := 0 to High(Self) do
@@ -1048,7 +1048,7 @@ end;
   @action: Removes adjacent duplicates.
   @note: Original order is preserved and non-adjacent duplicates remain.
 [==============================================================================}
-function THelper.Compact: Integer; overload;
+function MHelper.Compact: Integer; overload;
 var
   i: Integer;
 begin
@@ -1066,7 +1066,7 @@ end;
   @action: Removes adjacent duplicates and returns a new compacted array.
   @note: Original order is preserved and non-adjacent duplicates remain.
 [==============================================================================}
-function THelper.Compacted: TArr; overload;
+function MHelper.Compacted: MArray; overload;
 var
   i: Integer;
 begin
@@ -1084,7 +1084,7 @@ end;
   @action: Removes adjacent duplicates and returns a new compacted array.
   @note: Custom threshold possibility.
 [==============================================================================}
-function THelper.Compacted(const threshold: Integer): TArr; overload;
+function MHelper.Compacted(const threshold: Integer): MArray; overload;
 var
   i, j: Integer;
   k: Boolean;
@@ -1118,7 +1118,7 @@ end;
   @action: Combines arrays arr and b together as single array.
   @note: This is an alternative method. :)
 [==============================================================================}
-function THelper.Combine(const b: TArr): TArr; overload;
+function MHelper.Combine(const b: MArray): MArray; overload;
 begin
   SetLength(Result, 0);
   Insert(Self, Result, 0);
@@ -1132,17 +1132,17 @@ end;
            represents one group of connected elements.
   @param: connections - an array of TConnection, each containing two indices (Id1, Id2) 
            in Self that are connected.
-  @returns: T2DArr - 2D array of grouped elements from Self.
+  @returns: M2DArray - 2D array of grouped elements from Self.
   @note: Duplicate connections are ignored. Self must contain at least as many elements as
          the maximum index in any connection.
 [==============================================================================}
-function THelper.Components(const connections: TConnectionArray): T2DArr; overload;
+function MHelper.Components(const connections: TConnectionArray): M2DArray; overload;
 var
   i, l: Integer;
   v: TBooleanArray;
   n: T2DIntegerArray;
   s: TIntegerArray;
-  procedure DFS(const startPos: Integer; var group: TArr);
+  procedure DFS(const startPos: Integer; var group: MArray);
   var
     h, c, k: Integer;
   begin
@@ -1194,7 +1194,7 @@ end;
          are left untouched. The relative order of the remaining elements
          is unchanged.
 [==============================================================================}
-function THelper.Compressed: TArr; overload;
+function MHelper.Compressed: MArray; overload;
 var
   r, i, l: Integer;
 begin
@@ -1219,7 +1219,7 @@ end;
            effectively run-length–compressing the input.
   @note: Custom threshold possibility.
 [==============================================================================}
-function THelper.Compressed(const threshold: Integer): TArr; overload;
+function MHelper.Compressed(const threshold: Integer): MArray; overload;
 var
   w, r, i: Integer;
   d: Boolean;
@@ -1251,7 +1251,7 @@ end;
          are left untouched. The relative order of the remaining elements
          is unchanged.
 [==============================================================================}
-function THelper.Compress: Integer; overload;
+function MHelper.Compress: Integer; overload;
 var
   i: Integer;
 begin
@@ -1269,7 +1269,7 @@ end;
   @action: Returns true if arr is built of items only.
   @note: 
 [==============================================================================}
-function THelper.Comprised(const items: TArr): Boolean; overload;
+function MHelper.Comprised(const items: MArray): Boolean; overload;
 var
   l: Integer;
 begin
@@ -1284,7 +1284,7 @@ end;
   @action: Returns true if arr consists of item ONLY.
   @note: Requires at least single item. Otherwise returns False. (With empty arrays)
 [==============================================================================}
-function THelper.Constant(const item: TVar): Boolean; overload;
+function MHelper.Constant(const item: MType): Boolean; overload;
 var
   l: Integer;
 begin
@@ -1299,7 +1299,7 @@ end;
   @action: Returns true if arr consists of ONLY same items.
   @note: Requires at least single item. Otherwise returns False. (With empty arrays)
 [==============================================================================}
-function THelper.Constant: Boolean; overload;
+function MHelper.Constant: Boolean; overload;
 begin
   Result := (Self.Occupied and Constant(Self[0]));
 end;
@@ -1309,7 +1309,7 @@ end;
   @action: Looks array for item starting from start index. If found, Result will be True.
   @note: None.
 [==============================================================================}
-function THelper.Contains(const item: TVar; const index: Integer = 0): Boolean; overload;
+function MHelper.Contains(const item: MType; const index: Integer = 0): Boolean; overload;
 var
   i: Integer;
 begin
@@ -1328,7 +1328,7 @@ end;
     - Uses 0-based indexing for arrays.
     - limit.Normalize ensures that limit.start <= limit.stop.
 [==============================================================================}
-function THelper.Contains(const item: TVar; const limit: TRange): Boolean; overload;
+function MHelper.Contains(const item: MType; const limit: TRange): Boolean; overload;
 var
   i, c, r: Integer;
   n: TRange;
@@ -1358,7 +1358,7 @@ end;
     - Performs early-exit optimization if remaining elements cannot reach the limit.
     - Uses 0-based indexing for arrays.
 [==============================================================================}
-function THelper.ContainsAtLeast(const item: TVar; const limit: Integer): Boolean; overload;
+function MHelper.ContainsAtLeast(const item: MType; const limit: Integer): Boolean; overload;
 var
   i, c, r: Integer;
 begin
@@ -1388,7 +1388,7 @@ end;
     - Performs early-exit optimization if remaining elements cannot exceed the limit.
     - Uses 0-based indexing for arrays.
 [==============================================================================}
-function THelper.ContainsAtMost(const item: TVar; const limit: Integer): Boolean; overload;
+function MHelper.ContainsAtMost(const item: MType; const limit: Integer): Boolean; overload;
 var
   i, c, r: Integer;
 begin
@@ -1414,7 +1414,7 @@ end;
   @action: Returns copy of an array arr.
   @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
-function THelper.Copy(const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
+function MHelper.Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 var
   i, c, l: Integer;
 begin
@@ -1437,7 +1437,7 @@ end;
   @action: Simply returns a copy of array.
   @note: None.
 [==============================================================================}
-function THelper.Copied: TArr; overload;
+function MHelper.Copied: MArray; overload;
 var
   h, i, l: Integer;
 begin
@@ -1465,7 +1465,7 @@ end;
     - Uses zero-based indexing (0..High(Self)).
     - Single-pass, no extra memory allocation.
 [==============================================================================}
-function THelper.Count(const item: TVar): Integer; overload;
+function MHelper.Count(const item: MType): Integer; overload;
 var
   i: Integer;
 begin
@@ -1484,7 +1484,7 @@ end;
     - Uses zero-based indexing (0..High(Self)).
     - Single-pass over Self, but each element performs a search over items (O(n*m)).
 [==============================================================================}
-function THelper.Count(const items: TArr): Integer; overload;
+function MHelper.Count(const items: MArray): Integer; overload;
 var
   i: Integer;
 begin
@@ -1500,7 +1500,7 @@ end;
   @action: Creates array with item, size as 1. Returns old Self.
   @note: [item]
 [==============================================================================}
-function THelper.Create(const item: TVar): TArr; overload;
+function MHelper.Create(const item: MType): MArray; overload;
 begin
   Result := Self.Clone;
   SetLength(Self, 1);
@@ -1512,7 +1512,7 @@ end;
   @action: Creates array with item where aSize is length of the array. Returns old Self.
   @note: item is placed on every index in result.
 [==============================================================================}
-function THelper.Create(const aSize: Integer; const item: TVar): TArr; overload;
+function MHelper.Create(const aSize: Integer; const item: MType): MArray; overload;
 var
   i: Integer;
 begin
@@ -1527,7 +1527,7 @@ end;
   @action: Removes adjacent duplicates and returns a new compacted array.
   @note: Original order is preserved and non-adjacent duplicates remain.
 [==============================================================================}
-function THelper.Deduplicated: TArr; overload;
+function MHelper.Deduplicated: MArray; overload;
 var
   i, l: Integer;
 begin
@@ -1546,7 +1546,7 @@ end;
   @action: Deletes array item from arr by index.
   @note: Returns true with success (index existed in arr).
 [==============================================================================}
-function THelper.Delete(const index: Integer = 0): TArr; overload;
+function MHelper.Delete(const index: Integer = 0): MArray; overload;
 var
   i, h: Integer;
 begin
@@ -1565,7 +1565,7 @@ end;
   @action: Deletes array items from arr by indexes (ID).
   @note: Returns amount of items that were deleted succesfully by ID's.
 [==============================================================================}
-function THelper.Delete(const ID: TIntegerArray): TArr; overload;
+function MHelper.Delete(const ID: TIntegerArray): MArray; overload;
 var
   i, l, r: Integer;
 begin
@@ -1590,7 +1590,7 @@ end;
          The original array (Self) is not modified.
          If dIDs contains indices out of range, they are ignored. Empty arrays for Self or dIDs result in an unchanged copy.
 [==============================================================================}
-function THelper.Devein(const dIDs: TIntegerArray; const dValue: TVar): TArr; overload;
+function MHelper.Devein(const dIDs: TIntegerArray; const dValue: MType): MArray; overload;
 var
   i, l: Integer;
   s: TRange;
@@ -1611,9 +1611,9 @@ begin
   SetLength(Result, l);
 end;
 
-function THelper.Devein(const dIDs: TIntegerArray): TArr; overload;
+function MHelper.Devein(const dIDs: TIntegerArray): MArray; overload;
 begin
-  Result := Self.Devein(dIDs, Default(TVar));
+  Result := Self.Devein(dIDs, Default(MType));
 end;
 
 {==============================================================================]
@@ -1621,7 +1621,7 @@ end;
   @action: Returns true if arr differs from target.
   @note: None
 [==============================================================================}
-function THelper.Differ(const target: TArr): Boolean; overload;
+function MHelper.Differ(const target: MArray): Boolean; overload;
 var
   i: Integer;
 begin
@@ -1637,7 +1637,7 @@ end;
   @action: Returns the number of unique elements in array 
   @note: None.
 [==============================================================================}
-function THelper.Distinct: Integer; overload;
+function MHelper.Distinct: Integer; overload;
 var
   i, j: Integer;
   u: Boolean;
@@ -1669,9 +1669,9 @@ end;
          been grouped. Duplicate values in Self are added to the same group.
          The resulting 2D array has one group per unique value.
 [==============================================================================}
-function THelper.Distincted: T2DArr; overload;
+function MHelper.Distincted: M2DArray; overload;
 var
-  m: TArr;
+  m: MArray;
   i, l: Integer;
 begin
   SetLength(m, 0);
@@ -1695,7 +1695,7 @@ end;
   @action: Returns array with randomized order (disorder)
   @note: [1,2,3] => [1,3,2] | [2,1,3] | [2,3,1] | [3,2,1] ...
 [==============================================================================}
-function THelper.Disordered: TArr; overload;
+function MHelper.Disordered: MArray; overload;
 var
   m: TBooleanArray;
   i, r, l: Integer;
@@ -1720,7 +1720,7 @@ end;
   @action: Distributes array arr to 2D array by number of parts.
   @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5][6,7]
 [==============================================================================}
-function THelper.Distribute(const parts: Integer): T2DArr; overload;
+function MHelper.Distribute(const parts: Integer): M2DArray; overload;
 var
   l, p, b, r, i, j, s, c: Integer;
 begin
@@ -1750,13 +1750,13 @@ end;
   @action: Alternative for Unique methods
   @note: None.
 [==============================================================================}
-function THelper.Diversified: TArr; overload;
+function MHelper.Diversified: MArray; overload;
 var
-  d: specialize TDictionary<TVar, Boolean>;
+  d: specialize TDictionary<MType, Boolean>;
   i: Integer;
-  k: TVar;
+  k: MType;
 begin
-  d := specialize TDictionary<TVar, Boolean>.Create;
+  d := specialize TDictionary<MType, Boolean>.Create;
   try
     for i := 0 to High(Self) do
       if not d.ContainsKey(Self[i]) then
@@ -1775,14 +1775,14 @@ end;
   @action: Alternative for Unique methods
   @note: None.
 [==============================================================================}
-function THelper.DiversifiedEx(const dAscending: Boolean = True): TArr; overload;
+function MHelper.DiversifiedEx(const dAscending: Boolean = True): MArray; overload;
 var
-  l: specialize TList<TVar>;
-  d: specialize TDictionary<TVar, Boolean>;
+  l: specialize TList<MType>;
+  d: specialize TDictionary<MType, Boolean>;
   i: Integer;
 begin
-  l := specialize TList<TVar>.Create;
-  d := specialize TDictionary<TVar, Boolean>.Create;
+  l := specialize TList<MType>.Create;
+  d := specialize TDictionary<MType, Boolean>.Create;
   try
     case dAscending of
       True:
@@ -1814,7 +1814,7 @@ end;
     - If the array is empty, start and stop are set to -1.
     - Otherwise, start = 0 and stop = Length(Self) - 1.
 [==============================================================================}
-function THelper.Domain: TRange; overload;
+function MHelper.Domain: TRange; overload;
 begin
   Result.stop := (Self.Size - 1);
   if (Result.stop = -1) then
@@ -1828,7 +1828,7 @@ end;
   @action: Removes item(s) from arr and returns it.
   @note: 	
 [==============================================================================}
-function THelper.Drop(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload;
+function MHelper.Drop(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
 var
   p: TIntegerArray;
   r: TRange;
@@ -1848,7 +1848,7 @@ end;
   @action: Deletes items from array, keeps others. Returns array length (after action).
   @note: Supports custom start index!
 [==============================================================================}
-function THelper.Dump(const items: TArr; const index: Integer = 0): TArr; overload;
+function MHelper.Dump(const items: MArray; const index: Integer = 0): MArray; overload;
 var
   i, l, m, d: Integer;
 begin
@@ -1874,7 +1874,7 @@ end;
   @action: Returns copy of an array arr.
   @note: None.
 [==============================================================================}
-function THelper.Dupe: TArr; overload;
+function MHelper.Dupe: MArray; overload;
 var
   i, l, j: Integer;
 begin
@@ -1901,7 +1901,7 @@ end;
   @action: Returns copy of an array arr.
   @note: None.
 [==============================================================================}
-function THelper.Duplicate(const xTimes: Integer = 1): TArr; overload;
+function MHelper.Duplicate(const xTimes: Integer = 1): MArray; overload;
 var
   m, i, j, l: Integer;
 begin
@@ -1919,7 +1919,7 @@ end;
   @action: Returns copy of an array arr.
   @note: None.
 [==============================================================================}
-function THelper.Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): TArr; overload;
+function MHelper.Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): MArray; overload;
 var
   h, i, j, l, c, s: Integer;
   r: TIntegerArray;
@@ -1955,7 +1955,7 @@ end;
   @action: Inserts item to index in arr. Returns the index it was inserted to.
   @note: Alternative for Insert().
 [==============================================================================}
-function THelper.Emplace(const item: TVar; const index: Integer = 0): Integer; overload;
+function MHelper.Emplace(const item: MType; const index: Integer = 0): Integer; overload;
 var
   i: Integer;
 begin
@@ -1971,7 +1971,7 @@ end;
   @action: Returns true if array is empty (Length = 0).
   @note: None.
 [==============================================================================}
-function THelper.Empty: Boolean; overload;
+function MHelper.Empty: Boolean; overload;
 begin
   Result := (Self.Size = 0);
 end;
@@ -1981,7 +1981,7 @@ end;
   @action: Returns true if arr equals target (identical arrays)
   @note: None
 [==============================================================================}
-function THelper.Equal(const target: TArr): Boolean; overload;
+function MHelper.Equal(const target: MArray): Boolean; overload;
 var
   i: Integer;
 begin
@@ -1997,7 +1997,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
-function THelper.Erase(const item: TVar; const index: Integer = 2147483647; const all: Boolean = True): TArr; overload;
+function MHelper.Erase(const item: MType; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
 var
   j, i, m, l, d: Integer;
   f: Boolean;
@@ -2036,7 +2036,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed.
 [==============================================================================}
-function THelper.Erase(const item: TVar; const all: Boolean): TArr; overload;
+function MHelper.Erase(const item: MType; const all: Boolean): MArray; overload;
 begin
   Result := Self.Erase(item, 2147483647, all);
 end;
@@ -2046,7 +2046,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
-function THelper.Erase(const items: TArr; const index: Integer = 2147483647; const all: Boolean = True): TArr; overload;
+function MHelper.Erase(const items: MArray; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
 var
   h, i, j, m, l, d: Integer;
   f: Boolean;
@@ -2088,7 +2088,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed.
 [==============================================================================}
-function THelper.Erase(const items: TArr; const all: Boolean): TArr; overload;
+function MHelper.Erase(const items: MArray; const all: Boolean): MArray; overload;
 begin
   Result := Self.Erase(items, 2147483647, all);
 end;
@@ -2104,7 +2104,7 @@ end;
          arr[2,1,3,4] => False
          This function requires items array to be unique. No duplicates allowed for it!
 [==============================================================================}
-function THelper.Exact(const items: TArr): Boolean; overload;
+function MHelper.Exact(const items: MArray): Boolean; overload;
 var
   i, j: Integer;
   f: TBooleanArray;
@@ -2127,9 +2127,9 @@ end;
   @action: Returns true if arr contains any duplicates in it.
   @note: None.
 [==============================================================================}
-function THelper.Excessive: Boolean; overload; 
+function MHelper.Excessive: Boolean; overload; 
 type
-  TDict = specialize TDictionary<TVar, Boolean>;
+  TDict = specialize TDictionary<MType, Boolean>;
 var
   d: TDict;
   i: Integer;
@@ -2152,9 +2152,9 @@ end;
   @action: Fast version of Exchange().
   @note: Unsafe, no checking.
 [==============================================================================}
-function THelper.Exch(const aIndex, bIndex: Integer): Boolean; overload;
+function MHelper.Exch(const aIndex, bIndex: Integer): Boolean; overload;
 var
-  c: TVar;
+  c: MType;
 begin
   Result := (Self[aIndex] <> Self[bIndex]);
   c := Self[aIndex];
@@ -2167,9 +2167,9 @@ end;
   @action: Swap items aIndex and bIndex in array arr.
   @note: Returns true with success.
 [==============================================================================}
-function THelper.Exchange(const aIndex, bIndex: Integer): Boolean; overload;
+function MHelper.Exchange(const aIndex, bIndex: Integer): Boolean; overload;
 var
-  c: TVar;
+  c: MType;
   h: Integer;
 begin
   h := High(Self);
@@ -2187,9 +2187,9 @@ end;
   @action: Swaps array arr and array b.
   @note: arr will be b and b will be arr.
 [==============================================================================}
-function THelper.Exchange(var b: TArr): Integer; overload;
+function MHelper.Exchange(var b: MArray): Integer; overload;
 var
-  a: TArr;
+  a: MArray;
 begin
   Result := (Self.Size + b.Size);
   if (Result = 0) then
@@ -2208,7 +2208,7 @@ end;
          - The input swap list must be compatible with the array length.
          - Commonly used to replay sorting animations or verify transformations.
 [==============================================================================}
-function THelper.Exchange(const swaps: TConnectionArray): TArr; overload;
+function MHelper.Exchange(const swaps: TConnectionArray): MArray; overload;
 var
   i: Integer;
 begin
@@ -2227,10 +2227,10 @@ end;
          - Ideal for sorting visualizations or swap-based replay systems.
          - All swaps are adjacent, producing stable step-by-step transitions.
 [==============================================================================}
-function THelper.Exchanges(const target: TArr): TConnectionArray; overload;
+function MHelper.Exchanges(const target: MArray): TConnectionArray; overload;
 var
   i, j: Integer;
-  s: TArr;
+  s: MArray;
 begin
   s := Self.Copy;
   SetLength(Result, 0);
@@ -2255,7 +2255,7 @@ end;
   @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
          The default index filters the entire array.
 [==============================================================================}
-function THelper.Exclude(const items: TArr; const index: Integer = 2147483647): TArr; overload;
+function MHelper.Exclude(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 var
   i, l, m, d: Integer;
 begin
@@ -2281,7 +2281,7 @@ end;
   @action: Returns true if array length is not 0.
   @note: Alternative for arr.Populated.
 [==============================================================================}
-function THelper.Exists: Boolean; overload;
+function MHelper.Exists: Boolean; overload;
 begin
   Result := (Self.Size > 0);
 end;
@@ -2295,7 +2295,7 @@ end;
          Indices in eIDs that are out of range are ignored.
          Uses -2147483648 as an internal sentinel to mark elements for removal.
 [==============================================================================}
-function THelper.Expel(const eIDs: TIntegerArray): TArr; overload;
+function MHelper.Expel(const eIDs: TIntegerArray): MArray; overload;
 var
   i, l: Integer;
   s: TRange;
@@ -2323,7 +2323,7 @@ end;
   @action: Extends arr with item. Returns it.
   @note: Places item to the left side of the array.
 [==============================================================================}
-function THelper.Extend(const item: TVar): TArr; overload;
+function MHelper.Extend(const item: MType): MArray; overload;
 var
   i, h: Integer;
 begin
@@ -2339,7 +2339,7 @@ end;
   @action: Extends arr with items. Returns it.
   @note: Places items to the left side of the array.
 [==============================================================================}
-function THelper.Extend(const items: TArr): TArr; overload;
+function MHelper.Extend(const items: MArray): MArray; overload;
 var
   i, h, l: Integer;
 begin
@@ -2357,7 +2357,7 @@ end;
   @action: Keeps (extracts) all values in arr that are item. Starts scan from start index.
   @note: Returns the items.
 [==============================================================================} 
-function THelper.Extract(const item: TVar; const index: Integer = 0): TArr; overload;
+function MHelper.Extract(const item: MType; const index: Integer = 0): MArray; overload;
 var
   i, l, r: Integer;
 begin
@@ -2375,7 +2375,7 @@ end;
   @action: Keeps (extracts) all values in arr that are in items. Starts scan from start index.
   @note: Returns the items.
 [==============================================================================}
-function THelper.Extract(const items: TArr; const index: Integer = 0): TArr; overload;
+function MHelper.Extract(const items: MArray; const index: Integer = 0): MArray; overload;
 var
   i, l, r: Integer;
 begin
@@ -2396,7 +2396,7 @@ end;
   @action: Keeps (extracts) all X values from array. Starts scan from start index.
   @note: Returns the items.
 [==============================================================================} 
-function THelper.ExtractEvery(const X: Integer = 1; const index: Integer = 0): TArr; overload;
+function MHelper.ExtractEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
 var
   i, h, l: Integer;
 begin
@@ -2416,7 +2416,7 @@ end;
   @action: Keeps (extracts) all allowed index values from array.
   @note: None.
 [==============================================================================}
-function THelper.ExtractIDs(const allowed: TIntegerArray): TArr; overload;
+function MHelper.ExtractIDs(const allowed: TIntegerArray): MArray; overload;
 var
   h, i, l: Integer;
   m: TBooleanArray;
@@ -2441,7 +2441,7 @@ end;
   @action: Keeps (extracts) all allowed index values from array.
   @note: If allowed is not in ascending order, aSorted needs to be False.
 [==============================================================================}
-function THelper.ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): TArr; overload;
+function MHelper.ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): MArray; overload;
 var
   h, i, l: Integer;
   a: TIntegerArray;
@@ -2466,7 +2466,7 @@ end;
   @action: Feeds item to array and returns the index position it was added to.
   @note: Returns -1 if duplicates are not allowed and array already includes item.
 [==============================================================================}
-function THelper.Feed(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload;
+function MHelper.Feed(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
 begin
   if ((not allowDuplicates) and Self.Includes(item)) then
     Exit(-1);
@@ -2480,7 +2480,7 @@ end;
   @action: Fills whole arr with item.
   @note: Returns the filled array.
 [==============================================================================}
-function THelper.Fill(const item: TVar; const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
+function MHelper.Fill(const item: MType; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 var
   h, i, s, t: Integer;
 begin
@@ -2501,7 +2501,7 @@ end;
   @action: Fills whole arr with items.
   @note: None
 [==============================================================================}
-function THelper.Fill(const items: TArr; const index: Integer = 0; const count: Integer = 2147483647): TArr; overload;
+function MHelper.Fill(const items: MArray; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 var
   h, i, s, t, l: Integer;
 begin
@@ -2527,7 +2527,7 @@ end;
   @action: Removes all values from arr that are found in items.
   @note: None
 [==============================================================================}
-function THelper.Filter(const item: TVar; const index: Integer = 0): TArr; overload;
+function MHelper.Filter(const item: MType; const index: Integer = 0): MArray; overload;
 var
   i, l, r: Integer;
 begin
@@ -2545,7 +2545,7 @@ end;
   @action: Removes all values from arr that are found in items.
   @note: None
 [==============================================================================}
-function THelper.Filter(const items: TArr; const index: Integer = 0): TArr; overload;
+function MHelper.Filter(const items: MArray; const index: Integer = 0): MArray; overload;
 var
   i, l, r: Integer;
 begin
@@ -2565,7 +2565,7 @@ end;
   @action: Filters every/each X item from arr.
   @note: Custom index
 [==============================================================================}
-function THelper.FilterEvery(const X: Integer = 1; const index: Integer = 0): TArr; overload;
+function MHelper.FilterEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
 var
   i, h, l: Integer;
 begin
@@ -2585,7 +2585,7 @@ end;
   @action: Returns the array without values from forbidden indexes.
   @note: None.
 [==============================================================================}
-function THelper.FilterIDs(const forbidden: TIntegerArray): TArr; overload;
+function MHelper.FilterIDs(const forbidden: TIntegerArray): MArray; overload;
 var
   h, i, l: Integer;
   m: TBooleanArray;
@@ -2610,7 +2610,7 @@ end;
   @action: Returns the array without values from forbidden indexes.
   @note: If forbidden is not in ascending order, fSorted needs to be False.
 [==============================================================================}
-function THelper.FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): TArr; overload;
+function MHelper.FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): MArray; overload;
 var
   h, i, l: Integer;
   f: TIntegerArray;
@@ -2637,7 +2637,7 @@ end;
   @action: Scans array for item by IDs. Returns position if found.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function THelper.Find(const ID: TRange; const item: TVar): Integer; overload;
+function MHelper.Find(const ID: TRange; const item: MType): Integer; overload;
 begin
   if Self.Populated then
   case ID.Ascending of
@@ -2658,7 +2658,7 @@ end;
   @action: Scans array for item by IDs. Returns position if found.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function THelper.Find(const ID: TIntegerArray; const item: TVar): Integer; overload;
+function MHelper.Find(const ID: TIntegerArray; const item: MType): Integer; overload;
 var
   i: Integer;
 begin
@@ -2674,7 +2674,7 @@ end;
   @action: Scans array for items by IDs. Returns position if found.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function THelper.Find(const ID: TRange; const items: TArr): Integer; overload;
+function MHelper.Find(const ID: TRange; const items: MArray): Integer; overload;
 begin
   if (Self.Populated and items.Populated) then
   case ID.Ascending of
@@ -2695,7 +2695,7 @@ end;
   @action: Scans array for items by IDs. Returns position if found.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function THelper.Find(const ID: TIntegerArray; const items: TArr): Integer; overload;
+function MHelper.Find(const ID: TIntegerArray; const items: MArray): Integer; overload;
 var
   i: Integer;
 begin
@@ -2711,7 +2711,7 @@ end;
   @action: Returns the first index of arr.
   @note: With empty array result will be -1!
 [==============================================================================}
-function THelper.First: Integer; overload;
+function MHelper.First: Integer; overload;
 begin
   Result := IfThen(Self.Empty, -1, 0);
 end;
@@ -2721,7 +2721,7 @@ end;
   @action: Returns the first index that matches item in arr.
   @note: Unmatch will be -1!
 [==============================================================================}
-function THelper.First(const item: TVar): Integer; overload;
+function MHelper.First(const item: MType): Integer; overload;
 begin
   for Result := 0 to High(Self) do
     if (Self[Result] = item) then
@@ -2734,7 +2734,7 @@ end;
   @action: Returns the first arr index that matches any of the items.
   @note: Unmatch will be -1!
 [==============================================================================}
-function THelper.First(const items: TArr): Integer; overload;
+function MHelper.First(const items: MArray): Integer; overload;
 begin
   for Result := 0 to High(Self) do
     if items.Contains(Self[Result]) then
@@ -2747,7 +2747,7 @@ end;
   @action: Returns array length.
   @note: Alternative.
 [==============================================================================}
-function THelper.Fit: Integer; overload;
+function MHelper.Fit: Integer; overload;
 begin
   Result := ((High(Self) - Low(Self)) + 1);
 end;
@@ -2757,7 +2757,7 @@ end;
   @action: Resizes the array to aSize (sets length safely).
   @note: Returns the length that was set to Self. Negative sizes are clamped to 0.
 [==============================================================================}
-function THelper.Fit(const aSize: Integer): Integer; overload;
+function MHelper.Fit(const aSize: Integer): Integer; overload;
 begin
   Result := Max(0, aSize);
   SetLength(Self, Result);
@@ -2773,7 +2773,7 @@ end;
     - If current length is within the range → no change.
     - Negative lengths are clamped to 0.
 [==============================================================================}
-function THelper.Fit(const aBounds: TRange): Integer; overload;
+function MHelper.Fit(const aBounds: TRange): Integer; overload;
 var
   l: Integer;
   b: TRange;
@@ -2796,7 +2796,7 @@ end;
   @action: Returns true if arr size is at maximum maxValue.
   @note: None.
 [==============================================================================}
-function THelper.Fits(const maxValue: Integer): Boolean; overload;
+function MHelper.Fits(const maxValue: Integer): Boolean; overload;
 begin
   Result := (Self.Size <= maxValue);
 end;
@@ -2806,7 +2806,7 @@ end;
   @action: Returns true if arr size is between target start and stop.
   @note: None.
 [==============================================================================}
-function THelper.Fits(const target: TRange): Boolean; overload;
+function MHelper.Fits(const target: TRange): Boolean; overload;
 begin
   Result := InRange(Self.Size, Min(target.start, target.stop), Max(target.start, target.stop));
 end;
@@ -2816,7 +2816,7 @@ end;
   @action: Reverses array arr.
   @note: Alternative for TArray_Reverse
 [==============================================================================}
-function THelper.Flip: Boolean; overload;
+function MHelper.Flip: Boolean; overload;
 var
   r: TRange;
 begin
@@ -2831,7 +2831,7 @@ end;
   @action: Result := Length(Self) + SetLength(Self, 0) combo. 
   @note: None.
 [==============================================================================}
-function THelper.Free: Integer; overload;
+function MHelper.Free: Integer; overload;
 begin
   Result := Self.Size;
   SetLength(Self, 0);
@@ -2842,7 +2842,7 @@ end;
   @action: Returns count of array items from left-side by index.
   @note: None
 [==============================================================================}
-function THelper.FromLeft(const count: Integer; const index: Integer = 2147483647): TArr; overload;
+function MHelper.FromLeft(const count: Integer; const index: Integer = 2147483647): MArray; overload;
 var
   m: Integer;
   a, r, i: TRange;
@@ -2860,7 +2860,7 @@ end;
   @action: Returns count of array items from right-side by index.
   @note: None
 [==============================================================================}
-function THelper.FromRight(const count: Integer; const index: Integer = 0): TArr; overload;
+function MHelper.FromRight(const count: Integer; const index: Integer = 0): MArray; overload;
 var
   m: Integer;
   a, r, i: TRange;
@@ -2878,9 +2878,9 @@ end;
   @action: Copy of an array arr.
   @note: Just an alternative.
 [==============================================================================}
-function THelper.Get: TArr; overload;
+function MHelper.Get: MArray; overload;
 var
-  a: TVar;
+  a: MType;
   i: Integer;
 begin
   SetLength(Result, Self.Size);
@@ -2894,7 +2894,7 @@ begin
   @action: Outputs array of items from arr by indexes (IDs).
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function THelper.Get(const ID: TIntegerArray): TArr; overload;
+function MHelper.Get(const ID: TIntegerArray): MArray; overload;
 var
   i: Integer;
 begin
@@ -2908,7 +2908,7 @@ end;
   @action: Outputs array of items from arr by indexes (IDs).
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function THelper.Get(const ID: TRange): TArr; overload;
+function MHelper.Get(const ID: TRange): MArray; overload;
 var
   i, a: Integer;
 begin
@@ -2932,7 +2932,7 @@ end;
     - Returns False if limit is greater than the actual occurrences.
     - Single-pass (delegated to Count) and zero-based indexing.
 [==============================================================================}
-function THelper.GotAtLeast(const item: TVar; const limit: Integer): Boolean; overload;
+function MHelper.GotAtLeast(const item: MType; const limit: Integer): Boolean; overload;
 begin
   Result := (Self.Count(item) >= limit);
 end;
@@ -2945,7 +2945,7 @@ end;
     - Returns False if the occurrences exceed the specified limit.
     - Single-pass (delegated to Count) and zero-based indexing.
 [==============================================================================}
-function THelper.GotAtMost(const item: TVar; const limit: Integer): Boolean; overload;
+function MHelper.GotAtMost(const item: MType; const limit: Integer): Boolean; overload;
 begin
   Result := (Self.Count(item) <= limit);
 end;
@@ -2959,7 +2959,7 @@ end;
     - Returns True if Count(item) is within [limit.start, limit.stop].
     - Single-pass (delegated to Count) and zero-based indexing.
 [==============================================================================}
-function THelper.Got(const item: TVar; const limit: TRange): Boolean; overload;
+function MHelper.Got(const item: MType; const limit: TRange): Boolean; overload;
 begin
   Result := limit.Contains(Self.Count(item));
 end; 
@@ -2969,7 +2969,7 @@ end;
   @action: Groups array arr to 2D array by items.
   @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
 [==============================================================================}
-function THelper.Group: T2DArr; overload;
+function MHelper.Group: M2DArray; overload;
 var
   h, i, r, g, l: Integer;
   f: Boolean;
@@ -3004,8 +3004,8 @@ end;
   @action: Groups array arr to 2D array by items.
   @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
 [==============================================================================}
-function THelper.Group(const weight: TIntegerArray; const wSorted: Boolean = False): T2DArr; overload; var w: TIntegerArray; {$DEFINE Skeleton_Group}{$I Skeletons.inc}{$UNDEF Skeleton_Group}
-function THelper.Group(const weight: TDoubleArray; const wSorted: Boolean = False): T2DArr; overload; var w: TDoubleArray; {$DEFINE Skeleton_Group}{$I Skeletons.inc}{$UNDEF Skeleton_Group}
+function MHelper.Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload; var w: TIntegerArray; {$DEFINE Skeleton_Group}{$I Skeletons.inc}{$UNDEF Skeleton_Group}
+function MHelper.Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload; var w: TDoubleArray; {$DEFINE Skeleton_Group}{$I Skeletons.inc}{$UNDEF Skeleton_Group}
 
 {==============================================================================]
   <Grouped>
@@ -3020,7 +3020,7 @@ function THelper.Group(const weight: TDoubleArray; const wSorted: Boolean = Fals
          • Best suited for small datasets or when original group order must
            be maintained.
 [==============================================================================}
-function THelper.Grouped(const groups: TIntegerArray): T2DArr; overload;
+function MHelper.Grouped(const groups: TIntegerArray): M2DArray; overload;
 var
   u: TIntegerArray;
   i, j, l: Integer;
@@ -3067,7 +3067,7 @@ end;
          • Suitable for large datasets where grouping speed matters more
            than preserving the original order.
 [==============================================================================}
-function THelper.Grouping(const groups: TIntegerArray): T2DArr; overload;
+function MHelper.Grouping(const groups: TIntegerArray): M2DArray; overload;
 var
   i, l, g, c: Integer;
   p: TIntegerArray;
@@ -3104,7 +3104,7 @@ end;
            from Self whose corresponding index in groups matches that group.
   @note: • Requires `Length(Self) = Length(groups).
          • Returns an empty result if the input is empty or lengths differ.
-         • Uses a TDictionary<Integer, TArr> internally for O(1) average
+         • Uses a TDictionary<Integer, MArray> internally for O(1) average
            grouping performance.
          • The resulting order of groups in Result is **not deterministic**
            because TDictionary.Values does not preserve insertion or sorted
@@ -3112,16 +3112,16 @@ end;
          • Best suited for large datasets where grouping speed is more
            important than predictable output order.
 [==============================================================================}
-function THelper.Groupify(const groups: TIntegerArray): T2DArr; overload;
+function MHelper.Groupify(const groups: TIntegerArray): M2DArray; overload;
 var
-  m: specialize TDictionary<Integer, TArr>;
+  m: specialize TDictionary<Integer, MArray>;
   l, i, g: Integer;
 begin
   SetLength(Result, 0);
   l := Self.Length;
   if ((l = 0) or (l <> groups.Size)) then
     Exit;
-  m := specialize TDictionary<Integer, TArr>.Create;
+  m := specialize TDictionary<Integer, MArray>.Create;
   try
     for i := 0 to (l - 1) do
     begin
@@ -3141,7 +3141,7 @@ end;
   @action: Feeds item to array and returns the index position it was added to.
   @note: Returns -1 if duplicates are not allowed and array already contains item.
 [==============================================================================}
-function THelper.Grow(const item: TVar; const allowDuplicates: Boolean = False): Integer; overload;
+function MHelper.Grow(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
 begin
   if ((not allowDuplicates) and Self.Contains(item)) then
     Exit(-1);
@@ -3159,7 +3159,7 @@ end;
     - Uses zero-based indexing (0..High(Self)).
     - Optimized for large arrays; no temporary allocations are made.
 [==============================================================================}
-function THelper.HasAtLeast(const item: TVar; const limit: Integer): Boolean; overload;
+function MHelper.HasAtLeast(const item: MType; const limit: Integer): Boolean; overload;
 var
   i, c: Integer;
 begin
@@ -3182,7 +3182,7 @@ end;
     - Uses zero-based indexing (0..High(Self)).
     - Optimized for large arrays; no temporary allocations are made.
 [==============================================================================}
-function THelper.HasAtMost(const item: TVar; const limit: Integer): Boolean; overload;
+function MHelper.HasAtMost(const item: MType; const limit: Integer): Boolean; overload;
 var
   i, c: Integer;
 begin
@@ -3209,7 +3209,7 @@ end;
     - Uses zero-based indexing (0..High(Self)).
     - Optimized for large arrays; no temporary allocations are made.
 [==============================================================================}
-function THelper.Has(const item: TVar; const limit: TRange): Boolean; overload;
+function MHelper.Has(const item: MType; const limit: TRange): Boolean; overload;
 var
   i, c, r: Integer;
   n: TRange;
@@ -3236,7 +3236,7 @@ end;
   @action: Returns true if arr contains (holds) WHOLE chain of items in it.
   @note: Starting from any index and ending to any index!
 [==============================================================================}
-function THelper.Holds(const chain: TArr): Boolean; overload;
+function MHelper.Holds(const chain: MArray): Boolean; overload;
 var
   a, b, x, y, z: Integer;
   n: Boolean;
@@ -3264,7 +3264,7 @@ end;
   @action: Returns true if arr consists of ONLY same items.
   @note: Requires at least single item. Otherwise returns False. (With empty arrays)
 [==============================================================================}
-function THelper.Homogeneous(const item: TVar): Boolean; overload;
+function MHelper.Homogeneous(const item: MType): Boolean; overload;
 var
   h, i: Integer;
 begin
@@ -3280,7 +3280,7 @@ end;
   @action: Returns true if arr consists of ONLY same items.
   @note: Requires at least single item. Otherwise returns False. (With empty arrays)
 [==============================================================================}
-function THelper.Homogeneous: Boolean; overload;
+function MHelper.Homogeneous: Boolean; overload;
 begin
   Result := (Self.Exists and Homogeneous(Self[0]));
 end;
@@ -3290,7 +3290,7 @@ end;
   @action: Returns indexes of arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function THelper.ID(const aAscending: Boolean = True): TIntegerArray; overload;
+function MHelper.ID(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   i, l, b, s: Integer;
 begin
@@ -3307,7 +3307,7 @@ end;
   @action: Returns IDs of arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function THelper.IDs(const aAscending: Boolean = True): TIntegerArray; overload;
+function MHelper.IDs(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   h, i: Integer;
 begin
@@ -3328,7 +3328,7 @@ end;
   @action: Returns items from arr by IDs.
   @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array.
 [==============================================================================}
-function THelper.IDs(const ID: TIntegerArray): TArr; overload;
+function MHelper.IDs(const ID: TIntegerArray): MArray; overload;
 var
   i: Integer;
 begin
@@ -3342,7 +3342,7 @@ end;
   @action: Returns arr with IDs replaced as item.
   @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array.
 [==============================================================================}
-function THelper.IDs(const ID: TIntegerArray; const item: TVar): TArr; overload;
+function MHelper.IDs(const ID: TIntegerArray; const item: MType): MArray; overload;
 var
   i: Integer;
 begin
@@ -3356,7 +3356,7 @@ end;
   @action: Returns arr with IDs replaced as items.
   @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array and ALSO item[s].
 [==============================================================================}
-function THelper.IDs(const ID: TIntegerArray; const items: TArr): TArr; overload;
+function MHelper.IDs(const ID: TIntegerArray; const items: MArray): MArray; overload;
 var
   i, l: Integer;
 begin
@@ -3371,7 +3371,7 @@ end;
   @action: Looks array for item starting from start index down to index 0. If found, Result will be True.
   @note: Alternative to TArray_Contains, but this scans in opposite direction.
 [==============================================================================}
-function THelper.Includes(const item: TVar; const index: Integer = 2147483647): Boolean; overload;
+function MHelper.Includes(const item: MType; const index: Integer = 2147483647): Boolean; overload;
 var
   i: Integer;
 begin
@@ -3386,7 +3386,7 @@ end;
   @action: Returns IDs of arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function THelper.Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
+function MHelper.Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   l: Integer;
 begin
@@ -3408,7 +3408,7 @@ end;
   @action: Returns IDs of arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function THelper.Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
+function MHelper.Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -3428,7 +3428,7 @@ end;
     - Uses efficient two-pointer approach for small/medium arrays.
     - Optional divide-and-conquer recursive variant can be used for huge arrays.
 [==============================================================================}
-function THelper.Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
+function MHelper.Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
 procedure RI(var return: TIntegerArray; const L, R: Integer);
 var
   M: Integer;
@@ -3458,7 +3458,7 @@ end;
   @action: Returns IDs of arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function THelper.Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
+function MHelper.Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   r: TRange;
 begin
@@ -3485,7 +3485,7 @@ end;
   @action: Returns IDs of arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function THelper.Indices(const aAscending: Boolean = True): TIntegerArray; overload;
+function MHelper.Indices(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   i, l, h: Integer;
 begin
@@ -3512,7 +3512,7 @@ end;
          Passing an empty array leaves the original array unchanged.
          Returns the new total number of elements after insertion.
 [==============================================================================}
-function THelper.Inject(const items: TArr; const index: Integer = 2147483647): Integer; overload;
+function MHelper.Inject(const items: MArray; const index: Integer = 2147483647): Integer; overload;
 var
   i, s, l, p: Integer;
 begin
@@ -3536,20 +3536,20 @@ end;
     - Does not require the arrays to be sorted.
     - Uses a hash-based dictionary to track membership; time complexity is roughly O(N + M), 
       where N = Length(Self), M = Length(Items).
-    - Works for any type supported by TVar that can be used as a dictionary key
+    - Works for any type supported by MType that can be used as a dictionary key
       (must support hashing and equality comparison).
     - Each matched element is removed from the dictionary to ensure distinct counting.
     - Returns 0 if either array is empty.
 [==============================================================================}
-function THelper.IntersectionCounted(const items: TArr): Integer; overload;
+function MHelper.IntersectionCounted(const items: MArray): Integer; overload;
 var
-  S: specialize TDictionary<TVar, Byte>;
+  S: specialize TDictionary<MType, Byte>;
   i: Integer;
 begin
   Result := 0;
   if (items.Empty or Self.Empty) then
     Exit;
-  S := specialize TDictionary<TVar, Byte>.Create;
+  S := specialize TDictionary<MType, Byte>.Create;
   try
     for i := 0 to High(items) do
       S.TryAdd(items[i], 0);
@@ -3569,7 +3569,7 @@ end;
   @action: Keeps items in array, removes others.
   @note: Supports custom start index! Returns the modified arr.
 [==============================================================================}
-function THelper.Keep(const items: TArr; const index: Integer = 0): TArr; overload;
+function MHelper.Keep(const items: MArray; const index: Integer = 0): MArray; overload;
 var
   m, i, l, r: Integer;
 begin
@@ -3598,7 +3598,7 @@ end;
   @action: Combination of Length(arr) + SetLength(arr, 0).
   @note: Returns the length of the arr!
 [==============================================================================}
-function THelper.Kill: Integer; overload;
+function MHelper.Kill: Integer; overload;
 begin
   Result := Self.Size;
   SetLength(Self, 0);
@@ -3609,7 +3609,7 @@ end;
   @action: Returns the last index of arr.
   @note: With empty array result will be -1!
 [==============================================================================}
-function THelper.Last: Integer; overload;
+function MHelper.Last: Integer; overload;
 begin
   Result := IfThen(Self.Empty, -1, (Self.Size - 1));
 end;
@@ -3619,7 +3619,7 @@ end;
   @action: Returns the last index that matches item in arr.
   @note: Unmatch will be -1!
 [==============================================================================}
-function THelper.Last(const item: TVar): Integer; overload;
+function MHelper.Last(const item: MType): Integer; overload;
 begin
   for Result := High(Self) downto 0 do
     if (Self[Result] = item) then
@@ -3632,7 +3632,7 @@ end;
   @action: Returns the last arr index that matches any of the items.
   @note: Unmatch will be -1!
 [==============================================================================}
-function THelper.Last(const items: TArr): Integer; overload;
+function MHelper.Last(const items: MArray): Integer; overload;
 begin
   for Result := High(Self) downto 0 do
     if items.Contains(Self[Result]) then
@@ -3645,16 +3645,16 @@ end;
   @action: Returns the least common array item.
   @note: None
 [==============================================================================}
-function THelper.LeastCommon: TVar; overload;
+function MHelper.LeastCommon: MType; overload;
 var
-  d: specialize TDictionary<TVar, Integer>;
+  d: specialize TDictionary<MType, Integer>;
   c, m, i: Integer;
 begin
   if Self.Empty then
-    Exit(Default(TVar));
+    Exit(Default(MType));
   Result := Self[0];
   m := MaxInt;
-  d := specialize TDictionary<TVar, Integer>.Create;
+  d := specialize TDictionary<MType, Integer>.Create;
   try
     for i := 0 to High(Self) do
       if d.TryGetValue(Self[i], c) then
@@ -3677,7 +3677,7 @@ end;
   @action: Returns the least frequent arr item.
   @note: None.
 [==============================================================================}
-function THelper.LeastFrequent: TVar; overload;
+function MHelper.LeastFrequent: MType; overload;
 var
   i, j, c, m: Integer;
   f: Boolean;
@@ -3714,7 +3714,7 @@ end;
   @action: Simply Result := System.Length(arr);
   @note: None.
 [==============================================================================}
-function THelper.Length: Integer; overload;
+function MHelper.Length: Integer; overload;
 begin
   Result := System.Length(Self);
 end;
@@ -3724,7 +3724,7 @@ end;
   @action: Returns last index position from arr which matched with item.
   @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
-function THelper.Loc(const item: TVar; const index: Integer = 2147483647): Integer; overload;
+function MHelper.Loc(const item: MType; const index: Integer = 2147483647): Integer; overload;
 begin
   for Result := Min(High(Self), index) downto 0 do
     if (Self[Result] = item) then
@@ -3737,7 +3737,7 @@ end;
   @action: Returns index position from arr which matches with items.
   @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
-function THelper.Loc(const items: TArr; const index: Integer = 2147483647): Integer; overload;
+function MHelper.Loc(const items: MArray; const index: Integer = 2147483647): Integer; overload;
 var
   h, i: Integer;
 begin
@@ -3755,7 +3755,7 @@ end;
   @action: Returns index position from arr which matched with item.
   @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
-function THelper.Location(const item: TVar; const index: Integer = 2147483647): Integer; overload;
+function MHelper.Location(const item: MType; const index: Integer = 2147483647): Integer; overload;
 var
   l: Integer;
 begin
@@ -3772,7 +3772,7 @@ end;
   @action: Returns index position from arr which matches with items.
   @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
-function THelper.Location(const items: TArr; const index: Integer = 2147483647): Integer; overload;
+function MHelper.Location(const items: MArray; const index: Integer = 2147483647): Integer; overload;
 var
   h, i, l: Integer;
 begin
@@ -3794,7 +3794,7 @@ end;
   @action: Returns last index positions from arr which matched with item.
   @note: None.
 [==============================================================================}
-function THelper.Locations(const item: TVar; const index: Integer = 2147483647): TIntegerArray; overload;
+function MHelper.Locations(const item: MType; const index: Integer = 2147483647): TIntegerArray; overload;
 var
   i, r, h, s: Integer;
 begin
@@ -3816,7 +3816,7 @@ end;
   @action: Returns last index positions from arr which matches with items.
   @note: None.
 [==============================================================================}
-function THelper.Locations(const items: TArr; const index: Integer = 2147483647): TIntegerArray; overload;
+function MHelper.Locations(const items: MArray; const index: Integer = 2147483647): TIntegerArray; overload;
 var
   i, r, h, s: Integer;
 begin
@@ -3838,7 +3838,7 @@ end;
   @action: Simply returns arr indexes.
   @note: None.
 [==============================================================================}
-function THelper.Locations: TIntegerArray; overload;
+function MHelper.Locations: TIntegerArray; overload;
 var
   i, r: Integer;
 begin
@@ -3858,10 +3858,10 @@ end;
          - Returns the length of Self after sorting.
          - When aAscending = True, smaller weights appear first.
 [==============================================================================}
-function THelper.MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
-  procedure MSW(var arr: TArr; var wgt: TIntegerArray; const L, R: Integer);
+function MHelper.MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+  procedure MSW(var arr: MArray; var wgt: TIntegerArray; const L, R: Integer);
   var
-    s: TArr;
+    s: MArray;
     w: TIntegerArray;
     i, j, k, m: Integer;
   begin
@@ -3919,10 +3919,10 @@ begin
     MSW(Self, weight, 0, (Result - 1));
 end;
 
-function THelper.MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
-  procedure MSW(var arr: TArr; var wgt: TDoubleArray; const L, R: Integer);
+function MHelper.MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
+  procedure MSW(var arr: MArray; var wgt: TDoubleArray; const L, R: Integer);
   var
-    s: TArr;
+    s: MArray;
     w: TDoubleArray;
     i, j, k, m: Integer;
   begin
@@ -3985,7 +3985,7 @@ end;
   @action: Ramdomizes array with custom mixings.
   @note: None.
 [==============================================================================}
-function THelper.Mix(const mixings: Integer = 1): Boolean; overload;
+function MHelper.Mix(const mixings: Integer = 1): Boolean; overload;
 var
   l, i, m: Integer;
 begin
@@ -4004,7 +4004,7 @@ end;
   @action: Returns ramdomized array by mixing.
   @note: None.
 [==============================================================================}
-function THelper.Mixed(const mixings: Integer = 1): TArr; overload;
+function MHelper.Mixed(const mixings: Integer = 1): MArray; overload;
 var
   l, i, m: Integer;
 begin
@@ -4021,16 +4021,16 @@ end;
   @action: Returns the most common array item.
   @note: None
 [==============================================================================}
-function THelper.MostCommon: TVar; overload;
+function MHelper.MostCommon: MType; overload;
 var
-  d: specialize TDictionary<TVar, Integer>;
+  d: specialize TDictionary<MType, Integer>;
   c, m, i: Integer;
 begin
   if Self.Empty then
-    Exit(Default(TVar));
+    Exit(Default(MType));
   Result := Self[0];
   m := 0;
-  d := specialize TDictionary<TVar, Integer>.Create;
+  d := specialize TDictionary<MType, Integer>.Create;
   try
     for i := 0 to High(Self) do
       if d.TryGetValue(Self[i], c) then
@@ -4053,7 +4053,7 @@ end;
   @action: Returns the most frequent arr item.
   @note: None.
 [==============================================================================}
-function THelper.MostFrequent: TVar; overload;
+function MHelper.MostFrequent: MType; overload;
 var
   i, j, c, m: Integer;
 begin
@@ -4083,9 +4083,9 @@ end;
          - Movements preserve the array’s relative ordering behavior.
          - The input move set is assumed valid for the given array.
 [==============================================================================}
-function THelper.Movement(const moves: TConnectionArray): TArr; overload;
+function MHelper.Movement(const moves: TConnectionArray): MArray; overload;
 var
-  t: TVar;
+  t: MType;
   i, j, c: Integer;
 begin
   Result := Self.Copy;
@@ -4118,11 +4118,11 @@ end;
          - Can be reversed/applied using <arr.Movement>.
          - Useful for visualizing "element movement" sorting.
 [==============================================================================}
-function THelper.Movements(const target: TArr): TConnectionArray; overload;
+function MHelper.Movements(const target: MArray): TConnectionArray; overload;
 var
-  t: TVar;
+  t: MType;
   i, j, k: Integer;
-  s: TArr;
+  s: MArray;
 begin
   s := Self.Copy;
   SetLength(Result, 0);
@@ -4154,7 +4154,7 @@ end;
   @action: Returns true if array contains at least threshold of items in it.
   @note: None.	
 [==============================================================================}
-function THelper.Multi(const threshold: Integer = 2): Boolean; overload;
+function MHelper.Multi(const threshold: Integer = 2): Boolean; overload;
 begin
   Result := (Self.Size >= threshold);
 end;
@@ -4164,7 +4164,7 @@ end;
   @action: Returns true if array contains at least threshold of items in it.
   @note: None.	
 [==============================================================================}
-function THelper.Multi(const threshold: TRange): Boolean; overload;
+function MHelper.Multi(const threshold: TRange): Boolean; overload;
 var
   r: TRange;
 begin
@@ -4177,7 +4177,7 @@ end;
   @action: Returns next items from array by index and count.
   @note: None.	
 [==============================================================================}
-function THelper.Next(const index: Integer; const count: Integer = 2147483647): TArr; overload;
+function MHelper.Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
 var
   m, i: Integer;
 begin
@@ -4196,15 +4196,15 @@ end;
   @action: Returns true if arr does not contain any items from forbidden.
   @note: None.
 [==============================================================================}
-function THelper.NoneOf(const forbidden: TArr): Boolean; overload;
+function MHelper.NoneOf(const forbidden: MArray): Boolean; overload;
 var
-  d: specialize TDictionary<TVar, Boolean>;
+  d: specialize TDictionary<MType, Boolean>;
   i: Integer;
 begin
   Result := True;
   if (Self.Empty or forbidden.Empty) then
     Exit;
-  d := specialize TDictionary<TVar, Boolean>.Create;
+  d := specialize TDictionary<MType, Boolean>.Create;
   try
     for i := 0 to High(forbidden) do
       d.AddOrSetValue(forbidden[i], True);
@@ -4223,7 +4223,7 @@ end;
   @note    Uses Low(Self) <= High(Self) to determine occupancy. This is 
            functionally equivalent to Length(Self) > 0.	
 [==============================================================================}
-function THelper.Occupied: Boolean; overload;
+function MHelper.Occupied: Boolean; overload;
 begin
   Result := (Low(Self) <= High(Self));
 end;
@@ -4233,7 +4233,7 @@ end;
   @action: Returns true item exists in arr EXACTLY(!) occurrence amount of times.
   @note: Supports lookup for 0 items. Loops array through from beginning to end.	
 [==============================================================================}
-function THelper.Occurs(const item: TVar; const occurrence: Integer = 1): Boolean; overload;
+function MHelper.Occurs(const item: MType; const occurrence: Integer = 1): Boolean; overload;
 var
   o, p: Integer;
 begin
@@ -4262,7 +4262,7 @@ end;
   @action: Overlays items to array index.
   @note: Returns the array with overlay action.		
 [==============================================================================}
-function THelper.Overlay(const items: TArr; const index: Integer; const init: TVar): TArr; overload;
+function MHelper.Overlay(const items: MArray; const index: Integer; const init: MType): MArray; overload;
 var
   s, l, r, i, a, j: Integer;
 begin
@@ -4289,9 +4289,9 @@ begin
       Result[i] := items[i];
 end;
 
-function THelper.Overlay(const items: TArr; const index: Integer = 0): TArr; overload;
+function MHelper.Overlay(const items: MArray; const index: Integer = 0): MArray; overload;
 begin
-  Result := Self.Overlay(items, index, Default(TVar));
+  Result := Self.Overlay(items, index, Default(MType));
 end;
 
 {==============================================================================]
@@ -4299,7 +4299,7 @@ end;
   @action: Returns true if size of arr is OVER the limit.
   @note: None.	
 [==============================================================================}
-function THelper.Oversize(const limit: Integer): Boolean; overload;
+function MHelper.Oversize(const limit: Integer): Boolean; overload;
 begin
   Result := (Self.Size > limit);
 end;
@@ -4309,7 +4309,7 @@ end;
   @action: Partitions array arr to 2D array by size of parts.
   @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5,6][7]
 [==============================================================================}
-function THelper.Partition(const pSize: Integer): T2DArr; overload;
+function MHelper.Partition(const pSize: Integer): M2DArray; overload;
 var
   p, i, j, s, r, l: Integer;
 begin
@@ -4339,7 +4339,7 @@ end;
   @note: Uses SetLength incase index + items goes over the current length.
          If index is below 0 it will automatically set max length.
 [==============================================================================}
-function THelper.Patch(const index: Integer; const items: TArr): Integer; overload;
+function MHelper.Patch(const index: Integer; const items: MArray): Integer; overload;
 var
   j, i: Integer;
 begin
@@ -4358,7 +4358,7 @@ end;
   @action: Alternative method for arr.Keep
   @note: None.
 [==============================================================================}
-function THelper.Pick(const items: TArr; const index: Integer = 0): TArr; overload;
+function MHelper.Pick(const items: MArray; const index: Integer = 0): MArray; overload;
 var
   i, m, l: Integer;
 begin
@@ -4386,7 +4386,7 @@ end;
   @action: Returns true if all array items are identical.
   @note: None.
 [==============================================================================}
-function THelper.Plain: Boolean; overload;
+function MHelper.Plain: Boolean; overload;
 var
   i, l: Integer;
 begin
@@ -4404,7 +4404,7 @@ end;
   @action: Returns and removes item from highest array index from arr.
   @note: UNSAFE! Make sure array has enough items..
 [==============================================================================}
-function THelper.Pop: TVar; overload;
+function MHelper.Pop: MType; overload;
 var
   h: Integer;
 begin
@@ -4420,7 +4420,7 @@ end;
   @action: Returns and removes item from highest array index from arr.
   @note: Returns null if array contains no items.
 [==============================================================================}
-function THelper.Pop(const null: TVar): TVar; overload;
+function MHelper.Pop(const null: MType): MType; overload;
 var
   h: Integer;
 begin
@@ -4436,7 +4436,7 @@ end;
   @action: Populates array with items, x-times.
   @note: Returns true if items is not empty and times is more than 0.
 [==============================================================================}
-function THelper.Populate(const items: TArr; const times: Integer = 1): Boolean; overload;
+function MHelper.Populate(const items: MArray; const times: Integer = 1): Boolean; overload;
 var
   i, j, l: Integer;
 begin
@@ -4454,7 +4454,7 @@ end;
   @action: Populates array with item, x-times.
   @note: Returns true if times is more than 0.
 [==============================================================================}
-function THelper.Populate(const item: TVar; const times: Integer = 1): Boolean; overload;
+function MHelper.Populate(const item: MType; const times: Integer = 1): Boolean; overload;
 var
   i: Integer;
 begin;
@@ -4470,7 +4470,7 @@ end;
   @action: Returns true if arr Length is between population TRange (start, stop).
   @note: None.
 [==============================================================================}
-function THelper.Populated(const population: TRange): Boolean; overload;
+function MHelper.Populated(const population: TRange): Boolean; overload;
 begin
   Result := InRange(Self.Size, population.Minimum, population.Maximum);
 end;
@@ -4480,7 +4480,7 @@ end;
   @action: Returns true if arr Length is between populationMin and populationMax.
   @note: Strict! Min should NOT be higher than Max.
 [==============================================================================}
-function THelper.Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload;
+function MHelper.Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload;
 begin
   Result := InRange(Self.Size, populationMin, populationMax);
 end;  
@@ -4490,7 +4490,7 @@ end;
   @action: Returns index position from arr which matched with item.
   @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
-function THelper.Pos(const item: TVar; const index: Integer = 0): Integer; overload;
+function MHelper.Pos(const item: MType; const index: Integer = 0): Integer; overload;
 begin
   for Result := Max(0, index) to High(Self) do
     if (Self[Result] = item) then
@@ -4503,7 +4503,7 @@ end;
   @action: Returns index position from arr which matches with items.
   @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
-function THelper.Pos(const items: TArr; const index: Integer = 0): Integer; overload;
+function MHelper.Pos(const items: MArray; const index: Integer = 0): Integer; overload;
 var
   h, i: Integer;
 begin
@@ -4521,7 +4521,7 @@ end;
   @action: Returns index position from arr which matched with item.
   @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
-function THelper.Position(const item: TVar; const index: Integer = 0): Integer; overload;
+function MHelper.Position(const item: MType; const index: Integer = 0): Integer; overload;
 var
   l: Integer;
 begin
@@ -4538,7 +4538,7 @@ end;
   @action: Returns index position from arr which matches with items.
   @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
-function THelper.Position(const items: TArr; const index: Integer = 0): Integer; overload;
+function MHelper.Position(const items: MArray; const index: Integer = 0): Integer; overload;
 var
   h, i, l: Integer;
 begin
@@ -4560,7 +4560,7 @@ end;
   @action: Returns index positions from arr which matched with item.
   @note: None.
 [==============================================================================}
-function THelper.Positions(const item: TVar; const index: Integer = 0): TIntegerArray; overload;
+function MHelper.Positions(const item: MType; const index: Integer = 0): TIntegerArray; overload;
 var
   i, r, h, s: Integer;
 begin
@@ -4582,7 +4582,7 @@ end;
   @action: Returns index positions from arr which matches with items.
   @note: None.
 [==============================================================================}
-function THelper.Positions(const items: TArr; const index: Integer = 0): TIntegerArray; overload;
+function MHelper.Positions(const items: MArray; const index: Integer = 0): TIntegerArray; overload;
 var
   i, r, h, s: Integer;
 begin
@@ -4604,7 +4604,7 @@ end;
   @action: Simply returns arr indexes.
   @note: None.
 [==============================================================================}
-function THelper.Positions: TIntegerArray; overload;
+function MHelper.Positions: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -4622,7 +4622,7 @@ end;
          If the index exceeds the array length, the items are appended.
          Returns the new total number of elements after insertion.
 [==============================================================================}
-function THelper.Prepend(const items: TArr; const index: Integer = 0): Integer; overload;
+function MHelper.Prepend(const items: MArray; const index: Integer = 0): Integer; overload;
 var
   i: Integer;
 begin
@@ -4636,7 +4636,7 @@ end;
   @action: Returns true item exists in arr EXACTLY(!) occurrence amount of times.
   @note: Supports lookup for 0 items. Loops array through from end to beginning.	
 [==============================================================================}
-function THelper.Presence(const item: TVar; const occurrence: Integer = 1): Boolean; overload;
+function MHelper.Presence(const item: MType; const occurrence: Integer = 1): Boolean; overload;
 var
   l, o: Integer;
 begin
@@ -4665,7 +4665,7 @@ end;
   @action: Returns previous array items from index by count.
   @note: None.
 [==============================================================================}
-function THelper.Previous(const index: Integer; const count: Integer = 2147483647): TArr; overload;
+function MHelper.Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
 var
   m, l, i: Integer;
 begin
@@ -4688,7 +4688,7 @@ end;
          are left untouched. The relative order of the remaining elements
          is unchanged.
 [==============================================================================}
-function THelper.Pruned: TArr; overload;
+function MHelper.Pruned: MArray; overload;
 var
   i, l, r: Integer;
 begin
@@ -4712,10 +4712,10 @@ end;
            effectively run-length–compressing the input.
   @note: Custom threshold possibility.
 [==============================================================================}
-function THelper.Pruned(const threshold: Integer): TArr; overload;
+function MHelper.Pruned(const threshold: Integer): MArray; overload;
 var
-  w: TArr;
-  e: TVar;
+  w: MArray;
+  e: MType;
   h, t, c, i, j: Integer;
   d: Boolean;
 begin
@@ -4758,7 +4758,7 @@ end;
          are left untouched. The relative order of the remaining elements
          is unchanged.
 [==============================================================================}
-function THelper.Prune: Integer; overload;
+function MHelper.Prune: Integer; overload;
 var
   i: Integer;
 begin
@@ -4775,7 +4775,7 @@ end;
   @action: Returns the contents of the array and leaves it empty.
   @note: After calling Pull, Self.Length = 0.
 [==============================================================================}
-function THelper.Pull: TArr; overload;
+function MHelper.Pull: MArray; overload;
 var
   i: Integer;
 begin
@@ -4790,14 +4790,14 @@ end;
   @action: Returns array with unique items
   @note: None.
 [==============================================================================}
-function THelper.Purified(const dAscending: Boolean = True): TArr; overload;
+function MHelper.Purified(const dAscending: Boolean = True): MArray; overload;
 var
-  d: specialize TDictionary<TVar, Boolean>;
-  l: specialize TList<TVar>;
+  d: specialize TDictionary<MType, Boolean>;
+  l: specialize TList<MType>;
   i: Integer;
 begin
-  d := specialize TDictionary<TVar, Boolean>.Create;
-  l := specialize TList<TVar>.Create;
+  d := specialize TDictionary<MType, Boolean>.Create;
+  l := specialize TList<MType>.Create;
   try
     case dAscending of
       True:
@@ -4827,13 +4827,13 @@ end;
   @action: Removes duplicates
   @note: None
 [==============================================================================}
-function THelper.Purify(const dAscending: Boolean = True): Integer; overload;
+function MHelper.Purify(const dAscending: Boolean = True): Integer; overload;
 var
-  d: specialize TDictionary<TVar, Boolean>;
-  c: TArr;
+  d: specialize TDictionary<MType, Boolean>;
+  c: MArray;
   i: Integer;
 begin
-  d := specialize TDictionary<TVar, Boolean>.Create;
+  d := specialize TDictionary<MType, Boolean>.Create;
   Result := 0;
   try
     case dAscending of
@@ -4866,7 +4866,7 @@ end;
   @action: Returns array arr filled with item to indexes (ID).
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function THelper.Put(const ID: TIntegerArray; const item: TVar): TArr; overload;
+function MHelper.Put(const ID: TIntegerArray; const item: MType): MArray; overload;
 var
   i: Integer;
 begin
@@ -4882,7 +4882,7 @@ end;
   @action: Returns array arr filled with items to indexes (ID).
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function THelper.Put(const ID: TIntegerArray; const items: TArr): TArr; overload;
+function MHelper.Put(const ID: TIntegerArray; const items: MArray): MArray; overload;
 var
   i, l: Integer;
 begin
@@ -4899,7 +4899,7 @@ end;
   @action: Returns array arr filled with items to starting from custom start index.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function THelper.Put(const index: Integer; const items: TArr): TArr; overload;
+function MHelper.Put(const index: Integer; const items: MArray): MArray; overload;
 var
   i: Integer;
 begin
@@ -4915,7 +4915,7 @@ end;
   @action: Places item in array with arr.
   @note: Returns array (arr+item) length.
 [==============================================================================}
-function THelper.Push(const item: TVar): TArr; overload;
+function MHelper.Push(const item: MType): MArray; overload;
 var
   i, l: Integer;
 begin
@@ -4931,7 +4931,7 @@ end;
   @action: Places items in array with arr.
   @note: Returns array (arr+item) length.
 [==============================================================================}
-function THelper.Push(const items: TArr): TArr; overload;
+function MHelper.Push(const items: MArray): MArray; overload;
 var
   h, i, l: Integer;
 begin
@@ -4954,8 +4954,8 @@ end;
          Returns the length of Self. Useful when you want to reorder an array according
          to external weights while preserving pairings.
 [==============================================================================}
-function THelper.QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
-  procedure QS(var A: TArr; var W: TIntegerArray; const L, R: Integer);
+function MHelper.QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+  procedure QS(var A: MArray; var W: TIntegerArray; const L, R: Integer);
   var
     i, j, p: Integer;
   begin
@@ -5013,8 +5013,8 @@ end;
          Returns the length of Self. Useful when you want to reorder an array according
          to external weights while preserving pairings.
 [==============================================================================}
-function THelper.QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
-  procedure QS(var A: TArr; var W: TDoubleArray; const L, R: Integer);
+function MHelper.QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
+  procedure QS(var A: MArray; var W: TDoubleArray; const L, R: Integer);
   var
     p: Double;
     i, j: Integer;
@@ -5068,15 +5068,15 @@ end;
   @action: Returns arr sorted by weight, based on QuickSort algorithm.
   @note: Weight and arr must be the same length! Otherwise returns empty array.
 [==============================================================================}
-function THelper.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): TArr; overload; var w: Integer; {$DEFINE Skeleton_QuickSorted}{$I Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
-function THelper.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): TArr; overload; var w: Double; {$DEFINE Skeleton_QuickSorted}{$I Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
+function MHelper.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): MArray; overload; var w: Integer; {$DEFINE Skeleton_QuickSorted}{$I Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
+function MHelper.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): MArray; overload; var w: Double; {$DEFINE Skeleton_QuickSorted}{$I Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
 
 {==============================================================================]
   <Randomized>
   @action: Returns randomized copy of array
   @note: None.
 [==============================================================================}
-function THelper.Randomized: TArr; overload;
+function MHelper.Randomized: MArray; overload;
 var
   s, l, r: Integer;
   i: TIntegerArray;
@@ -5100,7 +5100,7 @@ end;
   @note: (-1, -1) if subArray is not found.
          Loops array from index to max.
 [==============================================================================}
-function THelper.Range(const subArray: TArr; const index: Integer = 0): TRange; overload;
+function MHelper.Range(const subArray: MArray; const index: Integer = 0): TRange; overload;
 var
   i, j, a, s, p: Integer;
   f: Boolean;
@@ -5132,7 +5132,7 @@ end;
   @note: [] if not a single subArray is not found.
          Loops array from index to max.
 [==============================================================================}
-function THelper.Ranges(const subArray: TArr; const index: Integer = 0): TRangeArray; overload;
+function MHelper.Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload;
 var
   i, j, a, s, p, l: Integer;
   f: Boolean;
@@ -5166,7 +5166,7 @@ end;
   @action: Clear the array and reallocate to arrSize (negative = previous length).
   @note: Returns True if array was non-empty and arrSize <> 0.
 [==============================================================================}
-function THelper.Recreate(const arrSize: Integer): Boolean; overload;
+function MHelper.Recreate(const arrSize: Integer): Boolean; overload;
 var
   l: Integer;
 begin
@@ -5186,7 +5186,7 @@ end;
   @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
          The default index filters the entire array.
 [==============================================================================}
-function THelper.Reject(const items: TArr; const index: Integer = 2147483647): TArr; overload;
+function MHelper.Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 var
   i, l, m, c: Integer;
 begin
@@ -5212,7 +5212,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
-function THelper.Remove(const item: TVar; const index: Integer = 0; const all: Boolean = True): TArr; overload;
+function MHelper.Remove(const item: MType; const index: Integer = 0; const all: Boolean = True): MArray; overload;
 var
   l, i, r, m: Integer;
   s: Boolean;
@@ -5239,7 +5239,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed.
 [==============================================================================}
-function THelper.Remove(const item: TVar; const all: Boolean): TArr; overload;
+function MHelper.Remove(const item: MType; const all: Boolean): MArray; overload;
 begin
   Result := Self.Remove(item, 0, all);
 end;
@@ -5249,7 +5249,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
-function THelper.Remove(const items: TArr; const index: Integer = 0; const all: Boolean = True): TArr; overload;
+function MHelper.Remove(const items: MArray; const index: Integer = 0; const all: Boolean = True): MArray; overload;
 var
   a, b, l, i, r, m: Integer;
   d, s: Boolean;
@@ -5289,7 +5289,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed.
 [==============================================================================}
-function THelper.Remove(const items: TArr; const all: Boolean): TArr; overload;
+function MHelper.Remove(const items: MArray; const all: Boolean): MArray; overload;
 begin
   Result := Self.Remove(items, 0, all);
 end;
@@ -5299,9 +5299,9 @@ end;
   @action: Moves item from oldIndex to newIndex in array arr.
   @note: Returns true with success.
 [==============================================================================}
-function THelper.Reposition(const oldIndex, newIndex: Integer): Boolean; overload;
+function MHelper.Reposition(const oldIndex, newIndex: Integer): Boolean; overload;
 var
-  s: TVar;
+  s: MType;
   h, i: Integer;
 begin
   h := High(Self);
@@ -5326,7 +5326,7 @@ end;
   @action: Resets all elements of the array to default values while preserving its structure.
   @note: Returns the number of elements that were reset.
 [==============================================================================}
-function THelper.Reset: Integer; overload;
+function MHelper.Reset: Integer; overload;
 begin
   Result := Self.Size;
   SetLength(Self, 0);
@@ -5340,7 +5340,7 @@ end;
          aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
          aChange = 0 => Returns 0.
 [==============================================================================}
-function THelper.Resize(const aChange: Integer): Integer; overload;
+function MHelper.Resize(const aChange: Integer): Integer; overload;
 var
   l: Integer;
 begin
@@ -5357,7 +5357,7 @@ end;
          aChange = 0 => Returns 0.
          Supports null for filling created indexes.
 [==============================================================================}
-function THelper.Resize(const aChange: Integer; const null: TVar): Integer; overload;
+function MHelper.Resize(const aChange: Integer; const null: MType): Integer; overload;
 var
   i, l: Integer;
 begin
@@ -5373,7 +5373,7 @@ end;
   @action: Returns array with items in reversed order.
   @note: None.
 [==============================================================================}
-function THelper.Reversal: TArr; overload;
+function MHelper.Reversal: MArray; overload;
 var
   r: TRange;
 begin
@@ -5396,7 +5396,7 @@ end;
   @action: Reverses items in array.
   @note: Returns true with success (array contains 2 or more items)
 [==============================================================================}
-function THelper.Reverse: Boolean; overload;
+function MHelper.Reverse: Boolean; overload;
 var
   i, l: Integer;
 begin
@@ -5412,7 +5412,7 @@ end;
   @action: Returns reversed version of array arr.
   @note: None.
 [==============================================================================}
-function THelper.Reversed: TArr; overload;
+function MHelper.Reversed: MArray; overload;
 var
   i, l: Integer;
 begin
@@ -5430,9 +5430,9 @@ end;
          - Returns True if the array had 2 or more elements (reversal performed).
          - Returns False if the array had 0 or 1 element (nothing changed).
 [==============================================================================}
-function THelper.Reversify: Boolean; overload;
+function MHelper.Reversify: Boolean; overload;
 var
-  s: TArr;
+  s: MArray;
   i, l: Integer;
 begin
   l := Self.Length;
@@ -5450,7 +5450,7 @@ end;
   @action: Returns array with items in reversed order.
   @note: None.
 [==============================================================================}
-function THelper.Reversion: TArr; overload;
+function MHelper.Reversion: MArray; overload;
 var
   h, i, l: Integer;
 begin
@@ -5476,7 +5476,7 @@ end;
   @note: Input must be sorted for meaningful grouping; a new group is started
          whenever the value differs from the previous element.
 [==============================================================================}
-function THelper.Runs: T2DArr; overload;
+function MHelper.Runs: M2DArray; overload;
 var
   i, r: Integer;
 begin
@@ -5497,7 +5497,7 @@ end;
   @action: Returns sample from array by sSize.
   @note: None.
 [==============================================================================}
-function THelper.Sample(const sSize: Integer): TArr; overload;
+function MHelper.Sample(const sSize: Integer): MArray; overload;
 var
   i: Integer;
   r: TIntegerArray;
@@ -5515,7 +5515,7 @@ end;
   @action: Scans array for item by ID. Returns all the positions.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function THelper.Scan(const ID: TRange; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload;
+function MHelper.Scan(const ID: TRange; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload;
 var
   i, r: Integer;
 begin
@@ -5548,7 +5548,7 @@ end;
   @action: Scans array for item by ID. Returns all the positions.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function THelper.Scan(const ID: TIntegerArray; const item: TVar; const limit: Integer = 2147483647): TIntegerArray; overload;
+function MHelper.Scan(const ID: TIntegerArray; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload;
 var
   i, r: Integer;
 begin
@@ -5571,7 +5571,7 @@ end;
   @action: Scans array for items by ID. Returns all the positions.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function THelper.Scan(const ID: TRange; const items: TArr; const limit: Integer = 2147483647): TIntegerArray; overload;
+function MHelper.Scan(const ID: TRange; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
 var
   i, r: Integer;
 begin
@@ -5604,7 +5604,7 @@ end;
   @action: Scans array for items by ID. Returns all the positions.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function THelper.Scan(const ID: TIntegerArray; const items: TArr; const limit: Integer = 2147483647): TIntegerArray; overload;
+function MHelper.Scan(const ID: TIntegerArray; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
 var
   i, r: Integer;
 begin
@@ -5627,7 +5627,7 @@ end;
   @action: Returns scrambled array, that is randomized with offset and swapping. 
   @note: Supports custom swaps.
 [==============================================================================}
-function THelper.Scramble(const swaps: Integer = -1): TArr; overload;
+function MHelper.Scramble(const swaps: Integer = -1): MArray; overload;
 var
   o, i, l, s: Integer;
 begin
@@ -5644,7 +5644,7 @@ end;
   @action: Returns array as randomized with shaking it.
   @note: None.
 [==============================================================================}
-function THelper.Shake(const shakes: Integer = 1): TArr; overload;
+function MHelper.Shake(const shakes: Integer = 1): MArray; overload;
 var
   i, s: Integer;
 begin
@@ -5660,7 +5660,7 @@ end;
   @action: Shortens the array with first element.
   @note: Returns the removed arr[0].
 [==============================================================================}
-function THelper.Shift: TVar; overload;
+function MHelper.Shift: MType; overload;
 var
   i, h: Integer;
 begin
@@ -5678,7 +5678,7 @@ end;
   @action: Shortens the array with first SCOUNT element(s).
   @note: Returns the removed arr[x]s.
 [==============================================================================}
-function THelper.Shift(const sCount: Integer): TArr; overload;
+function MHelper.Shift(const sCount: Integer): MArray; overload;
 var
   i, l, s: Integer;
 begin
@@ -5699,7 +5699,7 @@ end;
   @action: Returns array as randomized with shuffling it.
   @note: None.
 [==============================================================================}
-function THelper.Shuffle(const shuffles: Integer = 1): TArr; overload;
+function MHelper.Shuffle(const shuffles: Integer = 1): MArray; overload;
 var
   i, s: Integer;
 begin
@@ -5715,7 +5715,7 @@ end;
   @action: Removes duplicate occurrences of a specific item, keeping only the first.
   @note: Useful for ensuring a item appears exactly once in the array.
 [==============================================================================}
-function THelper.Singlify(const item: TVar): Integer; overload;
+function MHelper.Singlify(const item: MType): Integer; overload;
 var
   i, l: Integer;
   f: Boolean;
@@ -5740,7 +5740,7 @@ end;
   @note: Duplicates of item beyond the first occurrence are removed in the result.
          The original array remains unchanged.
 [==============================================================================}
-function THelper.Singlified(const item: TVar): TArr; overload;
+function MHelper.Singlified(const item: MType): MArray; overload;
 var
   i, l: Integer;
   f: Boolean;
@@ -5764,12 +5764,12 @@ end;
   @note: The operation modifies the current array in-place. The order of the first appearances
          is preserved. Returns the number of items removed.
 [==============================================================================}
-function THelper.Singularize(const item: TVar): Integer; overload;
+function MHelper.Singularize(const item: MType): Integer; overload;
 var
-  d: specialize TDictionary<TVar, Boolean>;
+  d: specialize TDictionary<MType, Boolean>;
   i, l: Integer;
 begin
-  d := specialize TDictionary<TVar, Boolean>.Create;
+  d := specialize TDictionary<MType, Boolean>.Create;
   try
     l := 0;
     for i := 0 to High(Self) do
@@ -5793,12 +5793,12 @@ end;
   @note: The original array remains unchanged. The resulting array preserves
          the order of the first appearances.
 [==============================================================================}
-function THelper.Singularized(const item: TVar): TArr; overload;
+function MHelper.Singularized(const item: MType): MArray; overload;
 var
-  d: specialize TDictionary<TVar, Boolean>;
+  d: specialize TDictionary<MType, Boolean>;
   i, c: Integer;
 begin
-  d := specialize TDictionary<TVar, Boolean>.Create;
+  d := specialize TDictionary<MType, Boolean>.Create;
   try
     SetLength(Result, Self.Size);
     c := 0;
@@ -5820,7 +5820,7 @@ end;
   @action: Returns true if all array items are identical.
   @note: None.
 [==============================================================================}
-function THelper.Singular: Boolean; overload;
+function MHelper.Singular: Boolean; overload;
 var
   i: Integer;
 begin
@@ -5835,7 +5835,7 @@ end;
   @action: Returns array length.
   @note: Simply Result := Length(arr);
 [==============================================================================}
-function THelper.Size: Integer; overload;
+function MHelper.Size: Integer; overload;
 begin
   Result := ((High(Self) - Low(Self)) + 1);
 end;
@@ -5845,7 +5845,7 @@ end;
   @action: Set's arr length to aSize.
   @note: None.
 [==============================================================================}
-function THelper.Size(const aSize: Integer): TArr; overload;
+function MHelper.Size(const aSize: Integer): MArray; overload;
 var
   i, l: Integer;
 begin
@@ -5860,7 +5860,7 @@ end;
   @action: Set's arr length to size.
   @note: Uses null for created indexes.
 [==============================================================================}
-function THelper.Size(const aSize: Integer; const null: TVar): TArr; overload;
+function MHelper.Size(const aSize: Integer; const null: MType): MArray; overload;
 var
   i, l: Integer;
 begin
@@ -5877,7 +5877,7 @@ end;
   @action: Returns true if size is at equal/greater than sMin and equal/lesser than sMax.
   @note: 	
 [==============================================================================}
-function THelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload;
+function MHelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload;
 begin
   Result := InRange(Self.Size, sMin, sMax);
 end;
@@ -5887,7 +5887,7 @@ end;
   @action: Returns true if size is at equal/lesser than target.
   @note: 	
 [==============================================================================}
-function THelper.SizeMax(const target: Integer): Boolean; overload;
+function MHelper.SizeMax(const target: Integer): Boolean; overload;
 begin
   Result := (Self.Size <= target);
 end;
@@ -5897,7 +5897,7 @@ end;
   @action: Returns true if size is at equal/greater than target.
   @note: 	
 [==============================================================================}
-function THelper.SizeMin(const target: Integer): Boolean; overload;
+function MHelper.SizeMin(const target: Integer): Boolean; overload;
 begin
   Result := (Self.Size >= target);
 end;
@@ -5908,7 +5908,7 @@ end;
   @note: Make sure you use correct indexes and there is enough buffer in array!
          No safety checks for this function. 
 [==============================================================================}
-function THelper.Slice(const r: TRange): TArr; overload;
+function MHelper.Slice(const r: TRange): MArray; overload;
 var
   i: Integer;
 begin
@@ -5929,7 +5929,7 @@ end;
   @note: Make sure you use correct indexes and there is enough buffer in array!
          No safety checks for this function. 
 [==============================================================================}
-function THelper.Slice(const r: TRangeArray): TArr; overload;
+function MHelper.Slice(const r: TRangeArray): MArray; overload;
 var
   i, j, l: Integer;
 begin
@@ -5955,7 +5955,7 @@ end;
   @action: Returns indexes of array.
   @note: None.
 [==============================================================================}
-function THelper.Slots: TIntegerArray; overload;
+function MHelper.Slots: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -5969,7 +5969,7 @@ end;
   @action: Removes all occurrences of a specific item from the array.
   @note: Returns the number of items removed. If none found, the array is unchanged.
 [==============================================================================}
-function THelper.Soloize(const item: TVar): Integer; overload;
+function MHelper.Soloize(const item: MType): Integer; overload;
 var
   i, l: Integer;
 begin
@@ -5990,7 +5990,7 @@ end;
   @note: Duplicates of item beyond the first occurrence are removed in the result.
          The original array remains unchanged.
 [==============================================================================}
-function THelper.Soloized(const item: TVar): TArr; overload;
+function MHelper.Soloized(const item: MType): MArray; overload;
 var
   i, l, s: Integer;
 begin
@@ -6011,7 +6011,7 @@ end;
   @action: Returns random amount of random array items from Self.
   @note: Does not return empty arrays.
 [==============================================================================}
-function THelper.Some: TArr; overload;
+function MHelper.Some: MArray; overload;
 begin
   Result := Self.Shuffle.Copy(0, Max(Random(Self.Size + 1), 1));
 end;
@@ -6021,7 +6021,7 @@ end;
   @action: Returns amount of random array items from Self.
   @note: Does not return empty arrays.
 [==============================================================================}
-function THelper.Some(const amount: Integer): TArr; overload;
+function MHelper.Some(const amount: Integer): MArray; overload;
 begin
   Result := Self.Shuffle.Copy(0, Max(1, Min(amount, Self.Size)));
 end;
@@ -6032,7 +6032,7 @@ end;
   @note: (-1, -1) if subArray is not found.
          Loops array from index downto min.
 [==============================================================================}
-function THelper.Span: TRange; overload;
+function MHelper.Span: TRange; overload;
 begin
   Result.stop := High(Self);
   Result.start := IfThen((Result.stop = -1), -1, 0);
@@ -6044,7 +6044,7 @@ end;
   @note: (-1, -1) if subArray is not found.
          Loops array from index downto min.
 [==============================================================================}
-function THelper.Span(const subArray: TArr; const index: Integer = 2147483647): TRange; overload;
+function MHelper.Span(const subArray: MArray; const index: Integer = 2147483647): TRange; overload;
 var
   i, j, a, s, p: Integer;
   f: Boolean;
@@ -6076,7 +6076,7 @@ end;
   @note: [] if not a single subArray is not found.
          Loops array from index downto min.
 [==============================================================================}
-function THelper.Spans(const subArray: TArr; const index: Integer = 2147483647): TRangeArray; overload;
+function MHelper.Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload;
 var
   i, j, a, s, p, l: Integer;
   f: Boolean;
@@ -6110,7 +6110,7 @@ end;
   @action: Removes item(s) from arr and returns it.
   @note: 	
 [==============================================================================}
-function THelper.Strip(const item: TVar; const eraseDuplicates: Boolean = True): TArr; overload;
+function MHelper.Strip(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
 var
   p: TIntegerArray;
   r: TRange;
@@ -6130,7 +6130,7 @@ end;
   @action: Returns subarray position in arr that match pattern exactly.
   @note: arr[0,1,2,0,1,2,3].([1,2]) => 4	
 [==============================================================================}
-function THelper.SubarrayLocation(const pattern: TArr): Integer; overload;
+function MHelper.SubarrayLocation(const pattern: MArray): Integer; overload;
 var
   i, j, l, s, p: Integer;
 begin
@@ -6156,7 +6156,7 @@ end;
   @action: Returns subarray positions in arr that match pattern exactly.
   @note: arr[0,1,2,0,1,2,3].([1,2]) => [4,1]	
 [==============================================================================}
-function THelper.SubarrayLocations(const pattern: TArr): TIntegerArray; overload;
+function MHelper.SubarrayLocations(const pattern: MArray): TIntegerArray; overload;
 var
   i, j, l, s, r, p: Integer;
 begin
@@ -6187,7 +6187,7 @@ end;
   @action: Returns subarray position in arr that match pattern exactly.
   @note: arr[0,1,2,0,1,2,3].([1,2]) => 1	
 [==============================================================================}
-function THelper.SubarrayPosition(const pattern: TArr): Integer; overload;
+function MHelper.SubarrayPosition(const pattern: MArray): Integer; overload;
 var
   i, j, l, p: Integer;
   f: Boolean;
@@ -6215,7 +6215,7 @@ end;
   @action: Returns subarray positions in arr that match pattern exactly.
   @note: arr[0,1,2,0,1,2,3].([1,2]) => [1,4]	
 [==============================================================================}
-function THelper.SubarrayPositions(const pattern: TArr): TIntegerArray; overload;
+function MHelper.SubarrayPositions(const pattern: MArray): TIntegerArray; overload;
 var
   i, j, l, p, r: Integer;
   f: Boolean;
@@ -6248,7 +6248,7 @@ end;
   @action: Returns true if arr is subset of items.
   @note: None.
 [==============================================================================}
-function THelper.Subset(const items: TArr): Boolean; overload;
+function MHelper.Subset(const items: MArray): Boolean; overload;
 var
   i: Integer;
 begin
@@ -6263,7 +6263,7 @@ end;
   @action: Adds item to the end of the array.
   @note: Returns the index where item was inserted.
 [==============================================================================}
-function THelper.Supply(const item: TVar): Integer; overload;
+function MHelper.Supply(const item: MType): Integer; overload;
 begin
   Result := Self.Size;
   SetLength(Self, (Result + 1));
@@ -6275,7 +6275,7 @@ end;
   @action: Adds items to the end of the array.
   @note: Returns the index where items were inserted.
 [==============================================================================}
-function THelper.Supply(const items: TArr): Integer; overload;
+function MHelper.Supply(const items: MArray): Integer; overload;
 var
   i: Integer;
 begin
@@ -6293,9 +6293,9 @@ end;
   @note: The swap is O(1) because dynamic arrays are reference-counted.
          Returns Length(Self) + Length(target) after the swap.
 [==============================================================================}
-function THelper.Swapped(var target: TArr): Integer; overload;
+function MHelper.Swapped(var target: MArray): Integer; overload;
 var
-  t: TArr;
+  t: MArray;
 begin
   t := Self;
   Self := target;
@@ -6314,7 +6314,7 @@ end;
          is copied. Use this if the merged array should reflect the **pre-swap
          ordering**.
 [==============================================================================}
-function THelper.SwapMerged(var target: TArr): TArr; overload;
+function MHelper.SwapMerged(var target: MArray): MArray; overload;
 var
   r, t, s, i: Integer;
 begin
@@ -6347,7 +6347,7 @@ end;
          target. This is preferred for large dynamic arrays, and the
          resulting array reflects the swapped positions of Self and target.
 [==============================================================================}
-function THelper.SwappedMerge(var target: TArr): TArr; overload;
+function MHelper.SwappedMerge(var target: MArray): MArray; overload;
 var
   t, s, i: Integer;
 begin
@@ -6371,7 +6371,7 @@ end;
          TIA.To2D(2, 3) = [[1, 2, 3], [4, 5, 6]]
          TIA.To2D(3, 2) = [[1, 2], [3, 4], [5, 6]]
 [==============================================================================}
-function THelper.To2D(const rows, columns: Integer): T2DArr; overload;
+function MHelper.To2D(const rows, columns: Integer): M2DArray; overload;
 var
   i, r, c, l: Integer;
 begin
@@ -6389,7 +6389,7 @@ end;
   @action: Converts 1D array to 2D by height.
   @note: 
 [==============================================================================}
-function THelper.To2D(const height: Integer): T2DArr; overload;
+function MHelper.To2D(const height: Integer): M2DArray; overload;
 var
   l, w, i, r, c: Integer;
 begin
@@ -6408,7 +6408,7 @@ end;
   @action: Returns indexes of array.
   @note: None.
 [==============================================================================}
-function THelper.ToIndexes: TIntegerArray; overload;
+function MHelper.ToIndexes: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -6423,9 +6423,9 @@ end;
   @action: Swaps array arr and array b.
   @note: arr will be b and b will be arr.
 [==============================================================================}
-function THelper.Trade(var b: TArr): Integer; overload;
+function MHelper.Trade(var b: MArray): Integer; overload;
 var
-  a: TArr;
+  a: MArray;
 begin
   Result := (Self.Size + b.Size);
   if (Result > 0) then
@@ -6442,7 +6442,7 @@ end;
   @action: Returns true if size of arr is UNDER the limit.
   @note: None.	
 [==============================================================================} 
-function THelper.Undersize(const limit: Integer): Boolean; overload;
+function MHelper.Undersize(const limit: Integer): Boolean; overload;
 begin
   Result := (Self.Size < limit);
 end;
@@ -6452,9 +6452,9 @@ end;
   @action: Removes all duplicates from arr.
   @note: Returns the number of items that were removed.
 [==============================================================================}
-function THelper.Uncluttered: TArr; overload;
+function MHelper.Uncluttered: MArray; overload;
 type
-  TDict = specialize TDictionary<TVar, Boolean>;
+  TDict = specialize TDictionary<MType, Boolean>;
 var
   d: TDict;
   r, i, l: Integer;
@@ -6484,7 +6484,7 @@ end;
   @action: Returns true if arr is consistent with only 1 item.
   @note: Returns True with empty arrays!
 [==============================================================================}
-function THelper.Uniform: Boolean; overload;
+function MHelper.Uniform: Boolean; overload;
 var
   i: Integer;
 begin
@@ -6499,7 +6499,7 @@ end;
   @action: Returns true if arr is consistent with only custom item.
   @note: Returns True with empty arrays!
 [==============================================================================}
-function THelper.Uniform(const item: TVar): Boolean; overload;
+function MHelper.Uniform(const item: MType): Boolean; overload;
 var
   i: Integer;
 begin
@@ -6515,7 +6515,7 @@ end;
            or something in between based on unique-value ratio. 
   @note: None.
  [==============================================================================}
-function THelper.Uniformity: Double; overload;
+function MHelper.Uniformity: Double; overload;
 begin
   if not Self.Empty then
     Result := (1.0 / Self.Distinct)
@@ -6528,12 +6528,12 @@ end;
   @action: Uniques array
   @note: None.
  [==============================================================================}
-function THelper.Unified(const dAscending: Boolean = True): TArr; overload;
+function MHelper.Unified(const dAscending: Boolean = True): MArray; overload;
 var
-  d: specialize TDictionary<TVar, Byte>;
+  d: specialize TDictionary<MType, Byte>;
   i, n: Integer;
 begin
-  d := specialize TDictionary<TVar, Byte>.Create;
+  d := specialize TDictionary<MType, Byte>.Create;
   try
     SetLength(Result, Self.Size);
     n := 0;
@@ -6564,13 +6564,13 @@ end;
   @action: Uniques array
   @note: None.
  [==============================================================================}
-function THelper.Unify(const dAscending: Boolean = True): Integer; overload;
+function MHelper.Unify(const dAscending: Boolean = True): Integer; overload;
 var
-  s: TArr;
-  d: specialize TDictionary<TVar, Byte>;
+  s: MArray;
+  d: specialize TDictionary<MType, Byte>;
   l, i: Integer;
 begin
-  d := specialize TDictionary<TVar, Byte>.Create;
+  d := specialize TDictionary<MType, Byte>.Create;
   Result := 0;
   try
     l := Self.Length;
@@ -6604,7 +6604,7 @@ end;
   @action: Removes all duplicates from arr.
   @note: Returns the number of items that were removed.
 [==============================================================================}
-function THelper.Unduplicated: TArr; overload;
+function MHelper.Unduplicated: MArray; overload;
 var
   a, l, i, j: Integer;
   m: Boolean;
@@ -6635,7 +6635,7 @@ end;
   @action: Removes all duplicates from arr.
   @note: Returns the unique version of arr.
 [==============================================================================}
-function THelper.Uniqued: TArr; overload;
+function MHelper.Uniqued: MArray; overload;
 var
   i, j, l, c: Integer;
 begin
@@ -6665,7 +6665,7 @@ end;
   @action: Returns the indexes of unique array (arr) items.
   @note: None.
 [==============================================================================}
-function THelper.Uniques: TIntegerArray; overload;
+function MHelper.Uniques: TIntegerArray; overload;
 var
   h, r, x, y: Integer;
   m: Boolean;
@@ -6697,7 +6697,7 @@ end;
   @action: Grows arr with item.
   @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
-function THelper.Unshift(const item: TVar): TArr; overload;
+function MHelper.Unshift(const item: MType): MArray; overload;
 var
   i, l: Integer;
 begin
@@ -6713,7 +6713,7 @@ end;
   @action: Grows arr with items. Returns the index of last added item.
   @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
-function THelper.Unshift(const items: TArr): TArr; overload;
+function MHelper.Unshift(const items: MArray): MArray; overload;
 var
   l, i, r: Integer;
 begin
@@ -6733,7 +6733,7 @@ end;
   @action: Returns true if array is void (empty)
   @note: Alternative for Empty.
 [==============================================================================}
-function THelper.Void: Boolean; overload;
+function MHelper.Void: Boolean; overload;
 begin
   Result := (Low(Self) > High(Self));
 end;
@@ -6743,13 +6743,13 @@ end;
   @action: Returns total count of Duplicates in array, which is considered as "Waste"
   @note: None.
 [==============================================================================}
-function THelper.Waste: Integer; overload;
+function MHelper.Waste: Integer; overload;
 type
-  TDict = specialize TDictionary<TVar, Integer>;
+  TDict = specialize TDictionary<MType, Integer>;
 var
   d: TDict;
   i: Integer;
-  v: TVar;
+  v: MType;
 begin
   Result := 0;
   if Self.Empty then
@@ -6775,7 +6775,7 @@ end;
            start and end of the source array, producing an outside-in “zigzag” order.
   @note: For odd-length arrays, the middle element appears last.
 [==============================================================================}
-function THelper.Zigzag(const zAscending: Boolean = True): TArr; overload;
+function MHelper.Zigzag(const zAscending: Boolean = True): MArray; overload;
 var
   l, r: Integer;
   s: TRange;
@@ -6812,7 +6812,7 @@ end;
   @note: Arrays with all equal elements, a single element, or empty arrays
          return False.
 [==============================================================================}
-function THelper.Sortable: Boolean; overload;
+function MHelper.Sortable: Boolean; overload;
 var
   i: Integer;
 begin
@@ -6827,7 +6827,7 @@ end;
   @action: Returns true if array arr is in ascending/descending order by aAscending.
   @note: By default checking for ascending order.
 [==============================================================================}
-function THelper.Sorted(const aAscending: Boolean = True): Boolean; overload;
+function MHelper.Sorted(const aAscending: Boolean = True): Boolean; overload;
 var
   i: Integer;
 begin
@@ -6842,7 +6842,7 @@ end;
   @action: Checks whether the entire array is sorted in ascending or descending order.
   @note:   Returns True if all elements are in the correct order according to aAscending.
 [==============================================================================}
-function THelper.IsSorted(const aAscending: Boolean = True): Boolean; overload;
+function MHelper.IsSorted(const aAscending: Boolean = True): Boolean; overload;
 var
   i: Integer;
 begin
@@ -6860,7 +6860,7 @@ end;
          valid array bounds. Returns True if all elements within the range
          follow the specified order.
 [==============================================================================}
-function THelper.IsSorted(const iStart, iStop: Integer; const aAscending: Boolean = True): Boolean; overload;
+function MHelper.IsSorted(const iStart, iStop: Integer; const aAscending: Boolean = True): Boolean; overload;
 var
   i, s, e, h: Integer;
 begin
@@ -6885,7 +6885,7 @@ end;
          automatically normalized and clamped to valid array bounds.
          Returns True if all elements within the range follow the specified order.
 [==============================================================================}
-function THelper.IsSorted(const indexes: TRange; const aAscending: Boolean = True): Boolean; overload;
+function MHelper.IsSorted(const indexes: TRange; const aAscending: Boolean = True): Boolean; overload;
 begin
   Result := Self.IsSorted(indexes.start, indexes.stop, aAscending);
 end;
@@ -6899,7 +6899,7 @@ end;
          order with adjacent elements. Boundary or single-element arrays are
          considered sorted. Returns False for out-of-range indices.
 [==============================================================================}
-function THelper.IsSorted(const index: Integer; const aAscending: Boolean = True): Boolean; overload;
+function MHelper.IsSorted(const index: Integer; const aAscending: Boolean = True): Boolean; overload;
 var
   h: Integer;
 begin
@@ -6920,7 +6920,7 @@ end;
   @action: Returns true if array arr is in ascending/descending order by aAscending.
   @note: By default checking for ascending order.
 [==============================================================================}
-function THelper.InOrder(const aAscending: Boolean = True): Boolean; overload;
+function MHelper.InOrder(const aAscending: Boolean = True): Boolean; overload;
 var
   i, l: Integer;
 begin
@@ -6945,7 +6945,7 @@ end;
   @action: Returns true if array arr is in ascending AND/OR descending order.
   @note: None.
 [==============================================================================}
-function THelper.Orderly: Boolean; overload;
+function MHelper.Orderly: Boolean; overload;
 var
   i: Integer;
   a, d: Boolean;
@@ -6969,7 +6969,7 @@ end;
   @action: Returns true if array arr is in ascending AND/OR descending order by aAscending.
   @note: Recursive alternative.
 [==============================================================================}
-function THelper.Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload;
+function MHelper.Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload;
 begin
   if (index >= High(Self)) then
     Exit(True);
@@ -6984,7 +6984,7 @@ end;
   @note: -1 = DESCENDING, 0=NO ORDER OR MIXED ARRAY, 1=ASCENDING
          [1,2,3] => 1 [1,1,1] => 1 [1,0,1] => 0 [3,2,1] => -1
 [==============================================================================}
-function THelper.Order: Integer; overload;
+function MHelper.Order: Integer; overload;
 var
   i, l: Integer;
   a, d: Boolean;
@@ -7021,7 +7021,7 @@ end;
   @note: -1 = DESCENDING, 0=NO ORDER OR MIXED ARRAY, 1=ASCENDING
          [1,2,3] => 1 [1,1,1] => 0 [1,0,1] => 0 [3,2,1] => -1
 [==============================================================================}
-function THelper.Orientation: Integer; overload;
+function MHelper.Orientation: Integer; overload;
 var
   i: Integer;
   a, d: Boolean;
@@ -7054,10 +7054,10 @@ end;
   @action: Returns array arr sorted to asscending order.
   @note: None.
 [==============================================================================}
-function THelper.Ascend: TArr; overload;
-procedure QS(var arr: TArr; const valLow, valHigh: Integer);
+function MHelper.Ascend: MArray; overload;
+procedure QS(var arr: MArray; const valLow, valHigh: Integer);
 var
-  p: TVar;
+  p: MType;
   r: TRange;
 begin
   r.Create(valLow, valHigh);
@@ -7086,10 +7086,10 @@ end;
   @action: Returns array arr sorted to descending order.
   @note: None.
 [==============================================================================}
-function THelper.Descend: TArr; overload;
-procedure QS(var arr: TArr; const valLow, valHigh: Integer);
+function MHelper.Descend: MArray; overload;
+procedure QS(var arr: MArray; const valLow, valHigh: Integer);
 var
-  p: TVar;
+  p: MType;
   r: TRange;
 begin
   r.Create(valLow, valHigh);
@@ -7118,7 +7118,7 @@ end;
   @action: Returns true if array arr is in descending order.
   @note: [0,1] = False | [0,0] = False | [1,0] = True |
 [==============================================================================}
-function THelper.Descending: Boolean; overload;
+function MHelper.Descending: Boolean; overload;
 var
   i: Integer;
 begin
@@ -7133,7 +7133,7 @@ end;
   @action: Returns true if array arr is in asscending order.
   @note: [0,1] = True | [0,0] = False | [1,0] = False |
 [==============================================================================}
-function THelper.Ascending: Boolean; overload;
+function MHelper.Ascending: Boolean; overload;
 var
   i: Integer;
 begin
@@ -7148,7 +7148,7 @@ end;
   @action: Returns true if array arr is in descending order.
   @note: [0,1] = False | [0,0] = True | [1,0] = True |
 [==============================================================================}
-function THelper.Decreasing: Boolean; overload;
+function MHelper.Decreasing: Boolean; overload;
 var
   i: Integer;
 begin
@@ -7163,7 +7163,7 @@ end;
   @action: Returns true if array arr is in asscending order.
   @note: [0,1] = True | [0,0] = True | [1,0] = False |
 [==============================================================================}
-function THelper.Increasing: Boolean; overload;
+function MHelper.Increasing: Boolean; overload;
 var
   i: Integer;
 begin
@@ -7178,7 +7178,7 @@ end;
   @action: Returns true if array arr is in descending order.
   @note: Returns true with empty []array! Unlike Descending, Decreasing.
 [==============================================================================}
-function THelper.Downward: Boolean; overload;
+function MHelper.Downward: Boolean; overload;
 var
   h: Integer;
 begin
@@ -7194,7 +7194,7 @@ end;
   @action: Returns true if array arr is in ascending order.
   @note: Returns true with empty [] array! Unlike Ascending, Increasing.
 [==============================================================================}
-function THelper.Upward: Boolean; overload;
+function MHelper.Upward: Boolean; overload;
 var
   h: Integer;
 begin
@@ -7210,7 +7210,7 @@ end;
   @action: Returns array minimum value.
   @note: None.
 [==============================================================================}
-function THelper.Lowest: TVar; overload;
+function MHelper.Lowest: MType; overload;
 var
   i: Integer;
 begin
@@ -7226,7 +7226,7 @@ end;
   @action: Returns array maximum value.
   @note: None.
 [==============================================================================}
-function THelper.Highest: TVar; overload;
+function MHelper.Highest: MType; overload;
 var
   i: Integer;
 begin
@@ -7242,7 +7242,7 @@ end;
   @action: Returns array INDEX with minimum value.
   @note: Supports reversed order (last min index) with aAscending as False.
 [==============================================================================}
-function THelper.Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
+function MHelper.Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
 var
   h, i: Integer;
 begin
@@ -7267,7 +7267,7 @@ begin
   end;
 end;
 
-function THelper.Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload;
+function MHelper.Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload;
 begin
   Result := Self.Mini(aAscending, start);
 end;
@@ -7277,7 +7277,7 @@ end;
   @action: Returns array INDEX with maximum value.
   @note: Supports reversed order (last max index) with aAscending as False.
 [==============================================================================}
-function THelper.Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
+function MHelper.Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
 var
   h, i: Integer;
 begin
@@ -7302,7 +7302,7 @@ begin
   end;
 end;
 
-function THelper.Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload;
+function MHelper.Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload;
 begin
   Result := Self.Maxi(aAscending, start);
 end;
@@ -7312,9 +7312,9 @@ end;
   @action: The value that occurs most frequently in arr.
   @note: None
 [==============================================================================}
-function THelper.Mode: TVar; overload;
+function MHelper.Mode: MType; overload;
 var
-  a: TArr;
+  a: MArray;
   c: TIntegerArray;
   h, i, j, l: Integer;
 begin
@@ -7352,7 +7352,7 @@ end;
   @action: The value at the center position of a sorted or unsorted arr.
   @note: None
 [==============================================================================}
-function THelper.Center: TVar; overload;
+function MHelper.Center: MType; overload;
 begin
   if (Self.Size > 0) then
     Result := Self[Self.Size div 2];
@@ -7367,10 +7367,10 @@ end;
          - Sorting is stable (preserves order of equal elements).
          - Useful for retrieving both sorted data and their original positions.
 [==============================================================================}
-function THelper.MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
-  procedure MSI(var arr: TArr; var indexes: TIntegerArray; const L, R: Integer);
+function MHelper.MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
+  procedure MSI(var arr: MArray; var indexes: TIntegerArray; const L, R: Integer);
   var
-    s: TArr;
+    s: MArray;
     p: TIntegerArray;
     i, j, k, m: Integer;
   begin
@@ -7443,10 +7443,10 @@ end;
          - Returns Length(Self).
          - Set aAscending = False for descending order.
 [==============================================================================}
-function THelper.MergeSortPair(var partner: TArr; const aAscending: Boolean = True): Integer; overload;
-  procedure MSP(var arr, prt: TArr; const L, R: Integer);
+function MHelper.MergeSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
+  procedure MSP(var arr, prt: MArray; const L, R: Integer);
   var
-    s, p: TArr;
+    s, p: MArray;
     i, j, k, m: Integer;
   begin
     if (L >= R) then
@@ -7510,10 +7510,10 @@ end;
   @note: Useful when you have a key array and a related value array that must stay paired.
          The method returns the length of the array.
 [==============================================================================}
-function THelper.QuickSortPair(var partner: TArr; const aAscending: Boolean = True): Integer; overload;
-  procedure QS2(var A, B: TArr; const L, R: Integer);
+function MHelper.QuickSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
+  procedure QS2(var A, B: MArray; const L, R: Integer);
   var
-    p: TVar;
+    p: MType;
     i, j: Integer;
   begin
     i := L;
@@ -7571,12 +7571,12 @@ end;
            - Uses auxiliary arrays, trading memory for stability.
            - Also known as "Stable QuickSort".
 [==============================================================================}
-function THelper.PartitionSort(const aAscending: Boolean = True): Integer; overload;
-  procedure PS(var A: TArr; const L, R: Integer);
+function MHelper.PartitionSort(const aAscending: Boolean = True): Integer; overload;
+  procedure PS(var A: MArray; const L, R: Integer);
   var
-    p: TVar;
+    p: MType;
     i, t: Integer;
-    s, e, b: TArr;
+    s, e, b: MArray;
   begin
     if (L >= R) then
       Exit;
@@ -7622,10 +7622,10 @@ end;
   @note: Returns a dynamic array of TConnection records, each representing the indices of elements swapped during the sort.
          Useful for visualizations or undoing the sort.
 [==============================================================================}
-function THelper.QuickSortSwapped(const aAscending: Boolean = True): TConnectionArray; overload;
+function MHelper.QuickSortSwapped(const aAscending: Boolean = True): TConnectionArray; overload;
   procedure QuickSortRec(const L, R: Integer; var swaps: TConnectionArray);
   var
-    p: TVar;
+    p: MType;
     i, j: Integer;
   begin
     i := L;
@@ -7677,10 +7677,10 @@ end;
          The original array is modified.
          Useful when you want to know how elements move rather than just sorting the values.
 [==============================================================================}
-function THelper.QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
+function MHelper.QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
   procedure QuickSortRec(const L, R: Integer; var indexes: TIntegerArray);
   var
-    p: TVar;
+    p: MType;
     i, j: Integer;
   begin
     i := L;
@@ -7734,10 +7734,10 @@ end;
   @note: Purely functional: the original array stays unchanged.
          The result is an array of indices indicating the sorted order.
 [==============================================================================}
-function THelper.QuickSortedly(const aAscending: Boolean = True): TIntegerArray; overload;
-  procedure QuickSortIndexedHelper(const arr: TArr; var indexes: TIntegerArray; const L, R: Integer; const aAscending: Boolean);
+function MHelper.QuickSortedly(const aAscending: Boolean = True): TIntegerArray; overload;
+  procedure QuickSortIndexedHelper(const arr: MArray; var indexes: TIntegerArray; const L, R: Integer; const aAscending: Boolean);
   var
-    p: TVar;
+    p: MType;
     i, j: Integer;
   begin
     i := L;
@@ -7779,15 +7779,15 @@ begin
 end;
 
 {==============================================================================]
-  <QuickSorted(aAscending: Boolean): TArr>
+  <QuickSorted(aAscending: Boolean): MArray>
   @action: Returns array sorted by its own values, based on QuickSort algorithm.
   @note: None.
 [==============================================================================}
-function THelper.QuickSorted(const aAscending: Boolean = True): TArr; overload;
-  procedure QS(var arr: TArr; const L, R: Integer);
+function MHelper.QuickSorted(const aAscending: Boolean = True): MArray; overload;
+  procedure QS(var arr: MArray; const L, R: Integer);
   var
     i, j: Integer;
-    p: TVar;
+    p: MType;
   begin
     i := L;
     j := R;
@@ -7819,9 +7819,9 @@ end;
   @action: QuickSort algorithm that is NOT based on recursion.
   @note: non-recursive. Returns High(arr).
 [==============================================================================}
-function THelper.QuickSort(const aAscending: Boolean = True): Integer; overload;
+function MHelper.QuickSort(const aAscending: Boolean = True): Integer; overload;
 var
-  p: TVar;
+  p: MType;
   t, o: Integer;
   s: TRangeArray;
   x, r: TRange;
@@ -7882,10 +7882,10 @@ end;
   @action: 3-way QuickSort algorithm that is NOT based on recursion.
   @note: recursive. Returns High(arr).
 [==============================================================================}
-function THelper.QuickSort3W(const aAscending: Boolean = True): Integer; overload;
-  procedure SortLH(var arr: TArr; const L, H: Integer; const aAscending: Boolean = True);
+function MHelper.QuickSort3W(const aAscending: Boolean = True): Integer; overload;
+  procedure SortLH(var arr: MArray; const L, H: Integer; const aAscending: Boolean = True);
   var
-    a: TVar;
+    a: MType;
     p, o: Integer;
     r: TRange;
   begin
@@ -7917,10 +7917,10 @@ end;
   @action: QuickSort algorithm that IS based on recursion.
   @note: recursive. Returns High(arr).
 [==============================================================================}
-function THelper.QSort(const aAscending: Boolean = True): Integer; overload;
-  procedure _QuickSort(var arr: TArr; const start, stop: Integer; const aAscending: Boolean = True);
+function MHelper.QSort(const aAscending: Boolean = True): Integer; overload;
+  procedure _QuickSort(var arr: MArray; const start, stop: Integer; const aAscending: Boolean = True);
   var
-    p: TVar;
+    p: MType;
 	o: Integer;
     s: TRange;
   begin
@@ -7954,7 +7954,7 @@ end;
   @action: CoctailSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function THelper.CoctailSort(const aAscending: Boolean = True): Integer; overload;
+function MHelper.CoctailSort(const aAscending: Boolean = True): Integer; overload;
 var
   i, o: Integer;
   s: Boolean;
@@ -7989,7 +7989,7 @@ end;
   @action: CoctailSort algorithm.
   @note: CoctailSort v2. Returns High(arr).
 [==============================================================================}
-function THelper.CoctailSort2(const aAscending: Boolean = True): Integer; overload;
+function MHelper.CoctailSort2(const aAscending: Boolean = True): Integer; overload;
 var
   b, e, i, o: Integer;
   s: Boolean;
@@ -8028,7 +8028,7 @@ end;
   @action: GnomeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function THelper.GnomeSort(const aAscending: Boolean = True): Integer; overload;
+function MHelper.GnomeSort(const aAscending: Boolean = True): Integer; overload;
 var
   o, p: Integer;
 begin
@@ -8053,7 +8053,7 @@ end;
   @action: Optimized GnomeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function THelper.GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload;
+function MHelper.GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload;
 var
   p, l, o: Integer;
 begin
@@ -8090,7 +8090,7 @@ end;
   @action: PancakeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function THelper.PancakeSort(const aAscending: Boolean = True): Integer; overload;
+function MHelper.PancakeSort(const aAscending: Boolean = True): Integer; overload;
 var
   i, j, l, m, x, o: Integer;
 begin
@@ -8121,7 +8121,7 @@ end;
   @action: Sorts arr with BubbleSort algorithm
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
-function THelper.BubbleSort(const aAscending: Boolean = True): Integer; overload;
+function MHelper.BubbleSort(const aAscending: Boolean = True): Integer; overload;
 var
   i, j: Integer;
 begin
@@ -8137,7 +8137,7 @@ end;
   @action: Sorts arr with BubbleSort algorithm - contains some optimization.
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
-function THelper.BubbleSort2(const aAscending: Boolean = True): Integer; overload;
+function MHelper.BubbleSort2(const aAscending: Boolean = True): Integer; overload;
 var
   a, b, o: Integer;
 begin
@@ -8157,7 +8157,7 @@ end;
   @action: Sorts arr with optimized BubbleSort algorithm
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
-function THelper.BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload;
+function MHelper.BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload;
 var
   i, j: Integer;
   s: Boolean;
@@ -8182,7 +8182,7 @@ end;
   @action: CombSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function THelper.CombSort(const aAscending: Boolean = True): Integer; overload;
+function MHelper.CombSort(const aAscending: Boolean = True): Integer; overload;
 var
   i, g, o: Integer;
   s: Boolean;
@@ -8214,7 +8214,7 @@ end;
   @action: HeapSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function THelper.HeapSort(const aAscending: Boolean = True): Integer; overload;
+function MHelper.HeapSort(const aAscending: Boolean = True): Integer; overload;
 var
   a, b, r, c, o: Integer;
 begin
@@ -8267,7 +8267,7 @@ end;
   @action: InsertionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function THelper.InsertionSort(const aAscending: Boolean = True): Integer; overload;
+function MHelper.InsertionSort(const aAscending: Boolean = True): Integer; overload;
 var
   a, b, o: Integer;
 begin
@@ -8289,7 +8289,7 @@ end;
   @action: SelectionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function THelper.SelectionSort(const aAscending: Boolean = True): Integer; overload;
+function MHelper.SelectionSort(const aAscending: Boolean = True): Integer; overload;
 var
   c, t, m, o: Integer;
 begin
@@ -8313,7 +8313,7 @@ end;
   @action: Bidirectional SelectionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function THelper.SelectionSortBidirectional(const aAscending: Boolean = True): Integer; overload;
+function MHelper.SelectionSortBidirectional(const aAscending: Boolean = True): Integer; overload;
 var
   i, s, o: Integer;
   x, y: TRange;
@@ -8346,7 +8346,7 @@ end;
   @action: Bidirectional SelectionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function THelper.SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; overload;
+function MHelper.SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; overload;
 var
   s, i, o: Integer;
   r: TRange;
@@ -8375,7 +8375,7 @@ end;
   @action: ShellSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function THelper.ShellSort(const aAscending: Boolean = True): Integer; overload;
+function MHelper.ShellSort(const aAscending: Boolean = True): Integer; overload;
 var
   x, a, b, l, o: Integer;
 begin
@@ -8416,8 +8416,8 @@ end;
   @action: MergeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function THelper.MergeSort(const aAscending: Boolean = True): Integer; overload;
-  procedure Merge(var arr, tmp: TArr; const Lo, Hi: Integer; const aAscending: Boolean = True);
+function MHelper.MergeSort(const aAscending: Boolean = True): Integer; overload;
+  procedure Merge(var arr, tmp: MArray; const Lo, Hi: Integer; const aAscending: Boolean = True);
   var
     l, r, i, m, o: Integer;
   begin
@@ -8444,7 +8444,7 @@ function THelper.MergeSort(const aAscending: Boolean = True): Integer; overload;
             arr[i] := tmp[l.Increase];
   end;
 var
-  t: TArr;
+  t: MArray;
 begin
   Result := High(Self);
   if (Result > 0) then
@@ -8459,9 +8459,9 @@ end;
   @action: Bottom-up MergeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function THelper.MergeSortBU(const aAscending: Boolean = True): Integer; overload;
+function MHelper.MergeSortBU(const aAscending: Boolean = True): Integer; overload;
 var
-  t: TArr;
+  t: MArray;
   w, i, s: Integer;
   l, r: TRange;
 begin
@@ -8504,12 +8504,12 @@ end;
   @note:   - Returns Length(Self)
            - Stable (preserves equal element order)
 [==============================================================================}
-function THelper.HybridSort(const aAscending: Boolean = True): Integer; overload;
+function MHelper.HybridSort(const aAscending: Boolean = True): Integer; overload;
 const
   RUN_SIZE = 32;
-  procedure INS(var arr: TArr; const L, R: Integer);
+  procedure INS(var arr: MArray; const L, R: Integer);
   var
-    t: TVar;
+    t: MType;
     i, j: Integer;
   begin
     for i := (L + 1) to R do
@@ -8524,10 +8524,10 @@ const
       arr[j + 1] := t;
     end;
   end;
-  procedure MRG(var arr: TArr; const L, M, R: Integer);
+  procedure MRG(var arr: MArray; const L, M, R: Integer);
   var
     a, b, i, j, k: Integer;
-    x, y: TArr;
+    x, y: MArray;
   begin
     a := ((M - L) + 1);
     b := (R - M);
@@ -8588,7 +8588,7 @@ end;
   @action: Unique method for sortable types.
   @note: None.
 [==============================================================================}
-function THelper.Uniq(const sSorted: Boolean = False): TArr; overload;
+function MHelper.Uniq(const sSorted: Boolean = False): MArray; overload;
 begin
   if Self.Empty then
     SetLength(Result, 0)
@@ -8604,7 +8604,7 @@ end;
   @action: Returns True if the first element of the array is greater than the last element.
   @note: Only meaningful for arrays with at least 2 elements. Indicates a “falling” trend.
 [==============================================================================}
-function THelper.Downtrending: Boolean; overload;
+function MHelper.Downtrending: Boolean; overload;
 begin
   Result := ((Self.Size > 1) and (Self[Low(Self)] > Self[High(Self)]));
 end;
@@ -8614,7 +8614,7 @@ end;
   @action: Returns True if the first element of the array is less than the last element.
   @note: Only meaningful for arrays with at least 2 elements. Indicates a “rising” trend.
 [==============================================================================}
-function THelper.Uptrending: Boolean; overload;
+function MHelper.Uptrending: Boolean; overload;
 begin
   Result := ((Self.Size > 1) and (Self[Low(Self)] < Self[High(Self)]));
 end;
@@ -8624,7 +8624,7 @@ end;
   @action: Returns True if the first element of the array is equal to the last element.
   @note: Only meaningful for arrays with at least 2 elements. Indicates no significant trend.
 [==============================================================================}
-function THelper.Notrending: Boolean; overload;
+function MHelper.Notrending: Boolean; overload;
 begin
   Result := ((Self.Size > 1) and (Self[Low(Self)] = Self[High(Self)]));
 end;
@@ -8638,7 +8638,7 @@ end;
   @note: Only meaningful for arrays with at least 2 elements.
          Comparison is done between the first and last elements only.
 [==============================================================================}
-function THelper.Trend: Integer; overload;
+function MHelper.Trend: Integer; overload;
 begin
   if ((Self.Size < 2) or (Self[Low(Self)] = Self[High(Self)])) then
     Result := 0
@@ -8655,7 +8655,7 @@ end;
   @note: Only meaningful for arrays with at least 2 elements.
          Returns False if the array has no trend (Notrending).
 [==============================================================================}
-function THelper.Trending: Boolean; overload;
+function MHelper.Trending: Boolean; overload;
 begin
   Result := (Self.Trend <> 0);
 end;
@@ -8667,7 +8667,7 @@ end;
   @note: Arrays with 0 or 1 element are considered Rising by default.
          Checks all elements, not just the first and last.
 [==============================================================================}
-function THelper.Rising: Boolean; overload;
+function MHelper.Rising: Boolean; overload;
 var
   i: Integer;
 begin
@@ -8684,7 +8684,7 @@ end;
   @note: Arrays with 0 or 1 element are considered Falling by default.
          Checks all elements, not just the first and last.
 [==============================================================================}
-function THelper.Falling: Boolean; overload;
+function MHelper.Falling: Boolean; overload;
 var
   i: Integer;
 begin
@@ -8702,7 +8702,7 @@ end;
            0 = Notrending (mixed sequence or empty/single element).
   @note: Checks all elements. Inclusive comparisons (≤ / ≥).
 [==============================================================================}
-function THelper.Direction: Integer; overload;
+function MHelper.Direction: Integer; overload;
 begin
   if Self.Notrending then
     Result := 0
@@ -8720,7 +8720,7 @@ end;
   @note: Only meaningful for arrays with at least 2 elements.
          This checks only the first and last elements, not the full array.
 [==============================================================================}
-function THelper.TrendFalling: Boolean; overload;
+function MHelper.TrendFalling: Boolean; overload;
 begin
   Result := ((Self.Size > 1) and (Self[Low(Self)] >= Self[High(Self)]));
 end;
@@ -8732,7 +8732,7 @@ end;
   @note: Only meaningful for arrays with at least 2 elements.
          This checks only the first and last elements, not the full array.
 [==============================================================================}
-function THelper.TrendRising: Boolean; overload;
+function MHelper.TrendRising: Boolean; overload;
 begin
   Result := ((Self.Size > 1) and (Self[Low(Self)] <= Self[High(Self)]));
 end;
@@ -8745,8 +8745,8 @@ end;
          search to minimize comparisons. It performs well on small or
          partially sorted datasets. Returns the number of elements sorted.
 [==============================================================================}
-function THelper.BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
-  function BP(const value: TVar; const hIndex: Integer): Integer;
+function MHelper.BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
+  function BP(const value: MType; const hIndex: Integer): Integer;
   var
     L, R, M: Integer;
   begin
@@ -8763,7 +8763,7 @@ function THelper.BinaryInsertionSort(const aAscending: Boolean = True): Integer;
     Result := L;
   end;
 var
-  k: TVar;
+  k: MType;
   i, j, p: Integer;
 begin
   Result := Self.Size;
@@ -8790,7 +8790,7 @@ end;
          Efficient for large arrays due to early exit if disorder is detected.
          This version checks every element in both phases.
 [==============================================================================}
-function THelper.Sortedness: Boolean; overload;
+function MHelper.Sortedness: Boolean; overload;
 var
   L, R, D: Integer;
 begin
@@ -8832,7 +8832,7 @@ end;
          of small local disorder. Returns True for arrays of length 0 or 1.
          Useful for extremely large arrays where global trend violation is likely.
 [==============================================================================}
-function THelper.SortednessEx(const stride: Integer = 16): Boolean; overload;
+function MHelper.SortednessEx(const stride: Integer = 16): Boolean; overload;
 var
   L, R, D: Integer;
 begin
@@ -8875,7 +8875,7 @@ end;
          Performs both global and local comparisons in a single loop.
          Uses Integer_Increment and Integer_Decrement for safe index movement.
 [==============================================================================}
-function THelper.Monotonic: Boolean; overload;
+function MHelper.Monotonic: Boolean; overload;
 var
   L, R: Integer;
 begin
@@ -8905,7 +8905,7 @@ end;
          This function is a slightly simpler alternative to Sortedness, but checks both
          global and local conditions for each iteration.
 [==============================================================================}
-function THelper.Monotone: Boolean; overload;
+function MHelper.Monotone: Boolean; overload;
 var
   L, R: Integer;
 begin
@@ -8938,7 +8938,7 @@ end;
     • The function short-circuits for efficiency — exits early once a
       non-monotone pattern is detected.
 [==============================================================================}
-function THelper.IsMonotone: Boolean; overload;
+function MHelper.IsMonotone: Boolean; overload;
 var
   i: Integer;
   A, D: Boolean;
@@ -8978,7 +8978,7 @@ end;
     • This is functionally equivalent to other “direction-lock” or “accumulator”
       implementations but tracks high/low separately.
 [==============================================================================}
-function THelper.Monotonious: Boolean; overload;
+function MHelper.Monotonious: Boolean; overload;
 var
   i, h, l: Integer;
 begin
@@ -9003,7 +9003,7 @@ end;
   @action: Checks if the array is monotonic (either non-decreasing or non-increasing).
   @note: Returns True if all elements move in one direction, False otherwise.
 [==============================================================================}
-function THelper.Unidirectional: Boolean; overload;
+function MHelper.Unidirectional: Boolean; overload;
 label
   D;
 var
@@ -9026,7 +9026,7 @@ end;
            non-increasing, or constant.
   @note: Returns True if the array changes in only one direction; False otherwise.
 [==============================================================================}
-function THelper.Trendy: Boolean; overload;
+function MHelper.Trendy: Boolean; overload;
 var
   i, h, l: Integer;
 begin
@@ -9047,7 +9047,7 @@ end;
   @note: Returns True if the sequence does not reverse direction (monotonic in
          either direction). Returns False if the order changes (both rises and falls occur).
 [==============================================================================}
-function THelper.OnOrder: Boolean; overload;
+function MHelper.OnOrder: Boolean; overload;
 var
   i, h, l: Integer;
 begin
@@ -9067,7 +9067,7 @@ end;
          they satisfy the one-sided comparison. The result array is sized
          exactly to the number of detected peaks.
 [==============================================================================}
-function THelper.Peaks: TIntegerArray; overload;
+function MHelper.Peaks: TIntegerArray; overload;
 var
   h, l, i: Integer;
 begin
@@ -9094,7 +9094,7 @@ end;
          they satisfy the one-sided comparison. The result array is sized
          exactly to the number of detected valleys.
 [==============================================================================}
-function THelper.Valleys: TIntegerArray; overload;
+function MHelper.Valleys: TIntegerArray; overload;
 var
   h, l, i: Integer;
 begin
@@ -9122,9 +9122,9 @@ end;
          allocated array sized exactly to the number of distinct merged
          elements.
 [==============================================================================}
-function THelper.Unionize(const items: TArr; const oAscending: Boolean = True): TArr; overload;
+function MHelper.Unionize(const items: MArray; const oAscending: Boolean = True): MArray; overload;
 var
-  v: TVar;
+  v: MType;
   i, j, l, a, b: Integer;
   e: Boolean;
 begin
@@ -9209,9 +9209,9 @@ end;
          respective lengths. This is the standard A − B set-difference
          operation.
 [==============================================================================}
-function THelper.Subtract(const items: TArr; const oAscending: Boolean = True): TArr; overload;
+function MHelper.Subtract(const items: MArray; const oAscending: Boolean = True): MArray; overload;
 var
-  v: TVar;
+  v: MType;
   i, j, l: Integer;
   a, b: Integer;
   e: Boolean;
@@ -9247,9 +9247,9 @@ end;
          This implementation uses a linear merge approach with O(m + n) time
          complexity, which is optimal for this operation.
 [==============================================================================}
-function THelper.Intersect(const items: TArr; const oAscending: Boolean = True): TArr; overload;
+function MHelper.Intersect(const items: MArray; const oAscending: Boolean = True): MArray; overload;
 var
-  v: TVar;
+  v: MType;
   i, j, l, a, b: Integer;
   e: Boolean;
 begin
@@ -9297,7 +9297,7 @@ end;
         e.g., Self = [2,2,2], Items = [2,2] → Result = 2
     - Returns 0 if either array is empty.
 [==============================================================================}
-function THelper.IntersectionCount(const items: TArr; const oAscending: Boolean = True): Integer; overload;
+function MHelper.IntersectionCount(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 var
   h, s, i, j: Integer;
 begin
@@ -9341,7 +9341,7 @@ end;
         - `Result.start > Result.stop` → item not found; sentinel range returned.
     - Time complexity: O(n) (linear search).
 [==============================================================================}
-function THelper.Spanning(const item: TVar; const oAscending: Boolean = True): TRange; overload;
+function MHelper.Spanning(const item: MType; const oAscending: Boolean = True): TRange; overload;
 begin
   if Self.Empty then
     Exit(TRange.Construct(Low(Integer), Low(Integer)));
@@ -9367,7 +9367,7 @@ end;
     - Time complexity: O(N log M), where N = Length(Self),
       M = Length(Items).
 [==============================================================================}
-function THelper.CountOf(const items: TArr; const iAscending: Boolean = True): Integer; overload;
+function MHelper.CountOf(const items: MArray; const iAscending: Boolean = True): Integer; overload;
 var
   i: Integer;
 begin
@@ -9394,9 +9394,9 @@ end;
         * iSorted = True : O(N log M)
       where N = Length(Self), M = Length(Items).
 [==============================================================================}
-function THelper.Counted(const items: TArr; const iSorted: Boolean = False): Integer; overload;
+function MHelper.Counted(const items: MArray; const iSorted: Boolean = False): Integer; overload;
 var
-  s: TArr;
+  s: MArray;
   i: Integer;
   a: Boolean;
 begin
@@ -9425,7 +9425,7 @@ end;
   @action: Returns minimum item from arr.
   @note: None.
 [==============================================================================}
-function THelper.MinItem: TVar; overload;
+function MHelper.MinItem: MType; overload;
 var
   i: Integer;
 begin
@@ -9440,7 +9440,7 @@ end;
   @action: Returns minimum item from arr.
   @note: None.
 [==============================================================================}
-function THelper.MinItem(const null: TVar): TVar; overload;
+function MHelper.MinItem(const null: MType): MType; overload;
 var
   i: Integer;
 begin
@@ -9456,7 +9456,7 @@ end;
   @action: Returns maximum item from arr.
   @note: None.
 [==============================================================================}
-function THelper.MaxItem: TVar; overload;
+function MHelper.MaxItem: MType; overload;
 var
   i: Integer;
 begin
@@ -9471,7 +9471,7 @@ end;
   @action: Returns maximum item from arr.
   @note: None.
 [==============================================================================}
-function THelper.MaxItem(const null: TVar): TVar; overload;
+function MHelper.MaxItem(const null: MType): MType; overload;
 var
   i: Integer;
 begin
@@ -9487,7 +9487,7 @@ end;
   @action: Returns minimum value from arr and stores index to Integer variable.
   @note: None.
 [==============================================================================}
-function THelper.Minimum(var index: Integer): TVar; overload;
+function MHelper.Minimum(var index: Integer): MType; overload;
 var
   i: Integer;
 begin
@@ -9507,7 +9507,7 @@ end;
   @action: Returns minimum value from arr.
   @note: None.
 [==============================================================================}
-function THelper.Minimum: TVar; overload;
+function MHelper.Minimum: MType; overload;
 var
   i: Integer;
 begin
@@ -9519,7 +9519,7 @@ end;
   @action: Returns maximum value from arr and stores index to Integer variable.
   @note: None.
 [==============================================================================}
-function THelper.Maximum(var index: Integer): TVar; overload;
+function MHelper.Maximum(var index: Integer): MType; overload;
 var
   i: Integer;
 begin
@@ -9539,7 +9539,7 @@ end;
   @action: Returns maximum value from arr.
   @note: None.
 [==============================================================================}
-function THelper.Maximum: TVar; overload;
+function MHelper.Maximum: MType; overload;
 var
   i: Integer;
 begin
@@ -9551,7 +9551,7 @@ end;
   @action: Returns minimum value from arr and stores index to Integer variable.
   @note: None.
 [==============================================================================}
-function THelper.Minim(var index: Integer): TVar; overload;
+function MHelper.Minim(var index: Integer): MType; overload;
 var
   i: Integer;
 begin
@@ -9568,7 +9568,7 @@ end;
   @action: Returns minimum value from arr.
   @note: None.
 [==============================================================================}
-function THelper.Minim: TVar; overload;
+function MHelper.Minim: MType; overload;
 var
   i: Integer;
 begin
@@ -9580,7 +9580,7 @@ end;
   @action: Returns maximum value from arr and stores index to Integer variable.
   @note: None.
 [==============================================================================}
-function THelper.Maxim(var index: Integer): TVar; overload;
+function MHelper.Maxim(var index: Integer): MType; overload;
 var
   i: Integer;
 begin
@@ -9597,7 +9597,7 @@ end;
   @action: Returns maximum value from arr.
   @note: None.
 [==============================================================================}
-function THelper.Maxim: TVar; overload;
+function MHelper.Maxim: MType; overload;
 var
   i: Integer;
 begin
@@ -9611,7 +9611,7 @@ end;
   @note: The array must be sorted according to the value of oAscending.
          An empty array always returns False.
 [==============================================================================}
-function THelper.WithinBounds(const item: TVar; const oAscending: Boolean = True): Boolean; overload;
+function MHelper.WithinBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 begin
   if oAscending then
     Result := not (Self.Empty or (item < Self[0]) or (item > Self[High(Self)]))
@@ -9626,7 +9626,7 @@ end;
   @note: This function is the logical inverse of WithinBounds and assumes
          the same sort-order invariant.
 [==============================================================================}
-function THelper.OutOfBounds(const item: TVar; const oAscending: Boolean = True): Boolean; overload;
+function MHelper.OutOfBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := not Self.WithinBounds(item, oAscending);
 end;
@@ -9640,7 +9640,7 @@ end;
          The check is inclusive of the first and last elements.
          An empty array rejects all values.
 [==============================================================================}
-function THelper.Accepts(const item: TVar; const oAscending: Boolean = True): Boolean; overload;
+function MHelper.Accepts(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := ((Self.Length > 0) and ((oAscending and ((item >= Self[0]) and (item <= Self[High(Self)]))) or ((not oAscending) and ((item <= Self[0]) and (item >= Self[High(Self)])))));
 end;
@@ -9653,7 +9653,7 @@ end;
          The array is assumed to be sorted according to oAscending.
          Boundary violations provide a strict (exclusive) rejection.
 [==============================================================================}
-function THelper.Rejects(const item: TVar; const oAscending: Boolean = True): Boolean; overload;
+function MHelper.Rejects(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := ((Self.Length = 0) or ((oAscending and ((item < Self[0]) or (item > Self[High(Self)]))) or ((not oAscending) and ((item > Self[0]) or (item < Self[High(Self)])))));
 end;
@@ -9667,7 +9667,7 @@ end;
            - Returns False if the array is empty.
            - Supports ascending or descending sorted arrays depending on oAscending.
 [==============================================================================}
-function THelper.InsideBounds(const item: TVar; const oAscending: Boolean = True): Boolean; overload;
+function MHelper.InsideBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := ((Self.Length > 0) and ((oAscending and ((item >= Self[0]) and (item <= Self[High(Self)]))) or ((not oAscending) and ((item <= Self[0]) and (item >= Self[High(Self)])))));
 end;
@@ -9680,7 +9680,7 @@ end;
          - The array must be sorted according to the value of oAscending.
          - Supports ascending or descending sorted arrays depending on oAscending.
 [==============================================================================}
-function THelper.OutsideBounds(const item: TVar; const oAscending: Boolean = True): Boolean; overload;
+function MHelper.OutsideBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := not Self.InsideBounds(item, oAscending);
 end;
@@ -9701,7 +9701,7 @@ end;
          memory-hierarchy–sensitive workloads. The input array must be
          pre-sorted in the order defined by oAscending.
 [==============================================================================}
-function THelper.FibonacciSearch(const item: TVar; const oAscending: Boolean = True): Integer; overload;
+function MHelper.FibonacciSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 var
   M: Integer;
   H, o, i: Integer;
@@ -9758,7 +9758,7 @@ end;
          Comparisons are performed using Integer_Compare, allowing for
          consistent ordering and potential extension to other comparison logic.
 [==============================================================================}
-function THelper.BinarySearchBy(const item: TVar; const oAscending: Boolean = True): Integer; overload;
+function MHelper.BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 var
   R: TRange;
   M, C: Integer;
@@ -9787,7 +9787,7 @@ end;
          'oAscending'. Supports both ascending and descending arrays. Uses
           a standard binary search algorithm to efficiently locate the item.
 [==============================================================================}
-function THelper.BinaryHas(const item: TVar; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
+function MHelper.BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 var
   R: TRange;
   C: Integer;
@@ -9816,7 +9816,7 @@ end;
          order, depending on the oAscending flag. Uses TRange utilities
          for interval reduction; returns -1 when the item is not present.
 [==============================================================================}
-function THelper.BinaryGot(const item: TVar; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
+function MHelper.BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 var
   R: TRange;
 begin
@@ -9845,7 +9845,7 @@ end;
          for large arrays or targets near the beginning. Supports ascending
          (default) and descending arrays. Time complexity is O(log n).
 [==============================================================================}
-function THelper.BinaryExpSearch(const item: TVar; const oAscending: Boolean = True): Integer; overload;
+function MHelper.BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 var
   B, L: Integer;
   R: TRange;
@@ -9870,7 +9870,7 @@ begin
   Result := -1;
 end;
 
-class function TBinarySearch.Search(const arr: TArr; const item: TVar; const ascending: Boolean = True): Integer; overload;
+class function TBinarySearch.Search(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload;
 var
   L, R, M: Integer;
 begin
@@ -9895,7 +9895,7 @@ end;
   @action: Creates array with item where size is length of the array.
   @note: item is placed on every index in result.
 [==============================================================================}
-class function T1D.Create(const item: TVar; const aSize: Integer = 1): TArr; overload;
+class function T1D.Create(const item: MType; const aSize: Integer = 1): MArray; overload;
 var
   i: Integer;
 begin

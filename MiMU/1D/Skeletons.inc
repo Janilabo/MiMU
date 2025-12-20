@@ -1197,11 +1197,11 @@ end;
 
 {$IFDEF Skeleton_BinaryCombine}
 var
-  l: specialize TFPGList<TVar>;
+  l: specialize TFPGList<MType>;
   r: Integer;
   s, i: TRange;
 begin
-  l := specialize TFPGList<TVar>.Create;
+  l := specialize TFPGList<MType>.Create;
   try
     i.Create(0, items.Size);
     s.Create(0, Self.Size);

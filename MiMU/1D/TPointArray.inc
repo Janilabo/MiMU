@@ -1,9 +1,9 @@
-{$DEFINE TVar := TPoint}
-{$DEFINE TArr := TPointArray}
-{$DEFINE T2DArr := T2DPointArray}
-{$DEFINE THelper := TPointArrayHelper}
-{$DEFINE FVar := Integer}
-{$DEFINE FArr := TIntegerArray}
+{$DEFINE MType := TPoint}
+{$DEFINE MArray := TPointArray}
+{$DEFINE M2DArray := T2DPointArray}
+{$DEFINE MHelper := TPointArrayHelper}
+{$DEFINE FType := Integer}
+{$DEFINE FArray := TIntegerArray}
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}

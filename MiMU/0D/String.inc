@@ -1,8 +1,8 @@
-{$DEFINE TVar := string}
-{$DEFINE TArr := TStringArray}
-{$DEFINE T2DArr := T2DStringArray}
-{$DEFINE TCmp := TStringCompare}
-{$DEFINE THelper := TStringHelper}
+{$DEFINE MType := string}
+{$DEFINE MArray := TStringArray}
+{$DEFINE M2DArray := T2DStringArray}
+{$DEFINE MCompare := TStringCompare}
+{$DEFINE MHelper := TStringHelper}
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}

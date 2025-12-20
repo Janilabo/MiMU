@@ -1,30 +1,30 @@
 {$IFDEF TYPES}
-TCmp = specialize TCompare<TVar>;
-TArr = array of TVar;
-T2DArr = array of TArr;
+MCompare = specialize TCompare<MType>;
+MArray = array of MType;
+M2DArray = array of MArray;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-THelper = type helper for TVar
-  function TArray(const aSize: Integer = 1): TArr; overload;
-  function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
-  function AppearsIn(const target: TArr): Integer; overload;
-  function CountIn(const target: TArr): Integer; overload;
-  function Scan(const target: TArr): TIntegerArray; overload;
-  function PositionsIn(const target: TArr): TIntegerArray; overload;
-  function LocationsIn(const target: TArr): TIntegerArray; overload;
-  function Positions(const target: TArr): TIntegerArray; overload;
-  function Locations(const target: TArr): TIntegerArray; overload;
+MHelper = type helper for MType
+  function TArray(const aSize: Integer = 1): MArray; overload;
+  function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload;
+  function AppearsIn(const target: MArray): Integer; overload;
+  function CountIn(const target: MArray): Integer; overload;
+  function Scan(const target: MArray): TIntegerArray; overload;
+  function PositionsIn(const target: MArray): TIntegerArray; overload;
+  function LocationsIn(const target: MArray): TIntegerArray; overload;
+  function Positions(const target: MArray): TIntegerArray; overload;
+  function Locations(const target: MArray): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF METHODS}
-function IfThen(const state: Boolean; const sTrue, sFalse: TVar): TVar; overload; inline;
-function Swap(var A, B: TVar): Boolean; overload; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: MType): MType; overload; inline;
+function Swap(var A, B: MType): Boolean; overload; inline;
 {$IFDEF Sortable}
-function Swop(var A, B: TVar; const oAscending: Boolean = True): Boolean; overload;
-function Swop(var A, B, C: TVar; const oAscending: Boolean = True): Boolean; overload;
-function Sort(var A, B: TVar; const oAscending: Boolean = True): Boolean; overload;
-function Sort(var A, B, C: TVar; const oAscending: Boolean = True): Boolean; overload;
+function Swop(var A, B: MType; const oAscending: Boolean = True): Boolean; overload;
+function Swop(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
+function Sort(var A, B: MType; const oAscending: Boolean = True): Boolean; overload;
+function Sort(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 {$ENDIF}
 
@@ -34,7 +34,7 @@ function Sort(var A, B, C: TVar; const oAscending: Boolean = True): Boolean; ove
  @action: Creates TArray with Self.
  @note: aSize will be Length of the created array.
 [==============================================================================}
-function THelper.TArray(const aSize: Integer = 1): TArr; overload;
+function MHelper.TArray(const aSize: Integer = 1): MArray; overload;
 var
   i: Integer;
 begin
@@ -48,7 +48,7 @@ end;
  @action: Creates 2D array with Self.
  @note: None.
 [==============================================================================}
-function THelper.T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
+function MHelper.T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload;
 var
   i, j: Integer;
 begin
@@ -74,7 +74,7 @@ end;
          This implementation is more complex than CountIn and is primarily intended for
          performance-critical scenarios where profiling justifies its use.
 [==============================================================================}
-function THelper.AppearsIn(const target: TArr): Integer; overload;
+function MHelper.AppearsIn(const target: MArray): Integer; overload;
 var
   R: TRange;
 begin
@@ -102,7 +102,7 @@ end;
          efficient; it should be preferred unless profiling indicates a need for the
          optimized AppearsIn implementation.
 [==============================================================================}
-function THelper.CountIn(const target: TArr): Integer; overload;
+function MHelper.CountIn(const target: MArray): Integer; overload;
 var
   i: Integer;
 begin
@@ -123,7 +123,7 @@ end;
          This implementation favors reduced passes over the array and is well suited
          for cases where the number of matches is unknown.
 [==============================================================================}
-function THelper.Scan(const target: TArr): TIntegerArray; overload;
+function MHelper.Scan(const target: MArray): TIntegerArray; overload;
 var
   i, r, c: Integer;
 begin
@@ -153,7 +153,7 @@ end;
          This implementation minimizes memory allocations while preserving deterministic
          ordering.
 [==============================================================================}
-function THelper.PositionsIn(const target: TArr): TIntegerArray; overload;
+function MHelper.PositionsIn(const target: MArray): TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -175,7 +175,7 @@ end;
          This implementation is functionally equivalent to PositionsIn but returns the
          indexes in reversed order.
 [==============================================================================}
-function THelper.LocationsIn(const target: TArr): TIntegerArray; overload;
+function MHelper.LocationsIn(const target: MArray): TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -197,7 +197,7 @@ end;
          This implementation guarantees a single allocation and predictable memory
          usage.
 [==============================================================================}
-function THelper.Positions(const target: TArr): TIntegerArray; overload;
+function MHelper.Positions(const target: MArray): TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -219,7 +219,7 @@ end;
          This method is functionally equivalent to Positions but differs in the
          ordering of the returned indexes.
 [==============================================================================}
-function THelper.Locations(const target: TArr): TIntegerArray; overload;
+function MHelper.Locations(const target: MArray): TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -231,15 +231,15 @@ begin
       Result[l.Decrement] := i;
 end;
 
-function Swap(var A, B: TVar): Boolean; overload; inline; var C: TVar; {$DEFINE Skeleton_Swap}{$I Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: MType): Boolean; overload; inline; var C: MType; {$DEFINE Skeleton_Swap}{$I Skeletons.inc}{$UNDEF Skeleton_Swap}
 
-function IfThen(const state: Boolean; const sTrue, sFalse: TVar): TVar; overload; inline; {$DEFINE Skeleton_IfThen}{$I Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: MType): MType; overload; inline; {$DEFINE Skeleton_IfThen}{$I Skeletons.inc}{$UNDEF Skeleton_IfThen}
 
 {$IFDEF Sortable}
-function Swop(var A, B: TVar; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Swop<TVar>(A, B, oAscending); end;
-function Swop(var A, B, C: TVar; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Swop<TVar>(A, B, C, oAscending); end;
+function Swop(var A, B: MType; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Swop<MType>(A, B, oAscending); end;
+function Swop(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Swop<MType>(A, B, C, oAscending); end;
 
-function Sort(var A, B: TVar; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Sort<TVar>(A, B, oAscending); end;
-function Sort(var A, B, C: TVar; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Sort<TVar>(A, B, C, oAscending); end;
+function Sort(var A, B: MType; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Sort<MType>(A, B, oAscending); end;
+function Sort(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Sort<MType>(A, B, C, oAscending); end;
 {$ENDIF}
 {$ENDIF}

@@ -1,13 +1,13 @@
 {$IFDEF HELPERS}
-THelper = type helper for T2DArr
+MHelper = type helper for M2DArray
   function Blank: Boolean; overload;
   function Empty: Boolean; overload;
-  function Flat: TArr; overload;
-  function Flatten: TArr; overload;
+  function Flat: MArray; overload;
+  function Flatten: MArray; overload;
   function Irregular: Boolean; overload;
   function Jagged: Boolean; overload;
-  function Merge: TArr; overload;
-  function Merged: TArr; overload;
+  function Merge: MArray; overload;
+  function Merged: MArray; overload;
   function Ragged: Boolean; overload;
   function Fit: Integer; overload;
   function Fit(const aSize: Integer): Integer; overload;
@@ -21,28 +21,28 @@ THelper = type helper for T2DArr
   function Total: Int64; overload;
   function Population: Int64; overload;
   function Census: Int64; overload;
-  function Inventory(var items: TArr): Int64; overload;
+  function Inventory(var items: MArray): Int64; overload;
   function Inventory: Int64; overload;
-  function TArray: TArr; overload;
-  function Unwrap: TArr; overload;
+  function TArray: MArray; overload;
+  function Unwrap: MArray; overload;
   function Kill: Integer; overload;
   function Kill(const k2D: TIntegerArray): Int64; overload;
   function Free: Int64; overload;
   function Recreate(const arrSize: Integer): Boolean; overload;
   function Reset: Int64; overload;
   function Reverse: Boolean; overload;
-  function Reversed: T2DArr; overload;
+  function Reversed: M2DArray; overload;
   function Reversify: Boolean; overload;
   function Destroy: Int64; overload;
-  function Pull: T2DArr; overload;
-  function To1D: TArr; overload;
-  function Linearize: TArr; overload;
+  function Pull: M2DArray; overload;
+  function To1D: MArray; overload;
+  function Linearize: MArray; overload;
   function Squeeze: Integer; overload;
-  function Squeezed: T2DArr; overload;
+  function Squeezed: M2DArray; overload;
 {$ENDIF}
 
 {$IFDEF T2D}
-class function Create(const item: TVar; const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
+class function Create(const item: MType; const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -52,7 +52,7 @@ class function Create(const item: TVar; const size1D: Integer = 1; const size2D:
   @note: Blank array could be for example [[], [], []]. Returns false if array contains any items.
          NOTE: Returns false if array is empty (1D Length = 0)!
 [==============================================================================}
-function THelper.Blank: Boolean; overload;
+function MHelper.Blank: Boolean; overload;
 var
   i: Integer;
 begin
@@ -67,7 +67,7 @@ end;
   @action: Returns true if array is empty (Length = 0).
   @note: None.
 [==============================================================================}
-function THelper.Empty: Boolean; overload;
+function MHelper.Empty: Boolean; overload;
 begin
   Result := (Self.Length = 0);
 end;
@@ -77,7 +77,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function THelper.Flat: TArr; overload;
+function MHelper.Flat: MArray; overload;
 var
   i: Integer;
 begin
@@ -91,7 +91,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function THelper.Flatten: TArr; overload;
+function MHelper.Flatten: MArray; overload;
 var
   i, j, l: Integer;
 begin
@@ -107,12 +107,12 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function THelper.To1D: TArr; overload;
+function MHelper.To1D: MArray; overload;
 var
   i, j, r: Integer;
-  l: specialize TList<TVar>;
+  l: specialize TList<MType>;
 begin
-  l := specialize TList<TVar>.Create;
+  l := specialize TList<MType>.Create;
   try
     for i := 0 to High(Self) do
       for j := 0 to High(Self[i]) do
@@ -130,7 +130,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function THelper.Linearize: TArr; overload;
+function MHelper.Linearize: MArray; overload;
 var
   i: Integer;
 begin
@@ -144,7 +144,7 @@ end;
   @action: Returns true if array contains arrays with different lengths (array not symmetrict)
   @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
 [==============================================================================}
-function THelper.Irregular: Boolean; overload;
+function MHelper.Irregular: Boolean; overload;
 var
   i, a, l, h: Integer;
 begin
@@ -171,7 +171,7 @@ end;
   @action: Returns true if array contains arrays with different lengths (array not symmetrict)
   @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
 [==============================================================================}
-function THelper.Jagged: Boolean; overload;
+function MHelper.Jagged: Boolean; overload;
 var
   i, l: Integer;
 begin
@@ -188,7 +188,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function THelper.Merge: TArr; overload;
+function MHelper.Merge: MArray; overload;
 var
   i, j, l: Integer;
 begin
@@ -205,7 +205,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function THelper.Merged: TArr; overload;
+function MHelper.Merged: MArray; overload;
 var
   i, j, o, s: Integer;
 begin
@@ -229,7 +229,7 @@ end;
   @action: Returns true if array contains arrays with different lengths (array not symmetrict)
   @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
 [==============================================================================}
-function THelper.Ragged: Boolean; overload;
+function MHelper.Ragged: Boolean; overload;
 var
   i: Integer;
   h: specialize THashSet<Integer>;
@@ -252,7 +252,7 @@ end;
   @action: Returns array length.
   @note: Alternative.
 [==============================================================================}
-function THelper.Fit: Integer; overload;
+function MHelper.Fit: Integer; overload;
 begin
   Result := ((High(Self) - Low(Self)) + 1);
 end;
@@ -262,7 +262,7 @@ end;
   @action: Resizes the array to aSize (sets length safely).
   @note: Returns the length that was set to Self. Negative sizes are clamped to 0.
 [==============================================================================}
-function THelper.Fit(const aSize: Integer): Integer; overload;
+function MHelper.Fit(const aSize: Integer): Integer; overload;
 begin
   Result := Max(0, aSize);
   SetLength(Self, Result);
@@ -278,7 +278,7 @@ end;
     - If current length is within the range → no change.
     - Negative lengths are clamped to 0.
 [==============================================================================}
-function THelper.Fit(const aBounds: TRange): Integer; overload;
+function MHelper.Fit(const aBounds: TRange): Integer; overload;
 var
   l: Integer;
   b: TRange;
@@ -301,7 +301,7 @@ end;
   @action: System.Length()
   @note: None.
 [==============================================================================}
-function THelper.Length: Integer; overload;
+function MHelper.Length: Integer; overload;
 begin
   Result := System.Length(Self);
 end;
@@ -311,7 +311,7 @@ end;
  @action: System.Length()
  @note: Stores Lengths of 2D part.
 [==============================================================================}
-function THelper.Length(var lengths: TIntegerArray): Integer; overload;
+function MHelper.Length(var lengths: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
@@ -326,7 +326,7 @@ end;
   @action: System.Length()
   @note: None.
 [==============================================================================}
-function THelper.Size: Integer; overload;
+function MHelper.Size: Integer; overload;
 begin
   Result := ((High(Self) - Low(Self)) + 1);
 end;
@@ -336,7 +336,7 @@ end;
  @action: System.Length()
  @note: Stores Lengths of 2D part.
 [==============================================================================}
-function THelper.Size(var sizes: TIntegerArray): Integer; overload;
+function MHelper.Size(var sizes: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
@@ -351,7 +351,7 @@ end;
  @action: Returns actual Length for 2D array. Stores Length's of 2D part, of the arr, to lengths variable.
  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function THelper.Sized(var lengths: TIntegerArray): Int64; overload;
+function MHelper.Sized(var lengths: TIntegerArray): Int64; overload;
 var
   i: Integer;
 begin
@@ -369,7 +369,7 @@ end;
   @action: Returns actual Length for 2D array.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function THelper.Sized: Int64; overload;
+function MHelper.Sized: Int64; overload;
 var
   i: Integer;
 begin
@@ -383,9 +383,9 @@ end;
   @action: Returns actual Length for 2D array.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function THelper.Total: Int64; overload;
+function MHelper.Total: Int64; overload;
 var
-  a: TArr;
+  a: MArray;
 begin
   Result := 0;
   for a in Self do
@@ -397,7 +397,7 @@ end;
   @action: Returns actual Length for 2D array.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function THelper.Population: Int64; overload;
+function MHelper.Population: Int64; overload;
 var
   i: Integer;
   s, e: PInteger;
@@ -419,7 +419,7 @@ end;
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
          Stores 2D array items as 1D to items.
 [==============================================================================}
-function THelper.Inventory(var items: TArr): Int64; overload;
+function MHelper.Inventory(var items: MArray): Int64; overload;
 var
   i, j: Integer;
 begin
@@ -439,7 +439,7 @@ end;
   @action: Returns actual Length for 2D array.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function THelper.Inventory: Int64; overload;
+function MHelper.Inventory: Int64; overload;
 var
   i: Integer;
 begin
@@ -453,7 +453,7 @@ end;
   @action: Returns actual Length for 2D array.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function THelper.Census: Int64; overload;
+function MHelper.Census: Int64; overload;
 var
   i: Integer;
   s, e: PInteger;
@@ -476,7 +476,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function THelper.TArray: TArr; overload;
+function MHelper.TArray: MArray; overload;
 var
   i, j, l: Integer;
 begin
@@ -495,7 +495,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function THelper.Unwrap: TArr; overload;
+function MHelper.Unwrap: MArray; overload;
 var
   i, j: Integer;
 begin
@@ -510,7 +510,7 @@ end;
   @action: Combination of Length(arr) + SetLength(arr, 0).
   @note: Returns the length of main array (1st dimension)!
 [==============================================================================}
-function THelper.Kill: Integer; overload;
+function MHelper.Kill: Integer; overload;
 begin
   Result := Self.Length;
   SetLength(Self, 0);
@@ -523,7 +523,7 @@ end;
         Unsafe, simply goes through the given indexes, no safety checks!
 		Use with caution, correctly.
 [==============================================================================}
-function THelper.Kill(const k2D: TIntegerArray): Int64; overload;
+function MHelper.Kill(const k2D: TIntegerArray): Int64; overload;
 var
   i: Integer;
 begin
@@ -540,7 +540,7 @@ end;
   @action: Combination of Length(arr) + SetLength(arr, 0) for array indexes by k2D.
   @note: Completely wipes the array.
 [==============================================================================}
-function THelper.Destroy: Int64; overload;
+function MHelper.Destroy: Int64; overload;
 var
   i: Integer;
 begin
@@ -558,7 +558,7 @@ end;
   @action: Result := Length(Self) + SetLength(Self, 0) combo for 2D array
   @note: None.
 [==============================================================================}
-function THelper.Free: Int64; overload;
+function MHelper.Free: Int64; overload;
 var
   i: Integer;
 begin
@@ -573,7 +573,7 @@ end;
   @action: Clear the array and reallocate to arrSize (negative = previous length).
   @note: Returns True if array was non-empty and/or arrSize <> 0.
 [==============================================================================}
-function THelper.Recreate(const arrSize: Integer): Boolean; overload;
+function MHelper.Recreate(const arrSize: Integer): Boolean; overload;
 var
   l: Integer;
 begin
@@ -592,7 +592,7 @@ end;
   @action: Resets all elements of the array to default values while preserving its structure.
   @note: Returns the number of elements that were reset.
 [==============================================================================}
-function THelper.Reset: Int64; overload;
+function MHelper.Reset: Int64; overload;
 var
   i: Integer;
 begin
@@ -610,7 +610,7 @@ end;
   @note: Returns True only if the array contained 2 or more elements.
          Returns False if Length < 2 (no operation performed).
 [==============================================================================}
-function THelper.Reverse: Boolean; overload;
+function MHelper.Reverse: Boolean; overload;
 var
   r: TRange;
 begin
@@ -630,7 +630,7 @@ end;
          - Returns True if the array had 2 or more elements (reversal performed).
          - Returns False if the array had 0 or 1 element (nothing changed).
 [==============================================================================}
-function THelper.Reversed: T2DArr; overload;
+function MHelper.Reversed: M2DArray; overload;
 var
   i, l: Integer;
 begin
@@ -648,9 +648,9 @@ end;
          - Returns True if the array had 2 or more elements (reversal performed).
          - Returns False if the array had 0 or 1 element (nothing changed).
 [==============================================================================}
-function THelper.Reversify: Boolean; overload;
+function MHelper.Reversify: Boolean; overload;
 var
-  s: T2DArr;
+  s: M2DArray;
   i, l: Integer;
 begin
   l := Self.Length;
@@ -668,7 +668,7 @@ end;
   @action: Returns the contents of the array and leaves it empty.
   @note: After calling Pull, Self.Length = 0.
 [==============================================================================}
-function THelper.Pull: T2DArr; overload;
+function MHelper.Pull: M2DArray; overload;
 var
   i, j: Integer;
 begin
@@ -687,7 +687,7 @@ end;
   @action: Removes empty subarrays from the current 2D point array (in place).
   @note: Returns the number of removed (empty) subarrays; the array itself is resized.
 [==============================================================================}
-function THelper.Squeeze: Integer; overload;
+function MHelper.Squeeze: Integer; overload;
 var
   i, r, l: Integer;
 begin
@@ -706,7 +706,7 @@ end;
   @action: Creates and returns a copy of the array with all empty subarrays removed.
   @note: The original array remains unchanged; the result is the squeezed copy.
 [==============================================================================}
-function THelper.Squeezed: T2DArr; overload;
+function MHelper.Squeezed: M2DArray; overload;
 var
   i, r: Integer;
 begin
@@ -725,7 +725,7 @@ end;
   @action: Creates array with item where size is length of the array.
   @note: item is placed on every index in result.
 [==============================================================================}
-class function T2D.Create(const item: TVar; const size1D: Integer = 1; const size2D: Integer = 1): T2DArr; overload;
+class function T2D.Create(const item: MType; const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload;
 var
   i, j, s: Integer;
 begin

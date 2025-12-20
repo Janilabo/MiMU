@@ -1,8 +1,8 @@
-{$DEFINE TVar := Char}
-{$DEFINE TArr := TCharArray}
-{$DEFINE T2DArr := T2DCharArray}
-{$DEFINE TCmp := TCharCompare}
-{$DEFINE THelper := TCharHelper}
+{$DEFINE MType := Char}
+{$DEFINE MArray := TCharArray}
+{$DEFINE M2DArray := T2DCharArray}
+{$DEFINE MCompare := TCharCompare}
+{$DEFINE MHelper := TCharHelper}
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}

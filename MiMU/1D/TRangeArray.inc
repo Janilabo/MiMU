@@ -1,9 +1,9 @@
-{$DEFINE TVar := TRange}
-{$DEFINE TArr := TRangeArray}
-{$DEFINE T2DArr := T2DRangeArray}
-{$DEFINE THelper := TRangeArrayHelper}
-{$DEFINE FVar := Integer}
-{$DEFINE FArr := TIntegerArray}
+{$DEFINE MType := TRange}
+{$DEFINE MArray := TRangeArray}
+{$DEFINE M2DArray := T2DRangeArray}
+{$DEFINE MHelper := TRangeArrayHelper}
+{$DEFINE FType := Integer}
+{$DEFINE FArray := TIntegerArray}
 {$UNDEF Sortable}
 
 {$IFDEF HELPERS}

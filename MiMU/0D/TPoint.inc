@@ -1,8 +1,8 @@
-{$DEFINE TVar := TPoint}
-{$DEFINE TArr := TPointArray}
-{$DEFINE T2DArr := T2DPointArray}
-{$DEFINE TCmp := TPointCompare}
-{$DEFINE THelper := TPointHelper}
+{$DEFINE MType := TPoint}
+{$DEFINE MArray := TPointArray}
+{$DEFINE M2DArray := T2DPointArray}
+{$DEFINE MCompare := TPointCompare}
+{$DEFINE MHelper := TPointHelper}
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}

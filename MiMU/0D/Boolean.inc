@@ -1,8 +1,8 @@
-{$DEFINE TVar := Boolean}
-{$DEFINE TArr := TBooleanArray}
-{$DEFINE T2DArr := T2DBooleanArray}
-{$DEFINE TCmp := TBooleanCompare}
-{$DEFINE THelper := TBooleanHelper}
+{$DEFINE MType := Boolean}
+{$DEFINE MArray := TBooleanArray}
+{$DEFINE M2DArray := T2DBooleanArray}
+{$DEFINE MCompare := TBooleanCompare}
+{$DEFINE MHelper := TBooleanHelper}
 {$UNDEF Sortable}
 
 {$IFDEF TYPES}

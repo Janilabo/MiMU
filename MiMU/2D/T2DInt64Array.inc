@@ -1,7 +1,7 @@
-{$DEFINE TVar := Int64}
-{$DEFINE TArr := TInt64Array}
-{$DEFINE T2DArr := T2DInt64Array}
-{$DEFINE THelper := T2DInt64ArrayHelper}
+{$DEFINE MType := Int64}
+{$DEFINE MArray := TInt64Array}
+{$DEFINE M2DArray := T2DInt64Array}
+{$DEFINE MHelper := T2DInt64ArrayHelper}
 {$DEFINE Sortable}
 
 {$IFDEF HELPERS}

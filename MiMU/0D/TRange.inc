@@ -1,8 +1,8 @@
-{$DEFINE TVar := TRange}
-{$DEFINE TArr := TRangeArray}
-{$DEFINE T2DArr := T2DRangeArray}
-{$DEFINE TCmp := TRangeCompare}
-{$DEFINE THelper := TRangeHelper}
+{$DEFINE MType := TRange}
+{$DEFINE MArray := TRangeArray}
+{$DEFINE M2DArray := T2DRangeArray}
+{$DEFINE MCompare := TRangeCompare}
+{$DEFINE MHelper := TRangeHelper}
 {$UNDEF Sortable}
 
 {$IFDEF TYPES}

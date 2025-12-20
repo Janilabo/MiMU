@@ -1,8 +1,8 @@
-{$DEFINE TVar := Int64}
-{$DEFINE TArr := TInt64Array}
-{$DEFINE T2DArr := T2DInt64Array}
-{$DEFINE TCmp := TInt64Compare}
-{$DEFINE THelper := TInt64Helper}
+{$DEFINE MType := Int64}
+{$DEFINE MArray := TInt64Array}
+{$DEFINE M2DArray := T2DInt64Array}
+{$DEFINE MCompare := TInt64Compare}
+{$DEFINE MHelper := TInt64Helper}
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}

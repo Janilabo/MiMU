@@ -1,7 +1,7 @@
-{$DEFINE TVar := Integer}
-{$DEFINE TArr := TIntegerArray}
-{$DEFINE T2DArr := T2DIntegerArray}
-{$DEFINE THelper := T2DIntegerArrayHelper}
+{$DEFINE MType := Integer}
+{$DEFINE MArray := TIntegerArray}
+{$DEFINE M2DArray := T2DIntegerArray}
+{$DEFINE MHelper := T2DIntegerArrayHelper}
 {$DEFINE Sortable}
 
 {$IFDEF TYPES}

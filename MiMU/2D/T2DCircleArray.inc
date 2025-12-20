@@ -1,7 +1,7 @@
-{$DEFINE TVar := TCircle}
-{$DEFINE TArr := TCircleArray}
-{$DEFINE T2DArr := T2DCircleArray}
-{$DEFINE THelper := T2DCircleArrayHelper}
+{$DEFINE MType := TCircle}
+{$DEFINE MArray := TCircleArray}
+{$DEFINE M2DArray := T2DCircleArray}
+{$DEFINE MHelper := T2DCircleArrayHelper}
 {$UNDEF Sortable}
 
 {$IFDEF HELPERS}

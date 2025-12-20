@@ -1,8 +1,8 @@
-{$DEFINE TVar := TConnection}
-{$DEFINE TArr := TConnectionArray}
-{$DEFINE T2DArr := T2DConnectionArray}
-{$DEFINE TCmp := TConnectionCompare}
-{$DEFINE THelper := TConnectionHelper}
+{$DEFINE MType := TConnection}
+{$DEFINE MArray := TConnectionArray}
+{$DEFINE M2DArray := T2DConnectionArray}
+{$DEFINE MCompare := TConnectionCompare}
+{$DEFINE MHelper := TConnectionHelper}
 {$UNDEF Sortable}
 
 {$IFDEF TYPES}

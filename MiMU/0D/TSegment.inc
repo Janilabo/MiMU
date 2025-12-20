@@ -1,8 +1,8 @@
-{$DEFINE TVar := TSegment}
-{$DEFINE TArr := TSegmentArray}
-{$DEFINE T2DArr := T2DSegmentArray}
-{$DEFINE TCmp := TSegmentCompare}
-{$DEFINE THelper := TSegmentHelper}
+{$DEFINE MType := TSegment}
+{$DEFINE MArray := TSegmentArray}
+{$DEFINE M2DArray := T2DSegmentArray}
+{$DEFINE MCompare := TSegmentCompare}
+{$DEFINE MHelper := TSegmentHelper}
 {$UNDEF Sortable}
 
 {$IFDEF TYPES}

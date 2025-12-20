@@ -1,8 +1,8 @@
-{$DEFINE TVar := TBox}
-{$DEFINE TArr := TBoxArray}
-{$DEFINE T2DArr := T2DBoxArray}
-{$DEFINE TCmp := TBoxCompare}
-{$DEFINE THelper := TBoxHelper}
+{$DEFINE MType := TBox}
+{$DEFINE MArray := TBoxArray}
+{$DEFINE M2DArray := T2DBoxArray}
+{$DEFINE MCompare := TBoxCompare}
+{$DEFINE MHelper := TBoxHelper}
 {$UNDEF Sortable}
 
 {$IFDEF TYPES}

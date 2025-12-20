@@ -1,7 +1,7 @@
-{$DEFINE TVar := Double}
-{$DEFINE TArr := TDoubleArray}
-{$DEFINE T2DArr := T2DDoubleArray}
-{$DEFINE THelper := T2DDoubleArrayHelper}
+{$DEFINE MType := Double}
+{$DEFINE MArray := TDoubleArray}
+{$DEFINE M2DArray := T2DDoubleArray}
+{$DEFINE MHelper := T2DDoubleArrayHelper}
 {$DEFINE Sortable}
 
 {$IFDEF HELPERS}
