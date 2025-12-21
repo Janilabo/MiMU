@@ -1,8 +1,6 @@
 {$IFDEF HELPERS}
 function Compare(const target: Int64): Integer; inline;
 function Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; 
-function Distance(const T: Int64): Int64; inline;
-function Difference(const T: Int64): Int64; inline;
 function Sign(const target: Int64 = 0): Integer; inline;
 function Over(const target: Int64): Boolean; inline;
 function Under(const target: Int64): Boolean; inline;
@@ -25,26 +23,6 @@ function TInt64Helper.Compare(const target: Int64): Integer; inline; {$DEFINE Sk
   @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
 function TInt64Helper.Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; {$DEFINE Skeleton_Precede}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Precede}
-
-{==============================================================================]
-  <Distance>
-  @action: Returns the distance between x and T.
-  @note: None
-[==============================================================================}
-function TInt64Helper.Distance(const T: Int64): Int64; inline;
-begin
-  Result := Abs(T - Self);
-end;
-
-{==============================================================================]
-  <Difference>
-  @action: Returns the difference from x to T.
-  @note: None
-[==============================================================================}
-function TInt64Helper.Difference(const T: Int64): Int64; inline;
-begin
-  Result := (T - Self);
-end;
 
 {==============================================================================]
   <Sign>

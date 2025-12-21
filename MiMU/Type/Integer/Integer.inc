@@ -1,1 +1,11 @@
 {$I ./Restriction.inc}
+{$I ./Adjust.inc}
+{$I ./Distance.inc}
+{$I ./Comparison.inc}
+{$I ./Parity.inc}
+{$I ./Digit.inc}
+{$I ./Sign.inc}
+{$I ./Randomness.inc}
+{$I ./Sort.inc}
+{$I ./Bit.inc}
+{$I ./Factorization.inc}
