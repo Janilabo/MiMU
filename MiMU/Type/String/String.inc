@@ -7,3 +7,8 @@
 {$I ./Miscellaneous.inc}
 {$I ./Position.inc}
 {$I ./Search.inc}
+{$I ./Slice.inc}
+{$I ./Split.inc}
+{$I ./State.inc}
+{$I ./Transform.inc}
+{$I ./Trim.inc}
