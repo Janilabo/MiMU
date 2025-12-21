@@ -1,4 +1,4 @@
-{$DEFINE TPoint}{$I Configuration\Defines.inc}
+{$DEFINE TPoint}{$I ./Configuration/Defines.inc}
 
 {$IFDEF TYPES}
 TPoint = record
@@ -65,7 +65,7 @@ TPoint = record
   function Employs(const val: Integer): Boolean;
   function Omits(const val: Integer): Boolean; 	
 end;
-{$I Core.inc}
+{$I ./Core.inc}
 PPoint = ^TPoint;
 _TPoint = class
 public
@@ -113,7 +113,7 @@ operator <=(const a, b: TPoint): Boolean;
 
 {$IFDEF HELPERS}
 TPointHelper = type helper for TPoint
-  {$I Core.inc}
+  {$I ./Core.inc}
   function Inside(const bx: TBox): Boolean; inline;
   function Clamp(const area: TBox): TPoint;
   function Create: TPoint; overload;
@@ -147,7 +147,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -273,7 +273,7 @@ end;
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TPointHelper.Sign(const target: TPoint): Integer; overload; inline; {$DEFINE Skeleton_Sign}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Sign}
+function TPointHelper.Sign(const target: TPoint): Integer; overload; inline; {$DEFINE Skeleton_Sign}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Sign}
 
 {==============================================================================]
   <Lower>
@@ -1544,7 +1544,7 @@ begin
   Result := 0;
 end;
 
-function Comparison(const A, B: TPoint): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Comparison}
+function Comparison(const A, B: TPoint): Integer; overload; {$DEFINE Skeleton_Comparison}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Comparison}
 {$ENDIF}
 
 {$UNDEF TPoint}

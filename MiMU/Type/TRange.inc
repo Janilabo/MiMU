@@ -1,4 +1,4 @@
-{$DEFINE TRange}{$I Configuration\Defines.inc}
+{$DEFINE TRange}{$I ./Configuration/Defines.inc}
 
 {$IFDEF TYPES}
 TRangeEnumerator = record
@@ -258,7 +258,7 @@ TRange = record
   class function CompareSizeAscending(const A, B: TRange): Integer; static;
   class function CompareSizeDescending(const A, B: TRange): Integer; static;
 end;
-{$I Core.inc}
+{$I ./Core.inc}
 _TRange = class
 public
   class function Create(const rStart, rStop: Integer): TRange; overload; 
@@ -282,7 +282,7 @@ operator in(const I: Integer; const R: TRange): Boolean;
 
 {$IFDEF HELPERS}
 TRangeHelper = type helper for TRange
-  {$I Core.inc}
+  {$I ./Core.inc}
   function Create: TRange; overload;
   function Distribute(const parts: Integer): TRangeArray;
   function Partition(const size: Integer): TRangeArray;
@@ -294,7 +294,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

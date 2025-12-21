@@ -1,9 +1,9 @@
-{$DEFINE TBox}{$I ..\Type\Configuration\Defines.inc}
+{$DEFINE TBox}{$I ../Type/Configuration/Defines.inc}
 
 
 {$IFDEF HELPERS}
 TBoxArrayHelper = type helper for TBoxArray
-  {$I Core.inc}
+  {$I ./Core.inc}
   function X1s: TIntegerArray; overload;
   function X2s: TIntegerArray; overload;
   function Y1s: TIntegerArray; overload;
@@ -20,12 +20,12 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS) OR DEFINED(CLASSES)}
-{$I Core.inc}
+{$I ./Core.inc}
 {$IFNDEF CLASSES}
-{$DEFINE FField := X1}{$I Configuration\F.inc}
-{$DEFINE FField := Y1}{$I Configuration\F.inc}
-{$DEFINE FField := X2}{$I Configuration\F.inc}
-{$DEFINE FField := Y2}{$I Configuration\F.inc}
+{$DEFINE FField := X1}{$I ./Configuration/F.inc}
+{$DEFINE FField := Y1}{$I ./Configuration/F.inc}
+{$DEFINE FField := X2}{$I ./Configuration/F.inc}
+{$DEFINE FField := Y2}{$I ./Configuration/F.inc}
 {$ENDIF}
 {$ENDIF}
 

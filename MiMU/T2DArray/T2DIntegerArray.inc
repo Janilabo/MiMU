@@ -1,4 +1,4 @@
-{$DEFINE Integer}{$I ..\Type\Configuration\Defines.inc}
+{$DEFINE Integer}{$I ../Type/Configuration/Defines.inc}
 
 {$IFDEF TYPES}
 ATIA = class
@@ -11,12 +11,12 @@ end;
 
 {$IFDEF HELPERS}
 T2DIntegerArrayHelper = type helper for T2DIntegerArray
-  {$I Core.inc}
+  {$I ./Core.inc}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS) OR DEFINED(CLASSES)}
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

@@ -1,12 +1,12 @@
-{$DEFINE Integer}{$I Configuration\Defines.inc}
+{$DEFINE Integer}{$I ./Configuration/Defines.inc}
 
 {$IFDEF TYPES}
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TIntegerHelper = type helper for Integer
-  {$I Core.inc}
+  {$I ./Core.inc}
   function ClampMin(const limit: Integer): Integer;
   function ClampMax(const limit: Integer): Integer;
   function Clamp(const minimum, maximum: Integer): Integer; overload;
@@ -100,21 +100,21 @@ function Comparison(const A, B: Integer): Integer; overload;
   @action: Returns Integer clamped by minimum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.ClampMin(const limit: Integer): Integer; {$DEFINE Skeleton_ClampMin}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_ClampMin}
+function TIntegerHelper.ClampMin(const limit: Integer): Integer; {$DEFINE Skeleton_ClampMin}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_ClampMin}
 
 {==============================================================================]
   <ClampMax>
   @action: Returns Integer clamped by maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.ClampMax(const limit: Integer): Integer; {$DEFINE Skeleton_ClampMax}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_ClampMax}
+function TIntegerHelper.ClampMax(const limit: Integer): Integer; {$DEFINE Skeleton_ClampMax}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_ClampMax}
 
 {==============================================================================]
   <Clamp>
   @action: Returns Integer clamped by minimum and maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.Clamp(const minimum, maximum: Integer): Integer; overload; {$DEFINE Skeleton_Clamp}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Clamp}
+function TIntegerHelper.Clamp(const minimum, maximum: Integer): Integer; overload; {$DEFINE Skeleton_Clamp}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Clamp}
 
 {==============================================================================]
   <Clamp>
@@ -195,42 +195,42 @@ end;
   @action: Returns Integer with minimum limit
   @note: Max() call.
 [==============================================================================}
-function TIntegerHelper.LimitMin(const limit: Integer): Integer; {$DEFINE Skeleton_LimitMin}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_LimitMin}
+function TIntegerHelper.LimitMin(const limit: Integer): Integer; {$DEFINE Skeleton_LimitMin}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_LimitMin}
 
 {==============================================================================]
   <LimitMax>
   @action: Returns Integer with maximum limit
   @note: Min() call.
 [==============================================================================}
-function TIntegerHelper.LimitMax(const limit: Integer): Integer; {$DEFINE Skeleton_LimitMax}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_LimitMax}
+function TIntegerHelper.LimitMax(const limit: Integer): Integer; {$DEFINE Skeleton_LimitMax}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_LimitMax}
 
 {==============================================================================]
   <Limit>
   @action: Returns Integer with minimum and maximum limits
   @note: EnsureRange() call.
 [==============================================================================}
-function TIntegerHelper.Limit(const minimum, maximum: Integer): Integer; {$DEFINE Skeleton_Limit}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Limit}
+function TIntegerHelper.Limit(const minimum, maximum: Integer): Integer; {$DEFINE Skeleton_Limit}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Limit}
 
 {==============================================================================]
   <ConstraintMin>
   @action: Returns true if Integer is constrainted with minimum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.ConstraintMin(const limit: Integer): Boolean; {$DEFINE Skeleton_ConstraintMin}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_ConstraintMin}
+function TIntegerHelper.ConstraintMin(const limit: Integer): Boolean; {$DEFINE Skeleton_ConstraintMin}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_ConstraintMin}
 
 {==============================================================================]
   <ConstraintMax>
   @action: Returns true if Integer is constrainted with maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.ConstraintMax(const limit: Integer): Boolean; {$DEFINE Skeleton_ConstraintMax}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_ConstraintMax}
+function TIntegerHelper.ConstraintMax(const limit: Integer): Boolean; {$DEFINE Skeleton_ConstraintMax}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_ConstraintMax}
 
 {==============================================================================]
   <Constraint>
   @action: Returns true if Integer is constrainted with minimum or maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.Constraint(const minimum, maximum: Integer): Boolean; overload; {$DEFINE Skeleton_Constraint}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Constraint}
+function TIntegerHelper.Constraint(const minimum, maximum: Integer): Boolean; overload; {$DEFINE Skeleton_Constraint}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Constraint}
 
 {==============================================================================]
   <Contstraint>
@@ -297,56 +297,56 @@ end;
   @action: Increases the Integer value x by N.
   @note: Returns x before increasing it with N!
 [==============================================================================}
-function TIntegerHelper.Increase(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Increase}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Increase}
+function TIntegerHelper.Increase(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Increase}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Increase}
 
 {==============================================================================]
   <Increase>
   @action: Increases the Integer value x by 1 when B is true.
   @note: Returns x before increasing!
 [==============================================================================}
-function TIntegerHelper.Increase(const B: Boolean): Integer; overload; {$DEFINE Skeleton_IncreaseB}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_IncreaseB}
+function TIntegerHelper.Increase(const B: Boolean): Integer; overload; {$DEFINE Skeleton_IncreaseB}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_IncreaseB}
 
 {==============================================================================]
   <Decrease>
   @action: Decreases the Integer value x by N.
   @note: Returns x before decreasing it with N!
 [==============================================================================}
-function TIntegerHelper.Decrease(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Decrease}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Decrease}
+function TIntegerHelper.Decrease(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Decrease}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Decrease}
 
 {==============================================================================]
   <Decrease>
   @action: Decreases the Integer value x by 1 if B is true.
   @note: Returns x before decreasing!
 [==============================================================================}
-function TIntegerHelper.Decrease(const B: Boolean): Integer; overload; {$DEFINE Skeleton_DecreaseB}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_DecreaseB}
+function TIntegerHelper.Decrease(const B: Boolean): Integer; overload; {$DEFINE Skeleton_DecreaseB}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_DecreaseB}
 
 {==============================================================================]
   <Increment>
   @action: Increases the Integer value x by N.
   @note: Returns the increased x!
 [==============================================================================}
-function TIntegerHelper.Increment(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Increment}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Increment}
+function TIntegerHelper.Increment(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Increment}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Increment}
 
 {==============================================================================]
   <Increment>
   @action: Increases the Integer value x by 1 if B is true.
   @note: Returns the increased x!
 [==============================================================================}
-function TIntegerHelper.Increment(const B: Boolean): Integer; overload; {$DEFINE Skeleton_IncrementB}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_IncrementB}
+function TIntegerHelper.Increment(const B: Boolean): Integer; overload; {$DEFINE Skeleton_IncrementB}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_IncrementB}
 
 {==============================================================================]
   <Decrement>
   @action: Decreases the Integer value x by N.
   @note: Returns the decreased x!
 [==============================================================================}
-function TIntegerHelper.Decrement(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Decrement}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Decrement} 
+function TIntegerHelper.Decrement(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Decrement}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Decrement} 
 
 {==============================================================================]
   <Decrement>
   @action: Decreases the Integer value x by 1 if B is true.
   @note: Returns the decreased x!
 [==============================================================================}
-function TIntegerHelper.Decrement(const B: Boolean): Integer; overload; {$DEFINE Skeleton_DecrementB}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_DecrementB} 
+function TIntegerHelper.Decrement(const B: Boolean): Integer; overload; {$DEFINE Skeleton_DecrementB}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_DecrementB} 
 
 {==============================================================================]
   <DigitCount>
@@ -473,14 +473,14 @@ end;
            Results: 0=EQUAL, 1=x>target, -1=x<target
   @note: None
 [==============================================================================}
-function TIntegerHelper.Compare(const target: Integer): Integer; inline; {$DEFINE Skeleton_Compare}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Compare}
+function TIntegerHelper.Compare(const target: Integer): Integer; inline; {$DEFINE Skeleton_Compare}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Compare}
 
 {==============================================================================]
   <Precede>
   @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
   @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
-function TIntegerHelper.Precede(const target: Integer; const aAscending: Boolean): Boolean; overload; {$DEFINE Skeleton_Precede}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Precede}
+function TIntegerHelper.Precede(const target: Integer; const aAscending: Boolean): Boolean; overload; {$DEFINE Skeleton_Precede}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Precede}
 
 {==============================================================================]
   <Ascending>
@@ -489,7 +489,7 @@ function TIntegerHelper.Precede(const target: Integer; const aAscending: Boolean
            sorting or merging arrays in ascending order.
   @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}
-function TIntegerHelper.Ascending(const target: Integer): Boolean; inline; {$DEFINE Skeleton_Ascending}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Ascending}
+function TIntegerHelper.Ascending(const target: Integer): Boolean; inline; {$DEFINE Skeleton_Ascending}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Ascending}
 
 {==============================================================================]
   <Descending>
@@ -498,7 +498,7 @@ function TIntegerHelper.Ascending(const target: Integer): Boolean; inline; {$DEF
            sorting or merging arrays in descending order.
   @note: Pure comparison only; equivalent to Self >= target.
 [==============================================================================}
-function TIntegerHelper.Descending(const target: Integer): Boolean; inline; {$DEFINE Skeleton_Descending}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Descending}
+function TIntegerHelper.Descending(const target: Integer): Boolean; inline; {$DEFINE Skeleton_Descending}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Descending}
 
 {==============================================================================]
   <Distance>
@@ -542,7 +542,7 @@ end;
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TIntegerHelper.Sign(const target: Integer = 0): Integer; inline; {$DEFINE Skeleton_Sign}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Sign}
+function TIntegerHelper.Sign(const target: Integer = 0): Integer; inline; {$DEFINE Skeleton_Sign}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Sign}
 
 {==============================================================================]
   <Shuffle>
@@ -963,7 +963,7 @@ begin
   Result := ((Integer(iSort(A, B, oAscending)) + Integer(iSort(A, C, oAscending)) + Integer(iSort(B, C, oAscending))) > 0);
 end;
 
-function Comparison(const A, B: Integer): Integer; overload; {$DEFINE Skeleton_Comparison}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Comparison}
+function Comparison(const A, B: Integer): Integer; overload; {$DEFINE Skeleton_Comparison}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Comparison}
 {$ENDIF}
 
 {$UNDEF Integer}

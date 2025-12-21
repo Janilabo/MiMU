@@ -1,4 +1,4 @@
-{$DEFINE TConnection}{$I Configuration\Defines.inc}
+{$DEFINE TConnection}{$I ./Configuration/Defines.inc}
 
 {$IFDEF TYPES}
 TConnection = record
@@ -7,12 +7,12 @@ TConnection = record
   class function Construct(const index1, index2: Integer): TConnection; overload; static;
   function Build(const index1, index2: Integer): TConnection; overload;
 end;
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TConnectionHelper = type helper for TConnection
-  {$I Core.inc}
+  {$I ./Core.inc}
 end;
 {$ENDIF}
 
@@ -22,7 +22,7 @@ operator <>(const a, b: TConnection): Boolean;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

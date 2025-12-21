@@ -1,13 +1,13 @@
-{$DEFINE TBox}{$I ..\Type\Configuration\Defines.inc}
+{$DEFINE TBox}{$I ../Type/Configuration/Defines.inc}
 
 {$IFDEF HELPERS}
 T2DBoxArrayHelper = type helper for T2DBoxArray
-  {$I Core.inc}
+  {$I ./Core.inc}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS) OR DEFINED(CLASSES)}
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$UNDEF TBox}

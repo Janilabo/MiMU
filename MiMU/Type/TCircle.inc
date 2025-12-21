@@ -1,4 +1,4 @@
-{$DEFINE TCircle}{$I Configuration\Defines.inc}
+{$DEFINE TCircle}{$I ./Configuration/Defines.inc}
 
 {$IFDEF TYPES}
 TCircle = record
@@ -20,12 +20,12 @@ TCircle = record
   function BorderPoints(const count: Integer): TPointArray; 
   function Border: TPointArray; 
 end;
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TCircleHelper = type helper for TCircle
-  {$I Core.inc}
+  {$I ./Core.inc}
 end;
 {$ENDIF}
 
@@ -35,7 +35,7 @@ operator <>(const a, b: TCircle): Boolean;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

@@ -1,4 +1,4 @@
-{$DEFINE TPoint}{$I ..\Type\Configuration\Defines.inc}
+{$DEFINE TPoint}{$I ../Type/Configuration/Defines.inc}
 
 {$IFDEF TYPES}
 TPA = class
@@ -13,7 +13,7 @@ end;
 
 {$IFDEF HELPERS}
 TPointArrayHelper = type helper for TPointArray
-  {$I Core.inc}
+  {$I ./Core.inc}
   function Binify(const xRadius, yRadius: Integer): T2DPointArray; overload;
   function Binify(const radius: Double; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
   function Binified(const xRadius, yRadius: Integer): T2DPointArray; overload;
@@ -236,10 +236,10 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS) OR DEFINED(CLASSES)}
-{$I Core.inc}
+{$I ./Core.inc}
 {$IFNDEF CLASSES}
-{$DEFINE FField := X}{$I Configuration\F.inc}
-{$DEFINE FField := Y}{$I Configuration\F.inc}
+{$DEFINE FField := X}{$I ./Configuration/F.inc}
+{$DEFINE FField := Y}{$I ./Configuration/F.inc}
 {$ENDIF}
 {$ENDIF}
 
@@ -7469,7 +7469,7 @@ begin
   end;
 end;
 
-function TPointArrayHelper.Pure(const allowed: TPointArray): Boolean; overload; var a: TPointArray; {$DEFINE Skeleton_Pure}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Pure}
+function TPointArrayHelper.Pure(const allowed: TPointArray): Boolean; overload; var a: TPointArray; {$DEFINE Skeleton_Pure}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Pure}
 
 {==============================================================================]
   <BSort>

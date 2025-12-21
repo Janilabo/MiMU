@@ -1,15 +1,15 @@
-{$DEFINE TPoint}{$I ..\Type\Configuration\Defines.inc}
+{$DEFINE TPoint}{$I ../Type/Configuration/Defines.inc}
 
 {$IFDEF HELPERS}
 T2DPointArrayHelper = type helper for T2DPointArray
-  {$I Core.inc}
+  {$I ./Core.inc}
   function AllBounds: TBoxArray; overload;
   function AllBounds(var aBounds: TBox): TBoxArray; overload;
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS) OR DEFINED(CLASSES)}
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

@@ -1,8 +1,8 @@
-{$DEFINE Char}{$I ..\Type\Configuration\Defines.inc}
+{$DEFINE Char}{$I ../Type/Configuration/Defines.inc}
 
 {$IFDEF HELPERS}
 TCharArrayHelper = type helper for TCharArray
-  {$I Core.inc}
+  {$I ./Core.inc}
   function Str: string;
   function ToStr: string;
   function Join: string; overload;
@@ -16,7 +16,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS) OR DEFINED(CLASSES)}
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

@@ -1,4 +1,4 @@
-{$DEFINE TSegment}{$I Configuration\Defines.inc}
+{$DEFINE TSegment}{$I ./Configuration/Defines.inc}
 
 {$IFDEF TYPES}
 TSegment = record
@@ -13,12 +13,12 @@ TSegment = record
   function Points: TPointArray; 
   function Pixels(const steps: Integer = 2147483647): TPointArray; 
 end;
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TSegmentHelper = type helper for TSegment
-  {$I Core.inc}
+  {$I ./Core.inc}
 end;
 {$ENDIF}
 
@@ -28,7 +28,7 @@ operator <>(const a, b: TSegment): Boolean;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

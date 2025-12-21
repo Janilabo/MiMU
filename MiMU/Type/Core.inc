@@ -230,9 +230,9 @@ begin
       Result[l.Decrement] := i;
 end;
 
-function Swap(var A, B: MType): Boolean; overload; inline; var C: MType; {$DEFINE Skeleton_Swap}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: MType): Boolean; overload; inline; var C: MType; {$DEFINE Skeleton_Swap}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Swap}
 
-function IfThen(const state: Boolean; const sTrue, sFalse: MType): MType; overload; inline; {$DEFINE Skeleton_IfThen}{$I Configuration\Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: MType): MType; overload; inline; {$DEFINE Skeleton_IfThen}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_IfThen}
 
 {$IFDEF Sortable}
 function Swop(var A, B: MType; const oAscending: Boolean = True): Boolean; overload; begin Result := specialize Swop<MType>(A, B, oAscending); end;

@@ -1,15 +1,15 @@
-{$DEFINE TTriangle}{$I Configuration\Defines.inc}
+{$DEFINE TTriangle}{$I ./Configuration/Defines.inc}
 
 {$IFDEF TYPES}
 TTriangle = record
   A, B, C: TPoint;
 end;
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TTriangleHelper = type helper for TTriangle
-  {$I Core.inc}
+  {$I ./Core.inc}
 end;
 {$ENDIF}
 
@@ -19,7 +19,7 @@ operator <>(const a, b: TTriangle): Boolean;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

@@ -1,4 +1,4 @@
-{$DEFINE TBox}{$I Configuration\Defines.inc}
+{$DEFINE TBox}{$I ./Configuration/Defines.inc}
 
 {$IFDEF TYPES}
 TBoxEnumerator = record
@@ -179,7 +179,7 @@ TBox = record
   function Employs(const val: Integer): Boolean;
   function Omits(const val: Integer): Boolean; 
 end;
-{$I Core.inc}
+{$I ./Core.inc}
 _TBox = class
 public
   class function Create(const minX, minY, maxX, maxY: Integer): TBox; overload; 
@@ -192,7 +192,7 @@ end;
 
 {$IFDEF HELPERS}
 TBoxHelper = type helper for TBox
-  {$I Core.inc}
+  {$I ./Core.inc}
   function Create: TBox; overload;
   function Inside(const targets: TBoxArray): Boolean; overload;
   function AsGrid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;
@@ -220,7 +220,7 @@ function Box(const val: Integer = 0): TBox; overload; inline;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I Core.inc}
+{$I ./Core.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
