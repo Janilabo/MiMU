@@ -1,17 +1,17 @@
 {$IFDEF TYPES}
-  function Singular: Boolean; 
-  function IsPoint: Boolean; 
-  function IsHorizontalLine: Boolean; 
-  function IsVerticalLine: Boolean; 
-  function IsLine: Boolean; 
-  function Linear: Boolean; 
-  function Is2D: Boolean; 
-  function Collapsed: Boolean; 
-  function Boxy: Boolean; 
-  function Plural: Boolean; 
-  function Rectangular: Boolean; 
-  function Equilateral: Boolean; 
-  function Square: Boolean; 
+function Singular: Boolean; 
+function IsPoint: Boolean; 
+function IsHorizontalLine: Boolean; 
+function IsVerticalLine: Boolean; 
+function IsLine: Boolean; 
+function Linear: Boolean; 
+function Is2D: Boolean; 
+function Collapsed: Boolean; 
+function Boxy: Boolean; 
+function Plural: Boolean; 
+function Rectangular: Boolean; 
+function Equilateral: Boolean; 
+function Square: Boolean; 
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
