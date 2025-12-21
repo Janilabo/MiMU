@@ -1,8 +1,8 @@
 {$I ./Adjust.inc}
 {$I ./Comparison.inc}
-{$I ./Distance.inc}
 {$I ./Digit.inc}
+{$I ./Distance.inc}
 {$I ./Parity.inc}
 {$I ./Primality.inc}
-{$I ./Sign.inc}
 {$I ./Randomness.inc}
+{$I ./Sign.inc}
