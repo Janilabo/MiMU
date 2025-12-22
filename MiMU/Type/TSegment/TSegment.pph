@@ -1,3 +1,0 @@
-{$I ./Construction.inc}
-{$I ./Bounds.inc}
-{$I ./Sampling.inc}
