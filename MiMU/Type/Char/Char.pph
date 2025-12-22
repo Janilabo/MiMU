@@ -1,0 +1,6 @@
+{$I ./Casing.inc}
+{$I ./Classification.inc}
+{$I ./Comparison.inc}
+{$I ./Convert.inc}
+{$I ./Counting.inc}
+{$I ./Tokenizing.inc}
