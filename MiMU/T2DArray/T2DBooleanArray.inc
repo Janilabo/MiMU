@@ -1,4 +1,4 @@
-{$DEFINE Boolean}{$I ../Type/Configuration/Defines.inc}
+{$DEFINE Boolean}{$I ../Type/Defines.inc}
 
 {$IFDEF HELPERS}
 T2DBooleanArrayHelper = type helper for T2DBooleanArray

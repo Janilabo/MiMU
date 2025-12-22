@@ -3,21 +3,8 @@ type
 {$ENDIF}
 
 {$IF (NOT DEFINED(TBS)) AND (NOT DEFINED(T1D)) AND (NOT DEFINED(T2D))}
-  {$I ./Type/Integer.inc}
-  {$I ./Type/Double.inc}
-  {$I ./Type/String.inc}
-  {$I ./Type/Char.inc}
-  {$I ./Type/Boolean.inc}
-  {$I ./Type/TPoint.inc}
-  {$I ./Type/TRange.inc}
-  {$I ./Type/TBox.inc}
-  {$I ./Type/Int64.inc}
-  {$I ./Type/TConnection.inc}
-  {$I ./Type/TCircle.inc}
-  {$I ./Type/TTriangle.inc}
-  {$I ./Type/TSegment.inc}
-  
-  {$I .\Miscellaneous\Randomness.inc}
+  {$I ./Type/Type.inc}
+  {$I ./Miscellaneous/Randomness.inc}
 {$ENDIF}
 
 {$IFNDEF T2D}

@@ -1,4 +1,4 @@
-{$DEFINE TBox}{$I ../Type/Configuration/Defines.inc}
+{$DEFINE TBox}{$I ../Type/Defines.inc}
 
 
 {$IFDEF HELPERS}

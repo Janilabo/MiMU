@@ -1,4 +1,4 @@
-{$DEFINE TRange}{$I ../Type/Configuration/Defines.inc}
+{$DEFINE TRange}{$I ../Type/Defines.inc}
 
 {$IFDEF HELPERS}
 TRangeArrayHelper = type helper for TRangeArray

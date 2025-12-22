@@ -22,21 +22,21 @@ function Constraint(const minimum, maximum: Double): Boolean;
   @action: Returns Double clamped by minimum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.ClampMin(const limit: Double): Double; {$DEFINE Skeleton_ClampMin}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_ClampMin}
+function TDoubleHelper.ClampMin(const limit: Double): Double; {$DEFINE Skeleton_ClampMin}{$I ../Skeletons.inc}{$UNDEF Skeleton_ClampMin}
 
 {==============================================================================]
   <ClampMax>
   @action: Returns Double clamped by maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.ClampMax(const limit: Double): Double; {$DEFINE Skeleton_ClampMax}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_ClampMax}
+function TDoubleHelper.ClampMax(const limit: Double): Double; {$DEFINE Skeleton_ClampMax}{$I ../Skeletons.inc}{$UNDEF Skeleton_ClampMax}
 
 {==============================================================================]
   <Clamp>
   @action: Returns Double clamped by minimum and maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.Clamp(const minimum, maximum: Double): Double; {$DEFINE Skeleton_Clamp}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Clamp}
+function TDoubleHelper.Clamp(const minimum, maximum: Double): Double; {$DEFINE Skeleton_Clamp}{$I ../Skeletons.inc}{$UNDEF Skeleton_Clamp}
 
 {==============================================================================]
   <BoundMin>
@@ -105,40 +105,40 @@ end;
   @action: Returns Double with minimum limit
   @note: Max() call.
 [==============================================================================}
-function TDoubleHelper.LimitMin(const limit: Double): Double; {$DEFINE Skeleton_LimitMin}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_LimitMin}
+function TDoubleHelper.LimitMin(const limit: Double): Double; {$DEFINE Skeleton_LimitMin}{$I ../Skeletons.inc}{$UNDEF Skeleton_LimitMin}
 
 {==============================================================================]
   <LimitMax>
   @action: Returns Double with maximum limit
   @note: Min() call.
 [==============================================================================}
-function TDoubleHelper.LimitMax(const limit: Double): Double; {$DEFINE Skeleton_LimitMax}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_LimitMax}
+function TDoubleHelper.LimitMax(const limit: Double): Double; {$DEFINE Skeleton_LimitMax}{$I ../Skeletons.inc}{$UNDEF Skeleton_LimitMax}
 
 {==============================================================================]
   <Limit>
   @action: Returns Double with minimum and maximum limits
   @note: EnsureRange() call.
 [==============================================================================}
-function TDoubleHelper.Limit(const minimum, maximum: Double): Double; {$DEFINE Skeleton_Limit}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Limit}
+function TDoubleHelper.Limit(const minimum, maximum: Double): Double; {$DEFINE Skeleton_Limit}{$I ../Skeletons.inc}{$UNDEF Skeleton_Limit}
 
 {==============================================================================]
   <ConstraintMin>
   @action: Returns true if Double is constrainted with minimum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.ConstraintMin(const limit: Double): Boolean; {$DEFINE Skeleton_ConstraintMin}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_ConstraintMin}
+function TDoubleHelper.ConstraintMin(const limit: Double): Boolean; {$DEFINE Skeleton_ConstraintMin}{$I ../Skeletons.inc}{$UNDEF Skeleton_ConstraintMin}
 
 {==============================================================================]
   <ConstraintMax>
   @action: Returns true if Double is constrainted with maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.ConstraintMax(const limit: Double): Boolean; {$DEFINE Skeleton_ConstraintMax}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_ConstraintMax}
+function TDoubleHelper.ConstraintMax(const limit: Double): Boolean; {$DEFINE Skeleton_ConstraintMax}{$I ../Skeletons.inc}{$UNDEF Skeleton_ConstraintMax}
 
 {==============================================================================]
   <Constraint>
   @action: Returns true if Double is constrainted with minimum or maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.Constraint(const minimum, maximum: Double): Boolean; {$DEFINE Skeleton_Constraint}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Constraint}
+function TDoubleHelper.Constraint(const minimum, maximum: Double): Boolean; {$DEFINE Skeleton_Constraint}{$I ../Skeletons.inc}{$UNDEF Skeleton_Constraint}
 {$ENDIF}

@@ -1,4 +1,4 @@
-{$DEFINE TConnection}{$I ../Type/Configuration/Defines.inc}
+{$DEFINE TConnection}{$I ../Type/Defines.inc}
 
 {$IFDEF HELPERS}
 TConnectionArrayHelper = type helper for TConnectionArray

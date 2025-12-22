@@ -1,4 +1,4 @@
-{$DEFINE TTriangle}{$I ./Configuration/Defines.inc}
+{$DEFINE TTriangle}{$I ./Defines.inc}
 
 {$IFDEF TYPES}
 TTriangle = record

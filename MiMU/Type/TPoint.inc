@@ -1,4 +1,4 @@
-{$DEFINE TPoint}{$I ./Configuration/Defines.inc}
+{$DEFINE TPoint}{$I ./Defines.inc}
 
 {$IFDEF TYPES}
 TPoint = record
@@ -273,7 +273,7 @@ end;
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TPointHelper.Sign(const target: TPoint): Integer; overload; inline; {$DEFINE Skeleton_Sign}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Sign}
+function TPointHelper.Sign(const target: TPoint): Integer; overload; inline; {$DEFINE Skeleton_Sign}{$I ./Skeletons.inc}{$UNDEF Skeleton_Sign}
 
 {==============================================================================]
   <Lower>
@@ -1544,7 +1544,7 @@ begin
   Result := 0;
 end;
 
-function Comparison(const A, B: TPoint): Integer; overload; {$DEFINE Skeleton_Comparison}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Comparison}
+function Comparison(const A, B: TPoint): Integer; overload; {$DEFINE Skeleton_Comparison}{$I ./Skeletons.inc}{$UNDEF Skeleton_Comparison}
 {$ENDIF}
 
 {$UNDEF TPoint}

@@ -1,4 +1,4 @@
-{$DEFINE TSegment}{$I ../Type/Configuration/Defines.inc}
+{$DEFINE TSegment}{$I ../Type/Defines.inc}
 
 {$IFDEF HELPERS}
 TSegmentArrayHelper = type helper for TSegmentArray

@@ -27,56 +27,56 @@ function UpdatedMax(const cValue: Integer; const limit: Integer = 2147483647): I
   @action: Increases the Integer value x by N.
   @note: Returns x before increasing it with N!
 [==============================================================================}
-function TIntegerHelper.Increase(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Increase}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Increase}
+function TIntegerHelper.Increase(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Increase}{$I ../Skeletons.inc}{$UNDEF Skeleton_Increase}
 
 {==============================================================================]
   <Increase>
   @action: Increases the Integer value x by 1 when B is true.
   @note: Returns x before increasing!
 [==============================================================================}
-function TIntegerHelper.Increase(const B: Boolean): Integer; overload; {$DEFINE Skeleton_IncreaseB}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_IncreaseB}
+function TIntegerHelper.Increase(const B: Boolean): Integer; overload; {$DEFINE Skeleton_IncreaseB}{$I ../Skeletons.inc}{$UNDEF Skeleton_IncreaseB}
 
 {==============================================================================]
   <Decrease>
   @action: Decreases the Integer value x by N.
   @note: Returns x before decreasing it with N!
 [==============================================================================}
-function TIntegerHelper.Decrease(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Decrease}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Decrease}
+function TIntegerHelper.Decrease(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Decrease}{$I ../Skeletons.inc}{$UNDEF Skeleton_Decrease}
 
 {==============================================================================]
   <Decrease>
   @action: Decreases the Integer value x by 1 if B is true.
   @note: Returns x before decreasing!
 [==============================================================================}
-function TIntegerHelper.Decrease(const B: Boolean): Integer; overload; {$DEFINE Skeleton_DecreaseB}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_DecreaseB}
+function TIntegerHelper.Decrease(const B: Boolean): Integer; overload; {$DEFINE Skeleton_DecreaseB}{$I ../Skeletons.inc}{$UNDEF Skeleton_DecreaseB}
 
 {==============================================================================]
   <Increment>
   @action: Increases the Integer value x by N.
   @note: Returns the increased x!
 [==============================================================================}
-function TIntegerHelper.Increment(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Increment}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Increment}
+function TIntegerHelper.Increment(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Increment}{$I ../Skeletons.inc}{$UNDEF Skeleton_Increment}
 
 {==============================================================================]
   <Increment>
   @action: Increases the Integer value x by 1 if B is true.
   @note: Returns the increased x!
 [==============================================================================}
-function TIntegerHelper.Increment(const B: Boolean): Integer; overload; {$DEFINE Skeleton_IncrementB}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_IncrementB}
+function TIntegerHelper.Increment(const B: Boolean): Integer; overload; {$DEFINE Skeleton_IncrementB}{$I ../Skeletons.inc}{$UNDEF Skeleton_IncrementB}
 
 {==============================================================================]
   <Decrement>
   @action: Decreases the Integer value x by N.
   @note: Returns the decreased x!
 [==============================================================================}
-function TIntegerHelper.Decrement(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Decrement}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Decrement} 
+function TIntegerHelper.Decrement(const N: Integer = 1): Integer; overload; {$DEFINE Skeleton_Decrement}{$I ../Skeletons.inc}{$UNDEF Skeleton_Decrement} 
 
 {==============================================================================]
   <Decrement>
   @action: Decreases the Integer value x by 1 if B is true.
   @note: Returns the decreased x!
 [==============================================================================}
-function TIntegerHelper.Decrement(const B: Boolean): Integer; overload; {$DEFINE Skeleton_DecrementB}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_DecrementB}
+function TIntegerHelper.Decrement(const B: Boolean): Integer; overload; {$DEFINE Skeleton_DecrementB}{$I ../Skeletons.inc}{$UNDEF Skeleton_DecrementB}
 
 {==============================================================================]
   <Adjust>

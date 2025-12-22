@@ -1,11 +1,19 @@
-{$I ./Adjust.inc}
-{$I ./Bit.inc}
-{$I ./Comparison.inc}
-{$I ./Digit.inc}
-{$I ./Distance.inc}
-{$I ./Factorization.inc}
-{$I ./Parity.inc}
-{$I ./Randomness.inc}
-{$I ./Restriction.inc}
-{$I ./Sign.inc}
-{$I ./Sort.inc}
+{$DEFINE Integer}{$I ../Defines.inc}
+
+{$IFDEF TYPES}
+{$I ../Core.inc}
+{$ENDIF}
+
+{$IFDEF HELPERS}
+TIntegerHelper = type helper for Integer
+  {$I ../Core.inc}
+  {$I ./Integer.pph}
+end;
+{$ENDIF}
+
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$I ../Core.inc}
+{$I ./Integer.pph}
+{$ENDIF}
+
+{$UNDEF Integer}

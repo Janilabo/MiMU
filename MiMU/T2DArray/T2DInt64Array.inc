@@ -1,4 +1,4 @@
-{$DEFINE Int64}{$I ../Type/Configuration/Defines.inc}
+{$DEFINE Int64}{$I ../Type/Defines.inc}
 
 {$IFDEF HELPERS}
 T2DInt64ArrayHelper = type helper for T2DInt64Array

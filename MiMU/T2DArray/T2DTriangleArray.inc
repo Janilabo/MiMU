@@ -1,4 +1,4 @@
-{$DEFINE TTriangle}{$I ../Type/Configuration/Defines.inc}
+{$DEFINE TTriangle}{$I ../Type/Defines.inc}
 
 {$IFDEF HELPERS}
 T2DTriangleArrayHelper = type helper for T2DTriangleArray

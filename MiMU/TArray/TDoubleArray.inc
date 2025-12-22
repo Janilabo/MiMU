@@ -1,4 +1,4 @@
-{$DEFINE Double}{$I ../Type/Configuration/Defines.inc}
+{$DEFINE Double}{$I ../Type/Defines.inc}
 
 {$IFDEF HELPERS}
 TDoubleArrayHelper = type helper for TDoubleArray

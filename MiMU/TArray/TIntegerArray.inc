@@ -1,4 +1,4 @@
-{$DEFINE Integer}{$I ../Type/Configuration/Defines.inc}
+{$DEFINE Integer}{$I ../Type/Defines.inc}
 
 {$IFDEF TYPES}
 TIA = class

@@ -1,4 +1,4 @@
-{$DEFINE Boolean}{$I ../Type/Configuration/Defines.inc}
+{$DEFINE Boolean}{$I ../Type/Defines.inc}
 
 {$IFDEF TYPES}
 TBA = class

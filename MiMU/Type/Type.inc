@@ -1,0 +1,13 @@
+  {$I ./Integer/Integer.inc}
+  {$I ./Double/Double.inc}
+  {$I ./String/String.inc}
+  {$I ./Char/Char.inc}
+  {$I ./Boolean/Boolean.inc}
+  {$I ./TPoint.inc}
+  {$I ./TRange.inc}
+  {$I ./TBox/TBox.inc}
+  {$I ./Int64/Int64.inc}
+  {$I ./TConnection.inc}
+  {$I ./TCircle/TCircle.inc}
+  {$I ./TTriangle.inc}
+  {$I ./TSegment.inc}
