@@ -9,5 +9,5 @@
   {$I ./Int64/Int64.inc}
   {$I ./TConnection/TConnection.inc}
   {$I ./TCircle/TCircle.inc}
-  {$I ./TTriangle.inc}
-  {$I ./TSegment.inc}
+  {$I ./TTriangle/TTriangle.inc}
+  {$I ./TSegment/TSegment.inc}
