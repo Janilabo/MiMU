@@ -1,4 +1,4 @@
-{$DEFINE TCircle}{$I ../Defines.inc}
+{$DEFINE TCircle}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
 TCircle = record
@@ -6,12 +6,12 @@ TCircle = record
   Radius: Double; 
   {$I TCircle.pph}
 end;
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TCircleHelper = type helper for TCircle
-  {$I ../Core.inc}
+  {$I ../Type.inc}
 end;
 {$ENDIF}
 
@@ -21,7 +21,7 @@ operator <>(const a, b: TCircle): Boolean;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$I TCircle.pph}
 {$ENDIF}
 
@@ -37,4 +37,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF TCircle}
+{$UNDEF BASE}{$UNDEF TCircle}

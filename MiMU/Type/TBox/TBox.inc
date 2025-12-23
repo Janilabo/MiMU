@@ -1,4 +1,4 @@
-{$DEFINE TBox}{$I ../Defines.inc}
+{$DEFINE TBox}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
 TBoxEnumerator = record
@@ -16,7 +16,7 @@ TBox = record
   {$I TBox.pph}
   function GetEnumerator: TBoxEnumerator; 
 end;
-{$I ../Core.inc}
+{$I ../Type.inc}
 _TBox = class
 public
   class function Create(const minX, minY, maxX, maxY: Integer): TBox; overload; 
@@ -29,7 +29,7 @@ end;
 
 {$IFDEF HELPERS}
 TBoxHelper = type helper for TBox
-  {$I ../Core.inc}
+  {$I ../Type.inc}
   {$I TBox.pph}
 end;
 {$ENDIF}
@@ -44,7 +44,7 @@ operator in(const P: TPoint; const B: TBox): Boolean;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$I TBox.pph}
 {$ENDIF}
 
@@ -190,4 +190,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF TBox}
+{$UNDEF BASE}{$UNDEF TBox}

@@ -1,4 +1,4 @@
-{$DEFINE TRange}{$I ../Defines.inc}
+{$DEFINE TRange}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
 TRangeEnumerator = record
@@ -15,7 +15,7 @@ TRange = record
   function GetEnumerator: TRangeEnumerator;
   {$I TRange.pph}
 end;
-{$I ../Core.inc}
+{$I ../Type.inc}
 _TRange = class
 public
   class function Create(const rStart, rStop: Integer): TRange; overload; 
@@ -34,13 +34,13 @@ operator in(const I: Integer; const R: TRange): Boolean;
 
 {$IFDEF HELPERS}
 TRangeHelper = type helper for TRange
-  {$I ../Core.inc}
+  {$I ../Type.inc}
   {$I TRange.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$I TRange.pph}
 {$ENDIF}
 
@@ -174,4 +174,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF TRange}
+{$UNDEF BASE}{$UNDEF TRange}

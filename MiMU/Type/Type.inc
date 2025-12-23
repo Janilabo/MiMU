@@ -1,3 +1,4 @@
+{$IFNDEF BASE}
   {$I Integer/Integer.inc}
   {$I Double/Double.inc}
   {$I String/String.inc}
@@ -11,3 +12,6 @@
   {$I TCircle/TCircle.inc}
   {$I TTriangle/TTriangle.inc}
   {$I TSegment/TSegment.inc}
+{$ELSE}
+  {$I Base/Base.inc}
+{$ENDIF}

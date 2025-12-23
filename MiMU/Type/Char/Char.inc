@@ -1,19 +1,19 @@
-{$DEFINE Char}{$I ../Defines.inc}
+{$DEFINE Char}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TCharHelper = type helper for Char
-  {$I ../Core.inc}
+  {$I ../Type.inc}
   {$I Char.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$I Char.pph}
 {$ENDIF}
 
-{$UNDEF Char}
+{$UNDEF BASE}{$UNDEF Char}

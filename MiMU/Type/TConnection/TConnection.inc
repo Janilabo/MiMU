@@ -1,16 +1,16 @@
-{$DEFINE TConnection}{$I ../Defines.inc}
+{$DEFINE TConnection}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
 TConnection = record
   id1, id2: Integer;
   {$I TConnection.pph}
 end;
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TConnectionHelper = type helper for TConnection
-  {$I ../Core.inc}
+  {$I ../Type.inc}
 end;
 {$ENDIF}
 
@@ -20,7 +20,7 @@ operator <>(const a, b: TConnection): Boolean;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$I TConnection.pph}
 {$ENDIF}
 
@@ -36,4 +36,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF TConnection}
+{$UNDEF BASE}{$UNDEF TConnection}

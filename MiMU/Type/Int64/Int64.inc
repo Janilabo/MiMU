@@ -1,19 +1,19 @@
-{$DEFINE Int64}{$I ../Defines.inc}
+{$DEFINE Int64}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TInt64Helper = type helper for Int64
-  {$I ../Core.inc} 
+  {$I ../Type.inc} 
   {$I Int64.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$I Int64.pph}
 {$ENDIF}
 
-{$UNDEF Int64}
+{$UNDEF BASE}{$UNDEF Int64}

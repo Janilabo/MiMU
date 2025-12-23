@@ -1,19 +1,19 @@
-{$DEFINE Boolean}{$I ../Defines.inc}
+{$DEFINE Boolean}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TBooleanHelper = type helper for Boolean
-  {$I ../Core.inc}
+  {$I ../Type.inc}
   {$I Boolean.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$I Boolean.pph}
 {$ENDIF}
 
-{$UNDEF Boolean}
+{$UNDEF BASE}{$UNDEF Boolean}

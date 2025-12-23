@@ -1,19 +1,19 @@
-{$DEFINE Double}{$I ../Defines.inc}
+{$DEFINE Double}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TDoubleHelper = type helper for Double
-  {$I ../Core.inc}
+  {$I ../Type.inc}
   {$I Double.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$I Double.pph}
 {$ENDIF}
 
-{$UNDEF Double}
+{$UNDEF BASE}{$UNDEF Double}

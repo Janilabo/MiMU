@@ -1,19 +1,19 @@
-{$DEFINE string}{$I ../Defines.inc}
+{$DEFINE string}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TStringHelper = type helper for string
-  {$I ../Core.inc}
+  {$I ../Type.inc}
   {$I String.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$I String.pph}
 {$ENDIF}
 
-{$UNDEF string}
+{$UNDEF BASE}{$UNDEF string}

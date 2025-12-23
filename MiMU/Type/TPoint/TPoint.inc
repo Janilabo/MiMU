@@ -1,4 +1,4 @@
-{$DEFINE TPoint}{$I ../Defines.inc}
+{$DEFINE TPoint}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
 TPoint = record
@@ -8,7 +8,7 @@ TPoint = record
   function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; overload;
   function AngleRadians(const target: TPoint): Double; overload; 
 end;
-{$I ../Core.inc}
+{$I ../Type.inc}
 PPoint = ^TPoint;
 _TPoint = class
 public
@@ -32,7 +32,7 @@ operator <=(const a, b: TPoint): Boolean;
 
 {$IFDEF HELPERS}
 TPointHelper = type helper for TPoint
-  {$I ../Core.inc}
+  {$I ../Type.inc}
   {$I TPoint.pph}
   function Clamp(const area: TBox): TPoint;
   function ToY(const yGoal: Integer): TPointArray; overload;
@@ -42,7 +42,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
-{$I ../Core.inc}
+{$I ../Type.inc}
 {$I TPoint.pph}
 {$ENDIF}
 
@@ -220,4 +220,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF TPoint}
+{$UNDEF BASE}{$UNDEF TPoint}
