@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 constructor Create(const sA, sB: TPoint); overload;
 constructor Create(const aX, aY, bX, bY: Integer); overload;
 class function Construct(const sA, sB: TPoint): TSegment; overload; static;

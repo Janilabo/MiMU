@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Overlapping(const b: TRange): Boolean; 
 function Overlap(const b: TRange): Boolean; 
 function Intersect(const b: TRange): TRange; overload; 

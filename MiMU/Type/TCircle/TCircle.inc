@@ -4,7 +4,7 @@
 TCircle = record
   Center: TPoint;
   Radius: Double; 
-  {$I TCircle.pph}
+  {$DEFINE METHODS}{$I TCircle.pph}{$UNDEF METHODS}
 end;
 {$I ../Type.inc}
 {$ENDIF}

@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Expand(const change: Integer = 1): TBox; overload; 
 function Expand(const target: TBox): TBox; overload; 
 function Shrink(const change: Integer = 1): TBox; overload; 

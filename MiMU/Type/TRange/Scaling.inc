@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Contract(const N: Integer = 1): TRange; overload; 
 function Contracted(const N: Integer = 1): TRange; overload; 
 function Expand(const N: Integer = 1): TRange; overload; 

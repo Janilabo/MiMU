@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 constructor Create(const rStart, rStop: Integer); overload;
 constructor Create(const value: Integer); overload;
 class function Construct(const rStart, rStop: Integer): TRange; overload; static;

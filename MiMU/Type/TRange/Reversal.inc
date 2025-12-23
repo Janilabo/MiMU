@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Reversed: TRange; 
 function Reverse: Boolean;
 {$ENDIF}

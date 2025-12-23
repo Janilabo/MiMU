@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Normed: TRange; 
 function Norm: TRange; 
 function Normal: TRange;

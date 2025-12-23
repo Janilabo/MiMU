@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Modify(const mStart, mStop: Integer): TRange; overload; 
 function Modified(const mStart, mStop: Integer): TRange; overload; 
 {$ENDIF}

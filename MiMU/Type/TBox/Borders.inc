@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Border: TPointArray; overload; 
 function Border(const X, Y: Integer): Boolean; overload; 
 function Border(const pt: TPoint): Boolean; overload; 

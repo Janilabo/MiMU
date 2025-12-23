@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Digits: TIntegerArray; overload; 
 function Digits(const dIndex: Integer): Integer; overload; 
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload; 

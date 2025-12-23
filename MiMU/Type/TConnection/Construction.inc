@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 constructor Create(const index1, index2: Integer); overload;
 class function Construct(const index1, index2: Integer): TConnection; overload; static;
 function Build(const index1, index2: Integer): TConnection; overload;

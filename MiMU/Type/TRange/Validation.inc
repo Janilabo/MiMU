@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Exceeds(const maxElements: Integer): Boolean; 
 function Insufficient(const minElements: Integer): Boolean;
 function Uniform(const val: Integer): Boolean; overload;

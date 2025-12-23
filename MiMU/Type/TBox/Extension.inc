@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function ExtendX(const xCoord: Integer): Boolean; 
 function ExtendY(const yCoord: Integer): Boolean; 
 function Extend(const pt: TPoint): Boolean;

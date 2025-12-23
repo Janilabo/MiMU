@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Offset(const sDelta: Integer): TRange; 
 function Shift(const N: Integer = 1): TRange; overload; 
 function Shifted(const N: Integer = 1): TRange; overload; 

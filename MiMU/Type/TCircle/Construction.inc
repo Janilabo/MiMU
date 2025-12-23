@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 constructor Create(const cCenter: TPoint; const cRadius: Double); overload;
 constructor Create(const centerX, centerY: Integer; const cRadius: Double); overload;
 class function Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload; static;

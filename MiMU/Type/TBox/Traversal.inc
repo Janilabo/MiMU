@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Spiral: TPointArray; 
 function Traverse: TPointArray;
 function Rowwise: TPointArray; 

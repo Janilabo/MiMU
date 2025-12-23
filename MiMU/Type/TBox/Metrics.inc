@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Size(var width, height: Integer): Integer; overload; inline;
 function Size: TPoint; overload; 
 function Area: Integer; inline;

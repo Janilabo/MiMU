@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Clamp(const zone: TRange): TRange; overload; 
 function ClampMax(const maxValue: Integer): TRange; 
 function ClampMin(const minValue: Integer): TRange; 

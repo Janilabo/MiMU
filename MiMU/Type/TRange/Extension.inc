@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Extend(const val: Integer): Boolean;
 function Absorb(const val: Integer): Boolean; overload; 
 function Include(const val: Integer): TRange; overload;

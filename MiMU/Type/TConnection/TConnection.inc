@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 TConnection = record
   id1, id2: Integer;
-  {$I TConnection.pph}
+  {$DEFINE METHODS}{$I TConnection.pph}{$UNDEF METHODS}
 end;
 {$I ../Type.inc}
 {$ENDIF}

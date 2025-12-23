@@ -13,7 +13,7 @@ end;
 TRange = record
   start, stop: Integer;
   function GetEnumerator: TRangeEnumerator;
-  {$I TRange.pph}
+  {$DEFINE METHODS}{$I TRange.pph}{$UNDEF METHODS}
 end;
 {$I ../Type.inc}
 {$ENDIF}

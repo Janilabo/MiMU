@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Rows: Integer; overload;
 function Rows(const index: Integer): TPointArray; overload;
 function Columns: Integer; overload;

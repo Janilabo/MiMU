@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function InCircle(const center: TPoint; const radius: Double): Boolean; inline;
 function InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; inline;
 {$ENDIF}

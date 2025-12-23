@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 class function Null(const value: Integer = -2147483648): TBox; overload; static;
 function Frame(var fWidth, fHeight: Integer): TBox; overload;
 function Frame: TBox; overload;  

@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Points: TPointArray; 
 function TPA: TPointArray; 
 {$ENDIF}

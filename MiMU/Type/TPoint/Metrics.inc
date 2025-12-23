@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function DistX(const target: TPoint): Integer;
 function DistY(const target: TPoint): Integer;
 function DistanceX(const target: TPoint): Integer;

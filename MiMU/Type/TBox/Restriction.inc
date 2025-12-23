@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Constraint(const toArea: TBox): Boolean; 
 function Clip(const toArea: TBox): TBox; 
 function Restrict(const toArea: TBox): Boolean; 

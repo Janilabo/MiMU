@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Lower(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
 function Higher(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
 function Under(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;

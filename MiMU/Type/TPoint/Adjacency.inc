@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Neighbour(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
 function Neighbor(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
 function Adjacent(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;

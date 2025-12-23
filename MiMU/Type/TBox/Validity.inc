@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Valid: Boolean; inline;
 function Invalid: Boolean; 
 function Fix: Boolean;

@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Sorted(const oAscending: Boolean = True): TRange; overload; 
 function Sort(const oAscending: Boolean = True): Boolean; overload; 
 function Ordered(const oAscending: Boolean = True): TRange; overload; 

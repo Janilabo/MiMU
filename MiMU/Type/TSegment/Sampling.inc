@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Points: TPointArray; 
 function Pixels(const steps: Integer = 2147483647): TPointArray;
 {$ENDIF}

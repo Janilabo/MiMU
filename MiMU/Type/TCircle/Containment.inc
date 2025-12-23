@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Contains(const pt: TPoint): Boolean; 
 function Item(const pt: TPoint): Boolean; 
 function Pixel(const pt: TPoint): Boolean;

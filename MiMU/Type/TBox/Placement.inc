@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Places(const target: TBox; const o: TPoint): TPointArray; overload;
 function Places(const target: TBox): TPointArray; overload;
 {$ENDIF}

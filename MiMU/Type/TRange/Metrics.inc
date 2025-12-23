@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Count: Integer; 
 function Area: Integer; 
 function Span: Integer;

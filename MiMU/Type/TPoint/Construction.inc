@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 constructor Create(const pX, pY: Integer); overload;
 constructor Create(const value: Integer); overload;
 class function Construct(const pX, pY: Integer): TPoint; overload; static;

@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Reserve: TIntegerArray; overload; 
 function Reserve(var aRange: TIntegerArray): Integer; overload;  
 function Frame(var rSize: Integer): TRange; overload; 

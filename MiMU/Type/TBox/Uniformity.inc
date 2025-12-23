@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Uniform(const val: Integer): Boolean; overload;
 function Uniform: Boolean; overload;
 function Employs(const val: Integer): Boolean;

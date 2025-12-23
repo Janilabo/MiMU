@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function HypotEuclidean(const target: TPoint): Double; overload;	
 function Euclidean(const target: TPoint): Double; overload;
 function Euclidean2(const target: TPoint): Double; overload;

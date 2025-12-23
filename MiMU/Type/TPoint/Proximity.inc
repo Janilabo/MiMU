@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Within(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;
 function Near(const target: TPoint; const radius: Double = 1.0): Boolean; overload;
 function Near(const target: TPoint; const xRadius, yRadius: Integer): Boolean; overload;

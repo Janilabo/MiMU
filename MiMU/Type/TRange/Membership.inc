@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Contains(const x: Integer): Boolean; overload; 
 function Contains(const x: TRange): Boolean; overload;
 function Holds(const val: Integer): Boolean; overload;

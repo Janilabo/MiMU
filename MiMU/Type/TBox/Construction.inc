@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 constructor Create(const minX, minY, maxX, maxY: Integer); overload;
 constructor Create(const top, bottom: TPoint); overload;
 constructor Create(const valueX, valueY: Integer); overload;

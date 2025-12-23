@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Resize(const change: Integer): TBox;
 function ResizeVertically(const change: Integer): TBox; 
 function ResizeHorizontally(const change: Integer): TBox; 

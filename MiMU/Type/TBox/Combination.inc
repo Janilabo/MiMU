@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Envelope(const b: TBox): TBox;  
 function UnionX(const xCoord: Integer): TBox; 
 function Uniony(const yCoord: Integer): TBox; 

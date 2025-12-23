@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Even: Boolean; overload;
 function Odd: Boolean; overload;
 function Evens: Integer; overload;

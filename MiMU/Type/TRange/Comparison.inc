@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function CompareSize(const target: TRange): Integer;
 class function CompareSizeAscending(const A, B: TRange): Integer; static;
 class function CompareSizeDescending(const A, B: TRange): Integer; static;

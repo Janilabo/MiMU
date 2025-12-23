@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload;	
 function Unzip: TPointArray; overload;
 function Unpack: TPointArray; overload;

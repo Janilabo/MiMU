@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function AsStr(const rReversed: Boolean = False): string; overload; 
 function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string;
 function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; 

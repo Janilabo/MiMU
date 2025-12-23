@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Direction: Integer; 
 function Orientation: Integer;
 function Signum: Integer;

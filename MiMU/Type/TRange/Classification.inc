@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Singular: Boolean; 
 function Atomic: Boolean; 
 function Plural: Boolean; 

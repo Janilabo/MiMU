@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 TSegment = record
   A, B: TPoint;
-  {$I TSegment.pph}
+  {$DEFINE METHODS}{$I TSegment.pph}{$UNDEF METHODS}
 end;
 {$I ../Type.inc}
 {$ENDIF}

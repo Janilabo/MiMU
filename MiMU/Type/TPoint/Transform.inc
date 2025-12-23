@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Reflected: TPoint; inline;
 function Flipped: TPoint; inline;
 {$ENDIF}

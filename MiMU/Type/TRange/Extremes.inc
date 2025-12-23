@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Lowest: Integer;  
 function Highest: Integer;
 function Minimum: Integer;	

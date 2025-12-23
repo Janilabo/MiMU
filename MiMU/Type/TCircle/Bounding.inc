@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Bounds: TBox; 
 function Boundaries: TBox; 
 function BoundingBox: TBox; 

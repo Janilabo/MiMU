@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Overlap(const b: TBox): Boolean; inline;
 function Intersect(const b: TBox): TBox; overload; 
 function Intersect(const b: TBox; var iArea: TBox): Boolean; overload;

@@ -13,8 +13,8 @@ public
 end;
 TBox = record
   X1, Y1, X2, Y2: Integer;
-  {$I TBox.pph}
-  function GetEnumerator: TBoxEnumerator; 
+  {$DEFINE METHODS}{$I TBox.pph}{$UNDEF METHODS}
+  function GetEnumerator: TBoxEnumerator;  
 end;
 {$I ../Type.inc}
 {$ENDIF}

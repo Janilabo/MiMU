@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Inside(const target: TBox): Boolean; overload; 
 function Contains(const pt: TPoint): Boolean; overload; 
 function Contains(const b: TBox): Boolean; overload;

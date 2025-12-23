@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Pivot: Integer; 
 function Mean: Double; overload;
 function Medium: Double; overload;

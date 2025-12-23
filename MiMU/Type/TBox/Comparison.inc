@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Equal(const b: TBox): Boolean; inline;
 function Similar(const b: TBox; const maxWDiff, maxHDiff: Integer): Boolean; overload; 
 function Similar(const b: TBox; const diff: Integer): Boolean; overload;

@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function IDs: TIntegerArray; overload; 
 function IDs(const p: TPoint): Integer; overload; 
 function IDs(const p: TPointArray): TIntegerArray; overload;

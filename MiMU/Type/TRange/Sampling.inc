@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
 function Mixed(const mixings: Integer = 1): TIntegerArray; 
 function Shake(const shakes: Integer = 1): TIntegerArray; 

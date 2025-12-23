@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Any: TPoint; 
 function Some: TPointArray; overload; 
 function Some(const amount: Integer): TPointArray; overload;

@@ -1,4 +1,4 @@
-{$IFDEF TYPES}
+{$IFDEF METHODS}
 function Singular: Boolean; 
 function IsPoint: Boolean; 
 function IsHorizontalLine: Boolean; 
