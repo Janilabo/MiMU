@@ -39,7 +39,7 @@ TRangeHelper = type helper for TRange
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
 {$I ../Type.inc}
 {$I TRange.pph}
 {$ENDIF}

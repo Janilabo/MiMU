@@ -11,7 +11,7 @@ TInt64Helper = type helper for Int64
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
 {$I ../Type.inc}
 {$I Int64.pph}
 {$ENDIF}

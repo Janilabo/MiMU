@@ -10,7 +10,7 @@ function Oversize(const limit: Integer): Boolean; inline;
 function Undersize(const limit: Integer): Boolean; inline;
 {$ENDIF}
 
-{$IFDEF METHODS}
+{$IFDEF FUNCTIONS}
 function Comparison(const A, B: Integer): Integer; overload;
 {$ENDIF}
 

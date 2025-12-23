@@ -13,7 +13,7 @@ function Init(const val: Integer = 0): TRange; overload;
 function Create: TRange; overload;
 {$ENDIF}
 
-{$IFDEF METHODS}
+{$IFDEF FUNCTIONS}
 function Range(const rStart, rStop: Integer): TRange; overload; inline;
 function Range(const val: Integer = 0): TRange; overload; inline;
 {$ENDIF}

@@ -9,7 +9,7 @@ function Build(const pX, pY: Integer): TPoint;  inline;
 function Create: TPoint; overload;
 {$ENDIF}
 
-{$IFDEF METHODS}
+{$IFDEF FUNCTIONS}
 function Point(const pX, pY: Integer): TPoint; overload; inline;
 function Point(const val: Integer = 0): TPoint; overload; inline;
 {$ENDIF}

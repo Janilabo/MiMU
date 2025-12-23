@@ -1,4 +1,4 @@
-{$IFDEF METHODS}
+{$IFDEF FUNCTIONS}
 function RandomB: Boolean; overload; 
 function RandomBit: Byte; overload; 
 function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload; 

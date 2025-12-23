@@ -16,7 +16,7 @@ function Positions(const target: MArray): TIntegerArray; overload;
 function Locations(const target: MArray): TIntegerArray; overload;
 {$ENDIF}
 
-{$IFDEF METHODS}
+{$IFDEF FUNCTIONS}
 function IfThen(const state: Boolean; const sTrue, sFalse: MType): MType; overload; inline;
 function Swap(var A, B: MType): Boolean; overload; inline;
 {$IFDEF Sortable}

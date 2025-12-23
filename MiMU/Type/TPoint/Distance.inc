@@ -15,7 +15,7 @@ function Octile(const target: TPoint): Double; overload;
 function Dist(const target: TPoint; const metric: TMetrics = dmEuclidean): Double; overload;
 {$ENDIF}
 
-{$IFDEF METHODS}
+{$IFDEF FUNCTIONS}
 function HypotEuclidean(const A, B: TPoint): Double; overload;
 function Euclidean(const A, B: TPoint): Double; overload;
 function Euclidean2(const A, B: TPoint): Double; overload;

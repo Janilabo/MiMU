@@ -20,7 +20,7 @@ operator =(const a, b: TCircle): Boolean;
 operator <>(const a, b: TCircle): Boolean;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
 {$I ../Type.inc}
 {$I TCircle.pph}
 {$ENDIF}

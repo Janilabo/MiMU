@@ -1,4 +1,4 @@
-{$IFDEF METHODS}
+{$IFDEF FUNCTIONS}
 function XORSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
 function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
 

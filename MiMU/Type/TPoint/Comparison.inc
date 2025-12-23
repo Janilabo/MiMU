@@ -24,7 +24,7 @@ function CompY(const target: TPoint): Integer;
 function Sign(const target: TPoint): Integer; overload; inline;
 {$ENDIF}
 
-{$IFDEF METHODS}
+{$IFDEF FUNCTIONS}
 function Min(const A, B: TPoint): TPoint; overload;
 function Max(const A, B: TPoint): TPoint; overload;
 function Compare(const A, B: TPoint): Integer; overload;

@@ -19,7 +19,7 @@ operator =(const a, b: TConnection): Boolean;
 operator <>(const a, b: TConnection): Boolean;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
 {$I ../Type.inc}
 {$I TConnection.pph}
 {$ENDIF}

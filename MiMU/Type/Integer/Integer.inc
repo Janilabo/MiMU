@@ -11,7 +11,7 @@ TIntegerHelper = type helper for Integer
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
 {$I ../Type.inc}
 {$I Integer.pph}
 {$ENDIF}

@@ -43,7 +43,7 @@ operator <>(const a, b: TBox): Boolean;
 operator in(const P: TPoint; const B: TBox): Boolean;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
 {$I ../Type.inc}
 {$I TBox.pph}
 {$ENDIF}

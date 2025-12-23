@@ -18,7 +18,7 @@ operator =(const a, b: TTriangle): Boolean;
 operator <>(const a, b: TTriangle): Boolean;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
 {$I ../Type.inc}
 {$ENDIF}
 

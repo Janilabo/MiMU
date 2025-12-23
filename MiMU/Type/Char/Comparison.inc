@@ -6,7 +6,7 @@ function Ascending(const target: Char): Boolean; inline;
 function Descending(const target: Char): Boolean; inline;
 {$ENDIF}
 
-{$IFDEF METHODS}
+{$IFDEF FUNCTIONS}
 function Max(const a, b: Char): Char; overload; inline;
 function Min(const a, b: Char): Char; overload; inline;
 function Comparison(const A, B: Char): Integer; overload;

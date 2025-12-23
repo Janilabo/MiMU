@@ -20,7 +20,7 @@ operator =(const a, b: TSegment): Boolean;
 operator <>(const a, b: TSegment): Boolean;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
 {$I ../Type.inc}
 {$I TSegment.pph}
 {$ENDIF}

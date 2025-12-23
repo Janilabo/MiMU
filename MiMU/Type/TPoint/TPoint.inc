@@ -41,7 +41,7 @@ TPointHelper = type helper for TPoint
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
 {$I ../Type.inc}
 {$I TPoint.pph}
 {$ENDIF}

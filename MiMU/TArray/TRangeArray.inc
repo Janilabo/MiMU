@@ -21,7 +21,7 @@ TRangeArrayHelper = type helper for TRangeArray
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS) OR DEFINED(CLASSES)}
+{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
 {$I ./Core.inc}
 {$IFNDEF CLASSES}
 {$DEFINE FField := start}{$I ./Configuration/F.inc}

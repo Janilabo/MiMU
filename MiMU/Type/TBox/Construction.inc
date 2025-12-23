@@ -25,7 +25,7 @@ function Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload
 function Create: TBox; overload;
 {$ENDIF}
 
-{$IFDEF METHODS}
+{$IFDEF FUNCTIONS}
 function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
 function Box(const val: Integer = 0): TBox; overload; inline;
 {$ENDIF}
