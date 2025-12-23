@@ -16,11 +16,6 @@ TRange = record
   {$I TRange.pph}
 end;
 {$I ../Type.inc}
-_TRange = class
-public
-  class function Create(const rStart, rStop: Integer): TRange; overload; 
-  class function Create(const value: Integer = 0): TRange; overload; 
-end;
 {$ENDIF}
 
 {$IFDEF OPERATORS}
@@ -150,27 +145,6 @@ end;
 function TRange.GetEnumerator: TRangeEnumerator;
 begin
   Result.Init(start, stop);
-end;
-
-{==============================================================================]
-  <Create>
-  @action: Creates TPoint using pX, pY 
-  @note: function version
-[==============================================================================}
-class function _TRange.Create(const rStart, rStop: Integer): TRange; overload;
-begin
-  Result.start := rStart;
-  Result.stop := rStop;
-end;
-
-{==============================================================================]
-  <Create>
-  @action: Creates TPoint using value 
-  @note: function version
-[==============================================================================}
-class function _TRange.Create(const value: Integer = 0): TRange; overload;
-begin
-  Result := _TRange.Create(value, value);
 end;
 {$ENDIF}
 

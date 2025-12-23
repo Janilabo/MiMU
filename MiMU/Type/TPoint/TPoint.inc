@@ -10,11 +10,6 @@ TPoint = record
 end;
 {$I ../Type.inc}
 PPoint = ^TPoint;
-_TPoint = class
-public
-  class function Create(const pX, pY: Integer): TPoint; overload; 
-  class function Create(const value: Integer = 0): TPoint; overload; 
-end;
 TMetrics = (dmHypotEuclidean, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev, dmMinkowski, dmMaxMinChebyshev, dmOctile);
 TDistance = function(const A, B: TPoint): Double;
 {$ENDIF}
@@ -182,27 +177,6 @@ begin
     for i := Self.X to xGoal do
       Result[r.Increase] := Point(i, Self.Y);
   end;
-end;
-
-{==============================================================================]
-  <Create>
-  @action: Creates TPoint using pX, pY 
-  @note: function version
-[==============================================================================}
-class function _TPoint.Create(const pX, pY: Integer): TPoint; overload;
-begin
-  Result.X := pX;
-  Result.Y := pY;
-end;
-
-{==============================================================================]
-  <Create>
-  @action: Creates TPoint using value 
-  @note: function version
-[==============================================================================}
-class function _TPoint.Create(const value: Integer = 0): TPoint; overload;
-begin
-  Result := _TPoint.Create(value, value);
 end;
 
 {==============================================================================]

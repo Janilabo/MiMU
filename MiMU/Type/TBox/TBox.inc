@@ -17,14 +17,6 @@ TBox = record
   function GetEnumerator: TBoxEnumerator; 
 end;
 {$I ../Type.inc}
-_TBox = class
-public
-  class function Create(const minX, minY, maxX, maxY: Integer): TBox; overload; 
-  class function Create(const top, bottom: TPoint): TBox; overload; 
-  class function Create(const valueX, valueY: Integer): TBox; overload; 
-  class function Create(const target: TPoint): TBox; overload; 
-  class function Create(const value: Integer = 0): TBox; overload; 
-end;
 {$ENDIF}
 
 {$IFDEF HELPERS}
@@ -134,59 +126,6 @@ end;
 function TBox.GetEnumerator: TBoxEnumerator;
 begin
   Result.Init(X1, Y1, X2, Y2);
-end;
-
-{==============================================================================]
-  <Create>
-  @action: Creates TBox using minX, minY, maxX, maxY 
-  @note: function version
-[==============================================================================}
-class function _TBox.Create(const minX, minY, maxX, maxY: Integer): TBox; overload;
-begin
-  Result.X1 := minX;
-  Result.Y1 := minY;
-  Result.X2 := maxX;
-  Result.Y2 := maxY;
-end;
-
-{==============================================================================]
-  <Create>
-  @action: Creates TBox using top and bottom TPoint (top contains minX,minY and bottom contains maxX,maxY) 
-  @note: Constructor.
-[==============================================================================}
-class function _TBox.Create(const top, bottom: TPoint): TBox; overload;
-begin
-  Result := _TBox.Create(top.X, top.Y, bottom.X, bottom.Y);
-end;
-
-{==============================================================================]
-  <Create>
-  @action: We simply build using  
-  @note: Function.
-[==============================================================================}
-class function _TBox.Create(const valueX, valueY: Integer): TBox; overload;
-begin
-  Result := _TBox.Create(valueX, valueY, valueX, valueY);
-end;
-
-{==============================================================================]
-  <Create>
-  @action: Creates TBox using target TPoint 
-  @note: Function.
-[==============================================================================}
-class function _TBox.Create(const target: TPoint): TBox; overload;
-begin
-  Result := _TBox.Create(target.X, target.Y, target.X, target.Y);
-end;
-
-{==============================================================================]
-  <Create>
-  @action: We simply build using value. 
-  @note: Constructor.
-[==============================================================================}
-class function _TBox.Create(const value: Integer = 0): TBox; overload;
-begin
-  Result := _TBox.Create(value, value, value, value);
 end;
 {$ENDIF}
 
