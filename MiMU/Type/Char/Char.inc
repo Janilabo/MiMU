@@ -7,13 +7,13 @@
 {$IFDEF HELPERS}
 TCharHelper = type helper for Char
   {$I ../Core.inc}
-  {$I ./Char.pph}
+  {$I Char.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I ../Core.inc}
-{$I ./Char.pph}
+{$I Char.pph}
 {$ENDIF}
 
 {$UNDEF Char}

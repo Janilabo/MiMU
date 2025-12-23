@@ -15,14 +15,6 @@ function MinLimit(const val: Integer): Integer;
 function MaxLimit(const val: Integer): Integer;
 {$ENDIF}
 
-{$IFDEF HELPERS}
-
-{$ENDIF}
-
-{$IFDEF METHODS}
-
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Clamp>

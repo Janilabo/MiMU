@@ -7,13 +7,13 @@
 {$IFDEF HELPERS}
 TBooleanHelper = type helper for Boolean
   {$I ../Core.inc}
-  {$I ./Boolean.pph}
+  {$I Boolean.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I ../Core.inc}
-{$I ./Boolean.pph}
+{$I Boolean.pph}
 {$ENDIF}
 
 {$UNDEF Boolean}

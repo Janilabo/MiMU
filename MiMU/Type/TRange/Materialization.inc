@@ -25,14 +25,6 @@ function Steps: TIntegerArray; overload;
 function Recursed: TIntegerArray; overload;
 {$ENDIF}
 
-{$IFDEF HELPERS}
-
-{$ENDIF}
-
-{$IFDEF METHODS}
-
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Digits>

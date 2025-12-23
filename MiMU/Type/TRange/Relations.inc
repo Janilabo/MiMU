@@ -19,14 +19,6 @@ function Distance: Integer; overload;
 function DistHausdorff(const b: TRange): Integer;
 {$ENDIF}
 
-{$IFDEF HELPERS}
-
-{$ENDIF}
-
-{$IFDEF METHODS}
-
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Overlapping>

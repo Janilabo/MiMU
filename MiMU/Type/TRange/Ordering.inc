@@ -11,14 +11,6 @@ function Descend: TRange;
 function Descended: TRange;
 {$ENDIF}
 
-{$IFDEF HELPERS}
-
-{$ENDIF}
-
-{$IFDEF METHODS}
-
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Sorted>

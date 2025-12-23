@@ -1,7 +1,3 @@
-{$IFDEF TYPES}
-
-{$ENDIF}
-
 {$IFDEF HELPERS}
 function Distribute(const parts: Integer): TRangeArray;
 function Partition(const size: Integer): TRangeArray;

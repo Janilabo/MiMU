@@ -19,14 +19,6 @@ function Dropping: Boolean;
 function Drops: Boolean; 
 {$ENDIF}
 
-{$IFDEF HELPERS}
-
-{$ENDIF}
-
-{$IFDEF METHODS}
-
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Singular>

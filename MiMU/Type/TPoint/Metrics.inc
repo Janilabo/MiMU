@@ -12,14 +12,6 @@ function HorizontalDist(const target: TPoint): Integer;
 function VerticalDist(const target: TPoint): Integer;
 {$ENDIF}
 
-{$IFDEF HELPERS}
-
-{$ENDIF}
-
-{$IFDEF METHODS}
-
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <DistX>

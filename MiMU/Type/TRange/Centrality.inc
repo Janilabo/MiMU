@@ -25,14 +25,6 @@ function Halfway: Integer; overload;
 function Halved: Integer; overload;
 {$ENDIF}
 
-{$IFDEF HELPERS}
-
-{$ENDIF}
-
-{$IFDEF METHODS}
-
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
  <Pivot>

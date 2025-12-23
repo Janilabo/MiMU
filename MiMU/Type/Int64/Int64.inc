@@ -7,13 +7,13 @@
 {$IFDEF HELPERS}
 TInt64Helper = type helper for Int64
   {$I ../Core.inc} 
-  {$I ./Int64.pph}
+  {$I Int64.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I ../Core.inc}
-{$I ./Int64.pph}
+{$I Int64.pph}
 {$ENDIF}
 
 {$UNDEF Int64}

@@ -18,14 +18,6 @@ function Lacks(const x: Integer): Boolean; inline;
 function Outside(const x: Integer): Boolean; inline;
 {$ENDIF}
 
-{$IFDEF HELPERS}
-
-{$ENDIF}
-
-{$IFDEF METHODS}
-
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Contains>

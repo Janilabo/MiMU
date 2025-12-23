@@ -7,13 +7,13 @@
 {$IFDEF HELPERS}
 TStringHelper = type helper for string
   {$I ../Core.inc}
-  {$I ./String.pph}
+  {$I String.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I ../Core.inc}
-{$I ./String.pph}
+{$I String.pph}
 {$ENDIF}
 
 {$UNDEF string}

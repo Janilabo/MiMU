@@ -11,10 +11,6 @@ function Near(const target: TPoint; const radius: Double; const distFunc: TDista
 function Near(const target: TPoint; const radius: Double; const metric: TMetrics): Boolean; overload;
 {$ENDIF}
 
-{$IFDEF METHODS}
-
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Within>

@@ -1,15 +1,7 @@
-{$IFDEF TYPES}
-
-{$ENDIF}
-
 {$IFDEF HELPERS}
 function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray;
 function Row(const cells: Integer; const space: Integer = 0): TPointArray;
 function Column(const cells: Integer; const space: Integer = 0): TPointArray;
-{$ENDIF}
-
-{$IFDEF METHODS}
-
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

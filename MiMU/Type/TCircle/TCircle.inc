@@ -4,7 +4,7 @@
 TCircle = record
   Center: TPoint;
   Radius: Double; 
-  {$I ./TCircle.pph}
+  {$I TCircle.pph}
 end;
 {$I ../Core.inc}
 {$ENDIF}
@@ -22,7 +22,7 @@ operator <>(const a, b: TCircle): Boolean;
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I ../Core.inc}
-{$I ./TCircle.pph}
+{$I TCircle.pph}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

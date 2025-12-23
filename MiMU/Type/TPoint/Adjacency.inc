@@ -15,10 +15,6 @@ function Neighbors(const adjacency8: Boolean = True): TPointArray; overload;
 procedure Neighbors(var adj: TPointArray); overload;
 {$ENDIF}
 
-{$IFDEF METHODS}
-
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Surrounding>

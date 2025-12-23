@@ -7,14 +7,7 @@ function Normalize: TRange;
 function Normalized: TRange; 
 function MinMax: TRange; overload;
 function MaxMin: TRange; overload;
-{$ENDIF}
-
-{$IFDEF HELPERS}
-
-{$ENDIF}
-
-{$IFDEF METHODS}
-
+function Grab: TRange;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -111,5 +104,15 @@ begin
   if (Self.start > Self.stop) then
     Exit(Self);
   Result.Create(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <Grab>
+  @action: Returns TRange with range, swaps range.stop and range.start if they are in reversed order.
+  @note: None.
+[==============================================================================}
+function TRange.Grab: TRange;
+begin
+  Result := IfThen(Self.Descending, Result.Create(Self.stop, Self.start), Self);
 end;
 {$ENDIF}

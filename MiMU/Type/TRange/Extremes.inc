@@ -17,14 +17,6 @@ function Bottom: Integer; overload;
 function Top: Integer; overload;
 {$ENDIF}
 
-{$IFDEF HELPERS}
-
-{$ENDIF}
-
-{$IFDEF METHODS}
-
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Highest>

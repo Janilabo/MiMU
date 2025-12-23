@@ -11,14 +11,6 @@ function Evenz: TIntegerArray; overload;
 function Oddz: TIntegerArray; overload;
 {$ENDIF}
 
-{$IFDEF HELPERS}
-
-{$ENDIF}
-
-{$IFDEF METHODS}
-
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Even>

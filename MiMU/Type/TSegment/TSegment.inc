@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 TSegment = record
   A, B: TPoint;
-  {$I ./TSegment.pph}
+  {$I TSegment.pph}
 end;
 {$I ../Core.inc}
 {$ENDIF}
@@ -11,7 +11,7 @@ end;
 {$IFDEF HELPERS}
 TSegmentHelper = type helper for TSegment
   {$I ../Core.inc}
-  {$I ./TSegment.pph}
+  {$I TSegment.pph}
 end;
 {$ENDIF}
 
@@ -22,7 +22,7 @@ operator <>(const a, b: TSegment): Boolean;
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I ../Core.inc}
-{$I ./TSegment.pph}
+{$I TSegment.pph}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

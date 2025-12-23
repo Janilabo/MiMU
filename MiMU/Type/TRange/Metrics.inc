@@ -18,14 +18,12 @@ function Difference: Integer;
 function Diff: Integer;
 function Magnitude: Integer; 
 function Deficit: Integer;
-{$ENDIF}
-
-{$IFDEF HELPERS}
-
-{$ENDIF}
-
-{$IFDEF METHODS}
-
+function Sum: Int64; 
+function Summation: Int64; 
+function Total: Int64;
+function Radius: Integer; overload; 
+function Rad: Integer; overload; 
+function Radiar: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -245,5 +243,82 @@ end;
 function TRange.Deficit: Integer;
 begin
   Result := (Min(Self.start, Self.stop) - Max(Self.start, Self.stop));
+end;
+
+{==============================================================================]
+  <Sum>
+  @action: Returns the sum of all TRange values (start..stop)
+  @note: None
+[==============================================================================}
+function TRange.Sum: Int64;
+var
+  a, b: Int64;
+begin
+  a := Min(Self.start, Self.stop);
+  b := Max(Self.start, Self.stop);
+  Result := ((((b - a) + 1) * (a + b)) div 2);
+end;
+
+{==============================================================================]
+  <Summation>
+  @action: Returns the sum of all TRange values (start..stop)
+  @note: None
+[==============================================================================}
+function TRange.Summation: Int64;
+var
+  a, b, c, s, n: Int64;
+begin
+  a := Min(Self.start, Self.stop);
+  b := Max(Self.start, Self.stop);
+  n := ((b - a) + 1);
+  s := (a + b);
+  c := (s div 2);
+  Result := (n * c);
+  if ((s and 1) = 1) then
+    Result := (Result + (n div 2));
+end;
+
+{==============================================================================]
+  <Total>
+  @action: Returns the sum of all TRange values (start..stop)
+  @note: None
+[==============================================================================}
+function TRange.Total: Int64;
+begin
+  if Self.Descending then
+    Result := (((Int64(Self.start) * (Self.start + 1)) div 2) - ((Int64(Self.stop - 1) * Self.stop) div 2))
+  else
+    Result := (((Int64(Self.stop) * (Self.stop + 1)) div 2) - ((Int64(Self.start - 1) * Self.start) div 2));
+end;
+
+{==============================================================================]
+  <Radius>
+  @action: Returns half the total span (distance) between Start and Stop.
+  @note: Equivalent to (RangeLength / 2); independent of which value is greater.
+[==============================================================================}
+function TRange.Radius: Integer; overload;
+begin
+  Result := ((Self.Maximum - Self.Minimum) div 2);
+end;
+
+{==============================================================================]
+  <Rad>
+  @action: Returns the half-length (radius) of the range as an integer value.
+  @note: Computed as Abs(Stop - Start) shr 1; equivalent to (|Stop - Start| div 2).
+[==============================================================================}
+function TRange.Rad: Integer; overload;
+begin
+  Result := (Abs(Self.stop - Self.start) shr 1);
+end;
+
+{==============================================================================]
+  <Radiar>
+  @action: Returns half the absolute distance between Start and Stop, rounded to the nearest integer.
+  @note: Computed as Round(Abs(Stop - Start) * 0.5). Useful when a midpoint-to-edge distance is needed
+         and rounding is preferred over truncation. Order of Start and Stop does not matter.
+[==============================================================================}
+function TRange.Radiar: Integer; overload;
+begin
+  Result := Round(Abs(Self.stop - Self.start) * 0.5);
 end;
 {$ENDIF}

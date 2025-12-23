@@ -13,7 +13,7 @@ public
 end;
 TBox = record
   X1, Y1, X2, Y2: Integer;
-  {$I ./TBox.pph}
+  {$I TBox.pph}
   function GetEnumerator: TBoxEnumerator; 
 end;
 {$I ../Core.inc}
@@ -30,7 +30,7 @@ end;
 {$IFDEF HELPERS}
 TBoxHelper = type helper for TBox
   {$I ../Core.inc}
-  {$I ./TBox.pph}
+  {$I TBox.pph}
 end;
 {$ENDIF}
 
@@ -45,7 +45,7 @@ operator in(const P: TPoint; const B: TBox): Boolean;
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I ../Core.inc}
-{$I ./TBox.pph}
+{$I TBox.pph}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

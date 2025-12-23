@@ -7,7 +7,6 @@ function Union(const b: TBox): TBox; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-
 {==============================================================================]
   <Envelope>
   @action: Bounds 2 boxes (a and b) to 1 box.

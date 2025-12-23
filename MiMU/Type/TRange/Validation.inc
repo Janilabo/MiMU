@@ -5,14 +5,6 @@ function Uniform(const val: Integer): Boolean; overload;
 function Uniform: Boolean; overload;
 {$ENDIF}
 
-{$IFDEF HELPERS}
-
-{$ENDIF}
-
-{$IFDEF METHODS}
-
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Exceeds>

@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 TConnection = record
   id1, id2: Integer;
-  {$I ./TConnection.pph}
+  {$I TConnection.pph}
 end;
 {$I ../Core.inc}
 {$ENDIF}
@@ -21,7 +21,7 @@ operator <>(const a, b: TConnection): Boolean;
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(METHODS)}
 {$I ../Core.inc}
-{$I ./TConnection.pph}
+{$I TConnection.pph}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

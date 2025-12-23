@@ -68,6 +68,18 @@ begin
 end;
 
 {==============================================================================]
+  <Create>
+  @action: TRange 0..0.
+  @note: None.
+[==============================================================================}
+function TRangeHelper.Create: TRange;
+begin
+  Self.start := 0;
+  Self.stop := 0;
+  Result := Self;
+end;
+
+{==============================================================================]
   <Construct>
   @action: Constructs TRange with rStart and rStop.
   @note: None.
