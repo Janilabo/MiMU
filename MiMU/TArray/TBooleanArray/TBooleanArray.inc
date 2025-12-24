@@ -1,4 +1,4 @@
-{$DEFINE Boolean}{$I ../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE Boolean}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
 TBA = class
@@ -8,19 +8,8 @@ end;
 
 {$IFDEF HELPERS}
 TBooleanArrayHelper = type helper for TBooleanArray
-  {$I TArray.inc}
-  function Select(const sTrue, sFalse: Integer): TIntegerArray; overload;
-  function Select(const sTrue, sFalse: Double): TDoubleArray; overload;
-  function Select(const sTrue, sFalse: string): TStringArray; overload;
-  function Select(const sTrue, sFalse: Char): TCharArray; overload;
-  function Select(const sTrue, sFalse: Boolean): TBooleanArray; overload;
-  function Select(const sTrue, sFalse: TPoint): TPointArray; overload;
-  function Select(const sTrue, sFalse: TBox): TBoxArray; overload;
-  function Select(const sTrue, sFalse: TRange): TRangeArray; overload;
-  function Bits: Integer;
-  function Bitify: Integer;
-  function ToBits: Integer;
-  function Digits: TIntegerArray; overload;
+  {$I ../TArray.inc}
+  {$I TBooleanArray.pph}
   function Falsed: Boolean; overload;
   function Falseless: Boolean; overload;
   function Falseless(const maxFalse: Integer): Boolean; overload;
@@ -28,11 +17,6 @@ TBooleanArrayHelper = type helper for TBooleanArray
   function Falses: TIntegerArray; overload;
   function Falsesome: Boolean; overload;
   function Falsesome(const minFalse: Integer): Boolean; overload;
-  function Str(const separator: string; const strTrue: string = 'True'; strFalse: string = 'False'): string; overload;
-  function Str: string; overload;
-  function Text(const strTrue, strFalse, separator: string): string; overload;
-  function Text(const strTrue: string = 'True'; strFalse: string = 'False'): string; overload;
-  function TIA(const valTrue: Integer = 1; const valFalse: Integer = 0): TIntegerArray; overload;
   function Toggle: TBooleanArray; overload;
   function Trued: Boolean; overload;
   function Trueless: Boolean; overload;
@@ -42,9 +26,6 @@ TBooleanArrayHelper = type helper for TBooleanArray
   function Truesome: Boolean; overload;
   function Truesome(const minTrue: Integer): Boolean; overload;
   function Opposite: TBooleanArray; overload;
-  function BinaryStr: string;
-  function BinaryDigits: TIntegerArray;
-  function Binary: string;
   function Reinit: Integer; overload;
   function Occupancy(const val: Boolean = True): Double; overload;
   function Attach(const items: TBooleanArray): Integer; overload;
@@ -53,84 +34,11 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
-{$I TArray.inc}
+{$I ../TArray.inc}
+{$I TBooleanArray.pph}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Select>
-  @action: IfThen method for TBooleanArray.
-  @note: [True, False, True] => 5.
-[==============================================================================}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: Integer): TIntegerArray; overload; {$DEFINE Skeleton_Select2}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: Double): TDoubleArray; overload; {$DEFINE Skeleton_Select2}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: string): TStringArray; overload; {$DEFINE Skeleton_Select2}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: Char): TCharArray; overload; {$DEFINE Skeleton_Select2}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: Boolean): TBooleanArray; overload; {$DEFINE Skeleton_Select2}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TPoint): TPointArray; overload; {$DEFINE Skeleton_Select2}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TBox): TBoxArray; overload; {$DEFINE Skeleton_Select2}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Select2}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TRange): TRangeArray; overload; {$DEFINE Skeleton_Select2}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Select2}
-
-{==============================================================================]
-  <Bitify>
-  @action: Returns TBooleanArray as bits.
-  @note: [True, False, True] => 5.
-[==============================================================================}
-function TBooleanArrayHelper.Bitify: Integer;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-  begin
-    Result := (Result shl 1);
-    if Self[i] then
-      Inc(Result);
-  end;
-end;
-
-{==============================================================================]
-  <Bits>
-  @action: Returns TBooleanArray as bits.
-  @note: [True, False, True] => 5.
-[==============================================================================}
-function TBooleanArrayHelper.Bits: Integer;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-    Result := ((Result shl 1) or Self[i].Bit);
-end;
-
-{==============================================================================]
-  <ToBits>
-  @action: Returns TBooleanArray as bits.
-  @note: [True, False, True] => 5.
-[==============================================================================}
-function TBooleanArrayHelper.ToBits: Integer;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-    Result := ((Result shl 1) or Byte(Self[i]));
-end;
-
-{==============================================================================]
-  <Digits>
-  @action: Returns TBooleanArray as Integers.
-  @note: [True, False] => [1, 0].
-[==============================================================================}
-function TBooleanArrayHelper.Digits: TIntegerArray; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
-    Result[i] := Ord(Self[i]);
-end;
-
 {==============================================================================]
   <Falsed>
   @action: Returns true if ALL values in arr are False.
@@ -246,72 +154,7 @@ begin
   Result := False;
 end;
 
-{==============================================================================]
-  <Str>
-  @action: Returns TBooleanArray as string.
-  @note: Supports custom separator & True / False strings.
-[==============================================================================}
-function TBooleanArrayHelper.Str(const separator: string; const strTrue: string = 'True'; strFalse: string = 'False'): string; overload;
-var
-  i: Integer;
-begin
-  Result := '[';
-  for i := 0 to High(Self) do
-    if Self[i] then
-      Result := (Result + strTrue + separator)
-    else
-      Result := (Result + strFalse + separator);
-  if not (separator = '') then
-    SetLength(Result, (System.Length(Result) - System.Length(separator)));
-  Result := (Result + ']');
-end;
 
-function TBooleanArrayHelper.Str: string; overload;
-begin
-  Result := Self.Str(', ');
-end;
-
-{==============================================================================]
-  <Text>
-  @action: Returns TBooleanArray as string.
-  @note: Supports custom separator & True / False strings.
-[==============================================================================}
-function TBooleanArrayHelper.Text(const strTrue, strFalse, separator: string): string; overload;
-var
-  i: Integer;
-begin
-  Result := '[';
-  for i := 0 to High(Self) do
-    if Self[i] then
-      Result := (Result + strTrue + separator)
-    else
-      Result := (Result + strFalse + separator);
-  if not (separator = '') then
-    SetLength(Result, (System.Length(Result) - System.Length(separator)));
-  Result := (Result + ']');
-end;
-
-function TBooleanArrayHelper.Text(const strTrue: string = 'True'; strFalse: string = 'False'): string; overload;
-begin
-  Result := Self.Text(strTrue, strFalse, ', ');
-end;
-
-{==============================================================================]
-  <TIA>
-  @action: Returns TBooleanArray as Integers.
-  @note: [True, False] => [1, 0].
-[==============================================================================}
-function TBooleanArrayHelper.TIA(const valTrue: Integer = 1; const valFalse: Integer = 0): TIntegerArray; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
-    if Self[i] then
-      Result[i] := valTrue
-    else
-      Result[i] := valFalse;
-end;
 
 {==============================================================================]
   <Toggle>
@@ -457,48 +300,6 @@ begin
       Result[i] := False
 	else
 	  Result[i] := True;
-end;
-
-{==============================================================================]
-  <BinaryStr>
-  @action: Returns binary string from Boolean Array
-  @note: [True, False] => '10' & [False, True] => '01'
-[==============================================================================}
-function TBooleanArrayHelper.BinaryStr: string;
-var
-  i: Integer;
-begin
-  Result := '';
-  for i := 0 to High(Self) do
-    Result := (Result + IfThen(Self[i], '1', '0'));  
-end;
-
-{==============================================================================]
-  <BinaryDigits>
-  @action: Returns binary digits from Boolean Array
-  @note: [True, False] => [1, 0] & [False, True] => [0, 1]
-[==============================================================================}
-function TBooleanArrayHelper.BinaryDigits: TIntegerArray;
-var
-  i: Integer;
-begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
-    Result[i] := IfThen(Self[i], 1, 0);  
-end;
-
-{==============================================================================]
-  <Binary>
-  @action: Returns binary string from Boolean Array
-  @note: [True, False] => '10' & [False, True] => '01'
-[==============================================================================}
-function TBooleanArrayHelper.Binary: string;
-var
-  i: Integer;
-begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
-    Result[i] := Self[i].Binary;  
 end;
 
 {==============================================================================]

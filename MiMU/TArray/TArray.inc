@@ -3,7 +3,7 @@
   {$I TDoubleArray.inc}
   {$I TStringArray.inc}
   {$I TCharArray.inc}
-  {$I TBooleanArray.inc}
+  {$I TBooleanArray/TBooleanArray.inc}
   {$I TPointArray.inc}
   {$I TRangeArray.inc}
   {$I TBoxArray.inc}
