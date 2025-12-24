@@ -1,4 +1,4 @@
-{$DEFINE Boolean}{$I ../Type/Defines.inc}
+{$DEFINE Boolean}{$I ../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
 TBA = class
@@ -8,7 +8,7 @@ end;
 
 {$IFDEF HELPERS}
 TBooleanArrayHelper = type helper for TBooleanArray
-  {$I ./Core.inc}
+  {$I TArray.inc}
   function Select(const sTrue, sFalse: Integer): TIntegerArray; overload;
   function Select(const sTrue, sFalse: Double): TDoubleArray; overload;
   function Select(const sTrue, sFalse: string): TStringArray; overload;
@@ -53,7 +53,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
-{$I ./Core.inc}
+{$I TArray.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -587,4 +587,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF Boolean}
+{$UNDEF BASE}{$UNDEF Boolean}

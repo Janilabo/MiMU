@@ -1,13 +1,13 @@
-{$DEFINE TConnection}{$I ../Type/Defines.inc}
+{$DEFINE TConnection}{$I ../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF HELPERS}
 TConnectionArrayHelper = type helper for TConnectionArray
-  {$I ./Core.inc}
+  {$I TArray.inc}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
-{$I ./Core.inc}
+{$I TArray.inc}
 {$ENDIF}
 
-{$UNDEF TConnection}
+{$UNDEF BASE}{$UNDEF TConnection}

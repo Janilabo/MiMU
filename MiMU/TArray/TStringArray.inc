@@ -1,8 +1,8 @@
-{$DEFINE string}{$I ../Type/Defines.inc}
+{$DEFINE string}{$I ../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF HELPERS}
 TStringArrayHelper = type helper for TStringArray
-  {$I ./Core.inc}
+  {$I TArray.inc}
   function Tally: Int64;
   function Concat: string;
   function Concatenate: string;
@@ -12,7 +12,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
-{$I ./Core.inc}
+{$I TArray.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -106,4 +106,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF string}
+{$UNDEF BASE}{$UNDEF string}

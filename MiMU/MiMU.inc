@@ -16,19 +16,7 @@ type
   TBinarySearch = class
   public
   {$ENDIF}
-  {$I TArray/TIntegerArray.inc}
-  {$I TArray/TDoubleArray.inc}
-  {$I TArray/TStringArray.inc}
-  {$I TArray/TCharArray.inc}
-  {$I TArray/TBooleanArray.inc}
-  {$I TArray/TPointArray.inc}
-  {$I TArray/TBoxArray.inc}
-  {$I TArray/TRangeArray.inc}
-  {$I TArray/TInt64Array.inc}
-  {$I TArray/TConnectionArray.inc}
-  {$I TArray/TCircleArray.inc}
-  {$I TArray/TTriangleArray.inc}
-  {$I TArray/TSegmentArray.inc}
+  {$I TArray/TArray.inc}
 {$ENDIF}
 
 {$IFNDEF T1D}

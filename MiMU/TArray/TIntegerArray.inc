@@ -1,4 +1,4 @@
-{$DEFINE Integer}{$I ../Type/Defines.inc}
+{$DEFINE Integer}{$I ../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
 TIA = class
@@ -13,7 +13,7 @@ end;
 
 {$IFDEF HELPERS}
 TIntegerArrayHelper = type helper for TIntegerArray
-  {$I ./Core.inc}
+  {$I TArray.inc}
   function Bounds: TRange; overload;
   function Bounds(var aSize: Integer): TRange; overload;
   function BRange: TRange; overload;
@@ -235,7 +235,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
-{$I ./Core.inc}
+{$I TArray.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -4524,4 +4524,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF Integer}
+{$UNDEF BASE}{$UNDEF Integer}

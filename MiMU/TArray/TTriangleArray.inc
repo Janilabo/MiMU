@@ -1,13 +1,13 @@
-{$DEFINE TTriangle}{$I ../Type/Defines.inc}
+{$DEFINE TTriangle}{$I ../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF HELPERS}
 TTriangleArrayHelper = type helper for TTriangleArray
-  {$I ./Core.inc}
+  {$I TArray.inc}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
-{$I ./Core.inc}
+{$I TArray.inc}
 {$ENDIF}
 
-{$UNDEF TTriangle}
+{$UNDEF BASE}{$UNDEF TTriangle}

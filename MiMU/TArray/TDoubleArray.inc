@@ -1,8 +1,8 @@
-{$DEFINE Double}{$I ../Type/Defines.inc}
+{$DEFINE Double}{$I ../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF HELPERS}
 TDoubleArrayHelper = type helper for TDoubleArray
-  {$I ./Core.inc}
+  {$I TArray.inc}
   function Reinit: Integer; overload;
   function Attach(const items: TDoubleArray): Integer; overload;
   function Embed(const items: TDoubleArray; const index: Integer = 2147483647): Integer; overload;
@@ -121,7 +121,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
-{$I ./Core.inc}
+{$I TArray.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1248,4 +1248,4 @@ function TDoubleArrayHelper.BinaryUniq(const oAscending: Boolean = True): Intege
 function TDoubleArrayHelper.BinaryUniqd(const oAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinaryUniqd}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_BinaryUniqd}
 {$ENDIF}
 
-{$UNDEF Double}
+{$UNDEF BASE}{$UNDEF Double}

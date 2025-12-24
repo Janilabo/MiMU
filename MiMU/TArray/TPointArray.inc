@@ -1,4 +1,4 @@
-{$DEFINE TPoint}{$I ../Type/Defines.inc}
+{$DEFINE TPoint}{$I ../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
 TPA = class
@@ -13,7 +13,7 @@ end;
 
 {$IFDEF HELPERS}
 TPointArrayHelper = type helper for TPointArray
-  {$I ./Core.inc}
+  {$I TArray.inc}
   function Binify(const xRadius, yRadius: Integer): T2DPointArray; overload;
   function Binify(const radius: Double; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
   function Binified(const xRadius, yRadius: Integer): T2DPointArray; overload;
@@ -236,10 +236,10 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
-{$I ./Core.inc}
+{$I TArray.inc}
 {$IFNDEF CLASSES}
-{$DEFINE FField := X}{$I ./Configuration/F.inc}
-{$DEFINE FField := Y}{$I ./Configuration/F.inc}
+{$DEFINE FField := X}{$I Configuration/F.inc}
+{$DEFINE FField := Y}{$I Configuration/F.inc}
 {$ENDIF}
 {$ENDIF}
 
@@ -8899,4 +8899,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF TPoint}
+{$UNDEF BASE}{$UNDEF TPoint}

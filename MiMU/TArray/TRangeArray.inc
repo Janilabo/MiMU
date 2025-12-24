@@ -1,8 +1,8 @@
-{$DEFINE TRange}{$I ../Type/Defines.inc}
+{$DEFINE TRange}{$I ../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF HELPERS}
 TRangeArrayHelper = type helper for TRangeArray
-  {$I ./Core.inc}
+  {$I TArray.inc}
   function Bounds: TRange; overload;
   function Range: TRange; overload;
   function TIA: TIntegerArray;
@@ -22,10 +22,10 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
-{$I ./Core.inc}
+{$I TArray.inc}
 {$IFNDEF CLASSES}
-{$DEFINE FField := start}{$I ./Configuration/F.inc}
-{$DEFINE FField := stop}{$I ./Configuration/F.inc}
+{$DEFINE FField := start}{$I Configuration/F.inc}
+{$DEFINE FField := stop}{$I Configuration/F.inc}
 {$ENDIF}
 {$ENDIF}
 
@@ -297,4 +297,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF TRange}
+{$UNDEF BASE}{$UNDEF TRange}
