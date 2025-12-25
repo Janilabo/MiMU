@@ -2,3 +2,9 @@
 {$I Bitwise.inc}
 {$I Conversion.inc}
 {$I Selection.inc}
+{$I Quantifier.inc}
+{$I Mutate.inc}
+{$I Transform.inc}
+{$I Reset.inc}
+{$I Metric.inc}
+{$I Search.inc}
