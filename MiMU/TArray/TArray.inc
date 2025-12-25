@@ -1,11 +1,11 @@
 {$IFNDEF BASE}
-  {$I TIntegerArray.inc}
+  {$I TIntegerArray/TIntegerArray.inc}
   {$I TDoubleArray/TDoubleArray.inc}
   {$I TStringArray/TStringArray.inc}
   {$I TCharArray/TCharArray.inc}
   {$I TBooleanArray/TBooleanArray.inc}
-  {$I TPointArray.inc}
-  {$I TRangeArray.inc}
+  {$I TPointArray/TPointArray.inc}
+  {$I TRangeArray/TRangeArray.inc}
   {$I TBoxArray/TBoxArray.inc}
   {$I TInt64Array/TInt64Array.inc}
   {$I TConnectionArray/TConnectionArray.inc}
