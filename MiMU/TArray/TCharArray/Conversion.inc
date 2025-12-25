@@ -1,22 +1,12 @@
-{$DEFINE Char}{$I ../Type/Defines.inc}{$DEFINE BASE}
-
 {$IFDEF HELPERS}
-TCharArrayHelper = type helper for TCharArray
-  {$I TArray.inc}
-  function Str: string;
-  function ToStr: string;
-  function Join: string; overload;
-  function Join(const glue: string): string; overload;
-  function Stringify: string; overload;
-  function Stringify(const glue: string): string; overload;
-  function Ordinals: TIntegerArray;
-  function Unduped: TCharArray;
-  function TSA: TStringArray;
-end;
-{$ENDIF}
-
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
-{$I TArray.inc}
+function Str: string;
+function ToStr: string;
+function Join: string; overload;
+function Join(const glue: string): string; overload;
+function Stringify: string; overload;
+function Stringify(const glue: string): string; overload;
+function Ordinals: TIntegerArray;
+function TSA: TStringArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -128,31 +118,6 @@ begin
 end;
 
 {==============================================================================]
-  <Unduped>
-  @action: Returns TCharArray with unique chars. 
-  @note: Works with ASCII.
-[==============================================================================}
-function TCharArrayHelper.Unduped: TCharArray;
-var
-  s: set of Char;
-  i, l: Integer;
-begin
-  if (Self.Size < 2) then
-    Exit(Self.Clone);
-  s := [];
-  l := 0;
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
-  begin
-    if (Self[i] in s) then
-      Continue;
-    Include(s, Self[i]);
-    Result[l.Increase] := Self[i];
-  end;
-  SetLength(Result, l);
-end;
-
-{==============================================================================]
   <TSA>
   @action: Returns TCharArray as TStringArray. 
   @note: None.
@@ -166,5 +131,3 @@ begin
     Result[i] := Self[i];
 end;
 {$ENDIF}
-
-{$UNDEF BASE}{$UNDEF Char}
