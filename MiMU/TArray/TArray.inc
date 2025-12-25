@@ -1,6 +1,6 @@
 {$IFNDEF BASE}
   {$I TIntegerArray.inc}
-  {$I TDoubleArray.inc}
+  {$I TDoubleArray/TDoubleArray.inc}
   {$I TStringArray/TStringArray.inc}
   {$I TCharArray/TCharArray.inc}
   {$I TBooleanArray/TBooleanArray.inc}
