@@ -24,8 +24,8 @@ end;
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
 {$I TArray.inc}
 {$IFNDEF CLASSES}
-{$DEFINE FField := start}{$I Configuration/F.inc}
-{$DEFINE FField := stop}{$I Configuration/F.inc}
+{$DEFINE FField := start}{$I F.inc}
+{$DEFINE FField := stop}{$I F.inc}
 {$ENDIF}
 {$ENDIF}
 

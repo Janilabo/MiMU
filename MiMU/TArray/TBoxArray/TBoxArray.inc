@@ -12,10 +12,10 @@ end;
 {$I ../TArray.inc}
 {$I TBoxArray.pph}
 {$IFNDEF CLASSES}
-{$DEFINE FField := X1}{$I ../Configuration/F.inc}
-{$DEFINE FField := Y1}{$I ../Configuration/F.inc}
-{$DEFINE FField := X2}{$I ../Configuration/F.inc}
-{$DEFINE FField := Y2}{$I ../Configuration/F.inc}
+{$DEFINE FField := X1}{$I ../F.inc}
+{$DEFINE FField := Y1}{$I ../F.inc}
+{$DEFINE FField := X2}{$I ../F.inc}
+{$DEFINE FField := Y2}{$I ../F.inc}
 {$ENDIF}
 {$ENDIF}
 

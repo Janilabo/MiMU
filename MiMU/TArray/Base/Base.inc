@@ -880,8 +880,8 @@ end;
          duplicate classes can exist if values repeat non-consecutively.
 		 Custom weight.
 [==============================================================================}
-function MArrayHelper.Classes(const weight: TIntegerArray): M2DArray; overload; var w: Integer; {$DEFINE Skeleton_Classes}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Classes}
-function MArrayHelper.Classes(const weight: TDoubleArray): M2DArray; overload; var w: Double; {$DEFINE Skeleton_Classes}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Classes}
+function MArrayHelper.Classes(const weight: TIntegerArray): M2DArray; overload; var w: Integer; {$DEFINE Skeleton_Classes}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classes}
+function MArrayHelper.Classes(const weight: TDoubleArray): M2DArray; overload; var w: Double; {$DEFINE Skeleton_Classes}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classes}
 
 {==============================================================================]
   <Classify>
@@ -924,8 +924,8 @@ end;
          duplicate classes can exist if values repeat non-consecutively.
 		 Custom weight.
 [==============================================================================}
-function MArrayHelper.Classify(const weight: TIntegerArray): M2DArray; overload; var w: Integer; {$DEFINE Skeleton_Classify}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Classify}
-function MArrayHelper.Classify(const weight: TDoubleArray): M2DArray; overload; var w: Double; {$DEFINE Skeleton_Classify}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Classify}
+function MArrayHelper.Classify(const weight: TIntegerArray): M2DArray; overload; var w: Integer; {$DEFINE Skeleton_Classify}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classify}
+function MArrayHelper.Classify(const weight: TDoubleArray): M2DArray; overload; var w: Double; {$DEFINE Skeleton_Classify}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classify}
 
 {==============================================================================]
   <Clear>
@@ -3003,8 +3003,8 @@ end;
   @action: Groups array arr to 2D array by items.
   @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
 [==============================================================================}
-function MArrayHelper.Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload; var w: TIntegerArray; {$DEFINE Skeleton_Group}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Group}
-function MArrayHelper.Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload; var w: TDoubleArray; {$DEFINE Skeleton_Group}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_Group}
+function MArrayHelper.Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload; var w: TIntegerArray; {$DEFINE Skeleton_Group}{$I ../Skeletons.inc}{$UNDEF Skeleton_Group}
+function MArrayHelper.Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload; var w: TDoubleArray; {$DEFINE Skeleton_Group}{$I ../Skeletons.inc}{$UNDEF Skeleton_Group}
 
 {==============================================================================]
   <Grouped>
@@ -5067,8 +5067,8 @@ end;
   @action: Returns arr sorted by weight, based on QuickSort algorithm.
   @note: Weight and arr must be the same length! Otherwise returns empty array.
 [==============================================================================}
-function MArrayHelper.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): MArray; overload; var w: Integer; {$DEFINE Skeleton_QuickSorted}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
-function MArrayHelper.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): MArray; overload; var w: Double; {$DEFINE Skeleton_QuickSorted}{$I ../Configuration/Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
+function MArrayHelper.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): MArray; overload; var w: Integer; {$DEFINE Skeleton_QuickSorted}{$I ../Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
+function MArrayHelper.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): MArray; overload; var w: Double; {$DEFINE Skeleton_QuickSorted}{$I ../Skeletons.inc}{$UNDEF Skeleton_QuickSorted}
 
 {==============================================================================]
   <Randomized>

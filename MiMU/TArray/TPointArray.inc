@@ -238,8 +238,8 @@ end;
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
 {$I TArray.inc}
 {$IFNDEF CLASSES}
-{$DEFINE FField := X}{$I Configuration/F.inc}
-{$DEFINE FField := Y}{$I Configuration/F.inc}
+{$DEFINE FField := X}{$I F.inc}
+{$DEFINE FField := Y}{$I F.inc}
 {$ENDIF}
 {$ENDIF}
 
@@ -7469,7 +7469,7 @@ begin
   end;
 end;
 
-function TPointArrayHelper.Pure(const allowed: TPointArray): Boolean; overload; var a: TPointArray; {$DEFINE Skeleton_Pure}{$I ./Configuration/Skeletons.inc}{$UNDEF Skeleton_Pure}
+function TPointArrayHelper.Pure(const allowed: TPointArray): Boolean; overload; var a: TPointArray; {$DEFINE Skeleton_Pure}{$I Skeletons.inc}{$UNDEF Skeleton_Pure}
 
 {==============================================================================]
   <BSort>
