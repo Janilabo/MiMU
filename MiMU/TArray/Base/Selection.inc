@@ -14,6 +14,7 @@ function FilterEvery(const X: Integer = 1; const index: Integer = 0): MArray; ov
 function FilterIDs(const forbidden: TIntegerArray): MArray; overload;
 function FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): MArray; overload;
 function Keep(const items: MArray; const index: Integer = 0): MArray; overload;
+function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -356,5 +357,32 @@ begin
     end;
     False: Result := Self.Copy;
   end;
+end;
+
+{==============================================================================]
+  <Reject>
+  @action: Returns a new array with elements from items excluded, up to and including the specified index.
+  @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
+         The default index filters the entire array.
+[==============================================================================}
+function MArrayHelper.Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
+var
+  i, l, m, c: Integer;
+begin
+  if (items.Empty or Self.Empty) then
+    Exit(Self.Copy);
+  l := Self.Length;
+  m := Min(index, (l - 1));
+  c := 0;
+  for i := 0 to m do
+    if not items.Contains(Self[i]) then
+      Inc(c);
+  SetLength(Result, (c + (l - (m + 1))));
+  c := 0;
+  for i := 0 to m do
+    if not items.Contains(Self[i]) then
+      Result[c.Increase] := Self[i];
+  for i := (m + 1) to (l - 1) do
+    Result[c.Increase] := Self[i];
 end;
 {$ENDIF}

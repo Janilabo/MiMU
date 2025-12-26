@@ -1,4 +1,10 @@
 {$IFDEF HELPERS}
+function Classes: M2DArray; overload;
+function Classes(const weight: TIntegerArray): M2DArray; overload;
+function Classes(const weight: TDoubleArray): M2DArray; overload;
+function Classify: M2DArray; overload;
+function Classify(const weight: TIntegerArray): M2DArray; overload;
+function Classify(const weight: TDoubleArray): M2DArray; overload;
 function Group: M2DArray; overload;
 function Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload;
 function Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload;
@@ -8,6 +14,90 @@ function Grouping(const groups: TIntegerArray): M2DArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Classes>
+  @action: Groups consecutive identical array items into sub-arrays (classes).
+  @note: Works on any array. Each run of identical values becomes a class; 
+         duplicate classes can exist if values repeat non-consecutively.
+[==============================================================================}
+function MArrayHelper.Classes: M2DArray; overload;
+var
+  i, g: Integer;
+  v: MType;
+begin
+  if Self.Empty then
+    Exit([]);
+  g := 0;
+  v := Self[0];
+  SetLength(Result, 1);
+  SetLength(Result[0], 0);
+  for i := 0 to High(Self) do
+  begin
+    if not (Self[i] = v) then
+    begin
+      v := Self[i];
+      SetLength(Result, (g.Increment + 1));
+      SetLength(Result[g], 0);
+    end;
+    SetLength(Result[g], (Result[g].Size + 1));
+    Result[g][High(Result[g])] := Self[i];
+  end;
+end;
+
+{==============================================================================]
+  <Classes>
+  @action: Groups consecutive identical array items into sub-arrays (classes).
+  @note: Works on any array. Each run of identical values becomes a class; 
+         duplicate classes can exist if values repeat non-consecutively.
+		 Custom weight.
+[==============================================================================}
+function MArrayHelper.Classes(const weight: TIntegerArray): M2DArray; overload; var w: Integer; {$DEFINE Skeleton_Classes}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classes}
+function MArrayHelper.Classes(const weight: TDoubleArray): M2DArray; overload; var w: Double; {$DEFINE Skeleton_Classes}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classes}
+
+{==============================================================================]
+  <Classify>
+  @action: Groups consecutive identical array items into sub-arrays (classes).
+  @note: Works on any array. Each run of identical values becomes a class; 
+         duplicate classes can exist if values repeat non-consecutively.
+[==============================================================================}
+function MArrayHelper.Classify: M2DArray; overload;
+var
+  i, h, g, l: Integer;
+begin
+  l := Self.Size;
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  SetLength(Result[0], l);
+  Result[0][0] := Self[0];
+  g := 0;
+  h := 0;
+  for i := 1 to High(Self) do
+  case (Self[i] = Result[g][0]) of
+    False:
+    begin
+      SetLength(Result[g], (h + 1));
+      Result[g][h] := Result[g][0];
+      h := 0;
+      SetLength(Result[g.Increment], (l - i));
+      Result[g][0] := Self[i];
+    end;
+	True: Result[g][h.Increase] := Self[i];
+  end;
+  SetLength(Result[g], (h + 1));
+  SetLength(Result, (g + 1));
+end;
+
+{==============================================================================]
+  <Classify>
+  @action: Groups consecutive identical array items into sub-arrays (classes).
+  @note: Works on any array. Each run of identical values becomes a class; 
+         duplicate classes can exist if values repeat non-consecutively.
+		 Custom weight.
+[==============================================================================}
+function MArrayHelper.Classify(const weight: TIntegerArray): M2DArray; overload; var w: Integer; {$DEFINE Skeleton_Classify}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classify}
+function MArrayHelper.Classify(const weight: TDoubleArray): M2DArray; overload; var w: Double; {$DEFINE Skeleton_Classify}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classify}
+
 {==============================================================================]
   <Group>
   @action: Groups array arr to 2D array by items.

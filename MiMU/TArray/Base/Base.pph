@@ -1,5 +1,14 @@
+{$I Add.inc}
 {$I Construction.inc}
 {$I Grouping.inc}
 {$I Indexing.inc}
+{$I Partition.inc}
+{$I Query.inc}
+{$I Remove.inc}
+{$I Reversal.inc}
+{$I Scanning.inc}
+{$I Search.inc}
 {$I Selection.inc}
 {$I Sort.inc}
+{$I Transform.inc}
+{$I Validation.inc}

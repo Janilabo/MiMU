@@ -1,171 +1,69 @@
 {$IFDEF HELPERS}
 {$I Base.pph}
-function Add(const item: MType; const duplicates: Boolean = True): MArray; overload;
-function Add(const items: MArray; const duplicates: Boolean = True): MArray; overload;
-function AllEqual: Boolean; overload;
-function AllOf(const candidates: MArray): Boolean; overload;
-function AllSame: Boolean; overload;
-function AllUnique: Boolean; overload;
+
 function Any(const null: MType): MType; overload;
-function Any: MType; overload;
-function AnyOf(const candidates: MArray): Boolean; overload;
-function Append(const item: MType; const duplicates: Boolean = True): MArray; overload;
-function Append(const items: MArray; const duplicates: Boolean = True): MArray; overload;
-function As2D(const rows, columns: Integer): M2DArray; overload;
-function As2D(const width: Integer): M2DArray; overload;
-function Backwards: MArray; overload;
+function Any: MType; overload;  
 function Blend(const items: MArray; const index: Integer = 2147483647): MArray; overload;
-function BuiltWith(const blocks: MArray): Boolean; overload;
-function MadeOf(const allowed: MArray): Boolean; overload;
-function FreeOf(const forbidden: MArray): Boolean; overload;
-function BuiltWithout(const forbidden: MArray): Boolean; overload;
-function Blit(const items: MArray; const index: Integer = 0): Integer; overload;
-function Classes: M2DArray; overload;
-function Classes(const weight: TIntegerArray): M2DArray; overload;
-function Classes(const weight: TDoubleArray): M2DArray; overload;
-function Classify: M2DArray; overload;
-function Classify(const weight: TIntegerArray): M2DArray; overload;
-function Classify(const weight: TDoubleArray): M2DArray; overload;
 function Clear: Boolean; overload;
 function Clone(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Clone(const ID: TIntegerArray): MArray; overload;
 function Cloned: MArray; overload;
-function Collated: M2DArray; overload;
 function Combine(const b: MArray): MArray; overload;
-function Components(const connections: TConnectionArray): M2DArray; overload;
 function Compact: Integer; overload;
 function Compacted: MArray; overload;
 function Compacted(const threshold: Integer): MArray; overload;
 function Compress: Integer; overload;
 function Compressed: MArray; overload;
 function Compressed(const threshold: Integer): MArray; overload;
-function Comprised(const items: MArray): Boolean; overload;
-function Constant(const item: MType): Boolean; overload;
-function Constant: Boolean; overload;
-function Contains(const item: MType; const index: Integer = 0): Boolean; overload;
-function Contains(const item: MType; const limit: TRange): Boolean; overload;
-function ContainsAtLeast(const item: MType; const limit: Integer): Boolean; overload;
-function ContainsAtMost(const item: MType; const limit: Integer): Boolean; overload;
 function Copied: MArray; overload;
 function Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Count(const item: MType): Integer; overload;
 function Count(const items: MArray): Integer; overload;
 function Deduplicated: MArray; overload;
-function Delete(const index: Integer = 0): MArray; overload;
-function Delete(const ID: TIntegerArray): MArray; overload;
-function Differ(const target: MArray): Boolean; overload;
 function Disordered: MArray; overload;
 function Distinct: Integer; overload;
-function Distincted: M2DArray; overload;
-function Distribute(const parts: Integer): M2DArray; overload;
 function Diversified: MArray; overload;
 function DiversifiedEx(const dAscending: Boolean = True): MArray; overload;
 function Domain: TRange; overload;
-function Drop(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
-function Dump(const items: MArray; const index: Integer = 0): MArray; overload;
 function Dupe: MArray; overload;
 function Duplicate(const xTimes: Integer = 1): MArray; overload;
 function Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): MArray; overload;
-function Emplace(const item: MType; const index: Integer = 0): Integer; overload;
-function Empty: Boolean; overload;
-function Equal(const target: MArray): Boolean; overload;
-function Erase(const item: MType; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
-function Erase(const item: MType; const all: Boolean): MArray; overload;
-function Erase(const items: MArray; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
-function Erase(const items: MArray; const all: Boolean): MArray; overload;
-function Exact(const items: MArray): Boolean; overload;
-function Excessive: Boolean; overload; 
 function Exch(const aIndex, bIndex: Integer): Boolean; overload;
 function Exchange(const aIndex, bIndex: Integer): Boolean; overload;
 function Exchange(var b: MArray): Integer; overload;
 function Exchange(const swaps: TConnectionArray): MArray; overload;
 function Exchanges(const target: MArray): TConnectionArray; overload;
-function Exists: Boolean; overload;
-function Extend(const item: MType): MArray; overload;
-function Extend(const items: MArray): MArray; overload;
-function Feed(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
 function Fill(const item: MType; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Fill(const items: MArray; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
-function Find(const ID: TRange; const item: MType): Integer; overload;
-function Find(const ID: TIntegerArray; const item: MType): Integer; overload;
-function Find(const ID: TRange; const items: MArray): Integer; overload;
-function Find(const ID: TIntegerArray; const items: MArray): Integer; overload;
-function First: Integer; overload;
-function First(const item: MType): Integer; overload;
-function First(const items: MArray): Integer; overload;
 function Fit: Integer; overload;
 function Fit(const aSize: Integer): Integer; overload;
 function Fit(const aBounds: TRange): Integer; overload;
-function Fits(const maxValue: Integer): Boolean; overload;
-function Fits(const target: TRange): Boolean; overload;
-function Flip: Boolean; overload;
 function Free: Integer; overload;
 function FromLeft(const count: Integer; const index: Integer = 2147483647): MArray; overload;
 function FromRight(const count: Integer; const index: Integer = 0): MArray; overload;
 function Get: MArray; overload;
 function Get(const ID: TIntegerArray): MArray; overload;
 function Get(const ID: TRange): MArray; overload;
-function GotAtLeast(const item: MType; const limit: Integer): Boolean; overload;
-function GotAtMost(const item: MType; const limit: Integer): Boolean; overload;
-function Got(const item: MType; const limit: TRange): Boolean; overload;
-function Grow(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
-function HasAtLeast(const item: MType; const limit: Integer): Boolean; overload;
-function HasAtMost(const item: MType; const limit: Integer): Boolean; overload;
-function Has(const item: MType; const limit: TRange): Boolean; overload;
-function Holds(const chain: MArray): Boolean; overload;
-function Homogeneous(const item: MType): Boolean; overload;
-function Homogeneous: Boolean; overload;
-function Includes(const item: MType; const index: Integer = 2147483647): Boolean; overload;
-function Inject(const items: MArray; const index: Integer = 2147483647): Integer; overload;
 function IntersectionCounted(const items: MArray): Integer; overload;
 function Kill: Integer; overload;
-function Last: Integer; overload;
-function Last(const item: MType): Integer; overload;
-function Last(const items: MArray): Integer; overload;
 function LeastCommon: MType; overload;
 function LeastFrequent: MType; overload;
 function Length: Integer; overload;
-function Loc(const item: MType; const index: Integer = 2147483647): Integer; overload;
-function Loc(const items: MArray; const index: Integer = 2147483647): Integer; overload;
-function Location(const item: MType; const index: Integer = 2147483647): Integer; overload;
-function Location(const items: MArray; const index: Integer = 2147483647): Integer; overload;
-function Locations(const item: MType; const index: Integer = 2147483647): TIntegerArray; overload;
-function Locations(const items: MArray; const index: Integer = 2147483647): TIntegerArray; overload;
-function Locations: TIntegerArray; overload;
 function Mix(const mixings: Integer = 1): Boolean; overload;
 function Mixed(const mixings: Integer = 1): MArray; overload;
 function MostCommon: MType; overload;
 function MostFrequent: MType; overload;
 function Movement(const moves: TConnectionArray): MArray; overload;
 function Movements(const target: MArray): TConnectionArray; overload;
-function Multi(const threshold: Integer = 2): Boolean; overload;
-function Multi(const threshold: TRange): Boolean; overload;
 function Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
-function NoneOf(const forbidden: MArray): Boolean; overload;
-function Occupied: Boolean; overload;
-function Occurs(const item: MType; const occurrence: Integer = 1): Boolean; overload;
 function Overlay(const items: MArray; const index: Integer; const init: MType): MArray; overload;
 function Overlay(const items: MArray; const index: Integer = 0): MArray; overload;
-function Oversize(const limit: Integer): Boolean; overload;
-function Partition(const pSize: Integer): M2DArray; overload;
 function Patch(const index: Integer; const items: MArray): Integer; overload;
-function Plain: Boolean; overload;
 function Pick(const items: MArray; const index: Integer = 0): MArray; overload;
 function Pop: MType; overload;
 function Pop(const null: MType): MType; overload;
 function Populate(const items: MArray; const times: Integer = 1): Boolean; overload;
 function Populate(const item: MType; const times: Integer = 1): Boolean; overload;
-function Populated(const population: TRange): Boolean; overload;
-function Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload;
-function Pos(const item: MType; const index: Integer = 0): Integer; overload;
-function Pos(const items: MArray; const index: Integer = 0): Integer; overload;
-function Position(const item: MType; const index: Integer = 0): Integer; overload;
-function Position(const items: MArray; const index: Integer = 0): Integer; overload;
-function Positions(const item: MType; const index: Integer = 0): TIntegerArray; overload;
-function Positions(const items: MArray; const index: Integer = 0): TIntegerArray; overload;
-function Positions: TIntegerArray; overload;
-function Prepend(const items: MArray; const index: Integer = 0): Integer; overload;
-function Presence(const item: MType; const occurrence: Integer = 1): Boolean; overload;
 function Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
 function Prune: Integer; overload;
 function Pruned: MArray; overload;
@@ -173,35 +71,15 @@ function Pruned(const threshold: Integer): MArray; overload;
 function Pull: MArray; overload;
 function Purified(const dAscending: Boolean = True): MArray; overload;
 function Purify(const dAscending: Boolean = True): Integer; overload;
-function Push(const item: MType): MArray; overload;
-function Push(const items: MArray): MArray; overload;
-function Put(const ID: TIntegerArray; const item: MType): MArray; overload;
-function Put(const ID: TIntegerArray; const items: MArray): MArray; overload;
-function Put(const index: Integer; const items: MArray): MArray; overload;
 function Randomized: MArray; overload;
 function Range(const subArray: MArray; const index: Integer = 0): TRange; overload;
 function Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload;
 function Recreate(const arrSize: Integer): Boolean; overload;
-function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
-function Remove(const item: MType; const index: Integer = 0; const all: Boolean = True): MArray; overload;
-function Remove(const item: MType; const all: Boolean): MArray; overload;
-function Remove(const items: MArray; const index: Integer = 0; const all: Boolean = True): MArray; overload;
-function Remove(const items: MArray; const all: Boolean): MArray; overload;
 function Reposition(const oldIndex, newIndex: Integer): Boolean; overload;
 function Reset: Integer; overload;
 function Resize(const aChange: Integer): Integer; overload;
 function Resize(const aChange: Integer; const null: MType): Integer; overload;
-function Reversal: MArray; overload;
-function Reverse: Boolean; overload;
-function Reversed: MArray; overload;
-function Reversify: Boolean; overload;
-function Reversion: MArray; overload;
-function Runs: M2DArray; overload;
 function Sample(const sSize: Integer): MArray; overload;
-function Scan(const ID: TRange; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload;
-function Scan(const ID: TIntegerArray; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload;
-function Scan(const ID: TRange; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
-function Scan(const ID: TIntegerArray; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
 function Scramble(const swaps: Integer = -1): MArray; overload;
 function Shake(const shakes: Integer = 1): MArray; overload;
 function Shift: MType; overload;
@@ -209,7 +87,6 @@ function Shift(const sCount: Integer): MArray; overload;
 function Shuffle(const shuffles: Integer = 1): MArray; overload;
 function Singlify(const item: MType): Integer; overload;
 function Singlified(const item: MType): MArray; overload;
-function Singular: Boolean; overload;
 function Singularize(const item: MType): Integer; overload;
 function Singularized(const item: MType): MArray; overload;
 function Soloize(const item: MType): Integer; overload;
@@ -217,9 +94,6 @@ function Soloized(const item: MType): MArray; overload;
 function Size: Integer; overload;
 function Size(const aSize: Integer): MArray; overload;
 function Size(const aSize: Integer; const null: MType): MArray; overload;
-function SizeBetween(const sMin, sMax: Integer): Boolean; overload;
-function SizeMax(const target: Integer): Boolean; overload;
-function SizeMin(const target: Integer): Boolean; overload;
 function Slice(const r: TRange): MArray; overload;
 function Slice(const r: TRangeArray): MArray; overload;
 function Some: MArray; overload;
@@ -227,24 +101,11 @@ function Some(const amount: Integer): MArray; overload;
 function Span: TRange; overload;
 function Span(const subArray: MArray; const index: Integer = 2147483647): TRange; overload;
 function Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload;
-function Strip(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
-function SubarrayLocation(const pattern: MArray): Integer; overload;
-function SubarrayLocations(const pattern: MArray): TIntegerArray; overload;
-function SubarrayPosition(const pattern: MArray): Integer; overload;
-function SubarrayPositions(const pattern: MArray): TIntegerArray; overload;
-function Subset(const items: MArray): Boolean; overload;
-function Supply(const item: MType): Integer; overload;
-function Supply(const items: MArray): Integer; overload;
 function Swapped(var target: MArray): Integer; overload;
 function SwapMerged(var target: MArray): MArray; overload;
 function SwappedMerge(var target: MArray): MArray; overload;
-function To2D(const rows, columns: Integer): M2DArray; overload;
-function To2D(const height: Integer): M2DArray; overload;
 function Trade(var b: MArray): Integer; overload;
-function Undersize(const limit: Integer): Boolean; overload;
 function Uncluttered: MArray; overload;
-function Uniform: Boolean; overload;
-function Uniform(const item: MType): Boolean; overload;
 function Uniformity: Double; overload;
 function Unified(const dAscending: Boolean = True): MArray; overload;
 function Unify(const dAscending: Boolean = True): Integer; overload;
@@ -253,7 +114,6 @@ function Uniqued: MArray; overload;
 function Uniques: TIntegerArray; overload;
 function Unshift(const item: MType): MArray; overload;
 function Unshift(const items: MArray): MArray; overload;
-function Void: Boolean; overload;
 function Waste: Integer; overload;
 function Zigzag(const zAscending: Boolean = True): MArray; overload;
 {$IFDEF Sortable}
@@ -381,130 +241,6 @@ class function Search(const arr: MArray; const item: MType; const ascending: Boo
 
 {$IFDEF IMPLEMENTATION}
 {$I Base.pph}
-{==============================================================================]
-  <Add>
-  @action: Appends arr with item. Returns the array with added item.
-  @note: Adds item to the right side of the array.
-[==============================================================================}
-function MArrayHelper.Add(const item: MType; const duplicates: Boolean = True): MArray; overload;
-var
-  i, l: Integer;
-begin
-  l := Self.Length;
-  SetLength(Result, (l + 1));
-  for i := 0 to (l - 1) do
-    Result[i] := Self[i];
-  if ((not duplicates) and Self.Contains(item)) then
-    SetLength(Result, l)
-  else
-    Result[l] := item;
-end;
-
-{==============================================================================]
-  <Add>
-  @action: Appends arr with items. Returns the array with added items.
-  @note: Adds item to the right side of the array.
-[==============================================================================}
-function MArrayHelper.Add(const items: MArray; const duplicates: Boolean = True): MArray; overload;
-var
-  a, h, i, s: Integer;
-begin
-  s := Self.Length;
-  i := items.Length;
-  SetLength(Result, (s + i));
-  if ((i = 0) and (s = 0)) then
-    Exit;
-  h := High(items);
-  for i := 0 to (s - 1) do
-    Result[i] := Self[i];
-  case duplicates of
-    False:
-    begin
-      a := 0;
-      for i := 0 to h do
-        if not Result.Contains(items[i]) then
-          Result[s + a.Increase] := items[i];
-      SetLength(Result, (s + a));
-    end;
-    True:
-    for i := 0 to h do
-      Result[i] := items[i];
-  end;
-end;
-
-{==============================================================================]
-  <AllEqual>
-  @action: Returns true if all values in arr are equal (arr contains only equal values).
-  @note: Returns FALSE with empty array!
-[==============================================================================}
-function MArrayHelper.AllEqual: Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := 1 to High(Self) do
-    if (Self[0] <> Self[i]) then
-      Exit(False);
-  Result := (Self.Length > 0);
-end;
-
-{==============================================================================]
-  <AllOf>
-  @action: Returns True if arr contains all items from candidates.
-  @note: Always True if candidates is empty. False if arr is empty but candidates is not.
-[==============================================================================}
-function MArrayHelper.AllOf(const candidates: MArray): Boolean; overload;
-var
-  d: specialize TDictionary<MType, Boolean>;
-  i: Integer;
-begin
-  if candidates.Empty then
-    Exit(True);
-  if Self.Empty then
-    Exit(False);
-  d := specialize TDictionary<MType, Boolean>.Create;
-  try
-    for i := 0 to High(Self) do
-      d.AddOrSetValue(Self[i], True);
-    for i := 0 to High(candidates) do
-      if not d.ContainsKey(candidates[i]) then
-        Exit(False);
-    Result := True;
-  finally
-    d.Free;
-  end;
-end;
-
-{==============================================================================]
-  <AllSame>
-  @action: Returns true if all values in arr are the same (arr contains only equal values).
-  @note: Returns FALSE with empty array!
-[==============================================================================}
-function MArrayHelper.AllSame: Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := 1 to High(Self) do
-    if (Self[0] <> Self[i]) then
-      Exit(False);
-  Result := (Self.Length > 0);
-end;
-
-{==============================================================================]
-  <AllUnique>
-  @action: Returns true if all values in arr are unique (arr contains ONLY unique values).
-  @note: None
-[==============================================================================}
-function MArrayHelper.AllUnique: Boolean; overload;
-var
-  h, a, b: Integer;
-begin
-  h := High(Self);
-  for a := 0 to (h - 1) do
-    for b := (a + 1) to h do
-      if (Self[a] = Self[b]) then
-        Exit(False);
-  Result := (h > -1);
-end;
 
 {==============================================================================]
   <Any>
@@ -526,185 +262,6 @@ end;
 function MArrayHelper.Any: MType; overload;
 begin
   Result := Self[Low(Self) + Random(Self.Size)];
-end;
-
-{==============================================================================]
-  <AnyOf>
-  @action: Returns True if arr contains at least one item from candidates.
-  @note: Always False if arr or candidates is empty.
-[==============================================================================}
-function MArrayHelper.AnyOf(const candidates: MArray): Boolean; overload;
-var
-  d: specialize TDictionary<MType, Boolean>;
-  i: Integer;
-begin
-  Result := False;
-  if (Self.Empty or candidates.Empty) then
-    Exit;
-  d := specialize TDictionary<MType, Boolean>.Create;
-  try
-    for i := 0 to High(candidates) do
-      d.AddOrSetValue(candidates[i], True);
-    for i := 0 to High(Self) do
-      if d.ContainsKey(Self[i]) then
-        Exit(True);
-  finally
-    d.Free;
-  end;
-end;
-
-{==============================================================================]
-  <Append>
-  @action: Appends arr with item. Returns the index of added item.
-  @note: Adds item to the right side of the array.
-[==============================================================================}
-function MArrayHelper.Append(const item: MType; const duplicates: Boolean = True): MArray; overload;
-begin
-  Result := Self.Copy;
-  if ((not duplicates) and Self.Contains(item)) then
-    Exit;
-  SetLength(Result, (Self.Size + 1));
-  Result[Self.Size] := item;
-end;
-
-{==============================================================================]
-  <Append>
-  @action: Adds all items items to arr.
-  @note: Returns the highest index in the end.
-[==============================================================================}
-function MArrayHelper.Append(const items: MArray; const duplicates: Boolean = True): MArray; overload;
-var
-  a, h, i: Integer;
-begin
-  Result := Self.Copy;
-  if Items.Empty then
-    Exit;
-  h := High(items);
-  a := High(Self);
-  SetLength(Result, ((a + h) + 2));
-  case duplicates of
-    False:
-    begin
-      for i := 0 to h do
-        if not Self.Contains(items[i]) then
-          Result[a.Increment] := items[i];
-      SetLength(Result, (a + 1));
-    end;
-    True:
-    for i := 0 to h do
-      Result[a.Increment] := items[i];
-  end;
-end;
-
-{==============================================================================]
-  <As2D>
-  @action: Converts 1D array to 2D by rows and columns.
-  @note: TIA := [1,2,3,4,5,6];
-         TIA.To2D(2, 3) = [[1, 2, 3], [4, 5, 6]]
-         TIA.To2D(3, 2) = [[1, 2], [3, 4], [5, 6]]
-[==============================================================================}
-function MArrayHelper.As2D(const rows, columns: Integer): M2DArray; overload;
-var
-  l, i: Integer;
-begin
-  l := Self.Length;
-  SetLength(Result, rows, columns);
-  for i := 0 to ((rows * columns) - 1) do
-    if (i < l) then
-      Result[i div columns][i mod columns] := Self[i];
-end;
-
-{==============================================================================]
-  <As2D>
-  @action: Converts 1D array to 2D by width.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.As2D(const width: Integer): M2DArray; overload;
-var
-  l, h, i, r, c: Integer;
-begin
-  l := Self.Length;
-  h := Ceil(l / width);
-  SetLength(Result, h, width);
-  i := 0;
-  for r := 0 to (h - 1) do
-    for c := 0 to (width - 1) do
-      if (i < l) then
-        Result[r][c] := Self[i.Increase];
-end;
-
-{==============================================================================]
-  <Backwards>
-  @action: Returns arr as reversed.
-  @note: Alternative for Reversed methods
-[==============================================================================}
-function MArrayHelper.Backwards: MArray; overload;
-var
-  l, i: Integer;
-begin
-  l := Self.Length;
-  SetLength(Result, l);
-  i := 0;
-  while (l > 0) do
-    Result[i.Increase] := Self[l.Decrement];
-end;
-
-{==============================================================================]
-  <Blit>
-  @action: Simply puts items to array index, fast.
-  @note: No safety checks. Make sure buffer is enough!
-[==============================================================================}
-function MArrayHelper.Blit(const items: MArray; const index: Integer = 0): Integer; overload;
-var
-  i: Integer;
-begin
-  Result := (index + items.Size);
-  for i := 0 to High(items) do
-    Self[index + i] := items[i]; 
-end;
-
-{==============================================================================]
-  <MadeOf> 
-  @action: Checks if array arr contains only allowed items.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.MadeOf(const allowed: MArray): Boolean; overload;
-var
-  a, s: TRange;
-  i: Integer;
-begin
-  if (Self.Empty or allowed.Empty) then
-    Exit(False);
-  s.Create(0, High(Self));
-  a.Create(0, High(allowed));
-  repeat
-    i := a.start;
-    repeat
-      Result := (Self[s.stop] = allowed[i]);
-    until (Result or (i.Increment > a.stop));
-  until ((not Result) or (s.stop.Decrement < s.start));
-end;
-
-{==============================================================================]
-  <FreeOf> 
-  @action: Checks if array arr does not have any forbidden items.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.FreeOf(const forbidden: MArray): Boolean; overload;
-var
-  s, f: TRange;
-  i: Integer;
-begin
-  if (Self.Empty or forbidden.Empty) then
-    Exit(True);
-  s.Create(0, High(Self));
-  f.Create(0, High(forbidden));	
-  repeat
-    i := f.start;
-    repeat
-      Result := not (Self[s.stop] = forbidden[i]);
-    until ((i.Increment > f.stop) or (not Result));
-  until ((not Result) or (s.stop.Decrement < s.start));
 end;
 
 {==============================================================================]
@@ -749,133 +306,6 @@ begin
     end;
   end;
 end;
-
-{==============================================================================]
-  <BuiltWithout> 
-  @action: Checks if array arr does not have any forbidden items.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.BuiltWithout(const forbidden: MArray): Boolean; overload;
-var
-  i, j: Integer;
-begin
-  if not (Self.Empty or forbidden.Empty) then
-  for i := 0 to High(Self) do
-    for j := 0 to High(forbidden) do
-      if (Self[i] = forbidden[j]) then
-        Exit(False);
-  Result := True;
-end;
-
-{==============================================================================]
-  <BuiltWith>
-  @action: Returns true is arr is built with blocks.
-  @note: This function requires blocks array to be unique (no duplicates allowed for it).
-[==============================================================================}
-function MArrayHelper.BuiltWith(const blocks: MArray): Boolean; overload;
-var
-  i, p: Integer;
-  u: TBooleanArray;
-begin
-  if (Self.Empty or blocks.Empty) then
-    Exit(False);
-  SetLength(u, blocks.Size);
-  for i := 0 to High(Self) do
-  begin
-    p := blocks.Pos(Self[i]);
-    if (p = -1) then
-      Exit(False);
-    u[p] := True;
-  end;
-  for i := 0 to High(blocks) do
-    if not u[i] then
-      Exit(False);
-  Result := True;
-end;
-
-{==============================================================================]
-  <Classes>
-  @action: Groups consecutive identical array items into sub-arrays (classes).
-  @note: Works on any array. Each run of identical values becomes a class; 
-         duplicate classes can exist if values repeat non-consecutively.
-[==============================================================================}
-function MArrayHelper.Classes: M2DArray; overload;
-var
-  i, g: Integer;
-  v: MType;
-begin
-  if Self.Empty then
-    Exit([]);
-  g := 0;
-  v := Self[0];
-  SetLength(Result, 1);
-  SetLength(Result[0], 0);
-  for i := 0 to High(Self) do
-  begin
-    if not (Self[i] = v) then
-    begin
-      v := Self[i];
-      SetLength(Result, (g.Increment + 1));
-      SetLength(Result[g], 0);
-    end;
-    SetLength(Result[g], (Result[g].Size + 1));
-    Result[g][High(Result[g])] := Self[i];
-  end;
-end;
-
-{==============================================================================]
-  <Classes>
-  @action: Groups consecutive identical array items into sub-arrays (classes).
-  @note: Works on any array. Each run of identical values becomes a class; 
-         duplicate classes can exist if values repeat non-consecutively.
-		 Custom weight.
-[==============================================================================}
-function MArrayHelper.Classes(const weight: TIntegerArray): M2DArray; overload; var w: Integer; {$DEFINE Skeleton_Classes}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classes}
-function MArrayHelper.Classes(const weight: TDoubleArray): M2DArray; overload; var w: Double; {$DEFINE Skeleton_Classes}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classes}
-
-{==============================================================================]
-  <Classify>
-  @action: Groups consecutive identical array items into sub-arrays (classes).
-  @note: Works on any array. Each run of identical values becomes a class; 
-         duplicate classes can exist if values repeat non-consecutively.
-[==============================================================================}
-function MArrayHelper.Classify: M2DArray; overload;
-var
-  i, h, g, l: Integer;
-begin
-  l := Self.Size;
-  SetLength(Result, l);
-  if (l = 0) then
-    Exit;
-  SetLength(Result[0], l);
-  Result[0][0] := Self[0];
-  g := 0;
-  h := 0;
-  for i := 1 to High(Self) do
-  case (Self[i] = Result[g][0]) of
-    False:
-    begin
-      SetLength(Result[g], (h + 1));
-      Result[g][h] := Result[g][0];
-      h := 0;
-      SetLength(Result[g.Increment], (l - i));
-      Result[g][0] := Self[i];
-    end;
-	True: Result[g][h.Increase] := Self[i];
-  end;
-  SetLength(Result[g], (h + 1));
-  SetLength(Result, (g + 1));
-end;
-
-{==============================================================================]
-  <Classify>
-  @action: Groups consecutive identical array items into sub-arrays (classes).
-  @note: Works on any array. Each run of identical values becomes a class; 
-         duplicate classes can exist if values repeat non-consecutively.
-		 Custom weight.
-[==============================================================================}
-function MArrayHelper.Classify(const weight: TIntegerArray): M2DArray; overload; var w: Integer; {$DEFINE Skeleton_Classify}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classify}
-function MArrayHelper.Classify(const weight: TDoubleArray): M2DArray; overload; var w: Double; {$DEFINE Skeleton_Classify}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classify}
 
 {==============================================================================]
   <Clear>
@@ -953,42 +383,6 @@ begin
     Result[r.start] := Self[r.start];
     if (r.start <> r.stop) then
       Result[r.stop] := Self[r.stop];
-  end;
-end;
-
-{==============================================================================]
-  <Collated>
-  @action: Groups the elements of the array into subarrays keyed by their value.
-           Each distinct MType value is assigned a unique group index, and all
-           occurrences of that value are collected into the corresponding
-           subarray. The result is a 2-dimensional array where each row contains
-           all instances of a specific MType.
-  @note: Uses a dictionary to map each unique MType to its group position,
-         preserving the order in which unique values first appear. The
-         original ordering of elements within each group is preserved as well.
-         This operation performs a stable categorization, not a clone.
-[==============================================================================}
-function MArrayHelper.Collated: M2DArray; overload;
-var
-  m: specialize TDictionary<MType, Integer>;
-  i, p: Integer;
-begin
-  m := specialize TDictionary<MType, Integer>.Create;
-  try
-    SetLength(Result, 0);
-    for i := 0 to High(Self) do
-    begin
-      if not m.TryGetValue(Self[i], p) then
-      begin
-        p := System.Length(Result);
-        m.Add(Self[i], p);
-        SetLength(Result, (p + 1));
-        SetLength(Result[p], 0);
-      end;
-      Result[p].Supply(Self[i]);
-    end;
-  finally
-    m.Free;
   end;
 end;
 
@@ -1075,67 +469,6 @@ begin
 end;
 
 {==============================================================================]
-  <Components>
-  @action: Groups elements of the array into connected components based on provided connections.
-           Each connection is treated as undirected. Returns a 2D array where each inner array
-           represents one group of connected elements.
-  @param: connections - an array of TConnection, each containing two indices (Id1, Id2) 
-           in Self that are connected.
-  @returns: M2DArray - 2D array of grouped elements from Self.
-  @note: Duplicate connections are ignored. Self must contain at least as many elements as
-         the maximum index in any connection.
-[==============================================================================}
-function MArrayHelper.Components(const connections: TConnectionArray): M2DArray; overload;
-var
-  i, l: Integer;
-  v: TBooleanArray;
-  n: T2DIntegerArray;
-  s: TIntegerArray;
-  procedure DFS(const startPos: Integer; var group: MArray);
-  var
-    h, c, k: Integer;
-  begin
-    SetLength(s, 0);
-    s := s + [startPos];
-    while s.Occupied do
-    begin
-      h := High(s);
-      c := s[h];
-      SetLength(s, h);
-      if v[c] then
-        Continue;
-      v[c] := True;
-      group := (group + [Self[c]]);
-      for k := 0 to High(n[c]) do
-        if not v[n[c][k]] then
-          s := (s + [n[c][k]]);
-    end;
-  end;
-begin
-  l := Self.Size;
-  if l = 0 then
-    Exit([]);
-  SetLength(n, l);
-  SetLength(v, l);
-  for i := 0 to High(connections) do
-    if (InRange(connections[i].id1, 0, (l - 1)) and InRange(connections[i].id2, 0, (l - 1))) then
-    begin
-      n[connections[i].id1] := (n[connections[i].id1] + [connections[i].id2]);
-      n[connections[i].id2] := (n[connections[i].id2] + [connections[i].id1]);
-    end;
-  SetLength(Result, 0);
-  for i := 0 to (l - 1) do
-  begin
-    if not v[i] then
-    begin
-      SetLength(Result, (System.Length(Result) + 1));
-      SetLength(Result[High(Result)], 0);
-      DFS(i, Result[High(Result)]);
-    end;
-  end;
-end;
-
-{==============================================================================]
   <Compressed>
   @action: Produces a new array by removing all immediately repeated values,
            effectively run-length–compressing the input.
@@ -1211,151 +544,6 @@ begin
     if not (Self[i] = Self[Result - 1]) then
       Self[Result.Increase] := Self[i];
   SetLength(Self, Result);
-end;
-
-{==============================================================================]
-  <Comprised>
-  @action: Returns true if arr is built of items only.
-  @note: 
-[==============================================================================}
-function MArrayHelper.Comprised(const items: MArray): Boolean; overload;
-var
-  l: Integer;
-begin
-  l := Self.Size;
-  Result := (l > 0);
-  while (Result and (l.Decrease > 0)) do
-    Result := items.Contains(Self[l]);
-end;
-
-{==============================================================================]
-  <Constant>
-  @action: Returns true if arr consists of item ONLY.
-  @note: Requires at least single item. Otherwise returns False. (With empty arrays)
-[==============================================================================}
-function MArrayHelper.Constant(const item: MType): Boolean; overload;
-var
-  l: Integer;
-begin
-  l := Self.Size;
-  Result := (l > 0);
-  while (Result and (l.Decrease > 0)) do
-    Result := (Self[l] = item);
-end;
-
-{==============================================================================]
-  <Constant>
-  @action: Returns true if arr consists of ONLY same items.
-  @note: Requires at least single item. Otherwise returns False. (With empty arrays)
-[==============================================================================}
-function MArrayHelper.Constant: Boolean; overload;
-begin
-  Result := (Self.Occupied and Constant(Self[0]));
-end;
-
-{==============================================================================]
-  <Contains>
-  @action: Looks array for item starting from start index. If found, Result will be True.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Contains(const item: MType; const index: Integer = 0): Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := index to High(Self) do
-    if (item = Self[i]) then
-      Exit(True);
-  Result := False;
-end;
-
-{==============================================================================]
-  <Contains>
-  @action: Determines whether the array contains a number of occurrences of item
-           within the inclusive range specified by limit (normalized).
-  @note:
-    - Stops scanning early if occurrences exceed the maximum or cannot reach the minimum.
-    - Uses 0-based indexing for arrays.
-    - limit.Normalize ensures that limit.start <= limit.stop.
-[==============================================================================}
-function MArrayHelper.Contains(const item: MType; const limit: TRange): Boolean; overload;
-var
-  i, c, r: Integer;
-  n: TRange;
-begin
-  n := limit.Normalize;
-  c := 0;
-  r := Self.Length;
-  for i := 0 to High(Self) do
-  begin
-    if (Self[i] = item) then
-      Inc(c);
-    Dec(r);
-    if (c > n.stop) then
-      Exit(False);
-    if ((c + r) < n.start) then
-      Exit(False);
-  end;
-  Result := InRange(c, n.start, n.stop);
-end;
-
-{==============================================================================]
-  <ContainsAtLeast>
-  @action: Determines whether the array contains at least limit occurrences of item.
-  @note:
-    - Returns True if limit < 1.
-    - Stops scanning early once the limit is reached.
-    - Performs early-exit optimization if remaining elements cannot reach the limit.
-    - Uses 0-based indexing for arrays.
-[==============================================================================}
-function MArrayHelper.ContainsAtLeast(const item: MType; const limit: Integer): Boolean; overload;
-var
-  i, c, r: Integer;
-begin
-  if (limit < 1) then
-    Exit(True);
-  c := 0;
-  r := Self.Length;
-  for i := 0 to High(Self) do
-  begin
-    if (Self[i] = item) then
-      Inc(c);
-    Dec(r);
-    if (c >= limit) then
-      Exit(True);
-    if ((c + r) < limit) then
-      Exit(False);
-  end;
-  Result := False;
-end;
-
-{==============================================================================]
-  <ContainsAtMost>
-  @action: Determines whether the array contains at most limit occurrences of item.
-  @note:
-    - Returns False if limit < 0.
-    - Stops scanning early once the limit is exceeded.
-    - Performs early-exit optimization if remaining elements cannot exceed the limit.
-    - Uses 0-based indexing for arrays.
-[==============================================================================}
-function MArrayHelper.ContainsAtMost(const item: MType; const limit: Integer): Boolean; overload;
-var
-  i, c, r: Integer;
-begin
-  if (limit < 0) then
-    Exit(False);
-  c := 0;
-  r := Self.Length;
-  for i := 0 to High(Self) do
-  begin
-    if (Self[i] = item) then
-      Inc(c);
-    Dec(r);
-    if (c > limit) then
-      Exit(False);
-    if ((c + r) <= limit) then
-      Exit(True);
-  end;
-  Result := True;
 end;
 
 {==============================================================================]
@@ -1464,63 +652,6 @@ begin
 end;
 
 {==============================================================================]
-  <Delete>
-  @action: Deletes array item from arr by index.
-  @note: Returns true with success (index existed in arr).
-[==============================================================================}
-function MArrayHelper.Delete(const index: Integer = 0): MArray; overload;
-var
-  i, h: Integer;
-begin
-  h := High(Self);
-  if not ((index <= h) and (index > -1)) then
-    Exit(Self.Copy);
-  SetLength(Result, h);
-  for i := 0 to (index - 1) do
-    Result[i] := Self[i];
-  for i := index to (h - 1) do
-    Result[i] := Self[i + 1];
-end;
-
-{==============================================================================]
-  <Delete>
-  @action: Deletes array items from arr by indexes (ID).
-  @note: Returns amount of items that were deleted succesfully by ID's.
-[==============================================================================}
-function MArrayHelper.Delete(const ID: TIntegerArray): MArray; overload;
-var
-  i, l, r: Integer;
-begin
-  if ID.Empty then
-    Exit(Self.Copy);
-  l := Self.Length;
-  SetLength(Result, l);
-  r := 0;
-  for i := 0 to (l - 1) do
-    if not ID.Contains(i) then
-      Result[i - r] := Self[i]
-    else
-      r := (r + 1);
-  SetLength(Result, (l - r));
-end;
-
-{==============================================================================]
-  <Differ>
-  @action: Returns true if arr differs from target.
-  @note: None
-[==============================================================================}
-function MArrayHelper.Differ(const target: MArray): Boolean; overload;
-var
-  i: Integer;
-begin
-  Result := (Self.Size <> target.Size);
-  if not Result then
-  for i := High(Self) downto 0 do
-    if (Self[i] <> target[i]) then
-      Exit(True);
-end;
-
-{==============================================================================]
   <Distinct>
   @action: Returns the number of unique elements in array 
   @note: None.
@@ -1548,37 +679,6 @@ begin
 end;
 
 {==============================================================================]
-  <Distincted>
-  @action: Groups the integer array into subarrays by unique values. Each subarray
-           in the result contains all occurrences of one distinct integer from Self,
-           preserving the order of first appearance.
-  @note: The function preserves the original order of first occurrence for each unique
-         value. It uses an auxiliary array 'm' to track which values have already
-         been grouped. Duplicate values in Self are added to the same group.
-         The resulting 2D array has one group per unique value.
-[==============================================================================}
-function MArrayHelper.Distincted: M2DArray; overload;
-var
-  m: MArray;
-  i, l: Integer;
-begin
-  SetLength(m, 0);
-  SetLength(Result, 0);
-  for i := 0 to High(Self) do
-  begin
-    l := m.Pos(Self[i]);
-    if (l = -1) then
-    begin
-      l := m.Length;
-      SetLength(m, (l + 1));
-      SetLength(Result, (l + 1));
-      m[l] := Self[i];
-    end;
-    Result[l].Supply(Self[i]);
-  end;
-end;
-
-{==============================================================================]
   <Disordered>
   @action: Returns array with randomized order (disorder)
   @note: [1,2,3] => [1,3,2] | [2,1,3] | [2,3,1] | [3,2,1] ...
@@ -1601,36 +701,6 @@ begin
     Result[i] := Self[r];
     m[r] := True;
   end;
-end;
-
-{==============================================================================]
-  <Distribute>
-  @action: Distributes array arr to 2D array by number of parts.
-  @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5][6,7]
-[==============================================================================}
-function MArrayHelper.Distribute(const parts: Integer): M2DArray; overload;
-var
-  l, p, b, r, i, j, s, c: Integer;
-begin
-  l := Self.Length;
-  if ((parts > 0) and (l > 0)) then
-  begin
-    p := Min(parts, l);
-    SetLength(Result, p);
-    b := (l div p);
-    r := (l mod p);
-    s := 0;
-    for i := 0 to (p - 1) do
-    begin
-      c := b;
-      if (i < r) then
-        Inc(c);
-      SetLength(Result[i], c);
-      for j := 0 to (c - 1) do
-        Result[i][j] := Self[s.Increase];
-    end;
-  end else
-    SetLength(Result, 0);
 end;
 
 {==============================================================================]
@@ -1712,52 +782,6 @@ begin
 end;
 
 {==============================================================================]
-  <Drop>
-  @action: Removes item(s) from arr and returns it.
-  @note: 	
-[==============================================================================}
-function MArrayHelper.Drop(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
-var
-  p: TIntegerArray;
-  r: TRange;
-begin
-  if Self.Empty then
-    Exit([]);
-  if eraseDuplicates then
-    p := Self.Positions(item)
-  else
-    p := [Self.Pos(item)];
-  r.Create(0, High(Self));
-  Result := Self.Get(p.Inverted(r));
-end;
-
-{==============================================================================]
-  <Dump>
-  @action: Deletes items from array, keeps others. Returns array length (after action).
-  @note: Supports custom start index!
-[==============================================================================}
-function MArrayHelper.Dump(const items: MArray; const index: Integer = 0): MArray; overload;
-var
-  i, l, m, d: Integer;
-begin
-  if (items.Empty or Self.Empty) then
-    Exit(Self.Copy);
-  l := Self.Length;
-  SetLength(Result, l);
-  d := 0;
-  m := Max(0, index);
-  for i := 0 to (m - 1) do
-    Result[i] := Self[i];
-  for i := m to (l - 1) do
-    if not items.Contains(Self[i]) then
-      Result[i - d] := Self[i]
-    else
-      Inc(d);
-  if (d > 0) then
-    SetLength(Result, (l - d));
-end;
-
-{==============================================================================]
   <Dupe>
   @action: Returns copy of an array arr.
   @note: None.
@@ -1836,203 +860,6 @@ begin
     True: Break;
   end;
   SetLength(Result, l);
-end;
-
-{==============================================================================]
-  <Emplace>
-  @action: Inserts item to index in arr. Returns the index it was inserted to.
-  @note: Alternative for Insert().
-[==============================================================================}
-function MArrayHelper.Emplace(const item: MType; const index: Integer = 0): Integer; overload;
-var
-  i: Integer;
-begin
-  SetLength(Self, (Self.Size + 1));
-  Result := index.Clamp(0, High(Self));
-  for i := High(Self) downto (Result + 1) do
-    Self[i] := Self[i - 1];
-  Self[Result] := item;
-end;
-
-{==============================================================================]
-  <Empty>
-  @action: Returns true if array is empty (Length = 0).
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Empty: Boolean; overload;
-begin
-  Result := (Self.Size = 0);
-end;
-
-{==============================================================================]
-  <Equal>
-  @action: Returns true if arr equals target (identical arrays)
-  @note: None
-[==============================================================================}
-function MArrayHelper.Equal(const target: MArray): Boolean; overload;
-var
-  i: Integer;
-begin
-  Result := (Self.Size = target.Size);
-  if Result then
-  for i := High(Self) downto 0 do
-    if (Self[i] <> target[i]) then
-      Exit(False);
-end;
-
-{==============================================================================]
-  <Erase>
-  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
-  @note: Returns amount of items that were removed. Supports start index position.
-[==============================================================================}
-function MArrayHelper.Erase(const item: MType; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
-var
-  j, i, m, l, d: Integer;
-  f: Boolean;
-  r: TBooleanArray;
-begin
-  if not (Self.Empty or (index < 0)) then
-  begin
-    l := Self.Length;
-    SetLength(r, l);
-    m := Min(index, (l - 1));
-	d := 0;
-    for i := m downto 0 do
-    begin
-      f := False;
-      if (Self[i] = item) then
-      begin
-        r[i] := True;
-        Inc(d);
-        f := True;
-      end;
-      if (f and (not all)) then
-        Break;
-    end;
-    j := 0;
-	SetLength(Result, (l - d));
-    for i := 0 to (l - 1) do
-      if not r[i] then
-        Result[j.Increase] := Self[i];
-    SetLength(Result, j);
-  end else
-    Result := Self.Copy;
-end;
-
-{==============================================================================]
-  <Erase>
-  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
-  @note: Returns amount of items that were removed.
-[==============================================================================}
-function MArrayHelper.Erase(const item: MType; const all: Boolean): MArray; overload;
-begin
-  Result := Self.Erase(item, 2147483647, all);
-end;
-
-{==============================================================================]
-  <Erase>
-  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
-  @note: Returns amount of items that were removed. Supports start index position.
-[==============================================================================}
-function MArrayHelper.Erase(const items: MArray; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
-var
-  h, i, j, m, l, d: Integer;
-  f: Boolean;
-  r: TBooleanArray;
-begin 
-  if (Self.Populated and items.Populated and (index >= 0)) then
-  begin
-    h := High(items);
-    l := Self.Length;
-    SetLength(r, l);
-    m := Min(index, (l - 1));
-	d := 0;
-    for i := m downto 0 do
-    begin
-      f := False;
-      for j := 0 to h do
-        if (Self[i] = items[j]) then
-        begin
-          r[i] := True;
-          Inc(d);
-          f := True;
-          Break;
-        end;
-      if (f and (not all)) then
-        Break;
-    end;
-	j := 0;
-	SetLength(Result, (l - d)); 
-    for i := 0 to (l - 1) do
-      if not r[i] then
-        Result[j.Increase] := Self[i];
-    SetLength(Result, j);
-  end else
-    Result := Self.Copy;
-end;
-
-{==============================================================================]
-  <Erase>
-  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
-  @note: Returns amount of items that were removed.
-[==============================================================================}
-function MArrayHelper.Erase(const items: MArray; const all: Boolean): MArray; overload;
-begin
-  Result := Self.Erase(items, 2147483647, all);
-end;
-
-{==============================================================================]
-  <Exact>
-  @action: Returns true if arr consists of items.
-  @note: arr must contain ALL the items for this function to return True.
-         Any extra items will cause Result to be False also.
-         items[1,2,3]
-         arr[1,2,3,1,2,3] => True
-         arr[2,3,2,3] => False
-         arr[2,1,3,4] => False
-         This function requires items array to be unique. No duplicates allowed for it!
-[==============================================================================}
-function MArrayHelper.Exact(const items: MArray): Boolean; overload;
-var
-  i, j: Integer;
-  f: TBooleanArray;
-begin
-  if items.Empty then
-    Exit(Self.Empty);
-  f.Create(items.Size, False);
-  for i := 0 to High(Self) do
-  begin
-    j := items.Pos(Self[i]);
-    if (j = -1) then
-      Exit(False);
-    f[j] := True;
-  end;
-  Result := f.Uniform(True);
-end;
-
-{==============================================================================]
-  <Excessive>
-  @action: Returns true if arr contains any duplicates in it.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Excessive: Boolean; overload; 
-type
-  TDict = specialize TDictionary<MType, Boolean>;
-var
-  d: TDict;
-  i: Integer;
-begin
-  d := TDict.Create;
-  try
-    for i := Low(Self) to High(Self) do
-      if not d.ContainsKey(Self[i]) then
-        d.Add(Self[i], True)
-      else
-        Exit(True);
-  finally
-    d.Free;
-  end;
-  Result := False;
 end;
 
 {==============================================================================]
@@ -2138,64 +965,6 @@ begin
 end;
 
 {==============================================================================]
-  <Exists>
-  @action: Returns true if array length is not 0.
-  @note: Alternative for arr.Populated.
-[==============================================================================}
-function MArrayHelper.Exists: Boolean; overload;
-begin
-  Result := (Self.Size > 0);
-end;
-
-{==============================================================================]
-  <Extend>
-  @action: Extends arr with item. Returns it.
-  @note: Places item to the left side of the array.
-[==============================================================================}
-function MArrayHelper.Extend(const item: MType): MArray; overload;
-var
-  i, h: Integer;
-begin
-  h := High(Self);
-  SetLength(Result, (h + 2));
-  for i := 0 to h do
-    Result[i + 1] := Self[i];
-  Result[0] := item;
-end;
-
-{==============================================================================]
-  <Extend>
-  @action: Extends arr with items. Returns it.
-  @note: Places items to the left side of the array.
-[==============================================================================}
-function MArrayHelper.Extend(const items: MArray): MArray; overload;
-var
-  i, h, l: Integer;
-begin
-  h := High(Self);
-  l := items.Length;
-  SetLength(Result, ((h + 1) + l));
-  for i := 0 to h do
-    Result[i + l] := Self[i];
-  for i := 0 to (l - 1) do
-    Result[i] := items[i];
-end;
-
-{==============================================================================]
-  <Feed>
-  @action: Feeds item to array and returns the index position it was added to.
-  @note: Returns -1 if duplicates are not allowed and array already includes item.
-[==============================================================================}
-function MArrayHelper.Feed(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
-begin
-  if ((not allowDuplicates) and Self.Includes(item)) then
-    Exit(-1);
-  Result := Self.Size;
-  SetLength(Self, (Result + 1));
-  Self[Result] := item;
-end;
-
-{==============================================================================]
   <Fill>
   @action: Fills whole arr with item.
   @note: Returns the filled array.
@@ -2240,116 +1009,6 @@ begin
     Result[i] := items[(index + i) mod (l - 1)];
   for i := (t + 1) to h do
     Result[i] := Self[i];
-end;
-
-{==============================================================================]
-  <Find>
-  @action: Scans array for item by IDs. Returns position if found.
-  @note: Unsafe method! No safety checking.
-[==============================================================================}
-function MArrayHelper.Find(const ID: TRange; const item: MType): Integer; overload;
-begin
-  if Self.Populated then
-  case ID.Ascending of
-    True:
-    for Result := ID.start to ID.stop do
-      if (Self[Result] = item) then
-        Exit;
-    False:
-    for Result := ID.start downto ID.stop do
-      if (Self[Result] = item) then
-        Exit;
-  end;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <Find>
-  @action: Scans array for item by IDs. Returns position if found.
-  @note: Unsafe method! No safety checking.
-[==============================================================================}
-function MArrayHelper.Find(const ID: TIntegerArray; const item: MType): Integer; overload;
-var
-  i: Integer;
-begin
-  if Self.Populated then
-  for i := 0 to High(ID) do
-    if (Self[ID[i]] = item) then
-      Exit(ID[i]);
-  Result := -1;
-end;
-
-{==============================================================================]
-  <Find>
-  @action: Scans array for items by IDs. Returns position if found.
-  @note: Unsafe method! No safety checking.
-[==============================================================================}
-function MArrayHelper.Find(const ID: TRange; const items: MArray): Integer; overload;
-begin
-  if (Self.Populated and items.Populated) then
-  case ID.Ascending of
-    True:
-    for Result := ID.start to ID.stop do
-      if items.Contains(Self[Result]) then
-        Exit;
-    False:
-    for Result := ID.start downto ID.stop do
-      if items.Contains(Self[Result]) then
-        Exit;
-  end;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <Find>
-  @action: Scans array for items by IDs. Returns position if found.
-  @note: Unsafe method! No safety checking.
-[==============================================================================}
-function MArrayHelper.Find(const ID: TIntegerArray; const items: MArray): Integer; overload;
-var
-  i: Integer;
-begin
-  if (Self.Populated and items.Populated) then
-  for i := 0 to High(ID) do
-    if items.Contains(Self[ID[i]]) then
-      Exit(ID[i]);
-  Result := -1;
-end;
-
-{==============================================================================]
-  <First>
-  @action: Returns the first index of arr.
-  @note: With empty array result will be -1!
-[==============================================================================}
-function MArrayHelper.First: Integer; overload;
-begin
-  Result := IfThen(Self.Empty, -1, 0);
-end;
-
-{==============================================================================]
-  <First>
-  @action: Returns the first index that matches item in arr.
-  @note: Unmatch will be -1!
-[==============================================================================}
-function MArrayHelper.First(const item: MType): Integer; overload;
-begin
-  for Result := 0 to High(Self) do
-    if (Self[Result] = item) then
-      Exit;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <First>
-  @action: Returns the first arr index that matches any of the items.
-  @note: Unmatch will be -1!
-[==============================================================================}
-function MArrayHelper.First(const items: MArray): Integer; overload;
-begin
-  for Result := 0 to High(Self) do
-    if items.Contains(Self[Result]) then
-      Exit;
-  Result := -1;
 end;
 
 {==============================================================================]
@@ -2399,41 +1058,6 @@ begin
       Result := l;	
   if (Result <> l) then
     SetLength(Self, Result);
-end;
-
-{==============================================================================]
-  <Fits>
-  @action: Returns true if arr size is at maximum maxValue.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Fits(const maxValue: Integer): Boolean; overload;
-begin
-  Result := (Self.Size <= maxValue);
-end;
-
-{==============================================================================]
-  <Fits>
-  @action: Returns true if arr size is between target start and stop.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Fits(const target: TRange): Boolean; overload;
-begin
-  Result := InRange(Self.Size, Min(target.start, target.stop), Max(target.start, target.stop));
-end;
-
-{==============================================================================]
-  <Flip>
-  @action: Reverses array arr.
-  @note: Alternative for TArray_Reverse
-[==============================================================================}
-function MArrayHelper.Flip: Boolean; overload;
-var
-  r: TRange;
-begin
-  r.Create(0, (Self.Size - 1));
-  Result := (r.stop > 0);
-  while (r.start < r.stop) do
-    Exchange(r.start.Increase, r.stop.Decrease);
 end;
 
 {==============================================================================]
@@ -2535,236 +1159,6 @@ begin
 end;
 
 {==============================================================================]
-  <GotAtLeast>
-  @action: Determines if the array contains at least a specified number of occurrences of an item.
-  @note:
-    - Uses the Count(item) function internally.
-    - Returns False if limit is greater than the actual occurrences.
-    - Single-pass (delegated to Count) and zero-based indexing.
-[==============================================================================}
-function MArrayHelper.GotAtLeast(const item: MType; const limit: Integer): Boolean; overload;
-begin
-  Result := (Self.Count(item) >= limit);
-end;
-
-{==============================================================================]
-  <GotAtMost>
-  @action: Determines if the array contains at most a specified number of occurrences of an item.
-  @note:
-    - Uses the Count(item) function internally.
-    - Returns False if the occurrences exceed the specified limit.
-    - Single-pass (delegated to Count) and zero-based indexing.
-[==============================================================================}
-function MArrayHelper.GotAtMost(const item: MType; const limit: Integer): Boolean; overload;
-begin
-  Result := (Self.Count(item) <= limit);
-end;
-
-{==============================================================================]
-  <Got>
-  @action: Determines if the array contains a number of occurrences of an item within a specified inclusive range.
-  @note:
-    - Uses the Count(item) function internally.
-    - The range is represented by TRange, which must implement Contains.
-    - Returns True if Count(item) is within [limit.start, limit.stop].
-    - Single-pass (delegated to Count) and zero-based indexing.
-[==============================================================================}
-function MArrayHelper.Got(const item: MType; const limit: TRange): Boolean; overload;
-begin
-  Result := limit.Contains(Self.Count(item));
-end; 
-
-{==============================================================================]
-  <Grow>
-  @action: Feeds item to array and returns the index position it was added to.
-  @note: Returns -1 if duplicates are not allowed and array already contains item.
-[==============================================================================}
-function MArrayHelper.Grow(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
-begin
-  if ((not allowDuplicates) and Self.Contains(item)) then
-    Exit(-1);
-  Result := Self.Size;
-  SetLength(Self, (Result + 1));
-  Self[Result] := item;
-end;
-
-{==============================================================================]
-  <HasAtLeast>
-  @action: Determines whether the array contains at least limit occurrences of item.
-  @note:
-    - Returns True as soon as the count reaches limit (early exit).
-    - Returns False if the array contains fewer than limit occurrences.
-    - Uses zero-based indexing (0..High(Self)).
-    - Optimized for large arrays; no temporary allocations are made.
-[==============================================================================}
-function MArrayHelper.HasAtLeast(const item: MType; const limit: Integer): Boolean; overload;
-var
-  i, c: Integer;
-begin
-  c := 0;
-  for i := 0 to High(Self) do
-    if (Self[i] = item) then
-    case (c >= limit) of
-      True: Exit(True);
-      False: Inc(c);
-    end;
-  Result := (c >= limit);
-end;
-
-{==============================================================================]
-  <HasAtMost>
-  @action: Determines whether the array contains at most limit occurrences of item.
-  @note:
-    - Returns False if the number of occurrences exceeds limit.
-    - Early exit is used for efficiency.
-    - Uses zero-based indexing (0..High(Self)).
-    - Optimized for large arrays; no temporary allocations are made.
-[==============================================================================}
-function MArrayHelper.HasAtMost(const item: MType; const limit: Integer): Boolean; overload;
-var
-  i, c: Integer;
-begin
-  c := 0;
-  for i := 0 to High(Self) do
-    if (Self[i] = item) then
-    case (c > limit) of
-      True: Exit(False);
-      False: Inc(c);
-    end;
-  Result := (c <= limit);
-end;
-
-{==============================================================================]
-  <Has>
-  @action: Determines whether the number of occurrences of item in the array
-           falls within the inclusive range specified by limit.
-  @note:
-    - `limit` is normalized first, ensuring that limit.start <= limit.stop.
-    - Early exits are used for efficiency:
-        * Exits False if the count exceeds the upper bound (`limit.stop`).
-        * Exits False if it becomes impossible to reach the lower bound (limit.start)
-          given the remaining elements in the array.
-    - Uses zero-based indexing (0..High(Self)).
-    - Optimized for large arrays; no temporary allocations are made.
-[==============================================================================}
-function MArrayHelper.Has(const item: MType; const limit: TRange): Boolean; overload;
-var
-  i, c, r: Integer;
-  n: TRange;
-begin
-  n := limit.Normalize;
-  c := 0;
-  r := Self.Length;
-  for i := 0 to High(Self) do
-  begin
-    if (Self[i] = item) then
-    case(c > n.stop) of
-      True: Exit(False);
-      False: Inc(c);
-    end;
-    Dec(r);
-    if ((c + r) < n.start) then
-      Exit(False);
-  end;
-  Result := InRange(c, n.start, n.stop);
-end;
-
-{==============================================================================]
-  <Holds>
-  @action: Returns true if arr contains (holds) WHOLE chain of items in it.
-  @note: Starting from any index and ending to any index!
-[==============================================================================}
-function MArrayHelper.Holds(const chain: MArray): Boolean; overload;
-var
-  a, b, x, y, z: Integer;
-  n: Boolean;
-begin
-  z := High(Self);
-  y := High(chain);
-  if ((z < y) or (y = -1)) then
-    Exit(False);
-  a := -1;
-  b := (z - y);
-  repeat
-    a := (a + 1);
-    for x := 0 to y do
-    begin
-      n := (Self[a + x] <> chain[x]);
-      if n then
-        Break;
-    end;
-    Result := not n;
-  until ((a = b) or Result);
-end;
-
-{==============================================================================]
-  <Homogeneous>
-  @action: Returns true if arr consists of ONLY same items.
-  @note: Requires at least single item. Otherwise returns False. (With empty arrays)
-[==============================================================================}
-function MArrayHelper.Homogeneous(const item: MType): Boolean; overload;
-var
-  h, i: Integer;
-begin
-  i := -1;
-  h := High(Self);
-  Result := (h > -1);
-  while (Result and (i.Increase < h)) do
-    Result := (Self[i] = item);
-end;
-
-{==============================================================================]
-  <Homogeneous>
-  @action: Returns true if arr consists of ONLY same items.
-  @note: Requires at least single item. Otherwise returns False. (With empty arrays)
-[==============================================================================}
-function MArrayHelper.Homogeneous: Boolean; overload;
-begin
-  Result := (Self.Exists and Homogeneous(Self[0]));
-end;
-
-{==============================================================================]
-  <Includes>
-  @action: Looks array for item starting from start index down to index 0. If found, Result will be True.
-  @note: Alternative to TArray_Contains, but this scans in opposite direction.
-[==============================================================================}
-function MArrayHelper.Includes(const item: MType; const index: Integer = 2147483647): Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := Min(High(Self), index) downto 0 do
-    if (item = Self[i]) then
-      Exit(True);
-  Result := False;
-end;
-
-{==============================================================================]
-  <Inject>
-  @action: Inserts the specified items into the current array at the given index.
-           Elements at and after that index are shifted to make room for the
-           inserted items.
-  @note: If the index exceeds the current length, the items are appended.
-         If the index is less than zero, insertion occurs at the beginning.
-         Passing an empty array leaves the original array unchanged.
-         Returns the new total number of elements after insertion.
-[==============================================================================}
-function MArrayHelper.Inject(const items: MArray; const index: Integer = 2147483647): Integer; overload;
-var
-  i, s, l, p: Integer;
-begin
-  s := Self.Size;
-  l := items.Length;
-  if (l = 0) then
-    Exit(s);
-  p := Max(Min(s, index), 0);
-  SetLength(Self, (s + l));
-  for i := (s - 1) downto p do
-    Self[i + l] := Self[i];
-  for i := 0 to (l - 1) do
-    Self[p + i] := items[i];
-end;
-
-{==============================================================================]
   <IntersectionCounted>
   @action: Counts the number of distinct elements in Self that also exist in Items.
            Each element is counted at most once, regardless of duplicates in either array.
@@ -2809,42 +1203,6 @@ function MArrayHelper.Kill: Integer; overload;
 begin
   Result := Self.Size;
   SetLength(Self, 0);
-end;
-
-{==============================================================================]
-  <Last>
-  @action: Returns the last index of arr.
-  @note: With empty array result will be -1!
-[==============================================================================}
-function MArrayHelper.Last: Integer; overload;
-begin
-  Result := IfThen(Self.Empty, -1, (Self.Size - 1));
-end;
-
-{==============================================================================]
-  <Last>
-  @action: Returns the last index that matches item in arr.
-  @note: Unmatch will be -1!
-[==============================================================================}
-function MArrayHelper.Last(const item: MType): Integer; overload;
-begin
-  for Result := High(Self) downto 0 do
-    if (Self[Result] = item) then
-      Exit;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <Last>
-  @action: Returns the last arr index that matches any of the items.
-  @note: Unmatch will be -1!
-[==============================================================================}
-function MArrayHelper.Last(const items: MArray): Integer; overload;
-begin
-  for Result := High(Self) downto 0 do
-    if items.Contains(Self[Result]) then
-      Exit;
-  Result := -1;
 end;
 
 {==============================================================================]
@@ -2925,135 +1283,6 @@ function MArrayHelper.Length: Integer; overload;
 begin
   Result := System.Length(Self);
 end;
-
-{==============================================================================]
-  <Loc>
-  @action: Returns last index position from arr which matched with item.
-  @note: Returns -1 if any of arr items doesnt match with item!
-[==============================================================================}
-function MArrayHelper.Loc(const item: MType; const index: Integer = 2147483647): Integer; overload;
-begin
-  for Result := Min(High(Self), index) downto 0 do
-    if (Self[Result] = item) then
-      Exit;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <Loc>
-  @action: Returns index position from arr which matches with items.
-  @note: Returns -1 if any of arr items doesnt match with items!
-[==============================================================================}
-function MArrayHelper.Loc(const items: MArray; const index: Integer = 2147483647): Integer; overload;
-var
-  h, i: Integer;
-begin
-  h := High(items);
-  if items.Populated then
-  for Result := Min(High(Self), index) downto 0 do
-    for i := 0 to h do
-      if (Self[Result] = items[i]) then
-        Exit;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <Location>
-  @action: Returns index position from arr which matched with item.
-  @note: Returns -1 if any of arr items doesnt match with item!
-[==============================================================================}
-function MArrayHelper.Location(const item: MType; const index: Integer = 2147483647): Integer; overload;
-var
-  l: Integer;
-begin
-  l := Self.Length;
-  Result := Min(l, (index + 1));
-  while (Result.Decrement > -1) do
-    if (Self[Result] = item) then
-      Exit;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <Location>
-  @action: Returns index position from arr which matches with items.
-  @note: Returns -1 if any of arr items doesnt match with items!
-[==============================================================================}
-function MArrayHelper.Location(const items: MArray; const index: Integer = 2147483647): Integer; overload;
-var
-  h, i, l: Integer;
-begin
-  if items.Populated then
-  begin
-    h := High(items);
-    l := Self.Length;
-    Result := Min(l, (index + 1));
-    while (Result.Decrement > -1) do
-      for i := 0 to h do
-        if (Self[Result] = items[i]) then
-          Exit;
-  end;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <Locations>
-  @action: Returns last index positions from arr which matched with item.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Locations(const item: MType; const index: Integer = 2147483647): TIntegerArray; overload;
-var
-  i, r, h, s: Integer;
-begin
-  r := 0;
-  h := High(Self);
-  s := Min(index, h);
-  if ((h > -1) and (s > -1)) then
-  begin
-    SetLength(Result, (s + 1));
-    for i := s downto 0 do
-      if (Self[i] = item) then
-        Result[r.Increase] := i;
-  end;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
-  <Locations>
-  @action: Returns last index positions from arr which matches with items.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Locations(const items: MArray; const index: Integer = 2147483647): TIntegerArray; overload;
-var
-  i, r, h, s: Integer;
-begin
-  r := 0;
-  h := High(Self);
-  s := Min(index, h);
-  if ((h > -1) and (s > -1) and items.Exists) then
-  begin
-    SetLength(Result, (s + 1));
-    for i := s downto 0 do
-      if items.Contains(Self[i]) then
-        Result[r.Increase] := i;
-  end;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
-  <Locations>
-  @action: Simply returns arr indexes.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Locations: TIntegerArray; overload;
-var
-  i, r: Integer;
-begin
-  SetLength(Result, Self.Size);
-  r := 0;
-  for i := High(Result) downto 0 do
-    Result[r.Increase] := i;  
-end; 
 
 {==============================================================================]
   <Mix>
@@ -3225,29 +1454,6 @@ begin
 end;
 
 {==============================================================================]
-  <Multi>
-  @action: Returns true if array contains at least threshold of items in it.
-  @note: None.	
-[==============================================================================}
-function MArrayHelper.Multi(const threshold: Integer = 2): Boolean; overload;
-begin
-  Result := (Self.Size >= threshold);
-end;
-
-{==============================================================================]
-  <Multi>
-  @action: Returns true if array contains at least threshold of items in it.
-  @note: None.	
-[==============================================================================}
-function MArrayHelper.Multi(const threshold: TRange): Boolean; overload;
-var
-  r: TRange;
-begin
-  r:= threshold.Normalize;
-  Result := InRange(Self.Size, r.start, r.stop);
-end;
-
-{==============================================================================]
   <Next>
   @action: Returns next items from array by index and count.
   @note: None.	
@@ -3264,72 +1470,6 @@ begin
       Result[i] := Self[(index + 1) + i];
   end else
     SetLength(Result, 0);
-end;
-
-{==============================================================================]
-  <NoneOf>
-  @action: Returns true if arr does not contain any items from forbidden.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.NoneOf(const forbidden: MArray): Boolean; overload;
-var
-  d: specialize TDictionary<MType, Boolean>;
-  i: Integer;
-begin
-  Result := True;
-  if (Self.Empty or forbidden.Empty) then
-    Exit;
-  d := specialize TDictionary<MType, Boolean>.Create;
-  try
-    for i := 0 to High(forbidden) do
-      d.AddOrSetValue(forbidden[i], True);
-    for i := 0 to High(Self) do
-      if d.ContainsKey(Self[i]) then
-        Exit(False); 
-  finally
-    d.Free;
-  end;
-end;
-
-{==============================================================================]
-  <Occupied>
-  @action  Returns True if the dynamic array contains one or more elements; 
-           otherwise returns False.
-  @note    Uses Low(Self) <= High(Self) to determine occupancy. This is 
-           functionally equivalent to Length(Self) > 0.	
-[==============================================================================}
-function MArrayHelper.Occupied: Boolean; overload;
-begin
-  Result := (Low(Self) <= High(Self));
-end;
-
-{==============================================================================]
-  <Occurs>
-  @action: Returns true item exists in arr EXACTLY(!) occurrence amount of times.
-  @note: Supports lookup for 0 items. Loops array through from beginning to end.	
-[==============================================================================}
-function MArrayHelper.Occurs(const item: MType; const occurrence: Integer = 1): Boolean; overload;
-var
-  o, p: Integer;
-begin
-  if (occurrence < 0) then
-    Exit(False);
-  case (occurrence = 0) of
-    False:
-    begin
-      o := 0;
-      p := -1;
-      while (o <= occurrence) do
-      begin
-        p := Self.Pos(item, (p + 1));
-        if (p = -1) then
-          Break;
-        o := (o + 1);
-      end;
-      Result := (o = occurrence);
-    end;
-    True: Result := (Self.Pos(item) = -1);
-  end;
 end;
 
 {==============================================================================]
@@ -3367,45 +1507,6 @@ end;
 function MArrayHelper.Overlay(const items: MArray; const index: Integer = 0): MArray; overload;
 begin
   Result := Self.Overlay(items, index, Default(MType));
-end;
-
-{==============================================================================]
-  <Oversize>
-  @action: Returns true if size of arr is OVER the limit.
-  @note: None.	
-[==============================================================================}
-function MArrayHelper.Oversize(const limit: Integer): Boolean; overload;
-begin
-  Result := (Self.Size > limit);
-end;
-
-{==============================================================================]
-  <Partition>
-  @action: Partitions array arr to 2D array by size of parts.
-  @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5,6][7]
-[==============================================================================}
-function MArrayHelper.Partition(const pSize: Integer): M2DArray; overload;
-var
-  p, i, j, s, r, l: Integer;
-begin
-  if ((pSize > 0) and Self.Populated) then
-  begin
-    l := Self.Length;
-    p := ((l + (pSize - 1)) div pSize);
-    SetLength(Result, p);
-    for i := 0 to (p - 1) do
-    begin
-      s := (i * pSize);
-      if ((s + pSize) > l) then
-        r := (l - s)
-      else
-        r := pSize;
-      SetLength(Result[i], r);
-      for j := 0 to (r - 1) do
-        Result[i][j] := Self[s + j];
-    end;
-  end else
-    SetLength(Result, 0);
 end;
 
 {==============================================================================]
@@ -3454,24 +1555,6 @@ begin
     end;
     False: Result := Self.Copy;
   end;
-end;
-
-{==============================================================================]
-  <Plain>
-  @action: Returns true if all array items are identical.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Plain: Boolean; overload;
-var
-  i, l: Integer;
-begin
-  l := Self.Length;
-  if (l <= 1) then
-    Exit(True);
-  for i := 1 to (l - 1) do
-    if (Self[i] <> Self[i - 1]) then
-      Exit(False);
-  Result := True;
 end;
 
 {==============================================================================]
@@ -3538,201 +1621,6 @@ begin;
   if Result then
   for i := 0 to (times - 1) do
     Self[i] := item;
-end;
-
-{==============================================================================]
-  <Populated(population: TRange)>
-  @action: Returns true if arr Length is between population TRange (start, stop).
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Populated(const population: TRange): Boolean; overload;
-begin
-  Result := InRange(Self.Size, population.Minimum, population.Maximum);
-end;
-
-{==============================================================================]
-  <Populated>
-  @action: Returns true if arr Length is between populationMin and populationMax.
-  @note: Strict! Min should NOT be higher than Max.
-[==============================================================================}
-function MArrayHelper.Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload;
-begin
-  Result := InRange(Self.Size, populationMin, populationMax);
-end;  
-
-{==============================================================================]
-  <Pos>
-  @action: Returns index position from arr which matched with item.
-  @note: Returns -1 if any of arr items doesnt match with item!
-[==============================================================================}
-function MArrayHelper.Pos(const item: MType; const index: Integer = 0): Integer; overload;
-begin
-  for Result := Max(0, index) to High(Self) do
-    if (Self[Result] = item) then
-      Exit;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <Pos>
-  @action: Returns index position from arr which matches with items.
-  @note: Returns -1 if any of arr items doesnt match with items!
-[==============================================================================}
-function MArrayHelper.Pos(const items: MArray; const index: Integer = 0): Integer; overload;
-var
-  h, i: Integer;
-begin
-  h := High(items);
-  if (h > -1) then
-  for Result := Max(0, index) to High(Self) do
-    for i := 0 to h do
-      if (Self[Result] = items[i]) then
-        Exit;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <Position>
-  @action: Returns index position from arr which matched with item.
-  @note: Returns -1 if any of arr items doesnt match with item!
-[==============================================================================}
-function MArrayHelper.Position(const item: MType; const index: Integer = 0): Integer; overload;
-var
-  l: Integer;
-begin
-  Result := Max(-1, (index - 1));
-  l := Self.Length;
-  while (Result.Increment < l) do
-    if (Self[Result] = item) then
-      Exit;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <Position>
-  @action: Returns index position from arr which matches with items.
-  @note: Returns -1 if any of arr items doesnt match with items!
-[==============================================================================}
-function MArrayHelper.Position(const items: MArray; const index: Integer = 0): Integer; overload;
-var
-  h, i, l: Integer;
-begin
-  if items.Populated then
-  begin
-    h := High(items);
-    Result := Max(-1, (index - 1));
-    l := Self.Length;
-    while (Result.Increment < l) do
-      for i := 0 to h do
-        if (Self[Result] = items[i]) then
-          Exit;
-  end;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <Positions>
-  @action: Returns index positions from arr which matched with item.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Positions(const item: MType; const index: Integer = 0): TIntegerArray; overload;
-var
-  i, r, h, s: Integer;
-begin
-  r := 0;
-  h := High(Self);
-  s := Max(0, index);
-  if ((h > -1) and (s <= h)) then
-  begin
-    SetLength(Result, ((h + 1) - s));
-    for i := s to h do
-      if (Self[i] = item) then
-        Result[r.Increase] := i;
-  end;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
-  <Positions>
-  @action: Returns index positions from arr which matches with items.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Positions(const items: MArray; const index: Integer = 0): TIntegerArray; overload;
-var
-  i, r, h, s: Integer;
-begin
-  r := 0;
-  h := High(Self);
-  s := Max(0, index);
-  if ((h > -1) and (s <= h) and items.Populated) then
-  begin
-    SetLength(Result, ((h + 1) - s));
-    for i := s to h do
-      if items.Contains(Self[i]) then
-        Result[r.Increase] := i;
-  end;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
-  <Positions>
-  @action: Simply returns arr indexes.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Positions: TIntegerArray; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Result) do
-    Result[i] := i;  
-end;
-
-{==============================================================================]
-  <Prepend>
-  @action: Inserts the specified items into the current array starting at the
-           given index (default = 0). Elements at and after that index are
-           shifted to follow the newly inserted items.
-  @note: If the index is less than 0, insertion occurs at the beginning.
-         If the index exceeds the array length, the items are appended.
-         Returns the new total number of elements after insertion.
-[==============================================================================}
-function MArrayHelper.Prepend(const items: MArray; const index: Integer = 0): Integer; overload;
-var
-  i: Integer;
-begin
-  i := Max(Min(index, Self.Size), 0);
-  Self := (Self.Copy(0, i) + items + Self.Copy(i, (Self.Size - i)));
-  Result := Self.Size;
-end;
-
-{==============================================================================]
-  <Presence>
-  @action: Returns true item exists in arr EXACTLY(!) occurrence amount of times.
-  @note: Supports lookup for 0 items. Loops array through from end to beginning.	
-[==============================================================================}
-function MArrayHelper.Presence(const item: MType; const occurrence: Integer = 1): Boolean; overload;
-var
-  l, o: Integer;
-begin
-  if (occurrence < 0) then
-    Exit(False);
-  case (occurrence = 0) of
-    False:
-    begin
-      o := 0;
-      l := Self.Length;
-      while (o <= occurrence) do
-      begin
-        l := Self.Loc(item, (l - 1));
-        if (l = -1) then
-          Break;
-        o := (o + 1);
-      end;
-      Result := (o = occurrence);
-    end;
-    True: Result := (Self.Loc(item) = -1);
-  end;
 end;
 
 {==============================================================================]
@@ -3937,89 +1825,6 @@ begin
 end;
 
 {==============================================================================]
-  <Put>
-  @action: Returns array arr filled with item to indexes (ID).
-  @note: Unsafe method! No safety checking.
-[==============================================================================}
-function MArrayHelper.Put(const ID: TIntegerArray; const item: MType): MArray; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
-    Result[i] := Self[i];
-  for i := 0 to High(ID) do
-    Result[ID[i]] := item;
-end;
-
-{==============================================================================]
-  <Put>
-  @action: Returns array arr filled with items to indexes (ID).
-  @note: Unsafe method! No safety checking.
-[==============================================================================}
-function MArrayHelper.Put(const ID: TIntegerArray; const items: MArray): MArray; overload;
-var
-  i, l: Integer;
-begin
-  SetLength(Result, Self.Size);
-  l := items.Length;
-  for i := 0 to High(Self) do
-    Result[i] := Self[i];
-  for i := 0 to High(ID) do
-    Result[ID[i]] := items[i mod l];
-end;
-
-{==============================================================================]
-  <Put>
-  @action: Returns array arr filled with items to starting from custom start index.
-  @note: Unsafe method! No safety checking.
-[==============================================================================}
-function MArrayHelper.Put(const index: Integer; const items: MArray): MArray; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
-    Result[i] := Self[i];
-  for i := 0 to High(items) do
-    Result[index + i] := items[i];
-end;
-
-{==============================================================================]
-  <Push>
-  @action: Places item in array with arr.
-  @note: Returns array (arr+item) length.
-[==============================================================================}
-function MArrayHelper.Push(const item: MType): MArray; overload;
-var
-  i, l: Integer;
-begin
-  l := Self.Length;
-  SetLength(Result, (l + 1));
-  for i := 0 to (l - 1) do
-    Result[i] := Self[i];
-  Result[l] := item;
-end;
-
-{==============================================================================]
-  <Push>
-  @action: Places items in array with arr.
-  @note: Returns array (arr+item) length.
-[==============================================================================}
-function MArrayHelper.Push(const items: MArray): MArray; overload;
-var
-  h, i, l: Integer;
-begin
-  h := High(items);
-  l := Self.Length;
-  SetLength(Result, (l + (h + 1)));
-  for i := 0 to (l - 1) do
-    Result[i] := Self[i];
-  for i := 0 to h do
-    Result[l + i] := items[i];
-end;
-
-{==============================================================================]
   <Randomized>
   @action: Returns randomized copy of array
   @note: None.
@@ -4129,120 +1934,6 @@ begin
 end;
 
 {==============================================================================]
-  <Reject>
-  @action: Returns a new array with elements from items excluded, up to and including the specified index.
-  @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
-         The default index filters the entire array.
-[==============================================================================}
-function MArrayHelper.Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
-var
-  i, l, m, c: Integer;
-begin
-  if (items.Empty or Self.Empty) then
-    Exit(Self.Copy);
-  l := Self.Length;
-  m := Min(index, (l - 1));
-  c := 0;
-  for i := 0 to m do
-    if not items.Contains(Self[i]) then
-      Inc(c);
-  SetLength(Result, (c + (l - (m + 1))));
-  c := 0;
-  for i := 0 to m do
-    if not items.Contains(Self[i]) then
-      Result[c.Increase] := Self[i];
-  for i := (m + 1) to (l - 1) do
-    Result[c.Increase] := Self[i];
-end;
-
-{==============================================================================]
-  <Remove>
-  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
-  @note: Returns amount of items that were removed. Supports start index position.
-[==============================================================================}
-function MArrayHelper.Remove(const item: MType; const index: Integer = 0; const all: Boolean = True): MArray; overload;
-var
-  l, i, r, m: Integer;
-  s: Boolean;
-begin
-  l := Self.Length;
-  if ((l = 0) or (index >= l)) then
-    Exit(Self.Copy);
-  m := Max(0, index);
-  s := False;
-  r := 0;
-  SetLength(Result, l);
-  for i := 0 to (m - 1) do
-    Result[i] := Self[i];
-  for i := m to (l - 1) do
-    if (s or (Self[i] <> item)) then
-      Result[r.Increase + m] := Self[i]
-    else
-      s := not all;
-  SetLength(Result, (r + m));
-end;
-
-{==============================================================================]
-  <Remove>
-  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
-  @note: Returns amount of items that were removed.
-[==============================================================================}
-function MArrayHelper.Remove(const item: MType; const all: Boolean): MArray; overload;
-begin
-  Result := Self.Remove(item, 0, all);
-end;
-
-{==============================================================================]
-  <Remove>
-  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
-  @note: Returns amount of items that were removed. Supports start index position.
-[==============================================================================}
-function MArrayHelper.Remove(const items: MArray; const index: Integer = 0; const all: Boolean = True): MArray; overload;
-var
-  a, b, l, i, r, m: Integer;
-  d, s: Boolean;
-begin
-  l := Self.Length;
-  b := High(items);
-  if ((l = 0) or (index >= l) or (b = -1)) then
-    Exit(Self.Copy);
-  m := Max(0, index);
-  r := 0;
-  s := False;
-  SetLength(Result, l);
-  for i := 0 to (m - 1) do
-    Result[i] := Self[i];
-  for i := m to (l - 1) do
-  begin
-    if not s then
-    for a := 0 to b do
-    begin
-      d := (Self[i] = items[a]);
-      if d then
-      begin
-        s := not all;
-        Break;
-      end;
-    end;
-    if not d then
-      Result[r.Increase + m] := Self[i]
-    else
-      d := not s;
-  end;
-  SetLength(Result, (r + m));
-end;
-
-{==============================================================================]
-  <Remove>
-  @action: Deletes item(s) from array arr. Only 1 if all is set as False.
-  @note: Returns amount of items that were removed.
-[==============================================================================}
-function MArrayHelper.Remove(const items: MArray; const all: Boolean): MArray; overload;
-begin
-  Result := Self.Remove(items, 0, all);
-end;
-
-{==============================================================================]
   <Reposition>
   @action: Moves item from oldIndex to newIndex in array arr.
   @note: Returns true with success.
@@ -4317,130 +2008,6 @@ begin
 end;
 
 {==============================================================================]
-  <Reversal>
-  @action: Returns array with items in reversed order.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Reversal: MArray; overload;
-var
-  r: TRange;
-begin
-  case Self.Size of
-    0: Exit([]);
-    1: Exit([Self[0]]);
-  end;
-  SetLength(Result, Self.Size);
-  r.Create(-1, Result.Size);
-  while (r.start.Increment <= r.stop.Decrement) do
-  begin
-    Result[r.start] := Self[r.stop];
-    if (r.start <> r.stop) then
-      Result[r.stop] := Self[r.start];
-  end;
-end;
-
-{==============================================================================]
-  <Reverse>
-  @action: Reverses items in array.
-  @note: Returns true with success (array contains 2 or more items)
-[==============================================================================}
-function MArrayHelper.Reverse: Boolean; overload;
-var
-  i, l: Integer;
-begin
-  l := Self.Length;
-  Result := (l > 1);
-  if Result then
-  for i := 0 to ((l div 2) - 1) do
-    Exchange(i, ((l - i) - 1));
-end;
-
-{==============================================================================]
-  <Reversed>
-  @action: Returns reversed version of array arr.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Reversed: MArray; overload;
-var
-  i, l: Integer;
-begin
-  l := Self.Length;
-  SetLength(Result, l);
-  for i := 0 to (l - 1) do
-    Result[i] := Self[(l - i) - 1];
-end;
-
-{==============================================================================]
-  <Reversify>
-  @action: Reverses the order of elements in a 1D array.
-           Works by creating a temporary array and copying elements in reverse order.
-  @note: - The operation modifies Self in place.
-         - Returns True if the array had 2 or more elements (reversal performed).
-         - Returns False if the array had 0 or 1 element (nothing changed).
-[==============================================================================}
-function MArrayHelper.Reversify: Boolean; overload;
-var
-  s: MArray;
-  i, l: Integer;
-begin
-  l := Self.Length;
-  Result := (l > 1);
-  if not Result then
-    Exit;
-  SetLength(s, l);
-  for i := 0 to (l - 1) do
-    s[i] := Self[(l - 1) - i];
-  Self := s;
-end;
-
-{==============================================================================]
-  <Reversion>
-  @action: Returns array with items in reversed order.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Reversion: MArray; overload;
-var
-  h, i, l: Integer;
-begin
-  l := Self.Length;
-  case l of
-    0: Exit([]);
-    1: Exit([Self[0]]);
-  end;
-  SetLength(Result, l);
-  h := (l div 2);
-  for i := 0 to (h - 1) do
-  begin
-    Result[i] := Self[(l - i) - 1];
-    Result[(l - i) - 1] := Self[i];
-  end;
-  if l.Odd then
-    Result[h] := Self[h];
-end;
-
-{==============================================================================]
-  <Runs>
-  @action: Groups consecutive identical values into sub-arrays.
-  @note: Input must be sorted for meaningful grouping; a new group is started
-         whenever the value differs from the previous element.
-[==============================================================================}
-function MArrayHelper.Runs: M2DArray; overload;
-var
-  i, r: Integer;
-begin
-  SetLength(Result, 0);
-  if Self.Empty then
-    Exit;
-  r := -1;
-  for i := 0 to High(Self) do
-  begin
-    if ((i = 0) or (Self[i] <> Self[i - 1])) then
-      SetLength(Result, (r.Increment + 1));
-    Result[r].Supply(Self[i]);
-  end;
-end;
-
-{==============================================================================]
   <Sample>
   @action: Returns sample from array by sSize.
   @note: None.
@@ -4456,118 +2023,6 @@ begin
   SetLength(Result, r.Size);
   for i := 0 to High(Result) do
     Result[i] := Self[r[i]];
-end;
-
-{==============================================================================]
-  <Scan>
-  @action: Scans array for item by ID. Returns all the positions.
-  @note: Unsafe method! No safety checking.
-[==============================================================================}
-function MArrayHelper.Scan(const ID: TRange; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload;
-var
-  i, r: Integer;
-begin
-  r := 0;
-  if Self.Populated then
-  begin
-    SetLength(Result, ID.Size);
-    case ID.Ascending of
-      True:
-      for i := ID.start to ID.stop do
-        if (r >= limit) then
-	      Break
-        else
-          if (Self[i] = item) then
-            Result[r.Increase] := i;
-      False:
-      for i := ID.start downto ID.stop do
-        if (r >= limit) then
-          Break
-        else
-          if (Self[i] = item) then
-	    Result[r.Increase] := i;
-    end;
-  end;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
-  <Scan>
-  @action: Scans array for item by ID. Returns all the positions.
-  @note: Unsafe method! No safety checking.
-[==============================================================================}
-function MArrayHelper.Scan(const ID: TIntegerArray; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload;
-var
-  i, r: Integer;
-begin
-  r := 0;
-  if Self.Empty then
-  begin
-    SetLength(Result, ID.Size);
-    for i := 0 to High(ID) do
-      if (r >= limit) then
-        Break
-      else
-        if (Self[ID[i]] = item) then
-	  Result[r.Increase] := ID[i];
-  end;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
-  <Scan>
-  @action: Scans array for items by ID. Returns all the positions.
-  @note: Unsafe method! No safety checking.
-[==============================================================================}
-function MArrayHelper.Scan(const ID: TRange; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
-var
-  i, r: Integer;
-begin
-  r := 0;
-  if (Self.Populated and items.Populated) then
-  begin
-    SetLength(Result, ID.Size);
-    case ID.Ascending of
-      True:
-      for i := ID.start to ID.stop do
-        if (r >= limit) then
-          Break
-        else
-          if items.Contains(Self[i]) then
-            Result[r.Increase] := i;
-      False:
-      for i := ID.start downto ID.stop do
-        if (r >= limit) then
-          Break
-        else
-          if items.Contains(Self[i]) then
-            Result[r.Increase] := i;
-    end;
-  end;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
-  <Scan>
-  @action: Scans array for items by ID. Returns all the positions.
-  @note: Unsafe method! No safety checking.
-[==============================================================================}
-function MArrayHelper.Scan(const ID: TIntegerArray; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
-var
-  i, r: Integer;
-begin
-  r := 0;
-  if (Self.Populated and items.Populated) then
-  begin
-    SetLength(Result, ID.Size);
-    for i := 0 to High(ID) do
-      if (r >= limit) then
-        Break
-      else
-        if items.Contains(Self[ID[i]]) then
-	  Result[r.Increase] := ID[i];
-  end;
-  SetLength(Result, r);
 end;
 
 {==============================================================================]
@@ -4764,21 +2219,6 @@ begin
 end;
 
 {==============================================================================]
-  <Singular>
-  @action: Returns true if all array items are identical.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Singular: Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := 1 to High(Self) do
-    if (Self[i] <> Self[i - 1]) then
-      Exit(False);
-  Result := True;
-end; 
-
-{==============================================================================]
   <Size> 
   @action: Returns array length.
   @note: Simply Result := Length(arr);
@@ -4818,36 +2258,6 @@ begin
     Result[i] := Self[i];
   for i := l to (aSize - 1) do
     Result[i] := null;
-end;
-
-{==============================================================================]
-  <SizeBetween>
-  @action: Returns true if size is at equal/greater than sMin and equal/lesser than sMax.
-  @note: 	
-[==============================================================================}
-function MArrayHelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload;
-begin
-  Result := InRange(Self.Size, sMin, sMax);
-end;
-
-{==============================================================================]
-  <SizeMax>
-  @action: Returns true if size is at equal/lesser than target.
-  @note: 	
-[==============================================================================}
-function MArrayHelper.SizeMax(const target: Integer): Boolean; overload;
-begin
-  Result := (Self.Size <= target);
-end;
-
-{==============================================================================]
-  <SizeMin>
-  @action: Returns true if size is at equal/greater than target.
-  @note: 	
-[==============================================================================}
-function MArrayHelper.SizeMin(const target: Integer): Boolean; overload;
-begin
-  Result := (Self.Size >= target);
 end;
 
 {==============================================================================]
@@ -5040,188 +2450,6 @@ begin
 end;
 
 {==============================================================================]
-  <Strip>
-  @action: Removes item(s) from arr and returns it.
-  @note: 	
-[==============================================================================}
-function MArrayHelper.Strip(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
-var
-  p: TIntegerArray;
-  r: TRange;
-begin
-  if Self.Empty then
-    Exit([]);
-  if eraseDuplicates then
-    p := Self.Locations(item)
-  else
-    p := [Self.Loc(item)];
-  r.Create(0, High(Self));
-  Result := Self.Get(p.Inverted(r));
-end;
-
-{==============================================================================]
-  <SubarrayLocation>
-  @action: Returns subarray position in arr that match pattern exactly.
-  @note: arr[0,1,2,0,1,2,3].([1,2]) => 4	
-[==============================================================================}
-function MArrayHelper.SubarrayLocation(const pattern: MArray): Integer; overload;
-var
-  i, j, l, s, p: Integer;
-begin
-  l := Self.Length;
-  p := pattern.Size;
-  if ((p > 0) and (p <= l)) then
-  for i := (l - p) downto 0 do
-  begin
-    s := 0;
-    for j := 0 to (p - 1) do
-      if (Self[i + j] <> pattern[j]) then
-        Break
-      else
-        s := (s + 1);
-    if (s = p) then
-      Exit(i);
-  end;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <SubarrayLocations>
-  @action: Returns subarray positions in arr that match pattern exactly.
-  @note: arr[0,1,2,0,1,2,3].([1,2]) => [4,1]	
-[==============================================================================}
-function MArrayHelper.SubarrayLocations(const pattern: MArray): TIntegerArray; overload;
-var
-  i, j, l, s, r, p: Integer;
-begin
-  l := Self.Length;
-  p := pattern.Size;
-  SetLength(Result, 0);
-  r := 0;
-  if ((p > 0) and (p <= l)) then
-  begin
-    SetLength(Result, ((l - p) + 1));
-    for i := (l - p) downto 0 do
-    begin
-      s := 0;
-      for j := 0 to (p - 1) do
-        if (Self[i + j] <> pattern[j]) then
-          Break
-        else
-          s := (s + 1);
-      if (s = p) then
-        Result[r.Increase] := i;
-    end;
-  end;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
-  <SubarrayPosition>
-  @action: Returns subarray position in arr that match pattern exactly.
-  @note: arr[0,1,2,0,1,2,3].([1,2]) => 1	
-[==============================================================================}
-function MArrayHelper.SubarrayPosition(const pattern: MArray): Integer; overload;
-var
-  i, j, l, p: Integer;
-  f: Boolean;
-begin
-  l := Self.Length;
-  p := pattern.Size;
-  if ((p > 0) and (p <= l)) then
-  for i := 0 to (l - p) do
-  begin
-    f := True;
-    for j := 0 to (p - 1) do
-      if (Self[i + j] <> pattern[j]) then
-      begin
-        f := False;
-        Break;
-      end;
-    if f then
-      Exit(i);
-  end;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <SubarrayPositions>
-  @action: Returns subarray positions in arr that match pattern exactly.
-  @note: arr[0,1,2,0,1,2,3].([1,2]) => [1,4]	
-[==============================================================================}
-function MArrayHelper.SubarrayPositions(const pattern: MArray): TIntegerArray; overload;
-var
-  i, j, l, p, r: Integer;
-  f: Boolean;
-begin
-  l := Self.Length;
-  p := pattern.Size;
-  SetLength(Result, 0);
-  r := 0;
-  if ((p > 0) and (p <= l)) then
-  begin
-    SetLength(Result, ((l - p) + 1));
-    for i := 0 to (l - p) do
-    begin
-      f := True;
-      for j := 0 to (p - 1) do
-        if (Self[i + j] <> pattern[j]) then
-        begin
-          f := False;
-          Break;
-        end;
-      if f then
-        Result[r.Increase] := i;
-    end;
-  end;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
-  <Subset>
-  @action: Returns true if arr is subset of items.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Subset(const items: MArray): Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := 0 to High(Self) do
-    if not items.Contains(Self[i]) then
-      Exit(False);
-  Result := True;
-end;
-
-{==============================================================================]
-  <Supply>
-  @action: Adds item to the end of the array.
-  @note: Returns the index where item was inserted.
-[==============================================================================}
-function MArrayHelper.Supply(const item: MType): Integer; overload;
-begin
-  Result := Self.Size;
-  SetLength(Self, (Result + 1));
-  Self[Result] := item;
-end;
-
-{==============================================================================]
-  <Supply>
-  @action: Adds items to the end of the array.
-  @note: Returns the index where items were inserted.
-[==============================================================================}
-function MArrayHelper.Supply(const items: MArray): Integer; overload;
-var
-  i: Integer;
-begin
-  if items.Empty then
-    Exit(-1);
-  Result := Self.Size;
-  SetLength(Self, (Result + items.Size));
-  for i := 0 to High(items) do
-    Self[Result + i] := items[i];
-end;
-
-{==============================================================================]
   <Swapped>
   @action: Swaps the contents of this array with the given target array.
   @note: The swap is O(1) because dynamic arrays are reference-counted.
@@ -5298,46 +2526,6 @@ begin
 end;
 
 {==============================================================================]
-  <To2D>
-  @action: Converts 1D array to 2D by rows and columns.
-  @note: Make sure Length(array) equals rows*columns (otherwise returns [])! Working examples below.
-         TIA := [1,2,3,4,5,6];
-         TIA.To2D(2, 3) = [[1, 2, 3], [4, 5, 6]]
-         TIA.To2D(3, 2) = [[1, 2], [3, 4], [5, 6]]
-[==============================================================================}
-function MArrayHelper.To2D(const rows, columns: Integer): M2DArray; overload;
-var
-  i, r, c, l: Integer;
-begin
-  l := Self.Length;
-  SetLength(Result, rows, columns);
-  i := 0;
-  for r := 0 to (rows - 1) do
-    for c := 0 to (columns - 1) do
-      if (i < l) then
-        Result[r][c] := Self[i.Increase];
-end;
-
-{==============================================================================]
-  <To2D>
-  @action: Converts 1D array to 2D by height.
-  @note: 
-[==============================================================================}
-function MArrayHelper.To2D(const height: Integer): M2DArray; overload;
-var
-  l, w, i, r, c: Integer;
-begin
-  l := Self.Length;
-  w := Ceil(l / height);
-  SetLength(Result, height, w);
-  i := 0;
-  for r := 0 to (height - 1) do
-    for c := 0 to (w - 1) do
-      if (i < l) then
-        Result[r][c] := Self[i.Increase];
-end;
-
-{==============================================================================]
   <Trade> 
   @action: Swaps array arr and array b.
   @note: arr will be b and b will be arr.
@@ -5354,16 +2542,6 @@ begin
     b := a.Copy;
     SetLength(a, 0);
   end;
-end;
-
-{==============================================================================]
-  <Undersize>
-  @action: Returns true if size of arr is UNDER the limit.
-  @note: None.	
-[==============================================================================} 
-function MArrayHelper.Undersize(const limit: Integer): Boolean; overload;
-begin
-  Result := (Self.Size < limit);
 end;
 
 {==============================================================================]
@@ -5396,36 +2574,6 @@ begin
   finally
     d.Free;
   end;
-end;
-
-{==============================================================================]
-  <Uniform>
-  @action: Returns true if arr is consistent with only 1 item.
-  @note: Returns True with empty arrays!
-[==============================================================================}
-function MArrayHelper.Uniform: Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := 1 to High(Self) do
-    if (Self[i] <> Self[0]) then
-      Exit(False);
-  Result := True;
-end;
-
-{==============================================================================]
-  <Uniform>
-  @action: Returns true if arr is consistent with only custom item.
-  @note: Returns True with empty arrays!
-[==============================================================================}
-function MArrayHelper.Uniform(const item: MType): Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := 0 to High(Self) do
-    if (Self[i] <> item) then
-      Exit(False);
-  Result := True;
 end;
 
 {==============================================================================]
