@@ -11,3 +11,19 @@
 {$I BinaryOps/Search.inc}
 {$I BinaryOps/Selection.inc}
 {$I BinaryOps/Sort.inc}
+
+{$I Analytics.inc}
+{$I Bounding.inc}
+{$I Clustering.inc}
+{$I Conversion.inc}
+{$I Deduplicate.inc}
+{$I Merging.inc}
+{$I Monotone.inc}
+{$I Navigation.inc}
+{$I Selection.inc}
+{$I Sorting.inc}
+{$I Spanning.inc}
+{$I Ternary.inc}
+{$I Transformation.inc}
+{$I Traversal.inc}
+{$I Validation.inc}
