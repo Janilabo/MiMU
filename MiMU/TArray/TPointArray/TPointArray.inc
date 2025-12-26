@@ -1,7 +1,7 @@
 {$DEFINE TPoint}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
-TPA = class
+CPointArray = class
   class function Init(var arr: TPointArray): Integer; overload; 
   class function Unique(var arr: TPointArray): Integer; overload; 
   class function Create(const xRange, yRange: TRange): TPointArray; overload; 
@@ -507,7 +507,7 @@ end;
 function TPointArrayHelper.Undupe: TPointArray; 
 begin
   Result := Self.Copy;
-  TPA.Unique(Result);
+  CPointArray.Unique(Result);
 end;
 
 {==============================================================================]
@@ -8832,14 +8832,14 @@ begin
   end;
 end;
 
-class function TPA.Init(var arr: TPointArray): Integer; overload; 
+class function CPointArray.Init(var arr: TPointArray): Integer; overload; 
 begin
   Result := Length(arr);
   if (Result > 0) then
     FillChar(arr[0], (Result * SizeOf(TPoint)), 0);
 end;
 
-class function TPA.Unique(var arr: TPointArray): Integer; overload; 
+class function CPointArray.Unique(var arr: TPointArray): Integer; overload; 
 var
   i, r, l, w, h: Integer;
   m: T2DBooleanArray;
@@ -8860,7 +8860,7 @@ begin
   Result := (l - Length(arr));
 end;
 
-class function TPA.Create(const xRange, yRange: TRange): TPointArray; overload; 
+class function CPointArray.Create(const xRange, yRange: TRange): TPointArray; overload; 
 var
   x, y, i: Integer;
 begin
@@ -8871,7 +8871,7 @@ begin
       Result[i.Increase] := Point(x, y);
 end;
 
-class function TPA.Create(const xRange, yRange: TRange; const offset: TPoint): TPointArray; overload; 
+class function CPointArray.Create(const xRange, yRange: TRange; const offset: TPoint): TPointArray; overload; 
 var
   x, y, i: Integer;
 begin
@@ -8882,7 +8882,7 @@ begin
       Result[i.Increase] := Point((x + offset.X), (y + offset.Y));
 end;
 
-class function TPA.Create(const xValues, yValues: TIntegerArray): TPointArray; overload; 
+class function CPointArray.Create(const xValues, yValues: TIntegerArray): TPointArray; overload; 
 var
   i: Integer;
 begin
@@ -8891,7 +8891,7 @@ begin
     Result[i] := Point(xValues[i], yValues[i]);	
 end;
 
-class function TPA.Create(const xValues, yValues: TIntegerArray; const offset: TPoint): TPointArray; overload; 
+class function CPointArray.Create(const xValues, yValues: TIntegerArray; const offset: TPoint): TPointArray; overload; 
 var
   i: Integer;
 begin

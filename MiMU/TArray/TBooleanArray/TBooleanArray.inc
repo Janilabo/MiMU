@@ -1,7 +1,7 @@
 {$DEFINE Boolean}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
-TBA = class
+CBooleanArray = class
   {$DEFINE METHODS}{$I TBooleanArray.pph}{$UNDEF METHODS}
 end;
 {$ENDIF}

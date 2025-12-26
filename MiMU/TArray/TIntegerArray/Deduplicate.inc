@@ -12,7 +12,7 @@ function Unduped: TIntegerArray;
 function TIntegerArrayHelper.Undupe: TIntegerArray;
 begin
   Result := Self.Copy;
-  TIA.Unique(Result);
+  CIntegerArray.Unique(Result);
 end;
 
 {==============================================================================]

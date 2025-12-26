@@ -1,7 +1,7 @@
 {$DEFINE Integer}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
-TIA = class
+CIntegerArray = class
 public
   class function Init(var arr: TIntegerArray): Integer; overload; 
   class function Reverse(var arr: TIntegerArray): Boolean; overload; 
@@ -17,8 +17,6 @@ TIntegerArrayHelper = type helper for TIntegerArray
   {$I TIntegerArray.pph}
   function Numberline: TIntegerArray;
   function Reinit: Integer; overload;
-  function Attach(const items: TIntegerArray): Integer; overload;
-  function Embed(const items: TIntegerArray; const index: Integer = 2147483647): Integer; overload; 
 end;
 {$ENDIF}
 
@@ -75,61 +73,14 @@ begin
     FillChar(Pointer(Self)^, (Result * SizeOf(Integer)), 0);
 end;
 
-{==============================================================================]
-  <Attach>
-  @action: Appends all points from the given array to the end of Self.
-           Returns the new total length of the array after appending.
-  @note:   Uses Move() for efficiency since Integer is an unmanaged type.
-           If the input array is empty, the function returns the current length
-           of Self without modification.
-[==============================================================================}
-function TIntegerArrayHelper.Attach(const items: TIntegerArray): Integer; overload;
-var
-  l, i: Integer;
-begin
-  l := Self.Length;
-  i := items.Size;
-  if (i = 0) then
-    Exit(l);
-  Result := (l + i);
-  SetLength(Self, Result);
-  Move(items[0], Self[l], (i * SizeOf(Integer)));
-end;
-
-{==============================================================================]
-  <Embed>
-  @action: Inserts the contents of another integer array into the current array
-           at the specified index. Existing elements from that position onward
-           are shifted to make room for the new items.
-  @note: If the index exceeds the current length, the items are appended.
-         Passing an empty array leaves the original array unchanged.
-         The function returns the new total element count.
-[==============================================================================}
-function TIntegerArrayHelper.Embed(const items: TIntegerArray; const index: Integer = 2147483647): Integer; overload;
-var
-  s, l, p, t: Integer;
-begin
-  s := Self.Size;
-  l := items.Length;
-  if (l = 0) then
-    Exit(s);
-  p := EnsureRange(index, 0, s);
-  t := (s - p);
-  SetLength(Self, (s + l));
-  if (t > 0) then
-    Move(Self[p], Self[p + l], (t * SizeOf(Integer)));
-  Move(items[0], Self[p], (l * SizeOf(Integer)));
-  Result := Self.Size;
-end;
-
-class function TIA.Init(var arr: TIntegerArray): Integer; overload; 
+class function CIntegerArray.Init(var arr: TIntegerArray): Integer; overload; 
 begin
   Result := Length(arr);
   if (Result > 0) then
     FillChar(arr[0], (Result * SizeOf(Integer)), 0);
 end;
 
-class function TIA.Unique(var arr: TIntegerArray): Integer; overload; 
+class function CIntegerArray.Unique(var arr: TIntegerArray): Integer; overload; 
 var
   x, y, z: Integer;
   r: TRange;
@@ -151,7 +102,7 @@ begin
     Result := 0;
 end;
 
-class function TIA.Reverse(var arr: TIntegerArray): Boolean; overload; 
+class function CIntegerArray.Reverse(var arr: TIntegerArray): Boolean; overload; 
 var
   a: TIntegerArray;
   i: Integer;
@@ -165,7 +116,7 @@ begin
   Move(a[0], arr[0], (Length(arr) * SizeOf(Integer)));
 end;
 
-class function TIA.Reversed(const arr: TIntegerArray): TIntegerArray; overload; 
+class function CIntegerArray.Reversed(const arr: TIntegerArray): TIntegerArray; overload; 
 var
   i, r: Integer;
 begin
@@ -181,7 +132,7 @@ begin
   end;
 end;
 
-class function TIA.Combine(const A, B: TIntegerArray): TIntegerArray; overload; 
+class function CIntegerArray.Combine(const A, B: TIntegerArray): TIntegerArray; overload; 
 var
   x, y: Integer;
 begin

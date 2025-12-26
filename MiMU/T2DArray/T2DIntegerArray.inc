@@ -1,7 +1,7 @@
 {$DEFINE Integer}{$I ../Type/Defines.inc}
 
 {$IFDEF TYPES}
-ATIA = class
+C2DIntegerArray = class
 public
   class function Merge(const arr: T2DIntegerArray): TIntegerArray; overload; 
   class function Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
@@ -20,7 +20,7 @@ end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-class function ATIA.Merge(const arr: T2DIntegerArray): TIntegerArray; overload; 
+class function C2DIntegerArray.Merge(const arr: T2DIntegerArray): TIntegerArray; overload; 
 var
   i, r: Integer;
 begin
@@ -33,7 +33,7 @@ begin
       Move(arr[i][0], Result[r.Increase(arr[i].Size)], (arr[i].Size * SizeOf(Integer)));
 end;
 
-class function ATIA.Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
+class function C2DIntegerArray.Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
 var
   x, y: Integer;
 begin
@@ -43,7 +43,7 @@ begin
       Result[y][x] := value;
 end;
 
-class function ATIA.Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
+class function C2DIntegerArray.Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
 var
   r, c: Integer;
 begin

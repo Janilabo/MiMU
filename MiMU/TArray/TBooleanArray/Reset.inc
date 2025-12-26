@@ -20,7 +20,7 @@ begin
     FillChar(Pointer(Self)^, (Result * SizeOf(Boolean)), 0);
 end;
 
-class function TBA.Init(var arr: TBooleanArray): Integer; overload; 
+class function CBooleanArray.Init(var arr: TBooleanArray): Integer; overload;
 begin
   Result := Length(arr);
   if (Result > 0) then
