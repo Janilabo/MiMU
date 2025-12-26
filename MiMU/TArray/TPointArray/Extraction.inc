@@ -12,6 +12,8 @@ function YAxis(const rUnique: Boolean = True): TIntegerArray; overload;
 function Axes(var X, Y: TIntegerArray): Integer; overload;
 function Axed: T2DIntegerArray; overload;
 function Axed(var X, Y: TIntegerArray): Integer; overload;
+function Unzip(var xArr, yArr: TIntegerArray): Integer;
+function Zip(const xArr, yArr: TIntegerArray): Integer;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -240,5 +242,39 @@ begin
     X[i] := Self[i].X;
     Y[i] := Self[i].Y;
   end;
+end;
+
+{==============================================================================]
+  <Unzip>
+  @action: Stores arr X and Y values to xArr and yArr.
+  @note: Returns Length(arr).
+[==============================================================================}
+function TPointArrayHelper.Unzip(var xArr, yArr: TIntegerArray): Integer; 
+var
+  i: Integer;
+begin
+  Result := Self.Size;
+  SetLength(xArr, Result);
+  SetLength(yArr, Result);
+  for i := 0 to (Result - 1) do
+  begin
+    xArr[i] := Self[i].X;
+    yArr[i] := Self[i].Y;
+  end;
+end;
+
+{==============================================================================]
+  <Zip>
+  @action: Zips TPointArray with xArr and yArr.
+  @note: Uses minimum length(!), if xArr differs from yArr size.
+[==============================================================================}
+function TPointArrayHelper.Zip(const xArr, yArr: TIntegerArray): Integer; 
+var
+  i: Integer;
+begin
+  Result := Min(xArr.Size, yArr.Size);
+  SetLength(Self, Result);
+  for i := 0 to (Result - 1) do
+    Self[i] := Point(xArr[i], yArr[i]);
 end;
 {$ENDIF}
