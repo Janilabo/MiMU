@@ -18,6 +18,8 @@ function Put(const ID: TIntegerArray; const items: MArray): MArray; overload;
 function Put(const index: Integer; const items: MArray): MArray; overload;
 function Supply(const item: MType): Integer; overload;
 function Supply(const items: MArray): Integer; overload;
+function Unshift(const item: MType): MArray; overload;
+function Unshift(const items: MArray): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -361,5 +363,41 @@ begin
   SetLength(Self, (Result + items.Size));
   for i := 0 to High(items) do
     Self[Result + i] := items[i];
+end;
+
+{==============================================================================]
+  <Unshift>
+  @action: Grows arr with item.
+  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
+[==============================================================================}
+function MArrayHelper.Unshift(const item: MType): MArray; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  SetLength(Result, (l + 1));
+  for i := l downto 1 do
+    Result[i] := Self[i - 1];
+  Result[0] := item;
+end;
+
+{==============================================================================]
+  <Unshift>
+  @action: Grows arr with items. Returns the index of last added item.
+  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
+[==============================================================================}
+function MArrayHelper.Unshift(const items: MArray): MArray; overload;
+var
+  l, i, r: Integer;
+begin
+  if items.Empty then
+    Exit(Self.Copy);
+  l := items.Length;
+  r := (Self.Size + l);
+  SetLength(Result, r);
+  for i := (r - 1) downto l do
+    Result[i] := Self[i - l];
+  for i := 0 to (l - 1) do
+    Result[i] := items[i];
 end;
 {$ENDIF}

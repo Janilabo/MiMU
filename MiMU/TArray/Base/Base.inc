@@ -3,22 +3,10 @@
 
 function Any(const null: MType): MType; overload;
 function Any: MType; overload;  
-function Blend(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 function Clear: Boolean; overload;
-function Clone(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
-function Clone(const ID: TIntegerArray): MArray; overload;
-function Cloned: MArray; overload;
-function Combine(const b: MArray): MArray; overload;
-function Copied: MArray; overload;
-function Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Count(const item: MType): Integer; overload;
 function Count(const items: MArray): Integer; overload;
 function Disordered: MArray; overload;
-function Distinct: Integer; overload;
-function Domain: TRange; overload;
-function Dupe: MArray; overload;
-function Duplicate(const xTimes: Integer = 1): MArray; overload;
-function Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): MArray; overload;
 function Exch(const aIndex, bIndex: Integer): Boolean; overload;
 function Exchange(const aIndex, bIndex: Integer): Boolean; overload;
 function Exchange(var b: MArray): Integer; overload;
@@ -30,11 +18,6 @@ function Fit: Integer; overload;
 function Fit(const aSize: Integer): Integer; overload;
 function Fit(const aBounds: TRange): Integer; overload;
 function Free: Integer; overload;
-function FromLeft(const count: Integer; const index: Integer = 2147483647): MArray; overload;
-function FromRight(const count: Integer; const index: Integer = 0): MArray; overload;
-function Get: MArray; overload;
-function Get(const ID: TIntegerArray): MArray; overload;
-function Get(const ID: TRange): MArray; overload;
 function IntersectionCounted(const items: MArray): Integer; overload;
 function Kill: Integer; overload;
 function LeastCommon: MType; overload;
@@ -47,9 +30,6 @@ function MostFrequent: MType; overload;
 function Movement(const moves: TConnectionArray): MArray; overload;
 function Movements(const target: MArray): TConnectionArray; overload;
 function Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
-function Overlay(const items: MArray; const index: Integer; const init: MType): MArray; overload;
-function Overlay(const items: MArray; const index: Integer = 0): MArray; overload;
-function Patch(const index: Integer; const items: MArray): Integer; overload;
 function Pick(const items: MArray; const index: Integer = 0): MArray; overload;
 function Pop: MType; overload;
 function Pop(const null: MType): MType; overload;
@@ -74,21 +54,14 @@ function Shuffle(const shuffles: Integer = 1): MArray; overload;
 function Size: Integer; overload;
 function Size(const aSize: Integer): MArray; overload;
 function Size(const aSize: Integer; const null: MType): MArray; overload;
-function Slice(const r: TRange): MArray; overload;
-function Slice(const r: TRangeArray): MArray; overload;
 function Some: MArray; overload;
 function Some(const amount: Integer): MArray; overload;
 function Span: TRange; overload;
 function Span(const subArray: MArray; const index: Integer = 2147483647): TRange; overload;
 function Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload;
 function Swapped(var target: MArray): Integer; overload;
-function SwapMerged(var target: MArray): MArray; overload;
-function SwappedMerge(var target: MArray): MArray; overload;
 function Trade(var b: MArray): Integer; overload;
-function Uniques: TIntegerArray; overload;
 function Uniformity: Double; overload;
-function Unshift(const item: MType): MArray; overload;
-function Unshift(const items: MArray): MArray; overload;
 function Waste: Integer; overload;
 function Zigzag(const zAscending: Boolean = True): MArray; overload;
 {$IFDEF Sortable}
@@ -240,49 +213,6 @@ begin
 end;
 
 {==============================================================================]
-  <Blend> 
-  @action: Blends items with array, cleverly.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Blend(const items: MArray; const index: Integer = 2147483647): MArray; overload;
-var
-  s, l, p, r, i: Integer;
-begin
-  s := Self.Length;
-  if (s = 0) then
-    Exit(items.Copy);
-  l := items.Size;
-  if (l = 0) then
-    Exit(Self.Copy);
-  case (index > 0) of
-    True:
-    begin
-      p := index;
-      if (p > s) then
-        p := s;
-      r := (p + l);
-      SetLength(Result, r);
-      for i := 0 to (p - 1) do
-        Result[i] := Self[i];
-      for i := 0 to (l - 1) do
-        Result[p + i] := items[i];
-    end;
-	False:
-    begin
-      p := ((s + index) - 1);
-      if (p < 0) then
-        p := 0;
-      r := (l + (s - p));
-      SetLength(Result, r);
-      for i := 0 to (l - 1) do
-        Result[i] := items[i];
-      for i := p to (s - 1) do
-        Result[l + (i - p)] := Self[i];
-    end;
-  end;
-end;
-
-{==============================================================================]
   <Clear>
   @action: SetLength(arr, 0) and returns true if items existed before doing it.
   @note: None.
@@ -291,134 +221,6 @@ function MArrayHelper.Clear: Boolean; overload;
 begin
   Result := (Self.Length > 0);
   SetLength(Self, 0);
-end;
-
-{==============================================================================]
-  <Clone>
-  @action: Returns copy of an array arr.
-  @note: Contains support for starting index and count. -1 count uses Length(arr)!
-[==============================================================================}
-function MArrayHelper.Clone(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
-var
-  i, s, c: Integer;
-begin
-  if (count > 0) then
-  begin
-    if (index < 0) then
-      c := (index + count)
-    else
-      c := Min(count, (Self.Size - index));
-    s := Max(0, index);
-    SetLength(Result, c);
-    for i := s to ((s + c) - 1) do
-      Result[i - s] := Self[i];
-  end else
-    SetLength(Result, 0);
-end;
-
-{==============================================================================]
-  <Clone>
-  @action: Outputs array of items from arr by indexes (ID).
-  @note: Ignores invalid ID's (doesn't include those to result, they will be left out).
-[==============================================================================}
-function MArrayHelper.Clone(const ID: TIntegerArray): MArray; overload;
-var
-  i, h, l, r: Integer;
-begin
-  r := 0;
-  if (ID.Populated and Self.Populated) then
-  begin
-    h := High(Self);
-    l := ID.Size;
-    SetLength(Result, l);
-    for i := 0 to (l - 1) do
-      if ((ID[i] <= h) and (ID[i] > -1)) then
-        Result[r.Increase] := Self[ID[i]];
-  end;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
-  <Cloned>
-  @action: Simply returns a clone of array.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Cloned: MArray; overload;
-var
-  r: TRange;
-begin
-  case Self.Size of
-    0: Exit([]);
-    1: Exit([Self[0]]);
-  end;
-  SetLength(Result, Self.Size);
-  r.Create(-1, Result.Size);
-  while (r.start.Increment <= r.stop.Decrement) do
-  begin
-    Result[r.start] := Self[r.start];
-    if (r.start <> r.stop) then
-      Result[r.stop] := Self[r.stop];
-  end;
-end;
-
-{==============================================================================]
-  <Combine>
-  @action: Combines arrays arr and b together as single array.
-  @note: This is an alternative method. :)
-[==============================================================================}
-function MArrayHelper.Combine(const b: MArray): MArray; overload;
-begin
-  SetLength(Result, 0);
-  Insert(Self, Result, 0);
-  Insert(b, Result, Self.Size);
-end;
-
-{==============================================================================]
-  <Copy>
-  @action: Returns copy of an array arr.
-  @note: Contains support for starting index and count. -1 count uses Length(arr)!
-[==============================================================================}
-function MArrayHelper.Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
-var
-  i, c, l: Integer;
-begin
-  l := Self.Length;
-  if (index < l) then
-  begin
-    i := Max(index, 0);
-    c := count;
-    if ((i + c) > l) then
-      c := (l - i);
-    SetLength(Result, c);
-    for l := 0 to (c - 1) do
-      Result[l] := Self[l + i];
-  end else
-    SetLength(Result, 0);
-end;
-
-{==============================================================================]
-  <Copied>
-  @action: Simply returns a copy of array.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Copied: MArray; overload;
-var
-  h, i, l: Integer;
-begin
-  l := Self.Length;
-  case l of
-    0: Exit([]);
-    1: Exit([Self[0]]);
-  end;
-  SetLength(Result, l);
-  h := (l div 2);
-  for i := 0 to (h - 1) do
-  begin
-    Result[i] := Self[i];
-    Result[(l - i) - 1] := Self[(l - i) - 1];
-  end;
-  if l.Odd then
-    Result[h] := Self[h];
 end;
 
 {==============================================================================]
@@ -460,33 +262,6 @@ begin
 end;
 
 {==============================================================================]
-  <Distinct>
-  @action: Returns the number of unique elements in array 
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Distinct: Integer; overload;
-var
-  i, j: Integer;
-  u: Boolean;
-begin
-  Result := 0;
-  if Self.Empty then
-    Exit;
-  for i := 0 to High(Self) do
-  begin
-    u := True;
-    for j := 0 to (i - 1) do
-      if (Self[i] = Self[j]) then
-      begin
-        u := False;
-        Break;
-      end;
-    if u then
-      Inc(Result);
-  end;
-end;
-
-{==============================================================================]
   <Disordered>
   @action: Returns array with randomized order (disorder)
   @note: [1,2,3] => [1,3,2] | [2,1,3] | [2,3,1] | [3,2,1] ...
@@ -525,87 +300,6 @@ begin
     Result.start := -1
   else
     Result.start := 0;
-end;
-
-{==============================================================================]
-  <Dupe>
-  @action: Returns copy of an array arr.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Dupe: MArray; overload;
-var
-  i, l, j: Integer;
-begin
-  l := Self.Length;
-  SetLength(Result, l);
-  if (l = 0) then
-    Exit;
-  if ((l mod 2) <> 0) then
-  begin
-    j := (l div 2);
-    Result[j] := Self[j];
-  end;
-  if (l > 1) then
-  for i := 0 to ((l div 2) - 1) do
-  begin
-    j := ((l - i) - 1);
-    Result[i] := Self[i];
-    Result[j] := Self[j];
-  end;
-end;
-
-{==============================================================================]
-  <Duplicate>
-  @action: Returns copy of an array arr.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Duplicate(const xTimes: Integer = 1): MArray; overload;
-var
-  m, i, j, l: Integer;
-begin
-  l := Self.Length;
-  m := Max(0, xTimes);
-  SetLength(Result, (m * l));
-  if (l > 0) then
-  for i := 0 to (m - 1) do
-    for j := 0 to (l - 1) do
-      Result[(i * l) + j] := Self[j];
-end;
-
-{==============================================================================]
-  <Elements>
-  @action: Returns copy of an array arr.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): MArray; overload;
-var
-  h, i, j, l, c, s: Integer;
-  r: TIntegerArray;
-begin
-  if (Self.Empty or returnIDs.Empty) then
-    Exit([]);
-  if returnSort then
-    r := returnIDs.QuickSorted
-  else
-    r := returnIDs.Copy;
-  h := High(r);
-  s := High(Self);
-  SetLength(Result, Self.Size);
-  l := 0;
-  c := 0;
-  for i := 0 to s do
-  case ((c > h) or (r[c] > s)) of
-    False:
-    for j := c to h do
-      if not (r[j] = i) then
-      begin
-        c := (j + IfThen((r[j] < 0), 1, 0));
-        Break;
-      end else
-        Result[l.Increase] := Self[i];
-    True: Break;
-  end;
-  SetLength(Result, l);
 end;
 
 {==============================================================================]
@@ -815,93 +509,6 @@ function MArrayHelper.Free: Integer; overload;
 begin
   Result := Self.Size;
   SetLength(Self, 0);
-end;
-
-{==============================================================================]
-  <FromLeft>
-  @action: Returns count of array items from left-side by index.
-  @note: None
-[==============================================================================}
-function MArrayHelper.FromLeft(const count: Integer; const index: Integer = 2147483647): MArray; overload;
-var
-  m: Integer;
-  a, r, i: TRange;
-begin
-  m := Min(High(Self), index);
-  a.Build(0, High(Self));
-  if ((count > 0) and a.Intersect(r.Create((m - count), (m - 1)), i)) then
-    Result := Self.Copy(i.start, ((i.stop - i.start) + 1))
-  else
-    SetLength(Result, 0);
-end;
-
-{==============================================================================]
-  <FromRight>
-  @action: Returns count of array items from right-side by index.
-  @note: None
-[==============================================================================}
-function MArrayHelper.FromRight(const count: Integer; const index: Integer = 0): MArray; overload;
-var
-  m: Integer;
-  a, r, i: TRange;
-begin
-  m := Max(0, index);
-  a.Build(0, High(Self));
-  if ((count > 0) and a.Intersect(r.Create((m + 1), (m + count)), i)) then
-    Result := Self.Copy(i.start, ((i.stop - i.start) + 1))
-  else
-    SetLength(Result, 0);
-end;
-
-{==============================================================================]
-  <Get>
-  @action: Copy of an array arr.
-  @note: Just an alternative.
-[==============================================================================}
-function MArrayHelper.Get: MArray; overload;
-var
-  a: MType;
-  i: Integer;
-begin
-  SetLength(Result, Self.Size);
-  i := 0;
-  for a in Self do
-    Result[i.Increase] := a;
- end;
-
-{==============================================================================]
-  <Get>
-  @action: Outputs array of items from arr by indexes (IDs).
-  @note: Unsafe method! No safety checking.
-[==============================================================================}
-function MArrayHelper.Get(const ID: TIntegerArray): MArray; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, ID.Size);
-  for i := 0 to High(ID) do
-    Result[i] := Self[ID[i]];
-end;
-
-{==============================================================================]
-  <Get>
-  @action: Outputs array of items from arr by indexes (IDs).
-  @note: Unsafe method! No safety checking.
-[==============================================================================}
-function MArrayHelper.Get(const ID: TRange): MArray; overload;
-var
-  i, a: Integer;
-begin
-  SetLength(Result, ID.Size);
-  a := 0;
-  case ID.Ascending of
-    True:
-    for i := ID.start to ID.stop do
-      Result[a.Increase] := Self[i];
-	False:
-    for i := ID.start downto ID.stop do
-      Result[a.Increase] := Self[i];
-  end;
 end;
 
 {==============================================================================]
@@ -1216,63 +823,6 @@ begin
       Result[i] := Self[(index + 1) + i];
   end else
     SetLength(Result, 0);
-end;
-
-{==============================================================================]
-  <Overlay>
-  @action: Overlays items to array index.
-  @note: Returns the array with overlay action.		
-[==============================================================================}
-function MArrayHelper.Overlay(const items: MArray; const index: Integer; const init: MType): MArray; overload;
-var
-  s, l, r, i, a, j: Integer;
-begin
-  l := items.Length;
-  if (l = 0) then
-    Exit(Self.Copy);
-  s := Self.Size;
-  r := IfThen((index < 0), Max((Abs(index) + s), l), Max(s, (index + l)));
-  SetLength(Result, r);
-  for i := 0 to (r - 1) do
-    if not ((index <= 0) and (i < l)) then
-    begin
-      j := (i - index);
-      if not ((index >= 0) and (j >= 0) and (j < l)) then
-      begin
-        a := IfThen((index < 0), (i - Abs(index)), i);
-        if ((a >= 0) and (a < s)) then
-          Result[i] := Self[a]
-        else
-          Result[i] := init;
-      end else
-        Result[i] := items[j];
-    end else
-      Result[i] := items[i];
-end;
-
-function MArrayHelper.Overlay(const items: MArray; const index: Integer = 0): MArray; overload;
-begin
-  Result := Self.Overlay(items, index, Default(MType));
-end;
-
-{==============================================================================]
-  <Patch>
-  @action: Simply puts items to array index.
-  @note: Uses SetLength incase index + items goes over the current length.
-         If index is below 0 it will automatically set max length.
-[==============================================================================}
-function MArrayHelper.Patch(const index: Integer; const items: MArray): Integer; overload;
-var
-  j, i: Integer;
-begin
-  if items.Empty then
-    Exit(index);
-  i := IfThen((index < 0), Self.Size, index);
-  Result := (i + items.Size);
-  if (Result > Self.Size) then
-    SetLength(Self, Result);
-  for j := 0 to High(items) do
-    Self[i + j] := items[j];
 end;
 
 {==============================================================================]
@@ -1736,54 +1286,6 @@ begin
 end;
 
 {==============================================================================]
-  <Slice>
-  @action: Returns array slice with TRange r.
-  @note: Make sure you use correct indexes and there is enough buffer in array!
-         No safety checks for this function. 
-[==============================================================================}
-function MArrayHelper.Slice(const r: TRange): MArray; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, r.Size);
-  case r.Ascending of
-    True:
-    for i := r.start to r.stop do
-      Result[i - r.start] := Self[i];
-    False:
-    for i := r.start downto r.stop do
-      Result[i - r.start] := Self[i];
-  end;
-end;
-
-{==============================================================================]
-  <Slice>
-  @action: Returns array slice with multiple TRanges by r.
-  @note: Make sure you use correct indexes and there is enough buffer in array!
-         No safety checks for this function. 
-[==============================================================================}
-function MArrayHelper.Slice(const r: TRangeArray): MArray; overload;
-var
-  i, j, l: Integer;
-begin
-  if r.Empty then
-    Exit([]);
-  l := 0;
-  for i := 0 to High(r) do
-    l := (l + r[i].Size);
-  SetLength(Result, l);
-  for i := High(r) downto 0 do
-  case r[i].Ascending of
-    True:
-    for j := r[i].stop downto r[i].start do
-      Result[l.Decrement] := Self[j];
-    False:
-    for j := r[i].stop to r[i].start do
-      Result[l.Decrement] := Self[j];
-  end;
-end;
-
-{==============================================================================]
   <Some>
   @action: Returns random amount of random array items from Self.
   @note: Does not return empty arrays.
@@ -1899,66 +1401,6 @@ begin
 end;
 
 {==============================================================================]
-  <SwapMerged>
-  @action: Swaps the contents of Self and target arrays manually using an
-           auxiliary array, and returns a new array containing all elements
-           from both arrays combined in the **original order** (before swap).
-  @note: The swap is performed by copying elements from Self and target
-         into a temporary array in reverse order, then assigning them back.
-         This method works but is less efficient (O(n)) because every element
-         is copied. Use this if the merged array should reflect the **pre-swap
-         ordering**.
-[==============================================================================}
-function MArrayHelper.SwapMerged(var target: MArray): MArray; overload;
-var
-  r, t, s, i: Integer;
-begin
-  s := Self.Size;
-  t := target.Size;
-  r := (s + t);
-  SetLength(Result, r);
-  if (r = 0) then
-    Exit;
-  for i := High(target) downto 0 do
-    Result[r.Decrement] := target[i];
-  for i := High(Self) downto 0 do
-    Result[r.Decrement] := Self[i];
-  SetLength(Self, t);
-  SetLength(target, s);
-  for i := 0 to (t - 1) do
-    Self[i] := Result[s + i];
-  for i := 0 to (s - 1) do
-    target[i] := Result[i];
-end;
-
-{==============================================================================]
-  <SwappedMerge>
-  @action: Swaps the contents of Self and target arrays using the reference
-           swap method (Self.Swapped), and returns a new array containing all
-           elements from both arrays combined in the **post-swap order**.
-  @note: This implementation is more efficient (O(1) for the swap) because
-         it swaps references rather than copying elements individually.
-         The merged array is then constructed by iterating over Self and
-         target. This is preferred for large dynamic arrays, and the
-         resulting array reflects the swapped positions of Self and target.
-[==============================================================================}
-function MArrayHelper.SwappedMerge(var target: MArray): MArray; overload;
-var
-  t, s, i: Integer;
-begin
-  s := Self.Size;
-  t := target.Size;
-  SetLength(Result, (s + t));
-  if ((s + t) = 0) then
-    Exit;
-  Self.Swapped(target);
-  for i := 0 to High(Self) do
-    Result[i] := Self[i];
-  for i := 0 to High(target) do
-    Result[t + i] := target[i];
-end;
-
-{==============================================================================]
   <Trade> 
   @action: Swaps array arr and array b.
   @note: arr will be b and b will be arr.
@@ -1989,85 +1431,7 @@ begin
     Result := (1.0 / Self.Distinct)
   else
     Result := 0.0;
-end;
-
-{==============================================================================]
-  <Uniques>
-  @action: Returns the indexes of unique array (arr) items.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Uniques: TIntegerArray; overload;
-var
-  h, r, x, y: Integer;
-  m: Boolean;
-begin
-  h := High(Self);
-  SetLength(Result, (h + 1));
-  if (h > 0) then
-  begin
-    r := 0;
-    for x := 0 to h do
-    begin
-      for y := 0 to h do
-      begin
-        m := ((y <> x) and (Self[x] = Self[y]));
-        if m then
-          Break;
-      end;
-      if not m then
-        Result[r.Increase] := x;
-    end;
-    SetLength(Result, r);
-  end;
-  if (h = 0) then
-    Result[0] := 0;
 end; 
-
-{==============================================================================]
-  <Unshift>
-  @action: Grows arr with item.
-  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
-[==============================================================================}
-function MArrayHelper.Unshift(const item: MType): MArray; overload;
-var
-  i, l: Integer;
-begin
-  l := Self.Length;
-  SetLength(Result, (l + 1));
-  for i := l downto 1 do
-    Result[i] := Self[i - 1];
-  Result[0] := item;
-end;
-
-{==============================================================================]
-  <Unshift>
-  @action: Grows arr with items. Returns the index of last added item.
-  @note: Adds item to the left side of the array. (Opposite to TArray_Append!
-[==============================================================================}
-function MArrayHelper.Unshift(const items: MArray): MArray; overload;
-var
-  l, i, r: Integer;
-begin
-  if items.Empty then
-    Exit(Self.Copy);
-  l := items.Length;
-  r := (Self.Size + l);
-  SetLength(Result, r);
-  for i := (r - 1) downto l do
-    Result[i] := Self[i - l];
-  for i := 0 to (l - 1) do
-    Result[i] := items[i];
-end;
-
-{==============================================================================]
-  <Void>
-  @action: Returns true if array is void (empty)
-  @note: Alternative for Empty.
-[==============================================================================}
-function MArrayHelper.Void: Boolean; overload;
-begin
-  Result := (Low(Self) > High(Self));
-end;
 
 {==============================================================================]
   <Waste>

@@ -304,4 +304,14 @@ function MArrayHelper.Undersize(const limit: Integer): Boolean; overload;
 begin
   Result := (Self.Size < limit);
 end;
+
+{==============================================================================]
+  <Void>
+  @action: Returns true if array is void (empty)
+  @note: Alternative for Empty.
+[==============================================================================}
+function MArrayHelper.Void: Boolean; overload;
+begin
+  Result := (Low(Self) > High(Self));
+end;
 {$ENDIF}

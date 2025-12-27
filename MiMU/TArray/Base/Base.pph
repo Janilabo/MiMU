@@ -1,7 +1,10 @@
 {$I Add.inc}
+{$I Cloning.inc}
+{$I Composition.inc}
 {$I Construction.inc}
 {$I Grouping.inc}
 {$I Indexing.inc}
+{$I Merging.inc}
 {$I Partition.inc}
 {$I Query.inc}
 {$I Remove.inc}
@@ -13,6 +16,8 @@
 {$I Transform.inc}
 {$I Validation.inc}
 
+{$I Deduplication/Cardinality.inc}
 {$I Deduplication/Global.inc}
 {$I Deduplication/Runlength.inc}
+{$I Deduplication/Scan.inc}
 {$I Deduplication/Singular.inc}
