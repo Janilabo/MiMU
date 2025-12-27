@@ -7,10 +7,15 @@ function Erase(const item: MType; const index: Integer = 2147483647; const all: 
 function Erase(const item: MType; const all: Boolean): MArray; overload;
 function Erase(const items: MArray; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
 function Erase(const items: MArray; const all: Boolean): MArray; overload;
+function Pop: MType; overload;
+function Pop(const null: MType): MType; overload;
+function Pull: MArray; overload;
 function Remove(const item: MType; const index: Integer = 0; const all: Boolean = True): MArray; overload;
 function Remove(const item: MType; const all: Boolean): MArray; overload;
 function Remove(const items: MArray; const index: Integer = 0; const all: Boolean = True): MArray; overload;
 function Remove(const items: MArray; const all: Boolean): MArray; overload;
+function Shift: MType; overload;
+function Shift(const sCount: Integer): MArray; overload;
 function Strip(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
 {$ENDIF}
 
@@ -204,6 +209,53 @@ begin
 end;
 
 {==============================================================================]
+  <Pop>
+  @action: Returns and removes item from highest array index from arr.
+  @note: UNSAFE! Make sure array has enough items..
+[==============================================================================}
+function MArrayHelper.Pop: MType; overload;
+var
+  h: Integer;
+begin
+  if Self.Empty then
+    Exit;
+  h := High(Self);
+  Result := Self[h];
+  SetLength(Self, h);
+end;
+
+{==============================================================================]
+  <Pop>
+  @action: Returns and removes item from highest array index from arr.
+  @note: Returns null if array contains no items.
+[==============================================================================}
+function MArrayHelper.Pop(const null: MType): MType; overload;
+var
+  h: Integer;
+begin
+  if Self.Empty then
+    Exit(null);
+  h := High(Self);
+  Result := Self[h];
+  SetLength(Self, h);
+end;
+
+{==============================================================================]
+  <Pull>
+  @action: Returns the contents of the array and leaves it empty.
+  @note: After calling Pull, Self.Length = 0.
+[==============================================================================}
+function MArrayHelper.Pull: MArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Self) do
+    Result[i] := Self[i];
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
   <Remove>
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed. Supports start index position.
@@ -288,6 +340,45 @@ end;
 function MArrayHelper.Remove(const items: MArray; const all: Boolean): MArray; overload;
 begin
   Result := Self.Remove(items, 0, all);
+end;
+
+{==============================================================================]
+  <Shift>
+  @action: Shortens the array with first element.
+  @note: Returns the removed arr[0].
+[==============================================================================}
+function MArrayHelper.Shift: MType; overload;
+var
+  i, h: Integer;
+begin
+  h := (Self.Size - 1);
+  if (h < 0) then
+    Exit;
+  Result := Self[0];
+  for i := 0 to (h - 1) do
+    Self[i] := Self[i + h];
+  SetLength(Self, h);
+end;
+
+{==============================================================================]
+  <Shift>
+  @action: Shortens the array with first SCOUNT element(s).
+  @note: Returns the removed arr[x]s.
+[==============================================================================}
+function MArrayHelper.Shift(const sCount: Integer): MArray; overload;
+var
+  i, l, s: Integer;
+begin
+  l := Self.Length;
+  s := Max(0, Min(sCount, l));
+  SetLength(Result, s);
+  if (l = 0) then
+    Exit;
+  for i := 0 to (s - 1) do
+    Result[i] := Self[i];
+  for i := s to High(Self) do
+    Self[i - s] := Self[i];
+  SetLength(Self, (Self.Size - s));
 end;
 
 {==============================================================================]

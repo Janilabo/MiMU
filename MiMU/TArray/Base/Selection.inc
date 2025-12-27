@@ -14,6 +14,7 @@ function FilterEvery(const X: Integer = 1; const index: Integer = 0): MArray; ov
 function FilterIDs(const forbidden: TIntegerArray): MArray; overload;
 function FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): MArray; overload;
 function Keep(const items: MArray; const index: Integer = 0): MArray; overload;
+function Pick(const items: MArray; const index: Integer = 0): MArray; overload;
 function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 {$ENDIF}
 
@@ -354,6 +355,34 @@ begin
         else
           Inc(r);
       SetLength(Result, (l - r));
+    end;
+    False: Result := Self.Copy;
+  end;
+end;
+
+{==============================================================================]
+  <Pick>
+  @action: Alternative method for arr.Keep
+  @note: None.
+[==============================================================================}
+function MArrayHelper.Pick(const items: MArray; const index: Integer = 0): MArray; overload;
+var
+  i, m, l: Integer;
+begin
+  l := Self.Length;
+  m := Max(0, index);
+  case (items.Populated and (m < l)) of
+    True:
+    begin
+      SetLength(Result, m);
+      for i := 0 to (m - 1) do
+        Result[i] := Self[i];
+      for i := m to (l - 1) do
+        if items.Contains(Self[i]) then
+        begin
+          SetLength(Result, (Result.Size + 1));
+          Result[High(Result)] := Self[i];
+        end;
     end;
     False: Result := Self.Copy;
   end;

@@ -17,6 +17,11 @@ function Pos(const item: MType; const index: Integer = 0): Integer; overload;
 function Pos(const items: MArray; const index: Integer = 0): Integer; overload;
 function Position(const item: MType; const index: Integer = 0): Integer; overload;
 function Position(const items: MArray; const index: Integer = 0): Integer; overload;
+function Range(const subArray: MArray; const index: Integer = 0): TRange; overload;
+function Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload;
+function Span: TRange; overload;
+function Span(const subArray: MArray; const index: Integer = 2147483647): TRange; overload;
+function Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload;
 function SubarrayLocation(const pattern: MArray): Integer; overload;
 function SubarrayPosition(const pattern: MArray): Integer; overload;
 {$ENDIF}
@@ -306,6 +311,151 @@ begin
           Exit;
   end;
   Result := -1;
+end;
+
+{==============================================================================]
+  <Range>
+  @action: Returns the indexes as TRange where subArray exists in array (Self)
+  @note: (-1, -1) if subArray is not found.
+         Loops array from index to max.
+[==============================================================================}
+function MArrayHelper.Range(const subArray: MArray; const index: Integer = 0): TRange; overload;
+var
+  i, j, a, s, p: Integer;
+  f: Boolean;
+begin
+  Result.start := -1;
+  Result.stop  := -1;
+  a := Self.Size;
+  s := subArray.Size;
+  if ((s = 0) or (a = 0) or (s > a) or (index >= a)) then
+    Exit;
+  p := Max(0, index);
+  for i := p to (a - s) do
+  begin
+    f := True;
+    for j := 0 to (s - 1) do
+      if (Self[i + j] <> subArray[j]) then
+      begin
+        f := False;
+        Break;
+      end;
+    if f then
+      Exit(Result.Construct(i, ((i + s) - 1)));
+  end;
+end;
+
+{==============================================================================]
+  <Ranges>
+  @action: Returns the indexes as TRanges where subArray exists in array (Self)
+  @note: [] if not a single subArray is not found.
+         Loops array from index to max.
+[==============================================================================}
+function MArrayHelper.Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload;
+var
+  i, j, a, s, p, l: Integer;
+  f: Boolean;
+begin
+  SetLength(Result, 0);
+  a := Self.Size;
+  s := subArray.Size;
+  if ((s = 0) or (a = 0) or (s > a) or (index >= a)) then
+    Exit;
+  p := Max(0, index);
+  l := 0;
+  for i := p to (a - s) do
+  begin
+    f := True;
+    for j := 0 to (s - 1) do
+      if (Self[i + j] <> subArray[j]) then
+      begin
+        f := False;
+        Break;
+      end;
+    if f then
+    begin
+      SetLength(Result, l.Increment);
+      Result[l - 1].Create(i, ((i + s) - 1));
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <Span>
+  @action: -
+  @note: -
+[==============================================================================}
+function MArrayHelper.Span: TRange; overload;
+begin
+  Result.stop := High(Self);
+  Result.start := IfThen((Result.stop = -1), -1, 0);
+end;
+
+{==============================================================================]
+  <Span>
+  @action: Returns the indexes as TRange where subArray exists in array (Self)
+  @note: (-1, -1) if subArray is not found.
+         Loops array from index downto min.
+[==============================================================================}
+function MArrayHelper.Span(const subArray: MArray; const index: Integer = 2147483647): TRange; overload;
+var
+  i, j, a, s, p: Integer;
+  f: Boolean;
+begin
+  Result.start := -1;
+  Result.stop  := -1;
+  a := Self.Size;
+  s := subArray.Size;
+  if ((s = 0) or (a = 0) or (s > a) or (index < 0)) then
+    Exit;
+  p := Min(index, (a - s));
+  for i := p downto 0 do
+  begin
+    f := True;
+    for j := 0 to (s - 1) do
+      if (Self[i + j] <> subArray[j]) then
+      begin
+        f := False;
+        Break;
+      end;
+    if f then
+      Exit(Result.Construct(i, ((i + s) - 1)));
+  end;
+end;
+
+{==============================================================================]
+  <Spans>
+  @action: Returns the indexes as TRanges where subArray exists in array (Self)
+  @note: [] if not a single subArray is not found.
+         Loops array from index downto min.
+[==============================================================================}
+function MArrayHelper.Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload;
+var
+  i, j, a, s, p, l: Integer;
+  f: Boolean;
+begin
+  SetLength(Result, 0);
+  a := Self.Size;
+  s := subArray.Size;
+  if ((s = 0) or (a = 0) or (s > a) or (index < 0)) then
+    Exit;
+  p := Min(index, (a - s));
+  l := 0;
+  for i := p downto 0 do
+  begin
+    f := True;
+    for j := 0 to (s - 1) do
+      if (Self[i + j] <> subArray[j]) then
+      begin
+        f := False;
+        Break;
+      end;
+    if f then
+    begin
+      SetLength(Result, l.Increment);
+      Result[l - 1].Create(i, ((i + s) - 1));
+    end;
+  end;
 end;
 
 {==============================================================================]

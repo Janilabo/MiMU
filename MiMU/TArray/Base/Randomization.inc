@@ -1,4 +1,6 @@
 {$IFDEF HELPERS}
+function Any(const null: MType): MType; overload;
+function Any: MType; overload;
 function Disordered: MArray; overload;
 function Mix(const mixings: Integer = 1): Boolean; overload;
 function Mixed(const mixings: Integer = 1): MArray; overload;
@@ -11,6 +13,28 @@ function Some(const amount: Integer): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Any>
+  @action: Returns random array item from Self.
+  @note: Returns null with empty arrays.
+[==============================================================================}
+function MArrayHelper.Any(const null: MType): MType; overload;
+begin
+  if Self.Empty then
+    Exit(null);
+  Result := Self[Random(Self.Size)];
+end;
+
+{==============================================================================]
+  <Any>
+  @action: Returns random array item from Self.
+  @note: Make sure array has at least 1 item! This one is unsafe and returns error else.
+[==============================================================================}
+function MArrayHelper.Any: MType; overload;
+begin
+  Result := Self[Low(Self) + Random(Self.Size)];
+end;
+
 {==============================================================================]
   <Disordered>
   @action: Returns array with randomized order (disorder)

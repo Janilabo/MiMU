@@ -4,7 +4,6 @@ function Clone(const ID: TIntegerArray): MArray; overload;
 function Cloned: MArray; overload;
 function Copied: MArray; overload;
 function Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
-function Domain: TRange; overload;
 function Dupe: MArray; overload;
 function Duplicate(const xTimes: Integer = 1): MArray; overload;
 function Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): MArray; overload;
@@ -13,6 +12,8 @@ function FromRight(const count: Integer; const index: Integer = 0): MArray; over
 function Get: MArray; overload;
 function Get(const ID: TIntegerArray): MArray; overload;
 function Get(const ID: TRange): MArray; overload;
+function Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
+function Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
 function Slice(const r: TRange): MArray; overload;
 function Slice(const r: TRangeArray): MArray; overload;
 {$ENDIF}
@@ -300,6 +301,45 @@ begin
     for i := ID.start downto ID.stop do
       Result[a.Increase] := Self[i];
   end;
+end;
+
+{==============================================================================]
+  <Next>
+  @action: Returns next items from array by index and count.
+  @note: None.	
+[==============================================================================}
+function MArrayHelper.Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
+var
+  m, i: Integer;
+begin
+  if ((index >= 0) and (index < (Self.Size - 1)) and (count > 0)) then
+  begin
+    m := Min((Self.Size - (index + 1)), count);
+    SetLength(Result, m);
+    for i := 0 to (m - 1) do
+      Result[i] := Self[(index + 1) + i];
+  end else
+    SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <Previous>
+  @action: Returns previous array items from index by count.
+  @note: None.
+[==============================================================================}
+function MArrayHelper.Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
+var
+  m, l, i: Integer;
+begin
+  if ((index > 0) and (index < Self.Size) and (count > 0)) then
+  begin
+    m := Max(0, (index - count));
+    l := (((index - 1) - m) + 1);
+    SetLength(Result, l);
+    for i := 0 to (l - 1) do
+      Result[i] := Self[m + i];
+  end else
+    SetLength(Result, 0);
 end;
 
 {==============================================================================]
