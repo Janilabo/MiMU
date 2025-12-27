@@ -3,7 +3,6 @@
 
 function Any(const null: MType): MType; overload;
 function Any: MType; overload;  
-function Clear: Boolean; overload;
 function Count(const item: MType): Integer; overload;
 function Count(const items: MArray): Integer; overload;
 function Disordered: MArray; overload;
@@ -14,15 +13,9 @@ function Exchange(const swaps: TConnectionArray): MArray; overload;
 function Exchanges(const target: MArray): TConnectionArray; overload;
 function Fill(const item: MType; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Fill(const items: MArray; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
-function Fit: Integer; overload;
-function Fit(const aSize: Integer): Integer; overload;
-function Fit(const aBounds: TRange): Integer; overload;
-function Free: Integer; overload;
 function IntersectionCounted(const items: MArray): Integer; overload;
-function Kill: Integer; overload;
 function LeastCommon: MType; overload;
 function LeastFrequent: MType; overload;
-function Length: Integer; overload;
 function Mix(const mixings: Integer = 1): Boolean; overload;
 function Mixed(const mixings: Integer = 1): MArray; overload;
 function MostCommon: MType; overload;
@@ -40,20 +33,13 @@ function Pull: MArray; overload;
 function Randomized: MArray; overload;
 function Range(const subArray: MArray; const index: Integer = 0): TRange; overload;
 function Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload;
-function Recreate(const arrSize: Integer): Boolean; overload;
 function Reposition(const oldIndex, newIndex: Integer): Boolean; overload;
-function Reset: Integer; overload;
-function Resize(const aChange: Integer): Integer; overload;
-function Resize(const aChange: Integer; const null: MType): Integer; overload;
 function Sample(const sSize: Integer): MArray; overload;
 function Scramble(const swaps: Integer = -1): MArray; overload;
 function Shake(const shakes: Integer = 1): MArray; overload;
 function Shift: MType; overload;
 function Shift(const sCount: Integer): MArray; overload;
 function Shuffle(const shuffles: Integer = 1): MArray; overload;
-function Size: Integer; overload;
-function Size(const aSize: Integer): MArray; overload;
-function Size(const aSize: Integer; const null: MType): MArray; overload;
 function Some: MArray; overload;
 function Some(const amount: Integer): MArray; overload;
 function Span: TRange; overload;
@@ -62,7 +48,6 @@ function Spans(const subArray: MArray; const index: Integer = 2147483647): TRang
 function Swapped(var target: MArray): Integer; overload;
 function Trade(var b: MArray): Integer; overload;
 function Uniformity: Double; overload;
-function Waste: Integer; overload;
 function Zigzag(const zAscending: Boolean = True): MArray; overload;
 {$IFDEF Sortable}
 function Sortable: Boolean; overload;
@@ -210,17 +195,6 @@ end;
 function MArrayHelper.Any: MType; overload;
 begin
   Result := Self[Low(Self) + Random(Self.Size)];
-end;
-
-{==============================================================================]
-  <Clear>
-  @action: SetLength(arr, 0) and returns true if items existed before doing it.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Clear: Boolean; overload;
-begin
-  Result := (Self.Length > 0);
-  SetLength(Self, 0);
 end;
 
 {==============================================================================]
@@ -452,66 +426,6 @@ begin
 end;
 
 {==============================================================================]
-  <Fit>
-  @action: Returns array length.
-  @note: Alternative.
-[==============================================================================}
-function MArrayHelper.Fit: Integer; overload;
-begin
-  Result := ((High(Self) - Low(Self)) + 1);
-end;
-
-{==============================================================================]
-  <Fit>
-  @action: Resizes the array to aSize (sets length safely).
-  @note: Returns the length that was set to Self. Negative sizes are clamped to 0.
-[==============================================================================}
-function MArrayHelper.Fit(const aSize: Integer): Integer; overload;
-begin
-  Result := Max(0, aSize);
-  SetLength(Self, Result);
-end;
-
-{==============================================================================]
-  <Fit>
-  @action: Resizes the array to fit within the specified range.
-  @note: 
-    - Returns the final array length. 
-    - If current length is below b.start → array grows to b.start.
-    - If current length is above b.stop → array shrinks to b.stop.
-    - If current length is within the range → no change.
-    - Negative lengths are clamped to 0.
-[==============================================================================}
-function MArrayHelper.Fit(const aBounds: TRange): Integer; overload;
-var
-  l: Integer;
-  b: TRange;
-begin
-  l := Self.Length;
-  b := aBounds.Normalize.ClampMin(0);
-  if (l < b.start) then
-    Result := b.start
-  else
-    if (l > b.stop) then
-      Result := b.stop
-    else
-      Result := l;	
-  if (Result <> l) then
-    SetLength(Self, Result);
-end;
-
-{==============================================================================]
-  <Free>
-  @action: Result := Length(Self) + SetLength(Self, 0) combo. 
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Free: Integer; overload;
-begin
-  Result := Self.Size;
-  SetLength(Self, 0);
-end;
-
-{==============================================================================]
   <IntersectionCounted>
   @action: Counts the number of distinct elements in Self that also exist in Items.
            Each element is counted at most once, regardless of duplicates in either array.
@@ -545,17 +459,6 @@ begin
   finally
     S.Free;
   end;
-end;
-
-{==============================================================================]
-  <Kill>
-  @action: Combination of Length(arr) + SetLength(arr, 0).
-  @note: Returns the length of the arr!
-[==============================================================================}
-function MArrayHelper.Kill: Integer; overload;
-begin
-  Result := Self.Size;
-  SetLength(Self, 0);
 end;
 
 {==============================================================================]
@@ -625,16 +528,6 @@ begin
       Result := Self[i];
     end;
   end;
-end;
-
-{==============================================================================]
-  <Len>
-  @action: Simply Result := System.Length(arr);
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Length: Integer; overload;
-begin
-  Result := System.Length(Self);
 end;
 
 {==============================================================================]
@@ -1045,25 +938,6 @@ begin
 end;
 
 {==============================================================================]
-  <Recreate>
-  @action: Clear the array and reallocate to arrSize (negative = previous length).
-  @note: Returns True if array was non-empty and arrSize <> 0.
-[==============================================================================}
-function MArrayHelper.Recreate(const arrSize: Integer): Boolean; overload;
-var
-  l: Integer;
-begin
-  l := Self.Length;
-  Result := ((l > 0) or (arrSize <> 0));
-  SetLength(Self, 0);
-  if Result then
-    if (arrSize < 0) then
-      SetLength(Self, l)
-    else
-      SetLength(Self, arrSize);
-end;
-
-{==============================================================================]
   <Reposition>
   @action: Moves item from oldIndex to newIndex in array arr.
   @note: Returns true with success.
@@ -1088,53 +962,6 @@ begin
     end;
     Self[newIndex] := s;
   end;
-end;
-
-{==============================================================================]
-  <Reset>
-  @action: Resets all elements of the array to default values while preserving its structure.
-  @note: Returns the number of elements that were reset.
-[==============================================================================}
-function MArrayHelper.Reset: Integer; overload;
-begin
-  Result := Self.Size;
-  SetLength(Self, 0);
-  SetLength(Self, Result);
-end; 
-
-{==============================================================================]
-  <Resize>
-  @action: Updates's arr length with aChange.
-  @note: aChange > 0 => Result will give how many elements were added
-         aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
-         aChange = 0 => Returns 0.
-[==============================================================================}
-function MArrayHelper.Resize(const aChange: Integer): Integer; overload;
-var
-  l: Integer;
-begin
-  l := Self.Length;
-  SetLength(Self, (l + aChange));
-  Result := (Self.Size - l);
-end;
-
-{==============================================================================]
-  <Resize>
-  @action: Updates's arr length with aChange.
-  @note: aChange > 0 => Result will give how many elements were added
-         aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
-         aChange = 0 => Returns 0.
-         Supports null for filling created indexes.
-[==============================================================================}
-function MArrayHelper.Resize(const aChange: Integer; const null: MType): Integer; overload;
-var
-  i, l: Integer;
-begin
-  l := Self.Length;
-  SetLength(Self, aChange);
-  Result := (Self.Size - l);
-  for i := 0 to (Result - 1) do
-    Self[l + i] := null;
 end;
 
 {==============================================================================]
@@ -1241,48 +1068,6 @@ begin
   for s := 1 to shuffles do
     for i := 0 to High(Result) do
       Swap(Result[i], Result[Random(Self.Size)]);
-end;
-
-{==============================================================================]
-  <Size> 
-  @action: Returns array length.
-  @note: Simply Result := Length(arr);
-[==============================================================================}
-function MArrayHelper.Size: Integer; overload;
-begin
-  Result := ((High(Self) - Low(Self)) + 1);
-end;
-
-{==============================================================================]
-  <Size>
-  @action: Set's arr length to aSize.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Size(const aSize: Integer): MArray; overload;
-var
-  i, l: Integer;
-begin
-  l := Self.Length;
-  SetLength(Result, aSize);
-  for i := 0 to (Min(l, aSize) - 1) do
-    Result[i] := Self[i];
-end;
-
-{==============================================================================]
-  <Size>
-  @action: Set's arr length to size.
-  @note: Uses null for created indexes.
-[==============================================================================}
-function MArrayHelper.Size(const aSize: Integer; const null: MType): MArray; overload;
-var
-  i, l: Integer;
-begin
-  l := Self.Length;
-  SetLength(Result, aSize);
-  for i := 0 to (Min(l, aSize) - 1) do
-    Result[i] := Self[i];
-  for i := l to (aSize - 1) do
-    Result[i] := null;
 end;
 
 {==============================================================================]
@@ -1432,37 +1217,6 @@ begin
   else
     Result := 0.0;
 end; 
-
-{==============================================================================]
-  <Waste>
-  @action: Returns total count of Duplicates in array, which is considered as "Waste"
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Waste: Integer; overload;
-type
-  TDict = specialize TDictionary<MType, Integer>;
-var
-  d: TDict;
-  i: Integer;
-  v: MType;
-begin
-  Result := 0;
-  if Self.Empty then
-    Exit;
-  d := TDict.Create;
-  try
-    for v in Self do
-      if d.ContainsKey(v) then
-        d[v] := (d[v] + 1)
-      else
-        d.Add(v, 1);
-    for i in d.Values do
-      if (i > 1) then
-        Result := (Result + (i - 1));
-  finally
-    d.Free;
-  end;
-end;
 
 {==============================================================================]
   <Zigzag>

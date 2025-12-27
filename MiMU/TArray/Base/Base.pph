@@ -1,4 +1,5 @@
 {$I Add.inc}
+{$I Clearing.inc}
 {$I Cloning.inc}
 {$I Composition.inc}
 {$I Construction.inc}
@@ -12,6 +13,7 @@
 {$I Scanning.inc}
 {$I Search.inc}
 {$I Selection.inc}
+{$I Size.inc}
 {$I Sort.inc}
 {$I Transform.inc}
 {$I Validation.inc}
