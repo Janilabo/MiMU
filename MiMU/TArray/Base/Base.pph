@@ -24,6 +24,27 @@
 {$I Transform.inc}
 {$I Validation.inc}
 
+{$IFDEF Sortable}
+{$I Sortable/BinaryOps.inc}
+{$I Sortable/Bounds.inc}
+{$I Sortable/Counting.inc}
+{$I Sortable/Directionality.inc}
+{$I Sortable/Extrema.inc}
+{$I Sortable/Manipulation.inc}
+{$I Sortable/Metric.inc}
+{$I Sortable/Monotonic.inc}
+{$I Sortable/Order.inc}
+{$I Sortable/Search.inc}
+{$I Sortable/Sorted.inc}
+{$I Sortable/Trend.inc}
+{$I Sortable/Algorithms/BubbleSort.inc}
+{$I Sortable/Algorithms/HybridSort.inc}
+{$I Sortable/Algorithms/MergeSort.inc}
+{$I Sortable/Algorithms/Others.inc}
+{$I Sortable/Algorithms/QuickSort.inc}
+{$I Sortable/Algorithms/SelectionSort.inc}
+{$ENDIF}
+
 {$I Deduplication/Cardinality.inc}
 {$I Deduplication/Global.inc}
 {$I Deduplication/Runlength.inc}
