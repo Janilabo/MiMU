@@ -4,10 +4,12 @@
 {$I Composition.inc}
 {$I Construction.inc}
 {$I Grouping.inc}
+{$I Frequency.inc}
 {$I Indexing.inc}
 {$I Merging.inc}
 {$I Partition.inc}
 {$I Query.inc}
+{$I Randomization.inc}
 {$I Remove.inc}
 {$I Reversal.inc}
 {$I Scanning.inc}

@@ -5,7 +5,6 @@ function Any(const null: MType): MType; overload;
 function Any: MType; overload;  
 function Count(const item: MType): Integer; overload;
 function Count(const items: MArray): Integer; overload;
-function Disordered: MArray; overload;
 function Exch(const aIndex, bIndex: Integer): Boolean; overload;
 function Exchange(const aIndex, bIndex: Integer): Boolean; overload;
 function Exchange(var b: MArray): Integer; overload;
@@ -14,12 +13,6 @@ function Exchanges(const target: MArray): TConnectionArray; overload;
 function Fill(const item: MType; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Fill(const items: MArray; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function IntersectionCounted(const items: MArray): Integer; overload;
-function LeastCommon: MType; overload;
-function LeastFrequent: MType; overload;
-function Mix(const mixings: Integer = 1): Boolean; overload;
-function Mixed(const mixings: Integer = 1): MArray; overload;
-function MostCommon: MType; overload;
-function MostFrequent: MType; overload;
 function Movement(const moves: TConnectionArray): MArray; overload;
 function Movements(const target: MArray): TConnectionArray; overload;
 function Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
@@ -30,18 +23,12 @@ function Populate(const items: MArray; const times: Integer = 1): Boolean; overl
 function Populate(const item: MType; const times: Integer = 1): Boolean; overload;
 function Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
 function Pull: MArray; overload;
-function Randomized: MArray; overload;
 function Range(const subArray: MArray; const index: Integer = 0): TRange; overload;
 function Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload;
 function Reposition(const oldIndex, newIndex: Integer): Boolean; overload;
 function Sample(const sSize: Integer): MArray; overload;
-function Scramble(const swaps: Integer = -1): MArray; overload;
-function Shake(const shakes: Integer = 1): MArray; overload;
 function Shift: MType; overload;
 function Shift(const sCount: Integer): MArray; overload;
-function Shuffle(const shuffles: Integer = 1): MArray; overload;
-function Some: MArray; overload;
-function Some(const amount: Integer): MArray; overload;
 function Span: TRange; overload;
 function Span(const subArray: MArray; const index: Integer = 2147483647): TRange; overload;
 function Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload;
@@ -233,31 +220,6 @@ begin
   for i := 0 to High(Self) do
     if items.Contains(Self[i]) then
       Inc(Result);
-end;
-
-{==============================================================================]
-  <Disordered>
-  @action: Returns array with randomized order (disorder)
-  @note: [1,2,3] => [1,3,2] | [2,1,3] | [2,3,1] | [3,2,1] ...
-[==============================================================================}
-function MArrayHelper.Disordered: MArray; overload;
-var
-  m: TBooleanArray;
-  i, r, l: Integer;
-begin
-  l := Self.Length;
-  if (l < 2) then
-    Exit(Self.Copy);
-  SetLength(Result, l);
-  m.Create(l, False);
-  for i := 0 to (l - 1) do
-  begin
-    repeat
-      r := Random(l);
-    until (not m[r]);
-    Result[i] := Self[r];
-    m[r] := True;
-  end;
 end;
 
 {==============================================================================]
@@ -458,170 +420,6 @@ begin
       end;
   finally
     S.Free;
-  end;
-end;
-
-{==============================================================================]
-  <LeastCommon>
-  @action: Returns the least common array item.
-  @note: None
-[==============================================================================}
-function MArrayHelper.LeastCommon: MType; overload;
-var
-  d: specialize TDictionary<MType, Integer>;
-  c, m, i: Integer;
-begin
-  if Self.Empty then
-    Exit(Default(MType));
-  Result := Self[0];
-  m := MaxInt;
-  d := specialize TDictionary<MType, Integer>.Create;
-  try
-    for i := 0 to High(Self) do
-      if d.TryGetValue(Self[i], c) then
-        d[Self[i]] := (c + 1)
-      else
-        d.Add(Self[i], 1);
-    for i := 0 to High(Self) do
-      if (d[Self[i]] < m) then
-      begin
-        m := d[Self[i]];
-        Result := Self[i];
-      end;
-  finally
-    d.Free;
-  end;
-end;
-
-{==============================================================================]
-  <LeastFrequent> 
-  @action: Returns the least frequent arr item.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.LeastFrequent: MType; overload;
-var
-  i, j, c, m: Integer;
-  f: Boolean;
-begin
-  if Self.Empty then
-    Exit;
-  m := 2147483647;
-  Result := Self[0];
-  for i := 0 to High(Self) do
-  begin
-    f := False;
-    for j := 0 to (i - 1) do
-      if (Self[j] = Self[i]) then
-      begin
-        f := True;
-        Break;
-      end;
-    if f then
-      Continue;
-    c := 1;
-    for j := (i + 1) to High(Self) do
-      if (Self[j] = Self[i]) then
-        Inc(c);
-    if (c < m) then
-    begin
-      m := c;
-      Result := Self[i];
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <Mix>
-  @action: Ramdomizes array with custom mixings.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Mix(const mixings: Integer = 1): Boolean; overload;
-var
-  l, i, m: Integer;
-begin
-  Result := ((mixings > 0) and Self.Populated);
-  if not Result then
-    Exit;
-  l := Self.Length;
-  if (l > 1) then
-  for m := 1 to mixings do
-    for i := 0 to (l - 1) do
-      Exchange(Random(l), Random(l));
-end;
-
-{==============================================================================]
-  <Mixed>
-  @action: Returns ramdomized array by mixing.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Mixed(const mixings: Integer = 1): MArray; overload;
-var
-  l, i, m: Integer;
-begin
-  l := Self.Length;
-  Result := Self.Copy;
-  if (l > 1) then
-  for m := 1 to mixings do
-    for i := 0 to (l - 1) do
-      Swap(Result[Random(l)], Result[Random(l)]);
-end;
-
-{==============================================================================]
-  <MostCommon>
-  @action: Returns the most common array item.
-  @note: None
-[==============================================================================}
-function MArrayHelper.MostCommon: MType; overload;
-var
-  d: specialize TDictionary<MType, Integer>;
-  c, m, i: Integer;
-begin
-  if Self.Empty then
-    Exit(Default(MType));
-  Result := Self[0];
-  m := 0;
-  d := specialize TDictionary<MType, Integer>.Create;
-  try
-    for i := 0 to High(Self) do
-      if d.TryGetValue(Self[i], c) then
-        d[Self[i]] := (c + 1)
-      else
-        d.Add(Self[i], 1);
-    for i := 0 to High(Self) do
-      if (d[Self[i]] > m) then
-      begin
-        m := d[Self[i]];
-        Result := Self[i];
-      end;
-  finally
-    d.Free;
-  end;
-end;
-
-{==============================================================================]
-  <MostFrequent> 
-  @action: Returns the most frequent arr item.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.MostFrequent: MType; overload;
-var
-  i, j, c, m: Integer;
-begin
-  if Self.Empty then
-    Exit;
-  m := 0;
-  Result := Self[0];
-  for i := 0 to High(Self) do
-  begin
-    c := 1;
-    for j := (i + 1) to High(Self) do
-      if (Self[j] = Self[i]) then
-        Inc(c);
-    if (c > m) then
-    begin
-      m := c;
-      Result := Self[i];
-    end;
   end;
 end;
 
@@ -848,29 +646,6 @@ begin
 end;
 
 {==============================================================================]
-  <Randomized>
-  @action: Returns randomized copy of array
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Randomized: MArray; overload;
-var
-  s, l, r: Integer;
-  i: TIntegerArray;
-begin
-  l := Self.Length;
-  if (l < 2) then
-    Exit(Self.Copy);
-  SetLength(Result, l);
-  i := Self.Indexes;
-  for s := 0 to High(Self) do
-  begin
-    r := Random(l);
-    Result[i[r]] := Self[s];
-    i[r] := i[l.Decrement];
-  end;
-end;
-
-{==============================================================================]
   <Range>
   @action: Returns the indexes as TRange where subArray exists in array (Self)
   @note: (-1, -1) if subArray is not found.
@@ -983,39 +758,6 @@ begin
 end;
 
 {==============================================================================]
-  <Scramble>
-  @action: Returns scrambled array, that is randomized with offset and swapping. 
-  @note: Supports custom swaps.
-[==============================================================================}
-function MArrayHelper.Scramble(const swaps: Integer = -1): MArray; overload;
-var
-  o, i, l, s: Integer;
-begin
-  l := Self.Length;
-  o := Random(l);
-  s := IfThen((swaps < 0), l, swaps);
-  Result := Self.Copy(o, (l - o)) + Self.Copy(0, o);
-  for i := 1 to s do
-    Swap(Result[Random(l)], Result[Random(l)]);
-end;
-
-{==============================================================================]
-  <Shake>
-  @action: Returns array as randomized with shaking it.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Shake(const shakes: Integer = 1): MArray; overload;
-var
-  i, s: Integer;
-begin
-  Result := Self.Copy;
-  if (Result.Size > 1) then
-  for s := 1 to shakes do
-    for i := 0 to Random(Self.Size) do
-      Swap(Result[i], Result[Random(Self.Size)]);
-end;
-
-{==============================================================================]
   <Shift>
   @action: Shortens the array with first element.
   @note: Returns the removed arr[0].
@@ -1052,42 +794,6 @@ begin
   for i := s to High(Self) do
     Self[i - s] := Self[i];
   SetLength(Self, (Self.Size - s));
-end;
-
-{==============================================================================]
-  <Shuffle>
-  @action: Returns array as randomized with shuffling it.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Shuffle(const shuffles: Integer = 1): MArray; overload;
-var
-  i, s: Integer;
-begin
-  Result := Self.Copy;
-  if (Result.Size > 1) then
-  for s := 1 to shuffles do
-    for i := 0 to High(Result) do
-      Swap(Result[i], Result[Random(Self.Size)]);
-end;
-
-{==============================================================================]
-  <Some>
-  @action: Returns random amount of random array items from Self.
-  @note: Does not return empty arrays.
-[==============================================================================}
-function MArrayHelper.Some: MArray; overload;
-begin
-  Result := Self.Shuffle.Copy(0, Max(Random(Self.Size + 1), 1));
-end;
-
-{==============================================================================]
-  <Some>
-  @action: Returns amount of random array items from Self.
-  @note: Does not return empty arrays.
-[==============================================================================}
-function MArrayHelper.Some(const amount: Integer): MArray; overload;
-begin
-  Result := Self.Shuffle.Copy(0, Max(1, Min(amount, Self.Size)));
 end;
 
 {==============================================================================]
