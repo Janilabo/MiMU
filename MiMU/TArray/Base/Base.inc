@@ -9,21 +9,12 @@ function Clone(const index: Integer = 0; const count: Integer = 2147483647): MAr
 function Clone(const ID: TIntegerArray): MArray; overload;
 function Cloned: MArray; overload;
 function Combine(const b: MArray): MArray; overload;
-function Compact: Integer; overload;
-function Compacted: MArray; overload;
-function Compacted(const threshold: Integer): MArray; overload;
-function Compress: Integer; overload;
-function Compressed: MArray; overload;
-function Compressed(const threshold: Integer): MArray; overload;
 function Copied: MArray; overload;
 function Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Count(const item: MType): Integer; overload;
 function Count(const items: MArray): Integer; overload;
-function Deduplicated: MArray; overload;
 function Disordered: MArray; overload;
 function Distinct: Integer; overload;
-function Diversified: MArray; overload;
-function DiversifiedEx(const dAscending: Boolean = True): MArray; overload;
 function Domain: TRange; overload;
 function Dupe: MArray; overload;
 function Duplicate(const xTimes: Integer = 1): MArray; overload;
@@ -65,12 +56,7 @@ function Pop(const null: MType): MType; overload;
 function Populate(const items: MArray; const times: Integer = 1): Boolean; overload;
 function Populate(const item: MType; const times: Integer = 1): Boolean; overload;
 function Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
-function Prune: Integer; overload;
-function Pruned: MArray; overload;
-function Pruned(const threshold: Integer): MArray; overload;
 function Pull: MArray; overload;
-function Purified(const dAscending: Boolean = True): MArray; overload;
-function Purify(const dAscending: Boolean = True): Integer; overload;
 function Randomized: MArray; overload;
 function Range(const subArray: MArray; const index: Integer = 0): TRange; overload;
 function Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload;
@@ -85,12 +71,6 @@ function Shake(const shakes: Integer = 1): MArray; overload;
 function Shift: MType; overload;
 function Shift(const sCount: Integer): MArray; overload;
 function Shuffle(const shuffles: Integer = 1): MArray; overload;
-function Singlify(const item: MType): Integer; overload;
-function Singlified(const item: MType): MArray; overload;
-function Singularize(const item: MType): Integer; overload;
-function Singularized(const item: MType): MArray; overload;
-function Soloize(const item: MType): Integer; overload;
-function Soloized(const item: MType): MArray; overload;
 function Size: Integer; overload;
 function Size(const aSize: Integer): MArray; overload;
 function Size(const aSize: Integer; const null: MType): MArray; overload;
@@ -105,13 +85,8 @@ function Swapped(var target: MArray): Integer; overload;
 function SwapMerged(var target: MArray): MArray; overload;
 function SwappedMerge(var target: MArray): MArray; overload;
 function Trade(var b: MArray): Integer; overload;
-function Uncluttered: MArray; overload;
-function Uniformity: Double; overload;
-function Unified(const dAscending: Boolean = True): MArray; overload;
-function Unify(const dAscending: Boolean = True): Integer; overload;
-function Unduplicated: MArray; overload;
-function Uniqued: MArray; overload;
 function Uniques: TIntegerArray; overload;
+function Uniformity: Double; overload;
 function Unshift(const item: MType): MArray; overload;
 function Unshift(const items: MArray): MArray; overload;
 function Waste: Integer; overload;
@@ -387,76 +362,6 @@ begin
 end;
 
 {==============================================================================]
-  <Compact>
-  @action: Removes adjacent duplicates.
-  @note: Original order is preserved and non-adjacent duplicates remain.
-[==============================================================================}
-function MArrayHelper.Compact: Integer; overload;
-var
-  i: Integer;
-begin
-  if (Self.Size < 2) then
-    Exit(Self.Size);
-  Result := 1;
-  for i := 1 to High(Self) do
-    if (Self[i] <> Self[i - 1]) then
-      Self[Result.Increase] := Self[i];
-  SetLength(Self, Result);
-end;
-
-{==============================================================================]
-  <Compacted>
-  @action: Removes adjacent duplicates and returns a new compacted array.
-  @note: Original order is preserved and non-adjacent duplicates remain.
-[==============================================================================}
-function MArrayHelper.Compacted: MArray; overload;
-var
-  i: Integer;
-begin
-  if Self.Empty then
-    Exit([]);
-  SetLength(Result, 1);
-  Result[0] := Self[0];
-  for i := 1 to High(Self) do
-    if (Self[i] <> Self[i - 1]) then
-      Result.Supply(Self[i]);
-end;
-
-{==============================================================================]
-  <Compacted>
-  @action: Removes adjacent duplicates and returns a new compacted array.
-  @note: Custom threshold possibility.
-[==============================================================================}
-function MArrayHelper.Compacted(const threshold: Integer): MArray; overload;
-var
-  i, j: Integer;
-  k: Boolean;
-  r: Integer;
-begin
-  if (Self.Empty or (threshold < 1)) then
-    Exit(Self.Copy);
-  r := 0;
-  SetLength(Result, 0);
-  for i := 0 to High(Self) do
-  begin
-    k := True;
-    for j := Max(0, (r - threshold)) to (r - 1) do
-      if (Result[j] = Self[i]) then
-      begin
-        k := False;
-        Break;
-      end;
-    if k then
-    begin
-      if (Result.Size <= r) then
-        SetLength(Result, (r + 1));
-      Result[r.Increase] := Self[i];
-    end;
-  end;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
   <Combine>
   @action: Combines arrays arr and b together as single array.
   @note: This is an alternative method. :)
@@ -466,84 +371,6 @@ begin
   SetLength(Result, 0);
   Insert(Self, Result, 0);
   Insert(b, Result, Self.Size);
-end;
-
-{==============================================================================]
-  <Compressed>
-  @action: Produces a new array by removing all immediately repeated values,
-           effectively run-length–compressing the input.
-  @note: Only consecutive duplicates are removed; values separated by others
-         are left untouched. The relative order of the remaining elements
-         is unchanged.
-[==============================================================================}
-function MArrayHelper.Compressed: MArray; overload;
-var
-  r, i, l: Integer;
-begin
-  l := Self.Size;
-  SetLength(Result, l);
-  if (l = 0) then
-    Exit;
-  Result[0] := Self[0];
-  if (l > 1) then
-  begin
-    r := 0;
-    for i := 1 to (l - 1) do
-      if not (Self[i] = Result[r]) then
-        Result[r.Increment] := Self[i];
-    SetLength(Result, (r + 1));
-  end;
-end;
-
-{==============================================================================]
-  <Compressed>
-  @action: Produces a new array by removing all immediately repeated values,
-           effectively run-length–compressing the input.
-  @note: Custom threshold possibility.
-[==============================================================================}
-function MArrayHelper.Compressed(const threshold: Integer): MArray; overload;
-var
-  w, r, i: Integer;
-  d: Boolean;
-begin
-  Result := Self.Copy;
-  if (Self.Empty or (threshold < 1)) then
-    Exit;
-  w := 0;
-  for r := 0 to High(Result) do
-  begin
-    d := False;
-    for i := Max(0, (w - threshold)) to (w - 1) do
-      if (Result[i] = Result[r]) then
-      begin
-        d := True;
-        Break;
-      end;
-    if not d then
-      Result[w.Increase] := Result[r];
-  end;
-  SetLength(Result, w);
-end;
-
-{==============================================================================]
-  <Compress>
-  @action: Removes all immediately repeated values,
-           effectively run-length–compressing the input.
-  @note: Only consecutive duplicates are removed; values separated by others
-         are left untouched. The relative order of the remaining elements
-         is unchanged.
-[==============================================================================}
-function MArrayHelper.Compress: Integer; overload;
-var
-  i: Integer;
-begin
-  if (Self.Size < 2) then
-    Exit(Self.Size);
-  Result := 1;
-  for i := 1 to High(Self) do
-    if not (Self[i] = Self[Result - 1]) then
-      Self[Result.Increase] := Self[i];
-  SetLength(Self, Result);
 end;
 
 {==============================================================================]
@@ -633,25 +460,6 @@ begin
 end;
 
 {==============================================================================]
-  <Deduplicated>
-  @action: Removes adjacent duplicates and returns a new compacted array.
-  @note: Original order is preserved and non-adjacent duplicates remain.
-[==============================================================================}
-function MArrayHelper.Deduplicated: MArray; overload;
-var
-  i, l: Integer;
-begin
-  SetLength(Result, Self.Size);
-  if Self.Empty then
-    Exit();
-  l := 0;
-  for i := 0 to High(Self) do
-    if ((i = 0) or (Self[i] <> Self[i - 1])) then
-      Result[l.Increase] := Self[i];
-  SetLength(Result, l);
-end;
-
-{==============================================================================]
   <Distinct>
   @action: Returns the number of unique elements in array 
   @note: None.
@@ -700,68 +508,6 @@ begin
     until (not m[r]);
     Result[i] := Self[r];
     m[r] := True;
-  end;
-end;
-
-{==============================================================================]
-  <Diversified>
-  @action: Alternative for Unique methods
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Diversified: MArray; overload;
-var
-  d: specialize TDictionary<MType, Boolean>;
-  i: Integer;
-  k: MType;
-begin
-  d := specialize TDictionary<MType, Boolean>.Create;
-  try
-    for i := 0 to High(Self) do
-      if not d.ContainsKey(Self[i]) then
-        d.Add(Self[i], True);
-    SetLength(Result, d.Count);
-    i := 0;
-    for k in d.Keys do
-      Result[i.Increase] := k;
-  finally
-    d.Free;
-  end;
-end;
-
-{==============================================================================]
-  <DiversifiedEx>
-  @action: Alternative for Unique methods
-  @note: None.
-[==============================================================================}
-function MArrayHelper.DiversifiedEx(const dAscending: Boolean = True): MArray; overload;
-var
-  l: specialize TList<MType>;
-  d: specialize TDictionary<MType, Boolean>;
-  i: Integer;
-begin
-  l := specialize TList<MType>.Create;
-  d := specialize TDictionary<MType, Boolean>.Create;
-  try
-    case dAscending of
-      True:
-      for i := 0 to High(Self) do
-        if not d.ContainsKey(Self[i]) then
-        begin
-          d.Add(Self[i], True);
-          l.Add(Self[i]);
-        end;
-      False:
-      for i := High(Self) downto 0 do
-        if not d.ContainsKey(Self[i]) then
-        begin
-          d.Add(Self[i], True);
-          l.Add(Self[i]);
-        end;
-    end;
-    Result := l.ToArray;
-  finally
-    d.Free;
-    l.Free;
   end;
 end;
 
@@ -1644,96 +1390,6 @@ begin
 end;
 
 {==============================================================================]
-  <Pruned>
-  @action: Produces a new array by removing all immediately repeated values,
-           effectively run-length–compressing the input.
-  @note: Only consecutive duplicates are removed; values separated by others
-         are left untouched. The relative order of the remaining elements
-         is unchanged.
-[==============================================================================}
-function MArrayHelper.Pruned: MArray; overload;
-var
-  i, l, r: Integer;
-begin
-  l := Self.Length;
-  SetLength(Result, l);
-  if (l = 0) then
-    Exit;
-  Result[0] := Self[0];
-  if (l = 1) then
-    Exit;
-  r := 0;
-  for i := 1 to High(Self) do
-    if not (Self[i] = Self[i - 1]) then
-      Result[r.Increment] := Self[i];
-  SetLength(Result, (r + 1));
-end;
-
-{==============================================================================]
-  <Pruned>
-  @action: Produces a new array by removing all immediately repeated values,
-           effectively run-length–compressing the input.
-  @note: Custom threshold possibility.
-[==============================================================================}
-function MArrayHelper.Pruned(const threshold: Integer): MArray; overload;
-var
-  w: MArray;
-  e: MType;
-  h, t, c, i, j: Integer;
-  d: Boolean;
-begin
-  if (Self.Empty or (threshold < 1)) then
-    Exit(Self.Copy);
-  SetLength(Result, 0);
-  SetLength(w, threshold);
-  h := 0;
-  t := 0;
-  c := 0;
-  for i := 0 to High(Self) do
-  begin
-    e := Self[i];
-    d := False;
-    for j := 0 to (c - 1) do
-      if (w[(h + j) mod threshold] = e) then
-      begin
-        d := True;
-        Break;
-      end;
-    if not d then
-    begin
-      SetLength(Result, (Result.Size + 1));
-      Result[High(Result)] := e;
-      w[t] := e;
-      t := ((t + 1) mod threshold);
-      if (c < threshold) then
-        Inc(c)
-      else
-        h := ((h + 1) mod threshold);
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <Prune>
-  @action: Removes all immediately repeated values,
-           effectively run-length–compressing the input.
-  @note: Only consecutive duplicates are removed; values separated by others
-         are left untouched. The relative order of the remaining elements
-         is unchanged.
-[==============================================================================}
-function MArrayHelper.Prune: Integer; overload;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 1 to High(Self) do
-    if (Self[i] <> Self[Result]) then
-      Self[Result.Increment] := Self[i];
-  if not Self.Empty then
-    SetLength(Self, Result.Increment);
-end; 
-
-{==============================================================================]
   <Pull>
   @action: Returns the contents of the array and leaves it empty.
   @note: After calling Pull, Self.Length = 0.
@@ -1746,82 +1402,6 @@ begin
   for i := 0 to High(Self) do
     Result[i] := Self[i];
   SetLength(Self, 0);
-end;
-
-{==============================================================================]
-  <Purified>
-  @action: Returns array with unique items
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Purified(const dAscending: Boolean = True): MArray; overload;
-var
-  d: specialize TDictionary<MType, Boolean>;
-  l: specialize TList<MType>;
-  i: Integer;
-begin
-  d := specialize TDictionary<MType, Boolean>.Create;
-  l := specialize TList<MType>.Create;
-  try
-    case dAscending of
-      True:
-      for i := 0 to High(Self) do
-        if not d.ContainsKey(Self[i]) then
-        begin
-          d.Add(Self[i], True);
-          l.Add(Self[i]);
-        end;
-      False:
-      for i := High(Self) downto 0 do
-        if not d.ContainsKey(Self[i]) then
-        begin
-          d.Add(Self[i], True);
-          l.Add(Self[i]);
-        end;
-    end;
-    Result := l.ToArray;
-  finally
-    d.Free;
-    l.Free;
-  end;
-end;
-
-{==============================================================================]
-  <Purify>
-  @action: Removes duplicates
-  @note: None
-[==============================================================================}
-function MArrayHelper.Purify(const dAscending: Boolean = True): Integer; overload;
-var
-  d: specialize TDictionary<MType, Boolean>;
-  c: MArray;
-  i: Integer;
-begin
-  d := specialize TDictionary<MType, Boolean>.Create;
-  Result := 0;
-  try
-    case dAscending of
-      True:
-      for i := 0 to High(Self) do
-        if not d.ContainsKey(Self[i]) then
-        begin
-          d.Add(Self[i], True);
-	  Self[Result.Increase] := Self[i];
-        end;
-      False:
-      begin
-        c := Self.Copy;
-        for i := High(c) downto 0 do
-          if not d.ContainsKey(c[i]) then
-          begin
-            d.Add(c[i], True);
-	    Self[Result.Increase] := c[i];
-          end;
-      end;
-    end;
-  finally
-    d.Free;
-  end;
-  SetLength(Self, Result);
 end;
 
 {==============================================================================]
@@ -2114,111 +1694,6 @@ begin
 end;
 
 {==============================================================================]
-  <Singlify>
-  @action: Removes duplicate occurrences of a specific item, keeping only the first.
-  @note: Useful for ensuring a item appears exactly once in the array.
-[==============================================================================}
-function MArrayHelper.Singlify(const item: MType): Integer; overload;
-var
-  i, l: Integer;
-  f: Boolean;
-begin
-  Result := Self.Size;
-  l := 0;
-  f := False;
-  for i := 0 to (Result - 1) do
-    if ((not f) or (Self[i] <> item)) then
-    begin
-      Self[l.Increase] := Self[i];
-      if (Self[i] = item) then
-        f := True;
-    end;
-  if (Result.Decrement(l) > 0) then
-    SetLength(Self, l);
-end;
-
-{==============================================================================]
-  <Singlified>
-  @action: Returns a new array containing only a single instance of the specified item.
-  @note: Duplicates of item beyond the first occurrence are removed in the result.
-         The original array remains unchanged.
-[==============================================================================}
-function MArrayHelper.Singlified(const item: MType): MArray; overload;
-var
-  i, l: Integer;
-  f: Boolean;
-begin
-  SetLength(Result, Self.Size);
-  l := 0;
-  f := False;
-  for i := 0 to High(Self) do
-    if ((not f) or (Self[i] <> item)) then
-    begin
-      Result[l.Increase] := Self[i];
-      if (Self[i] = item) then
-        f := True;
-    end;
-  SetLength(Result, l);
-end;
-
-{==============================================================================]
-  <Singularize>
-  @action: Removes duplicate items in the array, keeping only the first occurrence of each unique value.
-  @note: The operation modifies the current array in-place. The order of the first appearances
-         is preserved. Returns the number of items removed.
-[==============================================================================}
-function MArrayHelper.Singularize(const item: MType): Integer; overload;
-var
-  d: specialize TDictionary<MType, Boolean>;
-  i, l: Integer;
-begin
-  d := specialize TDictionary<MType, Boolean>.Create;
-  try
-    l := 0;
-    for i := 0 to High(Self) do
-      if ((Self[i] <> item) or (not d.ContainsKey(item))) then
-      begin
-	    if (Self[i] = item) then
-          d.Add(item, True);
-        Self[l.Increase] := Self[i];
-      end;
-    Result := (Self.Size - l);
-    if (Result > 0) then
-      SetLength(Self, l);
-  finally
-    d.Free;
-  end;
-end;
-
-{==============================================================================]
-  <Singularized>
-  @action: Returns a new array containing only the first occurrence of each unique item.
-  @note: The original array remains unchanged. The resulting array preserves
-         the order of the first appearances.
-[==============================================================================}
-function MArrayHelper.Singularized(const item: MType): MArray; overload;
-var
-  d: specialize TDictionary<MType, Boolean>;
-  i, c: Integer;
-begin
-  d := specialize TDictionary<MType, Boolean>.Create;
-  try
-    SetLength(Result, Self.Size);
-    c := 0;
-    for i := 0 to High(Self) do
-      if ((Self[i] <> item) or (not d.ContainsKey(item))) then
-      begin
-        if (Self[i] = item) then
-          d.Add(item, True);
-        Result[c.Increase] := Self[i];
-      end;
-    SetLength(Result, c);
-  finally
-    d.Free;
-  end;
-end;
-
-{==============================================================================]
   <Size> 
   @action: Returns array length.
   @note: Simply Result := Length(arr);
@@ -2306,48 +1781,6 @@ begin
     for j := r[i].stop to r[i].start do
       Result[l.Decrement] := Self[j];
   end;
-end;
-
-{==============================================================================]
-  <Soloize>
-  @action: Removes all occurrences of a specific item from the array.
-  @note: Returns the number of items removed. If none found, the array is unchanged.
-[==============================================================================}
-function MArrayHelper.Soloize(const item: MType): Integer; overload;
-var
-  i, l: Integer;
-begin
-  l := 0;
-  Result := 0;
-  for i := 0 to High(Self) do
-    if ((Self[i] = item) and (Result.Increase > 0)) then
-      Continue
-    else
-      Self[l.Increase] := Self[i];
-  if (Result > 0) then
-    SetLength(Self, l);
-end;
-
-{==============================================================================]
-  <Soloized>
-  @action: Returns a new array containing only a single instance of the specified item.
-  @note: Duplicates of item beyond the first occurrence are removed in the result.
-         The original array remains unchanged.
-[==============================================================================}
-function MArrayHelper.Soloized(const item: MType): MArray; overload;
-var
-  i, l, s: Integer;
-begin
-  SetLength(Result, Self.Size);
-  s := 0;
-  l := 0;
-  for i := 0 to High(Self) do
-    if ((Self[i] = item) and (s.Increase > 0)) then
-      Continue
-    else
-      Result[l.Increase] := Self[i];
-  if (s > 0) then
-    SetLength(Result, l);
 end;
 
 {==============================================================================]
@@ -2545,38 +1978,6 @@ begin
 end;
 
 {==============================================================================]
-  <Uncluttered>
-  @action: Removes all duplicates from arr.
-  @note: Returns the number of items that were removed.
-[==============================================================================}
-function MArrayHelper.Uncluttered: MArray; overload;
-type
-  TDict = specialize TDictionary<MType, Boolean>;
-var
-  d: TDict;
-  r, i, l: Integer;
-begin
-  l := Self.Length;
-  if (l < 2) then
-    Exit(Self.Copy);
-  d := TDict.Create;
-  try
-    SetLength(Result, l);
-    r := 0;
-    for i := 0 to (l - 1) do
-      if not d.ContainsKey(Self[i]) then
-      begin
-        d.Add(Self[i], True);
-        Result[r.Increase] := Self[i];
-      end;
-    if ((l - r) > 0) then
-      SetLength(Result, r);
-  finally
-    d.Free;
-  end;
-end;
-
-{==============================================================================]
   <Uniformity>
   @action: Returns 1.0 if all elements equal, 0.0 if all different,
            or something in between based on unique-value ratio. 
@@ -2588,143 +1989,6 @@ begin
     Result := (1.0 / Self.Distinct)
   else
     Result := 0.0;
-end;
-
-{==============================================================================]
-  <Unified>
-  @action: Uniques array
-  @note: None.
- [==============================================================================}
-function MArrayHelper.Unified(const dAscending: Boolean = True): MArray; overload;
-var
-  d: specialize TDictionary<MType, Byte>;
-  i, n: Integer;
-begin
-  d := specialize TDictionary<MType, Byte>.Create;
-  try
-    SetLength(Result, Self.Size);
-    n := 0;
-    case dAscending of
-      True:
-      for i := 0 to High(Self) do
-        if not d.ContainsKey(Self[i]) then
-        begin
-          d.Add(Self[i], 0);
-          Result[n.Increase] := Self[i];
-        end;
-      False:
-      for i := High(Self) downto 0 do
-        if not d.ContainsKey(Self[i]) then
-        begin
-          d.Add(Self[i], 0);
-          Result[n.Increase] := Self[i];
-        end;
-    end;
-    SetLength(Result, n);
-  finally
-    d.Free;
-  end;
-end;
-
-{==============================================================================]
-  <Unify>
-  @action: Uniques array
-  @note: None.
- [==============================================================================}
-function MArrayHelper.Unify(const dAscending: Boolean = True): Integer; overload;
-var
-  s: MArray;
-  d: specialize TDictionary<MType, Byte>;
-  l, i: Integer;
-begin
-  d := specialize TDictionary<MType, Byte>.Create;
-  Result := 0;
-  try
-    l := Self.Length;
-    case dAscending of
-      False:
-      begin
-        s := Self.Copy;
-        for i := (l - 1) downto 0 do
-          if not d.ContainsKey(Self[i]) then
-          begin
-            d.Add(Self[i], 0);
-            Self[Result.Increase] := s[i];
-          end;
-      end;
-      True:
-      for i := 0 to (l - 1) do
-        if not d.ContainsKey(Self[i]) then
-        begin
-          d.Add(Self[i], 0);
-          Self[Result.Increase] := Self[i];
-        end;
-    end;
-    SetLength(Self, Result);
-  finally
-    d.Free;
-  end;
-end;
-
-{==============================================================================]
-  <Unduplicated>
-  @action: Removes all duplicates from arr.
-  @note: Returns the number of items that were removed.
-[==============================================================================}
-function MArrayHelper.Unduplicated: MArray; overload;
-var
-  a, l, i, j: Integer;
-  m: Boolean;
-begin
-  Result := Self.Copy;
-  l := Result.Length;
-  if (l < 2) then
-    Exit;
-  a := 0;
-  for i := 1 to (l - 1) do
-  begin
-    for j := 0 to a do
-    begin
-      m := (Result[i] = Result[j]);
-      if m then
-        Break;
-    end;
-    if m then
-      Continue;
-    Result[a.Increment] := Result[i];
-  end;
-  if ((l - (a + 1)) > 0) then
-    SetLength(Result, (a + 1));
-end;
-
-{==============================================================================]
-  <Uniqued>
-  @action: Removes all duplicates from arr.
-  @note: Returns the unique version of arr.
-[==============================================================================}
-function MArrayHelper.Uniqued: MArray; overload;
-var
-  i, j, l, c: Integer;
-begin
-  l := Self.Length;
-  SetLength(Result, l);
-  if (l > 0) then
-  begin
-    c := 0;
-    for i := 0 to (l - 1) do
-    begin
-      j := 0;
-      repeat
-        if (Self[i] <> Result[j]) then
-          j := (j + 1)
-        else
-          j := 0;
-      until ((j = 0) or (j > c));
-      if (j > 0) then
-        Result[c.Increase] := Self[i];
-    end;
-    SetLength(Result, c);
-  end;
 end;
 
 {==============================================================================]
@@ -2757,7 +2021,7 @@ begin
   end;
   if (h = 0) then
     Result[0] := 0;
-end;
+end; 
 
 {==============================================================================]
   <Unshift>

@@ -12,3 +12,7 @@
 {$I Sort.inc}
 {$I Transform.inc}
 {$I Validation.inc}
+
+{$I Deduplication/Global.inc}
+{$I Deduplication/Runlength.inc}
+{$I Deduplication/Singular.inc}
