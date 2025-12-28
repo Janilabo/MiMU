@@ -1,13 +1,13 @@
-{$DEFINE string}{$I ../Type/Defines.inc}
+{$DEFINE string}{$I ../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF HELPERS}
 T2DStringArrayHelper = type helper for T2DStringArray
-  {$I ./Core.inc}
+  {$I T2DArray.inc}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
-{$I ./Core.inc}
+{$I T2DArray.inc}
 {$ENDIF}
 
-{$UNDEF string}
+{$UNDEF BASE}{$UNDEF string}

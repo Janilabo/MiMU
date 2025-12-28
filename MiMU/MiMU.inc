@@ -24,19 +24,7 @@ type
   T2D = class
   public
   {$ENDIF}
-  {$I T2DArray/T2DIntegerArray.inc}
-  {$I T2DArray/T2DDoubleArray.inc}
-  {$I T2DArray/T2DStringArray.inc}
-  {$I T2DArray/T2DCharArray.inc}
-  {$I T2DArray/T2DBooleanArray.inc}
-  {$I T2DArray/T2DPointArray.inc}
-  {$I T2DArray/T2DBoxArray.inc}
-  {$I T2DArray/T2DRangeArray.inc}
-  {$I T2DArray/T2DInt64Array.inc}
-  {$I T2DArray/T2DConnectionArray.inc}
-  {$I T2DArray/T2DCircleArray.inc}
-  {$I T2DArray/T2DTriangleArray.inc}
-  {$I T2DArray/T2DSegmentArray.inc}
+  {$i T2DArray/T2DArray.inc}
 {$ENDIF}
 
 {$IFDEF CLASSES}

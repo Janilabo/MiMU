@@ -1,13 +1,13 @@
-{$DEFINE Double}{$I ../Type/Defines.inc}
+{$DEFINE Double}{$I ../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF HELPERS}
 T2DDoubleArrayHelper = type helper for T2DDoubleArray
-  {$I ./Core.inc}
+  {$I T2DArray.inc}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
-{$I ./Core.inc}
+{$I T2DArray.inc}
 {$ENDIF}
 
-{$UNDEF Double}
+{$UNDEF BASE}{$UNDEF Double}

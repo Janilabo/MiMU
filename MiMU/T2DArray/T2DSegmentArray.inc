@@ -1,13 +1,13 @@
-{$DEFINE TSegment}{$I ../Type/Defines.inc}
+{$DEFINE TSegment}{$I ../Type/Defines.inc}{$DEFINE BASE}
 
 {$IFDEF HELPERS}
 T2DSegmentArrayHelper = type helper for T2DSegmentArray
-  {$I ./Core.inc}
+  {$I T2DArray.inc}
 end;
 {$ENDIF}
 
 {$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
-{$I ./Core.inc}
+{$I T2DArray.inc}
 {$ENDIF}
 
-{$UNDEF TSegment}
+{$UNDEF BASE}{$UNDEF TSegment}
