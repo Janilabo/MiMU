@@ -7,7 +7,7 @@ TTriangleArrayHelper = type helper for TTriangleArray
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
+{$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
 {$I ../TArray.inc}
 {$I TTriangleArray.pph}
 {$ENDIF}

@@ -11,7 +11,7 @@ TBooleanHelper = type helper for Boolean
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
+{$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
 {$I ../Type.inc}
 {$I Boolean.pph}
 {$ENDIF}

@@ -15,26 +15,13 @@ TCircleHelper = type helper for TCircle
 end;
 {$ENDIF}
 
-{$IFDEF OPERATORS}
-operator =(const a, b: TCircle): Boolean;
-operator <>(const a, b: TCircle): Boolean;
+{$IF DEFINED(OPERATORS) OR DEFINED(IMPLEMENTATION)}
+{$I Operators.inc}
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
+{$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
 {$I ../Type.inc}
 {$I TCircle.pph}
-{$ENDIF}
-
-{$IFDEF IMPLEMENTATION}
-operator =(const a, b: TCircle): Boolean;
-begin
-  Result := ((a.Center = b.Center) and (a.Radius = b.Radius));
-end;
-
-operator <>(const a, b: TCircle): Boolean;
-begin
-  Result := not (a = b);
-end;
 {$ENDIF}
 
 {$UNDEF BASE}{$UNDEF TCircle}

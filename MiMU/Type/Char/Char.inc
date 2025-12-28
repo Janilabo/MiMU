@@ -11,7 +11,7 @@ TCharHelper = type helper for Char
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
+{$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
 {$I ../Type.inc}
 {$I Char.pph}
 {$ENDIF}

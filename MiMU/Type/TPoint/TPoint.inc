@@ -14,15 +14,8 @@ TMetrics = (dmHypotEuclidean, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmM
 TDistance = function(const A, B: TPoint): Double;
 {$ENDIF}
 
-{$IFDEF OPERATORS}
-operator +(const a, b: TPoint): TPoint;
-operator -(const a, b: TPoint): TPoint;
-operator =(const a, b: TPoint): Boolean;
-operator <>(const a, b: TPoint): Boolean;
-operator >(const a, b: TPoint): Boolean;
-operator <(const a, b: TPoint): Boolean;
-operator >=(const a, b: TPoint): Boolean;
-operator <=(const a, b: TPoint): Boolean;
+{$IF DEFINED(OPERATORS) OR DEFINED(IMPLEMENTATION)}
+{$I Operators.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
@@ -36,54 +29,12 @@ TPointHelper = type helper for TPoint
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
+{$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
 {$I ../Type.inc}
 {$I TPoint.pph}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-operator +(const a, b: TPoint): TPoint;
-begin
-  Result.X := (a.X + b.X);
-  Result.X := (a.Y + b.Y);
-end;
-
-operator -(const a, b: TPoint): TPoint;
-begin
-  Result.X := (a.X - b.X);
-  Result.Y := (a.Y - b.Y);
-end;
-
-operator =(const a, b: TPoint): Boolean;
-begin
-  Result := ((a.X = b.X) and (a.Y = b.Y));
-end;
-
-operator <>(const a, b: TPoint): Boolean;
-begin
-  Result := not ((a.X = b.X) and (a.Y = b.Y));
-end;
-
-operator >(const a, b: TPoint): Boolean;
-begin
-  Result := ((a.Y > b.Y) or ((a.Y = b.Y) and (a.X > b.X)));
-end;
-
-operator <(const a, b: TPoint): Boolean;
-begin
-  Result := ((a.Y < b.Y) or ((a.Y = b.Y) and (a.X < b.X)));
-end;
-
-operator >=(const a, b: TPoint): Boolean;
-begin
-  Result := ((a > b) or (a = b));
-end;
-
-operator <=(const a, b: TPoint): Boolean;
-begin
-  Result := ((a < b) or (a = b));
-end;
-
 {==============================================================================]
   <Null>
   @action: Returns a "null" or invalid point, with both X and Y set to the specified sentinel value.

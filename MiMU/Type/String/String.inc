@@ -11,7 +11,7 @@ TStringHelper = type helper for string
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
+{$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
 {$I ../Type.inc}
 {$I String.pph}
 {$ENDIF}

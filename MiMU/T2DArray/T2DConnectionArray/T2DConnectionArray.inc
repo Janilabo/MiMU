@@ -7,7 +7,7 @@ T2DConnectionArrayHelper = type helper for T2DConnectionArray
 end;
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS) OR DEFINED(CLASSES)}
+{$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
 {$I ../T2DArray.inc}
 {$I T2DConnectionArray.pph}
 {$ENDIF}

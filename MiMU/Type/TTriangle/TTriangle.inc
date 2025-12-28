@@ -13,25 +13,12 @@ TTriangleHelper = type helper for TTriangle
 end;
 {$ENDIF}
 
-{$IFDEF OPERATORS}
-operator =(const a, b: TTriangle): Boolean;
-operator <>(const a, b: TTriangle): Boolean;
+{$IF DEFINED(OPERATORS) OR DEFINED(IMPLEMENTATION)}
+{$I Operators.inc}
 {$ENDIF}
 
-{$IF DEFINED(IMPLEMENTATION) OR DEFINED(FUNCTIONS)}
+{$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
 {$I ../Type.inc}
-{$ENDIF}
-
-{$IFDEF IMPLEMENTATION}
-operator =(const a, b: TTriangle): Boolean;
-begin
-  Result := ((a.A = b.A) and (a.B = b.B) and (a.C = b.C));
-end;
-
-operator <>(const a, b: TTriangle): Boolean;
-begin
-  Result := not (a = b);
-end;
 {$ENDIF}
 
 {$UNDEF BASE}{$UNDEF TTriangle}
