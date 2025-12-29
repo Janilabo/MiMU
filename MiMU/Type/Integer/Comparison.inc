@@ -1,5 +1,9 @@
 {$IFDEF HELPERS}
+function Cmpr(const target: Integer): Integer;
 function Compare(const target: Integer): Integer; inline;
+function Compared(const target: Integer; const oAscending: Boolean = True): Integer;
+function CompareWith(const target: Integer; const oAscending: Boolean = True): Integer;
+function CompareTo(const target: Integer; const oAscending: Boolean = True): Integer;
 function Precede(const target: Integer; const aAscending: Boolean): Boolean; overload;
 function Ascending(const target: Integer): Boolean; inline;
 function Descending(const target: Integer): Boolean; inline;
@@ -16,12 +20,44 @@ function Comparison(const A, B: Integer): Integer; overload;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
+  <Cmpr>
+  @action: Compares x with target target.
+           Results: 0=EQUAL, 1=x>target, -1=x<target
+  @note: None
+[==============================================================================}
+function TIntegerHelper.Cmpr(const target: Integer): Integer; inline; {$DEFINE Skeleton_Cmpr}{$I ../Skeletons.inc}{$UNDEF Skeleton_Cmpr}
+
+{==============================================================================]
   <Compare>
   @action: Compares x with target target.
            Results: 0=EQUAL, 1=x>target, -1=x<target
   @note: None
 [==============================================================================}
 function TIntegerHelper.Compare(const target: Integer): Integer; inline; {$DEFINE Skeleton_Compare}{$I ../Skeletons.inc}{$UNDEF Skeleton_Compare}
+
+{==============================================================================]
+  <Compared>
+  @action: Compares x with target value.
+           Results: 0=EQUAL
+  @note: Supports ascending/descending
+[==============================================================================}
+function TIntegerHelper.Compared(const target: Integer; const oAscending: Boolean = True): Integer; {$DEFINE Skeleton_Compared}{$I ../Skeletons.inc}{$UNDEF Skeleton_Compared}
+
+{==============================================================================]
+  <CompareWith>
+  @action: Compares x with target value.
+           Results: 0=EQUAL
+  @note: Supports ascending/descending
+[==============================================================================}
+function TIntegerHelper.CompareWith(const target: Integer; const oAscending: Boolean = True): Integer; {$DEFINE Skeleton_CompareWith}{$I ../Skeletons.inc}{$UNDEF Skeleton_CompareWith}
+
+{==============================================================================]
+  <CompareTo>
+  @action: Compares x with target value.
+           Results: 0=EQUAL
+  @note: Supports ascending/descending
+[==============================================================================}
+function TIntegerHelper.CompareTo(const target: Integer; const oAscending: Boolean = True): Integer; {$DEFINE Skeleton_CompareTo}{$I ../Skeletons.inc}{$UNDEF Skeleton_CompareTo}
 
 {==============================================================================]
   <Precede>

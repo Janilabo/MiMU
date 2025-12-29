@@ -25,6 +25,12 @@ begin
 end;
 {$ENDIF}
 
+{$IFDEF Skeleton_Cmpr}
+begin
+  Result := (Ord(Self > target) - Ord(Self < target));
+end;
+{$ENDIF}
+
 {$IFDEF Skeleton_Compare}
 begin
   if (Self = target) then
@@ -35,6 +41,37 @@ begin
     Result := -1;
 end;
 {$ENDIF}
+
+{$IFDEF Skeleton_Compared}
+begin
+  Result := (Ord(Self > target) - Ord(Self < target));
+  if not oAscending then
+    Result := -Result;
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_CompareWith}
+begin
+  if (Self = target) then
+    Exit(0);
+  if oAscending then
+    Result := IfThen((Self > target), 1, -1)
+  else
+    Result := IfThen((target > Self), 1, -1);
+end;
+{$ENDIF}
+
+{$IFDEF Skeleton_CompareTo}
+begin
+  if (Self = target) then
+    Exit(0);
+  if oAscending then
+    Result := ((Ord(Self > target) * 2) - 1)
+  else
+    Result := ((Ord(target > Self) * 2) - 1);
+end;
+{$ENDIF}
+
 
 {$IFDEF Skeleton_Comparison}
 begin
