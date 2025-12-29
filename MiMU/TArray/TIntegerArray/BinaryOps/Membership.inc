@@ -6,6 +6,8 @@ function BinaryIncludes(const value: Integer; const oAscending: Boolean = True):
 function BinaryExcludes(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExistent(const item: Integer; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExists(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
+function BinaryContact(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
+function BinaryContact(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -100,5 +102,68 @@ begin
   end;
   index := -1;
   Result := False;
+end;
+
+{==============================================================================]
+  <BinaryContact>
+  @action: Determines whether a specific integer value exists in a sorted array
+           using binary search.
+  @note: - Assumes the array is sorted according to the `oAscending` flag.
+         - Returns True if the value is found, False otherwise.
+         - Time complexity is O(log n).
+         - Works for ascending or descending arrays.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryContact(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
+var
+  M, H: Integer;
+  R: TRange;
+begin
+  H := High(Self);
+  Result := False;
+  if ((H = -1) or (oAscending and ((x < Self[0]) or (x > Self[H]))) or ((not oAscending) and ((x > Self[0]) or (x < Self[H])))) then
+    Exit;
+  R.Create(0, H);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = x) then
+      Exit(True);
+    if ((oAscending and (Self[M] < x)) or ((not oAscending) and (Self[M] > x))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryContact>
+  @action: Determines whether any element exists within a specified inclusive
+           range (`TRange`) in a sorted array using binary search.
+  @note: - Assumes the array is sorted according to the `oAscending` flag.
+         - Returns True if at least one element falls within the range, False otherwise.
+         - The input range is normalized internally (start <= stop).
+         - Time complexity is O(log n).
+         - Works for ascending or descending arrays.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryContact(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
+var
+  M: Integer;
+  R, N: TRange;
+begin
+  Result := False;
+  R.Create(0, High(Self));
+  if (R.stop = -1) then
+    Exit;
+  N := x.Normalize;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if InRange(Self[M], N.start, N.stop) then
+      Exit(True);
+    if ((oAscending and (Self[M] < N.start)) or ((not oAscending) and (Self[M] > N.stop))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
 end;
 {$ENDIF}

@@ -1,6 +1,10 @@
 {$IFDEF HELPERS}
 function BinaryCount(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryCount(const x: TRange; const aAscending: Boolean = True): Integer; overload;
+function BinaryCountOf(const x: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinaryCountOf(const x: TRange; const oAscending: Boolean = True): Integer; overload;
+function BinaryCountFor(const x: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinaryCountFor(const x: TRange; const oAscending: Boolean = True): Integer; overload;
 function BinaryCounted(const x: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryCounted(const x: TRange; const oAscending: Boolean = True): Integer; overload;
 function BinaryAmount(const x: Integer; const aAscending: Boolean = True): Integer; overload;
@@ -31,6 +35,216 @@ begin
     Result := ((Self.BinaryRightmost(r, aAscending) - Result) + 1)
   else
     Result := 0;
+end;
+
+{==============================================================================]
+  <BinaryCountOf>
+  @action: Counts the number of occurrences of a specific integer value
+           in a sorted array. Uses a single binary search to locate any
+           occurrence of the value, then expands left and right to
+           count contiguous occurrences.
+  @note: - Assumes the array is sorted according to the `oAscending` flag.
+         - Returns 0 if the array is empty or the value is not present.
+         - Time complexity is O(log n + k), where k is the number of occurrences.
+         - Works correctly for ascending or descending arrays.
+         - This overload counts a single integer value.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryCountOf(const x: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  M, I, H: Integer;
+  R: TRange;
+begin
+  Result := 0;
+  H := High(Self);
+  if (H = -1) then
+    Exit;
+  R.Create(0, H);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = x) then
+    begin
+      Result := 1;
+      I := (M - 1);
+      while ((I >= 0) and (Self[I.Decrease] = x)) do
+        Inc(Result);
+      I := (M + 1);
+      while ((I <= H) and (Self[I.Increase] = x)) do
+        Inc(Result);
+      Exit;
+    end;
+    if ((oAscending and (Self[M] < x)) or ((not oAscending) and (Self[M] > x))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryCountOf>
+  @action: Counts the number of elements within a specified inclusive range
+           (`TRange`) in a sorted array. Performs a single binary search
+           to locate any element within the range, then expands left and
+           right to count all elements inside the range.
+  @note: - Assumes the array is sorted according to the `oAscending` flag.
+         - Returns 0 if the array is empty or no elements fall within the range.
+         - The input range is normalized internally (start <= stop).
+         - Time complexity is O(log n + k), where k is the number of elements in the range.
+         - Works correctly for ascending or descending arrays.
+         - Use this overload for ranges instead of single values.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryCountOf(const x: TRange; const oAscending: Boolean = True): Integer; overload;
+var
+  M, I, H: Integer;
+  R, N: TRange;
+begin
+  Result := 0;
+  H := High(Self);
+  if (H = -1) then
+    Exit;
+  N := x.Normalize;
+  R.Create(0, H);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if InRange(Self[M], N.start, N.stop) then
+    begin
+      Result := 1;
+      I := (M - 1);
+      while ((I >= 0) and InRange(Self[I.Decrease], N.start, N.stop)) do
+        Inc(Result);
+      I := (M + 1);
+      while ((I <= H) and InRange(Self[I.Increase], N.start, N.stop)) do
+        Inc(Result);
+      Exit;
+    end;
+    if ((oAscending and (Self[M] < N.start)) or ((not oAscending) and (Self[M] > N.stop))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryCountFor>
+  @action: Counts the number of occurrences of a specific integer value
+           in a sorted array. Performs a single binary search to locate
+           any occurrence of the value, then uses **exponential ("gallop")**
+           expansion left and right to efficiently count all contiguous duplicates.
+  @note: - Assumes the array is sorted according to the `oAscending` flag.
+         - Returns 0 if the array is empty or if the value is not present.
+         - Time complexity is O(log n + log k), where k is the number of occurrences.
+         - Works correctly for ascending or descending arrays.
+         - Use this function instead of a linear count when duplicates may form
+           large contiguous blocks.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryCountFor(const x: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  M, I, H, S: Integer;
+  R: TRange;
+begin
+  Result := 0;
+  H := High(Self);
+  if (H = -1) then
+    Exit;
+  R.Create(0, H);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = x) then
+      Break;
+    case oAscending of
+      True:
+      if (Self[M] < x) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+      False:
+      if (Self[M] > x) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+  end;
+  if (Self[M] <> x) then
+    Exit(0);
+  Result := 1;
+  S := 1;
+  I := (M - 1);
+  while (((I - S) >= 0) and (Self[I - S] = x)) do
+    S := (S * 2);
+  for I := Max(((I - S) + 1), 0) to (M - 1) do
+    if (Self[I] = x) then
+      Inc(Result);
+  S := 1;
+  I := (M + 1);
+  while (((I + S) <= H) and (Self[I + S] = x)) do
+    S := (S * 2);
+  for I := (M + 1) to Min(((I + S) - 1), H) do
+    if (Self[I] = x) then
+      Inc(Result);
+end;
+
+{==============================================================================]
+  <BinaryCountFor>
+  @action: Counts the number of elements within a specified inclusive range
+           (`TRange`) in a sorted array. Uses a **single binary search** to locate
+           any element in the range, then expands **exponentially ("gallop")**
+           left and right to efficiently count all contiguous elements in the range.
+  @note: - Assumes the array is sorted according to the `oAscending` flag.
+         - Returns 0 if the array is empty or no elements fall within the range.
+         - The input range is normalized internally (start <= stop).
+         - This is a hybrid approach: O(log n) for the binary search plus
+           O(log k) for the exponential expansion, where k is the number of elements in the range.
+         - Works correctly for ascending or descending arrays.
+         - Use this overload when the range may include a large contiguous block to reduce linear expansion.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryCountFor(const x: TRange; const oAscending: Boolean = True): Integer; overload;
+var
+  M, I, H, S: Integer;
+  R, N: TRange;
+begin
+  Result := 0;
+  H := High(Self);
+  if (H = -1) then
+    Exit;
+  N := x.Normalize;
+  R.Create(0, H);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if InRange(Self[M], N.start, N.stop) then
+      Break;
+    case oAscending of
+      True:
+      if (Self[M] < N.start) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+      False:
+      if (Self[M] > N.stop) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+  end;
+  if not InRange(Self[M], N.start, N.stop) then
+    Exit(0);
+  Result := 1;
+  S := 1;
+  I := (M - 1);
+  while (((I - S) >= 0) and InRange(Self[I - S], N.start, N.stop)) do
+    S := (S * 2);
+  for I := Max(((I - S) + 1), 0) to (M - 1) do
+    if InRange(Self[I], N.start, N.stop) then
+      Inc(Result);
+  S := 1;
+  I := (M + 1);
+  while (((I + S) <= H) and InRange(Self[I + S], N.start, N.stop)) do
+    S := (S * 2);
+  for I := (M + 1) to Min(((I + S) - 1), H) do
+    if InRange(Self[I], N.start, N.stop) then
+      Inc(Result);
 end;
 
 {==============================================================================]
