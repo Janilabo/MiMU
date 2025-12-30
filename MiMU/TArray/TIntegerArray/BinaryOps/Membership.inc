@@ -8,6 +8,14 @@ function BinaryExistent(const item: Integer; out index: Integer; const oAscendin
 function BinaryExists(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryContact(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryContact(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
+function BinaryMember(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
+function BinaryMember(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
+function BinaryAvailable(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
+function BinaryAvailable(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
+function BinaryUnavailable(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
+function BinaryUnavailable(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
+function BinaryOverlaps(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
+function BinaryOverlaps(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -165,5 +173,244 @@ begin
     else if ((oAscending and (Self[M] > N.stop)) or ((not oAscending) and (Self[M] < N.start))) then
       R.stop := (M - 1);
   end;
+end;
+
+{==============================================================================]
+  <BinaryMember>
+  @action: Performs a binary search to determine whether a specific integer value
+           exists in the array. The search logic is comparison-driven and supports
+           both ascending and descending sorted arrays.
+  @note: The array must already be sorted according to the value of oAscending.
+         Uses Integer_Compare for ordering semantics. Returns True immediately
+         upon finding an exact match; otherwise returns False if the value is not present.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryMember(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
+var
+  M, C: Integer;
+  R: TRange;
+begin
+  Result := False;
+  if Self.Empty then
+    Exit;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if oAscending then
+      C := Self[M].Compare(x)
+    else
+      C := x.Compare(Self[M]);
+    case C of
+      0: Exit(True);
+      -1: R.start := (M + 1);
+      1: R.stop := (M - 1);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryMember>
+  @action: Performs a binary search to determine whether any element of the array
+           falls within the specified integer range.
+  @note: The input range is normalized prior to searching. The array must be
+         sorted according to oAscending. Returns True if at least one element
+         lies within the range; otherwise returns False. Comparison direction
+         is controlled via Integer_Compared to support descending order.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryMember(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
+var
+  M: Integer;
+  R, N: TRange;
+begin
+  Result := False;
+  if Self.Empty then
+    Exit;
+  N := x.Normalize;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if InRange(Self[M], N.start, N.stop) then
+      Exit(True);
+    if (Self[M].Compared(N.stop, oAscending) > 0) then
+      R.stop := (M - 1)
+    else if (Self[M].Compared(N.start, oAscending) < 0) then
+      R.start := (M + 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryAvailable>
+  @action: Performs a classic binary search to test whether a specific integer
+           value is present in the array.
+  @note: The array must be sorted in ascending or descending order as indicated
+         by oAscending. Uses direct relational comparisons rather than abstract
+         comparison helpers. Returns True if the value is found; otherwise False.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryAvailable(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := False;
+  if Self.Empty then
+    Exit;
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      if (Self[M] = x) then
+        Exit(True)
+      else if (Self[M] < x) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      if (Self[M] = x) then
+        Exit(True)
+      else if (Self[M] > x) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryAvailable>
+  @action: Performs a classic binary search to test whether any element in the
+           array lies within the specified integer range.
+  @note: The input range is normalized before searching. The array must be
+         sorted according to oAscending. Uses direct relational comparisons
+         against the range bounds. Returns True if at least one value in the
+         array falls within the range; otherwise False.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryAvailable(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
+var
+  M: Integer;
+  R, N: TRange;
+begin
+  Result := False;
+  if Self.Empty then
+    Exit;
+  N := x.Normalize;
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      if InRange(Self[M], N.start, N.stop) then
+        Exit(True)
+      else if (Self[M] < N.start) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      if InRange(Self[M], N.start, N.stop) then
+        Exit(True)
+      else if (Self[M] > N.stop) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryUnavailable>
+  @action: Determines whether a specific integer value is not present in the array
+           using binary search semantics.
+  @note: This function is a logical negation of BinaryAvailable for integer values.
+         The array must be sorted according to oAscending. Returns True if the
+         value does not exist in the array; otherwise returns False.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryUnavailable(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := not Self.BinaryAvailable(x, oAscending);
+end;
+
+{==============================================================================]
+  <BinaryUnvailable>
+  @action: Determines whether no elements of the array fall within the specified
+           integer range using binary search semantics.
+  @note: This function is a logical negation of BinaryAvailable for ranges.
+         The input range is normalized by the underlying call. The array must
+         be sorted according to oAscending. Returns True if no element in the
+         array lies within the range; otherwise returns False.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryUnavailable(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := not Self.BinaryAvailable(x, oAscending);
+end;
+
+{==============================================================================]
+  <BinaryOverlaps>
+  @action: Performs a binary search to determine whether the specified integer
+           value overlaps the array; that is, whether the value exists as an
+           element of the array.
+  @note: The array must be sorted according to oAscending. Although named
+         "Overlaps", this overload performs an equality-based binary search
+         and returns True only when an exact match is found. Returns False
+         if the array is empty or if the value is not present.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryOverlaps(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
+var
+  M, L: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  if (R.stop > -1) then
+  repeat
+    M := R.Pivot;
+    if (Self[M] = x) then
+      Exit(True);
+    if ((oAscending and (Self[M] < x)) or ((not oAscending) and (Self[M] > x))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  until (R.start > R.stop);
+  Result := False;
+end;
+
+{==============================================================================]
+  <BinaryOverlaps>
+  @action: Performs a binary search to determine whether any element of the array
+           overlaps (falls within) the specified integer range.
+  @note: The input range is normalized prior to searching. The array must be
+         sorted according to oAscending. Returns True if at least one element
+         lies within the range; otherwise returns False. This function detects
+         overlap based on value inclusion rather than structural range
+         intersection.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryOverlaps(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
+var
+  M: Integer;
+  R, N: TRange;
+begin
+  R.Create(0, High(Self));
+  if (R.stop = -1) then
+    Exit(False);
+  N := x.Normalize;
+  repeat
+    M := R.Pivot;
+    if InRange(Self[M], N.start, N.stop) then
+      Exit(True);
+    if ((oAscending and (Self[M] < N.start)) or ((not oAscending) and (Self[M] > N.stop))) then
+      R.start := (M + 1)
+    else if ((oAscending and (Self[M] > N.stop)) or ((not oAscending) and (Self[M] < N.start))) then
+      R.stop := (M - 1);
+  until (R.start > R.stop);
+  Result := False;
 end;
 {$ENDIF}
