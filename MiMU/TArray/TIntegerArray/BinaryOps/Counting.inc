@@ -11,6 +11,8 @@ function BinaryAmount(const x: Integer; const aAscending: Boolean = True): Integ
 function BinaryAmount(const x: TRange; const aAscending: Boolean = True): Integer; overload;
 function BinaryQuantity(const x: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryQuantity(const x: TRange; const oAscending: Boolean = True): Integer; overload;
+function BinaryTally(const x: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinaryTally(const x: TRange; const oAscending: Boolean = True): Integer; overload;
 function BinaryLowerCount(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryHigherCount(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -547,6 +549,112 @@ begin
     end else
       R.stop := (M - 1);
   end;
+  Result := ((L - F) + 1);
+end;
+
+{==============================================================================]
+  <BinaryTally>
+  @action: Counts the number of occurrences of a specific value in a sorted array
+           using two binary searches to find the first and last occurrence.
+  @note: - Assumes the array is sorted according to the `oAscending` flag.
+         - Returns 0 if the array is empty or the value is not found.
+         - Time complexity is O(log n) - performs two binary searches.
+         - More efficient than linear expansion for many duplicates.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryTally(const x: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  M, F, L: Integer;
+  R: TRange;
+begin
+  if Self.Empty then
+    Exit(0);
+  R.Create(0, High(Self));
+  F := -1;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case (Self[M] = x) of
+      True:
+      begin
+        F := M;
+        R.stop := (M - 1);
+      end;
+      False:
+      if ((oAscending and (Self[M] < x)) or ((not oAscending) and (Self[M] > x))) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+  end;
+  if (F = -1) then
+    Exit(0);
+  R.Create(F, High(Self));
+  L := F;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case (Self[M] = x) of
+      True:
+      begin
+        L := M;
+        R.start := (M + 1);
+      end;
+      False:
+      if ((oAscending and (Self[M] < x)) or ((not oAscending) and (Self[M] > x))) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+  end;
+  Result := ((L - F) + 1);
+end;
+
+{==============================================================================]
+  <BinaryTally>
+  @action: Counts the number of elements within a specified inclusive range
+           in a sorted array using two binary searches to find the boundaries.
+  @note: - Assumes the array is sorted according to the `oAscending` flag.
+         - Returns 0 if the array is empty or no elements fall within the range.
+         - The input range is normalized internally (start <= stop).
+         - Time complexity is O(log n) - performs two binary searches.
+         - More efficient than linear expansion for large contiguous ranges.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryTally(const x: TRange; const oAscending: Boolean = True): Integer; overload;
+var
+  M, F, L: Integer;
+  R, N: TRange;
+begin
+  if Self.Empty then
+    Exit(0);
+  N := x.Normalize;
+  R.Create(0, High(Self));
+  F := -1;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if ((oAscending and (Self[M] >= N.start)) or ((not oAscending) and (Self[M] <= N.stop))) then
+    begin
+      F := M;
+      R.stop := (M - 1);
+    end else
+      R.start := (M + 1);
+  end;
+  if (F = -1) then
+    Exit(0);
+  R.Create(F, High(Self));
+  L := -1;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if ((oAscending and (Self[M] <= N.stop)) or ((not oAscending) and (Self[M] >= N.start))) then
+    begin
+      L := M;
+      R.start := (M + 1);
+    end else
+      R.stop := (M - 1);
+  end;
+  if (L = -1) then
+    Exit(0);
   Result := ((L - F) + 1);
 end;
 
