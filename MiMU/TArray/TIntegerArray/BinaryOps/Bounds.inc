@@ -151,7 +151,7 @@ begin
     end;
     if ((aAscending and (r.stop < Self[M])) or ((not aAscending) and (r.stop > Self[M]))) then
       s.stop := (M - 1)
-    else
+    else if ((aAscending and (r.start > Self[M])) or ((not aAscending) and (r.start < Self[M]))) then
       s.start := (M + 1);
   end;
   Result := -1;
@@ -196,7 +196,7 @@ begin
     end;
     if ((aAscending and (r.stop < Self[M])) or ((not aAscending) and (r.stop > Self[M]))) then
       s.stop := (M - 1)
-    else
+    else if ((aAscending and (r.start > Self[M])) or ((not aAscending) and (r.start < Self[M]))) then
       s.start := (M + 1);
   end;
   Result := -1;

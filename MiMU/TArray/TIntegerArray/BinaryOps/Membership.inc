@@ -162,7 +162,7 @@ begin
       Exit(True);
     if ((oAscending and (Self[M] < N.start)) or ((not oAscending) and (Self[M] > N.stop))) then
       R.start := (M + 1)
-    else
+    else if ((oAscending and (Self[M] > N.stop)) or ((not oAscending) and (Self[M] < N.start))) then
       R.stop := (M - 1);
   end;
 end;

@@ -2018,7 +2018,7 @@ end;
       Exit(M);
     if ((aAscending and (range.stop < Self[M])) or ((not aAscending) and (range.start > Self[M]))) then
       Result := BSS(range, L, (M - 1), aAscending)
-    else
+    else if ((aAscending and (range.start > Self[M])) or ((not aAscending) and (range.stop < Self[M]))) then
       Result := BSS(range, (M + 1), R, aAscending);
   end;
 begin
@@ -2495,7 +2495,7 @@ begin
       False:
       if ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.start))) then
         r.start := (m + 1)
-      else
+      else if ((oAscending and (Self[m] > n.stop)) or ((not oAscending) and (Self[m] < n.start))) then
         r.stop := (m - 1);
     end;
   end;
@@ -2516,7 +2516,7 @@ begin
       False:
       if ((oAscending and (Self[m] < n.stop)) or ((not oAscending) and (Self[m] > n.stop))) then
         r.start := (m + 1)
-      else
+      else if ((oAscending and (Self[m] > n.stop)) or ((not oAscending) and (Self[m] < n.start))) then
         r.stop := (m - 1);
     end;
   end;
@@ -2579,7 +2579,7 @@ begin
       False:
       if ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.stop))) then
         r.start := (m + 1)
-      else
+      else if ((oAscending and (Self[m] > n.stop)) or ((not oAscending) and (Self[m] < n.start))) then
         r.stop := (m - 1);
     end;
   end;
@@ -2664,7 +2664,7 @@ begin
       False:
       if ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.stop))) then
         r.start := (m + 1)
-      else
+      else if ((oAscending and (Self[m] > n.stop)) or ((not oAscending) and (Self[m] < n.start))) then
         r.stop := (m - 1);
     end;
   end;
