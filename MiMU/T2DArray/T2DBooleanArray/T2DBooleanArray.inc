@@ -1,5 +1,12 @@
 {$DEFINE Boolean}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
+{$IFDEF TYPES}
+C2DBooleanArray = class
+public 
+  {$DEFINE METHODS}{$I T2DBooleanArray.pph}{$UNDEF METHODS}
+end;
+{$ENDIF}
+
 {$IFDEF HELPERS}
 T2DBooleanArrayHelper = type helper for T2DBooleanArray
   {$I ../T2DArray.inc}

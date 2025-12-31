@@ -1,6 +1,9 @@
 {$DEFINE Double}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
+TDoubleCompare = specialize TCompare<Double>;
+TDoubleArray = array of Double;
+T2DDoubleArray = array of TDoubleArray;
 {$I ../Type.inc}
 {$ENDIF}
 

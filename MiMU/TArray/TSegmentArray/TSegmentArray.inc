@@ -1,5 +1,12 @@
 {$DEFINE TSegment}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
+{$IFDEF TYPES}
+CSegmentArray = class
+public
+  {$DEFINE METHODS}{$I TSegmentArray.pph}{$UNDEF METHODS}
+end;
+{$ENDIF}
+
 {$IFDEF HELPERS}
 TSegmentArrayHelper = type helper for TSegmentArray
   {$I ../TArray.inc}

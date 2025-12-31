@@ -1,5 +1,12 @@
 {$DEFINE TRange}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
+{$IFDEF TYPES}
+CRangeArray = class
+public
+  {$DEFINE METHODS}{$I TRangeArray.pph}{$UNDEF METHODS}
+end;
+{$ENDIF}
+
 {$IFDEF HELPERS}
 TRangeArrayHelper = type helper for TRangeArray
   {$I ../TArray.inc}

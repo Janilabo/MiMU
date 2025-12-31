@@ -2,6 +2,7 @@
 
 {$IFDEF TYPES}
 CBooleanArray = class
+public
   {$DEFINE METHODS}{$I TBooleanArray.pph}{$UNDEF METHODS}
 end;
 {$ENDIF}

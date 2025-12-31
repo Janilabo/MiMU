@@ -7,6 +7,9 @@ TBox = record
   function GetEnumerator: TBoxEnumerator;
   {$DEFINE METHODS}{$I TBox.pph}{$UNDEF METHODS}  
 end;
+TBoxCompare = specialize TCompare<TBox>;
+TBoxArray = array of TBox;
+T2DBoxArray = array of TBoxArray;
 {$I ../Type.inc}
 {$ENDIF}
 

@@ -1,6 +1,9 @@
 {$DEFINE Boolean}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
+TBooleanCompare = specialize TCompare<Boolean>;
+TBooleanArray = array of Boolean;
+T2DBooleanArray = array of TBooleanArray;
 {$I ../Type.inc}
 {$ENDIF}
 

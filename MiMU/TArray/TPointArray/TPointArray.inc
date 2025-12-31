@@ -2,6 +2,7 @@
 
 {$IFDEF TYPES}
 CPointArray = class
+public
   class function Init(var arr: TPointArray): Integer; overload; 
   class function Unique(var arr: TPointArray): Integer; overload; 
   class function Create(const xRange, yRange: TRange): TPointArray; overload; 

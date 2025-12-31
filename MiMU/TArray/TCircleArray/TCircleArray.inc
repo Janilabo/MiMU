@@ -1,5 +1,12 @@
 {$DEFINE TCircle}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
+{$IFDEF TYPES}
+CCircleArray = class
+public
+  {$DEFINE METHODS}{$I TCircleArray.pph}{$UNDEF METHODS}
+end;
+{$ENDIF}
+
 {$IFDEF HELPERS}
 TCircleArrayHelper = type helper for TCircleArray
   {$I ../TArray.inc}

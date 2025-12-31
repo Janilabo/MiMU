@@ -1,5 +1,12 @@
 {$DEFINE string}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
+{$IFDEF TYPES}
+CStringArray = class
+public
+  {$DEFINE METHODS}{$I TStringArray.pph}{$UNDEF METHODS}
+end;
+{$ENDIF}
+
 {$IFDEF HELPERS}
 TStringArrayHelper = type helper for TStringArray
   {$I ../TArray.inc}

@@ -1,6 +1,9 @@
 {$DEFINE Integer}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
+TIntegerCompare = specialize TCompare<Integer>;
+TIntegerArray = array of Integer;
+T2DIntegerArray = array of TIntegerArray;
 {$I ../Type.inc}
 {$ENDIF}
 

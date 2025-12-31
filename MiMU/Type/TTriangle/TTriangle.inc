@@ -4,6 +4,9 @@
 TTriangle = record
   A, B, C: TPoint;
 end;
+TTriangleCompare = specialize TCompare<TTriangle>;
+TTriangleArray = array of TTriangle;
+T2DTriangleArray = array of TTriangleArray;
 {$I ../Type.inc}
 {$ENDIF}
 

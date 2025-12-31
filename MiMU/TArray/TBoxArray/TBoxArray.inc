@@ -1,5 +1,11 @@
 {$DEFINE TBox}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
+{$IFDEF TYPES}
+CBoxArray = class
+public
+  {$DEFINE METHODS}{$I TBoxArray.pph}{$UNDEF METHODS}
+end;
+{$ENDIF}
 
 {$IFDEF HELPERS}
 TBoxArrayHelper = type helper for TBoxArray

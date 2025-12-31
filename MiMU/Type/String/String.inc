@@ -1,6 +1,9 @@
 {$DEFINE string}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
+TStringCompare = specialize TCompare<string>;
+TStringArray = array of string;
+T2DStringArray = array of TStringArray;
 {$I ../Type.inc}
 {$ENDIF}
 

@@ -2,14 +2,12 @@
 
 {$IFDEF TYPES}
 {$I Enumerator.inc}
+TRangeCompare = specialize TCompare<TRange>;
 TRange = record
   start, stop: Integer;
   function GetEnumerator: TRangeEnumerator;
   {$DEFINE METHODS}{$I TRange.pph}{$UNDEF METHODS}
 end;
-TRangeCompare = specialize TCompare<TRange>;
-TRangeArray = array of TRange;
-T2DRangeArray = array of TRangeArray;
 {$I ../Type.inc}
 {$ENDIF}
 

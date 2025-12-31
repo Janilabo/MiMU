@@ -1,5 +1,12 @@
 {$DEFINE Int64}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
+{$IFDEF TYPES}
+C2DInt64Array = class
+public 
+  {$DEFINE METHODS}{$I T2DInt64Array.pph}{$UNDEF METHODS}
+end;
+{$ENDIF}
+
 {$IFDEF HELPERS}
 T2DInt64ArrayHelper = type helper for T2DInt64Array
   {$I ../T2DArray.inc}

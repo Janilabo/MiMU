@@ -1,6 +1,9 @@
 {$DEFINE Char}{$I ../Defines.inc}{$DEFINE BASE}
 
 {$IFDEF TYPES}
+TCharCompare = specialize TCompare<Char>;
+TCharArray = array of Char;
+T2DCharArray = array of TCharArray;
 {$I ../Type.inc}
 {$ENDIF}
 

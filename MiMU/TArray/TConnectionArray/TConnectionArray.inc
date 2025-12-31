@@ -1,5 +1,12 @@
 {$DEFINE TConnection}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
+{$IFDEF TYPES}
+CConnectionArray = class
+public
+  {$DEFINE METHODS}{$I TConnectionArray.pph}{$UNDEF METHODS}
+end;
+{$ENDIF}
+
 {$IFDEF HELPERS}
 TConnectionArrayHelper = type helper for TConnectionArray
   {$I ../TArray.inc}

@@ -1,5 +1,12 @@
 {$DEFINE Char}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
+{$IFDEF TYPES}
+CCharArray = class
+public
+  {$DEFINE METHODS}{$I TCharArray.pph}{$UNDEF METHODS}
+end;
+{$ENDIF}
+
 {$IFDEF HELPERS}
 TCharArrayHelper = type helper for TCharArray
   {$I ../TArray.inc}

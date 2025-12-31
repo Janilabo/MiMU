@@ -1,5 +1,12 @@
 {$DEFINE TSegment}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
+{$IFDEF TYPES}
+C2DSegmentArray = class
+public 
+  {$DEFINE METHODS}{$I T2DSegmentArray.pph}{$UNDEF METHODS}
+end;
+{$ENDIF}
+
 {$IFDEF HELPERS}
 T2DSegmentArrayHelper = type helper for T2DSegmentArray
   {$I ../T2DArray.inc}

@@ -1,5 +1,12 @@
 {$DEFINE Double}{$I ../../Type/Defines.inc}{$DEFINE BASE}
 
+{$IFDEF TYPES}
+CDoubleArray = class
+public
+  {$DEFINE METHODS}{$I TDoubleArray.pph}{$UNDEF METHODS}
+end;
+{$ENDIF}
+
 {$IFDEF HELPERS}
 TDoubleArrayHelper = type helper for TDoubleArray
   {$I ../TArray.inc}

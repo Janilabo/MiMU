@@ -8,6 +8,9 @@ TPoint = record
   function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; overload;
   function AngleRadians(const target: TPoint): Double; overload; 
 end;
+TPointCompare = specialize TCompare<TPoint>;
+TPointArray = array of TPoint;
+T2DPointArray = array of TPointArray;
 {$I ../Type.inc}
 PPoint = ^TPoint;
 TMetrics = (dmHypotEuclidean, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev, dmMinkowski, dmMaxMinChebyshev, dmOctile);

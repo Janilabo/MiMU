@@ -5,6 +5,9 @@ TConnection = record
   id1, id2: Integer;
   {$DEFINE METHODS}{$I TConnection.pph}{$UNDEF METHODS}
 end;
+TConnectionCompare = specialize TCompare<TConnection>;
+TConnectionArray = array of TConnection;
+T2DConnectionArray = array of TConnectionArray;
 {$I ../Type.inc}
 {$ENDIF}
 

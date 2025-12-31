@@ -5,6 +5,9 @@ TSegment = record
   A, B: TPoint;
   {$DEFINE METHODS}{$I TSegment.pph}{$UNDEF METHODS}
 end;
+TSegmentCompare = specialize TCompare<TSegment>;
+TSegmentArray = array of TSegment;
+T2DSegmentArray = array of TSegmentArray;
 {$I ../Type.inc}
 {$ENDIF}
 
