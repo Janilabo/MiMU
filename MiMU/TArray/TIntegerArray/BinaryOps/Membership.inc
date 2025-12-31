@@ -366,7 +366,7 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.BinaryOverlaps(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
 var
-  M, L: Integer;
+  M: Integer;
   R: TRange;
 begin
   R.Create(0, High(Self));

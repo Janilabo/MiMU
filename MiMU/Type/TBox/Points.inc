@@ -110,7 +110,7 @@ end;
 [==============================================================================}
 function TBox.Unbox: TPointArray; overload;
 var
-  w, h, count: Integer;
+  w, h: Integer;
   x, y: Integer;
   s: TPointArray;
   p, r: PPoint;

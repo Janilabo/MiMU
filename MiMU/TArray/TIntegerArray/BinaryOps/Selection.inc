@@ -108,7 +108,7 @@ end;
 
 function TIntegerArrayHelper.BinaryFilter(const values: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
 var
-  h, i, r: Integer;
+  i, r: Integer;
 begin
   if Self.Empty then
     Exit([]);

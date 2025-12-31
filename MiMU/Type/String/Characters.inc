@@ -192,7 +192,6 @@ function TStringHelper.UniqueChars: TCharArray; overload;
 var
   i, j, l: Integer;
   f: Boolean;
-  c: Char;
 begin
   if (Length(Self) = 0) then
     Exit([]);

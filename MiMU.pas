@@ -30,8 +30,6 @@
  ╚╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╝ 
                                              ( ..for Free Pascal }
 
- unit MiMU;
-
 {$mode objfpc}
 {$H+}
 {$macro on}
@@ -39,6 +37,8 @@
 {$modeswitch advancedrecords}
 {$modeswitch arrayoperators}
 {$modeswitch typehelpers}
+
+unit MiMU;
 
 interface
 

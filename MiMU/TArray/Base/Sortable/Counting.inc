@@ -55,10 +55,10 @@ begin
   if ((items.Length > 0) and (Self.Length > 0)) then
   case iSorted of
     False:
-	  begin
-	    s := items.QuickSorted;
+    begin
+      s := items.QuickSorted;
       for i := 0 to High(Self) do
-        if (items.WithinBounds(Self[i]) and (items.BinarySearchBy(Self[i]) > -1)) then
+        if (s.WithinBounds(Self[i]) and (s.BinarySearchBy(Self[i]) > -1)) then
           Inc(Result);
     end;
     True:
