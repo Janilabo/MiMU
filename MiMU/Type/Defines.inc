@@ -92,17 +92,6 @@
   {$UNDEF Sortable}
 {$ENDIF}
 
-{$IFDEF Int64}
-  {$DEFINE MType := Int64}
-  {$DEFINE MArray := TInt64Array}
-  {$DEFINE M2DArray := T2DInt64Array}
-  {$DEFINE MCompare := TInt64Compare}
-  {$DEFINE MTypeHelper := TInt64Helper}
-  {$DEFINE MArrayHelper := TInt64ArrayHelper}
-  {$DEFINE M2DArrayHelper := T2DInt64ArrayHelper}
-  {$DEFINE Sortable}
-{$ENDIF}
-
 {$IFDEF TConnection}
   {$DEFINE MType := TConnection}
   {$DEFINE MArray := TConnectionArray}
@@ -145,4 +134,15 @@
   {$DEFINE MArrayHelper := TSegmentArrayHelper}
   {$DEFINE M2DArrayHelper := T2DSegmentArrayHelper}
   {$UNDEF Sortable}
+{$ENDIF}
+
+{$IFDEF Int64}
+  {$DEFINE MType := Int64}
+  {$DEFINE MArray := TInt64Array}
+  {$DEFINE M2DArray := T2DInt64Array}
+  {$DEFINE MCompare := TInt64Compare}
+  {$DEFINE MTypeHelper := TInt64Helper}
+  {$DEFINE MArrayHelper := TInt64ArrayHelper}
+  {$DEFINE M2DArrayHelper := T2DInt64ArrayHelper}
+  {$DEFINE Sortable}
 {$ENDIF}

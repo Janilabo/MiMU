@@ -17,8 +17,8 @@ begin
   Result := Self.Length;
   if (Result > 1) then
   case oAscending of
-    True: specialize QuickSort<TRange>(Self, @TRange.CompareSizeAscending);
-    False: specialize QuickSort<TRange>(Self, @TRange.CompareSizeDescending);
+    True: Result := specialize QuickSort<TRange>(Self, @TRange.CompareSizeAscending);
+    False: Result := specialize QuickSort<TRange>(Self, @TRange.CompareSizeDescending);
   end;
 end;
 {$ENDIF}

@@ -80,6 +80,7 @@ generic function SetSize<T>(var A, B: specialize TArray<T>; const size: Integer 
 generic function SetSize<T>(var A, B, C: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 generic function SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 generic function Trade<T>(var A, B: T): Boolean; overload;
+generic function QuickSort<T>(var arr: array of T; const comp: specialize TCompare<T>): Integer; overload;
 
 implementation
 
