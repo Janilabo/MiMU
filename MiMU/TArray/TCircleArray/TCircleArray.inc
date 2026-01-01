@@ -1,4 +1,4 @@
-{$DEFINE TCircle}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE TCircle}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 CCircleArray = class
@@ -9,14 +9,14 @@ end;
 
 {$IFDEF HELPERS}
 TCircleArrayHelper = type helper for TCircleArray
-  {$I ../TArray.inc}
+  {$I ../Base/Base.inc}
   {$I TCircleArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../TArray.inc}
+{$I ../Base/Base.inc}
 {$I TCircleArray.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TCircle}
+{$UNDEF TCircle}

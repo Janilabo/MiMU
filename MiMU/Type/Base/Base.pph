@@ -1,5 +1,6 @@
 {$I Arrays.inc}
 {$I Counting.inc}
-{$I Operators.inc}
+{$I Miscellaneous.inc}
+{$I Order.inc}
 {$I Search.inc}
 

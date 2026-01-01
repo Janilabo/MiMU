@@ -1,4 +1,4 @@
-{$DEFINE Boolean}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE Boolean}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 C2DBooleanArray = class
@@ -9,14 +9,14 @@ end;
 
 {$IFDEF HELPERS}
 T2DBooleanArrayHelper = type helper for T2DBooleanArray
-  {$I ../T2DArray.inc}
+  {$I ../Base/Base.inc}
   {$I T2DBooleanArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../T2DArray.inc}
+{$I ../Base/Base.inc}
 {$I T2DBooleanArray.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF Boolean}
+{$UNDEF Boolean}

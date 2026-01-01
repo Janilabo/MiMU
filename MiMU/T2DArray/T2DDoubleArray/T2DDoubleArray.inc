@@ -1,4 +1,4 @@
-{$DEFINE Double}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE Double}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 C2DDoubleArray = class
@@ -9,14 +9,14 @@ end;
 
 {$IFDEF HELPERS}
 T2DDoubleArrayHelper = type helper for T2DDoubleArray
-  {$I ../T2DArray.inc}
+  {$I ../Base/Base.inc}
   {$I T2DDoubleArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../T2DArray.inc}
+{$I ../Base/Base.inc}
 {$I T2DDoubleArray.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF Double}
+{$UNDEF Double}

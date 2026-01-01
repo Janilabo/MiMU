@@ -1,4 +1,4 @@
-{$DEFINE TCircle}{$I ../Defines.inc}{$DEFINE BASE}
+{$DEFINE TCircle}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
 TCircle = record
@@ -9,12 +9,11 @@ end;
 TCircleCompare = specialize TCompare<TCircle>;
 TCircleArray = array of TCircle;
 T2DCircleArray = array of TCircleArray;
-{$I ../Type.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TCircleHelper = type helper for TCircle
-  {$I ../Type.inc}
+  {$I ../Base/Base.inc}
 end;
 {$ENDIF}
 
@@ -23,8 +22,8 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Type.inc}
+{$I ../Base/Base.inc}
 {$I TCircle.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TCircle}
+{$UNDEF TCircle}

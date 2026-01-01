@@ -1,4 +1,4 @@
-{$DEFINE TBox}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE TBox}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 CBoxArray = class
@@ -9,13 +9,13 @@ end;
 
 {$IFDEF HELPERS}
 TBoxArrayHelper = type helper for TBoxArray
-  {$I ../TArray.inc}
+  {$I ../Base/Base.inc}
   {$I TBoxArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../TArray.inc}
+{$I ../Base/Base.inc}
 {$I TBoxArray.pph}
 {$IFNDEF CLASSES}
 {$DEFINE FField := X1}{$I ../F.inc}
@@ -25,4 +25,4 @@ end;
 {$ENDIF}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TBox}
+{$UNDEF TBox}

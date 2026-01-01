@@ -1,4 +1,4 @@
-{$DEFINE TPoint}{$I ../Defines.inc}{$DEFINE BASE}
+{$DEFINE TPoint}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
 TPoint = record
@@ -11,7 +11,6 @@ end;
 TPointCompare = specialize TCompare<TPoint>;
 TPointArray = array of TPoint;
 T2DPointArray = array of TPointArray;
-{$I ../Type.inc}
 PPoint = ^TPoint;
 TMetrics = (dmHypotEuclidean, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev, dmMinkowski, dmMaxMinChebyshev, dmOctile);
 TDistance = function(const A, B: TPoint): Double;
@@ -23,7 +22,7 @@ TDistance = function(const A, B: TPoint): Double;
 
 {$IFDEF HELPERS}
 TPointHelper = type helper for TPoint
-  {$I ../Type.inc}
+  {$I ../Base/Base.inc}
   {$I TPoint.pph}
   function Clamp(const area: TBox): TPoint;
   function ToY(const yGoal: Integer): TPointArray; overload;
@@ -33,7 +32,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Type.inc}
+{$I ../Base/Base.inc}
 {$I TPoint.pph}
 {$ENDIF}
 
@@ -148,4 +147,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TPoint}
+{$UNDEF TPoint}

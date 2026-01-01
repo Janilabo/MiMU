@@ -1,4 +1,4 @@
-{$DEFINE TCircle}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE TCircle}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 C2DCircleArray = class
@@ -9,14 +9,14 @@ end;
 
 {$IFDEF HELPERS}
 T2DCircleArrayHelper = type helper for T2DCircleArray
-  {$I ../T2DArray.inc}
+  {$I ../Base/Base.inc}
   {$I T2DCircleArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../T2DArray.inc}
+{$I ../Base/Base.inc}
 {$I T2DCircleArray.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TCircle}
+{$UNDEF TCircle}

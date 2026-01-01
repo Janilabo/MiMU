@@ -1,4 +1,4 @@
-{$DEFINE TBox}{$I ../Defines.inc}{$DEFINE BASE}
+{$DEFINE TBox}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
 {$I Enumerator.inc}
@@ -10,12 +10,11 @@ end;
 TBoxCompare = specialize TCompare<TBox>;
 TBoxArray = array of TBox;
 T2DBoxArray = array of TBoxArray;
-{$I ../Type.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TBoxHelper = type helper for TBox
-  {$I ../Type.inc}
+  {$I ../Base/Base.inc}
   {$I TBox.pph}
 end;
 {$ENDIF}
@@ -25,7 +24,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Type.inc}
+{$I ../Base/Base.inc}
 {$I TBox.pph}
 {$ENDIF}
 
@@ -38,4 +37,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TBox}
+{$UNDEF TBox}

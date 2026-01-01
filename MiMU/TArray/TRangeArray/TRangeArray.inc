@@ -1,4 +1,4 @@
-{$DEFINE TRange}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE TRange}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 CRangeArray = class
@@ -9,13 +9,13 @@ end;
 
 {$IFDEF HELPERS}
 TRangeArrayHelper = type helper for TRangeArray
-  {$I ../TArray.inc}
+  {$I ../Base/Base.inc}
   {$I TRangeArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../TArray.inc}
+{$I ../Base/Base.inc}
 {$I TRangeArray.pph}
 {$IFNDEF CLASSES}
 {$DEFINE FField := start}{$I ../F.inc}
@@ -23,4 +23,4 @@ end;
 {$ENDIF}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TRange}
+{$UNDEF TRange}

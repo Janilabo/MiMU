@@ -1,4 +1,4 @@
-{$DEFINE TBox}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE TBox}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 C2DBoxArray = class
@@ -9,14 +9,14 @@ end;
 
 {$IFDEF HELPERS}
 T2DBoxArrayHelper = type helper for T2DBoxArray
-  {$I ../T2DArray.inc}
+  {$I ../Base/Base.inc}
   {$I T2DBoxArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../T2DArray.inc}
+{$I ../Base/Base.inc}
 {$I T2DBoxArray.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TBox}
+{$UNDEF TBox}

@@ -1,4 +1,4 @@
-{$DEFINE Integer}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE Integer}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 {$I XIntegerArray.inc}
@@ -7,7 +7,7 @@
 
 {$IFDEF HELPERS}
 TIntegerArrayHelper = type helper for TIntegerArray
-  {$I ../TArray.inc}
+  {$I ../Base/Base.inc}
   {$I TIntegerArray.pph}
   function Numberline: TIntegerArray;
   function Reinit: Integer; overload;
@@ -15,7 +15,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../TArray.inc}
+{$I ../Base/Base.inc}
 {$I TIntegerArray.pph}
 {$I XIntegerArray.inc}
 {$I CIntegerArray.inc}
@@ -70,4 +70,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF Integer}
+{$UNDEF Integer}

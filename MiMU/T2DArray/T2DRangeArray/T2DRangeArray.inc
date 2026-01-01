@@ -1,4 +1,4 @@
-{$DEFINE TRange}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE TRange}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 C2DRangeArray = class
@@ -9,14 +9,14 @@ end;
 
 {$IFDEF HELPERS}
 T2DRangeArrayHelper = type helper for T2DRangeArray
-  {$I ../T2DArray.inc}
+  {$I ../Base/Base.inc}
   {$I T2DRangeArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../T2DArray.inc}
+{$I ../Base/Base.inc}
 {$I T2DRangeArray.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TRange}
+{$UNDEF TRange}

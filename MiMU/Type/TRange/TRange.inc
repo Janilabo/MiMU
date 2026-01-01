@@ -1,4 +1,4 @@
-{$DEFINE TRange}{$I ../Defines.inc}{$DEFINE BASE}
+{$DEFINE TRange}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
 {$I Enumerator.inc}
@@ -10,7 +10,6 @@ end;
 TRangeCompare = specialize TCompare<TRange>;
 TRangeArray = array of TRange;
 T2DRangeArray = array of TRangeArray;
-{$I ../Type.inc}
 {$ENDIF}
 
 {$IF DEFINED(OPERATORS) OR DEFINED(IMPLEMENTATION)}
@@ -19,13 +18,13 @@ T2DRangeArray = array of TRangeArray;
 
 {$IFDEF HELPERS}
 TRangeHelper = type helper for TRange
-  {$I ../Type.inc}
+  {$I ../Base/Base.inc}
   {$I TRange.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Type.inc}
+{$I ../Base/Base.inc}
 {$I TRange.pph}
 {$ENDIF}
 
@@ -48,4 +47,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TRange}
+{$UNDEF TRange}

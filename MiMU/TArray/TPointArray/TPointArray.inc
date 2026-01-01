@@ -1,4 +1,4 @@
-{$DEFINE TPoint}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE TPoint}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 CPointArray = class
@@ -14,7 +14,7 @@ end;
 
 {$IFDEF HELPERS}
 TPointArrayHelper = type helper for TPointArray
-  {$I ../TArray.inc}
+  {$I ../Base/Base.inc}
   {$I TPointArray.pph}
   function Reinit: Integer; overload;
   function Pure(const allowed: TPointArray): Boolean; overload;
@@ -22,7 +22,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../TArray.inc}
+{$I ../Base/Base.inc}
 {$I TPointArray.pph}
 {$IFNDEF CLASSES}
 {$DEFINE FField := X}{$I ../F.inc}
@@ -115,4 +115,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TPoint}
+{$UNDEF TPoint}

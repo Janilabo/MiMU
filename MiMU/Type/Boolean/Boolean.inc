@@ -1,22 +1,22 @@
-{$DEFINE Boolean}{$I ../Defines.inc}{$DEFINE BASE}
+{$DEFINE Boolean}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
 TBooleanCompare = specialize TCompare<Boolean>;
 TBooleanArray = array of Boolean;
 T2DBooleanArray = array of TBooleanArray;
-{$I ../Type.inc}
+{$I ../Base/Base.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TBooleanHelper = type helper for Boolean
-  {$I ../Type.inc}
+  {$I ../Base/Base.inc}
   {$I Boolean.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Type.inc}
+{$I ../Base/Base.inc}
 {$I Boolean.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF Boolean}
+{$UNDEF Boolean}

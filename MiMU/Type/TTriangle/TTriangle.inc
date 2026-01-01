@@ -1,4 +1,4 @@
-{$DEFINE TTriangle}{$I ../Defines.inc}{$DEFINE BASE}
+{$DEFINE TTriangle}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
 TTriangle = record
@@ -7,12 +7,11 @@ end;
 TTriangleCompare = specialize TCompare<TTriangle>;
 TTriangleArray = array of TTriangle;
 T2DTriangleArray = array of TTriangleArray;
-{$I ../Type.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TTriangleHelper = type helper for TTriangle
-  {$I ../Type.inc}
+  {$I ../Base/Base.inc}
 end;
 {$ENDIF}
 
@@ -21,7 +20,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Type.inc}
+{$I ../Base/Base.inc}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TTriangle}
+{$UNDEF TTriangle}

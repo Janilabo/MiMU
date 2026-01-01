@@ -1,4 +1,4 @@
-{$DEFINE Char}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE Char}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 C2DCharArray = class
@@ -9,14 +9,14 @@ end;
 
 {$IFDEF HELPERS}
 T2DCharArrayHelper = type helper for T2DCharArray
-  {$I ../T2DArray.inc}
+  {$I ../Base/Base.inc}
   {$I T2DCharArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../T2DArray.inc}
+{$I ../Base/Base.inc}
 {$I T2DCharArray.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF Char}
+{$UNDEF Char}

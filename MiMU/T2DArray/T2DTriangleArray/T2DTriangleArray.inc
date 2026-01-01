@@ -1,4 +1,4 @@
-{$DEFINE TTriangle}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE TTriangle}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 C2DTriangleArray = class
@@ -9,14 +9,14 @@ end;
 
 {$IFDEF HELPERS}
 T2DTriangleArrayHelper = type helper for T2DTriangleArray
-  {$I ../T2DArray.inc}
+  {$I ../Base/Base.inc}
   {$I T2DTriangleArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../T2DArray.inc}
+{$I ../Base/Base.inc}
 {$I T2DTriangleArray.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TTriangle}
+{$UNDEF TTriangle}

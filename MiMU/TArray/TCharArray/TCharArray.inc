@@ -1,4 +1,4 @@
-{$DEFINE Char}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE Char}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 CCharArray = class
@@ -9,14 +9,14 @@ end;
 
 {$IFDEF HELPERS}
 TCharArrayHelper = type helper for TCharArray
-  {$I ../TArray.inc}
+  {$I ../Base/Base.inc}
   {$I TCharArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../TArray.inc}
+{$I ../Base/Base.inc}
 {$I TCharArray.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF Char}
+{$UNDEF Char}

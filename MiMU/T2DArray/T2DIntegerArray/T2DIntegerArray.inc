@@ -1,4 +1,4 @@
-{$DEFINE Integer}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE Integer}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 C2DIntegerArray = class
@@ -9,14 +9,14 @@ end;
 
 {$IFDEF HELPERS}
 T2DIntegerArrayHelper = type helper for T2DIntegerArray
-  {$I ../T2DArray.inc}
+  {$I ../Base/Base.inc}
   {$I T2DIntegerArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../T2DArray.inc}
+{$I ../Base/Base.inc}
 {$I T2DIntegerArray.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF Integer}
+{$UNDEF Integer}

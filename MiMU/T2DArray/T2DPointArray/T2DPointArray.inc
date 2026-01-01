@@ -1,4 +1,4 @@
-{$DEFINE TPoint}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE TPoint}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 C2DPointArray = class
@@ -9,14 +9,14 @@ end;
 
 {$IFDEF HELPERS}
 T2DPointArrayHelper = type helper for T2DPointArray
-  {$I ../T2DArray.inc}
+  {$I ../Base/Base.inc}
   {$I T2DPointArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../T2DArray.inc}
+{$I ../Base/Base.inc}
 {$I T2DPointArray.pph}
 {$ENDIF}
 
-{$DEFINE BASE}{$UNDEF TPoint}
+{$UNDEF TPoint}

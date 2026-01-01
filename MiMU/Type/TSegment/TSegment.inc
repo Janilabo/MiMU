@@ -1,4 +1,4 @@
-{$DEFINE TSegment}{$I ../Defines.inc}{$DEFINE BASE}
+{$DEFINE TSegment}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
 TSegment = record
@@ -8,12 +8,11 @@ end;
 TSegmentCompare = specialize TCompare<TSegment>;
 TSegmentArray = array of TSegment;
 T2DSegmentArray = array of TSegmentArray;
-{$I ../Type.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TSegmentHelper = type helper for TSegment
-  {$I ../Type.inc}
+  {$I ../Base/Base.inc}
   {$I TSegment.pph}
 end;
 {$ENDIF}
@@ -23,8 +22,8 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Type.inc}
+{$I ../Base/Base.inc}
 {$I TSegment.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TSegment}
+{$UNDEF TSegment}

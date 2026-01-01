@@ -1,4 +1,4 @@
-{$DEFINE Double}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE Double}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 CDoubleArray = class
@@ -9,7 +9,7 @@ end;
 
 {$IFDEF HELPERS}
 TDoubleArrayHelper = type helper for TDoubleArray
-  {$I ../TArray.inc}
+  {$I ../Base/Base.inc}
   {$I TDoubleArray.pph}
   function Reinit: Integer; overload;
   function Attach(const items: TDoubleArray): Integer; overload;
@@ -18,7 +18,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../TArray.inc}
+{$I ../Base/Base.inc}
 {$I TDoubleArray.pph}
 {$ENDIF}
 
@@ -84,4 +84,4 @@ begin
 end;
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF Double}
+{$UNDEF Double}

@@ -1,22 +1,21 @@
-{$DEFINE string}{$I ../Defines.inc}{$DEFINE BASE}
+{$DEFINE string}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
 TStringCompare = specialize TCompare<string>;
 TStringArray = array of string;
 T2DStringArray = array of TStringArray;
-{$I ../Type.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TStringHelper = type helper for string
-  {$I ../Type.inc}
+  {$I ../Base/Base.inc}
   {$I String.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Type.inc}
+{$I ../Base/Base.inc}
 {$I String.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF string}
+{$UNDEF string}

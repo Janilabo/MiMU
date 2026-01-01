@@ -1,4 +1,4 @@
-{$DEFINE Int64}{$I ../../Type/Defines.inc}{$DEFINE BASE}
+{$DEFINE Int64}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
 C2DInt64Array = class
@@ -9,14 +9,14 @@ end;
 
 {$IFDEF HELPERS}
 T2DInt64ArrayHelper = type helper for T2DInt64Array
-  {$I ../T2DArray.inc}
+  {$I ../Base/Base.inc}
   {$I T2DInt64Array.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../T2DArray.inc}
+{$I ../Base/Base.inc}
 {$I T2DInt64Array.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF Int64}
+{$UNDEF Int64}

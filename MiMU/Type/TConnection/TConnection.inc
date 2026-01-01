@@ -1,4 +1,4 @@
-{$DEFINE TConnection}{$I ../Defines.inc}{$DEFINE BASE}
+{$DEFINE TConnection}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
 TConnection = record
@@ -8,12 +8,11 @@ end;
 TConnectionCompare = specialize TCompare<TConnection>;
 TConnectionArray = array of TConnection;
 T2DConnectionArray = array of TConnectionArray;
-{$I ../Type.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
 TConnectionHelper = type helper for TConnection
-  {$I ../Type.inc}
+  {$I ../Base/Base.inc}
 end;
 {$ENDIF}
 
@@ -22,8 +21,8 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Type.inc}
+{$I ../Base/Base.inc}
 {$I TConnection.pph}
 {$ENDIF}
 
-{$UNDEF BASE}{$UNDEF TConnection}
+{$UNDEF TConnection}
