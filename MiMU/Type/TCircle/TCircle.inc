@@ -13,7 +13,7 @@ T2DCircleArray = array of TCircleArray;
 
 {$IFDEF HELPERS}
 TCircleHelper = type helper for TCircle
-  {$I ../Base/Base.inc}
+  {$I TCircle.pph}
 end;
 {$ENDIF}
 
@@ -22,7 +22,6 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I TCircle.pph}
 {$ENDIF}
 

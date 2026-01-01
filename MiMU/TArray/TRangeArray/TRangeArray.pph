@@ -1,3 +1,5 @@
+{$I ../Base/Base.inc}
+
 {$I Bounding.inc}
 {$I Conversion.inc}
 {$I Extraction.inc}

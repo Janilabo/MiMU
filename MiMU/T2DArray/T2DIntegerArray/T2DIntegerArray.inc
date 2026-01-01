@@ -9,13 +9,11 @@ end;
 
 {$IFDEF HELPERS}
 T2DIntegerArrayHelper = type helper for T2DIntegerArray
-  {$I ../Base/Base.inc}
   {$I T2DIntegerArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I T2DIntegerArray.pph}
 {$ENDIF}
 

@@ -22,7 +22,6 @@ TDistance = function(const A, B: TPoint): Double;
 
 {$IFDEF HELPERS}
 TPointHelper = type helper for TPoint
-  {$I ../Base/Base.inc}
   {$I TPoint.pph}
   function Clamp(const area: TBox): TPoint;
   function ToY(const yGoal: Integer): TPointArray; overload;
@@ -32,7 +31,6 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I TPoint.pph}
 {$ENDIF}
 

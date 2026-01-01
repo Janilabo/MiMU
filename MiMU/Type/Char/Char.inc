@@ -8,13 +8,11 @@ T2DCharArray = array of TCharArray;
 
 {$IFDEF HELPERS}
 TCharHelper = type helper for Char
-  {$I ../Base/Base.inc}
   {$I Char.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I Char.pph}
 {$ENDIF}
 

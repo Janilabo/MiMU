@@ -1,12 +1,4 @@
-{$I Line/Access.inc}
-{$I Line/Collections.inc}
-{$I Line/Indexing.inc}
-{$I Line/Mapping.inc}
-{$I Line/Metrics.inc}
-{$I Line/Miscellaneous.inc}
-{$I Line/Mutation.inc}
-{$I Line/Validation.inc}
-
+{$I ../Base/Base.inc}
 
 {$I Characters.inc}
 {$I Comparison.inc}
@@ -20,3 +12,12 @@
 {$I State.inc}
 {$I Transform.inc}
 {$I Trim.inc}
+
+{$I Line/Access.inc}
+{$I Line/Collections.inc}
+{$I Line/Indexing.inc}
+{$I Line/Mapping.inc}
+{$I Line/Metrics.inc}
+{$I Line/Miscellaneous.inc}
+{$I Line/Mutation.inc}
+{$I Line/Validation.inc}

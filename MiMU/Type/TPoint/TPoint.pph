@@ -1,3 +1,5 @@
+{$I ../Base/Base.inc}
+
 {$I Construction.inc}
 {$I Comparison.inc}
 {$I Distance.inc}

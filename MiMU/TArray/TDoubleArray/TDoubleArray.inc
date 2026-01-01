@@ -9,7 +9,6 @@ end;
 
 {$IFDEF HELPERS}
 TDoubleArrayHelper = type helper for TDoubleArray
-  {$I ../Base/Base.inc}
   {$I TDoubleArray.pph}
   function Reinit: Integer; overload;
   function Attach(const items: TDoubleArray): Integer; overload;
@@ -18,7 +17,6 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I TDoubleArray.pph}
 {$ENDIF}
 

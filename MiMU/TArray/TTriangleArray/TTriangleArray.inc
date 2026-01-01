@@ -9,13 +9,11 @@ end;
 
 {$IFDEF HELPERS}
 TTriangleArrayHelper = type helper for TTriangleArray
-  {$I ../Base/Base.inc}
   {$I TTriangleArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I TTriangleArray.pph}
 {$ENDIF}
 

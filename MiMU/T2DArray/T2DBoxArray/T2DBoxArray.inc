@@ -9,13 +9,11 @@ end;
 
 {$IFDEF HELPERS}
 T2DBoxArrayHelper = type helper for T2DBoxArray
-  {$I ../Base/Base.inc}
   {$I T2DBoxArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I T2DBoxArray.pph}
 {$ENDIF}
 

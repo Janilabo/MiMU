@@ -1,3 +1,5 @@
+{$I ../Base/Base.inc}
+
 {$I BinaryOps/Addition.inc}
 {$I BinaryOps/Bounds.inc}
 {$I BinaryOps/Counting.inc}

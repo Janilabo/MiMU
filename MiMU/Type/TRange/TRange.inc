@@ -18,13 +18,11 @@ T2DRangeArray = array of TRangeArray;
 
 {$IFDEF HELPERS}
 TRangeHelper = type helper for TRange
-  {$I ../Base/Base.inc}
   {$I TRange.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I TRange.pph}
 {$ENDIF}
 

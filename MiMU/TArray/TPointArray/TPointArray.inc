@@ -14,7 +14,6 @@ end;
 
 {$IFDEF HELPERS}
 TPointArrayHelper = type helper for TPointArray
-  {$I ../Base/Base.inc}
   {$I TPointArray.pph}
   function Reinit: Integer; overload;
   function Pure(const allowed: TPointArray): Boolean; overload;
@@ -22,7 +21,6 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I TPointArray.pph}
 {$IFNDEF CLASSES}
 {$DEFINE FField := X}{$I ../F.inc}

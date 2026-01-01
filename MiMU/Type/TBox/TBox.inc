@@ -14,7 +14,6 @@ T2DBoxArray = array of TBoxArray;
 
 {$IFDEF HELPERS}
 TBoxHelper = type helper for TBox
-  {$I ../Base/Base.inc}
   {$I TBox.pph}
 end;
 {$ENDIF}
@@ -24,7 +23,6 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I TBox.pph}
 {$ENDIF}
 

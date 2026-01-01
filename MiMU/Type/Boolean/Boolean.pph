@@ -1,3 +1,5 @@
+{$I ../Base/Base.inc}
+
 {$I Convert.inc}
 {$I Operation.inc}
 {$I Randomness.inc}

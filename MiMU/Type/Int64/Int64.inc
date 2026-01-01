@@ -8,13 +8,11 @@ T2DInt64Array = array of TInt64Array;
 
 {$IFDEF HELPERS}
 TInt64Helper = type helper for Int64
-  {$I ../Base/Base.inc} 
   {$I Int64.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I Int64.pph}
 {$ENDIF}
 

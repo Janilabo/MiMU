@@ -8,13 +8,11 @@ T2DStringArray = array of TStringArray;
 
 {$IFDEF HELPERS}
 TStringHelper = type helper for string
-  {$I ../Base/Base.inc}
   {$I String.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I String.pph}
 {$ENDIF}
 

@@ -9,13 +9,11 @@ end;
 
 {$IFDEF HELPERS}
 TSegmentArrayHelper = type helper for TSegmentArray
-  {$I ../Base/Base.inc}
   {$I TSegmentArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I TSegmentArray.pph}
 {$ENDIF}
 

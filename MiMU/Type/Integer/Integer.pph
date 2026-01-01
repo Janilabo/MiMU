@@ -1,3 +1,5 @@
+{$I ../Base/Base.inc}
+
 {$I Adjust.inc}
 {$I Bit.inc}
 {$I Comparison.inc}

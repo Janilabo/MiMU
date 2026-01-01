@@ -1,2 +1,4 @@
+{$I ../Base/Base.inc}
+
 {$I Composition.inc}
 {$I Metric.inc}

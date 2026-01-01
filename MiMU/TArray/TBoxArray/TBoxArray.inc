@@ -9,13 +9,11 @@ end;
 
 {$IFDEF HELPERS}
 TBoxArrayHelper = type helper for TBoxArray
-  {$I ../Base/Base.inc}
   {$I TBoxArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I TBoxArray.pph}
 {$IFNDEF CLASSES}
 {$DEFINE FField := X1}{$I ../F.inc}

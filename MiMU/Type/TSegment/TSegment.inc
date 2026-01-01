@@ -12,7 +12,6 @@ T2DSegmentArray = array of TSegmentArray;
 
 {$IFDEF HELPERS}
 TSegmentHelper = type helper for TSegment
-  {$I ../Base/Base.inc}
   {$I TSegment.pph}
 end;
 {$ENDIF}
@@ -22,7 +21,6 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I TSegment.pph}
 {$ENDIF}
 

@@ -1,2 +1,4 @@
+{$I ../Base/Base.inc}
+
 {$I Conversion.inc}
 {$I Reduction.inc}

@@ -7,7 +7,6 @@
 
 {$IFDEF HELPERS}
 TIntegerArrayHelper = type helper for TIntegerArray
-  {$I ../Base/Base.inc}
   {$I TIntegerArray.pph}
   function Numberline: TIntegerArray;
   function Reinit: Integer; overload;
@@ -15,7 +14,6 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I TIntegerArray.pph}
 {$I XIntegerArray.inc}
 {$I CIntegerArray.inc}

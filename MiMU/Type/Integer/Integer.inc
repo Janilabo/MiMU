@@ -8,13 +8,11 @@ T2DIntegerArray = array of TIntegerArray;
 
 {$IFDEF HELPERS}
 TIntegerHelper = type helper for Integer
-  {$I ../Base/Base.inc}
   {$I Integer.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I Integer.pph}
 {$ENDIF}
 

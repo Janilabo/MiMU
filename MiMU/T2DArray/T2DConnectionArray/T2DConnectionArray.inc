@@ -9,13 +9,11 @@ end;
 
 {$IFDEF HELPERS}
 T2DConnectionArrayHelper = type helper for T2DConnectionArray
-  {$I ../Base/Base.inc}
   {$I T2DConnectionArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I T2DConnectionArray.pph}
 {$ENDIF}
 

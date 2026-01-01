@@ -9,13 +9,11 @@ end;
 
 {$IFDEF HELPERS}
 TCharArrayHelper = type helper for TCharArray
-  {$I ../Base/Base.inc}
   {$I TCharArray.pph}
 end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I TCharArray.pph}
 {$ENDIF}
 

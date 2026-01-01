@@ -1,3 +1,5 @@
+{$I ../Base/Base.inc}
+
 {$I Adjust.inc}
 {$I Angle.inc}
 {$I Comparison.inc}

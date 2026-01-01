@@ -1,3 +1,5 @@
+{$I ../Base/Base.inc}
+
 {$I Casing.inc}
 {$I Classification.inc}
 {$I Comparison.inc}

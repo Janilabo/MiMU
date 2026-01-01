@@ -12,7 +12,7 @@ T2DConnectionArray = array of TConnectionArray;
 
 {$IFDEF HELPERS}
 TConnectionHelper = type helper for TConnection
-  {$I ../Base/Base.inc}
+  {$I TConnection.pph}
 end;
 {$ENDIF}
 
@@ -21,7 +21,6 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
 {$I TConnection.pph}
 {$ENDIF}
 

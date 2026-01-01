@@ -1,3 +1,5 @@
+{$I ../Base/Base.inc}
+
 {$I Bounds.inc}
 {$I Components.inc}
 {$I Extraction.inc}
