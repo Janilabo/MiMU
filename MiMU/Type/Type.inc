@@ -6,8 +6,8 @@
 {$I TPoint/TPoint.inc}
 {$I TRange/TRange.inc}
 {$I TBox/TBox.inc}
-{$I Int64/Int64.inc}
 {$I TConnection/TConnection.inc}
 {$I TCircle/TCircle.inc}
 {$I TTriangle/TTriangle.inc}
 {$I TSegment/TSegment.inc}
+{$I Int64/Int64.inc}

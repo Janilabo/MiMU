@@ -19,7 +19,7 @@ type
   {$I TArray/TArray.inc}
 {$ENDIF}
 
-{$IFNDEF T1D}
+{$IF (NOT DEFINED(T1D)) AND (NOT DEFINED(TBS))}
   {$IFDEF T2D}
   T2D = class
   public
