@@ -24,21 +24,42 @@ function Constraint(const range: TRange): Boolean; overload;
   @action: Returns Integer clamped by minimum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.ClampMin(const limit: Integer): Integer; {$DEFINE Skeleton_ClampMin}{$I ../Skeletons.inc}{$UNDEF Skeleton_ClampMin}
+function TIntegerHelper.ClampMin(const limit: Integer): Integer;
+begin
+  if (Self < limit) then
+    Result := limit
+  else
+    Result := Self;
+end;
 
 {==============================================================================]
   <ClampMax>
   @action: Returns Integer clamped by maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.ClampMax(const limit: Integer): Integer; {$DEFINE Skeleton_ClampMax}{$I ../Skeletons.inc}{$UNDEF Skeleton_ClampMax}
+function TIntegerHelper.ClampMax(const limit: Integer): Integer;
+begin
+  if (Self > limit) then
+    Result := limit
+  else
+    Result := Self;
+end;
 
 {==============================================================================]
   <Clamp>
   @action: Returns Integer clamped by minimum and maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.Clamp(const minimum, maximum: Integer): Integer; overload; {$DEFINE Skeleton_Clamp}{$I ../Skeletons.inc}{$UNDEF Skeleton_Clamp}
+function TIntegerHelper.Clamp(const minimum, maximum: Integer): Integer; overload;
+begin
+  if (Self < minimum) then
+    Result := minimum
+  else
+    if(Self > maximum) then
+      Result := maximum
+    else
+      Result := Self;
+end;
 
 {==============================================================================]
   <Clamp>
@@ -119,42 +140,64 @@ end;
   @action: Returns Integer with minimum limit
   @note: Max() call.
 [==============================================================================}
-function TIntegerHelper.LimitMin(const limit: Integer): Integer; {$DEFINE Skeleton_LimitMin}{$I ../Skeletons.inc}{$UNDEF Skeleton_LimitMin}
+function TIntegerHelper.LimitMin(const limit: Integer): Integer;
+begin
+  Result := Max(Self, limit);
+end;
 
 {==============================================================================]
   <LimitMax>
   @action: Returns Integer with maximum limit
   @note: Min() call.
 [==============================================================================}
-function TIntegerHelper.LimitMax(const limit: Integer): Integer; {$DEFINE Skeleton_LimitMax}{$I ../Skeletons.inc}{$UNDEF Skeleton_LimitMax}
+function TIntegerHelper.LimitMax(const limit: Integer): Integer;
+begin
+  Result := Min(Self, limit);
+end;
 
 {==============================================================================]
   <Limit>
   @action: Returns Integer with minimum and maximum limits
   @note: EnsureRange() call.
 [==============================================================================}
-function TIntegerHelper.Limit(const minimum, maximum: Integer): Integer; {$DEFINE Skeleton_Limit}{$I ../Skeletons.inc}{$UNDEF Skeleton_Limit}
+function TIntegerHelper.Limit(const minimum, maximum: Integer): Integer;
+begin
+  Result := EnsureRange(Self, minimum, maximum);
+end;
 
 {==============================================================================]
   <ConstraintMin>
   @action: Returns true if Integer is constrainted with minimum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.ConstraintMin(const limit: Integer): Boolean; {$DEFINE Skeleton_ConstraintMin}{$I ../Skeletons.inc}{$UNDEF Skeleton_ConstraintMin}
+function TIntegerHelper.ConstraintMin(const limit: Integer): Boolean;
+begin
+  Result := (Self < limit);
+  if Result then
+    Self := limit;
+end;
 
 {==============================================================================]
   <ConstraintMax>
   @action: Returns true if Integer is constrainted with maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.ConstraintMax(const limit: Integer): Boolean; {$DEFINE Skeleton_ConstraintMax}{$I ../Skeletons.inc}{$UNDEF Skeleton_ConstraintMax}
+function TIntegerHelper.ConstraintMax(const limit: Integer): Boolean;
+begin
+  Result := (Self > limit);
+  if Result then
+    Self := limit;
+end;
 
 {==============================================================================]
   <Constraint>
   @action: Returns true if Integer is constrainted with minimum or maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.Constraint(const minimum, maximum: Integer): Boolean; overload; {$DEFINE Skeleton_Constraint}{$I ../Skeletons.inc}{$UNDEF Skeleton_Constraint}
+function TIntegerHelper.Constraint(const minimum, maximum: Integer): Boolean; overload;
+begin
+  Result := (Self.ConstraintMin(minimum) or Self.ConstraintMax(maximum));
+end;
 
 {==============================================================================]
   <Contstraint>
