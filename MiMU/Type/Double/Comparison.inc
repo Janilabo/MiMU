@@ -25,7 +25,10 @@ function Comparison(const A, B: Double): Integer; overload;
            Results: 0=EQUAL, 1=x>target, -1=x<target
   @note: None
 [==============================================================================}
-function TDoubleHelper.Cmpr(const target: Double): Integer; inline; {$DEFINE Skeleton_Cmpr}{$I ../Skeletons.inc}{$UNDEF Skeleton_Cmpr}
+function TDoubleHelper.Cmpr(const target: Double): Integer; inline;
+begin
+  Result := (Ord(Self > target) - Ord(Self < target));
+end;
 
 {==============================================================================]
   <Compare>
@@ -33,7 +36,15 @@ function TDoubleHelper.Cmpr(const target: Double): Integer; inline; {$DEFINE Ske
            Results: 0=EQUAL, 1=x>target, -1=x<target
   @note: None
 [==============================================================================}
-function TDoubleHelper.Compare(const target: Double): Integer; inline; {$DEFINE Skeleton_Compare}{$I ../Skeletons.inc}{$UNDEF Skeleton_Compare}
+function TDoubleHelper.Compare(const target: Double): Integer; inline;
+begin
+  if (Self = target) then
+    Exit(0);
+  if (Self > target) then
+    Result := 1
+  else
+    Result := -1;
+end;
 
 {==============================================================================]
   <Compared>
@@ -41,7 +52,12 @@ function TDoubleHelper.Compare(const target: Double): Integer; inline; {$DEFINE 
            Results: 0=EQUAL
   @note: Supports ascending/descending
 [==============================================================================}
-function TDoubleHelper.Compared(const target: Double; const oAscending: Boolean = True): Integer; {$DEFINE Skeleton_Compared}{$I ../Skeletons.inc}{$UNDEF Skeleton_Compared}
+function TDoubleHelper.Compared(const target: Double; const oAscending: Boolean = True): Integer;
+begin
+  Result := (Ord(Self > target) - Ord(Self < target));
+  if not oAscending then
+    Result := -Result;
+end;
 
 {==============================================================================]
   <CompareWith>
@@ -49,7 +65,15 @@ function TDoubleHelper.Compared(const target: Double; const oAscending: Boolean 
            Results: 0=EQUAL
   @note: Supports ascending/descending
 [==============================================================================}
-function TDoubleHelper.CompareWith(const target: Double; const oAscending: Boolean = True): Integer; {$DEFINE Skeleton_CompareWith}{$I ../Skeletons.inc}{$UNDEF Skeleton_CompareWith}
+function TDoubleHelper.CompareWith(const target: Double; const oAscending: Boolean = True): Integer;
+begin
+  if (Self = target) then
+    Exit(0);
+  if oAscending then
+    Result := IfThen((Self > target), 1, -1)
+  else
+    Result := IfThen((target > Self), 1, -1);
+end;
 
 {==============================================================================]
   <CompareTo>
@@ -57,7 +81,15 @@ function TDoubleHelper.CompareWith(const target: Double; const oAscending: Boole
            Results: 0=EQUAL
   @note: Supports ascending/descending
 [==============================================================================}
-function TDoubleHelper.CompareTo(const target: Double; const oAscending: Boolean = True): Integer; {$DEFINE Skeleton_CompareTo}{$I ../Skeletons.inc}{$UNDEF Skeleton_CompareTo}
+function TDoubleHelper.CompareTo(const target: Double; const oAscending: Boolean = True): Integer;
+begin
+  if (Self = target) then
+    Exit(0);
+  if oAscending then
+    Result := ((Ord(Self > target) * 2) - 1)
+  else
+    Result := ((Ord(target > Self) * 2) - 1);
+end;
 
 {==============================================================================]
   <Sign>
@@ -70,14 +102,25 @@ function TDoubleHelper.CompareTo(const target: Double; const oAscending: Boolean
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TDoubleHelper.Sign(const target: Double = 0): Integer; inline; {$DEFINE Skeleton_Sign}{$I ../Skeletons.inc}{$UNDEF Skeleton_Sign}
+function TDoubleHelper.Sign(const target: Double = 0): Integer; inline;
+begin
+  if (Self = target) then
+    Result := 0
+  else if (Self < target) then
+    Result := 1
+  else
+    Result := -1;
+end;
 
 {==============================================================================]
   <Precede>
   @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
   @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
-function TDoubleHelper.Precede(const target: Double; const aAscending: Boolean): Boolean; overload; {$DEFINE Skeleton_Precede}{$I ../Skeletons.inc}{$UNDEF Skeleton_Precede}
+function TDoubleHelper.Precede(const target: Double; const aAscending: Boolean): Boolean; overload;
+begin
+  Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));
+end;
 
 {==============================================================================]
   <Ascending>
@@ -86,7 +129,10 @@ function TDoubleHelper.Precede(const target: Double; const aAscending: Boolean):
            sorting or merging arrays in ascending order.
   @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}
-function TDoubleHelper.Ascending(const target: Double): Boolean; inline; {$DEFINE Skeleton_Ascending}{$I ../Skeletons.inc}{$UNDEF Skeleton_Ascending}
+function TDoubleHelper.Ascending(const target: Double): Boolean; inline;
+begin
+  Result := (Self <= target);
+end;
 
 {==============================================================================]
   <Descending>
@@ -95,7 +141,10 @@ function TDoubleHelper.Ascending(const target: Double): Boolean; inline; {$DEFIN
            sorting or merging arrays in descending order.
   @note: Pure comparison only; equivalent to Self >= target.
 [==============================================================================}
-function TDoubleHelper.Descending(const target: Double): Boolean; inline; {$DEFINE Skeleton_Descending}{$I ../Skeletons.inc}{$UNDEF Skeleton_Descending}
+function TDoubleHelper.Descending(const target: Double): Boolean; inline;
+begin
+  Result := (Self >= target);
+end;
 
 {==============================================================================]
   <Over>
@@ -137,5 +186,12 @@ begin
   Result := (Self < limit);
 end;
 
-function Comparison(const A, B: Double): Integer; overload; {$DEFINE Skeleton_Comparison}{$I ../Skeletons.inc}{$UNDEF Skeleton_Comparison}
+function Comparison(const A, B: Double): Integer; overload;
+begin
+  if (A < B) then
+    Exit(-1);
+  if (A > B) then
+    Exit(1);
+  Result := 0;
+end;
 {$ENDIF}

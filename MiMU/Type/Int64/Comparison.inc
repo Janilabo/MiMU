@@ -15,14 +15,25 @@ function Undersize(const limit: Int64): Boolean; inline;
            Results: 0=EQUAL, 1=x>target, -1=x<target
   @note: None
 [==============================================================================}
-function TInt64Helper.Compare(const target: Int64): Integer; inline; {$DEFINE Skeleton_Compare}{$I ../Skeletons.inc}{$UNDEF Skeleton_Compare}
+function TInt64Helper.Compare(const target: Int64): Integer; inline;
+begin
+  if (Self = target) then
+    Exit(0);
+  if (Self > target) then
+    Result := 1
+  else
+    Result := -1;
+end;
 
 {==============================================================================]
   <Precede>
   @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
   @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
-function TInt64Helper.Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; {$DEFINE Skeleton_Precede}{$I ../Skeletons.inc}{$UNDEF Skeleton_Precede}
+function TInt64Helper.Precede(const target: Int64; const aAscending: Boolean): Boolean; overload;
+begin
+  Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));
+end;
 
 {==============================================================================]
   <Sign>
@@ -35,7 +46,15 @@ function TInt64Helper.Precede(const target: Int64; const aAscending: Boolean): B
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TInt64Helper.Sign(const target: Int64 = 0): Integer; inline; {$DEFINE Skeleton_Sign}{$I ../Skeletons.inc}{$UNDEF Skeleton_Sign}
+function TInt64Helper.Sign(const target: Int64 = 0): Integer; inline;
+begin
+  if (Self = target) then
+    Result := 0
+  else if (Self < target) then
+    Result := 1
+  else
+    Result := -1;
+end;
 
 {==============================================================================]
   <Over>

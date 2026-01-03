@@ -18,7 +18,15 @@ function Comparison(const A, B: string): Integer; overload;
   @action: Compares str with target.
   @note: Results: 0=EQUAL, 1=str>target, -1=str<target
 [==============================================================================}
-function TStringHelper.Compare(const target: string): Integer; inline; {$DEFINE Skeleton_Compare}{$I ../Skeletons.inc}{$UNDEF Skeleton_Compare}
+function TStringHelper.Compare(const target: string): Integer; inline;
+begin
+  if (Self = target) then
+    Exit(0);
+  if (Self > target) then
+    Result := 1
+  else
+    Result := -1;
+end;
 
 {==============================================================================]
   <Sign>
@@ -31,14 +39,25 @@ function TStringHelper.Compare(const target: string): Integer; inline; {$DEFINE 
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TStringHelper.Sign(const target: string): Integer; inline; {$DEFINE Skeleton_Sign}{$I ../Skeletons.inc}{$UNDEF Skeleton_Sign}
+function TStringHelper.Sign(const target: string): Integer; inline;
+begin
+  if (Self = target) then
+    Result := 0
+  else if (Self < target) then
+    Result := 1
+  else
+    Result := -1;
+end;
 
 {==============================================================================]
   <Precede>
   @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
   @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
-function TStringHelper.Precede(const target: string; const aAscending: Boolean): Boolean; overload; {$DEFINE Skeleton_Precede}{$I ../Skeletons.inc}{$UNDEF Skeleton_Precede}
+function TStringHelper.Precede(const target: string; const aAscending: Boolean): Boolean; overload;
+begin
+  Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));
+end;
 
 {==============================================================================]
   <Ascending>
@@ -47,7 +66,10 @@ function TStringHelper.Precede(const target: string; const aAscending: Boolean):
            sorting or merging arrays in ascending order.
   @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}
-function TStringHelper.Ascending(const target: string): Boolean; inline; {$DEFINE Skeleton_Ascending}{$I ../Skeletons.inc}{$UNDEF Skeleton_Ascending}
+function TStringHelper.Ascending(const target: string): Boolean; inline;
+begin
+  Result := (Self <= target);
+end;
 
 {==============================================================================]
   <Descending>
@@ -56,9 +78,33 @@ function TStringHelper.Ascending(const target: string): Boolean; inline; {$DEFIN
            sorting or merging arrays in descending order.
   @note: Pure comparison only; equivalent to Self >= target.
 [==============================================================================}
-function TStringHelper.Descending(const target: string): Boolean; inline; {$DEFINE Skeleton_Descending}{$I ../Skeletons.inc}{$UNDEF Skeleton_Descending}
+function TStringHelper.Descending(const target: string): Boolean; inline;
+begin
+  Result := (Self >= target);
+end;
 
-function Max(const A, B: string): string; overload; inline; {$DEFINE Skeleton_Max}{$I ../Skeletons.inc}{$UNDEF Skeleton_Max}
-function Min(const A, B: string): string; overload; inline; {$DEFINE Skeleton_Min}{$I ../Skeletons.inc}{$UNDEF Skeleton_Min}
-function Comparison(const A, B: string): Integer; overload; {$DEFINE Skeleton_Comparison}{$I ../Skeletons.inc}{$UNDEF Skeleton_Comparison}
+function Max(const A, B: string): string; overload; inline;
+begin
+  if (A > B) then
+    Result := A
+  else
+    Result := B;
+end;
+
+function Min(const A, B: string): string; overload; inline;
+begin
+  if (A < B) then
+    Result := A
+  else
+    Result := B;
+end;
+
+function Comparison(const A, B: string): Integer; overload;
+begin
+  if (A < B) then
+    Exit(-1);
+  if (A > B) then
+    Exit(1);
+  Result := 0;
+end;
 {$ENDIF}

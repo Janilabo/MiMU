@@ -4,7 +4,19 @@ function Swap(var A, B: MType): Boolean; overload; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-function IfThen(const state: Boolean; const sTrue, sFalse: MType): MType; overload; inline; {$DEFINE Skeleton_IfThen}{$I ../Skeletons.inc}{$UNDEF Skeleton_IfThen}
+function IfThen(const state: Boolean; const sTrue, sFalse: MType): MType; overload; inline;
+begin
+  if state then
+    Result := sTrue
+  else
+    Result := sFalse;
+end;
 
-function Swap(var A, B: MType): Boolean; overload; inline; var C: MType; {$DEFINE Skeleton_Swap}{$I ../Skeletons.inc}{$UNDEF Skeleton_Swap}
+function Swap(var A, B: MType): Boolean; overload; inline; var C: MType;
+begin
+  Result := (A <> B);
+  C := A;
+  A := B;
+  B := C;
+end;
 {$ENDIF}

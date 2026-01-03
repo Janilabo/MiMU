@@ -43,7 +43,15 @@ function Comparison(const A, B: TPoint): Integer; overload;
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TPointHelper.Sign(const target: TPoint): Integer; overload; inline; {$DEFINE Skeleton_Sign}{$I ../Skeletons.inc}{$UNDEF Skeleton_Sign}
+function TPointHelper.Sign(const target: TPoint): Integer; overload; inline;
+begin
+  if (Self = target) then
+    Result := 0
+  else if (Self < target) then
+    Result := 1
+  else
+    Result := -1;
+end;
 
 {==============================================================================]
   <Lower>
@@ -347,5 +355,12 @@ begin
   Result := 0;
 end;
 
-function Comparison(const A, B: TPoint): Integer; overload; {$DEFINE Skeleton_Comparison}{$I ../Skeletons.inc}{$UNDEF Skeleton_Comparison}
+function Comparison(const A, B: TPoint): Integer; overload;
+begin
+  if (A < B) then
+    Exit(-1);
+  if (A > B) then
+    Exit(1);
+  Result := 0;
+end;
 {$ENDIF}
