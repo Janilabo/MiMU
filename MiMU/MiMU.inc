@@ -1,32 +1,61 @@
-{$IF DEFINED(ENUMERATORS) OR DEFINED(TYPES) OR DEFINED(HELPERS) OR DEFINED(CLASSES)}
+{$IFNDEF IMPLEMENTATION}
+
+{$DEFINE TYPES}
 type
-{$ENDIF}
+{$I Type/Type.inc}
+{$I TArray/TArray.inc}
+{$i T2DArray/T2DArray.inc}
+{$UNDEF TYPES}
 
-{$IF (NOT DEFINED(TBS)) AND (NOT DEFINED(T1D)) AND (NOT DEFINED(T2D))}
-  {$I Type/Type.inc}
-  {$I Miscellaneous/Randomness.inc}
-{$ENDIF}
+{$DEFINE OPERATORS}
+{$I Type/Type.inc}
+{$I TArray/TArray.inc}
+{$i T2DArray/T2DArray.inc}
+{$UNDEF OPERATORS}
 
-{$IFNDEF T2D}
-  {$IFDEF T1D}
-  T1D = class
-  public
-  {$ENDIF}
-  {$IFDEF TBS}
+{$DEFINE HELPERS}
+type
+{$I Type/Type.inc}
+{$I TArray/TArray.inc}
+{$i T2DArray/T2DArray.inc}
+{$UNDEF HELPERS}
+
+{$DEFINE FUNCTIONS}
+{$I Type/Type.inc}
+{$I TArray/TArray.inc}
+{$i T2DArray/T2DArray.inc}
+{$I Miscellaneous/Randomness.inc}
+{$UNDEF FUNCTIONS}
+
+{$DEFINE CLASSES}
+type
+{$DEFINE TBS}
   TBinarySearch = class
   public
-  {$ENDIF}
   {$I TArray/TArray.inc}
-{$ENDIF}
+  end;
+{$UNDEF TBS}
 
-{$IF (NOT DEFINED(T1D)) AND (NOT DEFINED(TBS))}
-  {$IFDEF T2D}
+{$DEFINE T1D}
+  T1D = class
+  public
+  {$I TArray/TArray.inc}
+  end;
+{$UNDEF T1D}
+
+{$DEFINE T2D}
   T2D = class
   public
-  {$ENDIF}
   {$i T2DArray/T2DArray.inc}
+  end;
+{$UNDEF T2D}
+{$UNDEF CLASSES}
+
 {$ENDIF}
 
-{$IFDEF CLASSES}
-end;
-{$ENDIF} 
+{$IFDEF IMPLEMENTATION}
+{$I Type/Type.inc}
+{$I TArray/TArray.inc}
+{$i T2DArray/T2DArray.inc}
+{$I Miscellaneous/Randomness.inc}
+{$ENDIF}
