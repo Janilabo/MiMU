@@ -42,7 +42,19 @@ begin
     FillChar(Pointer(Self)^, (Result * SizeOf(TPoint)), 0);
 end;
 
-function TPointArrayHelper.Pure(const allowed: TPointArray): Boolean; overload; var a: TPointArray; {$DEFINE Skeleton_Pure}{$I ../Skeletons.inc}{$UNDEF Skeleton_Pure}
+function TPointArrayHelper.Pure(const allowed: TPointArray): Boolean; overload;
+var
+  a: TPointArray;
+  i: Integer;
+begin
+  if allowed.Empty then
+    Exit(False);
+  a := allowed.QuickSorted;
+  for i := 0 to High(Self) do
+    if not a.BinaryContains(Self[i]) then
+      Exit(False);
+  Result := True;
+end;
 
 class function CPointArray.Init(var arr: TPointArray): Integer; overload; 
 begin

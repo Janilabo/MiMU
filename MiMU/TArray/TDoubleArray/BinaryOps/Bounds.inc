@@ -33,14 +33,46 @@ function BinaryRound(const value: Double; const oAscending: Boolean = True): Int
   @action: Returns Binary Search Lower Bound based on x-value.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
-function TDoubleArrayHelper.BinaryBoundL(const x: Double; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryBoundL}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryBoundL}
+function TDoubleArrayHelper.BinaryBoundL(const x: Double; const aAscending: Boolean = True): Integer;
+var
+  m, o: Integer;
+  r: TRange;
+begin
+  o := aAscending.Select(1, -1);
+  r.Create(0, Self.Size);
+  while r.Grows do
+  begin
+    m := r.Pivot;
+    if ((o * Self[m]) < (o * x)) then
+      r.start := (m + 1)
+    else
+      r.stop := m;
+  end;
+  Result := r.start;
+end;
 
 {==============================================================================]
   <BinaryBoundR>
   @action: Returns Binary Search Upper Bound based on x-value.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
-function TDoubleArrayHelper.BinaryBoundR(const x: Double; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryBoundR}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryBoundR}
+function TDoubleArrayHelper.BinaryBoundR(const x: Double; const aAscending: Boolean = True): Integer;
+var
+  m, o: Integer;
+  r: TRange;
+begin
+  o := aAscending.Select(1, -1);
+  r.Create(0, Self.Size);
+  while r.Grows do
+  begin
+    m := r.Pivot;
+    if ((o * Self[m]) <= (o * x)) then
+      r.start := (m + 1)
+    else
+      r.stop := m;
+  end;
+  Result := r.start;
+end;
 
 {==============================================================================]
   <BinaryBoundLeft>
@@ -49,7 +81,42 @@ function TDoubleArrayHelper.BinaryBoundR(const x: Double; const aAscending: Bool
          or the first element less than or equal for descending arrays.
          If all elements are smaller/larger, returns Length(Self).
 [==============================================================================}
-function TDoubleArrayHelper.BinaryBoundLeft(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryBoundLeft}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryBoundLeft}
+function TDoubleArrayHelper.BinaryBoundLeft(const value: Double; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := Self.Size;
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] < value) of
+        False:
+        begin
+          Result := M;
+          R.stop := (M - 1);
+        end;
+        True: R.start := (M + 1);
+      end;
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] > value) of
+        False:
+        begin
+          Result := M;
+          R.stop := (M - 1);
+        end;
+        True: R.start := (M + 1);
+      end;
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryBoundRight>
@@ -58,35 +125,152 @@ function TDoubleArrayHelper.BinaryBoundLeft(const value: Double; const oAscendin
          or strictly smaller for descending arrays.
          If all elements satisfy the condition, returns Length(Self).
 [==============================================================================}
-function TDoubleArrayHelper.BinaryBoundRight(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryBoundRight}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryBoundRight}
+function TDoubleArrayHelper.BinaryBoundRight(const value: Double; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := Self.Size;
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] <= value) of
+        False:
+        begin
+          Result := M;
+          R.stop := (M - 1);
+        end;
+        True: R.start := (M + 1);
+      end;
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] >= value) of
+        False:
+        begin
+          Result := M;
+          R.stop := (M - 1);
+        end;
+        True: R.start := (M + 1);
+      end;
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryPosL>
   @action: Returns L-side pos of x in arr with Binary Search. -1 if x does not exist.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
-function TDoubleArrayHelper.BinaryPosL(const x: Double; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryPosL}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryPosL}
+function TDoubleArrayHelper.BinaryPosL(const x: Double; const aAscending: Boolean = True): Integer;
+var
+  m, o: Integer;
+  r: TRange;
+begin
+  Result := -1;
+  o := aAscending.Select(1, -1);
+  r.Create(0, Self.Size);
+  while r.Grows do
+  begin
+    m := r.Pivot;
+    if ((o * Self[m]) < (o * x)) then
+      r.start := (m + 1)
+    else
+      r.stop := m;
+  end;
+  if ((r.start < Self.Size) and (Self[r.start] = x)) then
+    Result := r.Start;
+end;
 
 {==============================================================================]
   <BinaryPosR>
   @action: Returns R-side pos of x in arr with Binary Search. -1 if x does not exist.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
-function TDoubleArrayHelper.BinaryPosR(const x: Double; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryPosR}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryPosR}
+function TDoubleArrayHelper.BinaryPosR(const x: Double; const aAscending: Boolean = True): Integer;
+var
+  m, o: Integer;
+  r: TRange;
+begin
+  Result := -1;
+  o := aAscending.Select(1, -1);
+  r.Create(0, Self.Size);
+  while r.Grows do
+  begin
+    m := r.Pivot;
+    if ((o * Self[m]) <= (o * x)) then
+      r.start := (m + 1)
+    else
+      r.stop := m;
+  end;
+  if ((r.start > 0) and (Self[r.start - 1] = x)) then
+    Result := (r.Start - 1);
+end;
 
 {==============================================================================]
   <BinarySearchF>
   @action: Binary Search which supports TRange search, uses first match from x-range.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TDoubleArrayHelper.BinarySearchF(const x: TRange; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinarySearchF}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinarySearchF}
+function TDoubleArrayHelper.BinarySearchF(const x: TRange; const aAscending: Boolean = True): Integer;
+var
+  m, o: Integer;
+  f, r: TRange;
+begin
+  Result := -1;
+  f := x.Normalize;
+  o := aAscending.Select(1, -1);
+  r.Create(0, High(Self));
+  while r.Ascending do
+  begin
+    m := r.Pivot;
+    if ((o * Self[m]) < (o * f.start)) then
+      r.start := (m + 1)
+    else
+      if ((o * Self[m]) > (o * f.stop)) then
+        r.stop := (m - 1)
+    else
+    begin
+      Result := m;
+      r.stop := (m - 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinarySearchL>
   @action: Binary Search which supports TRange search, uses last match from x-range.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TDoubleArrayHelper.BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinarySearchL}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinarySearchL}
+function TDoubleArrayHelper.BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer;
+var
+  m, o: Integer;
+  f, r: TRange;
+begin
+  Result := -1;
+  f := x.Normalize;
+  o := aAscending.Select(1, -1);
+  r.Create(0, High(Self));
+  while r.Ascending do
+  begin
+    m := r.Pivot;
+    if ((o * Self[m]) < (o * f.start)) then
+      r.start := (m + 1)
+    else
+      if ((o * Self[m]) > (o * f.stop)) then
+        r.stop := (m - 1)
+      else
+      begin
+        Result := m;
+        r.start := (m + 1);
+      end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryLowerBound>
@@ -97,7 +281,34 @@ function TDoubleArrayHelper.BinarySearchL(const x: TRange; const aAscending: Boo
     - Equivalent to std::lower_bound in C++.
     - Works correctly for arrays sorted either ascending or descending.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryLowerBound(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLowerBound}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryLowerBound}
+function TDoubleArrayHelper.BinaryLowerBound(const x: Double; const aAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := Self.Size;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case aAscending of
+      True:
+      if (Self[M] >= x) then
+      begin
+        Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
+      False:
+      if (Self[M] <= x) then
+      begin
+        Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryUpperBound>
@@ -108,7 +319,34 @@ function TDoubleArrayHelper.BinaryLowerBound(const x: Double; const aAscending: 
     - Equivalent to std::upper_bound in C++.
     - Works correctly for arrays sorted either ascending or descending.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUpperBound(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryUpperBound}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryUpperBound}
+function TDoubleArrayHelper.BinaryUpperBound(const x: Double; const aAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := Self.Size;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case aAscending of
+      True:
+      if (Self[M] > x) then
+      begin
+        Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
+      False:
+      if (Self[M] < x) then
+      begin
+        Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryRightmost>
@@ -119,7 +357,34 @@ function TDoubleArrayHelper.BinaryUpperBound(const x: Double; const aAscending: 
     - Useful for “rightmost occurrence” searches.
     - Differs from BinaryUpperBound: includes elements equal to x.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryRightmost(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryRightmost}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryRightmost}
+function TDoubleArrayHelper.BinaryRightmost(const x: Double; const aAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case aAscending of
+      True:
+      if (Self[M] <= x) then
+      begin
+        Result := M;
+        R.start := (M + 1);
+      end else
+        R.stop := (M - 1);
+      False:
+      if (Self[M] >= x) then
+      begin
+        Result := M;
+        R.start := (M + 1);
+      end else
+        R.stop := (M - 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryLeftmost>
@@ -130,7 +395,34 @@ function TDoubleArrayHelper.BinaryRightmost(const x: Double; const aAscending: B
     - Useful for “leftmost occurrence” searches.
     - Equivalent to BinaryLowerBound but returns -1 when not found instead of Length(Self).
 [==============================================================================}
-function TDoubleArrayHelper.BinaryLeftmost(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLeftmost}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryLeftmost}
+function TDoubleArrayHelper.BinaryLeftmost(const x: Double; const aAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case aAscending of
+      True:
+      if (Self[M] >= x) then
+      begin
+        Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
+      False:
+      if (Self[M] <= x) then
+      begin
+        Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinarySearchFirst>
@@ -140,7 +432,30 @@ function TDoubleArrayHelper.BinaryLeftmost(const x: Double; const aAscending: Bo
          - If the value occurs multiple times, the index of its first occurrence is returned.
          - If the value is not found, returns -1.
 [==============================================================================}
-function TDoubleArrayHelper.BinarySearchFirst(const value: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchFirst}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinarySearchFirst}
+function TDoubleArrayHelper.BinarySearchFirst(const value: Double; const aAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  Result := -1;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case (Self[M] = value) of
+      True:
+      begin
+        Result := M;
+        R.stop := (M - 1);
+      end;
+      False:
+      if ((aAscending and (Self[M] < value)) or ((not aAscending) and (Self[M] > value))) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinarySearchLast>
@@ -150,7 +465,30 @@ function TDoubleArrayHelper.BinarySearchFirst(const value: Double; const aAscend
          - If the value occurs multiple times, the index of its last occurrence is returned.
          - If the value is not found, returns -1.
 [==============================================================================}
-function TDoubleArrayHelper.BinarySearchLast(const value: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySearchLast}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinarySearchLast}
+function TDoubleArrayHelper.BinarySearchLast(const value: Double; const aAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  Result := -1;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case (Self[M] = value) of
+      True:
+      begin
+        Result := M;
+        R.start := (M + 1);
+      end;
+      False:
+      if ((aAscending and (Self[M] < value)) or ((not aAscending) and (Self[M] > value))) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryFirst>
@@ -160,7 +498,27 @@ function TDoubleArrayHelper.BinarySearchLast(const value: Double; const aAscendi
   @note:   Returns -1 if all elements are less than x (or greater when
            searching a descending array).
 [==============================================================================}
-function TDoubleArrayHelper.BinaryFirst(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryFirst}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryFirst}
+function TDoubleArrayHelper.BinaryFirst(const x: Double; const aAscending: Boolean = True): Integer; overload;
+var
+  m, o: Integer;
+  r: TRange;
+begin
+  Result := -1;
+  r.Create(0, High(Self));
+  o := aAscending.Select(1, -1);
+  while r.Ascending do
+  begin
+    m := r.Pivot;
+    case ((o * Self[m]) < (o * x)) of
+      False:
+      begin
+        Result := m;
+        r.stop := (m - 1);
+      end;
+      True: r.start := (m + 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryLast>
@@ -170,7 +528,27 @@ function TDoubleArrayHelper.BinaryFirst(const x: Double; const aAscending: Boole
   @note:   Returns -1 if all elements are greater than x (or less when
            searching a descending array).
 [==============================================================================}
-function TDoubleArrayHelper.BinaryLast(const x: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLast}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryLast}
+function TDoubleArrayHelper.BinaryLast(const x: Double; const aAscending: Boolean = True): Integer; overload;
+var
+  m, o: Integer;
+  r: TRange;
+begin
+  Result := -1;
+  r.Create(0, High(Self));
+  o := aAscending.Select(1, -1);
+  while r.Ascending do
+  begin
+    m := r.Pivot;
+    case ((o * Self[m]) > (o * x)) of
+      False:
+      begin
+        Result := m;
+        r.start := (m + 1);
+      end;
+      True: r.stop := (m - 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryFindFirst>
@@ -182,7 +560,44 @@ function TDoubleArrayHelper.BinaryLast(const x: Double; const aAscending: Boolea
            “first” occurrence corresponds to the lowest index in an ascending
            array or the highest index in a descending array.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryFindFirst(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryFindFirst1}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryFindFirst1}
+function TDoubleArrayHelper.BinaryFindFirst(const value: Double; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] < value) of
+        False:
+        begin
+          R.stop := (M - 1);
+          if (Self[M] = value) then
+            Result := M;
+        end;
+        True: R.start := (M + 1);
+      end;
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] > value) of
+        False:
+        begin
+          R.stop := (M - 1);
+          if (Self[M] = value) then
+            Result := M;
+        end;
+        True: R.start := (M + 1);
+      end;
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryFindFirst>
@@ -194,7 +609,48 @@ function TDoubleArrayHelper.BinaryFindFirst(const value: Double; const oAscendin
            The search space is the full array; `range` specifies the acceptable
            value interval. The array must be sorted according to `oAscending`.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryFindFirst(const range: TRange; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryFindFirst2}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryFindFirst2}
+function TDoubleArrayHelper.BinaryFindFirst(const range: TRange; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  N, R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  if (R.stop > -1) then
+  begin
+    N := range.Normalize;
+    case oAscending of
+      True:
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        case (Self[M] < N.start) of
+          False:
+          begin
+            R.stop := (M - 1);
+            if InRange(Self[M], N.start, N.stop) then
+              Result := M;
+          end;
+          True: R.start := (M + 1);
+        end;
+      end;
+      False:
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        case (Self[M] > N.stop) of
+          False:
+          begin
+            R.stop := (M - 1);
+            if InRange(Self[M], N.start, N.stop) then
+              Result := M;
+          end;
+          True: R.start := (M + 1);
+        end;
+      end;
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryFindLast>
@@ -206,7 +662,44 @@ function TDoubleArrayHelper.BinaryFindFirst(const range: TRange; const oAscendin
            occurrence corresponds to the highest index in an ascending array or
            the lowest index in a descending array.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryFindLast(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryFindLast1}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryFindLast1}
+function TDoubleArrayHelper.BinaryFindLast(const value: Double; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] > value) of
+        False:
+        begin
+          R.start := (M + 1);
+          if (Self[M] = value) then
+            Result := M;
+        end;
+        True: R.stop := (M - 1);
+      end;
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] < value) of
+        False:
+        begin
+          R.start := (M + 1);
+          if (Self[M] = value) then
+            Result := M;
+        end;
+        True: R.stop := (M - 1);
+      end;
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryFindLast>
@@ -218,7 +711,48 @@ function TDoubleArrayHelper.BinaryFindLast(const value: Double; const oAscending
            must be sorted in accordance with `oAscending`. The overload identifies
            the last qualifying value relative to the sorted order.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryFindLast(const range: TRange; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryFindLast2}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryFindLast2}
+function TDoubleArrayHelper.BinaryFindLast(const range: TRange; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  N, R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  if (R.stop > -1) then
+  begin
+    N := range.Normalize;
+    case oAscending of
+      True:
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        case (Self[M] > N.stop) of
+          False:
+          begin
+            R.start := (M + 1);
+            if InRange(Self[M], N.start, N.stop) then
+              Result := M;
+          end;
+          True: R.stop := (M - 1);
+        end;
+      end;
+      False:
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        case (Self[M] < N.start) of
+          False:
+          begin
+            R.start := (M + 1);
+            if InRange(Self[M], N.start, N.stop) then
+              Result := M;
+          end;
+          True: R.stop := (M - 1);
+        end;
+      end;
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryClosest>
@@ -229,7 +763,59 @@ function TDoubleArrayHelper.BinaryFindLast(const range: TRange; const oAscending
     - Handles both ascending and descending sorted arrays (controlled by oAscending).
     - Returns -1 if the array is empty.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryClosest(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryClosest}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryClosest}
+function TDoubleArrayHelper.BinaryClosest(const value: Double; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  if (R.stop > -1) then
+  case oAscending of
+    True:
+    begin
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        if (Self[M] = value) then
+          Exit(M)
+        else if (Self[M] < value) then
+          R.start := (M + 1)
+        else
+          R.stop := (M - 1);
+      end;
+      if (R.stop < 0) then
+        Result := R.start
+      else if (R.start > High(Self)) then
+        Result := R.stop
+      else if ((Abs(Self[R.stop] - value) <= Abs(Self[R.start] - value))) then
+        Result := R.stop
+      else
+        Result := R.start;
+    end;
+    False:
+    begin
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        if (Self[M] = value) then
+          Exit(M)
+        else if (Self[M] > value) then
+          R.start := (M + 1)
+        else
+          R.stop := (M - 1);
+      end;
+      if (R.stop < 0) then
+        Result := R.start
+      else if (R.start > High(Self)) then
+        Result := R.stop
+      else if ((Abs(Self[R.stop] - value) <= Abs(Self[R.start] - value))) then
+        Result := R.stop
+      else
+        Result := R.start;
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryFarthest>
@@ -238,7 +824,15 @@ function TDoubleArrayHelper.BinaryClosest(const value: Double; const oAscending:
          `oAscending = True` selects the lower index (first element),
          `oAscending = False` selects the higher index (last element). Returns -1 for empty arrays.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryFarthest(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryFarthest}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryFarthest}
+function TDoubleArrayHelper.BinaryFarthest(const value: Double; const oAscending: Boolean = True): Integer; overload;
+begin
+  Result := High(Self);
+  if (Result < 0) then
+    Exit;
+  if (Abs(Self[0] - value) = Abs(Self[Result] - value)) then
+    Exit(IfThen(oAscending, 0, Result));
+  Result := IfThen((Abs(Self[0] - value) > Abs(Self[Result] - value)), 0, Result);
+end;
 
 {==============================================================================]
   <BinaryFloor>
@@ -250,7 +844,42 @@ function TDoubleArrayHelper.BinaryFarthest(const value: Double; const oAscending
          represents the element whose value is the nearest lower-or-equal
          bound relative to `value`.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryFloor(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryFloor}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryFloor}
+function TDoubleArrayHelper.BinaryFloor(const value: Double; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] > value) of
+        False:
+        begin
+          Result := M;
+          R.start := (M + 1);
+        end;
+        True: R.stop := (M - 1);
+      end;
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] < value) of
+        False:
+        begin
+          Result := M;
+          R.start := (M + 1);
+        end;
+        True: R.stop := (M - 1);
+      end;
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryCeil>
@@ -261,7 +890,42 @@ function TDoubleArrayHelper.BinaryFloor(const value: Double; const oAscending: B
          order, the search logic is inverted but the resulting index still
          identifies the nearest upper-or-equal bound with respect to `value`.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryCeil(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryCeil}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryCeil}
+function TDoubleArrayHelper.BinaryCeil(const value: Double; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] < value) of
+        False:
+        begin
+          Result := M;
+          R.stop := (M - 1);
+        end;
+        True: R.start := (M + 1);
+      end;
+    end;
+    False:
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      case (Self[M] > value) of
+        False:
+        begin
+          Result := M;
+          R.stop := (M - 1);
+        end;
+        True: R.start := (M + 1);
+      end;
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryTrunc>
@@ -272,7 +936,13 @@ function TDoubleArrayHelper.BinaryCeil(const value: Double; const oAscending: Bo
   @note: The array must be sorted according to `oAscending`. This mimics the
          behavior of mathematical truncation, which always rounds towards zero.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryTrunc(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryTrunc}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryTrunc}
+function TDoubleArrayHelper.BinaryTrunc(const value: Double; const oAscending: Boolean = True): Integer; overload;
+begin
+  if (value >= 0) then
+    Result := Self.BinaryFloor(value, oAscending)
+  else
+    Result := Self.BinaryCeil(value, oAscending);
+end;
 
 {==============================================================================]
   <BinaryRound>
@@ -283,5 +953,18 @@ function TDoubleArrayHelper.BinaryTrunc(const value: Double; const oAscending: B
          rounding to the nearest element, similar to mathematical rounding
          with ties going to the lower value.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryRound(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryRound}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryRound}
+function TDoubleArrayHelper.BinaryRound(const value: Double; const oAscending: Boolean = True): Integer; overload;
+var
+  c, f: Integer;
+begin
+  if Self.Empty then
+    Exit(-1);
+  f := Self.BinaryFloor(value, oAscending);
+  c := Self.BinaryCeil(value, oAscending);
+  if (f = -1) then
+    Exit(c);
+  if ((c = -1) or (f = c))then
+    Exit(f);
+  Result := IfThen((Abs(Self[f] - value) <= Abs(Self[c] - value)), f, c);
+end;
 {$ENDIF}

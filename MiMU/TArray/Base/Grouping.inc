@@ -51,8 +51,52 @@ end;
          duplicate classes can exist if values repeat non-consecutively.
 		 Custom weight.
 [==============================================================================}
-function MArrayHelper.Classes(const weight: TIntegerArray): M2DArray; overload; var w: Integer; {$DEFINE Skeleton_Classes}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classes}
-function MArrayHelper.Classes(const weight: TDoubleArray): M2DArray; overload; var w: Double; {$DEFINE Skeleton_Classes}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classes}
+function MArrayHelper.Classes(const weight: TIntegerArray): M2DArray; overload;
+var
+  w, i, g: Integer;
+begin
+  if (Self.Empty or (Self.Length <> weight.Length)) then
+    Exit([]);
+  g := 0;
+  w := weight[0];
+  SetLength(Result, 1);
+  SetLength(Result[0], 0);
+  for i := 0 to High(Self) do
+  begin
+    if (weight[i] <> w) then
+    begin
+      w := weight[i];
+      SetLength(Result, (g.Increment + 1));
+      SetLength(Result[g], 0);
+    end;
+    SetLength(Result[g], (Result[g].Length + 1));
+    Result[g][High(Result[g])] := Self[i];
+  end;
+end;
+
+function MArrayHelper.Classes(const weight: TDoubleArray): M2DArray; overload;
+var
+  w: Double;
+  i, g: Integer;
+begin
+  if (Self.Empty or (Self.Length <> weight.Length)) then
+    Exit([]);
+  g := 0;
+  w := weight[0];
+  SetLength(Result, 1);
+  SetLength(Result[0], 0);
+  for i := 0 to High(Self) do
+  begin
+    if (weight[i] <> w) then
+    begin
+      w := weight[i];
+      SetLength(Result, (g.Increment + 1));
+      SetLength(Result[g], 0);
+    end;
+    SetLength(Result[g], (Result[g].Length + 1));
+    Result[g][High(Result[g])] := Self[i];
+  end;
+end;
 
 {==============================================================================]
   <Classify>
@@ -95,8 +139,62 @@ end;
          duplicate classes can exist if values repeat non-consecutively.
 		 Custom weight.
 [==============================================================================}
-function MArrayHelper.Classify(const weight: TIntegerArray): M2DArray; overload; var w: Integer; {$DEFINE Skeleton_Classify}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classify}
-function MArrayHelper.Classify(const weight: TDoubleArray): M2DArray; overload; var w: Double; {$DEFINE Skeleton_Classify}{$I ../Skeletons.inc}{$UNDEF Skeleton_Classify}
+function MArrayHelper.Classify(const weight: TIntegerArray): M2DArray; overload;
+var
+  w, i, c, l, s: Integer;
+begin
+  l := Self.Length;
+  if ((l = 0) or (l <> weight.Length)) then
+    Exit([]);
+  c := 0;
+  w := weight[0];
+  SetLength(Result, l);
+  SetLength(Result[0], l);
+  Result[0][0] := Self[0];
+  s := 1;
+  for i := 1 to (l - 1) do
+  begin
+    if (weight[i] <> w) then
+    begin
+      SetLength(Result[c], s);
+      s := 0;
+      w := weight[i];
+      SetLength(Result[c.Increment], (l - i));
+    end;
+    Result[c][s.Increase] := Self[i];
+  end;
+  SetLength(Result[c], s);
+  SetLength(Result, (c + 1));
+end;
+
+function MArrayHelper.Classify(const weight: TDoubleArray): M2DArray; overload;
+var
+  w: Double;
+  i, c, l, s: Integer;
+begin
+  l := Self.Length;
+  if ((l = 0) or (l <> weight.Length)) then
+    Exit([]);
+  c := 0;
+  w := weight[0];
+  SetLength(Result, l);
+  SetLength(Result[0], l);
+  Result[0][0] := Self[0];
+  s := 1;
+  for i := 1 to (l - 1) do
+  begin
+    if (weight[i] <> w) then
+    begin
+      SetLength(Result[c], s);
+      s := 0;
+      w := weight[i];
+      SetLength(Result[c.Increment], (l - i));
+    end;
+    Result[c][s.Increase] := Self[i];
+  end;
+  SetLength(Result[c], s);
+  SetLength(Result, (c + 1));
+end;
 
 {==============================================================================]
   <Group>
@@ -138,8 +236,51 @@ end;
   @action: Groups array arr to 2D array by items.
   @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
 [==============================================================================}
-function MArrayHelper.Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload; var w: TIntegerArray; {$DEFINE Skeleton_Group}{$I ../Skeletons.inc}{$UNDEF Skeleton_Group}
-function MArrayHelper.Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload; var w: TDoubleArray; {$DEFINE Skeleton_Group}{$I ../Skeletons.inc}{$UNDEF Skeleton_Group}
+function MArrayHelper.Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload;
+var
+  w: TIntegerArray;
+  i, l, g: Integer;
+begin
+  l := Self.Length;
+  if ((l = 0) or (weight.Size <> l))then
+    Exit([]);
+  if not wSorted then
+    w := weight.QuickSorted
+  else
+    w := weight.Copy;
+  w.BinaryPrune;
+  Result.Recreate(w.Size);
+  for i := 0 to High(Self) do
+  begin
+    g := w.BinarySearch(weight[i]);
+    l := Result[g].Length;
+    SetLength(Result[g], (l + 1));
+    Result[g][l] := Self[i];
+  end;
+end;
+
+function MArrayHelper.Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload;
+var
+  w: TDoubleArray;
+  i, l, g: Integer;
+begin
+  l := Self.Length;
+  if ((l = 0) or (weight.Size <> l))then
+    Exit([]);
+  if not wSorted then
+    w := weight.QuickSorted
+  else
+    w := weight.Copy;
+  w.BinaryPrune;
+  Result.Recreate(w.Size);
+  for i := 0 to High(Self) do
+  begin
+    g := w.BinarySearch(weight[i]);
+    l := Result[g].Length;
+    SetLength(Result[g], (l + 1));
+    Result[g][l] := Self[i];
+  end;
+end;
 
 {==============================================================================]
   <Grouped>
