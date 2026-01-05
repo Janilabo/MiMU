@@ -1,18 +1,30 @@
 {$IFDEF HELPERS}
-function Compare(const target: Char): Integer; inline;
-function Sign(const target: Char): Integer; inline;
-function Precede(const target: Char; const aAscending: Boolean): Boolean; overload;
 function Ascending(const target: Char): Boolean; inline;
+function Compare(const target: Char): Integer; inline;
 function Descending(const target: Char): Boolean; inline;
+function Precede(const target: Char; const aAscending: Boolean): Boolean; overload;
+function Sign(const target: Char): Integer; inline;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
+function Comparison(const A, B: Char): Integer; overload;
 function Max(const a, b: Char): Char; overload; inline;
 function Min(const a, b: Char): Char; overload; inline;
-function Comparison(const A, B: Char): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Ascending>
+  @action  Returns True if the helper’s value is less than or equal to         
+           the given target value. Useful as a comparison predicate when        
+           sorting or merging arrays in ascending order.
+  @note: This method does not modify either value; it simply performs a <= comparison.
+[==============================================================================}
+function TCharHelper.Ascending(const target: Char): Boolean; inline;
+begin
+  Result := (Self <= target);
+end;
+
 {==============================================================================]
   <Compare>
   @action: Compares char with target.
@@ -26,6 +38,28 @@ begin
     Result := 1
   else
     Result := -1;
+end;
+
+{==============================================================================]
+  <Descending>
+  @action: Returns True if the helper’s value is greater than or equal to
+           the given target value. Use as a comparison predicate when
+           sorting or merging arrays in descending order.
+  @note: Pure comparison only; equivalent to Self >= target.
+[==============================================================================}
+function TCharHelper.Descending(const target: Char): Boolean; inline;
+begin
+  Result := (Self >= target);
+end;
+
+{==============================================================================]
+  <Precede>
+  @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
+  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
+[==============================================================================}
+function TCharHelper.Precede(const target: Char; const aAscending: Boolean): Boolean; overload;
+begin
+  Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));
 end;
 
 {==============================================================================]
@@ -49,38 +83,13 @@ begin
     Result := -1;
 end;
 
-{==============================================================================]
-  <Precede>
-  @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
-  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
-[==============================================================================}
-function TCharHelper.Precede(const target: Char; const aAscending: Boolean): Boolean; overload;
+function Comparison(const A, B: Char): Integer; overload;
 begin
-  Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));
-end;
-
-{==============================================================================]
-  <Ascending>
-  @action  Returns True if the helper’s value is less than or equal to         
-           the given target value. Useful as a comparison predicate when        
-           sorting or merging arrays in ascending order.
-  @note: This method does not modify either value; it simply performs a <= comparison.
-[==============================================================================}
-function TCharHelper.Ascending(const target: Char): Boolean; inline;
-begin
-  Result := (Self <= target);
-end;
-
-{==============================================================================]
-  <Descending>
-  @action: Returns True if the helper’s value is greater than or equal to
-           the given target value. Use as a comparison predicate when
-           sorting or merging arrays in descending order.
-  @note: Pure comparison only; equivalent to Self >= target.
-[==============================================================================}
-function TCharHelper.Descending(const target: Char): Boolean; inline;
-begin
-  Result := (Self >= target);
+  if (A < B) then
+    Exit(-1);
+  if (A > B) then
+    Exit(1);
+  Result := 0;
 end;
 
 function Max(const A, B: Char): Char; overload; inline;
@@ -97,14 +106,5 @@ begin
     Result := A
   else
     Result := B;
-end;
-
-function Comparison(const A, B: Char): Integer; overload;
-begin
-  if (A < B) then
-    Exit(-1);
-  if (A > B) then
-    Exit(1);
-  Result := 0;
 end;
 {$ENDIF}

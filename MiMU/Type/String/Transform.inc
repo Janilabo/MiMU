@@ -3,12 +3,12 @@ function Center(const size: Integer; const fill: Char = #32): string;
 function Duplicate(const x: Integer = 2): string;
 function Duplicated(const x: Integer; const glue: string): string;
 function EndWith(const s: string; const index: Integer = 2147483647): Boolean;
-function StartWith(const s: string; const index: Integer = 1): Boolean;
+function Exch(const aIndex, bIndex: Integer): Boolean;
+function Exchange(const aIndex, bIndex: Integer): Boolean;
 function Flip: string;
 function Reverse: Boolean;
 function Reversed: string;
-function Exch(const aIndex, bIndex: Integer): Boolean;
-function Exchange(const aIndex, bIndex: Integer): Boolean;
+function StartWith(const s: string; const index: Integer = 1): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -84,18 +84,38 @@ begin
 end;
 
 {==============================================================================]
-  <StartWith>
-  @action: Returns true if s was found in str and it was set as the beginning of the str.
-  @note: None
+  <Exch(aIndex, bIndex: Integer): Boolean>
+  @action: Fast version of Exchange().
+  @note: Unsafe, no checking.
 [==============================================================================}
-function TStringHelper.StartWith(const s: string; const index: Integer = 1): Boolean;
+function TStringHelper.Exch(const aIndex, bIndex: Integer): Boolean;
 var
-  p: Integer;
+  c: Char;
 begin
-  p := Self.Find(s, index);
-  Result := (p > 0);
+  Result := (Self[aIndex] <> Self[bIndex]);
+  c := Self[aIndex];
+  Self[aIndex] := Self[bIndex];
+  Self[bIndex] := c;
+end;
+
+{==============================================================================]
+  <Exchange(aIndex, bIndex: Integer): Boolean>
+  @action: Swap items aIndex and bIndex in string.
+  @note: Returns true with success.
+[==============================================================================}
+function TStringHelper.Exchange(const aIndex, bIndex: Integer): Boolean;
+var
+  l: Integer;
+  c: Char;
+begin
+  l := Length(Self);
+  Result := ((l > 1) and (aIndex <> bIndex) and InRange(aIndex, 1, l) and InRange(bIndex, 1, l) and (Self[aIndex] <> Self[bIndex]));
   if Result then
-    Self := Copy(Self, p, (Length(Self) - (p - 1)));
+  begin
+    c := Self[aIndex];
+    Self[aIndex] := Self[bIndex];
+    Self[bIndex] := c;
+  end;
 end;
 
 {==============================================================================]
@@ -160,37 +180,17 @@ begin
 end;
 
 {==============================================================================]
-  <Exch(aIndex, bIndex: Integer): Boolean>
-  @action: Fast version of Exchange().
-  @note: Unsafe, no checking.
+  <StartWith>
+  @action: Returns true if s was found in str and it was set as the beginning of the str.
+  @note: None
 [==============================================================================}
-function TStringHelper.Exch(const aIndex, bIndex: Integer): Boolean;
+function TStringHelper.StartWith(const s: string; const index: Integer = 1): Boolean;
 var
-  c: Char;
+  p: Integer;
 begin
-  Result := (Self[aIndex] <> Self[bIndex]);
-  c := Self[aIndex];
-  Self[aIndex] := Self[bIndex];
-  Self[bIndex] := c;
-end;
-
-{==============================================================================]
-  <Exchange(aIndex, bIndex: Integer): Boolean>
-  @action: Swap items aIndex and bIndex in string.
-  @note: Returns true with success.
-[==============================================================================}
-function TStringHelper.Exchange(const aIndex, bIndex: Integer): Boolean;
-var
-  l: Integer;
-  c: Char;
-begin
-  l := Length(Self);
-  Result := ((l > 1) and (aIndex <> bIndex) and InRange(aIndex, 1, l) and InRange(bIndex, 1, l) and (Self[aIndex] <> Self[bIndex]));
+  p := Self.Find(s, index);
+  Result := (p > 0);
   if Result then
-  begin
-    c := Self[aIndex];
-    Self[aIndex] := Self[bIndex];
-    Self[bIndex] := c;
-  end;
+    Self := Copy(Self, p, (Length(Self) - (p - 1)));
 end;
 {$ENDIF}

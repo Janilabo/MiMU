@@ -1,10 +1,32 @@
 {$IFDEF HELPERS}
+function LineDelete(const lineNumber: Integer): string; overload;
 function LineInsert(const lineNumber: Integer; const text: string): string; overload;
 function LineReplace(const lineNumber: Integer; const text: string): string; overload;
-function LineDelete(const lineNumber: Integer): string; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <LineDelete>
+  @action: Deletes the specified line from the string and returns the resulting string.
+  @note:
+    - Line numbering is 1-based.
+    - Uses LineRange to determine the start and end positions of the line.
+    - If the specified line does not exist, the original string is returned
+      unchanged.
+    - Only the characters of the specified line are removed; line-ending
+      characters of other lines are preserved.
+    - Does not normalize or adjust remaining line breaks.
+[==============================================================================}
+function TStringHelper.LineDelete(const lineNumber: Integer): string; overload;
+var
+  R: TRange;
+begin
+  R := Self.LineRange(lineNumber);
+  if (R.start = 0) then
+    Exit(Self);
+  Result := Copy(Self, 1, (R.start - 1)) + Copy(Self, (R.stop + 1), High(Integer));
+end;
+
 {==============================================================================]
   <LineInsert>
   @action: Inserts the specified text as a new line at the given line number and returns
@@ -52,27 +74,5 @@ begin
   if (R.start = 0) then
     Exit(Self);
   Result := (Copy(Self, 1, (R.start - 1)) + text + Copy(Self, (R.stop + 1), High(Integer)));
-end;
-
-{==============================================================================]
-  <LineDelete>
-  @action: Deletes the specified line from the string and returns the resulting string.
-  @note:
-    - Line numbering is 1-based.
-    - Uses LineRange to determine the start and end positions of the line.
-    - If the specified line does not exist, the original string is returned
-      unchanged.
-    - Only the characters of the specified line are removed; line-ending
-      characters of other lines are preserved.
-    - Does not normalize or adjust remaining line breaks.
-[==============================================================================}
-function TStringHelper.LineDelete(const lineNumber: Integer): string; overload;
-var
-  R: TRange;
-begin
-  R := Self.LineRange(lineNumber);
-  if (R.start = 0) then
-    Exit(Self);
-  Result := Copy(Self, 1, (R.start - 1)) + Copy(Self, (R.stop + 1), High(Integer));
 end;
 {$ENDIF}

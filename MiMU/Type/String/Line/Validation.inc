@@ -1,76 +1,33 @@
 {$IFDEF HELPERS}
+function LineClamp(const lineNumber: Integer): Integer; overload;
+function LineExisting(const lineNumber: Integer): Boolean; overload;
+function LineExists(const lineNumber: Integer): Boolean; overload;
+function LineExtant(const lineNumber: Integer): Boolean; overload;
+function LineFixed(const lineNumber: Integer): Integer; overload;
 function LineIsEmpty(const lineNumber: Integer): Boolean; overload;
 function LineValid(const lineNumber: Integer): Boolean; overload;
-function LineExists(const lineNumber: Integer): Boolean; overload;
-function LineExisting(const lineNumber: Integer): Boolean; overload;
-function LineExtant(const lineNumber: Integer): Boolean; overload;
-function LineClamp(const lineNumber: Integer): Integer; overload;
-function LineFixed(const lineNumber: Integer): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <LineIsEmpty>
-  @action: Determines whether the specified line contains only whitespace or is completely empty.
-  @note:
-    - Line numbering is 1-based.
-    - Uses LineStr to extract the line content and Trim to remove leading and
-      trailing whitespace before checking emptiness.
-    - Returns True if the line is empty or contains only spaces, tabs, or other
-      whitespace characters; otherwise, returns False.
-    - If the specified line does not exist, the function returns True.
-[==============================================================================}
-function TStringHelper.LineIsEmpty(const lineNumber: Integer): Boolean; overload;
-begin
-  Result := (SysUtils.Trim(Self.LineStr(lineNumber)) = '');
-end;
-
-{==============================================================================]
-  <LineValid>
-  @action:
-    Checks whether the given 1-based line number exists in the string.
+  <LineClamp>
+  @action: Returns a line number clamped to the valid range of the string.
+           If the requested line number is invalid (less than 1), returns 0.
+           If the requested line number exceeds the total number of lines, returns 0.
+           Otherwise, returns the requested line number.
   @note:
     - Line numbers are 1-based.
-    - Returns True if 1 <= LineNumber <= LineCount.
-    - Returns False if LineNumber < 1 or LineNumber > LineCount.
+    - 0 indicates an invalid or non-existent line.
+    - Useful for query functions that need to signal invalid lines.
 [==============================================================================}
-function TStringHelper.LineValid(const lineNumber: Integer): Boolean; overload;
-begin
-  Result := ((lineNumber >= 1) and (lineNumber <= Self.LineCount));
-end;
-
-{==============================================================================]
-  <LineExists>
-  @action:
-    Determines whether the given 1-based line number exists in the string.
-    Optimized: scans only until the requested line is found.
-  @note:
-    - Line numbers are 1-based.
-    - Returns True if the requested line exists, False otherwise.
-    - Efficient for large strings; does not count all lines.
-[==============================================================================}
-function TStringHelper.LineExists(const lineNumber: Integer): Boolean; overload;
-var
-  i, l, c: Integer;
+function TStringHelper.LineClamp(const lineNumber: Integer): Integer; overload;
 begin
   if (lineNumber < 1) then
-    Exit(False);
-  l := Length(Self);
-  if (l = 0) then
-    Exit(lineNumber = 1);
-  c := 1;
-  i := 0;
-  while ((i.Increment <= l) and (c < lineNumber)) do
-  case Self[i] of
-    #10: Inc(c);
-    #13:
-    begin
-      Inc(c);
-      if ((i < l) and (Self[i + 1] = #10)) then
-        Inc(i);
-    end;
-  end;
-  Result := (c >= lineNumber);
+    Exit(0);
+  Result := Self.LineCount;
+  if (lineNumber > Result) then
+    Exit;
+  Result := lineNumber;
 end;
 
 {==============================================================================]
@@ -120,6 +77,40 @@ begin
 end; 
 
 {==============================================================================]
+  <LineExists>
+  @action:
+    Determines whether the given 1-based line number exists in the string.
+    Optimized: scans only until the requested line is found.
+  @note:
+    - Line numbers are 1-based.
+    - Returns True if the requested line exists, False otherwise.
+    - Efficient for large strings; does not count all lines.
+[==============================================================================}
+function TStringHelper.LineExists(const lineNumber: Integer): Boolean; overload;
+var
+  i, l, c: Integer;
+begin
+  if (lineNumber < 1) then
+    Exit(False);
+  l := Length(Self);
+  if (l = 0) then
+    Exit(lineNumber = 1);
+  c := 1;
+  i := 0;
+  while ((i.Increment <= l) and (c < lineNumber)) do
+  case Self[i] of
+    #10: Inc(c);
+    #13:
+    begin
+      Inc(c);
+      if ((i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+    end;
+  end;
+  Result := (c >= lineNumber);
+end;
+
+{==============================================================================]
   <LineExtant>
   @action: Determines whether the specified line number exists in the string.
   @note:
@@ -135,27 +126,6 @@ end;
 function TStringHelper.LineExtant(const lineNumber: Integer): Boolean; overload;
 begin
   Result := ((lineNumber > 0) and (Self.LineCountUpTo(lineNumber) >= lineNumber));
-end;
-
-{==============================================================================]
-  <LineClamp>
-  @action: Returns a line number clamped to the valid range of the string.
-           If the requested line number is invalid (less than 1), returns 0.
-           If the requested line number exceeds the total number of lines, returns 0.
-           Otherwise, returns the requested line number.
-  @note:
-    - Line numbers are 1-based.
-    - 0 indicates an invalid or non-existent line.
-    - Useful for query functions that need to signal invalid lines.
-[==============================================================================}
-function TStringHelper.LineClamp(const lineNumber: Integer): Integer; overload;
-begin
-  if (lineNumber < 1) then
-    Exit(0);
-  Result := Self.LineCount;
-  if (lineNumber > Result) then
-    Exit;
-  Result := lineNumber;
 end;
 
 {==============================================================================]
@@ -177,5 +147,35 @@ begin
   if (lineNumber > Result) then
     Exit;
   Result := lineNumber;
+end;
+
+{==============================================================================]
+  <LineIsEmpty>
+  @action: Determines whether the specified line contains only whitespace or is completely empty.
+  @note:
+    - Line numbering is 1-based.
+    - Uses LineStr to extract the line content and Trim to remove leading and
+      trailing whitespace before checking emptiness.
+    - Returns True if the line is empty or contains only spaces, tabs, or other
+      whitespace characters; otherwise, returns False.
+    - If the specified line does not exist, the function returns True.
+[==============================================================================}
+function TStringHelper.LineIsEmpty(const lineNumber: Integer): Boolean; overload;
+begin
+  Result := (SysUtils.Trim(Self.LineStr(lineNumber)) = '');
+end;
+
+{==============================================================================]
+  <LineValid>
+  @action:
+    Checks whether the given 1-based line number exists in the string.
+  @note:
+    - Line numbers are 1-based.
+    - Returns True if 1 <= LineNumber <= LineCount.
+    - Returns False if LineNumber < 1 or LineNumber > LineCount.
+[==============================================================================}
+function TStringHelper.LineValid(const lineNumber: Integer): Boolean; overload;
+begin
+  Result := ((lineNumber >= 1) and (lineNumber <= Self.LineCount));
 end; 
 {$ENDIF}

@@ -1,22 +1,12 @@
 {$IFDEF HELPERS}
-function Parity: Byte; inline;
 function Even: Boolean; inline;
 function IsEven: Boolean; inline;
-function Odd: Boolean; inline;
 function IsOdd: Boolean; inline;
+function Odd: Boolean; inline;
+function Parity: Byte; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Parity>
-  @action: Returns the Integer Parity Bit as Byte.
-  @note: 0 = even, 1 = odd.
-[==============================================================================}
-function TIntegerHelper.Parity: Byte; inline;
-begin
-  Result := (Self mod 2);
-end;
-
 {==============================================================================]
   <Even>
   @action: Returns true if Integer value x is an even number.
@@ -38,6 +28,16 @@ begin
 end;
 
 {==============================================================================]
+  <IsOdd>
+  @action: Returns true if Integer value x is an odd number.
+  @note: None
+[==============================================================================}
+function TIntegerHelper.IsOdd: Boolean; inline;
+begin
+  Result := ((Self and 1) = 1);
+end;
+
+{==============================================================================]
   <Odd>
   @action: Returns true if Integer value x is an odd number.
   @note: None
@@ -48,12 +48,12 @@ begin
 end;
 
 {==============================================================================]
-  <IsOdd>
-  @action: Returns true if Integer value x is an odd number.
-  @note: None
+  <Parity>
+  @action: Returns the Integer Parity Bit as Byte.
+  @note: 0 = even, 1 = odd.
 [==============================================================================}
-function TIntegerHelper.IsOdd: Boolean; inline;
+function TIntegerHelper.Parity: Byte; inline;
 begin
-  Result := ((Self and 1) = 1);
+  Result := (Self mod 2);
 end;
 {$ENDIF}

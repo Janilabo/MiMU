@@ -1,15 +1,15 @@
 {$IFDEF HELPERS}
 function LineAmount: Integer; overload;
-function LinesTotal: Integer; overload;
-function LineQuantity: Integer; overload;
-function LinePopulation: Integer; overload;
-function LinesCount: Integer; overload;
 function LineCount: Integer; overload;
-function LinesCounted: Integer; overload;
-function LineCountUpTo(const targetLine: Integer): Integer; overload;
 function LineCountEx(const lineBreak: string): Integer; overload;
 function LineCountEx(const lineBreak: TStringArray): Integer; overload;
 function LineCountEx: Integer; overload;
+function LineCountUpTo(const targetLine: Integer): Integer; overload;
+function LinePopulation: Integer; overload;
+function LineQuantity: Integer; overload;
+function LinesCount: Integer; overload;
+function LinesCounted: Integer; overload;
+function LinesTotal: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -39,153 +39,6 @@ begin
       if ((Self[i] = #13) and (i < l) and (Self[i + 1] = #10)) then
         Inc(i);
     end;
-end;
-
-{==============================================================================]
-  <LinesTotal>
-  @action: Returns the total number of logical lines contained in the string.
-  @note:
-    - Lines are delimited using standard newline conventions:
-        * CRLF (#13#10)
-        * CR   (#13)
-        * LF   (#10)
-      CRLF sequences are treated as a single line break.
-    - Consecutive line breaks produce empty lines, each of which is counted.
-    - For an empty string, the result is 1, representing a single
-      empty line.
-    - The function performs a single forward scan of the string using indexed
-      access.
-[==============================================================================}
-function TStringHelper.LinesTotal: Integer; overload;
-var
-  i, l: Integer;
-begin
-  l := Length(Self);
-  Result := 1;
-  i := 0;
-  while (i.Increment <= l) do
-  case (Self[i] = #13) of
-    True:
-    begin
-      Inc(Result);
-      if ((i < l) and (Self[i + 1] = #10)) then
-        Inc(i);
-    end;
-    False:
-    if (Self[i] = #10) then
-      Inc(Result);
-  end;
-end;
-
-{==============================================================================]
-  <LineQuantity>
-  @action: Returns the total number of logical lines contained in the string.
-  @note:
-    - Lines are delimited using standard newline conventions:
-        * CRLF (#13#10)
-        * CR   (#13)
-        * LF   (#10)
-      CRLF sequences are treated as a single line break.
-    - Consecutive line breaks produce empty lines, each of which is counted.
-    - For an empty string, the result is 1, representing a single
-      empty line.
-    - The function performs a single forward scan using PChar pointers,
-      minimizing bounds checks and offering optimal performance for large
-      strings.
-[==============================================================================}
-function TStringHelper.LineQuantity: Integer; overload;
-var
-  P, E: PChar;
-begin
-  Result := 1;
-  P := PChar(Self);
-  E := (P + Length(Self));
-  while (P < E) do
-  begin
-    case P^ of
-      #13:
-      begin
-        Inc(Result);
-        Inc(P);
-        if ((P < E) and (P^ = #10)) then
-          Inc(P);
-        Continue;
-      end;
-      #10: Inc(Result);
-    end;
-    Inc(P);
-  end;
-end;
-
-{==============================================================================]
-  <LinePopulation>
-  @action: Returns the total number of logical lines contained in the string.
-  @note:
-    - Lines are delimited using standard newline characters:
-        * CRLF (#13#10)
-        * CR   (#13)
-        * LF   (#10)
-      CRLF sequences are treated as a single line break.
-    - Consecutive line breaks produce empty lines, each counted separately.
-    - For an empty string, the function returns 1, representing a
-      single empty line.
-    - The function uses a for loop and a boolean flag p to detect CRLF
-      sequences efficiently.
-[==============================================================================}
-function TStringHelper.LinePopulation: Integer; overload;
-var
-  i, l: Integer;
-  p: Boolean;
-begin
-  l := Length(Self);
-  Result := 1;
-  p := False;
-  for i := 1 to l do
-  case (Self[i] = #13) of
-    True:
-    begin
-      Inc(Result);
-      p := True;
-    end;
-    False:
-    begin
-      if ((Self[i] = #10) and (not p)) then
-        Inc(Result);
-      p := False;
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <LinesCount>
-  @action: Counts the number of lines in a string.
-           Each line is delimited by Windows (#13#10), Mac (#13), or Unix (#10) line breaks.
-           Lines that end with a line break are counted, including a trailing empty line.
-  @note: If the string is empty, it is considered to contain 1 line.
-         This function handles mixed line endings and ensures that
-         the last line is counted even if it does not end with a line break.
-[==============================================================================}
-function TStringHelper.LinesCount: Integer; overload;
-var
-  i, l: Integer;
-begin
-  Result := 1;
-  l := Length(Self);
-  if (l = 0) then
-    Exit;
-  i := 0;
-  while (i.Increment <= l) do
-  case (Self[i] = #13) of
-    True:
-    begin
-      Inc(Result);
-      if ((i < l) and (Self[i + 1] = #10)) then
-        Inc(i);
-    end;
-    False:
-    if (Self[i] = #10) then
-      Inc(Result);
-  end;
 end;
 
 {==============================================================================]
@@ -233,28 +86,36 @@ begin
 end;
 
 {==============================================================================]
-  <LinesCounted>
-  @action: Returns the total number of logical lines in the string.
-  @note:
-    - Line numbering is 1-based.
-    - An empty string is considered to contain a single (empty) line.
-    - Line breaks are detected using all common newline conventions:
-        * CRLF (#13#10)
-        * LF   (#10)
-        * CR   (#13)
-    - CRLF sequences are treated as a single logical line break.
-    - A trailing line break increases the line count by one.
-    - This implementation computes the result using character counting:
-        Result = 1 + (CR count + LF count) − CRLF count
-    - The function performs multiple passes over the string and is therefore
-      less efficient than single-pass implementations for large strings.
-    - No temporary strings are created, but the string is scanned three times.
+  <LineCountEx>
+  @action: Returns the number of lines in the string, using the specified
+           line break string as delimiter.
+  @note: Returns 0 if the string is empty.
 [==============================================================================}
-function TStringHelper.LinesCounted: Integer; overload;
+function TStringHelper.LineCountEx(const lineBreak: string): Integer; overload;
 begin
-  if (Length(Self) = 0) then
-    Exit(1);
-  Result := ((1 + (Self.Count(#10) + Self.Count(#13))) - Self.Count(#13#10));
+  Result := Self.LinesEx(lineBreak).Length;
+end;
+
+{==============================================================================]
+  <LineCountEx>
+  @action: Returns the number of lines in the string, using any of the provided
+           line break strings in the TStringArray as delimiters.
+  @note: Returns 0 if the string is empty or the delimiter array is empty.
+[==============================================================================}
+function TStringHelper.LineCountEx(const lineBreak: TStringArray): Integer; overload;
+begin
+  Result := Self.LinesEx(lineBreak).Length;
+end;
+
+{==============================================================================]
+  <LineCountEx>
+  @action: Returns the number of lines in the string, using the default line
+           breaks (#13#10, #13, #10) as delimiters.
+  @note:   Returns 0 if the string is empty.
+[==============================================================================}
+function TStringHelper.LineCountEx: Integer; overload;
+begin
+  Result := Self.LineCountEx([#13#10, #13, #10]);
 end;
 
 {==============================================================================]
@@ -297,35 +158,174 @@ begin
 end;
 
 {==============================================================================]
-  <LineCountEx>
-  @action: Returns the number of lines in the string, using the specified
-           line break string as delimiter.
-  @note: Returns 0 if the string is empty.
+  <LinePopulation>
+  @action: Returns the total number of logical lines contained in the string.
+  @note:
+    - Lines are delimited using standard newline characters:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single line break.
+    - Consecutive line breaks produce empty lines, each counted separately.
+    - For an empty string, the function returns 1, representing a
+      single empty line.
+    - The function uses a for loop and a boolean flag p to detect CRLF
+      sequences efficiently.
 [==============================================================================}
-function TStringHelper.LineCountEx(const lineBreak: string): Integer; overload;
+function TStringHelper.LinePopulation: Integer; overload;
+var
+  i, l: Integer;
+  p: Boolean;
 begin
-  Result := Self.LinesEx(lineBreak).Length;
+  l := Length(Self);
+  Result := 1;
+  p := False;
+  for i := 1 to l do
+  case (Self[i] = #13) of
+    True:
+    begin
+      Inc(Result);
+      p := True;
+    end;
+    False:
+    begin
+      if ((Self[i] = #10) and (not p)) then
+        Inc(Result);
+      p := False;
+    end;
+  end;
 end;
 
 {==============================================================================]
-  <LineCountEx>
-  @action: Returns the number of lines in the string, using any of the provided
-           line break strings in the TStringArray as delimiters.
-  @note: Returns 0 if the string is empty or the delimiter array is empty.
+  <LineQuantity>
+  @action: Returns the total number of logical lines contained in the string.
+  @note:
+    - Lines are delimited using standard newline conventions:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single line break.
+    - Consecutive line breaks produce empty lines, each of which is counted.
+    - For an empty string, the result is 1, representing a single
+      empty line.
+    - The function performs a single forward scan using PChar pointers,
+      minimizing bounds checks and offering optimal performance for large
+      strings.
 [==============================================================================}
-function TStringHelper.LineCountEx(const lineBreak: TStringArray): Integer; overload;
+function TStringHelper.LineQuantity: Integer; overload;
+var
+  P, E: PChar;
 begin
-  Result := Self.LinesEx(lineBreak).Length;
+  Result := 1;
+  P := PChar(Self);
+  E := (P + Length(Self));
+  while (P < E) do
+  begin
+    case P^ of
+      #13:
+      begin
+        Inc(Result);
+        Inc(P);
+        if ((P < E) and (P^ = #10)) then
+          Inc(P);
+        Continue;
+      end;
+      #10: Inc(Result);
+    end;
+    Inc(P);
+  end;
 end;
 
 {==============================================================================]
-  <LineCountEx>
-  @action: Returns the number of lines in the string, using the default line
-           breaks (#13#10, #13, #10) as delimiters.
-  @note:   Returns 0 if the string is empty.
+  <LinesCount>
+  @action: Counts the number of lines in a string.
+           Each line is delimited by Windows (#13#10), Mac (#13), or Unix (#10) line breaks.
+           Lines that end with a line break are counted, including a trailing empty line.
+  @note: If the string is empty, it is considered to contain 1 line.
+         This function handles mixed line endings and ensures that
+         the last line is counted even if it does not end with a line break.
 [==============================================================================}
-function TStringHelper.LineCountEx: Integer; overload;
+function TStringHelper.LinesCount: Integer; overload;
+var
+  i, l: Integer;
 begin
-  Result := Self.LineCountEx([#13#10, #13, #10]);
+  Result := 1;
+  l := Length(Self);
+  if (l = 0) then
+    Exit;
+  i := 0;
+  while (i.Increment <= l) do
+  case (Self[i] = #13) of
+    True:
+    begin
+      Inc(Result);
+      if ((i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+    end;
+    False:
+    if (Self[i] = #10) then
+      Inc(Result);
+  end;
+end;
+
+{==============================================================================]
+  <LinesCounted>
+  @action: Returns the total number of logical lines in the string.
+  @note:
+    - Line numbering is 1-based.
+    - An empty string is considered to contain a single (empty) line.
+    - Line breaks are detected using all common newline conventions:
+        * CRLF (#13#10)
+        * LF   (#10)
+        * CR   (#13)
+    - CRLF sequences are treated as a single logical line break.
+    - A trailing line break increases the line count by one.
+    - This implementation computes the result using character counting:
+        Result = 1 + (CR count + LF count) − CRLF count
+    - The function performs multiple passes over the string and is therefore
+      less efficient than single-pass implementations for large strings.
+    - No temporary strings are created, but the string is scanned three times.
+[==============================================================================}
+function TStringHelper.LinesCounted: Integer; overload;
+begin
+  if (Length(Self) = 0) then
+    Exit(1);
+  Result := ((1 + (Self.Count(#10) + Self.Count(#13))) - Self.Count(#13#10));
+end;
+
+{==============================================================================]
+  <LinesTotal>
+  @action: Returns the total number of logical lines contained in the string.
+  @note:
+    - Lines are delimited using standard newline conventions:
+        * CRLF (#13#10)
+        * CR   (#13)
+        * LF   (#10)
+      CRLF sequences are treated as a single line break.
+    - Consecutive line breaks produce empty lines, each of which is counted.
+    - For an empty string, the result is 1, representing a single
+      empty line.
+    - The function performs a single forward scan of the string using indexed
+      access.
+[==============================================================================}
+function TStringHelper.LinesTotal: Integer; overload;
+var
+  i, l: Integer;
+begin
+  l := Length(Self);
+  Result := 1;
+  i := 0;
+  while (i.Increment <= l) do
+  case (Self[i] = #13) of
+    True:
+    begin
+      Inc(Result);
+      if ((i < l) and (Self[i + 1] = #10)) then
+        Inc(i);
+    end;
+    False:
+    if (Self[i] = #10) then
+      Inc(Result);
+  end;
 end;
 {$ENDIF}

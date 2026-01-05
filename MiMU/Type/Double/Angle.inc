@@ -1,11 +1,24 @@
 {$IFDEF HELPERS}
-function FixDegrees: Double;
 function Degrees: Double;
+function FixDegrees: Double;
 function FixRadians: Double;
 function Radians(const compass: Boolean = False): Double;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Degrees>
+  @action: Converts Radians to Degrees.
+  @note: None
+[==============================================================================} 
+function TDoubleHelper.Degrees: Double; 
+var
+  r: Double;
+begin
+  r := (Self * (180.0 / Pi));
+  Result := r.FixDegrees;
+end;
+
 {==============================================================================]
   <FixDegrees>
   @action: 365 => 5 | 722 => 2 | 359.9 => 359.9 | 360 => 0
@@ -22,19 +35,6 @@ begin
   Result := ((Floor(Result) mod 360 + Frac(Result)) * t);
   if (Result < 0) then
     Result := (Result + 360.0);
-end;
-
-{==============================================================================]
-  <Degrees>
-  @action: Converts Radians to Degrees.
-  @note: None
-[==============================================================================} 
-function TDoubleHelper.Degrees: Double; 
-var
-  r: Double;
-begin
-  r := (Self * (180.0 / Pi));
-  Result := r.FixDegrees;
 end;
 
 {==============================================================================]

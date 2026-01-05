@@ -1,35 +1,36 @@
 {$IFDEF HELPERS}
-function CountOf(const item: Char): Integer; overload;
-function AmountOf(const item: Char): Integer; overload;
-function Occurs(const item: Char): Integer; overload;
-function Occurrences(const item: Char): Integer; overload;
 function Amount(const s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer;
+function AmountOf(const item: Char): Integer; overload;
 function Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer;
-function CountIn(const target: string): Integer; overload;
 function CountedIn(const target: string; const overlap: Boolean = True): Integer; overload;
+function CountIn(const target: string): Integer; overload;
+function CountOf(const item: Char): Integer; overload;
 function CountTokens(const items: TStringArray): Integer; overload;
+function Occurrences(const item: Char): Integer; overload;
+function Occurs(const item: Char): Integer; overload;
 function TokensCount(const items: TStringArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <CountOf>
-  @action: Returns the number of occurrences of the specified character.
-  @note: Performs a straightforward linear scan. Suitable for general use.
+  <Amount>
+  @action: Simply returns the amount of s in str.
+  @note: Contains support for overlapping (overlap)
 [==============================================================================}
-function TStringHelper.CountOf(const item: Char): Integer; overload;
+function TStringHelper.Amount(const s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer;
 var
-  P, E: PChar;
+  p, o: Integer;
+  c: string;
 begin
   Result := 0;
-  P := PChar(Self);
-  E := (P + Length(Self));
-  while (P < E) do
-  begin
-    if (P^ = item) then
+  c := Copy(Self, 1, index);
+  o := overlap.Select(1, Length(s));
+  p := (1 - o);
+  repeat
+    p := c.Find(s, (p + o));
+    if (p > 0) then
       Inc(Result);
-    Inc(P);
-  end;
+  until (p < 1);
 end;
 
 {==============================================================================]
@@ -50,67 +51,6 @@ begin
       Inc(Result);
     Inc(P);
   until (P = E);
-end;
-
-{==============================================================================]
-  <Occurs>
-  @action: Counts occurrences of the specified character using indexed access.
-  @note: Uses 1-based string indexing; clear and simple but slightly slower.
-[==============================================================================}
-function TStringHelper.Occurs(const item: Char): Integer; overload;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 1 to Length(Self) do
-    if (Self[i] = item) then
-      Inc(Result);
-end;
-
-{==============================================================================]
-  <Occurrences>
-  @action: Returns the number of occurrences of the specified character.
-  @note: Optimized approach using loop unrolling for improved performance.
-[==============================================================================}
-function TStringHelper.Occurrences(const item: Char): Integer; overload;
-var
-  P, E: PChar;
-begin
-  Result := 0;
-  P := PChar(Self);
-  E := (P + Length(Self));
-  while ((PtrUInt(E) - PtrUInt(P)) >= 4) do
-  begin
-    Result := (Result + (Ord(P[0] = item)) + Ord(P[1] = item) + Ord(P[2] = item) + Ord(P[3] = item));
-    Inc(P, 4);
-  end;
-  while (P < E) do
-  begin
-    if (P^ = item) then
-      Inc(Result);
-    Inc(P);
-  end;
-end;
-
-{==============================================================================]
-  <Amount>
-  @action: Simply returns the amount of s in str.
-  @note: Contains support for overlapping (overlap)
-[==============================================================================}
-function TStringHelper.Amount(const s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer;
-var
-  p, o: Integer;
-  c: string;
-begin
-  Result := 0;
-  c := Copy(Self, 1, index);
-  o := overlap.Select(1, Length(s));
-  p := (1 - o);
-  repeat
-    p := c.Find(s, (p + o));
-    if (p > 0) then
-      Inc(Result);
-  until (p < 1);
 end;
 
 {==============================================================================]
@@ -136,30 +76,6 @@ begin
     if (p > 0) then
       Inc(Result);
   until (p < 1);
-end;
-
-{==============================================================================]
-  <CountIn>
-  @action: Counts the number of occurrences of this string (`Self`) as a substring
-           within the specified target string. Overlapping occurrences are considered.
-  @note: The search is case-sensitive. If the length of Self is greater than
-         the length of the target, the result is zero. This implementation
-         uses a naive O(n*m) substring search algorithm, where n = Length(target)
-         and m = Length(Self), so it may be inefficient for long strings.
-[==============================================================================}
-function TStringHelper.CountIn(const target: string): Integer; overload;
-var
-  i, j, l: Integer;
-begin
-  Result := 0;
-  l := Length(Self);
-  if InRange(l, 1, Length(target)) then
-  for i := 1 to ((Length(target) - l) + 1) do
-    for j := 1 to l do
-      if (Self[j] <> target[(i + j) - 1]) then
-        Break
-      else if ((j = l) and (Self[j] = target[(i + j) - 1])) then
-        Inc(Result);
 end;
 
 {==============================================================================]
@@ -201,6 +117,50 @@ begin
 end;
 
 {==============================================================================]
+  <CountIn>
+  @action: Counts the number of occurrences of this string (`Self`) as a substring
+           within the specified target string. Overlapping occurrences are considered.
+  @note: The search is case-sensitive. If the length of Self is greater than
+         the length of the target, the result is zero. This implementation
+         uses a naive O(n*m) substring search algorithm, where n = Length(target)
+         and m = Length(Self), so it may be inefficient for long strings.
+[==============================================================================}
+function TStringHelper.CountIn(const target: string): Integer; overload;
+var
+  i, j, l: Integer;
+begin
+  Result := 0;
+  l := Length(Self);
+  if InRange(l, 1, Length(target)) then
+  for i := 1 to ((Length(target) - l) + 1) do
+    for j := 1 to l do
+      if (Self[j] <> target[(i + j) - 1]) then
+        Break
+      else if ((j = l) and (Self[j] = target[(i + j) - 1])) then
+        Inc(Result);
+end;
+
+{==============================================================================]
+  <CountOf>
+  @action: Returns the number of occurrences of the specified character.
+  @note: Performs a straightforward linear scan. Suitable for general use.
+[==============================================================================}
+function TStringHelper.CountOf(const item: Char): Integer; overload;
+var
+  P, E: PChar;
+begin
+  Result := 0;
+  P := PChar(Self);
+  E := (P + Length(Self));
+  while (P < E) do
+  begin
+    if (P^ = item) then
+      Inc(Result);
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
   <CountTokens>
   @action: Counts the number of non-overlapping occurrences of the specified token
            strings in the string. Scans left-to-right, matching the first token that
@@ -235,6 +195,46 @@ begin
     Inc(i);
     ContinueScan:
   end;
+end;
+
+{==============================================================================]
+  <Occurrences>
+  @action: Returns the number of occurrences of the specified character.
+  @note: Optimized approach using loop unrolling for improved performance.
+[==============================================================================}
+function TStringHelper.Occurrences(const item: Char): Integer; overload;
+var
+  P, E: PChar;
+begin
+  Result := 0;
+  P := PChar(Self);
+  E := (P + Length(Self));
+  while ((PtrUInt(E) - PtrUInt(P)) >= 4) do
+  begin
+    Result := (Result + (Ord(P[0] = item)) + Ord(P[1] = item) + Ord(P[2] = item) + Ord(P[3] = item));
+    Inc(P, 4);
+  end;
+  while (P < E) do
+  begin
+    if (P^ = item) then
+      Inc(Result);
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
+  <Occurs>
+  @action: Counts occurrences of the specified character using indexed access.
+  @note: Uses 1-based string indexing; clear and simple but slightly slower.
+[==============================================================================}
+function TStringHelper.Occurs(const item: Char): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 1 to Length(Self) do
+    if (Self[i] = item) then
+      Inc(Result);
 end;
 
 {==============================================================================]

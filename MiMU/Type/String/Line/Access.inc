@@ -1,9 +1,9 @@
 {$IFDEF HELPERS}
 function Line(const number: Integer): string; overload;
-function LineStr(const lineNumber: Integer): string; overload;
 function LineEx(const number: Integer; const lineBreak: string): string; overload;
 function LineEx(const number: Integer; const lineBreak: TStringArray): string; overload;
 function LineEx(const number: Integer): string; overload;
+function LineStr(const lineNumber: Integer): string; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -40,26 +40,6 @@ begin
     end;
   if (n = number) then
     Result := Copy(Self, s, ((Length(Self) - s) + 1));
-end;
-
-{==============================================================================]
-  <LineStr>
-  @action: Returns the textual contents of the specified line from the string,
-           excluding any line break characters.
-  @note:
-    - Line numbering is 1-based.
-    - Internally uses LineRange to determine the line boundaries.
-    - If the requested line does not exist, an empty string is returned.
-    - Line terminators (#10, #13, or #13#10) are not included in the result.
-[==============================================================================}
-function TStringHelper.LineStr(const lineNumber: Integer): string; overload;
-var
-  R: TRange;
-begin
-  R := Self.LineRange(lineNumber);
-  if ((R.start < 1) or (R.stop < R.start)) then
-    Exit('');
-  Result := Copy(Self, R.start, R.Size);
 end;
 
 {==============================================================================]
@@ -110,5 +90,25 @@ end;
 function TStringHelper.LineEx(const number: Integer): string; overload;
 begin
   Result := Self.LineEx(number, [#13#10, #13, #10]);
+end;
+
+{==============================================================================]
+  <LineStr>
+  @action: Returns the textual contents of the specified line from the string,
+           excluding any line break characters.
+  @note:
+    - Line numbering is 1-based.
+    - Internally uses LineRange to determine the line boundaries.
+    - If the requested line does not exist, an empty string is returned.
+    - Line terminators (#10, #13, or #13#10) are not included in the result.
+[==============================================================================}
+function TStringHelper.LineStr(const lineNumber: Integer): string; overload;
+var
+  R: TRange;
+begin
+  R := Self.LineRange(lineNumber);
+  if ((R.start < 1) or (R.stop < R.start)) then
+    Exit('');
+  Result := Copy(Self, R.start, R.Size);
 end;
 {$ENDIF}

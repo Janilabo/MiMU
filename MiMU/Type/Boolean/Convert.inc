@@ -1,13 +1,3 @@
-{$IFDEF HELPERS}
-function ToString: string;
-function Binary: Char;
-function BinaryDigit: Integer;
-function Bit: Integer; inline;
-function Bitify: Integer;
-function ToInteger: Integer;
-function AsInteger: Integer;
-{$ENDIF}
-
 {$IFDEF METHODS}
 function Bitify(const a: Boolean): Integer; overload; inline;
 function Bitify(const a, b: Boolean): Integer; overload;
@@ -15,18 +5,48 @@ function Bitify(const a, b, c: Boolean): Integer; overload;
 function Bitify(const a, b, c, d: Boolean): Integer; overload;
 {$ENDIF}
 
+{$IFDEF HELPERS}
+function AsInteger: Integer;
+function Binary: Char;
+function BinaryDigit: Integer;
+function Bit: Integer; inline;
+function Bitify: Integer;
+function ToInteger: Integer;
+function ToString: string;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <ToString>
-  @action: Returns string of Self.
-  @note: True => 'True', False => 'False'.
-[==============================================================================}
-function TBooleanHelper.ToString: string; 
+function Bitify(const a: Boolean): Integer; overload; inline;
 begin
-  if Self then
-    Result := 'True'
+  if a then
+    Result := 1
   else
-    Result := 'False';
+    Result := 0;
+end;
+
+function Bitify(const a, b: Boolean): Integer; overload;
+begin
+  Result := ((Bitify(a) shl 1) or Bitify(b));
+end;
+
+function Bitify(const a, b, c: Boolean): Integer; overload;
+begin
+  Result := ((Bitify(a) shl 2) or (Bitify(b) shl 1) or Bitify(c));
+end;
+
+function Bitify(const a, b, c, d: Boolean): Integer; overload;
+begin
+  Result := ((Bitify(a) shl 3) or (Bitify(b) shl 2) or (Bitify(c) shl 1) or Bitify(d));
+end;
+
+{==============================================================================]
+  <AsInteger>
+  @action: Returns Self as Integer.
+  @note: False => 0 | True => 1
+[==============================================================================}
+function TBooleanHelper.AsInteger: Integer; 
+begin
+  Result := Integer(Self);
 end;
 
 {==============================================================================]
@@ -83,35 +103,15 @@ begin
 end;
 
 {==============================================================================]
-  <AsInteger>
-  @action: Returns Self as Integer.
-  @note: False => 0 | True => 1
+  <ToString>
+  @action: Returns string of Self.
+  @note: True => 'True', False => 'False'.
 [==============================================================================}
-function TBooleanHelper.AsInteger: Integer; 
+function TBooleanHelper.ToString: string; 
 begin
-  Result := Integer(Self);
-end;
-
-function Bitify(const a: Boolean): Integer; overload; inline;
-begin
-  if a then
-    Result := 1
+  if Self then
+    Result := 'True'
   else
-    Result := 0;
-end;
-
-function Bitify(const a, b: Boolean): Integer; overload;
-begin
-  Result := ((Bitify(a) shl 1) or Bitify(b));
-end;
-
-function Bitify(const a, b, c: Boolean): Integer; overload;
-begin
-  Result := ((Bitify(a) shl 2) or (Bitify(b) shl 1) or Bitify(c));
-end;
-
-function Bitify(const a, b, c, d: Boolean): Integer; overload;
-begin
-  Result := ((Bitify(a) shl 3) or (Bitify(b) shl 2) or (Bitify(c) shl 1) or Bitify(d));
+    Result := 'False';
 end;
 {$ENDIF}

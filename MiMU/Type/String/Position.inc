@@ -1,30 +1,15 @@
 {$IFDEF HELPERS}
-function IsAt(const s: string; const index: Integer = 1): Boolean;
 function At(const s: string; const index: Integer = 1): Boolean; inline;
 function At2(const s: string; const index: Integer = 1): Boolean;
+function AtIndex(const s: string; const index: Integer = 1): Boolean;
 function AtP(const s: string; const index: Integer = 1): Boolean;
 function AtPos(const s: string; const index: Integer = 1): Boolean;
 function AtPosEx(const s: string; const index: Integer = 1): Boolean;
 function AtPosition(const s: string; const index: Integer = 1): Boolean;
-function AtIndex(const s: string; const index: Integer = 1): Boolean;
+function IsAt(const s: string; const index: Integer = 1): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <IsAt>
-  @action: Evaluates whether the substring s matches the characters of the
-           current string beginning at the specified 1-based index by performing
-           a raw memory comparison via CompareMem.
-  @note: Performs no boundary checks on Self or index; the caller must ensure
-         that the referenced range is valid. Provides extremely low overhead
-         and represents the fastest practical implementation when safety is
-         managed externally.
-[==============================================================================}
-function TStringHelper.IsAt(const s: string; const index: Integer = 1): Boolean;
-begin
-  Result := CompareMem((PChar(Self) + (index - 1)), PChar(s), (Length(s) * SizeOf(Char)));
-end;
-
 {==============================================================================]
   <At>
   @action: Checks if string s is at index position in str.
@@ -66,6 +51,29 @@ begin
     Inc(a);
     Inc(b);
   until (l.Decrement = 0);
+  Result := True;
+end;
+
+{==============================================================================]
+  <AtIndex>
+  @action: Determines whether the substring s matches the content of the
+           current string beginning at the specified 1-based index by performing
+           a direct character-by-character comparison.
+  @note: Avoids temporary string allocation and uses an early check on the
+         first character for efficiency. Performs full boundary validation and
+         is suitable for performance-sensitive contexts where readability and
+         safety must both be preserved.
+[==============================================================================}
+function TStringHelper.AtIndex(const s: string; const index: Integer = 1): Boolean;
+var
+  i, l: Integer;
+begin
+  l := Length(s);
+  if ((l = 0) or (index < 1) or (((index + l) - 1) > Length(Self)) or (Self[index] <> s[1])) then
+    Exit(False);
+  for i := 2 to l do
+    if (Self[(index + i) - 1] <> s[i]) then
+      Exit(False);
   Result := True;
 end;
 
@@ -141,25 +149,17 @@ begin
 end;
 
 {==============================================================================]
-  <AtIndex>
-  @action: Determines whether the substring s matches the content of the
+  <IsAt>
+  @action: Evaluates whether the substring s matches the characters of the
            current string beginning at the specified 1-based index by performing
-           a direct character-by-character comparison.
-  @note: Avoids temporary string allocation and uses an early check on the
-         first character for efficiency. Performs full boundary validation and
-         is suitable for performance-sensitive contexts where readability and
-         safety must both be preserved.
+           a raw memory comparison via CompareMem.
+  @note: Performs no boundary checks on Self or index; the caller must ensure
+         that the referenced range is valid. Provides extremely low overhead
+         and represents the fastest practical implementation when safety is
+         managed externally.
 [==============================================================================}
-function TStringHelper.AtIndex(const s: string; const index: Integer = 1): Boolean;
-var
-  i, l: Integer;
+function TStringHelper.IsAt(const s: string; const index: Integer = 1): Boolean;
 begin
-  l := Length(s);
-  if ((l = 0) or (index < 1) or (((index + l) - 1) > Length(Self)) or (Self[index] <> s[1])) then
-    Exit(False);
-  for i := 2 to l do
-    if (Self[(index + i) - 1] <> s[i]) then
-      Exit(False);
-  Result := True;
+  Result := CompareMem((PChar(Self) + (index - 1)), PChar(s), (Length(s) * SizeOf(Char)));
 end;
 {$ENDIF}

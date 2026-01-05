@@ -9,12 +9,12 @@ function Behind(const s: string; const index: Integer = 2147483647): string; ove
 function Behind(const index: Integer; const count: Integer = 2147483647): string; overload;
 function Between(const s1, s2: string; const index: Integer = 1): string;
 function Chunk(const a, b: Integer): string;
-function Slice(const a, b: Integer): string;
 function FromLeft(const count: Integer; const index: Integer = 1): string;
 function FromRight(const count: Integer; const index: Integer = 2147483647): string;
-function Stuff(const s: string; const iFrom, iCount: Integer): string;
 function Get(const index: Integer; const count: Integer): string; inline;
 function Pick(const index: Integer; const count: Integer = 2147483647): string;
+function Slice(const a, b: Integer): string;
+function Stuff(const s: string; const iFrom, iCount: Integer): string;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -194,6 +194,56 @@ begin
 end;
 
 {==============================================================================]
+  <FromLeft>
+  @action: Returns string from left with count of characters.
+  @note: None
+[==============================================================================}
+function TStringHelper.FromLeft(const count: Integer; const index: Integer = 1): string;
+begin
+  Result := Copy(Self, index, count);
+end;
+
+{==============================================================================]
+  <FromRight>
+  @action: Returns string from right with count of characters.
+  @note: None
+[==============================================================================}
+function TStringHelper.FromRight(const count: Integer; const index: Integer = 2147483647): string;
+begin
+  Result := Copy(Self, ((Min(Length(Self), index) - count) + 1), count);
+end;
+
+{==============================================================================]
+  <Get>
+  @action: Fast method for getting substring from string index position by size.
+  @note: UNSAFE! Minimal checks for efficiency.
+[==============================================================================}
+function TStringHelper.Get(const index: Integer; const count: Integer): string; inline;
+var
+  i: Integer;
+begin
+  SetLength(Result, count);
+  for i := 1 to count do
+    Result[i] := Self[(index + i) - 1];
+end;
+
+{==============================================================================]
+  <Pick>
+  @action: Method for getting substring from string index position by count.
+  @note: Contains some failsafes, alternative for String_Get.
+[==============================================================================}
+function TStringHelper.Pick(const index: Integer; const count: Integer = 2147483647): string;
+var
+  s, i, p: Integer;
+begin
+  i := Max(index, 1);
+  s := Min(((Length(Self) - i) + 1), count);
+  SetLength(Result, s);
+  for p := 1 to s do
+    Result[p] := Self[(i + p) - 1];
+end;
+
+{==============================================================================]
   <Slice>
   @action: Returns slice of string with a and b.
   @note: Supports reversed slice, when a is higher than b.
@@ -230,26 +280,6 @@ begin
 end;
 
 {==============================================================================]
-  <FromLeft>
-  @action: Returns string from left with count of characters.
-  @note: None
-[==============================================================================}
-function TStringHelper.FromLeft(const count: Integer; const index: Integer = 1): string;
-begin
-  Result := Copy(Self, index, count);
-end;
-
-{==============================================================================]
-  <FromRight>
-  @action: Returns string from right with count of characters.
-  @note: None
-[==============================================================================}
-function TStringHelper.FromRight(const count: Integer; const index: Integer = 2147483647): string;
-begin
-  Result := Copy(Self, ((Min(Length(Self), index) - count) + 1), count);
-end;
-
-{==============================================================================]
   <Stuff>
   @action: Returns str stuffed with s. Starting from iFrom and ending to iFrom + iCount.
   @note: Places s to iFrom position and replaces iCount amount of next characters in str with s.
@@ -259,35 +289,5 @@ begin
   Result := Copy(Self, 1, Length(Self));
   Delete(Result, iFrom, iCount);
   Insert(s, Result, iFrom);
-end;
-
-{==============================================================================]
-  <Get>
-  @action: Fast method for getting substring from string index position by size.
-  @note: UNSAFE! Minimal checks for efficiency.
-[==============================================================================}
-function TStringHelper.Get(const index: Integer; const count: Integer): string; inline;
-var
-  i: Integer;
-begin
-  SetLength(Result, count);
-  for i := 1 to count do
-    Result[i] := Self[(index + i) - 1];
-end;
-
-{==============================================================================]
-  <Pick>
-  @action: Method for getting substring from string index position by count.
-  @note: Contains some failsafes, alternative for String_Get.
-[==============================================================================}
-function TStringHelper.Pick(const index: Integer; const count: Integer = 2147483647): string;
-var
-  s, i, p: Integer;
-begin
-  i := Max(index, 1);
-  s := Min(((Length(Self) - i) + 1), count);
-  SetLength(Result, s);
-  for p := 1 to s do
-    Result[p] := Self[(i + p) - 1];
 end;
 {$ENDIF}

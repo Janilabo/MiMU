@@ -1,13 +1,13 @@
 {$IFDEF HELPERS}
 function Chop: TCharArray; overload;
 function Chop(const delimiter: Char): TStringArray; overload;
-function Split: TCharArray; overload;
-function Split(const delimiter: Char): TStringArray; overload;
+function Delimited(const d: Char = #32): TStringArray; overload;
 function Explode: TCharArray; overload;
 function Explode(const d: string; const limit: Integer = -1): TStringArray; overload;
 function Explode(const d: TStringArray; const limit: Integer = -1): TStringArray; overload;
+function Split: TCharArray; overload;
+function Split(const delimiter: Char): TStringArray; overload;
 function Tokenized(const d: Char = #32): TStringArray; overload;
-function Delimited(const d: Char = #32): TStringArray; overload;  
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -51,79 +51,6 @@ begin
   l := 0;
   for i := 1 to Length(Self) do
     if (Self[i] = delimiter) then
-    begin
-      Result[l.Increase] := Copy(Self, s, (i - s));
-      s := (i + 1);
-    end;
-  Result[l] := Copy(Self, s, ((Length(Self) - s) + 1));
-end;
-
-{==============================================================================]
-  <Split>
-  @action: Converts the string into an array of characters (TCharArray),
-           where each element of the array is a single character from the string.
-  @note: - The resulting array length is equal to the length of the string.
-         - Characters are placed in the same order as in the original string.
-[==============================================================================}
-function TStringHelper.Split: TCharArray; overload;
-var
-  l: Integer;
-begin
-  l := Length(Self);
-  SetLength(Result, l);
-  while (l.Decrement > -1) do
-    Result[l] := Self[l + 1];
-end;
-
-{==============================================================================]
-  <Split>
-  @action: Splits the string into substrings using the specified delimiter character.
-           Each occurrence of the delimiter separates the string, and the substrings
-           are returned as a TStringArray.
-  @note:   - If the string is empty, returns an empty array.
-           - Consecutive delimiters produce empty strings in the result array.
-           - The delimiter itself is not included in the resulting substrings.
-[==============================================================================}
-function TStringHelper.Split(const delimiter: Char): TStringArray; overload;
-var
-  p, r: Integer;
-  s: string;
-begin
-  if (Length(Self) = 0) then
-    Exit([]);
-  r := 0;
-  s := Copy(Self, 1, Length(Self));
-  p := s.Pos(delimiter);
-  while (p > 0) do
-  begin
-    SetLength(Result, (r + 1));
-    Result[r.Increase] := Copy(s, 1, (p - 1));
-    s := Copy(s, (p + 1), High(Integer));
-    p := s.Pos(delimiter);
-  end;
-  SetLength(Result, (r + 1));
-  Result[r] := s;
-end;
-
-{==============================================================================]
-  <Tokenized>
-  @action: Splits the current string into an array of substrings using the
-           specified delimiter character d. Returns all segments between
-           occurrences of d.
-  @note:   Consecutive delimiters produce empty substrings. The order of
-           elements in the resulting array corresponds to their order in
-           the original string. Preallocates the result array based on the
-           count of delimiter occurrences for efficiency.
-[==============================================================================}
-function TStringHelper.Tokenized(const d: Char = #32): TStringArray; overload;
-var
-  s, i, l: Integer;
-begin
-  SetLength(Result, (Self.Count(d) + 1));
-  s := 1;
-  l := 0;
-  for i := 1 to Length(Self) do
-    if (Self[i] = d) then
     begin
       Result[l.Increase] := Copy(Self, s, (i - s));
       s := (i + 1);
@@ -283,5 +210,78 @@ begin
       Result[0] := Self;
     end;
   end;
+end;
+
+{==============================================================================]
+  <Split>
+  @action: Converts the string into an array of characters (TCharArray),
+           where each element of the array is a single character from the string.
+  @note: - The resulting array length is equal to the length of the string.
+         - Characters are placed in the same order as in the original string.
+[==============================================================================}
+function TStringHelper.Split: TCharArray; overload;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  while (l.Decrement > -1) do
+    Result[l] := Self[l + 1];
+end;
+
+{==============================================================================]
+  <Split>
+  @action: Splits the string into substrings using the specified delimiter character.
+           Each occurrence of the delimiter separates the string, and the substrings
+           are returned as a TStringArray.
+  @note:   - If the string is empty, returns an empty array.
+           - Consecutive delimiters produce empty strings in the result array.
+           - The delimiter itself is not included in the resulting substrings.
+[==============================================================================}
+function TStringHelper.Split(const delimiter: Char): TStringArray; overload;
+var
+  p, r: Integer;
+  s: string;
+begin
+  if (Length(Self) = 0) then
+    Exit([]);
+  r := 0;
+  s := Copy(Self, 1, Length(Self));
+  p := s.Pos(delimiter);
+  while (p > 0) do
+  begin
+    SetLength(Result, (r + 1));
+    Result[r.Increase] := Copy(s, 1, (p - 1));
+    s := Copy(s, (p + 1), High(Integer));
+    p := s.Pos(delimiter);
+  end;
+  SetLength(Result, (r + 1));
+  Result[r] := s;
+end;
+
+{==============================================================================]
+  <Tokenized>
+  @action: Splits the current string into an array of substrings using the
+           specified delimiter character d. Returns all segments between
+           occurrences of d.
+  @note:   Consecutive delimiters produce empty substrings. The order of
+           elements in the resulting array corresponds to their order in
+           the original string. Preallocates the result array based on the
+           count of delimiter occurrences for efficiency.
+[==============================================================================}
+function TStringHelper.Tokenized(const d: Char = #32): TStringArray; overload;
+var
+  s, i, l: Integer;
+begin
+  SetLength(Result, (Self.Count(d) + 1));
+  s := 1;
+  l := 0;
+  for i := 1 to Length(Self) do
+    if (Self[i] = d) then
+    begin
+      Result[l.Increase] := Copy(Self, s, (i - s));
+      s := (i + 1);
+    end;
+  Result[l] := Copy(Self, s, ((Length(Self) - s) + 1));
 end;
 {$ENDIF}

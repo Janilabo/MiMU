@@ -1,11 +1,29 @@
 {$IFDEF HELPERS}
+function DivisibleBy(const value: Integer): Boolean;
 function Divisors: TIntegerArray;
 function Factors: TIntegerArray;
-function DivisibleBy(const value: Integer): Boolean;
 function MultipleOf(const value: Integer): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <DivisibleBy>
+  @action: Returns True if the current integer (`Self`) is evenly divisible by
+           `value`. The function checks whether dividing `Self` by `value`
+           yields an integer with no remainder. Uses an arithmetic identity
+           (`Self = (Self div value) * value`) instead of the modulus operator.
+  @note:
+    - Returns True for `value = 1` or `value = -1` (all integers are divisible
+      by ±1).
+    - Returns False for `value = 0` to avoid division-by-zero.
+    - Works correctly for positive and negative integers.
+    - Uses a remainder-free equality test rather than `mod`.
+[==============================================================================}
+function TIntegerHelper.DivisibleBy(const value: Integer): Boolean;
+begin
+  Result := (((value = 1) or (value = -1)) or ((value <> 0) and ((Self - (Self div value) * value) = 0)));
+end;
+
 {==============================================================================]
   <Divisors>
   @action: Returns an array of all positive divisors of Self, including Self itself.
@@ -61,24 +79,6 @@ begin
   end;
   SetLength(Result, r);
   Result.QuickSort;
-end;
-
-{==============================================================================]
-  <DivisibleBy>
-  @action: Returns True if the current integer (`Self`) is evenly divisible by
-           `value`. The function checks whether dividing `Self` by `value`
-           yields an integer with no remainder. Uses an arithmetic identity
-           (`Self = (Self div value) * value`) instead of the modulus operator.
-  @note:
-    - Returns True for `value = 1` or `value = -1` (all integers are divisible
-      by ±1).
-    - Returns False for `value = 0` to avoid division-by-zero.
-    - Works correctly for positive and negative integers.
-    - Uses a remainder-free equality test rather than `mod`.
-[==============================================================================}
-function TIntegerHelper.DivisibleBy(const value: Integer): Boolean;
-begin
-  Result := (((value = 1) or (value = -1)) or ((value <> 0) and ((Self - (Self div value) * value) = 0)));
 end;
 
 {==============================================================================]

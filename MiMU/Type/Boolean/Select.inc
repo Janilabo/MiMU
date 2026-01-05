@@ -1,13 +1,4 @@
 {$IFDEF HELPERS}
-function Select(const bTrue, bFalse: Integer): Integer; overload;
-function Select(const bTrue, bFalse: Int64): Int64; overload;
-function Select(const bTrue, bFalse: Double): Double; overload;
-function Select(const bTrue, bFalse: string): string; overload;
-function Select(const bTrue, bFalse: Char): Char; overload;
-function Select(const bTrue, bFalse: Boolean): Boolean; overload;
-function Select(const bTrue, bFalse: TPoint): TPoint; overload;
-function Select(const bTrue, bFalse: TBox): TBox; overload;
-function Select(const bTrue, bFalse: TRange): TRange; overload;
 function Evaluate(const bTrue, bFalse: Integer): Integer; overload;
 function Evaluate(const bTrue, bFalse: Int64): Int64; overload;
 function Evaluate(const bTrue, bFalse: Double): Double; overload;
@@ -17,31 +8,18 @@ function Evaluate(const bTrue, bFalse: Boolean): Boolean; overload;
 function Evaluate(const bTrue, bFalse: TPoint): TPoint; overload;
 function Evaluate(const bTrue, bFalse: TBox): TBox; overload;
 function Evaluate(const bTrue, bFalse: TRange): TRange; overload;
+function Select(const bTrue, bFalse: Integer): Integer; overload;
+function Select(const bTrue, bFalse: Int64): Int64; overload;
+function Select(const bTrue, bFalse: Double): Double; overload;
+function Select(const bTrue, bFalse: string): string; overload;
+function Select(const bTrue, bFalse: Char): Char; overload;
+function Select(const bTrue, bFalse: Boolean): Boolean; overload;
+function Select(const bTrue, bFalse: TPoint): TPoint; overload;
+function Select(const bTrue, bFalse: TBox): TBox; overload;
+function Select(const bTrue, bFalse: TRange): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Select>
-  @action: If (Self = True) then Result := bTrue else Result := bFalse; 
-  @note: Returns T or F based on the Self-condition.
-[==============================================================================}
-
-function TBooleanHelper.Select(const bTrue, bFalse: Integer): Integer; overload; {$I Skeletons/Select.inc}
-function TBooleanHelper.Select(const bTrue, bFalse: Int64): Int64; overload; {$I Skeletons/Select.inc}
-function TBooleanHelper.Select(const bTrue, bFalse: Double): Double; overload; {$I Skeletons/Select.inc}
-function TBooleanHelper.Select(const bTrue, bFalse: string): string; overload; {$I Skeletons/Select.inc}
-function TBooleanHelper.Select(const bTrue, bFalse: Char): Char; overload; {$I Skeletons/Select.inc}
-function TBooleanHelper.Select(const bTrue, bFalse: Boolean): Boolean; overload; {$I Skeletons/Select.inc}
-function TBooleanHelper.Select(const bTrue, bFalse: TPoint): TPoint; overload; {$I Skeletons/Select.inc}
-function TBooleanHelper.Select(const bTrue, bFalse: TBox): TBox; overload; {$I Skeletons/Select.inc}
-function TBooleanHelper.Select(const bTrue, bFalse: TRange): TRange; overload;
-begin
-  if Self then
-    Result := bTrue
-  else
-    Result := bFalse;
-end;
-
 {==============================================================================]
   <Evaluate>
   @action: If (Self = True) then Result := bTrue else Result := bFalse;
@@ -62,5 +40,27 @@ begin
     True: Result := bTrue;
     False: Result := bFalse;
   end;
+end;
+
+{==============================================================================]
+  <Select>
+  @action: If (Self = True) then Result := bTrue else Result := bFalse; 
+  @note: Returns T or F based on the Self-condition.
+[==============================================================================}
+
+function TBooleanHelper.Select(const bTrue, bFalse: Integer): Integer; overload; {$I Skeletons/Select.inc}
+function TBooleanHelper.Select(const bTrue, bFalse: Int64): Int64; overload; {$I Skeletons/Select.inc}
+function TBooleanHelper.Select(const bTrue, bFalse: Double): Double; overload; {$I Skeletons/Select.inc}
+function TBooleanHelper.Select(const bTrue, bFalse: string): string; overload; {$I Skeletons/Select.inc}
+function TBooleanHelper.Select(const bTrue, bFalse: Char): Char; overload; {$I Skeletons/Select.inc}
+function TBooleanHelper.Select(const bTrue, bFalse: Boolean): Boolean; overload; {$I Skeletons/Select.inc}
+function TBooleanHelper.Select(const bTrue, bFalse: TPoint): TPoint; overload; {$I Skeletons/Select.inc}
+function TBooleanHelper.Select(const bTrue, bFalse: TBox): TBox; overload; {$I Skeletons/Select.inc}
+function TBooleanHelper.Select(const bTrue, bFalse: TRange): TRange; overload;
+begin
+  if Self then
+    Result := bTrue
+  else
+    Result := bFalse;
 end;
 {$ENDIF}

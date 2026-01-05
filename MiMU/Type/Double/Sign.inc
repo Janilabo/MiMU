@@ -1,24 +1,13 @@
 {$IFDEF HELPERS}
-function NegA: Double; inline;
 function Neg: Double; inline;
 function Negative: Boolean; inline;
-function Positive: Boolean; inline;
+function NegA: Double; inline;
 function Neutral: Boolean; inline;
 function Opposite: Double; inline;
+function Positive: Boolean; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <NegA>
-  @action: Returns the negative number of x. 
-           -9999 to -9999 OR 9999 to -9999 (+/- => -)
-  @note: None
-[==============================================================================}
-function TDoubleHelper.NegA: Double; inline;
-begin
-  Result := (Abs(Self) * -1);
-end;
-
 {==============================================================================]
   <Neg>
   @action: Returns the negative number of i. 
@@ -44,13 +33,14 @@ begin
 end;
 
 {==============================================================================]
-  <Positive>
-  @action: Returns True if Double value x is higher than 0 (positive), otherwise False. 
-  @note: 0 is not negative or positive!
+  <NegA>
+  @action: Returns the negative number of x. 
+           -9999 to -9999 OR 9999 to -9999 (+/- => -)
+  @note: None
 [==============================================================================}
-function TDoubleHelper.Positive: Boolean; inline;
+function TDoubleHelper.NegA: Double; inline;
 begin
-  Result := (Self > 0);
+  Result := (Abs(Self) * -1);
 end;
 
 {==============================================================================]
@@ -72,5 +62,15 @@ end;
 function TDoubleHelper.Opposite: Double; inline;
 begin
   Result := (Self * -1);
+end;
+
+{==============================================================================]
+  <Positive>
+  @action: Returns True if Double value x is higher than 0 (positive), otherwise False. 
+  @note: 0 is not negative or positive!
+[==============================================================================}
+function TDoubleHelper.Positive: Boolean; inline;
+begin
+  Result := (Self > 0);
 end;
 {$ENDIF}

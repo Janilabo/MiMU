@@ -1,10 +1,10 @@
 {$IFDEF HELPERS}
 function Compare(const target: Int64): Integer; inline;
+function Over(const target: Int64): Boolean; inline;
+function Oversize(const limit: Int64): Boolean; inline;
 function Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; 
 function Sign(const target: Int64 = 0): Integer; inline;
-function Over(const target: Int64): Boolean; inline;
 function Under(const target: Int64): Boolean; inline;
-function Oversize(const limit: Int64): Boolean; inline;
 function Undersize(const limit: Int64): Boolean; inline;
 {$ENDIF}
 
@@ -23,6 +23,26 @@ begin
     Result := 1
   else
     Result := -1;
+end;
+
+{==============================================================================]
+  <Over>
+  @action: Returns true if x is higher than target.
+  @note: None
+[==============================================================================}
+function TInt64Helper.Over(const target: Int64): Boolean; inline;
+begin
+  Result := not (target <= Self);
+end;
+
+{==============================================================================]
+  <Oversize>
+  @action: Returns true if x is higher than limit.
+  @note: None
+[==============================================================================}
+function TInt64Helper.Oversize(const limit: Int64): Boolean; inline;
+begin
+  Result := (Self > limit);
 end;
 
 {==============================================================================]
@@ -54,26 +74,6 @@ begin
     Result := 1
   else
     Result := -1;
-end;
-
-{==============================================================================]
-  <Over>
-  @action: Returns true if x is higher than target.
-  @note: None
-[==============================================================================}
-function TInt64Helper.Over(const target: Int64): Boolean; inline;
-begin
-  Result := not (target <= Self);
-end;
-
-{==============================================================================]
-  <Oversize>
-  @action: Returns true if x is higher than limit.
-  @note: None
-[==============================================================================}
-function TInt64Helper.Oversize(const limit: Int64): Boolean; inline;
-begin
-  Result := (Self > limit);
 end;
 
 {==============================================================================]

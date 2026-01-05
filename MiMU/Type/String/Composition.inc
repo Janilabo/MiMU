@@ -1,20 +1,84 @@
 {$IFDEF HELPERS}
+function BuiltWith(const blocks: TCharArray): Boolean;
+function BuiltWithout(const forbidden: TCharArray): Boolean;
+function Consists(const allowed: TCharArray): Boolean;
 function Contains(const s: string; const index: Integer = 1): Boolean;
 function ContainsAtLeast(const item: string; const limit: Integer): Boolean; overload;
 function ContainsAtMost(const item: string; const limit: Integer): Boolean; overload;
 function ContainsBetween(const item: string; const limit: TRange): Boolean; overload;
+function EndsWith(const s: string): Boolean;
+function FreeOf(const forbidden: TCharArray): Boolean;
 function Includes(const s: string; const index: Integer = 2147483647): Boolean;
 function MadeOf(const allowed: TCharArray): Boolean;
-function FreeOf(const forbidden: TCharArray): Boolean;
-function BuiltWithout(const forbidden: TCharArray): Boolean;
-function Consists(const allowed: TCharArray): Boolean;
 function Pure(const allowed: TCharArray): Boolean;
-function BuiltWith(const blocks: TCharArray): Boolean;
 function StartsWith(const s: string): Boolean;
-function EndsWith(const s: string): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BuiltWith>
+  @action: Returns true is string is built with blocks.
+  @note: This function requires blocks array to be unique (no duplicates allowed for it).
+[==============================================================================}
+function TStringHelper.BuiltWith(const blocks: TCharArray): Boolean;
+var
+  i, p: Integer;
+  u: TBooleanArray;
+begin
+  if (Self.Empty or blocks.Empty) then
+    Exit(False);
+  SetLength(u, Length(blocks));
+  for i := 1 to Length(Self) do
+  begin
+    p := blocks.Pos(Self[i]);
+    if (p = -1) then
+      Exit(False);
+    u[p] := True;
+  end;
+  for i := 0 to High(blocks) do
+    if not u[i] then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <BuiltWithout> 
+  @action: Checks if array arr does not have any forbidden items.
+  @note: None.
+[==============================================================================}
+function TStringHelper.BuiltWithout(const forbidden: TCharArray): Boolean;
+var
+  i, j: Integer;
+begin
+  if forbidden.Exists then
+  for i := 1 to Length(Self) do
+    for j := 0 to High(forbidden) do
+      if (Self[i] = forbidden[j]) then
+        Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Consists>
+  @action: Returns true if str is made with only allowed characters.
+  @note: None.
+[==============================================================================}
+function TStringHelper.Consists(const allowed: TCharArray): Boolean;
+var
+  i: Integer;
+  m: TBooleanArray;
+begin
+  if (allowed.Empty or Self.Empty) then
+    Exit(False);
+  m.Create(256, False);
+  for i := 0 to High(allowed) do
+    m[Ord(allowed[i])] := True;
+  for i := 1 to Length(Self) do
+    if not m[Ord(Self[i])] then
+      Exit(False);
+  Result := True;
+end; 
+
 {==============================================================================]
   <Contains>
   @action: Returns true if s can be found in str.
@@ -140,16 +204,6 @@ begin
 end;
 
 {==============================================================================]
-  <StartsWith>
-  @action: Returns True if str starts with s.
-  @note: None
-[==============================================================================}
-function TStringHelper.StartsWith(const s: string): Boolean;
-begin
-  Result := ((s <> '') and (Length(Self) >= Length(s)) and Self.At(s));
-end;
-
-{==============================================================================]
   <EndsWith>
   @action: Returns True if str ends with s.
   @note: None
@@ -161,6 +215,22 @@ begin
   l := Length(s);
   t := Length(Self);
   Result := ((l > 0) and (t >= l) and Self.At(s, ((t - l) + 1)));
+end;
+
+{==============================================================================]
+  <FreeOf>
+  @action: Returns true if str is built without forbidden characters.
+  @note: None.
+[==============================================================================}
+function TStringHelper.FreeOf(const forbidden: TCharArray): Boolean;
+var
+  i: Integer;
+begin
+  if forbidden.Exists then
+  for i := Length(Self) downto 1 do
+    if forbidden.Contains(Self[i]) then
+      Exit(False);
+  Result := Self.Exists;
 end;
 
 {==============================================================================]
@@ -197,60 +267,6 @@ begin
 end;
 
 {==============================================================================]
-  <FreeOf>
-  @action: Returns true if str is built without forbidden characters.
-  @note: None.
-[==============================================================================}
-function TStringHelper.FreeOf(const forbidden: TCharArray): Boolean;
-var
-  i: Integer;
-begin
-  if forbidden.Exists then
-  for i := Length(Self) downto 1 do
-    if forbidden.Contains(Self[i]) then
-      Exit(False);
-  Result := Self.Exists;
-end;
-
-{==============================================================================]
-  <BuiltWithout> 
-  @action: Checks if array arr does not have any forbidden items.
-  @note: None.
-[==============================================================================}
-function TStringHelper.BuiltWithout(const forbidden: TCharArray): Boolean;
-var
-  i, j: Integer;
-begin
-  if forbidden.Exists then
-  for i := 1 to Length(Self) do
-    for j := 0 to High(forbidden) do
-      if (Self[i] = forbidden[j]) then
-        Exit(False);
-  Result := True;
-end;
-
-{==============================================================================]
-  <Consists>
-  @action: Returns true if str is made with only allowed characters.
-  @note: None.
-[==============================================================================}
-function TStringHelper.Consists(const allowed: TCharArray): Boolean;
-var
-  i: Integer;
-  m: TBooleanArray;
-begin
-  if (allowed.Empty or Self.Empty) then
-    Exit(False);
-  m.Create(256, False);
-  for i := 0 to High(allowed) do
-    m[Ord(allowed[i])] := True;
-  for i := 1 to Length(Self) do
-    if not m[Ord(Self[i])] then
-      Exit(False);
-  Result := True;
-end; 
-
-{==============================================================================]
   <Pure>
   @action: Returns true if str is made with only allowed characters.
   @note: None.
@@ -261,28 +277,12 @@ begin
 end;
 
 {==============================================================================]
-  <BuiltWith>
-  @action: Returns true is string is built with blocks.
-  @note: This function requires blocks array to be unique (no duplicates allowed for it).
+  <StartsWith>
+  @action: Returns True if str starts with s.
+  @note: None
 [==============================================================================}
-function TStringHelper.BuiltWith(const blocks: TCharArray): Boolean;
-var
-  i, p: Integer;
-  u: TBooleanArray;
+function TStringHelper.StartsWith(const s: string): Boolean;
 begin
-  if (Self.Empty or blocks.Empty) then
-    Exit(False);
-  SetLength(u, Length(blocks));
-  for i := 1 to Length(Self) do
-  begin
-    p := blocks.Pos(Self[i]);
-    if (p = -1) then
-      Exit(False);
-    u[p] := True;
-  end;
-  for i := 0 to High(blocks) do
-    if not u[i] then
-      Exit(False);
-  Result := True;
+  Result := ((s <> '') and (Length(Self) >= Length(s)) and Self.At(s));
 end;
 {$ENDIF}

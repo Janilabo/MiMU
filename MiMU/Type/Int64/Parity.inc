@@ -1,20 +1,10 @@
 {$IFDEF HELPERS}
-function Parity: Byte; inline;
 function Even: Boolean; inline;
 function Odd: Boolean; inline;
+function Parity: Byte; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Parity>
-  @action: Returns the Int64 Parity Bit as Byte.
-  @note: 0 = even, 1 = odd.
-[==============================================================================}
-function TInt64Helper.Parity: Byte; inline;
-begin
-  Result := (Self mod 2);
-end;
-
 {==============================================================================]
   <Even>
   @action: Returns true if Int64 value x is an even number.
@@ -33,5 +23,15 @@ end;
 function TInt64Helper.Odd: Boolean; inline;
 begin
   Result := ((Self mod 2) <> 0);
+end;
+
+{==============================================================================]
+  <Parity>
+  @action: Returns the Int64 Parity Bit as Byte.
+  @note: 0 = even, 1 = odd.
+[==============================================================================}
+function TInt64Helper.Parity: Byte; inline;
+begin
+  Result := (Self mod 2);
 end;
 {$ENDIF}

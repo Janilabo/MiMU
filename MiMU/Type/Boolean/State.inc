@@ -1,24 +1,13 @@
 {$IFDEF HELPERS}
-function Enable: Boolean;
 function Disable: Boolean;
+function Enable: Boolean;
 function SetFalse: Integer;
 function SetTrue: Integer;
-function SwitchOn(const state: Boolean): Boolean;
 function SwitchOff(const state: Boolean): Boolean;
+function SwitchOn(const state: Boolean): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Enable>
-  @action: Sets Self to True (enabled).
-  @note: Returns True if Self was previously False.
-[==============================================================================}
-function TBooleanHelper.Enable: Boolean; 
-begin
-  Result := (Self <> True);
-  Self := True;
-end;
-
 {==============================================================================]
   <Disable>
   @action: Sets Self to False (disabled).
@@ -28,6 +17,17 @@ function TBooleanHelper.Disable: Boolean;
 begin
   Result := (Self = True);
   Self := False;
+end;
+
+{==============================================================================]
+  <Enable>
+  @action: Sets Self to True (enabled).
+  @note: Returns True if Self was previously False.
+[==============================================================================}
+function TBooleanHelper.Enable: Boolean; 
+begin
+  Result := (Self <> True);
+  Self := True;
 end;
 
 {==============================================================================]
@@ -53,18 +53,6 @@ begin
 end;
 
 {==============================================================================]
-  <SwitchOn>
-  @action: Sets Self to the given state if different.
-  @note: Returns True if Self was changed.
-[==============================================================================}
-function TBooleanHelper.SwitchOn(const state: Boolean): Boolean; 
-begin
-  Result := (Self <> state);
-  if Result then
-    Self := state;
-end;
-
-{==============================================================================]
   <SwitchOff>
   @action: Inverts Self only if it equals the given state.
   @note: Returns True if Self was changed.
@@ -74,5 +62,17 @@ begin
   Result := (Self = state);
   if Result then
     Self := not state;
+end;
+
+{==============================================================================]
+  <SwitchOn>
+  @action: Sets Self to the given state if different.
+  @note: Returns True if Self was changed.
+[==============================================================================}
+function TBooleanHelper.SwitchOn(const state: Boolean): Boolean; 
+begin
+  Result := (Self <> state);
+  if Result then
+    Self := state;
 end;
 {$ENDIF}

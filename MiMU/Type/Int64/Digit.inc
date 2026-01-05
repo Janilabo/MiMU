@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
-function DigitCount: Integer; 
-function Digitz: TIntegerArray; 
+function DigitCount: Integer;
 function Digits: TIntegerArray;
+function Digitz: TIntegerArray; 
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -22,6 +22,25 @@ begin
     n := (a mod m);
     m := (m * 10);
   until ((Result.Increment = 19) or (n = a));
+end;
+
+{==============================================================================]
+  <Digits>
+  @action: Converts Int64 value (x) to digits of it.
+           Example: 1234 => 1,2,3,4, -999 => 9,9,9
+  @note: If x is negative value, the negative sign is ignored.
+         Works with -9223372036854775808 - 9223372036854775807! 
+[==============================================================================}
+function TInt64Helper.Digits: TIntegerArray;
+var
+  s: string;
+  l, i: Integer;
+begin
+  s := IntToStr(Abs(Self));
+  l := Length(s);
+  SetLength(Result, l);
+  for i := 0 to (l - 1) do
+    Result[i] := StrToInt(s[i + 1]);
 end;
 
 {==============================================================================]
@@ -48,24 +67,5 @@ begin
   SetLength(Result, r);
   for i := 0 to ((r div 2) - 1) do
     Swap(Result[i], Result[(r - i) - 1]);
-end; 
-
-{==============================================================================]
-  <Digits>
-  @action: Converts Int64 value (x) to digits of it.
-           Example: 1234 => 1,2,3,4, -999 => 9,9,9
-  @note: If x is negative value, the negative sign is ignored.
-         Works with -9223372036854775808 - 9223372036854775807! 
-[==============================================================================}
-function TInt64Helper.Digits: TIntegerArray;
-var
-  s: string;
-  l, i: Integer;
-begin
-  s := IntToStr(Abs(Self));
-  l := Length(s);
-  SetLength(Result, l);
-  for i := 0 to (l - 1) do
-    Result[i] := StrToInt(s[i + 1]);
 end;
 {$ENDIF}

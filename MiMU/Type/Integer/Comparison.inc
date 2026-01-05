@@ -1,16 +1,16 @@
 {$IFDEF HELPERS}
+function Ascending(const target: Integer): Boolean; inline;
 function Cmpr(const target: Integer): Integer;
 function Compare(const target: Integer): Integer; inline;
 function Compared(const target: Integer; const oAscending: Boolean = True): Integer;
-function CompareWith(const target: Integer; const oAscending: Boolean = True): Integer;
 function CompareTo(const target: Integer; const oAscending: Boolean = True): Integer;
-function Precede(const target: Integer; const aAscending: Boolean): Boolean; overload;
-function Ascending(const target: Integer): Boolean; inline;
+function CompareWith(const target: Integer; const oAscending: Boolean = True): Integer;
 function Descending(const target: Integer): Boolean; inline;
-function Sign(const target: Integer = 0): Integer; inline;
 function Over(const target: Integer): Boolean; inline;
-function Under(const target: Integer): Boolean; inline;
 function Oversize(const limit: Integer): Boolean; inline;
+function Precede(const target: Integer; const aAscending: Boolean): Boolean; overload;
+function Sign(const target: Integer = 0): Integer; inline;
+function Under(const target: Integer): Boolean; inline;
 function Undersize(const limit: Integer): Boolean; inline;
 {$ENDIF}
 
@@ -19,6 +19,18 @@ function Comparison(const A, B: Integer): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Ascending>
+  @action  Returns True if the helper’s value is less than or equal to         
+           the given target value. Useful as a comparison predicate when        
+           sorting or merging arrays in ascending order.
+  @note: This method does not modify either value; it simply performs a <= comparison.
+[==============================================================================}
+function TIntegerHelper.Ascending(const target: Integer): Boolean; inline;
+begin
+  Result := (Self <= target);
+end;
+
 {==============================================================================]
   <Cmpr>
   @action: Compares x with target target.
@@ -60,22 +72,6 @@ begin
 end;
 
 {==============================================================================]
-  <CompareWith>
-  @action: Compares x with target value.
-           Results: 0=EQUAL
-  @note: Supports ascending/descending
-[==============================================================================}
-function TIntegerHelper.CompareWith(const target: Integer; const oAscending: Boolean = True): Integer;
-begin
-  if (Self = target) then
-    Exit(0);
-  if oAscending then
-    Result := IfThen((Self > target), 1, -1)
-  else
-    Result := IfThen((target > Self), 1, -1);
-end;
-
-{==============================================================================]
   <CompareTo>
   @action: Compares x with target value.
            Results: 0=EQUAL
@@ -92,25 +88,19 @@ begin
 end;
 
 {==============================================================================]
-  <Precede>
-  @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
-  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
+  <CompareWith>
+  @action: Compares x with target value.
+           Results: 0=EQUAL
+  @note: Supports ascending/descending
 [==============================================================================}
-function TIntegerHelper.Precede(const target: Integer; const aAscending: Boolean): Boolean; overload;
+function TIntegerHelper.CompareWith(const target: Integer; const oAscending: Boolean = True): Integer;
 begin
-  Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));
-end;
-
-{==============================================================================]
-  <Ascending>
-  @action  Returns True if the helper’s value is less than or equal to         
-           the given target value. Useful as a comparison predicate when        
-           sorting or merging arrays in ascending order.
-  @note: This method does not modify either value; it simply performs a <= comparison.
-[==============================================================================}
-function TIntegerHelper.Ascending(const target: Integer): Boolean; inline;
-begin
-  Result := (Self <= target);
+  if (Self = target) then
+    Exit(0);
+  if oAscending then
+    Result := IfThen((Self > target), 1, -1)
+  else
+    Result := IfThen((target > Self), 1, -1);
 end;
 
 {==============================================================================]
@@ -123,6 +113,36 @@ end;
 function TIntegerHelper.Descending(const target: Integer): Boolean; inline;
 begin
   Result := (Self >= target);
+end;
+
+{==============================================================================]
+  <Over>
+  @action: Returns true if x is higher than target.
+  @note: None
+[==============================================================================}
+function TIntegerHelper.Over(const target: Integer): Boolean; inline;
+begin
+  Result := not (target <= Self);
+end;
+
+{==============================================================================]
+  <Oversize>
+  @action: Returns true if x is higher than limit.
+  @note: None
+[==============================================================================}
+function TIntegerHelper.Oversize(const limit: Integer): Boolean; inline;
+begin
+  Result := (Self > limit);
+end;
+
+{==============================================================================]
+  <Precede>
+  @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
+  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
+[==============================================================================}
+function TIntegerHelper.Precede(const target: Integer; const aAscending: Boolean): Boolean; overload;
+begin
+  Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));
 end;
 
 {==============================================================================]
@@ -144,26 +164,6 @@ begin
     Result := 1
   else
     Result := -1;
-end;
-
-{==============================================================================]
-  <Over>
-  @action: Returns true if x is higher than target.
-  @note: None
-[==============================================================================}
-function TIntegerHelper.Over(const target: Integer): Boolean; inline;
-begin
-  Result := not (target <= Self);
-end;
-
-{==============================================================================]
-  <Oversize>
-  @action: Returns true if x is higher than limit.
-  @note: None
-[==============================================================================}
-function TIntegerHelper.Oversize(const limit: Integer): Boolean; inline;
-begin
-  Result := (Self > limit);
 end;
 
 {==============================================================================]
