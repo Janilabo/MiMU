@@ -15,7 +15,18 @@ function BinaryFilter(const values: TIntegerArray; const aAscending: Boolean = T
          the value of aAscending. If the value does not occur in the array,
          an empty array is returned.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryValues(const value: Integer; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryValues1}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryValues1}
+function TIntegerArrayHelper.BinaryValues(const value: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
+var
+  i: Integer;
+  r: TRange;
+begin
+  r := Self.BinaryRange(value, aAscending);
+  if r.Employs(-1) then
+    Exit([]);
+  SetLength(Result, r.Size);
+  for i := 0 to High(Result) do
+    Result[i] := Self[r.start + i];
+end;
 
 {==============================================================================]
   <BinaryValues>
@@ -27,7 +38,25 @@ function TIntegerArrayHelper.BinaryValues(const value: Integer; const aAscending
          and descending input returns results in descending order. If no
          items fall within the specified range, an empty array is returned.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload; {$DEFINE Skeleton_BinaryValues2}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryValues2}
+function TIntegerArrayHelper.BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
+var
+  h, i: Integer;
+  r: TRange;
+begin
+  r := Self.BinaryRange(values, aAscending);
+  if r.Employs(-1) then
+    Exit([]);
+  SetLength(Result, r.Size);
+  h := High(Result);
+  case values.Ascending of
+    True:
+    for i := 0 to h do
+      Result[i] := Self[r.start + i];
+    False:
+    for i := h downto 0 do
+      Result[h - i] := Self[r.start + i];
+  end;
+end;
 
 {==============================================================================]
   <BinaryExtract>

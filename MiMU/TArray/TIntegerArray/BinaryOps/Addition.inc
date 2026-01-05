@@ -11,14 +11,55 @@ function BinaryInsert(const x: Integer; const aAscending: Boolean = True): Integ
   @action: Binary Append method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the index x was added to.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryAppend}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryAppend}
+function TIntegerArrayHelper.BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer;
+var
+  m, i, o: Integer;
+  r: TRange;
+begin
+  o := aAscending.Select(1, -1);
+  r.Create(0, High(Self));
+  while r.Ascending do
+  begin
+    m := r.Pivot;
+    if ((o * Self[m]) < (o * x)) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  Result := r.start;
+  SetLength(Self, (Self.Size + 1));
+  for i := High(Self) downto (Result + 1) do
+    Self[i] := Self[i - 1];
+  Self[Result] := x;
+end;
 
 {==============================================================================]
   <BinaryAdd>
   @action: Binary Add method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the arr with x.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryAdd(const x: Integer; const aAscending: Boolean = True): TIntegerArray; {$DEFINE Skeleton_BinaryAdd}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryAdd}
+function TIntegerArrayHelper.BinaryAdd(const x: Integer; const aAscending: Boolean = True): TIntegerArray;
+var
+  m, i, o: Integer;
+  r: TRange;
+begin
+  o := aAscending.Select(1, -1);
+  r.Create(0, High(Self));
+  while r.Ascending do
+  begin
+    m := r.Pivot;
+    if ((o * Self[m]) < (o * x)) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  SetLength(Result, (Self.Size + 1));
+  for i := 0 to (r.start - 1) do
+    Result[i] := Self[i];
+  Result[r.start] := x;
+  for i := r.start to High(Self) do
+    Result[i + 1] := Self[i];
+end;
 
 {==============================================================================]
   <BinaryGrow>
@@ -26,12 +67,59 @@ function TIntegerArrayHelper.BinaryAdd(const x: Integer; const aAscending: Boole
            Works with ascending or descending order based on aAscending.
   @note: Returns True if the value was inserted, False if it already exists.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean; {$DEFINE Skeleton_BinaryGrow}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryGrow}
+function TIntegerArrayHelper.BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean;
+var
+  m, i, o: Integer;
+  r: TRange;
+begin
+  r.Create(0, High(Self));
+  o := aAscending.Select(1, -1);
+  while r.Ascending do
+  begin
+    m := r.Pivot;
+    if ((o * Self[m]) < (o * x)) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  Result := ((Self.Size = r.start) or (Self[r.start] <> x));
+  if not Result then
+    Exit;
+  SetLength(Self, (Self.Size + 1));
+  for i := High(Self) downto (r.start + 1) do
+    Self[i] := Self[i - 1];
+  Self[r.start] := x;
+end;
 
 {==============================================================================]
   <BinaryInsert>
   @action: Insert an integer into a sorted array using binary search, preserving order.
   @note: Returns the index where the element was inserted. Supports ascending or descending order.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryInsert(const x: Integer; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryInsert}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryInsert}
+function TIntegerArrayHelper.BinaryInsert(const x: Integer; const aAscending: Boolean = True): Integer; overload;
+var
+  m, i: Integer;
+  r: TRange;
+begin
+  Result := Self.Size;
+  SetLength(Self, (Result + 1));
+  if (Result > 0) then
+  begin
+    r.Create(0, (Result - 1));
+    while (r.start <= r.stop) do
+    begin
+      m := r.Pivot;
+      if ((aAscending and (Self[m] >= x)) or ((not aAscending) and (Self[m] <= x))) then
+      begin
+        Result := m;
+        r.stop := (m - 1);
+      end else
+        r.start := (m + 1);
+    end;
+    for i := High(Self) downto (Result + 1) do
+      Self[i] := Self[i - 1];
+    Self[Result] := x;
+  end else
+    Self[0] := x;
+end;
 {$ENDIF}

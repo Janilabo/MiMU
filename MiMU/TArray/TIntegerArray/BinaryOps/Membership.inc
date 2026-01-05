@@ -24,9 +24,29 @@ function BinaryOverlaps(const x: TRange; const oAscending: Boolean = True): Bool
   @action: Binary Contains function for TIntegerArrays.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TIntegerArrayHelper.BinaryContains(const x: Integer; const aAscending: Boolean = True): Boolean; {$DEFINE Skeleton_BinaryContains}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryContains}
+function TIntegerArrayHelper.BinaryContains(const x: Integer; const aAscending: Boolean = True): Boolean;
+begin
+  Result := (Self.BinarySearch(x, aAscending) > -1);
+end;
 
-function TIntegerArrayHelper.BinaryExists(const value: Integer; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryExists}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryExists}
+function TIntegerArrayHelper.BinaryExists(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
+  function BS(const L, R: Integer): Boolean;
+  var
+    M: Integer;
+  begin
+    if (L > R) then
+      Exit(False);
+    M := (L + ((R - L) div 2));
+    if (Self[M] = value) then
+      Exit(True);
+    if ((oAscending and (value < Self[M])) or ((not oAscending) and (value > Self[M]))) then
+      Result := BS(L, (M - 1))
+    else
+      Result := BS((M + 1), R);
+  end;
+begin
+  Result := BS(0, High(Self));
+end;
 
 {==============================================================================]
   <BinaryFit>
@@ -41,7 +61,13 @@ function TIntegerArrayHelper.BinaryExists(const value: Integer; const oAscending
          oAscending = False, the comparison logic is inverted to support
          descending-sorted arrays.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryFit(const value: Integer; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryFit}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryFit}
+function TIntegerArrayHelper.BinaryFit(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if oAscending then
+    Result := ((not Self.Empty) and (value >= Self[0]) and (value <= Self[High(Self)]))
+  else
+    Result := ((not Self.Empty) and (value <= Self[0]) and (value >= Self[High(Self)]));
+end;
 
 {==============================================================================]
   <BinaryUnfit>
@@ -55,7 +81,13 @@ function TIntegerArrayHelper.BinaryFit(const value: Integer; const oAscending: B
          boundary comparisons are reversed to support descending-sorted
          arrays.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryUnfit(const value: Integer; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryUnfit}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryUnfit}
+function TIntegerArrayHelper.BinaryUnfit(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if oAscending then
+    Result := (Self.Empty or (value < Self[0]) or (value > Self[High(Self)]))
+  else
+    Result := (Self.Empty or (value > Self[0]) or (value < Self[High(Self)]));
+end;
 
 {==============================================================================]
   <BinaryIncludes>
@@ -67,7 +99,10 @@ function TIntegerArrayHelper.BinaryUnfit(const value: Integer; const oAscending:
          lies within the array’s sorted bounds, and the binary search locates
          the element.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryIncludes(const value: Integer; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryIncludes}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryIncludes}
+function TIntegerArrayHelper.BinaryIncludes(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := (Self.BinaryFit(value, oAscending) and (Self.BinaryPos(value, oAscending) > -1));
+end;
 
 {==============================================================================]
   <BinaryExcludes>
@@ -78,7 +113,10 @@ function TIntegerArrayHelper.BinaryIncludes(const value: Integer; const oAscendi
          True if the array is empty, if the value lies outside the array’s
          sorted bounds, or if the binary search fails to locate the value.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryExcludes(const value: Integer; const oAscending: Boolean = True): Boolean; overload; {$DEFINE Skeleton_BinaryExcludes}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryExcludes}
+function TIntegerArrayHelper.BinaryExcludes(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := (Self.BinaryUnfit(value, oAscending) or (Self.BinaryPos(value, oAscending) = -1));
+end;
 
 {==============================================================================]
   <BinaryExistent>

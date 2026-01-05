@@ -22,35 +22,104 @@ function BinarySinglified(const item: Double; const aAscending: Boolean = True):
   @action: Binary Search-based Prune method.
   @note: None.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryPrune(const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryPrune}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryPrune}
+function TDoubleArrayHelper.BinaryPrune(const aAscending: Boolean = True): Integer;
+var
+  i, o: Integer;
+begin
+  Result := 0;
+  if Self.Empty then
+    Exit;
+  o := aAscending.Select(-1, 1);
+  for i := 1 to High(Self) do
+    if (Sign(Self[Result] - Self[i]) = o) then
+      Self[Result.Increment] := Self[i];
+  Result := (Result + 1);
+  SetLength(Self, Result);
+end;
 
 {==============================================================================]
   <BinaryPruned>
   @action: Binary Search-based Pruned method.
   @note: None.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryPruned(const aAscending: Boolean = True): TDoubleArray; {$DEFINE Skeleton_BinaryPruned}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryPruned}
+function TDoubleArrayHelper.BinaryPruned(const aAscending: Boolean = True): TDoubleArray;
+var
+  i, o, r: Integer;
+begin
+  SetLength(Result, Self.Size);
+  if Self.Empty then
+    Exit;
+  r := 0;
+  o := aAscending.Select(-1, 1);
+  Result[0] := Self[0];
+  for i := 1 to High(Self) do
+    if (Sign(Result[r] - Self[i]) = o) then
+      Result[r.Increment] := Self[i];
+  SetLength(Result, (r + 1));
+end;
 
 {==============================================================================]
   <BinaryUndupe>
   @action: Binary Search-based Undupe method.
   @note: None
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUndupe: Integer; var u: TDoubleArray; {$DEFINE Skeleton_BinaryUndupe}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryUndupe}
+function TDoubleArrayHelper.BinaryUndupe: Integer;
+var
+  u: TDoubleArray;
+  i: Integer;
+begin
+  if (Self.Size < 2) then
+    Exit(Self.Size);
+  Result := 0;
+  for i := 0 to High(Self) do
+    if u.BinaryGrow(Self[i]) then
+      Self[Result.Increase] := Self[i];
+  SetLength(Self, Result);
+end;
 
 {==============================================================================]
   <BinaryUnduped>
   @action: Binary Search-based Unduped method.
   @note: None
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUnduped: TDoubleArray; {$DEFINE Skeleton_BinaryUnduped}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryUnduped}
+function TDoubleArrayHelper.BinaryUnduped: TDoubleArray;
+var
+  i: Integer;
+begin
+  if Self.Empty then
+    Exit([]);
+  SetLength(Result, 1);
+  Result[0] := Self[0];
+  for i := 1 to High(Self) do
+    Result.BinaryGrow(Self[i]);
+end;
 
 {==============================================================================]
   <BinaryUnified>
   @action: Binary Search-based Unified method.
   @note: None
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUnified(const dAscending: Boolean = True): TDoubleArray; var u: TDoubleArray; {$DEFINE Skeleton_BinaryUnified}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryUnified}
+function TDoubleArrayHelper.BinaryUnified(const dAscending: Boolean = True): TDoubleArray;
+var
+  u: TDoubleArray;
+  i, l: Integer;
+begin
+  if (Self.Size < 2) then
+    Exit(Self.Copy);
+  SetLength(Result, Self.Size);
+  l := 0;
+  case dAscending of
+    True:
+    for i := 0 to High(Self) do
+      if u.BinaryGrow(Self[i]) then
+        Result[l.Increase] := Self[i];
+    False:
+    for i := High(Self) downto 0 do
+      if u.BinaryGrow(Self[i]) then
+        Result[l.Increase] := Self[i];
+  end;
+  SetLength(Result, l);
+end;
 
 {==============================================================================]
   <BinaryDeduplicate>
@@ -60,7 +129,21 @@ function TDoubleArrayHelper.BinaryUnified(const dAscending: Boolean = True): TDo
          Requires the array to be sorted (ascending or descending according to aAscending).
          Runs in O(n log n) time with O(n) additional memory usage.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryDeduplicate(const aAscending: Boolean = True): Integer; overload; var u: TDoubleArray; {$DEFINE Skeleton_BinaryDeduplicate}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryDeduplicate}
+function TDoubleArrayHelper.BinaryDeduplicate(const aAscending: Boolean = True): Integer; overload;
+var
+  u: TDoubleArray;
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(0);
+  u := Self.Copy;
+  SetLength(Self, 0);
+  for i := 0 to (l - 1) do
+    if (Self.BinarySearch(u[i], aAscending) = -1) then
+      Self.Supply(u[i]);
+  Result := (l - Self.Size);
+end;
 
 {==============================================================================]
   <BinaryUnduplicate>
@@ -70,7 +153,21 @@ function TDoubleArrayHelper.BinaryDeduplicate(const aAscending: Boolean = True):
          Requires the array to be sorted (ascending or descending as specified).
          Operates in O(n log n) time and O(1) extra space.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUnduplicate(const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryUnduplicate}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryUnduplicate}
+function TDoubleArrayHelper.BinaryUnduplicate(const aAscending: Boolean = True): Integer; overload;
+var
+  i, u, l: Integer;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(0);
+  u := 0;
+  for i := 1 to (l - 1) do
+    if (Self.BinarySearchRange(Self[i], 0, u, aAscending) = -1) then
+      Self[u.Increment] := Self[i];
+  Result := (l - (u + 1));
+  if (Result > 0) then
+    SetLength(Self, (u + 1)); 
+end;
 
 {==============================================================================]
   <BinaryDeduplicated>
@@ -79,7 +176,15 @@ function TDoubleArrayHelper.BinaryUnduplicate(const aAscending: Boolean = True):
          Uses binary search to avoid inserting duplicates.
          Sorting is recommended before calling for best results.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryDeduplicated(const aAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinaryDeduplicated}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryDeduplicated}
+function TDoubleArrayHelper.BinaryDeduplicated(const aAscending: Boolean = True): TDoubleArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+    if (Result.BinarySearch(Self[i], aAscending) = -1) then
+      Result.Supply(Self[i]);
+end;
 
 {==============================================================================]
   <BinaryUnduplicated>
@@ -87,7 +192,19 @@ function TDoubleArrayHelper.BinaryDeduplicated(const aAscending: Boolean = True)
   @note: Works like BinaryUnduplicate but produces a new array instead of modifying Self.
          Requires sorted input for correct results.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUnduplicated(const aAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinaryUnduplicated}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryUnduplicated}
+function TDoubleArrayHelper.BinaryUnduplicated(const aAscending: Boolean = True): TDoubleArray; overload;
+var
+  i, u: Integer;
+begin
+  Result := Self.Copy;
+  if (Self.Size < 2) then
+    Exit;
+  u := 0;
+  for i := 1 to High(Self) do
+    if (Result.BinarySearchRange(Result[i], 0, u, aAscending) = -1) then
+      Result[u.Increment] := Result[i];
+  SetLength(Result, (u + 1));
+end;
 
 {==============================================================================]
   <BinaryUnique>
@@ -98,7 +215,21 @@ function TDoubleArrayHelper.BinaryUnduplicated(const aAscending: Boolean = True)
          duplicates and truncating the underlying storage to the count of
          uniques.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUnique(const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryUnique}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryUnique}
+function TDoubleArrayHelper.BinaryUnique(const oAscending: Boolean = True): Integer; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(l);
+  Self.BinarySort(oAscending);
+  Result := 1;
+  for i := 1 to (l - 1) do
+    if (Self[i] <> Self[Result - 1]) then
+      Self[Result.Increase] := Self[i];
+  if (Result < l) then
+    SetLength(Self, Result);
+end;
 
 {==============================================================================]
   <BinaryUniqued>
@@ -109,7 +240,21 @@ function TDoubleArrayHelper.BinaryUnique(const oAscending: Boolean = True): Inte
          sort, removes duplicates by in-place compaction of the copy, and
          trims the resulting array to the count of unique elements.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUniqued(const oAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinaryUniqued}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryUniqued}
+function TDoubleArrayHelper.BinaryUniqued(const oAscending: Boolean = True): TDoubleArray; overload;
+var
+  i, l: Integer;
+begin
+  Result := Self.Copy;
+  if (Result.Size < 2) then
+    Exit;
+  Result.BinarySort(oAscending);
+  l := 1;
+  for i := 1 to High(Result) do
+    if (Result[i] <> Result[l - 1]) then
+      Result[l.Increase] := Result[i];
+  if (Result.Size > l) then
+    SetLength(Result, l);
+end;
 
 {==============================================================================]
   <BinaryUniq>
@@ -121,7 +266,27 @@ function TDoubleArrayHelper.BinaryUniqued(const oAscending: Boolean = True): TDo
          It performs a linear scan to compact unique values and truncates the
          array afterward.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUniq(const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryUniq}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryUniq}
+function TDoubleArrayHelper.BinaryUniq(const oAscending: Boolean = True): Integer; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(l);
+  Result := 1;
+  case oAscending of
+    True:
+    for i := 1 to (l - 1) do
+      if (Self[i] > Self[Result - 1]) then
+        Self[Result.Increase] := Self[i];
+    False:
+    for i := 1 to (l - 1) do
+      if (Self[i] < Self[Result - 1]) then
+        Self[Result.Increase] := Self[i];
+  end;
+  if (Result < l) then
+    SetLength(Self, Result);
+end;
 
 {==============================================================================]
   <BinaryUniqd>
@@ -134,7 +299,27 @@ function TDoubleArrayHelper.BinaryUniq(const oAscending: Boolean = True): Intege
          decreasing) transitions are preserved. The result is compacted in-place
          and truncated to the number of unique values.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryUniqd(const oAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinaryUniqd}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryUniqd}
+function TDoubleArrayHelper.BinaryUniqd(const oAscending: Boolean = True): TDoubleArray; overload;
+var
+  i, l: Integer;
+begin
+  Result := Self.Copy;
+  if (Result.Size < 2) then
+    Exit;
+  l := 1;
+  case oAscending of
+    True:
+    for i := 1 to High(Result) do
+      if (Result[i] > Result[l - 1]) then
+        Result[l.Increase] := Result[i];
+    False:
+    for i := 1 to High(Result) do
+      if (Result[i] < Result[l - 1]) then
+        Result[l.Increase] := Result[i];
+  end;
+  if (Result.Size > l) then
+    SetLength(Result, l);
+end;
 
 {==============================================================================]
   <BinarySinglify>
@@ -143,7 +328,22 @@ function TDoubleArrayHelper.BinaryUniqd(const oAscending: Boolean = True): TDoub
   @note: The array must be sorted (ascending or descending as specified).
          Uses binary search for fast location. Returns the number of removed items.
 [==============================================================================}
-function TDoubleArrayHelper.BinarySinglify(const item: Double; const aAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinarySinglify}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinarySinglify}
+function TDoubleArrayHelper.BinarySinglify(const item: Double; const aAscending: Boolean = True): Integer; overload;
+var
+  i, l, s, p: Integer;
+begin
+  p := Self.BinaryPosL(item, aAscending);
+  if (p = -1) then
+    Exit(0);
+  s := Self.Size;
+  l := p;
+  for i := (p + 1) to (s - 1) do
+    if (Self[i] <> item) then
+      Self[l.Increment] := Self[i];
+  Result := (s - (l + 1));
+  if (Result > 0) then
+    SetLength(Self, (l + 1));
+end;
 
 {==============================================================================]
   <BinarySinglified>
@@ -152,5 +352,18 @@ function TDoubleArrayHelper.BinarySinglify(const item: Double; const aAscending:
   @note: The source array must be sorted. The order is preserved, and if the value
          does not exist, a full copy of the array is returned unchanged.
 [==============================================================================}
-function TDoubleArrayHelper.BinarySinglified(const item: Double; const aAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinarySinglified}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinarySinglified}
+function TDoubleArrayHelper.BinarySinglified(const item: Double; const aAscending: Boolean = True): TDoubleArray; overload;
+var
+  i, l, p: Integer;
+begin
+  p := Self.BinaryPosL(item, aAscending);
+  if (p = -1) then
+    Exit(Self.Copy);
+  SetLength(Result, Self.Size);
+  l := 0;
+  for i := 0 to High(Self) do
+    if ((i = p) or (Self[i] <> item)) then
+      Result[l.Increase] := Self[i];
+  SetLength(Result, l);
+end;
 {$ENDIF}

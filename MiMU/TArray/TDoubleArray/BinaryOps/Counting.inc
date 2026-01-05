@@ -10,7 +10,13 @@ function BinaryHigherCount(const value: Double; const oAscending: Boolean = True
   @action: Binary Count function for TDoubleArrays.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TDoubleArrayHelper.BinaryCount(const x: Double; const aAscending: Boolean = True): Integer; {$DEFINE Skeleton_BinaryCount}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryCount}
+function TDoubleArrayHelper.BinaryCount(const x: Double; const aAscending: Boolean = True): Integer;
+var
+  r: TRange;
+begin
+  r := Self.BinaryLocate(x, aAscending);
+  Result := IfThen((r.start > -1), r.Size, 0);
+end;
 
 {==============================================================================]
   <BinaryLowerCount>
@@ -18,7 +24,19 @@ function TDoubleArrayHelper.BinaryCount(const x: Double; const aAscending: Boole
   @note: - The array must be sorted according to `oAscending` (True = ascending, False = descending).
          - Uses binary search for efficient calculation (O(log n)).
 [==============================================================================}
-function TDoubleArrayHelper.BinaryLowerCount(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryLowerCount}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryLowerCount}
+function TDoubleArrayHelper.BinaryLowerCount(const value: Double; const oAscending: Boolean = True): Integer; overload;
+var
+  p, l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(0);
+  p := Self.BinaryBoundLeft(value, oAscending);
+  if ((p = -1) or (p > (l - 1))) then
+    Result := oAscending.Select(l, 0)
+  else
+    Result := oAscending.Select(p, (l - p));
+end;
 
 {==============================================================================]
   <BinaryHigherCount>
@@ -26,5 +44,17 @@ function TDoubleArrayHelper.BinaryLowerCount(const value: Double; const oAscendi
   @note: - The array must be sorted according to `oAscending` (True = ascending, False = descending).
          - Uses binary search for efficient calculation (O(log n)).
 [==============================================================================}
-function TDoubleArrayHelper.BinaryHigherCount(const value: Double; const oAscending: Boolean = True): Integer; overload; {$DEFINE Skeleton_BinaryHigherCount}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryHigherCount}
+function TDoubleArrayHelper.BinaryHigherCount(const value: Double; const oAscending: Boolean = True): Integer; overload;
+var
+  p, l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(0);
+  p := Self.BinaryBoundRight(value, oAscending);
+  if ((p = -1) or (p > (l - 1))) then
+    Result := oAscending.Select(0, l)
+  else
+    Result := oAscending.Select((l - p), p);
+end;
 {$ENDIF}

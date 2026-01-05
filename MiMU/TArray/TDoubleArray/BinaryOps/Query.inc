@@ -20,14 +20,49 @@ function BinaryValues(const values: TRange; const aAscending: Boolean = True): T
   @action: Returns Binary Search left and right index as TRange based on x value.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
 [==============================================================================}
-function TDoubleArrayHelper.BinaryLocate(const x: Double; const aAscending: Boolean = True): TRange; {$DEFINE Skeleton_BinaryLocate}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryLocate}
+function TDoubleArrayHelper.BinaryLocate(const x: Double; const aAscending: Boolean = True): TRange;
+begin
+  Result.start := Self.BinaryPosL(x, aAscending);
+  if (Result.start > -1) then
+    Result.stop := Self.BinaryPosR(x, aAscending)
+  else
+    Result.stop := -1;
+end;
 
 {==============================================================================]
   <BinaryLocation>
   @action: Binary Contains function for TDoubleArrays. Contains location storage variable. With Result as False it will be -1..-1.
   @note: Works with sorted arrays! (aAscending or descending)
 [==============================================================================}
-function TDoubleArrayHelper.BinaryLocation(const x: Double; const aAscending: Boolean = True): TRange; {$DEFINE Skeleton_BinaryLocation}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryLocation}
+function TDoubleArrayHelper.BinaryLocation(const x: Double; const aAscending: Boolean = True): TRange;
+var
+  h, m, o: Integer;
+  f: Boolean;
+begin
+  f := False;
+  h := High(Self);
+  Result.Create(0, h);
+  o := aAscending.Select(1, -1);
+  while (Result.Ascending and (not f)) do
+  begin
+    m := Result.Pivot;
+    f := ((o * Self[m]) = (o * x));
+    if f then
+	begin
+      Result.Create(m, m);
+      while ((Result.start > 0) and (Self[Result.start - 1] = x)) do
+        Dec(Result.start);
+      while ((Result.stop < h) and (Self[Result.stop + 1] = x)) do
+        Inc(Result.stop);
+    end else
+      if ((o * Self[m]) < (o * x)) then
+        Result.start := (m + 1)
+      else
+        Result.stop := (m - 1);
+  end;
+  if not f then
+    Result.Create(-1, -1);
+end;
 
 {==============================================================================]
   <BinaryRange>
@@ -37,7 +72,30 @@ function TDoubleArrayHelper.BinaryLocation(const x: Double; const aAscending: Bo
   @note:    Returns (-1,-1) when no elements fall in the interval or when
             the array is empty.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinaryRange1}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryRange1}
+function TDoubleArrayHelper.BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload;
+var
+  r: TRange;
+begin
+  if Self.Empty then
+    Exit(TRange.Construct(-1, -1));
+  r := x.Normalize;
+  case aAscending of
+    True:
+    begin
+      Result.start := Self.BinaryFirst(r.start, aAscending);
+      if (Result.start > -1) then
+        Result.stop := Self.BinaryLast(r.stop, aAscending);
+    end;
+    False:
+    begin
+      Result.start := Self.BinaryFirst(r.stop, aAscending);
+      if (Result.start > -1) then
+        Result.stop := Self.BinaryLast(r.start, aAscending);
+    end;
+  end;
+  if Result.Employs(-1) then
+    Result.Create(-1, -1);
+end;
 
 {==============================================================================]
   <BinaryRange>
@@ -47,7 +105,14 @@ function TDoubleArrayHelper.BinaryRange(const x: TRange; const aAscending: Boole
   @note:    Returns (-1,-1) if x is not present. Works for arrays sorted
             ascending or descending as controlled by aAscending.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryRange(const x: Double; const aAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinaryRange2}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryRange2}
+function TDoubleArrayHelper.BinaryRange(const x: Double; const aAscending: Boolean = True): TRange; overload;
+begin
+  Result.start := Self.BinaryPosL(x, aAscending);
+  if (Result.start > -1) then
+    Result.stop := Self.BinaryPosR(x, aAscending)
+  else
+    Result.stop := -1;
+end;
 
 {==============================================================================]
   <BinarySpan>
@@ -60,7 +125,63 @@ function TDoubleArrayHelper.BinaryRange(const x: Double; const aAscending: Boole
                1. Finds the first index where values ≥ Range.start (or ≤ Range.stop for descending).
                2. Finds the last index where values ≤ Range.stop (or ≥ Range.start for descending).
 [==============================================================================}
-function TDoubleArrayHelper.BinarySpan(const x: TRange; const aAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinarySpan}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinarySpan}
+function TDoubleArrayHelper.BinarySpan(const x: TRange; const aAscending: Boolean = True): TRange; overload;
+var
+  m: Integer;
+  n, r: TRange;
+begin
+  if Self.Empty then
+    Exit(Result.Create(-1, -1));
+  n := x.Normalize;
+  r.Create(0, High(Self));
+  case aAscending of
+    True:
+    while (r.start <= r.stop) do
+    begin
+      m := r.Pivot;
+      if (Self[m] < n.start) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+    False:
+    while (r.start <= r.stop) do
+    begin
+      m := r.Pivot;
+      if (Self[m] > n.stop) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+  if ((r.start > High(Self)) or (r.start < 0)) then
+    Exit(Result.Create(-1, -1));
+  Result.start := r.start;
+  r.stop := High(Self);
+  case aAscending of
+    True:
+    while (r.start <= r.stop) do
+    begin
+      m := r.Pivot;
+      if (Self[m] <= n.stop) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+    False:
+    while (r.start <= r.stop) do
+    begin
+      m := r.Pivot;
+      if (Self[m] >= n.start) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+  Result.stop := r.stop;
+  if ((Result.start > Result.stop) or (Result.start < 0) or (Result.stop > High(Self))) then
+    Result.Create(-1, -1);
+end;
 
 {==============================================================================]
   <BinarySpanning>
@@ -73,7 +194,51 @@ function TDoubleArrayHelper.BinarySpan(const x: TRange; const aAscending: Boolea
     - If the value is not found, returns TRange(-1, -1).
   @return: TRange containing start and stop indices of the value in the array.
 [==============================================================================}
-function TDoubleArrayHelper.BinarySpanning(const value: Double; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinarySpanning1}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinarySpanning1}
+function TDoubleArrayHelper.BinarySpanning(const value: Double; const oAscending: Boolean = True): TRange; overload;
+var
+  m: Integer;
+  r: TRange;
+begin
+  r.Create(0, High(Self));
+  Result.start := -1;
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case (Self[m] = value) of
+      True:
+      begin
+        Result.start := m;
+        r.stop := (m - 1);
+      end;
+      False:
+      if ((oAscending and (Self[m] < value)) or ((not oAscending) and (Self[m] > value))) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+  if (Result.start = -1) then
+    Exit(TRange.Construct(-1, -1));
+  r.start := Result.start;
+  r.stop := High(Self);
+  Result.stop := Result.start;
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case (Self[m] = value) of
+      True:
+      begin
+        Result.stop := m;
+        r.start := (m + 1);
+      end;
+      False:
+      if ((oAscending and (Self[m] < value)) or ((not oAscending) and (Self[m] > value))) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinarySpanning>
@@ -86,7 +251,52 @@ function TDoubleArrayHelper.BinarySpanning(const value: Double; const oAscending
     - If no elements fall within the range, returns TRange(-1, -1).
   @return: TRange containing start and stop indices of elements in the array that are within the specified range.
 [==============================================================================}
-function TDoubleArrayHelper.BinarySpanning(const range: TRange; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinarySpanning2}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinarySpanning2}
+function TDoubleArrayHelper.BinarySpanning(const range: TRange; const oAscending: Boolean = True): TRange; overload;
+var
+  m: Integer;
+  n, r: TRange;
+begin
+  r.Create(0, High(Self));
+  n := range.Normalize;
+  Result.start := -1;
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case InRange(Self[m], n.start, n.stop) of
+      True:
+      begin
+        Result.start := m;
+        r.stop := (m - 1);
+      end;
+      False:
+      if ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.start))) then
+        r.start := (m + 1)
+      else if ((oAscending and (Self[m] > n.stop)) or ((not oAscending) and (Self[m] < n.start))) then
+        r.stop := (m - 1);
+    end;
+  end;
+  if (Result.start = -1) then
+    Exit(TRange.Construct(-1, -1));
+  r.start := Result.start;
+  r.stop := High(Self);
+  Result.stop := Result.start;
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case InRange(Self[m], n.start, n.stop) of
+      True:
+      begin
+        Result.stop := m;
+        r.start := (m + 1);
+      end;
+      False:
+      if ((oAscending and (Self[m] < n.stop)) or ((not oAscending) and (Self[m] > n.stop))) then
+        r.start := (m + 1)
+      else if ((oAscending and (Self[m] > n.stop)) or ((not oAscending) and (Self[m] < n.start))) then
+        r.stop := (m - 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinarySpanOf>
@@ -98,7 +308,35 @@ function TDoubleArrayHelper.BinarySpanning(const range: TRange; const oAscending
     - Returns TRange(-1, -1) if the value is not found.
   @return: TRange containing start and stop indices of the value in the array.
 [==============================================================================}
-function TDoubleArrayHelper.BinarySpanOf(const value: Double; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinarySpanOf1}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinarySpanOf1}
+function TDoubleArrayHelper.BinarySpanOf(const value: Double; const oAscending: Boolean = True): TRange; overload;
+var
+  m: Integer;
+  r: TRange;
+begin
+  Result.Create(-1, -1);
+  r.Create(0, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case (Self[m] = value) of
+      True:
+      begin
+        Result.start := m;
+        Result.stop := m;
+        while ((Result.start > 0) and (Self[Result.start - 1] = value)) do
+          Dec(Result.start);
+        while ((Result.stop < High(Self)) and (Self[Result.stop + 1] = value)) do
+          Inc(Result.stop);
+        Exit;
+      end;
+      False:
+      if ((oAscending and (Self[m] < value)) or ((not oAscending) and (Self[m] > value))) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinarySpanOf>
@@ -110,7 +348,36 @@ function TDoubleArrayHelper.BinarySpanOf(const value: Double; const oAscending: 
     - Returns TRange(-1, -1) if no elements are within the specified range.
   @return: TRange containing start and stop indices of elements in the array within the range.
 [==============================================================================}
-function TDoubleArrayHelper.BinarySpanOf(const range: TRange; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinarySpanOf2}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinarySpanOf2}
+function TDoubleArrayHelper.BinarySpanOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
+var
+  m: Integer;
+  n, r: TRange;
+begin
+  Result.Create(-1, -1);
+  n := range.Normalize;
+  r.Create(0, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case InRange(Self[m], n.start, n.stop) of
+      True:
+      begin
+        Result.start := m;
+        Result.stop := m;
+        while ((Result.start > 0) and (Self[Result.start - 1] >= n.start) and (Self[Result.start - 1] <= n.stop)) do
+          Dec(Result.start);
+        while ((Result.stop < High(Self)) and (Self[Result.stop + 1] >= n.start) and (Self[Result.stop + 1] <= n.stop)) do
+          Inc(Result.stop);
+        Exit;
+      end;
+      False:
+      if ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.stop))) then
+        r.start := (m + 1)
+      else if ((oAscending and (Self[m] > n.stop)) or ((not oAscending) and (Self[m] < n.start))) then
+        r.stop := (m - 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryRangeOf>
@@ -121,7 +388,46 @@ function TDoubleArrayHelper.BinarySpanOf(const range: TRange; const oAscending: 
     - Returns TRange(-1, -1) if the value is not found.
   @return: TRange containing start and stop indices of the value in the array.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryRangeOf(const value: Double; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinaryRangeOf1}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryRangeOf1}
+function TDoubleArrayHelper.BinaryRangeOf(const value: Double; const oAscending: Boolean = True): TRange; overload;
+var
+  m: Integer;
+  r: TRange;
+begin
+  Result.Create(-1, -1);
+  r.Create(0, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case ((oAscending and (Self[m] < value)) or ((not oAscending) and (Self[m] > value))) of
+      False:
+      begin
+        r.stop := (m - 1);
+        if (Self[m] = value) then
+          Result.start := m;
+      end;
+      True: r.start := (m + 1);
+    end;
+  end;
+  if Result.start = -1 then
+    Exit;
+  r.Create(Result.start, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case (Self[m] = value) of
+      True:
+      begin
+        Result.stop := m;
+        r.start := (m + 1);
+      end;
+      False:
+      if ((oAscending and (Self[m] < value)) or ((not oAscending) and (Self[m] > value))) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryRangeOf>
@@ -132,7 +438,47 @@ function TDoubleArrayHelper.BinaryRangeOf(const value: Double; const oAscending:
     - Returns TRange(-1, -1) if no elements fall within the range.
   @return: TRange containing start and stop indices of elements in the array within the range.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryRangeOf(const range: TRange; const oAscending: Boolean = True): TRange; overload; {$DEFINE Skeleton_BinaryRangeOf2}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryRangeOf2}
+function TDoubleArrayHelper.BinaryRangeOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
+var
+  m: Integer;
+  n, r: TRange;
+begin
+  Result.Create(-1, -1);
+  n := range.Normalize;
+  r.Create(0, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.stop))) of
+      False:
+      begin
+        if ((Self[m] >= n.start) and (Self[m] <= n.stop)) then
+          Result.start := m;
+        r.stop := (m - 1);
+      end;
+      True: r.start := (m + 1);
+    end;
+  end;
+  if (Result.start = -1) then
+    Exit;
+  r.Create(Result.start, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case ((Self[m] >= n.start) and (Self[m] <= n.stop)) of
+      True:
+      begin
+        Result.stop := m;
+        r.start := (m + 1);
+      end;
+      False:
+      if ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.stop))) then
+        r.start := (m + 1)
+      else if ((oAscending and (Self[m] > n.stop)) or ((not oAscending) and (Self[m] < n.start))) then
+        r.stop := (m - 1);
+    end;
+  end;
+end;
 
 {==============================================================================]
   <BinaryValues>
@@ -141,7 +487,18 @@ function TDoubleArrayHelper.BinaryRangeOf(const range: TRange; const oAscending:
          the value of aAscending. If the value does not occur in the array,
          an empty array is returned.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryValues(const value: Double; const aAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinaryValues1}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryValues1}
+function TDoubleArrayHelper.BinaryValues(const value: Double; const aAscending: Boolean = True): TDoubleArray; overload;
+var
+  i: Integer;
+  r: TRange;
+begin
+  r := Self.BinaryRange(value, aAscending);
+  if r.Employs(-1) then
+    Exit([]);
+  SetLength(Result, r.Size);
+  for i := 0 to High(Result) do
+    Result[i] := Self[r.start + i];
+end;
 
 {==============================================================================]
   <BinaryValues>
@@ -153,5 +510,23 @@ function TDoubleArrayHelper.BinaryValues(const value: Double; const aAscending: 
          and descending input returns results in descending order. If no
          items fall within the specified range, an empty array is returned.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryValues(const values: TRange; const aAscending: Boolean = True): TDoubleArray; overload; {$DEFINE Skeleton_BinaryValues2}{$I ../../Skeletons.inc}{$UNDEF Skeleton_BinaryValues2}
+function TDoubleArrayHelper.BinaryValues(const values: TRange; const aAscending: Boolean = True): TDoubleArray; overload;
+var
+  h, i: Integer;
+  r: TRange;
+begin
+  r := Self.BinaryRange(values, aAscending);
+  if r.Employs(-1) then
+    Exit([]);
+  SetLength(Result, r.Size);
+  h := High(Result);
+  case values.Ascending of
+    True:
+    for i := 0 to h do
+      Result[i] := Self[r.start + i];
+    False:
+    for i := h downto 0 do
+      Result[h - i] := Self[r.start + i];
+  end;
+end;
 {$ENDIF}
