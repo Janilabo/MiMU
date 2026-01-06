@@ -5,7 +5,7 @@
 TRange = record
   start, stop: Integer;
   function GetEnumerator: TRangeEnumerator;
-  {$DEFINE METHODS}{$I TRange.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TRange.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 TRangeCompare = specialize TCompare<TRange>;
 TRangeArray = array of TRange;

@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 CInt64Array = class
 public
-  {$DEFINE METHODS}{$I TInt64Array.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TInt64Array.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}
 

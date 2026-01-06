@@ -4,8 +4,7 @@
 {$I Enumerator.inc}
 TBox = record
   X1, Y1, X2, Y2: Integer;
-  function GetEnumerator: TBoxEnumerator;
-  {$DEFINE METHODS}{$I TBox.pph}{$UNDEF METHODS}  
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TBox.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 TBoxCompare = specialize TCompare<TBox>;
 TBoxArray = array of TBox;
@@ -24,15 +23,6 @@ end;
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
 {$I TBox.pph}
-{$ENDIF}
-
-{$IFDEF IMPLEMENTATION}
-{$I Enumerator.inc}
-
-function TBox.GetEnumerator: TBoxEnumerator;
-begin
-  Result.Init(X1, Y1, X2, Y2);
-end;
 {$ENDIF}
 
 {$UNDEF TBox}

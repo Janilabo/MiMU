@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 CBoxArray = class
 public
-  {$DEFINE METHODS}{$I TBoxArray.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TBoxArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}
 

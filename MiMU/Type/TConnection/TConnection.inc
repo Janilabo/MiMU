@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 TConnection = record
   id1, id2: Integer;
-  {$DEFINE METHODS}{$I TConnection.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TConnection.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 TConnectionCompare = specialize TCompare<TConnection>;
 TConnectionArray = array of TConnection;

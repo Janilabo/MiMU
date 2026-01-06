@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 C2DCircleArray = class
 public 
-  {$DEFINE METHODS}{$I T2DCircleArray.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I T2DCircleArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}
 

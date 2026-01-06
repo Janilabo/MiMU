@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 C2DBooleanArray = class
 public 
-  {$DEFINE METHODS}{$I T2DBooleanArray.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I T2DBooleanArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}
 

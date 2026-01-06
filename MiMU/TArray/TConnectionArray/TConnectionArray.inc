@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 CConnectionArray = class
 public
-  {$DEFINE METHODS}{$I TConnectionArray.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TConnectionArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}
 

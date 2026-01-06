@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 CCharArray = class
 public
-  {$DEFINE METHODS}{$I TCharArray.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TCharArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}
 

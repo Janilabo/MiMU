@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 CCircleArray = class
 public
-  {$DEFINE METHODS}{$I TCircleArray.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TCircleArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}
 

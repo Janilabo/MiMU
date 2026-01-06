@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 C2DTriangleArray = class
 public 
-  {$DEFINE METHODS}{$I T2DTriangleArray.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I T2DTriangleArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}
 

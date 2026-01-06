@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 CRangeArray = class
 public
-  {$DEFINE METHODS}{$I TRangeArray.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TRangeArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}
 

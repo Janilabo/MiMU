@@ -11,7 +11,16 @@ public
 end;
 {$ENDIF}
 
+{$IFDEF METHODS}
+function GetEnumerator: TBoxEnumerator;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
+function TBoxEnumerator.GetCurrent: TPoint;
+begin
+  Result := Point(FX, FY);
+end;
+
 constructor TBoxEnumerator.Init(const AX1, AY1, AX2, AY2: Integer);
 begin
   XStart := AX1;
@@ -41,8 +50,8 @@ begin
   Result := (FY <= YStop);
 end;
 
-function TBoxEnumerator.GetCurrent: TPoint;
+function TBox.GetEnumerator: TBoxEnumerator;
 begin
-  Result := Point(FX, FY);
+  Result.Init(X1, Y1, X2, Y2);
 end;
 {$ENDIF}

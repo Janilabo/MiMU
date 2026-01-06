@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 TSegment = record
   A, B: TPoint;
-  {$DEFINE METHODS}{$I TSegment.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TSegment.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 TSegmentCompare = specialize TCompare<TSegment>;
 TSegmentArray = array of TSegment;

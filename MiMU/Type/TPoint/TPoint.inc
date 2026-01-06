@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 TPoint = record
   X, Y: Integer;
-  {$DEFINE METHODS}{$I TPoint.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TPoint.pph}{$UNDEF METHODS}{$DEFINE TYPES}
   class function Null(const value: Integer = -2147483648): TPoint; overload; static; 
   function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; overload;
   function AngleRadians(const target: TPoint): Double; overload; 

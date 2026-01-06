@@ -4,7 +4,7 @@
 TCircle = record
   Center: TPoint;
   Radius: Double; 
-  {$DEFINE METHODS}{$I TCircle.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TCircle.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 TCircleCompare = specialize TCompare<TCircle>;
 TCircleArray = array of TCircle;

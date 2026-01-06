@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 CStringArray = class
 public
-  {$DEFINE METHODS}{$I TStringArray.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TStringArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}
 

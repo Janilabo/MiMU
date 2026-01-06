@@ -1,5 +1,6 @@
 {$I ../Base/Base.inc}
 
+{$I Enumerator.inc}
 {$I Construction.inc}
 {$I Metrics.inc}
 {$I Classification.inc}

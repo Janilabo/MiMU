@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 CSegmentArray = class
 public
-  {$DEFINE METHODS}{$I TSegmentArray.pph}{$UNDEF METHODS}
+  {$UNDEF TYPES}{$DEFINE METHODS}{$I TSegmentArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}
 
