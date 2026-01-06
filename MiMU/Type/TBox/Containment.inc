@@ -1,8 +1,8 @@
 {$IFDEF METHODS}
-function Inside(const target: TBox): Boolean; overload; 
 function Contains(const pt: TPoint): Boolean; overload; 
 function Contains(const b: TBox): Boolean; overload;
 function Disjoint(const target: TBox): Boolean; overload; 
+function Inside(const target: TBox): Boolean; overload; 
 function Lacks(const pt: TPoint): Boolean; overload;
 {$ENDIF}
 
@@ -11,31 +11,6 @@ function Inside(const targets: TBoxArray): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Inside>
-  @action: Returns true if bx is INSIDE target boundaries.
-  @note: None.
-[==============================================================================}
-function TBox.Inside(const target: TBox): Boolean; overload;
-begin
-  Result := not ((Self.X2 < target.X1) or (Self.Y2 < target.Y1) or (Self.X1 > target.X2) or (Self.Y1 > target.Y2));
-end;
-
-{==============================================================================]
-  <Inside>
-  @action: Returns true if bx is in/within any area boundaries by target areas.
-  @note: None.
-[==============================================================================}
-function TBoxHelper.Inside(const targets: TBoxArray): Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := 0 to High(targets) do
-    if not ((Self.X2 < targets[i].X1) or (Self.X1 > targets[i].X2) or (Self.Y2 < targets[i].Y1) or (Self.Y1 > targets[i].Y2)) then
-      Exit(True);
-  Result := False;
-end;
-
 {==============================================================================]
   <Contains>
   @action: Returns true if pt is inside the given box (bx).
@@ -64,6 +39,31 @@ end;
 function TBox.Disjoint(const target: TBox): Boolean; overload;
 begin
   Result := ((Self.X2 < target.X1) or (Self.Y2 < target.Y1) or (Self.X1 > target.X2) or (Self.Y1 > target.Y2));
+end;
+
+{==============================================================================]
+  <Inside>
+  @action: Returns true if bx is INSIDE target boundaries.
+  @note: None.
+[==============================================================================}
+function TBox.Inside(const target: TBox): Boolean; overload;
+begin
+  Result := not ((Self.X2 < target.X1) or (Self.Y2 < target.Y1) or (Self.X1 > target.X2) or (Self.Y1 > target.Y2));
+end;
+
+{==============================================================================]
+  <Inside>
+  @action: Returns true if bx is in/within any area boundaries by target areas.
+  @note: None.
+[==============================================================================}
+function TBoxHelper.Inside(const targets: TBoxArray): Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to High(targets) do
+    if not ((Self.X2 < targets[i].X1) or (Self.X1 > targets[i].X2) or (Self.Y2 < targets[i].Y1) or (Self.Y1 > targets[i].Y2)) then
+      Exit(True);
+  Result := False;
 end;
 
 {==============================================================================]
