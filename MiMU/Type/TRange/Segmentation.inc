@@ -1,13 +1,37 @@
 {$IFDEF HELPERS}
-function Distribute(const parts: Integer): TRangeArray;
-function Partition(const size: Integer): TRangeArray;
-function Divide(const size: Integer): TRangeArray;
-function Windows(const target: TRange): TRangeArray; overload;
-function Sectioned(const target: TRange): TRangeArray; overload;
 function Binned(const target: TRange): TRangeArray; overload;
+function Distribute(const parts: Integer): TRangeArray;
+function Divide(const size: Integer): TRangeArray;
+function Partition(const size: Integer): TRangeArray;
+function Sectioned(const target: TRange): TRangeArray; overload;
+function Windows(const target: TRange): TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Binned>
+  @action: Generate grid-aligned subranges (bins) of the same size as Self
+           inside the target range.
+  @note:   Subranges are aligned in steps of SelfSize from the start of target.
+           Any remainder that does not fit evenly is ignored.
+[==============================================================================}
+function TRangeHelper.Binned(const target: TRange): TRangeArray; overload;
+var
+  i, s: Integer;
+  t: TRange;
+begin
+  t := target.Normalize;
+  s := Self.Size;
+  if (s > t.Size) then
+    Exit([]);
+  SetLength(Result, (t.Size div s));
+  for i := 0 to High(Result) do
+  begin
+    Result[i].start := (t.start + (s * i));
+    Result[i].stop := (Result[i].start + (s - 1));
+  end;
+end;
+
 {==============================================================================]
   <Distribute>
   @action: Distributes range to TRangeArray by amount of parts
@@ -31,6 +55,34 @@ begin
       b := (a + ((s div p) - 1));
       if (i < e) then
         Inc(b);
+      if (Self.start > Self.stop) then
+        Result[i].Create(b, a)
+      else
+        Result[i].Create(a, b);
+      a := (b + 1);
+    end;
+  end else
+    SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <Divide>
+  @action: Partitions range to TRangeArray by size of parts
+  @note: Alternative for TRange_Partition.
+[==============================================================================}
+function TRangeHelper.Divide(const size: Integer): TRangeArray;
+var
+  a, b, i: Integer;
+  r: TRange;
+begin
+  if (size > 0) then
+  begin
+    r := Self.Normalize;
+    SetLength(Result, (((r.Size + size) - 1) div size));
+    a := r.start;
+    for i := 0 to High(Result) do
+    begin
+      b := Min(((a + size) - 1), r.stop);
       if (Self.start > Self.stop) then
         Result[i].Create(b, a)
       else
@@ -71,56 +123,6 @@ begin
 end;
 
 {==============================================================================]
-  <Divide>
-  @action: Partitions range to TRangeArray by size of parts
-  @note: Alternative for TRange_Partition.
-[==============================================================================}
-function TRangeHelper.Divide(const size: Integer): TRangeArray;
-var
-  a, b, i: Integer;
-  r: TRange;
-begin
-  if (size > 0) then
-  begin
-    r := Self.Normalize;
-    SetLength(Result, (((r.Size + size) - 1) div size));
-    a := r.start;
-    for i := 0 to High(Result) do
-    begin
-      b := Min(((a + size) - 1), r.stop);
-      if (Self.start > Self.stop) then
-        Result[i].Create(b, a)
-      else
-        Result[i].Create(a, b);
-      a := (b + 1);
-    end;
-  end else
-    SetLength(Result, 0);
-end;
-
-{==============================================================================]
-  <Windows>
-  @action: Generate all possible subranges (sliding windows) of Self inside
-           the target range. These windows may overlap.
-  @note:   The number of results is (TargetSize - SelfSize + 1).
-[==============================================================================}
-function TRangeHelper.Windows(const target: TRange): TRangeArray; overload;
-var
-  r, s: Integer;
-  f, t: TRange;
-begin
-  s := Self.Size;
-  if (target.Size < s) then
-    Exit([]);
-  t.Create(Min(target.start, target.stop), ((Max(target.start, target.stop) - s) + 1));
-  SetLength(Result, t.Size);
-  r := 0;
-  f := Self.Frame;
-  for s := t.start to t.stop do
-    Result[r.Increase].Create((f.start + s), (f.stop + s));
-end;
-
-{==============================================================================]
   <Sectioned>                                                             
   @action: Divide the target range into sequential, non-overlapping subranges
            of the same size as Self.
@@ -145,26 +147,24 @@ begin
 end;
 
 {==============================================================================]
-  <Binned>
-  @action: Generate grid-aligned subranges (bins) of the same size as Self
-           inside the target range.
-  @note:   Subranges are aligned in steps of SelfSize from the start of target.
-           Any remainder that does not fit evenly is ignored.
+  <Windows>
+  @action: Generate all possible subranges (sliding windows) of Self inside
+           the target range. These windows may overlap.
+  @note:   The number of results is (TargetSize - SelfSize + 1).
 [==============================================================================}
-function TRangeHelper.Binned(const target: TRange): TRangeArray; overload;
+function TRangeHelper.Windows(const target: TRange): TRangeArray; overload;
 var
-  i, s: Integer;
-  t: TRange;
+  r, s: Integer;
+  f, t: TRange;
 begin
-  t := target.Normalize;
   s := Self.Size;
-  if (s > t.Size) then
+  if (target.Size < s) then
     Exit([]);
-  SetLength(Result, (t.Size div s));
-  for i := 0 to High(Result) do
-  begin
-    Result[i].start := (t.start + (s * i));
-    Result[i].stop := (Result[i].start + (s - 1));
-  end;
+  t.Create(Min(target.start, target.stop), ((Max(target.start, target.stop) - s) + 1));
+  SetLength(Result, t.Size);
+  r := 0;
+  f := Self.Frame;
+  for s := t.start to t.stop do
+    Result[r.Increase].Create((f.start + s), (f.stop + s));
 end;
 {$ENDIF}

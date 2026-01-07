@@ -1,12 +1,31 @@
 {$IFDEF METHODS}
-function Reserve: TIntegerArray; overload; 
-function Reserve(var aRange: TIntegerArray): Integer; overload;  
+function Centered(const rCenter: Integer): TRange; overload;
 function Frame(var rSize: Integer): TRange; overload; 
 function Frame: TRange; overload; 
-function Centered(const rCenter: Integer): TRange; overload;
+function Reserve: TIntegerArray; overload; 
+function Reserve(var aRange: TIntegerArray): Integer; overload;  
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Centered>
+  @action: Returns a new TRange that has the same length as Self but is
+           repositioned so that its midpoint equals the specified Center value.
+           Self remains unchanged.
+  @note:   Direction-aware; preserves ascending or descending order.
+           Useful for geometric or data range realignment.
+[==============================================================================}
+function TRange.Centered(const rCenter: Integer): TRange; overload;
+var
+  h: Integer;
+begin
+  h := Self.Half;
+  if Self.Ascending then
+    Result.Create((rCenter - h), (rCenter + h))
+  else
+    Result.Create((rCenter + h), (rCenter - h));
+end;
+
 {==============================================================================]
   <Frame>
   @action Returns a TRange covering the full extent of this instance,
@@ -51,24 +70,5 @@ function TRange.Reserve(var aRange: TIntegerArray): Integer; overload;
 begin
   Result := Self.Size;
   SetLength(aRange, Result);
-end;
-
-{==============================================================================]
-  <Centered>
-  @action: Returns a new TRange that has the same length as Self but is
-           repositioned so that its midpoint equals the specified Center value.
-           Self remains unchanged.
-  @note:   Direction-aware; preserves ascending or descending order.
-           Useful for geometric or data range realignment.
-[==============================================================================}
-function TRange.Centered(const rCenter: Integer): TRange; overload;
-var
-  h: Integer;
-begin
-  h := Self.Half;
-  if Self.Ascending then
-    Result.Create((rCenter - h), (rCenter + h))
-  else
-    Result.Create((rCenter + h), (rCenter - h));
 end;
 {$ENDIF}

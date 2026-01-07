@@ -1,20 +1,10 @@
 {$IFDEF METHODS}
-function Bounds: TBox; 
-function Boundaries: TBox; 
+function Boundaries: TBox;
+function Bounds: TBox;
 function Envelope: TBox;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Bounds>
-  @action: Returns the bounds of TSegment as TBox.
-  @note: None.
-[==============================================================================}
-function TSegment.Bounds: TBox;
-begin
-  Result.Create(Min(Self.A.X, Self.B.X), Min(Self.A.Y, Self.B.Y), Max(Self.A.X, Self.B.X), Max(Self.A.Y, Self.B.Y));
-end;
-
 {==============================================================================]
   <Boundaries>
   @action: Returns the bounds of TSegment as TBox.
@@ -24,6 +14,16 @@ function TSegment.Boundaries: TBox;
 begin
   with Self do
   Result := Box(IfThen((A.X < B.X), A.X, B.X), IfThen((A.Y < B.Y), A.Y, B.Y), IfThen((A.X > B.X), A.X, B.X), IfThen((A.Y > B.Y), A.Y, B.Y));
+end;
+
+{==============================================================================]
+  <Bounds>
+  @action: Returns the bounds of TSegment as TBox.
+  @note: None.
+[==============================================================================}
+function TSegment.Bounds: TBox;
+begin
+  Result.Create(Min(Self.A.X, Self.B.X), Min(Self.A.Y, Self.B.Y), Max(Self.A.X, Self.B.X), Max(Self.A.Y, Self.B.Y));
 end;
 
 {==============================================================================]

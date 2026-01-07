@@ -1,13 +1,13 @@
 {$IFDEF METHODS}
 function Even: Boolean; overload;
-function Odd: Boolean; overload;
-function Evens: Integer; overload;
-function Odds: Integer; overload;
 function EvenCount: Integer; overload;
-function OddCount: Integer; overload;
 function Evened: TIntegerArray; overload;
-function Odded: TIntegerArray; overload;
+function Evens: Integer; overload;
 function Evenz: TIntegerArray; overload;
+function Odd: Boolean; overload;
+function OddCount: Integer; overload;
+function Odded: TIntegerArray; overload;
+function Odds: Integer; overload;
 function Oddz: TIntegerArray; overload;
 {$ENDIF}
 
@@ -20,48 +20,6 @@ function Oddz: TIntegerArray; overload;
 function TRange.Even: Boolean; overload;
 begin
   Result := Self.Size.Even;
-end;
-
-{==============================================================================]
-  <Odd>
-  @action: Returns True when the size of the range is an odd integer.
-  @note: Delegates to Self.Size.Odd; no side effects.
-[==============================================================================}
-function TRange.Odd: Boolean; overload;
-begin
-  Result := Self.Size.Odd;
-end;
-
-{==============================================================================]
-  <Evens>
-  @action: Computes the total number of even integers contained within the range.
-  @note: The computation is O(1) and works for both ascending and descending
-         ranges. The result is inclusive of both endpoints.
-[==============================================================================}
-function TRange.Evens: Integer; overload;
-var
-  r: TRange;
-begin
-  r := Self.Normalize;
-  if r.start.Odd then
-    Inc(r.start);
-  if r.stop.Odd then
-    Dec(r.stop);
-  if (r.start > r.stop) then
-    Result := 0
-  else
-    Result := (((r.stop - r.start) div 2) + 1);
-end;
-
-{==============================================================================]
-  <Odds>
-  @action: Computes the total number of odd integers contained within the range.
-  @note: Determined as (RangeSize - Evens), ensuring correctness regardless
-         of range direction or endpoint parity.
-[==============================================================================}
-function TRange.Odds: Integer; overload;
-begin
-  Result := (Self.Size - Self.Evens);
 end;
 
 {==============================================================================]
@@ -80,16 +38,6 @@ begin
   l := IfThen(Self.stop.Even, Self.stop, (Self.stop - Result));
   if not (((Result > 0) and (f > l)) or ((Result < 0) and (f < l))) then
     Result := Abs((l - f) div 2) + 1;
-end;
-
-{==============================================================================]
-  <OddCount>
-  @action: Returns the number of odd integers within the range (including both start and stop).
-  @note: Calculated as the total range size minus the number of even numbers. Works for ascending, descending, and negative ranges.
-[==============================================================================}
-function TRange.OddCount: Integer; overload;
-begin
-  Result := (Self.Size - Self.EvenCount);
 end;
 
 {==============================================================================]
@@ -121,6 +69,71 @@ begin
 end;
 
 {==============================================================================]
+  <Evens>
+  @action: Computes the total number of even integers contained within the range.
+  @note: The computation is O(1) and works for both ascending and descending
+         ranges. The result is inclusive of both endpoints.
+[==============================================================================}
+function TRange.Evens: Integer; overload;
+var
+  r: TRange;
+begin
+  r := Self.Normalize;
+  if r.start.Odd then
+    Inc(r.start);
+  if r.stop.Odd then
+    Dec(r.stop);
+  if (r.start > r.stop) then
+    Result := 0
+  else
+    Result := (((r.stop - r.start) div 2) + 1);
+end;
+
+{==============================================================================]
+  <TRange.Evenz>
+  @action: Returns an array of all even integers within the range (from start to stop).
+  @note:
+    - Works for ascending, descending, and single-element ranges.
+    - Handles negative numbers correctly.
+    - Uses Direction to step properly through the range.
+    - Skips the first element if it is odd.
+[==============================================================================}
+function TRange.Evenz: TIntegerArray; overload;
+var
+  i, s, d: Integer;
+begin
+  SetLength(Result, Self.EvenCount);
+  if (Result.Size = 0) then
+    Exit;
+  d := Self.Direction;
+  s := Self.start;
+  if s.Odd then
+    s := (s + d);
+  for i := 0 to High(Result) do
+    Result[i] := s.Increase(2 * d);
+end;
+
+{==============================================================================]
+  <Odd>
+  @action: Returns True when the size of the range is an odd integer.
+  @note: Delegates to Self.Size.Odd; no side effects.
+[==============================================================================}
+function TRange.Odd: Boolean; overload;
+begin
+  Result := Self.Size.Odd;
+end;
+
+{==============================================================================]
+  <OddCount>
+  @action: Returns the number of odd integers within the range (including both start and stop).
+  @note: Calculated as the total range size minus the number of even numbers. Works for ascending, descending, and negative ranges.
+[==============================================================================}
+function TRange.OddCount: Integer; overload;
+begin
+  Result := (Self.Size - Self.EvenCount);
+end;
+
+{==============================================================================]
   <Odded>
   @action: Produces an array containing all odd integers within the range,
            ordered according to the range direction.
@@ -149,27 +162,14 @@ begin
 end;
 
 {==============================================================================]
-  <TRange.Evenz>
-  @action: Returns an array of all even integers within the range (from start to stop).
-  @note:
-    - Works for ascending, descending, and single-element ranges.
-    - Handles negative numbers correctly.
-    - Uses Direction to step properly through the range.
-    - Skips the first element if it is odd.
+  <Odds>
+  @action: Computes the total number of odd integers contained within the range.
+  @note: Determined as (RangeSize - Evens), ensuring correctness regardless
+         of range direction or endpoint parity.
 [==============================================================================}
-function TRange.Evenz: TIntegerArray; overload;
-var
-  i, s, d: Integer;
+function TRange.Odds: Integer; overload;
 begin
-  SetLength(Result, Self.EvenCount);
-  if (Result.Size = 0) then
-    Exit;
-  d := Self.Direction;
-  s := Self.start;
-  if s.Odd then
-    s := (s + d);
-  for i := 0 to High(Result) do
-    Result[i] := s.Increase(2 * d);
+  Result := (Self.Size - Self.Evens);
 end;
 
 {==============================================================================]

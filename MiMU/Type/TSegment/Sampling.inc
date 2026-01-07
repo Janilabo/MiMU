@@ -1,9 +1,24 @@
 {$IFDEF METHODS}
-function Points: TPointArray; 
 function Pixels(const steps: Integer = 2147483647): TPointArray;
+function Points: TPointArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+ <Pixels>
+ @action: Returns the points of TSegment.
+ @note: Supports custom steps.
+[==============================================================================}
+function TSegment.Pixels(const steps: Integer = 2147483647): TPointArray;
+var
+  i, h: Integer;
+begin
+  h := (Max(2, Min(steps, (Max(Abs(Self.B.X - Self.A.X), Abs(Self.B.Y - Self.A.Y)) + 1))) - 1);
+  SetLength(Result, (h + 1));
+  for i := 0 to h do
+    Result[i] := Point(Round(Self.A.X + ((i / h) * (Self.B.X - Self.A.X))), Round(Self.A.Y + ((i / h) * (Self.B.Y - Self.A.Y))));
+end;
+
 {==============================================================================]
  <Points>
  @action: Returns all the points of TSegment.
@@ -33,20 +48,5 @@ begin
     for i := 0 to s do
       Result[i] := Point(Round(x.Increase(h)), Round(y.Increase(v)));
   end;
-end;
-
-{==============================================================================]
- <Pixels>
- @action: Returns the points of TSegment.
- @note: Supports custom steps.
-[==============================================================================}
-function TSegment.Pixels(const steps: Integer = 2147483647): TPointArray;
-var
-  i, h: Integer;
-begin
-  h := (Max(2, Min(steps, (Max(Abs(Self.B.X - Self.A.X), Abs(Self.B.Y - Self.A.Y)) + 1))) - 1);
-  SetLength(Result, (h + 1));
-  for i := 0 to h do
-    Result[i] := Point(Round(Self.A.X + ((i / h) * (Self.B.X - Self.A.X))), Round(Self.A.Y + ((i / h) * (Self.B.Y - Self.A.Y))));
 end;
 {$ENDIF}

@@ -19,6 +19,17 @@ begin
 end;
 
 {==============================================================================]
+  <Orientation>
+  @action: Returns +1 if the range is ascending or degenerate (Stop >= Start),
+           and -1 if the range is descending (Stop < Start).
+  @note: Useful for determining iteration direction or orientation of the range.
+[==============================================================================}
+function TRange.Orientation: Integer;
+begin
+  Result := IfThen((Self.Stop < Self.Start), -1, 1);
+end;
+
+{==============================================================================]
   <Signum>
   @action: Returns the directional sign of the range. 
            +1 if the range is ascending (stop > start), 
@@ -33,17 +44,6 @@ begin
     Result := 0
   else
     Result := ((Self.stop - Self.start) div Abs(Self.start - Self.stop));
-end;
-
-{==============================================================================]
-  <Orientation>
-  @action: Returns +1 if the range is ascending or degenerate (Stop >= Start),
-           and -1 if the range is descending (Stop < Start).
-  @note: Useful for determining iteration direction or orientation of the range.
-[==============================================================================}
-function TRange.Orientation: Integer;
-begin
-  Result := IfThen((Self.Stop < Self.Start), -1, 1);
 end;
 
 {==============================================================================]

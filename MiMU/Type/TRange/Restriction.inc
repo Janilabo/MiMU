@@ -1,18 +1,18 @@
 {$IFDEF METHODS}
 function Clamp(const zone: TRange): TRange; overload; 
-function ClampMax(const maxValue: Integer): TRange; 
-function ClampMin(const minValue: Integer): TRange; 
-function Restrict(const zone: TRange): Boolean; 
-function RestrictMin(const minValue: Integer): Boolean; 
-function RestrictMax(const maxValue: Integer): Boolean; 
+function ClampMin(const minValue: Integer): TRange;
+function ClampMax(const maxValue: Integer): TRange;
 function Clip(const zone: TRange): TRange; 
-function ClipMin(const minValue: Integer): TRange; 
-function ClipMax(const maxValue: Integer): TRange; 
-function Ensured(const zone: TRange): TRange; overload; 
+function ClipMax(const maxValue: Integer): TRange;
+function ClipMin(const minValue: Integer): TRange;
 function Ensure(const zone: TRange): Boolean; overload;
-function Limit(const val: Integer): Integer; 
-function MinLimit(const val: Integer): Integer; 
+function Ensured(const zone: TRange): TRange; overload;
+function Limit(const val: Integer): Integer;
 function MaxLimit(const val: Integer): Integer;
+function MinLimit(const val: Integer): Integer;
+function Restrict(const zone: TRange): Boolean;
+function RestrictMax(const maxValue: Integer): Boolean;
+function RestrictMin(const minValue: Integer): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -76,51 +76,6 @@ begin
 end;
 
 {==============================================================================]
-  <Restrict>
-  @action: Ensures range start and stop stays within zone.
-  @note: Returns true if restriction was performed for start or/and stop.
-[==============================================================================}
-function TRange.Restrict(const zone: TRange): Boolean;
-var
-  e: TRange;
-begin
-  e := Self.Clamp(zone);
-  Result := not e.Equals(Self);
-  if Result then
-    Self := e;
-end;
-
-{==============================================================================]
-  <RestrictMin>
-  @action: Ensures range start and stop stays within minimum.
-  @note: Returns true if restriction was performed for start or/and stop.
-[==============================================================================}
-function TRange.RestrictMin(const minValue: Integer): Boolean;
-var
-  e: TRange;
-begin
-  e := Self.ClampMin(minValue);
-  Result := not e.Equals(Self);
-  if Result then
-    Self := e;
-end;
-
-{==============================================================================]
-  <RestrictMax>
-  @action: Ensures range start and stop stays within maximum.
-  @note: Returns true if restriction was performed for start or/and stop.
-[==============================================================================}
-function TRange.RestrictMax(const maxValue: Integer): Boolean;
-var
-  e: TRange;
-begin
-  e := Self.ClampMax(maxValue);
-  Result := not e.Equals(Self);
-  if Result then
-    Self := e;
-end;
-
-{==============================================================================]
   <Clip>
   @action: Ensures range start and stop stays within zone.
   @note: Alternative for TRange_Clamp.
@@ -129,17 +84,6 @@ function TRange.Clip(const zone: TRange): TRange;
 begin
   Result.start := Max(zone.start, Min(Self.start, zone.stop));
   Result.stop := Min(zone.stop, Max(Self.stop, zone.start));
-end;
-
-{==============================================================================]
-  <ClipMin>
-  @action: Ensures range start and stop stays within minimum.
-  @note: Alternative for TRange_ClampMin.
-[==============================================================================}
-function TRange.ClipMin(const minValue: Integer): TRange;
-begin
-  Result.start := Max(Self.start, minValue);
-  Result.stop := Max(Self.stop, minValue);
 end;
 
 {==============================================================================]
@@ -154,15 +98,14 @@ begin
 end;
 
 {==============================================================================]
-  <Ensured>
-  @action: Returns a new TRange with start and stop clamped to fit within zone.
-  @note: Preserves the direction (start > stop) of the original range.
-         Zone is normalized internally, so reversed zones are handled.
+  <ClipMin>
+  @action: Ensures range start and stop stays within minimum.
+  @note: Alternative for TRange_ClampMin.
 [==============================================================================}
-function TRange.Ensured(const zone: TRange): TRange; overload;
+function TRange.ClipMin(const minValue: Integer): TRange;
 begin
-  Result := zone.Normalize;
-  Result.Create(Max(Result.start, Min(Self.start, Result.stop)), Min(Result.stop,  Max(Self.stop,  Result.start)));
+  Result.start := Max(Self.start, minValue);
+  Result.stop := Max(Self.stop, minValue);
 end;
 
 {==============================================================================]
@@ -180,6 +123,18 @@ begin
   Self := zone.Normalize;
   Self.Create(Max(Self.start, Min(s.start, Self.stop)), Min(Self.stop,  Max(s.stop,  Self.start)));
   Result := (Self <> s);
+end;
+
+{==============================================================================]
+  <Ensured>
+  @action: Returns a new TRange with start and stop clamped to fit within zone.
+  @note: Preserves the direction (start > stop) of the original range.
+         Zone is normalized internally, so reversed zones are handled.
+[==============================================================================}
+function TRange.Ensured(const zone: TRange): TRange; overload;
+begin
+  Result := zone.Normalize;
+  Result.Create(Max(Result.start, Min(Self.start, Result.stop)), Min(Result.stop,  Max(Self.stop,  Result.start)));
 end;
 
 {==============================================================================]
@@ -205,6 +160,18 @@ begin
 end;
 
 {==============================================================================]
+  <MaxLimit>
+  @action: Ensures a value is not greater than the range maximum.
+  @note: Returns Min(val, Max(start, stop)).
+         Values below the range minimum are allowed.
+         Useful when you only want to enforce an upper bound.
+[==============================================================================}
+function TRange.MaxLimit(const val: Integer): Integer;
+begin
+  Result := Min(val, Max(Self.start, Self.stop));
+end;
+
+{==============================================================================]
   <MinLimit>
   @action: Ensures a value is not less than the range minimum.
   @note: Returns Max(val, Min(start, stop)).
@@ -217,14 +184,47 @@ begin
 end;
 
 {==============================================================================]
-  <MaxLimit>
-  @action: Ensures a value is not greater than the range maximum.
-  @note: Returns Min(val, Max(start, stop)).
-         Values below the range minimum are allowed.
-         Useful when you only want to enforce an upper bound.
+  <Restrict>
+  @action: Ensures range start and stop stays within zone.
+  @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
-function TRange.MaxLimit(const val: Integer): Integer;
+function TRange.Restrict(const zone: TRange): Boolean;
+var
+  e: TRange;
 begin
-  Result := Min(val, Max(Self.start, Self.stop));
+  e := Self.Clamp(zone);
+  Result := not e.Equals(Self);
+  if Result then
+    Self := e;
+end;
+
+{==============================================================================]
+  <RestrictMax>
+  @action: Ensures range start and stop stays within maximum.
+  @note: Returns true if restriction was performed for start or/and stop.
+[==============================================================================}
+function TRange.RestrictMax(const maxValue: Integer): Boolean;
+var
+  e: TRange;
+begin
+  e := Self.ClampMax(maxValue);
+  Result := not e.Equals(Self);
+  if Result then
+    Self := e;
+end;
+
+{==============================================================================]
+  <RestrictMin>
+  @action: Ensures range start and stop stays within minimum.
+  @note: Returns true if restriction was performed for start or/and stop.
+[==============================================================================}
+function TRange.RestrictMin(const minValue: Integer): Boolean;
+var
+  e: TRange;
+begin
+  e := Self.ClampMin(minValue);
+  Result := not e.Equals(Self);
+  if Result then
+    Self := e;
 end;
 {$ENDIF}
