@@ -1,28 +1,9 @@
 {$IFDEF METHODS}
-function BorderPoints(const count: Integer): TPointArray; 
 function Border: TPointArray; 
+function BorderPoints(const count: Integer): TPointArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
- <BorderPoints>
- @action: Returns border points of TCircle.
- @note: Supports custom count.
-[==============================================================================}
-function TCircle.BorderPoints(const count: Integer): TPointArray;
-var
-  i: Integer;
-  a: Double;
-begin
-  SetLength(Result, count);
-  for i := 0 to (count - 1) do
-  begin
-    a := (2 * Pi * i / count);
-    Result[i].X := Round(Self.Center.X + Self.Radius * Cos(a));
-    Result[i].Y := Round(Self.Center.Y + Self.Radius * Sin(a));
-  end;
-end;
-
 {==============================================================================]
  <Border>
  @action: Returns border points of TCircle.
@@ -59,5 +40,24 @@ begin
       d := (d + 4 * c.X + 6);
     Inc(c.X);
   end;
-end; 
+end;
+
+{==============================================================================]
+ <BorderPoints>
+ @action: Returns border points of TCircle.
+ @note: Supports custom count.
+[==============================================================================}
+function TCircle.BorderPoints(const count: Integer): TPointArray;
+var
+  i: Integer;
+  a: Double;
+begin
+  SetLength(Result, count);
+  for i := 0 to (count - 1) do
+  begin
+    a := (2 * Pi * i / count);
+    Result[i].X := Round(Self.Center.X + Self.Radius * Cos(a));
+    Result[i].Y := Round(Self.Center.Y + Self.Radius * Sin(a));
+  end;
+end;
 {$ENDIF}

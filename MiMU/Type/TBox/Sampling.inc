@@ -1,13 +1,23 @@
 {$IFDEF METHODS}
-function Any: TPoint; 
-function Some: TPointArray; overload; 
-function Some(const amount: Integer): TPointArray; overload;
+function Any: TPoint;
 function Mixed(const mixings: Integer = 1): TPointArray; 
 function Shake(const shakes: Integer = 1): TPointArray; 
 function Shuffle(const shuffles: Integer = 1): TPointArray;
+function Some: TPointArray; overload; 
+function Some(const amount: Integer): TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Any>
+  @action: Returns random TBox point.
+  @note: None.
+[==============================================================================}
+function TBox.Any: TPoint;
+begin
+  Result := Point((Self.X1 + Random(Self.Width)), (Self.X1 + Random(Self.Height)));
+end;
+
 {==============================================================================]
   <Mixed>
   @action: Returns TBox randomly mixed as TPointArray.
@@ -54,16 +64,6 @@ begin
   for s := 1 to shuffles do
     for i := 0 to High(Result) do
       Swap(Result[i], Result[Random(Result.Size)]);
-end;
-
-{==============================================================================]
-  <Any>
-  @action: Returns random TBox point.
-  @note: None.
-[==============================================================================}
-function TBox.Any: TPoint;
-begin
-  Result := Point((Self.X1 + Random(Self.Width)), (Self.X1 + Random(Self.Height)));
 end;
 
 {==============================================================================]

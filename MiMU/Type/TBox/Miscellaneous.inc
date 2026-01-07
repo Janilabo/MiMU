@@ -1,28 +1,24 @@
 {$IFDEF METHODS}
-class function Null(const value: Integer = -2147483648): TBox; overload; static;
+function Center: TPoint;
 function Frame(var fWidth, fHeight: Integer): TBox; overload;
 function Frame: TBox; overload;  
 function Horizontal: TRange; 
-function Vertical: TRange; 
-function Center: TPoint;  
+class function Null(const value: Integer = -2147483648): TBox; overload; static;
 function Reserve: TPointArray; overload; 
 function Reserve(var aBox: TPointArray): Integer; overload;
+function Vertical: TRange;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Null>
-  @action: Returns a "null" or empty box, represented by all coordinates set to 
-           the specified sentinel value.
-  @param: value - Optional integer to use as the sentinel for an empty box. 
-                  Defaults to Low(Integer) (-2147483648 for 32-bit integers).
-  @note:   This function is typically used to mark non-overlapping boxes resulting 
-           from intersection operations. It provides a consistent marker for 
-           "empty" boxes.
+  <Center>
+  @action: Returns Center point from bx.
+  @note: None.
 [==============================================================================}
-class function TBox.Null(const value: Integer = -2147483648): TBox; overload;
+function TBox.Center: TPoint;
 begin
-  Result := Box(value, value, value, value);
+  Result.X := Round(Self.X1 + ((Self.Width - 1) div 2));
+  Result.Y := Round(Self.Y1 + ((Self.Height - 1) div 2));
 end;
 
 {==============================================================================]
@@ -59,25 +55,18 @@ begin
 end;
 
 {==============================================================================]
-  <Vertical>
-  @action: Returns bx.Y1 and bx.Y2 as TRange.
-  @note: Vertical-axis.
+  <Null>
+  @action: Returns a "null" or empty box, represented by all coordinates set to 
+           the specified sentinel value.
+  @param: value - Optional integer to use as the sentinel for an empty box. 
+                  Defaults to Low(Integer) (-2147483648 for 32-bit integers).
+  @note:   This function is typically used to mark non-overlapping boxes resulting 
+           from intersection operations. It provides a consistent marker for 
+           "empty" boxes.
 [==============================================================================}
-function TBox.Vertical: TRange;
+class function TBox.Null(const value: Integer = -2147483648): TBox; overload;
 begin
-  Result.start := Self.Y1;
-  Result.stop := Self.Y2;
-end;  
-
-{==============================================================================]
-  <Center>
-  @action: Returns Center point from bx.
-  @note: None.
-[==============================================================================}
-function TBox.Center: TPoint;
-begin
-  Result.X := Round(Self.X1 + ((Self.Width - 1) div 2));
-  Result.Y := Round(Self.Y1 + ((Self.Height - 1) div 2));
+  Result := Box(value, value, value, value);
 end;
 
 {==============================================================================]
@@ -100,5 +89,16 @@ function TBox.Reserve(var aBox: TPointArray): Integer; overload;
 begin
   Result := Self.Area;
   SetLength(aBox, Result);
+end;
+
+{==============================================================================]
+  <Vertical>
+  @action: Returns bx.Y1 and bx.Y2 as TRange.
+  @note: Vertical-axis.
+[==============================================================================}
+function TBox.Vertical: TRange;
+begin
+  Result.start := Self.Y1;
+  Result.stop := Self.Y2;
 end;
 {$ENDIF}

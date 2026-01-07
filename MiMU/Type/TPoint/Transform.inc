@@ -1,9 +1,19 @@
 {$IFDEF METHODS}
-function Reflected: TPoint; inline;
 function Flipped: TPoint; inline;
+function Reflected: TPoint; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Flipped>
+  @action: Returns the point with its coordinates flipped (same as Reflected).
+  @note: This is a shorthand, stylistically different version of Reflected.
+[==============================================================================}
+function TPoint.Flipped: TPoint; inline;
+begin
+  Result := Point(Self.Y, Self.X);
+end;
+
 {==============================================================================]
   <Reflected>
   @action: Reflects the point across the line y = x.
@@ -13,15 +23,5 @@ function TPoint.Reflected: TPoint; inline;
 begin
   Result.X := Self.Y;
   Result.Y := Self.X;
-end;
-
-{==============================================================================]
-  <Flipped>
-  @action: Returns the point with its coordinates flipped (same as Reflected).
-  @note: This is a shorthand, stylistically different version of Reflected.
-[==============================================================================}
-function TPoint.Flipped: TPoint; inline;
-begin
-  Result := Point(Self.Y, Self.X);
 end;
 {$ENDIF}

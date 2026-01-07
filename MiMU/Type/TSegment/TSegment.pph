@@ -1,5 +1,5 @@
 {$I ../Base/Base.inc}
 
-{$I Construction.inc}
 {$I Bounds.inc}
+{$I Construction.inc}
 {$I Sampling.inc}

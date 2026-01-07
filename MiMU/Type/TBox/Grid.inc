@@ -1,39 +1,50 @@
 {$IFDEF METHODS}
-function Rows: Integer; overload;
-function Rows(const index: Integer): TPointArray; overload;
+function Column(const index: Integer): TPointArray; overload;
+function Column: T2DPointArray; overload;
 function Columns: Integer; overload;
 function Columns(const index: Integer): TPointArray; overload;
 function Row(const index: Integer): TPointArray; overload;
 function Row: T2DPointArray; overload;
-function Column(const index: Integer): TPointArray; overload;
-function Column: T2DPointArray; overload;
+function Rows: Integer; overload;
+function Rows(const index: Integer): TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Rows>
-  @action: Returns the number of rows in the box (height)
-  @note: Zero-based row indexing is from top (Y1) to bottom (Y2)
+  <Column>
+  @action: Returns all points in the specified column (top-to-bottom)
+  @note: 'index' is zero-based relative to the left edge (X1)
 [==============================================================================}
-function TBox.Rows: Integer; overload;
+function TBox.Column(const index: Integer): TPointArray; overload;
+var
+  i: Integer;
+  p: PPoint;
 begin
-  Result := (Self.Height);
+  if ((index < 0) or (index >= Self.Width)) then
+    Exit([]);
+  SetLength(Result, Self.Height);
+  p := PPoint(Result);
+  for i := 0 to (Self.Height - 1) do
+  begin
+    p^.X := (Self.X1 + index);
+    p^.Y := (Self.Y1 + i);
+    Inc(p);
+  end;
 end;
 
 {==============================================================================]
-  <Row>
-  @action: Returns all points in the specified row of the box, left-to-right.
-  @note: 'index' is zero-based relative to the top edge (Y1). Returns [] if index is out of bounds.
+  <Column>
+  @action: Returns TBox as its columns of TPoints.
+  @note: Column-major. Dimensions = [Width][Height].
 [==============================================================================}
-function TBox.Rows(const index: Integer): TPointArray; overload;
+function TBox.Column: T2DPointArray; overload;
 var
-  i: Integer;
+  x, y: Integer;
 begin
-  if ((index < 0) or not (index < Self.Height)) then
-    Exit([]);
-  SetLength(Result, Self.Width);
-  for i := 0 to High(Result) do
-    Result[i] := Point((Self.X1 + i), (Self.Y1 + index));
+  Result := T2D.Create(Point(0, 0), Self.Width, Self.Height);
+  for x := Self.X1 to Self.X2 do
+    for y := Self.Y1 to Self.Y2 do
+      Result[x - Self.X1][y - Self.Y1] := Point(x, y);
 end;
 
 {==============================================================================]
@@ -100,39 +111,28 @@ begin
 end;
 
 {==============================================================================]
-  <Column>
-  @action: Returns all points in the specified column (top-to-bottom)
-  @note: 'index' is zero-based relative to the left edge (X1)
+  <Rows>
+  @action: Returns the number of rows in the box (height)
+  @note: Zero-based row indexing is from top (Y1) to bottom (Y2)
 [==============================================================================}
-function TBox.Column(const index: Integer): TPointArray; overload;
-var
-  i: Integer;
-  p: PPoint;
+function TBox.Rows: Integer; overload;
 begin
-  if ((index < 0) or (index >= Self.Width)) then
-    Exit([]);
-  SetLength(Result, Self.Height);
-  p := PPoint(Result);
-  for i := 0 to (Self.Height - 1) do
-  begin
-    p^.X := (Self.X1 + index);
-    p^.Y := (Self.Y1 + i);
-    Inc(p);
-  end;
+  Result := (Self.Height);
 end;
 
 {==============================================================================]
-  <Column>
-  @action: Returns TBox as its columns of TPoints.
-  @note: Column-major. Dimensions = [Width][Height].
+  <Row>
+  @action: Returns all points in the specified row of the box, left-to-right.
+  @note: 'index' is zero-based relative to the top edge (Y1). Returns [] if index is out of bounds.
 [==============================================================================}
-function TBox.Column: T2DPointArray; overload;
+function TBox.Rows(const index: Integer): TPointArray; overload;
 var
-  x, y: Integer;
+  i: Integer;
 begin
-  Result := T2D.Create(Point(0, 0), Self.Width, Self.Height);
-  for x := Self.X1 to Self.X2 do
-    for y := Self.Y1 to Self.Y2 do
-      Result[x - Self.X1][y - Self.Y1] := Point(x, y);
+  if ((index < 0) or not (index < Self.Height)) then
+    Exit([]);
+  SetLength(Result, Self.Width);
+  for i := 0 to High(Result) do
+    Result[i] := Point((Self.X1 + i), (Self.Y1 + index));
 end;
 {$ENDIF}

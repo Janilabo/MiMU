@@ -1,36 +1,46 @@
 {$IFDEF METHODS}
-function DistX(const target: TPoint): Integer;
-function DistY(const target: TPoint): Integer;
+function Delta(const target: TPoint): TPoint;
+function DeltaX(const target: TPoint): Integer;
+function DeltaY(const target: TPoint): Integer;
 function DistanceX(const target: TPoint): Integer;
 function DistanceY(const target: TPoint): Integer;
 function DistMaxMinX(const Target: TPoint): Integer;
 function DistMaxMinY(const Target: TPoint): Integer;
-function DeltaX(const target: TPoint): Integer;
-function DeltaY(const target: TPoint): Integer;
-function Delta(const target: TPoint): TPoint;
+function DistX(const target: TPoint): Integer;
+function DistY(const target: TPoint): Integer;
 function HorizontalDist(const target: TPoint): Integer;
 function VerticalDist(const target: TPoint): Integer;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <DistX>
-  @action: Returns the absolute horizontal distance between this point and the target point.
-  @note: Equivalent to Abs(Self.X - target.X). Useful for quick delta comparisons on the X-axis.
+  <Delta>
+  @action: Returns the signed vector delta from this point to the target point as a TPoint (dx, dy).
+  @note: Equivalent to Point(Target.X - Self.X, Target.Y - Self.Y); useful for relative positioning, vector calculations, or directional offsets without absolute values.
 [==============================================================================}
-function TPoint.DistX(const target: TPoint): Integer;
+function TPoint.Delta(const target: TPoint): TPoint;
 begin
-  Result := Abs(Self.X - target.X);
+  Result := Point((target.X - Self.X), (target.Y - Self.Y));
 end;
 
 {==============================================================================]
-  <DistY>
-  @action: Returns the absolute vertical distance between this point and the target point.
-  @note: Equivalent to Abs(Self.Y - target.Y). Useful for quick delta comparisons on the Y-axis.
+  <DeltaX>
+  @action: Returns the signed horizontal delta from this point to the target point (positive if target is to the right).
+  @note: Equivalent to Target.X - Self.X; useful for directional movement or vector calculations without absolute value.
 [==============================================================================}
-function TPoint.DistY(const target: TPoint): Integer;
+function TPoint.DeltaX(const target: TPoint): Integer;
 begin
-  Result := Abs(Self.Y - target.Y);
+  Result := (target.X - Self.X);
+end;
+
+{==============================================================================]
+  <DeltaY>
+  @action: Returns the signed vertical delta from this point to the target point (positive if target is below).
+  @note: Equivalent to Target.Y - Self.Y; useful for directional movement or vector calculations without absolute value. Assumes Y increases downward in coordinate system.
+[==============================================================================}
+function TPoint.DeltaY(const target: TPoint): Integer;
+begin
+  Result := (target.Y - Self.Y);
 end;
 
 {==============================================================================]
@@ -82,33 +92,23 @@ begin
 end;
 
 {==============================================================================]
-  <DeltaX>
-  @action: Returns the signed horizontal delta from this point to the target point (positive if target is to the right).
-  @note: Equivalent to Target.X - Self.X; useful for directional movement or vector calculations without absolute value.
+  <DistX>
+  @action: Returns the absolute horizontal distance between this point and the target point.
+  @note: Equivalent to Abs(Self.X - target.X). Useful for quick delta comparisons on the X-axis.
 [==============================================================================}
-function TPoint.DeltaX(const target: TPoint): Integer;
+function TPoint.DistX(const target: TPoint): Integer;
 begin
-  Result := (target.X - Self.X);
+  Result := Abs(Self.X - target.X);
 end;
 
 {==============================================================================]
-  <DeltaY>
-  @action: Returns the signed vertical delta from this point to the target point (positive if target is below).
-  @note: Equivalent to Target.Y - Self.Y; useful for directional movement or vector calculations without absolute value. Assumes Y increases downward in coordinate system.
+  <DistY>
+  @action: Returns the absolute vertical distance between this point and the target point.
+  @note: Equivalent to Abs(Self.Y - target.Y). Useful for quick delta comparisons on the Y-axis.
 [==============================================================================}
-function TPoint.DeltaY(const target: TPoint): Integer;
+function TPoint.DistY(const target: TPoint): Integer;
 begin
-  Result := (target.Y - Self.Y);
-end;
-
-{==============================================================================]
-  <Delta>
-  @action: Returns the signed vector delta from this point to the target point as a TPoint (dx, dy).
-  @note: Equivalent to Point(Target.X - Self.X, Target.Y - Self.Y); useful for relative positioning, vector calculations, or directional offsets without absolute values.
-[==============================================================================}
-function TPoint.Delta(const target: TPoint): TPoint;
-begin
-  Result := Point((target.X - Self.X), (target.Y - Self.Y));
+  Result := Abs(Self.Y - target.Y);
 end;
 
 {==============================================================================]

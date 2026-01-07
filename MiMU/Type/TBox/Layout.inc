@@ -1,12 +1,35 @@
 {$IFDEF HELPERS}
+function AsColumn(const cells: Integer; const space: Integer = 0): TBoxArray;
 function AsGrid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;
 function AsRow(const cells: Integer; const space: Integer = 0): TBoxArray;
-function AsColumn(const cells: Integer; const space: Integer = 0): TBoxArray;
-function Tiled(const target: TBox): TBoxArray; overload;
 function Gridded(const target: TBox): TBoxArray; overload;
+function Tiled(const target: TBox): TBoxArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsColumn>
+  @action: Outputs column of boxes. Starting from bx,
+           where space is the amount of space between each cell.
+  @note: None
+[==============================================================================}
+function TBoxHelper.AsColumn(const cells: Integer; const space: Integer = 0): TBoxArray;
+var
+  w, h, i, z: Integer;
+begin
+  if (cells > 0) then
+  begin
+    Self.Size(w, h);
+    SetLength(Result, cells);
+    for i := 0 to (cells - 1) do
+    begin
+      z := (Self.Y1 + (i * (h + space)));
+      Result[i].Build(Self.X1, z, Self.X2, (z + (h - 1)));
+    end;
+  end else
+    SetLength(Result, 0);
+end;
+
 {==============================================================================]
   <AsGrid>
   @action: Outputs/builds grid of boxes with parameters;
@@ -62,26 +85,24 @@ begin
 end;
 
 {==============================================================================]
-  <AsColumn>
-  @action: Outputs column of boxes. Starting from bx,
-           where space is the amount of space between each cell.
-  @note: None
+  <Gridded>
+  @action: Generate non-overlapping, grid-aligned positions of Self inside target.
+  @note: Steps by Self Width and Height. Returns empty array if Self does not fit.
 [==============================================================================}
-function TBoxHelper.AsColumn(const cells: Integer; const space: Integer = 0): TBoxArray;
+function TBoxHelper.Gridded(const target: TBox): TBoxArray; overload;
 var
-  w, h, i, z: Integer;
+  l, y, x, r, c, w, h: Integer;
 begin
-  if (cells > 0) then
-  begin
-    Self.Size(w, h);
-    SetLength(Result, cells);
-    for i := 0 to (cells - 1) do
-    begin
-      z := (Self.Y1 + (i * (h + space)));
-      Result[i].Build(Self.X1, z, Self.X2, (z + (h - 1)));
-    end;
-  end else
-    SetLength(Result, 0);
+  Self.Size(w, h);
+  if ((w > target.Width) or (h > target.Height)) then
+    Exit([]);
+  c := (target.Width div w);
+  r := (target.Height div h);
+  SetLength(Result, (r * c));
+  l := 0;
+  for y := 0 to (r - 1) do
+    for x := 0 to (c - 1) do
+      Result[l.Increase].Form(Point((target.X1 + (w * x)), (target.Y1 + (h * y))), w, h);
 end;
 
 {==============================================================================]
@@ -108,26 +129,5 @@ begin
     while (x.Increment(w) <= m.X) do
       Result[r.Increase] := Box((f.X1 + x), (f.Y1 + y), (f.X2 + x), (f.Y2 + y));
   until (y.Increment(h) > m.Y);
-end;
-
-{==============================================================================]
-  <Gridded>
-  @action: Generate non-overlapping, grid-aligned positions of Self inside target.
-  @note: Steps by Self Width and Height. Returns empty array if Self does not fit.
-[==============================================================================}
-function TBoxHelper.Gridded(const target: TBox): TBoxArray; overload;
-var
-  l, y, x, r, c, w, h: Integer;
-begin
-  Self.Size(w, h);
-  if ((w > target.Width) or (h > target.Height)) then
-    Exit([]);
-  c := (target.Width div w);
-  r := (target.Height div h);
-  SetLength(Result, (r * c));
-  l := 0;
-  for y := 0 to (r - 1) do
-    for x := 0 to (c - 1) do
-      Result[l.Increase].Form(Point((target.X1 + (w * x)), (target.Y1 + (h * y))), w, h);
 end;
 {$ENDIF}

@@ -31,5 +31,3 @@ begin
   Result := (System.Length(Self.data) = 0);
 end;
 {$ENDIF}
-
-{$UNDEF BASE}{$UNDEF Integer}

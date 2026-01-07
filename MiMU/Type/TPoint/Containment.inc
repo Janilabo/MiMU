@@ -9,16 +9,6 @@ function Inside(const bx: TBox): Boolean; inline;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Inside>
-  @action: Returns true if pt is inside the given box (bx).
-  @note: None.
-[==============================================================================}
-function TPointHelper.Inside(const bx: TBox): Boolean; inline;
-begin
-  Result := ((Self.X >= bx.X1) and (Self.Y >= bx.Y1) and (Self.X <= bx.X2) and (Self.Y <= bx.Y2));
-end;
-
-{==============================================================================]
   <InCircle>
   @action: Returns true if pt is inside the given circle,
           that is defined by the center point and radius.
@@ -38,5 +28,15 @@ end;
 function TPoint.InEllipse(const center: TPoint; const XRadius, YRadius: Double): Boolean; inline;
 begin
   Result := (Sqr((Self.X - center.X) / XRadius) + Sqr((Self.Y - center.Y) / YRadius) <= 1);
+end;
+
+{==============================================================================]
+  <Inside>
+  @action: Returns true if pt is inside the given box (bx).
+  @note: None.
+[==============================================================================}
+function TPointHelper.Inside(const bx: TBox): Boolean; inline;
+begin
+  Result := ((Self.X >= bx.X1) and (Self.Y >= bx.Y1) and (Self.X <= bx.X2) and (Self.Y <= bx.Y2));
 end;
 {$ENDIF}

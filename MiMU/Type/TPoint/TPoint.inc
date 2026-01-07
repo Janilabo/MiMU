@@ -4,9 +4,9 @@
 TPoint = record
   X, Y: Integer;
   {$UNDEF TYPES}{$DEFINE METHODS}{$I TPoint.pph}{$UNDEF METHODS}{$DEFINE TYPES}
-  class function Null(const value: Integer = -2147483648): TPoint; overload; static; 
   function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; overload;
   function AngleRadians(const target: TPoint): Double; overload; 
+  class function Null(const value: Integer = -2147483648): TPoint; overload; static;
 end;
 TPointCompare = specialize TCompare<TPoint>;
 TPointArray = array of TPoint;
@@ -24,9 +24,9 @@ TDistance = function(const A, B: TPoint): Double;
 TPointHelper = type helper for TPoint
   {$I TPoint.pph}
   function Clamp(const area: TBox): TPoint;
-  function ToY(const yGoal: Integer): TPointArray; overload;
-  function ToX(const xGoal: Integer): TPointArray; overload;
   function Linked(const p: TPoint; const link: TPointArray): Boolean; overload;
+  function ToX(const xGoal: Integer): TPointArray; overload;
+  function ToY(const yGoal: Integer): TPointArray; overload;
 end;
 {$ENDIF}
 
@@ -35,19 +35,6 @@ end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Null>
-  @action: Returns a "null" or invalid point, with both X and Y set to the specified sentinel value.
-  @param: value - Optional integer to use as the sentinel for an empty point. Defaults 
-                  to Low(Integer) (-2147483648 for 32-bit integers).
-  @note:   This function is typically used to mark uninitialized or invalid points, 
-           such as the result of an intersection that yields no valid coordinates.
-[==============================================================================}
-class function TPoint.Null(const value: Integer = -2147483648): TPoint; overload; static;
-begin
-  Result := Point(value, value);
-end;
-
 {==============================================================================]
   <AngleDegrees>
   @action: Calculates the angle in degrees from source to target.
@@ -89,24 +76,30 @@ begin
 end;
 
 {==============================================================================]
-  <ToY>
-  @action: Returns an array of points forming a vertical line from Self to yGoal.
-  @note: X remains constant; Y increments or decrements depending on yGoal.
+  <Linked>
+  @action: Determines whether both the current point (Self) and the given point p
+           are present in the provided TPointArray. Returns True if both points
+           are contained in the array, False otherwise.
+  @note:   Uses the Contains helper of TPointArray for membership checks. This
+           method only checks array membership; it does not imply any geometric
+           connection or adjacency between the points.
 [==============================================================================}
-function TPointHelper.ToY(const yGoal: Integer): TPointArray; overload;
-var
-  i, r: Integer;
+function TPointHelper.Linked(const p: TPoint; const link: TPointArray): Boolean; overload;
 begin
-  SetLength(Result, (Abs(yGoal - Self.Y) + 1));
-  r := 0;
-  case (Self.Y > yGoal) of
-    True:
-    for i := Self.Y downto yGoal do
-      Result[r.Increase] := Point(Self.X, i);
-    False:
-    for i := Self.Y to yGoal do
-      Result[r.Increase] := Point(Self.X, i);
-  end;
+  Result := (link.Contains(Self) and link.Contains(p));
+end;
+
+{==============================================================================]
+  <Null>
+  @action: Returns a "null" or invalid point, with both X and Y set to the specified sentinel value.
+  @param: value - Optional integer to use as the sentinel for an empty point. Defaults 
+                  to Low(Integer) (-2147483648 for 32-bit integers).
+  @note:   This function is typically used to mark uninitialized or invalid points, 
+           such as the result of an intersection that yields no valid coordinates.
+[==============================================================================}
+class function TPoint.Null(const value: Integer = -2147483648): TPoint; overload; static;
+begin
+  Result := Point(value, value);
 end;
 
 {==============================================================================]
@@ -131,17 +124,24 @@ begin
 end;
 
 {==============================================================================]
-  <Linked>
-  @action: Determines whether both the current point (Self) and the given point p
-           are present in the provided TPointArray. Returns True if both points
-           are contained in the array, False otherwise.
-  @note:   Uses the Contains helper of TPointArray for membership checks. This
-           method only checks array membership; it does not imply any geometric
-           connection or adjacency between the points.
+  <ToY>
+  @action: Returns an array of points forming a vertical line from Self to yGoal.
+  @note: X remains constant; Y increments or decrements depending on yGoal.
 [==============================================================================}
-function TPointHelper.Linked(const p: TPoint; const link: TPointArray): Boolean; overload;
+function TPointHelper.ToY(const yGoal: Integer): TPointArray; overload;
+var
+  i, r: Integer;
 begin
-  Result := (link.Contains(Self) and link.Contains(p));
+  SetLength(Result, (Abs(yGoal - Self.Y) + 1));
+  r := 0;
+  case (Self.Y > yGoal) of
+    True:
+    for i := Self.Y downto yGoal do
+      Result[r.Increase] := Point(Self.X, i);
+    False:
+    for i := Self.Y to yGoal do
+      Result[r.Increase] := Point(Self.X, i);
+  end;
 end;
 {$ENDIF}
 

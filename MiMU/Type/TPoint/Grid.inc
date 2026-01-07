@@ -1,10 +1,29 @@
 {$IFDEF HELPERS}
+function Column(const cells: Integer; const space: Integer = 0): TPointArray;
 function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray;
 function Row(const cells: Integer; const space: Integer = 0): TPointArray;
-function Column(const cells: Integer; const space: Integer = 0): TPointArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Column>
+  @action: Outputs column of points. Starting from pt,
+           where space is the amount of space between each cell.
+  @note: None
+[==============================================================================}
+function TPointHelper.Column(const cells: Integer; const space: Integer = 0): TPointArray;
+var
+  i: Integer;
+begin
+  if (cells > 0) then
+  begin
+    SetLength(Result, cells);
+    for i := 0 to (cells - 1) do
+	  Result[i].Create(Self.X, (Self.Y + (i * (space + 1))));
+  end else
+    SetLength(Result, 0);
+end;
+
 {==============================================================================]
   <Grid>
   @action: Outputs/builds grid of points with parameters;
@@ -49,25 +68,6 @@ begin
     SetLength(Result, cells);
     for i := 0 to (cells - 1) do
 	  Result[i].Create((Self.X + (i * (space + 1))), Self.Y);
-  end else
-    SetLength(Result, 0);
-end;
-
-{==============================================================================]
-  <Column>
-  @action: Outputs column of points. Starting from pt,
-           where space is the amount of space between each cell.
-  @note: None
-[==============================================================================}
-function TPointHelper.Column(const cells: Integer; const space: Integer = 0): TPointArray;
-var
-  i: Integer;
-begin
-  if (cells > 0) then
-  begin
-    SetLength(Result, cells);
-    for i := 0 to (cells - 1) do
-	  Result[i].Create(Self.X, (Self.Y + (i * (space + 1))));
   end else
     SetLength(Result, 0);
 end;

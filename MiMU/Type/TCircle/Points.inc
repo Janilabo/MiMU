@@ -5,6 +5,22 @@ function TPA: TPointArray;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
+ <Points>
+ @action: Returns all the points of TCircle.
+ @note: None.
+[==============================================================================}
+function TCircle.Points: TPointArray;
+var
+  x, y: Integer;
+begin
+  SetLength(Result, 0);
+  for x := Trunc(Self.Center.X - Self.Radius) to Trunc(Self.Center.X + Self.Radius) do
+    for y := Trunc(Self.Center.Y - Self.Radius) to Trunc(Self.Center.Y + Self.Radius) do
+      if (Sqr(x - Self.Center.X) + Sqr(y - Self.Center.Y) <= Sqr(Self.Radius)) then
+        Result := (Result + [Point(x, y)]);
+end;
+
+{==============================================================================]
   <TPA>
   @action: Returns TCircle points as TPointArray.
   @note: None.
@@ -21,21 +37,5 @@ begin
     for x := b.X1 to b.X2 do
       if Self.Contains(Point(x, y)) then
         Result[p.Increase] := Point(x, y);
-end;
-
-{==============================================================================]
- <Points>
- @action: Returns all the points of TCircle.
- @note: None.
-[==============================================================================}
-function TCircle.Points: TPointArray;
-var
-  x, y: Integer;
-begin
-  SetLength(Result, 0);
-  for x := Trunc(Self.Center.X - Self.Radius) to Trunc(Self.Center.X + Self.Radius) do
-    for y := Trunc(Self.Center.Y - Self.Radius) to Trunc(Self.Center.Y + Self.Radius) do
-      if (Sqr(x - Self.Center.X) + Sqr(y - Self.Center.Y) <= Sqr(Self.Radius)) then
-        Result := (Result + [Point(x, y)]);
 end;
 {$ENDIF}

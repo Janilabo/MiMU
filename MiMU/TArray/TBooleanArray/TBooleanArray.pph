@@ -3,10 +3,10 @@
 {$I Binary.inc}
 {$I Bitwise.inc}
 {$I Conversion.inc}
-{$I Selection.inc}
-{$I Quantifier.inc}
-{$I Mutate.inc}
-{$I Transform.inc}
-{$I Reset.inc}
 {$I Metric.inc}
+{$I Mutate.inc}
+{$I Quantifier.inc}
+{$I Reset.inc}
 {$I Search.inc}
+{$I Selection.inc}
+{$I Transform.inc}

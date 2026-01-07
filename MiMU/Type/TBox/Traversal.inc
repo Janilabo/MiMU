@@ -1,11 +1,43 @@
 {$IFDEF METHODS}
+function Columnwise: TPointArray;
+function Rowwise: TPointArray;
 function Spiral: TPointArray; 
 function Traverse: TPointArray;
-function Rowwise: TPointArray; 
-function Columnwise: TPointArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Columnwise>
+  @action: Returns all TBox TPoints as Column-wise.
+  @note: None.
+[==============================================================================}
+function TBox.Columnwise: TPointArray;
+var
+  x, y, r: Integer;
+begin
+  SetLength(Result, Self.Area);
+  r := 0;
+  for x := X1 to X2 do
+    for y := Y1 to Y2 do
+      Result[r.Increase] := Point(x, y);
+end;
+
+{==============================================================================]
+  <Rowwise>
+  @action: Returns all TBox TPoints as Row-wise.
+  @note: None.
+[==============================================================================}
+function TBox.Rowwise: TPointArray;
+var
+  x, y, r: Integer;
+begin
+  SetLength(Result, Self.Area);
+  r := 0;
+  for y := Y1 to Y2 do
+    for x := X1 to X2 do
+      Result[r.Increase] := Point(x, y);
+end;
+
 {==============================================================================]
   <Spiral>
   @action: Returns TBox TPoints as spiral shaped TPointArray.
@@ -70,37 +102,5 @@ begin
     c.X := (c.x + x[z]);
     c.Y := (c.y + y[z]);
   end;
-end;
-
-{==============================================================================]
-  <Rowwise>
-  @action: Returns all TBox TPoints as Row-wise.
-  @note: None.
-[==============================================================================}
-function TBox.Rowwise: TPointArray;
-var
-  x, y, r: Integer;
-begin
-  SetLength(Result, Self.Area);
-  r := 0;
-  for y := Y1 to Y2 do
-    for x := X1 to X2 do
-      Result[r.Increase] := Point(x, y);
-end;
-
-{==============================================================================]
-  <Columnwise>
-  @action: Returns all TBox TPoints as Column-wise.
-  @note: None.
-[==============================================================================}
-function TBox.Columnwise: TPointArray;
-var
-  x, y, r: Integer;
-begin
-  SetLength(Result, Self.Area);
-  r := 0;
-  for x := X1 to X2 do
-    for y := Y1 to Y2 do
-      Result[r.Increase] := Point(x, y);
 end;
 {$ENDIF}

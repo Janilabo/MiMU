@@ -4,7 +4,6 @@
 {$I Enumerator.inc}
 TRange = record
   start, stop: Integer;
-  function GetEnumerator: TRangeEnumerator;
   {$UNDEF TYPES}{$DEFINE METHODS}{$I TRange.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 TRangeCompare = specialize TCompare<TRange>;
@@ -24,25 +23,6 @@ end;
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
 {$I TRange.pph}
-{$ENDIF}
-
-{$IFDEF IMPLEMENTATION}
-{$I Enumerator.inc}
-
-{==============================================================================]
-  <GetEnumerator>
-  @action: Creates and returns an enumerator that iterates through all integer
-           values contained in the range, following the iteration rules defined
-           by TRangeEnumerator.
-  @note: The iteration order and behavior (ascending, descending, inclusive, or
-         normalized) are determined entirely by TRangeEnumerator.Init. This
-         function performs no normalization and passes the range endpoints
-         exactly as stored.
-[==============================================================================}
-function TRange.GetEnumerator: TRangeEnumerator;
-begin
-  Result.Init(start, stop);
-end;
 {$ENDIF}
 
 {$UNDEF TRange}

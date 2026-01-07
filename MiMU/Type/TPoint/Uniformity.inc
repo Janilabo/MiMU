@@ -1,31 +1,11 @@
 {$IFDEF METHODS}
-function Uniform(const val: Integer): Boolean; overload;
-function Uniform: Boolean; overload;
 function Employs(const val: Integer): Boolean;
 function Omits(const val: Integer): Boolean;
+function Uniform(const val: Integer): Boolean; overload;
+function Uniform: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Uniform>
-  @action: Checks whether both coordinates of the point equal the specified value.
-  @note: Returns True only if (X = val) and (Y = val).
-[==============================================================================}
-function TPoint.Uniform(const val: Integer): Boolean; overload;
-begin
-  Result := ((Self.X = val) and (Self.Y = val));
-end;
-
-{==============================================================================]
-  <Uniform>
-  @action: Checks whether the point’s coordinates are equal to each other.
-  @note: Returns True if (X = Y).
-[==============================================================================}
-function TPoint.Uniform: Boolean; overload;
-begin
-  Result := (Self.X = Self.Y);
-end;
-
 {==============================================================================]
   <Employs>
   @action: Checks if the given integer value matches either the X or Y coordinate of the point.
@@ -44,5 +24,25 @@ end;
 function TPoint.Omits(const val: Integer): Boolean;
 begin
   Result := not ((Self.X = val) or (Self.Y = val));
+end;
+
+{==============================================================================]
+  <Uniform>
+  @action: Checks whether both coordinates of the point equal the specified value.
+  @note: Returns True only if (X = val) and (Y = val).
+[==============================================================================}
+function TPoint.Uniform(const val: Integer): Boolean; overload;
+begin
+  Result := ((Self.X = val) and (Self.Y = val));
+end;
+
+{==============================================================================]
+  <Uniform>
+  @action: Checks whether the point’s coordinates are equal to each other.
+  @note: Returns True if (X = Y).
+[==============================================================================}
+function TPoint.Uniform: Boolean; overload;
+begin
+  Result := (Self.X = Self.Y);
 end;
 {$ENDIF}

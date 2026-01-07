@@ -1,8 +1,8 @@
 {$DEFINE Integer}{$I ../../Type/Defines.inc}
 
 {$IFDEF TYPES}
-{$I XIntegerArray.inc}
 {$I CIntegerArray.inc}
+{$I XIntegerArray.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}
@@ -14,9 +14,9 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(CLASSES) OR DEFINED(IMPLEMENTATION)}
+{$I CIntegerArray.inc}
 {$I TIntegerArray.pph}
 {$I XIntegerArray.inc}
-{$I CIntegerArray.inc}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
