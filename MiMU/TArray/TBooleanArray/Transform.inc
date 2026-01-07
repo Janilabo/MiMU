@@ -1,23 +1,9 @@
 {$IFDEF HELPERS}
-function Toggle: TBooleanArray; overload;
 function Opposite: TBooleanArray; overload;
+function Toggle: TBooleanArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Toggle>
-  @action: Returns opposite version of arr.
-  @note: [True, False] => [False, True].
-[==============================================================================}
-function TBooleanArrayHelper.Toggle: TBooleanArray; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
-    Result[i] := (not Self[i]);
-end;
-
 {==============================================================================]
   <Opposite>
   @action: Returns opposite version of arr.
@@ -33,5 +19,19 @@ begin
       Result[i] := False
 	else
 	  Result[i] := True;
+end;
+
+{==============================================================================]
+  <Toggle>
+  @action: Returns opposite version of arr.
+  @note: [True, False] => [False, True].
+[==============================================================================}
+function TBooleanArrayHelper.Toggle: TBooleanArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Self) do
+    Result[i] := (not Self[i]);
 end;
 {$ENDIF}

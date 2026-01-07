@@ -10,9 +10,9 @@ end;
 {$IFDEF HELPERS}
 TDoubleArrayHelper = type helper for TDoubleArray
   {$I TDoubleArray.pph}
-  function Reinit: Integer; overload;
   function Attach(const items: TDoubleArray): Integer; overload;
   function Embed(const items: TDoubleArray; const index: Integer = 2147483647): Integer; overload;
+  function Reinit: Integer; overload;
 end;
 {$ENDIF}
 
@@ -21,19 +21,6 @@ end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Reinit>
-  @action: Clears all elements of the array by zero-filling the underlying memory,
-           while keeping the current length unchanged.
-  @note: None.
-[==============================================================================}
-function TDoubleArrayHelper.Reinit: Integer; overload;
-begin
-  Result := Self.Size;
-  if (Result > 0) then
-    FillChar(Pointer(Self)^, (Result * SizeOf(Double)), 0);
-end;
-
 {==============================================================================]
   <Attach>
   @action: Appends all points from the given array to the end of Self.
@@ -79,6 +66,19 @@ begin
     Move(Self[p], Self[p + l], (t * SizeOf(Double)));
   Move(items[0], Self[p], (l * SizeOf(Double)));
   Result := Self.Size;
+end;
+
+{==============================================================================]
+  <Reinit>
+  @action: Clears all elements of the array by zero-filling the underlying memory,
+           while keeping the current length unchanged.
+  @note: None.
+[==============================================================================}
+function TDoubleArrayHelper.Reinit: Integer; overload;
+begin
+  Result := Self.Size;
+  if (Result > 0) then
+    FillChar(Pointer(Self)^, (Result * SizeOf(Double)), 0);
 end;
 {$ENDIF}
 

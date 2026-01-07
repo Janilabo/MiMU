@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function Bits: Integer;
 function Bitify: Integer;
+function Bits: Integer;
 function ToBits: Integer;
 {$ENDIF}
 

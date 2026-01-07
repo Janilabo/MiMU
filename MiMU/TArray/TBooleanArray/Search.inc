@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function Trues: TIntegerArray; overload;
 function Falses: TIntegerArray; overload;
+function Trues: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

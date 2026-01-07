@@ -1,22 +1,22 @@
 {$IFDEF HELPERS}
-function BinaryStr: string;
-function BinaryDigits: TIntegerArray;
 function Binary: string;
+function BinaryDigits: TIntegerArray;
+function BinaryStr: string;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <BinaryStr>
+  <Binary>
   @action: Returns binary string from Boolean Array
   @note: [True, False] => '10' & [False, True] => '01'
 [==============================================================================}
-function TBooleanArrayHelper.BinaryStr: string;
+function TBooleanArrayHelper.Binary: string;
 var
   i: Integer;
 begin
-  Result := '';
+  SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
-    Result := (Result + IfThen(Self[i], '1', '0'));  
+    Result[i] := Self[i].Binary;  
 end;
 
 {==============================================================================]
@@ -34,16 +34,16 @@ begin
 end;
 
 {==============================================================================]
-  <Binary>
+  <BinaryStr>
   @action: Returns binary string from Boolean Array
   @note: [True, False] => '10' & [False, True] => '01'
 [==============================================================================}
-function TBooleanArrayHelper.Binary: string;
+function TBooleanArrayHelper.BinaryStr: string;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
+  Result := '';
   for i := 0 to High(Self) do
-    Result[i] := Self[i].Binary;  
+    Result := (Result + IfThen(Self[i], '1', '0'));  
 end;
 {$ENDIF}

@@ -1,39 +1,15 @@
 {$IFDEF HELPERS}
-function Str: string;
-function ToStr: string;
 function Join: string; overload;
 function Join(const glue: string): string; overload;
+function Ordinals: TIntegerArray;
+function Str: string;
 function Stringify: string; overload;
 function Stringify(const glue: string): string; overload;
-function Ordinals: TIntegerArray;
+function ToStr: string;
 function TSA: TStringArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Str>
-  @action: Returns arr joined together as string.
-  @note: None.
-[==============================================================================}
-function TCharArrayHelper.Str: string;
-begin
-  if Self.Empty then
-    Exit('');
-  SetString(Result, PChar(@Self[0]), Self.Size);
-end;
-
-{==============================================================================]
-  <ToStr>
-  @action: Returns arr joined together as string.
-  @note: None.
-[==============================================================================}
-function TCharArrayHelper.ToStr: string;
-begin
-  SetLength(Result, Self.Size);
-  if Self.Exists then
-    Move(Self[0], Result[1], (Self.Size * SizeOf(Char)));
-end;
-
 {==============================================================================]
   <Join>
   @action: Returns arr joined together as string.
@@ -63,6 +39,32 @@ begin
   for i := 0 to (High(Self) - 1) do
     Result := (Result + Self[i] + glue);
   Result := (Result + Self[High(Self)]);
+end;
+
+{==============================================================================]
+  <Ordinals>
+  @action: Returns Ord() of every array items as TIntegerArray.
+  @note: None.
+[==============================================================================}
+function TCharArrayHelper.Ordinals: TIntegerArray;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Self) do
+    Result[i] := Ord(Self[i]);
+end;
+
+{==============================================================================]
+  <Str>
+  @action: Returns arr joined together as string.
+  @note: None.
+[==============================================================================}
+function TCharArrayHelper.Str: string;
+begin
+  if Self.Empty then
+    Exit('');
+  SetString(Result, PChar(@Self[0]), Self.Size);
 end;
 
 {==============================================================================]
@@ -104,17 +106,15 @@ begin
 end;
 
 {==============================================================================]
-  <Ordinals>
-  @action: Returns Ord() of every array items as TIntegerArray.
+  <ToStr>
+  @action: Returns arr joined together as string.
   @note: None.
 [==============================================================================}
-function TCharArrayHelper.Ordinals: TIntegerArray;
-var
-  i: Integer;
+function TCharArrayHelper.ToStr: string;
 begin
   SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
-    Result[i] := Ord(Self[i]);
+  if Self.Exists then
+    Move(Self[0], Result[1], (Self.Size * SizeOf(Char)));
 end;
 
 {==============================================================================]
