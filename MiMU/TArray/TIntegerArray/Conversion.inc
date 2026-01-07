@@ -1,12 +1,12 @@
 {$IFDEF HELPERS}
 function Charify: TCharArray; overload;
 function Charify(var str: string): TCharArray; overload;
+function Ranges: TRangeArray; overload;
+function Ranges(const aAscending: Boolean): TRangeArray; overload;
 function Stringify: string; overload;
 function Stringify(var chars: TCharArray): string; overload;
 function ToRanges: TRangeArray; overload;
 function ToRanges(const aAscending: Boolean): TRangeArray; overload;
-function Ranges: TRangeArray; overload;
-function Ranges(const aAscending: Boolean): TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -41,6 +41,90 @@ begin
     Result[i] := Chr(Self[i]);
     str[i + 1] := Result[i];
   end;
+end;
+
+{==============================================================================]
+  <Ranges>
+  @action: Converts the integer array into an array of consecutive ranges (TRangeArray)
+           using overlapping ranges. Each range represents a sequence of consecutive
+           integers (ascending or descending) in the array. A new range starts from
+           the previous range’s stop whenever the sequence trend breaks.
+  @note: - Returns an empty array if the source array is empty.
+         - If the array has one element, the range has Start = Stop.
+         - If the array has two elements, the range covers both values.
+         - The direction (ascending/descending) is determined automatically.
+         - Overlapping ensures that each new range starts from the last stop.
+         - Useful for compressing sequences or detecting consecutive runs.
+[==============================================================================}
+function TIntegerArrayHelper.Ranges: TRangeArray; overload;
+var
+  h, l, d, s, i: Integer;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit([]);
+    1: Exit([TRange.Construct(Self[0], Self[0])]);
+    2: Exit([TRange.Construct(Self[0], Self[1])]);
+  end;
+  SetLength(Result, l);
+  h := 0;
+  Result[0].Create(Self[0], Self[1]);
+  d := Result[0].Direction;
+  i := 2;
+  repeat
+    s := Result[h].stop.Sign(Self[i]);
+    case ((d = 0) or ((s = 0) or (s = d))) of
+      True:
+      begin
+        if (d = 0) then
+          d := s;
+        Result[h].stop := Self[i];
+      end;
+      False:
+      begin
+        d := 0;
+        Result[h.Increment].Create(Self[i.Decrement]);
+      end;
+    end;
+  until (i.Increment >= l);
+  SetLength(Result, (h + 1));
+end;
+
+{==============================================================================]
+  <Ranges>
+  @action: Converts the integer array into an array of ranges (TRangeArray) following
+           a specific direction (ascending or descending) using overlapping ranges.
+           Each range starts from the previous range’s stop and continues in the
+           specified direction until the trend breaks.
+  @note: - If aAscending = True, ranges only include ascending steps.
+         - If aAscending = False, ranges only include descending steps.
+         - Repeated values (0 sign) are included in the same range.
+         - Returns empty array for empty input; single-element arrays produce
+           a single-element range.
+         - Useful for generating directional ranges with overlaps.
+[==============================================================================}
+function TIntegerArrayHelper.Ranges(const aAscending: Boolean): TRangeArray; overload;
+var
+  h, l, d, s, i: Integer;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit([]);
+    1: Exit([TRange.Construct(Self[0], Self[0])]);
+  end;
+  SetLength(Result, l);
+  h := 0;
+  Result[0].Create(Self[0]);
+  d := IfThen(aAscending, 1, -1);
+  i := 1;
+  repeat
+    s := Result[h].stop.Sign(Self[i]);
+    if ((s = 0) or (s = d)) then
+      Result[h].stop := Self[i]
+    else
+      Result[h.Increment].Create(Self[i]);
+  until (i.Increment >= l);
+  SetLength(Result, (h + 1));
 end;
 
 {==============================================================================]
@@ -155,90 +239,6 @@ begin
     else
       Result[h.Increment].Create(Self[i]);
   end;
-  SetLength(Result, (h + 1));
-end;
-
-{==============================================================================]
-  <Ranges>
-  @action: Converts the integer array into an array of consecutive ranges (TRangeArray)
-           using overlapping ranges. Each range represents a sequence of consecutive
-           integers (ascending or descending) in the array. A new range starts from
-           the previous range’s stop whenever the sequence trend breaks.
-  @note: - Returns an empty array if the source array is empty.
-         - If the array has one element, the range has Start = Stop.
-         - If the array has two elements, the range covers both values.
-         - The direction (ascending/descending) is determined automatically.
-         - Overlapping ensures that each new range starts from the last stop.
-         - Useful for compressing sequences or detecting consecutive runs.
-[==============================================================================}
-function TIntegerArrayHelper.Ranges: TRangeArray; overload;
-var
-  h, l, d, s, i: Integer;
-begin
-  l := Self.Length;
-  case l of
-    0: Exit([]);
-    1: Exit([TRange.Construct(Self[0], Self[0])]);
-    2: Exit([TRange.Construct(Self[0], Self[1])]);
-  end;
-  SetLength(Result, l);
-  h := 0;
-  Result[0].Create(Self[0], Self[1]);
-  d := Result[0].Direction;
-  i := 2;
-  repeat
-    s := Result[h].stop.Sign(Self[i]);
-    case ((d = 0) or ((s = 0) or (s = d))) of
-      True:
-      begin
-        if (d = 0) then
-          d := s;
-        Result[h].stop := Self[i];
-      end;
-      False:
-      begin
-        d := 0;
-        Result[h.Increment].Create(Self[i.Decrement]);
-      end;
-    end;
-  until (i.Increment >= l);
-  SetLength(Result, (h + 1));
-end;
-
-{==============================================================================]
-  <Ranges>
-  @action: Converts the integer array into an array of ranges (TRangeArray) following
-           a specific direction (ascending or descending) using overlapping ranges.
-           Each range starts from the previous range’s stop and continues in the
-           specified direction until the trend breaks.
-  @note: - If aAscending = True, ranges only include ascending steps.
-         - If aAscending = False, ranges only include descending steps.
-         - Repeated values (0 sign) are included in the same range.
-         - Returns empty array for empty input; single-element arrays produce
-           a single-element range.
-         - Useful for generating directional ranges with overlaps.
-[==============================================================================}
-function TIntegerArrayHelper.Ranges(const aAscending: Boolean): TRangeArray; overload;
-var
-  h, l, d, s, i: Integer;
-begin
-  l := Self.Length;
-  case l of
-    0: Exit([]);
-    1: Exit([TRange.Construct(Self[0], Self[0])]);
-  end;
-  SetLength(Result, l);
-  h := 0;
-  Result[0].Create(Self[0]);
-  d := IfThen(aAscending, 1, -1);
-  i := 1;
-  repeat
-    s := Result[h].stop.Sign(Self[i]);
-    if ((s = 0) or (s = d)) then
-      Result[h].stop := Self[i]
-    else
-      Result[h.Increment].Create(Self[i]);
-  until (i.Increment >= l);
   SetLength(Result, (h + 1));
 end;
 {$ENDIF}

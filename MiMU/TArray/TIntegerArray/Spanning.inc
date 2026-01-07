@@ -1,12 +1,12 @@
 {$IFDEF HELPERS}
 function Broaden(const rValues: TRange; const aIndex: Integer): TRange; overload;
 function Broaden(const rValues: TRange; const sSorted: Boolean = False): TRange; overload;
+function ExpandGradient(const index: Integer; const tolerance: Integer): TRange;
 function Spanning(const range: TRange; const oAscending: Boolean = True): TRange; overload;
 function Splay(const index: Integer; const tolerance: Integer = 1; const oAscending: Boolean = True): TRange; overload;
 function Splay(const index: Integer; const limits: TRange; const tolerance: Integer = 1; const oAscending: Boolean = True): TRange; overload;
 function Trace(const index: Integer; const tolerance: Integer = 1): TRange; overload;
 function Trace(const index: Integer; const limits: TRange; const tolerance: Integer = 1): TRange; overload;
-function ExpandGradient(const index: Integer; const tolerance: Integer): TRange;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -72,6 +72,59 @@ begin
         Exit(Self.Broaden(rValues, i));
   end;
   Result.Create(-1);
+end;
+
+{==============================================================================]
+  <ExpandGradient>
+  @action: Expands from `index` while the rate of change (gradient) between
+           consecutive elements stays within `tolerance`. Useful for finding
+           regions with similar slope.
+  @note: For sorted arrays, this finds ranges where values increase/decrease
+         at a consistent rate. Tolerance represents maximum allowed change in
+         gradient (second derivative).
+  @example: arr=[10,12,14,16,20,25,31], index=2, tolerance=1
+            → gradient changes: 2,2,2,4,5,6 → stops when gradient jumps by >1
+[==============================================================================}
+function TIntegerArrayHelper.ExpandGradient(const index: Integer; const tolerance: Integer): TRange;
+var
+  H: Integer;
+  B, C: Integer;
+begin
+  Result.start := -1;
+  Result.stop := -1;
+  H := High(Self);
+  if ((index < 0) or (index > H) or (tolerance < 0)) then
+    Exit(TRange.Construct(-1, -1));
+  if (H < 1) then
+    Exit(TRange.Construct(index, index));
+  Result.start := index;
+  Result.stop := index;
+  if (index > 0) then
+    B := Abs(Self[index] - Self[index - 1])
+  else if (index < High(Self)) then
+    B := Abs(Self[index + 1] - Self[index])
+  else
+    B := 0;
+  while (Result.start > 1) do
+  begin
+    C := Abs(Self[Result.start] - Self[Result.start - 1]);
+    if (Abs(C - B) > tolerance) then
+      Break;
+    Dec(Result.start);
+    B := C;
+  end;
+  if (index < H) then
+    B := Abs(Self[index + 1] - Self[index])
+  else if (index > 0) then
+    B := Abs(Self[index] - Self[index - 1]);
+  while (Result.stop < (H - 1)) do
+  begin
+    C := Abs(Self[Result.stop + 1] - Self[Result.stop]);
+    if (Abs(C - B) > tolerance) then
+      Break;
+    Inc(Result.stop);
+    B := C;
+  end;
 end;
 
 {==============================================================================]
@@ -261,58 +314,5 @@ begin
       Inc(Result.stop)
     else
       Break;
-end;
-
-{==============================================================================]
-  <ExpandGradient>
-  @action: Expands from `index` while the rate of change (gradient) between
-           consecutive elements stays within `tolerance`. Useful for finding
-           regions with similar slope.
-  @note: For sorted arrays, this finds ranges where values increase/decrease
-         at a consistent rate. Tolerance represents maximum allowed change in
-         gradient (second derivative).
-  @example: arr=[10,12,14,16,20,25,31], index=2, tolerance=1
-            → gradient changes: 2,2,2,4,5,6 → stops when gradient jumps by >1
-[==============================================================================}
-function TIntegerArrayHelper.ExpandGradient(const index: Integer; const tolerance: Integer): TRange;
-var
-  H: Integer;
-  B, C: Integer;
-begin
-  Result.start := -1;
-  Result.stop := -1;
-  H := High(Self);
-  if ((index < 0) or (index > H) or (tolerance < 0)) then
-    Exit(TRange.Construct(-1, -1));
-  if (H < 1) then
-    Exit(TRange.Construct(index, index));
-  Result.start := index;
-  Result.stop := index;
-  if (index > 0) then
-    B := Abs(Self[index] - Self[index - 1])
-  else if (index < High(Self)) then
-    B := Abs(Self[index + 1] - Self[index])
-  else
-    B := 0;
-  while (Result.start > 1) do
-  begin
-    C := Abs(Self[Result.start] - Self[Result.start - 1]);
-    if (Abs(C - B) > tolerance) then
-      Break;
-    Dec(Result.start);
-    B := C;
-  end;
-  if (index < H) then
-    B := Abs(Self[index + 1] - Self[index])
-  else if (index > 0) then
-    B := Abs(Self[index] - Self[index - 1]);
-  while (Result.stop < (H - 1)) do
-  begin
-    C := Abs(Self[Result.stop + 1] - Self[Result.stop]);
-    if (Abs(C - B) > tolerance) then
-      Break;
-    Inc(Result.stop);
-    B := C;
-  end;
 end;
 {$ENDIF}

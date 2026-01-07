@@ -1,10 +1,44 @@
 {$IFDEF HELPERS}
-function RadixSort(const aAscending: Boolean = True): Integer;
 function CountingSort(const aAscending: Boolean = True): Integer;
+function RadixSort(const aAscending: Boolean = True): Integer;
 function SegmentedCountingSort(const aAscending: Boolean = True; const bucketSize: Integer = 1024): Integer;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <CountingSort>
+  @action: Sorts the integer array using the classical counting sort algorithm.
+           Works efficiently when the range of integer values is relatively small.
+  @note: 
+    - This method handles negative and positive integers.
+    - The algorithm counts the occurrences of each integer and writes them back
+      in sorted order.
+    - Always sorts in ascending order; descending order is not supported in this version.
+    - Counting array size is based on the range of values in the array, so large
+      ranges may use significant memory.
+[==============================================================================}
+function TIntegerArrayHelper.CountingSort(const aAscending: Boolean = True): Integer;
+var
+  c: TIntegerArray;
+  i, j, s, o: Integer;
+  m: TRange;
+begin
+  Result := Self.Size;
+  if (Result < 2) then
+    Exit;
+  m := Self.Bounds;
+  o := -m.start;
+  SetLength(c, m.Size);
+  for i := 0 to High(Self) do
+    Inc(c[Self[i] + o]);
+  s := 0;
+  for i := 0 to m.Span do
+    for j := 1 to c[i] do
+      Self[s.Increase] := (i - o);
+  if not aAscending then
+    Self.Reverse;
+end;
+
 {==============================================================================]
   <RadixSort>
   @action: RadixSort for TIntegerArrays.
@@ -82,40 +116,6 @@ begin
     Self := (n + a)
   else
     Self := (a.Reversed + n.Reversed);
-end;
-
-{==============================================================================]
-  <CountingSort>
-  @action: Sorts the integer array using the classical counting sort algorithm.
-           Works efficiently when the range of integer values is relatively small.
-  @note: 
-    - This method handles negative and positive integers.
-    - The algorithm counts the occurrences of each integer and writes them back
-      in sorted order.
-    - Always sorts in ascending order; descending order is not supported in this version.
-    - Counting array size is based on the range of values in the array, so large
-      ranges may use significant memory.
-[==============================================================================}
-function TIntegerArrayHelper.CountingSort(const aAscending: Boolean = True): Integer;
-var
-  c: TIntegerArray;
-  i, j, s, o: Integer;
-  m: TRange;
-begin
-  Result := Self.Size;
-  if (Result < 2) then
-    Exit;
-  m := Self.Bounds;
-  o := -m.start;
-  SetLength(c, m.Size);
-  for i := 0 to High(Self) do
-    Inc(c[Self[i] + o]);
-  s := 0;
-  for i := 0 to m.Span do
-    for j := 1 to c[i] do
-      Self[s.Increase] := (i - o);
-  if not aAscending then
-    Self.Reverse;
 end;
 
 {==============================================================================]

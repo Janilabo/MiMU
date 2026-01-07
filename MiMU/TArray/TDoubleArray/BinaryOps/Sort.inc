@@ -1,41 +1,65 @@
 {$IFDEF HELPERS}
-function BSort(const aAscending: Boolean = True): Integer;
-function BinarySort(const aAscending: Boolean = True): Integer;
-function BinarySorted(const aAscending: Boolean = True): TDoubleArray;
 function BinaryInsertSort(const oAscending: Boolean = True): Integer; overload;
 function BinaryInsertSorted(const oAscending: Boolean = True): TDoubleArray; overload;
+function BinarySort(const aAscending: Boolean = True): Integer;
+function BinarySorted(const aAscending: Boolean = True): TDoubleArray;
+function BSort(const aAscending: Boolean = True): Integer;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <BSort>
-  @action: BinarySort algorithm for TDoubleArrays (based on Binary Search).
-  @note: Returns High(arr).
-[==============================================================================}
-function TDoubleArrayHelper.BSort(const aAscending: Boolean = True): Integer;
+function TDoubleArrayHelper.BinaryInsertSort(const oAscending: Boolean = True): Integer; overload;
 var
-  a: Double;
-  i, j, m, o: Integer;
-  r: TRange;
+  K: Double;
+  i, j, L, R, M, P: Integer;
 begin
-  Result := High(Self);
-  if (Result > 0) then
-    o := aAscending.Select(-1, 1);
-  for i := 1 to Result do
+  Result := Self.Size;
+  for i := 1 to (Result - 1) do
   begin
-    a := Self[i];
-    r.Create(0, (i - 1));
-    while r.Ascending do
+    K := Self[i];
+    P := 0;
+    L := 0;
+    R := (i - 1);
+    while (L <= R) do
     begin
-      m := r.Pivot;
-      if (Sign(a - Self[m]) = o) then
-        r.stop := (m - 1)
+      M := (L + ((R - L) div 2));
+      if ((oAscending and (K < Self[M])) or ((not oAscending) and (K > Self[M]))) then
+        R := (M - 1)
       else
-        r.start := (m + 1);
+        L := (M + 1);
     end;
-    for j := (i - 1) downto r.start do
-      Self[j + 1] := Self[j];
-    Self[r.start] := a;
+    P := L;
+    j := (i - 1);
+    while (j >= P) do
+      Self[j + 1] := Self[j.Decrease];
+    Self[P] := K;
+  end;
+end;
+
+function TDoubleArrayHelper.BinaryInsertSorted(const oAscending: Boolean = True): TDoubleArray; overload;
+var
+  K: Double;
+  i, j, L, R, M, P: Integer;
+begin
+  Result := Self.Copy;
+  for i := 1 to High(Result) do
+  begin
+    K := Result[i];
+    P := 0;
+    L := 0;
+    R := (i - 1);
+    while (L <= R) do
+    begin
+      M := (L + ((R - L) div 2));
+      if ((oAscending and (K < Result[M])) or ((not oAscending) and (K > Result[M]))) then
+        R := (M - 1)
+      else
+        L := (M + 1);
+    end;
+    P := L;
+    j := (i - 1);
+    while (j >= P) do
+      Result[j + 1] := Result[j.Decrease];
+    Result[P] := K;
   end;
 end;
 
@@ -109,59 +133,35 @@ begin
   end;
 end;
 
-function TDoubleArrayHelper.BinaryInsertSorted(const oAscending: Boolean = True): TDoubleArray; overload;
+{==============================================================================]
+  <BSort>
+  @action: BinarySort algorithm for TDoubleArrays (based on Binary Search).
+  @note: Returns High(arr).
+[==============================================================================}
+function TDoubleArrayHelper.BSort(const aAscending: Boolean = True): Integer;
 var
-  K: Double;
-  i, j, L, R, M, P: Integer;
+  a: Double;
+  i, j, m, o: Integer;
+  r: TRange;
 begin
-  Result := Self.Copy;
-  for i := 1 to High(Result) do
+  Result := High(Self);
+  if (Result > 0) then
+    o := aAscending.Select(-1, 1);
+  for i := 1 to Result do
   begin
-    K := Result[i];
-    P := 0;
-    L := 0;
-    R := (i - 1);
-    while (L <= R) do
+    a := Self[i];
+    r.Create(0, (i - 1));
+    while r.Ascending do
     begin
-      M := (L + ((R - L) div 2));
-      if ((oAscending and (K < Result[M])) or ((not oAscending) and (K > Result[M]))) then
-        R := (M - 1)
+      m := r.Pivot;
+      if (Sign(a - Self[m]) = o) then
+        r.stop := (m - 1)
       else
-        L := (M + 1);
+        r.start := (m + 1);
     end;
-    P := L;
-    j := (i - 1);
-    while (j >= P) do
-      Result[j + 1] := Result[j.Decrease];
-    Result[P] := K;
-  end;
-end;
-
-function TDoubleArrayHelper.BinaryInsertSort(const oAscending: Boolean = True): Integer; overload;
-var
-  K: Double;
-  i, j, L, R, M, P: Integer;
-begin
-  Result := Self.Size;
-  for i := 1 to (Result - 1) do
-  begin
-    K := Self[i];
-    P := 0;
-    L := 0;
-    R := (i - 1);
-    while (L <= R) do
-    begin
-      M := (L + ((R - L) div 2));
-      if ((oAscending and (K < Self[M])) or ((not oAscending) and (K > Self[M]))) then
-        R := (M - 1)
-      else
-        L := (M + 1);
-    end;
-    P := L;
-    j := (i - 1);
-    while (j >= P) do
-      Self[j + 1] := Self[j.Decrease];
-    Self[P] := K;
+    for j := (i - 1) downto r.start do
+      Self[j + 1] := Self[j];
+    Self[r.start] := a;
   end;
 end;
 {$ENDIF}

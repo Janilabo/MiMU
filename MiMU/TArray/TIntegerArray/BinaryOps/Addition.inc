@@ -1,38 +1,11 @@
 {$IFDEF HELPERS}
-function BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer;
 function BinaryAdd(const x: Integer; const aAscending: Boolean = True): TIntegerArray;
+function BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer;
 function BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean;
 function BinaryInsert(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <BinaryAppend>
-  @action: Binary Append method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the index x was added to.
-  @note: Works with sorted arrays! (aAscending or descending)
-[==============================================================================}
-function TIntegerArrayHelper.BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer;
-var
-  m, i, o: Integer;
-  r: TRange;
-begin
-  o := aAscending.Select(1, -1);
-  r.Create(0, High(Self));
-  while r.Ascending do
-  begin
-    m := r.Pivot;
-    if ((o * Self[m]) < (o * x)) then
-      r.start := (m + 1)
-    else
-      r.stop := (m - 1);
-  end;
-  Result := r.start;
-  SetLength(Self, (Self.Size + 1));
-  for i := High(Self) downto (Result + 1) do
-    Self[i] := Self[i - 1];
-  Self[Result] := x;
-end;
-
 {==============================================================================]
   <BinaryAdd>
   @action: Binary Add method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the arr with x.
@@ -59,6 +32,33 @@ begin
   Result[r.start] := x;
   for i := r.start to High(Self) do
     Result[i + 1] := Self[i];
+end;
+
+{==============================================================================]
+  <BinaryAppend>
+  @action: Binary Append method, adds x to the arr and keeps it in order. Locates right index with Binary Search. Returns the index x was added to.
+  @note: Works with sorted arrays! (aAscending or descending)
+[==============================================================================}
+function TIntegerArrayHelper.BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer;
+var
+  m, i, o: Integer;
+  r: TRange;
+begin
+  o := aAscending.Select(1, -1);
+  r.Create(0, High(Self));
+  while r.Ascending do
+  begin
+    m := r.Pivot;
+    if ((o * Self[m]) < (o * x)) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  Result := r.start;
+  SetLength(Self, (Self.Size + 1));
+  for i := High(Self) downto (Result + 1) do
+    Self[i] := Self[i - 1];
+  Self[Result] := x;
 end;
 
 {==============================================================================]

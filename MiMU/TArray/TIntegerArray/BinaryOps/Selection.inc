@@ -1,63 +1,13 @@
 {$IFDEF HELPERS}
-function BinaryValues(const value: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
-function BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
 function BinaryExtract(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
 function BinaryExtract(const values: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
 function BinaryFilter(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
 function BinaryFilter(const values: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
+function BinaryValues(const value: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
+function BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <BinaryValues>
-  @action: Returns all items in the array that match a given value using binary search.
-  @note: The array must be sorted (ascending or descending) depending on
-         the value of aAscending. If the value does not occur in the array,
-         an empty array is returned.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryValues(const value: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
-var
-  i: Integer;
-  r: TRange;
-begin
-  r := Self.BinaryRange(value, aAscending);
-  if r.Employs(-1) then
-    Exit([]);
-  SetLength(Result, r.Size);
-  for i := 0 to High(Result) do
-    Result[i] := Self[r.start + i];
-end;
-
-{==============================================================================]
-  <BinaryValues>
-  @action: Returns all items in the array whose values fall within a given
-           numeric range, determined via binary search.
-  @note: The array must be sorted (ascending or descending) according to
-         aAscending. The order of the returned values matches the direction
-         of the input TRange: ascending input returns ascending results,
-         and descending input returns results in descending order. If no
-         items fall within the specified range, an empty array is returned.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
-var
-  h, i: Integer;
-  r: TRange;
-begin
-  r := Self.BinaryRange(values, aAscending);
-  if r.Employs(-1) then
-    Exit([]);
-  SetLength(Result, r.Size);
-  h := High(Result);
-  case values.Ascending of
-    True:
-    for i := 0 to h do
-      Result[i] := Self[r.start + i];
-    False:
-    for i := h downto 0 do
-      Result[h - i] := Self[r.start + i];
-  end;
-end;
-
 {==============================================================================]
   <BinaryExtract>
   @action: Returns all integers from Self that lie within the specified range.
@@ -149,5 +99,55 @@ begin
     if not values.BinaryContains(Self[i], aAscending) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <BinaryValues>
+  @action: Returns all items in the array that match a given value using binary search.
+  @note: The array must be sorted (ascending or descending) depending on
+         the value of aAscending. If the value does not occur in the array,
+         an empty array is returned.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryValues(const value: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
+var
+  i: Integer;
+  r: TRange;
+begin
+  r := Self.BinaryRange(value, aAscending);
+  if r.Employs(-1) then
+    Exit([]);
+  SetLength(Result, r.Size);
+  for i := 0 to High(Result) do
+    Result[i] := Self[r.start + i];
+end;
+
+{==============================================================================]
+  <BinaryValues>
+  @action: Returns all items in the array whose values fall within a given
+           numeric range, determined via binary search.
+  @note: The array must be sorted (ascending or descending) according to
+         aAscending. The order of the returned values matches the direction
+         of the input TRange: ascending input returns ascending results,
+         and descending input returns results in descending order. If no
+         items fall within the specified range, an empty array is returned.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
+var
+  h, i: Integer;
+  r: TRange;
+begin
+  r := Self.BinaryRange(values, aAscending);
+  if r.Employs(-1) then
+    Exit([]);
+  SetLength(Result, r.Size);
+  h := High(Result);
+  case values.Ascending of
+    True:
+    for i := 0 to h do
+      Result[i] := Self[r.start + i];
+    False:
+    for i := h downto 0 do
+      Result[h - i] := Self[r.start + i];
+  end;
 end;
 {$ENDIF}

@@ -1,10 +1,61 @@
 {$IFDEF HELPERS}
-function BinaryGrouped(const aAscending: Boolean = True): T2DIntegerArray; overload;
 function BinaryGroup(const aAscending: Boolean = True): T2DIntegerArray; overload;
+function BinaryGrouped(const aAscending: Boolean = True): T2DIntegerArray; overload;
 function BinaryGroups(const aAscending: Boolean = True): T2DIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryGroup>
+  @action: Groups the elements of the array into subarrays of identical values,
+           maintaining the groups in sorted order. Works efficiently on unsorted arrays.
+           Uses binary search to locate existing groups or binary-insert to create new ones.
+  @note:
+    - Groups are kept in ascending order if aAscending = True, descending if False.
+    - Complexity is O(n log k), where n = number of elements and k = number of unique values.
+    - Fully compatible with unsorted input.
+    - Relies on dynamic array insertion for both group keys and result subarrays.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryGroup(const aAscending: Boolean = True): T2DIntegerArray; overload;
+var
+  k: TIntegerArray;
+  i, m, p: Integer;
+  f: Boolean;
+  r: TRange;
+begin
+  SetLength(Result, 0);
+  SetLength(k, 0);
+  for i := 0 to High(Self) do
+  begin
+	r.Create(0, High(k));
+    f := False;
+    while (r.start <= r.stop) do
+    begin
+      m := r.Pivot;
+      case (k[m] = Self[i]) of
+        True:
+        begin
+          f := True;
+          p := m;
+          Break;
+        end;
+        False:
+        if ((k[m] < Self[i]) xor (not aAscending)) then
+          r.start := (m + 1)
+        else
+          r.stop := (m - 1);
+      end;
+    end;
+    if not f then
+    begin
+      p := r.start;
+      Insert(Self[i], k, p);
+      Insert(nil, Result, p);
+    end;
+    Result[p].Supply(Self[i]);
+  end;
+end;
+
 {==============================================================================]
   <BinaryGrouped>
   @action: Groups the elements of the array into subarrays of identical values.
@@ -72,57 +123,6 @@ begin
         Dec(l);
       end;
 	end;
-  end;
-end;
-
-{==============================================================================]
-  <BinaryGroup>
-  @action: Groups the elements of the array into subarrays of identical values,
-           maintaining the groups in sorted order. Works efficiently on unsorted arrays.
-           Uses binary search to locate existing groups or binary-insert to create new ones.
-  @note:
-    - Groups are kept in ascending order if aAscending = True, descending if False.
-    - Complexity is O(n log k), where n = number of elements and k = number of unique values.
-    - Fully compatible with unsorted input.
-    - Relies on dynamic array insertion for both group keys and result subarrays.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryGroup(const aAscending: Boolean = True): T2DIntegerArray; overload;
-var
-  k: TIntegerArray;
-  i, m, p: Integer;
-  f: Boolean;
-  r: TRange;
-begin
-  SetLength(Result, 0);
-  SetLength(k, 0);
-  for i := 0 to High(Self) do
-  begin
-	r.Create(0, High(k));
-    f := False;
-    while (r.start <= r.stop) do
-    begin
-      m := r.Pivot;
-      case (k[m] = Self[i]) of
-        True:
-        begin
-          f := True;
-          p := m;
-          Break;
-        end;
-        False:
-        if ((k[m] < Self[i]) xor (not aAscending)) then
-          r.start := (m + 1)
-        else
-          r.stop := (m - 1);
-      end;
-    end;
-    if not f then
-    begin
-      p := r.start;
-      Insert(Self[i], k, p);
-      Insert(nil, Result, p);
-    end;
-    Result[p].Supply(Self[i]);
   end;
 end;
 

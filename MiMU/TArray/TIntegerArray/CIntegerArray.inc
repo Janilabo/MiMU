@@ -1,42 +1,33 @@
 {$IFDEF TYPES}
 CIntegerArray = class
 public
+  class function Combine(const A, B: TIntegerArray): TIntegerArray; overload;
   class function Init(var arr: TIntegerArray): Integer; overload; 
   class function Reverse(var arr: TIntegerArray): Boolean; overload; 
   class function Reversed(const arr: TIntegerArray): TIntegerArray; overload; 
   class function Unique(var arr: TIntegerArray): Integer; overload; 
-  class function Combine(const A, B: TIntegerArray): TIntegerArray; overload;
 end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+class function CIntegerArray.Combine(const A, B: TIntegerArray): TIntegerArray; overload; 
+var
+  x, y: Integer;
+begin
+  x := Length(A);
+  y := Length(B);
+  SetLength(Result, (x + y));
+  if (x > 0) then
+    Move(A[0], Result[0], (x * SizeOf(Integer)));
+  if (y > 0) then
+    Move(B[0], Result[x], (y * SizeOf(Integer)));
+end;
+
 class function CIntegerArray.Init(var arr: TIntegerArray): Integer; overload; 
 begin
   Result := Length(arr);
   if (Result > 0) then
     FillChar(arr[0], (Result * SizeOf(Integer)), 0);
-end;
-
-class function CIntegerArray.Unique(var arr: TIntegerArray): Integer; overload; 
-var
-  x, y, z: Integer;
-  r: TRange;
-  b: TBooleanArray;
-begin
-  y := High(arr);
-  if (y > 0) then
-  begin
-    z := 0;
-    r := arr.Bounds;
-    b.Create(r.Size, False);
-    for x := 0 to y do
-      if b[arr[x] - r.start].Enable then
-        arr[z.Increase] := arr[x];
-    SetLength(b, 0);
-    SetLength(arr, z);
-    Result := ((y + 1) - z);
-  end else
-    Result := 0;
 end;
 
 class function CIntegerArray.Reverse(var arr: TIntegerArray): Boolean; overload; 
@@ -69,16 +60,25 @@ begin
   end;
 end;
 
-class function CIntegerArray.Combine(const A, B: TIntegerArray): TIntegerArray; overload; 
+class function CIntegerArray.Unique(var arr: TIntegerArray): Integer; overload; 
 var
-  x, y: Integer;
+  x, y, z: Integer;
+  r: TRange;
+  b: TBooleanArray;
 begin
-  x := Length(A);
-  y := Length(B);
-  SetLength(Result, (x + y));
-  if (x > 0) then
-    Move(A[0], Result[0], (x * SizeOf(Integer)));
+  y := High(arr);
   if (y > 0) then
-    Move(B[0], Result[x], (y * SizeOf(Integer)));
+  begin
+    z := 0;
+    r := arr.Bounds;
+    b.Create(r.Size, False);
+    for x := 0 to y do
+      if b[arr[x] - r.start].Enable then
+        arr[z.Increase] := arr[x];
+    SetLength(b, 0);
+    SetLength(arr, z);
+    Result := ((y + 1) - z);
+  end else
+    Result := 0;
 end;
 {$ENDIF}

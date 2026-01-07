@@ -1,7 +1,6 @@
 {$IFDEF HELPERS}
-function Clusters(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
-function Clusters(const radius: Double = 1.0): T2DPointArray; overload;
-function Clusters(const xRadius, yRadius: Integer): T2DPointArray; overload;
+function BCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
+function BCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
 function Cluster(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 function Cluster(const radius: Double = 1.0): T2DPointArray; overload;
 function Cluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
@@ -14,8 +13,9 @@ function Clusterify(const xRadius, yRadius: Integer): T2DPointArray; overload;
 function Clusterize(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 function Clusterize(const radius: Double = 1.0): T2DPointArray; overload;
 function Clusterize(const xRadius, yRadius: Integer): T2DPointArray; overload;
-function BCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
-function BCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
+function Clusters(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
+function Clusters(const radius: Double = 1.0): T2DPointArray; overload;
+function Clusters(const xRadius, yRadius: Integer): T2DPointArray; overload;
 function RCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
 function RCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
 function ProximityCluster(const xRadius, yRadius: Integer; const method: Integer = 0): T2DPointArray; overload;
@@ -24,176 +24,138 @@ function ProximityCluster(const radius: Double = 1.0; const metric: TMetrics = d
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Clusters>
-  @action: Group points in the array into clusters based on a distance threshold.
-  @note: Uses a breadth-first region-growing approach.
-         Each cluster contains points whose pairwise distances are within radius.
-         Uses the provided distance function.
+  <BCluster>
+  @action: Performs radius-based clustering using binary search.
+           Each point is assigned to a cluster based on proximity.
+  @params: -radius: Maximum distance for points to be considered neighbors.
+           -metric: Distance metric (Chebyshev, Euclidean, Manhattan, etc.)
+  @result: T2DPointArray where each subarray contains points of one cluster
 [==============================================================================}
-function TPointArrayHelper.Clusters(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
+function TPointArrayHelper.BCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
 var
-  i, w, h, e, v, z, r, n, t, x, y: Integer;
-  c: T2DIntegerArray;
-  s: T2DBooleanArray;
-  q: TPointArray;
-  b, f: TBox;
-  g, k, u: TPoint;
-  a: Boolean;
-  l: TRange;
-  d, m, o: Double;
-begin
-  z := Self.Size;
-  case z of
-    0: Exit([]);
-    1: ExiT([Self]);
-  end;
-  SetLength(Result, 0);
-  b := Self.Bounds(w, h);
-  c := T2D.Create(0, w, h);
-  s := T2D.Create(False, w, h);
-  for i := 0 to High(Self) do
-    Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
-  SetLength(q, z);
-  d := Max(radius, 0);
-  o := (d * d);
-  m := Min(d, Max(w, h));
-  r := 0;
-  e := 0;
-  for i := 0 to (z - 1) do
+  h, z: T2DIntegerArray;
+  d, l, i, j, r, g: Integer;
+  x, y, s: TRange;
+  t: TPoint;
+  c, q, p, v: TIntegerArray;
+  procedure Enqueue(const index: Integer);
   begin
-    g:= Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
-    if (c[g.X][g.Y] <= 0) then
+    q[s.stop.Increment] := index;
+    c[index] := g;
+  end;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  d := Ceil(radius);
+  SetLength(c, l);
+  for i := 0 to (l - 1) do
+    c[i] := -1;
+  h := Self.XTo2D(v, z);
+  SetLength(q, l);
+  g := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if (c[i] <> -1) then
       Continue;
-    n := c[g.X][g.Y];
-    SetLength(Result, (r + 1));
-    SetLength(Result[r], n);
-    for v := 0 to (n - 1) do
-      Result[r][v] := Self[i];
-    if (e.Increment(n) > (z - 1)) then
-      Exit;
-    l.Create(0);
-    q[l.stop.Increase] := Result[r][0];
-    c[g.X][g.Y] := 0;
-    while (l.start < l.stop) do
+    s.Create(0, 0);
+    q[0] := i;
+    c[i] := g;
+    while (s.start <= s.stop) do
     begin
-      k := q[l.start.Increase];
-      f := k.Boxed(Ceil(m)).Clamp(b);
-      for y := f.Y1 to f.Y2 do
+      t := Self[q[s.start.Increase]];
+      y := v.BinaryRange(TRange.Construct((t.Y - d), (t.Y + d)));
+      if not y.Employs(-1) then
+      for r := y.start to y.stop do
       begin
-        if s[f.X2 - b.X1][y - b.Y1] then
-          Continue;
-        a := True;
-        for x := f.X1 to f.X2 do
-        begin
-          u := Point((x - b.X1), (y - b.Y1));
-          if not (c[u.X][u.Y] > 0) then
-            Continue;
-          if k.Within(Point(x, y), o, distFunc) then
-          begin
-            t := Result[r].Size;
-            SetLength(Result[r], (t + c[u.X][u.Y]));
-            for v := 0 to (c[u.X][u.Y] - 1) do
-              Result[r][t + v] := Point(x, y);
-            q[l.stop.Increase] := Result[r][t];
-            if (e.Increment(c[u.X][u.Y]) > (z - 1)) then
-              Exit;
-            c[u.X][u.Y] := 0;
-          end else
-            a := False;
-        end;
-        if a then
-          s[f.X2 - b.X1][y - b.Y1] := True;
+        x := h[r].BinaryRange(TRange.Construct((t.X - d), (t.X + d)));
+        if not x.Employs(-1) then
+        for j := x.start to x.stop do
+          if ((c[z[r][j]] = -1) and t.Within(Self[z[r][j]], radius, metric)) then
+            Enqueue(z[r][j]);
       end;
     end;
-    Inc(r);
+    Inc(g);
   end;
-end;
-
-function TPointArrayHelper.Clusters(const radius: Double = 1.0): T2DPointArray; overload;
-begin
-  Result := Self.Clusters(radius, @Euclidean);
+  SetLength(p, g);
+  for i := 0 to (g - 1) do
+    p[i] := 0;
+  for i := 0 to (l - 1) do
+    Inc(p[c[i]]);
+  SetLength(Result, g);
+  for i := 0 to (g - 1) do
+    SetLength(Result[i], p[i]);
+  for i := 0 to (g - 1) do
+    p[i] := 0;
+  for i := 0 to (l - 1) do
+    Result[c[i]][p[c[i]].Increase] := Self[i];
 end;
 
 {==============================================================================]
-  <Clusters>
-  @action: Group points in the array into rectangular clusters based on X and Y radii.
-  @note: Clustering is anisotropic — points are grouped if their |ΔX| ≤ xRadius and |ΔY| ≤ yRadius.
-         No distance function is used.
+  <BCluster>
+  @action: Performs radius-based clustering using binary search.
+           Each point is assigned to a cluster based on proximity.
+  @params: -radius: Maximum distance for points to be considered neighbors.
+           -metric: Distance metric (Chebyshev, Euclidean, Manhattan, etc.)
+  @result: T2DPointArray where each subarray contains points of one cluster
 [==============================================================================}
-function TPointArrayHelper.Clusters(const xRadius, yRadius: Integer): T2DPointArray; overload;
+function TPointArrayHelper.BCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
-  i, w, h, e, v, z, r, n, t, x, y: Integer;
-  c: T2DIntegerArray;
-  s: T2DBooleanArray;
-  q: TPointArray;
-  b, f: TBox;
-  g, k, u, m: TPoint;
-  a: Boolean;
-  l: TRange;
-begin
-  z := Self.Size;
-  case z of
-    0: Exit([]);
-    1: ExiT([Self]);
-  end;
-  SetLength(Result, 0);
-  b := Self.Bounds(w, h);
-  c := T2D.Create(0, w, h);
-  s := T2D.Create(False, w, h);
-  for i := 0 to High(Self) do
-    Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
-  SetLength(q, z);
-  m := Point(Min(Max(0, xRadius), w), Min(Max(0, yRadius), h));
-  r := 0;
-  e := 0;
-  for i := 0 to (z - 1) do
+  h, z: T2DIntegerArray;
+  l, i, j, r, g: Integer;
+  x, y, s: TRange;
+  t: TPoint;
+  c, q, p, v: TIntegerArray;
+  procedure Enqueue(const index: Integer);
   begin
-    g:= Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
-    if (c[g.X][g.Y] <= 0) then
+    q[s.stop.Increment] := index;
+    c[index] := g;
+  end;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  SetLength(c, l);
+  for i := 0 to (l - 1) do
+    c[i] := -1;
+  h := Self.XTo2D(v, z);
+  SetLength(q, l);
+  g := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if (c[i] <> -1) then
       Continue;
-    n := c[g.X][g.Y];
-    SetLength(Result, (r + 1));
-    SetLength(Result[r], n);
-    for v := 0 to (n - 1) do
-      Result[r][v] := Self[i];
-    if (e.Increment(n) > (z - 1)) then
-      Exit;
-    l.Create(0);
-    q[l.stop.Increase] := Result[r][0];
-    c[g.X][g.Y] := 0;
-    while (l.start < l.stop) do
+    s.Create(0, 0);
+    q[0] := i;
+    c[i] := g;
+    while (s.start <= s.stop) do
     begin
-      k := q[l.start.Increase];
-      f := k.Boxed(Max(m.X, m.Y)).Clamp(b);
-      for y := f.Y1 to f.Y2 do
+      t := Self[q[s.start.Increase]];
+      y := v.BinaryRange(TRange.Construct((t.Y - yRadius), (t.Y + yRadius)));
+      if not y.Employs(-1) then
+      for r := y.start to y.stop do
       begin
-        if s[f.X2 - b.X1][y - b.Y1] then
-          Continue;
-        a := True;
-        for x := f.X1 to f.X2 do
-        begin
-          u := Point((x - b.X1), (y - b.Y1));
-          if not (c[u.X][u.Y] > 0) then
-            Continue;
-          if k.Within(Point(x, y), m.X, m.Y) then
-          begin
-            t := Result[r].Size;
-            SetLength(Result[r], (t + c[u.X][u.Y]));
-            for v := 0 to (c[u.X][u.Y] - 1) do
-              Result[r][t + v] := Point(x, y);
-            q[l.stop.Increase] := Result[r][t];
-            if (e.Increment(c[u.X][u.Y]) > (z - 1)) then
-              Exit;
-            c[u.X][u.Y] := 0;
-          end else
-            a := False;
-        end;
-        if a then
-          s[f.X2 - b.X1][y - b.Y1] := True;
+        x := h[r].BinaryRange(TRange.Construct((t.X - xRadius), (t.X + xRadius)));
+        if not x.Employs(-1) then
+        for j := x.start to x.stop do
+          if ((c[z[r][j]] = -1) and t.Within(Self[z[r][j]], xRadius, yRadius)) then
+            Enqueue(z[r][j]);
       end;
     end;
-    Inc(r);
+    Inc(g);
   end;
+  SetLength(p, g);
+  for i := 0 to (g - 1) do
+    p[i] := 0;
+  for i := 0 to (l - 1) do
+    Inc(p[c[i]]);
+  SetLength(Result, g);
+  for i := 0 to (g - 1) do
+    SetLength(Result[i], p[i]);
+  for i := 0 to (g - 1) do
+    p[i] := 0;
+  for i := 0 to (l - 1) do
+    Result[c[i]][p[c[i]].Increase] := Self[i];
 end;
 
 {==============================================================================]
@@ -740,138 +702,176 @@ begin
 end;
 
 {==============================================================================]
-  <BCluster>
-  @action: Performs radius-based clustering using binary search.
-           Each point is assigned to a cluster based on proximity.
-  @params: -radius: Maximum distance for points to be considered neighbors.
-           -metric: Distance metric (Chebyshev, Euclidean, Manhattan, etc.)
-  @result: T2DPointArray where each subarray contains points of one cluster
+  <Clusters>
+  @action: Group points in the array into clusters based on a distance threshold.
+  @note: Uses a breadth-first region-growing approach.
+         Each cluster contains points whose pairwise distances are within radius.
+         Uses the provided distance function.
 [==============================================================================}
-function TPointArrayHelper.BCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
+function TPointArrayHelper.Clusters(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 var
-  h, z: T2DIntegerArray;
-  d, l, i, j, r, g: Integer;
-  x, y, s: TRange;
-  t: TPoint;
-  c, q, p, v: TIntegerArray;
-  procedure Enqueue(const index: Integer);
-  begin
-    q[s.stop.Increment] := index;
-    c[index] := g;
-  end;
+  i, w, h, e, v, z, r, n, t, x, y: Integer;
+  c: T2DIntegerArray;
+  s: T2DBooleanArray;
+  q: TPointArray;
+  b, f: TBox;
+  g, k, u: TPoint;
+  a: Boolean;
+  l: TRange;
+  d, m, o: Double;
 begin
-  l := Self.Length;
-  if (l = 0) then
-    Exit([]);
-  d := Ceil(radius);
-  SetLength(c, l);
-  for i := 0 to (l - 1) do
-    c[i] := -1;
-  h := Self.XTo2D(v, z);
-  SetLength(q, l);
-  g := 0;
-  for i := 0 to (l - 1) do
+  z := Self.Size;
+  case z of
+    0: Exit([]);
+    1: ExiT([Self]);
+  end;
+  SetLength(Result, 0);
+  b := Self.Bounds(w, h);
+  c := T2D.Create(0, w, h);
+  s := T2D.Create(False, w, h);
+  for i := 0 to High(Self) do
+    Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
+  SetLength(q, z);
+  d := Max(radius, 0);
+  o := (d * d);
+  m := Min(d, Max(w, h));
+  r := 0;
+  e := 0;
+  for i := 0 to (z - 1) do
   begin
-    if (c[i] <> -1) then
+    g:= Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
+    if (c[g.X][g.Y] <= 0) then
       Continue;
-    s.Create(0, 0);
-    q[0] := i;
-    c[i] := g;
-    while (s.start <= s.stop) do
+    n := c[g.X][g.Y];
+    SetLength(Result, (r + 1));
+    SetLength(Result[r], n);
+    for v := 0 to (n - 1) do
+      Result[r][v] := Self[i];
+    if (e.Increment(n) > (z - 1)) then
+      Exit;
+    l.Create(0);
+    q[l.stop.Increase] := Result[r][0];
+    c[g.X][g.Y] := 0;
+    while (l.start < l.stop) do
     begin
-      t := Self[q[s.start.Increase]];
-      y := v.BinaryRange(TRange.Construct((t.Y - d), (t.Y + d)));
-      if not y.Employs(-1) then
-      for r := y.start to y.stop do
+      k := q[l.start.Increase];
+      f := k.Boxed(Ceil(m)).Clamp(b);
+      for y := f.Y1 to f.Y2 do
       begin
-        x := h[r].BinaryRange(TRange.Construct((t.X - d), (t.X + d)));
-        if not x.Employs(-1) then
-        for j := x.start to x.stop do
-          if ((c[z[r][j]] = -1) and t.Within(Self[z[r][j]], radius, metric)) then
-            Enqueue(z[r][j]);
+        if s[f.X2 - b.X1][y - b.Y1] then
+          Continue;
+        a := True;
+        for x := f.X1 to f.X2 do
+        begin
+          u := Point((x - b.X1), (y - b.Y1));
+          if not (c[u.X][u.Y] > 0) then
+            Continue;
+          if k.Within(Point(x, y), o, distFunc) then
+          begin
+            t := Result[r].Size;
+            SetLength(Result[r], (t + c[u.X][u.Y]));
+            for v := 0 to (c[u.X][u.Y] - 1) do
+              Result[r][t + v] := Point(x, y);
+            q[l.stop.Increase] := Result[r][t];
+            if (e.Increment(c[u.X][u.Y]) > (z - 1)) then
+              Exit;
+            c[u.X][u.Y] := 0;
+          end else
+            a := False;
+        end;
+        if a then
+          s[f.X2 - b.X1][y - b.Y1] := True;
       end;
     end;
-    Inc(g);
+    Inc(r);
   end;
-  SetLength(p, g);
-  for i := 0 to (g - 1) do
-    p[i] := 0;
-  for i := 0 to (l - 1) do
-    Inc(p[c[i]]);
-  SetLength(Result, g);
-  for i := 0 to (g - 1) do
-    SetLength(Result[i], p[i]);
-  for i := 0 to (g - 1) do
-    p[i] := 0;
-  for i := 0 to (l - 1) do
-    Result[c[i]][p[c[i]].Increase] := Self[i];
+end;
+
+function TPointArrayHelper.Clusters(const radius: Double = 1.0): T2DPointArray; overload;
+begin
+  Result := Self.Clusters(radius, @Euclidean);
 end;
 
 {==============================================================================]
-  <BCluster>
-  @action: Performs radius-based clustering using binary search.
-           Each point is assigned to a cluster based on proximity.
-  @params: -radius: Maximum distance for points to be considered neighbors.
-           -metric: Distance metric (Chebyshev, Euclidean, Manhattan, etc.)
-  @result: T2DPointArray where each subarray contains points of one cluster
+  <Clusters>
+  @action: Group points in the array into rectangular clusters based on X and Y radii.
+  @note: Clustering is anisotropic — points are grouped if their |ΔX| ≤ xRadius and |ΔY| ≤ yRadius.
+         No distance function is used.
 [==============================================================================}
-function TPointArrayHelper.BCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
+function TPointArrayHelper.Clusters(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
-  h, z: T2DIntegerArray;
-  l, i, j, r, g: Integer;
-  x, y, s: TRange;
-  t: TPoint;
-  c, q, p, v: TIntegerArray;
-  procedure Enqueue(const index: Integer);
-  begin
-    q[s.stop.Increment] := index;
-    c[index] := g;
-  end;
+  i, w, h, e, v, z, r, n, t, x, y: Integer;
+  c: T2DIntegerArray;
+  s: T2DBooleanArray;
+  q: TPointArray;
+  b, f: TBox;
+  g, k, u, m: TPoint;
+  a: Boolean;
+  l: TRange;
 begin
-  l := Self.Length;
-  if (l = 0) then
-    Exit([]);
-  SetLength(c, l);
-  for i := 0 to (l - 1) do
-    c[i] := -1;
-  h := Self.XTo2D(v, z);
-  SetLength(q, l);
-  g := 0;
-  for i := 0 to (l - 1) do
+  z := Self.Size;
+  case z of
+    0: Exit([]);
+    1: ExiT([Self]);
+  end;
+  SetLength(Result, 0);
+  b := Self.Bounds(w, h);
+  c := T2D.Create(0, w, h);
+  s := T2D.Create(False, w, h);
+  for i := 0 to High(Self) do
+    Inc(c[Self[i].X - b.X1][Self[i].Y - b.Y1]);
+  SetLength(q, z);
+  m := Point(Min(Max(0, xRadius), w), Min(Max(0, yRadius), h));
+  r := 0;
+  e := 0;
+  for i := 0 to (z - 1) do
   begin
-    if (c[i] <> -1) then
+    g:= Point((Self[i].X - b.X1), (Self[i].Y - b.Y1));
+    if (c[g.X][g.Y] <= 0) then
       Continue;
-    s.Create(0, 0);
-    q[0] := i;
-    c[i] := g;
-    while (s.start <= s.stop) do
+    n := c[g.X][g.Y];
+    SetLength(Result, (r + 1));
+    SetLength(Result[r], n);
+    for v := 0 to (n - 1) do
+      Result[r][v] := Self[i];
+    if (e.Increment(n) > (z - 1)) then
+      Exit;
+    l.Create(0);
+    q[l.stop.Increase] := Result[r][0];
+    c[g.X][g.Y] := 0;
+    while (l.start < l.stop) do
     begin
-      t := Self[q[s.start.Increase]];
-      y := v.BinaryRange(TRange.Construct((t.Y - yRadius), (t.Y + yRadius)));
-      if not y.Employs(-1) then
-      for r := y.start to y.stop do
+      k := q[l.start.Increase];
+      f := k.Boxed(Max(m.X, m.Y)).Clamp(b);
+      for y := f.Y1 to f.Y2 do
       begin
-        x := h[r].BinaryRange(TRange.Construct((t.X - xRadius), (t.X + xRadius)));
-        if not x.Employs(-1) then
-        for j := x.start to x.stop do
-          if ((c[z[r][j]] = -1) and t.Within(Self[z[r][j]], xRadius, yRadius)) then
-            Enqueue(z[r][j]);
+        if s[f.X2 - b.X1][y - b.Y1] then
+          Continue;
+        a := True;
+        for x := f.X1 to f.X2 do
+        begin
+          u := Point((x - b.X1), (y - b.Y1));
+          if not (c[u.X][u.Y] > 0) then
+            Continue;
+          if k.Within(Point(x, y), m.X, m.Y) then
+          begin
+            t := Result[r].Size;
+            SetLength(Result[r], (t + c[u.X][u.Y]));
+            for v := 0 to (c[u.X][u.Y] - 1) do
+              Result[r][t + v] := Point(x, y);
+            q[l.stop.Increase] := Result[r][t];
+            if (e.Increment(c[u.X][u.Y]) > (z - 1)) then
+              Exit;
+            c[u.X][u.Y] := 0;
+          end else
+            a := False;
+        end;
+        if a then
+          s[f.X2 - b.X1][y - b.Y1] := True;
       end;
     end;
-    Inc(g);
+    Inc(r);
   end;
-  SetLength(p, g);
-  for i := 0 to (g - 1) do
-    p[i] := 0;
-  for i := 0 to (l - 1) do
-    Inc(p[c[i]]);
-  SetLength(Result, g);
-  for i := 0 to (g - 1) do
-    SetLength(Result[i], p[i]);
-  for i := 0 to (g - 1) do
-    p[i] := 0;
-  for i := 0 to (l - 1) do
-    Result[c[i]][p[c[i]].Increase] := Self[i];
 end;
 
 {==============================================================================]

@@ -1,9 +1,28 @@
 {$IFDEF HELPERS}
-function BinaryCount(const item: TPoint): Integer; overload;
 function BinaryAmount(const item: TPoint): Integer; overload;
+function BinaryCount(const item: TPoint): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryAmount>
+  @action: Returns the number of elements in the sorted TPointArray that are
+           equal to the specified point.
+  @note: - The array must be sorted in ascending lexicographic order by X, then Y,
+           consistent with TPoint.Compare.
+         - Returns 0 if the point does not exist in the array.
+         - Internally uses BinaryRangeOf to determine the index range.
+[==============================================================================}
+function TPointArrayHelper.BinaryAmount(const item: TPoint): Integer; overload;
+var
+  r: TRange;
+begin
+  r := Self.BinaryRangeOf(item);
+  if (r.start > r.stop) then
+    Exit(0);
+  Result := ((r.stop - r.start) + 1);
+end;
+
 {==============================================================================]
   <BinaryCount>
   @action: Counts the total number of occurrences of a specified point in a
@@ -43,24 +62,5 @@ begin
       end;
     end;
   end;
-end;
-
-{==============================================================================]
-  <BinaryAmount>
-  @action: Returns the number of elements in the sorted TPointArray that are
-           equal to the specified point.
-  @note: - The array must be sorted in ascending lexicographic order by X, then Y,
-           consistent with TPoint.Compare.
-         - Returns 0 if the point does not exist in the array.
-         - Internally uses BinaryRangeOf to determine the index range.
-[==============================================================================}
-function TPointArrayHelper.BinaryAmount(const item: TPoint): Integer; overload;
-var
-  r: TRange;
-begin
-  r := Self.BinaryRangeOf(item);
-  if (r.start > r.stop) then
-    Exit(0);
-  Result := ((r.stop - r.start) + 1);
 end;
 {$ENDIF}

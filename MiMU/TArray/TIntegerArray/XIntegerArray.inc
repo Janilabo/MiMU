@@ -1,33 +1,31 @@
 {$IFDEF TYPES}
 XIntegerArray = record
   data: TIntegerArray;
-
-  class function Implicit(const arr: TIntegerArray): XIntegerArray; static;
   class operator Explicit(const ext: XIntegerArray): TIntegerArray;
-    
-  function Length: Integer;
+  class function Implicit(const arr: TIntegerArray): XIntegerArray; static;
   function IsEmpty: Boolean;
+  function Length: Integer;
 end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-class function XIntegerArray.Implicit(const arr: TIntegerArray): XIntegerArray;
-begin
-  Result.data := arr;
-end;
-
 class operator XIntegerArray.Explicit(const ext: XIntegerArray): TIntegerArray;
 begin
   Result := ext.data;
 end;
 
-function XIntegerArray.Length: Integer;
+class function XIntegerArray.Implicit(const arr: TIntegerArray): XIntegerArray;
 begin
-  Result := System.Length(Self.data);
+  Result.data := arr;
 end;
 
 function XIntegerArray.IsEmpty: Boolean;
 begin
   Result := (System.Length(Self.data) = 0);
+end;
+
+function XIntegerArray.Length: Integer;
+begin
+  Result := System.Length(Self.data);
 end;
 {$ENDIF}

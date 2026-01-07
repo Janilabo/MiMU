@@ -1,14 +1,47 @@
 {$IFDEF HELPERS}
+function Destroy: Int64; overload;
+function Free: Int64; overload;
 function Kill: Integer; overload;
 function Kill(const k2D: TIntegerArray): Int64; overload;
-function Free: Int64; overload;
+function Pull: M2DArray; overload;
 function Recreate(const arrSize: Integer): Boolean; overload;
 function Reset: Int64; overload;
-function Destroy: Int64; overload;
-function Pull: M2DArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Destroy>
+  @action: Combination of Length(arr) + SetLength(arr, 0) for array indexes by k2D.
+  @note: Completely wipes the array.
+[==============================================================================}
+function M2DArrayHelper.Destroy: Int64; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+  begin
+    Result := (Result + Self[i].Size);
+    SetLength(Self[i], 0);	
+  end;
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
+  <Free>
+  @action: Result := Length(Self) + SetLength(Self, 0) combo for 2D array
+  @note: None.
+[==============================================================================}
+function M2DArrayHelper.Free: Int64; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Result := (Result + Self[i].Size);
+  SetLength(Self, 0);
+end;
+
 {==============================================================================]
   <Kill>
   @action: Combination of Length(arr) + SetLength(arr, 0).
@@ -40,35 +73,21 @@ begin
 end;
 
 {==============================================================================]
-  <Destroy>
-  @action: Combination of Length(arr) + SetLength(arr, 0) for array indexes by k2D.
-  @note: Completely wipes the array.
+  <Pull>
+  @action: Returns the contents of the array and leaves it empty.
+  @note: After calling Pull, Self.Length = 0.
 [==============================================================================}
-function M2DArrayHelper.Destroy: Int64; overload;
+function M2DArrayHelper.Pull: M2DArray; overload;
 var
-  i: Integer;
+  i, j: Integer;
 begin
-  Result := 0;
+  SetLength(Result, Self.Length);
   for i := 0 to High(Self) do
   begin
-    Result := (Result + Self[i].Size);
-    SetLength(Self[i], 0);	
+    SetLength(Result[i], Self[i].Size);
+    for j := 0 to High(Self[i]) do
+      Result[i][j] := Self[i][j];
   end;
-  SetLength(Self, 0);
-end;
-
-{==============================================================================]
-  <Free>
-  @action: Result := Length(Self) + SetLength(Self, 0) combo for 2D array
-  @note: None.
-[==============================================================================}
-function M2DArrayHelper.Free: Int64; overload;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-    Result := (Result + Self[i].Size);
   SetLength(Self, 0);
 end;
 
@@ -106,24 +125,5 @@ begin
     Result := (Result + Self[i].Size);
     SetLength(Self[i], 0);
   end;
-end;
-
-{==============================================================================]
-  <Pull>
-  @action: Returns the contents of the array and leaves it empty.
-  @note: After calling Pull, Self.Length = 0.
-[==============================================================================}
-function M2DArrayHelper.Pull: M2DArray; overload;
-var
-  i, j: Integer;
-begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
-  begin
-    SetLength(Result[i], Self[i].Size);
-    for j := 0 to High(Self[i]) do
-      Result[i][j] := Self[i][j];
-  end;
-  SetLength(Self, 0);
 end;
 {$ENDIF}

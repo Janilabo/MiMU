@@ -1,8 +1,8 @@
 {$IFDEF HELPERS}
 function BinaryExtract(const area: TBox): TPointArray; overload;
 function BinaryFilter(const area: TBox): TPointArray; overload;
-function BinaryYPoints(const yValue: Integer): TPointArray; overload;
 function BinaryXPoints(const xValue: Integer): TPointArray; overload;
+function BinaryYPoints(const yValue: Integer): TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -132,58 +132,6 @@ begin
 end;
 
 {==============================================================================]
-  <BinaryYPoints>
-  @action:
-    Returns a TPointArray containing all points with the specified Y-value.
-    Uses binary search to locate the first and last indices with that Y.
-  @note:
-    - The array must be sorted by Y ascending.
-    - Returns an empty array if no points match the given Y-value.
-    - Efficient: O(log n) search to find the matching range.
-[==============================================================================}
-function TPointArrayHelper.BinaryYPoints(const yValue: Integer): TPointArray; overload;
-var
-  h, m, f, l, i: Integer;
-  r: TRange;
-begin
-  h := High(Self);
-  SetLength(Result, 0);
-  if (h < 0) then
-    Exit;
-  r.Create(0, h);
-  f := -1;
-  while (r.start <= r.stop) do
-  begin
-    m := r.Pivot;
-    if (Self[m].Y >= yValue) then
-    begin
-      if (Self[m].Y = yValue) then
-        f := m;
-      r.stop := (m - 1);
-    end else
-      r.start := (m + 1);
-  end;
-  if (f = -1) then
-    Exit;
-  r.Create(0, h);
-  l := -1;
-  while (r.start <= r.stop) do
-  begin
-    m := r.Pivot;
-    if (Self[m].Y <= yValue) then
-    begin
-      if (Self[m].Y = yValue) then
-        l := m;
-      r.start := (m + 1);
-    end else
-      r.stop := (m - 1);
-  end;
-  SetLength(Result, ((l - f) + 1));
-  for i := 0 to High(Result) do
-    Result[i] := Self[f + i];
-end;
-
-{==============================================================================]
   <BinaryXPoints>
   @action:
     Returns a TPointArray containing all points with the specified X-value.
@@ -256,5 +204,57 @@ begin
     end;
     Inc(i, p.Size);
   end;
+end;
+
+{==============================================================================]
+  <BinaryYPoints>
+  @action:
+    Returns a TPointArray containing all points with the specified Y-value.
+    Uses binary search to locate the first and last indices with that Y.
+  @note:
+    - The array must be sorted by Y ascending.
+    - Returns an empty array if no points match the given Y-value.
+    - Efficient: O(log n) search to find the matching range.
+[==============================================================================}
+function TPointArrayHelper.BinaryYPoints(const yValue: Integer): TPointArray; overload;
+var
+  h, m, f, l, i: Integer;
+  r: TRange;
+begin
+  h := High(Self);
+  SetLength(Result, 0);
+  if (h < 0) then
+    Exit;
+  r.Create(0, h);
+  f := -1;
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    if (Self[m].Y >= yValue) then
+    begin
+      if (Self[m].Y = yValue) then
+        f := m;
+      r.stop := (m - 1);
+    end else
+      r.start := (m + 1);
+  end;
+  if (f = -1) then
+    Exit;
+  r.Create(0, h);
+  l := -1;
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    if (Self[m].Y <= yValue) then
+    begin
+      if (Self[m].Y = yValue) then
+        l := m;
+      r.start := (m + 1);
+    end else
+      r.stop := (m - 1);
+  end;
+  SetLength(Result, ((l - f) + 1));
+  for i := 0 to High(Result) do
+    Result[i] := Self[f + i];
 end;
 {$ENDIF}

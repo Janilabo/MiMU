@@ -1,10 +1,27 @@
 {$IFDEF HELPERS}
-function BinaryInsert(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
 function BinaryAppend(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
+function BinaryInsert(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
 function BinarySupply(const item: TPoint): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryAppend>
+  @action: Appends a specified point to the end of a sorted TPointArray if it is greater
+           than the last point, otherwise performs a BinaryInsert.
+  @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
+           consistent with TPoint.Compare.
+         - If allowDuplicates = False, duplicates are ignored.
+         - Returns the index of the inserted or existing point.
+[==============================================================================}
+function TPointArrayHelper.BinaryAppend(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
+begin
+  if not (Self.Empty or (Self[High(Self)].Compare(item) < 0)) then
+    Exit(Self.BinaryInsert(item, allowDuplicates));
+  Result := Self.Size;
+  Self.Supply(item);
+end;
+
 {==============================================================================]
   <BinaryInsert>
   @action: Inserts a specified point into a sorted TPointArray while maintaining
@@ -34,23 +51,6 @@ begin
     end;
   end;
   Insert(item, Self, Result);
-end;
-
-{==============================================================================]
-  <BinaryAppend>
-  @action: Appends a specified point to the end of a sorted TPointArray if it is greater
-           than the last point, otherwise performs a BinaryInsert.
-  @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
-           consistent with TPoint.Compare.
-         - If allowDuplicates = False, duplicates are ignored.
-         - Returns the index of the inserted or existing point.
-[==============================================================================}
-function TPointArrayHelper.BinaryAppend(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
-begin
-  if not (Self.Empty or (Self[High(Self)].Compare(item) < 0)) then
-    Exit(Self.BinaryInsert(item, allowDuplicates));
-  Result := Self.Size;
-  Self.Supply(item);
 end;
 
 {==============================================================================]

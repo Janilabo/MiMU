@@ -1,47 +1,46 @@
 {$IFDEF HELPERS}
-function ToRows: T2DPointArray;
-function ToColumns: T2DPointArray;
-function AsRows: T2DPointArray;
 function AsColumns: T2DPointArray;
-function Rows: T2DPointArray;
+function AsRows: T2DPointArray;
 function Columns: T2DPointArray;
+function Rows: T2DPointArray;
+function ToColumns: T2DPointArray;
+function ToRows: T2DPointArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <ToRows>
-  @action: Groups all points in the array into rows based on their Y coordinates.
-  @note: The Y values are sorted and deduplicated before grouping, so the resulting
-         row order follows ascending Y. Each subarray of the result contains all
-         points that share the same Y value.
-[==============================================================================}
-function TPointArrayHelper.ToRows: T2DPointArray;
-var
-  i: Integer;
-  y: TIntegerArray;
-begin
-  y := Self.Ys.QuickSorted.BinaryPruned;
-  SetLength(Result, y.Size);
-  for i := 0 to High(Self) do
-    Result[y.BinarySearch(Self[i].Y)].Supply(Self[i]);
-end;
-
-{==============================================================================]
-  <ToColumns>
+  <AsColumns>
   @action: Groups all points in the array into columns based on their X coordinates.
-  @note: The X values are sorted and deduplicated before grouping, so the resulting
-         column order follows ascending X. Each subarray of the result contains all
-         points that share the same X value.
+  @note: The original order of X values is preserved — columns are created in the
+         order each X first appears in the source array. No sorting or pruning
+         is performed.
 [==============================================================================}
-function TPointArrayHelper.ToColumns: T2DPointArray;
+function TPointArrayHelper.AsColumns: T2DPointArray;
 var
-  i: Integer;
+  i, j: Integer;
   x: TIntegerArray;
+  p: Integer;
 begin
-  x := Self.Xs.QuickSorted.BinaryPruned;
-  SetLength(Result, x.Size);
+  SetLength(Result, 0);
+  SetLength(x, 0);
   for i := 0 to High(Self) do
-    Result[x.BinarySearch(Self[i].x)].Supply(Self[i]);
+  begin
+    p := -1;
+    for j := 0 to High(x) do
+      if (x[j] = Self[i].X) then
+      begin
+        p := j;
+        Break;
+      end;
+    if (p = -1) then
+    begin
+      p := x.Size;
+      SetLength(x, (p + 1));
+      x[p] := Self[i].X;
+      SetLength(Result, (p + 1));
+    end;
+    Result[p].Supply(Self[i]);
+  end;
 end;
 
 {==============================================================================]
@@ -80,37 +79,35 @@ begin
 end;
 
 {==============================================================================]
-  <AsColumns>
+  <Columns>
   @action: Groups all points in the array into columns based on their X coordinates.
-  @note: The original order of X values is preserved — columns are created in the
-         order each X first appears in the source array. No sorting or pruning
-         is performed.
+  @note: Each unique X value defines one column. The order of columns matches the
+         order in which distinct X values first appear in the source array (unsorted).
+         Uses a dictionary for O(1) coordinate lookup, providing fast grouping
+         while preserving the original encounter order.
 [==============================================================================}
-function TPointArrayHelper.AsColumns: T2DPointArray;
+function TPointArrayHelper.Columns: T2DPointArray;
 var
-  i, j: Integer;
-  x: TIntegerArray;
-  p: Integer;
+  i, p: Integer;
+  m: specialize TDictionary<Integer, Integer>;
+  o: TIntegerArray;
 begin
-  SetLength(Result, 0);
-  SetLength(x, 0);
-  for i := 0 to High(Self) do
-  begin
-    p := -1;
-    for j := 0 to High(x) do
-      if (x[j] = Self[i].X) then
-      begin
-        p := j;
-        Break;
-      end;
-    if (p = -1) then
+  m := specialize TDictionary<Integer, Integer>.Create;
+  try
+    for i := 0 to High(Self) do
     begin
-      p := x.Size;
-      SetLength(x, (p + 1));
-      x[p] := Self[i].X;
-      SetLength(Result, (p + 1));
+      if not m.TryGetValue(Self[i].X, p) then
+      begin
+        p := o.Size;
+        SetLength(o, (p + 1));
+        o[p] := Self[i].X;
+        m.Add(Self[i].X, p);
+        SetLength(Result, (p + 1));
+      end;
+      Result[p].Supply(Self[i]);
     end;
-    Result[p].Supply(Self[i]);
+  finally
+    m.Free;
   end;
 end;
 
@@ -148,35 +145,38 @@ begin
 end;
 
 {==============================================================================]
-  <Columns>
+  <ToColumns>
   @action: Groups all points in the array into columns based on their X coordinates.
-  @note: Each unique X value defines one column. The order of columns matches the
-         order in which distinct X values first appear in the source array (unsorted).
-         Uses a dictionary for O(1) coordinate lookup, providing fast grouping
-         while preserving the original encounter order.
+  @note: The X values are sorted and deduplicated before grouping, so the resulting
+         column order follows ascending X. Each subarray of the result contains all
+         points that share the same X value.
 [==============================================================================}
-function TPointArrayHelper.Columns: T2DPointArray;
+function TPointArrayHelper.ToColumns: T2DPointArray;
 var
-  i, p: Integer;
-  m: specialize TDictionary<Integer, Integer>;
-  o: TIntegerArray;
+  i: Integer;
+  x: TIntegerArray;
 begin
-  m := specialize TDictionary<Integer, Integer>.Create;
-  try
-    for i := 0 to High(Self) do
-    begin
-      if not m.TryGetValue(Self[i].X, p) then
-      begin
-        p := o.Size;
-        SetLength(o, (p + 1));
-        o[p] := Self[i].X;
-        m.Add(Self[i].X, p);
-        SetLength(Result, (p + 1));
-      end;
-      Result[p].Supply(Self[i]);
-    end;
-  finally
-    m.Free;
-  end;
+  x := Self.Xs.QuickSorted.BinaryPruned;
+  SetLength(Result, x.Size);
+  for i := 0 to High(Self) do
+    Result[x.BinarySearch(Self[i].x)].Supply(Self[i]);
+end;
+
+{==============================================================================]
+  <ToRows>
+  @action: Groups all points in the array into rows based on their Y coordinates.
+  @note: The Y values are sorted and deduplicated before grouping, so the resulting
+         row order follows ascending Y. Each subarray of the result contains all
+         points that share the same Y value.
+[==============================================================================}
+function TPointArrayHelper.ToRows: T2DPointArray;
+var
+  i: Integer;
+  y: TIntegerArray;
+begin
+  y := Self.Ys.QuickSorted.BinaryPruned;
+  SetLength(Result, y.Size);
+  for i := 0 to High(Self) do
+    Result[y.BinarySearch(Self[i].Y)].Supply(Self[i]);
 end;
 {$ENDIF}

@@ -1,30 +1,16 @@
 {$IFDEF HELPERS}
-function Sum: Int64;
 function Density: Double;
-function Occupancy: Double;
-function Saturated: Double;
+function LeastFreq(const null: Integer = -2147483648): Integer;
 function Mean: Double;
 function Median: Double;
 function Middle: Double;
 function MostFreq(const null: Integer = -2147483648): Integer;
-function LeastFreq(const null: Integer = -2147483648): Integer;
+function Occupancy: Double;
+function Saturated: Double;
+function Sum: Int64;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
- <Sum>
- @action: Returns the sum of all arr values together.
- @note: None
-[==============================================================================}
-function TIntegerArrayHelper.Sum: Int64;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-    Result := (Result + Self[i]);
-end;
-
 {==============================================================================]
  <Density>
  @action: Returns the calculated density from given arr.
@@ -62,49 +48,34 @@ begin
 end;
 
 {==============================================================================]
- <Occupancy>
- @action: Returns the calculated density from given arr.
- @note: None
+ <LeastFreq>
+ @action: Returns the least frequent/common value from TIA.
+ @note: Be careful with values! Try to avoid using too low or high values!
+        Such as: -200,000,000 or +200,000,000. Heavy memory-usage could possibly cause crashing.
 [==============================================================================}
-function TIntegerArrayHelper.Occupancy: Double;
+function TIntegerArrayHelper.LeastFreq(const null: Integer = -2147483648): Integer;
 var
+  h, x, t: Integer;
+  b: TIntegerArray;
   r: TRange;
 begin
-  if Self.Empty then
-    Exit(0.0);
-  Result := (Self.QuickSorted.Distinct / r.Construct(0, High(Self)).Size);
-end;
-
-{==============================================================================]
- <Saturated>
- @action: Returns the saturation of the integer array: fraction of the range
-          covered by unique elements.
-          0.0 = empty / no values, 1.0 = all possible values in range present.
- @note: None
-[==============================================================================}
-function TIntegerArrayHelper.Saturated: Double;
-var
-  m: specialize TFPGMap<Integer, Boolean>;
-  i: Integer;
-  r: TRange;
-begin
-  if Self.Empty then
-    Exit(0.0);
-  m := specialize TFPGMap<Integer, Boolean>.Create;
-  r.Create(Self[0], Self[0]);
-  try
-    for i := 0 to High(Self) do
+  h := High(Self);
+  case h.Compare(0) of
+    1:
     begin
-      r.Absorb(Self[i]);
-      if (not m.IndexOf(Self[i]) >= 0) then
-        m.Add(Self[i], True);
+      r := Self.Bounds;
+      b.Create(r.Size, 0);
+      for x := 0 to h do
+        Inc(b[Self[x] - r.start]);
+      t := 0;
+      for x := 0 to (r.stop - r.start) do
+        if ((b[x] > 0) and (b[x] < b[t])) then
+          t := x;
+      Result := (t + r.start);
+      SetLength(b, 0);
     end;
-    if (r.Size = 0) then
-      Result := 0.0
-    else
-      Result := (m.Count / r.Size);
-  finally
-    m.Free;
+    0: Result := Self[0];
+    -1: Result := null;
   end;
 end;
 
@@ -200,34 +171,63 @@ begin
 end;
 
 {==============================================================================]
- <LeastFreq>
- @action: Returns the least frequent/common value from TIA.
- @note: Be careful with values! Try to avoid using too low or high values!
-        Such as: -200,000,000 or +200,000,000. Heavy memory-usage could possibly cause crashing.
+ <Occupancy>
+ @action: Returns the calculated density from given arr.
+ @note: None
 [==============================================================================}
-function TIntegerArrayHelper.LeastFreq(const null: Integer = -2147483648): Integer;
+function TIntegerArrayHelper.Occupancy: Double;
 var
-  h, x, t: Integer;
-  b: TIntegerArray;
   r: TRange;
 begin
-  h := High(Self);
-  case h.Compare(0) of
-    1:
+  if Self.Empty then
+    Exit(0.0);
+  Result := (Self.QuickSorted.Distinct / r.Construct(0, High(Self)).Size);
+end;
+
+{==============================================================================]
+ <Saturated>
+ @action: Returns the saturation of the integer array: fraction of the range
+          covered by unique elements.
+          0.0 = empty / no values, 1.0 = all possible values in range present.
+ @note: None
+[==============================================================================}
+function TIntegerArrayHelper.Saturated: Double;
+var
+  m: specialize TFPGMap<Integer, Boolean>;
+  i: Integer;
+  r: TRange;
+begin
+  if Self.Empty then
+    Exit(0.0);
+  m := specialize TFPGMap<Integer, Boolean>.Create;
+  r.Create(Self[0], Self[0]);
+  try
+    for i := 0 to High(Self) do
     begin
-      r := Self.Bounds;
-      b.Create(r.Size, 0);
-      for x := 0 to h do
-        Inc(b[Self[x] - r.start]);
-      t := 0;
-      for x := 0 to (r.stop - r.start) do
-        if ((b[x] > 0) and (b[x] < b[t])) then
-          t := x;
-      Result := (t + r.start);
-      SetLength(b, 0);
+      r.Absorb(Self[i]);
+      if (not m.IndexOf(Self[i]) >= 0) then
+        m.Add(Self[i], True);
     end;
-    0: Result := Self[0];
-    -1: Result := null;
+    if (r.Size = 0) then
+      Result := 0.0
+    else
+      Result := (m.Count / r.Size);
+  finally
+    m.Free;
   end;
+end;
+
+{==============================================================================]
+ <Sum>
+ @action: Returns the sum of all arr values together.
+ @note: None
+[==============================================================================}
+function TIntegerArrayHelper.Sum: Int64;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Result := (Result + Self[i]);
 end;
 {$ENDIF}

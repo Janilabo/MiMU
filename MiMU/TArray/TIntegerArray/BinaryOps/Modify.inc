@@ -1,39 +1,32 @@
 {$IFDEF HELPERS}
-function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean;
-function BinaryRemove(const val: Integer; const all: Boolean = True; const aAscending: Boolean = True): Integer; overload;
-function BinaryUpdate(const oValue, nValue: Integer; const aAscending: Boolean = True): Boolean; overload;
 function BinaryDelete(const x: Integer; const aAscending: Boolean = True): Boolean; overload;
+function BinaryRemove(const val: Integer; const all: Boolean = True; const aAscending: Boolean = True): Integer; overload;
 function BinaryReplace(const oValue, nValue: Integer; const aAscending: Boolean = True): Boolean; overload;
 function BinaryReplaceAll(const oValue, nValue: Integer; const aAscending: Boolean = True): Integer; overload;
+function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean;
+function BinaryUpdate(const oValue, nValue: Integer; const aAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <BinaryShrink>
-  @action: Removes an integer x from the array while maintaining sorted order.
-  @note: Returns True if the value was removed, False if it was not found.
+  <BinaryDelete>
+  @action: Removes the first occurrence of a specific value from a sorted array.
+  @note: Uses binary search to locate the target efficiently.
+         Returns True if the value was found and deleted, otherwise False.
+         Works for ascending or descending arrays.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean;
+function TIntegerArrayHelper.BinaryDelete(const x: Integer; const aAscending: Boolean = True): Boolean; overload;
 var
-  m, i, o: Integer;
-  r: TRange;
+  p, l, i: Integer;
 begin
-  r.Create(0, High(Self));
-  o := aAscending.Select(1, -1);
-  while r.Ascending do
-  begin
-    m := r.Pivot;
-    if ((o * Self[m]) < (o * x)) then
-      r.start := (m + 1)
-    else
-      r.stop := (m - 1);
-  end;
-  Result := ((Self.Size > r.start) and (Self[r.start] = x));
+  p := Self.BinaryIndex(x, aAscending);
+  Result := (p <> -1);
   if not Result then
     Exit;
-  for i := r.start to (High(Self) - 1) do
+  l := Self.Length;
+  for i := p to (l - 2) do
     Self[i] := Self[i + 1];
-  SetLength(Self, (Self.Size - 1));
+  SetLength(Self, (l - 1));
 end;
 
 {==============================================================================]
@@ -76,45 +69,6 @@ begin
     end;
   end;
   Result := (l - Self.Size);
-end;
-
-{==============================================================================]
-  <BinaryUpdate>
-  @action: Updates the first occurrence of an element in the sorted array.
-  @note: Searches for old_value using binary search. If found, replaces it with new_value.
-         Returns True if updated, False if the value was not found.
-         After replacement, sorting may be violated if new_value changes order.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryUpdate(const oValue, nValue: Integer; const aAscending: Boolean = True): Boolean; overload;
-var
-  p: Integer;
-begin
-  Result := False;
-  p := Self.BinaryIndex(oValue, aAscending);
-  Result := (p <> -1);
-  if Result then
-    Self[p] := nValue;
-end;
-
-{==============================================================================]
-  <BinaryDelete>
-  @action: Removes the first occurrence of a specific value from a sorted array.
-  @note: Uses binary search to locate the target efficiently.
-         Returns True if the value was found and deleted, otherwise False.
-         Works for ascending or descending arrays.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryDelete(const x: Integer; const aAscending: Boolean = True): Boolean; overload;
-var
-  p, l, i: Integer;
-begin
-  p := Self.BinaryIndex(x, aAscending);
-  Result := (p <> -1);
-  if not Result then
-    Exit;
-  l := Self.Length;
-  for i := p to (l - 2) do
-    Self[i] := Self[i + 1];
-  SetLength(Self, (l - 1));
 end;
 
 {==============================================================================]
@@ -161,5 +115,51 @@ begin
 	  Break;
   if r then
     Self.BinaryInsertionSort(aAscending);
+end;
+
+{==============================================================================]
+  <BinaryShrink>
+  @action: Removes an integer x from the array while maintaining sorted order.
+  @note: Returns True if the value was removed, False if it was not found.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean;
+var
+  m, i, o: Integer;
+  r: TRange;
+begin
+  r.Create(0, High(Self));
+  o := aAscending.Select(1, -1);
+  while r.Ascending do
+  begin
+    m := r.Pivot;
+    if ((o * Self[m]) < (o * x)) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  Result := ((Self.Size > r.start) and (Self[r.start] = x));
+  if not Result then
+    Exit;
+  for i := r.start to (High(Self) - 1) do
+    Self[i] := Self[i + 1];
+  SetLength(Self, (Self.Size - 1));
+end;
+
+{==============================================================================]
+  <BinaryUpdate>
+  @action: Updates the first occurrence of an element in the sorted array.
+  @note: Searches for old_value using binary search. If found, replaces it with new_value.
+         Returns True if updated, False if the value was not found.
+         After replacement, sorting may be violated if new_value changes order.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryUpdate(const oValue, nValue: Integer; const aAscending: Boolean = True): Boolean; overload;
+var
+  p: Integer;
+begin
+  Result := False;
+  p := Self.BinaryIndex(oValue, aAscending);
+  Result := (p <> -1);
+  if Result then
+    Self[p] := nValue;
 end;
 {$ENDIF}

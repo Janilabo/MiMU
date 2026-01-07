@@ -1,60 +1,11 @@
 {$IFDEF HELPERS}
-function BinaryMerge(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
-function BinaryMerged(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
 function BinaryCombine(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
 function BinaryCombined(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
+function BinaryMerge(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
+function BinaryMerged(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-function TDoubleArrayHelper.BinaryMerge(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
-var
-  l: Integer;
-  s, i: TRange;
-begin
-  l := 0;
-  s.Create(0, Self.Size);
-  i.Create(0, items.Size);
-  SetLength(Result, (s.stop + i.stop));
-  case aAscending of
-    True:
-    while ((s.start < s.stop) and (i.start < i.stop)) do
-      if (Self[s.start] <= items[i.start]) then
-        Result[l.Increase] := Self[s.start.Increase]
-      else
-        Result[l.Increase] := items[i.start.Increase];
-    False:
-    while ((s.start < s.stop) and (i.start < i.stop)) do
-      if (Self[s.start] >= items[i.start]) then
-        Result[l.Increase] := Self[s.start.Increase]
-      else
-        Result[l.Increase] := items[i.start.Increase];
-  end;
-  while (s.start < s.stop) do
-    Result[l.Increase] := Self[s.start.Increase];
-  while (i.start < i.stop) do
-    Result[l.Increase] := items[i.start.Increase];
-end;
-
-function TDoubleArrayHelper.BinaryMerged(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
-var
-  l: Integer;
-  s, i: TRange;
-begin
-  l := 0;
-  s.Create(0, Self.Size);
-  i.Create(0, items.Size);
-  SetLength(Result, (s.stop + i.stop));
-  while ((s.start < s.stop) and (i.start < i.stop)) do
-    if Self[s.start].Precede(items[i.start], aAscending) then
-      Result[l.Increase] := Self[s.start.Increase]
-    else
-      Result[l.Increase] := items[i.start.Increase];
-  while (s.start < s.stop) do
-    Result[l.Increase] := Self[s.start.Increase];
-  while (i.start < i.stop) do
-    Result[l.Increase] := items[i.start.Increase];
-end;
-
 function TDoubleArrayHelper.BinaryCombine(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
 var
   l: specialize TFPGList<MType>;
@@ -110,5 +61,54 @@ begin
     Result[k.Increase] := items[j.Increase];
   if (k < Result.Size) then
     SetLength(Result, k);
+end;
+
+function TDoubleArrayHelper.BinaryMerge(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
+var
+  l: Integer;
+  s, i: TRange;
+begin
+  l := 0;
+  s.Create(0, Self.Size);
+  i.Create(0, items.Size);
+  SetLength(Result, (s.stop + i.stop));
+  case aAscending of
+    True:
+    while ((s.start < s.stop) and (i.start < i.stop)) do
+      if (Self[s.start] <= items[i.start]) then
+        Result[l.Increase] := Self[s.start.Increase]
+      else
+        Result[l.Increase] := items[i.start.Increase];
+    False:
+    while ((s.start < s.stop) and (i.start < i.stop)) do
+      if (Self[s.start] >= items[i.start]) then
+        Result[l.Increase] := Self[s.start.Increase]
+      else
+        Result[l.Increase] := items[i.start.Increase];
+  end;
+  while (s.start < s.stop) do
+    Result[l.Increase] := Self[s.start.Increase];
+  while (i.start < i.stop) do
+    Result[l.Increase] := items[i.start.Increase];
+end;
+
+function TDoubleArrayHelper.BinaryMerged(const items: TDoubleArray; const aAscending: Boolean = True): TDoubleArray; overload;
+var
+  l: Integer;
+  s, i: TRange;
+begin
+  l := 0;
+  s.Create(0, Self.Size);
+  i.Create(0, items.Size);
+  SetLength(Result, (s.stop + i.stop));
+  while ((s.start < s.stop) and (i.start < i.stop)) do
+    if Self[s.start].Precede(items[i.start], aAscending) then
+      Result[l.Increase] := Self[s.start.Increase]
+    else
+      Result[l.Increase] := items[i.start.Increase];
+  while (s.start < s.stop) do
+    Result[l.Increase] := Self[s.start.Increase];
+  while (i.start < i.stop) do
+    Result[l.Increase] := items[i.start.Increase];
 end;
 {$ENDIF}

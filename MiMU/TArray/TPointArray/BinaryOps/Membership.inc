@@ -1,9 +1,21 @@
 {$IFDEF HELPERS}
-function BinaryExists(const item: TPoint): Boolean; overload;
 function BinaryContains(const item: TPoint): Boolean; overload;
+function BinaryExists(const item: TPoint): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinarySearch>
+  @action: Performs a binary search for a specified point in a sorted TPointArray.
+  @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
+           consistent with TPoint.Compare.
+         - Returns the index of the matching point if found, or -1 if not found.
+[==============================================================================}
+function TPointArrayHelper.BinaryContains(const item: TPoint): Boolean; overload;
+begin
+  Result := (Self.BinarySearch(item) > -1);
+end;
+
 {==============================================================================]
   <BinaryExists>
   @action: Performs a binary search for a specified point in a sorted TPointArray.
@@ -25,17 +37,5 @@ function TPointArrayHelper.BinaryExists(const item: TPoint): Boolean; overload;
   end;
 begin
   Result := BS(0, High(Self));
-end;
-
-{==============================================================================]
-  <BinarySearch>
-  @action: Performs a binary search for a specified point in a sorted TPointArray.
-  @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
-           consistent with TPoint.Compare.
-         - Returns the index of the matching point if found, or -1 if not found.
-[==============================================================================}
-function TPointArrayHelper.BinaryContains(const item: TPoint): Boolean; overload;
-begin
-  Result := (Self.BinarySearch(item) > -1);
 end;
 {$ENDIF}

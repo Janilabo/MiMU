@@ -1,11 +1,11 @@
 {$IFDEF HELPERS}
 function BinaryDelete(const item: TPoint): Boolean; overload;
+function BinaryMerge(const items: TPointArray): TPointArray; overload;
 function BinaryRemove(const item: TPoint; const all: Boolean = True): Integer; overload;
-function BinarySinglify(const item: TPoint): Integer; overload;
-function BinarySinglified(const item: TPoint): TPointArray; overload;
 function BinaryReplace(const oItem, nItem: TPoint): Boolean; overload;
 function BinaryReplaceAll(const oItem, nItem: TPoint): Integer; overload;
-function BinaryMerge(const items: TPointArray): TPointArray; overload;
+function BinarySinglified(const item: TPoint): TPointArray; overload;
+function BinarySinglify(const item: TPoint): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -29,88 +29,6 @@ begin
   for i := p to (High(Self) - 1) do
     Self[i] := Self[i + 1];
   SetLength(Self, (Self.Size - 1));
-end;
-
-{==============================================================================]
-  <BinaryRemove>
-  @action: Removes one or all occurrences of a specified TPoint from the array
-           using binary search. If 'all' is True, every matching element is
-           deleted; otherwise, only the first found instance is removed.
-  @note: - The array must be sorted using the same ordering as
-           TPointArray.BinarySearch and TPointArray.BinaryRange.
-         - When 'all' is True, deletion shifts the remaining elements left.
-         - Returns the number of elements removed (0 if none found).
-[==============================================================================}
-function TPointArrayHelper.BinaryRemove(const item: TPoint; const all: Boolean = True): Integer; overload;
-var
-  i, l: Integer;
-  r: TRange;
-begin
-  l := Self.Length;
-  if (l = 0) then
-    Exit(0);
-  case all of
-    False: Result := IfThen(Self.BinaryDelete(item), 1, 0);
-    True:
-    begin
-      r := Self.BinaryRange(item);
-      if r.Employs(-1) then
-        Exit(0);
-      Result := r.Size;
-      for i := r.start to ((l - Result) - 1) do
-        Self[i] := Self[i + Result];
-      SetLength(Self, (l - Result));
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <BinarySinglify>
-  @action: Removes all occurrences of a specified point from the sorted TPointArray
-           in place, preserving ascending lexicographic order by X, then Y.
-  @note: - The array must be sorted ascending by X, then Y, consistent with TPoint.Compare.
-         - Uses BinaryPosL to locate the first occurrence efficiently.
-         - Shifts subsequent elements left to fill removed entries.
-         - Returns the number of points removed.
-		 - KEEPS ONLY ONE!
-[==============================================================================}
-function TPointArrayHelper.BinarySinglify(const item: TPoint): Integer; overload;
-var
-  i, l, s, p: Integer;
-begin
-  p := Self.BinaryPosL(item);
-  if (p = -1) then
-    Exit(0);
-  s := Self.Size;
-  l := p;
-  for i := (p + 1) to (s - 1) do
-    if (Self[i] <> item)then
-      Self[l.Increment] := Self[i];
-  Result := (s - (l + 1));
-  if (Result > 0) then
-    SetLength(Self, (l + 1));
-end;
-
-{==============================================================================]
-  <BinarySinglified>
-  @action: Returns a copy of the array with all occurrences of a specified point
-           removed, preserving the original order.
-  @note: - The array must be sorted ascending by X then Y, consistent with TPoint.Compare.
-         - Uses BinaryPosL to locate the first occurrence efficiently.
-[==============================================================================}
-function TPointArrayHelper.BinarySinglified(const item: TPoint): TPointArray; overload;
-var
-  i, l, p: Integer;
-begin
-  p := Self.BinaryPosL(item);
-  if (p = -1) then
-    Exit(Self.Copy);
-  SetLength(Result, Self.Size);
-  l := 0;
-  for i := 0 to High(Self) do
-    if ((i = p) or (Self[i] <> item)) then
-      Result[l.Increase] := Self[i];
-  SetLength(Result, l);
 end;
 
 {==============================================================================]
@@ -147,6 +65,39 @@ begin
     Result[k.Increase] := Self[i.Increase];
   while (j < o) do
     Result[k.Increase] := items[j.Increase];
+end;
+
+{==============================================================================]
+  <BinaryRemove>
+  @action: Removes one or all occurrences of a specified TPoint from the array
+           using binary search. If 'all' is True, every matching element is
+           deleted; otherwise, only the first found instance is removed.
+  @note: - The array must be sorted using the same ordering as
+           TPointArray.BinarySearch and TPointArray.BinaryRange.
+         - When 'all' is True, deletion shifts the remaining elements left.
+         - Returns the number of elements removed (0 if none found).
+[==============================================================================}
+function TPointArrayHelper.BinaryRemove(const item: TPoint; const all: Boolean = True): Integer; overload;
+var
+  i, l: Integer;
+  r: TRange;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(0);
+  case all of
+    False: Result := IfThen(Self.BinaryDelete(item), 1, 0);
+    True:
+    begin
+      r := Self.BinaryRange(item);
+      if r.Employs(-1) then
+        Exit(0);
+      Result := r.Size;
+      for i := r.start to ((l - Result) - 1) do
+        Self[i] := Self[i + Result];
+      SetLength(Self, (l - Result));
+    end;
+  end;
 end;
 
 {==============================================================================]
@@ -187,5 +138,54 @@ begin
       Break;
   if r then
     Self.BinaryInsertionSort;
+end;
+
+{==============================================================================]
+  <BinarySinglified>
+  @action: Returns a copy of the array with all occurrences of a specified point
+           removed, preserving the original order.
+  @note: - The array must be sorted ascending by X then Y, consistent with TPoint.Compare.
+         - Uses BinaryPosL to locate the first occurrence efficiently.
+[==============================================================================}
+function TPointArrayHelper.BinarySinglified(const item: TPoint): TPointArray; overload;
+var
+  i, l, p: Integer;
+begin
+  p := Self.BinaryPosL(item);
+  if (p = -1) then
+    Exit(Self.Copy);
+  SetLength(Result, Self.Size);
+  l := 0;
+  for i := 0 to High(Self) do
+    if ((i = p) or (Self[i] <> item)) then
+      Result[l.Increase] := Self[i];
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <BinarySinglify>
+  @action: Removes all occurrences of a specified point from the sorted TPointArray
+           in place, preserving ascending lexicographic order by X, then Y.
+  @note: - The array must be sorted ascending by X, then Y, consistent with TPoint.Compare.
+         - Uses BinaryPosL to locate the first occurrence efficiently.
+         - Shifts subsequent elements left to fill removed entries.
+         - Returns the number of points removed.
+		 - KEEPS ONLY ONE!
+[==============================================================================}
+function TPointArrayHelper.BinarySinglify(const item: TPoint): Integer; overload;
+var
+  i, l, s, p: Integer;
+begin
+  p := Self.BinaryPosL(item);
+  if (p = -1) then
+    Exit(0);
+  s := Self.Size;
+  l := p;
+  for i := (p + 1) to (s - 1) do
+    if (Self[i] <> item)then
+      Self[l.Increment] := Self[i];
+  Result := (s - (l + 1));
+  if (Result > 0) then
+    SetLength(Self, (l + 1));
 end;
 {$ENDIF}

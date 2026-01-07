@@ -1,20 +1,106 @@
 {$IFDEF HELPERS}
+function BBox: TBox; overload;
+function Boundaries: TBox;
+function BoundingBox: TBox;
 function Bounds: TBox; overload;
 function Bounds(var width, height: Integer): TBox; overload;
-function BoundingBox: TBox;
-function Boundaries: TBox;
 function Box: TBox;
-function BBox: TBox; overload;
 function Boxed: TBox;
-function MinMax: TBox;
-function Region: TBox; overload;
 function Coverage: TBox; overload;
 function Extent: TBox;
-function Vertical: TRange; overload;
 function Horizontal: TRange; overload;
+function MinMax: TBox;
+function Region: TBox; overload;
+function Vertical: TRange; overload;
+
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BBox>
+  @action: Computes the minimal bounding box (TBox) that encloses all points
+           in the TPointArray. It calculates the minimum and maximum X and Y
+           coordinates among the points to define the box.
+  @note:   - If the array is empty, the resulting TBox will be uninitialized.
+           - If the array has only one point, the bounding box will be a
+             degenerate box where X1=X2 and Y1=Y2.
+           - Uses pointer-based iteration for efficiency.
+[==============================================================================}
+function TPointArrayHelper.BBox: TBox; overload;
+var
+  P, M: PPoint;
+  L: Integer;
+begin
+  L := Self.Length;
+  if (L > 0) then
+  with Result do
+  begin
+    P := @Self[0];
+    X1 := P^.X;
+    Y1 := P^.Y;
+    X2 := P^.X;
+    Y2 := P^.Y;
+    if (L = 1) then
+      Exit;
+    M := @Self[0];
+    Inc(M, L);
+    repeat
+      if (X1 > P^.X) then
+        X1 := P^.X
+      else if (X2 < P^.X) then
+        X2 := P^.X;
+      if (Y1 > P^.Y) then
+        Y1 := P^.Y
+      else if (Y2 < P^.Y) then
+        Y2 := P^.Y;
+      Inc(P);
+    until (P = M);
+  end;
+end; 
+
+{==============================================================================]
+  <Boundaries>
+  @action: Returns bounding box around TPointArray arr.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.Boundaries: TBox; 
+  function BR(const arr: TPointArray; const L, R: Integer): TBox;
+  var
+    M: Integer;
+  begin
+    if (L = R) then
+      Exit(Result.Create(arr[L].X, arr[L].Y, arr[L].X, arr[L].Y));
+    M := ((L + R) div 2);
+    Result := BR(arr, L, M).Union(BR(arr, (M + 1), R));
+  end;
+begin
+  if Self.Empty then
+    Exit(Default(TBox));
+  Result := BR(Self, 0, High(Self));
+end;
+
+{==============================================================================]
+  <BoundingBox>
+  @action: Returns bounding box around TPointArray arr.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.BoundingBox: TBox; 
+var
+  i: Integer;
+  a, b: TIntegerArray;
+begin
+  if Self.Empty then
+    Exit(Result.Create(-2147483648));
+  SetLength(a, Self.Size);
+  SetLength(b, Self.Size);
+  for i := 0 to High(Self) do
+  begin
+    a[i] := Self[i].X;
+    b[i] := Self[i].Y;
+  end;
+  Result.Create(MinValue(a), MinValue(b), MaxValue(a), MaxValue(b));
+end;
+
 {==============================================================================]
   <Bounds>
   @action: Returns bounding box around TPointArray arr.
@@ -65,49 +151,6 @@ begin
 end;
 
 {==============================================================================]
-  <BoundingBox>
-  @action: Returns bounding box around TPointArray arr.
-  @note: None.
-[==============================================================================}
-function TPointArrayHelper.BoundingBox: TBox; 
-var
-  i: Integer;
-  a, b: TIntegerArray;
-begin
-  if Self.Empty then
-    Exit(Result.Create(-2147483648));
-  SetLength(a, Self.Size);
-  SetLength(b, Self.Size);
-  for i := 0 to High(Self) do
-  begin
-    a[i] := Self[i].X;
-    b[i] := Self[i].Y;
-  end;
-  Result.Create(MinValue(a), MinValue(b), MaxValue(a), MaxValue(b));
-end;
-
-{==============================================================================]
-  <Boundaries>
-  @action: Returns bounding box around TPointArray arr.
-  @note: None.
-[==============================================================================}
-function TPointArrayHelper.Boundaries: TBox; 
-  function BR(const arr: TPointArray; const L, R: Integer): TBox;
-  var
-    M: Integer;
-  begin
-    if (L = R) then
-      Exit(Result.Create(arr[L].X, arr[L].Y, arr[L].X, arr[L].Y));
-    M := ((L + R) div 2);
-    Result := BR(arr, L, M).Union(BR(arr, (M + 1), R));
-  end;
-begin
-  if Self.Empty then
-    Exit(Default(TBox));
-  Result := BR(Self, 0, High(Self));
-end;
-
-{==============================================================================]
   <Box>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
@@ -121,69 +164,6 @@ begin
   Result.Create(Self[0]);
   for P in Self do
     Result.Create(Min(Result.X1, p.X), Min(Result.Y1, p.Y), Max(Result.X2, p.X), Max(Result.Y2, p.Y));
-end;
-
-{==============================================================================]
-  <BBox>
-  @action: Computes the minimal bounding box (TBox) that encloses all points
-           in the TPointArray. It calculates the minimum and maximum X and Y
-           coordinates among the points to define the box.
-  @note:   - If the array is empty, the resulting TBox will be uninitialized.
-           - If the array has only one point, the bounding box will be a
-             degenerate box where X1=X2 and Y1=Y2.
-           - Uses pointer-based iteration for efficiency.
-[==============================================================================}
-function TPointArrayHelper.BBox: TBox; overload;
-var
-  P, M: PPoint;
-  L: Integer;
-begin
-  L := Self.Length;
-  if (L > 0) then
-  with Result do
-  begin
-    P := @Self[0];
-    X1 := P^.X;
-    Y1 := P^.Y;
-    X2 := P^.X;
-    Y2 := P^.Y;
-    if (L = 1) then
-      Exit;
-    M := @Self[0];
-    Inc(M, L);
-    repeat
-      if (X1 > P^.X) then
-        X1 := P^.X
-      else if (X2 < P^.X) then
-        X2 := P^.X;
-      if (Y1 > P^.Y) then
-        Y1 := P^.Y
-      else if (Y2 < P^.Y) then
-        Y2 := P^.Y;
-      Inc(P);
-    until (P = M);
-  end;
-end; 
-
-{==============================================================================]
-  <MinMax>
-  @action: Returns bounding box around TPointArray arr.
-  @note: None.
-[==============================================================================}
-function TPointArrayHelper.MinMax: TBox; 
-var
-  i: Integer;
-begin
-  if Self.Empty then
-    Exit(Result.Create(-2147483648));
-  Result.Create(Self[0]);
-  for i := 0 to High(Self) do
-  begin
-    Result.X1 := Min(Self[i].X, Result.X1);
-    Result.Y1 := Min(Self[i].Y, Result.Y1);
-    Result.X2 := Max(Self[i].X, Result.X2);
-    Result.Y2 := Max(Self[i].Y, Result.Y2);
-  end;
 end;
 
 {==============================================================================]
@@ -210,32 +190,6 @@ begin
   for i := 1 to High(Self) do
     if (Self[i].Y > Result.Y2) then
       Result.Y2 := Self[i].Y;
-end;
-
-{==============================================================================]
-  <Region>
-  @action: Returns bounding box around TPointArray arr.
-  @note: None.
-[==============================================================================}
-function TPointArrayHelper.Region: TBox; overload; 
-var
-  i, l: Integer;
-begin
-  l := Self.Length;
-  if (l = 0) then
-    Exit(Result.Create(-2147483648));
-  Result.Create(MaxInt, MaxInt, -MaxInt, -MaxInt);
-  for i := 0 to (l - 1) do
-  begin
-    if (Self[i].X < Result.X1) then
-      Result.X1 := Self[i].X;
-    if (Self[i].Y < Result.Y1) then
-      Result.Y1 := Self[i].Y;
-    if (Self[i].X > Result.X2) then
-      Result.X2 := Self[i].X;
-    if (Self[i].Y > Result.Y2) then
-      Result.Y2 := Self[i].Y;
-  end;
 end;
 
 {==============================================================================]
@@ -307,6 +261,53 @@ begin
           Result.stop := Self[i].X;
   end else
     Result := Default(TRange);
+end;
+
+{==============================================================================]
+  <MinMax>
+  @action: Returns bounding box around TPointArray arr.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.MinMax: TBox; 
+var
+  i: Integer;
+begin
+  if Self.Empty then
+    Exit(Result.Create(-2147483648));
+  Result.Create(Self[0]);
+  for i := 0 to High(Self) do
+  begin
+    Result.X1 := Min(Self[i].X, Result.X1);
+    Result.Y1 := Min(Self[i].Y, Result.Y1);
+    Result.X2 := Max(Self[i].X, Result.X2);
+    Result.Y2 := Max(Self[i].Y, Result.Y2);
+  end;
+end;
+
+{==============================================================================]
+  <Region>
+  @action: Returns bounding box around TPointArray arr.
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.Region: TBox; overload; 
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(Result.Create(-2147483648));
+  Result.Create(MaxInt, MaxInt, -MaxInt, -MaxInt);
+  for i := 0 to (l - 1) do
+  begin
+    if (Self[i].X < Result.X1) then
+      Result.X1 := Self[i].X;
+    if (Self[i].Y < Result.Y1) then
+      Result.Y1 := Self[i].Y;
+    if (Self[i].X > Result.X2) then
+      Result.X2 := Self[i].X;
+    if (Self[i].Y > Result.Y2) then
+      Result.Y2 := Self[i].Y;
+  end;
 end;
 
 {==============================================================================]

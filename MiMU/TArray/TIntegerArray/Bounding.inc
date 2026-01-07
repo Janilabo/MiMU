@@ -1,17 +1,50 @@
 {$IFDEF HELPERS}
+function Boundaries: TRange;
+function BoundingRange: TRange;
 function Bounds: TRange; overload;
 function Bounds(var aSize: Integer): TRange; overload;
 function BRange: TRange; overload;
-function BoundingRange: TRange;
-function Boundaries: TRange;
-function Range: TRange;
 function Coverage: TRange;
-function MinMax: TRange;
-function Region: TRange; overload;
 function Extent: TRange;
+function MinMax: TRange;
+function Range: TRange;
+function Region: TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Boundaries>
+  @action: Returns bounding box around TPointArray arr.
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.Boundaries: TRange;
+  function BR(const arr: TIntegerArray; const L, R: Integer): TRange;
+  var
+    M: Integer;
+  begin
+    if (L = R) then
+      Exit(Result.Create(arr[L], arr[L]));
+    M := ((L + R) div 2);
+    Result := BR(arr, L, M).Union(BR(arr, (M + 1), R));
+  end;
+begin
+  if Self.Empty then
+    Exit(Default(TRange));
+  Result := BR(Self, 0, High(Self));
+end;
+
+{==============================================================================]
+  <BoundingRange>
+  @action: Returns bounding range around TIntegerArray arr.
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.BoundingRange: TRange;
+begin
+  if Self.Empty then
+    Exit(Result.Create(-2147483648, -2147483648));
+  Result.Create(MinValue(Self), MaxValue(Self));
+end;
+
 {==============================================================================]
   <Bounds>
   @action: Stores arr bounds to TRange.
@@ -84,55 +117,6 @@ begin
 end;
 
 {==============================================================================]
-  <BoundingRange>
-  @action: Returns bounding range around TIntegerArray arr.
-  @note: None.
-[==============================================================================}
-function TIntegerArrayHelper.BoundingRange: TRange;
-begin
-  if Self.Empty then
-    Exit(Result.Create(-2147483648, -2147483648));
-  Result.Create(MinValue(Self), MaxValue(Self));
-end;
-
-{==============================================================================]
-  <Boundaries>
-  @action: Returns bounding box around TPointArray arr.
-  @note: None.
-[==============================================================================}
-function TIntegerArrayHelper.Boundaries: TRange;
-  function BR(const arr: TIntegerArray; const L, R: Integer): TRange;
-  var
-    M: Integer;
-  begin
-    if (L = R) then
-      Exit(Result.Create(arr[L], arr[L]));
-    M := ((L + R) div 2);
-    Result := BR(arr, L, M).Union(BR(arr, (M + 1), R));
-  end;
-begin
-  if Self.Empty then
-    Exit(Default(TRange));
-  Result := BR(Self, 0, High(Self));
-end;
-
-{==============================================================================]
-  <Range>
-  @action: Stores arr bounds to TRange.
-  @note: Returns -2147483648..-2147483648 with empty array.
-[==============================================================================}
-function TIntegerArrayHelper.Range: TRange;
-var
-  i: Integer;
-begin
-  if Self.Empty then
-    Exit(Result.Create(-2147483648, -2147483648));
-  Result := Result.Create(Self[0], Self[0]);
-  for i in Self do
-    Result.Create(Min(Result.start, i), Max(Result.stop, i));
-end;
-
-{==============================================================================]
   <Coverage>
   @action: Stores arr bounds to TRange.
   @note: Returns -2147483648..-2147483648 with empty array.
@@ -150,6 +134,16 @@ begin
   for i := 1 to High(Self) do
     if (Self[i] > Result.stop) then
       Result.stop := Self[i];
+end;
+
+{==============================================================================]
+  <Extent>
+  @action: Stores arr bounds to TRange.
+  @note: None
+[==============================================================================}
+function TIntegerArrayHelper.Extent: TRange;
+begin
+  Result.Create(Self.MinItem, Self.MaxItem);
 end;
 
 {==============================================================================]
@@ -172,6 +166,22 @@ begin
 end;
 
 {==============================================================================]
+  <Range>
+  @action: Stores arr bounds to TRange.
+  @note: Returns -2147483648..-2147483648 with empty array.
+[==============================================================================}
+function TIntegerArrayHelper.Range: TRange;
+var
+  i: Integer;
+begin
+  if Self.Empty then
+    Exit(Result.Create(-2147483648, -2147483648));
+  Result := Result.Create(Self[0], Self[0]);
+  for i in Self do
+    Result.Create(Min(Result.start, i), Max(Result.stop, i));
+end;
+
+{==============================================================================]
   <Region>
   @action: Stores arr bounds to TRange.
   @note: Returns -2147483648..-2147483648 with empty array.
@@ -190,15 +200,5 @@ begin
     if (Self[i] > Result.stop) then
       Result.stop := Self[i];
   end;
-end;
-
-{==============================================================================]
-  <Extent>
-  @action: Stores arr bounds to TRange.
-  @note: None
-[==============================================================================}
-function TIntegerArrayHelper.Extent: TRange;
-begin
-  Result.Create(Self.MinItem, Self.MaxItem);
 end;
 {$ENDIF}

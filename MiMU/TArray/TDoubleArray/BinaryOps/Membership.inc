@@ -1,10 +1,10 @@
 {$IFDEF HELPERS}
 function BinaryContains(const x: Double; const aAscending: Boolean = True): Boolean;
+function BinaryExcludes(const value: Double; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExists(const value: Double; const oAscending: Boolean = True): Boolean; overload;
 function BinaryFit(const value: Double; const oAscending: Boolean = True): Boolean; overload;
-function BinaryUnfit(const value: Double; const oAscending: Boolean = True): Boolean; overload;
 function BinaryIncludes(const value: Double; const oAscending: Boolean = True): Boolean; overload;
-function BinaryExcludes(const value: Double; const oAscending: Boolean = True): Boolean; overload;
+function BinaryUnfit(const value: Double; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -16,6 +16,20 @@ function BinaryExcludes(const value: Double; const oAscending: Boolean = True): 
 function TDoubleArrayHelper.BinaryContains(const x: Double; const aAscending: Boolean = True): Boolean;
 begin
   Result := (Self.BinarySearch(x, aAscending) > -1);
+end;
+
+{==============================================================================]
+  <BinaryExcludes>
+  @action: Determines whether the specified value does not exist in this array
+           by using a binary search. The array is assumed to be pre-sorted in
+           the order specified by oAscending.
+  @note: Performs boundary checks before invoking the binary search. Returns
+         True if the array is empty, if the value lies outside the array’s
+         sorted bounds, or if the binary search fails to locate the value.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryExcludes(const value: Double; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := (Self.BinaryUnfit(value, oAscending) or (Self.BinaryPos(value, oAscending) = -1));
 end;
 
 function TDoubleArrayHelper.BinaryExists(const value: Double; const oAscending: Boolean = True): Boolean; overload;
@@ -59,6 +73,21 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryIncludes>
+  @action: Determines whether the specified value exists in this array by using
+           a binary search. The array is assumed to be pre-sorted in the order
+           specified by oAscending.
+  @note: Performs boundary checks before invoking the binary search for
+         efficiency. Returns True only if the array is non-empty, the value
+         lies within the array’s sorted bounds, and the binary search locates
+         the element.
+[==============================================================================}
+function TDoubleArrayHelper.BinaryIncludes(const value: Double; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := (Self.BinaryFit(value, oAscending) and (Self.BinaryPos(value, oAscending) > -1));
+end;
+
+{==============================================================================]
   <BinaryUnfit>
   @action: Returns True if the specified value is outside the inclusive bounds
            of the array, or if the array is empty. This indicates that the
@@ -76,34 +105,5 @@ begin
     Result := (Self.Empty or (value < Self[0]) or (value > Self[High(Self)]))
   else
     Result := (Self.Empty or (value > Self[0]) or (value < Self[High(Self)]));
-end;
-
-{==============================================================================]
-  <BinaryIncludes>
-  @action: Determines whether the specified value exists in this array by using
-           a binary search. The array is assumed to be pre-sorted in the order
-           specified by oAscending.
-  @note: Performs boundary checks before invoking the binary search for
-         efficiency. Returns True only if the array is non-empty, the value
-         lies within the array’s sorted bounds, and the binary search locates
-         the element.
-[==============================================================================}
-function TDoubleArrayHelper.BinaryIncludes(const value: Double; const oAscending: Boolean = True): Boolean; overload;
-begin
-  Result := (Self.BinaryFit(value, oAscending) and (Self.BinaryPos(value, oAscending) > -1));
-end;
-
-{==============================================================================]
-  <BinaryExcludes>
-  @action: Determines whether the specified value does not exist in this array
-           by using a binary search. The array is assumed to be pre-sorted in
-           the order specified by oAscending.
-  @note: Performs boundary checks before invoking the binary search. Returns
-         True if the array is empty, if the value lies outside the array’s
-         sorted bounds, or if the binary search fails to locate the value.
-[==============================================================================}
-function TDoubleArrayHelper.BinaryExcludes(const value: Double; const oAscending: Boolean = True): Boolean; overload;
-begin
-  Result := (Self.BinaryUnfit(value, oAscending) or (Self.BinaryPos(value, oAscending) = -1));
 end;
 {$ENDIF}

@@ -1,240 +1,16 @@
 {$IFDEF HELPERS}
-function Groups(const adjacency8: Boolean = True): T2DPointArray; overload;
-function Grouping(const adjacency8: Boolean = True): T2DPointArray; overload;
-function Grouped(const adjacency8: Boolean = True): T2DPointArray; overload;
-function Groupify(const adjacency8: Boolean = True): T2DPointArray; overload;
 function AdjFill(const scan8W: Boolean = True): T2DPointArray;
-function NFill(const scan8W: Boolean = True): T2DPointArray;
 function AFill(const scan8W: Boolean = True): T2DPointArray;
 function CFill(const scan8W: Boolean = True): T2DPointArray;
+function Grouped(const adjacency8: Boolean = True): T2DPointArray; overload;
+function Groupify(const adjacency8: Boolean = True): T2DPointArray; overload;
+function Grouping(const adjacency8: Boolean = True): T2DPointArray; overload;
+function Groups(const adjacency8: Boolean = True): T2DPointArray; overload;
 function Neighborify(const adjacency8: Boolean = True): T2DPointArray; overload;
+function NFill(const scan8W: Boolean = True): T2DPointArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Grouped>
-  @action: Partitions the points in the array into groups of connected points
-           based on adjacency (4- or 8-connectivity). Each group is returned
-           as a separate T2DPointArray within the result array.
-  @note: The adjacency method is determined by the 'adjacency8' parameter:
-         - True  => 8-connectivity (including diagonals)
-         - False => 4-connectivity (orthogonal neighbors only)
-         Returns a T2DPointArray where each element is a group of connected points.
-         Uses a BFS (breadth-first search) algorithm internally to find the groups.
-[==============================================================================}
-function TPointArrayHelper.Grouped(const adjacency8: Boolean = True): T2DPointArray; overload;
-var
-  v: TBooleanArray;
-  q: TIntegerArray;
-  d: TPointArray;
-  r: TRange;
-  i, j, p, g, k, l: Integer;
-begin
-  l := Self.Length;
-  case l of
-    0: Exit([]);
-    1: Exit([Self]);
-  end;
-  SetLength(v, l);
-  d := Point(0,0).Surrounding(adjacency8);
-  for i := 0 to (l - 1) do
-  begin
-    if v[i] then
-      Continue;
-    g := System.Length(Result);
-    SetLength(Result, (g + 1));
-    SetLength(q, l);
-    r.Create(0, 0);
-    q[r.stop.Increase] := i;
-    v[i] := True;
-    while (r.start < r.stop) do
-    begin
-      p := q[r.start.Increase];
-      SetLength(Result[g], (Result[g].Size + 1));
-      Result[g][High(Result[g])] := Self[p];
-      for j := 0 to High(d) do
-        for k := 0 to (l - 1) do
-          if ((not v[k]) and (Self[k] = (Self[p] + d[j]))) then
-          begin
-            v[k] := True;
-            q[r.stop.Increase] := k;
-          end;
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <Groupify>
-  @action: Partitions the points in the array into connected groups (clusters)
-           based on adjacency. Two points are considered connected if they
-           are neighbors according to 4- or 8-connectivity.
-  @note: The adjacency method is determined by the 'adjacency8' parameter:
-         - True  => 8-connectivity (including diagonals)
-         - False => 4-connectivity (orthogonal neighbors only)
-         Returns a T2DPointArray where each element is a group of connected points.
-         Uses a union-find (disjoint-set) algorithm internally for efficiency.
-[==============================================================================}
-function TPointArrayHelper.Groupify(const adjacency8: Boolean = True): T2DPointArray; overload;
-var
-  p: TIntegerArray;
-  i, j, k, l: Integer;
-  d: TPointArray;
-  c, n: Integer;
-  r, m: TIntegerArray;
-  function FindRoot(const x: Integer): Integer;
-  begin
-    if (p[x] = x) then
-      Exit(x);
-    p[x] := FindRoot(p[x]);
-    Exit(p[x]);
-  end;
-  procedure Unioned(const x, y: Integer);
-  var
-    h, v: Integer;
-  begin
-    h := FindRoot(x);
-    v := FindRoot(y);
-    if (h <> v) then
-      p[v] := h;
-  end;
-begin
-  l := Self.Length;
-  case l of
-    0: Exit([]);
-    1: Exit([Self]);
-  end;
-  p := Self.IDs;
-  d := Point(0, 0).Surrounding(adjacency8);
-  for i := 0 to (l - 1) do
-    for j := 0 to High(d) do
-    begin
-      k := Self.Pos(Point((Self[i].X + d[j].X), (Self[i].Y + d[j].Y)));
-      if (k <> -1) then
-        Unioned(i, k);
-    end;
-  c := 0;
-  SetLength(r, l);
-  for i := 0 to (l - 1) do
-  begin
-    r[i] := FindRoot(i);
-    if (r[i] = i) then
-      Inc(c);
-  end;
-  SetLength(m, l);
-  n := 0;
-  for i := 0 to (l - 1) do
-    if (r[i] = i) then
-      m[i] := n.Increase
-    else
-      m[i] := m[r[i]];
-  SetLength(Result, c);
-  for i := 0 to (l - 1) do
-  begin
-    c := m[r[i]];
-    SetLength(Result[c], (Result[c].Size + 1));
-    Result[c][High(Result[c])] := Self[i];
-  end;
-end;
-
-{==============================================================================]
-  <Groups>
-  @action: Partitions the points in the array into connected groups using
-           an iterative depth-first search (DFS). Each group is returned as
-           a TPointArray within the resulting T2DPointArray.
-  @note: adjacency8 = True uses 8-connectivity (diagonals included),
-         False uses 4-connectivity (orthogonal neighbors only).
-         The function uses a manual stack to avoid recursion.
-         Returns a T2DPointArray where each element represents a group of
-         connected points.
-[==============================================================================}
-function TPointArrayHelper.Groups(const adjacency8: Boolean = True): T2DPointArray; overload;
-var
-  v: TBooleanArray;
-  d: TPointArray;
-  s: TIntegerArray;
-  c, n, g, l, i, j, t: Integer;
-begin
-  l := Self.Length;
-  case l of
-    0: Exit([]);
-    1: Exit([Self]);
-  end;
-  SetLength(Result, 0);
-  SetLength(v, l);
-  d := Point(0,0).Surrounding(adjacency8);
-  for i := 0 to (l - 1) do
-  begin
-    if v[i] then
-      Continue;
-    g := System.Length(Result);
-    SetLength(Result, (g + 1));
-    SetLength(s, l);
-    t := 0;
-    s[t.Increase] := i;
-    v[i] := True;
-    while (t) > 0 do
-    begin
-      c := s[t.Decrement];
-      SetLength(Result[g], (Result[g].Size + 1));
-      Result[g][High(Result[g])] := Self[c];
-      for j := 0 to High(d) do
-        for n := 0 to (l - 1) do
-          if ((not v[n]) and (Self[n] = (Self[c] + d[j]))) then
-          begin
-            v[n] := True;
-            s[t.Increase] := n;
-          end;
-      end;
-    end;
-end;
-
-{==============================================================================]
-  <Grouping>
-  @action: Partitions the points in the array into connected groups using a
-           recursive depth-first search (DFS). Each group is returned as a
-           separate TPointArray within the resulting T2DPointArray.
-  @note: The adjacency method is determined by the 'adjacency8' parameter:
-         - True  => 8-connectivity (includes diagonals)
-         - False => 4-connectivity (orthogonal neighbors only)
-         Returns a T2DPointArray where each element represents a group of
-         connected points.
-         Internally uses DFS to traverse and collect all points belonging
-         to the same connected component.
-[==============================================================================}
-function TPointArrayHelper.Grouping(const adjacency8: Boolean = True): T2DPointArray; overload;
-  procedure DFS(const arr: TPointArray; const index: Integer; const directions: TPointArray; var visited: TBooleanArray; var group: TPointArray);
-  var
-    i, j: Integer;
-  begin
-    visited[index] := True;
-    SetLength(group, (group.Size + 1));
-    group[High(group)] := arr[index];
-    for i := 0 to High(directions) do
-      for j := 0 to High(arr) do
-        if ((not visited[j]) and (arr[j] = (arr[index] + directions[i]))) then
-          DFS(arr, j, directions, visited, group);
-  end;
-var
-  v: TBooleanArray;
-  d: TPointArray;
-  i, l: Integer;
-begin
-  l := Self.Length;
-  case l of
-    0: Exit([]);
-    1: Exit([Self]);
-  end;
-  SetLength(Result, 0);
-  SetLength(v, l);
-  d := Point(0,0).Surrounding(adjacency8);
-  for i := 0 to (l - 1) do
-    if not v[i] then
-    begin
-      SetLength(Result, (System.Length(Result) + 1));
-      DFS(Self, i, d, v, Result[High(Result)]);
-    end;
-end;
-
 {==============================================================================]
   <AdjFill>
   @action:
@@ -309,75 +85,6 @@ begin
     Inc(g);
   end;
   SetLength(Result, g);
-end;
-
-{==============================================================================]
-  <NFill>
-  @action: Performs adjacency-based flood fill using binary search for neighbor detection.
-           Groups connected points (4-way or 8-way) into separate clusters.
-  @note: "N" stands for Neighbor Fill.
-         - When scan8W = True → uses 8-way connectivity (includes diagonals).
-         - When scan8W = False → uses 4-way connectivity (up, down, left, right).
-         The method uses binary search on sorted X/Y axes via TPointArray.XTo2D
-         for efficient detection of neighboring points without spatial hashing.
-[==============================================================================}
-function TPointArrayHelper.NFill(const scan8W: Boolean = True): T2DPointArray;
-var
-  i, j, k, r, c, l, t: Integer;
-  h, z: T2DIntegerArray;
-  v, q: TIntegerArray;
-  u: TBooleanArray;
-  p, n: TPoint;
-  x, y, s: TRange;
-  o: TPointArray;
-begin
-  l := Self.Length;
-  if (l = 0) then
-    Exit([]);
-  if scan8W then
-    o := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1), Point(1, 1), Point(-1, -1), Point(1, -1), Point(-1, 1)]
-  else
-    o := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1)];
-  h := Self.XTo2D(v, z);
-  SetLength(Result, l);
-  SetLength(u, l);
-  SetLength(q, l);
-  c := 0;
-  for i := 0 to (l - 1) do
-  begin
-    if u[i] then
-      Continue;
-    s.Create(0, 0);
-    q[0] := i;
-    u[i] := True;
-    while (s.start <= s.stop) do
-    begin
-      p := Self[q[s.start.Increase]];
-      Result[c].Supply(p);
-      for k := 0 to High(o) do
-      begin
-        n := Point((p.X + o[k].X), (p.Y + o[k].Y));
-        y := v.BinaryRange(TRange.Construct(n.Y, n.Y));
-        if not y.Employs(-1) then
-        for r := y.start to y.stop do
-        begin
-          x := h[r].BinaryRange(TRange.Construct(n.X, n.X));
-          if not x.Employs(-1) then
-          for j := x.start to x.stop do
-          begin
-            t := z[r][j];
-            if not u[t] and (Self[t].X = n.X) and (Self[t].Y = n.Y) then
-            begin
-              u[t] := True;
-              q[s.stop.Increment] := t;
-            end;
-          end;
-        end;
-      end;
-    end;
-    Inc(c);
-  end;
-  SetLength(Result, c);
 end;
 
 {==============================================================================]
@@ -530,6 +237,230 @@ begin
 end;
 
 {==============================================================================]
+  <Grouped>
+  @action: Partitions the points in the array into groups of connected points
+           based on adjacency (4- or 8-connectivity). Each group is returned
+           as a separate T2DPointArray within the result array.
+  @note: The adjacency method is determined by the 'adjacency8' parameter:
+         - True  => 8-connectivity (including diagonals)
+         - False => 4-connectivity (orthogonal neighbors only)
+         Returns a T2DPointArray where each element is a group of connected points.
+         Uses a BFS (breadth-first search) algorithm internally to find the groups.
+[==============================================================================}
+function TPointArrayHelper.Grouped(const adjacency8: Boolean = True): T2DPointArray; overload;
+var
+  v: TBooleanArray;
+  q: TIntegerArray;
+  d: TPointArray;
+  r: TRange;
+  i, j, p, g, k, l: Integer;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  SetLength(v, l);
+  d := Point(0,0).Surrounding(adjacency8);
+  for i := 0 to (l - 1) do
+  begin
+    if v[i] then
+      Continue;
+    g := System.Length(Result);
+    SetLength(Result, (g + 1));
+    SetLength(q, l);
+    r.Create(0, 0);
+    q[r.stop.Increase] := i;
+    v[i] := True;
+    while (r.start < r.stop) do
+    begin
+      p := q[r.start.Increase];
+      SetLength(Result[g], (Result[g].Size + 1));
+      Result[g][High(Result[g])] := Self[p];
+      for j := 0 to High(d) do
+        for k := 0 to (l - 1) do
+          if ((not v[k]) and (Self[k] = (Self[p] + d[j]))) then
+          begin
+            v[k] := True;
+            q[r.stop.Increase] := k;
+          end;
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <Groupify>
+  @action: Partitions the points in the array into connected groups (clusters)
+           based on adjacency. Two points are considered connected if they
+           are neighbors according to 4- or 8-connectivity.
+  @note: The adjacency method is determined by the 'adjacency8' parameter:
+         - True  => 8-connectivity (including diagonals)
+         - False => 4-connectivity (orthogonal neighbors only)
+         Returns a T2DPointArray where each element is a group of connected points.
+         Uses a union-find (disjoint-set) algorithm internally for efficiency.
+[==============================================================================}
+function TPointArrayHelper.Groupify(const adjacency8: Boolean = True): T2DPointArray; overload;
+var
+  p: TIntegerArray;
+  i, j, k, l: Integer;
+  d: TPointArray;
+  c, n: Integer;
+  r, m: TIntegerArray;
+  function FindRoot(const x: Integer): Integer;
+  begin
+    if (p[x] = x) then
+      Exit(x);
+    p[x] := FindRoot(p[x]);
+    Exit(p[x]);
+  end;
+  procedure Unioned(const x, y: Integer);
+  var
+    h, v: Integer;
+  begin
+    h := FindRoot(x);
+    v := FindRoot(y);
+    if (h <> v) then
+      p[v] := h;
+  end;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  p := Self.IDs;
+  d := Point(0, 0).Surrounding(adjacency8);
+  for i := 0 to (l - 1) do
+    for j := 0 to High(d) do
+    begin
+      k := Self.Pos(Point((Self[i].X + d[j].X), (Self[i].Y + d[j].Y)));
+      if (k <> -1) then
+        Unioned(i, k);
+    end;
+  c := 0;
+  SetLength(r, l);
+  for i := 0 to (l - 1) do
+  begin
+    r[i] := FindRoot(i);
+    if (r[i] = i) then
+      Inc(c);
+  end;
+  SetLength(m, l);
+  n := 0;
+  for i := 0 to (l - 1) do
+    if (r[i] = i) then
+      m[i] := n.Increase
+    else
+      m[i] := m[r[i]];
+  SetLength(Result, c);
+  for i := 0 to (l - 1) do
+  begin
+    c := m[r[i]];
+    SetLength(Result[c], (Result[c].Size + 1));
+    Result[c][High(Result[c])] := Self[i];
+  end;
+end;
+
+{==============================================================================]
+  <Grouping>
+  @action: Partitions the points in the array into connected groups using a
+           recursive depth-first search (DFS). Each group is returned as a
+           separate TPointArray within the resulting T2DPointArray.
+  @note: The adjacency method is determined by the 'adjacency8' parameter:
+         - True  => 8-connectivity (includes diagonals)
+         - False => 4-connectivity (orthogonal neighbors only)
+         Returns a T2DPointArray where each element represents a group of
+         connected points.
+         Internally uses DFS to traverse and collect all points belonging
+         to the same connected component.
+[==============================================================================}
+function TPointArrayHelper.Grouping(const adjacency8: Boolean = True): T2DPointArray; overload;
+  procedure DFS(const arr: TPointArray; const index: Integer; const directions: TPointArray; var visited: TBooleanArray; var group: TPointArray);
+  var
+    i, j: Integer;
+  begin
+    visited[index] := True;
+    SetLength(group, (group.Size + 1));
+    group[High(group)] := arr[index];
+    for i := 0 to High(directions) do
+      for j := 0 to High(arr) do
+        if ((not visited[j]) and (arr[j] = (arr[index] + directions[i]))) then
+          DFS(arr, j, directions, visited, group);
+  end;
+var
+  v: TBooleanArray;
+  d: TPointArray;
+  i, l: Integer;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  SetLength(Result, 0);
+  SetLength(v, l);
+  d := Point(0,0).Surrounding(adjacency8);
+  for i := 0 to (l - 1) do
+    if not v[i] then
+    begin
+      SetLength(Result, (System.Length(Result) + 1));
+      DFS(Self, i, d, v, Result[High(Result)]);
+    end;
+end;
+
+{==============================================================================]
+  <Groups>
+  @action: Partitions the points in the array into connected groups using
+           an iterative depth-first search (DFS). Each group is returned as
+           a TPointArray within the resulting T2DPointArray.
+  @note: adjacency8 = True uses 8-connectivity (diagonals included),
+         False uses 4-connectivity (orthogonal neighbors only).
+         The function uses a manual stack to avoid recursion.
+         Returns a T2DPointArray where each element represents a group of
+         connected points.
+[==============================================================================}
+function TPointArrayHelper.Groups(const adjacency8: Boolean = True): T2DPointArray; overload;
+var
+  v: TBooleanArray;
+  d: TPointArray;
+  s: TIntegerArray;
+  c, n, g, l, i, j, t: Integer;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  SetLength(Result, 0);
+  SetLength(v, l);
+  d := Point(0,0).Surrounding(adjacency8);
+  for i := 0 to (l - 1) do
+  begin
+    if v[i] then
+      Continue;
+    g := System.Length(Result);
+    SetLength(Result, (g + 1));
+    SetLength(s, l);
+    t := 0;
+    s[t.Increase] := i;
+    v[i] := True;
+    while (t) > 0 do
+    begin
+      c := s[t.Decrement];
+      SetLength(Result[g], (Result[g].Size + 1));
+      Result[g][High(Result[g])] := Self[c];
+      for j := 0 to High(d) do
+        for n := 0 to (l - 1) do
+          if ((not v[n]) and (Self[n] = (Self[c] + d[j]))) then
+          begin
+            v[n] := True;
+            s[t.Increase] := n;
+          end;
+      end;
+    end;
+end;
+
+{==============================================================================]
   <Neighborify>
   @action: Groups points into clusters of connected neighbors based on 4- or 8-directional adjacency.
   @note: Uses a flood-fill algorithm on a bounding-box grid. Returns a T2DPointArray where each sub-array is a connected component.
@@ -592,5 +523,74 @@ begin
           Inc(r);
       end;
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <NFill>
+  @action: Performs adjacency-based flood fill using binary search for neighbor detection.
+           Groups connected points (4-way or 8-way) into separate clusters.
+  @note: "N" stands for Neighbor Fill.
+         - When scan8W = True → uses 8-way connectivity (includes diagonals).
+         - When scan8W = False → uses 4-way connectivity (up, down, left, right).
+         The method uses binary search on sorted X/Y axes via TPointArray.XTo2D
+         for efficient detection of neighboring points without spatial hashing.
+[==============================================================================}
+function TPointArrayHelper.NFill(const scan8W: Boolean = True): T2DPointArray;
+var
+  i, j, k, r, c, l, t: Integer;
+  h, z: T2DIntegerArray;
+  v, q: TIntegerArray;
+  u: TBooleanArray;
+  p, n: TPoint;
+  x, y, s: TRange;
+  o: TPointArray;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  if scan8W then
+    o := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1), Point(1, 1), Point(-1, -1), Point(1, -1), Point(-1, 1)]
+  else
+    o := [Point(1, 0), Point(-1, 0), Point(0, 1), Point(0, -1)];
+  h := Self.XTo2D(v, z);
+  SetLength(Result, l);
+  SetLength(u, l);
+  SetLength(q, l);
+  c := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if u[i] then
+      Continue;
+    s.Create(0, 0);
+    q[0] := i;
+    u[i] := True;
+    while (s.start <= s.stop) do
+    begin
+      p := Self[q[s.start.Increase]];
+      Result[c].Supply(p);
+      for k := 0 to High(o) do
+      begin
+        n := Point((p.X + o[k].X), (p.Y + o[k].Y));
+        y := v.BinaryRange(TRange.Construct(n.Y, n.Y));
+        if not y.Employs(-1) then
+        for r := y.start to y.stop do
+        begin
+          x := h[r].BinaryRange(TRange.Construct(n.X, n.X));
+          if not x.Employs(-1) then
+          for j := x.start to x.stop do
+          begin
+            t := z[r][j];
+            if not u[t] and (Self[t].X = n.X) and (Self[t].Y = n.Y) then
+            begin
+              u[t] := True;
+              q[s.stop.Increment] := t;
+            end;
+          end;
+        end;
+      end;
+    end;
+    Inc(c);
+  end;
+  SetLength(Result, c);
 end;
 {$ENDIF}

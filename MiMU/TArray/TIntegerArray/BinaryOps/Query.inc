@@ -3,14 +3,14 @@ function BinaryLocate(const x: Integer; const aAscending: Boolean = True): TRang
 function BinaryLocation(const x: Integer; const aAscending: Boolean = True): TRange;
 function BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload;
 function BinaryRange(const x: Integer; const aAscending: Boolean = True): TRange; overload;
+function BinaryRangeEx(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange; overload;
+function BinaryRangeOf(const value: Integer; const oAscending: Boolean = True): TRange; overload;
+function BinaryRangeOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
 function BinarySpan(const x: TRange; const aAscending: Boolean = True): TRange; overload;
 function BinarySpanning(const value: Integer; const oAscending: Boolean = True): TRange; overload;
 function BinarySpanning(const range: TRange; const oAscending: Boolean = True): TRange; overload;
 function BinarySpanOf(const value: Integer; const oAscending: Boolean = True): TRange; overload;
 function BinarySpanOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
-function BinaryRangeOf(const value: Integer; const oAscending: Boolean = True): TRange; overload;
-function BinaryRangeOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
-function BinaryRangeEx(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -114,6 +114,132 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryRangeEx>
+  @action: Returns the range of indices containing values within `tolerance` of
+           `value`. Uses binary search to find boundaries efficiently.
+  @note: The array must be sorted according to `oAscending`. Unlike the expand
+         function, this searches the entire array for the range, not just from
+         a starting index. Time complexity is O(log n).
+  @example: arr=[10,15,20,25,30,35], value=22, tolerance=5
+            → includes 20,25 → range(2,3)
+[==============================================================================}
+function TIntegerArrayHelper.BinaryRangeEx(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange; overload;
+var
+  m: TRange;
+begin
+  if (tolerance < 0) then
+    Exit(TRange.Construct(-1, -1));
+  m.Create((value - tolerance), (value + tolerance));
+  Result.start := Self.BinaryBoundLeft(IfThen(oAscending, m.start, m.stop), oAscending);
+  Result.stop := Self.BinaryBoundRight(IfThen(oAscending, m.stop, m.start), oAscending);
+  if (Result.stop > 0) then
+    Dec(Result.stop);
+  if ((Result.start = -1) or (Result.start > High(Self)) or (Result.stop = -1) or (Result.stop < Result.start)) then
+    Result := TRange.Construct(-1, -1);
+end;
+
+{==============================================================================]
+  <BinaryRangeOf>
+  @action: Finds the contiguous range of a specific value in a sorted array.
+  @note:
+    - Fully binary search based; no linear expansion.
+    - Works with arrays sorted ascending or descending.
+    - Returns TRange(-1, -1) if the value is not found.
+  @return: TRange containing start and stop indices of the value in the array.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryRangeOf(const value: Integer; const oAscending: Boolean = True): TRange; overload;
+var
+  m: Integer;
+  r: TRange;
+begin
+  Result.Create(-1, -1);
+  r.Create(0, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case ((oAscending and (Self[m] < value)) or ((not oAscending) and (Self[m] > value))) of
+      False:
+      begin
+        r.stop := (m - 1);
+        if (Self[m] = value) then
+          Result.start := m;
+      end;
+      True: r.start := (m + 1);
+    end;
+  end;
+  if Result.start = -1 then
+    Exit;
+  r.Create(Result.start, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case (Self[m] = value) of
+      True:
+      begin
+        Result.stop := m;
+        r.start := (m + 1);
+      end;
+      False:
+      if ((oAscending and (Self[m] < value)) or ((not oAscending) and (Self[m] > value))) then
+        r.start := (m + 1)
+      else
+        r.stop := (m - 1);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryRangeOf>
+  @action: Finds the contiguous range of elements within a specified value range in a sorted array.
+  @note:
+    - Fully binary search based; no linear expansion.
+    - Works with arrays sorted ascending or descending.
+    - Returns TRange(-1, -1) if no elements fall within the range.
+  @return: TRange containing start and stop indices of elements in the array within the range.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryRangeOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
+var
+  m: Integer;
+  n, r: TRange;
+begin
+  Result.Create(-1, -1);
+  n := range.Normalize;
+  r.Create(0, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.stop))) of
+      False:
+      begin
+        if ((Self[m] >= n.start) and (Self[m] <= n.stop)) then
+          Result.start := m;
+        r.stop := (m - 1);
+      end;
+      True: r.start := (m + 1);
+    end;
+  end;
+  if (Result.start = -1) then
+    Exit;
+  r.Create(Result.start, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    case ((Self[m] >= n.start) and (Self[m] <= n.stop)) of
+      True:
+      begin
+        Result.stop := m;
+        r.start := (m + 1);
+      end;
+      False:
+      if ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.stop))) then
+        r.start := (m + 1)
+      else if ((oAscending and (Self[m] > n.stop)) or ((not oAscending) and (Self[m] < n.start))) then
+        r.stop := (m - 1);
+    end;
+  end;
+end;
+
+{==============================================================================]
   <BinarySpan>
   @action: Performs a binary search on a sorted integer array to find the index range
            (start..stop) of values that fall within a given numeric range.
@@ -180,31 +306,6 @@ begin
   Result.stop := r.stop;
   if ((Result.start > Result.stop) or (Result.start < 0) or (Result.stop > High(Self))) then
     Result.Create(-1, -1);
-end;
-
-{==============================================================================]
-  <BinaryRangeEx>
-  @action: Returns the range of indices containing values within `tolerance` of
-           `value`. Uses binary search to find boundaries efficiently.
-  @note: The array must be sorted according to `oAscending`. Unlike the expand
-         function, this searches the entire array for the range, not just from
-         a starting index. Time complexity is O(log n).
-  @example: arr=[10,15,20,25,30,35], value=22, tolerance=5
-            → includes 20,25 → range(2,3)
-[==============================================================================}
-function TIntegerArrayHelper.BinaryRangeEx(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange; overload;
-var
-  m: TRange;
-begin
-  if (tolerance < 0) then
-    Exit(TRange.Construct(-1, -1));
-  m.Create((value - tolerance), (value + tolerance));
-  Result.start := Self.BinaryBoundLeft(IfThen(oAscending, m.start, m.stop), oAscending);
-  Result.stop := Self.BinaryBoundRight(IfThen(oAscending, m.stop, m.start), oAscending);
-  if (Result.stop > 0) then
-    Dec(Result.stop);
-  if ((Result.start = -1) or (Result.start > High(Self)) or (Result.stop = -1) or (Result.stop < Result.start)) then
-    Result := TRange.Construct(-1, -1);
 end;
 
 {==============================================================================]
@@ -393,107 +494,6 @@ begin
         while ((Result.stop < High(Self)) and (Self[Result.stop + 1] >= n.start) and (Self[Result.stop + 1] <= n.stop)) do
           Inc(Result.stop);
         Exit;
-      end;
-      False:
-      if ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.stop))) then
-        r.start := (m + 1)
-      else if ((oAscending and (Self[m] > n.stop)) or ((not oAscending) and (Self[m] < n.start))) then
-        r.stop := (m - 1);
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <BinaryRangeOf>
-  @action: Finds the contiguous range of a specific value in a sorted array.
-  @note:
-    - Fully binary search based; no linear expansion.
-    - Works with arrays sorted ascending or descending.
-    - Returns TRange(-1, -1) if the value is not found.
-  @return: TRange containing start and stop indices of the value in the array.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryRangeOf(const value: Integer; const oAscending: Boolean = True): TRange; overload;
-var
-  m: Integer;
-  r: TRange;
-begin
-  Result.Create(-1, -1);
-  r.Create(0, High(Self));
-  while (r.start <= r.stop) do
-  begin
-    m := r.Pivot;
-    case ((oAscending and (Self[m] < value)) or ((not oAscending) and (Self[m] > value))) of
-      False:
-      begin
-        r.stop := (m - 1);
-        if (Self[m] = value) then
-          Result.start := m;
-      end;
-      True: r.start := (m + 1);
-    end;
-  end;
-  if Result.start = -1 then
-    Exit;
-  r.Create(Result.start, High(Self));
-  while (r.start <= r.stop) do
-  begin
-    m := r.Pivot;
-    case (Self[m] = value) of
-      True:
-      begin
-        Result.stop := m;
-        r.start := (m + 1);
-      end;
-      False:
-      if ((oAscending and (Self[m] < value)) or ((not oAscending) and (Self[m] > value))) then
-        r.start := (m + 1)
-      else
-        r.stop := (m - 1);
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <BinaryRangeOf>
-  @action: Finds the contiguous range of elements within a specified value range in a sorted array.
-  @note:
-    - Fully binary search based; no linear expansion.
-    - Works with arrays sorted ascending or descending.
-    - Returns TRange(-1, -1) if no elements fall within the range.
-  @return: TRange containing start and stop indices of elements in the array within the range.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryRangeOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
-var
-  m: Integer;
-  n, r: TRange;
-begin
-  Result.Create(-1, -1);
-  n := range.Normalize;
-  r.Create(0, High(Self));
-  while (r.start <= r.stop) do
-  begin
-    m := r.Pivot;
-    case ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.stop))) of
-      False:
-      begin
-        if ((Self[m] >= n.start) and (Self[m] <= n.stop)) then
-          Result.start := m;
-        r.stop := (m - 1);
-      end;
-      True: r.start := (m + 1);
-    end;
-  end;
-  if (Result.start = -1) then
-    Exit;
-  r.Create(Result.start, High(Self));
-  while (r.start <= r.stop) do
-  begin
-    m := r.Pivot;
-    case ((Self[m] >= n.start) and (Self[m] <= n.stop)) of
-      True:
-      begin
-        Result.stop := m;
-        r.start := (m + 1);
       end;
       False:
       if ((oAscending and (Self[m] < n.start)) or ((not oAscending) and (Self[m] > n.stop))) then

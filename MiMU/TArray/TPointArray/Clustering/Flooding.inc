@@ -1,77 +1,77 @@
 {$IFDEF HELPERS}
-function BinaryFloodFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
+function BFloodFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
 function BinaryFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
 function BinaryFilled(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
-function BFloodFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
+function BinaryFloodFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <BinaryFloodFill>
+  <BFloodFill>
   @action:
-    Performs a breadth-first flood fill (BFS) on the point array, grouping all
-    points that lie within the specified radius (using the selected distance
-    metric) into connected components.
+    Performs a breadth-first flood fill (BFS) similar to BinaryFloodFill but
+    uses a pre-allocated queue sized to the total number of points, providing
+    predictable performance and avoiding queue resizing.
   @note:
-    • Uses a dynamically resizing queue to perform BFS traversal.
-    • Employs a 2D spatial index (via TPointArray_XTo2D) to limit neighbor
-      searches to points whose coordinates fall within ±Ceil(radius).
-    • Each unvisited point becomes the seed of a new component; all reachable
-      points are enqueued and marked as visited.
-    • Returns: T2DPointArray where each subarray contains one connected cluster.
-    • Complexity: O(N · K) on average (K = nearby points per lookup),
-      worst case O(N²) when every point connects.
-    • Memory: boolean visited array, integer queue, and spatial index buffers.
-    • Recommended for small–medium point sets or when iterative BFS is preferred.
+    • Pre-allocates queue (length = total points) and manages it via TRange
+      (r.start/r.stop) as queue head/tail indices.
+    • Uses 2D spatial index to quickly find potential neighbors.
+    • Marks visited points (u[]) and collects connected components into Result.
+    • Returns: T2DPointArray of connected clusters.
+    • Complexity: O(N · K) average; O(N²) in the worst fully connected case.
+    • Memory: boolean visited array + full-length queue.
+    • Difference vs BinaryFloodFill:
+        – No dynamic queue growth (fixed maximum size).
+        – Slightly simpler and faster for large uniform point sets.
+    • Ideal when deterministic memory footprint is desired.
 [==============================================================================}
-function TPointArrayHelper.BinaryFloodFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
+function TPointArrayHelper.BFloodFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
 var
-  l, i, j, r, c, d: Integer;
+  l, i, k, j, d, f, c: Integer;
   h, z: T2DIntegerArray;
   q, v: TIntegerArray;
   u: TBooleanArray;
-  x, y, s: TRange;
-  p: TPoint;
-  procedure Enqueue(const index: Integer);
-  begin
-    if u[index] then
-      Exit;
-    u[index] := True;
-    if (s.stop.Increment > High(q)) then
-      SetLength(q, (q.Size * 2));
-    q[s.stop] := index;
-  end;
+  x, y, r: TRange;
+  a, b: TPoint;
 begin
   l := Self.Length;
   if (l = 0) then
     Exit([]);
   d := Ceil(Radius);
-  SetLength(u, l);
-  SetLength(Result, 0);
-  SetLength(Result, l);
   h := Self.XTo2D(v, z);
-  SetLength(q, Max(256, (l div 10)));
+  SetLength(u, l);
+  SetLength(Result, l);
   c := 0;
   for i := 0 to (l - 1) do
   begin
     if u[i] then
       Continue;
-    s.Create(0, 0);
-    q[s.stop] := i;
+    SetLength(q, l);
+    r.Create(0, 1);
+    q[0] := i;
     u[i] := True;
-    while (s.start <= s.stop) do
+    while (r.start < r.stop) do
     begin
-      p := Self[q[s.start.Increase]];
-      Result[c].Supply(p);
-      y := v.BinaryRange(TRange.Construct((p.Y - d), (p.Y + d)));
+      a := Self[q[r.start.Increase]];
+      Result[c].Supply(a);
+      y := v.BinaryRange(TRange.Construct((a.Y - d), (a.Y + d)));
       if not y.Employs(-1) then
-      for r := y.start to y.stop do
+      for k := y.start to y.stop do
       begin
-        x := h[r].BinaryRange(TRange.Construct((p.X - d), (p.X + d)));
+        x := h[k].BinaryRange(TRange.Construct((a.X - d), (a.X + d)));
         if not x.Employs(-1) then
         for j := x.start to x.stop do
-          if ((not u[z[r][j]]) and p.Within(Self[z[r][j]], radius, metric)) then
-            Enqueue(z[r][j]);
+        begin
+          f := z[k][j];
+          if u[f] then
+            Continue;
+          b := Self[f];
+          if a.Within(b, radius, metric) then
+          begin
+            u[f] := True;
+            q[r.stop.Increase] := f;
+          end;
+        end;
       end;
     end;
     if (Result[c].Size > 0) then
@@ -286,71 +286,71 @@ begin
 end;
 
 {==============================================================================]
-  <BFloodFill>
+  <BinaryFloodFill>
   @action:
-    Performs a breadth-first flood fill (BFS) similar to BinaryFloodFill but
-    uses a pre-allocated queue sized to the total number of points, providing
-    predictable performance and avoiding queue resizing.
+    Performs a breadth-first flood fill (BFS) on the point array, grouping all
+    points that lie within the specified radius (using the selected distance
+    metric) into connected components.
   @note:
-    • Pre-allocates queue (length = total points) and manages it via TRange
-      (r.start/r.stop) as queue head/tail indices.
-    • Uses 2D spatial index to quickly find potential neighbors.
-    • Marks visited points (u[]) and collects connected components into Result.
-    • Returns: T2DPointArray of connected clusters.
-    • Complexity: O(N · K) average; O(N²) in the worst fully connected case.
-    • Memory: boolean visited array + full-length queue.
-    • Difference vs BinaryFloodFill:
-        – No dynamic queue growth (fixed maximum size).
-        – Slightly simpler and faster for large uniform point sets.
-    • Ideal when deterministic memory footprint is desired.
+    • Uses a dynamically resizing queue to perform BFS traversal.
+    • Employs a 2D spatial index (via TPointArray_XTo2D) to limit neighbor
+      searches to points whose coordinates fall within ±Ceil(radius).
+    • Each unvisited point becomes the seed of a new component; all reachable
+      points are enqueued and marked as visited.
+    • Returns: T2DPointArray where each subarray contains one connected cluster.
+    • Complexity: O(N · K) on average (K = nearby points per lookup),
+      worst case O(N²) when every point connects.
+    • Memory: boolean visited array, integer queue, and spatial index buffers.
+    • Recommended for small–medium point sets or when iterative BFS is preferred.
 [==============================================================================}
-function TPointArrayHelper.BFloodFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
+function TPointArrayHelper.BinaryFloodFill(const radius: Double; const metric: TMetrics = dmChebyshev): T2DPointArray;
 var
-  l, i, k, j, d, f, c: Integer;
+  l, i, j, r, c, d: Integer;
   h, z: T2DIntegerArray;
   q, v: TIntegerArray;
   u: TBooleanArray;
-  x, y, r: TRange;
-  a, b: TPoint;
+  x, y, s: TRange;
+  p: TPoint;
+  procedure Enqueue(const index: Integer);
+  begin
+    if u[index] then
+      Exit;
+    u[index] := True;
+    if (s.stop.Increment > High(q)) then
+      SetLength(q, (q.Size * 2));
+    q[s.stop] := index;
+  end;
 begin
   l := Self.Length;
   if (l = 0) then
     Exit([]);
   d := Ceil(Radius);
-  h := Self.XTo2D(v, z);
   SetLength(u, l);
+  SetLength(Result, 0);
   SetLength(Result, l);
+  h := Self.XTo2D(v, z);
+  SetLength(q, Max(256, (l div 10)));
   c := 0;
   for i := 0 to (l - 1) do
   begin
     if u[i] then
       Continue;
-    SetLength(q, l);
-    r.Create(0, 1);
-    q[0] := i;
+    s.Create(0, 0);
+    q[s.stop] := i;
     u[i] := True;
-    while (r.start < r.stop) do
+    while (s.start <= s.stop) do
     begin
-      a := Self[q[r.start.Increase]];
-      Result[c].Supply(a);
-      y := v.BinaryRange(TRange.Construct((a.Y - d), (a.Y + d)));
+      p := Self[q[s.start.Increase]];
+      Result[c].Supply(p);
+      y := v.BinaryRange(TRange.Construct((p.Y - d), (p.Y + d)));
       if not y.Employs(-1) then
-      for k := y.start to y.stop do
+      for r := y.start to y.stop do
       begin
-        x := h[k].BinaryRange(TRange.Construct((a.X - d), (a.X + d)));
+        x := h[r].BinaryRange(TRange.Construct((p.X - d), (p.X + d)));
         if not x.Employs(-1) then
         for j := x.start to x.stop do
-        begin
-          f := z[k][j];
-          if u[f] then
-            Continue;
-          b := Self[f];
-          if a.Within(b, radius, metric) then
-          begin
-            u[f] := True;
-            q[r.stop.Increase] := f;
-          end;
-        end;
+          if ((not u[z[r][j]]) and p.Within(Self[z[r][j]], radius, metric)) then
+            Enqueue(z[r][j]);
       end;
     end;
     if (Result[c].Size > 0) then

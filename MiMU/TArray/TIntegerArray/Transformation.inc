@@ -1,59 +1,46 @@
 {$IFDEF HELPERS}
-function Reflected: TIntegerArray; overload;
-function Reflect: Integer; overload;
+function Inverse(const arrBounds: TRange): TIntegerArray; overload;
+function Inverse: TIntegerArray; overload;
 function Invert: TIntegerArray;
 function Inverted(const arrBounds: TRange): TIntegerArray; overload;
 function Inverted: TIntegerArray; overload;
-function Inverse(const arrBounds: TRange): TIntegerArray; overload;
-function Inverse: TIntegerArray; overload;
 function Mirror: Boolean;
+function Reflect: Integer; overload;
+function Reflected: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Reflect>
-  @action: Returns reversed array
-  @note: None.
+  <Inverse>
+  @action: Returns inverted arr.
+  @note: Arr = [0,2,4,6,8,10] => Result := [1, 3, 5, 7, 9]
+         Supports custom bounds!
 [==============================================================================}
-function TIntegerArrayHelper.Reflected: TIntegerArray; overload;
+function TIntegerArrayHelper.Inverse(const arrBounds: TRange): TIntegerArray; overload;
 var
-  i: Integer;
-  s: SizeInt;
+  l, i: Integer;
+  r: TRange;
+  b: TBooleanArray;
 begin
-  SetLength(Result, Self.Size);
-  s := SizeOf(Integer);
+  r := arrBounds.Normalize;
+  b.Create(arrBounds.Size, False);
   for i := 0 to High(Self) do
-    Move(Self[High(Self) - i], Result[i], s);
+    if not ((Self[i] < r.start) or (Self[i] > r.stop)) then
+      b[Self[i] - r.start] := True;
+  l := 0;
+  SetLength(Result, b.Size);
+  for i := r.start to r.stop do
+    if not b[i - r.start] then
+      Result[l.Increase] := i;
+  SetLength(Result, l);
 end;
 
-{==============================================================================]
-  <Reflect>
-  @action: Reverses array.
-  @note: Returns Length(Self)
-[==============================================================================}
-function TIntegerArrayHelper.Reflect: Integer; overload;
-var
-  r: TRange;
-  s: SizeInt;
-  b: array of Byte;
-  x, y: PByte;
+function TIntegerArrayHelper.Inverse: TIntegerArray; overload;
 begin
-  Result := Self.Size;
-  if (Result < 2) then
-    Exit;
-  s := SizeOf(Integer);
-  SetLength(b, s);
-  r.Create(-1, Result);
-  x := PByte(@Self[r.start + 1]);
-  y := PByte(@Self[r.stop - 1]);
-  while (r.start.Increment < r.stop.Decrement) do
-  begin
-    Move(x^, b[0], s);
-    Move(y^, x^, s);
-    Move(b[0], y^, s);
-    Inc(x, s);
-    Dec(y, s);
-  end;
+  if (Self.Size > 1) then
+    Result := Self.Inverse(Self.Bounds)
+  else
+    SetLength(Result, 0);
 end;
 
 {==============================================================================]
@@ -116,39 +103,6 @@ begin
 end;
 
 {==============================================================================]
-  <Inverse>
-  @action: Returns inverted arr.
-  @note: Arr = [0,2,4,6,8,10] => Result := [1, 3, 5, 7, 9]
-         Supports custom bounds!
-[==============================================================================}
-function TIntegerArrayHelper.Inverse(const arrBounds: TRange): TIntegerArray; overload;
-var
-  l, i: Integer;
-  r: TRange;
-  b: TBooleanArray;
-begin
-  r := arrBounds.Normalize;
-  b.Create(arrBounds.Size, False);
-  for i := 0 to High(Self) do
-    if not ((Self[i] < r.start) or (Self[i] > r.stop)) then
-      b[Self[i] - r.start] := True;
-  l := 0;
-  SetLength(Result, b.Size);
-  for i := r.start to r.stop do
-    if not b[i - r.start] then
-      Result[l.Increase] := i;
-  SetLength(Result, l);
-end;
-
-function TIntegerArrayHelper.Inverse: TIntegerArray; overload;
-begin
-  if (Self.Size > 1) then
-    Result := Self.Inverse(Self.Bounds)
-  else
-    SetLength(Result, 0);
-end;
-
-{==============================================================================]
  <Mirror>
  @action: Mirrors arr
  @note: None.
@@ -168,5 +122,51 @@ begin
     Self[l] := (Self[i] xor Self[l]);
     Self[i] := (Self[i] xor Self[l]);
   end;
+end;
+
+{==============================================================================]
+  <Reflect>
+  @action: Reverses array.
+  @note: Returns Length(Self)
+[==============================================================================}
+function TIntegerArrayHelper.Reflect: Integer; overload;
+var
+  r: TRange;
+  s: SizeInt;
+  b: array of Byte;
+  x, y: PByte;
+begin
+  Result := Self.Size;
+  if (Result < 2) then
+    Exit;
+  s := SizeOf(Integer);
+  SetLength(b, s);
+  r.Create(-1, Result);
+  x := PByte(@Self[r.start + 1]);
+  y := PByte(@Self[r.stop - 1]);
+  while (r.start.Increment < r.stop.Decrement) do
+  begin
+    Move(x^, b[0], s);
+    Move(y^, x^, s);
+    Move(b[0], y^, s);
+    Inc(x, s);
+    Dec(y, s);
+  end;
+end;
+
+{==============================================================================]
+  <Reflect>
+  @action: Returns reversed array
+  @note: None.
+[==============================================================================}
+function TIntegerArrayHelper.Reflected: TIntegerArray; overload;
+var
+  i: Integer;
+  s: SizeInt;
+begin
+  SetLength(Result, Self.Size);
+  s := SizeOf(Integer);
+  for i := 0 to High(Self) do
+    Move(Self[High(Self) - i], Result[i], s);
 end;
 {$ENDIF}

@@ -1,21 +1,44 @@
 {$IFDEF HELPERS}
+function Census: Int64; overload;
 function Fit: Integer; overload;
 function Fit(const aSize: Integer): Integer; overload;
 function Fit(const aBounds: TRange): Integer; overload;
+function Inventory(var items: MArray): Int64; overload;
+function Inventory: Int64; overload;
 function Length: Integer; overload;
 function Length(var lengths: TIntegerArray): Integer; overload;
+function Population: Int64; overload;
 function Size: Integer; overload;
 function Size(var sizes: TIntegerArray): Integer; overload;
 function Sized(var lengths: TIntegerArray): Int64; overload;
 function Sized: Int64; overload;
 function Total: Int64; overload;
-function Population: Int64; overload;
-function Census: Int64; overload;
-function Inventory(var items: MArray): Int64; overload;
-function Inventory: Int64; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Census>
+  @action: Returns actual Length for 2D array.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+[==============================================================================}
+function M2DArrayHelper.Census: Int64; overload;
+var
+  i: Integer;
+  s, e: PInteger;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+  begin
+    s := PInteger(Self[i]);
+    if (s <> nil) then
+    begin
+      e := s;
+      Inc(e, Self[i].Size);
+      Result := Result + (e - s);
+    end;
+  end;
+end; 
+
 {==============================================================================]
   <Fit>
   @action: Returns array length.
@@ -66,6 +89,41 @@ begin
 end;
 
 {==============================================================================]
+  <Inventory>
+  @action: Returns actual Length for 2D array.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+         Stores 2D array items as 1D to items.
+[==============================================================================}
+function M2DArrayHelper.Inventory(var items: MArray): Int64; overload;
+var
+  i, j: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Inc(Result, Self[i].Size);
+  SetLength(items, Result);
+  if (Result > 0) then
+  for i := High(Self) downto 0 do
+    for j := High(Self[i]) downto 0 do
+      items[Result.Decrement] := Self[i][j];
+  Result := items.Size;
+end;
+
+{==============================================================================]
+  <Inventory>
+  @action: Returns actual Length for 2D array.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+[==============================================================================}
+function M2DArrayHelper.Inventory: Int64; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Inc(Result, Self[i].Size);
+end;
+
+{==============================================================================]
   <Length>
   @action: System.Length()
   @note: None.
@@ -88,6 +146,27 @@ begin
   SetLength(lengths, Result);
   for i := 0 to (Result - 1) do
     lengths[i] := Self[i].Length;
+end;
+
+{==============================================================================]
+  <Population>
+  @action: Returns actual Length for 2D array.
+  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
+[==============================================================================}
+function M2DArrayHelper.Population: Int64; overload;
+var
+  i: Integer;
+  s, e: PInteger;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+  begin
+    if Self[i].Empty then
+      Continue;
+    s := PInteger(Self[i]);
+    e := (s + Self[i].Size);
+    Result := (Result + (e - s));
+  end;
 end;
 
 {==============================================================================]
@@ -160,83 +239,4 @@ begin
   for a in Self do
     Result.Increase(a.Length);
 end;
-
-{==============================================================================]
-  <Population>
-  @action: Returns actual Length for 2D array.
-  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
-[==============================================================================}
-function M2DArrayHelper.Population: Int64; overload;
-var
-  i: Integer;
-  s, e: PInteger;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-  begin
-    if Self[i].Empty then
-      Continue;
-    s := PInteger(Self[i]);
-    e := (s + Self[i].Size);
-    Result := (Result + (e - s));
-  end;
-end;
-
-{==============================================================================]
-  <Inventory>
-  @action: Returns actual Length for 2D array.
-  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
-         Stores 2D array items as 1D to items.
-[==============================================================================}
-function M2DArrayHelper.Inventory(var items: MArray): Int64; overload;
-var
-  i, j: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-    Inc(Result, Self[i].Size);
-  SetLength(items, Result);
-  if (Result > 0) then
-  for i := High(Self) downto 0 do
-    for j := High(Self[i]) downto 0 do
-      items[Result.Decrement] := Self[i][j];
-  Result := items.Size;
-end;
-
-{==============================================================================]
-  <Inventory>
-  @action: Returns actual Length for 2D array.
-  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
-[==============================================================================}
-function M2DArrayHelper.Inventory: Int64; overload;
-var
-  i: Integer;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-    Inc(Result, Self[i].Size);
-end;
-
-{==============================================================================]
-  <Census>
-  @action: Returns actual Length for 2D array.
-  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
-[==============================================================================}
-function M2DArrayHelper.Census: Int64; overload;
-var
-  i: Integer;
-  s, e: PInteger;
-begin
-  Result := 0;
-  for i := 0 to High(Self) do
-  begin
-    s := PInteger(Self[i]);
-    if (s <> nil) then
-    begin
-      e := s;
-      Inc(e, Self[i].Size);
-      Result := Result + (e - s);
-    end;
-  end;
-end; 
 {$ENDIF}
