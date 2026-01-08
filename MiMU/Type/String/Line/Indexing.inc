@@ -1,10 +1,10 @@
 {$IFDEF HELPERS}
-function LineEndingPositions: TIntegerArray; overload;
-function LineEndingRanges: TRangeArray; overload;
-function LineIndexes: TIntegerArray; overload;
-function LineNumberMap: TIntegerArray; overload;
-function LinePositions: TIntegerArray; overload;
-function LineRanges: TRangeArray; overload;
+function LineEndingPositions: TIntegerArray; overload; cdecl;
+function LineEndingRanges: TRangeArray; overload; cdecl;
+function LineIndexes: TIntegerArray; overload; cdecl;
+function LineNumberMap: TIntegerArray; overload; cdecl;
+function LinePositions: TIntegerArray; overload; cdecl;
+function LineRanges: TRangeArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -24,7 +24,7 @@ function LineRanges: TRangeArray; overload;
     - The function performs a single forward pass and dynamically grows the
       result array via arr.Supply.
 [==============================================================================}
-function TStringHelper.LineEndingPositions: TIntegerArray; overload;
+function TStringHelper.LineEndingPositions: TIntegerArray; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -58,7 +58,7 @@ end;
     - Returned ranges indicate the positions of the line-ending characters;
       line content is not included.
 [==============================================================================}
-function TStringHelper.LineEndingRanges: TRangeArray; overload;
+function TStringHelper.LineEndingRanges: TRangeArray; overload; cdecl;
 var
   i, l, s: Integer;
 begin
@@ -98,7 +98,7 @@ end;
     - The returned array may be safely used with Line, LineByPosition, and
       LineToPosition helpers.
 [==============================================================================}
-function TStringHelper.LineIndexes: TIntegerArray; overload;
+function TStringHelper.LineIndexes: TIntegerArray; overload; cdecl;
 var
   i, l, r: Integer;
 begin
@@ -139,7 +139,7 @@ end;
     - A line break character belongs to the line it terminates.
     - The resulting map is suitable for O(1) position-to-line lookups.
 [==============================================================================}
-function TStringHelper.LineNumberMap: TIntegerArray; overload;
+function TStringHelper.LineNumberMap: TIntegerArray; overload; cdecl;
 var
   i, l, s: Integer;
 begin
@@ -173,7 +173,7 @@ end;
     - The function performs a single forward pass and dynamically grows the
       result array via arr.Supply.
 [==============================================================================}
-function TStringHelper.LinePositions: TIntegerArray; overload;
+function TStringHelper.LinePositions: TIntegerArray; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -212,7 +212,7 @@ end;
     - Consumers should handle descending ranges appropriately when extracting
       content (e.g., Copy(Self, start, stop - start + 1) may return an empty string).
 [==============================================================================}
-function TStringHelper.LineRanges: TRangeArray; overload;
+function TStringHelper.LineRanges: TRangeArray; overload; cdecl;
 var
   i, l, s: Integer;
 begin

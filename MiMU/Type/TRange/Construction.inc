@@ -1,21 +1,21 @@
 {$IFDEF METHODS}
-class function Construct(const rStart, rStop: Integer): TRange; overload; static;
-function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; 
+class function Construct(const rStart, rStop: Integer): TRange; overload; cdecl; static;
+function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
 constructor Create(const rStart, rStop: Integer); overload;
 constructor Create(const value: Integer); overload;
-function Init(const rStart, rStop: Integer): TRange; overload; 
-function Init(const r: TRange): TRange; overload; 
-function Init(const val: Integer = 0): TRange; overload; 
-class function Null(const value: Integer = -2147483648): TRange; overload; static;
+function Init(const rStart, rStop: Integer): TRange; overload; cdecl; 
+function Init(const r: TRange): TRange; overload; cdecl;
+function Init(const val: Integer = 0): TRange; overload; cdecl; 
+class function Null(const value: Integer = -2147483648): TRange; overload; cdecl; static;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-function Create: TRange; overload;
+function Create: TRange; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
-function Range(const rStart, rStop: Integer): TRange; overload; inline;
-function Range(const val: Integer = 0): TRange; overload; inline;
+function Range(const rStart, rStop: Integer): TRange; overload; cdecl; inline;
+function Range(const val: Integer = 0): TRange; overload; cdecl; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -24,7 +24,7 @@ function Range(const val: Integer = 0): TRange; overload; inline;
   @action: Create a TRange with rStart and rStop, using Min and Max for safety.
   @note: None.
 [==============================================================================}
-function TRange.Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer;
+function TRange.Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; cdecl;
 begin
   Self.start := Min(rStart, rStop);
   Self.stop := Max(rStop, rStart);
@@ -36,7 +36,7 @@ end;
   @action: Constructs TRange with rStart and rStop.
   @note: None.
 [==============================================================================}
-class function TRange.Construct(const rStart, rStop: Integer): TRange; overload;
+class function TRange.Construct(const rStart, rStop: Integer): TRange; overload; cdecl;
 begin
   Result.start := rStart;
   Result.stop := rStop;
@@ -68,7 +68,7 @@ end;
   @action: TRange 0..0.
   @note: None.
 [==============================================================================}
-function TRangeHelper.Create: TRange;
+function TRangeHelper.Create: TRange; cdecl;
 begin
   Self.start := 0;
   Self.stop := 0;
@@ -82,7 +82,7 @@ end;
   @note: Useful for initializing a TRange instance and simultaneously returning it
          for assignment. Example: a := b.Init(1, 10);
 [==============================================================================}
-function TRange.Init(const rStart, rStop: Integer): TRange; overload;
+function TRange.Init(const rStart, rStop: Integer): TRange; overload; cdecl;
 begin
   Self.start := rStart;
   Self.stop := rStop;
@@ -97,7 +97,7 @@ end;
   @note: Useful for copying values from an existing TRange while allowing in-line assignment.
          Example: a := b.Init(c);
 [==============================================================================}
-function TRange.Init(const r: TRange): TRange; overload;
+function TRange.Init(const r: TRange): TRange; overload; cdecl;
 begin
   Self := r;
   Result := r;
@@ -110,7 +110,7 @@ end;
   @note: The parameter has a default of 0, allowing zero-initialization.
          Example: a := b.Init; or a := b.Init(5);
 [==============================================================================}
-function TRange.Init(const val: Integer = 0): TRange; overload;
+function TRange.Init(const val: Integer = 0): TRange; overload; cdecl;
 begin
   Self.start := val;
   Self.stop := val;
@@ -128,7 +128,7 @@ end;
            invalid ranges in operations like intersection. It provides a consistent
            marker for "empty" ranges.
 [==============================================================================}
-class function TRange.Null(const value: Integer = -2147483648): TRange; overload;
+class function TRange.Null(const value: Integer = -2147483648): TRange; overload; cdecl;
 begin
   Result := Range(value, value);
 end;
@@ -141,7 +141,7 @@ end;
   @note: The resulting range preserves the specified ordering. If rStart > rStop,
          the function returns a descending range.
 [==============================================================================}
-function Range(const rStart, rStop: Integer): TRange; overload; inline;
+function Range(const rStart, rStop: Integer): TRange; overload; cdecl; inline;
 begin
   Result.start := rStart;
   Result.stop := rStop;
@@ -154,7 +154,7 @@ end;
   @note: This overload is intended for convenience when creating point ranges.
          The default value (0) is used when no argument is provided.
 [==============================================================================}
-function Range(const val: Integer = 0): TRange; overload; inline;
+function Range(const val: Integer = 0): TRange; overload; cdecl; inline;
 begin
   Result.start := val;
   Result.stop := val;

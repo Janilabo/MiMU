@@ -1,7 +1,7 @@
 {$IFDEF METHODS}
-function IDs: TIntegerArray; overload; 
-function IDs(const dValue: Integer): Integer; overload; 
-function IDs(const dVals: TIntegerArray): TIntegerArray; overload;
+function IDs: TIntegerArray; overload; cdecl;
+function IDs(const dValue: Integer): Integer; overload; cdecl;
+function IDs(const dVals: TIntegerArray): TIntegerArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -10,7 +10,7 @@ function IDs(const dVals: TIntegerArray): TIntegerArray; overload;
   @action: Returns TRange indexes.
   @note: None.
 [==============================================================================}
-function TRange.IDs: TIntegerArray; overload;
+function TRange.IDs: TIntegerArray; overload; cdecl;
 var
   i: Integer;
 begin
@@ -24,7 +24,7 @@ end;
   @action: Returns TRange index by TRange value.
   @note: Returns -2147483648 if dValue does not exist in TRange.
 [==============================================================================}
-function TRange.IDs(const dValue: Integer): Integer; overload;
+function TRange.IDs(const dValue: Integer): Integer; overload; cdecl;
 begin
   case Self.Ascending of
     True:
@@ -45,7 +45,7 @@ end;
   @action: Returns TRange index by TRange value.
   @note: Returns -2147483648 if dValue does not exist in TRange.
 [==============================================================================}
-function TRange.IDs(const dVals: TIntegerArray): TIntegerArray; overload;
+function TRange.IDs(const dVals: TIntegerArray): TIntegerArray; overload; cdecl;
 var
   i: Integer;
 begin

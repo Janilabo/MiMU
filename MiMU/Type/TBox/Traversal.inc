@@ -1,8 +1,8 @@
 {$IFDEF METHODS}
-function Columnwise: TPointArray;
-function Rowwise: TPointArray;
-function Spiral: TPointArray; 
-function Traverse: TPointArray;
+function Columnwise: TPointArray; cdecl;
+function Rowwise: TPointArray; cdecl;
+function Spiral: TPointArray; cdecl;
+function Traverse: TPointArray; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function Traverse: TPointArray;
   @action: Returns all TBox TPoints as Column-wise.
   @note: None.
 [==============================================================================}
-function TBox.Columnwise: TPointArray;
+function TBox.Columnwise: TPointArray; cdecl;
 var
   x, y, r: Integer;
 begin
@@ -27,7 +27,7 @@ end;
   @action: Returns all TBox TPoints as Row-wise.
   @note: None.
 [==============================================================================}
-function TBox.Rowwise: TPointArray;
+function TBox.Rowwise: TPointArray; cdecl;
 var
   x, y, r: Integer;
 begin
@@ -43,7 +43,7 @@ end;
   @action: Returns TBox TPoints as spiral shaped TPointArray.
   @note: Alternative for TBox.Traverse.
 [==============================================================================}
-function TBox.Spiral: TPointArray;
+function TBox.Spiral: TPointArray; cdecl;
 var
   b: TBox;
   x, y, r: Integer;
@@ -78,7 +78,7 @@ end;
   @action: Returns TBox TPoints as spiral shaped TPointArray.
   @note: Alternative for TBox.Spiral.
 [==============================================================================}
-function TBox.Traverse: TPointArray;
+function TBox.Traverse: TPointArray; cdecl;
 var
   m: T2DBooleanArray;
   c: TPoint;

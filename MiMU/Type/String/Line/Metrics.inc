@@ -1,15 +1,15 @@
 {$IFDEF HELPERS}
-function LineAmount: Integer; overload;
-function LineCount: Integer; overload;
-function LineCountEx(const lineBreak: string): Integer; overload;
-function LineCountEx(const lineBreak: TStringArray): Integer; overload;
-function LineCountEx: Integer; overload;
-function LineCountUpTo(const targetLine: Integer): Integer; overload;
-function LinePopulation: Integer; overload;
-function LineQuantity: Integer; overload;
-function LinesCount: Integer; overload;
-function LinesCounted: Integer; overload;
-function LinesTotal: Integer; overload;
+function LineAmount: Integer; overload; cdecl;
+function LineCount: Integer; overload; cdecl;
+function LineCountEx(const lineBreak: string): Integer; overload; cdecl;
+function LineCountEx(const lineBreak: TStringArray): Integer; overload; cdecl;
+function LineCountEx: Integer; overload; cdecl;
+function LineCountUpTo(const targetLine: Integer): Integer; overload; cdecl;
+function LinePopulation: Integer; overload; cdecl;
+function LineQuantity: Integer; overload; cdecl;
+function LinesCount: Integer; overload; cdecl;
+function LinesCounted: Integer; overload; cdecl;
+function LinesTotal: Integer; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -25,7 +25,7 @@ function LinesTotal: Integer; overload;
     - CRLF sequences are treated as a single line break.
     - The function performs a single forward scan of the string.
 [==============================================================================}
-function TStringHelper.LineAmount: Integer; overload;
+function TStringHelper.LineAmount: Integer; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -58,7 +58,7 @@ end;
       case handling for CR and LF, skipping the LF of CRLF sequences.
     - No temporary allocations are performed.
 [==============================================================================}
-function TStringHelper.LineCount: Integer; overload;
+function TStringHelper.LineCount: Integer; overload; cdecl;
 var
   S, C, E: PChar;
   L: Integer;
@@ -91,7 +91,7 @@ end;
            line break string as delimiter.
   @note: Returns 0 if the string is empty.
 [==============================================================================}
-function TStringHelper.LineCountEx(const lineBreak: string): Integer; overload;
+function TStringHelper.LineCountEx(const lineBreak: string): Integer; overload; cdecl;
 begin
   Result := Self.LinesEx(lineBreak).Length;
 end;
@@ -102,7 +102,7 @@ end;
            line break strings in the TStringArray as delimiters.
   @note: Returns 0 if the string is empty or the delimiter array is empty.
 [==============================================================================}
-function TStringHelper.LineCountEx(const lineBreak: TStringArray): Integer; overload;
+function TStringHelper.LineCountEx(const lineBreak: TStringArray): Integer; overload; cdecl;
 begin
   Result := Self.LinesEx(lineBreak).Length;
 end;
@@ -113,7 +113,7 @@ end;
            breaks (#13#10, #13, #10) as delimiters.
   @note:   Returns 0 if the string is empty.
 [==============================================================================}
-function TStringHelper.LineCountEx: Integer; overload;
+function TStringHelper.LineCountEx: Integer; overload; cdecl;
 begin
   Result := Self.LineCountEx([#13#10, #13, #10]);
 end;
@@ -134,7 +134,7 @@ end;
     - Designed for efficient early-exit use cases such as LineExists,
       LineClamp, or LineValid, avoiding a full line scan when unnecessary.
 [==============================================================================}
-function TStringHelper.LineCountUpTo(const targetLine: Integer): Integer; overload;
+function TStringHelper.LineCountUpTo(const targetLine: Integer): Integer; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -172,7 +172,7 @@ end;
     - The function uses a for loop and a boolean flag p to detect CRLF
       sequences efficiently.
 [==============================================================================}
-function TStringHelper.LinePopulation: Integer; overload;
+function TStringHelper.LinePopulation: Integer; overload; cdecl;
 var
   i, l: Integer;
   p: Boolean;
@@ -212,7 +212,7 @@ end;
       minimizing bounds checks and offering optimal performance for large
       strings.
 [==============================================================================}
-function TStringHelper.LineQuantity: Integer; overload;
+function TStringHelper.LineQuantity: Integer; overload; cdecl;
 var
   P, E: PChar;
 begin
@@ -245,7 +245,7 @@ end;
          This function handles mixed line endings and ensures that
          the last line is counted even if it does not end with a line break.
 [==============================================================================}
-function TStringHelper.LinesCount: Integer; overload;
+function TStringHelper.LinesCount: Integer; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -286,7 +286,7 @@ end;
       less efficient than single-pass implementations for large strings.
     - No temporary strings are created, but the string is scanned three times.
 [==============================================================================}
-function TStringHelper.LinesCounted: Integer; overload;
+function TStringHelper.LinesCounted: Integer; overload; cdecl;
 begin
   if (Length(Self) = 0) then
     Exit(1);
@@ -308,7 +308,7 @@ end;
     - The function performs a single forward scan of the string using indexed
       access.
 [==============================================================================}
-function TStringHelper.LinesTotal: Integer; overload;
+function TStringHelper.LinesTotal: Integer; overload; cdecl;
 var
   i, l: Integer;
 begin

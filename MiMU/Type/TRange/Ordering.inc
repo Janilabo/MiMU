@@ -1,14 +1,14 @@
 {$IFDEF METHODS}
-function Asc: TIntegerArray; overload;
-function Ascend: TRange;
-function Ascended: TRange;
-function Desc: TIntegerArray; overload;
-function Descend: TRange;
-function Descended: TRange;
-function Order(const oAscending: Boolean = True): Boolean; overload;
-function Ordered(const oAscending: Boolean = True): TRange; overload;
-function Sort(const oAscending: Boolean = True): Boolean; overload;
-function Sorted(const oAscending: Boolean = True): TRange; overload;
+function Asc: TIntegerArray; overload; cdecl;
+function Ascend: TRange; cdecl;
+function Ascended: TRange; cdecl;
+function Desc: TIntegerArray; overload; cdecl;
+function Descend: TRange; cdecl;
+function Descended: TRange; cdecl;
+function Order(const oAscending: Boolean = True): Boolean; overload; cdecl;
+function Ordered(const oAscending: Boolean = True): TRange; overload; cdecl;
+function Sort(const oAscending: Boolean = True): Boolean; overload; cdecl;
+function Sorted(const oAscending: Boolean = True): TRange; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,7 +17,7 @@ function Sorted(const oAscending: Boolean = True): TRange; overload;
   @action: Returns an ascending sequence of integers from Start to Stop.
   @note: If Start > Stop, the order is still ascending (from the smaller to the larger value).
 [==============================================================================}
-function TRange.Asc: TIntegerArray; overload;
+function TRange.Asc: TIntegerArray; overload; cdecl;
 var
   l, h, i: Integer;
 begin
@@ -31,7 +31,7 @@ end;
   @action: Returns ascending TRange of Self.
   @note: None.
 [==============================================================================}
-function TRange.Ascend: TRange;
+function TRange.Ascend: TRange; cdecl;
 begin
   Result.start := Min(Self.start, Self.stop);
   Result.stop := Max(Self.stop, Self.start);
@@ -42,7 +42,7 @@ end;
   @action: Returns TRange in ascending order.
   @note: None.
 [==============================================================================}
-function TRange.Ascended: TRange;
+function TRange.Ascended: TRange; cdecl;
 begin
   if (Self.stop > Self.start) then
     Result.Create(Self.start, Self.stop)
@@ -55,7 +55,7 @@ end;
   @action: Returns a descending sequence of integers from Stop down to Start.
   @note: If Start < Stop, the order is still descending (from the larger to the smaller value).
 [==============================================================================}
-function TRange.Desc: TIntegerArray; overload;
+function TRange.Desc: TIntegerArray; overload; cdecl;
 var
   l, h, i: Integer;
 begin
@@ -69,7 +69,7 @@ end;
   @action: Returns descending TRange of Self.
   @note: None.
 [==============================================================================}
-function TRange.Descend: TRange;
+function TRange.Descend: TRange; cdecl;
 begin
   Result.start := Max(Self.stop, Self.start);
   Result.stop := Min(Self.start, Self.stop);
@@ -80,7 +80,7 @@ end;
   @action: Returns TRange in descending order.
   @note: None.
 [==============================================================================}
-function TRange.Descended: TRange;
+function TRange.Descended: TRange; cdecl;
 begin
   if (Self.start > Self.stop) then
     Result.Create(Self.start, Self.stop)
@@ -95,7 +95,7 @@ end;
            Uses arithmetic trick with Ord() to determine order.
   @note: In-place version of Ordered; efficient, works for both ascending and descending.
 [==============================================================================}
-function TRange.Order(const oAscending: Boolean = True): Boolean; overload;
+function TRange.Order(const oAscending: Boolean = True): Boolean; overload; cdecl;
 begin
   Result := (((Ord(oAscending) * 2 - 1) * (Self.Stop - Self.Start)) < 0);
   if Result then
@@ -108,7 +108,7 @@ end;
            Uses arithmetic trick with Ord() to determine order.
   @note: Functional version; does NOT modify the current record. Works for both ascending and descending.
 [==============================================================================}
-function TRange.Ordered(const oAscending: Boolean = True): TRange; overload;
+function TRange.Ordered(const oAscending: Boolean = True): TRange; overload; cdecl;
 begin
   if (((Ord(oAscending) * 2 - 1) * (Self.Stop - Self.Start)) >= 0) then
     Result.Create(Self.Start, Self.Stop)
@@ -122,7 +122,7 @@ end;
            Returns True if a swap of Start and Stop was performed.
   @note: If oAscending=True, Start <= Stop after call; if False, Start >= Stop.
 [==============================================================================}
-function TRange.Sort(const oAscending: Boolean = True): Boolean; overload;
+function TRange.Sort(const oAscending: Boolean = True): Boolean; overload; cdecl;
 begin
   Result := ((oAscending and (Self.start > Self.stop)) or ((not oAscending) and (Self.stop > Self.start)));
   if Result then
@@ -135,7 +135,7 @@ end;
            Does NOT modify the current record.
   @note: If aAscending=True, ensures Start <= Stop; if False, Start >= Stop.
 [==============================================================================}
-function TRange.Sorted(const oAscending: Boolean = True): TRange; overload;
+function TRange.Sorted(const oAscending: Boolean = True): TRange; overload; cdecl;
 begin
   if ((oAscending and (Self.start > Self.stop)) or ((not oAscending) and (Self.start < Self.stop))) then
     Result.Create(Self.stop, Self.start)

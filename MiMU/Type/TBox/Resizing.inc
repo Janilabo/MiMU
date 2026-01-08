@@ -1,15 +1,15 @@
 {$IFDEF METHODS}
-function Resize(const change: Integer): TBox;
-function ResizeBottom(const change: Integer): TBox;
-function ResizeBottomLeft(const change: Integer): TBox; 
-function ResizeBottomRight(const change: Integer): TBox;
-function ResizeHorizontally(const change: Integer): TBox;
-function ResizeLeft(const change: Integer): TBox;
-function ResizeRight(const change: Integer): TBox;
-function ResizeTop(const change: Integer): TBox;
-function ResizeTopLeft(const change: Integer): TBox; 
-function ResizeTopRight(const change: Integer): TBox;
-function ResizeVertically(const change: Integer): TBox;
+function Resize(const change: Integer): TBox; cdecl;
+function ResizeBottom(const change: Integer): TBox; cdecl;
+function ResizeBottomLeft(const change: Integer): TBox; cdecl;
+function ResizeBottomRight(const change: Integer): TBox; cdecl;
+function ResizeHorizontally(const change: Integer): TBox; cdecl;
+function ResizeLeft(const change: Integer): TBox; cdecl;
+function ResizeRight(const change: Integer): TBox; cdecl;
+function ResizeTop(const change: Integer): TBox; cdecl;
+function ResizeTopLeft(const change: Integer): TBox; cdecl;
+function ResizeTopRight(const change: Integer): TBox; cdecl;
+function ResizeVertically(const change: Integer): TBox; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -18,7 +18,7 @@ function ResizeVertically(const change: Integer): TBox;
   @action: Returns bx that has been resized fully by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.Resize(const change: Integer): TBox;
+function TBox.Resize(const change: Integer): TBox; cdecl;
 begin
   Result.X1 := (Self.X1 - change);
   Result.Y1 := (Self.Y1 - change);
@@ -31,7 +31,7 @@ end;
   @action: Returns bx that has been resized from bottom by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeBottom(const change: Integer): TBox;
+function TBox.ResizeBottom(const change: Integer): TBox; cdecl;
 begin
   Result.X1 := Self.X1;
   Result.Y1 := Self.Y1;
@@ -44,7 +44,7 @@ end;
   @action: Returns bx that has been resized from bottom-left by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeBottomLeft(const change: Integer): TBox;
+function TBox.ResizeBottomLeft(const change: Integer): TBox; cdecl;
 begin
   Result.X1 := (Self.X1 - change);
   Result.Y1 := Self.Y1;
@@ -57,7 +57,7 @@ end;
   @action: Returns bx that has been resized from bottom-right by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeBottomRight(const change: Integer): TBox;
+function TBox.ResizeBottomRight(const change: Integer): TBox; cdecl;
 begin
   Result.X1 := Self.X1;
   Result.Y1 := Self.Y1;
@@ -70,7 +70,7 @@ end;
   @action: Returns bx that has been resized horizontally by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeHorizontally(const change: Integer): TBox;
+function TBox.ResizeHorizontally(const change: Integer): TBox; cdecl;
 begin
   Result.X1 := (Self.X1 - change);
   Result.Y1 := Self.Y1;
@@ -83,7 +83,7 @@ end;
   @action: Returns bx that has been resized from left-side by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeLeft(const change: Integer): TBox;
+function TBox.ResizeLeft(const change: Integer): TBox; cdecl;
 begin
   Result.X1 := (Self.X1 - change);
   Result.Y1 := Self.Y1;
@@ -96,7 +96,7 @@ end;
   @action: Returns bx that has been resized from right-side by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeRight(const change: Integer): TBox;
+function TBox.ResizeRight(const change: Integer): TBox; cdecl;
 begin
   Result.X1 := Self.X1;
   Result.Y1 := Self.Y1;
@@ -109,7 +109,7 @@ end;
   @action: Returns bx that has been resized horizontally by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeTop(const change: Integer): TBox;
+function TBox.ResizeTop(const change: Integer): TBox; cdecl;
 begin
   Result.X1 := Self.X1;
   Result.Y1 := (Self.Y1 - change);
@@ -122,7 +122,7 @@ end;
   @action: Returns bx that has been resized from top-left by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeTopLeft(const change: Integer): TBox;
+function TBox.ResizeTopLeft(const change: Integer): TBox; cdecl;
 begin
   Result.X1 := (Self.X1 - change);
   Result.Y1 := (Self.Y1 - change);
@@ -135,7 +135,7 @@ end;
   @action: Returns bx that has been resized from top-right by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeTopRight(const change: Integer): TBox;
+function TBox.ResizeTopRight(const change: Integer): TBox; cdecl;
 begin
   Result.X1 := Self.X1;
   Result.Y1 := (Self.Y1 - change);
@@ -148,7 +148,7 @@ end;
   @action: Returns bx that has been resized vertically by change.
   @note: Change value can be also negative - so be careful with it! :)
 [==============================================================================}
-function TBox.ResizeVertically(const change: Integer): TBox;
+function TBox.ResizeVertically(const change: Integer): TBox; cdecl;
 begin
   Result.X1 := Self.X1;
   Result.Y1 := (Self.Y1 - change);

@@ -5,5 +5,5 @@
 {$I Extraction.inc}
 {$I Miscellaneous.inc}
 {$I Normalization.inc}
-{$I Sorting.inc}
+//{$I Sorting.inc}
 {$I Structuring.inc}

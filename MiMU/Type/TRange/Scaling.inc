@@ -1,8 +1,8 @@
 {$IFDEF METHODS}
-function Contract(const N: Integer = 1): TRange; overload; 
-function Contracted(const N: Integer = 1): TRange; overload; 
-function Expand(const N: Integer = 1): TRange; overload; 
-function Expanded(const N: Integer = 1): TRange; overload;
+function Contract(const N: Integer = 1): TRange; overload; cdecl;
+function Contracted(const N: Integer = 1): TRange; overload; cdecl;
+function Expand(const N: Integer = 1): TRange; overload; cdecl;
+function Expanded(const N: Integer = 1): TRange; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -14,7 +14,7 @@ function Expanded(const N: Integer = 1): TRange; overload;
   @note:   Direction-aware; contracts correctly for both ascending and
            descending ranges.
 [==============================================================================}
-function TRange.Contract(const N: Integer = 1): TRange; overload;
+function TRange.Contract(const N: Integer = 1): TRange; overload; cdecl;
 begin
   Result := Self;
   if Self.Ascending then
@@ -30,7 +30,7 @@ end;
   @note:   Functional style version of Contract; preserves Self and is safe
            for use in expressions or chainable operations.
 [==============================================================================}
-function TRange.Contracted(const N: Integer = 1): TRange; overload;
+function TRange.Contracted(const N: Integer = 1): TRange; overload; cdecl;
 begin
   if Self.Ascending then
     Result.Create((Self.start + N), (Self.stop - N))
@@ -46,7 +46,7 @@ end;
   @note:   Direction-aware; expands correctly for both ascending and descending
            ranges. Used when the current range should grow outward.
 [==============================================================================}
-function TRange.Expand(const N: Integer = 1): TRange; overload;
+function TRange.Expand(const N: Integer = 1): TRange; overload; cdecl;
 begin
   Result := Self;
   if Self.Ascending then
@@ -63,7 +63,7 @@ end;
            be used in expression-style or chainable operations. Handles both
            ascending and descending ranges.
 [==============================================================================}
-function TRange.Expanded(const N: Integer = 1): TRange; overload;
+function TRange.Expanded(const N: Integer = 1): TRange; overload; cdecl;
 begin
   if Self.Ascending then
     Result.Create((Self.start - N), (Self.stop + N))

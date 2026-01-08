@@ -1,9 +1,9 @@
 {$IFDEF HELPERS}
-function AmountIn(const target: string): Integer; overload;
-function AppearsIn(const target: string): Integer; overload;
-function CountIn(const target: string): Integer; overload;
-function OccurrencesIn(const target: string): Integer; overload;
-function Occurs(const target: string): Integer; overload;
+function AmountIn(const target: string): Integer; overload; cdecl;
+function AppearsIn(const target: string): Integer; overload; cdecl;
+function CountIn(const target: string): Integer; overload; cdecl;
+function OccurrencesIn(const target: string): Integer; overload; cdecl;
+function Occurs(const target: string): Integer; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -12,7 +12,7 @@ function Occurs(const target: string): Integer; overload;
   @action: Returns the number of occurrences of this character in the specified string.
   @note: Uses repeated StrScan calls; efficient when the character occurs infrequently.
 [==============================================================================}
-function TCharHelper.AmountIn(const target: string): Integer; overload;
+function TCharHelper.AmountIn(const target: string): Integer; overload; cdecl;
 var
   P, F: PChar;
 begin
@@ -34,7 +34,7 @@ end;
   @action: Returns the number of times this character appears in the specified string.
   @note: Uses a linear scan with loop unrolling for improved performance; operates on code units.
 [==============================================================================}
-function TCharHelper.AppearsIn(const target: string): Integer; overload;
+function TCharHelper.AppearsIn(const target: string): Integer; overload; cdecl;
 var
   P, E: PChar;
 begin
@@ -60,7 +60,7 @@ end;
   @note: Comparison is case-sensitive. No normalization or locale-specific
          rules are applied.
 [==============================================================================}
-function TCharHelper.CountIn(const target: string): Integer; overload;
+function TCharHelper.CountIn(const target: string): Integer; overload; cdecl;
 var
   i: Integer;
 begin
@@ -74,7 +74,7 @@ end;
   @action: Returns the number of times this character appears in the specified string.
   @note: Performs a linear scan of the string. Operates on code units, not grapheme clusters.
 [==============================================================================}
-function TCharHelper.OccurrencesIn(const target: string): Integer; overload;
+function TCharHelper.OccurrencesIn(const target: string): Integer; overload; cdecl;
 var
   P, E: PChar;
 begin
@@ -94,7 +94,7 @@ end;
   @action: Returns the number of times this character appears in the specified string.
   @note: Performs a linear scan of the string. Operates on code units, not grapheme clusters.
 [==============================================================================}
-function TCharHelper.Occurs(const target: string): Integer; overload;
+function TCharHelper.Occurs(const target: string): Integer; overload; cdecl;
 var
   P, E: PChar;
 begin

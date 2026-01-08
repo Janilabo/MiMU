@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
-function Pixels(const steps: Integer = 2147483647): TPointArray;
-function Points: TPointArray;
+function Pixels(const steps: Integer = 2147483647): TPointArray; cdecl;
+function Points: TPointArray; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function Points: TPointArray;
  @action: Returns the points of TSegment.
  @note: Supports custom steps.
 [==============================================================================}
-function TSegment.Pixels(const steps: Integer = 2147483647): TPointArray;
+function TSegment.Pixels(const steps: Integer = 2147483647): TPointArray; cdecl;
 var
   i, h: Integer;
 begin
@@ -24,7 +24,7 @@ end;
  @action: Returns all the points of TSegment.
  @note: None.
 [==============================================================================}
-function TSegment.Points: TPointArray;
+function TSegment.Points: TPointArray; cdecl;
 var
   l: TBox;
   s, i: Integer;

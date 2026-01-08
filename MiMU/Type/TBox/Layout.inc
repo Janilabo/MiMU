@@ -1,9 +1,9 @@
 {$IFDEF HELPERS}
-function AsColumn(const cells: Integer; const space: Integer = 0): TBoxArray;
-function AsGrid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;
-function AsRow(const cells: Integer; const space: Integer = 0): TBoxArray;
-function Gridded(const target: TBox): TBoxArray; overload;
-function Tiled(const target: TBox): TBoxArray; overload;
+function AsColumn(const cells: Integer; const space: Integer = 0): TBoxArray; cdecl;
+function AsGrid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray; cdecl;
+function AsRow(const cells: Integer; const space: Integer = 0): TBoxArray; cdecl;
+function Gridded(const target: TBox): TBoxArray; overload; cdecl;
+function Tiled(const target: TBox): TBoxArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -13,7 +13,7 @@ function Tiled(const target: TBox): TBoxArray; overload;
            where space is the amount of space between each cell.
   @note: None
 [==============================================================================}
-function TBoxHelper.AsColumn(const cells: Integer; const space: Integer = 0): TBoxArray;
+function TBoxHelper.AsColumn(const cells: Integer; const space: Integer = 0): TBoxArray; cdecl;
 var
   w, h, i, z: Integer;
 begin
@@ -39,7 +39,7 @@ end;
            spaceVertical = space between rows
   @note: None.
 [==============================================================================}
-function TBoxHelper.AsGrid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray;
+function TBoxHelper.AsGrid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TBoxArray; cdecl;
 var
   w, h, r, c, i, x, y: Integer;
 begin
@@ -67,7 +67,7 @@ end;
            where space is the amount of space between each cell.
   @note: None
 [==============================================================================}
-function TBoxHelper.AsRow(const cells: Integer; const space: Integer = 0): TBoxArray;
+function TBoxHelper.AsRow(const cells: Integer; const space: Integer = 0): TBoxArray; cdecl;
 var
   w, h, i, z: Integer;
 begin
@@ -89,7 +89,7 @@ end;
   @action: Generate non-overlapping, grid-aligned positions of Self inside target.
   @note: Steps by Self Width and Height. Returns empty array if Self does not fit.
 [==============================================================================}
-function TBoxHelper.Gridded(const target: TBox): TBoxArray; overload;
+function TBoxHelper.Gridded(const target: TBox): TBoxArray; overload; cdecl;
 var
   l, y, x, r, c, w, h: Integer;
 begin
@@ -110,7 +110,7 @@ end;
   @action: Generate non-overlapping, grid-aligned positions of Self inside target.
   @note: Steps by Self Width and Height. Returns empty array if Self does not fit.
 [==============================================================================}
-function TBoxHelper.Tiled(const target: TBox): TBoxArray; overload;
+function TBoxHelper.Tiled(const target: TBox): TBoxArray; overload; cdecl;
 var
   y, x, r, w, h: Integer;
   m: TPoint;

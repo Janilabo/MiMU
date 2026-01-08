@@ -1,7 +1,7 @@
 {$IFDEF METHODS}
-function IDs: TIntegerArray; overload; 
-function IDs(const p: TPoint): Integer; overload; 
-function IDs(const p: TPointArray): TIntegerArray; overload;
+function IDs: TIntegerArray; overload; cdecl;
+function IDs(const p: TPoint): Integer; overload; cdecl;
+function IDs(const p: TPointArray): TIntegerArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -10,7 +10,7 @@ function IDs(const p: TPointArray): TIntegerArray; overload;
   @action: Returns TBox indexes as TIntegerArray
   @note: None.
 [==============================================================================}
-function TBox.IDs: TIntegerArray; overload;
+function TBox.IDs: TIntegerArray; overload; cdecl;
 var
   i: Integer;
 begin
@@ -24,7 +24,7 @@ end;
   @action: Returns TBox index with TPoint p.
   @note: -1 if p is not part of TBox.
 [==============================================================================}
-function TBox.IDs(const p: TPoint): Integer; overload;
+function TBox.IDs(const p: TPoint): Integer; overload; cdecl;
 begin
   if not Self.Contains(p) then
     Exit(-1);
@@ -36,7 +36,7 @@ end;
   @action: Returns TBox indexes with TPointArray p.
   @note: -1 if p is not part of TBox.
 [==============================================================================}
-function TBox.IDs(const p: TPointArray): TIntegerArray; overload;
+function TBox.IDs(const p: TPointArray): TIntegerArray; overload; cdecl;
 var
   i: Integer;
 begin

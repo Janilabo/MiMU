@@ -1,11 +1,11 @@
 {$IFDEF HELPERS}
-function IsLetter: Boolean;
-function IsLower: Boolean;
-function IsLowercase: Boolean;
-function IsNumber: Boolean;
-function IsNumeric: Boolean;
-function IsUpper: Boolean;
-function IsUppercase: Boolean;
+function IsLetter: Boolean; cdecl;
+function IsLower: Boolean; cdecl;
+function IsLowercase: Boolean; cdecl;
+function IsNumber: Boolean; cdecl;
+function IsNumeric: Boolean; cdecl;
+function IsUpper: Boolean; cdecl;
+function IsUppercase: Boolean; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -14,7 +14,7 @@ function IsUppercase: Boolean;
   @action: Returns true if Char is part of lowercased or uppercased characters
   @note: Limited to ASCII.
 [==============================================================================}
-function TCharHelper.IsLetter: Boolean; 
+function TCharHelper.IsLetter: Boolean; cdecl;
 var
   o: Integer;
 begin
@@ -27,7 +27,7 @@ end;
   @action: Returns true if Char is part of lowercased characters
   @note: Limited to ASCII.
 [==============================================================================}
-function TCharHelper.IsLower: Boolean; 
+function TCharHelper.IsLower: Boolean; cdecl;
 begin
   Result := InRange(Ord(Self), 97, 122);
 end;
@@ -37,7 +37,7 @@ end;
   @action: Returns true if Char is part of lowercased characters
   @note: Limited to ASCII.
 [==============================================================================}
-function TCharHelper.IsLowercase: Boolean; 
+function TCharHelper.IsLowercase: Boolean; cdecl;
 begin
   Result := ((Self >= 'a') and (Self <= 'z'));
 end;
@@ -47,7 +47,7 @@ end;
   @action: Returns true if Char is a number.
   @note: None.
 [==============================================================================}
-function TCharHelper.IsNumber: Boolean; 
+function TCharHelper.IsNumber: Boolean; cdecl;
 begin
   Result := ((Self >= '0') and (Self <= '9'));
 end;
@@ -57,7 +57,7 @@ end;
   @action: Returns true if Char is a number.
   @note: None.
 [==============================================================================}
-function TCharHelper.IsNumeric: Boolean; 
+function TCharHelper.IsNumeric: Boolean; cdecl;
 begin
   Result := InRange(Ord(Self), 48, 57);
 end;
@@ -67,7 +67,7 @@ end;
   @action: Returns true if Char is part of uppercased characters
   @note: Limited to ASCII.
 [==============================================================================}
-function TCharHelper.IsUpper: Boolean; 
+function TCharHelper.IsUpper: Boolean; cdecl;
 begin
   Result := InRange(Ord(Self), 65, 90);
 end;
@@ -77,7 +77,7 @@ end;
   @action: Returns true if Char is part of uppercased characters
   @note: Limited to ASCII.
 [==============================================================================}
-function TCharHelper.IsUppercase: Boolean; 
+function TCharHelper.IsUppercase: Boolean; cdecl;
 begin
   Result := ((Self >= 'A') and (Self <= 'Z'));
 end;

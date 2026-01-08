@@ -1,8 +1,8 @@
 {$IFDEF METHODS}
-function Boundaries: TBox;
-function BoundingBox: TBox;
-function Bounds: TBox; 
-function Envelope: TBox; 
+function Boundaries: TBox; cdecl;
+function BoundingBox: TBox; cdecl;
+function Bounds: TBox; cdecl;
+function Envelope: TBox; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function Envelope: TBox;
   @action: Returns TCircle boundaries as TBox.
   @note: None.
 [==============================================================================}
-function TCircle.Boundaries: TBox;
+function TCircle.Boundaries: TBox; cdecl;
 begin
   Result := Box(Trunc(Self.Center.X - Self.Radius), Trunc(Self.Center.Y - Self.Radius), (Trunc(Self.Center.X + Self.Radius) + 1), (Trunc(Self.Center.Y + Self.Radius) + 1));
 end;
@@ -21,7 +21,7 @@ end;
   @action: Returns TCircle boundaries as TBox.
   @note: None.
 [==============================================================================}
-function TCircle.BoundingBox: TBox;
+function TCircle.BoundingBox: TBox; cdecl;
 var
   r: Integer;
 begin
@@ -34,7 +34,7 @@ end;
   @action: Returns TCircle boundaries as TBox.
   @note: None.
 [==============================================================================}
-function TCircle.Bounds: TBox;
+function TCircle.Bounds: TBox; cdecl;
 begin
   Result := Box(Floor(Self.Center.X - Self.Radius), Floor(Self.Center.Y - Self.Radius), Ceil(Self.Center.X + Self.Radius), Ceil(Self.Center.Y + Self.Radius));
 end;
@@ -44,7 +44,7 @@ end;
   @action: Returns TCircle boundaries as TBox.
   @note: None.
 [==============================================================================}
-function TCircle.Envelope: TBox;
+function TCircle.Envelope: TBox; cdecl;
 var
   r: Integer;
 begin

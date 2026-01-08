@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
-function BitMax: Integer;
-function Unbitify: TBooleanArray; overload;
-function Unbitify(const bCount: Integer): TBooleanArray; overload;
+function BitMax: Integer; cdecl;
+function Unbitify: TBooleanArray; overload; cdecl;
+function Unbitify(const bCount: Integer): TBooleanArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -10,7 +10,7 @@ function Unbitify(const bCount: Integer): TBooleanArray; overload;
   @action: Returns maximum bit index
   @note: Returns -1 with negatives.
 [==============================================================================}
-function TIntegerHelper.BitMax: Integer;
+function TIntegerHelper.BitMax: Integer; cdecl;
 var
   i: Integer;
 begin
@@ -28,7 +28,7 @@ end;
   @action: Returns array of Booleans by bits.
   @note: None.
 [==============================================================================}
-function TIntegerHelper.Unbitify: TBooleanArray; overload;
+function TIntegerHelper.Unbitify: TBooleanArray; overload; cdecl;
 var
   c, i, s: Integer;
 begin
@@ -49,7 +49,7 @@ end;
   @action: Returns array of Booleans by bits.
   @note: None.
 [==============================================================================}
-function TIntegerHelper.Unbitify(const bCount: Integer): TBooleanArray; overload;
+function TIntegerHelper.Unbitify(const bCount: Integer): TBooleanArray; overload; cdecl;
 var
   i, s: Integer;
 begin

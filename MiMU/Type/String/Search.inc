@@ -1,10 +1,10 @@
 {$IFDEF HELPERS}
-function Find(const s: string; const index: Integer = 1): Integer;
-function Loc(const s: string; const index: Integer = 2147483647): Integer;
-function Location(const s: string; const index: Integer = 2147483647): Integer;
-function Pos(const s: string; const index: Integer = 1): Integer;
-function Position(const s: string; const index: Integer = 1): Integer;
-function Search(const s: string; const index: Integer = 1): Integer;
+function Find(const s: string; const index: Integer = 1): Integer; cdecl;
+function Loc(const s: string; const index: Integer = 2147483647): Integer; cdecl;
+function Location(const s: string; const index: Integer = 2147483647): Integer; cdecl;
+function Pos(const s: string; const index: Integer = 1): Integer; cdecl;
+function Position(const s: string; const index: Integer = 1): Integer; cdecl;
+function Search(const s: string; const index: Integer = 1): Integer; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -13,7 +13,7 @@ function Search(const s: string; const index: Integer = 1): Integer;
   @action: Returns first position of s string in str.
   @note: Alternative for Pos().
 [==============================================================================}
-function TStringHelper.Find(const s: string; const index: Integer = 1): Integer;
+function TStringHelper.Find(const s: string; const index: Integer = 1): Integer; cdecl;
 var
   i, j, a, b: Integer;
 begin
@@ -36,7 +36,7 @@ end;
   @action: Returns last position of s string in str.
   @note: Starts search from index position.!
 [==============================================================================}
-function TStringHelper.Loc(const s: string; const index: Integer = 2147483647): Integer;
+function TStringHelper.Loc(const s: string; const index: Integer = 2147483647): Integer; cdecl;
 begin
   for Result := Min(index, ((Length(Self) - Length(s)) + 1)) downto 1 do
     if Self.At(s, Result) then
@@ -49,7 +49,7 @@ end;
   @action: Returns last position of s string in str.
   @note: Starts search from index position. -1 means str length!
 [==============================================================================}
-function TStringHelper.Location(const s: string; const index: Integer = 2147483647): Integer;
+function TStringHelper.Location(const s: string; const index: Integer = 2147483647): Integer; cdecl;
 var
   a, b, o: Integer;
 begin
@@ -71,7 +71,7 @@ end;
   @action: Returns first position of s string in str.
   @note: Starts search from index position.!
 [==============================================================================}
-function TStringHelper.Pos(const s: string; const index: Integer = 1): Integer;
+function TStringHelper.Pos(const s: string; const index: Integer = 1): Integer; cdecl;
 begin
   for Result := Max(1, index) to ((Length(Self) - Length(s)) + 1) do
     if Self.At(s, Result) then
@@ -85,7 +85,7 @@ end;
            If s doesn't exist in str, Result will be set as 0.
   @note: Supports custom index as scan start.
 [==============================================================================}
-function TStringHelper.Position(const s: string; const index: Integer = 1): Integer;
+function TStringHelper.Position(const s: string; const index: Integer = 1): Integer; cdecl;
 var
   a, b, i: Integer;
 begin
@@ -110,7 +110,7 @@ end;
   @action: Returns first position of s string in str.
   @note: Alternative for Pos().
 [==============================================================================}
-function TStringHelper.Search(const s: string; const index: Integer = 1): Integer;
+function TStringHelper.Search(const s: string; const index: Integer = 1): Integer; cdecl;
 var
   i, j, a, b: Integer;
 begin

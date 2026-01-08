@@ -1,7 +1,7 @@
 {$IFDEF METHODS}
-function Centered(const toArea: TBox): TBox; 
-function CenterHorizontally(const toArea: TBox): TBox;
-function CenterVertically(const toArea: TBox): TBox;
+function Centered(const toArea: TBox): TBox; cdecl;
+function CenterHorizontally(const toArea: TBox): TBox; cdecl;
+function CenterVertically(const toArea: TBox): TBox; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -10,7 +10,7 @@ function CenterVertically(const toArea: TBox): TBox;
   Explanation: Returns bx (by the dimensions) centered to area.
   @note: None.
 [==============================================================================}
-function TBox.Centered(const toArea: TBox): TBox;
+function TBox.Centered(const toArea: TBox): TBox; cdecl;
 var
   w, h: Integer;
 begin
@@ -26,7 +26,7 @@ end;
   Explanation: Returns bx centered horizontally to area.
   @note: None.
 [==============================================================================}
-function TBox.CenterHorizontally(const toArea: TBox): TBox;
+function TBox.CenterHorizontally(const toArea: TBox): TBox; cdecl;
 var
   w: Integer;
 begin
@@ -42,7 +42,7 @@ end;
   Explanation: Returns bx centered vertically to area.
   @note: None.
 [==============================================================================}
-function TBox.CenterVertically(const toArea: TBox): TBox;
+function TBox.CenterVertically(const toArea: TBox): TBox; cdecl;
 var
   h: Integer;
 begin

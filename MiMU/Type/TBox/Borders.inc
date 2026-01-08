@@ -1,17 +1,17 @@
 {$IFDEF METHODS}
-function Border: TPointArray; overload; 
-function Border(const X, Y: Integer): Boolean; overload; 
-function Border(const pt: TPoint): Boolean; overload;
-function Contour: TPointArray;
-function CornerPoints: TPointArray; 
-function CornerPts: TPointArray; 
-function Corners: TPointArray;
-function Edge: TPointArray; overload; 
-function Edge(const X, Y: Integer): Boolean; overload; 
-function Edge(const pt: TPoint): Boolean; overload; 
-function Outline: TPointArray; overload; 
-function Outline(const X, Y: Integer): Boolean; overload; 
-function Outline(const pt: TPoint): Boolean; overload; 
+function Border: TPointArray; overload; cdecl;
+function Border(const X, Y: Integer): Boolean; overload; cdecl;
+function Border(const pt: TPoint): Boolean; overload; cdecl;
+function Contour: TPointArray; cdecl;
+function CornerPoints: TPointArray; cdecl;
+function CornerPts: TPointArray; cdecl;
+function Corners: TPointArray; cdecl;
+function Edge: TPointArray; overload; cdecl; 
+function Edge(const X, Y: Integer): Boolean; overload; cdecl;
+function Edge(const pt: TPoint): Boolean; overload; cdecl;
+function Outline: TPointArray; overload; cdecl;
+function Outline(const X, Y: Integer): Boolean; overload; cdecl;
+function Outline(const pt: TPoint): Boolean; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -20,7 +20,7 @@ function Outline(const pt: TPoint): Boolean; overload;
   @action: Returns TBox border points as TPointArray.
   @note: Skips all the inside points.
 [==============================================================================}
-function TBox.Border: TPointArray; overload;
+function TBox.Border: TPointArray; overload; cdecl;
 var
   x, y, i, w, h: Integer;
 begin
@@ -39,13 +39,13 @@ begin
     Result[i.Increase] := Point(Self.X1, y);
 end;
 
-function TBox.Border(const X, Y: Integer): Boolean; overload;
+function TBox.Border(const X, Y: Integer): Boolean; overload; cdecl;
 begin
   with Self do
     Result := ((((X = X1) or (X = X2)) and ((Y >= Y1) and (Y <= Y2))) or (((Y = Y1) or (Y = Y2)) and ((X >= X1) and (X <= X2))));
 end;
 
-function TBox.Border(const pt: TPoint): Boolean; overload;
+function TBox.Border(const pt: TPoint): Boolean; overload; cdecl;
 begin
   Result := Self.Border(pt.X, pt.Y);
 end;
@@ -55,7 +55,7 @@ end;
   @action: Returns TBox contour points as TPointArray.
   @note: Skips all the inside points.
 [==============================================================================}
-function TBox.Contour: TPointArray;
+function TBox.Contour: TPointArray; cdecl;
 var
   z: TIntegerArray;
   s: TSegment;
@@ -75,7 +75,7 @@ end;
   @action: Returns all 4 corner points of bx.
   @note: None
 [==============================================================================}
-function TBox.CornerPoints: TPointArray;
+function TBox.CornerPoints: TPointArray; cdecl;
 begin
   SetLength(Result, 4);
   Result[0].X := Self.X1;
@@ -93,7 +93,7 @@ end;
   @action: Returns all 4 corner points of bx.
   @note: Gives also duplicates, if TBox is not rectangular.
 [==============================================================================}
-function TBox.CornerPts: TPointArray;
+function TBox.CornerPts: TPointArray; cdecl;
 begin
   Result := [Point(Self.X1, Self.Y1), Point(Self.X2, Self.Y1), Point(Self.X2, Self.Y2), Point(Self.X1, Self.Y2)];
 end;
@@ -103,7 +103,7 @@ end;
   @action: Returns corner points of bx.
   @note: Outputs only unique TPoints.
 [==============================================================================}
-function TBox.Corners: TPointArray;
+function TBox.Corners: TPointArray; cdecl;
 var
   p: TPoint;
 begin
@@ -121,7 +121,7 @@ end;
   @action: Returns TBox edge points as TPointArray.
   @note: Skips all the inside points.
 [==============================================================================}
-function TBox.Edge: TPointArray; overload;
+function TBox.Edge: TPointArray; overload; cdecl;
 var
   i, d, s: Integer;
   p: TPoint;
@@ -146,13 +146,13 @@ begin
   end;
 end;
 
-function TBox.Edge(const X, Y: Integer): Boolean; overload;
+function TBox.Edge(const X, Y: Integer): Boolean; overload; cdecl;
 begin
   with Self do
     Result := (((X = X1) or (X = X2) or (Y = Y1) or (Y = Y2)) and ((X >= X1) and (X <= X2) and (Y >= Y1) and (Y <= Y2)));
 end;
 
-function TBox.Edge(const pt: TPoint): Boolean; overload;
+function TBox.Edge(const pt: TPoint): Boolean; overload; cdecl;
 begin
   Result := Self.Edge(pt.X, pt.Y);
 end;
@@ -162,7 +162,7 @@ end;
   @action: Returns TBox outline points as TPointArray.
   @note: Skips all the inside points.
 [==============================================================================}
-function TBox.Outline: TPointArray; overload;
+function TBox.Outline: TPointArray; overload; cdecl;
 var
   x, y, i, w, h: Integer;
 begin
@@ -183,12 +183,12 @@ begin
   end;
 end;
 
-function TBox.Outline(const X, Y: Integer): Boolean; overload;
+function TBox.Outline(const X, Y: Integer): Boolean; overload; cdecl;
 begin
   Result := ((not ((X < X1) or (X > X2) or (Y < Y1) or (Y > Y2))) and ((X = X1) or (X = X2) or (Y = Y1) or (Y = Y2)));
 end;
 
-function TBox.Outline(const pt: TPoint): Boolean; overload;
+function TBox.Outline(const pt: TPoint): Boolean; overload; cdecl;
 begin
   Result := Self.Outline(pt.X, pt.Y);
 end;

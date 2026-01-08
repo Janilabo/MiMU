@@ -1,22 +1,22 @@
 {$IFDEF METHODS}
-function Ascending: Boolean; 
-function Ascends: Boolean;
-function Atomic: Boolean;
-function Composite: Boolean;
-function Descending: Boolean; 
-function Descends: Boolean;
-function Decreasing: Boolean;
-function Dropping: Boolean; 
-function Drops: Boolean; 
-function Growing: Boolean; 
-function Grows: Boolean; 
-function Increasing: Boolean;
-function Plural: Boolean; 
-function Shrinking: Boolean; 
-function Shrinks: Boolean;
-function Singular: Boolean;  
-function Rises: Boolean;
-function Rising: Boolean; 
+function Ascending: Boolean; cdecl;
+function Ascends: Boolean; cdecl;
+function Atomic: Boolean; cdecl;
+function Composite: Boolean; cdecl;
+function Descending: Boolean; cdecl;
+function Descends: Boolean; cdecl;
+function Decreasing: Boolean; cdecl;
+function Dropping: Boolean; cdecl;
+function Drops: Boolean; cdecl;
+function Growing: Boolean; cdecl;
+function Grows: Boolean; cdecl;
+function Increasing: Boolean; cdecl;
+function Plural: Boolean; cdecl;
+function Shrinking: Boolean; cdecl;
+function Shrinks: Boolean; cdecl;
+function Singular: Boolean; cdecl;
+function Rises: Boolean; cdecl;
+function Rising: Boolean; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -25,7 +25,7 @@ function Rising: Boolean;
   @action: Returns true if range start is lower or equal than stop
   @note: Non-strict.
 [==============================================================================}
-function TRange.Ascending: Boolean;
+function TRange.Ascending: Boolean; cdecl;
 begin
   Result := (Self.start <= Self.stop);
 end;
@@ -35,7 +35,7 @@ end;
   @action: Returns true if range start is lower or equal than stop
   @note: Non-strict.
 [==============================================================================}
-function TRange.Ascends: Boolean;
+function TRange.Ascends: Boolean; cdecl;
 begin
   Result := not (Self.start > Self.stop);
 end;
@@ -45,7 +45,7 @@ end;
   @action: Returns true if range start equals stop
   @note: None.
 [==============================================================================}
-function TRange.Atomic: Boolean;
+function TRange.Atomic: Boolean; cdecl;
 begin
   Result := ((Self.start - Self.stop) = 0);
 end;
@@ -55,7 +55,7 @@ end;
   @action: Returns true if range start does NOT equal to stop
   @note: None.
 [==============================================================================}
-function TRange.Composite: Boolean;
+function TRange.Composite: Boolean; cdecl;
 begin
   Result := not (Self.start = Self.stop);
 end;
@@ -65,7 +65,7 @@ end;
   @action: Returns true if range start is higher or equal with stop
   @note: Different logic compared to TRange.Descending!
 [==============================================================================}
-function TRange.Decreasing: Boolean;
+function TRange.Decreasing: Boolean; cdecl;
 begin
   Result := not (Self.start < Self.stop);
 end;
@@ -75,7 +75,7 @@ end;
   @action: Returns true if range start is higher or equal than stop
   @note: Non-strict.
 [==============================================================================}
-function TRange.Descending: Boolean;
+function TRange.Descending: Boolean; cdecl;
 begin
   Result := (Self.start >= Self.stop);
 end;
@@ -85,7 +85,7 @@ end;
   @action: Returns true if range start is higher or equal than stop
   @note: Non-strict.
 [==============================================================================}
-function TRange.Descends: Boolean;
+function TRange.Descends: Boolean; cdecl;
 begin
   Result := not (Self.start < Self.stop);
 end;
@@ -95,7 +95,7 @@ end;
   @action: Returns true if range start is higher or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Dropping: Boolean;
+function TRange.Dropping: Boolean; cdecl;
 begin
   Result := (Self.start > Self.stop);
 end;
@@ -105,7 +105,7 @@ end;
   @action: Returns true if range start is higher or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Drops: Boolean;
+function TRange.Drops: Boolean; cdecl;
 begin
   Result := not (Self.start <= Self.stop);
 end;
@@ -115,7 +115,7 @@ end;
   @action: Returns true if range start is lower or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Growing: Boolean;
+function TRange.Growing: Boolean; cdecl;
 begin
   Result := (Self.start < Self.stop);
 end;
@@ -125,7 +125,7 @@ end;
   @action: Returns true if range start is lower or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Grows: Boolean;
+function TRange.Grows: Boolean; cdecl;
 begin
   Result := not (Self.start >= Self.stop);
 end;
@@ -135,7 +135,7 @@ end;
   @action: Returns true if range start is lower or equal with stop
   @note: Non-strict.
 [==============================================================================}
-function TRange.Increasing: Boolean;
+function TRange.Increasing: Boolean; cdecl;
 begin
   Result := not (Self.start > Self.stop);
 end;
@@ -145,7 +145,7 @@ end;
   @action: Returns true if range start does NOT equal to stop
   @note: None.
 [==============================================================================}
-function TRange.Plural: Boolean;
+function TRange.Plural: Boolean; cdecl;
 begin
   Result := (Self.start <> Self.stop);
 end;
@@ -155,7 +155,7 @@ end;
   @action: Returns true if range start is higher or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Shrinking: Boolean;
+function TRange.Shrinking: Boolean; cdecl;
 begin
   Result := (Self.start > Self.stop);
 end;
@@ -165,7 +165,7 @@ end;
   @action: Returns true if range start is higher or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Shrinks: Boolean;
+function TRange.Shrinks: Boolean; cdecl;
 begin
   Result := not (Self.start <= Self.stop);
 end;
@@ -175,7 +175,7 @@ end;
   @action: Returns true if range start equals stop
   @note: None.
 [==============================================================================}
-function TRange.Singular: Boolean;
+function TRange.Singular: Boolean; cdecl;
 begin
   Result := (Self.start = Self.stop);
 end;
@@ -185,7 +185,7 @@ end;
   @action: Returns true if range start is lower or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Rises: Boolean;
+function TRange.Rises: Boolean; cdecl;
 begin
   Result := not (Self.start >= Self.stop);
 end;
@@ -195,7 +195,7 @@ end;
   @action: Returns true if range start is lower or equal with stop
   @note: Strict.
 [==============================================================================}
-function TRange.Rising: Boolean;
+function TRange.Rising: Boolean; cdecl;
 begin
   Result := (Self.start < Self.stop);
 end;

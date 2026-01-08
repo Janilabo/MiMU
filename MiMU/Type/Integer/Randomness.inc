@@ -1,5 +1,5 @@
 {$IFDEF HELPERS}
-function Shuffle: Integer;
+function Shuffle: Integer; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -8,7 +8,7 @@ function Shuffle: Integer;
   @action: Random() with support for negative Range (based on x value).
   @note: None
 [==============================================================================}
-function TIntegerHelper.Shuffle: Integer;
+function TIntegerHelper.Shuffle: Integer; cdecl;
 begin
   Result := Random(Abs(Self));
   if (Self < 0) then

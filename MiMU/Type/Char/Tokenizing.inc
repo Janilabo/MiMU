@@ -1,9 +1,9 @@
 {$IFDEF HELPERS}
-function Tokenize(const str: string): TStringArray; overload;
+function Tokenize(const str: string): TStringArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-function TCharHelper.Tokenize(const str: string): TStringArray; overload;
+function TCharHelper.Tokenize(const str: string): TStringArray; overload; cdecl;
 var
   s, i, l: Integer;
 begin

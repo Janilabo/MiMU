@@ -1,15 +1,15 @@
 {$IFDEF HELPERS}
-function Ascending(const target: string): Boolean; inline;
-function Compare(const target: string): Integer; inline;
-function Descending(const target: string): Boolean; inline;
-function Precede(const target: string; const aAscending: Boolean): Boolean; overload;
-function Sign(const target: string): Integer; inline;
+function Ascending(const target: string): Boolean; cdecl; inline;
+function Compare(const target: string): Integer; cdecl; inline;
+function Descending(const target: string): Boolean; cdecl; inline;
+function Precede(const target: string; const aAscending: Boolean): Boolean; overload; cdecl;
+function Sign(const target: string): Integer; cdecl; inline;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
-function Comparison(const A, B: string): Integer; overload;
-function Max(const a, b: string): string; overload; inline;
-function Min(const a, b: string): string; overload; inline;
+function Comparison(const A, B: string): Integer; overload; cdecl;
+function Max(const a, b: string): string; overload; cdecl; inline;
+function Min(const a, b: string): string; overload; cdecl; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -20,7 +20,7 @@ function Min(const a, b: string): string; overload; inline;
            sorting or merging arrays in ascending order.
   @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}
-function TStringHelper.Ascending(const target: string): Boolean; inline;
+function TStringHelper.Ascending(const target: string): Boolean; cdecl; inline;
 begin
   Result := (Self <= target);
 end;
@@ -30,7 +30,7 @@ end;
   @action: Compares str with target.
   @note: Results: 0=EQUAL, 1=str>target, -1=str<target
 [==============================================================================}
-function TStringHelper.Compare(const target: string): Integer; inline;
+function TStringHelper.Compare(const target: string): Integer; cdecl; inline;
 begin
   if (Self = target) then
     Exit(0);
@@ -47,7 +47,7 @@ end;
            sorting or merging arrays in descending order.
   @note: Pure comparison only; equivalent to Self >= target.
 [==============================================================================}
-function TStringHelper.Descending(const target: string): Boolean; inline;
+function TStringHelper.Descending(const target: string): Boolean; cdecl; inline;
 begin
   Result := (Self >= target);
 end;
@@ -57,7 +57,7 @@ end;
   @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
   @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
-function TStringHelper.Precede(const target: string; const aAscending: Boolean): Boolean; overload;
+function TStringHelper.Precede(const target: string; const aAscending: Boolean): Boolean; overload; cdecl;
 begin
   Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));
 end;
@@ -73,7 +73,7 @@ end;
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TStringHelper.Sign(const target: string): Integer; inline;
+function TStringHelper.Sign(const target: string): Integer; cdecl; inline;
 begin
   if (Self = target) then
     Result := 0
@@ -83,7 +83,7 @@ begin
     Result := -1;
 end;
 
-function Comparison(const A, B: string): Integer; overload;
+function Comparison(const A, B: string): Integer; overload; cdecl;
 begin
   if (A < B) then
     Exit(-1);
@@ -92,7 +92,7 @@ begin
   Result := 0;
 end;
 
-function Max(const A, B: string): string; overload; inline;
+function Max(const A, B: string): string; overload; cdecl; inline;
 begin
   if (A > B) then
     Result := A
@@ -100,7 +100,7 @@ begin
     Result := B;
 end;
 
-function Min(const A, B: string): string; overload; inline;
+function Min(const A, B: string): string; overload; cdecl; inline;
 begin
   if (A < B) then
     Result := A

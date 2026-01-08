@@ -1,9 +1,9 @@
 {$IFDEF HELPERS}
-function Locations(const target: MArray): TIntegerArray; overload;
-function LocationsIn(const target: MArray): TIntegerArray; overload;
-function Positions(const target: MArray): TIntegerArray; overload;
-function PositionsIn(const target: MArray): TIntegerArray; overload;
-function Scan(const target: MArray): TIntegerArray; overload;
+function Locations(const target: MArray): TIntegerArray; overload; cdecl;
+function LocationsIn(const target: MArray): TIntegerArray; overload; cdecl;
+function Positions(const target: MArray): TIntegerArray; overload; cdecl;
+function PositionsIn(const target: MArray): TIntegerArray; overload; cdecl;
+function Scan(const target: MArray): TIntegerArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,7 +17,7 @@ function Scan(const target: MArray): TIntegerArray; overload;
          This method is functionally equivalent to Positions but differs in the
          ordering of the returned indexes.
 [==============================================================================}
-function MTypeHelper.Locations(const target: MArray): TIntegerArray; overload;
+function MTypeHelper.Locations(const target: MArray): TIntegerArray; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -39,7 +39,7 @@ end;
          This implementation is functionally equivalent to PositionsIn but returns the
          indexes in reversed order.
 [==============================================================================}
-function MTypeHelper.LocationsIn(const target: MArray): TIntegerArray; overload;
+function MTypeHelper.LocationsIn(const target: MArray): TIntegerArray; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -61,7 +61,7 @@ end;
          This implementation guarantees a single allocation and predictable memory
          usage.
 [==============================================================================}
-function MTypeHelper.Positions(const target: MArray): TIntegerArray; overload;
+function MTypeHelper.Positions(const target: MArray): TIntegerArray; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -83,7 +83,7 @@ end;
          This implementation minimizes memory allocations while preserving deterministic
          ordering.
 [==============================================================================}
-function MTypeHelper.PositionsIn(const target: MArray): TIntegerArray; overload;
+function MTypeHelper.PositionsIn(const target: MArray): TIntegerArray; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -107,7 +107,7 @@ end;
          This implementation favors reduced passes over the array and is well suited
          for cases where the number of matches is unknown.
 [==============================================================================}
-function MTypeHelper.Scan(const target: MArray): TIntegerArray; overload;
+function MTypeHelper.Scan(const target: MArray): TIntegerArray; overload; cdecl;
 var
   i, r, c: Integer;
 begin

@@ -1,18 +1,18 @@
 {$IFDEF METHODS}
-function Adjacent(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
-function Neighbor(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
-function Neighbour(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
+function Adjacent(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload; cdecl;
+function Neighbor(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload; cdecl;
+function Neighbour(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-function Adjacency(const adjacency8: Boolean = True): TPointArray; overload;
-function Adjacent(const adjacency8: Boolean = True): TPointArray; overload;
-procedure Adjacent(var adj: TPointArray; const adjacency8: Boolean = True); overload;
-function Neighbors(const adjacency8: Boolean = True): TPointArray; overload;
-procedure Neighbors(var adj: TPointArray); overload;
-function Neighbours(const adjacency8: Boolean = True): TPointArray; overload;
-procedure Neighbours(var adj: TPointArray); overload;
-function Surrounding(const adjacency8: Boolean = True): TPointArray; overload;
+function Adjacency(const adjacency8: Boolean = True): TPointArray; overload; cdecl;
+function Adjacent(const adjacency8: Boolean = True): TPointArray; overload; cdecl;
+procedure Adjacent(var adj: TPointArray; const adjacency8: Boolean = True); overload; cdecl;
+function Neighbors(const adjacency8: Boolean = True): TPointArray; overload; cdecl;
+procedure Neighbors(var adj: TPointArray); overload; cdecl;
+function Neighbours(const adjacency8: Boolean = True): TPointArray; overload; cdecl;
+procedure Neighbours(var adj: TPointArray); overload; cdecl;
+function Surrounding(const adjacency8: Boolean = True): TPointArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -22,7 +22,7 @@ function Surrounding(const adjacency8: Boolean = True): TPointArray; overload;
            Uses a precomputed offset array for 4- or 8-way adjacency.
   @note: Efficient exact comparison. Self is not considered adjacent.
 [==============================================================================}
-function TPoint.Adjacent(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
+function TPoint.Adjacent(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload; cdecl;
 const
   o: array[0..7] of TPoint = ((X: 1; Y: 0), (X: 0; Y: 1), (X: -1; Y: 0), (X: 0; Y: -1), (X: 1; Y: 1), (X: 1; Y: -1), (X: -1; Y: 1), (X: -1; Y: -1));
 var
@@ -44,7 +44,7 @@ end;
          and Manhattan distance (dx + dy) for 4-way. Excludes `Self` automatically
          because distance 0 is not considered adjacency.
 [==============================================================================}
-function TPoint.Neighbor(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
+function TPoint.Neighbor(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload; cdecl;
 var
   d: TPoint;
 begin
@@ -62,7 +62,7 @@ end;
   @note:  Uses explicit comparisons of absolute differences.
           Excludes `Self` from being a neighbor in 8-way mode.
 [==============================================================================}
-function TPoint.Neighbour(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload;
+function TPoint.Neighbour(const p: TPoint; const adjacency8: Boolean = True): Boolean; overload; cdecl;
 var
   d: TPoint;
 begin
@@ -81,7 +81,7 @@ end;
          Useful for operations like pathfinding, image processing, and
          grid traversal where nearby cells must be inspected.
 [==============================================================================}
-function TPointHelper.Adjacency(const adjacency8: Boolean = True): TPointArray; overload;
+function TPointHelper.Adjacency(const adjacency8: Boolean = True): TPointArray; overload; cdecl;
 begin
   if adjacency8 then
     Result := [Point((Self.X - 1), (Self.Y - 1)), Point((Self.X - 1), Self.Y), Point((Self.X - 1), (Self.X + 1)), Point(Self.X, (Self.X + 1)), Point((Self.X + 1), (Self.Y + 1)), Point((Self.X + 1), Self.Y), Point((Self.X + 1), (Self.Y - 1)), Point(Self.X, (Self.Y - 1))]
@@ -95,7 +95,7 @@ end;
            Can return either 4-way (orthogonal) or 8-way (including diagonals).
   @note: Creates a new dynamic array on each call.
 [==============================================================================}
-function TPointHelper.Adjacent(const adjacency8: Boolean = True): TPointArray; overload;
+function TPointHelper.Adjacent(const adjacency8: Boolean = True): TPointArray; overload; cdecl;
 begin
   if adjacency8 then
     Exit([Point((Self.X + 1), Self.Y), Point(Self.X, (Self.Y + 1)), Point((Self.X - 1), Self.Y), Point(Self.X, (Self.Y - 1)), Point((Self.X + 1), (Self.Y + 1)), Point((Self.X + 1), (Self.Y - 1)), Point((Self.X - 1), (Self.Y + 1)), Point((Self.X - 1), (Self.Y - 1))]);
@@ -107,7 +107,7 @@ end;
   @action: Fills the given point array with the 4 or 8 adjacent points around Self.
   @note: If adjacency8 is True, diagonal neighbors are also included.
 [==============================================================================}
-procedure TPointHelper.Adjacent(var adj: TPointArray; const adjacency8: Boolean = True); overload;
+procedure TPointHelper.Adjacent(var adj: TPointArray; const adjacency8: Boolean = True); overload; cdecl;
 begin
   adj[0].Create(Self.x, (Self.y - 1));
   adj[3].Create(Self.x, (Self.y + 1));
@@ -128,7 +128,7 @@ end;
            Supports 4-way or 8-way adjacency.
   @note: The first 4 points are orthogonal neighbors; the next 4 (if adjacency8) are diagonals.
 [==============================================================================}
-function TPointHelper.Neighbors(const adjacency8: Boolean = True): TPointArray; overload;
+function TPointHelper.Neighbors(const adjacency8: Boolean = True): TPointArray; overload; cdecl;
 begin
   with Self do
     Result := [Point((X + 1), Y), Point(X, (Y + 1)), Point((X - 1), Y), Point(X, (Y - 1)),
@@ -143,7 +143,7 @@ end;
   @note:    Uses 8-way adjacency if the array length is greater than 4; 
             otherwise only the 4 cardinal directions are filled.
 [==============================================================================}
-procedure TPointHelper.Neighbors(var adj: TPointArray); overload;
+procedure TPointHelper.Neighbors(var adj: TPointArray); overload; cdecl;
 begin
   adj[0].Create(Self.x, (Self.y - 1));
   adj[3].Create(Self.x, (Self.y + 1));
@@ -164,7 +164,7 @@ end;
            Uses a precomputed offset array for 4- or 8-way adjacency.
   @note: Dynamic array is allocated for each call. Offset array ensures correct order.
 [==============================================================================}
-function TPointHelper.Neighbours(const adjacency8: Boolean = True): TPointArray; overload;
+function TPointHelper.Neighbours(const adjacency8: Boolean = True): TPointArray; overload; cdecl;
 const
   o: array[0..7] of TPoint = ((X: 1; Y: 0), (X: 0; Y: 1), (X: -1; Y: 0), (X: 0; Y: -1), (X: 1; Y: 1), (X: 1; Y: -1), (X: -1; Y: 1), (X: -1; Y: -1));
 var
@@ -181,7 +181,7 @@ end;
   @note:    Uses 8-way adjacency if the array length is greater than 4; 
             otherwise only the 4 cardinal directions are filled.
 [==============================================================================}
-procedure TPointHelper.Neighbours(var adj: TPointArray); overload;
+procedure TPointHelper.Neighbours(var adj: TPointArray); overload; cdecl;
 begin
   adj[0] := Point(Self.x, (Self.y - 1));
   adj[3] := Point(Self.x, (Self.y + 1));
@@ -206,7 +206,7 @@ end;
          Useful for grid traversal, flood fill, pathfinding, or image
          processing algorithms where nearby cells must be evaluated.
 [==============================================================================}
-function TPointHelper.Surrounding(const adjacency8: Boolean = True): TPointArray; overload;
+function TPointHelper.Surrounding(const adjacency8: Boolean = True): TPointArray; overload; cdecl;
 var
   r, c, i: Integer;
 begin

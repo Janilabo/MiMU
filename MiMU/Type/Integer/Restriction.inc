@@ -1,21 +1,21 @@
 {$IFDEF HELPERS}
-function Bound(const minimum, maximum: Integer): Integer;
-function BoundMax(const limit: Integer): Integer;
-function BoundMin(const limit: Integer): Integer;
-function Clamp(const minimum, maximum: Integer): Integer; overload;
-function Clamp(const range: TRange): Integer; overload;
-function ClampMax(const limit: Integer): Integer;
-function ClampMin(const limit: Integer): Integer;
-function Constraint(const minimum, maximum: Integer): Boolean; overload;
-function Constraint(const range: TRange): Boolean; overload;
-function ConstraintMax(const limit: Integer): Boolean;
-function ConstraintMin(const limit: Integer): Boolean;
-function Limit(const minimum, maximum: Integer): Integer;
-function LimitMax(const limit: Integer): Integer;
-function LimitMin(const limit: Integer): Integer;
-function Restrict(const minimum, maximum: Integer): Integer;
-function RestrictMax(const limit: Integer): Integer;
-function RestrictMin(const limit: Integer): Integer;
+function Bound(const minimum, maximum: Integer): Integer; cdecl;
+function BoundMax(const limit: Integer): Integer; cdecl;
+function BoundMin(const limit: Integer): Integer; cdecl;
+function Clamp(const minimum, maximum: Integer): Integer; overload; cdecl;
+function Clamp(const range: TRange): Integer; overload; cdecl;
+function ClampMax(const limit: Integer): Integer; cdecl;
+function ClampMin(const limit: Integer): Integer; cdecl;
+function Constraint(const minimum, maximum: Integer): Boolean; overload; cdecl;
+function Constraint(const range: TRange): Boolean; overload; cdecl;
+function ConstraintMax(const limit: Integer): Boolean; cdecl;
+function ConstraintMin(const limit: Integer): Boolean; cdecl;
+function Limit(const minimum, maximum: Integer): Integer; cdecl;
+function LimitMax(const limit: Integer): Integer; cdecl;
+function LimitMin(const limit: Integer): Integer; cdecl;
+function Restrict(const minimum, maximum: Integer): Integer; cdecl;
+function RestrictMax(const limit: Integer): Integer; cdecl;
+function RestrictMin(const limit: Integer): Integer; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -24,7 +24,7 @@ function RestrictMin(const limit: Integer): Integer;
   @action: Returns Integer bounded by minimum and maximum limits
   @note: None
 [==============================================================================}
-function TIntegerHelper.Bound(const minimum, maximum: Integer): Integer;
+function TIntegerHelper.Bound(const minimum, maximum: Integer): Integer; cdecl;
 begin
   Result := (((Self + minimum) + Abs(Self - minimum)) div 2);
   Result := (((Result + maximum) - Abs(Result - maximum)) div 2);
@@ -35,7 +35,7 @@ end;
   @action: Returns Integer bounded by maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.BoundMax(const limit: Integer): Integer;
+function TIntegerHelper.BoundMax(const limit: Integer): Integer; cdecl;
 begin
   Result := (((Self + limit) - Abs(Self - limit)) div 2);
 end;
@@ -45,7 +45,7 @@ end;
   @action: Returns Integer bounded by minimum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.BoundMin(const limit: Integer): Integer;
+function TIntegerHelper.BoundMin(const limit: Integer): Integer; cdecl;
 begin
   Result := (((Self + limit) + Abs(Self - limit)) div 2);
 end;
@@ -55,7 +55,7 @@ end;
   @action: Returns Integer clamped by minimum and maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.Clamp(const minimum, maximum: Integer): Integer; overload;
+function TIntegerHelper.Clamp(const minimum, maximum: Integer): Integer; cdecl; overload;
 begin
   if (Self < minimum) then
     Result := minimum
@@ -71,7 +71,7 @@ end;
   @action: Returns Integer clamped by minimum and maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.Clamp(const range: TRange): Integer; overload;
+function TIntegerHelper.Clamp(const range: TRange): Integer; overload; cdecl;
 begin
   Result := Self.ClampMin(range.Minimum);
   if (Self = Result) then
@@ -83,7 +83,7 @@ end;
   @action: Returns Integer clamped by maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.ClampMax(const limit: Integer): Integer;
+function TIntegerHelper.ClampMax(const limit: Integer): Integer; cdecl;
 begin
   if (Self > limit) then
     Result := limit
@@ -96,7 +96,7 @@ end;
   @action: Returns Integer clamped by minimum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.ClampMin(const limit: Integer): Integer;
+function TIntegerHelper.ClampMin(const limit: Integer): Integer; cdecl;
 begin
   if (Self < limit) then
     Result := limit
@@ -109,7 +109,7 @@ end;
   @action: Returns true if Integer is constrainted with minimum or maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.Constraint(const minimum, maximum: Integer): Boolean; overload;
+function TIntegerHelper.Constraint(const minimum, maximum: Integer): Boolean; overload; cdecl;
 begin
   Result := (Self.ConstraintMin(minimum) or Self.ConstraintMax(maximum));
 end;
@@ -119,7 +119,7 @@ end;
   @action: Returns true if Integer is constrainted with range
   @note: None
 [==============================================================================}
-function TIntegerHelper.Constraint(const range: TRange): Boolean; overload;
+function TIntegerHelper.Constraint(const range: TRange): Boolean; overload; cdecl;
 begin
   Result := (Self.ConstraintMin(range.Minimum) or Self.ConstraintMax(range.Maximum));
 end;
@@ -129,7 +129,7 @@ end;
   @action: Returns true if Integer is constrainted with maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.ConstraintMax(const limit: Integer): Boolean;
+function TIntegerHelper.ConstraintMax(const limit: Integer): Boolean; cdecl;
 begin
   Result := (Self > limit);
   if Result then
@@ -141,7 +141,7 @@ end;
   @action: Returns true if Integer is constrainted with minimum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.ConstraintMin(const limit: Integer): Boolean;
+function TIntegerHelper.ConstraintMin(const limit: Integer): Boolean; cdecl;
 begin
   Result := (Self < limit);
   if Result then
@@ -153,7 +153,7 @@ end;
   @action: Returns Integer with minimum and maximum limits
   @note: EnsureRange() call.
 [==============================================================================}
-function TIntegerHelper.Limit(const minimum, maximum: Integer): Integer;
+function TIntegerHelper.Limit(const minimum, maximum: Integer): Integer; cdecl;
 begin
   Result := EnsureRange(Self, minimum, maximum);
 end;
@@ -163,7 +163,7 @@ end;
   @action: Returns Integer with maximum limit
   @note: Min() call.
 [==============================================================================}
-function TIntegerHelper.LimitMax(const limit: Integer): Integer;
+function TIntegerHelper.LimitMax(const limit: Integer): Integer; cdecl;
 begin
   Result := Min(Self, limit);
 end;
@@ -173,7 +173,7 @@ end;
   @action: Returns Integer with minimum limit
   @note: Max() call.
 [==============================================================================}
-function TIntegerHelper.LimitMin(const limit: Integer): Integer;
+function TIntegerHelper.LimitMin(const limit: Integer): Integer; cdecl;
 begin
   Result := Max(Self, limit);
 end;
@@ -183,7 +183,7 @@ end;
   @action: Returns Integer bounded by minimum and maximum limits
   @note: None
 [==============================================================================}
-function TIntegerHelper.Restrict(const minimum, maximum: Integer): Integer;
+function TIntegerHelper.Restrict(const minimum, maximum: Integer): Integer; cdecl;
 begin
   Result := (Self - ((Self - minimum) - Abs(Self - minimum)) div 2);
   Result := (Result - ((Result - maximum) + Abs(Result - maximum)) div 2);
@@ -194,7 +194,7 @@ end;
   @action: Returns Integer bounded by maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.RestrictMax(const limit: Integer): Integer;
+function TIntegerHelper.RestrictMax(const limit: Integer): Integer; cdecl;
 begin
   Result := (Self - ((Self - limit) + Abs(Self - limit)) div 2);
 end;
@@ -204,7 +204,7 @@ end;
   @action: Returns Integer bounded by minimum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.RestrictMin(const limit: Integer): Integer;
+function TIntegerHelper.RestrictMin(const limit: Integer): Integer; cdecl;
 begin
   Result := (Self - ((Self - limit) - Abs(Self - limit)) div 2);
 end;

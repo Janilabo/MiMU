@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
-function Reverse: Boolean;
-function Reversed: TRange;
+function Reverse: Boolean; cdecl;
+function Reversed: TRange; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function Reversed: TRange;
   @action: Reverses range, returns True if range was reversed.
   @note: None.
 [==============================================================================}
-function TRange.Reverse: Boolean;
+function TRange.Reverse: Boolean; cdecl;
 begin
   Result := Self.Plural;
   if Result then
@@ -21,7 +21,7 @@ end;
   @action: Returns reversed range.
   @note: None.
 [==============================================================================}
-function TRange.Reversed: TRange;
+function TRange.Reversed: TRange; cdecl;
 begin
   Result.start := Self.stop;
   Result.stop := Self.start;

@@ -1,20 +1,20 @@
 {$IFDEF HELPERS}
-function After(const s: string; const index: Integer = 1): string; overload;
-function After(const index: Integer; const count: Integer = 2147483647): string; overload;
-function Ahead(const s: string; const index: Integer = 2147483647): string; overload;
-function Ahead(const index: Integer; const count: Integer = 2147483647): string; overload;
-function Before(const s: string; const index: Integer = 1): string; overload;
-function Before(const index: Integer; const count: Integer = 2147483647): string; overload;
-function Behind(const s: string; const index: Integer = 2147483647): string; overload;
-function Behind(const index: Integer; const count: Integer = 2147483647): string; overload;
-function Between(const s1, s2: string; const index: Integer = 1): string;
-function Chunk(const a, b: Integer): string;
-function FromLeft(const count: Integer; const index: Integer = 1): string;
-function FromRight(const count: Integer; const index: Integer = 2147483647): string;
-function Get(const index: Integer; const count: Integer): string; inline;
-function Pick(const index: Integer; const count: Integer = 2147483647): string;
-function Slice(const a, b: Integer): string;
-function Stuff(const s: string; const iFrom, iCount: Integer): string;
+function After(const s: string; const index: Integer = 1): string; overload; cdecl;
+function After(const index: Integer; const count: Integer = 2147483647): string; overload; cdecl;
+function Ahead(const s: string; const index: Integer = 2147483647): string; overload; cdecl;
+function Ahead(const index: Integer; const count: Integer = 2147483647): string; overload; cdecl;
+function Before(const s: string; const index: Integer = 1): string; overload; cdecl;
+function Before(const index: Integer; const count: Integer = 2147483647): string; overload; cdecl;
+function Behind(const s: string; const index: Integer = 2147483647): string; overload; cdecl;
+function Behind(const index: Integer; const count: Integer = 2147483647): string; overload; cdecl;
+function Between(const s1, s2: string; const index: Integer = 1): string; cdecl;
+function Chunk(const a, b: Integer): string; cdecl;
+function FromLeft(const count: Integer; const index: Integer = 1): string; cdecl;
+function FromRight(const count: Integer; const index: Integer = 2147483647): string; cdecl;
+function Get(const index: Integer; const count: Integer): string; cdecl; inline;
+function Pick(const index: Integer; const count: Integer = 2147483647): string; cdecl;
+function Slice(const a, b: Integer): string; cdecl;
+function Stuff(const s: string; const iFrom, iCount: Integer): string; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -23,7 +23,7 @@ function Stuff(const s: string; const iFrom, iCount: Integer): string;
   @action: Returns string that is found after s in str.
   @note: None
 [==============================================================================}
-function TStringHelper.After(const s: string; const index: Integer = 1): string; overload;
+function TStringHelper.After(const s: string; const index: Integer = 1): string; overload; cdecl;
 var
   p: Integer;
 begin
@@ -39,7 +39,7 @@ end;
   @action: Returns string that is found after index in str.
   @note: None
 [==============================================================================}
-function TStringHelper.After(const index: Integer; const count: Integer = 2147483647): string; overload;
+function TStringHelper.After(const index: Integer; const count: Integer = 2147483647): string; overload; cdecl;
 begin
   if ((index >= 0) and (index < Length(Self)) and (count > 0)) then
     Result := Copy(Self, (index + 1), count)
@@ -52,7 +52,7 @@ end;
   @action: Returns string that is ahead the s in str.
   @note: None
 [==============================================================================}
-function TStringHelper.Ahead(const s: string; const index: Integer = 2147483647): string; overload;
+function TStringHelper.Ahead(const s: string; const index: Integer = 2147483647): string; overload; cdecl;
 var
   p: Integer;
 begin
@@ -68,7 +68,7 @@ end;
   @action: Returns string that is ahead the index in str.
   @note: None
 [==============================================================================}
-function TStringHelper.Ahead(const index: Integer; const count: Integer = 2147483647): string; overload;
+function TStringHelper.Ahead(const index: Integer; const count: Integer = 2147483647): string; overload; cdecl;
 var
   c: Integer;
 begin
@@ -85,7 +85,7 @@ end;
   @action: Returns string that is found before s in str.
   @note: None
 [==============================================================================}
-function TStringHelper.Before(const s: string; const index: Integer = 1): string; overload;
+function TStringHelper.Before(const s: string; const index: Integer = 1): string; overload; cdecl;
 var
   p: Integer;
 begin
@@ -101,7 +101,7 @@ end;
   @action: Returns string that is found before index in str.
   @note: None
 [==============================================================================}
-function TStringHelper.Before(const index: Integer; const count: Integer = 2147483647): string; overload;
+function TStringHelper.Before(const index: Integer; const count: Integer = 2147483647): string; overload; cdecl;
 var
   c: Integer;
 begin
@@ -118,7 +118,7 @@ end;
   @action: Returns string (with count) that is behind the s in str.
   @note: None
 [==============================================================================}
-function TStringHelper.Behind(const s: string; const index: Integer = 2147483647): string; overload;
+function TStringHelper.Behind(const s: string; const index: Integer = 2147483647): string; overload; cdecl;
 var
   p: Integer;
 begin
@@ -134,7 +134,7 @@ end;
   @action: Returns string (with count) that is behind the index in str.
   @note: None
 [==============================================================================}
-function TStringHelper.Behind(const index: Integer; const count: Integer = 2147483647): string; overload;
+function TStringHelper.Behind(const index: Integer; const count: Integer = 2147483647): string; overload; cdecl;
 begin
   if (index >= 0) and (index < Length(Self)) and (count > 0) then
     Result := Copy(Self, (index + 1), count)
@@ -147,7 +147,7 @@ end;
   @action: Returns the string between s1 and s2 in str.
   @note: Supports offset (index).
 [==============================================================================}
-function TStringHelper.Between(const s1, s2: string; const index: Integer = 1): string;
+function TStringHelper.Between(const s1, s2: string; const index: Integer = 1): string; cdecl;
 var
   b, e, l: Integer;
 begin
@@ -166,7 +166,7 @@ end;
   @action: Returns chunk of string between a and b.
   @note: Supports reversed chunk, when a is higher than b.
 [==============================================================================}
-function TStringHelper.Chunk(const a, b: Integer): string;
+function TStringHelper.Chunk(const a, b: Integer): string; cdecl;
 var
   i, l, x, y: Integer;
 begin
@@ -198,7 +198,7 @@ end;
   @action: Returns string from left with count of characters.
   @note: None
 [==============================================================================}
-function TStringHelper.FromLeft(const count: Integer; const index: Integer = 1): string;
+function TStringHelper.FromLeft(const count: Integer; const index: Integer = 1): string; cdecl;
 begin
   Result := Copy(Self, index, count);
 end;
@@ -208,7 +208,7 @@ end;
   @action: Returns string from right with count of characters.
   @note: None
 [==============================================================================}
-function TStringHelper.FromRight(const count: Integer; const index: Integer = 2147483647): string;
+function TStringHelper.FromRight(const count: Integer; const index: Integer = 2147483647): string; cdecl;
 begin
   Result := Copy(Self, ((Min(Length(Self), index) - count) + 1), count);
 end;
@@ -218,7 +218,7 @@ end;
   @action: Fast method for getting substring from string index position by size.
   @note: UNSAFE! Minimal checks for efficiency.
 [==============================================================================}
-function TStringHelper.Get(const index: Integer; const count: Integer): string; inline;
+function TStringHelper.Get(const index: Integer; const count: Integer): string; cdecl; inline;
 var
   i: Integer;
 begin
@@ -232,7 +232,7 @@ end;
   @action: Method for getting substring from string index position by count.
   @note: Contains some failsafes, alternative for String_Get.
 [==============================================================================}
-function TStringHelper.Pick(const index: Integer; const count: Integer = 2147483647): string;
+function TStringHelper.Pick(const index: Integer; const count: Integer = 2147483647): string; cdecl;
 var
   s, i, p: Integer;
 begin
@@ -248,7 +248,7 @@ end;
   @action: Returns slice of string with a and b.
   @note: Supports reversed slice, when a is higher than b.
 [==============================================================================}
-function TStringHelper.Slice(const a, b: Integer): string;
+function TStringHelper.Slice(const a, b: Integer): string; cdecl;
 var
   i, l, x, y: Integer;
 begin
@@ -284,7 +284,7 @@ end;
   @action: Returns str stuffed with s. Starting from iFrom and ending to iFrom + iCount.
   @note: Places s to iFrom position and replaces iCount amount of next characters in str with s.
 [==============================================================================}
-function TStringHelper.Stuff(const s: string; const iFrom, iCount: Integer): string;
+function TStringHelper.Stuff(const s: string; const iFrom, iCount: Integer): string; cdecl;
 begin
   Result := Copy(Self, 1, Length(Self));
   Delete(Result, iFrom, iCount);

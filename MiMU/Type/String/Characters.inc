@@ -1,20 +1,20 @@
 {$IFDEF HELPERS}
-function BinaryCharSet: TCharArray; overload;
-function CharacterDict: TCharArray; overload;
-function CharacterSet: TCharArray; overload;
-function Charify: TCharArray;
-function Chars: TCharArray;
-function CharSet: TCharArray; overload;
-function DistinctCharacters: TCharArray; overload;
-function DistinctChars: TCharArray; overload;
-function IDs: TIntegerArray; overload;
-function IDs(const ID: TIntegerArray): TCharArray; overload;
-function IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload;
-function IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload;
-function SetOfCharacters: TCharArray; overload;
-function SetOfChars: TCharArray; overload;
-function UniqueCharacters(const oAscending: Boolean = True): TCharArray; overload;
-function UniqueChars: TCharArray; overload;
+function BinaryCharSet: TCharArray; overload; cdecl;
+function CharacterDict: TCharArray; overload; cdecl;
+function CharacterSet: TCharArray; overload; cdecl;
+function Charify: TCharArray; cdecl;
+function Chars: TCharArray; cdecl;
+function CharSet: TCharArray; overload; cdecl;
+function DistinctCharacters: TCharArray; overload; cdecl;
+function DistinctChars: TCharArray; overload; cdecl;
+function IDs: TIntegerArray; overload; cdecl;
+function IDs(const ID: TIntegerArray): TCharArray; overload; cdecl;
+function IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
+function IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
+function SetOfCharacters: TCharArray; overload; cdecl;
+function SetOfChars: TCharArray; overload; cdecl;
+function UniqueCharacters(const oAscending: Boolean = True): TCharArray; overload; cdecl;
+function UniqueChars: TCharArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -32,7 +32,7 @@ function UniqueChars: TCharArray; overload;
          - Characters are returned in the order defined by the binary array
            insertion logic, not necessarily by first occurrence in the string.
 [==============================================================================}
-function TStringHelper.BinaryCharSet: TCharArray; overload;
+function TStringHelper.BinaryCharSet: TCharArray; overload; cdecl;
 var
   i: Integer;
   c: TIntegerArray;
@@ -52,7 +52,7 @@ end;
   @action: Returns an array containing all unique characters present in the string.
   @note: Based on TDictionary
 [==============================================================================}
-function TStringHelper.CharacterDict: TCharArray; overload;
+function TStringHelper.CharacterDict: TCharArray; overload; cdecl;
 var
   d: specialize TDictionary<Char, Boolean>;
   c: Char;
@@ -81,7 +81,7 @@ end;
          ordinal order (0..255). Not suitable for UTF-8 strings.  
          Uses two passes over a 256-element Boolean array to determine count.
 [==============================================================================}
-function TStringHelper.CharacterSet: TCharArray; overload;
+function TStringHelper.CharacterSet: TCharArray; overload; cdecl;
 var
   i, c: Integer;
   u: TBooleanArray;
@@ -107,7 +107,7 @@ end;
   @action: Returns characters of string as TCharArray.
   @note: None.
 [==============================================================================}
-function TStringHelper.Charify: TCharArray;
+function TStringHelper.Charify: TCharArray; cdecl;
 begin
   SetLength(Result, Length(Self));
   if not Self.Empty then
@@ -119,7 +119,7 @@ end;
   @action: Returns characters of string as TCharArray.
   @note: None.
 [==============================================================================}
-function TStringHelper.Chars: TCharArray;
+function TStringHelper.Chars: TCharArray; cdecl;
 var
   i: Integer;
 begin
@@ -135,7 +135,7 @@ end;
   @note: Works correctly only for 8-bit AnsiStrings. The order of characters
          is ascending by ordinal value (0..255). May include control characters.
 [==============================================================================}
-function TStringHelper.CharSet: TCharArray; overload;
+function TStringHelper.CharSet: TCharArray; overload; cdecl;
 var
   i, l: Integer;
   c: TBooleanArray;
@@ -158,7 +158,7 @@ end;
   @action: Returns an array containing all unique characters present in the string.
   @note: Based on TDictionary
 [==============================================================================}
-function TStringHelper.DistinctCharacters: TCharArray; overload;
+function TStringHelper.DistinctCharacters: TCharArray; overload; cdecl;
 var
   s: set of Byte;
   i, c: Integer;
@@ -181,7 +181,7 @@ end;
   @note: Characters are deduplicated using a byte-level set and returned in
          ascending ordinal (0..255) order.
 [==============================================================================}
-function TStringHelper.DistinctChars: TCharArray; overload;
+function TStringHelper.DistinctChars: TCharArray; overload; cdecl;
 var
   b: set of Byte;
   i, c: Integer;
@@ -205,7 +205,7 @@ end;
   @action: Returns indexes of string as TIntegerArray.
   @note: With empty string this function returns as []!
 [==============================================================================}
-function TStringHelper.IDs: TIntegerArray; overload;
+function TStringHelper.IDs: TIntegerArray; overload; cdecl;
 var
   r: TRange;
 begin
@@ -222,7 +222,7 @@ end;
   @action: Returns indexes of string as TCharArray.
   @note: Unsafe method without failsafes, use with care!
 [==============================================================================}
-function TStringHelper.IDs(const ID: TIntegerArray): TCharArray; overload;
+function TStringHelper.IDs(const ID: TIntegerArray): TCharArray; overload; cdecl;
 var
   i: Integer;
 begin
@@ -236,7 +236,7 @@ end;
   @action: Returns indexes of string as TCharArray. Replaces character of str from IDs with item.
   @note: Unsafe method without failsafes, use with care!
 [==============================================================================}
-function TStringHelper.IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload;
+function TStringHelper.IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload; cdecl;
 var
   i: Integer;
 begin
@@ -250,7 +250,7 @@ end;
   @action: Returns indexes of string as TCharArray. Replaces character of str from IDs with item.
   @note: Unsafe method without failsafes, use with care!
 [==============================================================================}
-function TStringHelper.IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload;
+function TStringHelper.IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -266,7 +266,7 @@ end;
   @note: Implements a simple O(n²) uniqueness check by scanning previously collected characters.
          The result array is trimmed to the number of unique characters.
 [==============================================================================}
-function TStringHelper.SetOfCharacters: TCharArray; overload;
+function TStringHelper.SetOfCharacters: TCharArray; overload; cdecl;
 var
   i, j, l: Integer;
   f: Boolean;
@@ -294,7 +294,7 @@ end;
   @note: Uses a slightly different control flow from SetOfCharacters,
          starting with the first character pre-initialized. Runtime characteristics are equivalent (O(n²)).
 [==============================================================================}
-function TStringHelper.SetOfChars: TCharArray; overload;
+function TStringHelper.SetOfChars: TCharArray; overload; cdecl;
 var
   i, j, h: Integer;
 begin
@@ -319,7 +319,7 @@ end;
          parameter) before duplicate removal, so the result is ordered by
          character code, not by the original string's order.
 [==============================================================================}
-function TStringHelper.UniqueCharacters(const oAscending: Boolean = True): TCharArray; overload;
+function TStringHelper.UniqueCharacters(const oAscending: Boolean = True): TCharArray; overload; cdecl;
 begin
   Result := Self.Charify;
   if (Result.Size > 1) then
@@ -337,7 +337,7 @@ end;
          so it is less efficient for long strings. Suitable for small strings
          or when character order matters.
 [==============================================================================}
-function TStringHelper.UniqueChars: TCharArray; overload;
+function TStringHelper.UniqueChars: TCharArray; overload; cdecl;
 var
   i, j, l: Integer;
   f: Boolean;

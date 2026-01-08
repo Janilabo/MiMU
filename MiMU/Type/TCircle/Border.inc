@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
-function Border: TPointArray; 
-function BorderPoints(const count: Integer): TPointArray;
+function Border: TPointArray; cdecl;
+function BorderPoints(const count: Integer): TPointArray cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function BorderPoints(const count: Integer): TPointArray;
  @action: Returns border points of TCircle.
  @note: None.
 [==============================================================================}
-function TCircle.Border: TPointArray;
+function TCircle.Border: TPointArray; cdecl;
 var
   d: Integer;
   c: TPoint;
@@ -47,7 +47,7 @@ end;
  @action: Returns border points of TCircle.
  @note: Supports custom count.
 [==============================================================================}
-function TCircle.BorderPoints(const count: Integer): TPointArray;
+function TCircle.BorderPoints(const count: Integer): TPointArray; cdecl;
 var
   i: Integer;
   a: Double;

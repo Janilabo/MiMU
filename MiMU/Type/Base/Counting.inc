@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function AppearsIn(const target: MArray): Integer; overload;
-function CountIn(const target: MArray): Integer; overload;
+function AppearsIn(const target: MArray): Integer; overload; cdecl;
+function CountIn(const target: MArray): Integer; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,7 +17,7 @@ function CountIn(const target: MArray): Integer; overload;
          This implementation is more complex than CountIn and is primarily intended for
          performance-critical scenarios where profiling justifies its use.
 [==============================================================================}
-function MTypeHelper.AppearsIn(const target: MArray): Integer; overload;
+function MTypeHelper.AppearsIn(const target: MArray): Integer; overload; cdecl;
 var
   R: TRange;
 begin
@@ -45,7 +45,7 @@ end;
          efficient; it should be preferred unless profiling indicates a need for the
          optimized AppearsIn implementation.
 [==============================================================================}
-function MTypeHelper.CountIn(const target: MArray): Integer; overload;
+function MTypeHelper.CountIn(const target: MArray): Integer; overload; cdecl;
 var
   i: Integer;
 begin

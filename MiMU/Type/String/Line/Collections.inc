@@ -1,17 +1,17 @@
 {$IFDEF HELPERS}
-function LineArr: TStringArray; overload;
-function LineArray: TStringArray; overload;
-function Lined: TStringArray; overload;
-function LineList: TStringArray; overload;
-function Lines: TStringArray; overload;
-function LinesArr: TStringArray; overload;
-function LinesArray: TStringArray; overload;
-function LinesEx(const lineBreak: string): TStringArray; overload;
-function LinesEx(const lineBreak: TStringArray): TStringArray; overload;
-function LinesEx: TStringArray; overload;
-function LinesList: TStringArray; overload;
-function LinesNormalized(const newLine: string = sLineBreak): string; overload;
-function LinesStr(const lineRange: TRange): string; overload;
+function LineArr: TStringArray; overload; cdecl;
+function LineArray: TStringArray; overload; cdecl;
+function Lined: TStringArray; overload; cdecl;
+function LineList: TStringArray; overload; cdecl;
+function Lines: TStringArray; overload; cdecl;
+function LinesArr: TStringArray; overload; cdecl;
+function LinesArray: TStringArray; overload; cdecl;
+function LinesEx(const lineBreak: string): TStringArray; overload; cdecl;
+function LinesEx(const lineBreak: TStringArray): TStringArray; overload; cdecl;
+function LinesEx: TStringArray; overload; cdecl;
+function LinesList: TStringArray; overload; cdecl;
+function LinesNormalized(const newLine: string = sLineBreak): string; overload; cdecl;
+function LinesStr(const lineRange: TRange): string; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -31,7 +31,7 @@ function LinesStr(const lineRange: TRange): string; overload;
     - This approach avoids pre-counting lines but may incur slight overhead
       from repeated array resizing when the number of lines is large.
 [==============================================================================}
-function TStringHelper.LineArr: TStringArray; overload;
+function TStringHelper.LineArr: TStringArray; overload; cdecl;
 var
   P, S, E: PChar;
 begin
@@ -78,7 +78,7 @@ end;
     - Each line is **non-overlapping**; line endings are not included in the resulting
       strings.
 [==============================================================================}
-function TStringHelper.LineArray: TStringArray; overload;
+function TStringHelper.LineArray: TStringArray; overload; cdecl;
 var
   P, S, E: PChar;
   R: Integer;
@@ -140,7 +140,7 @@ end;
     - The function performs a single forward scan of the string and allocates
       the result array once using LineAmount.
 [==============================================================================}
-function TStringHelper.Lined: TStringArray; overload;
+function TStringHelper.Lined: TStringArray; overload; cdecl;
 var
   r, i, l, s: Integer;
 begin
@@ -172,7 +172,7 @@ end;
             will be ignored. That is, an "empty last line" will not appear
             in the resulting array when using this TStringList-based version.
 [==============================================================================}
-function TStringHelper.LineList: TStringArray; overload;
+function TStringHelper.LineList: TStringArray; overload; cdecl;
 var
   s: TStringList;
   i: Integer;
@@ -202,7 +202,7 @@ end;
     - The line-ending characters are **not included** in the returned lines.
     - This implementation uses pointer arithmetic for efficiency in Free Pascal.
 [==============================================================================}
-function TStringHelper.Lines: TStringArray; overload;
+function TStringHelper.Lines: TStringArray; overload; cdecl;
 var
   P, S, E: PChar;
   R: Integer;
@@ -262,7 +262,7 @@ end;
     - Uses pointer arithmetic and indexing internally; the resulting array size
       is trimmed to the actual number of lines.
 [==============================================================================}
-function TStringHelper.LinesArr: TStringArray; overload;
+function TStringHelper.LinesArr: TStringArray; overload; cdecl;
 var
   L, I, S, R: Integer;
 begin
@@ -301,7 +301,7 @@ end;
     - The function dynamically appends lines to the result array during iteration.
     - Works correctly for empty strings (returns an empty array).
 [==============================================================================}
-function TStringHelper.LinesArray: TStringArray;
+function TStringHelper.LinesArray: TStringArray; cdecl;
 var
   S, P, L: Integer;
 begin
@@ -328,7 +328,7 @@ end;
   @note: Returns an empty array if the string is empty or the delimiter
          is empty. Preserves the order of lines.
 [==============================================================================}
-function TStringHelper.LinesEx(const lineBreak: string): TStringArray; overload;
+function TStringHelper.LinesEx(const lineBreak: string): TStringArray; overload; cdecl;
 begin
   if ((Self = '') or (Length(lineBreak) = 0)) then
     Exit([]);
@@ -342,7 +342,7 @@ end;
   @note: Returns an empty array if the string is empty or the delimiter
          array is empty. Preserves the order of lines.
 [==============================================================================}
-function TStringHelper.LinesEx(const lineBreak: TStringArray): TStringArray; overload;
+function TStringHelper.LinesEx(const lineBreak: TStringArray): TStringArray; overload; cdecl;
 begin
   if ((Self = '') or (lineBreak.Size = 0)) then
     Exit([]);
@@ -355,7 +355,7 @@ end;
            (#13#10, #13, #10) as delimiters.
   @note: Returns an empty array if the string is empty.
 [==============================================================================}
-function TStringHelper.LinesEx: TStringArray; overload;
+function TStringHelper.LinesEx: TStringArray; overload; cdecl;
 begin
   Result := Self.LinesEx([#13#10, #13, #10]);
 end;
@@ -370,7 +370,7 @@ end;
             This version adds an empty string at the end if the original
             string ends with a line break.
 [==============================================================================}
-function TStringHelper.LinesList: TStringArray; overload;
+function TStringHelper.LinesList: TStringArray; overload; cdecl;
 var
   s: TStringList;
   i, l: Integer;
@@ -407,7 +407,7 @@ end;
       line terminators.
     - An empty string input returns an empty string.
 [==============================================================================}
-function TStringHelper.LinesNormalized(const newLine: string = sLineBreak): string; overload;
+function TStringHelper.LinesNormalized(const newLine: string = sLineBreak): string; overload; cdecl;
 var
   S, E: PChar;
   L, N, R, i: Integer;
@@ -464,7 +464,7 @@ end;
     - Line-ending characters outside the specified range are not included.
     - The original text within the specified line range is preserved verbatim.
 [==============================================================================}
-function TStringHelper.LinesStr(const lineRange: TRange): string; overload;
+function TStringHelper.LinesStr(const lineRange: TRange): string; overload; cdecl;
 var
   S, E: Integer;
 begin

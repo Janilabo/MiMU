@@ -1,9 +1,9 @@
 {$IFDEF FUNCTIONS}
-function iSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
-function iSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
+function iSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload; cdecl;
+function iSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload; cdecl;
 
-function XORSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
-function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
+function XORSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload; cdecl;
+function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -16,7 +16,7 @@ function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolea
          Returns True if a swap occurred, otherwise False.
          Arithmetic swap may overflow if A + B exceeds Integer range.
 [==============================================================================}
-function iSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
+function iSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload; cdecl;
 begin
   Result := ((oAscending and (A > B)) or ((not oAscending) and (A < B)));
   if Result then
@@ -36,7 +36,7 @@ end;
          Returns True if at least one swap occurred.
          Arithmetic swap may overflow if intermediate sums exceed Integer range.
 [==============================================================================}
-function iSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
+function iSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload; cdecl;
 begin
   Result := ((Integer(iSort(A, B, oAscending)) + Integer(iSort(A, C, oAscending)) + Integer(iSort(B, C, oAscending))) > 0);
 end;
@@ -49,7 +49,7 @@ end;
          Returns True if a swap occurred, otherwise False.
          XOR swap assumes A and B refer to distinct storage locations.
 [==============================================================================}
-function XORSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
+function XORSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload; cdecl;
 begin
   Result := (oAscending and (A > B)) or ((not oAscending) and (A < B));
   if Result then
@@ -69,7 +69,7 @@ end;
          Returns True if at least one swap occurred.
          Order is ascending by default, descending if oAscending is False.
 [==============================================================================}
-function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload;
+function XORSort(var A, B, C: Integer; const oAscending: Boolean = True): Boolean; overload; cdecl;
 begin
   Result := ((Integer(XORSort(A, B, oAscending)) + Integer(XORSort(A, C, oAscending)) + Integer(XORSort(B, C, oAscending))) > 0);
 end;

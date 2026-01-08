@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
-function Modified(const mStart, mStop: Integer): TRange; overload;
-function Modify(const mStart, mStop: Integer): TRange; overload;
+function Modified(const mStart, mStop: Integer): TRange; overload; cdecl;
+function Modify(const mStart, mStop: Integer): TRange; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function Modify(const mStart, mStop: Integer): TRange; overload;
   @note:   Functional version of Modify. Useful for expression-style or
            fluent programming where immutability is preferred.
 [==============================================================================}
-function TRange.Modified(const mStart, mStop: Integer): TRange; overload;
+function TRange.Modified(const mStart, mStop: Integer): TRange; overload; cdecl;
 begin
   Result.start := (Self.start + mStart);
   Result.stop := (Self.stop + mStop);
@@ -24,7 +24,7 @@ end;
   @note:   Used internally by operations like Contract or Expand for direct bound
            adjustment while preserving the previous state.
 [==============================================================================}
-function TRange.Modify(const mStart, mStop: Integer): TRange; overload;
+function TRange.Modify(const mStart, mStop: Integer): TRange; overload; cdecl;
 begin
   Result := Self;
   Self.start := (Self.start + mStart);

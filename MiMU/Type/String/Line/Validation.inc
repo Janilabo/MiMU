@@ -1,11 +1,11 @@
 {$IFDEF HELPERS}
-function LineClamp(const lineNumber: Integer): Integer; overload;
-function LineExisting(const lineNumber: Integer): Boolean; overload;
-function LineExists(const lineNumber: Integer): Boolean; overload;
-function LineExtant(const lineNumber: Integer): Boolean; overload;
-function LineFixed(const lineNumber: Integer): Integer; overload;
-function LineIsEmpty(const lineNumber: Integer): Boolean; overload;
-function LineValid(const lineNumber: Integer): Boolean; overload;
+function LineClamp(const lineNumber: Integer): Integer; overload; cdecl;
+function LineExisting(const lineNumber: Integer): Boolean; overload; cdecl;
+function LineExists(const lineNumber: Integer): Boolean; overload; cdecl;
+function LineExtant(const lineNumber: Integer): Boolean; overload; cdecl;
+function LineFixed(const lineNumber: Integer): Integer; overload; cdecl;
+function LineIsEmpty(const lineNumber: Integer): Boolean; overload; cdecl;
+function LineValid(const lineNumber: Integer): Boolean; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -20,7 +20,7 @@ function LineValid(const lineNumber: Integer): Boolean; overload;
     - 0 indicates an invalid or non-existent line.
     - Useful for query functions that need to signal invalid lines.
 [==============================================================================}
-function TStringHelper.LineClamp(const lineNumber: Integer): Integer; overload;
+function TStringHelper.LineClamp(const lineNumber: Integer): Integer; overload; cdecl;
 begin
   if (lineNumber < 1) then
     Exit(0);
@@ -44,7 +44,7 @@ end;
         * Exits False when remaining characters cannot produce enough lines.
     - Runs in O(n) worst case, often much faster in practice.
 [==============================================================================}
-function TStringHelper.LineExisting(const lineNumber: Integer): Boolean; overload;
+function TStringHelper.LineExisting(const lineNumber: Integer): Boolean; overload; cdecl;
 var
   i, l, c, n, r: Integer;
 begin
@@ -86,7 +86,7 @@ end;
     - Returns True if the requested line exists, False otherwise.
     - Efficient for large strings; does not count all lines.
 [==============================================================================}
-function TStringHelper.LineExists(const lineNumber: Integer): Boolean; overload;
+function TStringHelper.LineExists(const lineNumber: Integer): Boolean; overload; cdecl;
 var
   i, l, c: Integer;
 begin
@@ -123,7 +123,7 @@ end;
     - Line breaks are recognized as LF (#10), CR (#13), and CRLF (#13#10),
       with CRLF treated as a single line break.
 [==============================================================================}
-function TStringHelper.LineExtant(const lineNumber: Integer): Boolean; overload;
+function TStringHelper.LineExtant(const lineNumber: Integer): Boolean; overload; cdecl;
 begin
   Result := ((lineNumber > 0) and (Self.LineCountUpTo(lineNumber) >= lineNumber));
 end;
@@ -139,7 +139,7 @@ end;
     - Never returns 0; always returns a valid line.
     - Useful for editor-like functions where a valid line must always be returned.
 [==============================================================================}
-function TStringHelper.LineFixed(const lineNumber: Integer): Integer; overload;
+function TStringHelper.LineFixed(const lineNumber: Integer): Integer; overload; cdecl;
 begin
   if (lineNumber < 1) then
     Exit(1);
@@ -160,7 +160,7 @@ end;
       whitespace characters; otherwise, returns False.
     - If the specified line does not exist, the function returns True.
 [==============================================================================}
-function TStringHelper.LineIsEmpty(const lineNumber: Integer): Boolean; overload;
+function TStringHelper.LineIsEmpty(const lineNumber: Integer): Boolean; overload; cdecl;
 begin
   Result := (SysUtils.Trim(Self.LineStr(lineNumber)) = '');
 end;
@@ -174,7 +174,7 @@ end;
     - Returns True if 1 <= LineNumber <= LineCount.
     - Returns False if LineNumber < 1 or LineNumber > LineCount.
 [==============================================================================}
-function TStringHelper.LineValid(const lineNumber: Integer): Boolean; overload;
+function TStringHelper.LineValid(const lineNumber: Integer): Boolean; overload; cdecl;
 begin
   Result := ((lineNumber >= 1) and (lineNumber <= Self.LineCount));
 end; 

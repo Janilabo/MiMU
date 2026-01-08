@@ -1,8 +1,8 @@
 {$IFDEF HELPERS}
-function DivisibleBy(const value: Integer): Boolean;
-function Divisors: TIntegerArray;
-function Factors: TIntegerArray;
-function MultipleOf(const value: Integer): Boolean;
+function DivisibleBy(const value: Integer): Boolean; cdecl;
+function Divisors: TIntegerArray; cdecl;
+function Factors: TIntegerArray; cdecl;
+function MultipleOf(const value: Integer): Boolean; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -19,7 +19,7 @@ function MultipleOf(const value: Integer): Boolean;
     - Works correctly for positive and negative integers.
     - Uses a remainder-free equality test rather than `mod`.
 [==============================================================================}
-function TIntegerHelper.DivisibleBy(const value: Integer): Boolean;
+function TIntegerHelper.DivisibleBy(const value: Integer): Boolean; cdecl;
 begin
   Result := (((value = 1) or (value = -1)) or ((value <> 0) and ((Self - (Self div value) * value) = 0)));
 end;
@@ -33,7 +33,7 @@ end;
     - The resulting array contains only positive numbers and is in ascending order.
     - May be less efficient for large numbers compared to a square-root optimized method.
 [==============================================================================}
-function TIntegerHelper.Divisors: TIntegerArray;
+function TIntegerHelper.Divisors: TIntegerArray; cdecl;
 var
   a, i, r: Integer;
 begin
@@ -60,7 +60,7 @@ end;
     - Resulting array is sorted in ascending order using QuickSort.
     - More efficient than naive Divisors method for large numbers.
 [==============================================================================}
-function TIntegerHelper.Factors: TIntegerArray;
+function TIntegerHelper.Factors: TIntegerArray; cdecl;
 var
   i, r, a: Integer;
 begin
@@ -93,7 +93,7 @@ end;
     - Works correctly with signed operands.
     - Uses the standard modulus operator for remainder testing.
 [==============================================================================}
-function TIntegerHelper.MultipleOf(const value: Integer): Boolean;
+function TIntegerHelper.MultipleOf(const value: Integer): Boolean; cdecl;
 begin
   Result := (((value = 1) or (value = -1)) or ((value <> 0) and ((Self mod value) = 0)));
 end;

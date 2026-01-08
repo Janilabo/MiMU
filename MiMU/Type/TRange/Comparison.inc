@@ -1,7 +1,7 @@
 {$IFDEF METHODS}
-function CompareSize(const target: TRange): Integer;
-class function CompareSizeAscending(const A, B: TRange): Integer; static;
-class function CompareSizeDescending(const A, B: TRange): Integer; static;
+function CompareSize(const target: TRange): Integer; cdecl;
+class function CompareSizeAscending(const A, B: TRange): Integer; cdecl; static;
+class function CompareSizeDescending(const A, B: TRange): Integer; cdecl; static;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -12,7 +12,7 @@ class function CompareSizeDescending(const A, B: TRange): Integer; static;
            and zero if they are equal in size.
   @note: This is an instance method; it requires a TRange object to call.
 [==============================================================================}
-function TRange.CompareSize(const target: TRange): Integer;
+function TRange.CompareSize(const target: TRange): Integer; cdecl;
 begin
   Result := (Self.Size - target.Size);
 end;
@@ -25,7 +25,7 @@ end;
   @note: Declared as a static class function so it can be passed directly
          to a procedural type such as TCompare<TRange>.
 [==============================================================================}
-class function TRange.CompareSizeAscending(const A, B: TRange): Integer;
+class function TRange.CompareSizeAscending(const A, B: TRange): Integer; cdecl;
 begin
   Result := A.CompareSize(B);
 end;
@@ -38,7 +38,7 @@ end;
   @note: Declared as a static class function so it can be passed directly
          to a procedural type such as TCompare<TRange>.
 [==============================================================================}
-class function TRange.CompareSizeDescending(const A, B: TRange): Integer;
+class function TRange.CompareSizeDescending(const A, B: TRange): Integer; cdecl;
 begin
   Result := B.CompareSize(A);
 end;

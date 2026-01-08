@@ -1,29 +1,29 @@
 {$IFDEF METHODS}
-function Area: Integer;
-function Capacity: Integer;
-function Count: Integer;
-function Coverage: Integer; overload;
-function Deficit: Integer; 
-function Delta: Integer;
-function Diameter: Integer; overload;
-function Diff: Integer;
-function Difference: Integer;
-function Dist: Integer;
-function Extent: Integer; overload;
-function Length: Integer; overload;
-function Magnitude: Integer;
-function Population: Integer; overload;
-function Rad: Integer; overload;
-function Radiar: Integer; overload;
-function Radius: Integer; overload;
-function Reach: Integer; overload;
-function Span: Integer;
-function Size: Integer; overload; 
-function Size(var minVal, maxVal: Integer): Integer; overload; 
-function Sized: Integer; overload;
-function Sum: Int64; 
-function Summation: Int64;
-function Total: Int64;
+function Area: Integer; cdecl;
+function Capacity: Integer; cdecl;
+function Count: Integer; cdecl;
+function Coverage: Integer; overload; cdecl;
+function Deficit: Integer; cdecl;
+function Delta: Integer; cdecl;
+function Diameter: Integer; overload; cdecl;
+function Diff: Integer; cdecl;
+function Difference: Integer; cdecl;
+function Dist: Integer; cdecl;
+function Extent: Integer; overload; cdecl;
+function Length: Integer; overload; cdecl;
+function Magnitude: Integer; cdecl;
+function Population: Integer; overload; cdecl;
+function Rad: Integer; overload; cdecl;
+function Radiar: Integer; overload; cdecl;
+function Radius: Integer; overload; cdecl;
+function Reach: Integer; overload; cdecl;
+function Span: Integer; cdecl;
+function Size: Integer; overload; cdecl; 
+function Size(var minVal, maxVal: Integer): Integer; overload; cdecl; 
+function Sized: Integer; overload; cdecl;
+function Sum: Int64; cdecl;
+function Summation: Int64; cdecl;
+function Total: Int64; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -32,7 +32,7 @@ function Total: Int64;
   @action: Returns area of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Area: Integer;
+function TRange.Area: Integer; cdecl;
 begin
   if (Self.start > Self.stop) then
     Result := ((Self.start - Self.stop) + 1)
@@ -45,7 +45,7 @@ end;
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Capacity: Integer;
+function TRange.Capacity: Integer; cdecl;
 begin
   Result := (IfThen(Self.Descending, (Self.start - Self.stop), (Self.stop - Self.start)) + 1);
 end;
@@ -55,7 +55,7 @@ end;
   @action: Returns count values in the given range.
   @note: None.
 [==============================================================================}
-function TRange.Count: Integer;
+function TRange.Count: Integer; cdecl;
 begin
   Result := ((Max(Self.start, Self.stop) - Min(Self.start, Self.stop)) + 1);
 end;
@@ -65,7 +65,7 @@ end;
   @action: Returns the size of TRange.
   @note: Alternative.
 [==============================================================================}
-function TRange.Coverage: Integer; overload;
+function TRange.Coverage: Integer; overload; cdecl;
 begin
   case Self.start.Compare(Self.stop) of
     0: Result := 1;
@@ -80,7 +80,7 @@ end;
   @note: Computed as Min(Start, Stop) - Max(Start, Stop).
          Always ≤ 0. Ignores orientation; useful when a negative “shortfall” value is needed.
 [==============================================================================}
-function TRange.Deficit: Integer;
+function TRange.Deficit: Integer; cdecl;
 begin
   Result := (Min(Self.start, Self.stop) - Max(Self.start, Self.stop));
 end;
@@ -90,7 +90,7 @@ end;
   @action: Delta returns the signed difference from start to stop; the sign indicates the range’s orientation.
   @note: None.
 [==============================================================================}
-function TRange.Delta: Integer; inline;
+function TRange.Delta: Integer; cdecl; inline;
 begin
   Result := (Self.stop - Self.start);
 end;
@@ -100,7 +100,7 @@ end;
   @action: Returns area of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Diameter: Integer; overload;
+function TRange.Diameter: Integer; overload; cdecl;
 begin
   Result := ((Self.stop - Self.start) + 1);
   if (Self.stop < Self.start) then
@@ -114,7 +114,7 @@ end;
   @note: The result is always non-negative. Equivalent to Abs(stop - start).
          Does not include endpoints; useful when only the gap between values matters.
 [==============================================================================}
-function TRange.Diff: Integer;
+function TRange.Diff: Integer; cdecl;
 begin
   Result := (Max(Self.start, Self.stop) - Min(Self.start, Self.stop));
 end;
@@ -127,7 +127,7 @@ end;
          you only care about the magnitude of the gap, not whether the range
          is ascending or descending.
 [==============================================================================}
-function TRange.Difference: Integer;
+function TRange.Difference: Integer; cdecl;
 begin
   Result := Abs(Self.stop - Self.start);
 end;
@@ -139,7 +139,7 @@ end;
   @note: Same as Distance but written using IfThen for brevity. Still exclusive
          of endpoints and sensitive to the Descending flag.
 [==============================================================================}
-function TRange.Dist: Integer;
+function TRange.Dist: Integer; cdecl;
 begin
   Result := IfThen(Self.Descending, (Self.start - Self.stop), (Self.stop - Self.start));
 end;
@@ -149,7 +149,7 @@ end;
   @action: Returns the size of TRange.
   @note: Alternative.
 [==============================================================================}
-function TRange.Extent: Integer; overload;
+function TRange.Extent: Integer; overload; cdecl;
 begin
   Result := Succ(Max(Self.start, Self.stop) - Min(Self.start, Self.stop));
 end;
@@ -159,7 +159,7 @@ end;
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Length: Integer; overload;
+function TRange.Length: Integer; overload; cdecl;
 begin
   if (Self.start = Self.stop) then
     Result := 1
@@ -175,7 +175,7 @@ end;
   @note: Computed as the absolute value of Delta (Abs(Stop - Start)).
          Always ≥ 0, regardless of whether the range is ascending or descending.
 [==============================================================================}
-function TRange.Magnitude: Integer;
+function TRange.Magnitude: Integer; cdecl;
 begin
   Result := Abs(Self.Delta);
 end;
@@ -185,7 +185,7 @@ end;
   @action: Returns the size of TRange.
   @note: Alternative.
 [==============================================================================}
-function TRange.Population: Integer; overload;
+function TRange.Population: Integer; overload; cdecl;
 begin
   Result := ((Self.MinMax.stop - Self.MinMax.start) + 1);
 end;
@@ -195,7 +195,7 @@ end;
   @action: Returns the half-length (radius) of the range as an integer value.
   @note: Computed as Abs(Stop - Start) shr 1; equivalent to (|Stop - Start| div 2).
 [==============================================================================}
-function TRange.Rad: Integer; overload;
+function TRange.Rad: Integer; overload; cdecl;
 begin
   Result := (Abs(Self.stop - Self.start) shr 1);
 end;
@@ -206,7 +206,7 @@ end;
   @note: Computed as Round(Abs(Stop - Start) * 0.5). Useful when a midpoint-to-edge distance is needed
          and rounding is preferred over truncation. Order of Start and Stop does not matter.
 [==============================================================================}
-function TRange.Radiar: Integer; overload;
+function TRange.Radiar: Integer; overload; cdecl;
 begin
   Result := Round(Abs(Self.stop - Self.start) * 0.5);
 end;
@@ -216,7 +216,7 @@ end;
   @action: Returns half the total span (distance) between Start and Stop.
   @note: Equivalent to (RangeLength / 2); independent of which value is greater.
 [==============================================================================}
-function TRange.Radius: Integer; overload;
+function TRange.Radius: Integer; overload; cdecl;
 begin
   Result := ((Self.Maximum - Self.Minimum) div 2);
 end;
@@ -226,7 +226,7 @@ end;
   @action: Returns the size of TRange.
   @note: Alternative.
 [==============================================================================}
-function TRange.Reach: Integer; overload;
+function TRange.Reach: Integer; overload; cdecl;
 begin
   Result := (Self.stop - Self.start);
   if (Result < 0) then
@@ -239,7 +239,7 @@ end;
   @action: Returns size of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Size: Integer; overload;
+function TRange.Size: Integer; overload; cdecl;
 begin
   Result := (Abs(Self.stop - Self.start) + 1);
 end;
@@ -249,7 +249,7 @@ end;
   @action: Returns size of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Size(var minVal, maxVal: Integer): Integer; overload;
+function TRange.Size(var minVal, maxVal: Integer): Integer; overload; cdecl;
 begin
   minVal := Min(Self.start, Self.stop);
   maxVal := Max(Self.start, Self.stop);
@@ -261,7 +261,7 @@ end;
   @action: Returns size of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Sized: Integer; overload;
+function TRange.Sized: Integer; overload; cdecl;
 begin
   Result := ((Self.Maximum - Self.Minimum) + 1);
 end;
@@ -271,7 +271,7 @@ end;
   @action: Returns span of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Span: Integer;
+function TRange.Span: Integer; cdecl;
 begin
   Result := Abs(Self.stop - Self.start);
 end;
@@ -281,7 +281,7 @@ end;
   @action: Returns the sum of all TRange values (start..stop)
   @note: None
 [==============================================================================}
-function TRange.Sum: Int64;
+function TRange.Sum: Int64; cdecl;
 var
   a, b: Int64;
 begin
@@ -295,7 +295,7 @@ end;
   @action: Returns the sum of all TRange values (start..stop)
   @note: None
 [==============================================================================}
-function TRange.Summation: Int64;
+function TRange.Summation: Int64; cdecl;
 var
   a, b, c, s, n: Int64;
 begin
@@ -314,7 +314,7 @@ end;
   @action: Returns the sum of all TRange values (start..stop)
   @note: None
 [==============================================================================}
-function TRange.Total: Int64;
+function TRange.Total: Int64; cdecl;
 begin
   if Self.Descending then
     Result := (((Int64(Self.start) * (Self.start + 1)) div 2) - ((Int64(Self.stop - 1) * Self.stop) div 2))

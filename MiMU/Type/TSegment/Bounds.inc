@@ -1,7 +1,7 @@
 {$IFDEF METHODS}
-function Boundaries: TBox;
-function Bounds: TBox;
-function Envelope: TBox;
+function Boundaries: TBox; cdecl;
+function Bounds: TBox; cdecl;
+function Envelope: TBox; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -10,7 +10,7 @@ function Envelope: TBox;
   @action: Returns the bounds of TSegment as TBox.
   @note: None.
 [==============================================================================}
-function TSegment.Boundaries: TBox;
+function TSegment.Boundaries: TBox; cdecl;
 begin
   with Self do
   Result := Box(IfThen((A.X < B.X), A.X, B.X), IfThen((A.Y < B.Y), A.Y, B.Y), IfThen((A.X > B.X), A.X, B.X), IfThen((A.Y > B.Y), A.Y, B.Y));
@@ -21,7 +21,7 @@ end;
   @action: Returns the bounds of TSegment as TBox.
   @note: None.
 [==============================================================================}
-function TSegment.Bounds: TBox;
+function TSegment.Bounds: TBox; cdecl;
 begin
   Result.Create(Min(Self.A.X, Self.B.X), Min(Self.A.Y, Self.B.Y), Max(Self.A.X, Self.B.X), Max(Self.A.Y, Self.B.Y));
 end;
@@ -31,7 +31,7 @@ end;
   @action: Returns the bounds of TSegment as TBox.
   @note: None.
 [==============================================================================}
-function TSegment.Envelope: TBox;
+function TSegment.Envelope: TBox; cdecl;
 begin
   case Bitify((Self.A.X < Self.B.X), (Self.A.Y < Self.B.Y)) of
     0: Result.Create(Self.B.X, Self.B.Y, Self.A.X, Self.A.Y);

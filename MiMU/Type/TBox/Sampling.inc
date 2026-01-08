@@ -1,10 +1,10 @@
 {$IFDEF METHODS}
-function Any: TPoint;
-function Mixed(const mixings: Integer = 1): TPointArray; 
-function Shake(const shakes: Integer = 1): TPointArray; 
-function Shuffle(const shuffles: Integer = 1): TPointArray;
-function Some: TPointArray; overload; 
-function Some(const amount: Integer): TPointArray; overload;
+function Any: TPoint; cdecl;
+function Mixed(const mixings: Integer = 1): TPointArray; cdecl;
+function Shake(const shakes: Integer = 1): TPointArray; cdecl;
+function Shuffle(const shuffles: Integer = 1): TPointArray; cdecl;
+function Some: TPointArray; overload; cdecl;
+function Some(const amount: Integer): TPointArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -13,7 +13,7 @@ function Some(const amount: Integer): TPointArray; overload;
   @action: Returns random TBox point.
   @note: None.
 [==============================================================================}
-function TBox.Any: TPoint;
+function TBox.Any: TPoint; cdecl;
 begin
   Result := Point((Self.X1 + Random(Self.Width)), (Self.X1 + Random(Self.Height)));
 end;
@@ -23,7 +23,7 @@ end;
   @action: Returns TBox randomly mixed as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Mixed(const mixings: Integer = 1): TPointArray;
+function TBox.Mixed(const mixings: Integer = 1): TPointArray; cdecl;
 var
   i, m: Integer;
 begin
@@ -39,7 +39,7 @@ end;
   @action: Returns TBox randomly shaked as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Shake(const shakes: Integer = 1): TPointArray;
+function TBox.Shake(const shakes: Integer = 1): TPointArray; cdecl;
 var
   i, s: Integer;
 begin
@@ -55,7 +55,7 @@ end;
   @action: Returns TBox randomly shuffled as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Shuffle(const shuffles: Integer = 1): TPointArray;
+function TBox.Shuffle(const shuffles: Integer = 1): TPointArray; cdecl;
 var
   i, s: Integer;
 begin
@@ -71,7 +71,7 @@ end;
   @action: Returns random amount of random TBox points.
   @note: Does not return empty arrays.
 [==============================================================================}
-function TBox.Some: TPointArray; overload;
+function TBox.Some: TPointArray; overload; cdecl;
 begin
   Result := Copy(Self.Shuffle, 0, Max(Random(Self.Area + 1), 1));
 end;
@@ -81,7 +81,7 @@ end;
   @action: Returns random amount of random TBox points.
   @note: Does not return empty arrays.
 [==============================================================================}
-function TBox.Some(const amount: Integer): TPointArray; overload;
+function TBox.Some(const amount: Integer): TPointArray; overload; cdecl;
 begin
   Result := Copy(Self.Shuffle, 0, Max(1, Min(amount, Self.Area)));
 end;

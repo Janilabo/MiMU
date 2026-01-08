@@ -1,18 +1,18 @@
 {$IFDEF METHODS}
-function Clamp(const zone: TRange): TRange; overload; 
-function ClampMin(const minValue: Integer): TRange;
-function ClampMax(const maxValue: Integer): TRange;
-function Clip(const zone: TRange): TRange; 
-function ClipMax(const maxValue: Integer): TRange;
-function ClipMin(const minValue: Integer): TRange;
-function Ensure(const zone: TRange): Boolean; overload;
-function Ensured(const zone: TRange): TRange; overload;
-function Limit(const val: Integer): Integer;
-function MaxLimit(const val: Integer): Integer;
-function MinLimit(const val: Integer): Integer;
-function Restrict(const zone: TRange): Boolean;
-function RestrictMax(const maxValue: Integer): Boolean;
-function RestrictMin(const minValue: Integer): Boolean;
+function Clamp(const zone: TRange): TRange; overload; cdecl;
+function ClampMin(const minValue: Integer): TRange; cdecl;
+function ClampMax(const maxValue: Integer): TRange; cdecl;
+function Clip(const zone: TRange): TRange; cdecl;
+function ClipMax(const maxValue: Integer): TRange; cdecl;
+function ClipMin(const minValue: Integer): TRange; cdecl;
+function Ensure(const zone: TRange): Boolean; overload; cdecl;
+function Ensured(const zone: TRange): TRange; overload; cdecl;
+function Limit(const val: Integer): Integer; cdecl;
+function MaxLimit(const val: Integer): Integer; cdecl;
+function MinLimit(const val: Integer): Integer; cdecl;
+function Restrict(const zone: TRange): Boolean; cdecl;
+function RestrictMax(const maxValue: Integer): Boolean; cdecl;
+function RestrictMin(const minValue: Integer): Boolean; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -21,7 +21,7 @@ function RestrictMin(const minValue: Integer): Boolean;
   @action: Returns range clamped inside zone range.
   @note: Makes sure Result is range fitted in zone bounds.
 [==============================================================================}
-function TRange.Clamp(const zone: TRange): TRange;
+function TRange.Clamp(const zone: TRange): TRange; cdecl;
 var
   z: TRange;
 begin
@@ -46,7 +46,7 @@ end;
   @action: Returns range with start and stop with maximum value.
   @note: Makes sure neither start or stop is higher than maximum.
 [==============================================================================}
-function TRange.ClampMax(const maxValue: Integer): TRange;
+function TRange.ClampMax(const maxValue: Integer): TRange; cdecl;
 begin
   if (Self.start > maxValue) then
     Result.start := maxValue
@@ -63,7 +63,7 @@ end;
   @action: Returns range with start and stop with minimum value.
   @note: Makes sure neither start or stop is lower than minimum.
 [==============================================================================}
-function TRange.ClampMin(const minValue: Integer): TRange;
+function TRange.ClampMin(const minValue: Integer): TRange; cdecl;
 begin
   if (Self.start < minValue) then
     Result.start := minValue
@@ -80,7 +80,7 @@ end;
   @action: Ensures range start and stop stays within zone.
   @note: Alternative for TRange_Clamp.
 [==============================================================================}
-function TRange.Clip(const zone: TRange): TRange;
+function TRange.Clip(const zone: TRange): TRange; cdecl;
 begin
   Result.start := Max(zone.start, Min(Self.start, zone.stop));
   Result.stop := Min(zone.stop, Max(Self.stop, zone.start));
@@ -91,7 +91,7 @@ end;
   @action: Ensures range start and stop stays within maximum.
   @note: Alternative for TRange_ClampMax.
 [==============================================================================}
-function TRange.ClipMax(const maxValue: Integer): TRange;
+function TRange.ClipMax(const maxValue: Integer): TRange; cdecl;
 begin
   Result.start := Min(Self.start, maxValue);
   Result.stop := Min(Self.stop, maxValue);
@@ -102,7 +102,7 @@ end;
   @action: Ensures range start and stop stays within minimum.
   @note: Alternative for TRange_ClampMin.
 [==============================================================================}
-function TRange.ClipMin(const minValue: Integer): TRange;
+function TRange.ClipMin(const minValue: Integer): TRange; cdecl;
 begin
   Result.start := Max(Self.start, minValue);
   Result.stop := Max(Self.stop, minValue);
@@ -115,7 +115,7 @@ end;
          Returns True if Self was modified; False otherwise.
          Zone is normalized internally, so reversed zones are handled.
 [==============================================================================}
-function TRange.Ensure(const zone: TRange): Boolean; overload;
+function TRange.Ensure(const zone: TRange): Boolean; overload; cdecl;
 var
   s: TRange;
 begin
@@ -131,7 +131,7 @@ end;
   @note: Preserves the direction (start > stop) of the original range.
          Zone is normalized internally, so reversed zones are handled.
 [==============================================================================}
-function TRange.Ensured(const zone: TRange): TRange; overload;
+function TRange.Ensured(const zone: TRange): TRange; overload; cdecl;
 begin
   Result := zone.Normalize;
   Result.Create(Max(Result.start, Min(Self.start, Result.stop)), Min(Result.stop,  Max(Self.stop,  Result.start)));
@@ -145,7 +145,7 @@ end;
          Returns Max(start, stop) if val is above the range.
          Otherwise returns value itself.
 [==============================================================================}
-function TRange.Limit(const val: Integer): Integer;
+function TRange.Limit(const val: Integer): Integer; cdecl;
 var
   r: TRange;
 begin
@@ -166,7 +166,7 @@ end;
          Values below the range minimum are allowed.
          Useful when you only want to enforce an upper bound.
 [==============================================================================}
-function TRange.MaxLimit(const val: Integer): Integer;
+function TRange.MaxLimit(const val: Integer): Integer; cdecl;
 begin
   Result := Min(val, Max(Self.start, Self.stop));
 end;
@@ -178,7 +178,7 @@ end;
          Values above the range maximum are allowed.
          Useful when you only want to enforce a lower bound.
 [==============================================================================}
-function TRange.MinLimit(const val: Integer): Integer;
+function TRange.MinLimit(const val: Integer): Integer; cdecl;
 begin
   Result := Max(val, Min(Self.start, Self.stop));
 end;
@@ -188,7 +188,7 @@ end;
   @action: Ensures range start and stop stays within zone.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
-function TRange.Restrict(const zone: TRange): Boolean;
+function TRange.Restrict(const zone: TRange): Boolean; cdecl;
 var
   e: TRange;
 begin
@@ -203,7 +203,7 @@ end;
   @action: Ensures range start and stop stays within maximum.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
-function TRange.RestrictMax(const maxValue: Integer): Boolean;
+function TRange.RestrictMax(const maxValue: Integer): Boolean; cdecl;
 var
   e: TRange;
 begin
@@ -218,7 +218,7 @@ end;
   @action: Ensures range start and stop stays within minimum.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
-function TRange.RestrictMin(const minValue: Integer): Boolean;
+function TRange.RestrictMin(const minValue: Integer): Boolean; cdecl;
 var
   e: TRange;
 begin

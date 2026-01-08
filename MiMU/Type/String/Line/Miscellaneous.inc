@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function LineBreakArr: TStringArray; overload;
-function LineBreaks: TStringArray; overload;
+function LineBreakArr: TStringArray; overload; cdecl;
+function LineBreaks: TStringArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -24,7 +24,7 @@ function LineBreaks: TStringArray; overload;
     - The function performs a single forward scan and does not depend on
       LineCount or any other helper.
 [==============================================================================}
-function TStringHelper.LineBreakArr: TStringArray; overload;
+function TStringHelper.LineBreakArr: TStringArray; overload; cdecl;
 var
   C, E: PChar;
   L, S: Integer;
@@ -73,7 +73,7 @@ end;
     - The function performs a single forward scan and does not allocate
       temporary substrings.
 [==============================================================================}
-function TStringHelper.LineBreaks: TStringArray; overload;
+function TStringHelper.LineBreaks: TStringArray; overload; cdecl;
 var
   C, E: PChar;
   L, S: Integer;

@@ -1,12 +1,12 @@
 {$IFDEF METHODS}
-function Center: TPoint;
-function Frame(var fWidth, fHeight: Integer): TBox; overload;
-function Frame: TBox; overload;  
-function Horizontal: TRange; 
-class function Null(const value: Integer = -2147483648): TBox; overload; static;
-function Reserve: TPointArray; overload; 
-function Reserve(var aBox: TPointArray): Integer; overload;
-function Vertical: TRange;
+function Center: TPoint; cdecl;
+function Frame(var fWidth, fHeight: Integer): TBox; overload; cdecl;
+function Frame: TBox; overload; cdecl; 
+function Horizontal: TRange; cdecl;
+class function Null(const value: Integer = -2147483648): TBox; overload; cdecl; static;
+function Reserve: TPointArray; overload; cdecl;
+function Reserve(var aBox: TPointArray): Integer; overload; cdecl;
+function Vertical: TRange; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +15,7 @@ function Vertical: TRange;
   @action: Returns Center point from bx.
   @note: None.
 [==============================================================================}
-function TBox.Center: TPoint;
+function TBox.Center: TPoint; cdecl;
 begin
   Result.X := Round(Self.X1 + ((Self.Width - 1) div 2));
   Result.Y := Round(Self.Y1 + ((Self.Height - 1) div 2));
@@ -26,7 +26,7 @@ end;
   @action: Returns the frame of TBox 
   @note: Dimensional box of the TBox. Based on Width and Height.
 [==============================================================================}
-function TBox.Frame(var fWidth, fHeight: Integer): TBox; overload;
+function TBox.Frame(var fWidth, fHeight: Integer): TBox; overload; cdecl;
 begin
   fWidth := Self.Width;
   fHeight := Self.Height;
@@ -38,7 +38,7 @@ end;
   @action: Returns the frame of TBox 
   @note: Dimensional box of the TBox. Based on Width and Height.
 [==============================================================================}
-function TBox.Frame: TBox; overload;
+function TBox.Frame: TBox; overload; cdecl;
 begin
   Result := Box(0, 0, (Self.Width - 1), (Self.Height - 1));
 end;
@@ -48,7 +48,7 @@ end;
   @action: Returns bx.X1 and bx.X2 as TRange.
   @note: Horitonzal-axis.
 [==============================================================================}
-function TBox.Horizontal: TRange;
+function TBox.Horizontal: TRange; cdecl;
 begin
   Result.start := Self.X1;
   Result.stop := Self.X2;
@@ -64,7 +64,7 @@ end;
            from intersection operations. It provides a consistent marker for 
            "empty" boxes.
 [==============================================================================}
-class function TBox.Null(const value: Integer = -2147483648): TBox; overload;
+class function TBox.Null(const value: Integer = -2147483648): TBox; overload; cdecl;
 begin
   Result := Box(value, value, value, value);
 end;
@@ -74,7 +74,7 @@ end;
   Explanation: Reselve function for TBox.
   Example: None.
 [==============================================================================}
-function TBox.Reserve: TPointArray; overload;
+function TBox.Reserve: TPointArray; overload; cdecl;
 begin
   SetLength(Result, Self.Area);
 end;
@@ -85,7 +85,7 @@ end;
   @note: The array is preallocated with the correct length but is not filled 
          with values from X1,Y1..X2,Y2. Elements are default-initialized to 0,0.
 [==============================================================================}
-function TBox.Reserve(var aBox: TPointArray): Integer; overload;
+function TBox.Reserve(var aBox: TPointArray): Integer; overload; cdecl;
 begin
   Result := Self.Area;
   SetLength(aBox, Result);
@@ -96,7 +96,7 @@ end;
   @action: Returns bx.Y1 and bx.Y2 as TRange.
   @note: Vertical-axis.
 [==============================================================================}
-function TBox.Vertical: TRange;
+function TBox.Vertical: TRange; cdecl;
 begin
   Result.start := Self.Y1;
   Result.stop := Self.Y2;

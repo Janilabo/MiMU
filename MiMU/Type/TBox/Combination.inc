@@ -1,9 +1,9 @@
 {$IFDEF METHODS}
-function Envelope(const b: TBox): TBox;  
-function Union(const pt: TPoint): TBox; overload;
-function Union(const b: TBox): TBox; overload;
-function UnionX(const xCoord: Integer): TBox;
-function Uniony(const yCoord: Integer): TBox;
+function Envelope(const b: TBox): TBox; cdecl;
+function Union(const pt: TPoint): TBox; overload; cdecl;
+function Union(const b: TBox): TBox; overload; cdecl;
+function UnionX(const xCoord: Integer): TBox; cdecl;
+function Uniony(const yCoord: Integer): TBox; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -12,7 +12,7 @@ function Uniony(const yCoord: Integer): TBox;
   @action: Bounds 2 boxes (a and b) to 1 box.
   @note: Based on lowest / highest coordinate values.
 [==============================================================================}
-function TBox.Envelope(const b: TBox): TBox;
+function TBox.Envelope(const b: TBox): TBox; cdecl;
 begin
   Result.X1 := Min(Min(Self.X1, Self.X2), Min(b.X1, b.X2));
   Result.Y1 := Min(Min(Self.Y1, Self.Y2), Min(b.Y1, b.Y2));
@@ -25,7 +25,7 @@ end;
   Explanation: Returns the Self unioned with pt.
   @note: None.
 [==============================================================================}
-function TBox.Union(const pt: TPoint): TBox; overload;
+function TBox.Union(const pt: TPoint): TBox; overload; cdecl;
 begin
   Result := Self.UnionX(pt.X).UnionY(pt.Y);
 end;
@@ -35,7 +35,7 @@ end;
   @action: Returns union of a and b TBoxes
   @note: None
 [==============================================================================}
-function TBox.Union(const b: TBox): TBox; overload;
+function TBox.Union(const b: TBox): TBox; overload; cdecl;
 begin
   Result.X1 := Min(Self.X1, b.X1);
   Result.Y1 := Min(Self.Y1, b.Y1);
@@ -48,7 +48,7 @@ end;
   Explanation: Returns the TBox Self with X-value extended (if xCoord falls outside bounds)
   @note: None.
 [==============================================================================}
-function TBox.UnionX(const xCoord: Integer): TBox;
+function TBox.UnionX(const xCoord: Integer): TBox; cdecl;
 begin
   if (xCoord < Self.X1) then
     Result := Box(xCoord, Self.Y1, Self.X2, Self.Y2)
@@ -64,7 +64,7 @@ end;
   Explanation: Returns the TBox Self with Y-value extended (if yCoord falls outside bounds)
   @note: None.
 [==============================================================================}
-function TBox.UnionY(const yCoord: Integer): TBox;
+function TBox.UnionY(const yCoord: Integer): TBox; cdecl;
 begin
   if (yCoord < Self.Y1) then
     Result := Box(Self.X1, yCoord, Self.X2, Self.Y2)

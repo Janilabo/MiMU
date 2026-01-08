@@ -1,17 +1,17 @@
 {$IFDEF HELPERS}
-function BuiltWith(const blocks: TCharArray): Boolean;
-function BuiltWithout(const forbidden: TCharArray): Boolean;
-function Consists(const allowed: TCharArray): Boolean;
-function Contains(const s: string; const index: Integer = 1): Boolean;
-function ContainsAtLeast(const item: string; const limit: Integer): Boolean; overload;
-function ContainsAtMost(const item: string; const limit: Integer): Boolean; overload;
-function ContainsBetween(const item: string; const limit: TRange): Boolean; overload;
-function EndsWith(const s: string): Boolean;
-function FreeOf(const forbidden: TCharArray): Boolean;
-function Includes(const s: string; const index: Integer = 2147483647): Boolean;
-function MadeOf(const allowed: TCharArray): Boolean;
-function Pure(const allowed: TCharArray): Boolean;
-function StartsWith(const s: string): Boolean;
+function BuiltWith(const blocks: TCharArray): Boolean; cdecl;
+function BuiltWithout(const forbidden: TCharArray): Boolean; cdecl;
+function Consists(const allowed: TCharArray): Boolean; cdecl;
+function Contains(const s: string; const index: Integer = 1): Boolean; cdecl;
+function ContainsAtLeast(const item: string; const limit: Integer): Boolean; overload; cdecl;
+function ContainsAtMost(const item: string; const limit: Integer): Boolean; overload; cdecl;
+function ContainsBetween(const item: string; const limit: TRange): Boolean; overload; cdecl;
+function EndsWith(const s: string): Boolean; cdecl;
+function FreeOf(const forbidden: TCharArray): Boolean; cdecl;
+function Includes(const s: string; const index: Integer = 2147483647): Boolean; cdecl;
+function MadeOf(const allowed: TCharArray): Boolean; cdecl;
+function Pure(const allowed: TCharArray): Boolean; cdecl;
+function StartsWith(const s: string): Boolean; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -20,7 +20,7 @@ function StartsWith(const s: string): Boolean;
   @action: Returns true is string is built with blocks.
   @note: This function requires blocks array to be unique (no duplicates allowed for it).
 [==============================================================================}
-function TStringHelper.BuiltWith(const blocks: TCharArray): Boolean;
+function TStringHelper.BuiltWith(const blocks: TCharArray): Boolean; cdecl;
 var
   i, p: Integer;
   u: TBooleanArray;
@@ -46,7 +46,7 @@ end;
   @action: Checks if array arr does not have any forbidden items.
   @note: None.
 [==============================================================================}
-function TStringHelper.BuiltWithout(const forbidden: TCharArray): Boolean;
+function TStringHelper.BuiltWithout(const forbidden: TCharArray): Boolean; cdecl;
 var
   i, j: Integer;
 begin
@@ -63,7 +63,7 @@ end;
   @action: Returns true if str is made with only allowed characters.
   @note: None.
 [==============================================================================}
-function TStringHelper.Consists(const allowed: TCharArray): Boolean;
+function TStringHelper.Consists(const allowed: TCharArray): Boolean; cdecl;
 var
   i: Integer;
   m: TBooleanArray;
@@ -84,7 +84,7 @@ end;
   @action: Returns true if s can be found in str.
   @note: Starts search from index position.!
 [==============================================================================}
-function TStringHelper.Contains(const s: string; const index: Integer = 1): Boolean;
+function TStringHelper.Contains(const s: string; const index: Integer = 1): Boolean; cdecl;
 var
   i, l: Integer;
 begin
@@ -104,7 +104,7 @@ end;
     - Performs an early-exit optimization if remaining characters cannot reach the limit.
     - Uses 1-based indexing.
 [==============================================================================}
-function TStringHelper.ContainsAtLeast(const item: string; const limit: Integer): Boolean; overload;
+function TStringHelper.ContainsAtLeast(const item: string; const limit: Integer): Boolean; overload; cdecl;
 var
   i, c, r, l, s: Integer;
 begin
@@ -139,7 +139,7 @@ end;
     - Performs an early-exit optimization if remaining characters cannot exceed the limit.
     - Uses 1-based indexing.
 [==============================================================================}
-function TStringHelper.ContainsAtMost(const item: string; const limit: Integer): Boolean; overload;
+function TStringHelper.ContainsAtMost(const item: string; const limit: Integer): Boolean; overload; cdecl;
 var
   i, c, r, l, s: Integer;
 begin
@@ -175,7 +175,7 @@ end;
     - Uses 1-based indexing.
     - limit.Normalize ensures that limit.start <= limit.stop.
 [==============================================================================}
-function TStringHelper.ContainsBetween(const item: string; const limit: TRange): Boolean; overload;
+function TStringHelper.ContainsBetween(const item: string; const limit: TRange): Boolean; overload; cdecl;
 var
   i, c, r, l, s: Integer;
   n: TRange;
@@ -208,7 +208,7 @@ end;
   @action: Returns True if str ends with s.
   @note: None
 [==============================================================================}
-function TStringHelper.EndsWith(const s: string): Boolean;
+function TStringHelper.EndsWith(const s: string): Boolean; cdecl;
 var
   l, t: Integer;
 begin
@@ -222,7 +222,7 @@ end;
   @action: Returns true if str is built without forbidden characters.
   @note: None.
 [==============================================================================}
-function TStringHelper.FreeOf(const forbidden: TCharArray): Boolean;
+function TStringHelper.FreeOf(const forbidden: TCharArray): Boolean; cdecl;
 var
   i: Integer;
 begin
@@ -238,7 +238,7 @@ end;
   @action: Returns true if s can be found in str.
   @note: Starts backwards search from index position.!
 [==============================================================================}
-function TStringHelper.Includes(const s: string; const index: Integer = 2147483647): Boolean;
+function TStringHelper.Includes(const s: string; const index: Integer = 2147483647): Boolean; cdecl;
 var
   i, l: Integer;
 begin
@@ -254,7 +254,7 @@ end;
   @action: Returns true if str is made with only allowed characters.
   @note: None.
 [==============================================================================}
-function TStringHelper.MadeOf(const allowed: TCharArray): Boolean;
+function TStringHelper.MadeOf(const allowed: TCharArray): Boolean; cdecl;
 var
   i: Integer;
 begin
@@ -271,7 +271,7 @@ end;
   @action: Returns true if str is made with only allowed characters.
   @note: None.
 [==============================================================================}
-function TStringHelper.Pure(const allowed: TCharArray): Boolean;
+function TStringHelper.Pure(const allowed: TCharArray): Boolean; cdecl;
 begin
   Result := Self.Chars.Ordinals.Pure(allowed.Ordinals);
 end;
@@ -281,7 +281,7 @@ end;
   @action: Returns True if str starts with s.
   @note: None
 [==============================================================================}
-function TStringHelper.StartsWith(const s: string): Boolean;
+function TStringHelper.StartsWith(const s: string): Boolean; cdecl;
 begin
   Result := ((s <> '') and (Length(Self) >= Length(s)) and Self.At(s));
 end;

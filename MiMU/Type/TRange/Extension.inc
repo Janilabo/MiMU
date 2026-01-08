@@ -1,7 +1,7 @@
 {$IFDEF METHODS}
-function Absorb(const val: Integer): Boolean; overload;
-function Extend(const val: Integer): Boolean; 
-function Include(const val: Integer): TRange; overload;
+function Absorb(const val: Integer): Boolean; overload; cdecl;
+function Extend(const val: Integer): Boolean; cdecl;
+function Include(const val: Integer): TRange; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function Include(const val: Integer): TRange; overload;
   @note: If the value is already inside the range, the range remains unchanged.
          Returns true if value was added in.
 [==============================================================================}
-function TRange.Absorb(const val: Integer): Boolean; overload;
+function TRange.Absorb(const val: Integer): Boolean; overload; cdecl;
 var
   s: TRange;
 begin
@@ -38,7 +38,7 @@ end;
   @action: Returns true TRange is extended with val (val is not yet in range)
   @note: None.
 [==============================================================================}
-function TRange.Extend(const val: Integer): Boolean;
+function TRange.Extend(const val: Integer): Boolean; cdecl;
 begin
   case Self.Descending of
     True:
@@ -66,7 +66,7 @@ end;
   @action: Expands the range to include the given value while preserving ascending/descending order.
   @note: If the value is already inside the range, the range remains unchanged.
 [==============================================================================}
-function TRange.Include(const val: Integer): TRange; overload;
+function TRange.Include(const val: Integer): TRange; overload; cdecl;
 begin
   Result := Self;
   case Result.Ascending of

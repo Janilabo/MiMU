@@ -1,8 +1,8 @@
 {$IFDEF HELPERS}
-function Degrees: Double;
-function FixDegrees: Double;
-function FixRadians: Double;
-function Radians(const compass: Boolean = False): Double;
+function Degrees: Double; cdecl;
+function FixDegrees: Double; cdecl;
+function FixRadians: Double; cdecl;
+function Radians(const compass: Boolean = False): Double; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function Radians(const compass: Boolean = False): Double;
   @action: Converts Radians to Degrees.
   @note: None
 [==============================================================================} 
-function TDoubleHelper.Degrees: Double; 
+function TDoubleHelper.Degrees: Double; cdecl;
 var
   r: Double;
 begin
@@ -24,7 +24,7 @@ end;
   @action: 365 => 5 | 722 => 2 | 359.9 => 359.9 | 360 => 0
   @note: None
 [==============================================================================}
-function TDoubleHelper.FixDegrees: Double; 
+function TDoubleHelper.FixDegrees: Double; cdecl;
 var
   t: Integer;
 begin
@@ -42,7 +42,7 @@ end;
   @action: 365 => 5 | 722 => 2 | 359.9 => 359.9 | 360 => 0
   @note: None
 [==============================================================================}
-function TDoubleHelper.FixRadians: Double; 
+function TDoubleHelper.FixRadians: Double; cdecl;
 var
   r: Double;
 begin
@@ -55,7 +55,7 @@ end;
   @action: Converts Degrees or Compass (degrees) to Radians.
   @note: Supports compass.
 [==============================================================================}
-function TDoubleHelper.Radians(const compass: Boolean = False): Double; 
+function TDoubleHelper.Radians(const compass: Boolean = False): Double; cdecl;
 var
   d: Double;
 begin
