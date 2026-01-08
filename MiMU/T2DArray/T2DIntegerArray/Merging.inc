@@ -1,9 +1,9 @@
 {$IFDEF METHODS}
-class function Merge(const arr: T2DIntegerArray): TIntegerArray; overload;
+class function Merge(const arr: T2DIntegerArray): TIntegerArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-class function C2DIntegerArray.Merge(const arr: T2DIntegerArray): TIntegerArray; overload; 
+class function C2DIntegerArray.Merge(const arr: T2DIntegerArray): TIntegerArray; overload; cdecl;
 var
   i, r: Integer;
 begin

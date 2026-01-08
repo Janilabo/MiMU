@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function Squeeze: Integer; overload;
-function Squeezed: M2DArray; overload;
+function Squeeze: Integer; overload; cdecl;
+function Squeezed: M2DArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function Squeezed: M2DArray; overload;
   @action: Removes empty subarrays from the current 2D point array (in place).
   @note: Returns the number of removed (empty) subarrays; the array itself is resized.
 [==============================================================================}
-function M2DArrayHelper.Squeeze: Integer; overload;
+function M2DArrayHelper.Squeeze: Integer; overload; cdecl;
 var
   i, r, l: Integer;
 begin
@@ -28,7 +28,7 @@ end;
   @action: Creates and returns a copy of the array with all empty subarrays removed.
   @note: The original array remains unchanged; the result is the squeezed copy.
 [==============================================================================}
-function M2DArrayHelper.Squeezed: M2DArray; overload;
+function M2DArrayHelper.Squeezed: M2DArray; overload; cdecl;
 var
   i, r: Integer;
 begin
