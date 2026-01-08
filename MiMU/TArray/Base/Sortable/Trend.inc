@@ -1,12 +1,12 @@
 {$IFDEF HELPERS}
-function Downtrending: Boolean; overload;
-function Uptrending: Boolean; overload;
-function Notrending: Boolean; overload;
-function Trend: Integer; overload;
-function Trending: Boolean; overload;
-function TrendFalling: Boolean; overload;
-function TrendRising: Boolean; overload;
-function Trendy: Boolean; overload;
+function Downtrending: Boolean; overload; cdecl;
+function Uptrending: Boolean; overload; cdecl;
+function Notrending: Boolean; overload; cdecl;
+function Trend: Integer; overload; cdecl;
+function Trending: Boolean; overload; cdecl;
+function TrendFalling: Boolean; overload; cdecl;
+function TrendRising: Boolean; overload; cdecl;
+function Trendy: Boolean; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +15,7 @@ function Trendy: Boolean; overload;
   @action: Returns True if the first element of the array is greater than the last element.
   @note: Only meaningful for arrays with at least 2 elements. Indicates a “falling” trend.
 [==============================================================================}
-function MArrayHelper.Downtrending: Boolean; overload;
+function MArrayHelper.Downtrending: Boolean; overload; cdecl;
 begin
   Result := ((Self.Size > 1) and (Self[Low(Self)] > Self[High(Self)]));
 end;
@@ -25,7 +25,7 @@ end;
   @action: Returns True if the first element of the array is less than the last element.
   @note: Only meaningful for arrays with at least 2 elements. Indicates a “rising” trend.
 [==============================================================================}
-function MArrayHelper.Uptrending: Boolean; overload;
+function MArrayHelper.Uptrending: Boolean; overload; cdecl;
 begin
   Result := ((Self.Size > 1) and (Self[Low(Self)] < Self[High(Self)]));
 end;
@@ -35,7 +35,7 @@ end;
   @action: Returns True if the first element of the array is equal to the last element.
   @note: Only meaningful for arrays with at least 2 elements. Indicates no significant trend.
 [==============================================================================}
-function MArrayHelper.Notrending: Boolean; overload;
+function MArrayHelper.Notrending: Boolean; overload; cdecl;
 begin
   Result := ((Self.Size > 1) and (Self[Low(Self)] = Self[High(Self)]));
 end;
@@ -49,7 +49,7 @@ end;
   @note: Only meaningful for arrays with at least 2 elements.
          Comparison is done between the first and last elements only.
 [==============================================================================}
-function MArrayHelper.Trend: Integer; overload;
+function MArrayHelper.Trend: Integer; overload; cdecl;
 begin
   if ((Self.Size < 2) or (Self[Low(Self)] = Self[High(Self)])) then
     Result := 0
@@ -66,7 +66,7 @@ end;
   @note: Only meaningful for arrays with at least 2 elements.
          Returns False if the array has no trend (Notrending).
 [==============================================================================}
-function MArrayHelper.Trending: Boolean; overload;
+function MArrayHelper.Trending: Boolean; overload; cdecl;
 begin
   Result := (Self.Trend <> 0);
 end;
@@ -78,7 +78,7 @@ end;
   @note: Only meaningful for arrays with at least 2 elements.
          This checks only the first and last elements, not the full array.
 [==============================================================================}
-function MArrayHelper.TrendFalling: Boolean; overload;
+function MArrayHelper.TrendFalling: Boolean; overload; cdecl;
 begin
   Result := ((Self.Size > 1) and (Self[Low(Self)] >= Self[High(Self)]));
 end;
@@ -90,7 +90,7 @@ end;
   @note: Only meaningful for arrays with at least 2 elements.
          This checks only the first and last elements, not the full array.
 [==============================================================================}
-function MArrayHelper.TrendRising: Boolean; overload;
+function MArrayHelper.TrendRising: Boolean; overload; cdecl;
 begin
   Result := ((Self.Size > 1) and (Self[Low(Self)] <= Self[High(Self)]));
 end;
@@ -101,7 +101,7 @@ end;
            non-increasing, or constant.
   @note: Returns True if the array changes in only one direction; False otherwise.
 [==============================================================================}
-function MArrayHelper.Trendy: Boolean; overload;
+function MArrayHelper.Trendy: Boolean; overload; cdecl;
 var
   i, h, l: Integer;
 begin

@@ -1,10 +1,10 @@
 {$IFDEF HELPERS}
-function Singlify(const item: MType): Integer; overload;
-function Singlified(const item: MType): MArray; overload;
-function Singularize(const item: MType): Integer; overload;
-function Singularized(const item: MType): MArray; overload;
-function Soloize(const item: MType): Integer; overload;
-function Soloized(const item: MType): MArray; overload;
+function Singlify(const item: MType): Integer; overload; cdecl;
+function Singlified(const item: MType): MArray; overload; cdecl;
+function Singularize(const item: MType): Integer; overload; cdecl;
+function Singularized(const item: MType): MArray; overload; cdecl;
+function Soloize(const item: MType): Integer; overload; cdecl;
+function Soloized(const item: MType): MArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -13,7 +13,7 @@ function Soloized(const item: MType): MArray; overload;
   @action: Removes duplicate occurrences of a specific item, keeping only the first.
   @note: Useful for ensuring a item appears exactly once in the array.
 [==============================================================================}
-function MArrayHelper.Singlify(const item: MType): Integer; overload;
+function MArrayHelper.Singlify(const item: MType): Integer; overload; cdecl;
 var
   i, l: Integer;
   f: Boolean;
@@ -38,7 +38,7 @@ end;
   @note: Duplicates of item beyond the first occurrence are removed in the result.
          The original array remains unchanged.
 [==============================================================================}
-function MArrayHelper.Singlified(const item: MType): MArray; overload;
+function MArrayHelper.Singlified(const item: MType): MArray; overload; cdecl;
 var
   i, l: Integer;
   f: Boolean;
@@ -62,7 +62,7 @@ end;
   @note: The operation modifies the current array in-place. The order of the first appearances
          is preserved. Returns the number of items removed.
 [==============================================================================}
-function MArrayHelper.Singularize(const item: MType): Integer; overload;
+function MArrayHelper.Singularize(const item: MType): Integer; overload; cdecl;
 var
   d: specialize TDictionary<MType, Boolean>;
   i, l: Integer;
@@ -91,7 +91,7 @@ end;
   @note: The original array remains unchanged. The resulting array preserves
          the order of the first appearances.
 [==============================================================================}
-function MArrayHelper.Singularized(const item: MType): MArray; overload;
+function MArrayHelper.Singularized(const item: MType): MArray; overload; cdecl;
 var
   d: specialize TDictionary<MType, Boolean>;
   i, c: Integer;
@@ -118,7 +118,7 @@ end;
   @action: Removes all occurrences of a specific item from the array.
   @note: Returns the number of items removed. If none found, the array is unchanged.
 [==============================================================================}
-function MArrayHelper.Soloize(const item: MType): Integer; overload;
+function MArrayHelper.Soloize(const item: MType): Integer; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -139,7 +139,7 @@ end;
   @note: Duplicates of item beyond the first occurrence are removed in the result.
          The original array remains unchanged.
 [==============================================================================}
-function MArrayHelper.Soloized(const item: MType): MArray; overload;
+function MArrayHelper.Soloized(const item: MType): MArray; overload; cdecl;
 var
   i, l, s: Integer;
 begin

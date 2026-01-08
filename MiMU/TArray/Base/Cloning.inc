@@ -1,21 +1,21 @@
 {$IFDEF HELPERS}
-function Clone(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
-function Clone(const ID: TIntegerArray): MArray; overload;
-function Cloned: MArray; overload;
-function Copied: MArray; overload;
-function Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
-function Dupe: MArray; overload;
-function Duplicate(const xTimes: Integer = 1): MArray; overload;
-function Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): MArray; overload;
-function FromLeft(const count: Integer; const index: Integer = 2147483647): MArray; overload;
-function FromRight(const count: Integer; const index: Integer = 0): MArray; overload;
-function Get: MArray; overload;
-function Get(const ID: TIntegerArray): MArray; overload;
-function Get(const ID: TRange): MArray; overload;
-function Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
-function Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
-function Slice(const r: TRange): MArray; overload;
-function Slice(const r: TRangeArray): MArray; overload;
+function Clone(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload; cdecl;
+function Clone(const ID: TIntegerArray): MArray; overload; cdecl;
+function Cloned: MArray; overload; cdecl;
+function Copied: MArray; overload; cdecl;
+function Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload; cdecl;
+function Dupe: MArray; overload; cdecl;
+function Duplicate(const xTimes: Integer = 1): MArray; overload; cdecl;
+function Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): MArray; overload; cdecl;
+function FromLeft(const count: Integer; const index: Integer = 2147483647): MArray; overload; cdecl;
+function FromRight(const count: Integer; const index: Integer = 0): MArray; overload; cdecl;
+function Get: MArray; overload; cdecl;
+function Get(const ID: TIntegerArray): MArray; overload; cdecl;
+function Get(const ID: TRange): MArray; overload; cdecl;
+function Next(const index: Integer; const count: Integer = 2147483647): MArray; overload; cdecl;
+function Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload; cdecl;
+function Slice(const r: TRange): MArray; overload; cdecl;
+function Slice(const r: TRangeArray): MArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -24,7 +24,7 @@ function Slice(const r: TRangeArray): MArray; overload;
   @action: Returns copy of an array arr.
   @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
-function MArrayHelper.Clone(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
+function MArrayHelper.Clone(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload; cdecl;
 var
   i, s, c: Integer;
 begin
@@ -47,7 +47,7 @@ end;
   @action: Outputs array of items from arr by indexes (ID).
   @note: Ignores invalid ID's (doesn't include those to result, they will be left out).
 [==============================================================================}
-function MArrayHelper.Clone(const ID: TIntegerArray): MArray; overload;
+function MArrayHelper.Clone(const ID: TIntegerArray): MArray; overload; cdecl;
 var
   i, h, l, r: Integer;
 begin
@@ -69,7 +69,7 @@ end;
   @action: Simply returns a clone of array.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Cloned: MArray; overload;
+function MArrayHelper.Cloned: MArray; overload; cdecl;
 var
   r: TRange;
 begin
@@ -92,7 +92,7 @@ end;
   @action: Returns copy of an array arr.
   @note: Contains support for starting index and count. -1 count uses Length(arr)!
 [==============================================================================}
-function MArrayHelper.Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
+function MArrayHelper.Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload; cdecl;
 var
   i, c, l: Integer;
 begin
@@ -115,7 +115,7 @@ end;
   @action: Simply returns a copy of array.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Copied: MArray; overload;
+function MArrayHelper.Copied: MArray; overload; cdecl;
 var
   h, i, l: Integer;
 begin
@@ -140,7 +140,7 @@ end;
   @action: Returns copy of an array arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Dupe: MArray; overload;
+function MArrayHelper.Dupe: MArray; overload; cdecl;
 var
   i, l, j: Integer;
 begin
@@ -167,7 +167,7 @@ end;
   @action: Returns copy of an array arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Duplicate(const xTimes: Integer = 1): MArray; overload;
+function MArrayHelper.Duplicate(const xTimes: Integer = 1): MArray; overload; cdecl;
 var
   m, i, j, l: Integer;
 begin
@@ -185,7 +185,7 @@ end;
   @action: Returns copy of an array arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): MArray; overload;
+function MArrayHelper.Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): MArray; overload; cdecl;
 var
   h, i, j, l, c, s: Integer;
   r: TIntegerArray;
@@ -221,7 +221,7 @@ end;
   @action: Returns count of array items from left-side by index.
   @note: None
 [==============================================================================}
-function MArrayHelper.FromLeft(const count: Integer; const index: Integer = 2147483647): MArray; overload;
+function MArrayHelper.FromLeft(const count: Integer; const index: Integer = 2147483647): MArray; overload; cdecl;
 var
   m: Integer;
   a, r, i: TRange;
@@ -239,7 +239,7 @@ end;
   @action: Returns count of array items from right-side by index.
   @note: None
 [==============================================================================}
-function MArrayHelper.FromRight(const count: Integer; const index: Integer = 0): MArray; overload;
+function MArrayHelper.FromRight(const count: Integer; const index: Integer = 0): MArray; overload; cdecl;
 var
   m: Integer;
   a, r, i: TRange;
@@ -257,7 +257,7 @@ end;
   @action: Copy of an array arr.
   @note: Just an alternative.
 [==============================================================================}
-function MArrayHelper.Get: MArray; overload;
+function MArrayHelper.Get: MArray; overload; cdecl;
 var
   a: MType;
   i: Integer;
@@ -273,7 +273,7 @@ begin
   @action: Outputs array of items from arr by indexes (IDs).
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function MArrayHelper.Get(const ID: TIntegerArray): MArray; overload;
+function MArrayHelper.Get(const ID: TIntegerArray): MArray; overload; cdecl;
 var
   i: Integer;
 begin
@@ -287,7 +287,7 @@ end;
   @action: Outputs array of items from arr by indexes (IDs).
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function MArrayHelper.Get(const ID: TRange): MArray; overload;
+function MArrayHelper.Get(const ID: TRange): MArray; overload; cdecl;
 var
   i, a: Integer;
 begin
@@ -308,7 +308,7 @@ end;
   @action: Returns next items from array by index and count.
   @note: None.	
 [==============================================================================}
-function MArrayHelper.Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
+function MArrayHelper.Next(const index: Integer; const count: Integer = 2147483647): MArray; overload; cdecl;
 var
   m, i: Integer;
 begin
@@ -327,7 +327,7 @@ end;
   @action: Returns previous array items from index by count.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
+function MArrayHelper.Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload; cdecl;
 var
   m, l, i: Integer;
 begin
@@ -348,7 +348,7 @@ end;
   @note: Make sure you use correct indexes and there is enough buffer in array!
          No safety checks for this function.
 [==============================================================================}
-function MArrayHelper.Slice(const r: TRange): MArray; overload;
+function MArrayHelper.Slice(const r: TRange): MArray; overload; cdecl;
 var
   i: Integer;
 begin
@@ -369,7 +369,7 @@ end;
   @note: Make sure you use correct indexes and there is enough buffer in array!
          No safety checks for this function.
 [==============================================================================}
-function MArrayHelper.Slice(const r: TRangeArray): MArray; overload;
+function MArrayHelper.Slice(const r: TRangeArray): MArray; overload; cdecl;
 var
   i, j, l: Integer;
 begin

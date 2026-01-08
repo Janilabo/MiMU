@@ -1,25 +1,25 @@
 {$IFDEF HELPERS}
-function AllOf(const candidates: MArray): Boolean; overload;
-function AnyOf(const candidates: MArray): Boolean; overload;
-function Differ(const target: MArray): Boolean; overload;
-function Empty: Boolean; overload;
-function Equal(const target: MArray): Boolean; overload;
-function Exists: Boolean; overload;
-function Includes(const item: MType; const index: Integer = 2147483647): Boolean; overload;
-function Multi(const threshold: Integer = 2): Boolean; overload;
-function Multi(const threshold: TRange): Boolean; overload;
-function NoneOf(const forbidden: MArray): Boolean; overload;
-function Occupied: Boolean; overload;
-function Oversize(const limit: Integer): Boolean; overload;
-function Plain: Boolean; overload;
-function Populated(const population: TRange): Boolean; overload;
-function Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload;
-function Singular: Boolean; overload;
-function SizeBetween(const sMin, sMax: Integer): Boolean; overload;
-function SizeMax(const target: Integer): Boolean; overload;
-function SizeMin(const target: Integer): Boolean; overload;
-function Undersize(const limit: Integer): Boolean; overload;
-function Void: Boolean; overload;
+function AllOf(const candidates: MArray): Boolean; overload; cdecl;
+function AnyOf(const candidates: MArray): Boolean; overload; cdecl;
+function Differ(const target: MArray): Boolean; overload; cdecl;
+function Empty: Boolean; overload; cdecl;
+function Equal(const target: MArray): Boolean; overload; cdecl;
+function Exists: Boolean; overload; cdecl;
+function Includes(const item: MType; const index: Integer = 2147483647): Boolean; overload; cdecl;
+function Multi(const threshold: Integer = 2): Boolean; overload; cdecl;
+function Multi(const threshold: TRange): Boolean; overload; cdecl;
+function NoneOf(const forbidden: MArray): Boolean; overload; cdecl;
+function Occupied: Boolean; overload; cdecl;
+function Oversize(const limit: Integer): Boolean; overload; cdecl;
+function Plain: Boolean; overload; cdecl;
+function Populated(const population: TRange): Boolean; overload; cdecl;
+function Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload; cdecl;
+function Singular: Boolean; overload; cdecl;
+function SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl;
+function SizeMax(const target: Integer): Boolean; overload; cdecl;
+function SizeMin(const target: Integer): Boolean; overload; cdecl;
+function Undersize(const limit: Integer): Boolean; overload; cdecl;
+function Void: Boolean; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -28,7 +28,7 @@ function Void: Boolean; overload;
   @action: Returns True if arr contains all items from candidates.
   @note: Always True if candidates is empty. False if arr is empty but candidates is not.
 [==============================================================================}
-function MArrayHelper.AllOf(const candidates: MArray): Boolean; overload;
+function MArrayHelper.AllOf(const candidates: MArray): Boolean; overload; cdecl;
 var
   d: specialize TDictionary<MType, Boolean>;
   i: Integer;
@@ -55,7 +55,7 @@ end;
   @action: Returns True if arr contains at least one item from candidates.
   @note: Always False if arr or candidates is empty.
 [==============================================================================}
-function MArrayHelper.AnyOf(const candidates: MArray): Boolean; overload;
+function MArrayHelper.AnyOf(const candidates: MArray): Boolean; overload; cdecl;
 var
   d: specialize TDictionary<MType, Boolean>;
   i: Integer;
@@ -80,7 +80,7 @@ end;
   @action: Returns true if arr differs from target.
   @note: None
 [==============================================================================}
-function MArrayHelper.Differ(const target: MArray): Boolean; overload;
+function MArrayHelper.Differ(const target: MArray): Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -96,7 +96,7 @@ end;
   @action: Returns true if array is empty (Length = 0).
   @note: None.
 [==============================================================================}
-function MArrayHelper.Empty: Boolean; overload;
+function MArrayHelper.Empty: Boolean; overload; cdecl;
 begin
   Result := (Self.Size = 0);
 end;
@@ -106,7 +106,7 @@ end;
   @action: Returns true if arr equals target (identical arrays)
   @note: None
 [==============================================================================}
-function MArrayHelper.Equal(const target: MArray): Boolean; overload;
+function MArrayHelper.Equal(const target: MArray): Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -122,7 +122,7 @@ end;
   @action: Returns true if array length is not 0.
   @note: Alternative for arr.Populated.
 [==============================================================================}
-function MArrayHelper.Exists: Boolean; overload;
+function MArrayHelper.Exists: Boolean; overload; cdecl;
 begin
   Result := (Self.Size > 0);
 end;
@@ -132,7 +132,7 @@ end;
   @action: Looks array for item starting from start index down to index 0. If found, Result will be True.
   @note: Alternative to TArray_Contains, but this scans in opposite direction.
 [==============================================================================}
-function MArrayHelper.Includes(const item: MType; const index: Integer = 2147483647): Boolean; overload;
+function MArrayHelper.Includes(const item: MType; const index: Integer = 2147483647): Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -147,7 +147,7 @@ end;
   @action: Returns true if array contains at least threshold of items in it.
   @note: None.	
 [==============================================================================}
-function MArrayHelper.Multi(const threshold: Integer = 2): Boolean; overload;
+function MArrayHelper.Multi(const threshold: Integer = 2): Boolean; overload; cdecl;
 begin
   Result := (Self.Size >= threshold);
 end;
@@ -157,7 +157,7 @@ end;
   @action: Returns true if array contains at least threshold of items in it.
   @note: None.	
 [==============================================================================}
-function MArrayHelper.Multi(const threshold: TRange): Boolean; overload;
+function MArrayHelper.Multi(const threshold: TRange): Boolean; overload; cdecl;
 var
   r: TRange;
 begin
@@ -170,7 +170,7 @@ end;
   @action: Returns true if arr does not contain any items from forbidden.
   @note: None.
 [==============================================================================}
-function MArrayHelper.NoneOf(const forbidden: MArray): Boolean; overload;
+function MArrayHelper.NoneOf(const forbidden: MArray): Boolean; overload; cdecl;
 var
   d: specialize TDictionary<MType, Boolean>;
   i: Integer;
@@ -197,7 +197,7 @@ end;
   @note    Uses Low(Self) <= High(Self) to determine occupancy. This is 
            functionally equivalent to Length(Self) > 0.	
 [==============================================================================}
-function MArrayHelper.Occupied: Boolean; overload;
+function MArrayHelper.Occupied: Boolean; overload; cdecl;
 begin
   Result := (Low(Self) <= High(Self));
 end;
@@ -207,7 +207,7 @@ end;
   @action: Returns true if size of arr is OVER the limit.
   @note: None.	
 [==============================================================================}
-function MArrayHelper.Oversize(const limit: Integer): Boolean; overload;
+function MArrayHelper.Oversize(const limit: Integer): Boolean; overload; cdecl;
 begin
   Result := (Self.Size > limit);
 end;
@@ -217,7 +217,7 @@ end;
   @action: Returns true if all array items are identical.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Plain: Boolean; overload;
+function MArrayHelper.Plain: Boolean; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -235,7 +235,7 @@ end;
   @action: Returns true if arr Length is between population TRange (start, stop).
   @note: None.
 [==============================================================================}
-function MArrayHelper.Populated(const population: TRange): Boolean; overload;
+function MArrayHelper.Populated(const population: TRange): Boolean; overload; cdecl;
 begin
   Result := InRange(Self.Size, population.Minimum, population.Maximum);
 end;
@@ -245,7 +245,7 @@ end;
   @action: Returns true if arr Length is between populationMin and populationMax.
   @note: Strict! Min should NOT be higher than Max.
 [==============================================================================}
-function MArrayHelper.Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload;
+function MArrayHelper.Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload; cdecl;
 begin
   Result := InRange(Self.Size, populationMin, populationMax);
 end;
@@ -255,7 +255,7 @@ end;
   @action: Returns true if all array items are identical.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Singular: Boolean; overload;
+function MArrayHelper.Singular: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -270,7 +270,7 @@ end;
   @action: Returns true if size is at equal/greater than sMin and equal/lesser than sMax.
   @note: 	
 [==============================================================================}
-function MArrayHelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload;
+function MArrayHelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload; cdecl;
 begin
   Result := InRange(Self.Size, sMin, sMax);
 end;
@@ -280,7 +280,7 @@ end;
   @action: Returns true if size is at equal/lesser than target.
   @note: 	
 [==============================================================================}
-function MArrayHelper.SizeMax(const target: Integer): Boolean; overload;
+function MArrayHelper.SizeMax(const target: Integer): Boolean; overload; cdecl;
 begin
   Result := (Self.Size <= target);
 end;
@@ -290,7 +290,7 @@ end;
   @action: Returns true if size is at equal/greater than target.
   @note: 	
 [==============================================================================}
-function MArrayHelper.SizeMin(const target: Integer): Boolean; overload;
+function MArrayHelper.SizeMin(const target: Integer): Boolean; overload; cdecl;
 begin
   Result := (Self.Size >= target);
 end;
@@ -300,7 +300,7 @@ end;
   @action: Returns true if size of arr is UNDER the limit.
   @note: None.	
 [==============================================================================} 
-function MArrayHelper.Undersize(const limit: Integer): Boolean; overload;
+function MArrayHelper.Undersize(const limit: Integer): Boolean; overload; cdecl;
 begin
   Result := (Self.Size < limit);
 end;
@@ -310,7 +310,7 @@ end;
   @action: Returns true if array is void (empty)
   @note: Alternative for Empty.
 [==============================================================================}
-function MArrayHelper.Void: Boolean; overload;
+function MArrayHelper.Void: Boolean; overload; cdecl;
 begin
   Result := (Low(Self) > High(Self));
 end;

@@ -1,8 +1,8 @@
 {$IFDEF HELPERS}
-function As2D(const rows, columns: Integer): M2DArray; overload;
-function As2D(const width: Integer): M2DArray; overload;
-function To2D(const rows, columns: Integer): M2DArray; overload;
-function To2D(const height: Integer): M2DArray; overload;
+function As2D(const rows, columns: Integer): M2DArray; overload; cdecl;
+function As2D(const width: Integer): M2DArray; overload; cdecl;
+function To2D(const rows, columns: Integer): M2DArray; overload; cdecl;
+function To2D(const height: Integer): M2DArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -13,7 +13,7 @@ function To2D(const height: Integer): M2DArray; overload;
          TIA.To2D(2, 3) = [[1, 2, 3], [4, 5, 6]]
          TIA.To2D(3, 2) = [[1, 2], [3, 4], [5, 6]]
 [==============================================================================}
-function MArrayHelper.As2D(const rows, columns: Integer): M2DArray; overload;
+function MArrayHelper.As2D(const rows, columns: Integer): M2DArray; overload; cdecl;
 var
   l, i: Integer;
 begin
@@ -29,7 +29,7 @@ end;
   @action: Converts 1D array to 2D by width.
   @note: None.
 [==============================================================================}
-function MArrayHelper.As2D(const width: Integer): M2DArray; overload;
+function MArrayHelper.As2D(const width: Integer): M2DArray; overload; cdecl;
 var
   l, h, i, r, c: Integer;
 begin
@@ -51,7 +51,7 @@ end;
          TIA.To2D(2, 3) = [[1, 2, 3], [4, 5, 6]]
          TIA.To2D(3, 2) = [[1, 2], [3, 4], [5, 6]]
 [==============================================================================}
-function MArrayHelper.To2D(const rows, columns: Integer): M2DArray; overload;
+function MArrayHelper.To2D(const rows, columns: Integer): M2DArray; overload; cdecl;
 var
   i, r, c, l: Integer;
 begin
@@ -69,7 +69,7 @@ end;
   @action: Converts 1D array to 2D by height.
   @note: 
 [==============================================================================}
-function MArrayHelper.To2D(const height: Integer): M2DArray; overload;
+function MArrayHelper.To2D(const height: Integer): M2DArray; overload; cdecl;
 var
   l, w, i, r, c: Integer;
 begin

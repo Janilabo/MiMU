@@ -1,8 +1,8 @@
 {$IFDEF HELPERS}
-function Fill(const item: MType; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
-function Fill(const items: MArray; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
-function Populate(const items: MArray; const times: Integer = 1): Boolean; overload;
-function Populate(const item: MType; const times: Integer = 1): Boolean; overload;
+function Fill(const item: MType; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload; cdecl;
+function Fill(const items: MArray; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload; cdecl;
+function Populate(const items: MArray; const times: Integer = 1): Boolean; overload; cdecl;
+function Populate(const item: MType; const times: Integer = 1): Boolean; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function Populate(const item: MType; const times: Integer = 1): Boolean; overloa
   @action: Fills whole arr with item.
   @note: Returns the filled array.
 [==============================================================================}
-function MArrayHelper.Fill(const item: MType; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
+function MArrayHelper.Fill(const item: MType; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload; cdecl;
 var
   h, i, s, t: Integer;
 begin
@@ -32,7 +32,7 @@ end;
   @action: Fills whole arr with items.
   @note: None
 [==============================================================================}
-function MArrayHelper.Fill(const items: MArray; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
+function MArrayHelper.Fill(const items: MArray; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload; cdecl;
 var
   h, i, s, t, l: Integer;
 begin
@@ -58,7 +58,7 @@ end;
   @action: Populates array with items, x-times.
   @note: Returns true if items is not empty and times is more than 0.
 [==============================================================================}
-function MArrayHelper.Populate(const items: MArray; const times: Integer = 1): Boolean; overload;
+function MArrayHelper.Populate(const items: MArray; const times: Integer = 1): Boolean; overload; cdecl;
 var
   i, j, l: Integer;
 begin
@@ -76,7 +76,7 @@ end;
   @action: Populates array with item, x-times.
   @note: Returns true if times is more than 0.
 [==============================================================================}
-function MArrayHelper.Populate(const item: MType; const times: Integer = 1): Boolean; overload;
+function MArrayHelper.Populate(const item: MType; const times: Integer = 1): Boolean; overload; cdecl;
 var
   i: Integer;
 begin;

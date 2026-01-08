@@ -1,16 +1,16 @@
 {$IFDEF HELPERS}
-function Locations(const item: MType; const index: Integer = 2147483647): TIntegerArray; overload;
-function Locations(const items: MArray; const index: Integer = 2147483647): TIntegerArray; overload;
-function Locations: TIntegerArray; overload;
-function Positions(const item: MType; const index: Integer = 0): TIntegerArray; overload;
-function Positions(const items: MArray; const index: Integer = 0): TIntegerArray; overload;
-function Positions: TIntegerArray; overload;
-function Scan(const ID: TRange; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload;
-function Scan(const ID: TIntegerArray; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload;
-function Scan(const ID: TRange; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
-function Scan(const ID: TIntegerArray; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
-function SubarrayLocations(const pattern: MArray): TIntegerArray; overload;
-function SubarrayPositions(const pattern: MArray): TIntegerArray; overload;
+function Locations(const item: MType; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function Locations(const items: MArray; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function Locations: TIntegerArray; overload; cdecl;
+function Positions(const item: MType; const index: Integer = 0): TIntegerArray; overload; cdecl;
+function Positions(const items: MArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
+function Positions: TIntegerArray; overload; cdecl;
+function Scan(const ID: TRange; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function Scan(const ID: TIntegerArray; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function Scan(const ID: TRange; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function Scan(const ID: TIntegerArray; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
+function SubarrayLocations(const pattern: MArray): TIntegerArray; overload; cdecl;
+function SubarrayPositions(const pattern: MArray): TIntegerArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -19,7 +19,7 @@ function SubarrayPositions(const pattern: MArray): TIntegerArray; overload;
   @action: Returns last index positions from arr which matched with item.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Locations(const item: MType; const index: Integer = 2147483647): TIntegerArray; overload;
+function MArrayHelper.Locations(const item: MType; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
 var
   i, r, h, s: Integer;
 begin
@@ -41,7 +41,7 @@ end;
   @action: Returns last index positions from arr which matches with items.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Locations(const items: MArray; const index: Integer = 2147483647): TIntegerArray; overload;
+function MArrayHelper.Locations(const items: MArray; const index: Integer = 2147483647): TIntegerArray; overload; cdecl;
 var
   i, r, h, s: Integer;
 begin
@@ -63,7 +63,7 @@ end;
   @action: Simply returns arr indexes.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Locations: TIntegerArray; overload;
+function MArrayHelper.Locations: TIntegerArray; overload; cdecl;
 var
   i, r: Integer;
 begin
@@ -78,7 +78,7 @@ end;
   @action: Returns index positions from arr which matched with item.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Positions(const item: MType; const index: Integer = 0): TIntegerArray; overload;
+function MArrayHelper.Positions(const item: MType; const index: Integer = 0): TIntegerArray; overload; cdecl;
 var
   i, r, h, s: Integer;
 begin
@@ -100,7 +100,7 @@ end;
   @action: Returns index positions from arr which matches with items.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Positions(const items: MArray; const index: Integer = 0): TIntegerArray; overload;
+function MArrayHelper.Positions(const items: MArray; const index: Integer = 0): TIntegerArray; overload; cdecl;
 var
   i, r, h, s: Integer;
 begin
@@ -122,7 +122,7 @@ end;
   @action: Simply returns arr indexes.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Positions: TIntegerArray; overload;
+function MArrayHelper.Positions: TIntegerArray; overload; cdecl;
 var
   i: Integer;
 begin
@@ -136,7 +136,7 @@ end;
   @action: Scans array for item by ID. Returns all the positions.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function MArrayHelper.Scan(const ID: TRange; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload;
+function MArrayHelper.Scan(const ID: TRange; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
 var
   i, r: Integer;
 begin
@@ -169,7 +169,7 @@ end;
   @action: Scans array for item by ID. Returns all the positions.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function MArrayHelper.Scan(const ID: TIntegerArray; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload;
+function MArrayHelper.Scan(const ID: TIntegerArray; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
 var
   i, r: Integer;
 begin
@@ -192,7 +192,7 @@ end;
   @action: Scans array for items by ID. Returns all the positions.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function MArrayHelper.Scan(const ID: TRange; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
+function MArrayHelper.Scan(const ID: TRange; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
 var
   i, r: Integer;
 begin
@@ -225,7 +225,7 @@ end;
   @action: Scans array for items by ID. Returns all the positions.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function MArrayHelper.Scan(const ID: TIntegerArray; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
+function MArrayHelper.Scan(const ID: TIntegerArray; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload; cdecl;
 var
   i, r: Integer;
 begin
@@ -248,7 +248,7 @@ end;
   @action: Returns subarray positions in arr that match pattern exactly.
   @note: arr[0,1,2,0,1,2,3].([1,2]) => [4,1]	
 [==============================================================================}
-function MArrayHelper.SubarrayLocations(const pattern: MArray): TIntegerArray; overload;
+function MArrayHelper.SubarrayLocations(const pattern: MArray): TIntegerArray; overload; cdecl;
 var
   i, j, l, s, r, p: Integer;
 begin
@@ -279,7 +279,7 @@ end;
   @action: Returns subarray positions in arr that match pattern exactly.
   @note: arr[0,1,2,0,1,2,3].([1,2]) => [1,4]	
 [==============================================================================}
-function MArrayHelper.SubarrayPositions(const pattern: MArray): TIntegerArray; overload;
+function MArrayHelper.SubarrayPositions(const pattern: MArray): TIntegerArray; overload; cdecl;
 var
   i, j, l, p, r: Integer;
   f: Boolean;

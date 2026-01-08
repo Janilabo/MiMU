@@ -1,12 +1,12 @@
 {$IFDEF HELPERS}
-function Sortable: Boolean; overload;
-function Sorted(const aAscending: Boolean = True): Boolean; overload;
-function IsSorted(const aAscending: Boolean = True): Boolean; overload;
-function IsSorted(const iStart, iStop: Integer; const aAscending: Boolean = True): Boolean; overload;
-function IsSorted(const indexes: TRange; const aAscending: Boolean = True): Boolean; overload;
-function IsSorted(const index: Integer; const aAscending: Boolean = True): Boolean; overload;
-function Sortedness: Boolean; overload;
-function SortednessEx(const stride: Integer = 16): Boolean; overload;
+function Sortable: Boolean; overload; cdecl;
+function Sorted(const aAscending: Boolean = True): Boolean; overload; cdecl;
+function IsSorted(const aAscending: Boolean = True): Boolean; overload; cdecl;
+function IsSorted(const iStart, iStop: Integer; const aAscending: Boolean = True): Boolean; overload; cdecl;
+function IsSorted(const indexes: TRange; const aAscending: Boolean = True): Boolean; overload; cdecl;
+function IsSorted(const index: Integer; const aAscending: Boolean = True): Boolean; overload; cdecl;
+function Sortedness: Boolean; overload; cdecl;
+function SortednessEx(const stride: Integer = 16): Boolean; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,7 +17,7 @@ function SortednessEx(const stride: Integer = 16): Boolean; overload;
   @note: Arrays with all equal elements, a single element, or empty arrays
          return False.
 [==============================================================================}
-function MArrayHelper.Sortable: Boolean; overload;
+function MArrayHelper.Sortable: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -32,7 +32,7 @@ end;
   @action: Returns true if array arr is in ascending/descending order by aAscending.
   @note: By default checking for ascending order.
 [==============================================================================}
-function MArrayHelper.Sorted(const aAscending: Boolean = True): Boolean; overload;
+function MArrayHelper.Sorted(const aAscending: Boolean = True): Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -47,7 +47,7 @@ end;
   @action: Checks whether the entire array is sorted in ascending or descending order.
   @note:   Returns True if all elements are in the correct order according to aAscending.
 [==============================================================================}
-function MArrayHelper.IsSorted(const aAscending: Boolean = True): Boolean; overload;
+function MArrayHelper.IsSorted(const aAscending: Boolean = True): Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -65,7 +65,7 @@ end;
          valid array bounds. Returns True if all elements within the range
          follow the specified order.
 [==============================================================================}
-function MArrayHelper.IsSorted(const iStart, iStop: Integer; const aAscending: Boolean = True): Boolean; overload;
+function MArrayHelper.IsSorted(const iStart, iStop: Integer; const aAscending: Boolean = True): Boolean; overload; cdecl;
 var
   i, s, e, h: Integer;
 begin
@@ -90,7 +90,7 @@ end;
          automatically normalized and clamped to valid array bounds.
          Returns True if all elements within the range follow the specified order.
 [==============================================================================}
-function MArrayHelper.IsSorted(const indexes: TRange; const aAscending: Boolean = True): Boolean; overload;
+function MArrayHelper.IsSorted(const indexes: TRange; const aAscending: Boolean = True): Boolean; overload; cdecl;
 begin
   Result := Self.IsSorted(indexes.start, indexes.stop, aAscending);
 end;
@@ -104,7 +104,7 @@ end;
          order with adjacent elements. Boundary or single-element arrays are
          considered sorted. Returns False for out-of-range indices.
 [==============================================================================}
-function MArrayHelper.IsSorted(const index: Integer; const aAscending: Boolean = True): Boolean; overload;
+function MArrayHelper.IsSorted(const index: Integer; const aAscending: Boolean = True): Boolean; overload; cdecl;
 var
   h: Integer;
 begin
@@ -130,7 +130,7 @@ end;
          Efficient for large arrays due to early exit if disorder is detected.
          This version checks every element in both phases.
 [==============================================================================}
-function MArrayHelper.Sortedness: Boolean; overload;
+function MArrayHelper.Sortedness: Boolean; overload; cdecl;
 var
   L, R, D: Integer;
 begin
@@ -172,7 +172,7 @@ end;
          of small local disorder. Returns True for arrays of length 0 or 1.
          Useful for extremely large arrays where global trend violation is likely.
 [==============================================================================}
-function MArrayHelper.SortednessEx(const stride: Integer = 16): Boolean; overload;
+function MArrayHelper.SortednessEx(const stride: Integer = 16): Boolean; overload; cdecl;
 var
   L, R, D: Integer;
 begin

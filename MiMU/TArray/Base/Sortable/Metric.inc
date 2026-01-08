@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function Mode: MType; overload;
-function Center: MType; overload; 
+function Mode: MType; overload; cdecl;
+function Center: MType; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function Center: MType; overload;
   @action: The value that occurs most frequently in arr.
   @note: None
 [==============================================================================}
-function MArrayHelper.Mode: MType; overload;
+function MArrayHelper.Mode: MType; overload; cdecl;
 var
   a: MArray;
   c: TIntegerArray;
@@ -49,7 +49,7 @@ end;
   @action: The value at the center position of a sorted or unsorted arr.
   @note: None
 [==============================================================================}
-function MArrayHelper.Center: MType; overload;
+function MArrayHelper.Center: MType; overload; cdecl;
 begin
   if (Self.Size > 0) then
     Result := Self[Self.Size div 2];

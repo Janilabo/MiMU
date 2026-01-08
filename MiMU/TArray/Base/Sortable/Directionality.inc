@@ -1,15 +1,15 @@
 {$IFDEF HELPERS}
-function Direction: Integer; overload;
-function Rising: Boolean; overload;
-function Falling: Boolean; overload;
-function Descending: Boolean; overload;
-function Ascending: Boolean; overload;
-function Decreasing: Boolean; overload;
-function Increasing: Boolean; overload;
-function Downward: Boolean; overload;
-function Upward: Boolean; overload;
-function Orientation: Integer; overload;
-function Unidirectional: Boolean; overload;
+function Direction: Integer; overload; cdecl;
+function Rising: Boolean; overload; cdecl;
+function Falling: Boolean; overload; cdecl;
+function Descending: Boolean; overload; cdecl;
+function Ascending: Boolean; overload; cdecl;
+function Decreasing: Boolean; overload; cdecl;
+function Increasing: Boolean; overload; cdecl;
+function Downward: Boolean; overload; cdecl;
+function Upward: Boolean; overload; cdecl;
+function Orientation: Integer; overload; cdecl;
+function Unidirectional: Boolean; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -21,7 +21,7 @@ function Unidirectional: Boolean; overload;
            0 = Notrending (mixed sequence or empty/single element).
   @note: Checks all elements. Inclusive comparisons (≤ / ≥).
 [==============================================================================}
-function MArrayHelper.Direction: Integer; overload;
+function MArrayHelper.Direction: Integer; overload; cdecl;
 begin
   if Self.Notrending then
     Result := 0
@@ -39,7 +39,7 @@ end;
   @note: Arrays with 0 or 1 element are considered Rising by default.
          Checks all elements, not just the first and last.
 [==============================================================================}
-function MArrayHelper.Rising: Boolean; overload;
+function MArrayHelper.Rising: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -56,7 +56,7 @@ end;
   @note: Arrays with 0 or 1 element are considered Falling by default.
          Checks all elements, not just the first and last.
 [==============================================================================}
-function MArrayHelper.Falling: Boolean; overload;
+function MArrayHelper.Falling: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -71,7 +71,7 @@ end;
   @action: Returns true if array arr is in descending order.
   @note: [0,1] = False | [0,0] = False | [1,0] = True |
 [==============================================================================}
-function MArrayHelper.Descending: Boolean; overload;
+function MArrayHelper.Descending: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -86,7 +86,7 @@ end;
   @action: Returns true if array arr is in asscending order.
   @note: [0,1] = True | [0,0] = False | [1,0] = False |
 [==============================================================================}
-function MArrayHelper.Ascending: Boolean; overload;
+function MArrayHelper.Ascending: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -101,7 +101,7 @@ end;
   @action: Returns true if array arr is in descending order.
   @note: [0,1] = False | [0,0] = True | [1,0] = True |
 [==============================================================================}
-function MArrayHelper.Decreasing: Boolean; overload;
+function MArrayHelper.Decreasing: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -116,7 +116,7 @@ end;
   @action: Returns true if array arr is in asscending order.
   @note: [0,1] = True | [0,0] = True | [1,0] = False |
 [==============================================================================}
-function MArrayHelper.Increasing: Boolean; overload;
+function MArrayHelper.Increasing: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -131,7 +131,7 @@ end;
   @action: Returns true if array arr is in descending order.
   @note: Returns true with empty []array! Unlike Descending, Decreasing.
 [==============================================================================}
-function MArrayHelper.Downward: Boolean; overload;
+function MArrayHelper.Downward: Boolean; overload; cdecl;
 var
   h: Integer;
 begin
@@ -147,7 +147,7 @@ end;
   @action: Returns true if array arr is in ascending order.
   @note: Returns true with empty [] array! Unlike Ascending, Increasing.
 [==============================================================================}
-function MArrayHelper.Upward: Boolean; overload;
+function MArrayHelper.Upward: Boolean; overload; cdecl;
 var
   h: Integer;
 begin
@@ -164,7 +164,7 @@ end;
   @note: -1 = DESCENDING, 0=NO ORDER OR MIXED ARRAY, 1=ASCENDING
          [1,2,3] => 1 [1,1,1] => 0 [1,0,1] => 0 [3,2,1] => -1
 [==============================================================================}
-function MArrayHelper.Orientation: Integer; overload;
+function MArrayHelper.Orientation: Integer; overload; cdecl;
 var
   i: Integer;
   a, d: Boolean;
@@ -197,7 +197,7 @@ end;
   @action: Checks if the array is monotonic (either non-decreasing or non-increasing).
   @note: Returns True if all elements move in one direction, False otherwise.
 [==============================================================================}
-function MArrayHelper.Unidirectional: Boolean; overload;
+function MArrayHelper.Unidirectional: Boolean; overload; cdecl;
 label
   D;
 var

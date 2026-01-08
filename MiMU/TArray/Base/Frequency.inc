@@ -1,8 +1,8 @@
 {$IFDEF HELPERS}
-function LeastCommon: MType; overload;
-function LeastFrequent: MType; overload;
-function MostCommon: MType; overload;
-function MostFrequent: MType; overload;
+function LeastCommon: MType; overload; cdecl;
+function LeastFrequent: MType; overload; cdecl;
+function MostCommon: MType; overload; cdecl;
+function MostFrequent: MType; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function MostFrequent: MType; overload;
   @action: Returns the least common array item.
   @note: None
 [==============================================================================}
-function MArrayHelper.LeastCommon: MType; overload;
+function MArrayHelper.LeastCommon: MType; overload; cdecl;
 var
   d: specialize TDictionary<MType, Integer>;
   c, m, i: Integer;
@@ -43,7 +43,7 @@ end;
   @action: Returns the least frequent arr item.
   @note: None.
 [==============================================================================}
-function MArrayHelper.LeastFrequent: MType; overload;
+function MArrayHelper.LeastFrequent: MType; overload; cdecl;
 var
   i, j, c, m: Integer;
   f: Boolean;
@@ -80,7 +80,7 @@ end;
   @action: Returns the most common array item.
   @note: None
 [==============================================================================}
-function MArrayHelper.MostCommon: MType; overload;
+function MArrayHelper.MostCommon: MType; overload; cdecl;
 var
   d: specialize TDictionary<MType, Integer>;
   c, m, i: Integer;
@@ -112,7 +112,7 @@ end;
   @action: Returns the most frequent arr item.
   @note: None.
 [==============================================================================}
-function MArrayHelper.MostFrequent: MType; overload;
+function MArrayHelper.MostFrequent: MType; overload; cdecl;
 var
   i, j, c, m: Integer;
 begin

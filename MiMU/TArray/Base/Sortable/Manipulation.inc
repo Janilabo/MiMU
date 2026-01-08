@@ -1,10 +1,10 @@
 {$IFDEF HELPERS}
-function Descend: MArray; overload;
-function Ascend: MArray; overload;
-function Uniq(const sSorted: Boolean = False): MArray; overload;
-function Unionize(const items: MArray; const oAscending: Boolean = True): MArray; overload;
-function Subtract(const items: MArray; const oAscending: Boolean = True): MArray; overload;
-function Intersect(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function Descend: MArray; overload; cdecl;
+function Ascend: MArray; overload; cdecl;
+function Uniq(const sSorted: Boolean = False): MArray; overload; cdecl;
+function Unionize(const items: MArray; const oAscending: Boolean = True): MArray; overload; cdecl;
+function Subtract(const items: MArray; const oAscending: Boolean = True): MArray; overload; cdecl;
+function Intersect(const items: MArray; const oAscending: Boolean = True): MArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -13,7 +13,7 @@ function Intersect(const items: MArray; const oAscending: Boolean = True): MArra
   @action: Returns array arr sorted to asscending order.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Ascend: MArray; overload;
+function MArrayHelper.Ascend: MArray; overload; cdecl;
 procedure QS(var arr: MArray; const valLow, valHigh: Integer);
 var
   p: MType;
@@ -45,7 +45,7 @@ end;
   @action: Returns array arr sorted to descending order.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Descend: MArray; overload;
+function MArrayHelper.Descend: MArray; overload; cdecl;
 procedure QS(var arr: MArray; const valLow, valHigh: Integer);
 var
   p: MType;
@@ -77,7 +77,7 @@ end;
   @action: Unique method for sortable types.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Uniq(const sSorted: Boolean = False): MArray; overload;
+function MArrayHelper.Uniq(const sSorted: Boolean = False): MArray; overload; cdecl;
 begin
   if Self.Empty then
     SetLength(Result, 0)
@@ -97,7 +97,7 @@ end;
          allocated array sized exactly to the number of distinct merged
          elements.
 [==============================================================================}
-function MArrayHelper.Unionize(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function MArrayHelper.Unionize(const items: MArray; const oAscending: Boolean = True): MArray; overload; cdecl;
 var
   v: MType;
   i, j, l, a, b: Integer;
@@ -184,7 +184,7 @@ end;
          respective lengths. This is the standard A − B set-difference
          operation.
 [==============================================================================}
-function MArrayHelper.Subtract(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function MArrayHelper.Subtract(const items: MArray; const oAscending: Boolean = True): MArray; overload; cdecl;
 var
   v: MType;
   i, j, l: Integer;
@@ -222,7 +222,7 @@ end;
          This implementation uses a linear merge approach with O(m + n) time
          complexity, which is optimal for this operation.
 [==============================================================================}
-function MArrayHelper.Intersect(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function MArrayHelper.Intersect(const items: MArray; const oAscending: Boolean = True): MArray; overload; cdecl;
 var
   v: MType;
   i, j, l, a, b: Integer;

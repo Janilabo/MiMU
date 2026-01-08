@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
-function SelectionSort(const aAscending: Boolean = True): Integer; overload;
-function SelectionSortBidirectional(const aAscending: Boolean = True): Integer; overload;
-function SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; overload;
+function SelectionSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function SelectionSortBidirectional(const aAscending: Boolean = True): Integer; overload; cdecl;
+function SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -10,7 +10,7 @@ function SelectionSortBidirectional2(const aAscending: Boolean = True): Integer;
   @action: SelectionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function MArrayHelper.SelectionSort(const aAscending: Boolean = True): Integer; overload;
+function MArrayHelper.SelectionSort(const aAscending: Boolean = True): Integer; overload; cdecl;
 var
   c, t, m, o: Integer;
 begin
@@ -34,7 +34,7 @@ end;
   @action: Bidirectional SelectionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function MArrayHelper.SelectionSortBidirectional(const aAscending: Boolean = True): Integer; overload;
+function MArrayHelper.SelectionSortBidirectional(const aAscending: Boolean = True): Integer; overload; cdecl;
 var
   i, s, o: Integer;
   x, y: TRange;
@@ -67,7 +67,7 @@ end;
   @action: Bidirectional SelectionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function MArrayHelper.SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; overload;
+function MArrayHelper.SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; overload; cdecl;
 var
   s, i, o: Integer;
   r: TRange;

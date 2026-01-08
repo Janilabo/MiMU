@@ -1,8 +1,8 @@
 {$IFDEF HELPERS}
-function Count(const item: MType): Integer; overload;
-function Count(const items: MArray): Integer; overload;
-function IntersectionCounted(const items: MArray): Integer; overload;
-function Uniformity: Double; overload;
+function Count(const item: MType): Integer; overload; cdecl;
+function Count(const items: MArray): Integer; overload; cdecl;
+function IntersectionCounted(const items: MArray): Integer; overload; cdecl;
+function Uniformity: Double; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -14,7 +14,7 @@ function Uniformity: Double; overload;
     - Uses zero-based indexing (0..High(Self)).
     - Single-pass, no extra memory allocation.
 [==============================================================================}
-function MArrayHelper.Count(const item: MType): Integer; overload;
+function MArrayHelper.Count(const item: MType): Integer; overload; cdecl;
 var
   i: Integer;
 begin
@@ -33,7 +33,7 @@ end;
     - Uses zero-based indexing (0..High(Self)).
     - Single-pass over Self, but each element performs a search over items (O(n*m)).
 [==============================================================================}
-function MArrayHelper.Count(const items: MArray): Integer; overload;
+function MArrayHelper.Count(const items: MArray): Integer; overload; cdecl;
 var
   i: Integer;
 begin
@@ -57,7 +57,7 @@ end;
     - Each matched element is removed from the dictionary to ensure distinct counting.
     - Returns 0 if either array is empty.
 [==============================================================================}
-function MArrayHelper.IntersectionCounted(const items: MArray): Integer; overload;
+function MArrayHelper.IntersectionCounted(const items: MArray): Integer; overload; cdecl;
 var
   S: specialize TDictionary<MType, Byte>;
   i: Integer;
@@ -86,7 +86,7 @@ end;
            or something in between based on unique-value ratio. 
   @note: None.
  [==============================================================================}
-function MArrayHelper.Uniformity: Double; overload;
+function MArrayHelper.Uniformity: Double; overload; cdecl;
 begin
   if not Self.Empty then
     Result := (1.0 / Self.Distinct)

@@ -1,9 +1,9 @@
 {$IFDEF HELPERS}
-function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
-function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
-function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
-function BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
-function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload; cdecl;
+function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload; cdecl;
+function BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload; cdecl;
+function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +15,7 @@ function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): I
          search to minimize comparisons. It performs well on small or
          partially sorted datasets. Returns the number of elements sorted.
 [==============================================================================}
-function MArrayHelper.BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
+function MArrayHelper.BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload; cdecl;
   function BP(const value: MType; const hIndex: Integer): Integer;
   var
     L, R, M: Integer;
@@ -63,7 +63,7 @@ end;
          Comparisons are performed using Integer_Compare, allowing for
          consistent ordering and potential extension to other comparison logic.
 [==============================================================================}
-function MArrayHelper.BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function MArrayHelper.BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload; cdecl;
 var
   R: TRange;
   M, C: Integer;
@@ -92,7 +92,7 @@ end;
          'oAscending'. Supports both ascending and descending arrays. Uses
           a standard binary search algorithm to efficiently locate the item.
 [==============================================================================}
-function MArrayHelper.BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
+function MArrayHelper.BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload; cdecl;
 var
   R: TRange;
   C: Integer;
@@ -121,7 +121,7 @@ end;
          order, depending on the oAscending flag. Uses TRange utilities
          for interval reduction; returns -1 when the item is not present.
 [==============================================================================}
-function MArrayHelper.BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
+function MArrayHelper.BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload; cdecl;
 var
   R: TRange;
 begin
@@ -150,7 +150,7 @@ end;
          for large arrays or targets near the beginning. Supports ascending
          (default) and descending arrays. Time complexity is O(log n).
 [==============================================================================}
-function MArrayHelper.BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function MArrayHelper.BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload; cdecl;
 var
   B, L: Integer;
   R: TRange;

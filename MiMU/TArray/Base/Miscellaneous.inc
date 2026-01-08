@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
-function Domain: TRange; overload;
-function Sample(const sSize: Integer): MArray; overload;
-function Zigzag(const zAscending: Boolean = True): MArray; overload;   
+function Domain: TRange; overload; cdecl;
+function Sample(const sSize: Integer): MArray; overload; cdecl;
+function Zigzag(const zAscending: Boolean = True): MArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -12,7 +12,7 @@ function Zigzag(const zAscending: Boolean = True): MArray; overload;
     - If the array is empty, start and stop are set to -1.
     - Otherwise, start = 0 and stop = Length(Self) - 1.
 [==============================================================================}
-function MArrayHelper.Domain: TRange; overload;
+function MArrayHelper.Domain: TRange; overload; cdecl;
 begin
   Result.stop := (Self.Size - 1);
   if (Result.stop = -1) then
@@ -26,7 +26,7 @@ end;
   @action: Returns sample from array by sSize.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Sample(const sSize: Integer): MArray; overload;
+function MArrayHelper.Sample(const sSize: Integer): MArray; overload; cdecl;
 var
   i: Integer;
   r: TIntegerArray;
@@ -45,7 +45,7 @@ end;
            start and end of the source array, producing an outside-in “zigzag” order.
   @note: For odd-length arrays, the middle element appears last.
 [==============================================================================}
-function MArrayHelper.Zigzag(const zAscending: Boolean = True): MArray; overload;
+function MArrayHelper.Zigzag(const zAscending: Boolean = True): MArray; overload; cdecl;
 var
   l, r: Integer;
   s: TRange;

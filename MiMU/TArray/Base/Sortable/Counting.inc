@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
-function CountOf(const items: MArray; const iAscending: Boolean = True): Integer; overload;
-function Counted(const items: MArray; const iSorted: Boolean = False): Integer; overload;
-function IntersectionCount(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+function CountOf(const items: MArray; const iAscending: Boolean = True): Integer; overload; cdecl;
+function Counted(const items: MArray; const iSorted: Boolean = False): Integer; overload; cdecl;
+function IntersectionCount(const items: MArray; const oAscending: Boolean = True): Integer; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -18,7 +18,7 @@ function IntersectionCount(const items: MArray; const oAscending: Boolean = True
     - Time complexity: O(N log M), where N = Length(Self),
       M = Length(Items).
 [==============================================================================}
-function MArrayHelper.CountOf(const items: MArray; const iAscending: Boolean = True): Integer; overload;
+function MArrayHelper.CountOf(const items: MArray; const iAscending: Boolean = True): Integer; overload; cdecl;
 var
   i: Integer;
 begin
@@ -45,7 +45,7 @@ end;
         * iSorted = True : O(N log M)
       where N = Length(Self), M = Length(Items).
 [==============================================================================}
-function MArrayHelper.Counted(const items: MArray; const iSorted: Boolean = False): Integer; overload;
+function MArrayHelper.Counted(const items: MArray; const iSorted: Boolean = False): Integer; overload; cdecl;
 var
   s: MArray;
   i: Integer;
@@ -86,7 +86,7 @@ end;
         e.g., Self = [2,2,2], Items = [2,2] → Result = 2
     - Returns 0 if either array is empty.
 [==============================================================================}
-function MArrayHelper.IntersectionCount(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+function MArrayHelper.IntersectionCount(const items: MArray; const oAscending: Boolean = True): Integer; overload; cdecl;
 var
   h, s, i, j: Integer;
 begin

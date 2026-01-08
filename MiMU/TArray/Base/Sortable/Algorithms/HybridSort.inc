@@ -1,5 +1,5 @@
 {$IFDEF HELPERS}
-function HybridSort(const aAscending: Boolean = True): Integer; overload;
+function HybridSort(const aAscending: Boolean = True): Integer; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function HybridSort(const aAscending: Boolean = True): Integer; overload;
   @note:   - Returns Length(Self)
            - Stable (preserves equal element order)
 [==============================================================================}
-function MArrayHelper.HybridSort(const aAscending: Boolean = True): Integer; overload;
+function MArrayHelper.HybridSort(const aAscending: Boolean = True): Integer; overload; cdecl;
 const
   RUN_SIZE = 32;
   procedure INS(var arr: MArray; const L, R: Integer);

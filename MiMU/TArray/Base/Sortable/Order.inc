@@ -1,9 +1,9 @@
 {$IFDEF HELPERS}
-function Orderly: Boolean; overload;
-function Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload;
-function Order: Integer; overload;
-function InOrder(const aAscending: Boolean = True): Boolean; overload;
-function OnOrder: Boolean; overload;
+function Orderly: Boolean; overload; cdecl;
+function Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload; cdecl;
+function Order: Integer; overload; cdecl;
+function InOrder(const aAscending: Boolean = True): Boolean; overload; cdecl;
+function OnOrder: Boolean; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -12,7 +12,7 @@ function OnOrder: Boolean; overload;
   @action: Returns true if array arr is in ascending AND/OR descending order.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Orderly: Boolean; overload;
+function MArrayHelper.Orderly: Boolean; overload; cdecl;
 var
   i: Integer;
   a, d: Boolean;
@@ -36,7 +36,7 @@ end;
   @action: Returns true if array arr is in ascending AND/OR descending order by aAscending.
   @note: Recursive alternative.
 [==============================================================================}
-function MArrayHelper.Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload;
+function MArrayHelper.Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload; cdecl;
 begin
   if (index >= High(Self)) then
     Exit(True);
@@ -51,7 +51,7 @@ end;
   @note: -1 = DESCENDING, 0=NO ORDER OR MIXED ARRAY, 1=ASCENDING
          [1,2,3] => 1 [1,1,1] => 1 [1,0,1] => 0 [3,2,1] => -1
 [==============================================================================}
-function MArrayHelper.Order: Integer; overload;
+function MArrayHelper.Order: Integer; overload; cdecl;
 var
   i, l: Integer;
   a, d: Boolean;
@@ -87,7 +87,7 @@ end;
   @action: Returns true if array arr is in ascending/descending order by aAscending.
   @note: By default checking for ascending order.
 [==============================================================================}
-function MArrayHelper.InOrder(const aAscending: Boolean = True): Boolean; overload;
+function MArrayHelper.InOrder(const aAscending: Boolean = True): Boolean; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -114,7 +114,7 @@ end;
   @note: Returns True if the sequence does not reverse direction (monotonic in
          either direction). Returns False if the order changes (both rises and falls occur).
 [==============================================================================}
-function MArrayHelper.OnOrder: Boolean; overload;
+function MArrayHelper.OnOrder: Boolean; overload; cdecl;
 var
   i, h, l: Integer;
 begin

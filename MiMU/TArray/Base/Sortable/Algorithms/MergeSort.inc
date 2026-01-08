@@ -1,8 +1,8 @@
 {$IFDEF HELPERS}
-function MergeSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
-function MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload; 
-function MergeSort(const aAscending: Boolean = True): Integer; overload;
-function MergeSortBU(const aAscending: Boolean = True): Integer; overload;
+function MergeSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload; cdecl;
+function MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function MergeSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MergeSortBU(const aAscending: Boolean = True): Integer; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +15,7 @@ function MergeSortBU(const aAscending: Boolean = True): Integer; overload;
          - Sorting is stable (preserves order of equal elements).
          - Useful for retrieving both sorted data and their original positions.
 [==============================================================================}
-function MArrayHelper.MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
+function MArrayHelper.MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
   procedure MSI(var arr: MArray; var indexes: TIntegerArray; const L, R: Integer);
   var
     s: MArray;
@@ -91,7 +91,7 @@ end;
          - Returns Length(Self).
          - Set aAscending = False for descending order.
 [==============================================================================}
-function MArrayHelper.MergeSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
+function MArrayHelper.MergeSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload; cdecl;
   procedure MSP(var arr, prt: MArray; const L, R: Integer);
   var
     s, p: MArray;
@@ -156,7 +156,7 @@ end;
   @action: MergeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function MArrayHelper.MergeSort(const aAscending: Boolean = True): Integer; overload;
+function MArrayHelper.MergeSort(const aAscending: Boolean = True): Integer; overload; cdecl;
   procedure Merge(var arr, tmp: MArray; const Lo, Hi: Integer; const aAscending: Boolean = True);
   var
     l, r, i, m, o: Integer;
@@ -199,7 +199,7 @@ end;
   @action: Bottom-up MergeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function MArrayHelper.MergeSortBU(const aAscending: Boolean = True): Integer; overload;
+function MArrayHelper.MergeSortBU(const aAscending: Boolean = True): Integer; overload; cdecl;
 var
   t: MArray;
   w, i, s: Integer;

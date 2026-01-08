@@ -1,13 +1,13 @@
 {$IFDEF HELPERS}
-function Diversified: MArray; overload;
-function DiversifiedEx(const dAscending: Boolean = True): MArray; overload;
-function Purified(const dAscending: Boolean = True): MArray; overload;
-function Purify(const dAscending: Boolean = True): Integer; overload;
-function Uncluttered: MArray; overload;
-function Unified(const dAscending: Boolean = True): MArray; overload;
-function Unify(const dAscending: Boolean = True): Integer; overload;
-function Unduplicated: MArray; overload;
-function Uniqued: MArray; overload;
+function Diversified: MArray; overload; cdecl;
+function DiversifiedEx(const dAscending: Boolean = True): MArray; overload; cdecl;
+function Purified(const dAscending: Boolean = True): MArray; overload; cdecl;
+function Purify(const dAscending: Boolean = True): Integer; overload; cdecl;
+function Uncluttered: MArray; overload; cdecl;
+function Unified(const dAscending: Boolean = True): MArray; overload; cdecl;
+function Unify(const dAscending: Boolean = True): Integer; overload; cdecl;
+function Unduplicated: MArray; overload; cdecl;
+function Uniqued: MArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -16,7 +16,7 @@ function Uniqued: MArray; overload;
   @action: Alternative for Unique methods
   @note: None.
 [==============================================================================}
-function MArrayHelper.Diversified: MArray; overload;
+function MArrayHelper.Diversified: MArray; overload; cdecl;
 var
   d: specialize TDictionary<MType, Boolean>;
   i: Integer;
@@ -41,7 +41,7 @@ end;
   @action: Alternative for Unique methods
   @note: None.
 [==============================================================================}
-function MArrayHelper.DiversifiedEx(const dAscending: Boolean = True): MArray; overload;
+function MArrayHelper.DiversifiedEx(const dAscending: Boolean = True): MArray; overload; cdecl;
 var
   l: specialize TList<MType>;
   d: specialize TDictionary<MType, Boolean>;
@@ -78,7 +78,7 @@ end;
   @action: Returns array with unique items
   @note: None.
 [==============================================================================}
-function MArrayHelper.Purified(const dAscending: Boolean = True): MArray; overload;
+function MArrayHelper.Purified(const dAscending: Boolean = True): MArray; overload; cdecl;
 var
   d: specialize TDictionary<MType, Boolean>;
   l: specialize TList<MType>;
@@ -115,7 +115,7 @@ end;
   @action: Removes duplicates
   @note: None
 [==============================================================================}
-function MArrayHelper.Purify(const dAscending: Boolean = True): Integer; overload;
+function MArrayHelper.Purify(const dAscending: Boolean = True): Integer; overload; cdecl;
 var
   d: specialize TDictionary<MType, Boolean>;
   c: MArray;
@@ -154,7 +154,7 @@ end;
   @action: Removes all duplicates from arr.
   @note: Returns the number of items that were removed.
 [==============================================================================}
-function MArrayHelper.Uncluttered: MArray; overload;
+function MArrayHelper.Uncluttered: MArray; overload; cdecl;
 type
   TDict = specialize TDictionary<MType, Boolean>;
 var
@@ -186,7 +186,7 @@ end;
   @action: Uniques array
   @note: None.
  [==============================================================================}
-function MArrayHelper.Unified(const dAscending: Boolean = True): MArray; overload;
+function MArrayHelper.Unified(const dAscending: Boolean = True): MArray; overload; cdecl;
 var
   d: specialize TDictionary<MType, Byte>;
   i, n: Integer;
@@ -222,7 +222,7 @@ end;
   @action: Uniques array
   @note: None.
  [==============================================================================}
-function MArrayHelper.Unify(const dAscending: Boolean = True): Integer; overload;
+function MArrayHelper.Unify(const dAscending: Boolean = True): Integer; overload; cdecl;
 var
   s: MArray;
   d: specialize TDictionary<MType, Byte>;
@@ -262,7 +262,7 @@ end;
   @action: Removes all duplicates from arr.
   @note: Returns the number of items that were removed.
 [==============================================================================}
-function MArrayHelper.Unduplicated: MArray; overload;
+function MArrayHelper.Unduplicated: MArray; overload; cdecl;
 var
   a, l, i, j: Integer;
   m: Boolean;
@@ -293,7 +293,7 @@ end;
   @action: Removes all duplicates from arr.
   @note: Returns the unique version of arr.
 [==============================================================================}
-function MArrayHelper.Uniqued: MArray; overload;
+function MArrayHelper.Uniqued: MArray; overload; cdecl;
 var
   i, j, l, c: Integer;
 begin

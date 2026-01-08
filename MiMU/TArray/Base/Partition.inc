@@ -1,10 +1,10 @@
 {$IFDEF HELPERS}
-function Collated: M2DArray; overload;
-function Components(const connections: TConnectionArray): M2DArray; overload;
-function Distincted: M2DArray; overload;
-function Distribute(const parts: Integer): M2DArray; overload;
-function Partition(const pSize: Integer): M2DArray; overload;
-function Runs: M2DArray; overload;
+function Collated: M2DArray; overload; cdecl;
+function Components(const connections: TConnectionArray): M2DArray; overload; cdecl;
+function Distincted: M2DArray; overload; cdecl;
+function Distribute(const parts: Integer): M2DArray; overload; cdecl;
+function Partition(const pSize: Integer): M2DArray; overload; cdecl;
+function Runs: M2DArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -20,7 +20,7 @@ function Runs: M2DArray; overload;
          original ordering of elements within each group is preserved as well.
          This operation performs a stable categorization, not a clone.
 [==============================================================================}
-function MArrayHelper.Collated: M2DArray; overload;
+function MArrayHelper.Collated: M2DArray; overload; cdecl;
 var
   m: specialize TDictionary<MType, Integer>;
   i, p: Integer;
@@ -55,7 +55,7 @@ end;
   @note: Duplicate connections are ignored. Self must contain at least as many elements as
          the maximum index in any connection.
 [==============================================================================}
-function MArrayHelper.Components(const connections: TConnectionArray): M2DArray; overload;
+function MArrayHelper.Components(const connections: TConnectionArray): M2DArray; overload; cdecl;
 var
   i, l: Integer;
   v: TBooleanArray;
@@ -115,7 +115,7 @@ end;
          been grouped. Duplicate values in Self are added to the same group.
          The resulting 2D array has one group per unique value.
 [==============================================================================}
-function MArrayHelper.Distincted: M2DArray; overload;
+function MArrayHelper.Distincted: M2DArray; overload; cdecl;
 var
   m: MArray;
   i, l: Integer;
@@ -141,7 +141,7 @@ end;
   @action: Distributes array arr to 2D array by number of parts.
   @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5][6,7]
 [==============================================================================}
-function MArrayHelper.Distribute(const parts: Integer): M2DArray; overload;
+function MArrayHelper.Distribute(const parts: Integer): M2DArray; overload; cdecl;
 var
   l, p, b, r, i, j, s, c: Integer;
 begin
@@ -171,7 +171,7 @@ end;
   @action: Partitions array arr to 2D array by size of parts.
   @note: ([1,2,3,4,5,6,7], 3) => [1,2,3][4,5,6][7]
 [==============================================================================}
-function MArrayHelper.Partition(const pSize: Integer): M2DArray; overload;
+function MArrayHelper.Partition(const pSize: Integer): M2DArray; overload; cdecl;
 var
   p, i, j, s, r, l: Integer;
 begin
@@ -201,7 +201,7 @@ end;
   @note: Input must be sorted for meaningful grouping; a new group is started
          whenever the value differs from the previous element.
 [==============================================================================}
-function MArrayHelper.Runs: M2DArray; overload;
+function MArrayHelper.Runs: M2DArray; overload; cdecl;
 var
   i, r: Integer;
 begin

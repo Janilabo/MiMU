@@ -1,22 +1,22 @@
 {$IFDEF HELPERS}
-function Delete(const index: Integer = 0): MArray; overload;
-function Delete(const ID: TIntegerArray): MArray; overload;
-function Drop(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
-function Dump(const items: MArray; const index: Integer = 0): MArray; overload;
-function Erase(const item: MType; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
-function Erase(const item: MType; const all: Boolean): MArray; overload;
-function Erase(const items: MArray; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
-function Erase(const items: MArray; const all: Boolean): MArray; overload;
-function Pop: MType; overload;
-function Pop(const null: MType): MType; overload;
-function Pull: MArray; overload;
-function Remove(const item: MType; const index: Integer = 0; const all: Boolean = True): MArray; overload;
-function Remove(const item: MType; const all: Boolean): MArray; overload;
-function Remove(const items: MArray; const index: Integer = 0; const all: Boolean = True): MArray; overload;
-function Remove(const items: MArray; const all: Boolean): MArray; overload;
-function Shift: MType; overload;
-function Shift(const sCount: Integer): MArray; overload;
-function Strip(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
+function Delete(const index: Integer = 0): MArray; overload; cdecl;
+function Delete(const ID: TIntegerArray): MArray; overload; cdecl;
+function Drop(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload; cdecl;
+function Dump(const items: MArray; const index: Integer = 0): MArray; overload; cdecl;
+function Erase(const item: MType; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload; cdecl;
+function Erase(const item: MType; const all: Boolean): MArray; overload; cdecl;
+function Erase(const items: MArray; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload; cdecl;
+function Erase(const items: MArray; const all: Boolean): MArray; overload; cdecl;
+function Pop: MType; overload; cdecl;
+function Pop(const null: MType): MType; overload; cdecl;
+function Pull: MArray; overload; cdecl;
+function Remove(const item: MType; const index: Integer = 0; const all: Boolean = True): MArray; overload; cdecl;
+function Remove(const item: MType; const all: Boolean): MArray; overload; cdecl;
+function Remove(const items: MArray; const index: Integer = 0; const all: Boolean = True): MArray; overload; cdecl;
+function Remove(const items: MArray; const all: Boolean): MArray; overload; cdecl;
+function Shift: MType; overload; cdecl;
+function Shift(const sCount: Integer): MArray; overload; cdecl;
+function Strip(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -25,7 +25,7 @@ function Strip(const item: MType; const eraseDuplicates: Boolean = True): MArray
   @action: Deletes array item from arr by index.
   @note: Returns true with success (index existed in arr).
 [==============================================================================}
-function MArrayHelper.Delete(const index: Integer = 0): MArray; overload;
+function MArrayHelper.Delete(const index: Integer = 0): MArray; overload; cdecl;
 var
   i, h: Integer;
 begin
@@ -44,7 +44,7 @@ end;
   @action: Deletes array items from arr by indexes (ID).
   @note: Returns amount of items that were deleted succesfully by ID's.
 [==============================================================================}
-function MArrayHelper.Delete(const ID: TIntegerArray): MArray; overload;
+function MArrayHelper.Delete(const ID: TIntegerArray): MArray; overload; cdecl;
 var
   i, l, r: Integer;
 begin
@@ -66,7 +66,7 @@ end;
   @action: Removes item(s) from arr and returns it.
   @note: 	
 [==============================================================================}
-function MArrayHelper.Drop(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
+function MArrayHelper.Drop(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload; cdecl;
 var
   p: TIntegerArray;
   r: TRange;
@@ -86,7 +86,7 @@ end;
   @action: Deletes items from array, keeps others. Returns array length (after action).
   @note: Supports custom start index!
 [==============================================================================}
-function MArrayHelper.Dump(const items: MArray; const index: Integer = 0): MArray; overload;
+function MArrayHelper.Dump(const items: MArray; const index: Integer = 0): MArray; overload; cdecl;
 var
   i, l, m, d: Integer;
 begin
@@ -112,7 +112,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
-function MArrayHelper.Erase(const item: MType; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
+function MArrayHelper.Erase(const item: MType; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload; cdecl;
 var
   j, i, m, l, d: Integer;
   f: Boolean;
@@ -151,7 +151,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed.
 [==============================================================================}
-function MArrayHelper.Erase(const item: MType; const all: Boolean): MArray; overload;
+function MArrayHelper.Erase(const item: MType; const all: Boolean): MArray; overload; cdecl;
 begin
   Result := Self.Erase(item, 2147483647, all);
 end;
@@ -161,7 +161,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
-function MArrayHelper.Erase(const items: MArray; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
+function MArrayHelper.Erase(const items: MArray; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload; cdecl;
 var
   h, i, j, m, l, d: Integer;
   f: Boolean;
@@ -203,7 +203,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed.
 [==============================================================================}
-function MArrayHelper.Erase(const items: MArray; const all: Boolean): MArray; overload;
+function MArrayHelper.Erase(const items: MArray; const all: Boolean): MArray; overload; cdecl;
 begin
   Result := Self.Erase(items, 2147483647, all);
 end;
@@ -213,7 +213,7 @@ end;
   @action: Returns and removes item from highest array index from arr.
   @note: UNSAFE! Make sure array has enough items..
 [==============================================================================}
-function MArrayHelper.Pop: MType; overload;
+function MArrayHelper.Pop: MType; overload; cdecl;
 var
   h: Integer;
 begin
@@ -229,7 +229,7 @@ end;
   @action: Returns and removes item from highest array index from arr.
   @note: Returns null if array contains no items.
 [==============================================================================}
-function MArrayHelper.Pop(const null: MType): MType; overload;
+function MArrayHelper.Pop(const null: MType): MType; overload; cdecl;
 var
   h: Integer;
 begin
@@ -245,7 +245,7 @@ end;
   @action: Returns the contents of the array and leaves it empty.
   @note: After calling Pull, Self.Length = 0.
 [==============================================================================}
-function MArrayHelper.Pull: MArray; overload;
+function MArrayHelper.Pull: MArray; overload; cdecl;
 var
   i: Integer;
 begin
@@ -260,7 +260,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
-function MArrayHelper.Remove(const item: MType; const index: Integer = 0; const all: Boolean = True): MArray; overload;
+function MArrayHelper.Remove(const item: MType; const index: Integer = 0; const all: Boolean = True): MArray; overload; cdecl;
 var
   l, i, r, m: Integer;
   s: Boolean;
@@ -287,7 +287,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed.
 [==============================================================================}
-function MArrayHelper.Remove(const item: MType; const all: Boolean): MArray; overload;
+function MArrayHelper.Remove(const item: MType; const all: Boolean): MArray; overload; cdecl;
 begin
   Result := Self.Remove(item, 0, all);
 end;
@@ -297,7 +297,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed. Supports start index position.
 [==============================================================================}
-function MArrayHelper.Remove(const items: MArray; const index: Integer = 0; const all: Boolean = True): MArray; overload;
+function MArrayHelper.Remove(const items: MArray; const index: Integer = 0; const all: Boolean = True): MArray; overload; cdecl;
 var
   a, b, l, i, r, m: Integer;
   d, s: Boolean;
@@ -337,7 +337,7 @@ end;
   @action: Deletes item(s) from array arr. Only 1 if all is set as False.
   @note: Returns amount of items that were removed.
 [==============================================================================}
-function MArrayHelper.Remove(const items: MArray; const all: Boolean): MArray; overload;
+function MArrayHelper.Remove(const items: MArray; const all: Boolean): MArray; overload; cdecl;
 begin
   Result := Self.Remove(items, 0, all);
 end;
@@ -347,7 +347,7 @@ end;
   @action: Shortens the array with first element.
   @note: Returns the removed arr[0].
 [==============================================================================}
-function MArrayHelper.Shift: MType; overload;
+function MArrayHelper.Shift: MType; overload; cdecl;
 var
   i, h: Integer;
 begin
@@ -365,7 +365,7 @@ end;
   @action: Shortens the array with first SCOUNT element(s).
   @note: Returns the removed arr[x]s.
 [==============================================================================}
-function MArrayHelper.Shift(const sCount: Integer): MArray; overload;
+function MArrayHelper.Shift(const sCount: Integer): MArray; overload; cdecl;
 var
   i, l, s: Integer;
 begin
@@ -386,7 +386,7 @@ end;
   @action: Removes item(s) from arr and returns it.
   @note: 	
 [==============================================================================}
-function MArrayHelper.Strip(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
+function MArrayHelper.Strip(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload; cdecl;
 var
   p: TIntegerArray;
   r: TRange;

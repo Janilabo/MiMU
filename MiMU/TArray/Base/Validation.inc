@@ -1,36 +1,36 @@
 {$IFDEF HELPERS}
-function AllEqual: Boolean; overload;
-function AllSame: Boolean; overload;
-function AllUnique: Boolean; overload;
-function BuiltWith(const blocks: MArray): Boolean; overload;
-function BuiltWithout(const forbidden: MArray): Boolean; overload;
-function Comprised(const items: MArray): Boolean; overload;
-function Constant(const item: MType): Boolean; overload;
-function Constant: Boolean; overload;
-function Contains(const item: MType; const index: Integer = 0): Boolean; overload;
-function Contains(const item: MType; const limit: TRange): Boolean; overload;
-function ContainsAtLeast(const item: MType; const limit: Integer): Boolean; overload;
-function ContainsAtMost(const item: MType; const limit: Integer): Boolean; overload;
-function Exact(const items: MArray): Boolean; overload;
-function Excessive: Boolean; overload;
-function Fits(const maxValue: Integer): Boolean; overload;
-function Fits(const target: TRange): Boolean; overload;
-function FreeOf(const forbidden: MArray): Boolean; overload;
-function GotAtLeast(const item: MType; const limit: Integer): Boolean; overload;
-function GotAtMost(const item: MType; const limit: Integer): Boolean; overload;
-function Got(const item: MType; const limit: TRange): Boolean; overload;
-function HasAtLeast(const item: MType; const limit: Integer): Boolean; overload;
-function HasAtMost(const item: MType; const limit: Integer): Boolean; overload;
-function Has(const item: MType; const limit: TRange): Boolean; overload;
-function Holds(const chain: MArray): Boolean; overload;
-function Homogeneous(const item: MType): Boolean; overload;
-function Homogeneous: Boolean; overload;
-function MadeOf(const allowed: MArray): Boolean; overload;
-function Occurs(const item: MType; const occurrence: Integer = 1): Boolean; overload;
-function Presence(const item: MType; const occurrence: Integer = 1): Boolean; overload;
-function Subset(const items: MArray): Boolean; overload;
-function Uniform: Boolean; overload;
-function Uniform(const item: MType): Boolean; overload;
+function AllEqual: Boolean; overload; cdecl;
+function AllSame: Boolean; overload; cdecl;
+function AllUnique: Boolean; overload; cdecl;
+function BuiltWith(const blocks: MArray): Boolean; overload; cdecl;
+function BuiltWithout(const forbidden: MArray): Boolean; overload; cdecl;
+function Comprised(const items: MArray): Boolean; overload; cdecl;
+function Constant(const item: MType): Boolean; overload; cdecl;
+function Constant: Boolean; overload; cdecl;
+function Contains(const item: MType; const index: Integer = 0): Boolean; overload; cdecl;
+function Contains(const item: MType; const limit: TRange): Boolean; overload; cdecl;
+function ContainsAtLeast(const item: MType; const limit: Integer): Boolean; overload; cdecl;
+function ContainsAtMost(const item: MType; const limit: Integer): Boolean; overload; cdecl;
+function Exact(const items: MArray): Boolean; overload; cdecl;
+function Excessive: Boolean; overload; cdecl;
+function Fits(const maxValue: Integer): Boolean; overload; cdecl;
+function Fits(const target: TRange): Boolean; overload; cdecl;
+function FreeOf(const forbidden: MArray): Boolean; overload; cdecl;
+function GotAtLeast(const item: MType; const limit: Integer): Boolean; overload; cdecl;
+function GotAtMost(const item: MType; const limit: Integer): Boolean; overload; cdecl;
+function Got(const item: MType; const limit: TRange): Boolean; overload; cdecl;
+function HasAtLeast(const item: MType; const limit: Integer): Boolean; overload; cdecl;
+function HasAtMost(const item: MType; const limit: Integer): Boolean; overload; cdecl;
+function Has(const item: MType; const limit: TRange): Boolean; overload; cdecl;
+function Holds(const chain: MArray): Boolean; overload; cdecl;
+function Homogeneous(const item: MType): Boolean; overload; cdecl;
+function Homogeneous: Boolean; overload; cdecl;
+function MadeOf(const allowed: MArray): Boolean; overload; cdecl;
+function Occurs(const item: MType; const occurrence: Integer = 1): Boolean; overload; cdecl;
+function Presence(const item: MType; const occurrence: Integer = 1): Boolean; overload; cdecl;
+function Subset(const items: MArray): Boolean; overload; cdecl;
+function Uniform: Boolean; overload; cdecl;
+function Uniform(const item: MType): Boolean; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -39,7 +39,7 @@ function Uniform(const item: MType): Boolean; overload;
   @action: Returns true if all values in arr are equal (arr contains only equal values).
   @note: Returns FALSE with empty array!
 [==============================================================================}
-function MArrayHelper.AllEqual: Boolean; overload;
+function MArrayHelper.AllEqual: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -54,7 +54,7 @@ end;
   @action: Returns true if all values in arr are the same (arr contains only equal values).
   @note: Returns FALSE with empty array!
 [==============================================================================}
-function MArrayHelper.AllSame: Boolean; overload;
+function MArrayHelper.AllSame: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -69,7 +69,7 @@ end;
   @action: Returns true if all values in arr are unique (arr contains ONLY unique values).
   @note: None
 [==============================================================================}
-function MArrayHelper.AllUnique: Boolean; overload;
+function MArrayHelper.AllUnique: Boolean; overload; cdecl;
 var
   h, a, b: Integer;
 begin
@@ -86,7 +86,7 @@ end;
   @action: Returns true is arr is built with blocks.
   @note: This function requires blocks array to be unique (no duplicates allowed for it).
 [==============================================================================}
-function MArrayHelper.BuiltWith(const blocks: MArray): Boolean; overload;
+function MArrayHelper.BuiltWith(const blocks: MArray): Boolean; overload; cdecl;
 var
   i, p: Integer;
   u: TBooleanArray;
@@ -112,7 +112,7 @@ end;
   @action: Checks if array arr does not have any forbidden items.
   @note: None.
 [==============================================================================}
-function MArrayHelper.BuiltWithout(const forbidden: MArray): Boolean; overload;
+function MArrayHelper.BuiltWithout(const forbidden: MArray): Boolean; overload; cdecl;
 var
   i, j: Integer;
 begin
@@ -129,7 +129,7 @@ end;
   @action: Returns true if arr is built of items only.
   @note: 
 [==============================================================================}
-function MArrayHelper.Comprised(const items: MArray): Boolean; overload;
+function MArrayHelper.Comprised(const items: MArray): Boolean; overload; cdecl;
 var
   l: Integer;
 begin
@@ -144,7 +144,7 @@ end;
   @action: Returns true if arr consists of item ONLY.
   @note: Requires at least single item. Otherwise returns False. (With empty arrays)
 [==============================================================================}
-function MArrayHelper.Constant(const item: MType): Boolean; overload;
+function MArrayHelper.Constant(const item: MType): Boolean; overload; cdecl;
 var
   l: Integer;
 begin
@@ -159,7 +159,7 @@ end;
   @action: Returns true if arr consists of ONLY same items.
   @note: Requires at least single item. Otherwise returns False. (With empty arrays)
 [==============================================================================}
-function MArrayHelper.Constant: Boolean; overload;
+function MArrayHelper.Constant: Boolean; overload; cdecl;
 begin
   Result := (Self.Occupied and Constant(Self[0]));
 end;
@@ -169,7 +169,7 @@ end;
   @action: Looks array for item starting from start index. If found, Result will be True.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Contains(const item: MType; const index: Integer = 0): Boolean; overload;
+function MArrayHelper.Contains(const item: MType; const index: Integer = 0): Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -188,7 +188,7 @@ end;
     - Uses 0-based indexing for arrays.
     - limit.Normalize ensures that limit.start <= limit.stop.
 [==============================================================================}
-function MArrayHelper.Contains(const item: MType; const limit: TRange): Boolean; overload;
+function MArrayHelper.Contains(const item: MType; const limit: TRange): Boolean; overload; cdecl;
 var
   i, c, r: Integer;
   n: TRange;
@@ -218,7 +218,7 @@ end;
     - Performs early-exit optimization if remaining elements cannot reach the limit.
     - Uses 0-based indexing for arrays.
 [==============================================================================}
-function MArrayHelper.ContainsAtLeast(const item: MType; const limit: Integer): Boolean; overload;
+function MArrayHelper.ContainsAtLeast(const item: MType; const limit: Integer): Boolean; overload; cdecl;
 var
   i, c, r: Integer;
 begin
@@ -248,7 +248,7 @@ end;
     - Performs early-exit optimization if remaining elements cannot exceed the limit.
     - Uses 0-based indexing for arrays.
 [==============================================================================}
-function MArrayHelper.ContainsAtMost(const item: MType; const limit: Integer): Boolean; overload;
+function MArrayHelper.ContainsAtMost(const item: MType; const limit: Integer): Boolean; overload; cdecl;
 var
   i, c, r: Integer;
 begin
@@ -280,7 +280,7 @@ end;
          arr[2,1,3,4] => False
          This function requires items array to be unique. No duplicates allowed for it!
 [==============================================================================}
-function MArrayHelper.Exact(const items: MArray): Boolean; overload;
+function MArrayHelper.Exact(const items: MArray): Boolean; overload; cdecl;
 var
   i, j: Integer;
   f: TBooleanArray;
@@ -303,7 +303,7 @@ end;
   @action: Returns true if arr contains any duplicates in it.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Excessive: Boolean; overload; 
+function MArrayHelper.Excessive: Boolean; overload; cdecl;
 type
   TDict = specialize TDictionary<MType, Boolean>;
 var
@@ -328,7 +328,7 @@ end;
   @action: Returns true if arr size is at maximum maxValue.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Fits(const maxValue: Integer): Boolean; overload;
+function MArrayHelper.Fits(const maxValue: Integer): Boolean; overload; cdecl;
 begin
   Result := (Self.Size <= maxValue);
 end;
@@ -338,7 +338,7 @@ end;
   @action: Returns true if arr size is between target start and stop.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Fits(const target: TRange): Boolean; overload;
+function MArrayHelper.Fits(const target: TRange): Boolean; overload; cdecl;
 begin
   Result := InRange(Self.Size, Min(target.start, target.stop), Max(target.start, target.stop));
 end;
@@ -348,7 +348,7 @@ end;
   @action: Checks if array arr does not have any forbidden items.
   @note: None.
 [==============================================================================}
-function MArrayHelper.FreeOf(const forbidden: MArray): Boolean; overload;
+function MArrayHelper.FreeOf(const forbidden: MArray): Boolean; overload; cdecl;
 var
   s, f: TRange;
   i: Integer;
@@ -373,7 +373,7 @@ end;
     - Returns False if limit is greater than the actual occurrences.
     - Single-pass (delegated to Count) and zero-based indexing.
 [==============================================================================}
-function MArrayHelper.GotAtLeast(const item: MType; const limit: Integer): Boolean; overload;
+function MArrayHelper.GotAtLeast(const item: MType; const limit: Integer): Boolean; overload; cdecl;
 begin
   Result := (Self.Count(item) >= limit);
 end;
@@ -386,7 +386,7 @@ end;
     - Returns False if the occurrences exceed the specified limit.
     - Single-pass (delegated to Count) and zero-based indexing.
 [==============================================================================}
-function MArrayHelper.GotAtMost(const item: MType; const limit: Integer): Boolean; overload;
+function MArrayHelper.GotAtMost(const item: MType; const limit: Integer): Boolean; overload; cdecl;
 begin
   Result := (Self.Count(item) <= limit);
 end;
@@ -400,7 +400,7 @@ end;
     - Returns True if Count(item) is within [limit.start, limit.stop].
     - Single-pass (delegated to Count) and zero-based indexing.
 [==============================================================================}
-function MArrayHelper.Got(const item: MType; const limit: TRange): Boolean; overload;
+function MArrayHelper.Got(const item: MType; const limit: TRange): Boolean; overload; cdecl;
 begin
   Result := limit.Contains(Self.Count(item));
 end; 
@@ -414,7 +414,7 @@ end;
     - Uses zero-based indexing (0..High(Self)).
     - Optimized for large arrays; no temporary allocations are made.
 [==============================================================================}
-function MArrayHelper.HasAtLeast(const item: MType; const limit: Integer): Boolean; overload;
+function MArrayHelper.HasAtLeast(const item: MType; const limit: Integer): Boolean; overload; cdecl;
 var
   i, c: Integer;
 begin
@@ -437,7 +437,7 @@ end;
     - Uses zero-based indexing (0..High(Self)).
     - Optimized for large arrays; no temporary allocations are made.
 [==============================================================================}
-function MArrayHelper.HasAtMost(const item: MType; const limit: Integer): Boolean; overload;
+function MArrayHelper.HasAtMost(const item: MType; const limit: Integer): Boolean; overload; cdecl;
 var
   i, c: Integer;
 begin
@@ -464,7 +464,7 @@ end;
     - Uses zero-based indexing (0..High(Self)).
     - Optimized for large arrays; no temporary allocations are made.
 [==============================================================================}
-function MArrayHelper.Has(const item: MType; const limit: TRange): Boolean; overload;
+function MArrayHelper.Has(const item: MType; const limit: TRange): Boolean; overload; cdecl;
 var
   i, c, r: Integer;
   n: TRange;
@@ -491,7 +491,7 @@ end;
   @action: Returns true if arr contains (holds) WHOLE chain of items in it.
   @note: Starting from any index and ending to any index!
 [==============================================================================}
-function MArrayHelper.Holds(const chain: MArray): Boolean; overload;
+function MArrayHelper.Holds(const chain: MArray): Boolean; overload; cdecl;
 var
   a, b, x, y, z: Integer;
   n: Boolean;
@@ -519,7 +519,7 @@ end;
   @action: Returns true if arr consists of ONLY same items.
   @note: Requires at least single item. Otherwise returns False. (With empty arrays)
 [==============================================================================}
-function MArrayHelper.Homogeneous(const item: MType): Boolean; overload;
+function MArrayHelper.Homogeneous(const item: MType): Boolean; overload; cdecl;
 var
   h, i: Integer;
 begin
@@ -535,7 +535,7 @@ end;
   @action: Returns true if arr consists of ONLY same items.
   @note: Requires at least single item. Otherwise returns False. (With empty arrays)
 [==============================================================================}
-function MArrayHelper.Homogeneous: Boolean; overload;
+function MArrayHelper.Homogeneous: Boolean; overload; cdecl;
 begin
   Result := (Self.Exists and Homogeneous(Self[0]));
 end;
@@ -545,7 +545,7 @@ end;
   @action: Checks if array arr contains only allowed items.
   @note: None.
 [==============================================================================}
-function MArrayHelper.MadeOf(const allowed: MArray): Boolean; overload;
+function MArrayHelper.MadeOf(const allowed: MArray): Boolean; overload; cdecl;
 var
   a, s: TRange;
   i: Integer;
@@ -567,7 +567,7 @@ end;
   @action: Returns true item exists in arr EXACTLY(!) occurrence amount of times.
   @note: Supports lookup for 0 items. Loops array through from beginning to end.	
 [==============================================================================}
-function MArrayHelper.Occurs(const item: MType; const occurrence: Integer = 1): Boolean; overload;
+function MArrayHelper.Occurs(const item: MType; const occurrence: Integer = 1): Boolean; overload; cdecl;
 var
   o, p: Integer;
 begin
@@ -596,7 +596,7 @@ end;
   @action: Returns true item exists in arr EXACTLY(!) occurrence amount of times.
   @note: Supports lookup for 0 items. Loops array through from end to beginning.	
 [==============================================================================}
-function MArrayHelper.Presence(const item: MType; const occurrence: Integer = 1): Boolean; overload;
+function MArrayHelper.Presence(const item: MType; const occurrence: Integer = 1): Boolean; overload; cdecl;
 var
   l, o: Integer;
 begin
@@ -625,7 +625,7 @@ end;
   @action: Returns true if arr is subset of items.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Subset(const items: MArray): Boolean; overload;
+function MArrayHelper.Subset(const items: MArray): Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -640,7 +640,7 @@ end;
   @action: Returns true if arr is consistent with only 1 item.
   @note: Returns True with empty arrays!
 [==============================================================================}
-function MArrayHelper.Uniform: Boolean; overload;
+function MArrayHelper.Uniform: Boolean; overload; cdecl;
 var
   i: Integer;
 begin
@@ -655,7 +655,7 @@ end;
   @action: Returns true if arr is consistent with only custom item.
   @note: Returns True with empty arrays!
 [==============================================================================}
-function MArrayHelper.Uniform(const item: MType): Boolean; overload;
+function MArrayHelper.Uniform(const item: MType): Boolean; overload; cdecl;
 var
   i: Integer;
 begin

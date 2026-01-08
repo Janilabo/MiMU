@@ -1,14 +1,14 @@
 {$IFDEF HELPERS}
-function Compact: Integer; overload;
-function Compacted: MArray; overload;
-function Compacted(const threshold: Integer): MArray; overload;
-function Compress: Integer; overload;
-function Compressed: MArray; overload;
-function Compressed(const threshold: Integer): MArray; overload;
-function Deduplicated: MArray; overload;
-function Prune: Integer; overload;
-function Pruned: MArray; overload;
-function Pruned(const threshold: Integer): MArray; overload;
+function Compact: Integer; overload; cdecl;
+function Compacted: MArray; overload; cdecl;
+function Compacted(const threshold: Integer): MArray; overload; cdecl;
+function Compress: Integer; overload; cdecl;
+function Compressed: MArray; overload; cdecl;
+function Compressed(const threshold: Integer): MArray; overload; cdecl;
+function Deduplicated: MArray; overload; cdecl;
+function Prune: Integer; overload; cdecl;
+function Pruned: MArray; overload; cdecl;
+function Pruned(const threshold: Integer): MArray; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,7 +17,7 @@ function Pruned(const threshold: Integer): MArray; overload;
   @action: Removes adjacent duplicates.
   @note: Original order is preserved and non-adjacent duplicates remain.
 [==============================================================================}
-function MArrayHelper.Compact: Integer; overload;
+function MArrayHelper.Compact: Integer; overload; cdecl;
 var
   i: Integer;
 begin
@@ -35,7 +35,7 @@ end;
   @action: Removes adjacent duplicates and returns a new compacted array.
   @note: Original order is preserved and non-adjacent duplicates remain.
 [==============================================================================}
-function MArrayHelper.Compacted: MArray; overload;
+function MArrayHelper.Compacted: MArray; overload; cdecl;
 var
   i: Integer;
 begin
@@ -53,7 +53,7 @@ end;
   @action: Removes adjacent duplicates and returns a new compacted array.
   @note: Custom threshold possibility.
 [==============================================================================}
-function MArrayHelper.Compacted(const threshold: Integer): MArray; overload;
+function MArrayHelper.Compacted(const threshold: Integer): MArray; overload; cdecl;
 var
   i, j: Integer;
   k: Boolean;
@@ -90,7 +90,7 @@ end;
          are left untouched. The relative order of the remaining elements
          is unchanged.
 [==============================================================================}
-function MArrayHelper.Compressed: MArray; overload;
+function MArrayHelper.Compressed: MArray; overload; cdecl;
 var
   r, i, l: Integer;
 begin
@@ -115,7 +115,7 @@ end;
            effectively run-length–compressing the input.
   @note: Custom threshold possibility.
 [==============================================================================}
-function MArrayHelper.Compressed(const threshold: Integer): MArray; overload;
+function MArrayHelper.Compressed(const threshold: Integer): MArray; overload; cdecl;
 var
   w, r, i: Integer;
   d: Boolean;
@@ -147,7 +147,7 @@ end;
          are left untouched. The relative order of the remaining elements
          is unchanged.
 [==============================================================================}
-function MArrayHelper.Compress: Integer; overload;
+function MArrayHelper.Compress: Integer; overload; cdecl;
 var
   i: Integer;
 begin
@@ -165,7 +165,7 @@ end;
   @action: Removes adjacent duplicates and returns a new compacted array.
   @note: Original order is preserved and non-adjacent duplicates remain.
 [==============================================================================}
-function MArrayHelper.Deduplicated: MArray; overload;
+function MArrayHelper.Deduplicated: MArray; overload; cdecl;
 var
   i, l: Integer;
 begin
@@ -187,7 +187,7 @@ end;
          are left untouched. The relative order of the remaining elements
          is unchanged.
 [==============================================================================}
-function MArrayHelper.Pruned: MArray; overload;
+function MArrayHelper.Pruned: MArray; overload; cdecl;
 var
   i, l, r: Integer;
 begin
@@ -211,7 +211,7 @@ end;
            effectively run-length–compressing the input.
   @note: Custom threshold possibility.
 [==============================================================================}
-function MArrayHelper.Pruned(const threshold: Integer): MArray; overload;
+function MArrayHelper.Pruned(const threshold: Integer): MArray; overload; cdecl;
 var
   w: MArray;
   e: MType;
@@ -257,7 +257,7 @@ end;
          are left untouched. The relative order of the remaining elements
          is unchanged.
 [==============================================================================}
-function MArrayHelper.Prune: Integer; overload;
+function MArrayHelper.Prune: Integer; overload; cdecl;
 var
   i: Integer;
 begin
