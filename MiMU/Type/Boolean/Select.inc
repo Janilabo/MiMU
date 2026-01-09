@@ -1,6 +1,5 @@
 {$IFDEF HELPERS}
 function Evaluate(const bTrue, bFalse: Integer): Integer; overload; cdecl;
-function Evaluate(const bTrue, bFalse: Int64): Int64; overload; cdecl;
 function Evaluate(const bTrue, bFalse: Double): Double; overload; cdecl;
 function Evaluate(const bTrue, bFalse: string): string; overload; cdecl;
 function Evaluate(const bTrue, bFalse: Char): Char; overload; cdecl;
@@ -8,8 +7,13 @@ function Evaluate(const bTrue, bFalse: Boolean): Boolean; overload; cdecl;
 function Evaluate(const bTrue, bFalse: TPoint): TPoint; overload; cdecl;
 function Evaluate(const bTrue, bFalse: TBox): TBox; overload; cdecl;
 function Evaluate(const bTrue, bFalse: TRange): TRange; overload; cdecl;
+function Evaluate(const bTrue, bFalse: TConnection): TConnection; overload; cdecl;
+function Evaluate(const bTrue, bFalse: TSegment): TSegment; overload; cdecl;
+function Evaluate(const bTrue, bFalse: TTriangle): TTriangle; overload; cdecl;
+function Evaluate(const bTrue, bFalse: TCircle): TCircle; overload; cdecl;
+function Evaluate(const bTrue, bFalse: Int64): Int64; overload; cdecl;
+
 function Select(const bTrue, bFalse: Integer): Integer; overload; cdecl;
-function Select(const bTrue, bFalse: Int64): Int64; overload; cdecl;
 function Select(const bTrue, bFalse: Double): Double; overload; cdecl;
 function Select(const bTrue, bFalse: string): string; overload; cdecl;
 function Select(const bTrue, bFalse: Char): Char; overload; cdecl;
@@ -17,6 +21,11 @@ function Select(const bTrue, bFalse: Boolean): Boolean; overload; cdecl;
 function Select(const bTrue, bFalse: TPoint): TPoint; overload; cdecl;
 function Select(const bTrue, bFalse: TBox): TBox; overload; cdecl;
 function Select(const bTrue, bFalse: TRange): TRange; overload; cdecl;
+function Select(const bTrue, bFalse: TConnection): TConnection; overload; cdecl;
+function Select(const bTrue, bFalse: TSegment): TSegment; overload; cdecl;
+function Select(const bTrue, bFalse: TTriangle): TTriangle; overload; cdecl;
+function Select(const bTrue, bFalse: TCircle): TCircle; overload; cdecl;
+function Select(const bTrue, bFalse: Int64): Int64; overload; cdecl;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -27,14 +36,18 @@ function Select(const bTrue, bFalse: TRange): TRange; overload; cdecl;
 [==============================================================================}
 
 function TBooleanHelper.Evaluate(const bTrue, bFalse: Integer): Integer; overload; cdecl; {$I Skeletons/Evaluate.inc}
-function TBooleanHelper.Evaluate(const bTrue, bFalse: Int64): Int64; overload; cdecl; {$I Skeletons/Evaluate.inc}
 function TBooleanHelper.Evaluate(const bTrue, bFalse: Double): Double; overload; cdecl; {$I Skeletons/Evaluate.inc}
 function TBooleanHelper.Evaluate(const bTrue, bFalse: string): string; overload; cdecl; {$I Skeletons/Evaluate.inc}
 function TBooleanHelper.Evaluate(const bTrue, bFalse: Char): Char; overload; cdecl; {$I Skeletons/Evaluate.inc}
 function TBooleanHelper.Evaluate(const bTrue, bFalse: Boolean): Boolean; overload; cdecl; {$I Skeletons/Evaluate.inc}
 function TBooleanHelper.Evaluate(const bTrue, bFalse: TPoint): TPoint; overload; cdecl; {$I Skeletons/Evaluate.inc}
 function TBooleanHelper.Evaluate(const bTrue, bFalse: TBox): TBox; overload; cdecl; {$I Skeletons/Evaluate.inc}
-function TBooleanHelper.Evaluate(const bTrue, bFalse: TRange): TRange; overload; cdecl;
+function TBooleanHelper.Evaluate(const bTrue, bFalse: TRange): TRange; overload; cdecl; {$I Skeletons/Evaluate.inc}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: TConnection): TConnection; overload; cdecl; {$I Skeletons/Evaluate.inc}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: TSegment): TSegment; overload; cdecl; {$I Skeletons/Evaluate.inc}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: TTriangle): TTriangle; overload; cdecl; {$I Skeletons/Evaluate.inc}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: TCircle): TCircle; overload; cdecl; {$I Skeletons/Evaluate.inc}
+function TBooleanHelper.Evaluate(const bTrue, bFalse: Int64): Int64; overload; cdecl;
 begin
   case Self of
     True: Result := bTrue;
@@ -49,14 +62,18 @@ end;
 [==============================================================================}
 
 function TBooleanHelper.Select(const bTrue, bFalse: Integer): Integer; overload; cdecl; {$I Skeletons/Select.inc}
-function TBooleanHelper.Select(const bTrue, bFalse: Int64): Int64; overload; cdecl; {$I Skeletons/Select.inc}
 function TBooleanHelper.Select(const bTrue, bFalse: Double): Double; overload; cdecl; {$I Skeletons/Select.inc}
 function TBooleanHelper.Select(const bTrue, bFalse: string): string; overload; cdecl; {$I Skeletons/Select.inc}
 function TBooleanHelper.Select(const bTrue, bFalse: Char): Char; overload; cdecl; {$I Skeletons/Select.inc}
 function TBooleanHelper.Select(const bTrue, bFalse: Boolean): Boolean; overload; cdecl; {$I Skeletons/Select.inc}
 function TBooleanHelper.Select(const bTrue, bFalse: TPoint): TPoint; overload; cdecl; {$I Skeletons/Select.inc}
 function TBooleanHelper.Select(const bTrue, bFalse: TBox): TBox; overload; cdecl; {$I Skeletons/Select.inc}
-function TBooleanHelper.Select(const bTrue, bFalse: TRange): TRange; overload; cdecl;
+function TBooleanHelper.Select(const bTrue, bFalse: TRange): TRange; overload; cdecl; {$I Skeletons/Select.inc}
+function TBooleanHelper.Select(const bTrue, bFalse: TConnection): TConnection; overload; cdecl; {$I Skeletons/Select.inc}
+function TBooleanHelper.Select(const bTrue, bFalse: TSegment): TSegment; overload; cdecl; {$I Skeletons/Select.inc}
+function TBooleanHelper.Select(const bTrue, bFalse: TTriangle): TTriangle; overload; cdecl; {$I Skeletons/Select.inc}
+function TBooleanHelper.Select(const bTrue, bFalse: TCircle): TCircle; overload; cdecl; {$I Skeletons/Select.inc}
+function TBooleanHelper.Select(const bTrue, bFalse: Int64): Int64; overload; cdecl;
 begin
   if Self then
     Result := bTrue

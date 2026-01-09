@@ -1,7 +1,7 @@
 {$DEFINE Char}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
-TCharCompare = specialize TCompare<Char>;
+TCharCompare = function(const A, B: Char): Integer;
 TCharArray = array of Char;
 T2DCharArray = array of TCharArray;
 {$ENDIF}

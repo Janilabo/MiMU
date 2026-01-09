@@ -6,7 +6,7 @@ TBox = record
   X1, Y1, X2, Y2: Integer;
   {$UNDEF TYPES}{$DEFINE METHODS}{$I TBox.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
-TBoxCompare = specialize TCompare<TBox>;
+TBoxCompare = function(const A, B: TBox): Integer;
 TBoxArray = array of TBox;
 T2DBoxArray = array of TBoxArray;
 {$ENDIF}

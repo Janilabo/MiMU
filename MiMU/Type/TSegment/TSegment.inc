@@ -5,7 +5,7 @@ TSegment = record
   A, B: TPoint;
   {$UNDEF TYPES}{$DEFINE METHODS}{$I TSegment.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
-TSegmentCompare = specialize TCompare<TSegment>;
+TSegmentCompare = function(const A, B: TSegment): Integer;
 TSegmentArray = array of TSegment;
 T2DSegmentArray = array of TSegmentArray;
 {$ENDIF}

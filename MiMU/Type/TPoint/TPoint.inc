@@ -8,7 +8,7 @@ TPoint = record
   function AngleRadians(const target: TPoint): Double; overload; 
   class function Null(const value: Integer = -2147483648): TPoint; overload; static;
 end;
-TPointCompare = specialize TCompare<TPoint>;
+TPointCompare = function(const A, B: TPoint): Integer;
 TPointArray = array of TPoint;
 T2DPointArray = array of TPointArray;
 PPoint = ^TPoint;

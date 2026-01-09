@@ -1,7 +1,7 @@
 {$DEFINE Double}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
-TDoubleCompare = specialize TCompare<Double>;
+TDoubleCompare = function(const A, B: Double): Integer;
 TDoubleArray = array of Double;
 T2DDoubleArray = array of TDoubleArray;
 {$ENDIF}

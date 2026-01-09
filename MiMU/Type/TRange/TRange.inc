@@ -6,7 +6,7 @@ TRange = record
   start, stop: Integer;
   {$UNDEF TYPES}{$DEFINE METHODS}{$I TRange.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
-TRangeCompare = specialize TCompare<TRange>;
+TRangeCompare = function(const A, B: TRange): Integer;
 TRangeArray = array of TRange;
 T2DRangeArray = array of TRangeArray;
 {$ENDIF}

@@ -6,7 +6,7 @@ TCircle = record
   Radius: Double; 
   {$UNDEF TYPES}{$DEFINE METHODS}{$I TCircle.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
-TCircleCompare = specialize TCompare<TCircle>;
+TCircleCompare = function(const A, B: TCircle): Integer;
 TCircleArray = array of TCircle;
 T2DCircleArray = array of TCircleArray;
 {$ENDIF}
