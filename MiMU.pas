@@ -37,6 +37,7 @@
 {$modeswitch advancedrecords}
 {$modeswitch arrayoperators}
 {$modeswitch typehelpers}
+{$CODEALIGN LOCALMIN=16}
 
 unit MiMU;
 
