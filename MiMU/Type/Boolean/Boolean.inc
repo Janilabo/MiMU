@@ -1,7 +1,7 @@
 {$DEFINE Boolean}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
-TBooleanCompare = function(const A, B: Boolean): Integer;
+TBooleanCompare = specialize TCompare<Boolean>;
 TBooleanArray = array of Boolean;
 T2DBooleanArray = array of TBooleanArray;
 {$ENDIF}

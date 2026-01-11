@@ -1,8 +1,8 @@
 {$IFDEF METHODS}
 function Boundaries: TBox;
 function BoundingBox: TBox;
-function Bounds: TBox;
-function Envelope: TBox;
+function Bounds: TBox; 
+function Envelope: TBox; 
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

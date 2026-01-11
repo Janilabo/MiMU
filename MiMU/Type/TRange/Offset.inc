@@ -1,13 +1,13 @@
 {$IFDEF METHODS}
-function Back(const N: Integer = 1): TRange; overload;
+function Back(const N: Integer = 1): TRange; overload; 
 function Backed(const N: Integer = 1): TRange; overload;
 function Decrease(const N: Integer = 1): TRange; overload;
 function Decrement(const N: Integer = 1): TRange; overload;
-function Increase(const N: Integer = 1): TRange; overload;
+function Increase(const N: Integer = 1): TRange; overload; 
 function Increment(const N: Integer = 1): TRange; overload;
-function Offset(const sDelta: Integer): TRange;
+function Offset(const sDelta: Integer): TRange; 
 function Shift(const N: Integer = 1): TRange; overload; 
-function Shifted(const N: Integer = 1): TRange; overload;
+function Shifted(const N: Integer = 1): TRange; overload;  
 
 {$ENDIF}
 

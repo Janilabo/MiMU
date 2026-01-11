@@ -2,7 +2,7 @@
 function Chebyshev(const target: TPoint): Double; overload;
 function Euclidean(const target: TPoint): Double; overload;
 function Euclidean2(const target: TPoint): Double; overload;
-function HypotEuclidean(const target: TPoint): Double; overload;
+function HypotEuclidean(const target: TPoint): Double; overload;	
 function Manhattan(const target: TPoint): Double; overload;
 function MaxMinChebyshev(const target: TPoint): Double; overload;
 function Minkowski(const target: TPoint): Double; overload;

@@ -1,10 +1,10 @@
 {$IFDEF METHODS}
 function Center: TPoint;
 function Frame(var fWidth, fHeight: Integer): TBox; overload;
-function Frame: TBox; overload; 
-function Horizontal: TRange;
+function Frame: TBox; overload;  
+function Horizontal: TRange; 
 class function Null(const value: Integer = -2147483648): TBox; overload; static;
-function Reserve: TPointArray; overload;
+function Reserve: TPointArray; overload; 
 function Reserve(var aBox: TPointArray): Integer; overload;
 function Vertical: TRange;
 {$ENDIF}

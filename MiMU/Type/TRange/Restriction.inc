@@ -1,8 +1,8 @@
 {$IFDEF METHODS}
-function Clamp(const zone: TRange): TRange; overload;
+function Clamp(const zone: TRange): TRange; overload; 
 function ClampMin(const minValue: Integer): TRange;
 function ClampMax(const maxValue: Integer): TRange;
-function Clip(const zone: TRange): TRange;
+function Clip(const zone: TRange): TRange; 
 function ClipMax(const maxValue: Integer): TRange;
 function ClipMin(const minValue: Integer): TRange;
 function Ensure(const zone: TRange): Boolean; overload;

@@ -6,16 +6,16 @@ function Distance: Integer; overload;
 function DistHausdorff(const b: TRange): Integer;
 function Equal(const b: TRange): Boolean;
 function Equals(const b: TRange): Boolean;
-function Intersect(const b: TRange): TRange; overload;
+function Intersect(const b: TRange): TRange; overload; 
 function Intersect(const b: TRange; var iZone: TRange): Boolean; overload; 
-function Neighbor(const b: TRange): Boolean;
+function Neighbor(const b: TRange): Boolean; 
 function Neighbour(const b: TRange): Boolean;
 function Overlap(const b: TRange): Boolean;
 function Overlapping(const b: TRange): Boolean;
-function Touch(const b: TRange): Boolean;
-function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
+function Touch(const b: TRange): Boolean; 
+function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; 
 function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
-function Union(const b: TRange): TRange; overload;
+function Union(const b: TRange): TRange; overload; 
 function Union(const val: Integer): TRange; overload;
 {$ENDIF}
 

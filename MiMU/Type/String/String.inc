@@ -1,7 +1,7 @@
 {$DEFINE string}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
-TStringCompare = function(const A, B: string): Integer;
+TStringCompare = specialize TCompare<string>;
 TStringArray = array of string;
 T2DStringArray = array of TStringArray;
 {$ENDIF}

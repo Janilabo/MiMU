@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
 function Domain: TRange; overload;
 function Sample(const sSize: Integer): MArray; overload;
-function Zigzag(const zAscending: Boolean = True): MArray; overload;
+function Zigzag(const zAscending: Boolean = True): MArray; overload;   
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

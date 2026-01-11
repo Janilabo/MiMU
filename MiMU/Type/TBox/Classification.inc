@@ -5,13 +5,13 @@ function Equilateral: Boolean;
 function Is2D: Boolean;
 function IsHorizontalLine: Boolean;
 function IsLine: Boolean;
-function IsPoint: Boolean;
+function IsPoint: Boolean;  
 function IsVerticalLine: Boolean;  
-function Linear: Boolean;
-function Plural: Boolean;
+function Linear: Boolean; 
+function Plural: Boolean; 
 function Rectangular: Boolean;
 function Singular: Boolean;
-function Square: Boolean;
+function Square: Boolean; 
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

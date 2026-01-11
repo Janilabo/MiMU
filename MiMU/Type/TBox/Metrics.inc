@@ -4,15 +4,15 @@ function Capacity: Integer;
 function Circumference: Integer;
 function Diagonal: Double;
 function Footprint: Double;
-function Height: Integer; overload;
+function Height: Integer; overload; 
 function Height(const h: Integer): Integer; overload;
 function Perim: Integer;
 function Perimeter: Integer;
 function Ratio: Double;
 function Size(var bWidth, bHeight: Integer): Integer; overload; inline;
-function Size: TPoint; overload;
-function Width: Integer; overload;
-function Width(const w: Integer): Integer; overload;
+function Size: TPoint; overload; 
+function Width: Integer; overload; 
+function Width(const w: Integer): Integer; overload;  
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

@@ -1,5 +1,5 @@
 {$IFDEF METHODS}
-function Direction: Integer;
+function Direction: Integer; 
 function Orientation: Integer;
 function Signum: Integer;
 function Slope: Integer;

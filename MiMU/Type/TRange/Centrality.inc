@@ -1,12 +1,12 @@
 {$IFDEF METHODS}
-function Average: Double;
-function Center: Integer;
+function Average: Double; 
+function Center: Integer; 
 function Central: Integer; inline;
 function Centre: Integer; overload;
 function Centroid: Integer; overload;
 function Core: Integer; overload;
-function Half: Integer; overload;
-function Halfway: Integer; overload;
+function Half: Integer; overload; 
+function Halfway: Integer; overload; 
 function Halved: Integer; overload;
 function Mean: Double; overload;
 function Medium: Double; overload;

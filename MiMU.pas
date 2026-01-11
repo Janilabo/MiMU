@@ -31,15 +31,12 @@
                                              ( ..for Free Pascal }
 
 {$mode objfpc}
-{$H+}
 {$macro on}
 {$inline on}
 {$modeswitch advancedrecords}
 {$modeswitch arrayoperators}
 {$modeswitch typehelpers}
-{$CODEALIGN LOCALMIN=16}
-{$CODEALIGN RECORDMIN=16}
-{$CODEALIGN CONSTMIN=16}
+{$H+}
 
 unit MiMU;
 

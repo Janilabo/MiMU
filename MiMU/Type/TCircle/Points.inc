@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
-function Points: TPointArray;
-function TPA: TPointArray;
+function Points: TPointArray; 
+function TPA: TPointArray; 
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

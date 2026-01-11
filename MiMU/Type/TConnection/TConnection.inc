@@ -5,7 +5,7 @@ TConnection = record
   id1, id2: Integer;
   {$UNDEF TYPES}{$DEFINE METHODS}{$I TConnection.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
-TConnectionCompare = function(const A, B: TConnection): Integer;
+TConnectionCompare = specialize TCompare<TConnection>;
 TConnectionArray = array of TConnection;
 T2DConnectionArray = array of TConnectionArray;
 {$ENDIF}

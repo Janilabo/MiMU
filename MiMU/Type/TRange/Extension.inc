@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
 function Absorb(const val: Integer): Boolean; overload;
-function Extend(const val: Integer): Boolean;
+function Extend(const val: Integer): Boolean; 
 function Include(const val: Integer): TRange; overload;
 {$ENDIF}
 

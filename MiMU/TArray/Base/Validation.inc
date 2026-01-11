@@ -303,7 +303,7 @@ end;
   @action: Returns true if arr contains any duplicates in it.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Excessive: Boolean; overload;
+function MArrayHelper.Excessive: Boolean; overload; 
 type
   TDict = specialize TDictionary<MType, Boolean>;
 var

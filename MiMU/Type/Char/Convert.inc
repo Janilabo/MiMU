@@ -9,7 +9,7 @@ function ToStr(const size: Integer = 1): string;
   @action: Returns Char as string with size.
   @note: size * Char.
 [==============================================================================}
-function TCharHelper.Str(const size: Integer = 1): string;
+function TCharHelper.Str(const size: Integer = 1): string; 
 var
   i: Integer;
 begin
@@ -25,7 +25,7 @@ end;
   @action: Returns Char as string with size.
   @note: size * Char.
 [==============================================================================}
-function TCharHelper.ToStr(const size: Integer = 1): string;
+function TCharHelper.ToStr(const size: Integer = 1): string; 
 var
   i: Integer;
 begin

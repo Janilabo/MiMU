@@ -1,5 +1,5 @@
 {$IFDEF METHODS}
-function Envelope(const b: TBox): TBox;
+function Envelope(const b: TBox): TBox;  
 function Union(const pt: TPoint): TBox; overload;
 function Union(const b: TBox): TBox; overload;
 function UnionX(const xCoord: Integer): TBox;

@@ -1,7 +1,7 @@
 {$DEFINE Integer}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
-TIntegerCompare = function(const A, B: Integer): Integer;
+TIntegerCompare = specialize TCompare<Integer>;
 TIntegerArray = array of Integer;
 T2DIntegerArray = array of TIntegerArray;
 {$ENDIF}

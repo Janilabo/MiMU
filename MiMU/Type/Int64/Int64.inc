@@ -1,7 +1,7 @@
 {$DEFINE Int64}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
-TInt64Compare = function(const A, B: Int64): Integer;
+TInt64Compare = specialize TCompare<Int64>;
 TInt64Array = array of Int64;
 T2DInt64Array = array of TInt64Array;
 {$ENDIF}

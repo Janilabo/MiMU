@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
 function DigitCount: Integer;
 function Digits: TIntegerArray;
-function Digitz: TIntegerArray;
+function Digitz: TIntegerArray; 
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

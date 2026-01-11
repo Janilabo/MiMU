@@ -1,9 +1,9 @@
 {$IFDEF METHODS}
 function Equal(const b: TBox): Boolean; inline;
-function Similar(const b: TBox; const maxWDiff, maxHDiff: Integer): Boolean; overload;
+function Similar(const b: TBox; const maxWDiff, maxHDiff: Integer): Boolean; overload; 
 function Similar(const b: TBox; const diff: Integer): Boolean; overload;
-function SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload;
-function SimilarSize(const b: TBox; const differency: Integer): Boolean; overload;
+function SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload; 
+function SimilarSize(const b: TBox; const differency: Integer): Boolean; overload; 
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

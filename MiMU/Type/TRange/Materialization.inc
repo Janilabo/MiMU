@@ -1,15 +1,15 @@
 {$IFDEF METHODS}
 function All: TIntegerArray; overload;
 function AsArray: TIntegerArray; overload;
-function Digits: TIntegerArray; overload;
-function Digits(const dIndex: Integer): Integer; overload;
+function Digits: TIntegerArray; overload; 
+function Digits(const dIndex: Integer): Integer; overload; 
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
-function Elements: TIntegerArray;
+function Elements: TIntegerArray; 
 function Enumerate: TIntegerArray;
 function Enumerated: TIntegerArray;
 function Extract: TIntegerArray; overload; 
 function Extracted: TIntegerArray; overload;
-function Ints: TIntegerArray;
+function Ints: TIntegerArray; 
 function Items: TIntegerArray;
 function Materialize: TIntegerArray;
 function Numbers: TIntegerArray;
@@ -19,8 +19,8 @@ function Steps: TIntegerArray; overload;
 function TIA: TIntegerArray;
 function ToArray: TIntegerArray;
 function Unfold: TIntegerArray; overload;
-function Unpack: TIntegerArray; overload;
-function Unwrap: TIntegerArray; overload;
+function Unpack: TIntegerArray; overload; 
+function Unwrap: TIntegerArray; overload; 
 function Unzip: TIntegerArray; overload;
 function Values: TIntegerArray;
 {$ENDIF}

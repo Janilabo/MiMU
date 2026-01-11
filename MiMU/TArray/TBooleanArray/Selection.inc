@@ -7,11 +7,6 @@ function Select(const sTrue, sFalse: Boolean): TBooleanArray; overload;
 function Select(const sTrue, sFalse: TPoint): TPointArray; overload;
 function Select(const sTrue, sFalse: TBox): TBoxArray; overload;
 function Select(const sTrue, sFalse: TRange): TRangeArray; overload;
-function Select(const sTrue, sFalse: TConnection): TConnectionArray; overload;
-function Select(const sTrue, sFalse: TSegment): TSegmentArray; overload;
-function Select(const sTrue, sFalse: TTriangle): TTriangleArray; overload;
-function Select(const sTrue, sFalse: TCircle): TCircleArray; overload;
-function Select(const sTrue, sFalse: Int64): TInt64Array; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -27,12 +22,7 @@ function TBooleanArrayHelper.Select(const sTrue, sFalse: Char): TCharArray; over
 function TBooleanArrayHelper.Select(const sTrue, sFalse: Boolean): TBooleanArray; overload; {$I Skeletons/Select.inc}
 function TBooleanArrayHelper.Select(const sTrue, sFalse: TPoint): TPointArray; overload; {$I Skeletons/Select.inc}
 function TBooleanArrayHelper.Select(const sTrue, sFalse: TBox): TBoxArray; overload; {$I Skeletons/Select.inc}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TRange): TRangeArray; overload; {$I Skeletons/Select.inc}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TConnection): TConnectionArray; overload; {$I Skeletons/Select.inc}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TSegment): TSegmentArray; overload; {$I Skeletons/Select.inc}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TTriangle): TTriangleArray; overload; {$I Skeletons/Select.inc}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: TCircle): TCircleArray; overload; {$I Skeletons/Select.inc}
-function TBooleanArrayHelper.Select(const sTrue, sFalse: Int64): TInt64Array; overload;
+function TBooleanArrayHelper.Select(const sTrue, sFalse: TRange): TRangeArray; overload;
 var
   i: Integer;
 begin

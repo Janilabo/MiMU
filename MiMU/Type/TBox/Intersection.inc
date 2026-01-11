@@ -1,5 +1,5 @@
 {$IFDEF METHODS}
-function Intersect(const b: TBox): TBox; overload;
+function Intersect(const b: TBox): TBox; overload; 
 function Intersect(const b: TBox; var iArea: TBox): Boolean; overload;
 function Overlap(const b: TBox): Boolean; inline;
 {$ENDIF}

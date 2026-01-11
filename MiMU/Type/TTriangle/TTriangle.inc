@@ -4,7 +4,7 @@
 TTriangle = record
   A, B, C: TPoint;
 end;
-TTriangleCompare = function(const A, B: TTriangle): Integer;
+TTriangleCompare = specialize TCompare<TTriangle>;
 TTriangleArray = array of TTriangle;
 T2DTriangleArray = array of TTriangleArray;
 {$ENDIF}

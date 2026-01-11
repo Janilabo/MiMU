@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
 function MergeSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
-function MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
+function MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload; 
 function MergeSort(const aAscending: Boolean = True): Integer; overload;
 function MergeSortBU(const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}

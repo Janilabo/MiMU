@@ -2,9 +2,9 @@
 function Any: Integer;
 function Mixed(const mixings: Integer = 1): TIntegerArray;  
 function Sample(const sSize: Integer): TIntegerArray; overload;
-function Shake(const shakes: Integer = 1): TIntegerArray;
-function Shuffle(const shuffles: Integer = 1): TIntegerArray;
-function Some: TIntegerArray; overload;
+function Shake(const shakes: Integer = 1): TIntegerArray; 
+function Shuffle(const shuffles: Integer = 1): TIntegerArray; 
+function Some: TIntegerArray; overload; 
 function Some(const amount: Integer): TIntegerArray; overload;
 function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}

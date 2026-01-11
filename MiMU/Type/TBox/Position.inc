@@ -1,5 +1,5 @@
 {$IFDEF METHODS}
-function Centered(const toArea: TBox): TBox;
+function Centered(const toArea: TBox): TBox; 
 function CenterHorizontally(const toArea: TBox): TBox;
 function CenterVertically(const toArea: TBox): TBox;
 {$ENDIF}

@@ -1,8 +1,8 @@
 {$IFDEF METHODS}
 function Clamp(const toArea: TBox): TBox;
-function Clip(const toArea: TBox): TBox;
-function Constraint(const toArea: TBox): Boolean;
-function Restrict(const toArea: TBox): Boolean;
+function Clip(const toArea: TBox): TBox; 
+function Constraint(const toArea: TBox): Boolean; 
+function Restrict(const toArea: TBox): Boolean; 
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

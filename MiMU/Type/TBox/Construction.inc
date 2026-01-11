@@ -1,9 +1,9 @@
 {$IFDEF METHODS}
-function Build(const minX, minY, maxX, maxY: Integer): Integer; overload;
-function Build(const top, bottom: TPoint): Integer; overload;
-function Build(const valueX, valueY: Integer): Integer; overload;
-function Build(const target: TPoint): Integer; overload;
-function Build(const value: Integer = 0): Integer; overload;
+function Build(const minX, minY, maxX, maxY: Integer): Integer; overload; 
+function Build(const top, bottom: TPoint): Integer; overload; 
+function Build(const valueX, valueY: Integer): Integer; overload; 
+function Build(const target: TPoint): Integer; overload; 
+function Build(const value: Integer = 0): Integer; overload; 
 class function Construct(const XS, YS, XE, YE: Integer): TBox; overload; static;
 constructor Create(const minX, minY, maxX, maxY: Integer); overload;
 constructor Create(const top, bottom: TPoint); overload;
@@ -12,11 +12,11 @@ constructor Create(const target: TPoint); overload;
 constructor Create(const value: Integer); overload;
 function Form(const pt: TPoint; const size: Integer = 1): TBox; overload; 
 function Form(const pt: TPoint; const width, height: Integer): TBox; overload;
-function Init(const bX1, bY1, bX2, bY2: Integer): TBox; overload;
-function Init(const b: TBox): TBox; overload;
+function Init(const bX1, bY1, bX2, bY2: Integer): TBox; overload; 
+function Init(const b: TBox): TBox; overload; 
 function Init(const val: Integer = 0): TBox; overload; 
-function Init(const p: TPoint): TBox; overload;
-function Init(const TL, BR: TPoint): TBox; overload;
+function Init(const p: TPoint): TBox; overload; 
+function Init(const TL, BR: TPoint): TBox; overload;  
 function Make(const pt: TPoint; const radius: Integer = 0): TBox; overload; 
 function Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload;
 {$ENDIF}

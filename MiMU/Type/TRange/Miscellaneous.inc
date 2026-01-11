@@ -1,7 +1,7 @@
 {$IFDEF METHODS}
 function Centered(const rCenter: Integer): TRange; overload;
-function Frame(var rSize: Integer): TRange; overload;
-function Frame: TRange; overload;
+function Frame(var rSize: Integer): TRange; overload; 
+function Frame: TRange; overload; 
 function Reserve: TIntegerArray; overload; 
 function Reserve(var aRange: TIntegerArray): Integer; overload;  
 {$ENDIF}
