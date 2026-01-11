@@ -27,8 +27,9 @@ end;
 [==============================================================================}
 class function TRange.CompareSizeAscending(const A, B: TRange): Integer;
 begin
-  Result := A.CompareSize(B);
+  Result := ((Abs(A.stop - A.start) + 1) - (Abs(B.stop - B.start) + 1));
 end;
+
 
 {==============================================================================]
   <CompareSizeDescending>
@@ -40,6 +41,6 @@ end;
 [==============================================================================}
 class function TRange.CompareSizeDescending(const A, B: TRange): Integer;
 begin
-  Result := B.CompareSize(A);
+  Result := ((Abs(B.stop - B.start) + 1) - (Abs(A.stop - A.start) + 1));
 end;
 {$ENDIF}
