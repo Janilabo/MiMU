@@ -1,10 +1,10 @@
 {$IFDEF HELPERS}
-function Neg: Double; cdecl; inline;
-function Negative: Boolean; cdecl; inline;
-function NegA: Double; cdecl; inline;
-function Neutral: Boolean; cdecl; inline;
-function Opposite: Double; cdecl; inline;
-function Positive: Boolean; cdecl; inline;
+function Neg: Double; inline;
+function Negative: Boolean; inline;
+function NegA: Double; inline;
+function Neutral: Boolean; inline;
+function Opposite: Double; inline;
+function Positive: Boolean; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -14,7 +14,7 @@ function Positive: Boolean; cdecl; inline;
            -9999 to -9999 OR 9999 to -9999 (+/- => -)
   @note: None
 [==============================================================================}
-function TDoubleHelper.Neg: Double; cdecl; inline;
+function TDoubleHelper.Neg: Double; inline;
 begin
   if (Self > 0) then
     Result := (Self * -1)
@@ -27,7 +27,7 @@ end;
   @action: Returns True if Double value x is lower than 0 (negative), otherwise False. 
   @note: 0 is not negative or positive!
 [==============================================================================}
-function TDoubleHelper.Negative: Boolean; cdecl; inline;
+function TDoubleHelper.Negative: Boolean; inline;
 begin
   Result := (Self < 0);
 end;
@@ -38,7 +38,7 @@ end;
            -9999 to -9999 OR 9999 to -9999 (+/- => -)
   @note: None
 [==============================================================================}
-function TDoubleHelper.NegA: Double; cdecl; inline;
+function TDoubleHelper.NegA: Double; inline;
 begin
   Result := (Abs(Self) * -1);
 end;
@@ -48,7 +48,7 @@ end;
   @action: Returns True if Double value x is 0 (neutral), otherwise False. 
   @note: 0 is not negative or positive!
 [==============================================================================}
-function TDoubleHelper.Neutral: Boolean; cdecl; inline;
+function TDoubleHelper.Neutral: Boolean; inline;
 begin
   Result := (Self = 0);
 end;
@@ -59,7 +59,7 @@ end;
            -9999 to 9999 OR 9999 to -9999 (- <=> +) 
   @note: None
 [==============================================================================}
-function TDoubleHelper.Opposite: Double; cdecl; inline;
+function TDoubleHelper.Opposite: Double; inline;
 begin
   Result := (Self * -1);
 end;
@@ -69,7 +69,7 @@ end;
   @action: Returns True if Double value x is higher than 0 (positive), otherwise False. 
   @note: 0 is not negative or positive!
 [==============================================================================}
-function TDoubleHelper.Positive: Boolean; cdecl; inline;
+function TDoubleHelper.Positive: Boolean; inline;
 begin
   Result := (Self > 0);
 end;

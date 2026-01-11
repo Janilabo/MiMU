@@ -1,8 +1,8 @@
 {$IFDEF HELPERS}
-function Blank: Boolean; cdecl;
-function Empty: Boolean; cdecl;
-function Exists: Boolean; cdecl;
-function Void: Boolean; cdecl;
+function Blank: Boolean;
+function Empty: Boolean;
+function Exists: Boolean;
+function Void: Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function Void: Boolean; cdecl;
   @action: Returns true if string is empty or consists of whitespaces only.
   @note: None.
 [==============================================================================}
-function TStringHelper.Blank: Boolean; cdecl;
+function TStringHelper.Blank: Boolean;
 var
   i: Integer;
 begin
@@ -26,7 +26,7 @@ end;
   @action: Returns true if string is empty (Length is 0).
   @note: None.
 [==============================================================================}
-function TStringHelper.Empty: Boolean; cdecl;
+function TStringHelper.Empty: Boolean;
 begin
   Result := (Length(Self) = 0);
 end;
@@ -36,7 +36,7 @@ end;
   @action: Returns true if string is not empty.
   @note: Length(str) > 0.
 [==============================================================================}
-function TStringHelper.Exists: Boolean; cdecl;
+function TStringHelper.Exists: Boolean;
 begin
   Result := (Length(Self) > 0);
 end;
@@ -46,7 +46,7 @@ end;
   @action: Returns true if string is empty (Length is 0).
   @note: None.
 [==============================================================================}
-function TStringHelper.Void: Boolean; cdecl;
+function TStringHelper.Void: Boolean;
 begin
   Result := (Self = '');
 end;

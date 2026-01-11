@@ -1,29 +1,29 @@
 {$IFDEF HELPERS}
-function Find(const ID: TRange; const item: MType): Integer; overload; cdecl;
-function Find(const ID: TIntegerArray; const item: MType): Integer; overload; cdecl;
-function Find(const ID: TRange; const items: MArray): Integer; overload; cdecl;
-function Find(const ID: TIntegerArray; const items: MArray): Integer; overload; cdecl;
-function First: Integer; overload; cdecl;
-function First(const item: MType): Integer; overload; cdecl;
-function First(const items: MArray): Integer; overload; cdecl;
-function Last: Integer; overload; cdecl;
-function Last(const item: MType): Integer; overload; cdecl;
-function Last(const items: MArray): Integer; overload; cdecl;
-function Loc(const item: MType; const index: Integer = 2147483647): Integer; overload; cdecl;
-function Loc(const items: MArray; const index: Integer = 2147483647): Integer; overload; cdecl;
-function Location(const item: MType; const index: Integer = 2147483647): Integer; overload; cdecl;
-function Location(const items: MArray; const index: Integer = 2147483647): Integer; overload; cdecl;
-function Pos(const item: MType; const index: Integer = 0): Integer; overload; cdecl;
-function Pos(const items: MArray; const index: Integer = 0): Integer; overload; cdecl;
-function Position(const item: MType; const index: Integer = 0): Integer; overload; cdecl;
-function Position(const items: MArray; const index: Integer = 0): Integer; overload; cdecl;
-function Range(const subArray: MArray; const index: Integer = 0): TRange; overload; cdecl;
-function Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload; cdecl;
-function Span: TRange; overload; cdecl;
-function Span(const subArray: MArray; const index: Integer = 2147483647): TRange; overload; cdecl;
-function Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload; cdecl;
-function SubarrayLocation(const pattern: MArray): Integer; overload; cdecl;
-function SubarrayPosition(const pattern: MArray): Integer; overload; cdecl;
+function Find(const ID: TRange; const item: MType): Integer; overload;
+function Find(const ID: TIntegerArray; const item: MType): Integer; overload;
+function Find(const ID: TRange; const items: MArray): Integer; overload;
+function Find(const ID: TIntegerArray; const items: MArray): Integer; overload;
+function First: Integer; overload;
+function First(const item: MType): Integer; overload;
+function First(const items: MArray): Integer; overload;
+function Last: Integer; overload;
+function Last(const item: MType): Integer; overload;
+function Last(const items: MArray): Integer; overload;
+function Loc(const item: MType; const index: Integer = 2147483647): Integer; overload;
+function Loc(const items: MArray; const index: Integer = 2147483647): Integer; overload;
+function Location(const item: MType; const index: Integer = 2147483647): Integer; overload;
+function Location(const items: MArray; const index: Integer = 2147483647): Integer; overload;
+function Pos(const item: MType; const index: Integer = 0): Integer; overload;
+function Pos(const items: MArray; const index: Integer = 0): Integer; overload;
+function Position(const item: MType; const index: Integer = 0): Integer; overload;
+function Position(const items: MArray; const index: Integer = 0): Integer; overload;
+function Range(const subArray: MArray; const index: Integer = 0): TRange; overload;
+function Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload;
+function Span: TRange; overload;
+function Span(const subArray: MArray; const index: Integer = 2147483647): TRange; overload;
+function Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload;
+function SubarrayLocation(const pattern: MArray): Integer; overload;
+function SubarrayPosition(const pattern: MArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -32,7 +32,7 @@ function SubarrayPosition(const pattern: MArray): Integer; overload; cdecl;
   @action: Scans array for item by IDs. Returns position if found.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function MArrayHelper.Find(const ID: TRange; const item: MType): Integer; overload; cdecl;
+function MArrayHelper.Find(const ID: TRange; const item: MType): Integer; overload;
 begin
   if Self.Populated then
   case ID.Ascending of
@@ -53,7 +53,7 @@ end;
   @action: Scans array for item by IDs. Returns position if found.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function MArrayHelper.Find(const ID: TIntegerArray; const item: MType): Integer; overload; cdecl;
+function MArrayHelper.Find(const ID: TIntegerArray; const item: MType): Integer; overload;
 var
   i: Integer;
 begin
@@ -69,7 +69,7 @@ end;
   @action: Scans array for items by IDs. Returns position if found.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function MArrayHelper.Find(const ID: TRange; const items: MArray): Integer; overload; cdecl;
+function MArrayHelper.Find(const ID: TRange; const items: MArray): Integer; overload;
 begin
   if (Self.Populated and items.Populated) then
   case ID.Ascending of
@@ -90,7 +90,7 @@ end;
   @action: Scans array for items by IDs. Returns position if found.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function MArrayHelper.Find(const ID: TIntegerArray; const items: MArray): Integer; overload; cdecl;
+function MArrayHelper.Find(const ID: TIntegerArray; const items: MArray): Integer; overload;
 var
   i: Integer;
 begin
@@ -106,7 +106,7 @@ end;
   @action: Returns the first index of arr.
   @note: With empty array result will be -1!
 [==============================================================================}
-function MArrayHelper.First: Integer; overload; cdecl;
+function MArrayHelper.First: Integer; overload;
 begin
   Result := IfThen(Self.Empty, -1, 0);
 end;
@@ -116,7 +116,7 @@ end;
   @action: Returns the first index that matches item in arr.
   @note: Unmatch will be -1!
 [==============================================================================}
-function MArrayHelper.First(const item: MType): Integer; overload; cdecl;
+function MArrayHelper.First(const item: MType): Integer; overload;
 begin
   for Result := 0 to High(Self) do
     if (Self[Result] = item) then
@@ -129,7 +129,7 @@ end;
   @action: Returns the first arr index that matches any of the items.
   @note: Unmatch will be -1!
 [==============================================================================}
-function MArrayHelper.First(const items: MArray): Integer; overload; cdecl;
+function MArrayHelper.First(const items: MArray): Integer; overload;
 begin
   for Result := 0 to High(Self) do
     if items.Contains(Self[Result]) then
@@ -142,7 +142,7 @@ end;
   @action: Returns the last index of arr.
   @note: With empty array result will be -1!
 [==============================================================================}
-function MArrayHelper.Last: Integer; overload; cdecl;
+function MArrayHelper.Last: Integer; overload;
 begin
   Result := IfThen(Self.Empty, -1, (Self.Size - 1));
 end;
@@ -152,7 +152,7 @@ end;
   @action: Returns the last index that matches item in arr.
   @note: Unmatch will be -1!
 [==============================================================================}
-function MArrayHelper.Last(const item: MType): Integer; overload; cdecl;
+function MArrayHelper.Last(const item: MType): Integer; overload;
 begin
   for Result := High(Self) downto 0 do
     if (Self[Result] = item) then
@@ -165,7 +165,7 @@ end;
   @action: Returns the last arr index that matches any of the items.
   @note: Unmatch will be -1!
 [==============================================================================}
-function MArrayHelper.Last(const items: MArray): Integer; overload; cdecl;
+function MArrayHelper.Last(const items: MArray): Integer; overload;
 begin
   for Result := High(Self) downto 0 do
     if items.Contains(Self[Result]) then
@@ -178,7 +178,7 @@ end;
   @action: Returns last index position from arr which matched with item.
   @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
-function MArrayHelper.Loc(const item: MType; const index: Integer = 2147483647): Integer; overload; cdecl;
+function MArrayHelper.Loc(const item: MType; const index: Integer = 2147483647): Integer; overload;
 begin
   for Result := Min(High(Self), index) downto 0 do
     if (Self[Result] = item) then
@@ -191,7 +191,7 @@ end;
   @action: Returns index position from arr which matches with items.
   @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
-function MArrayHelper.Loc(const items: MArray; const index: Integer = 2147483647): Integer; overload; cdecl;
+function MArrayHelper.Loc(const items: MArray; const index: Integer = 2147483647): Integer; overload;
 var
   h, i: Integer;
 begin
@@ -209,7 +209,7 @@ end;
   @action: Returns index position from arr which matched with item.
   @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
-function MArrayHelper.Location(const item: MType; const index: Integer = 2147483647): Integer; overload; cdecl;
+function MArrayHelper.Location(const item: MType; const index: Integer = 2147483647): Integer; overload;
 var
   l: Integer;
 begin
@@ -226,7 +226,7 @@ end;
   @action: Returns index position from arr which matches with items.
   @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
-function MArrayHelper.Location(const items: MArray; const index: Integer = 2147483647): Integer; overload; cdecl;
+function MArrayHelper.Location(const items: MArray; const index: Integer = 2147483647): Integer; overload;
 var
   h, i, l: Integer;
 begin
@@ -248,7 +248,7 @@ end;
   @action: Returns index position from arr which matched with item.
   @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
-function MArrayHelper.Pos(const item: MType; const index: Integer = 0): Integer; overload; cdecl;
+function MArrayHelper.Pos(const item: MType; const index: Integer = 0): Integer; overload;
 begin
   for Result := Max(0, index) to High(Self) do
     if (Self[Result] = item) then
@@ -261,7 +261,7 @@ end;
   @action: Returns index position from arr which matches with items.
   @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
-function MArrayHelper.Pos(const items: MArray; const index: Integer = 0): Integer; overload; cdecl;
+function MArrayHelper.Pos(const items: MArray; const index: Integer = 0): Integer; overload;
 var
   h, i: Integer;
 begin
@@ -279,7 +279,7 @@ end;
   @action: Returns index position from arr which matched with item.
   @note: Returns -1 if any of arr items doesnt match with item!
 [==============================================================================}
-function MArrayHelper.Position(const item: MType; const index: Integer = 0): Integer; overload; cdecl;
+function MArrayHelper.Position(const item: MType; const index: Integer = 0): Integer; overload;
 var
   l: Integer;
 begin
@@ -296,7 +296,7 @@ end;
   @action: Returns index position from arr which matches with items.
   @note: Returns -1 if any of arr items doesnt match with items!
 [==============================================================================}
-function MArrayHelper.Position(const items: MArray; const index: Integer = 0): Integer; overload; cdecl;
+function MArrayHelper.Position(const items: MArray; const index: Integer = 0): Integer; overload;
 var
   h, i, l: Integer;
 begin
@@ -319,7 +319,7 @@ end;
   @note: (-1, -1) if subArray is not found.
          Loops array from index to max.
 [==============================================================================}
-function MArrayHelper.Range(const subArray: MArray; const index: Integer = 0): TRange; overload; cdecl;
+function MArrayHelper.Range(const subArray: MArray; const index: Integer = 0): TRange; overload;
 var
   i, j, a, s, p: Integer;
   f: Boolean;
@@ -351,7 +351,7 @@ end;
   @note: [] if not a single subArray is not found.
          Loops array from index to max.
 [==============================================================================}
-function MArrayHelper.Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload; cdecl;
+function MArrayHelper.Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload;
 var
   i, j, a, s, p, l: Integer;
   f: Boolean;
@@ -385,7 +385,7 @@ end;
   @action: -
   @note: -
 [==============================================================================}
-function MArrayHelper.Span: TRange; overload; cdecl;
+function MArrayHelper.Span: TRange; overload;
 begin
   Result.stop := High(Self);
   Result.start := IfThen((Result.stop = -1), -1, 0);
@@ -397,7 +397,7 @@ end;
   @note: (-1, -1) if subArray is not found.
          Loops array from index downto min.
 [==============================================================================}
-function MArrayHelper.Span(const subArray: MArray; const index: Integer = 2147483647): TRange; overload; cdecl;
+function MArrayHelper.Span(const subArray: MArray; const index: Integer = 2147483647): TRange; overload;
 var
   i, j, a, s, p: Integer;
   f: Boolean;
@@ -429,7 +429,7 @@ end;
   @note: [] if not a single subArray is not found.
          Loops array from index downto min.
 [==============================================================================}
-function MArrayHelper.Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload; cdecl;
+function MArrayHelper.Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload;
 var
   i, j, a, s, p, l: Integer;
   f: Boolean;
@@ -463,7 +463,7 @@ end;
   @action: Returns subarray position in arr that match pattern exactly.
   @note: arr[0,1,2,0,1,2,3].([1,2]) => 4	
 [==============================================================================}
-function MArrayHelper.SubarrayLocation(const pattern: MArray): Integer; overload; cdecl;
+function MArrayHelper.SubarrayLocation(const pattern: MArray): Integer; overload;
 var
   i, j, l, s, p: Integer;
 begin
@@ -489,7 +489,7 @@ end;
   @action: Returns subarray position in arr that match pattern exactly.
   @note: arr[0,1,2,0,1,2,3].([1,2]) => 1	
 [==============================================================================}
-function MArrayHelper.SubarrayPosition(const pattern: MArray): Integer; overload; cdecl;
+function MArrayHelper.SubarrayPosition(const pattern: MArray): Integer; overload;
 var
   i, j, l, p: Integer;
   f: Boolean;

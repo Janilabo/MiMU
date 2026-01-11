@@ -1,9 +1,9 @@
 {$IFDEF HELPERS}
-function Blank: Boolean; overload; cdecl;
-function Empty: Boolean; overload; cdecl;
-function Irregular: Boolean; overload; cdecl;
-function Jagged: Boolean; overload; cdecl;
-function Ragged: Boolean; overload; cdecl;
+function Blank: Boolean; overload;
+function Empty: Boolean; overload;
+function Irregular: Boolean; overload;
+function Jagged: Boolean; overload;
+function Ragged: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -13,7 +13,7 @@ function Ragged: Boolean; overload; cdecl;
   @note: Blank array could be for example [[], [], []]. Returns false if array contains any items.
          NOTE: Returns false if array is empty (1D Length = 0)!
 [==============================================================================}
-function M2DArrayHelper.Blank: Boolean; overload; cdecl;
+function M2DArrayHelper.Blank: Boolean; overload;
 var
   i: Integer;
 begin
@@ -28,7 +28,7 @@ end;
   @action: Returns true if array is empty (Length = 0).
   @note: None.
 [==============================================================================}
-function M2DArrayHelper.Empty: Boolean; overload; cdecl;
+function M2DArrayHelper.Empty: Boolean; overload;
 begin
   Result := (Self.Length = 0);
 end;
@@ -38,7 +38,7 @@ end;
   @action: Returns true if array contains arrays with different lengths (array not symmetrict)
   @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
 [==============================================================================}
-function M2DArrayHelper.Irregular: Boolean; overload; cdecl;
+function M2DArrayHelper.Irregular: Boolean; overload;
 var
   i, a, l, h: Integer;
 begin
@@ -65,7 +65,7 @@ end;
   @action: Returns true if array contains arrays with different lengths (array not symmetrict)
   @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
 [==============================================================================}
-function M2DArrayHelper.Jagged: Boolean; overload; cdecl;
+function M2DArrayHelper.Jagged: Boolean; overload;
 var
   i, l: Integer;
 begin
@@ -82,7 +82,7 @@ end;
   @action: Returns true if array contains arrays with different lengths (array not symmetrict)
   @note: [[1,2],[3,4],[5,6]] = False | [[1,2],[3],[4,5,6]] = True
 [==============================================================================}
-function M2DArrayHelper.Ragged: Boolean; overload; cdecl;
+function M2DArrayHelper.Ragged: Boolean; overload;
 var
   i: Integer;
   h: specialize THashSet<Integer>;

@@ -1,10 +1,10 @@
 {$IFDEF HELPERS}
-function AsTRange: TRange; cdecl;
-function BoolifyBinary: TBooleanArray; cdecl;
-function IsBinary(const emptyTrue: Boolean = True): Boolean; cdecl;
-function PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string; cdecl;
-function Quotatation: string; cdecl;
-function ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange; cdecl;
+function AsTRange: TRange;
+function BoolifyBinary: TBooleanArray;
+function IsBinary(const emptyTrue: Boolean = True): Boolean;
+function PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string;
+function Quotatation: string;
+function ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -13,7 +13,7 @@ function ToTRange(const glueRange: string = '..'; const openRange: Char = '['; c
   @action: Returns indexes of string as TRange.
   @note: With empty string this function returns as 0..0!
 [==============================================================================}
-function TStringHelper.AsTRange: TRange; cdecl;
+function TStringHelper.AsTRange: TRange;
 begin
   Result.Build(Min(1, Length(Self)), Length(Self));
 end;
@@ -23,7 +23,7 @@ end;
   @action: '10101' => [True, False, True, False, True]
   @note: Considers only '1' as True, everything else as False.
 [==============================================================================}
-function TStringHelper.BoolifyBinary: TBooleanArray; cdecl;
+function TStringHelper.BoolifyBinary: TBooleanArray;
 var
   i: Integer;
 begin
@@ -37,7 +37,7 @@ end;
   @action: Returns true if str contains only 0's and 1's
   @note: If str is empty and emptyTrue is True, then this function returns True with empty strings.
 [==============================================================================}
-function TStringHelper.IsBinary(const emptyTrue: Boolean = True): Boolean; cdecl;
+function TStringHelper.IsBinary(const emptyTrue: Boolean = True): Boolean;
 var
   i: Integer;
 begin
@@ -54,7 +54,7 @@ end;
   @action: Returns string with all characters escaped that are part of the regular expression syntax.
   @note: Based on the character set...
 [==============================================================================}
-function TStringHelper.PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string; cdecl;
+function TStringHelper.PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string;
 var
   l, i: Integer;
 begin
@@ -71,7 +71,7 @@ end;
   @action: Returns the quoted version of str.
   @note: None
 [==============================================================================}
-function TStringHelper.Quotatation: string; cdecl;
+function TStringHelper.Quotatation: string;
 begin
   Result := ('''' + StringReplace(Self, '''', '''''', [rfReplaceAll]) + '''');
 end;
@@ -81,7 +81,7 @@ end;
  @action: Converts string to TRange.
  @note: None
 [==============================================================================}
-function TStringHelper.ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange; cdecl;
+function TStringHelper.ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange;
 var
   s: string;
   p: Integer;

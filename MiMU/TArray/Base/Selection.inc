@@ -1,21 +1,21 @@
 {$IFDEF HELPERS}
-function Devein(const dIDs: TIntegerArray; const dValue: MType): MArray; overload; cdecl;
-function Devein(const dIDs: TIntegerArray): MArray; overload; cdecl;
-function Exclude(const items: MArray; const index: Integer = 2147483647): MArray; overload; cdecl;
-function Expel(const eIDs: TIntegerArray): MArray; overload; cdecl;
-function Extract(const item: MType; const index: Integer = 0): MArray; overload; cdecl;
-function Extract(const items: MArray; const index: Integer = 0): MArray; overload; cdecl;
-function ExtractEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload; cdecl;
-function ExtractIDs(const allowed: TIntegerArray): MArray; overload; cdecl;
-function ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): MArray; overload; cdecl;
-function Filter(const item: MType; const index: Integer = 0): MArray; overload; cdecl;
-function Filter(const items: MArray; const index: Integer = 0): MArray; overload; cdecl;
-function FilterEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload; cdecl;
-function FilterIDs(const forbidden: TIntegerArray): MArray; overload; cdecl;
-function FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): MArray; overload; cdecl;
-function Keep(const items: MArray; const index: Integer = 0): MArray; overload; cdecl;
-function Pick(const items: MArray; const index: Integer = 0): MArray; overload; cdecl;
-function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload; cdecl;
+function Devein(const dIDs: TIntegerArray; const dValue: MType): MArray; overload;
+function Devein(const dIDs: TIntegerArray): MArray; overload;
+function Exclude(const items: MArray; const index: Integer = 2147483647): MArray; overload;
+function Expel(const eIDs: TIntegerArray): MArray; overload;
+function Extract(const item: MType; const index: Integer = 0): MArray; overload;
+function Extract(const items: MArray; const index: Integer = 0): MArray; overload;
+function ExtractEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
+function ExtractIDs(const allowed: TIntegerArray): MArray; overload;
+function ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): MArray; overload;
+function Filter(const item: MType; const index: Integer = 0): MArray; overload;
+function Filter(const items: MArray; const index: Integer = 0): MArray; overload;
+function FilterEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
+function FilterIDs(const forbidden: TIntegerArray): MArray; overload;
+function FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): MArray; overload;
+function Keep(const items: MArray; const index: Integer = 0): MArray; overload;
+function Pick(const items: MArray; const index: Integer = 0): MArray; overload;
+function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -27,7 +27,7 @@ function Reject(const items: MArray; const index: Integer = 2147483647): MArray;
          The original array (Self) is not modified.
          If dIDs contains indices out of range, they are ignored. Empty arrays for Self or dIDs result in an unchanged copy.
 [==============================================================================}
-function MArrayHelper.Devein(const dIDs: TIntegerArray; const dValue: MType): MArray; overload; cdecl;
+function MArrayHelper.Devein(const dIDs: TIntegerArray; const dValue: MType): MArray; overload;
 var
   i, l: Integer;
   s: TRange;
@@ -48,7 +48,7 @@ begin
   SetLength(Result, l);
 end;
 
-function MArrayHelper.Devein(const dIDs: TIntegerArray): MArray; overload; cdecl;
+function MArrayHelper.Devein(const dIDs: TIntegerArray): MArray; overload;
 begin
   Result := Self.Devein(dIDs, Default(MType));
 end;
@@ -59,7 +59,7 @@ end;
   @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
          The default index filters the entire array.
 [==============================================================================}
-function MArrayHelper.Exclude(const items: MArray; const index: Integer = 2147483647): MArray; overload; cdecl;
+function MArrayHelper.Exclude(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 var
   i, l, m, d: Integer;
 begin
@@ -89,7 +89,7 @@ end;
          Indices in eIDs that are out of range are ignored.
          Uses -2147483648 as an internal sentinel to mark elements for removal.
 [==============================================================================}
-function MArrayHelper.Expel(const eIDs: TIntegerArray): MArray; overload; cdecl;
+function MArrayHelper.Expel(const eIDs: TIntegerArray): MArray; overload;
 var
   i, l: Integer;
   s: TRange;
@@ -117,7 +117,7 @@ end;
   @action: Keeps (extracts) all values in arr that are item. Starts scan from start index.
   @note: Returns the items.
 [==============================================================================} 
-function MArrayHelper.Extract(const item: MType; const index: Integer = 0): MArray; overload; cdecl;
+function MArrayHelper.Extract(const item: MType; const index: Integer = 0): MArray; overload;
 var
   i, l, r: Integer;
 begin
@@ -135,7 +135,7 @@ end;
   @action: Keeps (extracts) all values in arr that are in items. Starts scan from start index.
   @note: Returns the items.
 [==============================================================================}
-function MArrayHelper.Extract(const items: MArray; const index: Integer = 0): MArray; overload; cdecl;
+function MArrayHelper.Extract(const items: MArray; const index: Integer = 0): MArray; overload;
 var
   i, l, r: Integer;
 begin
@@ -156,7 +156,7 @@ end;
   @action: Keeps (extracts) all X values from array. Starts scan from start index.
   @note: Returns the items.
 [==============================================================================} 
-function MArrayHelper.ExtractEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload; cdecl;
+function MArrayHelper.ExtractEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
 var
   i, h, l: Integer;
 begin
@@ -176,7 +176,7 @@ end;
   @action: Keeps (extracts) all allowed index values from array.
   @note: None.
 [==============================================================================}
-function MArrayHelper.ExtractIDs(const allowed: TIntegerArray): MArray; overload; cdecl;
+function MArrayHelper.ExtractIDs(const allowed: TIntegerArray): MArray; overload;
 var
   h, i, l: Integer;
   m: TBooleanArray;
@@ -201,7 +201,7 @@ end;
   @action: Keeps (extracts) all allowed index values from array.
   @note: If allowed is not in ascending order, aSorted needs to be False.
 [==============================================================================}
-function MArrayHelper.ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): MArray; overload; cdecl;
+function MArrayHelper.ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): MArray; overload;
 var
   h, i, l: Integer;
   a: TIntegerArray;
@@ -226,7 +226,7 @@ end;
   @action: Removes all values from arr that are found in items.
   @note: None
 [==============================================================================}
-function MArrayHelper.Filter(const item: MType; const index: Integer = 0): MArray; overload; cdecl;
+function MArrayHelper.Filter(const item: MType; const index: Integer = 0): MArray; overload;
 var
   i, l, r: Integer;
 begin
@@ -244,7 +244,7 @@ end;
   @action: Removes all values from arr that are found in items.
   @note: None
 [==============================================================================}
-function MArrayHelper.Filter(const items: MArray; const index: Integer = 0): MArray; overload; cdecl;
+function MArrayHelper.Filter(const items: MArray; const index: Integer = 0): MArray; overload;
 var
   i, l, r: Integer;
 begin
@@ -264,7 +264,7 @@ end;
   @action: Filters every/each X item from arr.
   @note: Custom index
 [==============================================================================}
-function MArrayHelper.FilterEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload; cdecl;
+function MArrayHelper.FilterEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
 var
   i, h, l: Integer;
 begin
@@ -284,7 +284,7 @@ end;
   @action: Returns the array without values from forbidden indexes.
   @note: None.
 [==============================================================================}
-function MArrayHelper.FilterIDs(const forbidden: TIntegerArray): MArray; overload; cdecl;
+function MArrayHelper.FilterIDs(const forbidden: TIntegerArray): MArray; overload;
 var
   h, i, l: Integer;
   m: TBooleanArray;
@@ -309,7 +309,7 @@ end;
   @action: Returns the array without values from forbidden indexes.
   @note: If forbidden is not in ascending order, fSorted needs to be False.
 [==============================================================================}
-function MArrayHelper.FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): MArray; overload; cdecl;
+function MArrayHelper.FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): MArray; overload;
 var
   h, i, l: Integer;
   f: TIntegerArray;
@@ -336,7 +336,7 @@ end;
   @action: Keeps items in array, removes others.
   @note: Supports custom start index! Returns the modified arr.
 [==============================================================================}
-function MArrayHelper.Keep(const items: MArray; const index: Integer = 0): MArray; overload; cdecl;
+function MArrayHelper.Keep(const items: MArray; const index: Integer = 0): MArray; overload;
 var
   m, i, l, r: Integer;
 begin
@@ -365,7 +365,7 @@ end;
   @action: Alternative method for arr.Keep
   @note: None.
 [==============================================================================}
-function MArrayHelper.Pick(const items: MArray; const index: Integer = 0): MArray; overload; cdecl;
+function MArrayHelper.Pick(const items: MArray; const index: Integer = 0): MArray; overload;
 var
   i, m, l: Integer;
 begin
@@ -394,7 +394,7 @@ end;
   @note: Elements after index are copied without filtering. If index is out of bounds, it is clamped to the array length.
          The default index filters the entire array.
 [==============================================================================}
-function MArrayHelper.Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload; cdecl;
+function MArrayHelper.Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 var
   i, l, m, c: Integer;
 begin

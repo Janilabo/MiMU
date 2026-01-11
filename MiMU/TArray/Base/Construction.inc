@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
-function Build(const item: MType; const aSize: Integer = 1): MArray; overload; cdecl;
-function Create(const item: MType): MArray; overload; cdecl;
-function Create(const aSize: Integer; const item: MType): MArray; overload; cdecl;
+function Build(const item: MType; const aSize: Integer = 1): MArray; overload;
+function Create(const item: MType): MArray; overload;
+function Create(const aSize: Integer; const item: MType): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -10,7 +10,7 @@ function Create(const aSize: Integer; const item: MType): MArray; overload; cdec
  @action: Creates array with item where aSize is length of the array.
  @note: item is placed on every index in result.
 [==============================================================================}
-function MArrayHelper.Build(const item: MType; const aSize: Integer = 1): MArray; overload; cdecl;
+function MArrayHelper.Build(const item: MType; const aSize: Integer = 1): MArray; overload;
 begin
   Result := Self.Create(aSize, item);
 end;
@@ -20,7 +20,7 @@ end;
   @action: Creates array with item, size as 1. Returns old Self.
   @note: [item]
 [==============================================================================}
-function MArrayHelper.Create(const item: MType): MArray; overload; cdecl;
+function MArrayHelper.Create(const item: MType): MArray; overload;
 begin
   Result := Self.Clone;
   SetLength(Self, 1);
@@ -32,7 +32,7 @@ end;
   @action: Creates array with item where aSize is length of the array. Returns old Self.
   @note: item is placed on every index in result.
 [==============================================================================}
-function MArrayHelper.Create(const aSize: Integer; const item: MType): MArray; overload; cdecl;
+function MArrayHelper.Create(const aSize: Integer; const item: MType): MArray; overload;
 var
   i: Integer;
 begin

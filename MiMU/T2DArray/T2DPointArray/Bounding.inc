@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function AllBounds: TBoxArray; overload; cdecl;
-function AllBounds(var aBounds: TBox): TBoxArray; overload; cdecl;
+function AllBounds: TBoxArray; overload;
+function AllBounds(var aBounds: TBox): TBoxArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function AllBounds(var aBounds: TBox): TBoxArray; overload; cdecl;
   @action: Returns an array containing the bounding box of each point in the array.
   @note: Each element in the result corresponds to the bounds of a single point.
 [==============================================================================}
-function T2DPointArrayHelper.AllBounds: TBoxArray; overload; cdecl;
+function T2DPointArrayHelper.AllBounds: TBoxArray; overload;
 var
   i: Integer;
 begin
@@ -23,7 +23,7 @@ end;
   @action: Returns an array of per-point bounding boxes and outputs the overall bounding box covering all points.
   @note: The 'aBounds' parameter receives the minimal bounding box enclosing all individual boxes.
 [==============================================================================}
-function T2DPointArrayHelper.AllBounds(var aBounds: TBox): TBoxArray; overload; cdecl;
+function T2DPointArrayHelper.AllBounds(var aBounds: TBox): TBoxArray; overload;
 var
   i: Integer;
 begin

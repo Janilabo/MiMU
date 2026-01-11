@@ -1,8 +1,8 @@
 {$IFDEF METHODS}
-function Clamp(const toArea: TBox): TBox; cdecl;
-function Clip(const toArea: TBox): TBox; cdecl;
-function Constraint(const toArea: TBox): Boolean; cdecl;
-function Restrict(const toArea: TBox): Boolean; cdecl;
+function Clamp(const toArea: TBox): TBox;
+function Clip(const toArea: TBox): TBox;
+function Constraint(const toArea: TBox): Boolean;
+function Restrict(const toArea: TBox): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function Restrict(const toArea: TBox): Boolean; cdecl;
   Explanation: Returns bx that has been restricted to area.
   Example: None.
 [==============================================================================}
-function TBox.Clamp(const toArea: TBox): TBox; cdecl;
+function TBox.Clamp(const toArea: TBox): TBox;
 begin
   if (Self.X1 < toArea.X1) then
     Result.X1 := toArea.X1
@@ -48,7 +48,7 @@ end;
   Explanation: Returns bx that has been constrained to area.
   Example: None.
 [==============================================================================}
-function TBox.Clip(const toArea: TBox): TBox; cdecl;
+function TBox.Clip(const toArea: TBox): TBox;
 begin
   Result.X1 := Max(toArea.X1, Min(toArea.X2, Self.X1));
   Result.Y1 := Max(toArea.Y1, Min(toArea.Y2, Self.Y1));
@@ -61,7 +61,7 @@ end;
   Explanation: Constraints bx to area.
   Example: None.
 [==============================================================================}
-function TBox.Constraint(const toArea: TBox): Boolean; cdecl;
+function TBox.Constraint(const toArea: TBox): Boolean;
 var
   b: TBox;
 begin
@@ -78,7 +78,7 @@ end;
   Explanation: Restricts bx to area.
   Example: None.
 [==============================================================================}
-function TBox.Restrict(const toArea: TBox): Boolean; cdecl;
+function TBox.Restrict(const toArea: TBox): Boolean;
 var
   b: TBox;
 begin

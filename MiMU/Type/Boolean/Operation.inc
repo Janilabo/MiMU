@@ -1,8 +1,8 @@
 {$IFDEF HELPERS}
-function Flip: Boolean; cdecl;
-function Opposite: Boolean; cdecl;
-function Switch: Boolean; cdecl;
-function Toggle: Boolean; cdecl;
+function Flip: Boolean;
+function Opposite: Boolean;
+function Switch: Boolean;
+function Toggle: Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function Toggle: Boolean; cdecl;
   @action: Reverses Self.
   @note: Also returns the reversed Self.
 [==============================================================================}
-function TBooleanHelper.Flip: Boolean; cdecl;
+function TBooleanHelper.Flip: Boolean;
 begin
   Self := not Self;
   Result := Self;
@@ -22,7 +22,7 @@ end;
   @action: Returns opposite of Self.
   @note: None
 [==============================================================================}
-function TBooleanHelper.Opposite: Boolean; cdecl;
+function TBooleanHelper.Opposite: Boolean;
 begin
   if Self then
     Result := False
@@ -35,7 +35,7 @@ end;
   @action: Reverses Self.
   @note: Also returns the reversed Self.
 [==============================================================================}
-function TBooleanHelper.Switch: Boolean; cdecl;
+function TBooleanHelper.Switch: Boolean;
 begin
   if Self then
     Self := False
@@ -49,7 +49,7 @@ end;
   @action: Returns opposite of Self.
   @note: None
 [==============================================================================}
-function TBooleanHelper.Toggle: Boolean; cdecl;
+function TBooleanHelper.Toggle: Boolean;
 begin
   Result := not Self;
 end;

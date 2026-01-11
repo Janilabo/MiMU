@@ -1,7 +1,7 @@
 {$IFDEF METHODS}
-function Extend(const pt: TPoint): Boolean; cdecl;
-function ExtendX(const xCoord: Integer): Boolean; cdecl; 
-function ExtendY(const yCoord: Integer): Boolean; cdecl;
+function Extend(const pt: TPoint): Boolean;
+function ExtendX(const xCoord: Integer): Boolean; 
+function ExtendY(const yCoord: Integer): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -10,7 +10,7 @@ function ExtendY(const yCoord: Integer): Boolean; cdecl;
   Explanation: Returns true if TBox is changed with pt (X1, X2, Y1 or Y2)
   @note: Modifies the Self!
 [==============================================================================}
-function TBox.Extend(const pt: TPoint): Boolean; cdecl;
+function TBox.Extend(const pt: TPoint): Boolean;
 var
   w, h: Boolean;
 begin
@@ -24,7 +24,7 @@ end;
   Explanation: Returns true if TBox is changed with xCoord (X1 or X2)
   @note: Modifies the Self!
 [==============================================================================}
-function TBox.ExtendX(const xCoord: Integer): Boolean; cdecl;
+function TBox.ExtendX(const xCoord: Integer): Boolean;
 begin
   if (xCoord < Self.X1) then
     Self.X1 := xCoord
@@ -41,7 +41,7 @@ end;
   Explanation: Returns true if TBox is changed with yCoord (Y1 or Y2)
   @note: Modifies the Self!
 [==============================================================================}
-function TBox.ExtendY(const yCoord: Integer): Boolean; cdecl;
+function TBox.ExtendY(const yCoord: Integer): Boolean;
 begin
   if (yCoord < Self.Y1) then
     Self.Y1 := yCoord

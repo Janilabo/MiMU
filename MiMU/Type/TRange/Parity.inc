@@ -1,14 +1,14 @@
 {$IFDEF METHODS}
-function Even: Boolean; overload; cdecl;
-function EvenCount: Integer; overload; cdecl;
-function Evened: TIntegerArray; overload; cdecl;
-function Evens: Integer; overload; cdecl;
-function Evenz: TIntegerArray; overload; cdecl;
-function Odd: Boolean; overload; cdecl;
-function OddCount: Integer; overload; cdecl;
-function Odded: TIntegerArray; overload; cdecl;
-function Odds: Integer; overload; cdecl;
-function Oddz: TIntegerArray; overload; cdecl;
+function Even: Boolean; overload;
+function EvenCount: Integer; overload;
+function Evened: TIntegerArray; overload;
+function Evens: Integer; overload;
+function Evenz: TIntegerArray; overload;
+function Odd: Boolean; overload;
+function OddCount: Integer; overload;
+function Odded: TIntegerArray; overload;
+function Odds: Integer; overload;
+function Oddz: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,7 +17,7 @@ function Oddz: TIntegerArray; overload; cdecl;
   @action: Returns True when the size of the range is an even integer.
   @note: Delegates to Self.Size.Even; no side effects.
 [==============================================================================}
-function TRange.Even: Boolean; overload; cdecl;
+function TRange.Even: Boolean; overload;
 begin
   Result := Self.Size.Even;
 end;
@@ -27,7 +27,7 @@ end;
   @action: Returns the number of even integers within the range (including both start and stop).
   @note: Works for ascending, descending, and single-element ranges. Handles negative numbers correctly.
 [==============================================================================}
-function TRange.EvenCount: Integer; overload; cdecl;
+function TRange.EvenCount: Integer; overload;
 var
   f, l: Integer;
 begin
@@ -48,7 +48,7 @@ end;
          from `start`, then values progress by ±2 depending on whether the
          range is ascending or descending.
 [==============================================================================}
-function TRange.Evened: TIntegerArray; overload; cdecl;
+function TRange.Evened: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -74,7 +74,7 @@ end;
   @note: The computation is O(1) and works for both ascending and descending
          ranges. The result is inclusive of both endpoints.
 [==============================================================================}
-function TRange.Evens: Integer; overload; cdecl;
+function TRange.Evens: Integer; overload;
 var
   r: TRange;
 begin
@@ -98,7 +98,7 @@ end;
     - Uses Direction to step properly through the range.
     - Skips the first element if it is odd.
 [==============================================================================}
-function TRange.Evenz: TIntegerArray; overload; cdecl;
+function TRange.Evenz: TIntegerArray; overload;
 var
   i, s, d: Integer;
 begin
@@ -118,7 +118,7 @@ end;
   @action: Returns True when the size of the range is an odd integer.
   @note: Delegates to Self.Size.Odd; no side effects.
 [==============================================================================}
-function TRange.Odd: Boolean; overload; cdecl;
+function TRange.Odd: Boolean; overload;
 begin
   Result := Self.Size.Odd;
 end;
@@ -128,7 +128,7 @@ end;
   @action: Returns the number of odd integers within the range (including both start and stop).
   @note: Calculated as the total range size minus the number of even numbers. Works for ascending, descending, and negative ranges.
 [==============================================================================}
-function TRange.OddCount: Integer; overload; cdecl;
+function TRange.OddCount: Integer; overload;
 begin
   Result := (Self.Size - Self.EvenCount);
 end;
@@ -141,7 +141,7 @@ end;
          from `start`, then values progress by ±2 depending on the direction
          of the range.
 [==============================================================================}
-function TRange.Odded: TIntegerArray; overload; cdecl;
+function TRange.Odded: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -167,7 +167,7 @@ end;
   @note: Determined as (RangeSize - Evens), ensuring correctness regardless
          of range direction or endpoint parity.
 [==============================================================================}
-function TRange.Odds: Integer; overload; cdecl;
+function TRange.Odds: Integer; overload;
 begin
   Result := (Self.Size - Self.Evens);
 end;
@@ -181,7 +181,7 @@ end;
     - Uses Direction to step properly through the range.
     - Skips the first element if it is even.
 [==============================================================================}
-function TRange.Oddz: TIntegerArray; overload; cdecl;
+function TRange.Oddz: TIntegerArray; overload;
 var
   i, s, d: Integer;
 begin

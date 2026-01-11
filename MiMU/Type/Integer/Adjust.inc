@@ -1,24 +1,24 @@
 {$IFDEF HELPERS}
-function Adjust(const cValue: Integer; const limits: TRange): Boolean; cdecl;
-function Adjusted(const cValue: Integer; const limits: TRange): Integer; cdecl;
-function AdjustedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer; cdecl;
-function AdjustedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer; cdecl;
-function AdjustMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean; cdecl;
-function AdjustMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean; cdecl;
-function Decrease(const N: Integer = 1): Integer; overload; cdecl;
-function Decrease(const B: Boolean): Integer; overload; cdecl;
-function Decrement(const N: Integer = 1): Integer; overload; cdecl;
-function Decrement(const B: Boolean): Integer; overload; cdecl;
-function Increase(const N: Integer = 1): Integer; overload; cdecl;
-function Increase(const B: Boolean): Integer; overload; cdecl;
-function Increment(const N: Integer = 1): Integer; overload; cdecl;
-function Increment(const B: Boolean): Integer; overload; cdecl;
-function Update(const cValue: Integer; const limits: TRange): Boolean; cdecl;
-function Updated(const cValue: Integer; const limits: TRange): Integer; cdecl;
-function UpdatedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer; cdecl;
-function UpdatedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer; cdecl;
-function UpdateMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean; cdecl;
-function UpdateMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean; cdecl;
+function Adjust(const cValue: Integer; const limits: TRange): Boolean;
+function Adjusted(const cValue: Integer; const limits: TRange): Integer;
+function AdjustedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer;
+function AdjustedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer;
+function AdjustMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean;
+function AdjustMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean;
+function Decrease(const N: Integer = 1): Integer; overload;
+function Decrease(const B: Boolean): Integer; overload;
+function Decrement(const N: Integer = 1): Integer; overload;
+function Decrement(const B: Boolean): Integer; overload;
+function Increase(const N: Integer = 1): Integer; overload;
+function Increase(const B: Boolean): Integer; overload;
+function Increment(const N: Integer = 1): Integer; overload;
+function Increment(const B: Boolean): Integer; overload;
+function Update(const cValue: Integer; const limits: TRange): Boolean;
+function Updated(const cValue: Integer; const limits: TRange): Integer;
+function UpdatedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer;
+function UpdatedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer;
+function UpdateMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean;
+function UpdateMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -28,7 +28,7 @@ function UpdateMin(const cValue: Integer; const limit: Integer = -2147483648): B
            stays within the specified limits range.
   @note: Returns True if the value was adjusted, False if it would go out of range.
 [==============================================================================}
-function TIntegerHelper.Adjust(const cValue: Integer; const limits: TRange): Boolean; cdecl;
+function TIntegerHelper.Adjust(const cValue: Integer; const limits: TRange): Boolean;
 begin
   Result := limits.Contains(Self + cValue);
   if Result then
@@ -41,7 +41,7 @@ end;
            only if it stays within limits.
   @note: Non-mutating version of Adjust.
 [==============================================================================}
-function TIntegerHelper.Adjusted(const cValue: Integer; const limits: TRange): Integer; cdecl;
+function TIntegerHelper.Adjusted(const cValue: Integer; const limits: TRange): Integer;
 begin
   Result := Self;
   if limits.Contains(Self + cValue) then
@@ -53,7 +53,7 @@ end;
   @action: Returns Self + cValue if below limit; otherwise returns Self.
   @note:   Non-mutating version of AdjustMax.
 [==============================================================================}
-function TIntegerHelper.AdjustedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer; cdecl;
+function TIntegerHelper.AdjustedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer;
 begin
   Result := Self;
   if ((Self + cValue) <= limit) then
@@ -65,7 +65,7 @@ end;
   @action: Returns Self + cValue if above limit; otherwise returns Self.
   @note: Non-mutating version of AdjustMin.
 [==============================================================================}
-function TIntegerHelper.AdjustedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer; cdecl;
+function TIntegerHelper.AdjustedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer;
 begin
   Result := Self;
   if ((Self + cValue) >= limit) then
@@ -77,7 +77,7 @@ end;
   @action: Attempts to adjust by cValue but prevents exceeding the upper limit.
   @note: Returns True if the new value remains <= limit.
 [==============================================================================}
-function TIntegerHelper.AdjustMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean; cdecl;
+function TIntegerHelper.AdjustMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean;
 begin
   Result := ((Self + cValue) <= limit);
   if Result then
@@ -90,7 +90,7 @@ end;
            it from going below limit.
   @note: Returns True if the value stayed above or equal to limit.
 [==============================================================================}
-function TIntegerHelper.AdjustMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean; cdecl;
+function TIntegerHelper.AdjustMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean;
 begin
   Result := ((Self + cValue) >= limit);
   if Result then
@@ -102,7 +102,7 @@ end;
   @action: Decreases the Integer value x by N.
   @note: Returns x before decreasing it with N!
 [==============================================================================}
-function TIntegerHelper.Decrease(const N: Integer = 1): Integer; overload; cdecl;
+function TIntegerHelper.Decrease(const N: Integer = 1): Integer; overload;
 begin
   Result := Self;
   Self := (Self - N);
@@ -113,7 +113,7 @@ end;
   @action: Decreases the Integer value x by 1 if B is true.
   @note: Returns x before decreasing!
 [==============================================================================}
-function TIntegerHelper.Decrease(const B: Boolean): Integer; overload; cdecl;
+function TIntegerHelper.Decrease(const B: Boolean): Integer; overload;
 begin
   Result := Self;
   if B then
@@ -125,7 +125,7 @@ end;
   @action: Decreases the Integer value x by N.
   @note: Returns the decreased x!
 [==============================================================================}
-function TIntegerHelper.Decrement(const N: Integer = 1): Integer; overload; cdecl;
+function TIntegerHelper.Decrement(const N: Integer = 1): Integer; overload;
 begin
   Self := (Self - N);
   Result := Self;
@@ -136,7 +136,7 @@ end;
   @action: Decreases the Integer value x by 1 if B is true.
   @note: Returns the decreased x!
 [==============================================================================}
-function TIntegerHelper.Decrement(const B: Boolean): Integer; overload; cdecl;
+function TIntegerHelper.Decrement(const B: Boolean): Integer; overload;
 begin
   if B then
     Self := (Self - 1);
@@ -148,7 +148,7 @@ end;
   @action: Increases the Integer value x by N.
   @note: Returns x before increasing it with N!
 [==============================================================================}
-function TIntegerHelper.Increase(const N: Integer = 1): Integer; overload; cdecl;
+function TIntegerHelper.Increase(const N: Integer = 1): Integer; overload;
 begin
   Result := Self;
   Self := (Self + N);
@@ -159,7 +159,7 @@ end;
   @action: Increases the Integer value x by 1 when B is true.
   @note: Returns x before increasing!
 [==============================================================================}
-function TIntegerHelper.Increase(const B: Boolean): Integer; overload; cdecl;
+function TIntegerHelper.Increase(const B: Boolean): Integer; overload;
 begin
   Result := Self;
   if B then
@@ -171,7 +171,7 @@ end;
   @action: Increases the Integer value x by N.
   @note: Returns the increased x!
 [==============================================================================}
-function TIntegerHelper.Increment(const N: Integer = 1): Integer; overload; cdecl;
+function TIntegerHelper.Increment(const N: Integer = 1): Integer; overload;
 begin
   Self := (Self + N);
   Result := Self;
@@ -182,7 +182,7 @@ end;
   @action: Increases the Integer value x by 1 if B is true.
   @note: Returns the increased x!
 [==============================================================================}
-function TIntegerHelper.Increment(const B: Boolean): Integer; overload; cdecl;
+function TIntegerHelper.Increment(const B: Boolean): Integer; overload;
 begin
   if B then
     Self := (Self + 1);
@@ -194,7 +194,7 @@ end;
   @action: Adjusts the integer by cValue and clamps it within the specified limits.
   @note: Returns True if the result was within the range and assigned without clamping.
 [==============================================================================}
-function TIntegerHelper.Update(const cValue: Integer; const limits: TRange): Boolean; cdecl;
+function TIntegerHelper.Update(const cValue: Integer; const limits: TRange): Boolean;
 var
   r: TRange;
   n: Integer;
@@ -216,7 +216,7 @@ end;
   @action: Returns a new value equal to Self + cValue, clamped within the specified limits.
   @note: Does not modify Self.
 [==============================================================================}
-function TIntegerHelper.Updated(const cValue: Integer; const limits: TRange): Integer; cdecl;
+function TIntegerHelper.Updated(const cValue: Integer; const limits: TRange): Integer;
 var
   r: TRange;
   n: Integer;
@@ -237,7 +237,7 @@ end;
   @action: Returns Self + cValue, ensuring the result is not above limit.
   @note: Does not modify Self.
 [==============================================================================}
-function TIntegerHelper.UpdatedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer; cdecl;
+function TIntegerHelper.UpdatedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer;
 var
   n: Integer;
 begin
@@ -253,7 +253,7 @@ end;
   @action: Returns Self + cValue, ensuring the result is not below limit.
   @note: Does not modify Self.
 [==============================================================================}
-function TIntegerHelper.UpdatedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer; cdecl;
+function TIntegerHelper.UpdatedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer;
 var
   n: Integer;
 begin
@@ -269,7 +269,7 @@ end;
   @action: Adjusts the integer by cValue, ensuring it does not exceed limit.
   @note: Returns True if the result was below or equal to limit (no clamping).
 [==============================================================================}
-function TIntegerHelper.UpdateMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean; cdecl;
+function TIntegerHelper.UpdateMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean;
 var
   n: Integer;
 begin
@@ -286,7 +286,7 @@ end;
   @action: Adjusts the integer by cValue, ensuring it does not fall below limit.
   @note: Returns True if the result was above or equal to limit (no clamping).
 [==============================================================================}
-function TIntegerHelper.UpdateMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean; cdecl;
+function TIntegerHelper.UpdateMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean;
 var
   n: Integer;
 begin

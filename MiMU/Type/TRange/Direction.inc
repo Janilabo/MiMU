@@ -1,8 +1,8 @@
 {$IFDEF METHODS}
-function Direction: Integer; cdecl;
-function Orientation: Integer; cdecl;
-function Signum: Integer; cdecl;
-function Slope: Integer; cdecl;
+function Direction: Integer;
+function Orientation: Integer;
+function Signum: Integer;
+function Slope: Integer;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -13,7 +13,7 @@ function Slope: Integer; cdecl;
         -1  => ascending  (start > stop)
          0  => degenerate (start = stop)
 [==============================================================================}
-function TRange.Direction: Integer; cdecl;
+function TRange.Direction: Integer;
 begin
   Result := Sign(Self.Delta);
 end;
@@ -24,7 +24,7 @@ end;
            and -1 if the range is descending (Stop < Start).
   @note: Useful for determining iteration direction or orientation of the range.
 [==============================================================================}
-function TRange.Orientation: Integer; cdecl;
+function TRange.Orientation: Integer;
 begin
   Result := IfThen((Self.Stop < Self.Start), -1, 1);
 end;
@@ -38,7 +38,7 @@ end;
   @note: Useful for determining the trend or direction of the range without
          caring about the magnitude. Does not include endpoints count.
 [==============================================================================}
-function TRange.Signum: Integer; cdecl;
+function TRange.Signum: Integer;
 begin
   if (Self.start = Self.stop) then
     Result := 0
@@ -55,7 +55,7 @@ end;
   @note: Useful for determining the trend of the range without considering magnitude.
          Equivalent to Signum in behavior; purely indicates direction.
 [==============================================================================}
-function TRange.Slope: Integer; cdecl;
+function TRange.Slope: Integer;
 begin
   if (Self.start = Self.stop) then
     Result := 0

@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
-function DigitCount: Integer; cdecl;
-function Digits: TIntegerArray; cdecl;
-function Digitz: TIntegerArray; cdecl;
+function DigitCount: Integer;
+function Digits: TIntegerArray;
+function Digitz: TIntegerArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function Digitz: TIntegerArray; cdecl;
   @note: If x is negative value, the negative sign is ignored.
          Works with -2147483648 - 2147483647!
 [==============================================================================}
-function TIntegerHelper.DigitCount: Integer; cdecl;
+function TIntegerHelper.DigitCount: Integer;
 var
   a, n, m: Int64;
 begin
@@ -31,7 +31,7 @@ end;
   @note: If x is negative value, the negative sign is ignored.
          Works with -2147483648 - 2147483647!
 [==============================================================================}
-function TIntegerHelper.Digits: TIntegerArray; cdecl;
+function TIntegerHelper.Digits: TIntegerArray;
 var
   s: string;
   l, i: Integer;
@@ -50,7 +50,7 @@ end;
   @note: If x is negative value, the negative sign is ignored.
          Works with -2147483648 - 2147483647!
 [==============================================================================}
-function TIntegerHelper.Digitz: TIntegerArray; cdecl;
+function TIntegerHelper.Digitz: TIntegerArray;
 var
   a, n, m: Int64;
   i, r: Integer;

@@ -1,20 +1,20 @@
 {$IFDEF METHODS}
-function Bottom: Integer; overload; cdecl;
-function First: Integer; overload; cdecl;
-function Higher: Integer; overload; cdecl;
-function Highest: Integer; cdecl;
-function Last: Integer; overload; cdecl;
-function Left: Integer; overload; cdecl;
-function Lower: Integer; overload; cdecl;
-function Lowest: Integer; cdecl;
-function Maxima: Integer; cdecl;
-function Maximal: Integer cdecl;
-function Maximum: Integer; cdecl;
-function Minima: Integer; cdecl;
-function Minimal: Integer; cdecl;
-function Minimum: Integer; cdecl;
-function Right: Integer; overload; cdecl;
-function Top: Integer; overload; cdecl;
+function Bottom: Integer; overload;
+function First: Integer; overload;
+function Higher: Integer; overload;
+function Highest: Integer;
+function Last: Integer; overload;
+function Left: Integer; overload;
+function Lower: Integer; overload;
+function Lowest: Integer;
+function Maxima: Integer;
+function Maximal: Integer;
+function Maximum: Integer;
+function Minima: Integer;
+function Minimal: Integer;
+function Minimum: Integer;
+function Right: Integer; overload;
+function Top: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -28,7 +28,7 @@ function Top: Integer; overload; cdecl;
     - Equivalent in behavior to `if start <= stop then Result := start else Result := stop;` 
       or `Result := Min(start, stop);`.
 [==============================================================================}
-function TRange.Bottom: Integer; overload; cdecl;
+function TRange.Bottom: Integer; overload;
 begin
   case (Self.start < Self.stop) of
     True:  Result := Self.start;
@@ -42,7 +42,7 @@ end;
   @note: Can be computed branchlessly using arithmetic: (start + stop - Abs(start - stop)) div 2.
          Equivalent to Low/Min. Watch for potential integer overflow.
 [==============================================================================}
-function TRange.First: Integer; overload; cdecl;
+function TRange.First: Integer; overload;
 begin
   Result := (((Self.start + Self.stop) - Abs(Self.start - Self.stop)) div 2);
 end;
@@ -52,7 +52,7 @@ end;
   @action: Returns the larger of `start` and `stop` (the upper bound of the range).
   @note: Implemented using a branchless bitwise arithmetic trick.
 [==============================================================================}
-function TRange.Higher: Integer; overload; cdecl;
+function TRange.Higher: Integer; overload;
 begin
   Result := ((Self.start * Ord(Self.start >= Self.stop)) + (Self.stop * Ord(Self.start < Self.stop)));
 end;
@@ -62,7 +62,7 @@ end;
   @action: Returns maximum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Highest: Integer; cdecl;
+function TRange.Highest: Integer;
 begin
   Result := Max(Self.stop, Self.start);
 end;
@@ -73,7 +73,7 @@ end;
   @note: Can be computed branchlessly using arithmetic: (start + stop + Abs(start - stop)) div 2.
          Equivalent to High/Max. Watch for potential integer overflow.
 [==============================================================================}
-function TRange.Last: Integer; overload; cdecl;
+function TRange.Last: Integer; overload;
 begin
   Result := (((Self.start + Self.stop) + Abs(Self.start - Self.stop)) div 2);
 end;
@@ -85,7 +85,7 @@ end;
   @note: This is a derived, normalized boundary. It does not reflect the
          caller’s declared direction; it always represents the smaller value.
 [==============================================================================}
-function TRange.Left: Integer; overload; cdecl;
+function TRange.Left: Integer; overload;
 begin
   Result := IfThen((Self.start <= Self.stop), Self.start, Self.stop);
 end;
@@ -95,7 +95,7 @@ end;
   @action: Returns the smaller of `start` and `stop` (the lower bound of the range).
   @note: Implemented using a branchless bitwise arithmetic trick.
 [==============================================================================}
-function TRange.Lower: Integer; overload; cdecl;
+function TRange.Lower: Integer; overload;
 begin
   Result := ((Self.start * Ord(Self.start <= Self.stop)) + (Self.stop * Ord(Self.start > Self.stop)));
 end;
@@ -105,7 +105,7 @@ end;
   @action: Returns minimum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Lowest: Integer; cdecl;
+function TRange.Lowest: Integer;
 begin
   Result := Min(Self.start, Self.stop);
 end;
@@ -115,7 +115,7 @@ end;
   @action: Returns the larger of `start` and `stop`, regardless of ordering.
   @note: Implements a branchless maximum operation using bitwise arithmetic.
 [==============================================================================}
-function TRange.Maxima: Integer; cdecl;
+function TRange.Maxima: Integer;
 begin
   Result := (Self.start xor ((Self.start xor Self.stop) and ((Self.start - Self.stop) shr 31)));
 end;
@@ -129,7 +129,7 @@ end;
     - Works for ranges where start <= stop (ascending) or start > stop (descending).
     - Equivalent to Max(Self.start, Self.stop) but written without a function call.
 [==============================================================================}
-function TRange.Maximal: Integer; cdecl;
+function TRange.Maximal: Integer;
 var
   v: TIntegerArray;
 begin
@@ -142,7 +142,7 @@ end;
   @action: Returns maximum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Maximum: Integer; cdecl;
+function TRange.Maximum: Integer;
 begin
   if (Self.start < Self.stop) then
     Result := Self.stop
@@ -155,7 +155,7 @@ end;
   @action: Returns the smaller of `start` and `stop`, regardless of ordering.
   @note: Implements a branchless minimum operation using bitwise arithmetic.
 [==============================================================================}
-function TRange.Minima: Integer; cdecl;
+function TRange.Minima: Integer;
 begin
   Result := (Self.stop xor ((Self.start xor Self.stop) and ((Self.start - Self.stop) shr 31)));
 end;
@@ -169,7 +169,7 @@ end;
     - Works for ranges where start <= stop (ascending) or start > stop (descending).
     - Equivalent to Min(Self.start, Self.stop) but written without a function call.
 [==============================================================================}
-function TRange.Minimal: Integer; cdecl;
+function TRange.Minimal: Integer;
 var
   v: TIntegerArray;
 begin
@@ -182,7 +182,7 @@ end;
   @action: Returns minimum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Minimum: Integer; cdecl;
+function TRange.Minimum: Integer;
 begin
   if (Self.stop > Self.start) then
     Result := Self.start
@@ -198,7 +198,7 @@ end;
          normalized right-hand boundary used for length calculations
          and ordered interval operations.
 [==============================================================================}
-function TRange.Right: Integer; overload; cdecl;
+function TRange.Right: Integer; overload;
 begin
   Result := IfThen((Self.start >= Self.stop), Self.start, Self.stop);
 end;
@@ -213,7 +213,7 @@ end;
     - Equivalent in behavior to `if start >= stop then Result := start else Result := stop;`
       or `Result := Max(start, stop);`.
 [==============================================================================}
-function TRange.Top: Integer; overload; cdecl;
+function TRange.Top: Integer; overload;
 begin
   case (Self.stop > Self.start) of
     True: Result := Self.stop;

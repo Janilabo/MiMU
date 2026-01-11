@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
-function Points: TPointArray; cdecl;
-function TPA: TPointArray; cdecl;
+function Points: TPointArray;
+function TPA: TPointArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function TPA: TPointArray; cdecl;
  @action: Returns all the points of TCircle.
  @note: None.
 [==============================================================================}
-function TCircle.Points: TPointArray; cdecl;
+function TCircle.Points: TPointArray;
 var
   x, y: Integer;
 begin
@@ -25,7 +25,7 @@ end;
   @action: Returns TCircle points as TPointArray.
   @note: None.
 [==============================================================================}
-function TCircle.TPA: TPointArray; cdecl;
+function TCircle.TPA: TPointArray;
 var
   b: TBox;
   x, y, p: Integer;

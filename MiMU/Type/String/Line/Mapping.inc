@@ -1,17 +1,17 @@
 {$IFDEF HELPERS}
-function LineAtPos(const position: Integer): Integer; overload; cdecl;
-function LineAtPosition(const position: Integer): Integer; overload; cdecl;
-function LineByPos(const position: Integer): Integer; overload; cdecl;
-function LineByPosition(const position: Integer): Integer; overload; cdecl;
-function LineByPosition2(const position: Integer): Integer; overload; cdecl;
-function LineByStringList(const position: Integer): Integer; overload; cdecl;
-function LineEndPosition(const lineNumber: Integer): Integer; overload; cdecl;
-function LineFromPosition(const position: Integer): Integer; overload; cdecl;
-function LineRange(const lineNumber: Integer): TRange; overload; cdecl;
-function LineStartPosition(const lineNumber: Integer): Integer; overload; cdecl;
-function LineToPos(const line: Integer): Integer; overload; cdecl;
-function LineToPosition(const line: Integer): Integer; overload; cdecl;
-function LineWithPosition(const position: Integer): Integer; overload; cdecl;
+function LineAtPos(const position: Integer): Integer; overload;
+function LineAtPosition(const position: Integer): Integer; overload;
+function LineByPos(const position: Integer): Integer; overload;
+function LineByPosition(const position: Integer): Integer; overload;
+function LineByPosition2(const position: Integer): Integer; overload;
+function LineByStringList(const position: Integer): Integer; overload;
+function LineEndPosition(const lineNumber: Integer): Integer; overload;
+function LineFromPosition(const position: Integer): Integer; overload;
+function LineRange(const lineNumber: Integer): TRange; overload;
+function LineStartPosition(const lineNumber: Integer): Integer; overload;
+function LineToPos(const line: Integer): Integer; overload;
+function LineToPosition(const line: Integer): Integer; overload;
+function LineWithPosition(const position: Integer): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -34,7 +34,7 @@ function LineWithPosition(const position: Integer): Integer; overload; cdecl;
     - The function performs a single forward scan from the start of the string
       up to the specified position.
 [==============================================================================}
-function TStringHelper.LineAtPos(const position: Integer): Integer; overload; cdecl;
+function TStringHelper.LineAtPos(const position: Integer): Integer; overload;
 var
   i, p: Integer;
 begin
@@ -67,7 +67,7 @@ end;
     - The function performs a single forward scan from the start of the string
       up to the specified position and allocates no temporary memory.
 [==============================================================================}
-function TStringHelper.LineAtPosition(const position: Integer): Integer; overload; cdecl;
+function TStringHelper.LineAtPosition(const position: Integer): Integer; overload;
 var
   S, C, E: PChar;
   P, L: Integer;
@@ -109,7 +109,7 @@ end;
     - This overload uses multiple substring scans and is less efficient than
       LineByPosition for large strings.
 [==============================================================================}
-function TStringHelper.LineByPos(const position: Integer): Integer; overload; cdecl;
+function TStringHelper.LineByPos(const position: Integer): Integer; overload;
 var
   l: Integer;
   s: string;
@@ -143,7 +143,7 @@ end;
     - This overload performs a single linear pass up to the requested position
       and is optimized for performance and low memory overhead.
 [==============================================================================}
-function TStringHelper.LineByPosition(const position: Integer): Integer; overload; cdecl;
+function TStringHelper.LineByPosition(const position: Integer): Integer; overload;
 var
   i, l: Integer;
 begin
@@ -182,7 +182,7 @@ end;
     - This overload performs a single linear pass up to the requested position
       and is optimized for performance and low memory overhead.
 [==============================================================================}
-function TStringHelper.LineByPosition2(const position: Integer): Integer; overload; cdecl;
+function TStringHelper.LineByPosition2(const position: Integer): Integer; overload;
 var
   i, s, p: Integer;
 begin
@@ -217,7 +217,7 @@ end;
     - The method allocates a temporary TStringList on each call, which may be
       inefficient for high-frequency usage or large strings.
 [==============================================================================}
-function TStringHelper.LineByStringList(const position: Integer): Integer; overload; cdecl;
+function TStringHelper.LineByStringList(const position: Integer): Integer; overload;
 var
   s: TStringList;
   i, r: Integer;
@@ -251,7 +251,7 @@ end;
     - If the line extends to the end of the string, the string length is returned.
     - Line terminators (#10, #13, or #13#10) are not included in the result.
 [==============================================================================}
-function TStringHelper.LineEndPosition(const lineNumber: Integer): Integer; overload; cdecl;
+function TStringHelper.LineEndPosition(const lineNumber: Integer): Integer; overload;
 var
   L: Integer;
 begin
@@ -288,7 +288,7 @@ end;
       starts with one or more line breaks.
     - No temporary strings or auxiliary arrays are allocated.
 [==============================================================================}
-function TStringHelper.LineFromPosition(const position: Integer): Integer; overload; cdecl;
+function TStringHelper.LineFromPosition(const position: Integer): Integer; overload;
 var
   S, E: PChar;
   P, L: Integer;
@@ -331,7 +331,7 @@ end;
     - If the requested line does not exist, both start and stop are set to 0.
     - Internally relies on LineStartPosition and LineEndPosition for consistency.
 [==============================================================================}
-function TStringHelper.LineRange(const lineNumber: Integer): TRange; overload; cdecl;
+function TStringHelper.LineRange(const lineNumber: Integer): TRange; overload;
 begin
   Result.start := Self.LineStartPosition(lineNumber);
   if (Result.start > 0) then
@@ -353,7 +353,7 @@ end;
     - If the requested line does not exist, the function returns 0.
     - The returned position is a character offset, not a byte offset.
 [==============================================================================}
-function TStringHelper.LineStartPosition(const lineNumber: Integer): Integer; overload; cdecl;
+function TStringHelper.LineStartPosition(const lineNumber: Integer): Integer; overload;
 var
   C, E: PChar;
   L: Integer;
@@ -418,7 +418,7 @@ end;
     - The returned position points to the first character *after* the line
       break sequence that terminates the previous line.
 [==============================================================================}
-function TStringHelper.LineToPos(const line: Integer): Integer; overload; cdecl;
+function TStringHelper.LineToPos(const line: Integer): Integer; overload;
 var
   s: TStringArray;
   i, l, p, m, t, o: Integer;
@@ -476,7 +476,7 @@ end;
     - The returned position always refers to the first character *after*
       the line break sequence terminating the previous line.
 [==============================================================================}
-function TStringHelper.LineToPosition(const line: Integer): Integer; overload; cdecl;
+function TStringHelper.LineToPosition(const line: Integer): Integer; overload;
 var
   i, l, s, n: Integer;
 begin
@@ -524,7 +524,7 @@ end;
         * The first line is correctly identified even if the string starts
           with CR, LF, or CRLF.
 [==============================================================================}
-function TStringHelper.LineWithPosition(const position: Integer): Integer; overload; cdecl;
+function TStringHelper.LineWithPosition(const position: Integer): Integer; overload;
 var
   M: Integer;
   I: TIntegerArray;

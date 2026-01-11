@@ -1,12 +1,12 @@
 {$IFDEF METHODS}
-function Column(const index: Integer): TPointArray; overload; cdecl;
-function Column: T2DPointArray; overload; cdecl;
-function Columns: Integer; overload; cdecl;
-function Columns(const index: Integer): TPointArray; overload; cdecl;
-function Row(const index: Integer): TPointArray; overload; cdecl;
-function Row: T2DPointArray; overload; cdecl;
-function Rows: Integer; overload; cdecl;
-function Rows(const index: Integer): TPointArray; overload; cdecl;
+function Column(const index: Integer): TPointArray; overload;
+function Column: T2DPointArray; overload;
+function Columns: Integer; overload;
+function Columns(const index: Integer): TPointArray; overload;
+function Row(const index: Integer): TPointArray; overload;
+function Row: T2DPointArray; overload;
+function Rows: Integer; overload;
+function Rows(const index: Integer): TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +15,7 @@ function Rows(const index: Integer): TPointArray; overload; cdecl;
   @action: Returns all points in the specified column (top-to-bottom)
   @note: 'index' is zero-based relative to the left edge (X1)
 [==============================================================================}
-function TBox.Column(const index: Integer): TPointArray; overload; cdecl;
+function TBox.Column(const index: Integer): TPointArray; overload;
 var
   i: Integer;
   p: PPoint;
@@ -37,7 +37,7 @@ end;
   @action: Returns TBox as its columns of TPoints.
   @note: Column-major. Dimensions = [Width][Height].
 [==============================================================================}
-function TBox.Column: T2DPointArray; overload; cdecl;
+function TBox.Column: T2DPointArray; overload;
 var
   x, y: Integer;
 begin
@@ -52,7 +52,7 @@ end;
   @action: Returns the number of columns in the box (width)
   @note: Zero-based column indexing is from left (X1) to right (X2)
 [==============================================================================}
-function TBox.Columns: Integer; overload; cdecl;
+function TBox.Columns: Integer; overload;
 begin
   Result := (Self.Width);
 end;
@@ -62,7 +62,7 @@ end;
   @action: Returns all points in the specified column of the box, top-to-bottom.
   @note: 'index' is zero-based relative to the left edge (X1). Returns [] if index is out of bounds.
 [==============================================================================}
-function TBox.Columns(const index: Integer): TPointArray; overload; cdecl;
+function TBox.Columns(const index: Integer): TPointArray; overload;
 var
   i: Integer;
 begin
@@ -78,7 +78,7 @@ end;
   @action: Returns all points in the specified row (left-to-right)
   @note: 'index' is zero-based relative to the top edge (Y1)
 [==============================================================================}
-function TBox.Row(const index: Integer): TPointArray; overload; cdecl;
+function TBox.Row(const index: Integer): TPointArray; overload;
 var
   i: Integer;
   p: PPoint;
@@ -100,7 +100,7 @@ end;
   @action: Returns TBox as its rows of TPoints.
   @note: Row-major. Dimensions = [Height][Width].
 [==============================================================================}
-function TBox.Row: T2DPointArray; overload; cdecl;
+function TBox.Row: T2DPointArray; overload;
 var
   x, y: Integer;
 begin
@@ -115,7 +115,7 @@ end;
   @action: Returns the number of rows in the box (height)
   @note: Zero-based row indexing is from top (Y1) to bottom (Y2)
 [==============================================================================}
-function TBox.Rows: Integer; overload; cdecl;
+function TBox.Rows: Integer; overload;
 begin
   Result := (Self.Height);
 end;
@@ -125,7 +125,7 @@ end;
   @action: Returns all points in the specified row of the box, left-to-right.
   @note: 'index' is zero-based relative to the top edge (Y1). Returns [] if index is out of bounds.
 [==============================================================================}
-function TBox.Rows(const index: Integer): TPointArray; overload; cdecl;
+function TBox.Rows(const index: Integer): TPointArray; overload;
 var
   i: Integer;
 begin

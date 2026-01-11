@@ -1,27 +1,27 @@
 {$IFDEF METHODS}
-function All: TPointArray; overload; cdecl;
-function Content: TPointArray; cdecl;
-function Contents: TPointArray; cdecl;
-function Elements: TPointArray; cdecl;
-function Enumerate: TPointArray; cdecl;
-function Enumerated: TPointArray; cdecl;
-function Explode: TPointArray; overload; cdecl;
-function Extract: TPointArray; cdecl;
-function Flat: TPointArray; overload; cdecl;
-function Pixeled: TPointArray; overload; cdecl;
-function Pixels: TPointArray; overload; cdecl;
-function Pixels(const index: Integer): TPoint; overload; cdecl;
-function Points: TPointArray; overload; cdecl;
-function Points(const pIndex: Integer): TPoint; overload; cdecl;
-function Points(const pIDs: TIntegerArray): TPointArray; overload; cdecl;
-function Points(var xArray, yArray: TIntegerArray): Integer; overload; cdecl;
-function Pts: TPointArray; overload; cdecl;
-function TPA: TPointArray; overload; cdecl;
-function TPA(const index: Integer): TPoint; overload; cdecl;
-function Unbox: TPointArray; overload; cdecl;
-function Unpack: TPointArray; overload; cdecl;
-function Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload; cdecl;
-function Unzip: TPointArray; overload; cdecl;
+function All: TPointArray; overload;
+function Content: TPointArray;
+function Contents: TPointArray;
+function Elements: TPointArray;
+function Enumerate: TPointArray;
+function Enumerated: TPointArray;
+function Explode: TPointArray; overload;
+function Extract: TPointArray;
+function Flat: TPointArray; overload;
+function Pixeled: TPointArray; overload;
+function Pixels: TPointArray; overload;
+function Pixels(const index: Integer): TPoint; overload;
+function Points: TPointArray; overload;
+function Points(const pIndex: Integer): TPoint; overload;
+function Points(const pIDs: TIntegerArray): TPointArray; overload;
+function Points(var xArray, yArray: TIntegerArray): Integer; overload;
+function Pts: TPointArray; overload;
+function TPA: TPointArray; overload;
+function TPA(const index: Integer): TPoint; overload;
+function Unbox: TPointArray; overload;
+function Unpack: TPointArray; overload;
+function Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload;
+function Unzip: TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -30,7 +30,7 @@ function Unzip: TPointArray; overload; cdecl;
   @action: Returns ALL points of TBox as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.All: TPointArray; overload; cdecl;
+function TBox.All: TPointArray; overload;
 var
   x, y: Integer;
   p: PPoint;
@@ -50,7 +50,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: Fast, Pointer-based alternative single loop version.
 [==============================================================================}
-function TBox.Content: TPointArray; cdecl;
+function TBox.Content: TPointArray;
 var
   w, i: Integer;
   p: PPoint;
@@ -72,7 +72,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: Fast, Pointer-based alternative. Double loop version.
 [==============================================================================}
-function TBox.Contents: TPointArray; cdecl;
+function TBox.Contents: TPointArray;
 var
   p: PPoint;
   x, y: Integer;
@@ -93,7 +93,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
-function TBox.Elements: TPointArray; cdecl;
+function TBox.Elements: TPointArray;
 var
   p: specialize TList<TPoint>;
   x, y: Integer;
@@ -114,7 +114,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
-function TBox.Enumerate: TPointArray; cdecl;
+function TBox.Enumerate: TPointArray;
 var
   x, y: Integer;
 begin
@@ -129,7 +129,7 @@ end;
   @action: Returns all points of the given box as TPointArray.
   @note: Uses the TBox enumerator (for-in).
 [==============================================================================}
-function TBox.Enumerated: TPointArray; cdecl;
+function TBox.Enumerated: TPointArray;
 var
   p: TPoint;
   i: Integer;
@@ -145,7 +145,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
-function TBox.Explode: TPointArray; overload; cdecl;
+function TBox.Explode: TPointArray; overload;
 var
   i: Integer;
 begin
@@ -163,7 +163,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: Alternative method for Points(), TPA() and Contents().
 [==============================================================================}
-function TBox.Extract: TPointArray; cdecl;
+function TBox.Extract: TPointArray;
 var
   x, y, i: Integer;
 begin
@@ -183,7 +183,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
-function TBox.Flat: TPointArray; overload; cdecl;
+function TBox.Flat: TPointArray; overload;
 var
   i: Integer;
   p: TPoint;
@@ -205,7 +205,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Pixeled: TPointArray; overload; cdecl;
+function TBox.Pixeled: TPointArray; overload;
 var
   w, h, l, i: Integer;
   r: TRange;
@@ -229,7 +229,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Pixels: TPointArray; overload; cdecl;
+function TBox.Pixels: TPointArray; overload;
 var
   w, h, s, x, y, i: Integer;
   p: TPointArray;
@@ -248,7 +248,7 @@ begin
   end;
 end;
 
-function TBox.Pixels(const index: Integer): TPoint; overload; cdecl;
+function TBox.Pixels(const index: Integer): TPoint; overload;
 begin
   Result := Point((Self.X1 + (index mod Self.Width)), (Self.Y1 + (index div Self.Width)));
 end;
@@ -258,7 +258,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Points: TPointArray; overload; cdecl;
+function TBox.Points: TPointArray; overload;
 var
   x, y, r: Integer;
 begin
@@ -274,7 +274,7 @@ end;
   @action: Returns TBox point with index (pIndex).
   @note: None.
 [==============================================================================}
-function TBox.Points(const pIndex: Integer): TPoint; overload; cdecl;
+function TBox.Points(const pIndex: Integer): TPoint; overload;
 begin
   if not InRange(pIndex, 0, (Self.Area - 1)) then
     Exit(Result.Create(-2147483648));
@@ -286,7 +286,7 @@ end;
   @action: Returns TBox points with indexes (pIDs).
   @note: None.
 [==============================================================================}
-function TBox.Points(const pIDs: TIntegerArray): TPointArray; overload; cdecl;
+function TBox.Points(const pIDs: TIntegerArray): TPointArray; overload;
 var
   i: Integer;
 begin
@@ -300,7 +300,7 @@ end;
   @action: Stores TBox points to xArray and yArray.
   @note: Returns area (length of TPointArray in box)
 [==============================================================================}
-function TBox.Points(var xArray, yArray: TIntegerArray): Integer; overload; cdecl;
+function TBox.Points(var xArray, yArray: TIntegerArray): Integer; overload;
 var
   i, w: Integer;
 begin
@@ -320,7 +320,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
-function TBox.Pts: TPointArray; overload; cdecl;
+function TBox.Pts: TPointArray; overload;
 var
   x, y, w, h: Integer;
 begin
@@ -336,7 +336,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.TPA: TPointArray; overload; cdecl;
+function TBox.TPA: TPointArray; overload;
 var
   i, j: Integer;
 begin
@@ -345,7 +345,7 @@ begin
     Result[i].Create((Self.X1 + (i mod j)), (Self.Y1 + (i div j)));
 end;
 
-function TBox.TPA(const index: Integer): TPoint; overload; cdecl;
+function TBox.TPA(const index: Integer): TPoint; overload;
 var
   x, y: Integer;
 begin
@@ -359,7 +359,7 @@ end;
   @action: Unpacks TBox as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Unbox: TPointArray; overload; cdecl;
+function TBox.Unbox: TPointArray; overload;
 var
   w, h: Integer;
   x, y: Integer;
@@ -395,7 +395,7 @@ end;
   @action: Unpacks TBox as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Unpack: TPointArray; overload; cdecl;
+function TBox.Unpack: TPointArray; overload;
 var
   r: TPointArray;
   w, h, l, x, y: Integer;
@@ -427,7 +427,7 @@ end;
   @action: Unzips TBox X1, Y1, X2, Y2 and returns the area.
   @note: None.
 [==============================================================================}
-function TBox.Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload; cdecl;
+function TBox.Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload;
 begin
   bX1 := Self.X1;
   bY1 := Self.Y1;
@@ -441,7 +441,7 @@ end;
   @action: Unzips TBox as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Unzip: TPointArray; overload; cdecl;
+function TBox.Unzip: TPointArray; overload;
 var
   r: TPointArray;
   w, h, l, x, y: Integer;

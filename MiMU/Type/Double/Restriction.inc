@@ -1,19 +1,19 @@
 {$IFDEF HELPERS}
-function Bound(const minimum, maximum: Double): Double; cdecl;
-function BoundMax(const limit: Double): Double; cdecl;
-function BoundMin(const limit: Double): Double; cdecl;
-function Clamp(const minimum, maximum: Double): Double; cdecl;
-function ClampMax(const limit: Double): Double; cdecl;
-function ClampMin(const limit: Double): Double; cdecl;
-function Constraint(const minimum, maximum: Double): Boolean; cdecl;
-function ConstraintMax(const limit: Double): Boolean; cdecl;
-function ConstraintMin(const limit: Double): Boolean; cdecl;
-function Limit(const minimum, maximum: Double): Double; cdecl;
-function LimitMax(const limit: Double): Double; cdecl;
-function LimitMin(const limit: Double): Double; cdecl;
-function Restrict(const minimum, maximum: Double): Double; cdecl;
-function RestrictMax(const limit: Double): Double; cdecl;
-function RestrictMin(const limit: Double): Double; cdecl;
+function Bound(const minimum, maximum: Double): Double;
+function BoundMax(const limit: Double): Double;
+function BoundMin(const limit: Double): Double;
+function Clamp(const minimum, maximum: Double): Double;
+function ClampMax(const limit: Double): Double;
+function ClampMin(const limit: Double): Double;
+function Constraint(const minimum, maximum: Double): Boolean;
+function ConstraintMax(const limit: Double): Boolean;
+function ConstraintMin(const limit: Double): Boolean;
+function Limit(const minimum, maximum: Double): Double;
+function LimitMax(const limit: Double): Double;
+function LimitMin(const limit: Double): Double;
+function Restrict(const minimum, maximum: Double): Double;
+function RestrictMax(const limit: Double): Double;
+function RestrictMin(const limit: Double): Double;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -22,7 +22,7 @@ function RestrictMin(const limit: Double): Double; cdecl;
   @action: Returns Double bounded by minimum and maximum limits
   @note: None
 [==============================================================================}
-function TDoubleHelper.Bound(const minimum, maximum: Double): Double; cdecl;
+function TDoubleHelper.Bound(const minimum, maximum: Double): Double;
 begin
   Result := (((Self + minimum) + Abs(Self - minimum)) / 2);
   Result := (((Result + maximum) - Abs(Result - maximum)) / 2);
@@ -33,7 +33,7 @@ end;
   @action: Returns Double bounded by maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.BoundMax(const limit: Double): Double; cdecl;
+function TDoubleHelper.BoundMax(const limit: Double): Double;
 begin
   Result := (((Self + limit) - Abs(Self - limit)) / 2);
 end;
@@ -43,7 +43,7 @@ end;
   @action: Returns Double bounded by minimum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.BoundMin(const limit: Double): Double; cdecl;
+function TDoubleHelper.BoundMin(const limit: Double): Double;
 begin
   Result := (((Self + limit) + Abs(Self - limit)) / 2);
 end;
@@ -53,7 +53,7 @@ end;
   @action: Returns Double clamped by minimum and maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.Clamp(const minimum, maximum: Double): Double; cdecl;
+function TDoubleHelper.Clamp(const minimum, maximum: Double): Double;
 begin
   if (Self < minimum) then
     Result := minimum
@@ -69,7 +69,7 @@ end;
   @action: Returns Double clamped by maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.ClampMax(const limit: Double): Double; cdecl;
+function TDoubleHelper.ClampMax(const limit: Double): Double;
 begin
   if (Self > limit) then
     Result := limit
@@ -82,7 +82,7 @@ end;
   @action: Returns Double clamped by minimum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.ClampMin(const limit: Double): Double; cdecl;
+function TDoubleHelper.ClampMin(const limit: Double): Double;
 begin
   if (Self < limit) then
     Result := limit
@@ -95,7 +95,7 @@ end;
   @action: Returns true if Double is constrainted with minimum or maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.Constraint(const minimum, maximum: Double): Boolean; cdecl;
+function TDoubleHelper.Constraint(const minimum, maximum: Double): Boolean;
 begin
   Result := (Self.ConstraintMin(minimum) or Self.ConstraintMax(maximum));
 end;
@@ -105,7 +105,7 @@ end;
   @action: Returns true if Double is constrainted with maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.ConstraintMax(const limit: Double): Boolean; cdecl;
+function TDoubleHelper.ConstraintMax(const limit: Double): Boolean;
 begin
   Result := (Self > limit);
   if Result then
@@ -117,7 +117,7 @@ end;
   @action: Returns true if Double is constrainted with minimum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.ConstraintMin(const limit: Double): Boolean; cdecl;
+function TDoubleHelper.ConstraintMin(const limit: Double): Boolean;
 begin
   Result := (Self < limit);
   if Result then
@@ -129,7 +129,7 @@ end;
   @action: Returns Double with minimum and maximum limits
   @note: EnsureRange() call.
 [==============================================================================}
-function TDoubleHelper.Limit(const minimum, maximum: Double): Double; cdecl;
+function TDoubleHelper.Limit(const minimum, maximum: Double): Double;
 begin
   Result := EnsureRange(Self, minimum, maximum);
 end;
@@ -139,7 +139,7 @@ end;
   @action: Returns Double with maximum limit
   @note: Min() call.
 [==============================================================================}
-function TDoubleHelper.LimitMax(const limit: Double): Double; cdecl;
+function TDoubleHelper.LimitMax(const limit: Double): Double;
 begin
   Result := Min(Self, limit);
 end;
@@ -149,7 +149,7 @@ end;
   @action: Returns Double with minimum limit
   @note: Max() call.
 [==============================================================================}
-function TDoubleHelper.LimitMin(const limit: Double): Double; cdecl;
+function TDoubleHelper.LimitMin(const limit: Double): Double;
 begin
   Result := Max(Self, limit);
 end;
@@ -159,7 +159,7 @@ end;
   @action: Returns Double bounded by minimum and maximum limits
   @note: None
 [==============================================================================}
-function TDoubleHelper.Restrict(const minimum, maximum: Double): Double; cdecl;
+function TDoubleHelper.Restrict(const minimum, maximum: Double): Double;
 begin
   Result := (Self - ((Self - minimum) - Abs(Self - minimum)) / 2);
   Result := (Result - ((Result - maximum) + Abs(Result - maximum)) / 2);
@@ -170,7 +170,7 @@ end;
   @action: Returns Double bounded by maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.RestrictMax(const limit: Double): Double; cdecl;
+function TDoubleHelper.RestrictMax(const limit: Double): Double;
 begin
   Result := (Self - ((Self - limit) + Abs(Self - limit)) / 2);
 end;
@@ -180,7 +180,7 @@ end;
   @action: Returns Double bounded by minimum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.RestrictMin(const limit: Double): Double; cdecl;
+function TDoubleHelper.RestrictMin(const limit: Double): Double;
 begin
   Result := (Self - ((Self - limit) - Abs(Self - limit)) / 2);
 end;

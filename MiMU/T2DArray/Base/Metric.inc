@@ -1,18 +1,18 @@
 {$IFDEF HELPERS}
-function Census: Int64; overload; cdecl;
-function Fit: Integer; overload; cdecl;
-function Fit(const aSize: Integer): Integer; overload; cdecl;
-function Fit(const aBounds: TRange): Integer; overload; cdecl;
-function Inventory(var items: MArray): Int64; overload; cdecl;
-function Inventory: Int64; overload; cdecl;
-function Length: Integer; overload; cdecl;
-function Length(var lengths: TIntegerArray): Integer; overload; cdecl;
-function Population: Int64; overload; cdecl;
-function Size: Integer; overload; cdecl;
-function Size(var sizes: TIntegerArray): Integer; overload; cdecl;
-function Sized(var lengths: TIntegerArray): Int64; overload; cdecl;
-function Sized: Int64; overload; cdecl;
-function Total: Int64; overload; cdecl;
+function Census: Int64; overload;
+function Fit: Integer; overload;
+function Fit(const aSize: Integer): Integer; overload;
+function Fit(const aBounds: TRange): Integer; overload;
+function Inventory(var items: MArray): Int64; overload;
+function Inventory: Int64; overload;
+function Length: Integer; overload;
+function Length(var lengths: TIntegerArray): Integer; overload;
+function Population: Int64; overload;
+function Size: Integer; overload;
+function Size(var sizes: TIntegerArray): Integer; overload;
+function Sized(var lengths: TIntegerArray): Int64; overload;
+function Sized: Int64; overload;
+function Total: Int64; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -21,7 +21,7 @@ function Total: Int64; overload; cdecl;
   @action: Returns actual Length for 2D array.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function M2DArrayHelper.Census: Int64; overload; cdecl;
+function M2DArrayHelper.Census: Int64; overload;
 var
   i: Integer;
   s, e: PInteger;
@@ -44,7 +44,7 @@ end;
   @action: Returns array length.
   @note: Alternative.
 [==============================================================================}
-function M2DArrayHelper.Fit: Integer; overload; cdecl;
+function M2DArrayHelper.Fit: Integer; overload;
 begin
   Result := ((High(Self) - Low(Self)) + 1);
 end;
@@ -54,7 +54,7 @@ end;
   @action: Resizes the array to aSize (sets length safely).
   @note: Returns the length that was set to Self. Negative sizes are clamped to 0.
 [==============================================================================}
-function M2DArrayHelper.Fit(const aSize: Integer): Integer; overload; cdecl;
+function M2DArrayHelper.Fit(const aSize: Integer): Integer; overload;
 begin
   Result := Max(0, aSize);
   SetLength(Self, Result);
@@ -70,7 +70,7 @@ end;
     - If current length is within the range → no change.
     - Negative lengths are clamped to 0.
 [==============================================================================}
-function M2DArrayHelper.Fit(const aBounds: TRange): Integer; overload; cdecl;
+function M2DArrayHelper.Fit(const aBounds: TRange): Integer; overload;
 var
   l: Integer;
   b: TRange;
@@ -94,7 +94,7 @@ end;
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
          Stores 2D array items as 1D to items.
 [==============================================================================}
-function M2DArrayHelper.Inventory(var items: MArray): Int64; overload; cdecl;
+function M2DArrayHelper.Inventory(var items: MArray): Int64; overload;
 var
   i, j: Integer;
 begin
@@ -114,7 +114,7 @@ end;
   @action: Returns actual Length for 2D array.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function M2DArrayHelper.Inventory: Int64; overload; cdecl;
+function M2DArrayHelper.Inventory: Int64; overload;
 var
   i: Integer;
 begin
@@ -128,7 +128,7 @@ end;
   @action: System.Length()
   @note: None.
 [==============================================================================}
-function M2DArrayHelper.Length: Integer; overload; cdecl;
+function M2DArrayHelper.Length: Integer; overload;
 begin
   Result := System.Length(Self);
 end;
@@ -138,7 +138,7 @@ end;
  @action: System.Length()
  @note: Stores Lengths of 2D part.
 [==============================================================================}
-function M2DArrayHelper.Length(var lengths: TIntegerArray): Integer; overload; cdecl;
+function M2DArrayHelper.Length(var lengths: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
@@ -153,7 +153,7 @@ end;
   @action: Returns actual Length for 2D array.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function M2DArrayHelper.Population: Int64; overload; cdecl;
+function M2DArrayHelper.Population: Int64; overload;
 var
   i: Integer;
   s, e: PInteger;
@@ -174,7 +174,7 @@ end;
   @action: System.Length()
   @note: None.
 [==============================================================================}
-function M2DArrayHelper.Size: Integer; overload; cdecl;
+function M2DArrayHelper.Size: Integer; overload;
 begin
   Result := ((High(Self) - Low(Self)) + 1);
 end;
@@ -184,7 +184,7 @@ end;
  @action: System.Length()
  @note: Stores Lengths of 2D part.
 [==============================================================================}
-function M2DArrayHelper.Size(var sizes: TIntegerArray): Integer; overload; cdecl;
+function M2DArrayHelper.Size(var sizes: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
@@ -199,7 +199,7 @@ end;
  @action: Returns actual Length for 2D array. Stores Length's of 2D part, of the arr, to lengths variable.
  @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function M2DArrayHelper.Sized(var lengths: TIntegerArray): Int64; overload; cdecl;
+function M2DArrayHelper.Sized(var lengths: TIntegerArray): Int64; overload;
 var
   i: Integer;
 begin
@@ -217,7 +217,7 @@ end;
   @action: Returns actual Length for 2D array.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function M2DArrayHelper.Sized: Int64; overload; cdecl;
+function M2DArrayHelper.Sized: Int64; overload;
 var
   i: Integer;
 begin
@@ -231,7 +231,7 @@ end;
   @action: Returns actual Length for 2D array.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => 9.
 [==============================================================================}
-function M2DArrayHelper.Total: Int64; overload; cdecl;
+function M2DArrayHelper.Total: Int64; overload;
 var
   a: MArray;
 begin

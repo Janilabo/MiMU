@@ -1,12 +1,12 @@
 {$IFDEF METHODS}
-function Any: Integer; cdecl;
-function Mixed(const mixings: Integer = 1): TIntegerArray; cdecl;  
-function Sample(const sSize: Integer): TIntegerArray; overload; cdecl;
-function Shake(const shakes: Integer = 1): TIntegerArray; cdecl;
-function Shuffle(const shuffles: Integer = 1): TIntegerArray; cdecl;
-function Some: TIntegerArray; overload; cdecl;
-function Some(const amount: Integer): TIntegerArray; overload; cdecl;
-function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function Any: Integer;
+function Mixed(const mixings: Integer = 1): TIntegerArray;  
+function Sample(const sSize: Integer): TIntegerArray; overload;
+function Shake(const shakes: Integer = 1): TIntegerArray;
+function Shuffle(const shuffles: Integer = 1): TIntegerArray;
+function Some: TIntegerArray; overload;
+function Some(const amount: Integer): TIntegerArray; overload;
+function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +15,7 @@ function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload; cdec
   @action: Returns random TRange item.
   @note: None.
 [==============================================================================}
-function TRange.Any: Integer; cdecl;
+function TRange.Any: Integer;
 begin
   Result := ((Self.Start + Random(Self.Size)) * IfThen(Self.Ascending, 1, -1));
 end;
@@ -25,7 +25,7 @@ end;
   @action: Returns TRange randomly mixed as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TRange.Mixed(const mixings: Integer = 1): TIntegerArray; cdecl;
+function TRange.Mixed(const mixings: Integer = 1): TIntegerArray;
 var
   i, s, r: Integer;
 begin
@@ -46,7 +46,7 @@ end;
          Uses rounding to map floating step positions to integers.
          If sSize = 1, returns only the start value.
 [==============================================================================}
-function TRange.Sample(const sSize: Integer): TIntegerArray; overload; cdecl;
+function TRange.Sample(const sSize: Integer): TIntegerArray; overload;
 var
   i: Integer;
   s: Double;
@@ -64,7 +64,7 @@ end;
   @action: Returns TRange randomly shaked as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TRange.Shake(const shakes: Integer = 1): TIntegerArray; cdecl;
+function TRange.Shake(const shakes: Integer = 1): TIntegerArray;
 var
   i, s, r: Integer;
 begin
@@ -83,7 +83,7 @@ end;
   @action: Returns TRange randomly shuffled as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TRange.Shuffle(const shuffles: Integer = 1): TIntegerArray; cdecl;
+function TRange.Shuffle(const shuffles: Integer = 1): TIntegerArray;
 var
   i, s, r: Integer;
 begin
@@ -102,7 +102,7 @@ end;
   @action: Returns random amount of random TRange items.
   @note: Does not return empty arrays.
 [==============================================================================}
-function TRange.Some: TIntegerArray; overload; cdecl;
+function TRange.Some: TIntegerArray; overload;
 begin
   Result := Copy(Self.Shuffle, 0, Max(Random(Self.Size + 1), 1))
 end;
@@ -112,7 +112,7 @@ end;
   @action: Returns random amount of random TRange items.
   @note: Does not return empty arrays.
 [==============================================================================}
-function TRange.Some(const amount: Integer): TIntegerArray; overload; cdecl;
+function TRange.Some(const amount: Integer): TIntegerArray; overload;
 begin
   Result := Copy(Self.Shuffle, 0, Max(1, Min(amount, Self.Size)));
 end;
@@ -126,7 +126,7 @@ end;
            If the range contains a single value, returns an array with that single value.
            Internally uses two arrays (ascending and reversed) to construct the pattern.
 [==============================================================================}
-function TRange.Zigzag(const zAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function TRange.Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
 var
   a, d: TIntegerArray;
   l, i, j, r, z: Integer;

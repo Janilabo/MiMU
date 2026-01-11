@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function IsPrime: Boolean; cdecl;
-function Prime: Boolean; cdecl;
+function IsPrime: Boolean;
+function Prime: Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function Prime: Boolean; cdecl;
   @action: Returns true if N is prime.
   @note: None.
 [==============================================================================}
-function TInt64Helper.IsPrime: Boolean; cdecl;
+function TInt64Helper.IsPrime: Boolean;
 var
   p: array of Int64;
   i: Integer;
@@ -38,7 +38,7 @@ end;
   @action: Returns true if N is prime.
   @note: None.
 [==============================================================================}
-function TInt64Helper.Prime: Boolean; cdecl;
+function TInt64Helper.Prime: Boolean;
 var
   i: Int64;
 begin

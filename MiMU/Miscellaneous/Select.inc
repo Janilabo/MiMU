@@ -1,17 +1,17 @@
 {$IFDEF FUNCTIONS}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Integer): Integer; overload; cdecl;
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Double): Double; overload; cdecl;
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: string): string; overload; cdecl;
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Char): Char; overload; cdecl;
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Boolean): Boolean; overload; cdecl;
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TPoint): TPoint; overload; cdecl;
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TBox): TBox; overload; cdecl;
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TRange): TRange; overload; cdecl;
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TConnection): TConnection; overload; cdecl;
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TSegment): TSegment; overload; cdecl;
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TTriangle): TTriangle; overload; cdecl;
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TCircle): TCircle; overload; cdecl;
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Int64): Int64; overload; cdecl;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Integer): Integer; overload;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Double): Double; overload;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: string): string; overload;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Char): Char; overload;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Boolean): Boolean; overload;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TPoint): TPoint; overload;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TBox): TBox; overload;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TRange): TRange; overload;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TConnection): TConnection; overload;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TSegment): TSegment; overload;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TTriangle): TTriangle; overload;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TCircle): TCircle; overload;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Int64): Int64; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -20,19 +20,19 @@ function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult
   @action: Returns one of three possible results depending on two Boolean conditions.
   @note: Evaluates aBool first, then bBool, returning aResult, bResult, or cResult accordingly.
 [==============================================================================}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Integer): Integer; overload; cdecl; {$I Skeletons/IfThenElse.inc}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Double): Double; overload; cdecl; {$I Skeletons/IfThenElse.inc}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: string): string; overload; cdecl; {$I Skeletons/IfThenElse.inc}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Char): Char; overload; cdecl; {$I Skeletons/IfThenElse.inc}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Boolean): Boolean; overload; cdecl; {$I Skeletons/IfThenElse.inc}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TPoint): TPoint; overload; cdecl; {$I Skeletons/IfThenElse.inc}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TBox): TBox; overload; cdecl; {$I Skeletons/IfThenElse.inc}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TRange): TRange; overload; cdecl; {$I Skeletons/IfThenElse.inc}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TConnection): TConnection; overload; cdecl; {$I Skeletons/IfThenElse.inc}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TSegment): TSegment; overload; cdecl; {$I Skeletons/IfThenElse.inc}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TTriangle): TTriangle; overload; cdecl; {$I Skeletons/IfThenElse.inc}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TCircle): TCircle; overload; cdecl; {$I Skeletons/IfThenElse.inc}
-function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Int64): Int64; overload; cdecl;
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Integer): Integer; overload; {$I Skeletons/IfThenElse.inc}
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Double): Double; overload; {$I Skeletons/IfThenElse.inc}
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: string): string; overload; {$I Skeletons/IfThenElse.inc}
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Char): Char; overload; {$I Skeletons/IfThenElse.inc}
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Boolean): Boolean; overload; {$I Skeletons/IfThenElse.inc}
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TPoint): TPoint; overload; {$I Skeletons/IfThenElse.inc}
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TBox): TBox; overload; {$I Skeletons/IfThenElse.inc}
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TRange): TRange; overload; {$I Skeletons/IfThenElse.inc}
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TConnection): TConnection; overload; {$I Skeletons/IfThenElse.inc}
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TSegment): TSegment; overload; {$I Skeletons/IfThenElse.inc}
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TTriangle): TTriangle; overload; {$I Skeletons/IfThenElse.inc}
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: TCircle): TCircle; overload; {$I Skeletons/IfThenElse.inc}
+function IfThenElse(const aBool, bBool: Boolean; const aResult, bResult, cResult: Int64): Int64; overload;
 begin
   if aBool then
     Result := aResult

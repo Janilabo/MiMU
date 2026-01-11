@@ -1,12 +1,12 @@
 {$IFDEF HELPERS}
-function QuickSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload; cdecl;
-function QuickSortSwapped(const aAscending: Boolean = True): TConnectionArray; overload; cdecl;
-function QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
-function QuickSortedly(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
-function QuickSorted(const aAscending: Boolean = True): MArray; overload; cdecl;
-function QuickSort(const aAscending: Boolean = True): Integer; overload; cdecl;
-function QuickSort3W(const aAscending: Boolean = True): Integer; overload; cdecl;
-function QSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function QuickSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
+function QuickSortSwapped(const aAscending: Boolean = True): TConnectionArray; overload;
+function QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
+function QuickSortedly(const aAscending: Boolean = True): TIntegerArray; overload;
+function QuickSorted(const aAscending: Boolean = True): MArray; overload;
+function QuickSort(const aAscending: Boolean = True): Integer; overload;
+function QuickSort3W(const aAscending: Boolean = True): Integer; overload;
+function QSort(const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,7 +17,7 @@ function QSort(const aAscending: Boolean = True): Integer; overload; cdecl;
   @note: Useful when you have a key array and a related value array that must stay paired.
          The method returns the length of the array.
 [==============================================================================}
-function MArrayHelper.QuickSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.QuickSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
   procedure QS2(var A, B: MArray; const L, R: Integer);
   var
     p: MType;
@@ -73,7 +73,7 @@ end;
   @note: Returns a dynamic array of TConnection records, each representing the indices of elements swapped during the sort.
          Useful for visualizations or undoing the sort.
 [==============================================================================}
-function MArrayHelper.QuickSortSwapped(const aAscending: Boolean = True): TConnectionArray; overload; cdecl;
+function MArrayHelper.QuickSortSwapped(const aAscending: Boolean = True): TConnectionArray; overload;
   procedure QuickSortRec(const L, R: Integer; var swaps: TConnectionArray);
   var
     p: MType;
@@ -128,7 +128,7 @@ end;
          The original array is modified.
          Useful when you want to know how elements move rather than just sorting the values.
 [==============================================================================}
-function MArrayHelper.QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function MArrayHelper.QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
   procedure QuickSortRec(const L, R: Integer; var indexes: TIntegerArray);
   var
     p: MType;
@@ -185,7 +185,7 @@ end;
   @note: Purely functional: the original array stays unchanged.
          The result is an array of indices indicating the sorted order.
 [==============================================================================}
-function MArrayHelper.QuickSortedly(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function MArrayHelper.QuickSortedly(const aAscending: Boolean = True): TIntegerArray; overload;
   procedure QuickSortIndexedHelper(const arr: MArray; var indexes: TIntegerArray; const L, R: Integer; const aAscending: Boolean);
   var
     p: MType;
@@ -234,7 +234,7 @@ end;
   @action: Returns array sorted by its own values, based on QuickSort algorithm.
   @note: None.
 [==============================================================================}
-function MArrayHelper.QuickSorted(const aAscending: Boolean = True): MArray; overload; cdecl;
+function MArrayHelper.QuickSorted(const aAscending: Boolean = True): MArray; overload;
   procedure QS(var arr: MArray; const L, R: Integer);
   var
     i, j: Integer;
@@ -270,7 +270,7 @@ end;
   @action: QuickSort algorithm that is NOT based on recursion.
   @note: non-recursive. Returns High(arr).
 [==============================================================================}
-function MArrayHelper.QuickSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.QuickSort(const aAscending: Boolean = True): Integer; overload;
 var
   p: MType;
   t, o: Integer;
@@ -333,7 +333,7 @@ end;
   @action: 3-way QuickSort algorithm that is NOT based on recursion.
   @note: recursive. Returns High(arr).
 [==============================================================================}
-function MArrayHelper.QuickSort3W(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.QuickSort3W(const aAscending: Boolean = True): Integer; overload;
   procedure SortLH(var arr: MArray; const L, H: Integer; const aAscending: Boolean = True);
   var
     a: MType;
@@ -368,7 +368,7 @@ end;
   @action: QuickSort algorithm that IS based on recursion.
   @note: recursive. Returns High(arr).
 [==============================================================================}
-function MArrayHelper.QSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.QSort(const aAscending: Boolean = True): Integer; overload;
   procedure _QuickSort(var arr: MArray; const start, stop: Integer; const aAscending: Boolean = True);
   var
     p: MType;

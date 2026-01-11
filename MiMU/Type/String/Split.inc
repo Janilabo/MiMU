@@ -1,13 +1,13 @@
 {$IFDEF HELPERS}
-function Chop: TCharArray; overload; cdecl;
-function Chop(const delimiter: Char): TStringArray; overload; cdecl;
-function Delimited(const d: Char = #32): TStringArray; overload; cdecl;
-function Explode: TCharArray; overload; cdecl;
-function Explode(const d: string; const limit: Integer = -1): TStringArray; overload; cdecl;
-function Explode(const d: TStringArray; const limit: Integer = -1): TStringArray; overload; cdecl;
-function Split: TCharArray; overload; cdecl;
-function Split(const delimiter: Char): TStringArray; overload; cdecl;
-function Tokenized(const d: Char = #32): TStringArray; overload; cdecl;
+function Chop: TCharArray; overload;
+function Chop(const delimiter: Char): TStringArray; overload;
+function Delimited(const d: Char = #32): TStringArray; overload;
+function Explode: TCharArray; overload;
+function Explode(const d: string; const limit: Integer = -1): TStringArray; overload;
+function Explode(const d: TStringArray; const limit: Integer = -1): TStringArray; overload;
+function Split: TCharArray; overload;
+function Split(const delimiter: Char): TStringArray; overload;
+function Tokenized(const d: Char = #32): TStringArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -16,7 +16,7 @@ function Tokenized(const d: Char = #32): TStringArray; overload; cdecl;
   @action: Returns characters of string as TCharArray.
   @note: None.
 [==============================================================================}
-function TStringHelper.Chop: TCharArray; overload; cdecl;
+function TStringHelper.Chop: TCharArray; overload;
 var
   p: PChar;
   i, l: Integer;
@@ -40,7 +40,7 @@ end;
          - Leading or trailing delimiters result in empty strings at the start or end.
          - Uses Self.Count(d) to determine the number of delimiters; ensure this helper exists.
 [==============================================================================}
-function TStringHelper.Chop(const delimiter: Char): TStringArray; overload; cdecl;
+function TStringHelper.Chop(const delimiter: Char): TStringArray; overload;
 var
   s, i, l: Integer;
 begin
@@ -69,7 +69,7 @@ end;
          preallocated approaches for very long strings due to repeated
          memory shifting by `Delete`.
 [==============================================================================}
-function TStringHelper.Delimited(const d: Char = #32): TStringArray; overload; cdecl;
+function TStringHelper.Delimited(const d: Char = #32): TStringArray; overload;
 var
   t: string;
   p, c: Integer;
@@ -94,7 +94,7 @@ end;
   @action: Simply "explodes" string to TCharArray.
   @note: None.
 [==============================================================================}
-function TStringHelper.Explode: TCharArray; overload; cdecl;
+function TStringHelper.Explode: TCharArray; overload;
 var
   p: PChar;
   i, l: Integer;
@@ -114,7 +114,7 @@ end;
   @action: Explodes str with delimiter (d).
   @note: Explodes up to (maximum) limit. Limit as -1 means no limits.
 [==============================================================================}
-function TStringHelper.Explode(const d: string; const limit: Integer = -1): TStringArray; overload; cdecl;
+function TStringHelper.Explode(const d: string; const limit: Integer = -1): TStringArray; overload;
 var
   a, b, l, p, r, s, t: Integer;
   m: Boolean;
@@ -161,7 +161,7 @@ end;
   @action: Explodes str with delimiters (d).
   @note: Explodes up to (maximum) limit. Limit as -1 means no limits.
 [==============================================================================}
-function TStringHelper.Explode(const d: TStringArray; const limit: Integer = -1): TStringArray; overload; cdecl;
+function TStringHelper.Explode(const d: TStringArray; const limit: Integer = -1): TStringArray; overload;
 var
   i, j, p, l, f, c: Integer;
   s, x: string;
@@ -219,7 +219,7 @@ end;
   @note: - The resulting array length is equal to the length of the string.
          - Characters are placed in the same order as in the original string.
 [==============================================================================}
-function TStringHelper.Split: TCharArray; overload; cdecl;
+function TStringHelper.Split: TCharArray; overload;
 var
   l: Integer;
 begin
@@ -238,7 +238,7 @@ end;
            - Consecutive delimiters produce empty strings in the result array.
            - The delimiter itself is not included in the resulting substrings.
 [==============================================================================}
-function TStringHelper.Split(const delimiter: Char): TStringArray; overload; cdecl;
+function TStringHelper.Split(const delimiter: Char): TStringArray; overload;
 var
   p, r: Integer;
   s: string;
@@ -269,7 +269,7 @@ end;
            the original string. Preallocates the result array based on the
            count of delimiter occurrences for efficiency.
 [==============================================================================}
-function TStringHelper.Tokenized(const d: Char = #32): TStringArray; overload; cdecl;
+function TStringHelper.Tokenized(const d: Char = #32): TStringArray; overload;
 var
   s, i, l: Integer;
 begin

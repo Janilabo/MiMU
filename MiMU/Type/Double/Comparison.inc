@@ -1,21 +1,21 @@
 {$IFDEF HELPERS}
-function Ascending(const target: Double): Boolean; cdecl; inline;
-function Cmpr(const target: Double): Integer; cdecl;
-function Compare(const target: Double): Integer; cdecl; inline;
-function Compared(const target: Double; const oAscending: Boolean = True): Integer; cdecl;
-function CompareTo(const target: Double; const oAscending: Boolean = True): Integer; cdecl;
-function CompareWith(const target: Double; const oAscending: Boolean = True): Integer; cdecl;
-function Descending(const target: Double): Boolean; cdecl; inline;
-function Over(const target: Double): Boolean; cdecl; inline;
-function Oversize(const limit: Double): Boolean; cdecl;
-function Precede(const target: Double; const aAscending: Boolean): Boolean; overload; cdecl;
-function Sign(const target: Double = 0): Integer; cdecl; inline;
-function Under(const target: Double): Boolean; cdecl; inline;
-function Undersize(const limit: Double): Boolean; cdecl;
+function Ascending(const target: Double): Boolean; inline;
+function Cmpr(const target: Double): Integer;
+function Compare(const target: Double): Integer; inline;
+function Compared(const target: Double; const oAscending: Boolean = True): Integer;
+function CompareTo(const target: Double; const oAscending: Boolean = True): Integer;
+function CompareWith(const target: Double; const oAscending: Boolean = True): Integer;
+function Descending(const target: Double): Boolean; inline;
+function Over(const target: Double): Boolean; inline;
+function Oversize(const limit: Double): Boolean;
+function Precede(const target: Double; const aAscending: Boolean): Boolean; overload;
+function Sign(const target: Double = 0): Integer; inline;
+function Under(const target: Double): Boolean; inline;
+function Undersize(const limit: Double): Boolean;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
-function Comparison(const A, B: Double): Integer; overload; cdecl;
+function Comparison(const A, B: Double): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -26,7 +26,7 @@ function Comparison(const A, B: Double): Integer; overload; cdecl;
            sorting or merging arrays in ascending order.
   @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}
-function TDoubleHelper.Ascending(const target: Double): Boolean; cdecl; inline;
+function TDoubleHelper.Ascending(const target: Double): Boolean; inline;
 begin
   Result := (Self <= target);
 end;
@@ -37,7 +37,7 @@ end;
            Results: 0=EQUAL, 1=x>target, -1=x<target
   @note: None
 [==============================================================================}
-function TDoubleHelper.Cmpr(const target: Double): Integer; cdecl; inline;
+function TDoubleHelper.Cmpr(const target: Double): Integer; inline;
 begin
   Result := (Ord(Self > target) - Ord(Self < target));
 end;
@@ -48,7 +48,7 @@ end;
            Results: 0=EQUAL, 1=x>target, -1=x<target
   @note: None
 [==============================================================================}
-function TDoubleHelper.Compare(const target: Double): Integer; cdecl; inline;
+function TDoubleHelper.Compare(const target: Double): Integer; inline;
 begin
   if (Self = target) then
     Exit(0);
@@ -64,7 +64,7 @@ end;
            Results: 0=EQUAL
   @note: Supports ascending/descending
 [==============================================================================}
-function TDoubleHelper.Compared(const target: Double; const oAscending: Boolean = True): Integer; cdecl;
+function TDoubleHelper.Compared(const target: Double; const oAscending: Boolean = True): Integer;
 begin
   Result := (Ord(Self > target) - Ord(Self < target));
   if not oAscending then
@@ -77,7 +77,7 @@ end;
            Results: 0=EQUAL
   @note: Supports ascending/descending
 [==============================================================================}
-function TDoubleHelper.CompareTo(const target: Double; const oAscending: Boolean = True): Integer; cdecl;
+function TDoubleHelper.CompareTo(const target: Double; const oAscending: Boolean = True): Integer;
 begin
   if (Self = target) then
     Exit(0);
@@ -93,7 +93,7 @@ end;
            Results: 0=EQUAL
   @note: Supports ascending/descending
 [==============================================================================}
-function TDoubleHelper.CompareWith(const target: Double; const oAscending: Boolean = True): Integer; cdecl;
+function TDoubleHelper.CompareWith(const target: Double; const oAscending: Boolean = True): Integer;
 begin
   if (Self = target) then
     Exit(0);
@@ -110,7 +110,7 @@ end;
            sorting or merging arrays in descending order.
   @note: Pure comparison only; equivalent to Self >= target.
 [==============================================================================}
-function TDoubleHelper.Descending(const target: Double): Boolean; cdecl; inline;
+function TDoubleHelper.Descending(const target: Double): Boolean; inline;
 begin
   Result := (Self >= target);
 end;
@@ -120,7 +120,7 @@ end;
   @action: Returns true if x is higher than target.
   @note: None
 [==============================================================================}
-function TDoubleHelper.Over(const target: Double): Boolean; cdecl; inline;
+function TDoubleHelper.Over(const target: Double): Boolean; inline;
 begin
   Result := not (target <= Self);
 end;
@@ -130,7 +130,7 @@ end;
   @action: Returns true if x is higher than limit.
   @note: None
 [==============================================================================}
-function TDoubleHelper.Oversize(const limit: Double): Boolean; cdecl;
+function TDoubleHelper.Oversize(const limit: Double): Boolean;
 begin
   Result := (Self > limit);
 end;
@@ -140,7 +140,7 @@ end;
   @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
   @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
 [==============================================================================}
-function TDoubleHelper.Precede(const target: Double; const aAscending: Boolean): Boolean; overload; cdecl;
+function TDoubleHelper.Precede(const target: Double; const aAscending: Boolean): Boolean; overload;
 begin
   Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));
 end;
@@ -156,7 +156,7 @@ end;
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TDoubleHelper.Sign(const target: Double = 0): Integer; cdecl; inline;
+function TDoubleHelper.Sign(const target: Double = 0): Integer; inline;
 begin
   if (Self = target) then
     Result := 0
@@ -171,7 +171,7 @@ end;
   @action: Returns true if x is lower than target.
   @note: None
 [==============================================================================}
-function TDoubleHelper.Under(const target: Double): Boolean; cdecl; inline;
+function TDoubleHelper.Under(const target: Double): Boolean; inline;
 begin
   Result := not (target >= Self);
 end;
@@ -181,12 +181,12 @@ end;
   @action: Returns true if x is lower than limit.
   @note: None
 [==============================================================================}
-function TDoubleHelper.Undersize(const limit: Double): Boolean; cdecl;
+function TDoubleHelper.Undersize(const limit: Double): Boolean;
 begin
   Result := (Self < limit);
 end;
 
-function Comparison(const A, B: Double): Integer; overload; cdecl;
+function Comparison(const A, B: Double): Integer; overload;
 begin
   if (A < B) then
     Exit(-1);

@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
-class function Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload; cdecl; static;
-class function Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload; cdecl; static;
+class function Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload; static;
+class function Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload; static;
 constructor Create(const cCenter: TPoint; const cRadius: Double); overload;
 constructor Create(const centerX, centerY: Integer; const cRadius: Double); overload;
 {$ENDIF}
@@ -11,7 +11,7 @@ constructor Create(const centerX, centerY: Integer; const cRadius: Double); over
   @action: Constructs TCircle with cCenter and cRadius.
   @note: None.
 [==============================================================================}
-class function TCircle.Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload; cdecl;
+class function TCircle.Construct(const cCenter: TPoint; const cRadius: Double): TCircle; overload;
 begin
   Result.center := cCenter;
   Result.radius := cRadius;
@@ -22,7 +22,7 @@ end;
   @action: Constructs TCircle with centerX, centerY and radius.
   @note: None.
 [==============================================================================}
-class function TCircle.Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload; cdecl;
+class function TCircle.Construct(const centerX, centerY: Integer; const cRadius: Double): TCircle; overload;
 begin
   Result.center := Point(centerX, centerY);
   Result.radius := cRadius;

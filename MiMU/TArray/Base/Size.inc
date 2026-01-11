@@ -1,13 +1,13 @@
 {$IFDEF HELPERS}
-function Fit: Integer; overload; cdecl;
-function Fit(const aSize: Integer): Integer; overload; cdecl;
-function Fit(const aBounds: TRange): Integer; overload; cdecl;
-function Length: Integer; overload; cdecl;
-function Resize(const aChange: Integer): Integer; overload; cdecl;
-function Resize(const aChange: Integer; const null: MType): Integer; overload; cdecl;
-function Size: Integer; overload; cdecl;
-function Size(const aSize: Integer): MArray; overload; cdecl;
-function Size(const aSize: Integer; const null: MType): MArray; overload; cdecl;
+function Fit: Integer; overload;
+function Fit(const aSize: Integer): Integer; overload;
+function Fit(const aBounds: TRange): Integer; overload;
+function Length: Integer; overload;
+function Resize(const aChange: Integer): Integer; overload;
+function Resize(const aChange: Integer; const null: MType): Integer; overload;
+function Size: Integer; overload;
+function Size(const aSize: Integer): MArray; overload;
+function Size(const aSize: Integer; const null: MType): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -16,7 +16,7 @@ function Size(const aSize: Integer; const null: MType): MArray; overload; cdecl;
   @action: Returns array length.
   @note: Alternative.
 [==============================================================================}
-function MArrayHelper.Fit: Integer; overload; cdecl;
+function MArrayHelper.Fit: Integer; overload;
 begin
   Result := ((High(Self) - Low(Self)) + 1);
 end;
@@ -26,7 +26,7 @@ end;
   @action: Resizes the array to aSize (sets length safely).
   @note: Returns the length that was set to Self. Negative sizes are clamped to 0.
 [==============================================================================}
-function MArrayHelper.Fit(const aSize: Integer): Integer; overload; cdecl;
+function MArrayHelper.Fit(const aSize: Integer): Integer; overload;
 begin
   Result := Max(0, aSize);
   SetLength(Self, Result);
@@ -42,7 +42,7 @@ end;
     - If current length is within the range → no change.
     - Negative lengths are clamped to 0.
 [==============================================================================}
-function MArrayHelper.Fit(const aBounds: TRange): Integer; overload; cdecl;
+function MArrayHelper.Fit(const aBounds: TRange): Integer; overload;
 var
   l: Integer;
   b: TRange;
@@ -65,7 +65,7 @@ end;
   @action: Simply Result := System.Length(arr);
   @note: None.
 [==============================================================================}
-function MArrayHelper.Length: Integer; overload; cdecl;
+function MArrayHelper.Length: Integer; overload;
 begin
   Result := System.Length(Self);
 end;
@@ -77,7 +77,7 @@ end;
          aChange < 0 => Result will give how many elements got deleted (it will be negative value!)
          aChange = 0 => Returns 0.
 [==============================================================================}
-function MArrayHelper.Resize(const aChange: Integer): Integer; overload; cdecl;
+function MArrayHelper.Resize(const aChange: Integer): Integer; overload;
 var
   l: Integer;
 begin
@@ -94,7 +94,7 @@ end;
          aChange = 0 => Returns 0.
          Supports null for filling created indexes.
 [==============================================================================}
-function MArrayHelper.Resize(const aChange: Integer; const null: MType): Integer; overload; cdecl;
+function MArrayHelper.Resize(const aChange: Integer; const null: MType): Integer; overload;
 var
   i, l: Integer;
 begin
@@ -110,7 +110,7 @@ end;
   @action: Returns array length.
   @note: Simply Result := Length(arr);
 [==============================================================================}
-function MArrayHelper.Size: Integer; overload; cdecl;
+function MArrayHelper.Size: Integer; overload;
 begin
   Result := ((High(Self) - Low(Self)) + 1);
 end;
@@ -120,7 +120,7 @@ end;
   @action: Set's arr length to aSize.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Size(const aSize: Integer): MArray; overload; cdecl;
+function MArrayHelper.Size(const aSize: Integer): MArray; overload;
 var
   i, l: Integer;
 begin
@@ -135,7 +135,7 @@ end;
   @action: Set's arr length to size.
   @note: Uses null for created indexes.
 [==============================================================================}
-function MArrayHelper.Size(const aSize: Integer; const null: MType): MArray; overload; cdecl;
+function MArrayHelper.Size(const aSize: Integer; const null: MType): MArray; overload;
 var
   i, l: Integer;
 begin

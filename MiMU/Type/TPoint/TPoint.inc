@@ -13,7 +13,7 @@ TPointArray = array of TPoint;
 T2DPointArray = array of TPointArray;
 PPoint = ^TPoint;
 TMetrics = (dmHypotEuclidean, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev, dmMinkowski, dmMaxMinChebyshev, dmOctile);
-TDistance = function(const A, B: TPoint): Double; cdecl;
+TDistance = function(const A, B: TPoint): Double;
 {$ENDIF}
 
 {$IF DEFINED(OPERATORS) OR DEFINED(IMPLEMENTATION)}

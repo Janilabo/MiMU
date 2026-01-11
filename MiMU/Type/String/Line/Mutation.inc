@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
-function LineDelete(const lineNumber: Integer): string; overload; cdecl;
-function LineInsert(const lineNumber: Integer; const text: string): string; overload; cdecl;
-function LineReplace(const lineNumber: Integer; const text: string): string; overload; cdecl;
+function LineDelete(const lineNumber: Integer): string; overload;
+function LineInsert(const lineNumber: Integer; const text: string): string; overload;
+function LineReplace(const lineNumber: Integer; const text: string): string; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,7 +17,7 @@ function LineReplace(const lineNumber: Integer; const text: string): string; ove
       characters of other lines are preserved.
     - Does not normalize or adjust remaining line breaks.
 [==============================================================================}
-function TStringHelper.LineDelete(const lineNumber: Integer): string; overload; cdecl;
+function TStringHelper.LineDelete(const lineNumber: Integer): string; overload;
 var
   R: TRange;
 begin
@@ -40,7 +40,7 @@ end;
       the string followed by a line break.
     - Existing content is preserved and shifted as needed.
 [==============================================================================}
-function TStringHelper.LineInsert(const lineNumber: Integer; const text: string): string; overload; cdecl;
+function TStringHelper.LineInsert(const lineNumber: Integer; const text: string): string; overload;
 var
   P: Integer;
 begin
@@ -66,7 +66,7 @@ end;
     - No normalization of line endings is performed.
     - This function allocates a new string containing the modified content.
 [==============================================================================}
-function TStringHelper.LineReplace(const lineNumber: Integer; const text: string): string; overload; cdecl;
+function TStringHelper.LineReplace(const lineNumber: Integer; const text: string): string; overload;
 var
   R: TRange;
 begin

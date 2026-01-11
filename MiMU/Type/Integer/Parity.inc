@@ -1,9 +1,9 @@
 {$IFDEF HELPERS}
-function Even: Boolean; cdecl; inline;
-function IsEven: Boolean; cdecl; inline;
-function IsOdd: Boolean; cdecl; inline;
-function Odd: Boolean; cdecl; inline;
-function Parity: Byte; cdecl; inline;
+function Even: Boolean; inline;
+function IsEven: Boolean; inline;
+function IsOdd: Boolean; inline;
+function Odd: Boolean; inline;
+function Parity: Byte; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -12,7 +12,7 @@ function Parity: Byte; cdecl; inline;
   @action: Returns true if Integer value x is an even number.
   @note: None
 [==============================================================================}
-function TIntegerHelper.Even: Boolean; cdecl; inline;
+function TIntegerHelper.Even: Boolean; inline;
 begin
   Result := ((Self mod 2) = 0);
 end;
@@ -22,7 +22,7 @@ end;
   @action: Returns true if Integer value x is an even number.
   @note: None
 [==============================================================================}
-function TIntegerHelper.IsEven: Boolean; cdecl; inline;
+function TIntegerHelper.IsEven: Boolean; inline;
 begin
   Result := ((Self and 1) = 0);
 end;
@@ -32,7 +32,7 @@ end;
   @action: Returns true if Integer value x is an odd number.
   @note: None
 [==============================================================================}
-function TIntegerHelper.IsOdd: Boolean; cdecl; inline;
+function TIntegerHelper.IsOdd: Boolean; inline;
 begin
   Result := ((Self and 1) = 1);
 end;
@@ -42,7 +42,7 @@ end;
   @action: Returns true if Integer value x is an odd number.
   @note: None
 [==============================================================================}
-function TIntegerHelper.Odd: Boolean; cdecl; inline;
+function TIntegerHelper.Odd: Boolean; inline;
 begin
   Result := ((Self mod 2) <> 0);
 end;
@@ -52,7 +52,7 @@ end;
   @action: Returns the Integer Parity Bit as Byte.
   @note: 0 = even, 1 = odd.
 [==============================================================================}
-function TIntegerHelper.Parity: Byte; cdecl; inline;
+function TIntegerHelper.Parity: Byte; inline;
 begin
   Result := (Self mod 2);
 end;

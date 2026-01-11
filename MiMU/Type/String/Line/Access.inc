@@ -1,9 +1,9 @@
 {$IFDEF HELPERS}
-function Line(const number: Integer): string; overload; cdecl;
-function LineEx(const number: Integer; const lineBreak: string): string; overload; cdecl;
-function LineEx(const number: Integer; const lineBreak: TStringArray): string; overload; cdecl;
-function LineEx(const number: Integer): string; overload; cdecl;
-function LineStr(const lineNumber: Integer): string; overload; cdecl;
+function Line(const number: Integer): string; overload;
+function LineEx(const number: Integer; const lineBreak: string): string; overload;
+function LineEx(const number: Integer; const lineBreak: TStringArray): string; overload;
+function LineEx(const number: Integer): string; overload;
+function LineStr(const lineNumber: Integer): string; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,7 +17,7 @@ function LineStr(const lineNumber: Integer): string; overload; cdecl;
          the string is empty, or the specified line does not exist. Handles
          mixed line endings and treats CRLF (#13#10) as a single line break.
 [==============================================================================}
-function TStringHelper.Line(const number: Integer): string; overload; cdecl;
+function TStringHelper.Line(const number: Integer): string; overload;
 var
   i, s, n, l: Integer;
 begin
@@ -49,7 +49,7 @@ end;
   @note: Line numbers are 1-based. Returns an empty string if the number
          is less than 1, the string is empty, or the line does not exist.
 [==============================================================================}
-function TStringHelper.LineEx(const number: Integer; const lineBreak: string): string; overload; cdecl;
+function TStringHelper.LineEx(const number: Integer; const lineBreak: string): string; overload;
 var
   r: TStringArray;
 begin
@@ -68,7 +68,7 @@ end;
   @note: Line numbers are 1-based. Returns an empty string if the number
          is less than 1, the string is empty, or the line does not exist.
 [==============================================================================}
-function TStringHelper.LineEx(const number: Integer; const lineBreak: TStringArray): string; overload; cdecl;
+function TStringHelper.LineEx(const number: Integer; const lineBreak: TStringArray): string; overload;
 var
   r: TStringArray;
 begin
@@ -87,7 +87,7 @@ end;
   @note: Line numbers are 1-based. Returns an empty string if the number
          is less than 1 or the string is empty.
 [==============================================================================}
-function TStringHelper.LineEx(const number: Integer): string; overload; cdecl;
+function TStringHelper.LineEx(const number: Integer): string; overload;
 begin
   Result := Self.LineEx(number, [#13#10, #13, #10]);
 end;
@@ -102,7 +102,7 @@ end;
     - If the requested line does not exist, an empty string is returned.
     - Line terminators (#10, #13, or #13#10) are not included in the result.
 [==============================================================================}
-function TStringHelper.LineStr(const lineNumber: Integer): string; overload; cdecl;
+function TStringHelper.LineStr(const lineNumber: Integer): string; overload;
 var
   R: TRange;
 begin

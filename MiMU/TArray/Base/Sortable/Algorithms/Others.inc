@@ -1,14 +1,14 @@
 {$IFDEF HELPERS}
-function PartitionSort(const aAscending: Boolean = True): Integer; overload; cdecl;
-function CoctailSort(const aAscending: Boolean = True): Integer; overload; cdecl;
-function CoctailSort2(const aAscending: Boolean = True): Integer; overload; cdecl;
-function GnomeSort(const aAscending: Boolean = True): Integer; overload; cdecl;
-function GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
-function PancakeSort(const aAscending: Boolean = True): Integer; overload; cdecl;
-function CombSort(const aAscending: Boolean = True): Integer; overload; cdecl;
-function HeapSort(const aAscending: Boolean = True): Integer; overload; cdecl;
-function InsertionSort(const aAscending: Boolean = True): Integer; overload; cdecl;
-function ShellSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function PartitionSort(const aAscending: Boolean = True): Integer; overload;
+function CoctailSort(const aAscending: Boolean = True): Integer; overload;
+function CoctailSort2(const aAscending: Boolean = True): Integer; overload;
+function GnomeSort(const aAscending: Boolean = True): Integer; overload;
+function GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload;
+function PancakeSort(const aAscending: Boolean = True): Integer; overload;
+function CombSort(const aAscending: Boolean = True): Integer; overload;
+function HeapSort(const aAscending: Boolean = True): Integer; overload;
+function InsertionSort(const aAscending: Boolean = True): Integer; overload;
+function ShellSort(const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -23,7 +23,7 @@ function ShellSort(const aAscending: Boolean = True): Integer; overload; cdecl;
            - Uses auxiliary arrays, trading memory for stability.
            - Also known as "Stable QuickSort".
 [==============================================================================}
-function MArrayHelper.PartitionSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.PartitionSort(const aAscending: Boolean = True): Integer; overload;
   procedure PS(var A: MArray; const L, R: Integer);
   var
     p: MType;
@@ -73,7 +73,7 @@ end;
   @action: CoctailSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function MArrayHelper.CoctailSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.CoctailSort(const aAscending: Boolean = True): Integer; overload;
 var
   i, o: Integer;
   s: Boolean;
@@ -108,7 +108,7 @@ end;
   @action: CoctailSort algorithm.
   @note: CoctailSort v2. Returns High(arr).
 [==============================================================================}
-function MArrayHelper.CoctailSort2(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.CoctailSort2(const aAscending: Boolean = True): Integer; overload;
 var
   b, e, i, o: Integer;
   s: Boolean;
@@ -147,7 +147,7 @@ end;
   @action: GnomeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function MArrayHelper.GnomeSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.GnomeSort(const aAscending: Boolean = True): Integer; overload;
 var
   o, p: Integer;
 begin
@@ -172,7 +172,7 @@ end;
   @action: Optimized GnomeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function MArrayHelper.GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload;
 var
   p, l, o: Integer;
 begin
@@ -209,7 +209,7 @@ end;
   @action: PancakeSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function MArrayHelper.PancakeSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.PancakeSort(const aAscending: Boolean = True): Integer; overload;
 var
   i, j, l, m, x, o: Integer;
 begin
@@ -240,7 +240,7 @@ end;
   @action: CombSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function MArrayHelper.CombSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.CombSort(const aAscending: Boolean = True): Integer; overload;
 var
   i, g, o: Integer;
   s: Boolean;
@@ -272,7 +272,7 @@ end;
   @action: HeapSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function MArrayHelper.HeapSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.HeapSort(const aAscending: Boolean = True): Integer; overload;
 var
   a, b, r, c, o: Integer;
 begin
@@ -325,7 +325,7 @@ end;
   @action: InsertionSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function MArrayHelper.InsertionSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.InsertionSort(const aAscending: Boolean = True): Integer; overload;
 var
   a, b, o: Integer;
 begin
@@ -347,7 +347,7 @@ end;
   @action: ShellSort algorithm.
   @note: Returns High(arr).
 [==============================================================================}
-function MArrayHelper.ShellSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.ShellSort(const aAscending: Boolean = True): Integer; overload;
 var
   x, a, b, l, o: Integer;
 begin

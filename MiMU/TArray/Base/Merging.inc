@@ -1,8 +1,8 @@
 {$IFDEF HELPERS}
-function Blend(const items: MArray; const index: Integer = 2147483647): MArray; overload; cdecl;
-function Combine(const b: MArray): MArray; overload; cdecl;
-function SwapMerged(var target: MArray): MArray; overload; cdecl;
-function SwappedMerge(var target: MArray): MArray; overload; cdecl;
+function Blend(const items: MArray; const index: Integer = 2147483647): MArray; overload;
+function Combine(const b: MArray): MArray; overload;
+function SwapMerged(var target: MArray): MArray; overload;
+function SwappedMerge(var target: MArray): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function SwappedMerge(var target: MArray): MArray; overload; cdecl;
   @action: Blends items with array, cleverly.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Blend(const items: MArray; const index: Integer = 2147483647): MArray; overload; cdecl;
+function MArrayHelper.Blend(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 var
   s, l, p, r, i: Integer;
 begin
@@ -54,7 +54,7 @@ end;
   @action: Combines arrays arr and b together as single array.
   @note: This is an alternative method. :)
 [==============================================================================}
-function MArrayHelper.Combine(const b: MArray): MArray; overload; cdecl;
+function MArrayHelper.Combine(const b: MArray): MArray; overload;
 begin
   SetLength(Result, 0);
   Insert(Self, Result, 0);
@@ -72,7 +72,7 @@ end;
          is copied. Use this if the merged array should reflect the **pre-swap
          ordering**.
 [==============================================================================}
-function MArrayHelper.SwapMerged(var target: MArray): MArray; overload; cdecl;
+function MArrayHelper.SwapMerged(var target: MArray): MArray; overload;
 var
   r, t, s, i: Integer;
 begin
@@ -105,7 +105,7 @@ end;
          target. This is preferred for large dynamic arrays, and the
          resulting array reflects the swapped positions of Self and target.
 [==============================================================================}
-function MArrayHelper.SwappedMerge(var target: MArray): MArray; overload; cdecl;
+function MArrayHelper.SwappedMerge(var target: MArray): MArray; overload;
 var
   t, s, i: Integer;
 begin

@@ -1,16 +1,16 @@
 {$IFDEF HELPERS}
-function ID(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
-function IDs(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
-function IDs(const ID: TIntegerArray): MArray; overload; cdecl;
-function IDs(const ID: TIntegerArray; const item: MType): MArray; overload; cdecl;
-function IDs(const ID: TIntegerArray; const items: MArray): MArray; overload; cdecl;
-function Indexed(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
-function Indexes(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
-function Indexing(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
-function Indices(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
-function Indiced(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
-function Slots: TIntegerArray; overload; cdecl;
-function ToIndexes: TIntegerArray; overload; cdecl;
+function ID(const aAscending: Boolean = True): TIntegerArray; overload;
+function IDs(const aAscending: Boolean = True): TIntegerArray; overload;
+function IDs(const ID: TIntegerArray): MArray; overload;
+function IDs(const ID: TIntegerArray; const item: MType): MArray; overload;
+function IDs(const ID: TIntegerArray; const items: MArray): MArray; overload;
+function Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
+function Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
+function Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
+function Indices(const aAscending: Boolean = True): TIntegerArray; overload;
+function Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
+function Slots: TIntegerArray; overload;
+function ToIndexes: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -19,7 +19,7 @@ function ToIndexes: TIntegerArray; overload; cdecl;
   @action: Returns indexes of arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function MArrayHelper.ID(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function MArrayHelper.ID(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   i, l, b, s: Integer;
 begin
@@ -36,7 +36,7 @@ end;
   @action: Returns IDs of arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function MArrayHelper.IDs(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function MArrayHelper.IDs(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   h, i: Integer;
 begin
@@ -57,7 +57,7 @@ end;
   @action: Returns items from arr by IDs.
   @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array.
 [==============================================================================}
-function MArrayHelper.IDs(const ID: TIntegerArray): MArray; overload; cdecl;
+function MArrayHelper.IDs(const ID: TIntegerArray): MArray; overload;
 var
   i: Integer;
 begin
@@ -71,7 +71,7 @@ end;
   @action: Returns arr with IDs replaced as item.
   @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array.
 [==============================================================================}
-function MArrayHelper.IDs(const ID: TIntegerArray; const item: MType): MArray; overload; cdecl;
+function MArrayHelper.IDs(const ID: TIntegerArray; const item: MType): MArray; overload;
 var
   i: Integer;
 begin
@@ -85,7 +85,7 @@ end;
   @action: Returns arr with IDs replaced as items.
   @note: UNSAFE! No failsafes, so make sure you use correct indexes in IDs array and ALSO item[s].
 [==============================================================================}
-function MArrayHelper.IDs(const ID: TIntegerArray; const items: MArray): MArray; overload; cdecl;
+function MArrayHelper.IDs(const ID: TIntegerArray; const items: MArray): MArray; overload;
 var
   i, l: Integer;
 begin
@@ -100,7 +100,7 @@ end;
   @action: Returns IDs of arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Indexed(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function MArrayHelper.Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   l: Integer;
 begin
@@ -122,7 +122,7 @@ end;
   @action: Returns IDs of arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Indexes(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function MArrayHelper.Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -142,7 +142,7 @@ end;
     - Uses efficient two-pointer approach for small/medium arrays.
     - Optional divide-and-conquer recursive variant can be used for huge arrays.
 [==============================================================================}
-function MArrayHelper.Indexing(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function MArrayHelper.Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
 procedure RI(var return: TIntegerArray; const L, R: Integer);
 var
   M: Integer;
@@ -172,7 +172,7 @@ end;
   @action: Returns IDs of arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Indiced(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function MArrayHelper.Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   r: TRange;
 begin
@@ -199,7 +199,7 @@ end;
   @action: Returns IDs of arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Indices(const aAscending: Boolean = True): TIntegerArray; overload; cdecl;
+function MArrayHelper.Indices(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   i, l, h: Integer;
 begin
@@ -221,7 +221,7 @@ end;
   @action: Returns indexes of array.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Slots: TIntegerArray; overload; cdecl;
+function MArrayHelper.Slots: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -235,7 +235,7 @@ end;
   @action: Returns indexes of array.
   @note: None.
 [==============================================================================}
-function MArrayHelper.ToIndexes: TIntegerArray; overload; cdecl;
+function MArrayHelper.ToIndexes: TIntegerArray; overload;
 var
   i, l: Integer;
 begin

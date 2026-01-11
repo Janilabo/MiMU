@@ -1,9 +1,9 @@
 {$IFDEF METHODS}
-function Centered(const rCenter: Integer): TRange; overload; cdecl;
-function Frame(var rSize: Integer): TRange; overload; cdecl;
-function Frame: TRange; overload; cdecl;
-function Reserve: TIntegerArray; overload; cdecl; 
-function Reserve(var aRange: TIntegerArray): Integer; overload; cdecl;  
+function Centered(const rCenter: Integer): TRange; overload;
+function Frame(var rSize: Integer): TRange; overload;
+function Frame: TRange; overload;
+function Reserve: TIntegerArray; overload; 
+function Reserve(var aRange: TIntegerArray): Integer; overload;  
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +15,7 @@ function Reserve(var aRange: TIntegerArray): Integer; overload; cdecl;
   @note:   Direction-aware; preserves ascending or descending order.
            Useful for geometric or data range realignment.
 [==============================================================================}
-function TRange.Centered(const rCenter: Integer): TRange; overload; cdecl;
+function TRange.Centered(const rCenter: Integer): TRange; overload;
 var
   h: Integer;
 begin
@@ -32,7 +32,7 @@ end;
           starting at 0 and ending at Size - 1.
   @note   None.
 [==============================================================================}
-function TRange.Frame(var rSize: Integer): TRange; overload; cdecl;
+function TRange.Frame(var rSize: Integer): TRange; overload;
 begin
   rSize := Self.Size;
   Result := Range(0, (rSize - 1));
@@ -44,7 +44,7 @@ end;
           starting at 0 and ending at Size - 1.
   @note   None.
 [==============================================================================}
-function TRange.Frame: TRange; overload; cdecl;
+function TRange.Frame: TRange; overload;
 begin
   Result := Range(0, (Self.Size - 1));
 end;
@@ -55,7 +55,7 @@ end;
   @note: The array is preallocated with the correct length but is not filled 
          with values from start..stop. Elements are default-initialized to 0.
 [==============================================================================}
-function TRange.Reserve: TIntegerArray; overload; cdecl;
+function TRange.Reserve: TIntegerArray; overload;
 begin
   SetLength(Result, Self.Size);
 end;
@@ -66,7 +66,7 @@ end;
   @note: The array is preallocated with the correct length but is not filled 
          with values from start..stop. Elements are default-initialized to 0.
 [==============================================================================}
-function TRange.Reserve(var aRange: TIntegerArray): Integer; overload; cdecl;
+function TRange.Reserve(var aRange: TIntegerArray): Integer; overload;
 begin
   Result := Self.Size;
   SetLength(aRange, Result);

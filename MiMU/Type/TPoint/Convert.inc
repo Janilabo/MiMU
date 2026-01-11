@@ -1,10 +1,10 @@
 {$IFDEF HELPERS}
-function Boxed(const xRadius, yRadius: Integer): TBox; overload; cdecl;
-function Boxed(const radius: Integer = 0): TBox; overload; cdecl;
-function Boxify(const width, height: Integer): TBox; overload; cdecl;
-function Boxify(const size: Integer = 0): TBox; overload; cdecl;
-function ToBox(const width, height: Integer): TBox; overload; cdecl;
-function ToBox(const size: Integer = 0): TBox; overload; cdecl;
+function Boxed(const xRadius, yRadius: Integer): TBox; overload;
+function Boxed(const radius: Integer = 0): TBox; overload;
+function Boxify(const width, height: Integer): TBox; overload;
+function Boxify(const size: Integer = 0): TBox; overload;
+function ToBox(const width, height: Integer): TBox; overload;
+function ToBox(const size: Integer = 0): TBox; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -14,7 +14,7 @@ function ToBox(const size: Integer = 0): TBox; overload; cdecl;
            extending by xRadius horizontally and yRadius vertically.
   @note: Useful for defining an area of influence around a point.
 [==============================================================================}
-function TPointHelper.Boxed(const xRadius, yRadius: Integer): TBox; overload; cdecl;
+function TPointHelper.Boxed(const xRadius, yRadius: Integer): TBox; overload;
 begin
   Result.X1 := (Self.X - xRadius);
   Result.Y1 := (Self.Y - yRadius);
@@ -22,7 +22,7 @@ begin
   Result.Y2 := (Self.Y + yRadius);
 end;
 
-function TPointHelper.Boxed(const radius: Integer = 0): TBox; overload; cdecl;
+function TPointHelper.Boxed(const radius: Integer = 0): TBox; overload;
 begin
   Result := Self.Boxed(radius, radius);
 end;
@@ -32,7 +32,7 @@ end;
   @action: Returns a box centered on the point with the specified width and height.
   @note: The box expands equally in all directions from the point’s center.
 [==============================================================================}
-function TPointHelper.Boxify(const width, height: Integer): TBox; overload; cdecl;
+function TPointHelper.Boxify(const width, height: Integer): TBox; overload;
 var
   w, h: Integer;
 begin
@@ -44,7 +44,7 @@ begin
   Result.Y2 := (Self.Y + (height - h));
 end;
 
-function TPointHelper.Boxify(const size: Integer = 0): TBox; overload; cdecl;
+function TPointHelper.Boxify(const size: Integer = 0): TBox; overload;
 begin
   Result := Self.Boxify(size, size);
 end;
@@ -55,7 +55,7 @@ end;
            extending rightward by width and downward by height.
   @note: Negative width/height make the box extend left/up instead.
 [==============================================================================}
-function TPointHelper.ToBox(const width, height: Integer): TBox; overload; cdecl;
+function TPointHelper.ToBox(const width, height: Integer): TBox; overload;
 begin
   Result.X1 := IfThen((width < 0), (Self.X - width), Self.X);
   Result.Y1 := IfThen((height < 0), (Self.Y - height), Self.Y);
@@ -63,7 +63,7 @@ begin
   Result.Y2 := IfThen((height < 0), Self.Y, (Self.Y + height));
 end;
 
-function TPointHelper.ToBox(const size: Integer = 0): TBox; overload; cdecl;
+function TPointHelper.ToBox(const size: Integer = 0): TBox; overload;
 begin
   Result := Self.ToBox(size, size);
 end;

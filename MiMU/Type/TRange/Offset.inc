@@ -1,13 +1,13 @@
 {$IFDEF METHODS}
-function Back(const N: Integer = 1): TRange; overload; cdecl;
-function Backed(const N: Integer = 1): TRange; overload; cdecl;
-function Decrease(const N: Integer = 1): TRange; overload; cdecl;
-function Decrement(const N: Integer = 1): TRange; overload; cdecl;
-function Increase(const N: Integer = 1): TRange; overload; cdecl;
-function Increment(const N: Integer = 1): TRange; overload; cdecl;
-function Offset(const sDelta: Integer): TRange; cdecl;
-function Shift(const N: Integer = 1): TRange; overload; cdecl; 
-function Shifted(const N: Integer = 1): TRange; overload; cdecl;
+function Back(const N: Integer = 1): TRange; overload;
+function Backed(const N: Integer = 1): TRange; overload;
+function Decrease(const N: Integer = 1): TRange; overload;
+function Decrement(const N: Integer = 1): TRange; overload;
+function Increase(const N: Integer = 1): TRange; overload;
+function Increment(const N: Integer = 1): TRange; overload;
+function Offset(const sDelta: Integer): TRange;
+function Shift(const N: Integer = 1): TRange; overload; 
+function Shifted(const N: Integer = 1): TRange; overload;
 
 {$ENDIF}
 
@@ -20,7 +20,7 @@ function Shifted(const N: Integer = 1): TRange; overload; cdecl;
   @note:   Default offset = 1. Useful when you need the previous state while 
            moving the range backward.
 [==============================================================================}
-function TRange.Back(const N: Integer = 1): TRange; overload; cdecl;
+function TRange.Back(const N: Integer = 1): TRange; overload;
 begin
   Result := Self;
   Dec(Self.start, N);
@@ -34,7 +34,7 @@ end;
   @note:   Default offset = 1. Functional style; Self remains unchanged. Can 
            be used for expression-style or fluent programming.
 [==============================================================================}
-function TRange.Backed(const N: Integer = 1): TRange; overload; cdecl;
+function TRange.Backed(const N: Integer = 1): TRange; overload;
 begin
   Result.start := (Self.start - N);
   Result.stop := (Self.stop - N);
@@ -47,7 +47,7 @@ end;
            before the decrease.
   @note:   Useful when you want to capture the previous state while mutating the range backward.
 [==============================================================================}
-function TRange.Decrease(const N: Integer = 1): TRange; overload; cdecl;
+function TRange.Decrease(const N: Integer = 1): TRange; overload;
 begin
   Result := Self;
   Self.start := (Self.start - N);
@@ -60,7 +60,7 @@ end;
            modifying Self in place. Returns the updated range after the decrease.
   @note:   Functional-style usage: Self is modified, and the returned range reflects the new values.
 [==============================================================================}
-function TRange.Decrement(const N: Integer = 1): TRange; overload; cdecl;
+function TRange.Decrement(const N: Integer = 1): TRange; overload;
 begin
   Self.start := (Self.start - N);
   Self.stop := (Self.stop - N);
@@ -74,7 +74,7 @@ end;
            before the increase.
   @note:   Useful when you want to capture the previous state while mutating the range forward.
 [==============================================================================}
-function TRange.Increase(const N: Integer = 1): TRange; overload; cdecl;
+function TRange.Increase(const N: Integer = 1): TRange; overload;
 begin
   Result := Self;
   Self.start := (Self.start + N);
@@ -87,7 +87,7 @@ end;
            modifying Self in place. Returns the updated range after the increase.
   @note:   Functional-style usage: Self is modified, and the returned range reflects the new values.
 [==============================================================================}
-function TRange.Increment(const N: Integer = 1): TRange; overload; cdecl;
+function TRange.Increment(const N: Integer = 1): TRange; overload;
 begin
   Self.start := (Self.start + N);
   Self.stop := (Self.stop + N);
@@ -99,7 +99,7 @@ end;
   @action: Returns shift of range r by delta.
   @note: None.
 [==============================================================================}
-function TRange.Offset(const sDelta: Integer): TRange; cdecl;
+function TRange.Offset(const sDelta: Integer): TRange;
 begin
   Result.Create((Self.start + sDelta), (Self.stop + sDelta));
 end;
@@ -111,7 +111,7 @@ end;
            before the shift.
   @note:   Useful when you need the previous state while mutating the range.
 [==============================================================================}
-function TRange.Shift(const N: Integer = 1): TRange; overload; cdecl;
+function TRange.Shift(const N: Integer = 1): TRange; overload;
 begin
   Result := Self;
   Inc(Self.start, N);
@@ -124,7 +124,7 @@ end;
   @note:   Functional style; Self remains unchanged. Can be used for expression-style 
            or fluent programming.
 [==============================================================================}
-function TRange.Shifted(const N: Integer = 1): TRange; overload; cdecl;
+function TRange.Shifted(const N: Integer = 1): TRange; overload;
 begin
   Result.start := (Self.start + N);
   Result.stop := (Self.stop + N);

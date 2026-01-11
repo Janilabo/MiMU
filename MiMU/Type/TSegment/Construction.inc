@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
-class function Construct(const sA, sB: TPoint): TSegment; overload; cdecl; static;
-class function Construct(const aX, aY, bX, bY: Integer): TSegment; overload; cdecl; static;
+class function Construct(const sA, sB: TPoint): TSegment; overload; static;
+class function Construct(const aX, aY, bX, bY: Integer): TSegment; overload; static;
 constructor Create(const sA, sB: TPoint); overload;
 constructor Create(const aX, aY, bX, bY: Integer); overload;
 {$ENDIF}
@@ -11,7 +11,7 @@ constructor Create(const aX, aY, bX, bY: Integer); overload;
   @action: Constructs TSegment with sA and sB points.
   @note: None.
 [==============================================================================}
-class function TSegment.Construct(const sA, sB: TPoint): TSegment; overload; cdecl;
+class function TSegment.Construct(const sA, sB: TPoint): TSegment; overload;
 begin
   Result.A := sA;
   Result.B := sB;
@@ -22,7 +22,7 @@ end;
   @action: Constructs TSegment with aX, aY, bX, bY.
   @note: None.
 [==============================================================================}
-class function TSegment.Construct(const aX, aY, bX, bY: Integer): TSegment; overload; cdecl;
+class function TSegment.Construct(const aX, aY, bX, bY: Integer): TSegment; overload;
 begin
   Result.A := Point(aX, aY);
   Result.B := Point(bX, bY);

@@ -1,28 +1,28 @@
 {$IFDEF METHODS}
-function All: TIntegerArray; overload; cdecl;
-function AsArray: TIntegerArray; overload; cdecl;
-function Digits: TIntegerArray; overload; cdecl;
-function Digits(const dIndex: Integer): Integer; overload; cdecl;
-function Digits(const dIDs: TIntegerArray): TIntegerArray; overload; cdecl;
-function Elements: TIntegerArray; cdecl;
-function Enumerate: TIntegerArray; cdecl;
-function Enumerated: TIntegerArray; cdecl;
-function Extract: TIntegerArray; overload; cdecl; 
-function Extracted: TIntegerArray; overload; cdecl;
-function Ints: TIntegerArray; cdecl;
-function Items: TIntegerArray; cdecl;
-function Materialize: TIntegerArray; cdecl;
-function Numbers: TIntegerArray; cdecl;
-function Recursed: TIntegerArray; overload; cdecl;
-function Sequence: TIntegerArray; cdecl;
-function Steps: TIntegerArray; overload; cdecl;
-function TIA: TIntegerArray; cdecl;
-function ToArray: TIntegerArray; cdecl;
-function Unfold: TIntegerArray; overload; cdecl;
-function Unpack: TIntegerArray; overload; cdecl;
-function Unwrap: TIntegerArray; overload; cdecl;
-function Unzip: TIntegerArray; overload; cdecl;
-function Values: TIntegerArray; cdecl;
+function All: TIntegerArray; overload;
+function AsArray: TIntegerArray; overload;
+function Digits: TIntegerArray; overload;
+function Digits(const dIndex: Integer): Integer; overload;
+function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
+function Elements: TIntegerArray;
+function Enumerate: TIntegerArray;
+function Enumerated: TIntegerArray;
+function Extract: TIntegerArray; overload; 
+function Extracted: TIntegerArray; overload;
+function Ints: TIntegerArray;
+function Items: TIntegerArray;
+function Materialize: TIntegerArray;
+function Numbers: TIntegerArray;
+function Recursed: TIntegerArray; overload;
+function Sequence: TIntegerArray;
+function Steps: TIntegerArray; overload;
+function TIA: TIntegerArray;
+function ToArray: TIntegerArray;
+function Unfold: TIntegerArray; overload;
+function Unpack: TIntegerArray; overload;
+function Unwrap: TIntegerArray; overload;
+function Unzip: TIntegerArray; overload;
+function Values: TIntegerArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -31,7 +31,7 @@ function Values: TIntegerArray; cdecl;
   @action: Returns ALL TRange items as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TRange.All: TIntegerArray; overload; cdecl;
+function TRange.All: TIntegerArray; overload;
 var
   i, j: Integer;
   p: PInteger;
@@ -55,7 +55,7 @@ end;
   @action: Two-way alternative for extracting items from TRange.
   @note: None.
 [==============================================================================}
-function TRange.AsArray: TIntegerArray; overload; cdecl;
+function TRange.AsArray: TIntegerArray; overload;
 var
   h, i, l: Integer;
 begin
@@ -86,7 +86,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Digits: TIntegerArray; overload; cdecl;
+function TRange.Digits: TIntegerArray; overload;
 var
   i, s: Integer;
 begin
@@ -101,7 +101,7 @@ end;
   @action: Returns digit from TRange by index.
   @note: None.
 [==============================================================================}
-function TRange.Digits(const dIndex: Integer): Integer; overload; cdecl;
+function TRange.Digits(const dIndex: Integer): Integer; overload;
 begin
   if ((dIndex < 0) or (dIndex >= Self.Area)) then
     Result := -2147483648
@@ -117,7 +117,7 @@ end;
   @action: Returns digits from TRange by indexes.
   @note: None.
 [==============================================================================}
-function TRange.Digits(const dIDs: TIntegerArray): TIntegerArray; overload; cdecl;
+function TRange.Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -131,7 +131,7 @@ end;
   Explanation: Returns TBox points as TPointArray.
   Example: Alternative method.
 [==============================================================================}
-function TRange.Elements: TIntegerArray; cdecl;
+function TRange.Elements: TIntegerArray;
 var
   i: specialize TList<Integer>;
   e: Integer;
@@ -157,7 +157,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Enumerate: TIntegerArray; cdecl;
+function TRange.Enumerate: TIntegerArray;
 var
   i: Integer;
 begin
@@ -179,7 +179,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Enumerated: TIntegerArray; cdecl;
+function TRange.Enumerated: TIntegerArray;
 var
   n, i: Integer;
 begin
@@ -194,7 +194,7 @@ end;
   @action: Extracts TRange as TIntegerArray. 
   @note: None.
 [==============================================================================}
-function TRange.Extract: TIntegerArray; overload; cdecl;
+function TRange.Extract: TIntegerArray; overload;
 var
   i, c, s: Integer;
 begin
@@ -212,7 +212,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Extracted: TIntegerArray; cdecl;
+function TRange.Extracted: TIntegerArray;
 var
   i: Integer;
 begin
@@ -228,7 +228,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Ints: TIntegerArray; cdecl;
+function TRange.Ints: TIntegerArray;
 var
   i, l: Integer;
 begin
@@ -249,7 +249,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Items: TIntegerArray; cdecl;
+function TRange.Items: TIntegerArray;
 var
   i, s: Integer;
 begin
@@ -266,7 +266,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Materialize: TIntegerArray; cdecl;
+function TRange.Materialize: TIntegerArray;
 var
   i, s, v: Integer;
   p: PInteger;
@@ -287,7 +287,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Numbers: TIntegerArray; cdecl;
+function TRange.Numbers: TIntegerArray;
 var
   i, r, s: Integer;
 begin
@@ -306,7 +306,7 @@ end;
   @action: Returns digits of the given range.
   @note: Recursion-based.
 [==============================================================================}
-function TRange.Recursed: TIntegerArray; overload; cdecl;
+function TRange.Recursed: TIntegerArray; overload;
   function BR(const rStart, rStop: Integer): TIntegerArray;
   begin
     if (rStart = rStop) then
@@ -324,7 +324,7 @@ end;
   @action: Returns digits from TRange.
   @note: None.
 [==============================================================================}
-function TRange.Sequence: TIntegerArray; cdecl;
+function TRange.Sequence: TIntegerArray;
 var
   i: Integer;
 begin
@@ -344,7 +344,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Steps: TIntegerArray; overload; cdecl;
+function TRange.Steps: TIntegerArray; overload;
 var
   i, s: Integer;
   p: PInteger;
@@ -366,7 +366,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.TIA: TIntegerArray; cdecl;
+function TRange.TIA: TIntegerArray;
 var
   i, l, d: Integer;
 begin
@@ -389,7 +389,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.ToArray: TIntegerArray; cdecl;
+function TRange.ToArray: TIntegerArray;
 var
   i: Integer;
 begin
@@ -409,7 +409,7 @@ end;
   @action: Recursion-based alternative for extracting items from TRange.
   @note: None.
 [==============================================================================}
-function TRange.Unfold: TIntegerArray; overload; cdecl;
+function TRange.Unfold: TIntegerArray; overload;
   procedure F2W(const R: TRange; const L, H: Integer; const A: Boolean; var arr: TIntegerArray);
   begin
     if (L > H) then
@@ -440,7 +440,7 @@ end;
   @action: Two-way alternative for extracting items from TRange.
   @note: None.
 [==============================================================================}
-function TRange.Unpack: TIntegerArray; overload; cdecl;
+function TRange.Unpack: TIntegerArray; overload;
 var
   s, i: Integer;
   o: Boolean;
@@ -460,7 +460,7 @@ end;
   @action: Two-way alternative for extracting items from TRange.
   @note: None.
 [==============================================================================}
-function TRange.Unwrap: TIntegerArray; overload; cdecl;
+function TRange.Unwrap: TIntegerArray; overload;
 var
   s, h, i: Integer;
   a: Boolean;
@@ -489,7 +489,7 @@ end;
   @action: Two-way alternative for extracting items from TRange.
   @note: None.
 [==============================================================================}
-function TRange.Unzip: TIntegerArray; overload; cdecl;
+function TRange.Unzip: TIntegerArray; overload;
 var
   r: TRange;
 begin
@@ -516,7 +516,7 @@ end;
   @action: Returns values of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Values: TIntegerArray; cdecl;
+function TRange.Values: TIntegerArray;
 var
   i, r: Integer;
 begin

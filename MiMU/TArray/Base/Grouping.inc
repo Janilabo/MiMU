@@ -1,16 +1,16 @@
 {$IFDEF HELPERS}
-function Classes: M2DArray; overload; cdecl;
-function Classes(const weight: TIntegerArray): M2DArray; overload; cdecl;
-function Classes(const weight: TDoubleArray): M2DArray; overload; cdecl;
-function Classify: M2DArray; overload; cdecl;
-function Classify(const weight: TIntegerArray): M2DArray; overload; cdecl;
-function Classify(const weight: TDoubleArray): M2DArray; overload; cdecl;
-function Group: M2DArray; overload; cdecl;
-function Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload; cdecl;
-function Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload; cdecl;
-function Grouped(const groups: TIntegerArray): M2DArray; overload; cdecl;
-function Groupify(const groups: TIntegerArray): M2DArray; overload; cdecl;
-function Grouping(const groups: TIntegerArray): M2DArray; overload; cdecl;
+function Classes: M2DArray; overload;
+function Classes(const weight: TIntegerArray): M2DArray; overload;
+function Classes(const weight: TDoubleArray): M2DArray; overload;
+function Classify: M2DArray; overload;
+function Classify(const weight: TIntegerArray): M2DArray; overload;
+function Classify(const weight: TDoubleArray): M2DArray; overload;
+function Group: M2DArray; overload;
+function Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload;
+function Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload;
+function Grouped(const groups: TIntegerArray): M2DArray; overload;
+function Groupify(const groups: TIntegerArray): M2DArray; overload;
+function Grouping(const groups: TIntegerArray): M2DArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -20,7 +20,7 @@ function Grouping(const groups: TIntegerArray): M2DArray; overload; cdecl;
   @note: Works on any array. Each run of identical values becomes a class; 
          duplicate classes can exist if values repeat non-consecutively.
 [==============================================================================}
-function MArrayHelper.Classes: M2DArray; overload; cdecl;
+function MArrayHelper.Classes: M2DArray; overload;
 var
   i, g: Integer;
   v: MType;
@@ -51,7 +51,7 @@ end;
          duplicate classes can exist if values repeat non-consecutively.
 		 Custom weight.
 [==============================================================================}
-function MArrayHelper.Classes(const weight: TIntegerArray): M2DArray; overload; cdecl;
+function MArrayHelper.Classes(const weight: TIntegerArray): M2DArray; overload;
 var
   w, i, g: Integer;
 begin
@@ -74,7 +74,7 @@ begin
   end;
 end;
 
-function MArrayHelper.Classes(const weight: TDoubleArray): M2DArray; overload; cdecl;
+function MArrayHelper.Classes(const weight: TDoubleArray): M2DArray; overload;
 var
   w: Double;
   i, g: Integer;
@@ -104,7 +104,7 @@ end;
   @note: Works on any array. Each run of identical values becomes a class; 
          duplicate classes can exist if values repeat non-consecutively.
 [==============================================================================}
-function MArrayHelper.Classify: M2DArray; overload; cdecl;
+function MArrayHelper.Classify: M2DArray; overload;
 var
   i, h, g, l: Integer;
 begin
@@ -139,7 +139,7 @@ end;
          duplicate classes can exist if values repeat non-consecutively.
 		 Custom weight.
 [==============================================================================}
-function MArrayHelper.Classify(const weight: TIntegerArray): M2DArray; overload; cdecl;
+function MArrayHelper.Classify(const weight: TIntegerArray): M2DArray; overload;
 var
   w, i, c, l, s: Integer;
 begin
@@ -167,7 +167,7 @@ begin
   SetLength(Result, (c + 1));
 end;
 
-function MArrayHelper.Classify(const weight: TDoubleArray): M2DArray; overload; cdecl;
+function MArrayHelper.Classify(const weight: TDoubleArray): M2DArray; overload;
 var
   w: Double;
   i, c, l, s: Integer;
@@ -201,7 +201,7 @@ end;
   @action: Groups array arr to 2D array by items.
   @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
 [==============================================================================}
-function MArrayHelper.Group: M2DArray; overload; cdecl;
+function MArrayHelper.Group: M2DArray; overload;
 var
   h, i, r, g, l: Integer;
   f: Boolean;
@@ -236,7 +236,7 @@ end;
   @action: Groups array arr to 2D array by items.
   @note: ([1,2,1,2,3,1,2,3,4]) => [1,1,1][2,2,2][3,3][4]
 [==============================================================================}
-function MArrayHelper.Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload; cdecl;
+function MArrayHelper.Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload;
 var
   w: TIntegerArray;
   i, l, g: Integer;
@@ -259,7 +259,7 @@ begin
   end;
 end;
 
-function MArrayHelper.Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload; cdecl;
+function MArrayHelper.Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload;
 var
   w: TDoubleArray;
   i, l, g: Integer;
@@ -295,7 +295,7 @@ end;
          • Best suited for small datasets or when original group order must
            be maintained.
 [==============================================================================}
-function MArrayHelper.Grouped(const groups: TIntegerArray): M2DArray; overload; cdecl;
+function MArrayHelper.Grouped(const groups: TIntegerArray): M2DArray; overload;
 var
   u: TIntegerArray;
   i, j, l: Integer;
@@ -342,7 +342,7 @@ end;
          • Suitable for large datasets where grouping speed matters more
            than preserving the original order.
 [==============================================================================}
-function MArrayHelper.Grouping(const groups: TIntegerArray): M2DArray; overload; cdecl;
+function MArrayHelper.Grouping(const groups: TIntegerArray): M2DArray; overload;
 var
   i, l, g, c: Integer;
   p: TIntegerArray;
@@ -387,7 +387,7 @@ end;
          • Best suited for large datasets where grouping speed is more
            important than predictable output order.
 [==============================================================================}
-function MArrayHelper.Groupify(const groups: TIntegerArray): M2DArray; overload; cdecl;
+function MArrayHelper.Groupify(const groups: TIntegerArray): M2DArray; overload;
 var
   m: specialize TDictionary<Integer, MArray>;
   l, i, g: Integer;

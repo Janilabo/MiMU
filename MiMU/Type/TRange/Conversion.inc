@@ -1,8 +1,8 @@
 {$IFDEF METHODS}
-function AsStr(const rReversed: Boolean = False): string; overload; cdecl;
-function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; cdecl;
-function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;
-function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;
+function AsStr(const rReversed: Boolean = False): string; overload;
+function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string;
+function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string;
+function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function ToStr(const glueRange: string = '..'; const openRange: string = '['; co
   @action: Converts TRange range to string.
   @note: From..To or To..From.
 [==============================================================================}
-function TRange.AsStr(const rReversed: Boolean = False): string; overload; cdecl;
+function TRange.AsStr(const rReversed: Boolean = False): string; overload;
 begin
   if not rReversed then
     Result := Format('%d..%d', [Self.start, Self.stop])
@@ -24,7 +24,7 @@ end;
   @action: Converts TRange range to string.
   @note: None
 [==============================================================================}
-function TRange.Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; cdecl;
+function TRange.Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string;
 begin
   Result := ('[' + IntToStr(Self.start) + glueRange + IntToStr(Self.stop) + ']');
 end;
@@ -34,7 +34,7 @@ end;
   @action: Converts TRange range to string.
   @note: None
 [==============================================================================}
-function TRange.Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; cdecl;
+function TRange.Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string;
 begin
   Result := Format(openRange + '%d' + glueRange + '%d' + closeRange, [Self.start, Self.stop]);
 end;
@@ -44,7 +44,7 @@ end;
   @action: Converts TRange range to string.
   @note: None
 [==============================================================================}
-function TRange.ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; cdecl;
+function TRange.ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string;
 begin
   Result := '';
   if (openRange <> '') then

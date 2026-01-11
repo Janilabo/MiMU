@@ -1,15 +1,15 @@
 {$IFDEF HELPERS}
-function Any(const null: MType): MType; overload; cdecl;
-function Any: MType; overload; cdecl;
-function Disordered: MArray; overload; cdecl;
-function Mix(const mixings: Integer = 1): Boolean; overload; cdecl;
-function Mixed(const mixings: Integer = 1): MArray; overload; cdecl;
-function Randomized: MArray; overload; cdecl;
-function Scramble(const swaps: Integer = -1): MArray; overload; cdecl;
-function Shake(const shakes: Integer = 1): MArray; overload; cdecl;
-function Shuffle(const shuffles: Integer = 1): MArray; overload; cdecl;
-function Some: MArray; overload; cdecl;
-function Some(const amount: Integer): MArray; overload; cdecl;
+function Any(const null: MType): MType; overload;
+function Any: MType; overload;
+function Disordered: MArray; overload;
+function Mix(const mixings: Integer = 1): Boolean; overload;
+function Mixed(const mixings: Integer = 1): MArray; overload;
+function Randomized: MArray; overload;
+function Scramble(const swaps: Integer = -1): MArray; overload;
+function Shake(const shakes: Integer = 1): MArray; overload;
+function Shuffle(const shuffles: Integer = 1): MArray; overload;
+function Some: MArray; overload;
+function Some(const amount: Integer): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -18,7 +18,7 @@ function Some(const amount: Integer): MArray; overload; cdecl;
   @action: Returns random array item from Self.
   @note: Returns null with empty arrays.
 [==============================================================================}
-function MArrayHelper.Any(const null: MType): MType; overload; cdecl;
+function MArrayHelper.Any(const null: MType): MType; overload;
 begin
   if Self.Empty then
     Exit(null);
@@ -30,7 +30,7 @@ end;
   @action: Returns random array item from Self.
   @note: Make sure array has at least 1 item! This one is unsafe and returns error else.
 [==============================================================================}
-function MArrayHelper.Any: MType; overload; cdecl;
+function MArrayHelper.Any: MType; overload;
 begin
   Result := Self[Low(Self) + Random(Self.Size)];
 end;
@@ -40,7 +40,7 @@ end;
   @action: Returns array with randomized order (disorder)
   @note: [1,2,3] => [1,3,2] | [2,1,3] | [2,3,1] | [3,2,1] ...
 [==============================================================================}
-function MArrayHelper.Disordered: MArray; overload; cdecl;
+function MArrayHelper.Disordered: MArray; overload;
 var
   m: TBooleanArray;
   i, r, l: Integer;
@@ -65,7 +65,7 @@ end;
   @action: Ramdomizes array with custom mixings.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Mix(const mixings: Integer = 1): Boolean; overload; cdecl;
+function MArrayHelper.Mix(const mixings: Integer = 1): Boolean; overload;
 var
   l, i, m: Integer;
 begin
@@ -84,7 +84,7 @@ end;
   @action: Returns ramdomized array by mixing.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Mixed(const mixings: Integer = 1): MArray; overload; cdecl;
+function MArrayHelper.Mixed(const mixings: Integer = 1): MArray; overload;
 var
   l, i, m: Integer;
 begin
@@ -101,7 +101,7 @@ end;
   @action: Returns randomized copy of array
   @note: None.
 [==============================================================================}
-function MArrayHelper.Randomized: MArray; overload; cdecl;
+function MArrayHelper.Randomized: MArray; overload;
 var
   s, l, r: Integer;
   i: TIntegerArray;
@@ -124,7 +124,7 @@ end;
   @action: Returns scrambled array, that is randomized with offset and swapping. 
   @note: Supports custom swaps.
 [==============================================================================}
-function MArrayHelper.Scramble(const swaps: Integer = -1): MArray; overload; cdecl;
+function MArrayHelper.Scramble(const swaps: Integer = -1): MArray; overload;
 var
   o, i, l, s: Integer;
 begin
@@ -141,7 +141,7 @@ end;
   @action: Returns array as randomized with shaking it.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Shake(const shakes: Integer = 1): MArray; overload; cdecl;
+function MArrayHelper.Shake(const shakes: Integer = 1): MArray; overload;
 var
   i, s: Integer;
 begin
@@ -157,7 +157,7 @@ end;
   @action: Returns array as randomized with shuffling it.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Shuffle(const shuffles: Integer = 1): MArray; overload; cdecl;
+function MArrayHelper.Shuffle(const shuffles: Integer = 1): MArray; overload;
 var
   i, s: Integer;
 begin
@@ -173,7 +173,7 @@ end;
   @action: Returns random amount of random array items from Self.
   @note: Does not return empty arrays.
 [==============================================================================}
-function MArrayHelper.Some: MArray; overload; cdecl;
+function MArrayHelper.Some: MArray; overload;
 begin
   Result := Self.Shuffle.Copy(0, Max(Random(Self.Size + 1), 1));
 end;
@@ -183,7 +183,7 @@ end;
   @action: Returns amount of random array items from Self.
   @note: Does not return empty arrays.
 [==============================================================================}
-function MArrayHelper.Some(const amount: Integer): MArray; overload; cdecl;
+function MArrayHelper.Some(const amount: Integer): MArray; overload;
 begin
   Result := Self.Shuffle.Copy(0, Max(1, Min(amount, Self.Size)));
 end;

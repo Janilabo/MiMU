@@ -1,11 +1,11 @@
 {$IFDEF METHODS}
-function Places(const target: TBox; const o: TPoint): TPointArray; overload; cdecl;
-function Places(const target: TBox): TPointArray; overload; cdecl;
+function Places(const target: TBox; const o: TPoint): TPointArray; overload;
+function Places(const target: TBox): TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-function Placements(const target: TBox; const o: TPoint): TBoxArray; overload; cdecl;
-function Placements(const target: TBox): TBoxArray; overload; cdecl;
+function Placements(const target: TBox; const o: TPoint): TBoxArray; overload;
+function Placements(const target: TBox): TBoxArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +15,7 @@ function Placements(const target: TBox): TBoxArray; overload; cdecl;
   @note: Returns an array of boxes representing every valid placement;
          order is row-major (y first, then x). Returns empty array if no fit.
 [==============================================================================}
-function TBoxHelper.Placements(const target: TBox; const o: TPoint): TBoxArray; overload; cdecl;
+function TBoxHelper.Placements(const target: TBox; const o: TPoint): TBoxArray; overload;
 var
   y, x, r: Integer;
   f, t: TBox;
@@ -31,7 +31,7 @@ begin
       Result[r.Increase] := Box(((f.X1 + x) + o.X), ((f.Y1 + y) + o.Y), ((f.X2 + x) + o.X), ((f.Y2 + y) + o.Y));
 end;
 
-function TBoxHelper.Placements(const target: TBox): TBoxArray; overload; cdecl;
+function TBoxHelper.Placements(const target: TBox): TBoxArray; overload;
 begin
   Result := Self.Placements(target, Point(0, 0));
 end;
@@ -42,7 +42,7 @@ end;
   @note: Returns an array of points representing every valid place;
          order is row-major (y first, then x). Returns empty array if no fit.
 [==============================================================================}
-function TBox.Places(const target: TBox; const o: TPoint): TPointArray; overload; cdecl;
+function TBox.Places(const target: TBox; const o: TPoint): TPointArray; overload;
 var
   w, h, x, y, l: Integer;
   r, c: TRange;
@@ -60,7 +60,7 @@ begin
       Result[l.Increase] := Point(((x + target.X1) + o.X), ((y + target.Y1) + o.Y));
 end;
 
-function TBox.Places(const target: TBox): TPointArray; overload; cdecl;
+function TBox.Places(const target: TBox): TPointArray; overload;
 begin
   Result := Self.Places(target, Point(0, 0));
 end;

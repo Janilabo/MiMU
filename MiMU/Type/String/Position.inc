@@ -1,12 +1,12 @@
 {$IFDEF HELPERS}
-function At(const s: string; const index: Integer = 1): Boolean; cdecl; inline;
-function At2(const s: string; const index: Integer = 1): Boolean; cdecl;
-function AtIndex(const s: string; const index: Integer = 1): Boolean; cdecl;
-function AtP(const s: string; const index: Integer = 1): Boolean; cdecl;
-function AtPos(const s: string; const index: Integer = 1): Boolean; cdecl;
-function AtPosEx(const s: string; const index: Integer = 1): Boolean; cdecl;
-function AtPosition(const s: string; const index: Integer = 1): Boolean; cdecl;
-function IsAt(const s: string; const index: Integer = 1): Boolean; cdecl;
+function At(const s: string; const index: Integer = 1): Boolean; inline;
+function At2(const s: string; const index: Integer = 1): Boolean;
+function AtIndex(const s: string; const index: Integer = 1): Boolean;
+function AtP(const s: string; const index: Integer = 1): Boolean;
+function AtPos(const s: string; const index: Integer = 1): Boolean;
+function AtPosEx(const s: string; const index: Integer = 1): Boolean;
+function AtPosition(const s: string; const index: Integer = 1): Boolean;
+function IsAt(const s: string; const index: Integer = 1): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +15,7 @@ function IsAt(const s: string; const index: Integer = 1): Boolean; cdecl;
   @action: Checks if string s is at index position in str.
   @note: UNSAFE: Minimal checking for efficiency!
 [==============================================================================}
-function TStringHelper.At(const s: string; const index: Integer = 1): Boolean; cdecl; inline;
+function TStringHelper.At(const s: string; const index: Integer = 1): Boolean; inline;
 var
   i: Integer;
 begin
@@ -35,7 +35,7 @@ end;
          Self. Uses minimal loop overhead and a countdown-based termination
          condition, making this an efficient but unsafe low-level routine.
 [==============================================================================}
-function TStringHelper.At2(const s: string; const index: Integer = 1): Boolean; cdecl;
+function TStringHelper.At2(const s: string; const index: Integer = 1): Boolean;
 var
   a, b: PChar;
   l: Integer;
@@ -64,7 +64,7 @@ end;
          is suitable for performance-sensitive contexts where readability and
          safety must both be preserved.
 [==============================================================================}
-function TStringHelper.AtIndex(const s: string; const index: Integer = 1): Boolean; cdecl;
+function TStringHelper.AtIndex(const s: string; const index: Integer = 1): Boolean;
 var
   i, l: Integer;
 begin
@@ -87,7 +87,7 @@ end;
          Uses direct pointer arithmetic and is optimized for maximum speed
          with minimal overhead, but is inherently unsafe if misused.
 [==============================================================================}
-function TStringHelper.AtP(const s: string; const index: Integer = 1): Boolean; cdecl;
+function TStringHelper.AtP(const s: string; const index: Integer = 1): Boolean;
 var
   a, b, c: PChar;
   l: Integer;
@@ -115,7 +115,7 @@ end;
   @note: Performs full bounds checking and uses Copy for comparison, which
          is safe but allocates a temporary substring.
 [==============================================================================}
-function TStringHelper.AtPos(const s: string; const index: Integer = 1): Boolean; cdecl;
+function TStringHelper.AtPos(const s: string; const index: Integer = 1): Boolean;
 begin
   Result := ((index > 0) and (Length(s) > 0) and (((index + Length(s)) - 1) <= Length(Self)) and (Copy(Self, index, Length(s)) = s));
 end;
@@ -126,7 +126,7 @@ end;
            current string starting at the specified 1-based index.
   @note: Based on PosEx
 [==============================================================================}
-function TStringHelper.AtPosEx(const s: string; const index: Integer = 1): Boolean; cdecl;
+function TStringHelper.AtPosEx(const s: string; const index: Integer = 1): Boolean;
 begin
   Result := ((Length(s) > 0) and (index > 0) and (PosEx(s, Self, index) = index));
 end;
@@ -138,7 +138,7 @@ end;
   @note: Validates bounds but avoids temporary allocations by using
          CompareMem, providing a faster, low-overhead comparison.
 [==============================================================================}
-function TStringHelper.AtPosition(const s: string; const index: Integer = 1): Boolean; cdecl;
+function TStringHelper.AtPosition(const s: string; const index: Integer = 1): Boolean;
 var
   l: Integer;
 begin
@@ -158,7 +158,7 @@ end;
          and represents the fastest practical implementation when safety is
          managed externally.
 [==============================================================================}
-function TStringHelper.IsAt(const s: string; const index: Integer = 1): Boolean; cdecl;
+function TStringHelper.IsAt(const s: string; const index: Integer = 1): Boolean;
 begin
   Result := CompareMem((PChar(Self) + (index - 1)), PChar(s), (Length(s) * SizeOf(Char)));
 end;

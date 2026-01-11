@@ -1,10 +1,10 @@
 {$IFDEF FUNCTIONS}
-function IfThen(const state: Boolean; const sTrue, sFalse: MType): MType; overload; cdecl; inline;
-function Swap(var A, B: MType): Boolean; overload; cdecl; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: MType): MType; overload; inline;
+function Swap(var A, B: MType): Boolean; overload; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-function IfThen(const state: Boolean; const sTrue, sFalse: MType): MType; overload; cdecl; inline;
+function IfThen(const state: Boolean; const sTrue, sFalse: MType): MType; overload; inline;
 begin
   if state then
     Result := sTrue
@@ -12,7 +12,7 @@ begin
     Result := sFalse;
 end;
 
-function Swap(var A, B: MType): Boolean; overload; cdecl; inline;
+function Swap(var A, B: MType): Boolean; overload; inline;
 var
   C: MType;
 begin

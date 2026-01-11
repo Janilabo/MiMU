@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function Distinct: Integer; overload; cdecl;
-function Waste: Integer; overload; cdecl;
+function Distinct: Integer; overload;
+function Waste: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function Waste: Integer; overload; cdecl;
   @action: Returns the number of unique elements in array 
   @note: None.
 [==============================================================================}
-function MArrayHelper.Distinct: Integer; overload; cdecl;
+function MArrayHelper.Distinct: Integer; overload;
 var
   i, j: Integer;
   u: Boolean;
@@ -36,7 +36,7 @@ end;
   @action: Returns total count of Duplicates in array, which is considered as "Waste"
   @note: None.
 [==============================================================================}
-function MArrayHelper.Waste: Integer; overload; cdecl;
+function MArrayHelper.Waste: Integer; overload;
 type
   TDict = specialize TDictionary<MType, Integer>;
 var

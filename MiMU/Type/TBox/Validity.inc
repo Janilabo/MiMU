@@ -1,7 +1,7 @@
 {$IFDEF METHODS}
-function Fix: Boolean; cdecl;
-function Invalid: Boolean; cdecl;
-function Valid: Boolean; cdecl; inline;
+function Fix: Boolean;
+function Invalid: Boolean;
+function Valid: Boolean; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function Valid: Boolean; cdecl; inline;
                Returns true if bx was fixed.
   Example: (200*, 100, 100*, 200) => (100, 100, 200, 200)
 [==============================================================================}
-function TBox.Fix: Boolean; cdecl;
+function TBox.Fix: Boolean;
 var
   x, y: Boolean;
 begin
@@ -31,7 +31,7 @@ end;
   Explanation: Returns true if TBox is invalid (X1 > X2 or Y1 > Y2)
   Example: None.
 [==============================================================================}
-function TBox.Invalid: Boolean; cdecl;
+function TBox.Invalid: Boolean;
 begin
   Result := ((Self.X1 > Self.X2) or (Self.Y1 > Self.Y2));
 end;
@@ -41,7 +41,7 @@ end;
   Explanation: Returns true if TBox is valid (X1 <= X2 and Y1 <= Y2)
   Example: None.
 [==============================================================================}
-function TBox.Valid: Boolean; cdecl; inline;
+function TBox.Valid: Boolean; inline;
 begin
   Result := ((Self.X1 <= Self.X2) and (Self.Y1 <= Self.Y2));
 end;

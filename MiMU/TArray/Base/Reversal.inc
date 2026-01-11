@@ -1,11 +1,11 @@
 {$IFDEF HELPERS}
-function Backwards: MArray; overload; cdecl;
-function Flip: Boolean; overload; cdecl;
-function Reversal: MArray; overload; cdecl;
-function Reverse: Boolean; overload; cdecl;
-function Reversed: MArray; overload; cdecl;
-function Reversify: Boolean; overload; cdecl;
-function Reversion: MArray; overload; cdecl;
+function Backwards: MArray; overload;
+function Flip: Boolean; overload;
+function Reversal: MArray; overload;
+function Reverse: Boolean; overload;
+function Reversed: MArray; overload;
+function Reversify: Boolean; overload;
+function Reversion: MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -14,7 +14,7 @@ function Reversion: MArray; overload; cdecl;
   @action: Returns arr as reversed.
   @note: Alternative for Reversed methods
 [==============================================================================}
-function MArrayHelper.Backwards: MArray; overload; cdecl;
+function MArrayHelper.Backwards: MArray; overload;
 var
   l, i: Integer;
 begin
@@ -30,7 +30,7 @@ end;
   @action: Reverses array arr.
   @note: Alternative for TArray_Reverse
 [==============================================================================}
-function MArrayHelper.Flip: Boolean; overload; cdecl;
+function MArrayHelper.Flip: Boolean; overload;
 var
   r: TRange;
 begin
@@ -45,7 +45,7 @@ end;
   @action: Returns array with items in reversed order.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Reversal: MArray; overload; cdecl;
+function MArrayHelper.Reversal: MArray; overload;
 var
   r: TRange;
 begin
@@ -68,7 +68,7 @@ end;
   @action: Reverses items in array.
   @note: Returns true with success (array contains 2 or more items)
 [==============================================================================}
-function MArrayHelper.Reverse: Boolean; overload; cdecl;
+function MArrayHelper.Reverse: Boolean; overload;
 var
   i, l: Integer;
 begin
@@ -84,7 +84,7 @@ end;
   @action: Returns reversed version of array arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Reversed: MArray; overload; cdecl;
+function MArrayHelper.Reversed: MArray; overload;
 var
   i, l: Integer;
 begin
@@ -102,7 +102,7 @@ end;
          - Returns True if the array had 2 or more elements (reversal performed).
          - Returns False if the array had 0 or 1 element (nothing changed).
 [==============================================================================}
-function MArrayHelper.Reversify: Boolean; overload; cdecl;
+function MArrayHelper.Reversify: Boolean; overload;
 var
   s: MArray;
   i, l: Integer;
@@ -122,7 +122,7 @@ end;
   @action: Returns array with items in reversed order.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Reversion: MArray; overload; cdecl;
+function MArrayHelper.Reversion: MArray; overload;
 var
   h, i, l: Integer;
 begin

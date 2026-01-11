@@ -1,5 +1,5 @@
 {$IFDEF HELPERS}
-function Uniques: TIntegerArray; overload; cdecl;
+function Uniques: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -8,7 +8,7 @@ function Uniques: TIntegerArray; overload; cdecl;
   @action: Returns the indexes of unique array (arr) items.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Uniques: TIntegerArray; overload; cdecl;
+function MArrayHelper.Uniques: TIntegerArray; overload;
 var
   h, r, x, y: Integer;
   m: Boolean;

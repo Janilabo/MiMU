@@ -1,8 +1,8 @@
 {$IFDEF HELPERS}
-function Monotonic: Boolean; overload; cdecl;
-function Monotone: Boolean; overload; cdecl;
-function IsMonotone: Boolean; overload; cdecl;
-function Monotonious: Boolean; overload; cdecl;
+function Monotonic: Boolean; overload;
+function Monotone: Boolean; overload;
+function IsMonotone: Boolean; overload;
+function Monotonious: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -16,7 +16,7 @@ function Monotonious: Boolean; overload; cdecl;
          Performs both global and local comparisons in a single loop.
          Uses Integer_Increment and Integer_Decrement for safe index movement.
 [==============================================================================}
-function MArrayHelper.Monotonic: Boolean; overload; cdecl;
+function MArrayHelper.Monotonic: Boolean; overload;
 var
   L, R: Integer;
 begin
@@ -46,7 +46,7 @@ end;
          This function is a slightly simpler alternative to Sortedness, but checks both
          global and local conditions for each iteration.
 [==============================================================================}
-function MArrayHelper.Monotone: Boolean; overload; cdecl;
+function MArrayHelper.Monotone: Boolean; overload;
 var
   L, R: Integer;
 begin
@@ -79,7 +79,7 @@ end;
     • The function short-circuits for efficiency — exits early once a
       non-monotone pattern is detected.
 [==============================================================================}
-function MArrayHelper.IsMonotone: Boolean; overload; cdecl;
+function MArrayHelper.IsMonotone: Boolean; overload;
 var
   i: Integer;
   A, D: Boolean;
@@ -119,7 +119,7 @@ end;
     • This is functionally equivalent to other “direction-lock” or “accumulator”
       implementations but tracks high/low separately.
 [==============================================================================}
-function MArrayHelper.Monotonious: Boolean; overload; cdecl;
+function MArrayHelper.Monotonious: Boolean; overload;
 var
   i, h, l: Integer;
 begin

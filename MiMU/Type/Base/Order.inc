@@ -1,22 +1,22 @@
 {$IFDEF FUNCTIONS}
 {$IFDEF Sortable}
-function Sort(var A, B: MType; const oAscending: Boolean = True): Boolean; overload; cdecl;
-function Sort(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload; cdecl;
-function Swop(var A, B: MType; const oAscending: Boolean = True): Boolean; overload; cdecl;
-function Swop(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload; cdecl;
+function Sort(var A, B: MType; const oAscending: Boolean = True): Boolean; overload;
+function Sort(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
+function Swop(var A, B: MType; const oAscending: Boolean = True): Boolean; overload;
+function Swop(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {$IFDEF Sortable}
-function Sort(var A, B: MType; const oAscending: Boolean = True): Boolean; overload; cdecl;
+function Sort(var A, B: MType; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := ((oAscending and (A > B)) or ((not oAscending) and (A < B)));
   if Result then
     Swap(A, B);
 end;
 
-function Sort(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload; cdecl;
+function Sort(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
   function DoSwap(var X, Y: MType): Boolean;
   var
     Z: MType;
@@ -36,7 +36,7 @@ begin
     Result := DoSwap(B, C);
 end;
 
-function Swop(var A, B: MType; const oAscending: Boolean = True): Boolean; overload; cdecl;
+function Swop(var A, B: MType; const oAscending: Boolean = True): Boolean; overload;
 var
  S: MType;
 begin
@@ -48,7 +48,7 @@ begin
   B := S;
 end;
 
-function Swop(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload; cdecl;
+function Swop(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
 var
   S: MType;
 procedure SwapIf(var X, Y: MType);

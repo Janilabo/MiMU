@@ -1,9 +1,9 @@
 {$IFDEF HELPERS}
-function Clear: Boolean; overload; cdecl;
-function Free: Integer; overload; cdecl;
-function Kill: Integer; overload; cdecl;
-function Recreate(const arrSize: Integer): Boolean; overload; cdecl;
-function Reset: Integer; overload; cdecl;
+function Clear: Boolean; overload;
+function Free: Integer; overload;
+function Kill: Integer; overload;
+function Recreate(const arrSize: Integer): Boolean; overload;
+function Reset: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -12,7 +12,7 @@ function Reset: Integer; overload; cdecl;
   @action: SetLength(arr, 0) and returns true if items existed before doing it.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Clear: Boolean; overload; cdecl;
+function MArrayHelper.Clear: Boolean; overload;
 begin
   Result := (Self.Length > 0);
   SetLength(Self, 0);
@@ -23,7 +23,7 @@ end;
   @action: Result := Length(Self) + SetLength(Self, 0) combo.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Free: Integer; overload; cdecl;
+function MArrayHelper.Free: Integer; overload;
 begin
   Result := Self.Size;
   SetLength(Self, 0);
@@ -34,7 +34,7 @@ end;
   @action: Combination of Length(arr) + SetLength(arr, 0).
   @note: Returns the length of the arr!
 [==============================================================================}
-function MArrayHelper.Kill: Integer; overload; cdecl;
+function MArrayHelper.Kill: Integer; overload;
 begin
   Result := Self.Size;
   SetLength(Self, 0);
@@ -45,7 +45,7 @@ end;
   @action: Clear the array and reallocate to arrSize (negative = previous length).
   @note: Returns True if array was non-empty and arrSize <> 0.
 [==============================================================================}
-function MArrayHelper.Recreate(const arrSize: Integer): Boolean; overload; cdecl;
+function MArrayHelper.Recreate(const arrSize: Integer): Boolean; overload;
 var
   l: Integer;
 begin
@@ -64,7 +64,7 @@ end;
   @action: Resets all elements of the array to default values while preserving its structure.
   @note: Returns the number of elements that were reset.
 [==============================================================================}
-function MArrayHelper.Reset: Integer; overload; cdecl;
+function MArrayHelper.Reset: Integer; overload;
 begin
   Result := Self.Size;
   SetLength(Self, 0);

@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function Spanning(const item: MType; const oAscending: Boolean = True): TRange; overload; cdecl;
-function FibonacciSearch(const item: MType; const oAscending: Boolean = True): Integer; overload; cdecl;
+function Spanning(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function FibonacciSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -23,7 +23,7 @@ function FibonacciSearch(const item: MType; const oAscending: Boolean = True): I
         - `Result.start > Result.stop` → item not found; sentinel range returned.
     - Time complexity: O(n) (linear search).
 [==============================================================================}
-function MArrayHelper.Spanning(const item: MType; const oAscending: Boolean = True): TRange; overload; cdecl;
+function MArrayHelper.Spanning(const item: MType; const oAscending: Boolean = True): TRange; overload;
 begin
   if Self.Empty then
     Exit(TRange.Construct(Low(Integer), Low(Integer)));
@@ -52,7 +52,7 @@ end;
          memory-hierarchy–sensitive workloads. The input array must be
          pre-sorted in the order defined by oAscending.
 [==============================================================================}
-function MArrayHelper.FibonacciSearch(const item: MType; const oAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.FibonacciSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 var
   M: Integer;
   H, o, i: Integer;

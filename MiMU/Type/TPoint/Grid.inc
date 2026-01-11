@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
-function Column(const cells: Integer; const space: Integer = 0): TPointArray; cdecl;
-function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray; cdecl;
-function Row(const cells: Integer; const space: Integer = 0): TPointArray; cdecl;
+function Column(const cells: Integer; const space: Integer = 0): TPointArray;
+function Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray;
+function Row(const cells: Integer; const space: Integer = 0): TPointArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +11,7 @@ function Row(const cells: Integer; const space: Integer = 0): TPointArray; cdecl
            where space is the amount of space between each cell.
   @note: None
 [==============================================================================}
-function TPointHelper.Column(const cells: Integer; const space: Integer = 0): TPointArray; cdecl;
+function TPointHelper.Column(const cells: Integer; const space: Integer = 0): TPointArray;
 var
   i: Integer;
 begin
@@ -33,7 +33,7 @@ end;
            spaceVertical = space between rows
   @note: None.
 [==============================================================================}
-function TPointHelper.Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray; cdecl;
+function TPointHelper.Grid(const rows, columns: Integer; const spaceVertical: Integer = 0; const spaceHorizontal: Integer = 0): TPointArray;
 var
   r, c, x, y: Integer;
 begin
@@ -59,7 +59,7 @@ end;
            where space is the amount of space between each cell.
   @note: None
 [==============================================================================}
-function TPointHelper.Row(const cells: Integer; const space: Integer = 0): TPointArray; cdecl;
+function TPointHelper.Row(const cells: Integer; const space: Integer = 0): TPointArray;
 var
   i: Integer;
 begin

@@ -3,7 +3,7 @@
 {$ENDIF}
 
 {$IFDEF T2D}
-class function Create(const item: MType; const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload; cdecl;
+class function Create(const item: MType; const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -14,7 +14,7 @@ class function Create(const item: MType; const size1D: Integer = 1; const size2D
   @action: Creates array with item where size is length of the array.
   @note: item is placed on every index in result.
 [==============================================================================}
-class function T2D.Create(const item: MType; const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload; cdecl;
+class function T2D.Create(const item: MType; const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload;
 var
   i, j, s: Integer;
 begin

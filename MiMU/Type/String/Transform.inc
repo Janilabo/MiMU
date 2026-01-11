@@ -1,14 +1,14 @@
 {$IFDEF HELPERS}
-function Center(const size: Integer; const fill: Char = #32): string; cdecl;
-function Duplicate(const x: Integer = 2): string; cdecl;
-function Duplicated(const x: Integer; const glue: string): string; cdecl;
-function EndWith(const s: string; const index: Integer = 2147483647): Boolean; cdecl;
-function Exch(const aIndex, bIndex: Integer): Boolean; cdecl;
-function Exchange(const aIndex, bIndex: Integer): Boolean; cdecl;
-function Flip: string; cdecl;
-function Reverse: Boolean; cdecl;
-function Reversed: string; cdecl;
-function StartWith(const s: string; const index: Integer = 1): Boolean; cdecl;
+function Center(const size: Integer; const fill: Char = #32): string;
+function Duplicate(const x: Integer = 2): string;
+function Duplicated(const x: Integer; const glue: string): string;
+function EndWith(const s: string; const index: Integer = 2147483647): Boolean;
+function Exch(const aIndex, bIndex: Integer): Boolean;
+function Exchange(const aIndex, bIndex: Integer): Boolean;
+function Flip: string;
+function Reverse: Boolean;
+function Reversed: string;
+function StartWith(const s: string; const index: Integer = 1): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,7 +17,7 @@ function StartWith(const s: string; const index: Integer = 1): Boolean; cdecl;
   @action: Returns str centered with fill characters where size is the length of the Result.
   @note: Supports custom filling character by fill!
 [==============================================================================}
-function TStringHelper.Center(const size: Integer; const fill: Char = #32): string; cdecl;
+function TStringHelper.Center(const size: Integer; const fill: Char = #32): string;
 var
   l, p: Integer;
 begin
@@ -38,7 +38,7 @@ end;
   @action: Returns str * x (duplicated) times. Example: ('ha', 3) => 'hahaha'
   @note: None
 [==============================================================================}
-function TStringHelper.Duplicate(const x: Integer = 2): string; cdecl;
+function TStringHelper.Duplicate(const x: Integer = 2): string;
 var
   i: Integer;
 begin
@@ -53,7 +53,7 @@ end;
            Places glue between the str positions to result.
   @note: Supports custom glue addition between duplicated str's.
 [==============================================================================}
-function TStringHelper.Duplicated(const x: Integer; const glue: string): string; cdecl;
+function TStringHelper.Duplicated(const x: Integer; const glue: string): string;
 var
   i: Integer;
 begin
@@ -73,7 +73,7 @@ end;
   @action: Returns true if s was found in str and it was set as the ending of the str.
   @note: Supports offset.
 [==============================================================================}
-function TStringHelper.EndWith(const s: string; const index: Integer = 2147483647): Boolean; cdecl;
+function TStringHelper.EndWith(const s: string; const index: Integer = 2147483647): Boolean;
 var
   p: Integer;
 begin
@@ -88,7 +88,7 @@ end;
   @action: Fast version of Exchange().
   @note: Unsafe, no checking.
 [==============================================================================}
-function TStringHelper.Exch(const aIndex, bIndex: Integer): Boolean; cdecl;
+function TStringHelper.Exch(const aIndex, bIndex: Integer): Boolean;
 var
   c: Char;
 begin
@@ -103,7 +103,7 @@ end;
   @action: Swap items aIndex and bIndex in string.
   @note: Returns true with success.
 [==============================================================================}
-function TStringHelper.Exchange(const aIndex, bIndex: Integer): Boolean; cdecl;
+function TStringHelper.Exchange(const aIndex, bIndex: Integer): Boolean;
 var
   l: Integer;
   c: Char;
@@ -123,7 +123,7 @@ end;
   @action: Returns reversed str.
   @note: None
 [==============================================================================}
-function TStringHelper.Flip: string; cdecl;
+function TStringHelper.Flip: string;
 var
   i, l: Integer;
 begin
@@ -138,7 +138,7 @@ end;
   @action: Returns reversed str.
   @note: None
 [==============================================================================}
-function TStringHelper.Reverse: Boolean; cdecl;
+function TStringHelper.Reverse: Boolean;
 var
   i, l: Integer;
   c: Char;
@@ -159,7 +159,7 @@ end;
   @action: Returns reversed str.
   @note: None
 [==============================================================================}
-function TStringHelper.Reversed: string; cdecl;
+function TStringHelper.Reversed: string;
 var
   i, l, m: Integer;
 begin
@@ -184,7 +184,7 @@ end;
   @action: Returns true if s was found in str and it was set as the beginning of the str.
   @note: None
 [==============================================================================}
-function TStringHelper.StartWith(const s: string; const index: Integer = 1): Boolean; cdecl;
+function TStringHelper.StartWith(const s: string; const index: Integer = 1): Boolean;
 var
   p: Integer;
 begin

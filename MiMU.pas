@@ -38,6 +38,8 @@
 {$modeswitch arrayoperators}
 {$modeswitch typehelpers}
 {$CODEALIGN LOCALMIN=16}
+{$CODEALIGN RECORDMIN=16}
+{$CODEALIGN CONSTMIN=16}    
 
 unit MiMU;
 
@@ -49,37 +51,37 @@ uses
 const
   MiMU_VERSION_NUMBER = 0.5;
 
-function MiMU_Version: Double; cdecl;
+function MiMU_Version: Double;
 
 type
-  generic TCompare<T> = function(const A, B: T): Integer; cdecl;
+  generic TCompare<T> = function(const A, B: T): Integer;
 
 {$I MiMU/MiMU.inc}
 
-generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload; cdecl;
-generic function Sort<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload; cdecl;
-generic function Swap<T>(var A, B: T): Boolean; overload; cdecl;
-generic function Swop<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload; cdecl;
-generic function Swop<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload; cdecl;
-generic function Arrange<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload; cdecl;
-generic function Arrange<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload; cdecl;
+generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
+generic function Sort<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
+generic function Swap<T>(var A, B: T): Boolean; overload;
+generic function Swop<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
+generic function Swop<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
+generic function Arrange<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
+generic function Arrange<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Contains<T>(const arr: array of T; const item: T): Boolean;
 generic function Includes<T>(const arr: array of T; const item: T): Boolean;
 generic function Position<T>(const arr: array of T; const item: T): Integer;
 generic function Location<T>(const arr: array of T; const item: T): Integer;
 generic function Indexes<T>(const arr: array of T): TIntegerArray;
-generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T; cdecl;
-generic function SetSize<T>(var A, B: specialize TArray<T>; const size: Integer = 1): Integer; overload; cdecl;
-generic function SetSize<T>(var A, B, C: specialize TArray<T>; const size: Integer = 1): Integer; overload; cdecl;
-generic function SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: Integer = 1): Integer; overload; cdecl;
-generic function Trade<T>(var A, B: T): Boolean; overload; cdecl;
+generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;
+generic function SetSize<T>(var A, B: specialize TArray<T>; const size: Integer = 1): Integer; overload;
+generic function SetSize<T>(var A, B, C: specialize TArray<T>; const size: Integer = 1): Integer; overload;
+generic function SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: Integer = 1): Integer; overload;
+generic function Trade<T>(var A, B: T): Boolean; overload;
 generic function QuickSort<T>(var arr: array of T; const comp: specialize TCompare<T>): Integer; overload;
 
 implementation
 
 {$DEFINE IMPLEMENTATION} 
 
-function MiMU_Version: Double; cdecl; 
+function MiMU_Version: Double; 
 begin
   Result := MiMU_VERSION_NUMBER;
 end;
@@ -90,7 +92,7 @@ end;
   @note: Returns True if the values were different before the swap, False otherwise.
          Requires that type T supports the <> operator.
 [==============================================================================}
-generic function Swap<T>(var A, B: T): Boolean; overload; cdecl;
+generic function Swap<T>(var A, B: T): Boolean; overload;
 var
   C: T;
 begin
@@ -105,7 +107,7 @@ end;
   @action: Swaps two variables A and B if they are out of order according to the specified ascending flag.
   @note: Returns True if a swap occurred, False otherwise.
 [==============================================================================}
-generic function Swop<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload; cdecl;
+generic function Swop<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 var
  S: T;
 begin
@@ -122,7 +124,7 @@ end;
   @action: Arranges three variables A, B, C in order according to the ascending flag by performing minimal swaps.
   @note: Returns True if any swap occurred, False otherwise.
 [==============================================================================}
-generic function Swop<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload; cdecl;
+generic function Swop<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
 var
   S: T;
 procedure SwapIf(var X, Y: T);
@@ -147,7 +149,7 @@ end;
   @action: Ensures that two values are ordered according to the ascending flag, performing a swap if necessary.
   @note: Returns True if a swap occurred, False otherwise. Calls generic Swap<T> internally.
 [==============================================================================}
-generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload; cdecl;
+generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := ((oAscending and (A > B)) or ((not oAscending) and (A < B)));
   if Result then
@@ -159,7 +161,7 @@ end;
   @action: Ensures that three values A, B, C are ordered according to the ascending flag, performing swaps if necessary.
   @note: Returns True if any swaps occurred, False otherwise. Does not fully sort arrays, only these three values.
 [==============================================================================}
-generic function Sort<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload; cdecl;
+generic function Sort<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
   function DoSwap(var X, Y: T): Boolean;
   var
     Z: T;
@@ -186,7 +188,7 @@ end;
   @note: Returns True if a swap occurred, False otherwise. 
          This function only arranges the two values; it does not sort arrays or larger collections.
 [==============================================================================}
-generic function Arrange<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload; cdecl;
+generic function Arrange<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := ((oAscending and (A > B)) or ((not oAscending) and (A < B)));
   if Result then
@@ -202,7 +204,7 @@ end;
          This function does not perform a full sort; it only arranges the three values 
          relative to each other.
 [==============================================================================}
-generic function Arrange<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload; cdecl;
+generic function Arrange<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := (specialize Arrange<T>(A, B) or specialize Arrange<T>(A, C) or specialize Arrange<T>(B, C));
 end;
@@ -287,7 +289,7 @@ end;
   @action: Returns one of three possible results depending on two Boolean conditions.
   @note: Evaluates aBool first, then bBool, returning aResult, bResult, or cResult accordingly.
 [==============================================================================}
-generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T; cdecl;
+generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;
 begin
   if aBool then
     Result := aResult
@@ -303,7 +305,7 @@ end;
   @action: Resizes two dynamic arrays to the specified size.
   @note: Returns the size used. Size is clamped to 0 minimum. Overloaded for multiple arrays.
 [==============================================================================}
-generic function SetSize<T>(var A, B: specialize TArray<T>; const size: Integer = 1): Integer; overload; cdecl;
+generic function SetSize<T>(var A, B: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 begin
   Result := Max(0, size);
   SetLength(A, Result);
@@ -315,7 +317,7 @@ end;
   @action: Resizes three dynamic arrays to the specified size.
   @note: Returns the size used. Size is clamped to 0 minimum. Overloaded for multiple arrays.
 [==============================================================================}
-generic function SetSize<T>(var A, B, C: specialize TArray<T>; const size: Integer = 1): Integer; overload; cdecl;
+generic function SetSize<T>(var A, B, C: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 begin
   Result := Max(0, size);
   SetLength(A, Result);
@@ -328,7 +330,7 @@ end;
   @action: Resizes four dynamic arrays to the specified size.
   @note: Returns the size used. Size is clamped to 0 minimum. Overloaded for multiple arrays.
 [==============================================================================}
-generic function SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: Integer = 1): Integer; overload; cdecl;
+generic function SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 begin
   Result := Max(0, size);
   SetLength(A, Result);
@@ -342,7 +344,7 @@ end;
   @action: Swaps two variables if their memory addresses are different.
   @note: Returns True if a swap occurred, False otherwise.
 [==============================================================================}
-generic function Trade<T>(var A, B: T): Boolean; overload; cdecl;
+generic function Trade<T>(var A, B: T): Boolean; overload;
 var
   C: T;
 begin

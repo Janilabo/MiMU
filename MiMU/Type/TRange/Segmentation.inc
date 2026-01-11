@@ -1,10 +1,10 @@
 {$IFDEF HELPERS}
-function Binned(const target: TRange): TRangeArray; overload; cdecl;
-function Distribute(const parts: Integer): TRangeArray; cdecl;
-function Divide(const size: Integer): TRangeArray; cdecl;
-function Partition(const size: Integer): TRangeArray; cdecl;
-function Sectioned(const target: TRange): TRangeArray; overload; cdecl;
-function Windows(const target: TRange): TRangeArray; overload; cdecl;
+function Binned(const target: TRange): TRangeArray; overload;
+function Distribute(const parts: Integer): TRangeArray;
+function Divide(const size: Integer): TRangeArray;
+function Partition(const size: Integer): TRangeArray;
+function Sectioned(const target: TRange): TRangeArray; overload;
+function Windows(const target: TRange): TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +15,7 @@ function Windows(const target: TRange): TRangeArray; overload; cdecl;
   @note:   Subranges are aligned in steps of SelfSize from the start of target.
            Any remainder that does not fit evenly is ignored.
 [==============================================================================}
-function TRangeHelper.Binned(const target: TRange): TRangeArray; overload; cdecl;
+function TRangeHelper.Binned(const target: TRange): TRangeArray; overload;
 var
   i, s: Integer;
   t: TRange;
@@ -37,7 +37,7 @@ end;
   @action: Distributes range to TRangeArray by amount of parts
   @note: None.
 [==============================================================================}
-function TRangeHelper.Distribute(const parts: Integer): TRangeArray; cdecl;
+function TRangeHelper.Distribute(const parts: Integer): TRangeArray;
 var
   i, s, e, a, b, p: Integer;
   r: TRange;
@@ -70,7 +70,7 @@ end;
   @action: Partitions range to TRangeArray by size of parts
   @note: Alternative for TRange_Partition.
 [==============================================================================}
-function TRangeHelper.Divide(const size: Integer): TRangeArray; cdecl;
+function TRangeHelper.Divide(const size: Integer): TRangeArray;
 var
   a, b, i: Integer;
   r: TRange;
@@ -98,7 +98,7 @@ end;
   @action: Partitions range to TRangeArray by size of parts
   @note: None.
 [==============================================================================}
-function TRangeHelper.Partition(const size: Integer): TRangeArray; cdecl;
+function TRangeHelper.Partition(const size: Integer): TRangeArray;
 var
   a, b, l: Integer;
   r: TRange;
@@ -128,7 +128,7 @@ end;
            of the same size as Self.
   @note:   Any remainder at the end of the target range is discarded.
 [==============================================================================}
-function TRangeHelper.Sectioned(const target: TRange): TRangeArray; overload; cdecl;
+function TRangeHelper.Sectioned(const target: TRange): TRangeArray; overload;
 var
   p, r, s, m: Integer;
   f, t: TRange;
@@ -152,7 +152,7 @@ end;
            the target range. These windows may overlap.
   @note:   The number of results is (TargetSize - SelfSize + 1).
 [==============================================================================}
-function TRangeHelper.Windows(const target: TRange): TRangeArray; overload; cdecl;
+function TRangeHelper.Windows(const target: TRange): TRangeArray; overload;
 var
   r, s: Integer;
   f, t: TRange;

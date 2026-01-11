@@ -1,10 +1,10 @@
 {$IFDEF HELPERS}
-function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload; cdecl;
-function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload; cdecl;
-function QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload; cdecl;
-function QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload; cdecl;
-function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): MArray; overload; cdecl;
-function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): MArray; overload; cdecl;
+function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
+function QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+function QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
+function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): MArray; overload;
+function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -18,7 +18,7 @@ function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = Tru
          - Returns the length of Self after sorting.
          - When aAscending = True, smaller weights appear first.
 [==============================================================================}
-function MArrayHelper.MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
   procedure MSW(var arr: MArray; var wgt: TIntegerArray; const L, R: Integer);
   var
     s: MArray;
@@ -79,7 +79,7 @@ begin
     MSW(Self, weight, 0, (Result - 1));
 end;
 
-function MArrayHelper.MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
   procedure MSW(var arr: MArray; var wgt: TDoubleArray; const L, R: Integer);
   var
     s: MArray;
@@ -150,7 +150,7 @@ end;
          Returns the length of Self. Useful when you want to reorder an array according
          to external weights while preserving pairings.
 [==============================================================================}
-function MArrayHelper.QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
   procedure QS(var A: MArray; var W: TIntegerArray; const L, R: Integer);
   var
     i, j, p: Integer;
@@ -209,7 +209,7 @@ end;
          Returns the length of Self. Useful when you want to reorder an array according
          to external weights while preserving pairings.
 [==============================================================================}
-function MArrayHelper.QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
   procedure QS(var A: MArray; var W: TDoubleArray; const L, R: Integer);
   var
     p: Double;
@@ -264,7 +264,7 @@ end;
   @action: Returns arr sorted by weight, based on QuickSort algorithm.
   @note: Weight and arr must be the same length! Otherwise returns empty array.
 [==============================================================================}
-function MArrayHelper.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): MArray; overload; cdecl;
+function MArrayHelper.QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): MArray; overload;
 var
   w: Integer;
 procedure QS_IDs(var aID: TIntegerArray; const L, R: Integer);
@@ -308,7 +308,7 @@ begin
     SetLength(Result, 0);
 end;
   
-function MArrayHelper.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): MArray; overload; cdecl;
+function MArrayHelper.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): MArray; overload;
 var 
   w: Double;
 procedure QS_IDs(var aID: TIntegerArray; const L, R: Integer);

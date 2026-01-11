@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
-function Overlay(const items: MArray; const index: Integer; const init: MType): MArray; overload; cdecl;
-function Overlay(const items: MArray; const index: Integer = 0): MArray; overload; cdecl;
-function Patch(const index: Integer; const items: MArray): Integer; overload; cdecl;
+function Overlay(const items: MArray; const index: Integer; const init: MType): MArray; overload;
+function Overlay(const items: MArray; const index: Integer = 0): MArray; overload;
+function Patch(const index: Integer; const items: MArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -10,7 +10,7 @@ function Patch(const index: Integer; const items: MArray): Integer; overload; cd
   @action: Overlays items to array index.
   @note: Returns the array with overlay action.		
 [==============================================================================}
-function MArrayHelper.Overlay(const items: MArray; const index: Integer; const init: MType): MArray; overload; cdecl;
+function MArrayHelper.Overlay(const items: MArray; const index: Integer; const init: MType): MArray; overload;
 var
   s, l, r, i, a, j: Integer;
 begin
@@ -37,7 +37,7 @@ begin
       Result[i] := items[i];
 end;
 
-function MArrayHelper.Overlay(const items: MArray; const index: Integer = 0): MArray; overload; cdecl;
+function MArrayHelper.Overlay(const items: MArray; const index: Integer = 0): MArray; overload;
 begin
   Result := Self.Overlay(items, index, Default(MType));
 end;
@@ -48,7 +48,7 @@ end;
   @note: Uses SetLength incase index + items goes over the current length.
          If index is below 0 it will automatically set max length.
 [==============================================================================}
-function MArrayHelper.Patch(const index: Integer; const items: MArray): Integer; overload; cdecl;
+function MArrayHelper.Patch(const index: Integer; const items: MArray): Integer; overload;
 var
   j, i: Integer;
 begin

@@ -1,22 +1,22 @@
 {$IFDEF METHODS}
-function Differ(const b: TRange): Boolean; cdecl;
-function Differs(const b: TRange): Boolean; cdecl;
-function Distance(const b: TRange): Integer; overload; cdecl;
-function Distance: Integer; overload; cdecl;
-function DistHausdorff(const b: TRange): Integer; cdecl;
-function Equal(const b: TRange): Boolean; cdecl;
-function Equals(const b: TRange): Boolean; cdecl;
-function Intersect(const b: TRange): TRange; overload; cdecl;
-function Intersect(const b: TRange; var iZone: TRange): Boolean; overload; cdecl; 
-function Neighbor(const b: TRange): Boolean; cdecl;
-function Neighbour(const b: TRange): Boolean; cdecl;
-function Overlap(const b: TRange): Boolean; cdecl;
-function Overlapping(const b: TRange): Boolean; cdecl;
-function Touch(const b: TRange): Boolean; cdecl;
-function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
-function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
-function Union(const b: TRange): TRange; overload; cdecl;
-function Union(const val: Integer): TRange; overload; cdecl;
+function Differ(const b: TRange): Boolean;
+function Differs(const b: TRange): Boolean;
+function Distance(const b: TRange): Integer; overload;
+function Distance: Integer; overload;
+function DistHausdorff(const b: TRange): Integer;
+function Equal(const b: TRange): Boolean;
+function Equals(const b: TRange): Boolean;
+function Intersect(const b: TRange): TRange; overload;
+function Intersect(const b: TRange; var iZone: TRange): Boolean; overload; 
+function Neighbor(const b: TRange): Boolean;
+function Neighbour(const b: TRange): Boolean;
+function Overlap(const b: TRange): Boolean;
+function Overlapping(const b: TRange): Boolean;
+function Touch(const b: TRange): Boolean;
+function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
+function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
+function Union(const b: TRange): TRange; overload;
+function Union(const val: Integer): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -25,7 +25,7 @@ function Union(const val: Integer): TRange; overload; cdecl;
   @action: Checks if a unmatches b exactly.
   @note: 0..3 and 3..0 will NOT be treated as match.
 [==============================================================================}
-function TRange.Differ(const b: TRange): Boolean; cdecl;
+function TRange.Differ(const b: TRange): Boolean;
 begin
   Result := ((Self.start <> b.start) or (Self.stop <> b.stop));
 end;
@@ -35,7 +35,7 @@ end;
   @action: Checks if a unmatches b.
   @note: 0..3 and 3..0 will be treated as match.
 [==============================================================================}
-function TRange.Differs(const b: TRange): Boolean; cdecl;
+function TRange.Differs(const b: TRange): Boolean;
 begin
   Result := ((Min(Self.start, Self.stop) <> Min(b.start, b.stop)) or (Max(Self.start, Self.stop) <> Max(b.start, b.stop)));
 end;
@@ -45,7 +45,7 @@ end;
   @action: Returns minimum distance between ranges a and b.
   @note: If ranges overlap, distance is 0.
 [==============================================================================}
-function TRange.Distance(const b: TRange): Integer; overload; cdecl;
+function TRange.Distance(const b: TRange): Integer; overload;
 var
   r1, r2: TRange;
 begin
@@ -67,7 +67,7 @@ end;
   @note: Distance is exclusive of endpoints. Use this if you want the signed
          difference based on the range direction (negative if descending?).
 [==============================================================================}
-function TRange.Distance: Integer; overload; cdecl;
+function TRange.Distance: Integer; overload;
 begin
   if Self.Descending then
     Result := (Self.start - Self.stop)
@@ -80,7 +80,7 @@ end;
   @action: Returns Hausdorff-based distance between ranges a and b.
   @note: None.
 [==============================================================================}
-function TRange.DistHausdorff(const b: TRange): Integer; cdecl;
+function TRange.DistHausdorff(const b: TRange): Integer;
 var
   i, j: TRange;
 begin
@@ -94,7 +94,7 @@ end;
   @action: Checks if a matches b exactly.
   @note: 0..3 and 3..0 will NOT be treated as match.
 [==============================================================================}
-function TRange.Equal(const b: TRange): Boolean; cdecl;
+function TRange.Equal(const b: TRange): Boolean;
 begin
   Result := ((Self.start = b.start) and (Self.stop = b.stop));
 end;
@@ -104,7 +104,7 @@ end;
   @action: Checks if a matches b.
   @note: 0..3 and 3..0 will be treated as match.
 [==============================================================================}
-function TRange.Equals(const b: TRange): Boolean; cdecl;
+function TRange.Equals(const b: TRange): Boolean;
 begin
   Result := ((Min(Self.start, Self.stop) = Min(b.start, b.stop)) and (Max(Self.start, Self.stop) = Max(b.start, b.stop)));
 end;
@@ -114,7 +114,7 @@ end;
   @action: Returns intersection of a and b.
   @note: Returns null if there is no intersection for a and b.
 [==============================================================================}
-function TRange.Intersect(const b: TRange): TRange; overload; cdecl;
+function TRange.Intersect(const b: TRange): TRange; overload;
 var
   s, t: TRange;
 begin
@@ -129,7 +129,7 @@ end;
   @action: Returns true if of a and b contains intersection.
   @note: Stores intersection to variable, if Result is True.
 [==============================================================================}
-function TRange.Intersect(const b: TRange; var iZone: TRange): Boolean; overload; cdecl;
+function TRange.Intersect(const b: TRange; var iZone: TRange): Boolean; overload;
 var
   s, t: TRange;
   x, y: Integer;
@@ -148,7 +148,7 @@ end;
   @action: Returns true if 2 TRanges are right next to eachother.
   @note: (Distance is exactly 1 between em).
 [==============================================================================}
-function TRange.Neighbor(const b: TRange): Boolean; cdecl;
+function TRange.Neighbor(const b: TRange): Boolean;
 var
   i, j: TRange;
 begin
@@ -162,7 +162,7 @@ end;
   @action: Returns true if 2 TRanges are right next to eachother.
   @note: (Distance is exactly 1 between em).
 [==============================================================================}
-function TRange.Neighbour(const b: TRange): Boolean; cdecl;
+function TRange.Neighbour(const b: TRange): Boolean;
 begin
   Result := (((Max(Self.start, Self.stop) + 1) = Min(b.start, b.stop)) or ((Max(b.start, b.stop) + 1) = Min(Self.start, Self.stop)));
 end;
@@ -172,7 +172,7 @@ end;
   @action: Checks if a and b overlap eachother.
   @note: Returns true if overlap is found.
 [==============================================================================}
-function TRange.Overlapping(const b: TRange): Boolean; cdecl;
+function TRange.Overlapping(const b: TRange): Boolean;
 begin
   Result := ((Min(Self.start, Self.stop) <= Max(b.start, b.stop)) and (Min(b.start, b.stop) <= Max(Self.start, Self.stop)));
 end;
@@ -182,7 +182,7 @@ end;
   @action: Checks if a and b overlap eachother.
   @note: Returns true if overlap is found.
 [==============================================================================}
-function TRange.Overlap(const b: TRange): Boolean; cdecl;
+function TRange.Overlap(const b: TRange): Boolean;
 begin
   Result := not ((Min(Self.start, Self.stop) > Max(b.start, b.stop)) or (Min(b.start, b.stop) > Max(Self.start, Self.stop)));
 end;
@@ -192,7 +192,7 @@ end;
   @action: Returns true if range touches b.
   @note: Touch = only single value is shared between the ranges.
 [==============================================================================}
-function TRange.Touch(const b: TRange): Boolean; cdecl;
+function TRange.Touch(const b: TRange): Boolean;
 var
   l, h, r: TRange;
 begin
@@ -207,7 +207,7 @@ end;
   @action: Returns true if range touches b with minimum and maximum contact.
   @note: Touch = minimum/maximum shared values.
 [==============================================================================}
-function TRange.Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
+function TRange.Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
 var
   x, y: TRange;
   i, s: Integer;
@@ -227,7 +227,7 @@ end;
   @action: Returns true if range touches b with minimum and maximum contact.
   @note: Touch = minimum/maximum shared values.
 [==============================================================================}
-function TRange.Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; cdecl;
+function TRange.Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
 var
   x, y: TRange;
   s, i: Integer;
@@ -247,7 +247,7 @@ end;
   @action: Returns union of ranges a and b.
   @note: None.
 [==============================================================================}
-function TRange.Union(const b: TRange): TRange; overload; cdecl;
+function TRange.Union(const b: TRange): TRange; overload;
 begin
   Result.start := Min(Min(Self.start, Self.stop), Min(b.start, b.stop));
   Result.stop := Max(Max(Self.start, Self.stop), Max(b.start, b.stop));
@@ -258,7 +258,7 @@ end;
   @action: Returns union of range and val.
   @note: None.
 [==============================================================================}
-function TRange.Union(const val: Integer): TRange; overload; cdecl;
+function TRange.Union(const val: Integer): TRange; overload;
 begin
   Result := Self;
   case Self.Descending of

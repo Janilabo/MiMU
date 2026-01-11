@@ -1,25 +1,25 @@
 {$IFDEF HELPERS}
-function Add(const item: MType; const duplicates: Boolean = True): MArray; overload; cdecl;
-function Add(const items: MArray; const duplicates: Boolean = True): MArray; overload; cdecl;
-function Append(const item: MType; const duplicates: Boolean = True): MArray; overload; cdecl;
-function Append(const items: MArray; const duplicates: Boolean = True): MArray; overload; cdecl;
-function Blit(const items: MArray; const index: Integer = 0): Integer; overload; cdecl;
-function Emplace(const item: MType; const index: Integer = 0): Integer; overload; cdecl;
-function Extend(const item: MType): MArray; overload; cdecl;
-function Extend(const items: MArray): MArray; overload; cdecl;
-function Feed(const item: MType; const allowDuplicates: Boolean = False): Integer; overload; cdecl;
-function Grow(const item: MType; const allowDuplicates: Boolean = False): Integer; overload; cdecl;
-function Inject(const items: MArray; const index: Integer = 2147483647): Integer; overload; cdecl;
-function Prepend(const items: MArray; const index: Integer = 0): Integer; overload; cdecl;
-function Push(const item: MType): MArray; overload; cdecl;
-function Push(const items: MArray): MArray; overload; cdecl;
-function Put(const ID: TIntegerArray; const item: MType): MArray; overload; cdecl;
-function Put(const ID: TIntegerArray; const items: MArray): MArray; overload; cdecl;
-function Put(const index: Integer; const items: MArray): MArray; overload; cdecl;
-function Supply(const item: MType): Integer; overload; cdecl;
-function Supply(const items: MArray): Integer; overload; cdecl;
-function Unshift(const item: MType): MArray; overload; cdecl;
-function Unshift(const items: MArray): MArray; overload; cdecl;
+function Add(const item: MType; const duplicates: Boolean = True): MArray; overload;
+function Add(const items: MArray; const duplicates: Boolean = True): MArray; overload;
+function Append(const item: MType; const duplicates: Boolean = True): MArray; overload;
+function Append(const items: MArray; const duplicates: Boolean = True): MArray; overload;
+function Blit(const items: MArray; const index: Integer = 0): Integer; overload;
+function Emplace(const item: MType; const index: Integer = 0): Integer; overload;
+function Extend(const item: MType): MArray; overload;
+function Extend(const items: MArray): MArray; overload;
+function Feed(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
+function Grow(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
+function Inject(const items: MArray; const index: Integer = 2147483647): Integer; overload;
+function Prepend(const items: MArray; const index: Integer = 0): Integer; overload;
+function Push(const item: MType): MArray; overload;
+function Push(const items: MArray): MArray; overload;
+function Put(const ID: TIntegerArray; const item: MType): MArray; overload;
+function Put(const ID: TIntegerArray; const items: MArray): MArray; overload;
+function Put(const index: Integer; const items: MArray): MArray; overload;
+function Supply(const item: MType): Integer; overload;
+function Supply(const items: MArray): Integer; overload;
+function Unshift(const item: MType): MArray; overload;
+function Unshift(const items: MArray): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -28,7 +28,7 @@ function Unshift(const items: MArray): MArray; overload; cdecl;
   @action: Appends arr with item. Returns the array with added item.
   @note: Adds item to the right side of the array.
 [==============================================================================}
-function MArrayHelper.Add(const item: MType; const duplicates: Boolean = True): MArray; overload; cdecl;
+function MArrayHelper.Add(const item: MType; const duplicates: Boolean = True): MArray; overload;
 var
   i, l: Integer;
 begin
@@ -47,7 +47,7 @@ end;
   @action: Appends arr with items. Returns the array with added items.
   @note: Adds item to the right side of the array.
 [==============================================================================}
-function MArrayHelper.Add(const items: MArray; const duplicates: Boolean = True): MArray; overload; cdecl;
+function MArrayHelper.Add(const items: MArray; const duplicates: Boolean = True): MArray; overload;
 var
   a, h, i, s: Integer;
 begin
@@ -79,7 +79,7 @@ end;
   @action: Appends arr with item. Returns the index of added item.
   @note: Adds item to the right side of the array.
 [==============================================================================}
-function MArrayHelper.Append(const item: MType; const duplicates: Boolean = True): MArray; overload; cdecl;
+function MArrayHelper.Append(const item: MType; const duplicates: Boolean = True): MArray; overload;
 begin
   Result := Self.Copy;
   if ((not duplicates) and Self.Contains(item)) then
@@ -93,7 +93,7 @@ end;
   @action: Adds all items items to arr.
   @note: Returns the highest index in the end.
 [==============================================================================}
-function MArrayHelper.Append(const items: MArray; const duplicates: Boolean = True): MArray; overload; cdecl;
+function MArrayHelper.Append(const items: MArray; const duplicates: Boolean = True): MArray; overload;
 var
   a, h, i: Integer;
 begin
@@ -122,7 +122,7 @@ end;
   @action: Simply puts items to array index, fast.
   @note: No safety checks. Make sure buffer is enough!
 [==============================================================================}
-function MArrayHelper.Blit(const items: MArray; const index: Integer = 0): Integer; overload; cdecl;
+function MArrayHelper.Blit(const items: MArray; const index: Integer = 0): Integer; overload;
 var
   i: Integer;
 begin
@@ -136,7 +136,7 @@ end;
   @action: Inserts item to index in arr. Returns the index it was inserted to.
   @note: Alternative for Insert().
 [==============================================================================}
-function MArrayHelper.Emplace(const item: MType; const index: Integer = 0): Integer; overload; cdecl;
+function MArrayHelper.Emplace(const item: MType; const index: Integer = 0): Integer; overload;
 var
   i: Integer;
 begin
@@ -152,7 +152,7 @@ end;
   @action: Extends arr with item. Returns it.
   @note: Places item to the left side of the array.
 [==============================================================================}
-function MArrayHelper.Extend(const item: MType): MArray; overload; cdecl;
+function MArrayHelper.Extend(const item: MType): MArray; overload;
 var
   i, h: Integer;
 begin
@@ -168,7 +168,7 @@ end;
   @action: Extends arr with items. Returns it.
   @note: Places items to the left side of the array.
 [==============================================================================}
-function MArrayHelper.Extend(const items: MArray): MArray; overload; cdecl;
+function MArrayHelper.Extend(const items: MArray): MArray; overload;
 var
   i, h, l: Integer;
 begin
@@ -186,7 +186,7 @@ end;
   @action: Feeds item to array and returns the index position it was added to.
   @note: Returns -1 if duplicates are not allowed and array already includes item.
 [==============================================================================}
-function MArrayHelper.Feed(const item: MType; const allowDuplicates: Boolean = False): Integer; overload; cdecl;
+function MArrayHelper.Feed(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
 begin
   if ((not allowDuplicates) and Self.Includes(item)) then
     Exit(-1);
@@ -200,7 +200,7 @@ end;
   @action: Feeds item to array and returns the index position it was added to.
   @note: Returns -1 if duplicates are not allowed and array already contains item.
 [==============================================================================}
-function MArrayHelper.Grow(const item: MType; const allowDuplicates: Boolean = False): Integer; overload; cdecl;
+function MArrayHelper.Grow(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
 begin
   if ((not allowDuplicates) and Self.Contains(item)) then
     Exit(-1);
@@ -219,7 +219,7 @@ end;
          Passing an empty array leaves the original array unchanged.
          Returns the new total number of elements after insertion.
 [==============================================================================}
-function MArrayHelper.Inject(const items: MArray; const index: Integer = 2147483647): Integer; overload; cdecl;
+function MArrayHelper.Inject(const items: MArray; const index: Integer = 2147483647): Integer; overload;
 var
   i, s, l, p: Integer;
 begin
@@ -244,7 +244,7 @@ end;
          If the index exceeds the array length, the items are appended.
          Returns the new total number of elements after insertion.
 [==============================================================================}
-function MArrayHelper.Prepend(const items: MArray; const index: Integer = 0): Integer; overload; cdecl;
+function MArrayHelper.Prepend(const items: MArray; const index: Integer = 0): Integer; overload;
 var
   i: Integer;
 begin
@@ -258,7 +258,7 @@ end;
   @action: Places item in array with arr.
   @note: Returns array (arr+item) length.
 [==============================================================================}
-function MArrayHelper.Push(const item: MType): MArray; overload; cdecl;
+function MArrayHelper.Push(const item: MType): MArray; overload;
 var
   i, l: Integer;
 begin
@@ -274,7 +274,7 @@ end;
   @action: Places items in array with arr.
   @note: Returns array (arr+item) length.
 [==============================================================================}
-function MArrayHelper.Push(const items: MArray): MArray; overload; cdecl;
+function MArrayHelper.Push(const items: MArray): MArray; overload;
 var
   h, i, l: Integer;
 begin
@@ -292,7 +292,7 @@ end;
   @action: Returns array arr filled with item to indexes (ID).
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function MArrayHelper.Put(const ID: TIntegerArray; const item: MType): MArray; overload; cdecl;
+function MArrayHelper.Put(const ID: TIntegerArray; const item: MType): MArray; overload;
 var
   i: Integer;
 begin
@@ -308,7 +308,7 @@ end;
   @action: Returns array arr filled with items to indexes (ID).
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function MArrayHelper.Put(const ID: TIntegerArray; const items: MArray): MArray; overload; cdecl;
+function MArrayHelper.Put(const ID: TIntegerArray; const items: MArray): MArray; overload;
 var
   i, l: Integer;
 begin
@@ -325,7 +325,7 @@ end;
   @action: Returns array arr filled with items to starting from custom start index.
   @note: Unsafe method! No safety checking.
 [==============================================================================}
-function MArrayHelper.Put(const index: Integer; const items: MArray): MArray; overload; cdecl;
+function MArrayHelper.Put(const index: Integer; const items: MArray): MArray; overload;
 var
   i: Integer;
 begin
@@ -341,7 +341,7 @@ end;
   @action: Adds item to the end of the array.
   @note: Returns the index where item was inserted.
 [==============================================================================}
-function MArrayHelper.Supply(const item: MType): Integer; overload; cdecl;
+function MArrayHelper.Supply(const item: MType): Integer; overload;
 begin
   Result := Self.Size;
   SetLength(Self, (Result + 1));
@@ -353,7 +353,7 @@ end;
   @action: Adds items to the end of the array.
   @note: Returns the index where items were inserted.
 [==============================================================================}
-function MArrayHelper.Supply(const items: MArray): Integer; overload; cdecl;
+function MArrayHelper.Supply(const items: MArray): Integer; overload;
 var
   i: Integer;
 begin
@@ -370,7 +370,7 @@ end;
   @action: Grows arr with item.
   @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
-function MArrayHelper.Unshift(const item: MType): MArray; overload; cdecl;
+function MArrayHelper.Unshift(const item: MType): MArray; overload;
 var
   i, l: Integer;
 begin
@@ -386,7 +386,7 @@ end;
   @action: Grows arr with items. Returns the index of last added item.
   @note: Adds item to the left side of the array. (Opposite to TArray_Append!
 [==============================================================================}
-function MArrayHelper.Unshift(const items: MArray): MArray; overload; cdecl;
+function MArrayHelper.Unshift(const items: MArray): MArray; overload;
 var
   l, i, r: Integer;
 begin

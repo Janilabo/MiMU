@@ -1,24 +1,24 @@
 {$IFDEF HELPERS}
-function Lowest: MType; overload; cdecl;
-function Highest: MType; overload; cdecl;
-function Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
-function Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload; cdecl;
-function Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
-function Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload; cdecl;
-function MinItem: MType; overload; cdecl;
-function MinItem(const null: MType): MType; overload; cdecl;
-function MaxItem: MType; overload; cdecl;
-function MaxItem(const null: MType): MType; overload; cdecl;
-function Minimum(var index: Integer): MType; overload; cdecl;
-function Minimum: MType; overload; cdecl;
-function Maximum(var index: Integer): MType; overload; cdecl;
-function Maximum: MType; overload; cdecl;
-function Minim(var index: Integer): MType; overload; cdecl;
-function Minim: MType; overload; cdecl;
-function Maxim(var index: Integer): MType; overload; cdecl;
-function Maxim: MType; overload; cdecl;
-function Peaks: TIntegerArray; overload; cdecl;
-function Valleys: TIntegerArray; overload; cdecl;
+function Lowest: MType; overload;
+function Highest: MType; overload;
+function Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
+function Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload;
+function Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
+function Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload;
+function MinItem: MType; overload;
+function MinItem(const null: MType): MType; overload;
+function MaxItem: MType; overload;
+function MaxItem(const null: MType): MType; overload;
+function Minimum(var index: Integer): MType; overload;
+function Minimum: MType; overload;
+function Maximum(var index: Integer): MType; overload;
+function Maximum: MType; overload;
+function Minim(var index: Integer): MType; overload;
+function Minim: MType; overload;
+function Maxim(var index: Integer): MType; overload;
+function Maxim: MType; overload;
+function Peaks: TIntegerArray; overload;
+function Valleys: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -27,7 +27,7 @@ function Valleys: TIntegerArray; overload; cdecl;
   @action: Returns array minimum value.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Lowest: MType; overload; cdecl;
+function MArrayHelper.Lowest: MType; overload;
 var
   i: Integer;
 begin
@@ -43,7 +43,7 @@ end;
   @action: Returns array maximum value.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Highest: MType; overload; cdecl;
+function MArrayHelper.Highest: MType; overload;
 var
   i: Integer;
 begin
@@ -59,7 +59,7 @@ end;
   @action: Returns array INDEX with minimum value.
   @note: Supports reversed order (last min index) with aAscending as False.
 [==============================================================================}
-function MArrayHelper.Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
+function MArrayHelper.Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
 var
   h, i: Integer;
 begin
@@ -84,7 +84,7 @@ begin
   end;
 end;
 
-function MArrayHelper.Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload;
 begin
   Result := Self.Mini(aAscending, start);
 end;
@@ -94,7 +94,7 @@ end;
   @action: Returns array INDEX with maximum value.
   @note: Supports reversed order (last max index) with aAscending as False.
 [==============================================================================}
-function MArrayHelper.Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload; cdecl;
+function MArrayHelper.Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
 var
   h, i: Integer;
 begin
@@ -119,7 +119,7 @@ begin
   end;
 end;
 
-function MArrayHelper.Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.Maxi(const start: Integer; const aAscending: Boolean = True): Integer; overload;
 begin
   Result := Self.Maxi(aAscending, start);
 end;
@@ -129,7 +129,7 @@ end;
   @action: Returns minimum item from arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.MinItem: MType; overload; cdecl;
+function MArrayHelper.MinItem: MType; overload;
 var
   i: Integer;
 begin
@@ -144,7 +144,7 @@ end;
   @action: Returns minimum item from arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.MinItem(const null: MType): MType; overload; cdecl;
+function MArrayHelper.MinItem(const null: MType): MType; overload;
 var
   i: Integer;
 begin
@@ -160,7 +160,7 @@ end;
   @action: Returns maximum item from arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.MaxItem: MType; overload; cdecl;
+function MArrayHelper.MaxItem: MType; overload;
 var
   i: Integer;
 begin
@@ -175,7 +175,7 @@ end;
   @action: Returns maximum item from arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.MaxItem(const null: MType): MType; overload; cdecl;
+function MArrayHelper.MaxItem(const null: MType): MType; overload;
 var
   i: Integer;
 begin
@@ -191,7 +191,7 @@ end;
   @action: Returns minimum value from arr and stores index to Integer variable.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Minimum(var index: Integer): MType; overload; cdecl;
+function MArrayHelper.Minimum(var index: Integer): MType; overload;
 var
   i: Integer;
 begin
@@ -211,7 +211,7 @@ end;
   @action: Returns minimum value from arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Minimum: MType; overload; cdecl;
+function MArrayHelper.Minimum: MType; overload;
 var
   i: Integer;
 begin
@@ -223,7 +223,7 @@ end;
   @action: Returns maximum value from arr and stores index to Integer variable.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Maximum(var index: Integer): MType; overload; cdecl;
+function MArrayHelper.Maximum(var index: Integer): MType; overload;
 var
   i: Integer;
 begin
@@ -243,7 +243,7 @@ end;
   @action: Returns maximum value from arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Maximum: MType; overload; cdecl;
+function MArrayHelper.Maximum: MType; overload;
 var
   i: Integer;
 begin
@@ -255,7 +255,7 @@ end;
   @action: Returns minimum value from arr and stores index to Integer variable.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Minim(var index: Integer): MType; overload; cdecl;
+function MArrayHelper.Minim(var index: Integer): MType; overload;
 var
   i: Integer;
 begin
@@ -272,7 +272,7 @@ end;
   @action: Returns minimum value from arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Minim: MType; overload; cdecl;
+function MArrayHelper.Minim: MType; overload;
 var
   i: Integer;
 begin
@@ -284,7 +284,7 @@ end;
   @action: Returns maximum value from arr and stores index to Integer variable.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Maxim(var index: Integer): MType; overload; cdecl;
+function MArrayHelper.Maxim(var index: Integer): MType; overload;
 var
   i: Integer;
 begin
@@ -301,7 +301,7 @@ end;
   @action: Returns maximum value from arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Maxim: MType; overload; cdecl;
+function MArrayHelper.Maxim: MType; overload;
 var
   i: Integer;
 begin
@@ -316,7 +316,7 @@ end;
          they satisfy the one-sided comparison. The result array is sized
          exactly to the number of detected peaks.
 [==============================================================================}
-function MArrayHelper.Peaks: TIntegerArray; overload; cdecl;
+function MArrayHelper.Peaks: TIntegerArray; overload;
 var
   h, l, i: Integer;
 begin
@@ -343,7 +343,7 @@ end;
          they satisfy the one-sided comparison. The result array is sized
          exactly to the number of detected valleys.
 [==============================================================================}
-function MArrayHelper.Valleys: TIntegerArray; overload; cdecl;
+function MArrayHelper.Valleys: TIntegerArray; overload;
 var
   h, l, i: Integer;
 begin

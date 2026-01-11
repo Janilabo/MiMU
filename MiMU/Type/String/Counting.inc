@@ -1,14 +1,14 @@
 {$IFDEF HELPERS}
-function Amount(const s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer; cdecl;
-function AmountOf(const item: Char): Integer; overload; cdecl;
-function Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer; cdecl;
-function CountedIn(const target: string; const overlap: Boolean = True): Integer; overload; cdecl;
-function CountIn(const target: string): Integer; overload; cdecl;
-function CountOf(const item: Char): Integer; overload; cdecl;
-function CountTokens(const items: TStringArray): Integer; overload; cdecl;
-function Occurrences(const item: Char): Integer; overload; cdecl;
-function Occurs(const item: Char): Integer; overload; cdecl;
-function TokensCount(const items: TStringArray): Integer; overload; cdecl;
+function Amount(const s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer;
+function AmountOf(const item: Char): Integer; overload;
+function Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer;
+function CountedIn(const target: string; const overlap: Boolean = True): Integer; overload;
+function CountIn(const target: string): Integer; overload;
+function CountOf(const item: Char): Integer; overload;
+function CountTokens(const items: TStringArray): Integer; overload;
+function Occurrences(const item: Char): Integer; overload;
+function Occurs(const item: Char): Integer; overload;
+function TokensCount(const items: TStringArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,7 +17,7 @@ function TokensCount(const items: TStringArray): Integer; overload; cdecl;
   @action: Simply returns the amount of s in str.
   @note: Contains support for overlapping (overlap)
 [==============================================================================}
-function TStringHelper.Amount(const s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer; cdecl;
+function TStringHelper.Amount(const s: string; const overlap: Boolean = True; const index: Integer = 2147483647): Integer;
 var
   p, o: Integer;
   c: string;
@@ -38,7 +38,7 @@ end;
   @action: Returns how many times the specified character appears in the string.
   @note: Equivalent to CountOf but expressed with repeat/until iteration.
 [==============================================================================}
-function TStringHelper.AmountOf(const item: Char): Integer; overload; cdecl;
+function TStringHelper.AmountOf(const item: Char): Integer; overload;
 var
   P, E: PChar;
 begin
@@ -62,7 +62,7 @@ end;
          uses a naive O(n*m) substring search algorithm, where n = Length(target)
          and m = Length(Self), so it may be inefficient for long strings.
 [==============================================================================}
-function TStringHelper.Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer; cdecl;
+function TStringHelper.Count(const s: string; const overlap: Boolean = True; const index: Integer = 1): Integer;
 var
   p, o: Integer;
   c: string;
@@ -92,7 +92,7 @@ end;
           m = Length(Self)); may be inefficient for long strings.
         - If Self is empty or longer than target, the result is 0.
 [==============================================================================}
-function TStringHelper.CountedIn(const target: string; const overlap: Boolean = True): Integer; overload; cdecl;
+function TStringHelper.CountedIn(const target: string; const overlap: Boolean = True): Integer; overload;
 var
   i, j, l, s, o: Integer;
 begin
@@ -125,7 +125,7 @@ end;
          uses a naive O(n*m) substring search algorithm, where n = Length(target)
          and m = Length(Self), so it may be inefficient for long strings.
 [==============================================================================}
-function TStringHelper.CountIn(const target: string): Integer; overload; cdecl;
+function TStringHelper.CountIn(const target: string): Integer; overload;
 var
   i, j, l: Integer;
 begin
@@ -145,7 +145,7 @@ end;
   @action: Returns the number of occurrences of the specified character.
   @note: Performs a straightforward linear scan. Suitable for general use.
 [==============================================================================}
-function TStringHelper.CountOf(const item: Char): Integer; overload; cdecl;
+function TStringHelper.CountOf(const item: Char): Integer; overload;
 var
   P, E: PChar;
 begin
@@ -171,7 +171,7 @@ end;
       double-counting (e.g., #13#10 before #13 and #10).
     - Returns 0 if the string is empty or no tokens match.
 [==============================================================================}
-function TStringHelper.CountTokens(const items: TStringArray): Integer; overload; cdecl;
+function TStringHelper.CountTokens(const items: TStringArray): Integer; overload;
 label
   ContinueScan;
 var
@@ -202,7 +202,7 @@ end;
   @action: Returns the number of occurrences of the specified character.
   @note: Optimized approach using loop unrolling for improved performance.
 [==============================================================================}
-function TStringHelper.Occurrences(const item: Char): Integer; overload; cdecl;
+function TStringHelper.Occurrences(const item: Char): Integer; overload;
 var
   P, E: PChar;
 begin
@@ -227,7 +227,7 @@ end;
   @action: Counts occurrences of the specified character using indexed access.
   @note: Uses 1-based string indexing; clear and simple but slightly slower.
 [==============================================================================}
-function TStringHelper.Occurs(const item: Char): Integer; overload; cdecl;
+function TStringHelper.Occurs(const item: Char): Integer; overload;
 var
   i: Integer;
 begin
@@ -253,7 +253,7 @@ end;
     - Matches are non-overlapping; once a token is matched, shorter tokens
       starting at the same position are ignored.
 [==============================================================================}
-function TStringHelper.TokensCount(const items: TStringArray): Integer; overload; cdecl;
+function TStringHelper.TokensCount(const items: TStringArray): Integer; overload;
 var
   i, j, l, s: Integer;
   m: Boolean;

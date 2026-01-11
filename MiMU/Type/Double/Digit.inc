@@ -1,8 +1,8 @@
 {$IFDEF HELPERS}
-function Accuracy(const a: Integer): Double; cdecl;
-function Digits: TIntegerArray; cdecl;
-function MaxDecimal: Double; cdecl;
-function MinDecimal: Double; cdecl;
+function Accuracy(const a: Integer): Double;
+function Digits: TIntegerArray;
+function MaxDecimal: Double;
+function MinDecimal: Double;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -13,7 +13,7 @@ function MinDecimal: Double; cdecl;
            123   123.4   123.45   123.456   123.4567   123.45678
   @note: None
 [==============================================================================}
-function TDoubleHelper.Accuracy(const a: Integer): Double; cdecl;
+function TDoubleHelper.Accuracy(const a: Integer): Double;
 var
   d: Double;
   z: Boolean;
@@ -36,7 +36,7 @@ end;
            Example: 1234 => 1,2,3,4, -999 => 9,9,9
   @note: If x is negative value, the negative sign is ignored. 
 [==============================================================================}
-function TDoubleHelper.Digits: TIntegerArray; cdecl;
+function TDoubleHelper.Digits: TIntegerArray;
 var
   s: string;
   l, i: Integer;
@@ -54,7 +54,7 @@ end;
            0.12345 => 0.99999
   @note: None
 [==============================================================================}
-function TDoubleHelper.MaxDecimal: Double; cdecl;
+function TDoubleHelper.MaxDecimal: Double;
 var
   d: Double;
 begin
@@ -74,7 +74,7 @@ end;
            0.12345 => 0.00001
   @note: None
 [==============================================================================}
-function TDoubleHelper.MinDecimal: Double; cdecl;
+function TDoubleHelper.MinDecimal: Double;
 var
   d: Double;
 begin

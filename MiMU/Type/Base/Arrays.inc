@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload; cdecl;
-function TArray(const aSize: Integer = 1): MArray; overload; cdecl;
+function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload;
+function TArray(const aSize: Integer = 1): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function TArray(const aSize: Integer = 1): MArray; overload; cdecl;
  @action: Creates 2D array with Self.
  @note: None.
 [==============================================================================}
-function MTypeHelper.T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload; cdecl;
+function MTypeHelper.T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload;
 var
   i, j: Integer;
 begin
@@ -27,7 +27,7 @@ end;
  @action: Creates TArray with Self.
  @note: aSize will be Length of the created array.
 [==============================================================================}
-function MTypeHelper.TArray(const aSize: Integer = 1): MArray; overload; cdecl;
+function MTypeHelper.TArray(const aSize: Integer = 1): MArray; overload;
 var
   i: Integer;
 begin

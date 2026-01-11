@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
-function Trim(const t: Char = #32): string; cdecl;
-function TrimLeft(const t: Char = #32): string; cdecl;
-function TrimRight(const t: Char = #32): string; cdecl;
+function Trim(const t: Char = #32): string;
+function TrimLeft(const t: Char = #32): string;
+function TrimRight(const t: Char = #32): string;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -10,7 +10,7 @@ function TrimRight(const t: Char = #32): string; cdecl;
   @action: Returns str with left-side and right-side trimmed/cleaned of t.
   @note: None
 [==============================================================================}
-function TStringHelper.Trim(const t: Char = #32): string; cdecl;
+function TStringHelper.Trim(const t: Char = #32): string;
 var
   i, l, x, y: Integer;
 begin
@@ -45,7 +45,7 @@ end;
   @action: Returns str with left-side trimmed/cleaned of t.
   @note: None
 [==============================================================================}
-function TStringHelper.TrimLeft(const t: Char = #32): string; cdecl;
+function TStringHelper.TrimLeft(const t: Char = #32): string;
 var
   i, l: Integer;
 begin
@@ -61,7 +61,7 @@ end;
   @action: Returns str with right-side trimmed/cleaned of t.
   @note: None
 [==============================================================================}
-function TStringHelper.TrimRight(const t: Char = #32): string; cdecl;
+function TStringHelper.TrimRight(const t: Char = #32): string;
 var
   i, l: Integer;
 begin

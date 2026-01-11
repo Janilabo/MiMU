@@ -4,11 +4,11 @@
 
 {$IFDEF CLASSES}
 {$IFDEF T1D}
-class function Create(const item: MType; const aSize: Integer = 1): MArray; overload; cdecl;
+class function Create(const item: MType; const aSize: Integer = 1): MArray; overload;
 {$ENDIF}
 
 {$IF DEFINED(TBS) AND DEFINED(Sortable)}
-class function Search(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload; cdecl;
+class function Search(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload;
 {$ENDIF}
 {$ENDIF}
 
@@ -16,7 +16,7 @@ class function Search(const arr: MArray; const item: MType; const ascending: Boo
 {$I Base.pph}
 
 {$IFDEF Sortable}
-class function TBinarySearch.Search(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload; cdecl;
+class function TBinarySearch.Search(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload;
 var
   L, R, M: Integer;
 begin
@@ -41,7 +41,7 @@ end;
   @action: Creates array with item where size is length of the array.
   @note: item is placed on every index in result.
 [==============================================================================}
-class function T1D.Create(const item: MType; const aSize: Integer = 1): MArray; overload; cdecl;
+class function T1D.Create(const item: MType; const aSize: Integer = 1): MArray; overload;
 var
   i: Integer;
 begin

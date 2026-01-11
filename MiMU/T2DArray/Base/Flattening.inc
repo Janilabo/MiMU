@@ -1,12 +1,12 @@
 {$IFDEF HELPERS}
-function Flat: MArray; overload; cdecl;
-function Flatten: MArray; overload; cdecl;
-function Linearize: MArray; overload; cdecl;
-function Merge: MArray; overload; cdecl;
-function Merged: MArray; overload; cdecl;
-function TArray: MArray; overload; cdecl;
-function To1D: MArray; overload; cdecl;
-function Unwrap: MArray; overload; cdecl;
+function Flat: MArray; overload;
+function Flatten: MArray; overload;
+function Linearize: MArray; overload;
+function Merge: MArray; overload;
+function Merged: MArray; overload;
+function TArray: MArray; overload;
+function To1D: MArray; overload;
+function Unwrap: MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +15,7 @@ function Unwrap: MArray; overload; cdecl;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function M2DArrayHelper.Flat: MArray; overload; cdecl;
+function M2DArrayHelper.Flat: MArray; overload;
 var
   i: Integer;
 begin
@@ -29,7 +29,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function M2DArrayHelper.Flatten: MArray; overload; cdecl;
+function M2DArrayHelper.Flatten: MArray; overload;
 var
   i, j, l: Integer;
 begin
@@ -45,7 +45,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function M2DArrayHelper.Linearize: MArray; overload; cdecl;
+function M2DArrayHelper.Linearize: MArray; overload;
 var
   i: Integer;
 begin
@@ -59,7 +59,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function M2DArrayHelper.Merge: MArray; overload; cdecl;
+function M2DArrayHelper.Merge: MArray; overload;
 var
   i, j, l: Integer;
 begin
@@ -76,7 +76,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function M2DArrayHelper.Merged: MArray; overload; cdecl;
+function M2DArrayHelper.Merged: MArray; overload;
 var
   i, j, o, s: Integer;
 begin
@@ -100,7 +100,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function M2DArrayHelper.TArray: MArray; overload; cdecl;
+function M2DArrayHelper.TArray: MArray; overload;
 var
   i, j, l: Integer;
 begin
@@ -119,7 +119,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function M2DArrayHelper.To1D: MArray; overload; cdecl;
+function M2DArrayHelper.To1D: MArray; overload;
 var
   i, j, r: Integer;
   l: specialize TList<MType>;
@@ -142,7 +142,7 @@ end;
   @action: Merges 2D array to 1D.
   @note: For example [[1,2],[],[3,4,5],[],[],[6],[7,8],[],[9]] => [1,2,3,4,5,6,7,8,9].
 [==============================================================================}
-function M2DArrayHelper.Unwrap: MArray; overload; cdecl;
+function M2DArrayHelper.Unwrap: MArray; overload;
 var
   i, j: Integer;
 begin

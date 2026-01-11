@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
-function BubbleSort(const aAscending: Boolean = True): Integer; overload; cdecl;
-function BubbleSort2(const aAscending: Boolean = True): Integer; overload; cdecl;
-function BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
+function BubbleSort(const aAscending: Boolean = True): Integer; overload;
+function BubbleSort2(const aAscending: Boolean = True): Integer; overload;
+function BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -10,7 +10,7 @@ function BubbleSortOptimized(const aAscending: Boolean = True): Integer; overloa
   @action: Sorts arr with BubbleSort algorithm
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
-function MArrayHelper.BubbleSort(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.BubbleSort(const aAscending: Boolean = True): Integer; overload;
 var
   i, j: Integer;
 begin
@@ -26,7 +26,7 @@ end;
   @action: Sorts arr with BubbleSort algorithm - contains some optimization.
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
-function MArrayHelper.BubbleSort2(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.BubbleSort2(const aAscending: Boolean = True): Integer; overload;
 var
   a, b, o: Integer;
 begin
@@ -46,7 +46,7 @@ end;
   @action: Sorts arr with optimized BubbleSort algorithm
   @note: Supports sorting to aAscending and descending order. Returns High(arr)!
 [==============================================================================}
-function MArrayHelper.BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload; cdecl;
+function MArrayHelper.BubbleSortOptimized(const aAscending: Boolean = True): Integer; overload;
 var
   i, j: Integer;
   s: Boolean;

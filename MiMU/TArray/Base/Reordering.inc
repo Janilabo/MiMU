@@ -1,14 +1,14 @@
 {$IFDEF HELPERS}
-function Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
-function Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
-function Exchange(var b: MArray): Integer; overload; cdecl;
-function Exchange(const swaps: TConnectionArray): MArray; overload; cdecl;
-function Exchanges(const target: MArray): TConnectionArray; overload; cdecl;
-function Movement(const moves: TConnectionArray): MArray; overload; cdecl;
-function Movements(const target: MArray): TConnectionArray; overload; cdecl;
-function Reposition(const oldIndex, newIndex: Integer): Boolean; overload; cdecl;
-function Swapped(var target: MArray): Integer; overload; cdecl;
-function Trade(var b: MArray): Integer; overload; cdecl;
+function Exch(const aIndex, bIndex: Integer): Boolean; overload;
+function Exchange(const aIndex, bIndex: Integer): Boolean; overload;
+function Exchange(var b: MArray): Integer; overload;
+function Exchange(const swaps: TConnectionArray): MArray; overload;
+function Exchanges(const target: MArray): TConnectionArray; overload;
+function Movement(const moves: TConnectionArray): MArray; overload;
+function Movements(const target: MArray): TConnectionArray; overload;
+function Reposition(const oldIndex, newIndex: Integer): Boolean; overload;
+function Swapped(var target: MArray): Integer; overload;
+function Trade(var b: MArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,7 +17,7 @@ function Trade(var b: MArray): Integer; overload; cdecl;
   @action: Fast version of Exchange().
   @note: Unsafe, no checking.
 [==============================================================================}
-function MArrayHelper.Exch(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
+function MArrayHelper.Exch(const aIndex, bIndex: Integer): Boolean; overload;
 var
   c: MType;
 begin
@@ -32,7 +32,7 @@ end;
   @action: Swap items aIndex and bIndex in array arr.
   @note: Returns true with success.
 [==============================================================================}
-function MArrayHelper.Exchange(const aIndex, bIndex: Integer): Boolean; overload; cdecl;
+function MArrayHelper.Exchange(const aIndex, bIndex: Integer): Boolean; overload;
 var
   c: MType;
   h: Integer;
@@ -52,7 +52,7 @@ end;
   @action: Swaps array arr and array b.
   @note: arr will be b and b will be arr.
 [==============================================================================}
-function MArrayHelper.Exchange(var b: MArray): Integer; overload; cdecl;
+function MArrayHelper.Exchange(var b: MArray): Integer; overload;
 var
   a: MArray;
 begin
@@ -73,7 +73,7 @@ end;
          - The input swap list must be compatible with the array length.
          - Commonly used to replay sorting animations or verify transformations.
 [==============================================================================}
-function MArrayHelper.Exchange(const swaps: TConnectionArray): MArray; overload; cdecl;
+function MArrayHelper.Exchange(const swaps: TConnectionArray): MArray; overload;
 var
   i: Integer;
 begin
@@ -92,7 +92,7 @@ end;
          - Ideal for sorting visualizations or swap-based replay systems.
          - All swaps are adjacent, producing stable step-by-step transitions.
 [==============================================================================}
-function MArrayHelper.Exchanges(const target: MArray): TConnectionArray; overload; cdecl;
+function MArrayHelper.Exchanges(const target: MArray): TConnectionArray; overload;
 var
   i, j: Integer;
   s: MArray;
@@ -122,7 +122,7 @@ end;
          - Movements preserve the array’s relative ordering behavior.
          - The input move set is assumed valid for the given array.
 [==============================================================================}
-function MArrayHelper.Movement(const moves: TConnectionArray): MArray; overload; cdecl;
+function MArrayHelper.Movement(const moves: TConnectionArray): MArray; overload;
 var
   t: MType;
   i, j, c: Integer;
@@ -157,7 +157,7 @@ end;
          - Can be reversed/applied using <arr.Movement>.
          - Useful for visualizing "element movement" sorting.
 [==============================================================================}
-function MArrayHelper.Movements(const target: MArray): TConnectionArray; overload; cdecl;
+function MArrayHelper.Movements(const target: MArray): TConnectionArray; overload;
 var
   t: MType;
   i, j, k: Integer;
@@ -193,7 +193,7 @@ end;
   @action: Moves item from oldIndex to newIndex in array arr.
   @note: Returns true with success.
 [==============================================================================}
-function MArrayHelper.Reposition(const oldIndex, newIndex: Integer): Boolean; overload; cdecl;
+function MArrayHelper.Reposition(const oldIndex, newIndex: Integer): Boolean; overload;
 var
   s: MType;
   h, i: Integer;
@@ -221,7 +221,7 @@ end;
   @note: The swap is O(1) because dynamic arrays are reference-counted.
          Returns Length(Self) + Length(target) after the swap.
 [==============================================================================}
-function MArrayHelper.Swapped(var target: MArray): Integer; overload; cdecl;
+function MArrayHelper.Swapped(var target: MArray): Integer; overload;
 var
   t: MArray;
 begin
@@ -236,7 +236,7 @@ end;
   @action: Swaps array arr and array b.
   @note: arr will be b and b will be arr.
 [==============================================================================}
-function MArrayHelper.Trade(var b: MArray): Integer; overload; cdecl;
+function MArrayHelper.Trade(var b: MArray): Integer; overload;
 var
   a: MArray;
 begin

@@ -1,13 +1,13 @@
 {$IFDEF METHODS}
-function Grab: TRange; cdecl;
-function MaxMin: TRange; overload; cdecl;
-function MinMax: TRange; overload; cdecl;
-function Norm: TRange; cdecl;
-function Normal: TRange; cdecl;
-function Normalize: TRange; cdecl;
-function Normalized: TRange; cdecl;
-function Normally: TRange; cdecl;
-function Normed: TRange; cdecl;
+function Grab: TRange;
+function MaxMin: TRange; overload;
+function MinMax: TRange; overload;
+function Norm: TRange;
+function Normal: TRange;
+function Normalize: TRange;
+function Normalized: TRange;
+function Normally: TRange;
+function Normed: TRange;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -16,7 +16,7 @@ function Normed: TRange; cdecl;
   @action: Returns TRange with range, swaps range.stop and range.start if they are in reversed order.
   @note: None.
 [==============================================================================}
-function TRange.Grab: TRange; cdecl;
+function TRange.Grab: TRange;
 begin
   Result := IfThen(Self.Descending, Result.Create(Self.stop, Self.start), Self);
 end;
@@ -26,7 +26,7 @@ end;
   @action: Returns a normalized descending version of the range, ensuring start >= stop.
   @note: If the current range is already descending, the function returns Self unchanged.
 [==============================================================================}
-function TRange.MaxMin: TRange; overload; cdecl;
+function TRange.MaxMin: TRange; overload;
 begin
   if (Self.start > Self.stop) then
     Exit(Self);
@@ -38,7 +38,7 @@ end;
   @action: Returns a normalized ascending version of the range, ensuring start <= stop.
   @note: If the current range is already ascending, the function returns Self unchanged.
 [==============================================================================}
-function TRange.MinMax: TRange; overload; cdecl;
+function TRange.MinMax: TRange; overload;
 begin
   if (Self.start < Self.stop) then
     Exit(Self);
@@ -50,7 +50,7 @@ end;
   @action: Using if-then comparison this function returns "normal" range.
   @note: None.
 [==============================================================================}
-function TRange.Norm: TRange; cdecl;
+function TRange.Norm: TRange;
 begin
   Result := IfThen((Self.start > Self.stop), Self.Reversed, Self);
 end;
@@ -60,7 +60,7 @@ end;
   @action: XOR-swap based.
   @note: None.
 [==============================================================================}
- function TRange.Normal: TRange; cdecl;
+ function TRange.Normal: TRange;
 begin
   Result := Self;
   if (Result.start <= Result.stop) then
@@ -75,7 +75,7 @@ end;
   @action: Using Min-Maxing this function returns "normal" range.
   @note: None.
 [==============================================================================}
-function TRange.Normalize: TRange; cdecl;
+function TRange.Normalize: TRange;
 begin
   Result.start := Min(Self.start, Self.stop);
   Result.stop := Max(Self.start, Self.stop);
@@ -86,7 +86,7 @@ end;
   @action: Using if-then comparison this function returns "normal" range.
   @note: None.
 [==============================================================================}
-function TRange.Normalized: TRange; cdecl;
+function TRange.Normalized: TRange;
 begin
   Result.start := ((Self.start + Self.stop) shr 1);
   Result.stop := (Abs(Self.start - Self.stop) shr 1);
@@ -98,7 +98,7 @@ end;
   @action: Ord-based.
   @note: None.
 [==============================================================================}
-function TRange.Normally: TRange; cdecl;
+function TRange.Normally: TRange;
 var
   a: TIntegerArray;
 begin
@@ -111,7 +111,7 @@ end;
   @action: Using if-then comparison this function returns "normal" range.
   @note: None.
 [==============================================================================}
-function TRange.Normed: TRange; cdecl;
+function TRange.Normed: TRange;
 begin
   Result.Create(IfThen((Self.start < Self.stop), Self.start, Self.stop), IfThen((Self.start < Self.stop), Self.stop, Self.start));
 end;

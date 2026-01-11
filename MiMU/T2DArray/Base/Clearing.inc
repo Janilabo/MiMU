@@ -1,11 +1,11 @@
 {$IFDEF HELPERS}
-function Destroy: Int64; overload; cdecl;
-function Free: Int64; overload; cdecl;
-function Kill: Integer; overload; cdecl;
-function Kill(const k2D: TIntegerArray): Int64; overload; cdecl;
-function Pull: M2DArray; overload; cdecl;
-function Recreate(const arrSize: Integer): Boolean; overload; cdecl;
-function Reset: Int64; overload; cdecl;
+function Destroy: Int64; overload;
+function Free: Int64; overload;
+function Kill: Integer; overload;
+function Kill(const k2D: TIntegerArray): Int64; overload;
+function Pull: M2DArray; overload;
+function Recreate(const arrSize: Integer): Boolean; overload;
+function Reset: Int64; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -14,7 +14,7 @@ function Reset: Int64; overload; cdecl;
   @action: Combination of Length(arr) + SetLength(arr, 0) for array indexes by k2D.
   @note: Completely wipes the array.
 [==============================================================================}
-function M2DArrayHelper.Destroy: Int64; overload; cdecl;
+function M2DArrayHelper.Destroy: Int64; overload;
 var
   i: Integer;
 begin
@@ -32,7 +32,7 @@ end;
   @action: Result := Length(Self) + SetLength(Self, 0) combo for 2D array
   @note: None.
 [==============================================================================}
-function M2DArrayHelper.Free: Int64; overload; cdecl;
+function M2DArrayHelper.Free: Int64; overload;
 var
   i: Integer;
 begin
@@ -47,7 +47,7 @@ end;
   @action: Combination of Length(arr) + SetLength(arr, 0).
   @note: Returns the length of main array (1st dimension)!
 [==============================================================================}
-function M2DArrayHelper.Kill: Integer; overload; cdecl;
+function M2DArrayHelper.Kill: Integer; overload;
 begin
   Result := Self.Length;
   SetLength(Self, 0);
@@ -60,7 +60,7 @@ end;
         Unsafe, simply goes through the given indexes, no safety checks!
 		Use with caution, correctly.
 [==============================================================================}
-function M2DArrayHelper.Kill(const k2D: TIntegerArray): Int64; overload; cdecl;
+function M2DArrayHelper.Kill(const k2D: TIntegerArray): Int64; overload;
 var
   i: Integer;
 begin
@@ -77,7 +77,7 @@ end;
   @action: Returns the contents of the array and leaves it empty.
   @note: After calling Pull, Self.Length = 0.
 [==============================================================================}
-function M2DArrayHelper.Pull: M2DArray; overload; cdecl;
+function M2DArrayHelper.Pull: M2DArray; overload;
 var
   i, j: Integer;
 begin
@@ -96,7 +96,7 @@ end;
   @action: Clear the array and reallocate to arrSize (negative = previous length).
   @note: Returns True if array was non-empty and/or arrSize <> 0.
 [==============================================================================}
-function M2DArrayHelper.Recreate(const arrSize: Integer): Boolean; overload; cdecl;
+function M2DArrayHelper.Recreate(const arrSize: Integer): Boolean; overload;
 var
   l: Integer;
 begin
@@ -115,7 +115,7 @@ end;
   @action: Resets all elements of the array to default values while preserving its structure.
   @note: Returns the number of elements that were reset.
 [==============================================================================}
-function M2DArrayHelper.Reset: Int64; overload; cdecl;
+function M2DArrayHelper.Reset: Int64; overload;
 var
   i: Integer;
 begin
