@@ -5,6 +5,8 @@ operator =(const a, b: TRange): Boolean;
 operator <>(const a, b: TRange): Boolean;
 
 operator in(const I: Integer; const R: TRange): Boolean;
+operator shl(const R: TRange; const N: Integer): TRange;
+operator shr(const R: TRange; const N: Integer): TRange;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -81,5 +83,27 @@ end;
 operator in(const I: Integer; const R: TRange): Boolean;
 begin
   Result := R.Contains(I);
+end;
+
+{==============================================================================]
+  <shl>
+  @action: Shrinks the range by dividing both bounds by 2^N.
+  @note: Scale Down
+[==============================================================================}
+operator shl(const R: TRange; const N: Integer): TRange;
+begin
+  Result.start := (R.start shr N);
+  Result.stop := (R.stop shr N);
+end;
+
+{==============================================================================]
+  <shr> 
+  @action: Expands the range by multiplying both bounds by 2^N.
+  @note: Scale Up
+[==============================================================================}
+operator shr(const R: TRange; const N: Integer): TRange;
+begin
+  Result.start := (R.start shl N);
+  Result.stop := (R.stop shl N);
 end;
 {$ENDIF}
