@@ -30,7 +30,7 @@ function BinarySeek(const x: Double; const aAscending: Boolean = True): Integer;
            or—if no exact match exists—the closest element whose absolute difference from the target does not exceed the specified tolerance.
   @note: This implementation evaluates all candidate positions encountered during the binary-search traversal and selects the closest qualifying value.
          It returns –1 when no element falls within the tolerance or when the array is empty or the tolerance is negative.
-[==============================================================================} 
+[==============================================================================}
 function TDoubleArrayHelper.BinaryApproximateSearch(const value: Double; const tolerance: Double; const oAscending: Boolean = True): Integer; overload;
 var
   H, D: Double;
@@ -83,9 +83,9 @@ end;
 {==============================================================================]
   <BinaryFind>
   @action: Performs a binary search on a sorted double array to locate a specific value.
-  @note:   The array must be sorted in either ascending or descending order, 
-           as specified by `aAscending`. If the value is found, its index is 
-           returned; otherwise, -1 is returned. This function assumes there are 
+  @note:   The array must be sorted in either ascending or descending order,
+           as specified by `aAscending`. If the value is found, its index is
+           returned; otherwise, -1 is returned. This function assumes there are
            no ignored or placeholder values in the array.
 [==============================================================================}
 function TDoubleArrayHelper.BinaryFind(const val: Double; const aAscending: Boolean): Integer; overload;
@@ -226,7 +226,7 @@ end;
   @action: Performs a binary search on the array to find the index of the specified value.
            Automatically detects whether the array is sorted in ascending or descending order.
            Returns the index of the value if found; otherwise returns -1.
-  @note:   The array must be monotonic (fully ascending or fully descending).  
+  @note:   The array must be monotonic (fully ascending or fully descending).
            If the array contains duplicates, the function returns an arbitrary occurrence.
            This method does not modify the array.
 [==============================================================================}

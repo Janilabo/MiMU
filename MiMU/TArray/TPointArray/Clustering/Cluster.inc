@@ -161,7 +161,7 @@ end;
 {==============================================================================]
   <Cluster>
   @action: Groups the points in the array into clusters based on a given distance threshold.
-  @note: Uses a grid-based breadth-first search (BFS) approach; points are added to a cluster 
+  @note: Uses a grid-based breadth-first search (BFS) approach; points are added to a cluster
          if their distance from any member is less than or equal to radius.
 		 Supports custom distance functions via distFunc (default is Euclidean).
 [==============================================================================}
@@ -245,8 +245,8 @@ end;
 {==============================================================================]
   <Cluster>
   @action: Groups points into clusters using separate X and Y distance limits.
-  @note: Clusters are formed within rectangular (axis-aligned) bounds where the 
-         absolute difference in X and Y coordinates does not exceed xRadius and yRadius. 
+  @note: Clusters are formed within rectangular (axis-aligned) bounds where the
+         absolute difference in X and Y coordinates does not exceed xRadius and yRadius.
          Faster than the distance-function version but not rotation invariant.
 [==============================================================================}
 function TPointArrayHelper.Cluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
@@ -581,7 +581,7 @@ end;
   @action: Splits TPointArray to groups by radius.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Clusterize(const radius: Double; const distFunc: TDistance): T2DPointArray; overload; 
+function TPointArrayHelper.Clusterize(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 var
   m, p: TIntegerArray;
   r, l, i, j: Integer;
@@ -646,7 +646,7 @@ end;
   @action: Splits TPointArray to groups by xRadius and yRadius.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Clusterize(const xRadius, yRadius: Integer): T2DPointArray; overload; 
+function TPointArrayHelper.Clusterize(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
   m, p: TIntegerArray;
   i, j, r, c: Integer;
@@ -877,7 +877,7 @@ end;
 {==============================================================================]
   <RCluster>
   @action: Groups points into rectangular clusters based on X/Y radius thresholds.
-  @note: Uses a grid-based flood-fill algorithm; points are considered connected 
+  @note: Uses a grid-based flood-fill algorithm; points are considered connected
          if their absolute X and Y distances are within (xRadius, yRadius).
 [==============================================================================}
 function TPointArrayHelper.RCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;

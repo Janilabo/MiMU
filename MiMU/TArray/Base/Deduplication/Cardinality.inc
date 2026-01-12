@@ -6,7 +6,7 @@ function Waste: Integer; overload;
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Distinct>
-  @action: Returns the number of unique elements in array 
+  @action: Returns the number of unique elements in array
   @note: None.
 [==============================================================================}
 function MArrayHelper.Distinct: Integer; overload;

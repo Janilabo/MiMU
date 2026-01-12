@@ -2,7 +2,7 @@
 
 {$IFDEF TYPES}
 C2DConnectionArray = class
-public 
+public
   {$UNDEF TYPES}{$DEFINE METHODS}{$I T2DConnectionArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}

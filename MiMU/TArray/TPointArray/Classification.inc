@@ -12,12 +12,12 @@ function YClassify(const pSorted: Boolean = False): T2DPointArray; overload;
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <CorePoints>
-  @action: Returns all points whose number of neighbours lies **within the 
-           inclusive range `allowedNeighbours`** for the given rectangular or 
+  @action: Returns all points whose number of neighbours lies **within the
+           inclusive range `allowedNeighbours`** for the given rectangular or
            metric radius.
-  @note: Generalized version of `CorePointsMin` and `CorePointsMax`. 
-         Supports both integer radii (grid-based) and floating-point radii 
-         with custom distance metrics. Automatically ignores points outside 
+  @note: Generalized version of `CorePointsMin` and `CorePointsMax`.
+         Supports both integer radii (grid-based) and floating-point radii
+         with custom distance metrics. Automatically ignores points outside
          the defined neighbour range.
 [==============================================================================}
 function TPointArrayHelper.CorePoints(const allowedNeighbours: TRange; const radius: Double; const metric: TMetrics = dmEuclidean): TPointArray; overload;
@@ -64,12 +64,12 @@ end;
 
 {==============================================================================]
   <CorePoints>
-  @action: Returns all points whose number of neighbours lies **within the 
-           inclusive range `allowedNeighbours`** for the given rectangular or 
+  @action: Returns all points whose number of neighbours lies **within the
+           inclusive range `allowedNeighbours`** for the given rectangular or
            metric radius.
-  @note: Generalized version of `CorePointsMin` and `CorePointsMax`. 
-         Supports both integer radii (grid-based) and floating-point radii 
-         with custom distance metrics. Automatically ignores points outside 
+  @note: Generalized version of `CorePointsMin` and `CorePointsMax`.
+         Supports both integer radii (grid-based) and floating-point radii
+         with custom distance metrics. Automatically ignores points outside
          the defined neighbour range.
 [==============================================================================}
 function TPointArrayHelper.CorePoints(const allowedNeighbours: TRange; const xRadius, yRadius: Integer): TPointArray; overload;
@@ -107,9 +107,9 @@ end;
 
 {==============================================================================]
   <CorePointsMax>
-  @action: Returns all points that have **no more than `maximumNeighbours`** 
+  @action: Returns all points that have **no more than `maximumNeighbours`**
            within the specified rectangular or metric radius.
-  @note: Used to detect *sparse* points or "edge" points in a spatial 
+  @note: Used to detect *sparse* points or "edge" points in a spatial
          distribution. Early-breaks when neighbour count exceeds the limit.
 [==============================================================================}
 function TPointArrayHelper.CorePointsMax(const maximumNeighbours: Integer; const xRadius, yRadius: Integer): TPointArray; overload;
@@ -143,9 +143,9 @@ end;
 
 {==============================================================================]
   <CorePointsMax>
-  @action: Returns all points that have **no more than `maximumNeighbours`** 
+  @action: Returns all points that have **no more than `maximumNeighbours`**
            within the specified rectangular or metric radius.
-  @note: Used to detect *sparse* points or "edge" points in a spatial 
+  @note: Used to detect *sparse* points or "edge" points in a spatial
          distribution. Early-breaks when neighbour count exceeds the limit.
 [==============================================================================}
 function TPointArrayHelper.CorePointsMax(const maximumNeighbours: Integer; const radius: Double; const metric: TMetrics = dmEuclidean): TPointArray; overload;
@@ -188,9 +188,9 @@ end;
 
 {==============================================================================]
   <CorePointsMin>
-  @action: Returns all points that have **at least `minimumNeighbours`** 
+  @action: Returns all points that have **at least `minimumNeighbours`**
            within the specified rectangular or metric radius.
-  @note: Used to detect *core* points in a density-based clustering context 
+  @note: Used to detect *core* points in a density-based clustering context
          (e.g. DBSCAN). Early-breaks when minimum is reached.
 [==============================================================================}
 function TPointArrayHelper.CorePointsMin(const minimumNeighbours: Integer; const xRadius, yRadius: Integer): TPointArray; overload;
@@ -225,9 +225,9 @@ end;
 
 {==============================================================================]
   <CorePointsMin>
-  @action: Returns all points that have **at least `minimumNeighbours`** 
+  @action: Returns all points that have **at least `minimumNeighbours`**
            within the specified rectangular or metric radius.
-  @note: Used to detect *core* points in a density-based clustering context 
+  @note: Used to detect *core* points in a density-based clustering context
          (e.g. DBSCAN). Early-breaks when minimum is reached.
 [==============================================================================}
 function TPointArrayHelper.CorePointsMin(const minimumNeighbours: Integer; const radius: Double; const metric: TMetrics = dmEuclidean): TPointArray; overload;
@@ -274,7 +274,7 @@ end;
   @action: Classifies TPointArray to groups by X-value
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.XClassify(const pSorted: Boolean = False): T2DPointArray; overload; 
+function TPointArrayHelper.XClassify(const pSorted: Boolean = False): T2DPointArray; overload;
 var
   p: TPointArray;
 begin
@@ -290,7 +290,7 @@ end;
   @action: Classifies TPointArray to groups by X-value
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.YClassify(const pSorted: Boolean = False): T2DPointArray; overload; 
+function TPointArrayHelper.YClassify(const pSorted: Boolean = False): T2DPointArray; overload;
 var
   p: TPointArray;
 begin

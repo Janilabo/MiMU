@@ -2,7 +2,7 @@
 
 {$IFDEF TYPES}
 C2DPointArray = class
-public 
+public
   {$UNDEF TYPES}{$DEFINE METHODS}{$I T2DPointArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}

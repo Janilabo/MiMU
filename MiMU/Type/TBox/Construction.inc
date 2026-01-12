@@ -1,23 +1,23 @@
 {$IFDEF METHODS}
-function Build(const minX, minY, maxX, maxY: Integer): Integer; overload; 
-function Build(const top, bottom: TPoint): Integer; overload; 
-function Build(const valueX, valueY: Integer): Integer; overload; 
-function Build(const target: TPoint): Integer; overload; 
-function Build(const value: Integer = 0): Integer; overload; 
+function Build(const minX, minY, maxX, maxY: Integer): Integer; overload;
+function Build(const top, bottom: TPoint): Integer; overload;
+function Build(const valueX, valueY: Integer): Integer; overload;
+function Build(const target: TPoint): Integer; overload;
+function Build(const value: Integer = 0): Integer; overload;
 class function Construct(const XS, YS, XE, YE: Integer): TBox; overload; static;
 constructor Create(const minX, minY, maxX, maxY: Integer); overload;
 constructor Create(const top, bottom: TPoint); overload;
 constructor Create(const valueX, valueY: Integer); overload;
 constructor Create(const target: TPoint); overload;
 constructor Create(const value: Integer); overload;
-function Form(const pt: TPoint; const size: Integer = 1): TBox; overload; 
+function Form(const pt: TPoint; const size: Integer = 1): TBox; overload;
 function Form(const pt: TPoint; const width, height: Integer): TBox; overload;
-function Init(const bX1, bY1, bX2, bY2: Integer): TBox; overload; 
-function Init(const b: TBox): TBox; overload; 
-function Init(const val: Integer = 0): TBox; overload; 
-function Init(const p: TPoint): TBox; overload; 
-function Init(const TL, BR: TPoint): TBox; overload;  
-function Make(const pt: TPoint; const radius: Integer = 0): TBox; overload; 
+function Init(const bX1, bY1, bX2, bY2: Integer): TBox; overload;
+function Init(const b: TBox): TBox; overload;
+function Init(const val: Integer = 0): TBox; overload;
+function Init(const p: TPoint): TBox; overload;
+function Init(const TL, BR: TPoint): TBox; overload;
+function Make(const pt: TPoint; const radius: Integer = 0): TBox; overload;
 function Make(const pt: TPoint; const wRadius, hRadius: Integer): TBox; overload;
 {$ENDIF}
 
@@ -33,7 +33,7 @@ function Box(const val: Integer = 0): TBox; overload; inline;
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Build>
-  @action: Creates TBox using minX, minY, maxX, maxY 
+  @action: Creates TBox using minX, minY, maxX, maxY
   @note: Min-Maxed. Creates only valid TBoxes. Returns area.
 [==============================================================================}
 function TBox.Build(const minX, minY, maxX, maxY: Integer): Integer; overload;
@@ -57,7 +57,7 @@ end;
 
 {==============================================================================]
   <Build>
-  @action: We simply build using  
+  @action: We simply build using
   @note: Constructor.
 [==============================================================================}
 function TBox.Build(const valueX, valueY: Integer): Integer; overload;
@@ -100,7 +100,7 @@ end;
 
 {==============================================================================]
   <Create>
-  @action: Creates TBox using minX, minY, maxX, maxY 
+  @action: Creates TBox using minX, minY, maxX, maxY
   @note: Constructor.
 [==============================================================================}
 constructor TBox.Create(const minX, minY, maxX, maxY: Integer); overload;
@@ -113,7 +113,7 @@ end;
 
 {==============================================================================]
   <Create>
-  @action: Creates TBox using top and bottom TPoint (top contains minX,minY and bottom contains maxX,maxY) 
+  @action: Creates TBox using top and bottom TPoint (top contains minX,minY and bottom contains maxX,maxY)
   @note: Constructor.
 [==============================================================================}
 constructor TBox.Create(const top, bottom: TPoint); overload;
@@ -123,7 +123,7 @@ end;
 
 {==============================================================================]
   <Create>
-  @action: We simply build using  
+  @action: We simply build using
   @note: Constructor.
 [==============================================================================}
 constructor TBox.Create(const valueX, valueY: Integer); overload;
@@ -133,7 +133,7 @@ end;
 
 {==============================================================================]
   <Create>
-  @action: Creates TBox using target TPoint 
+  @action: Creates TBox using target TPoint
   @note: Constructor.
 [==============================================================================}
 constructor TBox.Create(const target: TPoint); overload;
@@ -143,12 +143,12 @@ end;
 
 {==============================================================================]
   <Create>
-  @action: We simply build using value. 
+  @action: We simply build using value.
   @note: Constructor.
 [==============================================================================}
 constructor TBox.Create(const value: Integer); overload;
 begin
-  Self.Create(value, value, value, value); 
+  Self.Create(value, value, value, value);
 end;
 
 {==============================================================================]
@@ -162,7 +162,7 @@ begin
   Self.Y1 := 0;
   Self.X2 := 0;
   Self.Y2 := 0;
-  Result := Self;  
+  Result := Self;
 end;
 
 {==============================================================================]

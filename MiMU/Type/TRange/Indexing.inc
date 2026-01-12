@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
-function IDs: TIntegerArray; overload; 
-function IDs(const dValue: Integer): Integer; overload; 
+function IDs: TIntegerArray; overload;
+function IDs(const dValue: Integer): Integer; overload;
 function IDs(const dVals: TIntegerArray): TIntegerArray; overload;
 {$ENDIF}
 

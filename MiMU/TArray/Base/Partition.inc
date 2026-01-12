@@ -49,7 +49,7 @@ end;
   @action: Groups elements of the array into connected components based on provided connections.
            Each connection is treated as undirected. Returns a 2D array where each inner array
            represents one group of connected elements.
-  @param: connections - an array of TConnection, each containing two indices (Id1, Id2) 
+  @param: connections - an array of TConnection, each containing two indices (Id1, Id2)
            in Self that are connected.
   @returns: M2DArray - 2D array of grouped elements from Self.
   @note: Duplicate connections are ignored. Self must contain at least as many elements as

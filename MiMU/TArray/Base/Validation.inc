@@ -108,7 +108,7 @@ begin
 end;
 
 {==============================================================================]
-  <BuiltWithout> 
+  <BuiltWithout>
   @action: Checks if array arr does not have any forbidden items.
   @note: None.
 [==============================================================================}
@@ -127,7 +127,7 @@ end;
 {==============================================================================]
   <Comprised>
   @action: Returns true if arr is built of items only.
-  @note: 
+  @note:
 [==============================================================================}
 function MArrayHelper.Comprised(const items: MArray): Boolean; overload;
 var
@@ -303,7 +303,7 @@ end;
   @action: Returns true if arr contains any duplicates in it.
   @note: None.
 [==============================================================================}
-function MArrayHelper.Excessive: Boolean; overload; 
+function MArrayHelper.Excessive: Boolean; overload;
 type
   TDict = specialize TDictionary<MType, Boolean>;
 var
@@ -344,7 +344,7 @@ begin
 end;
 
 {==============================================================================]
-  <FreeOf> 
+  <FreeOf>
   @action: Checks if array arr does not have any forbidden items.
   @note: None.
 [==============================================================================}
@@ -403,7 +403,7 @@ end;
 function MArrayHelper.Got(const item: MType; const limit: TRange): Boolean; overload;
 begin
   Result := limit.Contains(Self.Count(item));
-end; 
+end;
 
 {==============================================================================]
   <HasAtLeast>
@@ -541,7 +541,7 @@ begin
 end;
 
 {==============================================================================]
-  <MadeOf> 
+  <MadeOf>
   @action: Checks if array arr contains only allowed items.
   @note: None.
 [==============================================================================}

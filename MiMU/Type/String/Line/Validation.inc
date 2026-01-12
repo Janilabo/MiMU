@@ -74,7 +74,7 @@ begin
     end;
   end;
   Result := (c >= lineNumber);
-end; 
+end;
 
 {==============================================================================]
   <LineExists>
@@ -177,5 +177,5 @@ end;
 function TStringHelper.LineValid(const lineNumber: Integer): Boolean; overload;
 begin
   Result := ((lineNumber >= 1) and (lineNumber <= Self.LineCount));
-end; 
+end;
 {$ENDIF}

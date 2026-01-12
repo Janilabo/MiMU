@@ -16,7 +16,7 @@ var
   x, y: Boolean;
 begin
   x := (Self.X1 > Self.X2);
-  y := (Self.Y1 > Self.Y2); 
+  y := (Self.Y1 > Self.Y2);
   Result := (x or y);
   if not Result then
     Exit;

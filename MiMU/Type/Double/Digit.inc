@@ -13,7 +13,7 @@ function MinDecimal: Double;
            123   123.4   123.45   123.456   123.4567   123.45678
   @note: None
 [==============================================================================}
-function TDoubleHelper.Accuracy(const a: Integer): Double; 
+function TDoubleHelper.Accuracy(const a: Integer): Double;
 var
   d: Double;
   z: Boolean;
@@ -34,9 +34,9 @@ end;
   <Digits>
   @action: Converts Double value (x) to digits of it.
            Example: 1234 => 1,2,3,4, -999 => 9,9,9
-  @note: If x is negative value, the negative sign is ignored. 
+  @note: If x is negative value, the negative sign is ignored.
 [==============================================================================}
-function TDoubleHelper.Digits: TIntegerArray; 
+function TDoubleHelper.Digits: TIntegerArray;
 var
   s: string;
   l, i: Integer;
@@ -54,7 +54,7 @@ end;
            0.12345 => 0.99999
   @note: None
 [==============================================================================}
-function TDoubleHelper.MaxDecimal: Double; 
+function TDoubleHelper.MaxDecimal: Double;
 var
   d: Double;
 begin
@@ -74,7 +74,7 @@ end;
            0.12345 => 0.00001
   @note: None
 [==============================================================================}
-function TDoubleHelper.MinDecimal: Double; 
+function TDoubleHelper.MinDecimal: Double;
 var
   d: Double;
 begin

@@ -1,5 +1,5 @@
 {$IFDEF METHODS}
-function Direction: Integer; 
+function Direction: Integer;
 function Orientation: Integer;
 function Signum: Integer;
 function Slope: Integer;
@@ -31,9 +31,9 @@ end;
 
 {==============================================================================]
   <Signum>
-  @action: Returns the directional sign of the range. 
-           +1 if the range is ascending (stop > start), 
-           -1 if descending (stop < start), 
+  @action: Returns the directional sign of the range.
+           +1 if the range is ascending (stop > start),
+           -1 if descending (stop < start),
            0 if start = stop.
   @note: Useful for determining the trend or direction of the range without
          caring about the magnitude. Does not include endpoints count.

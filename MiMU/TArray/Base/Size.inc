@@ -35,8 +35,8 @@ end;
 {==============================================================================]
   <Fit>
   @action: Resizes the array to fit within the specified range.
-  @note: 
-    - Returns the final array length. 
+  @note:
+    - Returns the final array length.
     - If current length is below b.start → array grows to b.start.
     - If current length is above b.stop → array shrinks to b.stop.
     - If current length is within the range → no change.
@@ -106,7 +106,7 @@ begin
 end;
 
 {==============================================================================]
-  <Size> 
+  <Size>
   @action: Returns array length.
   @note: Simply Result := Length(arr);
 [==============================================================================}

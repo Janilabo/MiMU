@@ -1,11 +1,11 @@
 {$IFDEF METHODS}
 class function Construct(const rStart, rStop: Integer): TRange; overload; static;
-function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; 
+function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer;
 constructor Create(const rStart, rStop: Integer); overload;
 constructor Create(const value: Integer); overload;
-function Init(const rStart, rStop: Integer): TRange; overload; 
-function Init(const r: TRange): TRange; overload; 
-function Init(const val: Integer = 0): TRange; overload; 
+function Init(const rStart, rStop: Integer): TRange; overload;
+function Init(const r: TRange): TRange; overload;
+function Init(const val: Integer = 0): TRange; overload;
 class function Null(const value: Integer = -2147483648): TRange; overload; static;
 {$ENDIF}
 

@@ -207,7 +207,7 @@ begin
   h := High(Self);
   SetLength(Result, ((h - l) + 1));
   case aAscending of
-    False:  
+    False:
     for i := l to h do
       Result[h - i] := i;
 	True:

@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
 function MergeSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
-function MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload; 
+function MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
 function MergeSort(const aAscending: Boolean = True): Integer; overload;
 function MergeSortBU(const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -216,7 +216,7 @@ begin
       while (i <= Result) do
       begin
 	    l.Create(i, Min((i + (w - 1)), Result));
-	    r.Create((l.stop + 1), Min((l.start + (2 * w) - 1), Result)); 
+	    r.Create((l.stop + 1), Min((l.start + (2 * w) - 1), Result));
         for s := l.start to r.stop do
           t[s] := Self[s];
 		s := i;

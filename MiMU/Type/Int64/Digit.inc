@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
 function DigitCount: Integer;
 function Digits: TIntegerArray;
-function Digitz: TIntegerArray; 
+function Digitz: TIntegerArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function Digitz: TIntegerArray;
   <DigitCount>
   @action: Returns count of digits Int64 x value contains.
   @note: If x is negative value, the negative sign is ignored.
-        Works with -9223372036854775808 - 9223372036854775807! 
+        Works with -9223372036854775808 - 9223372036854775807!
 [==============================================================================}
 function TInt64Helper.DigitCount: Integer;
 var
@@ -29,7 +29,7 @@ end;
   @action: Converts Int64 value (x) to digits of it.
            Example: 1234 => 1,2,3,4, -999 => 9,9,9
   @note: If x is negative value, the negative sign is ignored.
-         Works with -9223372036854775808 - 9223372036854775807! 
+         Works with -9223372036854775808 - 9223372036854775807!
 [==============================================================================}
 function TInt64Helper.Digits: TIntegerArray;
 var
@@ -48,7 +48,7 @@ end;
   @action: Converts Int64 value (x) to digits of it.
            Example: 1234 => 1,2,3,4, -999 => 9,9,9
   @note: If x is negative value, the negative sign is ignored.
-         Works with -9223372036854775808 - 9223372036854775807! 
+         Works with -9223372036854775808 - 9223372036854775807!
 [==============================================================================}
 function TInt64Helper.Digitz: TIntegerArray;
 var

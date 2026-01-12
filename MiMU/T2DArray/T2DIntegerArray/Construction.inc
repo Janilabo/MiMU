@@ -1,10 +1,10 @@
 {$IFDEF METHODS}
 class function Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload;
-class function Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
+class function Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-class function C2DIntegerArray.Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
+class function C2DIntegerArray.Build(const rows, columns: Integer; const value: Integer = 0): T2DIntegerArray; overload;
 var
   r, c: Integer;
 begin
@@ -14,7 +14,7 @@ begin
       Result[r][c] := value;
 end;
 
-class function C2DIntegerArray.Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload; 
+class function C2DIntegerArray.Create(const width, height: Integer; const value: Integer = 0): T2DIntegerArray; overload;
 var
   x, y: Integer;
 begin

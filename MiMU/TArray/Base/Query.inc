@@ -184,7 +184,7 @@ begin
       d.AddOrSetValue(forbidden[i], True);
     for i := 0 to High(Self) do
       if d.ContainsKey(Self[i]) then
-        Exit(False); 
+        Exit(False);
   finally
     d.Free;
   end;
@@ -192,9 +192,9 @@ end;
 
 {==============================================================================]
   <Occupied>
-  @action  Returns True if the dynamic array contains one or more elements; 
+  @action  Returns True if the dynamic array contains one or more elements;
            otherwise returns False.
-  @note    Uses Low(Self) <= High(Self) to determine occupancy. This is 
+  @note    Uses Low(Self) <= High(Self) to determine occupancy. This is
            functionally equivalent to Length(Self) > 0.	
 [==============================================================================}
 function MArrayHelper.Occupied: Boolean; overload;
@@ -299,7 +299,7 @@ end;
   <Undersize>
   @action: Returns true if size of arr is UNDER the limit.
   @note: None.	
-[==============================================================================} 
+[==============================================================================}
 function MArrayHelper.Undersize(const limit: Integer): Boolean; overload;
 begin
   Result := (Self.Size < limit);

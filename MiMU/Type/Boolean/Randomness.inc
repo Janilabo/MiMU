@@ -8,7 +8,7 @@ function Shuffle: Boolean;
   @action: Randomizes Self and then returns it.
   @note: None
 [==============================================================================}
-function TBooleanHelper.Shuffle: Boolean; 
+function TBooleanHelper.Shuffle: Boolean;
 begin
   Self := (Random(2) = 0);
   Result := Self;

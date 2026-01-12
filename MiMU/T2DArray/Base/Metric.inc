@@ -37,7 +37,7 @@ begin
       Result := Result + (e - s);
     end;
   end;
-end; 
+end;
 
 {==============================================================================]
   <Fit>
@@ -63,8 +63,8 @@ end;
 {==============================================================================]
   <Fit>
   @action: Resizes the array to fit within the specified range.
-  @note: 
-    - Returns the final array length. 
+  @note:
+    - Returns the final array length.
     - If current length is below b.start → array grows to b.start.
     - If current length is above b.stop → array shrinks to b.stop.
     - If current length is within the range → no change.

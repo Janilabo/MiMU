@@ -121,7 +121,7 @@ end;
 
 {==============================================================================]
   <Scramble>
-  @action: Returns scrambled array, that is randomized with offset and swapping. 
+  @action: Returns scrambled array, that is randomized with offset and swapping.
   @note: Supports custom swaps.
 [==============================================================================}
 function MArrayHelper.Scramble(const swaps: Integer = -1): MArray; overload;

@@ -116,7 +116,7 @@ end;
   <Extract>
   @action: Keeps (extracts) all values in arr that are item. Starts scan from start index.
   @note: Returns the items.
-[==============================================================================} 
+[==============================================================================}
 function MArrayHelper.Extract(const item: MType; const index: Integer = 0): MArray; overload;
 var
   i, l, r: Integer;
@@ -155,7 +155,7 @@ end;
   <ExtractEvery>
   @action: Keeps (extracts) all X values from array. Starts scan from start index.
   @note: Returns the items.
-[==============================================================================} 
+[==============================================================================}
 function MArrayHelper.ExtractEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
 var
   i, h, l: Integer;

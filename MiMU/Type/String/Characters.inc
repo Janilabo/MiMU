@@ -78,7 +78,7 @@ end;
            counts the unique values and then allocates the result array exactly
            once before populating it.
   @note: Efficient for 8-bit strings. Characters are returned in ascending
-         ordinal order (0..255). Not suitable for UTF-8 strings.  
+         ordinal order (0..255). Not suitable for UTF-8 strings.
          Uses two passes over a 256-element Boolean array to determine count.
 [==============================================================================}
 function TStringHelper.CharacterSet: TCharArray; overload;

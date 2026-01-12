@@ -119,7 +119,7 @@ end;
 
 {==============================================================================]
   <TSA>
-  @action: Returns TCharArray as TStringArray. 
+  @action: Returns TCharArray as TStringArray.
   @note: None.
 [==============================================================================}
 function TCharArrayHelper.TSA: TStringArray;

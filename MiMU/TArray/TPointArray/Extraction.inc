@@ -22,7 +22,7 @@ function Zip(const xArr, yArr: TIntegerArray): Integer;
   @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Axed: T2DIntegerArray; overload; 
+function TPointArrayHelper.Axed: T2DIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -39,7 +39,7 @@ end;
   @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Axed(var X, Y: TIntegerArray): Integer; overload; 
+function TPointArrayHelper.Axed(var X, Y: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
@@ -57,7 +57,7 @@ end;
   @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Axes(var X, Y: TIntegerArray): Integer; overload; 
+function TPointArrayHelper.Axes(var X, Y: TIntegerArray): Integer; overload;
 var
   sX, sY, dX, dY: Pointer;
   p, c: SizeInt;
@@ -89,7 +89,7 @@ end;
   @action: Stores arr X and Y values to xArr and yArr.
   @note: Returns Length(arr).
 [==============================================================================}
-function TPointArrayHelper.Unzip(var xArr, yArr: TIntegerArray): Integer; 
+function TPointArrayHelper.Unzip(var xArr, yArr: TIntegerArray): Integer;
 var
   i: Integer;
 begin
@@ -145,7 +145,7 @@ end;
          transformation is applied. The returned array always has the same
          length as the source.
 [==============================================================================}
-function TPointArrayHelper.Xs: TIntegerArray; overload; 
+function TPointArrayHelper.Xs: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -174,7 +174,7 @@ end;
   @action: Returns X-values from arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.XValues: TIntegerArray; overload; 
+function TPointArrayHelper.XValues: TIntegerArray; overload;
 var
   l: Integer;
 begin
@@ -224,7 +224,7 @@ end;
   @note: Performs a simple coordinate projection without any modification or
          reordering. The returned array has the same length as the input.
 [==============================================================================}
-function TPointArrayHelper.Ys: TIntegerArray; overload; 
+function TPointArrayHelper.Ys: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -253,7 +253,7 @@ end;
   @action: Returns Y-values from arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.YValues: TIntegerArray; overload; 
+function TPointArrayHelper.YValues: TIntegerArray; overload;
 var
   l: Integer;
 begin
@@ -268,7 +268,7 @@ end;
   @action: Zips TPointArray with xArr and yArr.
   @note: Uses minimum length(!), if xArr differs from yArr size.
 [==============================================================================}
-function TPointArrayHelper.Zip(const xArr, yArr: TIntegerArray): Integer; 
+function TPointArrayHelper.Zip(const xArr, yArr: TIntegerArray): Integer;
 var
   i: Integer;
 begin

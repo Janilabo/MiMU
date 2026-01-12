@@ -3,7 +3,7 @@ function Area: Integer;
 function Capacity: Integer;
 function Count: Integer;
 function Coverage: Integer; overload;
-function Deficit: Integer; 
+function Deficit: Integer;
 function Delta: Integer;
 function Diameter: Integer; overload;
 function Diff: Integer;
@@ -18,10 +18,10 @@ function Radiar: Integer; overload;
 function Radius: Integer; overload;
 function Reach: Integer; overload;
 function Span: Integer;
-function Size: Integer; overload; 
-function Size(var minVal, maxVal: Integer): Integer; overload; 
+function Size: Integer; overload;
+function Size(var minVal, maxVal: Integer): Integer; overload;
 function Sized: Integer; overload;
-function Sum: Int64; 
+function Sum: Int64;
 function Summation: Int64;
 function Total: Int64;
 {$ENDIF}
@@ -36,7 +36,7 @@ function TRange.Area: Integer;
 begin
   if (Self.start > Self.stop) then
     Result := ((Self.start - Self.stop) + 1)
-  else 
+  else
     Result := ((Self.stop - Self.start) + 1);
 end;
 

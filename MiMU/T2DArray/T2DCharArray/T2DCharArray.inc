@@ -2,7 +2,7 @@
 
 {$IFDEF TYPES}
 C2DCharArray = class
-public 
+public
   {$UNDEF TYPES}{$DEFINE METHODS}{$I T2DCharArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}

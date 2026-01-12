@@ -44,7 +44,7 @@ end;
   @action: Returns Self as Integer.
   @note: False => 0 | True => 1
 [==============================================================================}
-function TBooleanHelper.AsInteger: Integer; 
+function TBooleanHelper.AsInteger: Integer;
 begin
   Result := Integer(Self);
 end;
@@ -54,7 +54,7 @@ end;
   @action: Returns binary char based on boolean state.
   @note: True => '1', False => '0'.
 [==============================================================================}
-function TBooleanHelper.Binary: Char; 
+function TBooleanHelper.Binary: Char;
 begin
   Result := IfThen(Self, '1', '0');
 end;
@@ -64,9 +64,9 @@ end;
   @action: Returns binary char from Boolean
   @note: True => 1 & False => 0
 [==============================================================================}
-function TBooleanHelper.BinaryDigit: Integer; 
+function TBooleanHelper.BinaryDigit: Integer;
 begin
-  Result := IfThen(Self, 1, 0);  
+  Result := IfThen(Self, 1, 0);
 end;
 
 {==============================================================================]
@@ -84,7 +84,7 @@ end;
   @action: Bitify for helper booleans.
   @note: True => 1 | False => 0
 [==============================================================================}
-function TBooleanHelper.Bitify: Integer; 
+function TBooleanHelper.Bitify: Integer;
 begin
   Result := IfThen(Self, 1, 0);
 end;
@@ -94,7 +94,7 @@ end;
   @action: Returns integer based on state of Self.
   @note: True => 1 | False => 0
 [==============================================================================}
-function TBooleanHelper.ToInteger: Integer; 
+function TBooleanHelper.ToInteger: Integer;
 begin
   case Self of
     True: Result := 1;
@@ -107,7 +107,7 @@ end;
   @action: Returns string of Self.
   @note: True => 'True', False => 'False'.
 [==============================================================================}
-function TBooleanHelper.ToString: string; 
+function TBooleanHelper.ToString: string;
 begin
   if Self then
     Result := 'True'

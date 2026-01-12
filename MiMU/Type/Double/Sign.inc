@@ -10,7 +10,7 @@ function Positive: Boolean; inline;
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Neg>
-  @action: Returns the negative number of i. 
+  @action: Returns the negative number of i.
            -9999 to -9999 OR 9999 to -9999 (+/- => -)
   @note: None
 [==============================================================================}
@@ -20,11 +20,11 @@ begin
     Result := (Self * -1)
   else
     Result := Self;
-end; 
+end;
 
 {==============================================================================]
   <Negative>
-  @action: Returns True if Double value x is lower than 0 (negative), otherwise False. 
+  @action: Returns True if Double value x is lower than 0 (negative), otherwise False.
   @note: 0 is not negative or positive!
 [==============================================================================}
 function TDoubleHelper.Negative: Boolean; inline;
@@ -34,7 +34,7 @@ end;
 
 {==============================================================================]
   <NegA>
-  @action: Returns the negative number of x. 
+  @action: Returns the negative number of x.
            -9999 to -9999 OR 9999 to -9999 (+/- => -)
   @note: None
 [==============================================================================}
@@ -45,7 +45,7 @@ end;
 
 {==============================================================================]
   <Neutral>
-  @action: Returns True if Double value x is 0 (neutral), otherwise False. 
+  @action: Returns True if Double value x is 0 (neutral), otherwise False.
   @note: 0 is not negative or positive!
 [==============================================================================}
 function TDoubleHelper.Neutral: Boolean; inline;
@@ -55,8 +55,8 @@ end;
 
 {==============================================================================]
   <Opposite>
-  @action: Returns the opposite number of x. 
-           -9999 to 9999 OR 9999 to -9999 (- <=> +) 
+  @action: Returns the opposite number of x.
+           -9999 to 9999 OR 9999 to -9999 (- <=> +)
   @note: None
 [==============================================================================}
 function TDoubleHelper.Opposite: Double; inline;
@@ -66,7 +66,7 @@ end;
 
 {==============================================================================]
   <Positive>
-  @action: Returns True if Double value x is higher than 0 (positive), otherwise False. 
+  @action: Returns True if Double value x is higher than 0 (positive), otherwise False.
   @note: 0 is not negative or positive!
 [==============================================================================}
 function TDoubleHelper.Positive: Boolean; inline;

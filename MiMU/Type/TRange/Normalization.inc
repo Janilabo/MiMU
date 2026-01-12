@@ -4,8 +4,8 @@ function MaxMin: TRange; overload;
 function MinMax: TRange; overload;
 function Norm: TRange;
 function Normal: TRange;
-function Normalize: TRange; 
-function Normalized: TRange; 
+function Normalize: TRange;
+function Normalized: TRange;
 function Normally: TRange;
 function Normed: TRange;
 {$ENDIF}

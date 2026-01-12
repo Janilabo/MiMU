@@ -2,7 +2,7 @@
 
 {$IFDEF TYPES}
 C2DStringArray = class
-public 
+public
   {$UNDEF TYPES}{$DEFINE METHODS}{$I T2DStringArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}

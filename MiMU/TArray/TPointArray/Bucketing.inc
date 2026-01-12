@@ -72,14 +72,14 @@ end;
 
 {==============================================================================]
   <Boxified>
-  @action: Groups the points of the current array into a grid of equally sized 
-           square boxes of side length bSize, returning a 2D array where each 
+  @action: Groups the points of the current array into a grid of equally sized
+           square boxes of side length bSize, returning a 2D array where each
            subarray contains the points belonging to its corresponding box.
-  @note: Uses direct indexing (no grid scanning) to compute each point’s 
-         target box based on its position relative to the bounding box. 
-         Boxes are arranged in row-major order. 
-         Empty boxes are automatically trimmed by Result.Squeeze. 
-         This method is faster and more memory-efficient than Boxify 
+  @note: Uses direct indexing (no grid scanning) to compute each point’s
+         target box based on its position relative to the bounding box.
+         Boxes are arranged in row-major order.
+         Empty boxes are automatically trimmed by Result.Squeeze.
+         This method is faster and more memory-efficient than Boxify
          for uniformly sized square grids.
 [==============================================================================}
 function TPointArrayHelper.Boxified(const bSize: Integer = 1): T2DPointArray; overload;
@@ -100,13 +100,13 @@ end;
 
 {==============================================================================]
   <Boxified>
-  @action: Groups the points of the current array into a grid of rectangular 
-           boxes with dimensions bWidth × bHeight, returning a 2D array 
+  @action: Groups the points of the current array into a grid of rectangular
+           boxes with dimensions bWidth × bHeight, returning a 2D array
            where each element contains the points that fall within that box.
-  @note:   Computes each point’s box position directly using integer division 
-           based on its relative coordinates. Boxes are arranged in row-major 
-           order (rows first, then columns). 
-           The Result.Squeeze call removes any empty boxes from the final output. 
+  @note:   Computes each point’s box position directly using integer division
+           based on its relative coordinates. Boxes are arranged in row-major
+           order (rows first, then columns).
+           The Result.Squeeze call removes any empty boxes from the final output.
            This method is the most efficient rectangular variant of Boxify.
 [==============================================================================}
 function TPointArrayHelper.Boxified(const bWidth, bHeight: Integer): T2DPointArray; overload;
@@ -127,13 +127,13 @@ end;
 
 {==============================================================================]
   <Boxify>
-  @action: Splits the current point array into a grid of rectangular cells 
-           (boxes) of the specified width and height, returning a 2D array 
+  @action: Splits the current point array into a grid of rectangular cells
+           (boxes) of the specified width and height, returning a 2D array
            of points grouped by their corresponding box.
-  @note: Each box represents a bounded sub-region of the point array’s 
-         overall bounding box. Boxes are generated in row-major order, 
-         and may be smaller along the right or bottom edges if the total 
-         width/height is not divisible by the box size. Empty boxes 
+  @note: Each box represents a bounded sub-region of the point array’s
+         overall bounding box. Boxes are generated in row-major order,
+         and may be smaller along the right or bottom edges if the total
+         width/height is not divisible by the box size. Empty boxes
          return as empty point arrays.
 [==============================================================================}
 function TPointArrayHelper.Boxify(const bWidth, bHeight: Integer): T2DPointArray; overload;
@@ -169,14 +169,14 @@ end;
 
 {==============================================================================]
   <Boxify>
-  @action: Splits the current point array into spatial groups using a uniform 
-           box size (bSize). Each group contains points that fall within a 
+  @action: Splits the current point array into spatial groups using a uniform
+           box size (bSize). Each group contains points that fall within a
            Chebyshev distance of bSize from the box's origin point.
-  @note: Creates a grid of square boxes based on the specified size, 
-         using the Chebyshev metric to determine point inclusion. 
-         Effectively partitions the bounding area into square regions 
-         and assigns points to their nearest box region. 
-         Useful for coarse spatial grouping or uniform grid segmentation 
+  @note: Creates a grid of square boxes based on the specified size,
+         using the Chebyshev metric to determine point inclusion.
+         Effectively partitions the bounding area into square regions
+         and assigns points to their nearest box region.
+         Useful for coarse spatial grouping or uniform grid segmentation
          of point data.
 [==============================================================================}
 function TPointArrayHelper.Boxify(const bSize: Integer = 1): T2DPointArray; overload;

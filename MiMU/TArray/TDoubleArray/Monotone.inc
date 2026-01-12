@@ -70,21 +70,21 @@ end;
 {==============================================================================]
   <Monotony>
   @action:
-    Determines whether the array of doubles is monotone — that is, whether all 
+    Determines whether the array of doubles is monotone — that is, whether all
     its elements are entirely non-decreasing or entirely non-increasing.
 
     The function iterates through adjacent elements, computing the difference
     between each pair. If the difference is smaller than a small tolerance (EPS),
-    the elements are considered equal. Otherwise, the sign of the difference 
-    establishes the direction (increasing or decreasing). Once a direction is 
+    the elements are considered equal. Otherwise, the sign of the difference
+    establishes the direction (increasing or decreasing). Once a direction is
     locked, any reversal causes the function to return False immediately.
 
   @note:
-    • Empty or single-element arrays are considered monotone (trivially True).  
-    • Equal adjacent elements (within EPS tolerance) do not affect monotonicity.  
-    • EPS is a small threshold to account for floating-point rounding errors.  
+    • Empty or single-element arrays are considered monotone (trivially True).
+    • Equal adjacent elements (within EPS tolerance) do not affect monotonicity.
+    • EPS is a small threshold to account for floating-point rounding errors.
     • The function short-circuits for efficiency — exits as soon as a direction
-      reversal is detected.  
+      reversal is detected.
     • Uses Sign(c) from Math unit to determine the direction of change.
 [==============================================================================}
 function TDoubleArrayHelper.Monotony: Boolean; overload;

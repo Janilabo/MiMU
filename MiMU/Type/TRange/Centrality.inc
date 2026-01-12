@@ -1,12 +1,12 @@
 {$IFDEF METHODS}
-function Average: Double; 
-function Center: Integer; 
+function Average: Double;
+function Center: Integer;
 function Central: Integer; inline;
 function Centre: Integer; overload;
 function Centroid: Integer; overload;
 function Core: Integer; overload;
-function Half: Integer; overload; 
-function Halfway: Integer; overload; 
+function Half: Integer; overload;
+function Halfway: Integer; overload;
 function Halved: Integer; overload;
 function Mean: Double; overload;
 function Medium: Double; overload;
@@ -225,7 +225,7 @@ end;
 
 {==============================================================================]
  <MiddleStep>
- @action: Returns the integer midpoint of the range, calculated by stepping halfway 
+ @action: Returns the integer midpoint of the range, calculated by stepping halfway
           from start to stop. Works for both ascending and descending ranges.
  @note: Neutral midpoint, unbiased toward lower or higher indices.
 [==============================================================================}

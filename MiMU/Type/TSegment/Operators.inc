@@ -1,4 +1,4 @@
-{$IFDEF OPERATORS}  
+{$IFDEF OPERATORS}
 operator =(const a, b: TSegment): Boolean;
 operator <>(const a, b: TSegment): Boolean;
 {$ENDIF}

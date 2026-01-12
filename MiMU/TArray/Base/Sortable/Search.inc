@@ -42,13 +42,13 @@ end;
            The routine locates the index of a target value using progressively
            shrinking search intervals determined by the Fibonacci sequence.
            The array may be sorted in ascending or descending order as
-           specified by the oAscending parameter. Returns the index of the 
+           specified by the oAscending parameter. Returns the index of the
            matching element if found; otherwise returns -1.
   @note: Fibonacci Search is an alternative to binary search that partitions
          the search interval using Fibonacci ratios rather than powers of two.
          It preserves ordered-search correctness while enabling searches that
-         favor sequential access patterns. Performance is comparable to 
-         binary search for random-access arrays and may offer advantages for 
+         favor sequential access patterns. Performance is comparable to
+         binary search for random-access arrays and may offer advantages for
          memory-hierarchy–sensitive workloads. The input array must be
          pre-sorted in the order defined by oAscending.
 [==============================================================================}

@@ -128,7 +128,7 @@ var
 begin
   Result := (index + items.Size);
   for i := 0 to High(items) do
-    Self[index + i] := items[i]; 
+    Self[index + i] := items[i];
 end;
 
 {==============================================================================]

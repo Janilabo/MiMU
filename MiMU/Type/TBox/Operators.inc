@@ -24,8 +24,8 @@ end;
 
 {==============================================================================]
   <->
-  @action: Computes the intersection of two boxes. Returns a box representing the 
-           overlapping area of `a` and `b`. If the boxes do not overlap, returns 
+  @action: Computes the intersection of two boxes. Returns a box representing the
+           overlapping area of `a` and `b`. If the boxes do not overlap, returns
            a null box marker.
   @note:   A null box can be represented by `TBox.Null` (e.g., all coordinates = Low(Integer)).
            This function does not require the boxes to be normalized beforehand, but

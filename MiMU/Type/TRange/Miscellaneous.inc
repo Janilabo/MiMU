@@ -1,9 +1,9 @@
 {$IFDEF METHODS}
 function Centered(const rCenter: Integer): TRange; overload;
-function Frame(var rSize: Integer): TRange; overload; 
-function Frame: TRange; overload; 
-function Reserve: TIntegerArray; overload; 
-function Reserve(var aRange: TIntegerArray): Integer; overload;  
+function Frame(var rSize: Integer): TRange; overload;
+function Frame: TRange; overload;
+function Reserve: TIntegerArray; overload;
+function Reserve(var aRange: TIntegerArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -52,7 +52,7 @@ end;
 {==============================================================================]
   <Reserve>
   @action: Allocate an integer array sized to fit the full range.
-  @note: The array is preallocated with the correct length but is not filled 
+  @note: The array is preallocated with the correct length but is not filled
          with values from start..stop. Elements are default-initialized to 0.
 [==============================================================================}
 function TRange.Reserve: TIntegerArray; overload;
@@ -63,7 +63,7 @@ end;
 {==============================================================================]
   <Reserve>
   @action: Allocate an integer array sized to fit the full range.
-  @note: The array is preallocated with the correct length but is not filled 
+  @note: The array is preallocated with the correct length but is not filled
          with values from start..stop. Elements are default-initialized to 0.
 [==============================================================================}
 function TRange.Reserve(var aRange: TIntegerArray): Integer; overload;

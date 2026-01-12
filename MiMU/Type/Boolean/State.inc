@@ -13,7 +13,7 @@ function SwitchOn(const state: Boolean): Boolean;
   @action: Sets Self to False (disabled).
   @note: Returns True if Self was previously True.
 [==============================================================================}
-function TBooleanHelper.Disable: Boolean; 
+function TBooleanHelper.Disable: Boolean;
 begin
   Result := (Self = True);
   Self := False;
@@ -24,7 +24,7 @@ end;
   @action: Sets Self to True (enabled).
   @note: Returns True if Self was previously False.
 [==============================================================================}
-function TBooleanHelper.Enable: Boolean; 
+function TBooleanHelper.Enable: Boolean;
 begin
   Result := (Self <> True);
   Self := True;
@@ -35,7 +35,7 @@ end;
   @action: Sets Self as False and returns 0.
   @note: None.
 [==============================================================================}
-function TBooleanHelper.SetFalse: Integer; 
+function TBooleanHelper.SetFalse: Integer;
 begin
   Self := False;
   Result := 0;
@@ -46,7 +46,7 @@ end;
   @action: Sets Self as True and returns 1.
   @note: None.
 [==============================================================================}
-function TBooleanHelper.SetTrue: Integer; 
+function TBooleanHelper.SetTrue: Integer;
 begin
   Self := True;
   Result := 1;
@@ -57,7 +57,7 @@ end;
   @action: Inverts Self only if it equals the given state.
   @note: Returns True if Self was changed.
 [==============================================================================}
-function TBooleanHelper.SwitchOff(const state: Boolean): Boolean; 
+function TBooleanHelper.SwitchOff(const state: Boolean): Boolean;
 begin
   Result := (Self = state);
   if Result then
@@ -69,7 +69,7 @@ end;
   @action: Sets Self to the given state if different.
   @note: Returns True if Self was changed.
 [==============================================================================}
-function TBooleanHelper.SwitchOn(const state: Boolean): Boolean; 
+function TBooleanHelper.SwitchOn(const state: Boolean): Boolean;
 begin
   Result := (Self <> state);
   if Result then

@@ -165,5 +165,5 @@ begin
     if (r < l) then
       SetLength(Result, r);
   end;
-end; 
+end;
 {$ENDIF}

@@ -166,7 +166,7 @@ var
   h, i, j, m, l, d: Integer;
   f: Boolean;
   r: TBooleanArray;
-begin 
+begin
   if (Self.Populated and items.Populated and (index >= 0)) then
   begin
     h := High(items);
@@ -189,7 +189,7 @@ begin
         Break;
     end;
 	j := 0;
-	SetLength(Result, (l - d)); 
+	SetLength(Result, (l - d));
     for i := 0 to (l - 1) do
       if not r[i] then
         Result[j.Increase] := Self[i];

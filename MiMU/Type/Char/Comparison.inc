@@ -15,8 +15,8 @@ function Min(const a, b: Char): Char; overload; inline;
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Ascending>
-  @action  Returns True if the helper’s value is less than or equal to         
-           the given target value. Useful as a comparison predicate when        
+  @action  Returns True if the helper’s value is less than or equal to
+           the given target value. Useful as a comparison predicate when
            sorting or merging arrays in ascending order.
   @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}

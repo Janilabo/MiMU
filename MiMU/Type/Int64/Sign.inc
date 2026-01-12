@@ -5,8 +5,8 @@ function Opposite: Int64; inline;
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Opposite>
-  @action: Returns the opposite number of x. 
-           -9999 to 9999 OR 9999 to -9999 (- <=> +) 
+  @action: Returns the opposite number of x.
+           -9999 to 9999 OR 9999 to -9999 (- <=> +)
   @note: None
 [==============================================================================}
 function TInt64Helper.Opposite: Int64; inline;

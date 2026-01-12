@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
 function Attach(const items: TIntegerArray): Integer; overload;
-function Embed(const items: TIntegerArray; const index: Integer = 2147483647): Integer; overload; 
+function Embed(const items: TIntegerArray; const index: Integer = 2147483647): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

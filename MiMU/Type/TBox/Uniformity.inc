@@ -2,7 +2,7 @@
 function Employs(const val: Integer): Boolean;
 function Omits(const val: Integer): Boolean;
 function Uniform(const val: Integer): Boolean; overload;
-function Uniform: Boolean; overload; 
+function Uniform: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

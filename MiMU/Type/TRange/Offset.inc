@@ -1,13 +1,13 @@
 {$IFDEF METHODS}
-function Back(const N: Integer = 1): TRange; overload; 
+function Back(const N: Integer = 1): TRange; overload;
 function Backed(const N: Integer = 1): TRange; overload;
 function Decrease(const N: Integer = 1): TRange; overload;
 function Decrement(const N: Integer = 1): TRange; overload;
-function Increase(const N: Integer = 1): TRange; overload; 
+function Increase(const N: Integer = 1): TRange; overload;
 function Increment(const N: Integer = 1): TRange; overload;
-function Offset(const sDelta: Integer): TRange; 
-function Shift(const N: Integer = 1): TRange; overload; 
-function Shifted(const N: Integer = 1): TRange; overload;  
+function Offset(const sDelta: Integer): TRange;
+function Shift(const N: Integer = 1): TRange; overload;
+function Shifted(const N: Integer = 1): TRange; overload;
 
 {$ENDIF}
 
@@ -15,9 +15,9 @@ function Shifted(const N: Integer = 1): TRange; overload;
 {==============================================================================]
   <Back>
   @action: Subtracts the given offset N from both Start and Stop of the range,
-           modifying Self in place. Returns a copy of the original range 
+           modifying Self in place. Returns a copy of the original range
            before the backward shift.
-  @note:   Default offset = 1. Useful when you need the previous state while 
+  @note:   Default offset = 1. Useful when you need the previous state while
            moving the range backward.
 [==============================================================================}
 function TRange.Back(const N: Integer = 1): TRange; overload;
@@ -29,9 +29,9 @@ end;
 
 {==============================================================================]
   <Backed>
-  @action: Returns a new TRange shifted backward by the given offset N, without 
+  @action: Returns a new TRange shifted backward by the given offset N, without
            modifying Self.
-  @note:   Default offset = 1. Functional style; Self remains unchanged. Can 
+  @note:   Default offset = 1. Functional style; Self remains unchanged. Can
            be used for expression-style or fluent programming.
 [==============================================================================}
 function TRange.Backed(const N: Integer = 1): TRange; overload;
@@ -43,7 +43,7 @@ end;
 {==============================================================================]
   <Decrease>
   @action: Subtracts the given amount (default = 1) from both Start and Stop of the range,
-           modifying Self in place. Returns a copy of the original range 
+           modifying Self in place. Returns a copy of the original range
            before the decrease.
   @note:   Useful when you want to capture the previous state while mutating the range backward.
 [==============================================================================}
@@ -70,7 +70,7 @@ end;
 {==============================================================================]
   <Increase>
   @action: Adds the given amount (default = 1) to both Start and Stop of the range,
-           modifying Self in place. Returns a copy of the original range 
+           modifying Self in place. Returns a copy of the original range
            before the increase.
   @note:   Useful when you want to capture the previous state while mutating the range forward.
 [==============================================================================}
@@ -106,8 +106,8 @@ end;
 
 {==============================================================================]
   <Shift>
-  @action: Adds the given offset N to both Start and Stop of the range, 
-           modifying Self in place. Returns a copy of the original range 
+  @action: Adds the given offset N to both Start and Stop of the range,
+           modifying Self in place. Returns a copy of the original range
            before the shift.
   @note:   Useful when you need the previous state while mutating the range.
 [==============================================================================}
@@ -121,7 +121,7 @@ end;
 {==============================================================================]
   <Shifted>
   @action: Returns a new TRange offset N by the given value, without modifying Self.
-  @note:   Functional style; Self remains unchanged. Can be used for expression-style 
+  @note:   Functional style; Self remains unchanged. Can be used for expression-style
            or fluent programming.
 [==============================================================================}
 function TRange.Shifted(const N: Integer = 1): TRange; overload;

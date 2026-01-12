@@ -13,7 +13,7 @@ function BSort(const aAscending: Boolean = True): Integer;
   @action: Sorts the integer array using a hybrid approach that combines counting sort
            for densely clustered values with binary insertion for outliers.
            Automatically adapts to the data distribution based on the maxRange parameter.
-  @note: 
+  @note:
     - If the range of array values is smaller than or equal to maxRange, a full counting
       sort is applied.
     - If the range exceeds maxRange, the method counts values within a central cluster

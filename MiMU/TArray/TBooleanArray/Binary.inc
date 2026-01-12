@@ -16,7 +16,7 @@ var
 begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
-    Result[i] := Self[i].Binary;  
+    Result[i] := Self[i].Binary;
 end;
 
 {==============================================================================]
@@ -30,7 +30,7 @@ var
 begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
-    Result[i] := IfThen(Self[i], 1, 0);  
+    Result[i] := IfThen(Self[i], 1, 0);
 end;
 
 {==============================================================================]
@@ -44,6 +44,6 @@ var
 begin
   Result := '';
   for i := 0 to High(Self) do
-    Result := (Result + IfThen(Self[i], '1', '0'));  
+    Result := (Result + IfThen(Self[i], '1', '0'));
 end;
 {$ENDIF}

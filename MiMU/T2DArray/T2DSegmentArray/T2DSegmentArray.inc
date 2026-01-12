@@ -2,7 +2,7 @@
 
 {$IFDEF TYPES}
 C2DSegmentArray = class
-public 
+public
   {$UNDEF TYPES}{$DEFINE METHODS}{$I T2DSegmentArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}

@@ -307,9 +307,9 @@ begin
   end else
     SetLength(Result, 0);
 end;
-  
+
 function MArrayHelper.QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): MArray; overload;
-var 
+var
   w: Double;
 procedure QS_IDs(var aID: TIntegerArray; const L, R: Integer);
 var

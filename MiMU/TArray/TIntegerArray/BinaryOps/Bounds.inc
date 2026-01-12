@@ -606,7 +606,7 @@ end;
   <BinaryLeftmost>
   @action: Finds the first index where the array value is greater than or equal to x
            (ascending) or less than or equal to x (descending).
-  @note: 
+  @note:
     - Returns -1 if no element satisfies the condition.
     - Useful for “leftmost occurrence” searches.
     - Equivalent to BinaryLowerBound but returns -1 when not found instead of Length(Self).
@@ -678,7 +678,7 @@ end;
   <BinaryLowerBound>
   @action: Finds the first index where the array value is greater than or equal to x
            (ascending) or less than or equal to x (descending).
-  @note: 
+  @note:
     - Returns Length(Self) if no element satisfies the condition.
     - Equivalent to std::lower_bound in C++.
     - Works correctly for arrays sorted either ascending or descending.
@@ -766,7 +766,7 @@ end;
   <BinaryRightmost>
   @action: Finds the last index where the array value is less than or equal to x
            (ascending) or greater than or equal to x (descending).
-  @note: 
+  @note:
     - Returns -1 if no element satisfies the condition.
     - Useful for “rightmost occurrence” searches.
     - Differs from BinaryUpperBound: includes elements equal to x.
@@ -1005,7 +1005,7 @@ end;
   <BinaryUpperBound>
   @action: Finds the first index where the array value is strictly greater than x
            (ascending) or strictly less than x (descending).
-  @note: 
+  @note:
     - Returns Length(Self) if no element satisfies the condition.
     - Equivalent to std::upper_bound in C++.
     - Works correctly for arrays sorted either ascending or descending.

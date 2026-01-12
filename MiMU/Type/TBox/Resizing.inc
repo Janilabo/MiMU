@@ -1,13 +1,13 @@
 {$IFDEF METHODS}
 function Resize(const change: Integer): TBox;
 function ResizeBottom(const change: Integer): TBox;
-function ResizeBottomLeft(const change: Integer): TBox; 
+function ResizeBottomLeft(const change: Integer): TBox;
 function ResizeBottomRight(const change: Integer): TBox;
 function ResizeHorizontally(const change: Integer): TBox;
 function ResizeLeft(const change: Integer): TBox;
 function ResizeRight(const change: Integer): TBox;
 function ResizeTop(const change: Integer): TBox;
-function ResizeTopLeft(const change: Integer): TBox; 
+function ResizeTopLeft(const change: Integer): TBox;
 function ResizeTopRight(const change: Integer): TBox;
 function ResizeVertically(const change: Integer): TBox;
 {$ENDIF}

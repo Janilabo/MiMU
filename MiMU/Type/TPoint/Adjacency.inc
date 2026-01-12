@@ -29,7 +29,7 @@ var
   i: Integer;
   c: TPoint;
 begin
-  c := Point((p.X - Self.X), (p.Y - Self.Y)); 
+  c := Point((p.X - Self.X), (p.Y - Self.Y));
   for i := 0 to IfThen(adjacency8, 7, 3) do
     if ((c.X = o[i].X) and (c.Y = o[i].Y)) then
       Exit(True);
@@ -140,7 +140,7 @@ end;
 {==============================================================================]
   <Neighbors>
   @action:  Populates the provided array with adjacent points in 4 or 8 directions.
-  @note:    Uses 8-way adjacency if the array length is greater than 4; 
+  @note:    Uses 8-way adjacency if the array length is greater than 4;
             otherwise only the 4 cardinal directions are filled.
 [==============================================================================}
 procedure TPointHelper.Neighbors(var adj: TPointArray); overload;
@@ -178,7 +178,7 @@ end;
 {==============================================================================]
   <Neighbours>
   @action:  Populates the provided array with adjacent points in 4 or 8 directions.
-  @note:    Uses 8-way adjacency if the array length is greater than 4; 
+  @note:    Uses 8-way adjacency if the array length is greater than 4;
             otherwise only the 4 cardinal directions are filled.
 [==============================================================================}
 procedure TPointHelper.Neighbours(var adj: TPointArray); overload;

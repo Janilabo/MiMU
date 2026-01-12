@@ -16,7 +16,7 @@ function Segment(const xRadius, yRadius: Integer): T2DPointArray; overload;
   @action: Splits TPointArray to groups by radius.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Fragment(const radius: Double; const distFunc: TDistance): T2DPointArray; overload; 
+function TPointArrayHelper.Fragment(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 var
   h, l, i, j, k, r, p, c: Integer;
   v: TBooleanArray;
@@ -68,7 +68,7 @@ end;
   @action: Splits TPointArray to groups by xRadius and yRadius.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Fragment(const xRadius, yRadius: Integer): T2DPointArray; overload; 
+function TPointArrayHelper.Fragment(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
   h, l, i, j, k, r, p, c: Integer;
   v: TBooleanArray;
@@ -274,7 +274,7 @@ end;
   @action: Splits TPointArray to groups by radius.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Segment(const radius: Double; const distFunc: TDistance): T2DPointArray; overload; 
+function TPointArrayHelper.Segment(const radius: Double; const distFunc: TDistance): T2DPointArray; overload;
 var
   b, f, l, i, j, k, p, r, c: Integer;
   v: TBooleanArray;
@@ -327,7 +327,7 @@ end;
   @action: Splits TPointArray to groups by xRadius and yRadius.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Segment(const xRadius, yRadius: Integer): T2DPointArray; overload; 
+function TPointArrayHelper.Segment(const xRadius, yRadius: Integer): T2DPointArray; overload;
 var
   b, f, l, i, j, k, p, r, c: Integer;
   v: TBooleanArray;

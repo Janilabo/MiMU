@@ -67,7 +67,7 @@ end;
 {==============================================================================]
   <To2D>
   @action: Converts 1D array to 2D by height.
-  @note: 
+  @note:
 [==============================================================================}
 function MArrayHelper.To2D(const height: Integer): M2DArray; overload;
 var

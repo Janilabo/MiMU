@@ -11,7 +11,7 @@ function Toggle: Boolean;
   @action: Reverses Self.
   @note: Also returns the reversed Self.
 [==============================================================================}
-function TBooleanHelper.Flip: Boolean; 
+function TBooleanHelper.Flip: Boolean;
 begin
   Self := not Self;
   Result := Self;
@@ -22,7 +22,7 @@ end;
   @action: Returns opposite of Self.
   @note: None
 [==============================================================================}
-function TBooleanHelper.Opposite: Boolean; 
+function TBooleanHelper.Opposite: Boolean;
 begin
   if Self then
     Result := False
@@ -35,7 +35,7 @@ end;
   @action: Reverses Self.
   @note: Also returns the reversed Self.
 [==============================================================================}
-function TBooleanHelper.Switch: Boolean; 
+function TBooleanHelper.Switch: Boolean;
 begin
   if Self then
     Self := False
@@ -49,7 +49,7 @@ end;
   @action: Returns opposite of Self.
   @note: None
 [==============================================================================}
-function TBooleanHelper.Toggle: Boolean; 
+function TBooleanHelper.Toggle: Boolean;
 begin
   Result := not Self;
 end;

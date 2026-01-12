@@ -15,7 +15,7 @@ function Nearby(const targets: TPointArray; const xRadius, yRadius: Integer): TP
            Supports both, 4-way and 8-way direction scanning styles.
   @note: Edge-points are points that are on the edge of the TPointArray, not completely surrounded by other points.
 [==============================================================================}
-function TPointArrayHelper.Edge(const scan8W: Boolean = False): TPointArray; 
+function TPointArrayHelper.Edge(const scan8W: Boolean = False): TPointArray;
 var
   i, l, x, y, w, h, r: Integer;
   m: T2DBooleanArray;

@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
 function Absorb(const val: Integer): Boolean; overload;
-function Extend(const val: Integer): Boolean; 
+function Extend(const val: Integer): Boolean;
 function Include(const val: Integer): TRange; overload;
 {$ENDIF}
 
@@ -30,7 +30,7 @@ begin
       if (val < Self.stop) then
         Self.stop := val;
   end;
-  Result := (Self <> s); 
+  Result := (Self <> s);
 end;
 
 {==============================================================================]

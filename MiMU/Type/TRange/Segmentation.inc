@@ -123,7 +123,7 @@ begin
 end;
 
 {==============================================================================]
-  <Sectioned>                                                             
+  <Sectioned>
   @action: Divide the target range into sequential, non-overlapping subranges
            of the same size as Self.
   @note:   Any remainder at the end of the target range is discarded.

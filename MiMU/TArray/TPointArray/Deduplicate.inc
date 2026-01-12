@@ -9,7 +9,7 @@ function Unduped: TPointArray;
   @action: Removes duplicates from arr.
   @note: Returns number of duplicate items that were removed from arr.
 [==============================================================================}
-function TPointArrayHelper.Undupe: TPointArray; 
+function TPointArrayHelper.Undupe: TPointArray;
 begin
   Result := Self.Copy;
   CPointArray.Unique(Result);
@@ -20,7 +20,7 @@ end;
   @action: Returns arr without duplicates.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Unduped: TPointArray; 
+function TPointArrayHelper.Unduped: TPointArray;
 var
   i, r, w, h: Integer;
   m: T2DBooleanArray;

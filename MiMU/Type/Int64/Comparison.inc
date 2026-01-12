@@ -2,7 +2,7 @@
 function Compare(const target: Int64): Integer; inline;
 function Over(const target: Int64): Boolean; inline;
 function Oversize(const limit: Int64): Boolean; inline;
-function Precede(const target: Int64; const aAscending: Boolean): Boolean; overload; 
+function Precede(const target: Int64; const aAscending: Boolean): Boolean; overload;
 function Sign(const target: Int64 = 0): Integer; inline;
 function Under(const target: Int64): Boolean; inline;
 function Undersize(const limit: Int64): Boolean; inline;

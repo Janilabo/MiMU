@@ -1,4 +1,4 @@
-{$IFDEF OPERATORS}  
+{$IFDEF OPERATORS}
 operator =(const a, b: TConnection): Boolean;
 operator <>(const a, b: TConnection): Boolean;
 {$ENDIF}

@@ -9,7 +9,7 @@ function SegmentedCountingSort(const aAscending: Boolean = True; const bucketSiz
   <CountingSort>
   @action: Sorts the integer array using the classical counting sort algorithm.
            Works efficiently when the range of integer values is relatively small.
-  @note: 
+  @note:
     - This method handles negative and positive integers.
     - The algorithm counts the occurrences of each integer and writes them back
       in sorted order.

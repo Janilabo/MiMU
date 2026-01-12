@@ -70,7 +70,7 @@ begin
   SetLength(Result, Self.Size);
   r := 0;
   for i := High(Result) downto 0 do
-    Result[r.Increase] := i;  
+    Result[r.Increase] := i;
 end;
 
 {==============================================================================]
@@ -128,7 +128,7 @@ var
 begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
-    Result[i] := i;  
+    Result[i] := i;
 end;
 
 {==============================================================================]

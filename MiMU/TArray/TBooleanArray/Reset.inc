@@ -3,7 +3,7 @@ function Reinit: Integer; overload;
 {$ENDIF}
 
 {$IFDEF METHODS}
-class function Init(var arr: TBooleanArray): Integer; overload; 
+class function Init(var arr: TBooleanArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

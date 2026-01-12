@@ -1,5 +1,5 @@
 {$IFDEF METHODS}
-function Border: TPointArray; 
+function Border: TPointArray;
 function BorderPoints(const count: Integer): TPointArray;
 {$ENDIF}
 

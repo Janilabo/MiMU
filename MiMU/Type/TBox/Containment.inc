@@ -1,8 +1,8 @@
 {$IFDEF METHODS}
-function Contains(const pt: TPoint): Boolean; overload; 
+function Contains(const pt: TPoint): Boolean; overload;
 function Contains(const b: TBox): Boolean; overload;
-function Disjoint(const target: TBox): Boolean; overload; 
-function Inside(const target: TBox): Boolean; overload; 
+function Disjoint(const target: TBox): Boolean; overload;
+function Inside(const target: TBox): Boolean; overload;
 function Lacks(const pt: TPoint): Boolean; overload;
 {$ENDIF}
 

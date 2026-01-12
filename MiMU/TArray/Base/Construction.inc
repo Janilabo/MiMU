@@ -6,7 +6,7 @@ function Create(const aSize: Integer; const item: MType): MArray; overload;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
- <Build> 
+ <Build>
  @action: Creates array with item where aSize is length of the array.
  @note: item is placed on every index in result.
 [==============================================================================}
@@ -16,7 +16,7 @@ begin
 end;
 
 {==============================================================================]
-  <Create> 
+  <Create>
   @action: Creates array with item, size as 1. Returns old Self.
   @note: [item]
 [==============================================================================}
@@ -28,7 +28,7 @@ begin
 end;
 
 {==============================================================================]
-  <Create> 
+  <Create>
   @action: Creates array with item where aSize is length of the array. Returns old Self.
   @note: item is placed on every index in result.
 [==============================================================================}

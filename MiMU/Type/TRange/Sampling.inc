@@ -1,10 +1,10 @@
 {$IFDEF METHODS}
 function Any: Integer;
-function Mixed(const mixings: Integer = 1): TIntegerArray;  
+function Mixed(const mixings: Integer = 1): TIntegerArray;
 function Sample(const sSize: Integer): TIntegerArray; overload;
-function Shake(const shakes: Integer = 1): TIntegerArray; 
-function Shuffle(const shuffles: Integer = 1): TIntegerArray; 
-function Some: TIntegerArray; overload; 
+function Shake(const shakes: Integer = 1): TIntegerArray;
+function Shuffle(const shuffles: Integer = 1): TIntegerArray;
+function Some: TIntegerArray; overload;
 function Some(const amount: Integer): TIntegerArray; overload;
 function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
@@ -122,7 +122,7 @@ end;
   @action: Returns the integer values of the range in an alternating “zig-zag” order,
            taking elements from the start and end of the range alternately.
            For example, for a range 1..5, the result is [1,5,2,4,3].
-  @note:   Works for ascending and descending ranges. 
+  @note:   Works for ascending and descending ranges.
            If the range contains a single value, returns an array with that single value.
            Internally uses two arrays (ascending and reversed) to construct the pattern.
 [==============================================================================}

@@ -111,7 +111,7 @@ end;
 [==============================================================================}
 function TPoint.Minkowski(const target: TPoint): Double; overload;
 begin
-  Result := Power(Power(Abs(Self.X - target.X), 2.0) + Power(Abs(Self.Y - target.Y), 2.0), (1 / 2.0)); 
+  Result := Power(Power(Abs(Self.X - target.X), 2.0) + Power(Abs(Self.Y - target.Y), 2.0), (1 / 2.0));
 end;
 
 {==============================================================================]

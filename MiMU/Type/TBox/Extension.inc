@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
 function Extend(const pt: TPoint): Boolean;
-function ExtendX(const xCoord: Integer): Boolean; 
+function ExtendX(const xCoord: Integer): Boolean;
 function ExtendY(const yCoord: Integer): Boolean;
 {$ENDIF}
 

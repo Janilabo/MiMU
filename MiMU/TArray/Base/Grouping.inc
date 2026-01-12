@@ -17,7 +17,7 @@ function Grouping(const groups: TIntegerArray): M2DArray; overload;
 {==============================================================================]
   <Classes>
   @action: Groups consecutive identical array items into sub-arrays (classes).
-  @note: Works on any array. Each run of identical values becomes a class; 
+  @note: Works on any array. Each run of identical values becomes a class;
          duplicate classes can exist if values repeat non-consecutively.
 [==============================================================================}
 function MArrayHelper.Classes: M2DArray; overload;
@@ -47,7 +47,7 @@ end;
 {==============================================================================]
   <Classes>
   @action: Groups consecutive identical array items into sub-arrays (classes).
-  @note: Works on any array. Each run of identical values becomes a class; 
+  @note: Works on any array. Each run of identical values becomes a class;
          duplicate classes can exist if values repeat non-consecutively.
 		 Custom weight.
 [==============================================================================}
@@ -101,7 +101,7 @@ end;
 {==============================================================================]
   <Classify>
   @action: Groups consecutive identical array items into sub-arrays (classes).
-  @note: Works on any array. Each run of identical values becomes a class; 
+  @note: Works on any array. Each run of identical values becomes a class;
          duplicate classes can exist if values repeat non-consecutively.
 [==============================================================================}
 function MArrayHelper.Classify: M2DArray; overload;
@@ -135,7 +135,7 @@ end;
 {==============================================================================]
   <Classify>
   @action: Groups consecutive identical array items into sub-arrays (classes).
-  @note: Works on any array. Each run of identical values becomes a class; 
+  @note: Works on any array. Each run of identical values becomes a class;
          duplicate classes can exist if values repeat non-consecutively.
 		 Custom weight.
 [==============================================================================}

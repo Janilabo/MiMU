@@ -10,7 +10,7 @@ function Upper: Char;
   @action: Lowers char casing if Char is part of uppercased characters
   @note: Limited to ASCII.
 [==============================================================================}
-function TCharHelper.Lower: Char; 
+function TCharHelper.Lower: Char;
 var
   o: Integer;
 begin
@@ -26,7 +26,7 @@ end;
   @action: Swaps casing of Char, if it is part of letters
   @note: Limited to ASCII.
 [==============================================================================}
-function TCharHelper.Swapcase: Char; 
+function TCharHelper.Swapcase: Char;
 var
   o: Integer;
 begin
@@ -45,7 +45,7 @@ end;
   @action: Uppers char casing if Char is part of lowercased characters
   @note: Limited to ASCII.
 [==============================================================================}
-function TCharHelper.Upper: Char; 
+function TCharHelper.Upper: Char;
 var
   o: Integer;
 begin

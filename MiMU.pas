@@ -1,4 +1,4 @@
-                                            { MiMU is Massive Unit )                                                                                                                         
+                                            { MiMU is Massive Unit )
  ╔╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╗
  ╠╬╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╬╣
  ╠╣                                                                                                           ╠╣
@@ -27,7 +27,7 @@
  ╠╣                                                                                                           ╠╣
  ╠╣                                                                                                           ╠╣
  ╠╬╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╦╬╣
- ╚╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╝ 
+ ╚╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╝
                                              ( ..for Free Pascal }
 
 {$mode objfpc}
@@ -76,9 +76,9 @@ generic function QuickSort<T>(var arr: array of T; const comp: specialize TCompa
 
 implementation
 
-{$DEFINE IMPLEMENTATION} 
+{$DEFINE IMPLEMENTATION}
 
-function MiMU_Version: Double; 
+function MiMU_Version: Double;
 begin
   Result := MiMU_VERSION_NUMBER;
 end;
@@ -182,7 +182,7 @@ end;
   <Arrange>
   @action: Ensures that the two items A and B are in the specified order (ascending or descending).
            Performs a swap if necessary.
-  @note: Returns True if a swap occurred, False otherwise. 
+  @note: Returns True if a swap occurred, False otherwise.
          This function only arranges the two values; it does not sort arrays or larger collections.
 [==============================================================================}
 generic function Arrange<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
@@ -194,11 +194,11 @@ end;
 
 {==============================================================================]
   <Arrange>
-  @action: Ensures that the three items A, B, and C are arranged relative to each other according 
+  @action: Ensures that the three items A, B, and C are arranged relative to each other according
            to the specified order (ascending or descending).
            Performs minimal swaps to enforce ordering between the three items.
   @note: Returns True if any swaps occurred, False otherwise.
-         This function does not perform a full sort; it only arranges the three values 
+         This function does not perform a full sort; it only arranges the three values
          relative to each other.
 [==============================================================================}
 generic function Arrange<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;

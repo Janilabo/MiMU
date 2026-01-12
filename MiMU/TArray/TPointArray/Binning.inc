@@ -213,7 +213,7 @@ end;
   @action: Groups points into clusters using a distance threshold and a specified metric.
            Uses binary-search-optimized spatial indexing and union-find to efficiently
            merge points within the given radius according to the metric.
-  @note: Overload for floating-point / metric-aware clustering. 
+  @note: Overload for floating-point / metric-aware clustering.
          The metric can be Euclidean, Manhattan, or any user-defined TMetrics.
          Efficient for large point sets due to spatial partitioning and union-find.
 [==============================================================================}

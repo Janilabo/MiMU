@@ -282,7 +282,7 @@ begin
 	  begin
 	    Swap(n[j].index, n[c].index);
 	    Swap(n[j].distance, n[c].distance);
-          end;  
+          end;
       for j := 0 to Min(High(n), (check - 1)) do
       begin
         if u[n[j].index] then

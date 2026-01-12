@@ -11,7 +11,7 @@ function FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointAr
             Supports custom area by area as TBox.
   note: Make sure start is inside your area. Doesn't pay attention to ANYTHING outside area. :)
 [==============================================================================}
-function TPointArrayHelper.FloodFill(const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload; 
+function TPointArrayHelper.FloodFill(const start: TPoint; const area: TBox; const scan8W: Boolean = False): TPointArray; overload;
 var
   l, i, w, h, x, y, f, r: Integer;
   q, a: TPointArray;
@@ -80,7 +80,7 @@ end;
   @note: Make sure start is inside TPA Bounds.
          Doesn't pay attention to ANYTHING outside those boundaries. :)
 [==============================================================================}
-function TPointArrayHelper.FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointArray; overload; 
+function TPointArrayHelper.FloodFill(const start: TPoint; const scan8W: Boolean = False): TPointArray; overload;
 begin
   Result := Self.FloodFill(start, Self.Bounds, scan8W);
 end;

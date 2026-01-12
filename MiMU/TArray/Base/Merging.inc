@@ -7,7 +7,7 @@ function SwappedMerge(var target: MArray): MArray; overload;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Blend> 
+  <Blend>
   @action: Blends items with array, cleverly.
   @note: None.
 [==============================================================================}

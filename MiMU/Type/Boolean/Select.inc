@@ -44,7 +44,7 @@ end;
 
 {==============================================================================]
   <Select>
-  @action: If (Self = True) then Result := bTrue else Result := bFalse; 
+  @action: If (Self = True) then Result := bTrue else Result := bFalse;
   @note: Returns T or F based on the Self-condition.
 [==============================================================================}
 

@@ -1,9 +1,9 @@
 {$IFDEF METHODS}
 function Any: TPoint;
-function Mixed(const mixings: Integer = 1): TPointArray; 
-function Shake(const shakes: Integer = 1): TPointArray; 
+function Mixed(const mixings: Integer = 1): TPointArray;
+function Shake(const shakes: Integer = 1): TPointArray;
 function Shuffle(const shuffles: Integer = 1): TPointArray;
-function Some: TPointArray; overload; 
+function Some: TPointArray; overload;
 function Some(const amount: Integer): TPointArray; overload;
 {$ENDIF}
 

@@ -202,7 +202,7 @@ begin
       Self[u.Increment] := Self[i];
   Result := (l - (u + 1));
   if (Result > 0) then
-    SetLength(Self, (u + 1)); 
+    SetLength(Self, (u + 1));
 end;
 
 {==============================================================================]

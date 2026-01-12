@@ -156,7 +156,7 @@ end;
   @action: Sorts array Column-by-Column.
   @note: Returns Length().
 [==============================================================================}
-function TPointArrayHelper.SortByColumn(const aAscending: Boolean = True): Integer; overload; 
+function TPointArrayHelper.SortByColumn(const aAscending: Boolean = True): Integer; overload;
 var
   x, y, w, h, r, i: Integer;
   c: T2DIntegerArray;
@@ -189,7 +189,7 @@ begin
               Self[r + i] := Point((x + b.X1), (y + b.Y1));
             r := (r + c[x][y]);
           end;
-    end;		  
+    end;		
     SetLength(c, 0);
   end;
 end;
@@ -230,7 +230,7 @@ end;
   @action: Sorts array Row-by-Row.
   @note: Returns Length().
 [==============================================================================}
-function TPointArrayHelper.SortByRow(const aAscending: Boolean = True): Integer; overload; 
+function TPointArrayHelper.SortByRow(const aAscending: Boolean = True): Integer; overload;
 var
   x, y, w, h, r, i: Integer;
   c: T2DIntegerArray;
@@ -350,7 +350,7 @@ end;
   @action: Returns array sorted by indexes in array bounding box.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.SortedByIndex(const aAscending: Boolean = True): TPointArray; overload; 
+function TPointArrayHelper.SortedByIndex(const aAscending: Boolean = True): TPointArray; overload;
 begin
   if Self.Empty then
     SetLength(Result, 0)

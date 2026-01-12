@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
 function CSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
 function CSplit(const radius: Double; const distFunc: TDistance; const sSorted: Boolean = False): T2DPointArray; overload;
-function CSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload; 
+function CSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;
 function RSplit(const xRadius, yRadius: Integer; const sSorted: Boolean = False): T2DPointArray; overload;
 function RSplit(const radius: Double; const distFunc: TDistance; const sSorted: Boolean = False): T2DPointArray; overload;
 function RSplit(const radius: Double = 1.0; const sSorted: Boolean = False): T2DPointArray; overload;

@@ -2,15 +2,15 @@
 CIntegerArray = class
 public
   class function Combine(const A, B: TIntegerArray): TIntegerArray; overload;
-  class function Init(var arr: TIntegerArray): Integer; overload; 
-  class function Reverse(var arr: TIntegerArray): Boolean; overload; 
-  class function Reversed(const arr: TIntegerArray): TIntegerArray; overload; 
-  class function Unique(var arr: TIntegerArray): Integer; overload; 
+  class function Init(var arr: TIntegerArray): Integer; overload;
+  class function Reverse(var arr: TIntegerArray): Boolean; overload;
+  class function Reversed(const arr: TIntegerArray): TIntegerArray; overload;
+  class function Unique(var arr: TIntegerArray): Integer; overload;
 end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-class function CIntegerArray.Combine(const A, B: TIntegerArray): TIntegerArray; overload; 
+class function CIntegerArray.Combine(const A, B: TIntegerArray): TIntegerArray; overload;
 var
   x, y: Integer;
 begin
@@ -23,14 +23,14 @@ begin
     Move(B[0], Result[x], (y * SizeOf(Integer)));
 end;
 
-class function CIntegerArray.Init(var arr: TIntegerArray): Integer; overload; 
+class function CIntegerArray.Init(var arr: TIntegerArray): Integer; overload;
 begin
   Result := Length(arr);
   if (Result > 0) then
     FillChar(arr[0], (Result * SizeOf(Integer)), 0);
 end;
 
-class function CIntegerArray.Reverse(var arr: TIntegerArray): Boolean; overload; 
+class function CIntegerArray.Reverse(var arr: TIntegerArray): Boolean; overload;
 var
   a: TIntegerArray;
   i: Integer;
@@ -44,7 +44,7 @@ begin
   Move(a[0], arr[0], (Length(arr) * SizeOf(Integer)));
 end;
 
-class function CIntegerArray.Reversed(const arr: TIntegerArray): TIntegerArray; overload; 
+class function CIntegerArray.Reversed(const arr: TIntegerArray): TIntegerArray; overload;
 var
   i, r: Integer;
 begin
@@ -60,7 +60,7 @@ begin
   end;
 end;
 
-class function CIntegerArray.Unique(var arr: TIntegerArray): Integer; overload; 
+class function CIntegerArray.Unique(var arr: TIntegerArray): Integer; overload;
 var
   x, y, z: Integer;
   r: TRange;

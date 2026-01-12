@@ -2,7 +2,7 @@
 
 {$IFDEF TYPES}
 C2DIntegerArray = class
-public 
+public
   {$UNDEF TYPES}{$DEFINE METHODS}{$I T2DIntegerArray.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 {$ENDIF}

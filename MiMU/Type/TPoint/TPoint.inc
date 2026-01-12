@@ -5,7 +5,7 @@ TPoint = record
   X, Y: Integer;
   {$UNDEF TYPES}{$DEFINE METHODS}{$I TPoint.pph}{$UNDEF METHODS}{$DEFINE TYPES}
   function AngleDegrees(const target: TPoint; const compass: Boolean = False): Double; overload;
-  function AngleRadians(const target: TPoint): Double; overload; 
+  function AngleRadians(const target: TPoint): Double; overload;
   class function Null(const value: Integer = -2147483648): TPoint; overload; static;
 end;
 TPointCompare = specialize TCompare<TPoint>;
@@ -92,9 +92,9 @@ end;
 {==============================================================================]
   <Null>
   @action: Returns a "null" or invalid point, with both X and Y set to the specified sentinel value.
-  @param: value - Optional integer to use as the sentinel for an empty point. Defaults 
+  @param: value - Optional integer to use as the sentinel for an empty point. Defaults
                   to Low(Integer) (-2147483648 for 32-bit integers).
-  @note:   This function is typically used to mark uninitialized or invalid points, 
+  @note:   This function is typically used to mark uninitialized or invalid points,
            such as the result of an intersection that yields no valid coordinates.
 [==============================================================================}
 class function TPoint.Null(const value: Integer = -2147483648): TPoint; overload; static;

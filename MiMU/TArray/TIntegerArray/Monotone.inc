@@ -66,13 +66,13 @@ end;
 
 {==============================================================================]
   <Monotony>
-    Determines whether the array is monotone (entirely non-decreasing or 
+    Determines whether the array is monotone (entirely non-decreasing or
     entirely non-increasing).
   @note:
-    • Empty or single-element arrays are considered monotone (trivially True).  
-    • Equal adjacent elements do not affect monotonicity.  
-    • Uses Sign(A - B) from Math to compute relative order.  
-    • Short-circuits for efficiency — exits as soon as a reversal is detected.  
+    • Empty or single-element arrays are considered monotone (trivially True).
+    • Equal adjacent elements do not affect monotonicity.
+    • Uses Sign(A - B) from Math to compute relative order.
+    • Short-circuits for efficiency — exits as soon as a reversal is detected.
     • This version differs from the “direction-lock” version by using an
       accumulated trend variable instead of separate Booleans for ascending
       and descending.

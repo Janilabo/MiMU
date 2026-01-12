@@ -12,7 +12,7 @@ function QSort(const aAscending: Boolean = True): Integer; overload;
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <QuickSortPair>
-  @action: Sorts the array in-place while simultaneously reordering a partner array 
+  @action: Sorts the array in-place while simultaneously reordering a partner array
            to maintain element correspondence. Supports ascending or descending order.
   @note: Useful when you have a key array and a related value array that must stay paired.
          The method returns the length of the array.
@@ -289,7 +289,7 @@ var
       Exit;
     start := s[t].start;
     stop := s[t].stop;
-    Dec(t); 
+    Dec(t);
   end;
 begin
   Result := High(Self);

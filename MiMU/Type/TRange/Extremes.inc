@@ -25,7 +25,7 @@ function Top: Integer; overload;
     - Implemented using a `case` statement on the Boolean expression `(start < stop)`.
     - Handles ascending and descending ranges, including negative numbers.
     - Fully portable across Free Pascal, Delphi, and PascalScript.
-    - Equivalent in behavior to `if start <= stop then Result := start else Result := stop;` 
+    - Equivalent in behavior to `if start <= stop then Result := start else Result := stop;`
       or `Result := Min(start, stop);`.
 [==============================================================================}
 function TRange.Bottom: Integer; overload;
@@ -219,5 +219,5 @@ begin
     True: Result := Self.stop;
     False: Result := Self.start;
   end;
-end; 
+end;
 {$ENDIF}

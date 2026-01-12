@@ -50,7 +50,7 @@ end;
            Each element is counted at most once, regardless of duplicates in either array.
   @note:
     - Does not require the arrays to be sorted.
-    - Uses a hash-based dictionary to track membership; time complexity is roughly O(N + M), 
+    - Uses a hash-based dictionary to track membership; time complexity is roughly O(N + M),
       where N = Length(Self), M = Length(Items).
     - Works for any type supported by MType that can be used as a dictionary key
       (must support hashing and equality comparison).
@@ -83,7 +83,7 @@ end;
 {==============================================================================]
   <Uniformity>
   @action: Returns 1.0 if all elements equal, 0.0 if all different,
-           or something in between based on unique-value ratio. 
+           or something in between based on unique-value ratio.
   @note: None.
  [==============================================================================}
 function MArrayHelper.Uniformity: Double; overload;

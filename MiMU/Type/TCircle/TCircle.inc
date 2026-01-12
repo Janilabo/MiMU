@@ -3,7 +3,7 @@
 {$IFDEF TYPES}
 TCircle = record
   Center: TPoint;
-  Radius: Double; 
+  Radius: Double;
   {$UNDEF TYPES}{$DEFINE METHODS}{$I TCircle.pph}{$UNDEF METHODS}{$DEFINE TYPES}
 end;
 TCircleCompare = specialize TCompare<TCircle>;

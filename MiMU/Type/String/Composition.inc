@@ -42,7 +42,7 @@ begin
 end;
 
 {==============================================================================]
-  <BuiltWithout> 
+  <BuiltWithout>
   @action: Checks if array arr does not have any forbidden items.
   @note: None.
 [==============================================================================}
@@ -77,7 +77,7 @@ begin
     if not m[Ord(Self[i])] then
       Exit(False);
   Result := True;
-end; 
+end;
 
 {==============================================================================]
   <Contains>

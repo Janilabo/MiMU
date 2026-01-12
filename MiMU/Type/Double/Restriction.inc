@@ -22,7 +22,7 @@ function RestrictMin(const limit: Double): Double;
   @action: Returns Double bounded by minimum and maximum limits
   @note: None
 [==============================================================================}
-function TDoubleHelper.Bound(const minimum, maximum: Double): Double; 
+function TDoubleHelper.Bound(const minimum, maximum: Double): Double;
 begin
   Result := (((Self + minimum) + Abs(Self - minimum)) / 2);
   Result := (((Result + maximum) - Abs(Result - maximum)) / 2);
@@ -33,7 +33,7 @@ end;
   @action: Returns Double bounded by maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.BoundMax(const limit: Double): Double; 
+function TDoubleHelper.BoundMax(const limit: Double): Double;
 begin
   Result := (((Self + limit) - Abs(Self - limit)) / 2);
 end;
@@ -43,7 +43,7 @@ end;
   @action: Returns Double bounded by minimum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.BoundMin(const limit: Double): Double; 
+function TDoubleHelper.BoundMin(const limit: Double): Double;
 begin
   Result := (((Self + limit) + Abs(Self - limit)) / 2);
 end;
@@ -159,7 +159,7 @@ end;
   @action: Returns Double bounded by minimum and maximum limits
   @note: None
 [==============================================================================}
-function TDoubleHelper.Restrict(const minimum, maximum: Double): Double; 
+function TDoubleHelper.Restrict(const minimum, maximum: Double): Double;
 begin
   Result := (Self - ((Self - minimum) - Abs(Self - minimum)) / 2);
   Result := (Result - ((Result - maximum) + Abs(Result - maximum)) / 2);
@@ -170,7 +170,7 @@ end;
   @action: Returns Double bounded by maximum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.RestrictMax(const limit: Double): Double; 
+function TDoubleHelper.RestrictMax(const limit: Double): Double;
 begin
   Result := (Self - ((Self - limit) + Abs(Self - limit)) / 2);
 end;
@@ -180,7 +180,7 @@ end;
   @action: Returns Double bounded by minimum limit
   @note: None
 [==============================================================================}
-function TDoubleHelper.RestrictMin(const limit: Double): Double; 
+function TDoubleHelper.RestrictMin(const limit: Double): Double;
 begin
   Result := (Self - ((Self - limit) - Abs(Self - limit)) / 2);
 end;

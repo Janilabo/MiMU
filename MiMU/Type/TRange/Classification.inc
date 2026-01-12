@@ -1,22 +1,22 @@
 {$IFDEF METHODS}
-function Ascending: Boolean; 
+function Ascending: Boolean;
 function Ascends: Boolean;
 function Atomic: Boolean;
 function Composite: Boolean;
-function Descending: Boolean; 
+function Descending: Boolean;
 function Descends: Boolean;
 function Decreasing: Boolean;
-function Dropping: Boolean; 
-function Drops: Boolean; 
-function Growing: Boolean; 
-function Grows: Boolean; 
+function Dropping: Boolean;
+function Drops: Boolean;
+function Growing: Boolean;
+function Grows: Boolean;
 function Increasing: Boolean;
-function Plural: Boolean; 
-function Shrinking: Boolean; 
+function Plural: Boolean;
+function Shrinking: Boolean;
 function Shrinks: Boolean;
-function Singular: Boolean;  
+function Singular: Boolean;
 function Rises: Boolean;
-function Rising: Boolean; 
+function Rising: Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

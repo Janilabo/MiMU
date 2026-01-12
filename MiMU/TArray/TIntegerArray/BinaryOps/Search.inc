@@ -36,9 +36,9 @@ function BSearch(const value: Integer; const oAscending: Boolean = True): Intege
            or—if no exact match exists—the closest element whose absolute difference from the target does not exceed the specified tolerance.
   @note: This implementation evaluates all candidate positions encountered during the binary-search traversal and selects the closest qualifying value.
          It returns –1 when no element falls within the tolerance or when the array is empty or the tolerance is negative.
-[==============================================================================} 
+[==============================================================================}
 function TIntegerArrayHelper.BinaryApproximateSearch(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): Integer; overload;
-var 
+var
   H, D, M: Integer;
   R: TRange;
 begin
@@ -88,9 +88,9 @@ end;
 {==============================================================================]
   <BinaryFind>
   @action: Performs a binary search on a sorted integer array to locate a specific value.
-  @note:   The array must be sorted in either ascending or descending order, 
-           as specified by `aAscending`. If the value is found, its index is 
-           returned; otherwise, -1 is returned. This function assumes there are 
+  @note:   The array must be sorted in either ascending or descending order,
+           as specified by `aAscending`. If the value is found, its index is
+           returned; otherwise, -1 is returned. This function assumes there are
            no ignored or placeholder values in the array.
 [==============================================================================}
 function TIntegerArrayHelper.BinaryFind(const val: Integer; const aAscending: Boolean): Integer; overload;
@@ -281,7 +281,7 @@ end;
   @action: Performs a binary search on the array to find the index of the specified value.
            Automatically detects whether the array is sorted in ascending or descending order.
            Returns the index of the value if found; otherwise returns -1.
-  @note:   The array must be monotonic (fully ascending or fully descending).  
+  @note:   The array must be monotonic (fully ascending or fully descending).
            If the array contains duplicates, the function returns an arbitrary occurrence.
            This method does not modify the array.
 [==============================================================================}
@@ -813,15 +813,15 @@ end;
 
 {==============================================================================]
   <BSearch>
-  @action: Performs a binary search on the current integer array using a 
-           branchless, arithmetic-driven search strategy. The routine locates 
-           the index of a target value within a sorted array, supporting both 
+  @action: Performs a binary search on the current integer array using a
+           branchless, arithmetic-driven search strategy. The routine locates
+           the index of a target value within a sorted array, supporting both
            ascending and descending order based on the supplied flag.
-  @note: This implementation uses mask-based comparisons and branchless 
-         interval updates to avoid data-dependent branching. It is designed 
-         to provide predictable control flow and consistent performance 
-         regardless of input distribution. The function returns the index of 
-         one matching element if the value is present; otherwise, it returns 
+  @note: This implementation uses mask-based comparisons and branchless
+         interval updates to avoid data-dependent branching. It is designed
+         to provide predictable control flow and consistent performance
+         regardless of input distribution. The function returns the index of
+         one matching element if the value is present; otherwise, it returns
          -1. The input array must be pre-sorted in the specified order.
 [==============================================================================}
 function TIntegerArrayHelper.BSearch(const value: Integer; const oAscending: Boolean = True): Integer; overload;

@@ -1,9 +1,9 @@
 {$IFDEF METHODS}
-function Above(const target: Integer): Boolean; overload; 
+function Above(const target: Integer): Boolean; overload;
 function Above(const target: TRange): Boolean; overload;
-function Below(const target: Integer): Boolean; overload; 
+function Below(const target: Integer): Boolean; overload;
 function Below(const target: TRange): Boolean; overload;
-function Contains(const x: Integer): Boolean; overload; 
+function Contains(const x: Integer): Boolean; overload;
 function Contains(const x: TRange): Boolean; overload;
 function Digit(const x: Integer): Boolean; inline;
 function Employs(const val: Integer): Boolean;

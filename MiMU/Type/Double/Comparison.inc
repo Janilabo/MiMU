@@ -15,14 +15,14 @@ function Undersize(const limit: Double): Boolean;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
-function Comparison(const A, B: Double): Integer; overload; 
+function Comparison(const A, B: Double): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Ascending>
-  @action  Returns True if the helper’s value is less than or equal to         
-           the given target value. Useful as a comparison predicate when        
+  @action  Returns True if the helper’s value is less than or equal to
+           the given target value. Useful as a comparison predicate when
            sorting or merging arrays in ascending order.
   @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}
@@ -130,7 +130,7 @@ end;
   @action: Returns true if x is higher than limit.
   @note: None
 [==============================================================================}
-function TDoubleHelper.Oversize(const limit: Double): Boolean; 
+function TDoubleHelper.Oversize(const limit: Double): Boolean;
 begin
   Result := (Self > limit);
 end;
@@ -181,7 +181,7 @@ end;
   @action: Returns true if x is lower than limit.
   @note: None
 [==============================================================================}
-function TDoubleHelper.Undersize(const limit: Double): Boolean; 
+function TDoubleHelper.Undersize(const limit: Double): Boolean;
 begin
   Result := (Self < limit);
 end;

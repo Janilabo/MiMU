@@ -56,14 +56,14 @@ begin
       Inc(P);
     until (P = M);
   end;
-end; 
+end;
 
 {==============================================================================]
   <Boundaries>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Boundaries: TBox; 
+function TPointArrayHelper.Boundaries: TBox;
   function BR(const arr: TPointArray; const L, R: Integer): TBox;
   var
     M: Integer;
@@ -84,7 +84,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.BoundingBox: TBox; 
+function TPointArrayHelper.BoundingBox: TBox;
 var
   i: Integer;
   a, b: TIntegerArray;
@@ -106,7 +106,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Bounds: TBox; overload; 
+function TPointArrayHelper.Bounds: TBox; overload;
 var
   i: Integer;
 begin
@@ -133,7 +133,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: Stores width and height of bounds to width and height variables.
 [==============================================================================}
-function TPointArrayHelper.Bounds(var width, height: Integer): TBox; overload; 
+function TPointArrayHelper.Bounds(var width, height: Integer): TBox; overload;
 begin
   case Self.Empty of
     False:
@@ -155,7 +155,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Box: TBox; 
+function TPointArrayHelper.Box: TBox;
 var
   P: TPoint;
 begin
@@ -171,7 +171,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Boxed: TBox; 
+function TPointArrayHelper.Boxed: TBox;
 var
   i: Integer;
 begin
@@ -197,7 +197,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Coverage: TBox; overload; 
+function TPointArrayHelper.Coverage: TBox; overload;
 var
   i: Integer;
   a, b: TPoint;
@@ -227,7 +227,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Extent: TBox; 
+function TPointArrayHelper.Extent: TBox;
 var
   h, v: TIntegerArray;
   z: Integer;
@@ -246,7 +246,7 @@ end;
   @action: Returns Horizontal-axis from TPointArray as TRange.
   @note: MinMax X-values.
 [==============================================================================}
-function TPointArrayHelper.Horizontal: TRange; overload; 
+function TPointArrayHelper.Horizontal: TRange; overload;
 var
   i: Integer;
 begin
@@ -268,7 +268,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.MinMax: TBox; 
+function TPointArrayHelper.MinMax: TBox;
 var
   i: Integer;
 begin
@@ -289,7 +289,7 @@ end;
   @action: Returns bounding box around TPointArray arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Region: TBox; overload; 
+function TPointArrayHelper.Region: TBox; overload;
 var
   i, l: Integer;
 begin
@@ -315,7 +315,7 @@ end;
   @action: Returns Vertical-axis from TPointArray as TRange.
   @note: MinMax Y-values.
 [==============================================================================}
-function TPointArrayHelper.Vertical: TRange; overload; 
+function TPointArrayHelper.Vertical: TRange; overload;
 var
   i: Integer;
 begin

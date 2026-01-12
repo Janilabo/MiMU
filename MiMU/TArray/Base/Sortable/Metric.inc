@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
 function Mode: MType; overload;
-function Center: MType; overload; 
+function Center: MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

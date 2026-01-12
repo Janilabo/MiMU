@@ -5,7 +5,7 @@ function Unduped: TCharArray;
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Unduped>
-  @action: Returns TCharArray with unique chars. 
+  @action: Returns TCharArray with unique chars.
   @note: Works with ASCII.
 [==============================================================================}
 function TCharArrayHelper.Unduped: TCharArray;

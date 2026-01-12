@@ -37,7 +37,7 @@ begin
     1: Exit([yArr]);
   end;
   SetLength(Result, l);
-  case xOrder of 
+  case xOrder of
     True:
     for i := 0 to High(Self) do
       Result[yArr.BinarySearch(Self[i].Y)].BinaryAppend(Self[i].X, xAscending);

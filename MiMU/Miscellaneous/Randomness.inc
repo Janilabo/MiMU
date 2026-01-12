@@ -1,15 +1,15 @@
 {$IFDEF FUNCTIONS}
 function Random2(const x: Integer; const r: Integer = 2): Integer; overload;
-function RandomB: Boolean; overload; 
+function RandomB: Boolean; overload;
 function RandomBit: Byte; overload;
 function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload;
 function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload;
 function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload;
-function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload;  
+function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-function Random2(const x: Integer; const r: Integer = 2): Integer; overload; 
+function Random2(const x: Integer; const r: Integer = 2): Integer; overload;
 var
   i: Integer;
 begin
@@ -18,17 +18,17 @@ begin
   Result := Random(x);
 end;
 
-function RandomB: Boolean; overload; 
+function RandomB: Boolean; overload;
 begin
   Result := (Random(2) = 1);
 end;
 
-function RandomBit: Byte; overload; 
+function RandomBit: Byte; overload;
 begin
   Result := Random(2);
 end;
 
-function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload; 
+function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload;
 var
   i: Integer;
 begin
@@ -37,12 +37,12 @@ begin
     Result := Max(Result, Random(x));
 end;
 
-function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload; 
+function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload;
 begin
   Result := Round(RandomSample(x, sample).Mean);
 end;
 
-function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload; 
+function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload;
 var
   i: Integer;
 begin
@@ -51,7 +51,7 @@ begin
     Result := Min(Result, Random(x));
 end;
 
-function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload; 
+function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload;
 var
   i: Integer;
 begin

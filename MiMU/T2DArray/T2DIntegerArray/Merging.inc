@@ -3,7 +3,7 @@ class function Merge(const arr: T2DIntegerArray): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-class function C2DIntegerArray.Merge(const arr: T2DIntegerArray): TIntegerArray; overload; 
+class function C2DIntegerArray.Merge(const arr: T2DIntegerArray): TIntegerArray; overload;
 var
   i, r: Integer;
 begin

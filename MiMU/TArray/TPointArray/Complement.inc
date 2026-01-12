@@ -12,7 +12,7 @@ function Inverted: TPointArray; overload;
   @action: Returns inverted version of arr.
   @note: Supports custom bounds.
 [==============================================================================}
-function TPointArrayHelper.Inverse(const arrBounds: TBox): TPointArray; overload; 
+function TPointArrayHelper.Inverse(const arrBounds: TBox): TPointArray; overload;
 var
   w, h, l, i, x, y: Integer;
   b: T2DBooleanArray;
@@ -32,7 +32,7 @@ begin
   SetLength(Result, l);
 end;
 
-function TPointArrayHelper.Inverse: TPointArray; overload; 
+function TPointArrayHelper.Inverse: TPointArray; overload;
 begin
   Result := Self.Inverse(Self.Bounds);
 end;
@@ -42,7 +42,7 @@ end;
   @action: Returns inverted version of arr.
   @note: None.
 [==============================================================================}
-function TPointArrayHelper.Invert: TPointArray; 
+function TPointArrayHelper.Invert: TPointArray;
 var
   i, x, y, w, h, r: Integer;
   m: T2DBooleanArray;
@@ -73,7 +73,7 @@ end;
   @action: Returns inverted version of arr.
   @note: Supports custom bounds.
 [==============================================================================}
-function TPointArrayHelper.Inverted(const arrBounds: TBox): TPointArray; overload; 
+function TPointArrayHelper.Inverted(const arrBounds: TBox): TPointArray; overload;
 var
   x, y, r: Integer;
 begin
@@ -86,7 +86,7 @@ begin
   SetLength(Result, r);
 end;
 
-function TPointArrayHelper.Inverted: TPointArray; overload; 
+function TPointArrayHelper.Inverted: TPointArray; overload;
 begin
   Result := Self.Inverted(Self.Bounds);
 end;

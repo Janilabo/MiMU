@@ -1,17 +1,17 @@
 {$IFDEF METHODS}
-function Border: TPointArray; overload; 
-function Border(const X, Y: Integer): Boolean; overload; 
+function Border: TPointArray; overload;
+function Border(const X, Y: Integer): Boolean; overload;
 function Border(const pt: TPoint): Boolean; overload;
 function Contour: TPointArray;
-function CornerPoints: TPointArray; 
-function CornerPts: TPointArray; 
+function CornerPoints: TPointArray;
+function CornerPts: TPointArray;
 function Corners: TPointArray;
-function Edge: TPointArray; overload; 
-function Edge(const X, Y: Integer): Boolean; overload; 
-function Edge(const pt: TPoint): Boolean; overload; 
-function Outline: TPointArray; overload; 
-function Outline(const X, Y: Integer): Boolean; overload; 
-function Outline(const pt: TPoint): Boolean; overload; 
+function Edge: TPointArray; overload;
+function Edge(const X, Y: Integer): Boolean; overload;
+function Edge(const pt: TPoint): Boolean; overload;
+function Outline: TPointArray; overload;
+function Outline(const X, Y: Integer): Boolean; overload;
+function Outline(const pt: TPoint): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}

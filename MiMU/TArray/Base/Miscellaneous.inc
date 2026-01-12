@@ -1,14 +1,14 @@
 {$IFDEF HELPERS}
 function Domain: TRange; overload;
 function Sample(const sSize: Integer): MArray; overload;
-function Zigzag(const zAscending: Boolean = True): MArray; overload;   
+function Zigzag(const zAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Domain>
   @action: Returns the valid index range of the array.
-  @note: 
+  @note:
     - If the array is empty, start and stop are set to -1.
     - Otherwise, start = 0 and stop = Length(Self) - 1.
 [==============================================================================}
