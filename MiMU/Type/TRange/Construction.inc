@@ -3,6 +3,7 @@ class function Construct(const rStart, rStop: Integer): TRange; overload; static
 function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer;
 constructor Create(const rStart, rStop: Integer); overload;
 constructor Create(const value: Integer); overload;
+constructor Create(const data: string); overload;
 function Init(const rStart, rStop: Integer): TRange; overload;
 function Init(const r: TRange): TRange; overload;
 function Init(const val: Integer = 0): TRange; overload;
@@ -16,6 +17,8 @@ function Create: TRange; overload;
 {$IFDEF FUNCTIONS}
 function Range(const rStart, rStop: Integer): TRange; overload; inline;
 function Range(const val: Integer = 0): TRange; overload; inline;
+function R(const startVal, stopVal: Integer): TRange; overload; inline;
+function R(const val: Integer = 0): TRange; overload; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -61,6 +64,33 @@ end;
 constructor TRange.Create(const value: Integer); overload;
 begin
   Self.Create(value, value);
+end;
+
+{==============================================================================]
+  <Create>
+  @action: Create a TRange with value
+  @note: None.
+[==============================================================================}
+constructor TRange.Create(const data: string);
+var
+  p: TStringArray;
+  s: string;
+begin
+  if Pos('..', data) > 0 then
+    s := '..'
+  else if Pos('-', data) > 0 then
+    s := '-'
+  else if Pos(':', data) > 0 then
+    s := ':'
+  else if Pos(',', data) > 0 then
+    s := ','
+  else
+    raise Exception.Create('Invalid range format');
+  p := SplitString(data, s);
+  if (System.Length(p) <> 2) then
+    raise Exception.Create('Invalid range format');
+  start := StrToInt(Trim(p[0]));
+  stop  := StrToInt(Trim(p[1]));
 end;
 
 {==============================================================================]
@@ -155,6 +185,33 @@ end;
          The default value (0) is used when no argument is provided.
 [==============================================================================}
 function Range(const val: Integer = 0): TRange; overload; inline;
+begin
+  Result.start := val;
+  Result.stop := val;
+end;
+
+{==============================================================================]
+  <R>
+  @action: Constructs and returns a TRange whose start and stop values are set to
+           startVal and stopVal respectively. No normalization or validation is
+           performed.
+  @note: The resulting range preserves the specified ordering. If startVal > stopVal,
+         the function returns a descending range.
+[==============================================================================}
+function R(const startVal, stopVal: Integer): TRange; overload; inline;
+begin
+  Result.start := startVal;
+  Result.stop := stopVal;
+end;
+
+{==============================================================================]
+  <R>
+  @action: Constructs and returns a TRange representing a single-value range,
+           with both start and stop initialized to val.
+  @note: This overload is intended for convenience when creating point ranges.
+         The default value (0) is used when no argument is provided.
+[==============================================================================}
+function R(const val: Integer = 0): TRange; overload; inline;
 begin
   Result.start := val;
   Result.stop := val;

@@ -28,6 +28,8 @@ function Create: TBox; overload;
 {$IFDEF FUNCTIONS}
 function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
 function Box(const val: Integer = 0): TBox; overload; inline;
+function B(const XS, YS, XE, YE: Integer): TBox; overload; inline;
+function B(const val: Integer = 0): TBox; overload; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -315,6 +317,22 @@ begin
 end;
 
 function Box(const val: Integer = 0): TBox; overload; inline;
+begin
+  Result.X1 := val;
+  Result.Y1 := val;
+  Result.X2 := val;
+  Result.Y2 := val;
+end;
+
+function B(const XS, YS, XE, YE: Integer): TBox; overload; inline;
+begin
+  Result.X1 := XS;
+  Result.Y1 := YS;
+  Result.X2 := XE;
+  Result.Y2 := YE;
+end;
+
+function B(const val: Integer = 0): TBox; overload; inline;
 begin
   Result.X1 := val;
   Result.Y1 := val;

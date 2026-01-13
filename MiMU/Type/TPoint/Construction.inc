@@ -12,6 +12,8 @@ function Create: TPoint; overload;
 {$IFDEF FUNCTIONS}
 function Point(const pX, pY: Integer): TPoint; overload; inline;
 function Point(const val: Integer = 0): TPoint; overload; inline;
+function P(const xVal, yVal: Integer): TPoint; overload; inline;
+function P(const val: Integer = 0): TPoint; overload; inline;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -78,6 +80,18 @@ begin
 end;
 
 function Point(const val: Integer = 0): TPoint; overload; inline;
+begin
+  Result.X := val;
+  Result.Y := val;
+end;
+
+function P(const xVal, yVal: Integer): TPoint; overload; inline;
+begin
+  Result.X := xVal;
+  Result.Y := yVal;
+end;
+
+function P(const val: Integer = 0): TPoint; overload; inline;
 begin
   Result.X := val;
   Result.Y := val;
