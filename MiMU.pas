@@ -52,6 +52,7 @@ function MiMU_Version: Double;
 
 type
   generic TCompare<T> = function(const A, B: T): Integer;
+  TByteSet = set of Byte;
 
 {$I MiMU/MiMU.inc}
 

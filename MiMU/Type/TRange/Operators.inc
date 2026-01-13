@@ -7,6 +7,12 @@ operator <>(const a, b: TRange): Boolean;
 operator in(const I: Integer; const R: TRange): Boolean;
 operator shl(const R: TRange; const N: Integer): TRange;
 operator shr(const R: TRange; const N: Integer): TRange;
+
+operator := (const I: Integer): TRange;
+operator := (const S: TByteSet): TRange;
+operator := (const A: TIntegerArray): TRange;
+operator := (const R: TRange): TIntegerArray;
+operator := (const R: TRange): string;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -105,5 +111,62 @@ operator shr(const R: TRange; const N: Integer): TRange;
 begin
   Result.start := (R.start shl N);
   Result.stop := (R.stop shl N);
+end;
+
+operator := (const I: Integer): TRange;
+begin
+  Result.start := I;
+  Result.stop := I;
+end;
+
+operator := (const S: TByteSet): TRange;
+var
+  i: Byte;
+begin
+  Result.start := 255;
+  Result.stop := 0;
+  for i := 0 to 255 do
+    if i in S then
+      if (i < Result.start) then
+	    Result.start := i
+      else if (i > Result.stop) then
+	    Result.stop := i;
+end;
+
+operator := (const A: TIntegerArray): TRange;
+var
+  i: Integer;
+begin
+  if (Length(A) > 0) then
+  begin
+    Result.start := A[0];
+    Result.stop := A[0];
+    for i := 1 to High(A) do
+      if (A[i] < Result.start) then
+	    Result.start := A[i]
+      else if (A[i] > Result.stop) then
+	    Result.stop := A[i];
+  end;
+end;
+
+operator := (const R: TRange): TIntegerArray;
+var
+  i, h: Integer;
+begin
+  SetLength(Result, (Abs(R.stop - R.start) + 1));
+  h := 0;
+  case (R.start <= R.stop) of
+    True:
+    for i := R.start to R.stop do
+      Result[h.Increase] := i;
+    False:
+    for i := R.start downto R.stop do
+      Result[h.Increase] := i;
+  end;
+end;
+
+operator := (const R: TRange): string;
+begin
+  Result := Format('%d..%d', [R.start, R.stop]);
 end;
 {$ENDIF}
