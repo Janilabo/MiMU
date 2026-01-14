@@ -31,12 +31,12 @@
                                              ( ..for Free Pascal }
 
 {$mode objfpc}
+{$H+}
 {$macro on}
 {$inline on}
 {$modeswitch advancedrecords}
 {$modeswitch arrayoperators}
 {$modeswitch typehelpers}
-{$H+}
 
 unit MiMU;
 
