@@ -1,6 +1,7 @@
 {$IFDEF METHODS}
 function Area: Integer;
 function Capacity: Integer;
+function Cardinality: Integer;
 function Count: Integer;
 function Coverage: Integer; overload;
 function Deficit: Integer;
@@ -10,6 +11,9 @@ function Diff: Integer;
 function Difference: Integer;
 function Dist: Integer;
 function Extent: Integer; overload;
+function GetLength: Integer;
+function GetSize: Integer;
+function Len: Integer;
 function Length: Integer; overload;
 function Magnitude: Integer;
 function Population: Integer; overload;
@@ -24,6 +28,7 @@ function Sized: Integer; overload;
 function Sum: Int64;
 function Summation: Int64;
 function Total: Int64;
+function Width: Integer;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -48,6 +53,25 @@ end;
 function TRange.Capacity: Integer;
 begin
   Result := (IfThen(Self.Descending, (Self.start - Self.stop), (Self.stop - Self.start)) + 1);
+end;
+
+{==============================================================================]
+  <Cardinality>
+  @action: Returns length of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Cardinality: Integer;
+  function C(const A, B: Integer): Integer;
+  begin
+    if (A > B) then
+	  Exit(A - B);
+    Result := (B - A);
+  end;
+begin
+  if (Self.Start = Self.stop) then
+    Result := 1
+  else
+    Result := (C(Self.start, Self.stop) + 1);
 end;
 
 {==============================================================================]
@@ -152,6 +176,56 @@ end;
 function TRange.Extent: Integer; overload;
 begin
   Result := Succ(Max(Self.start, Self.stop) - Min(Self.start, Self.stop));
+end;
+
+{==============================================================================]
+  <GetLength>
+  @action: Returns length of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.GetLength: Integer;
+var
+  d: Integer;
+begin
+  if (Self.start = Self.stop) then
+    Exit(1);
+  if (Self.start <= Self.stop) then
+    d := (Self.stop - Self.start)
+  else
+    d := (Self.start - Self.stop);
+  Result := (((d xor (d shr 31)) - (d shr 31)) + 1);
+end;
+
+{==============================================================================]
+  <GetSize>
+  @action: Returns length of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.GetSize: Integer;
+var
+  c: Integer;
+begin
+  if (Self.start < Self.stop) then
+    c := -1
+  else if (Self.start > Self.stop) then
+    c := 1
+  else
+    c := 0;
+  case c of
+     0: Result := 1;
+     -1: Result := ((Self.stop - Self.start) + 1);
+     1: Result := ((Self.start - Self.stop) + 1);
+  end;
+end;
+
+{==============================================================================]
+  <Len>
+  @action: Returns length of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Len: Integer;
+begin
+  Result := (((Self.stop - Self.start) * IfThen((Self.start <= Self.stop), 1, -1)) + 1);
 end;
 
 {==============================================================================]
@@ -320,5 +394,22 @@ begin
     Result := (((Int64(Self.start) * (Self.start + 1)) div 2) - ((Int64(Self.stop - 1) * Self.stop) div 2))
   else
     Result := (((Int64(Self.stop) * (Self.stop + 1)) div 2) - ((Int64(Self.start - 1) * Self.start) div 2));
+end;
+
+{==============================================================================]
+  <Width>
+  @action: Returns size of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Width: Integer;
+var
+  s: Int64;
+begin
+  if (Self.start = Self.stop) then
+    Exit(1);
+  s := (Int64(Self.stop) - Int64(Self.start));
+  if (s < 0) then
+    s := -s;
+  Result := (Integer(s) + 1);
 end;
 {$ENDIF}
