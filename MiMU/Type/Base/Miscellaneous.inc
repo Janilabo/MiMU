@@ -12,7 +12,9 @@ begin
     Result := sFalse;
 end;
 
-function Swap(var A, B: MType): Boolean; overload; var C: MType;
+function Swap(var A, B: MType): Boolean; overload;
+var
+  C: MType;
 begin
   Result := (A <> B);
   C := A;
