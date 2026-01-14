@@ -26,10 +26,10 @@ function Create: TBox; overload;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
-function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
-function Box(const val: Integer = 0): TBox; overload; inline;
-function B(const XS, YS, XE, YE: Integer): TBox; overload; inline;
-function B(const val: Integer = 0): TBox; overload; inline;
+function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload;
+function Box(const val: Integer = 0): TBox; overload;
+function B(const XS, YS, XE, YE: Integer): TBox; overload;
+function B(const val: Integer = 0): TBox; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -308,7 +308,7 @@ begin
   Result := Self.Make(pt, radius, radius);
 end;
 
-function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload; inline;
+function Box(const bX1, bY1, bX2, bY2: Integer): TBox; overload;
 begin
   Result.X1 := bX1;
   Result.Y1 := bY1;
@@ -316,7 +316,7 @@ begin
   Result.Y2 := bY2;
 end;
 
-function Box(const val: Integer = 0): TBox; overload; inline;
+function Box(const val: Integer = 0): TBox; overload;
 begin
   Result.X1 := val;
   Result.Y1 := val;
@@ -324,7 +324,7 @@ begin
   Result.Y2 := val;
 end;
 
-function B(const XS, YS, XE, YE: Integer): TBox; overload; inline;
+function B(const XS, YS, XE, YE: Integer): TBox; overload;
 begin
   Result.X1 := XS;
   Result.Y1 := YS;
@@ -332,7 +332,7 @@ begin
   Result.Y2 := YE;
 end;
 
-function B(const val: Integer = 0): TBox; overload; inline;
+function B(const val: Integer = 0): TBox; overload;
 begin
   Result.X1 := val;
   Result.Y1 := val;

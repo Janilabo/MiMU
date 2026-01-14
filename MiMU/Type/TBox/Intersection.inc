@@ -1,7 +1,7 @@
 {$IFDEF METHODS}
 function Intersect(const b: TBox): TBox; overload;
 function Intersect(const b: TBox; var iArea: TBox): Boolean; overload;
-function Overlap(const b: TBox): Boolean; inline;
+function Overlap(const b: TBox): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -34,7 +34,7 @@ end;
   @action: Returns true if a and b are in anykind of contact with each other.
   @note: None
 [==============================================================================}
-function TBox.Overlap(const b: TBox): Boolean; inline;
+function TBox.Overlap(const b: TBox): Boolean;
 begin
   Result := not ((Self.X1 > b.X2) or (Self.X2 < b.X1) or (Self.Y1 > b.Y2) or (Self.Y2 < b.Y1));
 end;

@@ -1,5 +1,5 @@
 {$IFDEF HELPERS}
-function Opposite: Int64; inline;
+function Opposite: Int64;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function Opposite: Int64; inline;
            -9999 to 9999 OR 9999 to -9999 (- <=> +)
   @note: None
 [==============================================================================}
-function TInt64Helper.Opposite: Int64; inline;
+function TInt64Helper.Opposite: Int64;
 begin
   Result := (Self * -1);
 end;

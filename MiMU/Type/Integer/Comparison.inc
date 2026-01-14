@@ -1,17 +1,17 @@
 {$IFDEF HELPERS}
-function Ascending(const target: Integer): Boolean; inline;
+function Ascending(const target: Integer): Boolean;
 function Cmpr(const target: Integer): Integer;
-function Compare(const target: Integer): Integer; inline;
+function Compare(const target: Integer): Integer;
 function Compared(const target: Integer; const oAscending: Boolean = True): Integer;
 function CompareTo(const target: Integer; const oAscending: Boolean = True): Integer;
 function CompareWith(const target: Integer; const oAscending: Boolean = True): Integer;
-function Descending(const target: Integer): Boolean; inline;
-function Over(const target: Integer): Boolean; inline;
-function Oversize(const limit: Integer): Boolean; inline;
+function Descending(const target: Integer): Boolean;
+function Over(const target: Integer): Boolean;
+function Oversize(const limit: Integer): Boolean;
 function Precede(const target: Integer; const aAscending: Boolean): Boolean; overload;
-function Sign(const target: Integer = 0): Integer; inline;
-function Under(const target: Integer): Boolean; inline;
-function Undersize(const limit: Integer): Boolean; inline;
+function Sign(const target: Integer = 0): Integer;
+function Under(const target: Integer): Boolean;
+function Undersize(const limit: Integer): Boolean;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
@@ -26,7 +26,7 @@ function Comparison(const A, B: Integer): Integer; overload;
            sorting or merging arrays in ascending order.
   @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}
-function TIntegerHelper.Ascending(const target: Integer): Boolean; inline;
+function TIntegerHelper.Ascending(const target: Integer): Boolean;
 begin
   Result := (Self <= target);
 end;
@@ -37,7 +37,7 @@ end;
            Results: 0=EQUAL, 1=x>target, -1=x<target
   @note: None
 [==============================================================================}
-function TIntegerHelper.Cmpr(const target: Integer): Integer; inline;
+function TIntegerHelper.Cmpr(const target: Integer): Integer;
 begin
   Result := (Ord(Self > target) - Ord(Self < target));
 end;
@@ -48,7 +48,7 @@ end;
            Results: 0=EQUAL, 1=x>target, -1=x<target
   @note: None
 [==============================================================================}
-function TIntegerHelper.Compare(const target: Integer): Integer; inline;
+function TIntegerHelper.Compare(const target: Integer): Integer;
 begin
   if (Self = target) then
     Exit(0);
@@ -110,7 +110,7 @@ end;
            sorting or merging arrays in descending order.
   @note: Pure comparison only; equivalent to Self >= target.
 [==============================================================================}
-function TIntegerHelper.Descending(const target: Integer): Boolean; inline;
+function TIntegerHelper.Descending(const target: Integer): Boolean;
 begin
   Result := (Self >= target);
 end;
@@ -120,7 +120,7 @@ end;
   @action: Returns true if x is higher than target.
   @note: None
 [==============================================================================}
-function TIntegerHelper.Over(const target: Integer): Boolean; inline;
+function TIntegerHelper.Over(const target: Integer): Boolean;
 begin
   Result := not (target <= Self);
 end;
@@ -130,7 +130,7 @@ end;
   @action: Returns true if x is higher than limit.
   @note: None
 [==============================================================================}
-function TIntegerHelper.Oversize(const limit: Integer): Boolean; inline;
+function TIntegerHelper.Oversize(const limit: Integer): Boolean;
 begin
   Result := (Self > limit);
 end;
@@ -156,7 +156,7 @@ end;
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TIntegerHelper.Sign(const target: Integer = 0): Integer; inline;
+function TIntegerHelper.Sign(const target: Integer = 0): Integer;
 begin
   if (Self = target) then
     Result := 0
@@ -171,7 +171,7 @@ end;
   @action: Returns true if x is lower than target.
   @note: None
 [==============================================================================}
-function TIntegerHelper.Under(const target: Integer): Boolean; inline;
+function TIntegerHelper.Under(const target: Integer): Boolean;
 begin
   Result := not (target >= Self);
 end;
@@ -181,7 +181,7 @@ end;
   @action: Returns true if x is lower than limit.
   @note: None
 [==============================================================================}
-function TIntegerHelper.Undersize(const limit: Integer): Boolean; inline;
+function TIntegerHelper.Undersize(const limit: Integer): Boolean;
 begin
   Result := (Self < limit);
 end;

@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function Difference(const T: Double): Double; inline;
-function Distance(const T: Double): Double; inline;
+function Difference(const T: Double): Double;
+function Distance(const T: Double): Double;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function Distance(const T: Double): Double; inline;
   @action: Returns the difference from x to T.
   @note: None
 [==============================================================================}
-function TDoubleHelper.Difference(const T: Double): Double; inline;
+function TDoubleHelper.Difference(const T: Double): Double;
 begin
   Result := (T - Self);
 end;
@@ -19,7 +19,7 @@ end;
   @action: Returns the distance between x and T.
   @note: None
 [==============================================================================}
-function TDoubleHelper.Distance(const T: Double): Double; inline;
+function TDoubleHelper.Distance(const T: Double): Double;
 begin
   Result := Abs(T - Self);
 end;

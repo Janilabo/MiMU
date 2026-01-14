@@ -1,16 +1,16 @@
 {$IFDEF HELPERS}
-function Ascending(const target: Double): Boolean; inline;
+function Ascending(const target: Double): Boolean;
 function Cmpr(const target: Double): Integer;
-function Compare(const target: Double): Integer; inline;
+function Compare(const target: Double): Integer;
 function Compared(const target: Double; const oAscending: Boolean = True): Integer;
 function CompareTo(const target: Double; const oAscending: Boolean = True): Integer;
 function CompareWith(const target: Double; const oAscending: Boolean = True): Integer;
-function Descending(const target: Double): Boolean; inline;
-function Over(const target: Double): Boolean; inline;
+function Descending(const target: Double): Boolean;
+function Over(const target: Double): Boolean;
 function Oversize(const limit: Double): Boolean;
 function Precede(const target: Double; const aAscending: Boolean): Boolean; overload;
-function Sign(const target: Double = 0): Integer; inline;
-function Under(const target: Double): Boolean; inline;
+function Sign(const target: Double = 0): Integer;
+function Under(const target: Double): Boolean;
 function Undersize(const limit: Double): Boolean;
 {$ENDIF}
 
@@ -26,7 +26,7 @@ function Comparison(const A, B: Double): Integer; overload;
            sorting or merging arrays in ascending order.
   @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}
-function TDoubleHelper.Ascending(const target: Double): Boolean; inline;
+function TDoubleHelper.Ascending(const target: Double): Boolean;
 begin
   Result := (Self <= target);
 end;
@@ -37,7 +37,7 @@ end;
            Results: 0=EQUAL, 1=x>target, -1=x<target
   @note: None
 [==============================================================================}
-function TDoubleHelper.Cmpr(const target: Double): Integer; inline;
+function TDoubleHelper.Cmpr(const target: Double): Integer;
 begin
   Result := (Ord(Self > target) - Ord(Self < target));
 end;
@@ -48,7 +48,7 @@ end;
            Results: 0=EQUAL, 1=x>target, -1=x<target
   @note: None
 [==============================================================================}
-function TDoubleHelper.Compare(const target: Double): Integer; inline;
+function TDoubleHelper.Compare(const target: Double): Integer;
 begin
   if (Self = target) then
     Exit(0);
@@ -110,7 +110,7 @@ end;
            sorting or merging arrays in descending order.
   @note: Pure comparison only; equivalent to Self >= target.
 [==============================================================================}
-function TDoubleHelper.Descending(const target: Double): Boolean; inline;
+function TDoubleHelper.Descending(const target: Double): Boolean;
 begin
   Result := (Self >= target);
 end;
@@ -120,7 +120,7 @@ end;
   @action: Returns true if x is higher than target.
   @note: None
 [==============================================================================}
-function TDoubleHelper.Over(const target: Double): Boolean; inline;
+function TDoubleHelper.Over(const target: Double): Boolean;
 begin
   Result := not (target <= Self);
 end;
@@ -156,7 +156,7 @@ end;
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TDoubleHelper.Sign(const target: Double = 0): Integer; inline;
+function TDoubleHelper.Sign(const target: Double = 0): Integer;
 begin
   if (Self = target) then
     Result := 0
@@ -171,7 +171,7 @@ end;
   @action: Returns true if x is lower than target.
   @note: None
 [==============================================================================}
-function TDoubleHelper.Under(const target: Double): Boolean; inline;
+function TDoubleHelper.Under(const target: Double): Boolean;
 begin
   Result := not (target >= Self);
 end;

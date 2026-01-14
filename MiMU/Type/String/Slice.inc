@@ -11,7 +11,7 @@ function Between(const s1, s2: string; const index: Integer = 1): string;
 function Chunk(const a, b: Integer): string;
 function FromLeft(const count: Integer; const index: Integer = 1): string;
 function FromRight(const count: Integer; const index: Integer = 2147483647): string;
-function Get(const index: Integer; const count: Integer): string; inline;
+function Get(const index: Integer; const count: Integer): string;
 function Pick(const index: Integer; const count: Integer = 2147483647): string;
 function Slice(const a, b: Integer): string;
 function Stuff(const s: string; const iFrom, iCount: Integer): string;
@@ -218,7 +218,7 @@ end;
   @action: Fast method for getting substring from string index position by size.
   @note: UNSAFE! Minimal checks for efficiency.
 [==============================================================================}
-function TStringHelper.Get(const index: Integer; const count: Integer): string; inline;
+function TStringHelper.Get(const index: Integer; const count: Integer): string;
 var
   i: Integer;
 begin

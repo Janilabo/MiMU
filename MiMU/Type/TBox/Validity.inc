@@ -1,7 +1,7 @@
 {$IFDEF METHODS}
 function Fix: Boolean;
 function Invalid: Boolean;
-function Valid: Boolean; inline;
+function Valid: Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -41,7 +41,7 @@ end;
   Explanation: Returns true if TBox is valid (X1 <= X2 and Y1 <= Y2)
   Example: None.
 [==============================================================================}
-function TBox.Valid: Boolean; inline;
+function TBox.Valid: Boolean;
 begin
   Result := ((Self.X1 <= Self.X2) and (Self.Y1 <= Self.Y2));
 end;

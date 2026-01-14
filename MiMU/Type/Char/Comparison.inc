@@ -1,15 +1,15 @@
 {$IFDEF HELPERS}
-function Ascending(const target: Char): Boolean; inline;
-function Compare(const target: Char): Integer; inline;
-function Descending(const target: Char): Boolean; inline;
+function Ascending(const target: Char): Boolean;
+function Compare(const target: Char): Integer;
+function Descending(const target: Char): Boolean;
 function Precede(const target: Char; const aAscending: Boolean): Boolean; overload;
-function Sign(const target: Char): Integer; inline;
+function Sign(const target: Char): Integer;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
 function Comparison(const A, B: Char): Integer; overload;
-function Max(const a, b: Char): Char; overload; inline;
-function Min(const a, b: Char): Char; overload; inline;
+function Max(const a, b: Char): Char; overload;
+function Min(const a, b: Char): Char; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -20,7 +20,7 @@ function Min(const a, b: Char): Char; overload; inline;
            sorting or merging arrays in ascending order.
   @note: This method does not modify either value; it simply performs a <= comparison.
 [==============================================================================}
-function TCharHelper.Ascending(const target: Char): Boolean; inline;
+function TCharHelper.Ascending(const target: Char): Boolean;
 begin
   Result := (Self <= target);
 end;
@@ -30,7 +30,7 @@ end;
   @action: Compares char with target.
   @note: Results: 0=EQUAL, 1=char>target, -1=char<target
 [==============================================================================}
-function TCharHelper.Compare(const target: Char): Integer; inline;
+function TCharHelper.Compare(const target: Char): Integer;
 begin
   if (Self = target) then
     Exit(0);
@@ -47,7 +47,7 @@ end;
            sorting or merging arrays in descending order.
   @note: Pure comparison only; equivalent to Self >= target.
 [==============================================================================}
-function TCharHelper.Descending(const target: Char): Boolean; inline;
+function TCharHelper.Descending(const target: Char): Boolean;
 begin
   Result := (Self >= target);
 end;
@@ -73,7 +73,7 @@ end;
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TCharHelper.Sign(const target: Char): Integer; inline;
+function TCharHelper.Sign(const target: Char): Integer;
 begin
   if (Self = target) then
     Result := 0
@@ -92,7 +92,7 @@ begin
   Result := 0;
 end;
 
-function Max(const A, B: Char): Char; overload; inline;
+function Max(const A, B: Char): Char; overload;
 begin
   if (A > B) then
     Result := A
@@ -100,7 +100,7 @@ begin
     Result := B;
 end;
 
-function Min(const A, B: Char): Char; overload; inline;
+function Min(const A, B: Char): Char; overload;
 begin
   if (A < B) then
     Result := A

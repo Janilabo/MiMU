@@ -126,7 +126,7 @@ var
   q: TPointArray;
   k: string;
   a, b: TBox;
-  function KeyStr(const p: TPoint): string; inline;
+  function KeyStr(const p: TPoint): string;
   begin
     Result := (IntToStr(p.X) + ',' + IntToStr(p.Y));
   end;
@@ -206,7 +206,7 @@ var
   p: TPoint;
   q: TPointArray;
   k: string;
-  function KeyStr(const p: TPoint): string; inline;
+  function KeyStr(const p: TPoint): string;
   begin
     Result := (IntToStr(p.X) + ',' + IntToStr(p.Y));
   end;

@@ -14,14 +14,14 @@ function Higher(const target: TPoint; const oAscending: Boolean = True): Boolean
 function Lower(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
 function Over(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
 function Under(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-function XComp(const target: TPoint): Integer; inline;
+function XComp(const target: TPoint): Integer;
 function XCompare(const target: TPoint): Integer;
-function YComp(const target: TPoint): Integer; inline;
+function YComp(const target: TPoint): Integer;
 function YCompare(const target: TPoint): Integer;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-function Sign(const target: TPoint): Integer; overload; inline;
+function Sign(const target: TPoint): Integer; overload;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
@@ -43,7 +43,7 @@ function Min(const A, B: TPoint): TPoint; overload;
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TPointHelper.Sign(const target: TPoint): Integer; overload; inline;
+function TPointHelper.Sign(const target: TPoint): Integer; overload;
 begin
   if (Self = target) then
     Result := 0
@@ -257,7 +257,7 @@ end;
   @action: Compares two points by their X coordinates only.
   @note: Returns -1 if Self.X < target.X, 1 if Self.X > target.X, or 0 if equal.
 [==============================================================================}
-function TPoint.XComp(const target: TPoint): Integer; inline;
+function TPoint.XComp(const target: TPoint): Integer;
 begin
   if (Self.X < target.X) then
     Result := -1
@@ -294,7 +294,7 @@ end;
   @action: Compares two points by their Y coordinates only.
   @note: Returns -1 if Self.Y < target.Y, 1 if Self.Y > target.Y, or 0 if equal.
 [==============================================================================}
-function TPoint.YComp(const target: TPoint): Integer; inline;
+function TPoint.YComp(const target: TPoint): Integer;
 begin
   if (Self.Y < target.Y) then
     Result := -1

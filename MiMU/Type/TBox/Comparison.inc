@@ -1,5 +1,5 @@
 {$IFDEF METHODS}
-function Equal(const b: TBox): Boolean; inline;
+function Equal(const b: TBox): Boolean;
 function Similar(const b: TBox; const maxWDiff, maxHDiff: Integer): Boolean; overload;
 function Similar(const b: TBox; const diff: Integer): Boolean; overload;
 function SimilarSize(const b: TBox; const widthDifferency, heightDifferency: Integer): Boolean; overload;
@@ -12,7 +12,7 @@ function SimilarSize(const b: TBox; const differency: Integer): Boolean; overloa
   @action: Returns true if bx1 and bx2 are identical.
   @note: None
 [==============================================================================}
-function TBox.Equal(const b: TBox): Boolean; inline;
+function TBox.Equal(const b: TBox): Boolean;
 begin
   Result := ((Self.X1 = b.X1) and (Self.Y1 = b.Y1) and (Self.X2 = b.X2) and (Self.Y2 = b.Y2));
 end;

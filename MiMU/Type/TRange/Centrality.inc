@@ -1,7 +1,7 @@
 {$IFDEF METHODS}
 function Average: Double;
 function Center: Integer;
-function Central: Integer; inline;
+function Central: Integer;
 function Centre: Integer; overload;
 function Centroid: Integer; overload;
 function Core: Integer; overload;
@@ -54,7 +54,7 @@ end;
  @action: The value(s) at the center position(s) of given range.
  @note: None
 [==============================================================================}
-function TRange.Central: Integer; inline;
+function TRange.Central: Integer;
 begin
   Result := ((Self.start + self.stop) shr 1);
 end;

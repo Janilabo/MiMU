@@ -1,11 +1,11 @@
 {$IFDEF HELPERS}
-function Compare(const target: Int64): Integer; inline;
-function Over(const target: Int64): Boolean; inline;
-function Oversize(const limit: Int64): Boolean; inline;
+function Compare(const target: Int64): Integer;
+function Over(const target: Int64): Boolean;
+function Oversize(const limit: Int64): Boolean;
 function Precede(const target: Int64; const aAscending: Boolean): Boolean; overload;
-function Sign(const target: Int64 = 0): Integer; inline;
-function Under(const target: Int64): Boolean; inline;
-function Undersize(const limit: Int64): Boolean; inline;
+function Sign(const target: Int64 = 0): Integer;
+function Under(const target: Int64): Boolean;
+function Undersize(const limit: Int64): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +15,7 @@ function Undersize(const limit: Int64): Boolean; inline;
            Results: 0=EQUAL, 1=x>target, -1=x<target
   @note: None
 [==============================================================================}
-function TInt64Helper.Compare(const target: Int64): Integer; inline;
+function TInt64Helper.Compare(const target: Int64): Integer;
 begin
   if (Self = target) then
     Exit(0);
@@ -30,7 +30,7 @@ end;
   @action: Returns true if x is higher than target.
   @note: None
 [==============================================================================}
-function TInt64Helper.Over(const target: Int64): Boolean; inline;
+function TInt64Helper.Over(const target: Int64): Boolean;
 begin
   Result := not (target <= Self);
 end;
@@ -40,7 +40,7 @@ end;
   @action: Returns true if x is higher than limit.
   @note: None
 [==============================================================================}
-function TInt64Helper.Oversize(const limit: Int64): Boolean; inline;
+function TInt64Helper.Oversize(const limit: Int64): Boolean;
 begin
   Result := (Self > limit);
 end;
@@ -66,7 +66,7 @@ end;
          -1  if Self > target (target is smaller → descending)
          Useful for detecting sequence direction, ordering, or range computation.
 [==============================================================================}
-function TInt64Helper.Sign(const target: Int64 = 0): Integer; inline;
+function TInt64Helper.Sign(const target: Int64 = 0): Integer;
 begin
   if (Self = target) then
     Result := 0
@@ -81,7 +81,7 @@ end;
   @action: Returns true if x is lower than target.
   @note: None
 [==============================================================================}
-function TInt64Helper.Under(const target: Int64): Boolean; inline;
+function TInt64Helper.Under(const target: Int64): Boolean;
 begin
   Result := not (target >= Self);
 end;
@@ -91,7 +91,7 @@ end;
   @action: Returns true if x is lower than limit.
   @note: None
 [==============================================================================}
-function TInt64Helper.Undersize(const limit: Int64): Boolean; inline;
+function TInt64Helper.Undersize(const limit: Int64): Boolean;
 begin
   Result := (Self < limit);
 end;

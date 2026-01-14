@@ -15,10 +15,10 @@ function Create: TRange; overload;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
-function Range(const rStart, rStop: Integer): TRange; overload; inline;
-function Range(const val: Integer = 0): TRange; overload; inline;
-function R(const startVal, stopVal: Integer): TRange; overload; inline;
-function R(const val: Integer = 0): TRange; overload; inline;
+function Range(const rStart, rStop: Integer): TRange; overload;
+function Range(const val: Integer = 0): TRange; overload;
+function R(const startVal, stopVal: Integer): TRange; overload;
+function R(const val: Integer = 0): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -171,7 +171,7 @@ end;
   @note: The resulting range preserves the specified ordering. If rStart > rStop,
          the function returns a descending range.
 [==============================================================================}
-function Range(const rStart, rStop: Integer): TRange; overload; inline;
+function Range(const rStart, rStop: Integer): TRange; overload;
 begin
   Result.start := rStart;
   Result.stop := rStop;
@@ -184,7 +184,7 @@ end;
   @note: This overload is intended for convenience when creating point ranges.
          The default value (0) is used when no argument is provided.
 [==============================================================================}
-function Range(const val: Integer = 0): TRange; overload; inline;
+function Range(const val: Integer = 0): TRange; overload;
 begin
   Result.start := val;
   Result.stop := val;
@@ -198,7 +198,7 @@ end;
   @note: The resulting range preserves the specified ordering. If startVal > stopVal,
          the function returns a descending range.
 [==============================================================================}
-function R(const startVal, stopVal: Integer): TRange; overload; inline;
+function R(const startVal, stopVal: Integer): TRange; overload;
 begin
   Result.start := startVal;
   Result.stop := stopVal;
@@ -211,7 +211,7 @@ end;
   @note: This overload is intended for convenience when creating point ranges.
          The default value (0) is used when no argument is provided.
 [==============================================================================}
-function R(const val: Integer = 0): TRange; overload; inline;
+function R(const val: Integer = 0): TRange; overload;
 begin
   Result.start := val;
   Result.stop := val;

@@ -1,5 +1,5 @@
 {$IFDEF METHODS}
-function Bitify(const a: Boolean): Integer; overload; inline;
+function Bitify(const a: Boolean): Integer; overload;
 function Bitify(const a, b: Boolean): Integer; overload;
 function Bitify(const a, b, c: Boolean): Integer; overload;
 function Bitify(const a, b, c, d: Boolean): Integer; overload;
@@ -9,14 +9,14 @@ function Bitify(const a, b, c, d: Boolean): Integer; overload;
 function AsInteger: Integer;
 function Binary: Char;
 function BinaryDigit: Integer;
-function Bit: Integer; inline;
+function Bit: Integer;
 function Bitify: Integer;
 function ToInteger: Integer;
 function ToString: string;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-function Bitify(const a: Boolean): Integer; overload; inline;
+function Bitify(const a: Boolean): Integer; overload;
 begin
   if a then
     Result := 1
@@ -74,7 +74,7 @@ end;
   @action: Bit for helper booleans.
   @note: True => 1 | False => 0
 [==============================================================================}
-function TBooleanHelper.Bit: Integer; inline;
+function TBooleanHelper.Bit: Integer;
 begin
   Result := (Integer(Self) and 1);
 end;

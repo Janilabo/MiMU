@@ -5,17 +5,17 @@ function Below(const target: Integer): Boolean; overload;
 function Below(const target: TRange): Boolean; overload;
 function Contains(const x: Integer): Boolean; overload;
 function Contains(const x: TRange): Boolean; overload;
-function Digit(const x: Integer): Boolean; inline;
+function Digit(const x: Integer): Boolean;
 function Employs(const val: Integer): Boolean;
 function Holds(const val: Integer): Boolean; overload;
 function Holds(const vals: TRange): Boolean; overload;
-function Item(const x: Integer): Boolean; inline;
-function Lacks(const x: Integer): Boolean; inline;
+function Item(const x: Integer): Boolean;
+function Lacks(const x: Integer): Boolean;
 function Missing(const val: Integer): Boolean; overload;
 function Missing(const vals: TRange): Boolean; overload;	
 function Omits(const val: Integer): Boolean;
-function Outside(const x: Integer): Boolean; inline;
-function Value(const x: Integer): Boolean; inline;
+function Outside(const x: Integer): Boolean;
+function Value(const x: Integer): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -74,7 +74,7 @@ end;
  @action: Returns true if range contains x-value.
  @note: None.
 [==============================================================================}
-function TRange.Digit(const x: Integer): Boolean; inline;
+function TRange.Digit(const x: Integer): Boolean;
 begin
   Result := (((x >= Self.start) and (x <= Self.stop)) or ((x >= Self.stop) and (x <= Self.start)));
 end;
@@ -118,7 +118,7 @@ end;
  @action: Returns true if range contains x-value.
  @note: None.
 [==============================================================================}
-function TRange.Item(const x: Integer): Boolean; inline;
+function TRange.Item(const x: Integer): Boolean;
 begin
   if (Self.start <= Self.stop) then
     Result := ((x >= Self.start) and (x <= Self.stop))
@@ -131,7 +131,7 @@ end;
  @action: Returns true if x-value is out of range.
  @note: None.
 [==============================================================================}
-function TRange.Lacks(const x: Integer): Boolean; inline;
+function TRange.Lacks(const x: Integer): Boolean;
 begin
   Result := (((x < Self.start) and (x < Self.stop)) or ((x > Self.stop) and (x > Self.start)));
 end;
@@ -174,7 +174,7 @@ end;
  @action: Returns true if x-value is outside the range.
  @note: None.
 [==============================================================================}
-function TRange.Outside(const x: Integer): Boolean; inline;
+function TRange.Outside(const x: Integer): Boolean;
 begin
   Result := not (((x >= Self.start) and (x <= Self.stop)) or ((x >= Self.stop) and (x <= Self.start)));
 end;
@@ -184,7 +184,7 @@ end;
  @action: Returns true if range contains x-value.
  @note: None.
 [==============================================================================}
-function TRange.Value(const x: Integer): Boolean; inline;
+function TRange.Value(const x: Integer): Boolean;
 begin
   Result := not (((x < Self.start) and (x < Self.stop)) or ((x > Self.stop) and (x > Self.start)));
 end;

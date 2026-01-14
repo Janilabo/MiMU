@@ -30,13 +30,17 @@
  ╚╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╝
                                              ( ..for Free Pascal }
 
-{$mode objfpc}
+{$MODE OBJFPC}
 {$H+}
-{$macro on}
-{$inline on}
-{$modeswitch advancedrecords}
-{$modeswitch arrayoperators}
-{$modeswitch typehelpers}
+{$MACRO ON}
+{$INLINE OFF}
+{$MODESWITCH ADVANCEDRECORDS}
+{$MODESWITCH ARRAYOPERATORS}
+{$MODESWITCH TYPEHELPERS}
+{$SMARTLINK OFF}
+{$OPTIMIZATION OFF}
+{$ALIGN 16}
+{$CODEALIGN PROC=16}
 
 unit MiMU;
 

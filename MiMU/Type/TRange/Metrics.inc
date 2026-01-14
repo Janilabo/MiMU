@@ -90,7 +90,7 @@ end;
   @action: Delta returns the signed difference from start to stop; the sign indicates the range’s orientation.
   @note: None.
 [==============================================================================}
-function TRange.Delta: Integer; inline;
+function TRange.Delta: Integer;
 begin
   Result := (Self.stop - Self.start);
 end;

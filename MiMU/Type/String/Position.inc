@@ -1,5 +1,5 @@
 {$IFDEF HELPERS}
-function At(const s: string; const index: Integer = 1): Boolean; inline;
+function At(const s: string; const index: Integer = 1): Boolean;
 function At2(const s: string; const index: Integer = 1): Boolean;
 function AtIndex(const s: string; const index: Integer = 1): Boolean;
 function AtP(const s: string; const index: Integer = 1): Boolean;
@@ -15,7 +15,7 @@ function IsAt(const s: string; const index: Integer = 1): Boolean;
   @action: Checks if string s is at index position in str.
   @note: UNSAFE: Minimal checking for efficiency!
 [==============================================================================}
-function TStringHelper.At(const s: string; const index: Integer = 1): Boolean; inline;
+function TStringHelper.At(const s: string; const index: Integer = 1): Boolean;
 var
   i: Integer;
 begin
