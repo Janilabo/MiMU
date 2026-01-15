@@ -5,16 +5,21 @@ function Below(const target: Integer): Boolean; overload;
 function Below(const target: TRange): Boolean; overload;
 function Contains(const x: Integer): Boolean; overload;
 function Contains(const x: TRange): Boolean; overload;
+function Covers(const val: Integer): Boolean;
 function Digit(const x: Integer): Boolean;
 function Employs(const val: Integer): Boolean;
+function Got(const val: Integer): Boolean;
+function Has(const val: Integer): Boolean;
 function Holds(const val: Integer): Boolean; overload;
 function Holds(const vals: TRange): Boolean; overload;
+function Inside(const val: Integer): Boolean;
 function Item(const x: Integer): Boolean;
 function Lacks(const x: Integer): Boolean;
 function Missing(const val: Integer): Boolean; overload;
 function Missing(const vals: TRange): Boolean; overload;	
 function Omits(const val: Integer): Boolean;
 function Outside(const x: Integer): Boolean;
+function Owns(const val: Integer): Boolean;
 function Value(const x: Integer): Boolean;
 {$ENDIF}
 
@@ -70,9 +75,23 @@ begin
 end;
 
 {==============================================================================]
- <Digit>
- @action: Returns true if range contains x-value.
- @note: None.
+  <Covers>
+  @action: Determines whether a value val lies within the bounds of the range,
+           accounting for reversed start/stop ordering.
+  @note: Explicitly branches on range direction before calling InRange,
+         avoiding Min/Max calls and making ordering logic explicit.
+[==============================================================================}
+function TRange.Covers(const val: Integer): Boolean;
+begin
+  if (Self.start > Self.stop) then
+    Exit(InRange(val, Self.stop, Self.start));
+  Result := InRange(val, Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <Digit>
+  @action: Returns true if range contains x-value.
+  @note: None.
 [==============================================================================}
 function TRange.Digit(const x: Integer): Boolean;
 begin
@@ -87,6 +106,29 @@ end;
 function TRange.Employs(const val: Integer): Boolean;
 begin
   Result := ((Self.start = val) or (Self.stop = val));
+end;
+
+{==============================================================================]
+  <Got>
+  @action: Determines whether a value val lies within the bounds of the range,
+           regardless of the ordering of start and stop.
+  @note:   Functionally equivalent to Inside, but delegates the comparison
+           to the RTL InRange helper after normalizing bounds.
+[==============================================================================}
+function TRange.Got(const val: Integer): Boolean;
+begin
+  Result := InRange(val, Min(Self.start, Self.stop), Max(Self.start, Self.stop));
+end;
+
+{==============================================================================]
+  <Has>
+  @action: Determines whether a value val lies between start and stop inclusively.
+  @note: Performs a direct bidirectional comparison without normalization
+         or helper functions; logically equivalent to Inside.
+[==============================================================================}
+function TRange.Has(const val: Integer): Boolean;
+begin
+  Result := (((val >= Self.start) and (val <= Self.stop)) or ((val >= Self.stop) and (val <= Self.start)));
 end;
 
 {==============================================================================]
@@ -114,9 +156,21 @@ begin
 end;
 
 {==============================================================================]
- <Item>
- @action: Returns true if range contains x-value.
- @note: None.
+  <Inside>
+  @action: Determines whether a value val lies within the bounds of the range,
+           regardless of the ordering of start and stop.
+  @note:   Normalizes the range by computing Min(start, stop) and Max(start, stop)
+           before performing inclusive boundary comparison.
+[==============================================================================}
+function TRange.Inside(const val: Integer): Boolean;
+begin
+  Result := ((val >= Min(Self.start, Self.stop)) and (val <= Max(Self.start, Self.stop)));
+end;
+
+{==============================================================================]
+  <Item>
+  @action: Returns true if range contains x-value.
+  @note: None.
 [==============================================================================}
 function TRange.Item(const x: Integer): Boolean;
 begin
@@ -127,9 +181,9 @@ begin
 end;
 
 {==============================================================================]
- <Lacks>
- @action: Returns true if x-value is out of range.
- @note: None.
+  <Lacks>
+  @action: Returns true if x-value is out of range.
+  @note: None.
 [==============================================================================}
 function TRange.Lacks(const x: Integer): Boolean;
 begin
@@ -170,9 +224,9 @@ begin
 end;
 
 {==============================================================================]
- <Outside>
- @action: Returns true if x-value is outside the range.
- @note: None.
+  <Outside>
+  @action: Returns true if x-value is outside the range.
+  @note: None.
 [==============================================================================}
 function TRange.Outside(const x: Integer): Boolean;
 begin
@@ -180,9 +234,21 @@ begin
 end;
 
 {==============================================================================]
- <Value>
- @action: Returns true if range contains x-value.
- @note: None.
+  <Owns>
+  @action: Determines whether a value val lies between start and stop inclusively.
+  @note: Uses a mathematical sign test: if value lies between start and stop,
+         the product of (value - start) and (value - stop) is non-positive.
+         This is a compact, branch-free formulation.
+[==============================================================================}
+function TRange.Owns(const val: Integer): Boolean;
+begin
+  Result := (((val - Self.start) * (val - Self.stop)) <= 0);
+end;
+
+{==============================================================================]
+  <Value>
+  @action: Returns true if range contains x-value.
+  @note: None.
 [==============================================================================}
 function TRange.Value(const x: Integer): Boolean;
 begin
