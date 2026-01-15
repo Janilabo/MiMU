@@ -11,12 +11,16 @@ function Diff: Integer;
 function Difference: Integer;
 function Dist: Integer;
 function Extent: Integer; overload;
+function Footprint: Integer;
 function GetLength: Integer;
 function GetSize: Integer;
 function Len: Integer;
 function Length: Integer; overload;
 function Magnitude: Integer;
+function Mass: Integer;
+function Measure: Integer;
 function Population: Integer; overload;
+function Quantity: Integer;
 function Rad: Integer; overload;
 function Radiar: Integer; overload;
 function Radius: Integer; overload;
@@ -27,7 +31,9 @@ function Size(var minVal, maxVal: Integer): Integer; overload;
 function Sized: Integer; overload;
 function Sum: Int64;
 function Summation: Int64;
+function Tally: Integer;
 function Total: Int64;
+function Volume: Integer;
 function Width: Integer;
 {$ENDIF}
 
@@ -179,6 +185,24 @@ begin
 end;
 
 {==============================================================================]
+  <Footprint>
+  @action: Computes the inclusive size (cardinality) of the range.
+  @note: Explicitly branches on the sign of (stop - start) to derive the
+         absolute distance, then adds one for inclusivity. This is the
+         most direct and readable formulation.
+[==============================================================================}
+function TRange.Footprint: Integer;
+var
+  d: Integer;
+begin
+  d := (Self.stop - Self.start);
+  if (d >= 0) then
+    Result := (d + 1)
+  else
+    Result := (-d + 1);
+end;
+
+{==============================================================================]
   <GetLength>
   @action: Returns length of the given range.
   @note: None.
@@ -255,6 +279,30 @@ begin
 end;
 
 {==============================================================================]
+  <Mass>
+  @action: Computes the inclusive size (cardinality) of the range.
+  @note: Uses Ord(...) as numeric selectors to choose the correct
+         directional delta without branching. Produces the absolute
+         difference plus one in a compact arithmetic form.
+[==============================================================================}
+function TRange.Mass: Integer;
+begin
+  Result := (1 + ((Ord(Self.stop > Self.start) * (Self.stop - Self.start)) + (Ord(Self.start > Self.stop) * (Self.start - Self.stop))));
+end;
+
+{==============================================================================]
+  <Measure>
+  @action: Computes the inclusive size (cardinality) of the range.
+  @note: Normalizes direction by dividing the delta by its sign, ensuring
+         a positive magnitude before adding one. Uses integer arithmetic
+         and Sign to avoid conditional branching.
+[==============================================================================}
+function TRange.Measure: Integer;
+begin
+  Result := (Abs((Self.stop - Self.start) div Sign(Self.stop - Self.start + 1)) + 1);
+end;
+
+{==============================================================================]
   <Population>
   @action: Returns the size of TRange.
   @note: Alternative.
@@ -262,6 +310,19 @@ end;
 function TRange.Population: Integer; overload;
 begin
   Result := ((Self.MinMax.stop - Self.MinMax.start) + 1);
+end;
+
+{==============================================================================]
+  <Quantity>
+  @action: Returns the size of TRange.
+  @note: Alternative.
+[==============================================================================}
+function TRange.Quantity: Integer;
+var
+  d: Integer;
+begin
+  d := (Self.stop - Self.start);
+  Result := ((d * Sign(d)) + 1);
 end;
 
 {==============================================================================]
@@ -384,6 +445,21 @@ begin
 end;
 
 {==============================================================================]
+  <Tally>
+  @action: Computes the inclusive size (cardinality) of the range.
+  @note: Converts a comparison result to an integer selector, then applies
+         directional arithmetic based on range ordering. Semantically
+         equivalent to Mass, with explicit Boolean state.
+[==============================================================================}
+function TRange.Tally: Integer;
+var
+  a: Boolean;
+begin
+  a := (Self.stop >= Self.start);
+  Result := (1 + (Integer(a) * (Self.stop - Self.start)) + (Integer(not a) * (Self.start - Self.stop)));
+end; 
+
+{==============================================================================]
   <Total>
   @action: Returns the sum of all TRange values (start..stop)
   @note: None
@@ -394,6 +470,19 @@ begin
     Result := (((Int64(Self.start) * (Self.start + 1)) div 2) - ((Int64(Self.stop - 1) * Self.stop) div 2))
   else
     Result := (((Int64(Self.stop) * (Self.stop + 1)) div 2) - ((Int64(Self.start - 1) * Self.start) div 2));
+end;
+
+{==============================================================================]
+  <Volume>
+  @action: Computes the inclusive size (cardinality) of the range.
+  @note: Calculates the absolute distance between start and stop using
+         a squared–square-root round-trip, then adds one to account for
+         inclusive bounds. Functionally equivalent to Abs(stop - start) + 1,
+         but expressed via arithmetic normalization.
+[==============================================================================}
+function TRange.Volume: Integer;
+begin
+  Result := (Round(Sqrt(Sqr(Self.stop - Self.start))) + 1);
 end;
 
 {==============================================================================]
