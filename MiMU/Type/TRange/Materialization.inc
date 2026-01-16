@@ -2,6 +2,8 @@
 function All: TIntegerArray; overload;
 function AsArr: TIntegerArray;
 function AsArray: TIntegerArray; overload;
+function Contents: TIntegerArray;
+function Data: TIntegerArray; overload;
 function Digits: TIntegerArray; overload;
 function Digits(const dIndex: Integer): Integer; overload;
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
@@ -12,9 +14,13 @@ function Explode: TIntegerArray;
 function Exploded: TIntegerArray;
 function Extract: TIntegerArray; overload;
 function Extracted: TIntegerArray; overload;
+function Generate: TIntegerArray;
 function Ints: TIntegerArray;
 function Items: TIntegerArray;
+function List: TIntegerArray;
 function Materialize: TIntegerArray;
+function Materialized: TIntegerArray;
+function Members: TIntegerArray;
 function Numbers: TIntegerArray;
 function Recursed: TIntegerArray; overload;
 function Sequence: TIntegerArray;
@@ -107,6 +113,39 @@ begin
 end;
 
 {==============================================================================]
+  <Contents>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: None.
+[==============================================================================}
+function TRange.Contents: TIntegerArray;
+var
+  i, s: Integer;
+begin
+  SetLength(Result, Self.Size);
+  case Sign(Self.stop - Self.start) of
+    0, 1:  s := 1;
+    -1: s := -1;
+  end;
+  for i := 0 to High(Result) do
+    Result[i] := (Self.start + (i * s));
+end;
+
+{==============================================================================]
+  <Data>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Data: TIntegerArray;
+var
+  n, i: Integer;
+begin
+  Result := Self.Reserve;
+  i := 0;
+  for n in Self do
+    Result[i.Increase] := n;
+end;
+
+{==============================================================================]
   <Digits>
   @action: Returns digits of the given range.
   @note: None.
@@ -185,18 +224,13 @@ end;
 function TRange.Enumerate: TIntegerArray;
 var
   i: Integer;
+  e: TRangeEnumerator;
 begin
-  if Self.Singular then
-    Exit([Self.start]);
-  SetLength(Result, 0);
-  case Self.Ascending of
-    True:
-    for i := Self.start to Self.stop do
-      Result := (Result + [i]);
-    False:
-    for i := Self.start downto Self.stop do
-      Result := (Result + [i]);
-  end;
+  SetLength(Result, Self.Size);
+  e := GetEnumerator;
+  i := 0;
+  while e.MoveNext do
+    Result[i.Increase] := e.Current;
 end;
 
 {==============================================================================]
@@ -206,12 +240,14 @@ end;
 [==============================================================================}
 function TRange.Enumerated: TIntegerArray;
 var
-  n, i: Integer;
+  i: Integer;
+  e: TRangeEnumerator;
 begin
-  Result := Self.Reserve;
-  i := 0;
-  for n in Self do
-    Result[i.Increase] := n;
+  SetLength(Result, Self.Size);
+  e := GetEnumerator;
+  for i := 0 to High(Result) do
+    if e.MoveNext then
+      Result[i] := e.Current;
 end;
 
 {==============================================================================]
@@ -301,6 +337,28 @@ begin
 end;
 
 {==============================================================================]
+  <Generate>
+  @action: Returns values of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Generate: TIntegerArray;
+var
+  i: Integer;
+begin
+  if Self.Singular then
+    Exit([Self.start]);
+  SetLength(Result, 0);
+  case Self.Ascending of
+    True:
+    for i := Self.start to Self.stop do
+      Result := (Result + [i]);
+    False:
+    for i := Self.start downto Self.stop do
+      Result := (Result + [i]);
+  end;
+end;
+
+{==============================================================================]
   <Ints>
   @action: Returns digits of the given range.
   @note: None.
@@ -339,6 +397,22 @@ begin
 end;
 
 {==============================================================================]
+  <List>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.List: TIntegerArray;
+var
+  i, c, s: Integer;
+begin
+  SetLength(Result, Self.Size);
+  s := IfThen((Self.start <= Self.stop), 1, -1);
+  c := Self.start;
+  for i := 0 to High(Result) do
+    Result[i] := c.Increase(s);
+end;
+
+{==============================================================================]
   <Materialize>
   @action: Returns digits of the given range.
   @note: None.
@@ -357,6 +431,42 @@ begin
     p^ := v.Increase(s);
     Inc(p);
   end;
+end;
+
+{==============================================================================]
+  <Materialized>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Materialized: TIntegerArray;
+var
+  i, r, s, l: Integer;
+begin
+  l := Self.Size;
+  SetLength(Result, l);
+  s := IfThen((Self.start <= Self.stop), 1, -1);
+  r := 0;
+  i := Self.start;
+  while (r < l) do
+    Result[r.Increase] := i.Increase(s);
+end;
+
+{==============================================================================]
+  <Members>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Members: TIntegerArray;
+var
+  i, c: Integer;
+begin
+  SetLength(Result, Self.Size);
+  c := Self.start;
+  for i := 0 to High(Result) do
+    if (Self.start <= Self.stop) then
+      Result[i] := c.Increase
+    else
+      Result[i] := c.Decrease;
 end;
 
 {==============================================================================]
