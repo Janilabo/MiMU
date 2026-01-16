@@ -2,6 +2,7 @@
 function All: TIntegerArray; overload;
 function AsArr: TIntegerArray;
 function AsArray: TIntegerArray; overload;
+function Content: TIntegerArray;
 function Contents: TIntegerArray;
 function Data: TIntegerArray; overload;
 function Digits: TIntegerArray; overload;
@@ -110,6 +111,22 @@ begin
   end;
   if h.Even then
     Result[i] := IfThen(Self.Ascending, (Self.start + i), (Self.start - i));
+end;
+
+{==============================================================================]
+  <Content>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Content: TIntegerArray;
+var
+  i, c, s: Integer;
+begin
+  SetLength(Result, Self.Size);
+  s := IfThen((Self.start <= Self.stop), 1, -1);
+  c := Self.start;
+  for i := 0 to High(Result) do
+    Result[i] := c.Increase(s);
 end;
 
 {==============================================================================]
@@ -396,20 +413,19 @@ begin
     Result[i] := (Self.start + (s * i));
 end;
 
-{==============================================================================]
-  <List>
-  @action: Returns digits of the given range.
-  @note: None.
-[==============================================================================}
 function TRange.List: TIntegerArray;
 var
-  i, c, s: Integer;
+  l: specialize TList<Integer>;
+  v: Integer;
 begin
-  SetLength(Result, Self.Size);
-  s := IfThen((Self.start <= Self.stop), 1, -1);
-  c := Self.start;
-  for i := 0 to High(Result) do
-    Result[i] := c.Increase(s);
+  l := specialize TList<Integer>.Create;
+  try
+    for v in Self do
+      l.Add(v);
+    Result := l.ToArray;
+  finally
+    l.Free;
+  end;
 end;
 
 {==============================================================================]
