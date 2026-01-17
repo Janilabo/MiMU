@@ -25,4 +25,5 @@
 {$I Sampling.inc}
 {$I Scaling.inc}
 {$I Segmentation.inc}
+{$I Transform.inc}
 {$I Validation.inc}

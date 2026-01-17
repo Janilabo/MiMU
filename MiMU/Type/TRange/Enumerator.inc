@@ -2,7 +2,6 @@
 TRangeEnumerator = record
 private
   FCurrent, FStop, FStep: Integer;
-  FFirst: Boolean;
 public
   constructor Init(const AStart, AStop: Integer);
   function MoveNext: Boolean;
@@ -23,7 +22,6 @@ begin
   else
     FStep := -1;
   FCurrent := (AStart - FStep);
-  FFirst := True;
 end;
 
 function TRangeEnumerator.MoveNext: Boolean;

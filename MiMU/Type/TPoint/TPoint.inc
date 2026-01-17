@@ -1,6 +1,7 @@
 {$DEFINE TPoint}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
+{$I Enumerator.inc}
 TPoint = record
   X, Y: Integer;
   {$UNDEF TYPES}{$DEFINE METHODS}{$I TPoint.pph}{$UNDEF METHODS}{$DEFINE TYPES}
