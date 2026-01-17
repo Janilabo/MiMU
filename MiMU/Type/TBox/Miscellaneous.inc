@@ -1,12 +1,8 @@
 {$IFDEF METHODS}
 function Center: TPoint;
-function Frame(var fWidth, fHeight: Integer): TBox; overload;
-function Frame: TBox; overload;
-function Horizontal: TRange;
 class function Null(const value: Integer = -2147483648): TBox; overload; static;
 function Reserve: TPointArray; overload;
 function Reserve(var aBox: TPointArray): Integer; overload;
-function Vertical: TRange;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -19,39 +15,6 @@ function TBox.Center: TPoint;
 begin
   Result.X := Round(Self.X1 + ((Self.Width - 1) div 2));
   Result.Y := Round(Self.Y1 + ((Self.Height - 1) div 2));
-end;
-
-{==============================================================================]
-  <Frame>
-  @action: Returns the frame of TBox
-  @note: Dimensional box of the TBox. Based on Width and Height.
-[==============================================================================}
-function TBox.Frame(var fWidth, fHeight: Integer): TBox; overload;
-begin
-  fWidth := Self.Width;
-  fHeight := Self.Height;
-  Result := Box(0, 0, (fWidth - 1), (fHeight - 1));
-end;
-
-{==============================================================================]
-  <Frame>
-  @action: Returns the frame of TBox
-  @note: Dimensional box of the TBox. Based on Width and Height.
-[==============================================================================}
-function TBox.Frame: TBox; overload;
-begin
-  Result := Box(0, 0, (Self.Width - 1), (Self.Height - 1));
-end;
-
-{==============================================================================]
-  <Horizontal>
-  @action: Returns bx.X1 and bx.X2 as TRange.
-  @note: Horitonzal-axis.
-[==============================================================================}
-function TBox.Horizontal: TRange;
-begin
-  Result.start := Self.X1;
-  Result.stop := Self.X2;
 end;
 
 {==============================================================================]
@@ -71,7 +34,7 @@ end;
 
 {==============================================================================]
   <Reserve>
-  Explanation: Reselve function for TBox.
+  Explanation: Reserve function for TBox.
   Example: None.
 [==============================================================================}
 function TBox.Reserve: TPointArray; overload;
@@ -89,16 +52,5 @@ function TBox.Reserve(var aBox: TPointArray): Integer; overload;
 begin
   Result := Self.Area;
   SetLength(aBox, Result);
-end;
-
-{==============================================================================]
-  <Vertical>
-  @action: Returns bx.Y1 and bx.Y2 as TRange.
-  @note: Vertical-axis.
-[==============================================================================}
-function TBox.Vertical: TRange;
-begin
-  Result.start := Self.Y1;
-  Result.stop := Self.Y2;
 end;
 {$ENDIF}

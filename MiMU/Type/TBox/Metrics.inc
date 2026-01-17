@@ -1,18 +1,15 @@
 {$IFDEF METHODS}
-function Area: Integer;
+function Area: Integer; overload;
+function Area(var bWidth, bHeight: Integer): Integer; overload;
 function Capacity: Integer;
 function Circumference: Integer;
 function Diagonal: Double;
 function Footprint: Double;
-function Height: Integer; overload;
-function Height(const h: Integer): Integer; overload;
 function Perim: Integer;
 function Perimeter: Integer;
 function Ratio: Double;
 function Size(var bWidth, bHeight: Integer): Integer; overload;
-function Size: TPoint; overload;
-function Width: Integer; overload;
-function Width(const w: Integer): Integer; overload;
+function Size: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -21,9 +18,16 @@ function Width(const w: Integer): Integer; overload;
   @action: Calculates the amount of pixels in TBox (bx).
   @note: None
 [==============================================================================}
-function TBox.Area: Integer;
+function TBox.Area: Integer; overload;
 begin
   Result := (Self.Width * Self.Height);
+end;
+
+function TBox.Area(var bWidth, bHeight: Integer): Integer; overload;
+begin
+  bWidth := Self.GetWidth;
+  bHeight := Self.GetHeight;
+  Result := (bWidth * bHeight);
 end;
 
 {==============================================================================]
@@ -65,27 +69,6 @@ end;
 function TBox.Footprint: Double;
 begin
   Result := ((Abs(Self.X2 - Self.X1) + 1) * (Abs(Self.Y2 - Self.Y1) + 1));
-end;
-
-{==============================================================================]
-  <Height>
-  @action: Returns bx height.
-  @note: Fast, works with only valid TBoxes.
-[==============================================================================}
-function TBox.Height: Integer; overload;
-begin
-  Result := ((Self.Y2 - Self.Y1) + 1);
-end;
-
-{==============================================================================]
-  <Height>
-  @action: Sets bx height.
-  @note: Returns old height.
-[==============================================================================}
-function TBox.Height(const h: Integer): Integer; overload;
-begin
-  Result := ((Self.Y2 - Self.Y1) + 1);
-  Self.Y2 := (Self.Y1 + (h - 1));
 end;
 
 {==============================================================================]
@@ -132,32 +115,13 @@ end;
 
 {==============================================================================]
   <Size>
-  @action: Returns TBox dimensions (Width and Height) as TPoint.
-  @note: X = Width, Y = Height.
+  @action: Returns area of Self.
+  @note: None.
 [==============================================================================}
-function TBox.Size: TPoint; overload;
+function TBox.Size: Integer; overload;
+var
+  w, h: Integer;
 begin
-  Result := Point(Self.Width, Self.Height);
-end;
-
-{==============================================================================]
-  <Width>
-  @action: Returns bx width.
-  @note: Fast, works with only valid TBoxes.
-[==============================================================================}
-function TBox.Width: Integer; overload;
-begin
-  Result := ((Self.X2 - Self.X1) + 1);
-end;
-
-{==============================================================================]
-  <Width>
-  @action: Sets bx width.
-  @note: Returns old width.
-[==============================================================================}
-function TBox.Width(const w: Integer): Integer; overload;
-begin
-  Result := ((Self.X2 - Self.X1) + 1);
-  Self.X2 := (Self.X1 + (w - 1));
+  Result := Self.Size(w, h);
 end;
 {$ENDIF}

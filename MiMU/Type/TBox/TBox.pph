@@ -6,6 +6,7 @@
 {$I Comparison.inc}
 {$I Construction.inc}
 {$I Containment.inc}
+{$I Dimensions.inc}
 {$I Enumerator.inc}
 {$I Extension.inc}
 {$I Grid.inc}

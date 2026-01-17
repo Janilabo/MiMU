@@ -12,6 +12,7 @@ function Edge(const pt: TPoint): Boolean; overload;
 function Outline: TPointArray; overload;
 function Outline(const X, Y: Integer): Boolean; overload;
 function Outline(const pt: TPoint): Boolean; overload;
+function Skeleton: TPointArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -192,4 +193,28 @@ function TBox.Outline(const pt: TPoint): Boolean; overload;
 begin
   Result := Self.Outline(pt.X, pt.Y);
 end;
+
+{==============================================================================]
+  <Skeleton>
+  @action: Returns an array of points representing the outline/perimeter of
+           the box.
+  @returns: Array of TPoint containing all border points in clockwise order.
+  @note: Includes corners and edges. Useful for drawing box outlines or
+         collision detection along the perimeter.
+[==============================================================================}
+function TBox.Skeleton: TPointArray;
+var
+  i, r: Integer;
+begin
+  SetLength(Result, ((2 * (Self.Width + Self.Height)) - 4));
+  r := 0;
+  for i := Self.X1 to Self.X2 do
+    Result[r.Increase] := Point(i, Self.Y1);
+  for i := (Self.Y1 + 1) to Self.Y2 do
+    Result[r.Increase] := Point(Self.X2, i);
+  for i := (Self.X2 - 1) downto Self.X1 do
+    Result[r.Increase] := Point(i, Self.Y2);
+  for i := (Self.Y2 - 1) downto (Self.Y1 + 1) do
+    Result[r.Increase] := Point(Self.X1, i);
+end; 
 {$ENDIF}
