@@ -6,7 +6,6 @@
 {$I Containment.inc}
 {$I Convert.inc}
 {$I Distance.inc}
-{$I Enumerator.inc}
 {$I Grid.inc}
 {$I Metrics.inc}
 {$I Proximity.inc}

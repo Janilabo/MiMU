@@ -326,7 +326,7 @@ var
     a := Point(FindRoot(i), FindRoot(j));
     if (a.X = a.Y) then
       Exit;
-    b := IfThen((s[a.X] < s[a.Y]), a, a.Reflected);
+    b := IfThen((s[a.X] < s[a.Y]), a, a.Flip);
     p[b.X] := b.Y;
     Inc(s[b.Y], s[b.X]);
   end;
@@ -415,7 +415,7 @@ var
     a := Point(FindRoot(i), FindRoot(j));
     if (a.X = a.Y) then
       Exit;
-    b := IfThen((s[a.X] < s[a.Y]), a, a.Reflected);
+    b := IfThen((s[a.X] < s[a.Y]), a, a.Flip);
     p[b.X] := b.Y;
     Inc(s[b.Y], s[b.X]);
   end;
