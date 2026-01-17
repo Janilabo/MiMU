@@ -2,12 +2,12 @@
 function All: TPointArray; overload;
 function Content: TPointArray;
 function Contents: TPointArray;
-function Elements: TPointArray;
 function Enumerate: TPointArray;
 function Enumerated: TPointArray;
 function Explode: TPointArray; overload;
 function Extract: TPointArray;
 function Flat: TPointArray; overload;
+function List: TPointArray;
 function Pixeled: TPointArray; overload;
 function Pixels: TPointArray; overload;
 function Pixels(const index: Integer): TPoint; overload;
@@ -86,27 +86,6 @@ begin
       p^.Y := y;
       Inc(p);
     end;
-end;
-
-{==============================================================================]
-  <Elements>
-  @action: Returns TBox points as TPointArray.
-  @note: Alternative method.
-[==============================================================================}
-function TBox.Elements: TPointArray;
-var
-  p: specialize TList<TPoint>;
-  x, y: Integer;
-begin
-  p := specialize TList<TPoint>.Create;
-  try
-    for y := Self.Y1 to Self.Y2 do
-      for x := Self.X1 to Self.X2 do
-        p.Add(Point(x, y));
-    Result := p.ToArray;
-  finally
-    p.Free;
-  end;
 end;
 
 {==============================================================================]
@@ -197,6 +176,27 @@ begin
       Inc(p.X)
     else
       p := Point(Self.X1, (p.Y + 1));
+  end;
+end;
+
+{==============================================================================]
+  <List>
+  @action: Returns TBox points as TPointArray.
+  @note: Alternative method.
+[==============================================================================}
+function TBox.List: TPointArray;
+var
+  p: specialize TList<TPoint>;
+  x, y: Integer;
+begin
+  p := specialize TList<TPoint>.Create;
+  try
+    for y := Self.Y1 to Self.Y2 do
+      for x := Self.X1 to Self.X2 do
+        p.Add(Point(x, y));
+    Result := p.ToArray;
+  finally
+    p.Free;
   end;
 end;
 

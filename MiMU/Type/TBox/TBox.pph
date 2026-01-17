@@ -12,13 +12,13 @@
 {$I Indexing.inc}
 {$I Intersection.inc}
 {$I Layout.inc}
+{$I Materialization.inc}
 {$I Metrics.inc}
 {$I Miscellaneous.inc}
 {$I Scaling.inc}
 {$I Resizing.inc}
 {$I Restriction.inc}
 {$I Placement.inc}
-{$I Points.inc}
 {$I Position.inc}
 {$I Sampling.inc}
 {$I Traversal.inc}
