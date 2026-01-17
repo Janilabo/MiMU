@@ -2,9 +2,11 @@
 function All: TPointArray; overload;
 function Content: TPointArray;
 function Contents: TPointArray;
+function Elements: TPointArray;
 function Enumerate: TPointArray;
 function Enumerated: TPointArray;
 function Explode: TPointArray; overload;
+function Exploded: TPointArray;
 function Extract: TPointArray;
 function Flat: TPointArray; overload;
 function List: TPointArray;
@@ -89,11 +91,11 @@ begin
 end;
 
 {==============================================================================]
-  <Enumerate>
+  <Elements>
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
-function TBox.Enumerate: TPointArray;
+function TBox.Elements: TPointArray;
 var
   x, y: Integer;
 begin
@@ -104,19 +106,37 @@ begin
 end;
 
 {==============================================================================]
+  <Enumerate>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TBox.Enumerate: TPointArray;
+var
+  i: Integer;
+  e: TBoxEnumerator;
+begin
+  SetLength(Result, Self.Area);
+  e := GetEnumerator;
+  i := 0;
+  while e.MoveNext do
+    Result[i.Increase] := e.Current;
+end;
+
+{==============================================================================]
   <Enumerated>
-  @action: Returns all points of the given box as TPointArray.
-  @note: Uses the TBox enumerator (for-in).
+  @action: Returns digits of the given range.
+  @note: None.
 [==============================================================================}
 function TBox.Enumerated: TPointArray;
 var
-  p: TPoint;
   i: Integer;
+  e: TBoxEnumerator;
 begin
   SetLength(Result, Self.Area);
-  i := 0;
-  for p in Self do
-    Result[i.Increase] := p;
+  e := GetEnumerator;
+  for i := 0 to High(Result) do
+    if e.MoveNext then
+      Result[i] := e.Current;
 end;
 
 {==============================================================================]
@@ -135,6 +155,22 @@ begin
       Result[i] := Point(Self.X1, (Result[i - 1].Y + 1))
     else
       Result[i] := Point((Result[i - 1].X + 1), Result[i - 1].Y);
+end;
+
+{==============================================================================]
+  <Exploded>
+  @action: Returns all points of the given box as TPointArray.
+  @note: Uses the TBox enumerator (for-in).
+[==============================================================================}
+function TBox.Exploded: TPointArray;
+var
+  p: TPoint;
+  i: Integer;
+begin
+  SetLength(Result, Self.Area);
+  i := 0;
+  for p in Self do
+    Result[i.Increase] := p;
 end;
 
 {==============================================================================]
