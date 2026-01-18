@@ -1,6 +1,9 @@
 {$IFDEF HELPERS}
+function Accommodate(const item: MType; const index: Integer): Integer; overload;
 function Add(const item: MType; const duplicates: Boolean = True): MArray; overload;
 function Add(const items: MArray; const duplicates: Boolean = True): MArray; overload;
+function Annex(const item: MType): MArray; overload;
+function Annex(const items: MArray): MArray; overload;
 function Append(const item: MType; const duplicates: Boolean = True): MArray; overload;
 function Append(const items: MArray; const duplicates: Boolean = True): MArray; overload;
 function Blit(const items: MArray; const index: Integer = 0): Integer; overload;
@@ -23,6 +26,37 @@ function Unshift(const items: MArray): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Accommodate>
+  @action: Ensures the array has sufficient capacity to store a value at the specified
+           index, automatically expanding the array if necessary, and assigns `item`
+           at that index.
+           If the requested index exceeds the current length, the array grows
+           exponentially (doubling each time, with a minimum initial size of 4). The
+           function returns the new length of the array after resizing.
+  @note
+    - Negative indices are treated as zero.
+    - The array is modified in-place; existing elements are preserved.
+    - Growth follows an exponential doubling strategy to reduce repeated
+      allocations.
+    - If the array is initially empty, it grows to a minimum size of 4.
+    - The return value is the new length of the array, not the assigned index.
+[==============================================================================}
+function MArrayHelper.Accommodate(const item: MType; const index: Integer): Integer; overload;
+var
+  i: Integer;
+begin
+  i := Max(index, 0);
+  Result := Self.Length;
+  while (i >= Result) do
+    if (Result = 0) then
+      Result := 4
+    else
+      Result := (Result * 2);
+  SetLength(Self, Result);
+  Self[i] := item;
+end;
+
 {==============================================================================]
   <Add>
   @action: Appends arr with item. Returns the array with added item.
@@ -73,6 +107,53 @@ begin
       Result[i] := items[i];
   end;
 end;
+
+{==============================================================================]
+  <Annex>
+  @action: Returns a new array consisting of the current array (`Self`) followed by
+           the specified single element `item`.
+           The original array is not modified. A copy of `Self` is created, its length
+           is increased by one, and `item` is appended as the final element.
+  @note:
+    - This function performs a full copy of `Self`; it is not an in-place
+      operation.
+    - The appended element is placed at index `Self.Length`.
+    - The order of existing elements in `Self` is preserved.
+[==============================================================================}
+function MArrayHelper.Annex(const item: MType): MArray; overload;
+var
+  l: Integer;
+begin
+  Result := Self.Copy;
+  l := Result.Length;
+  SetLength(Result, (l + 1));
+  Result[l] := item;
+end;
+
+{==============================================================================]
+  <Annex>
+  @action: Returns a new array consisting of the current array (`Self`) followed by
+           all elements of the supplied array `items`.
+           The original array is not modified. A copy of `Self` is created, its length
+           is increased to accommodate `items`, and all elements of `items` are
+           appended in their original order.
+  @note:
+    - This function performs a full copy of `Self`; it is not an in-place
+      operation.
+    - Elements from `items` are appended starting at index `Self.Length`.
+    - The order of elements in both `Self` and `items` is preserved.
+    - If `items` is empty, the result is a copy of `Self`.
+[==============================================================================}
+function MArrayHelper.Annex(const items: MArray): MArray; overload;
+var
+  i, l: Integer;
+begin
+  Result := Self.Copy;
+  l := Result.Length;
+  SetLength(Result, (l + items.Length));
+  for i := 0 to High(items) do
+    Result[l + i] := items[i];
+end; 
 
 {==============================================================================]
   <Append>
@@ -192,7 +273,7 @@ begin
     Exit(-1);
   Result := Self.Size;
   SetLength(Self, (Result + 1));
-  Self[Result] := item;
+  Self[Result] := item; 
 end;
 
 {==============================================================================]

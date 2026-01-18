@@ -1,50 +1,8 @@
 {$IFDEF HELPERS}
-function Hits(const items: TIntegerArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function Hits(const items: TRange; const oAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Hits>
-  @action: Returns the indices of elements in Self whose values occur in a given set
-  @note: - Self must be sorted according to oAscending
-         - items are internally sorted before evaluation
-         - The result contains indices into Self, not the matching values
-         - Multiple equal values in Self produce multiple hits
-         - Returns an empty array if Self or items is empty
-         - Time complexity: O(N + M), where N = Length(Self) and M = Length(items)
-[==============================================================================}
-function TIntegerArrayHelper.Hits(const items: TIntegerArray; const oAscending: Boolean = True): TIntegerArray; overload;
-var
-  s: TIntegerArray;
-  h, i, j, k, l: Integer;
-begin
-  h := High(items);
-  l := Self.Length;
-  if ((l = 0) or (h = -1)) then
-    Exit([]);
-  SetLength(Result, l);
-  s := items.QuickSorted(oAscending);
-  i := 0;
-  j := 0;
-  k := 0;
-  while ((i < l) and (j <= h)) do
-  case (Self[i] = s[j]) of
-    True:
-    begin
-      Result[k.Increase] := i;
-      Inc(i);
-      Inc(j);
-    end;
-	False:
-    if ((Self[i] < s[j]) = oAscending) then
-      Inc(i)
-    else
-      Inc(j);
-  end;
-  SetLength(Result, k);
-end;
-
 {==============================================================================]
   <Hits>
   @action: Returns the indices of elements in Self whose values fall within a given range

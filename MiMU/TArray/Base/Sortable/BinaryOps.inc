@@ -3,6 +3,7 @@ function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): I
 function BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHits(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+function BinaryHitsOf(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -125,6 +126,44 @@ begin
       Result[k.Increase] := p;
   end;
   SetLength(Result, k);
+end;
+
+{==============================================================================]
+  <BinaryHitsOf>
+  @action: Performs a binary search for each element in the supplied array `items`
+           against the current array (`Self`) and returns the indices of all elements
+           that are found.
+           For every value in `items`, `BinarySearch` is invoked on `Self`. If the value
+           exists, the index returned by `BinarySearch` is collected into the result
+           array. The result therefore represents the hit positions within `Self`,
+           not within `items`.
+  @note:
+    - `Self` must be sorted according to the order specified by `oAscending`
+      for `BinarySearch` to operate correctly.
+    - If either `Self` or `items` is empty, the function returns an empty array.
+    - If the same value appears multiple times in `items`, its hit index in
+      `Self` may appear multiple times in the result.
+    - The function performs two passes over `items`: one to count hits and one
+      to populate the result array.
+[==============================================================================}
+function MArrayHelper.BinaryHitsOf(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, p, r: Integer;
+begin
+  if (Self.Empty or items.Empty) then
+    Exit([]);
+  r := 0;
+  for i := 0 to High(items) do
+    if (Self.BinarySearchBy(items[i], oAscending) >= 0) then
+      Inc(r);
+  SetLength(Result, r);
+  r := 0;
+  for i := 0 to High(items) do
+  begin
+    p := Self.BinarySearchBy(items[i], oAscending);
+    if (p >= 0) then
+      Result[r.Increase] := p;
+  end;
 end;
 
 {==============================================================================]

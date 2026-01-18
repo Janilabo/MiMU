@@ -2,6 +2,7 @@
 function Border: TPointArray; overload;
 function Border(const X, Y: Integer): Boolean; overload;
 function Border(const pt: TPoint): Boolean; overload;
+function Boundary: TPointArray;
 function Contour: TPointArray;
 function CornerPoints: TPointArray;
 function CornerPts: TPointArray;
@@ -12,7 +13,7 @@ function Edge(const pt: TPoint): Boolean; overload;
 function Outline: TPointArray; overload;
 function Outline(const X, Y: Integer): Boolean; overload;
 function Outline(const pt: TPoint): Boolean; overload;
-function Skeleton: TPointArray;
+function Shell: TPointArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -49,6 +50,31 @@ end;
 function TBox.Border(const pt: TPoint): Boolean; overload;
 begin
   Result := Self.Border(pt.X, pt.Y);
+end;
+
+{==============================================================================]
+  <Boundary>
+  @action: Returns all points that form the hollow outline of the box.
+  @note: Array of all boundary (perimeter) points.
+[==============================================================================}
+function TBox.Boundary: TPointArray;
+var
+  x, y, r: Integer;
+begin
+  SetLength(Result, (2 * ((Self.Width + Self.Height) - 2)));
+  r := 0;
+  for x := Self.X1 to Self.X2 do
+  begin
+    Result[r.Increase] := Point(x, Self.Y1);
+    if (Self.Y1 <> Self.Y2) then
+      Result[r.Increase] := Point(x, Self.Y2);
+  end;
+  for y := (Self.Y1 + 1) to (Self.Y2 - 1) do
+  begin
+    Result[r.Increase] := Point(Self.X1, y);
+    if (Self.X1 <> Self.X2) then
+      Result[r.Increase] := Point(Self.X2, y);
+  end;
 end;
 
 {==============================================================================]
@@ -195,14 +221,14 @@ begin
 end;
 
 {==============================================================================]
-  <Skeleton>
+  <Shell>
   @action: Returns an array of points representing the outline/perimeter of
            the box.
   @returns: Array of TPoint containing all border points in clockwise order.
   @note: Includes corners and edges. Useful for drawing box outlines or
          collision detection along the perimeter.
 [==============================================================================}
-function TBox.Skeleton: TPointArray;
+function TBox.Shell: TPointArray;
 var
   i, r: Integer;
 begin

@@ -34,6 +34,7 @@
 {$I Sortable/Metric.inc}
 {$I Sortable/Monotonic.inc}
 {$I Sortable/Order.inc}
+{$I Sortable/Scanning.inc}
 {$I Sortable/Search.inc}
 {$I Sortable/Sorted.inc}
 {$I Sortable/Trend.inc}
