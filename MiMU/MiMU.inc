@@ -21,6 +21,7 @@
   {$I Type/Type.inc}
   {$I TArray/TArray.inc}
   {$i T2DArray/T2DArray.inc}
+  {$I Miscellaneous/Mathematics.inc}
   {$I Miscellaneous/Randomness.inc}
   {$I Miscellaneous/Select.inc}
   {$UNDEF FUNCTIONS}
@@ -52,6 +53,7 @@
   {$I Type/Type.inc}
   {$I TArray/TArray.inc}
   {$i T2DArray/T2DArray.inc}
+  {$I Miscellaneous/Mathematics.inc}
   {$I Miscellaneous/Randomness.inc}
   {$I Miscellaneous/Select.inc}
 {$ENDIF}

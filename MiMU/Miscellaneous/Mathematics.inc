@@ -1,0 +1,126 @@
+{$IFDEF FUNCTIONS}
+function AsNextPowerOf2(const x: Integer): Integer;
+function AtNextPowerOf2(const x: Integer): Integer;
+function CountNextPowerOf2(const x: Integer): Integer;
+function FindNextPowerOf2(const x: Integer): Integer;
+function ForNextPowerOf2(const x: Integer): Integer;
+function GetNextPowerOf2(const x: Integer): Integer;
+function NextPowerOf2(const x: Integer): Integer;
+function ReturnNextPowerOf2(const x: Integer): Integer;
+function ToNextPowerOf2(const x: Integer): Integer;
+{$ENDIF}
+
+{$IFDEF IMPLEMENTATION}
+function AsNextPowerOf2(const x: Integer): Integer;
+begin
+  if (x < 2) then
+    Exit(1);
+  Result := 1;
+  while (Result < x) do
+    Result := (Result * 2);
+end;
+
+function AtNextPowerOf2(const x: Integer): Integer;
+const
+  PowersOf2: array[0..31] of Integer =
+    (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768,
+     65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216,
+     33554432, 67108864, 134217728, 268435456, 536870912, 1073741824, -2147483648);
+var
+  i: Integer;
+begin
+  if (x < 2) then
+    Exit(1);
+  for i := 0 to 30 do
+    if (PowersOf2[i] >= x) then
+      Exit(PowersOf2[i]);
+  Result := Low(Integer);
+end;
+
+function CountNextPowerOf2(const x: Integer): Integer;
+var
+  v, z: Integer;
+begin
+  if (x < 2) then
+    Exit(1);
+  if ((x and (x - 1)) = 0) then
+    Exit(x);
+  v := (x - 1);
+  z := 0;
+  while (v <> 0) do
+  begin
+    v := (v shr 1);
+    Inc(z);
+  end;
+  Result := (1 shl z);
+end;
+
+function FindNextPowerOf2(const x: Integer): Integer;
+begin
+  if (x < 2) then
+    Exit(1);
+  Result := (1 shl (Ceil(Log2(x))));
+end;
+
+function ForNextPowerOf2(const x: Integer): Integer;
+var
+  i, r: Integer;
+begin
+  if (x < 2) then
+    Exit(1);
+  Result := (x - 1);
+  r := 1;
+  Result := (Result or (Result shr r));
+  for i := 0 to 4 do
+    Result := (Result or (Result shr r.Increase((r * 2) - 1)));
+  Result := (Result + 1);
+end;
+
+function GetNextPowerOf2(const x: Integer): Integer;
+begin
+  if (x < 2) then
+    Exit(1);
+  Result := 2;
+  while (Result < x) do
+  begin
+    Result := (Result shl 1);
+    if (Result < 1) then
+      Exit(High(Integer));
+  end;
+end;
+
+function NextPowerOf2(const x: Integer): Integer;
+begin
+  if (x < 2) then
+    Exit(1);
+  if ((x and (x - 1)) = 0) then
+    Exit(x);
+  Result := 1;
+  while (Result < x) do
+    Result := (Result shl 1);
+end;
+
+function ReturnNextPowerOf2(const x: Integer): Integer;
+begin
+  if (x < 2) then
+    Exit(1);
+  if ((x and (x - 1)) = 0) then
+    Exit(x);
+  Result := (NextPowerOf2((x shr 1) + 1) shl 1);
+end;
+
+function ToNextPowerOf2(const x: Integer): Integer;
+var
+  r: Integer;
+begin
+  if (x < 2) then
+    Exit(1);
+  r := (x - 1);
+  r := (r or (r shr 1));
+  r := (r or (r shr 2));
+  r := (r or (r shr 4));
+  r := (r or (r shr 8));
+  r := (r or (r shr 16));
+  Result := (r + 1);
+end;
+{$ENDIF}
