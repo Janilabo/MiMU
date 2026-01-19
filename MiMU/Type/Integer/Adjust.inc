@@ -19,6 +19,17 @@ function UpdatedMax(const cValue: Integer; const limit: Integer = 2147483647): I
 function UpdatedMin(const cValue: Integer; const limit: Integer = -2147483648): Integer;
 function UpdateMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean;
 function UpdateMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean;
+function X(const N: Integer = 1): Integer; overload;
+function X2(const N: Integer = 1): Integer; overload;
+function X3(const N: Integer = 1): Integer; overload;
+function X4(const N: Integer = 1): Integer; overload;
+{$ENDIF}
+
+{$IFDEF FUNCTIONS}
+function X(var val: Integer; const N: Integer = 1): Integer; overload;
+function X2(var val: Integer; const N: Integer = 1): Integer; overload;
+function X3(var val: Integer; const N: Integer = 1): Integer; overload;
+function X4(var val: Integer; const N: Integer = 1): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -296,5 +307,120 @@ begin
   else
     Self := n;
   Result := (n = Self);
+end;
+
+{==============================================================================]
+  <X>
+  @action: Returns the value of the integer multiplied by the specified factor `N`.
+  @note:
+    - Does not modify the original integer; returns the computed value.
+    - If `N` is not specified, it defaults to 1 and returns the integer itself.
+    - Equivalent to `Self * N`.
+[==============================================================================}
+function TIntegerHelper.X(const N: Integer = 1): Integer; overload;
+begin
+  Result := (Self * N);
+end;
+
+{==============================================================================]
+  <X2>
+  @action: Returns the value of the integer multiplied by 2 and further scaled by
+           the specified factor `N`.
+  @note:
+    - Does not modify the original integer; returns the computed value.
+    - Equivalent to `Self * (2 * N)`.
+    - If `N` is not specified, it defaults to 1 and the result is `Self * 2`.
+[==============================================================================}
+function TIntegerHelper.X2(const N: Integer = 1): Integer; overload;
+begin
+  Result := ((Self * 2) * N);
+end;
+
+{==============================================================================]
+  <X3>
+  @action: Returns the value of the integer multiplied by 3 and further scaled by
+           the specified factor `N`.´
+  @note:
+    - Does not modify the original integer; returns the computed value.
+    - Equivalent to `Self * (3 * N)`.
+    - If `N` is not specified, it defaults to 1 and the result is `Self * 3`.
+[==============================================================================}
+function TIntegerHelper.X3(const N: Integer = 1): Integer; overload;
+begin
+  Result := ((Self * 3) * N);
+end;
+
+{==============================================================================]
+  <X4>
+  @action: Returns the value of the integer multiplied by 4 and further scaled by
+           the specified factor `N`.
+  @note:
+    - Does not modify the original integer; returns the computed value.
+    - Equivalent to `Self * (4 * N)`.
+    - If `N` is not specified, it defaults to 1 and the result is `Self * 4`.
+[==============================================================================}
+function TIntegerHelper.X4(const N: Integer = 1): Integer; overload;
+begin
+  Result := ((Self * 4) * N);
+end;
+
+{==============================================================================]
+  <X>
+  @action: Multiplies the given integer variable `val` by the specified factor `N`
+           and returns the resulting value.
+  @note:
+    - The parameter `val` is modified in-place.
+    - If `N` is not specified, it defaults to 1 and `val` remains unchanged.
+    - Equivalent to: `val := val * N`.
+[==============================================================================}
+function X(var val: Integer; const N: Integer = 1): Integer; overload;
+begin
+  val := (val * N);
+  Result := val;
+end;
+
+{==============================================================================]
+  <X2>
+  @action: Multiplies the given integer variable `val` by 2 and further scales it by
+           the specified factor `N`, returning the resulting value.
+  @note:
+    - The parameter `val` is modified in-place.
+    - Equivalent to: `val := val * (2 * N)`.
+    - If `N` is not specified, it defaults to 1 and `val` is multiplied by 2.
+[==============================================================================}
+function X2(var val: Integer; const N: Integer = 1): Integer; overload;
+begin
+  val := ((val * 2) * N);
+  Result := val;
+end;
+
+{==============================================================================]
+  <X3>
+  @action: Multiplies the given integer variable `val` by 3 and further scales it by
+           the specified factor `N`, returning the resulting value.
+  @note:
+    - The parameter `val` is modified in-place.
+    - Equivalent to: `val := val * (3 * N)`.
+    - If `N` is not specified, it defaults to 1 and `val` is multiplied by 3.
+[==============================================================================}
+function X3(var val: Integer; const N: Integer = 1): Integer; overload;
+begin
+  val := ((val * 3) * N);
+  Result := val;
+end;
+
+{==============================================================================]
+  <X4>
+  @action: Multiplies the given integer variable `val` by 4 and further scales it by
+           the specified factor `N`, returning the resulting value.
+  @note:
+    - The parameter `val` is modified in-place.
+    - Equivalent to: `val := val * (4 * N)`.
+    - If `N` is not specified, it defaults to 1 and `val` is multiplied by 4.
+[==============================================================================}
+function X4(var val: Integer; const N: Integer = 1): Integer; overload;
+begin
+  val := ((val * 4) * N);
+  Result := val;
 end;
 {$ENDIF}
