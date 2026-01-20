@@ -5,6 +5,8 @@ function CountNextPowerOf2(const x: Integer): Integer;
 function FindNextPowerOf2(const x: Integer): Integer;
 function ForNextPowerOf2(const x: Integer): Integer;
 function GetNextPowerOf2(const x: Integer): Integer;
+function IsPowerOf2(const x: Integer): Boolean;
+function IsPowerOfTwo(const x: Integer): Boolean;
 function NextPowerOf2(const x: Integer): Integer;
 function ReturnNextPowerOf2(const x: Integer): Integer;
 function ToNextPowerOf2(const x: Integer): Integer;
@@ -87,6 +89,16 @@ begin
     if (Result < 1) then
       Exit(High(Integer));
   end;
+end;
+
+function IsPowerOf2(const x: Integer): Boolean;
+begin
+  Result := ((x > 0) and ((x and (x - 1)) = 0));
+end;
+
+function IsPowerOfTwo(const x: Integer): Boolean;
+begin
+  Result := ((x > 0) and ((x and -x) = x));
 end;
 
 function NextPowerOf2(const x: Integer): Integer;
