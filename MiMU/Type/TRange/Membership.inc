@@ -12,6 +12,7 @@ function Got(const val: Integer): Boolean;
 function Has(const val: Integer): Boolean;
 function Holds(const val: Integer): Boolean; overload;
 function Holds(const vals: TRange): Boolean; overload;
+function InOpen(const val: Integer): Boolean;
 function Inside(const val: Integer): Boolean;
 function Item(const x: Integer): Boolean;
 function Lacks(const x: Integer): Boolean;
@@ -153,6 +154,18 @@ end;
 function TRange.Holds(const vals: TRange): Boolean; overload;
 begin
   Result := (Min(vals.start, vals.stop) >= Min(Self.start, Self.stop)) and (Max(vals.start, vals.stop) <= Max(Self.start, Self.stop));
+end;
+
+{==============================================================================]
+  <InOpen>
+  @action: Returns True if the specified value lies strictly within the range
+           defined by start and stop (exclusive of both bounds).
+  @note: The range is treated as open (start < val < stop).
+         Bound order is normalized internally; start may be greater than stop.
+[==============================================================================}
+function TRange.InOpen(const val: Integer): Boolean;
+begin
+  Result := ((val > Min(Self.start, Self.stop)) and (val < Max(Self.start, Self.stop)));
 end;
 
 {==============================================================================]

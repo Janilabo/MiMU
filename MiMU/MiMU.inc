@@ -21,6 +21,7 @@
   {$I Type/Type.inc}
   {$I TArray/TArray.inc}
   {$i T2DArray/T2DArray.inc}
+  {$I Miscellaneous/Bounds.inc}
   {$I Miscellaneous/Mathematics.inc}
   {$I Miscellaneous/Randomness.inc}
   {$I Miscellaneous/Select.inc}
@@ -53,6 +54,7 @@
   {$I Type/Type.inc}
   {$I TArray/TArray.inc}
   {$i T2DArray/T2DArray.inc}
+  {$I Miscellaneous/Bounds.inc}
   {$I Miscellaneous/Mathematics.inc}
   {$I Miscellaneous/Randomness.inc}
   {$I Miscellaneous/Select.inc}

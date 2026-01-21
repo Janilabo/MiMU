@@ -14,6 +14,7 @@ function LimitMin(const limit: Double): Double;
 function Restrict(const minimum, maximum: Double): Double;
 function RestrictMax(const limit: Double): Double;
 function RestrictMin(const limit: Double): Double;
+function Saturate: Double;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -183,5 +184,20 @@ end;
 function TDoubleHelper.RestrictMin(const limit: Double): Double;
 begin
   Result := (Self - ((Self - limit) - Abs(Self - limit)) / 2);
+end;
+
+{==============================================================================]
+  <Saturate>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function TDoubleHelper.Saturate: Double;
+begin
+  if (Self < 0.0) then
+    Result := 0.0
+  else if (Self > 1.0) then
+    Result := 1.0
+  else
+    Result := Self;
 end;
 {$ENDIF}
