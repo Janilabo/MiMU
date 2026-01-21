@@ -1,5 +1,9 @@
 {$IFDEF METHODS}
+function Backwards: TRange;
+function Forwards: TRange;
 function Grab: TRange;
+function HighToLow: TRange;
+function LowToHigh: TRange;
 function MaxMin: TRange; overload;
 function MinMax: TRange; overload;
 function Norm: TRange;
@@ -12,6 +16,34 @@ function Normed: TRange;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
+  <Backwards>
+  @action: Ensures range is descending (start >= stop)
+  @note: Uses branch-free arithmetic to swap if needed
+[==============================================================================}
+function TRange.Backwards: TRange;
+var
+  m: Integer;
+begin
+  m := Max(Self.start, Self.stop);
+  Result.start := m;
+  Result.stop := (Self.start + (Self.stop - m));
+end;
+
+{==============================================================================]
+  <Forwards>
+  @action: Ensures range is ascending (start <= stop)
+  @note: Uses branch-free arithmetic to swap if needed
+[==============================================================================}
+function TRange.Forwards: TRange;
+var
+  m: Integer;
+begin
+  m := Max(Self.start, Self.stop);
+  Result.start := (Self.start + (Self.stop - m));
+  Result.stop := m;
+end;
+
+{==============================================================================]
   <Grab>
   @action: Returns TRange with range, swaps range.stop and range.start if they are in reversed order.
   @note: None.
@@ -19,6 +51,36 @@ function Normed: TRange;
 function TRange.Grab: TRange;
 begin
   Result := IfThen(Self.Descending, Result.Create(Self.stop, Self.start), Self);
+end;
+
+{==============================================================================]
+  <HighToLow>
+  @action: Ensures range is descending (start >= stop)
+  @note: Uses branch-free arithmetic to swap if needed
+[==============================================================================}
+function TRange.HighToLow: TRange;
+var
+  a, s: Integer;
+begin
+  a := Abs(Self.start - Self.stop);
+  s := (Self.start + Self.stop);
+  Result.stop := ((s - a) div 2);
+  Result.start := ((s + a) div 2);
+end;
+
+{==============================================================================]
+  <LowToHigh>
+  @action: Ensures range is ascending (start <= stop)
+  @note: Uses branch-free arithmetic to swap if needed
+[==============================================================================}
+function TRange.LowToHigh: TRange;
+var
+  a, s: Integer;
+begin
+  a := Abs(Self.start - Self.stop);
+  s := (Self.start + Self.stop);
+  Result.start := ((s - a) div 2);
+  Result.stop := ((s + a) div 2);
 end;
 
 {==============================================================================]

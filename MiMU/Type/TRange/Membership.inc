@@ -12,6 +12,8 @@ function Got(const val: Integer): Boolean;
 function Has(const val: Integer): Boolean;
 function Holds(const val: Integer): Boolean; overload;
 function Holds(const vals: TRange): Boolean; overload;
+function Interior(const val: Integer): Boolean;
+function Internal(const val: Integer): Boolean;
 function InOpen(const val: Integer): Boolean;
 function Inside(const val: Integer): Boolean;
 function Item(const x: Integer): Boolean;
@@ -166,6 +168,35 @@ end;
 function TRange.InOpen(const val: Integer): Boolean;
 begin
   Result := ((val > Min(Self.start, Self.stop)) and (val < Max(Self.start, Self.stop)));
+end;
+
+{==============================================================================]
+  <Interior>
+  @action: Returns True if the specified value lies strictly within the range
+           defined by start and stop (exclusive of both bounds).
+  @note: The range is treated as open (start < val < stop).
+         Bound order is normalized internally; start may be greater than stop.
+[==============================================================================}
+function TRange.Interior(const val: Integer): Boolean;
+var
+  n: TRange;
+begin
+  n.Create(Min(Self.start, Self.stop), Max(Self.start, Self.stop));
+  Result := ((val > n.start) and (val < n.stop));
+end;
+
+{==============================================================================]
+  <Internal>
+  @action: Returns True if the specified value lies strictly within the range
+           defined by start and stop (exclusive of both bounds).
+  @note: The range is treated as open (start < val < stop).
+         Bound order is normalized internally; start may be greater than stop.
+[==============================================================================}
+function TRange.Internal(const val: Integer): Boolean;
+begin
+  if (Self.start > Self.stop) then
+    Exit((val > Self.stop) and (val < Self.start));
+  Result := ((val > Self.start) and (val < Self.stop));
 end;
 
 {==============================================================================]
