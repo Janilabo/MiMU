@@ -14,6 +14,7 @@ function Extent: Integer; overload;
 function Footprint: Integer;
 function GetLength: Integer;
 function GetSize: Integer;
+function InclusiveSize: Integer;
 function Len: Integer;
 function Length: Integer; overload;
 function Magnitude: Integer;
@@ -29,6 +30,7 @@ function Span: Integer;
 function Size: Integer; overload;
 function Size(var minVal, maxVal: Integer): Integer; overload;
 function Sized: Integer; overload;
+function Stretch: Integer;
 function Sum: Int64;
 function Summation: Int64;
 function Tally: Integer;
@@ -243,6 +245,21 @@ begin
 end;
 
 {==============================================================================]
+  <InclusiveSize>
+  @action: Returns length of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.InclusiveSize: Integer;
+  function D(const a, b: Integer): Integer;
+  begin
+    Result := ((Max(a, b) - Min(a, b)) + 1);
+  end;
+begin
+  Result := D(Self.start, Self.stop);
+end;
+
+
+{==============================================================================]
   <Len>
   @action: Returns length of the given range.
   @note: None.
@@ -409,6 +426,11 @@ end;
 function TRange.Span: Integer;
 begin
   Result := Abs(Self.stop - Self.start);
+end;
+
+function TRange.Stretch: Integer;
+begin
+  Result := ((((Self.start - Self.stop) * Bitify(Self.start >= Self.stop)) + ((Self.stop - Self.start) * Bitify(Self.stop > Self.start))) + 1);
 end;
 
 {==============================================================================]

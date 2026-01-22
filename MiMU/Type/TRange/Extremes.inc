@@ -2,19 +2,23 @@
 function Bottom: Integer; overload;
 function First: Integer; overload;
 function Higher: Integer; overload;
-function Highest: Integer;
+function Highest: Integer; overload;
+function HighValue: Integer; overload;
 function Last: Integer; overload;
 function Left: Integer; overload;
 function Lower: Integer; overload;
-function Lowest: Integer;
-function Maxima: Integer;
-function Maximal: Integer;	
-function Maximum: Integer;
-function Minima: Integer;
-function Minimal: Integer;	
-function Minimum: Integer;
+function LowerBound: Integer; overload;
+function Lowest: Integer; overload;
+function LowValue: Integer; overload;
+function Maxima: Integer; overload;
+function Maximal: Integer; overload;
+function Maximum: Integer; overload;
+function Minima: Integer; overload;
+function Minimal: Integer; overload;
+function Minimum: Integer; overload;
 function Right: Integer; overload;
 function Top: Integer; overload;
+function UpperBound: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -62,9 +66,24 @@ end;
   @action: Returns maximum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Highest: Integer;
+function TRange.Highest: Integer; overload;
 begin
   Result := Max(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <HighValue>
+  @action: Returns the upper (maximum) bound of the range defined by start and stop.
+  @note: Order-independent; equivalent to Max(start, stop).
+         Uses Int64 intermediates to avoid overflow.
+[==============================================================================}
+function TRange.HighValue: Integer; overload;
+var
+  A, B: Int64;
+begin
+  A := Self.start;
+  B := Self.stop;
+  Result := ((A + B + Abs(A - B)) div 2);
 end;
 
 {==============================================================================]
@@ -101,13 +120,42 @@ begin
 end;
 
 {==============================================================================]
+  <LowerBound>
+  @action: Returns the lower (minimum) bound of the range defined by start and stop.
+  @note: Functionally equivalent to Low.
+         Uses a sum/absolute-difference formulation with Int64 arithmetic.
+[==============================================================================}
+function TRange.LowerBound: Integer; overload;
+var
+  s: Int64;
+begin
+  s := (Int64(Self.start) + Self.stop);
+  Result := ((s - Abs(Int64(Self.start) - Self.stop)) div 2);
+end;
+
+{==============================================================================]
   <Lowest>
   @action: Returns minimum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Lowest: Integer;
+function TRange.Lowest: Integer; overload;
 begin
   Result := Min(Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <LowValue>
+  @action: Returns the lower (minimum) bound of the range defined by start and stop.
+  @note: Order-independent; equivalent to Min(start, stop).
+         Uses Int64 intermediates to avoid overflow.
+[==============================================================================}
+function TRange.LowValue: Integer; overload;
+var
+  A, B: Int64;
+begin
+  A := Self.start;
+  B := Self.stop;
+  Result := ((A + B - Abs(A - B)) div 2);
 end;
 
 {==============================================================================]
@@ -115,7 +163,7 @@ end;
   @action: Returns the larger of `start` and `stop`, regardless of ordering.
   @note: Implements a branchless maximum operation using bitwise arithmetic.
 [==============================================================================}
-function TRange.Maxima: Integer;
+function TRange.Maxima: Integer; overload;
 begin
   Result := (Self.start xor ((Self.start xor Self.stop) and ((Self.start - Self.stop) shr 31)));
 end;
@@ -129,7 +177,7 @@ end;
     - Works for ranges where start <= stop (ascending) or start > stop (descending).
     - Equivalent to Max(Self.start, Self.stop) but written without a function call.
 [==============================================================================}
-function TRange.Maximal: Integer;
+function TRange.Maximal: Integer; overload;
 var
   v: TIntegerArray;
 begin
@@ -142,7 +190,7 @@ end;
   @action: Returns maximum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Maximum: Integer;
+function TRange.Maximum: Integer; overload;
 begin
   if (Self.start < Self.stop) then
     Result := Self.stop
@@ -155,7 +203,7 @@ end;
   @action: Returns the smaller of `start` and `stop`, regardless of ordering.
   @note: Implements a branchless minimum operation using bitwise arithmetic.
 [==============================================================================}
-function TRange.Minima: Integer;
+function TRange.Minima: Integer; overload;
 begin
   Result := (Self.stop xor ((Self.start xor Self.stop) and ((Self.start - Self.stop) shr 31)));
 end;
@@ -169,7 +217,7 @@ end;
     - Works for ranges where start <= stop (ascending) or start > stop (descending).
     - Equivalent to Min(Self.start, Self.stop) but written without a function call.
 [==============================================================================}
-function TRange.Minimal: Integer;
+function TRange.Minimal: Integer; overload;
 var
   v: TIntegerArray;
 begin
@@ -182,7 +230,7 @@ end;
   @action: Returns minimum value of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Minimum: Integer;
+function TRange.Minimum: Integer; overload;
 begin
   if (Self.stop > Self.start) then
     Result := Self.start
@@ -219,5 +267,19 @@ begin
     True: Result := Self.stop;
     False: Result := Self.start;
   end;
+end;
+
+{==============================================================================]
+  <UpperBound>
+  @action: Returns the upper (maximum) bound of the range defined by start and stop.
+  @note: Functionally equivalent to High.
+         Uses a sum/absolute-difference formulation with Int64 arithmetic.
+[==============================================================================}
+function TRange.UpperBound: Integer; overload;
+var
+  s: Int64;
+begin
+  s := (Int64(Self.start) + Self.stop);
+  Result := ((s + Abs(Int64(Self.start) - Self.stop)) div 2);
 end;
 {$ENDIF}

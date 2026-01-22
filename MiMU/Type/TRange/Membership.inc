@@ -16,6 +16,8 @@ function Interior(const val: Integer): Boolean;
 function Internal(const val: Integer): Boolean;
 function InOpen(const val: Integer): Boolean;
 function Inside(const val: Integer): Boolean;
+function IsSubsetFor(const target: TRange): Boolean;
+function IsSubsetOf(const target: TRange): Boolean;
 function Item(const x: Integer): Boolean;
 function Lacks(const x: Integer): Boolean;
 function Missing(const val: Integer): Boolean; overload;
@@ -23,6 +25,7 @@ function Missing(const vals: TRange): Boolean; overload;
 function Omits(const val: Integer): Boolean;
 function Outside(const x: Integer): Boolean;
 function Owns(const val: Integer): Boolean;
+function Subset(const r: TRange): Boolean;
 function Value(const x: Integer): Boolean;
 {$ENDIF}
 
@@ -212,6 +215,34 @@ begin
 end;
 
 {==============================================================================]
+  <IsSubsetFor>
+  @action: Determines whether the current range is entirely contained within the target range.
+  @note: Explicitly calculates min/max of both ranges and checks that the current range is fully within the target.
+         Order-independent; works even if start > stop.
+[==============================================================================}
+function TRange.IsSubsetFor(const target: TRange): Boolean;
+var
+  a, b, c, d: Integer;
+begin
+  a := Min(Self.start, Self.stop);
+  b := Max(Self.start, Self.stop);
+  c := Min(target.start, target.stop);
+  d := Max(target.start, target.stop);
+  Result := ((Max(a, c) = a) and (Min(b, d) = b));
+end;
+
+{==============================================================================]
+  <IsSubsetOf>
+  @action: Returns true if the current range lies entirely within the target range.
+  @note: Compares the range’s Minimum and Maximum properties; equivalent to IsSubsetFor but relies on existing property getters.
+         Order-independent and overflow-safe if Minimum/Maximum use Int64 internally.
+[==============================================================================}
+function TRange.IsSubsetOf(const target: TRange): Boolean;
+begin
+  Result := ((Self.Minimum >= target.Minimum) and (Self.Maximum <= target.Maximum));
+end;
+
+{==============================================================================]
   <Item>
   @action: Returns true if range contains x-value.
   @note: None.
@@ -287,6 +318,17 @@ end;
 function TRange.Owns(const val: Integer): Boolean;
 begin
   Result := (((val - Self.start) * (val - Self.stop)) <= 0);
+end;
+
+{==============================================================================]
+  <Subset>
+  @action: Determines whether the given range r is entirely contained within the current range.
+  @note: Uses Contains checks on both endpoints of r; simpler for single-value containment but equivalent in effect to IsSubsetOf.
+         Order-independent as Contains accounts for start/stop ordering.
+[==============================================================================}
+function TRange.Subset(const r: TRange): Boolean;
+begin
+  Result := (Self.Contains(r.start) and Self.Contains(r.stop));
 end;
 
 {==============================================================================]

@@ -2,6 +2,7 @@
 function All: TIntegerArray; overload;
 function AsArr: TIntegerArray;
 function AsArray: TIntegerArray; overload;
+function Collect: TIntegerArray;
 function Content: TIntegerArray;
 function Contents: TIntegerArray;
 function Data: TIntegerArray; overload;
@@ -111,6 +112,29 @@ begin
   end;
   if h.Even then
     Result[i] := IfThen(Self.Ascending, (Self.start + i), (Self.start - i));
+end;
+
+{==============================================================================]
+  <Collect>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Collect: TIntegerArray;
+  procedure Return(var arr: TIntegerArray);
+  var
+    c, i, f, s: Integer;
+  begin
+    s := 1;
+    if (Self.start > Self.stop) then
+      s := -1;
+    f := Self.start;
+    SetLength(arr, Self.Size);
+    i := 0;
+    while (f <> (Self.stop + s)) do
+      arr[i.Increase] := f.Increase(s);
+  end;
+begin
+  Return(Result);
 end;
 
 {==============================================================================]

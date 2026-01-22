@@ -3,6 +3,8 @@ function Backwards: TRange;
 function Forwards: TRange;
 function Grab: TRange;
 function HighToLow: TRange;
+function HiLo: TRange;
+function LoHi: TRange;
 function LowToHigh: TRange;
 function MaxMin: TRange; overload;
 function MinMax: TRange; overload;
@@ -66,6 +68,36 @@ begin
   s := (Self.start + Self.stop);
   Result.stop := ((s - a) div 2);
   Result.start := ((s + a) div 2);
+end;
+
+{==============================================================================]
+  <HiLo>
+  @action: Ensures range is descending (start >= stop)
+  @note: Uses branch-free arithmetic to swap if needed
+[==============================================================================}
+function TRange.HiLo: TRange;
+var
+  c, d: Integer;
+begin
+  d := (Self.stop - Self.start);
+  c := -(Ord(d > 0));
+  Result.start := (Self.start + (d and c));
+  Result.stop := (Self.stop - (d and c));
+end;
+
+{==============================================================================]
+  <LoHi>
+  @action: Ensures range is ascending (start <= stop)
+  @note: Uses branch-free arithmetic to swap if needed
+[==============================================================================}
+function TRange.LoHi: TRange;
+var
+  c, d: Integer;
+begin
+  d := (Self.start - Self.stop);
+  c := -(Ord(d > 0));
+  Result.start := (Self.start - (d and c));
+  Result.stop := (Self.stop + (d and c));
 end;
 
 {==============================================================================]
