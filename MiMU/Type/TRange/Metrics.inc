@@ -20,7 +20,9 @@ function Length: Integer; overload;
 function Magnitude: Integer;
 function Mass: Integer;
 function Measure: Integer;
+function Measured: Int64;
 function Population: Integer; overload;
+function Quantify: Integer;
 function Quantity: Integer;
 function Rad: Integer; overload;
 function Radiar: Integer; overload;
@@ -30,6 +32,7 @@ function Span: Integer;
 function Size: Integer; overload;
 function Size(var minVal, maxVal: Integer): Integer; overload;
 function Sized: Integer; overload;
+function Spread: Integer;
 function Stretch: Integer;
 function Sum: Int64;
 function Summation: Int64;
@@ -320,6 +323,18 @@ begin
 end;
 
 {==============================================================================]
+  <Measured>
+  @action: Returns the inclusive length of the range defined by Start and Stop.
+  @note: The result is always non-negative and includes both endpoints.
+         For example, Start = 5 and Stop = 5 yields 1.
+         Uses Int64 arithmetic to avoid overflow on wide ranges.
+[==============================================================================}
+function TRange.Measured: Int64;
+begin
+  Result := (Abs(Int64(Self.stop) - Int64(Self.start)) + 1);
+end;
+
+{==============================================================================]
   <Population>
   @action: Returns the size of TRange.
   @note: Alternative.
@@ -327,6 +342,25 @@ end;
 function TRange.Population: Integer; overload;
 begin
   Result := ((Self.MinMax.stop - Self.MinMax.start) + 1);
+end;
+
+{==============================================================================]
+  <Quantify>
+  @action: Returns the inclusive size of the range defined by Start and Stop.
+  @note: This is an Integer-optimized variant that computes the absolute
+         difference using bitwise arithmetic instead of Abs().
+         The result is always non-negative and includes both endpoints.
+         Assumes Start and Stop fit within 32-bit signed integer range.
+[==============================================================================}
+function TRange.Quantify: Integer;
+var
+  d, m: Integer;
+begin
+  d := (Self.stop - Self.start);
+  if (d < 0) then
+    d := -d;
+  m := (d shr 31);
+  Result := (((d xor m) - m) + 1);
 end;
 
 {==============================================================================]
@@ -428,6 +462,30 @@ begin
   Result := Abs(Self.stop - Self.start);
 end;
 
+{==============================================================================]
+  <Spread>
+  @action: Returns the inclusive size of the range defined by Start and Stop.
+  @note: Uses arithmetic manipulation to derive the absolute difference
+         without calling Abs() or using conditional branches.
+         The result is always non-negative and includes both endpoints.
+         Operates entirely on 32-bit Integer arithmetic.
+[==============================================================================}
+function TRange.Spread: Integer;
+var
+  d: Integer;
+begin
+  d := (Self.stop - Self.start);
+  Result := (d + (d shr 31) * (-d shl 1) + 1);
+end;
+
+{==============================================================================]
+  <Stretch>
+  @action: Returns the inclusive size of the range defined by Start and Stop.
+  @note: Computes the range length by explicitly selecting the positive
+         difference using boolean-to-integer conversion via Bitify().
+         Avoids branching while remaining semantically explicit.
+         The result is always non-negative and includes both endpoints.
+[==============================================================================}
 function TRange.Stretch: Integer;
 begin
   Result := ((((Self.start - Self.stop) * Bitify(Self.start >= Self.stop)) + ((Self.stop - Self.start) * Bitify(Self.stop > Self.start))) + 1);

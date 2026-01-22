@@ -10,12 +10,14 @@ function Digits: TIntegerArray; overload;
 function Digits(const dIndex: Integer): Integer; overload;
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
 function Elements: TIntegerArray;
+function Emit: TIntegerArray;
 function Enumerate: TIntegerArray;
 function Enumerated: TIntegerArray;
 function Explode: TIntegerArray;
 function Exploded: TIntegerArray;
 function Extract: TIntegerArray; overload;
 function Extracted: TIntegerArray; overload;
+function Flatten: TIntegerArray;
 function Generate: TIntegerArray;
 function Ints: TIntegerArray;
 function Items: TIntegerArray;
@@ -233,8 +235,8 @@ end;
 
 {==============================================================================]
   <Elements>
-  Explanation: Returns TBox points as TPointArray.
-  Example: Alternative method.
+  action: Returns TBox points as TPointArray.
+  note: Alternative method.
 [==============================================================================}
 function TRange.Elements: TIntegerArray;
 var
@@ -254,6 +256,35 @@ begin
     Result := i.ToArray;
   finally
     i.Free;
+  end;
+end;
+
+{==============================================================================]
+  <Emit>
+  @action: Emits all values of the range into a newly allocated integer array.
+  @note: Materializes the inclusive range from Start to Stop as an ordered
+         sequence. The emission direction is determined by the relative
+         ordering of Start and Stop.
+         For a single-value range, the result contains that value only.
+[==============================================================================}
+function TRange.Emit: TIntegerArray;
+var
+  c, s, v: Integer;
+  p: PInteger;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  c := Self.Size;
+  SetLength(Result, c);
+  s := Sign(Self.stop - Self.start);
+  v := Self.start;
+  p := @Result[0];
+  while (c > 0) do
+  begin
+    p^ := v;
+    Inc(v, s);
+    Inc(p);
+    Dec(c);
   end;
 end;
 
@@ -375,6 +406,28 @@ begin
     Result[i] := (Self.Start + i);
   if Self.Descending then
     Result.Reverse;
+end;
+
+{==============================================================================]
+  <Flatten>
+  @action: Materializes the range into a contiguous integer array.
+  @note: Expands the inclusive range from Start to Stop into an ordered
+         sequence of values. The direction is determined by the relative
+         ordering of Start and Stop.
+         For a single-element range, the array contains Start only.
+[==============================================================================}
+function TRange.Flatten: TIntegerArray;
+var
+  i, s: Integer;
+begin
+  SetLength(Result, Self.Size);
+  if (Result.Length > 1) then
+  begin
+    s := Sign(Self.stop - Self.start);
+    for i := 0 to High(Result) do
+      Result[i] := (Self.start + (i * s));
+  end else
+    Result[0] := Self.start;
 end;
 
 {==============================================================================]
