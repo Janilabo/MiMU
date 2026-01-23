@@ -22,6 +22,7 @@ function Mass: Integer;
 function Measure: Integer;
 function Measured: Int64;
 function Population: Integer; overload;
+function Quantified: Int64;
 function Quantify: Integer;
 function Quantity: Integer;
 function Rad: Integer; overload;
@@ -29,6 +30,7 @@ function Radiar: Integer; overload;
 function Radius: Integer; overload;
 function Reach: Integer; overload;
 function Span: Integer;
+function Signed: Int64;
 function Size: Integer; overload;
 function Size(var minVal, maxVal: Integer): Integer; overload;
 function Sized: Integer; overload;
@@ -345,6 +347,26 @@ begin
 end;
 
 {==============================================================================]
+  <Quantified>
+  @action: Returns the inclusive size of the range as a 64-bit integer.
+           Works correctly for both ascending and descending ranges.
+  @note: Computes the absolute difference between Stop and Start using
+         branchless arithmetic to avoid conditional statements.
+         The result is always non-negative and includes both endpoints.
+         Uses Int64 arithmetic to safely handle very large ranges.
+[==============================================================================}
+function TRange.Quantified: Int64;
+var
+  d, m: Int64;
+begin
+  d := (Int64(Self.stop) - Int64(Self.start));
+  if (d < 0) then
+    d := -d;
+  m := (d shr 63);
+  Result := (((d xor m) - m) + 1);
+end;  
+
+{==============================================================================]
   <Quantify>
   @action: Returns the inclusive size of the range defined by Start and Stop.
   @note: This is an Integer-optimized variant that computes the absolute
@@ -418,6 +440,18 @@ begin
   if (Result < 0) then
     Result := -Result;
   Result := (Result + 1);
+end;
+
+{==============================================================================]
+  <Signed>
+  @action: Returns the signed difference between Stop and Start as a 64-bit integer.
+  @note: The result can be negative if Start > Stop.
+         Does not include both endpoints; this is the exclusive difference.
+         Uses Int64 arithmetic to safely handle large integer ranges without overflow.
+[==============================================================================}
+function TRange.Signed: Int64;
+begin
+  Result := (Int64(Self.stop) - Int64(Self.start));
 end;
 
 {==============================================================================]

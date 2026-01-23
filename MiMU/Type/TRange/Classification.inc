@@ -11,6 +11,9 @@ function Drops: Boolean;
 function Growing: Boolean;
 function Grows: Boolean;
 function Increasing: Boolean;
+function IsAscending: Boolean;
+function IsDescending: Boolean;
+function IsSingle: Boolean;
 function Plural: Boolean;
 function Shrinking: Boolean;
 function Shrinks: Boolean;
@@ -138,6 +141,39 @@ end;
 function TRange.Increasing: Boolean;
 begin
   Result := not (Self.start > Self.stop);
+end;
+
+{==============================================================================]
+  <IsAscending>
+  @action: Determines whether the range is in ascending order.
+  @note: Returns True if Start is less than or equal to Stop.
+         Useful for iteration or conditional logic that depends on direction.
+[==============================================================================}
+function TRange.IsAscending: Boolean;
+begin
+  Result := (Self.start <= Self.stop);
+end;
+
+{==============================================================================]
+  <IsDescending>
+  @action: Determines whether the range is in descending order.
+  @note: Returns True if Start is greater than Stop.
+         Useful for iteration or conditional logic that depends on direction.
+[==============================================================================}
+function TRange.IsDescending: Boolean;
+begin
+  Result := (Self.start > Self.stop);
+end;
+
+{==============================================================================]
+  <IsSingle>
+  @action: Checks if the range contains exactly one element.
+  @note: Returns True if Start equals Stop.
+         Can be used to optimize operations on singleton ranges or avoid unnecessary iteration.
+[==============================================================================}
+function TRange.IsSingle: Boolean;
+begin
+  Result := (Self.start = Self.stop);
 end;
 
 {==============================================================================]

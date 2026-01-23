@@ -18,10 +18,12 @@ function Exploded: TIntegerArray;
 function Extract: TIntegerArray; overload;
 function Extracted: TIntegerArray; overload;
 function Flatten: TIntegerArray;
+function Gather: TIntegerArray;
 function Generate: TIntegerArray;
 function Ints: TIntegerArray;
 function Items: TIntegerArray;
 function List: TIntegerArray;
+function Listed: TIntegerArray;
 function Materialize: TIntegerArray;
 function Materialized: TIntegerArray;
 function Members: TIntegerArray;
@@ -431,6 +433,28 @@ begin
 end;
 
 {==============================================================================]
+  <Gather>
+  @action: Returns all values of the range as an integer array, in order.
+           Works for ascending, descending, or singleton ranges.
+  @note: Uses bitwise arithmetic to determine the step direction without
+         explicit branching. The first element is Start, and each subsequent
+         element is incremented or decremented depending on the sign of
+         (Stop - Start). Resulting array length equals Size (inclusive).
+         Assumes Start and Stop fit in 32-bit integers.
+[==============================================================================}
+function TRange.Gather: TIntegerArray;
+var
+  i, d, m: Integer;
+begin
+  SetLength(Result, Self.Size);
+  d := (Self.stop - Self.start);
+  m := (d shr 31);
+  Result[0] := Self.start;
+  for i := 1 to High(Result) do
+    Result[i] := (Result[i - 1] + (1 - (2 * (m and 1))));
+end;
+
+{==============================================================================]
   <Generate>
   @action: Returns values of the given range.
   @note: None.
@@ -490,6 +514,16 @@ begin
     Result[i] := (Self.start + (s * i));
 end;
 
+{==============================================================================]
+  <List>
+  @action: Collects all values of the range into a newly allocated integer array
+           using a generic list as an intermediate container.
+  @note: Iterates over the range using its enumerator and appends each value
+         to a TList<Integer>, which is then converted to an array.
+         This implementation is compatible with Free Pascal generic lists
+         (via specialize) and preserves inclusive range semantics.
+         Less efficient than direct array emission due to intermediate storage.
+[==============================================================================}
 function TRange.List: TIntegerArray;
 var
   l: specialize TList<Integer>;
@@ -499,6 +533,36 @@ begin
   try
     for v in Self do
       l.Add(v);
+    Result := l.ToArray;
+  finally
+    l.Free;
+  end;
+end;
+
+{==============================================================================]
+  <Listed>
+  @action: Collects all values of the range into a generic list and returns them as an array.
+  @note: Iterates from Start to Stop (inclusive) in the proper direction,
+         determined by the sign of Stop - Start.
+         Uses a TList<Integer> internally, then calls ToArray.
+[==============================================================================}
+function TRange.Listed: TIntegerArray;
+var
+  l: specialize TList<Integer>;
+  v, s, i: Integer;
+begin
+  l := specialize TList<Integer>.Create;
+  try
+    s := Sign(Self.stop - Self.start);
+    if (s = 0) then
+	  s := 1;
+    v := Self.start;
+    repeat
+      l.Add(v);
+      if (v = Self.stop) then
+	    Break;
+      Inc(v, s);
+    until False;
     Result := l.ToArray;
   finally
     l.Free;
