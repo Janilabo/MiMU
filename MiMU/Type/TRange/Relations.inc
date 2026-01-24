@@ -3,15 +3,25 @@ function Differ(const b: TRange): Boolean;
 function Differs(const b: TRange): Boolean;
 function Distance(const b: TRange): Integer; overload;
 function Distance: Integer; overload;
+function DistanceTo(const other: TRange): Integer;
 function DistHausdorff(const b: TRange): Integer;
 function Equal(const b: TRange): Boolean;
 function Equals(const b: TRange): Boolean;
+function Gap(const other: TRange): Integer;
+function GapTo(const other: TRange): Integer;
 function Intersect(const b: TRange): TRange; overload;
 function Intersect(const b: TRange; var iZone: TRange): Boolean; overload;
+function IsAdjacent(const other: TRange): Boolean;
+function IsMergeable(const other: TRange): Boolean;
+function Mergeable(const other: TRange): Boolean;
 function Neighbor(const b: TRange): Boolean;
 function Neighbour(const b: TRange): Boolean;
 function Overlap(const b: TRange): Boolean;
 function Overlapping(const b: TRange): Boolean;
+function Overlaps(const other: TRange): Boolean;
+function Separated(const other: TRange): Boolean;
+function Separation(other: TRange): Integer;
+function Shared(const other: TRange): Integer;
 function Touch(const b: TRange): Boolean;
 function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
 function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
@@ -76,6 +86,21 @@ begin
 end;
 
 {==============================================================================]
+  <DistanceTo>
+  @action: Returns the minimum discrete distance between this range and another
+          range.
+  @note: The distance is defined as the number of integer steps required to
+         move from one range to the other. If the ranges overlap, the result
+         is 0. If the ranges are adjacent, the result is 1. For non-overlapping
+         ranges, the result is equal to GapTo(other) + 1.
+         This method assumes both ranges are valid (Minimum <= Maximum).
+[==============================================================================}
+function TRange.DistanceTo(const other: TRange): Integer;
+begin
+  Result := Max(0, (Self.GapTo(other) + 1));
+end;
+
+{==============================================================================]
   <DistHausdorff>
   @action: Returns Hausdorff-based distance between ranges a and b.
   @note: None.
@@ -107,6 +132,49 @@ end;
 function TRange.Equals(const b: TRange): Boolean;
 begin
   Result := ((Min(Self.start, Self.stop) = Min(b.start, b.stop)) and (Max(Self.start, Self.stop) = Max(b.start, b.stop)));
+end;
+
+{==============================================================================]
+  <Gap>
+  @action: Returns the number of discrete values strictly between this range and
+          another range.
+  @note: If the ranges do not overlap and are not adjacent, the result is the
+         exclusive gap size between them. If the ranges overlap or are directly
+         adjacent, the result is 0. This method does not distinguish overlap
+         from adjacency and always returns a non-negative value.
+         This method assumes both ranges are valid (Minimum <= Maximum).
+[==============================================================================}
+function TRange.Gap(const other: TRange): Integer;
+begin
+  if (Self.Maximum < other.Minimum) then
+    Result := ((other.Minimum - Self.Maximum) - 1)
+  else if (other.Maximum < Self.Minimum) then
+    Result := ((Self.Minimum - other.Maximum) - 1)
+  else
+    Result := 0;
+end;
+
+{==============================================================================]
+  <GapTo>
+  @action: Returns the number of discrete values between this range and another
+          non-overlapping range.
+  @note: If the ranges overlap, the function returns -1. If the ranges do not
+         overlap, the result represents the exclusive gap between them, i.e.
+         the count of integer values that lie strictly between
+         Self.Maximum and other.Minimum, or between other.Maximum and
+         Self.Minimum, depending on their relative ordering.
+         Adjacent ranges (where Self.Maximum + 1 = other.Minimum, or vice
+         versa) yield a gap of 0. This method assumes both ranges are valid
+         (Minimum <= Maximum).
+[==============================================================================}
+function TRange.GapTo(const other: TRange): Integer;
+begin
+  if Self.Overlaps(other) then
+    Exit(-1)
+  else if (Self.Maximum < other.Minimum) then
+    Result := ((other.Minimum - Self.Maximum) - 1)
+  else
+    Result := ((Self.Minimum - other.Maximum) - 1);
 end;
 
 {==============================================================================]
@@ -144,6 +212,48 @@ begin
 end;
 
 {==============================================================================]
+  <IsAdjacent>
+  @action: Determines whether this range is directly adjacent to another range.
+  @note: Returns True if the ranges do not overlap but touch at exactly one
+         boundary, such that Self.Maximum + 1 = other.Minimum or
+         other.Maximum + 1 = Self.Minimum. Adjacent ranges have no shared
+         values and a gap size of zero.
+         This method assumes both ranges are valid (Minimum <= Maximum).
+[==============================================================================}
+function TRange.IsAdjacent(const other: TRange): Boolean;
+begin
+  Result := (((Self.Maximum + 1) = other.Minimum) or ((other.Maximum + 1) = Self.Minimum));
+end;
+
+{==============================================================================]
+  <IsMergeable>
+  @action: Determines whether this range can be merged with another range.
+  @note: Returns True if the ranges overlap or are directly adjacent.
+         Mergeable ranges can be combined into a single contiguous range
+         without introducing gaps.
+         This method assumes both ranges are valid (Minimum <= Maximum).
+[==============================================================================}
+function TRange.IsMergeable(const other: TRange): Boolean;
+begin
+  Result := (Self.Overlaps(other) or Self.IsAdjacent(other));
+end;
+
+{==============================================================================]
+  <Mergeable>
+  @action: Determines whether this range is mergeable with another range.
+  @note: Returns True if the ranges overlap or are directly adjacent.
+         The evaluation is inclusive of a one-unit boundary, meaning that
+         ranges with no gap between them can be combined into a single
+         contiguous range. This condition is equivalent to testing whether
+         the union of the two ranges would form a continuous interval.
+         This method assumes both ranges are valid (Minimum <= Maximum).
+[==============================================================================}
+function TRange.Mergeable(const other: TRange): Boolean;
+begin
+  Result := ((Self.Minimum <= (other.Maximum + 1)) and ((Self.Maximum + 1) >= other.Minimum));
+end;
+
+{==============================================================================]
   <Neighbor>
   @action: Returns true if 2 TRanges are right next to eachother.
   @note: (Distance is exactly 1 between em).
@@ -168,6 +278,16 @@ begin
 end;
 
 {==============================================================================]
+  <Overlap>
+  @action: Checks if a and b overlap eachother.
+  @note: Returns true if overlap is found.
+[==============================================================================}
+function TRange.Overlap(const b: TRange): Boolean;
+begin
+  Result := not ((Min(Self.start, Self.stop) > Max(b.start, b.stop)) or (Min(b.start, b.stop) > Max(Self.start, Self.stop)));
+end;
+
+{==============================================================================]
   <Overlapping>
   @action: Checks if a and b overlap eachother.
   @note: Returns true if overlap is found.
@@ -178,13 +298,68 @@ begin
 end;
 
 {==============================================================================]
-  <Overlap>
-  @action: Checks if a and b overlap eachother.
-  @note: Returns true if overlap is found.
+  <Overlaps>
+  @action: Determines whether this range overlaps with another range.
+  @note: Overlap is evaluated inclusively. If the ranges share at least one
+         value, including boundary values, the result is True. For example,
+         ranges where Self.Maximum = other.Minimum are considered overlapping.
+         This method assumes both ranges are valid (Minimum <= Maximum).
 [==============================================================================}
-function TRange.Overlap(const b: TRange): Boolean;
+function TRange.Overlaps(const other: TRange): Boolean;
 begin
-  Result := not ((Min(Self.start, Self.stop) > Max(b.start, b.stop)) or (Min(b.start, b.stop) > Max(Self.start, Self.stop)));
+  Result := ((Self.Minimum <= other.Maximum) and (Self.Maximum >= other.Minimum));
+end;
+
+{==============================================================================]
+  <Separated>
+  @action: Determines whether this range is strictly separated from another range.
+  @note: Returns True if there is at least one discrete value between the two
+         ranges. Overlapping or directly adjacent ranges are not considered
+         separated. In other words, this method evaluates whether the gap
+         between the ranges is greater than zero.
+         This method assumes both ranges are valid (Minimum <= Maximum).
+[==============================================================================}
+function TRange.Separated(const other: TRange): Boolean;
+begin
+  Result := ((Self.Maximum < (other.Minimum - 1)) or (other.Maximum < (Self.Minimum - 1)));
+end; 
+
+{==============================================================================]
+  <Separation>
+  @action: Returns the signed separation between this range and another range.
+  @note: For non-overlapping ranges, the result is a positive value equal to
+         the number of discrete values strictly between the two ranges.
+         For overlapping ranges, the result is negative and represents the
+         inclusive size of the overlap (i.e. the negated shared value count).
+         Adjacent ranges yield a separation of 0.
+         This method assumes both ranges are valid (Minimum <= Maximum).
+[==============================================================================}
+function TRange.Separation(other: TRange): Integer;
+begin
+  if (Self.Maximum < other.Minimum) then
+    Result := ((other.Minimum - Self.Maximum) - 1)
+  else if (other.Maximum < Self.Minimum) then
+    Result := ((Self.Minimum - other.Maximum) - 1)
+  else
+    Result := -((Min(Self.Maximum, other.Maximum) - Max(Self.Minimum, other.Minimum)) + 1);
+end;
+
+{==============================================================================]
+  <Shared>
+  @action: Returns the number of discrete values shared by this range and another
+          range.
+  @note: If the ranges overlap, the result is the inclusive size of their
+         intersection, calculated as
+         Min(Self.Maximum, other.Maximum) - Max(Self.Minimum, other.Minimum) + 1.
+         If the ranges do not overlap, the result is 0.
+         This method assumes both ranges are valid (Minimum <= Maximum).
+[==============================================================================}
+function TRange.Shared(const other: TRange): Integer;
+begin
+  if Self.Overlaps(other) then
+    Result := ((Min(Self.Maximum, other.Maximum) - Max(Self.Minimum, other.Minimum)) + 1)
+  else
+    Result := 0;
 end;
 
 {==============================================================================]
