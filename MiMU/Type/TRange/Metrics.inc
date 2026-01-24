@@ -1,4 +1,6 @@
 {$IFDEF METHODS}
+function Aggregate(var items: TIntegerArray): Int64;
+function Aggregated(var items: TIntegerArray): Int64;
 function Area: Integer;
 function Capacity: Integer;
 function Cardinality: Integer;
@@ -30,6 +32,7 @@ function Radiar: Integer; overload;
 function Radius: Integer; overload;
 function Reach: Integer; overload;
 function Span: Integer;
+function Sigma: Int64;
 function Signed: Int64;
 function Size: Integer; overload;
 function Size(var minVal, maxVal: Integer): Integer; overload;
@@ -37,6 +40,7 @@ function Sized: Integer; overload;
 function Spread: Integer;
 function Stretch: Integer;
 function Sum: Int64;
+function Summa: Int64;
 function Summation: Int64;
 function Tally: Integer;
 function Total: Int64;
@@ -45,6 +49,58 @@ function Width: Integer;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Aggregate>
+  @action: Fills a TIntegerArray with all integer values from this range and
+          returns their sum.
+  @note: The array is automatically sized to the range length. Supports both
+         ascending and descending ranges. The sum is computed incrementally
+         while filling the array. Uses Int64 for the result to reduce overflow
+         risk. Assumes the range is inclusive and valid (Minimum <= Maximum
+         or descending).
+[==============================================================================}
+function TRange.Aggregate(var items: TIntegerArray): Int64;
+var
+  l, r, s: Integer;
+begin
+  l := Self.Size;
+  SetLength(items, l);
+  items[0] := Self.start;
+  Result := Self.start;
+  if (Self.start = Self.stop) then
+    Exit;
+  s := IfThen((Self.start < Self.stop), 1, -1);
+  r := 1;
+  repeat
+    items[r] := (Items[r - 1] + s);
+    Result := (Result + items[r]);
+  until (r.Increment >= l);
+end;
+
+{==============================================================================]
+  <Aggregated>
+  @action: Fills a TIntegerArray with all values in the range and returns their sum.
+  @note: Supports both ascending and descending ranges. The sum is computed
+          incrementally while filling the array. The array length is automatically
+          set to the range size. Uses Int64 for the sum to reduce overflow risk.
+[==============================================================================}
+function TRange.Aggregated(var items: TIntegerArray): Int64;
+var
+  i, l, r, s: Integer;
+begin
+  l := Self.Size;
+  SetLength(items, l);
+  Result := 0;
+  s := IfThen((Self.Start <= Self.Stop), 1, -1);
+  r := 0;
+  i := Self.Start;
+  while (r < l) do
+  begin
+    items[r.Increase] := i;
+    Result := (Result + i.Increase(s));
+  end;
+end; 
+
 {==============================================================================]
   <Area>
   @action: Returns area of the given range.
@@ -443,6 +499,21 @@ begin
 end;
 
 {==============================================================================]
+  <Sigma>
+  @action: Returns the sum of all integer values contained in this range.
+  @note: The sum is calculated using the arithmetic series formula:
+         Size * (start + stop) / 2. Both start and stop are promoted to
+         Int64 to reduce the risk of 32-bit overflow. The division by 2 is
+         performed after the multiplication, so extremely large ranges may
+         still overflow Int64. This method assumes the range is valid
+         (Minimum <= Maximum) and represents an inclusive set of integers.
+[==============================================================================}
+function TRange.Sigma: Int64;
+begin
+  Result := ((Int64(Self.Size) * (Int64(Self.start) + Self.stop)) div 2);
+end; 
+
+{==============================================================================]
   <Signed>
   @action: Returns the signed difference between Stop and Start as a 64-bit integer.
   @note: The result can be negative if Start > Stop.
@@ -537,6 +608,30 @@ begin
   a := Min(Self.start, Self.stop);
   b := Max(Self.start, Self.stop);
   Result := ((((b - a) + 1) * (a + b)) div 2);
+end;
+
+{==============================================================================]
+  <Summa>
+  @action: Returns the sum of all integer values contained in this range.
+  @note: The sum is computed using the arithmetic series formula:
+         Size * (start + stop) / 2. To reduce the risk of 32-bit overflow,
+         start, stop, and Size are promoted to Int64. Division is done after
+         multiplication when the range size is odd, and before multiplication
+         when the size is even, to minimize intermediate value magnitude.
+         Extremely large ranges may still overflow Int64. This method assumes
+         the range is valid (Minimum <= Maximum) and inclusive.
+[==============================================================================}
+function TRange.Summa: Int64;
+var
+  A, B, C: Int64;
+begin
+  A := Self.start;
+  B := Self.stop;
+  C := Self.Size;
+  if ((C and 1) = 0) then
+    Result := ((C div 2) * (A + B))
+  else
+    Result := (C * ((A + B) div 2));
 end;
 
 {==============================================================================]
