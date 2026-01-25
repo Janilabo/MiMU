@@ -5,6 +5,7 @@ function Area: Integer;
 function Capacity: Integer;
 function Cardinality: Integer;
 function Count: Integer;
+function Counted: Int64;
 function Coverage: Integer; overload;
 function Deficit: Integer;
 function Delta: Integer;
@@ -14,6 +15,7 @@ function Difference: Integer;
 function Dist: Integer;
 function Extent: Integer; overload;
 function Footprint: Integer;
+function GetCount: Integer;
 function GetLength: Integer;
 function GetSize: Integer;
 function InclusiveSize: Integer;
@@ -24,12 +26,17 @@ function Mass: Integer;
 function Measure: Integer;
 function Measured: Int64;
 function Population: Integer; overload;
+function PopulationSize: Integer;
+function Prod: Int64;
+function Product: Int64;
 function Quantified: Int64;
 function Quantify: Integer;
 function Quantity: Integer;
+function Quotient(const defaultValue: Integer = 0): Integer;
 function Rad: Integer; overload;
 function Radiar: Integer; overload;
 function Radius: Integer; overload;
+function Ratio(const defaultValue: Double = 0.0): Double;
 function Reach: Integer; overload;
 function Span: Integer;
 function Sigma: Int64;
@@ -154,6 +161,19 @@ begin
 end;
 
 {==============================================================================]
+  <Counted>
+  @action: Returns the number of discrete integer values contained in the range.
+  @note: The result is calculated using 64-bit arithmetic and supports both
+         ascending and descending ranges. The count is inclusive of both
+         start and stop values and is equivalent to Abs(stop - start) + 1.
+         This method is overflow-safe for all Integer endpoint values.
+[==============================================================================}
+function TRange.Counted: Int64;
+begin
+  Result := (Abs(Int64(Self.stop) - Int64(Self.start)) + 1);
+end;
+
+{==============================================================================]
   <Coverage>
   @action: Returns the size of TRange.
   @note: Alternative.
@@ -263,6 +283,22 @@ begin
     Result := (d + 1)
   else
     Result := (-d + 1);
+end;
+
+{==============================================================================]
+  <GetCount>
+  @action: Returns the number of discrete integer values contained in the range.
+  @note: The result is computed using branchless 32-bit arithmetic and supports
+         both ascending and descending ranges. The count is inclusive of both
+         start and stop values and is equivalent to Abs(stop - start) + 1.
+[==============================================================================}
+function TRange.GetCount: Integer;
+var
+  d, m: Integer;
+begin
+  d := IfThen((Self.start <= Self.stop), (Self.stop - Self.start), (Self.start - Self.stop));
+  m := (d shr 31);
+  Result := (((d xor m) - m) + 1);
 end;
 
 {==============================================================================]
@@ -403,6 +439,64 @@ begin
 end;
 
 {==============================================================================]
+  <PopulationSize>
+  @action: Returns the number of discrete integer values in the range.
+  @note: The calculation supports both ascending and descending ranges and
+         treats the range as inclusive. The function uses unsigned arithmetic
+         to reduce the risk of overflow in intermediate subtraction. For
+         ascending ranges (stop >= start), the count is stop - start + 1.
+         For descending ranges (start > stop), the count is start - stop + 1.
+[==============================================================================}
+function TRange.PopulationSize: Integer;
+begin
+  Result := UInt32(Self.stop - Self.start);
+  if (Self.stop >= Self.start) then
+    Inc(Result)
+  else
+    Result := (-Result + 1);
+end;
+
+{==============================================================================]
+  <Prod>
+  @action: Returns the product of all integers in the range (Π)
+  @note: Can overflow very quickly! Use with caution on large ranges.
+         Returns 1 for empty ranges. Returns 0 if range contains 0.
+  @examples:
+    TRange.Create(1, 5).Product  → 120 (1×2×3×4×5)
+    TRange.Create(3, 6).Product  → 360 (3×4×5×6)
+    TRange.Create(1, 0).Product  → 1 (empty range)
+[==============================================================================}
+function TRange.Prod: Int64;
+var
+  i: Integer;
+begin
+  Result := 1;
+  for i := Min(Self.start, Self.stop) to Max(Self.start, Self.stop) do
+    Result := (Result * i);
+end;
+
+{==============================================================================]
+  <Product>
+  @action: Returns the product of all integer values contained in the range.
+  @note: The range is treated as inclusive and is evaluated from the smaller
+         endpoint to the larger, regardless of direction. If the range spans
+         zero, the result is immediately zero. The product is accumulated
+         using Int64 and no overflow detection is performed.
+[==============================================================================}
+function TRange.Product: Int64;
+var
+  i, l, h: Integer;
+begin
+  l := Min(Self.start, Self.stop);
+  h := Max(Self.start, Self.stop);
+  if ((l <= 0) and (h >= 0)) then
+    Exit(0);
+  Result := 1;
+  for i := l to h do
+    Result := (Result * i);
+end;
+
+{==============================================================================]
   <Quantified>
   @action: Returns the inclusive size of the range as a 64-bit integer.
            Works correctly for both ascending and descending ranges.
@@ -455,6 +549,22 @@ begin
 end;
 
 {==============================================================================]
+  <Quotient>
+  @action: Returns the integer quotient of the range start divided by the stop.
+  @note: The result is calculated using integer division (start div stop),
+         truncating toward zero. If stop is zero, the specified defaultValue
+         is returned to avoid division-by-zero. No validation or normalization
+         of the range endpoints is performed.
+[==============================================================================}
+function TRange.Quotient(const defaultValue: Integer = 0): Integer;
+begin
+  if Self.stop = 0 then
+    Result := defaultValue
+  else
+    Result := (Self.start div Self.stop);
+end;
+
+{==============================================================================]
   <Rad>
   @action: Returns the half-length (radius) of the range as an integer value.
   @note: Computed as Abs(Stop - Start) shr 1; equivalent to (|Stop - Start| div 2).
@@ -483,6 +593,22 @@ end;
 function TRange.Radius: Integer; overload;
 begin
   Result := ((Self.Maximum - Self.Minimum) div 2);
+end;
+
+{==============================================================================]
+  <Ratio>
+  @action: Returns the ratio of the range start value to the stop value.
+  @note: The result is calculated as start / stop using floating-point
+         division. If stop is zero, the specified defaultValue is returned
+         instead to avoid division-by-zero. The method does not enforce any
+         ordering between start and stop and performs no range validation.
+[==============================================================================}
+function TRange.Ratio(const defaultValue: Double = 0.0): Double;
+begin
+  if (Self.stop = 0) then
+    Result := defaultValue
+  else
+    Result := (Self.start / Self.stop);
 end;
 
 {==============================================================================]
