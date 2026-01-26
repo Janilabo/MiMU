@@ -2,6 +2,8 @@
 function All: TIntegerArray; overload;
 function AsArr: TIntegerArray;
 function AsArray: TIntegerArray; overload;
+function Capture: TIntegerArray;
+function Captured: TIntegerArray;
 function Collect: TIntegerArray;
 function Content: TIntegerArray;
 function Contents: TIntegerArray;
@@ -22,6 +24,7 @@ function Gather: TIntegerArray;
 function Generate: TIntegerArray;
 function Ints: TIntegerArray;
 function Items: TIntegerArray;
+function Iterated: TIntegerArray;
 function List: TIntegerArray;
 function Listed: TIntegerArray;
 function Materialize: TIntegerArray;
@@ -30,6 +33,7 @@ function Members: TIntegerArray;
 function Numbers: TIntegerArray;
 function Recursed: TIntegerArray; overload;
 function Sequence: TIntegerArray;
+function Snapshot: TIntegerArray;
 function Steps: TIntegerArray; overload;
 function TIA: TIntegerArray;
 function ToArr: TIntegerArray;
@@ -116,6 +120,63 @@ begin
   end;
   if h.Even then
     Result[i] := IfThen(Self.Ascending, (Self.start + i), (Self.start - i));
+end;
+
+{==============================================================================]
+  <Capture>
+  @action: Materializes the range into a concrete array of integers.
+  @note: The returned array represents a point-in-time snapshot of the range
+         and is ordered according to the range direction.
+[==============================================================================}
+function TRange.Capture: TIntegerArray;
+var
+  i, v: Integer;
+  P: PInteger;
+begin
+  SetLength(Result, Self.Size);
+  P := @Result[0];
+  v := Self.start;
+  case Self.Ascending of
+    True:
+    for i := 1 to Result.Length do
+    begin
+      P^ := v.Increase;
+      Inc(P);
+    end;
+    False:
+    for i := 1 to Result.Length do
+    begin
+      P^ := v.Decrease;
+      Inc(P);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <Captured>
+  @action: Returns a concrete array containing all values in the range.
+  @note: The returned array reflects the range's current start, end, and 
+         ascending/descending direction. Evaluation is eager and allocates
+         a new array of integers.
+[==============================================================================}
+function TRange.Captured: TIntegerArray;
+var
+  i, v: Integer;
+  P: PInteger;
+  a: Boolean;
+begin
+  SetLength(Result, Self.Size);
+  P := @Result[0];
+  v := Self.start;
+  a := Self.Ascending;
+  for i := 1 to Result.Length do
+  begin
+    if a then
+      P^ := v.Increase
+    else
+      P^ := v.Decrease;
+    Inc(P);
+  end;
 end;
 
 {==============================================================================]
@@ -516,6 +577,36 @@ begin
 end;
 
 {==============================================================================]
+  <Iterated>
+  @action: Returns an array of integers produced by iterating the range.
+  @note: Uses an optimized lookup-based implementation for ascending ranges
+         within predefined bounds; otherwise falls back to the standard
+         materialization logic.
+[==============================================================================}
+function TRange.Iterated: TIntegerArray;
+const
+  MASTER: array[0..99] of Integer =
+   (0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
+    10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+    20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+    30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
+    40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+    50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
+    60, 61, 62, 63, 64, 65, 66, 67, 68, 69,
+    70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
+    80, 81, 82, 83, 84, 85, 86, 87, 88, 89,
+    90, 91, 92, 93, 94, 95, 96, 97, 98, 99);
+var
+  l: Integer;
+begin
+  if (Self.Descending or (Self.start < 0) or (Self.stop > High(MASTER))) then
+    Exit(Self.Items);
+  l := Self.Size;
+  SetLength(Result, l);
+  Move(MASTER[start], Result[0], (l * SizeOf(Integer)));
+end;
+
+{==============================================================================]
   <List>
   @action: Collects all values of the range into a newly allocated integer array
            using a generic list as an intermediate container.
@@ -681,6 +772,29 @@ begin
     True:
     for i := 0 to High(Result) do
       Result[i] := (Self.start - i);
+  end;
+end;
+
+{==============================================================================]
+  <Snapshot>
+  @action: Produces an array containing all integers in the range.
+  @note: The returned array represents a point-in-time snapshot of the range,
+         preserving the start value, end value, and ascending or descending
+         order. The evaluation is eager and allocates a new array.
+[==============================================================================}
+function TRange.Snapshot: TIntegerArray;
+var
+  i, s: Integer;
+  P: PInteger;
+begin
+  SetLength(Result, Self.Size);
+  P := @Result[0];
+  Result[0] := Self.start;
+  s := IfThen(Self.Ascending, 1, -1);
+  for i := 1 to High(Result) do
+  begin
+    Inc(P);
+    P^ := (Result[i - 1] + s);
   end;
 end;
 
