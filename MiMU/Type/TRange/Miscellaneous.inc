@@ -2,6 +2,7 @@
 function Centered(const rCenter: Integer): TRange; overload;
 function Frame(var rSize: Integer): TRange; overload;
 function Frame: TRange; overload;
+function Progress(const pPercent: Double): Integer;
 function Reserve: TIntegerArray; overload;
 function Reserve(var aRange: TIntegerArray): Integer; overload;
 function Split(var rLeft, rRight: TRange): Integer;
@@ -48,6 +49,27 @@ end;
 function TRange.Frame: TRange; overload;
 begin
   Result := Range(0, (Self.Size - 1));
+end;
+
+{==============================================================================]
+  <Progress>
+  @action: Returns a position within the range corresponding to the given progress
+          ratio.
+          The position is calculated by linearly interpolating between Start and Stop
+		  using pPercent, then rounding to the nearest integer.
+  @note:
+    - pPercent is expected to be in the range 0.0 .. 1.0, where:
+        0.0 returns Start
+        1.0 returns Stop
+    - Values outside this range will extrapolate beyond the bounds.
+    - No normalization is performed; Start and Stop are used as-is.
+    - Rounding is applied after interpolation and may bias the result.
+    - For a singular range (Start = Stop), the result equals Start regardless
+      of pPercent.
+[==============================================================================}
+function TRange.Progress(const pPercent: Double): Integer;
+begin
+  Result := (Self.start + Round((Self.stop - Self.start) * pPercent));
 end;
 
 {==============================================================================]
