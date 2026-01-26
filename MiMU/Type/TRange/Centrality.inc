@@ -1,13 +1,16 @@
 {$IFDEF METHODS}
 function Average: Double;
+function Bisect: Integer;
 function Center: Integer;
 function Central: Integer;
 function Centre: Integer; overload;
 function Centroid: Integer; overload;
 function Core: Integer; overload;
 function Half: Integer; overload;
+function Halfstep: Integer; overload;
 function Halfway: Integer; overload;
 function Halved: Integer; overload;
+function Kernel: Integer;
 function Mean: Double; overload;
 function Medium: Double; overload;
 function Mid: Double;
@@ -22,6 +25,7 @@ function MiddleValue: Double;
 function Midpoint(const wStart: Double = 1; const wStop: Double = 1): Double; overload;
 function MidVal: Double;
 function MidValue: Double;
+function Nexus: Integer;
 function Pivot: Integer;
 {$ENDIF}
 
@@ -37,6 +41,20 @@ var
 begin
   c := Self.Size;
   Result := ((c * (Self.start + Self.stop) div 2) / c);
+end;
+
+{==============================================================================]
+ <Bisect>
+ @action: Returns the lower median index of the range using integer-only arithmetic.
+ @note: The result is order-independent and always lies within the range bounds.
+        For ranges with an even number of elements, the lower of the two central
+        values is returned. Equivalent to: Min(start, stop) + ((Size - 1) div 2)
+        This method avoids floating-point arithmetic and is safe for all integer
+        ranges.
+[==============================================================================}
+function TRange.Bisect: Integer;
+begin
+  Result := (Min(Self.start, Self.stop) + ((Self.Size - 1) shr 1));
 end;
 
 {==============================================================================]
@@ -66,7 +84,7 @@ end;
 [==============================================================================}
 function TRange.Centre: Integer; overload;
 begin
-  Result := ((Min(Self.start, Self.stop)) + (Abs(Self.start - Self.stop) div 2));
+  Result := (Min(Self.start, Self.stop) + (Abs(Self.stop - Self.start) div 2));
 end;
 
 {==============================================================================]
@@ -93,40 +111,68 @@ end;
 
 {==============================================================================]
   <Half>
-  @action: Returns half the length of the range as an integer, calculated as the
-           absolute difference between Stop and Start divided by two.
-  @note:   Direction-agnostic; works for both ascending and descending ranges.
-           Useful for offset calculations, contraction, or expansion operations.
+  @action: Returns the arithmetic midpoint of the range using truncation toward zero.
+  @note: Equivalent to Trunc((start + stop) / 2).
+         For positive ranges this behaves like Floor; for negative ranges it behaves
+         like Ceil. Use only when truncation semantics are explicitly desired.
 [==============================================================================}
 function TRange.Half: Integer; overload;
 begin
-  Result := (Abs(Self.stop - Self.start) div 2);
+  Result := Trunc((Self.start + Self.stop) / 2);
+end;
+
+{==============================================================================]
+  <Halfstep>
+  @action: Returns the arithmetic midpoint of the range, rounded down.
+  @note: Equivalent to Floor((start + stop) / 2).
+         Always rounds toward negative infinity. This is the lower of the two central
+         values when the midpoint lies between integers.
+[==============================================================================}
+function TRange.Halfstep: Integer; overload;
+begin
+  Result := Floor((Self.start + Self.stop) / 2);
 end;
 
 {==============================================================================]
   <Halfway>
-  @action: Returns half the distance between Start and Stop, explicitly handling
-           ascending and descending ranges.
-  @note:   Functionally identical to Half; uses conditional logic instead of Abs().
-           Can be used interchangeably where explicit branch logic is preferred.
+  @action: Returns the arithmetic midpoint of the range using banker's rounding.
+  @note: Equivalent to Round((start + stop) / 2).
+         Uses the RTL rounding mode (round-to-nearest, ties to even).
+         May round up or down depending on parity when the fractional part is exactly 0.5.
 [==============================================================================}
 function TRange.Halfway: Integer; overload;
 begin
-  if (Self.start > Self.stop) then
-    Result := ((Self.start - Self.stop) div 2)
-  else
-    Result := ((Self.stop - Self.start) div 2);
+  Result := Round((Self.start + Self.stop) / 2);
 end;
 
 {==============================================================================]
   <Halved>
-  @action: Returns half the distance between Start and Stop, explicitly handling
-           ascending and descending ranges.
-  @note:   EnsureRange-based.
+  @action: Returns the arithmetic midpoint of the range, rounded up.
+  @note: Equivalent to Ceil((start + stop) / 2).
+         Always rounds toward positive infinity. This is the upper of the two central
+         values when the midpoint lies between integers.
 [==============================================================================}
 function TRange.Halved: Integer; overload;
 begin
-  Result := EnsureRange((Abs(Self.stop - Self.start) div 2), 0, High(Integer));
+  Result := Ceil((Self.start + Self.stop) / 2);
+end;
+
+{==============================================================================]
+  <Kernel>
+  @action: Returns the midpoint of the range, biased toward the start value.
+  @note: The result is computed using integer-only arithmetic and preserves the
+         direction of the range. For ranges where start < stop, the midpoint is
+         rounded down; for ranges where start > stop, the midpoint is rounded up.
+         This makes the result stable with respect to the start endpoint and suitable
+         for iterative bisection algorithms that advance from start toward stop.
+         Equivalent to: start + Sign(stop - start) * (Abs(stop - start) div 2)
+[==============================================================================}
+function TRange.Kernel: Integer;
+var
+  d: Integer;
+begin
+  d := (Self.stop - Self.start);
+  Result := (Self.start + (Sign(d) * (Abs(d) div 2)));
 end;
 
 {==============================================================================]
@@ -287,9 +333,9 @@ begin
 end;
 
 {==============================================================================]
- <MidValue>
- @action: The value(s) at the center position(s) of given range.
- @note: None
+  <MidValue>
+  @action: The value(s) at the center position(s) of given range.
+  @note: None
 [==============================================================================}
 function TRange.MidValue: Double;
 var
@@ -302,9 +348,33 @@ begin
 end;
 
 {==============================================================================]
- <Pivot>
- @action: The value(s) at the center position(s) of given range.
- @note: None
+  <Nexus>
+  @action: Returns the arithmetic midpoint of the range using overflow-safe integer
+           arithmetic.
+  @note: Computes the midpoint of start and stop without risk of signed integer
+         overflow. The calculation is order-independent and equivalent to
+         Floor((start + stop) / 2)
+         for all integer values within the Integer domain.
+         The implementation uses a bitwise averaging algorithm with an offset to
+         preserve correct signed behavior.
+         This method should be preferred when start and stop may approach the
+         integer limits.
+[==============================================================================}
+function TRange.Nexus: Integer;
+var
+  o: Integer;
+  l, h: Int64;
+begin
+  o := High(Integer);
+  l := (Int64(Self.start) + o);
+  h := (Int64(Self.stop) + o);
+  Result := Integer(((l and h) + (l xor h) shr 1) - o);
+end;
+
+{==============================================================================]
+  <Pivot>
+  @action: The value(s) at the center position(s) of given range.
+  @note: None
 [==============================================================================}
 function TRange.Pivot: Integer;
 begin
