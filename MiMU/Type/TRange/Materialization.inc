@@ -401,11 +401,12 @@ end;
 [==============================================================================}
 function TRange.Extracted: TIntegerArray;
 var
-  i: Integer;
+  i, s: Integer;
 begin
   SetLength(Result, Self.Size);
+  s := IfThen(Self.Ascending, Self.start, Self.stop);
   for i := 0 to High(Result) do
-    Result[i] := (Self.Start + i);
+    Result[i] := (s + i);
   if Self.Descending then
     Result.Reverse;
 end;
