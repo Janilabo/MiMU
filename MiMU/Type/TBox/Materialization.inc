@@ -10,6 +10,7 @@ function Exploded: TPointArray;
 function Extract: TPointArray;
 function Flat: TPointArray; overload;
 function List: TPointArray;
+function Materialize: TPointArray;
 function Pixeled: TPointArray; overload;
 function Pixels: TPointArray; overload;
 function Pixels(const index: Integer): TPoint; overload;
@@ -233,6 +234,25 @@ begin
     Result := p.ToArray;
   finally
     p.Free;
+  end;
+end;
+
+{==============================================================================]
+  <Materialize>
+  @action: Returns TBox points as TPointArray.
+  @note: Alternative method.
+[==============================================================================}
+function TBox.Materialize: TPointArray;
+var
+  i, W, H: Integer;
+begin
+  W := ((Self.X2 - Self.X1) + 1);
+  H := ((Self.Y2 - Self.Y1) + 1);
+  SetLength(Result, W * H);
+  for i := 0 to High(Result) do
+  begin
+    Result[i].X := (Self.X1 + (i mod W));
+    Result[i].Y := (Self.Y1 + (i div W));
   end;
 end;
 

@@ -13,7 +13,8 @@ function Grows: Boolean;
 function Increasing: Boolean;
 function IsAscending: Boolean;
 function IsDescending: Boolean;
-function IsSingle: Boolean;
+function IsPlural: Boolean;
+function IsSingular: Boolean;
 function Plural: Boolean;
 function Shrinking: Boolean;
 function Shrinks: Boolean;
@@ -25,8 +26,10 @@ function Rising: Boolean;
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Ascending>
-  @action: Returns true if range start is lower or equal than stop
-  @note: Non-strict.
+  @action: Returns True if the range is ordered in ascending or neutral order,
+           i.e. the start value is less than or equal to the stop value.
+  @note: A range with equal start and stop values is considered ascending.
+         This function is logically equivalent to not Descending.
 [==============================================================================}
 function TRange.Ascending: Boolean;
 begin
@@ -35,8 +38,10 @@ end;
 
 {==============================================================================]
   <Ascends>
-  @action: Returns true if range start is lower or equal than stop
-  @note: Non-strict.
+  @action: Returns True if the range does not descend, meaning the start value
+           is less than or equal to the stop value.
+  @note: This function is semantically equivalent to Ascending and is provided
+         for readability in contexts where verb-style predicates are preferred.
 [==============================================================================}
 function TRange.Ascends: Boolean;
 begin
@@ -70,27 +75,31 @@ end;
 [==============================================================================}
 function TRange.Decreasing: Boolean;
 begin
-  Result := not (Self.start < Self.stop);
+  Result := ((Self.start - Self.stop) > -1);
 end;
 
 {==============================================================================]
   <Descending>
-  @action: Returns true if range start is higher or equal than stop
-  @note: Non-strict.
+  @action: Returns True if the range is ordered in strictly descending order,
+           i.e. the start value is greater than the stop value.
+  @note: A range with equal start and stop values is not considered descending.
+         This function is logically equivalent to not Ascending.
 [==============================================================================}
 function TRange.Descending: Boolean;
 begin
-  Result := (Self.start >= Self.stop);
+  Result := (Self.start > Self.stop);
 end;
 
 {==============================================================================]
   <Descends>
-  @action: Returns true if range start is higher or equal than stop
-  @note: Non-strict.
+  @action: Returns True if the range descends, meaning the start value is greater
+           than the stop value.
+  @note: This function is semantically equivalent to Descending and exists to
+         support verb-style readability in conditional expressions.
 [==============================================================================}
 function TRange.Descends: Boolean;
 begin
-  Result := not (Self.start < Self.stop);
+  Result := not (Self.start <= Self.stop);
 end;
 
 {==============================================================================]
@@ -140,7 +149,7 @@ end;
 [==============================================================================}
 function TRange.Increasing: Boolean;
 begin
-  Result := not (Self.start > Self.stop);
+  Result := ((Self.start - Self.stop) < 1);
 end;
 
 {==============================================================================]
@@ -151,7 +160,7 @@ end;
 [==============================================================================}
 function TRange.IsAscending: Boolean;
 begin
-  Result := (Self.start <= Self.stop);
+  Result := ((Self.start - Self.stop) <= 0);
 end;
 
 {==============================================================================]
@@ -162,18 +171,28 @@ end;
 [==============================================================================}
 function TRange.IsDescending: Boolean;
 begin
-  Result := (Self.start > Self.stop);
+  Result := ((Self.start - Self.stop) > 0);
 end;
 
 {==============================================================================]
-  <IsSingle>
+  <IsPlural>
+  @action: Checks if the range contains more than one element.
+  @note: Returns True if Start does not equal Stop.
+[==============================================================================}
+function TRange.IsPlural: Boolean;
+begin
+  Result := ((Self.start - Self.stop) <> 0);
+end;
+
+{==============================================================================]
+  <IsSingular>
   @action: Checks if the range contains exactly one element.
   @note: Returns True if Start equals Stop.
          Can be used to optimize operations on singleton ranges or avoid unnecessary iteration.
 [==============================================================================}
-function TRange.IsSingle: Boolean;
+function TRange.IsSingular: Boolean;
 begin
-  Result := (Self.start = Self.stop);
+  Result := ((Self.start - Self.stop) = 0);
 end;
 
 {==============================================================================]

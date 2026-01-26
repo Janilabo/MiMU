@@ -44,7 +44,7 @@ end;
 [==============================================================================}
 function TRange.Ascended: TRange;
 begin
-  if (Self.stop > Self.start) then
+  if (Self.stop >= Self.start) then
     Result.Create(Self.start, Self.stop)
   else
     Result.Create(Self.stop, Self.start);
