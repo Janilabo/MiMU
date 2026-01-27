@@ -9,6 +9,7 @@
 {$I Dimensions.inc}
 {$I Enumerator.inc}
 {$I Extension.inc}
+{$I Frame.inc}
 {$I Grid.inc}
 {$I Indexing.inc}
 {$I Intersection.inc}

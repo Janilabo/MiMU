@@ -10,6 +10,7 @@
 {$I Enumerator.inc}
 {$I Extension.inc}
 {$I Extremes.inc}
+{$I Frame.inc}
 {$I Indexing.inc}
 {$I Metrics.inc}
 {$I Miscellaneous.inc}

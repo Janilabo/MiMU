@@ -2,8 +2,6 @@
 function Bottom: Integer;
 function Dimensions(var bHorizontal, bVertical: TRange): Integer; overload;
 function Dimensions(var bWidth, bHeight: Integer): Integer; overload;
-function Frame(var fWidth, fHeight: Integer): TBox; overload;
-function Frame: TBox; overload;
 function GetHeight: Integer;
 function GetWidth: Integer;
 function Height: Integer; overload;
@@ -54,28 +52,6 @@ begin
   bWidth := Self.Horizontal.Size;
   bHeight := Self.Vertical.Size;
   Result := (bWidth * bHeight);
-end;
-
-{==============================================================================]
-  <Frame>
-  @action: Returns the frame of TBox
-  @note: Dimensional box of the TBox. Based on Width and Height.
-[==============================================================================}
-function TBox.Frame(var fWidth, fHeight: Integer): TBox; overload;
-begin
-  fWidth := Self.Width;
-  fHeight := Self.Height;
-  Result := Box(0, 0, (fWidth - 1), (fHeight - 1));
-end;
-
-{==============================================================================]
-  <Frame>
-  @action: Returns the frame of TBox
-  @note: Dimensional box of the TBox. Based on Width and Height.
-[==============================================================================}
-function TBox.Frame: TBox; overload;
-begin
-  Result := Box(0, 0, (Self.Width - 1), (Self.Height - 1));
 end;
 
 {==============================================================================]
