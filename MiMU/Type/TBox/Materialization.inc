@@ -9,6 +9,7 @@ function Explode: TPointArray; overload;
 function Exploded: TPointArray;
 function Extract: TPointArray;
 function Flat: TPointArray; overload;
+function Flatten: TPointArray;
 function List: TPointArray;
 function Materialize: TPointArray;
 function Pixeled: TPointArray; overload;
@@ -214,6 +215,28 @@ begin
     else
       p := Point(Self.X1, (p.Y + 1));
   end;
+end;
+
+{==============================================================================]
+  <Flatten>
+  @action: Returns a linear array containing all discrete points within the
+           box, flattened from its two-dimensional extent.
+  @note: The box is first expressed in a local (zero-based) frame, then
+         enumerated in row-major order (Y outer, X inner). The resulting
+         points are translated back to the box’s original coordinate space.
+         The array length equals the discrete area of the box.
+[==============================================================================}
+function TBox.Flatten: TPointArray;
+var
+  B: TBox;
+  x, y, i: Integer;
+begin
+  B := Self.Blanco;
+  SetLength(Result, B.Area);
+  i := 0;
+  for y := 0 to B.Y2 do
+    for x := 0 to B.X2 do
+      Result[i.Increase] := Point((x + Self.X1), (y + Self.Y1));
 end;
 
 {==============================================================================]
