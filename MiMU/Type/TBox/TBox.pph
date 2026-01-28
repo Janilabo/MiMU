@@ -1,6 +1,8 @@
 {$I ../Base/Base.inc}
 
 {$I Borders.inc}
+{$I Boundary.inc}
+{$I Centrality.inc}
 {$I Classification.inc}
 {$I Combination.inc}
 {$I Comparison.inc}

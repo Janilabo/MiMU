@@ -5,6 +5,7 @@ function Capacity: Integer;
 function Cardinality: Int64;
 function Circumference: Integer;
 function Diagonal: Double;
+function Extent: Int64;
 function Footprint: Double;
 function Perim: Integer;
 function Perimeter: Integer;
@@ -77,6 +78,19 @@ function TBox.Diagonal: Double;
 begin
   Result := Sqrt(Sqr(Self.Width) + Sqr(Self.Height));
 end;
+
+{==============================================================================]
+  <Extent>
+  @action  Returns the total area of the box.
+  @note    Computed as width * height, where width = (X2 - X1 + 1) and height
+           = (Y2 - Y1 + 1). Result is Int64 to avoid overflow for large boxes.
+           If the box has zero or negative width/height, area is 0.
+[==============================================================================}
+function TBox.Extent: Int64;
+begin
+  Result := (Max(0, Int64((Self.X2 - Self.X1) + 1)) * Max(0, Int64((Self.Y2 - Self.Y1) + 1)));
+end;
+
 
 {==============================================================================]
   <Footprint>

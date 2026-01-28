@@ -1,22 +1,10 @@
 {$IFDEF METHODS}
-function Center: TPoint;
 class function Null(const value: Integer = -2147483648): TBox; overload; static;
 function Reserve: TPointArray; overload;
 function Reserve(var aBox: TPointArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Center>
-  @action: Returns Center point from bx.
-  @note: None.
-[==============================================================================}
-function TBox.Center: TPoint;
-begin
-  Result.X := Round(Self.X1 + ((Self.Width - 1) div 2));
-  Result.Y := Round(Self.Y1 + ((Self.Height - 1) div 2));
-end;
-
 {==============================================================================]
   <Null>
   @action: Returns a "null" or empty box, represented by all coordinates set to
