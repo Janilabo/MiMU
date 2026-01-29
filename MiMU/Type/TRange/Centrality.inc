@@ -30,6 +30,7 @@ function MiddleVal: Integer; overload;
 function MiddleValue: Double;
 function Middleway: Integer;
 function Midpoint(const wStart: Double = 1; const wStop: Double = 1): Double; overload;
+function Midst(const method: Integer = 0): Integer;
 function MidVal: Double;
 function MidValue: Double;
 function Nexus: Integer;
@@ -446,6 +447,37 @@ end;
 function TRange.Midpoint(const wStart: Double = 1; const wStop: Double = 1): Double; overload;
 begin
   Result := (((Self.start * wStart) + (Self.stop * wStop)) / (wStart + wStop));
+end;
+
+{==============================================================================]
+ <Midst>
+  @action: Computes the integer midpoint of the range [Start..Stop] using
+           a selectable rounding method.
+           The midpoint is calculated as (Start+Stop)/2 and then rounded
+           according to the 'method' parameter.
+  @note: 
+    - 'method' specifies the rounding behavior:
+        0 = Round (default)
+        1 = Trunc (toward zero)
+        2 = Floor (round down)
+        3 = Ceil  (round up)
+    - If the sum of Start and Stop is ≤ 1, the function returns Start.
+    - The function uses Int64 internally to avoid overflow for large ranges.
+    - Useful for obtaining a central integer value of a numeric range.
+[==============================================================================}
+function TRange.Midst(const method: Integer = 0): Integer;
+var
+  s: Int64;
+begin
+  s := (Self.start + Self.stop);
+  if (s > 1) then
+  case method of
+    0: Exit(Round(s / 2));
+    1: Exit(Trunc(s / 2));
+    2: Exit(Floor(s / 2));
+    3: Exit(Ceil(s / 2));
+  end;
+  Result := Self.start;
 end;
 
 {==============================================================================]

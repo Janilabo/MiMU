@@ -1,10 +1,34 @@
 {$IFDEF METHODS}
+function AsIndexes: TIntegerArray;
 function IDs: TIntegerArray; overload;
 function IDs(const dValue: Integer): Integer; overload;
 function IDs(const dVals: TIntegerArray): TIntegerArray; overload;
+function Indexed: TIntegerArray;
+function Indexes: TIntegerArray;
+function Indices: TIntegerArray;
+function ToIndexes: TIntegerArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsIndexes>
+  @action: Returns TRange indexes.
+  @note: None.
+[==============================================================================}
+function TRange.AsIndexes: TIntegerArray;
+var
+  i, h, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  h := (s div 2);
+  for i := 0 to h do
+  begin
+    Result[i] := i;
+    Result[(s - 1) - i] := ((s - 1) - i);
+  end;
+end;
+
 {==============================================================================]
   <IDs>
   @action: Returns TRange indexes.
@@ -52,5 +76,99 @@ begin
   SetLength(Result, (High(dVals) + 1));
   for i := 0 to High(dVals) do
     Result[i] := Self.IDs(dVals[i]);
+end;
+
+{==============================================================================]
+  <Indexed>
+  @action: Returns an array of zero-based indices corresponding to the
+           elements of the range.
+  @note: The resulting array has length Size and contains the values
+         [0, 1, 2, ..., Size-1].
+         Implemented using loop unrolling for improved performance.
+         Independent of range direction (ascending or descending).
+[==============================================================================}
+function TRange.Indexed: TIntegerArray;
+var
+  i, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  i := 0;
+  while ((i + 3) < s) do
+  begin
+    Result[i + 0] := (i + 0);
+    Result[i + 1] := (i + 1);
+    Result[i + 2] := (i + 2);
+    Result[i + 3] := (i + 3);
+    Inc(i, 4);
+  end;
+  for s := i to High(Result) do
+    Result[s] := s;
+end;
+
+{==============================================================================]
+  <Indexes>
+  @action: Returns an array of zero-based indices corresponding to the
+           elements of the range.
+  @note: The resulting array has length Size and contains the values
+         [0, 1, 2, ..., Size-1].
+         Straightforward reference implementation.
+         Independent of range direction (ascending or descending).
+[==============================================================================}
+function TRange.Indexes: TIntegerArray;
+  function Output(const rSize: Integer): TIntegerArray;
+  var
+    i: Integer;
+  begin
+    SetLength(Result, rSize);
+    for i := 0 to (rSize - 1) do
+      Result[i] := i;
+  end;
+begin
+  Result := Output(Self.Size);
+end;
+
+{==============================================================================]
+  <Indices>
+  @action: Returns TRange indexes.
+  @note: None.
+[==============================================================================}
+function TRange.Indices: TIntegerArray;
+var
+  l, r: Integer;
+begin
+  SetLength(Result, Self.Size);
+  l := -1;
+  r := Result.Length;
+  while (l.Increment < r.Decrement) do
+  begin
+    Result[l] := l;
+    Result[r] := r;
+  end;
+  if (l = r) then
+    Result[l] := l;
+end;
+
+{==============================================================================]
+  <ToIndexes>
+  @action: Produces an array of zero-based indices corresponding to the
+           elements of the range.
+  @note: The resulting array has length Size and contains the values
+         [0, 1, 2, ..., Size-1].
+         Implemented using direct pointer iteration for efficiency.
+         Independent of range direction (ascending or descending).
+[==============================================================================}
+function TRange.ToIndexes: TIntegerArray;
+var
+  i: Integer;
+  p: PInteger;
+begin
+  SetLength(Result, Self.Size);
+  p := @Result[0];
+  for i := 0 to High(Result) do
+  begin
+    p^ := i;
+    Inc(p);
+  end;
 end;
 {$ENDIF}
