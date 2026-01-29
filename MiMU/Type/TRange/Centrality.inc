@@ -23,6 +23,7 @@ function MidBit: Integer; overload;
 function Middle: Integer;
 function MiddleBit: Integer; overload;
 function MiddleLeft: Integer; overload;
+function MiddlePoint: Double;
 function MiddleRight: Integer; overload;
 function MiddleStep: Integer; overload;
 function MiddleVal: Integer; overload;
@@ -357,6 +358,16 @@ begin
   if (Self.start > Self.stop) then
     Exit(Self.stop + (Self.start - Self.stop) div 2);
   Result := (Self.start + (Self.stop - Self.start) div 2);
+end;
+
+{==============================================================================]
+ <MiddlePoint>
+ @action: ?
+ @note: ?
+[==============================================================================}
+function TRange.MiddlePoint: Double;
+begin
+  Result := (((1.0 * Self.start) + (1.0 * Self.stop)) / 2.0);
 end;
 
 {==============================================================================]
