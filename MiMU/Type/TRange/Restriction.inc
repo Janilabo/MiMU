@@ -1,4 +1,7 @@
 {$IFDEF METHODS}
+function Anchor(const aLength: Integer = 1): TRange;
+function AnchorStart(const aLength: Integer = 1): TRange;
+function AnchorStop(const aLength: Integer = 1): TRange;
 function Clamp(const zone: TRange): TRange; overload;
 function ClampMin(const minValue: Integer): TRange;
 function ClampMax(const maxValue: Integer): TRange;
@@ -16,6 +19,65 @@ function RestrictMin(const minValue: Integer): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Anchor>
+  @action: Returns a range of the given length anchored to the natural end of
+           the range, based on its direction.
+  @note: This is a non-mutating operation. For ascending ranges, anchoring is
+         performed at the start endpoint; for descending ranges, anchoring is
+         performed at the stop endpoint.
+         Length is inclusive: aLength = 1 produces a single-point range.
+         The direction of the original range is preserved.
+[==============================================================================}
+function TRange.Anchor(const aLength: Integer = 1): TRange;
+begin
+  if Self.Ascending then
+    Result := Self.AnchorStart(aLength)
+  else
+    Result := Self.AnchorStop(aLength);
+end;
+
+{==============================================================================]
+  <AnchorStart>
+  @action: Returns a range of the given length anchored at the start endpoint.
+  @note: This is a non-mutating operation. The resulting range begins at
+         Self.start and extends in the direction of the original range.
+         Length is inclusive: aLength = 1 produces a single-point range.
+         If aLength < 2, the range collapses to [start .. start].
+         The direction (ascending or descending) of the original range
+         is preserved.
+[==============================================================================}
+function TRange.AnchorStart(const aLength: Integer = 1): TRange;
+begin
+  if (aLength < 2) then
+    Exit(TRange.Construct(Self.start, Self.start));
+  if Self.Ascending then
+    Result.Create(Self.start, (Self.start + (aLength - 1)))
+  else
+    Result.Create(Self.start, (Self.start - (aLength - 1)));
+end;
+
+{==============================================================================]
+  <AnchorStop>
+  @action: Returns a range of the given length anchored at the stop endpoint.
+  @note: This is a non-mutating operation. The resulting range ends at
+         Self.stop and extends backward relative to the direction of the
+         original range.
+         Length is inclusive: aLength = 1 produces a single-point range.
+         If aLength < 2, the range collapses to [stop .. stop].
+         The direction (ascending or descending) of the original range
+         is preserved.
+[==============================================================================}
+function TRange.AnchorStop(const aLength: Integer = 1): TRange;
+begin
+  if (aLength < 2) then
+    Exit(TRange.Construct(Self.stop, Self.stop));
+  if Self.Ascending then
+    Result.Create((Self.stop - (aLength - 1)), Self.stop)
+  else
+    Result.Create((Self.stop + (aLength - 1)), Self.stop);
+end;
+
 {==============================================================================]
   <Clamp>
   @action: Returns range clamped inside zone range.

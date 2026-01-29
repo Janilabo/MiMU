@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
 function AMean: Double;
-function Anchor: Integer;
+function Amid: Integer;
 function Average: Double;
 function Bisect: Integer;
 function Center: Integer;
@@ -15,6 +15,7 @@ function Halfway: Integer; overload;
 function Halved: Integer; overload;
 function Kernel: Integer;
 function Mean: Double; overload;
+function Median: Double;
 function Medium: Double; overload;
 function Medoid: Integer;
 function Mid: Double;
@@ -53,7 +54,7 @@ begin
 end;
 
 {==============================================================================]
- <Anchor>
+ <Amid>
  @action: Returns the anchor point of the range.
           The anchor is defined as the upper midpoint of the range and is calculated
           as (Start + Stop + 1) div 2. This biases the result toward the upper bound
@@ -63,7 +64,7 @@ end;
    - For a singular range (Start = Stop), the anchor equals Start.
    - The result is always within the inclusive range Start .. Stop.
 [==============================================================================}
-function TRange.Anchor: Integer;
+function TRange.Amid: Integer;
 begin
   Result := ((Self.start + Self.stop + 1) div 2);
 end;
@@ -240,6 +241,31 @@ end;
 function TRange.Mean: Double; overload;
 begin
   Result := ((Self.start / 2.0) + (Self.stop / 2.0));
+end;
+
+{==============================================================================]
+ <Median>
+ @action: Returns the discrete median of the range as a floating-point value.
+ @note: This is a non-mutating operation. The median is calculated over the
+        set of integers represented by the range, including both endpoints.
+        - For odd-sized ranges, it returns the middle element.
+        - For even-sized ranges, it returns the average of the two central
+          elements.
+        The function respects the direction of the range (ascending or
+        descending) and produces the same numeric result regardless of
+        order.
+[==============================================================================}
+function TRange.Median: Double;
+var
+  M, D, S: Integer;
+begin
+  D := IfThen(Self.Descending, -1, 1);
+  S := Self.Size;
+  M := (S div 2);
+  if S.Odd then
+    Result := (Self.start + D * M)
+  else
+    Result := (((Self.start + D * (M - 1)) + (Self.start + D * M)) / 2.0);
 end;
 
 {==============================================================================]
