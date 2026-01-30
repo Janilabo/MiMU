@@ -1,6 +1,8 @@
 {$IFDEF METHODS}
 function Any: Integer;
 function Mixed(const mixings: Integer = 1): TIntegerArray;
+function Rand: Integer;
+function Randomize: TIntegerArray;
 function Sample(const sSize: Integer): TIntegerArray; overload;
 function Shake(const shakes: Integer = 1): TIntegerArray;
 function Shuffle(const shuffles: Integer = 1): TIntegerArray;
@@ -37,6 +39,32 @@ begin
   for r := 1 to mixings do
     for i := High(Result) downto 0 do
       Swap(Result[Random(Result.Size)], Result[Random(Result.Size)]);
+end;
+
+{==============================================================================]
+  <Rand>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function TRange.Rand: Integer;
+begin
+  Result := (Min(Self.start, Self.stop) + Random(Self.Size));
+end;
+
+{==============================================================================]
+  <Randomize>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function TRange.Randomize: TIntegerArray;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Result) do
+    Result[i] := Self.At(i);
+  for i := High(Result) downto 1 do
+    Swap(Result[Random(i + 1)], Result[i]);
 end;
 
 {==============================================================================]

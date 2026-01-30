@@ -1,11 +1,16 @@
 {$IFDEF METHODS}
 function AsIndexes: TIntegerArray;
+function GetIndexes: TIntegerArray;
 function IDs: TIntegerArray; overload;
 function IDs(const dValue: Integer): Integer; overload;
 function IDs(const dVals: TIntegerArray): TIntegerArray; overload;
 function Indexed: TIntegerArray;
 function Indexes: TIntegerArray;
+function Indiced: TIntegerArray;
 function Indices: TIntegerArray;
+function IndexList: TIntegerArray;
+function Keys: TIntegerArray;
+function Positions: TIntegerArray;
 function ToIndexes: TIntegerArray;
 {$ENDIF}
 
@@ -27,6 +32,23 @@ begin
     Result[i] := i;
     Result[(s - 1) - i] := ((s - 1) - i);
   end;
+end;
+
+{==============================================================================]
+  <GetIndexes>
+  @action: Returns TRange indexes.
+  @note: None.
+[==============================================================================}
+function TRange.GetIndexes: TIntegerArray;
+var
+  s, i: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  for i := 0 to ((s - 1) div 2) do
+    Result[i * 2] := (i * 2);
+  for i := 0 to ((s - 2) div 2) do
+    Result[(i * 2) + 1] := ((i * 2) + 1);
 end;
 
 {==============================================================================]
@@ -129,6 +151,18 @@ begin
 end;
 
 {==============================================================================]
+  <Indiced>
+  @action: Returns TRange indexes.
+  @note: None.
+[==============================================================================}
+function TRange.Indiced: TIntegerArray;
+begin
+  SetLength(Result, 0);
+  while (Result.Length < Self.Size) do
+    Result.Supply(System.Length(Result));
+end;
+
+{==============================================================================]
   <Indices>
   @action: Returns TRange indexes.
   @note: None.
@@ -148,6 +182,64 @@ begin
   if (l = r) then
     Result[l] := l;
 end;
+
+{==============================================================================]
+  <IndexList>
+  @action: Returns TRange indexes.
+  @note: None.
+[==============================================================================}
+function TRange.IndexList: TIntegerArray;
+var
+  l: specialize TList<Integer>;
+  i: Integer;
+begin
+  l := specialize TList<Integer>.Create;
+  try
+    for i := 0 to (Self.Size - 1) do
+      l.Add(i);
+    Result := l.ToArray;
+  finally
+    l.Free;
+  end;
+end;
+
+{==============================================================================]
+  <Keys>
+  @action: Returns TRange indexes.
+  @note: None.
+[==============================================================================}
+function TRange.Keys: TIntegerArray;
+label
+  b, e;
+var
+  i, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  i := 0;
+  b:
+  if (i >= s) then
+    goto e;
+  Result[i] := i;
+  Inc(i);
+  goto b;
+  e:
+end; 
+
+{==============================================================================]
+  <Position>
+  @action: Returns TRange indexes.
+  @note: None.
+[==============================================================================}
+function TRange.Positions: TIntegerArray;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  Result[0] := 0;
+  for i := 1 to High(Result) do
+    Result[i] := (Result[i - 1] + 1);
+end; 
 
 {==============================================================================]
   <ToIndexes>

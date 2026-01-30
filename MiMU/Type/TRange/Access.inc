@@ -130,6 +130,6 @@ end;
 [==============================================================================}
 function TRange.Nth(const index: Integer = 0): Integer;
 begin
-  Result := (Self.start + (Ord(not Self.Descending) * 2 - 1) * index);
+  Result := (Self.start + ((Ord(not Self.Descending) * 2) - 1) * index);
 end;
 {$ENDIF}
