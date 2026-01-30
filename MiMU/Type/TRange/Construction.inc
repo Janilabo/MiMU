@@ -1,5 +1,8 @@
 {$IFDEF METHODS}
 class function Construct(const rStart, rStop: Integer): TRange; overload; static;
+class function Construct(const rVal: Integer): TRange; overload; static;
+class function Construct: TRange; overload; static;
+class function Construct(const arr: TIntegerArray; const oAscending: Boolean = True): TRange; overload; static;
 function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer;
 constructor Create(const rStart, rStop: Integer); overload;
 constructor Create(const value: Integer); overload;
@@ -8,6 +11,7 @@ function Init(const rStart, rStop: Integer): TRange; overload;
 function Init(const r: TRange): TRange; overload;
 function Init(const val: Integer = 0): TRange; overload;
 class function Null(const value: Integer = -2147483648): TRange; overload; static;
+class function Unbounded(const oAscending: Boolean = True): TRange; static;
 {$ENDIF}
 
 {$IFDEF HELPERS}
@@ -44,6 +48,58 @@ begin
   Result.start := rStart;
   Result.stop := rStop;
 end;
+
+{==============================================================================]
+  <Construct>
+  @action: Constructs TRange with rVal.
+  @note: rVal will be used for both start and stop.
+[==============================================================================}
+class function TRange.Construct(const rVal: Integer): TRange; overload;
+begin
+  Result.start := rVal;
+  Result.stop := rVal;
+end;
+
+{==============================================================================]
+  <Construct>
+  @action: Constructs TRange with 0's.
+  @note: 0 will be used for both start and stop.
+[==============================================================================}
+class function TRange.Construct: TRange; overload;
+begin
+  Result.start := 0;
+  Result.stop := 0;
+end;
+
+{==============================================================================]
+  <Construct>
+  @action: Constructs a TRange whose bounds span all values in the given integer array.
+  @note: The oAscending flag only controls comparison direction; the resulting range
+         always represents the minimum and maximum values in the array.
+[==============================================================================}
+class function TRange.Construct(const arr: TIntegerArray; const oAscending: Boolean = True): TRange; overload;
+var
+  i: Integer;
+begin
+  if (System.Length(arr) = 0) then
+    Exit(TRange.Null);
+  Result.start := arr[0];
+  Result.stop := arr[0];
+  case oAscending of
+    True:
+    for i := 1 to High(arr) do
+      if (arr[i] < Result.start) then
+        Result.start := arr[i]
+      else if (arr[i] > Result.stop) then
+        Result.stop := arr[i];
+    False:
+    for i := 1 to High(arr) do
+      if (arr[i] < Result.stop) then
+        Result.stop := arr[i]
+      else if (arr[i] > Result.start) then
+        Result.start := arr[i];
+  end;
+end; 
 
 {==============================================================================]
   <Create>
@@ -161,6 +217,21 @@ end;
 class function TRange.Null(const value: Integer = -2147483648): TRange; overload;
 begin
   Result := Range(value, value);
+end;
+
+{==============================================================================]
+  <Unbounded>
+  @action: Constructs a TRange representing the full span of Integer values.
+  @note: The oAscending flag determines the ordering of start and stop:
+         ascending yields (Low(Integer), High(Integer));
+         descending yields (High(Integer), Low(Integer)).
+[==============================================================================}
+class function TRange.Unbounded(const oAscending: Boolean = True): TRange;
+begin
+  if oAscending then
+    Result.Create(Low(Integer), High(Integer))
+  else
+    Result.Create(High(Integer), Low(Integer));
 end;
 
 {==============================================================================]
