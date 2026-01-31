@@ -1,17 +1,22 @@
 {$IFDEF METHODS}
+class function Ascending(const A, B: Integer): TRange; overload; static;
 class function Construct(const rStart, rStop: Integer): TRange; overload; static;
 class function Construct(const rVal: Integer): TRange; overload; static;
 class function Construct: TRange; overload; static;
 class function Construct(const arr: TIntegerArray; const oAscending: Boolean = True): TRange; overload; static;
-function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer;
+function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; overload;
 constructor Create(const rStart, rStop: Integer); overload;
 constructor Create(const value: Integer); overload;
 constructor Create(const data: string); overload;
+constructor Create(const other: TRange); overload;
+class function Descending(const A, B: Integer): TRange; overload; static;
+class function From(const startVal: Integer; const stepCount: Integer = 0): TRange; overload; static;
 function Init(const rStart, rStop: Integer): TRange; overload;
 function Init(const r: TRange): TRange; overload;
 function Init(const val: Integer = 0): TRange; overload;
+function Make(const A: Integer = 0; const B: Integer = 0): Integer; overload;
 class function Null(const value: Integer = -2147483648): TRange; overload; static;
-class function Unbounded(const oAscending: Boolean = True): TRange; static;
+class function Unbounded(const oAscending: Boolean = True): TRange; overload; static;
 {$ENDIF}
 
 {$IFDEF HELPERS}
@@ -27,11 +32,24 @@ function R(const val: Integer = 0): TRange; overload;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
+  <Ascending>
+  @action: Creates a range whose start value is less than or equal to its stop
+           value, regardless of the order of the input parameters.
+  @note: The smaller of A and B is assigned to start, and the larger to stop.
+         This guarantees an ascending (non-decreasing) range.
+[==============================================================================}
+class function TRange.Ascending(const A, B: Integer): TRange; overload;
+begin
+  Result.start := Min(A, B);
+  Result.stop := Max(A, B);
+end;
+
+{==============================================================================]
   <Build>
   @action: Create a TRange with rStart and rStop, using Min and Max for safety.
   @note: None.
 [==============================================================================}
-function TRange.Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer;
+function TRange.Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; overload;
 begin
   Self.start := Min(rStart, rStop);
   Self.stop := Max(rStop, rStart);
@@ -124,21 +142,26 @@ end;
 
 {==============================================================================]
   <Create>
-  @action: Create a TRange with value
-  @note: None.
+  @action: Parses a textual range specification and initializes the range
+           boundaries from it.
+  @note: The input string must contain exactly two integer values separated
+         by one of the supported delimiters: "..", "-", ":", or ",".
+         Whitespace around the values is ignored.
+         An exception is raised if the format is invalid or if either value
+         cannot be converted to an integer.
 [==============================================================================}
-constructor TRange.Create(const data: string);
+constructor TRange.Create(const data: string); overload;
 var
   p: TStringArray;
   s: string;
 begin
-  if Pos('..', data) > 0 then
+  if (Pos('..', data) > 0) then
     s := '..'
-  else if Pos('-', data) > 0 then
+  else if (Pos('-', data) > 0) then
     s := '-'
-  else if Pos(':', data) > 0 then
+  else if (Pos(':', data) > 0) then
     s := ':'
-  else if Pos(',', data) > 0 then
+  else if (Pos(',', data) > 0) then
     s := ','
   else
     raise Exception.Create('Invalid range format');
@@ -151,14 +174,51 @@ end;
 
 {==============================================================================]
   <Create>
+  @action: Create a TRange with other TRange
+  @note: None.
+[==============================================================================}
+constructor TRange.Create(const other: TRange); overload;
+begin
+  Self.start := other.start;
+  Self.stop := other.stop;
+end;
+
+{==============================================================================]
+  <Create>
   @action: TRange 0..0.
   @note: None.
 [==============================================================================}
-function TRangeHelper.Create: TRange;
+function TRangeHelper.Create: TRange; overload;
 begin
   Self.start := 0;
   Self.stop := 0;
   Result := Self;
+end;
+
+{==============================================================================]
+  <Descending>
+  @action: Creates a range whose start value is greater than or equal to its stop
+           value, regardless of the order of the input parameters.
+  @note: The larger of A and B is assigned to start, and the smaller to stop.
+         This guarantees a descending (non-increasing) range.
+[==============================================================================}
+class function TRange.Descending(const A, B: Integer): TRange; overload;
+begin
+  Result.start := Max(A, B);
+  Result.stop := Min(A, B);
+end;
+
+{==============================================================================]
+  <From>
+  @action: Creates a new TRange starting at the given value and extending by the
+           specified step count.
+  @note: The stop value is computed as startVal + stepCount. A stepCount of zero
+         produces a single-point range where start = stop.
+[==============================================================================}
+class function TRange.From(const startVal: Integer; const stepCount: Integer = 0): TRange; overload;
+begin
+  Result.start := startVal;
+  Result.stop := (startVal + stepCount);
 end;
 
 {==============================================================================]
@@ -205,6 +265,20 @@ begin
 end;
 
 {==============================================================================]
+  <Make>
+  @action: Initializes the current TRange instance using the given bounds and
+           returns the resulting range size.
+  @note: This method assigns the range as Starting(A).Stopping(B), overwriting
+         the current instance. The return value is the Size of the resulting
+         range.
+[==============================================================================}
+function TRange.Make(const A: Integer = 0; const B: Integer = 0): Integer; overload;
+begin
+  Self := TRange.From(A).Stopping(B);
+  Result := Self.Size;
+end;
+
+{==============================================================================]
   <Null>
   @action: Returns a special "null" or empty range, represented by both start and stop
            being set to the specified sentinel value.
@@ -226,7 +300,7 @@ end;
          ascending yields (Low(Integer), High(Integer));
          descending yields (High(Integer), Low(Integer)).
 [==============================================================================}
-class function TRange.Unbounded(const oAscending: Boolean = True): TRange;
+class function TRange.Unbounded(const oAscending: Boolean = True): TRange; overload;
 begin
   if oAscending then
     Result.Create(Low(Integer), High(Integer))

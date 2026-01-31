@@ -8,6 +8,7 @@
 {$I Conversion.inc}
 {$I Classification.inc}
 {$I Direction.inc}
+{$I Encoding.inc}
 {$I Enumerator.inc}
 {$I Extension.inc}
 {$I Extremes.inc}

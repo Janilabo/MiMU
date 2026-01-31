@@ -1,10 +1,12 @@
 {$IFDEF METHODS}
 function Modified(const mStart, mStop: Integer): TRange; overload;
 function Modify(const mStart, mStop: Integer): TRange; overload;
-procedure Scale(const sFactor: Integer);
-function Scaled(const sFactor: Integer): TRange;
-procedure Translate(const tDelta: Integer);
-function Translated(const tDelta: Integer): TRange;
+procedure Scale(const sFactor: Integer); overload;
+function Scaled(const sFactor: Integer): TRange; overload;
+function Starting(const val: Integer): TRange; overload;
+function Stopping(const val: Integer): TRange; overload;
+procedure Translate(const tDelta: Integer); overload;
+function Translated(const tDelta: Integer): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -41,7 +43,7 @@ end;
   @note: This is a mutating operation. Scaling is relative to the origin (0).
          Both endpoints are multiplied by sFactor.
 [==============================================================================}
-procedure TRange.Scale(const sFactor: Integer);
+procedure TRange.Scale(const sFactor: Integer); overload;
 begin
   Self.start := (Self.start * sFactor);
   Self.stop  := (Self.stop  * sFactor);
@@ -54,10 +56,34 @@ end;
          multiplied by sFactor. Direction is preserved for positive factors
          and inverted for negative factors.
 [==============================================================================}
-function TRange.Scaled(const sFactor: Integer): TRange;
+function TRange.Scaled(const sFactor: Integer): TRange; overload;
 begin
   Result.start := (Self.start * sFactor);
   Result.stop  := (Self.stop  * sFactor);
+end;
+
+{==============================================================================]
+  <Starting>
+  @action: Returns a new TRange with its start value replaced by the given value.
+  @note: This method does not modify the current instance; it produces a copy
+         with an updated start while preserving the existing stop value.
+[==============================================================================}
+function TRange.Starting(const val: Integer): TRange; overload;
+begin
+  Result.start := val;
+  Result.stop := Self.stop;
+end;
+
+{==============================================================================]
+  <Stopping>
+  @action: Returns a new TRange with its stop value replaced by the given value.
+  @note: This method does not modify the current instance; it produces a copy
+         with an updated stop while preserving the existing start value.
+[==============================================================================}
+function TRange.Stopping(const val: Integer): TRange; overload;
+begin
+  Result.start := Self.start;
+  Result.stop := val;
 end;
 
 {==============================================================================]
@@ -67,7 +93,7 @@ end;
          preserving the range’s length, direction, and ordering.
          Equivalent to adding tDelta to both start and stop.
 [==============================================================================}
-procedure TRange.Translate(const tDelta: Integer);
+procedure TRange.Translate(const tDelta: Integer); overload;
 begin
   Inc(Self.start, tDelta);
   Inc(Self.stop, tDelta);
@@ -79,7 +105,7 @@ end;
   @note: This is a non-mutating operation. Both endpoints of the resulting
          range are shifted by tDelta. Length and direction are preserved.
 [==============================================================================}
-function TRange.Translated(const tDelta: Integer): TRange;
+function TRange.Translated(const tDelta: Integer): TRange; overload;
 begin
   Result.start := (Self.start + tDelta);
   Result.stop  := (Self.stop + tDelta);

@@ -5,6 +5,7 @@ function Signum: Integer;
 function Slope: Integer;
 function Step: Integer; overload;
 function Step(const index: Integer): Integer; overload;
+function Stepping: Integer; overload;
 function Stride: Integer; overload;
 {$ENDIF}
 
@@ -84,7 +85,7 @@ end;
 [==============================================================================}
 function TRange.Step: Integer; overload;
 begin
-  if (Self.start > Self.stop) then
+  if Self.Descending then
     Exit(-1);
   Result := 1;
 end;
@@ -106,6 +107,19 @@ begin
   if ((index < 0) or (index >= Self.Size)) then
     Exit(-2147483648);
   Result := ((Self.start + Index) * (Self.Stride - 1));
+end;
+
+{==============================================================================]
+  <Stepping>
+  @action: Returns the step value for iterating over the range.
+           - Returns 1 if the range is ascending.
+           - Returns -1 if the range is descending.
+  @note: The stepping is determined solely by the Descending property of the range.
+         This method is useful when looping or performing arithmetic over the range.
+[==============================================================================}
+function TRange.Stepping: Integer; overload;
+begin
+  Result := IfThen(Self.Descending, -1, 1);
 end;
 
 {==============================================================================]

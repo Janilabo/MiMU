@@ -1,10 +1,10 @@
 {$IFDEF METHODS}
 function Asc: TIntegerArray; overload;
-function Ascend: TRange;
-function Ascended: TRange;
+function Ascend: TRange; overload;
+function Ascended: TRange; overload;
 function Desc: TIntegerArray; overload;
-function Descend: TRange;
-function Descended: TRange;
+function Descend: TRange; overload;
+function Descended: TRange; overload;
 function Order(const oAscending: Boolean = True): Boolean; overload;
 function Ordered(const oAscending: Boolean = True): TRange; overload;
 function Sort(const oAscending: Boolean = True): Boolean; overload;
@@ -31,7 +31,7 @@ end;
   @action: Returns ascending TRange of Self.
   @note: None.
 [==============================================================================}
-function TRange.Ascend: TRange;
+function TRange.Ascend: TRange; overload;
 begin
   Result.start := Min(Self.start, Self.stop);
   Result.stop := Max(Self.stop, Self.start);
@@ -42,7 +42,7 @@ end;
   @action: Returns TRange in ascending order.
   @note: None.
 [==============================================================================}
-function TRange.Ascended: TRange;
+function TRange.Ascended: TRange; overload;
 begin
   if (Self.stop >= Self.start) then
     Result.Create(Self.start, Self.stop)
@@ -69,7 +69,7 @@ end;
   @action: Returns descending TRange of Self.
   @note: None.
 [==============================================================================}
-function TRange.Descend: TRange;
+function TRange.Descend: TRange; overload;
 begin
   Result.start := Max(Self.stop, Self.start);
   Result.stop := Min(Self.start, Self.stop);
@@ -80,7 +80,7 @@ end;
   @action: Returns TRange in descending order.
   @note: None.
 [==============================================================================}
-function TRange.Descended: TRange;
+function TRange.Descended: TRange; overload;
 begin
   if (Self.start > Self.stop) then
     Result.Create(Self.start, Self.stop)
