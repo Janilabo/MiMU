@@ -1,5 +1,6 @@
 {$IFDEF METHODS}
 function All: TIntegerArray; overload;
+function ArrayOf: TIntegerArray;
 function AsArr: TIntegerArray;
 function AsArray: TIntegerArray; overload;
 function Atomize: TIntegerArray;
@@ -41,6 +42,7 @@ function Recursed: TIntegerArray; overload;
 function Sequence: TIntegerArray;
 function Snapshot: TIntegerArray;
 function Steps: TIntegerArray; overload;
+function Stock: TIntegerArray;
 function TIA: TIntegerArray;
 function ToArr: TIntegerArray;
 function ToArray: TIntegerArray;
@@ -74,6 +76,32 @@ begin
     Inc(p);
     Inc(i, j);
   end;
+end;
+
+{==============================================================================]
+  <ArrayOf>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: None.
+[==============================================================================}
+function TRange.ArrayOf: TIntegerArray;
+label
+  sLoop, eLoop;
+var
+  i, v, d, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  i := 0;
+  v := Self.start;
+  d := IfThen(Self.Ascending, 1, -1);
+  sLoop:
+  if (i >= s) then
+    goto eLoop;
+  Result[i] := v;
+  Inc(v, d);
+  Inc(i);
+  goto sLoop;
+  eLoop:
 end;
 
 {==============================================================================]
@@ -1041,6 +1069,37 @@ begin
   begin
     p^ := ((p - 1)^ + s);
     Inc(p);
+  end;
+end;
+
+{==============================================================================]
+  <Stock>
+  @action: Returns an array of all integers in the range in sequential order,
+           filled using two interleaved passes over the result indices.
+           Works for both ascending and descending ranges.
+  @note:   Implementation details:
+           - Allocates an array of length = Self.Size
+           - Computes direction d (+1 for ascending, -1 for descending)
+           - Fills the result array in two phases:
+               • First pass fills indices 0, 2, 4, ...
+               • Second pass fills indices 1, 3, 5, ...
+           - Each value is computed directly as:
+               Start + d * index
+           - This interleaving can reduce dependency chains and may improve
+             instruction-level parallelism on some architectures
+[==============================================================================}
+function TRange.Stock: TIntegerArray;
+var
+  i, j, d, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := IfThen(Self.Ascending, 1, -1);
+  for j := 0 to 1 do
+  begin
+    i := (j - 2);
+    while (i.Increment(2) < s) do
+      Result[i] := (Self.start + (d * i));
   end;
 end;
 
