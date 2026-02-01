@@ -46,6 +46,7 @@ uses
 
 const
   MiMU_VERSION_NUMBER = 0.5;
+  BASE_DIGITS: array[0..9] of Integer = (0,1,2,3,4,5,6,7,8,9);
 
 function MiMU_Version: Double;
 

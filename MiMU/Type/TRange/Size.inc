@@ -1,5 +1,6 @@
 {$IFDEF METHODS}
 function Area: Integer;
+function Bulk: Integer;
 function Capacity: Integer;
 function Cardinality: Integer;
 function Count: Integer;
@@ -12,6 +13,7 @@ function GetCount: Integer;
 function GetLength: Integer;
 function GetSize: Integer;
 function InclusiveSize: Integer;
+function Latitude: Integer;
 function Len: Integer;
 function Length: Integer; overload;
 function Mass: Integer;
@@ -45,6 +47,25 @@ begin
     Result := ((Self.start - Self.stop) + 1)
   else
     Result := ((Self.stop - Self.start) + 1);
+end;
+
+{==============================================================================]
+  <Bulk>
+  @action: Returns the inclusive cardinality of the range, i.e. the number of
+           integer values contained between start and stop, regardless of order.
+  @note:
+    This implementation computes the absolute difference between stop and
+    start using Sign-based multiplication, then adds one to account for
+    inclusive bounds.
+      Bulk = |stop − start| + 1
+    It is functionally equivalent to:
+      Abs(stop - start) + 1
+    This method is order-independent (ascending or descending) and returns
+    1 for degenerate ranges where start = stop.
+[==============================================================================}
+function TRange.Bulk: Integer;
+begin
+  Result := (((Self.stop - Self.start) * Sign(Self.stop - Self.start)) + 1);
 end;
 
 {==============================================================================]
@@ -223,6 +244,18 @@ begin
   Result := D(Self.start, Self.stop);
 end;
 
+{==============================================================================]
+  <Latitude>
+  @action: Returns length of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Latitude: Integer;
+var
+  d: Integer;
+begin
+  d := (Self.stop - Self.start);
+  Result := (d * ((Ord(d >= 0) * 2) - 1) + 1);
+end;
 
 {==============================================================================]
   <Len>

@@ -1,26 +1,67 @@
 {$IFDEF METHODS}
-function AsIndexes: TIntegerArray;
-function GetIndexes: TIntegerArray;
+function AsIDs: TIntegerArray; overload;
+function AsIndexes: TIntegerArray; overload;
+function GetIDs: TIntegerArray; overload;
+function GetIndexes: TIntegerArray; overload;
 function IDs: TIntegerArray; overload;
 function IDs(const dValue: Integer): Integer; overload;
 function IDs(const dVals: TIntegerArray): TIntegerArray; overload;
-function Indexed: TIntegerArray;
-function Indexes: TIntegerArray;
-function Indiced: TIntegerArray;
-function Indices: TIntegerArray;
-function IndexList: TIntegerArray;
-function Keys: TIntegerArray;
-function Positions: TIntegerArray;
-function ToIndexes: TIntegerArray;
+function Indexed: TIntegerArray; overload;
+function Indexes: TIntegerArray; overload;
+function Indexing: TIntegerArray; overload;
+function Indiced: TIntegerArray; overload;
+function Indices: TIntegerArray; overload;
+function IndexList: TIntegerArray; overload;
+function Keys: TIntegerArray; overload;
+function Positions: TIntegerArray; overload;
+function ToIDs: TIntegerArray; overload;
+function ToIndexes: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsIDs>
+  @action: Returns an integer array of length equal to the range size, where each
+           element is assigned a zero-based sequential ID corresponding to its
+           position in the array.
+  @note:
+    - The generated IDs always start at 0 and increase monotonically.
+    - The actual numeric values of `Self.start` and `Self.stop` are NOT used,
+      except to determine the array length via `Size`.
+    - IDs are generated in fixed-size chunks (CHUNK_SIZE = 10), which is an
+      implementation detail and does not affect the final result.
+    - The resulting array is equivalent to:
+          Result[i] := i
+      for all valid indices.
+    - Useful when a range needs to be mapped to stable, compact identifiers
+      (e.g., indexing, lookup tables, parallel arrays).
+[==============================================================================}
+function TRange.AsIDs: TIntegerArray; overload;
+const
+  CHUNK_SIZE = 10;
+var
+  i, o, s, c: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  o := 0;
+  while (o < s) do
+  begin
+    c := (s - o);
+    if (c > CHUNK_SIZE) then
+      c := CHUNK_SIZE;
+    for i := 0 to (c - 1) do
+      Result[o + i] := (o + i);
+    Inc(o, CHUNK_SIZE);
+  end;
+end;
+
 {==============================================================================]
   <AsIndexes>
   @action: Returns TRange indexes.
   @note: None.
 [==============================================================================}
-function TRange.AsIndexes: TIntegerArray;
+function TRange.AsIndexes: TIntegerArray; overload;
 var
   i, h, s: Integer;
 begin
@@ -35,11 +76,29 @@ begin
 end;
 
 {==============================================================================]
+  <GetIDs>
+  @action: Returns TRange indexes.
+  @note: None.
+[==============================================================================}
+function TRange.GetIDs: TIntegerArray; overload;
+  procedure Fill(var arr: TIntegerArray; const idx: Integer);
+  begin
+    if (idx < 0) then
+      Exit;
+    arr[idx] := idx;
+    Fill(arr, (idx - 1));
+  end;
+begin
+  SetLength(Result, Self.Size);
+  Fill(Result, High(Result));
+end;
+
+{==============================================================================]
   <GetIndexes>
   @action: Returns TRange indexes.
   @note: None.
 [==============================================================================}
-function TRange.GetIndexes: TIntegerArray;
+function TRange.GetIndexes: TIntegerArray; overload;
 var
   s, i: Integer;
 begin
@@ -109,7 +168,7 @@ end;
          Implemented using loop unrolling for improved performance.
          Independent of range direction (ascending or descending).
 [==============================================================================}
-function TRange.Indexed: TIntegerArray;
+function TRange.Indexed: TIntegerArray; overload;
 var
   i, s: Integer;
 begin
@@ -137,7 +196,7 @@ end;
          Straightforward reference implementation.
          Independent of range direction (ascending or descending).
 [==============================================================================}
-function TRange.Indexes: TIntegerArray;
+function TRange.Indexes: TIntegerArray; overload;
   function Output(const rSize: Integer): TIntegerArray;
   var
     i: Integer;
@@ -151,11 +210,39 @@ begin
 end;
 
 {==============================================================================]
+  <Indexing>
+  @action: Generates and returns an array of integer “IDs” corresponding to the range, 
+           using the digits 0..9 as a repeated base pattern. The length of the resulting 
+           array is equal to the size of the range (`Size := Abs(stop - start) + 1`).
+  @note:
+    - The array is filled in blocks of 10 using the constant `BASE_DIGITS = [0..9]`.  
+      If the range size is not a multiple of 10, the final block is truncated to fit.
+    - This method does **not** take the actual `start` or `stop` values of the range 
+      into account except for determining the array length.
+    - The pattern produces a repeated sequence of 0..9, so the first elements are
+      always 0,1,2,...9, then repeated with offsets.
+    - Useful when you need a simple repeating ID pattern for indexing, mapping, 
+      or placeholder purposes.
+[==============================================================================}
+function TRange.Indexing: TIntegerArray; overload;
+var
+  b, i, o, d, s: Integer;
+begin
+  b := System.Length(BASE_DIGITS);
+  s := Self.Size;
+  SetLength(Result, s);
+  o := -b;
+  while (o.Increment(b) < s) do
+    for i := 0 to Min((b - 1), ((s - o) - 1)) do
+      Result[o + i] := (BASE_DIGITS[i] + o);
+end;
+
+{==============================================================================]
   <Indiced>
   @action: Returns TRange indexes.
   @note: None.
 [==============================================================================}
-function TRange.Indiced: TIntegerArray;
+function TRange.Indiced: TIntegerArray; overload;
 begin
   SetLength(Result, 0);
   while (Result.Length < Self.Size) do
@@ -167,7 +254,7 @@ end;
   @action: Returns TRange indexes.
   @note: None.
 [==============================================================================}
-function TRange.Indices: TIntegerArray;
+function TRange.Indices: TIntegerArray; overload;
 var
   l, r: Integer;
 begin
@@ -188,7 +275,7 @@ end;
   @action: Returns TRange indexes.
   @note: None.
 [==============================================================================}
-function TRange.IndexList: TIntegerArray;
+function TRange.IndexList: TIntegerArray; overload;
 var
   l: specialize TList<Integer>;
   i: Integer;
@@ -208,7 +295,7 @@ end;
   @action: Returns TRange indexes.
   @note: None.
 [==============================================================================}
-function TRange.Keys: TIntegerArray;
+function TRange.Keys: TIntegerArray; overload;
 label
   b, e;
 var
@@ -231,7 +318,7 @@ end;
   @action: Returns TRange indexes.
   @note: None.
 [==============================================================================}
-function TRange.Positions: TIntegerArray;
+function TRange.Positions: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -239,7 +326,37 @@ begin
   Result[0] := 0;
   for i := 1 to High(Result) do
     Result[i] := (Result[i - 1] + 1);
-end; 
+end;
+
+{==============================================================================]
+  <ToIDs>
+  @action: Returns TRange indexes.
+  @note: None.
+[==============================================================================}
+function TRange.ToIDs: TIntegerArray; overload;
+var
+  s, b, o, i: Integer;
+  P: PInteger;
+begin
+  s := Self.Size;
+  b := System.Length(BASE_DIGITS);
+  SetLength(Result, s);
+  o := 0;
+  while (o < s) do
+  begin
+    i := (s - o);
+    if (i > b) then
+	  i := b;
+    Move(BASE_DIGITS[0], Result[o], (i * SizeOf(Integer)));
+    P := @Result[o];
+    for i := 1 to i do
+    begin
+      P^ := (P^ + o);
+      Inc(P);
+    end;
+    Inc(o, b);
+  end;
+end;
 
 {==============================================================================]
   <ToIndexes>
@@ -250,7 +367,7 @@ end;
          Implemented using direct pointer iteration for efficiency.
          Independent of range direction (ascending or descending).
 [==============================================================================}
-function TRange.ToIndexes: TIntegerArray;
+function TRange.ToIndexes: TIntegerArray; overload;
 var
   i: Integer;
   p: PInteger;

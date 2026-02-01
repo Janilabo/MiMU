@@ -1,56 +1,60 @@
 {$IFDEF METHODS}
 function All: TIntegerArray; overload;
-function ArrayOf: TIntegerArray;
-function AsArr: TIntegerArray;
+function ArrayOf: TIntegerArray; overload;
+function AsArr: TIntegerArray; overload;
 function AsArray: TIntegerArray; overload;
-function Atomize: TIntegerArray;
-function Capture: TIntegerArray;
-function Captured: TIntegerArray;
-function Collect: TIntegerArray;
-function Content: TIntegerArray;
-function Contents: TIntegerArray;
+function Atomize: TIntegerArray; overload;
+function Bank: TIntegerArray; overload;
+function Capture: TIntegerArray; overload;
+function Captured: TIntegerArray; overload;
+function Collect: TIntegerArray; overload;
+function Content: TIntegerArray; overload;
+function Contents: TIntegerArray; overload;
 function Data: TIntegerArray; overload;
 function Digits: TIntegerArray; overload;
 function Digits(const dIndex: Integer): Integer; overload;
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
-function Disjoint: TIntegerArray;
-function Elements: TIntegerArray;
-function Emit: TIntegerArray;
-function Enumerate: TIntegerArray;
-function Enumerated: TIntegerArray;
-function Explode: TIntegerArray;
-function Exploded: TIntegerArray;
+function Disjoint: TIntegerArray; overload;
+function Elements: TIntegerArray; overload;
+function Emit: TIntegerArray; overload;
+function Enumerate: TIntegerArray; overload;
+function Enumerated: TIntegerArray; overload;
+function Explode: TIntegerArray; overload;
+function Exploded: TIntegerArray; overload;
 function Extract: TIntegerArray; overload;
 function Extracted: TIntegerArray; overload;
-function Flatten: TIntegerArray;
-function Gather: TIntegerArray;
-function Generate: TIntegerArray;
-function Generated: TIntegerArray;
-function Ints: TIntegerArray;
-function Items: TIntegerArray;
-function Iterated: TIntegerArray;
-function List: TIntegerArray;
-function Listed: TIntegerArray;
-function Material: TIntegerArray;
-function Materialize: TIntegerArray;
-function Materialized: TIntegerArray;
-function Members: TIntegerArray;
-function Numbered: TIntegerArray;
-function Numbers: TIntegerArray;
-function Pull: TIntegerArray;
+function Flatten: TIntegerArray; overload;
+function Gather: TIntegerArray; overload;
+function Generate: TIntegerArray; overload;
+function Generated: TIntegerArray; overload;
+function Ints: TIntegerArray; overload;
+function Items: TIntegerArray; overload;
+function Iterated: TIntegerArray; overload;
+function List: TIntegerArray; overload;
+function Listed: TIntegerArray; overload;
+function Material: TIntegerArray; overload;
+function Materialize: TIntegerArray; overload;
+function Materialized: TIntegerArray; overload;
+function Members: TIntegerArray; overload;
+function Numbered: TIntegerArray; overload;
+function Numbers: TIntegerArray; overload;
+function Populate(var arr: TIntegerArray): TRange; overload;
+function Pull: TIntegerArray; overload;
 function Recursed: TIntegerArray; overload;
-function Sequence: TIntegerArray;
-function Snapshot: TIntegerArray;
+function Sequence: TIntegerArray; overload;
+function Snapshot: TIntegerArray; overload;
 function Steps: TIntegerArray; overload;
-function Stock: TIntegerArray;
-function TIA: TIntegerArray;
-function ToArr: TIntegerArray;
-function ToArray: TIntegerArray;
+function Stock: TIntegerArray; overload;
+function Storage: TIntegerArray; overload;
+function TIA: TIntegerArray; overload;
+function ToArr: TIntegerArray; overload;
+function ToArray: TIntegerArray; overload;
+class function ToArray(const AStart, AStop: Integer): TIntegerArray; overload; static;
 function Unfold: TIntegerArray; overload;
 function Unpack: TIntegerArray; overload;
 function Unwrap: TIntegerArray; overload;
 function Unzip: TIntegerArray; overload;
-function Values: TIntegerArray;
+function Values: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -83,7 +87,7 @@ end;
   @action: Returns ALL TRange items as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TRange.ArrayOf: TIntegerArray;
+function TRange.ArrayOf: TIntegerArray; overload;
 label
   sLoop, eLoop;
 var
@@ -109,7 +113,7 @@ end;
   @action: Two-way alternative for extracting items from TRange.
   @note: None.
 [==============================================================================}
-function TRange.AsArr: TIntegerArray;
+function TRange.AsArr: TIntegerArray; overload;
 var
   i, r, l, s: Integer;
 begin
@@ -173,7 +177,7 @@ end;
          - This approach is branch-light, cache-friendly, and suitable
            for large ranges where predictable memory access is desired
 [==============================================================================}
-function TRange.Atomize: TIntegerArray;
+function TRange.Atomize: TIntegerArray; overload;
 const
   CHUNK_SIZE = 64;
 var
@@ -193,12 +197,33 @@ begin
 end;
 
 {==============================================================================]
+  <Bank>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function TRange.Bank: TIntegerArray; overload;
+var
+  d: Integer;
+  r: TRange;
+begin
+  SetLength(Result, Self.Size);
+  d := IfThen(Self.Ascending, 1, -1);
+  r.Create(-1, Result.Length);
+  while (r.start.Increment <= r.stop.Decrement) do
+  begin
+    Result[r.start] := (Self.start + (d * r.start));
+    if (r.start <> r.stop) then
+      Result[r.stop] := (Self.start + (d * r.stop));
+  end;
+end;
+
+{==============================================================================]
   <Capture>
   @action: Materializes the range into a concrete array of integers.
   @note: The returned array represents a point-in-time snapshot of the range
          and is ordered according to the range direction.
 [==============================================================================}
-function TRange.Capture: TIntegerArray;
+function TRange.Capture: TIntegerArray; overload;
 var
   i, v: Integer;
   P: PInteger;
@@ -229,7 +254,7 @@ end;
          ascending/descending direction. Evaluation is eager and allocates
          a new array of integers.
 [==============================================================================}
-function TRange.Captured: TIntegerArray;
+function TRange.Captured: TIntegerArray; overload;
 var
   i, v: Integer;
   P: PInteger;
@@ -254,7 +279,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Collect: TIntegerArray;
+function TRange.Collect: TIntegerArray; overload;
   procedure Return(var arr: TIntegerArray);
   var
     c, i, f, s: Integer;
@@ -277,7 +302,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Content: TIntegerArray;
+function TRange.Content: TIntegerArray; overload;
 var
   i, c, s: Integer;
 begin
@@ -293,7 +318,7 @@ end;
   @action: Returns ALL TRange items as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TRange.Contents: TIntegerArray;
+function TRange.Contents: TIntegerArray; overload;
 var
   i, s: Integer;
 begin
@@ -311,7 +336,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Data: TIntegerArray;
+function TRange.Data: TIntegerArray; overload;
 var
   n, i: Integer;
 begin
@@ -388,7 +413,7 @@ end;
            from sampling from both ends and center simultaneously.
          - Single-element ranges (start = stop) are handled implicitly.
 [==============================================================================}
-function TRange.Disjoint: TIntegerArray;
+function TRange.Disjoint: TIntegerArray; overload;
 var
   i, h, t, d: Integer;
 begin
@@ -409,7 +434,7 @@ end;
   action: Returns TBox points as TPointArray.
   note: Alternative method.
 [==============================================================================}
-function TRange.Elements: TIntegerArray;
+function TRange.Elements: TIntegerArray; overload;
 var
   i: specialize TList<Integer>;
   e: Integer;
@@ -438,7 +463,7 @@ end;
          ordering of Start and Stop.
          For a single-value range, the result contains that value only.
 [==============================================================================}
-function TRange.Emit: TIntegerArray;
+function TRange.Emit: TIntegerArray; overload;
 var
   c, s, v: Integer;
   p: PInteger;
@@ -464,7 +489,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Enumerate: TIntegerArray;
+function TRange.Enumerate: TIntegerArray; overload;
 var
   i: Integer;
   e: TRangeEnumerator;
@@ -481,7 +506,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Enumerated: TIntegerArray;
+function TRange.Enumerated: TIntegerArray; overload;
 var
   i: Integer;
   e: TRangeEnumerator;
@@ -500,7 +525,7 @@ end;
          sign of (stop - start). The number of elements is determined entirely
          by TRange_Size(Self). Recursion terminates by index, not by value.
 [==============================================================================}
-function TRange.Explode: TIntegerArray;
+function TRange.Explode: TIntegerArray; overload;
 var
   s, c: Integer;
   procedure Return(const i: Integer);
@@ -528,7 +553,7 @@ end;
          equality (current = stop). Step direction is derived from
          sign(stop - start), defaulting to +1 when both are equal.
 [==============================================================================}
-function TRange.Exploded: TIntegerArray;
+function TRange.Exploded: TIntegerArray; overload;
   procedure Return(var arr: TIntegerArray; const index, current, target, step: Integer);
   begin
     arr[index] := current;
@@ -568,7 +593,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Extracted: TIntegerArray;
+function TRange.Extracted: TIntegerArray; overload;
 var
   i, s: Integer;
 begin
@@ -588,7 +613,7 @@ end;
          ordering of Start and Stop.
          For a single-element range, the array contains Start only.
 [==============================================================================}
-function TRange.Flatten: TIntegerArray;
+function TRange.Flatten: TIntegerArray; overload;
 var
   i, s: Integer;
 begin
@@ -612,7 +637,7 @@ end;
          (Stop - Start). Resulting array length equals Size (inclusive).
          Assumes Start and Stop fit in 32-bit integers.
 [==============================================================================}
-function TRange.Gather: TIntegerArray;
+function TRange.Gather: TIntegerArray; overload;
 var
   i, d, m: Integer;
 begin
@@ -629,7 +654,7 @@ end;
   @action: Returns values of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Generate: TIntegerArray;
+function TRange.Generate: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -662,7 +687,7 @@ end;
            - Fills Result array by calling `NextValue` for each index
            - Works for ranges of any size and orientation
 [==============================================================================}
-function TRange.Generated: TIntegerArray;
+function TRange.Generated: TIntegerArray; overload;
 var
   i, v, d: Integer;
   function NextValue: Integer;
@@ -682,7 +707,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Ints: TIntegerArray;
+function TRange.Ints: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -703,7 +728,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Items: TIntegerArray;
+function TRange.Items: TIntegerArray; overload;
 var
   i, s: Integer;
 begin
@@ -722,7 +747,7 @@ end;
          within predefined bounds; otherwise falls back to the standard
          materialization logic.
 [==============================================================================}
-function TRange.Iterated: TIntegerArray;
+function TRange.Iterated: TIntegerArray; overload;
 const
   MASTER: array[0..99] of Integer =
    (0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
@@ -755,7 +780,7 @@ end;
          (via specialize) and preserves inclusive range semantics.
          Less efficient than direct array emission due to intermediate storage.
 [==============================================================================}
-function TRange.List: TIntegerArray;
+function TRange.List: TIntegerArray; overload;
 var
   l: specialize TList<Integer>;
   v: Integer;
@@ -777,7 +802,7 @@ end;
          determined by the sign of Stop - Start.
          Uses a TList<Integer> internally, then calls ToArray.
 [==============================================================================}
-function TRange.Listed: TIntegerArray;
+function TRange.Listed: TIntegerArray; overload;
 var
   l: specialize TList<Integer>;
   v, s, i: Integer;
@@ -825,7 +850,7 @@ end;
          - Useful for performance-critical situations where repeated single-step
            assignment is costly
 [==============================================================================}
-function TRange.Material: TIntegerArray;
+function TRange.Material: TIntegerArray; overload;
 var
   i, d, v, s: Integer;
 begin
@@ -856,7 +881,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Materialize: TIntegerArray;
+function TRange.Materialize: TIntegerArray; overload;
 var
   i, s, v: Integer;
   p: PInteger;
@@ -877,7 +902,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Materialized: TIntegerArray;
+function TRange.Materialized: TIntegerArray; overload;
 var
   i, r, s, l: Integer;
 begin
@@ -895,7 +920,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Members: TIntegerArray;
+function TRange.Members: TIntegerArray; overload;
 var
   i, c: Integer;
 begin
@@ -921,7 +946,7 @@ end;
          - Unlike Pull, Numbered produces a **sequential order**, not a symmetric
            “pull from ends” order
 [==============================================================================}
-function TRange.Numbered: TIntegerArray;
+function TRange.Numbered: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -935,7 +960,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Numbers: TIntegerArray;
+function TRange.Numbers: TIntegerArray; overload;
 var
   i, r, s: Integer;
 begin
@@ -947,6 +972,34 @@ begin
   i := Self.start;
   while (((s = 1) and (i <= Self.stop)) or ((s = -1) and (i >= Self.stop))) do
     Result[r.Increase] := i.Increase(s);
+end;
+
+{==============================================================================]
+  <Populate>
+  @action: Fills the provided integer array `arr` with the sequence of values 
+           represented by this TRange, respecting the ascending or descending order.
+           The array must already be allocated; its length determines how many values 
+           are filled. The method also returns a TRange reflecting the filled portion.
+  @note:
+    - If the array is empty, the method exits immediately without modification.
+    - The step between elements is automatically set to +1 (ascending) or -1 (descending).
+    - The `Result.start` is set to Self.start, and `Result.stop` is set to the last 
+      value written to the array.
+    - Unlike `Generated` or `Material`, this method **populates an existing array** 
+      rather than allocating a new one.
+    - Useful when you want to reuse preallocated memory for performance.
+[==============================================================================}
+function TRange.Populate(var arr: TIntegerArray): TRange; overload;
+var
+  i, s: Integer;
+begin
+  if arr.Empty then
+    Exit;
+  s := IfThen(Self.Descending, -1, 1);
+  Result.start := Self.start;
+  for i := 0 to High(arr) do
+    arr[i] := (Self.start + (i * s));
+  Result.stop := arr[High(arr)];
 end;
 
 {==============================================================================]
@@ -965,7 +1018,7 @@ end;
          - Produces a symmetric “pull from ends to center” ordering
          - Orientation (ascending/descending) is handled via Self.Descending
 [==============================================================================}
-function TRange.Pull: TIntegerArray;
+function TRange.Pull: TIntegerArray; overload;
 var
   h, i: Integer;
 begin
@@ -1012,7 +1065,7 @@ end;
   @action: Returns digits from TRange.
   @note: None.
 [==============================================================================}
-function TRange.Sequence: TIntegerArray;
+function TRange.Sequence: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -1034,7 +1087,7 @@ end;
          preserving the start value, end value, and ascending or descending
          order. The evaluation is eager and allocates a new array.
 [==============================================================================}
-function TRange.Snapshot: TIntegerArray;
+function TRange.Snapshot: TIntegerArray; overload;
 var
   i, s: Integer;
   P: PInteger;
@@ -1077,18 +1130,17 @@ end;
   @action: Returns an array of all integers in the range in sequential order,
            filled using two interleaved passes over the result indices.
            Works for both ascending and descending ranges.
-  @note:   Implementation details:
-           - Allocates an array of length = Self.Size
-           - Computes direction d (+1 for ascending, -1 for descending)
-           - Fills the result array in two phases:
-               • First pass fills indices 0, 2, 4, ...
-               • Second pass fills indices 1, 3, 5, ...
-           - Each value is computed directly as:
-               Start + d * index
-           - This interleaving can reduce dependency chains and may improve
-             instruction-level parallelism on some architectures
+  @note: Implementation details:
+         - Allocates an array of length = Self.Size
+         - Computes direction d (+1 for ascending, -1 for descending)
+         - Fills the result array in two phases:
+             • First pass fills indices 0, 2, 4, ...
+             • Second pass fills indices 1, 3, 5, ...
+         - Each value is computed directly as: Start + d * index
+         - This interleaving can reduce dependency chains and may improve
+           instruction-level parallelism on some architectures
 [==============================================================================}
-function TRange.Stock: TIntegerArray;
+function TRange.Stock: TIntegerArray; overload;
 var
   i, j, d, s: Integer;
 begin
@@ -1104,11 +1156,38 @@ begin
 end;
 
 {==============================================================================]
+  <Storage>
+  @action: Materializes the range into a contiguous TIntegerArray using
+    block-based expansion from a fixed base digit table.
+  @note:
+    This implementation fills the result array in fixed-size chunks
+    (BASE_DIGITS), reducing loop-control overhead and improving
+    instruction locality compared to a naïve element-by-element fill.
+
+    The method is order-safe for both ascending and descending ranges.
+    It is functionally equivalent to sequential generation, but favors
+    predictable memory access patterns and partial unrolling.
+[==============================================================================}
+function TRange.Storage: TIntegerArray; overload;
+var
+  b, i, o, d, s: Integer;
+begin
+  b := System.Length(BASE_DIGITS);
+  s := Self.Size;
+  SetLength(Result, s);
+  d := IfThen(Self.Ascending, 1, -1);
+  o := -b;
+  while (o.Increment(b) < s) do
+    for i := 0 to Min((b - 1), ((s - o) - 1)) do
+      Result[o + i] := (Self.start + (d * (BASE_DIGITS[i] + o)));
+end; 
+
+{==============================================================================]
   <TIA>
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.TIA: TIntegerArray;
+function TRange.TIA: TIntegerArray; overload;
 var
   i, l, d: Integer;
 begin
@@ -1131,7 +1210,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.ToArr: TIntegerArray;
+function TRange.ToArr: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -1148,7 +1227,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TRange.ToArray: TIntegerArray;
+function TRange.ToArray: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -1160,6 +1239,35 @@ begin
     True:
     for i := Self.start downto Self.stop do
       Result[Self.start - i] := i;
+  end;
+end;
+
+{==============================================================================]
+  <ToArray>
+  @action: Creates and returns a new integer array containing all integers from 
+           `AStart` to `AStop`, inclusive. The order of elements respects the 
+           direction of the range:
+            - Ascending if AStart <= AStop
+            - Descending if AStart > AStop
+  @note:
+    - Allocates a new array internally; the caller does not need to preallocate it.
+    - The length of the resulting array is Abs(AStop - AStart) + 1.
+    - Useful as a static helper when you want to quickly convert a numeric range 
+      into an array without first constructing a TRange instance.
+    - Overloaded versions may exist to create arrays from existing TRange instances.
+[==============================================================================}
+class function TRange.ToArray(const AStart, AStop: Integer): TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, (Abs(AStop - AStart) + 1));
+  case (AStart > AStop) of
+    False:
+    for i := 0 to High(Result) do
+      Result[i] := (AStart + i);
+	True:
+	for i := 0 to High(Result) do
+      Result[i] := (AStart - i);
   end;
 end;
 
@@ -1275,7 +1383,7 @@ end;
   @action: Returns values of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Values: TIntegerArray;
+function TRange.Values: TIntegerArray; overload;
 var
   i, r: Integer;
 begin
