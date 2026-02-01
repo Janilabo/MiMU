@@ -2,6 +2,7 @@
 function All: TIntegerArray; overload;
 function AsArr: TIntegerArray;
 function AsArray: TIntegerArray; overload;
+function Atomize: TIntegerArray;
 function Capture: TIntegerArray;
 function Captured: TIntegerArray;
 function Collect: TIntegerArray;
@@ -11,6 +12,7 @@ function Data: TIntegerArray; overload;
 function Digits: TIntegerArray; overload;
 function Digits(const dIndex: Integer): Integer; overload;
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
+function Disjoint: TIntegerArray;
 function Elements: TIntegerArray;
 function Emit: TIntegerArray;
 function Enumerate: TIntegerArray;
@@ -22,15 +24,19 @@ function Extracted: TIntegerArray; overload;
 function Flatten: TIntegerArray;
 function Gather: TIntegerArray;
 function Generate: TIntegerArray;
+function Generated: TIntegerArray;
 function Ints: TIntegerArray;
 function Items: TIntegerArray;
 function Iterated: TIntegerArray;
 function List: TIntegerArray;
 function Listed: TIntegerArray;
+function Material: TIntegerArray;
 function Materialize: TIntegerArray;
 function Materialized: TIntegerArray;
 function Members: TIntegerArray;
+function Numbered: TIntegerArray;
 function Numbers: TIntegerArray;
+function Pull: TIntegerArray;
 function Recursed: TIntegerArray; overload;
 function Sequence: TIntegerArray;
 function Snapshot: TIntegerArray;
@@ -120,6 +126,42 @@ begin
   end;
   if h.Even then
     Result[i] := IfThen(Self.Ascending, (Self.start + i), (Self.start - i));
+end;
+
+{==============================================================================]
+  <Atomize>
+  @action: Returns an array of all integers in the range in sequential order,
+           generated in fixed-size chunks.
+           - For ascending ranges: values go from Start to Stop
+           - For descending ranges: values go from Start down to Stop
+  @note: Implementation details:
+         - Allocates an array of length = Self.Size
+         - Uses a fixed chunk size (CHUNK_SIZE = 64)
+         - Iterates over the range in chunks, computing offset for each chunk
+         - Each chunk fills at most CHUNK_SIZE consecutive values using
+           direct index arithmetic: Result[o + i] := Start + d * (o + i)
+         - The final chunk is automatically truncated if the remaining
+           element count is smaller than CHUNK_SIZE
+         - This approach is branch-light, cache-friendly, and suitable
+           for large ranges where predictable memory access is desired
+[==============================================================================}
+function TRange.Atomize: TIntegerArray;
+const
+  CHUNK_SIZE = 64;
+var
+  c, i, o, d, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := IfThen(Self.Ascending, 1, -1);
+  c := 0;
+  while ((c * CHUNK_SIZE) < s) do
+  begin
+    o := (c * CHUNK_SIZE);
+    for i := 0 to Min((CHUNK_SIZE - 1), ((s - o) - 1)) do
+      Result[o + i] := (Self.start + (d * (o + i)));
+    Inc(c);
+  end;
 end;
 
 {==============================================================================]
@@ -294,6 +336,44 @@ begin
   SetLength(Result, (High(dIDs) + 1));
   for i := 0 to High(dIDs) do
     Result[i] := Self.Digits(dIDs[i]);
+end;
+
+{==============================================================================]
+  <Disjoint>
+  @action: Returns an array of all integers in the range arranged in a “disjoint”
+           or interleaved order:
+           - Pulls values from the start and stop toward the center
+           - Fills the middle segment sequentially from the start
+           - Produces a three-part ordering (start segment, end segment, middle segment)
+           Works for both ascending and descending ranges.
+  @note: Implementation details:
+         - Allocates an array of length = Self.Size
+         - Computes:
+             - h = High(Result) (last index)
+             - d = direction (+1 for ascending, -1 for descending)
+             - t = number of elements in the “end segments” = (h + 1) div 3
+         - Fills arrays in three phases:
+             1. Start segment: indices 0..t ← start + d*i
+             2. End segment: indices h..h-t ← stop - d*i
+             3. Middle segment: indices t+1 .. h-t-1 ← start + d*i
+         - Produces a non-linear ordering useful for algorithms that benefit
+           from sampling from both ends and center simultaneously.
+         - Single-element ranges (start = stop) are handled implicitly.
+[==============================================================================}
+function TRange.Disjoint: TIntegerArray;
+var
+  i, h, t, d: Integer;
+begin
+  SetLength(Result, Self.Size);
+  h := High(Result);
+  d := IfThen(Self.Descending, -1, 1);
+  t := ((h + 1) div 3);
+  for i := 0 to t do
+    Result[i] := (Self.start + (d * i));
+  for i := 0 to t do
+    Result[h - i] := (Self.stop - (d * i));
+  for i := (t + 1) to ((h - t) - 1) do
+    Result[i] := (Self.start + (d * i));
 end;
 
 {==============================================================================]
@@ -539,6 +619,37 @@ begin
 end;
 
 {==============================================================================]
+  <Generated>
+  @action: Returns an array of all integers in the range in sequential order.
+           - For ascending ranges: values go from Start to Stop
+           - For descending ranges: values go from Start down to Stop
+           Uses an internal helper function `NextValue` to increment or decrement.
+  @note:   Implementation details:
+           - Allocates an array of length = Self.Size
+           - Initializes:
+               - v := Start value
+               - d := direction (1 for ascending, -1 for descending)
+           - Defines `NextValue` to return the current value of `v` and
+             increment it by `d` using v.Increase(d)
+           - Fills Result array by calling `NextValue` for each index
+           - Works for ranges of any size and orientation
+[==============================================================================}
+function TRange.Generated: TIntegerArray;
+var
+  i, v, d: Integer;
+  function NextValue: Integer;
+  begin
+    Result := v.Increase(d);
+  end;
+begin
+  SetLength(Result, Self.Size);
+  v := Self.start;
+  d := IfThen(Self.Ascending, 1, -1);
+  for i := 0 to High(Result) do
+    Result[i] := NextValue;
+end;
+
+{==============================================================================]
   <Ints>
   @action: Returns digits of the given range.
   @note: None.
@@ -662,6 +773,57 @@ begin
 end;
 
 {==============================================================================]
+  <Material>
+  @action: Returns an array of all integers in the range in sequential order,
+           efficiently filling values in blocks of four, then handling any
+           remaining elements at the end.
+           - For ascending ranges: values go from Start to Stop
+           - For descending ranges: values go from Start down to Stop
+  @note: Implementation details:
+         - Allocates an array of length = Self.Size
+         - Initializes:
+             - v := Start value
+             - d := direction (+1 for ascending, -1 for descending)
+         - Fills the array in a while loop in blocks of four:
+             - Result[i] := v
+             - Result[i+1] := v + d
+             - Result[i+2] := v + 2*d
+             - Result[i+3] := v + 3*d
+             - Then increments v by 4*d and i by 4
+         - Handles remaining elements (if Size mod 4 ≠ 0) in a final loop
+         - Produces the same sequential order as Numbered() or Generated(),
+           but optimized for batch assignments
+         - Works for any range length and both ascending/descending ranges
+         - Useful for performance-critical situations where repeated single-step
+           assignment is costly
+[==============================================================================}
+function TRange.Material: TIntegerArray;
+var
+  i, d, v, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := IfThen(Self.Ascending, 1, -1);
+  v := Self.start;
+  i := 0;
+  while ((i + 3) < s) do
+  begin
+    Result[i] := v;
+    Result[i + 1] := (v + d);
+    Result[i + 2] := (v + (d * 2));
+    Result[i + 3] := (v + (d * 3));
+    Inc(v, (d * 4));
+    Inc(i, 4);
+  end;
+  while (i < s) do
+  begin
+    Result[i] := v;
+    Inc(v, d);
+    Inc(i);
+  end;
+end; 
+
+{==============================================================================]
   <Materialize>
   @action: Returns digits of the given range.
   @note: None.
@@ -719,6 +881,28 @@ begin
 end;
 
 {==============================================================================]
+  <Numbered>
+  @action: Returns an array of all integers in the range in **natural order**.
+           For an ascending range, values go from Start to Stop; for a descending
+           range, values go from Start down to Stop.
+  @note: Implementation details:
+         - Allocates an array of length equal to Self.Size
+         - Fills each element using Self.At(i), which returns the i-th element
+           in the range accounting for ascending or descending order
+         - Resulting array preserves the range’s original orientation
+         - Unlike Pull, Numbered produces a **sequential order**, not a symmetric
+           “pull from ends” order
+[==============================================================================}
+function TRange.Numbered: TIntegerArray;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Result) do
+    Result[i] := Self.At(i);
+end;
+
+{==============================================================================]
   <Numbers>
   @action: Returns digits of the given range.
   @note: None.
@@ -735,6 +919,46 @@ begin
   i := Self.start;
   while (((s = 1) and (i <= Self.stop)) or ((s = -1) and (i >= Self.stop))) do
     Result[r.Increase] := i.Increase(s);
+end;
+
+{==============================================================================]
+  <Pull>
+  @action: Returns an array of all integers contained in the range, 
+           starting from both ends and meeting in the middle.
+           For example, for range [1,5], the output will be:
+             [1,5,2,4,3]
+           Works for both ascending and descending ranges.
+  @note: Implementation details:
+         - If start = stop, returns a single-element array [start]
+         - Otherwise, allocates an array of length = Size of range
+         - Iterates from 0 to half of the array, filling:
+             - Result[i] from the start (or start descending)
+             - Result[High-i] from the stop (or stop descending)
+         - Produces a symmetric “pull from ends to center” ordering
+         - Orientation (ascending/descending) is handled via Self.Descending
+[==============================================================================}
+function TRange.Pull: TIntegerArray;
+var
+  h, i: Integer;
+begin
+  if (Self.start = Self.stop) then
+    Exit([Self.start]);
+  SetLength(Result, Self.Size);
+  h := High(Result);
+  case Self.Descending of
+    False:
+    for i := 0 to (h div 2) do
+    begin
+      Result[i] := (Self.start + i);
+      Result[h - i] := (Self.stop - i);
+    end;
+    True:
+    for i := 0 to (h div 2) do
+    begin
+      Result[i] := (Self.start - i);
+      Result[h - i] := (Self.stop + i);
+    end;
+  end;
 end;
 
 {==============================================================================]
