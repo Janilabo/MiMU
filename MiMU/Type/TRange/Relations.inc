@@ -2,6 +2,7 @@
 function Differ(const b: TRange): Boolean; overload;
 function Differs(const b: TRange): Boolean; overload;
 function Dist(const target: TRange): Integer; overload;
+function Dist: Integer; overload;
 function DistAt(const target: TRange): Integer; overload;
 function Distance(const b: TRange): Integer; overload;
 function Distance: Integer; overload;
@@ -70,6 +71,18 @@ end;
 function TRange.Dist(const target: TRange): Integer; overload;
 begin
   Result := Max(0, (Max(Self.Minimum, target.Minimum) - Min(Self.Maximum, target.Maximum)));
+end;
+
+{==============================================================================]
+  <Dist>
+  @action: Returns the distance between the start and stop values of the range.
+           Uses a compact conditional expression to handle descending ranges.
+  @note: Same as Distance but written using IfThen for brevity. Still exclusive
+         of endpoints and sensitive to the Descending flag.
+[==============================================================================}
+function TRange.Dist: Integer; overload;
+begin
+  Result := IfThen(Self.Descending, (Self.start - Self.stop), (Self.stop - Self.start));
 end;
 
 {==============================================================================]

@@ -13,6 +13,8 @@ operator := (const S: TByteSet): TRange;
 operator := (const A: TIntegerArray): TRange;
 operator := (const R: TRange): TIntegerArray;
 operator := (const R: TRange): string;
+
+operator Explicit(const R: TRange): TIntegerArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -168,5 +170,15 @@ end;
 operator := (const R: TRange): string;
 begin
   Result := Format('%d..%d', [R.start, R.stop]);
+end;
+
+operator Explicit(const R: TRange): TIntegerArray;
+var
+  i, l, s: Integer;
+begin
+  SetLength(Result, R.Size);
+  s := IfThen(R.Descending, -1, 1);
+  for i := 0 to High(Result) do
+    Result[i] := (R.start + (i * s));
 end;
 {$ENDIF}

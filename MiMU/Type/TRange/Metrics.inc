@@ -5,7 +5,6 @@ function Deficit: Integer; overload;
 function Delta: Integer; overload;
 function Diff: Integer; overload;
 function Difference: Integer; overload;
-function Dist: Integer; overload;
 function Magnitude: Integer; overload;
 function Prod: Int64; overload;
 function Product: Int64; overload;
@@ -120,18 +119,6 @@ end;
 function TRange.Difference: Integer; overload;
 begin
   Result := Abs(Self.stop - Self.start);
-end;
-
-{==============================================================================]
-  <Dist>
-  @action: Returns the distance between the start and stop values of the range.
-           Uses a compact conditional expression to handle descending ranges.
-  @note: Same as Distance but written using IfThen for brevity. Still exclusive
-         of endpoints and sensitive to the Descending flag.
-[==============================================================================}
-function TRange.Dist: Integer; overload;
-begin
-  Result := IfThen(Self.Descending, (Self.start - Self.stop), (Self.stop - Self.start));
 end;
 
 {==============================================================================]

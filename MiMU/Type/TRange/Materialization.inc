@@ -32,6 +32,7 @@ function Items: TIntegerArray; overload;
 function Iterated: TIntegerArray; overload;
 function List: TIntegerArray; overload;
 function Listed: TIntegerArray; overload;
+function Listing: TIntegerArray; overload;
 function Material: TIntegerArray; overload;
 function Materialize: TIntegerArray; overload;
 function Materialized: TIntegerArray; overload;
@@ -43,6 +44,7 @@ function Pull: TIntegerArray; overload;
 function Recursed: TIntegerArray; overload;
 function Sequence: TIntegerArray; overload;
 function Snapshot: TIntegerArray; overload;
+function Stack: TIntegerArray; overload;
 function Steps: TIntegerArray; overload;
 function Stock: TIntegerArray; overload;
 function Storage: TIntegerArray; overload;
@@ -826,6 +828,34 @@ begin
 end;
 
 {==============================================================================]
+  <Listing>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function TRange.Listing: TIntegerArray; overload;
+var
+  l: TList;
+  i, v, s: Integer;
+begin
+  l := TList.Create;
+  try
+    l.Count := Self.Size;
+    s := IfThen(Self.Ascending, 1, -1);
+    v := Self.start;
+    for i := 0 to (l.Count - 1) do
+    begin
+      l.Items[i] := Pointer(PtrUint(v)); 
+      Inc(v, s);
+    end;
+    SetLength(Result, l.Count);
+    for i := 0 to (l.Count - 1) do
+      Result[i] := Integer(PtrUint(l.Items[i]));
+  finally
+    l.Free;
+  end;
+end;
+
+{==============================================================================]
   <Material>
   @action: Returns an array of all integers in the range in sequential order,
            efficiently filling values in blocks of four, then handling any
@@ -1100,6 +1130,36 @@ begin
   begin
     Inc(P);
     P^ := (Result[i - 1] + s);
+  end;
+end;
+
+{==============================================================================]
+  <Stack>
+  @action: Generates an array of integers representing the range defined in the TRange object. 
+           The integers are returned in proper order (ascending or descending) regardless 
+           of how they are pushed onto the temporary stack.
+  @note: Uses TStack.
+[==============================================================================}
+function TRange.Stack: TIntegerArray;
+var
+  s: specialize TStack<Integer>;
+  i, l, d, v: Integer;
+begin
+  s := specialize TStack<Integer>.Create;
+  try
+    l := Self.Size;
+    d := IfThen(Self.Ascending, 1, -1);
+    v := Self.stop;
+    for i := 1 to l do
+    begin
+      s.Push(v);
+      v := (v - d);
+    end;
+    SetLength(Result, l);
+    for i := 0 to (l - 1) do
+      Result[i] := s.Pop;
+  finally
+    s.Free;
   end;
 end;
 
