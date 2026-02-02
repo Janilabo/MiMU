@@ -1,12 +1,13 @@
 {$IFDEF METHODS}
-function At(const index: Integer = 0): Integer;
-function Elem(const index: Integer = 0): Integer;
-function Element(const index: Integer = 0): Integer;
-function Entry(const index: Integer = 0): Integer;
-function Fetch(const index: Integer = 0): Integer;
-function Get(const index: Integer = 0): Integer;
-function Member(const index: Integer = 0): Integer;
-function Nth(const index: Integer = 0): Integer;
+function At(const index: Integer = 0): Integer; overload;
+function Elem(const index: Integer = 0): Integer; overload;
+function Element(const index: Integer = 0): Integer; overload;
+function Entry(const index: Integer = 0): Integer; overload;
+function Fetch(const index: Integer = 0): Integer; overload;
+function Get(const index: Integer = 0): Integer; overload;
+function Member(const index: Integer = 0): Integer; overload;
+function Nth(const index: Integer = 0): Integer; overload;
+function ValueAt(const offset: Integer = 0): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -18,7 +19,7 @@ function Nth(const index: Integer = 0): Integer;
          Index values outside the range extent will extrapolate beyond Stop.
          Equivalent to direct offset addressing.
 [==============================================================================}
-function TRange.At(const index: Integer = 0): Integer;
+function TRange.At(const index: Integer = 0): Integer; overload;
 begin
   if Self.Ascending then
     Result := (Self.start + index)
@@ -33,7 +34,7 @@ end;
   @note: Direction is determined by (Stop - Start).
          No bounds checking is performed.
 [==============================================================================}
-function TRange.Elem(const index: Integer = 0): Integer;
+function TRange.Elem(const index: Integer = 0): Integer; overload;
 begin
   Result := (Self.start + (Sign(Self.stop - Self.start) * index));
 end;
@@ -46,7 +47,7 @@ end;
          Negative indices are supported.
          Direction is respected (ascending or descending).
 [==============================================================================}
-function TRange.Element(const index: Integer = 0): Integer;
+function TRange.Element(const index: Integer = 0): Integer; overload;
 var
   i, s: Integer;
 begin
@@ -67,7 +68,7 @@ end;
   @note: Uses XOR and ordinal direction for branch-free computation.
          No bounds checking is performed.
 [==============================================================================}
-function TRange.Entry(const index: Integer = 0): Integer;
+function TRange.Entry(const index: Integer = 0): Integer; overload;
 var
   m: Integer;
 begin
@@ -82,7 +83,7 @@ end;
   @note: Uses explicit control flow rather than expressions.
          No bounds checking is performed.
 [==============================================================================}
-function TRange.Fetch(const index: Integer = 0): Integer;
+function TRange.Fetch(const index: Integer = 0): Integer; overload;
 label 
   forward, backward;
 begin
@@ -104,7 +105,7 @@ end;
   @note: Uses IfThen() for direction selection.
          No bounds checking is performed.
 [==============================================================================}
-function TRange.Get(const index: Integer = 0): Integer;
+function TRange.Get(const index: Integer = 0): Integer; overload;
 begin
   Result := (Self.start + (IfThen(Self.Descending, -1, 1) * index));
 end;
@@ -116,7 +117,7 @@ end;
   @note: Expressed using IfThen() with explicit branch semantics.
          No bounds checking is performed.
 [==============================================================================}
-function TRange.Member(const index: Integer = 0): Integer;
+function TRange.Member(const index: Integer = 0): Integer; overload;
 begin
   Result := IfThen(Self.Ascending, (Self.start + index), (Self.start - index));
 end;
@@ -128,8 +129,21 @@ end;
   @note: Direction is encoded via Ord(not Descending).
          No bounds checking is performed.
 [==============================================================================}
-function TRange.Nth(const index: Integer = 0): Integer;
+function TRange.Nth(const index: Integer = 0): Integer; overload;
 begin
   Result := (Self.start + ((Ord(not Self.Descending) * 2) - 1) * index);
+end;
+
+{==============================================================================]
+  <ValueAt>
+  @action: Returns the value at a specified offset from the start of the range, accounting for ascending or descending order.
+  @note: Offset defaults to 0. The method assumes the caller ensures the offset stays within valid range bounds. Works for both ascending and descending ranges.
+[==============================================================================}
+function TRange.ValueAt(const offset: Integer = 0): Integer; overload;
+begin
+  case Self.Descending of
+    False: Result := (start + offset);
+    True: Result := (start - offset);
+  end;
 end;
 {$ENDIF}

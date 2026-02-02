@@ -6,6 +6,7 @@ function Inverted: TRange; overload;
 function Reverse: Boolean; overload;
 function Reversed: TRange; overload;
 function Reversify: TRange; overload;
+function Rotate32: TRange; overload;
 function Toggle: TRange; overload;
 {$ENDIF}
 
@@ -101,7 +102,6 @@ end;
   <Reversify>
   @action: Returns a new range whose bounds are reversed (start and stop swapped),
     preserving the same midpoint as the original range.
-
   @note:
     - Functionally equivalent to exchanging Self.start and Self.stop.
     - Assumes that start and stop are symmetric endpoints of the range.
@@ -115,6 +115,19 @@ begin
   s := (Self.start + Self.stop);
   Result.start := (s - Self.start);
   Result.stop := (s - Self.stop);
+end;
+
+{==============================================================================]
+  <Rotate32>
+  @action: Rotates the 64-bit value left by 32 bits.
+  @note: Equivalent to swapping the high and low 32-bit words.
+[==============================================================================}
+function TRange.Rotate32: TRange; overload;
+var
+  c: Int64;
+begin
+  c := Int64(Self);
+  Int64(Result) := ((c shl 32) or (c shr 32));
 end;
 
 {==============================================================================]

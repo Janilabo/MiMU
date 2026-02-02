@@ -1,8 +1,10 @@
 {$IFDEF HELPERS}
 function Binned(const target: TRange): TRangeArray; overload;
-function Distribute(const parts: Integer): TRangeArray;
-function Divide(const size: Integer): TRangeArray;
-function Partition(const size: Integer): TRangeArray;
+function Chunked(const chunkSize: Integer = 2): TRangeArray; overload;
+function Chunkify(const chunkSize: Integer = 2): TRangeArray; overload;
+function Distribute(const parts: Integer): TRangeArray; overload;
+function Divide(const size: Integer): TRangeArray; overload;
+function Partition(const size: Integer): TRangeArray; overload;
 function Sectioned(const target: TRange): TRangeArray; overload;
 function Windows(const target: TRange): TRangeArray; overload;
 {$ENDIF}
@@ -33,11 +35,69 @@ begin
 end;
 
 {==============================================================================]
+  <Chunked>
+  @action: Splits the range into an array of contiguous sub-ranges (chunks), each
+           containing at most chunkSize elements, preserving the original range
+           direction (ascending or descending).
+  @note: The last chunk may be smaller than chunkSize. The stop value of the final
+         chunk is always aligned with Self.stop. No validation is performed on
+         chunkSize; values <= 0 will produce undefined results.
+[==============================================================================}
+function TRangeHelper.Chunked(const chunkSize: Integer = 2): TRangeArray; overload;
+var
+  h, i, d: Integer;
+begin
+  SetLength(Result, ((Self.Size + (chunkSize - 1)) div chunkSize));
+  h := High(Result);
+  d := IfThen(Self.Descending, -1, 1);
+  for i := 0 to h do
+  begin
+    Result[i].start := (Self.start + (i * chunkSize * d));
+    if (i = h) then
+      Result[i].stop := Self.stop
+    else
+      Result[i].stop := (Result[i].start + ((chunkSize - 1) * d));
+  end;
+end;
+
+{==============================================================================]
+  <Chunkify>
+  @action: Splits the range into an array of contiguous sub-ranges (chunks), each
+           containing at most chunkSize elements, preserving the original range
+          direction (ascending or descending).
+  @note:
+    - Returns an empty array if chunkSize < 1.
+    - The last chunk may contain fewer than chunkSize elements.
+    - The stop value of the final chunk is always aligned with Self.stop.
+[==============================================================================}
+function TRangeHelper.Chunkify(const chunkSize: Integer = 2): TRangeArray; overload;
+var
+  h, c, i, p, d: Integer;
+begin
+  if (chunkSize < 1) then
+    Exit([]);
+  c := ((Self.Size + (chunkSize - 1)) div chunkSize);
+  SetLength(Result, c);
+  h := (c - 1);
+  d := IfThen(Self.Descending, -1, 1);
+  p := Self.start;
+  for i := 0 to h do
+  begin
+    Result[i].start := p;
+    if (i = h) then
+      Result[i].stop := Self.stop
+    else
+      Result[i].stop := (p + (d * (chunkSize - 1)));
+    p := (Result[i].stop + d);
+  end;
+end;
+
+{==============================================================================]
   <Distribute>
   @action: Distributes range to TRangeArray by amount of parts
   @note: None.
 [==============================================================================}
-function TRangeHelper.Distribute(const parts: Integer): TRangeArray;
+function TRangeHelper.Distribute(const parts: Integer): TRangeArray; overload;
 var
   i, s, e, a, b, p: Integer;
   r: TRange;
@@ -70,7 +130,7 @@ end;
   @action: Partitions range to TRangeArray by size of parts
   @note: Alternative for TRange_Partition.
 [==============================================================================}
-function TRangeHelper.Divide(const size: Integer): TRangeArray;
+function TRangeHelper.Divide(const size: Integer): TRangeArray; overload;
 var
   a, b, i: Integer;
   r: TRange;
@@ -98,7 +158,7 @@ end;
   @action: Partitions range to TRangeArray by size of parts
   @note: None.
 [==============================================================================}
-function TRangeHelper.Partition(const size: Integer): TRangeArray;
+function TRangeHelper.Partition(const size: Integer): TRangeArray; overload;
 var
   a, b, l: Integer;
   r: TRange;
