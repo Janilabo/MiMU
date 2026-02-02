@@ -41,7 +41,9 @@ function Numbered: TIntegerArray; overload;
 function Numbers: TIntegerArray; overload;
 function Populate(var arr: TIntegerArray): TRange; overload;
 function Pull: TIntegerArray; overload;
+function Queue: TIntegerArray; overload;
 function Recursed: TIntegerArray; overload;
+function Revert: TIntegerArray; overload;
 function Sequence: TIntegerArray; overload;
 function Snapshot: TIntegerArray; overload;
 function Stack: TIntegerArray; overload;
@@ -1073,6 +1075,32 @@ begin
 end;
 
 {==============================================================================]
+  <Queue>
+  @action: Generates an array of integers representing the range defined in the TRange object. 
+           Values are enqueued into a queue to preserve the natural order, and then converted 
+           to an array.
+  @note: Uses a generic TQueue<Integer> to store values temporarily. The queue ensures that 
+         integers are kept in insertion order (FIFO), so the resulting array matches the 
+         intended ascending or descending sequence.
+[==============================================================================}
+function TRange.Queue: TIntegerArray; overload;
+var
+  Q: specialize TQueue<Integer>;
+  i, h, s: Integer;
+begin
+  Q := specialize TQueue<Integer>.Create;
+  try
+    h := Abs(Self.stop - Self.start);
+    s := IfThen(Self.Ascending, 1, -1);
+    for i := 0 to h do
+      Q.Enqueue(Self.start + (i * s));
+    Result := Q.ToArray;
+  finally
+    Q.Free;
+  end;
+end;
+
+{==============================================================================]
   <Recursed>
   @action: Returns digits of the given range.
   @note: Recursion-based.
@@ -1089,6 +1117,26 @@ function TRange.Recursed: TIntegerArray; overload;
 begin
   Result := BR(Self.start, Self.stop);
 end;
+
+{==============================================================================]
+  <Revert>
+  @action: Returns a TIntegerArray containing the range elements in reverse order
+           compared to the natural direction of the range, without modifying the TRange itself.
+  @note: Uses direct array allocation and a simple loop to fill values in reverse.
+         Fully type-safe and works for both ascending and descending ranges.
+[==============================================================================}
+function TRange.Revert: TIntegerArray; overload;
+var
+  i, l, s, v: Integer;
+begin
+  l := Self.Size;
+  SetLength(Result, l);
+  s := IfThen(Self.Ascending, 1, -1);
+  v := (Self.start + ((l - 1) * s));
+  for i := 0 to (l - 1) do
+    Result[i] := v.Decrease(s);
+end;
+
 
 {==============================================================================]
   <Sequence>
