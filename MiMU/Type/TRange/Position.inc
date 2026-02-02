@@ -1,9 +1,9 @@
 {$IFDEF METHODS}
-function Interpolate(const F: Double): Double;
-function Percentile(const F: Double): Double;
-function Q1: Double;
-function Q2: Double;
-function Q3: Double;
+function Interpolate(const F: Double): Double; overload;
+function Percentile(const F: Double): Double; overload;
+function Q1: Double; overload;
+function Q2: Double; overload;
+function Q3: Double; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +15,7 @@ function Q3: Double;
          Works with ascending and descending ranges.
          Useful for linear interpolation, animation, or parameterization.
 [==============================================================================}
-function TRange.Interpolate(const F: Double): Double;
+function TRange.Interpolate(const F: Double): Double; overload;
 begin
   Result := (Self.start + ((Self.stop - Self.start) * F));
 end;
@@ -27,7 +27,7 @@ end;
   @note: F = 0 returns the smaller of Start/Stop, F = 1 returns the larger.
          Useful for statistical calculations such as percentiles and quartiles.
 [==============================================================================}
-function TRange.Percentile(const F: Double): Double;
+function TRange.Percentile(const F: Double): Double; overload;
 var
   A, B: Double;
 begin
@@ -42,7 +42,7 @@ end;
   @note: Uses Percentile(0.25). Direction of the range is ignored.
          Represents the value one quarter of the way from the minimum to the maximum.
 [==============================================================================}
-function TRange.Q1: Double;
+function TRange.Q1: Double; overload;
 begin
   Result := Self.Percentile(0.25);
 end;
@@ -53,7 +53,7 @@ end;
   @note: Uses Percentile(0.5). Equivalent to the midpoint when the range is symmetric.
          Direction of the range is ignored.
 [==============================================================================}
-function TRange.Q2: Double;
+function TRange.Q2: Double; overload;
 begin
   Result := Self.Percentile(0.5);
 end;
@@ -64,7 +64,7 @@ end;
   @note: Uses Percentile(0.75). Direction of the range is ignored.
          Represents the value three quarters of the way from the minimum to the maximum.
 [==============================================================================}
-function TRange.Q3: Double;
+function TRange.Q3: Double; overload;
 begin
   Result := Self.Percentile(0.75);
 end;

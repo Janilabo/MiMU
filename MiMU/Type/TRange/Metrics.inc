@@ -1,26 +1,26 @@
 {$IFDEF METHODS}
-function Aggregate(var items: TIntegerArray): Int64;
-function Aggregated(var items: TIntegerArray): Int64;
-function Deficit: Integer;
-function Delta: Integer;
-function Diff: Integer;
-function Difference: Integer;
-function Dist: Integer;
-function Magnitude: Integer;
-function Prod: Int64;
-function Product: Int64;
-function Quotient(const defaultValue: Integer = 0): Integer;
+function Aggregate(var items: TIntegerArray): Int64; overload;
+function Aggregated(var items: TIntegerArray): Int64; overload;
+function Deficit: Integer; overload;
+function Delta: Integer; overload;
+function Diff: Integer; overload;
+function Difference: Integer; overload;
+function Dist: Integer; overload;
+function Magnitude: Integer; overload;
+function Prod: Int64; overload;
+function Product: Int64; overload;
+function Quotient(const defaultValue: Integer = 0): Integer; overload;
 function Rad: Integer; overload;
 function Radiar: Integer; overload;
 function Radius: Integer; overload;
-function Ratio(const defaultValue: Double = 0.0): Double;
-function Span: Integer;
-function Sigma: Int64;
-function Signed: Int64;
-function Sum: Int64;
-function Summa: Int64;
-function Summation: Int64;
-function Total: Int64;
+function Ratio(const defaultValue: Double = 0.0): Double; overload;
+function Span: Integer; overload;
+function Sigma: Int64; overload;
+function Signed: Int64; overload;
+function Sum: Int64; overload;
+function Summa: Int64; overload;
+function Summation: Int64; overload;
+function Total: Int64; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -34,7 +34,7 @@ function Total: Int64;
          risk. Assumes the range is inclusive and valid (Minimum <= Maximum
          or descending).
 [==============================================================================}
-function TRange.Aggregate(var items: TIntegerArray): Int64;
+function TRange.Aggregate(var items: TIntegerArray): Int64; overload;
 var
   l, r, s: Integer;
 begin
@@ -59,7 +59,7 @@ end;
           incrementally while filling the array. The array length is automatically
           set to the range size. Uses Int64 for the sum to reduce overflow risk.
 [==============================================================================}
-function TRange.Aggregated(var items: TIntegerArray): Int64;
+function TRange.Aggregated(var items: TIntegerArray): Int64; overload;
 var
   i, l, r, s: Integer;
 begin
@@ -82,7 +82,7 @@ end;
   @note: Computed as Min(Start, Stop) - Max(Start, Stop).
          Always ≤ 0. Ignores orientation; useful when a negative “shortfall” value is needed.
 [==============================================================================}
-function TRange.Deficit: Integer;
+function TRange.Deficit: Integer; overload;
 begin
   Result := (Min(Self.start, Self.stop) - Max(Self.start, Self.stop));
 end;
@@ -92,7 +92,7 @@ end;
   @action: Delta returns the signed difference from start to stop; the sign indicates the range’s orientation.
   @note: None.
 [==============================================================================}
-function TRange.Delta: Integer;
+function TRange.Delta: Integer; overload;
 begin
   Result := (Self.stop - Self.start);
 end;
@@ -104,7 +104,7 @@ end;
   @note: The result is always non-negative. Equivalent to Abs(stop - start).
          Does not include endpoints; useful when only the gap between values matters.
 [==============================================================================}
-function TRange.Diff: Integer;
+function TRange.Diff: Integer; overload;
 begin
   Result := (Max(Self.start, Self.stop) - Min(Self.start, Self.stop));
 end;
@@ -117,7 +117,7 @@ end;
          you only care about the magnitude of the gap, not whether the range
          is ascending or descending.
 [==============================================================================}
-function TRange.Difference: Integer;
+function TRange.Difference: Integer; overload;
 begin
   Result := Abs(Self.stop - Self.start);
 end;
@@ -129,7 +129,7 @@ end;
   @note: Same as Distance but written using IfThen for brevity. Still exclusive
          of endpoints and sensitive to the Descending flag.
 [==============================================================================}
-function TRange.Dist: Integer;
+function TRange.Dist: Integer; overload;
 begin
   Result := IfThen(Self.Descending, (Self.start - Self.stop), (Self.stop - Self.start));
 end;
@@ -140,7 +140,7 @@ end;
   @note: Computed as the absolute value of Delta (Abs(Stop - Start)).
          Always ≥ 0, regardless of whether the range is ascending or descending.
 [==============================================================================}
-function TRange.Magnitude: Integer;
+function TRange.Magnitude: Integer; overload;
 begin
   Result := Abs(Self.Delta);
 end;
@@ -155,7 +155,7 @@ end;
     TRange.Create(3, 6).Product  → 360 (3×4×5×6)
     TRange.Create(1, 0).Product  → 1 (empty range)
 [==============================================================================}
-function TRange.Prod: Int64;
+function TRange.Prod: Int64; overload;
 var
   i: Integer;
 begin
@@ -172,7 +172,7 @@ end;
          zero, the result is immediately zero. The product is accumulated
          using Int64 and no overflow detection is performed.
 [==============================================================================}
-function TRange.Product: Int64;
+function TRange.Product: Int64; overload;
 var
   i, l, h: Integer;
 begin
@@ -193,7 +193,7 @@ end;
          is returned to avoid division-by-zero. No validation or normalization
          of the range endpoints is performed.
 [==============================================================================}
-function TRange.Quotient(const defaultValue: Integer = 0): Integer;
+function TRange.Quotient(const defaultValue: Integer = 0): Integer; overload;
 begin
   if Self.stop = 0 then
     Result := defaultValue
@@ -240,7 +240,7 @@ end;
          instead to avoid division-by-zero. The method does not enforce any
          ordering between start and stop and performs no range validation.
 [==============================================================================}
-function TRange.Ratio(const defaultValue: Double = 0.0): Double;
+function TRange.Ratio(const defaultValue: Double = 0.0): Double; overload;
 begin
   if (Self.stop = 0) then
     Result := defaultValue
@@ -258,7 +258,7 @@ end;
          still overflow Int64. This method assumes the range is valid
          (Minimum <= Maximum) and represents an inclusive set of integers.
 [==============================================================================}
-function TRange.Sigma: Int64;
+function TRange.Sigma: Int64; overload;
 begin
   Result := ((Int64(Self.Size) * (Int64(Self.start) + Self.stop)) div 2);
 end; 
@@ -270,7 +270,7 @@ end;
          Does not include both endpoints; this is the exclusive difference.
          Uses Int64 arithmetic to safely handle large integer ranges without overflow.
 [==============================================================================}
-function TRange.Signed: Int64;
+function TRange.Signed: Int64; overload;
 begin
   Result := (Int64(Self.stop) - Int64(Self.start));
 end;
@@ -280,7 +280,7 @@ end;
   @action: Returns span of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Span: Integer;
+function TRange.Span: Integer; overload;
 begin
   Result := Abs(Self.stop - Self.start);
 end;
@@ -290,7 +290,7 @@ end;
   @action: Returns the sum of all TRange values (start..stop)
   @note: None
 [==============================================================================}
-function TRange.Sum: Int64;
+function TRange.Sum: Int64; overload;
 var
   a, b: Int64;
 begin
@@ -310,7 +310,7 @@ end;
          Extremely large ranges may still overflow Int64. This method assumes
          the range is valid (Minimum <= Maximum) and inclusive.
 [==============================================================================}
-function TRange.Summa: Int64;
+function TRange.Summa: Int64; overload;
 var
   A, B, C: Int64;
 begin
@@ -328,7 +328,7 @@ end;
   @action: Returns the sum of all TRange values (start..stop)
   @note: None
 [==============================================================================}
-function TRange.Summation: Int64;
+function TRange.Summation: Int64; overload;
 var
   a, b, c, s, n: Int64;
 begin
@@ -347,7 +347,7 @@ end;
   @action: Returns the sum of all TRange values (start..stop)
   @note: None
 [==============================================================================}
-function TRange.Total: Int64;
+function TRange.Total: Int64; overload;
 begin
   if Self.Descending then
     Result := (((Int64(Self.start) * (Self.start + 1)) div 2) - ((Int64(Self.stop - 1) * Self.stop) div 2))

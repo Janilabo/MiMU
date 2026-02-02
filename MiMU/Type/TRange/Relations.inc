@@ -1,30 +1,38 @@
 {$IFDEF METHODS}
-function Differ(const b: TRange): Boolean;
-function Differs(const b: TRange): Boolean;
+function Differ(const b: TRange): Boolean; overload;
+function Differs(const b: TRange): Boolean; overload;
+function Dist(const target: TRange): Integer; overload;
+function DistAt(const target: TRange): Integer; overload;
 function Distance(const b: TRange): Integer; overload;
 function Distance: Integer; overload;
-function DistanceTo(const other: TRange): Integer;
-function DistHausdorff(const b: TRange): Integer;
-function Equal(const b: TRange): Boolean;
-function Equals(const b: TRange): Boolean;
-function Gap(const other: TRange): Integer;
-function GapTo(const other: TRange): Integer;
+function DistanceAt(const target: TRange): Integer; overload;
+function DistanceEx(const target: TRange): Integer; overload;
+function DistanceFor(const target: TRange): Integer; overload;
+function DistanceOf(const target: TRange): Integer; overload;
+function DistanceTo(const other: TRange): Integer; overload;
+function DistanceWith(const target: TRange): Integer; overload;
+function DistHausdorff(const b: TRange): Integer; overload;
+function Equal(const b: TRange): Boolean; overload;
+function Equals(const b: TRange): Boolean; overload;
+function Gap(const other: TRange): Integer; overload;
+function GapTo(const other: TRange): Integer; overload;
+function GetDistance(const target: TRange): Integer; overload;
 function Intersect(const b: TRange): TRange; overload;
 function Intersect(const b: TRange; var iZone: TRange): Boolean; overload;
-function IsAdjacent(const other: TRange): Boolean;
-function IsMergeable(const other: TRange): Boolean;
-function Mergeable(const other: TRange): Boolean;
-function Neighbor(const b: TRange): Boolean;
-function Neighbour(const b: TRange): Boolean;
-function Overlap(const b: TRange): Boolean;
-function Overlapping(const b: TRange): Boolean;
-function Overlaps(const other: TRange): Boolean;
-function Separated(const other: TRange): Boolean;
-function Separation(other: TRange): Integer;
-function Shared(const other: TRange): Integer;
-function Touch(const b: TRange): Boolean;
-function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
-function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
+function IsAdjacent(const other: TRange): Boolean; overload;
+function IsMergeable(const other: TRange): Boolean; overload;
+function Mergeable(const other: TRange): Boolean; overload;
+function Neighbor(const b: TRange): Boolean; overload;
+function Neighbour(const b: TRange): Boolean; overload;
+function Overlap(const b: TRange): Boolean; overload;
+function Overlapping(const b: TRange): Boolean; overload;
+function Overlaps(const other: TRange): Boolean; overload;
+function Separated(const other: TRange): Boolean; overload;
+function Separation(other: TRange): Integer; overload;
+function Shared(const other: TRange): Integer; overload;
+function Touch(const b: TRange): Boolean; overload;
+function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
+function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
 function Union(const b: TRange): TRange; overload;
 function Union(const val: Integer): TRange; overload;
 {$ENDIF}
@@ -35,7 +43,7 @@ function Union(const val: Integer): TRange; overload;
   @action: Checks if a unmatches b exactly.
   @note: 0..3 and 3..0 will NOT be treated as match.
 [==============================================================================}
-function TRange.Differ(const b: TRange): Boolean;
+function TRange.Differ(const b: TRange): Boolean; overload;
 begin
   Result := ((Self.start <> b.start) or (Self.stop <> b.stop));
 end;
@@ -45,9 +53,42 @@ end;
   @action: Checks if a unmatches b.
   @note: 0..3 and 3..0 will be treated as match.
 [==============================================================================}
-function TRange.Differs(const b: TRange): Boolean;
+function TRange.Differs(const b: TRange): Boolean; overload;
 begin
   Result := ((Min(Self.start, Self.stop) <> Min(b.start, b.stop)) or (Max(Self.start, Self.stop) <> Max(b.start, b.stop)));
+end;
+
+{==============================================================================]
+  <Dist>
+  @action: Returns the non-negative discrete distance between this range and a
+           target range.
+           Overlapping or endpoint-touching ranges return 0.
+           Adjacent ranges return 1.
+           Otherwise returns the integer gap between the ranges.
+  @note: Uses Minimum/Maximum accessors; start/stop order does not matter.
+[==============================================================================}
+function TRange.Dist(const target: TRange): Integer; overload;
+begin
+  Result := Max(0, (Max(Self.Minimum, target.Minimum) - Min(Self.Maximum, target.Maximum)));
+end;
+
+{==============================================================================]
+  <DistAt>
+  @action: Returns the non-negative discrete distance between this range and a
+           target range using a center-based arithmetic computation.
+           Overlapping or endpoint-touching ranges return 0.
+           Adjacent ranges return 1.
+           Otherwise returns the integer gap between the ranges.
+  @note: Both ranges are normalized; start/stop order does not matter.
+         Fully branchless and symmetric.
+[==============================================================================}
+function TRange.DistAt(const target: TRange): Integer; overload;
+var
+  s, t: TRange;
+begin
+  s := Self.Normalize;
+  t := target.Normalize;
+  Result := Max(0, (Abs((s.start + s.stop) - (t.start + t.stop)) div 2) - (((s.stop - s.start) + (t.stop - t.start)) div 2));
 end;
 
 {==============================================================================]
@@ -86,6 +127,90 @@ begin
 end;
 
 {==============================================================================]
+  <DistanceAt>
+  @action: Returns the non-negative distance between this range and a target range.
+           Overlapping = 0
+		   Touching (adjacent) = 1
+		   Otherwise +1 (returns the integer gap between the ranges)
+  @note: Ranges are internally normalized, so start/stop order does not matter.
+[==============================================================================}
+function TRange.DistanceAt(const target: TRange): Integer; overload;
+var
+  a, g: Integer;
+  s, t: TRange;
+begin
+  a := Abs(Self.start - Self.stop);
+  s.Create(((Self.start + Self.stop - a) div 2), ((Self.start + Self.stop + a) div 2));
+  a := Abs(target.start - target.stop);
+  t.Create(((target.start + target.stop - a) div 2), ((target.start + target.stop + a) div 2));
+  g := (Max(s.start, t.start) - Min(s.stop, t.stop));
+  Result := ((g + Abs(g)) div 2);
+end;
+
+{==============================================================================]
+  <DistanceEx>
+  @action: Returns the non-negative discrete distance between this range and a
+           target range using explicit overlap and ordering checks.
+           Overlapping or endpoint-touching ranges return 0.
+           Adjacent ranges return 1.
+           Otherwise returns the integer gap between the ranges.
+  @note: Both ranges are normalized before comparison; start/stop order
+         does not matter.
+[==============================================================================}
+function TRange.DistanceEx(const target: TRange): Integer; overload;
+var
+  s, t: TRange;
+begin
+  s := Self.Normalize;
+  t := target.Normalize;
+  if (s.stop >= t.start) then
+    if (t.stop >= s.start) then
+      Exit(0);
+  if (s.stop < t.start) then
+    Result := (t.start - s.stop)
+  else
+    Result := (s.start - t.stop);
+end;
+
+{==============================================================================]
+  <DistanceFor>
+  @action: Returns the non-negative discrete distance between this range and a
+           target range.
+           Overlapping or endpoint-touching ranges return 0.
+           Adjacent ranges return 1.
+           Otherwise returns the integer gap between the ranges.
+  @note: Both ranges are normalized before comparison; start/stop order
+         does not matter.
+[==============================================================================}
+function TRange.DistanceFor(const target: TRange): Integer; overload;
+var
+  s, t: TRange;
+begin
+  s := Self.Normalize;
+  t := target.Normalize;
+  Result := Max(0, Max(s.start, t.start) - Min(s.stop, t.stop));
+end;
+
+{==============================================================================]
+  <DistanceOf>
+  @action: Returns the non-negative discrete distance between this range and a
+           target range using a branchless boolean-masked computation.
+           Overlapping or endpoint-touching ranges return 0.
+           Adjacent ranges return 1.
+           Otherwise returns the integer gap between the ranges.
+  @note: Both ranges are normalized before computation; start/stop order
+         does not matter.
+[==============================================================================}
+function TRange.DistanceOf(const target: TRange): Integer; overload;
+var
+  s, t: TRange;
+begin
+  s := Self.Normalize;
+  t := target.Normalize;
+  Result := (((t.start - s.stop) * Ord(s.stop < t.start)) + ((s.start - t.stop) * Ord(t.stop < s.start)));
+end;
+
+{==============================================================================]
   <DistanceTo>
   @action: Returns the minimum discrete distance between this range and another
           range.
@@ -95,9 +220,33 @@ end;
          ranges, the result is equal to GapTo(other) + 1.
          This method assumes both ranges are valid (Minimum <= Maximum).
 [==============================================================================}
-function TRange.DistanceTo(const other: TRange): Integer;
+function TRange.DistanceTo(const other: TRange): Integer; overload;
 begin
   Result := Max(0, (Self.GapTo(other) + 1));
+end;
+
+{==============================================================================]
+  <DistanceWith>
+  @action: Returns the non-negative discrete distance between this range and a
+           target range.
+           Overlapping or endpoint-touching ranges return 0.
+           Adjacent ranges return 1.
+           Otherwise returns the integer gap between the ranges.
+  @note: Both ranges are normalized before comparison; start/stop order
+         does not matter.
+[==============================================================================}
+function TRange.DistanceWith(const target: TRange): Integer; overload;
+var
+  s, t: TRange;
+begin
+  s := Self.Normalize;
+  t := target.Normalize;
+  if (s.stop < t.start) then
+    Result := (t.start - s.stop)
+  else if (t.stop < s.start) then
+    Result := (s.start - t.stop)
+  else
+    Result := 0;
 end;
 
 {==============================================================================]
@@ -105,7 +254,7 @@ end;
   @action: Returns Hausdorff-based distance between ranges a and b.
   @note: None.
 [==============================================================================}
-function TRange.DistHausdorff(const b: TRange): Integer;
+function TRange.DistHausdorff(const b: TRange): Integer; overload;
 var
   i, j: TRange;
 begin
@@ -119,7 +268,7 @@ end;
   @action: Checks if a matches b exactly.
   @note: 0..3 and 3..0 will NOT be treated as match.
 [==============================================================================}
-function TRange.Equal(const b: TRange): Boolean;
+function TRange.Equal(const b: TRange): Boolean; overload;
 begin
   Result := ((Self.start = b.start) and (Self.stop = b.stop));
 end;
@@ -129,7 +278,7 @@ end;
   @action: Checks if a matches b.
   @note: 0..3 and 3..0 will be treated as match.
 [==============================================================================}
-function TRange.Equals(const b: TRange): Boolean;
+function TRange.Equals(const b: TRange): Boolean; overload;
 begin
   Result := ((Min(Self.start, Self.stop) = Min(b.start, b.stop)) and (Max(Self.start, Self.stop) = Max(b.start, b.stop)));
 end;
@@ -144,7 +293,7 @@ end;
          from adjacency and always returns a non-negative value.
          This method assumes both ranges are valid (Minimum <= Maximum).
 [==============================================================================}
-function TRange.Gap(const other: TRange): Integer;
+function TRange.Gap(const other: TRange): Integer; overload;
 begin
   if (Self.Maximum < other.Minimum) then
     Result := ((other.Minimum - Self.Maximum) - 1)
@@ -167,7 +316,7 @@ end;
          versa) yield a gap of 0. This method assumes both ranges are valid
          (Minimum <= Maximum).
 [==============================================================================}
-function TRange.GapTo(const other: TRange): Integer;
+function TRange.GapTo(const other: TRange): Integer; overload;
 begin
   if Self.Overlaps(other) then
     Exit(-1)
@@ -175,6 +324,28 @@ begin
     Result := ((other.Minimum - Self.Maximum) - 1)
   else
     Result := ((Self.Minimum - other.Maximum) - 1);
+end;
+
+{==============================================================================]
+  <GetDistance>
+  @action: Returns the non-negative discrete distance between this range and a
+           target range using a branchless signed-gap computation.
+           Overlapping or endpoint-touching ranges return 0.
+           Adjacent ranges return 1.
+           Otherwise returns the integer gap between the ranges.
+  @note: Both ranges are normalized before computation; start/stop order
+         does not matter.
+         Uses arithmetic clamping: (g + Abs(g)) div 2.
+[==============================================================================}
+function TRange.GetDistance(const target: TRange): Integer; overload;
+var
+  s, t: TRange;
+  g: Integer;
+begin
+  s := Self.Normalize;
+  t := target.Normalize;
+  g := (Max(s.start, t.start) - Min(s.stop, t.stop));
+  Result := ((g + Abs(g)) div 2);
 end;
 
 {==============================================================================]
@@ -220,7 +391,7 @@ end;
          values and a gap size of zero.
          This method assumes both ranges are valid (Minimum <= Maximum).
 [==============================================================================}
-function TRange.IsAdjacent(const other: TRange): Boolean;
+function TRange.IsAdjacent(const other: TRange): Boolean; overload;
 begin
   Result := (((Self.Maximum + 1) = other.Minimum) or ((other.Maximum + 1) = Self.Minimum));
 end;
@@ -233,7 +404,7 @@ end;
          without introducing gaps.
          This method assumes both ranges are valid (Minimum <= Maximum).
 [==============================================================================}
-function TRange.IsMergeable(const other: TRange): Boolean;
+function TRange.IsMergeable(const other: TRange): Boolean; overload;
 begin
   Result := (Self.Overlaps(other) or Self.IsAdjacent(other));
 end;
@@ -248,7 +419,7 @@ end;
          the union of the two ranges would form a continuous interval.
          This method assumes both ranges are valid (Minimum <= Maximum).
 [==============================================================================}
-function TRange.Mergeable(const other: TRange): Boolean;
+function TRange.Mergeable(const other: TRange): Boolean; overload;
 begin
   Result := ((Self.Minimum <= (other.Maximum + 1)) and ((Self.Maximum + 1) >= other.Minimum));
 end;
@@ -258,7 +429,7 @@ end;
   @action: Returns true if 2 TRanges are right next to eachother.
   @note: (Distance is exactly 1 between em).
 [==============================================================================}
-function TRange.Neighbor(const b: TRange): Boolean;
+function TRange.Neighbor(const b: TRange): Boolean; overload;
 var
   i, j: TRange;
 begin
@@ -272,7 +443,7 @@ end;
   @action: Returns true if 2 TRanges are right next to eachother.
   @note: (Distance is exactly 1 between em).
 [==============================================================================}
-function TRange.Neighbour(const b: TRange): Boolean;
+function TRange.Neighbour(const b: TRange): Boolean; overload;
 begin
   Result := (((Max(Self.start, Self.stop) + 1) = Min(b.start, b.stop)) or ((Max(b.start, b.stop) + 1) = Min(Self.start, Self.stop)));
 end;
@@ -282,7 +453,7 @@ end;
   @action: Checks if a and b overlap eachother.
   @note: Returns true if overlap is found.
 [==============================================================================}
-function TRange.Overlap(const b: TRange): Boolean;
+function TRange.Overlap(const b: TRange): Boolean; overload;
 begin
   Result := not ((Min(Self.start, Self.stop) > Max(b.start, b.stop)) or (Min(b.start, b.stop) > Max(Self.start, Self.stop)));
 end;
@@ -292,7 +463,7 @@ end;
   @action: Checks if a and b overlap eachother.
   @note: Returns true if overlap is found.
 [==============================================================================}
-function TRange.Overlapping(const b: TRange): Boolean;
+function TRange.Overlapping(const b: TRange): Boolean; overload;
 begin
   Result := ((Min(Self.start, Self.stop) <= Max(b.start, b.stop)) and (Min(b.start, b.stop) <= Max(Self.start, Self.stop)));
 end;
@@ -305,7 +476,7 @@ end;
          ranges where Self.Maximum = other.Minimum are considered overlapping.
          This method assumes both ranges are valid (Minimum <= Maximum).
 [==============================================================================}
-function TRange.Overlaps(const other: TRange): Boolean;
+function TRange.Overlaps(const other: TRange): Boolean; overload;
 begin
   Result := ((Self.Minimum <= other.Maximum) and (Self.Maximum >= other.Minimum));
 end;
@@ -319,7 +490,7 @@ end;
          between the ranges is greater than zero.
          This method assumes both ranges are valid (Minimum <= Maximum).
 [==============================================================================}
-function TRange.Separated(const other: TRange): Boolean;
+function TRange.Separated(const other: TRange): Boolean; overload;
 begin
   Result := ((Self.Maximum < (other.Minimum - 1)) or (other.Maximum < (Self.Minimum - 1)));
 end; 
@@ -334,7 +505,7 @@ end;
          Adjacent ranges yield a separation of 0.
          This method assumes both ranges are valid (Minimum <= Maximum).
 [==============================================================================}
-function TRange.Separation(other: TRange): Integer;
+function TRange.Separation(other: TRange): Integer; overload;
 begin
   if (Self.Maximum < other.Minimum) then
     Result := ((other.Minimum - Self.Maximum) - 1)
@@ -354,7 +525,7 @@ end;
          If the ranges do not overlap, the result is 0.
          This method assumes both ranges are valid (Minimum <= Maximum).
 [==============================================================================}
-function TRange.Shared(const other: TRange): Integer;
+function TRange.Shared(const other: TRange): Integer; overload;
 begin
   if Self.Overlaps(other) then
     Result := ((Min(Self.Maximum, other.Maximum) - Max(Self.Minimum, other.Minimum)) + 1)
@@ -367,7 +538,7 @@ end;
   @action: Returns true if range touches b.
   @note: Touch = only single value is shared between the ranges.
 [==============================================================================}
-function TRange.Touch(const b: TRange): Boolean;
+function TRange.Touch(const b: TRange): Boolean; overload;
 var
   l, h, r: TRange;
 begin
@@ -382,7 +553,7 @@ end;
   @action: Returns true if range touches b with minimum and maximum contact.
   @note: Touch = minimum/maximum shared values.
 [==============================================================================}
-function TRange.Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
+function TRange.Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
 var
   x, y: TRange;
   i, s: Integer;
@@ -402,7 +573,7 @@ end;
   @action: Returns true if range touches b with minimum and maximum contact.
   @note: Touch = minimum/maximum shared values.
 [==============================================================================}
-function TRange.Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean;
+function TRange.Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
 var
   x, y: TRange;
   s, i: Integer;

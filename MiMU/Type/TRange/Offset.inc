@@ -5,7 +5,7 @@ function Decrease(const N: Integer = 1): TRange; overload;
 function Decrement(const N: Integer = 1): TRange; overload;
 function Increase(const N: Integer = 1): TRange; overload;
 function Increment(const N: Integer = 1): TRange; overload;
-function Offset(const sDelta: Integer): TRange;
+function Offset(const sDelta: Integer): TRange; overload;
 function Shift(const N: Integer = 1): TRange; overload;
 function Shifted(const N: Integer = 1): TRange; overload;
 
@@ -99,7 +99,7 @@ end;
   @action: Returns shift of range r by delta.
   @note: None.
 [==============================================================================}
-function TRange.Offset(const sDelta: Integer): TRange;
+function TRange.Offset(const sDelta: Integer): TRange; overload;
 begin
   Result.Create((Self.start + sDelta), (Self.stop + sDelta));
 end;
