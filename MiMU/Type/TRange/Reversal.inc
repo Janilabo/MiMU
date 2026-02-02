@@ -1,11 +1,49 @@
 {$IFDEF METHODS}
-function Invert: Boolean;
-function Inverted: TRange;
-function Reverse: Boolean;
-function Reversed: TRange;
+function Flip: TRange; overload;
+function Flipped: TRange; overload;
+function Invert: Boolean; overload;
+function Inverted: TRange; overload;
+function Reverse: Boolean; overload;
+function Reversed: TRange; overload;
+function Reversify: TRange; overload;
+function Toggle: TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Flip>
+  @action: Returns a new range with start and stop exchanged, using an XOR-swap
+    sequence instead of a temporary variable.
+  @note:
+    - Functionally equivalent to swapping Self.start and Self.stop.
+    - Relies on bitwise XOR; valid only for integral types.
+    - Assumes start and stop are distinct storage locations.
+    - Offers no semantic advantage over a simple swap and may reduce clarity.
+[==============================================================================}
+function TRange.Flip: TRange; overload;
+begin
+  Result.start := (Self.start xor Self.stop);
+  Result.stop := (Result.start xor Self.stop);
+  Result.start := (Result.start xor Result.stop);
+end;
+
+{==============================================================================]
+  <Flipped>
+  @action: Returns a new range with start and stop values exchanged, using
+           sum–difference arithmetic instead of a temporary variable.
+  @note:
+    - Functionally equivalent to swapping Self.start and Self.stop.
+    - Uses addition and subtraction; may overflow for large integral values.
+    - Less explicit and less safe than a direct constructor-based swap.
+    - No validation is performed (e.g., start <= stop).
+[==============================================================================}
+function TRange.Flipped: TRange; overload;
+begin
+  Result.start := (Self.start + Self.stop);
+  Result.stop := (Result.start - Self.stop);
+  Result.start := (Result.start - Result.stop)
+end;
+
 {==============================================================================]
   <Invert>
   @action: Negates both endpoints of the range in place.
@@ -15,7 +53,7 @@ function Reversed: TRange;
          (i.e. either endpoint was non-zero), and False otherwise.
          Direction and magnitude are preserved, but sign is inverted.
 [==============================================================================}
-function TRange.Invert: Boolean;
+function TRange.Invert: Boolean; overload;
 begin
   Result := ((Self.start <> 0) or (Self.stop <> 0));
   Self.start := -Self.start;
@@ -30,7 +68,7 @@ end;
          [start, stop] → [-start, -stop].
          Direction and magnitude are preserved.
 [==============================================================================}
-function TRange.Inverted: TRange;
+function TRange.Inverted: TRange; overload;
 begin
   Result.start := -Self.start;
   Result.stop := -Self.stop;
@@ -41,7 +79,7 @@ end;
   @action: Reverses range, returns True if range was reversed.
   @note: None.
 [==============================================================================}
-function TRange.Reverse: Boolean;
+function TRange.Reverse: Boolean; overload;
 begin
   Result := Self.Plural;
   if Result then
@@ -53,9 +91,43 @@ end;
   @action: Returns reversed range.
   @note: None.
 [==============================================================================}
-function TRange.Reversed: TRange;
+function TRange.Reversed: TRange; overload;
 begin
   Result.start := Self.stop;
   Result.stop := Self.start;
+end;
+
+{==============================================================================]
+  <Reversify>
+  @action: Returns a new range whose bounds are reversed (start and stop swapped),
+    preserving the same midpoint as the original range.
+
+  @note:
+    - Functionally equivalent to exchanging Self.start and Self.stop.
+    - Assumes that start and stop are symmetric endpoints of the range.
+    - No validation is performed (e.g., start <= stop).
+    - Uses Int64 arithmetic; extreme values may overflow when summed.
+[==============================================================================}
+function TRange.Reversify: TRange; overload;
+var
+  s: Int64;
+begin
+  s := (Self.start + Self.stop);
+  Result.start := (s - Self.start);
+  Result.stop := (s - Self.stop);
+end;
+
+{==============================================================================]
+  <Toggle>
+  @action: Returns a new range with its start and stop values exchanged.
+  @note:
+    - Purely swaps the range bounds.
+    - No arithmetic or bitwise operations involved.
+    - Clearer and safer than XOR- or sum-based swap implementations.
+    - No validation is performed (e.g., start <= stop).
+[==============================================================================}
+function TRange.Toggle: TRange; overload;
+begin
+  Result := TRange.Construct(Self.stop, Self.start);
 end;
 {$ENDIF}
