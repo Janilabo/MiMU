@@ -12,8 +12,10 @@ function Fetch(const index: Integer = 0): Integer; overload;
 function Get(const index: Integer = 0): Integer; overload;
 function GetValue(const index: Integer = 0): Integer; overload;
 function Lookup(const index: Integer = 0): Integer; overload;
+function Map(const index: Integer = 0): Integer; overload;
 function Member(const index: Integer = 0): Integer; overload;
 function Nth(const index: Integer = 0): Integer; overload;
+function Term(const index: Integer = 0): Integer; overload;
 function ToValue(const index: Integer = 0): Integer; overload;
 function ValueAt(const index: Integer = 0): Integer; overload;
 {$ENDIF}
@@ -25,9 +27,9 @@ function ValueAt(const index: Integer = 0): Integer; overload;
            resolving direction via a Boolean-indexed lookup table.
   @note: Index defaults to 0, which returns Start.
          Direction is determined from Descending and converted to an ordinal (0 or 1) to index the constant array `d`,
-		 where 0 maps to +1 (ascending) and 1 maps to -1 (descending).
-		 This implementation avoids conditional branching. No bounds checking is performed;
-		 the caller must ensure the index is within the logical range limits.
+	 where 0 maps to +1 (ascending) and 1 maps to -1 (descending).
+	 This implementation avoids conditional branching. No bounds checking is performed;
+	 the caller must ensure the index is within the logical range limits.
 [==============================================================================}
 function TRange.Access(const index: Integer = 0): Integer;
 const
@@ -42,8 +44,8 @@ end;
            using a branchless direction multiplier derived from Descending.
   @note: Index defaults to 0, which returns Start. Direction is computed as ((Ord(Descending) * -2) + 1),
          producing +1 when not descending and -1 when descending.
-		 Functionally equivalent to other index-based accessors but avoids conditional branching.
-		 No bounds checking is performed; the caller is responsible for ensuring the index is within the valid range extent.
+	 Functionally equivalent to other index-based accessors but avoids conditional branching.
+	 No bounds checking is performed; the caller is responsible for ensuring the index is within the valid range extent.
 [==============================================================================}
 function TRange.AsValue(const index: Integer = 0): Integer; overload;
 begin
@@ -73,7 +75,7 @@ end;
   @note: Index defaults to 0, which returns Start. Direction is determined by Ascending,
          and translated into a +1 or -1 step using IfThen.
          No bounds checking is performed;
-		 the caller is responsible for ensuring the index lies within the valid range extent.
+	 the caller is responsible for ensuring the index lies within the valid range extent.
 [==============================================================================}
 function TRange.AtIndex(const index: Integer = 0): Integer; overload;
 begin
@@ -86,7 +88,7 @@ end;
            using a branchless direction multiplier derived from Descending.
   @note: Index defaults to 0, returning Start. Direction is computed as
          (1 - (2 * Ord(Descending))), yielding +1 for ascending and -1 for descending.
-		 This avoids conditional branching. No validation of index bounds is performed.
+	 This avoids conditional branching. No validation of index bounds is performed.
 [==============================================================================}
 function TRange.AtPos(const index: Integer = 0): Integer; overload;
 begin
@@ -100,7 +102,7 @@ end;
   @note: Index defaults to 0, returning Start. Direction is computed as
          (1 - (Ord(Descending) shl 1)), producing +1 when not descending and -1 when descending.
          Functionally equivalent to AtPos but uses a shift instead of multiplication.
-		 No bounds enforcement is performed.
+	 No bounds enforcement is performed.
 [==============================================================================}
 function TRange.AtPosition(const index: Integer = 0): Integer; overload;
 begin
@@ -211,14 +213,29 @@ end;
            using a precomputed direction lookup based on Ascending.
   @note: Index defaults to 0, which returns Start. Direction is resolved via a Boolean-indexed constant array `d`,
          where False maps to -1 and True maps to +1, eliminating conditional branching.
-		 This assumes Ascending accurately reflects the range direction. No bounds validation is performed;
-		 the caller is responsible for ensuring the index lies within the valid range extent.
+	 This assumes Ascending accurately reflects the range direction. No bounds validation is performed;
+	 the caller is responsible for ensuring the index lies within the valid range extent.
 [==============================================================================}
 function TRange.Lookup(const index: Integer = 0): Integer; overload;
 const
   d: array[Boolean] of Integer = (-1, 1);
 begin
   Result := (Self.start + (index * d[Self.Ascending]));
+end;
+
+{==============================================================================]
+  <Map>
+  @action: Translates a zero-based index into its corresponding value within the range,
+           applying direction derived from the Descending flag.
+  @note: Index defaults to 0, which returns Start.
+         The direction multiplier is computed branchlessly as (-(Ord(Descending) shl 1) + 1),
+	 yielding +1 when Descending = False and -1 when Descending = True.
+	 Equivalent to other index-to-value implementations but expressed using shift-based Boolean arithmetic.
+	 No bounds validation is performed; the caller must ensure the index is within the logical range limits.
+[==============================================================================}
+function TRange.Map(const index: Integer = 0): Integer; overload;
+begin
+  Result := (Self.start + (index * (-(Ord(Self.Descending) shl 1) + 1)));
 end;
 
 {==============================================================================]
@@ -246,18 +263,35 @@ begin
 end;
 
 {==============================================================================]
+  <Term>
+  @action: Returns the value at the specified zero-based index within the range,
+           calculating direction dynamically from the difference between Stop and Start.
+  @note: Index defaults to 0, which returns Start. Direction is computed using ordinal comparison:
+         +1 if Stop > Start, -1 if Stop < Start, and 0 if Start = Stop (degenerate range).
+	 This approach allows the range to determine its direction automatically without relying on an Ascending/Descending flag.
+	 No bounds checking is performed; the caller must ensure the index is within the logical range extent.
+[==============================================================================}
+function TRange.Term(const index: Integer = 0): Integer; overload;
+var
+  d: Integer;
+begin
+  d := (Self.stop - Self.start);
+  Result := (Self.start + (index * (Ord(d > 0) - Ord(d < 0))));
+end;
+
+{==============================================================================]
   <ToValue>
-  @action:  Returns the value at the specified zero-based index relative to the range start,
-            determining direction dynamically from the sign of (Stop - Start).
+  @action: Returns the value at the specified zero-based index relative to the range start,
+           determining direction dynamically from the sign of (Stop - Start).
   @note: Index defaults to 0, which returns Start. Direction is computed using Sign(Stop - Start),
           yielding +1 for ascending ranges, -1 for descending ranges, and 0 when Start equals Stop.
-		  In the degenerate case where Start = Stop, the result will always equal Start regardless of Index.
-		  No bounds checking is performed; the caller must ensure the index is within the logical range length.
+	  In the degenerate case where Start = Stop, the result will always equal Start regardless of Index.
+	  No bounds checking is performed; the caller must ensure the index is within the logical range length.
 [==============================================================================}
 function TRange.ToValue(const index: Integer = 0): Integer; overload;
 begin
   Result := (Self.start + (index * Sign(Self.stop - Self.start)));
-end; 
+end;
 
 {==============================================================================]
   <ValueAt>
