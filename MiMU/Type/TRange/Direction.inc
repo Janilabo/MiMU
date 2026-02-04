@@ -1,12 +1,16 @@
 {$IFDEF METHODS}
-function Direction: Integer;
-function Orientation: Integer;
-function Signum: Integer;
-function Slope: Integer;
+function Direction: Integer; overload;
+function Orientation: Integer; overload;
+function Signum: Integer; overload;
+function Slope: Integer; overload;
 function Step: Integer; overload;
 function Step(const index: Integer): Integer; overload;
 function Stepping: Integer; overload;
 function Stride: Integer; overload;
+function Wind: Integer; overload;
+function Winding: Integer; overload;
+function Winds: Integer; overload;
+function Windy: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,7 +21,7 @@ function Stride: Integer; overload;
         -1  => ascending  (start > stop)
          0  => degenerate (start = stop)
 [==============================================================================}
-function TRange.Direction: Integer;
+function TRange.Direction: Integer; overload;
 begin
   Result := Sign(Self.Delta);
 end;
@@ -28,7 +32,7 @@ end;
            and -1 if the range is descending (Stop < Start).
   @note: Useful for determining iteration direction or orientation of the range.
 [==============================================================================}
-function TRange.Orientation: Integer;
+function TRange.Orientation: Integer; overload;
 begin
   Result := IfThen((Self.Stop < Self.Start), -1, 1);
 end;
@@ -42,7 +46,7 @@ end;
   @note: Useful for determining the trend or direction of the range without
          caring about the magnitude. Does not include endpoints count.
 [==============================================================================}
-function TRange.Signum: Integer;
+function TRange.Signum: Integer; overload;
 begin
   if Self.Singular then
     Result := 0
@@ -59,7 +63,7 @@ end;
   @note: Useful for determining the trend of the range without considering magnitude.
          Equivalent to Signum in behavior; purely indicates direction.
 [==============================================================================}
-function TRange.Slope: Integer;
+function TRange.Slope: Integer; overload;
 begin
   if Self.Singular then
     Result := 0
@@ -139,5 +143,71 @@ end;
 function TRange.Stride: Integer; overload;
 begin
   Result := ((Ord(Self.Ascending) * 2) - 1);
+end;
+
+{==============================================================================]
+  <Wind>
+  @action: Computes the winding direction from the sign of Delta using a
+           branchless expression.
+  @note:
+    - Returns 1 when Delta >= 0.
+    - Returns -1 when Delta < 0.
+    - Zero Delta is treated as non-negative and therefore yields 1.
+    - The implementation avoids conditional branching by using Ord().
+[==============================================================================}
+function TRange.Wind: Integer; overload;
+begin
+  Result := (-1 + (2 * Ord(Self.Delta >= 0)));
+end;
+
+{==============================================================================]
+  <Winding>
+  @action: Computes the winding direction of the range based on the sign of Delta.
+           Returns +1 if Delta is negative, -1 if Delta is zero or positive.
+  @note:
+    - Uses a branchless approach via boolean-to-integer conversion.
+    - Delta < 0  → Result =  -1
+    - Delta >= 0 → Result = 1
+    - The function never returns 0.
+[==============================================================================}
+function TRange.Winding: Integer; overload;
+begin
+  Result := Self.Delta;
+  Result := (Ord(Result >= 0) - Ord(Result < 0));
+end;
+
+{==============================================================================]
+  <Winds>
+  @action: Returns the winding sign derived from Delta.
+  @note:
+    Result = -Sign(Delta), with zero mapped to 1.
+    - Delta > 0  →  1
+    - Delta < 0  →  -1
+    - Delta = 0  →  1
+    The function never returns 0.
+[==============================================================================}
+function TRange.Winds: Integer; overload;
+begin
+  Result := Sign(Self.Delta);
+  if (Result = 0) then
+    Result := 1;
+end;
+
+{==============================================================================]
+  <Windy>
+  @action: Determines the winding direction based solely on whether Delta
+           is negative.
+  @note:
+    - Returns -1 when Delta < 0.
+    - Returns 1 when Delta >= 0.
+    - Zero Delta is treated as non-negative and therefore yields 1.
+    - The function never returns 0.
+[==============================================================================}
+function TRange.Windy: Integer; overload;
+begin
+  if (Self.Delta < 0) then
+    Result := -1
+  else
+    Result := 1;
 end;
 {$ENDIF}
