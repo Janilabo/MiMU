@@ -44,7 +44,7 @@ end;
 [==============================================================================}
 function TRange.Signum: Integer;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Result := 0
   else
     Result := ((Self.stop - Self.start) div Abs(Self.start - Self.stop));
@@ -61,7 +61,7 @@ end;
 [==============================================================================}
 function TRange.Slope: Integer;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Result := 0
   else if (Self.stop > Self.start) then
     Result := 1
@@ -138,6 +138,6 @@ end;
 [==============================================================================}
 function TRange.Stride: Integer; overload;
 begin
-  Result := ((Ord(Self.start <= Self.stop) * 2) - 1);
+  Result := ((Ord(Self.Ascending) * 2) - 1);
 end;
 {$ENDIF}

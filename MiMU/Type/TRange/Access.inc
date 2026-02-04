@@ -118,7 +118,7 @@ end;
 [==============================================================================}
 function TRange.Elem(const index: Integer = 0): Integer; overload;
 begin
-  Result := (Self.start + (Sign(Self.stop - Self.start) * index));
+  Result := (Self.start + (Self.Direction * index));
 end;
 
 {==============================================================================]
@@ -275,7 +275,7 @@ function TRange.Term(const index: Integer = 0): Integer; overload;
 var
   d: Integer;
 begin
-  d := (Self.stop - Self.start);
+  d := Self.Delta;
   Result := (Self.start + (index * (Ord(d > 0) - Ord(d < 0))));
 end;
 
@@ -290,7 +290,7 @@ end;
 [==============================================================================}
 function TRange.ToValue(const index: Integer = 0): Integer; overload;
 begin
-  Result := (Self.start + (index * Sign(Self.stop - Self.start)));
+  Result := (Self.start + (index * Self.Direction));
 end;
 
 {==============================================================================]
@@ -301,8 +301,8 @@ end;
 function TRange.ValueAt(const index: Integer = 0): Integer; overload;
 begin
   case Self.Descending of
-    False: Result := (start + index);
-    True: Result := (start - index);
+    False: Result := (Self.start + index);
+    True: Result := (Self.start - index);
   end;
 end;
 {$ENDIF}

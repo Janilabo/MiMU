@@ -64,8 +64,8 @@ function TRange.HighToLow: TRange;
 var
   a, s: Integer;
 begin
-  a := Abs(Self.start - Self.stop);
-  s := (Self.start + Self.stop);
+  a := Abs(Self.Contra);
+  s := Self.Combined;
   Result.stop := ((s - a) div 2);
   Result.start := ((s + a) div 2);
 end;
@@ -79,7 +79,7 @@ function TRange.HiLo: TRange;
 var
   c, d: Integer;
 begin
-  d := (Self.stop - Self.start);
+  d := Self.Delta;
   c := -(Ord(d > 0));
   Result.start := (Self.start + (d and c));
   Result.stop := (Self.stop - (d and c));
@@ -94,7 +94,7 @@ function TRange.LoHi: TRange;
 var
   c, d: Integer;
 begin
-  d := (Self.start - Self.stop);
+  d := Self.Contra;
   c := -(Ord(d > 0));
   Result.start := (Self.start - (d and c));
   Result.stop := (Self.stop + (d and c));
@@ -110,7 +110,7 @@ var
   a, s: Integer;
 begin
   a := Abs(Self.start - Self.stop);
-  s := (Self.start + Self.stop);
+  s := Self.Combined;
   Result.start := ((s - a) div 2);
   Result.stop := ((s + a) div 2);
 end;
@@ -122,7 +122,7 @@ end;
 [==============================================================================}
 function TRange.MaxMin: TRange; overload;
 begin
-  if (Self.start > Self.stop) then
+  if Self.Descending then
     Exit(Self);
   Result.Create(Self.stop, Self.start);
 end;
@@ -134,7 +134,7 @@ end;
 [==============================================================================}
 function TRange.MinMax: TRange; overload;
 begin
-  if (Self.start < Self.stop) then
+  if Self.Ascending then
     Exit(Self);
   Result.Create(Self.stop, Self.start);
 end;
@@ -146,7 +146,7 @@ end;
 [==============================================================================}
 function TRange.Norm: TRange;
 begin
-  Result := IfThen((Self.start > Self.stop), Self.Reversed, Self);
+  Result := IfThen(Self.Descending, Self.Reversed, Self);
 end;
 
 {==============================================================================]
@@ -157,7 +157,7 @@ end;
  function TRange.Normal: TRange;
 begin
   Result := Self;
-  if (Result.start <= Result.stop) then
+  if Result.Ascending then
     Exit;
   Result.start := (Result.start xor Result.stop);
   Result.stop := (Result.start xor Result.stop);
@@ -171,8 +171,8 @@ end;
 [==============================================================================}
 function TRange.Normalize: TRange;
 begin
-  Result.start := Min(Self.start, Self.stop);
-  Result.stop := Max(Self.start, Self.stop);
+  Result.start := Self.Minimum;
+  Result.stop := Self.Maximum;
 end;
 
 {==============================================================================]
@@ -182,9 +182,9 @@ end;
 [==============================================================================}
 function TRange.Normalized: TRange;
 begin
-  Result.start := ((Self.start + Self.stop) shr 1);
-  Result.stop := (Abs(Self.start - Self.stop) shr 1);
-  Result.Create((Result.start - Result.stop), (Result.start + Result.stop));
+  Result.start := (Self.Combined shr 1);
+  Result.stop := (Abs(Self.Contra) shr 1);
+  Result.Create(Result.Contra, Result.Combined);
 end;
 
 {==============================================================================]
@@ -197,7 +197,7 @@ var
   a: TIntegerArray;
 begin
   a := [Self.start, Self.stop];
-  Result.Create(a[Ord(Self.start > Self.stop)], a[Ord(Self.start <= Self.stop)]);
+  Result.Create(a[Ord(Self.Descending)], a[Ord(Self.Ascending)]);
 end;
 
 {==============================================================================]

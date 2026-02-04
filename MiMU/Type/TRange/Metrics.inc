@@ -1,6 +1,8 @@
 {$IFDEF METHODS}
 function Aggregate(var items: TIntegerArray): Int64; overload;
 function Aggregated(var items: TIntegerArray): Int64; overload;
+function Combined: Int64; overload;
+function Contra: Integer; overload;
 function Deficit: Integer; overload;
 function Delta: Integer; overload;
 function Diff: Integer; overload;
@@ -41,9 +43,9 @@ begin
   SetLength(items, l);
   items[0] := Self.start;
   Result := Self.start;
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit;
-  s := IfThen((Self.start < Self.stop), 1, -1);
+  s := IfThen(Self.Ascending, 1, -1);
   r := 1;
   repeat
     items[r] := (Items[r - 1] + s);
@@ -65,7 +67,7 @@ begin
   l := Self.Size;
   SetLength(items, l);
   Result := 0;
-  s := IfThen((Self.Start <= Self.Stop), 1, -1);
+  s := IfThen(Self.Ascending, 1, -1);
   r := 0;
   i := Self.Start;
   while (r < l) do
@@ -73,7 +75,29 @@ begin
     items[r.Increase] := i;
     Result := (Result + i.Increase(s));
   end;
-end; 
+end;
+
+{==============================================================================]
+  <Combined>
+  @action: Returns the sum of the range boundaries (start + stop).
+  @note: This function does not calculate a minimum, maximum, or midpoint;
+         it simply adds start and stop and may overflow if values are large.
+[==============================================================================}
+function TRange.Combined: Int64; overload;
+begin
+  Result := (Int64(Self.start) + Self.stop);
+end;
+
+{==============================================================================]
+  <Contra>
+  @action: Returns the negative delta of the range (start - stop). 
+           Equivalent to -Delta; reflects the range in the opposite direction.
+  @note: The sign indicates the inverse orientation from start to stop.
+[==============================================================================}
+function TRange.Contra: Integer; overload;
+begin
+  Result := (Self.start - Self.stop);
+end;
 
 {==============================================================================]
   <Deficit>
@@ -83,7 +107,7 @@ end;
 [==============================================================================}
 function TRange.Deficit: Integer; overload;
 begin
-  Result := (Min(Self.start, Self.stop) - Max(Self.start, Self.stop));
+  Result := (Self.Minimum - Self.Maximum);
 end;
 
 {==============================================================================]
@@ -105,7 +129,7 @@ end;
 [==============================================================================}
 function TRange.Diff: Integer; overload;
 begin
-  Result := (Max(Self.start, Self.stop) - Min(Self.start, Self.stop));
+  Result := (Self.Maximum - Self.Minimum);
 end;
 
 {==============================================================================]
@@ -147,7 +171,7 @@ var
   i: Integer;
 begin
   Result := 1;
-  for i := Min(Self.start, Self.stop) to Max(Self.start, Self.stop) do
+  for i := Self.Minimum to Self.Maximum do
     Result := (Result * i);
 end;
 
@@ -163,8 +187,8 @@ function TRange.Product: Int64; overload;
 var
   i, l, h: Integer;
 begin
-  l := Min(Self.start, Self.stop);
-  h := Max(Self.start, Self.stop);
+  l := Self.Minimum;
+  h := Self.Maximum;
   if ((l <= 0) and (h >= 0)) then
     Exit(0);
   Result := 1;
@@ -182,7 +206,7 @@ end;
 [==============================================================================}
 function TRange.Quotient(const defaultValue: Integer = 0): Integer; overload;
 begin
-  if Self.stop = 0 then
+  if (Self.stop = 0) then
     Result := defaultValue
   else
     Result := (Self.start div Self.stop);
@@ -195,7 +219,7 @@ end;
 [==============================================================================}
 function TRange.Rad: Integer; overload;
 begin
-  Result := (Abs(Self.stop - Self.start) shr 1);
+  Result := (Self.Difference shr 1);
 end;
 
 {==============================================================================]
@@ -206,7 +230,7 @@ end;
 [==============================================================================}
 function TRange.Radiar: Integer; overload;
 begin
-  Result := Round(Abs(Self.stop - Self.start) * 0.5);
+  Result := Round(Self.Difference * 0.5);
 end;
 
 {==============================================================================]
@@ -247,7 +271,7 @@ end;
 [==============================================================================}
 function TRange.Sigma: Int64; overload;
 begin
-  Result := ((Int64(Self.Size) * (Int64(Self.start) + Self.stop)) div 2);
+  Result := ((Int64(Self.Size) * Self.Combined) div 2);
 end; 
 
 {==============================================================================]
@@ -281,8 +305,8 @@ function TRange.Sum: Int64; overload;
 var
   a, b: Int64;
 begin
-  a := Min(Self.start, Self.stop);
-  b := Max(Self.start, Self.stop);
+  a := Self.Minimum;
+  b := Self.Maximum;
   Result := ((((b - a) + 1) * (a + b)) div 2);
 end;
 
@@ -319,8 +343,8 @@ function TRange.Summation: Int64; overload;
 var
   a, b, c, s, n: Int64;
 begin
-  a := Min(Self.start, Self.stop);
-  b := Max(Self.start, Self.stop);
+  a := Self.Minimum;
+  b := Self.Maximum;
   n := ((b - a) + 1);
   s := (a + b);
   c := (s div 2);

@@ -23,7 +23,7 @@ function Reserve(var aRange: TIntegerArray): Integer; overload;
 [==============================================================================}
 function TRange.Progress(const pPercent: Double): Integer;
 begin
-  Result := (Self.start + Round((Self.stop - Self.start) * pPercent));
+  Result := (Self.start + Round(Self.Delta * pPercent));
 end;
 
 {==============================================================================]

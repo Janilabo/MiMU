@@ -81,7 +81,7 @@ var
   c: Int64;
 begin
   c := Self.Size;
-  Result := ((c * (Self.start + Self.stop) div 2) / c);
+  Result := (((c * Self.Combined) div 2) / c);
 end;
 
 {==============================================================================]
@@ -95,7 +95,7 @@ end;
 [==============================================================================}
 function TRange.Bisect: Integer;
 begin
-  Result := (Min(Self.start, Self.stop) + ((Self.Size - 1) shr 1));
+  Result := (Self.Minimum + ((Self.Size - 1) shr 1));
 end;
 
 {==============================================================================]
@@ -105,7 +105,7 @@ end;
 [==============================================================================}
 function TRange.Center: Integer;
 begin
-  Result := ((Self.start + Self.stop) div 2);
+  Result := (Self.Combined div 2);
 end;
 
 {==============================================================================]
@@ -134,7 +134,7 @@ end;
 [==============================================================================}
 function TRange.Central: Integer;
 begin
-  Result := ((Self.start + self.stop) shr 1);
+  Result := (Self.Combined shr 1);
 end;
 
 {==============================================================================]
@@ -144,7 +144,7 @@ end;
 [==============================================================================}
 function TRange.Centre: Integer; overload;
 begin
-  Result := (Min(Self.start, Self.stop) + (Abs(Self.stop - Self.start) div 2));
+  Result := (Self.Minimum + (Abs(Self.stop - Self.start) div 2));
 end;
 
 {==============================================================================]
@@ -164,7 +164,7 @@ end;
 [==============================================================================}
 function TRange.Core: Integer; overload;
 begin
-  Result := (Self.stop - Self.start);
+  Result := Self.Delta;
   Result := (Result - (Result and 1));
   Result := (Self.start + (Result div 2));
 end;
@@ -231,7 +231,7 @@ function TRange.Kernel: Integer;
 var
   d: Integer;
 begin
-  d := (Self.stop - Self.start);
+  d := Self.Delta;
   Result := (Self.start + (Sign(d) * (Abs(d) div 2)));
 end;
 
@@ -277,7 +277,7 @@ end;
 [==============================================================================}
 function TRange.Medium: Double; overload;
 begin
-  Result := ((Self.start + Self.stop) * 0.5);
+  Result := (Self.Combined * 0.5);
 end;
 
 {==============================================================================]
@@ -308,7 +308,7 @@ end;
 [==============================================================================}
 function TRange.Mid: Double;
 begin
-  Result := ((Self.start + Self.stop) / 2.0);
+  Result := (Self.Combined / 2.0);
 end;
 
 {==============================================================================]
@@ -319,8 +319,8 @@ end;
 [==============================================================================}
 function TRange.MidBit: Integer; overload;
 begin
-  if (Self.start <= Self.stop) then
-    Exit(Self.start + ((Self.stop - Self.start) shr 1));
+  if Self.Ascending then
+    Exit(Self.start + (Self.Delta shr 1));
   Result := TRange.Construct(Self.stop, Self.start).MidBit;
 end;
 
@@ -331,7 +331,7 @@ end;
 [==============================================================================}
 function TRange.Middle: Integer;
 begin
-  Result := ((Self.start + Self.stop) div 2);
+  Result := (Self.Combined div 2);
 end;
 
 {==============================================================================]
@@ -342,7 +342,7 @@ end;
 [==============================================================================}
 function TRange.MiddleBit: Integer; overload;
 begin
-  if (Self.start <= Self.stop) then
+  if Self.Ascending then
     Result := (Self.start + ((Self.stop - Self.start) shr 1))
   else
     Result := (Self.start - ((Self.start - Self.stop) shr 1));
@@ -356,7 +356,7 @@ end;
 [==============================================================================}
 function TRange.MiddleLeft: Integer; overload;
 begin
-  if (Self.start > Self.stop) then
+  if Self.Descending then
     Exit(Self.stop + (Self.start - Self.stop) div 2);
   Result := (Self.start + (Self.stop - Self.start) div 2);
 end;
@@ -380,7 +380,7 @@ end;
 [==============================================================================}
 function TRange.MiddleRight: Integer; overload;
 begin
-  if (Self.start > Self.stop) then
+  if Self.Descending then
     Exit(Self.stop + ((Self.start - Self.stop) + 1) div 2);
   Result := (Self.start + ((Self.stop - Self.start) + 1) div 2);
 end;
@@ -394,9 +394,9 @@ end;
 function TRange.MiddleStep: Integer; overload;
 begin
   if (Self.stop > Self.start) then
-    Result := (Self.start + (Abs(Self.stop - Self.start) div 2))
+    Result := (Self.start + (Self.Span div 2))
   else
-    Result := (Self.start - (Abs(Self.stop - Self.start) div 2));
+    Result := (Self.start - (Self.Span div 2));
 end;
 
 {==============================================================================]
@@ -406,7 +406,7 @@ end;
 [==============================================================================}
 function TRange.MiddleValue: Double;
 begin
-  if (Self.start <= Self.stop) then
+  if Self.Ascending then
     Result := (Self.start + ((Self.stop - Self.start) / 2))
   else
     Result := (Self.stop + ((Self.start - Self.stop) / 2));
@@ -435,7 +435,7 @@ end;
 [==============================================================================}
 function TRange.Middleway: Integer;
 begin
-  Result := Round(Self.start + ((Self.stop - Self.start) * 0.5));
+  Result := Round(Self.start + (Self.Delta * 0.5));
 end;
 
 {==============================================================================]
@@ -469,7 +469,7 @@ function TRange.Midst(const method: Integer = 0): Integer;
 var
   s: Int64;
 begin
-  s := (Self.start + Self.stop);
+  s := Self.Combined;
   if (s > 1) then
   case method of
     0: Exit(Round(s / 2));
@@ -504,7 +504,7 @@ function TRange.MidValue: Double;
 var
   s: Integer;
 begin
-  s := (Self.start + Self.stop);
+  s := Self.Combined;
   Result := (s div 2);
   if ((s mod 2) <> 0) then
     Result := (Result + 0.5);

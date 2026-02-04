@@ -63,12 +63,11 @@ end;
 [==============================================================================}
 function TRange.AsIndexes: TIntegerArray; overload;
 var
-  i, h, s: Integer;
+  i, s: Integer;
 begin
   s := Self.Size;
   SetLength(Result, s);
-  h := (s div 2);
-  for i := 0 to h do
+  for i := 0 to (s div 2) do
   begin
     Result[i] := i;
     Result[(s - 1) - i] := ((s - 1) - i);

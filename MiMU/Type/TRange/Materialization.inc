@@ -72,10 +72,10 @@ var
   i, j: Integer;
   p: PInteger;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit([Self.start]);
   SetLength(Result, Self.Size);
-  j := IfThen((Self.start <= Self.stop), 1, -1);
+  j := IfThen(Self.Ascending, 1, -1);
   p := PInteger(Result);
   i := Self.start;
   while (i <> (Self.stop + j)) do
@@ -123,7 +123,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  s := Sign(Self.stop - Self.start);
+  s := Self.Direction;
   if (s = 0) then
     s := 1;
   r := 0;
@@ -142,7 +142,7 @@ function TRange.AsArray: TIntegerArray; overload;
 var
   h, i, l: Integer;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit([Self.start]);
   SetLength(Result, Self.Size);
   h := High(Result);
@@ -311,7 +311,7 @@ var
   i, c, s: Integer;
 begin
   SetLength(Result, Self.Size);
-  s := IfThen((Self.start <= Self.stop), 1, -1);
+  s := IfThen(Self.Ascending, 1, -1);
   c := Self.start;
   for i := 0 to High(Result) do
     Result[i] := c.Increase(s);
@@ -327,8 +327,8 @@ var
   i, s: Integer;
 begin
   SetLength(Result, Self.Size);
-  case Sign(Self.stop - Self.start) of
-    0, 1:  s := 1;
+  case Self.Direction of
+    0, 1: s := 1;
     -1: s := -1;
   end;
   for i := 0 to High(Result) do
@@ -359,7 +359,7 @@ function TRange.Digits: TIntegerArray; overload;
 var
   i, s: Integer;
 begin
-  s := Sign(Self.stop - Self.start);
+  s := Self.Direction;
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := (Self.start + (i * s));
@@ -472,11 +472,11 @@ var
   c, s, v: Integer;
   p: PInteger;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit([Self.start]);
   c := Self.Size;
   SetLength(Result, c);
-  s := Sign(Self.stop - Self.start);
+  s := Self.Direction;
   v := Self.start;
   p := @Result[0];
   while (c > 0) do
@@ -543,7 +543,7 @@ var
 begin
   c := Self.Size;
   SetLength(Result, c);
-  s := Sign(Self.stop - Self.start);
+  s := Self.Direction;
   if (s = 0) then
     s := 1;
   Return(0);
@@ -568,7 +568,7 @@ var
   s: Integer;
 begin
   SetLength(Result, Self.Size);
-  s := Sign(Self.stop - Self.start);
+  s := Self.Direction;
   if (s = 0) then
     s := 1;
   Return(Result, 0, Self.start, Self.stop, s);
@@ -581,14 +581,13 @@ end;
 [==============================================================================}
 function TRange.Extract: TIntegerArray; overload;
 var
-  i, c, s: Integer;
+  i, s: Integer;
 begin
   if Self.Singular then
     Exit([Self.start]);
   s := IfThen((Self.stop > Self.start), 1, -1);
-  c := (Abs(Self.stop - Self.start) + 1);
-  SetLength(Result, c);
-  for i := 0 to (c - 1) do
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Result) do
     Result[i] := (Self.start + (i * s));
 end;
 
@@ -624,7 +623,7 @@ begin
   SetLength(Result, Self.Size);
   if (Result.Length > 1) then
   begin
-    s := Sign(Self.stop - Self.start);
+    s := Self.Direction;
     for i := 0 to High(Result) do
       Result[i] := (Self.start + (i * s));
   end else
@@ -643,11 +642,10 @@ end;
 [==============================================================================}
 function TRange.Gather: TIntegerArray; overload;
 var
-  i, d, m: Integer;
+  i, m: Integer;
 begin
   SetLength(Result, Self.Size);
-  d := (Self.stop - Self.start);
-  m := (d shr 31);
+  m := (Self.Delta shr 31);
   Result[0] := Self.start;
   for i := 1 to High(Result) do
     Result[i] := (Result[i - 1] + (1 - (2 * (m and 1))));
@@ -813,7 +811,7 @@ var
 begin
   l := specialize TList<Integer>.Create;
   try
-    s := Sign(Self.stop - Self.start);
+    s := Self.Direction;
     if (s = 0) then
 	  s := 1;
     v := Self.start;
@@ -940,7 +938,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  s := IfThen((Self.start <= Self.stop), 1, -1);
+  s := IfThen(Self.Ascending, 1, -1);
   r := 0;
   i := Self.start;
   while (r < l) do
@@ -959,7 +957,7 @@ begin
   SetLength(Result, Self.Size);
   c := Self.start;
   for i := 0 to High(Result) do
-    if (Self.start <= Self.stop) then
+    if Self.Ascending then
       Result[i] := c.Increase
     else
       Result[i] := c.Decrease;
@@ -1054,7 +1052,7 @@ function TRange.Pull: TIntegerArray; overload;
 var
   h, i: Integer;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit([Self.start]);
   SetLength(Result, Self.Size);
   h := High(Result);
@@ -1221,7 +1219,7 @@ var
   i, s: Integer;
   p: PInteger;
 begin
-  s := IfThen((Self.start < Self.stop), 1, -1);
+  s := IfThen(Self.Ascending, 1, -1);
   Result := Self.Reserve;
   p := @Result[0];
   p^ := Self.start;
@@ -1303,7 +1301,7 @@ begin
   SetLength(Result, l);
   if Self.Plural then
   begin
-    d := Sign(Self.stop - Self.start);
+    d := Self.Direction;
     for i := 0 to ((l - 1) div 2) do
     begin
       Result[i] := (Self.start + (i * d));
@@ -1324,7 +1322,7 @@ var
 begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
-    if (Self.start <= Self.stop) then
+    if Self.Ascending then
       Result[i] := (Self.start + i)
     else
       Result[i] := (Self.start - i);
@@ -1404,7 +1402,7 @@ function TRange.Unfold: TIntegerArray; overload;
     F2W(R, (L + 1), (H - 1), A, arr);
   end;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit([Self.start]);
   SetLength(Result, Self.Size);
   F2W(Self, 0, High(Result), Self.Ascending, Result);
@@ -1468,7 +1466,7 @@ function TRange.Unzip: TIntegerArray; overload;
 var
   r: TRange;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit([Self.start]);
   SetLength(Result, Self.Size);
   r.Create(0, High(Result));

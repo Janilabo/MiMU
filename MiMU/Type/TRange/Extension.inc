@@ -165,9 +165,9 @@ end;
 function TRange.Include(const val: Integer): TRange; overload;
 begin
   if Self.Ascending then
-    Result.Create(Min(Min(Self.start, Self.stop), val), Max(Max(Self.start, Self.stop), val))
+    Result.Create(Min(Self.Minimum, val), Max(Self.Maximum, val))
   else
-    Result.Create(Max(Max(Self.start, Self.stop), val), Min(Min(Self.start, Self.stop), val));
+    Result.Create(Max(Self.Maximum, val), Min(Self.Minimum, val));
 end;
 
 {==============================================================================]
@@ -191,9 +191,9 @@ var
 begin
   r := target.Normalize;
   if Self.Ascending then
-    Result.Create(Min(Min(Self.start, Self.stop), r.start), Max(Max(Self.start, Self.stop), r.stop))
+    Result.Create(Min(Self.Minimum, r.start), Max(Self.Maximum, r.stop))
   else
-    Result.Create(Max(Max(Self.start, Self.stop), r.stop), Min(Min(Self.start, Self.stop), r.start));
+    Result.Create(Max(Self.Maximum, r.stop), Min(Self.Minimum, r.start));
 end;
 
 {==============================================================================]
@@ -207,9 +207,9 @@ end;
 function TRange.IncludeMax(const val: Integer): TRange; overload;
 begin
   if Self.Ascending then
-    Result.Create(Self.start, Max(Max(Self.start, Self.stop), val))
+    Result.Create(Self.start, Max(Self.Maximum, val))
   else
-    Result.Create(Max(Max(Self.start, Self.stop), val), Self.stop);
+    Result.Create(Max(Self.Maximum, val), Self.stop);
 end;
 
 {==============================================================================]
@@ -223,8 +223,8 @@ end;
 function TRange.IncludeMin(const val: Integer): TRange; overload;
 begin
   if Self.Ascending then
-    Result.Create(Min(Min(Self.start, Self.stop), val), Self.stop)
+    Result.Create(Min(Self.Minimum, val), Self.stop)
   else
-    Result.Create(Self.start, Min(Min(Self.start, Self.stop), val));
+    Result.Create(Self.start, Min(Self.Minimum, val));
 end;
 {$ENDIF}

@@ -143,7 +143,7 @@ begin
   rRight := n;
   if n.Singular then
     Exit(n.start);
-  Result := ((n.start + n.stop) div 2);
+  Result := (n.Combined div 2);
   rLeft.stop := Result;
   rRight.start := (Result + 1);
 end;
@@ -159,8 +159,8 @@ end;
 function TRange.Template: TRange;
 begin
   if Self.Ascending then
-    Result.Create(0, (Max(Self.start, Self.stop) - Min(Self.start, Self.stop)))
+    Result.Create(0, (Self.Maximum - Self.Minimum))
   else
-    Result.Create((Max(Self.start, Self.stop) - Min(Self.start, Self.stop)), 0);
+    Result.Create((Self.Maximum - Self.Minimum), 0);
 end;
 {$ENDIF}

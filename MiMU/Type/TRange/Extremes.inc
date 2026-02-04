@@ -35,7 +35,7 @@ function UpperBound: Integer; overload;
 function TRange.Bottom: Integer; overload;
 begin
   case (Self.start < Self.stop) of
-    True:  Result := Self.start;
+    True: Result := Self.start;
     False: Result := Self.stop;
   end;
 end;

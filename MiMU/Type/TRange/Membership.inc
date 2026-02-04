@@ -77,7 +77,7 @@ end;
 [==============================================================================}
 function TRange.Contains(const x: Integer): Boolean; overload;
 begin
-  Result := ((x >= Min(Self.start, Self.stop)) and (x <= Max(Self.stop, Self.start)));
+  Result := ((x >= Self.Minimum) and (x <= Self.Maximum));
 end;
 
 {==============================================================================]
@@ -87,7 +87,7 @@ end;
 [==============================================================================}
 function TRange.Contains(const x: TRange): Boolean; overload;
 begin
-  Result := ((Min(x.start, x.stop) >= Min(Self.start, Self.stop)) and (Max(x.start, x.stop) <= Max(Self.start, Self.stop)));
+  Result := ((x.Minimum >= Self.Minimum) and (x.Maximum <= Self.Maximum));
 end;
 
 {==============================================================================]
@@ -111,7 +111,7 @@ end;
 [==============================================================================}
 function TRange.Covers(const val: Integer): Boolean; overload;
 begin
-  if (Self.start > Self.stop) then
+  if Self.Descending then
     Exit(InRange(val, Self.stop, Self.start));
   Result := InRange(val, Self.start, Self.stop);
 end;
@@ -145,7 +145,7 @@ end;
 [==============================================================================}
 function TRange.Got(const val: Integer): Boolean; overload;
 begin
-  Result := InRange(val, Min(Self.start, Self.stop), Max(Self.start, Self.stop));
+  Result := InRange(val, Self.Minimum, Self.Maximum);
 end;
 
 {==============================================================================]
@@ -175,7 +175,7 @@ end;
 [==============================================================================}
 function TRange.Holding(const val: Integer): Boolean; overload;
 begin
-  Result := (Abs(val - ((Self.start + Self.stop) / 2)) <= (Abs(Self.stop - Self.start) / 2));
+  Result := (Abs(val - (Self.Combined / 2)) <= (Self.Span / 2));
 end;
 
 {==============================================================================]
@@ -187,7 +187,7 @@ end;
 [==============================================================================}
 function TRange.Holds(const val: Integer): Boolean; overload;
 begin
-  Result := ((val >= Min(Self.start, Self.stop)) and (val <= Max(Self.start, Self.stop)));
+  Result := ((val >= Self.Minimum) and (val <= Self.Maximum));
 end;
 
 {==============================================================================]
@@ -199,7 +199,7 @@ end;
 [==============================================================================}
 function TRange.Holds(const vals: TRange): Boolean; overload;
 begin
-  Result := (Min(vals.start, vals.stop) >= Min(Self.start, Self.stop)) and (Max(vals.start, vals.stop) <= Max(Self.start, Self.stop));
+  Result := (vals.Minimum >= Self.Minimum) and (vals.Maximum <= Self.Maximum);
 end;
 
 {==============================================================================]
@@ -226,7 +226,7 @@ end;
 [==============================================================================}
 function TRange.InOpen(const val: Integer): Boolean; overload;
 begin
-  Result := ((val > Min(Self.start, Self.stop)) and (val < Max(Self.start, Self.stop)));
+  Result := ((val > Self.Minimum) and (val < Self.Maximum));
 end;
 
 {==============================================================================]
@@ -240,7 +240,7 @@ function TRange.Interior(const val: Integer): Boolean; overload;
 var
   n: TRange;
 begin
-  n.Create(Min(Self.start, Self.stop), Max(Self.start, Self.stop));
+  n.Create(Self.Minimum, Self.Maximum);
   Result := ((val > n.start) and (val < n.stop));
 end;
 
@@ -253,7 +253,7 @@ end;
 [==============================================================================}
 function TRange.Internal(const val: Integer): Boolean; overload;
 begin
-  if (Self.start > Self.stop) then
+  if Self.Descending then
     Exit((val > Self.stop) and (val < Self.start));
   Result := ((val > Self.start) and (val < Self.stop));
 end;
@@ -267,7 +267,7 @@ end;
 [==============================================================================}
 function TRange.Inside(const val: Integer): Boolean; overload;
 begin
-  Result := ((val >= Min(Self.start, Self.stop)) and (val <= Max(Self.start, Self.stop)));
+  Result := ((val >= Self.Minimum) and (val <= Self.Maximum));
 end;
 
 {==============================================================================]
@@ -334,13 +334,11 @@ end;
 [==============================================================================}
 function TRange.IsSubsetFor(const target: TRange): Boolean; overload;
 var
-  a, b, c, d: Integer;
+  a, b: Integer;
 begin
-  a := Min(Self.start, Self.stop);
-  b := Max(Self.start, Self.stop);
-  c := Min(target.start, target.stop);
-  d := Max(target.start, target.stop);
-  Result := ((Max(a, c) = a) and (Min(b, d) = b));
+  a := Self.Minimum;
+  b := Self.Maximum;
+  Result := ((Max(a, target.Minimum) = a) and (Min(b, target.Maximum) = b));
 end;
 
 {==============================================================================]
@@ -361,7 +359,7 @@ end;
 [==============================================================================}
 function TRange.Item(const x: Integer): Boolean; overload;
 begin
-  if (Self.start <= Self.stop) then
+  if Self.Ascending then
     Result := ((x >= Self.start) and (x <= Self.stop))
   else
     Result := ((x >= Self.stop) and (x <= Self.start));
@@ -382,7 +380,7 @@ end;
 [==============================================================================}
 function TRange.Keeps(const val: Integer): Boolean; overload;
 begin
-  Result := (Abs((val * 2) - (Self.start + Self.stop)) <= Abs(Self.stop - Self.start));
+  Result := (Abs((val * 2) - Self.Combined) <= Self.Span);
 end;
 
 {==============================================================================]
@@ -419,7 +417,7 @@ end;
 [==============================================================================}
 function TRange.Missing(const val: Integer): Boolean; overload;
 begin
-  Result := ((val < Min(Self.start, Self.stop)) or (val > Max(Self.start, Self.stop)));
+  Result := ((val < Self.Minimum) or (val > Self.Maximum));
 end;
 
 {==============================================================================]
@@ -431,7 +429,7 @@ end;
 [==============================================================================}
 function TRange.Missing(const vals: TRange): Boolean; overload;
 begin
-  Result := ((Max(vals.start, vals.stop) < Min(Self.start, Self.stop)) or (Min(vals.start, vals.stop) > Max(Self.start, Self.stop)));
+  Result := ((vals.Maximum < Self.Minimum) or (vals.Minimum > Self.Maximum));
 end;
 
 {==============================================================================]
