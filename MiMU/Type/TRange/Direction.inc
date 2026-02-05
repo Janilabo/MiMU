@@ -1,12 +1,15 @@
 {$IFDEF METHODS}
 function Direction: Integer; overload;
 function Orientation: Integer; overload;
+function Polarity: Integer; overload;
+function Sgn: Integer; overload;
 function Signum: Integer; overload;
 function Slope: Integer; overload;
 function Step: Integer; overload;
 function Step(const index: Integer): Integer; overload;
 function Stepping: Integer; overload;
 function Stride: Integer; overload;
+function Trend: Integer; overload;
 function Wind: Integer; overload;
 function Winding: Integer; overload;
 function Winds: Integer; overload;
@@ -36,6 +39,40 @@ function TRange.Orientation: Integer; overload;
 begin
   Result := IfThen((Self.Stop < Self.Start), -1, 1);
 end;
+
+{==============================================================================]
+  <Polarity>
+  @action: Returns the directional polarity of the range.
+           +1 if Start < Stop (ascending),
+           -1 if Start > Stop (descending),
+            0 if Start = Stop (degenerate range).
+  @note: Indicates ordering direction only; independent of magnitude or length.
+         Equivalent to Sign(Stop - Start).
+[==============================================================================}
+function TRange.Polarity: Integer; overload;
+begin
+  if (Self.Start < Self.Stop) then
+    Result := 1
+  else if (Self.Start > Self.Stop) then
+    Result := -1
+  else
+    Result := 0;
+end;
+
+{==============================================================================]
+  <Sgn>
+  @action: Returns the signum of the range delta (Stop - Start).
+           +1 if Start < Stop,
+           -1 if Start > Stop,
+            0 if Start = Stop.
+  @note: Equivalent to sgn(Stop - Start).
+         Indicates ordering direction only; independent of span magnitude.
+         Implemented branchlessly via ordinal boolean evaluation.
+[==============================================================================}
+function TRange.Sgn: Integer; overload;
+begin
+  Result := (Ord(Self.Start < Self.Stop) - Ord(Self.Start > Self.Stop));
+end; 
 
 {==============================================================================]
   <Signum>
@@ -143,6 +180,21 @@ end;
 function TRange.Stride: Integer; overload;
 begin
   Result := ((Ord(Self.Ascending) * 2) - 1);
+end;
+
+{==============================================================================]
+  <Trend>
+  @action: Returns the directional trend of the range.
+           +1 if Stop > Start (ascending),
+           -1 if Stop < Start (descending),
+            0 if Stop = Start.
+  @note: Computed as Sign(Stop - Start).
+         Represents direction only; independent of span magnitude.
+         Suitable for detecting progression without evaluating distance.
+[==============================================================================}
+function TRange.Trend: Integer; overload;
+begin
+  Result := Sign(Self.Stop - Self.Start);
 end;
 
 {==============================================================================]
