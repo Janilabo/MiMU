@@ -2,8 +2,9 @@
 function AsStr(const rReversed: Boolean = False): string; overload;
 function Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; overload;
 function Stringify(const openRange: string = '['; const glueRange: string = '..'; const closeRange: string = ']'): string; overload;
-function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; overload;
 function Text(const glueRange: string = '..';  const openRange: string = '['; const closeRange: string = ']'): string; overload;
+function ToStr(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; overload;
+function ToString(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): String; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -41,6 +42,21 @@ begin
 end;
 
 {==============================================================================]
+  <Text>
+  @action: Returns the string representation of the range.
+  @param:: glueRange  String inserted between Start and Stop (default '..').
+           openRange  Prefix delimiter for the range (default '[').
+           closeRange Suffix delimiter for the range (default ']').
+  @note: Produces a formatted interval representation such as "[1..5]".
+         Does not encode inclusivity/exclusivity semantics beyond the
+         provided delimiters. Intended for display or logging purposes.
+[==============================================================================}
+function TRange.Text(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; overload;
+begin
+  Result := Concat(openRange, IntToStr(Self.start), glueRange, IntToStr(Self.stop), closeRange);
+end;
+
+{==============================================================================]
   <ToStr>
   @action: Converts TRange range to string.
   @note: None
@@ -58,8 +74,31 @@ begin
     Result := (Result + closeRange);
 end;
 
-function TRange.Text(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): string; overload;
+{==============================================================================]
+  <ToString>
+  @action: Returns a string representation of the range using a customizable format.
+           Constructs a textual interval in the form: openRange + Start + glueRange + Stop + closeRange.
+  @param: glueRange  String inserted between Start and Stop (default '..').
+          openRange  Prefix delimiter for the range (default '[').
+          closeRange Suffix delimiter for the range (default ']').
+  @note: Similar to Text(), but uses TStringBuilder for more efficient string concatenation.
+         Primarily intended for display, logging, or debugging.
+         Does not alter range semantics; delimiters are purely presentational.
+[==============================================================================}
+function TRange.ToString(const glueRange: string = '..'; const openRange: string = '['; const closeRange: string = ']'): String; overload;
+var
+  b: TStringBuilder;
 begin
-  Result := Concat(openRange, IntToStr(Self.start), glueRange, IntToStr(Self.stop), closeRange);
+  b := TStringBuilder.Create;
+  try
+    b.Append(openRange);
+    b.Append(Self.start);
+    b.Append(glueRange);
+    b.Append(Self.stop);
+    b.Append(closeRange);
+    Result := b.ToString;
+  finally
+    b.Free;
+  end;
 end;
 {$ENDIF}
