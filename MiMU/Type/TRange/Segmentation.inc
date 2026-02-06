@@ -2,10 +2,13 @@
 function Binned(const target: TRange): TRangeArray; overload;
 function Chunked(const chunkSize: Integer = 2): TRangeArray; overload;
 function Chunkify(const chunkSize: Integer = 2): TRangeArray; overload;
-function Distribute(const parts: Integer): TRangeArray; overload;
-function Divide(const size: Integer): TRangeArray; overload;
-function Partition(const size: Integer): TRangeArray; overload;
+function Distribute(const parts: Integer= 2): TRangeArray; overload;
+function Divide(const size: Integer = 2): TRangeArray; overload;
+function Partition(const size: Integer = 2): TRangeArray; overload;
 function Sectioned(const target: TRange): TRangeArray; overload;
+function Sliced(const partCount: Integer = 2): TRangeArray; overload;
+function Subdivide(const partCount: Integer = 2): TRangeArray; overload;
+function Subdivided(const partCount: Integer = 2): TRangeArray; cdecl;
 function Windows(const target: TRange): TRangeArray; overload;
 {$ENDIF}
 
@@ -97,7 +100,7 @@ end;
   @action: Distributes range to TRangeArray by amount of parts
   @note: None.
 [==============================================================================}
-function TRangeHelper.Distribute(const parts: Integer): TRangeArray; overload;
+function TRangeHelper.Distribute(const parts: Integer = 2): TRangeArray; overload;
 var
   i, s, e, a, b, p: Integer;
   r: TRange;
@@ -130,7 +133,7 @@ end;
   @action: Partitions range to TRangeArray by size of parts
   @note: Alternative for TRange_Partition.
 [==============================================================================}
-function TRangeHelper.Divide(const size: Integer): TRangeArray; overload;
+function TRangeHelper.Divide(const size: Integer = 2): TRangeArray; overload;
 var
   a, b, i: Integer;
   r: TRange;
@@ -158,7 +161,7 @@ end;
   @action: Partitions range to TRangeArray by size of parts
   @note: None.
 [==============================================================================}
-function TRangeHelper.Partition(const size: Integer): TRangeArray; overload;
+function TRangeHelper.Partition(const size: Integer = 2): TRangeArray; overload;
 var
   a, b, l: Integer;
   r: TRange;
@@ -204,6 +207,118 @@ begin
   p := (t.start - s);
   while (p.Increment(s) <= m) do
     Result[r.Increase].Create((f.start + p), (f.stop + p));
+end;
+
+{==============================================================================]
+  <Sliced>
+  @action: Divides the current range into up to partCount contiguous slices of
+           proportional size using index-based partitioning. The entire range is
+           covered without overlap, and the original direction (ascending or
+           descending) is preserved. If partCount exceeds the number of elements,
+           it is limited to Self.Count.
+  @note:
+    Slice boundaries are computed using integer division of
+    (Count * index) div sliceCount. This produces evenly distributed
+    partitions with sizes differing by at most one element.
+    Returns an empty array if partCount < 1 or if the range is empty.
+[==============================================================================}
+function TRangeHelper.Sliced(const partCount: Integer = 2): TRangeArray; overload;
+var
+  i, l, d, c: Integer;
+  function StartSlice(const idx: Integer): Integer;
+  begin
+    Result := (Self.start + ((c * idx) div l) * d);
+  end;
+begin
+  if (partCount < 1) then
+    Exit([]);
+  c := Self.Count;
+  l := Min(partCount, c);
+  SetLength(Result, l);
+  if (l = 1) then
+    Exit([Self]);
+  d := Self.Wind;
+  for i := 0 to (l - 1) do
+    Result[i].Create(StartSlice(i), (StartSlice(i + 1) - d));
+end;
+
+{==============================================================================]
+  <Subdivide>
+  @action: Divides the range into at most partCount contiguous subranges
+           and returns them as an array (partCount is the maximum number of partitions to produce)
+  @return: Array of contiguous subranges covering the original range.
+  @note:   - If partCount < 1, returns an empty array.
+           - The actual number of partitions is Min(partCount, Count).
+           - Partitions are distributed as evenly as possible.
+             Any remainder elements are allocated one-per-partition
+             starting from the first partition.
+           - Preserves the original range direction (ascending/descending).
+           - The union of all returned subranges equals the original range.
+[==============================================================================}
+function TRangeHelper.Subdivide(const partCount: Integer = 2): TRangeArray; overload;
+var
+  c, d, i, l, p, r, s, z: Integer;
+begin
+  if (partCount < 1) then
+    Exit([]);
+  c := Self.Count;
+  l := Min(partCount, c);
+  SetLength(Result, l);
+  if (l = 1) then
+  begin
+    Result[0] := Self;
+    Exit;
+  end;
+  s := (c div l);
+  r := (c mod l);
+  d := Self.Wind;
+  z := Self.Start;
+  for i := 0 to (l - 2) do
+  begin
+    p := IfThen((i < r), s, (s - 1));
+    Result[I].Create(z, (z + (p * d)));
+    z := (z + ((p + 1) * d));
+  end;
+  Result[l - 1].Create(z, Self.Stop);
+end;
+
+{==============================================================================]
+  <Subdivided>
+  @action: Splits the current range into up to partCount contiguous subranges of
+           nearly equal size. The resulting subranges collectively cover the entire
+           original range without overlap and preserve its direction (ascending or
+           descending). If partCount exceeds the number of elements, it is limited
+           to Self.Count. Any remainder elements are distributed one per subrange
+           starting from the first.
+  @note:
+    A TRangeArray containing Min(partCount, Self.Count) subranges.
+    Returns an empty array if partCount < 1 or if the range is empty.
+[==============================================================================}
+function TRangeHelper.Subdivided(const partCount: Integer = 2): TRangeArray; cdecl;
+var
+  i, c, l, s, r, d, p, z: Integer;
+begin
+  if (partCount < 1) then
+    Exit([]);
+  c := Self.Count;
+  l := Min(partCount, c);
+  SetLength(Result, l);
+  if (l = 1) then
+    Exit([Self]);
+  s := (c div l);
+  r := (c mod l);
+  d := Self.Wind;
+  p := Self.start;
+  for i := 0 to (l - 1) do
+  begin
+    z := (s + Ord(i < r) - 1);
+    if (i < (l - 1)) then
+    begin
+      Result[i].Create(p, (p + (z * d)));
+      p := (p + (z + 1) * d);
+    end else
+      Result[i].Create(p, Self.stop);
+  end;
 end;
 
 {==============================================================================]
