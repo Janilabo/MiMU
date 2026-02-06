@@ -7,8 +7,11 @@ function Divide(const size: Integer = 2): TRangeArray; overload;
 function Partition(const size: Integer = 2): TRangeArray; overload;
 function Sectioned(const target: TRange): TRangeArray; overload;
 function Sliced(const partCount: Integer = 2): TRangeArray; overload;
+function Splinter(const partCount: Integer = 2): TRangeArray; overload;
+function Subdiv(const partCount: Integer = 2): TRangeArray; overload;
 function Subdivide(const partCount: Integer = 2): TRangeArray; overload;
-function Subdivided(const partCount: Integer = 2): TRangeArray; cdecl;
+function Subdivided(const partCount: Integer = 2): TRangeArray; overload;
+function Subdivision(const partCount: Integer = 2): TRangeArray; overload;
 function Windows(const target: TRange): TRangeArray; overload;
 {$ENDIF}
 
@@ -216,11 +219,10 @@ end;
            covered without overlap, and the original direction (ascending or
            descending) is preserved. If partCount exceeds the number of elements,
            it is limited to Self.Count.
-  @note:
-    Slice boundaries are computed using integer division of
-    (Count * index) div sliceCount. This produces evenly distributed
-    partitions with sizes differing by at most one element.
-    Returns an empty array if partCount < 1 or if the range is empty.
+  @note: Slice boundaries are computed using integer division of
+         (Count * index) div sliceCount. This produces evenly distributed
+         partitions with sizes differing by at most one element.
+         Returns an empty array if partCount < 1 or if the range is empty.
 [==============================================================================}
 function TRangeHelper.Sliced(const partCount: Integer = 2): TRangeArray; overload;
 var
@@ -243,17 +245,94 @@ begin
 end;
 
 {==============================================================================]
+  <Splinter>
+  @action: Recursively partitions the current range into partCount contiguous
+           subranges using a divide-and-conquer strategy. The range is repeatedly
+           split into two halves until the requested number of parts is produced.
+           The resulting subranges collectively cover the entire original range,
+           preserve its direction (ascending or descending), and do not overlap.
+  @note: Partitioning is performed by recursively bisecting each intermediate
+         range at its midpoint. The number of subdivisions assigned to each half
+         is determined by integer division (parts div 2) and the remainder.
+         This produces balanced, tree-structured splits rather than strictly
+         sequential allocation. If partCount exceeds Self.Count, it is limited
+         accordingly. Returns an empty array if partCount < 1 or if the range is empty.
+[==============================================================================}
+function TRangeHelper.Splinter(const partCount: Integer = 2): TRangeArray; overload;
+  procedure Split(const rng: TRange; const parts: Integer; var idx: Integer);
+  var
+    m, h: Integer;
+  begin
+    if (parts > 1) then
+    begin
+      h := (rng.Count div 2);
+      m := (rng.Start + (h * rng.Wind));
+      Split(TRange.Construct(rng.start, m), (parts div 2), idx);
+      Split(TRange.Construct((m + rng.Wind), rng.stop), (parts - (parts div 2)), idx);
+    end else
+      Result[idx.Increase] := rng;
+  end;
+var
+  i: Integer;
+begin
+  if (partCount < 1) then
+    Exit([]);
+  SetLength(Result, Min(partCount, Self.Count));
+  i := 0;
+  Split(Self, Result.Length, i);
+end;
+
+{==============================================================================]
+  <Subdiv>
+  @action: Divides the current range into up to partCount contiguous subranges of
+           near-equal size. The total element count is first evenly distributed,
+           then any remainder elements are assigned one per subrange starting
+           from the first. All generated subranges are contiguous, non-overlapping,
+           preserve the original direction (ascending or descending), and together
+           exactly reconstruct the original range.
+  @note: The number of resulting subranges is Min(partCount, Self.Count).
+         Subrange sizes differ by at most one element. Size distribution is
+         precomputed into a temporary array before constructing the resulting
+         ranges. Returns an empty array if partCount < 1 or if the range is empty.
+[==============================================================================}
+function TRangeHelper.Subdiv(const partCount: Integer = 2): TRangeArray; overload;
+var
+  c, i, l, s, r, d, p: Integer;
+  z: TIntegerArray;
+begin
+  if (partCount < 1) then
+    Exit([]);
+  c := Self.Count;
+  l := Min(partCount, c);
+  SetLength(Result, l);
+  if (l = 1) then
+    Exit([Self]);
+  s := (c div l);
+  r := (c mod l);
+  SetLength(z, l);
+  for i := 0 to (l - 1) do
+    z[i] := (s + Ord(i < r));
+  d := Self.Wind;
+  p := Self.start;
+  for i := 0 to (l - 1) do
+  begin
+    Result[i].Create(p, (p + (z[i] - 1) * d));
+    p := (p + (z[i] * d));
+  end;
+end;
+
+{==============================================================================]
   <Subdivide>
   @action: Divides the range into at most partCount contiguous subranges
            and returns them as an array (partCount is the maximum number of partitions to produce)
   @return: Array of contiguous subranges covering the original range.
-  @note:   - If partCount < 1, returns an empty array.
-           - The actual number of partitions is Min(partCount, Count).
-           - Partitions are distributed as evenly as possible.
-             Any remainder elements are allocated one-per-partition
-             starting from the first partition.
-           - Preserves the original range direction (ascending/descending).
-           - The union of all returned subranges equals the original range.
+  @note: - If partCount < 1, returns an empty array.
+         - The actual number of partitions is Min(partCount, Count).
+         - Partitions are distributed as evenly as possible.
+           Any remainder elements are allocated one-per-partition
+           starting from the first partition.
+         - Preserves the original range direction (ascending/descending).
+         - The union of all returned subranges equals the original range.
 [==============================================================================}
 function TRangeHelper.Subdivide(const partCount: Integer = 2): TRangeArray; overload;
 var
@@ -290,11 +369,10 @@ end;
            descending). If partCount exceeds the number of elements, it is limited
            to Self.Count. Any remainder elements are distributed one per subrange
            starting from the first.
-  @note:
-    A TRangeArray containing Min(partCount, Self.Count) subranges.
-    Returns an empty array if partCount < 1 or if the range is empty.
+  @note: A TRangeArray containing Min(partCount, Self.Count) subranges.
+         Returns an empty array if partCount < 1 or if the range is empty.
 [==============================================================================}
-function TRangeHelper.Subdivided(const partCount: Integer = 2): TRangeArray; cdecl;
+function TRangeHelper.Subdivided(const partCount: Integer = 2): TRangeArray; overload;
 var
   i, c, l, s, r, d, p, z: Integer;
 begin
@@ -318,6 +396,44 @@ begin
       p := (p + (z + 1) * d);
     end else
       Result[i].Create(p, Self.stop);
+  end;
+end;
+
+{==============================================================================]
+  <Subdivision>
+  @action: Partitions the current range into up to partCount contiguous subranges,
+           distributing elements as evenly as possible. Each subdivision is created
+           sequentially from the current start position, preserving the original
+           direction (ascending or descending). The combined result fully reconstructs
+           the original range without gaps or overlap. If partCount exceeds the
+           number of elements, it is limited to Self.Count.
+  @note: Subrange sizes are computed dynamically based on the number of remaining
+         elements and remaining partitions, ensuring that sizes differ by at most
+         one element. This approach guarantees balanced distribution even when the
+         total element count is not evenly divisible. Returns an empty array if
+         partCount < 1 or if the range is empty.
+[==============================================================================}
+function TRangeHelper.Subdivision(const partCount: Integer = 2): TRangeArray; overload;
+var
+  c, i, l, r, s, d, p: Integer;
+begin
+  if (partCount < 1) then
+    Exit([]);
+  c := Self.Count;
+  l := Min(partCount, c);
+  SetLength(Result, l);
+  if (l = 1) then
+    Exit([Self]);
+  d := Self.Wind;
+  p := Self.Start;
+  r := c;
+  i := -1;
+  while (i.Increment < l) do
+  begin
+    s := ((r + ((l - i) - 1)) div (l - i));
+    Result[i].Create(p, (p + (s - 1) * d));
+    p := (p + (s * d));
+    Dec(r, s);
   end;
 end;
 
