@@ -3,9 +3,13 @@ function Binned(const target: TRange): TRangeArray; overload;
 function Chunked(const chunkSize: Integer = 2): TRangeArray; overload;
 function Chunkify(const chunkSize: Integer = 2): TRangeArray; overload;
 function Distribute(const parts: Integer= 2): TRangeArray; overload;
+function Distributed(const partCount: Integer = 2): TRangeArray; overload;
 function Divide(const size: Integer = 2): TRangeArray; overload;
+function Divided(const partCount: Integer = 2): TRangeArray; overload;
 function Partition(const size: Integer = 2): TRangeArray; overload;
+function Partitioned(const partSize: Integer = 2): TRangeArray; overload;
 function Sectioned(const target: TRange): TRangeArray; overload;
+function Segmented(const partCount: Integer = 2): TRangeArray; overload;
 function Sliced(const partCount: Integer = 2): TRangeArray; overload;
 function Splinter(const partCount: Integer = 2): TRangeArray; overload;
 function Subdiv(const partCount: Integer = 2): TRangeArray; overload;
@@ -132,6 +136,42 @@ begin
 end;
 
 {==============================================================================]
+  <Distributed>
+  @action: Splits the range into `partCount` contiguous subranges with
+           near-equal cardinality, distributing any remainder elements
+           across the first partitions.
+  @note:
+    - If `partCount` exceeds the range count, it is reduced to `Count`.
+    - Subranges preserve the original range direction (`Wind`).
+    - Partition sizes differ by at most one element.
+    - Remainder elements (`Count mod partCount`) are assigned
+      one-by-one to the leading partitions.
+    - Returns an empty array if `partCount < 1`.
+[==============================================================================}
+function TRangeHelper.Distributed(const partCount: Integer = 2): TRangeArray; overload;
+var
+  i, l, c, s, r, d: Integer;
+  o: TIntegerArray;
+begin
+  if (partCount < 1) then
+    Exit([]);
+  c := Self.Count;
+  l := Min(partCount, c);
+  SetLength(Result, l);
+  if (l = 1) then
+    Exit([Self]);
+  s := (c div l);
+  r := (c mod l);
+  d := Self.Wind;
+  SetLength(o, (l + 1));
+  o[0] := 0;
+  for i := 1 to l do
+    o[i] := (o[i-1] + (s + Ord(i <= r)));
+  for i := 0 to (l - 1) do
+    Result[i].Create((Self.Start + (o[i] * d)), (Self.Start + ((o[i + 1] - 1) * d)));
+end;
+
+{==============================================================================]
   <Divide>
   @action: Partitions range to TRangeArray by size of parts
   @note: Alternative for TRange_Partition.
@@ -157,6 +197,45 @@ begin
     end;
   end else
     SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <Divided>
+  @action: Splits the range into `partCount` contiguous subranges using
+           proportional index division across the total element count.
+
+  @note:
+    - Partition boundaries are computed via scaled integer division
+      (`(Count * index) div partCount`).
+    - Subranges preserve the original range direction (`Wind`).
+    - Produces contiguous, non-overlapping partitions covering
+      the full range.
+    - Partition sizes are near-equal and may differ by at most one.
+    - If `partCount` exceeds the range count, it is reduced to `Count`.
+    - Returns an empty array if `partCount < 1`.
+[==============================================================================}
+function TRangeHelper.Divided(const partCount: Integer = 2): TRangeArray; overload;
+var
+  i, l, c, d: Integer;
+  function PartStarts(const idx: Integer): Integer;
+  begin
+    Result := (Self.Start + (((c * idx) div l) * d));
+  end;
+  function PartStops(const idx: Integer): Integer;
+  begin
+    Result := (Self.Start + (((c * (idx + 1)) div l - 1) * d));
+  end;
+begin
+  if (partCount < 1) then
+    Exit([]);
+  c := Self.Count;
+  l := Min(partCount, c);
+  SetLength(Result, l);
+  if (l = 1) then
+    Exit([Self]);
+  d := Self.Wind;
+  for i := 0 to (l - 1) do
+    Result[i].Create(PartStarts(i), PartStops(i));
 end;
 
 {==============================================================================]
@@ -189,10 +268,38 @@ begin
 end;
 
 {==============================================================================]
+  <Partitioned>
+  @action: Divides the range into chunks of a fixed size.
+  @param partSize: The size of each partition (number of elements per chunk)
+  @returns: Array of ranges, each containing partSize elements (last may be smaller)
+  @note: - If partSize < 1, returns empty array.
+         - Last partition may contain fewer elements than partSize.
+         - Preserves range direction (ascending/descending).
+         - Returns single-element partitions if partSize = 1.
+[==============================================================================}
+function TRangeHelper.Partitioned(const partSize: Integer = 2): TRangeArray; overload;
+var
+  i, c, d, p: Integer;
+begin
+  if (partSize < 1) then
+    Exit([]);
+  c := (((Self.Count + partSize) - 1) div partSize);
+  SetLength(Result, c);
+  d := Self.Wind;
+  p := Self.start;
+  for i := 0 to (c - 2) do
+  begin
+    Result[i].Create(p, (p + (partSize - 1) * d));
+    p := (p + (partSize * d));
+  end;
+  Result[c - 1].Create(p, Self.stop);
+end; 
+
+{==============================================================================]
   <Sectioned>
   @action: Divide the target range into sequential, non-overlapping subranges
            of the same size as Self.
-  @note:   Any remainder at the end of the target range is discarded.
+  @note: Any remainder at the end of the target range is discarded.
 [==============================================================================}
 function TRangeHelper.Sectioned(const target: TRange): TRangeArray; overload;
 var
@@ -210,6 +317,41 @@ begin
   p := (t.start - s);
   while (p.Increment(s) <= m) do
     Result[r.Increase].Create((f.start + p), (f.stop + p));
+end;
+
+{==============================================================================]
+  <Segmented>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function TRangeHelper.Segmented(const partCount: Integer = 2): TRangeArray; overload;
+var
+  c, i, l, d, p: Integer;
+  s: TIntegerArray;
+  procedure CalculateSizes;
+  var
+    j: Integer;
+  begin
+    for j := 0 to (l - 1) do
+      s[j] := ((c div l) + Ord(j < (c mod l)));
+  end;
+begin
+  if (partCount < 1) then
+    Exit([]);
+  c := Self.Count;
+  l := Min(partCount, c);
+  SetLength(Result, l);
+  if (l = 1) then
+    Exit([Self]);
+  SetLength(s, l);
+  CalculateSizes;
+  d := Self.Wind;
+  p := Self.start;
+  for i := 0 to (l - 1) do
+  begin
+    Result[i].Create(p, (p + ((s[i] - 1) * d)));
+    p := (p + (s[i] * d));
+  end;
 end;
 
 {==============================================================================]
