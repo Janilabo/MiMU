@@ -8,6 +8,7 @@ function Divide(const size: Integer = 2): TRangeArray; overload;
 function Divided(const partCount: Integer = 2): TRangeArray; overload;
 function Partition(const size: Integer = 2): TRangeArray; overload;
 function Partitioned(const partSize: Integer = 2): TRangeArray; overload;
+function Partitions(const partSize: Integer = 2): TRangeArray; overload;
 function Sectioned(const target: TRange): TRangeArray; overload;
 function Segmented(const partCount: Integer = 2): TRangeArray; overload;
 function Sliced(const partCount: Integer = 2): TRangeArray; overload;
@@ -293,6 +294,37 @@ begin
     p := (p + (partSize * d));
   end;
   Result[c - 1].Create(p, Self.stop);
+end;
+
+{==============================================================================]
+  <Partitions>
+  @action: Splits the current range into consecutive subranges of a specified size.
+  @note: Returns an empty array if partSize < 1. 
+         Returns the original range as a single segment if partSize >= Count.
+         The final segment may contain fewer elements if Count is not
+         evenly divisible by partSize. The original Wind (direction)
+         is preserved.
+[==============================================================================}
+function TRangeHelper.Partitions(const partSize: Integer = 2): TRangeArray; overload;
+var
+  i, c, l, d, p, s: Integer;
+begin
+  if (partSize < 1) then
+    Exit([]);
+  c := Self.Count;
+  if (partSize >= c) then
+    Exit([Self]);
+  SetLength(Result, (((c + partSize) - 1) div partSize));
+  d := Self.Wind;
+  p := Self.start;
+  l := c;
+  for i := 0 to High(Result) do
+  begin
+    s := Min(partSize, l);
+    Result[i].Create(p, (p + ((s - 1) * d)));
+    p := (p + (s * d));
+    Dec(l, s);
+  end;
 end; 
 
 {==============================================================================]
