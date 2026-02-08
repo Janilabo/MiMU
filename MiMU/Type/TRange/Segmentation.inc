@@ -2,13 +2,16 @@
 function Binned(const target: TRange): TRangeArray; overload;
 function Chunked(const chunkSize: Integer = 2): TRangeArray; overload;
 function Chunkify(const chunkSize: Integer = 2): TRangeArray; overload;
+function Chunks(const partSize: Integer = 2): TRangeArray; overload;
 function Distribute(const parts: Integer= 2): TRangeArray; overload;
 function Distributed(const partCount: Integer = 2): TRangeArray; overload;
 function Divide(const size: Integer = 2): TRangeArray; overload;
 function Divided(const partCount: Integer = 2): TRangeArray; overload;
+function Parted(const partSize: Integer = 2): TRangeArray; overload;
 function Partition(const size: Integer = 2): TRangeArray; overload;
 function Partitioned(const partSize: Integer = 2): TRangeArray; overload;
 function Partitions(const partSize: Integer = 2): TRangeArray; overload;
+function Parts(const partSize: Integer = 2): TRangeArray; overload;
 function Sectioned(const target: TRange): TRangeArray; overload;
 function Segmented(const partCount: Integer = 2): TRangeArray; overload;
 function Sliced(const partCount: Integer = 2): TRangeArray; overload;
@@ -17,6 +20,7 @@ function Subdiv(const partCount: Integer = 2): TRangeArray; overload;
 function Subdivide(const partCount: Integer = 2): TRangeArray; overload;
 function Subdivided(const partCount: Integer = 2): TRangeArray; overload;
 function Subdivision(const partCount: Integer = 2): TRangeArray; overload;
+function ToParts(const partSize: Integer = 2): TRangeArray; overload;
 function Windows(const target: TRange): TRangeArray; overload;
 {$ENDIF}
 
@@ -100,6 +104,41 @@ begin
     else
       Result[i].stop := (p + (d * (chunkSize - 1)));
     p := (Result[i].stop + d);
+  end;
+end;
+
+{==============================================================================]
+  <Chunks>
+  @action: Splits the current range into contiguous subranges of at most
+           partSize elements, preserving the range direction (Wind).
+  @note: Returns an empty array if partSize < 1. If partSize >= Size,
+         the result contains a single element equal to Self.
+         The last chunk always terminates exactly at Self.stop.
+[==============================================================================}
+function TRangeHelper.Chunks(const partSize: Integer = 2): TRangeArray; overload;
+var
+  i, s, h, d, p: Integer;
+  function MakeChunk(const starting: Integer; const isLast: Boolean): TRange;
+  begin
+    if isLast then
+      Result.Create(starting, Self.stop)
+    else
+      Result.Create(starting, (starting + ((partSize - 1) * d)));
+  end;
+begin
+  if (partSize < 1) then
+    Exit([]);
+  s := Self.Size;
+  if (partSize >= s) then
+    Exit([Self]);
+  SetLength(Result, (((s + partSize) - 1) div partSize));
+  h := High(Result);
+  d := Self.Wind;
+  p := Self.start;
+  for i := 0 to h do
+  begin
+    Result[i] := MakeChunk(p, (i = h));
+    p := (p + (partSize * d));
   end;
 end;
 
@@ -240,6 +279,37 @@ begin
 end;
 
 {==============================================================================]
+  <Parted>
+  @action: Partitions the range into contiguous directional subranges
+           of at most partSize elements.
+  @note: Returns an empty array if partSize < 1. If partSize >= Size,
+         the result contains a single element equal to Self.
+         The final part may contain fewer than partSize elements.
+         Range direction (Wind) is preserved.
+[==============================================================================}
+function TRangeHelper.Parted(const partSize: Integer = 2): TRangeArray; overload;
+var
+  s, d, p, n, c: Integer;
+begin
+  if (partSize < 1) then
+    Exit([]);
+  s := Self.Size;
+  if (partSize >= s) then
+    Exit([Self]);
+  SetLength(Result, ((s + (partSize - 1)) div partSize));
+  d := Self.Wind;
+  p := Self.start;
+  c := 0;
+  repeat
+    n := (p + ((partSize - 1) * d));
+    if (((d > 0) and (n > Self.stop)) or ((d < 0) and (n < Self.stop))) then
+      n := Self.stop;
+    Result[c.Increase].Create(p, n);
+    p := (n + d);
+  until (p = (Self.stop + d));
+end;
+
+{==============================================================================]
   <Partition>
   @action: Partitions range to TRangeArray by size of parts
   @note: None.
@@ -324,6 +394,41 @@ begin
     Result[i].Create(p, (p + ((s - 1) * d)));
     p := (p + (s * d));
     Dec(l, s);
+  end;
+end;
+
+{==============================================================================]
+  <Parts>
+  @action: Partitions the range into directional subranges containing
+           up to partSize elements each.
+  @note: The final subrange may contain fewer than partSize elements.
+         Range direction is preserved. Invalid partSize (< 1)
+         yields an empty result.
+[==============================================================================}
+function TRangeHelper.Parts(const partSize: Integer = 2): TRangeArray; overload;
+var
+  c, d, p: Integer;
+begin
+  if (partSize < 1) then
+    Exit([]);
+  c := Self.Count;
+  if (partSize >= c) then
+    Exit([Self]);
+  SetLength(Result, 0);
+  d := Self.Wind;
+  p := Self.start;
+  while (((d > 0) and (p <= Self.stop)) or ((d < 0) and (p >= Self.stop))) do
+  begin
+    SetLength(Result, (Result.Length + 1));
+    if not (((d > 0) and (p + ((partSize - 1) * d) > Self.stop)) or ((d < 0) and (p + ((partSize - 1) * d) < Self.stop))) then
+    begin
+      Result[High(Result)].Create(p, (p + ((partSize - 1) * d)));
+      p := p + partSize * d;
+    end else
+      Result[High(Result)].Create(p, Self.stop);
+    if (Result[High(Result)].stop = Self.stop) then
+      Break;
+    p := (Result[High(Result)].stop + d);
   end;
 end; 
 
@@ -609,6 +714,31 @@ begin
     p := (p + (s * d));
     Dec(r, s);
   end;
+end;
+
+{==============================================================================]
+  <ToParts>
+  @action: Splits the range into contiguous directional subranges
+           of at most partSize elements using index-based computation.
+  @note: Returns an empty array if partSize < 1. If partSize >= Size,
+         the result contains a single element equal to Self.
+         The final part may contain fewer than partSize elements.
+         Range direction (Wind) is preserved.
+[==============================================================================}
+function TRangeHelper.ToParts(const partSize: Integer = 2): TRangeArray; overload;
+var
+  s, i, c, d: Integer;
+begin
+  if (partSize < 1) then
+    Exit([]);
+  s := Self.Size;
+  if (partSize >= s) then
+    Exit([Self]);
+  c := (((s + partSize) - 1) div partSize);
+  SetLength(Result, c);
+  d := Self.Wind;
+  for i := 0 to (c - 1) do
+    Result[i].Create((Self.start + ((i * partSize) * d)), (Self.start + ((Min((i + 1) * partSize, s) - 1) * d)));
 end;
 
 {==============================================================================]
