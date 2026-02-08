@@ -14,6 +14,7 @@ function Partitions(const partSize: Integer = 2): TRangeArray; overload;
 function Parts(const partSize: Integer = 2): TRangeArray; overload;
 function Sectioned(const target: TRange): TRangeArray; overload;
 function Segmented(const partCount: Integer = 2): TRangeArray; overload;
+function Separate(const partSize: Integer = 2): TRangeArray; overload;
 function Sliced(const partCount: Integer = 2): TRangeArray; overload;
 function Splinter(const partCount: Integer = 2): TRangeArray; overload;
 function Subdiv(const partCount: Integer = 2): TRangeArray; overload;
@@ -454,6 +455,54 @@ begin
   p := (t.start - s);
   while (p.Increment(s) <= m) do
     Result[r.Increase].Create((f.start + p), (f.stop + p));
+end;
+
+{==============================================================================]
+  <Separate>
+  @action: Splits the current TRange into an array of contiguous subranges,
+           each containing at most partSize elements, preserving the original
+           range direction (Wind).
+  @note:
+    - If partSize < 1, an empty array is returned.
+    - If partSize >= Size, the result contains a single element equal to Self.
+    - Subranges are created sequentially from Start, following Wind.
+    - The final subrange may contain fewer than partSize elements
+      if Size is not an exact multiple of partSize.
+    - Time complexity: O(n / partSize)
+    - Space complexity: O(n / partSize)
+[==============================================================================}
+function TRangeHelper.Separate(const partSize: Integer = 2): TRangeArray; overload;
+label
+  loop, done;
+var
+  s, i, c, d, p, l: Integer;
+begin
+  if (partSize < 1) then
+    Exit([]);
+  s := Self.Size;
+  if (partSize >= s) then
+  begin
+    SetLength(Result, 1);
+    Result[0] := Self;
+    Exit;
+  end;
+  c := (((s + partSize) - 1) div partSize);
+  SetLength(Result, c);
+  d := Self.Wind;
+  p := Self.start;
+  i := 0;
+  loop:
+  if (i >= c) then
+    goto done;
+  if (i = (c - 1)) then
+    l := (s - (i * partSize) - 1)
+  else
+    l := (partSize - 1);
+  Result[i].Create(p, (p + (l * d)));
+  p := (p + ((l + 1) * d));
+  Inc(i);
+  goto loop;
+  done:
 end;
 
 {==============================================================================]
