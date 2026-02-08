@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Combinate(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
 function Fuse(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
+function Fusion: TRangeArray; overload;
+function Merge(const rAscending: Boolean = True): TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -114,5 +116,103 @@ begin
     Self[k.Increase] := s[i.Increase];
   while (j < a) do
     Self[k.Increase] := items[j.Increase];
+end;
+
+{==============================================================================]
+  <Fusion>
+  @action: Aggregates neighboring integer values into contiguous TRange segments
+           when successive elements differ by at most ±1. Each resulting range
+           is normalized so that Start holds the minimum and Stop the maximum
+           value observed within the fused cluster.
+  @note:
+    - Returns an empty TRangeArray when the source array is empty.
+    - The input order is preserved; no sorting is performed.
+    - Fusion condition:
+      Self[i + 1] ∈ [Self[i] - 1 .. Self[i] + 1]
+      This supports increasing sequences, decreasing sequences,
+      and duplicate values.
+    - During fusion:
+        • The range is initialized with Create(Self[i]).
+        • For each accepted neighbor, the index is advanced first,
+          then Start/Stop are adjusted to maintain:
+          Start = Min(cluster values)
+          Stop  = Max(cluster values)
+      This guarantees Start ≤ Stop regardless of traversal direction.
+    - Initial capacity equals Length and is trimmed to the actual
+      number of produced ranges.
+    - Time complexity: O(n)
+    - Space complexity: O(n)
+[==============================================================================}
+function TIntegerArrayHelper.Fusion: TRangeArray; overload;
+var
+  h, i, l: Integer;
+begin
+  if Self.Empty then
+    Exit([]);
+  h := High(Self);
+  SetLength(Result, (h + 1));
+  l := 0;
+  i := 0;
+  while (i <= h) do
+  begin
+	Result[l].Create(Self[i]);
+    while ((i < h) and InRange(Self[i + 1], (Self[i] - 1), (Self[i] + 1))) do
+	begin
+	  Inc(i);
+	  if (Self[i] < Result[l].start) then
+	    Result[l].start := Self[i]
+      else if (Self[i] > Result[l].stop) then
+	    Result[l].stop := Self[i];
+	end;
+    Inc(l);
+    Inc(i);
+  end;
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <Merge>
+  @action: Consolidates the integer values of the array into a minimal set of
+           contiguous TRange instances. Adjacent values (based on ordering
+           direction) are coalesced into a single range.
+  @note:
+    - If the array is empty, an empty TRangeArray is returned.
+    - The input array is first sorted using QuickSorted according to rAscending.
+    - Duplicate values are ignored.
+    - Contiguity is determined by a step of:
+      +1 when rAscending = True
+      -1 when rAscending = False
+    - Each resulting range is inclusive: Create(StartValue, EndValue).
+    - Time complexity:
+      O(n log n) due to sorting
+    - Space complexity:
+      O(n)
+[==============================================================================}
+function TIntegerArrayHelper.Merge(const rAscending: Boolean = True): TRangeArray; overload;
+var
+  i, s, e, c, d: Integer;
+  a: TIntegerArray;
+begin
+  if Self.Empty then
+    Exit([]);
+  a := Self.QuickSorted(rAscending);
+  SetLength(Result, a.Length);
+  c := 0;
+  s := a[0];
+  e := a[0];
+  d := IfThen(rAscending, 1, -1);
+  for i := 1 to High(a) do
+  begin
+    if (a[i] = e) then
+      Continue;
+    if (a[i] <> (e + d)) then
+    begin
+      Result[c.Increase].Create(s, e);
+      s := a[i];
+    end;
+    e := a[i];
+  end;
+  Result[c.Increase].Create(s, e);
+  SetLength(Result, c);
 end;
 {$ENDIF}

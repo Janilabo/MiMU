@@ -16,6 +16,7 @@ function Sectioned(const target: TRange): TRangeArray; overload;
 function Segmented(const partCount: Integer = 2): TRangeArray; overload;
 function Separate(const partSize: Integer = 2): TRangeArray; overload;
 function Sliced(const partCount: Integer = 2): TRangeArray; overload;
+function Slices(const partCount: Integer = 2): TRangeArray; overload;
 function Splinter(const partCount: Integer = 2): TRangeArray; overload;
 function Subdiv(const partCount: Integer = 2): TRangeArray; overload;
 function Subdivide(const partCount: Integer = 2): TRangeArray; overload;
@@ -570,6 +571,47 @@ begin
   d := Self.Wind;
   for i := 0 to (l - 1) do
     Result[i].Create(StartSlice(i), (StartSlice(i + 1) - d));
+end;
+
+{==============================================================================]
+  <Slices>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function TRangeHelper.Slices(const partCount: Integer = 2): TRangeArray; overload;
+label
+  loop, done;
+var
+  i, l, c, s, r, d, p, a: Integer;
+begin
+  if (partCount < 1) then
+    Exit([]);
+  c := Self.Count;
+  l := Min(partCount, c);
+  SetLength(Result, l);
+  if (l = 1) then
+  begin
+    Result[0] := Self;
+    Exit;
+  end;
+  s := (c div l);
+  r := (c mod l);
+  d := Self.Wind;
+  p := Self.start;
+  i := 0;
+  loop:
+  if (i >= l) then
+    goto done;
+  if (i < (l - 1)) then
+  begin
+    a := IfThen((i < r), s, (s - 1));
+    Result[i].Create(p, (p + (a * d)));
+    p := (p + ((a + 1) * d));
+  end else
+    Result[i].Create(p, Self.stop);
+  Inc(i);
+  goto loop;
+  done:
 end;
 
 {==============================================================================]

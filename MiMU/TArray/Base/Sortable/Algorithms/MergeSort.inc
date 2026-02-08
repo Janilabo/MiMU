@@ -157,7 +157,7 @@ end;
   @note: Returns High(arr).
 [==============================================================================}
 function MArrayHelper.MergeSort(const aAscending: Boolean = True): Integer; overload;
-  procedure Merge(var arr, tmp: MArray; const Lo, Hi: Integer; const aAscending: Boolean = True);
+  procedure M2(var arr, tmp: MArray; const Lo, Hi: Integer; const aAscending: Boolean = True);
   var
     l, r, i, m, o: Integer;
   begin
@@ -165,8 +165,8 @@ function MArrayHelper.MergeSort(const aAscending: Boolean = True): Integer; over
       Exit;
     o := aAscending.Select(-1, 1);
     m := (Lo + ((Hi - Lo) div 2));
-    Merge(arr, tmp, Lo, m, aAscending);
-    Merge(arr, tmp, (m + 1), Hi, aAscending);
+    M2(arr, tmp, Lo, m, aAscending);
+    M2(arr, tmp, (m + 1), Hi, aAscending);
     l := Lo;
     r := (m + 1);
     for i := Lo to Hi do
@@ -190,7 +190,7 @@ begin
   if (Result > 0) then
   begin
     SetLength(t, (Result + 1));
-    Merge(Self, t, 0, Result, aAscending);
+    M2(Self, t, 0, Result, aAscending);
   end;
 end;
 
