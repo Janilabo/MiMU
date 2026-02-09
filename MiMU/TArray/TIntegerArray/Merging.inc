@@ -1,8 +1,11 @@
 {$IFDEF HELPERS}
 function Combinate(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
+function Consolidate: TRangeArray; overload;
 function Fuse(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
 function Fusion: TRangeArray; overload;
 function Merge(const rAscending: Boolean = True): TRangeArray; overload;
+function Merged(const rAscending: Boolean = True): TRangeArray; overload;
+function TRA: TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -60,6 +63,47 @@ begin
   if (k <> Self.Size) then
     SetLength(Self, k);
   Result := k;
+end;
+
+{==============================================================================]
+  <Consolidate>
+  @action: Collapses adjacent integer values into contiguous ranges without
+           altering the original ordering of the array.
+           Returns an array of TRange records, where each range represents a contiguous
+           sequence of integers detected while iterating the source array.
+  @note:
+    - The source array is processed in its existing order; no sorting
+      is performed.
+    - Correct consolidation requires the array to already be ordered
+      such that adjacent values differ by at most ±1.
+    - Consecutive values differing by +1 extend the current range upward.
+    - Consecutive values differing by −1 extend the current range downward.
+    - Duplicate values are ignored.
+    - An empty source array returns an empty result.
+[==============================================================================}
+function TIntegerArrayHelper.Consolidate: TRangeArray; overload;
+var
+  h, i, c: Integer;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit([]);
+  SetLength(Result, (h + 1));
+  c := 0;
+  Result[c].Create(Self[0], Self[0]);
+  for i := 1 to h do
+  begin
+    if (Self[i] = (Result[c].stop + 1)) then
+      Result[c].stop := Self[i]
+    else if (Self[i] = (Result[c].stop - 1)) then
+      Result[c].start := Self[i]
+    else if (Self[i] = Result[c].stop) then
+      Continue
+    else
+      Result[c.Increment].Create(Self[i], Self[i]);
+  end;
+  if (c <= h) then
+    SetLength(Result, (c + 1));
 end;
 
 {==============================================================================]
@@ -213,6 +257,133 @@ begin
     e := a[i];
   end;
   Result[c.Increase].Create(s, e);
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <Merged>
+  @action: Returns a set of integer ranges created by merging adjacent values
+           in the array. rAscending determines the sort order used before merging.
+           If True (default), values are sorted ascending and merged when
+           successive elements differ by +1.
+           If False, values are sorted descending and merged when successive
+           elements differ by −1.
+           Result is an array of TRange records, where each range represents
+		   a maximal contiguous sequence of integers from the source array.
+  @note:
+    - The source array is not modified.
+    - The array is internally sorted prior to merging.
+    - Duplicate values are implicitly collapsed into the same range.
+    - An empty source array returns an empty result.
+[==============================================================================}
+function TIntegerArrayHelper.Merged(const rAscending: Boolean = True): TRangeArray; overload;
+var
+  h, i, l, r, c: Integer;
+  s: TIntegerArray;
+begin
+  if Self.Empty then
+    Exit([]);
+  s := Self.QuickSorted(rAscending);
+  h := High(Self);
+  SetLength(Result, (h + 1));
+  c := 0;
+  l := 0;
+  case rAscending of
+    True:
+    while (l <= h) do
+    begin
+      r := l;
+      while ((r < h) and (s[r + 1] <= (s[r] + 1))) do
+        Inc(r);
+      Result[c.Increase].Create(s[l], s[r]);
+      l := (r + 1);
+    end;
+    False:
+    while (l <= h) do
+    begin
+      r := l;
+      while ((r < h) and (s[r + 1] >= (s[r] - 1))) do
+        Inc(r);
+      Result[c.Increase].Create(s[l], s[r]);
+      l := (r + 1);
+    end;
+  end;
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <TRA>
+  @action: Converts the integer array into contiguous ranges while preserving
+           the original element order and detected progression direction.
+           Returns an array of TRange records representing maximal contiguous sequences
+           of integers encountered during sequential traversal of the array.
+  @note:
+    - The source array is processed in its existing order; no sorting
+      is performed.
+    - Ranges are formed only when consecutive elements differ by ±1.
+    - Direction of progression is tracked:
+        * +1 extends an ascending sequence.
+        * −1 extends a descending sequence.
+      A change in direction terminates the current range.
+    - Duplicate values are ignored.
+    - Non-adjacent values terminate the current range.
+    - Arrays with fewer than two elements return an empty result.
+[==============================================================================}
+function TIntegerArrayHelper.TRA: TRangeArray; overload;
+var
+  h, i, c, d: Integer;
+  r: TRange;
+begin
+  h := High(Self);
+  case h of
+    0: Exit([]);
+    1: Exit([TRange.Construct(Self[0])]);
+  end;
+  SetLength(Result, (h + 1));
+  c := 0;
+  r.Create(Self[0]);
+  d := 0;
+  for i := 1 to h do
+  case Self[i].Compare(r.stop) of
+    0: Continue;
+    1:
+    begin
+      case ((d = 0) or (d = 1)) of
+        True:
+        begin
+          r.stop := Self[i];
+          d := 1;
+        end;
+        False:
+        begin
+          Result[c.Increase] := r;
+          r.Create(Self[i]);
+          d := 0;
+        end;
+      end;
+    end;
+    -1:
+    case ((d = 0) or (d = -1)) of
+      True:
+      begin
+        r.stop := Self[i];
+        d := -1;
+      end;
+      False:
+      begin
+        Result[c.Increase] := r;
+        r.Create(Self[i]);
+        d := 0;
+      end;
+    end;
+  else
+    begin
+      Result[c.Increase] := r;
+      r.Create(Self[i]);
+      d := 0;
+    end;
+  end;
+  Result[c.Increase] := r;
   SetLength(Result, c);
 end;
 {$ENDIF}
