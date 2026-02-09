@@ -5,6 +5,9 @@ function Fuse(const items: TIntegerArray; const oAscending: Boolean = True): Int
 function Fusion: TRangeArray; overload;
 function Merge(const rAscending: Boolean = True): TRangeArray; overload;
 function Merged(const rAscending: Boolean = True): TRangeArray; overload;
+function Sequences: TRangeArray; overload;
+function Streaks: TRangeArray; overload;
+function ToTRangeArray: TRangeArray; overload;
 function TRA: TRangeArray; overload;
 {$ENDIF}
 
@@ -309,6 +312,160 @@ begin
     end;
   end;
   SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <Sequences>
+  @action: Splits the integer array into consecutive ascending or descending ranges,
+           returning them as an array of TRange.
+  @note: Handles both ascending and descending sequences.
+         Single elements are returned as ranges with identical start and stop values.
+[==============================================================================}
+function TIntegerArrayHelper.Sequences: TRangeArray; overload;
+  function PS(const left, right: Integer): TRangeArray;
+  var
+    i, d, c: Integer;
+  begin
+    if (left > right) then
+      Exit([]);
+    if (left = right) then
+      Exit([TRange.Construct(Self[left], Self[left])]);
+    SetLength(Result, ((right - left) + 1));
+    c := 0;
+    i := left;
+    while (i <= right) do
+    begin
+      if (i = right) then
+        d := 0
+      else if (Self[i + 1] = (Self[i] + 1)) then
+        d := 1
+      else if (Self[i + 1] = (Self[i] - 1)) then
+        d := -1
+      else
+        d := 0;
+      Result[c].start := Self[i];
+      while ((i < right) and (((d = 1) and (Self[i + 1] = (Self[i] + 1))) or ((d = -1) and (Self[i + 1] = (Self[i] - 1))))) do
+        Inc(i);
+      Result[c].stop := Self[i];
+      Inc(c);
+      Inc(i);
+    end;
+    SetLength(Result, c);
+  end;
+begin
+  Result := PS(0, High(Self));
+end;
+
+{==============================================================================]
+  <Streaks>
+  @action: Identifies contiguous sequences of integers (“streaks”) in the array
+           where consecutive elements consistently increase or decrease by 1,
+           and returns them as ranges.
+           Returns an array of TRange records, where each range represents a maximal
+           ascending or descending streak.
+  @note:
+    - The source array is not modified; processing is order-sensitive.
+    - A streak continues as long as consecutive elements differ by +1
+      (ascending) or -1 (descending). Any change or pause ends the streak.
+    - Single elements not part of a streak become degenerate ranges
+      (Start = Stop).
+    - Empty arrays return an empty result.
+[==============================================================================}
+function TIntegerArrayHelper.Streaks: TRangeArray; overload;
+var
+  h, i, c, d: Integer;
+  function PeekDirection(const idx: Integer): Integer;
+  begin
+    if (idx >= h) then
+      Result := 0
+    else if (Self[idx + 1] = (Self[idx] + 1)) then
+      Result := 1
+    else if (Self[idx + 1] = (Self[idx] - 1)) then
+      Result := -1
+    else
+      Result := 0;
+  end;
+begin
+  h := High(Self);
+  SetLength(Result, (h + 1));
+  if (h = -1) then
+    Exit;
+  c := 0;
+  i := -1;
+  while (i.Increment <= h) do
+  begin
+    Result[c].start := Self[i];
+    d := PeekDirection(i);
+    while ((i < h) and (d <> 0) and (PeekDirection(i) = d)) do
+      Inc(i);
+    Result[c].stop := Self[i];
+    Inc(c);
+  end;
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <ToTRangeArray>
+  @action: Converts the integer array into an array of TRange values, where each range
+           represents a maximal contiguous sequence of ascending or descending integers.
+           Adjacent values differing by +1 form ascending ranges; values differing by −1
+           form descending ranges. Non-contiguous values start new ranges.
+  @note:
+    - The input array is processed in its existing order (no sorting is performed).
+    - Both ascending and descending sequences are supported.
+    - Single elements are returned as ranges with identical start/stop values.
+    - An empty array returns an empty result.
+[==============================================================================}
+function TIntegerArrayHelper.ToTRangeArray: TRangeArray; overload;
+const
+  STATE_NO = 0;
+  STATE_ASC = 1;
+  STATE_DESC = 2;
+var
+  h, i, s, c: Integer;
+begin
+  h := High(Self);
+  case h of
+    -1: Exit;
+    0: Exit([TRange.Construct(Self[0])]);
+  end;
+  SetLength(Result, (h + 1));
+  Result[0].Create(Self[0]);
+  c := 0;
+  s := STATE_NO;
+  for i := 1 to h do
+  case s of
+    STATE_NO:
+    case Self[i].Difference(Result[c].stop) of
+      -1:
+      begin
+        Result[c].stop := Self[i];
+        s := STATE_ASC;
+      end;
+      1:
+      begin
+        Result[c].stop := Self[i];
+        s := STATE_DESC;
+      end;
+    else
+      Result[c.Increment].Create(Self[i]);
+    end;
+    STATE_ASC:
+    if not (Self[i] = (Result[c].stop + 1)) then
+    begin
+      Result[c.Increment].Create(Self[i]);
+      s := STATE_NO;
+    end else
+      Result[c].stop := Self[i];
+    STATE_DESC:
+    if not (Self[i] = (Result[c].stop - 1)) then
+    begin
+      Result[c.Increment].Create(Self[i]);
+      s := STATE_NO;
+    end else
+      Result[c].stop := Self[i];
+  end;
+  SetLength(Result, (c + 1));
 end;
 
 {==============================================================================]

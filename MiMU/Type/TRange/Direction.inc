@@ -1,10 +1,13 @@
 {$IFDEF METHODS}
 function Direction: Integer; overload;
+function Flow: Integer; overload;
 function Orientation: Integer; overload;
 function Polarity: Integer; overload;
 function Sgn: Integer; overload;
 function Signum: Integer; overload;
 function Slope: Integer; overload;
+function State: Integer; overload;
+function Status: Integer; overload;
 function Step: Integer; overload;
 function Step(const index: Integer): Integer; overload;
 function Stepping: Integer; overload;
@@ -27,6 +30,26 @@ function Windy: Integer; overload;
 function TRange.Direction: Integer; overload;
 begin
   Result := Sign(Self.Delta);
+end;
+
+{==============================================================================]
+  <Flow>
+  @action: Returns the numeric flow direction of the range based on the
+           difference between Stop and Start.
+  @note:
+    The result is the normalized sign of (Stop - Start):
+       1  => increasing  (Stop > Start)
+      -1  => decreasing  (Stop < Start)
+       0  => neutral     (Stop = Start)
+    The magnitude of the range is not returned, only its directional
+    tendency.
+[==============================================================================}
+function TRange.Flow: Integer; overload;
+var
+  d: Integer;
+begin
+  d := (Self.stop - Self.start);
+  Result := (d div (Abs(d) + Ord(d = 0)));
 end;
 
 {==============================================================================]
@@ -108,6 +131,53 @@ begin
     Result := 1
   else
     Result := -1;
+end;
+
+{==============================================================================]
+  <State>
+  @action: Determines the directional state of the range.
+           Returns the sign of (Stop - Start):
+            1   if Stop > Start  (ascending range)
+           -1   if Stop < Start  (descending range)
+            0   if Stop = Start  (single-value range)
+  @note:
+    - The result is derived from the arithmetic difference
+      (Stop - Start).
+    - No normalization of Start and Stop is performed.
+    - The magnitude of the range is not returned, only its direction.
+[==============================================================================}
+function TRange.State: Integer; overload;
+var
+  d: Integer;
+begin
+  d := (Self.stop - Self.start);
+  if (d > 0) then
+    Result := 1
+  else if (d < 0) then
+    Result := -1
+  else
+    Result := 0;
+end;
+
+{==============================================================================]
+  <Status>
+  @action: Returns the directional status of the range.
+           Indicates the progression of the range based on the Delta value:
+            1  => ascending  (Stop > Start)
+           -1  => descending (Stop < Start)
+            0  => degenerate (Stop = Start)
+  @note:
+    - The result is derived from Self.Delta (Stop - Start).
+    - Only the direction is returned; the magnitude of the range is ignored.
+    - Functionally equivalent to computing Sign(Stop - Start).
+[==============================================================================}
+function TRange.Status: Integer; overload;
+begin
+  case Sign(Self.Delta) of
+    1:  Result := 1;
+    -1: Result := -1;
+    0:  Result := 0;
+  end;
 end;
 
 {==============================================================================]
