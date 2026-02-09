@@ -6,7 +6,9 @@ function Fusion: TRangeArray; overload;
 function Merge(const rAscending: Boolean = True): TRangeArray; overload;
 function Merged(const rAscending: Boolean = True): TRangeArray; overload;
 function Sequences: TRangeArray; overload;
+function Strands: TRangeArray; overload;
 function Streaks: TRangeArray; overload;
+function Streams: TRangeArray; overload;
 function ToTRangeArray: TRangeArray; overload;
 function TRA: TRangeArray; overload;
 {$ENDIF}
@@ -357,6 +359,58 @@ begin
 end;
 
 {==============================================================================]
+  <Strands>
+  @action: Splits the integer array into contiguous sequences (“strands”) where
+           consecutive elements consistently increase or decrease by 1, and
+           returns them as ranges.
+           An array of TRange records, each representing a maximal ascending or
+           descending sequence from the original array.
+  @note:
+    - The source array is processed in its original order; no sorting occurs.
+    - A strand continues as long as consecutive elements differ by +1 (ascending)
+      or -1 (descending). Any change in direction or non-consecutive value
+      ends the strand.
+    - Single elements not part of a strand become degenerate ranges
+      (Start = Stop).
+    - Empty arrays return an empty result.
+[==============================================================================}
+function TIntegerArrayHelper.Strands: TRangeArray; overload;
+var
+  h, c, i: Integer;
+  function HasNext(var idx: Integer): Boolean;
+  begin
+    Result := (idx <= h);
+  end;
+  function NextRange(var idx: Integer): TRange;
+  var
+    s, d: Integer;
+  begin
+    if (idx = h) then
+      Exit(TRange.Construct(Self[idx.Increase]));
+    s := idx;
+    if (Self[idx + 1] = (Self[idx] + 1)) then
+      d := 1
+    else if (Self[idx + 1] = (Self[idx] - 1)) then
+      d := -1
+    else
+      d := 0;
+    while ((idx < h) and (((d = 1) and (Self[idx + 1] = (Self[idx] + 1))) or ((d = -1) and (Self[idx + 1] = (Self[idx] - 1))))) do
+      Inc(idx);
+    Result.Create(Self[s], Self[idx.Increase]);
+  end;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit([]);
+  SetLength(Result, (h + 1));
+  c := 0;
+  i := 0;
+  while HasNext(i) do
+    Result[c.Increase] := NextRange(i);
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
   <Streaks>
   @action: Identifies contiguous sequences of integers (“streaks”) in the array
            where consecutive elements consistently increase or decrease by 1,
@@ -402,6 +456,42 @@ begin
     Inc(c);
   end;
   SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <Streams>
+  @action: Converts an integer array into contiguous ranges (“streams”) by grouping
+           consecutive elements that increment or decrement by 1, taking into account
+           changes in direction to start a new stream.
+           Returns a TRangeArray, where each range represents a maximal contiguous
+           sequence of ascending or descending integers from the original array.
+  @note:
+    - The source array is processed in its original order; no sorting occurs.
+    - A new stream begins whenever:
+        * A non-consecutive element is encountered (difference ≠ ±1), or
+        * A direction reversal occurs after at least two consecutive elements.
+    - Single elements not part of a sequence become degenerate ranges
+      (Start = Stop).
+    - Empty arrays return an empty TRangeArray.
+[==============================================================================}
+function TIntegerArrayHelper.Streams: TRangeArray; overload;
+var
+  i, j, c, l: Integer;
+  b: TIntegerArray;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  SetLength(b, l);
+  b[0] := 0;
+  c := 1;
+  for i := 1 to (l - 1) do
+    if (((Self[i] <> (Self[i - 1] + 1)) and (Self[i] <> (Self[i - 1] - 1))) or ((i > 1) and ((Self[i - 1] = (Self[i - 2] + 1)) and (Self[i] = (Self[i - 1] - 1))) or ((Self[i - 1] = (Self[i - 2] - 1)) and (Self[i] = (Self[i - 1] + 1))))) then
+      b[c.Increase] := i;
+  b[c] := l;
+  SetLength(Result, c);
+  for i := 0 to (c - 1) do
+    Result[i].Create(Self[b[i]], Self[b[i + 1] - 1]);
 end;
 
 {==============================================================================]

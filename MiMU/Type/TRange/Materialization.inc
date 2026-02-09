@@ -5,12 +5,14 @@ function AsArr: TIntegerArray; overload;
 function AsArray: TIntegerArray; overload;
 function Atomize: TIntegerArray; overload;
 function Bank: TIntegerArray; overload;
+function Breakdown: TIntegerArray; overload;
 function Capture: TIntegerArray; overload;
 function Captured: TIntegerArray; overload;
 function Collect: TIntegerArray; overload;
 function Content: TIntegerArray; overload;
 function Contents: TIntegerArray; overload;
 function Data: TIntegerArray; overload;
+function Decompose: TIntegerArray; overload;
 function Digits: TIntegerArray; overload;
 function Digits(const dIndex: Integer): Integer; overload;
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
@@ -39,6 +41,9 @@ function Materialized: TIntegerArray; overload;
 function Members: TIntegerArray; overload;
 function Numbered: TIntegerArray; overload;
 function Numbers: TIntegerArray; overload;
+function Numeralize: TIntegerArray; overload;
+function Numerals: TIntegerArray; overload;
+function Pile: TIntegerArray; overload;
 function Populate(var arr: TIntegerArray): TRange; overload;
 function Pull: TIntegerArray; overload;
 function Queue: TIntegerArray; overload;
@@ -202,7 +207,7 @@ end;
 
 {==============================================================================]
   <Bank>
-  @action: ?
+  @action: Returns ALL TRange items as TIntegerArray.
   @note: ?
 [==============================================================================}
 function TRange.Bank: TIntegerArray; overload;
@@ -218,6 +223,34 @@ begin
     Result[r.start] := (Self.start + (d * r.start));
     if (r.start <> r.stop) then
       Result[r.stop] := (Self.start + (d * r.stop));
+  end;
+end;
+
+{==============================================================================]
+  <Breakdown>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: ?
+[==============================================================================}
+function TRange.Breakdown: TIntegerArray; overload;
+var
+  c, i, b, p, d, v: Integer;
+begin
+  c := Self.Count;
+  SetLength(Result, c);
+  d := Self.Direction;
+  for i := 0 to (c - 1) do
+  begin
+    v := Self.start;
+    p := i;
+    b := 0;
+    while (p > 0) do
+    begin
+      if ((p and 1) = 1) then
+        v := (v + (d shl b));
+      p := (p shr 1);
+      Inc(b);
+    end;
+    Result[i] := v;
   end;
 end;
 
@@ -348,6 +381,40 @@ begin
   i := 0;
   for n in Self do
     Result[i.Increase] := n;
+end;
+
+{==============================================================================]
+  <Decompose>
+  @action: Converts the range to an array using divide and conquer.
+  @returns: Dynamic array containing all values from Start to Stop
+  @note: Respects range direction (ascending/descending).
+         Uses recursive divide and conquer strategy.
+[==============================================================================}
+function TRange.Decompose: TIntegerArray; overload;
+  procedure FillRange(var arr: TIntegerArray; const offset, start, stop, step: Integer);
+  var
+    m: Integer;
+  begin
+    if (start = stop) then
+    begin
+      arr[offset] := start;
+      Exit;
+    end;
+    if (Abs(stop - start) = Abs(step)) then
+    begin
+      arr[offset] := start;
+      arr[offset + 1] := stop;
+      Exit;
+    end;
+    m := (start + ((stop - start) div 2));
+    FillRange(arr, offset, start, m, step);
+    FillRange(arr, (offset + ((Abs(m - start) div Abs(step)) + 1)), (m + step), stop, step);
+  end;
+var
+  d: Integer;
+begin
+  SetLength(Result, Self.Count);
+  FillRange(Result, 0, Self.Start, Self.Stop, Self.Direction);
 end;
 
 {==============================================================================]
@@ -1003,6 +1070,117 @@ begin
   while (((s = 1) and (i <= Self.stop)) or ((s = -1) and (i >= Self.stop))) do
     Result[r.Increase] := i.Increase(s);
 end;
+
+{==============================================================================]
+  <Numeralize>
+  @action: Expands the range into a dynamic array of integers using a
+           divide-and-conquer strategy, producing all values from Start to Stop.
+           A TIntegerArray containing every integer in the range, in order,
+           respecting the range’s direction (ascending or descending).
+  @note:
+    - Efficiently populates the array by recursively splitting the range.
+    - Handles ranges of any length, including single-element or two-element ranges.
+    - Preserves the numeric progression; step is always 1 in the correct direction.
+    - Empty ranges return an empty array.
+[==============================================================================}
+function TRange.Numeralize: TIntegerArray; overload;
+  procedure DividedFill(var arr: TIntegerArray; const offset, rangeStart, rangeStop: Integer);
+  var
+    c, m, i, s: Integer;
+  begin
+    c := (Abs(rangeStop - rangeStart) + 1);
+    if (c <= 2) then
+    begin
+      arr[offset] := rangeStart;
+      if (c = 2) then
+        arr[offset + 1] := rangeStop;
+      Exit;
+    end;
+    s := IfThen((rangeStart <= rangeStop), 1, -1);
+    m := (rangeStart + ((c div 2) * s));
+    DividedFill(arr, offset, rangeStart, (m - s));
+    DividedFill(arr, (offset + (c div 2)), m, rangeStop);
+  end;
+begin
+  SetLength(Result, Self.Count);
+  DividedFill(Result, 0, Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <Numerals>
+  @action: Expands the range into a dynamic array of integers containing
+           all values from Start to Stop.
+           A TIntegerArray containing every integer in the range, in order,
+           respecting the range’s direction (ascending or descending).
+  @note:
+    - Uses a recursive divide-and-conquer strategy for efficient population.
+    - Single-element ranges produce a one-element array.
+    - Empty ranges return an empty array.
+    - Preserves the numeric progression; the step between elements is always 1
+      in the correct direction (ascending or descending).
+[==============================================================================}
+function TRange.Numerals: TIntegerArray; overload;
+  procedure FillPartition(var arr: TIntegerArray; const left, right, startVal, step: Integer);
+  var
+    m, i: Integer;
+  begin
+    if (left > right) then
+      Exit;
+    if (left = right) then
+    begin
+      arr[left] := startVal;
+      Exit;
+    end;
+    i := ((left + right) div 2);
+    m := (startVal + ((i - left) * step));
+    arr[i] := m;
+    FillPartition(arr, left, (i - 1), startVal, step);
+    FillPartition(arr, (i + 1), right, (m + step), step);
+  end;
+begin
+  SetLength(Result, Self.Count);
+  FillPartition(Result, 0, High(Result), Self.start, Self.Direction);
+end;
+
+{==============================================================================]
+  <Pile>
+  @action: Converts the range into a dynamic array of integers using a
+           recursive divide-and-conquer strategy, producing all values from Start to Stop.
+           A TIntegerArray containing every integer in the range, in order,
+           respecting the range’s direction (ascending or descending).
+  @note:
+    - Builds the array recursively by splitting the range into subarrays.
+    - Handles ranges of any length, including single-element ranges.
+    - Preserves numeric progression; step is always 1 in the correct direction.
+    - Empty ranges return an empty array.
+    - Functionally similar to `Numeralize` but implemented via explicit array concatenation.
+[==============================================================================}
+function TRange.Pile: TIntegerArray; overload;
+  function BuildSubArray(const start, stop: Integer): TIntegerArray;
+  var
+    i, c, m, s: Integer;
+    l, r: TIntegerArray;
+  begin
+    c := (Abs(stop - start) + 1);
+    if (c = 1) then
+    begin
+      SetLength(Result, 1);
+      Result[0] := start;
+      Exit;
+    end;
+    s := IfThen((start <= stop), 1, -1);
+    m := (start + ((c div 2) * s));
+    l := BuildSubArray(start, (m - s));
+    r := BuildSubArray(m, stop);
+    SetLength(Result, (System.Length(l) + System.Length(r)));
+    for i := 0 to High(l) do
+      Result[i] := l[i];
+    for i := 0 to High(r) do
+      Result[System.Length(l) + i] := r[i];
+  end;
+begin
+  Result := BuildSubArray(Self.start, Self.stop);
+end; 
 
 {==============================================================================]
   <Populate>
