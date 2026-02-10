@@ -1,4 +1,5 @@
 {$IFDEF METHODS}
+function Amount: Int64; overload;
 function Area: Integer;
 function Bulk: Integer;
 function Capacity: Integer;
@@ -19,6 +20,7 @@ function Length: Integer; overload;
 function Mass: Integer;
 function Measure: Integer;
 function Measured: Int64;
+function Perimeter: Int64; overload;
 function Population: Integer; overload;
 function PopulationSize: Integer;
 function Quantified: Int64;
@@ -36,6 +38,25 @@ function Width: Integer;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Amount>
+  @action: Returns the number of discrete Int64 values contained in the
+           inclusive range defined by Self.start and Self.stop.
+  @note: Order-independent. If start > stop, the result is still positive.
+         Uses a branchless absolute-value implementation for performance.
+         If (stop - start) overflows Int64, the result is undefined.
+  Formula: |stop - start| + 1        
+[==============================================================================}
+function TRange.Amount: Int64; overload;
+var
+  d: Int64;
+begin
+  d := (Int64(Self.stop) - Self.start);
+  if (d < 0) then
+    d := -d;
+  Result := ((d xor (d shr 63)) - (d shr 63) + 1);
+end;
+
 {==============================================================================]
   <Area>
   @action: Returns area of the given range.
@@ -316,6 +337,20 @@ end;
 function TRange.Measured: Int64;
 begin
   Result := (Abs(Int64(Self.stop) - Int64(Self.start)) + 1);
+end;
+
+{==============================================================================]
+  <Perimeter>
+  @action: Returns the size of the inclusive range defined by Self.start and Self.stop.
+  @note: Order-independent. The result is always positive.
+         Formula: |stop - start| + 1
+         Uses Abs() on PtrInt-casted operands to ensure native-sized
+         signed arithmetic before evaluation.
+         If (stop - start) exceeds the signed range of PtrInt, the result is undefined.
+[==============================================================================}
+function TRange.Perimeter: Int64; overload;
+begin
+  Result := (Abs(PtrInt(Self.stop) - PtrInt(Self.start)) + 1);
 end;
 
 {==============================================================================]
