@@ -1,5 +1,5 @@
 {$IFDEF HELPERS}
-function Squeeze: TRangeArray; overload;
+function Squeeze(const rAscending: Boolean = True): TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,9 +17,10 @@ function Squeeze: TRangeArray; overload;
     - Original ranges with gaps between them may be merged if the sequences
       of values are contiguous.
     - Preserves ascending order for each resulting streak.
+	- rAscending for Ascending or Descending order for the returning array.
 [==============================================================================}
-function TRangeArrayHelper.Squeeze: TRangeArray; overload;
+function TRangeArrayHelper.Squeeze(const rAscending: Boolean = True): TRangeArray; overload;
 begin
-  Result := Self.TIA.QuickSorted.Compressed.Streaks;
+  Result := Self.TIA.QuickSorted(rAscending).Compressed.Streaks;
 end;
 {$ENDIF}
