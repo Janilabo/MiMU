@@ -16,6 +16,7 @@ function Map(const index: Integer = 0): Integer; overload;
 function Member(const index: Integer = 0): Integer; overload;
 function Nth(const index: Integer = 0): Integer; overload;
 function NthVal(const index: Integer = 0): Integer; overload;
+function NValue(const index: Integer = 0): Integer; overload;
 function Term(const index: Integer = 0): Integer; overload;
 function ToValue(const index: Integer = 0): Integer; overload;
 function ValueAt(const index: Integer = 0): Integer; overload;
@@ -289,6 +290,31 @@ begin
     Exit(Self.start);
   arr := Self.ToArray;
   Result := arr[Index];
+end;
+
+{==============================================================================]
+  <NValue>
+  @action: Returns the element at a specified zero-based index in the range,
+           supporting negative indices to count from the end.
+  @param index: Zero-based index of the desired element.  
+                 - Positive values count from Start (0 = first element).  
+                 - Negative values count backward from the last element (-1 = last element).
+                 Default = 0.
+  @returns: The integer value at the specified index in the range.
+  @note:
+    - The value is computed using: Start + (index * Wind) for non-negative indices,  
+      or Start + ((Count + index) * Wind) for negative indices.
+    - Preserves range direction (ascending/descending) via Wind.
+    - Supports easy access to the first, last, or any element by index.
+    - Does **not** perform bounds checking; using an out-of-range index may
+      produce a value outside the range.
+[==============================================================================}
+function TRange.NValue(const index: Integer = 0): Integer; overload;
+begin
+  if (index < 0) then
+    Result := (Self.start + ((Self.Count + index) * Self.Wind))
+  else
+    Result := (Self.start + (index * Self.Wind));
 end;
 
 {==============================================================================]

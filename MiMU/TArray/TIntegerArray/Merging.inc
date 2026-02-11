@@ -9,6 +9,7 @@ function Sequences: TRangeArray; overload;
 function Strands: TRangeArray; overload;
 function Streaks: TRangeArray; overload;
 function Streams: TRangeArray; overload;
+function ToTRA(const buffer: Integer = 0): TRangeArray; overload;
 function ToTRangeArray: TRangeArray; overload;
 function TRA: TRangeArray; overload;
 {$ENDIF}
@@ -492,6 +493,52 @@ begin
   SetLength(Result, c);
   for i := 0 to (c - 1) do
     Result[i].Create(Self[b[i]], Self[b[i + 1] - 1]);
+end;
+
+{==============================================================================]
+  <ToTRA>
+  @action: Converts a TIntegerArray into a TRangeArray by grouping consecutive
+           or near-consecutive values into ranges.
+  @param buffer: Determines how close values must be to form a range:
+                  -1 : merge only overlapping values (duplicates).  
+                   0 : merge touching values (adjacent integers).  
+                  ≥1 : merge values separated by gaps ≤ buffer.
+  @returns: TRangeArray containing ranges representing contiguous sequences
+            according to the buffer parameter.
+  @note:
+    - The integer array is first sorted ascending (`QuickSorted`).  
+    - Iterates through the sorted values, extending the current range if
+      the next value is within `(stop + 1 + buffer)`.  
+    - If the next value exceeds this limit, a new range is started.  
+    - The resulting ranges are ascending, non-overlapping, and cover
+      all values in the array.  
+    - Empty input arrays return an empty `TRangeArray`.  
+    - Duplicates in the original array are naturally merged into ranges.
+[==============================================================================}
+function TIntegerArrayHelper.ToTRA(const buffer: Integer = 0): TRangeArray; overload;
+var
+  s: TIntegerArray;
+  c: TRange;
+  b, i: Integer;
+begin
+  SetLength(Result, 0);
+  if Self.Empty then
+    Exit;
+  b := Max(buffer, -1);
+  s := Self.QuickSorted;
+  c.Create(s[0]);
+  for i := 1 to High(s) do
+  case (s[i] <= ((c.stop + 1) + b)) of
+    False:
+    begin
+      Result.Supply(c);
+      c.Create(s[i]);
+    end;
+    True:
+    if (s[i] > c.stop) then
+      c.stop := s[i];
+  end;
+  Result.Supply(c);
 end;
 
 {==============================================================================]
