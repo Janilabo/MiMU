@@ -1,11 +1,12 @@
 {$IFDEF METHODS}
-function Any: Integer;
-function Mixed(const mixings: Integer = 1): TIntegerArray;
-function Rand: Integer;
-function Randomize: TIntegerArray;
+function Any: Integer; overload;
+function Mixed(const mixings: Integer = 1): TIntegerArray; overload;
+function Rand: Integer; overload;
+function Randomize: TIntegerArray; overload;
+function Randomly: Integer; overload;
 function Sample(const sSize: Integer): TIntegerArray; overload;
-function Shake(const shakes: Integer = 1): TIntegerArray;
-function Shuffle(const shuffles: Integer = 1): TIntegerArray;
+function Shake(const shakes: Integer = 1): TIntegerArray; overload;
+function Shuffle(const shuffles: Integer = 1): TIntegerArray; overload;
 function Some: TIntegerArray; overload;
 function Some(const amount: Integer): TIntegerArray; overload;
 function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
@@ -17,9 +18,9 @@ function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
   @action: Returns random TRange item.
   @note: None.
 [==============================================================================}
-function TRange.Any: Integer;
+function TRange.Any: Integer; overload;
 begin
-  Result := ((Self.Start + Random(Self.Size)) * IfThen(Self.Ascending, 1, -1));
+  Result := ((Self.start + Random(Self.Size)) * IfThen(Self.Ascending, 1, -1));
 end;
 
 {==============================================================================]
@@ -27,14 +28,14 @@ end;
   @action: Returns TRange randomly mixed as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TRange.Mixed(const mixings: Integer = 1): TIntegerArray;
+function TRange.Mixed(const mixings: Integer = 1): TIntegerArray; overload;
 var
   i, s, r: Integer;
 begin
   s := IfThen(Self.Ascending, 1, -1);
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
-    Result[i] := ((Self.Start + i) * s);
+    Result[i] := ((Self.start + i) * s);
   if (Result.Size > 1) then
   for r := 1 to mixings do
     for i := High(Result) downto 0 do
@@ -43,20 +44,44 @@ end;
 
 {==============================================================================]
   <Rand>
-  @action: ?
-  @note: ?
+  @action: Returns a pseudo-random value within the numeric bounds of the range.
+  @returns: A random integer between Min(Start, Stop) and
+            Min(Start, Stop) + Size - 1.
+  @note:
+    - The lower bound is Min(Start, Stop).
+    - The value is computed as:
+        Min(Start, Stop) + Random(Size)
+    - Assumes Size > 0.
+    - The distribution is uniform over the produced interval.
+    - This implementation does not explicitly account for Wind;
+      it generates values within the numeric bounds rather than
+      iterating according to range direction.
+    - Correctness depends on Size matching the numeric span
+      of the range.
 [==============================================================================}
-function TRange.Rand: Integer;
+function TRange.Rand: Integer; overload;
 begin
-  Result := (Min(Self.start, Self.stop) + Random(Self.Size));
+  Result := (Self.Minimum + Random(Self.Size));
 end;
 
 {==============================================================================]
   <Randomize>
-  @action: ?
-  @note: ?
+  @action: Returns a randomly permuted array of the range values.
+  @returns: TIntegerArray containing all elements of the range
+            in randomized order.
+  @note:
+    - The result array length equals Size.
+    - Elements are populated using At(i), preserving the
+      logical order of the range prior to shuffling.
+    - The array is shuffled in-place using the Fisher–Yates
+      (Knuth) algorithm.
+    - The permutation is uniformly distributed assuming
+      Random(n) is uniform.
+    - The original range remains unchanged.
+    - Time complexity: O(n).
+    - Space complexity: O(n).
 [==============================================================================}
-function TRange.Randomize: TIntegerArray;
+function TRange.Randomize: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -65,6 +90,29 @@ begin
     Result[i] := Self.At(i);
   for i := High(Result) downto 1 do
     Swap(Result[Random(i + 1)], Result[i]);
+end;
+
+{==============================================================================]
+  <Randomly>
+  @action: Returns a pseudo-random value from within the range.
+  @returns: A randomly selected element of the range.
+  @note:
+    - If the range is ascending:
+        Result := Start + Random(Count)
+    - If the range is descending:
+        Result := Start - Random(Count)
+    - The distribution is uniform over Count possible values.
+    - Assumes Count > 0.
+    - The generated value follows the range direction (respects
+      Ascending / descending orientation).
+    - The result is guaranteed to lie within the range bounds.
+[==============================================================================}
+function TRange.Randomly: Integer; overload;
+begin
+  if Self.Ascending then
+    Result := (Self.start + Random(Self.Count))
+  else
+    Result := (Self.start - Random(Self.Count));
 end;
 
 {==============================================================================]
@@ -92,7 +140,7 @@ end;
   @action: Returns TRange randomly shaked as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TRange.Shake(const shakes: Integer = 1): TIntegerArray;
+function TRange.Shake(const shakes: Integer = 1): TIntegerArray; overload;
 var
   i, s, r: Integer;
 begin
@@ -111,14 +159,14 @@ end;
   @action: Returns TRange randomly shuffled as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TRange.Shuffle(const shuffles: Integer = 1): TIntegerArray;
+function TRange.Shuffle(const shuffles: Integer = 1): TIntegerArray; overload;
 var
   i, s, r: Integer;
 begin
   s := IfThen(Self.Ascending, 1, -1);
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
-    Result[i] := ((Self.Start + i) * s);
+    Result[i] := ((Self.start + i) * s);
   if (Result.Size > 1) then
   for r := 1 to shuffles do
     for i := High(Result) downto 0 do

@@ -15,6 +15,7 @@ function Lookup(const index: Integer = 0): Integer; overload;
 function Map(const index: Integer = 0): Integer; overload;
 function Member(const index: Integer = 0): Integer; overload;
 function Nth(const index: Integer = 0): Integer; overload;
+function NthVal(const index: Integer = 0): Integer; overload;
 function Term(const index: Integer = 0): Integer; overload;
 function ToValue(const index: Integer = 0): Integer; overload;
 function ValueAt(const index: Integer = 0): Integer; overload;
@@ -260,6 +261,34 @@ end;
 function TRange.Nth(const index: Integer = 0): Integer; overload;
 begin
   Result := (Self.start + ((Ord(not Self.Descending) * 2) - 1) * index);
+end;
+
+{==============================================================================]
+  <NthVal>
+  @action: Returns the value at the specified zero-based index within the range.
+  @param index: Zero-based position of the desired element (default = 0).
+  @returns: The value at the specified index, or Low(Integer) if the
+            index is out of bounds.
+  @note:
+    - If index < 0 or index >= Count, Low(Integer) is returned.
+    - If index = 0, Start is returned directly.
+    - For index > 0, the range is materialized via ToArray and the
+      value is retrieved from the resulting array.
+    - Indexing respects the range direction (ascending/descending),
+      as determined by the underlying representation.
+    - This method may incur additional allocation cost for
+      index > 0 due to array construction.
+[==============================================================================}
+function TRange.NthVal(const index: Integer = 0): Integer; overload;
+var
+  arr: TIntegerArray;
+begin
+  if (index < 0) or (Index >= Self.Count) then
+    Exit(Low(Integer));
+  if (index = 0) then 
+    Exit(Self.start);
+  arr := Self.ToArray;
+  Result := arr[Index];
 end;
 
 {==============================================================================]

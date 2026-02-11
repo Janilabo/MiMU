@@ -7,6 +7,9 @@ function Distribute(const parts: Integer= 2): TRangeArray; overload;
 function Distributed(const partCount: Integer = 2): TRangeArray; overload;
 function Divide(const size: Integer = 2): TRangeArray; overload;
 function Divided(const partCount: Integer = 2): TRangeArray; overload;
+function Halve: TRangeArray; overload;
+function Halved: TRangeArray; overload;
+function Halves: TRangeArray; overload;
 function Parted(const partSize: Integer = 2): TRangeArray; overload;
 function Partition(const size: Integer = 2): TRangeArray; overload;
 function Partitioned(const partSize: Integer = 2): TRangeArray; overload;
@@ -15,6 +18,8 @@ function Parts(const partSize: Integer = 2): TRangeArray; overload;
 function Sectioned(const target: TRange): TRangeArray; overload;
 function Segmented(const partCount: Integer = 2): TRangeArray; overload;
 function Separate(const partSize: Integer = 2): TRangeArray; overload;
+function Sever(const atValue: Integer): TRangeArray; overload;
+function Sever(const atValues: TIntegerArray): TRangeArray; overload;
 function Sliced(const partCount: Integer = 2): TRangeArray; overload;
 function Slices(const partCount: Integer = 2): TRangeArray; overload;
 function Splinter(const partCount: Integer = 2): TRangeArray; overload;
@@ -281,6 +286,97 @@ begin
 end;
 
 {==============================================================================]
+  <Halve>
+  @action: Splits the range into two contiguous subranges at the midpoint.
+  @returns: Array of two ranges representing the first and second half.
+  @note:
+    - The split index is calculated as (Size div 2).
+    - For odd counts, the extra element is placed in the second half.
+    - Preserves range direction (ascending/descending) via Wind.
+    - For single-element ranges (Size = 1), returns a single range
+      constructed from Start to Stop (no second empty range).
+    - The first range spans from Start to (Midpoint - Wind).
+    - The second range spans from Midpoint to Stop.
+[==============================================================================}
+function TRangeHelper.Halve: TRangeArray; overload;
+var
+  s, m, h, d: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([TRange.Construct(Self.start, Self.stop)]);
+  SetLength(Result, 2);
+  d := Self.Wind;
+  h := (s div 2);
+  m := (Self.start + (h * d));
+  Result[0].Create(Self.start, (m - d));
+  Result[1].Create(m, Self.stop);
+end;
+
+{==============================================================================]
+  <Halved>
+  @action: Splits the range into two contiguous subranges using the arithmetic
+           midpoint between Start and Stop.
+  @returns: Array of two ranges representing the lower and upper halves.
+  @note:
+    - The midpoint is calculated as:
+        m := Start + ((Stop - Start) div 2)
+      (integer division).
+    - The first range spans from Start to m.
+    - The second range spans from (m + Wind) to Stop.
+    - Preserves range direction (ascending/descending) via Wind.
+    - For Size = 1, returns two identical single-element ranges.
+    - For Size = 2, returns two single-element ranges:
+        [Start..Start] and [Stop..Stop].
+    - For larger ranges, elements are partitioned contiguously
+      with no overlap and no gaps.
+[==============================================================================}
+function TRangeHelper.Halved: TRangeArray; overload;
+var
+  m: Integer;
+begin
+  case Self.Size of
+    1: Exit([TRange.Construct(Self.start, Self.stop), TRange.Construct(Self.start, Self.stop)]);
+    2: Exit([TRange.Construct(Self.start, Self.start), TRange.Construct(Self.stop, Self.stop)]);
+  end;
+  SetLength(Result, 2);
+  m := (Self.start + ((Self.stop - Self.start) div 2));
+  Result[0].Create(Self.start, m);
+  Result[1].Create((m + Self.Wind), Self.stop);
+end;
+
+{==============================================================================]
+  <Halves>
+  @action: Splits the range into two contiguous subranges at the arithmetic
+           midpoint between Start and Stop.
+  @returns: Array containing either one or two ranges.
+  @note:
+    - If the range is singular (Single element), returns a single
+      range identical to Self.
+    - Otherwise returns two ranges.
+    - The midpoint is calculated as:
+        m := Start + ((Stop - Start) div 2)
+      (integer division).
+    - The first range spans from Start to m.
+    - The second range spans from (m + Wind) to Stop.
+    - Preserves range direction (ascending/descending) via Wind.
+    - The resulting ranges are contiguous, with no overlap and no gaps.
+    - For odd-length ranges, the midpoint element belongs to
+      the first range.
+[==============================================================================}
+function TRangeHelper.Halves: TRangeArray; overload;
+var
+  m: Integer;
+begin
+  if Self.Singular then
+    Exit([TRange.Construct(Self.start, Self.stop)]);
+  SetLength(Result, 2);
+  m := (Self.start + ((Self.stop - Self.start) div 2));
+  Result[0].Create(Self.start, m);
+  Result[1].Create((m + Self.Wind), Self.stop);
+end; 
+
+{==============================================================================]
   <Parted>
   @action: Partitions the range into contiguous directional subranges
            of at most partSize elements.
@@ -505,6 +601,83 @@ begin
   goto loop;
   done:
 end;
+
+{==============================================================================]
+  <Sever>
+  @action: Splits the range at the specified value, producing up to two
+           contiguous subranges.
+  @param atValue: The value at which the range is to be severed.
+  @returns: Array containing either one or two ranges.
+  @note:
+    - If atValue equals Start, or if atValue is not contained within
+      the range, the original range is returned unchanged (single entry).
+    - Otherwise, two ranges are returned.
+    - The first range spans from Start to (atValue - Wind).
+    - The second range spans from atValue to Stop.
+    - Preserves range direction (ascending/descending) via Wind.
+    - The resulting ranges are contiguous, with no overlap and no gaps.
+    - The split value (atValue) becomes the first element of the
+      second range.
+[==============================================================================}
+function TRangeHelper.Sever(const atValue: Integer): TRangeArray; overload;
+begin
+  if ((atValue = Self.start) or not Self.Contains(atValue)) then
+    Exit([TRange.Construct(Self.start, Self.stop)]);
+  SetLength(Result, 2);
+  Result[0].Create(Self.start, (atValue - Self.Wind));
+  Result[1].Create(atValue, Self.stop);
+end;
+
+{==============================================================================]
+  <Sever>
+  @action: Splits the range at multiple specified values, producing a sequence
+           of contiguous subranges.
+  @param atValues: Array of candidate split values.
+  @returns: Array of one or more ranges resulting from the splits.
+  @note:
+    - If atValues is empty, the original range is returned unchanged.
+    - Only values that exist within the range are considered.
+    - Split values are:
+        * Extracted to those contained in the range,
+        * Deduplicated (Compress),
+        * Sorted according to the range direction.
+    - Splitting proceeds sequentially from Start toward Stop.
+    - For each valid split value v:
+        * A range is created from the current cursor to (v - Wind).
+        * The cursor is then advanced to v.
+    - The final range spans from the last cursor position to Stop.
+    - Values equal to the current cursor (including Start) are ignored.
+    - Preserves range direction (ascending/descending) via Wind.
+    - Resulting ranges are contiguous, non-overlapping, and gap-free.
+    - If no valid split values remain after filtering, the original
+      range is returned as a single entry.
+[==============================================================================}
+function TRangeHelper.Sever(const atValues: TIntegerArray): TRangeArray; overload;
+var
+  i, l, d, c: Integer;
+  s: TIntegerArray;
+begin
+  if atValues.Empty then
+    Exit([TRange.Construct(Self.start, Self.stop)]);
+  s := atValues.Extract(Self.All);
+  if s.Empty then
+    Exit([TRange.Construct(Self.start, Self.stop)]);
+  s.Compress;
+  s.QuickSort(Self.Ascending);
+  d := Self.Wind;
+  SetLength(Result, (System.Length(s) + 1));
+  l := 0;
+  c := Self.Start;
+  for i := 0 to High(s) do
+  begin
+    if not (Self.Contains(s[i]) and (s[i] <> c)) then
+      Continue;
+    Result[l.Increase].Create(c, (s[i] - d));
+    c := s[i];
+  end;
+  Result[l.Increase].Create(c, Self.stop);
+  SetLength(Result, l);
+end; 
 
 {==============================================================================]
   <Segmented>

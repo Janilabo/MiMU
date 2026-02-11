@@ -10,6 +10,7 @@ function Coverage: Integer; overload;
 function Diameter: Integer; overload;
 function Extent: Integer; overload;
 function Footprint: Integer;
+function GetAmount: Int64; overload;
 function GetCount: Integer;
 function GetLength: Integer;
 function GetSize: Integer;
@@ -193,6 +194,25 @@ begin
     Result := (d + 1)
   else
     Result := (-d + 1);
+end;
+
+{==============================================================================]
+  <GetAmount>
+  @action: Returns the number of discrete Int64 values contained in the
+           inclusive range defined by Self.start and Self.stop.
+  @note: Order-independent. The bounds are normalized internally
+         (min/max) before evaluation. Formula: (max - min) + 1
+         Computation is performed in signed Int64 arithmetic.
+[==============================================================================}
+function TRange.GetAmount: Int64; overload;
+var
+  l, h: Int64;
+begin
+  l := Self.start;
+  h := Self.stop;
+  if (l > h) then
+    Swap(l, h);
+  Result := ((h - l) + 1);
 end;
 
 {==============================================================================]
