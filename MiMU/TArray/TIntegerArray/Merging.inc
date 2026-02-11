@@ -5,6 +5,8 @@ function Fuse(const items: TIntegerArray; const oAscending: Boolean = True): Int
 function Fusion: TRangeArray; overload;
 function Merge(const rAscending: Boolean = True): TRangeArray; overload;
 function Merged(const rAscending: Boolean = True): TRangeArray; overload;
+function Rangified: TRangeArray; overload;
+function Rangify: TRangeArray; overload;
 function Sequences: TRangeArray; overload;
 function Strands: TRangeArray; overload;
 function Streaks: TRangeArray; overload;
@@ -315,6 +317,92 @@ begin
     end;
   end;
   SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <Rangified>
+  @action: Partitions the integer array into maximal consecutive (±1 step) monotonic
+           runs and converts each run into a TRange.
+  @note:
+    - The array is processed in its current order; it is not sorted.
+    - A new range starts when:
+        • The step between adjacent elements is not ±1, or
+        • The direction changes (increasing ↔ decreasing).
+    - Duplicate values break a run (step = 0).
+    - An empty array returns an empty TRangeArray.
+    - Each resulting range is created as: TRange.Create(StartValue, EndValue)
+      where StartValue and EndValue correspond to the first and last
+      elements of the run.
+[==============================================================================}
+function TIntegerArrayHelper.Rangified: TRangeArray; overload;
+var
+  i, l, n, s, p: Integer;
+begin
+  SetLength(Result, 0);
+  l := Self.Length;
+  if (l = 0) then
+    Exit;
+  n := 0;
+  p := 0;
+  for i := 1 to (l - 1) do
+  begin
+    s := (Self[i] - Self[i - 1]);
+    if ((Abs(s) <> 1) or ((p <> 0) and (s <> p))) then
+    begin
+      Result.Supply(TRange.Construct(Self[n], Self[i - 1]));
+      n := i;
+      p := 0;
+      Continue;
+    end;
+    p := s;
+  end;
+  Result.Supply(TRange.Construct(Self[n], Self[l - 1]));
+end;
+
+{==============================================================================]
+  <Rangify>
+  @action: Partitions the integer array into maximal consecutive (±1 step) monotonic
+           runs and converts each run into a TRange.
+  @note:
+    - The array is processed in its current order; it is not sorted.
+    - A new range starts when:
+        • The step between adjacent elements is not ±1, or
+        • The direction changes (increasing ↔ decreasing).
+    - Duplicate values break a run (step = 0).
+    - An empty array returns an empty TRangeArray.
+    - Each resulting range is created as: TRange.Create(StartValue, EndValue)
+      where StartValue and EndValue correspond to the first and last
+      elements of the run.
+[==============================================================================}
+function TIntegerArrayHelper.Rangify: TRangeArray; overload;
+var
+  i, c, l, p, s: Integer;
+  b: TIntegerArray;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  SetLength(b, l);
+  b[0] := 0;
+  c := 1;
+  p := 0;
+  for i := 1 to (l - 1) do
+  begin
+    s := (Self[i] - Self[i - 1]);
+    if (Abs(s) <> 1) then
+    begin
+      b[c.Increase] := i;
+      p := 0;
+      Continue;
+    end;
+    if ((i > 1) and (p <> 0) and (s <> p)) then
+      b[c.Increase] := i;
+    p := s;
+  end;
+  b[c] := l;
+  SetLength(Result, c);
+  for i := 0 to (c - 1) do
+    Result[i].Create(Self[b[i]], Self[b[i + 1] - 1]);
 end;
 
 {==============================================================================]
