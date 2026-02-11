@@ -487,7 +487,7 @@ begin
   b[0] := 0;
   c := 1;
   for i := 1 to (l - 1) do
-    if (((Self[i] <> (Self[i - 1] + 1)) and (Self[i] <> (Self[i - 1] - 1))) or ((i > 1) and ((Self[i - 1] = (Self[i - 2] + 1)) and (Self[i] = (Self[i - 1] - 1))) or ((Self[i - 1] = (Self[i - 2] - 1)) and (Self[i] = (Self[i - 1] + 1))))) then
+    if (((Self[i] <> (Self[i - 1] + 1)) and (Self[i] <> (Self[i - 1] - 1))) or ((i > 1) and (((Self[i - 1] = (Self[i - 2] + 1)) and (Self[i] = (Self[i - 1] - 1))) or ((Self[i - 1] = (Self[i - 2] - 1)) and (Self[i] = (Self[i - 1] + 1)))))) then
       b[c.Increase] := i;
   b[c] := l;
   SetLength(Result, c);
