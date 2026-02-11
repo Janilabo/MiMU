@@ -1,6 +1,7 @@
 {$IFDEF METHODS}
 function Any: Integer; overload;
 function Mixed(const mixings: Integer = 1): TIntegerArray; overload;
+function Raffle(const N: Integer = 1): TIntegerArray; overload;
 function Rand: Integer; overload;
 function Randomize: TIntegerArray; overload;
 function Randomly: Integer; overload;
@@ -41,6 +42,59 @@ begin
     for i := High(Result) downto 0 do
       Swap(Result[Random(Result.Size)], Result[Random(Result.Size)]);
 end;
+
+{==============================================================================]
+  <Raffle>
+  @action: Selects N distinct random elements from the range without replacement.
+  @param N: The number of elements to select (default = 1).
+  @returns: TIntegerArray containing up to N unique elements from the range.
+  @note:
+    - If N < 1, an empty array is returned.
+    - If N >= Count, all range elements are returned in order.
+    - For small N (less than one-tenth of Count), elements are selected
+      individually using a boolean mask to ensure uniqueness.
+    - For larger N, the range is converted to an array and partially shuffled
+      using the Fisher–Yates algorithm to select the first N elements.
+    - Preserves the range direction via Wind when computing element values.
+    - The resulting array contains unique elements, randomly distributed,
+      with no duplicates.
+    - Original range is not modified.
+[==============================================================================}
+function TRange.Raffle(const N: Integer = 1): TIntegerArray; overload;
+var
+  a, c, i, m, v, w: Integer;
+  u: TBooleanArray;
+begin
+  if (N < 1) then
+    Exit([]);
+  c := Self.Count;
+  m := Min(N, c);
+  SetLength(Result, m);
+  if (m = c) then
+    Exit(Self.ToArray);
+  case (m < (c div 10)) of
+    True:
+    begin
+      w := Self.Wind;
+      SetLength(u, c);
+      for i := 0 to (m - 1) do
+      begin
+        repeat
+          v := Random(c);
+        until not u[v];
+        u[v] := True;
+        Result[i] := (Self.start + (v * w));
+      end;
+    end;
+    False:
+    begin
+      Result := Self.ToArray;
+      for i := 0 to (m - 1) do
+        Swap(Result[i], Result[(i + Random(c - i))]);
+      SetLength(Result, m);
+    end;
+  end;
+end; 
 
 {==============================================================================]
   <Rand>
