@@ -5,8 +5,10 @@ function Fuse(const items: TIntegerArray; const oAscending: Boolean = True): Int
 function Fusion: TRangeArray; overload;
 function Merge(const rAscending: Boolean = True): TRangeArray; overload;
 function Merged(const rAscending: Boolean = True): TRangeArray; overload;
+function Rangefy: TRangeArray; overload;
 function Rangified: TRangeArray; overload;
 function Rangify: TRangeArray; overload;
+function Runify: TRangeArray; overload;
 function Sequences: TRangeArray; overload;
 function Strands: TRangeArray; overload;
 function Streaks: TRangeArray; overload;
@@ -320,6 +322,51 @@ begin
 end;
 
 {==============================================================================]
+  <Rangefy>
+  @action: Scans the integer array and partitions it into maximal consecutive
+           monotonic runs where each step between adjacent elements is ±1.
+           Each run is converted into a TRange and appended to the result.
+  @note:
+    - The array is processed in its current order; it is not sorted.
+    - A new range starts when:
+        • The difference between consecutive elements is not ±1, or
+        • The direction of consecutive steps changes.
+    - Single elements are returned as ranges where Start = End.
+    - An empty array returns an empty TRangeArray.
+    - Each resulting range is created using TRange.Construct(StartValue, EndValue).
+[==============================================================================}
+function TIntegerArrayHelper.Rangefy: TRangeArray; overload;
+var
+  i, j, l, s: Integer;
+begin
+  l := Self.Length;
+  SetLength(Result, 0);
+  if (l = 0) then
+    Exit;
+  i := 0;
+  while (i < l) do
+  begin
+    j := (i + 1);
+    if (j >= l) then
+    begin
+      Result.Supply(TRange.Construct(Self[i], Self[i]));
+      Break;
+    end;
+    s := (Self[j] - Self[j - 1]);
+    if (Abs(s) <> 1) then
+    begin
+      Result.Supply(TRange.Construct(Self[i], Self[i]));
+      Inc(i);
+      Continue;
+    end;
+    while ((j < l) and ((Self[j] - Self[j - 1]) = s)) do
+      Inc(j);
+    Result.Supply(TRange.Construct(Self[i], Self[j - 1]));
+    i := j;
+  end;
+end;
+
+{==============================================================================]
   <Rangified>
   @action: Partitions the integer array into maximal consecutive (±1 step) monotonic
            runs and converts each run into a TRange.
@@ -403,6 +450,52 @@ begin
   SetLength(Result, c);
   for i := 0 to (c - 1) do
     Result[i].Create(Self[b[i]], Self[b[i + 1] - 1]);
+end;
+
+{==============================================================================]
+  <Runify>
+  @action: Converts the integer array into a sequence of maximal monotonic runs
+           where each step between consecutive elements is ±1. Each run is
+           emitted as a TRange and appended to the result.
+  @note:
+    - The array is processed in its original order; it is not sorted.
+    - A new range starts when:
+        • The difference between consecutive elements is not ±1, or
+        • The direction of consecutive steps changes.
+    - Single elements are returned as ranges with Start = End.
+    - An empty array returns an empty TRangeArray.
+    - Each resulting range is created via TRange.Construct(StartValue, EndValue).
+    - This version uses a state variable `s` to track the current step and
+      emits ranges dynamically as breaks are encountered.
+[==============================================================================}
+function TIntegerArrayHelper.Runify: TRangeArray; overload;
+var
+  h, i, c, s: Integer;
+begin
+  h := High(Self);
+  SetLength(Result, 0);
+  if (h = -1) then
+    Exit;
+  c := Self[0];
+  s := 0;
+  for i := 1 to h do
+  case (s = 0) of
+    True:
+    if not (Abs(Self[i] - Self[i - 1]) = 1) then
+    begin
+      Result.Supply(TRange.Construct(c, c));
+      c := Self[i];
+    end else
+      s := (Self[i] - Self[i - 1]);
+    False:
+    if ((Self[i] - Self[i - 1]) <> s) then
+    begin
+      Result.Supply(TRange.Construct(c, Self[i - 1]));
+      c := Self[i];
+      s := 0;
+    end;
+  end;
+  Result.Supply(TRange.Construct(c, Self[h]));
 end;
 
 {==============================================================================]
