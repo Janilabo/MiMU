@@ -5,9 +5,11 @@ function Fuse(const items: TIntegerArray; const oAscending: Boolean = True): Int
 function Fusion: TRangeArray; overload;
 function Merge(const rAscending: Boolean = True): TRangeArray; overload;
 function Merged(const rAscending: Boolean = True): TRangeArray; overload;
+function Rangefied: TRangeArray; overload;
 function Rangefy: TRangeArray; overload;
 function Rangified: TRangeArray; overload;
 function Rangify: TRangeArray; overload;
+function Runified: TRangeArray; overload;
 function Runify: TRangeArray; overload;
 function Sequences: TRangeArray; overload;
 function Strands: TRangeArray; overload;
@@ -322,6 +324,55 @@ begin
 end;
 
 {==============================================================================]
+  <Rangefied>
+  @action: Converts the integer array into a sequence of maximal monotonic runs
+           where consecutive elements differ by ±1, producing each run as a TRange.
+           The resulting ranges are appended to a TRangeArray.
+  @note:
+    - The array is processed in its current order; it is not sorted.
+    - A new range starts when:
+        • The difference between consecutive elements is not ±1, or
+        • The direction of consecutive steps changes.
+    - Single-element runs are returned as ranges with Start = End.
+    - An empty array returns an empty TRangeArray.
+    - Uses a state variable `s` to track the current step:
+        • `s = 0` → run not yet started or just broken
+        • `s <> 0` → current run has constant step
+    - Each range is constructed via `TRange.Construct(StartValue, EndValue)`.
+    - The logic is implemented using a single loop with a `case` to
+      distinguish initialization vs. ongoing run.
+[==============================================================================}
+function TIntegerArrayHelper.Rangefied: TRangeArray; overload;
+var
+  h, i, c, s: Integer;
+begin
+  h := High(Self);
+  SetLength(Result, 0);
+  if (h = -1) then
+    Exit;
+  c := Self[0];
+  s := 0;
+  for i := 1 to h do
+  case (s = 0) of
+    True:
+    if (Abs(Self[i] - Self[i - 1]) <> 1) then
+    begin
+      Result.Supply(TRange.Construct(c, c));
+      c := Self[i];
+    end else
+      s := (Self[i] - Self[i - 1]);
+    False:
+    if ((Self[i] - Self[i - 1]) <> s) then
+    begin
+      Result.Supply(TRange.Construct(c, Self[i - 1]));
+      c := Self[i];
+      s := 0;
+    end;
+  end;
+  Result.Supply(TRange.Construct(c, Self[h]));
+end;
+
+{==============================================================================]
   <Rangefy>
   @action: Scans the integer array and partitions it into maximal consecutive
            monotonic runs where each step between adjacent elements is ±1.
@@ -450,6 +501,42 @@ begin
   SetLength(Result, c);
   for i := 0 to (c - 1) do
     Result[i].Create(Self[b[i]], Self[b[i + 1] - 1]);
+end;
+
+{==============================================================================]
+  <Runified>
+  @action: Converts the integer array into a sequence of maximal monotonic runs
+           where each consecutive element differs by ±1, and returns each run
+           as a TRange in a TRangeArray.
+  @note:
+    - The array is processed in its original order; it is not sorted.
+    - A new range starts when:
+        • The difference between consecutive elements is not ±1, or
+        • The direction of consecutive steps changes.
+    - Single elements are returned as ranges where Start = End.
+    - An empty array returns an empty TRangeArray.
+    - This implementation uses a single loop and a start index `s` to
+      track the beginning of the current run. Ranges are emitted dynamically
+      when a break in the run is detected or the array ends.
+    - The loop condition is compact but encodes three break criteria:
+        1. End of the array (`i = l`)
+        2. Non-consecutive elements (`Abs(Self[i] - Self[i - 1]) <> 1`)
+        3. Step direction change for runs longer than 1 element
+[==============================================================================}
+function TIntegerArrayHelper.Runified: TRangeArray; overload;
+var
+  l, i, s: Integer;
+begin
+  SetLength(Result, 0);
+  l := Self.Length;
+  s := 0;
+  for i := 1 to l do
+  begin
+    if not ((i = l) or (Abs(Self[i] - Self[i - 1]) <> 1) or ((i > (s + 1)) and ((Self[i] - Self[i - 1]) <> (Self[i - 1] - Self[i - 2])))) then
+      Continue;
+    Result.Supply(TRange.Construct(Self[s], Self[i - 1]));
+    s := i;
+  end;
 end;
 
 {==============================================================================]
