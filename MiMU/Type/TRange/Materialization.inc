@@ -33,6 +33,7 @@ function Generated: TIntegerArray; overload;
 function Ints: TIntegerArray; overload;
 function Items: TIntegerArray; overload;
 function Iterated: TIntegerArray; overload;
+function Iteration: TIntegerArray; overload;
 function List: TIntegerArray; overload;
 function Listed: TIntegerArray; overload;
 function Listing: TIntegerArray; overload;
@@ -46,11 +47,13 @@ function Numeralize: TIntegerArray; overload;
 function Numerals: TIntegerArray; overload;
 function Numericize: TIntegerArray; overload;
 function Numerics: TIntegerArray; overload;
+function Particles: TIntegerArray; overload;
 function Pile: TIntegerArray; overload;
 function Populate(var arr: TIntegerArray): TRange; overload;
 function Pull: TIntegerArray; overload;
 function Queue: TIntegerArray; overload;
 function Recursed: TIntegerArray; overload;
+function Recursively: TIntegerArray; overload;
 function Revert: TIntegerArray; overload;
 function Sequence: TIntegerArray; overload;
 function Snapshot: TIntegerArray; overload;
@@ -860,6 +863,26 @@ begin
 end;
 
 {==============================================================================]
+  <Iteration>
+  @action: Constructs and returns a dynamic integer array of length
+           Self.Size using index-based iteration from zero, deriving
+           each element relative to Self.Start and directionally
+           adjusted by Self.Ascending.
+  @note: The method iterates from 0 to (Self.Size - 1) and appends
+         one computed element per iteration:
+          • Ascending  : Self.Start + i
+          • Descending : Self.Start - i
+[==============================================================================}
+function TRange.Iteration: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  for i := 0 to (Self.Size - 1) do
+    Result := (Result + [IfThen(Self.Ascending, (Self.start + i), (Self.start - i))]);
+end; 
+
+{==============================================================================]
   <List>
   @action: Collects all values of the range into a newly allocated integer array
            using a generic list as an intermediate container.
@@ -1201,6 +1224,25 @@ begin
 end;
 
 {==============================================================================]
+  <Particles>
+  @action: Iteratively constructs and returns a dynamic integer array
+           representing the inclusive sequence from Self.Start to
+           Self.Stop using the increment defined by Self.Wind.
+
+  @note: The sequence begins with Self.Start and repeatedly appends
+         the previous element plus Wind until Self.Stop is reached.
+[==============================================================================}
+function TRange.Particles: TIntegerArray; overload;
+var
+  s: Integer;
+begin
+  Result := [Self.start];
+  s := Self.Wind;
+  while (Result[High(Result)] <> Self.stop) do
+    Result := (Result + [Result[High(Result)] + s]);
+end;
+
+{==============================================================================]
   <Pile>
   @action: Converts the range into a dynamic array of integers using a
            recursive divide-and-conquer strategy, producing all values from Start to Stop.
@@ -1350,6 +1392,31 @@ function TRange.Recursed: TIntegerArray; overload;
   end;
 begin
   Result := BR(Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <Recursively>
+  @action: Builds and returns a dynamic integer array representing the
+           inclusive sequence from Self.Start to Self.Stop using Self.Step,
+           constructed via recursive descent.
+
+  @note: Terminates only when Self.Start = Self.Stop.
+         Requires:
+          • Self.Step <> 0
+          • Self.Step moves toward Self.Stop
+          • Self.Stop is reachable from Self.Start by repeated addition
+            of Self.Step
+          Violation of these conditions results in infinite recursion (stack overflow).
+          Complexity:
+          - Time  : O(n²)  (due to repeated dynamic array concatenation)
+          - Space : O(n)
+          - Stack : O(n)
+[==============================================================================}
+function TRange.Recursively: TIntegerArray; overload;
+begin
+  Result := [Self.start];
+  if (Self.start <> Self.stop) then
+    Result := (Result + Range((Self.start + Self.Step), Self.stop).Recursively);
 end;
 
 {==============================================================================]
