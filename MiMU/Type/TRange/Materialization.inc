@@ -13,6 +13,7 @@ function Content: TIntegerArray; overload;
 function Contents: TIntegerArray; overload;
 function Data: TIntegerArray; overload;
 function Decompose: TIntegerArray; overload;
+function Digited: TIntegerArray; overload;
 function Digits: TIntegerArray; overload;
 function Digits(const dIndex: Integer): Integer; overload;
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
@@ -43,6 +44,8 @@ function Numbered: TIntegerArray; overload;
 function Numbers: TIntegerArray; overload;
 function Numeralize: TIntegerArray; overload;
 function Numerals: TIntegerArray; overload;
+function Numericize: TIntegerArray; overload;
+function Numerics: TIntegerArray; overload;
 function Pile: TIntegerArray; overload;
 function Populate(var arr: TIntegerArray): TRange; overload;
 function Pull: TIntegerArray; overload;
@@ -415,6 +418,23 @@ var
 begin
   SetLength(Result, Self.Count);
   FillRange(Result, 0, Self.Start, Self.Stop, Self.Direction);
+end;
+
+{==============================================================================]
+  <Digited>
+  @action: Returns an integer array containing all discrete values within the range,
+           starting at Start and progressing by Direction for Size elements.
+  @note: The resulting array length equals Size. Values are generated incrementally using the range Direction (+1 or −1).
+         The range instance is not modified.
+[==============================================================================}
+function TRange.Digited: TIntegerArray; overload;
+var
+  d, i: Integer;
+begin
+  Result := [Self.start];
+  d := Self.Direction;
+  for i := 1 to (Self.Size - 1) do
+    Result := (Result + [Result[i - 1] + d]);
 end;
 
 {==============================================================================]
@@ -1143,6 +1163,44 @@ begin
 end;
 
 {==============================================================================]
+  <Numericize>
+  @action: Materializes the range into a preallocated integer array
+          by iterating from Start in the Wind direction while the value remains contained within the range.
+  @note: The resulting array is allocated with Size elements and filled sequentially using Wind as the step.
+         Iteration stops when Contains returns False. The range instance is not modified.
+[==============================================================================}
+function TRange.Numericize: TIntegerArray; overload;
+var
+  r, d, s: Integer;
+begin
+  d := Self.Wind;
+  SetLength(Result, Self.Size);
+  s := Self.start;
+  r := 0;
+  while Self.Contains(s) do
+    Result[r.Increase] := s.Increase(d);
+end;
+
+{==============================================================================]
+  <Numerics>
+  @action: Materializes the range into an integer array by iteratively appending values from Start in the Wind direction
+          while contained in the range.
+@note:   The array grows dynamically through concatenation on each iteration.
+         This approach is less efficient than Numericize due to repeated reallocations.
+         The range instance remains unchanged.
+[==============================================================================}
+function TRange.Numerics: TIntegerArray; overload;
+var
+  d, s: Integer;
+begin
+  d := Self.Wind;
+  SetLength(Result, 0);
+  s := Self.start;
+  while Self.Contains(s) do
+    Result := (Result + [s.Increase(d)]);
+end;
+
+{==============================================================================]
   <Pile>
   @action: Converts the range into a dynamic array of integers using a
            recursive divide-and-conquer strategy, producing all values from Start to Stop.
@@ -1312,7 +1370,6 @@ begin
   for i := 0 to (l - 1) do
     Result[i] := v.Decrease(s);
 end;
-
 
 {==============================================================================]
   <Sequence>

@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Normalize: Integer; overload;
 function Normalized: TRangeArray; overload;
+function Normalized(out reversedIndices: TIntegerArray): TRangeArray; overload;
 function Normally: TRangeArray; overload;
 {$ENDIF}
 
@@ -41,6 +42,37 @@ begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i].Create(Min(Self[i].start, Self[i].stop), Max(Self[i].start, Self[i].stop));
+end;
+
+{==============================================================================]
+  <Normalized>
+  @action: Returns a normalized copy of the range array in which all ranges are
+           guaranteed to be ascending (Start <= Stop).
+           Any range whose Descending property is True is inverted by swapping
+           its Start and Stop boundaries in the resulting array.
+           Returns a new TRangeArray of the same length as Self where all ranges are
+           ascending.
+  @note:
+    - The original array (Self) is not modified.
+    - The operation runs in O(n) time and allocates O(n) additional memory.
+    - The order of elements is preserved.
+    - reversedIndices preserves the encounter order of reversed elements.
+[==============================================================================}
+function TRangeArrayHelper.Normalized(out reversedIndices: TIntegerArray): TRangeArray; overload;
+var
+  i, r: Integer;
+begin
+  SetLength(Result, Self.Length);
+  SetLength(reversedIndices, Self.Length);
+  r := 0;
+  for i := 0 to High(Self) do
+    if Self[i].Descending then
+	begin
+      Result[i].Create(Self[i].stop, Self[i].start);
+      reversedIndices[r.Increase] := i;
+    end else
+      Result[i] := Self[i];
+  SetLength(reversedIndices, r);
 end;
 
 {==============================================================================]
