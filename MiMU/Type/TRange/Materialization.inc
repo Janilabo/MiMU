@@ -54,7 +54,6 @@ function Pull: TIntegerArray; overload;
 function Queue: TIntegerArray; overload;
 function Recursed: TIntegerArray; overload;
 function Recursively: TIntegerArray; overload;
-function Revert: TIntegerArray; overload;
 function Sequence: TIntegerArray; overload;
 function Snapshot: TIntegerArray; overload;
 function Stack: TIntegerArray; overload;
@@ -1417,25 +1416,6 @@ begin
   Result := [Self.start];
   if (Self.start <> Self.stop) then
     Result := (Result + Range((Self.start + Self.Step), Self.stop).Recursively);
-end;
-
-{==============================================================================]
-  <Revert>
-  @action: Returns a TIntegerArray containing the range elements in reverse order
-           compared to the natural direction of the range, without modifying the TRange itself.
-  @note: Uses direct array allocation and a simple loop to fill values in reverse.
-         Fully type-safe and works for both ascending and descending ranges.
-[==============================================================================}
-function TRange.Revert: TIntegerArray; overload;
-var
-  i, l, s, v: Integer;
-begin
-  l := Self.Size;
-  SetLength(Result, l);
-  s := IfThen(Self.Ascending, 1, -1);
-  v := (Self.start + ((l - 1) * s));
-  for i := 0 to (l - 1) do
-    Result[i] := v.Decrease(s);
 end;
 
 {==============================================================================]

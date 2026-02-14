@@ -1,16 +1,40 @@
 {$IFDEF METHODS}
+function Backtrack: TIntegerArray; overload;
 function Flip: TRange; overload;
 function Flipped: TRange; overload;
 function Invert: Boolean; overload;
 function Inverted: TRange; overload;
+function Retrograde: TIntegerArray; overload;
 function Reverse: Boolean; overload;
 function Reversed: TRange; overload;
 function Reversify: TRange; overload;
+function Reversion: TRange; overload;
+function Revert: TRange; overload;
+function Rewind: TIntegerArray; overload;
 function Rotate32: TRange; overload;
 function Toggle: TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Backtrack>
+  @action: Returns a TIntegerArray containing the range elements in reverse order
+           compared to the natural direction of the range, without modifying the TRange itself.
+  @note: Uses direct array allocation and a simple loop to fill values in reverse.
+         Fully type-safe and works for both ascending and descending ranges.
+[==============================================================================}
+function TRange.Backtrack: TIntegerArray; overload;
+var
+  i, l, s, v: Integer;
+begin
+  l := Self.Size;
+  SetLength(Result, l);
+  s := IfThen(Self.Ascending, 1, -1);
+  v := (Self.start + ((l - 1) * s));
+  for i := 0 to (l - 1) do
+    Result[i] := v.Decrease(s);
+end;
+
 {==============================================================================]
   <Flip>
   @action: Returns a new range with start and stop exchanged, using an XOR-swap
@@ -76,6 +100,33 @@ begin
 end;
 
 {==============================================================================]
+  <Retrograde>
+  @action: Returns the full range of integers in reverse order relative to the
+            range direction, producing a TIntegerArray.
+  @note: For ascending ranges, this generates numbers from Stop down to Start.
+         For descending ranges, this generates numbers from Stop up to Start.
+         If the range is singular (Size = 1), the array contains only Self.Start.
+         The resulting array length equals Self.Size.
+[==============================================================================}
+function TRange.Retrograde: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  case Self.Ascending of
+    True:
+    for i := 0 to (s - 1) do
+      Result[i] := (((Self.start + s) - 1) - i);
+    False:
+    for i := 0 to (s - 1) do
+      Result[i] := (((Self.start - s) + 1) + i);
+  end;
+end;
+
+{==============================================================================]
   <Reverse>
   @action: Reverses range, returns True if range was reversed.
   @note: None.
@@ -115,6 +166,66 @@ begin
   s := (Self.start + Self.stop);
   Result.start := (s - Self.start);
   Result.stop := (s - Self.stop);
+end;
+
+{==============================================================================]
+  <Reversion>
+  @action: Returns a new TRange object representing the **reverse of the current range**.
+           The new range starts at the original Stop and ends at the original Start,
+           preserving the step direction.
+  @note: For ascending ranges, the returned range counts down from Stop to Start.
+         For descending ranges, the returned range counts up from Stop to Start.
+         The size of the range remains the same as the original.
+[==============================================================================}
+function TRange.Reversion: TRange; overload;
+begin
+  Result := Range((Self.start + ((Self.Size - 1) * IfThen(Self.Ascending, 1, -1))), Self.start);
+end;
+
+{==============================================================================]
+  <Revert>
+  @action: Returns a new TRange object representing the **reversed range**,
+           calculated from the original Start and Size. The new range starts
+           at the original Stop and ends at the original Start, preserving
+           the original step direction.
+  @note: This differs from Reversion in that it explicitly computes the
+         Start and Stop values using the Size and Ascending flag, rather
+         than using the Range helper. For ascending ranges, the returned
+         range counts down; for descending ranges, it counts up.
+[==============================================================================}
+function TRange.Revert: TRange; overload;
+var
+  s: Integer;
+  a: Boolean;
+begin
+  s := (Self.Size - 1);
+  a := Self.Ascending;
+  Result.start := (Self.start + (s * IfThen(a, 1, -1)));
+  Result.stop := IfThen(a, (Result.start - s), (Result.start + s));
+end;
+
+{==============================================================================]
+  <Rewind>
+  @action: Returns a TIntegerArray containing all values of the range
+           in **reverse order** relative to the range direction.
+  @note:
+    - Works for ascending or descending ranges.
+    - If the range is singular (Size = 1), the array contains only Self.Start.
+    - The array length equals Self.Size.
+[==============================================================================}
+function TRange.Rewind: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  for i := 0 to (s - 1) do
+    if Self.Ascending then
+      Result[i] := (Self.stop - i)
+    else
+      Result[i] := (Self.stop + i);
 end;
 
 {==============================================================================]
