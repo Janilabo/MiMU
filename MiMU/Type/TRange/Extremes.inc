@@ -1,5 +1,7 @@
 {$IFDEF METHODS}
 function Bottom: Integer; overload;
+function Extents: Integer; overload;
+function Extents(var rMin, rMax: Integer): Integer; overload;
 function First: Integer; overload;
 function Higher: Integer; overload;
 function Highest: Integer; overload;
@@ -38,6 +40,32 @@ begin
     True: Result := Self.start;
     False: Result := Self.stop;
   end;
+end;
+
+{==============================================================================]
+  <Extents>
+  @action: Returns the sum of the Start and Stop bounds of the range.
+@note:   This value can be used for midpoint calculations (Midpoint = Extents div 2).
+         The range itself is not modified. The result does not normalize the bounds;
+		 it simply adds Start and Stop.
+[==============================================================================}
+function TRange.Extents: Integer; overload;
+begin
+  Result := (Self.start + Self.stop);
+end; 
+
+{==============================================================================]
+  <Extents>
+  @action: Outputs the normalized lower and upper bounds of the range via rMin and rMax,
+           and returns the sum of Start and Stop.
+  @note: rMin is guaranteed to be ≤ rMax. The returned sum (Start + Stop) is not normalized
+         and can be used for midpoint calculations. The range instance is not modified.
+[==============================================================================}
+function TRange.Extents(var rMin, rMax: Integer): Integer; overload;
+begin
+  rMin := Min(Self.start, Self.stop);
+  rMax := Max(Self.start, Self.stop);
+  Result := (Self.start + Self.stop);
 end;
 
 {==============================================================================]

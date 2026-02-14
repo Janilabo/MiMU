@@ -1,10 +1,25 @@
 {$IFDEF METHODS}
+function Deconstruct(var rStart, rStop: Integer): Integer; overload;
 function Progress(const pPercent: Double): Integer;
 function Reserve: TIntegerArray; overload;
 function Reserve(var aRange: TIntegerArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Deconstruct>
+  @action: Outputs the Start and Stop bounds of the range via reference parameters and returns its Size.
+  @note: This is a non-mutating structural deconstruction of the range.
+         The bounds are returned exactly as stored (not normalized),
+		 and the function result represents the range cardinality.
+[==============================================================================}
+function TRange.Deconstruct(var rStart, rStop: Integer): Integer; overload;
+begin
+  rStart := Self.start;
+  rStop := Self.stop;
+  Result := Self.Size;
+end;
+
 {==============================================================================]
   <Progress>
   @action: Returns a position within the range corresponding to the given progress

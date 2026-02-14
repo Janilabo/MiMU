@@ -13,6 +13,7 @@ function Revert: TRange; overload;
 function Rewind: TIntegerArray; overload;
 function Rotate32: TRange; overload;
 function Toggle: TRange; overload;
+function Turnaround: TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -253,5 +254,24 @@ end;
 function TRange.Toggle: TRange; overload;
 begin
   Result := TRange.Construct(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <Turnaround>
+  @action: Returns a new TRange representing the same interval
+           with its direction reversed.
+  @note: - The new Start becomes the original terminal value
+           (computed via Span).
+         - The new Stop becomes the original Start.
+         - Assumes unit step (±1).
+         - Works correctly for negative Start values.
+[==============================================================================}
+function TRange.Turnaround: TRange; overload;
+begin
+  if Self.Ascending then
+    Result.start := (Self.start + Self.Span)
+  else
+    Result.start := (Self.start - Self.Span);
+  Result.stop := Self.start;
 end;
 {$ENDIF}
