@@ -28,7 +28,8 @@
 {$I Reversal.inc}
 {$I Sampling.inc}
 {$I Scaling.inc}
-{$I Size.inc}
 {$I Segmentation.inc}
+{$I Size.inc}
+{$I Status.inc}
 {$I Transform.inc}
 {$I Validation.inc}
