@@ -5,6 +5,7 @@ function BinaryHas(const item: MType; out index: Integer; const oAscending: Bool
 function BinaryHits(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryHitsOf(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
+function BinaryInsertionSorted(const aAscending: Boolean = True): MArray; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
@@ -206,6 +207,49 @@ begin
     while (j.Decrement > p) do
       Self[j] := Self[j - 1];
     Self[p] := k;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryInsertionSorted>
+  @action: Returns a new array sorted using the Binary Insertion Sort algorithm.
+           The insertion position for each element is determined via binary search
+           within the already sorted left partition.
+  @note:
+    - Stable sorting algorithm.
+    - In-place with respect to the returned copy (original array is unchanged).
+    - Comparison complexity: O(n log n).
+    - Data movement complexity: O(n²) due to element shifting.
+    - Performs efficiently on small or nearly sorted datasets.
+[==============================================================================}
+function MArrayHelper.BinaryInsertionSorted(const aAscending: Boolean = True): MArray; overload;
+var
+  s, i, j, m, p: Integer;
+  k: MType;
+  r: TRange;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  Result := Self.Copy;
+  for i := 1 to (s - 1) do
+  begin
+    k := Result[i];
+    p := 0;
+    r.Create(0, (i - 1));
+    while (r.start <= r.stop) do
+    begin
+      m := r.Pivot;
+      if ((aAscending and (k < Result[m])) or ((not aAscending) and (k > Result[m]))) then
+        r.stop := (m - 1)
+      else
+        r.start := (m + 1);
+    end;
+    p := r.start;
+    j := i;
+    while (j.Decrement >= p) do
+      Result[j + 1] := Result[j];
+    Result[p] := k;
   end;
 end;
 

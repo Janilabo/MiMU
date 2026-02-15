@@ -6,6 +6,7 @@ function Reverse: Boolean; overload;
 function Reversed: MArray; overload;
 function Reversify: Boolean; overload;
 function Reversion: MArray; overload;
+function Revert: MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -140,5 +141,24 @@ begin
   end;
   if l.Odd then
     Result[h] := Self[h];
+end;
+
+{==============================================================================]
+  <Revert>
+  @action: Returns a new array with the elements in reverse order.
+  @note:
+    - The original array remains unchanged.
+    - Time complexity: O(n).
+    - Space complexity: O(n) due to result allocation.
+    - Equivalent to a non-destructive array reversal.
+[==============================================================================}
+function MArrayHelper.Revert: MArray; overload;
+var
+  h, i: Integer;
+begin
+  h := High(Self);
+  SetLength(Result, (h + 1));
+  for i := 0 to h do
+    Result[i] := Self[h - i];
 end;
 {$ENDIF}
