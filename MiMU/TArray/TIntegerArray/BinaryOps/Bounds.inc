@@ -16,6 +16,8 @@ function BinaryLast(const x: Integer; const aAscending: Boolean = True): Integer
 function BinaryLeftmost(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryLeftmost(const x: TRange; const aAscending: Boolean = True): Integer; overload;
 function BinaryLowerBound(const x: Integer; const aAscending: Boolean = True): Integer; overload;
+function BinaryNear(const target: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinaryNearest(const target: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryPosL(const x: Integer; const aAscending: Boolean = True): Integer;
 function BinaryPosR(const x: Integer; const aAscending: Boolean = True): Integer;
 function BinaryRightmost(const x: Integer; const aAscending: Boolean = True): Integer; overload;
@@ -710,6 +712,76 @@ begin
         R.start := (M + 1);
     end;
   end;
+end;
+
+{==============================================================================]
+  <BinaryNear>
+  @action: Returns the index of the element in the sorted array whose value is
+           closest to the specified target, using binary search.
+  @note:
+    - The array must already be sorted according to oAscending.
+    - If the target exists, its index is returned.
+    - If not found, the index of the nearest value (by absolute difference)
+      is returned.
+    - If the array is empty, returns Low(Integer).
+    - If the target is outside the range, returns the nearest boundary index.
+    - In case of equal distance, the lower index is preferred.
+    - Time complexity: O(log n).
+    - Uses Int64 arithmetic to prevent overflow during difference calculation.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryNear(const target: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  h, s: Integer;
+  p, c: Int64;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit(Low(Integer));
+  s := Self.BinarySpot(target, oAscending);
+  if (s >= 0) then
+    Exit(s);
+  s := not s;
+  if (s <= 0) then
+    Exit(0);
+  if (s > h) then
+    Exit(h);
+  if (Abs(Int64(target) - Self[s - 1]) <= Abs(Int64(target) - Self[s])) then
+    Result := (s - 1)
+  else
+    Result := s;
+end;
+
+{==============================================================================]
+  <BinaryNearest>
+  @action: Returns the element in the sorted array whose value is closest to the
+           specified target, using binary search to determine proximity.
+  @note:
+    - The array must already be sorted according to oAscending.
+    - If the target exists, the exact value is returned.
+    - If not found, the nearest neighbor (by absolute difference) is returned.
+    - If the array is empty, returns Low(Integer).
+    - Time complexity: O(log n).
+    - In case of equal distance, the lower neighbor is preferred.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryNearest(const target: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  h, p: Integer;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit(Low(Integer));
+  p := Self.BinarySpot(target, oAscending);
+  if (p >= 0) then
+    Exit(Self[p]);
+  p := not p;
+  if (p = 0) then
+    Exit(Self[0]);
+  if (p > h) then
+    Exit(Self[h]);
+  if ((target - Self[p - 1]) <= (Self[p] - target)) then
+    Result := Self[p - 1]
+  else
+    Result := Self[p];
 end;
 
 {==============================================================================]

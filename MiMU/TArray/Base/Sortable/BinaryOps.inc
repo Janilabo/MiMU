@@ -7,6 +7,7 @@ function BinaryHitsOf(const items: MArray; const oAscending: Boolean = True): TI
 function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
 function BinaryInsertionSorted(const aAscending: Boolean = True): MArray; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinarySpot(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -284,5 +285,36 @@ begin
       R.stop := (M - 1);
   end;
   Result := -1;
+end;
+
+{==============================================================================]
+  <BinarySpot>
+  @action: Performs a high-speed binary search to locate the index of a item 
+           value or identify its ideal insertion point within a sorted array.        
+  @note: 
+    - The array MUST be pre-sorted according to the [oAscending] parameter.
+    - If Found: Returns the 0-based index [0..High].
+    - If Not Found: Returns the bitwise NOT of the start index (not R.start), 
+      representing the position where the item should be inserted to 
+      preserve order.
+    - Complexity: O(log n).
+[==============================================================================}
+function MArrayHelper.BinarySpot(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+      Exit(M)
+    else if (oAscending = (Self[M] < item)) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  Result := not R.start;
 end;
 {$ENDIF}
