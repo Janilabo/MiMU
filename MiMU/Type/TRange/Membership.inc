@@ -8,6 +8,7 @@ function Contains(const x: TRange): Boolean; overload;
 function Covered(const val: Integer): Boolean; overload;
 function Covers(const val: Integer): Boolean; overload;
 function Digit(const x: Integer): Boolean; overload;
+function Disjoint(const target: TRange): Boolean; overload;
 function Employs(const val: Integer): Boolean; overload;
 function Got(const val: Integer): Boolean; overload;
 function Has(const val: Integer): Boolean; overload;
@@ -124,6 +125,23 @@ end;
 function TRange.Digit(const x: Integer): Boolean; overload;
 begin
   Result := (((x >= Self.start) and (x <= Self.stop)) or ((x >= Self.stop) and (x <= Self.start)));
+end;
+
+{==============================================================================]
+  <Disjoint>
+  @action: Returns True if this range and the target range are strictly
+           non-overlapping. That is, the closed intervals
+           [Self.Minimum, Self.Maximum] and [target.Minimum, target.Maximum] share no common values.
+  @note:
+    • Implemented as:
+      (Self.Maximum < target.Minimum) OR (Self.Minimum > target.Maximum)
+    • Endpoint contact is considered overlap.
+      Example: [0,5] and [5,10] → NOT disjoint.
+    • Assumes both ranges are valid (Minimum ≤ Maximum).
+[==============================================================================}
+function TRange.Disjoint(const target: TRange): Boolean; overload;
+begin
+  Result := ((Self.Maximum < target.Minimum) or (Self.Minimum > target.Maximum));
 end;
 
 {==============================================================================]

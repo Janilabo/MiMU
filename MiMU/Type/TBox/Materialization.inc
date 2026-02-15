@@ -1,17 +1,20 @@
 {$IFDEF METHODS}
 function All: TPointArray; overload;
-function Content: TPointArray;
-function Contents: TPointArray;
-function Elements: TPointArray;
-function Enumerate: TPointArray;
-function Enumerated: TPointArray;
+function Atomize: TPointArray; overload;
+function Breakdown: TPointArray; overload;
+function Content: TPointArray; overload;
+function Contents: TPointArray; overload;
+function Decompose: TPointArray; overload;
+function Elements: TPointArray; overload;
+function Enumerate: TPointArray; overload;
+function Enumerated: TPointArray; overload;
 function Explode: TPointArray; overload;
-function Exploded: TPointArray;
-function Extract: TPointArray;
+function Exploded: TPointArray; overload;
+function Extract: TPointArray; overload;
 function Flat: TPointArray; overload;
-function Flatten: TPointArray;
-function List: TPointArray;
-function Materialize: TPointArray;
+function Flatten: TPointArray; overload;
+function List: TPointArray; overload;
+function Materialize: TPointArray; overload;
 function Pixeled: TPointArray; overload;
 function Pixels: TPointArray; overload;
 function Pixels(const index: Integer): TPoint; overload;
@@ -50,11 +53,76 @@ begin
 end;
 
 {==============================================================================]
+  <Atomize>
+  @action: Expands the rectangle defined by (X1,Y1)-(X2,Y2) into a dense array
+           containing every integer grid coordinate within the box (inclusive
+           bounds). Points are written in row-major order using precomputed
+           row offsets for direct index addressing.
+  @note:
+    • The resulting array length is determined by Self.Size(w, o).
+      The method is expected to return total element count and assign
+      the box width to "w" (height or auxiliary value to "o", if used).
+    • Enumeration order:
+        (X1,Y1) → (X2,Y1),
+        (X1,Y2) → (X2,Y2), etc.
+    • Index calculation:
+        rowOffset = (y - Y1) * width
+        index     = rowOffset + (x - X1)
+    • No bounds validation is performed (assumes X1 ≤ X2 and Y1 ≤ Y2).
+    • Memory allocation is proportional to the box area.
+    • Direct index computation avoids incremental counters and
+      branch-based wrap logic.
+[==============================================================================}
+function TBox.Atomize: TPointArray; overload;
+var
+  x, y, w, o: Integer;
+begin
+  SetLength(Result, Self.Size(w, o));
+  for y := Self.Y1 to Self.Y2 do
+  begin
+    o := ((y - Self.Y1) * w);
+    for x := Self.X1 to Self.X2 do
+      Result[o + (x - Self.X1)] := Point(x, y);
+  end;
+end;
+
+{==============================================================================]
+  <Breakdown>
+  @action: Expands the rectangle defined by (X1,Y1)-(X2,Y2) into a dense array
+           containing every integer grid coordinate within the box (inclusive
+           bounds). Points are emitted in row-major order, iterating Y from Y1
+           to Y2 and, for each row, X from X1 to X2.
+  @note:
+    • The resulting array length equals Self.Area.
+    • Enumeration order:
+        (X1,Y1) → (X2,Y1),
+        (X1,Y2) → (X2,Y2), etc.
+    • Uses increment helper methods (Increment / Increase) for loop
+      progression and index advancement.
+    • Bounds are assumed valid (X1 ≤ X2 and Y1 ≤ Y2).
+    • No range or consistency validation is performed.
+    • Memory allocation is proportional to the box area.
+[==============================================================================}
+function TBox.Breakdown: TPointArray; overload;
+var
+  x, y, r: Integer;
+begin
+  SetLength(Result, Self.Area);
+  r := 0;
+  for y := Self.Y1 to Self.Y2 do
+  begin
+    x := (Self.X1 - 1);
+    while (x.Increment <= Self.X2) do
+      Result[r.Increase] := Point(x, y);
+  end;
+end;
+
+{==============================================================================]
   <Content>
   @action: Returns TBox points as TPointArray.
   @note: Fast, Pointer-based alternative single loop version.
 [==============================================================================}
-function TBox.Content: TPointArray;
+function TBox.Content: TPointArray; overload;
 var
   w, i: Integer;
   p: PPoint;
@@ -76,7 +144,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: Fast, Pointer-based alternative. Double loop version.
 [==============================================================================}
-function TBox.Contents: TPointArray;
+function TBox.Contents: TPointArray; overload;
 var
   p: PPoint;
   x, y: Integer;
@@ -93,11 +161,50 @@ begin
 end;
 
 {==============================================================================]
+  <Decompose>
+  @action: Expands the rectangle defined by (X1,Y1)-(X2,Y2) into a dense array
+           containing every integer grid coordinate within the box (inclusive
+           bounds). Points are emitted in row-major order, starting at (X1,Y1),
+           incrementing X toward X2, then wrapping to X1 and incrementing Y.
+  @note:
+    • The resulting array length equals TBox_Area(Self).
+    • Enumeration order:
+        (X1,Y1) → (X2,Y1),
+        (X1,Y2) → (X2,Y2), etc.
+    • Bounds are assumed valid (X1 ≤ X2 and Y1 ≤ Y2).
+    • No range validation is performed.
+    • Memory allocation is proportional to box area.
+[==============================================================================}
+function TBox.Decompose: TPointArray; overload;
+label
+  sLoop, eLoop;
+var
+  a, i: Integer;
+  v: TPoint;
+begin
+  a := Self.Area;
+  SetLength(Result, a);
+  i := 0;
+  v := Point(Self.X1, Self.Y1);
+  sLoop:
+  if (i >= a) then
+    goto eLoop;
+  Result[i] := v;
+  if (v.X = Self.X2) then
+    v := Point(Self.X1, (v.Y + 1))
+  else
+    v.X := (v.X + 1);
+  Inc(i);
+  goto sLoop;
+  eLoop:
+end;
+
+{==============================================================================]
   <Elements>
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
-function TBox.Elements: TPointArray;
+function TBox.Elements: TPointArray; overload;
 var
   x, y: Integer;
 begin
@@ -112,7 +219,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TBox.Enumerate: TPointArray;
+function TBox.Enumerate: TPointArray; overload;
 var
   i: Integer;
   e: TBoxEnumerator;
@@ -129,7 +236,7 @@ end;
   @action: Returns digits of the given range.
   @note: None.
 [==============================================================================}
-function TBox.Enumerated: TPointArray;
+function TBox.Enumerated: TPointArray; overload;
 var
   i: Integer;
   e: TBoxEnumerator;
@@ -164,7 +271,7 @@ end;
   @action: Returns all points of the given box as TPointArray.
   @note: Uses the TBox enumerator (for-in).
 [==============================================================================}
-function TBox.Exploded: TPointArray;
+function TBox.Exploded: TPointArray; overload;
 var
   p: TPoint;
   i: Integer;
@@ -180,7 +287,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: Alternative method for Points(), TPA() and Contents().
 [==============================================================================}
-function TBox.Extract: TPointArray;
+function TBox.Extract: TPointArray; overload;
 var
   x, y, i: Integer;
 begin
@@ -226,7 +333,7 @@ end;
          points are translated back to the box’s original coordinate space.
          The array length equals the discrete area of the box.
 [==============================================================================}
-function TBox.Flatten: TPointArray;
+function TBox.Flatten: TPointArray; overload;
 var
   B: TBox;
   x, y, i: Integer;
@@ -244,7 +351,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
-function TBox.List: TPointArray;
+function TBox.List: TPointArray; overload;
 var
   p: specialize TList<TPoint>;
   x, y: Integer;
@@ -265,7 +372,7 @@ end;
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
 [==============================================================================}
-function TBox.Materialize: TPointArray;
+function TBox.Materialize: TPointArray; overload;
 var
   i, W, H: Integer;
 begin

@@ -17,7 +17,7 @@ function Digited: TIntegerArray; overload;
 function Digits: TIntegerArray; overload;
 function Digits(const dIndex: Integer): Integer; overload;
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
-function Disjoint: TIntegerArray; overload;
+function Dismantle: TIntegerArray; overload;
 function Elements: TIntegerArray; overload;
 function Emit: TIntegerArray; overload;
 function Enumerate: TIntegerArray; overload;
@@ -485,8 +485,8 @@ begin
 end;
 
 {==============================================================================]
-  <Disjoint>
-  @action: Returns an array of all integers in the range arranged in a “disjoint”
+  <Dismantle>
+  @action: Returns an array of all integers in the range arranged in a “dismantle”
            or interleaved order:
            - Pulls values from the start and stop toward the center
            - Fills the middle segment sequentially from the start
@@ -506,7 +506,7 @@ end;
            from sampling from both ends and center simultaneously.
          - Single-element ranges (start = stop) are handled implicitly.
 [==============================================================================}
-function TRange.Disjoint: TIntegerArray; overload;
+function TRange.Dismantle: TIntegerArray; overload;
 var
   i, h, t, d: Integer;
 begin
