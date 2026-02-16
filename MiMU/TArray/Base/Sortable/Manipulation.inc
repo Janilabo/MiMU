@@ -1,10 +1,11 @@
 {$IFDEF HELPERS}
-function Descend: MArray; overload;
 function Ascend: MArray; overload;
-function Uniq(const sSorted: Boolean = False): MArray; overload;
-function Unionize(const items: MArray; const oAscending: Boolean = True): MArray; overload;
-function Subtract(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function Canonical(const oAscending: Boolean = True): MArray; overload;
+function Descend: MArray; overload;
 function Intersect(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function Subtract(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function Unionize(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function Uniq(const sSorted: Boolean = False): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -41,6 +42,24 @@ begin
 end;
 
 {==============================================================================]
+  <Canonical>
+  @action: Returns a canonical representation of the array: a sorted, duplicate-free
+           copy of Self.
+  @note:
+    - Non-mutating: the source array remains unchanged.
+    - Elements are ordered according to oAscending.
+    - Duplicate values are removed after sorting.
+    - If Length < 2, a copy of Self is returned.
+    - The result is deterministic for a given input and sort order.
+[==============================================================================}
+function MArrayHelper.Canonical(const oAscending: Boolean = True): MArray; overload;
+begin
+  if (Self.Length < 2) then
+    Exit(Self.Copy);
+  Result := Self.QuickSorted(oAscending).Pruned;
+end;
+
+{==============================================================================]
   <Descend>
   @action: Returns array arr sorted to descending order.
   @note: None.
@@ -73,19 +92,88 @@ begin
 end;
 
 {==============================================================================]
-  <Uniq>
-  @action: Unique method for sortable types.
-  @note: None.
+  <Intersect>
+  @action: Returns a new array containing all elements that appear in BOTH this
+           array and `items`. The result is sorted according to `oAscending`
+           and contains no duplicates.
+  @note: Both arrays must be sorted in the same order specified by `oAscending`.
+         This implementation uses a linear merge approach with O(m + n) time
+         complexity, which is optimal for this operation.
 [==============================================================================}
-function MArrayHelper.Uniq(const sSorted: Boolean = False): MArray; overload;
+function MArrayHelper.Intersect(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  v: MType;
+  i, j, l, a, b: Integer;
+  e: Boolean;
 begin
-  if Self.Empty then
-    SetLength(Result, 0)
-  else
-    if not sSorted then
-      Result := Self.QuickSorted.Pruned
+  a := Self.Size;
+  b := items.Size;
+  SetLength(Result, Min(a, b));
+  i := 0;
+  j := 0;
+  l := 0;
+  e := False;
+  while ((i < a) and (j < b)) do
+  case (Self[i] = items[j]) of
+    True:
+    begin
+      if ((not e) or (Self[i] <> v)) then
+      begin
+        v := Self[i];
+        Result[l.Increase] := v;
+        e := True;
+      end;
+      Inc(i);
+      Inc(j);
+    end;
+    False:
+    if ((oAscending and (Self[i] < items[j])) or ((not oAscending) and (Self[i] > items[j]))) then
+      Inc(i)
     else
-      Result := Self.Pruned;
+      Inc(j);
+  end;
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <Subtract>
+  @action: Constructs and returns a new array representing the set difference
+           of this array minus `items`. Only values present in this array and
+           absent from `items` are included. The output is sorted according to
+           `oAscending` and contains no duplicate values.
+  @note: Both input arrays must be pre-sorted in the same direction specified
+         by `oAscending`. The implementation performs a linear pass over both
+         arrays and executes in O(m + n) time, where m and n are their
+         respective lengths. This is the standard A − B set-difference
+         operation.
+[==============================================================================}
+function MArrayHelper.Subtract(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  v: MType;
+  i, j, l: Integer;
+  a, b: Integer;
+  e: Boolean;
+begin
+  a := Self.Size;
+  b := items.Size;
+  SetLength(Result, a);
+  i := 0;
+  j := 0;
+  l := 0;
+  e := False;
+  while (i < a) do
+  begin
+    while ((j < b) and ((oAscending and (items[j] < Self[i])) or ((not oAscending) and (items[j] > Self[i])))) do
+      Inc(j);
+    if (((j >= b) or ((oAscending and (Self[i] < items[j])) or ((not oAscending) and (Self[i] > items[j])))) and ((not e) or (Self[i] <> v))) then
+    begin
+      v := Self[i];
+      Result[l.Increase] := v;
+      e := True;
+    end;
+    Inc(i);
+  end;
+  SetLength(Result, l);
 end;
 
 {==============================================================================]
@@ -173,87 +261,18 @@ begin
 end;
 
 {==============================================================================]
-  <Subtract>
-  @action: Constructs and returns a new array representing the set difference
-           of this array minus `items`. Only values present in this array and
-           absent from `items` are included. The output is sorted according to
-           `oAscending` and contains no duplicate values.
-  @note: Both input arrays must be pre-sorted in the same direction specified
-         by `oAscending`. The implementation performs a linear pass over both
-         arrays and executes in O(m + n) time, where m and n are their
-         respective lengths. This is the standard A − B set-difference
-         operation.
+  <Uniq>
+  @action: Unique method for sortable types.
+  @note: None.
 [==============================================================================}
-function MArrayHelper.Subtract(const items: MArray; const oAscending: Boolean = True): MArray; overload;
-var
-  v: MType;
-  i, j, l: Integer;
-  a, b: Integer;
-  e: Boolean;
+function MArrayHelper.Uniq(const sSorted: Boolean = False): MArray; overload;
 begin
-  a := Self.Size;
-  b := items.Size;
-  SetLength(Result, a);
-  i := 0;
-  j := 0;
-  l := 0;
-  e := False;
-  while (i < a) do
-  begin
-    while ((j < b) and ((oAscending and (items[j] < Self[i])) or ((not oAscending) and (items[j] > Self[i])))) do
-      Inc(j);
-    if (((j >= b) or ((oAscending and (Self[i] < items[j])) or ((not oAscending) and (Self[i] > items[j])))) and ((not e) or (Self[i] <> v))) then
-    begin
-      v := Self[i];
-      Result[l.Increase] := v;
-      e := True;
-    end;
-    Inc(i);
-  end;
-  SetLength(Result, l);
-end;
-
-{==============================================================================]
-  <Intersect>
-  @action: Returns a new array containing all elements that appear in BOTH this
-           array and `items`. The result is sorted according to `oAscending`
-           and contains no duplicates.
-  @note: Both arrays must be sorted in the same order specified by `oAscending`.
-         This implementation uses a linear merge approach with O(m + n) time
-         complexity, which is optimal for this operation.
-[==============================================================================}
-function MArrayHelper.Intersect(const items: MArray; const oAscending: Boolean = True): MArray; overload;
-var
-  v: MType;
-  i, j, l, a, b: Integer;
-  e: Boolean;
-begin
-  a := Self.Size;
-  b := items.Size;
-  SetLength(Result, Min(a, b));
-  i := 0;
-  j := 0;
-  l := 0;
-  e := False;
-  while ((i < a) and (j < b)) do
-  case (Self[i] = items[j]) of
-    True:
-    begin
-      if ((not e) or (Self[i] <> v)) then
-      begin
-        v := Self[i];
-        Result[l.Increase] := v;
-        e := True;
-      end;
-      Inc(i);
-      Inc(j);
-    end;
-    False:
-    if ((oAscending and (Self[i] < items[j])) or ((not oAscending) and (Self[i] > items[j]))) then
-      Inc(i)
+  if Self.Empty then
+    SetLength(Result, 0)
+  else
+    if not sSorted then
+      Result := Self.QuickSorted.Pruned
     else
-      Inc(j);
-  end;
-  SetLength(Result, l);
+      Result := Self.Pruned;
 end;
 {$ENDIF}

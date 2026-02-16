@@ -8,11 +8,13 @@ function Extract(const items: MArray; const index: Integer = 0): MArray; overloa
 function ExtractEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
 function ExtractIDs(const allowed: TIntegerArray): MArray; overload;
 function ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): MArray; overload;
+function ExtractIndices(const ID: TIntegerArray): MArray; overload;
 function Filter(const item: MType; const index: Integer = 0): MArray; overload;
 function Filter(const items: MArray; const index: Integer = 0): MArray; overload;
 function FilterEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
 function FilterIDs(const forbidden: TIntegerArray): MArray; overload;
 function FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): MArray; overload;
+function FilterIndices(const ID: TIntegerArray): MArray; overload;
 function Keep(const items: MArray; const index: Integer = 0): MArray; overload;
 function Pick(const items: MArray; const index: Integer = 0): MArray; overload;
 function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
@@ -98,9 +100,9 @@ begin
   if Self.Empty then
     Exit([]);
   if eIDs.Empty then
-    Exit(Self);
+    Exit(Self.Copy);
   r := Self.IDs;
-  s.Create(Low(Self), High(Self));
+  s.Create(0, High(Self));
   for i := 0 to High(eIDs) do
     if s.Contains(eIDs[i]) then
       r[eIDs[i]] := -2147483648;
@@ -222,6 +224,33 @@ begin
 end;
 
 {==============================================================================]
+  <ExtractIndices>
+  @action: Returns a new array containing the elements of Self located at the
+           specified indices.
+  @note:
+    - Non-mutating: the source array remains unchanged.
+    - Indices outside the valid range [0..Length-1] are ignored.
+    - Indices are canonicalized (sorted and deduplicated) before extraction.
+    - The result is ordered by ascending index.
+    - If Self is empty, or no valid indices are supplied, an empty array is returned.
+[==============================================================================}
+function MArrayHelper.ExtractIndices(const ID: TIntegerArray): MArray; overload;
+var
+  i: Integer;
+  e: TIntegerArray;
+begin
+  if Self.Empty then
+    Exit([]);
+  e := ID.ExtractValues(TRange.Construct(0, High(Self)));
+  if e.Empty then
+    Exit([]);
+  e := e.Canonical;
+  SetLength(Result, e.Length);
+  for i := 0 to High(e) do
+    Result[i] := Self[e[i]];
+end;
+
+{==============================================================================]
   <Filter>
   @action: Removes all values from arr that are found in items.
   @note: None
@@ -329,6 +358,42 @@ begin
     if not f.BinaryContains(i) then
       Result[h.Increase] := Self[i];
   SetLength(Result, h);
+end;
+
+{==============================================================================]
+  <FilterIndices>
+  @action: Returns a new array with the elements at the specified indices removed.
+  @note:
+    - Non-mutating: the source array remains unchanged.
+    - Indices outside the valid range [0..Length-1] are ignored.
+    - Indices are canonicalized (sorted and deduplicated) before processing.
+    - Relative order of remaining elements is preserved.
+    - If Self is empty, an empty array is returned.
+    - If no valid indices are supplied, a copy of Self is returned.
+[==============================================================================}
+function MArrayHelper.FilterIndices(const ID: TIntegerArray): MArray; overload;
+var
+  j, c, i, r: Integer;
+  f: TIntegerArray;
+begin
+  if Self.Empty then
+    Exit([]);
+  f := ID.ExtractValues(TRange.Construct(0, High(Self)));
+  if f.Empty then
+    Exit(Self.Copy);
+  f := f.Canonical;
+  c := 0;
+  j := 0;
+  r := 0;
+  SetLength(Result, (Self.Length - f.Length));
+  repeat
+    for i := c to (f[j] - 1) do
+      Result[r.Increase] := Self[i];
+    c := (f[j] + 1);
+    Inc(j);
+  until (j = f.Length);
+  for i := (f[j - 1] + 1) to High(Self) do
+    Result[r.Increase] := Self[i];
 end;
 
 {==============================================================================]
