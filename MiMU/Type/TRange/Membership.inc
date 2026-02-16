@@ -9,6 +9,7 @@ function Covered(const val: Integer): Boolean; overload;
 function Covers(const val: Integer): Boolean; overload;
 function Digit(const x: Integer): Boolean; overload;
 function Disjoint(const target: TRange): Boolean; overload;
+function Disjointed(const target: TRange): Boolean; overload;
 function Employs(const val: Integer): Boolean; overload;
 function Got(const val: Integer): Boolean; overload;
 function Has(const val: Integer): Boolean; overload;
@@ -141,7 +142,27 @@ end;
 [==============================================================================}
 function TRange.Disjoint(const target: TRange): Boolean; overload;
 begin
-  Result := ((Self.Maximum < target.Minimum) or (Self.Minimum > target.Maximum));
+  Result := not Self.Overlaps(target);
+end;
+
+{==============================================================================]
+  <Disjointed>
+  @action: Returns True if this range and the target range are strictly non-overlapping.
+           Implementation uses the “Min/Max test”: the smaller of the two interval
+           ends is less than the larger of the two interval starts. If so, the ranges
+           do not intersect.
+  @note:
+    • Endpoint contact is considered overlapping:
+        Example: [0,3] and [3,5] → Disjointed = False
+    • Equivalent to:
+        (Self.Maximum < target.Minimum) OR (Self.Minimum > target.Maximum)
+      for closed intervals.
+    • Assumes both ranges are valid (Minimum ≤ Maximum).
+    • This formulation may be visually confusing, but is mathematically correct.
+[==============================================================================}
+function TRange.Disjointed(const target: TRange): Boolean; overload;
+begin
+  Result := (Min(Self.Maximum, target.Maximum) < Max(Self.Minimum, target.Minimum));
 end;
 
 {==============================================================================]
@@ -217,7 +238,7 @@ end;
 [==============================================================================}
 function TRange.Holds(const vals: TRange): Boolean; overload;
 begin
-  Result := (vals.Minimum >= Self.Minimum) and (vals.Maximum <= Self.Maximum);
+  Result := ((vals.Minimum >= Self.Minimum) and (vals.Maximum <= Self.Maximum));
 end;
 
 {==============================================================================]

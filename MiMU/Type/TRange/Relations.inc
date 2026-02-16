@@ -22,6 +22,7 @@ function Intersect(const b: TRange): TRange; overload;
 function Intersect(const b: TRange; var iZone: TRange): Boolean; overload;
 function IsAdjacent(const other: TRange): Boolean; overload;
 function IsMergeable(const other: TRange): Boolean; overload;
+function Loose(const target: TRange): Boolean; overload;
 function Mergeable(const other: TRange): Boolean; overload;
 function Neighbor(const b: TRange): Boolean; overload;
 function Neighbour(const b: TRange): Boolean; overload;
@@ -31,6 +32,7 @@ function Overlaps(const other: TRange): Boolean; overload;
 function Separated(const other: TRange): Boolean; overload;
 function Separation(other: TRange): Integer; overload;
 function Shared(const other: TRange): Integer; overload;
+function Space(const target: TRange): Integer; overload;
 function Touch(const b: TRange): Boolean; overload;
 function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
 function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
@@ -423,6 +425,19 @@ begin
 end;
 
 {==============================================================================]
+  <Loose>
+  @action: Returns True if this range and the target range are strictly separated,
+           i.e., there is a positive gap between them. Equivalent to saying the
+           ranges are disjoint with no touching endpoints.
+  @note:
+    • Uses the Gap method: Result = Self.Gap(target) > 0
+[==============================================================================}
+function TRange.Loose(const target: TRange): Boolean; overload;
+begin
+  Result := (Self.Gap(target) > 0);
+end;
+
+{==============================================================================]
   <Mergeable>
   @action: Determines whether this range is mergeable with another range.
   @note: Returns True if the ranges overlap or are directly adjacent.
@@ -542,6 +557,36 @@ function TRange.Shared(const other: TRange): Integer; overload;
 begin
   if Self.Overlaps(other) then
     Result := ((Min(Self.Maximum, other.Maximum) - Max(Self.Minimum, other.Minimum)) + 1)
+  else
+    Result := 0;
+end;
+
+{==============================================================================]
+  <Space>
+  @action: Returns the signed distance between this range and the target range.
+    - Positive if the target range lies entirely after this range.  
+    - Negative if the target range lies entirely before this range.  
+    - Zero if the ranges overlap.
+  @note:
+    • Uses normalized ranges (Self.Normalize and target.Normalize) so that
+      start ≤ stop is guaranteed.  
+    • Computation:
+        - If Self stops before target starts: Result = target.start - Self.stop
+        - If Self starts after target stops: Result = target.stop - Self.start
+        - Otherwise (overlap): Result = 0
+    • Useful for determining relative position, separation, or collision clearance.
+    • Returns negative, zero, or positive values depending on relative ordering.
+[==============================================================================}
+function TRange.Space(const target: TRange): Integer; overload;
+var
+  s, t: TRange;
+begin
+  s := Self.Normalize;
+  t := target.Normalize;
+  if (s.stop < t.start) then
+    Result := (t.start - s.stop)
+  else if (s.start > t.stop) then
+    Result := (t.stop - s.start)
   else
     Result := 0;
 end;

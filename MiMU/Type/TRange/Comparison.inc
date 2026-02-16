@@ -2,6 +2,7 @@
 function CompareSize(const target: TRange): Integer;
 class function CompareSizeAscending(const A, B: TRange): Integer; static;
 class function CompareSizeDescending(const A, B: TRange): Integer; static;
+function Rank(const target: TRange): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -41,5 +42,38 @@ end;
 class function TRange.CompareSizeDescending(const A, B: TRange): Integer;
 begin
   Result := B.CompareSize(A);
+end;
+
+{==============================================================================]
+  <Rank>
+  @action: Compares this range with the target range to determine their relative
+           ordering. Returns:
+             -1 if Self comes before target,
+             0 if Self and target are identical,
+             1 if Self comes after target.
+           Comparison is performed first on the normalized start values, and if
+           equal, then on the normalized stop (end) values.
+  @note:
+    • Uses normalized ranges (via Self.Normalize and target.Normalize),
+      so ranges with reversed min/max are correctly handled.
+    • Ordering is total: every two ranges will yield -1, 0, or 1.
+    • Normalization ensures Minimum ≤ Maximum before comparison.
+    • This is suitable for sorting ranges or defining a canonical order.
+[==============================================================================}
+function TRange.Rank(const target: TRange): Integer; overload;
+var
+  s, t: TRange;
+begin
+  s := Self.Normalize;
+  t := target.Normalize;
+  if (s.start < t.start) then
+    Exit(-1)
+  else if (s.start > t.start) then
+    Exit(1)
+  else if (s.stop < t.stop) then
+    Exit(-1)
+  else if (s.stop > t.stop) then
+    Exit(1);
+  Result := 0;
 end;
 {$ENDIF}
