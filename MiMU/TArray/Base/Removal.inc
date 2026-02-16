@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Delete(const index: Integer = 0): MArray; overload;
 function Delete(const ID: TIntegerArray): MArray; overload;
+function Discard(const ID: TIntegerArray): MArray; overload;
 function Drop(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
 function Dump(const items: MArray; const index: Integer = 0): MArray; overload;
 function Erase(const item: MType; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
@@ -59,6 +60,44 @@ begin
     else
       r := (r + 1);
   SetLength(Result, (l - r));
+end;
+
+{==============================================================================]
+  <Discard>
+  @action: Returns a new MArray with the elements at the specified indices removed.
+  @note:
+    - Non-mutating: the source array (Self) remains unchanged.
+    - Indices outside the valid range [0..Length-1] are ignored.
+    - Duplicate indices are tolerated.
+    - If IDs is empty, a copy of Self is returned.
+    - If Self is empty, an empty array is returned.
+    - Order of remaining elements is preserved.
+[==============================================================================}
+function MArrayHelper.Discard(const ID: TIntegerArray): MArray; overload;
+var
+  i, l, m: Integer;
+  s: TRange;
+  r: TIntegerArray;
+begin
+  if ID.Empty then
+    Exit(Self.Copy);
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  r := Self.IDs;
+  s.Create(0, (l - 1));
+  m := 0;
+  for i := 0 to High(ID) do
+    if s.Contains(ID[i]) then
+      r[ID[i]] := -1
+    else
+      m := (m + 1);
+  SetLength(Result, (l - m));
+  l := 0;
+  for i := 0 to s.stop do
+    if (r[i] <> -1) then
+      Result[l.Increase] := Self[i];
+  SetLength(Result, l);
 end;
 
 {==============================================================================]
