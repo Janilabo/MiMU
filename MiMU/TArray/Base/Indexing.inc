@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function AsIDs(const aAscending: Boolean = True): TIntegerArray; overload;
 function AsIndexes(const aAscending: Boolean = True): TIntegerArray; overload;
+function AsIndices(const aAscending: Boolean = True): TIntegerArray; overload;
 function GetIDs: TIntegerArray; overload;
 function ID(const aAscending: Boolean = True): TIntegerArray; overload;
 function IDs(const aAscending: Boolean = True): TIntegerArray; overload;
@@ -12,6 +13,10 @@ function Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indices(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
+function LoadID(var target: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+function LoadIDs(var target: TIntegerArray): Integer; overload;
+function LoadIndexes(var target: TIntegerArray): Integer; overload;
+function LoadIndices(var target: TIntegerArray): Integer; overload;
 function Slots: TIntegerArray; overload;
 function ToIDs(const aAscending: Boolean = True): TIntegerArray; overload;
 function ToIndexes: TIntegerArray; overload;
@@ -91,6 +96,45 @@ begin
     while (l.Decrement > i) do
       Result.Supply(l);
   end;
+end;
+
+{==============================================================================]
+  <AsIndices>
+  @action: Generates and returns a positional index vector for the current
+           array instance.
+  @note: The resulting TIntegerArray has Length = Self.Length and contains
+         only positional offsets — element values are not inspected.
+         Ordering:
+           • aAscending = True  →  [0, 1, 2, ..., Length - 1]
+           • aAscending = False →  [Length - 1, ..., 2, 1, 0]
+         If Self.Length = 0, an empty array is returned.
+[==============================================================================}
+function MArrayHelper.AsIndices(const aAscending: Boolean = True): TIntegerArray; overload;
+label
+  ready;
+var
+  i, l: Integer;
+  P: PInteger;
+begin
+  l := Self.Length;
+  SetLength(Result, l);
+  if (l < 1) then
+    goto ready;
+  P := PInteger(Result);
+  case aAscending of
+    True:
+    for i := 0 to (l - 1) do
+    begin
+      P^ := i;
+      Inc(P);
+    end;
+    False:
+    repeat
+      P^ := l.Decrement;
+      Inc(P);
+    until (l = 0);
+  end;
+  ready:
 end;
 
 {==============================================================================]
@@ -329,6 +373,132 @@ begin
 	True:
     for i := l to h do
       Result[i - l] := i;
+  end;
+end;
+
+{==============================================================================]
+  <LoadID>
+  @action: Loads the target array with positional identifiers corresponding
+           to the current array instance, optionally ordered ascending or
+           descending.
+  @note: • Returns Self.Length.
+         • Ensures target.Length = Self.Length (resizes if required).
+         • aAscending = True  →  [0, 1, 2, ..., Length - 1]
+           aAscending = False →  [Length - 1, ..., 2, 1, 0]
+         • Uses pointer-based sequential writes.
+         • If Length = 0, target is resized to zero and 0 is returned.
+         • Time complexity: O(n)
+[==============================================================================}
+function MArrayHelper.LoadID(var target: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
+var
+  i: Integer;
+  P: PInteger;
+begin
+  Result := Self.Length;
+  if (target.Length <> Result) then
+    SetLength(target, Result);
+  if (Result = 0) then
+    Exit;
+  P := @target[0];
+  case aAscending of
+    True:
+    for i := 0 to (Result - 1) do
+    begin
+      P^ := i;
+      Inc(P);
+    end;
+	False:
+	for i := (Result - 1) downto 0 do
+    begin
+      P^ := i;
+      Inc(P);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <LoadIDs>
+  @action: Loads the target array with ascending positional identifiers
+           (0..Length-1) corresponding to the current array instance.
+  @note: • Returns Self.Length.
+         • Ensures target.Length = Self.Length (resizes if required).
+         • Writes sequential indices using pointer-based iteration.
+         • If Length = 0, target is resized to zero and 0 is returned.
+         • Time complexity: O(n)
+[==============================================================================}
+function MArrayHelper.LoadIDs(var target: TIntegerArray): Integer; overload;
+var
+  i: Integer;
+  P: PInteger;
+begin
+  Result := Self.Length;
+  if (target.Length <> Result) then
+    SetLength(target, Result);
+  if (Result = 0) then
+    Exit;
+  P := @target[0];
+  for i := 0 to (Result - 1) do
+  begin
+    P^ := i;
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
+  <LoadIndexes>
+  @action: Loads the target array with ascending positional indexes
+           (0..Length-1) corresponding to the current array instance.
+  @note: • Returns Self.Length.
+         • Ensures target.Length = Self.Length (resizes if required).
+         • Uses direct indexed assignment.
+         • Safe for zero-length arrays.
+         • Time complexity: O(n)
+[==============================================================================}
+function MArrayHelper.LoadIndexes(var target: TIntegerArray): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Length;
+  if (target.Length <> Result) then
+    SetLength(target, Result);
+  for i := 0 to (Result - 1) do
+    target[i] := i;
+end;
+
+{==============================================================================]
+  <LoadIndices>
+  @action: Loads the target array with ascending positional indices
+           (0..Length-1) corresponding to the current array instance.
+  @note: • Returns Self.Length.
+         • Ensures target.Length = Self.Length (resizes if required).
+         • Uses loop unrolling (×4) for reduced loop overhead and
+           improved write throughput on large arrays.
+         • Handles remaining elements via tail loop.
+         • If Length = 0, target is resized to zero and 0 is returned.
+         • Time complexity: O(n)
+[==============================================================================}
+function MArrayHelper.LoadIndices(var target: TIntegerArray): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Length;
+  if (target.Length <> Result) then
+    SetLength(target, Result);
+  if (Result = 0) then
+    Exit;
+  i := 0;
+  while (i <= (Result - 4)) do
+  begin
+    target[i] := i;
+    target[i + 1] := (i + 1);
+    target[i + 2] := (i + 2);
+    target[i + 3] := (i + 3);
+    Inc(i, 4);
+  end;
+  while (i < Result) do
+  begin
+    target[i] := i;
+    Inc(i);
   end;
 end;
 

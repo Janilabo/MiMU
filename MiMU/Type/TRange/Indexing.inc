@@ -1,4 +1,5 @@
 {$IFDEF METHODS}
+function AsID(const oAscending: Boolean = True): TIntegerArray; overload;
 function AsIDs: TIntegerArray; overload;
 function AsIndexes: TIntegerArray; overload;
 function GetIDs: TIntegerArray; overload;
@@ -13,12 +14,38 @@ function Indiced: TIntegerArray; overload;
 function Indices: TIntegerArray; overload;
 function IndexList: TIntegerArray; overload;
 function Keys: TIntegerArray; overload;
+function LoadID(var target: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
 function Positions: TIntegerArray; overload;
 function ToIDs: TIntegerArray; overload;
 function ToIndexes: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsID>
+  @action: Constructs and returns a positional identifier vector for the
+           current range instance.
+  @note: • If the range is Singular, returns [0].
+         • Result length equals Self.Size.
+         • oAscending = True  →  [0, 1, 2, ..., Size - 1]
+           oAscending = False →  [Size - 1, ..., 2, 1, 0]
+         • Generation is arithmetic-progression based (±1 step).
+         • Does not depend on the range’s actual Start/Stop values —
+           only on its computed Size.
+[==============================================================================}
+function TRange.AsID(const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  if Self.Singular then
+    Exit([0]);
+  s := IfThen(oAscending, 1, -1);
+  SetLength(Result, Self.Size);
+  Result[0] := oAscending.Select(0, High(Result));
+  for i := 1 to High(Result) do
+    Result[i] := (Result[i - 1] + s);
+end;
+
 {==============================================================================]
   <AsIDs>
   @action: Returns an integer array of length equal to the range size, where each
@@ -310,7 +337,36 @@ begin
   Inc(i);
   goto b;
   e:
-end; 
+end;
+
+{==============================================================================]
+  <LoadID>
+  @action: Loads the target array with positional identifiers derived from
+           the current range instance.
+  @note: • Returns Self.Size.
+         • Ensures target.Length = Self.Size (resizes if required).
+         • oAscending = True  →  [0, 1, 2, ..., Size - 1]
+           oAscending = False →  [Size - 1, ..., 2, 1, 0]
+         • If the range is Singular, target[0] is initialized and the
+           method exits.
+         • Sequence is generated as an arithmetic progression (±1 step).
+         • Independent of the range’s actual boundary values; relies
+           solely on computed Size.
+[==============================================================================}
+function TRange.LoadID(var target: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
+var
+  i, s: Integer;
+begin
+  Result := Self.Size;
+  if (target.Length <> Result) then
+    SetLength(target, Result);
+  target[0] := oAscending.Select(0, (Result - 1));
+  if Self.Singular then
+    Exit;
+  s := IfThen(oAscending, 1, -1);
+  for i := 1 to (Result - 1) do
+    target[i] := (target[i - 1] + s);
+end;
 
 {==============================================================================]
   <Position>
