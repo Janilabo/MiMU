@@ -5,6 +5,7 @@ function Exclude(const items: MArray; const index: Integer = 2147483647): MArray
 function Expel(const eIDs: TIntegerArray): MArray; overload;
 function Extract(const item: MType; const index: Integer = 0): MArray; overload;
 function Extract(const items: MArray; const index: Integer = 0): MArray; overload;
+function ExtractByIndexes(const ID: TIntegerArray): MArray; overload;
 function ExtractByIndices(const ID: TIntegerArray): MArray; overload;
 function ExtractEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
 function ExtractIDs(const allowed: TIntegerArray): MArray; overload;
@@ -12,6 +13,7 @@ function ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = F
 function ExtractIndices(const ID: TIntegerArray): MArray; overload;
 function Filter(const item: MType; const index: Integer = 0): MArray; overload;
 function Filter(const items: MArray; const index: Integer = 0): MArray; overload;
+function FilterByIndexes(const ID: TIntegerArray): MArray; overload;
 function FilterByIndices(const ID: TIntegerArray): MArray; overload;
 function FilterEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
 function FilterIDs(const forbidden: TIntegerArray): MArray; overload;
@@ -153,6 +155,41 @@ begin
         Result[r.Increase] := Self[i];
   end;
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <ExtractByIndexes>
+  @action: Returns a new array containing the elements at the specified indexes.
+  @note:
+    - Non-mutating: the source array remains unchanged.
+    - Only indexes within the valid range [0..Length-1] are considered.
+    - Indexes are canonicalized (sorted and deduplicated) before extraction.
+    - The result is ordered by ascending index.
+    - If Self is empty, or no valid indexes are supplied, an empty array is returned.
+[==============================================================================}
+function MArrayHelper.ExtractByIndexes(const ID: TIntegerArray): MArray; overload;
+var
+  e: TIntegerArray;
+  i, j, r, n, k: Integer;
+begin
+  if Self.Empty then
+    Exit([]);
+  e := ID.ExtractValues(TRange.Construct(0, High(Self)));
+  if e.Empty then
+    Exit([]);
+  e := e.Canonical;
+  n := Self.Length;
+  k := e.Length;
+  SetLength(Result, k);
+  i := -1;
+  j := 0;
+  r := 0;
+  while ((i.Increment < n) and (j < k)) do
+    if (i = e[j]) then
+    begin
+      Result[r.Increase] := Self[i];
+      Inc(j);
+    end;
 end;
 
 {==============================================================================]
@@ -323,6 +360,41 @@ begin
     if not items.Contains(Self[i]) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <FilterByIndexes>
+  @action: Returns a new array with the elements at the specified indexes excluded.
+  @note:
+    - Non-mutating: the source array remains unchanged.
+    - Only indexes within the valid range [0..Length-1] are considered.
+    - Indexes are canonicalized (sorted and deduplicated) before filtering.
+    - The relative order of remaining elements is preserved.
+    - If Self is empty, an empty array is returned.
+    - If no valid indexes are supplied, a copy of Self is returned.
+[==============================================================================}
+function MArrayHelper.FilterByIndexes(const ID: TIntegerArray): MArray; overload;
+var
+  f: TIntegerArray;
+  i, j, r, n, k: Integer;
+begin
+  if Self.Empty then
+    Exit([]);
+  f := ID.ExtractValues(TRange.Construct(0, High(Self)));
+  if f.Empty then
+    Exit(Self.Copy);
+  f := f.Canonical;
+  n := Self.Length;
+  k := f.Length;
+  SetLength(Result, (n - k));
+  i := -1;
+  j := 0;
+  r := 0;
+  while (i.Increment < n) do
+    if ((j < k) and (i = f[j])) then
+      Inc(j)
+    else
+      Result[r.Increase] := Self[i];
 end;
 
 {==============================================================================]
