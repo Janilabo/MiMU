@@ -12,6 +12,7 @@ function ExtractEvery(const X: Integer = 1; const index: Integer = 0): MArray; o
 function ExtractIDs(const allowed: TIntegerArray): MArray; overload;
 function ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): MArray; overload;
 function ExtractIndices(const ID: TIntegerArray): MArray; overload;
+function ExtractWithIDs(const ID: TIntegerArray): MArray; overload;
 function Filter(const item: MType; const index: Integer = 0): MArray; overload;
 function Filter(const items: MArray; const index: Integer = 0): MArray; overload;
 function FilterByIDs(const ID: TIntegerArray): MArray; overload;
@@ -21,6 +22,7 @@ function FilterEvery(const X: Integer = 1; const index: Integer = 0): MArray; ov
 function FilterIDs(const forbidden: TIntegerArray): MArray; overload;
 function FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): MArray; overload;
 function FilterIndices(const ID: TIntegerArray): MArray; overload;
+function FilterWithIDs(const ID: TIntegerArray): MArray; overload;
 function Keep(const items: MArray; const index: Integer = 0): MArray; overload;
 function Pick(const items: MArray; const index: Integer = 0): MArray; overload;
 function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
@@ -365,6 +367,49 @@ begin
 end;
 
 {==============================================================================]
+  <ExtractWithIDs>
+  @action: Returns a new array containing the elements at the specified IDs.
+  @note:
+    - Non-mutating: the source array remains unchanged.
+    - Only IDs within the valid range [0..Length-1] are considered.
+    - Duplicate IDs are ignored.
+    - Indices are canonicalized (sorted and deduplicated) before extraction.
+    - The result preserves ascending index order.
+    - Consecutive indices are copied in contiguous blocks using `Move` for maximum efficiency.
+    - If Self is empty, or no valid IDs are supplied, an empty array is returned.
+[==============================================================================}
+function MArrayHelper.ExtractWithIDs(const ID: TIntegerArray): MArray; overload;
+var
+  e: TIntegerArray;
+  h, i, j, r, k, s, f: Integer;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit([]);
+  e := ID.ExtractValues(TRange.Construct(0, h));
+  if e.Empty then
+    Exit([]);
+  e := e.Canonical;
+  k := e.Length;
+  SetLength(Result, k);
+  r := 0;
+  j := 0;
+  while (j < k) do
+  begin
+    s := e[j];
+    f := s;
+    Inc(j);
+    while ((j < k) and (e[j] = (f + 1))) do
+    begin
+      f := e[j];
+      Inc(j);
+    end;
+    Move(Self[s], Result[r], (((f - s) + 1) * SizeOf(Self[0])));
+    Inc(r, ((f - s) + 1));
+  end;
+end;
+
+{==============================================================================]
   <Filter>
   @action: Removes all values from arr that are found in items.
   @note: None
@@ -620,6 +665,52 @@ begin
   until (j = f.Length);
   for i := (f[j - 1] + 1) to High(Self) do
     Result[r.Increase] := Self[i];
+end;
+
+{==============================================================================]
+  <FilterWithIDs>
+  @action: Returns a new array with the elements at the specified IDs removed.
+  @note:
+    - Non-mutating: the source array remains unchanged.
+    - Only IDs within the valid range [0..Length-1] are considered.
+    - Duplicate IDs are ignored.
+    - Indices are canonicalized (sorted and deduplicated) before filtering.
+    - The relative order of remaining elements is preserved.
+    - Uses contiguous memory copy (`Move`) for efficiency, especially with consecutive blocks.
+    - If Self is empty, an empty array is returned.
+    - If no valid IDs are supplied, a copy of Self is returned.
+[==============================================================================}
+function MArrayHelper.FilterWithIDs(const ID: TIntegerArray): MArray; overload;
+var
+  f: TIntegerArray;
+  h, i, j, r, k, s, e: Integer;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit([]);
+  f := ID.ExtractValues(TRange.Construct(0, h));
+  if f.Empty then
+    Exit(Self.Copy);
+  f := f.Canonical;
+  k := f.Length;
+  SetLength(Result, ((h + 1) - k));
+  r := 0;
+  s := 0;
+  for j := 0 to (k - 1) do
+  begin
+    e := (f[j] - 1);
+    if (e >= s) then
+    begin
+      Move(Self[s], Result[r], (((e - s) + 1) * SizeOf(Self[0])));
+      Inc(r, ((e - s) + 1));
+    end;
+    s := (f[j] + 1);
+  end;
+  if (s <= h) then
+  begin
+    Move(Self[s], Result[r], (((h - s) + 1) * SizeOf(Self[0])));
+    Inc(r, ((h - s) + 1));
+  end;
 end;
 
 {==============================================================================]
