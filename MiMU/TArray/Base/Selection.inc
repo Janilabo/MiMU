@@ -5,6 +5,7 @@ function Exclude(const items: MArray; const index: Integer = 2147483647): MArray
 function Expel(const eIDs: TIntegerArray): MArray; overload;
 function Extract(const item: MType; const index: Integer = 0): MArray; overload;
 function Extract(const items: MArray; const index: Integer = 0): MArray; overload;
+function ExtractByIDs(const ID: TIntegerArray): MArray; overload;
 function ExtractByIndexes(const ID: TIntegerArray): MArray; overload;
 function ExtractByIndices(const ID: TIntegerArray): MArray; overload;
 function ExtractEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
@@ -13,6 +14,7 @@ function ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = F
 function ExtractIndices(const ID: TIntegerArray): MArray; overload;
 function Filter(const item: MType; const index: Integer = 0): MArray; overload;
 function Filter(const items: MArray; const index: Integer = 0): MArray; overload;
+function FilterByIDs(const ID: TIntegerArray): MArray; overload;
 function FilterByIndexes(const ID: TIntegerArray): MArray; overload;
 function FilterByIndices(const ID: TIntegerArray): MArray; overload;
 function FilterEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
@@ -155,6 +157,44 @@ begin
         Result[r.Increase] := Self[i];
   end;
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <ExtractByIDs>
+  @action: Returns a new array containing the elements of Self located at the
+           specified IDs (indexes).
+  @note:
+    - Non-mutating: the source array remains unchanged.
+    - Only IDs within the valid range [0..Length-1] are considered.
+    - Duplicate IDs are ignored.
+    - The result preserves the original order of elements in Self.
+    - If Self is empty, or no valid IDs are supplied, an empty array is returned.
+    - Internally uses a hash set for O(1) membership checks.
+[==============================================================================}
+function MArrayHelper.ExtractByIDs(const ID: TIntegerArray): MArray; overload;
+var
+  d: specialize TDictionary<Integer, Byte>;
+  i, r, l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  d := specialize TDictionary<Integer, Byte>.Create;
+  try
+    for i in ID do
+      if ((i >= 0) and (i < l)) then
+        d.TryAdd(i, 0);
+    if (d.Count = 0) then
+      Exit([]);
+    SetLength(Result, d.Count);
+    r := 0;
+    for i := 0 to High(Self) do
+      if d.ContainsKey(i) then
+        Result[r.Increase] := Self[i];
+    SetLength(Result, r);
+  finally
+    d.Free;
+  end;
 end;
 
 {==============================================================================]
@@ -360,6 +400,44 @@ begin
     if not items.Contains(Self[i]) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <FilterByIDs>
+  @action: Returns a new array with the elements at the specified IDs (indexes) removed.
+  @note:
+    - Non-mutating: the source array remains unchanged.
+    - Only IDs within the valid range [0..Length-1] are considered.
+    - Duplicate IDs are ignored.
+    - The relative order of remaining elements is preserved.
+    - If Self is empty, an empty array is returned.
+    - If no valid IDs are supplied, a copy of Self is returned.
+    - Internally uses a hash set for O(1) membership checks.
+[==============================================================================}
+function MArrayHelper.FilterByIDs(const ID: TIntegerArray): MArray; overload;
+var
+  d: specialize TDictionary<Integer, Byte>;
+  i, r, l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  d := specialize TDictionary<Integer, Byte>.Create;
+  try
+    for i in ID do
+      if ((i >= 0) and (i < l)) then
+        d.TryAdd(i, 0);
+    if (d.Count = 0) then
+      Exit(Self.Copy);
+    SetLength(Result, l);
+    r := 0;
+    for i := 0 to High(Self) do
+      if not d.ContainsKey(i) then
+        Result[r.Increase] := Self[i];
+    SetLength(Result, r);
+  finally
+    d.Free;
+  end;
 end;
 
 {==============================================================================]
