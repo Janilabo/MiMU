@@ -1,4 +1,7 @@
 {$IFDEF HELPERS}
+function AsIDs(const aAscending: Boolean = True): TIntegerArray; overload;
+function AsIndexes(const aAscending: Boolean = True): TIntegerArray; overload;
+function GetIDs: TIntegerArray; overload;
 function ID(const aAscending: Boolean = True): TIntegerArray; overload;
 function IDs(const aAscending: Boolean = True): TIntegerArray; overload;
 function IDs(const ID: TIntegerArray): MArray; overload;
@@ -10,10 +13,123 @@ function Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indices(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
 function Slots: TIntegerArray; overload;
+function ToIDs(const aAscending: Boolean = True): TIntegerArray; overload;
 function ToIndexes: TIntegerArray; overload;
+function ToIndices(const aAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsIDs>
+  @action: Generates an array of zero-based indexes representing the current
+           array. The resulting array can be ascending (0..Length-1) or descending
+           (Length-1..0) depending on the `aAscending` parameter.
+  @note:
+    • If the array is empty, an empty array is returned.
+    • Uses direct pointer arithmetic for efficient population.
+    • Time complexity: O(n), where n = Length(Self).
+    • Returns a new TIntegerArray containing all indexes of Self.
+    • Default order is ascending.
+[==============================================================================}
+function MArrayHelper.AsIDs(const aAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, l: Integer;
+  P: PInteger;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit([]);
+	1: Exit([0]);
+  end;
+  SetLength(Result, l);
+  P := @Result[0];
+  case aAscending of
+    True:
+    for i := 0 to (l - 1) do
+    begin
+      P^ := i;
+      Inc(P);
+    end;
+	False:
+	for i := (l - 1) downto 0 do
+    begin
+      P^ := i;
+      Inc(P);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <AsIndexes>
+  @action: Generates an array of zero-based indexes representing the elements
+           of the current array. Supports ascending (0..Length-1) or descending
+           (Length-1..0) order via the `aAscending` parameter.
+  @note:
+    • Returns an empty array if the source array is empty.
+    • Returns [0] if the array has a single element.
+    • Uses `Increment` and `Decrement` helpers along with `Result.Supply`
+      for in-place efficient population.
+    • Time complexity: O(n), where n = Length(Self).
+    • The resulting array contains all indexes of Self in the requested order.
+[==============================================================================}
+function MArrayHelper.AsIndexes(const aAscending: Boolean = True): TIntegerArray; overload;
+var
+  l, i: Integer;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit([]);
+    1: Exit([0]);
+  end;
+  SetLength(Result, 0);
+  i := -1;
+  case aAscending of
+    True:
+    while (i.Increment < l) do
+      Result.Supply(i);
+    False:
+    while (l.Decrement > i) do
+      Result.Supply(l);
+  end;
+end;
+
+{==============================================================================]
+  <GetIDs>
+  @action: Generates an array of zero-based indexes representing the elements
+           of the current array. Optimized for performance by filling multiple
+           indexes per iteration when possible.
+  @note:
+    • Returns an empty array if the source array is empty.
+    • Returns [0] if the array has a single element.
+    • Uses an unrolled loop to assign four indexes per iteration for speed,
+      then completes remaining indexes with a standard loop.
+    • Time complexity: O(n), where n = Length(Self).
+    • The resulting array always contains indexes 0..Length(Self)-1
+      in ascending order.
+[==============================================================================}
+function MArrayHelper.GetIDs: TIntegerArray; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit([]);
+    1: Exit([0]);
+  end;
+  SetLength(Result, l);
+  i := 0;
+  while (i <= (l - 4)) do
+  begin
+    Result[i] := i;
+    Result[i + 1] := (i + 1);
+    Result[i + 2] := (i + 2);
+    Result[i + 3] := (i + 3);
+    Inc(i, 4);
+  end;
+  for i := i to (l - 1) do
+    Result[i] := i;
+end;
+
 {==============================================================================]
   <ID>
   @action: Returns indexes of arr as TIntegerArray.
@@ -231,6 +347,40 @@ begin
 end;
 
 {==============================================================================]
+  <ToIDs>
+  @action: Generates an array of zero-based identifiers (IDs) representing the
+           elements of the current array. Supports ascending (0..Length-1) or
+           descending (Length-1..0) order via the `aAscending` parameter.
+  @note:
+    • Returns an empty array if the source array is empty.
+    • Returns [0] if the array contains a single element.
+    • Uses a simple arithmetic step with a `goto` loop for efficient
+      population of the result array.
+    • Time complexity: O(n), where n = Length(Self).
+    • The resulting array contains all IDs in ascending or descending order.
+[==============================================================================}
+function MArrayHelper.ToIDs(const aAscending: Boolean = True): TIntegerArray; overload;
+label
+  filling;
+var
+  i, s, l: Integer;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit([]);
+    1: Exit([0]);
+  end;
+  SetLength(Result, l);
+  s := IfThen(aAscending, 1, -1);
+  Result[0] := IfThen(aAscending, 0, (l - 1));
+  i := 1;
+  filling:
+  Result[i] := (Result[i - 1] + s);
+  if (i.Increment < l) then
+    goto filling;
+end;
+
+{==============================================================================]
   <ToIndexes>
   @action: Returns indexes of array.
   @note: None.
@@ -243,5 +393,40 @@ begin
   l := Low(Self);
   for i := l to High(Self) do
     Result[i - l] := i;
+end;
+
+{==============================================================================]
+  <ToIndices>
+  @action: Generates an array of zero-based indices representing the elements
+           of the current array. The resulting sequence may be ascending
+           (0..Length-1) or descending (Length-1..0) depending on `aAscending`.
+  @note:
+    • Returns an empty array if the source array is empty.
+    • Returns [0] if the array contains a single element.
+    • Populates the result in reverse storage order while controlling
+      logical direction via a signed step value.
+    • Uses `Increment` / `Decrement` helpers and a `goto` loop for
+      compact, branch-minimal iteration.
+    • Time complexity: O(n), where n = Length(Self).
+    • The resulting array always contains a complete index set.
+[==============================================================================}
+function MArrayHelper.ToIndices(const aAscending: Boolean = True): TIntegerArray; overload;
+label
+  filling;
+var
+  i, s, h, r: Integer;
+begin
+  h := High(Self);
+  case h of
+    -1: Exit([]);
+    0: Exit([0]);
+  end;
+  SetLength(Result, (h + 1));
+  s := IfThen(aAscending, -1, 1);
+  r := IfThen(aAscending, (h + 1), -1);
+  filling:
+  Result[h] := r.Increment(s);
+  if (h.Decrement > -1) then
+    goto filling;
 end;
 {$ENDIF}

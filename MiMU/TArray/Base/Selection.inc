@@ -1,6 +1,10 @@
 {$IFDEF HELPERS}
 function Devein(const dIDs: TIntegerArray; const dValue: MType): MArray; overload;
 function Devein(const dIDs: TIntegerArray): MArray; overload;
+function DumpID(const ID: TIntegerArray): Integer; overload;
+function DumpIDs(const ID: TIntegerArray): Integer; overload;
+function DumpIndexes(const ID: TIntegerArray): Integer; overload;
+function DumpIndices(const ID: TIntegerArray): Integer; overload;
 function Exclude(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 function Expel(const eIDs: TIntegerArray): MArray; overload;
 function Extract(const item: MType; const index: Integer = 0): MArray; overload;
@@ -9,21 +13,31 @@ function ExtractByIDs(const ID: TIntegerArray): MArray; overload;
 function ExtractByIndexes(const ID: TIntegerArray): MArray; overload;
 function ExtractByIndices(const ID: TIntegerArray): MArray; overload;
 function ExtractEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
+function ExtractID(const ID: TIntegerArray): MArray; overload;
 function ExtractIDs(const allowed: TIntegerArray): MArray; overload;
 function ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): MArray; overload;
+function ExtractIndexList(const ID: TIntegerArray): MArray; overload;
 function ExtractIndices(const ID: TIntegerArray): MArray; overload;
 function ExtractWithIDs(const ID: TIntegerArray): MArray; overload;
+function ExtractWithIndices(const ID: TIntegerArray): MArray; overload;
 function Filter(const item: MType; const index: Integer = 0): MArray; overload;
 function Filter(const items: MArray; const index: Integer = 0): MArray; overload;
 function FilterByIDs(const ID: TIntegerArray): MArray; overload;
 function FilterByIndexes(const ID: TIntegerArray): MArray; overload;
 function FilterByIndices(const ID: TIntegerArray): MArray; overload;
 function FilterEvery(const X: Integer = 1; const index: Integer = 0): MArray; overload;
+function FilterID(const ID: TIntegerArray): MArray; overload;
 function FilterIDs(const forbidden: TIntegerArray): MArray; overload;
 function FilterIndexes(const forbidden: TIntegerArray; const fSorted: Boolean = False): MArray; overload;
+function FilterIndexList(const ID: TIntegerArray): MArray; overload;
 function FilterIndices(const ID: TIntegerArray): MArray; overload;
 function FilterWithIDs(const ID: TIntegerArray): MArray; overload;
+function FilterWithIndices(const ID: TIntegerArray): MArray; overload;
 function Keep(const items: MArray; const index: Integer = 0): MArray; overload;
+function KeepID(const ID: TIntegerArray): Integer; overload;
+function KeepIDs(const ID: TIntegerArray): Integer; overload;
+function KeepIndexes(const ID: TIntegerArray): Integer; overload;
+function KeepIndices(const ID: TIntegerArray): Integer; overload;
 function Pick(const items: MArray; const index: Integer = 0): MArray; overload;
 function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 {$ENDIF}
@@ -61,6 +75,139 @@ end;
 function MArrayHelper.Devein(const dIDs: TIntegerArray): MArray; overload;
 begin
   Result := Self.Devein(dIDs, Default(MType));
+end;
+
+{==============================================================================]
+  <DumpID>
+  @action: Retains only elements whose zero-based indexes are listed in `ID`.
+           Uses a hash set for O(1) index lookup, compacts the array in-place,
+           and updates its length.
+  @note:
+    • Indexes outside the range [0..Length(Self)-1] are ignored.
+    • Element order is preserved.
+    • Time complexity: O(n + m), where n = Length(Self) and m = Length(ID).
+    • Memory complexity: O(m) for the hash set.
+    • Returns the new array length after compaction.
+[==============================================================================}
+function MArrayHelper.DumpID(const ID: TIntegerArray): Integer; overload;
+var
+  l, i: Integer;
+  d: specialize TDictionary<Integer, Boolean>;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(0);
+  if ID.Empty then
+    Exit(l);
+  d := specialize TDictionary<Integer, Boolean>.Create;
+  try
+    for i := 0 to High(ID) do
+      if ((ID[i] >= 0) and (ID[i] < l)) then
+        d.AddOrSetValue(ID[i], True);
+    Result := 0;
+    for i := 0 to (l - 1) do
+      if not d.ContainsKey(i) then
+        Self[Result.Increase] := Self[i];
+    SetLength(Self, Result);
+  finally
+    d.Free;
+  end;
+end;
+
+{==============================================================================]
+  <DumpIDs>
+  @action: Removes elements from the array whose zero-based indexes are specified
+           in `ID`. The input index list is normalized prior to removal, then the
+           array is compacted in-place and its length reduced accordingly.
+  @note:
+    • `ID` is first restricted to the valid index range [0..Length(Self)-1]
+      and canonicalized (sorted and de-duplicated) before processing.
+    • Element order is preserved according to their original position.
+    • Executes in O(n + m log m) time due to canonicalization,
+      where n = Length(Self) and m = Length(ID).
+    • Uses O(m) auxiliary storage for the normalized index set.
+    • Returns the new length of the array after compaction.
+[==============================================================================}
+function MArrayHelper.DumpIDs(const ID: TIntegerArray): Integer; overload;
+var
+  h, l, i, j: Integer;
+  r: TIntegerArray;
+begin
+  Result := 0;
+  l := Self.Length;
+  if (l = 0) then
+    Exit;
+  r := ID.ExtractValues(TRange.Construct(0, (l - 1))).Canonical;
+  j := 0;
+  h := High(r);
+  for i := 0 to (l - 1) do
+    if ((j > h) or (i < r[j])) then
+      Self[Result.Increase] := Self[i]
+    else
+      Inc(j);
+  SetLength(Self, Result);
+end;
+
+{==============================================================================]
+  <DumpIndexes>
+  @action: Removes elements from the array whose zero-based indexes are specified
+           in `ID`. Remaining elements are compacted in-place and the array length
+           is reduced accordingly.
+  @note:
+    • Indexes outside the valid range [0..Length(Self)-1] are ignored.
+    • Element order is preserved according to their original position.
+    • Duplicate values in `ID` have no additional effect.
+    • Executes in O(n + m) time with O(n) temporary boolean storage,
+      where n = Length(Self) and m = Length(ID).
+    • Returns the new length of the array after compaction.
+[==============================================================================}
+function MArrayHelper.DumpIndexes(const ID: TIntegerArray): Integer; overload;
+var
+  l, i: Integer;
+  r: TBooleanArray;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(0);
+  SetLength(r, l);
+  for i := 0 to High(ID) do
+    if ((ID[i] >= 0) and (ID[i] < l)) then
+      r[ID[i]] := True;
+  Result := 0;
+  for i := 0 to (l - 1) do
+    if not r[i] then
+      Self[Result.Increase] := Self[i];
+  SetLength(Self, Result);
+end;
+
+{==============================================================================]
+  <DumpIndices>
+  @action: Removes elements from the array whose zero-based indexes are specified
+           in `ID`. The index list is first normalized and sorted, then a binary
+           search is used to determine which elements to remove. Remaining elements
+           are compacted in-place and the array length is reduced.
+  @note:
+    • `ID` is restricted to the valid index range [0..Length(Self)-1] and
+      quick-sorted prior to processing.
+    • Element order is preserved according to their original positions.
+    • Binary search ensures O(log m) lookup per element, resulting in
+      O(n log m) total time, where n = Length(Self) and m = Length(ID).
+    • Returns the new length of the array after compaction.
+[==============================================================================}
+function MArrayHelper.DumpIndices(const ID: TIntegerArray): Integer; overload;
+var
+  l, i: Integer;
+  s: TIntegerArray;
+begin
+  Result := 0;
+  l := Self.Length;
+  if (l = 0) then
+    Exit;
+  s := ID.ExtractValues(TRange.Construct(0, (l - 1))).QuickSorted;
+  for i := 0 to (l - 1) do
+    if not s.BinaryContains(i) then
+      Self[Result.Increase] := Self[i];
+  SetLength(Self, Result);
 end;
 
 {==============================================================================]
@@ -290,6 +437,41 @@ begin
 end;
 
 {==============================================================================]
+  <ExtractID>
+  @action: Creates and returns a new array containing elements referenced by the
+           zero-based identifiers specified in `ID`. Elements are copied in the
+           order provided by `ID`.
+  @note:
+    • Returns an empty array if the source array is empty or `ID` is empty.
+    • Extraction stops immediately if an invalid index (< 0 or > High(Self))
+      is encountered; only successfully copied elements are returned.
+    • The resulting array preserves the order of identifiers as given in `ID`.
+    • Does not canonicalize, sort, or de-duplicate `ID`.
+    • Time complexity: O(m), where m = Length(ID).
+    • Allocates up to Length(ID) elements, then truncates if early termination occurs.
+[==============================================================================}
+function MArrayHelper.ExtractID(const ID: TIntegerArray): MArray; overload;
+label
+  finish;
+var
+  h, i, j: Integer;
+begin
+  h := High(Self);
+  if ((h = -1) or ID.Empty) then
+    Exit([]);
+  SetLength(Result, ID.Length);
+  j := 0;
+  for i := 0 to High(ID) do
+    if ((ID[i] < 0) or (ID[i] > h)) then
+      goto finish
+    else
+      Result[j.Increase] := Self[ID[i]];
+  Exit;
+  finish:
+  SetLength(Result, j);
+end;
+
+{==============================================================================]
   <ExtractIDs>
   @action: Keeps (extracts) all allowed index values from array.
   @note: None.
@@ -337,6 +519,36 @@ begin
     if a.BinaryContains(i) then
       Result[h.Increase] := Self[i];
   SetLength(Result, h);
+end;
+
+{==============================================================================]
+  <ExtractIndexList>
+  @action: Returns a new array containing the elements of Self located at the
+           specified indices.
+  @note:
+    - Non-mutating: the source array remains unchanged.
+    - Only indices within the valid range [0..Length-1] are considered.
+    - Indices are processed in the order provided; no sorting or deduplication is performed.
+    - Duplicate indices will produce duplicate elements in the result.
+    - The result preserves the order defined by the input ID array.
+    - Internally uses a TList to accumulate results before converting to an array.
+    - If no valid indices are supplied, an empty array is returned.
+[==============================================================================}
+function MArrayHelper.ExtractIndexList(const ID: TIntegerArray): MArray; overload;
+var
+  l: specialize TList<MType>;
+  s, i: Integer;
+begin
+  l := specialize TList<MType>.Create;
+  s := Self.Length;
+  try
+    for i := 0 to High(ID) do
+      if ((ID[i] >= 0) and (ID[i] < s)) then
+        l.Add(Self[ID[i]]);
+    Result := l.ToArray;
+  finally
+    l.Free;
+  end;
 end;
 
 {==============================================================================]
@@ -407,6 +619,42 @@ begin
     Move(Self[s], Result[r], (((f - s) + 1) * SizeOf(Self[0])));
     Inc(r, ((f - s) + 1));
   end;
+end;
+
+{==============================================================================]
+  <ExtractWithIndices>
+  @action: Returns a new array containing the elements at the specified indices.
+  @note:
+    - Non-mutating: the source array remains unchanged.
+    - Only indices within the valid range [0..Length-1] are considered.
+    - Duplicate indices do not produce duplicate elements (each index is included at most once).
+    - The result preserves ascending index order.
+    - Uses a boolean mask to mark included positions before constructing the result.
+    - If Self is empty or no valid indices are supplied, an empty array is returned.
+[==============================================================================}
+function MArrayHelper.ExtractWithIndices(const ID: TIntegerArray): MArray; overload;
+var
+  m: TBooleanArray;
+  l, i, j, c: Integer;
+begin
+  l := Self.Length;
+  if ((l = 0) or ID.Empty) then
+    Exit([]);
+  SetLength(m, l);
+  for i := 0 to High(m) do
+    m[i] := False;
+  for i := 0 to High(ID) do
+    if ((ID[i] >= 0) and (ID[i] < l)) then
+      m[ID[i]] := True;
+  c := 0;
+  for i := 0 to High(m) do
+    if m[i] then
+      Inc(c);
+  SetLength(Result, c);
+  j := 0;
+  for i := 0 to (l - 1) do
+    if m[i] then
+      Result[j.Increase] := Self[i];
 end;
 
 {==============================================================================]
@@ -580,6 +828,46 @@ begin
 end;
 
 {==============================================================================]
+  <FilterID>
+  @action: Returns a new array containing all elements of the source array
+           except those whose zero-based identifiers are specified in `ID`.
+  @note:
+    • Returns an empty array if the source array is empty.
+    • Uses a boolean exclusion mask sized to Length(Self).
+    • If an invalid index (< 0 or >= Length(Self)) is encountered,
+      mask population stops immediately; only previously validated
+      identifiers are applied.
+    • Element order is preserved.
+    • Duplicate identifiers in `ID` have no additional effect.
+    • Time complexity: O(n + m), where n = Length(Self) and m = Length(ID).
+    • Space complexity: O(n) due to the temporary boolean mask.
+[==============================================================================}
+function MArrayHelper.FilterID(const ID: TIntegerArray): MArray; overload;
+label
+  process;
+var
+  l, i, j: Integer;
+  e: TBooleanArray;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  e.Create(l, False);
+  for i := 0 to High(ID) do
+    if ((ID[i] < 0) or (ID[i] >= l)) then
+      goto process
+    else
+      e[ID[i]] := True;
+  process:
+  SetLength(Result, l);
+  j := 0;
+  for i := 0 to (l - 1) do
+    if not e[i] then
+      Result[j.Increase] := Self[i];
+  SetLength(Result, j);
+end;
+
+{==============================================================================]
   <FilterIDs>
   @action: Returns the array without values from forbidden indexes.
   @note: None.
@@ -629,6 +917,38 @@ begin
     if not f.BinaryContains(i) then
       Result[h.Increase] := Self[i];
   SetLength(Result, h);
+end;
+
+{==============================================================================]
+  <FilterIndexList>
+  @action: Returns a new array with the elements at the specified indices removed.
+  @note:
+    - Non-mutating: the source array remains unchanged.
+    - Indices are sorted before processing to ensure safe descending deletion.
+    - Deletion is performed from highest to lowest index to avoid reindexing errors.
+    - Only indices within the valid range [0..Count-1] are considered.
+    - Duplicate indices may cause multiple deletion attempts; only valid positions are removed.
+    - Relative order of remaining elements is preserved.
+    - Internally uses a TList copy of Self and converts the result back to an array.
+    - If no valid indices are supplied, a copy of Self is returned.
+[==============================================================================}
+function MArrayHelper.FilterIndexList(const ID: TIntegerArray): MArray; overload;
+var
+  l: specialize TList<MType>;
+  i: Integer;
+  s: TIntegerArray;
+begin
+  l := specialize TList<MType>.Create;
+  try
+    l.AddRange(Self);
+    s := ID.QuickSorted;
+    for i := High(s) downto 0 do
+      if ((s[i] >= 0) and (s[i] < l.Count)) then
+        l.Delete(s[i]);
+    Result := l.ToArray;
+  finally
+    l.Free;
+  end;
 end;
 
 {==============================================================================]
@@ -714,6 +1034,42 @@ begin
 end;
 
 {==============================================================================]
+  <FilterWithIndices>
+  @action: Returns a new array with the elements at the specified indices removed.
+  @note:
+    - Non-mutating: the source array remains unchanged.
+    - Only indices within the valid range [0..Length-1] are considered.
+    - Duplicate indices are effectively ignored.
+    - The relative order of remaining elements is preserved.
+    - Uses a boolean mask to mark excluded positions before constructing the result.
+    - If Self is empty, an empty array is returned.
+[==============================================================================}
+function MArrayHelper.FilterWithIndices(const ID: TIntegerArray): MArray; overload;
+var
+  m: TBooleanArray;
+  l, i, j, s: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  SetLength(m, l);
+  for i := 0 to High(m) do
+    m[i] := True;
+  for i := 0 to High(ID) do
+    if ((ID[i] >= 0) and (ID[i] < l)) then
+      m[ID[i]] := False;
+  s := 0;
+  for i := 0 to High(m) do
+    if m[i] then
+      Inc(s);
+  SetLength(Result, s);
+  j := 0;
+  for i := 0 to (l - 1) do
+    if m[i] then
+      Result[j.Increase] := Self[i];
+end;
+
+{==============================================================================]
   <Keep>
   @action: Keeps items in array, removes others.
   @note: Supports custom start index! Returns the modified arr.
@@ -740,6 +1096,139 @@ begin
     end;
     False: Result := Self.Copy;
   end;
+end;
+
+{==============================================================================]
+  <KeepID>
+  @action: Retains only elements whose zero-based indexes are listed in `ID`.
+           Uses a hash set for O(1) index lookup, compacts the array in-place,
+           and updates its length.
+  @note:
+    • Indexes outside the range [0..Length(Self)-1] are ignored.
+    • Element order is preserved.
+    • Time complexity: O(n + m), where n = Length(Self) and m = Length(ID).
+    • Memory complexity: O(m) for the hash set.
+    • Returns the new array length after compaction.
+[==============================================================================}
+function MArrayHelper.KeepID(const ID: TIntegerArray): Integer; overload;
+var
+  l, i: Integer;
+  d: specialize TDictionary<Integer, Boolean>;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(0);
+  if ID.Empty then
+  begin
+    SetLength(Self, 0);
+	Exit(0);
+  end;
+  d := specialize TDictionary<Integer, Boolean>.Create;
+  try
+    for i := 0 to High(ID) do
+      if ((ID[i] >= 0) and (ID[i] < l)) then
+        d.AddOrSetValue(ID[i], True);
+    Result := 0;
+    for i := 0 to (l - 1) do
+      if d.ContainsKey(i) then
+        Self[Result.Increase] := Self[i];
+    SetLength(Self, Result);
+  finally
+    d.Free;
+  end;
+end;
+
+{==============================================================================]
+  <KeepIDs>
+  @action: Rebuilds the array in-place so that only elements whose zero-based
+           indexes are specified in `ID` are retained. The resulting array
+           contains the referenced elements in ascending index order.
+  @note:
+    • `ID` is restricted to the valid index range [0..Length(Self)-1]
+      and canonicalized (sorted and de-duplicated) prior to access.
+    • Resulting element order follows the canonicalized index sequence
+      (ascending original index order).
+    • Executes in O(n + m log m) time due to canonicalization,
+      where n = Length(Self) and m = Length(ID).
+    • Uses O(m) auxiliary storage for the normalized index set.
+    • Returns the new length of the array after reconstruction.
+[==============================================================================}
+function MArrayHelper.KeepIDs(const ID: TIntegerArray): Integer; overload;
+var
+  l, i: Integer;
+  r: TIntegerArray;
+begin
+  Result := 0;
+  l := Self.Length;
+  if (l = 0) then
+    Exit;
+  r := ID.ExtractValues(TRange.Construct(0, (l - 1))).Canonical;
+  for i := 0 to High(r) do
+    Self[Result.Increase] := Self[r[i]];
+  SetLength(Self, Result);
+end; 
+
+{==============================================================================]
+  <KeepIndexes>
+  @action: Filters the array in-place by retaining only elements whose zero-based
+           indexes are specified in `ID`. Elements not referenced in `ID` are removed.
+           The array is compacted and its length is reduced accordingly.
+  @note:
+    • Indexes outside the valid range [0..Length(Self)-1] are ignored.
+    • Element order is preserved according to their original position in Self
+      (not the order of indexes in `ID`).
+    • Duplicate values in `ID` have no additional effect.
+    • Executes in O(n + m) time with O(n) temporary boolean storage,
+      where n = Length(Self) and m = Length(ID).
+    • Returns the new length of the array after compaction.
+[==============================================================================}
+function MArrayHelper.KeepIndexes(const ID: TIntegerArray): Integer; overload;
+var
+  l, i: Integer;
+  r: TBooleanArray;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(0);
+  SetLength(r, l);
+  for i := 0 to High(ID) do
+    if ((ID[i] >= 0) and (ID[i] < l)) then
+      r[ID[i]] := True;
+  Result := 0;
+  for i := 0 to (l - 1) do
+    if r[i] then
+      Self[Result.Increase] := Self[i];
+  SetLength(Self, Result);
+end;
+
+{==============================================================================]
+  <KeepIndices>
+  @action: Retains only elements in the array whose zero-based indexes are specified
+           in `ID`. The index list is first normalized and sorted, then a binary
+           search is used to determine which elements to keep. The array is
+           compacted in-place and its length updated.
+  @note:
+    • `ID` is restricted to the valid index range [0..Length(Self)-1] and
+      quick-sorted prior to processing.
+    • Element order is preserved according to their original positions.
+    • Binary search ensures O(log m) lookup per element, resulting in
+      O(n log m) total time, where n = Length(Self) and m = Length(ID).
+    • Returns the new length of the array after compaction.
+[==============================================================================}
+function MArrayHelper.KeepIndices(const ID: TIntegerArray): Integer; overload;
+var
+  l, i: Integer;
+  s: TIntegerArray;
+begin
+  Result := 0;
+  l := Self.Length;
+  if (l = 0) then
+    Exit;
+  s := ID.ExtractValues(TRange.Construct(0, (l - 1))).QuickSorted;
+  for i := 0 to (l - 1) do
+    if s.BinaryContains(i) then
+      Self[Result.Increase] := Self[i];
+  SetLength(Self, Result);
 end;
 
 {==============================================================================]
