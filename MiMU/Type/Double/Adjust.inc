@@ -1,12 +1,12 @@
 {$IFDEF HELPERS}
 function Decrease(const N: Double = 1): Double; overload;
-function Decrease(const B: Boolean): Double; overload;
+function Decrease(const B: Boolean; const N: Double = 1): Double; overload;
 function Decrement(const N: Double = 1): Double; overload;
-function Decrement(const B: Boolean): Double; overload;
+function Decrement(const B: Boolean; const N: Double = 1): Double; overload;
 function Increase(const N: Double = 1): Double; overload;
-function Increase(const B: Boolean): Double; overload;
+function Increase(const B: Boolean; const N: Double = 1): Double; overload;
 function Increment(const N: Double = 1): Double; overload;
-function Increment(const B: Boolean): Double; overload;
+function Increment(const B: Boolean; const N: Double = 1): Double; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -23,14 +23,14 @@ end;
 
 {==============================================================================]
   <Decrease>
-  @action: Decreases the Double value x by 1 if B is true.
+  @action: Decreases the Double value x by N if B is true.
   @note: Returns x before decreasing it!
 [==============================================================================}
-function TDoubleHelper.Decrease(const B: Boolean): Double; overload;
+function TDoubleHelper.Decrease(const B: Boolean; const N: Double = 1): Double; overload;
 begin
   Result := Self;
   if B then
-    Self := (Self - 1);
+    Self := (Self - N);
 end;
 
 {==============================================================================]
@@ -46,13 +46,13 @@ end;
 
 {==============================================================================]
   <Decrement>
-  @action: Decreases the Double value x by 1 if B is true.
+  @action: Decreases the Double value x by N if B is true.
   @note: Returns the decreased x!
 [==============================================================================}
-function TDoubleHelper.Decrement(const B: Boolean): Double; overload;
+function TDoubleHelper.Decrement(const B: Boolean; const N: Double = 1): Double; overload;
 begin
   if B then
-    Self := (Self - 1);
+    Self := (Self - N);
   Result := Self;
 end;
 
@@ -69,14 +69,14 @@ end;
 
 {==============================================================================]
   <Increase>
-  @action: Increases the Double value x by 1 if B is true.
+  @action: Increases the Double value x by N if B is true.
   @note: Returns x before increasing it!
 [==============================================================================}
-function TDoubleHelper.Increase(const B: Boolean): Double; overload;
+function TDoubleHelper.Increase(const B: Boolean; const N: Double = 1): Double; overload;
 begin
   Result := Self;
   if B then
-    Self := (Self + 1);
+    Self := (Self + N);
 end;
 
 {==============================================================================]
@@ -92,13 +92,13 @@ end;
 
 {==============================================================================]
   <Increment>
-  @action: Increases the Double value x by 1 if B is true.
+  @action: Increases the Double value x by N if B is true.
   @note: Returns the increased x!
 [==============================================================================}
-function TDoubleHelper.Increment(const B: Boolean): Double; overload;
+function TDoubleHelper.Increment(const B: Boolean; const N: Double = 1): Double; overload;
 begin
   if B then
-    Self := (Self + 1);
+    Self := (Self + N);
   Result := Self;
 end;
 {$ENDIF}

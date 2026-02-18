@@ -1,12 +1,12 @@
 {$IFDEF HELPERS}
 function Decrease(const N: Int64 = 1): Int64; overload;
-function Decrease(const B: Boolean): Int64; overload;
+function Decrease(const B: Boolean; const N: Int64 = 1): Int64; overload;
 function Decrement(const N: Int64 = 1): Int64; overload;
-function Decrement(const B: Boolean): Int64; overload;
+function Decrement(const B: Boolean; const N: Int64 = 1): Int64; overload;
 function Increase(const N: Int64 = 1): Int64; overload;
-function Increase(const B: Boolean): Int64; overload;
+function Increase(const B: Boolean; const N: Int64 = 1): Int64; overload;
 function Increment(const N: Int64 = 1): Int64; overload;
-function Increment(const B: Boolean): Int64; overload;
+function Increment(const B: Boolean; const N: Int64 = 1): Int64; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -23,14 +23,14 @@ end;
 
 {==============================================================================]
   <Decrease>
-  @action: Decreases the Int64 value x by 1 if B is true.
+  @action: Decreases the Int64 value x by N if B is true.
   @note: Returns x before decreasing it with N!
 [==============================================================================}
-function TInt64Helper.Decrease(const B: Boolean): Int64; overload;
+function TInt64Helper.Decrease(const B: Boolean; const N: Int64 = 1): Int64; overload;
 begin
   Result := Self;
   if B then
-    Self := (Self - 1);
+    Self := (Self - N);
 end;
 
 {==============================================================================]
@@ -46,13 +46,13 @@ end;
 
 {==============================================================================]
   <Decrement>
-  @action: Decreases the Int64 value x by 1 if B is true.
+  @action: Decreases the Int64 value x by N if B is true.
   @note: Returns the decreased x!
 [==============================================================================}
-function TInt64Helper.Decrement(const B: Boolean): Int64; overload;
+function TInt64Helper.Decrement(const B: Boolean; const N: Int64 = 1): Int64; overload;
 begin
   if B then
-    Self := (Self - 1);
+    Self := (Self - N);
   Result := Self;
 end;
 
@@ -69,14 +69,14 @@ end;
 
 {==============================================================================]
   <Increase>
-  @action: Increases the Int64 value x by 1 if B is true.
+  @action: Increases the Int64 value x by N if B is true.
   @note: Returns x before increasing it!
 [==============================================================================}
-function TInt64Helper.Increase(const B: Boolean): Int64; overload;
+function TInt64Helper.Increase(const B: Boolean; const N: Int64 = 1): Int64; overload;
 begin
   Result := Self;
   if B then
-    Self := (Self + 1);
+    Self := (Self + N);
 end;
 
 {==============================================================================]
@@ -92,13 +92,13 @@ end;
 
 {==============================================================================]
   <Increment>
-  @action: Increases the Int64 value x by 1 if B is true.
+  @action: Increases the Int64 value x by N if B is true.
   @note: Returns the increased x!
 [==============================================================================}
-function TInt64Helper.Increment(const B: Boolean): Int64; overload;
+function TInt64Helper.Increment(const B: Boolean; const N: Int64 = 1): Int64; overload;
 begin
   if B then
-    Self := (Self + 1);
+    Self := (Self + N);
   Result := Self;
 end;
 {$ENDIF}
