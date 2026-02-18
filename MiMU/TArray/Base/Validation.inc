@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function AllDistinct: Boolean; overload;
 function AllEqual: Boolean; overload;
 function AllSame: Boolean; overload;
 function AllUnique: Boolean; overload;
@@ -11,6 +12,8 @@ function Contains(const item: MType; const index: Integer = 0): Boolean; overloa
 function Contains(const item: MType; const limit: TRange): Boolean; overload;
 function ContainsAtLeast(const item: MType; const limit: Integer): Boolean; overload;
 function ContainsAtMost(const item: MType; const limit: Integer): Boolean; overload;
+function Dull(const item: MType): Boolean; overload;
+function Dull: Boolean; overload;
 function Exact(const items: MArray): Boolean; overload;
 function Excessive: Boolean; overload;
 function Fits(const maxValue: Integer): Boolean; overload;
@@ -25,6 +28,8 @@ function Has(const item: MType; const limit: TRange): Boolean; overload;
 function Holds(const chain: MArray): Boolean; overload;
 function Homogeneous(const item: MType): Boolean; overload;
 function Homogeneous: Boolean; overload;
+function IsConstant(const item: MType): Boolean; overload;
+function IsConstant: Boolean; overload;
 function MadeOf(const allowed: MArray): Boolean; overload;
 function Occurs(const item: MType; const occurrence: Integer = 1): Boolean; overload;
 function Presence(const item: MType; const occurrence: Integer = 1): Boolean; overload;
@@ -34,6 +39,32 @@ function Uniform(const item: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AllDistinct>
+  @action: Returns True if all elements contained in the array are pairwise distinct.
+           Returns False immediately when a duplicate element is detected.
+  @note:
+    • Arrays with fewer than two elements are considered distinct by definition.
+    • Uniqueness is determined using the equality and hash semantics (THashSet).
+[==============================================================================}
+function MArrayHelper.AllDistinct: Boolean; overload;
+var
+  h: specialize THashSet<MType>;
+  i: MType;
+begin
+  if (Self.Length < 2) then
+    Exit(True);
+  h := specialize THashSet<MType>.Create;
+  try
+    for i in Self do
+      if not h.Add(i) then
+        Exit(False);
+    Result := True;
+  finally
+    h.Free;
+  end;
+end;
+
 {==============================================================================]
   <AllEqual>
   @action: Returns true if all values in arr are equal (arr contains only equal values).
@@ -56,12 +87,13 @@ end;
 [==============================================================================}
 function MArrayHelper.AllSame: Boolean; overload;
 var
-  i: Integer;
+  l, i: Integer;
 begin
-  for i := 1 to High(Self) do
-    if (Self[0] <> Self[i]) then
-      Exit(False);
-  Result := (Self.Length > 0);
+  l := Self.Length;
+  Result := (l > 0);
+  i := 0;
+  while (Result and (i.Increment < l)) do
+    Result := (Self[0] = Self[i]);
 end;
 
 {==============================================================================]
@@ -161,7 +193,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Constant: Boolean; overload;
 begin
-  Result := (Self.Occupied and Constant(Self[0]));
+  Result := (Self.Occupied and Self.Constant(Self[0]));
 end;
 
 {==============================================================================]
@@ -267,6 +299,38 @@ begin
       Exit(True);
   end;
   Result := True;
+end;
+
+{==============================================================================]
+  <Dull>
+  @action: Returns True if the array is non-empty and every element in the array
+           is equal to the specified item.
+  @note:
+    • Returns False for an empty array.
+    • Stops at the first element that differs from item.
+[==============================================================================}
+function MArrayHelper.Dull(const item: MType): Boolean; overload;
+var
+  e: MType;
+begin
+  for e in Self do
+    if (e <> item) then
+      Exit(False);
+  Result := (Self.Length > 0);
+end;
+
+{==============================================================================]
+  <Dull>
+  @action: Returns True if the array is non-empty and all elements in the array
+           are equal to each other.
+  @note:
+    • Returns False for an empty array.
+    • Internally compares all elements against the first element.
+    • Equivalent to Dull(Self[0]) when Length > 0.
+[==============================================================================}
+function MArrayHelper.Dull: Boolean; overload;
+begin
+  Result := ((Self.Length > 0) and Self.Dull(Self[0]));
 end;
 
 {==============================================================================]
@@ -538,6 +602,31 @@ end;
 function MArrayHelper.Homogeneous: Boolean; overload;
 begin
   Result := (Self.Exists and Homogeneous(Self[0]));
+end;
+
+{==============================================================================]
+  <IsConstant>
+  @action: Returns true if arr consists of item ONLY.
+  @note: Requires at least single item. Otherwise returns False. (With empty arrays)
+[==============================================================================}
+function MArrayHelper.IsConstant(const item: MType): Boolean; overload;
+var
+  h: Integer;
+begin
+  h := High(Self);
+  repeat
+    Result := ((h > -1) and (Self[h] = item));
+  until ((Result = False) or (h.Decrement < 0));
+end;
+
+{==============================================================================]
+  <IsConstant>
+  @action: Returns true if arr consists of ONLY same items.
+  @note: Requires at least single item. Otherwise returns False. (With empty arrays)
+[==============================================================================}
+function MArrayHelper.IsConstant: Boolean; overload;
+begin
+  Result := ((not Self.Empty) and Self.IsConstant(Self[0]));
 end;
 
 {==============================================================================]
