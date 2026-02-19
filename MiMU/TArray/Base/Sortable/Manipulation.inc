@@ -269,10 +269,9 @@ function MArrayHelper.Uniq(const sSorted: Boolean = False): MArray; overload;
 begin
   if Self.Empty then
     SetLength(Result, 0)
+  else if not sSorted then
+    Result := Self.QuickSorted.Pruned
   else
-    if not sSorted then
-      Result := Self.QuickSorted.Pruned
-    else
-      Result := Self.Pruned;
+    Result := Self.Pruned;
 end;
 {$ENDIF}

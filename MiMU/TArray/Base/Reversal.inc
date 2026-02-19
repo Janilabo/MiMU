@@ -4,6 +4,7 @@ function Flip: Boolean; overload;
 function Reversal: MArray; overload;
 function Reverse: Boolean; overload;
 function Reversed: MArray; overload;
+function Reversement: Boolean; overload;
 function Reversify: Boolean; overload;
 function Reversion: MArray; overload;
 function Revert: MArray; overload;
@@ -93,6 +94,26 @@ begin
   SetLength(Result, l);
   for i := 0 to (l - 1) do
     Result[i] := Self[(l - i) - 1];
+end;
+
+{==============================================================================]
+  <Reversement>
+  @action: Reverses the elements of the array in place.
+  @note: Performs an in-place symmetric swap of elements from both ends toward 
+         the center. Returns True if the array length is greater than 1 and a 
+         reversal occurred; otherwise returns False.
+[==============================================================================}
+function MArrayHelper.Reversement: Boolean; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  Result := (l > 1);
+  if not Result then
+    Exit; 
+  i := -1;
+  while (i.Increment < l.Decrement) do
+    Swap(Self[i], Self[l]);
 end;
 
 {==============================================================================]

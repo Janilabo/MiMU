@@ -95,9 +95,7 @@ begin
   begin
     Result[i] := c;
     m[(c.X - Self.X1), (c.Y - Self.Y1)] := True;
-    if (((c.X + x[z]) < Self.X1) or ((c.X + x[z]) > Self.X2) or
-       ((c.Y + y[z]) < Self.Y1) or ((c.Y + y[z]) > Self.Y2) or
-       m[((c.X + x[z]) - Self.X1), ((c.Y + y[z]) - Self.Y1)]) then
+    if (((c.X + x[z]) < Self.X1) or ((c.X + x[z]) > Self.X2) or ((c.Y + y[z]) < Self.Y1) or ((c.Y + y[z]) > Self.Y2) or m[((c.X + x[z]) - Self.X1), ((c.Y + y[z]) - Self.Y1)]) then
       z := ((z + 1) mod 4);
     c.X := (c.x + x[z]);
     c.Y := (c.y + y[z]);

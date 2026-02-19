@@ -79,11 +79,10 @@ begin
   b := aBounds.Normalize.ClampMin(0);
   if (l < b.start) then
     Result := b.start
+  else if (l > b.stop) then
+    Result := b.stop
   else
-    if (l > b.stop) then
-      Result := b.stop
-    else
-      Result := l;	
+    Result := l;	
   if (Result <> l) then
     SetLength(Self, Result);
 end;

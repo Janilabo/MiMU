@@ -100,8 +100,8 @@ end;
 [==============================================================================}
 function TBox.Medium: TPoint;
 begin
-  Result.X := ((Self.X1 + Self.X2 + Ord((Self.X1 + Self.X2) mod 2 <> 0)) div 2);
-  Result.Y := ((Self.Y1 + Self.Y2 + Ord((Self.Y1 + Self.Y2) mod 2 <> 0)) div 2);
+  Result.X := ((Self.X1 + Self.X2 + Ord(((Self.X1 + Self.X2) mod 2) <> 0)) div 2);
+  Result.Y := ((Self.Y1 + Self.Y2 + Ord(((Self.Y1 + Self.Y2) mod 2) <> 0)) div 2);
 end;
 
 {==============================================================================]

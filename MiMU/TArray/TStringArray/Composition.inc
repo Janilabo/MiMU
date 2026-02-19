@@ -75,7 +75,7 @@ begin
   for i := 0 to High(Self) do
     if (Self[i] <> '') then
     begin
-      Move(Self[i][1], c[p], System.Length(Self[i]) * SizeOf(Char));
+      Move(Self[i][1], c[p], (System.Length(Self[i]) * SizeOf(Char)));
       Inc(p, System.Length(Self[i]));
     end;
   SetString(Result, PChar(@c[0]), l);

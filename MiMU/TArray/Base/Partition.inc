@@ -66,7 +66,7 @@ var
     h, c, k: Integer;
   begin
     SetLength(s, 0);
-    s := s + [startPos];
+    s := (s + [startPos]);
     while s.Occupied do
     begin
       h := High(s);

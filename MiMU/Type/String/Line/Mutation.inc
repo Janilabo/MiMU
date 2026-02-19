@@ -47,7 +47,7 @@ begin
   P := Self.LineStartPosition(lineNumber);
   if (P = 0) then
     Exit(Self + text + sLineBreak);
-  Result := Copy(Self, 1, (P - 1)) + text + sLineBreak + Copy(Self, P, High(Integer));
+  Result := (Copy(Self, 1, (P - 1)) + text + sLineBreak + Copy(Self, P, High(Integer)));
 end;
 
 {==============================================================================]

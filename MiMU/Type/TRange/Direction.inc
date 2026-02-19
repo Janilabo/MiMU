@@ -174,9 +174,9 @@ end;
 function TRange.Status: Integer; overload;
 begin
   case Sign(Self.Delta) of
-    1:  Result := 1;
+    1: Result := 1;
     -1: Result := -1;
-    0:  Result := 0;
+    0: Result := 0;
   end;
 end;
 

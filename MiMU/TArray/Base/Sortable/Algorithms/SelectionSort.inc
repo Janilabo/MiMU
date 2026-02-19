@@ -51,9 +51,8 @@ begin
       for s := (y.start + 1) to (y.stop - 1) do
         if (Sign(Self[s].Compare(Self[x.start])) = o) then
           x.start := s
-        else
-          if (Sign(Self[s].Compare(Self[x.stop])) = -o) then
-            x.stop := s;
+        else if (Sign(Self[s].Compare(Self[x.stop])) = -o) then
+          x.stop := s;
       if (x.start <> y.start) then
         Exchange(y.start, x.start);
       if (x.stop <> y.stop) then
@@ -84,9 +83,8 @@ begin
       for s := (r.start + 1) to (r.stop - 1) do
         if (Sign(Self[s].Compare(Self[r.start])) = o) then
           Exchange(r.start, s)
-        else
-          if (Sign(Self[s].Compare(Self[r.stop])) = -o) then
-            Exchange(s, r.stop);
+        else if (Sign(Self[s].Compare(Self[r.stop])) = -o) then
+          Exchange(s, r.stop);
       end;
   end;
 end;

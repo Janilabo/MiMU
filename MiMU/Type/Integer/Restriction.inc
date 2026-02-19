@@ -59,11 +59,10 @@ function TIntegerHelper.Clamp(const minimum, maximum: Integer): Integer; overloa
 begin
   if (Self < minimum) then
     Result := minimum
+  else if(Self > maximum) then
+    Result := maximum
   else
-    if(Self > maximum) then
-      Result := maximum
-    else
-      Result := Self;
+    Result := Self;
 end;
 
 {==============================================================================]

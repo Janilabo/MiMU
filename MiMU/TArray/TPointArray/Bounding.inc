@@ -117,14 +117,12 @@ begin
   begin
     if (Self[i].X < Result.X1) then
       Result.X1 := Self[i].X
-    else
-      if (Self[i].X > Result.X2) then
-        Result.X2 := Self[i].X;
+    else if (Self[i].X > Result.X2) then
+      Result.X2 := Self[i].X;
     if (Self[i].Y < Result.Y1) then
       Result.Y1 := Self[i].Y
-    else
-      if (Self[i].Y > Result.Y2) then
-        Result.Y2 := Self[i].Y;
+    else if (Self[i].Y > Result.Y2) then
+      Result.Y2 := Self[i].Y;
   end;
 end;
 
@@ -210,14 +208,12 @@ begin
   begin
     if (Self[i].X < a.X) then
       a.X := Self[i].X
-    else
-      if (Self[i].X > b.X) then
-        b.X := Self[i].X;
+    else if (Self[i].X > b.X) then
+      b.X := Self[i].X;
     if (Self[i].Y < a.Y) then
       a.Y := Self[i].Y
-    else
-      if (Self[i].Y > b.Y) then
-        b.Y := Self[i].Y;
+    else if (Self[i].Y > b.Y) then
+      b.Y := Self[i].Y;
   end;
   Result.Create(a.X, a.Y, b.X, b.Y);
 end;
@@ -256,9 +252,8 @@ begin
     for i := 0 to High(Self) do
       if (Self[i].X < Result.start) then
         Result.start := Self[i].X
-      else
-        if (Self[i].X > Result.stop) then
-          Result.stop := Self[i].X;
+      else if (Self[i].X > Result.stop) then
+        Result.stop := Self[i].X;
   end else
     Result := Default(TRange);
 end;
@@ -325,9 +320,8 @@ begin
     for i := 0 to High(Self) do
       if (Self[i].Y < Result.start) then
         Result.start := Self[i].Y
-      else
-        if (Self[i].Y > Result.stop) then
-          Result.stop := Self[i].Y;
+      else if (Self[i].Y > Result.stop) then
+        Result.stop := Self[i].Y;
   end else
     Result := Default(TRange);
 end;

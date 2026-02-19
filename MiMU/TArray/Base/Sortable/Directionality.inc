@@ -25,11 +25,10 @@ function MArrayHelper.Direction: Integer; overload;
 begin
   if Self.Notrending then
     Result := 0
+  else if Rising then
+    Result := 1
   else
-    if Rising then
-      Result := 1
-    else
-      Result := -1;
+    Result := -1;
 end;
 
 {==============================================================================]
@@ -177,19 +176,17 @@ begin
   begin
     if (Self[i] < Self[i - 1]) then
       a := False
-    else
-      if (Self[i] > Self[i - 1]) then
-        d := False;
+    else if (Self[i] > Self[i - 1]) then
+      d := False;
     if not (a or d) then
       Exit(0);
   end;
   if a then
     Result := 1
+  else if d then
+    Result := -1
   else
-    if d then
-      Result := -1
-    else
-      Result := 0;
+    Result := 0;
 end;
 
 {==============================================================================]

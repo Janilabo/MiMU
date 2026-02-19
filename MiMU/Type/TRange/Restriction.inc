@@ -91,14 +91,12 @@ begin
   z := zone.Normalize;
   if (Result.start < z.start) then
     Result.start := z.start
-  else
-    if (Result.start > z.stop) then
-      Result.start := z.stop;
+  else if (Result.start > z.stop) then
+    Result.start := z.stop;
   if (Result.stop > z.stop) then
     Result.stop := z.stop
-  else
-    if (Result.stop < z.start) then
-      Result.stop := z.start;
+  else if (Result.stop < z.start) then
+    Result.stop := z.start;
   if (Self.start > Self.stop) then
     Result.Reverse;
 end;
@@ -214,11 +212,10 @@ begin
   r.Create(Min(Self.Start, Self.Stop), Max(Self.start, Self.stop));
   if (val < r.start) then
     Result := r.start
+  else if (val > r.stop) then
+    Result := r.stop
   else
-    if (val > r.stop) then
-      Result := r.stop
-    else
-      Result := val;
+    Result := val;
 end;
 
 {==============================================================================]

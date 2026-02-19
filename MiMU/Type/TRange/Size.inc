@@ -113,7 +113,7 @@ function TRange.Cardinality: Integer;
     Result := (B - A);
   end;
 begin
-  if (Self.Start = Self.stop) then
+  if Self.Singular then
     Result := 1
   else
     Result := (C(Self.start, Self.stop) + 1);
@@ -240,7 +240,7 @@ function TRange.GetLength: Integer;
 var
   d: Integer;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit(1);
   if (Self.start <= Self.stop) then
     d := (Self.stop - Self.start)
@@ -315,7 +315,7 @@ end;
 [==============================================================================}
 function TRange.Length: Integer; overload;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Result := 1
   else if (Self.stop < Self.start) then
     Result := ((Self.start - Self.stop) + 1)
@@ -564,7 +564,7 @@ function TRange.Width: Integer;
 var
   s: Int64;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit(1);
   s := (Int64(Self.stop) - Int64(Self.start));
   if (s < 0) then

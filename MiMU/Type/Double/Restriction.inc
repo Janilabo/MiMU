@@ -58,11 +58,10 @@ function TDoubleHelper.Clamp(const minimum, maximum: Double): Double;
 begin
   if (Self < minimum) then
     Result := minimum
+  else if (Self > maximum) then
+    Result := maximum
   else
-    if(Self > maximum) then
-      Result := maximum
-    else
-      Result := Self;
+    Result := Self;
 end;
 
 {==============================================================================]

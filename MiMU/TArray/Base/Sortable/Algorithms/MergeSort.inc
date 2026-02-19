@@ -174,14 +174,12 @@ function MArrayHelper.MergeSort(const aAscending: Boolean = True): Integer; over
     for i := Lo to Hi do
       if (L > m) then
         arr[i] := tmp[r.Increase]
+      else if (R > Hi) then
+        arr[i] := tmp[l.Increase]
+      else if (Sign(tmp[r].Compare(tmp[l])) = o) then
+        arr[i] := tmp[r.Increase]
       else
-        if (R > Hi) then
-          arr[i] := tmp[l.Increase]
-        else
-          if (Sign(tmp[r].Compare(tmp[l])) = o) then
-            arr[i] := tmp[r.Increase]
-          else
-            arr[i] := tmp[l.Increase];
+        arr[i] := tmp[l.Increase];
   end;
 var
   t: MArray;

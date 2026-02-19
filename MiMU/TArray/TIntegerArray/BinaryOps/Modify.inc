@@ -3,7 +3,7 @@ function BinaryDelete(const x: Integer; const aAscending: Boolean = True): Boole
 function BinaryRemove(const val: Integer; const all: Boolean = True; const aAscending: Boolean = True): Integer; overload;
 function BinaryReplace(const oValue, nValue: Integer; const aAscending: Boolean = True): Boolean; overload;
 function BinaryReplaceAll(const oValue, nValue: Integer; const aAscending: Boolean = True): Integer; overload;
-function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean;
+function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean; overload;
 function BinaryUpdate(const oValue, nValue: Integer; const aAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
@@ -20,7 +20,7 @@ var
   p, l, i: Integer;
 begin
   p := Self.BinaryIndex(x, aAscending);
-  Result := (p <> -1);
+  Result := (p > -1);
   if not Result then
     Exit;
   l := Self.Length;
@@ -122,7 +122,7 @@ end;
   @action: Removes an integer x from the array while maintaining sorted order.
   @note: Returns True if the value was removed, False if it was not found.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean;
+function TIntegerArrayHelper.BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean; overload;
 var
   m, i, o: Integer;
   r: TRange;
@@ -158,7 +158,7 @@ var
 begin
   Result := False;
   p := Self.BinaryIndex(oValue, aAscending);
-  Result := (p <> -1);
+  Result := (p > -1);
   if Result then
     Self[p] := nValue;
 end;

@@ -86,7 +86,6 @@ begin
   if (l = 0) then
     Exit(0);
   case all of
-    False: Result := IfThen(Self.BinaryDelete(item), 1, 0);
     True:
     begin
       r := Self.BinaryRange(item);
@@ -97,6 +96,7 @@ begin
         Self[i] := Self[i + Result];
       SetLength(Self, (l - Result));
     end;
+	False: Result := IfThen(Self.BinaryDelete(item), 1, 0);
   end;
 end;
 

@@ -153,8 +153,7 @@ begin
           s[l.Increase] := (r.start + i);
       Inc(r.start, bucketSize);
     end;
-  end
-  else
+  end else
   begin
     r.start := m.stop;
     while (r.start >= m.start) do

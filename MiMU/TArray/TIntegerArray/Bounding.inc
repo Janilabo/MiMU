@@ -60,9 +60,8 @@ begin
   for i := 1 to High(Self) do
     if (Self[i] < Result.start) then
       Result.start := Self[i]
-    else
-      if (Self[i] > Result.stop) then
-        Result.stop := Self[i];
+    else if (Self[i] > Result.stop) then
+      Result.stop := Self[i];
 end;
 
 function TIntegerArrayHelper.Bounds(var aSize: Integer): TRange; overload;

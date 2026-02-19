@@ -51,9 +51,8 @@ begin
     a := Self[i].Length;
     if (a < l) then
       l := a
-	else
-      if (a > h) then
-        h := a;
+	else if (a > h) then
+      h := a;
     if (l <> h) then
       Exit(True);
   end;

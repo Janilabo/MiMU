@@ -130,7 +130,7 @@ begin
         if not d.ContainsKey(Self[i]) then
         begin
           d.Add(Self[i], True);
-	  Self[Result.Increase] := Self[i];
+	      Self[Result.Increase] := Self[i];
         end;
       False:
       begin
@@ -139,7 +139,7 @@ begin
           if not d.ContainsKey(c[i]) then
           begin
             d.Add(c[i], True);
-	    Self[Result.Increase] := c[i];
+	        Self[Result.Increase] := c[i];
           end;
       end;
     end;

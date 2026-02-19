@@ -323,20 +323,20 @@ end;
 [==============================================================================}
 function TRange.Keys: TIntegerArray; overload;
 label
-  b, e;
+  loop, finish;
 var
   i, s: Integer;
 begin
   s := Self.Size;
   SetLength(Result, s);
   i := 0;
-  b:
+  loop:
   if (i >= s) then
-    goto e;
+    goto finish;
   Result[i] := i;
   Inc(i);
-  goto b;
-  e:
+  goto loop;
+  finish:
 end;
 
 {==============================================================================]

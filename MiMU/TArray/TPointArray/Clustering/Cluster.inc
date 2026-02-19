@@ -1003,15 +1003,13 @@ begin
       for x := Max(0, (p.X - 1)) to Min((w - 1), (p.X + 1)) do
         for y := Max(0, (p.Y - 1)) to Min((h - 1), (p.Y + 1)) do
           for j := 0 to High(g[x, y].indices) do
-          begin
             if v[g[x, y].indices[j]] then
-              Continue;
-            if c.Within(Self[g[x, y].indices[j]], radius, metric) then
+              Continue
+			else if c.Within(Self[g[x, y].indices[j]], radius, metric) then
             begin
               v[g[x, y].indices[j]] := True;
               s[t.Increase] := g[x, y].indices[j];
             end;
-          end;
     end;
     Inc(r);
   end;

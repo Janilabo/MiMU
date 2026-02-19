@@ -169,11 +169,10 @@ begin
     m := r.Pivot;
     if (Self[m] = x) then
       Exit(m)
+    else if ((aAscending and (Self[m] < x)) or ((not aAscending) and (Self[m] > x))) then
+      r.start := (m + 1)
     else
-      if ((aAscending and (Self[m] < x)) or ((not aAscending) and (Self[m] > x))) then
-        r.start := (m + 1)
-      else
-        r.stop := (m - 1);
+      r.stop := (m - 1);
   end;
 end;
 
@@ -462,11 +461,10 @@ begin
     m := r.Pivot;
     if ((o * Self[m]) = (o * x)) then
       Result := m
+    else if ((o * Self[m]) < (o * x)) then
+      r.start := (m + 1)
     else
-      if ((o * Self[m]) < (o * x)) then
-        r.start := (m + 1)
-      else
-        r.stop := (m - 1);
+      r.stop := (m - 1);
   end;
 end;
 
@@ -581,11 +579,10 @@ begin
     M := R.Pivot;
     if (Self[M] = x) then
       Exit(M)
+    else if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
+      R.start := (M + 1)
     else
-      if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
-        R.start := (M + 1)
-      else
-        R.stop := (M - 1);
+      R.stop := (M - 1);
   end;
 end;
 

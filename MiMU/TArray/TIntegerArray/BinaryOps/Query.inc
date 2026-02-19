@@ -53,11 +53,10 @@ begin
         Dec(Result.start);
       while ((Result.stop < h) and (Self[Result.stop + 1] = x)) do
         Inc(Result.stop);
-    end else
-      if ((o * Self[m]) < (o * x)) then
-        Result.start := (m + 1)
-      else
-        Result.stop := (m - 1);
+    end else if ((o * Self[m]) < (o * x)) then
+      Result.start := (m + 1)
+    else
+      Result.stop := (m - 1);
   end;
   if not f then
     Result.Create(-1, -1);

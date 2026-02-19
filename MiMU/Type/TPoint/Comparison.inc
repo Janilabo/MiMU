@@ -261,11 +261,10 @@ function TPoint.XComp(const target: TPoint): Integer;
 begin
   if (Self.X < target.X) then
     Result := -1
+  else if (Self.X > target.X) then
+	Result := 1
   else
-    if (Self.X > target.X) then
-	  Result := 1
-    else
-	  Result := 0;
+	Result := 0;
 end;
 
 {==============================================================================]
@@ -277,15 +276,12 @@ function TPoint.XCompare(const target: TPoint): Integer;
 begin
   if (Self.X < target.X) then
     Exit(-1)
-  else
-    if (Self.X > target.X) then
-      Exit(1)
-    else
-      if (Self.Y < target.Y) then
-        Exit(-1)
-      else
-        if (Self.Y > target.Y) then
-          Exit(1);
+  else if (Self.X > target.X) then
+    Exit(1)
+  else if (Self.Y < target.Y) then
+    Exit(-1)
+  else if (Self.Y > target.Y) then
+    Exit(1);
   Result := 0;
 end;
 
@@ -298,11 +294,10 @@ function TPoint.YComp(const target: TPoint): Integer;
 begin
   if (Self.Y < target.Y) then
     Result := -1
+  else if (Self.Y > target.Y) then
+	Result := 1
   else
-    if (Self.Y > target.Y) then
-	  Result := 1
-    else
-	  Result := 0;
+	Result := 0;
 end;
 
 {==============================================================================]
@@ -314,15 +309,12 @@ function TPoint.YCompare(const target: TPoint): Integer;
 begin
   if (Self.Y < target.Y) then
     Exit(-1)
-  else
-    if (Self.Y > target.Y) then
-      Exit(1)
-    else
-      if (Self.X < target.X) then
-        Exit(-1)
-      else
-        if (Self.X > target.X) then
-          Exit(1);
+  else if (Self.Y > target.Y) then
+    Exit(1)
+  else if (Self.X < target.X) then
+    Exit(-1)
+  else if (Self.X > target.X) then
+    Exit(1);
   Result := 0;
 end;
 

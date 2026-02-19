@@ -580,7 +580,7 @@ begin
           for j := x.start to x.stop do
           begin
             t := z[r][j];
-            if not u[t] and (Self[t].X = n.X) and (Self[t].Y = n.Y) then
+            if ((not u[t]) and (Self[t].X = n.X) and (Self[t].Y = n.Y)) then
             begin
               u[t] := True;
               q[s.stop.Increment] := t;

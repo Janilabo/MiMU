@@ -161,7 +161,7 @@ begin
       SetLength(Result[p], a.Area);
       for y := a.Y1 to a.Y2 do
         for x := a.X1 to a.X2 do
-          if m[(y - b.Y1)][(x - b.X1)] then
+          if m[y - b.Y1][x - b.X1] then
             Result[p][z.Increase] := Point(x, y);
       SetLength(Result[p], z);
     end;
@@ -207,7 +207,7 @@ begin
       SetLength(Result[p], a.Area);
       for y := a.Y1 to a.Y2 do
         for x := a.X1 to a.X2 do
-          if (m[(y - b.Y1)][(x - b.X1)] and (g.Within(Point(x, y), bSize, dmChebyshev))) then
+          if (m[y - b.Y1][x - b.X1] and (g.Within(Point(x, y), bSize, dmChebyshev))) then
             Result[p][z.Increase] := Point(x, y);
       SetLength(Result[p], z);
     end;

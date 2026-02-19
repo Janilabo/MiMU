@@ -52,11 +52,10 @@ function TBox.UnionX(const xCoord: Integer): TBox;
 begin
   if (xCoord < Self.X1) then
     Result := Box(xCoord, Self.Y1, Self.X2, Self.Y2)
+  else if (xCoord > Self.X2) then
+    Result := Box(Self.X1, Self.Y1, xCoord, Self.Y2)
   else
-    if (xCoord > Self.X2) then
-      Result := Box(Self.X1, Self.Y1, xCoord, Self.Y2)
-    else
-      Result := Self;
+    Result := Self;
 end;
 
 {==============================================================================]
@@ -68,10 +67,9 @@ function TBox.UnionY(const yCoord: Integer): TBox;
 begin
   if (yCoord < Self.Y1) then
     Result := Box(Self.X1, yCoord, Self.X2, Self.Y2)
+  else if (yCoord > Self.Y2) then
+    Result := Box(Self.X1, Self.Y1, Self.X2, yCoord)
   else
-    if (yCoord > Self.Y2) then
-      Result := Box(Self.X1, Self.Y1, Self.X2, yCoord)
-    else
-      Result := Self;
+    Result := Self;
 end;
 {$ENDIF}

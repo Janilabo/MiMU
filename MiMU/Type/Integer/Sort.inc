@@ -51,7 +51,7 @@ end;
 [==============================================================================}
 function XORSort(var A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
 begin
-  Result := (oAscending and (A > B)) or ((not oAscending) and (A < B));
+  Result := ((oAscending and (A > B)) or ((not oAscending) and (A < B)));
   if Result then
   begin
     A := (A xor B);

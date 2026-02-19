@@ -806,9 +806,8 @@ begin
     m := r.Pivot;
     if ((o * Self[m]) < (o * f.start)) then
       r.start := (m + 1)
-    else
-      if ((o * Self[m]) > (o * f.stop)) then
-        r.stop := (m - 1)
+    else if ((o * Self[m]) > (o * f.stop)) then
+      r.stop := (m - 1)
     else
     begin
       Result := m;
@@ -869,14 +868,13 @@ begin
     m := r.Pivot;
     if ((o * Self[m]) < (o * f.start)) then
       r.start := (m + 1)
+    else if ((o * Self[m]) > (o * f.stop)) then
+      r.stop := (m - 1)
     else
-      if ((o * Self[m]) > (o * f.stop)) then
-        r.stop := (m - 1)
-      else
-      begin
-        Result := m;
-        r.start := (m + 1);
-      end;
+    begin
+      Result := m;
+      r.start := (m + 1);
+    end;
   end;
 end;
 

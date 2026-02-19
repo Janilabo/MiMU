@@ -69,7 +69,7 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.BinaryGrouped(const aAscending: Boolean = True): T2DIntegerArray; overload;
 var
-  i, r, l, m, v: Integer;
+  h, i, r, l, m, v: Integer;
   s: TRange;
   t: TIntegerArray;
 begin
@@ -81,10 +81,11 @@ begin
   case aAscending of
     True:
     begin
+	  h := High(Self);
       r := 0;
-      for v := Self[0] to Self[High(Self)] do
+      for v := Self[0] to Self[h] do
       begin
-        s.Create(0, High(Self));
+        s.Create(0, h);
         while (s.start <= s.stop) do
         begin
           m := s.Center;
@@ -95,7 +96,7 @@ begin
               while ((l > 0) and (Self[l - 1] = v)) do
                 Dec(l);
               i := m;
-              while ((i < High(Self)) and (Self[i + 1] = v)) do
+              while ((i < h) and (Self[i + 1] = v)) do
                 Inc(i);
               SetLength(Result, (r + 1));
               SetLength(Result[r], ((i - l) + 1));

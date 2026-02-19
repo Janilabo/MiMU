@@ -131,8 +131,7 @@ end;
 function TPointHelper.Neighbors(const adjacency8: Boolean = True): TPointArray; overload;
 begin
   with Self do
-    Result := [Point((X + 1), Y), Point(X, (Y + 1)), Point((X - 1), Y), Point(X, (Y - 1)),
-               Point((X + 1), (Y + 1)), Point((X + 1), (Y - 1)), Point((X - 1), (Y + 1)), Point((X - 1), (Y - 1))];
+    Result := [Point((X + 1), Y), Point(X, (Y + 1)), Point((X - 1), Y), Point(X, (Y - 1)), Point((X + 1), (Y + 1)), Point((X + 1), (Y - 1)), Point((X - 1), (Y + 1)), Point((X - 1), (Y - 1))];
   if not adjacency8 then
     SetLength(Result, 4);
 end;
@@ -214,8 +213,7 @@ begin
   i := 0;
   for r := -1 to 1 do
     for c := -1 to 1 do
-      if not ((r = 0) and (c = 0)) then
-        if (adjacency8 or (Abs(r) + Abs(c) = 1)) then
-          Result[i.Increase] := Point((Self.X + c), (Self.Y + r));
+      if ((not ((r = 0) and (c = 0))) and (adjacency8 or ((Abs(r) + Abs(c)) = 1))) then
+        Result[i.Increase] := Point((Self.X + c), (Self.Y + r));
 end;
 {$ENDIF}

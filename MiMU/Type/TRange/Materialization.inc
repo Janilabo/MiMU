@@ -103,7 +103,7 @@ end;
 [==============================================================================}
 function TRange.ArrayOf: TIntegerArray; overload;
 label
-  sLoop, eLoop;
+  loop, finish;
 var
   i, v, d, s: Integer;
 begin
@@ -112,14 +112,14 @@ begin
   i := 0;
   v := Self.start;
   d := IfThen(Self.Ascending, 1, -1);
-  sLoop:
+  loop:
   if (i >= s) then
-    goto eLoop;
+    goto finish;
   Result[i] := v;
   Inc(v, d);
   Inc(i);
-  goto sLoop;
-  eLoop:
+  goto loop;
+  finish:
 end;
 
 {==============================================================================]
@@ -463,11 +463,10 @@ function TRange.Digits(const dIndex: Integer): Integer; overload;
 begin
   if ((dIndex < 0) or (dIndex >= Self.Area)) then
     Result := -2147483648
+  else if Self.Ascending then
+    Result := (Self.start + dIndex)
   else
-    if Self.Ascending then
-      Result := (Self.start + dIndex)
-    else
-      Result := (Self.start - dIndex);
+    Result := (Self.start - dIndex);
 end;
 
 {==============================================================================]

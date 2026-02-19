@@ -166,7 +166,7 @@ begin
   for i := 0 to (l - 1) do
   begin
     r := FindRoot(i);
-    if m[r] = -1 then
+    if (m[r] = -1) then
     begin
       m[r] := c;
       Inc(c);

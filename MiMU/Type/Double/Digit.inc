@@ -61,11 +61,10 @@ begin
   d := Frac(Self);
   if (d = 0) then
     Result := 0
+  else if (d < 0) then
+    Result := StrToFloat('-0,' + StringOfChar('9', (Length(FloatToStr(d)) - 3)))
   else
-    if (d < 0) then
-      Result := StrToFloat('-0,' + StringOfChar('9', (Length(FloatToStr(d)) - 3)))
-    else
-      Result := StrToFloat('0,' + StringOfChar('9', (Length(FloatToStr(d)) - 2)));
+    Result := StrToFloat('0,' + StringOfChar('9', (Length(FloatToStr(d)) - 2)));
 end;
 
 {==============================================================================]
@@ -81,10 +80,9 @@ begin
   d := Frac(Self);
   if (d = 0) then
     Result := 0
+  else if (d < 0) then
+    Result := StrToFloat('-0,' + StringOfChar('0', (Length(FloatToStr(d)) - 4)) + '1')
   else
-    if (d < 0) then
-      Result := StrToFloat('-0,' + StringOfChar('0', (Length(FloatToStr(d)) - 4)) + '1')
-    else
-      Result := StrToFloat('0,' + StringOfChar('0', (Length(FloatToStr(d)) - 3)) + '1');
+    Result := StrToFloat('0,' + StringOfChar('0', (Length(FloatToStr(d)) - 3)) + '1');
 end;
 {$ENDIF}

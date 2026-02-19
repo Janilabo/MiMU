@@ -291,11 +291,10 @@ generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResu
 begin
   if aBool then
     Result := aResult
+  else if bBool then
+    Result := bResult
   else
-    if bBool then
-      Result := bResult
-    else
-      Result := cResult;
+    Result := cResult;
 end;
 
 {==============================================================================]

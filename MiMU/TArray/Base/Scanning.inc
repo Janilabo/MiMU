@@ -149,16 +149,14 @@ begin
       for i := ID.start to ID.stop do
         if (r >= limit) then
 	      Break
-        else
-          if (Self[i] = item) then
-            Result[r.Increase] := i;
+        else if (Self[i] = item) then
+          Result[r.Increase] := i;
       False:
       for i := ID.start downto ID.stop do
         if (r >= limit) then
           Break
-        else
-          if (Self[i] = item) then
-	    Result[r.Increase] := i;
+		else if (Self[i] = item) then
+	      Result[r.Increase] := i;
     end;
   end;
   SetLength(Result, r);
@@ -180,9 +178,8 @@ begin
     for i := 0 to High(ID) do
       if (r >= limit) then
         Break
-      else
-        if (Self[ID[i]] = item) then
-	  Result[r.Increase] := ID[i];
+      else if (Self[ID[i]] = item) then
+	    Result[r.Increase] := ID[i];
   end;
   SetLength(Result, r);
 end;
@@ -205,16 +202,14 @@ begin
       for i := ID.start to ID.stop do
         if (r >= limit) then
           Break
-        else
-          if items.Contains(Self[i]) then
-            Result[r.Increase] := i;
+        else if items.Contains(Self[i]) then
+          Result[r.Increase] := i;
       False:
       for i := ID.start downto ID.stop do
         if (r >= limit) then
           Break
-        else
-          if items.Contains(Self[i]) then
-            Result[r.Increase] := i;
+        else if items.Contains(Self[i]) then
+          Result[r.Increase] := i;
     end;
   end;
   SetLength(Result, r);
@@ -236,9 +231,8 @@ begin
     for i := 0 to High(ID) do
       if (r >= limit) then
         Break
-      else
-        if items.Contains(Self[ID[i]]) then
-	  Result[r.Increase] := ID[i];
+      else if items.Contains(Self[ID[i]]) then
+	    Result[r.Increase] := ID[i];
   end;
   SetLength(Result, r);
 end;

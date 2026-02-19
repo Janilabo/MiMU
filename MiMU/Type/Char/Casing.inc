@@ -33,11 +33,10 @@ begin
   o := Ord(Self);
   if InRange(o, 65, 90) then
     Result := Char(o + 32)
+  else if InRange(o, 97, 122) then
+    Result := Char(o - 32)
   else
-    if InRange(o, 97, 122) then
-      Result := Char(o - 32)
-    else
-      Result := Self;
+    Result := Self;
 end;
 
 {==============================================================================]

@@ -53,11 +53,10 @@ function MArrayHelper.Trend: Integer; overload;
 begin
   if ((Self.Size < 2) or (Self[Low(Self)] = Self[High(Self)])) then
     Result := 0
+  else if (Self[Low(Self)] > Self[High(Self)]) then
+    Result := -1
   else
-    if (Self[Low(Self)] > Self[High(Self)]) then
-      Result := -1
-    else
-      Result := 1;
+    Result := 1;
 end;
 
 {==============================================================================]

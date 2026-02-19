@@ -24,9 +24,8 @@ begin
     c := (Self[i] - Self[i - 1]);
     if (c > 0) then
       D := False
-    else
-      if (c < 0) then
-        A := False;
+    else if (c < 0) then
+      A := False;
     if not (A or D) then
       Exit(False);
   end;

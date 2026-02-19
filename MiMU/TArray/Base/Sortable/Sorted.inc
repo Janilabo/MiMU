@@ -109,7 +109,7 @@ var
   h: Integer;
 begin
   h := High(Self);
-  if (index < 0) or (index > h) then
+  if ((index < 0) or (index > h)) then
     Exit(False);
   if (h = 0) then
     Exit(True);

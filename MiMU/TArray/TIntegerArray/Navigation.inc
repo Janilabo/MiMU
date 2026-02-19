@@ -19,13 +19,14 @@ function Successor(const currentIndex: Integer; const range: TRange; const aAsce
 [==============================================================================}
 function TIntegerArrayHelper.Navigate(const currentIndex: Integer; const range: TRange; const aAscending: Boolean = True): Integer; overload;
 var
-  s: Integer;
+  h, s: Integer;
 begin
   s := aAscending.Select(1, -1);
   Result := (currentIndex + s);
-  while (InRange(Result, 0, High(Self)) and range.Missing(Self[Result])) do
+  h := High(Self);
+  while (InRange(Result, 0, h) and range.Missing(Self[Result])) do
     Result := (Result + s);
-  if (Result < 0) or (Result > High(Self)) then
+  if ((Result < 0) or (Result > h)) then
     Result := -1;
 end;
 
@@ -37,11 +38,14 @@ end;
          found or the end of the array is reached.
 [==============================================================================}
 function TIntegerArrayHelper.Next(const currentIndex: Integer; const range: TRange): Integer; overload;
+var
+  h: Integer;
 begin
   Result := (currentIndex + 1);
-  while ((Result <= High(Self)) and range.Missing(Self[Result])) do
+  h := High(Self);
+  while ((Result <= h) and range.Missing(Self[Result])) do
     Inc(Result);
-  if (Result > High(Self)) then
+  if (Result > h) then
     Result := -1;
 end;
 
@@ -54,7 +58,7 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Pred(const currentIndex: Integer; const range: TRange): Integer; overload;
 begin
-  Result := currentIndex - 1;
+  Result := (currentIndex - 1);
   if ((Result < 0) or range.Missing(Self[Result])) then
     Result := -1;
 end;
@@ -68,13 +72,14 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Predecessor(const currentIndex: Integer; const range: TRange; const aAscending: Boolean = True): Integer; overload;
 var
-  d: Integer;
+  h, d: Integer;
 begin
   d := aAscending.Select(-1, 1);
   Result := (currentIndex + d);
-  while (InRange(Result, 0, High(Self)) and range.Missing(Self[Result])) do
+  h := High(Self);
+  while (InRange(Result, 0, h) and range.Missing(Self[Result])) do
     Result := (Result + d);
-  if ((Result < 0) or (Result > High(Self))) then
+  if ((Result < 0) or (Result > h)) then
     Result := -1;
 end;
 
@@ -117,13 +122,14 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Successor(const currentIndex: Integer; const range: TRange; const aAscending: Boolean = True): Integer; overload;
 var
-  d: Integer;
+  h, d: Integer;
 begin
   d := aAscending.Select(1, -1);
   Result := (currentIndex + d);
-  while (InRange(Result, 0, High(Self)) and range.Missing(Self[Result])) do
+  h := High(Self);
+  while (InRange(Result, 0, h) and range.Missing(Self[Result])) do
     Result := (Result + d);
-  if ((Result < 0) or (Result > High(Self))) then
+  if ((Result < 0) or (Result > h)) then
     Result := -1;
 end;
 {$ENDIF}

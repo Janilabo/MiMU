@@ -26,9 +26,8 @@ begin
     for j := 1 to b do
       if (Self[(i + j) - 1] <> s[j]) then
         Break
-      else
-        if (j = b) then
-          Exit(i);
+      else if (j = b) then
+        Exit(i);
 end;
 
 {==============================================================================]

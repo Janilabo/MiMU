@@ -174,11 +174,10 @@ begin
     m := r.Pivot;
     if (Self[m] = x) then
       Exit(m)
+    else if ((aAscending and (Self[m] < x)) or ((not aAscending) and (Self[m] > x))) then
+      r.start := (m + 1)
     else
-      if ((aAscending and (Self[m] < x)) or ((not aAscending) and (Self[m] > x))) then
-        r.start := (m + 1)
-      else
-        r.stop := (m - 1);
+      r.stop := (m - 1);
   end;
 end;
 
@@ -242,11 +241,10 @@ begin
     end;
     if (Self[M] = x) then
       Exit(M)
+    else if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
+      L := (M + 1)
     else
-	  if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
-        L := (M + 1)
-      else
-        H := (M - 1);
+      H := (M - 1);
   end;
   Result := -1;
 end;
@@ -351,9 +349,8 @@ begin
     Exit(IfThen((D < x.Distance(Self[Result - 1])), Result, (Result - 1)));
   if (D > x.Distance(Self[Result - 1])) then
     Dec(Result)
-  else
-    if (D > x.Distance(Self[Result + 1])) then
-      Inc(Result);
+  else if (D > x.Distance(Self[Result + 1])) then
+    Inc(Result);
 end;
 
 {==============================================================================]
@@ -518,18 +515,16 @@ begin
   begin
     if (Self[L] = Self[H]) then
 	  M := ((L + H) div 2)
+    else if aAscending then
+      M := (L + Trunc(EnsureRange((((x - Self[L]) / (Self[H] - Self[L])) + bias * (Random - 0.5)), 0.0, 1.0) * (H - L)))
     else
-      if aAscending then
-        M := (L + Trunc(EnsureRange((((x - Self[L]) / (Self[H] - Self[L])) + bias * (Random - 0.5)), 0.0, 1.0) * (H - L)))
-      else
-        M := (L + Trunc(EnsureRange((((Self[L] - x) / (Self[L] - Self[H])) + bias * (Random - 0.5)), 0.0, 1.0) * (H - L)));
+      M := (L + Trunc(EnsureRange((((Self[L] - x) / (Self[L] - Self[H])) + bias * (Random - 0.5)), 0.0, 1.0) * (H - L)));
     if (Self[M] = x) then
       Exit(M)
+    else if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
+      L := (M + 1)
     else
-	  if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
-        L := (M + 1)
-      else
-        H := (M - 1);
+      H := (M - 1);
   end;
   Result := -1;
 end;
@@ -592,11 +587,10 @@ begin
     m := r.Pivot;
     if ((o * Self[m]) = (o * x)) then
       Result := m
+    else if ((o * Self[m]) < (o * x)) then
+      r.start := (m + 1)
     else
-      if ((o * Self[m]) < (o * x)) then
-        r.start := (m + 1)
-      else
-        r.stop := (m - 1);
+      r.stop := (m - 1);
   end;
 end;
 
@@ -743,11 +737,10 @@ begin
     M := R.Pivot;
     if (Self[M] = x) then
       Exit(M)
+    else if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
+      R.start := (M + 1)
     else
-      if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
-        R.start := (M + 1)
-      else
-        R.stop := (M - 1);
+      R.stop := (M - 1);
   end;
 end;
 

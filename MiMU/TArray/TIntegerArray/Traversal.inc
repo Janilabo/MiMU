@@ -23,16 +23,14 @@ begin
     while InRange(Result.Increment, 0, High(Self)) do
       if (Self[Result] < Self[Result - 1]) then
         Exit(-1)
-      else
-        if range.Contains(Self[Result]) then
-          Exit(Result);
+      else if range.Contains(Self[Result]) then
+        Exit(Result);
     False:
     while InRange(Result.Increment, 0, High(Self)) do
       if (Self[Result] > Self[Result - 1]) then
         Exit(-1)
-      else
-        if range.Contains(Self[Result]) then
-          Exit(Result);
+      else if range.Contains(Self[Result]) then
+        Exit(Result);
   end;
   Result := -1;
 end;
@@ -56,16 +54,14 @@ begin
     while InRange(Result.Decrement, 0, High(Self)) do
       if (Self[Result] < Self[Result - 1]) then
         Exit(-1)
-      else
-        if range.Contains(Self[Result]) then
-          Exit(Result);
+      else if range.Contains(Self[Result]) then
+        Exit(Result);
     False:
     while InRange(Result.Decrement, 0, High(Self)) do
       if (Self[Result] > Self[Result - 1]) then
         Exit(-1)
-      else
-        if range.Contains(Self[Result]) then
-          Exit(Result);
+      else if range.Contains(Self[Result]) then
+        Exit(Result);
   end;
   Result := -1;
 end;

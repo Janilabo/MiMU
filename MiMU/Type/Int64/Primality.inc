@@ -11,7 +11,7 @@ function Prime: Boolean;
 [==============================================================================}
 function TInt64Helper.IsPrime: Boolean;
 var
-  p: array of Int64;
+  p: TInt64Array;
   i: Integer;
   j: Int64;
 begin
@@ -21,9 +21,8 @@ begin
   for i := 0 to High(p) do
     if (Self = p[i]) then
       Exit(True)
-    else
-      if ((Self mod p[i]) = 0) then
-        Exit(False);
+    else if ((Self mod p[i]) = 0) then
+      Exit(False);
   j := 30;
   repeat
     if (((Self mod j) = 0) or ((Self mod (j + 2)) = 0)) then

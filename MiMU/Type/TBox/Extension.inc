@@ -28,11 +28,10 @@ function TBox.ExtendX(const xCoord: Integer): Boolean;
 begin
   if (xCoord < Self.X1) then
     Self.X1 := xCoord
+  else if (xCoord > Self.X2) then
+    Self.X2 := xCoord
   else
-    if (xCoord > Self.X2) then
-      Self.X2 := xCoord
-    else
-      Exit(False);
+    Exit(False);
   Result := True;
 end;
 
@@ -45,11 +44,10 @@ function TBox.ExtendY(const yCoord: Integer): Boolean;
 begin
   if (yCoord < Self.Y1) then
     Self.Y1 := yCoord
+  else if (yCoord > Self.Y2) then
+    Self.Y2 := yCoord
   else
-    if (yCoord > Self.Y2) then
-      Self.Y2 := yCoord
-    else
-      Exit(False);
+    Exit(False);
   Result := True;
 end;
 {$ENDIF}

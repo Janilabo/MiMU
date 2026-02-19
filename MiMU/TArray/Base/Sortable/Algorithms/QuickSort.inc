@@ -349,11 +349,10 @@ function MArrayHelper.QuickSort3W(const aAscending: Boolean = True): Integer; ov
     while (p <= r.stop) do
       if (Sign(arr[p].Compare(a)) = o) then
         Exchange(r.start.Increase, p.Increase)
+      else if (Sign(arr[p].Compare(a)) = -o) then
+        Exchange(r.stop.Decrease, p)
       else
-        if (Sign(arr[p].Compare(a)) = -o) then
-          Exchange(r.stop.Decrease, p)
-        else
-          Inc(p);
+        Inc(p);
     SortLH(arr, L, (r.start - 1), aAscending);
     SortLH(arr, (r.stop + 1), H, aAscending);
   end;

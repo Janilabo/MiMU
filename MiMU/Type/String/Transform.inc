@@ -24,13 +24,12 @@ begin
   l := Length(Self);
   if (l >= size) then
     Result := Self
-  else
-    if (l > 0) then
-    begin
-      p := (((size - l) div 2) + 1);
-      Result := (StringOfChar(fill, (p - 1)) + Self + StringOfChar(fill, ((size - (p + l)) + 1)));
-    end else
-      Result := StringOfChar(fill, size);
+  else if (l > 0) then
+  begin
+    p := (((size - l) div 2) + 1);
+    Result := (StringOfChar(fill, (p - 1)) + Self + StringOfChar(fill, ((size - (p + l)) + 1)));
+  end else
+    Result := StringOfChar(fill, size);
 end;
 
 {==============================================================================]

@@ -173,7 +173,7 @@ end;
 [==============================================================================}
 function TStringHelper.CountTokens(const items: TStringArray): Integer; overload;
 label
-  ContinueScan;
+  scanning;
 var
   i, l, j, s: Integer;
 begin
@@ -189,11 +189,11 @@ begin
       begin
         Inc(Result);
         Inc(i, l);
-        goto ContinueScan;
+        goto scanning;
       end;
     end;
     Inc(i);
-    ContinueScan:
+    scanning:
   end;
 end;
 

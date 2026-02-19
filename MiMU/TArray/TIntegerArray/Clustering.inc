@@ -308,8 +308,8 @@ begin
           Result[j][l] := a[i];
           Break;
         end;
-	if m then
-	  Break;
+	    if m then
+	      Break;
       end;
       if not m then
         Result[r.Increase] := [a[i]];
@@ -361,16 +361,16 @@ begin
         begin
           l := Result[a].Length;
           for b := 0 to (l - 1) do
-	  begin
-	    m := ((Self[i] = Result[a][b]) or s.Value(Abs(Self[i] - Result[a][b])));
-	    if not m then
+	      begin
+	        m := ((Self[i] = Result[a][b]) or s.Value(Abs(Self[i] - Result[a][b])));
+	        if not m then
               Continue;
-	    SetLength(Result[a], (l + 1));
+	        SetLength(Result[a], (l + 1));
             Result[a][l] := Self[i];
             Break;
           end;
-	  if m then
-	    Break;
+	      if m then
+	        Break;
         end;
         if not m then
           Result[r.Increase] := [Self[i]];

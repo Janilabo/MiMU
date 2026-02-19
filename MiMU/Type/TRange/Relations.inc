@@ -119,11 +119,10 @@ begin
   r2 := b.Normalize;
   if (r1.stop < r2.start) then
     Result := (r2.start - r1.stop)
+  else if (r2.stop < r1.start) then
+    Result := (r1.start - r2.stop)
   else
-    if (r2.stop < r1.start) then
-      Result := (r1.start - r2.stop)
-    else
-      Result := 0;
+    Result := 0;
 end;
 
 {==============================================================================]
@@ -178,9 +177,8 @@ var
 begin
   s := Self.Normalize;
   t := target.Normalize;
-  if (s.stop >= t.start) then
-    if (t.stop >= s.start) then
-      Exit(0);
+  if ((s.stop >= t.start) and (t.stop >= s.start)) then
+    Exit(0);
   if (s.stop < t.start) then
     Result := (t.start - s.stop)
   else
@@ -669,15 +667,13 @@ begin
     True:
 	if (val > Self.start) then
 	  Result.start := val
-	else
-	  if (val < Self.stop) then
-	    Result.stop := val;
+	else if (val < Self.stop) then
+	  Result.stop := val;
     False:
 	if (val < Self.start) then
 	  Result.start := val
-	else
-	  if (val > Self.stop) then
-	    Result.stop := val;
+	else if (val > Self.stop) then
+	  Result.stop := val;
   end;
 end;
 {$ENDIF}

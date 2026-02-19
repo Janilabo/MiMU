@@ -188,7 +188,7 @@ begin
         Exit;
       end;
       -1: R.start := (M + 1);
-      1:  R.stop := (M - 1);
+      1: R.stop := (M - 1);
     end;
   end;
 end;

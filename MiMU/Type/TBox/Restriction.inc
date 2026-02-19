@@ -15,32 +15,28 @@ function TBox.Clamp(const toArea: TBox): TBox;
 begin
   if (Self.X1 < toArea.X1) then
     Result.X1 := toArea.X1
+  else if (Self.X1 > toArea.X2) then
+    Result.X1 := toArea.X2
   else
-    if (Self.X1 > toArea.X2) then
-      Result.X1 := toArea.X2
-    else
-      Result.X1 := Self.X1;
+    Result.X1 := Self.X1;
   if (Self.Y1 < toArea.Y1) then
     Result.Y1 := toArea.Y1
+  else if (Self.Y1 > toArea.Y2) then
+    Result.Y1 := toArea.Y2
   else
-    if (Self.Y1 > toArea.Y2) then
-      Result.Y1 := toArea.Y2
-    else
-      Result.Y1 := Self.Y1;
+    Result.Y1 := Self.Y1;
   if (Self.X2 > toArea.X2) then
     Result.X2 := toArea.X2
+  else if (Self.X2 < toArea.X1) then
+    Result.X2 := toArea.X1
   else
-    if (Self.X2 < toArea.X1) then
-      Result.X2 := toArea.X1
-    else
-      Result.X2 := Self.X2;
+    Result.X2 := Self.X2;
   if (Self.Y2 > toArea.Y2) then
     Result.Y2 := toArea.Y2
+  else if (Self.Y2 < toArea.Y1) then
+    Result.Y2 := toArea.Y1
   else
-    if (Self.Y2 < toArea.Y1) then
-      Result.Y2 := toArea.Y1
-    else
-      Result.Y2 := Self.Y2;
+    Result.Y2 := Self.Y2;
 end;
 
 {==============================================================================]
@@ -85,24 +81,20 @@ begin
   b := Self;
   if (Self.X1 < toArea.X1) then
     Self.X1 := toArea.X1
-  else
-    if (Self.X1 > toArea.X2) then
-      Self.X1 := toArea.X2;
+  else if (Self.X1 > toArea.X2) then
+    Self.X1 := toArea.X2;
   if (Self.Y1 < toArea.Y1) then
     Self.Y1 := toArea.Y1
-  else
-    if (Self.Y1 > toArea.Y2) then
-      Self.Y1 := toArea.Y2;
+  else if (Self.Y1 > toArea.Y2) then
+    Self.Y1 := toArea.Y2;
   if (Self.X2 > toArea.X2) then
     Self.X2 := toArea.X2
-  else
-    if (Self.X2 < toArea.X1) then
-      Self.X2 := toArea.X1;
+  else if (Self.X2 < toArea.X1) then
+    Self.X2 := toArea.X1;
   if (Self.Y2 > toArea.Y2) then
     Self.Y2 := toArea.Y2
-  else
-    if (Self.Y2 < toArea.Y1) then
-      Self.Y2 := toArea.Y1;
+  else if (Self.Y2 < toArea.Y1) then
+    Self.Y2 := toArea.Y1;
   Result := (Self <> b);
 end;
 {$ENDIF}

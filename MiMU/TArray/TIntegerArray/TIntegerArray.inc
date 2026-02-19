@@ -38,9 +38,8 @@ begin
       for x := 1 to y do
         if (Self[x] < r.start) then
           r.start := Self[x]
-        else
-          if (Self[x] > r.stop) then
-            r.stop := Self[x];
+        else if (Self[x] > r.stop) then
+          r.stop := Self[x];
       if (r.start <> r.stop) then
       begin
         SetLength(Result, r.Size);

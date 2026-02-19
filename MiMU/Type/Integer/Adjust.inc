@@ -304,11 +304,10 @@ begin
   n := (Self + cValue);
   if (n < r.start) then
     Self := r.start
+  else if (n > r.stop) then
+    Self := r.stop
   else
-    if (n > r.stop) then
-      Self := r.stop
-    else
-      Self := n;
+    Self := n;
   Result := (n = Self);
 end;
 
@@ -326,11 +325,10 @@ begin
   n := (Self + cValue);
   if (n < r.start) then
     Result := r.start
+  else if (n > r.stop) then
+    Result := r.stop
   else
-    if (n > r.stop) then
-      Result := r.stop
-    else
-      Result := n;
+    Result := n;
 end;
 
 {==============================================================================]
