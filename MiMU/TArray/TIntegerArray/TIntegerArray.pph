@@ -16,6 +16,7 @@
 
 {$I Analytics.inc}
 {$I Bounding.inc}
+{$I Cloning.inc}
 {$I Clustering.inc}
 {$I Conversion.inc}
 {$I Deduplicate.inc}

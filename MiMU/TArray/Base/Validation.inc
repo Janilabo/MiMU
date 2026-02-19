@@ -14,6 +14,7 @@ function ContainsAtLeast(const item: MType; const limit: Integer): Boolean; over
 function ContainsAtMost(const item: MType; const limit: Integer): Boolean; overload;
 function Dull(const item: MType): Boolean; overload;
 function Dull: Boolean; overload;
+function Equalized(const rIndex: Integer = 0): Boolean; overload;
 function Exact(const items: MArray): Boolean; overload;
 function Excessive: Boolean; overload;
 function Fits(const maxValue: Integer): Boolean; overload;
@@ -333,6 +334,25 @@ end;
 function MArrayHelper.Dull: Boolean; overload;
 begin
   Result := ((Self.Length > 0) and Self.Dull(Self[0]));
+end;
+
+{==============================================================================]
+  <Equalized>
+  @action: Checks whether all elements in the integer array are equal to each other.
+           Uses a recursive comparison starting from the specified index.
+  @note:
+    • Returns False for an empty array.  
+    • If rIndex >= High(Self), the recursion has reached the last element,
+      so the remaining array is trivially equal.  
+    • Recursively compares each element to the next element in the array.
+[==============================================================================}
+function MArrayHelper.Equalized(const rIndex: Integer = 0): Boolean; overload;
+begin
+  if Self.Empty then
+    Exit(False);
+  if (rIndex >= High(Self)) then
+    Exit(True);
+  Result := ((Self[rIndex] = Self[rIndex + 1]) and Self.Equalized(rIndex + 1));
 end;
 
 {==============================================================================]

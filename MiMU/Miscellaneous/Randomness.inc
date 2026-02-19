@@ -2,6 +2,7 @@
 function Random2(const x: Integer; const r: Integer = 2): Integer; overload;
 function RandomB: Boolean; overload;
 function RandomBit: Byte; overload;
+function RandomEx(const l: Integer = 2): Integer; overload;
 function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload;
 function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload;
 function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload;
@@ -26,6 +27,14 @@ end;
 function RandomBit: Byte; overload;
 begin
   Result := Random(2);
+end;
+
+function RandomEx(const l: Integer = 2): Integer; overload;
+begin
+  if (l > -1) then
+    Result := Random(l)
+  else
+    Result := (Random(Abs(l)) * -1);
 end;
 
 function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload;

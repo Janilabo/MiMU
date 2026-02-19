@@ -4,6 +4,8 @@ function BinaryGot(const item: MType; out index: Integer; const oAscending: Bool
 function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHits(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryHitsOf(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+function BinaryInsertingSort(const aAscending: Boolean = True): Integer; overload;
+function BinaryInsertingSorted(const aAscending: Boolean = True): MArray; overload;
 function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
 function BinaryInsertionSorted(const aAscending: Boolean = True): MArray; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -166,6 +168,102 @@ begin
     p := Self.BinarySearchBy(items[i], oAscending);
     if (p >= 0) then
       Result[r.Increase] := p;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryInsertingSort>
+  @action: Sorts the array in place using a binary-insertion approach.
+           Each element is inserted into its correct position in the partially
+           sorted portion of the array by performing a binary search to find
+           the insertion point.
+  @note:
+    • Sorting is done in place, overwriting the original array.  
+    • The optional parameter aAscending specifies sort order:
+        - True  → ascending
+        - False → descending  
+    • Equality is determined using the Compare method of MType.  
+    • Time complexity: O(n log n) for binary search + O(n²) for shifting,
+      overall O(n²) in the worst case.  
+    • Space complexity: O(n) due to the temporary copy used during sorting.  
+    • Returns the length of the array.
+[==============================================================================}
+function MArrayHelper.BinaryInsertingSort(const aAscending: Boolean = True): Integer; overload;
+var
+  a, i, m, c: Integer;
+  s: MArray;
+  r: TRange;
+begin
+  Result := Self.Length;
+  if (Result < 2) then
+    Exit;
+  s := Self.Copy;
+  SetLength(Self, 1);
+  a := IfThen(aAscending, 1, -1);
+  for i := 1 to (Result - 1) do
+  begin
+    r.Create(0, High(Self));
+    while (r.start <= r.stop) do
+    begin
+      m := r.Pivot;
+	  c := s[i].Compare(Self[m]);
+      if (c = 0) then
+      begin
+        r.start := m;
+        Break;
+      end;
+      if (c = a) then
+        r.start := (m + 1)
+      else
+	    r.stop := (m - 1);
+    end;
+    Insert(s[i], Self, r.start);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryInsertingSorted>
+  @action: Returns a new array containing all elements of the original array,
+           sorted using binary-insertion. The original array is not modified.
+  @note:
+    • The returned array preserves the sorted order: ascending or descending,
+      based on aAscending.  
+    • Each element is inserted into the result array using binary search
+      to find its correct position.  
+    • Equality is determined using the Compare method of MType.  
+    • Time complexity: O(n log n) for binary search + O(n²) for shifting,
+      overall O(n²) worst case.  
+    • Space complexity: O(n) due to building the new array.  
+    • If the array contains fewer than two elements, a copy is returned unchanged.
+[==============================================================================}
+function MArrayHelper.BinaryInsertingSorted(const aAscending: Boolean = True): MArray; overload;
+var
+  l, a, i, m, c: Integer;
+  r: TRange;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(Self.Copy);
+  Result := [Self[0]];
+  a := IfThen(aAscending, 1, -1);
+  for i := 1 to (l - 1) do
+  begin
+    r.Create(0, High(Result));
+    while (r.start <= r.stop) do
+    begin
+      m := r.Pivot;
+	  c := Self[i].Compare(Result[m]);
+      if (c = 0) then
+      begin
+        r.start := m;
+        Break;
+      end;
+      if (c = a) then
+        r.start := (m + 1)
+      else
+	    r.stop := (m - 1);
+    end;
+    Insert(Self[i], Result, r.start);
   end;
 end;
 
