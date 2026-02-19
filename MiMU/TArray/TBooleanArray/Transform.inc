@@ -1,15 +1,15 @@
 {$IFDEF HELPERS}
-function Opposite: TBooleanArray; overload;
+function Opposites: TBooleanArray; overload;
 function Toggle: TBooleanArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Opposite>
+  <Opposites>
   @action: Returns opposite version of arr.
   @note: [True, False] => [False, True].
 [==============================================================================}
-function TBooleanArrayHelper.Opposite: TBooleanArray; overload;
+function TBooleanArrayHelper.Opposites: TBooleanArray; overload;
 var
   i: Integer;
 begin
@@ -17,8 +17,8 @@ begin
   for i := 0 to High(Self) do
     if Self[i] then
       Result[i] := False
-	else
-	  Result[i] := True;
+    else
+      Result[i] := True;
 end;
 
 {==============================================================================]

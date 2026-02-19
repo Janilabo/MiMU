@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Backwards: MArray; overload;
 function Flip: Boolean; overload;
+function Oppose: Boolean; overload;
+function Opposite: MArray; overload;
 function Reversal: MArray; overload;
 function Reverse: Boolean; overload;
 function Reversed: MArray; overload;
@@ -40,6 +42,46 @@ begin
   Result := (r.stop > 0);
   while (r.start < r.stop) do
     Exchange(r.start.Increase, r.stop.Decrease);
+end;
+
+{==============================================================================]
+  <Oppose>
+  @action: Reverses the elements of the array **in place**, swapping the first
+           element with the last, the second with the second-to-last, and so on.
+           The operation is performed on the original array.
+  @note: The function returns True if the array has more than one element
+         and the reversal was performed. Returns False if the array has
+         zero or one element (nothing to reverse). The order of all other
+         elements is preserved according to the reversal.
+[==============================================================================}
+function MArrayHelper.Oppose: Boolean; overload;
+var
+  l, i: Integer;
+begin
+  l := Self.Length;
+  Result := (l > 1);
+  if Result then
+  for i := 0 to ((l div 2) - 1) do
+    Self.Exch(i, ((l - 1) - i));
+end;
+
+{==============================================================================]
+  <Opposite>
+  @action: eturns a new array containing the elements of the current array
+           in reverse order. The original array is not modified.
+  @note: The order of elements is inverted: the last element becomes
+         the first, the second-to-last becomes the second, and so on.
+         The resulting array has the same elements as the original,
+         but in reversed order.
+[==============================================================================}
+function MArrayHelper.Opposite: MArray; overload;
+var
+  l: Integer;
+begin
+  l := Self.Length;
+  SetLength(Result, 0);
+  while (l.Decrease > 0) do
+    Result := (Result + [Self[l]]);
 end;
 
 {==============================================================================]
