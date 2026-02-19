@@ -1,13 +1,84 @@
 {$IFDEF HELPERS}
+function Dedup(const Item: MType; const sIndex: Integer = 0): Integer; overload;
+function Deduped(const Item: MType): MArray; overload;
 function Singlify(const item: MType): Integer; overload;
 function Singlified(const item: MType): MArray; overload;
 function Singularize(const item: MType): Integer; overload;
 function Singularized(const item: MType): MArray; overload;
 function Soloize(const item: MType): Integer; overload;
 function Soloized(const item: MType): MArray; overload;
+function Uniquify(const item: MType; const sIndex: Integer = 0): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Dedup>
+  @action: Ensures that at most one occurrence of `item` exists in the
+           subrange [sIndex .. end] by removing subsequent duplicates
+           while preserving relative order.
+  @note: The first occurrence encountered at or after `sIndex`
+         is retained. Elements before `sIndex` are not examined.
+         Returns the number of removed duplicates. The array is
+         modified in place.
+[==============================================================================}
+function MArrayHelper.Dedup(const Item: MType; const sIndex: Integer = 0): Integer; overload;
+var
+  l, i: Integer;
+  s: Boolean;
+begin
+  Result := 0;
+  l := Self.Length;
+  if (l = 0) then
+    Exit;
+  s := False;
+  for i := Max(0, sIndex) to (l - 1) do
+  case (Self[i] = item) of
+    True:
+    if s then
+      Inc(Result)
+    else
+      s := True;
+    False: Self[i - Result] := Self[i];
+  end;
+  if (Result > 0) then
+    SetLength(Self, (l - Result));
+end;
+
+{==============================================================================]
+  <Deduped>
+  @action: Returns a new array based on the current array with at most one
+           occurrence of `Item`. All subsequent duplicates of `Item` are removed,
+           preserving the original order of elements.
+  @note: The first occurrence of `Item` is retained. The original array
+         is not modified. The returned array may have fewer elements than
+         the original.
+[==============================================================================}
+function MArrayHelper.Deduped(const Item: MType): MArray; overload;
+var
+  l, i, r: Integer;
+  s: Boolean;
+begin
+  l := Self.Length;
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  s := False;
+  r := 0;
+  for i := 0 to (l - 1) do
+  case (Self[i] = item) of
+    True:
+    if not s then
+    begin
+      s := True;
+      Result[i - r] := Self[i];
+    end else
+      Inc(r);
+    False: Result[i - r] := Self[i];
+  end;
+  if (r > 0) then
+    SetLength(Result, (l - r));
+end;
+
 {==============================================================================]
   <Singlify>
   @action: Removes duplicate occurrences of a specific item, keeping only the first.
@@ -153,5 +224,36 @@ begin
       Result[l.Increase] := Self[i];
   if (s > 0) then
     SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <Uniquify>
+  @action: Ensures that at most one occurrence of `item` exists in the
+           subrange [sIndex .. end] by removing subsequent duplicates
+           while preserving relative order.
+  @note: The first occurrence encountered at or after `sIndex`
+         is retained. Elements before `sIndex` are not examined.
+         Returns the number of removed duplicates. The array is
+         modified in place.
+[==============================================================================}
+function MArrayHelper.Uniquify(const item: MType; const sIndex: Integer = 0): Integer; overload;
+var
+  l, i: Integer;
+  r: Boolean;
+begin
+  Result := 0;
+  l := Self.Length;
+  if (l = 0) then
+    Exit;
+  r := False;
+  for i := Max(0, sIndex) to (l - 1) do
+    if (Self[i] <> item) then
+      Self[i - Result] := Self[i]
+    else if not r then
+      r := True
+    else
+      Inc(Result);
+  if (Result > 0) then
+    SetLength(Self, (l - Result));
 end;
 {$ENDIF}

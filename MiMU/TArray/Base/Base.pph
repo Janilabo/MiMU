@@ -9,6 +9,7 @@
 {$I Indexing.inc}
 {$I Merging.inc}
 {$I Miscellaneous.inc}
+{$I Modify.inc}
 {$I Partition.inc}
 {$I Query.inc}
 {$I Randomization.inc}

@@ -248,7 +248,6 @@ var
 begin
   l := Self.Length;
   p := pattern.Size;
-  SetLength(Result, 0);
   r := 0;
   if ((p > 0) and (p <= l)) then
   begin
@@ -280,7 +279,6 @@ var
 begin
   l := Self.Length;
   p := pattern.Size;
-  SetLength(Result, 0);
   r := 0;
   if ((p > 0) and (p <= l)) then
   begin
