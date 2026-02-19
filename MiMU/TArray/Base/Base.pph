@@ -38,6 +38,7 @@
 {$I Sortable/Search.inc}
 {$I Sortable/Sorted.inc}
 {$I Sortable/Trend.inc}
+{$I Sortable/Validation.inc}
 {$I Sortable/Algorithms/BubbleSort.inc}
 {$I Sortable/Algorithms/HybridSort.inc}
 {$I Sortable/Algorithms/MergeSort.inc}

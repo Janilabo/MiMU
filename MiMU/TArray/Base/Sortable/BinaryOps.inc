@@ -8,6 +8,7 @@ function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overloa
 function BinaryInsertionSorted(const aAscending: Boolean = True): MArray; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySpot(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinarySupply(const item: MType; const aAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -316,5 +317,44 @@ begin
       R.stop := (M - 1);
   end;
   Result := not R.start;
+end;
+
+{==============================================================================]
+  <BinarySupply>
+  @action: Inserts the item x into the array at the correct position to maintain
+           sorted order. Supports both ascending and descending order.
+  @note:
+    • The array must already be sorted according to aAscending.  
+    • If aAscending = True, ascending order is assumed;  
+      if aAscending = False, descending order is assumed.  
+    • The value is not inserted if it already exists in the array.  
+    • Returns True if the value was inserted, False if it already exists.  
+    • Search complexity: O(log n).  
+    • Insertion (element shift) complexity: O(n).  
+    • Overall complexity: O(n).  
+    • The array is resized when insertion occurs.
+[==============================================================================}
+function MArrayHelper.BinarySupply(const item: MType; const aAscending: Boolean = True): Boolean; overload;
+var
+  m, i, o: Integer;
+  r: TRange;
+begin
+  r.Create(0, High(Self));
+  o := aAscending.Select(1, -1);
+  while r.Ascending do
+  begin
+    m := r.Pivot;
+	if ((aAscending and (Self[m] < item)) or ((not aAscending) and (Self[m] > item))) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  Result := ((Self.Size = r.start) or (Self[r.start] <> item));
+  if not Result then
+    Exit;
+  SetLength(Self, (Self.Size + 1));
+  for i := High(Self) downto (r.start + 1) do
+    Self[i] := Self[i - 1];
+  Self[r.start] := item;
 end;
 {$ENDIF}

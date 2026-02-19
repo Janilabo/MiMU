@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
 function BinaryAppend(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
+function BinaryFeed(const item: TPoint): Integer; overload;
 function BinaryInsert(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
-function BinarySupply(const item: TPoint): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -20,6 +20,27 @@ begin
     Exit(Self.BinaryInsert(item, allowDuplicates));
   Result := Self.Size;
   Self.Supply(item);
+end;
+
+{==============================================================================]
+  <BinaryFeed>
+  @action: Inserts a specified point into the sorted TPointArray while preserving
+           ascending lexicographic order by X, then Y.
+  @note: - The array must already be sorted in ascending order consistent with
+           TPoint.Compare.
+         - Uses BinaryPosL to determine the correct insertion position.
+         - Shifts subsequent elements to make room for the new point.
+         - Returns the index at which the point was inserted.
+[==============================================================================}
+function TPointArrayHelper.BinaryFeed(const item: TPoint): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.BinaryPosL(item);
+  SetLength(Self, (Self.Size + 1));
+  for i := High(Self) downto (Result + 1) do
+    Self[i] := Self[i - 1];
+  Self[Result] := item;
 end;
 
 {==============================================================================]
@@ -51,26 +72,5 @@ begin
     end;
   end;
   Insert(item, Self, Result);
-end;
-
-{==============================================================================]
-  <BinarySupply>
-  @action: Inserts a specified point into the sorted TPointArray while preserving
-           ascending lexicographic order by X, then Y.
-  @note: - The array must already be sorted in ascending order consistent with
-           TPoint.Compare.
-         - Uses BinaryPosL to determine the correct insertion position.
-         - Shifts subsequent elements to make room for the new point.
-         - Returns the index at which the point was inserted.
-[==============================================================================}
-function TPointArrayHelper.BinarySupply(const item: TPoint): Integer; overload;
-var
-  i: Integer;
-begin
-  Result := Self.BinaryPosL(item);
-  SetLength(Self, (Self.Size + 1));
-  for i := High(Self) downto (Result + 1) do
-    Self[i] := Self[i - 1];
-  Self[Result] := item;
 end;
 {$ENDIF}

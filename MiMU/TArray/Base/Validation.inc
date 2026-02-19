@@ -25,11 +25,13 @@ function Got(const item: MType; const limit: TRange): Boolean; overload;
 function HasAtLeast(const item: MType; const limit: Integer): Boolean; overload;
 function HasAtMost(const item: MType; const limit: Integer): Boolean; overload;
 function Has(const item: MType; const limit: TRange): Boolean; overload;
+function Heterogeneous: Boolean; overload;
 function Holds(const chain: MArray): Boolean; overload;
 function Homogeneous(const item: MType): Boolean; overload;
 function Homogeneous: Boolean; overload;
 function IsConstant(const item: MType): Boolean; overload;
 function IsConstant: Boolean; overload;
+function IsDistinct: Boolean; overload;
 function MadeOf(const allowed: MArray): Boolean; overload;
 function Occurs(const item: MType; const occurrence: Integer = 1): Boolean; overload;
 function Presence(const item: MType; const occurrence: Integer = 1): Boolean; overload;
@@ -551,6 +553,38 @@ begin
 end;
 
 {==============================================================================]
+  <Heterogeneous>
+  @action: Returns True if the array is non-empty and all elements are pairwise
+           distinct (i.e. no two elements are equal).
+  @note:
+    • Returns False for an empty array.
+    • Uses a recursive pairwise comparison strategy.
+    • Time complexity: O(n²).
+    • Space complexity: O(n) due to recursion depth.
+    • Equality is evaluated using the = operator of MType.
+    • Functionally equivalent to an injectivity/distinctness check,
+      but significantly less efficient than hash- or sort-based methods.
+[==============================================================================}
+function MArrayHelper.Heterogeneous: Boolean; overload;
+var
+  h: Integer;
+  function Check(const idx: Integer): Boolean;
+  var
+    i: Integer;
+  begin
+    if (idx >= h) then
+      Exit(True);
+    for i := (idx + 1) to h do
+      if (Self[i] = Self[idx]) then
+        Exit(False);
+    Result := Check(idx + 1);
+  end;
+begin
+  h := High(Self);
+  Result := ((h > -1) and Check(0));
+end;
+
+{==============================================================================]
   <Holds>
   @action: Returns true if arr contains (holds) WHOLE chain of items in it.
   @note: Starting from any index and ending to any index!
@@ -627,6 +661,30 @@ end;
 function MArrayHelper.IsConstant: Boolean; overload;
 begin
   Result := ((not Self.Empty) and Self.IsConstant(Self[0]));
+end;
+
+{==============================================================================]
+  <IsDistinct>
+  @action: Returns True if all elements in the array are unique.
+           Returns False immediately upon detecting a duplicate element.
+  @note:
+    • An empty array is considered distinct.
+    • Internally uses TDictionary to detect duplicates.
+[==============================================================================}
+function MArrayHelper.IsDistinct: Boolean; overload;
+var
+  d: specialize TDictionary<MType, Byte>;
+  v: MType;
+begin
+  d := specialize TDictionary<MType, Byte>.Create;
+  try
+    for v in Self do
+      if not d.TryAdd(v, 0) then
+        Exit(False);
+    Result := True;
+  finally
+    d.Free;
+  end;
 end;
 
 {==============================================================================]
