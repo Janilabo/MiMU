@@ -298,7 +298,7 @@ procedure BuildMaxHeap(var arr: MArray);
 var
   i, l: Integer;
 begin
-  l := Length(arr);
+  l := arr.Length;
   for i := ((l div 2) - 1) downto 0 do
     MaxHeapify(arr, i, l);
 end;
