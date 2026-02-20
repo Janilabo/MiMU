@@ -14,6 +14,7 @@ function Get(const ID: TIntegerArray): MArray; overload;
 function Get(const ID: TRange): MArray; overload;
 function Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
 function Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
+function Replica(const oAscending: Boolean = True): MArray; overload;
 function Replicate(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Slice(const r: TRange): MArray; overload;
 function Slice(const r: TRangeArray): MArray; overload;
@@ -341,6 +342,22 @@ begin
       Result[i] := Self[m + i];
   end else
     SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <Replica>
+  @action: Returns a new array containing the same elements as the current
+           array, ordered according to the specified sorting direction.
+  @note:   - If `oAscending` is True (default), the returned array is sorted
+             in ascending order.
+           - If `oAscending` is False, the returned array is sorted in
+             descending order.
+           - The original array remains unchanged.
+           - This function creates a sorted copy (non-destructive).
+[==============================================================================}
+function MArrayHelper.Replica(const oAscending: Boolean = True): MArray; overload;
+begin
+  Result := Self.Get(Self.ID(oAscending));
 end;
 
 {==============================================================================]
