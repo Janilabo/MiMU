@@ -11,6 +11,7 @@
 {$I Miscellaneous.inc}
 {$I Modify.inc}
 {$I Partition.inc}
+{$I Position.inc}
 {$I Query.inc}
 {$I Randomization.inc}
 {$I Removal.inc}
