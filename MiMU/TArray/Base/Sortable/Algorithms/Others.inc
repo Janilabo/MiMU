@@ -6,6 +6,7 @@ function GnomeSort(const aAscending: Boolean = True): Integer; overload;
 function GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload;
 function PancakeSort(const aAscending: Boolean = True): Integer; overload;
 function CombSort(const aAscending: Boolean = True): Integer; overload;
+function HeapifySort(const oAscending: Boolean = True): Integer; overload;
 function HeapSort(const aAscending: Boolean = True): Integer; overload;
 function InsertionSort(const aAscending: Boolean = True): Integer; overload;
 function ShellSort(const aAscending: Boolean = True): Integer; overload;
@@ -264,6 +265,54 @@ begin
           s := True;
         end;
     end;
+  end;
+end;
+
+{==============================================================================]
+  <HeapifySort>
+  @action: Performs an in-place sort of the array using a binary heap structure.
+  @note: Guarantees O(n log n) time complexity. Memory efficient with O(1) 
+         space. Uses an iterative "sinking" method to prevent stack overflow.
+[==============================================================================}
+function MArrayHelper.HeapifySort(const oAscending: Boolean = True): Integer; overload;
+procedure MaxHeapify(var arr: MArray; index, heap: Integer);
+var
+  m, l, r: Integer;
+begin
+  while True do
+  begin
+    l := ((2 * index) + 1);
+    r := ((2 * index) + 2);
+    m := index;
+    if ((l < heap) and (oAscending = (arr[l] > arr[m]))) then
+      m := l;
+    if ((r < heap) and (oAscending = (arr[r] > arr[m]))) then
+      m := r;
+    if (m = index) then
+      Break;
+    Swap(arr[index], arr[m]);
+    index := m;
+  end;
+end;
+procedure BuildMaxHeap(var arr: MArray);
+var
+  i, l: Integer;
+begin
+  l := Length(arr);
+  for i := ((l div 2) - 1) downto 0 do
+    MaxHeapify(arr, i, l);
+end;
+var
+  i: Integer;
+begin
+  Result := High(Self);
+  if (Result < 1) then
+    Exit;
+  BuildMaxHeap(Self);
+  for i := Result downto 1 do
+  begin
+    Swap(Self[0], Self[i]);
+    MaxHeapify(Self, 0, i);
   end;
 end;
 
