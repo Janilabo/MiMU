@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Charify: TCharArray; overload;
 function Charify(var str: string): TCharArray; overload;
+function Intervals: TRangeArray; overload;
 function Ranges: TRangeArray; overload;
 function Ranges(const aAscending: Boolean): TRangeArray; overload;
 function Stringify: string; overload;
@@ -41,6 +42,32 @@ begin
     Result[i] := Chr(Self[i]);
     str[i + 1] := Result[i];
   end;
+end;
+
+{==============================================================================]
+  <Intervals>
+  @action: Returns an array of ranges representing consecutive elements in
+           the current integer array. Each range spans from one element to
+           the next (i.e., [Self[i]..Self[i+1]]).
+  @note: - If the array is empty, the result is empty.  
+         - If the array has one element, the result contains a single
+           range from that element to itself.  
+         - The order of elements is preserved, and the resulting array
+           length is `Length(Self)-1` for arrays with two or more elements.
+         - Useful for constructing intervals between consecutive numbers.
+[==============================================================================}
+function TIntegerArrayHelper.Intervals: TRangeArray; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit([]);
+    1: Exit([TRange.Construct(Self[0], Self[0])]);
+  end;
+  SetLength(Result, (l - 1));
+  for i := 0 to High(Result) do
+    Result[i].Create(Self[i], Self[i + 1]);
 end;
 
 {==============================================================================]

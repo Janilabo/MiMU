@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Delete(const index: Integer = 0): MArray; overload;
 function Delete(const ID: TIntegerArray): MArray; overload;
+function Deload(var target: MArray; const clearing: Boolean = True): Integer; overload;
 function Discard(const ID: TIntegerArray): MArray; overload;
 function Drop(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
 function Dump(const items: MArray; const index: Integer = 0): MArray; overload;
@@ -60,6 +61,29 @@ begin
     else
       r := (r + 1);
   SetLength(Result, (l - r));
+end;
+
+{==============================================================================]
+  <Deload>
+  @action: Transfers all elements from the current array into the `target` array,
+           resizing `target` if necessary. If `clearing` is True, the current
+           array is emptied after the transfer; otherwise, it is left unchanged.
+  @note: The function returns the number of elements transferred. The order
+         of elements is preserved. The original array may be cleared depending
+         on the `clearing` parameter, while `target` contains a copy of all
+         the elements from the source array.
+[==============================================================================}
+function MArrayHelper.Deload(var target: MArray; const clearing: Boolean = True): Integer; overload;
+var
+  i, j, l: Integer;
+begin
+  Result := Self.Length;
+  if (Result <> target.Length) then
+    SetLength(target, Result);
+  for i := 0 to High(Self) do
+    target[i] := Self[i];
+  if (clearing and (Result > 0)) then
+    SetLength(Self, 0);
 end;
 
 {==============================================================================]

@@ -14,6 +14,7 @@ function Get(const ID: TIntegerArray): MArray; overload;
 function Get(const ID: TRange): MArray; overload;
 function Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
 function Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
+function Replicate(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Slice(const r: TRange): MArray; overload;
 function Slice(const r: TRangeArray): MArray; overload;
 {$ENDIF}
@@ -340,6 +341,33 @@ begin
       Result[i] := Self[m + i];
   end else
     SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <Replicate>
+  @action: Returns a new array containing a contiguous slice of elements
+           copied from the current array, starting at `index` and
+           including up to `count` elements.
+  @note: - If `index` is greater than or equal to the array length,
+           an empty array is returned.
+         - Negative `index` values are treated as 0.
+         - If `count` exceeds the available number of elements,
+           it is clamped to the remaining length.
+         - The original array remains unchanged.
+         - The default `count` value (MaxInt) effectively means
+           “copy until the end”.
+[==============================================================================}
+function MArrayHelper.Replicate(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (index >= l) then
+    Exit([]);
+  i := Max(index, 0);
+  SetLength(Result, IfThen(((i + count) > l), (l - i), count));
+  for l := 0 to High(Result) do
+    Result[l] := Self[l + i];
 end;
 
 {==============================================================================]
