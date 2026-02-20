@@ -20,6 +20,7 @@
 {$I Clustering.inc}
 {$I Conversion.inc}
 {$I Deduplicate.inc}
+{$I Extrema.inc}
 {$I Insertion.inc}
 {$I Merging.inc}
 {$I Monotone.inc}

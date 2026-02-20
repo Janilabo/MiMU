@@ -4,6 +4,7 @@ function Clone(const ID: TIntegerArray): MArray; overload;
 function Cloned: MArray; overload;
 function Copied: MArray; overload;
 function Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
+function Doublet(const fromIndex: Integer = 0; const toIndex: Integer = 2147483647): MArray; overload;
 function Dupe: MArray; overload;
 function Duplicate(const xTimes: Integer = 1): MArray; overload;
 function Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): MArray; overload;
@@ -135,6 +136,23 @@ begin
   end;
   if l.Odd then
     Result[h] := Self[h];
+end;
+
+{==============================================================================]
+  <Doublet>
+  @action: Returns a sub-array (slice) defined by the specified index range.
+  @note  : Creates and returns a new MArray containing elements from
+           fromIndex to toIndex (inclusive).
+           If Self is empty (High = -1), returns [].
+[==============================================================================}
+function MArrayHelper.Doublet(const fromIndex: Integer = 0; const toIndex: Integer = 2147483647): MArray; overload;
+var
+  h: Integer;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit([]);
+  Result := Self.Get(TRange.Construct(fromIndex.Clamp(0, h), toIndex.Clamp(0, h)));
 end;
 
 {==============================================================================]

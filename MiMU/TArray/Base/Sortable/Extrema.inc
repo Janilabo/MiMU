@@ -153,7 +153,7 @@ begin
   Result := Self[0];
   for i := 1 to High(Self) do
     Result := Min(Self[i], Result);
-end;
+end;   
 
 {==============================================================================]
   <MaxItem>
