@@ -9,6 +9,7 @@
 {$I BinaryOps/Merging.inc}
 {$I BinaryOps/Modify.inc}
 {$I BinaryOps/Query.inc}
+{$I BinaryOps/Restriction.inc}
 {$I BinaryOps/Scanning.inc}
 {$I BinaryOps/Search.inc}
 {$I BinaryOps/Selection.inc}

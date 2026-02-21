@@ -4,6 +4,7 @@ function BinaryGot(const item: MType; out index: Integer; const oAscending: Bool
 function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHits(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryHitsOf(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+function BinaryIdentify(const aIndex: Integer; const iItems: MArray; const iAscending: Boolean = True): Integer; overload;
 function BinaryInsertingSort(const aAscending: Boolean = True): Integer; overload;
 function BinaryInsertingSorted(const aAscending: Boolean = True): MArray; overload;
 function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
@@ -169,6 +170,27 @@ begin
     if (p >= 0) then
       Result[r.Increase] := p;
   end;
+end;
+
+{==============================================================================]
+  <BinaryIdentify>
+  @action: Performs a binary search to find the position of the element at aIndex
+           within a sorted array (items). Returns the zero-based index of the matching element.
+  @note:
+    • The array (items) must be sorted in ascending or descending order,
+      as specified by iAscending.
+    • Returns -1 if:
+      - aIndex is out of bounds, or
+      - the value is not found in items.
+    • This method is optimized for large arrays, providing O(log n) search
+      complexity compared to a linear scan.
+[==============================================================================}
+function MArrayHelper.BinaryIdentify(const aIndex: Integer; const iItems: MArray; const iAscending: Boolean = True): Integer; overload;
+begin
+  if ((aIndex  > -1) and (aIndex < Self.Length)) then
+    Result := iItems.BinarySearchBy(Self[aIndex], iAscending)
+  else
+    Result := -1;
 end;
 
 {==============================================================================]
