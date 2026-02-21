@@ -1,5 +1,7 @@
 {$IFDEF HELPERS}
 function BinaryClamp(const allowed: TRange; const oAscending: Boolean = True): Integer; overload;
+function BinaryClampMaximum(const aMax: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinaryClampMinimum(const aMin: Integer; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -65,5 +67,109 @@ begin
   for i := 0 to (l - Result) do
     Self[i] := Self[i + r.start];
   SetLength(Self, c);
+end;
+
+{==============================================================================]
+  <BinaryClampMaximum>
+  @action: Removes all elements greater than aMax from a sorted array using
+           binary boundary detection. The array is modified in place and
+           truncated to contain only values <= aMax.
+  @note:
+    • The array must already be sorted according to oAscending.
+    • Ascending order:
+        Uses BinaryUpperBound to locate the first element > aMax.
+        Elements on the right side are truncated.
+    • Descending order:
+        Uses BinaryLowerBound (descending mode) to locate the first
+        element <= aMax. The valid tail segment is shifted to the
+        beginning of the array before truncation.
+    • Time complexity: O(log n + k), where k is the number of
+      retained elements that must be shifted (descending case).
+    • Returns the number of elements removed.
+    • If no elements exceed aMax, the array remains unchanged
+      and the function returns 0.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryClampMaximum(const aMax: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  i, l, p, c: Integer;
+begin
+  Result := 0;
+  l := Self.Length;
+  if (l = 0) then
+    Exit;
+  case oAscending of
+    True:
+    begin
+      p := Self.BinaryUpperBound(aMax);
+      if (p < 0) then
+        c := (-p - 1)
+      else
+        c := p;
+    end;
+    False:
+    begin
+      p := Self.BinaryLowerBound(aMax, False);
+      if (p < 0) then
+        p := (-p - 1);
+      c := (l - p);
+      for i := 0 to (c - 1) do
+        Self[i] := Self[p + i];
+    end;
+  end;
+  Result := (l - c);
+  if (Result > 0) then
+    SetLength(Self, c);
+end;
+
+{==============================================================================]
+  <BinaryClampMinimum>
+  @action: Removes all elements less than aMin from a sorted array using
+           binary boundary detection. The array is modified in place and
+           truncated to contain only values >= aMin.
+  @note:
+    • The array must already be sorted according to oAscending.
+    • Ascending order:
+        Uses BinaryLowerBound to locate the first element >= aMin.
+        The valid tail segment is shifted to the beginning of the
+        array before truncation.
+    • Descending order:
+        Uses BinaryUpperBound (descending mode) to locate the first
+        element < aMin. Elements on the right side are truncated.
+    • Time complexity: O(log n + k), where k is the number of
+      retained elements that must be shifted (ascending case).
+    • Returns the number of elements removed.
+    • If no elements are less than aMin, the array remains unchanged
+      and the function returns 0.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryClampMinimum(const aMin: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  i, l, p, c: Integer;
+begin
+  Result := 0;
+  l := Self.Length;
+  if (l = 0) then
+    Exit;
+  case oAscending of
+    True:
+    begin
+      p := Self.BinaryLowerBound(aMin);
+      if (p < 0) then
+        p := (-p - 1);
+      c := (l - p);
+      for i := 0 to (c - 1) do
+        Self[i] := Self[p + i];
+    end;
+    False:
+    begin
+      p := Self.BinaryUpperBound(aMin, False);
+      if (p < 0) then
+        c := (-p - 1)
+      else
+        c := p;
+    end;
+  end;
+  Result := (l - c);
+  if (Result > 0) then
+    SetLength(Self, c);
 end;
 {$ENDIF}
