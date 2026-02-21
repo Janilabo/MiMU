@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function Complement(const sSorted: Boolean = False): TIntegerArray; overload;
 function Inverse(const arrBounds: TRange): TIntegerArray; overload;
 function Inverse: TIntegerArray; overload;
 function Invert: TIntegerArray;
@@ -10,6 +11,46 @@ function Reflected: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Complement>
+  @action: Returns a new TIntegerArray containing all integers between the
+           minimum and maximum of the current array that are not present in it.
+           Optional parameter sSorted can be set to True if the array is already
+           sorted (ASCENDING order) to optimize uniqueness filtering.
+  @note: 
+    - Does not modify the original array.
+    - If the array has fewer than 2 elements or all values are consecutive,
+      returns an empty array.
+[==============================================================================}
+function TIntegerArrayHelper.Complement(const sSorted: Boolean = False): TIntegerArray; overload;
+var
+  i, c, l: Integer;
+  r: TRange;
+  m: TBooleanArray;
+  s: TIntegerArray;
+begin
+  SetLength(Result, 0);
+  if (Self.Length < 2) then
+    Exit;
+  s := Self.Uniq(sSorted);
+  if (s.Length < 2) then
+    Exit;
+  l := s.Length;
+  r.Create(s[0], s[l - 1]);
+  c := r.Size;
+  if (c = l) then
+    Exit;
+  m.Create(c, False);
+  for i := 0 to (l - 1) do
+    m[s[i] - r.start] := True;
+  SetLength(Result, (c - l));
+  l := 0;
+  for i := 0 to (c - 1) do
+    if not m[i] then
+      Result[l.Increase] := (i + r.start);
+  SetLength(Result, l);
+end;
+
 {==============================================================================]
   <Inverse>
   @action: Returns inverted arr.
