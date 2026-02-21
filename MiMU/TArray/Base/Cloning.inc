@@ -8,6 +8,8 @@ function Doublet(const fromIndex: Integer = 0; const toIndex: Integer = 21474836
 function Dupe: MArray; overload;
 function Duplicate(const xTimes: Integer = 1): MArray; overload;
 function Elements(const returnIDs: TIntegerArray; const returnSort: Boolean = True): MArray; overload;
+function EndWith(const aItem: MType): MArray; overload;
+function EndWith(const aItem: MArray): MArray; overload;
 function FromLeft(const count: Integer; const index: Integer = 2147483647): MArray; overload;
 function FromRight(const count: Integer; const index: Integer = 0): MArray; overload;
 function Get: MArray; overload;
@@ -19,6 +21,8 @@ function Replica(const oAscending: Boolean = True): MArray; overload;
 function Replicate(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Slice(const r: TRange): MArray; overload;
 function Slice(const r: TRangeArray): MArray; overload;
+function StartWith(const aItem: MType): MArray; overload;
+function StartWith(const aItem: MArray): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -237,6 +241,55 @@ begin
 end;
 
 {==============================================================================]
+  <EndWith>
+  @action: Returns a new array containing the elements of the current array
+           from index 0 up to and including the last occurrence of aItem.
+  @note: If aItem is not found, the resulting array length will be zero
+         or reflect the final decremented index state. No explicit
+         validation is performed for a missing match. Element order
+         remains unchanged.
+[==============================================================================}
+function MArrayHelper.EndWith(const aItem: MType): MArray; overload;
+var
+  i, l, r: Integer;
+begin
+  l := Self.Length;
+  while (l.Decrement > -1) do
+    if (Self[l] = aItem) then
+      Break;
+  SetLength(Result, (l + 1));
+  for r := 0 to l do
+    Result[r] := Self[r];
+end;
+
+{==============================================================================]
+  <EndWith>
+  @action: Returns a new array containing the elements of the current array
+           from index 0 up to and including the last occurrence of any
+           element contained in aItem.
+  @note: If either the source array or aItem is empty, an empty array
+         is returned. If no matching element is found, no explicit
+         guard is applied and the result depends on the final index
+         value after backward traversal. Element order is preserved.
+[==============================================================================}
+function MArrayHelper.EndWith(const aItem: MArray): MArray; overload;
+var
+  i, l, r: Integer;
+begin
+  l := Self.Length;
+  if ((l > 0) and (aItem.Length > 0)) then
+  begin
+    while (l.Decrement > -1) do
+      if aItem.Contains(Self[l]) then
+        Break;
+    SetLength(Result, (l + 1));
+    for r := 0 to l do
+      Result[r] := Self[r];
+  end else
+    SetLength(Result, 0);
+end;
+
+{==============================================================================]
   <FromLeft>
   @action: Returns count of array items from left-side by index.
   @note: None
@@ -451,5 +504,58 @@ begin
     for j := r[i].stop to r[i].start do
       Result[l.Decrement] := Self[j];
   end;
+end;
+
+{==============================================================================]
+  <StartWith>
+  @action: Returns a new array containing the elements of the current array
+           starting from the first occurrence of aItem through to the end
+           of the array. The matching element is included in the result.
+  @note: If aItem is not found, the resulting array length will be
+         (Length - (-1)), which may not be the intended behavior.
+         No explicit check is performed for a missing match.
+         The operation preserves original element order.
+[==============================================================================}
+function MArrayHelper.StartWith(const aItem: MType): MArray; overload;
+var
+  i, l, r: Integer;
+begin
+  l := Self.Length;
+  i := -1;
+  while (i.Increment < l) do
+    if (Self[i] = aItem) then
+      Break;
+  SetLength(Result, (l - i));
+  for r := i to (l - 1) do
+    Result[r - i] := Self[r];
+end;
+
+{==============================================================================]
+  <StartWith>
+  @action: Returns a new array containing the elements of the current array
+           starting from the first occurrence of any element contained in
+           aItem through to the end of the array. The matching element is
+           included in the result.
+  @note: If either the source array or aItem is empty, an empty array
+         is returned. If no matching element is found, no explicit
+         guard is applied and the resulting length depends on the
+         computed index value. Element order is preserved.
+[==============================================================================}
+function MArrayHelper.StartWith(const aItem: MArray): MArray; overload;
+var
+  i, l, r: Integer;
+begin
+  l := Self.Length;
+  if ((l > 0) and (aItem.Length > 0)) then
+  begin
+    i := -1;
+    while (i.Increment < l) do
+      if aItem.Contains(Self[i]) then
+        Break;
+    SetLength(Result, (l - i));
+    for r := i to (l - 1) do
+      Result[r - i] := Self[r];
+  end else
+    SetLength(Result, 0);
 end;
 {$ENDIF}
