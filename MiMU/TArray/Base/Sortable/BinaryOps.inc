@@ -1,4 +1,6 @@
 {$IFDEF HELPERS}
+function BinaryClampMax(const aMax: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryClampMin(const aMin: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
@@ -15,6 +17,109 @@ function BinarySupply(const item: MType; const aAscending: Boolean = True): Bool
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryClampMax>
+  @action: Removes elements greater than aMax from a sorted array using a binary boundary scan.
+          The scan searches the upper valid boundary depending on whether the array is sorted in ascending or descending order,
+		  then compacts the array in place and truncates it.
+  @note: The function assumes the array is already sorted according to oAscending.
+         It returns the number of elements removed (original length minus the clamped length).
+		 If no elements exceed the upper bound, the array is unchanged and the function returns 0.
+[==============================================================================}
+function MArrayHelper.BinaryClampMax(const aMax: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  c, i, l: Integer;
+  r: TRange;
+begin
+  Result := 0;
+  l := Self.Length;
+  if ((l = 0) or ((oAscending and (Self[l - 1] < aMax)) or ((not oAscending) and (Self[0] < aMax)))) then
+    Exit;
+  r.Create(0, (l - 1));
+  case oAscending of
+    True:
+    begin
+      while (r.stop > -1) do
+        if (Self[r.stop] > aMax) then
+          Dec(r.stop)
+        else
+          Break;
+      if (r.stop = -1) then
+        Exit(0);
+    end;
+    False:
+    begin
+      while (r.start < l) do
+        if  (Self[r.start] > aMax) then
+          Inc(r.start)
+        else
+          Break;
+      if (r.start = l) then
+        Exit(0);
+      Result := (l - r.start);
+    end;
+  end;
+  c := r.Size;
+  Result := (l - c);
+  if (Result > 0) then
+  begin
+    for i := r.start to r.stop do
+      Self[i - r.start] := Self[i];
+    SetLength(Self, c);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryClampMin>
+  @action: Removes elements less than aMin from a sorted array using a binary boundary scan.
+           The scan locates the lower valid boundary according to sort direction,
+		   then shifts remaining elements forward and truncates the array.
+  @note: The array must maintain the sorting invariant defined by oAscending.
+         The function returns the count of removed elements. If no elements violate the lower bound,
+		 the array remains unchanged and the function returns 0.
+[==============================================================================}
+function MArrayHelper.BinaryClampMin(const aMin: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  c, i, l: Integer;
+  r: TRange;
+begin
+  Result := 0;
+  l := Self.Length;
+  if ((l = 0) or ((oAscending and (Self[0] > aMin)) or ((not oAscending) and (Self[l - 1] > aMin)))) then
+    Exit;
+  r.Create(0, (l - 1));
+  case oAscending of
+    True:
+    begin
+      while (r.start < l) do
+        if (Self[r.start] < aMin) then
+          Inc(r.start)
+        else
+          Break;
+      if (r.start = l) then
+        Exit(0);
+    end;
+    False:
+    begin
+      while (r.stop > -1) do
+        if  (Self[r.stop] < aMin) then
+          Dec(r.stop)
+        else
+          Break;
+      if (r.stop = -1) then
+        Exit(0);
+    end;
+  end;
+  c := r.Size;
+  Result := (l - c);
+  if (Result > 0) then
+  begin
+    for i := r.start to r.stop do
+      Self[i - r.start] := Self[i];
+    SetLength(Self, c);
+  end;
+end; 
+
 {==============================================================================]
   <BinaryExpSearch>
   @action: Performs an exponential (galloping) search to locate the specified
