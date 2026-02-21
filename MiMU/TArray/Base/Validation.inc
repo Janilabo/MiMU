@@ -14,6 +14,8 @@ function ContainsAtLeast(const item: MType; const limit: Integer): Boolean; over
 function ContainsAtMost(const item: MType; const limit: Integer): Boolean; overload;
 function Dull(const item: MType): Boolean; overload;
 function Dull: Boolean; overload;
+function EndsWith(const aItem: MType): Boolean; overload;
+function EndsWith(const aItem: MArray): Boolean; overload;
 function Equalized(const rIndex: Integer = 0): Boolean; overload;
 function Exact(const items: MArray): Boolean; overload;
 function Excessive: Boolean; overload;
@@ -36,6 +38,8 @@ function IsDistinct: Boolean; overload;
 function MadeOf(const allowed: MArray): Boolean; overload;
 function Occurs(const item: MType; const occurrence: Integer = 1): Boolean; overload;
 function Presence(const item: MType; const occurrence: Integer = 1): Boolean; overload;
+function StartsWith(const aItem: MType): Boolean; overload;
+function StartsWith(const aItem: MArray): Boolean; overload;
 function Subset(const items: MArray): Boolean; overload;
 function Uniform: Boolean; overload;
 function Uniform(const item: MType): Boolean; overload;
@@ -334,6 +338,37 @@ end;
 function MArrayHelper.Dull: Boolean; overload;
 begin
   Result := ((Self.Length > 0) and Self.Dull(Self[0]));
+end;
+
+{==============================================================================]
+  <EndsWith>
+  @action: Checks whether the array is non-empty and its last element is equal
+           to the specified item.
+  @note: This overload performs a simple boundary comparison only. It does not
+         verify sequence suffix matching when a collection is supplied.
+[==============================================================================}
+function MArrayHelper.EndsWith(const aItem: MType): Boolean; overload;
+begin
+  Result := ((Self.Length > 0) and (Self[High(Self)] = aItem));
+end;
+
+{==============================================================================]
+  <EndsWith>
+  @action: Returns True if the array is non-empty and the last element of the array
+           matches any element contained in the provided array parameter.
+  @note: This implementation checks only the last array element against members
+         of aItem. It does not perform full suffix sequence comparison.
+[==============================================================================}
+function MArrayHelper.EndsWith(const aItem: MArray): Boolean; overload;
+var
+  h, i: Integer;
+begin
+  h := High(Self);
+  if (h > -1) then
+  for i := 0 to High(aItem) do
+    if (Self[h] = aItem[i]) then
+      Exit(True);
+  Result := False;
 end;
 
 {==============================================================================]
@@ -785,6 +820,36 @@ begin
     end;
     True: Result := (Self.Loc(item) = -1);
   end;
+end;
+
+{==============================================================================]
+  <StartsWith>
+  @action: Checks whether the array is non-empty and its first element is equal
+           to the specified item.
+  @note: This overload performs a simple boundary comparison only. It does not
+         verify sequence prefix matching when a collection is supplied.
+[==============================================================================}
+function MArrayHelper.StartsWith(const aItem: MType): Boolean; overload;
+begin
+  Result := ((Self.Length > 0) and (Self[0] = aItem));
+end;
+
+{==============================================================================]
+  <StartsWith>
+  @action: Returns True if the array is non-empty and the first element of the array
+           matches any element contained in the provided array parameter.
+  @note: This implementation checks only the first array element against members
+         of aItem. It does not perform full prefix sequence comparison.
+[==============================================================================}
+function MArrayHelper.StartsWith(const aItem: MArray): Boolean; overload;
+var
+  i: Integer;
+begin
+  if (Self.Length > 0) then
+  for i := 0 to High(aItem) do
+    if (Self[0] = aItem[i]) then
+      Exit(True);
+  Result := False;
 end;
 
 {==============================================================================]
