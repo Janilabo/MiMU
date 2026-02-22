@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
+function BinaryBounds(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryClampMax(const aMax: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryClampMin(const aMin: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryCluster(const start: Integer; const allowed: MArray; const aAscending: Boolean = True): TRange; overload;
 function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
@@ -11,12 +13,62 @@ function BinaryInsertingSort(const aAscending: Boolean = True): Integer; overloa
 function BinaryInsertingSorted(const aAscending: Boolean = True): MArray; overload;
 function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
 function BinaryInsertionSorted(const aAscending: Boolean = True): MArray; overload;
+function BinaryInterval(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySpot(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySupply(const item: MType; const aAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryBounds>
+  @action: Returns the inclusive lower and upper bounds of <item> within the
+           sorted array using binary search.
+  @note:
+    - The array must be sorted according to <oAscending>.
+    - Returns (-1, -1) if <item> is not present.
+    - Time complexity: O(log n).
+[==============================================================================}
+function MArrayHelper.BinaryBounds(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  M, L: Integer;
+  R: TRange;
+begin
+  L := Self.Length;
+  if (L = 0) then
+    Exit(TRange.Construct(-1, -1));
+  R.Create(0, (L - 1));
+  Result.start := -1;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+    begin
+      Result.start := M;
+      R.stop := (M - 1);
+    end else if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  Result.stop := Result.start;
+  if (Result.start = -1) then
+    Exit;
+  R.Create(Result.start, (L - 1));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+    begin
+      Result.stop := M;
+      R.start := (M + 1);
+    end else if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+end;
+
 {==============================================================================]
   <BinaryClampMax>
   @action: Removes elements greater than aMax from a sorted array using a binary boundary scan.
@@ -118,7 +170,39 @@ begin
       Self[i - r.start] := Self[i];
     SetLength(Self, c);
   end;
-end; 
+end;
+
+{==============================================================================]
+  <BinaryCluster>
+  @action: Starting at <start>, expands left and right to determine the maximal
+           contiguous range of elements whose values are contained in <allowed>.
+           Membership is verified using binary search on <allowed>.
+  @note:
+    - <start> must be a valid index within the array.
+    - The element at <start> must exist in <allowed>.
+    - <allowed> must be sorted according to <aAscending>.
+    - Returns (-1, -1) if:
+        * <start> is invalid,
+        * <allowed> is empty, or
+        * Self[<start>] is not contained in <allowed>.
+    - Time complexity: O(k log m), where:
+        k = size of the resulting cluster,
+        m = length of <allowed>.
+[==============================================================================}
+function MArrayHelper.BinaryCluster(const start: Integer; const allowed: MArray; const aAscending: Boolean = True): TRange; overload;
+var
+  p, l: Integer;
+begin
+  l := Self.Length;
+  if not ((start > -1) and (start < l) and (allowed.Length > 0) and (allowed.BinarySearchBy(Self[start], aAscending) > -1)) then
+    Exit(TRange.Construct(-1, -1));
+  Result := TRange.Construct(start, start);
+  while ((Result.start > -1) and (allowed.BinarySearchBy(Self[Result.start - 1], aAscending) > -1)) do
+    Dec(Result.start);
+  l := Self.Length;
+  while ((Result.stop < l) and (allowed.BinarySearchBy(Self[Result.stop + 1], aAscending) > -1)) do
+    Inc(Result.stop);
+end;
 
 {==============================================================================]
   <BinaryExpSearch>
@@ -478,6 +562,30 @@ begin
       Result[j + 1] := Result[j];
     Result[p] := k;
   end;
+end;
+
+{==============================================================================]
+  <BinaryInterval>
+  @action: Performs a binary search for <item> in a sorted array and returns the
+           contiguous interval (range) of all elements equal to <item>.
+  @note:
+    - The array must be sorted in ascending or descending order as specified
+      by <oAscending>.
+    - If <item> is not found, the returned range has Start = -1.
+    - Time complexity: O(log n + k), where k is the number of equal elements.
+[==============================================================================}
+function MArrayHelper.BinaryInterval(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  l: Integer;
+begin
+  Result.Create(Self.BinarySearchBy(item, oAscending));
+  if (Result.start = -1) then
+    Exit;
+  while ((Result.start > -1) and (Self[Result.start - 1] = item)) do
+    Dec(Result.start);
+  l := Self.Length;
+  while ((Result.stop < l) and (Self[Result.stop + 1] = item)) do
+    Inc(Result.stop);
 end;
 
 {==============================================================================]
