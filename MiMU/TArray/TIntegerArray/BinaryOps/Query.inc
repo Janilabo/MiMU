@@ -11,6 +11,8 @@ function BinarySpanning(const value: Integer; const oAscending: Boolean = True):
 function BinarySpanning(const range: TRange; const oAscending: Boolean = True): TRange; overload;
 function BinarySpanOf(const value: Integer; const oAscending: Boolean = True): TRange; overload;
 function BinarySpanOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
+function BinaryWindow(const item: Integer; const aAscending: Boolean = True): TRange; overload;
+function BinaryWindow(const items: TRange; const aAscending: Boolean = True): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -501,5 +503,117 @@ begin
         r.stop := (m - 1);
     end;
   end;
+end;
+
+{==============================================================================]
+  <BinaryWindow>
+  @action: Performs a binary search on a sorted array and returns the closed index
+           interval [start, stop] containing all occurrences of <item>.
+           The function determines:
+            - The first index at which Self[i] = item
+            - The last  index at which Self[i] = item
+           Both bounds are located using independent binary searches.
+  @note:
+    - Self must be sorted according to <aAscending>.
+    - Returns (-1, -1) if <item> is not present.
+    - The resulting range contains only indices whose value equals <item>.
+    - Time complexity: O(log n), where n = Length(Self).
+    - No linear expansion is performed.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryWindow(const item: Integer; const aAscending: Boolean = True): TRange; overload;
+var
+  M, S: Integer;
+  R: TRange;
+begin
+  Result := TRange.Construct(-1, -1);
+  S := Self.Length;
+  if (S = 0) then
+    Exit;
+  R.Create(0, (S - 1));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if ((Self[M] >= item) = aAscending) then
+    begin
+      if (Self[M] = item) then
+        Result.start := M;
+      R.stop := (M - 1);
+    end else
+      R.start := (M + 1);
+  end;
+  if (Result.start = -1) then
+    Exit;
+  Result.stop := Result.start;
+  R.Create(0, (S - 1));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if ((Self[M] <= item) = aAscending) then
+    begin
+      if (Self[M] = item) then
+        Result.stop := M;
+      R.start := (M + 1);
+    end else
+      R.stop := (M - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryWindow>
+  @action: Performs a binary range query on a sorted array and returns the maximal
+           contiguous index interval whose element values lie within <items>.
+           The function determines:
+            - The first index i such that Self[i] >= items.start
+            - The last  index j such that Self[j] <= items.stop
+           Ordering is controlled by <aAscending>.
+  @note:
+    - Self must be sorted according to <aAscending>.
+    - <items> is normalized internally before evaluation.
+    - If the value interval does not intersect the array domain,
+      (-1, -1) is returned.
+    - Time complexity: O(log n), where n = Length(Self).
+    - No linear expansion is performed; both bounds are located via
+      independent binary searches.
+    - If <items> is descending, the resulting index range is reversed
+      to preserve interval direction semantics.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryWindow(const items: TRange; const aAscending: Boolean = True): TRange; overload;
+var
+  M, S: Integer;
+  R, N: TRange;
+begin
+  Result := TRange.Construct(-1, -1);
+  S := Self.Length;
+  if (S = 0) then
+    Exit;
+  N := items.Normalize;
+  if ((aAscending and ((N.stop < Self[0]) or (N.start > Self[S - 1]))) or ((not aAscending) and ((N.stop < Self[S - 1]) or (N.start > Self[0])))) then
+    Exit;
+  R.Create(0, (S - 1));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if ((Self[M] >= N.start) = aAscending) then
+    begin
+      Result.start := M;
+      R.stop := (M - 1);
+    end else
+      R.start := (M + 1);
+  end;
+  if (Result.start = -1) then
+    Exit;
+  R.Create(0, (S - 1));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if ((Self[M] <= N.stop) = aAscending) then
+    begin
+      Result.stop := M;
+      R.start := (M + 1);
+    end else
+      R.stop := (M - 1);
+  end;
+  if items.Descending then
+    Result.Reverse;
 end;
 {$ENDIF}
