@@ -19,12 +19,13 @@
 {$I Materialization.inc}
 {$I Metrics.inc}
 {$I Miscellaneous.inc}
-{$I Scaling.inc}
-{$I Resizing.inc}
-{$I Restriction.inc}
+{$I Offset.inc}
 {$I Placement.inc}
 {$I Position.inc}
+{$I Resizing.inc}
+{$I Restriction.inc}
 {$I Sampling.inc}
+{$I Scaling.inc}
 {$I Traversal.inc}
 {$I Uniformity.inc}
 {$I Validity.inc}

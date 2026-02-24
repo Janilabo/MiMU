@@ -6,9 +6,9 @@ function Decrement(const N: Integer = 1): TRange; overload;
 function Increase(const N: Integer = 1): TRange; overload;
 function Increment(const N: Integer = 1): TRange; overload;
 function Offset(const sDelta: Integer): TRange; overload;
+function Offset(const dStart, dStop: Integer): TRange; overload;
 function Shift(const N: Integer = 1): TRange; overload;
 function Shifted(const N: Integer = 1): TRange; overload;
-
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -102,6 +102,17 @@ end;
 function TRange.Offset(const sDelta: Integer): TRange; overload;
 begin
   Result.Create((Self.start + sDelta), (Self.stop + sDelta));
+end;
+
+{==============================================================================]
+  <Offset>
+  @action: Returns shift of range r by delta starting/stopping.
+  @note: None.
+[==============================================================================}
+function TRange.Offset(const dStart, dStop: Integer): TRange; overload;
+begin
+  Result.start := (Self.start + dStart);
+  Result.stop := (Self.stop + dStop);
 end;
 
 {==============================================================================]
