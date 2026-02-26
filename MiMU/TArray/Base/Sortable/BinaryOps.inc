@@ -4,19 +4,24 @@ function BinaryClampMax(const aMax: MType; const oAscending: Boolean = True): In
 function BinaryClampMin(const aMin: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCluster(const start: Integer; const allowed: MArray; const aAscending: Boolean = True): TRange; overload;
 function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryGallopingSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHits(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryHitsOf(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryIdentify(const aIndex: Integer; const iItems: MArray; const iAscending: Boolean = True): Integer; overload;
+function BinaryIndices(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryInsertingSort(const aAscending: Boolean = True): Integer; overload;
 function BinaryInsertingSorted(const aAscending: Boolean = True): MArray; overload;
 function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
 function BinaryInsertionSorted(const aAscending: Boolean = True): MArray; overload;
 function BinaryInterval(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryProbe(const item: MType; const oAscending: Boolean = True; const probeRadius: Integer = 5): Integer; overload;
+function BinaryProbe(const item: MType; const probeRadius: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySpot(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySupply(const item: MType; const aAscending: Boolean = True): Boolean; overload;
+function BinaryUniformSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -240,6 +245,67 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryGallopingSearch>
+  @action: Performs an exponential (galloping) range expansion to locate a bounded
+           interval that may contain the specified item, followed by a binary search
+           refinement within that interval.
+           Returns the zero-based index of the matching element if found;
+           otherwise returns -1.
+  @note:
+    - The array must be globally sorted in either ascending or descending
+      order, as specified by oAscending.
+    - Time complexity is O(log k), where k is the index distance to the target.
+    - Particularly efficient when the sought element is located near the
+      beginning of the array.
+    - If duplicate values exist, any matching index may be returned.
+[==============================================================================}
+function MArrayHelper.BinaryGallopingSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  B, H, M: Integer;
+  R: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  H := High(Self);
+  B := 1;
+  case oAscending of
+    True:
+    begin
+      while ((B <= H) and (Self[B] < item)) do
+        B := (B shl 1);
+      R.Create((B shr 1), Min(B, H));
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        if (Self[M] = item) then
+          Exit(M);
+        if (Self[M] < item) then
+          R.start := (M + 1)
+        else
+          R.stop := (M - 1);
+      end;
+    end;
+    False:
+    begin
+      while ((B <= H) and (Self[B] > item)) do
+        B := (B shl 1);
+      R.Create((B shr 1), Min(B, H));
+      while (R.start <= R.stop) do
+      begin
+        M := R.Pivot;
+        if (Self[M] = item) then
+          Exit(M);
+        if (Self[M] > item) then
+          R.start := (M + 1)
+        else
+          R.stop := (M - 1);
+      end;
+    end;
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
   <BinaryGot>
   @action: Performs a binary search on the array to determine
            whether a specified value exists and returns its index if found.
@@ -380,6 +446,38 @@ begin
     Result := iItems.BinarySearchBy(Self[aIndex], iAscending)
   else
     Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryIndices>
+  @action: Performs batch membership position lookup between the current array and
+           a sorted query array. Returns the list of indices in the current array
+           where elements exist in the provided `items` collection.
+  @note:
+    - The query array `items` is internally sorted before searching.
+    - Binary search is used for membership testing.
+    - Duplicate matches may result in multiple indices being returned.
+    - The function excludes non-existent matches (no -1 values are returned).
+    - Time complexity is approximately O(n log m), where:
+        n = length of Self
+        m = length of items
+    - If `items` is empty, the function returns an empty array.
+    - The search ordering follows `oAscending`.
+[==============================================================================}
+function MArrayHelper.BinaryIndices(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, p, c: Integer;
+  t: MArray;
+begin
+  if items.Empty then
+    Exit([]);
+  SetLength(Result, Self.Length);
+  c := 0;
+  t := items.QuickSorted(oAscending);
+  for i := 0 to High(Result) do
+    if (t.BinarySearchBy(Self[i], oAscending) > -1) then
+      Result[c.Increase] := i;
+  SetLength(Result, c);
 end;
 
 {==============================================================================]
@@ -589,6 +687,56 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryProbe>
+  @action: Performs a hybrid divide-and-conquer search for `item` within the
+           current array. At each binary pivot, the function first checks the
+           pivot element and then linearly probes a symmetric neighborhood
+           around the pivot defined by `probeRadius`. If no match is found
+           within the probe window, the binary reduction continues.
+           Returns the index of a matching element if found; otherwise returns -1.
+  @note:
+    - The array must be sorted according to `oAscending`.
+    - The probe window at each iteration is:
+        [M - probeRadius .. M + probeRadius]
+      clamped to the current search bounds.
+    - Effective window width is (2 * probeRadius + 1).
+    - If duplicates exist, any matching index may be returned.
+    - Worst-case time complexity remains O(log n), but each iteration
+      incurs up to O(probeRadius) additional comparisons.
+    - If probeRadius is 0, behavior degenerates to standard binary search.
+    - No internal validation of sortedness is performed.
+    - If the array is empty, returns -1.
+[==============================================================================}
+function MArrayHelper.BinaryProbe(const item: MType; const oAscending: Boolean = True; const probeRadius: Integer = 5): Integer; overload;
+var
+  M, I: Integer;
+  R: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+      Exit(M);
+    for I := Max(R.start, (M - probeRadius)) to Min(R.stop, (M + probeRadius)) do
+      if (Self[I] = item) then
+        Exit(I);
+    if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  Result := -1;
+end;
+
+function MArrayHelper.BinaryProbe(const item: MType; const probeRadius: Integer; const oAscending: Boolean = True): Integer; overload;
+begin
+  Result := Self.BinaryProbe(item, oAscending, probeRadius);
+end;
+
+{==============================================================================]
   <BinarySearchBy>
   @action: Performs a binary search over the array using a
            comparator-based comparison. Returns the index of the specified
@@ -689,5 +837,46 @@ begin
   for i := High(Self) downto (r.start + 1) do
     Self[i] := Self[i - 1];
   Self[r.start] := item;
+end;
+
+{==============================================================================]
+  <BinaryUniformSearch>
+  @action: Performs a stepwise power-of-two probing search on a sorted array using
+           precomputed uniform binary stepping. The algorithm first determines the
+           largest exponential step size not exceeding the search interval and then
+           repeatedly halves the step size while moving the probe index.
+           Returns the index of the matching element if found; otherwise returns -1.
+  @note:
+    - The array must be monotonically sorted according to oAscending.
+    - This algorithm is a variant of meta-binary (uniform binary) search.
+    - Pivot movement is performed using fixed exponential step offsets rather
+      than dynamic midpoint division.
+    - Division operations are eliminated inside the main probing loop.
+    - Time complexity is O(log n).
+    - If duplicate values exist, any matching index may be returned.
+    - If Self is empty, the function returns -1.
+[==============================================================================}
+function MArrayHelper.BinaryUniformSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  S, M, K: Integer;
+  R: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  R.Create(0, High(Self));
+  S := 1;
+  while (S <= (R.stop - R.start)) do
+    S := (S shl 1);
+  S := (S shr 1);
+  while (S > 0) do
+  begin
+    K := (R.start + S);
+    if ((K <= R.stop) and ((oAscending and (Self[K] <= item)) or ((not oAscending) and (Self[K] >= item)))) then
+      R.start := K;
+    S := (S shr 1);
+  end;
+  if ((R.start <= R.stop) and (Self[R.start] = item)) then
+    Exit(R.start);
+  Result := -1;
 end;
 {$ENDIF}

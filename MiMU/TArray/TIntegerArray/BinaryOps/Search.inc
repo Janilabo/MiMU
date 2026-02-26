@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function BinaryAdaptiveSearch(const item: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryApproximateSearch(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryFind(const val: Integer; const aAscending: Boolean): Integer; overload;
 function BinaryFind(const val: Integer; const scan: TRange; const ascending: Boolean = True): Integer; overload;
@@ -32,6 +33,76 @@ function BSearch(const value: Integer; const oAscending: Boolean = True): Intege
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryAdaptiveSearch>
+  @action: Performs an adaptive divide-and-conquer search for `item` within the
+           current sorted integer array. The pivot index is estimated using
+           linear interpolation between the current range bounds, rather than
+           using the midpoint. The search range is then reduced in a binary
+           manner based on comparison results.
+           Returns the index of a matching element if found; otherwise returns -1.
+  @note:
+    - The array must be monotonically sorted according to `oAscending`.
+    - Pivot estimation uses interpolation:
+        index ≈ start + (item - A[start]) * (range_length) / (A[stop] - A[start])
+    - The computed pivot is clamped to the active search range to
+      prevent out-of-bounds access.
+    - If A[start] = A[stop], interpolation degenerates to a single-point check.
+    - Average complexity: O(log log n) for uniformly distributed values.
+    - Worst-case complexity: O(n) for highly skewed or clustered data.
+    - If duplicates exist, any matching index may be returned.
+    - No validation of sortedness is performed.
+    - If the array is empty, returns -1.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryAdaptiveSearch(const item: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  R.Create(0, High(Self));
+  case oAscending of
+    True:
+    while ((R.start <= R.stop) and (item >= Self[R.start]) and (item <= Self[R.stop])) do
+    begin
+      if (Self[R.stop] = Self[R.start]) then
+        M := R.start
+      else
+        M := (R.start + (Int64(item - Self[R.start]) * (R.stop - R.start)) div (Self[R.stop] - Self[R.start]));
+      if (M < R.start) then
+        M := R.start
+      else if (M > R.stop) then
+        M := R.stop;
+      if (Self[M] = item) then
+        Exit(M);
+      if (Self[M] < item) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+    False:
+    while ((R.start <= R.stop) and (item <= Self[R.start]) and (item >= Self[R.stop])) do
+    begin
+      if (Self[R.stop] = Self[R.start]) then
+        M := R.start
+      else
+        M := (R.start + (Int64(item - Self[R.start]) * (R.stop - R.start)) div (Self[R.stop] - Self[R.start]));
+      if (M < R.start) then
+        M := R.start
+      else if (M > R.stop) then
+        M := R.stop;
+      if (Self[M] = item) then
+        Exit(M);
+      if (Self[M] > item) then
+        R.start := (M + 1)
+      else
+        R.stop := (M - 1);
+    end;
+  end;
+  Result := -1;
+end;
+
 {==============================================================================]
   <BinaryApproximateSearch>
   @action: Performs a binary search over an ordered array (ascending or descending),

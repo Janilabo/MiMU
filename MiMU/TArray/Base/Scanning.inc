@@ -9,6 +9,7 @@ function Scan(const ID: TRange; const item: MType; const limit: Integer = 214748
 function Scan(const ID: TIntegerArray; const item: MType; const limit: Integer = 2147483647): TIntegerArray; overload;
 function Scan(const ID: TRange; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
 function Scan(const ID: TIntegerArray; const items: MArray; const limit: Integer = 2147483647): TIntegerArray; overload;
+function Scanned(const items: MArray): TIntegerArray; overload;
 function SubarrayLocations(const pattern: MArray): TIntegerArray; overload;
 function SubarrayPositions(const pattern: MArray): TIntegerArray; overload;
 {$ENDIF}
@@ -235,6 +236,46 @@ begin
 	    Result[r.Increase] := ID[i];
   end;
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <Scanned>
+  @action: Performs hash-based membership scanning between the current array and
+           a query collection. Returns the list of indices in the current array
+           where elements also exist in the provided `items` collection.
+           The algorithm builds a hash dictionary from `items` and then scans the
+           current array, collecting matching element indices.
+  @note:
+    - This is a hash-accelerated batch membership search.
+    - Time complexity is approximately O(n + m), where:
+        n = length of Self
+        m = length of items
+    - Memory complexity is O(m) due to dictionary construction.
+    - Duplicate values in Self may produce multiple indices in the result.
+    - The function does not guarantee preservation of original ordering
+      beyond index scanning order.
+    - If either array is empty, an empty array is returned.
+[==============================================================================}
+function MArrayHelper.Scanned(const items: MArray): TIntegerArray; overload;
+var
+  i, c: Integer;
+  d: specialize TDictionary<MType, Byte>; 
+begin
+  if (items.Empty or Self.Empty) then 
+    Exit([]);
+  d := specialize TDictionary<MType, Byte>.Create(items.Length);
+  try
+    for i := 0 to High(items) do
+      d.AddOrSetValue(items[i], 0);
+    SetLength(Result, Self.Length);
+    c := 0;
+    for i := 0 to High(Self) do
+      if d.ContainsKey(Self[i]) then
+        Result[c.Increase] := i;
+    SetLength(Result, c);
+  finally
+    d.Free;
+  end;
 end;
 
 {==============================================================================]

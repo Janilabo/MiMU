@@ -1,4 +1,6 @@
 {$IFDEF HELPERS}
+function Amount(const item: MType): Integer; overload;
+function Amount(const items: MArray): Integer; overload;
 function Count(const item: MType): Integer; overload;
 function Count(const items: MArray): Integer; overload;
 function IntersectionCounted(const items: MArray): Integer; overload;
@@ -6,6 +8,56 @@ function Uniformity: Double; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Amount>
+  @action: Counts the number of occurrences of a single element in the array.
+  @note:
+    - Iterates through the entire array, comparing each element to `item`.
+    - Returns 0 if the array is empty or the element does not exist.
+    - Time complexity: O(n), where n = length of Self.
+[==============================================================================}
+function MArrayHelper.Amount(const item: MType): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Result := (Result + Integer(Self[i] = item));
+end;
+
+{==============================================================================]
+  <Amount>
+  @action: Counts the total number of elements in the array that exist in the
+           provided collection `items`.
+  @note:
+    - Builds a hash dictionary from `items` for O(1) membership checks.
+    - Iterates through the current array, incrementing the count for every
+      element found in the dictionary.
+    - Returns 0 if either the array or the `items` collection is empty.
+    - Time complexity: O(n + m), where n = length of Self, m = length of items.
+    - Memory complexity: O(m) for the dictionary.
+[==============================================================================}
+function MArrayHelper.Amount(const items: MArray): Integer; overload;
+var
+  i: Integer;
+  d: specialize TDictionary<MType, Byte>; 
+begin
+  Result := 0;
+  if (items.Empty or Self.Empty) then 
+    Exit;
+  d := specialize TDictionary<MType, Byte>.Create(items.Length);
+  try
+    for i := 0 to High(items) do
+      d.AddOrSetValue(items[i], 0);
+    Result := 0;
+    for i := 0 to High(Self) do
+      if d.ContainsKey(Self[i]) then
+        Inc(Result);
+  finally
+    d.Free;
+  end;
+end;
+
 {==============================================================================]
   <Count>
   @action: Counts how many times the specified item appears in the array.
