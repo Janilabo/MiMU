@@ -35,6 +35,37 @@ begin
   Result := False;
 end;
 
+function BinaryFind(const arr: TIntegerArray; const item: Integer; const ascending: Boolean = True): Integer; overload; {$I Skeletons/BinaryFind.inc}
+function BinaryFind(const arr: TDoubleArray; const item: Double; const ascending: Boolean = True): Integer; overload; {$I Skeletons/BinaryFind.inc}
+function BinaryFind(const arr: TStringArray; const item: string; const ascending: Boolean = True): Integer; overload; {$I Skeletons/BinaryFind.inc}
+function BinaryFind(const arr: TCharArray; const item: Char; const ascending: Boolean = True): Integer; overload; {$I Skeletons/BinaryFind.inc}
+function BinaryFind(const arr: TPointArray; const item: TPoint; const ascending: Boolean = True): Integer; overload;
+var
+  L, H, M: Integer;
+begin
+  L := 0;
+  H := High(arr);
+  while (L <= H) do
+  begin
+    M := (L + ((H - L) shr 1));
+    if (arr[M] = item) then
+      Exit(M);
+    case ascending of
+      True:
+      if (arr[M] < item) then
+        L := (M + 1)
+      else
+        H := (M - 1);
+      False:
+      if (arr[M] > item) then
+        L := (M + 1)
+      else
+        H := (M - 1);
+    end;
+  end;
+  Result := -1;
+end;
+
 function BinarySearch(const arr: TIntegerArray; const item: Integer; const ascending: Boolean = True): Integer; overload; {$I Skeletons/BinarySearch.inc}
 function BinarySearch(const arr: TDoubleArray; const item: Double; const ascending: Boolean = True): Integer; overload; {$I Skeletons/BinarySearch.inc}
 function BinarySearch(const arr: TStringArray; const item: string; const ascending: Boolean = True): Integer; overload; {$I Skeletons/BinarySearch.inc}

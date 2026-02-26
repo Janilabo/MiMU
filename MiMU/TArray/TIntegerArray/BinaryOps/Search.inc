@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function BinaryApproximateSearch(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryFind(const val: Integer; const aAscending: Boolean): Integer; overload;
+function BinaryFind(const val: Integer; const scan: TRange; const ascending: Boolean = True): Integer; overload;
 function BinaryHybridSearch(const value: Integer; const oAscending: Boolean = True; const threshold: Integer = 8): Integer; overload;
 function BinaryHybridSearch(const value: Integer; const threshold: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryIndex(const x: Integer; const aAscending: Boolean = True): Integer; overload;
@@ -12,6 +13,8 @@ function BinaryPinpoint(const x: Integer; const aAscending: Boolean = True): Int
 function BinaryPoint(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryPos(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryPosition(const value: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinaryPositionOf(const item: Integer; const chunkRadius: Integer = 5; const ascending: Boolean = True): Integer; overload;
+function BinaryPositionOf(const item: Integer; const ascending: Boolean; const chunkRadius: Integer = 5): Integer; overload;
 function BinaryPosOf(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryProbabilisticSearch(const x: Integer; const bias: Double = 0.0; const aAscending: Boolean = True): Integer; overload;
 function BinaryProbabilisticSearch(const x: Integer; const aAscending: Boolean; const bias: Double = 0.0): Integer; overload;
@@ -111,6 +114,57 @@ begin
       s.stop := (m - 1);
   end;
 end;
+
+{==============================================================================]
+  <BinaryFind>
+  @action: Performs a bounded binary search for a specified value within the
+           current integer array (Self), restricted to the index range defined
+           by `scan`. Returns the index of the matching element if found;
+           otherwise returns -1.
+  @note:
+    - The array (or the specified subrange) must already be sorted
+      according to `ascending`.
+    - `scan` is normalized and clamped to valid array bounds before search.
+    - Only the effective range [Max(0, scan.start) .. Min(High(Self), scan.stop)]
+      is examined.
+    - Time complexity: O(log n) relative to the size of the effective range.
+    - If Self is empty, returns -1.
+    - If the clamped range is invalid (start > stop), returns -1.
+    - If duplicate values exist, the returned index is not guaranteed
+      to be the first or last occurrence.
+    - The method does not verify that the range is sorted; correctness
+      depends on the ordering invariant being satisfied.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryFind(const val: Integer; const scan: TRange; const ascending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  S: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  S := scan.Normalize;
+  S.start := Max(0, S.start);
+  S.stop := Min(High(Self), S.stop);
+  while (S.start <= S.stop) do
+  begin
+    M := S.Pivot;
+    if (Self[M] = val) then
+      Exit(M);
+    case ascending of
+      True:
+      if (Self[M] < val) then
+        S.start := (M + 1)
+      else
+        S.stop := (M - 1);
+      False:
+      if (Self[M] > val) then
+        S.start := (M + 1)
+      else
+        S.stop := (M - 1);
+    end;
+  end;
+  Result := -1;
+end; 
 
 function TIntegerArrayHelper.BinaryHybridSearch(const value: Integer; const oAscending: Boolean = True; const threshold: Integer = 8): Integer; overload;
 var
@@ -468,6 +522,69 @@ begin
       1: R.start := (M + 1);
     end;
   end;
+end;
+
+{==============================================================================]
+  <BinaryPositionOf>
+  @action: Performs a hybrid binary search for `item` in the current integer array.
+           At each pivot step, a bounded "chunk" centered on the pivot (defined by
+           `chunkRadius`) is inspected before continuing the binary reduction.
+           Returns the index of the matching element if found; otherwise returns -1.
+  @note:
+    - The array must be sorted according to `ascending`.
+    - `chunkRadius` defines a local window [M - r .. M + r] around the pivot.
+      This window is clamped to valid array bounds.
+    - The algorithm checks:
+        1) The pivot element.
+        2) The chunk boundaries.
+        3) If `item` lies within the chunk’s value range, a bounded
+           BinaryFind is executed within that chunk.
+        4) Otherwise, the normal binary search narrowing continues.
+    - Intended for datasets where nearby clustering around pivot is common.
+    - Worst-case time complexity remains O(log n), but may incur small
+      additional constant overhead per iteration due to chunk checks.
+    - If duplicates exist, any matching index may be returned.
+    - No internal verification of sortedness is performed.
+    - If Self is empty, returns -1.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryPositionOf(const item: Integer; const chunkRadius: Integer = 5; const ascending: Boolean = True): Integer; overload;
+var
+  H, M: Integer;
+  S, R: TRange;
+begin
+  H := High(Self);
+  S.Create(0, H);
+  while (S.start <= S.stop) do
+  begin
+    M := S.Pivot;
+    if (Self[M] = item) then
+      Exit(M);
+    R.Create(Max(0, (M - chunkRadius)), Min(H, (M + chunkRadius)));
+    if (Self[R.start] = item) then
+      Exit(R.start)
+    else if (Self[R.stop] = item) then
+      Exit(R.stop);
+    if InRange(item, Self[R.start], Self[R.stop]) then
+      Exit(Self.BinaryFind(item, R, ascending));
+    case ascending of
+      True:
+      if (Self[M] < item) then
+        S.start := (M + 1)
+      else
+        S.stop := (M - 1);
+      False:
+      if (Self[M] > item) then
+        S.start := (M + 1)
+      else
+        S.stop := (M - 1);
+    end;
+  end;
+  Result := -1;
+end;
+
+function TIntegerArrayHelper.BinaryPositionOf(const item: Integer; const ascending: Boolean; const chunkRadius: Integer = 5): Integer; overload;
+begin
+  Result := Self.BinaryPositionOf(item, chunkRadius, ascending);
 end;
 
 {==============================================================================]
