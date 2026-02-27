@@ -6,6 +6,8 @@ function Bounds(var aSize: Integer): TRange; overload;
 function BRange: TRange; overload;
 function Coverage: TRange;
 function Extent: TRange;
+function GetMinMax(var AMin, AMax: Integer): Boolean; overload;
+function GetRange(const rAscending: Boolean = True): TRange; overload;
 function MinMax: TRange;
 function Range: TRange;
 function Region: TRange; overload;
@@ -144,6 +146,74 @@ function TIntegerArrayHelper.Extent: TRange;
 begin
   Result.Create(Self.MinItem, Self.MaxItem);
 end;
+
+{==============================================================================]
+  <GetMinMax>
+  @action: Computes the inclusive range (minimum and maximum values) of the 
+           integer array in a single linear pass.
+  @note: 
+    - Returns True if the array contains elements; otherwise returns False.
+    - Uses Math.Min and Math.Max which can be faster than branching on 
+      modern CPUs.
+    - Complexity: O(n) time, O(1) space.
+    - If the array has one element, AMin and AMax will be equal.
+[==============================================================================}
+function TIntegerArrayHelper.GetMinMax(var AMin, AMax: Integer): Boolean; overload;
+var
+  i, v: Integer;
+begin
+  Result := (Self.Length > 0);
+  if not Result then
+    Exit;
+  AMin := Self[0];
+  AMax := Self[0];
+  for i := 1 to High(Self) do
+  begin
+    v := Self[i];
+    AMin := Min(AMin, v);
+    AMax := Max(AMax, v);
+  end;
+end;
+
+{==============================================================================]
+  <GetRange>
+  @action: Scans the array to identify the boundary values, returning them as a
+           TRange record.
+  @note: 
+    - If rAscending is True (default): Start = Min, Stop = Max.
+    - If rAscending is False: Start = Max, Stop = Min.
+    - Returns an uninitialized TRange if the array is empty.
+    - Optimized with a case-switch for single-element arrays to avoid loops.
+    - Complexity: O(n) linear scan.
+[==============================================================================}
+function TIntegerArrayHelper.GetRange(const rAscending: Boolean = True): TRange; overload;
+var
+  i, l, v: Integer;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit;
+	1: Exit(TRange.Construct(Self[0], Self[0]));
+  end;
+  Result.start := Self[0];
+  Result.stop := Self[0];
+  case rAscending of
+    True:
+    for i := 1 to (l - 1) do
+    begin
+      v := Self[i];
+      Result.start := Min(Result.start, v);
+      Result.stop := Max(Result.stop, v);
+	end;
+	False:
+    for i := 1 to (l - 1) do
+    begin
+      v := Self[i];
+      Result.start := Max(Result.start, v);
+      Result.stop := Min(Result.stop, v);
+	end;
+  end;
+end;    
 
 {==============================================================================]
   <MinMax>

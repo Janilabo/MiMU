@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Hits(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function HitsOf(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+function Where(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -90,5 +91,52 @@ begin
       Inc(j);
   end;
   SetLength(Result, k);
+end;
+
+{==============================================================================]
+  <Where>
+  @action: Performs batch membership index scanning between the current array and
+           a query collection using a merge-style binary traversal.
+           Both arrays are sorted according to the specified ordering, and the
+           algorithm advances two pointers to efficiently identify matching values.
+           Returns the list of indices in the current array where elements exist
+           in the `items` collection.
+  @note:
+    - The query array `items` is internally sorted before scanning.
+    - This algorithm combines sorting and linear merge traversal.
+    - Duplicate matches may produce multiple indices in the result.
+    - Non-existent elements are not included in the output.
+    - Time complexity is approximately:
+        O(n + m log m), where:
+            n = length(Self),
+            m = length(items)
+    - Requires monotonic ordering consistency with `oAscending`.
+    - If either array is empty, returns an empty array.
+[==============================================================================}
+function MArrayHelper.Where(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, l, x, y, z, c: Integer;
+  s: MArray;
+begin
+  l := Self.Length;
+  if (items.Empty or (l = 0)) then
+    Exit([]);
+  s := items.QuickSorted(oAscending);
+  z := High(s);
+  SetLength(Result, l);
+  x := 0;
+  y := 0;
+  c := 0;
+  while ((x < l) and (y <= z)) do
+    if (Self[x] = s[y]) then
+    begin
+      Result[c] := x;
+      Inc(c);
+      Inc(x);
+    end else if ((oAscending and (Self[x] < s[y])) or ((not oAscending) and (Self[x] > s[y]))) then
+      Inc(x)
+    else
+      Inc(y);
+  SetLength(Result, c);
 end;
 {$ENDIF}
