@@ -2,6 +2,7 @@
 function Axed: T2DIntegerArray; overload;
 function Axed(var X, Y: TIntegerArray): Integer; overload;
 function Axes(var X, Y: TIntegerArray): Integer; overload;
+function Project(var sX, sY: TIntegerArray): TBox; overload;
 function Unzip(var xArr, yArr: TIntegerArray): Integer;
 function XArr(const aAscending: Boolean = True): TIntegerArray;
 function XAxis(const rUnique: Boolean = True): TIntegerArray; overload;
@@ -81,6 +82,38 @@ begin
     Inc(PByte(sY), p);
     Inc(PByte(dX), c);
     Inc(PByte(dY), c);
+  end;
+end;
+
+{==============================================================================]
+  <Project>
+  @action: Projects the point array into separate X and Y coordinate arrays
+           while computing and returning the axis-aligned bounding box.
+  @note: The output arrays are resized to match Self.Length.
+         Returns an empty/uninitialized TBox if the array is empty.
+[==============================================================================}
+function TPointArrayHelper.Project(var sX, sY: TIntegerArray): TBox; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  SetLength(sX, l);
+  SetLength(sY, l);
+  if (l = 0) then
+    Exit;
+  Result.Create(Self[0].X, Self[0].Y, Self[0].X, Self[0].Y);
+  for i := 0 to (l - 1) do
+  begin
+    sX[i] := Self[i].X;
+    if (sX[i] < Result.X1) then
+      Result.X1 := sX[i]
+    else if (sX[i] > Result.X2) then
+      Result.X2 := sX[i];
+    sY[i] := Self[i].Y;
+    if (sY[i] < Result.Y1) then
+      Result.Y1 := sY[i]
+    else if (sY[i] > Result.Y2) then
+      Result.Y2 := sY[i];
   end;
 end;
 

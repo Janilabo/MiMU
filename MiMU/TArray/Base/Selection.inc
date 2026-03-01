@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function Cull(const items: MArray; const iMatching: Boolean = True): MArray; overload;
 function Devein(const dIDs: TIntegerArray; const dValue: MType): MArray; overload;
 function Devein(const dIDs: TIntegerArray): MArray; overload;
 function DumpID(const ID: TIntegerArray): Integer; overload;
@@ -43,6 +44,32 @@ function Reject(const items: MArray; const index: Integer = 2147483647): MArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Cull>
+  @action: Filters the array by membership in another array.
+           If iMatching = True, retains elements present in items.
+           If iMatching = False, removes elements present in items.
+  @note:
+    This operation is non-mutating; a new array is returned.
+    Semantically equivalent to intersection (iMatching = True)
+    or relative complement (iMatching = False).
+[==============================================================================}
+function MArrayHelper.Cull(const items: MArray; const iMatching: Boolean = True): MArray; overload;
+var
+  i, r: Integer;
+begin
+  if (Self.Empty or (iMatching and items.Empty)) then
+    Exit([]);
+  if ((not iMatching) and items.Empty) then
+    Exit(Self.Copy);
+  r := 0;
+  SetLength(Result, Self.Length);
+  for i := 0 to High(Self) do
+    if (items.Contains(Self[i]) = iMatching) then
+      Result[r.Increase] := Self[i];
+  SetLength(Result, r);
+end;
+
 {==============================================================================]
   <Devein>
   @action: Creates a copy of the current array with elements at the specified indices removed.
