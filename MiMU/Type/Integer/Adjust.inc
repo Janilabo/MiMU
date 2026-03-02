@@ -6,12 +6,14 @@ function AdjustedMin(const cValue: Integer; const limit: Integer = -2147483648):
 function AdjustMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean; overload;
 function AdjustMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean; overload;
 function Cut(const N: Integer = 1): Integer; overload;
+function Decr(const N: Integer = 1): Integer; overload;
 function Decrease(const N: Integer = 1): Integer; overload;
 function Decrease(const B: Boolean; const N: Integer = 1): Integer; overload;
 function Decrement(const N: Integer = 1): Integer; overload;
 function Decrement(const B: Boolean; const N: Integer = 1): Integer; overload;
 function Give(const N: Integer = 1): Integer; overload;
 function Give(const B: Boolean; const N: Integer = 1): Integer; overload;
+function Incr(const N: Integer = 1): Integer; overload;
 function Increase(const N: Integer = 1): Integer; overload;
 function Increase(const B: Boolean; const N: Integer = 1): Integer; overload;
 function Increment(const N: Integer = 1): Integer; overload;
@@ -135,6 +137,22 @@ begin
 end;
 
 {==============================================================================]
+  <Decr>
+  @action: Decrements the integer value by N (default = 1) and returns
+           the updated result.
+  @note:
+    • Uses pre-decrement semantics (result reflects the new value).
+    • N may be negative, effectively performing an increment.
+    • Only mutates the original variable when called on a true variable;
+      calling on a temporary modifies a copy.
+[==============================================================================}
+function TIntegerHelper.Decr(const N: Integer = 1): Integer; overload;
+begin
+  Dec(PInteger(@Self)^, N);
+  Result := Self;
+end;
+
+{==============================================================================]
   <Decrease>
   @action: Decreases the Integer value x by N.
   @note: Returns x before decreasing it with N!
@@ -204,6 +222,22 @@ begin
     Exit(Self);
   Result := (Self + N);
   Inc(Self, N);
+end;
+
+{==============================================================================]
+  <Incr>
+  @action: Increments the integer value by N (default = 1) and returns
+           the updated result.
+  @note:
+    • Uses pre-increment semantics (result reflects the new value).
+    • N may be negative, effectively performing a decrement.
+    • Only mutates the original variable when called on a true variable;
+      calling on a temporary modifies a copy.
+[==============================================================================}
+function TIntegerHelper.Incr(const N: Integer = 1): Integer; overload;
+begin
+  Inc(PInteger(@Self)^, N);
+  Result := Self;
 end;
 
 {==============================================================================]
