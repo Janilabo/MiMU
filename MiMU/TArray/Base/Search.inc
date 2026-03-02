@@ -6,6 +6,7 @@ function Find(const ID: TIntegerArray; const items: MArray): Integer; overload;
 function First: Integer; overload;
 function First(const item: MType): Integer; overload;
 function First(const items: MArray): Integer; overload;
+function IndexOf(const item: MType; const ID: TRange): Integer; overload;
 function Last: Integer; overload;
 function Last(const item: MType): Integer; overload;
 function Last(const items: MArray): Integer; overload;
@@ -134,6 +135,35 @@ begin
   for Result := 0 to High(Self) do
     if items.Contains(Self[Result]) then
       Exit;
+  Result := -1;
+end;
+
+{==============================================================================]
+  <IndexOf>
+  @action: Performs a linear search for the first occurrence of <item> within the
+           specified <TRange>. The traversal direction is determined by <ID.Ascending>.
+  @warning: This function is unsafe. It does not validate whether <ID> lies
+            within the valid index bounds of the array.
+            It is the caller's responsibility to ensure that <ID> is a valid range.
+  @note:
+    - Returns the index of the first matching element encountered.
+    - Returns -1 if the value is not found within the given range.
+    - Search direction follows <ID.Ascending>.
+    - Time complexity is O(n) relative to the size of the specified range.
+    - Does not modify the array.
+[==============================================================================}
+function MArrayHelper.IndexOf(const item: MType; const ID: TRange): Integer; overload;
+begin
+  case ID.Ascending of
+    True:
+    for Result := ID.start to ID.stop do
+      if (Self[Result] = item) then
+        Exit;
+    False:
+    for Result := ID.start downto ID.stop do
+      if (Self[Result] = item) then
+        Exit;
+  end;
   Result := -1;
 end;
 

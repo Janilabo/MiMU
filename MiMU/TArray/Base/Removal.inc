@@ -9,9 +9,11 @@ function Erase(const item: MType; const index: Integer = 2147483647; const all: 
 function Erase(const item: MType; const all: Boolean): MArray; overload;
 function Erase(const items: MArray; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
 function Erase(const items: MArray; const all: Boolean): MArray; overload;
+function Evict(const item: MType): Boolean; overload;
 function Pop: MType; overload;
 function Pop(const null: MType): MType; overload;
 function Pull: MArray; overload;
+function Purge(const item: MType): Integer; overload;
 function Remove(const item: MType; const index: Integer = 0; const all: Boolean = True): MArray; overload;
 function Remove(const item: MType; const all: Boolean): MArray; overload;
 function Remove(const items: MArray; const index: Integer = 0; const all: Boolean = True): MArray; overload;
@@ -272,6 +274,31 @@ begin
 end;
 
 {==============================================================================]
+  <Evict>
+  @action: Removes the first occurrence of <item> from the array using an
+           unordered removal strategy (swap-with-last compaction).
+  @note:
+    - Does not validate array bounds or internal state.
+    - Order of elements is not preserved after eviction.
+    - The caller is responsible for ensuring array integrity before calling.
+    - Returns True if the item was found and removed, otherwise False.
+    - Time complexity is approximately O(n) due to search operation.
+    - This is a single-occurrence eviction.
+[==============================================================================}
+function MArrayHelper.Evict(const item: MType): Boolean; overload;
+var
+  h, p: Integer;
+begin
+  p := Self.Pos(item);
+  Result := (p > -1);
+  if not Result then
+    Exit;
+  h := High(Self);
+  Self[p] := Self[h];
+  SetLength(Self, h);
+end;
+
+{==============================================================================]
   <Pop>
   @action: Returns and removes item from highest array index from arr.
   @note: UNSAFE! Make sure array has enough items..
@@ -316,6 +343,41 @@ begin
   for i := 0 to High(Self) do
     Result[i] := Self[i];
   SetLength(Self, 0);
+end;
+
+{==============================================================================]
+  <Purge>
+  @action: Removes all occurrences of <item> from the array by overwriting matched
+           elements with the current tail element and shrinking the array length.
+  @note:
+    - Order of elements is not preserved after purging.
+    - Removes all matching occurrences of <item>.
+    - The caller is responsible for ensuring array and range invariants.
+    - Returns the number of elements removed.
+    - Time complexity is approximately O(n), since the operation performs
+      repeated bounded linear searches during purging.
+    - This is a multi-occurrence purge operation.
+[==============================================================================}
+function MArrayHelper.Purge(const item: MType): Integer; overload;
+var
+  l: Integer;
+  s: TRange;
+begin
+  Result := 0;
+  l := Self.Length;
+  if (l > 0) then
+  begin
+    s.Create(0, (l - 1));
+    repeat
+      s.start := Self.IndexOf(item, s);
+      if (s.start = -1) then
+        Break;
+      Result := (Result + 1);
+      Self[s.start] := Self[s.stop];
+    until (s.start > s.stop.Decrement);
+    if (Result > 0) then
+      SetLength(Self, (l - Result));
+  end;
 end;
 
 {==============================================================================]

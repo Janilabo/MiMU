@@ -4,6 +4,7 @@ function Amount(const items: MArray): Integer; overload;
 function Count(const item: MType): Integer; overload;
 function Count(const items: MArray): Integer; overload;
 function IntersectionCounted(const items: MArray): Integer; overload;
+function Occurrences(const item: MType): Integer; overload;
 function Uniformity: Double; overload;
 {$ENDIF}
 
@@ -130,6 +131,33 @@ begin
   finally
     S.Free;
   end;
+end;
+
+{==============================================================================]
+  <Occurrences>
+  @action: Counts the number of occurrences of <item> within the array by performing
+           bounded linear searches over the valid index range.
+  @note:
+    - Traverses the array without modifying its contents.
+    - Returns the frequency of <item> in the array.
+    - Time complexity is approximately O(n), since the function may perform
+      repeated linear searches during counting.
+    - The caller is responsible for ensuring array invariants if the array is
+      externally managed.
+[==============================================================================}
+function MArrayHelper.Occurrences(const item: MType): Integer; overload;
+var
+  s: TRange;
+begin
+  Result := 0;
+  if Self.Empty then
+    Exit;
+  s.Create(0, High(Self));
+  repeat
+    s.start := Self.IndexOf(item, s);
+    if (s.start > -1) then
+      Result.Incr;
+  until ((s.start = -1) or (s.start.Increment > s.stop));
 end;
 
 {==============================================================================]
