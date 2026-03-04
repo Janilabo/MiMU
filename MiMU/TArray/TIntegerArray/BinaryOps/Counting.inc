@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function BinaryAmount(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryAmount(const x: TRange; const aAscending: Boolean = True): Integer; overload;
+function BinaryAmountOf(const x: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryCount(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryCount(const x: TRange; const aAscending: Boolean = True): Integer; overload;
 function BinaryCounted(const x: Integer; const oAscending: Boolean = True): Integer; overload;
@@ -120,6 +121,27 @@ begin
     end;
   end;
   Result := ((l - f) + 1);
+end;
+
+{==============================================================================]
+  <BinaryAmountOf>
+  @action: Returns the number of occurrences of the specified value using
+           binary search bound operations.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Internally uses BinaryLowerBound() and BinaryUpperBound().
+         Time complexity: O(log n).
+         Returns 0 if the value is outside bounds or not present.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryAmountOf(const x: Integer; const oAscending: Boolean = True): Integer; overload;
+begin
+  if not Self.WithinBounds(x, oAscending) then
+    Exit(0);
+  Result := Self.BinaryUpperBound(x, oAscending);
+  if (Result = -1) then
+    Exit(0);
+  Result := (Result - Self.BinaryLowerBound(x, oAscending));
 end;
 
 {==============================================================================]

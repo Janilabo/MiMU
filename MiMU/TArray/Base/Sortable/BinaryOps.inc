@@ -16,6 +16,7 @@ function BinaryInsertingSorted(const aAscending: Boolean = True): MArray; overlo
 function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
 function BinaryInsertionSorted(const aAscending: Boolean = True): MArray; overload;
 function BinaryInterval(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryMembership(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryProbe(const item: MType; const oAscending: Boolean = True; const probeRadius: Integer = 5): Integer; overload;
 function BinaryProbe(const item: MType; const probeRadius: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -684,6 +685,38 @@ begin
   l := Self.Length;
   while ((Result.stop < l) and (Self[Result.stop + 1] = item)) do
     Inc(Result.stop);
+end;
+
+{==============================================================================]
+  <BinaryMembership>
+  @action: Performs a binary search to determine whether the specified item
+           exists within the helper array.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Performs a boundary pre-check via WithinBounds().
+         Time complexity: O(log n).
+         Returns False if the array is empty.
+[==============================================================================}
+function MArrayHelper.BinaryMembership(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  if (Self.Empty or (not Self.WithinBounds(item, oAscending))) then
+    Exit(False);
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+      Exit(True)
+    else if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  Result := False;
 end;
 
 {==============================================================================]

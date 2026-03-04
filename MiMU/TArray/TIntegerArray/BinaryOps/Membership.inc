@@ -5,6 +5,7 @@ function BinaryContains(const x: Integer; const aAscending: Boolean = True): Boo
 function BinaryContact(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryContact(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExcludes(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
+function BinaryExistence(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExistent(const item: Integer; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExists(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryFit(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
@@ -195,6 +196,28 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryExistence>
+  @action: Determines whether the specified value exists in the array using
+           a binary lower-bound search.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Internally relies on BinaryLowerBound().
+         Time complexity: O(log n).
+         Returns False if the array is empty or the value is not present.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryExistence(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(False);
+  i := Self.BinaryLowerBound(x, oAscending);
+  Result := ((i > -1) and (i < l) and (Self[i] = x));
+end;
+
+{==============================================================================]
   <BinaryExistent>
   @action: Performs a binary search on the integer array to determine if a
            specified item exists. Returns True if found and provides the
@@ -226,6 +249,18 @@ begin
   Result := False;
 end;
 
+{==============================================================================]
+  <BinaryExists>
+  @action: Determines whether the specified value exists in the array using
+           a recursive binary search.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Implements a divide-and-conquer search over index range.
+         Time complexity: O(log n).
+         Space complexity: O(log n) due to recursion.
+         Returns False if the array is empty or the value is not present.
+[==============================================================================}
 function TIntegerArrayHelper.BinaryExists(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
   function BS(const L, R: Integer): Boolean;
   var

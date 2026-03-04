@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Accepts(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function GetBounds(var AMin, AMax: MType): Boolean; overload;
+function InBounds(const x: MType; const oAscending: Boolean = True): Boolean; overload;
 function InsideBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function OutsideBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function OutOfBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
@@ -47,6 +48,26 @@ begin
       AMin := Self[i]
     else if (Self[i] > AMax) then
       AMax := Self[i];
+end;
+
+{==============================================================================]
+  <InBounds>
+  @action: Checks whether the specified value lies within the bounds
+           of the helper array.
+  @note: Works on sorted arrays.
+         If oAscending = True, assumes ascending sorted order.
+         If oAscending = False, assumes descending sorted order.
+         Returns False if the array is empty.
+[==============================================================================}
+function MArrayHelper.InBounds(const x: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  h: Integer;
+begin
+  h := High(Self);
+  case oAscending of
+    True: Result := ((h > -1) and (x >= Self[0]) and (x <= Self[h]));
+    False: Result := ((h > -1) and (x <= Self[0]) and (x >= Self[h]));
+  end;
 end;
 
 {==============================================================================]
