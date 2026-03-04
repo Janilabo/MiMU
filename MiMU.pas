@@ -63,12 +63,15 @@ generic function Swop<T>(var A, B: T; const oAscending: Boolean = True): Boolean
 generic function Swop<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Arrange<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Arrange<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
-generic function Contains<T>(const arr: array of T; const item: T): Boolean;
-generic function Includes<T>(const arr: array of T; const item: T): Boolean;
-generic function Position<T>(const arr: array of T; const item: T): Integer;
-generic function Location<T>(const arr: array of T; const item: T): Integer;
-generic function Indexes<T>(const arr: array of T): TIntegerArray;
-generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;
+generic function Contains<T>(const arr: array of T; const item: T): Boolean; overload;
+generic function Includes<T>(const arr: array of T; const item: T): Boolean; overload;
+generic function Position<T>(const arr: array of T; const item: T): Integer; overload;
+generic function Location<T>(const arr: array of T; const item: T): Integer; overload;
+generic function Indexes<T>(const arr: array of T): TIntegerArray; overload;
+generic function Indices<T>(const arr: array of T): TIntegerArray; overload;
+generic function IDs<T>(const arr: array of T): TIntegerArray; overload;
+generic function GetArrayBounds<T>(const arr: array of T; out L, H: Integer): Integer; overload;
+generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T; overload;
 generic function SetSize<T>(var A, B: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 generic function SetSize<T>(var A, B, C: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 generic function SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: Integer = 1): Integer; overload;
@@ -212,7 +215,7 @@ end;
   @action: Checks if a given item exists in an array.
   @note: Returns True if the item is found, False otherwise. Searches from Low(arr) to High(arr).
 [==============================================================================}
-generic function Contains<T>(const arr: array of T; const item: T): Boolean;
+generic function Contains<T>(const arr: array of T; const item: T): Boolean; overload;
 var
   i: Integer;
 begin
@@ -227,7 +230,7 @@ end;
   @action: Checks if a given item exists in an array.
   @note: Returns True if the item is found, False otherwise. Searches from High(arr) down to Low(arr).
 [==============================================================================}
-generic function Includes<T>(const arr: array of T; const item: T): Boolean;
+generic function Includes<T>(const arr: array of T; const item: T): Boolean; overload;
 var
   i: Integer;
 begin
@@ -242,7 +245,7 @@ end;
   @action: Finds the first index of an item in an array.
   @note: Returns the index if found, -1 if the item does not exist. Searches Low to High.
 [==============================================================================}
-generic function Position<T>(const arr: array of T; const item: T): Integer;
+generic function Position<T>(const arr: array of T; const item: T): Integer; overload;
 var
   i: Integer;
 begin
@@ -257,7 +260,7 @@ end;
   @action: Finds the last index of an item in an array.
   @note: Returns the index if found, -1 if the item does not exist. Searches High to Low.
 [==============================================================================}
-generic function Location<T>(const arr: array of T; const item: T): Integer;
+generic function Location<T>(const arr: array of T; const item: T): Integer; overload;
 var
   i: Integer;
 begin
@@ -272,7 +275,7 @@ end;
   @action: Generates an array of integer indexes corresponding to the input array.
   @note: The returned array has the same length as the input array, with values Low(arr) to High(arr).
 [==============================================================================}
-generic function Indexes<T>(const arr: array of T): TIntegerArray;
+generic function Indexes<T>(const arr: array of T): TIntegerArray; overload;
 var
   i, l: Integer;
 begin
@@ -283,11 +286,67 @@ begin
 end;
 
 {==============================================================================]
+  <Indices>
+  @action: Returns an array containing all valid zero-based index values
+           for the specified dynamic array.
+  @note: Supports dynamic arrays only (passed via open array parameter).
+         Allocates a new array with Length(arr) elements.
+         Result range: 0 .. Length(arr) - 1.
+         Time complexity: O(n). Space complexity: O(n).
+[==============================================================================}
+generic function Indices<T>(const arr: array of T): TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(arr));
+  for i := 0 to High(arr) do
+    Result[i] := i;
+end;
+
+{==============================================================================]
+  <IDs>
+  @action: Returns an array containing sequential index values corresponding  
+           to the valid element positions of the specified dynamic array.      
+  @note: Supports dynamic arrays passed via open array parameter.           
+         Result contains values: Low(arr) .. High(arr).                     
+         Allocates a new dynamic array of size Length(arr). 
+[==============================================================================}
+generic function IDs<T>(const arr: array of T): TIntegerArray; overload;
+var
+  i, L, H: Integer;
+begin
+  L := Low(arr);
+  H := High(arr);
+  if (H < L) then
+    Exit([]);
+  SetLength(Result, ((H - L) + 1));
+  for i := L to H do
+    Result[i - L] := i;
+end;
+
+{==============================================================================]
+  <GetArrayBounds>
+  @action: Returns the bounds and element count of the specified dynamic array.
+  @note: Supports dynamic arrays passed via open array parameter.
+         Returns 0 if the array is empty.
+         L = Low(arr), H = High(arr).
+         Complexity: O(1). No element traversal performed.
+[==============================================================================}
+generic function GetArrayBounds<T>(const arr: array of T; out L, H: Integer): Integer; overload;
+begin
+  L := Low(arr);
+  H := High(arr);
+  if (H < L) then
+    Exit(0);
+  Result := ((H - L) + 1);
+end;
+
+{==============================================================================]
   <IfThenElse>
   @action: Returns one of three possible results depending on two Boolean conditions.
   @note: Evaluates aBool first, then bBool, returning aResult, bResult, or cResult accordingly.
 [==============================================================================}
-generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T;
+generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T; overload;
 begin
   if aBool then
     Result := aResult
