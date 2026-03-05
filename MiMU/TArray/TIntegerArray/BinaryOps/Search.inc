@@ -6,6 +6,7 @@ function BinaryFind(const val: Integer; const scan: TRange; const ascending: Boo
 function BinaryHybridSearch(const value: Integer; const oAscending: Boolean = True; const threshold: Integer = 8): Integer; overload;
 function BinaryHybridSearch(const value: Integer; const threshold: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryIndex(const x: Integer; const aAscending: Boolean = True): Integer; overload;
+function BinaryIndexFor(const item: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryIndexOf(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryInterpolationSearch(const x: Integer; const aAscending: Boolean = True): Integer;
 function BinaryLocalize(const value: Integer; const aAscending: Boolean = True): Integer; overload;
@@ -304,6 +305,25 @@ begin
     else
       r.stop := (m - 1);
   end;
+end;
+
+function TIntegerArrayHelper.BinaryIndexFor(const item: Integer; const oAscending: Boolean = True): Integer; overload;
+  function BS(const L, H: Integer): Integer;
+  var
+    M: Integer;
+  begin
+    if (L > H) then
+      Exit(-1);
+    M := ((L + H) shr 1);
+    if (Self[M] = item) then
+      Exit(M);
+    if ((Self[M] < item) = oAscending) then
+      Result := BS((M + 1), H)
+    else
+      Result := BS(L, (M - 1));
+  end;
+begin
+  Result := BS(0, High(Self));
 end;
 
 function TIntegerArrayHelper.BinaryIndexOf(const value: Integer; const oAscending: Boolean = True): Integer; overload;

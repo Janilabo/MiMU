@@ -1,9 +1,19 @@
 {$IFDEF HELPERS}
+function BinaryBoundaries(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryBoundLower(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryBounds(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryBoundUpper(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryClampMax(const aMax: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryClampMin(const aMin: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCluster(const start: Integer; const allowed: MArray; const aAscending: Boolean = True): TRange; overload;
+function BinaryContain(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryConverge(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryCounter(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryDomain(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryExist(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryFindID(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryFindIndex(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGallopingSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
@@ -15,17 +25,105 @@ function BinaryInsertingSort(const aAscending: Boolean = True): Integer; overloa
 function BinaryInsertingSorted(const aAscending: Boolean = True): MArray; overload;
 function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
 function BinaryInsertionSorted(const aAscending: Boolean = True): MArray; overload;
+function BinaryInsertPosition(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryInterval(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryItem(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryLeftside(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryMembership(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryOccurrence(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryOccurrences(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryOccurrency(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryProbe(const item: MType; const oAscending: Boolean = True; const probeRadius: Integer = 5): Integer; overload;
 function BinaryProbe(const item: MType; const probeRadius: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinaryRightside(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySpot(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryStart(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryStop(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySupply(const item: MType; const aAscending: Boolean = True): Boolean; overload;
 function BinaryUniformSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryBoundaries>
+  @action: Searches the sorted array for the contiguous occurrence block of the
+           specified item and returns its index interval boundaries.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Performs a boundary pre-check using WithinBounds().
+         If the item is found, the function expands the match position to the
+         full occurrence domain by scanning left and right while adjacent
+         elements are equal to the item.
+         Returns TRange(start = -1, stop = -1) if the item does not exist.
+[==============================================================================}
+function MArrayHelper.BinaryBoundaries(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  H, M: Integer;
+  R: TRange;
+begin
+  Result.Create(-1, -1);
+  H := High(Self);
+  if ((H = -1) or (not Self.WithinBounds(item, oAscending))) then
+    Exit;
+  R.Create(0, H);
+  repeat
+    if (R.start > R.stop) then
+      Exit;
+    M := R.Pivot;
+    if (Self[M] = item) then
+    begin
+      Result.start := M;
+      Result.stop := M;
+      while ((Result.start > 0) and (Self[Result.start - 1] = item)) do
+        Dec(Result.start);
+      while ((Result.stop < H) and (Self[Result.stop + 1] = item)) do
+        Inc(Result.stop);
+      Exit;
+    end;
+    if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  until False;
+end;
+
+{==============================================================================]
+  <BinaryBoundLower>
+  @action: Performs a binary search to determine the lower boundary insertion
+           position for the specified item in the sorted array.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Returns the first index where:
+           - array[index] >= item (ascending order)
+           - array[index] <= item (descending order)
+         If the item is greater than all elements (or smaller in descending
+         order), returns Length(Self).
+[==============================================================================}
+function MArrayHelper.BinaryBoundLower(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := Self.Length;
+  if Self.Empty then
+    Exit;
+  R.Create(0, High(Self));
+  repeat
+    if (R.start > R.stop) then
+      Exit;
+    M := R.Pivot;
+    if not ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+    begin
+      Result := M;
+      R.stop := (M - 1);
+    end else
+      R.start := (M + 1);
+  until False;
+end;
+
 {==============================================================================]
   <BinaryBounds>
   @action: Returns the inclusive lower and upper bounds of <item> within the
@@ -73,6 +171,40 @@ begin
     else
       R.stop := (M - 1);
   end;
+end;
+
+{==============================================================================]
+  <BinaryBoundUpper>
+  @action: Performs a binary search to determine the upper boundary insertion
+           position for the specified item in the sorted array.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Returns the first index where:
+           - array[index] > item (ascending order)
+           - array[index] < item (descending order)
+         If no such position exists, returns Length(Self).
+[==============================================================================}
+function MArrayHelper.BinaryBoundUpper(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := Self.Length;
+  if Self.Empty then
+    Exit;
+  R.Create(0, High(Self));
+  repeat
+    if (R.start > R.stop) then
+      Exit;
+    M := R.Pivot;
+    if not ((oAscending and (Self[M] <= item)) or ((not oAscending) and (Self[M] >= item))) then
+    begin
+      Result := M;
+      R.stop := (M - 1);
+    end else
+      R.start := (M + 1);
+  until False;
 end;
 
 {==============================================================================]
@@ -211,6 +343,162 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryContain>
+  @action: Determines whether the specified item exists in the sorted array
+           using a binary search over a narrowing range window.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Performs boundary pre-check via WithinBounds().
+         Utilizes TRange abstraction for search window management.
+         Time complexity: O(log n).
+         Space complexity: O(1).
+         Returns False if the array is empty or the item is not found.
+[==============================================================================}
+function MArrayHelper.BinaryContain(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  if (Self.Empty or (not Self.WithinBounds(item, oAscending))) then
+    Exit(False);
+  R.Create(0, High(Self));
+  repeat
+    if (R.start > R.stop) then
+      Exit(False);
+    M := R.Pivot;
+    if (Self[M] = item) then
+      Exit(True);
+    if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  until False;
+end;
+
+{==============================================================================]
+  <BinaryConverge>
+  @action: Performs binary search convergence and returns the candidate index
+           reached by the search path.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         The function searches for the specified item and returns:
+           - The index of the item if found.
+           - Otherwise the terminal convergence candidate index of the binary
+             search path.
+         Returns:
+           0..Length(Self)-1 -> array index candidate
+           -1                -> array is empty
+         This function does not guarantee that the item exists in the array.
+         It represents the final convergence position of the binary search
+         traversal.
+[==============================================================================}
+function MArrayHelper.BinaryConverge(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  Result := -1;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    Result := M;
+    if (Self[M] = item) then
+      Break;
+    if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryCounter>
+  @action: Counts the number of occurrences of the specified item in the
+           sorted array using binary search assisted boundary expansion.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         The function first locates the first occurrence of the item using
+         BinaryFindID, then expands linearly to the left and right boundaries
+         of the matching block to determine the total number of occurrences.
+         Returns:
+           0  -> item does not exist in the array
+           >0 -> number of occurrences of the item
+         Internal Steps:
+           1. Binary search to locate a candidate position.
+           2. Expand search window while adjacent elements match the item.
+[==============================================================================}
+function MArrayHelper.BinaryCounter(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  H, i, L, R: Integer;
+begin
+  i := Self.BinaryFindID(item, oAscending);
+  if (i = -1) then
+    Exit(0);
+  L := i;
+  R := i;
+  H := High(Self);
+  while ((L > 0) and (Self[L - 1] = item)) do
+    Dec(L);
+  while ((R < H) and (Self[R + 1] = item)) do
+    Inc(R);
+  Result := ((R - L) + 1);
+end; 
+
+{==============================================================================]
+  <BinaryDomain>
+  @action: Returns the contiguous index range where the specified item exists
+           within the sorted array using binary search bounds.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         The function combines BinaryStart() and BinaryStop() to construct
+         the domain interval [start, stop] where item occurs.
+         Returns TRange with start = -1 and stop = -1 if the item is not found.
+[==============================================================================}
+function MArrayHelper.BinaryDomain(const item: MType; const oAscending: Boolean = True): TRange; overload;
+begin
+  Result.start := Self.BinaryStart(item, oAscending);
+  if (Result.start = -1) then
+    Result.stop := -1
+  else
+    Result.stop := Self.BinaryStop(item, oAscending);
+end;
+
+{==============================================================================]
+  <BinaryExist>
+  @action: Determines whether the specified item in the sorted array
+           using a branch-reduced binary search.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Uses a reduced branching condition:
+           (Self[M] < item) = oAscending
+         to decide which half of the search range to continue with.
+[==============================================================================}
+function MArrayHelper.BinaryExist(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+      Exit(True);
+    if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  Result := False;
+end;
+
+{==============================================================================]
   <BinaryExpSearch>
   @action: Performs an exponential (galloping) search to locate the specified
            item in a sorted TIntegerArray. Returns the index of the item if
@@ -243,6 +531,50 @@ begin
       R.stop := (Result - 1);
   end;
   Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryFindID>
+  @action: Locates the specified item in the sorted array using binary search
+           and returns its array index position.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         The function returns the 0-based index position of the first
+         occurrence of the item in the array.
+         Returns:
+           0..Length(Self)-1 -> array index of the item
+           -1                -> item does not exist in the array
+         Internally uses BinaryBoundLower to determine the candidate
+         position and verifies equality before returning the index.
+[==============================================================================}
+function MArrayHelper.BinaryFindID(const item: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  Result := Self.BinaryBoundLower(item, oAscending);
+  if not ((Result < Self.Length) and (Self[Result] = item)) then
+    Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryFindIndex>
+  @action: Locates the specified item in the sorted array using binary search
+           and returns its array index position.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         The function returns the 0-based index position of the first
+         occurrence of the item in the array.
+         Returns:
+           0..Length(Self)-1 -> array index of the item
+           -1                -> item does not exist in the array
+         Internally uses BinaryBoundLower to determine the candidate
+         position and verifies equality before returning the index.
+[==============================================================================}
+function MArrayHelper.BinaryFindIndex(const item: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  Result := Self.BinaryBoundLower(item, oAscending);
+  if ((Result = Self.Length) or (Self[Result] <> item)) then
+    Result := -1;
 end;
 
 {==============================================================================]
@@ -664,6 +996,40 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryInsertPosition>
+  @action: Returns the insertion position where the specified item should be
+           inserted to maintain sorted array order.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         The function returns:
+           0 .. Length(Self)
+           Position where item should be inserted.
+         If the item already exists, the insertion position will be the
+         first occurrence boundary.
+[==============================================================================}
+function MArrayHelper.BinaryInsertPosition(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := Self.Length;
+  if Self.Empty then
+    Exit;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if not ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+    begin
+      Result := M;
+      R.stop := (M - 1);
+    end else
+      R.start := (M + 1);
+  end;
+end;
+
+{==============================================================================]
   <BinaryInterval>
   @action: Performs a binary search for <item> in a sorted array and returns the
            contiguous interval (range) of all elements equal to <item>.
@@ -685,6 +1051,73 @@ begin
   l := Self.Length;
   while ((Result.stop < l) and (Self[Result.stop + 1] = item)) do
     Inc(Result.stop);
+end;
+
+{==============================================================================]
+  <BinaryItem>
+  @action: Determines whether the specified item exists in the sorted array
+           using binary search with a narrowing range abstraction.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Utilizes the TRange helper to maintain the search window.
+         Returns False if the array is empty or the item is not found.
+[==============================================================================}
+function MArrayHelper.BinaryItem(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  repeat
+    if (R.start > R.stop) then
+      Exit(False);
+    M := R.Pivot;
+    if (Self[M] = item) then
+      Exit(True);
+    if ((oAscending and (item < Self[M])) or ((not oAscending) and (item > Self[M]))) then
+      R.stop := (M - 1)
+    else
+      R.start := (M + 1);
+  until False;
+end;
+
+{==============================================================================]
+  <BinaryLeftside>
+  @action: Searches the sorted array using binary search and returns the
+           first index position where the specified item is found.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Performs binary search over a narrowing range window.
+         Continues searching the left side of the match block to locate the
+         earliest occurrence of the item.
+         Returns -1 if the array is empty or the item does not exist.
+[==============================================================================}
+function MArrayHelper.BinaryLeftside(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  if Self.Empty then
+    Exit;
+  R.Create(0, High(Self));
+  repeat
+    if (R.start > R.stop) then
+      Exit;
+    M := R.Pivot;
+    if (Self[M] = item) then
+    begin
+      Result := M;
+      R.stop := (M - 1);
+      Continue;
+    end;
+    if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  until False;
 end;
 
 {==============================================================================]
@@ -717,6 +1150,64 @@ begin
       R.stop := (M - 1);
   end;
   Result := False;
+end;
+
+{==============================================================================]
+  <BinaryMembership>
+  @action: Returns the number of occurrences of the specified item in the
+           sorted array using binary boundary search primitives.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Computed as: Occurrence = BinaryBoundUpper(item) - BinaryBoundLower(item)
+         If the item does not exist in the array, returns 0.
+[==============================================================================}
+function MArrayHelper.BinaryOccurrence(const item: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  Result := (Self.BinaryBoundUpper(item, oAscending) - Self.BinaryBoundLower(item, oAscending));
+end;
+
+{==============================================================================]
+  <BinaryOccurrences>
+  @action: Returns the number of occurrences of the specified item in the
+           sorted array using binary search.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         The function determines the first and last occurrence of the item
+         and computes the amount of matching elements.
+         Returns:
+           0  -> item does not exist
+           >0 -> number of occurrences
+[==============================================================================}
+function MArrayHelper.BinaryOccurrences(const item: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  Result := Self.BinaryStart(item, oAscending);
+  if (Result > -1) then
+    Result := (Self.BinaryStop(item, oAscending) - Result);
+  Inc(Result);
+end;
+
+{==============================================================================]
+  <BinaryOccurrency>
+  @action: Returns the number of occurrences of the specified item in the
+           sorted array using binary boundary search primitives.
+  @note:   Requires the array to be sorted.
+           oAscending = True  -> ascending order assumed.
+           oAscending = False -> descending order assumed.
+           Computed as: Occurrence = BinaryBoundUpper(item) - BinaryBoundLower(item)
+           If the item does not exist in the array, returns 0.
+           Time complexity: O(log n).
+[==============================================================================}
+function MArrayHelper.BinaryOccurrency(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  L, U: Integer;
+begin
+  L := Self.BinaryBoundLower(item, oAscending);
+  U := Self.BinaryBoundUpper(item, oAscending);
+  if (L >= U) then
+    Exit(0);
+  Result := (U - L);
 end;
 
 {==============================================================================]
@@ -767,6 +1258,44 @@ end;
 function MArrayHelper.BinaryProbe(const item: MType; const probeRadius: Integer; const oAscending: Boolean = True): Integer; overload;
 begin
   Result := Self.BinaryProbe(item, oAscending, probeRadius);
+end;
+
+{==============================================================================]
+  <BinaryRightside>
+  @action: Searches the sorted array using binary search and returns the
+           last index position where the specified item is found.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oDescending = False -> descending order assumed.
+         Performs binary search over a narrowing range window.
+         Continues searching the right side of the match block to locate the
+         latest occurrence of the item.
+         Returns -1 if the array is empty or the item does not exist.
+[==============================================================================}
+function MArrayHelper.BinaryRightside(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  if Self.Empty then
+    Exit;
+  R.Create(0, High(Self));
+  repeat
+    if (R.start > R.stop) then
+      Exit;
+    M := R.Pivot;
+    if (Self[M] = item) then
+    begin
+      Result := M;
+      R.start := (M + 1);
+      Continue;
+    end;
+    if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  until False;
 end;
 
 {==============================================================================]
@@ -831,6 +1360,78 @@ begin
       R.stop := (M - 1);
   end;
   Result := not R.start;
+end;
+
+{==============================================================================]
+  <BinaryStart>
+  @action: Searches the sorted array using binary search and returns the
+           first index position where the specified item is found.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Performs a boundary pre-check via WithinBounds().
+         Uses a narrowing search window implemented through TRange.
+         Returns -1 if the array is empty or the item does not exist.
+[==============================================================================}
+function MArrayHelper.BinaryStart(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  if (Self.Empty or (not Self.WithinBounds(item, oAscending))) then
+    Exit;
+  R.Create(0, High(Self));
+  repeat
+    if (R.start > R.stop) then
+      Exit;
+    M := R.Pivot;
+    if (Self[M] = item) then
+    begin
+      Result := M;
+      R.stop := (M - 1);
+      Continue;
+    end;
+    if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  until False;
+end;
+
+{==============================================================================]
+  <BinaryStop>
+  @action: Searches the sorted array using binary search and returns the
+           last index position where the specified item is found.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Performs a boundary pre-check via WithinBounds().
+         Uses a narrowing search window implemented through TRange.
+         Returns -1 if the array is empty or the item does not exist.
+[==============================================================================}
+function MArrayHelper.BinaryStop(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  if (Self.Empty or (not Self.WithinBounds(item, oAscending))) then
+    Exit;
+  R.Create(0, High(Self));
+  repeat
+    if (R.start > R.stop) then
+      Exit;
+    M := R.Pivot;
+    if (Self[M] = item) then
+    begin
+      Result := M;
+      R.start := (M + 1);
+    end else if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  until False;
 end;
 
 {==============================================================================]

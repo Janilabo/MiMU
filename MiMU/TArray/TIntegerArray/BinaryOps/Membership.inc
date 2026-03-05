@@ -6,6 +6,7 @@ function BinaryContact(const x: Integer; const oAscending: Boolean = True): Bool
 function BinaryContact(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExcludes(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExistence(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
+function BinaryExistency(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExistent(const item: Integer; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExists(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryFit(const value: Integer; const oAscending: Boolean = True): Boolean; overload;
@@ -203,7 +204,6 @@ end;
          oAscending = True  -> ascending order assumed.
          oAscending = False -> descending order assumed.
          Internally relies on BinaryLowerBound().
-         Time complexity: O(log n).
          Returns False if the array is empty or the value is not present.
 [==============================================================================}
 function TIntegerArrayHelper.BinaryExistence(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
@@ -215,6 +215,26 @@ begin
     Exit(False);
   i := Self.BinaryLowerBound(x, oAscending);
   Result := ((i > -1) and (i < l) and (Self[i] = x));
+end;
+
+{==============================================================================]
+  <BinaryExistency>
+  @action: Determines whether the specified value exists in the sorted array
+           using the BinaryUpperBound method.
+  @note:   Requires the array to be sorted.
+           oAscending = True  -> ascending order assumed.
+           oAscending = False -> descending order assumed.
+           BinaryUpperBound returns the index immediately after the last
+           occurrence of the searched value.
+           If the returned index is greater than zero and the preceding
+           element equals the value, the value exists in the array.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryExistency(const x: Integer; const oAscending: Boolean = True): Boolean; overload;
+var
+  i: Integer;
+begin
+  i := Self.BinaryUpperBound(x, oAscending);
+  Result := ((i > 0) and (Self[i - 1] = x));
 end;
 
 {==============================================================================]

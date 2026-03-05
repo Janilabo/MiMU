@@ -10,6 +10,7 @@ function BinaryFindFirst(const value: Integer; const oAscending: Boolean = True)
 function BinaryFindFirst(const range: TRange; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindLast(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindLast(const range: TRange; const oAscending: Boolean = True): Integer; overload;
+function BinaryFindNearest(const item: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryFirst(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryFloor(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryLast(const x: Integer; const aAscending: Boolean = True): Integer; overload;
@@ -494,6 +495,48 @@ begin
         end;
       end;
     end;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryFindNearest>
+  @action: Searches the sorted array using binary search and returns the index
+           of the element closest to the specified item (nearest neighbor search).
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed.
+         oAscending = False -> descending order assumed.
+         Returns:
+           0 .. Length(Self)-1 -> index of nearest element
+           -1                  -> array is empty
+         If an exact match exists, its index is returned.
+         Otherwise, the function returns the index of the element with the
+         smallest absolute difference to the target item.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryFindNearest(const item: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  O, B, D, L, H, M: Integer;
+  R: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  R.Create(0, High(Self));
+  Result := 0;
+  O := Abs(Self[L] - item);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    D := Abs(Self[M] - item);
+    if (D < O) then
+    begin
+      O := D;
+      Result := M;
+      if (D = 0) then
+        Break;
+    end;
+    if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
   end;
 end;
 
