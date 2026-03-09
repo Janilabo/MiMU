@@ -3,6 +3,7 @@ function BinaryBoundaries(const item: MType; const oAscending: Boolean = True): 
 function BinaryBoundLower(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryBounds(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryBoundUpper(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryBracket(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryClampMax(const aMax: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryClampMin(const aMin: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCluster(const start: Integer; const allowed: MArray; const aAscending: Boolean = True): TRange; overload;
@@ -10,6 +11,7 @@ function BinaryContain(const item: MType; const oAscending: Boolean = True): Boo
 function BinaryConverge(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCounter(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryDomain(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryEncase(const item: MType): Boolean; overload;
 function BinaryExist(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindID(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -17,12 +19,14 @@ function BinaryFindIndex(const item: MType; const oAscending: Boolean = True): I
 function BinaryGallopingSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
+function BinaryHave(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHits(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryHitsOf(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryIdentify(const aIndex: Integer; const iItems: MArray; const iAscending: Boolean = True): Integer; overload;
 function BinaryIndices(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryInsertingSort(const aAscending: Boolean = True): Integer; overload;
 function BinaryInsertingSorted(const aAscending: Boolean = True): MArray; overload;
+function BinaryInsertion(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
 function BinaryInsertionSorted(const aAscending: Boolean = True): MArray; overload;
 function BinaryInsertPosition(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -30,6 +34,7 @@ function BinaryInterval(const item: MType; const oAscending: Boolean = True): TR
 function BinaryItem(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryLeftside(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryMembership(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryNeighbors(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryOccurrence(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryOccurrences(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryOccurrency(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -208,6 +213,42 @@ begin
     end else
       R.start := (M + 1);
   until False;
+end;
+
+{==============================================================================]
+  <BinaryBracket>
+  @action: Returns indices of the nearest elements surrounding item.
+  @note: Always returns valid indices within the array.
+         start -> index of predecessor
+         stop  -> index of successor
+         If item is outside array bounds, both indices clamp to
+         the nearest edge element.
+[==============================================================================}
+function MArrayHelper.BinaryBracket(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  M, L: Integer;
+  R: TRange;
+begin
+  L := Self.Length;
+  if (L = 0) then
+    Exit(TRange.Construct(-1, -1));
+  R.Create(0, (L - 1));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+      Exit(TRange.Construct(M, M));
+    if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  if (R.stop < 0) then
+    Result.Create(0, 0)
+  else if (R.start >= L) then
+    Result.Create((L - 1), (L - 1))
+  else
+    Result.Create(R.stop, R.start);
 end;
 
 {==============================================================================]
@@ -472,6 +513,39 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryEncase>
+  @action: Determines whether the specified item falls within the range of values
+           in a sorted array. The function returns True if the item is greater
+           than or equal to the smallest element and less than or equal to the
+           largest element, regardless of whether the array is ascending or
+           descending.
+  @note: Works for arrays of any length, including empty arrays.
+         - Returns False for empty arrays.
+         - Correctly handles both ascending and descending order arrays.
+         - Only checks the array’s first and last elements; does not search
+           for exact membership.
+[==============================================================================}
+function MArrayHelper.BinaryEncase(const item: MType): Boolean; overload;
+var
+  b, t: MType;
+  h: Integer;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit(False);
+  if (Self[0] < Self[h]) then
+  begin
+    b := Self[0];
+    t := Self[h];
+  end else
+  begin
+    b := Self[h];
+    t := Self[0];
+  end;
+  Result := ((item >= b) and (item <= t));
+end;
+
+{==============================================================================]
   <BinaryExist>
   @action: Determines whether the specified item in the sorted array
            using a branch-reduced binary search.
@@ -699,6 +773,25 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryHave>
+  @action: Determines whether the specified item exists in the sorted array
+           using binary search.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed
+         oAscending = False -> descending order assumed
+         Returns True if the item exists in the array, otherwise False.
+         Internally uses BinaryBoundLower to locate the first candidate
+         position and verifies equality.
+[==============================================================================}
+function MArrayHelper.BinaryHave(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  i: Integer;
+begin
+  i := Self.BinaryBoundLower(item, oAscending);
+  Result := ((i < Self.Length) and (Self[i] = item));
+end;
+
+{==============================================================================]
   <BinaryHits>
   @action: Performs a binary search for each value in the supplied array
            `items` against the current integer array and returns the indices
@@ -910,6 +1003,42 @@ begin
     end;
     Insert(Self[i], Result, r.start);
   end;
+end;
+
+{==============================================================================]
+  <BinaryInsertion>
+  @action: Inserts an item into a sorted array while preserving order.
+  @note: Array must already be sorted.
+         oAscending = True  -> ascending order assumed
+         oAscending = False -> descending order assumed
+         Returns index where the element was inserted.
+[==============================================================================}
+function MArrayHelper.BinaryInsertion(const item: MType; const oAscending: Boolean = True): Integer; overload;
+procedure I(var arr: MArray; const index: Integer; const value: MType);
+var
+  a, N: Integer;
+begin
+  N := System.Length(arr);
+  SetLength(arr, (N + 1));
+  for a := N downto (index + 1) do
+    arr[a] := arr[a - 1];
+  arr[index] := value;
+end;
+var
+  M: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  Result := R.start;
+  I(Self, Result, item);
 end;
 
 {==============================================================================]
@@ -1156,7 +1285,37 @@ begin
 end;
 
 {==============================================================================]
-  <BinaryMembership>
+  <BinaryNeighbors>
+  @action: Finds the closest lower and upper neighbors around a target
+           value in a sorted array using binary search.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed
+         oAscending = False -> descending order assumed
+         Returns:
+           TRange.start -> index of the largest element ≤ item (predecessor)
+           TRange.stop  -> index of the smallest element ≥ item (successor)
+           If no predecessor exists, start = -1
+           If no successor exists, stop = -1
+         Example:
+           Ascending array: [1,3,5,7] item = 4 BinaryNeighbors(item) -> start=1 (3), stop=2 (5)
+[==============================================================================}
+function MArrayHelper.BinaryNeighbors(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  l, x: Integer;
+begin
+  l := Self.Length;
+  Result.Create(-1, -1);
+  if (l = 0) then
+    Exit;
+  x := Self.BinaryThreshold(item, oAscending);
+  if (x > 0) then
+    Result.start := (x - 1);
+  if (x < l) then
+    Result.stop := x;
+end;
+
+{==============================================================================]
+  <BinaryOccurrence>
   @action: Returns the number of occurrences of the specified item in the
            sorted array using binary boundary search primitives.
   @note: Requires the array to be sorted.
