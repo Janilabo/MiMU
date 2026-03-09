@@ -1,9 +1,11 @@
 {$IFDEF HELPERS}
 function BinaryBoundaries(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryBoundary(const threshold: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryBoundLower(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryBounds(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryBoundUpper(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryBracket(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryCardinality(const itemMin, itemMax: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryClampMax(const aMax: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryClampMin(const aMin: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCluster(const start: Integer; const allowed: MArray; const aAscending: Boolean = True): TRange; overload;
@@ -16,6 +18,8 @@ function BinaryExist(const item: MType; const oAscending: Boolean = True): Boole
 function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindID(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindIndex(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryFindLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryFindRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGallopingSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
@@ -43,6 +47,7 @@ function BinaryProbe(const item: MType; const oAscending: Boolean = True; const 
 function BinaryProbe(const item: MType; const probeRadius: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightside(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinarySlice(const itemMin, itemMax: MType; const oAscending: Boolean = True): TRange; overload;
 function BinarySpot(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryStart(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryStop(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -95,6 +100,29 @@ begin
     else
       R.stop := (M - 1);
   until False;
+end;
+
+{==============================================================================]
+  <BinaryBoundary>
+  @action: Finds the index of the first element that meets or exceeds a threshold
+           in a sorted array, respecting ascending or descending order.
+           Conceptually, this is the “boundary” where values transition relative
+           to the threshold.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed
+         oAscending = False -> descending order assumed
+         Returns:
+           - Index of the first element ≥ threshold (ascending)
+           - Index of the first element ≤ threshold (descending)
+           - If no such element exists, returns Length(Self)
+         Internally uses BinaryBoundLower / BinaryBoundUpper helpers.
+[==============================================================================}
+function MArrayHelper.BinaryBoundary(const threshold: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  if oAscending then
+    Result := Self.BinaryBoundLower(threshold, oAscending)
+  else
+    Result := Self.BinaryBoundUpper(threshold, oAscending);
 end;
 
 {==============================================================================]
@@ -249,6 +277,42 @@ begin
     Result.Create((L - 1), (L - 1))
   else
     Result.Create(R.stop, R.start);
+end;
+
+{==============================================================================]
+  <BinaryCardinality>
+  @action: Counts the number of elements within a specified value interval
+           `[itemMin..itemMax]` in a sorted array using binary search.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed
+         oAscending = False -> descending order assumed
+         Returns:
+           - Number of elements whose values fall within the interval
+           - 0 if no elements lie in the range or the array is empty
+         Duplicate values are counted individually.
+         Internally uses BinaryBoundLower / BinaryBoundUpper.
+[==============================================================================}
+function MArrayHelper.BinaryCardinality(const itemMin, itemMax: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  l, h: MType;
+begin
+  if (Self.Length = 0) then
+    Exit(0);
+  if (itemMin <= itemMax) then
+  begin
+    l := itemMin;
+    h := itemMax;
+  end else
+  begin
+    l := itemMax;
+    h := itemMin;
+  end;
+  if oAscending then
+    Result := (Self.BinaryBoundUpper(h, oAscending) - Self.BinaryBoundLower(l, oAscending))
+  else
+    Result := (Self.BinaryBoundUpper(l, oAscending) - Self.BinaryBoundLower(h, oAscending));
+  if (Result < 0) then
+    Result := 0;
 end;
 
 {==============================================================================]
@@ -651,6 +715,46 @@ function MArrayHelper.BinaryFindIndex(const item: MType; const oAscending: Boole
 begin
   Result := Self.BinaryBoundLower(item, oAscending);
   if ((Result = Self.Length) or (Self[Result] <> item)) then
+    Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryFindLeft>
+  @action: Locates the first occurrence of a specified value in a sorted array
+           using binary search.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed
+         oAscending = False -> descending order assumed
+         Returns:
+           - Index of the first element equal to `item`
+           - -1 if the value does not exist in the array
+         Internally uses BinaryBoundLower to locate the candidate index
+         and verifies equality.
+[==============================================================================}
+function MArrayHelper.BinaryFindLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  Result := Self.BinaryBoundLower(item, oAscending);
+  if not ((Result > -1) and (Result < Self.Length) and (Self[Result] = item)) then
+    Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryFindRight>
+  @action: Locates the last occurrence of a specified value in a sorted array
+           using binary search.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed
+         oAscending = False -> descending order assumed
+         Returns:
+           - Index of the last element equal to `item`
+           - -1 if the value does not exist in the array
+         Internally uses BinaryBoundUpper to locate the first element greater
+         than `item`, then steps one position back to obtain the last match.
+[==============================================================================}
+function MArrayHelper.BinaryFindRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  Result := (Self.BinaryBoundUpper(item, oAscending) - 1);
+  if not ((Result > -1) and (Result < Self.Length) and (Self[Result] = item)) then
     Result := -1;
 end;
 
@@ -1522,6 +1626,46 @@ begin
       R.stop := (M - 1);
   end;
   Result := -1;
+end;
+
+{==============================================================================]
+  <BinarySlice>
+  @action: Finds the contiguous index range of elements within a specified
+           value interval `[itemMin..itemMax]` in a sorted array.
+           The function automatically handles cases where `itemMin > itemMax`
+           and can return ranges for both ascending and descending arrays.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed
+         oAscending = False -> descending order assumed
+         Returns a TRange where:
+           - start -> index of the first element ≥ min(itemMin,itemMax) (ascending)
+                      or ≤ max(itemMin,itemMax) (descending)
+           - stop  -> index of the last element ≤ max(itemMin,itemMax) (ascending)
+                      or ≥ min(itemMin,itemMax) (descending)
+         If no elements exist in the range, returns `TRange(-1, -1)`.
+         Automatically handles:
+           - empty arrays
+           - reversed min/max ranges (will flip result if itemMin > itemMax)
+           - duplicates
+[==============================================================================}
+function MArrayHelper.BinarySlice(const itemMin, itemMax: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  s: Integer;
+  nMin, nMax: MType;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit(TRange.Construct(-1, -1));
+  nMin := IfThen((itemMin > itemMax), itemMax, itemMin);
+  nMax := IfThen((itemMin > itemMax), itemMin, itemMax);
+  if oAscending then
+    Result.Create(Self.BinaryBoundLower(nMin, oAscending), (Self.BinaryBoundUpper(nMax, oAscending) - 1))
+  else
+    Result.Create(Self.BinaryBoundLower(nMax, oAscending), (Self.BinaryBoundUpper(nMin, oAscending) - 1));
+  if ((Result.start >= s) or (Result.stop < 0) or (Result.start > Result.stop)) then
+    Exit(TRange.Construct(-1, -1));
+  if (itemMin > itemMax) then
+    Result.Reverse;
 end;
 
 {==============================================================================]
