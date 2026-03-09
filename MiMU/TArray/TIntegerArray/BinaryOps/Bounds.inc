@@ -6,6 +6,7 @@ function BinaryBoundRight(const value: Integer; const oAscending: Boolean = True
 function BinaryCeil(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryClosest(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryFarthest(const value: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinaryFindClosest(const item: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindFirst(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindFirst(const range: TRange; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindLast(const value: Integer; const oAscending: Boolean = True): Integer; overload;
@@ -292,6 +293,38 @@ begin
   if (Abs(Self[0] - value) = Abs(Self[Result] - value)) then
     Exit(IfThen(oAscending, 0, Result));
   Result := IfThen((Abs(Self[0] - value) > Abs(Self[Result] - value)), 0, Result);
+end;
+
+{==============================================================================]
+  <BinaryFindClosest>
+  @action: Finds the index of the element whose value is closest to the
+           specified item in a sorted array using binary search.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed
+         oAscending = False -> descending order assumed
+         Returns:
+           - Index of the element whose value is nearest to `item`
+           - -1 if the array is empty
+         If the target lies between two elements, the one with the smaller
+         absolute difference is selected.
+         If both neighbors are equally close, the lower index is returned.
+         Internally uses BinaryInsertPosition to locate the candidate
+         position, then compares the two nearest neighbors.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryFindClosest(const item: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(-1);
+  Result := Self.BinaryInsertPosition(item, oAscending);
+  if (Result <= 0) then
+    Exit(0);
+  if (Result >= l) then
+    Exit(l - 1);
+  if not (Abs(Self[Result] - item) < Abs(Self[Result - 1] - item)) then
+    Dec(Result);
 end;
 
 {==============================================================================]

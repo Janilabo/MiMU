@@ -6,6 +6,7 @@ function BinaryBounds(const item: MType; const oAscending: Boolean = True): TRan
 function BinaryBoundUpper(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryBracket(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryCardinality(const itemMin, itemMax: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryCeiled(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryClampMax(const aMax: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryClampMin(const aMin: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCluster(const start: Integer; const allowed: MArray; const aAscending: Boolean = True): TRange; overload;
@@ -20,6 +21,7 @@ function BinaryFindID(const item: MType; const oAscending: Boolean = True): Inte
 function BinaryFindIndex(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryFloored(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGallopingSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
@@ -45,6 +47,7 @@ function BinaryOccurrency(const item: MType; const oAscending: Boolean = True): 
 function BinaryPredecessor(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryProbe(const item: MType; const oAscending: Boolean = True; const probeRadius: Integer = 5): Integer; overload;
 function BinaryProbe(const item: MType; const probeRadius: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinaryProxy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightside(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySlice(const itemMin, itemMax: MType; const oAscending: Boolean = True): TRange; overload;
@@ -313,6 +316,48 @@ begin
     Result := (Self.BinaryBoundUpper(l, oAscending) - Self.BinaryBoundLower(h, oAscending));
   if (Result < 0) then
     Result := 0;
+end;
+
+{==============================================================================]
+  <BinaryCeiled>
+  @action: Finds the index of the smallest element whose value is greater than
+           or equal to the specified item in a sorted array using binary search.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed
+         oAscending = False -> descending order assumed
+         Returns:
+           - Index of the element equal to `item` if it exists
+           - Otherwise the index of the nearest element whose value is not
+             less than `item` (ceiling)
+           - If `item` is smaller than all elements, returns 0
+           - If `item` is greater than all elements, returns High(Self)
+           - Returns -1 if the array is empty
+         The result is always clamped to a valid array index.
+[==============================================================================}
+function MArrayHelper.BinaryCeiled(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  H, M: Integer;
+  R: TRange;
+begin
+  H := High(Self);
+  if (H = -1) then
+    Exit(-1);
+  R.Create(0, H);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+      Exit(M);
+    if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  if (R.start > H) then
+    Exit(H);
+  if (R.stop < 0) then
+    Exit(0);
+  Result := R.start;
 end;
 
 {==============================================================================]
@@ -756,6 +801,48 @@ begin
   Result := (Self.BinaryBoundUpper(item, oAscending) - 1);
   if not ((Result > -1) and (Result < Self.Length) and (Self[Result] = item)) then
     Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryFloored>
+  @action: Finds the index of the largest element whose value is less than or
+           equal to the specified item in a sorted array using binary search.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed
+         oAscending = False -> descending order assumed
+         Returns:
+           - Index of the element equal to `item` if it exists
+           - Otherwise the index of the nearest element whose value does not
+             exceed `item` (floor)
+           - If `item` is smaller than all elements, returns 0
+           - If `item` is greater than all elements, returns High(Self)
+           - Returns -1 if the array is empty
+         The result is always clamped to a valid array index.
+[==============================================================================}
+function MArrayHelper.BinaryFloored(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  H, M: Integer;
+  R: TRange;
+begin
+  H := High(Self);
+  if (H = -1) then
+    Exit(-1);
+  R.Create(0, H);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+      Exit(M);
+    if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  if (R.start > H) then
+    Exit(H);
+  if (R.stop < 0) then
+    Exit(0);
+  Result := R.stop;
 end;
 
 {==============================================================================]
@@ -1555,6 +1642,41 @@ end;
 function MArrayHelper.BinaryProbe(const item: MType; const probeRadius: Integer; const oAscending: Boolean = True): Integer; overload;
 begin
   Result := Self.BinaryProbe(item, oAscending, probeRadius);
+end;
+
+{==============================================================================]
+  <BinaryProxy>
+  @action: Performs a binary search for a value in a sorted array and returns
+           the index of the last pivot inspected during the search.
+  @note: Requires the array to be sorted.
+         oAscending = True  -> ascending order assumed
+         oAscending = False -> descending order assumed
+         Returns:
+           - Index of the matching element if `item` exists
+           - Otherwise the index of the last pivot examined during the
+             binary search (a position near where the item would appear)
+           - -1 if the array is empty
+         This method provides a fast approximate location that can be used
+         as a starting point for nearby searches or adjustments.
+[==============================================================================}
+function MArrayHelper.BinaryProxy(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  R: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  R.Create(0, High(Self));
+  Result := 0;
+  while (R.start <= R.stop) do
+  begin
+    Result := R.Pivot;
+    if (Self[Result] = item) then
+      Exit;
+    if ((oAscending and (Self[Result] < item)) or ((not oAscending) and (Self[Result] > item))) then
+      R.start := (Result + 1)
+    else
+      R.stop := (Result - 1);
+  end;
 end;
 
 {==============================================================================]
