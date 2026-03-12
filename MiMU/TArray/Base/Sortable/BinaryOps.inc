@@ -25,6 +25,7 @@ function BinaryFloored(const item: MType; const oAscending: Boolean = True): Int
 function BinaryGallopingSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
+function BinaryHasVariance: Boolean; overload;
 function BinaryHave(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHits(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryHitsOf(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
@@ -37,9 +38,13 @@ function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overloa
 function BinaryInsertionSorted(const aAscending: Boolean = True): MArray; overload;
 function BinaryInsertPosition(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryInterval(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryIsConstant: Boolean; overload;
+function BinaryIsUnique: Boolean; overload;
 function BinaryItem(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryLeftside(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryMembership(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryMetaSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryMode: MType; overload;
 function BinaryNeighbors(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryOccurrence(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryOccurrences(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -965,6 +970,23 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryHasVariance>
+  @action: Returns True if the sorted array contains more than one distinct value.
+  @note:
+    • O(1)
+    • Requires sorted array
+    • Compares first and last elements only
+    • False if array has zero or one element
+[==============================================================================}
+function MArrayHelper.BinaryHasVariance: Boolean; overload;
+var
+  H: Integer;
+begin
+  H := High(Self);
+  Result := ((H > 0) and (Self[0] <> Self[H]));
+end;
+
+{==============================================================================]
   <BinaryHave>
   @action: Determines whether the specified item exists in the sorted array
            using binary search.
@@ -1378,6 +1400,43 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryIsConstant>
+  @action: Returns True if all elements in the sorted array are equal.
+  @note:
+    • O(1)
+    • Requires sorted array
+    • Compares first and last elements
+    • False if array is empty
+[==============================================================================}
+function MArrayHelper.BinaryIsConstant: Boolean; overload;
+var
+  H: Integer;
+begin
+  H := High(Self);
+  Result := ((H > -1) and (Self[0] = Self[H]));
+end;
+
+{==============================================================================]
+  <BinaryIsUnique>
+  @action: Returns True if the sorted array contains no duplicate values.
+  @note:
+    • O(n)
+    • Requires sorted array
+    • Adjacent elements are compared
+    • False if array is empty
+[==============================================================================}
+function MArrayHelper.BinaryIsUnique: Boolean; overload;
+var
+  i, h: Integer;
+begin
+  h := High(Self);
+  for i := 0 to (h - 1) do
+    if (Self[i] = Self[i + 1]) then
+      Exit(False);
+  Result := (h > -1);
+end;
+
+{==============================================================================]
   <BinaryItem>
   @action: Determines whether the specified item exists in the sorted array
            using binary search with a narrowing range abstraction.
@@ -1474,6 +1533,73 @@ begin
       R.stop := (M - 1);
   end;
   Result := False;
+end;
+
+{==============================================================================]
+  <BinaryMetaSearch>
+  @action: Performs a binary-like search on a sorted array to find the index of a given item.
+  @note:
+    • O(log n)
+    • Requires sorted array (ascending or descending)
+    • Returns index of item if found
+    • Returns -1 if item is not in the array
+    • Uses a binary meta-step approach instead of classic binary search
+[==============================================================================}
+function MArrayHelper.BinaryMetaSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  l, p, i, s: Integer;
+begin
+  l := Self.Length;
+  i := (1 shl Trunc(Log2(l)));
+  p := 0;
+  while (i > 0) do
+  begin
+    s := (p or i);
+    if ((s < l) and ((oAscending and (Self[s] <= item)) or ((not oAscending) and (Self[s] >= item)))) then
+      p := s;
+    i := (i shr 1);
+  end;
+  if ((p < l) and (Self[p] = item)) then
+    Result := p
+  else
+    Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryMode>
+  @action: Returns the mode (most frequent value) of a sorted array.
+  @note:
+    • O(n)
+    • Requires sorted array
+    • Scans once, counting consecutive identical values
+    • Returns first element if array is empty
+    • In case of ties, returns the first value with maximum frequency
+[==============================================================================}
+function MArrayHelper.BinaryMode: MType; overload;
+var
+  i, c, m: Integer;
+  s: MType;
+begin
+  if Self.Empty then
+    Exit;
+  Result := Self[0];
+  m := 1;
+  c := 1;
+  s := Self[0];
+  for i := 1 to High(Self) do
+    if (Self[i] <> s) then
+    begin
+      if (c > m) then
+      begin
+        m := c;
+        Result := s;
+      end;
+      s := Self[i];
+      c := 1;
+    end else
+      Inc(c);
+  if (c > m) then
+    Result := s;
 end;
 
 {==============================================================================]

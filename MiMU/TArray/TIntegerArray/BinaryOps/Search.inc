@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function BinaryAdaptiveSearch(const item: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryApproximateSearch(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinaryEstimate(const item: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryFind(const val: Integer; const aAscending: Boolean): Integer; overload;
 function BinaryFind(const val: Integer; const scan: TRange; const ascending: Boolean = True): Integer; overload;
 function BinaryHybridSearch(const value: Integer; const oAscending: Boolean = True; const threshold: Integer = 8): Integer; overload;
@@ -159,6 +160,46 @@ begin
     end;
   end;
 end;
+
+{==============================================================================]
+  <BinaryEstimate>
+  @action: Estimates the index of a given item in a sorted array using interpolation search.
+  @note:
+    • O(log n) on average (interpolation-based)
+    • Requires sorted array (ascending or descending)
+    • Returns index if item is found
+    • Returns -1 if item is not present or out of bounds
+    • Uses linear interpolation to estimate likely position
+[==============================================================================}
+function TIntegerArrayHelper.BinaryEstimate(const item: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  p, l, h: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  Result := -1;
+  if ((R.stop < 0) or (oAscending and ((item < Self[R.start]) or (item > Self[R.stop]))) or ((not oAscending) and ((item > Self[R.start]) or (item < Self[R.stop])))) then
+    Exit;
+  while (R.start <= R.stop) do
+  begin
+    l := Self[R.start];
+    h := Self[R.stop];
+    if (l = h) then
+      if (l = item) then
+        Exit(R.start)
+	  else
+        Break;
+    p := (R.start + Trunc((Double(item) - l) / (Double(h) - l) * (R.stop - R.start)));
+    if ((p < R.start) or (p > R.stop)) then
+      Break;
+    if (Self[p] = item) then
+      Exit(p);
+    if ((oAscending and (Self[p] < item)) or ((not oAscending) and (Self[p] > item))) then
+      R.start := (p + 1)
+    else
+      R.stop := (p - 1);
+  end;
+end;  
 
 {==============================================================================]
   <BinaryFind>
