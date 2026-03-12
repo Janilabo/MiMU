@@ -1,10 +1,53 @@
 {$IFDEF HELPERS}
+function BinaryDiff: Integer; overload;
+function BinaryDifference(const oAscending: Boolean = True): Integer; overload;
 function BinaryMedian: Double; overload;
+function BinaryMidrange: Double; overload;
 function BinaryQuantile(const aProbability: Double = 0.5): Double; overload;
-function BinarySpread(const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryDiff>
+  @action: Returns the difference between the last and first elements of the
+           array assuming it is sorted.
+  @note: The array must already be ordered. If oAscending=True the spread is
+         Self[High] - Self[0]. If False, the array is assumed descending and
+         the spread is Self[0] - Self[High]. Returns 0 if the array has
+         fewer than two elements.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryDiff: Integer; overload;
+var
+  H: Integer;
+begin
+  H := High(Self);
+  if (H <= 0) then
+    Exit(0);
+  Result := Abs(Self[H] - Self[0]);
+end;
+
+{==============================================================================]
+  <BinaryDifference>
+  @action: Returns the difference between the last and first elements of the
+           array assuming it is sorted.
+  @note: The array must already be ordered. If oAscending=True the spread is
+         Self[High] - Self[0]. If False, the array is assumed descending and
+         the spread is Self[0] - Self[High]. Returns 0 if the array has
+         fewer than two elements.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryDifference(const oAscending: Boolean = True): Integer; overload;
+var
+  H: Integer;
+begin
+  H := High(Self);
+  if (H <= 0) then 
+    Exit(0);
+  if oAscending then
+    Result := (Self[H] - Self[0])
+  else
+    Result := (Self[0] - Self[H]);
+end;
+
 {==============================================================================]
   <BinaryMedian>
   @action: Computes the median value of a sorted integer array.
@@ -33,6 +76,33 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryMidrange>
+  @action: Returns the midrange of a sorted array.
+           The midrange is the midpoint between the minimum and maximum values:
+           midrange = (min + max) / 2
+           Behavior:
+            • Requires array sorted ascending or descending
+            • Uses first and last elements as bounds
+           Returns:
+            • 0.0 if array is empty
+            • the single element if array has length 1
+  @note:
+   • This is not the mean or median
+   • Sensitive to outliers
+[==============================================================================}
+function TIntegerArrayHelper.BinaryMidrange: Double; overload;
+var
+  H: Integer;
+begin
+  H := High(Self);
+  if (H < 0) then
+    Exit(0.0);
+  if (H = 0) then
+    Exit(Self[0]);
+  Result := ((Self[0] + Self[H]) / 2.0);
+end;
+
+{==============================================================================]
   <BinaryQuantile>
   @action: Returns the quantile value corresponding to the specified probability
            using linear interpolation between adjacent elements of a sorted
@@ -56,27 +126,5 @@ begin
     Result := Self[l]
   else
     Result := (Self[l] + (p - l) * (Self[h] - Self[l]));
-end;
-
-{==============================================================================]
-  <BinarySpread>
-  @action: Returns the difference between the last and first elements of the
-           array assuming it is sorted.
-  @note: The array must already be ordered. If oAscending=True the spread is
-         Self[High] - Self[0]. If False, the array is assumed descending and
-         the spread is Self[0] - Self[High]. Returns 0 if the array has
-         fewer than two elements.
-[==============================================================================}
-function TIntegerArrayHelper.BinarySpread(const oAscending: Boolean = True): Integer; overload;
-var
-  H: Integer;
-begin
-  H := High(Self);
-  if (H <= 0) then 
-    Exit(0);
-  if oAscending then
-    Result := (Self[H] - Self[0])
-  else
-    Result := (Self[0] - Self[H]);
 end;
 {$ENDIF}

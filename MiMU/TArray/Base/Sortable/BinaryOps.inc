@@ -44,6 +44,7 @@ function BinaryNeighbors(const item: MType; const oAscending: Boolean = True): T
 function BinaryOccurrence(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryOccurrences(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryOccurrency(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryPercentile(const item: MType; const oAscending: Boolean = True): Double; overload;
 function BinaryPredecessor(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryProbe(const item: MType; const oAscending: Boolean = True; const probeRadius: Integer = 5): Integer; overload;
 function BinaryProbe(const item: MType; const probeRadius: Integer; const oAscending: Boolean = True): Integer; overload;
@@ -1561,6 +1562,40 @@ begin
   if (L >= U) then
     Exit(0);
   Result := (U - L);
+end;
+
+{==============================================================================]
+  <BinaryPercentile>
+  @action: Returns the percentile position of a value within a sorted array using
+           binary search.
+           Behavior:
+            • O(log n) search complexity
+            • Returns value in range [0..1]
+            • If the item exists → percentile of its index
+            • If not → percentile of its insertion position
+            • Works with ascending or descending arrays
+   @note: Percentile definition: P = index / (N - 1)
+[==============================================================================}
+function MArrayHelper.BinaryPercentile(const item: MType; const oAscending: Boolean = True): Double; overload;
+var
+  M, H: Integer;
+  R: TRange;
+begin
+  H := High(Self);
+  if (H <= 0) then
+    Exit(0.0);
+  R.Create(0, H);
+  while (R.start <= R.Stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+      Exit(M / H);
+    if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item)))  then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  Result := (R.start / H);
 end;
 
 {==============================================================================]
