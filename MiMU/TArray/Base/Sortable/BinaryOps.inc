@@ -685,8 +685,6 @@ end;
     - The array must already be sorted according to oAscending.
     - The function internally determines the correct range direction even if
       startItem and stopItem are provided in reverse order.
-    - Uses BinaryStart and BinaryStop to locate the first and last matching
-      positions in O(log n) time.
     - If no elements fall within the range, the result is 0.
 [==============================================================================}
 function MArrayHelper.BinaryEncounter(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
@@ -695,10 +693,10 @@ var
 begin
   b := (startItem <= stopItem);
   case (b.Binary + oAscending.Binary) of
-    '11': Result := ((Self.BinaryStop(stopItem, True) - Self.BinaryStart(startItem, True)) + 1);
-    '10': Result := ((Self.BinaryStop(startItem, False) - Self.BinaryStart(stopItem, False)) + 1);
-    '01': Result := ((Self.BinaryStop(startItem, True) - Self.BinaryStart(stopItem, True)) + 1);
-    '00': Result := ((Self.BinaryStop(stopItem, False) - Self.BinaryStart(startItem, False)) + 1);
+    '11': Result := (Self.BinaryBoundUpper(stopItem, True) - Self.BinaryBoundLower(startItem, True));
+    '10': Result := (Self.BinaryBoundUpper(startItem, False) - Self.BinaryBoundLower(stopItem, False));
+    '01': Result := (Self.BinaryBoundUpper(startItem, True) - Self.BinaryBoundLower(stopItem, True));
+    '00': Result := (Self.BinaryBoundUpper(stopItem, False) - Self.BinaryBoundLower(startItem, False));
   end;
   if (Result < 0) then
     Result := 0;
