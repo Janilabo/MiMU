@@ -15,6 +15,7 @@ function BinaryConverge(const item: MType; const oAscending: Boolean = True): In
 function BinaryCounter(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryDomain(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryEncase(const item: MType): Boolean; overload;
+function BinaryEncounter(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryExcept(const target: MArray; const oAscending: Boolean = True): MArray; overload;
 function BinaryExist(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -497,7 +498,7 @@ end;
 [==============================================================================}
 function MArrayHelper.BinaryCluster(const start: Integer; const allowed: MArray; const aAscending: Boolean = True): TRange; overload;
 var
-  p, l: Integer;
+  l: Integer;
 begin
   l := Self.Length;
   if not ((start > -1) and (start < l) and (allowed.Length > 0) and (allowed.BinarySearchBy(Self[start], aAscending) > -1)) then
@@ -667,6 +668,40 @@ begin
     t := Self[0];
   end;
   Result := ((item >= b) and (item <= t));
+end;
+
+{==============================================================================]
+  <BinaryEncounter>
+  @action: Counts how many elements in the array fall within the specified
+           value range using binary search boundaries.
+  @param: startItem   – First boundary value of the range.
+  @param: stopItem    – Second boundary value of the range.
+  @param: oAscending  – Sort order of the array:
+                        True  = array is sorted ascending (default)
+                        False = array is sorted descending.
+  @return: The number of elements whose values lie between startItem and
+           stopItem (inclusive).
+  @note:
+    - The array must already be sorted according to oAscending.
+    - The function internally determines the correct range direction even if
+      startItem and stopItem are provided in reverse order.
+    - Uses BinaryStart and BinaryStop to locate the first and last matching
+      positions in O(log n) time.
+    - If no elements fall within the range, the result is 0.
+[==============================================================================}
+function MArrayHelper.BinaryEncounter(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  b: Boolean;
+begin
+  b := (startItem <= stopItem);
+  case (b.Binary + oAscending.Binary) of
+    '11': Result := ((Self.BinaryStop(stopItem, True) - Self.BinaryStart(startItem, True)) + 1);
+    '10': Result := ((Self.BinaryStop(startItem, False) - Self.BinaryStart(stopItem, False)) + 1);
+    '01': Result := ((Self.BinaryStop(startItem, True) - Self.BinaryStart(stopItem, True)) + 1);
+    '00': Result := ((Self.BinaryStop(stopItem, False) - Self.BinaryStart(startItem, False)) + 1);
+  end;
+  if (Result < 0) then
+    Result := 0;
 end;
 
 {==============================================================================]
