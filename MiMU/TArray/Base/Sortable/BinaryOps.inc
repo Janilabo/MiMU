@@ -44,6 +44,7 @@ function BinaryInterval(const item: MType; const oAscending: Boolean = True): TR
 function BinaryIsConstant: Boolean; overload;
 function BinaryIsUnique: Boolean; overload;
 function BinaryItem(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryLeft(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLeftside(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryMajority(out oItem: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryMajority(const oAscending: Boolean = True): Boolean; overload;
@@ -63,6 +64,7 @@ function BinaryProbe(const item: MType; const probeRadius: Integer; const oAscen
 function BinaryProxy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRanking(const item: MType; const oAscending: Boolean = True): Double; overload;
 function BinaryRemoveAll(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+function BinaryRight(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightside(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySlice(const itemMin, itemMax: MType; const oAscending: Boolean = True): TRange; overload;
@@ -1582,6 +1584,77 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryLeft>
+  @action: Finds the index of the first element (leftmost position) in the
+           array whose value lies within the specified range.
+  @param: startItem   – First boundary value of the search range.
+  @param: stopItem    – Second boundary value of the search range.
+  @param: oAscending  – Sort order of the array:
+                        True  = array is sorted ascending (default)
+                        False = array is sorted descending.
+  @return: The index of the leftmost element whose value is between
+           startItem and stopItem (inclusive). Returns -1 if no such
+           element exists.
+  @note:
+    - The array must be sorted according to oAscending.
+    - The function automatically normalizes the range so that the lower
+      and upper bounds are correctly determined even if the parameters
+      are passed in reverse order.
+    - Uses a binary search strategy and runs in O(log n) time.
+    - The search continues toward the left side after a match to ensure
+      the earliest valid index is found.
+    - The array is not modified.
+  @example:
+    Self = [1,2,3,4,5,6,7]
+    BinaryLeft(3,6) -> 2   // value = 3
+
+    Self = [7,6,5,4,3,2,1]
+    BinaryLeft(3,6, False) -> 1   // value = 6
+[==============================================================================}
+function MArrayHelper.BinaryLeft(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  L, H: MType;
+  R: TRange;
+begin
+  Result := -1;
+  if Self.Empty then
+    Exit;
+  if (startItem <= stopItem) then
+  begin
+    L := startItem;
+    H := stopItem;
+  end else
+  begin
+    L := stopItem;
+    H := startItem;
+  end;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case oAscending of
+      True:
+      if Self[M] >= L then
+      begin
+        if (Self[M] <= H) then
+          Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
+      False:
+      if (Self[M] <= H) then
+      begin
+        if (Self[M] >= L) then
+          Result := M;
+        R.stop := (M - 1);
+      end else
+        R.start := (M + 1);
+    end;
+  end;
+end;
+
+{==============================================================================]
   <BinaryLeftside>
   @action: Searches the sorted array using binary search and returns the
            first index position where the specified item is found.
@@ -2130,6 +2203,70 @@ begin
     Exit(0);
   SetLength(Self, Result);
   Result := (l - Result);
+end;
+
+{==============================================================================]
+  <BinaryRight>
+  @action: Finds the index of the last element (rightmost position) in the
+           array whose value lies within the specified range.
+  @param: startItem   – First boundary value of the search range.
+  @param: stopItem    – Second boundary value of the search range.
+  @param: oAscending  – Sort order of the array:
+                        True  = array is sorted ascending (default)
+                        False = array is sorted descending.
+  @return: The index of the rightmost element whose value is between
+           startItem and stopItem (inclusive). Returns -1 if no such
+           element exists.
+  @note:
+    - The array must be sorted according to oAscending.
+    - The range boundaries are normalized internally so reversed
+      parameters are handled correctly.
+    - Uses a binary search strategy and runs in O(log n) time.
+    - The search continues toward the right side after a match to ensure
+      the latest valid index is found.
+    - The array is not modified.
+[==============================================================================}
+function MArrayHelper.BinaryRight(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  L, H: MType;
+  R: TRange;
+begin
+  Result := -1;
+  if Self.Empty then
+    Exit;
+  if (startItem <= stopItem) then
+  begin
+    L := startItem;
+    H := stopItem;
+  end else
+  begin
+    L := stopItem;
+    H := startItem;
+  end;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case oAscending of
+      True:
+      if (Self[M] <= H) then
+      begin
+        if (Self[M] >= L) then
+          Result := M;
+        R.start := (M + 1);
+      end else
+        R.stop := (M - 1);
+      False:
+      if (Self[M] >= L) then
+      begin
+        if (Self[M] <= H) then
+          Result := M;
+        R.start := (M + 1);
+      end else
+        R.stop := (M - 1);
+    end;
+  end;
 end;
 
 {==============================================================================]
