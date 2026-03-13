@@ -22,6 +22,7 @@ function BinaryFindIndex(const item: MType; const oAscending: Boolean = True): I
 function BinaryFindLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFloored(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryFrequency(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGallopingSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGot(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryHas(const item: MType; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
@@ -42,6 +43,8 @@ function BinaryIsConstant: Boolean; overload;
 function BinaryIsUnique: Boolean; overload;
 function BinaryItem(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryLeftside(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryMajority(out oItem: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryMajority(const oAscending: Boolean = True): Boolean; overload;
 function BinaryMembership(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryMetaSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryMode: MType; overload;
@@ -49,11 +52,14 @@ function BinaryNeighbors(const item: MType; const oAscending: Boolean = True): T
 function BinaryOccurrence(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryOccurrences(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryOccurrency(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryPercented(const item: MType; const oAscending: Boolean = True): Double; overload;
 function BinaryPercentile(const item: MType; const oAscending: Boolean = True): Double; overload;
+function BinaryPopular(const oAscending: Boolean = True): MType; overload;
 function BinaryPredecessor(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryProbe(const item: MType; const oAscending: Boolean = True; const probeRadius: Integer = 5): Integer; overload;
 function BinaryProbe(const item: MType; const probeRadius: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryProxy(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryRanking(const item: MType; const oAscending: Boolean = True): Double; overload;
 function BinaryRightside(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySlice(const itemMin, itemMax: MType; const oAscending: Boolean = True): TRange; overload;
@@ -852,6 +858,25 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryFrequency>
+  @action: Returns the number of occurrences of a specified item in a sorted array
+           using binary search to locate the first and last matching indices.
+  @note: The array must be sorted in either ascending or descending order
+         depending on the value of oAscending. Returns 0 if the item is not found.
+         Internally uses BinaryStart and BinaryStop to determine the range of
+         matching elements.
+[==============================================================================}
+function MArrayHelper.BinaryFrequency(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  s: Integer;
+begin
+  s := Self.BinaryStart(item, oAscending);
+  if (s = -1) then
+    Exit(0);
+  Result := ((Self.BinaryStop(item, oAscending) - s) + 1);
+end;
+
+{==============================================================================]
   <BinaryGallopingSearch>
   @action: Performs an exponential (galloping) range expansion to locate a bounded
            interval that may contain the specified item, followed by a binary search
@@ -1504,6 +1529,54 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryMajority>
+  @action: Determines whether the sorted array contains a majority element
+           (an element occurring more than half of the array length) using
+           binary search to measure the frequency of the middle value.
+  @note: In a sorted array, any majority element must occupy the median
+         position. The function therefore checks the value at index N div 2
+         and counts its occurrences using BinaryStart and BinaryStop.
+         If the count exceeds N div 2, the element is returned in oItem.
+         Time complexity: O(log n). The array must be sorted according to
+         oAscending.
+[==============================================================================}
+function MArrayHelper.BinaryMajority(out oItem: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  L, M: Integer;
+begin
+  L := Self.Length;
+  if (L = 0) then
+    Exit(False);
+  M := (L div 2);
+  Result := ((Self.BinaryStop(Self[M]) - Self.BinaryStart(Self[M]) + 1) > M);
+  if Result then
+    oItem := Self[M];
+end;
+
+{==============================================================================]
+  <BinaryMajority>
+  @action: Returns True if the sorted array contains a majority element
+           (an element occurring more than half the array length).
+  @note: The majority candidate must appear at index N div 2 in a sorted
+         array. The function verifies this by counting occurrences of the
+         median value using BinaryStart and BinaryStop. Returns True when
+         the count exceeds N div 2. Time complexity: O(log n).
+         The array must be sorted according to oAscending.
+[==============================================================================}
+function MArrayHelper.BinaryMajority(const oAscending: Boolean = True): Boolean; overload;
+var
+  L, M: Integer;
+begin
+  L := Self.Length;
+  case L of
+    0: Exit(False);
+	1: Exit(True);
+  end;
+  M := (L div 2);
+  Result := ((Self.BinaryStop(Self[M]) - Self.BinaryStart(Self[M]) + 1) > M);
+end;
+
+{==============================================================================]
   <BinaryMembership>
   @action: Performs a binary search to determine whether the specified item
            exists within the helper array.
@@ -1691,6 +1764,33 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryPercented>
+  @action: Returns the percentile rank position of a specified item within a
+           sorted array using binary search.
+  @note: The result represents the relative position of the item in the array
+         on a scale from 0..100 where the first element corresponds to 0%
+         and the last element corresponds to 100%. If the item is not found,
+         the insertion index returned by BinarySearchBy is used. The array
+         must be sorted according to oAscending.
+[==============================================================================}
+function MArrayHelper.BinaryPercented(const item: MType; const oAscending: Boolean = True): Double; overload;
+var
+  p, l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(0.0);
+  if (l = 1) then
+    Exit(100.0);
+  p := Self.BinarySearchBy(item, oAscending);
+  if (p < 0) then
+    p := not p;
+  if (p > (l - 1)) then
+    p := (l - 1);
+  Result := ((p / (l - 1)) * 100.0);
+end;
+
+{==============================================================================]
   <BinaryPercentile>
   @action: Returns the percentile position of a value within a sorted array using
            binary search.
@@ -1700,7 +1800,7 @@ end;
             • If the item exists → percentile of its index
             • If not → percentile of its insertion position
             • Works with ascending or descending arrays
-   @note: Percentile definition: P = index / (N - 1)
+  @note: Percentile definition: P = index / (N - 1)
 [==============================================================================}
 function MArrayHelper.BinaryPercentile(const item: MType; const oAscending: Boolean = True): Double; overload;
 var
@@ -1722,6 +1822,40 @@ begin
       R.stop := (M - 1);
   end;
   Result := (R.start / H);
+end;
+
+{==============================================================================]
+  <BinaryPopular>
+  @action: Returns the most frequent value (mode) in a sorted array using
+           binary search to determine the size of duplicate ranges.
+  @note: The array must be sorted in ascending or descending order depending
+         on oAscending. If multiple values share the same maximum frequency,
+         the first encountered value is returned.
+		 Returns nothing if array is empty!
+[==============================================================================}
+function MArrayHelper.BinaryPopular(const oAscending: Boolean = True): MType; overload;
+var
+  i, c, r, l, s: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit;
+  r := 0;
+  Result := Self[0];
+  i := 0;
+  while (i < l) do
+  begin
+    s := Self.BinaryStop(Self[i], oAscending);
+    if (s < i) then
+      s := i;
+    c := ((s - i) + 1);
+    if (c > r) then
+    begin
+      r := c;
+      Result := Self[i];
+    end;
+    i := (s + 1);
+  end;
 end;
 
 {==============================================================================]
@@ -1838,6 +1972,29 @@ begin
     else
       R.stop := (Result - 1);
   end;
+end;
+
+{==============================================================================]
+  <BinaryRanking>
+  @action: Returns the percentile rank position of a specified item within a
+           sorted array using binary search.
+  @note: The returned value represents the relative position of the item in
+         the array as a percentage in the range [0..100). If the item is not
+         present, the insertion index returned by BinarySearchBy is used to
+         estimate where the item would be placed. The array must be sorted in
+         ascending or descending order depending on oAscending.
+[==============================================================================}
+function MArrayHelper.BinaryRanking(const item: MType; const oAscending: Boolean = True): Double; overload;
+var
+  p, l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(0.0);
+  p := Self.BinarySearchBy(item, oAscending);
+  if (p < 0) then
+    p := not p;
+  Result := ((p / l) * 100);
 end;
 
 {==============================================================================]
