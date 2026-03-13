@@ -41,6 +41,8 @@ function KeepIndexes(const ID: TIntegerArray): Integer; overload;
 function KeepIndices(const ID: TIntegerArray): Integer; overload;
 function Pick(const items: MArray; const index: Integer = 0): MArray; overload;
 function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
+function Trim(const tCount: Integer = 1): MArray; overload;
+function Truncate(const tRate: Double = 10): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1311,5 +1313,65 @@ begin
       Result[c.Increase] := Self[i];
   for i := (m + 1) to (l - 1) do
     Result[c.Increase] := Self[i];
+end;
+
+{==============================================================================]
+  <Trim>
+  @action: Removes a fixed number of elements from the start and end of the array.
+  @param: tCount – Number of elements to remove from both the beginning and end (default = 1)
+  @return: A new array with the first and last tCount elements removed.
+  @note:
+    - If tCount <= 0, returns a copy of the original array.
+    - If 2 * tCount >= Length of the array, returns an empty array.
+    - Does not modify the original array; returns a new MArray.
+  @example:
+    [1,2,3,4,5].Trim(1) -> [2,3,4]
+    [1,2,3].Trim(2)     -> []
+[==============================================================================}
+function MArrayHelper.Trim(const tCount: Integer = 1): MArray; overload;
+var
+  L, c: Integer;
+begin
+  L := Self.Length;
+  if (tCount <= 0) then
+    Exit(Self.Copy);
+  c := (L - (2 * tCount));
+  if (c <= 0) then
+    Exit([]);
+  Result := Self.Copy(tCount, c);
+end;
+
+{==============================================================================]
+  <Truncate>
+  @action: Removes a percentage of elements from the start and end of the array.
+  @param: tRate – Percentage of elements to remove from both ends (0 < tRate < 50; default = 10)
+  @return: A new array with the first and last t elements removed, where t = Trunc(Length * tRate / 100)
+  @note:
+    - If tRate <= 0 or the array is empty, returns a copy of the original array.
+    - If tRate >= 50%, returns an empty array.
+    - If 2*t elements exceed the array length, returns an empty array.
+    - Does not modify the original array; returns a new MArray.
+  @example:
+    [1,2,3,4,5,6,7,8,9,10].Truncate(10) -> [2,3,4,5,6,7,8,9]
+    [1,2,3,4].Truncate(50)               -> []
+[==============================================================================}
+function MArrayHelper.Truncate(const tRate: Double = 10): MArray; overload;
+var
+  L, t: Integer;
+  s, c: Integer;
+begin
+  L := Self.Length;
+  if ((tRate <= 0) or (L = 0)) then
+    Exit(Self.Copy);
+  if (tRate >= 50.0)
+    then Exit([]);
+  t := Trunc((L * tRate) / 100.0);
+  if (t <= 0) then
+    Exit(Self.Copy);
+  s := t;
+  c := (L - (2 * t));
+  if c <= 0 then
+    Exit([]);
+  Result := Self.Copy(s, c);
 end;
 {$ENDIF}

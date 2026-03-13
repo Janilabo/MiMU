@@ -15,6 +15,7 @@ function BinaryConverge(const item: MType; const oAscending: Boolean = True): In
 function BinaryCounter(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryDomain(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryEncase(const item: MType): Boolean; overload;
+function BinaryExcept(const target: MArray; const oAscending: Boolean = True): MArray; overload;
 function BinaryExist(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindID(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -60,6 +61,7 @@ function BinaryProbe(const item: MType; const oAscending: Boolean = True; const 
 function BinaryProbe(const item: MType; const probeRadius: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryProxy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRanking(const item: MType; const oAscending: Boolean = True): Double; overload;
+function BinaryRemoveAll(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightside(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySlice(const itemMin, itemMax: MType; const oAscending: Boolean = True): TRange; overload;
@@ -70,6 +72,7 @@ function BinarySuccessor(const item: MType; const oAscending: Boolean = True): I
 function BinarySupply(const item: MType; const aAscending: Boolean = True): Boolean; overload;
 function BinaryThreshold(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUniformSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryWithout(const target: MArray; const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -664,6 +667,61 @@ begin
     t := Self[0];
   end;
   Result := ((item >= b) and (item <= t));
+end;
+
+{==============================================================================]
+  <BinaryExcept>
+  @action: Returns the set difference of two arrays (elements in Self that are NOT in target),
+           supporting both ascending and descending sorted arrays.
+  @param: target      – A sorted array to compare against Self.
+  @param: oAscending  – Boolean flag indicating the sort order of both arrays:
+                        True = ascending (default), False = descending.
+  @return: A new MArray containing elements from Self that do not appear in target.
+  @note:
+    - Both Self and target must be sorted in the order specified by oAscending; otherwise, the result may be incorrect.
+    - Efficient linear scan: O(L + T), where L = Length(Self), T = Length(target).
+    - Does not modify the original arrays; returns a new array.
+    - If Self is empty, returns an empty array.
+    - If target is empty, returns a copy of Self.
+  @example:
+    // Ascending arrays
+    Self = [1,2,3,4,5], target = [2,4], oAscending = True -> Result = [1,3,5]
+    // Descending arrays
+    Self = [5,4,3,2,1], target = [4,2], oAscending = False -> Result = [5,3,1]
+    // Empty target
+    Self = [1,3,5], target = [], oAscending = True -> Result = [1,3,5]
+[==============================================================================}
+function MArrayHelper.BinaryExcept(const target: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  i, j, k, l, t: Integer;
+begin
+  t := target.Length;
+  if (t = 0) then
+    Exit(Self.Copy);
+  l := Self.Length;
+  SetLength(Result, l);
+  i := 0;
+  j := 0;
+  k := 0;
+  case oAscending of
+    True:
+    while (i < l) do
+      if ((j >= t) or (Self[i] < target[j])) then
+        Result[k.Increase] := Self[i.Increase]
+      else if (Self[i] > target[j]) then
+        Inc(j)
+      else
+        Inc(i);
+	False:
+	while (i < l) do
+      if ((j >= t) or (Self[i] > target[j])) then
+        Result[k.Increase] := Self[i.Increase]
+      else if (Self[i] < target[j]) then
+        Inc(j)
+      else
+        Inc(i);
+  end;
+  SetLength(Result, k);
 end;
 
 {==============================================================================]
@@ -1998,6 +2056,50 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryRemoveAll>
+  @action: Removes all elements from Self that also appear in the items array,
+           modifying Self in place using a binary-style merge scan.
+  @param: items      – Sorted array containing values to remove from Self.
+  @param: oAscending  – Sort order of both arrays:
+                        True  = arrays are sorted ascending (default)
+                        False = arrays are sorted descending
+  @return: The number of elements removed from Self.
+  @note:
+    - Both Self and items must already be sorted according to oAscending.
+      If the ordering differs, the result is undefined.
+    - Performs an in-place removal using a two-pointer linear scan.
+      Time complexity: O(L + T), where L = Length(Self) and T = Length(target).
+    - The array capacity is reused during compaction, then truncated to the
+      new length at the end.
+    - If no elements are removed, Self remains unchanged and the function
+      returns 0.
+    - Duplicate values in Self that match items values will all be removed.
+[==============================================================================}
+function MArrayHelper.BinaryRemoveAll(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+var
+  i, j, l, t, r: Integer;
+begin
+  t := items.Length;
+  if (t = 0) then
+    Exit(0);
+  l := Self.Length;
+  i := 0;
+  j := 0;
+  Result := 0;
+  while (i < l) do
+    if ((j < t) and (Self[i] = items[j])) then
+      Inc(i)
+    else if ((j < t) and ((oAscending and (Self[i] > items[j])) or ((not oAscending) and (Self[i] < items[j])))) then
+      Inc(j)
+    else
+      Self[Result.Increase] := Self[i.Increase];
+  if (l = Result) then
+    Exit(0);
+  SetLength(Self, Result);
+  Result := (l - Result);
+end;
+
+{==============================================================================]
   <BinaryRightside>
   @action: Searches the sorted array using binary search and returns the
            last index position where the specified item is found.
@@ -2355,5 +2457,61 @@ begin
   if ((R.start <= R.stop) and (Self[R.start] = item)) then
     Exit(R.start);
   Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryWithout>
+  @action: Returns the set difference of two sorted arrays, producing all
+           elements in Self that are not present in target.
+  @param: target      – Sorted array whose values should be removed from Self.
+  @param: oAscending  – Sort order of both arrays:
+                        True  = arrays are sorted ascending (default)
+                        False = arrays are sorted descending
+  @return: A new MArray containing elements from Self that do not occur in target.
+  @note:
+    - Both Self and target must already be sorted in the order specified by
+      oAscending; otherwise the result is undefined.
+    - Uses a two-pointer linear scan and runs in O(L + T) time
+      (L = Length(Self), T = Length(target)).
+    - If target is empty, a copy of Self is returned immediately.
+    - If Self is empty, an empty array is returned.
+    - The original arrays are not modified.
+    - Functionally equivalent to a binary-style "set subtraction":
+        Result = Self − target
+  @example:
+    // Ascending
+    Self = [1,2,3,4,5], target = [2,4]
+    Result -> [1,3,5]
+
+    // Descending
+    Self = [5,4,3,2,1], target = [4,2], oAscending = False
+    Result -> [5,3,1]
+
+    // Empty target
+    Self = [1,3,5], target = []
+    Result -> [1,3,5]
+[==============================================================================}
+function MArrayHelper.BinaryWithout(const target: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  i, j, k, l, t: Integer;
+begin
+  t := target.Length;
+  if (t = 0) then
+    Exit(Self.Copy);
+  l := Self.Length;
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  i := 0;
+  j := 0;
+  k := 0;
+  while (i < l) do
+    if ((j >= t) or ((oAscending and (Self[i] < target[j])) or ((not oAscending) and (Self[i] > target[j])))) then
+      Result[k.Increase] := Self[i.Increase]
+    else if ((oAscending and (Self[i] > target[j])) or ((not oAscending) and (Self[i] < target[j]))) then
+      Inc(j)
+    else
+      Inc(i);
+  SetLength(Result, k);
 end;
 {$ENDIF}
