@@ -45,6 +45,7 @@ function BinaryIsConstant: Boolean; overload;
 function BinaryIsUnique: Boolean; overload;
 function BinaryItem(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryLeft(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryLeftBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLeftside(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryMajority(out oItem: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryMajority(const oAscending: Boolean = True): Boolean; overload;
@@ -65,6 +66,7 @@ function BinaryProxy(const item: MType; const oAscending: Boolean = True): Integ
 function BinaryRanking(const item: MType; const oAscending: Boolean = True): Double; overload;
 function BinaryRemoveAll(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function BinaryRight(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryRightBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightside(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySlice(const itemMin, itemMax: MType; const oAscending: Boolean = True): TRange; overload;
@@ -1655,6 +1657,41 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryLeftBound>
+  @action: Returns the index of the left boundary for a target value using
+           binary search.        
+            - For ascending arrays, this is the first index where
+              Self[i] >= target.
+            - For descending arrays, this is the first index where 
+	          Self[i] <= target.
+           If no such element exists, -1 is returned.
+  @note: The array must already be sorted according to the value of
+         oAscending. The function runs in O(log n) time.
+         When duplicates exist, the returned index points to the
+         leftmost element satisfying the comparison condition.
+[==============================================================================}
+function MArrayHelper.BinaryLeftBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  if Self.Empty then
+    Exit;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if ((oAscending and (Self[M] >= target)) or ((not oAscending) and (Self[M] <= target))) then
+    begin
+      Result := M;
+      R.stop := (M - 1);
+    end else
+      R.start := (M + 1);
+  end;
+end;
+
+{==============================================================================]
   <BinaryLeftside>
   @action: Searches the sorted array using binary search and returns the
            first index position where the specified item is found.
@@ -2266,6 +2303,41 @@ begin
       end else
         R.stop := (M - 1);
     end;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryRightBound>
+  @action: Returns the index of the right boundary for a target value using
+           binary search.
+            - For ascending arrays, this is the last index where
+              Self[i] <= target.
+            - For descending arrays, this is the last index where
+              Self[i] >= target.
+           If no such element exists, -1 is returned.
+  @note: The array must already be sorted according to the value of
+         oAscending. The function runs in O(log n) time.
+         When duplicates exist, the returned index points to the
+         rightmost element satisfying the comparison condition.
+[==============================================================================}
+function MArrayHelper.BinaryRightBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  if Self.Empty then
+    Exit;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if ((oAscending and (Self[M] <= target)) or ((not oAscending) and (Self[M] >= target))) then
+    begin
+      Result := M;
+      R.start := (M + 1);
+    end else
+      R.stop := (M - 1);
   end;
 end;
 
