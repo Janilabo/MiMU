@@ -27,7 +27,6 @@
 {$I Validation.inc}
 
 {$IFDEF Sortable}
-{$I Sortable/BinaryOps.inc}
 {$I Sortable/Bounds.inc}
 {$I Sortable/Counting.inc}
 {$I Sortable/Directionality.inc}
@@ -41,12 +40,25 @@
 {$I Sortable/Sorted.inc}
 {$I Sortable/Trend.inc}
 {$I Sortable/Validation.inc}
+
 {$I Sortable/Algorithms/BubbleSort.inc}
 {$I Sortable/Algorithms/HybridSort.inc}
 {$I Sortable/Algorithms/MergeSort.inc}
 {$I Sortable/Algorithms/Others.inc}
 {$I Sortable/Algorithms/QuickSort.inc}
 {$I Sortable/Algorithms/SelectionSort.inc}
+
+{$I Sortable/BinaryOps/Add.inc}
+{$I Sortable/BinaryOps/Bounds.inc}
+{$I Sortable/BinaryOps/Counting.inc}
+{$I Sortable/BinaryOps/Miscellaneous.inc}
+{$I Sortable/BinaryOps/Query.inc}
+{$I Sortable/BinaryOps/Removal.inc}
+{$I Sortable/BinaryOps/Scanning.inc}
+{$I Sortable/BinaryOps/Search.inc}
+{$I Sortable/BinaryOps/Selection.inc}
+{$I Sortable/BinaryOps/Sort.inc}
+{$I Sortable/BinaryOps/Validation.inc}
 {$ENDIF}
 
 {$I Deduplication/Cardinality.inc}
