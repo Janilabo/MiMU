@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function BinaryAddress(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryBoundaries(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryBoundary(const threshold: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryBoundLower(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -61,6 +62,7 @@ function BinaryOccurrences(const item: MType; const oAscending: Boolean = True):
 function BinaryOccurrency(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryPercented(const item: MType; const oAscending: Boolean = True): Double; overload;
 function BinaryPercentile(const item: MType; const oAscending: Boolean = True): Double; overload;
+function BinaryPlace(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryPopular(const oAscending: Boolean = True): MType; overload;
 function BinaryPredecessor(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryProbe(const item: MType; const oAscending: Boolean = True; const probeRadius: Integer = 5): Integer; overload;
@@ -87,6 +89,44 @@ function BinaryWithout(const target: MArray; const oAscending: Boolean = True): 
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryAddress>
+  @action: Performs a binary search to find the **index of a specific item** in a sorted array.
+           Behavior:
+           - If the item exists in the array, returns its index.
+           - If the item does not exist, returns `not InsertIndex`, where `InsertIndex` 
+             is the position where the item could be inserted to maintain the array’s sort order.
+           Supports both ascending and descending arrays using the `oAscending` parameter.
+  @param oAscending
+           Indicates the sort order of the array:
+           - True  → ascending order
+           - False → descending order
+  @note:   The array must already be sorted according to `oAscending`.
+           Uses a closed interval binary search [start..stop].
+           Return value follows the Delphi “InsertIndex” convention:
+             - Non-negative index → exact match found
+             - Negative value → `not InsertIndex`, the bitwise complement of the insertion position
+           Time complexity is O(log n).
+[==============================================================================}
+function MArrayHelper.BinaryAddress(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+      Exit(M);
+    if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  Result := not R.start;
+end;
+
 {==============================================================================]
   <BinaryBoundaries>
   @action: Searches the sorted array for the contiguous occurrence block of the
@@ -2140,6 +2180,41 @@ begin
       R.stop := (M - 1);
   end;
   Result := (R.start / H);
+end;
+
+{==============================================================================]
+  <BinaryPlace>
+  @action: Performs a standard binary search to find the exact index of the target 
+           value in a sorted array (ascending or descending depending on `oAscending`).
+           Behavior:
+           - If the target exists in the array, returns its index.
+           - If the target does not exist, returns `not InsertIndex` 
+             where `InsertIndex` is the position where the target could be inserted
+             to maintain the array’s sort order.
+  @note:   The array must already be sorted according to `oAscending`.
+           Uses a closed interval binary search [start..stop].
+           Return value follows the Delphi “InsertIndex” convention:
+             - Non-negative index → exact match found
+             - Negative value → `not InsertIndex`, the bitwise complement of the insertion position
+           Time complexity is O(log n).
+[==============================================================================}
+function MArrayHelper.BinaryPlace(const target: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = target) then
+      Exit(M);
+    if ((oAscending and (Self[M] < target)) or ((not oAscending) and (Self[M] > target))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  Result := not R.start;
 end;
 
 {==============================================================================]

@@ -9,6 +9,7 @@ function BinaryHybridSearch(const value: Integer; const threshold: Integer; cons
 function BinaryIndex(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryIndexFor(const item: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryIndexOf(const value: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinaryInterp(const target: Integer; const oAscending: Boolean = True): Double; overload;
 function BinaryInterpolationSearch(const x: Integer; const aAscending: Boolean = True): Integer;
 function BinaryLocalize(const value: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryLookup(const value: Integer): Integer; overload;
@@ -32,6 +33,7 @@ function BinarySearchSpan(const value: Integer; const L, R: Integer; const aAsce
 function BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinarySeek(const x: Integer; const aAscending: Boolean = True): Integer;
 function BSearch(const value: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinarySnap(const target: Integer; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -384,6 +386,36 @@ function TIntegerArrayHelper.BinaryIndexOf(const value: Integer; const oAscendin
   end;
 begin
   Result := BS(0, High(Self));
+end;
+
+{==============================================================================]
+  <BinaryInterp>
+  @action: Performs an **interpolation search** on a sorted integer array to estimate
+           the fractional index of a given target value.
+           Behavior:
+           - Finds the lower and upper bounds (L and R) around the target.
+           - If L = R or the values at L and R are equal, returns L.
+           - Otherwise, returns a fractional index computed by linear interpolation:
+               Result := L + (target - Self[L]) / (Self[R] - Self[L])
+           The fractional index can be used to **estimate the position** of the target
+           between array elements, useful for smooth scaling or interpolation tasks.
+  @note:   The array must already be sorted according to `oAscending`.
+           - Returns a **Double**, not an integer index.
+           - If the target is outside the array bounds, the formula may produce
+             a fractional index beyond 0..Length-1.
+           - Returns -1 if L or R are not found (i.e., array is empty or target not within bounds).
+           - Time complexity is O(log n), using binary search to find bounds first.
+           - Works best for **uniformly distributed data**; accuracy decreases for skewed distributions.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryInterp(const target: Integer; const oAscending: Boolean = True): Double; overload;
+var
+  L, R: Integer;
+begin
+  L := Self.BinaryLeftBound(target, oAscending);
+  R := Self.BinaryRightBound(target, oAscending);
+  if ((L = R) or (Self[R] = Self[L])) then
+    Exit(L);
+  Result := (L + ((target - Self[L]) / (Self[R] - Self[L])));
 end;
 
 {==============================================================================]
@@ -1083,5 +1115,41 @@ begin
     R.start := (R.start + (D * ((M + 1) - R.start)));
     R.stop := (R.stop - ((1 - D) * (R.stop - (M - 1))));
   end;
+end;
+
+{==============================================================================]
+  <BinarySnap>
+  @action: Finds the index of the element **closest to the target value** in a sorted array.
+           It uses BinaryLeft (first index ≥ target) and BinaryRight (last index ≤ target) 
+           to determine the nearest element. The comparison is based on absolute difference.
+           Behavior:
+           - If the target exactly matches an element, returns that index.
+           - If the target falls between two elements, returns the index of the element 
+             with the smaller absolute difference.
+           - If only one boundary exists (target outside array), returns that boundary.
+  @param target is the value to snap to.
+  @param oAscending indicates the sort order of the array.
+           True  → ascending order
+           False → descending order
+  @note: The array must already be sorted according to `oAscending`.
+         Time complexity is O(log n) because it performs two binary searches.
+         Handles integer overflows safely by converting differences to Int64.
+[==============================================================================}
+function TIntegerArrayHelper.BinarySnap(const target: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  L, R: Integer;
+begin
+  L := Self.BinaryLeftBound(target, oAscending);
+  R := Self.BinaryRightBound(target, oAscending);
+  if (L = R) then
+    Exit(L);
+  if (L = -1) then
+    Exit(R);
+  if (R = -1) then
+    Exit(L);
+  if (Abs(Int64(Self[L]) - target) <= Abs(Int64(Self[R]) - target)) then
+    Result := L
+  else
+    Result := R;
 end;
 {$ENDIF}
