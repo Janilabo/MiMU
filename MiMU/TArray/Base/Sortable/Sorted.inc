@@ -1,66 +1,18 @@
 {$IFDEF HELPERS}
-function Sortable: Boolean; overload;
-function Sorted(const aAscending: Boolean = True): Boolean; overload;
-function SortedAs(const oAscending: Boolean = True): Boolean; overload;
 function IsSorted(const aAscending: Boolean = True): Boolean; overload;
 function IsSorted(const iStart, iStop: Integer; const aAscending: Boolean = True): Boolean; overload;
 function IsSorted(const indexes: TRange; const aAscending: Boolean = True): Boolean; overload;
 function IsSorted(const index: Integer; const aAscending: Boolean = True): Boolean; overload;
+function Sortable: Boolean; overload;
+function Sorted(const aAscending: Boolean = True): Boolean; overload;
+function SortedAs(const oAscending: Boolean = True): Boolean; overload;
 function Sortedness: Boolean; overload;
 function SortednessEx(const stride: Integer = 16): Boolean; overload;
+function SortedWith(const oAscending: Boolean = True): Boolean; overload;
+function Sortered(const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Sortable>
-  @action: Checks whether the array contains at least two different elements.
-           Returns True if sorting would change the array order.
-  @note: Arrays with all equal elements, a single element, or empty arrays
-         return False.
-[==============================================================================}
-function MArrayHelper.Sortable: Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := 1 to High(Self) do
-    if (Self[i] <> Self[i - 1]) then
-      Exit(True);
-  Result := False;
-end;
-
-{==============================================================================]
-  <Sorted>
-  @action: Returns true if array arr is in ascending/descending order by aAscending.
-  @note: By default checking for ascending order.
-[==============================================================================}
-function MArrayHelper.Sorted(const aAscending: Boolean = True): Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := 0 to (High(Self) - 1) do
-    if (aAscending and (Self[i] > Self[i + 1])) or ((not aAscending) and (Self[i] < Self[i + 1])) then
-      Exit(False);
-  Result := (not Self.Empty);
-end;
-
-{==============================================================================]
-  <SortedAs>
-  @action: Determines whether the array is sorted (ascending or descending).
-  @note:
-    - Equal adjacent values are allowed.
-    - Sorting direction is controlled by oAscending (True = ascending, False = descending).
-    - The check stops at the first ordering violation for efficiency.
-[==============================================================================}
-function MArrayHelper.SortedAs(const oAscending: Boolean = True): Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := 0 to (High(Self) - 1) do
-    if ((Self[i] <> Self[i + 1]) and ((Self[i] < Self[i + 1]) xor oAscending)) then
-      Exit(False);
-  Result := True;
-end;
-
 {==============================================================================]
   <IsSorted>
   @action: Checks whether the entire array is sorted in ascending or descending order.
@@ -136,6 +88,56 @@ begin
     Exit(False);
   if ((index > 0) and (aAscending and (Self[index] < Self[index - 1])) or ((not aAscending) and (Self[index] > Self[index - 1]))) then
     Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Sortable>
+  @action: Checks whether the array contains at least two different elements.
+           Returns True if sorting would change the array order.
+  @note: Arrays with all equal elements, a single element, or empty arrays
+         return False.
+[==============================================================================}
+function MArrayHelper.Sortable: Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 1 to High(Self) do
+    if (Self[i] <> Self[i - 1]) then
+      Exit(True);
+  Result := False;
+end;
+
+{==============================================================================]
+  <Sorted>
+  @action: Returns true if array arr is in ascending/descending order by aAscending.
+  @note: By default checking for ascending order.
+[==============================================================================}
+function MArrayHelper.Sorted(const aAscending: Boolean = True): Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to (High(Self) - 1) do
+    if (aAscending and (Self[i] > Self[i + 1])) or ((not aAscending) and (Self[i] < Self[i + 1])) then
+      Exit(False);
+  Result := (not Self.Empty);
+end;
+
+{==============================================================================]
+  <SortedAs>
+  @action: Determines whether the array is sorted (ascending or descending).
+  @note:
+    - Equal adjacent values are allowed.
+    - Sorting direction is controlled by oAscending (True = ascending, False = descending).
+    - The check stops at the first ordering violation for efficiency.
+[==============================================================================}
+function MArrayHelper.SortedAs(const oAscending: Boolean = True): Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to (High(Self) - 1) do
+    if ((Self[i] <> Self[i + 1]) and ((Self[i] < Self[i + 1]) xor oAscending)) then
+      Exit(False);
   Result := True;
 end;
 
@@ -222,5 +224,56 @@ begin
       if (Self[L] > Self[L + 1]) then
         Exit(False);
   end;
+end;
+
+{==============================================================================]
+  <SortedWith>
+  @action: Determines whether the array is sorted in the specified direction
+           using a preliminary sample check followed by full validation.
+  @note:
+    - Uses the first, middle, and last elements for an initial ordering test.
+    - If the sample check fails, the function exits early.
+    - If the sample check passes, the array is fully verified using SortedAs.
+    - Equal values are permitted.
+[==============================================================================}
+function MArrayHelper.SortedWith(const oAscending: Boolean = True): Boolean; overload;
+var
+  A, B, C: MType;
+  H: Integer;
+begin
+  H := High(Self);
+  if (H < 1) then
+    Exit(True);
+  A := Self[0];
+  B := Self[H div 2];
+  C := Self[H];
+  if (((A <> B) and ((A < B) xor oAscending)) or ((B <> C) and ((B < C) xor oAscending))) then
+    Exit(False);
+  Result := Self.SortedAs(oAscending);
+end;
+
+{==============================================================================]
+  <Sortered>
+  @action: Determines whether the array is sorted in ascending or descending order using recursive divide-and-conquer validation.
+  @note:
+    - Splits the array into halves and checks the boundary between them.
+    - Each half is recursively verified for ordering.
+    - Equal adjacent values are permitted.
+    - Arrays with fewer than two elements are considered ordered.
+[==============================================================================}
+function MArrayHelper.Sortered(const oAscending: Boolean = True): Boolean; overload;
+  function ST(const L, R: Integer): Boolean;
+  var
+    M: Integer;
+  begin
+    if (L >= R) then
+      Exit(True);
+    M := (L + (R - L) div 2);
+    if ((Self[M] <> Self[M + 1]) and ((Self[M] < Self[M + 1]) xor oAscending)) then
+      Exit(False);
+    Result := (ST(L, M) and ST((M + 1), R));
+  end;
+begin
+  Result := ST(0, High(Self));
 end;
 {$ENDIF}

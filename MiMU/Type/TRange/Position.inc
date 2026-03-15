@@ -1,5 +1,6 @@
 {$IFDEF METHODS}
 function Interpolate(const F: Double): Double; overload;
+function Lerp(const aPercentage: Double): Integer; overload;
 function Percentile(const F: Double): Double; overload;
 function Q1: Double; overload;
 function Q2: Double; overload;
@@ -18,6 +19,20 @@ function Q3: Double; overload;
 function TRange.Interpolate(const F: Double): Double; overload;
 begin
   Result := (Self.start + ((Self.stop - Self.start) * F));
+end;
+
+{==============================================================================]
+  <Lerp>
+  @action: Returns the interpolated integer value within the range based on the specified percentage.
+  @note:
+    - Performs linear interpolation between start and stop.
+    - aPercentage normally ranges from 0.0 to 1.0.
+    - The result is rounded to the nearest integer.
+    - Percentages outside the [0.0, 1.0] range produce extrapolated values.
+[==============================================================================}
+function TRange.Lerp(const aPercentage: Double): Integer; overload;
+begin
+  Result := (Self.start + Round((Self.stop - Self.start) * aPercentage));
 end;
 
 {==============================================================================]
