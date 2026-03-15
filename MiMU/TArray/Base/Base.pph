@@ -59,6 +59,7 @@
 {$I Sortable/BinaryOps/Selection.inc}
 {$I Sortable/BinaryOps/Sort.inc}
 {$I Sortable/BinaryOps/Validation.inc}
+{$I Sortable/BinaryOps/Verify.inc}
 {$ENDIF}
 
 {$I Deduplication/Cardinality.inc}

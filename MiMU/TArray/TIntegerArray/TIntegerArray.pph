@@ -15,6 +15,7 @@
 {$I BinaryOps/Search.inc}
 {$I BinaryOps/Selection.inc}
 {$I BinaryOps/Sort.inc}
+{$I BinaryOps/Verify.inc}
 
 {$I Analytics.inc}
 {$I Bounding.inc}
