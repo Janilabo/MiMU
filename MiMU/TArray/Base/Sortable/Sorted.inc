@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Sortable: Boolean; overload;
 function Sorted(const aAscending: Boolean = True): Boolean; overload;
+function SortedAs(const oAscending: Boolean = True): Boolean; overload;
 function IsSorted(const aAscending: Boolean = True): Boolean; overload;
 function IsSorted(const iStart, iStop: Integer; const aAscending: Boolean = True): Boolean; overload;
 function IsSorted(const indexes: TRange; const aAscending: Boolean = True): Boolean; overload;
@@ -40,6 +41,24 @@ begin
     if (aAscending and (Self[i] > Self[i + 1])) or ((not aAscending) and (Self[i] < Self[i + 1])) then
       Exit(False);
   Result := (not Self.Empty);
+end;
+
+{==============================================================================]
+  <SortedAs>
+  @action: Determines whether the array is sorted (ascending or descending).
+  @note:
+    - Equal adjacent values are allowed.
+    - Sorting direction is controlled by oAscending (True = ascending, False = descending).
+    - The check stops at the first ordering violation for efficiency.
+[==============================================================================}
+function MArrayHelper.SortedAs(const oAscending: Boolean = True): Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to (High(Self) - 1) do
+    if ((Self[i] <> Self[i + 1]) and ((Self[i] < Self[i + 1]) xor oAscending)) then
+      Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]

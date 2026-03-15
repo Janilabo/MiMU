@@ -30,6 +30,7 @@
 {$I Navigation.inc}
 {$I Scanning.inc}
 {$I Selection.inc}
+{$I Sorted.inc}
 {$I Sorting.inc}
 {$I Spanning.inc}
 {$I Ternary.inc}
