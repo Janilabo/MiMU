@@ -1,11 +1,13 @@
 {$IFDEF METHODS}
-function AMean: Double;
-function Amid: Integer;
-function Average: Double;
-function Bisect: Integer;
-function Center: Integer;
-function Centerpoint: Integer;
-function Central: Integer;
+function AMean: Double; overload;
+function Amid: Integer; overload;
+function Average: Double; overload;
+function Base: Integer; overload;
+function Bisect: Integer; overload;
+function Bisector: Integer; overload;
+function Center: Integer; overload;
+function Centerpoint: Integer; overload;
+function Central: Integer; overload;
 function Centre: Integer; overload;
 function Centroid: Integer; overload;
 function Core: Integer; overload;
@@ -13,70 +15,71 @@ function Half: Integer; overload;
 function Halfstep: Integer; overload;
 function Halfway: Integer; overload;
 function Halved: Integer; overload;
-function Kernel: Integer;
+function Kernel: Integer; overload;
 function Mean: Double; overload;
-function Median: Double;
+function Median: Double; overload;
 function Medium: Double; overload;
-function Medoid: Integer;
-function Mid: Double;
+function Medoid: Integer; overload;
+function Mid: Double; overload;
 function MidBit: Integer; overload;
-function Middle: Integer;
+function Middle: Integer; overload;
 function MiddleBit: Integer; overload;
+function MiddleDigit: Integer; overload;
 function MiddleLeft: Integer; overload;
-function MiddlePoint: Double;
+function MiddlePoint: Double; overload;
 function MiddleRight: Integer; overload;
 function MiddleStep: Integer; overload;
 function MiddleVal: Integer; overload;
-function MiddleValue: Double;
-function Middleway: Integer;
+function MiddleValue: Double; overload;
+function Middleway: Integer; overload;
 function Midpoint(const wStart: Double = 1; const wStop: Double = 1): Double; overload;
-function Midst(const method: Integer = 0): Integer;
-function MidVal: Double;
-function MidValue: Double;
-function Nexus: Integer;
-function Pivot: Integer;
+function Midst(const method: Integer = 0): Integer; overload;
+function MidVal: Double; overload;
+function MidValue: Double; overload;
+function Nexus: Integer; overload;
+function Pivot: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
- <AMean>
- @action: Returns the arithmetic mean of the range bounds.
-          The arithmetic mean is calculated as (Start + Stop) / 2 using floating-point
-          arithmetic and represents the central value between the two bounds.
- @note:
-   - No normalization is performed; Start and Stop are used as-is.
-   - The result may be non-integer even when Start and Stop are integers.
-   - For a singular range (Start = Stop), the result equals Start.
-   - This method computes the arithmetic mean of the bounds, not the midpoint
-     of discrete elements within the range.
+  <AMean>
+  @action: Returns the arithmetic mean of the range bounds.
+           The arithmetic mean is calculated as (Start + Stop) / 2 using floating-point
+           arithmetic and represents the central value between the two bounds.
+  @note:
+    - No normalization is performed; Start and Stop are used as-is.
+    - The result may be non-integer even when Start and Stop are integers.
+    - For a singular range (Start = Stop), the result equals Start.
+    - This method computes the arithmetic mean of the bounds, not the midpoint
+      of discrete elements within the range.
 [==============================================================================}
-function TRange.AMean: Double;
+function TRange.AMean: Double; overload;
 begin
   Result := Math.Mean([Double(Self.start), Double(Self.stop)]);
 end;
 
 {==============================================================================]
- <Amid>
- @action: Returns the anchor point of the range.
-          The anchor is defined as the upper midpoint of the range and is calculated
-          as (Start + Stop + 1) div 2. This biases the result toward the upper bound
-          when the range has an even number of elements.
+  <Amid>
+  @action: Returns the anchor point of the range.
+           The anchor is defined as the upper midpoint of the range and is calculated
+           as (Start + Stop + 1) div 2. This biases the result toward the upper bound
+           when the range has an even number of elements.
   @note:
-   - No normalization is performed; Start and Stop are used as-is.
-   - For a singular range (Start = Stop), the anchor equals Start.
-   - The result is always within the inclusive range Start .. Stop.
+    - No normalization is performed; Start and Stop are used as-is.
+    - For a singular range (Start = Stop), the anchor equals Start.
+    - The result is always within the inclusive range Start .. Stop.
 [==============================================================================}
-function TRange.Amid: Integer;
+function TRange.Amid: Integer; overload;
 begin
   Result := ((Self.start + Self.stop + 1) div 2);
 end;
 
 {==============================================================================]
- <Average>
- @action: Average value from TRange.
- @note: None
+  <Average>
+  @action: Average value from TRange.
+  @note: None
 [==============================================================================}
-function TRange.Average: Double;
+function TRange.Average: Double; overload;
 var
   c: Int64;
 begin
@@ -85,17 +88,53 @@ begin
 end;
 
 {==============================================================================]
- <Bisect>
- @action: Returns the lower median index of the range using integer-only arithmetic.
- @note: The result is order-independent and always lies within the range bounds.
-        For ranges with an even number of elements, the lower of the two central
-        values is returned. Equivalent to: Min(start, stop) + ((Size - 1) div 2)
-        This method avoids floating-point arithmetic and is safe for all integer
-        ranges.
+  <Base>
+  @action: Returns base value of range (exact or midpoint approximation)
+  @note: Uses (start div 2 + stop div 2) to avoid overflow; may differ ±1
 [==============================================================================}
-function TRange.Bisect: Integer;
+function TRange.Base: Integer; overload;
+begin
+  if (Self.start = Self.stop) then
+    Result := Self.start
+  else
+    Result := ((Self.start div 2) + (Self.stop div 2));
+end;
+
+{==============================================================================]
+  <Bisect>
+  @action: Returns the lower median index of the range using integer-only arithmetic.
+  @note: The result is order-independent and always lies within the range bounds.
+         For ranges with an even number of elements, the lower of the two central
+         values is returned. Equivalent to: Min(start, stop) + ((Size - 1) div 2)
+         This method avoids floating-point arithmetic and is safe for all integer
+         ranges.
+[==============================================================================}
+function TRange.Bisect: Integer; overload;
 begin
   Result := (Self.Minimum + ((Self.Size - 1) shr 1));
+end;
+
+{==============================================================================]
+  <Bisector>
+  @action: Returns the integer midpoint between Self.start and Self.stop.
+  @note: Degenerate case: if Self.start = Self.stop, returns Self.start.
+         Supports both ascending (start < stop) and descending (start > stop) ranges.
+         Uses integer arithmetic only (no floating point).
+		 Midpoint is computed as: Self.start + ((Self.stop - Self.start) div 2)
+         but implemented in a direction-safe form.
+         Division is truncating (div), therefore:
+          - even span -> exact midpoint
+          - odd span -> biased toward Self.start
+         Avoids overflow risk of (start + stop) div 2.
+[==============================================================================}
+function TRange.Bisector: Integer; overload;
+var
+  s: Integer;
+begin
+  if (Self.start = Self.stop) then
+    Exit(Self.start);
+  s := (Self.stop - Self.start);
+  Result := (Self.start + (Abs(s) div 2) * Sign(s));
 end;
 
 {==============================================================================]
@@ -103,7 +142,7 @@ end;
   @action: The value(s) at the center position(s) of given range.
   @note: None
 [==============================================================================}
-function TRange.Center: Integer;
+function TRange.Center: Integer; overload;
 begin
   Result := (Self.Combined div 2);
 end;
@@ -114,33 +153,33 @@ end;
            calculation.
            The center point is computed using a bitwise formulation equivalent to:
            Start + (Stop − Start) div 2 - but without risk of integer overflow.
- @note
-   - This method avoids overflow that may occur when summing large integers.
-   - Integer division truncates toward zero, biasing the result toward Start.
-   - No normalization is performed; Start and Stop are used as-is.
-   - For a singular range (Start = Stop), the result equals Start.
-   - The result lies between Start and Stop (inclusive) for both ascending and
-     descending ranges.
+  @note
+    - This method avoids overflow that may occur when summing large integers.
+    - Integer division truncates toward zero, biasing the result toward Start.
+    - No normalization is performed; Start and Stop are used as-is.
+    - For a singular range (Start = Stop), the result equals Start.
+    - The result lies between Start and Stop (inclusive) for both ascending and
+      descending ranges.
 [==============================================================================}
-function TRange.Centerpoint: Integer;
+function TRange.Centerpoint: Integer; overload;
 begin
   Result := ((Self.start and Self.stop) + ((Self.start xor Self.stop) div 2));
 end;
 
 {==============================================================================]
- <Central>
- @action: The value(s) at the center position(s) of given range.
- @note: None
+  <Central>
+  @action: The value(s) at the center position(s) of given range.
+  @note: None
 [==============================================================================}
-function TRange.Central: Integer;
+function TRange.Central: Integer; overload;
 begin
   Result := (Self.Combined shr 1);
 end;
 
 {==============================================================================]
- <Centre>
- @action: The value(s) at the center position(s) of given range.
- @note: None
+  <Centre>
+  @action: The value(s) at the center position(s) of given range.
+  @note: None
 [==============================================================================}
 function TRange.Centre: Integer; overload;
 begin
@@ -148,9 +187,9 @@ begin
 end;
 
 {==============================================================================]
- <Centroid>
- @action: The value(s) at the center position(s) of given range.
- @note: None
+  <Centroid>
+  @action: The value(s) at the center position(s) of given range.
+  @note: None
 [==============================================================================}
 function TRange.Centroid: Integer; overload;
 begin
@@ -158,9 +197,9 @@ begin
 end;
 
 {==============================================================================]
- <Core>
- @action: The value(s) at the center position(s) of given range.
- @note: None
+  <Core>
+  @action: The value(s) at the center position(s) of given range.
+  @note: None
 [==============================================================================}
 function TRange.Core: Integer; overload;
 begin
@@ -227,7 +266,7 @@ end;
          for iterative bisection algorithms that advance from start toward stop.
          Equivalent to: start + Sign(stop - start) * (Abs(stop - start) div 2)
 [==============================================================================}
-function TRange.Kernel: Integer;
+function TRange.Kernel: Integer; overload;
 var
   d: Integer;
 begin
@@ -236,9 +275,9 @@ begin
 end;
 
 {==============================================================================]
- <Mean>
- @action: Returns the arithmetic mean (midpoint) of the range's Start and Stop values as a Double.
- @note: Uses floating-point division to avoid integer truncation and to handle large integer values safely.
+  <Mean>
+  @action: Returns the arithmetic mean (midpoint) of the range's Start and Stop values as a Double.
+  @note: Uses floating-point division to avoid integer truncation and to handle large integer values safely.
 [==============================================================================}
 function TRange.Mean: Double; overload;
 begin
@@ -246,18 +285,18 @@ begin
 end;
 
 {==============================================================================]
- <Median>
- @action: Returns the discrete median of the range as a floating-point value.
- @note: This is a non-mutating operation. The median is calculated over the
-        set of integers represented by the range, including both endpoints.
-        - For odd-sized ranges, it returns the middle element.
-        - For even-sized ranges, it returns the average of the two central
-          elements.
-        The function respects the direction of the range (ascending or
-        descending) and produces the same numeric result regardless of
-        order.
+  <Median>
+  @action: Returns the discrete median of the range as a floating-point value.
+  @note: This is a non-mutating operation. The median is calculated over the
+         set of integers represented by the range, including both endpoints.
+         - For odd-sized ranges, it returns the middle element.
+         - For even-sized ranges, it returns the average of the two central
+           elements.
+         The function respects the direction of the range (ascending or
+         descending) and produces the same numeric result regardless of
+         order.
 [==============================================================================}
-function TRange.Median: Double;
+function TRange.Median: Double; overload;
 var
   M, D, S: Integer;
 begin
@@ -271,9 +310,9 @@ begin
 end;
 
 {==============================================================================]
- <Medium>
- @action: Returns the arithmetic mean of the range bounds as a floating-point value.
- @note: This represents a mathematical midpoint only. The result may be fractional.
+  <Medium>
+  @action: Returns the arithmetic mean of the range bounds as a floating-point value.
+  @note: This represents a mathematical midpoint only. The result may be fractional.
 [==============================================================================}
 function TRange.Medium: Double; overload;
 begin
@@ -293,7 +332,7 @@ end;
       for ranges of odd length.
     - For a singular range (Start = Stop), the result equals Start.
 [==============================================================================}
-function TRange.Medoid: Integer;
+function TRange.Medoid: Integer; overload;
 begin
   if Self.Descending then
     Result := (Self.start - (Abs(Self.start - Self.stop) div 2))
@@ -302,20 +341,20 @@ begin
 end;
 
 {==============================================================================]
- <Mid>
- @action: The value(s) at the center position(s) of given range.
- @note: None
+  <Mid>
+  @action: The value(s) at the center position(s) of given range.
+  @note: None
 [==============================================================================}
-function TRange.Mid: Double;
+function TRange.Mid: Double; overload;
 begin
   Result := (Self.Combined / 2.0);
 end;
 
 {==============================================================================]
- <MidBit>
- @action: Returns the integer midpoint of the range using a bitwise shift (shr 1) for division by 2.
- @note: Safe for both ascending and descending ranges. This is a floor-biased midpoint,
-        equivalent to MiddleLeft, but implemented with a bit shift for efficiency.
+  <MidBit>
+  @action: Returns the integer midpoint of the range using a bitwise shift (shr 1) for division by 2.
+  @note: Safe for both ascending and descending ranges. This is a floor-biased midpoint,
+         equivalent to MiddleLeft, but implemented with a bit shift for efficiency.
 [==============================================================================}
 function TRange.MidBit: Integer; overload;
 begin
@@ -325,20 +364,20 @@ begin
 end;
 
 {==============================================================================]
- <Middle>
- @action: The value(s) at the center position(s) of given range.
- @note: None
+  <Middle>
+  @action: The value(s) at the center position(s) of given range.
+  @note: None
 [==============================================================================}
-function TRange.Middle: Integer;
+function TRange.Middle: Integer; overload;
 begin
   Result := (Self.Combined div 2);
 end;
 
 {==============================================================================]
- <MiddleBit>
- @action: Returns the integer midpoint of the range using a bitwise shift for division by 2.
- @note: Safe for ascending and descending ranges. Equivalent to a floor-biased midpoint
-        but uses low-level arithmetic for efficiency.
+  <MiddleBit>
+  @action: Returns the integer midpoint of the range using a bitwise shift for division by 2.
+  @note: Safe for ascending and descending ranges. Equivalent to a floor-biased midpoint
+         but uses low-level arithmetic for efficiency.
 [==============================================================================}
 function TRange.MiddleBit: Integer; overload;
 begin
@@ -349,10 +388,25 @@ begin
 end;
 
 {==============================================================================]
- <MiddleLeft>
- @action: Returns the integer midpoint of the range, biased toward the lower index.
- @note: Uses floor division. This is the classic binary search midpoint and is safe
-        for single-element, ascending, and descending ranges.
+  <MiddleDigit>
+  @action: Returns midpoint of range using bitwise split (exact integer average)
+  @note: Uses (b shr 1 + e shr 1) + ((b and 1 + e and 1) shr 1) to avoid overflow;
+         equivalent to (start + stop) div 2 without precision loss
+[==============================================================================}
+function TRange.MiddleDigit: Integer; overload;
+var
+  b, e: Int64;
+begin
+  b := Int64(Self.start);
+  e := Int64(Self.stop);
+  Result := Integer(((b shr 1) + (e shr 1)) + (((b and 1) + (e and 1)) shr 1));
+end;
+
+{==============================================================================]
+  <MiddleLeft>
+  @action: Returns the integer midpoint of the range, biased toward the lower index.
+  @note: Uses floor division. This is the classic binary search midpoint and is safe
+         for single-element, ascending, and descending ranges.
 [==============================================================================}
 function TRange.MiddleLeft: Integer; overload;
 begin
@@ -362,21 +416,21 @@ begin
 end;
 
 {==============================================================================]
- <MiddlePoint>
- @action: ?
- @note: ?
+  <MiddlePoint>
+  @action: ?
+  @note: ?
 [==============================================================================}
-function TRange.MiddlePoint: Double;
+function TRange.MiddlePoint: Double; overload;
 begin
   Result := (((1.0 * Self.start) + (1.0 * Self.stop)) / 2.0);
 end;
 
 {==============================================================================]
- <MiddleRight>
- @action: Returns the integer midpoint of the range, biased toward the higher index.
- @note: Uses ceiling division. Suitable for binary search variants that advance the
-        lower bound and require guaranteed progress on even-length ranges. Supports
-        both ascending and descending ranges.
+  <MiddleRight>
+  @action: Returns the integer midpoint of the range, biased toward the higher index.
+  @note: Uses ceiling division. Suitable for binary search variants that advance the
+         lower bound and require guaranteed progress on even-length ranges. Supports
+         both ascending and descending ranges.
 [==============================================================================}
 function TRange.MiddleRight: Integer; overload;
 begin
@@ -386,10 +440,10 @@ begin
 end;
 
 {==============================================================================]
- <MiddleStep>
- @action: Returns the integer midpoint of the range, calculated by stepping halfway
-          from start to stop. Works for both ascending and descending ranges.
- @note: Neutral midpoint, unbiased toward lower or higher indices.
+  <MiddleStep>
+  @action: Returns the integer midpoint of the range, calculated by stepping halfway
+           from start to stop. Works for both ascending and descending ranges.
+  @note: Neutral midpoint, unbiased toward lower or higher indices.
 [==============================================================================}
 function TRange.MiddleStep: Integer; overload;
 begin
@@ -400,11 +454,11 @@ begin
 end;
 
 {==============================================================================]
- <MiddleValue>
- @action: The value(s) at the center position(s) of given range.
- @note: None
+  <MiddleValue>
+  @action: The value(s) at the center position(s) of given range.
+  @note: None
 [==============================================================================}
-function TRange.MiddleValue: Double;
+function TRange.MiddleValue: Double; overload;
 begin
   if Self.Ascending then
     Result := (Self.start + ((Self.stop - Self.start) / 2))
@@ -413,9 +467,9 @@ begin
 end;
 
 {==============================================================================]
- <MiddleVal>
- @action: Middle value alternative
- @note: None
+  <MiddleVal>
+  @action: Middle value alternative
+  @note: None
 [==============================================================================}
 function TRange.MiddleVal: Integer; overload;
 begin
@@ -423,23 +477,23 @@ begin
 end;
 
 {==============================================================================]
- <Middleway>
- @action: Returns the rounded midpoint of the range.
-          The midpoint is calculated as: Start + ((Stop − Start) * 0.5)
-          and rounded to the nearest integer using standard rounding rules.
+  <Middleway>
+  @action: Returns the rounded midpoint of the range.
+           The midpoint is calculated as: Start + ((Stop − Start) * 0.5)
+           and rounded to the nearest integer using standard rounding rules.
   @note:
-   - No normalization is performed; Start and Stop are used as-is.
-   - Rounding may bias the result upward or downward depending on the fractional
-     component and the active rounding mode.
-   - For a singular range (Start = Stop), the result equals Start.
+    - No normalization is performed; Start and Stop are used as-is.
+    - Rounding may bias the result upward or downward depending on the fractional
+      component and the active rounding mode.
+    - For a singular range (Start = Stop), the result equals Start.
 [==============================================================================}
-function TRange.Middleway: Integer;
+function TRange.Middleway: Integer; overload;
 begin
   Result := Round(Self.start + (Self.Delta * 0.5));
 end;
 
 {==============================================================================]
- <Midpoint>
+  <Midpoint>
   @action: Computes the weighted midpoint (center) of the range using given weights.
   @note: Returns a Double. Weighted midpoint formula: ((Start * wStart) + (Stop * wStop)) / (wStart + wStop).
          Useful when one bound of the range has more importance than the other.
@@ -450,7 +504,7 @@ begin
 end;
 
 {==============================================================================]
- <Midst>
+  <Midst>
   @action: Computes the integer midpoint of the range [Start..Stop] using
            a selectable rounding method.
            The midpoint is calculated as (Start+Stop)/2 and then rounded
@@ -465,7 +519,7 @@ end;
     - The function uses Int64 internally to avoid overflow for large ranges.
     - Useful for obtaining a central integer value of a numeric range.
 [==============================================================================}
-function TRange.Midst(const method: Integer = 0): Integer;
+function TRange.Midst(const method: Integer = 0): Integer; overload;
 var
   s: Int64;
 begin
@@ -481,11 +535,11 @@ begin
 end;
 
 {==============================================================================]
- <MidVal>
- @action: The value(s) at the center position(s) of given range.
- @note: None
+  <MidVal>
+  @action: The value(s) at the center position(s) of given range.
+  @note: None
 [==============================================================================}
-function TRange.MidVal: Double;
+function TRange.MidVal: Double; overload;
 var
   s: Integer;
 begin
@@ -500,7 +554,7 @@ end;
   @action: The value(s) at the center position(s) of given range.
   @note: None
 [==============================================================================}
-function TRange.MidValue: Double;
+function TRange.MidValue: Double; overload;
 var
   s: Integer;
 begin
@@ -523,7 +577,7 @@ end;
          This method should be preferred when start and stop may approach the
          integer limits.
 [==============================================================================}
-function TRange.Nexus: Integer;
+function TRange.Nexus: Integer; overload;
 var
   o: Integer;
   l, h: Int64;
@@ -539,7 +593,7 @@ end;
   @action: The value(s) at the center position(s) of given range.
   @note: None
 [==============================================================================}
-function TRange.Pivot: Integer;
+function TRange.Pivot: Integer; overload;
 begin
   if Self.Ascending then
     Result := (Self.start + ((Self.stop - Self.start) div 2))

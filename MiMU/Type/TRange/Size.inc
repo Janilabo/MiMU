@@ -28,6 +28,7 @@ function Quantified: Int64;
 function Quantify: Integer;
 function Quantity: Integer;
 function Reach: Integer; overload;
+function Scope: Integer; overload;
 function Size: Integer; overload;
 function Size(var minVal, maxVal: Integer): Integer; overload;
 function Sized: Integer; overload;
@@ -464,6 +465,23 @@ begin
   if (Result < 0) then
     Result := -Result;
   Result := (Result + 1);
+end;
+
+{==============================================================================]
+  <Scope>
+  @action: Returns the size (count of integers) in the range
+  @note: 
+    - If start = stop, returns 1
+    - Handles inverted ranges (start > stop) correctly
+    - Computed as Abs(stop - start) + 1 using Int64 to prevent overflow
+[==============================================================================}
+function TRange.Scope: Integer; overload;
+begin
+  if (Self.start = Self.stop) then
+    Exit(1);
+  if (Self.start > Self.stop) then
+    Exit(Integer(((Int64(Self.stop) - Self.start) div -1) + 1));
+  Result := Integer(((Int64(Self.stop) - Self.start) div 1) + 1);
 end;
 
 {==============================================================================]
