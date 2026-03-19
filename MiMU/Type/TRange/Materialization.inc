@@ -32,6 +32,7 @@ function Generate: TIntegerArray; overload;
 function Generated: TIntegerArray; overload;
 function Ints: TIntegerArray; overload;
 function Items: TIntegerArray; overload;
+function Iterate(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
 function Iterated: TIntegerArray; overload;
 function Iteration: TIntegerArray; overload;
 function List: TIntegerArray; overload;
@@ -828,6 +829,54 @@ begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := (Self.start + (s * i));
+end;
+
+{==============================================================================]
+  <Iterate>
+  @action: Expands the current range into a contiguous array of integers.
+           Iteration respects the natural direction of the range unless
+           explicitly reversed via rReverse.
+  @note: - For non-singular ranges, values are generated starting from
+           Self.start toward Self.stop, INCLUDING the terminal bound.
+         - Direction is inferred automatically:
+            * Ascending  (start <= stop) → step = +1
+            * Descending (start >  stop) → step = -1
+        - When rReverse = True, the logical order is inverted without
+          mutating the original range.
+        - The resulting array is pre-sized for performance (no reallocation
+          during population).
+        - Singular ranges (start = stop) produce a single-element array.
+        - Uses Increase(s) as the stepping primitive; behavior depends on
+          its implementation (assumed side-effect increment).
+  @return: Number of elements written to rDigits.
+[==============================================================================}
+function TRange.Iterate(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
+var
+  i, s, d, j: Integer;
+  r: TRange;
+begin
+  case Self.Singular of
+    False:
+    begin
+      s := IfThen((Self.start <= Self.stop), 1, -1);
+      if rReverse then
+      begin
+        r := Self.Reversed;
+        s := -s;
+      end else
+        r := Self;
+      d := 0;
+      i := (r.start - s);
+      while (i.Increase(s) <> r.stop) do
+        Inc(d);
+      SetLength(rDigits, d);
+      i := r.start;
+      for j := 0 to (d - 1) do
+        rDigits[j] := i.Increase(s);
+    end;
+    True: rDigits := [Self.start];
+  end;
+  Result := rDigits.Length;
 end;
 
 {==============================================================================]
