@@ -32,6 +32,8 @@ function Generate: TIntegerArray; overload;
 function Generated: TIntegerArray; overload;
 function Ints: TIntegerArray; overload;
 function Items: TIntegerArray; overload;
+function Iter: TIntegerArray; overload;
+function Iter(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
 function Iterate: TIntegerArray; overload;
 function Iterate(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
 function Iterated: TIntegerArray; overload;
@@ -835,9 +837,83 @@ begin
 end;
 
 {==============================================================================]
+  <Iter>
+  @action: Returns a fully materialized array of the range values, pre-sized
+           for maximum efficiency. Uses pointer arithmetic and Increase() to
+           populate values sequentially from start to stop.
+  @note: - Values are generated from Self.start toward Self.stop,
+           INCLUDING the terminal bound.
+         - Direction is determined by Self.Ascending:
+             * True  → step = +1
+             * False → step = -1
+         - Array length is precomputed as Abs(Int64(stop) - start) + 1,
+           avoiding any dynamic resizing.
+         - Uses a pointer (PInteger) for fast sequential assignment.
+         - Increase(s) is used to advance the iterator for each element.
+         - This overload does not support reversing; always iterates in
+           natural ascending/descending order.
+         - Ideal for high-performance scenarios where a complete
+           materialization is required.
+[==============================================================================}
+function TRange.Iter: TIntegerArray; overload;
+var
+  P: PInteger;
+  i, r, s: Integer;
+begin
+  SetLength(Result, Integer(Abs(Int64(Self.stop) - Self.start) + 1));
+  P := @Result[0];
+  s := IfThen(Self.Ascending, 1, -1);
+  r := Self.start;
+  for i := 0 to High(Result) do
+  begin
+    P^ := r.Increase(s);
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
+  <Iter>
+  @action: Populates a caller-provided array with the range values, optionally
+           in reversed order. Optimized with pre-sizing and pointer-based
+           assignment.
+  @note: - Values are generated from Self.start to Self.stop, INCLUDING
+           the terminal bound.
+         - Direction is determined by Self.Ascending:
+             * True  → step = +1
+             * False → step = -1
+         - If rReverse = True, iteration starts from Self.stop and steps
+           in the opposite direction.
+         - Array length is precomputed; the output array is resized once
+           to exactly match the range length.
+         - Uses a PInteger pointer for efficient sequential writes.
+         - Increase(s) is used to advance the iterator for each element.
+         - This overload avoids any intermediate array or dynamic growth.
+[==============================================================================}
+function TRange.Iter(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
+var
+  P: PInteger;
+  i, r, s: Integer;
+begin
+  Result := Integer(Abs(Int64(Self.stop) - Self.start) + 1);
+  SetLength(rDigits, Result);
+  P := @rDigits[0];
+  s := IfThen(Self.Ascending, 1, -1);
+  if rReverse then
+  begin
+    r := Self.stop;
+    s := -s;
+  end else
+    r := Self.start;
+  for i := 0 to (Result - 1) do
+  begin
+    P^ := r.Increase(s);
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
   <Iterate>
   @action: Returns a dynamically constructed array representing the range.
-
   @note: - For non-singular ranges, values are generated from Self.start
            toward Self.stop, INCLUDING the terminal bound.
          - Direction is determined by Self.Ascending:
