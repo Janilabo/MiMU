@@ -32,9 +32,12 @@ function Generate: TIntegerArray; overload;
 function Generated: TIntegerArray; overload;
 function Ints: TIntegerArray; overload;
 function Items: TIntegerArray; overload;
+function Iterate: TIntegerArray; overload;
 function Iterate(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
 function Iterated: TIntegerArray; overload;
+function Iterated(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
 function Iteration: TIntegerArray; overload;
+function Iteration(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
 function List: TIntegerArray; overload;
 function Listed: TIntegerArray; overload;
 function Listing: TIntegerArray; overload;
@@ -833,6 +836,37 @@ end;
 
 {==============================================================================]
   <Iterate>
+  @action: Returns a dynamically constructed array representing the range.
+
+  @note: - For non-singular ranges, values are generated from Self.start
+           toward Self.stop, INCLUDING the terminal bound.
+         - Direction is determined by Self.Ascending:
+             * True  → step = +1
+             * False → step = -1
+         - Uses a local iterator (r) initialized to (start - step), then
+           advanced via Increase(s) prior to each append.
+         - Elements are appended using Supply, resulting in dynamic
+           growth of the output array.
+         - Iteration condition (r.Increase(s) <> Self.stop) ensures the
+           stop value is included in the result.
+         - Singular ranges (start = stop) return a single-element array
+           immediately.
+[==============================================================================}
+function TRange.Iterate: TIntegerArray; overload;
+var
+  i, s, r: Integer;
+begin
+  if Self.Singular then
+    Exit([Self.start]);
+  SetLength(Result, 0);
+  s := IfThen(Self.Ascending, 1, -1);
+  r := (Self.start - s);
+  while (r.Increase(s) <> Self.stop) do
+    Result.Supply(r);
+end;
+
+{==============================================================================]
+  <Iterate>
   @action: Expands the current range into a contiguous array of integers.
            Iteration respects the natural direction of the range unless
            explicitly reversed via rReverse.
@@ -910,6 +944,49 @@ begin
 end;
 
 {==============================================================================]
+  <Iterated>
+  @action: Materializes the range into an integer array by incrementally
+           supplying values using a dynamic append strategy.
+  @note: - For non-singular ranges, values are generated from Self.start
+           toward Self.stop, INCLUDING the terminal bound.
+         - Direction is determined by Self.Ascending:
+             * True  → step = +1
+             * False → step = -1
+         - When rReverse = True, iteration order is inverted by switching
+           to the reversed range and negating the step.
+         - Uses dynamic growth (Supply) instead of pre-allocation; array
+           capacity expands as elements are appended.
+         - Iteration is controlled via (r.start - s) <> r.stop, ensuring
+           the stop value is included.
+         - Uses Increase(s) as the stepping primitive (assumed to mutate
+           and return the advanced value).
+         - Singular ranges (start = stop) produce a single-element array.
+[==============================================================================}
+function TRange.Iterated(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
+var
+  s: Integer;
+  r: TRange;
+begin
+  case Self.Singular of
+    False:
+    begin
+      SetLength(rDigits, 0);
+      s := IfThen(Self.Ascending, 1, -1);
+      if rReverse then
+      begin
+        r := Self.Reversed;
+        s := -s;
+      end else
+        r := Self;
+      while ((r.start - s) <> r.stop) do
+        rDigits.Supply(r.start.Increase(s));
+    end;
+    True: rDigits := [Self.start];
+  end;
+  Result := rDigits.Length;
+end;
+
+{==============================================================================]
   <Iteration>
   @action: Constructs and returns a dynamic integer array of length
            Self.Size using index-based iteration from zero, deriving
@@ -927,7 +1004,61 @@ begin
   SetLength(Result, 0);
   for i := 0 to (Self.Size - 1) do
     Result := (Result + [IfThen(Self.Ascending, (Self.start + i), (Self.start - i))]);
-end; 
+end;
+
+{==============================================================================]
+  <Iteration>
+  @action: Expands the range into an integer array using manual capacity
+           management with exponential growth for efficient appends.
+
+  @note: - For non-singular ranges, values are generated from Self.start
+           toward Self.stop, INCLUDING the terminal bound.
+         - Direction is determined by Self.Ascending:
+             * True  → step = +1
+             * False → step = -1
+         - When rReverse = True, iteration order is inverted by switching
+           to the reversed range and negating the step.
+         - Starts with an initial buffer (b = 4) and grows capacity by
+           doubling when needed (amortized linear complexity).
+         - Result acts as both the write index and final element count.
+         - Iteration condition (r.start - s) <> r.stop guarantees inclusion
+           of the stop value.
+         - Uses Increase() for both index progression and value stepping.
+         - Final array is trimmed to exact size after population.
+         - Singular ranges (start = stop) return a single-element array
+           and exit early.
+[==============================================================================}
+function TRange.Iteration(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
+var
+  s, b: Integer;
+  r: TRange;
+begin
+  if Self.Singular then
+  begin
+    rDigits := [Self.start];
+    Exit(1);
+  end;
+  Result := 0;
+  b := 4;
+  SetLength(rDigits, b);
+  s := IfThen(Self.Ascending, 1, -1);
+  if rReverse then
+  begin
+    r := Self.Reversed;
+    s := -s;
+  end else
+    r := Self;
+  while ((r.start - s) <> r.stop) do
+  begin
+    if (Result = b) then
+    begin
+      b := (b * 2);
+      SetLength(rDigits, b);
+    end;
+    rDigits[Result.Increase] := r.start.Increase(s);
+  end;
+  SetLength(rDigits, Result);
+end;
 
 {==============================================================================]
   <List>
