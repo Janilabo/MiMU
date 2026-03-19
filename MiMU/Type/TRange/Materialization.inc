@@ -66,6 +66,7 @@ function Stack: TIntegerArray; overload;
 function Steps: TIntegerArray; overload;
 function Stock: TIntegerArray; overload;
 function Storage: TIntegerArray; overload;
+function Sweep: TIntegerArray; overload;
 function TIA: TIntegerArray; overload;
 function ToArr: TIntegerArray; overload;
 function ToArray: TIntegerArray; overload;
@@ -1823,7 +1824,47 @@ begin
   while (o.Increment(b) < s) do
     for i := 0 to Min((b - 1), ((s - o) - 1)) do
       Result[o + i] := (Self.start + (d * (BASE_DIGITS[i] + o)));
-end; 
+end;
+
+{==============================================================================]
+  <Sweep>
+  @action: Materializes the range into a dynamically growing array. Values
+           are appended sequentially using an exponential buffer expansion
+           strategy.
+  @note: - For non-singular ranges, values are generated from Self.start
+           toward Self.stop, INCLUDING the terminal bound.
+         - Direction is determined by Self.Ascending:
+             * True  → step = +1
+             * False → step = -1
+         - Starts with an initial buffer of size 8 and doubles the
+           capacity whenever the current buffer is exhausted.
+         - Uses a local iterator (r) and Increase(s) to advance each
+           value.
+         - Dynamic growth avoids precomputing exact length, trading
+           minor overhead for flexibility.
+         - Singular ranges (start = stop) produce a single-element array
+           immediately.
+         - Final array is trimmed to match the exact number of elements.
+[==============================================================================}
+function TRange.Sweep: TIntegerArray; overload;
+var
+  b, l, r, s: Integer;
+begin
+  if Self.Singular then
+    Exit([Self.start]);
+  b := 8;
+  SetLength(Result, b);
+  l := 0;
+  s := IfThen(Self.Ascending, 1, -1);
+  r := (Self.start - s);
+  while (r.Increase(s) <> Self.stop) do
+  begin
+    if (l = b) then
+      SetLength(Result, X2(b));
+    Result[l.Increase] := r;
+  end;
+  SetLength(Result, l);
+end;
 
 {==============================================================================]
   <TIA>
