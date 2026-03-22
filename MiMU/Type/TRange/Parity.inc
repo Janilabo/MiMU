@@ -3,11 +3,13 @@ function Even: Boolean; overload;
 function EvenCount: Integer; overload;
 function Evened: TIntegerArray; overload;
 function Evens: Integer; overload;
+function EvenSummed: Boolean; overload;
 function Evenz: TIntegerArray; overload;
 function Odd: Boolean; overload;
 function OddCount: Integer; overload;
 function Odded: TIntegerArray; overload;
 function Odds: Integer; overload;
+function OddSummed: Boolean; overload;
 function Oddz: TIntegerArray; overload;
 {$ENDIF}
 
@@ -87,6 +89,16 @@ begin
     Result := 0
   else
     Result := (((r.stop - r.start) div 2) + 1);
+end;
+
+{==============================================================================]
+  <EvenSummed>
+  @action: Returns True when Start and Stop sum to an even value.
+  @note: Useful for parity-based branching or alternating patterns.
+[==============================================================================}
+function TRange.EvenSummed: Boolean; overload;
+begin
+  Result := (((Self.start + Self.stop) mod 2) = 0);
 end;
 
 {==============================================================================]
@@ -170,6 +182,16 @@ end;
 function TRange.Odds: Integer; overload;
 begin
   Result := (Self.Size - Self.Evens);
+end;
+
+{==============================================================================]
+  <OddSummed>
+  @action: Returns True if the sum of Start and Stop is not even.
+  @note: Checks parity of (Start + Stop).
+[==============================================================================}
+function TRange.OddSummed: Boolean; overload;
+begin
+  Result := not (((Self.start + Self.stop) mod 2) = 0);
 end;
 
 {==============================================================================]

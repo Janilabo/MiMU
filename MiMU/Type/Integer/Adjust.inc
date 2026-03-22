@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function Add(const N: Integer; const aBounds: TRange): Integer; overload;
 function Adjust(const cValue: Integer; const limits: TRange): Boolean; overload;
 function Adjusted(const cValue: Integer; const limits: TRange): Integer; overload;
 function AdjustedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer; overload;
@@ -18,7 +19,9 @@ function Increase(const N: Integer = 1): Integer; overload;
 function Increase(const B: Boolean; const N: Integer = 1): Integer; overload;
 function Increment(const N: Integer = 1): Integer; overload;
 function Increment(const B: Boolean; const N: Integer = 1): Integer; overload;
+function Pred(const N: Integer = 1; const minBound: Integer = -2147483648): Integer; overload;
 function Put(const N: Integer = 1): Integer; overload;
+function Succ(const N: Integer = 1; const maxBound: Integer = 2147483647): Integer; overload;
 function Take(const N: Integer = 1): Integer; overload;
 function Take(const B: Boolean; const N: Integer = 1): Integer; overload;
 function Update(const cValue: Integer; const limits: TRange): Boolean; overload;
@@ -49,6 +52,19 @@ function X4(var val: Integer; const N: Integer = 1): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Add>
+  @action: Adds N to Self, clamped within the given range (aBounds).
+  @note: Uses Int64 arithmetic to prevent overflow; handles negative N by clamping to Min(aBounds), positive N by clamping to Max(aBounds).
+[==============================================================================}
+function TIntegerHelper.Add(const N: Integer; const aBounds: TRange): Integer; overload;
+begin
+  if (N < 0) then
+    Result := Max((Int64(Self) + N), Min(aBounds.start, aBounds.stop))
+  else
+    Result := Min((Int64(Self) + N), Max(aBounds.start, aBounds.stop));
+end;
+
 {==============================================================================]
   <Adjust>
   @action: Attempts to adjust the current value by cValue if the resulting value
@@ -287,6 +303,16 @@ begin
 end;
 
 {==============================================================================]
+  <Pred>
+  @action: Returns the predecessor of Self, decreased by N, not below minBound.
+  @note: Uses Int64 arithmetic to prevent underflow; default N = 1, default minBound = Low(Integer).
+[==============================================================================}
+function TIntegerHelper.Pred(const N: Integer = 1; const minBound: Integer = -2147483648): Integer; overload;
+begin
+  Result := Max((Int64(Self) - N), minBound);
+end;
+
+{==============================================================================]
   <Put>
   @action: Increases the integer by N.
   @note: Mutates Self in place and returns the updated value after addition.
@@ -296,6 +322,16 @@ function TIntegerHelper.Put(const N: Integer = 1): Integer; overload;
 begin
   Result := (Self + N);
   Self := Result
+end;
+
+{==============================================================================]
+  <Succ>
+  @action: Returns the successor of Self, increased by N, not above maxBound.
+  @note: Uses Int64 arithmetic to prevent overflow; default N = 1, default maxBound = High(Integer).
+[==============================================================================}
+function TIntegerHelper.Succ(const N: Integer = 1; const maxBound: Integer = 2147483647): Integer; overload;
+begin
+  Result := Min((Int64(Self) + N), maxBound);
 end;
 
 {==============================================================================]

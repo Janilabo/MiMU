@@ -63,6 +63,7 @@ function Recursively: TIntegerArray; overload;
 function Sequence: TIntegerArray; overload;
 function Snapshot: TIntegerArray; overload;
 function Stack: TIntegerArray; overload;
+function Stepped(const sSize: Integer = 1): TIntegerArray; overload;
 function Steps: TIntegerArray; overload;
 function Stock: TIntegerArray; overload;
 function Storage: TIntegerArray; overload;
@@ -1745,6 +1746,37 @@ begin
   finally
     s.Free;
   end;
+end;
+
+{==============================================================================]
+  <Stepped>
+  @action: Materializes the range into an array of integers with a custom
+           step size. Values are incremented by sSize at each iteration.
+
+  @note: - For non-singular ranges, values are generated from Self.start
+           toward Self.stop, INCLUDING the terminal bound.
+         - Direction is determined by Self.Ascending:
+             * True  → step = +sSize
+             * False → step = -sSize
+         - If sSize < 1, the function returns an empty array.
+         - Array length is precomputed based on the step size:
+           ((Abs(stop - start) div sSize) + 1)
+         - Uses Increase(d) to advance the iterator at each step.
+         - Singular ranges (start = stop) produce a single-element array
+           if step size allows.
+         - Allows sampling the range at regular intervals.
+[==============================================================================}
+function TRange.Stepped(const sSize: Integer = 1): TIntegerArray; overload;
+var
+  i, r, d: Integer;
+begin
+  if (sSize < 1) then
+    Exit([]);
+  SetLength(Result, ((Abs(Int64(Self.stop) - Self.start) div sSize) + 1));
+  d := IfThen(Self.Ascending, sSize, -Integer(sSize));
+  r := Self.start;
+  for i := 0 to High(Result) do
+    Result[i] := r.Increase(d);
 end;
 
 {==============================================================================]

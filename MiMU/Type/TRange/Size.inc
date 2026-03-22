@@ -18,24 +18,30 @@ function InclusiveSize: Integer;
 function Latitude: Integer;
 function Len: Integer;
 function Length: Integer; overload;
+function Load: Integer; overload;
 function Mass: Integer;
 function Measure: Integer;
 function Measured: Int64;
+function Mob: Integer; overload;
 function Perimeter: Int64; overload;
+function Populates: Integer; overload;
 function Population: Integer; overload;
 function PopulationSize: Integer;
 function Quantified: Int64;
 function Quantify: Integer;
 function Quantity: Integer;
+function Quota: Integer; overload;
 function Reach: Integer; overload;
 function Scope: Integer; overload;
 function Size: Integer; overload;
 function Size(var minVal, maxVal: Integer): Integer; overload;
 function Sized: Integer; overload;
+function Sizing: Integer; overload;
 function Spread: Integer;
 function Stretch: Integer;
 function Tally: Integer;
 function Volume: Integer;
+function Weight: Integer; overload;
 function Width: Integer;
 {$ENDIF}
 
@@ -325,6 +331,16 @@ begin
 end;
 
 {==============================================================================]
+  <Load>
+  @action: Returns the inclusive size of the range as Integer.
+  @note: Computed as |Start - Stop| + 1 and capped at High(Integer).
+[==============================================================================}
+function TRange.Load: Integer; overload;
+begin
+  Result := Min(High(Integer), (Abs(Int64(Self.stop) - Int64(Self.start)) + 1));
+end;
+
+{==============================================================================]
   <Mass>
   @action: Computes the inclusive size (cardinality) of the range.
   @note: Uses Ord(...) as numeric selectors to choose the correct
@@ -361,6 +377,19 @@ begin
 end;
 
 {==============================================================================]
+  <Mob>
+  @action: Returns the inclusive size of the range as Integer, preserving sign.
+  @note: Computed as |Stop - Start| + 1, clamped to High(Integer); uses Sign to handle negative ranges.
+[==============================================================================}
+function TRange.Mob: Integer; overload;
+var
+  D: Int64;
+begin
+  D := (Int64(Self.stop) - Self.start);
+  Result := Min(High(Integer), ((D * Sign(D)) + 1));
+end;
+
+{==============================================================================]
   <Perimeter>
   @action: Returns the size of the inclusive range defined by Self.start and Self.stop.
   @note: Order-independent. The result is always positive.
@@ -372,6 +401,21 @@ end;
 function TRange.Perimeter: Int64; overload;
 begin
   Result := (Abs(PtrInt(Self.stop) - PtrInt(Self.start)) + 1);
+end;
+
+{==============================================================================]
+  <Populates>
+  @action: Returns the inclusive number of elements in the range as Integer.
+  @note: Computed as |Stop - Start| + 1; does not clamp to High(Integer).
+[==============================================================================}
+function TRange.Populates: Integer; overload;
+var
+  D: Int64;
+begin
+  D := (Int64(Self.stop) - Self.start);
+  if (D < 0) then
+    D := -D;
+  Result := (Integer(D) + 1);
 end;
 
 {==============================================================================]
@@ -455,6 +499,30 @@ begin
 end;
 
 {==============================================================================]
+  <Quota>
+  @action: Returns the inclusive size of the range as Integer.
+  @note: Computed as |Start - Stop| + 1 and capped at High(Integer).
+[==============================================================================}
+function TRange.Quota: Integer; overload;
+var
+  A, B, D: Int64;
+  H: Integer;
+begin
+  A := Self.start;
+  B := Self.stop;
+  if (A > B) then
+    D := (A - B)
+  else
+    D := (B - A);
+  D := (D + 1);
+  H := High(Integer);
+  if (D > H) then
+    Result := H
+  else
+    Result := Integer(D);
+end;
+
+{==============================================================================]
   <Reach>
   @action: Returns the size of TRange.
   @note: Alternative.
@@ -517,6 +585,16 @@ begin
 end;
 
 {==============================================================================]
+  <Sizing>
+  @action: Returns the inclusive size of the range as Integer.
+  @note: Computed as Max(Start, Stop) - Min(Start, Stop) + 1 and capped at High(Integer).
+[==============================================================================}
+function TRange.Sizing: Integer; overload;
+begin
+  Result := Min(High(Integer), (Int64(Max(Self.start, Self.stop)) - Int64(Min(Self.start, Self.stop)) + 1));
+end;
+
+{==============================================================================]
   <Spread>
   @action: Returns the inclusive size of the range defined by Start and Stop.
   @note: Uses arithmetic manipulation to derive the absolute difference
@@ -571,6 +649,16 @@ end;
 function TRange.Volume: Integer;
 begin
   Result := (Round(Sqrt(Sqr(Self.stop - Self.start))) + 1);
+end;
+
+{==============================================================================]
+  <Weight>
+  @action: Returns the inclusive size of the range as Integer.
+  @note: Computed as |Start - Stop| + 1 and clamped to [0, High(Integer)].
+[==============================================================================}
+function TRange.Weight: Integer; overload;
+begin
+  Result := EnsureRange((Abs(Int64(Self.stop) - Self.start) + 1), 0, High(Integer(Integer)));
 end;
 
 {==============================================================================]
