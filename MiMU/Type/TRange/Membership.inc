@@ -9,6 +9,7 @@ function Contains(const x: TRange): Boolean; overload;
 function Covered(const val: Integer): Boolean; overload;
 function Covering(const val: Integer): Boolean; overload;
 function Covers(const val: Integer): Boolean; overload;
+function Deviant(const val: Integer): Boolean; overload;
 function Digit(const x: Integer): Boolean; overload;
 function Disjoint(const target: TRange): Boolean; overload;
 function Disjointed(const target: TRange): Boolean; overload;
@@ -41,6 +42,7 @@ function Missing(const vals: TRange): Boolean; overload;
 function Near(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
 function Number(const val: Integer): Boolean; overload;	
 function Omits(const val: Integer): Boolean; overload;
+function Outlier(const val: Integer): Boolean; overload;
 function Outside(const x: Integer): Boolean; overload;
 function Owns(const val: Integer): Boolean; overload;
 function Subset(const r: TRange): Boolean; overload;
@@ -149,6 +151,20 @@ begin
   if Self.Descending then
     Exit(InRange(val, Self.stop, Self.start));
   Result := InRange(val, Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <Deviant>
+  @action: Determines whether a value lies outside the range [Minimum, Maximum].
+  @note: 
+    - Returns True if val is less than Minimum or greater than Maximum.
+    - Uses a branchless sign check: (val - Minimum) and (Maximum - val) must 
+      have the same sign (or be zero) for the value to be within range.
+    - If their signs differ, the value is outside the range.
+[==============================================================================}
+function TRange.Deviant(const val: Integer): Boolean; overload;
+begin
+  Result := not (((val - Self.Minimum) xor (Self.Maximum - val)) >= 0);
 end;
 
 {==============================================================================]
@@ -589,6 +605,26 @@ end;
 function TRange.Omits(const val: Integer): Boolean; overload;
 begin
   Result := not ((Self.start = val) or (Self.stop = val));
+end;
+
+{==============================================================================]
+  <Outlier>
+  @action: Determines whether a value lies outside the bounds of the range.
+  @note: 
+    - For a singular range, returns True if val differs from the single value.
+    - For a non-singular range, evaluates whether val falls outside the interval 
+      defined by start and stop by comparing its distance from the midpoint 
+      against half the range width.
+    - Works for both ascending and descending ranges.
+[==============================================================================}
+function TRange.Outlier(const val: Integer): Boolean; overload;
+begin
+  if Self.Singular then
+    Result := (val <> Self.start)
+  else if Self.Ascending then
+    Result := (Abs(val - ((Self.start + Self.stop) / 2)) > ((Self.stop - Self.start) / 2))
+  else
+    Result := (Abs(val - ((Self.start + Self.stop) / 2)) > ((Self.start - Self.stop) / 2));
 end;
 
 {==============================================================================]
