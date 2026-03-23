@@ -9,6 +9,7 @@ function Order(const oAscending: Boolean = True): Boolean; overload;
 function Ordered(const oAscending: Boolean = True): TRange; overload;
 function Sort(const oAscending: Boolean = True): Boolean; overload;
 function Sorted(const oAscending: Boolean = True): TRange; overload;
+function ToOrder(const oAscending: Boolean = True): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -141,5 +142,28 @@ begin
     Result.Create(Self.stop, Self.start)
   else
     Result.Create(Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <ToOrder>
+  @action: Returns a new range with endpoints reordered according to the
+           specified order.
+  @note:
+    - If `oAscending = True`, the returned range will have `start <= stop`.
+    - If `oAscending = False`, the returned range will have `start >= stop`.
+    - If the range is already in the requested order, it is returned unchanged.
+    - Uses branchless bitwise operations to conditionally swap endpoints.
+    - Useful for calculations or iterations that require a specific range order.
+[==============================================================================}
+function TRange.ToOrder(const oAscending: Boolean = True): TRange; overload;
+var
+  m: Integer;
+begin
+  if oAscending then
+    m := -Ord(Self.start > Self.stop)
+  else
+    m := -Ord(Self.start <= Self.stop);
+  Result.start := (Self.start xor ((Self.start xor Self.stop) and m));
+  Result.stop := (Self.stop  xor ((Self.start xor Self.stop) and m)); 
 end;
 {$ENDIF}

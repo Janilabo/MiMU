@@ -11,6 +11,7 @@ function Reversed: TRange; overload;
 function Reversify: TRange; overload;
 function Reversion: TRange; overload;
 function Revert: TRange; overload;
+function Reverted: TRange; overload;
 function Rewind: TIntegerArray; overload;
 function Rotate32: TRange; overload;
 function Toggle: TRange; overload;
@@ -222,6 +223,25 @@ begin
   a := Self.Ascending;
   Result.start := (Self.start + (s * IfThen(a, 1, -1)));
   Result.stop := IfThen(a, (Result.start - s), (Result.start + s));
+end;
+
+{==============================================================================]
+  <Masked>
+  @action: Returns a new range with the order of endpoints reversed.
+  @note:
+    - If the original range is ascending (`start < stop`), the result is descending.
+    - If the original range is descending (`start > stop`), the result is ascending.
+    - The size of the range remains the same; only the order of `start` and `stop` is inverted.
+    - Useful when you need a range in the opposite order without modifying the original.
+[==============================================================================}
+function TRange.Reverted: TRange; overload;
+var
+  d, m: Integer;
+begin
+  d := (Self.start - Self.stop);
+  m := (d shr 31);
+  Result.start := (Self.stop + (d and m));
+  Result.stop := (Self.start - (d and m));
 end;
 
 {==============================================================================]

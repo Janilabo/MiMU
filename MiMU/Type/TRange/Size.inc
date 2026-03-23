@@ -1,35 +1,38 @@
 {$IFDEF METHODS}
 function Amount: Int64; overload;
-function Area: Integer;
-function Bulk: Integer;
-function Capacity: Integer;
-function Cardinality: Integer;
-function Count: Integer;
-function Counted: Int64;
+function Area: Integer; overload;
+function Bulk: Integer; overload;
+function Capacity: Integer; overload;
+function Cardinality: Integer; overload;
+function Count: Integer; overload;
+function Counted: Int64; overload;
 function Coverage: Integer; overload;
 function Diameter: Integer; overload;
 function Extent: Integer; overload;
-function Footprint: Integer;
+function Footprint: Integer; overload;
 function GetAmount: Int64; overload;
-function GetCount: Integer;
-function GetLength: Integer;
-function GetSize: Integer;
-function InclusiveSize: Integer;
-function Latitude: Integer;
-function Len: Integer;
+function GetCount: Integer; overload;
+function GetLength: Integer; overload;
+function GetSize: Integer; overload;
+function InclusiveSize: Integer; overload;
+function Latitude: Integer; overload;
+function Len: Integer; overload;
 function Length: Integer; overload;
 function Load: Integer; overload;
-function Mass: Integer;
-function Measure: Integer;
-function Measured: Int64;
+function Mass: Integer; overload;
+function Measure: Integer; overload;
+function Measured: Int64; overload;
 function Mob: Integer; overload;
+function Ordinality: Integer; overload;
+function Perim: Integer; overload;
 function Perimeter: Int64; overload;
 function Populates: Integer; overload;
 function Population: Integer; overload;
-function PopulationSize: Integer;
-function Quantified: Int64;
-function Quantify: Integer;
-function Quantity: Integer;
+function PopulationCount: Integer; overload;
+function PopulationSize: Integer; overload;
+function Quantified: Int64; overload;
+function Quantify: Integer; overload;
+function Quantity: Integer; overload;
 function Quota: Integer; overload;
 function Reach: Integer; overload;
 function Scope: Integer; overload;
@@ -37,12 +40,12 @@ function Size: Integer; overload;
 function Size(var minVal, maxVal: Integer): Integer; overload;
 function Sized: Integer; overload;
 function Sizing: Integer; overload;
-function Spread: Integer;
-function Stretch: Integer;
-function Tally: Integer;
-function Volume: Integer;
+function Spread: Integer; overload;
+function Stretch: Integer; overload;
+function Tally: Integer; overload;
+function Volume: Integer; overload;
 function Weight: Integer; overload;
-function Width: Integer;
+function Width: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -70,7 +73,7 @@ end;
   @action: Returns area of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Area: Integer;
+function TRange.Area: Integer; overload;
 begin
   if (Self.start > Self.stop) then
     Result := ((Self.start - Self.stop) + 1)
@@ -92,7 +95,7 @@ end;
     This method is order-independent (ascending or descending) and returns
     1 for degenerate ranges where start = stop.
 [==============================================================================}
-function TRange.Bulk: Integer;
+function TRange.Bulk: Integer; overload;
 begin
   Result := (((Self.stop - Self.start) * Sign(Self.stop - Self.start)) + 1);
 end;
@@ -102,7 +105,7 @@ end;
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Capacity: Integer;
+function TRange.Capacity: Integer; overload;
 begin
   Result := (IfThen(Self.Descending, (Self.start - Self.stop), (Self.stop - Self.start)) + 1);
 end;
@@ -112,7 +115,7 @@ end;
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Cardinality: Integer;
+function TRange.Cardinality: Integer; overload;
   function C(const A, B: Integer): Integer;
   begin
     if (A > B) then
@@ -131,7 +134,7 @@ end;
   @action: Returns count values in the given range.
   @note: None.
 [==============================================================================}
-function TRange.Count: Integer;
+function TRange.Count: Integer; overload;
 begin
   Result := ((Max(Self.start, Self.stop) - Min(Self.start, Self.stop)) + 1);
 end;
@@ -144,7 +147,7 @@ end;
          start and stop values and is equivalent to Abs(stop - start) + 1.
          This method is overflow-safe for all Integer endpoint values.
 [==============================================================================}
-function TRange.Counted: Int64;
+function TRange.Counted: Int64; overload;
 begin
   Result := (Abs(Int64(Self.stop) - Int64(Self.start)) + 1);
 end;
@@ -192,7 +195,7 @@ end;
          absolute distance, then adds one for inclusivity. This is the
          most direct and readable formulation.
 [==============================================================================}
-function TRange.Footprint: Integer;
+function TRange.Footprint: Integer; overload;
 var
   d: Integer;
 begin
@@ -229,7 +232,7 @@ end;
          both ascending and descending ranges. The count is inclusive of both
          start and stop values and is equivalent to Abs(stop - start) + 1.
 [==============================================================================}
-function TRange.GetCount: Integer;
+function TRange.GetCount: Integer; overload;
 var
   d, m: Integer;
 begin
@@ -243,7 +246,7 @@ end;
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
-function TRange.GetLength: Integer;
+function TRange.GetLength: Integer; overload;
 var
   d: Integer;
 begin
@@ -261,7 +264,7 @@ end;
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
-function TRange.GetSize: Integer;
+function TRange.GetSize: Integer; overload;
 var
   c: Integer;
 begin
@@ -283,7 +286,7 @@ end;
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
-function TRange.InclusiveSize: Integer;
+function TRange.InclusiveSize: Integer; overload;
   function D(const a, b: Integer): Integer;
   begin
     Result := ((Max(a, b) - Min(a, b)) + 1);
@@ -297,7 +300,7 @@ end;
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Latitude: Integer;
+function TRange.Latitude: Integer; overload;
 var
   d: Integer;
 begin
@@ -310,7 +313,7 @@ end;
   @action: Returns length of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Len: Integer;
+function TRange.Len: Integer; overload;
 begin
   Result := (((Self.stop - Self.start) * IfThen((Self.start <= Self.stop), 1, -1)) + 1);
 end;
@@ -347,7 +350,7 @@ end;
          directional delta without branching. Produces the absolute
          difference plus one in a compact arithmetic form.
 [==============================================================================}
-function TRange.Mass: Integer;
+function TRange.Mass: Integer; overload;
 begin
   Result := (1 + ((Ord(Self.stop > Self.start) * (Self.stop - Self.start)) + (Ord(Self.start > Self.stop) * (Self.start - Self.stop))));
 end;
@@ -359,7 +362,7 @@ end;
          a positive magnitude before adding one. Uses integer arithmetic
          and Sign to avoid conditional branching.
 [==============================================================================}
-function TRange.Measure: Integer;
+function TRange.Measure: Integer; overload;
 begin
   Result := (Abs((Self.stop - Self.start) div Sign(Self.stop - Self.start + 1)) + 1);
 end;
@@ -371,7 +374,7 @@ end;
          For example, Start = 5 and Stop = 5 yields 1.
          Uses Int64 arithmetic to avoid overflow on wide ranges.
 [==============================================================================}
-function TRange.Measured: Int64;
+function TRange.Measured: Int64; overload;
 begin
   Result := (Abs(Int64(Self.stop) - Int64(Self.start)) + 1);
 end;
@@ -387,6 +390,42 @@ var
 begin
   D := (Int64(Self.stop) - Self.start);
   Result := Min(High(Integer), ((D * Sign(D)) + 1));
+end;
+
+{==============================================================================]
+  <Ordinality>
+  @action: Returns the number of discrete elements in the range of an
+           enumerated type, including both `start` and `stop`.
+  @note:
+    - Computes `Abs(Ord(stop) - Ord(start)) + 1`.
+    - Works for ascending or descending ranges.
+    - Useful for iterating over all values of an enumerated range or
+      determining the total count of members.
+    - Always returns a value ≥ 1 for non-empty ranges.
+[==============================================================================}
+function TRange.Ordinality: Integer; overload;
+begin
+  Result := (Abs(Ord(Self.stop) - Ord(Self.start)) + 1);
+end;
+
+{==============================================================================]
+  <Perim>
+  @action: Returns the total number of discrete elements in the range,
+           inclusive of both `Minimum` and `Maximum`.
+  @note:
+    - Computes `Abs(Maximum - Minimum) + 1`.
+    - Works correctly for ascending or descending ranges.
+    - Result is clamped to `High(Integer)` if the range is larger than the maximum Integer.
+    - Conceptually, this is the "perimeter" or extent of the range in terms of
+      the number of elements it contains.
+[==============================================================================}
+function TRange.Perim: Integer; overload;
+var
+  D: Int64;
+begin
+  D := (Int64(Self.Maximum) - Self.Minimum);
+  D := (((D xor (D shr 63)) - (D shr 63)) + 1);
+  Result := Integer(Min(D, High(Integer)));
 end;
 
 {==============================================================================]
@@ -429,6 +468,31 @@ begin
 end;
 
 {==============================================================================]
+  <PopulationCount>
+  @action: Returns the number of integers contained in the range, inclusive of
+           both `start` and `stop`, as an Integer.
+  @note:
+    - If `Self.start <= Self.stop`, returns `stop - start + 1`.
+    - If `Self.start > Self.stop`, returns `start - stop + 1`.
+    - Result is clamped to `High(Integer)` if the range exceeds the Integer limit.
+    - The function always returns a value ≥ 1 for non-empty ranges.
+    - Useful when you need the count of discrete elements within a range.
+[==============================================================================}
+function TRange.PopulationCount: Integer; overload;
+var
+  H: Integer;
+  D, N: Int64;
+begin
+  D := (Int64(Self.stop) - Self.start);
+  N := ((D shr 63) and 1);
+  D := ((D * (1 - (2 * N))) + 1);
+  H := High(Integer);
+  if (D > H) then
+    Exit(H);
+  Result := Integer(D);
+end;
+
+{==============================================================================]
   <PopulationSize>
   @action: Returns the number of discrete integer values in the range.
   @note: The calculation supports both ascending and descending ranges and
@@ -437,7 +501,7 @@ end;
          ascending ranges (stop >= start), the count is stop - start + 1.
          For descending ranges (start > stop), the count is start - stop + 1.
 [==============================================================================}
-function TRange.PopulationSize: Integer;
+function TRange.PopulationSize: Integer; overload;
 begin
   Result := UInt32(Self.stop - Self.start);
   if (Self.stop >= Self.start) then
@@ -455,7 +519,7 @@ end;
          The result is always non-negative and includes both endpoints.
          Uses Int64 arithmetic to safely handle very large ranges.
 [==============================================================================}
-function TRange.Quantified: Int64;
+function TRange.Quantified: Int64; overload;
 var
   d, m: Int64;
 begin
@@ -474,7 +538,7 @@ end;
          The result is always non-negative and includes both endpoints.
          Assumes Start and Stop fit within 32-bit signed integer range.
 [==============================================================================}
-function TRange.Quantify: Integer;
+function TRange.Quantify: Integer; overload;
 var
   d, m: Integer;
 begin
@@ -490,7 +554,7 @@ end;
   @action: Returns the size of TRange.
   @note: Alternative.
 [==============================================================================}
-function TRange.Quantity: Integer;
+function TRange.Quantity: Integer; overload;
 var
   d: Integer;
 begin
@@ -602,7 +666,7 @@ end;
          The result is always non-negative and includes both endpoints.
          Operates entirely on 32-bit Integer arithmetic.
 [==============================================================================}
-function TRange.Spread: Integer;
+function TRange.Spread: Integer; overload;
 var
   d: Integer;
 begin
@@ -618,7 +682,7 @@ end;
          Avoids branching while remaining semantically explicit.
          The result is always non-negative and includes both endpoints.
 [==============================================================================}
-function TRange.Stretch: Integer;
+function TRange.Stretch: Integer; overload;
 begin
   Result := ((((Self.start - Self.stop) * Bitify(Self.start >= Self.stop)) + ((Self.stop - Self.start) * Bitify(Self.stop > Self.start))) + 1);
 end;
@@ -630,7 +694,7 @@ end;
          directional arithmetic based on range ordering. Semantically
          equivalent to Mass, with explicit Boolean state.
 [==============================================================================}
-function TRange.Tally: Integer;
+function TRange.Tally: Integer; overload;
 var
   a: Boolean;
 begin
@@ -646,7 +710,7 @@ end;
          inclusive bounds. Functionally equivalent to Abs(stop - start) + 1,
          but expressed via arithmetic normalization.
 [==============================================================================}
-function TRange.Volume: Integer;
+function TRange.Volume: Integer; overload;
 begin
   Result := (Round(Sqrt(Sqr(Self.stop - Self.start))) + 1);
 end;
@@ -666,7 +730,7 @@ end;
   @action: Returns size of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Width: Integer;
+function TRange.Width: Integer; overload;
 var
   s: Int64;
 begin

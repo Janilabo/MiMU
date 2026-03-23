@@ -1,19 +1,20 @@
 {$IFDEF METHODS}
-function Backwards: TRange;
-function Forwards: TRange;
-function Grab: TRange;
-function HighToLow: TRange;
-function HiLo: TRange;
-function LoHi: TRange;
-function LowToHigh: TRange;
+function Backwards: TRange; overload;
+function Forwards: TRange; overload;
+function Grab: TRange; overload;
+function HighToLow: TRange; overload;
+function HiLo: TRange; overload;
+function LoHi: TRange; overload;
+function LowToHigh: TRange; overload;
 function MaxMin: TRange; overload;
 function MinMax: TRange; overload;
-function Norm: TRange;
-function Normal: TRange;
-function Normalize: TRange;
-function Normalized: TRange;
-function Normally: TRange;
-function Normed: TRange;
+function Norm: TRange; overload;
+function Normal: TRange; overload;
+function Normalization: TRange; overload;
+function Normalize: TRange; overload;
+function Normalized: TRange; overload;
+function Normally: TRange; overload;
+function Normed: TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -22,7 +23,7 @@ function Normed: TRange;
   @action: Ensures range is descending (start >= stop)
   @note: Uses branch-free arithmetic to swap if needed
 [==============================================================================}
-function TRange.Backwards: TRange;
+function TRange.Backwards: TRange; overload;
 var
   m: Integer;
 begin
@@ -36,7 +37,7 @@ end;
   @action: Ensures range is ascending (start <= stop)
   @note: Uses branch-free arithmetic to swap if needed
 [==============================================================================}
-function TRange.Forwards: TRange;
+function TRange.Forwards: TRange; overload;
 var
   m: Integer;
 begin
@@ -50,7 +51,7 @@ end;
   @action: Returns TRange with range, swaps range.stop and range.start if they are in reversed order.
   @note: None.
 [==============================================================================}
-function TRange.Grab: TRange;
+function TRange.Grab: TRange; overload;
 begin
   Result := IfThen(Self.Descending, Result.Create(Self.stop, Self.start), Self);
 end;
@@ -60,7 +61,7 @@ end;
   @action: Ensures range is descending (start >= stop)
   @note: Uses branch-free arithmetic to swap if needed
 [==============================================================================}
-function TRange.HighToLow: TRange;
+function TRange.HighToLow: TRange; overload;
 var
   a, s: Integer;
 begin
@@ -75,7 +76,7 @@ end;
   @action: Ensures range is descending (start >= stop)
   @note: Uses branch-free arithmetic to swap if needed
 [==============================================================================}
-function TRange.HiLo: TRange;
+function TRange.HiLo: TRange; overload;
 var
   c, d: Integer;
 begin
@@ -90,7 +91,7 @@ end;
   @action: Ensures range is ascending (start <= stop)
   @note: Uses branch-free arithmetic to swap if needed
 [==============================================================================}
-function TRange.LoHi: TRange;
+function TRange.LoHi: TRange; overload;
 var
   c, d: Integer;
 begin
@@ -105,7 +106,7 @@ end;
   @action: Ensures range is ascending (start <= stop)
   @note: Uses branch-free arithmetic to swap if needed
 [==============================================================================}
-function TRange.LowToHigh: TRange;
+function TRange.LowToHigh: TRange; overload;
 var
   a, s: Integer;
 begin
@@ -144,7 +145,7 @@ end;
   @action: Using if-then comparison this function returns "normal" range.
   @note: None.
 [==============================================================================}
-function TRange.Norm: TRange;
+function TRange.Norm: TRange; overload;
 begin
   Result := IfThen(Self.Descending, Self.Reversed, Self);
 end;
@@ -154,7 +155,7 @@ end;
   @action: XOR-swap based.
   @note: None.
 [==============================================================================}
- function TRange.Normal: TRange;
+ function TRange.Normal: TRange; overload;
 begin
   Result := Self;
   if Result.Ascending then
@@ -165,11 +166,30 @@ begin
 end;
 
 {==============================================================================]
+  <Normalization>
+  @action: Returns a new range with endpoints reordered so that `start <= stop`.
+  @note:
+    - If the range is already ascending (`start <= stop`), it is returned unchanged.
+    - If the range is descending (`start > stop`), `start` and `stop` are swapped.
+    - Uses bitwise operations for a branchless, efficient conditional swap.
+    - Useful for operations that require a guaranteed ascending range, 
+      such as calculating size, iteration, or partitioning.
+[==============================================================================}
+function TRange.Normalization: TRange; overload;
+var
+  m: Integer;
+begin
+  m := -Ord(Self.start > Self.stop);
+  Result.start := (Self.start xor ((Self.start xor Self.stop) and m));
+  Result.stop := (Self.stop xor ((Self.start xor Self.stop) and m));
+end;
+
+{==============================================================================]
   <Normalize>
   @action: Using Min-Maxing this function returns "normal" range.
   @note: None.
 [==============================================================================}
-function TRange.Normalize: TRange;
+function TRange.Normalize: TRange; overload;
 begin
   Result.start := Self.Minimum;
   Result.stop := Self.Maximum;
@@ -180,7 +200,7 @@ end;
   @action: Using if-then comparison this function returns "normal" range.
   @note: None.
 [==============================================================================}
-function TRange.Normalized: TRange;
+function TRange.Normalized: TRange; overload;
 begin
   Result.start := (Self.Combined shr 1);
   Result.stop := (Abs(Self.Contra) shr 1);
@@ -192,7 +212,7 @@ end;
   @action: Ord-based.
   @note: None.
 [==============================================================================}
-function TRange.Normally: TRange;
+function TRange.Normally: TRange; overload;
 var
   a: TIntegerArray;
 begin
@@ -205,7 +225,7 @@ end;
   @action: Using if-then comparison this function returns "normal" range.
   @note: None.
 [==============================================================================}
-function TRange.Normed: TRange;
+function TRange.Normed: TRange; overload;
 begin
   Result.Create(IfThen((Self.start < Self.stop), Self.start, Self.stop), IfThen((Self.start < Self.stop), Self.stop, Self.start));
 end;
