@@ -1,6 +1,7 @@
 {$IFDEF METHODS}
 function Above(const target: Integer): Boolean; overload;
 function Above(const target: TRange): Boolean; overload;
+function Apart(const val: Integer; const threshold: Integer = 1): Boolean; overload;
 function Below(const target: Integer): Boolean; overload;
 function Below(const target: TRange): Boolean; overload;
 function Contains(const x: Integer): Boolean; overload;
@@ -11,7 +12,9 @@ function Covers(const val: Integer): Boolean; overload;
 function Digit(const x: Integer): Boolean; overload;
 function Disjoint(const target: TRange): Boolean; overload;
 function Disjointed(const target: TRange): Boolean; overload;
+function Distant(const val: Integer; const threshold: Integer = 1): Boolean; overload;
 function Employs(const val: Integer): Boolean; overload;
+function Far(const val: Integer; const threshold: Integer = 1): Boolean; overload;
 function Got(const val: Integer): Boolean; overload;
 function Has(const val: Integer): Boolean; overload;
 function Have(const val: Integer): Boolean; overload;
@@ -59,6 +62,18 @@ end;
 function TRange.Above(const target: TRange): Boolean; overload;
 begin
   Result := Self.Above(target.Maximum);
+end;
+
+{==============================================================================]
+  <Apart>
+  @action: Determines whether a value lies outside the central portion of the range.
+  @note: Computes the distance from the midpoint of [Minimum, Maximum] and returns 
+         True if it exceeds half the range plus an optional threshold (default = 1). 
+         Useful for checking if a value is “far from the center.”
+[==============================================================================}
+function TRange.Apart(const val: Integer; const threshold: Integer = 1): Boolean; overload;
+begin
+  Result := (Abs(val - ((Self.Minimum + Self.Maximum) / 2)) > (((Self.Maximum - Self.Minimum) / 2) + threshold));
 end;
 
 {==============================================================================]
@@ -184,6 +199,17 @@ begin
 end;
 
 {==============================================================================]
+  <Distant>
+  @action: Determines whether a value lies outside the extended range [Minimum - threshold, Maximum + threshold].
+  @note: Returns True if val is less than (Minimum - threshold) or greater than (Maximum + threshold). 
+         The threshold parameter allows for flexible margin beyond the defined range. Default threshold is 1.
+[==============================================================================}
+function TRange.Distant(const val: Integer; const threshold: Integer = 1): Boolean; overload;
+begin
+  Result := ((((Self.Minimum - threshold) - val) > 0) or ((val - (Self.Maximum + threshold)) > 0));
+end;
+
+{==============================================================================]
   <Employs>
   @action: Checks if the given integer value matches either the start or stop of the range.
   @note: Useful for quickly verifying if a value is an endpoint of the range.
@@ -191,6 +217,19 @@ end;
 function TRange.Employs(const val: Integer): Boolean; overload;
 begin
   Result := ((Self.start = val) or (Self.stop = val));
+end;
+
+{==============================================================================]
+  <Far>
+  @action: Returns True if val lies outside the range by at least threshold.
+  @note:
+    - A threshold of 1 (default) performs a standard exclusive check.
+    - A positive threshold requires the value to be "well clear" of the range.
+    - Internally calls Within(val, -threshold) or performs a direct check.
+[==============================================================================}
+function TRange.Far(const val: Integer; const threshold: Integer = 1): Boolean; overload;
+begin
+  Result := ((val < (Self.Minimum - threshold)) or (val > (Self.Maximum + threshold)));
 end;
 
 {==============================================================================]

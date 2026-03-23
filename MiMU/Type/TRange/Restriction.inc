@@ -8,11 +8,16 @@ function ClampMax(const maxValue: Integer): TRange;
 function Clip(const zone: TRange): TRange;
 function ClipMax(const maxValue: Integer): TRange;
 function ClipMin(const minValue: Integer): TRange;
+function Confine(const val: Integer): Integer; overload;
 function Ensure(const zone: TRange): Boolean; overload;
 function Ensured(const zone: TRange): TRange; overload;
 function Limit(const val: Integer): Integer;
 function MaxLimit(const val: Integer): Integer;
 function MinLimit(const val: Integer): Integer;
+function Pin(const val: Integer): Integer; overload;
+function Pinned(const val: Integer): Integer; overload;
+function PinMax(const val: Integer): Integer; overload;
+function PinMin(const val: Integer): Integer; overload;
 function Restrict(const zone: TRange): Boolean;
 function RestrictMax(const maxValue: Integer): Boolean;
 function RestrictMin(const minValue: Integer): Boolean;
@@ -169,6 +174,22 @@ begin
 end;
 
 {==============================================================================]
+  <Confine>
+  @action: Returns the value clamped within the range [Minimum, Maximum].
+  @note: If val is less than Minimum, Minimum is returned; 
+         if val is greater than Maximum, Maximum is returned. 
+         Otherwise, val is returned unchanged. Implements a branchless clamp.
+[==============================================================================}
+function TRange.Confine(const val: Integer): Integer; overload;
+var
+  l, h: Integer;
+begin
+  l := Self.Minimum;
+  h := Self.Maximum;
+  Result := ((l + h + Abs(val - l) - Abs(val - h)) div 2);
+end;
+
+{==============================================================================]
   <Ensure>
   @action: Clamps the current TRange (Self) to fit within zone.
   @note: Preserves the direction (start > stop) of Self.
@@ -240,6 +261,54 @@ end;
 function TRange.MinLimit(const val: Integer): Integer;
 begin
   Result := Max(val, Min(Self.start, Self.stop));
+end;
+
+{==============================================================================]
+  <Pin>
+  @action: Pins a value to the range boundaries (Clamp).
+  @note: If the value is within the range, it is returned unchanged.
+         Otherwise, the nearest boundary (Min or Max) is returned.
+[==============================================================================}
+function TRange.Pin(const val: Integer): Integer; overload;
+begin
+  Result := Max(Self.Minimum, Min(Self.Maximum, val));
+end;
+
+{==============================================================================]
+  <Pinned>
+  @action: Returns the value constrained within the range [Minimum, Maximum].
+  @note: If val is less than Minimum, Minimum is returned; 
+         if val is greater than Maximum, Maximum is returned; 
+         otherwise, val is returned unchanged. Uses standard conditional branching.
+[==============================================================================}
+function TRange.Pinned(const val: Integer): Integer; overload;
+begin
+  if (val < Self.Minimum) then
+    Result := Self.Minimum
+  else if (val > Self.Maximum) then
+    Result := Self.Maximum
+  else
+    Result := val;
+end;
+
+{==============================================================================]
+  <PinMax>
+  @action: Ensures the value is not higher than the range's Maximum.
+  @note: Ignores the lower bound (Minimum).
+[==============================================================================}
+function TRange.PinMax(const val: Integer): Integer; overload;
+begin
+  Result := Min(Self.Maximum, val);
+end;
+
+{==============================================================================]
+  <PinMin>
+  @action: Ensures the value is not lower than the range's Minimum.
+  @note: Ignores the upper bound (Maximum).
+[==============================================================================}
+function TRange.PinMin(const val: Integer): Integer; overload;
+begin
+  Result := Max(Self.Minimum, val);
 end;
 
 {==============================================================================]
