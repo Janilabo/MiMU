@@ -62,6 +62,7 @@ function Pull: TIntegerArray; overload;
 function Queue: TIntegerArray; overload;
 function Recursed: TIntegerArray; overload;
 function Recursively: TIntegerArray; overload;
+function Separately(const rReverse: Boolean = False): TIntegerArray; overload;
 function Sequence: TIntegerArray; overload;
 function Snapshot: TIntegerArray; overload;
 function Stack: TIntegerArray; overload;
@@ -1727,6 +1728,35 @@ begin
   Result := [Self.start];
   if (Self.start <> Self.stop) then
     Result := (Result + Range((Self.start + Self.Step), Self.stop).Recursively);
+end;
+
+{==============================================================================]
+  <Separately>
+  @action: Converts the range to a TIntegerArray.
+  @note:
+    - If rReverse = False, the array preserves the range’s natural order:
+        - Ascending range → ascending array.
+        - Descending range → descending array.
+    - If rReverse = True, the array is returned in reverse order:
+        - Ascending range → descending array.
+        - Descending range → ascending array.
+    - Singular ranges (start = stop) return a single-element array.
+    - Uses a step variable (`r`) to determine the direction of iteration.
+[==============================================================================}
+function TRange.Separately(const rReverse: Boolean = False): TIntegerArray; overload;
+var
+  i, s, r: Integer;
+begin
+  if Self.Singular then
+    Exit([Self.start]);
+  SetLength(Result, Self.Size);
+  s := IfThen(rReverse, Self.stop, Self.start);
+  if Self.Ascending then
+    r := IfThen(rReverse, -1, 1)
+  else
+    r := IfThen(rReverse, 1, -1);
+  for i := 0 to High(Result) do
+    Result[i] := s.Increase(r);
 end;
 
 {==============================================================================]

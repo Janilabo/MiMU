@@ -1,6 +1,7 @@
 {$IFDEF METHODS}
 function Direction: Integer; overload;
 function Flow: Integer; overload;
+function Ordering: Integer; overload;
 function Orientation: Integer; overload;
 function Polarity: Integer; overload;
 function Sgn: Integer; overload;
@@ -50,6 +51,20 @@ var
 begin
   d := (Self.stop - Self.start);
   Result := (d div (Abs(d) + Ord(d = 0)));
+end;
+
+{==============================================================================]
+  <Ordering>
+  @action: Returns an integer indicating the order of the range.
+  @note:
+    - Returns 1 if the range is ascending (start < stop).
+    - Returns 0 if the range is singular (start = stop).
+    - Returns -1 if the range is descending (start > stop).
+    - Useful for quickly determining range direction in calculations or iterations.
+[==============================================================================}
+function TRange.Ordering: Integer; overload;
+begin
+  Result := (Ord(Self.start < Self.stop) - Ord(Self.start > Self.stop));
 end;
 
 {==============================================================================]

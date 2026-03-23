@@ -35,6 +35,7 @@ function Lacks(const x: Integer): Boolean; overload;
 function Membership(const val: Integer): Boolean; overload;
 function Missing(const val: Integer): Boolean; overload;
 function Missing(const vals: TRange): Boolean; overload;
+function Near(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
 function Number(const val: Integer): Boolean; overload;	
 function Omits(const val: Integer): Boolean; overload;
 function Outside(const x: Integer): Boolean; overload;
@@ -497,6 +498,31 @@ end;
 function TRange.Missing(const vals: TRange): Boolean; overload;
 begin
   Result := ((vals.Maximum < Self.Minimum) or (vals.Minimum > Self.Maximum));
+end;
+
+{==============================================================================]
+  <Near>
+  @action: Determines whether a value lies within or near the range, based on
+           an optional radius.
+  @note:
+    - Returns True if `val` lies within the range extended by `vRadius`.
+    - The range is treated as centered at its midpoint with half-width expanded
+      by `vRadius`.
+    - If `vRadius = 0`, this is equivalent to checking whether `val` is inside
+      the range.
+    - If `vRadius > 0`, the effective range is expanded outward by `vRadius`.
+    - Returns False if `vRadius < 0`.
+    - Works for both ascending and descending ranges.
+[==============================================================================}
+function TRange.Near(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
+var
+  c, h: Double;
+begin
+  if (vRadius < 0) then
+    Exit(False);
+  c := ((Self.start + Self.stop) / 2);
+  h := ((Abs(Self.stop - Self.start) / 2) + vRadius);
+  Result := (Abs(val - c) <= h);
 end;
 
 {==============================================================================]

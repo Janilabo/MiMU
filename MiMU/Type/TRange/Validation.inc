@@ -2,6 +2,7 @@
 function Bipolar: Boolean;
 function Exceeds(const maxElements: Integer): Boolean;
 function Insufficient(const minElements: Integer): Boolean;
+function Natural: Boolean; overload;
 function Negative: Boolean;
 function NonNegative: Boolean;
 function NonPositive: Boolean;
@@ -42,6 +43,20 @@ end;
 function TRange.Insufficient(const minElements: Integer): Boolean;
 begin
   Result := (Self.Size < minElements);
+end;
+
+{==============================================================================]
+  <Natural>
+  @action: Determines whether the range lies entirely within the natural numbers.
+  @note  :
+    - Returns True if both `start` and `stop` are greater than or equal to 0.
+    - Returns False if either endpoint is negative.
+    - Does not consider ordering; only checks the sign of the endpoints.
+    - Useful for validating ranges intended to represent non-negative domains.
+[==============================================================================}
+function TRange.Natural: Boolean; overload;
+begin
+  Result := ((Self.start >= 0) and (Self.stop >= 0));
 end;
 
 {==============================================================================]

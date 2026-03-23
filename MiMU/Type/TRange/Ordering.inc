@@ -1,18 +1,42 @@
 {$IFDEF METHODS}
+function Arrange(const oAscending: Boolean = True): TRange; overload;
 function Asc: TIntegerArray; overload;
 function Ascend: TRange; overload;
 function Ascended: TRange; overload;
 function Desc: TIntegerArray; overload;
 function Descend: TRange; overload;
 function Descended: TRange; overload;
+function Fix(const oAscending: Boolean = True): TRange; overload;
 function Order(const oAscending: Boolean = True): Boolean; overload;
 function Ordered(const oAscending: Boolean = True): TRange; overload;
+function OrderTo(const oAscending: Boolean = True): TRange; overload;
 function Sort(const oAscending: Boolean = True): Boolean; overload;
 function Sorted(const oAscending: Boolean = True): TRange; overload;
 function ToOrder(const oAscending: Boolean = True): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Arrange>
+  @action: Returns a new range arranged in the specified order.
+  @note:
+    - If `oAscending = True`, the returned range will be ascending (`start <= stop`).
+    - If `oAscending = False`, the returned range will be descending (`start >= stop`).
+    - If the range is singular (start = stop), it is returned unchanged.
+    - Uses `EnsureRange` to clamp endpoints safely within valid integer limits.
+    - Useful for preparing a range for iteration, chunking, or other operations
+      that require a specific ordering.
+[==============================================================================}
+function TRange.Arrange(const oAscending: Boolean = True): TRange; overload;
+begin
+  if Self.Singular then
+    Result := Self
+  else if oAscending then
+    Result := TRange.Construct(EnsureRange(Self.start, Low(Integer), Self.stop), EnsureRange(Self.stop, Self.start, High(Integer)))
+  else
+    Result := TRange.Construct(EnsureRange(Self.stop, Self.start, High(Integer)), EnsureRange(Self.start, Low(Integer), Self.stop));
+end;
+
 {==============================================================================]
   <Asc>
   @action: Returns an ascending sequence of integers from Start to Stop.
@@ -34,8 +58,8 @@ end;
 [==============================================================================}
 function TRange.Ascend: TRange; overload;
 begin
-  Result.start := Min(Self.start, Self.stop);
-  Result.stop := Max(Self.stop, Self.start);
+  Result.start := Self.Minimum;
+  Result.stop := Self.Maximum;
 end;
 
 {==============================================================================]
@@ -72,8 +96,8 @@ end;
 [==============================================================================}
 function TRange.Descend: TRange; overload;
 begin
-  Result.start := Max(Self.stop, Self.start);
-  Result.stop := Min(Self.start, Self.stop);
+  Result.start := Self.Maximum;
+  Result.stop := Self.Minimum;
 end;
 
 {==============================================================================]
@@ -88,6 +112,32 @@ begin
   else
     Result.Create(Self.stop, Self.start);
 end;
+
+{==============================================================================]
+  <Fix>
+  @action: Returns a new range with endpoints arranged according to the
+           specified order, preserving the original range's size.
+  @note  :
+    - If `oAscending = True`, the returned range will be ascending (`start <= stop`).
+    - If `oAscending = False`, the returned range will be descending (`start >= stop`).
+    - Singular ranges (start = stop) are returned unchanged.
+    - Uses the range midpoint and half-width to reconstruct the range.
+    - Useful when you want a guaranteed ordered range without changing its
+      span or size.
+[==============================================================================}
+function TRange.Fix(const oAscending: Boolean = True): TRange; overload;
+var
+  c, h: Double;
+begin
+  if Self.Singular then
+    Exit(Self);
+  c := ((Self.start + Self.stop) / 2);
+  h := (Abs(Self.start - Self.stop) / 2);
+  if oAscending then
+    Result.Create(Round(c - h), Round(c + h))
+  else
+    Result.Create(Round(c + h), Round(c - h));
+end; 
 
 {==============================================================================]
   <Order>
@@ -115,6 +165,20 @@ begin
     Result.Create(Self.Start, Self.Stop)
   else
     Result.Create(Self.Stop, Self.Start);
+end;
+
+{==============================================================================]
+  <OrderTo>
+  @action: Normalizes the range to a specific direction (Ascending or Descending).
+  @note: Acts as a toggleable normalizer; uses the boolean parameter to choose 
+         between a Min-Max or Max-Min result.
+[==============================================================================}
+function TRange.OrderTo(const oAscending: Boolean = True): TRange; overload;
+begin
+  if oAscending then
+    Result := TRange.Construct(Self.Minimum, Self.Maximum)
+  else
+    Result := TRange.Construct(Self.Maximum, Self.Minimum);
 end;
 
 {==============================================================================]
