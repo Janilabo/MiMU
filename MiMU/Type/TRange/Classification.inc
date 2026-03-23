@@ -14,6 +14,7 @@ function Increasing: Boolean; overload;
 function IsAscending: Boolean; overload;
 function IsDescending: Boolean; overload;
 function IsPlural: Boolean; overload;
+function IsSingle: Boolean; overload;
 function IsSingular: Boolean; overload;
 function Plural: Boolean; overload;
 function Shrinking: Boolean; overload;
@@ -182,6 +183,20 @@ end;
 function TRange.IsPlural: Boolean; overload;
 begin
   Result := ((Self.start - Self.stop) <> 0);
+end;
+
+{==============================================================================]
+  <IsSingle>
+  @action: Determines whether the range represents a single point.
+  @note: 
+    - Returns True if start and stop are equal.
+    - Uses a branchless equality check via XOR:
+        (start xor stop) = 0
+      which holds only when both values are identical.
+[==============================================================================}
+function TRange.IsSingle: Boolean; overload;
+begin
+  Result := ((Self.start xor Self.stop) = 0);
 end;
 
 {==============================================================================]

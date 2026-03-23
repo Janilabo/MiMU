@@ -1,7 +1,12 @@
 {$IFDEF METHODS}
 function Bipolar: Boolean;
 function Exceeds(const maxElements: Integer): Boolean;
+function IsNarrow(const val: Integer): Boolean; overload;
 function Insufficient(const minElements: Integer): Boolean;
+function IsNegligible(const threshold: Integer = 0): Boolean; overload;
+function IsSignificant(const threshold: Integer = 0): Boolean; overload;
+function IsSubstantial(const threshold: Integer): Boolean; overload;
+function IsWide(const val: Integer): Boolean; overload;
 function Natural: Boolean; overload;
 function Negative: Boolean;
 function NonNegative: Boolean;
@@ -43,6 +48,56 @@ end;
 function TRange.Insufficient(const minElements: Integer): Boolean;
 begin
   Result := (Self.Size < minElements);
+end;
+
+{==============================================================================]
+  <IsNarrow>
+  @action: Returns True if the range's size is strictly less than the threshold.
+  @note: Use this to detect "thin" or "sub-limit" spans where Size < val.
+[==============================================================================}
+function TRange.IsNarrow(const val: Integer): Boolean; overload;
+begin
+  Result := (Self.Size < val);
+end;
+
+{==============================================================================]
+  <IsNegligible>
+  @action: Returns True if the range is so small it can be ignored.
+  @note: Usually used for "Zero-checks" or "Noise-filtering."
+[==============================================================================}
+function TRange.IsNegligible(const threshold: Integer = 0): Boolean; overload;
+begin
+  Result := (Self.Size <= threshold);
+end;
+
+{==============================================================================]
+  <IsSignificant>
+  @action: Returns True if the range is large enough to be meaningful.
+  @note: This is the logical inverse of IsNegligible.
+[==============================================================================}
+function TRange.IsSignificant(const threshold: Integer = 0): Boolean; overload;
+begin
+  Result := (Self.Size > threshold);
+end;
+
+{==============================================================================]
+  <IsSubstantial>
+  @action: Returns True if the range exceeds a large, specific scale.
+  @note: A formal synonym for IsLarge; implies a "major" span.
+[==============================================================================}
+function TRange.IsSubstantial(const threshold: Integer): Boolean; overload;
+begin
+  Result := (Self.Size >= threshold);
+end;
+
+{==============================================================================]
+  <IsWide>
+  @action: Returns True if the range's size is greater than or equal to the threshold.
+  @note: Use this to detect "broad" or "at-limit" spans where Size >= val.
+[==============================================================================}
+function TRange.IsWide(const val: Integer): Boolean; overload;
+begin
+  Result := (Self.Size >= val);
 end;
 
 {==============================================================================]

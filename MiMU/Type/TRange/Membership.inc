@@ -31,6 +31,8 @@ function IsIn(const val: Integer): Boolean; overload;
 function IsIncluded(const val: Integer): Boolean; overload;
 function IsInside(const val: Integer): Boolean; overload;
 function IsMember(const val: Integer): Boolean; overload;
+function IsMissing(const val: Integer): Boolean; overload;
+function IsOutside(const val: Integer): Boolean; overload;
 function IsSubsetFor(const target: TRange): Boolean; overload;
 function IsSubsetOf(const target: TRange): Boolean; overload;
 function Item(const x: Integer): Boolean; overload;
@@ -447,6 +449,37 @@ end;
 function TRange.IsMember(const val: Integer): Boolean; overload;
 begin
   Result := ((Ord(val >= Self.Minimum) + Ord(val <= Self.Maximum)) = 2);
+end;
+
+{==============================================================================]
+  <IsMissing>
+  @action: Determines whether a value lies outside the range [Minimum, Maximum].
+  @note: 
+    - Returns True if val < Minimum or val > Maximum.
+    - Returns False if val is within the range or exactly equal to the boundaries.
+    - Uses a branchless absolute-distance test:
+        |val - Minimum| + |val - Maximum| > (Maximum - Minimum)
+      which holds only when val is outside the interval.
+[==============================================================================}
+function TRange.IsMissing(const val: Integer): Boolean; overload;
+begin
+  Result := ((Abs(val - Self.Minimum) + Abs(val - Self.Maximum)) > (Self.Maximum - Self.Minimum));
+end;
+
+{==============================================================================]
+  <IsOutside>
+  @action: Determines whether a value lies strictly outside the range [Minimum, Maximum].
+  @note: 
+    - Returns True if val < Minimum or val > Maximum.
+    - Returns False if val is within the range or exactly equal to the boundaries.
+    - Uses a branchless multiplication sign test: 
+        (val - Minimum) * (val - Maximum) > 0
+      which is positive only when val is on the same side of both bounds.
+    - Operates in Int64 to avoid overflow during multiplication.
+[==============================================================================}
+function TRange.IsOutside(const val: Integer): Boolean; overload;
+begin
+  Result := (Int64(val - Self.Minimum) * Int64(val - Self.Maximum) > 0);
 end;
 
 {==============================================================================]
