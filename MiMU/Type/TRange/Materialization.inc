@@ -31,6 +31,8 @@ function Gather: TIntegerArray; overload;
 function Generate: TIntegerArray; overload;
 function Generated: TIntegerArray; overload;
 function Ints: TIntegerArray; overload;
+function Itemize: TIntegerArray; overload;
+function Itemized(const AStep: Integer = 1): TIntegerArray; overload;
 function Items: TIntegerArray; overload;
 function Iter: TIntegerArray; overload;
 function Iter(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
@@ -818,6 +820,59 @@ begin
     False:
     for i := 0 to High(Result) do
       Result[i] := (i + Self.start);
+  end;
+end;
+
+{==============================================================================]
+  <Itemize>
+  @action: Returns an array containing every integer in the range, enumerated
+           sequentially with a step of 1.
+  @note: 
+    - The array length is equal to the size of the range.
+    - Works for both ascending and descending ranges.
+    - The first element is `Self.start`; the last element is `Self.stop`.
+    - Suitable for generating a full list of values for iteration or indexing.
+[==============================================================================}
+function TRange.Itemize: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  SetLength(Result, Self.Size);
+  Result[0] := Self.start;
+  for i := 1 to High(Result) do
+    if Self.Ascending then
+      Result[i] := (Result[i - 1] + 1)
+    else
+      Result[i] := (Result[i - 1] - 1);
+end;
+
+{==============================================================================]
+  <Itemized>
+  @action: Returns an array containing values in the range, enumerated with a
+           custom step `AStep`.
+  @note: 
+    - If `AStep <= 0`, it is treated as 1.
+    - The array starts at `Self.start` and increments or decrements by `AStep` 
+      depending on whether the range is ascending or descending.
+    - The final element may not exactly equal `Self.stop` if the step does not
+      divide the range evenly.
+    - Useful for generating sequences with custom increments, such as ranges
+      for sampling or subsampling data.
+[==============================================================================}
+function TRange.Itemized(const AStep: Integer = 1): TIntegerArray; overload;
+var
+  s, i, v: Integer;
+begin
+  s := Max(AStep, 0);
+  SetLength(Result, ((Abs(Self.stop - Self.start) div s) + 1));
+  v := Self.start;
+  for i := 0 to High(Result) do
+  begin
+    Result[i] := v;
+    if Self.Ascending then
+      v := (v + s)
+    else
+      v := (v - s);
   end;
 end;
 
@@ -1655,7 +1710,6 @@ end;
   @action: Builds and returns a dynamic integer array representing the
            inclusive sequence from Self.Start to Self.Stop using Self.Step,
            constructed via recursive descent.
-
   @note: Terminates only when Self.Start = Self.Stop.
          Requires:
           • Self.Step <> 0
@@ -1752,7 +1806,6 @@ end;
   <Stepped>
   @action: Materializes the range into an array of integers with a custom
            step size. Values are incremented by sSize at each iteration.
-
   @note: - For non-singular ranges, values are generated from Self.start
            toward Self.stop, INCLUDING the terminal bound.
          - Direction is determined by Self.Ascending:

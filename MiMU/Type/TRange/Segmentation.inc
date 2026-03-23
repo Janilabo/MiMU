@@ -31,13 +31,17 @@ function ToParts(const partSize: Integer = 2): TRangeArray; overload;
 function Windows(const target: TRange): TRangeArray; overload;
 {$ENDIF}
 
+{$IFDEF METHODS}
+function GetChunk(const chunkIndex: Integer; const totalChunks: Integer = 2147483647): TRange; overload;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Binned>
   @action: Generate grid-aligned subranges (bins) of the same size as Self
            inside the target range.
-  @note:   Subranges are aligned in steps of SelfSize from the start of target.
-           Any remainder that does not fit evenly is ignored.
+  @note: Subranges are aligned in steps of SelfSize from the start of target.
+         Any remainder that does not fit evenly is ignored.
 [==============================================================================}
 function TRangeHelper.Binned(const target: TRange): TRangeArray; overload;
 var
@@ -250,7 +254,6 @@ end;
   <Divided>
   @action: Splits the range into `partCount` contiguous subranges using
            proportional index division across the total element count.
-
   @note:
     - Partition boundaries are computed via scaled integer division
       (`(Count * index) div partCount`).
@@ -283,6 +286,35 @@ begin
   d := Self.Wind;
   for i := 0 to (l - 1) do
     Result[i].Create(PartStarts(i), PartStops(i));
+end;
+
+{==============================================================================]
+  <GetChunk>
+  @action: Returns the subrange corresponding to the specified `chunkIndex` when
+           the current range is divided into up to `totalChunks` contiguous chunks.
+  @note: 
+    - The number of chunks is limited to the size of the range.
+    - If `chunkIndex` is outside the valid range [0..ChunkCount-1], it is clamped
+      to the nearest valid index.
+    - All chunks have equal size except the last, which may include any remaining
+      elements due to integer division.
+    - This implementation produces a "tail-heavy" distribution: the final chunk
+      may be larger if the range size is not divisible evenly by the chunk count.
+[==============================================================================}
+function TRange.GetChunk(const chunkIndex: Integer; const totalChunks: Integer = 2147483647): TRange; overload;
+var
+  s, c: Int64;
+  i, m: Integer;
+begin
+  s := Self.Size;
+  m := Min(Max(1, totalChunks), s);
+  i := Max(Min(chunkIndex, (m - 1)), 0);
+  c := (s div m);
+  Result.start := (Self.start + (i * c));
+  if (i = (m - 1)) then
+    Result.stop := Self.stop
+  else
+    Result.stop := (Result.start + (c - 1));
 end;
 
 {==============================================================================]

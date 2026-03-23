@@ -6,6 +6,7 @@ function Below(const target: TRange): Boolean; overload;
 function Contains(const x: Integer): Boolean; overload;
 function Contains(const x: TRange): Boolean; overload;
 function Covered(const val: Integer): Boolean; overload;
+function Covering(const val: Integer): Boolean; overload;
 function Covers(const val: Integer): Boolean; overload;
 function Digit(const x: Integer): Boolean; overload;
 function Disjoint(const target: TRange): Boolean; overload;
@@ -13,6 +14,7 @@ function Disjointed(const target: TRange): Boolean; overload;
 function Employs(const val: Integer): Boolean; overload;
 function Got(const val: Integer): Boolean; overload;
 function Has(const val: Integer): Boolean; overload;
+function Have(const val: Integer): Boolean; overload;
 function Holding(const val: Integer): Boolean; overload;
 function Holds(const val: Integer): Boolean; overload;
 function Holds(const vals: TRange): Boolean; overload;
@@ -39,6 +41,7 @@ function Outside(const x: Integer): Boolean; overload;
 function Owns(const val: Integer): Boolean; overload;
 function Subset(const r: TRange): Boolean; overload;
 function Value(const x: Integer): Boolean; overload;
+function Within(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -102,6 +105,20 @@ end;
 function TRange.Covered(const val: Integer): Boolean; overload;
 begin
   Result := not ((val < Self.Minimum) xor (val > Self.Maximum));
+end;
+
+{==============================================================================]
+  <Covering>
+  @action: Returns True if `val` lies within the range boundaries (inclusive).
+  @note: Works regardless of whether the range is ascending or descending.
+         This is an inclusive check: endpoints are considered inside.
+[==============================================================================}
+function TRange.Covering(const val: Integer): Boolean; overload;
+begin
+  if Self.Ascending then
+    Result := (((val - Self.start) or (Self.stop - val)) >= 0)
+  else
+    Result := (((val - Self.stop) or (Self.start - val)) >= 0);
 end;
 
 {==============================================================================]
@@ -196,6 +213,17 @@ end;
 function TRange.Has(const val: Integer): Boolean; overload;
 begin
   Result := (((val >= Self.start) and (val <= Self.stop)) or ((val >= Self.stop) and (val <= Self.start)));
+end;
+
+{==============================================================================]
+  <Have>
+  @action: Returns True if `val` lies within the range boundaries (inclusive).
+  @note: Uses a midpoint/radius formulation equivalent to an inclusive
+         range check. Endpoints are considered inside.
+[==============================================================================}
+function TRange.Have(const val: Integer): Boolean; overload;
+begin
+  Result := (Abs(val - ((Self.start + Self.stop) / 2)) <= (Abs(Self.stop - Self.start) / 2));
 end;
 
 {==============================================================================]
@@ -539,5 +567,18 @@ end;
 function TRange.Value(const x: Integer): Boolean; overload;
 begin
   Result := not (((x < Self.start) and (x < Self.stop)) or ((x > Self.stop) and (x > Self.start)));
+end;
+
+{==============================================================================]
+  <Within>
+  @action: Returns True if val lies within the range, optionally expanded
+           by vRadius on both sides.
+  @note: Radius of 0 performs a standard inclusive range check.
+          - Positive radius extends the range outward symmetrically.
+          - Negative radius is considered invalid and returns False.
+[==============================================================================}
+function TRange.Within(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
+begin
+  Result := ((vRadius >= 0) and (val >= (Self.Minimum - vRadius)) and (val <= (Self.Maximum + vRadius)));
 end;
 {$ENDIF}
