@@ -16,9 +16,11 @@ function IsDescending: Boolean; overload;
 function IsPlural: Boolean; overload;
 function IsSingle: Boolean; overload;
 function IsSingular: Boolean; overload;
+function Multiple: Boolean; overload;
 function Plural: Boolean; overload;
 function Shrinking: Boolean; overload;
 function Shrinks: Boolean; overload;
+function Singleton: Boolean; overload;
 function Singular: Boolean; overload;
 function Rises: Boolean; overload;
 function Rising: Boolean; overload;
@@ -211,6 +213,19 @@ begin
 end;
 
 {==============================================================================]
+  <Multiple>
+  @action: Determines whether the range contains more than one value.
+  @note: 
+    - Returns True if Size > 1.
+    - Represents the logical complement of Singleton.
+    - Assumes Size reflects the number of discrete values within the range.
+[==============================================================================}
+function TRange.Multiple: Boolean; overload;
+begin
+  Result := (Self.Size > 1);
+end;
+
+{==============================================================================]
   <Plural>
   @action: Returns true if range start does NOT equal to stop
   @note: None.
@@ -238,6 +253,19 @@ end;
 function TRange.Shrinks: Boolean; overload;
 begin
   Result := not (Self.start <= Self.stop);
+end;
+
+{==============================================================================]
+  <Singleton>
+  @action: Determines whether the range contains exactly one value.
+  @note: 
+    - Returns True if the range size is equal to 1.
+    - Assumes Size is defined as the count of discrete values within [start, stop].
+    - For continuous ranges, prefer equality check (start = stop) instead.
+[==============================================================================}
+function TRange.Singleton: Boolean; overload;
+begin
+  Result := (Self.Size = 1);
 end;
 
 {==============================================================================]
