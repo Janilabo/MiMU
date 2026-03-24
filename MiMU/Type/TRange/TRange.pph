@@ -25,6 +25,7 @@
 {$I Ordering.inc}
 {$I Parity.inc}
 {$I Position.inc}
+{$I Proximity.inc}
 {$I Restriction.inc}
 {$I Reversal.inc}
 {$I Sampling.inc}

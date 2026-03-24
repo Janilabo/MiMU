@@ -15,6 +15,8 @@ function Disjoint(const target: TRange): Boolean; overload;
 function Disjointed(const target: TRange): Boolean; overload;
 function Distant(const val: Integer; const threshold: Integer = 1): Boolean; overload;
 function Employs(const val: Integer): Boolean; overload;
+function Encloses(const val: Integer): Boolean; overload;
+function Encloses(const vals: TRange): Boolean; overload;
 function Far(const val: Integer; const threshold: Integer = 1): Boolean; overload;
 function Got(const val: Integer): Boolean; overload;
 function Has(const val: Integer): Boolean; overload;
@@ -235,6 +237,40 @@ end;
 function TRange.Employs(const val: Integer): Boolean; overload;
 begin
   Result := ((Self.start = val) or (Self.stop = val));
+end;
+
+{==============================================================================]
+  <Encloses>
+  @action: Determines whether a value lies within the inclusive bounds of
+           the range [start..stop].
+  @return: True: val is inside or exactly on the boundaries
+           False: val is outside the range
+  @note: Range is normalized prior to evaluation to ensure start <= stop.
+[==============================================================================}
+function TRange.Encloses(const val: Integer): Boolean; overload;
+var
+  n: TRange;
+begin
+  n := Self.Normalize;
+  Result := ((val >= n.start) and (val <= n.stop));
+end;
+
+{==============================================================================]
+  <Encloses>
+  @action: Determines whether a range is fully contained within this range,
+           using inclusive boundary comparison.
+  @return: True: vals.start >= start AND vals.stop <= stop
+           False: any portion of vals lies outside this range
+  @note: Both ranges are normalized prior to evaluation to ensure
+         start <= stop semantics for consistent comparison.
+[==============================================================================}
+function TRange.Encloses(const vals: TRange): Boolean; overload;
+var
+  s, v: TRange;
+begin
+  s := Self.Normalize;
+  v := vals.Normalize;
+  Result := ((v.start >= s.start) and (v.stop <= s.stop));
 end;
 
 {==============================================================================]
