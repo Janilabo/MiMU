@@ -9,10 +9,12 @@ constructor Create(const rStart, rStop: Integer); overload;
 constructor Create(const value: Integer); overload;
 constructor Create(const data: string); overload;
 constructor Create(const other: TRange); overload;
+constructor Create(const arr: TIntegerArray; const rAscending: Boolean = True); overload;
 class function Descending(const A, B: Integer): TRange; overload; static;
 class function From(const startVal: Integer; const stepCount: Integer = 0): TRange; overload; static;
 class function From(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload; static;
 class function Form(const val: Integer; const radius: Integer = 0; const rAscending: Boolean = True): TRange; overload; static;
+class function Form(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload; static;
 function Init(const rStart, rStop: Integer): TRange; overload;
 function Init(const r: TRange): TRange; overload;
 function Init(const val: Integer = 0): TRange; overload;
@@ -28,8 +30,10 @@ function Create: TRange; overload;
 {$IFDEF FUNCTIONS}
 function Range(const rStart, rStop: Integer): TRange; overload;
 function Range(const val: Integer = 0): TRange; overload;
+function Range(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload;
 function R(const startVal, stopVal: Integer): TRange; overload;
 function R(const val: Integer = 0): TRange; overload;
+function R(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -198,6 +202,53 @@ begin
 end;
 
 {==============================================================================]
+  <Create>
+  @action: Initializes the range to span the minimum and maximum values of the
+           given integer array.
+  @note: If the array is empty, the constructor exits without modifying Self.
+         The range is computed by scanning elements in pairs for efficiency,
+         ensuring all values contribute to the final bounds.
+         If the array contains a single element, the range is [value, value].
+         After construction, if rAscending is True, the range is normalized to
+         [min(arr), max(arr)]; otherwise it remains in reverse order
+         [max(arr), min(arr)].
+[==============================================================================}
+constructor TRange.Create(const arr: TIntegerArray; const rAscending: Boolean = True); overload;
+var
+  i, h: Integer;
+begin
+  h := High(arr);
+  if (h = -1) then
+    Exit;
+  Self := TRange.Construct(arr[0], arr[0]);
+  i := -1;
+  while (i.Increment(2) < h) do
+  case (arr[i] < arr[i + 1]) of
+    True:
+    begin
+      if (arr[i] < Self.start) then
+        Self.start := arr[i];
+      if (arr[i + 1] > Self.stop) then
+        Self.stop := arr[i + 1];
+    end;
+    False:
+    begin
+      if (arr[i + 1] < Self.start) then
+        Self.start := arr[i + 1];
+      if (arr[i] > Self.stop) then
+        Self.stop := arr[i];
+    end;
+  end;
+  if (i = h) then
+    if (arr[i] < Self.start) then
+      Self.start := arr[i]
+    else if (arr[i] > Self.stop) then
+      Self.stop := arr[i];
+  if not rAscending then
+    Self.Reverse;
+end;
+
+{==============================================================================]
   <Descending>
   @action: Creates a range whose start value is greater than or equal to its stop
            value, regardless of the order of the input parameters.
@@ -274,6 +325,27 @@ begin
     Result.Create((val - radius), (val + radius))
   else
     Result.Create((val + radius), (val - radius));
+end;
+
+{==============================================================================]
+  <Form>
+  @action: Creates a range spanning the minimum and maximum values of the
+           given integer array.
+  @note: If the array is empty, the function exits without modifying Result.
+         If the array contains a single element, the range is [value, value].
+         If rAscending is True, the range is [Minimum(arr), Maximum(arr)];
+         otherwise the bounds are reversed to [Maximum(arr), Minimum(arr)].
+[==============================================================================}
+class function TRange.Form(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload;
+begin
+  case arr.Length of
+    0: Exit;
+    1: Exit(TRange.Construct(arr[0], arr[0]));
+  end;
+  if rAscending then
+    Result.Create(arr.Minimum, arr.Maximum)
+  else
+    Result.Create(arr.Maximum, arr.Minimum);
 end;
 
 {==============================================================================]
@@ -391,6 +463,42 @@ begin
 end;
 
 {==============================================================================]
+  <Range>
+  @action: Returns a range spanning the minimum and maximum values of the
+           given integer array.
+  @note: If the array is empty, the function exits without assigning Result.
+         If the array contains a single element, the range is [value, value].
+         The bounds are determined via a linear scan of the array.
+         If rAscending is True, the range is [min(arr), max(arr)];
+         otherwise the bounds are reversed to [max(arr), min(arr)].
+[==============================================================================}
+function Range(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload;
+var
+  p: PInteger;
+  i, l, h: Integer;
+begin
+  case arr.Length of
+    0: Exit;
+    1: Exit(TRange.Construct(arr[0], arr[0]));
+  end;
+  p := @arr[0];
+  l := p^;
+  h := p^;
+  for i := 1 to High(arr) do
+  begin
+    Inc(p);
+    if (p^ < l) then
+      l := p^
+    else if (p^ > h) then
+      h := p^;
+  end;
+  if rAscending then
+    Result .Create(l, h)
+  else
+    Result.Create(h, l);
+end;
+
+{==============================================================================]
   <R>
   @action: Constructs and returns a TRange whose start and stop values are set to
            startVal and stopVal respectively. No normalization or validation is
@@ -415,5 +523,39 @@ function R(const val: Integer = 0): TRange; overload;
 begin
   Result.start := val;
   Result.stop := val;
+end;
+
+{==============================================================================]
+  <R>
+  @action: Returns a range spanning the minimum and maximum values of the
+           given integer array.
+  @note: If the array is empty, the function exits without assigning Result.
+         The bounds are initialized to extreme integer limits and refined
+         through a linear scan.
+         If rAscending is True, the range is [min(arr), max(arr)];
+         otherwise the bounds are reversed to [max(arr), min(arr)].
+[==============================================================================}
+function R(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload;
+var
+  i: Integer;
+begin
+  if arr.Empty then
+    Exit;
+  Result.start := IfThen(rAscending, High(Integer), Low(Integer));
+  Result.stop := IfThen(rAscending, Low(Integer), High(Integer));
+  case rAscending of
+    True:
+    for i := 0 to High(arr) do
+    begin
+      Result.start := Min(arr[i], Result.start);
+	  Result.stop := Max(arr[i], Result.stop);
+	end;
+	False:
+    for i := 0 to High(arr) do
+    begin
+      Result.stop := Min(arr[i], Result.stop);
+	  Result.start := Max(arr[i], Result.start);
+	end;
+  end;
 end;
 {$ENDIF}
