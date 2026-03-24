@@ -11,6 +11,8 @@ constructor Create(const data: string); overload;
 constructor Create(const other: TRange); overload;
 class function Descending(const A, B: Integer): TRange; overload; static;
 class function From(const startVal: Integer; const stepCount: Integer = 0): TRange; overload; static;
+class function From(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload; static;
+class function Form(const val: Integer; const radius: Integer = 0; const rAscending: Boolean = True): TRange; overload; static;
 function Init(const rStart, rStop: Integer): TRange; overload;
 function Init(const r: TRange): TRange; overload;
 function Init(const val: Integer = 0): TRange; overload;
@@ -219,6 +221,59 @@ class function TRange.From(const startVal: Integer; const stepCount: Integer = 0
 begin
   Result.start := startVal;
   Result.stop := (startVal + stepCount);
+end;
+
+{==============================================================================]
+  <From>
+  @action: Creates a range that spans the minimum and maximum values in the
+           given integer array.
+  @note: If the array is empty, an uninitialized range is returned.
+         If the array contains a single element, the range is [value, value].
+         If rAscending is True, the resulting range is ordered as
+         [min(arr), max(arr)]; otherwise the bounds are reversed to
+         [max(arr), min(arr)].
+[==============================================================================}
+class function TRange.From(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload;
+var
+  h, i: Integer;
+begin
+  h := High(arr);
+  case h of
+    -1: Exit;
+    0: Exit(TRange.Construct(arr[0], arr[0]));
+  end;
+  Result.Create(arr[0], arr[0]);
+  case rAscending of
+    True:
+    for i := 1 to h do
+      if (arr[i] < Result.start) then
+        Result.start := arr[i]
+      else if (arr[i] > Result.stop) then
+        Result.stop := arr[i];
+    False:
+    for i := 1 to h do
+      if (arr[i] < Result.stop) then
+        Result.stop := arr[i]
+      else if (arr[i] > Result.start) then
+        Result.start := arr[i];
+  end;
+end;
+
+{==============================================================================]
+  <Form>
+  @action: Creates a range centered at a given value using the specified radius.
+  @note: If radius < 1, the resulting range is a single-point range [val, val].
+         If rAscending is True, the range is [val - radius, val + radius];
+         otherwise the bounds are reversed to [val + radius, val - radius].
+[==============================================================================}
+class function TRange.Form(const val: Integer; const radius: Integer = 0; const rAscending: Boolean = True): TRange; overload;
+begin
+  if (radius < 1) then
+    Result.Create(val, val)
+  else if rAscending then
+    Result.Create((val - radius), (val + radius))
+  else
+    Result.Create((val + radius), (val - radius));
 end;
 
 {==============================================================================]
