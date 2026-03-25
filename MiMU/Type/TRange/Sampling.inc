@@ -1,5 +1,6 @@
 {$IFDEF METHODS}
 function Any: Integer; overload;
+function Arbitrary: Integer; overload;
 function Lottery(const lCount: Integer = 1): TIntegerArray; overload;
 function Mixed(const mixings: Integer = 1): TIntegerArray; overload;
 function Raffle(const N: Integer = 1): TIntegerArray; overload;
@@ -7,12 +8,15 @@ function Rand: Integer; overload;
 function Randomize: TIntegerArray; overload;
 function Randomly: Integer; overload;
 function Randoms(const rSize: Integer = 1): TIntegerArray; overload;
+function Roll(const rCount: Integer = 1): TIntegerArray; overload;
 function Sample(const sSize: Integer): TIntegerArray; overload;
 function Samples(const rCount: Integer = 1): TIntegerArray; overload;
 function Shake(const shakes: Integer = 1): TIntegerArray; overload;
 function Shuffle(const shuffles: Integer = 1): TIntegerArray; overload;
 function Some: TIntegerArray; overload;
 function Some(const amount: Integer): TIntegerArray; overload;
+function Subsample(const sSize: Integer = 1): TIntegerArray; overload;
+function Subsampled(const sSize: Integer = 1): TIntegerArray; overload;
 function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
@@ -25,6 +29,26 @@ function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
 function TRange.Any: Integer; overload;
 begin
   Result := ((Self.start + Random(Self.Size)) * IfThen(Self.Ascending, 1, -1));
+end;
+
+{==============================================================================]
+  <Arbitrary>
+  @action: Returns a single integer selected uniformly at random from the range.
+  @note: • Selection is inclusive of both bounds (start and stop).
+         • For ascending ranges:
+           Result = start + Random((stop - start) + 1)
+         • For descending ranges:
+           Result = stop + Random((start - stop) + 1)
+         • Random(N) yields a value in [0, N), ensuring uniform distribution
+           across all integers in the range.
+         • Does not allocate memory or modify the range.
+[==============================================================================}
+function TRange.Arbitrary: Integer; overload;
+begin
+  if Self.Ascending then
+    Result := (Self.start + Random((Self.stop - Self.start) + 1))
+  else
+    Result := (Self.stop + Random((Self.start - Self.stop) + 1));
 end;
 
 {==============================================================================]
@@ -227,6 +251,52 @@ begin
 end;
 
 {==============================================================================]
+  <Roll>
+  @action: Returns up to rCount unique integers randomly selected from the
+           range without replacement.
+  @note: • Computes c = Min(Size, rCount) as the number of values to return.
+         • Implements a partial Fisher–Yates shuffle over index space [0..Size-1].
+         • For each i ∈ [0, c-1]:
+           - Selects a random index p ∈ [i, Size-1].
+           - Resolves index indirection via a sparse map (dictionary).
+           - Emits value: Minimum + resolved index.
+           - Records the swap (p ↔ i) in the map.
+         • The dictionary m lazily tracks virtual swaps, avoiding full array allocation.
+         • Guarantees:
+           - No duplicates (sampling without replacement).
+           - Uniform distribution over all combinations of size c.
+         • Does not modify the range.
+         • Result order corresponds to selection order (not sorted).
+[==============================================================================}
+function TRange.Roll(const rCount: Integer = 1): TIntegerArray; overload;
+var
+  m: specialize TDictionary<Integer, Integer>;
+  c, i, j, s, p: Integer;
+  function GV(idx: Integer): Integer;
+  begin
+    if not m.TryGetValue(idx, Result) then
+      Result := idx;
+  end;
+begin
+  s := Self.Size;
+  c := Min(rCount, s);
+  SetLength(Result, c);
+  if (c <= 0) then
+    Exit;
+  m := specialize TDictionary<Integer, Integer>.Create;
+  try
+    for i := 0 to (c - 1) do
+    begin
+      p := (i + Random(s - i));
+      Result[i] := (Self.Minimum + GV(p));
+      m.AddOrSetValue(p, GV(i));
+    end;
+  finally
+    m.Free;
+  end;
+end;
+
+{==============================================================================]
   <Sample>
   @action: Return evenly spaced integer samples across the range.
   @note: Always includes both start and stop values of the range (if sSize > 1).
@@ -323,6 +393,74 @@ end;
 function TRange.Some(const amount: Integer): TIntegerArray; overload;
 begin
   Result := Copy(Self.Shuffle, 0, Max(1, Min(amount, Self.Size)));
+end;
+
+{==============================================================================]
+  <Subsample>
+  @action: Returns a contiguous random subrange (slice) of integers from Self.
+           The slice length is defined by sSize and is clamped to the range size.
+           The starting offset is chosen uniformly at random.
+  @note: • This is NOT a statistical/random subset; elements are contiguous.
+         • Time complexity: O(c), where c = Min(Size, sSize).
+         • Space complexity: O(c) for the result buffer.
+         • If sSize <= 0, returns an empty array.
+         • If sSize >= Size, the full range is returned (still via copy).
+         • Direction is preserved:
+           - Ascending  → increasing sequence (step = +1)
+           - Descending → decreasing sequence (step = -1)
+         • Random() is expected to be uniform in [0, N), thus the start index
+           r ∈ [0, Size - c] is uniformly distributed.
+[==============================================================================}
+function TRange.Subsample(const sSize: Integer = 1): TIntegerArray; overload;
+var
+  m, r, i, s, c: Integer;
+begin
+  s := Self.Size;
+  c := Min(s, sSize);
+  if (c < 1) then
+    Exit([]);
+  r := Random((s - c) + 1);
+  SetLength(Result, c);
+  m := IfThen(Self.Ascending, (Self.start + r), (Self.start - r));
+  case Self.Ascending of
+    True:
+    for i := 0 to (c - 1) do
+      Result[i] := (m + i);
+    False:
+    for i := 0 to (c - 1) do
+      Result[i] := (m - i);
+  end;
+end;
+
+{==============================================================================]
+  <Subsampled>
+  @action: Generates a contiguous slice of integers from the range starting at
+           a randomly selected offset, with length defined by sSize (clamped
+           to the range size).
+  @note: • Computes c = Min(Size, sSize) as the slice length.
+         • Selects a random offset r ∈ [0, Size - c].
+         • Derives the starting value m from the offset and range direction:
+           - Ascending  → m = start + r
+           - Descending → m = start - r
+         • Uses a directional step d (±1) to construct the sequence.
+         • Fills Result as: Result[i] = m + (i * d), i ∈ [0, c-1].
+         • Output is always a contiguous, in-order segment of the range.
+         • Returns [] when c < 1.
+[==============================================================================}
+function TRange.Subsampled(const sSize: Integer = 1): TIntegerArray; overload;
+var
+  m, r, i, s, c, d: Integer;
+begin
+  s := Self.Size;
+  c := Min(s, sSize);
+  if (c < 1) then
+    Exit([]);
+  r := Random((s - c) + 1);
+  SetLength(Result, c);
+  m := IfThen(Self.Ascending, (Self.start + r), (Self.start - r));
+  d := IfThen(Self.Ascending, 1, -1);
+  for i := 0 to (c - 1) do
+    Result[i] := (m + (i * d));
 end;
 
 {==============================================================================]

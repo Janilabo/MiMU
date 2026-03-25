@@ -5,6 +5,7 @@
 {$I Centrality.inc}
 {$I Comparison.inc}
 {$I Construction.inc}
+{$I Consumption.inc}
 {$I Conversion.inc}
 {$I Classification.inc}
 {$I Direction.inc}
