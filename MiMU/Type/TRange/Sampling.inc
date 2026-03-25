@@ -1,10 +1,12 @@
 {$IFDEF METHODS}
 function Any: Integer; overload;
+function Lottery(const lCount: Integer = 1): TIntegerArray; overload;
 function Mixed(const mixings: Integer = 1): TIntegerArray; overload;
 function Raffle(const N: Integer = 1): TIntegerArray; overload;
 function Rand: Integer; overload;
 function Randomize: TIntegerArray; overload;
 function Randomly: Integer; overload;
+function Randoms(const rSize: Integer = 1): TIntegerArray; overload;
 function Sample(const sSize: Integer): TIntegerArray; overload;
 function Samples(const rCount: Integer = 1): TIntegerArray; overload;
 function Shake(const shakes: Integer = 1): TIntegerArray; overload;
@@ -23,6 +25,39 @@ function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
 function TRange.Any: Integer; overload;
 begin
   Result := ((Self.start + Random(Self.Size)) * IfThen(Self.Ascending, 1, -1));
+end;
+
+{==============================================================================]
+  <Lottery>
+  @action: Selects a unique set of random integers within the range. 
+  @note: Ensures no duplicates. If lCount exceeds the range's total size, 
+         the result is capped at the range's capacity to prevent infinite loops.
+[==============================================================================}
+function TRange.Lottery(const lCount: Integer = 1): TIntegerArray; overload;
+var
+  m, c, i, j, r, s: Integer;
+  u: Boolean;
+begin
+  if (lCount < 1) then
+    Exit([]);
+  s := Self.Size;
+  c := Min(s, lCount);
+  SetLength(Result, c);
+  m := Self.Minimum;
+  for i := 0 to (c - 1) do
+  begin
+    repeat
+      r := (m + Random(s));
+      u := False;
+      for j := 0 to (i - 1) do
+        if (Result[j] = r) then
+        begin
+          u := True;
+          Break;
+        end;
+    until not u;
+    Result[i] := r;
+  end;
 end;
 
 {==============================================================================]
@@ -168,6 +203,27 @@ begin
     Result := (Self.start + Random(Self.Count))
   else
     Result := (Self.start - Random(Self.Count));
+end;
+
+{==============================================================================]
+  <Randoms>
+  @action: Generates random values within the range.
+  @note: 
+    - Returns an array of rSize uniformly distributed random integers.
+    - Values are sampled from the inclusive interval [Minimum, Maximum].
+    - If rSize < 1, an empty array is returned.
+[==============================================================================}
+function TRange.Randoms(const rSize: Integer = 1): TIntegerArray; overload;
+var
+  i, m, s: Integer;
+begin
+  SetLength(Result, Max(0, rSize));
+  if (rSize < 1) then
+    Exit;
+  m := Self.Minimum;
+  s := ((Self.Maximum - m) + 1);
+  for i := 0 to (rSize - 1) do
+    Result[i] := (m + Random(s));
 end;
 
 {==============================================================================]
