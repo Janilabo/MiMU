@@ -2,6 +2,7 @@
 function Anchor(const aLength: Integer = 1): TRange;
 function AnchorStart(const aLength: Integer = 1): TRange;
 function AnchorStop(const aLength: Integer = 1): TRange;
+function Bounce(const val: Integer): Integer; overload;
 function Clamp(const zone: TRange): TRange; overload;
 function ClampMin(const minValue: Integer): TRange;
 function ClampMax(const maxValue: Integer): TRange;
@@ -82,6 +83,32 @@ begin
     Result.Create((Self.stop - (aLength - 1)), Self.stop)
   else
     Result.Create((Self.stop + (aLength - 1)), Self.stop);
+end;
+
+{==============================================================================]
+  <Bounce>
+  @action: Constraints a value within the range by "bouncing" it off the
+           boundaries instead of wrapping or clamping.
+  @return: A value that oscillates between start and stop.
+  @example: For Range(10, 13), inputs 10, 11, 12, 13, 14, 15...
+            become 10, 11, 12, 13, 12, 11...
+[==============================================================================}
+function TRange.Bounce(const val: Integer): Integer; overload;
+var
+  m, w, d, r: Integer;
+begin
+  m := Min(Self.start, Self.stop);
+  w := Abs(Self.stop - Self.start);
+  if (w = 0) then
+    Exit(m);
+  d := (w * 2);
+  r := ((val - m) mod d);
+  if (r < 0) then
+    r := (r + d);
+  if (r > w) then
+    Result := (m + (d - r))
+  else
+    Result := (m + r);
 end;
 
 {==============================================================================]

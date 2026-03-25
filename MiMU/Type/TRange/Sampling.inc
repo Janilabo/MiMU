@@ -6,6 +6,7 @@ function Rand: Integer; overload;
 function Randomize: TIntegerArray; overload;
 function Randomly: Integer; overload;
 function Sample(const sSize: Integer): TIntegerArray; overload;
+function Samples(const rCount: Integer = 1): TIntegerArray; overload;
 function Shake(const shakes: Integer = 1): TIntegerArray; overload;
 function Shuffle(const shuffles: Integer = 1): TIntegerArray; overload;
 function Some: TIntegerArray; overload;
@@ -187,6 +188,27 @@ begin
   s := (Self.Delta / (sSize - 1));
   for i := 0 to (sSize - 1) do
     Result[i] := Round(Self.start + (i * s));
+end;
+
+{==============================================================================]
+  <Samples>
+  @action: Generates random sample values within the range.
+  @note: 
+    - Returns an array of rCount uniformly distributed random integers.
+    - Values are sampled from the inclusive interval [Minimum, Maximum].
+    - If rCount < 1, an empty array is returned.
+[==============================================================================}
+function TRange.Samples(const rCount: Integer = 1): TIntegerArray; overload;
+var
+  i, l, h: Integer;
+begin
+  if (rCount < 1) then
+    Exit([]);
+  SetLength(Result, rCount);
+  l := Self.Minimum;
+  h := Self.Maximum;
+  for i := 0 to (rCount - 1) do
+    Result[i] := (l + Random((h - l) + 1));
 end;
 
 {==============================================================================]
