@@ -20,6 +20,7 @@
 {$I Relations.inc}
 {$I Materialization.inc}
 {$I Membership.inc}
+{$I Merging.inc}
 {$I Normalization.inc}
 {$I Offset.inc}
 {$I Ordering.inc}

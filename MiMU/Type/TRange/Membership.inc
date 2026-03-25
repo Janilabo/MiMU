@@ -29,6 +29,7 @@ function Interior(const val: Integer): Boolean; overload;
 function Internal(const val: Integer): Boolean; overload;
 function InOpen(const val: Integer): Boolean; overload;
 function Inside(const val: Integer): Boolean; overload;
+function IsDisjoint(const other: TRange): Boolean; overload;
 function IsIn(const val: Integer): Boolean; overload;
 function IsIncluded(const val: Integer): Boolean; overload;
 function IsInside(const val: Integer): Boolean; overload;
@@ -429,6 +430,19 @@ end;
 function TRange.Inside(const val: Integer): Boolean; overload;
 begin
   Result := ((val >= Self.Minimum) and (val <= Self.Maximum));
+end;
+
+{==============================================================================]
+  <IsDisjoint>
+  @action: Determines whether two ranges have no overlap.
+  @note: Returns True if the ranges do not intersect at all;
+         implemented as the logical negation of Meet.
+[==============================================================================}
+function TRange.IsDisjoint(const other: TRange): Boolean; overload;
+var
+  d: TRange;
+begin
+  Result := not Self.Meet(other, d);
 end;
 
 {==============================================================================]

@@ -1,4 +1,5 @@
 {$IFDEF METHODS}
+function Abuts(const other: TRange): Boolean; overload;
 function Differ(const b: TRange): Boolean; overload;
 function Differs(const b: TRange): Boolean; overload;
 function Equal(const b: TRange): Boolean; overload;
@@ -7,6 +8,7 @@ function Equivalent(const b: TRange): Boolean; overload;
 function IsAdjacent(const other: TRange): Boolean; overload;
 function IsMergeable(const other: TRange): Boolean; overload;
 function Loose(const target: TRange): Boolean; overload;
+function Meet(const other: TRange; out mRange: TRange): Boolean; overload;
 function Mergeable(const other: TRange): Boolean; overload;
 function Neighbor(const b: TRange): Boolean; overload;
 function Neighbour(const b: TRange): Boolean; overload;
@@ -20,6 +22,21 @@ function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: 
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Abuts>
+  @action: Determines whether two ranges are directly adjacent (touching but not overlapping).
+  @note: Returns True if the end of one normalized range is exactly one unit before the start of the other;
+         ranges do not share any elements.
+[==============================================================================}
+function TRange.Abuts(const other: TRange): Boolean; overload;
+var
+  s, o: TRange;
+begin
+  s := Self.Normalize;
+  o := other.Normalize;
+  Result := ((s.stop = (o.start - 1)) or (o.stop = (s.start - 1)));
+end;
+
 {==============================================================================]
   <Differ>
   @action: Checks if a unmatches b exactly.
@@ -112,6 +129,26 @@ end;
 function TRange.Loose(const target: TRange): Boolean; overload;
 begin
   Result := (Self.Gap(target) > 0);
+end;
+
+{==============================================================================]
+  <Meet>
+  @action: Computes whether two ranges overlap and, if so, returns their intersection.
+  @note: Returns True when the normalized ranges share at least one common value (l <= h).
+         The resulting range represents the inclusive intersection [max(start), min(stop)].
+[==============================================================================}
+function TRange.Meet(const other: TRange; out mRange: TRange): Boolean; overload;
+var
+  s, o: TRange;
+  h, l: Integer;
+begin
+  s := Self.Normalize;
+  o := other.Normalize;
+  l := Max(s.start, o.start);
+  h := Min(s.stop, o.stop);
+  Result := (l <= h);
+  if Result then
+    mRange := TRange.Construct(l, h);
 end;
 
 {==============================================================================]

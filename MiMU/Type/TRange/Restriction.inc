@@ -21,6 +21,7 @@ function PinMin(const val: Integer): Integer; overload;
 function Restrict(const zone: TRange): Boolean;
 function RestrictMax(const maxValue: Integer): Boolean;
 function RestrictMin(const minValue: Integer): Boolean;
+function Wrap(const val: Integer): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -354,5 +355,28 @@ begin
   Result := not e.Equals(Self);
   if Result then
     Self := e;
+end;
+
+{==============================================================================]
+  <Wrap>
+  @action: Wraps a value into the bounds of the range using modular arithmetic.
+  @note: 
+    - Maps val into the interval [Minimum, Maximum) of the range.
+    - Handles values outside the range by wrapping around cyclically.
+    - Negative values are correctly wrapped into the range.
+    - If the range has zero width, Minimum is returned.
+[==============================================================================}
+function TRange.Wrap(const val: Integer): Integer; overload;
+var
+  m, w, r: Integer;
+begin
+  m := Self.Minimum;
+  w := Abs(Self.stop - Self.start);
+  if (w = 0) then
+    Exit(m);
+  r := ((val - m) mod w);
+  if (r < 0) then
+    r := (r + w);
+  Result := (m + r);
 end;
 {$ENDIF}

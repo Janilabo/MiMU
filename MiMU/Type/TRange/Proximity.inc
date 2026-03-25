@@ -15,15 +15,11 @@ function DistHausdorff(const b: TRange): Integer; overload;
 function Gap(const other: TRange): Integer; overload;
 function GapTo(const other: TRange): Integer; overload;
 function GetDistance(const target: TRange): Integer; overload;
-function Intersect(const b: TRange): TRange; overload;
-function Intersect(const b: TRange; var iZone: TRange): Boolean; overload;
 function Margin(const val: Integer): Integer; overload;
 function Proximity(const val: Integer): Integer; overload;
 function Separation(const other: TRange): Integer; overload;
 function Shared(const other: TRange): Integer; overload;
 function Space(const target: TRange): Integer; overload;
-function Union(const b: TRange): TRange; overload;
-function Union(const val: Integer): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -329,40 +325,6 @@ begin
 end;
 
 {==============================================================================]
-  <Intersect>
-  @action: Returns intersection of a and b.
-  @note: Returns null if there is no intersection for a and b.
-[==============================================================================}
-function TRange.Intersect(const b: TRange): TRange; overload;
-var
-  s, t: TRange;
-begin
-  s := Self.Normalize;
-  t := b.Normalize;
-  Result.start := Max(s.start, t.start);
-  Result.stop := Min(s.stop, t.stop);
-end;
-
-{==============================================================================]
-  <Intersect>
-  @action: Returns true if of a and b contains intersection.
-  @note: Stores intersection to variable, if Result is True.
-[==============================================================================}
-function TRange.Intersect(const b: TRange; var iZone: TRange): Boolean; overload;
-var
-  s, t: TRange;
-  x, y: Integer;
-begin
-  s := Self.Normalize;
-  t := b.Normalize;
-  x := Max(s.start, t.start);
-  y := Min(s.stop, t.stop);
-  Result := (x <= y);
-  if Result then
-    iZone.Create(x, y);
-end;
-
-{==============================================================================]
   <Margin>
   @action: Calculates the strict gap between a value and the nearest boundary
            of the range (excludes adjacency). Distinguishes inside, adjacent,
@@ -475,38 +437,5 @@ begin
     Result := (t.stop - s.start)
   else
     Result := 0;
-end;
-
-{==============================================================================]
-  <Union>
-  @action: Returns union of ranges a and b.
-  @note: None.
-[==============================================================================}
-function TRange.Union(const b: TRange): TRange; overload;
-begin
-  Result.start := Min(Min(Self.start, Self.stop), Min(b.start, b.stop));
-  Result.stop := Max(Max(Self.start, Self.stop), Max(b.start, b.stop));
-end;
-
-{==============================================================================]
-  <Union>
-  @action: Returns union of range and val.
-  @note: None.
-[==============================================================================}
-function TRange.Union(const val: Integer): TRange; overload;
-begin
-  Result := Self;
-  case Self.Descending of
-    True:
-	if (val > Self.start) then
-	  Result.start := val
-	else if (val < Self.stop) then
-	  Result.stop := val;
-    False:
-	if (val < Self.start) then
-	  Result.start := val
-	else if (val > Self.stop) then
-	  Result.stop := val;
-  end;
 end;
 {$ENDIF}
