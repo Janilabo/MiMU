@@ -7,6 +7,8 @@ function PopStart: Integer; overload;
 function PopStop: Integer; overload;
 function PullStart: Integer; overload;
 function PullStop: Integer; overload;
+function StepStart: Integer; overload;
+function StepStop: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -138,5 +140,25 @@ begin
     True: Result := Self.stop.Decrease;
     False: Result := Self.stop.Increase;
   end;
+end;
+
+{==============================================================================]
+  <StepStart>
+  @action: Steps the start boundary in the current direction and returns it.
+  @note: Moves the start without implying consumption semantics (simple traversal step).
+[==============================================================================}
+function TRange.StepStart: Integer; overload;
+begin
+  Result := Self.start.Increment(Self.Direction);
+end;
+
+{==============================================================================]
+  <StepStop>
+  @action: Steps the stop boundary opposite to the current direction and returns it.
+  @note: Moves the stop without implying consumption semantics (symmetric traversal step).
+[==============================================================================}
+function TRange.StepStop: Integer; overload;
+begin
+  Result := Self.stop.Decrement(Self.Direction);
 end;
 {$ENDIF}

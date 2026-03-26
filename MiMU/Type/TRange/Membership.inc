@@ -28,6 +28,8 @@ function Includes(const val: Integer): Boolean; overload;
 function Interior(const val: Integer): Boolean; overload;
 function Internal(const val: Integer): Boolean; overload;
 function InOpen(const val: Integer): Boolean; overload;
+function InsideRange(const val: Integer): Boolean; overload;
+function InsideRange(const vals: TRange): Boolean; overload;
 function Inside(const val: Integer): Boolean; overload;
 function IsDisjoint(const other: TRange): Boolean; overload;
 function IsIn(const val: Integer): Boolean; overload;
@@ -48,6 +50,8 @@ function Near(const val: Integer; const vRadius: Integer = 0): Boolean; overload
 function Number(const val: Integer): Boolean; overload;	
 function Omits(const val: Integer): Boolean; overload;
 function Outlier(const val: Integer): Boolean; overload;
+function OutOfRange(const val: Integer): Boolean; overload;
+function OutOfRange(const vals: TRange): Boolean; overload;
 function Outside(const x: Integer): Boolean; overload;
 function Owns(const val: Integer): Boolean; overload;
 function Subset(const r: TRange): Boolean; overload;
@@ -289,14 +293,15 @@ end;
 
 {==============================================================================]
   <Got>
-  @action: Determines whether a value val lies within the bounds of the range,
-           regardless of the ordering of start and stop.
-  @note:   Functionally equivalent to Inside, but delegates the comparison
-           to the RTL InRange helper after normalizing bounds.
+  @action: Checks whether a value lies within the current range bounds.
+  @note: Direction-aware inclusion test; works for both ascending and descending ranges.
 [==============================================================================}
 function TRange.Got(const val: Integer): Boolean; overload;
+var
+  d: Integer;
 begin
-  Result := InRange(val, Self.Minimum, Self.Maximum);
+  d := Self.Direction;
+  Result := ((((val - Self.start) * d) >= 0) and (((val - Self.stop)  * d) <= 0));
 end;
 
 {==============================================================================]
@@ -430,6 +435,28 @@ end;
 function TRange.Inside(const val: Integer): Boolean; overload;
 begin
   Result := ((val >= Self.Minimum) and (val <= Self.Maximum));
+end;
+
+{==============================================================================]
+  <InsideRange>
+  @action: Determines whether a value val lies within the bounds of the range,
+           regardless of the ordering of start and stop.
+  @note: Functionally equivalent to Inside, but delegates the comparison
+         to the RTL InRange helper after normalizing bounds.
+[==============================================================================}
+function TRange.InsideRange(const val: Integer): Boolean; overload;
+begin
+  Result := InRange(val, Self.Minimum, Self.Maximum);
+end;
+
+{==============================================================================]
+  <InsideRange>
+  @action: Checks whether another range lies fully within this range.
+  @note: Evaluates both endpoints against this range’s normalized bounds (Minimum/Maximum).
+[==============================================================================}
+function TRange.InsideRange(const vals: TRange): Boolean; overload;
+begin
+  Result := (InRange(vals.Minimum, Self.Minimum, Self.Maximum) and InRange(vals.Maximum, Self.Minimum, Self.Maximum));
 end;
 
 {==============================================================================]
@@ -708,6 +735,26 @@ begin
     Result := (Abs(val - ((Self.start + Self.stop) / 2)) > ((Self.stop - Self.start) / 2))
   else
     Result := (Abs(val - ((Self.start + Self.stop) / 2)) > ((Self.start - Self.stop) / 2));
+end;
+
+{==============================================================================]
+  <OutOfRange>
+  @action: Checks whether a value lies outside the current range bounds.
+  @note: Uses normalized bounds (Minimum/Maximum); equivalent to not InRange(val).
+[==============================================================================}
+function TRange.OutOfRange(const val: Integer): Boolean; overload;
+begin
+  Result := ((val < Self.Minimum) or (Self.Maximum < val));
+end;
+
+{==============================================================================]
+  <OutOfRange>
+  @action: Checks whether another range lies completely outside this range.
+  @note: True when ranges do not overlap at all (disjoint intervals).
+[==============================================================================}
+function TRange.OutOfRange(const vals: TRange): Boolean; overload;
+begin
+  Result := ((vals.Maximum < Self.Minimum) or (Self.Maximum < vals.Minimum));
 end;
 
 {==============================================================================]
