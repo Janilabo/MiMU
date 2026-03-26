@@ -1,4 +1,6 @@
 {$IFDEF METHODS}
+function ConsumeStart: Integer; overload;
+function ConsumeStop: Integer; overload;
 function PickStart: Integer; overload;
 function PickStop: Integer; overload;
 function PopStart: Integer; overload;
@@ -8,6 +10,26 @@ function PullStop: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <ConsumeStart>
+  @action: Advances the start boundary in the current direction and returns it.
+  @note: Consumes one element from the beginning of the range (direction-aware).
+[==============================================================================}
+function TRange.ConsumeStart: Integer; overload;
+begin
+  Result := Self.start.Increase(Self.Direction);
+end;
+
+{==============================================================================]
+  <ConsumeStop>
+  @action: Moves the stop boundary opposite to the current direction and returns it.
+  @note: Consumes one element from the end of the range (symmetric to ConsumeStart).
+[==============================================================================}
+function TRange.ConsumeStop: Integer; overload;
+begin
+  Result := Self.stop.Decrease(Self.Direction);
+end;
+
 {==============================================================================]
   <PickStart>
   @action: Returns the current start value, then advances the start boundary by
