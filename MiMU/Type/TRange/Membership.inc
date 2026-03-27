@@ -6,6 +6,8 @@ function Admits(const val: Integer): Boolean; overload;
 function Apart(const val: Integer; const threshold: Integer = 1): Boolean; overload;
 function Below(const target: Integer): Boolean; overload;
 function Below(const target: TRange): Boolean; overload;
+function Binds(const val: Integer): Boolean; overload;
+function Carry(const val: Integer): Boolean; overload;
 function Containing(const val: Integer): Boolean; overload;
 function Contains(const x: Integer): Boolean; overload;
 function Contains(const x: TRange): Boolean; overload;
@@ -17,6 +19,7 @@ function Digit(const x: Integer): Boolean; overload;
 function Disjoint(const target: TRange): Boolean; overload;
 function Disjointed(const target: TRange): Boolean; overload;
 function Distant(const val: Integer; const threshold: Integer = 1): Boolean; overload;
+function Embody(const val: Integer): Boolean; overload;
 function Employs(const val: Integer): Boolean; overload;
 function Encloses(const val: Integer): Boolean; overload;
 function Encloses(const vals: TRange): Boolean; overload;
@@ -27,7 +30,9 @@ function Have(const val: Integer): Boolean; overload;
 function Holding(const val: Integer): Boolean; overload;
 function Holds(const val: Integer): Boolean; overload;
 function Holds(const vals: TRange): Boolean; overload;
+function InBounds(const val: Integer): Boolean; overload;
 function Includes(const val: Integer): Boolean; overload;
+function Inhere(const val: Integer): Boolean; overload;
 function Interior(const val: Integer): Boolean; overload;
 function Internal(const val: Integer): Boolean; overload;
 function InOpen(const val: Integer): Boolean; overload;
@@ -57,6 +62,7 @@ function Outlier(const val: Integer): Boolean; overload;
 function OutOfRange(const val: Integer): Boolean; overload;
 function OutOfRange(const vals: TRange): Boolean; overload;
 function Outside(const x: Integer): Boolean; overload;
+function Own(const val: Integer): Boolean; overload;
 function Owns(const val: Integer): Boolean; overload;
 function Subset(const r: TRange): Boolean; overload;
 function Value(const x: Integer): Boolean; overload;
@@ -139,6 +145,38 @@ end;
 function TRange.Below(const target: TRange): Boolean; overload;
 begin
   Result := Self.Below(target.Minimum);
+end;
+
+{==============================================================================]
+  <Binds>
+  @action: Tests whether the value is bound by the range
+  @note: Returns True if val lies within [start..stop], inclusive.
+         Works regardless of whether start <= stop or start > stop.
+         Internally normalizes bounds using bitwise operations for branchless evaluation.
+[==============================================================================}
+function TRange.Binds(const val: Integer): Boolean; overload;
+var
+  l, h, o, x: Integer;
+begin
+  x := (Self.start xor Self.stop);
+  o := -Ord(Self.start < Self.stop);
+  l := (Self.stop xor (x and o));
+  h := (Self.start xor (x and o));
+  Result := ((val >= l) and (val <= h));
+end;
+
+{==============================================================================]
+  <Carry>
+  @action: Tests whether the range carries the value
+  @note: Returns True if val lies within [start..stop], inclusive.
+         Works regardless of the order of start and stop by normalizing bounds.
+[==============================================================================}
+function TRange.Carry(const val: Integer): Boolean; overload;
+var
+  m: Integer;
+begin
+  m := Self.Minimum;
+  Result := (Cardinal(val - m) <= Cardinal(Self.Maximum - m));
 end;
 
 {==============================================================================]
@@ -287,6 +325,17 @@ begin
 end;
 
 {==============================================================================]
+  <Embody>
+  @action: Check if value is in range
+  @note: Returns True if val lies within [start..stop], inclusive.
+         Works regardless of start > stop.
+[==============================================================================}
+function TRange.Embody(const val: Integer): Boolean; overload;
+begin
+  Result := (((((Self.start - val) shr 31) xor ((Self.stop - val) shr 31)) <> 0) or (val = Self.start) or (val = Self.stop));
+end;
+
+{==============================================================================]
   <Employs>
   @action: Checks if the given integer value matches either the start or stop of the range.
   @note: Useful for quickly verifying if a value is an endpoint of the range.
@@ -353,7 +402,7 @@ var
   d: Integer;
 begin
   d := Self.Direction;
-  Result := ((((val - Self.start) * d) >= 0) and (((val - Self.stop)  * d) <= 0));
+  Result := ((((val - Self.start) * d) >= 0) and (((val - Self.stop) * d) <= 0));
 end;
 
 {==============================================================================]
@@ -422,6 +471,18 @@ begin
 end;
 
 {==============================================================================]
+  <InBounds>
+  @action: Determines whether a given integer value lies within the range.
+  @note: Returns True if the value is greater than or equal to the lower bound
+         and less than or equal to the upper bound, regardless of whether
+         start > stop. Complementary to Missing.
+[==============================================================================}
+function TRange.InBounds(const val: Integer): Boolean; overload;
+begin
+  Result := ((Int64(val - Self.start) * (val - Self.stop)) <= 0);
+end; 
+
+{==============================================================================]
   <Includes>
   @action: Returns True if <val> lies within the range, including the endpoints.
            Works for both ascending and descending ranges.
@@ -434,6 +495,17 @@ end;
 function TRange.Includes(const val: Integer): Boolean; overload;
 begin
   Result := ((Abs(val - Self.start) + Abs(val - Self.stop)) = Abs(Self.start - Self.stop));
+end;
+
+{==============================================================================]
+  <Inhere>
+  @action: Tests whether the value inheres in the range
+  @note: Returns True if val lies within [start..stop], inclusive.
+         Works regardless of whether start <= stop or start > stop.
+[==============================================================================}
+function TRange.Inhere(const val: Integer): Boolean; overload;
+begin
+  Result := (((val >= Self.start) <> (val > Self.stop)) or ((val >= Self.stop) <> (val > Self.start)));
 end;
 
 {==============================================================================]
@@ -834,6 +906,16 @@ end;
 function TRange.Outside(const x: Integer): Boolean; overload;
 begin
   Result := not (((x >= Self.start) and (x <= Self.stop)) or ((x >= Self.stop) and (x <= Self.start)));
+end;
+
+{==============================================================================]
+  <Own>
+  @action: Contains()
+  @note: Returns True if val is within the range [start..stop], inclusive.
+[==============================================================================}
+function TRange.Own(const val: Integer): Boolean; overload;
+begin
+  Result := ((((val - Self.start) xor (val - Self.stop)) < 0) or (val = Self.start) or (val = Self.stop));
 end;
 
 {==============================================================================]
