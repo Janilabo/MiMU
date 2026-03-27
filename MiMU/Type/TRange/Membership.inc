@@ -1,9 +1,12 @@
 {$IFDEF METHODS}
 function Above(const target: Integer): Boolean; overload;
 function Above(const target: TRange): Boolean; overload;
+function Accepts(const val: Integer): Boolean; overload;
+function Admits(const val: Integer): Boolean; overload;
 function Apart(const val: Integer; const threshold: Integer = 1): Boolean; overload;
 function Below(const target: Integer): Boolean; overload;
 function Below(const target: TRange): Boolean; overload;
+function Containing(const val: Integer): Boolean; overload;
 function Contains(const x: Integer): Boolean; overload;
 function Contains(const x: TRange): Boolean; overload;
 function Covered(const val: Integer): Boolean; overload;
@@ -28,6 +31,7 @@ function Includes(const val: Integer): Boolean; overload;
 function Interior(const val: Integer): Boolean; overload;
 function Internal(const val: Integer): Boolean; overload;
 function InOpen(const val: Integer): Boolean; overload;
+function InSet(const val: Integer): Boolean; overload;
 function InsideRange(const val: Integer): Boolean; overload;
 function InsideRange(const vals: TRange): Boolean; overload;
 function Inside(const val: Integer): Boolean; overload;
@@ -76,6 +80,41 @@ begin
 end;
 
 {==============================================================================]
+  <Accepts>
+  @action: Determines whether the specified integer value lies within the range
+           by normalizing it to a [0,1] scale relative to the range endpoints.
+  @note: Uses floating-point division to compute the relative position of val within the range.
+         Returns True if the normalized value is between 0.0 and 1.0, inclusive.
+		 Handles singular ranges (start = stop) explicitly.
+		 May be susceptible to floating-point rounding errors for very large integers.
+[==============================================================================}
+function TRange.Accepts(const val: Integer): Boolean; overload;
+var
+  d: Double;
+begin
+  if Self.Singular then
+    Exit(val = Self.start);
+  d := ((val - Self.start) / (Self.stop - Self.start));
+  Result := ((d >= 0.0) and (d <= 1.0));
+end; 
+
+{==============================================================================]
+  <Admits>
+  @action: Determines whether the specified integer value lies within the range
+           using a direction-aware parity comparison.
+  @note: Uses the Ascending flag to branch between ascending and descending ranges.
+         Implements a boolean XOR-style check (<>) to efficiently test inclusion,
+		 including endpoints. Fully branch-dependent but avoids arithmetic overflow issues.
+[==============================================================================}
+function TRange.Admits(const val: Integer): Boolean; overload;
+var
+  a: Boolean;
+begin
+  a := Self.Ascending;
+  Result := ((a and ((val >= Self.start) <> (val > Self.stop))) or ((not a) and ((val >= Self.stop) <> (val > Self.start))));
+end;
+
+{==============================================================================]
   <Apart>
   @action: Determines whether a value lies outside the central portion of the range.
   @note: Computes the distance from the midpoint of [Minimum, Maximum] and returns 
@@ -100,6 +139,19 @@ end;
 function TRange.Below(const target: TRange): Boolean; overload;
 begin
   Result := Self.Below(target.Minimum);
+end;
+
+{==============================================================================]
+  <Containing>
+  @action: Determines whether the specified integer value is contained within the range,
+           independent of boundary order.
+  @note: Implements a branchless, overflow-safe check by normalizing the lower bound via Min,
+         and comparing unsigned distance using Cardinal arithmetic.
+		 Works for both ascending and descending ranges and includes both endpoints.
+[==============================================================================}
+function TRange.Containing(const val: Integer): Boolean; overload;
+begin
+  Result := (Cardinal(val - Min(Self.start, Self.stop)) <= Cardinal(Abs(Self.stop - Self.start)));
 end;
 
 {==============================================================================]
@@ -423,6 +475,23 @@ begin
   if Self.Descending then
     Exit((val > Self.stop) and (val < Self.start));
   Result := ((val > Self.start) and (val < Self.stop));
+end;
+
+{==============================================================================]
+  <InSet>
+  @action: Determines whether a given integer value lies within the bounds of the range,
+           accounting for both ascending and descending order.
+  @note: Returns False if the value or range boundaries fall outside the byte interval (0..255).
+         When Ascending is True, the range is evaluated as start..stop; otherwise, it is evaluated as stop..start.
+[==============================================================================}
+function TRange.InSet(const val: Integer): Boolean; overload;
+begin
+  if not ((val in [0..255]) and (Self.start in [0..255]) and (Self.stop in [0..255])) then
+    Result := False
+  else if Self.Ascending then
+    Result := (val in [Self.start..Self.stop])
+  else
+    Result := (val in [Self.stop..Self.start]);
 end;
 
 {==============================================================================]
