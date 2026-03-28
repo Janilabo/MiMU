@@ -3,6 +3,7 @@ function Above(const target: Integer): Boolean; overload;
 function Above(const target: TRange): Boolean; overload;
 function Accepts(const val: Integer): Boolean; overload;
 function Admits(const val: Integer): Boolean; overload;
+function Allows(const val: Integer): Boolean; overload;
 function Apart(const val: Integer; const threshold: Integer = 1): Boolean; overload;
 function Below(const target: Integer): Boolean; overload;
 function Below(const target: TRange): Boolean; overload;
@@ -33,6 +34,7 @@ function Holds(const vals: TRange): Boolean; overload;
 function InBounds(const val: Integer): Boolean; overload;
 function Includes(const val: Integer): Boolean; overload;
 function Inhere(const val: Integer): Boolean; overload;
+function InInterval(const val: Integer): Boolean; overload;
 function Interior(const val: Integer): Boolean; overload;
 function Internal(const val: Integer): Boolean; overload;
 function InOpen(const val: Integer): Boolean; overload;
@@ -43,6 +45,7 @@ function Inside(const val: Integer): Boolean; overload;
 function IsDisjoint(const other: TRange): Boolean; overload;
 function IsIn(const val: Integer): Boolean; overload;
 function IsIncluded(const val: Integer): Boolean; overload;
+function IsInRange(const val: Integer): Boolean; overload;
 function IsInside(const val: Integer): Boolean; overload;
 function IsMember(const val: Integer): Boolean; overload;
 function IsMissing(const val: Integer): Boolean; overload;
@@ -67,6 +70,7 @@ function Owns(const val: Integer): Boolean; overload;
 function Subset(const r: TRange): Boolean; overload;
 function Value(const x: Integer): Boolean; overload;
 function Within(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
+function WithinBounds(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -118,6 +122,17 @@ var
 begin
   a := Self.Ascending;
   Result := ((a and ((val >= Self.start) <> (val > Self.stop))) or ((not a) and ((val >= Self.stop) <> (val > Self.start))));
+end;
+
+{==============================================================================]
+  <Allows>
+  @action: Returns True if the value is permitted by the range.
+  @note: A value is allowed if it is explicitly employed or lies within
+         the inclusive bounds of the range. Bound order does not matter.
+[==============================================================================}
+function TRange.Allows(const val: Integer): Boolean; overload;
+begin
+  Result := (Self.Employs(val) or ((Self.start - val) xor (Self.stop - val) <= 0)); 
 end;
 
 {==============================================================================]
@@ -332,7 +347,7 @@ end;
 [==============================================================================}
 function TRange.Embody(const val: Integer): Boolean; overload;
 begin
-  Result := (((((Self.start - val) shr 31) xor ((Self.stop - val) shr 31)) <> 0) or (val = Self.start) or (val = Self.stop));
+  Result := (((((Self.start - val) shr 31) xor ((Self.stop - val) shr 31)) <> 0) or Self.Employs(val));
 end;
 
 {==============================================================================]
@@ -509,6 +524,17 @@ begin
 end;
 
 {==============================================================================]
+  <InInterval>
+  @action: Returns True if the given value lies within the range (inclusive).
+  @note: Works regardless of whether Start <= Stop or Start > Stop.
+         Both bounds are treated as inclusive.
+[==============================================================================}
+function TRange.InInterval(const val: Integer): Boolean; overload;
+begin
+  Result := ((((Self.start - val) xor (Self.stop - val)) <= 0) or (Self.Minimum = val));
+end;
+
+{==============================================================================]
   <InOpen>
   @action: Returns True if the specified value lies strictly within the range
            defined by start and stop (exclusive of both bounds).
@@ -638,6 +664,18 @@ end;
 function TRange.IsIncluded(const val: Integer): Boolean; overload;
 begin
   Result := not ((Sign(val - Self.start) xor Sign(val - Self.stop)) = 0);
+end;
+
+{==============================================================================]
+  <IsInRange>
+  @action: Returns True if the value lies within the range (inclusive).
+  @note: Implements an inclusive interval check: val ∈ [Start, Stop].
+         Assumes Start <= Stop; results are undefined if bounds are reversed.
+         Uses a product-based sign test for branchless evaluation.
+[==============================================================================}
+function TRange.IsInRange(const val: Integer): Boolean; overload;
+begin
+  Result := ((Int64(val - Self.start) * (Self.stop - val)) >= 0);
 end;
 
 {==============================================================================]
@@ -915,7 +953,7 @@ end;
 [==============================================================================}
 function TRange.Own(const val: Integer): Boolean; overload;
 begin
-  Result := ((((val - Self.start) xor (val - Self.stop)) < 0) or (val = Self.start) or (val = Self.stop));
+  Result := ((((val - Self.start) xor (val - Self.stop)) < 0) or Self.Employs(val));
 end;
 
 {==============================================================================]
@@ -962,5 +1000,17 @@ end;
 function TRange.Within(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
 begin
   Result := ((vRadius >= 0) and (val >= (Self.Minimum - vRadius)) and (val <= (Self.Maximum + vRadius)));
+end;
+
+{==============================================================================]
+  <WithinBounds>
+  @action: Returns True if the value lies within the range or is explicitly accepted.
+  @note: Performs an inclusive interval check: val ∈ [Start, Stop], regardless
+         of bound order. Additionally returns True if Employs(val) is True.
+         The vRadius parameter is reserved and currently unused.
+[==============================================================================}
+function TRange.WithinBounds(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
+begin
+  Result := (((val > Self.start) <> (val > Self.stop)) or Self.Employs(val));
 end;
 {$ENDIF}
