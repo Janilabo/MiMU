@@ -1,4 +1,5 @@
 {$IFDEF METHODS}
+function Commonality(const other: TRange): Integer; overload;
 function Displacement(const val: Integer): Integer; overload;
 function Dist(const target: TRange): Integer; overload;
 function Dist: Integer; overload;
@@ -18,11 +19,28 @@ function GetDistance(const target: TRange): Integer; overload;
 function Margin(const val: Integer): Integer; overload;
 function Proximity(const val: Integer): Integer; overload;
 function Separation(const other: TRange): Integer; overload;
-function Shared(const other: TRange): Integer; overload;
 function Space(const target: TRange): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Commonality>
+  @action: Returns the number of discrete values shared by this range and another
+          range.
+  @note: If the ranges overlap, the result is the inclusive size of their
+         intersection, calculated as
+         Min(Self.Maximum, other.Maximum) - Max(Self.Minimum, other.Minimum) + 1.
+         If the ranges do not overlap, the result is 0.
+         This method assumes both ranges are valid (Minimum <= Maximum).
+[==============================================================================}
+function TRange.Commonality(const other: TRange): Integer; overload;
+begin
+  if Self.Overlaps(other) then
+    Result := ((Min(Self.Maximum, other.Maximum) - Max(Self.Minimum, other.Minimum)) + 1)
+  else
+    Result := 0;
+end;
+
 {==============================================================================]
   <Displacement>
   @action: Calculates the signed distance from a value to the nearest boundary
@@ -389,24 +407,6 @@ begin
     Result := ((Self.Minimum - other.Maximum) - 1)
   else
     Result := -((Min(Self.Maximum, other.Maximum) - Max(Self.Minimum, other.Minimum)) + 1);
-end;
-
-{==============================================================================]
-  <Shared>
-  @action: Returns the number of discrete values shared by this range and another
-          range.
-  @note: If the ranges overlap, the result is the inclusive size of their
-         intersection, calculated as
-         Min(Self.Maximum, other.Maximum) - Max(Self.Minimum, other.Minimum) + 1.
-         If the ranges do not overlap, the result is 0.
-         This method assumes both ranges are valid (Minimum <= Maximum).
-[==============================================================================}
-function TRange.Shared(const other: TRange): Integer; overload;
-begin
-  if Self.Overlaps(other) then
-    Result := ((Min(Self.Maximum, other.Maximum) - Max(Self.Minimum, other.Minimum)) + 1)
-  else
-    Result := 0;
 end;
 
 {==============================================================================]

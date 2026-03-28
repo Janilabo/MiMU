@@ -33,6 +33,7 @@
 {$I Sampling.inc}
 {$I Scaling.inc}
 {$I Segmentation.inc}
+{$I Selection.inc}
 {$I Size.inc}
 {$I Status.inc}
 {$I Transform.inc}
