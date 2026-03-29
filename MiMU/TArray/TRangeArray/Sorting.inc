@@ -4,6 +4,10 @@ function SortByMinimum(const oAscending: Boolean = True): Integer; overload;
 function SortBySize(const oAscending: Boolean = True): Integer; overload;
 function SortByStart(const oAscending: Boolean = True): Integer; overload;
 function SortByStop(const oAscending: Boolean = True): Integer; overload;
+function SortedByMaximum(const oAscending: Boolean = True): TRangeArray; overload;
+function SortedByMinimum(const oAscending: Boolean = True): TRangeArray; overload;
+function SortedByStart(const oAscending: Boolean = True): TRangeArray; overload;
+function SortedByStop(const oAscending: Boolean = True): TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -166,5 +170,149 @@ begin
   Result := Self.Length;
   if (Result > 1) then
     QS(0, (Result - 1));
+end;
+
+{==============================================================================]
+  <SortedByMaximum>
+  @action: Returns new array sorted by `Maximum` using QuickSort (asc/desc).
+  @note: Non-destructive (works on copy). Not stable. Avg O(n log n), worst O(n^2).
+         Mid pivot ((l+r) div 2). Bidirectional partition (i/j).
+         Swap uses Increase/Decrease side-effects.
+         Depends on `Maximum` accessor (normalized upper bound).
+         Recursion depth depends on distribution. Length preserved.
+[==============================================================================}
+function TRangeArrayHelper.SortedByMaximum(const oAscending: Boolean = True): TRangeArray; overload;
+  procedure QS(var A: TRangeArray; L, R: Integer);
+  var
+    I, J, P: Integer;
+  begin
+    I := L;
+    J := R;
+    P := A[(L + R) div 2].Maximum;
+    repeat
+      while ((oAscending and (A[I].Maximum < P)) or ((not oAscending) and (A[I].Maximum > P))) do
+        Inc(I);
+      while ((oAscending and (A[J].Maximum > P)) or ((not oAscending) and (A[J].Maximum < P))) do
+        Dec(J);
+      if (I <= J) then
+        Swap(A[I.Increase], A[J.Decrease]);
+    until (I > J);
+    if (L < J) then
+      QS(A, L, J);
+    if (I < R) then
+      QS(A, I, R);
+  end;
+begin
+  Result := Self.Copy;
+  if (Result.Length > 1) then
+    QS(Result, 0, High(Result));
+end;
+
+{==============================================================================]
+  <SortedByMinimum>
+  @action: Returns new array sorted by `Minimum` using QuickSort (asc/desc).
+  @note: Non-destructive (works on copy). Not stable. Avg O(n log n), worst O(n^2).
+         Mid pivot ((l+r) div 2). Bidirectional partition (i/j).
+         Swap uses Increase/Decrease side-effects.
+         Depends on `Minimum` accessor (normalized lower bound).
+         Recursion depth depends on distribution. Length preserved.
+[==============================================================================}
+function TRangeArrayHelper.SortedByMinimum(const oAscending: Boolean = True): TRangeArray; overload;
+  procedure QS(var A: TRangeArray; L, R: Integer);
+  var
+    I, J, P: Integer;
+  begin
+    I := L;
+    J := R;
+    P := A[(L + R) div 2].Minimum;
+    repeat
+      while ((oAscending and (A[I].Minimum < P)) or ((not oAscending) and (A[I].Minimum > P))) do
+        Inc(I);
+      while ((oAscending and (A[J].Minimum > P)) or ((not oAscending) and (A[J].Minimum < P))) do
+        Dec(J);
+      if (I <= J) then
+        Swap(A[I.Increase], A[J.Decrease]);
+    until (I > J);
+    if (L < J) then
+      QS(A, L, J);
+    if (I < R) then
+      QS(A, I, R);
+  end;
+begin
+  Result := Self.Copy;
+  if (Result.Length > 1) then
+    QS(Result, 0, High(Result));
+end;
+
+{==============================================================================]
+  <SortedByStart>
+  @action: Returns new array sorted by `start` using QuickSort (asc/desc).
+  @note: Non-destructive (works on copy). Not stable. Avg O(n log n), worst O(n^2).
+         Mid pivot ((l+r) div 2). Bidirectional partition (i/j).
+         Swap uses Increase/Decrease side-effects.
+         Operates on raw `start` field (no normalization implied).
+         Recursion depth depends on distribution. Length preserved.
+[==============================================================================}
+function TRangeArrayHelper.SortedByStart(const oAscending: Boolean = True): TRangeArray; overload;
+  procedure QS(var A: TRangeArray; L, R: Integer);
+  var
+    I, J, P: Integer;
+  begin
+    I := L;
+    J := R;
+    P := A[(L + R) div 2].start;
+    repeat
+      while ((oAscending and (A[I].start < P)) or ((not oAscending) and (A[I].start > P))) do
+        Inc(I);
+      while ((oAscending and (A[J].start > P)) or ((not oAscending) and (A[J].start < P))) do
+        Dec(J);
+      if (I <= J) then
+        Swap(A[I.Increase], A[J.Decrease]);
+    until (I > J);
+    if (L < J) then
+      QS(A, L, J);
+    if (I < R) then
+      QS(A, I, R);
+  end;
+begin
+  Result := Self.Copy;
+  if (Result.Length > 1) then
+    QS(Result, 0, High(Result));
+end;
+
+{==============================================================================]
+  <SortedByStop>
+  @action: Returns new array sorted by `stop` using QuickSort (asc/desc).
+  @note: Non-destructive (works on copy). Not stable. Avg O(n log n), worst O(n^2).
+         Mid pivot ((l+r) div 2). Bidirectional partition (i/j).
+         Swap uses Increase/Decrease side-effects.
+         Operates on raw `stop` field (no normalization implied).
+         Recursion depth depends on distribution. Length preserved.
+[==============================================================================}
+function TRangeArrayHelper.SortedByStop(const oAscending: Boolean = True): TRangeArray; overload;
+  procedure QS(var A: TRangeArray; L, R: Integer);
+  var
+    I, J, P: Integer;
+  begin
+    I := L;
+    J := R;
+    P := A[(L + R) div 2].stop;
+    repeat
+      while ((oAscending and (A[I].stop < P)) or ((not oAscending) and (A[I].stop > P))) do
+        Inc(I);
+      while ((oAscending and (A[J].stop > P)) or ((not oAscending) and (A[J].stop < P))) do
+        Dec(J);
+      if (I <= J) then
+        Swap(A[I.Increase], A[J.Decrease]);
+    until (I > J);
+    if (L < J) then
+      QS(A, L, J);
+    if (I < R) then
+      QS(A, I, R);
+  end;
+begin
+  Result := Self.Copy;
+  if (Result.Length > 1) then
+    QS(Result, 0, High(Result));
 end;
 {$ENDIF}
