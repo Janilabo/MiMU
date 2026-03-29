@@ -1,8 +1,10 @@
 {$IFDEF HELPERS}
 function Consolidate(const rAscending: Boolean = True): TRangeArray; overload;
+function Consolidated(const rAscending: Boolean = True): TRangeArray; overload;
 function Defragment(const rAscending: Boolean = True): TRangeArray; overload;
 function Fuse: TRangeArray; overload;
 function Merge: TRangeArray; overload;
+function Simplify: TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -43,6 +45,52 @@ begin
     else
       Result[l.Increment].Create(r[i]);
   SetLength(Result, (l + 1));
+end;
+
+{==============================================================================]
+  <Consolidated>
+  @action: Returns a compact version of the array where all overlapping or 
+           adjacent segments are fused into single ranges.
+  @note: - Uses a Geometric Sweep (O(n log n)).
+         - Normalizes all input to ensure physical overlaps are detected.
+         - Merges segments that touch (e.g., [1..5] and [6..10] become [1..10]).
+         - If rAscending is False, the result is returned in Descending 
+           order (e.g., [20..10, 5..1]).
+[==============================================================================}
+function TRangeArrayHelper.Consolidated(const rAscending: Boolean = True): TRangeArray; overload;
+var
+  S: TRangeArray;
+  R: TRange;
+  i, l: Integer;
+begin
+  case Self.Length of
+    0: Exit([]);
+    1:
+    if rAscending then
+      Exit([Self[0].Normalize])
+    else
+      Exit([Self[0].Descended]);
+  end;
+  S := Self.Normalized;
+  S.SortByStart(True);
+  SetLength(Result, S.Length);
+  l := 0;
+  R := S[0];
+  for i := 1 to High(S) do
+  case (S[i].start <= (R.stop + 1)) of
+    True:
+    if (S[i].stop > R.stop) then
+      R.stop := S[i].stop;
+    False:
+    begin
+      Result[l.Increase] := R;
+      R := S[i];
+    end;
+  end;
+  Result[l.Increase] := R;
+  SetLength(Result, l);
+  if not rAscending then
+    Result := Result.Descended.Reversed;
 end;
 
 {==============================================================================]
@@ -166,6 +214,43 @@ begin
       R.stop := Max(R.stop, S[i].stop);
   if not a then
     R.Reverse;
+  Result[l.Increase] := R;
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <Simplify>
+  @action: Normalizes, sorts, and merges overlapping or adjacent ranges into a
+           minimal non-overlapping set.
+  @note: Steps:
+           1. Normalizes all ranges (`start <= stop`).
+           2. Sorts ranges by `Minimum` (ascending).
+           3. Sequentially merges overlapping or adjacent ranges (stop + 1).
+           4. Compacts result to final length.
+         Time complexity: O(n log n) due to sort; merge pass O(n).
+         Produces normalized, non-overlapping ranges. Original array is not modified.
+         Equivalent to Fuse after normalization; does not preserve direction.
+[==============================================================================}
+function TRangeArrayHelper.Simplify: TRangeArray; overload;
+var
+  S: TRangeArray;
+  R: TRange;
+  i, l: Integer;
+begin
+  if (Self.Length <= 1) then
+    Exit(Self.Copy);
+  S := Self.Normalized;
+  S.SortByMinimum(True);
+  SetLength(Result, S.Length);
+  R := S[0];
+  l := 0;
+  for i := 1 to High(S) do
+    if (S[i].start > (R.stop + 1)) then
+    begin
+      Result[l.Increase] := R;
+      R := S[i];
+    end else
+	  R.stop := Max(R.stop, S[i].stop);
   Result[l.Increase] := R;
   SetLength(Result, l);
 end;

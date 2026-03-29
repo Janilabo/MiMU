@@ -3,6 +3,8 @@ function Ascend: TRangeArray; overload;
 function Ascended: TRangeArray; overload;
 function Descend: TRangeArray; overload;
 function Descended: TRangeArray; overload;
+function Redirect: Integer; overload;
+function Redirected: TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -60,5 +62,37 @@ begin
   SetLength(Result, Self.Length);
   for i := 0 to High(Self) do
     Result[i] := Self[i].Descended;  
+end;
+
+{==============================================================================]
+  <Redirect>
+  @action: Swaps `start` and `stop` for each range in-place.
+  @note: Modifies Self directly. Equivalent to reversing direction of every range.
+         Does not validate or normalize bounds. Length unchanged.
+         Time complexity: O(n).
+[==============================================================================}
+function TRangeArrayHelper.Redirect: Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Length;
+  for i := 0 to (Result - 1) do
+    Swap(Self[i].start, Self[i].stop);
+end;
+
+{==============================================================================]
+  <Redirected>
+  @action: Returns new array with `start` and `stop` swapped for each range.
+  @note: Non-destructive (works on copy). Equivalent to reversing direction
+         of every range. Does not validate or normalize bounds.
+         Length preserved. Time complexity: O(n).
+[==============================================================================}
+function TRangeArrayHelper.Redirected: TRangeArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Length);
+  for i := 0 to High(Result) do
+    Result[i] := TRange.Construct(Self[i].stop, Self[i].start);
 end;
 {$ENDIF}
