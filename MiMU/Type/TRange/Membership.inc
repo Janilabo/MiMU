@@ -2,6 +2,8 @@
 function Above(const target: Integer): Boolean; overload;
 function Above(const target: TRange): Boolean; overload;
 function Accepts(const val: Integer): Boolean; overload;
+function Adjoins(const val: Integer): Boolean; overload;
+function Adjoins(const target: TRange): Boolean; overload;
 function Admits(const val: Integer): Boolean; overload;
 function Allows(const val: Integer): Boolean; overload;
 function Apart(const val: Integer; const threshold: Integer = 1): Boolean; overload;
@@ -60,6 +62,8 @@ function IsSubsetFor(const target: TRange): Boolean; overload;
 function IsSubsetOf(const target: TRange): Boolean; overload;
 function Item(const x: Integer): Boolean; overload;
 function Keeps(const val: Integer): Boolean; overload;
+function Kissing(const val: Integer): Boolean; overload;
+function Kissing(const target: TRange): Boolean; overload;
 function Lacks(const x: Integer): Boolean; overload;
 function Membership(const val: Integer): Boolean; overload;
 function Missing(const val: Integer): Boolean; overload;
@@ -75,6 +79,8 @@ function Own(const val: Integer): Boolean; overload;
 function Owns(const val: Integer): Boolean; overload;
 function Subset(const r: TRange): Boolean; overload;
 function Surrounds(const target: TRange): Boolean; overload;
+function Tangent(const val: Integer): Boolean; overload;
+function Tangent(const target: TRange): Boolean; overload;
 function Value(const x: Integer): Boolean; overload;
 function Within(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
 function WithinBounds(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
@@ -113,7 +119,32 @@ begin
     Exit(val = Self.start);
   d := ((val - Self.start) / (Self.stop - Self.start));
   Result := ((d >= 0.0) and (d <= 1.0));
-end; 
+end;
+
+{==============================================================================]
+  <Adjoins>
+  @action: Returns True if val is exactly on either boundary of Self.
+  @note: - Self [1..10] Adjoins 1  -> True
+         - Self [1..10] Adjoins 10 -> True
+         - Self [1..10] Adjoins 5  -> False (interior)
+         - Self [1..10] Adjoins 11 -> False (exterior)
+[==============================================================================}
+function TRange.Adjoins(const val: Integer): Boolean; overload;
+begin
+  Result := not ((Self.start <> val) and (Self.stop <> val));
+end;
+
+{==============================================================================]
+  <Adjoins>
+  @action: Returns True if Self and target share exactly one boundary value.
+  @note: - Self [1..5]  Adjoins [5..10] -> True
+         - Self [1..5]  Adjoins [6..10] -> False (gap)
+         - Self [1..5]  Adjoins [3..10] -> False (overlap > 1)
+[==============================================================================}
+function TRange.Adjoins(const target: TRange): Boolean; overload;
+begin
+  Result := (Self.Confluency(target) = 1);
+end;
 
 {==============================================================================]
   <Admits>
@@ -883,6 +914,32 @@ begin
 end;
 
 {==============================================================================]
+  <Kissing>
+  @action: Returns True if val lies exactly on either boundary of Self.
+  @note: - Self [1..10] Kissing 1  -> True
+         - Self [1..10] Kissing 10 -> True
+         - Self [1..10] Kissing 5  -> False (interior)
+         - Self [1..10] Kissing 11 -> False (exterior)
+[==============================================================================}
+function TRange.Kissing(const val: Integer): Boolean; overload;
+begin
+  Result := ((Self.Maximum = val) or (Self.Minimum = val));
+end;
+
+{==============================================================================]
+  <Kissing>
+  @action: Returns True if Self ends exactly where target begins, or vice versa.
+  @note:   - Self [1..5]  Kisses [5..10] -> True  (5 is stop of Self, start of target)
+           - Self [5..10] Kisses [1..5]  -> True  (5 is start of Self, stop of target)
+           - Self [1..5]  Kisses [3..8]  -> False (overlap)
+           - Self [1..5]  Kisses [6..10] -> False (gap)
+[==============================================================================}
+function TRange.Kissing(const target: TRange): Boolean; overload;
+begin
+  Result := ((Self.Maximum = target.Minimum) or (Self.Minimum = target.Maximum));
+end;
+
+{==============================================================================]
   <Lacks>
   @action: Returns true if x-value is out of range.
   @note: None.
@@ -1077,6 +1134,34 @@ end;
 function TRange.Surrounds(const target: TRange): Boolean; overload;
 begin
   Result := ((Self.RelationshipTo(target) and 12) = Self.RelationshipTo(target));
+end;
+
+{==============================================================================]
+  <Tangent>
+  @action: Returns True if val lies exactly on either boundary of Self.
+  @note: - Self [1..10] Tangent 1  -> True
+         - Self [1..10] Tangent 10 -> True
+         - Self [1..10] Tangent 5  -> False (interior)
+         - Self [1..10] Tangent 11 -> False (exterior)
+[==============================================================================}
+function TRange.Tangent(const val: Integer): Boolean; overload;
+begin
+  Result := Self.Employs(val);
+end;
+
+{==============================================================================]
+  <Tangent>
+  @action: Returns True if Self and target meet at exactly one shared boundary point.
+  @note: - Self [1..5]  Tangent [5..10] -> True
+         - Self [1..5]  Tangent [6..10] -> False (gap)
+         - Self [1..5]  Tangent [3..8]  -> False (overlap > 1)
+         - Self [1..5]  Tangent [1..10] -> False (target encloses Self)
+[==============================================================================}
+function TRange.Tangent(const target: TRange): Boolean; overload;
+var
+  r: TRange;
+begin
+  Result := (Self.Meet(target, r) and (r.Size = 1) and Self.Employs(r.start));
 end;
 
 {==============================================================================]

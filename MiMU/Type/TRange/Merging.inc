@@ -5,6 +5,7 @@ function Enclose(const val: Integer): TRange; overload;
 function Enclose(const other: TRange): TRange; overload;
 function Intersect(const b: TRange): TRange; overload;
 function Intersect(const b: TRange; var iZone: TRange): Boolean; overload;
+function Intersection(const target: TRange): TRange; overload;
 function Join(const val: Integer): TRange; overload;
 function Join(const other: TRange): TRange; overload;
 function Joinage(const val: Integer): TRange; overload;
@@ -110,6 +111,18 @@ begin
   Result := (x <= y);
   if Result then
     iZone.Create(x, y);
+end;
+
+{==============================================================================]
+  <Intersection>
+  @action: Returns the common overlapping area between two ranges.
+  @note: If IsConnected is False, returns TRange.Null.
+[==============================================================================}
+function TRange.Intersection(const target: TRange): TRange; overload;
+begin
+  if not Self.IsConnected(target) then 
+    Exit(TRange.Null);
+  Result.Create(Max(Self.Minimum, target.Minimum), Min(Self.Maximum, target.Maximum));
 end;
 
 {==============================================================================]
