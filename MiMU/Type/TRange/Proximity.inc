@@ -6,6 +6,7 @@ function Dist: Integer; overload;
 function DistAt(const target: TRange): Integer; overload;
 function Distance(const b: TRange): Integer; overload;
 function Distance: Integer; overload;
+function Distance2(const target: TRange): Integer; overload;
 function DistanceAt(const target: TRange): Integer; overload;
 function DistanceEx(const target: TRange): Integer; overload;
 function DistanceFor(const target: TRange): Integer; overload;
@@ -139,6 +140,37 @@ begin
     Result := (Self.start - Self.stop)
   else
     Result := (Self.stop - Self.start);
+end;
+
+{==============================================================================]
+  <Distance2>
+  @action: Computes the minimum distance between two ranges.
+  @note:
+    - Both ranges are normalized before comparison (start <= stop).
+    - Returns 0 if the ranges overlap or touch.
+    - Otherwise returns the gap between the closest endpoints.
+    - Result is always non-negative.
+    - Works symmetrically regardless of input order.
+    Cases:
+      * Overlapping or adjacent:
+          [a..b] vs [c..d] where a <= d and c <= b  -> 0
+      * Self before target:
+          b < c  ->  c - b
+      * Self after target:
+          a > d  ->  a - d
+[==============================================================================}
+function TRange.Distance2(const target: TRange): Integer; overload;
+var
+  s, t: TRange;
+begin
+  s := Self.Normalize;
+  t := target.Normalize;
+  if ((s.start <= t.stop) and (t.start <= s.stop)) then
+    Result := 0
+  else if (s.stop < t.start) then
+    Result := (t.start - s.stop)
+  else
+    Result := (s.start - t.stop);
 end;
 
 {==============================================================================]

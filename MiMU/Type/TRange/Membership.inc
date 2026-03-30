@@ -5,6 +5,8 @@ function Accepts(const val: Integer): Boolean; overload;
 function Admits(const val: Integer): Boolean; overload;
 function Allows(const val: Integer): Boolean; overload;
 function Apart(const val: Integer; const threshold: Integer = 1): Boolean; overload;
+function AtBorder(const val: Integer): Boolean; overload;
+function AtBorder(const target: TRange): Boolean; overload;
 function Below(const target: Integer): Boolean; overload;
 function Below(const target: TRange): Boolean; overload;
 function Binds(const val: Integer): Boolean; overload;
@@ -24,7 +26,11 @@ function Embody(const val: Integer): Boolean; overload;
 function Employs(const val: Integer): Boolean; overload;
 function Encloses(const val: Integer): Boolean; overload;
 function Encloses(const vals: TRange): Boolean; overload;
+function Enveloping(const target: TRange): Boolean; overload;
+function Envelops(const target: TRange): Boolean; overload;
 function Far(const val: Integer; const threshold: Integer = 1): Boolean; overload;
+function Flush(const val: Integer): Boolean; overload;
+function Flush(const target: TRange): Boolean; overload;
 function Got(const val: Integer): Boolean; overload;
 function Has(const val: Integer): Boolean; overload;
 function Have(const val: Integer): Boolean; overload;
@@ -68,6 +74,7 @@ function Outside(const x: Integer): Boolean; overload;
 function Own(const val: Integer): Boolean; overload;
 function Owns(const val: Integer): Boolean; overload;
 function Subset(const r: TRange): Boolean; overload;
+function Surrounds(const target: TRange): Boolean; overload;
 function Value(const x: Integer): Boolean; overload;
 function Within(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
 function WithinBounds(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
@@ -145,6 +152,30 @@ end;
 function TRange.Apart(const val: Integer; const threshold: Integer = 1): Boolean; overload;
 begin
   Result := (Abs(val - ((Self.Minimum + Self.Maximum) / 2)) > (((Self.Maximum - Self.Minimum) / 2) + threshold));
+end;
+
+{==============================================================================]
+  <AtBorder>
+  @action: Checks whether a value lies on the boundary of the range.
+  @note: True when val equals either Self.Minimum or Self.Maximum.
+         Returns False if the value is strictly inside or outside
+         the range.
+[==============================================================================}
+function TRange.AtBorder(const val: Integer): Boolean; overload;
+begin
+  Result := ((Self.Maximum = val) or (Self.Minimum = val));
+end;
+
+{==============================================================================]
+  <AtBorder>
+  @action: Checks whether two ranges touch at any boundary point.
+  @note: True when either Self.Maximum = target.Minimum or
+         Self.Minimum = target.Maximum. Returns False if the ranges
+         are disjoint or overlap without touching boundaries.
+[==============================================================================}
+function TRange.AtBorder(const target: TRange): Boolean; overload;
+begin
+  Result := ((Self.Maximum = target.Minimum) or (Self.Minimum = target.Maximum));
 end;
 
 {==============================================================================]
@@ -395,6 +426,37 @@ begin
 end;
 
 {==============================================================================]
+  <Enveloping>
+  @action: Returns True if the target range is strictly contained within Self.
+  @note: STRICT INTERIOR: Returns False if target boundaries touch or 
+         match Self boundaries.
+         NORMALIZATION: Uses local TRange copies (Self.Normalize) to 
+         ensure physical comparison regardless of original direction.
+[==============================================================================}
+function TRange.Enveloping(const target: TRange): Boolean; overload;
+var
+  S, T: TRange;
+begin
+  S := Self.Normalize;
+  T := target.Normalize;
+  Result := ((T.start > S.start) and (T.stop < S.stop));
+end;
+
+{==============================================================================]
+  <Envelops>
+  @action: Returns True if the target range is strictly contained within Self, 
+           with "breathing room" on both edges.
+  @note: BOUNDARY EXCLUSIVE: 
+          - Self[1..10], Target[2..9] -> True
+          - Self[1..10], Target[1..9] -> False (Touch at start)
+          - Self[1..10], Target[1..10]-> False (Identical)
+[==============================================================================}
+function TRange.Envelops(const target: TRange): Boolean; overload;
+begin
+  Result := ((target.Minimum > Self.Minimum) and (target.Maximum < Self.Maximum));
+end;
+
+{==============================================================================]
   <Far>
   @action: Returns True if val lies outside the range by at least threshold.
   @note:
@@ -405,6 +467,31 @@ end;
 function TRange.Far(const val: Integer; const threshold: Integer = 1): Boolean; overload;
 begin
   Result := ((val < (Self.Minimum - threshold)) or (val > (Self.Maximum + threshold)));
+end;
+
+{==============================================================================]
+  <Flush>
+  @action: Checks whether a value lies exactly on one boundary of the range.
+  @note: True when either Self.Maximum = val or Self.Minimum = val,
+         but not both (XOR). Returns False if the value is strictly
+         inside or outside the range, or if the range is degenerate
+         (Minimum = Maximum) and equals val.
+[==============================================================================}
+function TRange.Flush(const val: Integer): Boolean; overload;
+begin
+  Result := ((Self.Maximum = val) xor (Self.Minimum = val));
+end;
+
+{==============================================================================]
+  <Flush>
+  @action: Checks whether two ranges touch at exactly one boundary.
+  @note: True when either Self.Maximum = target.Minimum or
+         Self.Minimum = target.Maximum, but not both (XOR).
+         Returns False if ranges overlap, are disjoint, or are identical.
+[==============================================================================}
+function TRange.Flush(const target: TRange): Boolean; overload;
+begin
+  Result := ((Self.Maximum = target.Minimum) xor (Self.Minimum = target.Maximum));
 end;
 
 {==============================================================================]
@@ -977,6 +1064,19 @@ end;
 function TRange.Subset(const r: TRange): Boolean; overload;
 begin
   Result := (Self.Contains(r.start) and Self.Contains(r.stop));
+end;
+
+{==============================================================================]
+  <Surrounds>
+  @action: Bitmask-based check for boundary-independent containment.
+  @note: LOGIC WARNING: This specific bitwise implementation returns True 
+         if Self strictly Envelops Target OR if Self is strictly a Subset 
+         of Target. It effectively flags any relationship where no 
+         boundaries are shared (Masks 0 or 12).
+[==============================================================================}
+function TRange.Surrounds(const target: TRange): Boolean; overload;
+begin
+  Result := ((Self.RelationshipTo(target) and 12) = Self.RelationshipTo(target));
 end;
 
 {==============================================================================]

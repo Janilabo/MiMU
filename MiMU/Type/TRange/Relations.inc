@@ -6,6 +6,8 @@ function Equal(const b: TRange): Boolean; overload;
 function Equals(const b: TRange): Boolean; overload;
 function Equivalent(const b: TRange): Boolean; overload;
 function IsAdjacent(const other: TRange): Boolean; overload;
+function IsConnected(const target: TRange): Boolean; overload;
+function IsEquivalent(const target: TRange): Boolean; overload;
 function IsMergeable(const other: TRange): Boolean; overload;
 function Loose(const target: TRange): Boolean; overload;
 function Meet(const other: TRange; out mRange: TRange): Boolean; overload;
@@ -15,6 +17,8 @@ function Neighbour(const b: TRange): Boolean; overload;
 function Overlap(const b: TRange): Boolean; overload;
 function Overlapping(const b: TRange): Boolean; overload;
 function Overlaps(const other: TRange): Boolean; overload;
+function RelationshipTo(const target: TRange): Byte; overload;
+function RelationTo(const target: TRange): Byte; overload;
 function Separated(const other: TRange): Boolean; overload;
 function Touch(const b: TRange): Boolean; overload;
 function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
@@ -103,6 +107,40 @@ end;
 function TRange.IsAdjacent(const other: TRange): Boolean; overload;
 begin
   Result := (((Self.Maximum + 1) = other.Minimum) or ((other.Maximum + 1) = Self.Minimum));
+end;
+
+{==============================================================================]
+  <IsConnected>
+  @action: Determines if Self and the target range share any physical points, 
+           including shared boundaries (touching).
+           
+  @note:   POLARITY AGNOSTIC: 
+           Evaluates physical boundaries (Min/Max). Returns True if there is 
+           an overlap, containment, or if the ranges are adjacent (e.g., [1..5] 
+           and [5..10] are connected at point 5).
+           
+           LOGIC: 
+           Returns True if (Self.Min <= Target.Max) AND (Target.Min <= Self.Max).
+           If False, the ranges are "Disjoint" (separated by a gap).
+[==============================================================================}
+function TRange.IsConnected(const target: TRange): Boolean; overload;
+begin
+  Result := ((Self.Minimum <= target.Maximum) and (target.Minimum <= Self.Maximum));
+end;
+
+{==============================================================================]
+  <IsEquivalent>
+  @action: Returns True if both ranges occupy the exact same physical span 
+           on the number line.        
+  @note: This is a spatial check, not a structural one. For example, 
+         [1..10] and [10..1] are considered equivalent because they 
+         cover the same ground.
+         Relies on RelationshipTo(target) returning 3 (Binary 0011), 
+         indicating that both the Minimum and Maximum boundaries match.
+[==============================================================================}
+function TRange.IsEquivalent(const target: TRange): Boolean; overload;
+begin
+  Result := (Self.RelationshipTo(target) = 3);
 end;
 
 {==============================================================================]
@@ -221,6 +259,91 @@ end;
 function TRange.Overlaps(const other: TRange): Boolean; overload;
 begin
   Result := ((Self.Minimum <= other.Maximum) and (Self.Maximum >= other.Minimum));
+end;
+
+{==============================================================================]
+  <RelationshipTo>
+  @action: Generates a 4-bit topological bitmask representing the spatial
+           alignment of the 'Self' range relative to a 'Target' range.
+  @return: A Byte (0-14) where each bit signifies a specific boundary condition.
+  @note:   INTERNAL NORMALIZATION:
+           Both ranges are normalized (Start <= Stop) before comparison.
+           The result reflects physical coverage, not drawing direction.
+
+           BIT DEFINITIONS:
+           - Bit 0 (1): [MATCH]  Self.Start == Target.Start
+           - Bit 1 (2): [MATCH]  Self.Stop  == Target.Stop
+           - Bit 2 (4): [LOWER]  Self.Start <  Target.Start (Starts earlier)
+           - Bit 3 (8): [HIGHER] Self.Stop  >  Target.Stop  (Ends later)
+
+           VALID LOGICAL STATES:
+           - [0]  SUBSET:     Self is strictly inside Target.
+           - [1]  FLUSH-ST:   Starts together; Self is a prefix of Target.
+           - [2]  FLUSH-SP:   Stops together; Self is a suffix of Target.
+           - [3]  IDENTICAL:  Exact same footprint (Bits 1+2).
+           - [4]  LEFT-LEAN:  Self starts earlier and ends earlier/inside.
+           - [8]  RIGHT-LEAN: Self starts later/inside and ends later.
+           - [12] ENVELOPING: Self strictly contains Target (Bits 4+8).
+           - [13] ENVELOP-ST: Starts together; Self is longer than Target.
+           - [14] ENVELOP-SP: Stops together; Self starts earlier than Target.
+
+           IMPOSSIBLE STATES (Exclusive Logic):
+           Certain bit combinations are physically excluded because a point
+           cannot be simultaneously "Equal" and "Less Than" another point.
+           - [5, 7, 15]: Invalid. Bit 0 (Equal) and Bit 2 (Less) are exclusive.
+           - [10, 11, 15]: Invalid. Bit 1 (Equal) and Bit 3 (Greater) are exclusive.
+           - [9]: Invalid. Requires Start > Target.Start AND Stop > Target.Stop
+                  while maintaining Start < Target.Start logic.
+[==============================================================================}
+function TRange.RelationshipTo(const target: TRange): Byte; overload;
+var
+  S, T: TRange;
+begin
+  Result := 0;
+  S := Self.Normalize;
+  T := target.Normalize;
+  if (S.start = T.start) then
+    Result := (Result or 1);
+  if (S.stop = T.stop) then
+    Result := (Result or 2);
+  if (S.start < T.start) then
+    Result := (Result or 4);
+  if (S.stop > T.stop) then
+    Result := (Result or 8);
+end;
+
+{==============================================================================]
+  <RelationTo>
+  @action: Compares the physical boundaries of Self against a target range,
+           returning a 4-bit topological bitmask (0..14).
+  @note:   POLARITY AGNOSTIC:
+           Uses .Minimum and .Maximum to evaluate physical occupancy.
+           The result is identical regardless of range direction (Asc/Desc).
+
+           BIT DEFINITIONS:
+           - Bit 0 (1): [Snap-Start] Low boundaries are equal.
+           - Bit 1 (2): [Snap-Stop]  High boundaries are equal.
+           - Bit 2 (4): [Precedent]  Self starts before Target.
+           - Bit 3 (8): [Subsequent] Self ends after Target.
+
+           VALID STATES & IMPOSSIBILITIES:
+           - Result 3:  Identical physical footprint.
+           - Result 12: Enveloping (Self strictly contains Target).
+           - Result 0:  Subset (Self is strictly inside Target).
+           - States [5, 6, 7, 9, 10, 11, 15] are mathematically impossible
+             due to boundary exclusivity and internal normalization.
+[==============================================================================}
+function TRange.RelationTo(const target: TRange): Byte; overload;
+begin
+  Result := 0;
+  if (Self.Minimum = target.Minimum) then
+    Result := (Result or 1);
+  if (Self.Maximum = target.Maximum) then
+    Result := (Result or 2);
+  if (Self.Minimum < target.Minimum) then
+    Result := (Result or 4);
+  if (Self.Maximum > target.Maximum) then
+    Result := (Result or 8);
 end;
 
 {==============================================================================]
