@@ -1,12 +1,34 @@
 {$IFDEF HELPERS}
+function AsNormalized: TRangeArray; overload;
 function Normalize: Integer; overload;
 function Normalized: TRangeArray; overload;
 function Normalized(out reversedIndices: TIntegerArray): TRangeArray; overload;
 function Normally: TRangeArray; overload;
 function Normed: TRangeArray; overload;
+function ToNormal: TRangeArray; overload;
+function ToNormalized: TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsNormalized>
+  @action: Returns the current TRangeArray if all ranges are already normalized
+           (i.e. start ≤ stop). If any range is descending, returns a new array
+           with all ranges normalized.
+  @note: - Avoids unnecessary allocation by returning Self when possible.
+         - Calls ToNormal only when a descending range is detected.
+         - The original array is not modified.
+[==============================================================================}
+function TRangeArrayHelper.AsNormalized: TRangeArray; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to High(Self) do
+    if Self[i].Descending then
+      Exit(Self.ToNormal);
+  Result := Self;
+end;
+
 {==============================================================================]
   <Normalize>
   @action: Normalizes all ranges in-place by ensuring Start <= Stop.
@@ -112,5 +134,65 @@ begin
       Result[i] := TRange.Construct(Self[i].stop, Self[i].start)
     else
       Result[i] := Self[i];
+end;
+
+{==============================================================================]
+  <ToNormal>
+  @action: Returns a new TRangeArray where each range that has start > stop
+           is swapped (start and stop are reversed). Ranges already in normal
+           order are copied as-is.
+  @note: - Uses an auxiliary index array to track ranges needing swapping.
+         - Preserves the original array order.
+         - Safe for empty arrays.
+[==============================================================================}
+function TRangeArrayHelper.ToNormal: TRangeArray; overload;
+var
+  i, l, n: Integer;
+  f: TIntegerArray;
+begin
+  l := Self.Length;
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  SetLength(f, l);
+  n := 0;
+  for i := 0 to (l - 1) do
+    if (Self[i].start > Self[i].stop) then
+      f[n.Increase] := i
+	else
+      Result[i] := Self[i];
+  for i := 0 to (n - 1) do
+    Result[f[i]] := TRange.Construct(Self[f[i]].stop, Self[f[i]].start);
+end;
+
+{==============================================================================]
+  <ToNormalized>
+  @action: Returns a new TRangeArray where all ranges are normalized such that
+           start ≤ stop. If all ranges are already normalized, returns a copy
+           of the original array.
+  @note: - Uses Min and Max to normalize each range.
+         - Efficiently checks if normalization is needed before constructing
+           a new array.
+         - Safe for empty arrays.
+[==============================================================================}
+function TRangeArrayHelper.ToNormalized: TRangeArray; overload;
+var
+  i: Integer;
+  f: Boolean;
+begin
+  if Self.Empty then
+    Exit([]);
+  f := False;
+  for i := 0 to High(Self) do
+    if (Self[i].start > Self[i].stop) then
+    begin
+      f := True;
+      Break;
+    end;
+  if not f then
+    Exit(Self.Copy);
+  SetLength(Result, Self.Length);
+  for i := 0 to High(Self) do
+    Result[i] := TRange.Construct(Min(Self[i].start, Self[i].stop), Max(Self[i].start, Self[i].stop));
 end;
 {$ENDIF}

@@ -9,6 +9,7 @@ end;
 TRangeCompare = specialize TCompare<TRange>;
 TRangeArray = array of TRange;
 T2DRangeArray = array of TRangeArray;
+PRange = ^TRange;
 {$ENDIF}
 
 {$IF DEFINED(OPERATORS) OR DEFINED(IMPLEMENTATION)}

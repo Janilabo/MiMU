@@ -1,4 +1,6 @@
 {$IFDEF HELPERS}
+function Align(const oAscending: Boolean = True): Integer; overload;
+function Aligned(const oAscending: Boolean = True): TRangeArray; overload;
 function Ascend: TRangeArray; overload;
 function Ascended: TRangeArray; overload;
 function Descend: TRangeArray; overload;
@@ -8,6 +10,63 @@ function Redirected: TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Align>
+  @action: Iterates through the array and ensures each range has start ≤ stop 
+           if oAscending = True, or start ≥ stop if oAscending = False.
+           Swaps start and stop when needed.
+  @note: Returns the number of ranges that were modified.
+         Does nothing if the array is empty.
+[==============================================================================}
+function TRangeArrayHelper.Align(const oAscending: Boolean = True): Integer; overload;
+var
+  P, E: PRange;
+  s: Integer;
+begin
+  Result := 0;
+  if Self.Empty then
+    Exit;
+  P := @Self[0];
+  E := (P + Self.Length);
+  while (P < E) do
+  begin
+    if ((oAscending and (P^.start > P^.stop)) or ((not oAscending) and (P^.start < P^.stop))) then
+    begin
+      s := P^.start;
+      P^.start := P^.stop;
+      P^.stop := s;
+      Inc(Result);
+    end;
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
+  <Aligned>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function TRangeArrayHelper.Aligned(const oAscending: Boolean = True): TRangeArray; overload;
+var
+  P, E: PRange;
+  r, s: Integer;
+begin
+  if Self.Empty then
+    Exit([]);
+  P := @Self[0];
+  E := (P + Self.Length);
+  SetLength(Result, Self.Length);
+  r := 0;
+  while (P < E) do
+  begin
+    if ((oAscending and (P^.start > P^.stop)) or ((not oAscending) and (P^.start < P^.stop))) then
+      Result[r.Increase] := TRange.Construct(P^.stop, P^.start)
+	else
+	  Result[r.Increase] := TRange.Construct(P^.start, P^.stop);
+    Inc(P);
+  end;
+end;
+
 {==============================================================================]
   <Ascend>
   @action: Returns a new range array where each element is transformed using its Ascend method.
