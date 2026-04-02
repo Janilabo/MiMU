@@ -43,8 +43,8 @@ end;
 
 {==============================================================================]
   <Aligned>
-  @action: ?
-  @note: ?
+  @action: Returns a copy of the array with all ranges aligned to the specified direction.
+  @note: Reconstructs each range; swaps bounds only if direction differs from oAscending.
 [==============================================================================}
 function TRangeArrayHelper.Aligned(const oAscending: Boolean = True): TRangeArray; overload;
 var

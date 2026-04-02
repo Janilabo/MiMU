@@ -13,8 +13,10 @@ function Normal: TRange; overload;
 function Normalization: TRange; overload;
 function Normalize: TRange; overload;
 function Normalized: TRange; overload;
+function Normalizify: Boolean; overload;
 function Normally: TRange; overload;
 function Normed: TRange; overload;
+function ToNormalized: TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -208,6 +210,18 @@ begin
 end;
 
 {==============================================================================]
+  <Normalizify>
+  @action: Checks if range is descending and normalizes it by swapping bounds.
+  @note: Returns True if swap occurred; otherwise False.
+[==============================================================================}
+function TRange.Normalizify: Boolean; overload;
+begin
+  Result := Self.Descending;
+  if Result then
+    Swap(Self.start, Self.stop);
+end;
+
+{==============================================================================]
   <Normally>
   @action: Ord-based.
   @note: None.
@@ -228,5 +242,18 @@ end;
 function TRange.Normed: TRange; overload;
 begin
   Result.Create(IfThen((Self.start < Self.stop), Self.start, Self.stop), IfThen((Self.start < Self.stop), Self.stop, Self.start));
+end;
+
+{==============================================================================]
+  <ToNormalized>
+  @action: Normalize to ascending range (start <= stop)
+  @note: Swaps start/stop if descending; otherwise returns self
+[==============================================================================}
+function TRange.ToNormalized: TRange; overload;
+begin
+  if Self.Descending then
+    Result := TRange.Construct(Self.stop, Self.start)
+  else
+    Result := Self;
 end;
 {$ENDIF}

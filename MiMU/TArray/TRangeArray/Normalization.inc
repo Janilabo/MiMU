@@ -1,8 +1,10 @@
 {$IFDEF HELPERS}
+function AsNormal: TRangeArray; overload;
 function AsNormalized: TRangeArray; overload;
 function Normalize: Integer; overload;
 function Normalized: TRangeArray; overload;
 function Normalized(out reversedIndices: TIntegerArray): TRangeArray; overload;
+function Normalizify: Integer; overload;
 function Normally: TRangeArray; overload;
 function Normed: TRangeArray; overload;
 function ToNormal: TRangeArray; overload;
@@ -10,6 +12,21 @@ function ToNormalized: TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsNormal>
+  @action: Returns a copy of the array with all ranges normalized to ascending order.
+  @note: Only descending ranges are modified; original array remains unchanged.
+[==============================================================================}
+function TRangeArrayHelper.AsNormal: TRangeArray; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Copy;
+  for i := 0 to High(Result) do
+    if Result[i].Descending then
+      Swap(Result[i].start, Result[i].stop);
+end;
+
 {==============================================================================]
   <AsNormalized>
   @action: Returns the current TRangeArray if all ranges are already normalized
@@ -96,6 +113,26 @@ begin
     end else
       Result[i] := Self[i];
   SetLength(reversedIndices, r);
+end;
+
+{==============================================================================]
+  <Normalizify>
+  @action: Normalizes all descending ranges in-place and counts how many were normalized.
+  @note: Returns number of modified ranges; uses XOR-swap on bounds.
+[==============================================================================}
+function TRangeArrayHelper.Normalizify: Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Length;
+  for i := 0 to High(Self) do
+    if Self[i].Descending then
+    begin
+      Self[i].start := (Self[i].start xor Self[i].stop);
+      Self[i].stop := (Self[i].start xor Self[i].stop);
+      Self[i].start := (Self[i].start xor Self[i].stop);
+    end else
+      Dec(Result);
 end;
 
 {==============================================================================]

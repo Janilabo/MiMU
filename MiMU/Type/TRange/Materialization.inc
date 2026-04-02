@@ -18,6 +18,7 @@ function Digits: TIntegerArray; overload;
 function Digits(const dIndex: Integer): Integer; overload;
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
 function Dismantle: TIntegerArray; overload;
+function Elemented: TIntegerArray; overload;
 function Elements: TIntegerArray; overload;
 function Emit: TIntegerArray; overload;
 function Enumerate: TIntegerArray; overload;
@@ -75,6 +76,7 @@ function TIA: TIntegerArray; overload;
 function ToArr: TIntegerArray; overload;
 function ToArray: TIntegerArray; overload;
 class function ToArray(const AStart, AStop: Integer): TIntegerArray; overload; static;
+function ToValues: TIntegerArray; overload;
 function Unfold: TIntegerArray; overload;
 function Unpack: TIntegerArray; overload;
 function Unwrap: TIntegerArray; overload;
@@ -533,8 +535,39 @@ begin
 end;
 
 {==============================================================================]
+  <Elemented>
+  action: Expands range into an array of its elements based on direction.
+  @note: Preserves order; ascending increments, descending decrements.
+[==============================================================================}
+function TRange.Elemented: TIntegerArray; overload;
+var
+  s: Integer;
+  procedure RA;
+  var
+    i: Integer;
+  begin
+    for i := 0 to (s - 1) do
+      Result[i] := (Self.start + i);
+  end;
+  procedure RD;
+  var
+    i: Integer;
+  begin
+    for i := 0 to (s - 1) do
+      Result[i] := (Self.start - i);
+  end;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  if Self.Ascending then
+    RA
+  else
+    RD;
+end;
+
+{==============================================================================]
   <Elements>
-  action: Returns TBox points as TPointArray.
+  action: Returns TRange digits as TIntegerArray.
   note: Alternative method.
 [==============================================================================}
 function TRange.Elements: TIntegerArray; overload;
@@ -2067,6 +2100,31 @@ begin
 	True:
 	for i := 0 to High(Result) do
       Result[i] := (AStart - i);
+  end;
+end;
+
+{==============================================================================]
+  <ToValues>
+  @action: Expands range into an array of its values using direct pointer iteration.
+  @note: Preserves order; ascending adds, descending subtracts from start.
+[==============================================================================}
+function TRange.ToValues: TIntegerArray; overload;
+var
+  a: Boolean;
+  p: PInteger;
+  i, s: Integer;
+begin
+  a := Self.Ascending;
+  s := Self.Size;
+  SetLength(Result, s);
+  p := @Result[0];
+  for i := 0 to (s - 1) do
+  begin
+    if a then
+      p^ := (Self.start + i)
+    else
+      p^ := (Self.start - i);
+    Inc(p);
   end;
 end;
 
