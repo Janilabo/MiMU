@@ -1,13 +1,84 @@
 {$IFDEF HELPERS}
+function Coalesce: TRangeArray; overload;
+function Collapse: TRangeArray; overload;
 function Consolidate(const rAscending: Boolean = True): TRangeArray; overload;
 function Consolidated(const rAscending: Boolean = True): TRangeArray; overload;
 function Defragment(const rAscending: Boolean = True): TRangeArray; overload;
 function Fuse: TRangeArray; overload;
+function Fused: TRangeArray; overload;
 function Merge: TRangeArray; overload;
+function Merged: TRangeArray; overload;
 function Simplify: TRangeArray; overload;
+function Squashed: TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Coalesce>
+  @action: Coalesce overlapping and adjacent ranges
+  @note: Input normalized and sorted; adjacency = (start <= stop + 1)
+[==============================================================================}
+function TRangeArrayHelper.Coalesce: TRangeArray; overload;
+var
+  S: TRangeArray;
+  R: TRange;
+  i: Integer;
+begin
+  S := Self.Normalized;
+  if (S.Length < 2) then
+    Exit(S);
+  S.SortByStart;
+  SetLength(Result, 0);
+  R := S[0];
+  for i := 1 to High(S) do
+  case (S[i].start <= (R.stop + 1)) of
+    True:
+    if (S[i].stop > R.stop) then
+      R.stop := S[i].stop;
+    False:
+    begin
+      SetLength(Result, (Result.Length + 1));
+      Result[High(Result)] := R;
+      R := S[i];
+    end;
+  end;
+  SetLength(Result, (Result.Length + 1));
+  Result[High(Result)] := R;
+end;
+
+{==============================================================================]
+  <Collapse>
+  @action: Coalesce overlapping and adjacent ranges with preallocated result
+  @note: Input normalized and sorted; adjacency = (start <= stop + 1); uses index accumulator
+[==============================================================================}
+function TRangeArrayHelper.Collapse: TRangeArray; overload;
+var
+  S: TRangeArray;
+  C: TRange;
+  i, r: Integer;
+begin
+  S := Self.Normalized;
+  if (S.Length < 2) then
+    Exit(S);
+  S.SortByStart;
+  SetLength(Result, S.Length);
+  r := 0;
+  C := S[0];
+  for i := 1 to High(S) do
+  case (S[i].start <= (C.stop + 1)) of
+    True:
+    if (S[i].stop > C.stop) then
+      C.stop := S[i].stop;
+    False:
+    begin
+      Result[r.Increase] := C;
+      C := S[i];
+    end;
+  end;
+  Result[r.Increase] := C;
+  SetLength(Result, r);
+end;
+
 {==============================================================================]
   <Consolidate>
   @action: Expands ranges into unique integer values using ordered insertion,
@@ -175,6 +246,30 @@ begin
 end;
 
 {==============================================================================]
+  <Fused>
+  @action: Merge overlapping and adjacent ranges using supply-based append
+  @note: Input normalized and sorted; adjacency = (start <= stop + 1); result grows via Supply
+[==============================================================================}
+function TRangeArrayHelper.Fused: TRangeArray; overload;
+var
+  S: TRangeArray;
+  R: Integer;
+  i: Integer;
+begin
+  S := Self.Normalized;
+  if (S.Length < 2) then
+    Exit(S.Copy);
+  S.SortByStart;
+  Result := [S[0]];
+  R := 0;
+  for i := 1 to High(S) do
+    if not (S[i].start <= (Result[R].stop + 1)) then
+      R := Result.Supply(S[i])
+    else if (S[i].stop > Result[R].stop) then
+      Result[R].stop := S[i].stop;
+end;
+
+{==============================================================================]
   <Merge>
   @action: Merges overlapping or adjacent ranges into a normalized, non-overlapping array.
            Produces a new array; does not modify the original. Preserves the original
@@ -219,6 +314,28 @@ begin
 end;
 
 {==============================================================================]
+  <Merged>
+  @action: In-place merge of overlapping and adjacent ranges
+  @note: Operates on normalized copy; adjacency = (start <= stop + 1); compacts via index overwrite
+[==============================================================================}
+function TRangeArrayHelper.Merged: TRangeArray; overload;
+var
+  i, r: Integer;
+begin
+  Result := Self.Normalized;
+  if (Result.Length < 2) then
+    Exit;
+  r := 0;
+  Result.SortByStart;
+  for i := 1 to High(Result) do
+    if (Result[i].start <= (Result[r].stop + 1)) then
+      Result[r].stop := Max(Result[r].stop, Result[i].stop)
+    else
+      Result[r.Increment] := Result[i];
+  SetLength(Result, (r + 1));
+end;
+
+{==============================================================================]
   <Simplify>
   @action: Normalizes, sorts, and merges overlapping or adjacent ranges into a
            minimal non-overlapping set.
@@ -253,5 +370,40 @@ begin
 	  R.stop := Max(R.stop, S[i].stop);
   Result[l.Increase] := R;
   SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <Squashed>
+  @action: Incrementally merge overlapping and adjacent ranges into result
+  @note: Input normalized and sorted; adjacency = (start <= stop + 1); grows result dynamically
+[==============================================================================}
+function TRangeArrayHelper.Squashed: TRangeArray; overload;
+var
+  S: TRangeArray;
+  R: TRange;
+  i, h: Integer;
+begin
+  S := Self.Normalized;
+  if (S.Length < 2) then
+    Exit(S);
+  S.SortByStart;
+  SetLength(Result, 0);
+  h := -1;
+  for i := 0 to High(S) do
+  begin
+    R := S[i];
+    if (h = -1) then
+    begin
+      SetLength(Result, (h.Increment + 1));
+      Result[h] := R;
+      Continue;
+    end;
+    if (R.Start > (Result[h].Stop + 1)) then
+    begin
+      SetLength(Result, (h.Increment + 1));
+      Result[h] := R;
+    end else if (R.Stop > Result[h].Stop) then
+      Result[h].Stop := R.Stop;
+  end;
 end;
 {$ENDIF}

@@ -3,6 +3,7 @@ function Normalize: Integer; overload;
 function Normalized: TRangeArray; overload;
 function Normalized(out reversedIndices: TIntegerArray): TRangeArray; overload;
 function Normally: TRangeArray; overload;
+function Normed: TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -94,5 +95,22 @@ begin
 	  Result[i] := Self[i]
 	else
 	  Result[i] := Self[i].Reversed;
+end;
+
+{==============================================================================]
+  <Normed>
+  @action: Normalize ranges to ascending order (start <= stop)
+  @note: New array with all ranges ordered and direction corrected
+[==============================================================================}
+function TRangeArrayHelper.Normed: TRangeArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Length);
+  for i := 0 to High(Result) do
+    if Self[i].Descending then
+      Result[i] := TRange.Construct(Self[i].stop, Self[i].start)
+    else
+      Result[i] := Self[i];
 end;
 {$ENDIF}
