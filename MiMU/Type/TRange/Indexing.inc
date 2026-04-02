@@ -107,16 +107,16 @@ end;
   @note: None.
 [==============================================================================}
 function TRange.GetIDs: TIntegerArray; overload;
-  procedure Fill(var arr: TIntegerArray; const idx: Integer);
+  procedure F(var arr: TIntegerArray; const idx: Integer);
   begin
     if (idx < 0) then
       Exit;
     arr[idx] := idx;
-    Fill(arr, (idx - 1));
+    F(arr, (idx - 1));
   end;
 begin
   SetLength(Result, Self.Size);
-  Fill(Result, High(Result));
+  F(Result, High(Result));
 end;
 
 {==============================================================================]

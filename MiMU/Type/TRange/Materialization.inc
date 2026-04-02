@@ -28,10 +28,12 @@ function Exploded: TIntegerArray; overload;
 function Extract: TIntegerArray; overload;
 function Extracted: TIntegerArray; overload;
 function Flatten: TIntegerArray; overload;
+function Fill(var target: TIntegerArray): Integer; overload;
 function Gather: TIntegerArray; overload;
 function Generate: TIntegerArray; overload;
 function Generated: TIntegerArray; overload;
 function Ints: TIntegerArray; overload;
+function Itemed: TIntegerArray; overload;
 function Itemize: TIntegerArray; overload;
 function Itemized(const AStep: Integer = 1): TIntegerArray; overload;
 function Items: TIntegerArray; overload;
@@ -63,6 +65,7 @@ function Pull: TIntegerArray; overload;
 function Queue: TIntegerArray; overload;
 function Recursed: TIntegerArray; overload;
 function Recursively: TIntegerArray; overload;
+function Resources: TIntegerArray; overload;
 function Separately(const rReverse: Boolean = False): TIntegerArray; overload;
 function Sequence: TIntegerArray; overload;
 function Snapshot: TIntegerArray; overload;
@@ -79,6 +82,7 @@ class function ToArray(const AStart, AStop: Integer): TIntegerArray; overload; s
 function ToValues: TIntegerArray; overload;
 function Unfold: TIntegerArray; overload;
 function Unpack: TIntegerArray; overload;
+function Unrolled: TIntegerArray; overload;
 function Unwrap: TIntegerArray; overload;
 function Unzip: TIntegerArray; overload;
 function Values: TIntegerArray; overload;
@@ -741,6 +745,24 @@ begin
 end;
 
 {==============================================================================]
+  <Fill>
+  @action: Fills the provided array with values from the range, respecting direction.
+  @note: Returns the number of elements filled; does nothing if the target array is empty.
+[==============================================================================}
+function TRange.Fill(var target: TIntegerArray): Integer; overload;
+var
+  i, v, d: Integer;
+begin
+  Result := target.Length;
+  if (Result = 0) then
+    Exit;
+  v := Self.start;
+  d := Self.Direction;
+  for i := 0 to (Result - 1) do
+    target[i] := v.Increase(d);
+end;
+
+{==============================================================================]
   <Flatten>
   @action: Materializes the range into a contiguous integer array.
   @note: Expands the inclusive range from Start to Stop into an ordered
@@ -855,6 +877,24 @@ begin
     for i := 0 to High(Result) do
       Result[i] := (i + Self.start);
   end;
+end;
+
+{==============================================================================]
+  <Itemed>
+  @action: Generates an array representing the range step by step, using ±1 increments.
+  @note: First element is Start; subsequent elements increment or decrement based on Ascending property.
+[==============================================================================}
+function TRange.Itemed: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  for i := 0 to High(Result) do
+    Result[i] := IfThen(Self.Ascending, 1, -1);
+  Result[0] := Self.start;
+  for i := 1 to High(Result) do
+    Result[i] := (Result[i - 1] + Result[i]);
 end;
 
 {==============================================================================]
@@ -1764,6 +1804,45 @@ begin
 end;
 
 {==============================================================================]
+  <Resources>
+  @action: Fills an array with all values of the range using block-wise increments of 16 for efficiency.
+  @note: Handles ascending and descending ranges; any remaining elements after blocks are filled individually.
+[==============================================================================}
+function TRange.Resources: TIntegerArray; overload;
+var
+  i, d, v, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := IfThen(Self.Ascending, 1, -1);
+  v := Self.start;
+  i := 0;
+  while ((i + 15) < s) do
+  begin
+    Result[i] := v;
+    Result[i + 1] := (v + d);
+    Result[i + 2] := (v + (d * 2));
+    Result[i + 3] := (v + (d * 3));
+    Result[i + 4] := (v + (d * 4));
+    Result[i + 5] := (v + (d * 5));
+    Result[i + 6] := (v + (d * 6));
+    Result[i + 7] := (v + (d * 7));
+    Result[i + 8] := (v + (d * 8));
+    Result[i + 9] := (v + (d * 9));
+    Result[i + 10] := (v + (d * 10));
+    Result[i + 11] := (v + (d * 11));
+    Result[i + 12] := (v + (d * 12));
+    Result[i + 13] := (v + (d * 13));
+    Result[i + 14] := (v + (d * 14));
+    Result[i + 15] := (v + (d * 15));
+    Inc(v, (d * 16));
+    Inc(i, 16);
+  end;
+  while (i < s) do
+    Result[i.Increase] := v.Increase(d);
+end;
+
+{==============================================================================]
   <Separately>
   @action: Converts the range to a TIntegerArray.
   @note:
@@ -2177,6 +2256,39 @@ begin
       Result[i] := o.Select((Self.start + i), (Self.start - i))
     else
       Result[i] := o.Select((Self.stop - ((s - 1) - i)), (Self.stop + ((s - 1) - i)));
+end;
+
+{==============================================================================]
+  <Unrolled>
+  @action: Expands the range into an array using loop unrolling in blocks of 8 for efficiency.
+  @note: Handles ascending or descending ranges; fills any remaining elements individually after unrolled blocks.
+[==============================================================================}
+function TRange.Unrolled: TIntegerArray; overload;
+var
+  i, v, d, s, c: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  v := Self.start;
+  d := Self.Direction;
+  c := s;
+  i := 0;
+  while (c >= 8) do
+  begin
+    Result[i] := v;
+	Result[i + 1] := (v + d);
+    Result[i + 2] := (v + (2 * d));
+	Result[i + 3] := (v + (3 * d));
+    Result[i + 4] := (v + (4 * d));
+	Result[i + 5] := (v + (5 * d));
+    Result[i + 6] := (v + (6 * d));
+	Result[i + 7] := (v + (7 * d));
+    Inc(i, 8);
+    Inc(v, (8 * d));
+    Dec(c, 8);
+  end;
+  while (c.Decrease > 0) do
+    Result[i.Increase] := v.Increase(d);
 end;
 
 {==============================================================================]
