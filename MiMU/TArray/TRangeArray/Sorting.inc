@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function Sort(const oAscending: Boolean = True): Integer; overload;
 function SortByMaximum(const oAscending: Boolean = True): Integer; overload;
 function SortByMinimum(const oAscending: Boolean = True): Integer; overload;
 function SortBySize(const oAscending: Boolean = True): Integer; overload;
@@ -11,6 +12,53 @@ function SortedByStop(const oAscending: Boolean = True): TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Sort>
+  @action: Sorts ranges in-place using quicksort, ordering by start then stop via Comparison.
+  @note: Direction controlled by oAscending (True=ascending, False=descending);
+         uses middle pivot and recursive partitioning;
+		 unstable sort; average O(n log n), worst O(n^2); returns element count.
+[==============================================================================}
+function TRangeArrayHelper.Sort(const oAscending: Boolean = True): Integer; overload;
+  procedure QS(L, R: Integer);
+  var
+    I, J: Integer;
+    P: TRange;
+  begin
+    I := L;
+    J := R;
+    P := Self[(L + R) div 2];
+    repeat
+      case oAscending of
+        True:
+        begin
+          while (Self[I].Comparison(P) < 0) do
+            Inc(I);
+          while (Self[J].Comparison(P) > 0) do
+            Dec(J);
+        end;
+        False:
+        begin
+          while (Self[I].Comparison(P) > 0) do
+            Inc(I);
+          while (Self[J].Comparison(P) < 0) do
+            Dec(J);
+        end;
+      end;
+      if (I <= J) then
+	    Swap(Self[I.Increase], Self[J.Decrease]);
+    until (I > J);
+    if (L < J) then
+      QS(L, J);
+    if (I < R) then
+      QS(I, R);
+  end;
+begin
+  Result := Self.Length;
+  if (Result > 1) then
+    QS(0, (Result - 1));
+end;
+
 {==============================================================================]
   <SortByMaximum>
   @action: Sorts array in-place by `Maximum` using QuickSort (asc/desc).

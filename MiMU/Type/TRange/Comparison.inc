@@ -2,6 +2,7 @@
 function CompareSize(const target: TRange): Integer;
 class function CompareSizeAscending(const A, B: TRange): Integer; static;
 class function CompareSizeDescending(const A, B: TRange): Integer; static;
+function Comparison(const target: TRange): Integer; overload;
 function Rank(const target: TRange): Integer; overload;
 {$ENDIF}
 
@@ -42,6 +43,24 @@ end;
 class function TRange.CompareSizeDescending(const A, B: TRange): Integer;
 begin
   Result := B.CompareSize(A);
+end;
+
+{==============================================================================]
+  <Comparison>
+  @action: Compares two ranges by start then stop values.
+  @note: Returns -1 if less, 1 if greater, 0 if equal.
+[==============================================================================}
+function TRange.Comparison(const target: TRange): Integer; overload;
+begin
+  if (Self.start < target.start) then
+    Exit(-1);
+  if (Self.start > target.start) then
+    Exit(1);
+  if (Self.stop < target.stop) then
+    Exit(-1);
+  if (Self.stop > target.stop) then
+    Exit(1);
+  Result := 0;
 end;
 
 {==============================================================================]

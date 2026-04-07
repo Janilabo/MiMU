@@ -5,9 +5,10 @@
 {$I Conversion.inc}
 {$I Deduplication.inc}
 {$I Extraction.inc}
+{$I Gaps.inc}
 {$I Merging.inc}
-{$I Miscellaneous.inc}
 {$I Normalization.inc}
 {$I Ordering.inc}
+{$I Size.inc}
 {$I Sorting.inc}
 {$I Structuring.inc}
