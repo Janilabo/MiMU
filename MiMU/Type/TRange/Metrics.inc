@@ -19,8 +19,13 @@ function Span: Integer; overload;
 function Sigma: Int64; overload;
 function Signed: Int64; overload;
 function Sum: Int64; overload;
+function SumAll: Int64; overload;
+function Sumify: Int64; overload;
 function Summa: Int64; overload;
+function Summary: Int64; overload;
 function Summation: Int64; overload;
+function Summative: Int64; overload;
+function Summed: Int64; overload;
 function Total: Int64; overload;
 {$ENDIF}
 
@@ -311,6 +316,54 @@ begin
 end;
 
 {==============================================================================]
+  <SumAll>
+  @action: Returns the sum of the range starting at `start` and progressing
+           towards `stop` using a step of ±1 depending on direction.
+  @note: If the range is singular, the result is `start`.
+         The `stop` value is not included in the summation.
+         Iteration is performed via `Increase(d)` where
+         d = +1 (ascending) or -1 (descending).
+[==============================================================================}
+function TRange.SumAll: Int64; overload;
+var
+  s, d: Integer;
+begin
+  Result := Self.start;
+  if Self.Singular then
+    Exit;
+  s := Self.start;
+  d := IfThen(Self.Ascending, 1, -1);
+  while (s.Increase(d) <> Self.stop) do
+    Inc(Result, s);
+end;
+
+{==============================================================================]
+  <Sumify>
+  @action: Computes the sum of the range using an arithmetic series formula
+           based on the minimum and maximum bounds.
+  @note: The range is treated as inclusive [Minimum..Maximum].
+         Uses n = (h - l + 1) and s = (l + h) to avoid iteration.
+         Applies parity optimization to reduce overflow risk:
+         - If n is even: (n div 2) * (l + h)
+         - If n is odd:  n * ((l + h) div 2)
+         Direction (ascending/descending) has no effect on the result.
+[==============================================================================}
+function TRange.Sumify: Int64; overload;
+var
+  n, s: Int64;
+  l, h: Integer;
+begin
+  l := Self.Minimum;
+  h := Self.Maximum;
+  n := ((h - l) + 1);
+  s := (l + h);
+  if (n and 1 = 0) then
+    Result := ((n shr 1) * s)
+  else
+    Result := (n * (s shr 1));
+end;
+
+{==============================================================================]
   <Summa>
   @action: Returns the sum of all integer values contained in this range.
   @note: The sum is computed using the arithmetic series formula:
@@ -335,6 +388,24 @@ begin
 end;
 
 {==============================================================================]
+  <Summary>
+  @action: Iteratively computes the sum of all values between Minimum and
+           Maximum using a linear loop.
+  @note: The range is treated as inclusive [Minimum..Maximum].
+         Performs a simple accumulation via Inc over each integer value.
+         Less efficient than formula-based approaches (e.g. Sumify),
+         but straightforward and safe for small ranges.
+[==============================================================================}
+function TRange.Summary: Int64; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := Self.Minimum to Self.Maximum do
+    Inc(Result, i);
+end;
+
+{==============================================================================]
   <Summation>
   @action: Returns the sum of all TRange values (start..stop)
   @note: None
@@ -351,6 +422,47 @@ begin
   Result := (n * c);
   if ((s and 1) = 1) then
     Result := (Result + (n div 2));
+end;
+
+{==============================================================================]
+  <Summative>
+  @action: Computes the sum of the range by iteratively advancing from `start`
+           towards `stop` using `Increment(d)` and accumulating each step.
+  @note: The initial value `start` is included in the result.
+         Iteration continues until `s = stop`, with the loop adding each
+         incremented value returned by `Increment(d)`.
+         The `stop` value is included if `Increment(d)` reaches it.
+         Direction is controlled by d = +1 (ascending) or -1 (descending).
+         Behavior depends on `Increment(d)` semantics (in-place vs return).
+[==============================================================================}
+function TRange.Summative: Int64; overload;
+var
+  s, d: Integer;
+begin
+  d := IfThen(Self.Ascending, 1, -1);
+  s := Self.start;
+  Result := Self.start;
+  while (s <> Self.stop) do
+    Inc(Result, s.Increment(d));
+end;
+
+{==============================================================================]
+  <Summed>
+  @action: Computes the sum of the range using a floating-point arithmetic
+           series formula and rounds the result to Int64.
+  @note: The range is treated as inclusive [Minimum..Maximum].
+         Uses ((h - l + 1) * ((l + h) / 2.0)) for calculation.
+         Relies on floating-point division and Round, which may introduce
+         minor precision considerations for very large values.
+         Direction (ascending/descending) has no effect on the result.
+[==============================================================================}
+function TRange.Summed: Int64; overload;
+var
+  l, h: Int64;
+begin
+  l := Self.Minimum;
+  h := Self.Maximum;
+  Result := Round(((h - l) + 1) * ((l + h) / 2.0));
 end;
 
 {==============================================================================]

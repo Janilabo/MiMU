@@ -13,8 +13,11 @@ function Merge: TRangeArray; overload;
 function Merged: TRangeArray; overload;
 function Mergified(const threshold: Integer = -1): TRangeArray; overload;
 function Mergify(const threshold: Integer = -1): Integer; overload;
+function Restacked: TRangeArray; overload;
+function Scanlined: TRangeArray; overload;
 function Simplify: TRangeArray; overload;
 function Squashed: TRangeArray; overload;
+function Squeeze(const rAscending: Boolean = True): TRangeArray; overload;
 function Stream(const oAscending: Boolean = True): TRangeArray; overload;
 function Streamed(const oAscending: Boolean = True): TRangeArray; overload;
 function Streamline: TRangeArray; overload;
@@ -531,6 +534,123 @@ begin
 end;
 
 {==============================================================================]
+  <Restacked>
+  @action: Merge overlapping and adjacent ranges into a minimal set
+  @note:
+    - Input is normalized and sorted by Start
+    - Adjacent ranges are merged (Start <= Prev.Stop + 1)
+    - Uses stack to accumulate merged ranges
+    - Time complexity: O(n log n) due to sorting
+    - Requires Normalized to ensure Start <= Stop
+[==============================================================================}
+function TRangeArrayHelper.Restacked: TRangeArray; overload;
+var
+  r: TRangeArray;
+  i: Integer;
+  t: TRange;
+  s: specialize TStack<TRange>;
+begin
+  if (Self.Length < 2) then
+    Exit(Self.Normalized);
+  r := Self.Normalized;
+  r.SortByStart;
+  s := specialize TStack<TRange>.Create;
+  try
+    s.Push(r[0]);
+    for i := 1 to High(r) do
+      if (r[i].start <= (s.Peek.stop + 1)) then
+      begin
+        t := s.Pop;
+        t.stop := Max(t.stop, r[i].stop);
+        s.Push(t);
+      end else
+        s.Push(r[i]);
+    Result := s.ToArray;
+  finally
+    s.Free;
+  end;
+end;
+
+{==============================================================================
+  <Scanlined>
+  @action: Merge ranges using scanline (event sweep) algorithm
+  @note:
+    - Converts each range into two events: (start, +1) and (stop + 1, -1)
+    - Sorts events by position (ascending)
+    - Accumulates active count (coverage depth)
+    - New segment starts when count transitions 0 -> >0
+    - Segment ends when count transitions >0 -> 0
+    - Adjacent ranges are merged due to (stop + 1) encoding
+    - Handles overlapping, nested, and unordered ranges
+    - Time complexity: O(n log n) due to sorting
+    - Output is normalized and non-overlapping
+==============================================================================}
+function TRangeArrayHelper.Scanlined: TRangeArray; overload;
+type
+  TDeltaPoint = record
+    position: Integer;
+    delta: Integer;
+  end;
+var
+  P: array of TDeltaPoint;
+  h, i, o, c, s, z: Integer;
+  procedure QS(L, R: Integer);
+  var
+    I, J, T: Integer;
+    D: TDeltaPoint;
+  begin
+    I := L;
+    J := R;
+    T := P[L + (R - L) div 2].position;
+    repeat
+      while (P[I].position < T) do
+        Inc(I);
+      while (P[J].position > T) do
+        Dec(J);
+      if (I <= J) then
+      begin
+        D := P[I];
+        P[I] := P[J];
+        P[J] := D;
+        Inc(I);
+        Dec(J);
+      end;
+    until (I > J);
+    if (L < J) then
+      QS(L, J);
+    if (I < R) then
+      QS(I, R);
+  end;
+begin
+  z := Self.Length;
+  if (z = 0) then
+    Exit([]);
+  SetLength(P, (z * 2));
+  for i := 0 to (z - 1) do
+  begin
+    P[i * 2].position := Min(Self[i].start, Self[i].stop);
+    P[i * 2].delta := 1;
+    P[i * 2 + 1].position := (Max(Self[i].start, Self[i].stop) + 1);
+    P[i * 2 + 1].delta := -1;
+  end;
+  h := High(P);
+  if (h > 0) then
+    QS(0, h);
+  SetLength(Result, z);
+  o := 0;
+  c := 0;
+  for i := 0 to h do
+  begin
+    if (c = 0) then
+      s := P[i].position;
+    Inc(c, P[i].delta);
+    if ((c = 0) and ((i = h) or (P[i + 1].position > P[i].position))) then
+      Result[o.Increase].Create(s, (P[i].position - 1));
+  end;
+  SetLength(Result, o);
+end;
+
+{==============================================================================]
   <Simplify>
   @action: Normalizes, sorts, and merges overlapping or adjacent ranges into a
            minimal non-overlapping set.
@@ -600,6 +720,27 @@ begin
     end else if (R.Stop > Result[h].Stop) then
       Result[h].Stop := R.Stop;
   end;
+end;
+
+{==============================================================================]
+  <Squeeze>
+  @action: Returns a new TRangeArray with all values from the original ranges
+           flattened, sorted, deduplicated, and regrouped into contiguous streaks.
+  @returns: TRangeArray containing normalized ranges covering all unique values.
+  @note:
+    - Converts the original TRangeArray to a flat integer array (TIA).
+    - Sorts the integers in ascending order.
+    - Removes duplicate values.
+    - Converts consecutive sequences of integers back into contiguous ranges.
+    - The resulting ranges are minimal: no overlapping ranges and no duplicates.
+    - Original ranges with gaps between them may be merged if the sequences
+      of values are contiguous.
+    - Preserves ascending order for each resulting streak.
+	- rAscending for Ascending or Descending order for the returning array.
+[==============================================================================}
+function TRangeArrayHelper.Squeeze(const rAscending: Boolean = True): TRangeArray; overload;
+begin
+  Result := Self.TIA.QuickSorted(rAscending).Compressed.Streaks;
 end;
 
 {==============================================================================]
