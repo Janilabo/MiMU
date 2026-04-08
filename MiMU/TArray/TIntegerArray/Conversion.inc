@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function AsRanges(const oAscending: Boolean = True): TRangeArray; overload;
 function Charify: TCharArray; overload;
 function Charify(var str: string): TCharArray; overload;
 function Intervals: TRangeArray; overload;
@@ -11,6 +12,66 @@ function ToRanges(const aAscending: Boolean): TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsRanges>
+  @action: Transforms an integer array into a minimal set of contiguous ranges
+           (TRangeArray), grouping consecutive values into interval segments.
+           The result is a run-length style compression where each range represents
+           a maximal sequence of adjacent integers.
+  @note:
+    - Preprocessing:
+        * Input is sorted using QuickSorted(oAscending).
+        * Duplicate values are removed via Compress.
+    - Adjacency rule:
+        * Ascending:
+            consecutive if s[i] = previous.stop + 1
+        * Descending:
+            consecutive if s[i] = previous.stop - 1
+        Controlled by:
+            d := +1 (ascending) or -1 (descending)
+    - Algorithm:
+        1. Initialize first range with s[0].
+        2. Iterate through sorted unique values:
+            * If current value continues the active range → extend stop
+            * Otherwise → start a new range
+        3. Trim result to the number of constructed ranges
+    - Output:
+        * Each range is maximal (no two adjacent ranges can be merged further).
+        * Ranges preserve ordering based on oAscending.
+    - Complexity:
+        * Sorting:     O(n log n)
+        * Compression: O(n)
+        * Scan:        O(n)
+        * Overall:     O(n log n)
+    - Edge cases:
+        * Empty input → returns empty array
+        * Single element → single-point range [x, x]
+    - Characteristics:
+        * Non-destructive (operates on a sorted copy).
+        * Eliminates duplicates before range construction.
+        * Produces canonical segmentation of discrete values.
+[==============================================================================}
+function TIntegerArrayHelper.AsRanges(const oAscending: Boolean = True): TRangeArray; overload;
+var
+  s: TIntegerArray;
+  i, l, d: Integer;
+begin
+  if (Self.Length = 0) then
+    Exit([]);
+  s := Self.QuickSorted(oAscending);
+  s.Compress;
+  SetLength(Result, s.Length);
+  l := 0;
+  Result[0].Create(s[0], s[0]);
+  d := IfThen(oAscending, 1, -1);
+  for i := 1 to High(s) do
+    if (s[i] = (Result[l].stop + d)) then
+      Result[l].stop := s[i]
+    else
+      Result[l.Increment].Create(s[i], s[i]);
+  SetLength(Result, (l + 1));
+end;
+
 {==============================================================================]
   <Charify>
   @action: Converts TIntegerArray to Chars.

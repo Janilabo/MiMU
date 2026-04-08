@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function Bisected: TRangeArray; overload;
 function Coalesce: TRangeArray; overload;
 function Collapse: TRangeArray; overload;
 function Condense(const oAscending: Boolean = True): TRangeArray; overload;
@@ -7,6 +8,8 @@ function Consolidated(const rAscending: Boolean = True): TRangeArray; overload;
 function Defragment(const rAscending: Boolean = True): TRangeArray; overload;
 function Fuse: TRangeArray; overload;
 function Fused: TRangeArray; overload;
+function Gridded: TRangeArray; overload;
+function Heaped: TRangeArray; overload;
 function Meld(const rSort: Boolean = True): TRangeArray; overload;
 function Melted(const oAscending: Boolean = True): TRangeArray; overload;
 function Merge: TRangeArray; overload;
@@ -21,10 +24,78 @@ function Squeeze(const rAscending: Boolean = True): TRangeArray; overload;
 function Stream(const oAscending: Boolean = True): TRangeArray; overload;
 function Streamed(const oAscending: Boolean = True): TRangeArray; overload;
 function Streamline: TRangeArray; overload;
+function Unionized(const oAscending: Boolean = True): TRangeArray; overload;
 function Unite(const mAdjacent: Boolean = True): TRangeArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Bisected>
+  @action: Merge overlapping and adjacent ranges using divide and conquer
+  @note:
+    - Recursively splits the array in half, solves each side independently,
+      then merges two already-sorted, non-overlapping interval arrays.
+    - Adjacent ranges (stop + 1 = start) are merged at every level.
+    - Time complexity: O(n log² n) — O(log n) levels, O(n) merge per level.
+    - Normalizes input before recursing.
+[==============================================================================}
+function TRangeArrayHelper.Bisected: TRangeArray; overload;
+  function MP(const A, B: TRangeArray): TRangeArray;
+  var
+    i, j, l, x, y: Integer;
+    c, n: TRange;
+  begin
+    x := A.Length;
+    if (x = 0) then
+      Exit(B);
+    y := B.Length;
+    if (y = 0) then
+      Exit(A);
+    SetLength(Result, (x + y));
+    i := 0;
+    j := 0;
+    l := 0;
+    if (A[0].start <= B[0].start) then
+    begin
+      c := A[0];
+      Inc(i);
+    end else
+    begin
+      c := B[0];
+      Inc(j);
+    end;
+    while ((i < x) or (j < y)) do
+    begin
+      if ((i < x) and ((j >= y) or (A[i].start <= B[j].start))) then
+        n := A[i.Increase]
+      else
+        n := B[j.Increase];
+      if (n.start > (c.stop + 1)) then
+      begin
+        Result[l.Increase] := c;
+        c := n;
+      end else
+        c.stop := Max(c.stop, n.stop);
+    end;
+    Result[l.Increase] := c;
+    SetLength(Result, l);
+  end;
+  function DnC(const S: TRangeArray): TRangeArray;
+  var
+    l, m: Integer;
+  begin
+    l := S.Length;
+    if (l <= 1) then
+      Exit(S);
+    m := (l div 2);
+    Result := MP(DnC(System.Copy(S, 0, m)), DnC(System.Copy(S, m, (l - m))));
+  end;
+begin
+  if (Self.Length < 2) then
+    Exit(Self.Normalized);
+  Result := DnC(Self.Normalized);
+end;
+
 {==============================================================================]
   <Coalesce>
   @action: Coalesce overlapping and adjacent ranges
@@ -321,6 +392,145 @@ begin
       R := Result.Supply(S[i])
     else if (S[i].stop > Result[R].stop) then
       Result[R].stop := S[i].stop;
+end;
+
+{==============================================================================]
+  <Gridded>
+  @action: Merge ranges via coordinate compression on boundary endpoints
+  @note:
+    - Collects all unique start and (stop + 1) values as breakpoints.
+    - Sorts and deduplicates breakpoints.
+    - Marks each cell [bp[k]..bp[k+1]-1] as covered if any input range spans it.
+    - Reconstructs contiguous covered cells into merged ranges.
+    - Distinct from Scanlined: no delta accumulation; direct per-cell coverage test.
+    - Time complexity: O(n log n).
+[==============================================================================}
+function TRangeArrayHelper.Gridded: TRangeArray; overload;
+var
+  b: TIntegerArray;
+  c: TBooleanArray;
+  s, i, j, k, l, n: Integer;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  if (s = 1) then
+    Exit([Self[0].Normalized]);
+  SetLength(b, (s * 2));
+  for i := 0 to (s - 1) do
+  begin
+    b[i * 2] := Min(Self[i].start, Self[i].stop);
+    b[i * 2 + 1] := (Max(Self[i].start, Self[i].stop) + 1);
+  end;
+  b.QuickSort(True);
+  b.Compress;
+  n := b.Length;
+  SetLength(c, (n - 1));
+  for k := 0 to (n - 2) do
+  begin
+    c[k] := False;
+    for i := 0 to (s - 1) do
+      if ((b[k] >= Min(Self[i].start, Self[i].stop)) and ((b[k + 1] - 1) <= Max(Self[i].start, Self[i].stop))) then
+      begin
+        c[k] := True;
+        Break;
+      end;
+  end;
+  SetLength(Result, s);
+  l := 0;
+  k := 0;
+  while (k < (n - 1)) do
+  case c[k] of
+    True:
+    begin
+      j := k;
+      while ((k < (n - 1)) and c[k]) do
+        Inc(k);
+      Result[l.Increase].Create(b[j], (b[k] - 1));
+    end;
+    False: Inc(k);
+  end;
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <Heaped>
+  @action: Merge overlapping and adjacent ranges using a min-heap on start value
+  @note:
+    - Inserts all normalized ranges into a min-heap keyed by start.
+    - Repeatedly extracts the minimum-start range and merges if adjacent/overlapping.
+    - No separate sort pass; the heap enforces processing order.
+    - Useful for incremental / online inputs.
+    - Time complexity: O(n log n).
+[==============================================================================}
+function TRangeArrayHelper.Heaped: TRangeArray; overload;
+var
+  h: TRangeArray;
+  s, i, l: Integer;
+  q, t: TRange;
+  procedure SD(idx: Integer);
+  var
+    c: Integer;
+  begin
+    repeat
+      c := ((idx * 2) + 1);
+      if (c >= s) then
+        Break;
+      if (((c + 1) < s) and (h[c + 1].start < h[c].start)) then
+        Inc(c);
+      if (h[idx].start <= h[c].start) then
+        Break;
+      h.Exch(idx, c);
+      idx := c;
+    until False;
+  end;
+  function HPop: TRange;
+  begin
+    Result := h[0];
+    Dec(s);
+    h[0] := h[s];
+    if (s > 1) then
+      SD(0);
+  end;
+  procedure HPush(const R: TRange);
+  var
+    j, p: Integer;
+  begin
+    h[s] := R;
+    j := s;
+    Inc(s);
+    while (j > 0) do
+    begin
+      p := ((j - 1) div 2);
+      if (h[p].start <= h[j].start) then
+        Break;
+      h.Exch(j, p);
+      j := p;
+    end;
+  end;
+begin
+  if (Self.Length < 2) then
+    Exit(Self.Normalized);
+  SetLength(h, Self.Length);
+  s := 0;
+  for i := 0 to High(Self) do
+    HPush(Self[i].Normalize);
+  SetLength(Result, Self.Length);
+  l := 0;
+  q := HPop;
+  while (s > 0) do
+  begin
+    t := HPop;
+    if (t.start > (q.stop + 1)) then
+    begin
+      Result[l] := q;
+      Inc(l);
+      q := t;
+    end else
+      q.stop := Max(q.stop, t.stop);
+  end;
+  Result[l.Increase] := q;
+  SetLength(Result, l);
 end;
 
 {==============================================================================]
@@ -868,6 +1078,122 @@ begin
       Result.Supply(TRange.Construct((s - o), (p - 1 - o)));
     end else
       Inc(p);
+end;
+
+{==============================================================================]
+  <Unionized>
+  @action: Produces the union of all ranges by merging any that overlap or are
+           directly adjacent, using a Disjoint Set Union (Union-Find, DSU) structure.
+           Each input range is treated as a node in a connectivity graph.
+           Two nodes are unioned if their ranges intersect or touch
+           (i.e. adjacency is considered mergeable). The resulting connected
+           components represent merged ranges.
+           The final output contains one consolidated range per DSU component.
+  @note:
+    - Preprocessing:
+        * Input is first normalized (Self.Normalized).
+        * Then sorted by start (TRangeArray_SortByStart).
+    - Union condition:
+        For consecutive ranges i and i+1:
+          S[i+1].start <= (h[F(i)] + 1)
+        This merges:
+          * overlapping ranges
+          * directly adjacent ranges (gap = 0)
+    - DSU internals:
+        * p[] : parent links (path compression applied in F)
+        * z[] : rank/height heuristic (union by rank)
+        * l[] : component minimum bound
+        * h[] : component maximum bound
+        On union:
+          * roots are merged using rank heuristic
+          * bounds are updated:
+              l[root] = min(l[a], l[b])
+              h[root] = max(h[a], h[b])
+    - Optimization:
+        Only adjacent pairs are tested after sorting. This is sufficient
+        because any transitive overlap/adjacency chain will propagate
+        through consecutive unions.
+    - Output construction:
+        * Each DSU root represents a merged range.
+        * Traversal order depends on oAscending:
+            True  → forward order, ranges as [lo, hi]
+            False → reverse order, ranges as [hi, lo]
+    - Complexity:
+        * Sorting:        O(n log n)
+        * Union-Find:     O(n α(n))  (α = inverse Ackermann)
+        * Overall:        O(n log n)
+    - Characteristics:
+        * Non-destructive: operates on a normalized copy (S).
+        * Stable merging independent of input ordering.
+        * Conceptually models merging as graph connectivity rather than
+          sequential interval folding.
+    - Edge cases:
+        * n < 2 → returns normalized input directly.
+        * Assumes normalized ranges have valid start ≤ stop.
+[==============================================================================}
+function TRangeArrayHelper.Unionized(const oAscending: Boolean = True): TRangeArray; overload;
+var
+  p, z, l, h: TIntegerArray;
+  n, i, r: Integer;
+  S: TRangeArray;
+  function F(x: Integer): Integer;
+  begin
+    while (p[x] <> x) do
+    begin
+      p[x] := p[p[x]];
+      x := p[x];
+    end;
+    Result := x;
+  end;
+  procedure U(const x, y: Integer);
+  var
+    a, b: Integer;
+  begin
+    a := F(x);
+    b := F(y);
+    if (a = b) then
+      Exit;
+    if (z[a] < z[b]) then
+      Swap(a, b);
+    p[b] := a;
+    if (z[a] = z[b]) then
+      Inc(z[a]);
+    l[a] := Min(l[a], l[b]);
+    h[a] := Max(h[a], h[b]);
+  end;
+begin
+  S := Self.Normalized;
+  n := S.Length;
+  if (n < 2) then
+    Exit(S);
+  S.SortByStart;
+  SetLength(p, n);
+  SetLength(z, n);
+  SetLength(l, n);
+  SetLength(h, n);
+  for i := 0 to (n - 1) do
+  begin
+    p[i] := i;
+    z[i] := 0;
+    l[i] := S[i].start;
+    h[i] := S[i].stop;
+  end;
+  for i := 0 to (n - 2) do
+    if (S[i + 1].start <= (h[F(i)] + 1)) then
+      U(i, (i + 1));
+  SetLength(Result, n);
+  r := 0;
+  case oAscending of
+    True:
+    for i := 0 to (n - 1) do
+      if (F(i) = i) then
+        Result[r.Increase].Create(l[i], h[i]);
+    False:
+    for i := (n - 1) downto 0 do
+      if (F(i) = i) then
+        Result[r.Increase].Create(h[i], l[i]);
+  end;
+  SetLength(Result, r);
 end;
 
 {==============================================================================]

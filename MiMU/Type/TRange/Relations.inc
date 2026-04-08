@@ -1,5 +1,6 @@
 {$IFDEF METHODS}
 function Abuts(const other: TRange): Boolean; overload;
+function Coequal(const target: TRange; const strictly: Boolean = False): Boolean; overload;
 function Differ(const b: TRange): Boolean; overload;
 function Differs(const b: TRange): Boolean; overload;
 function Equal(const b: TRange): Boolean; overload;
@@ -42,6 +43,55 @@ begin
 end;
 
 {==============================================================================]
+  <Coequal>
+  @action: Determines whether two ranges are equal under either strict or
+           normalized comparison semantics.
+           Supports dual-mode equality:
+             * Strict equality: direct field comparison (start/stop).
+             * Non-strict equality: compares normalized bounds to account for
+               differing internal representations.
+  @note:
+    - strictly = True:
+        * Performs exact, field-level comparison:
+            (Self.start = target.start) AND
+            (Self.stop  = target.stop)
+        * No normalization is applied.
+        * Fastest path (O(1)).
+    - strictly = False:
+        * Compares normalized ranges:
+            s := Self.Normalized
+            t := target.Normalized
+            Result = (s.start = t.start) AND (s.stop = t.stop)
+        * Ensures equivalence even if:
+            - bounds are reversed (start > stop)
+            - internal representation differs but logical interval matches
+    - Normalization guarantees:
+        * start ≤ stop
+        * consistent canonical form for comparison
+    - Complexity:
+        * Strict:     O(1)
+        * Non-strict: O(1), assuming Normalized is O(1)
+    - Use cases:
+        * strictly = True:
+            When structural identity matters (exact stored values).
+        * strictly = False:
+            When logical interval equivalence is required.
+    - Notes:
+        * Non-strict mode is safer for external inputs or mixed range sources.
+        * Strict mode avoids overhead when invariants are already enforced.
+[==============================================================================}
+function TRange.Coequal(const target: TRange; const strictly: Boolean = False): Boolean; overload;
+var
+  s, t: TRange;
+begin
+  if strictly then
+    Exit((Self.start = target.start) and (Self.stop = target.stop));
+  s := Self.Normalized;
+  t := target.Normalized;
+  Result := ((s.start = t.start) and (s.stop = t.stop));
+end;
+
+{==============================================================================]
   <Differ>
   @action: Checks if a unmatches b exactly.
   @note: 0..3 and 3..0 will NOT be treated as match.
@@ -78,7 +128,7 @@ end;
 [==============================================================================}
 function TRange.Equals(const b: TRange): Boolean; overload;
 begin
-  Result := ((Min(Self.start, Self.stop) = Min(b.start, b.stop)) and (Max(Self.start, Self.stop) = Max(b.start, b.stop)));
+  Result := ((Self.Minimum = b.Minimum) and (Self.Maximum = b.Maximum));
 end;
 
 {==============================================================================]

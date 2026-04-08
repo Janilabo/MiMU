@@ -20,6 +20,7 @@ function Sigma: Int64; overload;
 function Signed: Int64; overload;
 function Sum: Int64; overload;
 function SumAll: Int64; overload;
+function Sumified: Int64; overload;
 function Sumify: Int64; overload;
 function Summa: Int64; overload;
 function Summary: Int64; overload;
@@ -335,6 +336,39 @@ begin
   d := IfThen(Self.Ascending, 1, -1);
   while (s.Increase(d) <> Self.stop) do
     Inc(Result, s);
+end;
+
+{==============================================================================]
+  <Sumified>
+  @action: Computes the arithmetic sum of all integer values within the range
+           defined by Self.Minimum (f) and Self.Maximum (l), inclusive.
+           Uses a constant-time formula derived from the arithmetic series:
+           sum = n * (f + l) / 2
+           To avoid intermediate overflow and preserve integer arithmetic,
+           the implementation splits the computation into: (n div 2) * (f + l)
+           and conditionally adds the middle element when n is odd.
+  @note:
+    - n is the total number of elements in the range:
+        n = (l - f) + 1
+    - When n is even:
+        Result = (n / 2) * (f + l)
+    - When n is odd:
+        The midpoint term (f + n div 2) is added explicitly to compensate
+        for integer division truncation.
+    - Assumes f <= l; behavior is undefined if the range is inverted.
+    - Entire computation is O(1), no iteration is performed.
+    - Uses Int64; ensure (f + l) and intermediate products do not overflow.
+[==============================================================================}
+function TRange.Sumified: Int64; overload;
+var
+  n, f, l: Int64;
+begin
+  f := Self.Minimum;
+  l := Self.Maximum;
+  n := ((l - f) + 1);
+  Result := ((n div 2) * (f + l));
+  if n.Odd then
+    Result := (Result + (f + (n div 2)));
 end;
 
 {==============================================================================]

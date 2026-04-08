@@ -3,8 +3,10 @@
 {$I Bounding.inc}
 {$I Classification.inc}
 {$I Conversion.inc}
+{$I Deduplication.inc}
 {$I Extraction.inc}
 {$I Gaps.inc}
+{$I Membership.inc}
 {$I Merging.inc}
 {$I Normalization.inc}
 {$I Ordering.inc}

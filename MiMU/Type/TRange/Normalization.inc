@@ -199,14 +199,15 @@ end;
 
 {==============================================================================]
   <Normalized>
-  @action: Using if-then comparison this function returns "normal" range.
-  @note: None.
+  @action: Normalize to ascending range (start <= stop)
+  @note: Swaps start/stop if descending; otherwise returns self
 [==============================================================================}
 function TRange.Normalized: TRange; overload;
 begin
-  Result.start := (Self.Combined shr 1);
-  Result.stop := (Abs(Self.Contra) shr 1);
-  Result.Create(Result.Contra, Result.Combined);
+  if Self.Descending then
+    Result := TRange.Construct(Self.stop, Self.start)
+  else
+    Result := Self;
 end;
 
 {==============================================================================]
@@ -245,15 +246,48 @@ begin
 end;
 
 {==============================================================================]
-  <ToNormalized>
-  @action: Normalize to ascending range (start <= stop)
-  @note: Swaps start/stop if descending; otherwise returns self
+  <ToNormalized>
+  @action: Produces a normalized (canonical) representation of the range, ensuring
+           consistent ordering and internal encoding regardless of the original
+           start/stop configuration.
+           The transformation reconstructs the range from its encoded form using
+           Combined and Contra, yielding a stable [start, stop] pair.
+  @note:
+    - Normalization goal:
+        * Enforces a canonical representation where:
+            start ≤ stop
+        * Eliminates ambiguity from reversed or non-canonical inputs.
+    - Encoding details:
+        * Combined and Contra represent a packed form of the range:
+            - Combined encodes aggregate boundary information
+            - Contra encodes directional / differential information
+        * Reconstruction:
+            start := Combined shr 1
+            stop  := Abs(Contra) shr 1
+        * Final Create call rehydrates the range using the derived
+          canonical components.
+    - Bit-level behavior:
+        * Right shift (shr 1) implies values are stored with a scaling
+          factor (e.g. doubled or tagged representation).
+        * Abs ensures stop is always non-negative before normalization.
+    - Complexity:
+        * O(1), purely arithmetic and bitwise operations.
+    - Characteristics:
+        * Non-destructive; returns a new normalized instance.
+        * Idempotent:
+            ToNormalized(ToNormalized(R)) = ToNormalized(R)
+    - Use cases:
+        * Equality comparisons (e.g. Coequal with strictly = False)
+        * Canonical storage or hashing
+        * Preprocessing before range algebra operations
+    - Assumptions:
+        * Combined and Contra are internally consistent encodings.
+        * Create correctly reconstructs a valid range from these values.
 [==============================================================================}
 function TRange.ToNormalized: TRange; overload;
 begin
-  if Self.Descending then
-    Result := TRange.Construct(Self.stop, Self.start)
-  else
-    Result := Self;
+  Result.start := (Self.Combined shr 1);
+  Result.stop := (Abs(Self.Contra) shr 1);
+  Result.Create(Result.Contra, Result.Combined);
 end;
 {$ENDIF}
