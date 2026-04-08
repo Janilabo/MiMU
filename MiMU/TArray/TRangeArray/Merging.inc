@@ -419,8 +419,8 @@ begin
   SetLength(b, (s * 2));
   for i := 0 to (s - 1) do
   begin
-    b[i * 2] := Min(Self[i].start, Self[i].stop);
-    b[i * 2 + 1] := (Max(Self[i].start, Self[i].stop) + 1);
+    b[i * 2] := Self[i].Minimum;
+    b[i * 2 + 1] := (Self[i].Maximum + 1);
   end;
   b.QuickSort(True);
   b.Compress;
@@ -430,7 +430,7 @@ begin
   begin
     c[k] := False;
     for i := 0 to (s - 1) do
-      if ((b[k] >= Min(Self[i].start, Self[i].stop)) and ((b[k + 1] - 1) <= Max(Self[i].start, Self[i].stop))) then
+      if ((b[k] >= Self[i].Minimum) and ((b[k + 1] - 1) <= Self[i].Maximum)) then
       begin
         c[k] := True;
         Break;
@@ -523,8 +523,7 @@ begin
     t := HPop;
     if (t.start > (q.stop + 1)) then
     begin
-      Result[l] := q;
-      Inc(l);
+      Result[l.Increase] := q;
       q := t;
     end else
       q.stop := Max(q.stop, t.stop);

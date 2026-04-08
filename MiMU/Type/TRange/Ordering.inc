@@ -12,6 +12,7 @@ function Ordered(const oAscending: Boolean = True): TRange; overload;
 function OrderTo(const oAscending: Boolean = True): TRange; overload;
 function Sort(const oAscending: Boolean = True): Boolean; overload;
 function Sorted(const oAscending: Boolean = True): TRange; overload;
+function SortedTo(const oAscending: Boolean = True): TRange; overload;
 function ToOrder(const oAscending: Boolean = True): TRange; overload;
 {$ENDIF}
 
@@ -206,6 +207,20 @@ begin
     Result.Create(Self.stop, Self.start)
   else
     Result.Create(Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <Sorted>
+  @action: Sort bounds in ascending/descending order and return new range
+  @note: Uses QuickSorted helper; order controlled by oAscending parameter
+[==============================================================================}
+function TRange.SortedTo(const oAscending: Boolean = True): TRange; overload;
+var
+  t: TIntegerArray;
+begin
+  t := [Self.start, Self.stop];
+  t.InsertionSort(oAscending);
+  Result := TRange.Construct(t[0], t[1]);
 end;
 
 {==============================================================================]

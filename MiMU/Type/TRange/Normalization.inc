@@ -1,4 +1,5 @@
 {$IFDEF METHODS}
+function AsNormal: TRange; overload;
 function Backwards: TRange; overload;
 function Forwards: TRange; overload;
 function Grab: TRange; overload;
@@ -16,10 +17,24 @@ function Normalized: TRange; overload;
 function Normalizify: Boolean; overload;
 function Normally: TRange; overload;
 function Normed: TRange; overload;
+function ToNormal: TRange; overload;
 function ToNormalized: TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsNormal>
+  @action: Return range with ordered bounds (start <= stop)
+  @note: Uses Compare for ordering; constructs new normalized instance
+[==============================================================================}
+function TRange.AsNormal: TRange; overload;
+begin
+  if (Self.start.Compare(Self.stop) <= 0) then
+    Result := TRange.Construct(Self.start, Self.stop)
+  else
+    Result := TRange.Construct(Self.stop, Self.start)
+end;
+
 {==============================================================================]
   <Backwards>
   @action: Ensures range is descending (start >= stop)
@@ -246,48 +261,38 @@ begin
 end;
 
 {==============================================================================]
+  <ToNormal>
+  @action: Reconstruct start/stop from Combined/Contra and normalize order
+  @note: Uses (Combined ± Contra) / 2 to derive bounds; ensures start <= stop
+[==============================================================================}
+function TRange.ToNormal: TRange; overload;
+var
+  s, e: Integer;
+begin
+  s := ((Self.Combined + Self.Contra) div 2);
+  e := ((Self.Combined - Self.Contra) div 2);
+  Result.start := Min(s, e);
+  Result.stop := Max(s, e);
+end;
+
+{==============================================================================]
   <ToNormalized>
-  @action: Produces a normalized (canonical) representation of the range, ensuring
-           consistent ordering and internal encoding regardless of the original
-           start/stop configuration.
-           The transformation reconstructs the range from its encoded form using
-           Combined and Contra, yielding a stable [start, stop] pair.
-  @note:
-    - Normalization goal:
-        * Enforces a canonical representation where:
-            start ≤ stop
-        * Eliminates ambiguity from reversed or non-canonical inputs.
-    - Encoding details:
-        * Combined and Contra represent a packed form of the range:
-            - Combined encodes aggregate boundary information
-            - Contra encodes directional / differential information
-        * Reconstruction:
-            start := Combined shr 1
-            stop  := Abs(Contra) shr 1
-        * Final Create call rehydrates the range using the derived
-          canonical components.
-    - Bit-level behavior:
-        * Right shift (shr 1) implies values are stored with a scaling
-          factor (e.g. doubled or tagged representation).
-        * Abs ensures stop is always non-negative before normalization.
-    - Complexity:
-        * O(1), purely arithmetic and bitwise operations.
-    - Characteristics:
-        * Non-destructive; returns a new normalized instance.
-        * Idempotent:
-            ToNormalized(ToNormalized(R)) = ToNormalized(R)
-    - Use cases:
-        * Equality comparisons (e.g. Coequal with strictly = False)
-        * Canonical storage or hashing
-        * Preprocessing before range algebra operations
-    - Assumptions:
-        * Combined and Contra are internally consistent encodings.
-        * Create correctly reconstructs a valid range from these values.
+  @action: Normalize range so start <= stop (swap if needed)
+  @note: Uses XOR swap; avoids temp variable but reduces readability
 [==============================================================================}
 function TRange.ToNormalized: TRange; overload;
+var
+  s: array[0..1] of Integer;
 begin
-  Result.start := (Self.Combined shr 1);
-  Result.stop := (Abs(Self.Contra) shr 1);
-  Result.Create(Result.Contra, Result.Combined);
+  s[0] := Self.start;
+  s[1] := Self.stop;
+  if (s[0] > s[1]) then
+  begin
+    s[0] := (s[0] xor s[1]);
+    s[1] := (s[0] xor s[1]);
+    s[0] := (s[0] xor s[1]);
+  end;
+  Result.start := s[0];
+  Result.stop := s[1];
 end;
 {$ENDIF}
