@@ -1,5 +1,6 @@
 {$IFDEF METHODS}
 function Abuts(const other: TRange): Boolean; overload;
+function Adjacent(const other: TRange): Boolean; overload;
 function Coequal(const target: TRange; const strictly: Boolean = False): Boolean; overload;
 function Differ(const b: TRange): Boolean; overload;
 function Differs(const b: TRange): Boolean; overload;
@@ -41,6 +42,16 @@ begin
   o := other.Normalize;
   Result := ((s.stop = (o.start - 1)) or (o.stop = (s.start - 1)));
 end;
+
+{==============================================================================]
+  <Adjacent>
+  @action: Returns True if Other begins exactly where Self ends, or vice versa.
+  @note: Treats ranges as adjacent regardless of direction.
+[==============================================================================}
+function TRange.Adjacent(const other: TRange): Boolean; overload;
+begin
+  Result := ((Abs(Self.stop - other.start) = 1) or (Abs(other.stop - Self.start) = 1));
+end; 
 
 {==============================================================================]
   <Coequal>

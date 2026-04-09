@@ -16,6 +16,7 @@ function Carry(const val: Integer): Boolean; overload;
 function Containing(const val: Integer): Boolean; overload;
 function Contains(const x: Integer): Boolean; overload;
 function Contains(const x: TRange): Boolean; overload;
+function Contains(const x: TIntegerArray): Boolean; overload;
 function Covered(const val: Integer): Boolean; overload;
 function Covering(const val: Integer): Boolean; overload;
 function Covers(const val: Integer): Boolean; overload;
@@ -287,6 +288,21 @@ end;
 function TRange.Contains(const x: TRange): Boolean; overload;
 begin
   Result := ((x.Minimum >= Self.Minimum) and (x.Maximum <= Self.Maximum));
+end;
+
+{==============================================================================]
+  <ContainsAll>
+  @action: Returns True if every value in x exists within the range.
+  @note: Returns True for an empty array.
+[==============================================================================}
+function TRange.Contains(const x: TIntegerArray): Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to High(x) do
+    if not Self.Contains(x[i]) then
+      Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]

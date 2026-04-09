@@ -19,8 +19,10 @@ function Kernel: Integer; overload;
 function Mean: Double; overload;
 function Median: Double; overload;
 function Medium: Double; overload;
+function Medlo: Integer; overload;
 function Medoid: Integer; overload;
 function Mid: Double; overload;
+function Midar: Integer; overload;
 function MidBit: Integer; overload;
 function Middle: Integer; overload;
 function MiddleBit: Integer; overload;
@@ -320,6 +322,18 @@ begin
 end;
 
 {==============================================================================]
+  <Medlo>
+  @action: Returns the median value of the range.
+  @note: For odd-sized ranges returns the exact middle value.
+         For even-sized ranges returns the lower of the two middle values.
+         Does not allocate an array; computed arithmetically.
+[==============================================================================}
+function TRange.Medlo: Integer; overload;
+begin
+  Result := (Self.start + (((Self.Size - 1) div 2) * IfThen(Self.Ascending, 1, -1)));
+end;
+
+{==============================================================================]
   <Medoid>
   @action: Returns the direction-aware integer center of the range.
            The medoid is computed as the start value offset by half the absolute
@@ -348,6 +362,20 @@ end;
 function TRange.Mid: Double; overload;
 begin
   Result := (Self.Combined / 2.0);
+end;
+
+{==============================================================================]
+  <Midar>
+  @action: Returns the value at the exact midpoint index of the range.
+  @note: Identical to Median for integer ranges. Provided as a named
+         alternative expressing spatial rather than statistical intent.
+         Singular ranges return Self.start.
+[==============================================================================}
+function TRange.Midar: Integer; overload;
+begin
+  if Self.Singular then
+    Exit(Self.start);
+  Result := (Self.start + ((Self.Size div 2) * IfThen(Self.Ascending, 1, -1)));
 end;
 
 {==============================================================================]
