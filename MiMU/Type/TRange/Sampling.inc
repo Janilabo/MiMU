@@ -2,6 +2,7 @@
 function Any: Integer; overload;
 function Arbitrary: Integer; overload;
 function Lottery(const lCount: Integer = 1): TIntegerArray; overload;
+function Lucky: Integer; overload;
 function Mixed(const mixings: Integer = 1): TIntegerArray; overload;
 function Raffle(const N: Integer = 1): TIntegerArray; overload;
 function Rand: Integer; overload;
@@ -82,6 +83,16 @@ begin
     until not u;
     Result[i] := r;
   end;
+end;
+
+{==============================================================================]
+  <Lucky>
+  @action: Returns a random element within the range bounds
+  @note: Uses Random(Size); direction adjusted by Ascending flag
+[==============================================================================}
+function TRange.Lucky: Integer; overload;
+begin
+  Result := (Self.start + (Random(Self.Size) * IfThen(Self.Ascending, 1, -1)));
 end;
 
 {==============================================================================]

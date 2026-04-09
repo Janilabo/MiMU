@@ -3,7 +3,9 @@ function Common(const other: TRange): TIntegerArray; overload;
 function Commons(const other: TRange): TIntegerArray; overload;
 function CommonWith(const other: TRange): TIntegerArray; overload;
 function Diverge(const other: TRange): TIntegerArray; overload;
+function Excluded(const other: TRange): TIntegerArray; overload;
 function Exclusive(const other: TRange): TIntegerArray; overload;
+function Included(const other: TRange): TIntegerArray; overload;
 function Shared(const other: TRange): TIntegerArray; overload;
 function Shares(const other: TRange): TIntegerArray; overload;
 function Sharing(const other: TRange): TIntegerArray; overload;
@@ -132,6 +134,26 @@ begin
 end;
 
 {==============================================================================]
+  <Excluded>
+  @action: Returns values present in Self but not in Other.
+  @note: Result is ordered according to Self's direction.
+[==============================================================================}
+function TRange.Excluded(const other: TRange): TIntegerArray; overload;
+var
+  i, v, d: Integer;
+begin
+  SetLength(Result, 0);
+  d := IfThen(Self.Ascending, 1, -1);
+  v := Self.start;
+  for i := 0 to (Self.Size - 1) do
+  begin
+    if not other.Contains(v) then
+      Result := (Result + [v]);
+    Inc(v, d);
+  end;
+end;
+
+{==============================================================================]
   <Exclusive>
   @action: Returns the elements that belong to either Self or other, but not both.
   @note:
@@ -159,6 +181,29 @@ begin
     Move(a[0], Result[0], (x * SizeOf(Integer)));
   if (y > 0) then
     Move(b[0], Result[x], (y * SizeOf(Integer)));
+end;
+
+{==============================================================================]
+  <Included>
+  @action: Returns values present in both Self and Other, ordered according
+           to Self's direction.
+  @note: Equivalent to a set intersection viewed from Self's perspective.
+         Returns an empty array if the ranges share no common values.
+         Result length is at most Min(Self.Size, Other.Size).
+[==============================================================================}
+function TRange.Included(const other: TRange): TIntegerArray; overload;
+var
+  i, v, d: Integer;
+begin
+  SetLength(Result, 0);
+  d := IfThen(Self.Ascending, 1, -1);
+  v := Self.start;
+  for i := 0 to (Self.Size - 1) do
+  begin
+    if other.Contains(v) then
+      Result := (Result + [v]);
+    Inc(v, d);
+  end;
 end;
 
 {==============================================================================]

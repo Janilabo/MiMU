@@ -9,6 +9,7 @@ function Breakdown: TIntegerArray; overload;
 function Capture: TIntegerArray; overload;
 function Captured: TIntegerArray; overload;
 function Collect: TIntegerArray; overload;
+function Collection: TIntegerArray; overload;
 function Content: TIntegerArray; overload;
 function Contents: TIntegerArray; overload;
 function Data: TIntegerArray; overload;
@@ -63,6 +64,7 @@ function Pile: TIntegerArray; overload;
 function Populate(var arr: TIntegerArray): TRange; overload;
 function Pull: TIntegerArray; overload;
 function Queue: TIntegerArray; overload;
+function Raw: TIntegerArray; overload;
 function Recursed: TIntegerArray; overload;
 function Recursively: TIntegerArray; overload;
 function Resources: TIntegerArray; overload;
@@ -354,6 +356,24 @@ function TRange.Collect: TIntegerArray; overload;
   end;
 begin
   Return(Result);
+end;
+
+{==============================================================================]
+  <Collection>
+  @action: Generates an array representing the numeric sequence defined by the range.
+  @note: The resulting array preserves the range size and direction. The first
+         element is initialized with `Start`, and each subsequent element is
+         derived incrementally based on the previous value. Assumes that
+         `Direction` encodes the step behavior (e.g., +1 or -1).
+[==============================================================================}
+function TRange.Collection: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  Result.Create(Self.Size, Self.Direction);
+  Result[0] := Self.start;
+  for i := 1 to High(Result) do
+    Result[i] := (Result[i - 1] + Result[i]);
 end;
 
 {==============================================================================]
@@ -1759,6 +1779,39 @@ begin
   finally
     Q.Free;
   end;
+end;
+
+{==============================================================================]
+  <Raw>
+  @action: Produces the range as a contiguous integer array using a split-fill
+           strategy for improved write locality.
+  @note: The array is allocated to `Size` and populated in two parallel
+         segments: the lower half (from index 0 upward) and the upper half
+         (from midpoint upward). This reduces dependency chains compared to
+         strictly sequential filling. The step direction is derived from
+         `Ascending` (±1). For odd sizes, the final element is written
+         explicitly after the loop.
+[==============================================================================}
+function TRange.Raw: TIntegerArray; overload;
+var
+  m, i, s, d: Integer;
+  l, h: PInteger;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  m := (s div 2);
+  d := IfThen(Self.Ascending, 1, -1);
+  l := @Result[0];
+  h := @Result[m];
+  for i := 0 to (m - 1) do
+  begin
+    l^ := (Self.start + (d * i));
+    h^ := (Self.start + (d * (i + m)));
+    Inc(l);
+    Inc(h);
+  end;
+  if ((s mod 2) = 1) then
+    Result[s - 1] := (Self.start + (d * (s - 1)));
 end;
 
 {==============================================================================]

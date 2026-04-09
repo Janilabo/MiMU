@@ -2,8 +2,10 @@
 function AsID(const oAscending: Boolean = True): TIntegerArray; overload;
 function AsIDs: TIntegerArray; overload;
 function AsIndexes: TIntegerArray; overload;
+function Entries: TIntegerArray; overload;
 function GetIDs: TIntegerArray; overload;
 function GetIndexes: TIntegerArray; overload;
+function Identifiers: TIntegerArray; overload;
 function IDs: TIntegerArray; overload;
 function IDs(const dValue: Integer): Integer; overload;
 function IDs(const dVals: TIntegerArray): TIntegerArray; overload;
@@ -15,6 +17,7 @@ function Indices: TIntegerArray; overload;
 function IndexList: TIntegerArray; overload;
 function Keys: TIntegerArray; overload;
 function LoadID(var target: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
+function Positional: TIntegerArray; overload;
 function Positions: TIntegerArray; overload;
 function ToIDs: TIntegerArray; overload;
 function ToIndexes: TIntegerArray; overload;
@@ -102,6 +105,23 @@ begin
 end;
 
 {==============================================================================]
+  <Entries>
+  @action: Fills array with zero-based indices via enumerator iteration
+  @note: Identical to Labels; sequential assignment using Range enumerator
+[==============================================================================}
+function TRange.Entries: TIntegerArray; overload;
+var
+  i: Integer;
+  e: TRangeEnumerator;
+begin
+  SetLength(Result, Self.Size);
+  e := Range(0, High(Result)).GetEnumerator;
+  i := 0;
+  while e.MoveNext do
+    Result[i.Increase] := e.Current;
+end;
+
+{==============================================================================]
   <GetIDs>
   @action: Returns TRange indexes.
   @note: None.
@@ -134,6 +154,29 @@ begin
     Result[i * 2] := (i * 2);
   for i := 0 to ((s - 2) div 2) do
     Result[(i * 2) + 1] := ((i * 2) + 1);
+end;
+
+{==============================================================================]
+  <Identifiers>
+  @action: Fills array with zero-based indices using recursive midpoint assignment
+  @note: Divide-and-conquer; writes center-out; avoids sequential iteration
+[==============================================================================}
+function TRange.Identifiers: TIntegerArray; overload;
+  procedure Return(var arr: TIntegerArray; const lo, hi: Integer);
+  var
+    m: Integer;
+  begin
+    if (lo > hi) then
+	  Exit;
+	m := ((lo + hi) div 2);
+    arr[m] := m;
+    Return(arr, lo, (m - 1));
+    Return(arr, (m + 1), hi);
+  end;
+begin
+  SetLength(Result, Self.Size);
+  if (Result.Length > 0) then
+    Return(Result, 0, High(Result));
 end;
 
 {==============================================================================]
@@ -369,7 +412,17 @@ begin
 end;
 
 {==============================================================================]
-  <Position>
+  <Positional>
+  @action: Returns zero-based positional indices [0..Size-1]
+  @note: Uses Range(0, Size-1); empty if Size = 0
+[==============================================================================}
+function TRange.Positional: TIntegerArray; overload;
+begin
+  Result := Range(0, (Self.Size - 1)).Items;
+end;
+
+{==============================================================================]
+  <Positions>
   @action: Returns TRange indexes.
   @note: None.
 [==============================================================================}
