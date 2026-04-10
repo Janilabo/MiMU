@@ -5,12 +5,14 @@ function Ending(const N: Integer = 1): TIntegerArray; overload;
 function Head(const N: Integer = 1): TIntegerArray; overload;
 function Intro(const N: Integer = 1): TIntegerArray; overload;
 function Lead(const N: Integer = 1): TIntegerArray; overload;
+function Leading(const N: Integer = 1): TIntegerArray; overload;
 function Opening(const N: Integer = 1): TIntegerArray; overload;
 function Origin(const sSteps: Integer = 0): TIntegerArray; overload;
 function Outro(const N: Integer = 1): TIntegerArray; overload;
 function Tail(const N: Integer = 1): TIntegerArray; overload;
 function Terminus(const sSteps: Integer = 0): TIntegerArray; overload;
 function Trail(const N: Integer = 1): TIntegerArray; overload;
+function Trailing(const N: Integer = 1): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -100,6 +102,23 @@ begin
 end;
 
 {==============================================================================]
+  <Leading>
+  @action: Returns the first N elements from the range.
+  @note: N is clamped to [0, Size]. Elements are copied in original order.
+[==============================================================================}
+function TRange.Leading(const N: Integer = 1): TIntegerArray; overload;
+var
+  i, c, v, d: Integer;
+begin
+  c := Min(Max(0, N), Self.Size);
+  SetLength(Result, c);
+  d := Self.Direction;
+  v := Self.start;
+  for i := 0 to (c - 1) do
+    Result[i] := v.Increase(d);
+end;
+
+{==============================================================================]
   <Opening>
   @action: Returns the first N elements using pointer arithmetic.
   @note: Does not clamp to range bounds.
@@ -185,5 +204,22 @@ begin
   if (N > 0) then
     Result := Self.Reversed.Items;
   SetLength(Result, Min(Max(0, N), Self.Size));
+end;
+
+{==============================================================================]
+  <Trailing>
+  @action: Returns the last N elements from the range.
+  @note: N is clamped to [0, Size]. Elements are returned in reverse order.
+[==============================================================================}
+function TRange.Trailing(const N: Integer = 1): TIntegerArray; overload;
+var
+  i, c, v, d: Integer;
+begin
+  c := Min(Max(0, N), Self.Size);
+  SetLength(Result, c);
+  d := Self.Direction;
+  v := (Self.start + (Self.Size - c) * d);
+  for i := 0 to (c - 1) do
+    Result[(c - i) - 1] := v.Increase(d);
 end;
 {$ENDIF}
