@@ -9,6 +9,8 @@ function Leading(const N: Integer = 1): TIntegerArray; overload;
 function Opening(const N: Integer = 1): TIntegerArray; overload;
 function Origin(const sSteps: Integer = 0): TIntegerArray; overload;
 function Outro(const N: Integer = 1): TIntegerArray; overload;
+function Prefix(const N: Integer = 1; const rClamp: Boolean = False): TIntegerArray; overload;
+function Suffix(const N: Integer = 1; const rClamp: Boolean = False): TIntegerArray; overload;
 function Tail(const N: Integer = 1): TIntegerArray; overload;
 function Terminus(const sSteps: Integer = 0): TIntegerArray; overload;
 function Trail(const N: Integer = 1): TIntegerArray; overload;
@@ -167,6 +169,48 @@ begin
   d := IfThen(Self.Ascending, 1, -1);
   for i := 0 to High(Result) do
     Result[i] := (Self.stop - ((c - 1 - i) * d));
+end;
+
+{==============================================================================]
+  <Prefix>
+  @action: Returns up to N elements starting from `start`, following the range direction.
+  @note:
+    - N < 1 returns an empty array.
+    - N = 1 returns [`start`].
+    - If rClamp is True and N exceeds the range size, returns the full range.
+    - Otherwise, may extend beyond the original range bounds.
+[==============================================================================}
+function TRange.Prefix(const N: Integer = 1; const rClamp: Boolean = False): TIntegerArray; overload;
+begin
+  if (N < 1) then
+    Exit([]);
+  if (rClamp and (N > Self.Size)) then
+    Result := Self.Items
+  else if Self.Ascending then
+    Result := TRange.Construct(Self.start, (Self.start + (N - 1))).Items
+  else
+    Result := TRange.Construct(Self.start, (Self.start - (N - 1))).Items;
+end;
+
+{==============================================================================]
+  <Suffix>
+  @action: Returns up to N elements starting from `stop`, moving opposite to the range direction.
+  @note:
+    - N < 1 returns an empty array.
+    - N = 1 returns [`stop`].
+    - If rClamp is True and N exceeds the range size, returns the full range.
+    - Otherwise, may extend beyond the original range bounds.
+[==============================================================================}
+function TRange.Suffix(const N: Integer = 1; const rClamp: Boolean = False): TIntegerArray; overload;
+begin
+  if (N < 1) then
+    Exit([]);
+  if (rClamp and (N > Self.Size)) then
+    Result := Self.Reversed.Items
+  else if Self.Ascending then
+    Result := TRange.Construct(Self.stop, (Self.stop - (N - 1))).Items
+  else
+    Result := TRange.Construct(Self.stop, (Self.stop + (N - 1))).Items;
 end;
 
 {==============================================================================]
