@@ -4,11 +4,13 @@ function Closing(const N: Integer = 1): TIntegerArray; overload;
 function Ending(const N: Integer = 1): TIntegerArray; overload;
 function Head(const N: Integer = 1): TIntegerArray; overload;
 function Intro(const N: Integer = 1): TIntegerArray; overload;
+function Lead(const N: Integer = 1): TIntegerArray; overload;
 function Opening(const N: Integer = 1): TIntegerArray; overload;
 function Origin(const sSteps: Integer = 0): TIntegerArray; overload;
 function Outro(const N: Integer = 1): TIntegerArray; overload;
 function Tail(const N: Integer = 1): TIntegerArray; overload;
 function Terminus(const sSteps: Integer = 0): TIntegerArray; overload;
+function Trail(const N: Integer = 1): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -86,6 +88,18 @@ begin
 end;
 
 {==============================================================================]
+  <Lead>
+  @action: Returns the first N elements from the range.
+  @note: N is clamped to [0, Size]. Elements are copied in original order.
+[==============================================================================}
+function TRange.Lead(const N: Integer = 1): TIntegerArray; overload;
+begin
+  if (N > 0) then
+    Result := Self.Items;
+  SetLength(Result, Min(Max(0, N), Self.Size));
+end;
+
+{==============================================================================]
   <Opening>
   @action: Returns the first N elements using pointer arithmetic.
   @note: Does not clamp to range bounds.
@@ -159,5 +173,17 @@ end;
 function TRange.Terminus(const sSteps: Integer = 0): TIntegerArray; overload;
 begin
   Result := TRange.Construct(Self.stop, IfThen(Self.Ascending, (Self.stop - sSteps), (Self.stop + sSteps))).Items;
+end;
+
+{==============================================================================]
+  <Trail>
+  @action: Returns the last N elements from the range.
+  @note: N is clamped to [0, Size]. Elements are returned in reverse order.
+[==============================================================================}
+function TRange.Trail(const N: Integer = 1): TIntegerArray; overload;
+begin  
+  if (N > 0) then
+    Result := Self.Reversed.Items;
+  SetLength(Result, Min(Max(0, N), Self.Size));
 end;
 {$ENDIF}
