@@ -9,6 +9,8 @@ function PullStart: Integer; overload;
 function PullStop: Integer; overload;
 function SStart: Integer; overload;
 function SStop: Integer; overload;
+function StartAtStop: TIntegerArray; overload;
+function StopAtStart: TIntegerArray; overload;
 function StepStart: Integer; overload;
 function StepStop: Integer; overload;
 {$ENDIF}
@@ -170,6 +172,42 @@ begin
 	-1: Result := Self.stop.Increase;
 	1: Result := Self.stop.Decrease;
   end;
+end;
+
+{==============================================================================]
+  <StartAtStop>
+  @action: Materializes the range by consuming `start` toward `stop`
+           one step at a time, returning values in natural order.
+  @note: DESTRUCTIVE — mutates Self directly. Final element Self.stop
+         is written after the loop to avoid an extra SStart call.
+[==============================================================================}
+function TRange.StartAtStop: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  i := 0;
+  while (Self.start <> Self.stop) do
+    Result[i.Increase] := Self.SStart;
+  Result[i] := Self.stop;
+end;
+
+{==============================================================================]
+  <StopAtStart>
+  @action: Materializes the range by consuming `stop` toward `start`
+           one step at a time, returning values in natural order.
+  @note: DESTRUCTIVE — mutates Self directly. Final element Self.start
+         is written after the loop to avoid an extra SStop call.
+[==============================================================================}
+function TRange.StopAtStart: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  i := 0;
+  while (Self.stop <> Self.start) do
+    Result[i.Increase] := Self.SStop;
+  Result[i] := Self.start;
 end;
 
 {==============================================================================]
