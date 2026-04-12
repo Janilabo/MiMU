@@ -33,6 +33,7 @@ function Fill(var target: TIntegerArray): Integer; overload;
 function Gather: TIntegerArray; overload;
 function Generate: TIntegerArray; overload;
 function Generated: TIntegerArray; overload;
+function Integers: TIntegerArray; overload;
 function Ints: TIntegerArray; overload;
 function Itemed: TIntegerArray; overload;
 function Itemize: TIntegerArray; overload;
@@ -62,9 +63,11 @@ function Numerics: TIntegerArray; overload;
 function Particles: TIntegerArray; overload;
 function Pile: TIntegerArray; overload;
 function Populate(var arr: TIntegerArray): TRange; overload;
+function Produce: TIntegerArray; overload;
 function Pull: TIntegerArray; overload;
 function Queue: TIntegerArray; overload;
 function Raw: TIntegerArray; overload;
+function Realize: TIntegerArray; overload;
 function Recursed: TIntegerArray; overload;
 function Recursively: TIntegerArray; overload;
 function Resources: TIntegerArray; overload;
@@ -876,6 +879,43 @@ begin
   d := IfThen(Self.Ascending, 1, -1);
   for i := 0 to High(Result) do
     Result[i] := NextValue;
+end;
+
+{==============================================================================]
+  <Integers>
+  @action: Constructs and returns a TIntegerArray representing the inclusive
+           integer range [start, stop] by iteratively appending each value
+           in Direction order.  
+           The iteration begins at start and advances using Direction (±1),
+           terminating after reaching stop. Each value is appended to the end
+           of the dynamic array using Insert at the current length position.
+           The sequence is produced in-order and is equivalent to:
+             start, start + d, start + 2d, ... stop
+           where d = Direction.
+  @note:   Time complexity is O(n²) in the current implementation due to
+           repeated Insert operations at the end of a dynamic array, which
+           requires array reallocation and copying on each append.
+           Space complexity is O(n).
+           This is functionally correct but performance-inefficient for large
+           ranges. A preallocated array with indexed assignment is preferred:
+             SetLength(Result, Size);
+             Result[i] := ...
+           Termination condition relies on:
+             v <> (stop + Direction)
+           which ensures inclusion of stop while avoiding overshoot.
+           Correctness depends on:
+             - Direction ∈ [+1, -1]
+             - start/stop being consistent with Direction progression
+[==============================================================================}
+function TRange.Integers: TIntegerArray; overload;
+var
+  v, d: Integer;
+begin
+  Result := [];
+  v := Self.start;
+  d := Self.Direction;
+  while (v <> (Self.stop + d)) do
+    Insert(v.Increase(d), Result, Result.Length);
 end;
 
 {==============================================================================]
@@ -1716,6 +1756,39 @@ begin
 end;
 
 {==============================================================================]
+  <Produce>
+  @action: Materializes the inclusive integer range [start, stop] into a
+           contiguous TIntegerArray using a single-pass iterative fill.   
+           The result array is preallocated to Size, initialized with start,
+           and each subsequent element is derived by applying Direction (±1)
+           to the previous value:
+             Result[i] := Result[i-1] + Direction
+           This yields a strictly ordered sequence from start to stop,
+           respecting the sign of Direction.
+  @note: Time complexity is O(n) with a single linear traversal.  
+         Space complexity is O(n) with exactly one allocation; no intermediate
+         arrays are created. 
+         This implementation is optimal with respect to both allocation and
+         copy overhead compared to recursive or Concat-based variants.  
+         Correctness depends on:
+           - Direction ∈ [+1, -1]
+           - Size representing the inclusive number of elements
+         Behavior is undefined if Size ≤ 0 (e.g., start/stop inconsistent
+         with Direction) unless externally validated.
+         For Size = 1, returns a singleton array [start].
+[==============================================================================}
+function TRange.Produce: TIntegerArray; overload;
+var
+  d, i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  Result[0] := Self.start;
+  d := Self.Direction;
+  for i := 1 to High(Result) do
+    Result[i] := (Result[i - 1] + d);
+end;
+
+{==============================================================================]
   <Pull>
   @action: Returns an array of all integers contained in the range, 
            starting from both ends and meeting in the middle.
@@ -1812,6 +1885,44 @@ begin
   end;
   if ((s mod 2) = 1) then
     Result[s - 1] := (Self.start + (d * (s - 1)));
+end;
+
+{==============================================================================]
+  <Realize>
+  @action: Recursively materializes the inclusive integer range [start, stop]
+           into a TIntegerArray by partitioning the range and combining results
+           via Concat.
+           The range is split at midpoint m, computed relative to Direction:
+             d = Direction  (±1)
+             m = start + (Size div 2) * d
+           Two subranges are formed:
+             [start .. m - d] and [m .. stop]
+           Each subrange is recursively produced and the resulting arrays are
+           merged using Concat, preserving order according to Direction.
+  @note: This implementation is Concat-driven: every recursive step allocates
+         a new array and copies both sub-results into it.  
+         Time complexity is O(n log n) due to repeated concatenation across
+         recursion levels.    
+         Space complexity exceeds O(n) because of intermediate arrays created
+         during recursion.   
+         Recursion depth is O(log n). 
+         Correctness depends on:
+           - Direction ∈ [+1, -1]
+           - Size representing the inclusive number of elements
+         Special case:
+           - Size = 1 returns a singleton array [start]
+         For performance-critical use, a preallocated linear fill avoids
+         Concat entirely and achieves O(n) time with minimal allocations.
+[==============================================================================}
+function TRange.Realize: TIntegerArray; overload;
+var
+  d, m: Integer;
+begin
+  if (Self.Size = 1) then
+    Exit([Self.start]);
+  d := Self.Direction;
+  m := (Self.start + ((Self.Size div 2) * d));
+  Result := Concat(TRange.Construct(Self.start, (m - d)).Realize, TRange.Construct(m, Self.stop).Realize);
 end;
 
 {==============================================================================]
