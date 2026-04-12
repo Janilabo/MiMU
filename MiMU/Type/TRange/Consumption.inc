@@ -7,6 +7,8 @@ function PopStart: Integer; overload;
 function PopStop: Integer; overload;
 function PullStart: Integer; overload;
 function PullStop: Integer; overload;
+function SStart: Integer; overload;
+function SStop: Integer; overload;
 function StepStart: Integer; overload;
 function StepStop: Integer; overload;
 {$ENDIF}
@@ -139,6 +141,34 @@ begin
   case Self.Ascending of
     True: Result := Self.stop.Decrease;
     False: Result := Self.stop.Increase;
+  end;
+end;
+
+{==============================================================================]
+  <SStart>
+  @action: Steps `start` one unit toward `stop` and returns the new value.
+  @note: If `start` = `stop` (singular range), returns `start` unchanged.
+[==============================================================================}
+function TRange.SStart: Integer; overload;
+begin
+  case Self.start.Compare(Self.stop) of
+    0: Result := Self.start;
+	-1: Result := Self.start.Increase;
+	1: Result := Self.start.Decrease;
+  end;
+end;
+
+{==============================================================================]
+  <SStop>
+  @action: Steps `stop` one unit toward `start` and returns the new value.
+  @note: If `start` = `stop` (singular range), returns `stop` unchanged.
+[==============================================================================}
+function TRange.SStop: Integer; overload;
+begin
+  case Self.stop.Compare(Self.start) of
+    0: Result := Self.stop;
+	-1: Result := Self.stop.Increase;
+	1: Result := Self.stop.Decrease;
   end;
 end;
 

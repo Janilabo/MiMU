@@ -75,9 +75,13 @@ function Separately(const rReverse: Boolean = False): TIntegerArray; overload;
 function Sequence: TIntegerArray; overload;
 function Snapshot: TIntegerArray; overload;
 function Stack: TIntegerArray; overload;
+function Start2Stop: TIntegerArray; overload;
+function StartToStop: TIntegerArray; overload;
 function Stepped(const sSize: Integer = 1): TIntegerArray; overload;
 function Steps: TIntegerArray; overload;
 function Stock: TIntegerArray; overload;
+function Stop2Start: TIntegerArray; overload;
+function StopToStart: TIntegerArray; overload;
 function Storage: TIntegerArray; overload;
 function Sweep: TIntegerArray; overload;
 function TIA: TIntegerArray; overload;
@@ -2109,6 +2113,42 @@ begin
 end;
 
 {==============================================================================]
+  <Start2Stop>
+  @action: Materializes the range in natural order (start → stop)
+           by consuming `stop` inward via SStop on a working copy.
+  @note: Non-destructive — operates on a local copy of Self.
+[==============================================================================}
+function TRange.Start2Stop: TIntegerArray; overload;
+var
+  r: TRange;
+  i: Integer;
+begin
+  r := Self;
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Result) do
+    Result[i] := r.SStart;
+end;
+
+{==============================================================================]
+  <StartToStop>
+  @action: Materializes the range in natural order (start → stop)
+           by consuming `stop` inward via SStop on a working copy.
+  @note: Non-destructive — operates on a local copy of Self.
+[==============================================================================}
+function TRange.StartToStop: TIntegerArray; overload;
+var
+  r: TRange;
+  s: Integer;
+begin
+  r := Self;
+  s := r.Size;
+  SetLength(Result, Self.Size);
+  while (r.Size > 1) do
+    Result[s.Decrement] := r.SStop;
+  Result[s - 1] := r.stop;
+end;
+
+{==============================================================================]
   <Stepped>
   @action: Materializes the range into an array of integers with a custom
            step size. Values are incremented by sSize at each iteration.
@@ -2188,6 +2228,42 @@ begin
     while (i.Increment(2) < s) do
       Result[i] := (Self.start + (d * i));
   end;
+end;
+
+{==============================================================================]
+  <Stop2Start>
+  @action: Materializes the range in reverse order (stop → start)
+           by consuming `start` inward via SStart on a working copy.
+  @note: Non-destructive — operates on a local copy of Self.
+[==============================================================================}
+function TRange.Stop2Start: TIntegerArray; overload;
+var
+  r: TRange;
+  i: Integer;
+begin
+  r := Self;
+  SetLength(Result, Self.Size);
+  for i := 0 to High(Result) do
+    Result[i] := r.SStop;
+end;
+
+{==============================================================================]
+  <StopToStart>
+  @action: Materializes the range in reverse order (stop → start)
+           by consuming `start` inward via SStart on a working copy.
+  @note: Non-destructive — operates on a local copy of Self.
+[==============================================================================}
+function TRange.StopToStart: TIntegerArray; overload;
+var
+  r: TRange;
+  s: Integer;
+begin
+  r := Self;
+  s := r.Size;
+  SetLength(Result, Self.Size);
+  while (r.Size > 1) do
+    Result[s.Decrement] := r.SStart;
+  Result[s - 1] := r.start;
 end;
 
 {==============================================================================]
