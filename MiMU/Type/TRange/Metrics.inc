@@ -15,6 +15,7 @@ function Rad: Integer; overload;
 function Radiar: Integer; overload;
 function Radius: Integer; overload;
 function Ratio(const defaultValue: Double = 0.0): Double; overload;
+function Resultant: Int64; overload;
 function Span: Integer; overload;
 function Sigma: Int64; overload;
 function Signed: Int64; overload;
@@ -27,6 +28,7 @@ function Summary: Int64; overload;
 function Summation: Int64; overload;
 function Summative: Int64; overload;
 function Summed: Int64; overload;
+function Summing: Int64; overload;
 function Total: Int64; overload;
 {$ENDIF}
 
@@ -266,6 +268,26 @@ begin
 end;
 
 {==============================================================================]
+  <Resultant>
+  @action: Computes the sum of the range using an arithmetic series formula
+           based on the minimum and maximum bounds.
+  @note: The range is treated as inclusive [Minimum..Maximum].
+[==============================================================================}
+function TRange.Resultant: Int64; overload;
+var
+  l, h, n, s: Int64;
+begin
+  l := Self.Minimum;
+  h := Self.Maximum;
+  n := ((h - l) + 1);
+  s := (l + h);
+  if ((n and 1) = 0) then
+    Result := ((n div 2) * s)
+  else
+    Result := (n * (s div 2));
+end;
+
+{==============================================================================]
   <Sigma>
   @action: Returns the sum of all integer values contained in this range.
   @note: The sum is calculated using the arithmetic series formula:
@@ -391,7 +413,7 @@ begin
   h := Self.Maximum;
   n := ((h - l) + 1);
   s := (l + h);
-  if (n and 1 = 0) then
+  if ((n and 1) = 0) then
     Result := ((n shr 1) * s)
   else
     Result := (n * (s shr 1));
@@ -497,6 +519,40 @@ begin
   l := Self.Minimum;
   h := Self.Maximum;
   Result := Round(((h - l) + 1) * ((l + h) / 2.0));
+end;
+
+{==============================================================================]
+  <Summing>
+  @action: Computes the arithmetic sum of all Int64 values within the inclusive
+           range [Minimum, Maximum] using a symmetric two-pointer accumulation.         
+           The algorithm iteratively pairs the lower and upper bounds, adding
+           their sum while converging toward the midpoint:
+             (a + b), (a+1 + b-1), ...
+           If the range has odd cardinality, the midpoint value is added once.
+           This avoids full linear traversal while remaining branch-light and
+           free of multiplication/division operations.
+  @note: Time complexity is O(n/2), effectively linear but with half the
+         iterations of a naive loop.
+         Behavior is undefined if Minimum > Maximum unless externally guarded.
+         Relies on side-effect semantics of Increase/Decrease:
+           - a.Increase returns current value of a, then increments a
+           - b.Decrease returns current value of b, then decrements b
+         This method reduces (but does not eliminate) overflow risk compared
+         to direct summation; overflow may still occur for large ranges.
+         For constant-time evaluation, prefer the closed-form variant
+         (see Resultant).
+[==============================================================================}
+function TRange.Summing: Int64; overload;
+var
+  a, b: Int64;
+begin
+  Result := 0;
+  a := Self.Minimum;
+  b := Self.Maximum;
+  while (a < b) do
+    Inc(Result, (a.Increase + b.Decrease));
+  if (a = b) then
+    Inc(Result, a);
 end;
 
 {==============================================================================]
