@@ -9,6 +9,8 @@ function Offset(const sDelta: Integer): TRange; overload;
 function Offset(const dStart, dStop: Integer): TRange; overload;
 function Shift(const N: Integer = 1): TRange; overload;
 function Shifted(const N: Integer = 1): TRange; overload;
+function ShiftStart(const N: Integer = 1): Integer; overload;
+function ShiftStop(const N: Integer = 1): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -139,5 +141,32 @@ function TRange.Shifted(const N: Integer = 1): TRange; overload;
 begin
   Result.start := (Self.start + N);
   Result.stop := (Self.stop + N);
+end;
+
+{==============================================================================]
+  <ShiftStart>
+  @action: Computes a directional offset value from the start boundary of the range.
+  @note: Does not mutate Self. Direction is inverted when Descending is true;
+         otherwise normal forward stepping is applied.
+[==============================================================================}
+function TRange.ShiftStart(const N: Integer = 1): Integer; overload;
+begin
+  if Self.Descending then
+    Result := Self.start.Increment(N)
+  else
+    Result := Self.start.Decrement(N);
+end;
+
+{==============================================================================]
+  <ShiftStop>
+  @action: Computes a directional offset value from the stop boundary of the range.
+  @note: Does not mutate Self. Uses Descending flag to invert increment/decrement behavior.
+[==============================================================================}
+function TRange.ShiftStop(const N: Integer = 1): Integer; overload;
+begin
+  if Self.Descending then
+    Result := Self.stop.Decrement(N)
+  else
+    Result := Self.stop.Increment(N);
 end;
 {$ENDIF}

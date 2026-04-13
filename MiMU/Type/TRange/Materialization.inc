@@ -5,6 +5,7 @@ function AsArr: TIntegerArray; overload;
 function AsArray: TIntegerArray; overload;
 function Atomize: TIntegerArray; overload;
 function Bank: TIntegerArray; overload;
+function Body: TIntegerArray; overload;
 function Breakdown: TIntegerArray; overload;
 function Capture: TIntegerArray; overload;
 function Captured: TIntegerArray; overload;
@@ -255,6 +256,27 @@ begin
     if (r.start <> r.stop) then
       Result[r.stop] := (Self.start + (d * r.stop));
   end;
+end;
+
+{==============================================================================]
+  <Body>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: ?
+[==============================================================================}
+function TRange.Body: TIntegerArray; overload;
+var
+  l, h, d: Integer;
+begin
+  if Self.Singular then
+    Exit([Self.start]);
+  SetLength(Result, Self.Size);
+  d := Self.Direction;
+  l := 0;
+  h := High(Result);
+  repeat
+    Result[l] := (Self.start + (l * d));
+    Result[h] := (Self.stop + (-l * d));
+  until (l.Increment > h.Decrement);
 end;
 
 {==============================================================================]

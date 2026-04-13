@@ -16,6 +16,7 @@ function Get: MArray; overload;
 function Get(const ID: TIntegerArray): MArray; overload;
 function Get(const ID: TRange): MArray; overload;
 function Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
+function Piece(const sIndexes: TRange): MArray; overload;
 function Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
 function Replica(const oAscending: Boolean = True): MArray; overload;
 function Replicate(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
@@ -393,6 +394,22 @@ begin
       Result[i] := Self[(index + 1) + i];
   end else
     SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <Piece>
+  @action: Copies a range-defined slice from the array into a new array
+  @note: Respects range direction; reverses result if range is descending	
+[==============================================================================}
+function MArrayHelper.Piece(const sIndexes: TRange): MArray; overload;
+var
+  s: Integer;
+begin
+  s := sIndexes.Size;
+  SetLength(Result, s);
+  Move(Self[sIndexes.Minimum], Result[0], (s * SizeOf(MType)));
+  if sIndexes.Descending then
+    Result.Reverse;
 end;
 
 {==============================================================================]
