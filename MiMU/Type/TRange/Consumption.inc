@@ -10,11 +10,13 @@ function PullStop: Integer; overload;
 function SStart: Integer; overload;
 function SStop: Integer; overload;
 function StartAtStop: TIntegerArray; overload;
+function StartStep: Integer; overload;
 function Startward: Integer; overload;
 function Startwarded: TIntegerArray; overload;
 function StepStart: Integer; overload;
 function StepStop: Integer; overload;
 function StopAtStart: TIntegerArray; overload;
+function StopStep: Integer; overload;
 function Stopward: Integer; overload;
 function Stopwarded: TIntegerArray; overload;
 {$ENDIF}
@@ -197,6 +199,19 @@ begin
 end;
 
 {==============================================================================]
+  <StartStep>
+  @action: Advances `start` by one step in the current direction and returns
+           the updated value.
+  @note: Step size and sign are determined by `Self.Direction`. This method
+         mutates the range by incrementing `start` toward `stop`.
+[==============================================================================}
+function TRange.StartStep: Integer; overload;
+begin
+  Self.start := (Self.start + Self.Direction);
+  Result := Self.start;
+end;
+
+{==============================================================================]
   <Startward>
   @action: Steps `stop` one unit toward `start` and returns the new value.
   @note: If `start` = `stop` (singular range), returns `stop` unchanged.
@@ -269,6 +284,19 @@ begin
   while (Self.stop <> Self.start) do
     Result[i.Increase] := Self.SStop;
   Result[i] := Self.start;
+end;
+
+{==============================================================================]
+  <StopStep>
+  @action: Retreats `stop` by one step in the current direction and returns
+           the updated value.
+  @note: Step size and sign are determined by `Self.Direction`. This method
+         mutates the range by decrementing `stop` toward `start`.
+[==============================================================================}
+function TRange.StopStep: Integer; overload;
+begin
+  Self.stop := (Self.stop - Self.Direction);
+  Result := Self.stop;
 end;
 
 {==============================================================================]
