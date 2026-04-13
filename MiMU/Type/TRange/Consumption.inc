@@ -10,9 +10,13 @@ function PullStop: Integer; overload;
 function SStart: Integer; overload;
 function SStop: Integer; overload;
 function StartAtStop: TIntegerArray; overload;
-function StopAtStart: TIntegerArray; overload;
+function Startward: Integer; overload;
+function Startwarded: TIntegerArray; overload;
 function StepStart: Integer; overload;
 function StepStop: Integer; overload;
+function StopAtStart: TIntegerArray; overload;
+function Stopward: Integer; overload;
+function Stopwarded: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -193,21 +197,40 @@ begin
 end;
 
 {==============================================================================]
-  <StopAtStart>
-  @action: Materializes the range by consuming `stop` toward `start`
-           one step at a time, returning values in natural order.
-  @note: DESTRUCTIVE — mutates Self directly. Final element Self.start
-         is written after the loop to avoid an extra SStop call.
+  <Startward>
+  @action: Steps `stop` one unit toward `start` and returns the new value.
+  @note: If `start` = `stop` (singular range), returns `stop` unchanged.
 [==============================================================================}
-function TRange.StopAtStart: TIntegerArray; overload;
+function TRange.Startward: Integer; overload;
+begin
+  if not Self.Singular then
+    Dec(Self.stop, Self.Direction);
+  Result := Self.stop;
+end;
+
+{==============================================================================]
+  <Startwarded>
+  @action: Generates an integer sequence starting from `stop`, progressing
+           backward toward `start` using the range direction, and returns it
+           as an array. After generation, updates `stop` to match `start`.
+  @note: Direction is determined by `Self.Direction`. The sequence length is
+         defined by `Self.Size`. This method mutates the range by collapsing
+         `stop` onto `start`, effectively consuming the backward span.
+[==============================================================================}
+function TRange.Startwarded: TIntegerArray; overload;
 var
-  i: Integer;
+  i, d: Integer;
+  p: PInteger;
 begin
   SetLength(Result, Self.Size);
-  i := 0;
-  while (Self.stop <> Self.start) do
-    Result[i.Increase] := Self.SStop;
-  Result[i] := Self.start;
+  p := @Result[0];
+  d := Self.Direction;
+  for i := 0 to High(Result) do
+  begin
+    p^ := (Self.stop - (i * d));
+    Inc(p);
+  end;
+  Self.stop := Self.start;
 end;
 
 {==============================================================================]
@@ -228,5 +251,60 @@ end;
 function TRange.StepStop: Integer; overload;
 begin
   Result := Self.stop.Decrement(Self.Direction);
+end;
+
+{==============================================================================]
+  <StopAtStart>
+  @action: Materializes the range by consuming `stop` toward `start`
+           one step at a time, returning values in natural order.
+  @note: DESTRUCTIVE — mutates Self directly. Final element Self.start
+         is written after the loop to avoid an extra SStop call.
+[==============================================================================}
+function TRange.StopAtStart: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  i := 0;
+  while (Self.stop <> Self.start) do
+    Result[i.Increase] := Self.SStop;
+  Result[i] := Self.start;
+end;
+
+{==============================================================================]
+  <Stopward>
+  @action: Steps `start` one unit toward `stop` and returns the new value.
+  @note: If `start` = `stop` (singular range), returns `start` unchanged.
+[==============================================================================}
+function TRange.Stopward: Integer; overload;
+begin
+  if not Self.Singular then
+    Inc(Self.start, Self.Direction);
+  Result := Self.start;
+end;
+
+{==============================================================================]
+  <Stopwarded>
+  @action: Generates an integer sequence starting from `start`, progressing
+           toward `stop` using the range direction, and returns it as an array.
+           After generation, updates `start` to match `stop`.
+  @note: Direction is determined by `Self.Direction`. The sequence length is
+         defined by `Self.Size`. This method mutates the range by collapsing
+         `start` onto `stop`, effectively consuming the forward span.
+[==============================================================================}
+function TRange.Stopwarded: TIntegerArray; overload;
+var
+  i, d: Integer;
+  p: PInteger;
+begin
+  SetLength(Result, Self.Size);
+  p := @Result[0];
+  d := Self.Direction;
+  for i := 0 to High(Result) do
+  begin
+    p^ := (Self.start + (i * d));
+    Inc(p);
+  end;
+  Self.start := Self.stop;
 end;
 {$ENDIF}
