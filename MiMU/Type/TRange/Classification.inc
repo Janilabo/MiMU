@@ -3,14 +3,16 @@ function Ascending: Boolean; overload;
 function Ascends: Boolean; overload;
 function Atomic: Boolean; overload;
 function Composite: Boolean; overload;
+function Decreasing: Boolean; overload;
+function Decremental: Boolean; overload;
 function Descending: Boolean; overload;
 function Descends: Boolean; overload;
-function Decreasing: Boolean; overload;
 function Dropping: Boolean; overload;
 function Drops: Boolean; overload;
 function Growing: Boolean; overload;
 function Grows: Boolean; overload;
 function Increasing: Boolean; overload;
+function Incremental: Boolean; overload;
 function IsAscending: Boolean; overload;
 function IsDescending: Boolean; overload;
 function IsPlural: Boolean; overload;
@@ -22,6 +24,12 @@ function Shrinking: Boolean; overload;
 function Shrinks: Boolean; overload;
 function Singleton: Boolean; overload;
 function Singular: Boolean; overload;
+function Startbent: Boolean; overload;
+function Startminded: Boolean; overload;
+function Startwise: Boolean; overload;
+function Stopbent: Boolean; overload;
+function Stopminded: Boolean; overload;
+function Stopwise: Boolean; overload;
 function Rises: Boolean; overload;
 function Rising: Boolean; overload;
 {$ENDIF}
@@ -79,6 +87,16 @@ end;
 function TRange.Decreasing: Boolean; overload;
 begin
   Result := ((Self.start - Self.stop) > -1);
+end;
+
+{==============================================================================]
+  <Decremental>
+  @action: Returns True if the range progresses from a greater to a lesser value (stop <= start).
+  @note: Returns True for singular ranges (start = stop).
+[==============================================================================}
+function TRange.Decremental: Boolean; overload;
+begin
+  Result := (Self.stop <= Self.start);
 end;
 
 {==============================================================================]
@@ -153,6 +171,16 @@ end;
 function TRange.Increasing: Boolean; overload;
 begin
   Result := ((Self.start - Self.stop) < 1);
+end;
+
+{==============================================================================]
+  <Incremental>
+  @action: Returns True if the range progresses from a lesser to a greater value (start <= stop).
+  @note: Returns True for singular ranges (start = stop).
+[==============================================================================}
+function TRange.Incremental: Boolean; overload;
+begin
+  Result := (Self.start <= Self.stop);
 end;
 
 {==============================================================================]
@@ -276,6 +304,70 @@ end;
 function TRange.Singular: Boolean; overload;
 begin
   Result := (Self.start = Self.stop);
+end;
+
+{==============================================================================]
+  <Startbent>
+  @action: Returns True if the range is bent toward `start`,
+           progressing from a greater to a lesser value (Direction <= 0).
+  @note: Returns True for singular ranges (Direction = 0).
+[==============================================================================}
+function TRange.Startbent: Boolean; overload;
+begin
+  Result := (Self.Direction <= 0);
+end;
+
+{==============================================================================]
+  <Startminded>
+  @action: Determines whether the range is currently aligned with its start boundary.
+  @note: Returns True when the Minimum value equals the Start value, indicating
+         that the range is positioned at or biased toward the start endpoint.
+[==============================================================================}
+function TRange.Startminded: Boolean; overload;
+begin
+  Result := (Self.Minimum = Self.start);
+end;
+
+{==============================================================================]
+  <Startwise>
+  @action: Returns True if the range progresses from a greater to a lesser value (stop <= start).
+  @note: Returns True for singular ranges (start = stop).
+[==============================================================================}
+function TRange.Startwise: Boolean; overload;
+begin
+  Result := not (Self.stop > Self.start);
+end;
+
+{==============================================================================]
+  <Stopbent>
+  @action: Returns True if the range is bent toward `stop`,
+           progressing from a lesser to a greater value (Direction >= 0).
+  @note: Returns True for singular ranges (Direction = 0).
+[==============================================================================}
+function TRange.Stopbent: Boolean; overload;
+begin
+  Result := (Self.Direction >= 0);
+end;
+
+{==============================================================================]
+  <Stopminded>
+  @action: Determines whether the range is currently aligned with its stop boundary.
+  @note: Returns True when the Minimum value equals the Stop value, indicating
+         that the range is positioned at or biased toward the stop endpoint.
+[==============================================================================}
+function TRange.Stopminded: Boolean; overload;
+begin
+  Result := (Self.Minimum = Self.stop);
+end;
+
+{==============================================================================]
+  <Stopwise>
+  @action: Returns True if the range progresses from a lesser to a greater value (start <= stop).
+  @note: Returns True for singular ranges (start = stop).
+[==============================================================================}
+function TRange.Stopwise: Boolean; overload;
+begin
+  Result := not (Self.start > Self.stop);
 end;
 
 {==============================================================================]
