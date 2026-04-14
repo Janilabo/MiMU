@@ -25,10 +25,20 @@ function Shrinks: Boolean; overload;
 function Singleton: Boolean; overload;
 function Singular: Boolean; overload;
 function Startbent: Boolean; overload;
+function StartHigher: Boolean; overload;
+function StartLower: Boolean; overload;
+function Startmax: Boolean; overload;
+function Startmin: Boolean; overload;
 function Startminded: Boolean; overload;
+function Startsided: Boolean; overload;
 function Startwise: Boolean; overload;
 function Stopbent: Boolean; overload;
+function StopHigher: Boolean; overload;
+function StopLower: Boolean; overload;
+function Stopmax: Boolean; overload;
+function Stopmin: Boolean; overload;
 function Stopminded: Boolean; overload;
+function Stopsided: Boolean; overload;
 function Stopwise: Boolean; overload;
 function Rises: Boolean; overload;
 function Rising: Boolean; overload;
@@ -318,6 +328,46 @@ begin
 end;
 
 {==============================================================================]
+  <StartHigher>
+  @action: Returns True if `start` is strictly greater than `stop`.
+  @note: Returns False for singular ranges (start = stop).
+[==============================================================================}
+function TRange.StartHigher: Boolean; overload;
+begin
+  Result := (Self.start > Self.stop);
+end;
+
+{==============================================================================]
+  <StartLower>
+  @action: Returns True if `start` is strictly less than `stop`.
+  @note: Returns False for singular ranges (start = stop).
+[==============================================================================}
+function TRange.StartLower: Boolean; overload;
+begin
+  Result := (Self.start < Self.stop);
+end;
+
+{==============================================================================]
+  <Startmax>
+  @action: Returns True if `start` holds the maximum value (start >= stop).
+  @note: Returns True for singular ranges (start = stop).
+[==============================================================================}
+function TRange.Startmax: Boolean; overload;
+begin
+  Result := (Max(Self.start, Self.stop) = Self.start);
+end;
+
+{==============================================================================]
+  <Startmin>
+  @action: Returns True if `start` holds the minimum value (start <= stop).
+  @note: Returns True for singular ranges (start = stop).
+[==============================================================================}
+function TRange.Startmin: Boolean; overload;
+begin
+  Result := (Min(Self.start, Self.stop) = Self.start);
+end;
+
+{==============================================================================]
   <Startminded>
   @action: Determines whether the range is currently aligned with its start boundary.
   @note: Returns True when the Minimum value equals the Start value, indicating
@@ -326,6 +376,16 @@ end;
 function TRange.Startminded: Boolean; overload;
 begin
   Result := (Self.Minimum = Self.start);
+end;
+
+{==============================================================================]
+  <Startsided>
+  @action: Returns True if `start` sits on the lesser side (start <= stop).
+  @note: Returns True for singular ranges (start = stop).
+[==============================================================================}
+function TRange.Startsided: Boolean; overload;
+begin
+  Result := (Self.start.Compare(Self.stop) < 1);
 end;
 
 {==============================================================================]
@@ -350,6 +410,46 @@ begin
 end;
 
 {==============================================================================]
+  <StopHigher>
+  @action: Returns True if `stop` is strictly greater than `start`.
+  @note: Returns False for singular ranges (start = stop).
+[==============================================================================}
+function TRange.StopHigher: Boolean; overload;
+begin
+  Result := (Self.stop > Self.start);
+end;
+
+{==============================================================================]
+  <StopLower>
+  @action: Returns True if `stop` is strictly less than `start`.
+  @note: Returns False for singular ranges (start = stop).
+[==============================================================================}
+function TRange.StopLower: Boolean; overload;
+begin
+  Result := (Self.stop < Self.start);
+end;
+
+{==============================================================================]
+  <Stopmax>
+  @action: Returns True if `stop` holds the maximum value (stop >= start).
+  @note: Returns True for singular ranges (start = stop).
+[==============================================================================}
+function TRange.Stopmax: Boolean; overload;
+begin
+  Result := (Max(Self.start, Self.stop) = Self.stop);
+end;
+
+{==============================================================================]
+  <Stopmin>
+  @action: Returns True if `stop` holds the minimum value (stop <= start).
+  @note: Returns True for singular ranges (start = stop).
+[==============================================================================}
+function TRange.Stopmin: Boolean; overload;
+begin
+  Result := (Min(Self.start, Self.stop) = Self.stop);
+end;
+
+{==============================================================================]
   <Stopminded>
   @action: Determines whether the range is currently aligned with its stop boundary.
   @note: Returns True when the Minimum value equals the Stop value, indicating
@@ -358,6 +458,16 @@ end;
 function TRange.Stopminded: Boolean; overload;
 begin
   Result := (Self.Minimum = Self.stop);
+end;
+
+{==============================================================================]
+  <Stopsided>
+  @action: Returns True if `stop` sits on the lesser side (stop <= start).
+  @note: Returns True for singular ranges (start = stop).
+[==============================================================================}
+function TRange.Stopsided: Boolean; overload;
+begin
+  Result := (Self.stop.Compare(Self.start) < 1);
 end;
 
 {==============================================================================]
