@@ -40,8 +40,10 @@ function Have(const val: Integer): Boolean; overload;
 function Holding(const val: Integer): Boolean; overload;
 function Holds(const val: Integer): Boolean; overload;
 function Holds(const vals: TRange): Boolean; overload;
+function InAsc(const val: Integer): Boolean; overload;
 function InBounds(const val: Integer): Boolean; overload;
 function Includes(const val: Integer): Boolean; overload;
+function InDesc(const val: Integer): Boolean; overload;
 function Inhere(const val: Integer): Boolean; overload;
 function InInterval(const val: Integer): Boolean; overload;
 function Interior(const val: Integer): Boolean; overload;
@@ -620,6 +622,16 @@ begin
 end;
 
 {==============================================================================]
+  <InAsc>
+  @action: Returns True if the value lies within the range assuming start <= stop.
+  @note: Inclusive comparison; both bounds are considered part of the range.
+[==============================================================================}
+function TRange.InAsc(const val: Integer): Boolean; overload;
+begin
+  Result := ((val >= Self.start) and (val <= Self.stop));
+end;
+
+{==============================================================================]
   <InBounds>
   @action: Determines whether a given integer value lies within the range.
   @note: Returns True if the value is greater than or equal to the lower bound
@@ -644,6 +656,16 @@ end;
 function TRange.Includes(const val: Integer): Boolean; overload;
 begin
   Result := ((Abs(val - Self.start) + Abs(val - Self.stop)) = Abs(Self.start - Self.stop));
+end;
+
+{==============================================================================]
+  <InDesc>
+  @action: Returns True if the value lies within the range assuming start >= stop.
+  @note: Inclusive comparison; both bounds are considered part of the range.
+[==============================================================================}
+function TRange.InDesc(const val: Integer): Boolean; overload;
+begin
+  Result := ((val >= Self.stop) and (val <= Self.start));
 end;
 
 {==============================================================================]

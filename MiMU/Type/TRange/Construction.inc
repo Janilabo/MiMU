@@ -59,7 +59,7 @@ function TRange.Build(const rStart: Integer = 0; const rStop: Integer = 0): Inte
 begin
   Self.start := Min(rStart, rStop);
   Self.stop := Max(rStop, rStart);
-  Result := (Abs(rStop - rStart) + 1);
+  Result := ((Self.stop - Self.start) + 1);
 end;
 
 {==============================================================================]

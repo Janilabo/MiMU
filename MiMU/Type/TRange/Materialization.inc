@@ -1,5 +1,6 @@
 {$IFDEF METHODS}
 function All: TIntegerArray; overload;
+function Arrayed(const rAscending: Boolean = True): TIntegerArray; overload;
 function ArrayOf: TIntegerArray; overload;
 function AsArr: TIntegerArray; overload;
 function AsArray: TIntegerArray; overload;
@@ -23,17 +24,22 @@ function Dismantle: TIntegerArray; overload;
 function Elemented: TIntegerArray; overload;
 function Elements: TIntegerArray; overload;
 function Emit: TIntegerArray; overload;
+function Entirely: TIntegerArray; overload;
+function Entirety: TIntegerArray; overload;
 function Enumerate: TIntegerArray; overload;
 function Enumerated: TIntegerArray; overload;
 function Explode: TIntegerArray; overload;
 function Exploded: TIntegerArray; overload;
+function Expose(const rAscending: Boolean = True): TIntegerArray; overload;
 function Extract: TIntegerArray; overload;
 function Extracted: TIntegerArray; overload;
 function Flatten: TIntegerArray; overload;
 function Fill(var target: TIntegerArray): Integer; overload;
+function FromTo(const rAscending: Boolean = True): TIntegerArray; overload;
 function Gather: TIntegerArray; overload;
 function Generate: TIntegerArray; overload;
 function Generated: TIntegerArray; overload;
+function Harvest: TIntegerArray; overload;
 function Integers: TIntegerArray; overload;
 function Ints: TIntegerArray; overload;
 function Itemed: TIntegerArray; overload;
@@ -65,6 +71,7 @@ function Particles: TIntegerArray; overload;
 function Pile: TIntegerArray; overload;
 function Populate(var arr: TIntegerArray): TRange; overload;
 function Produce: TIntegerArray; overload;
+function Publish(const rAscending: Boolean = True): TIntegerArray; overload;
 function Pull: TIntegerArray; overload;
 function Queue: TIntegerArray; overload;
 function Raw: TIntegerArray; overload;
@@ -89,6 +96,7 @@ function TIA: TIntegerArray; overload;
 function ToArr: TIntegerArray; overload;
 function ToArray: TIntegerArray; overload;
 class function ToArray(const AStart, AStop: Integer): TIntegerArray; overload; static;
+function ToIntegers: TIntegerArray; overload;
 function ToValues: TIntegerArray; overload;
 function Unfold: TIntegerArray; overload;
 function Unpack: TIntegerArray; overload;
@@ -121,6 +129,28 @@ begin
     Inc(p);
     Inc(i, j);
   end;
+end;
+
+{==============================================================================]
+  <Arrayed>
+  @action: Returns an array containing all integer values within the range.
+  @note: The result includes both bounds and is ordered ascending or
+         descending based on rAscending. Iteration respects the chosen
+         direction while remaining within the range.
+[==============================================================================}
+function TRange.Arrayed(const rAscending: Boolean = True): TIntegerArray; overload;
+var
+  d, s, r: Integer;
+begin
+  d := IfThen(rAscending, 1, -1);
+  if rAscending then
+    s := Self.Minimum
+  else
+    s := Self.Maximum;
+  SetLength(Result, Self.Size);
+  r := 0;
+  while Self.Contains(s) do
+    Result[r.Increase] := s.Increase(d);
 end;
 
 {==============================================================================]
@@ -674,6 +704,46 @@ begin
 end;
 
 {==============================================================================]
+  <Entirely>
+  @action: Generates an array containing all integer values within the range.
+  @note: The result includes both start and stop bounds. Values are produced
+         in sequential order from start to stop, respecting direction
+         (ascending or descending) based on the relative ordering of bounds.
+         The range is fully expanded into a newly allocated integer array.
+[==============================================================================}
+function TRange.Entirely: TIntegerArray; overload;
+var
+  r, d: Integer;
+begin
+  SetLength(Result, Self.Size);
+  d := Sign(Self.stop - Self.start);
+  Result[0] := Self.start;
+  r := 0;
+  while (Result[r.Increase] <> Self.stop) do
+    Result[r] := (Result[r - 1] + d);
+end;
+
+{==============================================================================]
+  <Entirety>
+  @action: Generates an array containing all integer values from start to stop.
+  @note: The sequence includes both bounds and is produced by stepping from
+         start toward stop using a direction derived from their difference.
+         The result is fully materialized into a newly allocated array.
+[==============================================================================}
+function TRange.Entirety: TIntegerArray; overload;
+var
+  r, d, s: Integer;
+begin
+  SetLength(Result, Self.Size);
+  d := Sign(Self.stop - Self.start);
+  s := Self.start;
+  Result[0] := s;
+  r := 0;
+  while (s <> Self.stop) do
+    Result[r.Increment] := s.Increment(d);
+end;
+
+{==============================================================================]
   <Enumerate>
   @action: Returns digits of the given range.
   @note: None.
@@ -760,6 +830,31 @@ begin
 end;
 
 {==============================================================================]
+  <Expose>
+  @action: Returns an array containing all integer values within the range.
+  @note: The result includes both bounds and can be ordered ascending or
+         descending based on rAscending. The range is expanded into a
+         newly allocated array.
+[==============================================================================}
+function TRange.Expose(const rAscending: Boolean = True): TIntegerArray; overload;
+var
+  l, h, i: Integer;
+begin
+  if Self.Singular then
+    Exit([Self.start]);
+  l := Self.Minimum;
+  h := Self.Maximum;
+  SetLength(Result, Self.Size);
+  i := 1;
+  Result[0] := IfThen(rAscending, l, h);
+  while (l < h) do
+  case rAscending of
+    True:Result[i.Increase] := l.Increment;
+    False: Result[i.Increase] := h.Decrement;
+  end;
+end;
+
+{==============================================================================]
   <Extract>
   @action: Extracts TRange as TIntegerArray.
   @note: None.
@@ -834,6 +929,32 @@ begin
 end;
 
 {==============================================================================]
+  <FromTo>
+  @action: Returns an array containing all integer values within the range.
+  @note: The result includes both bounds and can be ordered ascending or
+         descending based on rAscending. For a singular range, a single-element
+         array is returned.
+[==============================================================================}
+function TRange.FromTo(const rAscending: Boolean = True): TIntegerArray; overload;
+var
+  l, h, i: Integer;
+begin
+  if Self.Singular then
+    Exit([Self.start]);
+  l := Self.Minimum;
+  h := Self.Maximum;
+  SetLength(Result, Self.Size);
+  case rAscending of
+    True:
+    for i := l to h do
+      Result[i - l] := i;
+    False:
+    for i := h downto l do
+      Result[h - i] := i;
+  end;
+end;
+
+{==============================================================================]
   <Gather>
   @action: Returns all values of the range as an integer array, in order.
            Works for ascending, descending, or singleton ranges.
@@ -879,10 +1000,10 @@ end;
 {==============================================================================]
   <Generated>
   @action: Returns an array of all integers in the range in sequential order.
-           - For ascending ranges: values go from Start to Stop
-           - For descending ranges: values go from Start down to Stop
+             - For ascending ranges: values go from Start to Stop
+             - For descending ranges: values go from Start down to Stop
            Uses an internal helper function `NextValue` to increment or decrement.
-  @note:   Implementation details:
+  @note: Implementation details:
            - Allocates an array of length = Self.Size
            - Initializes:
                - v := Start value
@@ -905,6 +1026,27 @@ begin
   d := IfThen(Self.Ascending, 1, -1);
   for i := 0 to High(Result) do
     Result[i] := NextValue;
+end;
+
+{==============================================================================]
+  <Harvest>
+  @action: Returns an array containing all integer values within the range.
+  @note: The result includes both bounds and is ordered based on the range
+         direction. This method materializes the full sequence of values.
+[==============================================================================}
+function TRange.Harvest: TIntegerArray; overload;
+var
+  s, r, d: Integer;
+begin
+  Result := [Self.start];
+  s := Self.Size;
+  d := Sign(Self.start - Self.stop);
+  r := 0;
+  while (r.Increment < s) do
+  begin
+    SetLength(Result, (r + 1));
+    Result[r] := (Result[r - 1] - d);
+  end;
 end;
 
 {==============================================================================]
@@ -1815,6 +1957,35 @@ begin
 end;
 
 {==============================================================================]
+  <Publish>
+  @action: Returns an array containing all integer values within the range.
+  @note: The result includes both bounds and is ordered ascending or
+         descending based on rAscending. For a singular range, a single-element
+         array is returned.
+[==============================================================================}
+function TRange.Publish(const rAscending: Boolean = True): TIntegerArray; overload;
+var
+  l, h, i: Integer;
+begin
+  if Self.Singular then
+    Exit([Self.start]);
+  l := Self.Minimum;
+  h := Self.Maximum;
+  SetLength(Result, Self.Size);
+  i := 0;
+  case rAscending of
+    True:
+    repeat
+      Result[i.Increase] := l;
+    until (l.Increment > h);
+    False:
+    repeat
+      Result[i.Increase] := h;
+    until (l > h.Decrement);
+  end;
+end;
+
+{==============================================================================]
   <Pull>
   @action: Returns an array of all integers contained in the range, 
            starting from both ends and meeting in the middle.
@@ -2441,6 +2612,31 @@ begin
 	True:
 	for i := 0 to High(Result) do
       Result[i] := (AStart - i);
+  end;
+end;
+
+{==============================================================================]
+  <ToIntegers>
+  @action: Generates an array of all integer values within the range.
+  @note: The result is fully expanded and includes both bounds. Values are
+         produced in ascending or descending order depending on the relative
+         ordering of start and stop.
+[==============================================================================}
+function TRange.ToIntegers: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  for i := 0 to (s - 1) do
+    Result[i] := i;
+  case Self.Ascending of
+    True:
+    for i := 0 to (s - 1) do
+      Result[i] := (Self.start + Result[i]);
+    False:
+    for i := 0 to (s - 1) do
+      Result[i] := (Self.start - Result[i]);
   end;
 end;
 

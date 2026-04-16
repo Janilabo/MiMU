@@ -152,6 +152,7 @@ begin
   Result := (Abs(Int64(Self.stop) - Int64(Self.start)) + 1);
 end;
 
+
 {==============================================================================]
   <Coverage>
   @action: Returns the size of TRange.
