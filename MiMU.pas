@@ -42,7 +42,7 @@ unit MiMU;
 interface
 
 uses
-  Classes, SysUtils, StrUtils, Math, Generics.Collections, Generics.Defaults, FGL;
+  Classes, SysUtils, StrUtils, Math, Generics.Collections, Generics.Defaults, FGL, gdeque;
 
 const
   MiMU_VERSION_NUMBER = 0.5;

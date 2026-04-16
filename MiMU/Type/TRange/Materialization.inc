@@ -16,6 +16,7 @@ function Content: TIntegerArray; overload;
 function Contents: TIntegerArray; overload;
 function Data: TIntegerArray; overload;
 function Decompose: TIntegerArray; overload;
+function Dequeued: TIntegerArray; overload;
 function Digited: TIntegerArray; overload;
 function Digits: TIntegerArray; overload;
 function Digits(const dIndex: Integer): Integer; overload;
@@ -91,6 +92,7 @@ function Stock: TIntegerArray; overload;
 function Stop2Start: TIntegerArray; overload;
 function StopToStart: TIntegerArray; overload;
 function Storage: TIntegerArray; overload;
+function Succinct: TIntegerArray; overload;
 function Sweep: TIntegerArray; overload;
 function TIA: TIntegerArray; overload;
 function ToArr: TIntegerArray; overload;
@@ -516,6 +518,31 @@ var
 begin
   SetLength(Result, Self.Count);
   FillRange(Result, 0, Self.Start, Self.Stop, Self.Direction);
+end;
+
+{==============================================================================]
+  <Dequeued>
+  @action: Generates an array containing all integer values within the range.
+  @note: Values are produced sequentially from start using the configured
+         direction (Self.Direction) and step size of 1. Internally, a deque
+         is used as a temporary buffer before converting the result to an array.
+[==============================================================================}
+function TRange.Dequeued: TIntegerArray; overload;
+var
+  q: specialize TDeque<Integer>;
+  i, d: Integer;
+begin
+  q := specialize TDeque<Integer>.Create;
+  try
+    d := Self.Direction;
+    for i := 0 to (Self.Size - 1) do
+      q.PushBack(Self.start + (i * d));
+    SetLength(Result, Self.Size);
+    for i := 0 to (Self.Size - 1) do
+      Result[i] := q.Items[i];
+  finally
+    q.Free;
+  end;
 end;
 
 {==============================================================================]
@@ -2484,6 +2511,29 @@ begin
   while (o.Increment(b) < s) do
     for i := 0 to Min((b - 1), ((s - o) - 1)) do
       Result[o + i] := (Self.start + (d * (BASE_DIGITS[i] + o)));
+end;
+
+{==============================================================================]
+  <Succinct>
+  @action: Generates an array containing all integer values within the range.
+  @note: The result includes both bounds and is constructed sequentially from
+         the start value. Ordering follows the range direction (ascending or
+         descending) using successive increment or decrement operations.
+[==============================================================================}
+function TRange.Succinct: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  Result[0] := Self.start;
+  case Self.Ascending of
+    True:
+    for i := 1 to High(Result) do
+      Result[i] := Succ(Result[i - 1]);
+    False:
+    for i := 1 to High(Result) do
+      Result[i] := Pred(Result[i - 1]);
+  end;
 end;
 
 {==============================================================================]
