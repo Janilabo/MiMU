@@ -5,6 +5,7 @@ function ArrayOf: TIntegerArray; overload;
 function AsArr: TIntegerArray; overload;
 function AsArray: TIntegerArray; overload;
 function Atomize: TIntegerArray; overload;
+function Atomized: TIntegerArray; overload;
 function Bank: TIntegerArray; overload;
 function Body: TIntegerArray; overload;
 function Breakdown: TIntegerArray; overload;
@@ -12,6 +13,7 @@ function Capture: TIntegerArray; overload;
 function Captured: TIntegerArray; overload;
 function Collect: TIntegerArray; overload;
 function Collection: TIntegerArray; overload;
+function Composition: TIntegerArray; overload;
 function Content: TIntegerArray; overload;
 function Contents: TIntegerArray; overload;
 function Data: TIntegerArray; overload;
@@ -35,8 +37,10 @@ function Expose(const rAscending: Boolean = True): TIntegerArray; overload;
 function Extract: TIntegerArray; overload;
 function Extracted: TIntegerArray; overload;
 function Flatten: TIntegerArray; overload;
+function Flattened: TIntegerArray; overload;
 function Fill(var target: TIntegerArray): Integer; overload;
 function FromTo(const rAscending: Boolean = True): TIntegerArray; overload;
+function Formation: TIntegerArray; overload;
 function Gather: TIntegerArray; overload;
 function Generate: TIntegerArray; overload;
 function Generated: TIntegerArray; overload;
@@ -55,6 +59,8 @@ function Iterated: TIntegerArray; overload;
 function Iterated(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
 function Iteration: TIntegerArray; overload;
 function Iteration(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
+function Lay: TIntegerArray; overload;
+function Layout: TIntegerArray; overload;
 function List: TIntegerArray; overload;
 function Listed: TIntegerArray; overload;
 function Listing: TIntegerArray; overload;
@@ -270,6 +276,39 @@ begin
 end;
 
 {==============================================================================]
+  <Atomized>
+  @action: Fills the range using 64-bit packed writes (2 integers per iteration).
+  @note:
+    - O(n), reduced loop count (~n/2 iterations)
+    - Packs: [v, v + d] into one Int64 write
+    - Uses PInt64 for sequential bulk writes
+    - Tail-safe: handles odd Size
+    - Assumes little-endian layout and proper alignment
+    - Writes as: start + i * (±1)
+[==============================================================================}
+function TRange.Atomized: TIntegerArray; overload;
+var
+  i, s, d, v: Integer;
+  p: PInt64;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := IfThen(Self.Ascending, 1, -1);
+  v := Self.start;
+  p := PInt64(@Result[0]);
+  i := 0;
+  while ((i + 2) <= s) do
+  begin
+    p^ := Int64(Cardinal(v)) or (Int64(Cardinal(v + d)) shl 32);
+    Inc(p);
+    Inc(v, (d * 2));
+    Inc(i, 2);
+  end;
+  if ((s and 1) = 1) then
+    Result[s - 1] := v;
+end;
+
+{==============================================================================]
   <Bank>
   @action: Returns ALL TRange items as TIntegerArray.
   @note: ?
@@ -435,6 +474,75 @@ begin
   Result[0] := Self.start;
   for i := 1 to High(Result) do
     Result[i] := (Result[i - 1] + Result[i]);
+end;
+
+{==============================================================================]
+  <Composition>
+  @action: Materializes the range into an integer array using a 3-way partitioned
+           write strategy.
+             - Splits the output buffer into three contiguous segments:
+               L: [0 .. t-1]
+               M: [t .. 2t-1]
+               H: [2t .. 3t-1]
+               where `t = Size div 3`
+			 - Fills these segments in parallel within a single loop using pointer
+               arithmetic (`PInteger`) to reduce index overhead and improve locality
+             - Any remaining tail elements (when `Size mod 3 <> 0`) are filled in a
+               final linear pass
+             Produces the same sequence as a standard range:
+             Ascending  → start + i
+             Descending → start - i
+  @note:
+    - Time complexity: O(n)
+    - Memory: Allocates a new array of length Size
+    - Micro-optimization:
+      Reduces loop control overhead by writing 3 elements per iteration
+      and avoids repeated index computations via raw pointers (`l`, `m`, `h`)
+    - Pointer layout:
+      l → base
+      m → base + t
+      h → base + 2t
+    - Tail handling:
+      `r := (3 * t) - 1`
+      Loop fills indices [3t .. Size-1]
+    - Assumes:
+       * `Size >= 0`
+       * Safe pointer arithmetic within allocated buffer
+       * `Increment` advances `r` before comparison (non-standard helper)
+    - Behavior is undefined if:
+       * `Size = 0` (dereferencing @Result[0])
+       * `Increment` is not well-defined or inlined
+      Equivalent closed form:
+      Result[i] = start + i * (Ascending ? +1 : -1)
+      Trade-off:
+      Slightly more complex than a single loop, but can yield better
+      performance in tight loops due to reduced branching and improved
+      instruction-level parallelism.
+[==============================================================================}
+function TRange.Composition: TIntegerArray; overload;
+var
+  s, t, r, i, d: Integer;
+  l, m, h: PInteger;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := IfThen(Self.Ascending, 1, -1);
+  t := (s div 3);
+  l := @Result[0];
+  m := @Result[t];
+  h := @Result[2 * t];
+  for i := 0 to (t - 1) do
+  begin
+    l^ := (Self.start + (d * i));
+    m^ := (Self.start + (d * (t + i)));
+    h^ := (Self.start + (d * ((2 * t) + i)));
+    Inc(l);
+    Inc(m);
+    Inc(h);
+  end;
+  r := ((3 * t) - 1);
+  while (r.Increment < s) do
+    Result[r] := (Self.start + (d * r));
 end;
 
 {==============================================================================]
@@ -956,6 +1064,37 @@ begin
 end;
 
 {==============================================================================]
+  <Flattened>
+  @action: Builds the range via a temporary 2D grid, then flattens to 1D.
+  @note:
+    - O(n), extra 2D allocation
+    - Grid dims: r ≈ √n, c = ceil(n / r)
+    - Writes as: start + i * Direction (row-major)
+    - Final array is identical to linear construction
+[==============================================================================}
+function TRange.Flattened: TIntegerArray; overload;
+var
+  r, c, i, j, d, s: Integer;
+  g: T2DIntegerArray;
+begin
+  s := Self.Size;
+  d := Self.Direction;
+  r := Max(1, Round(Sqrt(s)));
+  c := ((s + r - 1) div r);
+  SetLength(g, r);
+  for i := 0 to (r - 1) do
+  begin
+    SetLength(g[i], Min(c, (s - (i * c))));
+    for j := 0 to High(g[i]) do
+      g[i][j] := (Self.start + (d * ((i * c) + j)));
+  end;
+  SetLength(Result, s);
+  for i := 0 to (r - 1) do
+    for j := 0 to High(g[i]) do
+      Result[(i * c) + j] := g[i][j];
+end;
+
+{==============================================================================]
   <FromTo>
   @action: Returns an array containing all integer values within the range.
   @note: The result includes both bounds and can be ordered ascending or
@@ -979,6 +1118,34 @@ begin
     for i := h downto l do
       Result[h - i] := i;
   end;
+end;
+
+{==============================================================================]
+  <Formation>
+  @action: Builds the range via a raw byte buffer, then bulk-copies into result.
+  @note:
+    - O(n), ~2× memory (buffer + result)
+    - Writes as: start + i * Direction
+    - Uses PInteger + Move for linear, low-level transfer
+    - Requires Size > 0 (unsafe @b[0] if empty)
+[==============================================================================}
+function TRange.Formation: TIntegerArray; overload;
+var
+  b: TBytes;
+  p: PInteger;
+  i, d, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(b, (s * SizeOf(Integer)));
+  p := PInteger(@b[0]);
+  d := Self.Direction;
+  for i := 0 to (s - 1) do
+  begin
+    p^ := (Self.start + (i * d));
+    Inc(p);
+  end;
+  SetLength(Result, s);
+  Move(b[0], Result[0], System.Length(b));
 end;
 
 {==============================================================================]
@@ -1520,6 +1687,85 @@ begin
     rDigits[Result.Increase] := r.start.Increase(s);
   end;
   SetLength(rDigits, Result);
+end;
+
+{==============================================================================]
+  <Lay>
+  @action: Constructs a range array using a cumulative step approach.
+             - Initializes the array with a constant step value:
+               +1 if `Ascending = True`
+               -1 if `Ascending = False`
+             - Seeds the first element with `start`
+             - Each subsequent element is computed as: Result[i] = Result[i - 1] + step
+           Effectively produces:
+            Ascending  → [start, start+1, start+2, ...]
+            Descending → [start, start-1, start-2, ...]
+  @note:
+    - Time complexity: O(n)
+    - Memory: Allocates a new array of length Size
+    - Relies on FillDWord to broadcast the step value across the array
+    - Uses a prefix-sum style recurrence:
+      Result[i] := Result[i - 1] + Result[i]
+      where Result[i] initially holds the step (±1)
+    - `IfThen(Self.Ascending, 1, -1)` determines direction without branching
+    - Assumes `Size > 0`; writing to `Result[0]` is unsafe if `Size = 0`
+    - Behavior depends on correct 32-bit representation of `-1` when cast to `DWord`.
+    Equivalent closed form: Result[i] = start + i * (Ascending ? +1 : -1)
+[==============================================================================}
+function TRange.Lay: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  FillDWord(Result[0], s, DWord(IfThen(Self.Ascending, 1, -1)));
+  Result[0] := Self.start;
+  for i := 1 to (s - 1) do
+    Result[i] := (Result[i - 1] + Result[i]);
+end;
+
+{==============================================================================]
+  <Layout>
+  @action: Materializes the range into a contiguous integer array (TIntegerArray),
+           based on the current range configuration (start value, size, and direction).
+             - If `start = 0` and `Ascending = True`, a zero-based identity sequence
+               is generated: [0, 1, 2, ..., Size-1].
+             - Otherwise, the array is initialized with `start` and then incremented
+               or decremented per index depending on `Ascending`.
+  @note:
+    - Time complexity: O(n)
+    - Memory: Allocates a new array of length Size
+    - Uses FillDWord for fast initialization when start <> 0 or descending
+    - Assumes Size >= 0; no bounds checking on negative size
+    - Behavior is undefined if Size overflows array limits
+    Equivalent logic:
+     Ascending  → Result[i] = start + i
+     Descending → Result[i] = start - i
+    Fast path: When `start = 0` and ascending, avoids bulk fill and computes directly.
+[==============================================================================}
+function TRange.Layout: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  case ((Self.start = 0) and Self.Ascending) of
+    False:
+    begin
+      FillDWord(Result[0], s, DWord(Self.start));
+      case Self.Ascending of
+	    True:
+        for i := 1 to (s - 1) do
+          Inc(Result[i], i);
+        False:
+        for i := 1 to (s - 1) do
+          Dec(Result[i], i);
+	  end;
+	end;
+	True:
+    for i := 0 to (s - 1) do
+      Result[i] := i;
+  end;
 end;
 
 {==============================================================================]
