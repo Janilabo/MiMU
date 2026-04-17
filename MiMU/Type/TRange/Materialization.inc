@@ -33,6 +33,7 @@ function Enumerate: TIntegerArray; overload;
 function Enumerated: TIntegerArray; overload;
 function Explode: TIntegerArray; overload;
 function Exploded: TIntegerArray; overload;
+function Explosion: TIntegerArray; overload;
 function Expose(const rAscending: Boolean = True): TIntegerArray; overload;
 function Extract: TIntegerArray; overload;
 function Extracted: TIntegerArray; overload;
@@ -80,6 +81,7 @@ function Populate(var arr: TIntegerArray): TRange; overload;
 function Produce: TIntegerArray; overload;
 function Publish(const rAscending: Boolean = True): TIntegerArray; overload;
 function Pull: TIntegerArray; overload;
+function Pulled: TIntegerArray; overload;
 function Queue: TIntegerArray; overload;
 function Raw: TIntegerArray; overload;
 function Realize: TIntegerArray; overload;
@@ -962,6 +964,39 @@ begin
   if (s = 0) then
     s := 1;
   Return(Result, 0, Self.start, Self.stop, s);
+end;
+
+{==============================================================================]
+  <Explosion>
+  @action: Expands the range by iterative block-doubling from an initial seed.
+  @note:
+    - O(n), logarithmic growth via Move (copy + adjust)
+    - Starts from start, repeatedly duplicates prefix blocks
+    - Each copied block is offset by (r * Direction)
+    - Efficient due to bulk memory moves
+    - Handles Size = 0 safely
+    - Final sequence: start + i * Direction
+[==============================================================================}
+function TRange.Explosion: TIntegerArray; overload;
+var
+  i, s, d, r, l, x: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  if (s = 0) then
+    Exit;
+  d := Self.Direction;
+  Result[0] := Self.start;
+  r := 1;
+  x := SizeOf(Integer);
+  while (r < s) do
+  begin
+    l := Min(r, (s - r));
+    Move(Result[0], Result[r], (l * x));
+    for i := r to ((r + l) - 1) do
+       Inc(Result[i], (r * d));
+    Inc(r, l);
+  end;
 end;
 
 {==============================================================================]
@@ -2295,6 +2330,32 @@ begin
       Result[i] := (Self.start - i);
       Result[h - i] := (Self.stop + i);
     end;
+  end;
+end;
+
+{==============================================================================]
+  <Pulled>
+  @action: Builds the range by seeding the center and expanding outward symmetrically.
+  @note:
+    - O(n), center-out write pattern
+    - Starts at mid index c, fills left/right alternately
+    - Writes as: start + i * Direction
+    - Final layout identical to linear construction
+[==============================================================================}
+function TRange.Pulled: TIntegerArray; overload;
+var
+  c, i, d, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := IfThen(Self.Ascending, 1, -1);
+  c := (s div 2);
+  Result[c] := (Self.start + (c * d));
+  for i := 1 to c do
+  begin
+    Result[c - i] := (Self.start + ((c - i) * d));
+    if ((c + i) < s) then
+      Result[c + i] := (Self.start + ((c + i) * d));
   end;
 end;
 
