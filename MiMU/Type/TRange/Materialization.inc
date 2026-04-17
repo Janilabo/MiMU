@@ -9,6 +9,7 @@ function Atomized: TIntegerArray; overload;
 function Bank: TIntegerArray; overload;
 function Body: TIntegerArray; overload;
 function Breakdown: TIntegerArray; overload;
+function Bundle: TIntegerArray; overload;
 function Capture: TIntegerArray; overload;
 function Captured: TIntegerArray; overload;
 function Collect: TIntegerArray; overload;
@@ -31,6 +32,7 @@ function Entirely: TIntegerArray; overload;
 function Entirety: TIntegerArray; overload;
 function Enumerate: TIntegerArray; overload;
 function Enumerated: TIntegerArray; overload;
+function Enumerating: TIntegerArray; overload;
 function Explode: TIntegerArray; overload;
 function Exploded: TIntegerArray; overload;
 function Explosion: TIntegerArray; overload;
@@ -87,6 +89,7 @@ function Raw: TIntegerArray; overload;
 function Realize: TIntegerArray; overload;
 function Recursed: TIntegerArray; overload;
 function Recursively: TIntegerArray; overload;
+function Render: TIntegerArray; overload;
 function Resources: TIntegerArray; overload;
 function Separately(const rReverse: Boolean = False): TIntegerArray; overload;
 function Sequence: TIntegerArray; overload;
@@ -378,6 +381,30 @@ begin
     end;
     Result[i] := v;
   end;
+end;
+
+{==============================================================================]
+  <Bundle>
+  @action: Fills the range in two interleaved passes (even and odd indices).
+  @note:
+    - O(n), dual-stride traversal
+    - First loop fills even indices, second fills odd indices
+    - Each element computed as: start + i * Direction
+    - Relies on custom Increment(2) stepping behavior
+[==============================================================================}
+function TRange.Bundle: TIntegerArray; overload;
+var
+  i, s, d: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := Self.Direction;
+  i := -2;
+  while (i.Increment(2) < s) do
+    Result[i] := (Self.start + (i * d));
+  i := -1;
+  while (i.Increment(2) < s) do
+    Result[i] := (Self.start + (i * d));
 end;
 
 {==============================================================================]
@@ -912,6 +939,24 @@ begin
   for i := 0 to High(Result) do
     if e.MoveNext then
       Result[i] := e.Current;
+end;
+
+{==============================================================================]
+  <Enumerating>
+  @action: Produces an array containing all values within the range.
+  @note: Iterates over the range using its enumerator and appends each
+         element to the result array. The resulting array reflects the
+         range order (ascending or descending). Dynamic growth via Supply
+         may incur reallocation overhead for large ranges.
+[==============================================================================}
+function TRange.Enumerating: TIntegerArray; overload;
+var
+  e: TRangeEnumerator;
+begin
+  SetLength(Result, 0);
+  e := GetEnumerator;
+  while e.MoveNext do
+    Result.Supply(e.Current);
 end;
 
 {==============================================================================]
@@ -2496,6 +2541,29 @@ begin
   Result := [Self.start];
   if (Self.start <> Self.stop) then
     Result := (Result + Range((Self.start + Self.Step), Self.stop).Recursively);
+end;
+
+{==============================================================================]
+  <Render>
+  @action: Constructs the range recursively via concatenation.
+  @note:
+    - O(n²) due to repeated array concatenation
+    - Recurrence: [start] + Render(start + step, count - 1)
+    - Allocates many intermediate arrays
+    - Stack depth = Size (risk for large n)
+    - Final sequence: start + i * Direction
+[==============================================================================}
+function TRange.Render: TIntegerArray; overload;
+  function Return(const aStart, aCount, aStep: Integer): TIntegerArray;
+  begin
+    if (aCount <= 0) then
+      Exit([]);
+    if (aCount = 1) then
+      Exit([aStart]);
+    Result := ([aStart] + Return((aStart + aStep), (aCount - 1), aStep));
+  end;
+begin
+  Result := Return(Self.start, Self.Size, Self.Direction);
 end;
 
 {==============================================================================]

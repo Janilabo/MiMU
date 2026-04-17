@@ -6,7 +6,9 @@ function Capacity: Integer; overload;
 function Cardinality: Integer; overload;
 function Count: Integer; overload;
 function Counted: Int64; overload;
+function Counting: Integer; overload;
 function Coverage: Integer; overload;
+function Depth: Integer; overload;
 function Diameter: Integer; overload;
 function Extent: Integer; overload;
 function Footprint: Integer; overload;
@@ -22,6 +24,7 @@ function Load: Integer; overload;
 function Mass: Integer; overload;
 function Measure: Integer; overload;
 function Measured: Int64; overload;
+function Measuring: Integer; overload;
 function Mob: Integer; overload;
 function Ordinality: Integer; overload;
 function Perim: Integer; overload;
@@ -152,6 +155,20 @@ begin
   Result := (Abs(Int64(Self.stop) - Int64(Self.start)) + 1);
 end;
 
+{==============================================================================]
+  <Counting>
+  @action: Computes the number of elements in the range.
+  @note:
+    - Constant time O(1)
+    - Formula: ((stop - start) * Direction) + 1
+    - Interprets direction to normalize increasing/decreasing ranges
+    - Assumes inclusive endpoints and consistent step of ±1
+    - No validation of start/stop ordering; relies on Direction correctness
+[==============================================================================}
+function TRange.Counting: Integer; overload;
+begin
+  Result := (((Self.stop - Self.start) * Self.Direction) + 1);
+end;
 
 {==============================================================================]
   <Coverage>
@@ -165,6 +182,19 @@ begin
 	-1: Result := ((Self.stop - Self.start) + 1);
 	1: Result := ((Self.start - Self.stop) + 1);
   end;
+end;
+
+{==============================================================================]
+  <Depth>
+  @action: Returns the number of discrete elements in the range.
+  @note: Computes the inclusive distance between Self.start and Self.stop
+         along a single dimension. The use of Hypot(..., 0) is equivalent
+         to Abs(Self.stop - Self.start). The result is rounded and incremented
+         by 1 to ensure both endpoints are included.
+[==============================================================================}
+function TRange.Depth: Integer; overload;
+begin
+  Result := (Round(Hypot((Double(Self.stop) - Self.start), 0)) + 1);
 end;
 
 {==============================================================================]
@@ -378,6 +408,29 @@ end;
 function TRange.Measured: Int64; overload;
 begin
   Result := (Abs(Int64(Self.stop) - Int64(Self.start)) + 1);
+end;
+
+{==============================================================================]
+  <Measuring>
+  @action: Calculates the number of elements in the range.
+  @note: Recursively counts the inclusive distance between Self.start and
+         Self.stop by stepping one unit at a time toward the target.
+         Equivalent in result to Depth, but implemented via recursion,
+         which may incur significant call overhead or risk stack overflow
+         for large ranges.
+[==============================================================================}
+function TRange.Measuring: Integer; overload;
+  function C(A, B: Integer): Integer;
+  begin
+    if (A = B) then
+      Result := 1
+    else if (A < B) then
+      Result := (1 + C((A + 1), B))
+    else
+      Result := (1 + C((A - 1), B));
+  end;
+begin
+  Result := C(Self.start, Self.stop);
 end;
 
 {==============================================================================]
