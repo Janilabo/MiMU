@@ -4,9 +4,11 @@ function Arbitrary: Integer; overload;
 function Lottery(const lCount: Integer = 1): TIntegerArray; overload;
 function Lucky: Integer; overload;
 function Mixed(const mixings: Integer = 1): TIntegerArray; overload;
+function Quantized(const sStep: Integer = 1): TIntegerArray; overload;
 function Raffle(const N: Integer = 1): TIntegerArray; overload;
 function Rand: Integer; overload;
 function Randomize: TIntegerArray; overload;
+function Randomized: TIntegerArray; overload;
 function Randomly: Integer; overload;
 function Randoms(const rSize: Integer = 1): TIntegerArray; overload;
 function Roll(const rCount: Integer = 1): TIntegerArray; overload;
@@ -116,6 +118,34 @@ begin
 end;
 
 {==============================================================================]
+  <Quantized>
+  @action: Returns a step-sampled (quantized) sequence over the range using a fixed
+           step size. The values are generated starting from `start` and advanced
+           by `sStep` in the direction of the range.
+  @note:
+    - sStep <= 0 returns an empty array.
+    - Sampling is direction-aware (uses Self.Direction).
+    - The number of elements is computed from range span and step size.
+    - Values are generated sequentially without exceeding the computed count.
+[==============================================================================}
+function TRange.Quantized(const sStep: Integer = 1): TIntegerArray; overload;
+var
+  i, v, d, c: Integer;
+begin
+  if (sStep <= 0) then
+    Exit([]);
+  d := Self.Direction;
+  v := Self.start;
+  if Self.Ascending then
+    c := (((Self.stop - Self.start) div sStep) + 1)
+  else
+    c := (((Self.start - Self.stop) div sStep) + 1);
+  SetLength(Result, c);
+  for i := 0 to (c - 1) do
+    Result[i] := v.Increase(sStep * d);
+end;
+
+{==============================================================================]
   <Raffle>
   @action: Selects N distinct random elements from the range without replacement.
   @param N: The number of elements to select (default = 1).
@@ -216,6 +246,25 @@ begin
     Result[i] := Self.At(i);
   for i := High(Result) downto 1 do
     Swap(Result[Random(i + 1)], Result[i]);
+end;
+
+{==============================================================================]
+  <Randomized>
+  @action: Returns a randomly shuffled permutation of all elements in the range.
+  @note:
+    - Produces a full permutation of Self.All using an in-place Fisher–Yates shuffle.
+    - Iterates from 0 to High(Result), swapping each element with a random index in [0..i].
+    - Ensures each element has an equal probability of appearing in any position.
+    - Does not modify the original range.
+    - Uses global Random generator; for non-deterministic results, ensure Randomize is called externally.
+[==============================================================================}
+function TRange.Randomized: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  Result := Self.All;
+  for i := 0 to High(Result) do
+    Result.Exch(Random(i + 1), i);
 end;
 
 {==============================================================================]

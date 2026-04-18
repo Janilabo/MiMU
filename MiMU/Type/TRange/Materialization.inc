@@ -121,6 +121,7 @@ function Unrolled: TIntegerArray; overload;
 function Unwrap: TIntegerArray; overload;
 function Unzip: TIntegerArray; overload;
 function Values: TIntegerArray; overload;
+function View(const vSize: Integer = 2147483647; const sIndex: Integer = 0): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -3353,5 +3354,39 @@ begin
     for i := Self.start to Self.stop do
       Result[r.Increase] := i;
   end;
+end;
+
+{==============================================================================]
+  <View>
+  @action: Returns a contiguous slice (view) of the range starting at sIndex and
+    containing up to vSize elements.
+  @note:
+    - vSize < 0 returns an empty array.
+    - sIndex defines the starting offset (default = 0).
+    - If sIndex is negative, it is clamped to 0 and the effective size is
+      reduced accordingly.
+    - If sIndex is outside the range bounds, returns an empty array.
+    - The result is always clipped to the available range size.
+    - Does not modify the original range.
+    - Uses Self.Digits for indexed element access.
+    - vSize defaults to MaxInt, effectively meaning "to end of range".
+    - Complexity: O(n), where n is the number of returned elements.
+[==============================================================================}
+function TRange.View(const vSize: Integer = 2147483647; const sIndex: Integer = 0): TIntegerArray; overload;
+var
+  i, s, o, c: Integer;
+begin
+  if ((vSize < 0) or (sIndex >= Self.Size(s)) or ((sIndex + vSize) < 0)) then
+    Exit([]);
+  if (sIndex < 0) then
+    o := 0
+  else
+    o := sIndex;
+  if (o >= s) then
+    Exit([]);
+  c := IfThen((sIndex < 0), (vSize - (-sIndex)), vSize);
+  SetLength(Result, Min(c, (s - o)));
+  for i := 0 to High(Result) do
+    Result[i] := Self.Digits(o + i);
 end;
 {$ENDIF}

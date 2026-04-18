@@ -41,6 +41,7 @@ function Reach: Integer; overload;
 function Scope: Integer; overload;
 function Size: Integer; overload;
 function Size(var minVal, maxVal: Integer): Integer; overload;
+function Size(var vSize: Integer): Integer; overload;
 function Sized: Integer; overload;
 function Sizing: Integer; overload;
 function Spread: Integer; overload;
@@ -690,6 +691,23 @@ begin
   minVal := Min(Self.start, Self.stop);
   maxVal := Max(Self.start, Self.stop);
   Result := ((maxVal - minVal) + 1);
+end;
+
+{==============================================================================]
+  <Size>
+  @action: Returns the number of elements in the range and optionally outputs the
+           same value through the provided variable parameter.
+  @note:
+    - vSize is assigned the computed range size.
+    - The function result is identical to vSize.
+    - This overload exists for call-site convenience when both return-value
+      and out-parameter usage are desired.
+    - Does not modify the range.
+[==============================================================================}
+function TRange.Size(var vSize: Integer): Integer; overload;
+begin
+  vSize := Self.Size;
+  Result := vSize;
 end;
 
 {==============================================================================]
