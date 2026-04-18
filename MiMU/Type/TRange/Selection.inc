@@ -40,8 +40,8 @@ var
   l, h, i: Integer;
 begin
   a := Self.Ascending;
-  l := Max(Min(Self.start, Self.stop), Min(other.start, other.stop));
-  h := Min(Max(Self.start, Self.stop), Max(other.start, other.stop));
+  l := Max(Self.Minimum, other.Minimum);
+  h := Min(Self.Maximum, other.Maximum);
   if (l > h) then
     Exit([]);
   SetLength(Result, ((h - l) + 1));
@@ -245,10 +245,10 @@ var
 begin
   SetLength(Result, Min(Self.Size, other.Size));
   r := 0;
-  a := Min(Self.start, Self.stop);
-  x := Max(Self.start, Self.stop);
-  b := Min(other.start, other.stop);
-  y := Max(other.start, other.stop);
+  a := Self.Minimum;
+  x := Self.Maximum;
+  b := other.Minimum;
+  y := other.Maximum;
   while ((a <= x) and (b <= y)) do
   case (a = b) of
     True:
@@ -501,10 +501,10 @@ var
 begin
   SetLength(Result, Self.Size);
   r := 0;
-  a := Min(Self.start, Self.stop);
-  x := Max(Self.start, Self.stop);
-  b := Min(other.start, other.stop);
-  y := Max(other.start, other.stop);
+  a := Self.Minimum;
+  x := Self.Maximum;
+  b := other.Minimum;
+  y := other.Maximum;
   while (a <= x) do
   case ((b > y) or (a < b)) of
     False:

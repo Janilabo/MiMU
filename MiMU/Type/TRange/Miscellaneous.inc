@@ -3,6 +3,7 @@ function Deconstruct(var rStart, rStop: Integer): Integer; overload;
 function Progress(const pPercent: Double): Integer;
 function Reserve: TIntegerArray; overload;
 function Reserve(var aRange: TIntegerArray): Integer; overload;
+function YoYo: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF HELPERS}
@@ -161,5 +162,33 @@ begin
   s := IFThen(Self.Ascending, 1, -1);
   for i := 0 to (l - 1) do
     Result[i] := arr[Self.start + (i * s)];
+end;
+
+{==============================================================================]
+  <YoYo>
+  @action: Generates a symmetric “back-and-forth” sequence over the range.
+  @note: Produces a palindromic expansion of the range values, starting from
+         Self.start and progressing by Self.Direction to Self.stop, then
+         mirroring back in reverse order (excluding the endpoint duplication).
+         The resulting array has length (2 * Size - 1). If Size = 1, returns
+         a single-element array [Self.start]. This is commonly used for
+         oscillation-style traversal patterns.
+[==============================================================================}
+function TRange.YoYo: TIntegerArray; overload;
+var
+  i, s, d, l: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  l := ((s * 2) - 1);
+  SetLength(Result, l);
+  d := Self.Direction;
+  for i := 0 to (s - 1) do
+  begin
+    Result[i] := (Self.start + (i * d));
+    if (i < (s - 1)) then
+      Result[(l - 1) - i] := Result[i];
+  end;
 end;
 {$ENDIF}

@@ -33,6 +33,7 @@ function Entirety: TIntegerArray; overload;
 function Enumerate: TIntegerArray; overload;
 function Enumerated: TIntegerArray; overload;
 function Enumerating: TIntegerArray; overload;
+function Every(const N: Integer = 1): TIntegerArray; overload;
 function Explode: TIntegerArray; overload;
 function Exploded: TIntegerArray; overload;
 function Explosion: TIntegerArray; overload;
@@ -77,10 +78,12 @@ function Numeralize: TIntegerArray; overload;
 function Numerals: TIntegerArray; overload;
 function Numericize: TIntegerArray; overload;
 function Numerics: TIntegerArray; overload;
+function Open: TIntegerArray; overload;
 function Particles: TIntegerArray; overload;
 function Pile: TIntegerArray; overload;
 function Populate(var arr: TIntegerArray): TRange; overload;
 function Produce: TIntegerArray; overload;
+function Produced: TIntegerArray; overload;
 function Publish(const rAscending: Boolean = True): TIntegerArray; overload;
 function Pull: TIntegerArray; overload;
 function Pulled: TIntegerArray; overload;
@@ -113,6 +116,7 @@ function ToIntegers: TIntegerArray; overload;
 function ToValues: TIntegerArray; overload;
 function Unfold: TIntegerArray; overload;
 function Unpack: TIntegerArray; overload;
+function Unpacked: TIntegerArray; overload;
 function Unrolled: TIntegerArray; overload;
 function Unwrap: TIntegerArray; overload;
 function Unzip: TIntegerArray; overload;
@@ -960,6 +964,33 @@ begin
 end;
 
 {==============================================================================]
+  <Every>
+  @action: Generates a sequence of values from the range at a fixed step.
+  @note: Returns an array starting at Self.start and advancing by N units
+         in the direction of the range until Self.stop is reached or exceeded.
+         The step is scaled by Direction to preserve ascending/descending order.
+         If N <= 0, returns an empty array. The resulting length is computed
+         as (|stop - start| div N) + 1. Uses pointer iteration for efficient writes.
+[==============================================================================}
+function TRange.Every(const N: Integer = 1): TIntegerArray; overload;
+var
+  i, s, r: Integer;
+  P: PInteger;
+begin
+  if (N <= 0) then
+    Exit([]);
+  SetLength(Result, ((Abs(Self.stop - Self.start) div N) + 1));
+  P := PInteger(Result);
+  s := (Self.Direction * N);
+  r := Self.start;
+  for i := 0 to High(Result) do
+  begin
+    P^ := r.Increase(s);
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
   <Explode>
   @action: Expands the range into an integer array using index-based calculation.
   @note: Elements are computed as start + (index * step), where step is the
@@ -1719,7 +1750,6 @@ end;
   <Iteration>
   @action: Expands the range into an integer array using manual capacity
            management with exponential growth for efficient appends.
-
   @note: - For non-singular ranges, values are generated from Self.start
            toward Self.stop, INCLUDING the terminal bound.
          - Direction is determined by Self.Ascending:
@@ -1905,8 +1935,14 @@ end;
 
 {==============================================================================]
   <Listing>
-  @action: ?
-  @note: ?
+  @action: Builds a fully enumerated list of all values in the range.
+  @note: Generates a sequential array from Self.start to Self.stop (inclusive),
+         respecting the direction (ascending or descending). Internally uses a
+         TList as a temporary storage buffer, storing integer values via pointer
+         casting, then converts them back into a typed integer array. This is a
+         two-phase materialization: first list population, then array extraction.
+         Functionally equivalent to Produced/Every with step = 1, but with
+         additional heap-based indirection overhead due to TList usage.
 [==============================================================================}
 function TRange.Listing: TIntegerArray; overload;
 var
@@ -2190,6 +2226,27 @@ begin
 end;
 
 {==============================================================================]
+  <Open>
+  @action: Expands the range into a sequential integer array.
+  @note: Produces a fully materialized sequence starting at Self.start and
+         advancing by Self.Direction until Self.stop is reached (inclusive).
+         Uses a helper procedure to fill the array via arithmetic progression:
+         value[i] = start + (i * step). This is a direct, allocation-minimal
+         implementation equivalent to Enumerating with constant step = ±1.
+[==============================================================================}
+function TRange.Open: TIntegerArray; overload;
+  procedure F(var a: TIntegerArray; const b, s: Integer);
+  var i: Integer;
+  begin
+    for i := 0 to High(a) do
+      a[i] := (b + (i * s));
+  end;
+begin
+  SetLength(Result, Self.Size);
+  F(Result, Self.start, Self.Direction);
+end;
+
+{==============================================================================]
   <Particles>
   @action: Iteratively constructs and returns a dynamic integer array
            representing the inclusive sequence from Self.Start to
@@ -2307,6 +2364,37 @@ begin
   d := Self.Direction;
   for i := 1 to High(Result) do
     Result[i] := (Result[i - 1] + d);
+end;
+
+{==============================================================================]
+  <Produced>
+  @action: Generates the full sequence of values defined by the range.
+  @note: Returns an array containing all elements from Self.start to
+         Self.stop (inclusive), respecting the range direction. Uses an
+         exponential block-copy strategy: previously computed segments are
+         duplicated via Move and offset by a directional delta (±b), where
+         b grows by powers of two. This reduces per-element iteration cost
+         compared to naive enumeration. Assumes Size >= 1.
+[==============================================================================}
+function TRange.Produced: TIntegerArray; overload;
+var
+  b, i, n, d, z: Integer;
+begin
+  n := Self.Size;
+  if (n = 1) then
+    Exit([Self.start]);
+  SetLength(Result, n);
+  d := IfThen(Self.Ascending, 1, -1);
+  Result[0] := Self.start;
+  b := 1;
+  z := SizeOf(Integer);
+  while (b < n) do
+  begin
+    Move(Result[0], Result[b], (Min(b, (n - b)) * z));
+    for i := b to (Min((b * 2), n) - 1) do
+      Inc(Result[i], (d * b));
+    b := (b * 2);
+  end;
 end;
 
 {==============================================================================]
@@ -3139,6 +3227,22 @@ begin
       Result[i] := o.Select((Self.start + i), (Self.start - i))
     else
       Result[i] := o.Select((Self.stop - ((s - 1) - i)), (Self.stop + ((s - 1) - i)));
+end;
+
+{==============================================================================]
+  <Unpacked>
+  @action: Expands the range into a concrete array representation.
+  @note: If the range contains multiple distinct values (Plural = True),
+         delegates to All to produce the full sequence. Otherwise, allocates
+         an array of Size and fills it with the single value Self.start.
+         This avoids enumeration overhead for degenerate (constant) ranges.
+[==============================================================================}
+function TRange.Unpacked: TIntegerArray; overload;
+begin
+  if Self.Plural then
+    Exit(Self.All);
+  SetLength(Result, Self.Size);
+  FillDWord(Result[0], Self.Size, Cardinal(Self.start));
 end;
 
 {==============================================================================]

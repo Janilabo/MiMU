@@ -10,7 +10,8 @@ function Randomize: TIntegerArray; overload;
 function Randomly: Integer; overload;
 function Randoms(const rSize: Integer = 1): TIntegerArray; overload;
 function Roll(const rCount: Integer = 1): TIntegerArray; overload;
-function Sample(const sSize: Integer): TIntegerArray; overload;
+function Sample(const sSize: Integer = 1): TIntegerArray; overload;
+function Sampled(const totalElements: Integer = 1): TIntegerArray; overload;
 function Samples(const rCount: Integer = 1): TIntegerArray; overload;
 function Shake(const shakes: Integer = 1): TIntegerArray; overload;
 function Shuffle(const shuffles: Integer = 1): TIntegerArray; overload;
@@ -314,7 +315,7 @@ end;
          Uses rounding to map floating step positions to integers.
          If sSize = 1, returns only the start value.
 [==============================================================================}
-function TRange.Sample(const sSize: Integer): TIntegerArray; overload;
+function TRange.Sample(const sSize: Integer = 1): TIntegerArray; overload;
 var
   i: Integer;
   s: Double;
@@ -324,6 +325,33 @@ begin
   SetLength(Result, sSize);
   s := (Self.Delta / (sSize - 1));
   for i := 0 to (sSize - 1) do
+    Result[i] := Round(Self.start + (i * s));
+end;
+
+{==============================================================================]
+  <Sampled>
+  @action: Produces a uniformly sampled subset of values across the range.
+  @note: Returns a fixed-size array of totalElements values evenly distributed
+         from Self.start to Self.stop (inclusive). If totalElements <= 0,
+         returns an empty array; if totalElements = 1, returns [Self.start];
+         if totalElements exceeds or equals Size, returns the full range (All).
+         Otherwise computes a linear interpolation step and rounds each value,
+         effectively performing uniform downsampling of the range.
+[==============================================================================}
+function TRange.Sampled(const totalElements: Integer = 1): TIntegerArray; overload;
+var
+  i: Integer;
+  s: Double;
+begin
+  if (totalElements <= 0) then
+    Exit([]);
+  if (totalElements = 1) then
+    Exit([Self.start]);
+  if (totalElements >= Self.Size) then
+    Exit(Self.All);  
+  SetLength(Result, totalElements);
+  s := ((Self.stop - Self.start) / (totalElements - 1));
+  for i := 0 to (totalElements - 1) do
     Result[i] := Round(Self.start + (i * s));
 end;
 
