@@ -19,6 +19,8 @@ function Keys: TIntegerArray; overload;
 function LoadID(var target: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
 function Positional: TIntegerArray; overload;
 function Positions: TIntegerArray; overload;
+function Serialization: TIntegerArray; overload;
+function Slots: TIntegerArray; overload;
 function ToIDs: TIntegerArray; overload;
 function ToIndexes: TIntegerArray; overload;
 {$ENDIF}
@@ -434,6 +436,66 @@ begin
   Result[0] := 0;
   for i := 1 to High(Result) do
     Result[i] := (Result[i - 1] + 1);
+end;
+
+{==============================================================================]
+  <Serialization>
+  @action: Generates a zero-based sequential index array using block-doubling.
+  @note: Produces the sequence [0, 1, 2, ..., Size-1] by iteratively copying
+         and offsetting previously built segments. The algorithm doubles the
+         initialized portion on each iteration (h := h * 2) via System.Move,
+         then applies an offset to form the next contiguous block. Any remaining
+         tail (when Size is not a power of two) is handled separately. This
+         approach minimizes per-element initialization overhead compared to
+         naive iteration, leveraging bulk memory operations.
+[==============================================================================}
+function TRange.Serialization: TIntegerArray; overload;
+var
+  i, l, h, r, s: Integer;
+begin
+  l := Self.Size;
+  if (l = 1) then
+    Exit([0]);
+  SetLength(Result, l);
+  s := SizeOf(Integer);
+  Result[0] := 0;
+  h := 1;
+  while ((h * 2) <= l) do
+  begin
+    System.Move(Result[0], Result[h], (h * s));
+    for i := h to ((h * 2) - 1) do
+      Result[i] := (Result[i] + h);
+    h := (h * 2);
+  end;
+  r := (l - h);
+  if (r > 0) then
+  begin
+    System.Move(Result[0], Result[h], (r * s));
+    for i := h to (l - 1) do
+      Result[i] := (Result[i] + h);
+  end;
+end;
+
+{==============================================================================]
+  <Slots>
+  @action: Generates a zero-based index sequence matching the range size.
+  @note: Returns an array of length Size containing cumulative increments,
+         producing the sequence [0, 1, 2, ..., Size-1]. Internally initializes
+         all elements to 1 (except the first set to 0) and performs a prefix
+         sum. Special-cases Size = 1 to return [0]. Assumes Size >= 1.
+[==============================================================================}
+function TRange.Slots: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([0]);
+  SetLength(Result, s);
+  FillDWord(Result[0], s, 1);
+  Result[0] := 0;
+  for i := 1 to (s - 1) do
+    Result[i] := (Result[i - 1] + Result[i]);
 end;
 
 {==============================================================================]
