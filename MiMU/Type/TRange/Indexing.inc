@@ -2,9 +2,11 @@
 function AsID(const oAscending: Boolean = True): TIntegerArray; overload;
 function AsIDs: TIntegerArray; overload;
 function AsIndexes: TIntegerArray; overload;
+function AsIndices: TIntegerArray; overload;
 function Entries: TIntegerArray; overload;
 function GetIDs: TIntegerArray; overload;
 function GetIndexes: TIntegerArray; overload;
+function GetIndices: TIntegerArray; overload;
 function Identifiers: TIntegerArray; overload;
 function IDs: TIntegerArray; overload;
 function IDs(const dValue: Integer): Integer; overload;
@@ -23,6 +25,7 @@ function Serialization: TIntegerArray; overload;
 function Slots: TIntegerArray; overload;
 function ToIDs: TIntegerArray; overload;
 function ToIndexes: TIntegerArray; overload;
+function ToIndices: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -107,6 +110,37 @@ begin
 end;
 
 {==============================================================================]
+  <AsIndices>
+  @action: Builds a zero-based index array using exponential block growth.
+  @note: Produces the sequence [0, 1, 2, ..., Size-1] by repeatedly duplicating
+         the initialized prefix and offsetting it. The working segment grows
+         exponentially (h := h * 2), reducing iteration overhead compared to
+         linear filling. Handles non power-of-two sizes by limiting each copy
+         to the remaining capacity. Relies on Move for bulk transfer and
+         assumes Size >= 1.
+[==============================================================================}
+function TRange.AsIndices: TIntegerArray; overload;
+var
+  h, s, i, z: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([0]);
+  SetLength(Result, s);
+  Result[0] := 0;
+  h := 1;
+  z := SizeOf(Integer);
+  while (h < s) do
+  begin
+    i := Min(h, (s - h));
+    Move(Result[0], Result[h], (i * z));
+    for i := h to Min(((h + i) - 1), (s - 1)) do
+      Result[i] := (Result[i] + h);
+    h := (h * 2);
+  end;
+end;
+
+{==============================================================================]
   <Entries>
   @action: Fills array with zero-based indices via enumerator iteration
   @note: Identical to Labels; sequential assignment using Range enumerator
@@ -156,6 +190,28 @@ begin
     Result[i * 2] := (i * 2);
   for i := 0 to ((s - 2) div 2) do
     Result[(i * 2) + 1] := ((i * 2) + 1);
+end;
+
+{==============================================================================]
+  <GetIndices>
+  @action: Generates a zero-based sequential index array for the range.
+  @note: Returns the sequence [0, 1, 2, ..., Size-1] by initializing the
+         array with 1s (except the first element set to 0) and performing
+         a prefix sum. Functionally equivalent to Slots, using a simple
+         linear accumulation strategy. Assumes Size >= 1.
+[==============================================================================}
+function TRange.GetIndices: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([0]);
+  SetLength(Result, s);
+  FillDWord(Result[0], s, 1);
+  Result[0] := 0;
+  for i := 1 to (s - 1) do
+    Result[i] := (Result[i - 1] + Result[i]);
 end;
 
 {==============================================================================]
@@ -548,6 +604,41 @@ begin
   begin
     p^ := i;
     Inc(p);
+  end;
+end;
+
+{==============================================================================]
+  <ToIndices>
+  @action: Produces a zero-based index array for the range using block expansion.
+  @note: Generates the sequence [0, 1, 2, ..., Size-1] by first initializing
+         a small prefix (up to BLOCK_SIZE), then repeatedly copying that block
+         and applying an offset. This reduces loop overhead versus naive
+         per-element assignment and improves cache locality. Handles arbitrary
+         sizes by processing remaining elements in the final partial block.
+         Assumes Size >= 1.
+[==============================================================================}
+function TRange.ToIndices: TIntegerArray; overload;
+const
+  BLOCK_SIZE = 256;
+var
+  i, s, o, c, z: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([0]);
+  SetLength(Result, s);
+  c := Min(s, BLOCK_SIZE);
+  for i := 0 to (c - 1) do
+    Result[i] := i;
+  o := BLOCK_SIZE;
+  z := SizeOf(Integer);
+  while (o < s) do
+  begin
+    c := Min(BLOCK_SIZE, (s - o));
+    Move(Result[0], Result[o], (c * z));
+    for i := o to ((o + c) - 1) do
+      Result[i] := (Result[i] + o);
+    Inc(o, BLOCK_SIZE);
   end;
 end;
 {$ENDIF}
