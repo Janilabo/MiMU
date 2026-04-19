@@ -81,12 +81,15 @@ function Outside(const x: Integer): Boolean; overload;
 function Own(const val: Integer): Boolean; overload;
 function Owns(const val: Integer): Boolean; overload;
 function Subset(const r: TRange): Boolean; overload;
+function Superset(const r: TRange): Boolean; overload;
 function Surrounds(const target: TRange): Boolean; overload;
 function Tangent(const val: Integer): Boolean; overload;
 function Tangent(const target: TRange): Boolean; overload;
 function Value(const x: Integer): Boolean; overload;
 function Within(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
 function WithinBounds(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
+function Wrapping(const r: TRange): Boolean; overload;
+function Wraps(const r: TRange): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1162,6 +1165,18 @@ begin
 end;
 
 {==============================================================================]
+  <Superset>
+  @action: Determines whether the current range fully contains another range.
+  @note: Returns True if both the minimum and maximum bounds of r lie within
+         Self. This implies complete coverage of r by Self, assuming contiguous
+         ranges. Relies on Contains for boundary checks.
+[==============================================================================}
+function TRange.Superset(const r: TRange): Boolean; overload;
+begin
+  Result := (Self.Contains(r.Minimum) and Self.Contains(r.Maximum));
+end;
+
+{==============================================================================]
   <Surrounds>
   @action: Bitmask-based check for boundary-independent containment.
   @note: LOGIC WARNING: This specific bitwise implementation returns True 
@@ -1235,5 +1250,43 @@ end;
 function TRange.WithinBounds(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
 begin
   Result := (((val > Self.start) <> (val > Self.stop)) or Self.Employs(val));
+end;
+
+{==============================================================================]
+  <Wrapping>
+  @action: Determines whether the current range strictly encloses another range.
+  @note: Returns True if Self extends beyond r on both sides, i.e. Self.Minimum
+         is strictly less than r.Minimum and Self.Maximum is strictly greater
+         than r.Maximum. The implementation evaluates the two boundary conditions
+         sequentially, short-circuiting on failure of the lower-bound check.
+         This expresses a strict containment relationship (non-inclusive).
+[==============================================================================}
+function TRange.Wrapping(const r: TRange): Boolean; overload;
+begin
+  Result := (Self.Minimum < r.Minimum);
+  if not Result then
+    Result := (Self.Maximum > r.Maximum);
+end;
+
+{==============================================================================]
+  <Wraps>
+  @action: Determines whether the current range fully wraps another range.
+  @note: Returns True when Self fully encloses r (i.e., r.Minimum is not
+         outside Self.Minimum and r.Maximum is not outside Self.Maximum).
+         The logic performs boundary comparisons using Min/Max checks rather
+         than direct relational operators. Equivalent in intent to a strict
+         containment test (Self.Minimum <= r.Minimum AND Self.Maximum >= r.Maximum),
+         but expressed via negated extremum comparisons.
+[==============================================================================}
+function TRange.Wraps(const r: TRange): Boolean; overload;
+var
+  m: Integer;
+begin
+  m := r.Minimum;
+  Result := not (Min(m, Self.Minimum) = m);
+  if not Result then
+    Exit;
+  m := r.Maximum;
+  Result := not (Max(m, Self.Maximum) = m);
 end;
 {$ENDIF}

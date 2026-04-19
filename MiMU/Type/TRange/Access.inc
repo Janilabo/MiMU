@@ -1,25 +1,35 @@
 {$IFDEF METHODS}
 function Access(const index: Integer = 0): Integer; overload;
+function Access(const ID: TIntegerArray): TIntegerArray; overload;
 function AsValue(const index: Integer = 0): Integer; overload;
 function At(const index: Integer = 0): Integer; overload;
 function AtIndex(const index: Integer = 0): Integer; overload;
 function AtPos(const index: Integer = 0): Integer; overload;
 function AtPosition(const index: Integer = 0): Integer; overload;
+function Derive(const index: Integer = 0): Integer; overload;
 function Elem(const index: Integer = 0): Integer; overload;
 function Element(const index: Integer = 0): Integer; overload;
 function Entry(const index: Integer = 0): Integer; overload;
+function Evaluate(const index: Integer = 0): Integer; overload;
 function Fetch(const index: Integer = 0): Integer; overload;
 function Get(const index: Integer = 0): Integer; overload;
 function GetValue(const index: Integer = 0): Integer; overload;
 function Lookup(const index: Integer = 0): Integer; overload;
 function Map(const index: Integer = 0): Integer; overload;
 function Member(const index: Integer = 0): Integer; overload;
+function Node(const index: Integer = 0): Integer; overload;
 function Nth(const index: Integer = 0): Integer; overload;
 function NthVal(const index: Integer = 0): Integer; overload;
 function NValue(const index: Integer = 0): Integer; overload;
+function Query(const index: Integer = 0): Integer; overload;
+function Read(const index: Integer = 0): Integer; overload;
+function Resolve(const index: Integer = 0): Integer; overload;
+function Retrieve(const index: Integer = 0): Integer; overload;
 function Term(const index: Integer = 0): Integer; overload;
 function ToValue(const index: Integer = 0): Integer; overload;
+function ToValues(const ID: TIntegerArray): TIntegerArray; overload;
 function ValueAt(const index: Integer = 0): Integer; overload;
+function Yield(const index: Integer = 0): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -33,11 +43,34 @@ function ValueAt(const index: Integer = 0): Integer; overload;
 	 This implementation avoids conditional branching. No bounds checking is performed;
 	 the caller must ensure the index is within the logical range limits.
 [==============================================================================}
-function TRange.Access(const index: Integer = 0): Integer;
+function TRange.Access(const index: Integer = 0): Integer; overload;
 const
   d: array[0..1] of Integer = (1, -1);
 begin
   Result := (Self.start + (index * d[Ord(Self.Descending)]));
+end;
+
+{==============================================================================]
+  <Access>
+  @action: Maps a set of indices to their corresponding values in the range.
+  @note: Converts each element in ID (assumed zero-based indices) into a value
+         using start + (index * step), where step is +1 for ascending ranges
+         and -1 for descending ranges. Returns an array of the same length as
+         ID. If ID is empty, returns an empty array. Does not perform bounds
+         checking; out-of-range indices will yield extrapolated values.
+[==============================================================================}
+function TRange.Access(const ID: TIntegerArray): TIntegerArray; overload;
+const
+  d: array[0..1] of Integer = (1, -1);
+var
+  i, o: Integer;
+begin
+  if ID.Empty then
+    Exit([]);
+  SetLength(Result, ID.Length);
+  o := Ord(Self.Descending);
+  for i := 0 to High(Result) do
+    Result[i] := (Self.start + (ID[i] * d[o]));
 end;
 
 {==============================================================================]
@@ -112,6 +145,23 @@ begin
 end;
 
 {==============================================================================]
+  <Derive>
+  @action: Computes the value at a given index using direct directional arithmetic.
+  @note: Derives the element as start ± index depending on Direction:
+         +1 or 0 → start + index; -1 → start - index. Treats a zero direction
+         (degenerate range) as ascending. This is a branch-based alternative
+         to Query with explicit handling of Direction states. Does not perform
+         bounds checking; indices outside [0, Size-1] yield extrapolated values.
+[==============================================================================}
+function TRange.Derive(const index: Integer = 0): Integer; overload;
+begin
+  case Self.Direction of
+    1, 0: Result := (Self.start + index);
+    -1: Result := (Self.start - index);
+  end;
+end;
+
+{==============================================================================]
   <Elem>
   @action: Returns the value at the given zero-based offset from Start,
            using the sign of the range direction.
@@ -158,6 +208,27 @@ var
 begin
   m := -Ord(Self.Descending);
   Result := (Self.start + ((index xor m) - m));
+end;
+
+{==============================================================================]
+  <Evaluate>
+  @action: Retrieves the value at a specified position via enumeration.
+  @note: Iterates the range using its enumerator until the given index is
+         reached, returning the last yielded value. If the index exceeds
+         the range bounds, the result remains the last valid element reached.
+         This approach is less efficient than direct index-based methods
+         (e.g., Query/Read) due to iterative traversal.
+[==============================================================================}
+function TRange.Evaluate(const index: Integer = 0): Integer; overload;
+var
+  e: TRangeEnumerator;
+  i: Integer;
+begin
+  Result := Self.start;
+  e := GetEnumerator;
+  for i := 0 to index do
+    if e.MoveNext then
+      Result := e.Current;
 end;
 
 {==============================================================================]
@@ -253,6 +324,30 @@ begin
 end;
 
 {==============================================================================]
+  <Node>
+  @action: Retrieves the value at a specified index via iterative stepping.
+  @note: Starts from Self.start and advances step-by-step using Succ
+         (ascending) or Pred (descending) until the given index is reached.
+         Equivalent in result to Query, but implemented with explicit looping.
+         Does not perform bounds checking; large indices may result in
+         extrapolated values beyond the original range.
+[==============================================================================}
+function TRange.Node(const index: Integer = 0): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.start;
+  case Self.Ascending of
+    True:
+    for i := 1 to index do
+      Result := Succ(Result);
+    False:
+    for i := 1 to index do
+      Result := Pred(Result);
+  end;
+end;
+
+{==============================================================================]
   <Nth>
   @action: Returns the N-th value from Start, respecting range direction,
            using ordinal arithmetic.
@@ -318,6 +413,71 @@ begin
 end;
 
 {==============================================================================]
+  <Query>
+  @action: Retrieves the value at a specified index within the range.
+  @note: Computes the value using a zero-based index with directional step:
+         value = start + (index * sign(stop - start)). The Sign function
+         determines whether the range is ascending, descending, or constant.
+         Does not perform bounds checking; indices outside [0, Size-1] will
+         yield extrapolated values.
+[==============================================================================}
+function TRange.Query(const index: Integer = 0): Integer; overload;
+begin
+  Result := (Self.start + (index * Sign(Self.stop - Self.start)));
+end;
+
+{==============================================================================]
+  <Read>
+  @action: Retrieves the value at a specified index with bounds enforcement.
+  @note: Clamps the provided index to the valid range [0, Size-1] using
+         EnsureRange, then computes the corresponding value via
+         start + (index * Direction). Unlike Query, this method guarantees
+         the result always falls within the range domain.
+[==============================================================================}
+function TRange.Read(const index: Integer = 0): Integer; overload;
+begin
+  Result := (Self.start + (EnsureRange(index, 0, (Self.Size - 1)) * Self.Direction));
+end;
+
+{==============================================================================]
+  <Resolve>
+  @action: Retrieves a value from the range using circular (wrapped) indexing.
+  @note: Maps the given index into the valid range domain via modulo Size,
+         supporting negative and out-of-bounds indices by wrapping them into
+         [0, Size-1]. The resolved position is then converted to a value using
+         start + (i * Direction). This provides cyclic access over the range.
+[==============================================================================}
+function TRange.Resolve(const index: Integer = 0): Integer; overload;
+var
+  s, i: Integer;
+begin
+  s := Self.Size;
+  i := (index mod s);
+  if (i < 0) then
+    Inc(i, s);
+  Result := (Self.start + (i * Self.Direction));
+end;
+
+{==============================================================================]
+  <Retrieve>
+  @action: Retrieves the value at a specified index using recursive traversal.
+  @note: Computes the result by recursively stepping from Self.start toward
+         the target index, applying Succ (ascending) or Pred (descending)
+         per level. For index <= 0, returns Self.start. This method is
+         functionally equivalent to Query but significantly less efficient
+         due to recursion and potential stack growth for large indices.
+[==============================================================================}
+function TRange.Retrieve(const index: Integer = 0): Integer; overload;
+begin
+  if (index <= 0) then
+    Result := Self.start
+  else if Self.Ascending then
+    Result := Succ(Self.Retrieve(index - 1))
+  else
+    Result := Pred(Self.Retrieve(index - 1));
+end;
+
+{==============================================================================]
   <Term>
   @action: Returns the value at the specified zero-based index within the range,
            calculating direction dynamically from the difference between Stop and Start.
@@ -349,6 +509,26 @@ begin
 end;
 
 {==============================================================================]
+  <ToValues>
+  @action: Maps index positions to their corresponding range values.
+  @note: Transforms a zero-based index array (ID) into actual values within
+         the range using the relation: value = start + (index * Direction).
+         The Direction ensures correct handling of ascending or descending
+         ranges. The length of the result matches the input ID array.
+         Assumes indices are within [0, Size-1]; out-of-range values will
+         produce extrapolated results.
+[==============================================================================}
+function TRange.ToValues(const ID: TIntegerArray): TIntegerArray; overload;
+var
+  i, d: Integer;
+begin
+  d := Self.Direction;
+  SetLength(Result, ID.Length);
+  for i := 0 to High(Result) do
+    Result[i] := (Self.start + (ID[i] * d));
+end;
+
+{==============================================================================]
   <ValueAt>
   @action: Returns the value at a specified index from the start of the range, accounting for ascending or descending order.
   @note: Index defaults to 0. The method assumes the caller ensures the index stays within valid range bounds. Works for both ascending and descending ranges.
@@ -359,5 +539,19 @@ begin
     False: Result := (Self.start + index);
     True: Result := (Self.start - index);
   end;
+end;
+
+{==============================================================================]
+  <Yield>
+  @action: Computes the value at a specified index using branchless direction encoding.
+  @note: Derives the element as start + (index * step), where step is computed
+         as (Ascending * 2) - 1, yielding +1 for ascending and -1 for descending.
+         This avoids conditional branching by encoding direction arithmetically.
+         Functionally equivalent to Query/Derive. Does not perform bounds
+         checking; indices outside [0, Size-1] yield extrapolated values.
+[==============================================================================}
+function TRange.Yield(const index: Integer = 0): Integer; overload;
+begin
+  Result := (Self.start + (index * ((Integer(Self.Ascending) * 2) - 1)));
 end;
 {$ENDIF}

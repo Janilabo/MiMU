@@ -20,9 +20,11 @@ function IndexList: TIntegerArray; overload;
 function Keys: TIntegerArray; overload;
 function LoadID(var target: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
 function Positional: TIntegerArray; overload;
+function Positionally: TIntegerArray; overload;
 function Positions: TIntegerArray; overload;
 function Serialization: TIntegerArray; overload;
 function Slots: TIntegerArray; overload;
+function Slotted: TIntegerArray; overload;
 function ToIDs: TIntegerArray; overload;
 function ToIndexes: TIntegerArray; overload;
 function ToIndices: TIntegerArray; overload;
@@ -480,6 +482,35 @@ begin
 end;
 
 {==============================================================================]
+  <Positionally>
+  @action: Generates a zero-based index array using pairwise packed writes.
+  @note: Produces the sequence [0, 1, 2, ..., Size-1] by writing two indices
+         at a time via 64-bit packing (PInt64), combining consecutive 32-bit
+         integers into a single operation. This reduces loop iterations and
+         can improve performance on aligned memory. If Size is odd, the final
+         element is assigned separately. Assumes contiguous memory layout
+         and proper alignment for 64-bit access.
+[==============================================================================}
+function TRange.Positionally: TIntegerArray; overload;
+var
+  i, n: Integer;
+  p: PInt64;
+begin
+  n := Self.Size;
+  SetLength(Result, n);
+  p := PInt64(@Result[0]);
+  i := 0;
+  while ((i + 2) <= n) do
+  begin
+    p^ := (Int64(Cardinal(i)) or (Int64(Cardinal(i + 1)) shl 32));
+    Inc(p);
+    Inc(i, 2);
+  end;
+  if ((n and 1) = 1) then
+    Result[n - 1] := (n - 1);
+end;
+
+{==============================================================================]
   <Positions>
   @action: Returns TRange indexes.
   @note: None.
@@ -552,6 +583,25 @@ begin
   Result[0] := 0;
   for i := 1 to (s - 1) do
     Result[i] := (Result[i - 1] + Result[i]);
+end;
+
+{==============================================================================]
+  <Slotted>
+  @action: Generates a zero-based index array corresponding to the range size.
+  @note: Returns the sequence [0, 1, 2, ..., Size-1] by initializing the array
+         to zero and incrementing each element by its index. Functionally
+         equivalent to GetIndices/Slots, but implemented via direct indexing
+         rather than prefix accumulation. Assumes Size >= 0.
+[==============================================================================}
+function TRange.Slotted: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  FillDWord(Result[0], s, 0);
+  for i := 0 to (s - 1) do
+    Inc(Result[i], i);
 end;
 
 {==============================================================================]
