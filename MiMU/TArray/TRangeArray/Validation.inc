@@ -1,10 +1,37 @@
 {$IFDEF HELPERS}
+function Cohesive: Boolean; overload;
 function Continuous: Boolean; overload;
 function Gapless: Boolean; overload;
+function Integral: Boolean; overload;
 function Solid: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Cohesive>
+  @action: Checks if the sorted range sequence forms a single continuous span.
+  @returns: True if there are no gaps between segments; False otherwise.
+  @note: Uses a high-speed linear scan. A "gap" is defined as any space 
+         greater than 1 unit between the current maximum reach and the 
+         next segment's start.
+[==============================================================================}
+function TRangeArrayHelper.Cohesive: Boolean; overload;
+var
+  s: TRangeArray;
+  i, m: Integer;
+begin
+  if (Self.Length < 2) then
+    Exit(Self.Length = 1);
+  s := Self.Normalized.SortedByStart;
+  m := s[0].stop;
+  for i := 0 to (High(s) - 1) do
+    if (s[i + 1].start > (m + 1)) then
+      Exit(False)
+    else if (s[i + 1].stop > m) then
+      m := s[i + 1].stop;
+  Result := True;
+end;
+
 {==============================================================================]
   <Continuous>
   @action: Determines if the array of ranges forms a single continuous span.
@@ -53,6 +80,29 @@ begin
     if (s[i] > (s[i - 1] + 1)) then
       Exit(False);
   Result := True;
+end;
+
+{==============================================================================]
+  <Integral>
+  @action: Verifies if the range collection forms a single, unbroken span.
+  @note: True if all segments are connected (no gaps > 1); False otherwise.
+[==============================================================================}
+function TRangeArrayHelper.Integral: Boolean; overload;
+var
+  s: TRangeArray;
+  i, l, h: Integer;
+begin
+  if (Self.Length < 2) then
+    Exit(Self.Length = 1);
+  s := Self.Normalized.SortedByStart;
+  l := s[0].start;
+  h := s[0].stop;
+  for i := 0 to High(s) do
+    if (s[i].start > (h + 1)) then
+      Exit(False)
+    else if (s[i].stop > h) then
+      h := s[i].stop;
+  Result := ((h - l) >= (s[High(s)].stop - s[0].start));
 end;
 
 {==============================================================================]
