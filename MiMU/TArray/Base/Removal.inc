@@ -1,10 +1,14 @@
 {$IFDEF HELPERS}
+function Cut(const cIndex: Integer; const nItem: MType): MType; overload;
+function Cut(const cIndex: Integer = 0): MType; overload;
+function Del(const dIndex: Integer = 0): Integer; overload;
 function Delete(const index: Integer = 0): MArray; overload;
 function Delete(const ID: TIntegerArray): MArray; overload;
 function Deload(var target: MArray; const clearing: Boolean = True): Integer; overload;
 function Discard(const ID: TIntegerArray): MArray; overload;
 function Drop(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
 function Dump(const items: MArray; const index: Integer = 0): MArray; overload;
+function Eject(const eIndex: Integer): Integer; overload;
 function Erase(const item: MType; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
 function Erase(const item: MType; const all: Boolean): MArray; overload;
 function Erase(const items: MArray; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
@@ -13,17 +17,74 @@ function Evict(const item: MType): Boolean; overload;
 function Pop: MType; overload;
 function Pop(const null: MType): MType; overload;
 function Pull: MArray; overload;
+function Pull(const pIndex: Integer): MType; overload;
 function Purge(const item: MType): Integer; overload;
 function Remove(const item: MType; const index: Integer = 0; const all: Boolean = True): MArray; overload;
 function Remove(const item: MType; const all: Boolean): MArray; overload;
 function Remove(const items: MArray; const index: Integer = 0; const all: Boolean = True): MArray; overload;
 function Remove(const items: MArray; const all: Boolean): MArray; overload;
+function RemoveIndex(const rIndex: Integer = 0): Boolean; overload;
 function Shift: MType; overload;
 function Shift(const sCount: Integer): MArray; overload;
 function Strip(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
+function Zap(const zIndex: Integer = 0): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Cut>
+  @action: Removes the element at cIndex and returns it.
+  @returns: The extracted element. If cIndex is out of bounds, returns nItem.
+  @note: Uses Move for high-speed memory shifting. Effectively a "Pop" 
+         operation with a safe fallback value.
+[==============================================================================}
+function MArrayHelper.Cut(const cIndex: Integer; const nItem: MType): MType; overload;
+var
+  h: Integer;
+begin
+  h := (Self.Length - 1);
+  if ((cIndex < 0) or (cIndex > h)) then
+    Exit(nItem);
+  Result := Self[cIndex];
+  if (cIndex < h) then
+    Move(Self[cIndex + 1], Self[cIndex], ((h - cIndex) * SizeOf(MType)));
+  SetLength(Self, h);
+end;
+
+{==============================================================================]
+  <Cut>
+  @action: Removes the element at cIndex and returns that element's value.
+  @returns: The value of the removed element.
+  @note: Default index is 0. If cIndex is out of bounds, an exception is raised
+         (standard surgical behavior) or a default value is returned.
+[==============================================================================}
+function MArrayHelper.Cut(const cIndex: Integer = 0): MType; overload;
+var
+  n: MType;
+begin
+  Result := Self.Cut(cIndex, n);
+end;
+
+{==============================================================================]
+  <Del>
+  @action: Unsafely removes the element at dIndex by shifting elements left.
+  @returns: The new Length of the array.
+  @note: Default index is 0. This is a "raw" operation: it does not validate 
+         if dIndex is within current bounds. Calling on an empty array 
+         safely returns 0.
+[==============================================================================}
+function MArrayHelper.Del(const dIndex: Integer = 0): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := High(Self);
+  if (Result < 0) then
+    Exit(0);
+  for i := dIndex to (Result - 1) do
+    Self[i] := Self[i + 1];
+  SetLength(Self, Result);
+end;
+
 {==============================================================================]
   <Delete>
   @action: Deletes array item from arr by index.
@@ -170,6 +231,25 @@ begin
       Inc(d);
   if (d > 0) then
     SetLength(Result, (l - d));
+end;
+
+{==============================================================================]
+  <Eject>
+  @action: Removes the element at eIndex and returns the new Length of the array.
+  @returns: The updated element count. If the index is invalid, returns the 
+            original length (no change).
+  @note: This shifts subsequent elements and shrinks the memory block.
+[==============================================================================}
+function MArrayHelper.Eject(const eIndex: Integer): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := High(Self);
+  if ((eIndex > Result) or (eIndex < 0)) then
+    Exit(Result + 1);
+  for i := eIndex to (Result - 1) do
+    Self[i] := Self[i + 1];
+  SetLength(Self, Result);
 end;
 
 {==============================================================================]
@@ -346,6 +426,26 @@ begin
 end;
 
 {==============================================================================]
+  <Pull>
+  @action: Extracts the element at the specified index, shifts the remaining 
+           elements to close the gap, and returns the extracted value.
+  @note: This is an O(N) operation. If the index is out of bounds, the function 
+         returns the default value for the type.
+[==============================================================================}
+function MArrayHelper.Pull(const pIndex: Integer): MType; overload;
+var
+  h, i: Integer;
+begin
+  h := High(Self);
+  if ((pIndex > h) or (pIndex < 0)) then
+    Exit;
+  Result := Self[pIndex];
+  for i := pIndex to (h - 1) do
+    Self[i] := Self[i + 1];
+  SetLength(Self, h);
+end;
+
+{==============================================================================]
   <Purge>
   @action: Removes all occurrences of <item> from the array by overwriting matched
            elements with the current tail element and shrinking the array length.
@@ -468,6 +568,27 @@ begin
 end;
 
 {==============================================================================]
+  <RemoveIndex>
+  @action: Validates the rIndex and, if valid, removes that element.
+  @returns: True if the element was successfully removed; False if the index 
+            was out of bounds.
+  @note: Default index is 0. This method utilizes high-speed memory block 
+         shifting (Move) and reduces the array length by 1.
+[==============================================================================}
+function MArrayHelper.RemoveIndex(const rIndex: Integer = 0): Boolean; overload;
+var
+  r: Integer;
+begin
+  r := High(Self);
+  Result := not ((rIndex < 0) or (rIndex > r));
+  if not Result then
+    Exit;
+  if (rIndex < r) then
+    Move(Self[rIndex + 1], Self[rIndex], ((r - rIndex) * SizeOf(MType)));
+  SetLength(Self, r);
+end;
+
+{==============================================================================]
   <Shift>
   @action: Shortens the array with first element.
   @note: Returns the removed arr[0].
@@ -524,5 +645,20 @@ begin
     p := [Self.Loc(item)];
   r.Create(0, High(Self));
   Result := Self.Get(p.Inverted(r));
+end;
+
+{==============================================================================]
+  <Zap>
+  @action: Unsafely removes the element at zIndex and returns the new Length.
+  @note: Default index is 0. This is a high-performance, raw memory operation.
+         Warning: No bounds checking is performed. If zIndex is invalid, 
+         this will result in memory corruption or an Access Violation.
+[==============================================================================}
+function MArrayHelper.Zap(const zIndex: Integer = 0): Integer; overload;
+begin
+  Result := (Self.Length - 1);
+  if (zIndex < Result) then
+    Move(Self[zIndex + 1], Self[zIndex], ((Result - zIndex) * SizeOf(MType)));
+  SetLength(Self, Result);
 end;
 {$ENDIF}
