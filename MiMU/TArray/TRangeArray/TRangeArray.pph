@@ -13,3 +13,4 @@
 {$I Size.inc}
 {$I Sorting.inc}
 {$I Structuring.inc}
+{$I Validation.inc}

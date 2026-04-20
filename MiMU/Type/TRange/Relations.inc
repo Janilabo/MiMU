@@ -16,6 +16,8 @@ function IsConnected(const target: TRange): Boolean; overload;
 function IsEquivalent(const target: TRange): Boolean; overload;
 function IsMergeable(const other: TRange): Boolean; overload;
 function IsNeighbor(const r: TRange): Boolean; overload;
+function Jointed(const r: TRange): Boolean; overload;
+function Linkable(const target: TRange): Boolean; overload;
 function Loose(const target: TRange): Boolean; overload;
 function Meet(const other: TRange; out mRange: TRange): Boolean; overload;
 function Mergeable(const other: TRange): Boolean; overload;
@@ -289,6 +291,42 @@ end;
 function TRange.IsNeighbor(const r: TRange): Boolean; overload;
 begin
   Result := (Self.Follows(r) or Self.Precedes(r));
+end;
+
+{==============================================================================]
+  <Jointed>
+  @action: Determines whether two ranges are connected without a gap.
+  @note: Returns True if Self and r either overlap or are directly adjacent.
+         Computes the separation between ranges (g), where:
+           g = 0  → overlap
+           g = 1  → touching (adjacent)
+           g > 1  → gap
+         The result is True when g <= 1, meaning the ranges form a continuous
+         interval when combined.
+[==============================================================================}
+function TRange.Jointed(const r: TRange): Boolean; overload;
+var
+  g: Integer;
+begin
+  if (Self.Maximum < r.Minimum) then
+    g := (r.Minimum - Self.Maximum)
+  else if (r.Maximum < Self.Minimum) then
+    g := (Self.Minimum - r.Maximum)
+  else
+    g := 0;
+  Result := (g <= 1);
+end;
+
+{==============================================================================]
+  <Linkable>
+  @action: Returns True if the target range is adjacent to or overlaps with
+           the current range.
+  @note: Uses a proximity check (Distance <= 1) to determine if two ranges
+         can be merged into a single continuous interval.
+[==============================================================================}
+function TRange.Linkable(const target: TRange): Boolean; overload;
+begin
+  Result := not ((Self.Minimum > (target.Maximum + 1)) or (target.Minimum > (Self.Maximum + 1)));
 end;
 
 {==============================================================================]
