@@ -2,23 +2,29 @@
 function Abuts(const other: TRange): Boolean; overload;
 function Adjacent(const other: TRange): Boolean; overload;
 function Coequal(const target: TRange; const strictly: Boolean = False): Boolean; overload;
+function Consecutive(const r: TRange): Boolean; overload;
+function Contiguous(const r: TRange): Boolean; overload;
 function Differ(const b: TRange): Boolean; overload;
 function Differs(const b: TRange): Boolean; overload;
 function Equal(const b: TRange): Boolean; overload;
 function Equals(const b: TRange): Boolean; overload;
 function Equivalent(const b: TRange): Boolean; overload;
+function Follows(const r: TRange): Boolean; overload;
 function IsAdjacent(const other: TRange): Boolean; overload;
 function IsConnected(const target: TRange): Boolean; overload;
 function IsEquivalent(const target: TRange): Boolean; overload;
 function IsMergeable(const other: TRange): Boolean; overload;
+function IsNeighbor(const r: TRange): Boolean; overload;
 function Loose(const target: TRange): Boolean; overload;
 function Meet(const other: TRange; out mRange: TRange): Boolean; overload;
 function Mergeable(const other: TRange): Boolean; overload;
 function Neighbor(const b: TRange): Boolean; overload;
+function Neighboring(const r: TRange): Boolean; overload;
 function Neighbour(const b: TRange): Boolean; overload;
 function Overlap(const b: TRange): Boolean; overload;
 function Overlapping(const b: TRange): Boolean; overload;
 function Overlaps(const other: TRange): Boolean; overload;
+function Precedes(const r: TRange): Boolean; overload;
 function RelationshipTo(const target: TRange): Byte; overload;
 function RelationTo(const target: TRange): Byte; overload;
 function Separated(const other: TRange): Boolean; overload;
@@ -103,6 +109,33 @@ begin
 end;
 
 {==============================================================================]
+  <Consecutive>
+  @action: Determines whether two ranges form a continuous, non-overlapping sequence.
+  @note: Returns True if Self and r are disjoint but adjacent such that their
+         union forms a contiguous interval without gaps or overlap. This is
+         verified by comparing the span of the combined bounds against the
+         sum of individual sizes. Equivalent to checking that the ranges do
+         not overlap and are directly consecutive.
+[==============================================================================}
+function TRange.Consecutive(const r: TRange): Boolean; overload;
+begin
+  Result := (((Max(Self.Maximum, r.Maximum) - Min(Self.Minimum, r.Minimum)) + 1) = (Self.Size + r.Size));
+end;
+
+{==============================================================================]
+  <Contiguous>
+  @action: Determines whether two ranges are directly adjacent.
+  @note: Returns True if Self and r touch at exactly one boundary without
+         overlapping, i.e. the maximum of one range differs by 1 from the
+         minimum of the other. Uses absolute difference to handle both
+         ascending and descending configurations symmetrically.
+[==============================================================================}
+function TRange.Contiguous(const r: TRange): Boolean; overload;
+begin
+  Result := ((Abs(Self.Maximum - r.Minimum) = 1) or (Abs(r.Maximum - Self.Minimum) = 1));
+end;
+
+{==============================================================================]
   <Differ>
   @action: Checks if a unmatches b exactly.
   @note: 0..3 and 3..0 will NOT be treated as match.
@@ -154,6 +187,18 @@ end;
 function TRange.Equivalent(const b: TRange): Boolean; overload;
 begin
   Result := (((Self.start = b.start) and (Self.stop = b.stop)) or ((Self.start = b.stop) and (Self.stop = b.start)));
+end;
+
+{==============================================================================]
+  <Follows>
+  @action: Determines whether the current range immediately follows another.
+  @note: Returns True if Self starts exactly one unit after r ends, i.e.
+         Self.Minimum = r.Maximum + 1. This implies direct adjacency with
+         Self positioned after r and no overlap or gap.
+[==============================================================================}
+function TRange.Follows(const r: TRange): Boolean; overload;
+begin
+  Result := (Self.Minimum = (r.Maximum + 1));
 end;
 
 {==============================================================================]
@@ -215,6 +260,17 @@ end;
 function TRange.IsMergeable(const other: TRange): Boolean; overload;
 begin
   Result := (Self.Overlaps(other) or Self.IsAdjacent(other));
+end;
+
+{==============================================================================]
+  <IsNeighbor>
+  @action: Determines whether two ranges are directly adjacent.
+  @note: Returns True if Self either immediately follows or precedes r.
+         Equivalent to checking for boundary adjacency without overlap.
+[==============================================================================}
+function TRange.IsNeighbor(const r: TRange): Boolean; overload;
+begin
+  Result := (Self.Follows(r) or Self.Precedes(r));
 end;
 
 {==============================================================================]
@@ -280,6 +336,21 @@ begin
 end;
 
 {==============================================================================]
+  <Neighboring>
+  @action: Determines whether two ranges are directly adjacent in exactly one direction.
+  @note: Returns True if Self and r touch at a boundary with a difference of
+         exactly 1, but only on one side (exclusive adjacency). The XOR ensures
+         that both conditions cannot be true simultaneously, enforcing a
+         directional neighbor relationship (either Self follows r or precedes it,
+         but not both). Functionally similar to IsNeighbor, but explicitly
+         encoded using mutually exclusive boundary checks.
+[==============================================================================}
+function TRange.Neighboring(const r: TRange): Boolean; overload;
+begin
+  Result := (((Self.Minimum - r.Maximum) = 1) xor ((r.Minimum - Self.Maximum) = 1));
+end;
+
+{==============================================================================]
   <Neighbour>
   @action: Returns true if 2 TRanges are right next to eachother.
   @note: (Distance is exactly 1 between em).
@@ -320,6 +391,18 @@ end;
 function TRange.Overlaps(const other: TRange): Boolean; overload;
 begin
   Result := ((Self.Minimum <= other.Maximum) and (Self.Maximum >= other.Minimum));
+end;
+
+{==============================================================================]
+  <Precedes>
+  @action: Determines whether the current range immediately precedes another.
+  @note: Returns True if Self ends exactly one unit before r begins, i.e.
+         Self.Maximum + 1 = r.Minimum. This implies direct adjacency with
+         Self positioned before r and no overlap or gap.
+[==============================================================================}
+function TRange.Precedes(const r: TRange): Boolean; overload;
+begin
+  Result := (r.Minimum = (Self.Maximum + 1));
 end;
 
 {==============================================================================]
