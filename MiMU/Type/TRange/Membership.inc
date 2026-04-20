@@ -34,6 +34,7 @@ function Envelops(const target: TRange): Boolean; overload;
 function Far(const val: Integer; const threshold: Integer = 1): Boolean; overload;
 function Flush(const val: Integer): Boolean; overload;
 function Flush(const target: TRange): Boolean; overload;
+function Gapped(const r: TRange; const gThreshold: Integer = 0): Boolean; overload;
 function Got(const val: Integer): Boolean; overload;
 function Has(const val: Integer): Boolean; overload;
 function Have(const val: Integer): Boolean; overload;
@@ -544,6 +545,20 @@ end;
 function TRange.Flush(const target: TRange): Boolean; overload;
 begin
   Result := ((Self.Maximum = target.Minimum) xor (Self.Minimum = target.Maximum));
+end;
+
+{==============================================================================]
+  <Gapped>
+  @action: Determines whether two ranges are separated by a gap exceeding a threshold.
+  @note: Returns True if the distance between Self and r is greater than the
+         allowed gap threshold (gThreshold). The comparison is based on the
+         difference between the combined span and the sum of individual sizes.
+         When gThreshold = 0, this detects any non-adjacent, non-overlapping
+         separation. Larger thresholds tolerate small gaps before reporting True.
+[==============================================================================}
+function TRange.Gapped(const r: TRange; const gThreshold: Integer = 0): Boolean; overload;
+begin
+  Result := (((Max(Self.Maximum, r.Maximum) - Min(Self.Minimum, r.Minimum)) + 1) > ((Self.Size + r.Size) + (gThreshold - 1)));
 end;
 
 {==============================================================================]

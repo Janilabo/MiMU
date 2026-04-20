@@ -10,6 +10,7 @@ function Equal(const b: TRange): Boolean; overload;
 function Equals(const b: TRange): Boolean; overload;
 function Equivalent(const b: TRange): Boolean; overload;
 function Follows(const r: TRange): Boolean; overload;
+function Gapless(const r: TRange): Boolean; overload;
 function IsAdjacent(const other: TRange): Boolean; overload;
 function IsConnected(const target: TRange): Boolean; overload;
 function IsEquivalent(const target: TRange): Boolean; overload;
@@ -20,6 +21,7 @@ function Meet(const other: TRange; out mRange: TRange): Boolean; overload;
 function Mergeable(const other: TRange): Boolean; overload;
 function Neighbor(const b: TRange): Boolean; overload;
 function Neighboring(const r: TRange): Boolean; overload;
+function Neighbors(const r: TRange): Boolean; overload;
 function Neighbour(const b: TRange): Boolean; overload;
 function Overlap(const b: TRange): Boolean; overload;
 function Overlapping(const b: TRange): Boolean; overload;
@@ -202,6 +204,22 @@ begin
 end;
 
 {==============================================================================]
+  <Gapless>
+  @action: Determines whether two ranges are contiguous or overlapping.
+  @note: Returns True if Self and r either overlap or are directly adjacent,
+         i.e. there is no gap between them. This is evaluated by checking
+         whether the maximum of the lower bounds is less than or equal to
+         the minimum of the upper bounds plus one. This condition allows:
+         - overlap (intersection > 0)
+         - adjacency (exact boundary touch)
+         but excludes any separation greater than one unit.
+[==============================================================================}
+function TRange.Gapless(const r: TRange): Boolean; overload;
+begin
+  Result := (Max(Self.Minimum, r.Minimum) <= (Min(Self.Maximum, r.Maximum) + 1));
+end;
+
+{==============================================================================]
   <IsAdjacent>
   @action: Determines whether this range is directly adjacent to another range.
   @note: Returns True if the ranges do not overlap but touch at exactly one
@@ -348,6 +366,21 @@ end;
 function TRange.Neighboring(const r: TRange): Boolean; overload;
 begin
   Result := (((Self.Minimum - r.Maximum) = 1) xor ((r.Minimum - Self.Maximum) = 1));
+end;
+
+{==============================================================================]
+  <Neighbors>
+  @action: Determines whether two ranges are directly adjacent (no gap, no overlap).
+  @note: Returns True if Self and r are immediate neighbors in either order,
+         meaning the difference between Self.Maximum and r.Minimum (or vice versa)
+         is exactly -1 when expressed as inclusive interval distance.
+         This implementation encodes adjacency using the identity:
+         (max - min + 1) = 0 for boundary-touching reversed endpoints.
+         Equivalent to strict adjacency without overlap.
+[==============================================================================}
+function TRange.Neighbors(const r: TRange): Boolean; overload;
+begin
+  Result := ((((Self.Maximum - r.Minimum) + 1) = 0) or (((r.Maximum - Self.Minimum) + 1) = 0));
 end;
 
 {==============================================================================]

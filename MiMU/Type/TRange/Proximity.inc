@@ -19,6 +19,7 @@ function GetDistance(const target: TRange): Integer; overload;
 function Margin(const val: Integer): Integer; overload;
 function Proximity(const val: Integer): Integer; overload;
 function Separation(const other: TRange): Integer; overload;
+function Separaty(const r: TRange): Integer; overload;
 function Space(const target: TRange): Integer; overload;
 {$ENDIF}
 
@@ -420,6 +421,20 @@ begin
     Result := ((Self.Minimum - other.Maximum) - 1)
   else
     Result := -((Min(Self.Maximum, other.Maximum) - Max(Self.Minimum, other.Minimum)) + 1);
+end;
+
+{==============================================================================]
+  <Separaty>
+  @action: Computes signed separation between two ranges.
+  @note: Returns the number of elements between Self and r:
+         > 0 → gap size
+         = 0 → contiguous (touching)
+         < 0 → overlap size (negative; magnitude = overlap length)
+         Works with any ordering via normalized bounds.
+[==============================================================================}
+function TRange.Separaty(const r: TRange): Integer; overload;
+begin
+  Result := (Max(Self.Minimum, r.Minimum) - Min(Self.Maximum, r.Maximum) - 1);
 end;
 
 {==============================================================================]
