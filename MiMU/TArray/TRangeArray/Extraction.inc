@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Deconstruct: TIntegerArray; overload;
 function Disassemble: TIntegerArray; overload;
+function Spit: TIntegerArray; overload;
 function Starting: TIntegerArray; overload;
 function Starts: TIntegerArray; overload;
 function StartValues: TIntegerArray; overload;
@@ -42,7 +43,30 @@ begin
   SetLength(Result, (l * 2));
   if (l > 0) then
     Move(Self[0], Result[0], (l * SizeOf(TRange)));
-end; 
+end;
+
+{==============================================================================]
+  <Spit>
+  @action: Deconstructs the range array into a flat TIntegerArray.
+  @note: Every range [A..B] becomes two separate entries in the resulting 
+         array. This "spits" the raw coordinate data out of the structures.
+[==============================================================================}
+function TRangeArrayHelper.Spit: TIntegerArray; overload;
+var
+  P: PRange;
+  i: Integer;
+begin
+  SetLength(Result, (Self.Length * 2));
+  if Self.Empty then
+    Exit;
+  P := @Self[0];
+  for i := 0 to High(Self) do
+  begin
+    Result[i * 2] := P^.start;
+    Result[(i * 2) + 1] := P^.stop;
+    Inc(P);
+  end;
+end;
 
 {==============================================================================]
   <Starting>
