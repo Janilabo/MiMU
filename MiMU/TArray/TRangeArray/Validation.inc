@@ -1,8 +1,10 @@
 {$IFDEF HELPERS}
 function Cohesive: Boolean; overload;
+function Contiguous: Boolean; overload;
 function Continuous: Boolean; overload;
 function Gapless: Boolean; overload;
 function Integral: Boolean; overload;
+function Monolithic: Boolean; overload;
 function Solid: Boolean; overload;
 {$ENDIF}
 
@@ -30,6 +32,37 @@ begin
     else if (s[i + 1].stop > m) then
       m := s[i + 1].stop;
   Result := True;
+end;
+
+{==============================================================================]
+  <Contiguous>
+  @action: Uses recursive merging to see if all ranges belong to one "island."
+  @returns: True if the entire array collapses into a single segment.
+  @note: This is the "Flood-Fill" of range logic.
+[==============================================================================}
+function TRangeArrayHelper.Contiguous: Boolean; overload;
+var
+  s: TRangeArray;
+  i: Integer;
+  c: Boolean;
+begin
+  if (Self.Length < 2) then
+    Exit(Self.Length = 1);
+  s := Self.Normalized.SortedByStart;
+  repeat
+    c := False;
+    i := 1;
+    while (i <= High(s)) do
+      if s[0].Linkable(s[i]) then
+      begin
+        s[0].start := Min(s[0].start, s[i].start);
+        s[0].stop := Max(s[0].stop, s[i].stop);
+        s.RemoveIndex(i);
+        c := True;
+      end else
+        Inc(i);
+  until not c;
+  Result := (s.Length = 1);
 end;
 
 {==============================================================================]
@@ -103,6 +136,40 @@ begin
     else if (s[i].stop > h) then
       h := s[i].stop;
   Result := ((h - l) >= (s[High(s)].stop - s[0].start));
+end;
+
+{==============================================================================]
+  <Monolithic>
+  @action: Validates continuity by splitting the array and bridging sub-sections.
+  @returns: True if the segments form an unbroken chain.
+  @note: Sorting by Start is the engine; it ensures r[0].start is the
+         minimum possible entry point for the right-hand partition.
+         Recursive Divide & Conquer.
+[==============================================================================}
+function TRangeArrayHelper.Monolithic: Boolean; overload;
+  function C(const aSub: TRangeArray): Boolean;
+  var
+    l, r: TRangeArray;
+    m: Integer;
+    x, y: Integer;
+  begin
+    if (aSub.Length <= 1) then
+      Exit(True);
+    m := (aSub.Length div 2);
+    l := aSub.Copy(0, m);
+    r := aSub.Copy(m, (aSub.Length - m));
+    if not C(l) then
+      Exit(False);
+    if not C(r) then
+      Exit(False);
+    x := l.MaxStop;
+    y := r[0].start;
+    Result := (x >= (y - 1));
+  end;
+begin
+  if (Self.Length < 2) then
+    Exit(Self.Length = 1);
+  Result := C(Self.Normalized.SortedByStart);
 end;
 
 {==============================================================================]

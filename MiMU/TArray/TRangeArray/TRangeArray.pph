@@ -5,6 +5,7 @@
 {$I Conversion.inc}
 {$I Deduplication.inc}
 {$I Extraction.inc}
+{$I Extremity.inc}
 {$I Gaps.inc}
 {$I Membership.inc}
 {$I Merging.inc}
