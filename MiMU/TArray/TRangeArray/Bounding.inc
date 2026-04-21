@@ -2,6 +2,7 @@
 function Boundaries: TRange; overload;
 function Bounding(const rAscending: Boolean = True): TRange; overload;
 function Bounds: TRange; overload;
+function BRange: TRange; overload;
 function Extent: TRange; overload;
 function MaxMin: TRange; overload;
 function MinMax: TRange; overload;
@@ -84,6 +85,39 @@ begin
     end;
   end else
     Result := Default(TRange);
+end;
+
+{==============================================================================]
+  <BRange>
+  @action: Returns the absolute bounding TRange (Extent) of the array.
+  @note: Uses an unrolled loop with an Integer-Helper-driven condition. 
+         Processes two records per iteration for maximum throughput.
+[==============================================================================}
+function TRangeArrayHelper.BRange: TRange; overload;
+var
+  P: PRange;
+  i, l: Integer;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit(TRange.Null);
+    1: Exit(Self[0].Ascend);
+  end;
+  P := @Self[0];
+  Result := TRange.Construct(Min(P^.start, P^.stop), Max(P^.start, P^.stop));
+  Inc(P);
+  i := -1;
+  while (i.Increment(2) <= (l - 2)) do
+  begin
+    Result.start := Min(Result.start, Min(P^.start, P^.stop));
+    Result.stop := Max(Result.stop, Max(P^.start, P^.stop));
+    Inc(P);
+    Result.start := Min(Result.start, Min(P^.start, P^.stop));
+    Result.stop := Max(Result.stop, Max(P^.start, P^.stop));
+    Inc(P);
+  end;
+  if (i < l) then
+    Result := TRange.Construct(Min(Result.start, Min(P^.start, P^.stop)), Max(Result.stop,  Max(P^.start, P^.stop)));
 end;
 
 {==============================================================================]

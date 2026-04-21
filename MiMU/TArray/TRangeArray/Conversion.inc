@@ -1,9 +1,40 @@
 {$IFDEF HELPERS}
+function Digitize: TIntegerArray; overload;
 function T2DIA: T2DIntegerArray;
 function TIA: TIntegerArray;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Digitize>
+  @action: Converts the range structures into a flat sequence of all contained
+           integers, preserving the direction (polarity) of each range.
+  @note:
+    - Pass 1: Accumulates total capacity to prevent reallocations.
+    - Pass 2: Uses a reverse-fill sentinel (r.Decrement) to inject values.
+    - Result: A "digitized" version of the coordinate data.
+[==============================================================================}
+function TRangeArrayHelper.Digitize: TIntegerArray; overload;
+var
+  i, r, s: Integer;
+begin
+  r := 0;
+  for i := 0 to High(Self) do
+    Inc(r, Self[i].Size);
+  SetLength(Result, r);
+  if (r = 0) then
+    Exit;
+  for i := High(Self) downto 0 do
+  case Self[i].Ascending of
+    True:
+    for s := Self[i].stop downto Self[i].start do
+      Result[r.Decrement] := s;
+    False:
+    for s := Self[i].stop to Self[i].start do
+      Result[r.Decrement] := s;
+  end;
+end; 
+
 {==============================================================================]
   <T2DIA>
   @action: Returns TRanges from arr as T2DIntegerArray.
