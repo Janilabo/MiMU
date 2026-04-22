@@ -35,6 +35,7 @@
 {$I Segmentation.inc}
 {$I Selection.inc}
 {$I Size.inc}
+{$I Space.inc}
 {$I Spatial.inc}
 {$I Status.inc}
 {$I Terminal.inc}
