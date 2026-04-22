@@ -1,66 +1,50 @@
-{$IFDEF HELPERS}
-function SpaceAround(const margin: Integer): TRangeArray; overload;
-{$ENDIF}
-
 {$IFDEF METHODS}
-function Vacuum(const target: TRange): TRange; overload;
-function Void(const target: TRange): TRange; overload;
+function Confluency(const target: TRange): Integer; overload;
+function Overlapment(const other: TRange): Integer; overload;
+function Sharedness(const target: TRange): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <SpaceAround>
-  @action: Generates two ranges representing the "padding" or "margins" 
-           immediately outside the current range boundaries.
-  @note: 
-    - Result[0] is the "Lead" space (before start).
-    - Result[1] is the "Trail" space (after stop).
-    - Orientation: Both generated ranges inherit Self's Ascending/Descending 
-      direction.
+  <Confluency>
+  @action: Returns the count of integers shared between Self and target.
+  @note: - Self [1..5]  Overlap [3..8]  -> 3  (3, 4, 5)
+         - Self [1..5]  Overlap [5..10] -> 1  (5)
+         - Self [1..5]  Overlap [6..10] -> 0
+         - Self [1..10] Overlap [3..7]  -> 5  (3, 4, 5, 6, 7)
 [==============================================================================}
-function TRangeHelper.SpaceAround(const margin: Integer): TRangeArray; overload;
-var
-  o: Integer;
+function TRange.Confluency(const target: TRange): Integer; overload;
 begin
-  o := IfThen(Self.Ascending, 1, -1);
-  Result := [TRange.Construct((Self.start - (o * margin)), (Self.start - o)), TRange.Construct((Self.stop + o), (Self.stop + (o * margin)))];
+  Result := Max(0, ((Min(Self.Maximum, target.Maximum) - Max(Self.Minimum, target.Minimum)) + 1));
 end;
 
 {==============================================================================]
-  <Vacuum>
-  @action: Returns the TRange representing the empty "suction" space between 
-           Self and a target range.
-  @note: 
-    - Logical Flow: The result starts at Self's boundary and ends at Target's 
-      boundary.
-    - Result: Returns TRange.Null if the ranges overlap or are touching, 
-      as no vacuum exists between them.
+  <Overlapment>
+  @action: Returns the number of discrete values shared by this range and another
+          range.
+  @note: If the ranges overlap, the result is the inclusive size of their
+         intersection, calculated as
+         Min(Self.Maximum, other.Maximum) - Max(Self.Minimum, other.Minimum) + 1.
+         If the ranges do not overlap, the result is 0.
+         This method assumes both ranges are valid (Minimum <= Maximum).
 [==============================================================================}
-function TRange.Vacuum(const target: TRange): TRange; overload;
+function TRange.Overlapment(const other: TRange): Integer; overload;
 begin
-  if Self.Under(target) then
-    Result := TRange.Construct((Self.Maximum + 1), (target.Minimum - 1))
-  else if Self.Over(target) then
-    Result := TRange.Construct((Self.Minimum - 1), (target.Maximum + 1))
+  if Self.Overlaps(other) then
+    Result := ((Min(Self.Maximum, other.Maximum) - Max(Self.Minimum, other.Minimum)) + 1)
   else
-    Result := TRange.Null;
+    Result := 0;
 end;
 
 {==============================================================================]
-  <Void>
-  @action: Identifies the gap between Self and a target range.
+  <Sharedness>
+  @action: Returns the count of integers common to both ranges.
   @note: 
-    - Directional: The resulting range always starts at the edge of Self 
-      and ends at the edge of the Target.
-    - If the ranges touch or overlap, TRange.Null is returned.
+    - If ranges overlap, returns the size of the intersection (1 or greater).
+    - If ranges are adjacent or separated, returns 0.
 [==============================================================================}
-function TRange.Void(const target: TRange): TRange; overload;
+function TRange.Sharedness(const target: TRange): Integer; overload;
 begin
-  if (Self.Intersects(target) or Self.Abuts(target)) then
-    Result := TRange.Null
-  else if Self.Under(target) then
-    Result := TRange.Construct((Self.Maximum + 1), (target.Minimum - 1))
-  else
-    Result := TRange.Construct((Self.Minimum - 1), (target.Maximum + 1));
+  Result := Max(0, Self.Intersecta(target));
 end;
 {$ENDIF}
