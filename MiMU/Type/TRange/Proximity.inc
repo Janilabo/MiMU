@@ -1,4 +1,6 @@
 {$IFDEF METHODS}
+function Commonality(const target: TRange): Integer; overload;
+function Commonality(const target: Integer): Integer; overload;
 function Displacement(const val: Integer): Integer; overload;
 function Dist(const target: TRange): Integer; overload;
 function Dist: Integer; overload;
@@ -14,16 +16,63 @@ function DistanceTo(const other: TRange): Integer; overload;
 function DistanceWith(const target: TRange): Integer; overload;
 function DistHausdorff(const b: TRange): Integer; overload;
 function Gap(const other: TRange): Integer; overload;
+function Gapping(const target: TRange): Integer; overload;
 function GapTo(const other: TRange): Integer; overload;
 function GetDistance(const target: TRange): Integer; overload;
+function Intersecta(const target: TRange): Integer; overload;
+function Intersecta(const target: Integer): Integer; overload;
 function Margin(const val: Integer): Integer; overload;
 function Proximity(const val: Integer): Integer; overload;
+function Relationality(const target: TRange): Integer; overload;
+function Relationality(const target: Integer): Integer; overload;
+function Score(const target: TRange): Integer; overload;
+function Score(const target: Integer): Integer; overload;
+function Scored(const target: TRange): Integer; overload;
+function Scored(const target: Integer): Integer; overload;
 function Separation(const other: TRange): Integer; overload;
 function Separaty(const r: TRange): Integer; overload;
 function Space(const target: TRange): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Commonality>
+  @action: Quantifies the intersection or gap between two ranges.
+  @return:
+    - Positive: Number of integers shared (Overlap).
+    - Zero: Ranges are adjacent/touching.
+    - Negative: Number of integers in the gap (Separation).
+[==============================================================================}
+function TRange.Commonality(const target: TRange): Integer; overload;
+var
+  a, b, c, d: Integer;
+begin
+  a := Self.Minimum;
+  b := Self.Maximum;
+  c := target.Minimum;
+  d := target.Maximum;
+  if (b < c) then
+    Result := -((c - b) - 1)
+  else if (d < a) then
+    Result := -((a - d) - 1)
+  else
+    Result := ((Min(b, d) - Max(a, c)) + 1);
+end;
+
+function TRange.Commonality(const target: Integer): Integer; overload;
+var
+  a, b: Integer;
+begin
+  a := Self.Minimum;
+  b := Self.Maximum;
+  if (target < a) then
+    Result := -((a - target) - 1)
+  else if (target > b) then
+    Result := -((target - b) - 1)
+  else
+    Result := 1;
+end;
+
 {==============================================================================]
   <Displacement>
   @action: Calculates the signed distance from a value to the nearest boundary
@@ -312,6 +361,24 @@ begin
 end;
 
 {==============================================================================]
+  <Gapping>
+  @action: Quantifies the empty space (the void) between two ranges.
+  @note: 
+    - If separated: Returns the positive count of integers in the gap.
+    - If touching or overlapping: Returns 0 (there is no gap).
+[==============================================================================}
+function TRange.Gapping(const target: TRange): Integer; overload;
+var
+  s: Integer;
+begin
+  s := Self.Intersecta(target);
+  if (s < 0) then
+    Result := Abs(s)
+  else
+    Result := 0;
+end;
+
+{==============================================================================]
   <GapTo>
   @action: Returns the number of discrete values between this range and another
           non-overlapping range.
@@ -354,6 +421,37 @@ begin
   t := target.Normalize;
   g := (Max(s.start, t.start) - Min(s.stop, t.stop));
   Result := ((g + Abs(g)) div 2);
+end;
+
+{==============================================================================]
+  <Intersecta>
+  @action: Measures the linear depth of intersection or the void of separation.
+  @note: 
+    Returns a signed integer where:
+    - Positive: The shared integer count (The overlap).
+    - Zero: The ranges are adjacent (The touch point).
+    - Negative: The number of integers between ranges (The gap).
+[==============================================================================}
+function TRange.Intersecta(const target: TRange): Integer; overload;
+var
+  g, o: Integer;
+begin
+  g := Max((target.Minimum - Self.Maximum), (Self.Minimum - target.Maximum));
+  o := ((Min(Self.Maximum, target.Maximum) - Max(Self.Minimum, target.Minimum)) + 1);
+  if (g > 0) then
+    Result := -(g - 1)
+  else
+    Result := o;
+end;
+
+{==============================================================================]
+  <Intersecta>
+  @action: Projects a point onto the range to determine its inclusive depth.
+  @note: Treats the target integer as a singular range [target..target].
+[==============================================================================}
+function TRange.Intersecta(const target: Integer): Integer; overload;
+begin
+  Result := Self.Intersecta(TRange.Construct(target, target));
 end;
 
 {==============================================================================]
@@ -401,6 +499,92 @@ begin
     Result := (n.start - val)
   else
     Result := (val - n.stop);
+end;
+
+{==============================================================================]
+  <Relationality>
+  @action: Quantifies the spatial bond between two ranges.
+  @return:
+    - Negative: Overlap count (Interference).
+    - Zero: Adjacency (The "Touching" point).
+    - Positive: Gap size (Separation).
+[==============================================================================}
+function TRange.Relationality(const target: TRange): Integer; overload;
+begin
+  Result := -Self.Commonality(target);
+end;
+
+function TRange.Relationality(const target: Integer): Integer; overload;
+begin
+  Result := -Self.Commonality(target);
+end;
+
+{==============================================================================]
+  <Score>
+  @action: Returns a signed integer representing the connection quality.
+  @return: 
+    - Positive: Overlap count (higher is deeper).
+    - Zero: Touching (adjacent).
+    - Negative: Gap size (separation distance).
+[==============================================================================}
+function TRange.Score(const target: TRange): Integer; overload;
+var
+  a, b, c, d: Integer;
+begin
+  a := Self.Minimum;
+  b := Self.Maximum;
+  c := target.Minimum;
+  d := target.Maximum;
+  Result := Max((c - b), (a - d));
+  if (Result <= 0) then
+    Result := ((Min(b, d) - Max(a, c)) + 1)
+  else
+    Result := -(Result - 1);
+end;
+
+{==============================================================================]
+  <Score> (Range vs Point)
+  @action: Ranks the proximity of a single point to this range.
+  @note:
+    - 1: The point is inside the range.
+    - 0: The point is adjacent to the range (distance of 1).
+    - Negative: The gap between the point and the range.
+[==============================================================================}
+function TRange.Score(const target: Integer): Integer; overload;
+begin
+  Result := Max(0, Max((Self.Minimum - target), (target - Self.Maximum)));
+  if (Result = 0) then
+    Result := 1
+  else
+    Result := (-Result + 1);
+end;
+
+{==============================================================================]
+  <Scored>
+  @action: Distills the spatial relationship into a single qualitative value.
+  @note: 
+    - Positive: The number of shared integers (Depth of connection).
+    - Zero: Perfectly adjacent/touching (The point of contact).
+    - Negative: The number of missing integers (The distance to bridge).
+[==============================================================================}
+function TRange.Scored(const target: TRange): Integer; overload;
+begin
+  if Self.Intersects(target) then
+    Result := Self.Sharedness(target)
+  else if Self.Adjacency(target) then
+    Result := 0
+  else
+    Result := -Self.Gapping(target);
+end;
+
+{==============================================================================]
+  <Scored>
+  @action: Ranks how deeply a point is integrated into (or separated from) the range.
+  @note: None.
+[==============================================================================}
+function TRange.Scored(const target: Integer): Integer; overload;
+begin
+  Result := Self.Scored(TRange.Construct(target, target));
 end;
 
 {==============================================================================]

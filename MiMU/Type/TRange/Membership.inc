@@ -64,6 +64,7 @@ function IsMissing(const val: Integer): Boolean; overload;
 function IsOutside(const val: Integer): Boolean; overload;
 function IsSubsetFor(const target: TRange): Boolean; overload;
 function IsSubsetOf(const target: TRange): Boolean; overload;
+function IsWithin(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
 function Item(const x: Integer): Boolean; overload;
 function Keeps(const val: Integer): Boolean; overload;
 function Kissing(const val: Integer): Boolean; overload;
@@ -87,7 +88,6 @@ function Surrounds(const target: TRange): Boolean; overload;
 function Tangent(const val: Integer): Boolean; overload;
 function Tangent(const target: TRange): Boolean; overload;
 function Value(const x: Integer): Boolean; overload;
-function Within(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
 function WithinBounds(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
 function Wrapping(const r: TRange): Boolean; overload;
 function Wraps(const r: TRange): Boolean; overload;
@@ -939,6 +939,19 @@ begin
 end;
 
 {==============================================================================]
+  <IsWithin>
+  @action: Returns True if val lies within the range, optionally expanded
+           by vRadius on both sides.
+  @note: Radius of 0 performs a standard inclusive range check.
+          - Positive radius extends the range outward symmetrically.
+          - Negative radius is considered invalid and returns False.
+[==============================================================================}
+function TRange.IsWithin(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
+begin
+  Result := ((vRadius >= 0) and (val >= (Self.Minimum - vRadius)) and (val <= (Self.Maximum + vRadius)));
+end;
+
+{==============================================================================]
   <Item>
   @action: Returns true if range contains x-value.
   @note: None.
@@ -1240,19 +1253,6 @@ end;
 function TRange.Value(const x: Integer): Boolean; overload;
 begin
   Result := not (((x < Self.start) and (x < Self.stop)) or ((x > Self.stop) and (x > Self.start)));
-end;
-
-{==============================================================================]
-  <Within>
-  @action: Returns True if val lies within the range, optionally expanded
-           by vRadius on both sides.
-  @note: Radius of 0 performs a standard inclusive range check.
-          - Positive radius extends the range outward symmetrically.
-          - Negative radius is considered invalid and returns False.
-[==============================================================================}
-function TRange.Within(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
-begin
-  Result := ((vRadius >= 0) and (val >= (Self.Minimum - vRadius)) and (val <= (Self.Maximum + vRadius)));
 end;
 
 {==============================================================================]

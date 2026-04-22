@@ -3,7 +3,9 @@ function Digitize: TIntegerArray; overload;
 function Digitized: TIntegerArray; overload;
 function Digitted(const sIDs: TRange): TIntegerArray; overload;
 function Digitted: TIntegerArray; overload;
+function Material(const chunkSize: Integer = 16): TIntegerArray; overload;
 function Materialize: TIntegerArray; overload;
+function Materialized: TIntegerArray; overload;
 function T2DIA: T2DIntegerArray; overload;
 function TIA: TIntegerArray; overload;
 {$ENDIF}
@@ -123,6 +125,50 @@ begin
 end;
 
 {==============================================================================]
+  <Material>
+  @action: Expands all ranges into a contiguous TIntegerArray, producing the
+           full sequence of integer values represented by the range set.
+           Each range contributes its elements in logical order
+           (ascending or descending).
+  @note: Precomputes offsets, starting values, and step directions for each
+         range, then performs a single allocation for the result buffer.
+         Expansion is executed in fixed-size chunks (chunkSize) to reduce
+         loop overhead and improve cache locality.
+         Direction is encoded as a step (+1 / -1) for branchless iteration.
+         Returns an empty array if no ranges are present.
+[==============================================================================}
+function TRangeArrayHelper.Material(const chunkSize: Integer = 16): TIntegerArray; overload;
+var
+  o, c, d: TIntegerArray;
+  i, j, l, p, r, m: Integer;
+begin
+  l := Self.Length;
+  SetLength(o, (l + 1));
+  SetLength(c, l);
+  SetLength(d, l);
+  o[0] := 0;
+  for i := 0 to (l - 1) do
+  begin
+    o[i + 1] := (o[i] + Self[i].Size);
+    c[i] := Self[i].start;
+    d[i] := (1 - (2 * Ord(Self[i].Descending)));
+  end;
+  SetLength(Result, o[High(o)]);
+  for i := 0 to (l - 1) do
+  begin
+    p := o[i];
+    r := Self[i].Size;
+    while (r > 0) do
+    begin
+      m := Min(r, chunkSize);
+      for j := 0 to (m - 1) do
+        Result[p.Increase] := c[i].Increase(d[i]);
+      Dec(r, m);
+    end;
+  end;
+end;
+
+{==============================================================================]
   <Materialize>
   @action: Expands all ranges in the array into a contiguous TIntegerArray.
            Each TRange contributes its full sequence of values in order,
@@ -159,11 +205,40 @@ begin
 end;
 
 {==============================================================================]
+  <Materialized>
+  @action: Expands all ranges into a contiguous TIntegerArray, producing the
+           full sequence of integer values represented by the range set.
+           Each range contributes its elements in logical order
+           (ascending or descending).
+  @note: Computes total size up front and performs a single allocation.
+         Fills the result buffer in reverse using a decrementing index,
+         avoiding intermediate offsets or prefix arrays.
+         Direction is encoded as a step (+1 / -1) for branchless iteration.
+         Returns an empty array if no ranges are present.
+[==============================================================================}
+function TRangeArrayHelper.Materialized: TIntegerArray; overload;
+var
+  i, j, s, o, v: Integer;
+begin
+  s := 0;
+  for i := 0 to High(Self) do
+    Inc(s, Self[i].Size);
+  SetLength(Result, s);
+  for i := High(Self) downto 0 do
+  begin
+    o := (1 - (2 * Ord(Self[i].Descending)));
+    v := Self[i].stop;
+    for j := (Self[i].Size - 1) downto 0 do
+      Result[s.Decrement] := v.Decrease(o);
+  end;
+end;
+
+{==============================================================================]
   <T2DIA>
   @action: Returns TRanges from arr as T2DIntegerArray.
   @note: None.
 [==============================================================================}
-function TRangeArrayHelper.T2DIA: T2DIntegerArray;
+function TRangeArrayHelper.T2DIA: T2DIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -177,7 +252,7 @@ end;
   @action: Returns TRanges from arr as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TRangeArrayHelper.TIA: TIntegerArray;
+function TRangeArrayHelper.TIA: TIntegerArray; overload;
 var
   i, j, l: Integer;
   r: TIntegerArray;

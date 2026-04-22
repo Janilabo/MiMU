@@ -1,5 +1,6 @@
 {$IFDEF METHODS}
 function Abuts(const other: TRange): Boolean; overload;
+function Adjacency(const target: TRange): Boolean; overload;
 function Adjacent(const other: TRange): Boolean; overload;
 function Coequal(const target: TRange; const strictly: Boolean = False): Boolean; overload;
 function Consecutive(const r: TRange): Boolean; overload;
@@ -11,6 +12,8 @@ function Equals(const b: TRange): Boolean; overload;
 function Equivalent(const b: TRange): Boolean; overload;
 function Follows(const r: TRange): Boolean; overload;
 function Gapless(const r: TRange): Boolean; overload;
+function Intersects(const target: TRange): Boolean; overload;
+function Intersects(const target: Integer): Boolean; overload;
 function IsAdjacent(const other: TRange): Boolean; overload;
 function IsConnected(const target: TRange): Boolean; overload;
 function IsEquivalent(const target: TRange): Boolean; overload;
@@ -35,6 +38,10 @@ function Separated(const other: TRange): Boolean; overload;
 function Touch(const b: TRange): Boolean; overload;
 function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
 function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
+function Within(const target: TRange; const minDist, maxDist: Integer): Boolean; overload;
+function Within(const target: TRange; const dist: Integer = 0): Boolean; overload;
+function Within(const target: Integer; const minDist, maxDist: Integer): Boolean; overload;
+function Within(const target: Integer; const dist: Integer = 0): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -54,6 +61,17 @@ begin
 end;
 
 {==============================================================================]
+  <Adjacency>
+  @action: Determines if two ranges are perfectly flush (neighboring).
+  @note: Returns True only if the gap between ranges is exactly zero. 
+         If ranges overlap, they are not considered adjacent (they are intersecting).
+[==============================================================================}
+function TRange.Adjacency(const target: TRange): Boolean; overload;
+begin
+  Result := (Self.Intersecta(target) = 0);
+end;
+
+{==============================================================================]
   <Adjacent>
   @action: Returns True if Other begins exactly where Self ends, or vice versa.
   @note: Treats ranges as adjacent regardless of direction.
@@ -61,7 +79,7 @@ end;
 function TRange.Adjacent(const other: TRange): Boolean; overload;
 begin
   Result := ((Abs(Self.stop - other.start) = 1) or (Abs(other.stop - Self.start) = 1));
-end; 
+end;
 
 {==============================================================================]
   <Coequal>
@@ -219,6 +237,28 @@ end;
 function TRange.Gapless(const r: TRange): Boolean; overload;
 begin
   Result := (Max(Self.Minimum, r.Minimum) <= (Min(Self.Maximum, r.Maximum) + 1));
+end;
+
+{==============================================================================]
+  <Intersects>
+  @action: Determines if there is any shared numerical space between ranges.
+  @note: 
+    Returns True only if the intersection size is 1 or greater. 
+    If the ranges are merely touching (Adjacent), this returns False.
+[==============================================================================}
+function TRange.Intersects(const target: TRange): Boolean; overload;
+begin
+  Result := (Self.Intersecta(target) > 0);
+end;
+
+{==============================================================================]
+  <Intersects>
+  @action: Checks if the given integer falls within the range's boundaries.
+  @note: This is semantically identical to a "Contains" or "Includes" check.
+[==============================================================================}
+function TRange.Intersects(const target: Integer): Boolean; overload;
+begin
+  Result := InRange(target, Self.Minimum, Self.Maximum);
 end;
 
 {==============================================================================]
@@ -628,5 +668,35 @@ begin
       if (s.Increment > maxTouch) then
         Exit(False);
   Result := (s >= minTouch);
+end;
+
+{==============================================================================]
+  <Within>
+  @action: Boolean check using signed distance logic.
+  @param: minDist - The lower bound of the signed distance.
+  @param: maxDist - The upper bound of the signed distance.
+[==============================================================================}
+function TRange.Within(const target: TRange; const minDist, maxDist: Integer): Boolean; overload;
+begin
+  Result := InRange(Self.Relationality(target), minDist, maxDist);
+end;
+
+function TRange.Within(const target: TRange; const dist: Integer = 0): Boolean; overload;
+begin
+  Result := (Self.Relationality(target) <= dist);
+end;
+
+{==============================================================================]
+  <Within>
+  @action: Checks if a point is within a specific proximity to the range.
+[==============================================================================}
+function TRange.Within(const target: Integer; const minDist, maxDist: Integer): Boolean; overload;
+begin
+  Result := InRange(Self.Relationality(target), minDist, maxDist);
+end;
+
+function TRange.Within(const target: Integer; const dist: Integer = 0): Boolean; overload;
+begin
+  Result := (Self.Relationality(target) <= dist);
 end;
 {$ENDIF}
