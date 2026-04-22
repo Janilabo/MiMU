@@ -27,6 +27,7 @@ function Subdiv(const partCount: Integer = 2): TRangeArray; overload;
 function Subdivide(const partCount: Integer = 2): TRangeArray; overload;
 function Subdivided(const partCount: Integer = 2): TRangeArray; overload;
 function Subdivision(const partCount: Integer = 2): TRangeArray; overload;
+function Subdivisions(const partCount: Integer = 2): TRangeArray; overload;
 function ToParts(const partSize: Integer = 2): TRangeArray; overload;
 function Windows(const target: TRange): TRangeArray; overload;
 {$ENDIF}
@@ -1009,6 +1010,39 @@ begin
     Result[i].Create(p, (p + (s - 1) * d));
     p := (p + (s * d));
     Dec(r, s);
+  end;
+end;
+
+{==============================================================================]
+  <Subdivisions>
+  @action: Fractions the range into a specified number of equal or near-equal segments.
+  @note: 
+    - Remainder Distribution: If the size isn't perfectly divisible, extra units 
+      are distributed to the leading segments.
+    - Safety: Automatically caps the partCount to the total Size of the range.
+    - Directional: Segments follow the original Ascending/Descending flow.
+[==============================================================================}
+function TRangeHelper.Subdivisions(const partCount: Integer = 2): TRangeArray; overload;
+var
+  i, b, e, s, p, d, m, o, l: Integer;
+begin
+  if (partCount < 1) then
+    Exit([]);
+  s := Self.Size;
+  p := Min(partCount, s);
+  SetLength(Result, p);
+  d := (s div p);
+  m := (s mod p);
+  o := IfThen(Self.Ascending, 1, -1);
+  b := Self.start;
+  for i := 0 to (p - 1) do
+  begin
+    l := d;
+    if (i < m) then
+      Inc(l);
+    e := (b + (o * (l - 1)));
+    Result[i] := TRange.Construct(b, e);
+    b := (e + o);
   end;
 end;
 

@@ -7,6 +7,7 @@ function YoYo: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF HELPERS}
+function Cutout(const target: TRange): TRangeArray; overload;
 function Select(const arr: TIntegerArray): TIntegerArray; overload;
 function Select(const arr: TDoubleArray): TDoubleArray; overload;
 function Select(const arr: TStringArray): TStringArray; overload;
@@ -18,6 +19,39 @@ function Select(const arr: TRangeArray): TRangeArray; overload;
 {$ENDIf}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Cutout>
+  @action: Subtracts the target range from Self, returning the remaining pieces.
+  @return: A TRangeArray containing:
+           - 0 elements: If Self was completely consumed by target.
+           - 1 element:  If Self was clipped at one end or not hit at all.
+           - 2 elements: If the target punched a hole through the middle of Self.
+[==============================================================================}
+function TRangeHelper.Cutout(const target: TRange): TRangeArray; overload;
+var
+  s, t: TRange;
+  procedure C(const A, B: Integer);
+  begin
+    SetLength(Result, (Result.Length + 1));
+    if Self.Ascending then
+      Result[High(Result)] := TRange.Construct(A, B)
+    else
+      Result[High(Result)] := TRange.Construct(B, A);
+  end;
+begin
+  if not Self.Intersects(target) then
+    Exit([Self]);
+  s := Self.Normalized;
+  t := target.Normalized;
+  SetLength(Result, 0);
+  if (s.start < t.start) then
+    C(s.start, (t.start - 1));
+  if (s.stop > t.stop) then
+    C((t.stop + 1), s.stop);
+  if Self.Descending then
+    Result.Reverse;
+end;
+
 {==============================================================================]
   <Deconstruct>
   @action: Outputs the Start and Stop bounds of the range via reference parameters and returns its Size.
