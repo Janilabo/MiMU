@@ -5,7 +5,9 @@ function Continuous: Boolean; overload;
 function Gapless: Boolean; overload;
 function Integral: Boolean; overload;
 function Monolithic: Boolean; overload;
+function Seamless: Boolean; overload;
 function Solid: Boolean; overload;
+function Unbroken: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -173,6 +175,36 @@ begin
 end;
 
 {==============================================================================]
+  <Seamless>
+  @action: Determines whether all ranges form a continuous coverage without gaps.
+  @note: Returns True if the union of all ranges in the array completely covers
+         the interval from the global minimum to the global maximum. Internally
+         builds a coverage map and marks each integer position spanned by the
+         ranges; if any position remains unmarked, the result is False. Overlaps
+         are allowed, but any uncovered gap causes failure. Arrays of length 0
+         return False, length 1 returns True.
+[==============================================================================}
+function TRangeArrayHelper.Seamless: Boolean; overload;
+var
+  l, h, i, j: Integer;
+  m: TBooleanArray;
+begin
+  if (Self.Length < 2) then
+    Exit(Self.Length = 1);
+  l := Self.MinimumValue;
+  h := Self.MaximumValue;
+  SetLength(m, ((h - l) + 1));
+  FillChar(m[0], m.Length, 0);
+  for i := 0 to High(Self) do
+    for j := Self[i].Minimum to Self[i].Maximum do
+      m[j - l] := True;
+  for i := 0 to High(m) do
+    if not m[i] then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
   <Solid>
   @action: Verifies that the collective ranges form a single, unbroken span 
            without any numerical gaps.
@@ -195,6 +227,42 @@ begin
       Exit(False)
     else if (s[i].stop > r) then
       r := s[i].stop;
+  Result := True;
+end;
+
+{==============================================================================]
+  <Unbroken>
+  @action: Determines whether a set of ranges forms a continuous interval without gaps.
+  @note: Returns True if the union of all ranges is gap-free. The ranges are first
+         normalized and sorted by their starting points. Iteratively tracks the
+         furthest reachable endpoint (r) and verifies that each subsequent range
+         begins at or before r + 1. If any range starts beyond this boundary, a
+         gap exists and the result is False. Overlapping and adjacent ranges are
+         both accepted.
+[==============================================================================}
+function TRangeArrayHelper.Unbroken: Boolean; overload;
+var
+  a, b: TIntegerArray;
+  h, i, j, r: Integer;
+begin
+  h := High(Self);
+  if (h < 1) then
+    Exit(h = 0);
+  Self.Normalized.SortedByStart.Unzip(a, b);
+  b.QuickSort;
+  r := b[0];
+  i := 1;
+  for j := 1 to h do
+  begin
+    while ((i <= h) and (b[i] < a[j])) do
+    begin
+      if (b[i] > r) then
+        r := b[i];
+      Inc(i);
+    end;
+    if (a[j] > (r + 1)) then
+      Exit(False);
+  end;
   Result := True;
 end;
 {$ENDIF}

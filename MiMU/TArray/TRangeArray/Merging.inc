@@ -18,6 +18,7 @@ function Mergified(const threshold: Integer = -1): TRangeArray; overload;
 function Mergify(const threshold: Integer = -1): Integer; overload;
 function Restacked: TRangeArray; overload;
 function Scanlined: TRangeArray; overload;
+function Simplified: TRangeArray; overload;
 function Simplify: TRangeArray; overload;
 function Squashed: TRangeArray; overload;
 function Squeeze(const rAscending: Boolean = True): TRangeArray; overload;
@@ -857,6 +858,36 @@ begin
       Result[o.Increase].Create(s, (P[i].position - 1));
   end;
   SetLength(Result, o);
+end;
+
+{==============================================================================]
+  <Simplified>
+  @action: Merges overlapping or contiguous ranges into a minimal set.
+  @note: Returns a normalized list of ranges where any overlapping or linkable
+         intervals are coalesced into a single continuous range. The input is
+         first normalized and sorted by start position. Iteration then merges
+         consecutive ranges when Linkable returns True, extending the current
+         range's upper bound as needed. Non-linkable ranges start a new segment.
+         The result is a compact representation of the union of all ranges.
+[==============================================================================}
+function TRangeArrayHelper.Simplified: TRangeArray; overload;
+var
+  l, r, i: Integer;
+  s: TRangeArray;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(Self);
+  s := Self.Normalized.SortedByStart;
+  SetLength(Result, l);
+  Result[0] := s[0];
+  r := 0;
+  for i := 1 to (l - 1) do
+    if s[i].Linkable(Result[r]) then
+      Result[r].stop := Max(Result[r].stop, s[i].stop)
+    else
+      Result[r.Increment] := s[i];
+  SetLength(Result, (r + 1));
 end;
 
 {==============================================================================]

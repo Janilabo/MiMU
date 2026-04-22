@@ -1,6 +1,8 @@
 {$IFDEF METHODS}
 function Absorb(const val: Integer): Boolean; overload;
+function Absorb(const vals: TRange): Boolean; overload;
 function Absorbed(const target: Integer): TRange; overload;
+function Absorbed(const target: TRange): TRange; overload;
 function Extend(const val: Integer): Boolean; overload;
 function Extend(const target: TRange): Boolean; overload;
 function ExtendMax(const val: Integer): Boolean; overload;
@@ -40,6 +42,40 @@ end;
 
 {==============================================================================]
   <Absorb>
+  @action: Expands the current range to encompass the entire vals range.
+  @note: 
+    - Orientation: Preserves Self's Ascending/Descending state.
+    - Result: Returns True if Self was modified (i.e., vals was not fully contained).
+[==============================================================================}
+function TRange.Absorb(const vals: TRange): Boolean; overload;
+var
+  s: TRange;
+  l, h: Integer;
+begin
+  s := Self;
+  l := vals.Minimum;
+  h := vals.Maximum;
+  case Self.Ascending of
+    True:
+    begin
+      if (l < Self.start) then
+	    Self.start := l;
+      if (h > Self.stop) then
+	    Self.stop := h;
+    end;
+    False:
+    begin
+      if (h > Self.start) then
+	    Self.start := h;
+      if (l < Self.stop) then
+	    Self.stop := l;
+    end;
+  end;
+  Result := (Self <> s);
+end;
+
+{==============================================================================]
+  <Absorb>
   @action: Returns a new range expanded to encompass the target value.
   @note: 
     - Orientation: Preserves the original direction (Ascending/Descending).
@@ -51,6 +87,23 @@ begin
     Result := TRange.Construct(Min(Self.start, target), Max(Self.stop, target))
   else
     Result := TRange.Construct(Max(Self.start, target), Min(Self.stop, target));
+end;
+
+{==============================================================================]
+  <Absorbed>
+  @action: Merges the current range with another, preserving direction.
+  @note: Returns a new range that fully covers both Self and target while
+         maintaining the orientation of Self. For ascending ranges, the result
+         spans from the smallest minimum to the largest maximum. For descending
+         ranges, the bounds are constructed in reverse order to preserve
+         directionality. Functionally similar to Hull, but orientation-aware.
+[==============================================================================}
+function TRange.Absorbed(const target: TRange): TRange; overload;
+begin
+  if Self.Ascending then
+    Result := TRange.Construct(Min(Self.start, target.Minimum), Max(Self.stop, target.Maximum))
+  else
+    Result := TRange.Construct(Max(Self.start, target.Maximum), Min(Self.stop, target.Minimum));
 end;
 
 {==============================================================================]
