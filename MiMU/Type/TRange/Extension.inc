@@ -1,5 +1,6 @@
 {$IFDEF METHODS}
 function Absorb(const val: Integer): Boolean; overload;
+function Absorbed(const target: Integer): TRange; overload;
 function Extend(const val: Integer): Boolean; overload;
 function Extend(const target: TRange): Boolean; overload;
 function ExtendMax(const val: Integer): Boolean; overload;
@@ -35,6 +36,21 @@ begin
       Self.stop := val;
   end;
   Result := (Self <> s);
+end;
+
+{==============================================================================]
+  <Absorb>
+  @action: Returns a new range expanded to encompass the target value.
+  @note: 
+    - Orientation: Preserves the original direction (Ascending/Descending).
+    - Idempotency: If the value is already contained, the result is identical to Self.
+[==============================================================================}
+function TRange.Absorbed(const target: Integer): TRange; overload;
+begin
+  if Self.Ascending then
+    Result := TRange.Construct(Min(Self.start, target), Max(Self.stop, target))
+  else
+    Result := TRange.Construct(Max(Self.start, target), Min(Self.stop, target));
 end;
 
 {==============================================================================]

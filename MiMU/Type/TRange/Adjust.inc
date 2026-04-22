@@ -1,4 +1,5 @@
 {$IFDEF METHODS}
+function Influence(const iDelta: Integer): TRange; overload;
 function Modified(const mStart, mStop: Integer): TRange; overload;
 function Modify(const mStart, mStop: Integer): TRange; overload;
 procedure Scale(const sFactor: Integer); overload;
@@ -10,6 +11,20 @@ function Translated(const tDelta: Integer): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Influence>
+  @action: Expands or contracts the range by a symmetric offset.
+  @note: Returns a new range whose bounds are shifted outward by iDelta on
+         both sides (Self.Minimum - iDelta, Self.Maximum + iDelta). Positive
+         values increase the range size (expansion), while negative values
+         reduce it (contraction), potentially inverting or collapsing the range
+         if applied beyond limits. This represents a uniform boundary influence.
+[==============================================================================}
+function TRange.Influence(const iDelta: Integer): TRange; overload;
+begin
+  Result := TRange.Construct((Self.Minimum - iDelta), (Self.Maximum + iDelta));
+end;
+
 {==============================================================================]
   <Modified>
   @action: Returns a new TRange with Start and Stop adjusted by the specified

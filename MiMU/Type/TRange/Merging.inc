@@ -3,6 +3,7 @@ function Encapsulate(const val: Integer): TRange; overload;
 function Encapsulate(const other: TRange): TRange; overload;
 function Enclose(const val: Integer): TRange; overload;
 function Enclose(const other: TRange): TRange; overload;
+function Hull(const target: TRange): TRange; overload;
 function Intersect(const b: TRange): TRange; overload;
 function Intersect(const b: TRange; var iZone: TRange): Boolean; overload;
 function Intersection(const target: TRange): TRange; overload;
@@ -10,6 +11,7 @@ function Join(const val: Integer): TRange; overload;
 function Join(const other: TRange): TRange; overload;
 function Joinage(const val: Integer): TRange; overload;
 function Joinage(const other: TRange): TRange; overload;
+function Overlay(const target: TRange): TRange; overload;
 function Union(const b: TRange): TRange; overload;
 function Union(const val: Integer): TRange; overload;
 {$ENDIF}
@@ -77,6 +79,20 @@ begin
   d := (l xor h);
   Result.start := (l xor (m and d));
   Result.stop := (h xor (m and d));
+end;
+
+{==============================================================================]
+  <Hull>
+  @action: Computes the minimal enclosing range of two ranges.
+  @note: Returns the convex hull (bounding interval) that fully contains both
+         Self and target. The resulting range spans from the minimum of both
+         lower bounds to the maximum of both upper bounds. This operation
+         merges two ranges into a single continuous covering interval without
+         regard to gaps or overlap.
+[==============================================================================}
+function TRange.Hull(const target: TRange): TRange; overload;
+begin
+  Result := TRange.Construct(Min(Self.Minimum, target.Minimum), Max(Self.Maximum, target.Maximum));
 end;
 
 {==============================================================================]
@@ -188,6 +204,21 @@ begin
     Result := TRange.Construct(Min(Min(other.start, other.stop), Min(Self.start, Self.stop)), Max(Max(other.start, other.stop), Max(Self.start, Self.stop)))
   else
     Result := TRange.Construct(Max(Max(other.start, other.stop), Max(Self.start, Self.stop)), Min(Min(other.start, other.stop), Min(Self.start, Self.stop)));
+end;
+
+{==============================================================================]
+  <Overlay>
+  @action: Returns the physical segment where this range and the target coincide.
+  @note: 
+    - Returns the intersection as a new TRange.
+    - If there is no overlap (Aparted or Abuts), returns TRange.Null.
+[==============================================================================}
+function TRange.Overlay(const target: TRange): TRange; overload;
+begin
+  if (Self.Intersecta(target) <= 0) then
+    Result := TRange.Null
+  else
+    Result := TRange.Construct(Max(Self.Minimum, target.Minimum), Min(Self.Maximum, target.Maximum));
 end;
 
 {==============================================================================]

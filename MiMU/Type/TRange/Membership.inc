@@ -80,13 +80,19 @@ function Outlier(const val: Integer): Boolean; overload;
 function OutOfRange(const val: Integer): Boolean; overload;
 function OutOfRange(const vals: TRange): Boolean; overload;
 function Outside(const x: Integer): Boolean; overload;
+function Over(const target: TRange): Boolean; overload;
+function Over(const target: Integer): Boolean; overload;
 function Own(const val: Integer): Boolean; overload;
 function Owns(const val: Integer): Boolean; overload;
+function Remote(const target: TRange): Boolean; overload;
+function Remote(const target: Integer): Boolean; overload;
 function Subset(const r: TRange): Boolean; overload;
 function Superset(const r: TRange): Boolean; overload;
 function Surrounds(const target: TRange): Boolean; overload;
 function Tangent(const val: Integer): Boolean; overload;
 function Tangent(const target: TRange): Boolean; overload;
+function Under(const target: TRange): Boolean; overload;
+function Under(const target: Integer): Boolean; overload;
 function Value(const x: Integer): Boolean; overload;
 function WithinBounds(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
 function Wrapping(const r: TRange): Boolean; overload;
@@ -1160,6 +1166,20 @@ begin
 end;
 
 {==============================================================================]
+  <Over>
+  @action: Returns True if this range is entirely above the target.
+[==============================================================================}
+function TRange.Over(const target: TRange): Boolean; overload;
+begin
+  Result := (Self.Minimum > target.Maximum);
+end;
+
+function TRange.Over(const target: Integer): Boolean; overload;
+begin
+  Result := (Self.Minimum > target);
+end;
+
+{==============================================================================]
   <Own>
   @action: Contains()
   @note: Returns True if val is within the range [start..stop], inclusive.
@@ -1179,6 +1199,23 @@ end;
 function TRange.Owns(const val: Integer): Boolean; overload;
 begin
   Result := (((val - Self.start) * (val - Self.stop)) <= 0);
+end;
+
+{==============================================================================]
+  <Remote>
+  @action: Determines if a range (or point) is completely disconnected.
+  @note: 
+    Returns True if there is a gap (Score < 0). 
+    Returns False if they overlap or share a boundary.
+[==============================================================================}
+function TRange.Remote(const target: TRange): Boolean; overload;
+begin
+  Result := (Self.Intersecta(target) < 0);
+end;
+
+function TRange.Remote(const target: Integer): Boolean; overload;
+begin
+  Result := (Self.Intersecta(target) < 0);
 end;
 
 {==============================================================================]
@@ -1243,6 +1280,21 @@ var
   r: TRange;
 begin
   Result := (Self.Meet(target, r) and (r.Size = 1) and Self.Employs(r.start));
+end;
+
+{==============================================================================]
+  <Under>
+  @action: Returns True if this range is entirely below the target.
+  @note: Comparison is based on the Maximum value being less than the target Minimum.
+[==============================================================================}
+function TRange.Under(const target: TRange): Boolean; overload;
+begin
+  Result := (Self.Maximum < target.Minimum);
+end;
+
+function TRange.Under(const target: Integer): Boolean; overload;
+begin
+  Result := (Self.Maximum < target);
 end;
 
 {==============================================================================]
