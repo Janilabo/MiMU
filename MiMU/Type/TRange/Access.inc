@@ -27,6 +27,8 @@ function Query(const index: Integer = 0): Integer; overload;
 function Read(const index: Integer = 0): Integer; overload;
 function Resolve(const index: Integer = 0): Integer; overload;
 function Retrieve(const index: Integer = 0): Integer; overload;
+function StartVal(const sIndex: Integer = 0): Integer; overload;
+function StopVal(const sIndex: Integer = 0): Integer; overload;
 function Term(const index: Integer = 0): Integer; overload;
 function ToValue(const index: Integer = 0): Integer; overload;
 function ToValues(const ID: TIntegerArray): TIntegerArray; overload;
@@ -497,6 +499,28 @@ begin
     Result := Succ(Self.Retrieve(index - 1))
   else
     Result := Pred(Self.Retrieve(index - 1));
+end;
+
+{==============================================================================]
+  <StartVal>
+  @action: Calculates the value at a given offset relative to the Start point.
+  @note: Direction-aware. Moving "forward" (positive sIndex) follows the 
+         internal Direction of the range.
+[==============================================================================}
+function TRange.StartVal(const sIndex: Integer = 0): Integer; overload;
+begin
+  Result := (Self.Start + (sIndex * Self.Direction));
+end;
+
+{==============================================================================]
+  <StopVal>
+  @action: Calculates the value at a given offset relative to the Stop point.
+  @note: Direction-aware. Moving "forward" (positive sIndex) moves back 
+         toward the Start.
+[==============================================================================}
+function TRange.StopVal(const sIndex: Integer = 0): Integer; overload;
+begin
+  Result := (Self.Stop - (sIndex * Self.Direction));
 end;
 
 {==============================================================================]

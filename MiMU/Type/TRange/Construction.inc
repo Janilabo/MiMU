@@ -13,7 +13,7 @@ constructor Create(const data: string); overload;
 constructor Create(const other: TRange); overload;
 constructor Create(const arr: TIntegerArray; const rAscending: Boolean = True); overload;
 class function Descending(const A, B: Integer): TRange; overload; static;
-class function From(const startVal: Integer; const stepCount: Integer = 0): TRange; overload; static;
+class function From(const startingVal: Integer; const stepCount: Integer = 0): TRange; overload; static;
 class function From(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload; static;
 class function Form(const val: Integer; const radius: Integer = 0; const rAscending: Boolean = True): TRange; overload; static;
 class function Form(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload; static;
@@ -290,13 +290,13 @@ end;
   <From>
   @action: Creates a new TRange starting at the given value and extending by the
            specified step count.
-  @note: The stop value is computed as startVal + stepCount. A stepCount of zero
+  @note: The stop value is computed as startingVal + stepCount. A stepCount of zero
          produces a single-point range where start = stop.
 [==============================================================================}
-class function TRange.From(const startVal: Integer; const stepCount: Integer = 0): TRange; overload;
+class function TRange.From(const startingVal: Integer; const stepCount: Integer = 0): TRange; overload;
 begin
-  Result.start := startVal;
-  Result.stop := (startVal + stepCount);
+  Result.start := startingVal;
+  Result.stop := (startingVal + stepCount);
 end;
 
 {==============================================================================]

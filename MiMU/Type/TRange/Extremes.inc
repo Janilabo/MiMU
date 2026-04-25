@@ -23,11 +23,13 @@ function Maxima: Integer; overload;
 function Maximal: Integer; overload;
 function Maximer: Integer; overload;
 function Maximum: Integer; overload;
+function Maximum(const mIndex: Integer): Integer; overload;
 function MaxVal: Integer; overload;
 function Minima: Integer; overload;
 function Minimal: Integer; overload;
 function Minimer: Integer; overload;
 function Minimum: Integer; overload;
+function Minimum(const mIndex: Integer): Integer; overload;
 function Minor: Integer; overload;
 function MinVal: Integer; overload;
 function Right: Integer; overload;
@@ -349,6 +351,17 @@ begin
 end;
 
 {==============================================================================]
+  <Maximum>
+  @action: Returns a value at a safe offset stepping down from the absolute ceiling.
+  @note: Clamps the index to range limits. Maximum(Size - 1) will safely 
+         return the Minimum value.
+[==============================================================================}
+function TRange.Maximum(const mIndex: Integer): Integer; overload;
+begin
+  Result := (Self.Maximum - EnsureRange(mIndex, 0, (Self.Size - 1)));
+end;
+
+{==============================================================================]
   <MaxVal>
   @action: Returns maximum value of the given range.
   @note: None.
@@ -406,6 +419,17 @@ begin
     Result := Self.start
   else
     Result := Self.stop;
+end;
+
+{==============================================================================]
+  <Minimum>
+  @action: Returns a value at a safe offset starting from the absolute floor.
+  @note: Uses EnsureRange to clamp the index between 0 and (Size - 1). 
+         Prevents out-of-bounds results by capping at the Maximum.
+[==============================================================================}
+function TRange.Minimum(const mIndex: Integer): Integer; overload;
+begin
+  Result := (Self.Minimum + EnsureRange(mIndex, 0, (Self.Size - 1)));
 end;
 
 {==============================================================================]
