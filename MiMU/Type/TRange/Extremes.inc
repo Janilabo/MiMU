@@ -3,6 +3,7 @@ function Bottom: Integer; overload;
 function Extents: Integer; overload;
 function Extents(var rMin, rMax: Integer): Integer; overload;
 function First: Integer; overload;
+function Greater: Integer; overload;
 function Higher: Integer; overload;
 function Highest: Integer; overload;
 function HighValue: Integer; overload;
@@ -12,10 +13,12 @@ function Left: Integer; overload;
 function Lefty: Integer; overload;
 function Leftern: Integer; overload;
 function Leftside: Integer; overload;
+function Lesser: Integer; overload;
 function Lower: Integer; overload;
 function LowerBound: Integer; overload;
 function Lowest: Integer; overload;
 function LowValue: Integer; overload;
+function Major: Integer; overload;
 function Maxima: Integer; overload;
 function Maximal: Integer; overload;
 function Maximer: Integer; overload;
@@ -25,6 +28,7 @@ function Minima: Integer; overload;
 function Minimal: Integer; overload;
 function Minimer: Integer; overload;
 function Minimum: Integer; overload;
+function Minor: Integer; overload;
 function MinVal: Integer; overload;
 function Right: Integer; overload;
 function Righty: Integer; overload;
@@ -89,6 +93,20 @@ end;
 function TRange.First: Integer; overload;
 begin
   Result := (((Self.start + Self.stop) - Abs(Self.start - Self.stop)) div 2);
+end;
+
+{==============================================================================]
+  <Greater>
+  @action: Returns the larger numerical value (maximum) of the range.
+  @note: Uses vector arithmetic: (Sum + Abs(Difference)) / 2. 
+         The Sign(d)*d operation effectively calculates the absolute distance.
+[==============================================================================}
+function TRange.Greater: Integer; overload;
+var
+  d: Integer;
+begin
+  d := (Self.start - Self.stop);
+  Result := (((Int64(Self.start) + Self.stop) + (Sign(d) * d)) div 2);
 end;
 
 {==============================================================================]
@@ -207,6 +225,20 @@ begin
 end;
 
 {==============================================================================]
+  <Lesser>
+  @action: Returns the smaller numerical value (minimum) of the range.
+  @note: Uses vector arithmetic: (Sum - Abs(Difference)) / 2.
+         Subtracting the absolute distance from the sum shifts to the low end.
+[==============================================================================}
+function TRange.Lesser: Integer;
+var
+  d: Integer;
+begin
+  d := (Self.start - Self.stop);
+  Result := (((Int64(Self.start) + Self.stop) - (Sign(d) * d)) div 2);
+end;
+
+{==============================================================================]
   <Lower>
   @action: Returns the smaller of `start` and `stop` (the lower bound of the range).
   @note: Implemented using a branchless bitwise arithmetic trick.
@@ -253,6 +285,17 @@ begin
   A := Self.start;
   B := Self.stop;
   Result := ((A + B - Abs(A - B)) div 2);
+end;
+
+{==============================================================================]
+  <Major>
+  @action: Returns the larger numerical value of the range.
+  @note: Uses a branchless bitwise XOR-mask (a ^ ((a ^ b) & -(a < b))).
+         If start < stop, the mask is all 1s, flipping start to stop.
+[==============================================================================}
+function TRange.Major: Integer; overload;
+begin
+  Result := (Self.start xor ((Self.start xor Self.stop) and -Ord(Self.start < Self.stop)));
 end;
 
 {==============================================================================]
@@ -363,6 +406,17 @@ begin
     Result := Self.start
   else
     Result := Self.stop;
+end;
+
+{==============================================================================]
+  <Minor>
+  @action: Returns the smaller numerical value of the range.
+  @note: Uses a branchless bitwise XOR-mask (b ^ ((a ^ b) & -(a < b))).
+         If start < stop, the mask is all 1s, flipping stop to start.
+[==============================================================================}
+function TRange.Minor: Integer; overload;
+begin
+  Result := (Self.stop xor ((Self.start xor Self.stop) and -Ord(Self.start < Self.stop)));
 end;
 
 {==============================================================================]
