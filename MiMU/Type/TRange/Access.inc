@@ -4,9 +4,11 @@ function Access(const ID: TIntegerArray): TIntegerArray; overload;
 function AsValue(const index: Integer = 0): Integer; overload;
 function At(const index: Integer = 0): Integer; overload;
 function AtIndex(const index: Integer = 0): Integer; overload;
+function Ascender(const mIndex: Integer = 0): Integer; overload;
 function AtPos(const index: Integer = 0): Integer; overload;
 function AtPosition(const index: Integer = 0): Integer; overload;
 function Derive(const index: Integer = 0): Integer; overload;
+function Descender(const mIndex: Integer = 0): Integer; overload;
 function Elem(const index: Integer = 0): Integer; overload;
 function Element(const index: Integer = 0): Integer; overload;
 function Entry(const index: Integer = 0): Integer; overload;
@@ -71,6 +73,16 @@ begin
   o := Ord(Self.Descending);
   for i := 0 to High(Result) do
     Result[i] := (Self.start + (ID[i] * d[o]));
+end;
+
+{==============================================================================]
+  <Ascender>
+  @action: Returns a specific value by stepping upward from the range's floor.
+  @note: mIndex is an offset added to Minimum. Defaults to 0 (the Minimum itself).
+[==============================================================================}
+function TRange.Ascender(const mIndex: Integer = 0): Integer; overload;
+begin
+  Result := (Self.Minimum + mIndex);
 end;
 
 {==============================================================================]
@@ -159,6 +171,16 @@ begin
     1, 0: Result := (Self.start + index);
     -1: Result := (Self.start - index);
   end;
+end;
+
+{==============================================================================]
+  <Descender>
+  @action: Returns a specific value by stepping downward from the range's ceiling.
+  @note: mIndex is an offset subtracted from Maximum. Defaults to 0 (the Maximum).
+[==============================================================================}
+function TRange.Descender(const mIndex: Integer = 0): Integer; overload;
+begin
+  Result := (Self.Maximum - mIndex);
 end;
 
 {==============================================================================]

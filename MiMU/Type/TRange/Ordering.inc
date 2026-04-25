@@ -4,9 +4,13 @@ function Arrange(const oAscending: Boolean = True): TRange; overload;
 function Asc: TIntegerArray; overload;
 function Ascend: TRange; overload;
 function Ascended: TRange; overload;
+function Ascension: TIntegerArray; overload;
+function Ascent: TIntegerArray; overload;
 function Desc: TIntegerArray; overload;
 function Descend: TRange; overload;
 function Descended: TRange; overload;
+function Descension: TIntegerArray; overload;
+function Descent: TIntegerArray; overload;
 function Fix(const oAscending: Boolean = True): TRange; overload;
 function Fixed(const oAscending: Boolean = True): TRange; overload;
 function Order(const oAscending: Boolean = True): Boolean; overload;
@@ -102,6 +106,42 @@ begin
 end;
 
 {==============================================================================]
+  <Ascension>
+  @action: Generates an array from Minimum to Maximum in strictly increasing order.
+  @note: High-performance pointer implementation. Bypasses index-to-offset 
+         calculations for O(n) linear speed.
+[==============================================================================}
+function TRange.Ascension: TIntegerArray; overload;
+var
+  P: PInteger;
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  P := @Result[0];
+  for i := Self.Minimum to Self.Maximum do
+  begin
+    P^ := i;
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
+  <Ascent>
+  @action: Returns an array containing all integers in the range sorted from 
+           lowest to highest (ascending).
+  @note: Uses Minimum and Maximum properties to ensure the sequence always 
+         climbs, regardless of the internal 'Direction'.
+[==============================================================================}
+function TRange.Ascent: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  for i := Self.Minimum to Self.Maximum do
+    Result[i - Self.Minimum] := i;
+end;
+
+{==============================================================================]
   <Desc>
   @action: Returns a descending sequence of integers from Stop down to Start.
   @note: If Start < Stop, the order is still descending (from the larger to the smaller value).
@@ -137,6 +177,41 @@ begin
     Result.Create(Self.start, Self.stop)
   else
     Result.Create(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <Descension>
+  @action: Generates an array from Maximum to Minimum in strictly decreasing order.
+  @note: Maintains linear memory writes (forward-moving pointer) while 
+         iterating the integer sequence backwards.
+[==============================================================================}
+function TRange.Descension: TIntegerArray; overload;
+var
+  P: PInteger;
+  i: Integer;
+begin
+  SetLength(Result, Self.Size); 
+  P := @Result[0];
+  for i := Self.Maximum downto Self.Minimum do
+  begin
+    P^ := i;
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
+  <Descent>
+  @action: Returns an array containing all integers in the range sorted from 
+           highest to lowest (descending).
+  @note: Uses the downto keyword to iterate backwards from Maximum.
+[==============================================================================}
+function TRange.Descent: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  for i := Self.Maximum downto Self.Minimum do
+    Result[Self.Maximum - i] := i;
 end;
 
 {==============================================================================]
