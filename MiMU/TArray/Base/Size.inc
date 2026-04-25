@@ -5,6 +5,8 @@ function Fit(const aBounds: TRange): Integer; overload;
 function Length: Integer; overload;
 function Resize(const aChange: Integer): Integer; overload;
 function Resize(const aChange: Integer; const null: MType): Integer; overload;
+function SetSize(const sSize: Integer = 1): Integer; overload;
+function SetSize(const sSize: Integer; const iCreated: MType): Integer; overload;
 function Size: Integer; overload;
 function Size(const aSize: Integer): MArray; overload;
 function Size(const aSize: Integer; const null: MType): MArray; overload;
@@ -103,6 +105,36 @@ begin
   Result := (Self.Size - l);
   for i := 0 to (Result - 1) do
     Self[l + i] := null;
+end;
+
+{==============================================================================]
+  <SetSize>
+  @action: Resizes the dynamic array to the specified number of elements.
+  @note: If sSize is 0 or negative, the array is cleared. Existing data is 
+         preserved if the array is expanded. Uses Math unit for Max().
+		 By default sets size as 1!
+[==============================================================================}
+function MArrayHelper.SetSize(const sSize: Integer = 1): Integer; overload;
+begin
+  SetLength(Self, Max(0, sSize));
+  Result := Self.Length;
+end;
+
+{==============================================================================]
+  <SetSize>
+  @action: Resizes the array and initializes any newly created elements.
+  @note: If the array grows, indices from the old length to the new length 
+         are populated with iCreated. If it shrinks, no initialization occurs.
+[==============================================================================}
+function MArrayHelper.SetSize(const sSize: Integer; const iCreated: MType): Integer; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  SetLength(Self, Max(0, sSize));
+  Result := Self.Length;
+  for i := l to (Result - 1) do
+    Self[i] := iCreated;
 end;
 
 {==============================================================================]

@@ -24,6 +24,7 @@ function Digited: TIntegerArray; overload;
 function Digits: TIntegerArray; overload;
 function Digits(const dIndex: Integer): Integer; overload;
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
+function Disclose: TIntegerArray; overload;
 function Dismantle: TIntegerArray; overload;
 function Elemented: TIntegerArray; overload;
 function Elements: TIntegerArray; overload;
@@ -94,6 +95,8 @@ function Recursed: TIntegerArray; overload;
 function Recursively: TIntegerArray; overload;
 function Render: TIntegerArray; overload;
 function Resources: TIntegerArray; overload;
+function Reveal: TIntegerArray; overload;
+function Revealed: TIntegerArray; overload;
 function Separately(const rReverse: Boolean = False): TIntegerArray; overload;
 function Sequence: TIntegerArray; overload;
 function Snapshot: TIntegerArray; overload;
@@ -749,6 +752,29 @@ begin
 end;
 
 {==============================================================================]
+  <Disclose>
+  @action: Populates an array with the range values using direct memory pointers.
+  @note: Optimized for speed. If the range is "Singular," it returns a single-
+         element array.
+[==============================================================================}
+function TRange.Disclose: TIntegerArray; overload;
+var
+  P: PInteger;
+  i, l, s: Integer;
+begin
+  if Self.Singular Then
+    Exit([Self.start]);
+  l := Result.SetSize(Self.Size);
+  P := @Result[0];
+  s := Self.Start;
+  for i := 0 to (l - 1) do
+  begin
+    P^ := s.Increase(Self.Direction);
+    Inc(P);
+  end;
+end;
+
+{==============================================================================]
   <Dismantle>
   @action: Returns an array of all integers in the range arranged in a “dismantle”
            or interleaved order:
@@ -1071,7 +1097,7 @@ begin
     l := Min(r, (s - r));
     Move(Result[0], Result[r], (l * x));
     for i := r to ((r + l) - 1) do
-       Inc(Result[i], (r * d));
+      Inc(Result[i], (r * d));
     Inc(r, l);
   end;
 end;
@@ -1096,7 +1122,7 @@ begin
   Result[0] := IfThen(rAscending, l, h);
   while (l < h) do
   case rAscending of
-    True:Result[i.Increase] := l.Increment;
+    True: Result[i.Increase] := l.Increment;
     False: Result[i.Increase] := h.Decrement;
   end;
 end;
@@ -2693,6 +2719,36 @@ begin
   while (i < s) do
     Result[i.Increase] := v.Increase(d);
 end;
+
+{==============================================================================]
+  <Reveal>
+  @action: Progressively unfolds the range into a dynamic array.
+  @note: Starts with the 'start' value and iteratively supplies the next
+         integer based on direction until 'stop' is reached. Useful for
+         following the natural path of the range (Ascending or Descending).
+[==============================================================================}
+function TRange.Reveal: TIntegerArray; overload;
+begin
+  Result := [Self.start];
+  while (Self.stop <> Result[High(Result)]) do
+    Result.Supply(Result[High(Result)] + Self.Direction);
+end;
+
+{==============================================================================]
+  <Revealed>
+  @action: Generates a concrete array of integers based on the range's 
+           start, size, and direction.
+  @note: Uses a countdown loop (Decrement) to populate the array from 
+         the end to the beginning.
+[==============================================================================}
+function TRange.Revealed: TIntegerArray; overload;
+var
+  s: Integer;
+begin
+  s := Result.SetSize(Self.Size);
+  while (s.Decrement > -1) do
+    Result[s] := (Self.start + (s * Self.Direction));
+end; 
 
 {==============================================================================]
   <Separately>

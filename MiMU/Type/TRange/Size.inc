@@ -36,6 +36,7 @@ function PopulationSize: Integer; overload;
 function Quantified: Int64; overload;
 function Quantify: Integer; overload;
 function Quantity: Integer; overload;
+function Quantum: Integer; overload;
 function Quota: Integer; overload;
 function Reach: Integer; overload;
 function Scope: Integer; overload;
@@ -615,6 +616,17 @@ var
 begin
   d := (Self.stop - Self.start);
   Result := ((d * Sign(d)) + 1);
+end;
+
+{==============================================================================]
+  <Quantum>
+  @action: Returns the discrete inclusive count of integers within the range.
+  @note: Calculated as (Major - Minor) + 1. This represents the total
+         number of "units" or "steps" the range contains.
+[==============================================================================}
+function TRange.Quantum: Integer; overload;
+begin
+  Result := ((Self.Major - Self.Minor) + 1);
 end;
 
 {==============================================================================]
