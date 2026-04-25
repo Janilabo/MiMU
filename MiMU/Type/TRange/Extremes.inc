@@ -6,19 +6,31 @@ function First: Integer; overload;
 function Higher: Integer; overload;
 function Highest: Integer; overload;
 function HighValue: Integer; overload;
+function Larger: Integer; overload;
 function Last: Integer; overload;
 function Left: Integer; overload;
+function Lefty: Integer; overload;
+function Leftern: Integer; overload;
+function Leftside: Integer; overload;
 function Lower: Integer; overload;
 function LowerBound: Integer; overload;
 function Lowest: Integer; overload;
 function LowValue: Integer; overload;
 function Maxima: Integer; overload;
 function Maximal: Integer; overload;
+function Maximer: Integer; overload;
 function Maximum: Integer; overload;
+function MaxVal: Integer; overload;
 function Minima: Integer; overload;
 function Minimal: Integer; overload;
+function Minimer: Integer; overload;
 function Minimum: Integer; overload;
+function MinVal: Integer; overload;
 function Right: Integer; overload;
+function Righty: Integer; overload;
+function Rightern: Integer; overload;
+function Rightside: Integer; overload;
+function Smaller: Integer; overload;
 function Top: Integer; overload;
 function UpperBound: Integer; overload;
 {$ENDIF}
@@ -115,6 +127,21 @@ begin
 end;
 
 {==============================================================================]
+  <Larger>
+  @action: Returns the higher numerical value between `start` and `stop`.
+  @note: Uses a branchless index mapping. When the condition (start < stop) 
+         is True (1), it selects the value at index 1 (stop).
+[==============================================================================}
+function TRange.Larger: Integer; overload;
+var
+  s: array[0..1] of Integer;
+begin
+  s[0] := Self.start;
+  s[1] := Self.stop;
+  Result := s[Ord(Self.start < Self.stop)];
+end;
+
+{==============================================================================]
   <Last>
   @action: Returns the larger of start and stop, regardless of order.
   @note: Can be computed branchlessly using arithmetic: (start + stop + Abs(start - stop)) div 2.
@@ -135,6 +162,48 @@ end;
 function TRange.Left: Integer; overload;
 begin
   Result := IfThen((Self.start <= Self.stop), Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <Leftern>
+  @action: Returns the lower numerical value (minimum) of the range.
+  @note: Uses a boolean coefficient to mathematically select 'start' or 'stop'. 
+         If start < stop (s=1), start is returned; otherwise, stop is returned.
+[==============================================================================}
+function TRange.Leftern: Integer; overload;
+var
+  s: Integer;
+begin
+  s := Ord(Self.start < Self.stop);
+  Result := ((s * Self.start) + ((1 - s) * Self.stop));
+end;
+
+{==============================================================================]
+  <Leftside>
+  @action: Returns the lower numerical bound (minimum) of the range.
+  @note: Uses an absolute memory alias and a constant index map to select 
+         the smaller value without branching logic.
+[==============================================================================}
+function TRange.Leftside: Integer; overload;
+const
+  PICK: array[Boolean] of Integer = (1, 0);
+var
+  F: array[0..1] of Integer absolute Self;
+begin
+  Result := F[PICK[Self.start < Self.stop]];
+end;
+
+{==============================================================================]
+  <Lefty>
+  @action: Returns the lower numerical bound (minimum) of the range.
+  @note: Uses branchless memory mapping. By overlaying an array onto the 
+         record memory, we select the lesser value via index calculation.
+[==============================================================================}
+function TRange.Lefty: Integer; overload;
+var
+  s: array[0..1] of Integer absolute Self;
+begin
+  Result := s[Ord(Self.start > Self.stop)];
 end;
 
 {==============================================================================]
@@ -214,6 +283,16 @@ begin
 end;
 
 {==============================================================================]
+  <Maximer>
+  @action: Returns the upper numerical bound of the range.
+  @note: Uses the algebraic formula (a + b + |a - b|) / 2 to find the maximum.
+[==============================================================================}
+function TRange.Maximer: Integer; overload;
+begin
+  Result := (((Int64(Self.start) + Self.stop) + Abs(Self.start - Self.stop)) div 2);
+end;
+
+{==============================================================================]
   <Maximum>
   @action: Returns maximum value of the given range.
   @note: None.
@@ -224,6 +303,16 @@ begin
     Result := Self.stop
   else
     Result := Self.start;
+end;
+
+{==============================================================================]
+  <MaxVal>
+  @action: Returns maximum value of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.MaxVal: Integer; overload;
+begin
+  Result := EnsureRange(Self.start, Self.stop, High(Integer));
 end;
 
 {==============================================================================]
@@ -254,6 +343,16 @@ begin
 end;
 
 {==============================================================================]
+  <Minimer>
+  @action: Returns the lower numerical bound of the range.
+  @note: Uses the algebraic formula (a + b - |a - b|) / 2 to find the minimum.
+[==============================================================================}
+function TRange.Minimer: Integer; overload;
+begin
+  Result := (((Int64(Self.start) + Self.stop) - Abs(Self.start - Self.stop)) div 2);
+end;
+
+{==============================================================================]
   <Minimum>
   @action: Returns minimum value of the given range.
   @note: None.
@@ -267,6 +366,16 @@ begin
 end;
 
 {==============================================================================]
+  <MinVal>
+  @action: Returns minimum value of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.MinVal: Integer; overload;
+begin
+  Result := EnsureRange(Self.start, Low(Integer), Self.stop);
+end;
+
+{==============================================================================]
   <Right>
   @action: Returns the upper endpoint of the range, independent of the direction
            in which the range was specified.
@@ -277,6 +386,63 @@ end;
 function TRange.Right: Integer; overload;
 begin
   Result := IfThen((Self.start >= Self.stop), Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <Rightern>
+  @action: Returns the higher numerical value (maximum) of the range.
+  @note: Uses a boolean coefficient to mathematically select 'start' or 'stop'. 
+         If start < stop (s=1), stop is returned; otherwise, start is returned.
+[==============================================================================}
+function TRange.Rightern: Integer; overload;
+var
+  s: Integer;
+begin
+  s := Ord(Self.start < Self.stop);
+  Result := (((1 - s) * Self.start) + (s * Self.stop));
+end;
+
+{==============================================================================]
+  <Rightside>
+  @action: Returns the upper numerical bound (maximum) of the range.
+  @note: Uses an absolute memory alias and a constant index map to select 
+         the larger value without branching logic.
+[==============================================================================}
+function TRange.Rightside: Integer; overload;
+const
+  PICK: array[Boolean] of Integer = (0, 1);
+var
+  F: array[0..1] of Integer absolute Self;
+begin
+  Result := F[PICK[Self.start < Self.stop]];
+end;
+
+{==============================================================================]
+  <Righty>
+  @action: Returns the higher numerical bound (maximum) of the range.
+  @note: Uses branchless memory mapping. By overlaying an array onto the 
+         record memory, we select the greater value via index calculation.
+[==============================================================================}
+function TRange.Righty: Integer; overload;
+var
+  s: array[0..1] of Integer absolute Self;
+begin
+  Result := s[Ord(Self.start < Self.stop)];
+end;
+
+{==============================================================================]
+  <Smaller>
+  @action: Returns the lower numerical value between `start` and `stop`.
+  @note: Uses a branchless index mapping. When the condition (start < stop) 
+         is True (1), it selects the value at index 1 (start).
+[==============================================================================}
+function TRange.Smaller: Integer; overload;
+var
+  s: array[0..1] of Integer;
+begin
+  s[0] := Self.stop;
+  s[1] := Self.start;
+  Result := s[Ord(Self.start < Self.stop)];
 end;
 
 {==============================================================================]

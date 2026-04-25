@@ -1,5 +1,7 @@
 {$IFDEF METHODS}
 class function Ascending(const A, B: Integer): TRange; overload; static;
+function Assign(const AStart, AStop: Integer): Integer; overload;
+function Assign(const ARange: TRange): Integer; overload;
 class function Construct(const rStart, rStop: Integer): TRange; overload; static;
 class function Construct(const rVal: Integer): TRange; overload; static;
 class function Construct: TRange; overload; static;
@@ -48,6 +50,29 @@ class function TRange.Ascending(const A, B: Integer): TRange; overload;
 begin
   Result.start := Min(A, B);
   Result.stop := Max(A, B);
+end;
+
+{==============================================================================]
+  <Assign>
+  @action: Sets the boundary points of the range and returns its total span.
+  @note: This method allows for "unordered" input; the returned size is 
+         always the absolute distance (delta) between start and stop.
+[==============================================================================}
+function TRange.Assign(const AStart, AStop: Integer): Integer; overload;
+begin
+  Self.start := AStart;
+  Self.stop := AStop;
+  Result := Self.Size;
+end;
+
+{==============================================================================]
+  <Assign>
+  @action: Copies the boundaries from a target range and returns the new size.
+  @note: None.
+[==============================================================================}
+function TRange.Assign(const ARange: TRange): Integer; overload;
+begin
+  Result := Self.Assign(ARange.start, ARange.stop);
 end;
 
 {==============================================================================]

@@ -18,6 +18,7 @@ function DistHausdorff(const b: TRange): Integer; overload;
 function Gap(const other: TRange): Integer; overload;
 function Gapping(const target: TRange): Integer; overload;
 function GapTo(const other: TRange): Integer; overload;
+function GapWith(const target: TRange): Integer; overload;
 function GetDistance(const target: TRange): Integer; overload;
 function Intersecta(const target: TRange): Integer; overload;
 function Intersecta(const target: Integer): Integer; overload;
@@ -399,6 +400,21 @@ begin
     Result := ((other.Minimum - Self.Maximum) - 1)
   else
     Result := ((Self.Minimum - other.Maximum) - 1);
+end;
+
+{==============================================================================]
+  <GapWith>
+  @action: Computes the signed distance (gap) between this range and the target range.
+  @note:
+    - Returns 0 if the ranges overlap or touch.
+    - Returns a positive value if Self lies entirely after target.
+    - Returns a negative value if Self lies entirely before target.
+    - The magnitude represents the distance between the nearest boundaries.
+    - Implemented branch-free using Min/Max for performance.
+[==============================================================================}
+function TRange.GapWith(const target: TRange): Integer; overload;
+begin
+  Result := (Max(0, (Self.Minimum - target.Maximum)) + Min(0, (Self.Maximum - target.Minimum)));
 end;
 
 {==============================================================================]

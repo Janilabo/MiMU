@@ -40,7 +40,7 @@ function Quota: Integer; overload;
 function Reach: Integer; overload;
 function Scope: Integer; overload;
 function Size: Integer; overload;
-function Size(var minVal, maxVal: Integer): Integer; overload;
+function Size(var lVal, hVal: Integer): Integer; overload;
 function Size(var vSize: Integer): Integer; overload;
 function Sized: Integer; overload;
 function Sizing: Integer; overload;
@@ -686,11 +686,11 @@ end;
   @action: Returns size of the given range.
   @note: None.
 [==============================================================================}
-function TRange.Size(var minVal, maxVal: Integer): Integer; overload;
+function TRange.Size(var lVal, hVal: Integer): Integer; overload;
 begin
-  minVal := Min(Self.start, Self.stop);
-  maxVal := Max(Self.start, Self.stop);
-  Result := ((maxVal - minVal) + 1);
+  lVal := Min(Self.start, Self.stop);
+  hVal := Max(Self.start, Self.stop);
+  Result := ((hVal - lVal) + 1);
 end;
 
 {==============================================================================]

@@ -4,3 +4,7 @@
 {$I Metric.inc}
 {$I Reversion.inc}
 {$I Validation.inc}
+
+{$IFDEF Sortable}
+{$I Sortable/Merge.inc}
+{$ENDIF}
