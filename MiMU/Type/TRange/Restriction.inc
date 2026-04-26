@@ -1,27 +1,30 @@
 {$IFDEF METHODS}
-function Anchor(const aLength: Integer = 1): TRange;
-function AnchorStart(const aLength: Integer = 1): TRange;
-function AnchorStop(const aLength: Integer = 1): TRange;
+function Anchor(const aLength: Integer = 1): TRange; overload;
+function AnchorStart(const aLength: Integer = 1): TRange; overload;
+function AnchorStop(const aLength: Integer = 1): TRange; overload;
 function Bounce(const val: Integer): Integer; overload;
 function Clamp(const zone: TRange): TRange; overload;
-function ClampMin(const minValue: Integer): TRange;
-function ClampMax(const maxValue: Integer): TRange;
-function Clip(const zone: TRange): TRange;
-function ClipMax(const maxValue: Integer): TRange;
-function ClipMin(const minValue: Integer): TRange;
+function ClampMin(const minValue: Integer): TRange; overload;
+function ClampMax(const maxValue: Integer): TRange; overload;
+function Clip(const zone: TRange): TRange; overload;
+function ClipMax(const maxValue: Integer): TRange; overload;
+function ClipMin(const minValue: Integer): TRange; overload;
 function Confine(const val: Integer): Integer; overload;
 function Ensure(const zone: TRange): Boolean; overload;
 function Ensured(const zone: TRange): TRange; overload;
-function Limit(const val: Integer): Integer;
-function MaxLimit(const val: Integer): Integer;
-function MinLimit(const val: Integer): Integer;
+function Limit(const val: Integer): Integer; overload;
+function MaxLimit(const val: Integer): Integer; overload;
+function MinLimit(const val: Integer): Integer; overload;
 function Pin(const val: Integer): Integer; overload;
 function Pinned(const val: Integer): Integer; overload;
+function Pinned(const vals: TRange): TRange; overload;
 function PinMax(const val: Integer): Integer; overload;
 function PinMin(const val: Integer): Integer; overload;
-function Restrict(const zone: TRange): Boolean;
-function RestrictMax(const maxValue: Integer): Boolean;
-function RestrictMin(const minValue: Integer): Boolean;
+function Restrict(const zone: TRange): Boolean; overload;
+function RestrictMax(const maxValue: Integer): Boolean; overload;
+function RestrictMin(const minValue: Integer): Boolean; overload;
+function Snap(const val: Integer): Integer; overload;
+function Snap(const vals: TRange): TRange; overload;
 function Wrap(const val: Integer): Integer; overload;
 {$ENDIF}
 
@@ -36,7 +39,7 @@ function Wrap(const val: Integer): Integer; overload;
          Length is inclusive: aLength = 1 produces a single-point range.
          The direction of the original range is preserved.
 [==============================================================================}
-function TRange.Anchor(const aLength: Integer = 1): TRange;
+function TRange.Anchor(const aLength: Integer = 1): TRange; overload;
 begin
   if Self.Ascending then
     Result := Self.AnchorStart(aLength)
@@ -54,7 +57,7 @@ end;
          The direction (ascending or descending) of the original range
          is preserved.
 [==============================================================================}
-function TRange.AnchorStart(const aLength: Integer = 1): TRange;
+function TRange.AnchorStart(const aLength: Integer = 1): TRange; overload;
 begin
   if (aLength < 2) then
     Exit(TRange.Construct(Self.start, Self.start));
@@ -75,7 +78,7 @@ end;
          The direction (ascending or descending) of the original range
          is preserved.
 [==============================================================================}
-function TRange.AnchorStop(const aLength: Integer = 1): TRange;
+function TRange.AnchorStop(const aLength: Integer = 1): TRange; overload;
 begin
   if (aLength < 2) then
     Exit(TRange.Construct(Self.stop, Self.stop));
@@ -116,7 +119,7 @@ end;
   @action: Returns range clamped inside zone range.
   @note: Makes sure Result is range fitted in zone bounds.
 [==============================================================================}
-function TRange.Clamp(const zone: TRange): TRange;
+function TRange.Clamp(const zone: TRange): TRange; overload;
 var
   z: TRange;
 begin
@@ -139,7 +142,7 @@ end;
   @action: Returns range with start and stop with maximum value.
   @note: Makes sure neither start or stop is higher than maximum.
 [==============================================================================}
-function TRange.ClampMax(const maxValue: Integer): TRange;
+function TRange.ClampMax(const maxValue: Integer): TRange; overload;
 begin
   if (Self.start > maxValue) then
     Result.start := maxValue
@@ -156,7 +159,7 @@ end;
   @action: Returns range with start and stop with minimum value.
   @note: Makes sure neither start or stop is lower than minimum.
 [==============================================================================}
-function TRange.ClampMin(const minValue: Integer): TRange;
+function TRange.ClampMin(const minValue: Integer): TRange; overload;
 begin
   if (Self.start < minValue) then
     Result.start := minValue
@@ -173,7 +176,7 @@ end;
   @action: Ensures range start and stop stays within zone.
   @note: Alternative for TRange_Clamp.
 [==============================================================================}
-function TRange.Clip(const zone: TRange): TRange;
+function TRange.Clip(const zone: TRange): TRange; overload;
 begin
   Result.start := Max(zone.start, Min(Self.start, zone.stop));
   Result.stop := Min(zone.stop, Max(Self.stop, zone.start));
@@ -184,7 +187,7 @@ end;
   @action: Ensures range start and stop stays within maximum.
   @note: Alternative for TRange_ClampMax.
 [==============================================================================}
-function TRange.ClipMax(const maxValue: Integer): TRange;
+function TRange.ClipMax(const maxValue: Integer): TRange; overload;
 begin
   Result.start := Min(Self.start, maxValue);
   Result.stop := Min(Self.stop, maxValue);
@@ -195,7 +198,7 @@ end;
   @action: Ensures range start and stop stays within minimum.
   @note: Alternative for TRange_ClampMin.
 [==============================================================================}
-function TRange.ClipMin(const minValue: Integer): TRange;
+function TRange.ClipMin(const minValue: Integer): TRange; overload;
 begin
   Result.start := Max(Self.start, minValue);
   Result.stop := Max(Self.stop, minValue);
@@ -254,7 +257,7 @@ end;
          Returns Max(start, stop) if val is above the range.
          Otherwise returns value itself.
 [==============================================================================}
-function TRange.Limit(const val: Integer): Integer;
+function TRange.Limit(const val: Integer): Integer; overload;
 var
   r: TRange;
 begin
@@ -274,7 +277,7 @@ end;
          Values below the range minimum are allowed.
          Useful when you only want to enforce an upper bound.
 [==============================================================================}
-function TRange.MaxLimit(const val: Integer): Integer;
+function TRange.MaxLimit(const val: Integer): Integer; overload;
 begin
   Result := Min(val, Max(Self.start, Self.stop));
 end;
@@ -286,7 +289,7 @@ end;
          Values above the range maximum are allowed.
          Useful when you only want to enforce a lower bound.
 [==============================================================================}
-function TRange.MinLimit(const val: Integer): Integer;
+function TRange.MinLimit(const val: Integer): Integer; overload;
 begin
   Result := Max(val, Min(Self.start, Self.stop));
 end;
@@ -320,6 +323,32 @@ begin
 end;
 
 {==============================================================================]
+  <Pinned>
+  @action: Forces an external range to stay within the bounds of this range.
+  @note: Clamps both Start and Stop to [Minimum..Maximum]. If the input 
+         range exceeds these bounds, it is truncated or "pinned" to the edges.
+[==============================================================================}
+function TRange.Pinned(const vals: TRange): TRange; overload;
+var
+  l, h: Integer;
+begin
+  l := Self.Minimum;
+  h := Self.Maximum;
+  if (vals.start < l) then
+    Result.start := l
+  else if (vals.start > h) then
+    Result.start := h
+  else
+    Result.start := vals.start;
+  if (vals.stop > h) then
+    Result.stop := h
+  else if (vals.stop < l) then
+    Result.stop := l
+  else
+    Result.stop := vals.stop;
+end;
+
+{==============================================================================]
   <PinMax>
   @action: Ensures the value is not higher than the range's Maximum.
   @note: Ignores the lower bound (Minimum).
@@ -344,7 +373,7 @@ end;
   @action: Ensures range start and stop stays within zone.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
-function TRange.Restrict(const zone: TRange): Boolean;
+function TRange.Restrict(const zone: TRange): Boolean; overload;
 var
   e: TRange;
 begin
@@ -359,7 +388,7 @@ end;
   @action: Ensures range start and stop stays within maximum.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
-function TRange.RestrictMax(const maxValue: Integer): Boolean;
+function TRange.RestrictMax(const maxValue: Integer): Boolean; overload;
 var
   e: TRange;
 begin
@@ -374,7 +403,7 @@ end;
   @action: Ensures range start and stop stays within minimum.
   @note: Returns true if restriction was performed for start or/and stop.
 [==============================================================================}
-function TRange.RestrictMin(const minValue: Integer): Boolean;
+function TRange.RestrictMin(const minValue: Integer): Boolean; overload;
 var
   e: TRange;
 begin
@@ -383,6 +412,37 @@ begin
   if Result then
     Self := e;
 end;
+
+{==============================================================================]
+  <Snap>
+  @action: Forces a value to reside within the range boundaries.
+  @note: If the value is outside the [Minimum..Maximum] bounds, it "snaps"
+         to the closest boundary. This is functionally equivalent to a Clamp.
+[==============================================================================}
+function TRange.Snap(const val: Integer): Integer; overload;
+var
+  m: Integer;
+begin
+  m := Self.Minimum;
+  if (val < m) then
+    Exit(m);
+  m := Self.Maximum;
+  if (val > m) then
+    Exit(m);
+  Result := val;
+end;
+
+{==============================================================================]
+  <Snap>
+  @action: Constrains an external range to the boundaries of the current range.
+  @note: Snaps both the Start and Stop points of the input range. Useful for
+         ensuring a "Selection Range" stays within a "Buffer Range."
+[==============================================================================}
+function TRange.Snap(const vals: TRange): TRange; overload;
+begin
+  Result.start := Self.Snap(vals.start);
+  Result.stop := Self.Snap(vals.stop);
+end; 
 
 {==============================================================================]
   <Wrap>

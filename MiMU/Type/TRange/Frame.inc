@@ -1,12 +1,12 @@
 {$IFDEF METHODS}
-function Blanco: TRange;
+function Blanco: TRange; overload;
 function Centered(const rCenter: Integer): TRange; overload;
 function Frame(var rSize: Integer): TRange; overload;
 function Frame: TRange; overload;
-function Localize: Integer;
-function Localized: TRange;
-function Split(var rLeft, rRight: TRange): Integer;
-function Template: TRange;
+function Localize: Integer; overload;
+function Localized: TRange; overload;
+function Split(var rLeft, rRight: TRange): Integer; overload;
+function Template: TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -18,7 +18,7 @@ function Template: TRange;
          or descending). Equivalent to translating the range by
          -min(start, stop).
 [==============================================================================}
-function TRange.Blanco: TRange;
+function TRange.Blanco: TRange; overload;
 var
   o: Integer;
 begin
@@ -76,7 +76,7 @@ end;
          other represents the range length. The returned value can be used
          to restore or reapply the original position.
 [==============================================================================}
-function TRange.Localize: Integer;
+function TRange.Localize: Integer; overload;
 begin
   case Self.Ascending of
     True:
@@ -101,7 +101,7 @@ end;
   @note: Non-mutating. The lowest (or highest, for descending ranges)
          endpoint is moved to zero while preserving orientation.
 [==============================================================================}
-function TRange.Localized: TRange;
+function TRange.Localized: TRange; overload;
 begin
   Result := Self;
   case Self.Ascending of
@@ -134,7 +134,7 @@ end;
       the Start value is returned.
     - Integer division is used when calculating the midpoint.
 [==============================================================================}
-function TRange.Split(var rLeft, rRight: TRange): Integer;
+function TRange.Split(var rLeft, rRight: TRange): Integer; overload;
 var
   n: TRange;
 begin
@@ -156,7 +156,7 @@ end;
          spans from 0 to Length for ascending ranges, or Length to 0 for
          descending ranges. Non-mutating.
 [==============================================================================}
-function TRange.Template: TRange;
+function TRange.Template: TRange; overload;
 begin
   if Self.Ascending then
     Result.Create(0, (Self.Maximum - Self.Minimum))

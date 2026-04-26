@@ -28,7 +28,9 @@ function Read(const index: Integer = 0): Integer; overload;
 function Resolve(const index: Integer = 0): Integer; overload;
 function Retrieve(const index: Integer = 0): Integer; overload;
 function StartVal(const sIndex: Integer = 0): Integer; overload;
+function StartValue(const sIndex: Integer = 0): Integer; overload;
 function StopVal(const sIndex: Integer = 0): Integer; overload;
+function StopValue(const sIndex: Integer = 0): Integer; overload;
 function Term(const index: Integer = 0): Integer; overload;
 function ToValue(const index: Integer = 0): Integer; overload;
 function ToValues(const ID: TIntegerArray): TIntegerArray; overload;
@@ -513,6 +515,17 @@ begin
 end;
 
 {==============================================================================]
+  <StartValue>
+  @action: Returns the value at a safe offset moving away from the Start.
+  @note: The index is clamped between 0 and (Size - 1). If sIndex exceeds 
+         the range, it returns the Stop value.
+[==============================================================================}
+function TRange.StartValue(const sIndex: Integer = 0): Integer; overload;
+begin
+  Result := (Self.start + (Max(0, Min(sIndex, (Self.Size - 1))) * Self.Direction));
+end;
+
+{==============================================================================]
   <StopVal>
   @action: Calculates the value at a given offset relative to the Stop point.
   @note: Direction-aware. Moving "forward" (positive sIndex) moves back 
@@ -521,6 +534,17 @@ end;
 function TRange.StopVal(const sIndex: Integer = 0): Integer; overload;
 begin
   Result := (Self.Stop - (sIndex * Self.Direction));
+end;
+
+{==============================================================================]
+  <StopValue>
+  @action: Returns the value at a safe offset moving back from the Stop.
+  @note: The index is clamped between 0 and (Size - 1). If sIndex exceeds 
+         the range, it returns the Start value.
+[==============================================================================}
+function TRange.StopValue(const sIndex: Integer = 0): Integer; overload;
+begin
+  Result := (Self.stop - (Max(0, Min(sIndex, (Self.Size - 1))) * Self.Direction));
 end;
 
 {==============================================================================]

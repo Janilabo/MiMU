@@ -19,6 +19,10 @@ function Indices: TIntegerArray; overload;
 function IndexList: TIntegerArray; overload;
 function Keys: TIntegerArray; overload;
 function LoadID(var target: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
+function Paged(const pageSize: Integer = 2): T2DIntegerArray; overload;
+function Pagenize(const pageSize: Integer = 2): T2DIntegerArray; overload;
+function Pages(const pageSize: Integer = 2): T2DIntegerArray; overload;
+function Paging(const pageSize: Integer = 2): T2DIntegerArray; overload;
 function Positional: TIntegerArray; overload;
 function Positionally: TIntegerArray; overload;
 function Positions: TIntegerArray; overload;
@@ -469,6 +473,128 @@ begin
   s := IfThen(oAscending, 1, -1);
   for i := 1 to (Result - 1) do
     target[i] := (target[i - 1] + s);
+end;
+
+{==============================================================================]
+  <Paged>
+  @action: Distributes zero-based indices into a two-dimensional array of
+           fixed-size blocks (pages).
+  @note:
+    - The total number of indices generated is equal to Self.Size.
+    - Each page has a length of PageSize, except potentially the last page.
+    - Useful for UI virtualization, multi-threaded processing, or avoiding
+      large contiguous memory allocations.
+[==============================================================================}
+function TRange.Paged(const pageSize: Integer = 2): T2DIntegerArray; overload;
+var
+  s, c, i, p, r, l: Integer;
+begin
+  if (pageSize < 1) then
+    Exit([]);
+  s := Self.Size;
+  c := ((s + pageSize - 1) div pageSize);
+  SetLength(Result, c);
+  for p := 0 to (c - 1) do
+  begin
+    r := (s - (p * pageSize));
+    if (r < pageSize) then
+      l := r
+    else
+      l := pageSize;
+    SetLength(Result[p], l);
+    for i := 0 to (l - 1) do
+      Result[p][i] := ((p * pageSize) + i);
+  end;
+end;
+
+{==============================================================================]
+  <Pagenize>
+  @action: Partitions the zero-based index sequence of the range into a 
+           two-dimensional array of discrete pages.
+  @note: 
+    - Uses TRange.Construct to create a temporary "Index Range" for each page.
+    - Calls .Items on each sub-range to populate the nested arrays.
+    - This approach is highly maintainable as it relies on existing 
+      range-to-array logic rather than manual pointer or loop math.
+[==============================================================================}
+function TRange.Pagenize(const pageSize: Integer = 2): T2DIntegerArray; overload;
+var
+  p, s: Integer;
+begin
+  if (pageSize < 1) then
+    Exit([]);
+  s := Self.Size;
+  SetLength(Result, ((s + pageSize - 1) div pageSize));
+  for p := 0 to High(Result) do
+    Result[p] := TRange.Construct((p * pageSize), Min((((p + 1) * pageSize) - 1), (s - 1))).Items;
+end;
+
+{==============================================================================]
+  <Pages>
+  @action: Distributes zero-based indices into a two-dimensional array of
+           fixed-size blocks (pages).
+  @note:
+    - The total number of indices generated is equal to Self.Size.
+    - Each page has a length of PageSize, except potentially the last page.
+    - Useful for UI virtualization, multi-threaded processing, or avoiding
+      large contiguous memory allocations.
+[==============================================================================}
+function TRange.Pages(const pageSize: Integer = 2): T2DIntegerArray; overload;
+var
+  s, i, j, l, r: Integer;
+  P: PInteger;
+begin
+  if (pageSize < 1) then
+    Exit([]);
+  s := Self.Size;
+  SetLength(Result, ((s + pageSize - 1) div pageSize));
+  r := 0;
+  for i := 0 to High(Result) do
+  begin
+    l := Min(pageSize, (s - (i * pageSize)));
+    SetLength(Result[i], l);
+    if (l > 0) then
+    begin
+      P := @Result[i][0];
+      for j := 1 to l do
+      begin
+        P^ := r.Increase;
+        Inc(P);
+      end;
+    end;
+  end;
+end; 
+
+{==============================================================================]
+  <Paging>
+  @action: Slices the range indices into a two-dimensional paginated structure 
+           using optimized bulk memory transfers.
+  @note: 
+    - First generates a linear index array using Self.ToIndices.
+    - Uses System.Move to rapidly copy segments of the linear array into 
+      individual pages.
+    - Highly efficient for large ranges where manual iteration is a bottleneck.
+[==============================================================================}
+function TRange.Paging(const pageSize: Integer = 2): T2DIntegerArray; overload;
+var
+  s, c, p, r, l, o, z: Integer;
+  i: TIntegerArray;
+begin
+  if (pageSize < 1) then
+    Exit([]);
+  s := Self.Size;
+  c := ((s + pageSize - 1) div pageSize);
+  SetLength(Result, c);
+  i := Self.ToIndices;
+  z := SizeOf(Integer);
+  for p := 0 to (c - 1) do
+  begin
+    o := (p * pageSize);
+    l := Min(pageSize, (s - o));
+    SetLength(Result[p], l);
+    if (l > 0) then
+      Move(i[o], Result[p][0], (l * z));
+  end;
 end;
 
 {==============================================================================]

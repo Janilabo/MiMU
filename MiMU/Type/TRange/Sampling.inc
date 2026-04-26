@@ -7,6 +7,8 @@ function Mixed(const mixings: Integer = 1): TIntegerArray; overload;
 function Quantized(const sStep: Integer = 1): TIntegerArray; overload;
 function Raffle(const N: Integer = 1): TIntegerArray; overload;
 function Rand: Integer; overload;
+function RandomEx(const forbidden: Integer): Integer; overload;
+function RandomEx(const forbidden: TIntegerArray): Integer; overload;
 function Randomize: TIntegerArray; overload;
 function Randomized: TIntegerArray; overload;
 function Randomly: Integer; overload;
@@ -17,6 +19,8 @@ function Sampled(const totalElements: Integer = 1): TIntegerArray; overload;
 function Samples(const rCount: Integer = 1): TIntegerArray; overload;
 function Shake(const shakes: Integer = 1): TIntegerArray; overload;
 function Shuffle(const shuffles: Integer = 1): TIntegerArray; overload;
+function Shuffled(const sCount: Integer): TIntegerArray; overload;
+function Shuffled: TIntegerArray; overload;
 function Some: TIntegerArray; overload;
 function Some(const amount: Integer): TIntegerArray; overload;
 function Subsample(const sSize: Integer = 1): TIntegerArray; overload;
@@ -218,6 +222,57 @@ end;
 function TRange.Rand: Integer; overload;
 begin
   Result := (Self.Minimum + Random(Self.Size));
+end;
+
+{==============================================================================]
+  <RandomEx>
+  @action: Returns a random value within the range, excluding a specific number.
+  @note: 
+    - If the range is Singular (Size=1), the Start value is returned regardless.
+    - Uses a rejection-sampling loop; ensure the forbidden value is actually 
+      within the range to avoid infinite loops in very small sets.
+[==============================================================================}
+function TRange.RandomEx(const forbidden: Integer): Integer; overload;
+var
+  s, d: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit(Self.start);
+  d := Self.Direction;
+  repeat
+    Result := (Self.start + (Random(s) * d));
+  until (Result <> forbidden);
+end;
+
+{==============================================================================]
+  <RandomEx>
+  @action: Selects a random value from the range that does not exist in the 
+           provided exclusion list.
+  @note: 
+    - Optimization: Uses a sorted, unique-filtered version of the forbidden 
+      array to enable O(log N) Binary Search lookups.
+    - Safety: Performs a logical equivalence check between the range and the 
+      filtered exclusion set to prevent infinite loops (deadlock).
+    - If no valid values are available, the range's Start value is returned.
+[==============================================================================}
+function TRange.RandomEx(const forbidden: TIntegerArray): Integer; overload;
+var
+  s, d: Integer;
+  f: TIntegerArray;
+begin
+  if forbidden.Empty then
+    Exit(Self.Randomly);
+  s := Self.Size;
+  if (s = 1) then
+    Exit(Self.start);
+  f := forbidden.Cleaned;
+  if ((s = f.Length) and Self.Equivalent(TRange.Construct(f[0], f[High(f)]))) then
+    Exit(Self.start);
+  d := Self.Direction;
+  repeat
+    Result := (Self.start + (Random(s) * d));
+  until not f.BinaryContains(Result);
 end;
 
 {==============================================================================]
@@ -461,6 +516,40 @@ begin
   for r := 1 to shuffles do
     for i := High(Result) downto 0 do
       Swap(Result[i], Result[Random(Result.Size)]);
+end;
+
+{==============================================================================]
+  <Shuffled>
+  @action: Generates a randomized selection of unique values from the range.
+  @return: A TIntegerArray containing [sCount] unique random items.
+  @note: 
+    - Implements a Partial Fisher-Yates shuffle directly on the result array.
+    - If sCount is 1 (default), returns a single random item in an array.
+    - If sCount >= Size, returns the entire range in a randomized order.
+    - Truncates the result to sCount after the necessary swaps are performed.
+[==============================================================================}
+function TRange.Shuffled(const sCount: Integer): TIntegerArray; overload;
+var
+  i, c, l: Integer;
+begin
+  if (sCount < 1) then
+    Exit([]);
+  Result := Self.Items;
+  l := Result.Length;
+  c := Min(sCount, l);
+  for i := 0 to (c - 1) do
+    Swap(Result[i], Result[i + Random(l - i)]);
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <Shuffled>
+  @action: Full TRange shuffled.
+  @note: None.
+[==============================================================================}
+function TRange.Shuffled: TIntegerArray; overload;
+begin
+  Result := Self.Shuffled(Self.Size);
 end;
 
 {==============================================================================]

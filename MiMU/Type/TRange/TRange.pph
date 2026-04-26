@@ -3,6 +3,7 @@
 {$I Access.inc}
 {$I Adjust.inc}
 {$I Centrality.inc}
+{$I Chunking.inc}
 {$I Comparison.inc}
 {$I Construction.inc}
 {$I Consumption.inc}
