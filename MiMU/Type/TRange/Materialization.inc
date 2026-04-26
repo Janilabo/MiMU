@@ -26,6 +26,7 @@ function Digits(const dIndex: Integer): Integer; overload;
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
 function Disclose: TIntegerArray; overload;
 function Dismantle: TIntegerArray; overload;
+function Dissolve: TIntegerArray; overload;
 function Elemented: TIntegerArray; overload;
 function Elements: TIntegerArray; overload;
 function Emit: TIntegerArray; overload;
@@ -43,6 +44,7 @@ function Extract: TIntegerArray; overload;
 function Extracted: TIntegerArray; overload;
 function Flatten: TIntegerArray; overload;
 function Flattened: TIntegerArray; overload;
+function Flooded: TIntegerArray; overload;
 function Fill(var target: TIntegerArray): Integer; overload;
 function FromTo(const rAscending: Boolean = True): TIntegerArray; overload;
 function Formation: TIntegerArray; overload;
@@ -118,6 +120,7 @@ class function ToArray(const AStart, AStop: Integer): TIntegerArray; overload; s
 function ToIntegers: TIntegerArray; overload;
 function ToValues: TIntegerArray; overload;
 function Unfold: TIntegerArray; overload;
+function Unfolded: TIntegerArray; overload;
 function Unpack: TIntegerArray; overload;
 function Unpacked: TIntegerArray; overload;
 function Unrolled: TIntegerArray; overload;
@@ -813,6 +816,41 @@ begin
 end;
 
 {==============================================================================]
+  <Dissolve>
+  @action: Expands the range into an array using a 4-lane unrolled loop.
+  @note: 
+    - Optimization: Reduces branching overhead by processing 4 elements per cycle.
+    - Mechanics: Uses pointer-based offsets for block-writes and a tail-pass
+      for remaining elements. 
+    - Order: Writes within the 4-element window are performed from high-index 
+      to low-index before advancing.
+[==============================================================================}
+function TRange.Dissolve: TIntegerArray; overload;
+var
+  i, s, d, v: Integer;
+  p: PInteger;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  d := Self.Direction;
+  v := Self.start;
+  p := @Result[0];
+  i := -4;
+  while (i.Increment(4) <= (s - 4)) do
+  begin
+    p[3] := (v + (d * 3));
+    p[2] := (v + (d * 2));
+    p[1] := (v + d);
+    p[0] := v.Increase(d * 4);
+    Inc(p, 4);
+  end;
+  while (i.Increase < s) do
+    Result[i - 1] := v.Increase(d);
+end;
+
+{==============================================================================]
   <Elemented>
   action: Expands range into an array of its elements based on direction.
   @note: Preserves order; ascending increments, descending decrements.
@@ -1230,6 +1268,25 @@ begin
   for i := 0 to (r - 1) do
     for j := 0 to High(g[i]) do
       Result[(i * c) + j] := g[i][j];
+end;
+
+{==============================================================================]
+  <Flooded>
+  @action: Uses FillDWord for bulk initialization followed by a corrective pass.
+  @note: None.
+[==============================================================================}
+function TRange.Flooded: TIntegerArray; overload;
+var
+  i, d, s: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  FillDWord(Result[0], s, Cardinal(Self.start));
+  d := Self.Direction;
+  for i := 1 to (s - 1) do
+    Result[i] := (Result[i] + (i * d));
 end;
 
 {==============================================================================]
@@ -3264,6 +3321,46 @@ begin
     Exit([Self.start]);
   SetLength(Result, Self.Size);
   F2W(Self, 0, High(Result), Self.Ascending, Result);
+end;
+
+{==============================================================================]
+  <Unfolded>
+  @action: Materializes the range via iterative binary bisection.
+  @note: 
+    - Pattern: Level-order (Breadth-First) filling of indices.
+    - Mechanism: Seeds boundaries, then resolves midpoints at power-of-two 
+      strides (Stride, Stride/2, Stride/4...).
+    - Stability: Uses a zero-sentinel check to prevent redundant calculation 
+      of previously established midpoints.
+[==============================================================================}
+function TRange.Unfolded: TIntegerArray; overload;
+var
+  s, h, i, d, l, m, r: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  h := (s - 1);
+  i := 1;
+  while (i < h) do
+    i := (i shl 1);
+  d := Self.Direction;
+  SetLength(Result, s);
+  Result[0] := Self.start;
+  Result[h] := Self.stop;
+  while (i > 0) do
+  begin
+    l := 0;
+    while ((l + i) <= h) do
+    begin
+      r := (l + i);
+      m := ((l + r) div 2);
+      if ((m > 0) and (m < h)) then
+        Result[m] := (Self.start + (m * d));
+      l := r;
+    end;
+    i := (i div 2);
+  end;
 end;
 
 {==============================================================================]
