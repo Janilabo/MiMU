@@ -17,6 +17,7 @@ function Collection: TIntegerArray; overload;
 function Composition: TIntegerArray; overload;
 function Content: TIntegerArray; overload;
 function Contents: TIntegerArray; overload;
+function Contentum: TIntegerArray; overload;
 function Data: TIntegerArray; overload;
 function Decompose: TIntegerArray; overload;
 function Dequeued: TIntegerArray; overload;
@@ -89,6 +90,7 @@ function Pile: TIntegerArray; overload;
 function Populate(var arr: TIntegerArray): TRange; overload;
 function Produce: TIntegerArray; overload;
 function Produced: TIntegerArray; overload;
+function Process: TIntegerArray; overload;
 function Publish(const rAscending: Boolean = True): TIntegerArray; overload;
 function Pull: TIntegerArray; overload;
 function Pulled: TIntegerArray; overload;
@@ -99,6 +101,7 @@ function Recursed: TIntegerArray; overload;
 function Recursively: TIntegerArray; overload;
 function Release: TIntegerArray; overload;
 function Render: TIntegerArray; overload;
+function Rendered: TIntegerArray; overload;
 function Resources: TIntegerArray; overload;
 function Reveal: TIntegerArray; overload;
 function Revealed: TIntegerArray; overload;
@@ -621,6 +624,29 @@ begin
   end;
   for i := 0 to High(Result) do
     Result[i] := (Self.start + (i * s));
+end;
+
+{==============================================================================]
+  <Contentum>
+  @action: Materializes the range via reverse-order buffer population.
+  @note: 
+    - Strategy: Starts at the 'stop' boundary and fills the array from the 
+      last index toward the first.
+    - Safety: Uses the range's internal 'Contains' logic as a loop guard to 
+      ensure boundary integrity.
+    - Directionality: Inverts the step direction to ensure the final array 
+      maintains the correct Start -> Stop visual order despite being filled 
+      backward.
+[==============================================================================}
+function TRange.Contentum: TIntegerArray; overload;
+var
+  l, d, s: Integer;
+begin
+  l := Result.SetSize(Self.Size);
+  d := IfThen(Self.Ascending, 1, -1);
+  s := Self.stop;
+  while Self.Contains(s) do
+    Result[l.Decrement] := s.Decrease(d);
 end;
 
 {==============================================================================]
@@ -2545,6 +2571,41 @@ begin
 end;
 
 {==============================================================================]
+  <Process>
+  @action: Converts the range to an array using a blocked iteration (tiling) 
+           pattern for cache efficiency.
+  @note: 
+    - Strategy: Segments the allocation into 1024-integer chunks to minimize 
+      L1 cache misses during high-volume materialization.
+    - Robustness: Automatically handles "remainder" blocks when the range 
+      size is not a perfect multiple of the BLOCK_SIZE.
+    - Scalability: Ideal for processing massive ranges (millions of entries) 
+      where memory throughput is the primary bottleneck.
+[==============================================================================}
+function TRange.Process: TIntegerArray; overload;
+const
+  BLOCK_SIZE = 1024;
+var
+  i, j, s, d, r, l: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  d := Self.Direction;
+  r := Self.start;
+  i := -BLOCK_SIZE;
+  while (i.Increment(BLOCK_SIZE) < s) do
+  begin
+    l := (i + BLOCK_SIZE - 1);
+    if (l >= s) then
+      l := (s - 1);
+    for j := i to l do
+      Result[j] := (r + (j * d));
+  end;
+end;
+
+{==============================================================================]
   <Publish>
   @action: Returns an array containing all integer values within the range.
   @note: The result includes both bounds and is ordered ascending or
@@ -2839,6 +2900,27 @@ function TRange.Render: TIntegerArray; overload;
   end;
 begin
   Result := Return(Self.start, Self.Size, Self.Direction);
+end;
+
+{==============================================================================]
+  <Rendered>
+  @action: Materializes the full range using an incremental accumulation pass.
+  @note: 
+    - Strategy: Sets the initial seed (Start) and derives every subsequent 
+      element from its predecessor.
+    - Directionality: Automatically branches between +1 and -1 steps based on 
+      the range's Ascending state.
+    - Concreteness: Signals to the user that the abstract range logic has been 
+      fully "drawn" into a physical array.
+[==============================================================================}
+function TRange.Rendered: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  Result[0] := Self.start;
+  for i := 1 to High(Result) do
+    Result[i] := (Result[i - 1] + IfThen(Self.Ascending, 1, -1));
 end;
 
 {==============================================================================]
