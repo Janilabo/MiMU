@@ -3,6 +3,7 @@ function Backwards: MArray; overload;
 function Flip: Boolean; overload;
 function Oppose: Boolean; overload;
 function Opposite: MArray; overload;
+function Reflex(const rIndex: Integer): MType; overload;
 function Reversal: MArray; overload;
 function Reverse: Boolean; overload;
 function Reversed: MArray; overload;
@@ -82,6 +83,24 @@ begin
   SetLength(Result, 0);
   while (l.Decrease > 0) do
     Result := (Result + [Self[l]]);
+end;
+
+{==============================================================================]
+  <Reflex>
+  @action: Retrieves the element from the mirrored position of the given index.
+  @note:
+    - Virtual Mapping: Acts as a "Lazy Reversal," mapping index [i] to
+      [High - i] to simulate a backward view of the array.
+    - Performance: O(1) constant time. Since it only performs a single
+      subtraction, it is infinitely faster than physically reversing the
+      data for one-off lookups.
+    - Non-Mutating: Does not modify the array or allocate new memory.
+    - Symmetry: The logic is reflexive; calling Reflex on a mirrored
+      index returns the original forward-facing element.
+[==============================================================================}
+function MArrayHelper.Reflex(const rIndex: Integer): MType; overload;
+begin
+  Result := Self[High(Self) - rIndex];
 end;
 
 {==============================================================================]

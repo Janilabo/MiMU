@@ -29,6 +29,7 @@
 {$I Merging.inc}
 {$I Monotone.inc}
 {$I Navigation.inc}
+{$I Reversal.inc}
 {$I Scanning.inc}
 {$I Selection.inc}
 {$I Sorted.inc}

@@ -37,10 +37,12 @@ function IsConstant: Boolean; overload;
 function IsDistinct: Boolean; overload;
 function MadeOf(const allowed: MArray): Boolean; overload;
 function Occurs(const item: MType; const occurrence: Integer = 1): Boolean; overload;
+function Palindrome: Boolean; overload;
 function Presence(const item: MType; const occurrence: Integer = 1): Boolean; overload;
 function StartsWith(const aItem: MType): Boolean; overload;
 function StartsWith(const aItem: MArray): Boolean; overload;
 function Subset(const items: MArray): Boolean; overload;
+function Symmetrical: Boolean; overload;
 function Uniform: Boolean; overload;
 function Uniform(const item: MType): Boolean; overload;
 {$ENDIF}
@@ -794,6 +796,35 @@ begin
 end;
 
 {==============================================================================]
+  <Palindrome>
+  @action: Evaluates if the array is symmetrical by comparing elements from 
+           the start and end simultaneously.
+  @note: 
+    - Type Safety: Uses a 'for..in' enumerator, making it safe for managed 
+      types (Strings, Interfaces) where bitwise memory comparison fails.
+    - Efficiency: O(N) time complexity with a half-pass optimization. The 
+      loop breaks as soon as the center of the array is reached.
+    - Logic: Iterates forward via the enumerator 's' while manually 
+      tracking a descending index 'i' for the mirrored element.
+    - Robustness: Handles zero and single-element arrays correctly, 
+      treating them as inherently symmetrical.
+[==============================================================================}
+function MArrayHelper.Palindrome: Boolean; overload;
+var
+  s: MType;
+  i, l: Integer;
+begin
+  i := High(Self);
+  l := ((i + 1) div 2);  
+  for s in Self do
+    if not (s = Self[i]) then
+	  Exit(False)
+	else if (i.Decrement < l) then
+	  Break;
+  Result := True;
+end;
+
+{==============================================================================]
   <Presence>
   @action: Returns true item exists in arr EXACTLY(!) occurrence amount of times.
   @note: Supports lookup for 0 items. Loops array through from end to beginning.	
@@ -863,6 +894,28 @@ var
 begin
   for i := 0 to High(Self) do
     if not items.Contains(Self[i]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Symmetrical>
+  @action: Checks if the array is a palindrome (identical when reversed).
+  @note: 
+    - Efficiency: O(N) time complexity, but only iterates through half of 
+      the array (N/2), exiting immediately upon the first mismatch.
+    - Logic: Compares the "Head" elements with their "Reflex" counterparts 
+      at the "Tail."
+    - Performance: Zero memory allocation; uses a simple stack-based loop 
+      for maximum speed.
+[==============================================================================}
+function MArrayHelper.Symmetrical: Boolean; overload;
+var
+  h, i: Integer;
+begin
+  h := High(Self);
+  for i := 0 to (h div 2) do
+    if (Self[i] <> Self[h - i]) then
       Exit(False);
   Result := True;
 end;
