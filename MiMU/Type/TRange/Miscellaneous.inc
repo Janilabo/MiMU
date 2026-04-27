@@ -7,6 +7,7 @@ function YoYo: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF HELPERS}
+function Complement(const target: TRange): TRangeArray; overload;
 function Cutout(const target: TRange): TRangeArray; overload;
 function Select(const arr: TIntegerArray): TIntegerArray; overload;
 function Select(const arr: TDoubleArray): TDoubleArray; overload;
@@ -19,6 +20,34 @@ function Select(const arr: TRangeArray): TRangeArray; overload;
 {$ENDIf}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Complement>
+  @action: Performs a relative set difference (Self \ target). Returns an 
+           array of ranges representing the portions of 'Self' that are 
+           not covered by 'target'.
+  @param: target - The range to be "subtracted" from the current instance.
+  @return: A TRangeArray containing 0, 1, or 2 ranges depending on the 
+           overlap topology.
+  @note: - Discrete Logic: Uses +/- 1 offsets, assuming integer-like step 
+           boundaries.
+         - Normalization: Automatically handles ranges where start > stop.
+         - Total Overlap: Returns an empty array if 'target' encompasses 'Self'.
+[==============================================================================}
+function TRangeHelper.Complement(const target: TRange): TRangeArray; overload;
+var
+  s, t: TRange;
+begin
+  SetLength(Result, 0);
+  s := Self.Normalized;
+  t := target.Normalized;
+  if ((t.stop < s.start) or (t.start > s.stop)) then
+    Exit([Self]);
+  if (t.start > s.start) then
+    Result.Supply(TRange.Construct(s.start, (t.start - 1)));
+  if (t.stop < s.stop) then
+    Result.Supply(TRange.Construct((t.stop + 1), s.stop));
+end;
+
 {==============================================================================]
   <Cutout>
   @action: Subtracts the target range from Self, returning the remaining pieces.

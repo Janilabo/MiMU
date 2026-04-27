@@ -1,4 +1,5 @@
 {$IFDEF METHODS}
+function IndexOf(const val: Integer): Integer; overload;
 function Interpolate(const F: Double): Double; overload;
 function Lerp(const aPercentage: Double): Integer; overload;
 function Percentile(const F: Double): Double; overload;
@@ -8,6 +9,24 @@ function Q3: Double; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <IndexOf>
+  @action: Returns the zero-based index of value val within the range.
+  @note: - Returns -1 if v is not contained in the range.
+         - O(1) — computed directly from start and direction, no iteration.
+         - Respects direction: index 0 is always Self.start regardless
+           of whether the range is ascending or descending.
+[==============================================================================}
+function TRange.IndexOf(const val: Integer): Integer; overload;
+begin
+  if not Self.Contains(val) then
+    Exit(-1);
+  if Self.Ascending then
+    Result := (val - Self.start)
+  else
+    Result := (Self.start - val);
+end;
+
 {==============================================================================]
   <Interpolate>
   @action: Computes the value at a relative fraction along the range,

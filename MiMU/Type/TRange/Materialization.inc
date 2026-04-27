@@ -46,6 +46,7 @@ function Flatten: TIntegerArray; overload;
 function Flattened: TIntegerArray; overload;
 function Flooded: TIntegerArray; overload;
 function Fill(var target: TIntegerArray): Integer; overload;
+function Filled: TIntegerArray; overload;
 function FromTo(const rAscending: Boolean = True): TIntegerArray; overload;
 function Formation: TIntegerArray; overload;
 function Gather: TIntegerArray; overload;
@@ -74,6 +75,7 @@ function Listing: TIntegerArray; overload;
 function Material: TIntegerArray; overload;
 function Materialize: TIntegerArray; overload;
 function Materialized: TIntegerArray; overload;
+function Membered: TIntegerArray; overload;
 function Members: TIntegerArray; overload;
 function Numbered: TIntegerArray; overload;
 function Numbers: TIntegerArray; overload;
@@ -95,6 +97,7 @@ function Raw: TIntegerArray; overload;
 function Realize: TIntegerArray; overload;
 function Recursed: TIntegerArray; overload;
 function Recursively: TIntegerArray; overload;
+function Release: TIntegerArray; overload;
 function Render: TIntegerArray; overload;
 function Resources: TIntegerArray; overload;
 function Reveal: TIntegerArray; overload;
@@ -128,6 +131,7 @@ function Unwrap: TIntegerArray; overload;
 function Unzip: TIntegerArray; overload;
 function Values: TIntegerArray; overload;
 function View(const vSize: Integer = 2147483647; const sIndex: Integer = 0): TIntegerArray; overload;
+function Yielded: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1218,6 +1222,34 @@ begin
 end;
 
 {==============================================================================]
+  <Filled>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: Uses FillChar for zero-based ascending ranges (byte broadcast of 0),
+         then applies a directional correction pass for all other ranges.
+         FillChar operates at byte granularity; only 0x00 is safe to broadcast
+         across a 4-byte integer without corruption.
+[==============================================================================}
+function TRange.Filled: TIntegerArray; overload;
+var
+  i, s, d: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  if ((Self.start = 0) and Self.Ascending) then
+  begin
+    FillChar(Result[0], (s * SizeOf(Integer)), 0);
+    for i := 1 to (s - 1) do
+      Result[i] := i;
+  end else
+  begin
+    FillChar(Result[0], (s * SizeOf(Integer)), Byte(Self.start));
+    d := IfThen(Self.Ascending, 1, -1);
+    for i := 0 to (s - 1) do
+      Result[i] := (Self.start + (i * d));
+  end;
+end; 
+
+{==============================================================================]
   <Flatten>
   @action: Materializes the range into a contiguous integer array.
   @note: Expands the inclusive range from Start to Stop into an ordered
@@ -2142,6 +2174,37 @@ begin
 end;
 
 {==============================================================================]
+  <Membered>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: Bypasses SetLength; allocates raw memory directly via GetMem,
+         writes values via pointer, then transfers ownership to Result.
+[==============================================================================}
+function TRange.Membered: TIntegerArray; overload;
+var
+  p, w: PInteger;
+  i, s, d, z: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  z := SizeOf(Integer);
+  GetMem(p, (s * z));
+  try
+    d := IfThen(Self.Ascending, 1, -1);
+    w := p;
+    for i := 0 to (s - 1) do
+    begin
+      w^ := (Self.start + (i * d));
+      Inc(w);
+    end;
+    SetLength(Result, s);
+    Move(p^, Result[0], (s * z));
+  finally
+    FreeMem(p);
+  end;
+end;
+
+{==============================================================================]
   <Members>
   @action: Returns digits of the given range.
   @note: None.
@@ -2713,6 +2776,46 @@ begin
   Result := [Self.start];
   if (Self.start <> Self.stop) then
     Result := (Result + Range((Self.start + Self.Step), Self.stop).Recursively);
+end;
+
+{==============================================================================]
+  <Release>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: Fills a circular buffer (ring) with range values, then drains it
+         sequentially into Result. The ring wraps via modulo masking; size
+         must be a power of two for the mask to work correctly.
+         Two-phase: fill phase writes into ring, drain phase reads out.
+[==============================================================================}
+function TRange.Release: TIntegerArray; overload;
+const
+  RING_SIZE = 64;
+  RING_MASK = (RING_SIZE - 1);
+var
+  r: array[0..RING_MASK] of Integer;
+  h, t, i, s, d, v, w: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := IfThen(Self.Ascending, 1, -1);
+  v := Self.start;
+  h := 0;
+  t := 0;
+  w := 0;
+  i := 0;
+  while (w < s) do
+  begin
+    while ((((t + 1) and RING_MASK) <> h) and (i < s)) do
+    begin
+      r[t] := v.Increase(d);
+      t := ((t + 1) and RING_MASK);
+      Inc(i);
+    end;
+    while (h <> t) do
+    begin
+      Result[w.Increase] := r[h];
+      h := ((h + 1) and RING_MASK);
+    end;
+  end;
 end;
 
 {==============================================================================]
@@ -3541,5 +3644,27 @@ begin
   SetLength(Result, Min(c, (s - o)));
   for i := 0 to High(Result) do
     Result[i] := Self.Digits(o + i);
+end;
+
+{==============================================================================]
+  <Yielded>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: Simulates a generator/coroutine via callback. Each value is
+         "yielded" by invoking the callback, which appends to the result.
+         The caller drives consumption; the generator drives production.
+[==============================================================================}
+function TRange.Yielded: TIntegerArray; overload;
+var
+  d, i, v: Integer;
+  procedure Y(const aValue: Integer);
+  begin
+    Result.Supply(aValue);
+  end;
+begin
+  SetLength(Result, 0);
+  d := IfThen(Self.Ascending, 1, -1);
+  v := Self.start;
+  for i := 0 to (Self.Size - 1) do
+    Y(v.Increase(d));
 end;
 {$ENDIF}
