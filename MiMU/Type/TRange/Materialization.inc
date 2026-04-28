@@ -7,11 +7,13 @@ function AsArray: TIntegerArray; overload;
 function Atomize: TIntegerArray; overload;
 function Atomized: TIntegerArray; overload;
 function Bank: TIntegerArray; overload;
+function Bitwise: TIntegerArray; overload;
 function Body: TIntegerArray; overload;
 function Breakdown: TIntegerArray; overload;
 function Bundle: TIntegerArray; overload;
 function Capture: TIntegerArray; overload;
 function Captured: TIntegerArray; overload;
+function Catalogue: TIntegerArray; overload;
 function Collect: TIntegerArray; overload;
 function Collection: TIntegerArray; overload;
 function Composition: TIntegerArray; overload;
@@ -70,9 +72,11 @@ function Iteration: TIntegerArray; overload;
 function Iteration(out rDigits: TIntegerArray; const rReverse: Boolean = False): Integer; overload;
 function Lay: TIntegerArray; overload;
 function Layout: TIntegerArray; overload;
+function Linear: TIntegerArray; overload;
 function List: TIntegerArray; overload;
 function Listed: TIntegerArray; overload;
 function Listing: TIntegerArray; overload;
+function Manifest: TIntegerArray; overload;
 function Material: TIntegerArray; overload;
 function Materialize: TIntegerArray; overload;
 function Materialized: TIntegerArray; overload;
@@ -107,6 +111,7 @@ function Reveal: TIntegerArray; overload;
 function Revealed: TIntegerArray; overload;
 function Separately(const rReverse: Boolean = False): TIntegerArray; overload;
 function Sequence: TIntegerArray; overload;
+function Sequential: TIntegerArray; overload;
 function Snapshot: TIntegerArray; overload;
 function Stack: TIntegerArray; overload;
 function Start2Stop: TIntegerArray; overload;
@@ -353,6 +358,52 @@ begin
 end;
 
 {==============================================================================]
+  <Bitwise>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: Fills the output array in bit-reversal permutation order.
+         The write index for element i is BitReverse(i, log2(n)), where n
+         is the next power of two >= Size. Because the mapping is a
+         bijection on [0..n-1], every index is written exactly once.
+         Indices beyond Size-1 (padding to power-of-two) are skipped.
+         The values themselves are always start + i * direction — only the
+         ORDER in which indices are written differs from a linear fill.
+         Useful for verifying correctness of index-value independence.
+[==============================================================================}
+function TRange.Bitwise: TIntegerArray; overload;
+var
+  i, b, r, n, s, d, v: Integer;
+  function F(const x, b: Integer): Integer;
+  var
+    j, t: Integer;
+  begin
+    Result := 0;
+    t := x;
+    for j := 0 to (b - 1) do
+    begin
+      Result := ((Result shl 1) or (t and 1));
+      t := (t shr 1);
+    end;
+  end;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := IfThen(Self.Ascending, 1, -1);
+  n := 1;
+  b := 0;
+  while (n < s) do
+  begin
+    n := (n shl 1);
+    Inc(b);
+  end;
+  for i := 0 to (n - 1) do
+  begin
+    r := F(i, b);
+    if (r < s) then
+      Result[r] := (Self.start + (d * r));
+  end;
+end;
+
+{==============================================================================]
   <Body>
   @action: Returns ALL TRange items as TIntegerArray.
   @note: ?
@@ -480,6 +531,31 @@ begin
       P^ := v.Decrease;
     Inc(P);
   end;
+end;
+
+{==============================================================================]
+  <Catalogue>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: Continuation-passing style. Each step receives the partially-built
+         array and the next index as its "continuation" argument; control
+         flows forward only, never returning to the caller between elements.
+         Implemented iteratively to avoid stack growth (FPC has no TCO).
+[==============================================================================}
+function TRange.Catalogue: TIntegerArray; overload;
+var
+  i, v, d, s: Integer;
+  procedure P(var arr: TIntegerArray; const idx, value, step: Integer);
+  begin
+    if (idx >= arr.Length) then
+      Exit;
+    arr[idx] := value;
+    P(arr, (idx + 1), (value + step), step);
+  end;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := IfThen(Self.Ascending, 1, -1);
+  P(Result, 0, Self.start, d);
 end;
 
 {==============================================================================]
@@ -2021,6 +2097,33 @@ begin
 end;
 
 {==============================================================================]
+  <Linear>
+  @action: Generates a TIntegerArray by interpolating values linearly between 
+           the start and stop points.
+  @note: 
+    - Logic: Unlike a standard incremental count, this function treats the 
+      range as a continuous span, dividing it into equal segments based on 
+      the requested Size.
+    - Precision: Uses a normalized 't' factor to ensure the 'stop' value is 
+      reached exactly at the final index.
+    - Result: Produces a "best-fit" integer sequence that maps the range 
+      boundaries to the array boundaries
+[==============================================================================}
+function TRange.Linear: TIntegerArray; overload;
+var
+  i, s: Integer;
+  d: Double;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  d := (Self.stop - Self.start);
+  for i := 0 to (s - 1) do
+    Result[i] := Round(Self.start + ((i / (s - 1)) * d));
+end;
+
+{==============================================================================]
   <List>
   @action: Collects all values of the range into a newly allocated integer array
            using a generic list as an intermediate container.
@@ -2107,6 +2210,44 @@ begin
   finally
     l.Free;
   end;
+end;
+
+{==============================================================================]
+  <Manifest>
+  @action: Materializes the abstract Range boundaries into a concrete 
+           TIntegerArray containing every value in the sequence.
+  @note: 
+    - Logic: Employs "Mutual Recursion" (Ping-Pong recursion) between 
+      filling even and filling odd to populate the resulting array.
+    - Directional: Automatically detects Self.Ascending to determine if 
+      the sequence should increment (+1) or decrement (-1).
+    - Memory: Allocates Result based on Self.Size. Ensure the range size 
+      is reasonable to avoid Stack Overflow due to the recursive depth.
+    - Performance: A stylistic "State-Machine" approach to array filling.
+[==============================================================================}
+function TRange.Manifest: TIntegerArray; overload;
+var
+  h, d: Integer;
+  procedure O(const i: Integer); forward;
+  procedure E(const i: Integer);
+  begin
+    if (i > h) then
+	  Exit;
+    Result[i] := (Self.start + (i * d));
+    O(i + 1);
+  end;
+  procedure O(const i: Integer);
+  begin
+    if (i > h) then
+	  Exit;
+    Result[i] := (Self.start + (i * d));
+    E(i + 1);
+  end;
+begin
+  SetLength(Result, Self.Size);
+  h := High(Result);
+  d := IfThen(Self.Ascending, 1, -1);
+  E(0);
 end;
 
 {==============================================================================]
@@ -3040,6 +3181,41 @@ begin
       Result[i] := (Self.start - i);
   end;
 end;
+
+{==============================================================================]
+  <Sequential>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: Simulates recursion via a trampoline loop. A state record holds
+         the current index and value; each iteration advances the state
+         without growing the call stack. Safe for arbitrarily large ranges
+         where direct recursion would overflow.
+[==============================================================================}
+function TRange.Sequential: TIntegerArray; overload;
+type
+  TState = record
+    index, value: Integer;
+    done: Boolean;
+  end;
+var
+  r: TState;
+  s, d: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  d := IfThen(Self.Ascending, 1, -1);
+  r.index := 0;
+  r.value := Self.start;
+  r.done := False;
+  while not r.done do
+  begin
+    Result[r.index] := r.value;
+    Inc(r.value, d);
+    Inc(r.index);
+    r.done := (r.index >= s);
+  end;
+end; 
 
 {==============================================================================]
   <Snapshot>
