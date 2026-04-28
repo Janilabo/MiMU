@@ -4,6 +4,7 @@ function Flip: TRange; overload;
 function Flipped: TRange; overload;
 function Invert: Boolean; overload;
 function Inverted: TRange; overload;
+function Reconstruct: TRange; overload;
 function Reverse: Boolean; overload;
 function Reversed: TRange; overload;
 function Reversely: TRange; overload;
@@ -101,6 +102,23 @@ function TRange.Inverted: TRange; overload;
 begin
   Result.start := -Self.start;
   Result.stop := -Self.stop;
+end;
+
+{==============================================================================]
+  <Reconstruct>
+  @action: Generates a new TRange with swapped boundaries, effectively 
+           inverting the direction of the original.
+  @note: 
+    - Logic: Re-passes the existing 'stop' and 'start' through the primary 
+      'Construct' logic, ensuring all internal validation or normalization 
+      is applied to the new orientation.
+    - Semantic: Unlike 'Antipode' (which implies a raw memory swap), 
+      'Reconstruct' implies a formal re-declaration of the range's identity.
+    - Result: A TRange where the destination becomes the origin.
+[==============================================================================}
+function TRange.Reconstruct: TRange; overload;
+begin
+  Result := TRange.Construct(Self.stop, Self.start);
 end;
 
 {==============================================================================]
@@ -254,16 +272,32 @@ end;
 
 {==============================================================================]
   <Toggle>
-  @action: Returns a new range with its start and stop values exchanged.
-  @note:
-    - Purely swaps the range bounds.
-    - No arithmetic or bitwise operations involved.
-    - Clearer and safer than XOR- or sum-based swap implementations.
-    - No validation is performed (e.g., start <= stop).
+  @action: Inverts the range boundaries by applying the calculated span 
+           differentially to both the start and stop points.
+  @note: 
+    - Logic: Determines the absolute distance (s), then shifts the origin 
+      forward and the destination backward by that amount. 
+    - Character: Unlike 'Antipode' (which is a memory swap), 'Toggle' is a 
+      "Relational" inversion. It treats the boundaries as points in motion 
+      rather than static data fields.
+    - Result: Effectively swaps start and stop, but does so through algebraic 
+      displacement rather than direct assignment.
 [==============================================================================}
 function TRange.Toggle: TRange; overload;
+var
+  s: Integer;
 begin
-  Result := TRange.Construct(Self.stop, Self.start);
+  if Self.Ascending then
+  begin
+    s := (Self.stop - Self.start);
+    Result.start := (Self.start + s);
+    Result.stop := (Self.stop - s);
+  end else
+  begin
+    s := (Self.start - Self.stop);
+    Result.start := (Self.start - s);
+    Result.stop := (Self.stop + s);
+  end;
 end;
 
 {==============================================================================]

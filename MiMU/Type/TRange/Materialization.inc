@@ -101,7 +101,7 @@ function Pulled: TIntegerArray; overload;
 function Queue: TIntegerArray; overload;
 function Raw: TIntegerArray; overload;
 function Realize: TIntegerArray; overload;
-function Recursed: TIntegerArray; overload;
+function Recursived: TIntegerArray; overload;
 function Recursively: TIntegerArray; overload;
 function Release: TIntegerArray; overload;
 function Render: TIntegerArray; overload;
@@ -2939,11 +2939,11 @@ begin
 end;
 
 {==============================================================================]
-  <Recursed>
+  <Recursived>
   @action: Returns digits of the given range.
   @note: Recursion-based.
 [==============================================================================}
-function TRange.Recursed: TIntegerArray; overload;
+function TRange.Recursived: TIntegerArray; overload;
   function BR(const rStart, rStop: Integer): TIntegerArray;
   begin
     if (rStart = rStop) then
