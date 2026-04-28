@@ -2,17 +2,21 @@
 function Backtrack: TIntegerArray; overload;
 function Echo: TIntegerArray; overload;
 function Echoed: TIntegerArray; overload;
+function Infuse(var target: TIntegerArray): Integer; overload;
 function Obverse: TIntegerArray; overload;
 function Obvert: TIntegerArray; overload;
 function Recant: TIntegerArray; overload;
 function Reconstructed: TIntegerArray; overload;
 function Recurse: TIntegerArray; overload;
 function Recursed: TIntegerArray; overload;
+function Reflection: TIntegerArray; overload;
 function Regress: TIntegerArray; overload;
 function Retrace: TIntegerArray; overload;
 function Retraced: TIntegerArray; overload;
 function Retrograde: TIntegerArray; overload;
 function Rewind: TIntegerArray; overload;
+function Transpose: TIntegerArray; overload;
+function Versus: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -74,6 +78,29 @@ begin
   d := IfThen(Self.Ascending, -1, 1);
   for i := 0 to High(Result) do
     Result[i] := r.Increase(d);
+end;
+
+{==============================================================================]
+  <Infuse>
+  @action: Populates an existing array with the reversed range values.
+  @note: Avoids allocations by using an open array parameter. The caller
+         is responsible for ensuring the destination size is sufficient.
+[==============================================================================}
+function TRange.Infuse(var target: TIntegerArray): Integer; overload;
+var
+  s, i, v, d: Integer;
+begin
+  Result := target.Length;
+  if (Result < 1) then
+    Exit;
+  s := Self.Size;
+  v := Self.stop;
+  d := -Self.Wind;
+  for i := 0 to (Result - 1) do
+    if (i < s) then
+      target[i] := v.Increase(d)
+    else
+      Break;
 end;
 
 {==============================================================================]
@@ -214,6 +241,28 @@ begin
 end; 
 
 {==============================================================================]
+  <Reflection>
+  @action: Optimizes for small ranges by building the sequence in a
+           local stack buffer.
+  @note: Avoids frequent heap hits for small range operations.
+[==============================================================================}
+function TRange.Reflection: TIntegerArray; overload;
+var
+  b: array[0..63] of Integer;
+  i, v, d, s: Integer;
+begin
+  s := Self.Size;
+  if (s > 64) then
+    Exit(Self.Obvert);
+  v := Self.stop;
+  d := -Self.Wind;
+  for i := 0 to (s - 1) do
+    b[i] := v.Increase(d);
+  SetLength(Result, s);
+  Move(b[0], Result[0], (s * SizeOf(Integer)));
+end; 
+
+{==============================================================================]
   <Regress>
   @action: Materializes the range into an array in reverse-sequential order.
   @note: 
@@ -329,5 +378,48 @@ begin
       Result[i] := (Self.stop - i)
     else
       Result[i] := (Self.stop + i);
+end;
+
+{==============================================================================]
+  <Transpose>
+  @action: Populates the array from both poles simultaneously.
+  @note: Uses a symmetric approach where the start and stop are processed
+         in tandem, meeting at the range's midpoint.
+[==============================================================================}
+function TRange.Transpose: TIntegerArray; overload;
+var
+  i, j, d, s: Integer;
+  r: TRange;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.stop]);
+  SetLength(Result, s);
+  r.start := Self.start;
+  r.stop := Self.stop;
+  d := Self.Wind;
+  j := (s - 1);
+  for i := 0 to (s div 2) do
+  begin
+    Result[j - i] := r.start.Increase(d);
+    Result[i] := r.stop.Decrease(d);
+  end;
+end;
+
+{==============================================================================]
+  <Versus>
+  @action: Materializes the reverse range using index-inversion math.
+  @note: Uses the property: ValueAt(i) = Stop - (i * Wind).
+         This is the most stable "O(n)" approach for FPC's optimizer.
+[==============================================================================}
+function TRange.Versus: TIntegerArray; overload;
+var
+  i, s, w: Integer;
+begin
+  SetLength(Result, Self.Size);
+  w := Self.Wind;
+  s := Self.stop;
+  for i := 0 to High(Result) do
+    Result[i] := (s - (i * w));
 end;
 {$ENDIF}
