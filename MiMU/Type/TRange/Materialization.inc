@@ -1,4 +1,5 @@
 {$IFDEF METHODS}
+function Accumulate: TIntegerArray; overload;
 function All: TIntegerArray; overload;
 function Arrayed(const rAscending: Boolean = True): TIntegerArray; overload;
 function ArrayOf: TIntegerArray; overload;
@@ -56,6 +57,7 @@ function Gather: TIntegerArray; overload;
 function Generate: TIntegerArray; overload;
 function Generated: TIntegerArray; overload;
 function Harvest: TIntegerArray; overload;
+function Inhabitants: TIntegerArray; overload;
 function Integers: TIntegerArray; overload;
 function Ints: TIntegerArray; overload;
 function Itemed: TIntegerArray; overload;
@@ -143,6 +145,34 @@ function Yielded: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Accumulate>
+  @action: Generates a sequential array by accumulating steps from an origin.
+  @note: 
+    - Strategy: Uses a relative-offset pattern where each element is 
+      derived from its predecessor.
+    - Efficiency: Minimizes multiplications by utilizing addition-chaining, 
+      which is computationally "cheaper" during large-scale materialization.
+    - Architecture: Encapsulates the generator logic within a nested 
+      worker (F), ensuring the Range's internal state (Start, Size, 
+      Direction) is projected into a discrete result set.
+[==============================================================================}
+function TRange.Accumulate: TIntegerArray; overload;
+  function F(origin: Integer; count: Integer; step: Integer): TIntegerArray;
+  var
+    i: Integer;
+  begin
+    if (count < 1) then
+      Exit([]);
+    SetLength(Result, count);
+    Result[0] := origin;
+    for i := 1 to (count - 1) do
+      Result[i] := (Result[i - 1] + step);
+  end;
+begin
+  Result := F(Self.start, Self.Size, Self.Direction);
+end;
+
 {==============================================================================]
   <All>
   @action: Returns ALL TRange items as TIntegerArray.
@@ -1570,6 +1600,36 @@ begin
     SetLength(Result, (r + 1));
     Result[r] := (Result[r - 1] - d);
   end;
+end;
+
+{==============================================================================]
+  <Inhabitants>
+  @action: Materializes the range using an exponential block-growth strategy.
+  @note: 
+    - Logic: An O(log N) pass approach that doubles the number of known 
+      values in each iteration of the 'repeat' loop.
+    - Mechanics: Each 'Inhabitant' at index [i] generates a new value at 
+      index [i + p] by applying a magnitude-shifted step (p * d).
+    - Performance: Highly efficient for large ranges as it maximizes 
+      spatial locality and reduces the total number of arithmetic 
+      operations compared to a standard linear fill.
+[==============================================================================}
+function TRange.Inhabitants: TIntegerArray; overload;
+var
+  i, p, d, s: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  d := Self.Direction;
+  Result[0] := Self.start;
+  p := 1;
+  repeat
+    for i := 0 to (p - 1) do
+      if ((p + i) < s) then
+        Result[p + i] := (Result[i] + (p * d));
+  until (X2(p) > s);
 end;
 
 {==============================================================================]

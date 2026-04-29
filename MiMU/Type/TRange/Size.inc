@@ -2,6 +2,7 @@
 function Amount: Int64; overload;
 function Area: Integer; overload;
 function Bulk: Integer; overload;
+function Cache: Integer; overload;
 function Capacity: Integer; overload;
 function Cardinality: Integer; overload;
 function Count: Integer; overload;
@@ -103,6 +104,21 @@ end;
 function TRange.Bulk: Integer; overload;
 begin
   Result := (((Self.stop - Self.start) * Sign(Self.stop - Self.start)) + 1);
+end;
+
+{==============================================================================]
+  <Cache>
+  @action: Calculates the allocation size required to house the range's elements.
+  @note: 
+    - Logic: Returns the absolute distance between boundaries plus the 
+      inclusive unit ($|Stop - Start| + 1$).
+    - Semantic: Treats the range as a potential data set, where 'Cache' 
+      represents the total capacity or "count" of the resulting buffer.
+    - Usage: Ideal for pre-allocating memory in TIntegerArray operations.
+[==============================================================================}
+function TRange.Cache: Integer; overload;
+begin
+  Result := (Trunc(Abs(Self.stop - Self.start) * 1.0) + 1);
 end;
 
 {==============================================================================]
