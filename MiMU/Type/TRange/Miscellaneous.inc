@@ -1,8 +1,9 @@
 {$IFDEF METHODS}
 function Deconstruct(var rStart, rStop: Integer): Integer; overload;
-function Progress(const pPercent: Double): Integer;
+function Progress(const pPercent: Double): Integer; overload;
 function Reserve: TIntegerArray; overload;
 function Reserve(var aRange: TIntegerArray): Integer; overload;
+function Stippled: TIntegerArray; overload;
 function YoYo: TIntegerArray; overload;
 {$ENDIF}
 
@@ -111,7 +112,7 @@ end;
     - For a singular range (Start = Stop), the result equals Start regardless
       of pPercent.
 [==============================================================================}
-function TRange.Progress(const pPercent: Double): Integer;
+function TRange.Progress(const pPercent: Double): Integer; overload;
 begin
   Result := (Self.start + Round(Self.Delta * pPercent));
 end;
@@ -225,6 +226,33 @@ begin
   s := IFThen(Self.Ascending, 1, -1);
   for i := 0 to (l - 1) do
     Result[i] := arr[Self.start + (i * s)];
+end;
+
+{==============================================================================]
+  <Stippled>
+  @action: Materializes the range into a standard sequential array.
+  @note: 
+    - Logic: Employs a non-linear "dot-filling" strategy. It utilizes a 
+      congruential mapping (((i * 7) + 1) mod s) to determine the write 
+      destination.
+    - Semantic: Like a pointillist painting, the range is "stippled" into 
+      memory. The indices are visited in a pseudo-random order, yet the 
+      final array is perfectly ordered.
+    - Purpose: Demonstrates index-value independence and tests cache 
+      performance under non-sequential write patterns.
+[==============================================================================}
+function TRange.Stippled: TIntegerArray; overload;
+var
+  i, r, s, d: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := Self.Direction;
+  for i := 0 to (s - 1) do
+  begin
+    r := (((i * 7) + 1) mod s);
+    Result[r] := (Self.start + (r * d));
+  end;
 end;
 
 {==============================================================================]

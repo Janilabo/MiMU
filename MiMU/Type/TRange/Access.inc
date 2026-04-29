@@ -3,6 +3,7 @@ function Access(const index: Integer = 0): Integer; overload;
 function Access(const ID: TIntegerArray): TIntegerArray; overload;
 function AsValue(const index: Integer = 0): Integer; overload;
 function At(const index: Integer = 0): Integer; overload;
+function At(const ID: TIntegerArray): TIntegerArray; overload;
 function AtIndex(const index: Integer = 0): Integer; overload;
 function Ascender(const mIndex: Integer = 0): Integer; overload;
 function AtPos(const index: Integer = 0): Integer; overload;
@@ -17,16 +18,25 @@ function Fetch(const index: Integer = 0): Integer; overload;
 function Get(const index: Integer = 0): Integer; overload;
 function GetValue(const index: Integer = 0): Integer; overload;
 function Lookup(const index: Integer = 0): Integer; overload;
+function Lookup(const ID: TIntegerArray): TIntegerArray; overload;
 function Map(const index: Integer = 0): Integer; overload;
+function Map(const ID: TIntegerArray): TIntegerArray; overload;
+function Mapped(const index: Integer = 0): Integer; overload;
+function Mapped(const ID: TIntegerArray): TIntegerArray; overload;
 function Member(const index: Integer = 0): Integer; overload;
+function Member(const ID: TIntegerArray): TIntegerArray; overload;
 function Node(const index: Integer = 0): Integer; overload;
 function Nth(const index: Integer = 0): Integer; overload;
+function Nth(const ID: TIntegerArray): TIntegerArray; overload;
 function NthVal(const index: Integer = 0): Integer; overload;
 function NValue(const index: Integer = 0): Integer; overload;
 function Query(const index: Integer = 0): Integer; overload;
 function Read(const index: Integer = 0): Integer; overload;
+function Referenced(const ID: TIntegerArray): TIntegerArray; overload;
 function Resolve(const index: Integer = 0): Integer; overload;
 function Retrieve(const index: Integer = 0): Integer; overload;
+function Site(const index: Integer = 0): Integer; overload;
+function Site(const ID: TIntegerArray): TIntegerArray; overload;
 function StartVal(const sIndex: Integer = 0): Integer; overload;
 function StartValue(const sIndex: Integer = 0): Integer; overload;
 function StopVal(const sIndex: Integer = 0): Integer; overload;
@@ -117,6 +127,19 @@ begin
     Result := (Self.start + index)
   else
     Result := (Self.start - index);
+end;
+
+function TRange.At(const ID: TIntegerArray): TIntegerArray; overload;
+var
+  i: Integer;
+  a: Boolean;
+begin
+  SetLength(Result, ID.Length);
+  if ID.Empty then
+    Exit;
+  a := Self.Ascending;
+  for i := 0 to High(Result) do
+    Result[i] := IfThen(a, (Self.start + ID[i]), (Self.start - ID[i]));
 end;
 
 {==============================================================================]
@@ -322,6 +345,21 @@ begin
   Result := (Self.start + (index * d[Self.Ascending]));
 end;
 
+function TRange.Lookup(const ID: TIntegerArray): TIntegerArray; overload;
+const
+  d: array[Boolean] of Integer = (-1, 1);
+var
+  i: Integer;
+  a: Boolean;
+begin
+  SetLength(Result, ID.Length);
+  if ID.Empty then
+    Exit;
+  a := Self.Ascending;
+  for i := 0 to High(Result) do
+    Result[i] := (Self.start + (ID[i] * d[a]));
+end;
+
 {==============================================================================]
   <Map>
   @action: Translates a zero-based index into its corresponding value within the range,
@@ -337,6 +375,58 @@ begin
   Result := (Self.start + (index * (-(Ord(Self.Descending) shl 1) + 1)));
 end;
 
+function TRange.Map(const ID: TIntegerArray): TIntegerArray; overload;
+var
+  o, i: Integer;
+begin
+  SetLength(Result, ID.Length);
+  if ID.Empty then
+    Exit;
+  o := (-(Ord(Self.Descending) shl 1) + 1);
+  for i := 0 to High(Result) do
+    Result[i] := (Self.start + (ID[i] * o));
+end;
+
+{==============================================================================]
+  <Mapped>
+  @action: Resolves the absolute value of a specific index relative to the range.
+  @note: 
+    - Logic: Implements a branchless projection f(i) = S + i * D.
+    - Mechanics: The direction D is derived via (-(Ord(Descending) shl 1) + 1),
+      effectively mapping [False, True] to [1, -1] without a CPU branch.
+    - Versatility: This function is "boundless"; it will return the 
+      mathematically correct value even if the index is outside the 
+      current [Start..Stop] constraints.
+[==============================================================================}
+function TRange.Mapped(const index: Integer = 0): Integer; overload;
+begin
+  Result := (Self.start + (index * (-(Ord(Self.Descending) shl 1) + 1)));
+end;
+
+{==============================================================================]
+  <Mapped>
+  @action: Projects an arbitrary set of indices onto the range's value space.
+  @note: 
+    - Logic: Uses a branchless bitwise transformation to determine direction:
+      f(o) = (-(o << 1) + 1). This ensures O(n) performance without 
+      triggering pipeline stalls from conditional branching.
+    - Result: A TIntegerArray where each element is the range-value 
+      corresponding to the index provided in ID.
+    - Behavior: Extrapolates values if indices in ID are outside the 
+      standard [0..Size-1] boundary.
+[==============================================================================}
+function TRange.Mapped(const ID: TIntegerArray): TIntegerArray; overload;
+var
+  i, o: Integer;
+begin
+  SetLength(Result, ID.Length);
+  if ID.Empty then
+    Exit;
+  o := (-(Ord(Self.Descending) shl 1) + 1);
+  for i := 0 to High(Result) do
+    Result[i] := (Self.start + (ID[i] * o));
+end;
+
 {==============================================================================]
   <Member>
   @action: Returns the value at the given offset from Start using
@@ -347,6 +437,22 @@ end;
 function TRange.Member(const index: Integer = 0): Integer; overload;
 begin
   Result := IfThen(Self.Ascending, (Self.start + index), (Self.start - index));
+end;
+
+function TRange.Member(const ID: TIntegerArray): TIntegerArray; overload;
+var
+  i: Integer;
+  a: Boolean;
+begin
+  SetLength(Result, ID.Length);
+  if ID.Empty then
+    Exit;
+  a := Self.Ascending;
+  for i := 0 to High(Result) do
+    if a then
+      Result[i] := (Self.start + ID[i])
+    else
+      Result[i] := (Self.start - ID[i]);
 end;
 
 {==============================================================================]
@@ -383,6 +489,25 @@ end;
 function TRange.Nth(const index: Integer = 0): Integer; overload;
 begin
   Result := (Self.start + ((Ord(not Self.Descending) * 2) - 1) * index);
+end;
+
+{==============================================================================]
+  <Nth>
+  @action: Returns the N-th value from Start, respecting range direction,
+           using ordinal arithmetic.
+  @note: Direction is encoded via Ord(not Descending).
+         No bounds checking is performed.
+[==============================================================================}
+function TRange.Nth(const ID: TIntegerArray): TIntegerArray; overload;
+var
+  o, i: Integer;
+begin
+  SetLength(Result, ID.Length);
+  if ID.Empty then
+    Exit;
+  o := ((Ord(not Self.Descending) * 2) - 1);
+  for i := 0 to High(Result) do
+    Result[i] := (Self.start + (o * ID[i]));
 end;
 
 {==============================================================================]
@@ -466,6 +591,28 @@ begin
 end;
 
 {==============================================================================]
+  <Referenced>
+  @action: Retrieves the value at a specified index with bounds enforcement.
+  @note: Clamps the provided index to the valid range [0, Size-1] using
+         EnsureRange, then computes the corresponding value via
+         start + (index * Direction). Unlike Query, this method guarantees
+         the result always falls within the range domain.
+[==============================================================================}
+function TRange.Referenced(const ID: TIntegerArray): TIntegerArray; overload;
+var
+  i, s: Integer;
+  a: TIntegerArray;
+begin
+  s := ID.Length;
+  SetLength(Result, s);
+  if (s = 0) then
+    Exit;
+  a := Self.All;
+  for i := 0 to (s - 1) do
+    Result[i] := a[ID[i]];
+end;
+
+{==============================================================================]
   <Resolve>
   @action: Retrieves a value from the range using circular (wrapped) indexing.
   @note: Maps the given index into the valid range domain via modulo Size,
@@ -501,6 +648,36 @@ begin
     Result := Succ(Self.Retrieve(index - 1))
   else
     Result := Pred(Self.Retrieve(index - 1));
+end;
+
+{==============================================================================]
+  <Site>
+  @action: Anchors a logical index to a physical value within the range bounds.
+  @note: 
+    - Logic: First projects the index via .Mapped(index), then enforces 
+      strict containment using EnsureRange against .Minimum and .Maximum.
+    - Semantic: Unlike .Mapped (which allows extrapolation), .Site ensures 
+      the result is always a valid "location" (site) inside the range.
+    - Safety: Guaranteed to return a value within [Min..Max], making it 
+      ideal for index-sensitive operations and UI boundary enforcement.
+[==============================================================================}
+function TRange.Site(const index: Integer = 0): Integer; overload;
+begin
+  Result := EnsureRange(Self.Mapped(index), Self.Minimum, Self.Maximum);
+end;
+
+function TRange.Site(const ID: TIntegerArray): TIntegerArray; overload;
+var
+  i, o: Integer;
+  s: TRange;
+begin
+  SetLength(Result, ID.Length);
+  if ID.Empty then
+    Exit;
+  s := Self.Normalized;
+  o := (-(Ord(Self.Descending) shl 1) + 1);
+  for i := 0 to High(Result) do  
+    Result[i] := EnsureRange((Self.start + (ID[i] * o)), s.start, s.stop);
 end;
 
 {==============================================================================]
