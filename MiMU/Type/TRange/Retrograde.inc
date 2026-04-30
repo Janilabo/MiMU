@@ -1,10 +1,13 @@
 {$IFDEF METHODS}
 function Backtrack: TIntegerArray; overload;
+function Backwarded: TIntegerArray; overload;
+function Bacon: TIntegerArray; overload;
 function Echo: TIntegerArray; overload;
 function Echoed: TIntegerArray; overload;
 function Infuse(var target: TIntegerArray): Integer; overload;
 function Obverse: TIntegerArray; overload;
 function Obvert: TIntegerArray; overload;
+function Reared: TIntegerArray; overload;
 function Recant: TIntegerArray; overload;
 function Reconstructed: TIntegerArray; overload;
 function Recurse: TIntegerArray; overload;
@@ -13,6 +16,7 @@ function Reflection: TIntegerArray; overload;
 function Regress: TIntegerArray; overload;
 function Retrace: TIntegerArray; overload;
 function Retraced: TIntegerArray; overload;
+function Retro: TIntegerArray; overload;
 function Retrograde: TIntegerArray; overload;
 function Rewind: TIntegerArray; overload;
 function Transpose: TIntegerArray; overload;
@@ -37,6 +41,56 @@ begin
   v := (Self.start + ((l - 1) * s));
   for i := 0 to (l - 1) do
     Result[i] := v.Decrease(s);
+end;
+
+{==============================================================================]
+  <Backwarded>
+  @action: Returns the range values in reverse order using direct iteration.
+  @returns: TIntegerArray with values from Stop down to Start.
+  @note:
+    - Name: "Backed" suggests moving backward from the end
+    - Algorithm: Iterates from Stop toward Start using direction step
+    - For ascending range: [Stop, Stop-1, Stop-2, ..., Start]
+    - For descending range: [Start, Start+1, Start+2, ..., Stop]
+    - Uses Next helper function to advance current value
+    - Time complexity: O(n) with single pre-allocation
+    - Memory: Single array allocation, no intermediate copies
+[==============================================================================}
+function TRange.Backwarded: TIntegerArray; overload;
+  function Next(var current: Integer; const step: Integer): Integer;
+  begin
+    Result := current.Increase(step);
+  end;
+var
+  i, s, d: Integer;
+begin
+  SetLength(Result, Self.Size);
+  d := IfThen(Self.Ascending, -1, 1);
+  s := Self.stop;
+  for i := 0 to High(Result) do
+    Result[i] := Next(s, d);
+end;
+
+{==============================================================================]
+  <Bacon>
+  @action: Returns range values in reverse order using backwarded concatenation.
+  @returns: TIntegerArray with values from Stop down to Start.
+  @note:
+    - For ascending range: [Stop, Stop-1, Stop-2, ..., Start]
+    - For descending range: [Start, Start+1, Start+2, ..., Stop]
+    - Uses prepend operation: Result := [value] + Result
+    - Time complexity: O(n²) - best enjoyed in small batches
+    - Memory: Creates multiple intermediate arrays (sizzling allocation)
+    - Recommended range size: < 1000 elements (breakfast portion)
+[==============================================================================}
+function TRange.Bacon: TIntegerArray; overload;
+var
+  i, d: Integer;
+begin
+  Result := [];
+  d := Self.Direction;
+  for i := 0 to (Self.Size - 1) do
+    Result := ([Self.start + (i * d)] + Result);
 end;
 
 {==============================================================================]
@@ -149,6 +203,34 @@ begin
   r := (Self.start + Self.stop);
   for i := 0 to High(Result) do
     Result[i] := (r - (Self.start + (i * Self.Wind)));
+end;
+
+{==============================================================================]
+  <Reared>
+  @action: Returns the range values in reverse order (from back to front).
+  @returns: TIntegerArray containing all values from Stop down to Start.
+  @note:
+    - Etymology: "Reared" = taken from the rear/back of the range
+    - For ascending range: [Stop, Stop-1, Stop-2, ..., Start]
+    - For descending range: [Start, Start+1, Start+2, ..., Stop]
+    - Uses simple index-based arithmetic (stop ± i)
+    - Time complexity: O(n) with single pre-allocation
+    - No heap allocations beyond the result array
+    - Branchless inside loop (case only once)
+[==============================================================================}
+function TRange.Reared: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  case Self.Ascending of
+    True:
+    for i := 0 to High(Result) do
+      Result[i] := (Self.stop - i);
+    False:
+    for i := 0 to High(Result) do
+      Result[i] := (Self.stop + i);
+  end;
 end;
 
 {==============================================================================]
@@ -327,6 +409,19 @@ begin
     Inc(P);
     Inc(r, d);
   end;
+end;
+
+{==============================================================================]
+  <Retro>
+  @action: Puts the range in reverse, as if it backed into a parking spot.
+  @note: The range values from Stop down to Start (reverse order).
+  @example:
+    r := TRange.Create(1, 5);
+    arr := r.Retro;  // [5, 4, 3, 2, 1] - moving backward!
+[==============================================================================}
+function TRange.Retro: TIntegerArray; overload;
+begin
+  Result := Self.Items.Delended(Self.start + Self.stop);
 end;
 
 {==============================================================================]

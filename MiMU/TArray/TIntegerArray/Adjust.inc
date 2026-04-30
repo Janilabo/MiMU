@@ -1,5 +1,9 @@
 {$IFDEF HELPERS}
 function Decrementation(const N: Integer = 1): Integer; overload;
+function Addend(const N: Integer): Integer; overload;
+function Addended(const N: Integer): TIntegerArray; overload;
+function Delend(const N: Integer): Integer; overload;
+function Delended(const N: Integer): TIntegerArray; overload;
 function Incrementation(const N: Integer = 1): Integer; overload;
 function Minus(const N: Integer = 1): TIntegerArray; overload;
 function Plus(const N: Integer = 1): TIntegerArray; overload;
@@ -26,6 +30,66 @@ begin
     p^ := (p^ - N);
     Inc(p);
   end;
+end;
+
+{==============================================================================]
+  <Addend>
+  @action: Adds N to each element IN-PLACE.
+  @note: Modifies the original array. Returns length for chaining.
+  @example: [1,2,3].Addend(10) → [11,12,13]
+[==============================================================================}
+function TIntegerArrayHelper.Addend(const N: Integer): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Length;
+  for i := 0 to (Result - 1) do
+    Self[i] := (N + Self[i]);
+end;
+
+{==============================================================================]
+  <Addended>
+  @action: Returns NEW array with N added to each element.
+  @note: Original array unchanged.
+  @example: [1,2,3].Addended(10) → [11,12,13]
+[==============================================================================}
+function TIntegerArrayHelper.Addended(const N: Integer): TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Length);
+  for i := 0 to High(Self) do
+    Result[i] := (N + Self[i]);
+end;
+
+{==============================================================================]
+  <Delend>
+  @action: Subtracts each element FROM N IN-PLACE (N - x).
+  @note: Modifies the original array. Returns length for chaining.
+  @example: [1,2,3].Delend(10) → [9,8,7]
+[==============================================================================}
+function TIntegerArrayHelper.Delend(const N: Integer): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Length;
+  for i := 0 to (Result - 1) do
+    Self[i] := (N - Self[i]);
+end;
+
+{==============================================================================]
+  <Delended>
+  @action: Returns NEW array with each element = N - Self[i].
+  @note: Original array unchanged.
+  @example: [1,2,3].Delended(10) → [9,8,7]
+[==============================================================================}
+function TIntegerArrayHelper.Delended(const N: Integer): TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Length);
+  for i := 0 to High(Self) do
+    Result[i] := (N - Self[i]);
 end;
 
 {==============================================================================]

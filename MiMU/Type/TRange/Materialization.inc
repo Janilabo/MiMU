@@ -89,6 +89,7 @@ function Numbered: TIntegerArray; overload;
 function Numbers: TIntegerArray; overload;
 function Numeralize: TIntegerArray; overload;
 function Numerals: TIntegerArray; overload;
+function Numerated: TIntegerArray; overload;
 function Numericize: TIntegerArray; overload;
 function Numerics: TIntegerArray; overload;
 function Open: TIntegerArray; overload;
@@ -112,6 +113,7 @@ function Rendered: TIntegerArray; overload;
 function Resources: TIntegerArray; overload;
 function Reveal: TIntegerArray; overload;
 function Revealed: TIntegerArray; overload;
+function Segregate: TIntegerArray; overload;
 function Separately(const rReverse: Boolean = False): TIntegerArray; overload;
 function Sequence: TIntegerArray; overload;
 function Sequential: TIntegerArray; overload;
@@ -143,6 +145,7 @@ function Unroll: TIntegerArray; overload;
 function Unrolled: TIntegerArray; overload;
 function Unwrap: TIntegerArray; overload;
 function Unzip: TIntegerArray; overload;
+function Valued: TIntegerArray; overload;
 function Values: TIntegerArray; overload;
 function View(const vSize: Integer = 2147483647; const sIndex: Integer = 0): TIntegerArray; overload;
 function Yielded: TIntegerArray; overload;
@@ -2581,6 +2584,32 @@ begin
 end;
 
 {==============================================================================]
+  <Numerated>
+  @action: Returns a concrete array of all numeric values in the range.
+  @returns: TIntegerArray containing the complete sequence from Start to Stop.
+  @note: 
+    - For ascending ranges: Start, Start+1, Start+2, ..., Stop
+    - For descending ranges: Start, Start-1, Start-2, ..., Stop
+    - Uses efficient ID transformation pattern:
+        Ascending  → IDs → Addended(Start)
+        Descending → IDs → Delended(Start)
+    - Original range is not modified.
+    - The name "Numerated" suggests "converted to numbers" or "numbered sequence".
+  @examples:
+    r := TRange.Create(5, 10); // Ascending range
+    arr := r.Numerated;  // = [5, 6, 7, 8, 9, 10]
+    r := TRange.Create(10, 5); // Descending range
+    arr := r.Numerated;  // = [10, 9, 8, 7, 6, 5]
+[==============================================================================}
+function TRange.Numerated: TIntegerArray; overload;
+begin
+  if Self.Ascending then
+    Result := Self.IDs.Addended(Self.start)
+  else
+    Result := Self.IDs.Delended(Self.start);
+end; 
+
+{==============================================================================]
   <Numericize>
   @action: Materializes the range into a preallocated integer array
           by iterating from Start in the Wind direction while the value remains contained within the range.
@@ -3211,7 +3240,30 @@ begin
   s := Result.SetSize(Self.Size);
   while (s.Decrement > -1) do
     Result[s] := (Self.start + (s * Self.Direction));
-end; 
+end;
+
+{==============================================================================]
+  <Segregate>
+  @action: Separates the range into a concrete integer array by extracting each value.
+  @returns: TIntegerArray containing all values from Start to Stop in sequence.
+  @note: 
+    - For ascending ranges: Start, Start+1, Start+2, ..., Stop
+    - For descending ranges: Start, Start-1, Start-2, ..., Stop
+    - Uses dynamic array concatenation (Result := Result + [value])
+    - Time complexity: O(n²) due to repeated reallocation and copying
+    - Memory complexity: O(n) but with multiple intermediate allocations
+    - Each iteration creates a NEW array by copying all previous elements
+    - Suitable for small ranges only (< 1000 elements)
+[==============================================================================}
+function TRange.Segregate: TIntegerArray; overload;
+var
+  i, d: Integer;
+begin
+  Result := [];
+  d := Self.Direction;
+  for i := 0 to (Self.Size - 1) do
+    Result := (Result + [Self.start + (i * d)]);
+end;
 
 {==============================================================================]
   <Separately>
@@ -3986,6 +4038,45 @@ begin
       Result[r.start] := (Self.start - r.start);
       Result[r.stop] := (Self.stop + r.start);
     until (r.start.Increment > r.stop.Decrement);
+  end;
+end;
+
+{==============================================================================]
+  <Valued>
+  @action: Returns a concrete array of all values in the range using block processing.
+  @returns: TIntegerArray containing the complete sequence from Start to Stop.
+  @note: 
+    - For ascending ranges: Start, Start+1, Start+2, ..., Stop
+    - For descending ranges: Start, Start-1, Start-2, ..., Stop
+    - Uses block processing (BLOCK_SIZE = 64) with Move for cache efficiency.
+    - Encodes direction as ±1 in step variable.
+    - Precomputes values into a temporary block buffer, then bulk-copies to result.
+    - This approach reduces loop overhead and improves memory locality.
+    - Time complexity: O(n), Memory: O(n + BLOCK_SIZE)
+  @param: (none) - Uses the range's current state.
+  @examples:
+    r := TRange.Create(5, 10); // Ascending range
+    arr := r.Valued;  // = [5, 6, 7, 8, 9, 10]  
+    r := TRange.Create(10, 5); // Descending range
+    arr := r.Valued;  // = [10, 9, 8, 7, 6, 5]
+[==============================================================================}
+function TRange.Valued: TIntegerArray; overload;
+const
+  BLOCK_SIZE = 64;
+var
+  i, j, d, s, z: Integer;
+  b: array[0..(BLOCK_SIZE - 1)] of Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := IfThen(Self.Ascending, 1, -1);
+  i := -BLOCK_SIZE; 
+  z := SizeOf(Integer);
+  while (i.Increment(BLOCK_SIZE) < s) do
+  begin
+    for j := 0 to (BLOCK_SIZE - 1) do
+      b[j] := (Self.start + ((i + j) * d));
+    Move(b[0], Result[i], (z * Min(BLOCK_SIZE, (s - i))));
   end;
 end;
 
