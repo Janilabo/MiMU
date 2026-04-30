@@ -36,6 +36,7 @@ function Elements: TIntegerArray; overload;
 function Emit: TIntegerArray; overload;
 function Entirely: TIntegerArray; overload;
 function Entirety: TIntegerArray; overload;
+function Enum: TIntegerArray; overload;
 function Enumerate: TIntegerArray; overload;
 function Enumerated: TIntegerArray; overload;
 function Enumerating: TIntegerArray; overload;
@@ -116,6 +117,8 @@ function Sequence: TIntegerArray; overload;
 function Sequential: TIntegerArray; overload;
 function Snapshot: TIntegerArray; overload;
 function Stack: TIntegerArray; overload;
+function Staged: TIntegerArray; overload;
+function Stages: TIntegerArray; overload;
 function Start2Stop: TIntegerArray; overload;
 function StartToStop: TIntegerArray; overload;
 function Stepped(const sSize: Integer = 1): TIntegerArray; overload;
@@ -136,6 +139,7 @@ function Unfold: TIntegerArray; overload;
 function Unfolded: TIntegerArray; overload;
 function Unpack: TIntegerArray; overload;
 function Unpacked: TIntegerArray; overload;
+function Unroll: TIntegerArray; overload;
 function Unrolled: TIntegerArray; overload;
 function Unwrap: TIntegerArray; overload;
 function Unzip: TIntegerArray; overload;
@@ -1110,6 +1114,21 @@ begin
   r := 0;
   while (s <> Self.stop) do
     Result[r.Increment] := s.Increment(d);
+end;
+
+{==============================================================================]
+  <Enum>
+  @action: Returns array using the range's enumerator.
+  @note: Leverages existing enumerator logic; very clean.
+[==============================================================================}
+function TRange.Enum: TIntegerArray; overload;
+var
+  r, s: Integer;
+begin
+  SetLength(Result, Self.Size);
+  r := 0;
+  for s in Self do
+    Result[r.Increase] := s;
 end;
 
 {==============================================================================]
@@ -2610,7 +2629,8 @@ end;
 [==============================================================================}
 function TRange.Open: TIntegerArray; overload;
   procedure F(var a: TIntegerArray; const b, s: Integer);
-  var i: Integer;
+  var
+    i: Integer;
   begin
     for i := 0 to High(a) do
       a[i] := (b + (i * s));
@@ -3331,6 +3351,46 @@ begin
 end;
 
 {==============================================================================]
+  <Staged>
+  @action: Generates an array containing every integer step within the range.
+  @note: Ensures the result is populated based on the range's direction.
+[==============================================================================}
+function TRange.Staged: TIntegerArray; overload;
+begin
+  Result.Create(Self.Size, Self.stop);
+  case Self.Ascending of
+    True:
+    while (Result[0].Decrement > Self.start) do
+      Result[Result[0] - Self.start] := Result[0];
+    False:
+    while (Result[0].Increment < Self.start) do
+      Result[Self.start - Result[0]] := Result[0];
+  end;
+end;
+
+{==============================================================================]
+  <Stages>
+  @action: Generates an array containing every integer step within the range.
+  @note: Ensures the result is populated based on the range's direction.
+[==============================================================================}
+function TRange.Stages: TIntegerArray; overload;
+var
+  r: Integer;
+begin
+  r := Self.start;
+  SetLength(Result, Self.Size);
+  Result[0] := Self.start;
+  case Self.Ascending of
+    True:
+    while (r.Increment <= Self.stop) do
+      Result[r - Self.start] := r;
+    False:
+    while (r.Decrement >= Self.stop) do
+      Result[Self.start - r] := r;
+  end;
+end;
+
+{==============================================================================]
   <Start2Stop>
   @action: Materializes the range in natural order (start → stop)
            by consuming `stop` inward via SStop on a working copy.
@@ -3818,6 +3878,26 @@ begin
     Exit(Self.All);
   SetLength(Result, Self.Size);
   FillDWord(Result[0], Self.Size, Cardinal(Self.start));
+end;
+
+{==============================================================================]
+  <Unroll>
+  @action: Expands the range boundaries into a full array of integers by 
+           working backward from the Stop value to the Start value.
+  @note: Uses array concatenation to prepend values. Best suited for smaller 
+         ranges due to the overhead of repeated memory reallocation.
+[==============================================================================}
+function TRange.Unroll: TIntegerArray; overload;
+begin
+  Result := [Self.stop];
+  case Self.Ascending of
+    True:
+    while (Result[0] > Self.start) do
+      Result := ([Result[0] - 1] + Result);
+    False:
+    while (Result[0] < Self.start) do
+      Result := ([Result[0] + 1] + Result);
+  end;
 end;
 
 {==============================================================================]

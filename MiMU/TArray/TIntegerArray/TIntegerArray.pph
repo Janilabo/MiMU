@@ -17,6 +17,7 @@
 {$I BinaryOps/Sort.inc}
 {$I BinaryOps/Verify.inc}
 
+{$I Adjust.inc}
 {$I Analytics.inc}
 {$I Bounding.inc}
 {$I Cloning.inc}
