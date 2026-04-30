@@ -1,4 +1,6 @@
 {$IFDEF METHODS}
+function A2B: TIntegerArray; overload;
+function B2A: TIntegerArray; overload;
 function Accumulate: TIntegerArray; overload;
 function All: TIntegerArray; overload;
 function Arrayed(const rAscending: Boolean = True): TIntegerArray; overload;
@@ -136,6 +138,10 @@ function ToArr: TIntegerArray; overload;
 function ToArray: TIntegerArray; overload;
 class function ToArray(const AStart, AStop: Integer): TIntegerArray; overload; static;
 function ToIntegers: TIntegerArray; overload;
+function ToStart: TIntegerArray; overload;
+function ToStarting: TIntegerArray; overload;
+function ToStop: TIntegerArray; overload;
+function ToStopping: TIntegerArray; overload;
 function ToValues: TIntegerArray; overload;
 function Unfold: TIntegerArray; overload;
 function Unfolded: TIntegerArray; overload;
@@ -152,6 +158,28 @@ function Yielded: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <A2B>
+  @action: Returns an array containing all values from Start (A) to Stop (B).
+  @note: Follows the range's natural direction.
+         A = Start, B = Stop.
+         Uses dynamic array supply pattern with integer stepping.
+  @example:
+    TRange(1, 5).A2B   -> [1, 2, 3, 4, 5]
+    TRange(5, 1).A2B   -> [5, 4, 3, 2, 1]
+    TRange(3, 3).A2B   -> [3]
+[==============================================================================}
+function TRange.A2B: TIntegerArray; overload;
+var
+  r, d: Integer;
+begin
+  Result := [Self.start];
+  d := Self.Direction;
+  r := (Self.start + d);
+  while (r <> (Self.stop + d)) do
+    Result.Supply(r.Increase(d));
+end;
+
 {==============================================================================]
   <Accumulate>
   @action: Generates a sequential array by accumulating steps from an origin.
@@ -371,6 +399,28 @@ begin
   end;
   if ((s and 1) = 1) then
     Result[s - 1] := v;
+end;
+
+{==============================================================================]
+  <B2A>
+  @action: Returns an array containing all values from Stop (B) to Start (A).
+  @note: Opposite of the range's natural direction.
+         A = Start, B = Stop.
+         Traverses backward from B to A.
+  @example:
+    TRange(1, 5).B2A   -> [5, 4, 3, 2, 1]
+    TRange(5, 1).B2A   -> [1, 2, 3, 4, 5]
+    TRange(3, 3).B2A   -> [3]
+[==============================================================================}
+function TRange.B2A: TIntegerArray; overload;
+var
+  r, d: Integer;
+begin
+  Result := [Self.stop];
+  d := Self.Direction;
+  r := (Self.stop - d);
+  while (r <> (Self.start - d)) do
+    Result.Supply(r.Decrease(d));
 end;
 
 {==============================================================================]
@@ -3798,6 +3848,94 @@ begin
     for i := 0 to (s - 1) do
       Result[i] := (Self.start - Result[i]);
   end;
+end;
+
+{==============================================================================]
+  <ToStart>
+  @action: Returns an array containing all values from Stop to Start.
+  @note: Opposite of the range's natural direction.
+  @example:
+    TRange(1, 5).ToStart  -> [5, 4, 3, 2, 1]
+    TRange(5, 1).ToStart  -> [1, 2, 3, 4, 5]
+[==============================================================================}
+function TRange.ToStart: TIntegerArray; overload;
+var
+  p: PInteger;
+  i, r, d: Integer;
+begin
+  SetLength(Result, Self.Size);
+  p := @Result[0];
+  r := Self.stop;
+  d := Self.Direction;
+  for i := 0 to High(Result) do
+  begin
+    p^ := r.Decrease(d);
+    Inc(p);
+  end;
+end;
+
+{==============================================================================]
+  <ToStarting>
+  @action: Returns an array containing all values from Stop to Start.
+  @note: Opposite of the range's natural direction.
+  @example:
+    TRange(1, 5).ToStarting  -> [5, 4, 3, 2, 1]
+    TRange(5, 1).ToStarting  -> [1, 2, 3, 4, 5]
+[==============================================================================}
+function TRange.ToStarting: TIntegerArray; overload;
+var
+  r, d: Integer;
+begin
+  Result := [];
+  d := Self.Direction;
+  r := Self.stop;
+  repeat
+    Result.Supply(r.Decrease(d));
+  until (((d > 0) and (r < Self.start)) or ((d < 0) and (r > Self.start)));
+end;
+
+{==============================================================================]
+  <ToStop>
+  @action: Returns an array containing all values from Start to Stop.
+  @note: Follows the range's natural direction (ascending or descending).
+  @example: 
+    TRange(1, 5).ToStop   -> [1, 2, 3, 4, 5]
+    TRange(5, 1).ToStop   -> [5, 4, 3, 2, 1]
+[==============================================================================}
+function TRange.ToStop: TIntegerArray; overload;
+var
+  p: PInteger;
+  i, r, d: Integer;
+begin
+  SetLength(Result, Self.Size);
+  p := @Result[0];
+  r := Self.start;
+  d := Self.Direction;
+  for i := 0 to High(Result) do
+  begin
+    p^ := r.Increase(d);
+    Inc(p);
+  end;
+end;
+
+{==============================================================================]
+  <ToStopping>
+  @action: Returns an array containing all values from Start to Stop.
+  @note: Follows the range's natural direction (ascending or descending).
+  @example: 
+    TRange(1, 5).ToStopping   -> [1, 2, 3, 4, 5]
+    TRange(5, 1).ToStopping   -> [5, 4, 3, 2, 1]
+[==============================================================================}
+function TRange.ToStopping: TIntegerArray; overload;
+var
+  r, d: Integer;
+begin
+  Result := [];
+  d := Self.Direction;
+  r := Self.start;
+  repeat
+    Result.Supply(r.Increase(d));
+  until (((d > 0) and (r > Self.stop)) or ((d < 0) and (r < Self.stop)));
 end;
 
 {==============================================================================]
