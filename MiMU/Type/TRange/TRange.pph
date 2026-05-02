@@ -43,3 +43,4 @@
 {$I Terminal.inc}
 {$I Transform.inc}
 {$I Validation.inc}
+{$I Vector.inc}

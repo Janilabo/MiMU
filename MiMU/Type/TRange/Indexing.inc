@@ -18,6 +18,7 @@ function Indiced: TIntegerArray; overload;
 function Indices: TIntegerArray; overload;
 function IndexList: TIntegerArray; overload;
 function Keys: TIntegerArray; overload;
+function Labels: TIntegerArray; overload;
 function LoadID(var target: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
 function Paged(const pageSize: Integer = 2): T2DIntegerArray; overload;
 function Pagenize(const pageSize: Integer = 2): T2DIntegerArray; overload;
@@ -26,6 +27,7 @@ function Paging(const pageSize: Integer = 2): T2DIntegerArray; overload;
 function Positional: TIntegerArray; overload;
 function Positionally: TIntegerArray; overload;
 function Positions: TIntegerArray; overload;
+function ReverseIndices: TIntegerArray; overload;
 function Serialization: TIntegerArray; overload;
 function Slots: TIntegerArray; overload;
 function Slotted: TIntegerArray; overload;
@@ -447,6 +449,32 @@ begin
 end;
 
 {==============================================================================]
+  <Labels>
+  @action: Returns a zero-based index array using label-based loop constructs.
+  @note:
+    - Implements sequential generation [0, 1, 2, ..., Size-1] using goto
+      instead of structured loops (for/while/repeat).
+    - Educational example showing low-level control flow in Pascal.
+    - Not recommended for production code due to reduced readability,
+      but demonstrates that Pascal supports unstructured jumps.
+    - May confuse maintainers; prefer structured loops for real code.
+[==============================================================================}
+function TRange.Labels: TIntegerArray; overload;
+label
+  loop;
+var
+  i, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  i := 0;
+  loop:
+  Result[i] := i;
+  if (i.Increment < s) then
+    goto loop;
+end;
+
+{==============================================================================]
   <LoadID>
   @action: Loads the target array with positional identifiers derived from
            the current range instance.
@@ -649,6 +677,29 @@ begin
   Result[0] := 0;
   for i := 1 to High(Result) do
     Result[i] := (Result[i - 1] + 1);
+end;
+
+{==============================================================================]
+  <ReverseIndices>
+  @action: Returns an array of zero-based indices in reverse order, where the
+           last element of the forward sequence becomes the first element.
+  @note: 
+    - Generates the sequence [Size-1, Size-2, ..., 1, 0]
+    - Equivalent to calling Reverse(ToIndices) but more efficient as it
+      constructs the reversed array directly without an intermediate copy.
+    - Useful for backward traversal, stack operations, or when processing
+      range elements in descending order by index.
+    - For example, if Size = 5, returns [4, 3, 2, 1, 0]
+    - Maintains zero-based indexing where Result[i] = (Size - 1 - i)
+[==============================================================================}
+function TRange.ReverseIndices: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  for i := 0 to (s - 1) do
+    Result[s - 1 - i] := i;
 end;
 
 {==============================================================================]

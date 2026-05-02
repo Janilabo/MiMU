@@ -44,6 +44,7 @@ function Scope: Integer; overload;
 function Size: Integer; overload;
 function Size(var lVal, hVal: Integer): Integer; overload;
 function Size(var vSize: Integer): Integer; overload;
+function Sizection(const dMultiplier: Integer): Integer; overload;
 function Sized: Integer; overload;
 function Sizing: Integer; overload;
 function Spread: Integer; overload;
@@ -157,7 +158,7 @@ end;
 [==============================================================================}
 function TRange.Count: Integer; overload;
 begin
-  Result := ((Max(Self.start, Self.stop) - Min(Self.start, Self.stop)) + 1);
+  Result := ((Self.Maximum - Self.Minimum) + 1);
 end;
 
 {==============================================================================]
@@ -234,7 +235,7 @@ end;
 [==============================================================================}
 function TRange.Extent: Integer; overload;
 begin
-  Result := Succ(Max(Self.start, Self.stop) - Min(Self.start, Self.stop));
+  Result := Succ(Self.Maximum - Self.Minimum);
 end;
 
 {==============================================================================]
@@ -285,7 +286,7 @@ function TRange.GetCount: Integer; overload;
 var
   d, m: Integer;
 begin
-  d := IfThen((Self.start <= Self.stop), (Self.stop - Self.start), (Self.start - Self.stop));
+  d := IfThen(Self.Ascending, (Self.stop - Self.start), (Self.start - Self.stop));
   m := (d shr 31);
   Result := (((d xor m) - m) + 1);
 end;
@@ -301,7 +302,7 @@ var
 begin
   if Self.Singular then
     Exit(1);
-  if (Self.start <= Self.stop) then
+  if Self.Ascending then
     d := (Self.stop - Self.start)
   else
     d := (Self.start - Self.stop);
@@ -736,6 +737,20 @@ function TRange.Size(var vSize: Integer): Integer; overload;
 begin
   vSize := Self.Size;
   Result := vSize;
+end;
+
+{==============================================================================]
+  <Sizection>
+  @action: Calculates the scaled inclusive length of the range.
+  @note: Uses an integer multiplier to scale the distance between 'start' and
+         'stop' before adding the inclusive offset.
+    - Use '1' as the multiplier to calculate standard Ascending TRange size.
+    - Use '-1' as the multiplier to calculate Descending TRange size logic.
+    - The result includes an offset of +1 to ensure the range is inclusive.
+[==============================================================================}
+function TRange.Sizection(const dMultiplier: Integer): Integer; overload;
+begin
+  Result := ((Self.Delta * dMultiplier) + 1);
 end;
 
 {==============================================================================]
