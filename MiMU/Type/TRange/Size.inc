@@ -11,6 +11,8 @@ function Counting: Integer; overload;
 function Coverage: Integer; overload;
 function Depth: Integer; overload;
 function Diameter: Integer; overload;
+function Dimension: Integer; overload;
+function Distal: Integer; overload;
 function Extent: Integer; overload;
 function Footprint: Integer; overload;
 function GetAmount: Int64; overload;
@@ -28,6 +30,7 @@ function Measured: Int64; overload;
 function Measuring: Integer; overload;
 function Mob: Integer; overload;
 function Ordinality: Integer; overload;
+function Ordy: Integer; overload;
 function Perim: Integer; overload;
 function Perimeter: Int64; overload;
 function Populates: Integer; overload;
@@ -45,6 +48,7 @@ function Size: Integer; overload;
 function Size(var lVal, hVal: Integer): Integer; overload;
 function Size(var vSize: Integer): Integer; overload;
 function Sizection(const dMultiplier: Integer): Integer; overload;
+function Sizection: Integer; overload;
 function Sized: Integer; overload;
 function Sizing: Integer; overload;
 function Spread: Integer; overload;
@@ -186,7 +190,7 @@ end;
 [==============================================================================}
 function TRange.Counting: Integer; overload;
 begin
-  Result := (((Self.stop - Self.start) * Self.Direction) + 1);
+  Result := ((Self.Delta * Self.Direction) + 1);
 end;
 
 {==============================================================================]
@@ -229,6 +233,31 @@ begin
 end;
 
 {==============================================================================]
+  <Dimension>
+  @action: Calculates the inclusive size using direction-appropriate difference.
+  @note: For ascending: uses Delta (stop - start). For descending: uses Contra (start - stop).
+         Always adds 1 for inclusivity. Equivalent to |stop - start| + 1.
+[==============================================================================}
+function TRange.Dimension: Integer; overload;
+begin
+  if (Self.Direction <> -1) then
+    Result := (Self.Delta + 1)
+  else
+    Result := (Self.Contra + 1);
+end;
+
+{==============================================================================]
+  <Distal>
+  @action: Returns the absolute inclusive magnitude of the range.
+  @note: Direction-agnostic. Calculates the total span by identifying the 
+         maximum and minimum boundaries regardless of orientation.
+[==============================================================================}
+function TRange.Distal: Integer; overload;
+begin
+  Result := (IfThen((Self.start <= Self.stop), Self.stop, Self.start) - IfThen((Self.start <= Self.stop), Self.start, Self.stop) + 1);
+end;
+
+{==============================================================================]
   <Extent>
   @action: Returns the size of TRange.
   @note: Alternative.
@@ -249,7 +278,7 @@ function TRange.Footprint: Integer; overload;
 var
   d: Integer;
 begin
-  d := (Self.stop - Self.start);
+  d := Self.Delta;
   if (d >= 0) then
     Result := (d + 1)
   else
@@ -303,9 +332,9 @@ begin
   if Self.Singular then
     Exit(1);
   if Self.Ascending then
-    d := (Self.stop - Self.start)
+    d := Self.Delta
   else
-    d := (Self.start - Self.stop);
+    d := Self.Contra;
   Result := (((d xor (d shr 31)) - (d shr 31)) + 1);
 end;
 
@@ -326,8 +355,8 @@ begin
     c := 0;
   case c of
      0: Result := 1;
-     -1: Result := ((Self.stop - Self.start) + 1);
-     1: Result := ((Self.start - Self.stop) + 1);
+     -1: Result := (Self.Delta + 1);
+     1: Result := (Self.Contra + 1);
   end;
 end;
 
@@ -354,7 +383,7 @@ function TRange.Latitude: Integer; overload;
 var
   d: Integer;
 begin
-  d := (Self.stop - Self.start);
+  d := Self.Delta;
   Result := (d * ((Ord(d >= 0) * 2) - 1) + 1);
 end;
 
@@ -365,7 +394,7 @@ end;
 [==============================================================================}
 function TRange.Len: Integer; overload;
 begin
-  Result := (((Self.stop - Self.start) * IfThen((Self.start <= Self.stop), 1, -1)) + 1);
+  Result := ((Self.Delta * IfThen((Self.start <= Self.stop), 1, -1)) + 1);
 end;
 
 {==============================================================================]
@@ -378,9 +407,9 @@ begin
   if Self.Singular then
     Result := 1
   else if (Self.stop < Self.start) then
-    Result := ((Self.start - Self.stop) + 1)
+    Result := (Self.Contra + 1)
   else
-    Result := ((Self.stop - Self.start) + 1);
+    Result := (Self.Delta + 1);
 end;
 
 {==============================================================================]
@@ -402,7 +431,7 @@ end;
 [==============================================================================}
 function TRange.Mass: Integer; overload;
 begin
-  Result := (1 + ((Ord(Self.stop > Self.start) * (Self.stop - Self.start)) + (Ord(Self.start > Self.stop) * (Self.start - Self.stop))));
+  Result := (1 + ((Ord(Self.stop > Self.start) * Self.Delta) + (Ord(Self.start > Self.stop) * Self.Contra)));
 end;
 
 {==============================================================================]
@@ -479,6 +508,18 @@ end;
 function TRange.Ordinality: Integer; overload;
 begin
   Result := (Abs(Ord(Self.stop) - Ord(Self.start)) + 1);
+end;
+
+{==============================================================================]
+  <Ordy>
+  @action: Returns the absolute ordinal size (magnitude) of the range.
+  @note: Implements a branchless absolute distance formula:
+         ((Start <= Stop) * Delta) + ((Start > Stop) * Contra) + 1.
+         This ensures a positive inclusive count regardless of direction.
+[==============================================================================}
+function TRange.Ordy: Integer; overload;
+begin
+  Result := (Ord(Self.start <= Self.stop) * (Self.stop - Self.start)) + (Ord(Self.start > Self.stop) * (Self.start - Self.stop)) + 1;
 end;
 
 {==============================================================================]
@@ -751,6 +792,23 @@ end;
 function TRange.Sizection(const dMultiplier: Integer): Integer; overload;
 begin
   Result := ((Self.Delta * dMultiplier) + 1);
+end;
+
+{==============================================================================]
+  <Sizection>
+  @action: Returns the directional inclusive size of the range based on its 
+           inherent order (ascending or descending).
+  @note: This overload automatically uses the range's Direction as the multiplier.
+         - For ascending ranges (start <= stop): returns (stop - start + 1)
+         - For descending ranges (start > stop): returns (start - stop + 1)
+         - For degenerate ranges (start = stop): returns 1
+         This is the order-sensitive counterpart to the order-independent Size.
+         Equivalent to calling Sizection(Self.Direction) or manually calculating
+         the absolute difference plus one.
+[==============================================================================}
+function TRange.Sizection: Integer; overload;
+begin
+  Result := Self.Sizection(Self.Direction);
 end;
 
 {==============================================================================]

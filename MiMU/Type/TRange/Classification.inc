@@ -1,12 +1,14 @@
 {$IFDEF METHODS}
 function Ascending: Boolean; overload;
 function Ascends: Boolean; overload;
+function Ascing: Boolean; overload;
 function Atomic: Boolean; overload;
 function Composite: Boolean; overload;
 function Decreasing: Boolean; overload;
 function Decremental: Boolean; overload;
 function Descending: Boolean; overload;
 function Descends: Boolean; overload;
+function Descing: Boolean; overload;
 function Dropping: Boolean; overload;
 function Drops: Boolean; overload;
 function Growing: Boolean; overload;
@@ -67,6 +69,17 @@ end;
 function TRange.Ascends: Boolean; overload;
 begin
   Result := not (Self.start > Self.stop);
+end;
+
+{==============================================================================]
+  <Ascing>
+  @action: Returns True if the range is oriented forward.
+  @note: Strict inequality (Stop > Start).
+         Returns False if the range is stationary (Start = Stop).
+[==============================================================================}
+function TRange.Ascing: Boolean; overload;
+begin
+  Result := (Self.stop > Self.start);
 end;
 
 {==============================================================================]
@@ -131,6 +144,17 @@ end;
 function TRange.Descends: Boolean; overload;
 begin
   Result := not (Self.start <= Self.stop);
+end;
+
+{==============================================================================]
+  <Descing>
+  @action: Returns True if the range is oriented backward.
+  @note: Strict inequality (Start > Stop).
+         Returns False if the range is stationary (Start = Stop).
+[==============================================================================}
+function TRange.Descing: Boolean; overload;
+begin
+  Result := (Self.start > Self.stop);
 end;
 
 {==============================================================================]

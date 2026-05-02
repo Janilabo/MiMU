@@ -1,4 +1,6 @@
 {$IFDEF METHODS}
+function Ascign: Integer; overload;
+function Descign: Integer; overload;
 function Direction: Integer; overload;
 function Flow: Integer; overload;
 function Ordering: Integer; overload;
@@ -21,6 +23,28 @@ function Windy: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Ascign>
+  @action: Returns the binary ascending sign (1 or 0).
+  @note: Logic: Ord(Stop > Start).
+         Used to weigh ascending-specific calculations.
+[==============================================================================}
+function TRange.Ascign: Integer; overload;
+begin
+  Result := Ord(Self.stop > Self.start);
+end;
+
+{==============================================================================]
+  <Descign>
+  @action: Returns the binary descending sign (1 or 0).
+  @note: Logic: Ord(Start > Stop).
+         Used to weigh descending-specific calculations.
+[==============================================================================}
+function TRange.Descign: Integer; overload;
+begin
+  Result := Ord(Self.start > Self.stop);
+end;
+
 {==============================================================================]
   <Direction>
   @action: Returns the orientation of the range.
