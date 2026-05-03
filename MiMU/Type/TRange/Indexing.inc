@@ -31,6 +31,7 @@ function ReverseIndices: TIntegerArray; overload;
 function Serialization: TIntegerArray; overload;
 function Slots: TIntegerArray; overload;
 function Slotted: TIntegerArray; overload;
+function Slottify: TIntegerArray; overload;
 function ToIDs: TIntegerArray; overload;
 function ToIndexes: TIntegerArray; overload;
 function ToIndices: TIntegerArray; overload;
@@ -779,6 +780,27 @@ begin
   FillDWord(Result[0], s, 0);
   for i := 0 to (s - 1) do
     Inc(Result[i], i);
+end;
+
+{==============================================================================]
+  <Slottify>
+  @action: Generates a discrete sequence of integers representing every 
+           available index within the TRange.
+  @note: Uses a recursive binary-split (divide and conquer) approach to 
+         reconstruct the range into a flat integer array.
+[==============================================================================}
+function TRange.Slottify: TIntegerArray; overload;
+  function C(const a, b: Integer): TIntegerArray;
+  var
+    d: Integer;
+  begin
+    if (a = b) then
+      Exit([a]);
+    d := ((a + b) div 2);
+    Result := (C(a, d) + C((d + 1), b));
+  end;
+begin
+  Result := C(0, (Self.Size - 1));
 end;
 
 {==============================================================================]

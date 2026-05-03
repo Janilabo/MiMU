@@ -1,0 +1,125 @@
+{$IFDEF METHODS}
+function StartStop(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
+function StartStop(var rIDs: TIntegerArray): TIntegerArray; overload;
+function StopStart(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
+function StopStart(var rIDs: TIntegerArray): TIntegerArray; overload;
+{$ENDIF}
+
+{$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <StartStop>
+  @action: Populates parallel arrays with zero-based indices and range values
+           traversing from Start to Stop (ascending order).
+  @param: rIDs - Output array receiving sequential indices [0, 1, 2, ..., Size-1]
+  @param: rValues - Output array receiving actual range values from Self.start 
+                    to Self.stop (inclusive)
+  @return: Size of the range (length of both arrays)
+  @note: • If range is singular, both arrays contain single elements [0] and [start]
+         • rIDs[i] always equals i for all valid indices
+         • rValues[0] = Self.start, then each subsequent value increments by Direction
+         • Direction = +1 for ascending ranges, -1 for descending ranges
+         • Arrays are automatically resized to match Self.Size
+         • For descending ranges, values still go Start→Stop (e.g., 10→1)
+[==============================================================================}
+function TRange.StartStop(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
+var
+  i, d: Integer;
+begin
+  Result := Self.Size;
+  SetLength(rIDs, Result);
+  SetLength(rValues, Result);
+  rIDs[0] := 0;
+  rValues[0] := Self.start;
+  if (Result = 1) then
+    Exit;
+  d := Self.Direction;
+  for i := 1 to (Result - 1) do
+  begin
+    rIDs[i] := i;
+    rValues[i] := (rValues[i - 1] + d);
+  end;
+end;
+
+{==============================================================================]
+  <StartStop>
+  @action: Returns range values traversing from Start to Stop while also
+           populating the corresponding indices via output parameter.
+  @param: rIDs - Output array receiving sequential indices [0, 1, 2, ..., Size-1]
+  @return: Array of range values from Self.start to Self.stop (ascending order)
+  @note: • Convenience overload that returns values directly as function result
+         • Calls the primary StartStop(var, var) implementation internally
+         • rIDs[i] always equals i for all valid indices
+         • Functional equivalent to:
+             SetLength(rIDs, Size); SetLength(Result, Size);
+             Result[0] := Self.start; rIDs[0] := 0;
+             for i := 1 to Size-1 do begin
+               rIDs[i] := i;
+               Result[i] := Result[i-1] + Direction;
+             end;
+         • Ideal for inline expressions where values are needed immediately
+         • Example: MyValues := MyRange.StartStop(MyIndices);
+[==============================================================================}
+function TRange.StartStop(var rIDs: TIntegerArray): TIntegerArray; overload;
+begin
+  Self.StartStop(rIDs, Result);
+end;
+
+{==============================================================================]
+  <StopStart>
+  @action: Populates parallel arrays with zero-based indices and range values
+           traversing from Stop to Start (descending order).
+  @param: rIDs - Output array receiving sequential indices [0, 1, 2, ..., Size-1]
+  @param: rValues - Output array receiving actual range values from Self.stop 
+                    down to Self.start (inclusive, descending)
+  @return: Size of the range (length of both arrays)
+  @note: • If range is singular, both arrays contain single elements [0] and [stop]
+         • rIDs[i] always equals i for all valid indices (same as StartStop)
+         • rValues[0] = Self.stop, then each subsequent value decrements by Direction
+         • Direction = +1 for ascending ranges, -1 for descending ranges
+         • For ascending ranges (1→10), values go 10→9→8→...→1
+         • For descending ranges (10→1), values go 1→2→3→...→10 (reversed)
+         • Arrays are automatically resized to match Self.Size
+[==============================================================================}
+function TRange.StopStart(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
+var
+  i, d: Integer;
+begin
+  Result := Self.Size;
+  SetLength(rIDs, Result);
+  SetLength(rValues, Result);
+  rIDs[0] := 0;
+  rValues[0] := Self.stop;
+  if (Result = 1) then
+    Exit;
+  d := Self.Direction;
+  for i := 1 to (Result - 1) do
+  begin
+    rIDs[i] := i;
+    rValues[i] := (rValues[i - 1] - d);
+  end;
+end;
+
+{==============================================================================]
+  <StopStart>
+  @action: Returns range values traversing from Stop to Start while also
+           populating the corresponding indices via output parameter.
+  @param: rIDs - Output array receiving sequential indices [0, 1, 2, ..., Size-1]
+  @return: Array of range values from Self.stop down to Self.start (descending order)
+  @note: • Convenience overload that returns values directly as function result
+         • Calls the primary StopStart(var, var) implementation internally
+         • rIDs[i] always equals i for all valid indices (same as StartStop)
+         • Functional equivalent to:
+             SetLength(rIDs, Size); SetLength(Result, Size);
+             Result[0] := Self.stop; rIDs[0] := 0;
+             for i := 1 to Size-1 do begin
+               rIDs[i] := i;
+               Result[i] := Result[i-1] - Direction;
+             end;
+         • Ideal for inline expressions where reverse-ordered values are needed
+         • Example: ReverseValues := MyRange.StopStart(MyIndices);
+[==============================================================================}
+function TRange.StopStart(var rIDs: TIntegerArray): TIntegerArray; overload;
+begin
+  Self.StopStart(rIDs, Result);
+end;
+{$ENDIF}

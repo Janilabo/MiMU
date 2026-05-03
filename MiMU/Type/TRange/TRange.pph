@@ -9,6 +9,7 @@
 {$I Consumption.inc}
 {$I Conversion.inc}
 {$I Classification.inc}
+{$I Data.inc}
 {$I Direction.inc}
 {$I Encoding.inc}
 {$I Enumerator.inc}

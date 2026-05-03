@@ -219,7 +219,7 @@ end;
 [==============================================================================}
 function TRange.Half: Integer; overload;
 begin
-  Result := Trunc((Self.start + Self.stop) / 2);
+  Result := Trunc(Self.Combined / 2);
 end;
 
 {==============================================================================]
@@ -231,7 +231,7 @@ end;
 [==============================================================================}
 function TRange.Halfstep: Integer; overload;
 begin
-  Result := Floor((Self.start + Self.stop) / 2);
+  Result := Floor(Self.Combined / 2);
 end;
 
 {==============================================================================]
@@ -243,7 +243,7 @@ end;
 [==============================================================================}
 function TRange.Halfway: Integer; overload;
 begin
-  Result := Round((Self.start + Self.stop) / 2);
+  Result := Round(Self.Combined / 2);
 end;
 
 {==============================================================================]
@@ -255,7 +255,7 @@ end;
 [==============================================================================}
 function TRange.Halved: Integer; overload;
 begin
-  Result := Ceil((Self.start + Self.stop) / 2);
+  Result := Ceil(Self.Combined / 2);
 end;
 
 {==============================================================================]
@@ -410,9 +410,9 @@ end;
 function TRange.MiddleBit: Integer; overload;
 begin
   if Self.Ascending then
-    Result := (Self.start + ((Self.stop - Self.start) shr 1))
+    Result := (Self.start + (Self.Delta shr 1))
   else
-    Result := (Self.start - ((Self.start - Self.stop) shr 1));
+    Result := (Self.start - (Self.Contra shr 1));
 end;
 
 {==============================================================================]
@@ -439,8 +439,8 @@ end;
 function TRange.MiddleLeft: Integer; overload;
 begin
   if Self.Descending then
-    Exit(Self.stop + (Self.start - Self.stop) div 2);
-  Result := (Self.start + (Self.stop - Self.start) div 2);
+    Exit(Self.stop + Self.Contra div 2);
+  Result := (Self.start + Self.Delta div 2);
 end;
 
 {==============================================================================]
@@ -463,8 +463,8 @@ end;
 function TRange.MiddleRight: Integer; overload;
 begin
   if Self.Descending then
-    Exit(Self.stop + ((Self.start - Self.stop) + 1) div 2);
-  Result := (Self.start + ((Self.stop - Self.start) + 1) div 2);
+    Exit(Self.stop + (Self.Contra + 1) div 2);
+  Result := (Self.start + (Self.Delta + 1) div 2);
 end;
 
 {==============================================================================]
@@ -489,9 +489,9 @@ end;
 function TRange.MiddleValue: Double; overload;
 begin
   if Self.Ascending then
-    Result := (Self.start + ((Self.stop - Self.start) / 2))
+    Result := (Self.start + (Self.Delta / 2))
   else
-    Result := (Self.stop + ((Self.start - Self.stop) / 2));
+    Result := (Self.stop + (Self.Contra / 2));
 end;
 
 {==============================================================================]
@@ -624,8 +624,8 @@ end;
 function TRange.Pivot: Integer; overload;
 begin
   if Self.Ascending then
-    Result := (Self.start + ((Self.stop - Self.start) div 2))
+    Result := (Self.start + (Self.Delta div 2))
   else
-    Result := (Self.stop + ((Self.start - Self.stop) div 2));
+    Result := (Self.stop + (Self.Contra div 2));
 end; 
 {$ENDIF}
