@@ -20,10 +20,12 @@ function Span: Integer; overload;
 function Sigma: Int64; overload;
 function Signed: Int64; overload;
 function Sum: Int64; overload;
+function Sum2: Int64; overload;
 function SumAll: Int64; overload;
 function Sumified: Int64; overload;
 function Sumify: Int64; overload;
 function Summa: Int64; overload;
+function Summarize: Int64; overload;
 function Summary: Int64; overload;
 function Summation: Int64; overload;
 function Summative: Int64; overload;
@@ -339,6 +341,20 @@ begin
 end;
 
 {==============================================================================]
+  <Sum2>
+  @action: Calculates the total sum of a stepped arithmetic progression.
+  @note: Uses the advanced series formula [n/2 * (2a + (n-1)d)] to account for 
+         Direction (step). Operates in O(1) constant time.
+[==============================================================================}
+function TRange.Sum2: Int64; overload;
+var
+  s: Int64;
+begin
+  s := Self.Size;
+  Result := (s * (2 * Int64(Self.start) + (s - 1) * Self.Direction) div 2);
+end;
+
+{==============================================================================]
   <SumAll>
   @action: Returns the sum of the range starting at `start` and progressing
            towards `stop` using a step of ±1 depending on direction.
@@ -441,6 +457,29 @@ begin
     Result := ((C div 2) * (A + B))
   else
     Result := (C * ((A + B) div 2));
+end;
+
+{==============================================================================]
+  <Summarize>
+  @action: Calculates the arithmetic sum of all values within the range.
+  @return: Sum of all elements from Self.start to Self.stop (inclusive)
+  @note: • Uses the arithmetic series formula: Sum = n * (first + last) / 2
+         • Handles both ascending and descending ranges correctly
+         • Self.Combined = Self.start + Self.stop (cached or calculated)
+         • Returns Int64 to prevent overflow for large ranges
+         • Examples:
+             - Range(1, 10).Summarize = 55
+             - Range(10, 1).Summarize = 55  (same result, order doesn't matter)
+             - Range(0, 100).Summarize = 5050
+         • O(1) time complexity - no iteration required
+         • Edge Cases:
+             - Empty range: Size = 0 → Result = 0
+             - Single element: Size = 1 → Result = start = stop
+         • Equivalent to: Sum := (Size * (start + stop)) div 2
+[==============================================================================}
+function TRange.Summarize: Int64; overload;
+begin
+  Result := ((Self.Size * Self.Combined) div 2);
 end;
 
 {==============================================================================]
