@@ -1,8 +1,12 @@
 {$IFDEF METHODS}
+function Startment(out rIDs, rValues: TIntegerArray): Integer; overload;
+function Startment(out rIDs: TIntegerArray): TIntegerArray; overload;
 function StartStop(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
 function StartStop(out rIDs: TIntegerArray): TIntegerArray; overload;
 function StartTilStop(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
 function StartTilStop(out rIDs: TIntegerArray): TIntegerArray; overload;
+function Stopment(out rIDs, rValues: TIntegerArray): Integer; overload;
+function Stopment(out rIDs: TIntegerArray): TIntegerArray; overload;
 function StopStart(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
 function StopStart(out rIDs: TIntegerArray): TIntegerArray; overload;
 function StopTilStart(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
@@ -10,7 +14,46 @@ function StopTilStart(out rIDs: TIntegerArray): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Startment>
+  @action: Populates arrays with values starting from the Start value and 
+           moving forward through the range.
+  @param: rIDs - Receives sequential index values (0, 1, 2, ...)
+  @param: rValues - Receives calculated values from Start moving toward Stop
+  @return: Number of elements populated (Size of the range)
+  @note: Uses pointer optimization for faster array access.
+         Example: Range(1, 5) → Values: [1, 2, 3, 4, 5]
+         Example: Range(5, 1) → Values: [5, 4, 3, 2, 1]
+[==============================================================================}
+function TRange.Startment(out rIDs, rValues: TIntegerArray): Integer; overload;
+var
+  r, s: PInteger;
+  i, d: Integer;
+begin
+  Result := Self.Size;
+  SetLength(rIDs, Result);
+  SetLength(rValues, Result);
+  r := @rIDs[0];
+  s := @rValues[0];
+  d := Self.Direction;
+  for i := 0 to (Result - 1) do
+  begin
+    r[i] := i;
+    s[i] := (Self.start + (i * d));
+  end;
+end;
 
+{==============================================================================]
+  <Startment>
+  @action: Returns a new array populated from Start moving toward Stop.
+  @param: rIDs - Receives sequential index values
+  @return: New array containing the range values
+  @note: Convenience overload that creates the values array automatically.
+[==============================================================================}
+function TRange.Startment(out rIDs: TIntegerArray): TIntegerArray; overload;
+begin
+  Self.Startment(rIDs, Result);
+end;
 
 {==============================================================================]
   <StartStop>
@@ -98,6 +141,47 @@ end;
 function TRange.StartTilStop(out rIDs: TIntegerArray): TIntegerArray; overload;
 begin
   Self.StartTilStop(rIDs, Result);
+end;
+
+{==============================================================================]
+  <Stopment>
+  @action: Populates arrays with values starting from the Stop value and 
+           moving backward through the range.
+  @param: rIDs - Receives sequential index values (0, 1, 2, ...)
+  @param: rValues - Receives calculated values from Stop moving toward Start
+  @return: Number of elements populated (Size of the range)
+  @note: Uses pointer optimization for faster array access.
+         Example: Range(1, 5) → Values: [5, 4, 3, 2, 1]
+         Example: Range(5, 1) → Values: [1, 2, 3, 4, 5]
+[==============================================================================}
+function TRange.Stopment(out rIDs, rValues: TIntegerArray): Integer; overload;
+var
+  r, s: PInteger;
+  i, d: Integer;
+begin
+  Result := Self.Size;
+  SetLength(rIDs, Result);
+  SetLength(rValues, Result);
+  r := @rIDs[0];
+  s := @rValues[0];
+  d := Self.Direction;
+  for i := 0 to (Result - 1) do
+  begin
+    r[i] := i;
+    s[i] := (Self.stop - (i * d));
+  end;
+end;
+
+{==============================================================================]
+  <Stopment>
+  @action: Returns a new array populated from Stop moving toward Start.
+  @param: rIDs - Receives sequential index values
+  @return: New array containing the range values (reversed orientation)
+  @note: Convenience overload that creates the values array automatically.
+[==============================================================================}
+function TRange.Stopment(out rIDs: TIntegerArray): TIntegerArray; overload;
+begin
+  Self.Stopment(rIDs, Result);
 end;
 
 {==============================================================================]
