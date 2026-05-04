@@ -124,11 +124,13 @@ function Stack: TIntegerArray; overload;
 function Staged: TIntegerArray; overload;
 function Stages: TIntegerArray; overload;
 function Start2Stop: TIntegerArray; overload;
+function Started: TIntegerArray; overload;
 function StartToStop: TIntegerArray; overload;
 function Stepped(const sSize: Integer = 1): TIntegerArray; overload;
 function Steps: TIntegerArray; overload;
 function Stock: TIntegerArray; overload;
 function Stop2Start: TIntegerArray; overload;
+function Stopped: TIntegerArray; overload;
 function StopToStart: TIntegerArray; overload;
 function Storage: TIntegerArray; overload;
 function Succinct: TIntegerArray; overload;
@@ -3510,6 +3512,34 @@ begin
 end;
 
 {==============================================================================]
+  <Started>
+  @action: Returns an array of values traversing from the Start value through the range
+  @return: TIntegerArray containing the range values in natural direction
+  @note: Direction-aware behavior:
+         - Direction = 1 (ascending): [Start, Start+1, Start+2, ..., Stop]
+         - Direction = -1 (descending): [Start, Start-1, Start-2, ..., Stop]
+         - Direction = 0 (single value): [Start]
+         Example: Range(1, 5) → [1, 2, 3, 4, 5]
+         Example: Range(5, 1) → [5, 4, 3, 2, 1]
+         Example: Range(3, 3) → [3]
+[==============================================================================}
+function TRange.Started: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  case Self.Direction of
+    0: Result[0] := Self.start;
+    1:
+    for i := 0 to High(Result) do
+      Result[i] := (Self.start + i);
+    -1:
+    for i := 0 to High(Result) do
+      Result[i] := (Self.start - i);
+  end;
+end;
+
+{==============================================================================]
   <StartToStop>
   @action: Materializes the range in natural order (start → stop)
            by consuming `stop` inward via SStop on a working copy.
@@ -3625,6 +3655,34 @@ begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := r.SStop;
+end;
+
+{==============================================================================]
+  <Stopped>
+  @action: Returns an array of values traversing from the Stop value backward through the range
+  @return: TIntegerArray containing the range values in reverse direction
+  @note: Direction-aware behavior:
+         - Direction = 1 (ascending): [Stop, Stop-1, Stop-2, ..., Start]
+         - Direction = -1 (descending): [Stop, Stop+1, Stop+2, ..., Start]
+         - Direction = 0 (single value): [Stop]
+         Example: Range(1, 5) → [5, 4, 3, 2, 1]
+         Example: Range(5, 1) → [1, 2, 3, 4, 5]
+         Example: Range(3, 3) → [3]
+[==============================================================================}
+function TRange.Stopped: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  case Self.Direction of
+    0: Result[0] := Self.stop;
+    1:
+    for i := 0 to High(Result) do
+      Result[i] := (Self.stop - i);
+    -1:
+    for i := 0 to High(Result) do
+      Result[i] := (Self.stop + i);
+  end;
 end;
 
 {==============================================================================]
