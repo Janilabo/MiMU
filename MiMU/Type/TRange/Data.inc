@@ -1,10 +1,12 @@
 {$IFDEF METHODS}
-function StartStop(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
-function StartStop(var rIDs: TIntegerArray): TIntegerArray; overload;
-function StartTilStop(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
-function StopStart(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
-function StopStart(var rIDs: TIntegerArray): TIntegerArray; overload;
-function StopTilStart(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
+function StartStop(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
+function StartStop(out rIDs: TIntegerArray): TIntegerArray; overload;
+function StartTilStop(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
+function StartTilStop(out rIDs: TIntegerArray): TIntegerArray; overload;
+function StopStart(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
+function StopStart(out rIDs: TIntegerArray): TIntegerArray; overload;
+function StopTilStart(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
+function StopTilStart(out rIDs: TIntegerArray): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -25,7 +27,7 @@ function StopTilStart(var rIDs: TIntegerArray; var rValues: TIntegerArray): Inte
          • Arrays are automatically resized to match Self.Size
          • For descending ranges, values still go Start→Stop (e.g., 10→1)
 [==============================================================================}
-function TRange.StartStop(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
+function TRange.StartStop(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
 var
   i, d: Integer;
 begin
@@ -63,7 +65,7 @@ end;
          • Ideal for inline expressions where values are needed immediately
          • Example: MyValues := MyRange.StartStop(MyIndices);
 [==============================================================================}
-function TRange.StartStop(var rIDs: TIntegerArray): TIntegerArray; overload;
+function TRange.StartStop(out rIDs: TIntegerArray): TIntegerArray; overload;
 begin
   Self.StartStop(rIDs, Result);
 end;
@@ -79,18 +81,23 @@ end;
          Example: Range(1, 5) produces Values: [1, 2, 3, 4, 5]
          Example: Range(5, 1) produces Values: [5, 4, 3, 2, 1]
 [==============================================================================}
-function TRange.StartTilStop(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
+function TRange.StartTilStop(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
 var
   i, d: Integer;
 begin
   Result := Self.Size;
-  rIDs.Reinitialize(Result);
-  rValues.Reinitialize(Result);
+  SetLength(rIDs, Result);
+  SetLength(rValues, Result);
   rIDs[0] := 0;
   rValues[0] := Self.start;
   d := Self.Direction;
   for i := 1 to (Result - 1) do
     rValues[i] := (Self.start + (rIDs[i].Increment(i) * d));
+end;
+
+function TRange.StartTilStop(out rIDs: TIntegerArray): TIntegerArray; overload;
+begin
+  Self.StartTilStop(rIDs, Result);
 end;
 
 {==============================================================================]
@@ -109,7 +116,7 @@ end;
          • For descending ranges (10→1), values go 1→2→3→...→10 (reversed)
          • Arrays are automatically resized to match Self.Size
 [==============================================================================}
-function TRange.StopStart(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
+function TRange.StopStart(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
 var
   i, d: Integer;
 begin
@@ -147,7 +154,7 @@ end;
          • Ideal for inline expressions where reverse-ordered values are needed
          • Example: ReverseValues := MyRange.StopStart(MyIndices);
 [==============================================================================}
-function TRange.StopStart(var rIDs: TIntegerArray): TIntegerArray; overload;
+function TRange.StopStart(out rIDs: TIntegerArray): TIntegerArray; overload;
 begin
   Self.StopStart(rIDs, Result);
 end;
@@ -163,17 +170,22 @@ end;
          Example: Range(1, 5) produces Values: [5, 4, 3, 2, 1]
          Example: Range(5, 1) produces Values: [1, 2, 3, 4, 5]
 [==============================================================================}
-function TRange.StopTilStart(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
+function TRange.StopTilStart(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
 var
   i, d: Integer;
 begin
   Result := Self.Size;
-  rIDs.Reinitialize(Result);
-  rValues.Reinitialize(Result);
+  SetLength(rIDs, Result);
+  SetLength(rValues, Result);
   rIDs[0] := 0;
   rValues[0] := Self.stop;
   d := Self.Direction;
   for i := 1 to (Result - 1) do
     rValues[i] := (Self.stop - (rIDs[i].Increment(i) * d));
+end;
+
+function TRange.StopTilStart(out rIDs: TIntegerArray): TIntegerArray; overload;
+begin
+  Self.StopTilStart(rIDs, Result);
 end;
 {$ENDIF}
