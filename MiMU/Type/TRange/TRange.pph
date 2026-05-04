@@ -41,6 +41,7 @@
 {$I Space.inc}
 {$I Spatial.inc}
 {$I Status.inc}
+{$I Summing.inc}
 {$I Terminal.inc}
 {$I Transform.inc}
 {$I Validation.inc}

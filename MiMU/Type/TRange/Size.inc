@@ -87,9 +87,9 @@ end;
 function TRange.Area: Integer; overload;
 begin
   if (Self.start > Self.stop) then
-    Result := ((Self.start - Self.stop) + 1)
+    Result := (Self.Contra + 1)
   else
-    Result := ((Self.stop - Self.start) + 1);
+    Result := (Self.Delta + 1);
 end;
 
 {==============================================================================]
@@ -108,7 +108,8 @@ end;
 [==============================================================================}
 function TRange.Bulk: Integer; overload;
 begin
-  Result := (((Self.stop - Self.start) * Sign(Self.stop - Self.start)) + 1);
+  Result := Self.Delta;
+  Result := ((Result * Sign(Result)) + 1);
 end;
 
 {==============================================================================]
@@ -275,14 +276,12 @@ end;
          most direct and readable formulation.
 [==============================================================================}
 function TRange.Footprint: Integer; overload;
-var
-  d: Integer;
 begin
-  d := Self.Delta;
-  if (d >= 0) then
-    Result := (d + 1)
+  Result := Self.Delta;
+  if (Result >= 0) then
+    Result := (Result + 1)
   else
-    Result := (-d + 1);
+    Result := (-Result + 1);
 end;
 
 {==============================================================================]
@@ -326,16 +325,14 @@ end;
   @note: None.
 [==============================================================================}
 function TRange.GetLength: Integer; overload;
-var
-  d: Integer;
 begin
   if Self.Singular then
     Exit(1);
   if Self.Ascending then
-    d := Self.Delta
+    Result := Self.Delta
   else
-    d := Self.Contra;
-  Result := (((d xor (d shr 31)) - (d shr 31)) + 1);
+    Result := Self.Contra;
+  Result := (((Result xor (Result shr 31)) - (Result shr 31)) + 1);
 end;
 
 {==============================================================================]
@@ -344,16 +341,14 @@ end;
   @note: None.
 [==============================================================================}
 function TRange.GetSize: Integer; overload;
-var
-  c: Integer;
 begin
   if (Self.start < Self.stop) then
-    c := -1
+    Result := -1
   else if (Self.start > Self.stop) then
-    c := 1
+    Result := 1
   else
-    c := 0;
-  case c of
+    Result := 0;
+  case Result of
      0: Result := 1;
      -1: Result := (Self.Delta + 1);
      1: Result := (Self.Contra + 1);
@@ -380,11 +375,9 @@ end;
   @note: None.
 [==============================================================================}
 function TRange.Latitude: Integer; overload;
-var
-  d: Integer;
 begin
-  d := Self.Delta;
-  Result := (d * ((Ord(d >= 0) * 2) - 1) + 1);
+  Result := Self.Delta;
+  Result := (Result * ((Ord(Result >= 0) * 2) - 1) + 1);
 end;
 
 {==============================================================================]
@@ -669,11 +662,9 @@ end;
   @note: Alternative.
 [==============================================================================}
 function TRange.Quantity: Integer; overload;
-var
-  d: Integer;
 begin
-  d := (Self.stop - Self.start);
-  Result := ((d * Sign(d)) + 1);
+  Result := Self.Delta;
+  Result := ((Result * Sign(Result)) + 1);
 end;
 
 {==============================================================================]
@@ -695,7 +686,6 @@ end;
 function TRange.Quota: Integer; overload;
 var
   A, B, D: Int64;
-  H: Integer;
 begin
   A := Self.start;
   B := Self.stop;
@@ -704,10 +694,8 @@ begin
   else
     D := (B - A);
   D := (D + 1);
-  H := High(Integer);
-  if (D > H) then
-    Result := H
-  else
+  Result := High(Integer);
+  if (D <= Result) then
     Result := Integer(D);
 end;
 
@@ -840,11 +828,9 @@ end;
          Operates entirely on 32-bit Integer arithmetic.
 [==============================================================================}
 function TRange.Spread: Integer; overload;
-var
-  d: Integer;
 begin
-  d := (Self.stop - Self.start);
-  Result := (d + (d shr 31) * (-d shl 1) + 1);
+  Result := Self.Delta;
+  Result := (Result + (Result shr 31) * (-Result shl 1) + 1);
 end;
 
 {==============================================================================]

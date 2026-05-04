@@ -1,11 +1,15 @@
 {$IFDEF METHODS}
 function StartStop(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
 function StartStop(var rIDs: TIntegerArray): TIntegerArray; overload;
+function StartTilStop(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
 function StopStart(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
 function StopStart(var rIDs: TIntegerArray): TIntegerArray; overload;
+function StopTilStart(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+
+
 {==============================================================================]
   <StartStop>
   @action: Populates parallel arrays with zero-based indices and range values
@@ -65,6 +69,31 @@ begin
 end;
 
 {==============================================================================]
+  <StartTilStop>
+  @action: Populates the arrays with values traversing from the Start value 
+           until reaching the Stop value, following the range's natural direction.
+  @param: rIDs - Receives sequential index values (0, 1, 2, ...)
+  @param: rValues - Receives the calculated range values from Start to Stop
+  @return: The total number of elements populated (Size of the range)
+  @note: The arrays are automatically resized to fit the range.
+         Example: Range(1, 5) produces Values: [1, 2, 3, 4, 5]
+         Example: Range(5, 1) produces Values: [5, 4, 3, 2, 1]
+[==============================================================================}
+function TRange.StartTilStop(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
+var
+  i, d: Integer;
+begin
+  Result := Self.Size;
+  rIDs.Reinitialize(Result);
+  rValues.Reinitialize(Result);
+  rIDs[0] := 0;
+  rValues[0] := Self.start;
+  d := Self.Direction;
+  for i := 1 to (Result - 1) do
+    rValues[i] := (Self.start + (rIDs[i].Increment(i) * d));
+end;
+
+{==============================================================================]
   <StopStart>
   @action: Populates parallel arrays with zero-based indices and range values
            traversing from Stop to Start (descending order).
@@ -121,5 +150,30 @@ end;
 function TRange.StopStart(var rIDs: TIntegerArray): TIntegerArray; overload;
 begin
   Self.StopStart(rIDs, Result);
+end;
+
+{==============================================================================]
+  <StopTilStart>
+  @action: Populates the arrays with values traversing from the Stop value 
+           backward until reaching the Start value, opposite the range's natural direction.
+  @param: rIDs - Receives sequential index values (0, 1, 2, ...)
+  @param: rValues - Receives the calculated range values from Stop to Start
+  @return: The total number of elements populated (Size of the range)
+  @note: The arrays are automatically resized to fit the range.
+         Example: Range(1, 5) produces Values: [5, 4, 3, 2, 1]
+         Example: Range(5, 1) produces Values: [1, 2, 3, 4, 5]
+[==============================================================================}
+function TRange.StopTilStart(var rIDs: TIntegerArray; var rValues: TIntegerArray): Integer; overload;
+var
+  i, d: Integer;
+begin
+  Result := Self.Size;
+  rIDs.Reinitialize(Result);
+  rValues.Reinitialize(Result);
+  rIDs[0] := 0;
+  rValues[0] := Self.stop;
+  d := Self.Direction;
+  for i := 1 to (Result - 1) do
+    rValues[i] := (Self.stop - (rIDs[i].Increment(i) * d));
 end;
 {$ENDIF}

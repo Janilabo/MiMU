@@ -3,6 +3,7 @@ function Clear: Boolean; overload;
 function Free: Integer; overload;
 function Kill: Integer; overload;
 function Recreate(const arrSize: Integer): Boolean; overload;
+function Reinitialize(const aSize: Integer = 1): Integer; overload;
 function Reset: Integer; overload;
 {$ENDIF}
 
@@ -57,6 +58,19 @@ begin
       SetLength(Self, l)
     else
       SetLength(Self, arrSize);
+end;
+
+{==============================================================================]
+  <Reinitialize>
+  @action: Resets the array to a fresh state with the specified size.
+  @note: Existing data is destroyed. Returns the new size (clamped to >= 0).
+[==============================================================================}
+function MArrayHelper.Reinitialize(const aSize: Integer = 1): Integer; overload;
+begin
+  SetLength(Self, 0);
+  Result := Max(0, aSize);
+  if (Result > 0) then
+    SetLength(Self, Result);
 end;
 
 {==============================================================================]
