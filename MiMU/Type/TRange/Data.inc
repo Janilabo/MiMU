@@ -1,12 +1,14 @@
 {$IFDEF METHODS}
 function Startment(out rIDs, rValues: TIntegerArray): Integer; overload;
 function Startment(out rIDs: TIntegerArray): TIntegerArray; overload;
+function Startment: TIntegerArray; overload;
 function StartStop(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
 function StartStop(out rIDs: TIntegerArray): TIntegerArray; overload;
 function StartTilStop(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
 function StartTilStop(out rIDs: TIntegerArray): TIntegerArray; overload;
 function Stopment(out rIDs, rValues: TIntegerArray): Integer; overload;
 function Stopment(out rIDs: TIntegerArray): TIntegerArray; overload;
+function Stopment: TIntegerArray; overload;
 function StopStart(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
 function StopStart(out rIDs: TIntegerArray): TIntegerArray; overload;
 function StopTilStart(out rIDs: TIntegerArray; out rValues: TIntegerArray): Integer; overload;
@@ -53,6 +55,27 @@ end;
 function TRange.Startment(out rIDs: TIntegerArray): TIntegerArray; overload;
 begin
   Self.Startment(rIDs, Result);
+end;
+
+{==============================================================================]
+  <Startment>
+  @action: Returns a new array populated from Start value moving toward Stop value
+  @return: TIntegerArray containing the range values in natural direction
+  @note: Uses pointer optimization. 
+         Range(1,5) → [1,2,3,4,5]
+         Range(5,1) → [5,4,3,2,1]
+[==============================================================================}
+function TRange.Startment: TIntegerArray; overload;
+var
+  p: PInteger;
+  i, d, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  p := @Result[0];
+  d := Self.Direction;
+  for i := 0 to (s - 1) do
+    p[i] := (Self.start + (i * d));
 end;
 
 {==============================================================================]
@@ -182,6 +205,27 @@ end;
 function TRange.Stopment(out rIDs: TIntegerArray): TIntegerArray; overload;
 begin
   Self.Stopment(rIDs, Result);
+end;
+
+{==============================================================================]
+  <Stopment>
+  @action: Returns a new array populated from Stop value moving toward Start value
+  @return: TIntegerArray containing the range values in reverse direction
+  @note: Uses pointer optimization.
+         Range(1,5) → [5,4,3,2,1]
+         Range(5,1) → [1,2,3,4,5]
+[==============================================================================}
+function TRange.Stopment: TIntegerArray; overload;
+var
+  p: PInteger;
+  i, d, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  p := @Result[0];
+  d := Self.Direction;
+  for i := 0 to (s - 1) do
+    p[i] := (Self.stop - (i * d));
 end;
 
 {==============================================================================]
