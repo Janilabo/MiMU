@@ -5,6 +5,8 @@ function Flipped: TRange; overload;
 function Invert: Boolean; overload;
 function Inverted: TRange; overload;
 function Reconstruct: TRange; overload;
+function Redo: TRange; overload;
+function Reinterpret: TRange; overload;
 function Reverse: Boolean; overload;
 function Reversed: TRange; overload;
 function Reversely: TRange; overload;
@@ -69,7 +71,7 @@ end;
 [==============================================================================}
 function TRange.Flipped: TRange; overload;
 begin
-  Result.start := (Self.start + Self.stop);
+  Result.start := Self.Combined;
   Result.stop := (Result.start - Self.stop);
   Result.start := (Result.start - Result.stop)
 end;
@@ -119,6 +121,38 @@ end;
 function TRange.Reconstruct: TRange; overload;
 begin
   Result := TRange.Construct(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <Redo>
+  @action: Reconstructs the range by reinterpreting the record's memory as a 
+           fixed-size integer array to swap the field values.
+  @note:   Uses a local type-cast (type punning) to treat 'Self' as an array 
+           of two 32-bit integers. Highly dependent on field order.
+[==============================================================================}
+function TRange.Redo: TRange; overload;
+type
+  S = array[0..1] of Integer;
+begin
+  Result.stop := S(Self)[0];
+  Result.start := S(Self)[1];
+end;
+
+{==============================================================================]
+  <Reinterpret>
+  @action: Returns a TRange where start and stop values are swapped by 
+           traversing the record's memory layout via pointer arithmetic.
+  @note: This method assumes a contiguous memory layout where the first 
+         4 bytes represent 'start' and the next 4 bytes represent 'stop'.
+[==============================================================================}
+function TRange.Reinterpret: TRange; overload;
+var
+  p: PInteger;
+begin
+  p := PInteger(@Self);
+  Result.stop := p^;
+  Inc(p);
+  Result.start := p^;
 end;
 
 {==============================================================================]
@@ -180,7 +214,7 @@ end;
 function TRange.Reversified: TRange; overload;
 begin
   Result.start := Self.stop;
-  Result.stop := (Self.stop - (Self.stop - Self.start));
+  Result.stop := (Self.stop - Self.Delta);
 end;
 
 {==============================================================================]
@@ -197,7 +231,7 @@ function TRange.Reversify: TRange; overload;
 var
   s: Int64;
 begin
-  s := (Self.start + Self.stop);
+  s := Self.Combined;
   Result.start := (s - Self.start);
   Result.stop := (s - Self.stop);
 end;
@@ -251,7 +285,7 @@ function TRange.Reverted: TRange; overload;
 var
   d, m: Integer;
 begin
-  d := (Self.start - Self.stop);
+  d := Self.Contra;
   m := (d shr 31);
   Result.start := (Self.stop + (d and m));
   Result.stop := (Self.start - (d and m));
@@ -289,12 +323,12 @@ var
 begin
   if Self.Ascending then
   begin
-    s := (Self.stop - Self.start);
+    s := Self.Delta;
     Result.start := (Self.start + s);
     Result.stop := (Self.stop - s);
   end else
   begin
-    s := (Self.start - Self.stop);
+    s := Self.Contra;
     Result.start := (Self.start - s);
     Result.stop := (Self.stop + s);
   end;
