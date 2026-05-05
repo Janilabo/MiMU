@@ -126,11 +126,13 @@ function Stages: TIntegerArray; overload;
 function Start2Stop: TIntegerArray; overload;
 function Startage: TIntegerArray; overload;
 function Started: TIntegerArray; overload;
+function Startify: TIntegerArray; overload;
 function StartToStop: TIntegerArray; overload;
 function Stepped(const sSize: Integer = 1): TIntegerArray; overload;
 function Steps: TIntegerArray; overload;
 function Stock: TIntegerArray; overload;
 function Stop2Start: TIntegerArray; overload;
+function Stopify: TIntegerArray; overload;
 function Stoppage: TIntegerArray; overload;
 function Stopped: TIntegerArray; overload;
 function StopToStart: TIntegerArray; overload;
@@ -3567,6 +3569,25 @@ begin
 end;
 
 {==============================================================================]
+  <Startify>
+  @action: Generates a sequence array where the 'stop' value is placed at the 
+           final index and the preceding values are backfilled toward 'start'.
+  @note: Uses a reverse-fill approach. The sequence is calculated by 
+         applying the negative Direction to the stop value.
+[==============================================================================}
+function TRange.Startify: TIntegerArray; overload;
+var
+  s, d: Integer;
+begin
+  SetLength(Result, Self.Size);
+  s := High(Result);
+  d := -Self.Direction;
+  Result[s] := Self.stop;
+  while (s.Decrement > -1) do
+    Result[s] := (Result[s + 1] + d);
+end;
+
+{==============================================================================]
   <StartToStop>
   @action: Materializes the range in natural order (start → stop)
            by consuming `stop` inward via SStop on a working copy.
@@ -3682,6 +3703,25 @@ begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := r.SStop;
+end;
+
+{==============================================================================]
+  <Stopify>
+  @action: Generates a sequence array where the 'start' value is placed at the 
+           final index and the preceding values are backfilled toward 'stop'.
+  @note: Effectively creates a mirrored or inverted progression compared to 
+         Startify by subtracting the directional delta during backfill.
+[==============================================================================}
+function TRange.Stopify: TIntegerArray; overload;
+var
+  s, d: Integer;
+begin
+  SetLength(Result, Self.Size);
+  s := High(Result);
+  d := -Self.Direction;
+  Result[s] := Self.start;
+  while (s.Decrement > -1) do
+    Result[s] := (Result[s + 1] - d);
 end;
 
 {==============================================================================]
