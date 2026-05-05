@@ -127,6 +127,7 @@ function Start2Stop: TIntegerArray; overload;
 function Startage: TIntegerArray; overload;
 function Started: TIntegerArray; overload;
 function Startify: TIntegerArray; overload;
+function Startset: TIntegerArray; overload;
 function StartToStop: TIntegerArray; overload;
 function Stepped(const sSize: Integer = 1): TIntegerArray; overload;
 function Steps: TIntegerArray; overload;
@@ -135,6 +136,7 @@ function Stop2Start: TIntegerArray; overload;
 function Stopify: TIntegerArray; overload;
 function Stoppage: TIntegerArray; overload;
 function Stopped: TIntegerArray; overload;
+function Stopset: TIntegerArray; overload;
 function StopToStart: TIntegerArray; overload;
 function Storage: TIntegerArray; overload;
 function Succinct: TIntegerArray; overload;
@@ -3588,6 +3590,21 @@ begin
 end;
 
 {==============================================================================]
+  <Startset>
+  @action: Recursively unrolls the range into an array starting from the 
+           start boundary.
+  @note: Produces an ordered sequence from Start to Stop; order follows the 
+         range direction (ascending for forward, descending for reverse).
+[==============================================================================}
+function TRange.Startset: TIntegerArray; overload;
+begin
+  if (Self.Size = 1) then
+    Result := [Self.start]
+  else
+    Result := ([Self.start] + Self.ShrinkStart.Startset);
+end;
+
+{==============================================================================]
   <StartToStop>
   @action: Materializes the range in natural order (start → stop)
            by consuming `stop` inward via SStop on a working copy.
@@ -3772,6 +3789,21 @@ begin
     for i := 0 to High(Result) do
       Result[i] := (Self.stop + i);
   end;
+end;
+
+{==============================================================================]
+  <Stopset>
+  @action: Recursively unrolls the range into an array starting from the 
+           stop boundary.
+  @note: Produces an ordered sequence from Stop to Start; effectively the 
+         reverse order of the range's natural direction.
+[==============================================================================}
+function TRange.Stopset: TIntegerArray; overload;
+begin
+  if (Self.Size = 1) then
+    Result := [Self.stop]
+  else
+    Result := ([Self.stop] + Self.ShrinkStop.Stopset);
 end;
 
 {==============================================================================]

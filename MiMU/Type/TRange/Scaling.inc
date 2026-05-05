@@ -3,6 +3,10 @@ function Contract(const N: Integer = 1): TRange; overload;
 function Contracted(const N: Integer = 1): TRange; overload;
 function Expand(const N: Integer = 1): TRange; overload;
 function Expanded(const N: Integer = 1): TRange; overload;
+function ExpandStart: TRange; overload;
+function ExpandStop: TRange; overload;
+function ShrinkStart: TRange; overload;
+function ShrinkStop: TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -70,4 +74,64 @@ begin
   else
     Result.Create((Self.start + N), (Self.stop - N));
 end;
+
+{==============================================================================]
+  <ExpandStart>
+  @action: Increments the range's magnitude by moving the start point outward.
+  @note: Increases the distance between boundaries; moves toward negative 
+         infinity in a forward range or positive infinity in a reverse range.
+[==============================================================================}
+function TRange.ExpandStart: TRange; overload;
+begin
+  if (Self.start > Self.stop) then
+    Result := TRange.Construct((Self.start + 1), Self.stop)
+  else
+    Result := TRange.Construct((Self.start - 1), Self.stop);
+end;
+
+{==============================================================================]
+  <ExpandStop>
+  @action: Increments the range's magnitude by moving the stop point outward.
+  @note: Increases the distance between boundaries; moves toward positive 
+         infinity in a forward range or negative infinity in a reverse range.
+[==============================================================================}
+function TRange.ExpandStop: TRange; overload;
+begin
+  if (Self.stop > Self.start) then
+    Result := TRange.Construct(Self.start, (Self.stop + 1))
+  else
+    Result := TRange.Construct(Self.start, (Self.stop - 1));
+end;
+
+{==============================================================================]
+  <ShrinkStart>
+  @action: Decreases the range's magnitude by moving the start point inward.
+  @note: Returns Self if Singular; otherwise moves start closer to stop 
+         without crossing it.
+[==============================================================================}
+function TRange.ShrinkStart: TRange; overload;
+begin
+  if Self.Singular then
+    Result := Self
+  else if (Self.start > Self.stop) then
+    Result := TRange.Construct((Self.start - 1), Self.stop)
+  else
+    Result := TRange.Construct((Self.start + 1), Self.stop);
+end;
+
+{==============================================================================]
+  <ShrinkStop>
+  @action: Decreases the range's magnitude by moving the stop point inward.
+  @note: Returns Self if Singular; otherwise moves stop closer to start 
+         without crossing it.
+[==============================================================================}
+function TRange.ShrinkStop: TRange; overload;
+begin
+  if Self.Singular then
+    Result := Self
+  else if (Self.stop > Self.start) then
+    Result := TRange.Construct(Self.start, (Self.stop - 1))
+  else
+    Result := TRange.Construct(Self.start, (Self.stop + 1));
+end; 
 {$ENDIF}
