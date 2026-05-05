@@ -6,6 +6,7 @@ function Cache: Integer; overload;
 function Capacity: Integer; overload;
 function Cardinality: Integer; overload;
 function Count: Integer; overload;
+function Countage: Integer; overload;
 function Counted: Int64; overload;
 function Counting: Integer; overload;
 function Coverage: Integer; overload;
@@ -55,6 +56,7 @@ function Spread: Integer; overload;
 function Stretch: Integer; overload;
 function Tally: Integer; overload;
 function Volume: Integer; overload;
+function Volyme: Integer; overload;
 function Weight: Integer; overload;
 function Width: Integer; overload;
 {$ENDIF}
@@ -124,7 +126,7 @@ end;
 [==============================================================================}
 function TRange.Cache: Integer; overload;
 begin
-  Result := (Trunc(Abs(Self.stop - Self.start) * 1.0) + 1);
+  Result := (Trunc(Abs(Self.Delta) * 1.0) + 1);
 end;
 
 {==============================================================================]
@@ -167,6 +169,22 @@ begin
 end;
 
 {==============================================================================]
+  <Countage>
+  @action: Calculates the inclusive magnitude of the range (distance + 1) using 
+           branchless bitwise operations.
+  @note: Uses a bit-mask shift (shr 31) and XOR to compute the absolute value 
+         of the range's progression without a conditional jump.
+[==============================================================================}
+function TRange.Countage: Integer; overload;
+var
+  D: Integer;
+begin
+  D := IfThen(Self.Ascending, Self.Delta, Self.Contra);
+  Result := (D shr 31);
+  Result := (((D xor Result) - Result) + 1);
+end;
+
+{==============================================================================]
   <Counted>
   @action: Returns the number of discrete integer values contained in the range.
   @note: The result is calculated using 64-bit arithmetic and supports both
@@ -203,8 +221,8 @@ function TRange.Coverage: Integer; overload;
 begin
   case Self.start.Compare(Self.stop) of
     0: Result := 1;
-	-1: Result := ((Self.stop - Self.start) + 1);
-	1: Result := ((Self.start - Self.stop) + 1);
+	-1: Result := (Self.Delta + 1);
+	1: Result := (Self.Contra + 1);
   end;
 end;
 
@@ -228,7 +246,7 @@ end;
 [==============================================================================}
 function TRange.Diameter: Integer; overload;
 begin
-  Result := ((Self.stop - Self.start) + 1);
+  Result := (Self.Delta + 1);
   if (Self.stop < Self.start) then
     Result := (-Result + 2);
 end;
@@ -254,8 +272,11 @@ end;
          maximum and minimum boundaries regardless of orientation.
 [==============================================================================}
 function TRange.Distal: Integer; overload;
+var
+  a: Boolean;
 begin
-  Result := (IfThen((Self.start <= Self.stop), Self.stop, Self.start) - IfThen((Self.start <= Self.stop), Self.start, Self.stop) + 1);
+  a := Self.Ascending;
+  Result := (IfThen(a, Self.stop, Self.start) - IfThen(a, Self.start, Self.stop) + 1);
 end;
 
 {==============================================================================]
@@ -436,7 +457,10 @@ end;
 [==============================================================================}
 function TRange.Measure: Integer; overload;
 begin
-  Result := (Abs((Self.stop - Self.start) div Sign(Self.stop - Self.start + 1)) + 1);
+  Result := Self.Delta;
+  if (Result < 0) then
+    Result := -Result;
+  Result := (Abs(Result div Sign(Result + 1)) + 1);
 end;
 
 {==============================================================================]
@@ -512,7 +536,7 @@ end;
 [==============================================================================}
 function TRange.Ordy: Integer; overload;
 begin
-  Result := (Ord(Self.start <= Self.stop) * (Self.stop - Self.start)) + (Ord(Self.start > Self.stop) * (Self.start - Self.stop)) + 1;
+  Result := (Ord(Self.start <= Self.stop) * Self.Delta) + (Ord(Self.start > Self.stop) * Self.Contra) + 1;
 end;
 
 {==============================================================================]
@@ -649,7 +673,7 @@ function TRange.Quantify: Integer; overload;
 var
   d, m: Integer;
 begin
-  d := (Self.stop - Self.start);
+  d := Self.Delta;
   if (d < 0) then
     d := -d;
   m := (d shr 31);
@@ -706,7 +730,7 @@ end;
 [==============================================================================}
 function TRange.Reach: Integer; overload;
 begin
-  Result := (Self.stop - Self.start);
+  Result := Self.Delta;
   if (Result < 0) then
     Result := -Result;
   Result := (Result + 1);
@@ -736,7 +760,7 @@ end;
 [==============================================================================}
 function TRange.Size: Integer; overload;
 begin
-  Result := (Abs(Self.stop - Self.start) + 1);
+  Result := (Abs(Self.Delta) + 1);
 end;
 
 {==============================================================================]
@@ -843,7 +867,7 @@ end;
 [==============================================================================}
 function TRange.Stretch: Integer; overload;
 begin
-  Result := ((((Self.start - Self.stop) * Bitify(Self.start >= Self.stop)) + ((Self.stop - Self.start) * Bitify(Self.stop > Self.start))) + 1);
+  Result := (((Self.Contra * Bitify(Self.start >= Self.stop)) + (Self.Delta * Bitify(Self.stop > Self.start))) + 1);
 end;
 
 {==============================================================================]
@@ -858,7 +882,7 @@ var
   a: Boolean;
 begin
   a := (Self.stop >= Self.start);
-  Result := (1 + (Integer(a) * (Self.stop - Self.start)) + (Integer(not a) * (Self.start - Self.stop)));
+  Result := (1 + (Integer(a) * Self.Delta) + (Integer(not a) * Self.Contra));
 end; 
 
 {==============================================================================]
@@ -871,7 +895,19 @@ end;
 [==============================================================================}
 function TRange.Volume: Integer; overload;
 begin
-  Result := (Round(Sqrt(Sqr(Self.stop - Self.start))) + 1);
+  Result := (Round(Sqrt(Sqr(Self.Delta))) + 1);
+end;
+
+{==============================================================================]
+  <Volyme>
+  @action: Returns the inclusive size of the range, calculated as the positive 
+           difference between stop and start points plus one.
+  @note: Uses a conditional check on the 'Ascending' property to ensure the 
+         result is always a positive magnitude (Volume).
+[==============================================================================}
+function TRange.Volyme: Integer; overload;
+begin
+  Result := (IfThen(Self.Ascending, (Self.stop - Self.start), (Self.start - Self.stop)) + 1);
 end;
 
 {==============================================================================]
