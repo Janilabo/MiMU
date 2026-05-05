@@ -5,9 +5,9 @@ function Compared(const target: TRange): Integer; overload;
 function Compared(const target: Integer): Integer; overload;
 function CompareTo(const target: TRange): Integer; overload;
 function CompareTo(const target: Integer): Integer; overload;
-function CompareSize(const target: TRange): Integer;
-class function CompareSizeAscending(const A, B: TRange): Integer; static;
-class function CompareSizeDescending(const A, B: TRange): Integer; static;
+function CompareSize(const target: TRange): Integer; overload;
+class function CompareSizeAscending(const A, B: TRange): Integer; overload; static;
+class function CompareSizeDescending(const A, B: TRange): Integer; overload; static;
 function Comparison(const target: TRange): Integer; overload;
 function Rank(const target: TRange): Integer; overload;
 function SideOf(const target: TRange): Integer; overload;
@@ -154,7 +154,7 @@ end;
            and zero if they are equal in size.
   @note: This is an instance method; it requires a TRange object to call.
 [==============================================================================}
-function TRange.CompareSize(const target: TRange): Integer;
+function TRange.CompareSize(const target: TRange): Integer; overload;
 begin
   Result := (Self.Size - target.Size);
 end;
@@ -167,7 +167,7 @@ end;
   @note: Declared as a static class function so it can be passed directly
          to a procedural type such as TCompare<TRange>.
 [==============================================================================}
-class function TRange.CompareSizeAscending(const A, B: TRange): Integer;
+class function TRange.CompareSizeAscending(const A, B: TRange): Integer; overload;
 begin
   Result := A.CompareSize(B);
 end;
@@ -180,7 +180,7 @@ end;
   @note: Declared as a static class function so it can be passed directly
          to a procedural type such as TCompare<TRange>.
 [==============================================================================}
-class function TRange.CompareSizeDescending(const A, B: TRange): Integer;
+class function TRange.CompareSizeDescending(const A, B: TRange): Integer; overload;
 begin
   Result := B.CompareSize(A);
 end;

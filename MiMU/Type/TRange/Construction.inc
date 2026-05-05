@@ -17,12 +17,14 @@ class function From(const startingVal: Integer; const stepCount: Integer = 0): T
 class function From(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload; static;
 class function Form(const val: Integer; const radius: Integer = 0; const rAscending: Boolean = True): TRange; overload; static;
 class function Form(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload; static;
+class function Full(const oAscending: Boolean = True): TRange; overload; static;
 function Init(const rStart, rStop: Integer): TRange; overload;
 function Init(const r: TRange): TRange; overload;
 function Init(const val: Integer = 0): TRange; overload;
 function Make(const A: Integer = 0; const B: Integer = 0): Integer; overload;
 class function Null(const value: Integer = -2147483648): TRange; overload; static;
 class function Unbounded(const oAscending: Boolean = True): TRange; overload; static;
+class function Zer0: TRange; overload; static;
 {$ENDIF}
 
 {$IFDEF HELPERS}
@@ -374,6 +376,19 @@ begin
 end;
 
 {==============================================================================]
+  <Full>
+  @action: Returns a TRange representing the maximum possible Integer boundaries.
+  @note: Uses Low(Integer) and High(Integer). Direction depends on oAscending.
+[==============================================================================}
+class function TRange.Full(const oAscending: Boolean = True): TRange; overload; static;
+begin
+  case oAscending of
+    True: Result := TRange.Construct(Low(Integer), High(Integer));
+	False: Result := TRange.Construct(High(Integer), Low(Integer));
+  end;
+end;
+
+{==============================================================================]
   <Init>
   @action: Initializes the current TRange with the specified start and stop values.
            Also returns the initialized record so it can be assigned in-line.
@@ -458,6 +473,24 @@ begin
     Result.Create(Low(Integer), High(Integer))
   else
     Result.Create(High(Integer), Low(Integer));
+end;
+
+{==============================================================================]
+  <Zer0>
+  @action: Returns a range containing only the value zero
+  @return: Range with Start = 0, Stop = 0 (single element range)
+  @note: Named with numeral '0' for visual distinction and memorability.
+         Use Zer0 for single zero value, not to be confused with zero-based operations.
+  @example:
+    var Z := TRange.Zer0;  // Range: 0..0
+    Z.Size;                // Returns 1
+    Z.Contains(0);         // Returns True
+    Z.Contains(5);         // Returns False
+[==============================================================================}
+class function TRange.Zer0: TRange; overload;
+begin
+  Result.start := 0;
+  Result.stop := 0;
 end;
 
 {==============================================================================]

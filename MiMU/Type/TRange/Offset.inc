@@ -11,6 +11,8 @@ function Shift(const N: Integer = 1): TRange; overload;
 function Shifted(const N: Integer = 1): TRange; overload;
 function ShiftStart(const N: Integer = 1): Integer; overload;
 function ShiftStop(const N: Integer = 1): Integer; overload;
+function Zeroed: TRange; overload;
+function Zerobased: TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -168,5 +170,42 @@ begin
     Result := Self.stop.Decrement(N)
   else
     Result := Self.stop.Increment(N);
+end;
+
+{==============================================================================]
+  <Zeroed>
+  @action: Shifts the current range to become zero-based while preserving direction
+  @return: New range starting at 0 with same size and direction
+  @note: Uses Exit for descending case. Does NOT handle singular ranges specially.
+         Descending ranges become 0..-(Size-1)
+         Example: Range(5,10).Zeroed → (0,5)     [0,1,2,3,4,5]
+         Example: Range(10,5).Zeroed → (0,-5)    [0,-1,-2,-3,-4,-5]
+         Example: Range(5,5).Zeroed → (0,0)      [0]
+[==============================================================================}
+function TRange.Zeroed: TRange; overload;
+begin
+  if Self.Descending then
+    Exit(TRange.Construct(0, -(Self.Size - 1)));
+  Result.Create(0, (Self.Size - 1));
+end;
+
+{==============================================================================]
+  <Zerobased>
+  @action: Returns a zero-based range with special handling for singular ranges
+  @return: New range starting at 0 with same size and direction
+  @note: Singular ranges (Size=1) always return (0,0) regardless of direction.
+         Otherwise same as Zeroed.
+         Example: Range(5,10).Zerobased → (0,5)   [0,1,2,3,4,5]
+         Example: Range(10,5).Zerobased → (0,-5)  [0,-1,-2,-3,-4,-5]
+         Example: Range(5,5).Zerobased → (0,0)    [0] (special handling)
+[==============================================================================}
+function TRange.Zerobased: TRange; overload;
+begin
+  if Self.Singular then
+    Result := TRange.Construct(0, 0)
+  else if (Self.Direction = 1) then
+    Result.Create(0, (Self.Size - 1))
+  else
+    Result.Create(0, -(Self.Size - 1));
 end;
 {$ENDIF}
