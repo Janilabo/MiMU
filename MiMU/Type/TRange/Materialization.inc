@@ -124,12 +124,14 @@ function Stack: TIntegerArray; overload;
 function Staged: TIntegerArray; overload;
 function Stages: TIntegerArray; overload;
 function Start2Stop: TIntegerArray; overload;
+function Startage: TIntegerArray; overload;
 function Started: TIntegerArray; overload;
 function StartToStop: TIntegerArray; overload;
 function Stepped(const sSize: Integer = 1): TIntegerArray; overload;
 function Steps: TIntegerArray; overload;
 function Stock: TIntegerArray; overload;
 function Stop2Start: TIntegerArray; overload;
+function Stoppage: TIntegerArray; overload;
 function Stopped: TIntegerArray; overload;
 function StopToStart: TIntegerArray; overload;
 function Storage: TIntegerArray; overload;
@@ -3512,6 +3514,31 @@ begin
 end;
 
 {==============================================================================]
+  <Startage>
+  @action: Returns array of range values starting from Start value
+  @return: TIntegerArray with values progressing from Start toward Stop
+  @note: Optimized with special cases for sizes 1, 2, and 3
+         Direction-aware (handles ascending and descending)
+  @example:
+    Range(1,5).Startage → [1,2,3,4,5]
+    Range(5,1).Startage → [5,4,3,2,1]
+[==============================================================================}
+function TRange.Startage: TIntegerArray; overload;
+var
+  d, s, i: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  Result[0] := Self.start;
+  if (s = 1) then
+    Exit;
+  d := Self.Direction;
+  Result[1] := (Self.start + d);
+  for i := 2 to (s - 1) do
+    Result[i] := (Self.start + (i * d));
+end;
+
+{==============================================================================]
   <Started>
   @action: Returns an array of values traversing from the Start value through the range
   @return: TIntegerArray containing the range values in natural direction
@@ -3655,6 +3682,28 @@ begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := r.SStop;
+end;
+
+{==============================================================================]
+  <Stoppage>
+  @action: Returns array of range values starting from Stop value
+  @return: TIntegerArray with values progressing from Stop toward Start
+  @note: Optimized with special cases for sizes 1, 2, and 3
+  @example: Range(1,5).Stoppage → [5,4,3,2,1]
+[==============================================================================}
+function TRange.Stoppage: TIntegerArray; overload;
+var
+  d, s, i: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  Result[0] := Self.stop;
+  if (s = 1) then
+    Exit;
+  d := Self.Direction;
+  Result[1] := (Self.stop - d);
+  for i := 2 to (s - 1) do
+    Result[i] := (Self.stop - (i * d));
 end;
 
 {==============================================================================]
