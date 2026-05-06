@@ -52,7 +52,6 @@ function Extracted: TIntegerArray; overload;
 function Flatten: TIntegerArray; overload;
 function Flattened: TIntegerArray; overload;
 function Flooded: TIntegerArray; overload;
-function Fill(var target: TIntegerArray): Integer; overload;
 function Filled: TIntegerArray; overload;
 function FromTo(const rAscending: Boolean = True): TIntegerArray; overload;
 function Formation: TIntegerArray; overload;
@@ -97,7 +96,6 @@ function Numerics: TIntegerArray; overload;
 function Open: TIntegerArray; overload;
 function Particles: TIntegerArray; overload;
 function Pile: TIntegerArray; overload;
-function Populate(var arr: TIntegerArray): TRange; overload;
 function Produce: TIntegerArray; overload;
 function Produced: TIntegerArray; overload;
 function Process: TIntegerArray; overload;
@@ -128,8 +126,10 @@ function Startage: TIntegerArray; overload;
 function Startcast: TIntegerArray; overload;
 function Started: TIntegerArray; overload;
 function Startify: TIntegerArray; overload;
+function StartRoute: TIntegerArray; overload;
 function Startset: TIntegerArray; overload;
 function StartToStop: TIntegerArray; overload;
+function Startvalued: TIntegerArray; overload;
 function Stepped(const sSize: Integer = 1): TIntegerArray; overload;
 function Steps: TIntegerArray; overload;
 function Stock: TIntegerArray; overload;
@@ -138,8 +138,10 @@ function Stopcast: TIntegerArray; overload;
 function Stopify: TIntegerArray; overload;
 function Stoppage: TIntegerArray; overload;
 function Stopped: TIntegerArray; overload;
+function StopRoute: TIntegerArray; overload;
 function Stopset: TIntegerArray; overload;
 function StopToStart: TIntegerArray; overload;
+function Stopvalued: TIntegerArray; overload;
 function Storage: TIntegerArray; overload;
 function Succinct: TIntegerArray; overload;
 function Sweep: TIntegerArray; overload;
@@ -1415,24 +1417,6 @@ begin
     Result[i] := (s + i);
   if Self.Descending then
     Result.Reverse;
-end;
-
-{==============================================================================]
-  <Fill>
-  @action: Fills the provided array with values from the range, respecting direction.
-  @note: Returns the number of elements filled; does nothing if the target array is empty.
-[==============================================================================}
-function TRange.Fill(var target: TIntegerArray): Integer; overload;
-var
-  i, v, d: Integer;
-begin
-  Result := target.Length;
-  if (Result = 0) then
-    Exit;
-  v := Self.start;
-  d := Self.Direction;
-  for i := 0 to (Result - 1) do
-    target[i] := v.Increase(d);
 end;
 
 {==============================================================================]
@@ -2786,34 +2770,6 @@ function TRange.Pile: TIntegerArray; overload;
   end;
 begin
   Result := BuildSubArray(Self.start, Self.stop);
-end; 
-
-{==============================================================================]
-  <Populate>
-  @action: Fills the provided integer array `arr` with the sequence of values 
-           represented by this TRange, respecting the ascending or descending order.
-           The array must already be allocated; its length determines how many values 
-           are filled. The method also returns a TRange reflecting the filled portion.
-  @note:
-    - If the array is empty, the method exits immediately without modification.
-    - The step between elements is automatically set to +1 (ascending) or -1 (descending).
-    - The `Result.start` is set to Self.start, and `Result.stop` is set to the last 
-      value written to the array.
-    - Unlike `Generated` or `Material`, this method **populates an existing array** 
-      rather than allocating a new one.
-    - Useful when you want to reuse preallocated memory for performance.
-[==============================================================================}
-function TRange.Populate(var arr: TIntegerArray): TRange; overload;
-var
-  i, s: Integer;
-begin
-  if arr.Empty then
-    Exit;
-  s := IfThen(Self.Descending, -1, 1);
-  Result.start := Self.start;
-  for i := 0 to High(arr) do
-    arr[i] := (Self.start + (i * s));
-  Result.stop := arr[High(arr)];
 end;
 
 {==============================================================================]
@@ -3609,6 +3565,27 @@ begin
 end;
 
 {==============================================================================]
+  <StartRoute>
+  @action: Generates a sequential TIntegerArray starting from the Start point.
+  @note: High-performance implementation using pointer math and directional steps.
+[==============================================================================}
+function TRange.StartRoute: TIntegerArray; overload;
+var
+  p: PInteger;
+  i, d, s: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  p := @Result[0];
+  p^ := Self.start;
+  d := Self.Direction;
+  for i := 1 to (s - 1) do
+    p[i] := (p[i - 1] + d);
+end;
+
+{==============================================================================]
   <Startset>
   @action: Recursively unrolls the range into an array starting from the 
            start boundary.
@@ -3640,6 +3617,27 @@ begin
   while (r.Size > 1) do
     Result[s.Decrement] := r.SStop;
   Result[s - 1] := r.stop;
+end;
+
+{==============================================================================]
+  <Startvalued>
+  @action: Generates an array of all integers in the range, beginning at Start.
+  @note: Uses iterative shrinking to collect values into a TIntegerArray.
+[==============================================================================}
+function TRange.Startvalued: TIntegerArray; overload;
+label
+  loop;
+var
+  S: TRange;
+begin
+  SetLength(Result, 0);
+  S := Self;
+  loop:
+  Result := (Result + [S.start]);
+  if (S.start = S.stop) then
+    Exit;
+  S := S.ShrinkStart;
+  goto loop;
 end;
 
 {==============================================================================]
@@ -3828,6 +3826,27 @@ begin
 end;
 
 {==============================================================================]
+  <StopRoute>
+  @action: Generates a sequential TIntegerArray starting from the Stop point.
+  @note: Traverses the range in reverse by subtracting the direction from Stop.
+[==============================================================================}
+function TRange.StopRoute: TIntegerArray; overload;
+var
+  p: PInteger;
+  i, d, s: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.stop]);
+  SetLength(Result, s);
+  p := @Result[0];
+  p^ := Self.stop;
+  d := Self.Direction;
+  for i := 1 to (Self.Size - 1) do
+    p[i] := (p[i - 1] - d);
+end;
+
+{==============================================================================]
   <Stopset>
   @action: Recursively unrolls the range into an array starting from the 
            stop boundary.
@@ -3859,6 +3878,27 @@ begin
   while (r.Size > 1) do
     Result[s.Decrement] := r.SStart;
   Result[s - 1] := r.start;
+end;
+
+{==============================================================================]
+  <Stopvalued>
+  @action: Generates an array of all integers in the range, beginning at Stop.
+  @note: Useful for retrieving the range sequence in reverse order.
+[==============================================================================}
+function TRange.Stopvalued: TIntegerArray; overload;
+label
+  loop;
+var
+  S: TRange;
+begin
+  SetLength(Result, 0);
+  S := Self;
+  loop:
+  Result := (Result + [S.stop]);
+  if (S.start = S.stop) then
+    Exit;
+  S := S.ShrinkStop;
+  goto loop;
 end;
 
 {==============================================================================]

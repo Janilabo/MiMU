@@ -10,6 +10,8 @@ function YoYo: TIntegerArray; overload;
 {$IFDEF HELPERS}
 function Complement(const target: TRange): TRangeArray; overload;
 function Cutout(const target: TRange): TRangeArray; overload;
+function Disjunct(const other: TRange): TRangeArray; overload;
+function Disjunction(const other: TRange): TRangeArray; overload;
 function Select(const arr: TIntegerArray): TIntegerArray; overload;
 function Select(const arr: TDoubleArray): TDoubleArray; overload;
 function Select(const arr: TStringArray): TStringArray; overload;
@@ -18,6 +20,7 @@ function Select(const arr: TBooleanArray): TBooleanArray; overload;
 function Select(const arr: TPointArray): TPointArray; overload;
 function Select(const arr: TBoxArray): TBoxArray; overload;
 function Select(const arr: TRangeArray): TRangeArray; overload;
+function Xorred(const other: TRange): TRangeArray; overload;
 {$ENDIf}
 
 {$IFDEF IMPLEMENTATION}
@@ -94,6 +97,84 @@ begin
   rStart := Self.start;
   rStop := Self.stop;
   Result := Self.Size;
+end;
+
+{==============================================================================]
+  <Disjunct>
+  @action: Returns an array of ranges representing the symmetric difference 
+           between two ranges (the areas where they do not overlap).
+  @note: Uses normalized versions of both ranges. Returns 0 to 2 range segments 
+         representing the "outer" parts of the combined span.
+[==============================================================================}
+function TRangeHelper.Disjunct(const other: TRange): TRangeArray; overload;
+var
+  s, o: TRange;
+  a, b: Integer;
+  rightStart, rightStop: Integer;
+begin
+  SetLength(Result, 0);
+  s := Self.Normalized;
+  o := other.Normalized;
+  a := Min(s.start, o.start);
+  b := (Max(s.start, o.start) - 1);
+  if (a <= b) then
+    Result.Supply(TRange.Construct(a, b));
+  a := (Min(s.stop, o.stop) + 1);
+  b := Max(s.stop, o.stop);
+  if (a <= b) then
+    Result.Supply(TRange.Construct(a, b));
+end;
+
+{==============================================================================]
+  <Disjunction>
+  @action: Returns the symmetric difference (XOR) of two ranges
+  @note: Elements that belong to exactly one range, not both.
+         Result is 0, 1, or 2 disjoint ranges sorted left-to-right.
+  @examples:
+    // Partial overlap
+    TRange(1, 10).Disjunction(TRange(5, 15))  -> [(1,4), (11,15)]
+    
+    // Complete containment
+    TRange(1, 10).Disjunction(TRange(3, 7))   -> [(1,2), (8,10)]
+    
+    // Identical ranges
+    TRange(1, 10).Disjunction(TRange(1, 10))  -> []
+    
+    // Adjacent ranges (touching)
+    TRange(1, 5).Disjunction(TRange(6, 10))   -> [(1,5), (6,10)]
+    
+    // One range completely inside another (touching boundary)
+    TRange(1, 10).Disjunction(TRange(1, 5))   -> [(6,10)]
+    
+    // Disjoint ranges (no overlap)
+    TRange(1, 5).Disjunction(TRange(7, 10))   -> [(1,5), (7,10)]
+    
+    // Single element ranges
+    TRange(5, 5).Disjunction(TRange(5, 5))    -> []
+    TRange(5, 5).Disjunction(TRange(3, 3))    -> [(3,3), (5,5)]
+    
+    // Descending ranges (automatically normalized)
+    TRange(10, 1).Disjunction(TRange(5, 15))  -> [(1,4), (11,15)]
+[==============================================================================}
+function TRangeHelper.Disjunction(const other: TRange): TRangeArray; overload;
+var
+  s, o: TRange;
+  b, e, l, r: Integer;
+  left, right: Integer;
+begin
+  SetLength(Result, 0);
+  s := Self.Normalized;
+  o := other.Normalized;
+  l := Min(s.start, o.start);
+  r := Max(s.stop, o.stop);
+  b := Max(s.start, o.start);
+  e := Min(s.stop, o.stop);
+  if (b > e) then
+    Exit([s, o]);
+  if (l < b) then
+    Result.Supply(TRange.Construct(l, (b - 1)));
+  if (e < r) then
+    Result.Supply(TRange.Construct((e + 1), r));
 end;
 
 {==============================================================================]
@@ -254,6 +335,50 @@ begin
     Result[r] := (Self.start + (r * d));
   end;
 end;
+
+{==============================================================================]
+  <Xorred>
+  @action: Returns elements that are in either range but not in both
+  @note: Result may be 0, 1, or 2 disjoint ranges
+  @example:
+    TRange(1, 10).Xorred(TRange(5, 15))  -> [(1,4), (11,15)]
+    TRange(1, 10).Xorred(TRange(3, 7))   -> [(1,2), (8,10)]
+    TRange(1, 10).Xorred(TRange(1, 10))  -> []
+[==============================================================================}
+function TRangeHelper.Xorred(const other: TRange): TRangeArray; overload;
+var
+  s, o: TRange;
+begin
+  SetLength(Result, 0);
+  s := Self.Normalized;
+  o := other.Normalized;
+  if ((s.stop < o.start) or (o.stop < s.start)) then
+    Exit([s, o]);
+  if ((s.start >= o.start) and (s.stop <= o.stop)) then
+  begin
+    if (s.start > o.start) then
+      Result.Supply(TRange.Construct(o.start, (s.start - 1)));
+    if (s.stop < o.stop) then
+      Result.Supply(TRange.Construct((s.stop + 1), o.stop));
+    Exit;
+  end;
+  if ((o.start >= s.start) and (o.stop <= s.stop)) then
+  begin
+    if (o.start > s.start) then
+      Result.Supply(TRange.Construct(s.start, (o.start - 1)));
+    if (o.stop < s.stop) then
+      Result.Supply(TRange.Construct((o.stop + 1), s.stop));
+    Exit;
+  end;
+  if (s.start < o.start) then
+    Result.Supply(TRange.Construct(s.start, (o.start - 1)))
+  else if (o.start < s.start) then
+    Result.Supply(TRange.Construct(o.start, (s.start - 1)));
+  if (s.stop > o.stop) then
+    Result.Supply(TRange.Construct((o.stop + 1), s.stop))
+  else if (o.stop > s.stop) then
+    Result.Supply(TRange.Construct((s.stop + 1), o.stop));
+end; 
 
 {==============================================================================]
   <YoYo>
