@@ -125,6 +125,7 @@ function Staged: TIntegerArray; overload;
 function Stages: TIntegerArray; overload;
 function Start2Stop: TIntegerArray; overload;
 function Startage: TIntegerArray; overload;
+function Startcast: TIntegerArray; overload;
 function Started: TIntegerArray; overload;
 function Startify: TIntegerArray; overload;
 function Startset: TIntegerArray; overload;
@@ -133,6 +134,7 @@ function Stepped(const sSize: Integer = 1): TIntegerArray; overload;
 function Steps: TIntegerArray; overload;
 function Stock: TIntegerArray; overload;
 function Stop2Start: TIntegerArray; overload;
+function Stopcast: TIntegerArray; overload;
 function Stopify: TIntegerArray; overload;
 function Stoppage: TIntegerArray; overload;
 function Stopped: TIntegerArray; overload;
@@ -3543,6 +3545,23 @@ begin
 end;
 
 {==============================================================================]
+  <Startcast>
+  @action: Projects the entire range into an array, originating from the Start point.
+  @note: Effectively "unrolls" the range into a linear sequence of integers.
+[==============================================================================}
+function TRange.Startcast: TIntegerArray; overload;
+var
+  s, i: Integer;
+  r: TRange;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  r := Self.ExpandStop;
+  while r.SnipStop do
+    Result[s.Decrement] := r.stop;
+end;
+
+{==============================================================================]
   <Started>
   @action: Returns an array of values traversing from the Start value through the range
   @return: TIntegerArray containing the range values in natural direction
@@ -3720,6 +3739,23 @@ begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := r.SStop;
+end;
+
+{==============================================================================]
+  <Stopcast>
+  @action: Projects the entire range into an array, originating from the Stop point.
+  @note: Generates the sequence in reverse, starting the array with the Stop value.
+[==============================================================================}
+function TRange.Stopcast: TIntegerArray; overload;
+var
+  s, i: Integer;
+  r: TRange;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  r := Self.ExpandStart;
+  while r.SnipStart do
+    Result[s.Decrement] := r.start;
 end;
 
 {==============================================================================]

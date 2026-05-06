@@ -7,6 +7,8 @@ function ExpandStart: TRange; overload;
 function ExpandStop: TRange; overload;
 function ShrinkStart: TRange; overload;
 function ShrinkStop: TRange; overload;
+function SnipStart: Boolean; overload;
+function SnipStop: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -133,5 +135,37 @@ begin
     Result := TRange.Construct(Self.start, (Self.stop - 1))
   else
     Result := TRange.Construct(Self.start, (Self.stop + 1));
-end; 
+end;
+
+{==============================================================================]
+  <SnipStart>
+  @action: Shifts the start boundary one unit toward the stop position.
+  @note: Returns True if the move was successful; False if start already equals stop.
+[==============================================================================}
+function TRange.SnipStart: Boolean; overload;
+begin
+  Result := (Self.start <> Self.stop);
+  if not Result then
+    Exit;
+  if (Self.start > Self.stop) then
+    Dec(Self.start)
+  else
+    Inc(Self.start);
+end;
+
+{==============================================================================]
+  <SnipStop>
+  @action: Shifts the stop boundary one unit toward the start position.
+  @note: Returns True if the move was successful; False if stop already equals start.
+[==============================================================================}
+function TRange.SnipStop: Boolean; overload;
+begin
+  Result := (Self.stop <> Self.start);
+  if not Result then
+    Exit;
+  if (Self.stop > Self.start) then
+    Dec(Self.stop)
+  else
+    Inc(Self.stop);
+end;
 {$ENDIF}
