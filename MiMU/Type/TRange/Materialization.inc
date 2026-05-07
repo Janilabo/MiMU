@@ -3,6 +3,7 @@ function A2B: TIntegerArray; overload;
 function B2A: TIntegerArray; overload;
 function Accumulate: TIntegerArray; overload;
 function All: TIntegerArray; overload;
+function All(var target: TIntegerArray): Integer; overload;
 function Arrayed(const rAscending: Boolean = True): TIntegerArray; overload;
 function ArrayOf: TIntegerArray; overload;
 function AsArr: TIntegerArray; overload;
@@ -241,6 +242,37 @@ begin
     p^ := i;
     Inc(p);
     Inc(i, j);
+  end;
+end;
+
+{==============================================================================]
+  <All>
+  @action: Populates the provided TIntegerArray with every value in the range.
+  @note: Returns the total count of integers. Supports both ascending and
+         descending ranges. The target array is resized if necessary.
+[==============================================================================}
+function TRange.All(var target: TIntegerArray): Integer; overload;
+var
+  i: Integer;
+  p: PInteger;
+begin
+  Result := Self.Size;
+  if (target.Length <> Result) then
+    SetLength(target, Result);
+  p := PInteger(target);
+  case Self.Ascending of
+    True:
+    for i := Self.start to Self.stop do
+    begin
+      p^ := i;
+      Inc(p);
+    end;
+    False:
+    for i := Self.start downto Self.stop do
+    begin
+      p^ := i;
+      Inc(p);
+    end;
   end;
 end;
 

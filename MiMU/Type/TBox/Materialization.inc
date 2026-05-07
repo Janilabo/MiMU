@@ -1,11 +1,13 @@
 {$IFDEF METHODS}
 function All: TPointArray; overload;
+function All(var target: TPointArray): Integer; overload;
 function Atomize: TPointArray; overload;
 function Breakdown: TPointArray; overload;
 function Content: TPointArray; overload;
 function Contents: TPointArray; overload;
 function Decompose: TPointArray; overload;
 function Elements: TPointArray; overload;
+function Enum: TPointArray; overload;
 function Enumerate: TPointArray; overload;
 function Enumerated: TPointArray; overload;
 function Explode: TPointArray; overload;
@@ -15,6 +17,7 @@ function Flat: TPointArray; overload;
 function Flatten: TPointArray; overload;
 function List: TPointArray; overload;
 function Materialize: TPointArray; overload;
+function Materialized: TPointArray; overload;
 function Pixeled: TPointArray; overload;
 function Pixels: TPointArray; overload;
 function Pixels(const pIndex: Integer): TPoint; overload;
@@ -23,6 +26,7 @@ function Points(const pIndex: Integer): TPoint; overload;
 function Points(const pIDs: TIntegerArray): TPointArray; overload;
 function Points(var xArray, yArray: TIntegerArray): Integer; overload;
 function Pts: TPointArray; overload;
+function Release: TPointArray; overload;
 function TPA: TPointArray; overload;
 function TPA(const pIndex: Integer): TPoint; overload;
 function Unbox: TPointArray; overload;
@@ -44,6 +48,30 @@ var
 begin
   SetLength(Result, Self.Area);
   p := PPoint(Result);
+  for y := Self.Y1 to Self.Y2 do
+    for x := Self.X1 to Self.X2 do
+    begin
+      p^ := Point(x, y);
+      Inc(p);
+    end;
+end;
+
+{==============================================================================]
+  <All>
+  @action: Populates the provided TPointArray with every coordinate in the box.
+  @note: Returns the total count of points (Area). If the target array size 
+         does not match the box area, it is automatically resized. Uses 
+         pointer arithmetic for optimal performance.
+[==============================================================================}
+function TBox.All(var target: TPointArray): Integer; overload;
+var
+  x, y: Integer;
+  p: PPoint;
+begin
+  Result := Self.Area;
+  if (target.Length <> Result) then
+    SetLength(target, Result);
+  p := PPoint(target);
   for y := Self.Y1 to Self.Y2 do
     for x := Self.X1 to Self.X2 do
     begin
@@ -212,6 +240,24 @@ begin
   for y := Self.Y1 to Self.Y2 do
     for x := Self.X1 to Self.X2 do
       Result := (Result + [Point(x, y)]);
+end;
+
+{==============================================================================]
+  <Enum>
+  @action: Returns all points of the box as TPointArray using the built-in enumerator.
+  @note: Requires TBox.GetEnumerator to be implemented.
+        Uses the for-in syntax which is readable and safe.
+        Performance is slightly slower than pointer-based methods due to enumerator overhead.
+[==============================================================================}
+function TBox.Enum: TPointArray; overload;
+var
+  p: TPoint;
+  i: Integer;
+begin
+  SetLength(Result, Self.Area);
+  i := 0;
+  for p in Self do
+    Result[i.Increase] := p;
 end;
 
 {==============================================================================]
@@ -387,6 +433,30 @@ begin
 end;
 
 {==============================================================================]
+  <Materialized>
+  @action: Generates a TPointArray containing every coordinate within the box.
+  @note: Highly optimized; pre-allocates the entire array at once and uses 
+         pointer increments to populate data, avoiding repeated reallocations.
+[==============================================================================}
+function TBox.Materialized: TPointArray; overload;
+var
+  x, y, w, h: Integer;
+  p: PPoint;
+begin
+  w := Self.Width;
+  h := Self.Height;
+  SetLength(Result, (w * h));
+  p := @Result[0];
+  for y := 0 to (h - 1) do
+    for x := 0 to (w - 1) do
+    begin
+      p^.X := (Self.X1 + x);
+      p^.Y := (Self.Y1 + y);
+      Inc(p);
+    end;
+end;
+
+{==============================================================================]
   <Pixeled>
   @action: Returns TBox points as TPointArray.
   @note: None.
@@ -515,6 +585,27 @@ begin
   for y := 0 to (h - 1) do
     for x := 0 to (w - 1) do
       Result[(y * w) + x] := Point((Self.X1 + x), (Self.Y1 + y));
+end;
+
+{==============================================================================]
+  <Release>
+  @action: Flattens the TBox area into a linear TPointArray (TPA).
+  @note: Iterates through the box row-by-row (Y-major order), appending 
+         each horizontal line of points to the final result array.
+[==============================================================================}
+function TBox.Release: TPointArray; overload;
+var
+  x, y: Integer;
+  r: TPointArray;
+begin
+  SetLength(Result, 0);
+  SetLength(r, Self.Width);
+  for y := Self.Y1 to Self.Y2 do
+  begin
+    for x := Self.X1 to Self.X2 do
+      r[x - Self.X1] := Point(x, y);
+    Result := (Result + r);
+  end;
 end;
 
 {==============================================================================]
