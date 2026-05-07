@@ -6,6 +6,7 @@ function Breakdown: TPointArray; overload;
 function Content: TPointArray; overload;
 function Contents: TPointArray; overload;
 function Decompose: TPointArray; overload;
+function Elemented: TPointArray; overload;
 function Elements: TPointArray; overload;
 function Enum: TPointArray; overload;
 function Enumerate: TPointArray; overload;
@@ -13,8 +14,10 @@ function Enumerated: TPointArray; overload;
 function Explode: TPointArray; overload;
 function Exploded: TPointArray; overload;
 function Extract: TPointArray; overload;
+function Filled: TPointArray; overload;
 function Flat: TPointArray; overload;
 function Flatten: TPointArray; overload;
+function Generate: TPointArray; overload;
 function List: TPointArray; overload;
 function Materialize: TPointArray; overload;
 function Materialized: TPointArray; overload;
@@ -228,6 +231,26 @@ begin
 end;
 
 {==============================================================================]
+  <Elemented>
+  @action: Returns TBox points as TPointArray.
+  @note: Alternative method.
+[==============================================================================}
+function TBox.Elemented: TPointArray; overload;
+var
+  x, y: Integer;
+  r: TPointArray;
+begin
+  Result := [];
+  for y := Self.Y1 to Self.Y2 do
+  begin
+    r := [];
+    for x := Self.X1 to Self.X2 do
+      r := (r + [Point(x, y)]);
+    Result := (Result + r);
+  end;
+end;
+
+{==============================================================================]
   <Elements>
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
@@ -314,18 +337,30 @@ end;
 
 {==============================================================================]
   <Exploded>
-  @action: Returns all points of the given box as TPointArray.
-  @note: Uses the TBox enumerator (for-in).
+  @action: Generates a TPointArray of the box using memory block copying.
+  @note: Highly efficient for wide boxes; it generates a template row of X 
+         coordinates and uses Move() to clone them across the Y-axis before 
+         applying the vertical offsets.
 [==============================================================================}
 function TBox.Exploded: TPointArray; overload;
 var
-  p: TPoint;
-  i: Integer;
+  x, y, w, h, r, s: Integer;
+  t: TPointArray;
 begin
-  SetLength(Result, Self.Area);
-  i := 0;
-  for p in Self do
-    Result[i.Increase] := p;
+  w := Self.Width;
+  h := Self.Height;
+  s := SizeOf(TPoint);
+  SetLength(Result, (w * h));
+  SetLength(t, w);
+  for x := 0 to (w - 1) do
+    t[x] := Point((Self.X1 + x), 0);
+  for y := 0 to (h - 1) do
+  begin
+    r := (y * w);
+    Move(t[0], Result[r], (w * s));
+    for x := 0 to (w - 1) do
+      Result[r + x].Y := (Self.Y1 + y);
+  end;
 end;
 
 {==============================================================================]
@@ -346,6 +381,26 @@ begin
       Result[i.Increase] := Point(x, y);
     until (x.Increment > Self.X2);
   until (y.Increment > Self.Y2);
+end;
+
+{==============================================================================]
+  <Filled>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function TBox.Filled: TPointArray; overload;
+var
+  w, h, i: Integer;
+begin
+  w := Self.Width;
+  h := Self.Height;
+  SetLength(Result, (w * h));
+  FillChar(Result[0], (Result.Length * SizeOf(TPoint)), 0); 
+  for i := 0 to High(Result) do
+  begin
+    Result[i].X := (Self.X1 + (i mod w));
+    Result[i].Y := (Self.Y1 + (i div w));
+  end;
 end;
 
 {==============================================================================]
@@ -390,6 +445,33 @@ begin
   for y := 0 to B.Y2 do
     for x := 0 to B.X2 do
       Result[i.Increase] := Point((x + Self.X1), (y + Self.Y1));
+end;
+
+{==============================================================================]
+  <Generate>
+  @action: Populates a TPointArray with all coordinates within the TBox.
+  @note: Uses a recursive depth-first approach to traverse the X and Y axes. 
+         While functionally identical to a loop, it is subject to stack 
+         limits for very large areas.
+[==============================================================================}
+function TBox.Generate: TPointArray; overload;
+var
+  i: Integer;
+  procedure G(var arr: TPointArray; const x, y: Integer);
+  begin
+    if (y > Self.Y2) then
+      Exit;
+    if not (x > Self.X2) then
+    begin
+      arr[i.Increase] := Point(x, y);
+      G(arr, (x + 1), y);
+    end else
+      G(arr, Self.X1, (y + 1));
+  end;
+begin
+  SetLength(Result, Self.Area);
+  i := 0;
+  G(Result, Self.X1, Self.Y1);
 end;
 
 {==============================================================================]
