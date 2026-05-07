@@ -5,6 +5,7 @@ function Shake(const shakes: Integer = 1): TPointArray;
 function Shuffle(const shuffles: Integer = 1): TPointArray;
 function Some: TPointArray; overload;
 function Some(const amount: Integer): TPointArray; overload;
+function Stepped(const sStep: Integer = 1): TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -84,5 +85,28 @@ end;
 function TBox.Some(const amount: Integer): TPointArray; overload;
 begin
   Result := Copy(Self.Shuffle, 0, Max(1, Min(amount, Self.Area)));
+end;
+
+{==============================================================================]
+  <Stepped>
+  @action: Returns a sampled subset of points (e.g., every Nth point).
+  @note: Useful for large boxes when full enumeration isn't needed.
+[==============================================================================}
+function TBox.Stepped(const sStep: Integer = 1): TPointArray; overload;
+var
+  x, y, r, s: Integer;
+begin
+  s := Max(1, sStep);
+  SetLength(Result, ((Self.Area + s - 1) div s));
+  r := 0;
+  y := Self.Y1;
+  while (y <= Self.Y2) do
+  begin
+    x := Self.X1;
+    while (x <= Self.X2) do
+      Result[r.Increase] := Point(x.Increase(s), y);
+    Inc(y, s);
+  end;
+  SetLength(Result, r);
 end;
 {$ENDIF}

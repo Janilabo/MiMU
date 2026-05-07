@@ -2,9 +2,11 @@
 function IDs: TIntegerArray; overload;
 function IDs(const p: TPoint): Integer; overload;
 function IDs(const p: TPointArray): TIntegerArray; overload;
+function Index(const p: TPoint): Integer; overload;
 function Indexed: T2DIntegerArray; overload;
 function Indexes: TIntegerArray; overload;
 function IndexList: TIntegerArray; overload;
+function IndexOf(const p: TPoint): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -46,6 +48,19 @@ begin
   SetLength(Result, Length(p));
   for i := 0 to High(p) do
     Result[i] := Self.IDs(p[i]);
+end;
+
+{==============================================================================]
+  <Index>
+  @action: Returns index of point in the flattened box array.
+  @note: Returns -1 if point not in box.
+[==============================================================================}
+function TBox.Index(const p: TPoint): Integer; overload;
+begin
+  if Self.Contains(p) then
+    Result := (((p.Y - Self.Y1) * Self.Width) + (p.X - Self.X1))
+  else
+    Result := -1;
 end;
 
 {==============================================================================]
@@ -123,4 +138,27 @@ begin
   end;
 end;
 
+{==============================================================================]
+  <IndexOf>
+  @action: Returns the linear index of a point within the box's row-major order.
+  @param p: The point to locate within the box.
+  @return: Zero-based index if point is inside the box; -1 otherwise.
+  @note: Uses linear search (O(n)) - suitable for small boxes or when index is
+        rarely needed. For frequent lookups, consider the direct calculation
+        approach which is O(1).
+[==============================================================================}
+function TBox.IndexOf(const p: TPoint): Integer; overload;
+var
+  x, y: Integer;
+begin
+  if not Self.Contains(p) then
+    Exit(-1);
+  Result := 0;
+  for y := Self.Y1 to Self.Y2 do
+    for x := Self.X1 to Self.X2 do
+      if ((x = p.X) and (y = p.Y)) then
+        Exit
+      else
+        Inc(Result);
+end;
 {$ENDIF}

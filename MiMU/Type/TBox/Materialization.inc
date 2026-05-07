@@ -17,14 +17,14 @@ function List: TPointArray; overload;
 function Materialize: TPointArray; overload;
 function Pixeled: TPointArray; overload;
 function Pixels: TPointArray; overload;
-function Pixels(const index: Integer): TPoint; overload;
+function Pixels(const pIndex: Integer): TPoint; overload;
 function Points: TPointArray; overload;
 function Points(const pIndex: Integer): TPoint; overload;
 function Points(const pIDs: TIntegerArray): TPointArray; overload;
 function Points(var xArray, yArray: TIntegerArray): Integer; overload;
 function Pts: TPointArray; overload;
 function TPA: TPointArray; overload;
-function TPA(const index: Integer): TPoint; overload;
+function TPA(const pIndex: Integer): TPoint; overload;
 function Unbox: TPointArray; overload;
 function Unpack: TPointArray; overload;
 function Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload;	
@@ -434,9 +434,9 @@ begin
   end;
 end;
 
-function TBox.Pixels(const index: Integer): TPoint; overload;
+function TBox.Pixels(const pIndex: Integer): TPoint; overload;
 begin
-  Result := Point((Self.X1 + (index mod Self.Width)), (Self.Y1 + (index div Self.Width)));
+  Result := Point((Self.X1 + (pIndex mod Self.Width)), (Self.Y1 + (pIndex div Self.Width)));
 end;
 
 {==============================================================================]
@@ -531,12 +531,12 @@ begin
     Result[i].Create((Self.X1 + (i mod j)), (Self.Y1 + (i div j)));
 end;
 
-function TBox.TPA(const index: Integer): TPoint; overload;
+function TBox.TPA(const pIndex: Integer): TPoint; overload;
 var
   x, y: Integer;
 begin
-  y := (index div Self.Width);
-  x := (index - (y * Self.Width));
+  y := (pIndex div Self.Width);
+  x := (pIndex - (y * Self.Width));
   Result := Point((Self.X1 + x), (Self.Y1 + y));
 end;
 
