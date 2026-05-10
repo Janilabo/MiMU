@@ -240,25 +240,27 @@ end;
 
 {==============================================================================]
   <All>
-  @action: Returns ALL TRange items as TIntegerArray.
-  @note: None.
+  @action: Materializes the range into a dynamic array of integers containing 
+           every value from Start to Stop.
+  @note: Uses a high-performance pointer-based iteration. By pre-calculating 
+         the direction (d) and the bounds, it avoids internal range-checks 
+         and fills the result array at raw memory speed.
 [==============================================================================}
 function TRange.All: TIntegerArray; overload;
 var
-  i, j: Integer;
+  i, d: Integer;
   p: PInteger;
 begin
   if Self.Singular then
     Exit([Self.start]);
   SetLength(Result, Self.Size);
-  j := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Ascending, 1, -1);
   p := PInteger(Result);
-  i := Self.start;
-  while (i <> (Self.stop + j)) do
+  i := (Self.start - d);
+  while (i.Increment(d) <> (Self.stop + d)) do
   begin
     p^ := i;
     Inc(p);
-    Inc(i, j);
   end;
 end;
 
