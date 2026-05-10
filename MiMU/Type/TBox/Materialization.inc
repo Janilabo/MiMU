@@ -6,6 +6,7 @@ function Breakdown: TPointArray; overload;
 function Content: TPointArray; overload;
 function Contents: TPointArray; overload;
 function Decompose: TPointArray; overload;
+function Decomposed: TPointArray; overload;
 function Elemented: TPointArray; overload;
 function Elements: TPointArray; overload;
 function Enum: TPointArray; overload;
@@ -228,6 +229,37 @@ begin
   Inc(i);
   goto sLoop;
   eLoop:
+end;
+
+{==============================================================================]
+  <Decomposed>
+  @action: Flattens the TBox into a TPointArray using manual jump labels.
+  @note: Implements coordinate traversal using 'goto' statements instead of 
+         standard loop constructs. Iterates X within Y (row-major order) 
+         until the boundary conditions are met.
+[==============================================================================}
+function TBox.Decomposed: TPointArray; overload;
+label
+  loop, done;
+var
+  x, y, i: Integer;
+begin
+  SetLength(Result, Self.Area);
+  y := Self.Y1;
+  x := Self.X1;
+  i := 0;
+  loop:
+  if (y > Self.Y2) then
+    goto done;
+  if (x > Self.X2) then
+  begin
+    x := Self.X1;
+    Inc(y);
+    goto loop;
+  end;
+  Result[i.Increase] := Point(x.Increase, y);
+  goto loop;
+  done:
 end;
 
 {==============================================================================]

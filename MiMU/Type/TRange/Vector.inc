@@ -1,13 +1,25 @@
 {$IFDEF METHODS}
+function Asco: Integer; overload;
 function Ascount: Integer; overload;
 function Ascounted: Integer; overload;
 function Ascounting: Integer; overload;
+function Desco: Integer; overload;
 function Descount: Integer; overload;
 function Descounted: Integer; overload;
 function Descounting: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Asco>
+  @action: Returns the inclusive count for the descending range orientation.
+  @note: Logic: (Delta + 1). Optimized via (Delta - not 0).
+[==============================================================================}
+function TRange.Asco: Integer; overload;
+begin
+  Result := (Self.Delta - not 0);
+end;
+
 {==============================================================================]
   <Ascount>
   @action: Returns the Ascending Count (inclusive size) of the range.
@@ -37,6 +49,16 @@ end;
 function TRange.Ascounting: Integer; overload;
 begin
   Result := Max(0, (Self.Delta + 1));
+end;
+
+{==============================================================================]
+  <Desco>
+  @action: Returns the inclusive count for the ascending range orientation.
+  @note: Logic: (Contra + 1). Optimized via (Contra - not 0).
+[==============================================================================}
+function TRange.Desco: Integer; overload;
+begin
+  Result := (Self.Contra - not 0);
 end;
 
 {==============================================================================]

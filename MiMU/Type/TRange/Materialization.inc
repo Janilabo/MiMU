@@ -11,10 +11,12 @@ function AsArray: TIntegerArray; overload;
 function Atomize: TIntegerArray; overload;
 function Atomized: TIntegerArray; overload;
 function Bank: TIntegerArray; overload;
+function Bidir: TIntegerArray; overload;
 function Bitwise: TIntegerArray; overload;
 function Body: TIntegerArray; overload;
 function Breakdown: TIntegerArray; overload;
 function Bundle: TIntegerArray; overload;
+function Burst: TIntegerArray; overload;
 function Capture: TIntegerArray; overload;
 function Captured: TIntegerArray; overload;
 function Catalogue: TIntegerArray; overload;
@@ -24,6 +26,7 @@ function Composition: TIntegerArray; overload;
 function Content: TIntegerArray; overload;
 function Contents: TIntegerArray; overload;
 function Contentum: TIntegerArray; overload;
+function Crossfill: TIntegerArray; overload;
 function Data: TIntegerArray; overload;
 function Decompose: TIntegerArray; overload;
 function Dequeued: TIntegerArray; overload;
@@ -33,7 +36,9 @@ function Digits(const dIndex: Integer): Integer; overload;
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
 function Disclose: TIntegerArray; overload;
 function Dismantle: TIntegerArray; overload;
+function Dismantled: TIntegerArray; overload;
 function Dissolve: TIntegerArray; overload;
+function Duplex: TIntegerArray; overload;
 function Elemented: TIntegerArray; overload;
 function Elements: TIntegerArray; overload;
 function Emit: TIntegerArray; overload;
@@ -57,11 +62,13 @@ function Filled: TIntegerArray; overload;
 function FromTo(const rAscending: Boolean = True): TIntegerArray; overload;
 function Formation: TIntegerArray; overload;
 function Gather: TIntegerArray; overload;
+function Gathered: TIntegerArray; overload;
 function Generate: TIntegerArray; overload;
 function Generated: TIntegerArray; overload;
 function Harvest: TIntegerArray; overload;
 function Inhabitants: TIntegerArray; overload;
 function Integers: TIntegerArray; overload;
+function Interlace: TIntegerArray; overload;
 function Ints: TIntegerArray; overload;
 function Itemed: TIntegerArray; overload;
 function Itemize: TIntegerArray; overload;
@@ -82,9 +89,11 @@ function List: TIntegerArray; overload;
 function Listed: TIntegerArray; overload;
 function Listing: TIntegerArray; overload;
 function Manifest: TIntegerArray; overload;
+function Manifold(const totalElements: Integer; const oAscending: Boolean = True): TIntegerArray; overload;
 function Material: TIntegerArray; overload;
 function Materialize: TIntegerArray; overload;
 function Materialized: TIntegerArray; overload;
+function Materially: TIntegerArray; overload;
 function Membered: TIntegerArray; overload;
 function Members: TIntegerArray; overload;
 function Numbered: TIntegerArray; overload;
@@ -97,9 +106,11 @@ function Numerics: TIntegerArray; overload;
 function Open: TIntegerArray; overload;
 function Particles: TIntegerArray; overload;
 function Pile: TIntegerArray; overload;
+function PingPong: TIntegerArray; overload;
 function Produce: TIntegerArray; overload;
 function Produced: TIntegerArray; overload;
 function Process: TIntegerArray; overload;
+function Progression: TIntegerArray; overload;
 function Publish(const rAscending: Boolean = True): TIntegerArray; overload;
 function Pull: TIntegerArray; overload;
 function Pulled: TIntegerArray; overload;
@@ -122,6 +133,7 @@ function Snapshot: TIntegerArray; overload;
 function Stack: TIntegerArray; overload;
 function Staged: TIntegerArray; overload;
 function Stages: TIntegerArray; overload;
+function Start1: TIntegerArray; overload;
 function Start2Stop: TIntegerArray; overload;
 function Startage: TIntegerArray; overload;
 function Startcast: TIntegerArray; overload;
@@ -134,6 +146,7 @@ function Startvalued: TIntegerArray; overload;
 function Stepped(const sSize: Integer = 1): TIntegerArray; overload;
 function Steps: TIntegerArray; overload;
 function Stock: TIntegerArray; overload;
+function Stop1: TIntegerArray; overload;
 function Stop2Start: TIntegerArray; overload;
 function Stopcast: TIntegerArray; overload;
 function Stopify: TIntegerArray; overload;
@@ -146,6 +159,7 @@ function Stopvalued: TIntegerArray; overload;
 function Storage: TIntegerArray; overload;
 function Succinct: TIntegerArray; overload;
 function Sweep: TIntegerArray; overload;
+function Tandem: TIntegerArray; overload;
 function TIA: TIntegerArray; overload;
 function ToArr: TIntegerArray; overload;
 function ToArray: TIntegerArray; overload;
@@ -155,7 +169,10 @@ function ToStart: TIntegerArray; overload;
 function ToStarting: TIntegerArray; overload;
 function ToStop: TIntegerArray; overload;
 function ToStopping: TIntegerArray; overload;
+function ToTIntegerArray: TIntegerArray; overload;
 function ToValues: TIntegerArray; overload;
+function Traverse: TIntegerArray; overload;
+function Traversed: TIntegerArray; overload;
 function Unfold: TIntegerArray; overload;
 function Unfolded: TIntegerArray; overload;
 function Unpack: TIntegerArray; overload;
@@ -489,6 +506,28 @@ begin
 end;
 
 {==============================================================================]
+  <Bidir>
+  @action: Populates a TIntegerArray by filling indices from both the start 
+           and the end of the array inward toward the center.
+  @note: Uses a single loop running for half the range size, calculating 
+         values relative to both Self.start and Self.stop in each iteration.
+[==============================================================================}
+function TRange.Bidir: TIntegerArray; overload;
+var
+  i, j, s, d: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := Self.Direction;
+  for i := 0 to (((s + 1) div 2) - 1) do
+  begin
+    j := (i * d);
+    Result[i] := (Self.start + j);
+    Result[s - 1 - i] := (Self.stop - j);
+  end;
+end;
+
+{==============================================================================]
   <Bitwise>
   @action: Returns ALL TRange items as TIntegerArray.
   @note: Fills the output array in bit-reversal permutation order.
@@ -605,6 +644,33 @@ begin
   i := -1;
   while (i.Increment(2) < s) do
     Result[i] := (Self.start + (i * d));
+end;
+
+{==============================================================================]
+  <Burst>
+  @action: Populates a TIntegerArray starting from the center index and 
+           expanding outwards to the boundaries.
+  @note: Uses a bidirectional "burst" fill pattern. While functionally 
+         equivalent to a linear fill, the order of write operations starts 
+         at (Size div 2).
+[==============================================================================}
+function TRange.Burst: TIntegerArray; overload;
+var
+  i, m, s, d: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  d := Self.Direction;
+  m := (s div 2);
+  for i := 0 to m do
+  begin
+    if ((m + i) < s) then
+      Result[m + i] := (Self.start + ((m + i) * d));
+    if ((m - i) >= 0) then
+      Result[m - i] := (Self.start + ((m - i) * d));
+  end;
 end;
 
 {==============================================================================]
@@ -857,6 +923,30 @@ begin
 end;
 
 {==============================================================================]
+  <Crossfill>
+  @action: Populates a TIntegerArray by alternating between the front and 
+           back of the array, placing the next chronological value of the 
+           range into the chosen slot.
+  @note: Unlike previous methods where values are tied to their index, this 
+         method ties values to the iteration count (i), resulting in a 
+         non-linear final sequence that "zig-zags" from start to end.
+[==============================================================================}
+function TRange.Crossfill: TIntegerArray; overload;
+var
+  d, i, L, R: Integer;
+begin
+  SetLength(Result, Self.Size);
+  L := 0;
+  R := High(Result);
+  d := Self.Direction;
+  for i := 0 to (Self.Size - 1) do
+    if ((i mod 2) = 0) then
+      Result[L.Increase] := (Self.start + ((L - 1) * d))
+    else
+      Result[R.Decrease] := (Self.start + ((R + 1) * d))
+end;
+
+{==============================================================================]
   <Data>
   @action: Returns digits of the given range.
   @note: None.
@@ -1053,6 +1143,32 @@ begin
 end;
 
 {==============================================================================]
+  <Dismantled>
+  @action: Populates a TIntegerArray by processing the first and second halves 
+           of the range simultaneously in a single pass.
+  @note: Uses a parallel-fill approach by splitting the range at (Size div 2). 
+         Handles odd-length ranges by explicitly assigning the final stop value.
+[==============================================================================}
+function TRange.Dismantled: TIntegerArray; overload;
+var
+  i, s, d, m: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  d := Self.Direction;
+  SetLength(Result, s);
+  m := (s div 2);
+  for i := 0 to (m - 1) do
+  begin
+    Result[i] := Self.start + (i * d);
+    Result[i + m] := Self.start + ((i + m) * d);
+  end;
+  if s.Odd then
+    Result[s - 1] := Self.stop;
+end;
+
+{==============================================================================]
   <Dissolve>
   @action: Expands the range into an array using a 4-lane unrolled loop.
   @note: 
@@ -1085,6 +1201,34 @@ begin
   end;
   while (i.Increase < s) do
     Result[i - 1] := v.Increase(d);
+end;
+
+{==============================================================================]
+  <Dissolve>
+  @action: Expands the range into an array using a 4-lane unrolled loop.
+  @note: 
+    - Optimization: Reduces branching overhead by processing 4 elements per cycle.
+    - Mechanics: Uses pointer-based offsets for block-writes and a tail-pass
+      for remaining elements. 
+    - Order: Writes within the 4-element window are performed from high-index 
+      to low-index before advancing.
+[==============================================================================}
+function TRange.Duplex: TIntegerArray; overload;
+var
+  i, j, s, d, m, r: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := Self.Direction;
+  m := (s div 2);
+  for i := 0 to (m - 1) do
+    for j := 0 to 1 do
+    begin
+      r := ((j * m) + i);
+      Result[r] := (Self.start + (r * d));
+    end;
+  if s.Odd then
+    Result[s - 1] := Self.stop;
 end;
 
 {==============================================================================]
@@ -1627,6 +1771,34 @@ begin
 end;
 
 {==============================================================================]
+  <Gathered>
+  @action: Populates a TIntegerArray by interleaving assignments between the 
+           first and second halves of the range.
+  @note: Uses a nested loop structure (i..m-1, j..1) to alternate writes 
+         between Result[i] and Result[i + m]. Effectively a more structured 
+         variant of the "Dismantled" approach.
+[==============================================================================}
+function TRange.Gathered: TIntegerArray; overload;
+var
+  i, j, s, d, m, r: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  d := Self.Direction;
+  m := (s div 2);
+  for i := 0 to (m - 1) do
+    for j := 0 to 1 do
+    begin
+      r := ((j * m) + i);
+      Result[r] := (Self.start + (r * d));
+    end;
+  if s.Odd then
+    Result[s - 1] := Self.stop;
+end;
+
+{==============================================================================]
   <Generate>
   @action: Returns values of the given range.
   @note: None.
@@ -1765,6 +1937,29 @@ begin
   d := Self.Direction;
   while (v <> (Self.stop + d)) do
     Insert(v.Increase(d), Result, Result.Length);
+end;
+
+{==============================================================================]
+  <Interlace>
+  @action: Populates a TIntegerArray by iterating through even indices first, 
+           followed by odd indices.
+  @note: While the final array content is a standard linear sequence, the 
+         internal logic "interlaces" the assignment by using a nested loop 
+         and an incremental step of 2.
+[==============================================================================}
+function TRange.Interlace: TIntegerArray; overload;
+var
+  i, j, s, d: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := Self.Direction;
+  for j := 0 to 1 do
+  begin
+    i := -2;
+    while ((i.Increment(2) + j) < s) do
+      Result[i + j] := (Self.start + ((i + j) * d));
+  end;
 end;
 
 {==============================================================================]
@@ -2409,6 +2604,35 @@ begin
 end;
 
 {==============================================================================]
+  <Manifold>
+  @action: Creates a TIntegerArray of a specified length by repeating the 
+           base range sequence as many times as necessary.
+  @note: Uses a high-performance doubling strategy with "Move" to rapidly 
+         expand the array, ensuring the sequence tiles seamlessly until 
+         totalElements is reached.
+[==============================================================================}
+function TRange.Manifold(const totalElements: Integer; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  p, s, z: Integer;
+begin
+  if (totalElements < 1) then
+    Exit([]);
+  Result := Self.Arrayed(oAscending);
+  s := Result.Length;
+  SetLength(Result, totalElements);
+  if (totalElements <= s) then
+    Exit;
+  z := SizeOf(Integer);
+  while ((s * 2) <= totalElements) do
+  begin
+    Move(Result[0], Result[s], (s * z));
+    s := (s * 2);
+  end;
+  if (s < TotalElements) then
+    Move(Result[0], Result[s], ((totalElements - s) * z));
+end;
+
+{==============================================================================]
   <Material>
   @action: Returns an array of all integers in the range in sequential order,
            efficiently filling values in blocks of four, then handling any
@@ -2496,6 +2720,28 @@ begin
   i := Self.start;
   while (r < l) do
     Result[r.Increase] := i.Increase(s);
+end;
+
+{==============================================================================]
+  <Materially>
+  @action: Returns digits of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Materially: TIntegerArray; overload;
+var
+  i, j, s, d, m: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  d := Self.Direction;
+  m := (s div 2);
+  for i := 0 to (m - 1) do
+    for j := 0 to 1 do
+      Result[(j * m) + i] := (Self.start + (((j * m) + i) * d));
+  if s.Odd then
+    Result[s - 1] := Self.stop;
 end;
 
 {==============================================================================]
@@ -2805,6 +3051,32 @@ begin
 end;
 
 {==============================================================================]
+  <PingPong>
+  @action: Populates a TIntegerArray by alternating assignments between the 
+           lowest and highest available indices.
+  @note: Uses a parity check (i mod 2) to toggle between the 'L' (left) and 
+         'R' (right) pointers, effectively filling the array from the 
+         outer edges toward the middle in an alternating fashion.
+[==============================================================================}
+function TRange.PingPong: TIntegerArray; overload;
+var
+  d, i, L, R, h: Integer;
+begin
+  SetLength(Result, Self.Size);
+  L := 0;
+  R := High(Result);
+  d := Self.Direction;
+  for i := 0 to (Self.Size - 1) do
+  begin
+    if ((i mod 2) = 0) then
+      h := L.Increase
+    else
+      h := R.Decrease;
+    Result[h] := (Self.start + (h * d));
+  end;
+end;
+
+{==============================================================================]
   <Produce>
   @action: Materializes the inclusive integer range [start, stop] into a
            contiguous TIntegerArray using a single-pass iterative fill.   
@@ -2901,6 +3173,27 @@ begin
     for j := i to l do
       Result[j] := (r + (j * d));
   end;
+end;
+
+{==============================================================================]
+  <Progression>
+  @action: Generates a TIntegerArray by calculating a linear arithmetic 
+           sequence based on the range's start and direction.
+  @note: Utilizes a nested local procedure (F) to abstract the population 
+         logic, iterating through the target array bounds to compute each 
+         value via: start + (index * step).
+[==============================================================================}
+function TRange.Progression: TIntegerArray; overload;
+  procedure F(var target: TIntegerArray; const start, step: Integer);
+  var
+    i: Integer;
+  begin
+    for i := Low(target) to High(target) do
+      target[i] := (start + (i * step));
+  end;
+begin
+  SetLength(Result, Self.Size);
+  F(Result, Self.start, Self.Direction);
 end;
 
 {==============================================================================]
@@ -3491,6 +3784,18 @@ begin
 end;
 
 {==============================================================================]
+  <Start1>
+  @action: Returns a TIntegerArray containing exactly one element: the 
+           start value of the range.
+  @note: A convenience method to wrap the range's entry point into an array 
+         format compatible with other TIntegerArray operations.
+[==============================================================================}
+function TRange.Start1: TIntegerArray; overload;
+begin
+  Result := [Self.start];
+end;
+
+{==============================================================================]
   <Start2Stop>
   @action: Materializes the range in natural order (start → stop)
            by consuming `stop` inward via SStop on a working copy.
@@ -3752,6 +4057,18 @@ begin
     while (i.Increment(2) < s) do
       Result[i] := (Self.start + (d * i));
   end;
+end;
+
+{==============================================================================]
+  <Stop1>
+  @action: Returns a TIntegerArray containing exactly one element: the 
+           stop value of the range.
+  @note: Provides the range's termination point in a single-element array, 
+         useful for boundary-specific logic or concatenation.
+[==============================================================================}
+function TRange.Stop1: TIntegerArray; overload;
+begin
+  Result := [Self.stop];
 end;
 
 {==============================================================================]
@@ -4024,6 +4341,33 @@ begin
 end;
 
 {==============================================================================]
+  <Tandem>
+  @action: Populates a TIntegerArray by processing two parallel segments of 
+           the range at once, meeting the requirement of a single loop pass.
+  @note: Dividies the array into two halves and fills index [i] and index [i + m] 
+         concurrently. If the size is odd, the final element is manually 
+         assigned to ensure full coverage.
+[==============================================================================}
+function TRange.Tandem: TIntegerArray; overload;
+var
+  i, s, d, m: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  d := Self.Direction;
+  SetLength(Result, s);
+  m := (s div 2);
+  for i := 0 to (m - 1) do
+  begin
+    Result[i] := Self.start + (i * d);
+    Result[i + m] := Self.start + ((i + m) * d);
+  end;
+  if s.Odd then
+    Result[s - 1] := Self.stop;
+end;
+
+{==============================================================================]
   <TIA>
   @action: Returns digits of the given range.
   @note: None.
@@ -4226,6 +4570,35 @@ begin
 end;
 
 {==============================================================================]
+  <ToTIntegerArray>
+  @action: Converts the current TRange instance into a TIntegerArray.
+  @note: Optimized using 8-step loop unrolling and pointer arithmetic for 
+         high-performance array population.
+[==============================================================================}
+function TRange.ToTIntegerArray: TIntegerArray; overload;
+var
+  i, s, d, v, j: Integer;
+  p: PInteger;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := Self.Direction;
+  v := Self.start;
+  p := @Result[0];
+  i := -8;
+  while (i.Increment(8) <= (s - 8)) do
+  begin
+    p[0] := v;
+    for j := 1 to 7 do
+      p[j] := (v + (d * j));
+    Inc(p, 8);
+    Inc(v, (d * 8));
+  end;
+  while (i < s) do
+    Result[i.Increase] := v.Increase(d);
+end;
+
+{==============================================================================]
   <ToValues>
   @action: Expands range into an array of its values using direct pointer iteration.
   @note: Preserves order; ascending adds, descending subtracts from start.
@@ -4247,6 +4620,87 @@ begin
     else
       p^ := (Self.start - i);
     Inc(p);
+  end;
+end;
+
+{==============================================================================]
+  <Traverse>
+  @action: Generates a TIntegerArray by building a linked list in reverse order 
+           and then extracting values in forward order.
+  @note: Uses a "Prepend" strategy (stack-like) during construction to ensure 
+         the final array maintains the original sequence from start to end.
+[==============================================================================}
+function TRange.Traverse: TIntegerArray; overload;
+type
+  PNode = ^TNode;
+  TNode = record
+    value: Integer;
+    next: PNode;
+  end;
+var
+  h, t, f: PNode;
+  i, s, d: Integer;
+begin
+  s := Self.Size;
+  d := Self.Direction;
+  h := nil;
+  for i := (s - 1) downto 0 do
+  begin
+    New(t);
+    t^.value := (Self.start + (i * d));
+    t^.next := h;
+    h := t;
+  end;
+  SetLength(Result, s);
+  t := h;
+  for i := 0 to (s - 1) do
+  begin
+    Result[i] := t^.Value;
+    f := t;
+    t := t^.Next;
+    Dispose(f);
+  end;
+end;
+
+{==============================================================================]
+  <Traversed>
+  @action: Generates a TIntegerArray by building a linked list in forward order 
+           and then extracting values into the array in reverse order.
+  @note: The linked list acts as a LIFO (Last-In-First-Out) stack; the last 
+         element generated is the first one processed, which is mapped to 
+         the end of the result array.
+[==============================================================================}
+function TRange.Traversed: TIntegerArray; overload;
+type
+  PNode = ^TNode;
+  TNode = record
+    value: Integer;
+    next: PNode;
+  end;
+var
+  h, t, f: PNode;
+  i, s, d, c: Integer;
+begin
+  s := Self.Size;
+  d := Self.Direction;
+  c := Self.start;
+  h := nil;
+  for i := 0 to (s - 1) do
+  begin
+    New(t);
+    t^.Value := c;
+    t^.Next := h;
+    h := t;
+    Inc(c, d);
+  end;
+  SetLength(Result, s);
+  t := h;
+  for i := (s - 1) downto 0 do
+  begin
+    Result[i] := t^.Value;
+    f := t;
+    t := t^.Next;
+    Dispose(f);
   end;
 end;
 

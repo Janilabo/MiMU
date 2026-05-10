@@ -1,10 +1,14 @@
 {$IFDEF METHODS}
 function Ascign: Integer; overload;
+function Bias: Integer; overload;
 function Descign: Integer; overload;
+function Dir: Integer; overload;
 function Direction: Integer; overload;
+function Drift: Integer; overload;
 function Flow: Integer; overload;
 function Ordering: Integer; overload;
 function Orientation: Integer; overload;
+function Phase: Integer; overload;
 function Polarity: Integer; overload;
 function Sgn: Integer; overload;
 function Signum: Integer; overload;
@@ -35,6 +39,18 @@ begin
 end;
 
 {==============================================================================]
+  <Bias>
+  @action: Returns a comparative bias representing the range direction: 
+           1 if start > stop, -1 if start < stop, and 0 if equal.
+  @note: Uses boolean-to-integer type casting to perform a branchless 
+         subtraction. Note that this returns the inverse of the <Dir> method.
+[==============================================================================}
+function TRange.Bias: Integer; overload;
+begin
+  Result := (Integer(Self.start > Self.stop) - Integer(Self.start < Self.stop));
+end;
+
+{==============================================================================]
   <Descign>
   @action: Returns the binary descending sign (1 or 0).
   @note: Logic: Ord(Start > Stop).
@@ -43,6 +59,22 @@ end;
 function TRange.Descign: Integer; overload;
 begin
   Result := Ord(Self.start > Self.stop);
+end;
+
+{==============================================================================]
+  <Dir>
+  @action: Returns the normalized direction of the range: 1 for ascending, 
+           -1 for descending, and 0 for singular ranges.
+  @note: Uses a branchless sign-bit extraction (shr 31) to index into a 
+         constant map, avoiding conditional jumps for the result calculation.
+[==============================================================================}
+function TRange.Dir: Integer; overload;
+const
+  DIR_MAP: array[0..1] of Integer = (1, -1);
+begin
+  if Self.Singular then
+    Exit(0);
+  Result := DIR_MAP[Cardinal(Self.Delta) shr 31];
 end;
 
 {==============================================================================]
@@ -55,6 +87,22 @@ end;
 function TRange.Direction: Integer; overload;
 begin
   Result := Sign(Self.Delta);
+end;
+
+{==============================================================================]
+  <Drift>
+  @action: Returns the "drift" or raw displacement of the range, effectively 
+           normalizing the Delta.
+  @note: Uses a modulo operation against (Abs(Delta) + 1). For any integer n, 
+         n mod (abs(n) + 1) returns n. This preserves the magnitude and sign 
+         of Delta while explicitly handling singular ranges as zero.
+[==============================================================================}
+function TRange.Drift: Integer; overload;
+begin
+  if Self.Singular then
+    Exit(0);
+  Result := Self.Delta;
+  Result := (Result mod (Abs(Result) + 1));
 end;
 
 {==============================================================================]
@@ -101,6 +149,18 @@ function TRange.Orientation: Integer; overload;
 begin
   Result := IfThen((Self.Stop < Self.Start), -1, 1);
 end;
+
+{==============================================================================]
+  <Phase>
+  @action: Returns the directional phase of the range as a non-zero sign 
+           indicator: 1 for positive (ascending) or -1 for negative (descending).
+  @note: Uses a bitwise shift to extract the sign bit and an 'OR 1' operation 
+         to force a non-zero result. Note: Singular ranges will return 1.
+[==============================================================================}
+function TRange.Phase: Integer; overload;
+begin
+  Result := (((Self.Delta shr 31) * -2) + 1);
+end; 
 
 {==============================================================================]
   <Polarity>

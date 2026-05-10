@@ -9,6 +9,7 @@ function Allows(const val: Integer): Boolean; overload;
 function Apart(const val: Integer; const threshold: Integer = 1): Boolean; overload;
 function AtBorder(const val: Integer): Boolean; overload;
 function AtBorder(const target: TRange): Boolean; overload;
+function Belongs(const val: Integer): Boolean; overload;
 function Below(const target: Integer): Boolean; overload;
 function Below(const target: TRange): Boolean; overload;
 function Binds(const val: Integer): Boolean; overload;
@@ -220,6 +221,19 @@ end;
 function TRange.AtBorder(const target: TRange): Boolean; overload;
 begin
   Result := ((Self.Maximum = target.Minimum) or (Self.Minimum = target.Maximum));
+end;
+
+{==============================================================================]
+  <Belongs>
+  @action: Determines if a given integer value falls within the inclusive 
+           boundaries of the range.
+  @note: Uses a logic-gate approach to check if the value is not simultaneously 
+         outside both bounds, making it compatible with both ascending and 
+         descending ranges.
+[==============================================================================}
+function TRange.Belongs(const val: Integer): Boolean; overload;
+begin
+  Result := not (((val < Self.start) and (val < Self.stop)) or ((val > Self.start) and (val > Self.stop)))
 end;
 
 {==============================================================================]
