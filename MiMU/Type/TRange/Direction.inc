@@ -11,7 +11,13 @@ function Orientation: Integer; overload;
 function Phase: Integer; overload;
 function Polarity: Integer; overload;
 function Sgn: Integer; overload;
+function Sift: Integer; overload;
+function Signa: Integer; overload;
+function Signal: Integer; overload;
+function Signified: Integer; overload;
+function Signify: Integer; overload;
 function Signum: Integer; overload;
+function Signumize: Integer; overload;
 function Slope: Integer; overload;
 function State: Integer; overload;
 function Status: Integer; overload;
@@ -20,6 +26,7 @@ function Step(const index: Integer): Integer; overload;
 function Stepping: Integer; overload;
 function Stride: Integer; overload;
 function Trend: Integer; overload;
+function Way: Integer; overload;
 function Wind: Integer; overload;
 function Winding: Integer; overload;
 function Winds: Integer; overload;
@@ -194,7 +201,80 @@ end;
 function TRange.Sgn: Integer; overload;
 begin
   Result := (Ord(Self.Start < Self.Stop) - Ord(Self.Start > Self.Stop));
-end; 
+end;
+
+{==============================================================================]
+  <Sift>
+  @action: Filters the range's displacement to isolate its unit direction 
+           (1, -1, or 0) using nested selection.
+  @note: Uses a functional approach with IfThen. This is often optimized 
+         by modern compilers into branchless CMOV (Conditional Move) 
+         instructions, providing a clean syntax with efficient execution.
+[==============================================================================}
+function TRange.Sift: Integer; overload;
+begin
+  Result := Self.Delta;
+  Result := IfThen((Result > 0), 1, IfThen((Result < 0), -1, 0));
+end;
+
+{==============================================================================]
+  <Signa>
+  @action: Returns the unit sign of the range (1, -1, or 0) using a 
+           conditional arithmetic approach.
+  @note: A variation of <Signal> that uses a simple inequality check (Result <> 0) 
+         to prevent division by zero, rather than calling the Singular.
+[==============================================================================}
+function TRange.Signa: Integer; overload;
+begin
+  Result := Self.Delta;
+  if (Result <> 0) then
+    Result := (Result div Abs(Result));
+end;
+
+{==============================================================================]
+  <Signal>
+  @action: Normalizes the range's displacement to a unit sign value (1 or -1).
+  @note: Uses a standard mathematical approach (x / |x|) to determine 
+         direction. Explicitly returns 0 for singular ranges to avoid 
+         division by zero errors.
+[==============================================================================}
+function TRange.Signal: Integer; overload;
+begin
+  if Self.Singular then
+    Exit(0);
+  Result := Self.Delta;
+  Result := (Result div Abs(Result));
+end;
+
+{==============================================================================]
+  <Signify>
+  @action: Returns the mathematical sign of the range's Delta: 1 if ascending, 
+           -1 if descending, and 0 if singular.
+  @note: Implements a branchless signum function using dual sign-bit 
+         extraction via logical shifts (shr 31).
+[==============================================================================}
+function TRange.Signify: Integer; overload;
+begin
+  Result := Self.Delta;
+  Result := Integer(LongWord(-Result) shr 31) - Integer(LongWord(Result) shr 31);
+end;
+
+{==============================================================================]
+  <Signified>
+  @action: Returns the unit sign of the range (1, -1, or 0) using an indexed 
+           lookup table.
+  @note: Maps the range's direction to a constant array index. This is an 
+         "extreme branchless" technique that eliminates arithmetic logic 
+         in favor of a direct memory fetch, ensuring consistent execution 
+         time regardless of the Delta's value.
+[==============================================================================}
+function TRange.Signified: Integer; overload;
+const
+  SIGN_TABLE: array[0..2] of Integer = (-1, 0, 1);
+begin
+  Result := Self.Delta;
+  Result := SIGN_TABLE[Ord(Result > 0) - Ord(Result < 0) + 1];
+end;
 
 {==============================================================================]
   <Signum>
@@ -211,6 +291,21 @@ begin
     Result := 0
   else
     Result := ((Self.stop - Self.start) div Abs(Self.start - Self.stop));
+end;
+
+{==============================================================================]
+  <Signumize>
+  @action: Normalizes the range's displacement to a mathematical signum 
+           value: 1 (positive), -1 (negative), or 0 (singular).
+  @note: Employs a unique boolean-to-integer casting trick. By casting the 
+         results of (Delta > 0) and (Delta < 0) to integers and applying 
+         a unary negation to the "less than" side, it creates a 
+         branchless -1, 0, or 1 result.
+[==============================================================================}
+function TRange.Signumize: Integer; overload;
+begin
+  Result := Self.Delta;
+  Result := (Integer(Result > 0)) or -(Integer(Result < 0));
 end;
 
 {==============================================================================]
@@ -246,16 +341,12 @@ end;
     - The magnitude of the range is not returned, only its direction.
 [==============================================================================}
 function TRange.State: Integer; overload;
-var
-  d: Integer;
 begin
-  d := (Self.stop - Self.start);
-  if (d > 0) then
+  Result := Self.Delta;
+  if (Result > 0) then
     Result := 1
-  else if (d < 0) then
-    Result := -1
-  else
-    Result := 0;
+  else if (Result < 0) then
+    Result := -1;
 end;
 
 {==============================================================================]
@@ -364,6 +455,18 @@ end;
 function TRange.Trend: Integer; overload;
 begin
   Result := Sign(Self.Stop - Self.Start);
+end;
+
+{==============================================================================]
+  <Way>
+  @action: Returns the unit direction of the range (1, -1, or 0).
+  @note: Uses a branchless comparison approach. 
+         Logic: (1 - 0) = 1, (0 - 1) = -1, (0 - 0) = 0.
+[==============================================================================}
+function TRange.Way: Integer; overload;
+begin
+  Result := Self.Delta;
+  Result := (Ord(Result > 0) - Ord(Result < 0));
 end;
 
 {==============================================================================]
