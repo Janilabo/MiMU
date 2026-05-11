@@ -2,6 +2,7 @@
 function Build(const item: MType; const aSize: Integer = 1): MArray; overload;
 function Create(const item: MType): MArray; overload;
 function Create(const aSize: Integer; const item: MType): MArray; overload;
+class function Forge(const rItem: MType; const rSize: Integer = 1): MArray; overload; static;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -40,5 +41,23 @@ begin
   SetLength(Self, Max(0, aSize));
   for i := 0 to High(Self) do
     Self[i] := item;
+end;
+
+{==============================================================================]
+  <Create>
+  @action: Initializes a new array of a specified size, populated with a 
+           default element.
+  @note: If rSize is less than 1, returns an empty array. Useful for 
+         pre-allocating and "priming" an array with a specific value.
+[==============================================================================}
+class function MArrayHelper.Forge(const rItem: MType; const rSize: Integer = 1): MArray; overload;
+var
+  i: Integer;
+begin
+  if (rSize < 1) then
+    Exit([]);
+  SetLength(Result, rSize);
+  for i := 0 to (rSize - 1) do
+    Result[i] := rItem;
 end;
 {$ENDIF}

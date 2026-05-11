@@ -24,6 +24,7 @@ function Init(const val: Integer = 0): TRange; overload;
 function Make(const A: Integer = 0; const B: Integer = 0): Integer; overload;
 class function Null(const value: Integer = -2147483648): TRange; overload; static;
 class function Unbounded(const oAscending: Boolean = True): TRange; overload; static;
+class function UpTo(const rCount: Integer = 1): TRange; overload; static;
 class function Zer0: TRange; overload; static;
 {$ENDIF}
 
@@ -461,7 +462,7 @@ begin
 end;
 
 {==============================================================================]
-  <Unbounded>
+  <UpTo>
   @action: Constructs a TRange representing the full span of Integer values.
   @note: The oAscending flag determines the ordering of start and stop:
          ascending yields (Low(Integer), High(Integer));
@@ -473,6 +474,17 @@ begin
     Result.Create(Low(Integer), High(Integer))
   else
     Result.Create(High(Integer), Low(Integer));
+end;
+
+{==============================================================================]
+  <UpTo>
+  @action: Creates a zero-based range spanning a specific number of elements.
+  @note: The range starts at 0 and ends at (rCount - 1). Default count is 1.
+[==============================================================================}
+class function TRange.UpTo(const rCount: Integer = 1): TRange; overload;
+begin
+  Result.start := 0;
+  Result.stop := (rCount - 1);
 end;
 
 {==============================================================================]
