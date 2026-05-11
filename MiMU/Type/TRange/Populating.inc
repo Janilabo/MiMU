@@ -1,5 +1,6 @@
 {$IFDEF METHODS}
 function Fill(var target: TIntegerArray): Integer; overload;
+function Fillage(var arr: TIntegerArray): Integer; overload;
 function FillBackward(var arr: TIntegerArray): Integer; overload;
 function FillBackwarded(var arr: TIntegerArray): Integer; overload;
 function FillBackwards(var arr: TIntegerArray): Integer; overload;
@@ -27,6 +28,27 @@ begin
   d := Self.Direction;
   for i := 0 to (Result - 1) do
     target[i] := v.Increase(d);
+end;
+
+{==============================================================================]
+  <Fillage>
+  @action: Populates an existing dynamic array with the range's sequence, 
+           automatically resizing the buffer if it is insufficient.
+  @note: Returns the total count of elements written (Size). This approach 
+         is memory-efficient for repeated operations, as it allows for 
+         buffer reuse to minimize heap allocations.
+[==============================================================================}
+function TRange.Fillage(var arr: TIntegerArray): Integer; overload;
+var
+  i, s, d: Integer;
+begin
+  Result := Self.Size;
+  if (arr.Length < Result) then 
+    SetLength(arr, Result);
+  d := Self.Signify;
+  s := Self.start;
+  for i := 0 to (Result - 1) do
+    arr[i] := s.Increase(d);
 end;
 
 {==============================================================================]

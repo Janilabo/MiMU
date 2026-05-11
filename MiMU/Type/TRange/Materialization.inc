@@ -4,6 +4,7 @@ function B2A: TIntegerArray; overload;
 function Accumulate: TIntegerArray; overload;
 function All: TIntegerArray; overload;
 function All(var target: TIntegerArray): Integer; overload;
+function Allness: TIntegerArray; overload;
 function Arrayed(const rAscending: Boolean = True): TIntegerArray; overload;
 function ArrayOf: TIntegerArray; overload;
 function AsArr: TIntegerArray; overload;
@@ -293,6 +294,32 @@ begin
       Inc(p);
     end;
   end;
+end;
+
+{==============================================================================]
+  <Allness>
+  @action: Generates a complete sequence of integers representing every point 
+           within the range, including both boundaries.
+  @note: Implements a high-speed pointer-fill strategy using the branchless 
+         Signify logic. By using a repeat-until structure, it minimizes 
+         initialization checks, though it relies on the internal 'Increase' 
+         helper to manage the state of the sequence during assignment.
+[==============================================================================}
+function TRange.Allness: TIntegerArray; overload;
+var
+  p: PInteger;
+  s, d: Integer;
+begin
+  if Self.Singular then
+    Exit([Self.start]);
+  SetLength(Result, Self.Size);
+  p := PInteger(Result);
+  d := Self.Signify;
+  s := Self.start;
+  repeat
+    p^ := s.Increase(d);
+    Inc(p);
+  until (s = (Self.stop + d));
 end;
 
 {==============================================================================]

@@ -9,6 +9,7 @@ function Stringify: string; overload;
 function Stringify(var chars: TCharArray): string; overload;
 function ToRanges: TRangeArray; overload;
 function ToRanges(const aAscending: Boolean): TRangeArray; overload;
+function ToString(const rSeparator: string = ', '; const rBracketed: Boolean = True): string; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -328,5 +329,34 @@ begin
       Result[h.Increment].Create(Self[i]);
   end;
   SetLength(Result, (h + 1));
+end;
+
+{==============================================================================]
+  <ToString>
+  @action: Formats the integer array into a delimited string.
+  @note: Uses rSeparator (default ', ') to join elements. If rBracketed 
+         is True, the result is wrapped in square brackets. Handles 
+         empty arrays gracefully based on the rBracketed flag.
+[==============================================================================}
+function TIntegerArrayHelper.ToString(const rSeparator: string = ', '; const rBracketed: Boolean = True): string; overload;
+var
+  h, i: Integer;
+  s: TStringBuilder;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit(IfThen(rBracketed, '[]', ''));
+  s := TStringBuilder.Create;
+  try
+    for i := 0 to (h - 1) do
+      s.Append(IntToStr(Self[i]) + rSeparator);
+	s.Append(IntToStr(Self[h]));
+    if rBracketed then
+      Result := ('[' + s.ToString + ']')
+	else
+	  Result := s.ToString;
+  finally
+    s.Free;
+  end;
 end;
 {$ENDIF}
