@@ -13,8 +13,9 @@ function Rad: Integer; overload;
 function Radiar: Integer; overload;
 function Radius: Integer; overload;
 function Ratio(const defaultValue: Double = 0.0): Double; overload;
-function Span: Integer; overload;
 function Signed: Int64; overload;
+function Span: Integer; overload;
+function Spanitude: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -220,5 +221,15 @@ end;
 function TRange.Span: Integer; overload;
 begin
   Result := Abs(Self.stop - Self.start);
+end;
+
+{==============================================================================]
+  <Spanitude>
+  @action: Returns span of the given range.
+  @note: None.
+[==============================================================================}
+function TRange.Spanitude: Integer; overload;
+begin
+  Result := IfThen(Self.Ascending, (Self.stop - Self.start), (Self.start - Self.stop));
 end;
 {$ENDIF}

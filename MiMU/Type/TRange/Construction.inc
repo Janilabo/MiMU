@@ -23,6 +23,7 @@ function Init(const r: TRange): TRange; overload;
 function Init(const val: Integer = 0): TRange; overload;
 function Make(const A: Integer = 0; const B: Integer = 0): Integer; overload;
 class function Null(const value: Integer = -2147483648): TRange; overload; static;
+class function Plot(const rCenter: Integer = 0; const rRadius: Integer = 0): TRange; overload; static;
 class function Unbounded(const oAscending: Boolean = True): TRange; overload; static;
 class function UpTo(const rCount: Integer = 1): TRange; overload; static;
 class function Zer0: TRange; overload; static;
@@ -459,6 +460,19 @@ end;
 class function TRange.Null(const value: Integer = -2147483648): TRange; overload;
 begin
   Result := Range(value, value);
+end;
+
+{==============================================================================]
+  <Plot>
+  @action: Plots a symmetric range on the number line based on a center point
+           and a radial distance.
+  @note:   Resulting range is [rCenter - rRadius] to [rCenter + rRadius].
+           Ideal for defining circular bounds or tolerance intervals.
+[==============================================================================}
+class function TRange.Plot(const rCenter: Integer = 0; const rRadius: Integer = 0): TRange; overload;
+begin
+  Result.start := (rCenter - rRadius);
+  Result.stop := (rCenter + rRadius);
 end;
 
 {==============================================================================]

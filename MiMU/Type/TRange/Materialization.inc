@@ -31,11 +31,13 @@ function Crossfill: TIntegerArray; overload;
 function Data: TIntegerArray; overload;
 function Decompose: TIntegerArray; overload;
 function Dequeued: TIntegerArray; overload;
+function Deploy: TIntegerArray; overload;
 function Digited: TIntegerArray; overload;
 function Digits: TIntegerArray; overload;
 function Digits(const dIndex: Integer): Integer; overload;
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
 function Disclose: TIntegerArray; overload;
+function Discrete: TIntegerArray; overload;
 function Dismantle: TIntegerArray; overload;
 function Dismantled: TIntegerArray; overload;
 function Dissolve: TIntegerArray; overload;
@@ -86,6 +88,7 @@ function Iteration(out rDigits: TIntegerArray; const rReverse: Boolean = False):
 function Lay: TIntegerArray; overload;
 function Layout: TIntegerArray; overload;
 function Linear: TIntegerArray; overload;
+function Lineate: TIntegerArray; overload;
 function List: TIntegerArray; overload;
 function Listed: TIntegerArray; overload;
 function Listing: TIntegerArray; overload;
@@ -176,6 +179,7 @@ function Traverse: TIntegerArray; overload;
 function Traversed: TIntegerArray; overload;
 function Unfold: TIntegerArray; overload;
 function Unfolded: TIntegerArray; overload;
+function Universe: TIntegerArray; overload;
 function Unpack: TIntegerArray; overload;
 function Unpacked: TIntegerArray; overload;
 function Unroll: TIntegerArray; overload;
@@ -1025,6 +1029,34 @@ begin
 end;
 
 {==============================================================================]
+  <Deploy>
+  @action: Unpacks the range's full sequence of digits into a concrete array 
+           using a bifurcated (split-step) strategy.
+  @note: Simultaneously populates the lower and upper halves of the result 
+         buffer. This "dual-front" deployment reduces loop overhead and 
+         ensures every constituent digit of the range is materialized.
+[==============================================================================}
+function TRange.Deploy: TIntegerArray; overload;
+var
+  i, s, d, m: Integer;
+begin
+  s := Self.Size;
+  if s = 1 then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  d := Self.Direction;
+  m := (s div 2);
+  for i := 0 to (m - 1) do
+  begin
+    Result[i] := (Self.start + (i * d));
+    if ((i + m) < s) then
+      Result[i + m] := (Self.start + ((i + m) * d));
+  end;
+  if ((s mod 2) = 1) then
+    Result[s - 1] := (Self.start + ((s - 1) * d));
+end;
+
+{==============================================================================]
   <Dequeued>
   @action: Generates an array containing all integer values within the range.
   @note: Values are produced sequentially from start using the configured
@@ -1130,6 +1162,37 @@ begin
   begin
     P^ := s.Increase(Self.Direction);
     Inc(P);
+  end;
+end;
+
+{==============================================================================]
+  <Discrete>
+  @action: Resolves the range into a concrete array of its constituent integers.
+  @note: Uses a dual-pointer (convergent) strategy to fill the array from 
+         both boundaries simultaneously. This approach ensures every 
+         individual value is materialized into a separate memory address.
+[==============================================================================}
+function TRange.Discrete: TIntegerArray; overload;
+var
+  l, r, s, d: Integer;
+  x, y: PInteger;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  d := Self.Direction;
+  l := -1;
+  r := s;
+  x := @Result[Low(Result)];
+  y := @Result[High(Result)];
+  while (l.Increment <= r.Decrement) do
+  begin
+    x^ := (Self.start + (l * d));
+    if (l <> r) then
+      y^ := (Self.start + (r * d));
+    Inc(x);
+    Dec(y);
   end;
 end;
 
@@ -2503,6 +2566,32 @@ begin
   d := (Self.stop - Self.start);
   for i := 0 to (s - 1) do
     Result[i] := Round(Self.start + ((i / (s - 1)) * d));
+end;
+
+{==============================================================================]
+  <Lineate>
+  @action: Materializes the range into an array using a cache-optimized 
+           linear filling strategy.
+  @note: Processes the range in 64-byte blocks (CACHE_LINE) to align with 
+         CPU architecture. It respects the range's direction, ensuring 
+         the array follows the intended step order.
+[==============================================================================}
+function TRange.Lineate: TIntegerArray; overload;
+const
+  CACHE_LINE = (64 div SizeOf(Integer));
+var
+  i, l, s, d: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  i := 0;
+  d := Self.Direction;
+  i := -CACHE_LINE;
+  while (Integer_Increment(i, CACHE_LINE) < s) do
+    for l := 0 to Min((CACHE_LINE - 1), ((s - i) - 1)) do
+      Result[i + l] := (Self.start + ((i + l) * d));
 end;
 
 {==============================================================================]
@@ -4802,6 +4891,27 @@ begin
     end;
     i := (i div 2);
   end;
+end;
+
+{==============================================================================]
+  <Universe>
+  @action: Projects the total set of possible values within the range into a 
+           discrete data structure.
+  @note: Uses a branchless-style mask to populate the array. In mathematical 
+         terms, this materializes the "Universe of Discourse" for the 
+         interval, ensuring every member of the set is represented.
+[==============================================================================}
+function TRange.Universe: TIntegerArray; overload;
+var
+  i, s, d: Integer;
+begin
+  s := Self.Size;
+  if (s = 1) then
+    Exit([Self.start]);
+  SetLength(Result, s);
+  d := Self.Direction;
+  for i := 0 to (s - 1) do
+    Result[i] := ((Self.start + (i * d)) and -Ord(i < s));
 end;
 
 {==============================================================================]
