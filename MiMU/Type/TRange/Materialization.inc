@@ -2589,7 +2589,7 @@ begin
   i := 0;
   d := Self.Direction;
   i := -CACHE_LINE;
-  while (Integer_Increment(i, CACHE_LINE) < s) do
+  while (i.Increment(CACHE_LINE) < s) do
     for l := 0 to Min((CACHE_LINE - 1), ((s - i) - 1)) do
       Result[i + l] := (Self.start + ((i + l) * d));
 end;
