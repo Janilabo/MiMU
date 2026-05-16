@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Falseness: Integer; overload;
 function Occupancy(const val: Boolean = True): Double; overload;
+function Score(const iTrue: Integer = 1; const iFalse: Integer = 0): Integer; overload;
 function Trueness: Integer; overload;
 {$ENDIF}
 
@@ -36,6 +37,23 @@ begin
     if (Self[i] = val) then
       Inc(c);
   Result := (c / Self.Size);
+end;
+
+{==============================================================================]
+  <Score>
+  @action: Compiles a weighted mathematical total across the array by mapping boolean states to custom integer point values.
+  @note: Highly flexible algorithm for game scoring, multi-rule evaluation, or custom metric tallies.
+[==============================================================================}
+function TBooleanArrayHelper.Score(const iTrue: Integer = 1; const iFalse: Integer = 0): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    if Self[i] then
+      Result := (Result + iTrue)
+    else
+      Result := (Result + iFalse);
 end;
 
 {==============================================================================]
