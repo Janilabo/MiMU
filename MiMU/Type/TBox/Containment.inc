@@ -1,6 +1,8 @@
 {$IFDEF METHODS}
 function Accepts(const pt: TPoint): Boolean; overload;
 function Binds(const pt: TPoint): Boolean; overload;
+function Contained(const pt: TPoint): Boolean; overload;
+function Contained(const b: TBox): Boolean; overload;
 function Contains(const pt: TPoint): Boolean; overload;
 function Contains(const b: TBox): Boolean; overload;
 function Disjoint(const target: TBox): Boolean; overload;
@@ -14,6 +16,7 @@ function Houses(const pt: TPoint): Boolean; overload;
 function Housing(const pt: TPoint): Boolean; overload;
 function Inside(const target: TBox): Boolean; overload;
 function Lacks(const pt: TPoint): Boolean; overload;
+function Nests(const pt: TPoint): Boolean; overload;
 function Owns(const pt: TPoint): Boolean; overload;
 function Seals(const pt: TPoint): Boolean; overload;
 {$ENDIF}
@@ -51,9 +54,29 @@ end;
   @action: Returns true if pt is inside the given box (bx).
   @note: None.
 [==============================================================================}
-function TBox.Contains(const pt: TPoint): Boolean; overload;
+function TBox.Contained(const pt: TPoint): Boolean; overload;
 begin
   Result := not ((pt.X < Self.X1) or (pt.Y < Self.Y1) or (pt.X > Self.X2) or (pt.Y > Self.Y2));
+end;
+
+{==============================================================================]
+  <Contains>
+  @action: Returns true if b is inside the given box (bx).
+  @note: None.
+[==============================================================================}
+function TBox.Contained(const b: TBox): Boolean; overload;
+begin
+  Result := not ((b.X1 < Self.X1) or (b.Y1 < Self.Y1) or (b.X2 > Self.X2) or (b.Y2 > Self.Y2));
+end;
+
+{==============================================================================]
+  <Contains>
+  @action: Returns true if pt is inside the given box (bx).
+  @note: None.
+[==============================================================================}
+function TBox.Contains(const pt: TPoint): Boolean; overload;
+begin
+  Result := ((pt.X >= Self.X1) and (pt.Y >= Self.Y1) and (pt.X <= Self.X2) and (pt.Y <= Self.Y2));
 end;
 
 {==============================================================================]
@@ -63,7 +86,7 @@ end;
 [==============================================================================}
 function TBox.Contains(const b: TBox): Boolean; overload;
 begin
-  Result := ((b.X1 >= Self.X1) and (b.X1 <= Self.X2) and (b.X2 >= Self.X1) and (b.X2 <= Self.X2) and (b.Y1 >= Self.Y1) and (b.Y1 <= Self.Y2) and (b.Y2 >= Self.Y1) and (b.Y2 <= Self.Y2));
+  Result := ((b.X1 >= Self.X1) and (b.X2 <= Self.X2) and (b.Y1 >= Self.Y1) and (b.Y2 <= Self.Y2));
 end;
 
 {==============================================================================]
@@ -205,6 +228,24 @@ end;
 function TBox.Lacks(const pt: TPoint): Boolean; overload;
 begin
   Result := ((pt.X > Self.X2) or (pt.Y > Self.Y2) or (pt.X < Self.X1) or (pt.Y < Self.Y1));
+end;
+
+{==============================================================================]
+  <Nests>
+  @action: Returns true if the specified TPoint is inside or on the boundaries of this TBox.
+  @note: This is an overloaded method used for point-in-box collision/containment checking.
+[==============================================================================}
+function TBox.Nests(const pt: TPoint): Boolean; overload;
+begin
+  if (pt.X < Self.X1) then
+    Exit(False)
+  else if (pt.X > Self.X2) then
+    Exit(False)
+  else if (pt.Y < Self.Y1) then
+    Exit(False)
+  else if (pt.Y > Self.Y2) then
+    Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]

@@ -75,6 +75,7 @@ function Membership(const val: Integer): Boolean; overload;
 function Missing(const val: Integer): Boolean; overload;
 function Missing(const vals: TRange): Boolean; overload;
 function Near(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
+function Nests(const val: Integer): Boolean; overload;
 function Number(const val: Integer): Boolean; overload;	
 function Omits(const val: Integer): Boolean; overload;
 function Outlier(const val: Integer): Boolean; overload;
@@ -1100,6 +1101,20 @@ begin
   c := ((Self.start + Self.stop) / 2);
   h := ((Abs(Self.stop - Self.start) / 2) + vRadius);
   Result := (Abs(val - c) <= h);
+end;
+
+{==============================================================================]
+  <Nests>
+  @action: Returns true if the specified Integer falls within the Minimum and Maximum boundaries of this TRange (inclusive).
+  @note: This is an overloaded method used for range boundary checking.
+[==============================================================================}
+function TRange.Nests(const val: Integer): Boolean; overload;
+begin
+  if (Self.Minimum > val) then
+    Exit(False)
+  else if (Self.Maximum < val) then
+    Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]

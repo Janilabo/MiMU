@@ -19,6 +19,7 @@
 {$I Materialization.inc}
 {$I Metrics.inc}
 {$I Miscellaneous.inc}
+{$I Normalization.inc}
 {$I Offset.inc}
 {$I Placement.inc}
 {$I Position.inc}
