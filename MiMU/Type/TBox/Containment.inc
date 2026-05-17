@@ -5,11 +5,14 @@ function Contained(const pt: TPoint): Boolean; overload;
 function Contained(const b: TBox): Boolean; overload;
 function Contains(const pt: TPoint): Boolean; overload;
 function Contains(const b: TBox): Boolean; overload;
+function Covers(const pt: TPoint): Boolean; overload;
 function Disjoint(const target: TBox): Boolean; overload;
+function Embody(const pt: TPoint): Boolean; overload;
 function Encase(const pt: TPoint): Boolean; overload;
 function Encloses(const pt: TPoint): Boolean; overload;
 function Got(const pt: TPoint): Boolean; overload;
 function Has(const pt: TPoint): Boolean; overload;
+function Have(const pt: TPoint): Boolean; overload;
 function Holding(const pt: TPoint): Boolean; overload;
 function Holds(const pt: TPoint): Boolean; overload;
 function Houses(const pt: TPoint): Boolean; overload;
@@ -90,6 +93,19 @@ begin
 end;
 
 {==============================================================================]
+  <Covers>
+  @action: Evaluates containment by OR-ing all boundary violations into a single
+           bitmask and verifying it is zero.
+  @note: Branchless. Distinct from Housing (integer addition) and Got (array
+         scoring): bitwise OR short-circuits as soon as any set bit is produced,
+         whereas addition must always sum all terms.
+[==============================================================================}
+function TBox.Covers(const pt: TPoint): Boolean; overload;
+begin
+  Result := ((Ord(pt.X < Self.X1) or Ord(pt.Y < Self.Y1) or Ord(pt.X > Self.X2) or Ord(pt.Y > Self.Y2)) = 0);
+end;
+
+{==============================================================================]
   <Disjoint>
   @action: Returns true if target TBox is outside the target boundaries.
   @note: None.
@@ -97,6 +113,24 @@ end;
 function TBox.Disjoint(const target: TBox): Boolean; overload;
 begin
   Result := ((Self.X2 < target.X1) or (Self.Y2 < target.Y1) or (Self.X1 > target.X2) or (Self.Y1 > target.Y2));
+end;
+
+{==============================================================================]
+  <Embody>
+  @action: Evaluates containment by confirming the point lies on the interior
+           side of all four box edges using 2D cross products — a direct
+           application of the convex-polygon half-plane (winding) test.
+  @note: Each term is the cross product of an edge direction vector with the
+         vector from that edge's origin to the point. Requires that both axes
+         share the same orientation (X1 <= X2 and Y1 <= Y2, or X1 >= X2 and
+         Y1 >= Y2). Mixed-axis inversion causes false negatives.
+[==============================================================================}
+function TBox.Embody(const pt: TPoint): Boolean; overload;
+var
+  s: TPoint;
+begin
+  s := Point((Self.X2 - Self.X1), (Self.Y2 - Self.Y1));
+  Result := (((s.X * (pt.Y - Self.Y1)) >= 0) and ((s.Y * (Self.X2 - pt.X)) >= 0) and ((s.X * (Self.Y2 - pt.Y)) >= 0) and ((s.Y * (pt.X - Self.X1)) >= 0));
 end;
 
 {==============================================================================]
@@ -139,6 +173,19 @@ end;
 function TBox.Has(const pt: TPoint): Boolean; overload;
 begin
   Result := (((pt.X - Self.X1) * (pt.X - Self.X2) <= 0) and ((pt.Y - Self.Y1) * (pt.Y - Self.Y2) <= 0));
+end;
+
+{==============================================================================]
+  <Have>
+  @action: Determines containment via the 1D identity: |pt - a| + |pt - b| = b - a
+           holds if and only if pt lies within the closed interval [a, b].
+  @note: Requires normalized coordinates (X1 <= X2 and Y1 <= Y2); if inverted,
+         the span (X2 - X1) is negative, causing false negatives for all points.
+         Outside the range, the absolute-sum strictly exceeds the span.
+[==============================================================================}
+function TBox.Have(const pt: TPoint): Boolean; overload;
+begin
+  Result := (((Abs(pt.X - Self.X1) + Abs(pt.X - Self.X2)) = (Self.X2 - Self.X1)) and ((Abs(pt.Y - Self.Y1) + Abs(pt.Y - Self.Y2)) = (Self.Y2 - Self.Y1)));
 end;
 
 {==============================================================================]

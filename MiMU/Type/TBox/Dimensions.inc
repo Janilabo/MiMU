@@ -1,22 +1,24 @@
 {$IFDEF METHODS}
-function Bottom: Integer;
+function Bottom: Integer; overload;
 function Dimensions(var bHorizontal, bVertical: TRange): Integer; overload;
 function Dimensions(var bWidth, bHeight: Integer): Integer; overload;
-function GetHeight: Integer;
-function GetWidth: Integer;
+function GetHeight: Integer; overload;
+function GetWidth: Integer; overload;
 function Height: Integer; overload;
 function Height(const h: Integer): Integer; overload;
-function Horizontal: TRange;
-function Left: Integer;
-function Right: Integer;
-function Top: Integer;
-function Vertical: TRange;
+function Horizontal: TRange; overload;
+function Left: Integer; overload;
+function Right: Integer; overload;
+function Top: Integer; overload;
+function Vertical: TRange; overload;
 function Width: Integer; overload;
 function Width(const w: Integer): Integer; overload;
-function XLength: Integer;
-function XSize: Integer;
-function YLength: Integer;
-function YSize: Integer;
+function XLength: Integer; overload;
+function XSize: Integer; overload;
+function XSpan: Integer; overload;
+function YLength: Integer; overload;
+function YSize: Integer; overload;
+function YSpan: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -25,7 +27,7 @@ function YSize: Integer;
   @action: Maximum Y-value
   @note: Always returns correct Bottom-value from TBox
 [==============================================================================}
-function TBox.Bottom: Integer;
+function TBox.Bottom: Integer; overload;
 begin
   Result := Max(Self.Y1, Self.Y2);
 end;
@@ -59,9 +61,9 @@ end;
   @action: Returns bx height.
   @note: Fast, works with only valid TBoxes.
 [==============================================================================}
-function TBox.GetHeight: Integer;
+function TBox.GetHeight: Integer; overload;
 begin
-  Result := Succ(Self.Y2 - Self.Y1);
+  Result := Succ(Self.YSpan);
 end;
 
 {==============================================================================]
@@ -69,9 +71,9 @@ end;
   @action: Returns bx height.
   @note: Fast, works with only valid TBoxes.
 [==============================================================================}
-function TBox.GetWidth: Integer;
+function TBox.GetWidth: Integer; overload;
 begin
-  Result := Succ(Self.X2 - Self.X1);
+  Result := Succ(Self.XSpan);
 end;
 
 {==============================================================================]
@@ -81,7 +83,7 @@ end;
 [==============================================================================}
 function TBox.Height: Integer; overload;
 begin
-  Result := ((Self.Y2 - Self.Y1) + 1);
+  Result := (Self.YSpan + 1);
 end;
 
 {==============================================================================]
@@ -91,7 +93,7 @@ end;
 [==============================================================================}
 function TBox.Height(const h: Integer): Integer; overload;
 begin
-  Result := ((Self.Y2 - Self.Y1) + 1);
+  Result := (Self.YSpan + 1);
   Self.Y2 := (Self.Y1 + (h - 1));
 end;
 
@@ -100,7 +102,7 @@ end;
   @action: Returns bx.X1 and bx.X2 as TRange.
   @note: Horitonzal-axis.
 [==============================================================================}
-function TBox.Horizontal: TRange;
+function TBox.Horizontal: TRange; overload;
 begin
   Result.start := Self.X1;
   Result.stop := Self.X2;
@@ -111,7 +113,7 @@ end;
   @action: Minimum X-value
   @note: Always returns correct Left-value from TBox
 [==============================================================================}
-function TBox.Left: Integer;
+function TBox.Left: Integer; overload;
 begin
   Result := Min(Self.X1, Self.X2);
 end;
@@ -121,7 +123,7 @@ end;
   @action: Maximum X-value
   @note: Always returns correct Right-value from TBox
 [==============================================================================}
-function TBox.Right: Integer;
+function TBox.Right: Integer; overload;
 begin
   Result := Max(Self.X1, Self.X2);
 end;
@@ -131,7 +133,7 @@ end;
   @action: Minimum Y-value
   @note: Always returns correct Top-value from TBox
 [==============================================================================}
-function TBox.Top: Integer;
+function TBox.Top: Integer; overload;
 begin
   Result := Min(Self.Y1, Self.Y2);
 end;
@@ -141,7 +143,7 @@ end;
   @action: Returns bx.Y1 and bx.Y2 as TRange.
   @note: Vertical-axis.
 [==============================================================================}
-function TBox.Vertical: TRange;
+function TBox.Vertical: TRange; overload;
 begin
   Result.start := Self.Y1;
   Result.stop := Self.Y2;
@@ -154,7 +156,7 @@ end;
 [==============================================================================}
 function TBox.Width: Integer; overload;
 begin
-  Result := ((Self.X2 - Self.X1) + 1);
+  Result := (Self.XSpan + 1);
 end;
 
 {==============================================================================]
@@ -164,7 +166,7 @@ end;
 [==============================================================================}
 function TBox.Width(const w: Integer): Integer; overload;
 begin
-  Result := ((Self.X2 - Self.X1) + 1);
+  Result := (Self.XSpan + 1);
   Self.X2 := (Self.X1 + (w - 1));
 end;
 
@@ -173,7 +175,7 @@ end;
   @action: Returns bx width.
   @note: Fast, works with only valid TBoxes.
 [==============================================================================}
-function TBox.XLength: Integer;
+function TBox.XLength: Integer; overload;
 begin
   Result := Self.X2;
   Dec(Result, Self.X1);
@@ -185,9 +187,21 @@ end;
   @action: Returns bx width.
   @note: Fast, works with only valid TBoxes.
 [==============================================================================}
-function TBox.XSize: Integer;
+function TBox.XSize: Integer; overload;
 begin
   Result := TRange.Construct(Self.X1, Self.X2).Size;
+end;
+
+{==============================================================================]
+  <XSpan>
+  @action: Calculates and returns the horizontal width (span) of the box.
+  @note: Represents the distance along the X-axis from the left edge (X1) to 
+         the right edge (X2). Note that if X2 is less than X1, this will return 
+         a negative value unless normalized.
+[==============================================================================}
+function TBox.XSpan: Integer; overload;
+begin
+  Result := (Self.X2 - Self.X1);
 end;
 
 {==============================================================================]
@@ -195,7 +209,7 @@ end;
   @action: Returns bx height.
   @note: Fast, works with only valid TBoxes.
 [==============================================================================}
-function TBox.YLength: Integer;
+function TBox.YLength: Integer; overload;
 begin
   Result := Self.Y2;
   Dec(Result, Self.Y1);
@@ -207,8 +221,21 @@ end;
   @action: Returns bx height.
   @note: Fast, works with only valid TBoxes.
 [==============================================================================}
-function TBox.YSize: Integer;
+function TBox.YSize: Integer; overload;
 begin
   Result := TRange.Construct(Self.Y1, Self.Y2).Size;
+end;
+
+{==============================================================================]
+  <YSpan>
+  @action: Calculates and returns the vertical height (span) of the box.
+  @note: Represents the distance along the Y-axis from the top edge (Y1) to 
+         the bottom edge (Y2). In most computer graphics coordinate systems, 
+         Y increases downwards, meaning a positive result indicates a downward 
+         span from Y1.
+[==============================================================================}
+function TBox.YSpan: Integer; overload;
+begin
+  Result := (Self.Y2 - Self.Y1);
 end;
 {$ENDIF}
