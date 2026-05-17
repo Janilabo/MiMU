@@ -4,7 +4,7 @@ function Reserve: TPointArray; overload;
 function Reserve(var aBox: TPointArray): Integer; overload;
 {$ENDIF}
 
-{$IFDEF IMPLEMENTATION}
+{$IFDEF IMPLEMENTATION} 
 {==============================================================================]
   <Null>
   @action: Returns a "null" or empty box, represented by all coordinates set to

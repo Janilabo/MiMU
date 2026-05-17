@@ -18,7 +18,9 @@ function Holds(const pt: TPoint): Boolean; overload;
 function Houses(const pt: TPoint): Boolean; overload;
 function Housing(const pt: TPoint): Boolean; overload;
 function Inside(const target: TBox): Boolean; overload;
+function Keeps(const pt: TPoint; const epsilon: Integer = 0): Boolean; overload;
 function Lacks(const pt: TPoint): Boolean; overload;
+function Membership(const pt: TPoint): Boolean; overload;
 function Nests(const pt: TPoint): Boolean; overload;
 function Owns(const pt: TPoint): Boolean; overload;
 function Seals(const pt: TPoint): Boolean; overload;
@@ -268,6 +270,16 @@ begin
 end;
 
 {==============================================================================]
+  <Keeps>
+  @action: Returns true if point is within box or within epsilon distance.
+  @note: Useful for hit testing with tolerance.
+[==============================================================================}
+function TBox.Keeps(const pt: TPoint; const epsilon: Integer = 0): Boolean; overload;
+begin
+  Result := ((pt.X >= (Self.X1 - epsilon)) and (pt.X <= (Self.X2 + epsilon)) and (pt.Y >= (Self.Y1 - epsilon)) and (pt.Y <= (Self.Y2 + epsilon)));
+end;
+
+{==============================================================================]
   <Lacks>
   @action: Returns true if pt TPoint is OUTSIDE the TBox boundaries.
   @note: None.
@@ -275,6 +287,20 @@ end;
 function TBox.Lacks(const pt: TPoint): Boolean; overload;
 begin
   Result := ((pt.X > Self.X2) or (pt.Y > Self.Y2) or (pt.X < Self.X1) or (pt.Y < Self.Y1));
+end;
+
+{==============================================================================]
+  <Membership>
+  @action: Determines containment using the AABB interval overlap test, treating
+           the point as a degenerate zero-area box.
+  @note: Requires normalized coordinates (X1 <= X2 and Y1 <= Y2).
+         Derives from the general interval overlap identity: two intervals [a,b]
+         and [c,d] overlap iff Max(a,c) <= Min(b,d). For a degenerate [pt,pt]:
+         Max(X1,pt) <= Min(X2,pt) holds iff X1 <= pt <= X2.
+[==============================================================================}
+function TBox.Membership(const pt: TPoint): Boolean; overload;
+begin
+  Result := ((Max(Self.X1, pt.X) <= Min(Self.X2, pt.X)) and (Max(Self.Y1, pt.Y) <= Min(Self.Y2, pt.Y)));
 end;
 
 {==============================================================================]
@@ -302,11 +328,11 @@ end;
 [==============================================================================}
 function TBox.Owns(const pt: TPoint): Boolean; overload;
 var
-  x, y: TRange;
+  h, v: TRange;
 begin
-  x := TRange.Construct((pt.X - Self.X1), (Self.X2 - pt.X));
-  y := TRange.Construct((pt.Y - Self.Y1), (Self.Y2 - pt.Y));
-  Result := (((x.start * y.start) >= 0) and ((x.stop * y.start) >= 0) and ((x.stop * y.stop) >= 0) and ((x.start * y.stop) >= 0));
+  h := TRange.Construct((pt.X - Self.X1), (Self.X2 - pt.X));
+  v := TRange.Construct((pt.Y - Self.Y1), (Self.Y2 - pt.Y));
+  Result := (((h.start * v.start) >= 0) and ((h.stop * v.start) >= 0) and ((h.stop * v.stop) >= 0) and ((h.start * v.stop) >= 0));
 end;
 
 {==============================================================================]

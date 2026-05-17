@@ -13,13 +13,13 @@ function Traverse: TPointArray;
 [==============================================================================}
 function TBox.Columnwise: TPointArray;
 var
-  x, y, r: Integer;
+  h, v, r: Integer;
 begin
   SetLength(Result, Self.Area);
   r := 0;
-  for x := X1 to X2 do
-    for y := Y1 to Y2 do
-      Result[r.Increase] := Point(x, y);
+  for h := X1 to X2 do
+    for v := Y1 to Y2 do
+      Result[r.Increase] := Point(h, v);
 end;
 
 {==============================================================================]
@@ -29,13 +29,13 @@ end;
 [==============================================================================}
 function TBox.Rowwise: TPointArray;
 var
-  x, y, r: Integer;
+  h, v, r: Integer;
 begin
   SetLength(Result, Self.Area);
   r := 0;
-  for y := Y1 to Y2 do
-    for x := X1 to X2 do
-      Result[r.Increase] := Point(x, y);
+  for v := Y1 to Y2 do
+    for h := X1 to X2 do
+      Result[r.Increase] := Point(h, v);
 end;
 
 {==============================================================================]
@@ -46,28 +46,28 @@ end;
 function TBox.Spiral: TPointArray;
 var
   b: TBox;
-  x, y, r: Integer;
+  h, v, r: Integer;
 begin
   SetLength(Result, Self.Area);
   b := Self;
   r := 0;
   repeat
-    for x := b.X1 to b.X2 do
-      Result[r.Increase] := Point(x, b.Y1);
+    for h := b.X1 to b.X2 do
+      Result[r.Increase] := Point(h, b.Y1);
     Inc(b.Y1);
-    for y := b.Y1 to b.Y2 do
-      Result[r.Increase] := Point(b.X2, y);
+    for v := b.Y1 to b.Y2 do
+      Result[r.Increase] := Point(b.X2, v);
     Dec(b.X2);
     if (b.Y1 <= b.Y2) then
     begin
-      for x := b.X2 downto b.X1 do
-        Result[r.Increase] := Point(x, b.Y2);
+      for h := b.X2 downto b.X1 do
+        Result[r.Increase] := Point(h, b.Y2);
       Dec(b.Y2);
     end;
     if (b.X1 <= b.X2) then
     begin
-      for y := b.Y2 downto b.Y1 do
-        Result[r.Increase] := Point(b.X1, y);
+      for v := b.Y2 downto b.Y1 do
+        Result[r.Increase] := Point(b.X1, v);
       Inc(b.X1);
     end;
   until ((b.X1 > b.X2) or (b.Y1 > b.Y2));
@@ -83,10 +83,10 @@ var
   m: T2DBooleanArray;
   c: TPoint;
   z, i: Integer;
-  x, y: TIntegerArray;
+  h, v: TIntegerArray;
 begin
-  x := [1, 0, -1, 0];
-  y := [0, 1, 0, -1];
+  h := [1, 0, -1, 0];
+  v := [0, 1, 0, -1];
   SetLength(Result, Self.Area);
   m := T2D.Create(False, Self.Width, Self.Height);
   c := Point(Self.X1, Self.Y1);
@@ -95,10 +95,10 @@ begin
   begin
     Result[i] := c;
     m[(c.X - Self.X1), (c.Y - Self.Y1)] := True;
-    if (((c.X + x[z]) < Self.X1) or ((c.X + x[z]) > Self.X2) or ((c.Y + y[z]) < Self.Y1) or ((c.Y + y[z]) > Self.Y2) or m[((c.X + x[z]) - Self.X1), ((c.Y + y[z]) - Self.Y1)]) then
+    if (((c.X + h[z]) < Self.X1) or ((c.X + h[z]) > Self.X2) or ((c.Y + v[z]) < Self.Y1) or ((c.Y + v[z]) > Self.Y2) or m[((c.X + h[z]) - Self.X1), ((c.Y + v[z]) - Self.Y1)]) then
       z := ((z + 1) mod 4);
-    c.X := (c.x + x[z]);
-    c.Y := (c.y + y[z]);
+    c.X := (c.x + h[z]);
+    c.Y := (c.y + v[z]);
   end;
 end;
 {$ENDIF}

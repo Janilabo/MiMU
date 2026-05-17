@@ -94,18 +94,18 @@ end;
 [==============================================================================}
 function TBox.Stepped(const sStep: Integer = 1): TPointArray; overload;
 var
-  x, y, r, s: Integer;
+  h, v, r, s: Integer;
 begin
   s := Max(1, sStep);
   SetLength(Result, ((Self.Area + s - 1) div s));
   r := 0;
-  y := Self.Y1;
-  while (y <= Self.Y2) do
+  v := Self.Y1;
+  while (v <= Self.Y2) do
   begin
-    x := Self.X1;
-    while (x <= Self.X2) do
-      Result[r.Increase] := Point(x.Increase(s), y);
-    Inc(y, s);
+    h := Self.X1;
+    while (h <= Self.X2) do
+      Result[r.Increase] := Point(h.Increase(s), v);
+    Inc(v, s);
   end;
   SetLength(Result, r);
 end;

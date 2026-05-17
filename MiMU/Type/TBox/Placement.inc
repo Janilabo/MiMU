@@ -44,20 +44,20 @@ end;
 [==============================================================================}
 function TBox.Places(const target: TBox; const o: TPoint): TPointArray; overload;
 var
-  w, h, x, y, l: Integer;
+  w, h, i, j, l: Integer;
   r, c: TRange;
 begin
   target.Size(w, h);
-  Self.Size(x, y);
-  if ((x > w) or (y > h)) then
+  Self.Size(i, j);
+  if ((i > w) or (j > h)) then
     Exit([]);
-  r.Create(0, (h - y));
-  c.Create(0, (w - x));
+  r.Create(0, (h - j));
+  c.Create(0, (w - i));
   l := 0;
   SetLength(Result, ((r.stop + 1) * (c.stop + 1)));
-  for y := r.start to r.stop do
-    for x := c.start to c.stop do
-      Result[l.Increase] := Point(((x + target.X1) + o.X), ((y + target.Y1) + o.Y));
+  for j := r.start to r.stop do
+    for i := c.start to c.stop do
+      Result[l.Increase] := Point(((i + target.X1) + o.X), ((j + target.Y1) + o.Y));
 end;
 
 function TBox.Places(const target: TBox): TPointArray; overload;

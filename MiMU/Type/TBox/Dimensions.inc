@@ -1,16 +1,10 @@
 {$IFDEF METHODS}
-function Bottom: Integer; overload;
 function Dimensions(var bHorizontal, bVertical: TRange): Integer; overload;
 function Dimensions(var bWidth, bHeight: Integer): Integer; overload;
 function GetHeight: Integer; overload;
 function GetWidth: Integer; overload;
 function Height: Integer; overload;
 function Height(const h: Integer): Integer; overload;
-function Horizontal: TRange; overload;
-function Left: Integer; overload;
-function Right: Integer; overload;
-function Top: Integer; overload;
-function Vertical: TRange; overload;
 function Width: Integer; overload;
 function Width(const w: Integer): Integer; overload;
 function XLength: Integer; overload;
@@ -22,16 +16,6 @@ function YSpan: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Bottom>
-  @action: Maximum Y-value
-  @note: Always returns correct Bottom-value from TBox
-[==============================================================================}
-function TBox.Bottom: Integer; overload;
-begin
-  Result := Max(Self.Y1, Self.Y2);
-end;
-
 {==============================================================================]
   <Dimensions>
   @action: Returns area of the TBox
@@ -95,58 +79,6 @@ function TBox.Height(const h: Integer): Integer; overload;
 begin
   Result := (Self.YSpan + 1);
   Self.Y2 := (Self.Y1 + (h - 1));
-end;
-
-{==============================================================================]
-  <Horizontal>
-  @action: Returns bx.X1 and bx.X2 as TRange.
-  @note: Horitonzal-axis.
-[==============================================================================}
-function TBox.Horizontal: TRange; overload;
-begin
-  Result.start := Self.X1;
-  Result.stop := Self.X2;
-end;
-
-{==============================================================================]
-  <Left>
-  @action: Minimum X-value
-  @note: Always returns correct Left-value from TBox
-[==============================================================================}
-function TBox.Left: Integer; overload;
-begin
-  Result := Min(Self.X1, Self.X2);
-end;
-
-{==============================================================================]
-  <Right>
-  @action: Maximum X-value
-  @note: Always returns correct Right-value from TBox
-[==============================================================================}
-function TBox.Right: Integer; overload;
-begin
-  Result := Max(Self.X1, Self.X2);
-end;
-
-{==============================================================================]
-  <Top>
-  @action: Minimum Y-value
-  @note: Always returns correct Top-value from TBox
-[==============================================================================}
-function TBox.Top: Integer; overload;
-begin
-  Result := Min(Self.Y1, Self.Y2);
-end;
-
-{==============================================================================]
-  <Vertical>
-  @action: Returns bx.Y1 and bx.Y2 as TRange.
-  @note: Vertical-axis.
-[==============================================================================}
-function TBox.Vertical: TRange; overload;
-begin
-  Result.start := Self.Y1;
-  Result.stop := Self.Y2;
 end;
 
 {==============================================================================]

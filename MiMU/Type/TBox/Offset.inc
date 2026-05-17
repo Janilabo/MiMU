@@ -1,5 +1,5 @@
 {$IFDEF METHODS}
-function Offset(const XS, YS, XE, YE: Integer): TBox; overload;
+function Offset(const bXS, bYS, bXE, bYE: Integer): TBox; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,11 +11,11 @@ function Offset(const XS, YS, XE, YE: Integer): TBox; overload;
          This method does not normalize or validate the resulting box.
          Self remains unchanged.
 [==============================================================================}
-function TBox.Offset(const XS, YS, XE, YE: Integer): TBox; overload;
+function TBox.Offset(const bXS, bYS, bXE, bYE: Integer): TBox; overload;
 begin
-  Result.X1 := (Self.X1 + XS);
-  Result.Y1 := (Self.Y1 + YS);
-  Result.X2 := (Self.X2 + XE);
-  Result.Y2 := (Self.Y2 + YE);
+  Result.X1 := (Self.X1 + bXS);
+  Result.Y1 := (Self.Y1 + bYS);
+  Result.X2 := (Self.X2 + bXE);
+  Result.Y2 := (Self.Y2 + bYE);
 end;
 {$ENDIF}

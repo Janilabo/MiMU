@@ -1,6 +1,6 @@
 {$IFDEF METHODS}
 function Border: TPointArray; overload;
-function Border(const X, Y: Integer): Boolean; overload;
+function Border(const pX, pY: Integer): Boolean; overload;
 function Border(const pt: TPoint): Boolean; overload;
 function Boundary: TPointArray;
 function Contour: TPointArray;
@@ -8,10 +8,10 @@ function CornerPoints: TPointArray;
 function CornerPts: TPointArray;
 function Corners: TPointArray;
 function Edge: TPointArray; overload;
-function Edge(const X, Y: Integer): Boolean; overload;
+function Edge(const pX, pY: Integer): Boolean; overload;
 function Edge(const pt: TPoint): Boolean; overload;
 function Outline: TPointArray; overload;
-function Outline(const X, Y: Integer): Boolean; overload;
+function Outline(const pX, pY: Integer): Boolean; overload;
 function Outline(const pt: TPoint): Boolean; overload;
 function Shell: TPointArray;
 {$ENDIF}
@@ -24,27 +24,27 @@ function Shell: TPointArray;
 [==============================================================================}
 function TBox.Border: TPointArray; overload;
 var
-  x, y, i, w, h: Integer;
+  s, i, w, h: Integer;
 begin
   Self.Size(w, h);
   if ((w = 1) or (h = 1)) then
     Exit(Self.Points);
   SetLength(Result, ((2 * (w + h)) - 4));
   i := 0;
-  for x := Self.X1 to Self.X2 do
-    Result[i.Increase] := Point(x, Self.Y1);
-  for y := (Self.Y1 + 1) to (Self.Y2 - 1) do
-    Result[i.Increase] := Point(Self.X2, y);
-  for x := Self.X2 downto Self.X1 do
-    Result[i.Increase] := Point(x, Self.Y2);
-  for y := (Self.Y2 - 1) downto (Self.Y1 + 1) do
-    Result[i.Increase] := Point(Self.X1, y);
+  for s := Self.X1 to Self.X2 do
+    Result[i.Increase] := Point(s, Self.Y1);
+  for s := (Self.Y1 + 1) to (Self.Y2 - 1) do
+    Result[i.Increase] := Point(Self.X2, s);
+  for s := Self.X2 downto Self.X1 do
+    Result[i.Increase] := Point(s, Self.Y2);
+  for s := (Self.Y2 - 1) downto (Self.Y1 + 1) do
+    Result[i.Increase] := Point(Self.X1, s);
 end;
 
-function TBox.Border(const X, Y: Integer): Boolean; overload;
+function TBox.Border(const pX, pY: Integer): Boolean; overload;
 begin
   with Self do
-    Result := ((((X = X1) or (X = X2)) and ((Y >= Y1) and (Y <= Y2))) or (((Y = Y1) or (Y = Y2)) and ((X >= X1) and (X <= X2))));
+    Result := ((((pX = X1) or (pX = X2)) and ((pY >= Y1) and (pY <= Y2))) or (((pY = Y1) or (pY = Y2)) and ((pX >= X1) and (pX <= X2))));
 end;
 
 function TBox.Border(const pt: TPoint): Boolean; overload;
@@ -59,21 +59,21 @@ end;
 [==============================================================================}
 function TBox.Boundary: TPointArray;
 var
-  x, y, r: Integer;
+  s, r: Integer;
 begin
   SetLength(Result, (2 * ((Self.Width + Self.Height) - 2)));
   r := 0;
-  for x := Self.X1 to Self.X2 do
+  for s := Self.X1 to Self.X2 do
   begin
-    Result[r.Increase] := Point(x, Self.Y1);
+    Result[r.Increase] := Point(s, Self.Y1);
     if (Self.Y1 <> Self.Y2) then
-      Result[r.Increase] := Point(x, Self.Y2);
+      Result[r.Increase] := Point(s, Self.Y2);
   end;
-  for y := (Self.Y1 + 1) to (Self.Y2 - 1) do
+  for s := (Self.Y1 + 1) to (Self.Y2 - 1) do
   begin
-    Result[r.Increase] := Point(Self.X1, y);
+    Result[r.Increase] := Point(Self.X1, s);
     if (Self.X1 <> Self.X2) then
-      Result[r.Increase] := Point(Self.X2, y);
+      Result[r.Increase] := Point(Self.X2, s);
   end;
 end;
 
@@ -173,10 +173,10 @@ begin
   end;
 end;
 
-function TBox.Edge(const X, Y: Integer): Boolean; overload;
+function TBox.Edge(const pX, pY: Integer): Boolean; overload;
 begin
   with Self do
-    Result := (((X = X1) or (X = X2) or (Y = Y1) or (Y = Y2)) and ((X >= X1) and (X <= X2) and (Y >= Y1) and (Y <= Y2)));
+    Result := (((pX = X1) or (pX = X2) or (pY = Y1) or (pY = Y2)) and ((pX >= X1) and (pX <= X2) and (pY >= Y1) and (pY <= Y2)));
 end;
 
 function TBox.Edge(const pt: TPoint): Boolean; overload;
@@ -191,28 +191,28 @@ end;
 [==============================================================================}
 function TBox.Outline: TPointArray; overload;
 var
-  x, y, i, w, h: Integer;
+  s, i, w, h: Integer;
 begin
   Self.Size(w, h);
   if ((w = 1) or (h = 1)) then
     Exit(Self.Points);
   SetLength(Result, ((2 * (w + h)) - 4));
   i := 0;
-  for x := Self.X1 to Self.X2 do
+  for s := Self.X1 to Self.X2 do
   begin
-    Result[i.Increase] := Point(x, Self.Y1);
-    Result[i.Increase] := Point(x, Self.Y2);
+    Result[i.Increase] := Point(s, Self.Y1);
+    Result[i.Increase] := Point(s, Self.Y2);
   end;
-  for y := (Self.Y1 + 1) to (Self.Y2 - 1) do
+  for s := (Self.Y1 + 1) to (Self.Y2 - 1) do
   begin
-    Result[i.Increase] := Point(Self.X1, y);
-    Result[i.Increase] := Point(Self.X2, y);
+    Result[i.Increase] := Point(Self.X1, s);
+    Result[i.Increase] := Point(Self.X2, s);
   end;
 end;
 
-function TBox.Outline(const X, Y: Integer): Boolean; overload;
+function TBox.Outline(const pX, pY: Integer): Boolean; overload;
 begin
-  Result := ((not ((X < X1) or (X > X2) or (Y < Y1) or (Y > Y2))) and ((X = X1) or (X = X2) or (Y = Y1) or (Y = Y2)));
+  Result := ((not ((pX < X1) or (pX > X2) or (pY < Y1) or (pY > Y2))) and ((pX = X1) or (pX = X2) or (pY = Y1) or (pY = Y2)));
 end;
 
 function TBox.Outline(const pt: TPoint): Boolean; overload;

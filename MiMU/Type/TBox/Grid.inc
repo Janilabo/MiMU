@@ -39,12 +39,12 @@ end;
 [==============================================================================}
 function TBox.Column: T2DPointArray; overload;
 var
-  x, y: Integer;
+  c, r: Integer;
 begin
   Result := T2D.Create(Point(0, 0), Self.Width, Self.Height);
-  for x := Self.X1 to Self.X2 do
-    for y := Self.Y1 to Self.Y2 do
-      Result[x - Self.X1][y - Self.Y1] := Point(x, y);
+  for c := Self.X1 to Self.X2 do
+    for r := Self.Y1 to Self.Y2 do
+      Result[c - Self.X1][r - Self.Y1] := Point(c, r);
 end;
 
 {==============================================================================]
@@ -102,12 +102,12 @@ end;
 [==============================================================================}
 function TBox.Row: T2DPointArray; overload;
 var
-  x, y: Integer;
+  c, r: Integer;
 begin
   Result := T2D.Create(Point(0, 0), Self.Height, Self.Width);
-  for y := Self.Y1 to Self.Y2 do
-    for x := Self.X1 to Self.X2 do
-      Result[y - Self.Y1][x - Self.X1] := Point(x, y);
+  for r := Self.Y1 to Self.Y2 do
+    for c := Self.X1 to Self.X2 do
+      Result[r - Self.Y1][c - Self.X1] := Point(c, r);
 end;
 
 {==============================================================================]

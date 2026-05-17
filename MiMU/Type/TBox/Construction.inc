@@ -1,12 +1,12 @@
 {$IFDEF METHODS}
 function Build(const minX, minY, maxX, maxY: Integer): Integer; overload;
-function Build(const top, bottom: TPoint): Integer; overload;
+function Build(const pTop, pBottom: TPoint): Integer; overload;
 function Build(const valueX, valueY: Integer): Integer; overload;
 function Build(const target: TPoint): Integer; overload;
 function Build(const value: Integer = 0): Integer; overload;
-class function Construct(const XS, YS, XE, YE: Integer): TBox; overload; static;
+class function Construct(const bXS, bYS, bXE, bYE: Integer): TBox; overload; static;
 constructor Create(const minX, minY, maxX, maxY: Integer); overload;
-constructor Create(const top, bottom: TPoint); overload;
+constructor Create(const pTop, pBottom: TPoint); overload;
 constructor Create(const valueX, valueY: Integer); overload;
 constructor Create(const target: TPoint); overload;
 constructor Create(const value: Integer); overload;
@@ -52,9 +52,9 @@ end;
   @action: Builds TBox using 2 points (a = start point, b = end point)..
   @note: Make sure start and end points are correct!
 [==============================================================================}
-function TBox.Build(const top, bottom: TPoint): Integer; overload;
+function TBox.Build(const pTop, pBottom: TPoint): Integer; overload;
 begin
-  Result := Self.Build(top.X, top.Y, bottom.X, bottom.Y);
+  Result := Self.Build(pTop.X, pTop.Y, pBottom.X, pBottom.Y);
 end;
 
 {==============================================================================]
@@ -92,12 +92,12 @@ end;
   @action: Constructs TBox with XS, YS, XE, YE.
   @note: None.
 [==============================================================================}
-class function TBox.Construct(const XS, YS, XE, YE: Integer): TBox; overload;
+class function TBox.Construct(const bXS, bYS, bXE, bYE: Integer): TBox; overload;
 begin
-  Result.X1 := XS;
-  Result.Y1 := YS;
-  Result.X2 := XE;
-  Result.Y2 := YE;
+  Result.X1 := bXS;
+  Result.Y1 := bYS;
+  Result.X2 := bXE;
+  Result.Y2 := bYE;
 end;
 
 {==============================================================================]
@@ -118,9 +118,9 @@ end;
   @action: Creates TBox using top and bottom TPoint (top contains minX,minY and bottom contains maxX,maxY)
   @note: Constructor.
 [==============================================================================}
-constructor TBox.Create(const top, bottom: TPoint); overload;
+constructor TBox.Create(const pTop, pBottom: TPoint); overload;
 begin
-  Self.Create(top.X, top.Y, bottom.X, bottom.Y);
+  Self.Create(pTop.X, pTop.Y, pBottom.X, pBottom.Y);
 end;
 
 {==============================================================================]

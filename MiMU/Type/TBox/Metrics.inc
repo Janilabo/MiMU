@@ -14,6 +14,7 @@ function Ratio: Double;
 function Resolution: Int64;
 function Size(var bWidth, bHeight: Integer): Integer; overload;
 function Size: Integer; overload;
+function Volume: Int64; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -186,5 +187,16 @@ var
   w, h: Integer;
 begin
   Result := Self.Size(w, h);
+end;
+
+{==============================================================================]
+  <Volume>
+  @action: Returns number of integer lattice points in the box.
+  @note: Guarantees non-negative result. Uses ABS to handle inverted boxes.
+         Equivalent to (abs(X2-X1)+1) * (abs(Y2-Y1)+1) but with overflow protection.
+[==============================================================================}
+function TBox.Volume: Int64; overload;
+begin
+  Result := ((Abs(Int64(Self.X2) - Int64(Self.X1)) + 1) * (Abs(Int64(Self.Y2) - Int64(Self.Y1)) + 1));
 end;
 {$ENDIF}

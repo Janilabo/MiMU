@@ -47,15 +47,15 @@ function Unzip: TPointArray; overload;
 [==============================================================================}
 function TBox.All: TPointArray; overload;
 var
-  x, y: Integer;
+  h, v: Integer;
   p: PPoint;
 begin
   SetLength(Result, Self.Area);
   p := PPoint(Result);
-  for y := Self.Y1 to Self.Y2 do
-    for x := Self.X1 to Self.X2 do
+  for v := Self.Y1 to Self.Y2 do
+    for h := Self.X1 to Self.X2 do
     begin
-      p^ := Point(x, y);
+      p^ := Point(h, v);
       Inc(p);
     end;
 end;
@@ -69,17 +69,17 @@ end;
 [==============================================================================}
 function TBox.All(var target: TPointArray): Integer; overload;
 var
-  x, y: Integer;
+  h, v: Integer;
   p: PPoint;
 begin
   Result := Self.Area;
   if (target.Length <> Result) then
     SetLength(target, Result);
   p := PPoint(target);
-  for y := Self.Y1 to Self.Y2 do
-    for x := Self.X1 to Self.X2 do
+  for v := Self.Y1 to Self.Y2 do
+    for h := Self.X1 to Self.X2 do
     begin
-      p^ := Point(x, y);
+      p^ := Point(h, v);
       Inc(p);
     end;
 end;
@@ -107,14 +107,14 @@ end;
 [==============================================================================}
 function TBox.Atomize: TPointArray; overload;
 var
-  x, y, w, o: Integer;
+  h, v, w, o: Integer;
 begin
   SetLength(Result, Self.Size(w, o));
-  for y := Self.Y1 to Self.Y2 do
+  for v := Self.Y1 to Self.Y2 do
   begin
-    o := ((y - Self.Y1) * w);
-    for x := Self.X1 to Self.X2 do
-      Result[o + (x - Self.X1)] := Point(x, y);
+    o := ((v - Self.Y1) * w);
+    for h := Self.X1 to Self.X2 do
+      Result[o + (h - Self.X1)] := Point(h, v);
   end;
 end;
 
@@ -137,15 +137,15 @@ end;
 [==============================================================================}
 function TBox.Breakdown: TPointArray; overload;
 var
-  x, y, r: Integer;
+  h, v, r: Integer;
 begin
   SetLength(Result, Self.Area);
   r := 0;
-  for y := Self.Y1 to Self.Y2 do
+  for v := Self.Y1 to Self.Y2 do
   begin
-    x := (Self.X1 - 1);
-    while (x.Increment <= Self.X2) do
-      Result[r.Increase] := Point(x, y);
+    h := (Self.X1 - 1);
+    while (h.Increment <= Self.X2) do
+      Result[r.Increase] := Point(h, v);
   end;
 end;
 
@@ -179,15 +179,15 @@ end;
 function TBox.Contents: TPointArray; overload;
 var
   p: PPoint;
-  x, y: Integer;
+  h, v: Integer;
 begin
   SetLength(Result, Self.Area);
   p := @Result[0];
-  for y := Self.Y1 to Self.Y2 do
-    for x := Self.X1 to Self.X2 do
+  for v := Self.Y1 to Self.Y2 do
+    for h := Self.X1 to Self.X2 do
     begin
-      p^.X := x;
-      p^.Y := y;
+      p^.X := h;
+      p^.Y := v;
       Inc(p);
     end;
 end;
@@ -242,22 +242,22 @@ function TBox.Decomposed: TPointArray; overload;
 label
   loop, done;
 var
-  x, y, i: Integer;
+  h, v, i: Integer;
 begin
   SetLength(Result, Self.Area);
-  y := Self.Y1;
-  x := Self.X1;
+  v := Self.Y1;
+  h := Self.X1;
   i := 0;
   loop:
-  if (y > Self.Y2) then
+  if (v > Self.Y2) then
     goto done;
-  if (x > Self.X2) then
+  if (h > Self.X2) then
   begin
-    x := Self.X1;
-    Inc(y);
+    h := Self.X1;
+    Inc(v);
     goto loop;
   end;
-  Result[i.Increase] := Point(x.Increase, y);
+  Result[i.Increase] := Point(h.Increase, v);
   goto loop;
   done:
 end;
@@ -269,15 +269,15 @@ end;
 [==============================================================================}
 function TBox.Elemented: TPointArray; overload;
 var
-  x, y: Integer;
+  h, v: Integer;
   r: TPointArray;
 begin
   Result := [];
-  for y := Self.Y1 to Self.Y2 do
+  for v := Self.Y1 to Self.Y2 do
   begin
     r := [];
-    for x := Self.X1 to Self.X2 do
-      r := (r + [Point(x, y)]);
+    for h := Self.X1 to Self.X2 do
+      r := (r + [Point(h, v)]);
     Result := (Result + r);
   end;
 end;
@@ -289,12 +289,12 @@ end;
 [==============================================================================}
 function TBox.Elements: TPointArray; overload;
 var
-  x, y: Integer;
+  h, v: Integer;
 begin
   SetLength(Result, 0);
-  for y := Self.Y1 to Self.Y2 do
-    for x := Self.X1 to Self.X2 do
-      Result := (Result + [Point(x, y)]);
+  for v := Self.Y1 to Self.Y2 do
+    for h := Self.X1 to Self.X2 do
+      Result := (Result + [Point(h, v)]);
 end;
 
 {==============================================================================]
@@ -376,7 +376,7 @@ end;
 [==============================================================================}
 function TBox.Exploded: TPointArray; overload;
 var
-  x, y, w, h, r, s: Integer;
+  a, b, w, h, r, s: Integer;
   t: TPointArray;
 begin
   w := Self.Width;
@@ -384,14 +384,14 @@ begin
   s := SizeOf(TPoint);
   SetLength(Result, (w * h));
   SetLength(t, w);
-  for x := 0 to (w - 1) do
-    t[x] := Point((Self.X1 + x), 0);
-  for y := 0 to (h - 1) do
+  for a := 0 to (w - 1) do
+    t[a] := Point((Self.X1 + a), 0);
+  for b := 0 to (h - 1) do
   begin
-    r := (y * w);
+    r := (b * w);
     Move(t[0], Result[r], (w * s));
-    for x := 0 to (w - 1) do
-      Result[r + x].Y := (Self.Y1 + y);
+    for a := 0 to (w - 1) do
+      Result[r + a].Y := (Self.Y1 + b);
   end;
 end;
 
@@ -402,17 +402,17 @@ end;
 [==============================================================================}
 function TBox.Extract: TPointArray; overload;
 var
-  x, y, i: Integer;
+  h, v, i: Integer;
 begin
   SetLength(Result, Self.Area);
   i := 0;
-  y := Self.Y1;
+  v := Self.Y1;
   repeat
-    x := Self.X1;
+    h := Self.X1;
     repeat
-      Result[i.Increase] := Point(x, y);
-    until (x.Increment > Self.X2);
-  until (y.Increment > Self.Y2);
+      Result[i.Increase] := Point(h, v);
+    until (h.Increment > Self.X2);
+  until (v.Increment > Self.Y2);
 end;
 
 {==============================================================================]
@@ -469,14 +469,14 @@ end;
 function TBox.Flatten: TPointArray; overload;
 var
   B: TBox;
-  x, y, i: Integer;
+  h, v, i: Integer;
 begin
   B := Self.Blanco;
   SetLength(Result, B.Area);
   i := 0;
-  for y := 0 to B.Y2 do
-    for x := 0 to B.X2 do
-      Result[i.Increase] := Point((x + Self.X1), (y + Self.Y1));
+  for v := 0 to B.Y2 do
+    for h := 0 to B.X2 do
+      Result[i.Increase] := Point((h + Self.X1), (v + Self.Y1));
 end;
 
 {==============================================================================]
@@ -514,13 +514,13 @@ end;
 function TBox.List: TPointArray; overload;
 var
   p: specialize TList<TPoint>;
-  x, y: Integer;
+  h, v: Integer;
 begin
   p := specialize TList<TPoint>.Create;
   try
-    for y := Self.Y1 to Self.Y2 do
-      for x := Self.X1 to Self.X2 do
-        p.Add(Point(x, y));
+    for v := Self.Y1 to Self.Y2 do
+      for h := Self.X1 to Self.X2 do
+        p.Add(Point(h, v));
     Result := p.ToArray;
   finally
     p.Free;
@@ -554,18 +554,18 @@ end;
 [==============================================================================}
 function TBox.Materialized: TPointArray; overload;
 var
-  x, y, w, h: Integer;
+  r, c, w, h: Integer;
   p: PPoint;
 begin
   w := Self.Width;
   h := Self.Height;
   SetLength(Result, (w * h));
   p := @Result[0];
-  for y := 0 to (h - 1) do
-    for x := 0 to (w - 1) do
+  for r := 0 to (h - 1) do
+    for c := 0 to (w - 1) do
     begin
-      p^.X := (Self.X1 + x);
-      p^.Y := (Self.Y1 + y);
+      p^.X := (Self.X1 + c);
+      p^.Y := (Self.Y1 + r);
       Inc(p);
     end;
 end;
@@ -601,19 +601,19 @@ end;
 [==============================================================================}
 function TBox.Pixels: TPointArray; overload;
 var
-  w, h, s, x, y, i: Integer;
+  w, h, s, r, c, i: Integer;
   p: TPointArray;
 begin
   SetLength(Result, Self.Size(w, h));
   SetLength(p, w);
-  for x := 0 to (w - 1) do
-    p[x].X := (Self.X1 + x);
+  for c := 0 to (w - 1) do
+    p[c].X := (Self.X1 + c);
   s := (w * SizeOf(TPoint));
   i := 0;
-  for y := Self.Y1 to Self.Y2 do
+  for r := Self.Y1 to Self.Y2 do
   begin
-    for x := 0 to (w - 1) do
-      p[x].Y := y;
+    for c := 0 to (w - 1) do
+      p[c].Y := r;
     Move(p[0], Result[i.Increase(w)], s);
   end;
 end;
@@ -630,13 +630,13 @@ end;
 [==============================================================================}
 function TBox.Points: TPointArray; overload;
 var
-  x, y, r: Integer;
+  h, v, r: Integer;
 begin
   SetLength(Result, Self.Area);
   r := 0;
-  for y := Self.Y1 to Self.Y2 do
-    for x := Self.X1 to Self.X2 do
-      Result[r.Increase].Create(x, y);
+  for v := Self.Y1 to Self.Y2 do
+    for h := Self.X1 to Self.X2 do
+      Result[r.Increase].Create(h, v);
 end;
 
 {==============================================================================]
@@ -692,13 +692,13 @@ end;
 [==============================================================================}
 function TBox.Pts: TPointArray; overload;
 var
-  x, y, w, h: Integer;
+  r, c, w, h: Integer;
 begin
   Self.Size(w, h);
   SetLength(Result, (w * h));
-  for y := 0 to (h - 1) do
-    for x := 0 to (w - 1) do
-      Result[(y * w) + x] := Point((Self.X1 + x), (Self.Y1 + y));
+  for r := 0 to (h - 1) do
+    for c := 0 to (w - 1) do
+      Result[(r * w) + c] := Point((Self.X1 + c), (Self.Y1 + r));
 end;
 
 {==============================================================================]
@@ -709,15 +709,15 @@ end;
 [==============================================================================}
 function TBox.Release: TPointArray; overload;
 var
-  x, y: Integer;
+  h, v: Integer;
   r: TPointArray;
 begin
   SetLength(Result, 0);
   SetLength(r, Self.Width);
-  for y := Self.Y1 to Self.Y2 do
+  for v := Self.Y1 to Self.Y2 do
   begin
-    for x := Self.X1 to Self.X2 do
-      r[x - Self.X1] := Point(x, y);
+    for h := Self.X1 to Self.X2 do
+      r[h - Self.X1] := Point(h, v);
     Result := (Result + r);
   end;
 end;
@@ -738,11 +738,11 @@ end;
 
 function TBox.TPA(const pIndex: Integer): TPoint; overload;
 var
-  x, y: Integer;
+  h, v: Integer;
 begin
-  y := (pIndex div Self.Width);
-  x := (pIndex - (y * Self.Width));
-  Result := Point((Self.X1 + x), (Self.Y1 + y));
+  v := (pIndex div Self.Width);
+  h := (pIndex - (v * Self.Width));
+  Result := Point((Self.X1 + h), (Self.Y1 + v));
 end;
 
 {==============================================================================]
@@ -752,8 +752,7 @@ end;
 [==============================================================================}
 function TBox.Unbox: TPointArray; overload;
 var
-  w, h: Integer;
-  x, y: Integer;
+  w, h, i, j: Integer;
   s: TPointArray;
   p, r: PPoint;
 begin
@@ -761,20 +760,20 @@ begin
   SetLength(s, w);
   r := @s[0];
   p := r;
-  for x := 0 to (w - 1) do
+  for i := 0 to (w - 1) do
   begin
-    p^.X := (Self.X1 + x);
+    p^.X := (Self.X1 + i);
     p^.Y := Self.Y1;
     Inc(p);
   end;
   P := @Result[0];
-  for y := 0 to (h - 1) do
+  for j := 0 to (h - 1) do
   begin
     Move(s[0], p^, (w * SizeOf(TPoint)));
     r := p;
-    for x := 0 to (w - 1) do
+    for i := 0 to (w - 1) do
     begin
-      r^.Y := (Self.Y1 + y);
+      r^.Y := (Self.Y1 + j);
       Inc(r);
     end;
     Inc(p, w);
@@ -789,25 +788,25 @@ end;
 function TBox.Unpack: TPointArray; overload;
 var
   r: TPointArray;
-  w, h, l, x, y: Integer;
+  w, h, l, i, j: Integer;
   p, s: PPoint;
 begin
   l := Self.Size(w, h);
   if (l < 1) then
     Exit([]);
   SetLength(r, w);
-  for x := 0 to (w - 1) do
-    r[x] := Point((Self.X1 + x), 0);
+  for i := 0 to (w - 1) do
+    r[i] := Point((Self.X1 + i), 0);
   SetLength(Result, l);
   p := @Result[0];
-  for y := Self.Y1 to Self.Y2 do
+  for j := Self.Y1 to Self.Y2 do
   begin
     Move(r[0], p^, (w * SizeOf(TPoint)));
     s := p;
     Inc(s, w);
     while (p <> s) do
     begin
-      p^.Y := y;
+      p^.Y := j;
       Inc(p);
     end;
   end;
@@ -835,24 +834,24 @@ end;
 function TBox.Unzip: TPointArray; overload;
 var
   r: TPointArray;
-  w, h, l, x, y: Integer;
+  w, h, l, i, j: Integer;
   p, s: PPoint;
 begin
   l := Self.Size(w, h);
   if (l < 1) then
     Exit([]);
   SetLength(r, w);
-  for x := 0 to (w - 1) do
-    r[x] := Point((Self.X1 + x), 0);
+  for i := 0 to (w - 1) do
+    r[i] := Point((Self.X1 + i), 0);
   SetLength(Result, l);
   p := @Result[0];
-  for y := Self.Y1 to Self.Y2 do
+  for j := Self.Y1 to Self.Y2 do
   begin
     Move(r[0], p^, (w * SizeOf(TPoint)));
     s := p;
-    for x := 0 to (w - 1) do
+    for i := 0 to (w - 1) do
     begin
-      s^.Y := y;
+      s^.Y := j;
       Inc(s);
     end;
     Inc(p, w);

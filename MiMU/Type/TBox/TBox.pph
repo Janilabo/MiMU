@@ -1,5 +1,6 @@
 {$I ../Base/Base.inc}
 
+{$I Axis.inc}
 {$I Borders.inc}
 {$I Boundary.inc}
 {$I Centrality.inc}
@@ -23,6 +24,7 @@
 {$I Offset.inc}
 {$I Placement.inc}
 {$I Position.inc}
+{$I Proximity.inc}
 {$I Resizing.inc}
 {$I Restriction.inc}
 {$I Sampling.inc}

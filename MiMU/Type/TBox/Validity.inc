@@ -15,16 +15,16 @@ function Usable: Boolean; overload;
 [==============================================================================}
 function TBox.Fix: Boolean; overload;
 var
-  x, y: Boolean;
+  h, v: Boolean;
 begin
-  x := (Self.X1 > Self.X2);
-  y := (Self.Y1 > Self.Y2);
-  Result := (x or y);
+  h := (Self.X1 > Self.X2);
+  v := (Self.Y1 > Self.Y2);
+  Result := (h or v);
   if not Result then
     Exit;
-  if x then
+  if h then
     Swap(Self.X1, Self.X2);
-  if y then
+  if v then
     Swap(Self.Y1, Self.Y2);
 end;
 

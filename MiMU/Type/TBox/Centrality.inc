@@ -1,14 +1,15 @@
 {$IFDEF METHODS}
-function Average: TPoint;
-function Center: TPoint;
-function Central: TPoint;
-function Centre: TPoint;
-function Centroid: TPoint;
-function Mean: TPoint;
-function Medium: TPoint;
-function Mid: TPoint;
-function Middle: TPoint;
-function MiddlePoint: TPoint;
+function Average: TPoint; overload;
+function Center: TPoint; overload;
+function Central: TPoint; overload;
+function Centre: TPoint; overload;
+function Centroid: TPoint; overload;
+function Core: TPoint; overload;
+function Mean: TPoint; overload;
+function Medium: TPoint; overload;
+function Mid: TPoint; overload;
+function Middle: TPoint; overload;
+function MiddlePoint: TPoint; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -21,7 +22,7 @@ function MiddlePoint: TPoint;
          box’s original coordinate space. Results use integer division, so
          fractional centers are truncated toward zero.
 [==============================================================================}
-function TBox.Average: TPoint;
+function TBox.Average: TPoint; overload;
 var
   B: TBox;
 begin
@@ -34,7 +35,7 @@ end;
   @action: Returns Center point from bx.
   @note: None.
 [==============================================================================}
-function TBox.Center: TPoint;
+function TBox.Center: TPoint; overload;
 begin
   Result.X := Round(Self.X1 + ((Self.Width - 1) div 2));
   Result.Y := Round(Self.Y1 + ((Self.Height - 1) div 2));
@@ -48,7 +49,7 @@ end;
          coordinate direction. Integer division is used; results are
          truncated toward zero.
 [==============================================================================}
-function TBox.Central: TPoint;
+function TBox.Central: TPoint; overload;
 begin
   Result.X := ((Min(Self.X1, Self.X2) + Max(Self.X1, Self.X2)) div 2);
   Result.Y := ((Min(Self.Y1, Self.Y2) + Max(Self.Y1, Self.Y2)) div 2);
@@ -62,7 +63,7 @@ end;
          overflow. Integer division truncates toward zero. The result is
          symmetric but may be biased for even extents.
 [==============================================================================}
-function TBox.Centre: TPoint;
+function TBox.Centre: TPoint; overload;
 begin
   Result := Point(((Int64(Self.X1) + Self.X2) div 2), ((Int64(Self.Y1) + Self.Y2) div 2));
 end;
@@ -74,9 +75,19 @@ end;
          to the nearest integer. This yields the least biased integer
          approximation of the true geometric center.
 [==============================================================================}
-function TBox.Centroid: TPoint;
+function TBox.Centroid: TPoint; overload;
 begin
   Result := Point(Round((Self.X1 + Self.X2) * 0.5), Round((Self.Y1 + Self.Y2) * 0.5));
+end;
+
+{==============================================================================]
+  <Core>
+  @action: Returns exact center using floating point with banker's rounding
+  @note: Uses Round() which implements banker's rounding (ties to nearest even).
+[==============================================================================}
+function TBox.Core: TPoint; overload;
+begin
+  Result := Point(Round((Self.X1 + Self.X2) / 2), Round((Self.Y1 + Self.Y2) / 2));
 end;
 
 {==============================================================================]
@@ -86,7 +97,7 @@ end;
          zero. This function does not normalize bounds and performs no
          rounding correction.
 [==============================================================================}
-function TBox.Mean: TPoint;
+function TBox.Mean: TPoint; overload;
 begin
   Result := Point(((Self.X1 + Self.X2) div 2), ((Self.Y1 + Self.Y2) div 2));
 end;
@@ -98,7 +109,7 @@ end;
          coordinate sums, producing a bias toward higher indices. No floating
          point arithmetic is used.
 [==============================================================================}
-function TBox.Medium: TPoint;
+function TBox.Medium: TPoint; overload;
 begin
   Result.X := ((Self.X1 + Self.X2 + Ord(((Self.X1 + Self.X2) mod 2) <> 0)) div 2);
   Result.Y := ((Self.Y1 + Self.Y2 + Ord(((Self.Y1 + Self.Y2) mod 2) <> 0)) div 2);
@@ -111,7 +122,7 @@ end;
          width and height. Bit-shift division is used and assumes non-negative
          extents. The result lies within the box.
 [==============================================================================}
-function TBox.Mid: TPoint;
+function TBox.Mid: TPoint; overload;
 begin
   Result := Point((Self.X1 + (Self.Width shr 1)), (Self.Y1 + (Self.Height shr 1)));
 end;
@@ -123,7 +134,7 @@ end;
          is biased toward the top-left for even sizes. The result always lies
          within the box.
 [==============================================================================}
-function TBox.Middle: TPoint;
+function TBox.Middle: TPoint; overload;
 begin
   Result := Point((Self.X1 + ((Self.X2 - Self.X1) div 2)), (Self.Y1 + ((Self.Y2 - Self.Y1) div 2)));
 end;
@@ -135,7 +146,7 @@ end;
          non-negative extents and produces identical results to division-based
          midpoint calculations.
 [==============================================================================}
-function TBox.MiddlePoint: TPoint;
+function TBox.MiddlePoint: TPoint; overload;
 begin
   Result := Point((Self.X1 + ((Self.X2 - Self.X1) shr 1)), (Self.Y1 + ((Self.Y2 - Self.Y1) shr 1)));
 end;

@@ -80,15 +80,15 @@ end;
 [==============================================================================}
 function TBox.Indexed: T2DIntegerArray; overload;
 var
-  r, w, h, x, y: Integer;
+  r, w, h, i, j: Integer;
 begin
   w := Self.Width;
   h := Self.Height;
   SetLength(Result, h, w);
   r := 0;
-  for y := 0 to (h - 1) do
-    for x := 0 to (w - 1) do
-      Result[y][x] := r.Increase;
+  for i := 0 to (h - 1) do
+    for j := 0 to (w - 1) do
+      Result[i][j] := r.Increase;
 end;
 
 {==============================================================================]
@@ -103,12 +103,12 @@ end;
 [==============================================================================}
 function TBox.Indexes: TIntegerArray; overload;
 var
-  r, x, y: Integer;
+  r, h, v: Integer;
 begin
   SetLength(Result, Self.Area);
   r := 0;
-  for y := Self.Y1 to Self.Y2 do
-    for x := Self.X1 to Self.X2 do
+  for v := Self.Y1 to Self.Y2 do
+    for h := Self.X1 to Self.X2 do
       Result[r] := r.Increment;
 end;
 
@@ -125,12 +125,12 @@ end;
 function TBox.IndexList: TIntegerArray; overload;
 var
   l: specialize TList<Integer>;
-  x, y: Integer;
+  h, v: Integer;
 begin
   l := specialize TList<Integer>.Create;
   try
-    for y := Self.Y1 to Self.Y2 do
-      for x := Self.X1 to Self.X2 do
+    for v := Self.Y1 to Self.Y2 do
+      for h := Self.X1 to Self.X2 do
         l.Add(l.Count);
     Result := l.ToArray;
   finally
@@ -149,14 +149,14 @@ end;
 [==============================================================================}
 function TBox.IndexOf(const p: TPoint): Integer; overload;
 var
-  x, y: Integer;
+  h, v: Integer;
 begin
   if not Self.Contains(p) then
     Exit(-1);
   Result := 0;
-  for y := Self.Y1 to Self.Y2 do
-    for x := Self.X1 to Self.X2 do
-      if ((x = p.X) and (y = p.Y)) then
+  for v := Self.Y1 to Self.Y2 do
+    for h := Self.X1 to Self.X2 do
+      if ((h = p.X) and (v = p.Y)) then
         Exit
       else
         Inc(Result);
