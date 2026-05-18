@@ -21,22 +21,26 @@ function Flat: TPointArray; overload;
 function Flatten: TPointArray; overload;
 function Generate: TPointArray; overload;
 function List: TPointArray; overload;
+function Material: TPointArray; overload;
 function Materialize: TPointArray; overload;
 function Materialized: TPointArray; overload;
 function Pixeled: TPointArray; overload;
 function Pixels: TPointArray; overload;
 function Pixels(const pIndex: Integer): TPoint; overload;
 function Pointalize: TPointArray; overload;
+function Pointify: TPointArray; overload;
 function Points: TPointArray; overload;
 function Points(const pIndex: Integer): TPoint; overload;
 function Points(const pIDs: TIntegerArray): TPointArray; overload;
 function Points(var xArray, yArray: TIntegerArray): Integer; overload;
 function Pts: TPointArray; overload;
 function Release: TPointArray; overload;
+function Stack: TPointArray; overload;
 function ToPoints: TPointArray; overload;
 function TPA: TPointArray; overload;
 function TPA(const pIndex: Integer): TPoint; overload;
 function Unbox: TPointArray; overload;
+function Unboxed: TPointArray; overload;
 function Unpack: TPointArray; overload;
 function Unzip(var bX1, bY1, bX2, bY2: Integer): Integer; overload;	
 function Unzip: TPointArray; overload;
@@ -557,6 +561,25 @@ begin
 end;
 
 {==============================================================================]
+  <Material>
+  @action: Returns TBox points as TPointArray.
+  @note: Alternative method.
+[==============================================================================}
+function TBox.Material: TPointArray; overload;
+begin
+  case Self.Area of
+    1: Exit([Self.X1Y1]);
+    2:
+	if (Self.Width = 2) then
+      Exit([Self.X1Y1, Self.X2Y1])
+    else
+      Exit([Self.X1Y1, Self.X1Y2]);
+  else
+    Result := Self.Materialize;
+  end;
+end;
+
+{==============================================================================]
   <Materialize>
   @action: Returns TBox points as TPointArray.
   @note: Alternative method.
@@ -672,6 +695,27 @@ begin
 end;
 
 {==============================================================================]
+  <Pointify>
+  @action: Converts the TBox into a 1D TPointArray by first constructing a 2D grid representation of the coordinates.
+  @note: Allocates a dynamic 2D array (T2DPointArray) matching the box dimensions,
+         populates it from top-left to bottom-right, and then flattens it row-by-row into the final result array via concatenation.
+[==============================================================================}
+function TBox.Pointify: TPointArray; overload;
+var
+  p: T2DPointArray;
+  r, c, w: Integer;
+begin
+  w := Self.Width;
+  SetLength(p, Self.Height, w);
+  for r := 0 to (Self.Height - 1) do
+    for c := 0 to (w - 1) do
+      p[r][c] := Point((Self.X1 + c), (Self.Y1 + r));
+  Result := [];
+  for r := 0 to High(p) do
+    Result := (Result + p[r]);
+end;
+
+{==============================================================================]
   <Points>
   @action: Returns TBox points as TPointArray.
   @note: None.
@@ -771,6 +815,29 @@ begin
 end;
 
 {==============================================================================]
+  <Stack>
+  @action: Populates a TPointArray with all coordinate points within the TBox using an intermediate stack structure.
+  @note: Leverages a specialized generic TStack to temporarily hold the generated points in top-left to bottom-right order
+         before converting the collection into the final result array.
+[==============================================================================}
+function TBox.Stack: TPointArray; overload;
+var
+  s: specialize TStack<TPoint>;
+  r, c: Integer;
+begin
+  s := specialize TStack<TPoint>.Create;
+  try
+    s.Capacity := Self.Area;
+    for r := Self.Y1 to Self.Y2 do
+      for c := Self.X1 to Self.X2 do
+        s.Push(Point(c, r));
+    Result := s.ToArray;
+  finally
+    s.Free;
+  end;
+end;
+
+{==============================================================================]
   <ToPoints>
   @action: Converts the TBox bounds into an array of all TPoint coordinates it contains.
   @note: Populates the array in reverse order (bottom-right to top-left) using a pre-allocated result array.
@@ -840,6 +907,25 @@ begin
       Inc(r);
     end;
     Inc(p, w);
+  end;
+end;
+
+{==============================================================================]
+  <Unboxed>
+  @action: Converts the TBox region into an array of TPoint structures containing every coordinate point inside the box.
+  @note: None.
+[==============================================================================}
+function TBox.Unboxed: TPointArray; overload;
+var
+  h, v, r: Integer;
+begin
+  r := Result.SetSize(Self.Area);
+  v := (Self.Y2 + 1);
+  while (v.Decrement >= Self.Y1) do
+  begin
+    h := (Self.X2 + 1);
+    while (h.Decrement >= Self.X1) do
+      Result[r.Decrement] := Point(h, v);
   end;
 end;
 
