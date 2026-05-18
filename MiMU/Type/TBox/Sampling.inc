@@ -1,8 +1,9 @@
 {$IFDEF METHODS}
-function Any: TPoint;
-function Mixed(const mixings: Integer = 1): TPointArray;
-function Shake(const shakes: Integer = 1): TPointArray;
-function Shuffle(const shuffles: Integer = 1): TPointArray;
+function Any: TPoint; overload;
+function Mixed(const mixings: Integer = 1): TPointArray; overload;
+function Shake(const shakes: Integer = 1): TPointArray; overload;
+function Shuffle(const shuffles: Integer = 1): TPointArray; overload;
+function Shuffled: TPointArray; overload;
 function Some: TPointArray; overload;
 function Some(const amount: Integer): TPointArray; overload;
 function Stepped(const sStep: Integer = 1): TPointArray; overload;
@@ -14,7 +15,7 @@ function Stepped(const sStep: Integer = 1): TPointArray; overload;
   @action: Returns random TBox point.
   @note: None.
 [==============================================================================}
-function TBox.Any: TPoint;
+function TBox.Any: TPoint; overload;
 begin
   Result := Point((Self.X1 + Random(Self.Width)), (Self.X1 + Random(Self.Height)));
 end;
@@ -24,7 +25,7 @@ end;
   @action: Returns TBox randomly mixed as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Mixed(const mixings: Integer = 1): TPointArray;
+function TBox.Mixed(const mixings: Integer = 1): TPointArray; overload;
 var
   i, m: Integer;
 begin
@@ -40,7 +41,7 @@ end;
   @action: Returns TBox randomly shaked as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Shake(const shakes: Integer = 1): TPointArray;
+function TBox.Shake(const shakes: Integer = 1): TPointArray; overload;
 var
   i, s: Integer;
 begin
@@ -56,7 +57,7 @@ end;
   @action: Returns TBox randomly shuffled as TPointArray.
   @note: None.
 [==============================================================================}
-function TBox.Shuffle(const shuffles: Integer = 1): TPointArray;
+function TBox.Shuffle(const shuffles: Integer = 1): TPointArray; overload;
 var
   i, s: Integer;
 begin
@@ -65,6 +66,28 @@ begin
   for s := 1 to shuffles do
     for i := 0 to High(Result) do
       Swap(Result[i], Result[Random(Result.Size)]);
+end;
+
+{==============================================================================]
+  <Shuffled>
+  @action: Generates an array containing every coordinate point within the TBox, arranged in a randomized (shuffled) order.
+  @note: Creates a flat index array, randomizes it using a Fisher-Yates shuffle variant via an `Exchange` helper,
+         and then maps those randomized indices back to 2D TBox coordinates.
+[==============================================================================}
+function TBox.Shuffled: TPointArray; overload;
+var
+  s: TIntegerArray;
+  i, w: Integer;
+begin
+  w := Self.Width;
+  SetLength(s, (w * Self.Height));
+  for i := 0 to High(s) do
+    s[i] := i;
+  for i := High(s) downto 1 do
+    s.Exchange(i, Random(i + 1));
+  SetLength(Result, s.Length);
+  for i := 0 to High(s) do
+    Result[i] := Point((Self.X1 + (s[i] mod w)), (Self.Y1 + (s[i] div w)));
 end;
 
 {==============================================================================]

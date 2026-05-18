@@ -1,12 +1,15 @@
 {$IFDEF METHODS}
 function Any: Integer; overload;
 function Arbitrary: Integer; overload;
+function Disordered: TIntegerArray; overload;
+function Jumbled: TIntegerArray; overload;
 function Lottery(const lCount: Integer = 1): TIntegerArray; overload;
 function Lucky: Integer; overload;
 function Mixed(const mixings: Integer = 1): TIntegerArray; overload;
 function Quantized(const sStep: Integer = 1): TIntegerArray; overload;
 function Raffle(const N: Integer = 1): TIntegerArray; overload;
 function Rand: Integer; overload;
+function Randed: TIntegerArray; overload;
 function RandomEx(const forbidden: Integer): Integer; overload;
 function RandomEx(const forbidden: TIntegerArray): Integer; overload;
 function Randomize: TIntegerArray; overload;
@@ -17,6 +20,7 @@ function Roll(const rCount: Integer = 1): TIntegerArray; overload;
 function Sample(const sSize: Integer = 1): TIntegerArray; overload;
 function Sampled(const totalElements: Integer = 1): TIntegerArray; overload;
 function Samples(const rCount: Integer = 1): TIntegerArray; overload;
+function Scrambled: TIntegerArray; overload;
 function Shake(const shakes: Integer = 1): TIntegerArray; overload;
 function Shuffle(const shuffles: Integer = 1): TIntegerArray; overload;
 function Shuffled(const sCount: Integer): TIntegerArray; overload;
@@ -57,6 +61,44 @@ begin
     Result := (Self.start + Random((Self.stop - Self.start) + 1))
   else
     Result := (Self.stop + Random((Self.start - Self.stop) + 1));
+end;
+
+{==============================================================================]
+  <Disordered>
+  @action: Generates a randomized array containing all integer values defined within the TRange.
+  @note: Materializes the entire range into a standard sequential array first via `.ToArray`,
+         then applies a classic Durstenfeld-Fisher-Yates shuffle backwards in-place using `Swap`.
+[==============================================================================}
+function TRange.Disordered: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  Result := Self.ToArray;
+  i := Result.Length;
+  while (i.Decrement > 0) do
+    Swap(Result[Random(i)], Result[i]);
+end;
+
+{==============================================================================]
+  <Jumbled>
+  @action: Generates a randomized array containing all unique integer values within the TRange bounds.
+  @note: Populates the result by converting the range to a temporary sequential array,
+         then repeatedly selects an item at a random index, copies it over,
+		 and destructively removes it from the pool using `Delete`.
+[==============================================================================}
+function TRange.Jumbled: TIntegerArray; overload;
+var
+  s: TIntegerArray;
+  i, r: Integer;
+begin
+  s := Self.ToArray;
+  SetLength(Result, s.Length);
+  for i := 0 to High(Result) do
+  begin
+    r := Random(s.Length);
+    Result[i] := s[r];
+    s.Delete(r);
+  end;
 end;
 
 {==============================================================================]
@@ -222,6 +264,28 @@ end;
 function TRange.Rand: Integer; overload;
 begin
   Result := (Self.Minimum + Random(Self.Size));
+end;
+
+{==============================================================================]
+  <Randed>
+  @action: Generates a randomized array containing all integer values from the TRange.
+  @note: Converts the range to an array first, then optimizes the traditional Fisher-Yates shuffle
+         by accessing elements directly via a raw pointer (`PInteger`) to bypass high-level array safety overhead during swapping.
+[==============================================================================}
+function TRange.Randed: TIntegerArray; overload;
+var
+  i, r, s: Integer;
+  p: PInteger;
+begin
+  Result := Self.ToArray;
+  p := PInteger(Result);
+  for i := High(Result) downto 1 do
+  begin
+    r := Random(i + 1);
+    s := p[i];
+    p[i] := p[r];
+    p[r] := s;
+  end;
 end;
 
 {==============================================================================]
@@ -481,6 +545,39 @@ begin
 end;
 
 {==============================================================================]
+  <Scrambled>
+  @action: Generates a randomized array containing every integer within the TRange boundaries.
+  @note: Automatically handles singular ranges, and utilizes an inline Fisher-Yates shuffle variant
+         to simultaneously generate and shuffle values in a single pass based on range direction (Ascending vs Descending).
+[==============================================================================}
+function TRange.Scrambled: TIntegerArray; overload;
+var
+  i, r: Integer;
+begin
+  if Self.Singular then
+    Exit([Self.start]);
+  SetLength(Result, Self.Size);
+  case Self.Ascending of
+    True:
+    for i := 0 to High(Result) do
+    begin
+      r := Random(i + 1);
+      if (r <> i) then
+        Result[i] := Result[r];
+      Result[r] := (Self.start + i);
+    end;
+    False:
+    for i := 0 to High(Result) do
+    begin
+      r := Random(i + 1);
+      if (r <> i) then
+        Result[i] := Result[r];
+      Result[r] := (Self.stop + i);
+    end;
+  end;
+end;
+
+{==============================================================================]
   <Shake>
   @action: Returns TRange randomly shaked as TIntegerArray.
   @note: None.
@@ -654,7 +751,7 @@ var
   a, d: TIntegerArray;
   l, i, j, r, z: Integer;
 begin
-  if (Self.start = Self.stop) then
+  if Self.Singular then
     Exit([Self.start]);
   a := Self.ToArray;
   d := a.Reversed;

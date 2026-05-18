@@ -8,6 +8,7 @@ function Randomized: MArray; overload;
 function Scramble(const swaps: Integer = -1): MArray; overload;
 function Shake(const shakes: Integer = 1): MArray; overload;
 function Shuffle(const shuffles: Integer = 1): MArray; overload;
+function Shuffled(const mixings: Integer = 1): MArray; overload;
 function Some: MArray; overload;
 function Some(const amount: Integer): MArray; overload;
 {$ENDIF}
@@ -166,6 +167,30 @@ begin
   for s := 1 to shuffles do
     for i := 0 to High(Result) do
       Swap(Result[i], Result[Random(Self.Size)]);
+end;
+
+{==============================================================================]
+  <Shuffled>
+  @action: Returns a new multi-dimensional array (MArray) containing the elements of the current array randomized into a shuffled sequence.
+  @note: Handles edge cases for empty or single-element arrays instantly,
+         and uses an external index permutation system (`Indexes.Mix`) to safely map old elements to new positions.
+[==============================================================================}
+function MArrayHelper.Shuffled(const mixings: Integer = 1): MArray; overload;
+var
+  r, l: Integer;
+  i: TIntegerArray;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit([]);
+    1: Exit(Self.Cloned);
+  else
+    SetLength(Result, l);
+  end;
+  i := Self.Indexes;
+  i.Mix(mixings);
+  for r := 0 to (l - 1) do
+    Result[r] := Self[i[r]];
 end;
 
 {==============================================================================]
