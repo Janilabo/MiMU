@@ -1,6 +1,7 @@
 {$IFDEF METHODS}
 function All: TPointArray; overload;
 function All(var target: TPointArray): Integer; overload;
+function Allness: TPointArray; overload;
 function Atomize: TPointArray; overload;
 function Breakdown: TPointArray; overload;
 function Content: TPointArray; overload;
@@ -25,12 +26,14 @@ function Materialized: TPointArray; overload;
 function Pixeled: TPointArray; overload;
 function Pixels: TPointArray; overload;
 function Pixels(const pIndex: Integer): TPoint; overload;
+function Pointalize: TPointArray; overload;
 function Points: TPointArray; overload;
 function Points(const pIndex: Integer): TPoint; overload;
 function Points(const pIDs: TIntegerArray): TPointArray; overload;
 function Points(var xArray, yArray: TIntegerArray): Integer; overload;
 function Pts: TPointArray; overload;
 function Release: TPointArray; overload;
+function ToPoints: TPointArray; overload;
 function TPA: TPointArray; overload;
 function TPA(const pIndex: Integer): TPoint; overload;
 function Unbox: TPointArray; overload;
@@ -82,6 +85,32 @@ begin
       p^ := Point(h, v);
       Inc(p);
     end;
+end;
+
+{==============================================================================]
+  <Allnesss>
+  @action: Populates a TPointArray with all coordinate points contained within the TBox.
+  @note: Allocates memory based on width and height, then iterates from top-left (X1, Y1) to bottom-right (X2, Y2) using a sequential row-major calculation.
+[==============================================================================}
+function TBox.Allness: TPointArray; overload;
+const
+  CHUNK_SIZE = 1024;
+var
+  w, s, j, i, r, c: Integer;
+function Below(const val: Integer; const aTarget, bTarget: Integer): Boolean;
+begin
+  Result := ((val < aTarget) and (val < bTarget));
+end;
+begin
+  w := Self.Width;
+  s := (w * Self.Height);
+  SetLength(Result, s);
+  for j := 0 to ((((s + CHUNK_SIZE) - 1) div CHUNK_SIZE) - 1) do
+  begin
+    i := ((j * CHUNK_SIZE) - 1);
+    while Below(i.Increment, ((j + 1) * CHUNK_SIZE), s) do
+      Result[i] := Point((Self.X1 + (i mod w)), (Self.Y1 + (i div w)));
+  end;
 end;
 
 {==============================================================================]
@@ -534,11 +563,10 @@ end;
 [==============================================================================}
 function TBox.Materialize: TPointArray; overload;
 var
-  i, W, H: Integer;
+  i, W: Integer;
 begin
-  W := ((Self.X2 - Self.X1) + 1);
-  H := ((Self.Y2 - Self.Y1) + 1);
-  SetLength(Result, W * H);
+  W := Self.Width;
+  SetLength(Result, (W * Self.Height));
   for i := 0 to High(Result) do
   begin
     Result[i].X := (Self.X1 + (i mod W));
@@ -621,6 +649,26 @@ end;
 function TBox.Pixels(const pIndex: Integer): TPoint; overload;
 begin
   Result := Point((Self.X1 + (pIndex mod Self.Width)), (Self.Y1 + (pIndex div Self.Width)));
+end;
+
+{==============================================================================]
+  <Pointalize>
+  @action: Populates a TPointArray with all coordinate points contained within the TBox.
+  @note: Allocates memory based on width and height, then iterates from top-left (X1, Y1) to bottom-right (X2, Y2) using a sequential row-major calculation.
+[==============================================================================}
+function TBox.Pointalize: TPointArray; overload;
+var
+  w, h, r, c: Integer;
+  b: TPoint;
+begin
+  w := Self.Width;
+  h := Self.Height;
+  SetLength(Result, (w * h));
+  b := Self.X1Y1;
+  r := -1;
+  while (r.Increment < h) do
+    for c := 0 to (w - 1) do
+      Result[(r * w) + c] := Point((b.X + c), (b.Y + r));
 end;
 
 {==============================================================================]
@@ -720,6 +768,21 @@ begin
       r[h - Self.X1] := Point(h, v);
     Result := (Result + r);
   end;
+end;
+
+{==============================================================================]
+  <ToPoints>
+  @action: Converts the TBox bounds into an array of all TPoint coordinates it contains.
+  @note: Populates the array in reverse order (bottom-right to top-left) using a pre-allocated result array.
+[==============================================================================}
+function TBox.ToPoints: TPointArray; overload;
+var
+  r, c, i: Integer;
+begin
+  i := Result.SetSize(Self.Area);
+  for r := Self.Y2 downto Self.Y1 do
+    for c := Self.X2 downto Self.X1 do
+	  Result[i.Decrement] := Point(c, r);
 end;
 
 {==============================================================================]
