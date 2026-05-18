@@ -25,6 +25,7 @@ function Latitude: Integer; overload;
 function Len: Integer; overload;
 function Length: Integer; overload;
 function Load: Integer; overload;
+function Longueur: Int64; overload;
 function Mass: Integer; overload;
 function Measure: Integer; overload;
 function Measured: Int64; overload;
@@ -435,6 +436,21 @@ function TRange.Load: Integer; overload;
 begin
   Result := Min(High(Integer), (Abs(Int64(Self.stop) - Int64(Self.start)) + 1));
 end;
+
+{==============================================================================]
+  <Longueur>
+  @action: Returns the size as 64-bit integer (for extremely large ranges)
+  @note: Useful when range might exceed 2^31-1 elements
+[==============================================================================}
+function TRange.Longueur: Int64; overload;
+begin
+  if Self.Singular then
+    Result := 1
+  else if (Self.start > Self.stop) then
+    Result := ((Int64(Self.start) - Int64(Self.stop)) + 1)
+  else
+    Result := ((Int64(Self.stop) - Int64(Self.start)) + 1);
+end; 
 
 {==============================================================================]
   <Mass>

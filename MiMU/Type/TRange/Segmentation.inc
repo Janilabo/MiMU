@@ -34,6 +34,7 @@ function Windows(const target: TRange): TRangeArray; overload;
 
 {$IFDEF METHODS}
 function GetChunk(const chunkIndex: Integer; const totalChunks: Integer = 2147483647): TRange; overload;
+function Strided(const strideCount: Integer = 1): T2DIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -857,6 +858,36 @@ begin
   i := 0;
   Split(Self, Result.Length, i);
 end;
+
+{==============================================================================]
+  <Strided>
+  @action: Fills the range into multiple interleaved buffers
+  @note: Separates values into N channels by stride.
+         Useful for vectorized processing or SIMD layouts.
+         Result is T2DIntegerArray where each subarray contains
+         every Nth value starting from offset.
+[==============================================================================}
+function TRange.Strided(const strideCount: Integer = 1): T2DIntegerArray; overload;
+var
+  i, s, d, c: Integer;
+  l: TIntegerArray;
+begin
+  if (strideCount < 1) then
+    Exit([]);
+  s := Self.Size;
+  SetLength(Result, strideCount);
+  SetLength(l, strideCount);
+  d := IfThen(Self.Ascending, 1, -1);
+  for i := 0 to (StrideCount - 1) do
+    l[i] := ((((s - i) + strideCount) - 1) div strideCount);
+  for i := 0 to (strideCount - 1) do
+    SetLength(Result[i], l[i]);
+  for i := 0 to (s - 1) do
+  begin
+    c := (i mod strideCount);
+    Result[c][i div strideCount] := (Self.start + (i * d));
+  end;
+end; 
 
 {==============================================================================]
   <Subdiv>
