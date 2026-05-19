@@ -103,8 +103,10 @@ function Material: TIntegerArray; overload;
 function Materialize: TIntegerArray; overload;
 function Materialized: TIntegerArray; overload;
 function Materially: TIntegerArray; overload;
+function MaxToMin: TIntegerArray; overload;
 function Membered: TIntegerArray; overload;
 function Members: TIntegerArray; overload;
+function MinToMax: TIntegerArray; overload;
 function Numbered: TIntegerArray; overload;
 function Numbering: TIntegerArray; overload;
 function Numbers: TIntegerArray; overload;
@@ -3008,6 +3010,21 @@ begin
 end;
 
 {==============================================================================]
+  <MaxToMin>
+  @action: Generates an array of integers sequentially ordered in reverse from the Maximum value down to the Minimum value.
+  @note: Self.Size matches the total count of numbers in the range, and Result[0] initializes at Self.Maximum.
+[==============================================================================}
+function TRange.MaxToMin: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  Result[0] := Self.Maximum;
+  for i := 1 to High(Result) do
+    Result[i] := (Result[i - 1] - 1);
+end;
+
+{==============================================================================]
   <Membered>
   @action: Returns ALL TRange items as TIntegerArray.
   @note: Bypasses SetLength; allocates raw memory directly via GetMem,
@@ -3054,6 +3071,21 @@ begin
       Result[i] := c.Increase
     else
       Result[i] := c.Decrease;
+end;
+
+{==============================================================================]
+  <MinToMax>
+  @action: Generates an array of integers sequentially ordered from the Minimum value to the Maximum value.
+  @note: Self.Size matches the total count of numbers in the range, and Result[0] initializes at Self.Minimum.
+[==============================================================================}
+function TRange.MinToMax: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Size);
+  Result[0] := Self.Minimum;
+  for i := 1 to High(Result) do
+    Result[i] := (Result[i - 1] + 1);
 end;
 
 {==============================================================================]
