@@ -6,6 +6,7 @@ function All: TIntegerArray; overload;
 function All(var target: TIntegerArray): Integer; overload;
 function Allness: TIntegerArray; overload;
 function Arrayed(const rAscending: Boolean = True): TIntegerArray; overload;
+function Arrayment(const rAscending: Boolean = True): TIntegerArray; overload;
 function ArrayOf: TIntegerArray; overload;
 function AsArr: TIntegerArray; overload;
 function AsArray: TIntegerArray; overload;
@@ -107,6 +108,7 @@ function MaximumToMinimum: TIntegerArray; overload;
 function MaxMinArr: TIntegerArray; overload;
 function MaxMinArray: TIntegerArray; overload;
 function MaxMinned: TIntegerArray; overload;
+function MaxTillMin: TIntegerArray; overload;
 function MaxToMin: TIntegerArray; overload;
 function Membered: TIntegerArray; overload;
 function Members: TIntegerArray; overload;
@@ -114,6 +116,7 @@ function MinimumToMaximum: TIntegerArray; overload;
 function MinMaxArr: TIntegerArray; overload;
 function MinMaxArray: TIntegerArray; overload;
 function MinMaxxed: TIntegerArray; overload;
+function MinTillMax: TIntegerArray; overload;
 function MinToMax: TIntegerArray; overload;
 function Numbered: TIntegerArray; overload;
 function Numbering: TIntegerArray; overload;
@@ -198,6 +201,7 @@ function Unfolded: TIntegerArray; overload;
 function Universe: TIntegerArray; overload;
 function Unpack: TIntegerArray; overload;
 function Unpacked: TIntegerArray; overload;
+function Unrange(const rAscending: Boolean = True): TIntegerArray; overload;
 function Unroll: TIntegerArray; overload;
 function Unrolled: TIntegerArray; overload;
 function Unwrap: TIntegerArray; overload;
@@ -362,6 +366,30 @@ begin
   r := 0;
   while Self.Contains(s) do
     Result[r.Increase] := s.Increase(d);
+end;
+
+{==============================================================================]
+  <Arrayment>
+  @action: Converts the TRange into a TIntegerArray, populating it with an 
+           ordered sequence of numbers spanning the range. 
+  @note: By default, the array is generated in ascending order (from Minimum 
+         upwards). Set rAscending to False to generate it in descending order 
+         (from Maximum downwards). Uses efficient pointer operations.
+[==============================================================================}
+function TRange.Arrayment(const rAscending: Boolean = True): TIntegerArray; overload;
+var
+  i: Integer;
+  P: PInteger;
+  s: TPoint;
+begin
+  SetLength(Result, Self.Size);
+  P := @Result[0];
+  s := IfThen(rAscending, Point(Self.Minimum, 1), Point(Self.Maximum, -1));
+  for i := 0 to High(Result) do
+  begin
+    P^ := s.X.Increase(s.Y);
+    Inc(P);
+  end;
 end;
 
 {==============================================================================]
@@ -3152,6 +3180,44 @@ begin
 end;
 
 {==============================================================================]
+  <MinTillMax>
+  @action: Generates an array of integers starting from the range's minimum value, 
+           incrementing each subsequent element by 1, up to the size of the range.
+  @note: Acts as an ascending sequence generator.
+[==============================================================================}
+function TRange.MinTillMax: TIntegerArray; overload;
+var
+  i, m, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  i := 0;
+  m := Self.Minimum;
+  repeat
+    Result[i] := m.Increase;
+  until (i.Increment = s);
+end;
+
+{==============================================================================]
+  <MaxTillMin>
+  @action: Generates an array of integers starting from the range's maximum value, 
+           decrementing each subsequent element by 1, down to the size of the range.
+  @note: Acts as a descending sequence generator starting from the top of the range.
+[==============================================================================}
+function TRange.MaxTillMin: TIntegerArray; overload;
+var
+  i, m, s: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  i := 0;
+  m := Self.Maximum;
+  repeat
+    Result[i] := m.Decrease;
+  until (i.Increment = s);
+end; 
+
+{==============================================================================]
   <MinimumToMaximum>
   @action: Generates an array of integers sequentially ordered from the Minimum value up to the Maximum value.
   @note: Calculates values safely relative to the minimum boundary using the loop index.
@@ -5291,6 +5357,25 @@ begin
     Exit(Self.All);
   SetLength(Result, Self.Size);
   FillDWord(Result[0], Self.Size, Cardinal(Self.start));
+end;
+
+{==============================================================================]
+  <Unrange>
+  @action: Unrolls a compact TRange object into a flat, sequential array of 
+           integers spanning from one boundary to the other.
+  @note: Uses a safe math-based progression strategy rather than pointers. 
+         Set rAscending to True (default) to start from the Minimum and count up, 
+         or False to start from the Maximum and count down.
+[==============================================================================}
+function TRange.Unrange(const rAscending: Boolean = True): TIntegerArray; overload;
+var
+  i: Integer;
+  s: TPoint;
+begin
+  SetLength(Result, Self.Size);
+  s := IfThen(rAscending, Point(Self.Minimum, 1), Point(Self.Maximum, -1));
+  for i := 0 to High(Result) do
+    Result[i] := (s.X + (i * s.Y));
 end;
 
 {==============================================================================]
