@@ -104,11 +104,15 @@ function Materialize: TIntegerArray; overload;
 function Materialized: TIntegerArray; overload;
 function Materially: TIntegerArray; overload;
 function MaximumToMinimum: TIntegerArray; overload;
+function MaxMinArr: TIntegerArray; overload;
+function MaxMinArray: TIntegerArray; overload;
 function MaxMinned: TIntegerArray; overload;
 function MaxToMin: TIntegerArray; overload;
 function Membered: TIntegerArray; overload;
 function Members: TIntegerArray; overload;
 function MinimumToMaximum: TIntegerArray; overload;
+function MinMaxArr: TIntegerArray; overload;
+function MinMaxArray: TIntegerArray; overload;
 function MinMaxxed: TIntegerArray; overload;
 function MinToMax: TIntegerArray; overload;
 function Numbered: TIntegerArray; overload;
@@ -3029,6 +3033,40 @@ begin
 end;
 
 {==============================================================================]
+  <MaxMinArr>
+  @action: Generates a descending sequence of integers from Maximum down to Minimum using dynamic array concatenation.
+  @note: Initializes as an empty array and dynamically grows during execution; utilizes a 'downto' loop to step backward.
+[==============================================================================}
+function TRange.MaxMinArr: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  Result := [];
+  for i := Self.Maximum downto Self.Minimum do
+    Result := (Result + [i]);
+end;
+
+{==============================================================================]
+  <MaxMinArray>
+  @action: Generates a sequentially descending array of integers from the Maximum value down to the Minimum value.
+  @note: Highly optimized; combines the predictable boundary safety of a standard loop with low-level pointer assignment speed.
+[==============================================================================}
+function TRange.MaxMinArray: TIntegerArray; overload;
+var
+  i, m: Integer;
+  p: PInteger;
+begin
+  SetLength(Result, Self.Size);
+  p := @Result[0];
+  m := Self.Maximum;
+  for i := 0 to High(Result) do
+  begin
+    p^ := (m - i);
+    Inc(p);
+  end;
+end;
+
+{==============================================================================]
   <MaxMinned>
   @action: Generates a sequentially descending array of integers starting from the Maximum value down toward the Minimum.
   @note: Leverages fast pointer assignment combined with fluent type helper mutations (`.Decrement` and `.Decrease`).
@@ -3126,6 +3164,40 @@ begin
   m := Self.Minimum;
   for i := 0 to High(Result) do
     Result[i] := (m + i);
+end;
+
+{==============================================================================]
+  <MinMaxArr>
+  @action: Generates an ascending sequence of integers from Minimum to Maximum using dynamic array concatenation.
+  @note: Initializes as an empty array and dynamically grows during execution; avoids requiring an explicit 'Size' property calculation.
+[==============================================================================}
+function TRange.MinMaxArr: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  Result := [];
+  for i := Self.Minimum to Self.Maximum do
+    Result := (Result + [i]);
+end;
+
+{==============================================================================]
+  <MinMaxArray>
+  @action: Generates a sequentially ascending array of integers from the Minimum value up to the Maximum value.
+  @note: Highly optimized; combines the predictable boundary safety of a standard loop with low-level pointer assignment speed.
+[==============================================================================}
+function TRange.MinMaxArray: TIntegerArray; overload;
+var
+  i, m: Integer;
+  p: PInteger;
+begin
+  SetLength(Result, Self.Size);
+  p := @Result[0];
+  m := Self.Minimum;
+  for i := 0 to High(Result) do
+  begin
+    p^ := (m + i);
+    Inc(p);
+  end;
 end;
 
 {==============================================================================]
