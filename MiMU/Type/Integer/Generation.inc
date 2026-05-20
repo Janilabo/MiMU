@@ -3,7 +3,9 @@ function Ascension(const target: Integer = 0): TIntegerArray; overload;
 function Descension(const target: Integer = 0): TIntegerArray; overload;
 function Downstairs(const target: Integer = 0): TIntegerArray; overload;
 function Onto(const target: Integer = 0): TIntegerArray; overload;
+function Path(const target: Integer = 0): TIntegerArray; overload;
 function Rebound(const target: Integer = 0): TIntegerArray; overload;
+function Route(const target: Integer = 0): TIntegerArray; overload;
 function Stairs(const target: Integer = 0): TIntegerArray; overload;
 function Steppify(const sCount: Integer = 0): TIntegerArray; overload;
 function Upstairs(const target: Integer = 0): TIntegerArray; overload;
@@ -103,6 +105,28 @@ begin
 end;
 
 {==============================================================================]
+  <Path>
+  @action: Generates a continuous, bi-directional sequence array of integers by 
+           dynamically stepping from Self toward the target value.
+  @note: Uses a localized tracking state variable (s) to drive the while loop 
+         independently of the array's bounds. If Self equals target, the loop 
+         is safely bypassed, instantly returning [Self]. Because the array grows 
+         dynamically via concatenation (+), it prioritizes progressive path 
+         exploration over static pre-allocation.
+[==============================================================================}
+function TIntegerHelper.Path(const target: Integer = 0): TIntegerArray; overload;
+var
+  d, s: Integer;
+begin
+  s := Self;
+  d := target.Compare(Self);
+  SetLength(Result, 0);
+  while (s <> target) do
+    Result := (Result + [s.Increase(d)]);
+  Result := (Result + [s]);
+end;
+
+{==============================================================================]
   <Rebound>
   @action: Returns an ascending then descending (or vice versa) sequence
            between Self and target, returning back to Self.
@@ -122,6 +146,25 @@ begin
     Result[i] := t[i];
   for i := 1 to d do
     Result[d + i] := s[i];
+end;
+
+{==============================================================================]
+  <Route>
+  @action: Generates a continuous, bi-directional sequence array of integers by 
+           dynamically plotting a path from Self directly to the target destination.
+  @note: Automatically determines direction using Compare. Because this method 
+         dynamically appends to and reallocates the array step-by-step inside 
+         a while loop, it is designed for maximum structural readability and 
+         expressive pathfinding. Default target is 0.
+[==============================================================================}
+function TIntegerHelper.Route(const target: Integer = 0): TIntegerArray; overload;
+var
+  s: Integer;
+begin
+  s := target.Compare(Self);
+  Result := [Self];
+  while (Result[High(Result)] <> target) do
+    Result := (Result + [Result[High(Result)] + s]);
 end;
 
 {==============================================================================]
