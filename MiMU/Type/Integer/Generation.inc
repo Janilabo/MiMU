@@ -2,10 +2,14 @@
 function Ascension(const target: Integer = 0): TIntegerArray; overload;
 function Descension(const target: Integer = 0): TIntegerArray; overload;
 function Downstairs(const target: Integer = 0): TIntegerArray; overload;
+function Onto(const target: Integer = 0): TIntegerArray; overload;
 function Rebound(const target: Integer = 0): TIntegerArray; overload;
 function Stairs(const target: Integer = 0): TIntegerArray; overload;
 function Steppify(const sCount: Integer = 0): TIntegerArray; overload;
 function Upstairs(const target: Integer = 0): TIntegerArray; overload;
+function Via(const target: Integer = 0): TIntegerArray; overload;
+function Way(const target: Integer = 0): TIntegerArray; overload;
+function WayTo(const target: Integer = 0): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -71,6 +75,31 @@ begin
   SetLength(Result, (Max(0, (Self - target)) + 1));
   for i := 0 to High(Result) do
     Result[i] := (Self - i);
+end;
+
+{==============================================================================]
+  <Onto>
+  @action: Generates an inclusive sequence array of integers starting from Self 
+           and continuing directly onto the target value.
+  @note: Automatically handles direction mapping. Uses the Compare method to 
+         explicitly split execution paths: counting up for a lower origin, 
+         counting down for a higher origin, or instantly returning [Self] if 
+         Self equals target.
+[==============================================================================}
+function TIntegerHelper.Onto(const target: Integer = 0): TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  if (Self <> target) then
+    SetLength(Result, (Abs(target - Self) + 1));
+  case Self.Compare(target) of
+    0: Result := [Self];
+    -1:
+    for i := 0 to High(Result) do
+      Result[i] := (Self + i);
+    1:  for i := 0 to High(Result) do
+      Result[i] := (Self - i);
+  end;
 end;
 
 {==============================================================================]
@@ -155,5 +184,77 @@ begin
   SetLength(Result, (Max(0, (target - Self)) + 1));
   for i := 0 to High(Result) do
     Result[i] := (Self + i);
+end;
+
+{==============================================================================]
+  <Via>
+  @action: Generates a continuous, bi-directional sequence array of integers 
+           starting from Self and traveling via steady steps to the target value.
+  @note: Automatically detects direction. If target is greater than Self, it 
+         increments forward (+1); if less, it decrements backward (-1). This 
+         method calculates step vectors inline, ensuring a continuous sequence 
+         is always returned without risking empty or single-element collapses.
+[==============================================================================}
+function TIntegerHelper.Via(const target: Integer = 0): TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  if (Self = target) then
+    Exit([Self]);
+  SetLength(Result, (Abs(target - Self) + 1));
+  s := IfThen((target > Self), 1, -1);
+  for i := 0 to High(Result) do
+    Result[i] := (Self + (i * s));
+end;
+
+{==============================================================================]
+  <Way>
+  @action: Generates a continuous, bi-directional sequence array of integers 
+           starting from Self and traveling to the target value.
+  @note: Automatically detects direction and uses optimized, manual pointer 
+         byte-offset arithmetic to write values directly into memory. This 
+         bypasses standard Pascal array-indexing bounds checking for maximum 
+         performance.
+[==============================================================================}
+function TIntegerHelper.Way(const target: Integer = 0): TIntegerArray; overload;
+var
+  i, s, z: Integer;
+  P: PInteger;
+begin
+  if (Self = target) then
+    Exit([Self]);
+  SetLength(Result, (Abs(target - Self) + 1));
+  s := IfThen((target > Self), 1, -1);
+  z := SizeOf(Integer);
+  for i := 0 to High(Result) do
+    PInteger(@Result[0] + (i * z))^ := (Self + (i * s));
+end;
+
+{==============================================================================]
+  <WayTo>
+  @action: Generates a continuous, bi-directional sequence array of integers 
+           starting from Self and traveling sequentially to the target value.
+  @note: Uses a highly optimized stream approach. By utilizing an escalating 
+         pointer cursor (Inc(P)) combined with iterative state mutations 
+         (Increase/Decrease) within a while loop, it entirely eliminates 
+         multiplication overhead from the loop body for maximum throughput.
+[==============================================================================}
+function TIntegerHelper.WayTo(const target: Integer = 0): TIntegerArray; overload;
+var
+  s, r, l: Integer;
+  P: PInteger;
+begin
+  if (Self = target) then
+    Exit([Self]);
+  l := (Abs(target - Self) + 1);
+  SetLength(Result, l);
+  P := @Result[0];
+  s := IfThen((target > Self), 1, -1);
+  r := Self;
+  while (l.Decrease > 0) do
+  begin
+    P^ := r.Increase(s);
+    Inc(P);
+  end;
 end;
 {$ENDIF}
