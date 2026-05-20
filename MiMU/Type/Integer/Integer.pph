@@ -5,6 +5,7 @@
 {$I Comparison.inc}
 {$I Digit.inc}
 {$I Distance.inc}
+{$I Duplication.inc}
 {$I Factorization.inc}
 {$I Generation.inc}
 {$I Parity.inc}
