@@ -3,7 +3,7 @@ function Ascending(const target: string): Boolean;
 function Compare(const target: string): Integer;
 function Descending(const target: string): Boolean;
 function Precede(const target: string; const aAscending: Boolean): Boolean; overload;
-function Sign(const target: string): Integer;
+function Unsign(const target: string): Integer;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
@@ -64,16 +64,18 @@ end;
 
 {==============================================================================]
   <Sign>
-  @action: Compares the current string (Self) with a target string and returns
-          a directional sign indicating whether the target is greater, equal,
-          or smaller than Self.
+  @action: Reversed three-way comparison between Self and target.
+           Returns the opposite sign of a standard comparison, effectively
+           negating the traditional -1,0,1 result.
   @note: Returns:
-         1  if Self < target (target is larger → ascending)
-         0  if Self = target (no change)
-         -1  if Self > target (target is smaller → descending)
-         Useful for detecting sequence direction, ordering, or range computation.
+          1  if Self < target  (standard comparison would return -1)
+          0  if Self = target  (standard comparison returns 0)
+          -1 if Self > target  (standard comparison would return 1)
+         This method is semantically equivalent to: -(Self.Compare(target))
+         Perfect for descending order sorting or when reversed comparison logic
+         is required without inverting the entire sorting algorithm.
 [==============================================================================}
-function TStringHelper.Sign(const target: string): Integer;
+function TStringHelper.Unsign(const target: string): Integer;
 begin
   if (Self = target) then
     Result := 0

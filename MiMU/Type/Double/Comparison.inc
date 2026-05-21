@@ -9,9 +9,9 @@ function Descending(const target: Double): Boolean;
 function Over(const target: Double): Boolean;
 function Oversize(const limit: Double): Boolean;
 function Precede(const target: Double; const aAscending: Boolean): Boolean; overload;
-function Sign(const target: Double = 0): Integer;
 function Under(const target: Double): Boolean;
 function Undersize(const limit: Double): Boolean;
+function Unsign(const target: Double = 0): Integer;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
@@ -146,27 +146,6 @@ begin
 end;
 
 {==============================================================================]
-  <Sign>
-  @action: Compares the current double (Self) with a target double and returns
-           a directional sign indicating whether the target is greater, equal,
-           or smaller than Self.
-  @note: Returns:
-         1  if Self < target (target is larger → ascending)
-         0  if Self = target (no change)
-         -1  if Self > target (target is smaller → descending)
-         Useful for detecting sequence direction, ordering, or range computation.
-[==============================================================================}
-function TDoubleHelper.Sign(const target: Double = 0): Integer;
-begin
-  if (Self = target) then
-    Result := 0
-  else if (Self < target) then
-    Result := 1
-  else
-    Result := -1;
-end;
-
-{==============================================================================]
   <Under>
   @action: Returns true if x is lower than target.
   @note: None
@@ -184,6 +163,29 @@ end;
 function TDoubleHelper.Undersize(const limit: Double): Boolean;
 begin
   Result := (Self < limit);
+end;
+
+{==============================================================================]
+  <Unsign>
+  @action: Reversed three-way comparison between Self and target.
+           Returns the opposite sign of a standard comparison, effectively
+           negating the traditional -1,0,1 result.
+  @note: Returns:
+          1  if Self < target  (standard comparison would return -1)
+          0  if Self = target  (standard comparison returns 0)
+          -1 if Self > target  (standard comparison would return 1)
+         This method is semantically equivalent to: -(Self.Compare(target))
+         Perfect for descending order sorting or when reversed comparison logic
+         is required without inverting the entire sorting algorithm.
+[==============================================================================}
+function TDoubleHelper.Unsign(const target: Double = 0): Integer;
+begin
+  if (Self = target) then
+    Result := 0
+  else if (Self < target) then
+    Result := 1
+  else
+    Result := -1;
 end;
 
 function Comparison(const A, B: Double): Integer; overload;

@@ -3,9 +3,9 @@ function Compare(const target: Int64): Integer;
 function Over(const target: Int64): Boolean;
 function Oversize(const limit: Int64): Boolean;
 function Precede(const target: Int64; const aAscending: Boolean): Boolean; overload;
-function Sign(const target: Int64 = 0): Integer;
 function Under(const target: Int64): Boolean;
 function Undersize(const limit: Int64): Boolean;
+function Unsign(const target: Int64 = 0): Integer;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -56,27 +56,6 @@ begin
 end;
 
 {==============================================================================]
-  <Sign>
-  @action: Compares the current double (Self) with a target double and returns
-           a directional sign indicating whether the target is greater, equal,
-           or smaller than Self.
-  @note: Returns:
-         1  if Self < target (target is larger → ascending)
-         0  if Self = target (no change)
-         -1  if Self > target (target is smaller → descending)
-         Useful for detecting sequence direction, ordering, or range computation.
-[==============================================================================}
-function TInt64Helper.Sign(const target: Int64 = 0): Integer;
-begin
-  if (Self = target) then
-    Result := 0
-  else if (Self < target) then
-    Result := 1
-  else
-    Result := -1;
-end;
-
-{==============================================================================]
   <Under>
   @action: Returns true if x is lower than target.
   @note: None
@@ -94,5 +73,28 @@ end;
 function TInt64Helper.Undersize(const limit: Int64): Boolean;
 begin
   Result := (Self < limit);
+end;
+
+{==============================================================================]
+  <Unsign>
+  @action: Reversed three-way comparison between Self and target.
+           Returns the opposite sign of a standard comparison, effectively
+           negating the traditional -1,0,1 result.
+  @note: Returns:
+          1  if Self < target  (standard comparison would return -1)
+          0  if Self = target  (standard comparison returns 0)
+          -1 if Self > target  (standard comparison would return 1)
+         This method is semantically equivalent to: -(Self.Compare(target))
+         Perfect for descending order sorting or when reversed comparison logic
+         is required without inverting the entire sorting algorithm.
+[==============================================================================}
+function TInt64Helper.Unsign(const target: Int64 = 0): Integer;
+begin
+  if (Self = target) then
+    Result := 0
+  else if (Self < target) then
+    Result := 1
+  else
+    Result := -1;
 end;
 {$ENDIF}

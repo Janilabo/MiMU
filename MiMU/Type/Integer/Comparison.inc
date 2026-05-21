@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Ascending(const target: Integer): Boolean; overload;
+function Cmp(const target: Integer): Integer; overload;
 function Cmpr(const target: Integer): Integer; overload;
+function Comp(const target: Integer): Integer; overload;
 function Compare(const target: Integer): Integer; overload;
 function CompareAt(const target: Integer): Integer; overload;
 function Compared(const target: Integer; const oAscending: Boolean = True): Integer; overload;
@@ -8,13 +10,14 @@ function CompareEx(const target: Integer; const tolerance: Integer = 0): Integer
 function Comparem(const target: Integer): Integer; overload;
 function CompareTo(const target: Integer; const oAscending: Boolean = True): Integer; overload;
 function CompareWith(const target: Integer; const oAscending: Boolean = True): Integer; overload;
+function Comparify(const target: Integer): Integer; overload;
 function Descending(const target: Integer): Boolean; overload;
 function Over(const target: Integer): Boolean; overload;
 function Oversize(const limit: Integer): Boolean; overload;
 function Precede(const target: Integer; const aAscending: Boolean): Boolean; overload;
-function Sign(const target: Integer = 0): Integer; overload;
 function Under(const target: Integer): Boolean; overload;
 function Undersize(const limit: Integer): Boolean; overload;
+function Unsign(const target: Integer = 0): Integer; overload;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
@@ -35,6 +38,17 @@ begin
 end;
 
 {==============================================================================]
+  <Cmp>
+  @action: Compares x with target target.
+           Results: 0=EQUAL, 1=x>target, -1=x<target
+  @note: None
+[==============================================================================}
+function TIntegerHelper.Cmp(const target: Integer): Integer; overload;
+begin
+  Result := (Integer(Self > target) - Integer(Self < target));
+end;
+
+{==============================================================================]
   <Cmpr>
   @action: Compares x with target target.
            Results: 0=EQUAL, 1=x>target, -1=x<target
@@ -43,6 +57,20 @@ end;
 function TIntegerHelper.Cmpr(const target: Integer): Integer; overload;
 begin
   Result := (Ord(Self > target) - Ord(Self < target));
+end;
+
+{==============================================================================]
+  <Comp>
+  @action: Computes a clean three-way comparison between Self and a target 
+           value using the sign of their mathematical difference.
+  @note: Returns -1 if Self is less than target, 1 if greater, and 0 if equal. 
+         By passing the arithmetic delta directly to the Sign function, this 
+         method achieves zero-branch evaluation without the overhead of 
+         lookup tables or conditional wrappers.
+[==============================================================================}
+function TIntegerHelper.Comp(const target: Integer): Integer; overload;
+begin
+  Result := Sign(Self - target);
 end;
 
 {==============================================================================]
@@ -158,6 +186,19 @@ begin
 end;
 
 {==============================================================================]
+  <Comparify>
+  @action: Transforms the relationship between Self and a target value into 
+           a normalized three-way positional scalar (-1, 0, 1).
+  @note: Utilizing a single-line functional fold, this method evaluates the 
+         less-than condition first, falling back onto a direct integer cast 
+         of the greater-than boolean expression to eliminate nesting.
+[==============================================================================}
+function TIntegerHelper.Comparify(const target: Integer): Integer; overload;
+begin
+  Result := IfThen((Self < target), -1, Integer(Self > target));
+end;
+
+{==============================================================================]
   <Descending>
   @action: Returns True if the helper’s value is greater than or equal to
            the given target value. Use as a comparison predicate when
@@ -200,27 +241,6 @@ begin
 end;
 
 {==============================================================================]
-  <Sign>
-  @action: Compares the current double (Self) with a target double and returns
-           a directional sign indicating whether the target is greater, equal,
-           or smaller than Self.
-  @note: Returns:
-         1  if Self < target (target is larger → ascending)
-         0  if Self = target (no change)
-         -1  if Self > target (target is smaller → descending)
-         Useful for detecting sequence direction, ordering, or range computation.
-[==============================================================================}
-function TIntegerHelper.Sign(const target: Integer = 0): Integer; overload;
-begin
-  if (Self = target) then
-    Result := 0
-  else if (Self < target) then
-    Result := 1
-  else
-    Result := -1;
-end;
-
-{==============================================================================]
   <Under>
   @action: Returns true if x is lower than target.
   @note: None
@@ -238,6 +258,29 @@ end;
 function TIntegerHelper.Undersize(const limit: Integer): Boolean; overload;
 begin
   Result := (Self < limit);
+end;
+
+{==============================================================================]
+  <Unsign>
+  @action: Reversed three-way comparison between Self and target.
+           Returns the opposite sign of a standard comparison, effectively
+           negating the traditional -1,0,1 result.
+  @note: Returns:
+          1  if Self < target  (standard comparison would return -1)
+          0  if Self = target  (standard comparison returns 0)
+          -1 if Self > target  (standard comparison would return 1)
+         This method is semantically equivalent to: -(Self.Compare(target))
+         Perfect for descending order sorting or when reversed comparison logic
+         is required without inverting the entire sorting algorithm.
+[==============================================================================}
+function TIntegerHelper.Unsign(const target: Integer = 0): Integer; overload;
+begin
+  if (Self = target) then
+    Result := 0
+  else if (Self < target) then
+    Result := 1
+  else
+    Result := -1;
 end;
 
 function Comparison(const A, B: Integer): Integer; overload;
