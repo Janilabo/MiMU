@@ -13,5 +13,6 @@
 {$I Proximity.inc}
 {$I Randomness.inc}
 {$I Restriction.inc}
+{$I Signing.inc}
 {$I Sort.inc}
 {$I Transform.inc}
