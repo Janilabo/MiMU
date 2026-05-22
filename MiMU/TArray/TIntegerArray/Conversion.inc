@@ -161,7 +161,7 @@ begin
   d := Result[0].Direction;
   i := 2;
   repeat
-    s := Result[h].stop.Unsign(Self[i]);
+    s := Result[h].stop.Decompare(Self[i]);
     case ((d = 0) or ((s = 0) or (s = d))) of
       True:
       begin
@@ -207,7 +207,7 @@ begin
   d := IfThen(aAscending, 1, -1);
   i := 1;
   repeat
-    s := Result[h].stop.Unsign(Self[i]);
+    s := Result[h].stop.Decompare(Self[i]);
     if ((s = 0) or (s = d)) then
       Result[h].stop := Self[i]
     else
@@ -276,7 +276,7 @@ begin
   d := Result[0].Direction;
   for i := 2 to (l - 1) do
   begin
-    s := Result[h].stop.Unsign(Self[i]);
+    s := Result[h].stop.Decompare(Self[i]);
     case ((d = 0) or ((s = 0) or (s = d))) of
       True:
       begin
@@ -322,7 +322,7 @@ begin
   d := IfThen(aAscending, 1, -1);
   for i := 1 to (l - 1) do
   begin
-    s := Result[h].stop.Unsign(Self[i]);
+    s := Result[h].stop.Decompare(Self[i]);
     if ((s = 0) or (s = d)) then
       Result[h].stop := Self[i]
     else

@@ -11,13 +11,13 @@ function Comparem(const target: Integer): Integer; overload;
 function CompareTo(const target: Integer; const oAscending: Boolean = True): Integer; overload;
 function CompareWith(const target: Integer; const oAscending: Boolean = True): Integer; overload;
 function Comparify(const target: Integer): Integer; overload;
+function Decompare(const target: Integer = 0): Integer; overload;
 function Descending(const target: Integer): Boolean; overload;
 function Over(const target: Integer): Boolean; overload;
 function Oversize(const limit: Integer): Boolean; overload;
 function Precede(const target: Integer; const aAscending: Boolean): Boolean; overload;
 function Under(const target: Integer): Boolean; overload;
 function Undersize(const limit: Integer): Boolean; overload;
-function Unsign(const target: Integer = 0): Integer; overload;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
@@ -199,6 +199,29 @@ begin
 end;
 
 {==============================================================================]
+  <Decompare>
+  @action: Reversed three-way comparison between Self and target.
+           Returns the opposite sign of a standard comparison, effectively
+           negating the traditional -1,0,1 result.
+  @note: Returns:
+          1  if Self < target  (standard comparison would return -1)
+          0  if Self = target  (standard comparison returns 0)
+          -1 if Self > target  (standard comparison would return 1)
+         This method is semantically equivalent to: -(Self.Compare(target))
+         Perfect for descending order sorting or when reversed comparison logic
+         is required without inverting the entire sorting algorithm.
+[==============================================================================}
+function TIntegerHelper.Decompare(const target: Integer = 0): Integer; overload;
+begin
+  if (Self = target) then
+    Result := 0
+  else if (Self < target) then
+    Result := 1
+  else
+    Result := -1;
+end;
+
+{==============================================================================]
   <Descending>
   @action: Returns True if the helper’s value is greater than or equal to
            the given target value. Use as a comparison predicate when
@@ -258,29 +281,6 @@ end;
 function TIntegerHelper.Undersize(const limit: Integer): Boolean; overload;
 begin
   Result := (Self < limit);
-end;
-
-{==============================================================================]
-  <Unsign>
-  @action: Reversed three-way comparison between Self and target.
-           Returns the opposite sign of a standard comparison, effectively
-           negating the traditional -1,0,1 result.
-  @note: Returns:
-          1  if Self < target  (standard comparison would return -1)
-          0  if Self = target  (standard comparison returns 0)
-          -1 if Self > target  (standard comparison would return 1)
-         This method is semantically equivalent to: -(Self.Compare(target))
-         Perfect for descending order sorting or when reversed comparison logic
-         is required without inverting the entire sorting algorithm.
-[==============================================================================}
-function TIntegerHelper.Unsign(const target: Integer = 0): Integer; overload;
-begin
-  if (Self = target) then
-    Result := 0
-  else if (Self < target) then
-    Result := 1
-  else
-    Result := -1;
 end;
 
 function Comparison(const A, B: Integer): Integer; overload;

@@ -21,7 +21,7 @@ function YCompare(const target: TPoint): Integer;
 {$ENDIF}
 
 {$IFDEF HELPERS}
-function Unsign(const target: TPoint): Integer; overload;
+function Decompare(const target: TPoint): Integer; overload;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
@@ -33,7 +33,7 @@ function Min(const A, B: TPoint): TPoint; overload;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Unsign>
+  <Decompare>
   @action: Reversed three-way comparison between Self and target.
            Returns the opposite sign of a standard comparison, effectively
            negating the traditional -1,0,1 result.
@@ -45,7 +45,7 @@ function Min(const A, B: TPoint): TPoint; overload;
          Perfect for descending order sorting or when reversed comparison logic
          is required without inverting the entire sorting algorithm.
 [==============================================================================}
-function TPointHelper.Unsign(const target: TPoint): Integer; overload;
+function TPointHelper.Decompare(const target: TPoint): Integer; overload;
 begin
   if (Self = target) then
     Result := 0

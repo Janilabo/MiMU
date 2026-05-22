@@ -1,9 +1,9 @@
 {$IFDEF HELPERS}
 function Ascending(const target: string): Boolean;
 function Compare(const target: string): Integer;
+function Decompare(const target: string): Integer;
 function Descending(const target: string): Boolean;
 function Precede(const target: string; const aAscending: Boolean): Boolean; overload;
-function Unsign(const target: string): Integer;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
@@ -41,6 +41,29 @@ begin
 end;
 
 {==============================================================================]
+  <Decompare>
+  @action: Reversed three-way comparison between Self and target.
+           Returns the opposite sign of a standard comparison, effectively
+           negating the traditional -1,0,1 result.
+  @note: Returns:
+          1  if Self < target  (standard comparison would return -1)
+          0  if Self = target  (standard comparison returns 0)
+          -1 if Self > target  (standard comparison would return 1)
+         This method is semantically equivalent to: -(Self.Compare(target))
+         Perfect for descending order sorting or when reversed comparison logic
+         is required without inverting the entire sorting algorithm.
+[==============================================================================}
+function TStringHelper.Decompare(const target: string): Integer;
+begin
+  if (Self = target) then
+    Result := 0
+  else if (Self < target) then
+    Result := 1
+  else
+    Result := -1;
+end;
+
+{==============================================================================]
   <Descending>
   @action: Returns True if the helper’s value is greater than or equal to
            the given target value. Use as a comparison predicate when
@@ -60,29 +83,6 @@ end;
 function TStringHelper.Precede(const target: string; const aAscending: Boolean): Boolean; overload;
 begin
   Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));
-end;
-
-{==============================================================================]
-  <Sign>
-  @action: Reversed three-way comparison between Self and target.
-           Returns the opposite sign of a standard comparison, effectively
-           negating the traditional -1,0,1 result.
-  @note: Returns:
-          1  if Self < target  (standard comparison would return -1)
-          0  if Self = target  (standard comparison returns 0)
-          -1 if Self > target  (standard comparison would return 1)
-         This method is semantically equivalent to: -(Self.Compare(target))
-         Perfect for descending order sorting or when reversed comparison logic
-         is required without inverting the entire sorting algorithm.
-[==============================================================================}
-function TStringHelper.Unsign(const target: string): Integer;
-begin
-  if (Self = target) then
-    Result := 0
-  else if (Self < target) then
-    Result := 1
-  else
-    Result := -1;
 end;
 
 function Comparison(const A, B: string): Integer; overload;

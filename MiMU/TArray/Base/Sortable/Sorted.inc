@@ -163,7 +163,7 @@ begin
   D := 0;
   repeat
     case D of
-      0: D := Self[L].Unsign(Self[R]);
+      0: D := Self[L].Decompare(Self[R]);
       1: Result := (Self[L] <= Self[R]);
       -1: Result := (Self[L] >= Self[R]);
     end;
@@ -205,7 +205,7 @@ begin
   D := 0;
   repeat
     case D of
-      0: D := Self[L].Unsign(Self[R]);
+      0: D := Self[L].Decompare(Self[R]);
       1: Result := (Self[L] <= Self[R]);
       -1: Result := (Self[L] >= Self[R]);
     end;

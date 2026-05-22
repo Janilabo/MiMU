@@ -88,7 +88,7 @@ begin
   D := True;
   for i := 1 to High(Self) do
   begin
-    case Self[i].Unsign(Self[i - 1]) of
+    case Self[i].Decompare(Self[i - 1]) of
       0: Continue;
       1: D := False;
       -1: A := False;
