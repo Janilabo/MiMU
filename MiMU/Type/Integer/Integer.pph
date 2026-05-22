@@ -9,8 +9,9 @@
 {$I Factorization.inc}
 {$I Generation.inc}
 {$I Parity.inc}
+{$I Polarity.inc}
 {$I Proximity.inc}
 {$I Randomness.inc}
 {$I Restriction.inc}
-{$I Sign.inc}
 {$I Sort.inc}
+{$I Transform.inc}

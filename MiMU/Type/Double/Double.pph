@@ -6,5 +6,6 @@
 {$I Digit.inc}
 {$I Distance.inc}
 {$I Percent.inc}
+{$I Polarity.inc}
 {$I Restriction.inc}
-{$I Sign.inc}
+{$I Transform.inc}
