@@ -7,6 +7,7 @@ end;
 TTriangleCompare = specialize TCompare<TTriangle>;
 TTriangleArray = array of TTriangle;
 T2DTriangleArray = array of TTriangleArray;
+PTriangle = ^TTriangle;
 {$ENDIF}
 
 {$IFDEF HELPERS}

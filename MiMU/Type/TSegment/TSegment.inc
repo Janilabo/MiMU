@@ -8,6 +8,7 @@ end;
 TSegmentCompare = specialize TCompare<TSegment>;
 TSegmentArray = array of TSegment;
 T2DSegmentArray = array of TSegmentArray;
+PSegment = ^TSegment;
 {$ENDIF}
 
 {$IFDEF HELPERS}

@@ -1,6 +1,3 @@
 begin
-  if Self then
-    Result := bTrue
-  else
-    Result := bFalse;
+  Result := TA.Create(bFalse, bTrue)[Ord(Self)];
 end;
