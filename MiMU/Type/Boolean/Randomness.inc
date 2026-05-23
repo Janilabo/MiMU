@@ -1,14 +1,14 @@
 {$IFDEF HELPERS}
-function Shuffle: Boolean;
+function Rand: Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Shuffle>
+  <Rand>
   @action: Randomizes Self and then returns it.
   @note: None
 [==============================================================================}
-function TBooleanHelper.Shuffle: Boolean;
+function TBooleanHelper.Rand: Boolean;
 begin
   Self := (Random(2) = 0);
   Result := Self;

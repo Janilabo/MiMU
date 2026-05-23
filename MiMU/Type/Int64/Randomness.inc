@@ -1,14 +1,14 @@
 {$IFDEF HELPERS}
-function Shuffle: Int64;
+function Rand: Int64;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Shuffle>
+  <Rand>
   @action: Random() with support for negative Range.
   @note: None
 [==============================================================================}
-function TInt64Helper.Shuffle: Int64;
+function TInt64Helper.Rand: Int64;
 begin
   Result := Random(Abs(Self));
   if (Self < 0) then

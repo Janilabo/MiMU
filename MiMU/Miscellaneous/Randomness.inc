@@ -1,4 +1,5 @@
 {$IFDEF FUNCTIONS}
+function Chance: Boolean; overload;
 function Rand(const R: Integer = 2): Integer; overload;
 function Randify(const R: Integer = 2): Integer; overload;
 function RandIn(const R: Integer = 2; const N: Integer = 2): Integer; overload;
@@ -6,6 +7,7 @@ function Rando(const R: Integer = 2): Integer; overload;
 function Random2(const x: Integer; const r: Integer = 2): Integer; overload;
 function RandomB: Boolean; overload;
 function RandomBit: Byte; overload;
+function RandomBool: Boolean; overload;
 function RandomEx(const l: Integer = 2): Integer; overload;
 function RandomLower(const R: Integer = 2): Integer; overload;
 function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload;
@@ -18,6 +20,11 @@ function RandOut(const R: Integer = 2; const N: Integer = 2): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+function Chance: Boolean; overload;
+begin
+  Result := (((Random(High(Integer))) mod 2) = 0);
+end; 
+
 function Rand(const R: Integer = 2): Integer; overload;
 begin
   case Sign(R) of
@@ -76,6 +83,11 @@ end;
 function RandomBit: Byte; overload;
 begin
   Result := Random(2);
+end;
+
+function RandomBool: Boolean; overload;
+begin
+  Result := Boolean(Random(2));
 end;
 
 function RandomEx(const l: Integer = 2): Integer; overload;
