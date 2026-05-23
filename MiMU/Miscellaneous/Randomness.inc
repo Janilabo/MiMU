@@ -17,6 +17,8 @@ function Randomish(const R: Integer = 2): Integer; overload;
 function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload;
 function RandomUpper(const R: Integer = 2): Integer; overload;
 function RandOut(const R: Integer = 2; const N: Integer = 2): Integer; overload;
+function Rign: Integer; overload;
+function Toss: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -163,5 +165,15 @@ begin
     Result := Max(Result, Random(v));
   if (R < 0) then
     Result := -Result;
+end;
+
+function Rign: Integer; overload;
+begin
+  Result := (Random(3) - 1);
+end;
+
+function Toss: Integer; overload;
+begin
+  Result := ((Random(2) * 2) - 1);
 end;
 {$ENDIF}

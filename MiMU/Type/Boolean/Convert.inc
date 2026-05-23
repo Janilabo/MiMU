@@ -11,6 +11,7 @@ function Binary: Char;
 function BinaryDigit: Integer;
 function Bit: Integer;
 function Bitify: Integer;
+function Ordinal: Byte; overload;
 function ToInteger: Integer;
 function ToString: string;
 {$ENDIF}
@@ -87,6 +88,17 @@ end;
 function TBooleanHelper.Bitify: Integer;
 begin
   Result := Self.IfThen(1, 0);
+end;
+
+{==============================================================================]
+  <Ordinal>
+  @action: Extracts the underlying ordinal value of the Boolean as a Byte.
+  @note: Uses a defensive bitwise mask (and 1) to guarantee a strict return 
+         value of 0 or 1, neutralizing uninitialized or corrupt memory states.
+[==============================================================================}
+function TBooleanHelper.Ordinal: Byte; overload;
+begin
+  Result := (Ord(Self) and 1);
 end;
 
 {==============================================================================]

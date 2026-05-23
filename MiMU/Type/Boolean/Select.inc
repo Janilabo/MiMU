@@ -41,6 +41,20 @@ function Decide(const bTrue, bFalse: TTriangle): TTriangle; overload;
 function Decide(const bTrue, bFalse: TCircle): TCircle; overload;
 function Decide(const bTrue, bFalse: Int64): Int64; overload;
 
+function Either(const bTrue, bFalse: Integer): Integer; overload;
+function Either(const bTrue, bFalse: Double): Double; overload;
+function Either(const bTrue, bFalse: string): string; overload;
+function Either(const bTrue, bFalse: Char): Char; overload;
+function Either(const bTrue, bFalse: Boolean): Boolean; overload;
+function Either(const bTrue, bFalse: TPoint): TPoint; overload;
+function Either(const bTrue, bFalse: TBox): TBox; overload;
+function Either(const bTrue, bFalse: TRange): TRange; overload;
+function Either(const bTrue, bFalse: TConnection): TConnection; overload;
+function Either(const bTrue, bFalse: TSegment): TSegment; overload;
+function Either(const bTrue, bFalse: TTriangle): TTriangle; overload;
+function Either(const bTrue, bFalse: TCircle): TCircle; overload;
+function Either(const bTrue, bFalse: Int64): Int64; overload;
+
 function Evaluate(const bTrue, bFalse: Integer): Integer; overload;
 function Evaluate(const bTrue, bFalse: Double): Double; overload;
 function Evaluate(const bTrue, bFalse: string): string; overload;
@@ -162,7 +176,32 @@ type
   RT = Int64;
 begin
   Result := specialize TArray<RT>.Create(bFalse, bTrue)[Ord(Self)];
-end; 
+end;
+
+{==============================================================================]
+  <Either>
+  @action: Selects between two items based on the Boolean state.
+  @note: Uses an early-exit branch approach. If Self is False, it immediately
+         returns bFalse; otherwise, it falls through to return bTrue.
+[==============================================================================}
+function TBooleanHelper.Either(const bTrue, bFalse: Integer): Integer; overload; {$I Skeletons/Either.inc}
+function TBooleanHelper.Either(const bTrue, bFalse: Double): Double; overload; {$I Skeletons/Either.inc}
+function TBooleanHelper.Either(const bTrue, bFalse: string): string; overload; {$I Skeletons/Either.inc}
+function TBooleanHelper.Either(const bTrue, bFalse: Char): Char; overload; {$I Skeletons/Either.inc}
+function TBooleanHelper.Either(const bTrue, bFalse: Boolean): Boolean; overload; {$I Skeletons/Either.inc}
+function TBooleanHelper.Either(const bTrue, bFalse: TPoint): TPoint; overload; {$I Skeletons/Either.inc}
+function TBooleanHelper.Either(const bTrue, bFalse: TBox): TBox; overload; {$I Skeletons/Either.inc}
+function TBooleanHelper.Either(const bTrue, bFalse: TRange): TRange; overload; {$I Skeletons/Either.inc}
+function TBooleanHelper.Either(const bTrue, bFalse: TConnection): TConnection; overload; {$I Skeletons/Either.inc}
+function TBooleanHelper.Either(const bTrue, bFalse: TSegment): TSegment; overload; {$I Skeletons/Either.inc}
+function TBooleanHelper.Either(const bTrue, bFalse: TTriangle): TTriangle; overload; {$I Skeletons/Either.inc}
+function TBooleanHelper.Either(const bTrue, bFalse: TCircle): TCircle; overload; {$I Skeletons/Either.inc}
+function TBooleanHelper.Either(const bTrue, bFalse: Int64): Int64; overload;
+begin
+  if not Self then
+    Exit(bFalse);
+  Result := bTrue;
+end;
 
 {==============================================================================]
   <Evaluate>
