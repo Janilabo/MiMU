@@ -35,6 +35,7 @@ function RandomLow(const R: Integer = 2; const biasStrength: Double = 2.0): Inte
 function RandomLower(const R: Integer = 2): Integer; overload;
 function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload;
 function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload;
+function RandomMid(const R: Integer): Integer; overload;
 function RandomMiddle(const R: Integer): Integer; overload;
 function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload;
 function RandomNumber(const digitCount: Byte = 1): Int64; overload;
@@ -518,6 +519,23 @@ end;
 function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload;
 begin
   Result := Round(RandomSample(x, sample).Mean);
+end;
+
+{==============================================================================]
+  <RandomMid>
+  @action: Generates a random integer from 0 to R - 1, gently biased toward the middle of the range.
+  @note: Implements a median-of-three selection. It samples three independent uniform random variables and returns the median value,
+         resulting in a smooth, symmetric distribution that drops off at the boundaries.
+[==============================================================================}
+function RandomMid(const R: Integer): Integer; overload;
+var
+  a: TIntegerArray;
+begin
+  if (R < 2) then
+    Exit(0);
+  a := [Random(R), Random(R), Random(R)];
+  Sort3(a[0], a[1], a[2]);
+  Result := a[1];
 end;
 
 {==============================================================================]
