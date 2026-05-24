@@ -25,15 +25,21 @@ function Random2(const x: Integer; const r: Integer = 2): Integer; overload;
 function RandomB: Boolean; overload;
 function RandomBit: Byte; overload;
 function RandomBool: Boolean; overload;
+function RandomCenter(const R: Integer; const sharpness: Double = 2.0): Integer; overload;
 function RandomCode(const digitCount: Byte = 1): Int64; overload;
 function RandomDigit: Byte; overload;
 function RandomEx(const l: Integer = 2): Integer; overload;
+function RandomHigh(const R: Integer = 2; const biasStrength: Double = 2.0): Integer; overload;
+function RandomLeft(const R: Integer = 2): Integer; overload;
+function RandomLow(const R: Integer = 2; const biasStrength: Double = 2.0): Integer; overload;
 function RandomLower(const R: Integer = 2): Integer; overload;
 function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload;
 function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload;
+function RandomMiddle(const R: Integer): Integer; overload;
 function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload;
 function RandomNumber(const digitCount: Byte = 1): Int64; overload;
 function Randomish(const R: Integer = 2): Integer; overload;
+function RandomRight(const R: Integer = 2): Integer; overload;
 function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload;
 function RandomUpper(const R: Integer = 2): Integer; overload;
 function RandomValue(const maxDigits: Byte = 1): Int64; overload;
@@ -360,6 +366,30 @@ begin
 end;
 
 {==============================================================================]
+  <RandomCenter>
+  @action: Generates a random integer from 0 to R - 1, sharply centered around the middle of the range.
+  @note: Generalization of RandomMiddle. Applies the Central Limit Theorem by averaging multiple uniform random variables ($s$ iterations).
+         Higher `sharpness` creates a narrower, bell-curve (Gaussian-like) distribution.
+[==============================================================================}
+function RandomCenter(const R: Integer; const sharpness: Double = 2.0): Integer; overload;
+var
+  t: Double;
+  i, s: Integer;
+begin
+  if ((R < 2) or (sharpness <= 0)) then
+    Exit(0);
+  s := Max(2, Round(sharpness * 2));
+  t := 0;
+  for i := 1 to s do
+    t := (t + Random);
+  Result := Floor((t / s) * R);
+  if (Result < 0) then
+    Result := 0
+  else if (Result >= R) then
+    Result := (R - 1);
+end; 
+
+{==============================================================================]
   <RandomCode>
   @action: Generates a random multi-digit Int64 code sequence via mathematical accumulation.
   @note: Ensures the leading digit is never zero (1-9) so the full digit length is preserved.
@@ -407,6 +437,56 @@ begin
 end;
 
 {==============================================================================]
+  <RandomHigh>
+  @action: Generates a random integer from 0 to R - 1, biased toward R - 1 with a configurable bias strength.
+  @note: Generalization of RandomRight. A higher `biasStrength` (> 1.0) pushes results closer to R - 1,
+         while a value of 1.0 yields a uniform distribution.
+[==============================================================================}
+function RandomHigh(const R: Integer = 2; const biasStrength: Double = 2.0): Integer; overload;
+begin
+  if ((R < 2) or (biasStrength <= 0)) then
+    Exit(0);
+  Result := ((R - 1) - Floor(Power(Random, biasStrength) * R));
+  if (Result < 0) then
+    Result := 0
+  else if (Result >= R) then
+    Result := (R - 1);
+end;
+
+{==============================================================================]
+  <RandomLeft>
+  @action: Generates a random integer from 0 to R - 1, heavily biased toward 0 (the left side of the range).
+  @note: Uses a quadratic distribution ($Random^2$) to cluster results near the lower bound. Clamped between 0 and R - 1.
+[==============================================================================}
+function RandomLeft(const R: Integer = 2): Integer; overload;
+begin
+  if (R < 2) then
+    Exit(0);
+  Result := Floor(Power(Random, 2.0) * R);
+  if (Result < 0) then
+    Result := 0
+  else if (Result >= R) then
+    Result := (R - 1);
+end;
+
+{==============================================================================]
+  <RandomLow>
+  @action: Generates a random integer from 0 to R - 1, biased toward 0 with a configurable bias strength.
+  @note: Generalization of RandomLeft. A higher `biasStrength` (> 1.0) pushes results closer to 0,
+         while a value of 1.0 yields a uniform distribution.
+[==============================================================================}
+function RandomLow(const R: Integer = 2; const biasStrength: Double = 2.0): Integer; overload;
+begin
+  if ((R < 2) or (biasStrength <= 0)) then
+    Exit(0);
+  Result := Floor(Power(Random, biasStrength) * R);
+  if (Result < 0) then
+    Result := 0
+  else if (Result >= R) then
+    Result := (R - 1);
+end;
+
+{==============================================================================]
   <RandomLower>
   @action: Biases results down toward zero by taking the lower of 2 samples.
   @note: Simple fixed-pass variation of a downward probability curve.
@@ -438,6 +518,27 @@ end;
 function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload;
 begin
   Result := Round(RandomSample(x, sample).Mean);
+end;
+
+{==============================================================================]
+  <RandomMiddle>
+  @action: Generates a random integer from 0 to R - 1, biased toward the center of the range.
+  @note: Averages two independent random uniform variables, creating a symmetric,
+         triangular probability distribution centered around $(R - 1) / 2$.
+[==============================================================================}
+function RandomMiddle(const R: Integer): Integer; overload;
+var
+  u, v: Double;
+begin
+  if (R < 2) then
+    Exit(0);
+  u := Random;
+  v := Random;
+  Result := Floor(((u + v) / 2) * R);
+  if (Result < 0) then
+    Result := 0
+  else if (Result >= R) then
+    Result := (R - 1);
 end;
 
 {==============================================================================]
@@ -485,6 +586,22 @@ begin
   Result := Random(Abs(R));
   if ((R shr 31) <> 0) then
     Result := -Result;
+end;
+
+{==============================================================================]
+  <RandomRight>
+  @action: Generates a random integer from 0 to R - 1, heavily biased toward R - 1 (the right side of the range).
+  @note: Inverts the quadratic distribution of RandomLeft to cluster results near the upper bound. Clamped between 0 and R - 1.
+[==============================================================================}
+function RandomRight(const R: Integer = 2): Integer; overload;
+begin
+  if (R < 2) then
+    Exit(0);
+  Result := ((R - 1) - Floor(Power(Random, 2.0) * R));
+  if (Result < 0) then
+    Result := 0
+  else if (Result >= R) then
+    Result := (R - 1);
 end;
 
 {==============================================================================]
