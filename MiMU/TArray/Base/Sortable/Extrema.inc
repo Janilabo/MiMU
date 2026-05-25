@@ -50,7 +50,7 @@ begin
   if (High(Self) > -1) then
     Result := Self[0];
   for i := 1 to High(Self) do
-    if (Self[i] < Result) then
+    if (Self[i] > Result) then
       Result := Self[i];
 end;
 
