@@ -5,6 +5,7 @@
 {$I Search.inc}
 
 {$IFDEF Sortable}
+{$I Sortable/Central.inc}
 {$I Sortable/Extrema.inc}
 {$I Sortable/Sort.inc}
 {$ENDIF}

@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Lowest: MType; overload;
 function Highest: MType; overload;
+function Maximus: MType; overload;
+function Minimus: MType; overload;
 function Mini(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
 function Mini(const start: Integer; const aAscending: Boolean = True): Integer; overload;
 function Maxi(const aAscending: Boolean = True; const start: Integer = -1): Integer; overload;
@@ -51,6 +53,52 @@ begin
     Result := Self[0];
   for i := 1 to High(Self) do
     if (Self[i] > Result) then
+      Result := Self[i];
+end;
+
+{==============================================================================]
+  <Minimus>
+  @action: Iterates through an array of `MType` elements to find and return the maximum (largest) value.
+  @note: Implements a sequential linear scan starting from the first element. It leverages a custom 
+         `.Increment` helper method on the loop counter variable `i` to advance the index while checking 
+         bounds simultaneously. If the array is empty (`Length = 0`), the function exits immediately 
+         returning an uninitialized or default `MType` value.
+  @result: The largest value found within the array instance, or a default value if the array is empty.
+[==============================================================================}
+function MArrayHelper.Maximus: MType; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit;
+  i := 0;
+  Result := Self[0];
+  while (i.Increment < l) do
+    if (Self[i] > Result) then
+      Result := Self[i];
+end;
+
+{==============================================================================]
+  <Minimus>
+  @action: Iterates through an array of `MType` elements to find and return the minimum (smallest) value.
+  @note: Scans the array sequentially to track the lowest value. It relies on the `<` operator being 
+         well-defined for `MType` and assumes `i.Increment` modifies `i` in-place (pre-increment or 
+         post-increment behavior depending on your helper's architecture) to safely step through 
+         the array indices.
+  @result: The smallest value found within the array instance, or a default value if the array is empty.
+[==============================================================================}
+function MArrayHelper.Minimus: MType; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit;
+  i := 0;
+  Result := Self[0];
+  while (i.Increment < l) do
+    if (Self[i] < Result) then
       Result := Self[i];
 end;
 

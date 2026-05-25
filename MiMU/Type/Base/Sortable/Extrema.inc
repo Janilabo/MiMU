@@ -15,6 +15,8 @@ function MinimumOf(const A, B, C: MType): MType; overload;
 function Mintri(const A, B, C: MType): MType; overload;
 function Trimax(const A, B, C: MType): MType; overload;
 function Trimin(const A, B, C: MType): MType; overload;
+function Triomax(const A, B, C: MType): MType; overload;
+function Triomin(const A, B, C: MType): MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -248,5 +250,44 @@ var
 begin
   D := [A, B, C];
   Result := D.Lowest;
+end;
+
+{==============================================================================]
+  <Triomax>
+  @action: Extracts the maximum (largest) value among three elements using a branchless 
+           array-index lookup table.
+  @note: Populates a local array `D` with the inputs and computes a 3-bit index based on the 
+         relative comparisons ($A > B$, $A > C$, $B > C$). This index maps directly into the 
+         constant array `m` to instantly pull the correct element index ($0$, $1$, or $2$) 
+         without CPU branching.
+[==============================================================================}
+function Triomax(const A, B, C: MType): MType; overload;
+const
+  m: array[0..7] of Integer = (2, 1, 2, 1, 2, 0, 0, 0);
+var
+  D: MArray;
+begin
+  D := [A, B, C];
+  Result := D[m[(Ord(A > B) shl 2) or (Ord(A > C) shl 1) or Ord(B > C)]];
+end;
+
+{==============================================================================]
+  <Triomin>
+  @action: Extracts the minimum (smallest) value among three elements using a branchless 
+           array-index lookup table.
+  @note: Packs inputs into `D` and converts the inverse relative comparisons ($A < B$, $A < C$, $B < C$) 
+         into a 3-bit binary flag. This flag queries the constant lookup table `m` to fetch 
+         the index of the minimum element. 
+         * This technique relies entirely on the efficiency of the `<` operator and avoids branch 
+           misprediction penalties at the hardware level.
+[==============================================================================}
+function Triomin(const A, B, C: MType): MType; overload;
+const
+  m: array[0..7] of Integer = (2, 1, 2, 1, 2, 0, 0, 0);
+var
+  D: MArray;
+begin
+  D := [A, B, C];
+  Result := D[m[(Ord(A < B) shl 2) or (Ord(A < C) shl 1) or Ord(B < C)]];
 end;
 {$ENDIF}
