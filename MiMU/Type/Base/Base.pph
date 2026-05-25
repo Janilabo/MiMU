@@ -8,4 +8,5 @@
 {$I Sortable/Central.inc}
 {$I Sortable/Extrema.inc}
 {$I Sortable/Sort.inc}
+{$I Sortable/Sorted.inc}
 {$ENDIF}
