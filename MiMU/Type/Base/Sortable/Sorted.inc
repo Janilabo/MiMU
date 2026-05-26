@@ -4,7 +4,9 @@ function InDescending3(const A, B, C: MType; const strictly: Boolean = False): B
 function InOrder3(const A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
 function IsAscending3(const A, B, C: MType; const strictly: Boolean = False): Boolean; overload;
 function IsDescending3(const A, B, C: MType; const strictly: Boolean = False): Boolean; overload;
+function IsMonotonic3(const A, B, C: MType): Boolean; overload;
 function IsSorted3(const A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
+function IsStrictlyMonotonic3(const A, B, C: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -73,6 +75,16 @@ begin
 end;
 
 {==============================================================================]
+  <IsMonotonic3>
+  @action: Checks if the sequence of three values (A, B, C) is monotonic.
+  @note: Returns True if the values are entirely non-decreasing (A <= B <= C) or entirely non-increasing (A >= B >= C). Platonic plateaus (equal adjacent values) are allowed.
+[==============================================================================}
+function IsMonotonic3(const A, B, C: MType): Boolean; overload;
+begin
+  Result := ((A <= B) and (B <= C)) or ((A >= B) and (B >= C));
+end;
+
+{==============================================================================]
   <IsSorted3>
   @action: Determines whether three values are sorted by using negated logical checks.
   @note: Uses De Morgan's laws to verify sorting. 
@@ -85,5 +97,15 @@ begin
     Result := not ((A > B) or (B > C))
   else
     Result := not ((A < B) or (B < C));
+end;
+
+{==============================================================================]
+  <IsStrictlyMonotonic3>
+  @action: Checks if the sequence of three values (A, B, C) is strictly monotonic.
+  @note: Returns True if the values are strictly increasing (A < B < C) or strictly decreasing (A > B > C). Flat plateaus or equal adjacent values will cause this to return False.
+[==============================================================================}
+function IsStrictlyMonotonic3(const A, B, C: MType): Boolean; overload;
+begin
+  Result := ((A < B) and (B < C)) or ((A > B) and (B > C));
 end;
 {$ENDIF}

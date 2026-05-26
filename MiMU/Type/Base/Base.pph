@@ -10,4 +10,5 @@
 {$I Sortable/Order.inc}
 {$I Sortable/Sort.inc}
 {$I Sortable/Sorted.inc}
+{$I Sortable/Validation.inc}
 {$ENDIF}

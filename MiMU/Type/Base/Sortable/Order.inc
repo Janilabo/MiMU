@@ -1,5 +1,6 @@
 {$IFDEF FUNCTIONS}
 function Order3(const A, B, C: MType): Integer; overload;
+function Triorder(const A, B, C: MType): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -19,5 +20,20 @@ begin
   if ((A >= B) and (B >= C)) then
     Exit(-1);
   Result := 0;
+end;
+
+{==============================================================================]
+  <Triorder>
+  @action: Determines the sorting order or monotonicity of three values (A, B, C).
+  @note: Returns 1 for ascending/non-decreasing order, -1 for descending/non-increasing order, and 0 if the values are unordered or fluctuating.
+[==============================================================================}
+function Triorder(const A, B, C: MType): Integer; overload;
+begin
+  if ((A <= B) and (B <= C)) then
+    Result := 1
+  else if ((A >= B) and (B >= C)) then
+    Result := -1
+  else
+    Result := 0;
 end;
 {$ENDIF}
