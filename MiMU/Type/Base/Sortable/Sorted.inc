@@ -1,9 +1,39 @@
 {$IFDEF FUNCTIONS}
+function InAscending3(const A, B, C: MType; const strictly: Boolean = False): Boolean; overload;
+function InDescending3(const A, B, C: MType; const strictly: Boolean = False): Boolean; overload;
 function InOrder3(const A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
+function IsAscending3(const A, B, C: MType; const strictly: Boolean = False): Boolean; overload;
+function IsDescending3(const A, B, C: MType; const strictly: Boolean = False): Boolean; overload;
 function IsSorted3(const A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <InAscending3>
+  @action: Determines whether three items are arranged in ascending order.
+  @note: If strictly is True, it evaluates for a strict increase (A < B < C).
+         If strictly is False (default), it allows equal values (A <= B <= C).
+[==============================================================================}
+function InAscending3(const A, B, C: MType; const strictly: Boolean = False): Boolean; overload;
+begin
+  if strictly then
+    Exit((A < B) and (B < C));
+  Result := ((A <= B) and (B <= C));
+end;
+
+{==============================================================================]
+  <InDescending3>
+  @action: Determines whether three items are arranged in descending order.
+  @note: If strictly is True, it evaluates for a strict decrease (A > B > C).
+         If strictly is False (default), it allows equal values (A >= B >= C).
+[==============================================================================}
+function InDescending3(const A, B, C: MType; const strictly: Boolean = False): Boolean; overload;
+begin
+  if strictly then
+    Exit((A > B) and (B > C));
+  Result := ((A >= B) and (B >= C));
+end;
+
 {==============================================================================]
   <InOrder3>
   @action: Determines whether three values are arranged in a specific sorted order.
@@ -12,6 +42,34 @@ function IsSorted3(const A, B, C: MType; const oAscending: Boolean = True): Bool
 function InOrder3(const A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := ((oAscending and ((A <= B) and (B <= C))) or ((not oAscending) and ((A >= B) and (B >= C))));
+end;
+
+{==============================================================================]
+  <IsAscending3>
+  @action: Determines whether three items are arranged in ascending order using negated logical checks.
+  @note: Uses De Morgan's laws to verify ascending order.
+         If strictly is True, it ensures neither A >= B nor B >= C is true (equivalent to A < B < C).
+         If strictly is False (default), it ensures neither A > B nor B > C is true (equivalent to A <= B <= C).
+[==============================================================================}
+function IsAscending3(const A, B, C: MType; const strictly: Boolean = False): Boolean; overload;
+begin
+  if strictly then
+    Exit(not ((A >= B) or (B >= C)));
+  Result := not ((A > B) or (B > C));
+end;
+
+{==============================================================================]
+  <IsDescending3>
+  @action: Determines whether three items are arranged in descending order using negated logical checks.
+  @note: Uses De Morgan's laws to verify descending order.
+         If strictly is True, it ensures neither A <= B nor B <= C is true (equivalent to A > B > C).
+         If strictly is False (default), it ensures neither A < B nor B < C is true (equivalent to A >= B >= C).
+[==============================================================================}
+function IsDescending3(const A, B, C: MType; const strictly: Boolean = False): Boolean; overload;
+begin
+  if strictly then
+    Exit(not ((A <= B) or (B <= C)));
+  Result := not ((A < B) or (B < C));
 end;
 
 {==============================================================================]

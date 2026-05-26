@@ -1,7 +1,11 @@
 {$IFDEF FUNCTIONS}
 function Selectionsorted(const A, B, C: MType; const oAscending: Boolean = True): MArray; overload;
+function Sort(var A, B: MType; const oAscending: Boolean = True): Boolean; overload;
+function Sort(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
 function Sort3(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
 function Sorted3(const A, B, C: MType; const oAscending: Boolean = True): MArray; overload;
+function Swop(var A, B: MType; const oAscending: Boolean = True): Boolean; overload;
+function Swop(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
 function Triosorted(const A, B, C: MType; const oAscending: Boolean = True): MArray; overload;
 function Trisort(var A, B, C: MType; const oAscending: Boolean = True): MType; overload;
 function Trisorted(const A, B, C: MType; const oAscending: Boolean = True): MArray; overload;
@@ -36,6 +40,33 @@ begin
   end;
 end;
 
+function Sort(var A, B: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((oAscending and (A > B)) or ((not oAscending) and (A < B)));
+  if Result then
+    Swap(A, B);
+end;
+
+function Sort(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
+  function DoSwap(var X, Y: MType): Boolean;
+  var
+    Z: MType;
+  begin
+    Z := X;
+    X := Y;
+    Y := Z;
+    Result := True;
+  end;
+begin
+  Result := False;
+  if ((oAscending and (A > B)) or ((not oAscending) and (A < B))) then
+    Result := DoSwap(A, B);
+  if ((oAscending and (A > C)) or ((not oAscending) and (A < C))) then
+    Result := DoSwap(A, C);
+  if ((oAscending and (B > C)) or ((not oAscending) and (B < C))) then
+    Result := DoSwap(B, C);
+end;
+
 {==============================================================================]
   <Sort3>
   @action: Sorts three values in place
@@ -65,6 +96,38 @@ function Sorted3(const A, B, C: MType; const oAscending: Boolean = True): MArray
 begin
   Result := [A, B, C];
   Sort3(Result[0], Result[1], Result[2], oAscending);
+end;
+
+function Swop(var A, B: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+ S: MType;
+begin
+  Result := ((oAscending and (A > B)) or ((not oAscending) and (B > A)));
+  if not Result then
+    Exit;
+  S := A;
+  A := B;
+  B := S;
+end;
+
+function Swop(var A, B, C: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  S: MType;
+procedure SwapIf(var X, Y: MType);
+begin
+  if ((oAscending and (X > Y)) or ((not oAscending) and (X < Y))) then
+  begin
+    S := X;
+    X := Y;
+    Y := S;
+    Result := True;
+  end;
+end;
+begin
+  Result := False;
+  SwapIf(A, B);
+  SwapIf(A, C);
+  SwapIf(B, C);
 end;
 
 {==============================================================================]
