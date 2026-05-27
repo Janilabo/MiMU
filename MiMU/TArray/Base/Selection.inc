@@ -41,6 +41,8 @@ function KeepIndexes(const ID: TIntegerArray): Integer; overload;
 function KeepIndices(const ID: TIntegerArray): Integer; overload;
 function Pick(const items: MArray; const index: Integer = 0): MArray; overload;
 function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
+function Resift(const reference: MType): MType; overload;
+function Sift(const reference: MType): MType; overload;
 function Trim(const tCount: Integer = 1): MArray; overload;
 function Truncate(const tRate: Double = 10): MArray; overload;
 {$ENDIF}
@@ -1313,6 +1315,40 @@ begin
       Result[c.Increase] := Self[i];
   for i := (m + 1) to (l - 1) do
     Result[c.Increase] := Self[i];
+end;
+
+{==============================================================================]
+  <Resift>
+  @action: Iterates through the array backward and returns the first element from the end that differs from a specified reference value.
+  @note: If no elements differ from the reference, it falls back to returning the first element of the array (Self[0]).
+[==============================================================================}
+function MArrayHelper.Resift(const reference: MType): MType; overload;
+var
+  h, i: Integer;
+begin
+  h := High(Self);
+  for i := h downto 0 do
+    if (Self[i] <> reference) then
+      Exit(Self[i]);
+  if (h > -1) then
+    Result := Self[0];
+end;
+
+{==============================================================================]
+  <Sift>
+  @action: Iterates through the array sequentially and returns the first element that differs from a specified reference value.
+  @note: If no elements differ from the reference (or if all match), it falls back to returning the final element of the array (Self[h]).
+[==============================================================================}
+function MArrayHelper.Sift(const reference: MType): MType; overload;
+var
+  h, i: Integer;
+begin
+  h := High(Self);
+  for i := 0 to h do
+    if (Self[i] <> reference) then
+      Exit(Self[i]);
+  if (h > -1) then
+    Result := Self[h];
 end;
 
 {==============================================================================]
