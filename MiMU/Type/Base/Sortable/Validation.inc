@@ -5,6 +5,12 @@ function AnyEqual3(const A, B, C: MType): Boolean; overload;
 function Majority3(const A, B, C: MType): Boolean; overload;
 {$ENDIF}
 
+{$IFDEF HELPERS}
+function IsBetween(const A, B: MType): Boolean; overload;
+function IsOutside(const A, B: MType): Boolean; overload;
+function IsStrictlyBetween(const A, B: MType): Boolean; overload;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <AllDistinct3>
@@ -44,5 +50,44 @@ end;
 function Majority3(const A, B, C: MType): Boolean; overload;
 begin
   Result := ((A = B) or (B = C) or (A = C));
+end;
+
+{==============================================================================]
+  <IsBetween>
+  @action: Determines whether the instance value falls within an inclusive range defined by two boundaries.
+  @note: The range is direction-agnostic; it automatically handles cases where the first boundary (A) is greater than the second boundary (B).
+[==============================================================================}
+function MTypeHelper.IsBetween(const A, B: MType): Boolean; overload;
+begin
+  if (B > A) then
+    Result := ((Self >= A) and (Self <= B))
+  else
+    Result := ((Self >= B) and (Self <= A));
+end;
+
+{==============================================================================]
+  <IsOutside>
+  @action: Determines whether the instance value falls completely outside an exclusive range defined by two boundaries.
+  @note: The range is direction-agnostic; it automatically handles cases where the first boundary (A) is greater than the second boundary (B).
+[==============================================================================}
+function MTypeHelper.IsOutside(const A, B: MType): Boolean; overload;
+begin
+  if (B > A) then
+    Result := ((Self < A) or (Self > B))
+  else
+    Result := ((Self < B) or (Self > A));
+end;
+
+{==============================================================================]
+  <IsStrictlyBetween>
+  @action: Determines whether the instance value falls strictly within an inclusive range defined by two boundaries.
+  @note: The range is direction-agnostic; it automatically handles cases where the first boundary (A) is greater than the second boundary (B).
+[==============================================================================}
+function MTypeHelper.IsStrictlyBetween(const A, B: MType): Boolean; overload;
+begin
+  if (B > A) then
+    Result := ((Self > A) and (Self < B))
+  else
+    Result := ((Self > B) and (Self < A));
 end;
 {$ENDIF}
