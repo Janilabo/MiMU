@@ -7,8 +7,10 @@ function Majority3(const A, B, C: MType): Boolean; overload;
 
 {$IFDEF HELPERS}
 function IsBetween(const A, B: MType): Boolean; overload;
+function IsIn(const A, B: MType): Boolean; overload;
 function IsOutside(const A, B: MType): Boolean; overload;
 function IsStrictlyBetween(const A, B: MType): Boolean; overload;
+function IsStrictlyIn(const A, B: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -66,6 +68,16 @@ begin
 end;
 
 {==============================================================================]
+  <IsIn>
+  @action: Checks if the current value is within the specified range (inclusive).
+  @note: Automatically handles cases where A > B by using Min and Max.
+[==============================================================================}
+function MTypeHelper.IsIn(const A, B: MType): Boolean; overload;
+begin
+  Result := ((Self >= Min(A, B)) and (Self <= Max(A, B)));
+end;
+
+{==============================================================================]
   <IsOutside>
   @action: Determines whether the instance value falls completely outside an exclusive range defined by two boundaries.
   @note: The range is direction-agnostic; it automatically handles cases where the first boundary (A) is greater than the second boundary (B).
@@ -89,5 +101,15 @@ begin
     Result := ((Self > A) and (Self < B))
   else
     Result := ((Self > B) and (Self < A));
+end;
+
+{==============================================================================]
+  <IsStrictlyIn>
+  @action: Checks if the current value is strictly between the specified range (exclusive).
+  @note: Automatically handles cases where A > B by using Min and Max.
+[==============================================================================}
+function MTypeHelper.IsStrictlyIn(const A, B: MType): Boolean; overload;
+begin
+  Result := ((Self > Min(A, B)) and (Self < Max(A, B)));
 end;
 {$ENDIF}
