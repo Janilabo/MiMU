@@ -5,6 +5,8 @@ function FartherFrom(const target, than: Integer): Boolean; overload;
 function FartherThan(const target, than: Integer): Boolean; overload;
 function Noncloser(const target, than: Integer): Boolean; overload;
 function Nonfarther(const target, than: Integer): Boolean; overload;
+function Reachable(const target: Integer; const radius: Cardinal = 1): Boolean; overload;
+function Within(const target: Integer; const radius: Cardinal = 1): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -86,5 +88,35 @@ end;
 function TIntegerHelper.Nonfarther(const target, than: Integer): Boolean; overload;
 begin
   Result := (Sign(Abs(Self - target) - Abs(Self - than)) <= 0);
+end;
+
+{==============================================================================]
+  <Reachable>
+  @action: Determines whether the current integer value falls within a maximum
+           allowable radius (tolerance window) centered around a target value.
+  @note: Evaluates True if Self is trapped between (target - radius) and 
+         (target + radius). If radius is 0, it skips the bounds calculation 
+         and performs a strict equality check (Self = target).
+[==============================================================================}
+function TIntegerHelper.Reachable(const target: Integer; const radius: Cardinal = 1): Boolean; overload;
+var
+  r: Integer;
+begin
+  if (radius = 0) then
+    Exit(Self = target); 
+  r := radius;
+  Result := ((Self >= (target - r)) and (Self <= (target + r)));
+end;
+
+{==============================================================================]
+  <Approachable>
+  @action: Determines whether the current value falls within an acceptable 
+           radius (tolerance zone) centered around the target value.
+  @note: Uses an absolute distance calculation. A radius of 0 requires 
+         exact equality (Self = target).
+[==============================================================================}
+function TIntegerHelper.Within(const target: Integer; const radius: Cardinal = 1): Boolean; overload;
+begin
+  Result := (Abs(Self - target) <= Integer(radius));
 end;
 {$ENDIF}
