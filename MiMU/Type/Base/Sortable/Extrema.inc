@@ -5,6 +5,7 @@ function Maximal(const A, B, C: MType): MType; overload;
 function Maxim(const A, B, C: MType): MType; overload;
 function MaximumBy(const A, B, C: MType): MType; overload;
 function MaximumOf(const A, B, C: MType): MType; overload;
+function MaxOf(const A, B, C: MType): MType; overload;
 function Maxtri(const A, B, C: MType): MType; overload;
 function Min3(const A, B, C: MType): MType; overload;
 function MinBy(const A, B, C: MType): MType; overload;
@@ -12,6 +13,7 @@ function Minimal(const A, B, C: MType): MType; overload;
 function Minim(const A, B, C: MType): MType; overload;
 function MinimumBy(const A, B, C: MType): MType; overload;
 function MinimumOf(const A, B, C: MType): MType; overload;
+function MinOf(const A, B, C: MType): MType; overload;
 function Mintri(const A, B, C: MType): MType; overload;
 function Trimax(const A, B, C: MType): MType; overload;
 function Trimin(const A, B, C: MType): MType; overload;
@@ -101,6 +103,21 @@ begin
     else
       Result := C;
   end;
+end;
+
+{==============================================================================]
+  <MaxOf>
+  @action: Returns the maximum (largest) value among three inputs.
+  @note: If there is a tie for the highest value involving 'A', or if all 
+         three values are equal, 'A' is returned as the fallback.
+[==============================================================================}
+function MaxOf(const A, B, C: MType): MType; overload;
+begin
+  if ((B > A) and (B > C)) then
+    Exit(B)
+  else if ((C > A) and (C > B)) then
+    Exit(C);
+  Result := A;
 end;
 
 {==============================================================================]
@@ -202,6 +219,21 @@ begin
     else
       Result := C;
   end;
+end;
+
+{==============================================================================]
+  <MinOf>
+  @action: Returns the minimum (smallest) value among three inputs.
+  @note: If there is a tie for the lowest value involving 'A', or if all 
+         three values are equal, 'A' is returned as the fallback.
+[==============================================================================}
+function MinOf(const A, B, C: MType): MType; overload;
+begin
+  if ((B < A) and (B < C)) then
+    Exit(B)
+  else if ((C < A) and (C < B)) then
+    Exit(C);
+  Result := A;
 end;
 
 {==============================================================================]
