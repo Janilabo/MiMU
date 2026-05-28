@@ -6,6 +6,8 @@ function Majority3(const A, B, C: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF HELPERS}
+function Among(const A, B: MType): Boolean; overload;
+function Amongst(const A, B: MType): Boolean; overload;
 function IsAbove(const target: MType): Boolean; overload;
 function IsBelow(const target: MType): Boolean; overload;
 function IsBetween(const A, B: MType): Boolean; overload;
@@ -35,6 +37,41 @@ end;
 function AllEqual3(const A, B, C: MType): Boolean; overload;
 begin
   Result := ((A = B) and (B = C));
+end;
+
+{==============================================================================]
+  <Among>
+  @action: Determines whether the current value falls inside the closed numerical 
+           range bounded by A and B, inclusive.
+  @note: Automatically handles unordered inputs (works perfectly whether A <= B 
+         or A > B) by checking both orientation scenarios. This creates a safe, 
+         bidirectional containment check.
+[==============================================================================}
+function MTypeHelper.Among(const A, B: MType): Boolean; overload;
+begin
+  if (A <= B) then
+    Result := ((A <= Self) and (Self <= B))
+  else
+    Result := ((B <= Self) and (Self <= A));
+end;
+
+{==============================================================================]
+  <Amongst>
+  @action: Determines whether the current value is contained within the inclusive 
+           range defined by endpoints A and B.
+  @note: Normalizes the boundaries automatically by swapping them if A > B. 
+         This ensures a reliable, orientation-independent range check without 
+         requiring conditional branching on the final comparison.
+[==============================================================================}
+function MTypeHelper.Amongst(const A, B: MType): Boolean; overload;
+var
+  X, Y: MType;
+begin
+  X := A;
+  Y := B;
+  if (X > Y) then
+    Swap(X, Y);
+  Result := ((Self >= X) and (Self <= Y));
 end;
 
 {==============================================================================]

@@ -2,6 +2,7 @@
 {$I Counting.inc}
 {$I Miscellaneous.inc}
 {$I Search.inc}
+{$I Validation.inc}
 
 {$IFDEF Sortable}
 {$I Sortable/Central.inc}

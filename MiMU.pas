@@ -72,6 +72,7 @@ generic function Indices<T>(const arr: array of T): TIntegerArray; overload;
 generic function IDs<T>(const arr: array of T): TIntegerArray; overload;
 generic function GetArrayBounds<T>(const arr: array of T; out L, H: Integer): Integer; overload;
 generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T; overload;
+generic function Iff<T>(bState: Boolean; const bTrue, bFalse: T): T; overload;
 generic function SetSize<T>(var A, B: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 generic function SetSize<T>(var A, B, C: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 generic function SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: Integer = 1): Integer; overload;
@@ -354,6 +355,14 @@ begin
     Result := bResult
   else
     Result := cResult;
+end;
+
+generic function Iff<T>(bState: Boolean; const bTrue, bFalse: T): T; overload;
+begin
+  if bState then
+    Result := bTrue
+  else
+    Result := bFalse;
 end;
 
 {==============================================================================]
