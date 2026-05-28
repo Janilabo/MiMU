@@ -6,8 +6,11 @@ function Majority3(const A, B, C: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF HELPERS}
+function IsAbove(const target: MType): Boolean; overload;
+function IsBelow(const target: MType): Boolean; overload;
 function IsBetween(const A, B: MType): Boolean; overload;
 function IsIn(const A, B: MType): Boolean; overload;
+function IsInside(const A, B: MType; const strictly: Boolean = False): Boolean; overload;
 function IsOutside(const A, B: MType): Boolean; overload;
 function IsStrictlyBetween(const A, B: MType): Boolean; overload;
 function IsStrictlyIn(const A, B: MType): Boolean; overload;
@@ -55,6 +58,28 @@ begin
 end;
 
 {==============================================================================]
+  <IsAbove>
+  @action: Determines whether the item is strictly greater 
+           than the specified target value.
+  @note: This is an exclusive comparison (returns False if Self equals target).
+[==============================================================================}
+function MTypeHelper.IsAbove(const target: MType): Boolean; overload;
+begin
+  Result := (Self > target);
+end;
+
+{==============================================================================]
+  <IsBelow>
+  @action: Determines whether the current item is strictly less 
+           than the specified target value.
+  @note: This is an exclusive comparison (returns False if Self equals target).
+[==============================================================================}
+function MTypeHelper.IsBelow(const target: MType): Boolean; overload;
+begin
+  Result := (Self < target);
+end;
+
+{==============================================================================]
   <IsBetween>
   @action: Determines whether the instance value falls within an inclusive range defined by two boundaries.
   @note: The range is direction-agnostic; it automatically handles cases where the first boundary (A) is greater than the second boundary (B).
@@ -75,6 +100,22 @@ end;
 function MTypeHelper.IsIn(const A, B: MType): Boolean; overload;
 begin
   Result := ((Self >= Min(A, B)) and (Self <= Max(A, B)));
+end;
+
+{==============================================================================]
+  <IsInside>
+  @action: Determines whether the current value falls within the range defined 
+           by bounds A and B. 
+           If 'strictly' is False, the range is inclusive of the boundaries. 
+           If 'strictly' is True, the range is exclusive.
+  @note: Automatically handles unordered bounds using Min() and Max().
+[==============================================================================}
+function MTypeHelper.IsInside(const A, B: MType; const strictly: Boolean = False): Boolean; overload;
+begin
+  if not strictly then
+    Result := ((Ord(Self >= Min(A, B)) and Ord(Self <= Max(A, B))) = 1)
+  else
+    Result := ((Ord(Self > Min(A, B)) and Ord(Self < Max(A, B))) = 1);
 end;
 
 {==============================================================================]
