@@ -6,6 +6,8 @@ function Find(const ID: TIntegerArray; const items: MArray): Integer; overload;
 function First: Integer; overload;
 function First(const item: MType): Integer; overload;
 function First(const items: MArray): Integer; overload;
+function IndexFor(const tItem: MType): Integer; overload;
+function IndexFor(const tItems: MArray): Integer; overload;
 function IndexOf(const item: MType; const ID: TRange): Integer; overload;
 function Last: Integer; overload;
 function Last(const item: MType): Integer; overload;
@@ -135,6 +137,81 @@ begin
   for Result := 0 to High(Self) do
     if items.Contains(Self[Result]) then
       Exit;
+  Result := -1;
+end;
+
+{==============================================================================]
+  <IndexFor>
+  @action: Scans the array sequentially to locate the first occurrence of a 
+           specified item and returns its 0-based index. Returns -1 if the 
+           item is not found.
+  @note: Optimized for execution speed using a 4-way loop unrolling strategy 
+         to maximize CPU instruction pipeline efficiency and minimize branch 
+         misprediction penalties.
+[==============================================================================}
+function MArrayHelper.IndexFor(const tItem: MType): Integer; overload;
+var
+  L: Integer;
+begin
+  L := Self.Length;
+  if (L > 0) then
+  begin
+    Result := 0;
+    while (Result <= (L - 4)) do
+    begin
+      if (Self[Result] = tItem) then
+        Exit;
+      if (Self[Result + 1] = tItem) then
+        Exit(Result + 1);
+      if (Self[Result + 2] = tItem) then
+        Exit(Result + 2);
+      if (Self[Result + 3] = tItem) then
+        Exit(Result + 3);
+      Result.Increase(4);
+    end;
+    while (Result < L) do
+      if (Self[Result] = tItem) then
+        Exit(Result)
+      else
+        Inc(Result);
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
+  <IndexFor>
+  @action: Scans the array sequentially to locate the first element that exists 
+           within the specified target collection (tItems) and returns its 
+           0-based index. Returns -1 if no matching element is found.
+  @note: Optimized using a 4-way loop unrolling strategy to accelerate the 
+         multi-item containment check (Contains) and reduce loop overhead.
+[==============================================================================}
+function MArrayHelper.IndexFor(const tItems: MArray): Integer; overload;
+var
+  L: Integer;
+begin
+  L := Self.Length;
+  if ((L > 0) and (tItems.Length > 0)) then
+  begin
+    Result := 0;
+    while (Result <= (L - 4)) do
+    begin
+      if tItems.Contains(Self[Result]) then
+        Exit;
+      if tItems.Contains(Self[Result + 1]) then
+        Exit(Result + 1);
+      if tItems.Contains(Self[Result + 2]) then
+        Exit(Result + 2);
+      if tItems.Contains(Self[Result + 3]) then
+        Exit(Result + 3);
+      Result.Increase(4);
+    end;
+    while (Result < L) do
+      if tItems.Contains(Self[Result]) then
+        Exit(Result)
+      else
+        Inc(Result);
+  end;
   Result := -1;
 end;
 

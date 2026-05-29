@@ -39,6 +39,8 @@ function KeepID(const ID: TIntegerArray): Integer; overload;
 function KeepIDs(const ID: TIntegerArray): Integer; overload;
 function KeepIndexes(const ID: TIntegerArray): Integer; overload;
 function KeepIndices(const ID: TIntegerArray): Integer; overload;
+function Map(const key: Integer; const via: TIntegerArray): MType; overload;
+function Map(const key: Integer; const via: TIntegerArray; const default: MType): MType; overload;
 function Pick(const items: MArray; const index: Integer = 0): MArray; overload;
 function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 function Resift(const reference: MType): MType; overload;
@@ -1260,6 +1262,34 @@ begin
     if s.BinaryContains(i) then
       Self[Result.Increase] := Self[i];
   SetLength(Self, Result);
+end;
+
+{==============================================================================]
+  <Map>
+  @action: Maps a search key directly to a target element in the current array 
+           by using an intermediary index lookup array (via).
+  @note: Fast, raw memory access version. Assumes the key exists in 'via' 
+         and that the resolved index is within the valid bounds of 'Self'. 
+         Will trigger a range check error if array lengths are out of sync.
+[==============================================================================}
+function MArrayHelper.Map(const key: Integer; const via: TIntegerArray): MType; overload;
+begin
+  Result := Self[via[key]];
+end;
+
+{==============================================================================]
+  <Map>
+  @action: Safely maps a search key to a target element in the current array 
+           via an intermediary index lookup array, returning a fallback 
+           default value if any stage of the lookup is out of bounds.
+  @note: Uses InRange to double-check that 'key' safely indexes 'via', and 
+         that the resulting value inside 'via' safely indexes 'Self'.
+[==============================================================================}
+function MArrayHelper.Map(const key: Integer; const via: TIntegerArray; const default: MType): MType; overload;
+begin
+  if ((key >= 0) and (key <= High(via)) and InRange(via[key], 0, High(Self))) then
+    Exit(Self[via[key]]);
+  Result := default;
 end;
 
 {==============================================================================]
