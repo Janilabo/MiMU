@@ -21,6 +21,8 @@ function ExtractIndexList(const ID: TIntegerArray): MArray; overload;
 function ExtractIndices(const ID: TIntegerArray): MArray; overload;
 function ExtractWithIDs(const ID: TIntegerArray): MArray; overload;
 function ExtractWithIndices(const ID: TIntegerArray): MArray; overload;
+function Fetch(const IDs: TIntegerArray; const null: MType): MArray; overload;
+function Fetch(const IDs: TIntegerArray): MArray; overload;
 function Filter(const item: MType; const index: Integer = 0): MArray; overload;
 function Filter(const items: MArray; const index: Integer = 0): MArray; overload;
 function FilterByIDs(const ID: TIntegerArray): MArray; overload;
@@ -688,6 +690,44 @@ begin
   for i := 0 to (l - 1) do
     if m[i] then
       Result[j.Increase] := Self[i];
+end;
+
+{==============================================================================]
+  <Fetch>
+  @action: Extracts a subset of strings from the current array based on an
+           array of target indices (IDs), returning them as a new array.
+  @note: Safely bounded using InRange; if a requested ID falls outside the
+         valid boundaries of 'Self', the provided fallback 'null' string
+         is written to that destination slot.
+[==============================================================================}
+function MArrayHelper.Fetch(const IDs: TIntegerArray; const null: MType): MArray; overload;
+var
+  h, i: Integer;
+begin
+  SetLength(Result, IDs.Length);
+  h := High(Self);
+  for i := 0 to High(Result) do
+    if InRange(IDs[i], 0, h) then
+      Result[i] := Self[IDs[i]]
+    else
+      Result[i] := null;
+end;
+
+{==============================================================================]
+  <Fetch>
+  @action: Directly maps an array of indices (IDs) to their corresponding
+           elements in the current array, returning the gathered subset.
+  @note: High-speed unchecked version. Assumes all target positions inside
+         'IDs' are perfectly valid within 'Self'. Will trigger a range-check
+         or access violation error if an ID is out of bounds.
+[==============================================================================}
+function MArrayHelper.Fetch(const IDs: TIntegerArray): MArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, IDs.Length);
+  for i := 0 to High(Result) do
+    Result[i] := Self[IDs[i]]
 end;
 
 {==============================================================================]
