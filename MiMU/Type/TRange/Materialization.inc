@@ -91,6 +91,7 @@ function Linearly: TIntegerArray; overload;
 function Lineate: TIntegerArray; overload;
 function List: TIntegerArray; overload;
 function Listed: TIntegerArray; overload;
+function Listify: TIntegerArray; overload;
 function Listing: TIntegerArray; overload;
 function Manifest: TIntegerArray; overload;
 function Manifold(const totalElements: Integer; const oAscending: Boolean = True): TIntegerArray; overload;
@@ -124,6 +125,7 @@ function Realize: TIntegerArray; overload;
 function Recursived: TIntegerArray; overload;
 function Recursively: TIntegerArray; overload;
 function Release: TIntegerArray; overload;
+function Released: TIntegerArray; overload;
 function Render: TIntegerArray; overload;
 function Rendered: TIntegerArray; overload;
 function Resources: TIntegerArray; overload;
@@ -2649,6 +2651,33 @@ begin
 end;
 
 {==============================================================================]
+  <Listify>
+  @action: Converts the TRange object into a concrete array of integers.
+  @note: Automatically detects direction; counts upwards if Ascending is True,
+         and downwards (downto) if Ascending is False.
+[==============================================================================}
+function TRange.Listify: TIntegerArray; overload;
+var
+  l: specialize TList<Integer>;
+  i: Integer;
+begin
+  l := specialize TList<Integer>.Create;
+  try
+    case Self.Ascending of
+	  True:
+      for i := Self.start to Self.stop do
+        l.Add(i);
+      False:
+      for i := Self.start downto Self.stop do
+        l.Add(i);
+    end;
+    Result := l.ToArray;
+  finally
+    l.Free;
+  end;
+end;
+
+{==============================================================================]
   <Listing>
   @action: Builds a fully enumerated list of all values in the range.
   @note: Generates a sequential array from Self.start to Self.stop (inclusive),
@@ -3575,6 +3604,39 @@ begin
     end;
   end;
 end;
+
+{==============================================================================]
+  <Released>
+  @action: Flattens the TRange into a TIntegerArray using an optimized loop.
+  @note: Uses manual 10-step loop unrolling for high-performance array 
+         population, with a cleanup loop for remaining elements.
+[==============================================================================}
+function TRange.Released: TIntegerArray; overload;
+var
+  i, r, l, s: Integer;
+begin
+  l := Self.Size;
+  SetLength(Result, l);
+  s := IfThen(Self.Ascending, 1, -1);
+  i := -10;
+  r := Self.start;
+  while (i.Increment(10) < l) do
+  begin
+    Result[i + 0] := (r + (0 * s));
+    Result[i + 1] := (r + (1 * s));
+    Result[i + 2] := (r + (2 * s));
+    Result[i + 3] := (r + (3 * s));
+    Result[i + 4] := (r + (4 * s));
+    Result[i + 5] := (r + (5 * s));
+    Result[i + 6] := (r + (6 * s));
+    Result[i + 7] := (r + (7 * s));
+    Result[i + 8] := (r + (8 * s));
+    Result[i + 9] := (r + (9 * s));
+    Inc(r, (10 * s));
+  end;
+  while (i.Increase < l) do
+    Result[i - 1] := r.Increase(s);
+end; 
 
 {==============================================================================]
   <Render>

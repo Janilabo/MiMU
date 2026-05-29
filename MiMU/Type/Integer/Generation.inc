@@ -8,6 +8,7 @@ function Rebound(const target: Integer = 0): TIntegerArray; overload;
 function Route(const target: Integer = 0): TIntegerArray; overload;
 function Stairs(const target: Integer = 0): TIntegerArray; overload;
 function Steppify(const sCount: Integer = 0): TIntegerArray; overload;
+function Thru(const target: Integer): TIntegerArray; overload;
 function Upstairs(const target: Integer = 0): TIntegerArray; overload;
 function Via(const target: Integer = 0): TIntegerArray; overload;
 function Way(const target: Integer = 0): TIntegerArray; overload;
@@ -211,6 +212,22 @@ begin
         Result[i] := (Self + i);
     end;
   end;
+end;
+
+{==============================================================================]
+  <Thru>
+  @action: Generates an array of integers spanning from Self to the target value.
+  @note: Dynamically calculates range size and direction; supports both 
+         ascending and descending sequences seamlessly.
+[==============================================================================}
+function TIntegerHelper.Thru(const target: Integer): TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  SetLength(Result, (Abs(target - Self) + 1));
+  s := IfThen((Self <= target), 1, -1);
+  for i := 0 to High(Result) do
+    Result[i] := (Self + (i * s));
 end;
 
 {==============================================================================]
