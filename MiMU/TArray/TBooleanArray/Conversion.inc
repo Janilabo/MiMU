@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function Digits: TIntegerArray; overload;
+function Digitted: TIntegerArray; overload;
 function Str(const separator: string; const strTrue: string = 'True'; strFalse: string = 'False'): string; overload;
 function Str: string; overload;
 function Text(const strTrue, strFalse, separator: string): string; overload;
@@ -20,6 +21,23 @@ begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
     Result[i] := Ord(Self[i]);
+end;
+
+{==============================================================================]
+  <Digitted>
+  @action: Returns TBooleanArray as Integers.
+  @note: [True, False] => [1, 0].
+[==============================================================================}
+function TBooleanArrayHelper.Digitted: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Length);
+  for i := 0 to High(Self) do
+    if Self[i] then
+	  Result[i] := 1
+	else
+	  Result[i] := 0;
 end;
 
 {==============================================================================]

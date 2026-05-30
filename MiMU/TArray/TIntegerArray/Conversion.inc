@@ -10,6 +10,7 @@ function Stringify(var chars: TCharArray): string; overload;
 function ToRanges: TRangeArray; overload;
 function ToRanges(const aAscending: Boolean): TRangeArray; overload;
 function ToString(const rSeparator: string = ', '; const rBracketed: Boolean = True): string; overload;
+function TVA: TVariantArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -358,5 +359,20 @@ begin
   finally
     s.Free;
   end;
+end;
+
+{==============================================================================]
+  <TVA>
+  @action: Converts the native TIntegerArray into a dynamic TVariantArray.
+  @note: Allocates a new array structure of 16-byte Variant elements, upcasting
+         each 4-byte native integer into a polymorphic Variant container.
+[==============================================================================}
+function TIntegerArrayHelper.TVA: TVariantArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Self.Length);
+  for i := 0 to High(Self) do
+    Result[i] := Self[i];
 end;
 {$ENDIF}

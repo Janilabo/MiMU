@@ -1,6 +1,9 @@
 {$IFNDEF IMPLEMENTATION}
   {$DEFINE TYPES}
   type
+    TByteSet = set of Byte;
+    TVariantArray = array of Variant;
+    TConstArray = array of TVarRec;
   {$I Type/Type.inc}
   {$I TArray/TArray.inc}
   {$i T2DArray/T2DArray.inc}
