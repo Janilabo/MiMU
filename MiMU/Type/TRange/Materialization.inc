@@ -21,6 +21,7 @@ function Catalogue: TIntegerArray; overload;
 function Collect: TIntegerArray; overload;
 function Collection: TIntegerArray; overload;
 function Composition: TIntegerArray; overload;
+function Concretize: TIntegerArray; overload;
 function Content: TIntegerArray; overload;
 function Contents: TIntegerArray; overload;
 function Contentum: TIntegerArray; overload;
@@ -809,6 +810,21 @@ begin
   r := ((3 * t) - 1);
   while (r.Increment < s) do
     Result[r] := (Self.start + (d * r));
+end;
+
+{==============================================================================]
+  <Concretize>
+  @action: Recursively expands a TRange definition into a concrete array of all integers contained within the range.
+  @note: Utilizes a divide-and-conquer recursive approach based on the Size of the range.
+         For ranges larger than 2 elements, it pins the start and stop boundaries and recursively concretizes the inner range.
+[==============================================================================}
+function TRange.Concretize: TIntegerArray; overload;
+begin
+  case Self.Size.Compare(2) of
+    -1: Result := [Self.start];
+	0: Result := [Self.start, Self.stop];
+    1: Result := Concat(Concat([Self.start], TRange.Construct((Self.start + Self.Direction), (Self.stop - Self.Direction)).Concretize), [Self.stop]);
+  end;
 end;
 
 {==============================================================================]

@@ -1,4 +1,8 @@
-{$IFDEF METHODS}
+{$IFDEF FUNCTIONS}
+function Binared(const A, B: Boolean): string; overload;
+function Binaried(const A, B: Boolean): string; overload;
+function Binarify(const A, B: Boolean): string; overload;
+function Binarize(const A, B: Boolean): string; overload;
 function Bitify(const a: Boolean): Integer; overload;
 function Bitify(const a, b: Boolean): Integer; overload;
 function Bitify(const a, b, c: Boolean): Integer; overload;
@@ -17,6 +21,28 @@ function ToString: string;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+function Binared(const A, B: Boolean): string; overload;
+begin
+  Result := Format('%d%d', [Ord(A), Ord(B)]);
+end;
+
+function Binaried(const A, B: Boolean): string; overload;
+begin
+  Result := (BoolToStr(A, '1', '0') + BoolToStr(B, '1', '0'));
+end;
+
+function Binarify(const A, B: Boolean): string; overload;
+begin
+  Result := (IfThen(A, '1', '0') + IfThen(B, '1', '0'));
+end;
+
+function Binarize(const A, B: Boolean): string; overload;
+const
+  C: array[Boolean] of Char = ('0', '1');
+begin
+  Result := (C[A] + C[B]);
+end;
+
 function Bitify(const a: Boolean): Integer; overload;
 begin
   if a then

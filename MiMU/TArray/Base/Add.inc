@@ -1,3 +1,7 @@
+{$IFDEF FUNCTIONS}
+function Cat(const A, B: MArray): MArray; overload;
+{$ENDIF}
+
 {$IFDEF HELPERS}
 function Accommodate(const item: MType; const index: Integer): Integer; overload;
 function Add(const item: MType; const duplicates: Boolean = True): MArray; overload;
@@ -7,6 +11,7 @@ function Annex(const items: MArray): MArray; overload;
 function Append(const item: MType; const duplicates: Boolean = True): MArray; overload;
 function Append(const items: MArray; const duplicates: Boolean = True): MArray; overload;
 function Blit(const items: MArray; const index: Integer = 0): Integer; overload;
+function Conjoin(const other: MArray): MArray; overload;
 function Emplace(const item: MType; const index: Integer = 0): Integer; overload;
 function Extend(const item: MType): MArray; overload;
 function Extend(const items: MArray): MArray; overload;
@@ -27,6 +32,26 @@ function Unshift(const items: MArray): MArray; overload;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
+  <Cat>
+  @action: Concatenates two source arrays (A and B) into a single destination array by writing elements in reverse order.
+  @note: Employs a zero-variable state mutation strategy. By abusing a prefix-decrement helper on the size variable s,
+       the function backfills array B into the upper indices, pivots exactly at the length boundary l,
+	   and then offsets and backfills array A into the lower indices.
+[==============================================================================}
+function Cat(const A, B: MArray): MArray; overload;
+var
+  l, s: Integer;
+begin
+  l := A.Length;
+  s := Result.SetSize(l + B.Length);
+  SetLength(Result, s);
+  while (s.Decrement >= l) do
+    Result[s] := B[s - l];
+  while (s.Decrement >= -1) do
+    Result[s + 1] := A[s + 1];
+end; 
+
+{==============================================================================]
   <Accommodate>
   @action: Ensures the array has sufficient capacity to store a value at the specified
            index, automatically expanding the array if necessary, and assigns `item`
@@ -34,7 +59,7 @@ function Unshift(const items: MArray): MArray; overload;
            If the requested index exceeds the current length, the array grows
            exponentially (doubling each time, with a minimum initial size of 4). The
            function returns the new length of the array after resizing.
-  @note
+  @note:
     - Negative indices are treated as zero.
     - The array is modified in-place; existing elements are preserved.
     - Growth follows an exponential doubling strategy to reduce repeated
@@ -210,6 +235,26 @@ begin
   Result := (index + items.Size);
   for i := 0 to High(items) do
     Self[index + i] := items[i];
+end;
+
+{==============================================================================]
+  <Conjoin>
+  @action: Creates a new array by structurally conjoining the elements of the current array with those of another array,
+           positioned sequentially end-to-end.@note: This operation allocates a fresh block of memory equivalent to the combined length of both arrays.
+		   It guarantees O(N+M) linear time complexity, ensuring that the original order of elements from both source sets is strictly preserved in the resulting unified array.
+  @note: Alternative method.
+[==============================================================================}
+function MArrayHelper.Conjoin(const other: MArray): MArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Length;
+  SetLength(Result, (s + other.Length));
+  for i := 0 to High(Result) do
+    if (i < s) then
+      Result[i] := Self[i]
+    else
+      Result[i] := other[i - s];
 end;
 
 {==============================================================================]
