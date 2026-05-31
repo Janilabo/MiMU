@@ -12,7 +12,10 @@ function Bitify(const a, b, c, d: Boolean): Integer; overload;
 {$IFDEF HELPERS}
 function AsInteger: Integer;
 function Binary: Char;
+function Binaryc: Char;
+function BinaryChar: Char;
 function BinaryDigit: Integer;
+function Binchared: Char;
 function Bit: Integer;
 function Bitify: Integer;
 function Ordinal: Byte; overload;
@@ -87,6 +90,26 @@ begin
 end;
 
 {==============================================================================]
+  <Binaryc>
+  @action: Returns binary char based on boolean state.
+  @note: True => '1', False => '0'.
+[==============================================================================}
+function TBooleanHelper.Binaryc: Char;
+begin
+  Result := Chr(Ord(Self) + 48);
+end; 
+
+{==============================================================================]
+  <BinaryChar>
+  @action: Returns binary char based on boolean state.
+  @note: True => '1', False => '0'.
+[==============================================================================}
+function TBooleanHelper.BinaryChar: Char;
+begin
+  Result := BoolToStr(Self, '1', '0')[1];
+end;
+
+{==============================================================================]
   <BinaryDigit>
   @action: Returns binary char from Boolean
   @note: True => 1 & False => 0
@@ -94,6 +117,16 @@ end;
 function TBooleanHelper.BinaryDigit: Integer;
 begin
   Result := Self.IfThen(1, 0);
+end;
+
+{==============================================================================]
+  <Binchared>
+  @action: Returns binary char from Boolean
+  @note: True => 1 & False => 0
+[==============================================================================}
+function TBooleanHelper.Binchared: Char;
+begin
+  Result := Char(Ord('0') or (Ord(Self) and 1));
 end;
 
 {==============================================================================]

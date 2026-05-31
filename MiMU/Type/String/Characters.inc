@@ -7,10 +7,12 @@ function Chars: TCharArray;
 function CharSet: TCharArray; overload;
 function DistinctCharacters: TCharArray; overload;
 function DistinctChars: TCharArray; overload;
+function Firsty(const null: Char = #0): Char; overload;
 function IDs: TIntegerArray; overload;
 function IDs(const ID: TIntegerArray): TCharArray; overload;
 function IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload;
 function IDs(const ID: TIntegerArray; const items: TCharArray): TCharArray; overload;
+function Lasty(const null: Char = #0): Char; overload;
 function SetOfCharacters: TCharArray; overload;
 function SetOfChars: TCharArray; overload;
 function UniqueCharacters(const oAscending: Boolean = True): TCharArray; overload;
@@ -201,6 +203,18 @@ begin
 end;
 
 {==============================================================================]
+  <Firsty>
+  @action: Returns the first character of the string, or a specified default character if the string is empty.
+  @note: Safely avoids "index out of bounds" errors on empty strings by checking the length first.
+[==============================================================================}
+function TStringHelper.Firsty(const null: Char = #0): Char; overload;
+begin
+  if (Length(Self) = 0) then
+    Exit(null);
+  Result := Self[1];
+end;
+
+{==============================================================================]
   <IDs>
   @action: Returns indexes of string as TIntegerArray.
   @note: With empty string this function returns as []!
@@ -258,6 +272,21 @@ begin
   l := Length(items);
   for i := 0 to High(ID) do
     Result[ID[i] - 1] := items[i mod l];	
+end;
+
+{==============================================================================]
+  <Lasty>
+  @action: Returns the last character of the string, or a specified default character if the string is empty.
+  @note: Safely handles empty strings by checking the length before attempting to index the final character.
+[==============================================================================}
+function TStringHelper.Lasty(const null: Char = #0): Char; overload;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit(null);
+  Result := Self[l];
 end;
 
 {==============================================================================]
