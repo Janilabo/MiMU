@@ -41,11 +41,13 @@ function KeepID(const ID: TIntegerArray): Integer; overload;
 function KeepIDs(const ID: TIntegerArray): Integer; overload;
 function KeepIndexes(const ID: TIntegerArray): Integer; overload;
 function KeepIndices(const ID: TIntegerArray): Integer; overload;
+function Lead: MArray; overload;
 function Map(const key: Integer; const via: TIntegerArray): MType; overload;
 function Map(const key: Integer; const via: TIntegerArray; const default: MType): MType; overload;
 function Pick(const items: MArray; const index: Integer = 0): MArray; overload;
 function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 function Resift(const reference: MType): MType; overload;
+function Rest: MArray; overload;
 function Sift(const reference: MType): MType; overload;
 function Trim(const tCount: Integer = 1): MArray; overload;
 function Truncate(const tRate: Double = 10): MArray; overload;
@@ -1305,6 +1307,21 @@ begin
 end;
 
 {==============================================================================]
+  <Lead>
+  @action: Returns a new array containing all elements except the last one.
+  @note: Uses Max(0, Length - 1) to safely handle empty arrays. If the source 
+         array has 0 or 1 elements, it returns an empty array.
+[==============================================================================}
+function MArrayHelper.Lead: MArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Max(0, (Self.Length - 1)));
+  for i := 0 to High(Result) do
+    Result[i] := Self[i];
+end;
+
+{==============================================================================]
   <Map>
   @action: Maps a search key directly to a target element in the current array 
            by using an intermediary index lookup array (via).
@@ -1402,6 +1419,21 @@ begin
       Exit(Self[i]);
   if (h > -1) then
     Result := Self[0];
+end;
+
+{==============================================================================]
+  <Rest>
+  @action: Returns a new array containing all elements except the first one.
+  @note: Uses a +1 index offset to shift elements forward. Safely returns an 
+         empty array if the source has 0 or 1 elements.
+[==============================================================================}
+function MArrayHelper.Rest: MArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Max(0, (Self.Length - 1)));
+  for i := 0 to High(Result) do
+    Result[i] := Self[i + 1];
 end;
 
 {==============================================================================]

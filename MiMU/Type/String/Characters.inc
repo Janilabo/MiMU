@@ -8,6 +8,7 @@ function CharSet: TCharArray; overload;
 function DistinctCharacters: TCharArray; overload;
 function DistinctChars: TCharArray; overload;
 function Firsty(const null: Char = #0): Char; overload;
+function Heady: Char; overload;
 function IDs: TIntegerArray; overload;
 function IDs(const ID: TIntegerArray): TCharArray; overload;
 function IDs(const ID: TIntegerArray; const item: Char): TCharArray; overload;
@@ -17,6 +18,7 @@ function SetOfCharacters: TCharArray; overload;
 function SetOfChars: TCharArray; overload;
 function UniqueCharacters(const oAscending: Boolean = True): TCharArray; overload;
 function UniqueChars: TCharArray; overload;
+function Taily: Char; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -215,6 +217,16 @@ begin
 end;
 
 {==============================================================================]
+  <Heady>
+  @action: Returns the first character of the string.
+  @note: Unsafe, fast method.
+[==============================================================================}
+function TStringHelper.Heady: Char; overload;
+begin
+  Result := Self[1];
+end;
+
+{==============================================================================]
   <IDs>
   @action: Returns indexes of string as TIntegerArray.
   @note: With empty string this function returns as []!
@@ -339,6 +351,16 @@ begin
       else if (j = h) then
         Result[h.Increment] := Self[i];
   SetLength(Result, (h + 1));
+end;
+
+{==============================================================================]
+  <Taily>
+  @action: Returns the last character of the string.
+  @note: Unsafe, fast method.
+[==============================================================================}
+function TStringHelper.Taily: Char; overload;
+begin
+  Result := Self[Length(Self)];
 end;
 
 {==============================================================================]
