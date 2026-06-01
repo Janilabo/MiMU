@@ -10,6 +10,8 @@ function Constant(const item: MType): Boolean; overload;
 function Constant: Boolean; overload;
 function Contains(const item: MType; const index: Integer = 0): Boolean; overload;
 function Contains(const item: MType; const limit: TRange): Boolean; overload;
+function ContainsAll(const sItems: MArray): Boolean; overload;
+function ContainsAny(const sItems: MArray): Boolean; overload;
 function ContainsAtLeast(const item: MType; const limit: Integer): Boolean; overload;
 function ContainsAtMost(const item: MType; const limit: Integer): Boolean; overload;
 function Dull(const item: MType): Boolean; overload;
@@ -248,6 +250,36 @@ begin
       Exit(False);
   end;
   Result := InRange(c, n.start, n.stop);
+end;
+
+{==============================================================================]
+  <ContainsAll>
+  @action: Checks if every single one of the specified values exists in the array.
+  @note: Returns false immediately if any target value is missing.
+[==============================================================================}
+function MArrayHelper.ContainsAll(const sItems: MArray): Boolean; overload;
+var
+  i: MType;
+begin
+  for i in sItems do
+    if not Self.Contains(i) then
+	  Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <ContainsAny>
+  @action: Checks if the array contains at least one of the specified values.
+  @note: Returns true on the very first match found.
+[==============================================================================}
+function MArrayHelper.ContainsAny(const sItems: MArray): Boolean; overload;
+var
+  i: MType;
+begin
+  for i in sItems do
+    if Self.Contains(i) then
+	  Exit(True);
+  Result := False;
 end;
 
 {==============================================================================]

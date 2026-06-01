@@ -12,6 +12,7 @@ function IndexOf(const item: MType; const ID: TRange): Integer; overload;
 function Last: Integer; overload;
 function Last(const item: MType): Integer; overload;
 function Last(const items: MArray): Integer; overload;
+function LastIndex(const sItem: MType): Integer; overload;
 function Loc(const item: MType; const index: Integer = 2147483647): Integer; overload;
 function Loc(const items: MArray; const index: Integer = 2147483647): Integer; overload;
 function Location(const item: MType; const index: Integer = 2147483647): Integer; overload;
@@ -256,8 +257,11 @@ end;
 
 {==============================================================================]
   <Last>
-  @action: Returns the last index that matches item in arr.
-  @note: Unmatch will be -1!
+  @action: Returns the 0-based index of the last occurrence of a value.
+  @param: item The value to locate within the array.
+  @return: The highest index where the value matches; -1 if not found.
+  @note: Searches the array backward from the end using an optimized
+         Result-driven iteration loop. Safely returns -1 for empty arrays.
 [==============================================================================}
 function MArrayHelper.Last(const item: MType): Integer; overload;
 begin
@@ -278,6 +282,25 @@ begin
     if items.Contains(Self[Result]) then
       Exit;
   Result := -1;
+end;
+
+{==============================================================================]
+  <LastIndex>
+  @action: Returns the 0-based index of the last occurrence of a value by 
+           scanning the array backward.
+  @param: sItem The value of type MType to locate within the array.
+  @return: The highest index where a match is found; -1 if the value does 
+           not exist or if the array is empty.
+  @note: Uses an aggressive inline state-mutation approach. Result is 
+         initialized to Length and safely pre-decremented into valid index 
+         space within the loop conditional check.
+[==============================================================================}
+function MArrayHelper.LastIndex(const sItem: MType): Integer; overload;
+begin
+  Result := Self.Length;
+  while (Result.Decrement > -1) do
+    if (Self[Result] = sItem) then
+      Exit;
 end;
 
 {==============================================================================]

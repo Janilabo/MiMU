@@ -1,6 +1,7 @@
 {$I Arrays.inc}
 {$I Counting.inc}
 {$I Miscellaneous.inc}
+{$I Modify.inc}
 {$I Search.inc}
 {$I Validation.inc}
 

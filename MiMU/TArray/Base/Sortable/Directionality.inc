@@ -1,85 +1,20 @@
 {$IFDEF HELPERS}
-function Direction: Integer; overload;
-function Rising: Boolean; overload;
-function Falling: Boolean; overload;
-function Descending: Boolean; overload;
 function Ascending: Boolean; overload;
+function Descending: Boolean; overload;
 function Decreasing: Boolean; overload;
-function Increasing: Boolean; overload;
+function Direction: Integer; overload;
 function Downward: Boolean; overload;
-function Upward: Boolean; overload;
+function Falling: Boolean; overload;
+function Increasing: Boolean; overload;
+function IsAsc(const strictly: Boolean = False): Boolean; overload;
+function IsDesc(const strictly: Boolean = False): Boolean; overload;
 function Orientation: Integer; overload;
+function Rising: Boolean; overload;
 function Unidirectional: Boolean; overload;
+function Upward: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Direction>
-  @action: Returns numeric trend across the entire array:
-           1 = Rising (monotonically non-decreasing),
-          -1 = Falling (monotonically non-increasing),
-           0 = Notrending (mixed sequence or empty/single element).
-  @note: Checks all elements. Inclusive comparisons (≤ / ≥).
-[==============================================================================}
-function MArrayHelper.Direction: Integer; overload;
-begin
-  if Self.Notrending then
-    Result := 0
-  else if Rising then
-    Result := 1
-  else
-    Result := -1;
-end;
-
-{==============================================================================]
-  <Rising>
-  @action: Returns True if the array is monotonically non-decreasing,
-           i.e., each element is less than or equal to the next.
-  @note: Arrays with 0 or 1 element are considered Rising by default.
-         Checks all elements, not just the first and last.
-[==============================================================================}
-function MArrayHelper.Rising: Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := Low(Self) to (High(Self) - 1) do
-    if (Self[i] > Self[i + 1]) then
-      Exit(False);
-  Result := True;
-end;
-
-{==============================================================================]
-  <Falling>
-  @action: Returns True if the array is monotonically non-increasing,
-           i.e., each element is greater than or equal to the next.
-  @note: Arrays with 0 or 1 element are considered Falling by default.
-         Checks all elements, not just the first and last.
-[==============================================================================}
-function MArrayHelper.Falling: Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := Low(Self) to (High(Self) - 1) do
-    if (Self[i] < Self[i + 1]) then
-      Exit(False);
-  Result := True;
-end;
-
-{==============================================================================]
-  <Descending>
-  @action: Returns true if array arr is in descending order.
-  @note: [0,1] = False | [0,0] = False | [1,0] = True |
-[==============================================================================}
-function MArrayHelper.Descending: Boolean; overload;
-var
-  i: Integer;
-begin
-  for i := 1 to High(Self) do
-    if (Self[i - 1] < Self[i]) then
-      Exit(False);
-  Result := (High(Self) > -1);
-end;
-
 {==============================================================================]
   <Ascending>
   @action: Returns true if array arr is in asscending order.
@@ -111,18 +46,36 @@ begin
 end;
 
 {==============================================================================]
-  <Increasing>
-  @action: Returns true if array arr is in asscending order.
-  @note: [0,1] = True | [0,0] = True | [1,0] = False |
+  <Descending>
+  @action: Returns true if array arr is in descending order.
+  @note: [0,1] = False | [0,0] = False | [1,0] = True |
 [==============================================================================}
-function MArrayHelper.Increasing: Boolean; overload;
+function MArrayHelper.Descending: Boolean; overload;
 var
   i: Integer;
 begin
-  for i := High(Self) downto 1 do
-    if (Self[i] < Self[i - 1]) then
+  for i := 1 to High(Self) do
+    if (Self[i - 1] < Self[i]) then
       Exit(False);
   Result := (High(Self) > -1);
+end;
+
+{==============================================================================]
+  <Direction>
+  @action: Returns numeric trend across the entire array:
+           1 = Rising (monotonically non-decreasing),
+          -1 = Falling (monotonically non-increasing),
+           0 = Notrending (mixed sequence or empty/single element).
+  @note: Checks all elements. Inclusive comparisons (≤ / ≥).
+[==============================================================================}
+function MArrayHelper.Direction: Integer; overload;
+begin
+  if Self.Notrending then
+    Result := 0
+  else if Rising then
+    Result := 1
+  else
+    Result := -1;
 end;
 
 {==============================================================================]
@@ -142,19 +95,66 @@ begin
 end;
 
 {==============================================================================]
-  <Upward>
-  @action: Returns true if array arr is in ascending order.
-  @note: Returns true with empty [] array! Unlike Ascending, Increasing.
+  <Falling>
+  @action: Returns True if the array is monotonically non-increasing,
+           i.e., each element is greater than or equal to the next.
+  @note: Arrays with 0 or 1 element are considered Falling by default.
+         Checks all elements, not just the first and last.
 [==============================================================================}
-function MArrayHelper.Upward: Boolean; overload;
+function MArrayHelper.Falling: Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := Low(Self) to (High(Self) - 1) do
+    if (Self[i] < Self[i + 1]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Increasing>
+  @action: Returns true if array arr is in asscending order.
+  @note: [0,1] = True | [0,0] = True | [1,0] = False |
+[==============================================================================}
+function MArrayHelper.Increasing: Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := High(Self) downto 1 do
+    if (Self[i] < Self[i - 1]) then
+      Exit(False);
+  Result := (High(Self) > -1);
+end;
+
+{==============================================================================]
+  <IsAsc>
+  @action: Checks if the array's endpoints indicate an ascending trend.
+  @param: strictly - If true, requires the first element to be strictly less
+           than the last element. Defaults to False.
+  @note: Uses short-circuit evaluation (h > -1) to safely handle empty arrays
+         without throwing an index exception.
+[==============================================================================}
+function MArrayHelper.IsAsc(const strictly: Boolean = False): Boolean; overload;
 var
   h: Integer;
 begin
-  h := High(Self);
-  while (h.Decrement > -1) do
-    if (Self[h] > Self[h + 1]) then
-      Exit(False);
-  Result := True;
+  Result := ((h.Assign(High(Self)) > -1) and ((Self[0] < Self[h]) or ((not strictly) and (Self[0] = Self[h]))));
+end;
+
+{==============================================================================]
+  <IsDesc>
+  @action: Checks if the array's endpoints indicate a descending trend.
+  @param: strictly If true, requires the first element to be strictly greater
+          than the last element. Defaults to False.
+  @return: True if a descending trend is detected; otherwise False.
+  @note: Uses short-circuit evaluation (h > -1) to safely handle empty arrays
+         without throwing an index exception.
+[==============================================================================}
+function MArrayHelper.IsDesc(const strictly: Boolean = False): Boolean; overload;
+var
+  h: Integer;
+begin
+  Result := ((h.Assign(High(Self)) > -1) and ((Self[0] > Self[h]) or ((not strictly) and (Self[0] = Self[h]))));
 end;
 
 {==============================================================================]
@@ -190,6 +190,23 @@ begin
 end;
 
 {==============================================================================]
+  <Rising>
+  @action: Returns True if the array is monotonically non-decreasing,
+           i.e., each element is less than or equal to the next.
+  @note: Arrays with 0 or 1 element are considered Rising by default.
+         Checks all elements, not just the first and last.
+[==============================================================================}
+function MArrayHelper.Rising: Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := Low(Self) to (High(Self) - 1) do
+    if (Self[i] > Self[i + 1]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
   <Unidirectional>
   @action: Checks if the array is monotonic (either non-decreasing or non-increasing).
   @note: Returns True if all elements move in one direction, False otherwise.
@@ -207,6 +224,22 @@ begin
   D:
   for i := 1 to High(Self) do
     if (Self[i] > Self[i - 1]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Upward>
+  @action: Returns true if array arr is in ascending order.
+  @note: Returns true with empty [] array! Unlike Ascending, Increasing.
+[==============================================================================}
+function MArrayHelper.Upward: Boolean; overload;
+var
+  h: Integer;
+begin
+  h := High(Self);
+  while (h.Decrement > -1) do
+    if (Self[h] > Self[h + 1]) then
       Exit(False);
   Result := True;
 end;

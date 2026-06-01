@@ -318,7 +318,7 @@ begin
 end;
 
 {==============================================================================]
-  <ContainsAll>
+  <Contains>
   @action: Returns True if every value in x exists within the range.
   @note: Returns True for an empty array.
 [==============================================================================}

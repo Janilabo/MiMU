@@ -1,7 +1,5 @@
 {$IFDEF METHODS}
 class function Ascending(const A, B: Integer): TRange; overload; static;
-function Assign(const AStart, AStop: Integer): Integer; overload;
-function Assign(const ARange: TRange): Integer; overload;
 class function Construct(const rStart, rStop: Integer): TRange; overload; static;
 class function Construct(const rVal: Integer): TRange; overload; static;
 class function Construct: TRange; overload; static;
@@ -24,6 +22,8 @@ function Init(const val: Integer = 0): TRange; overload;
 function Make(const A: Integer = 0; const B: Integer = 0): Integer; overload;
 class function Null(const value: Integer = -2147483648): TRange; overload; static;
 class function Plot(const rCenter: Integer = 0; const rRadius: Integer = 0): TRange; overload; static;
+function Shape(const AStart, AStop: Integer): Integer; overload;
+function Shape(const ARange: TRange): Integer; overload;
 class function Unbounded(const oAscending: Boolean = True): TRange; overload; static;
 class function UpTo(const rCount: Integer = 1): TRange; overload; static;
 class function Zer0: TRange; overload; static;
@@ -54,29 +54,6 @@ class function TRange.Ascending(const A, B: Integer): TRange; overload;
 begin
   Result.start := Min(A, B);
   Result.stop := Max(A, B);
-end;
-
-{==============================================================================]
-  <Assign>
-  @action: Sets the boundary points of the range and returns its total span.
-  @note: This method allows for "unordered" input; the returned size is 
-         always the absolute distance (delta) between start and stop.
-[==============================================================================}
-function TRange.Assign(const AStart, AStop: Integer): Integer; overload;
-begin
-  Self.start := AStart;
-  Self.stop := AStop;
-  Result := Self.Size;
-end;
-
-{==============================================================================]
-  <Assign>
-  @action: Copies the boundaries from a target range and returns the new size.
-  @note: None.
-[==============================================================================}
-function TRange.Assign(const ARange: TRange): Integer; overload;
-begin
-  Result := Self.Assign(ARange.start, ARange.stop);
 end;
 
 {==============================================================================]
@@ -473,6 +450,29 @@ class function TRange.Plot(const rCenter: Integer = 0; const rRadius: Integer = 
 begin
   Result.start := (rCenter - rRadius);
   Result.stop := (rCenter + rRadius);
+end;
+
+{==============================================================================]
+  <Shape>
+  @action: Sets the boundary points of the range and returns its total span.
+  @note: This method allows for "unordered" input; the returned size is 
+         always the absolute distance (delta) between start and stop.
+[==============================================================================}
+function TRange.Shape(const AStart, AStop: Integer): Integer; overload;
+begin
+  Self.start := AStart;
+  Self.stop := AStop;
+  Result := Self.Size;
+end;
+
+{==============================================================================]
+  <Shape>
+  @action: Copies the boundaries from a target range and returns the new size.
+  @note: None.
+[==============================================================================}
+function TRange.Shape(const ARange: TRange): Integer; overload;
+begin
+  Result := Self.Shape(ARange.start, ARange.stop);
 end;
 
 {==============================================================================]
