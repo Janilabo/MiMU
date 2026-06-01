@@ -28,6 +28,7 @@
 
 {$IFDEF Sortable}
 {$I Sortable/Bounds.inc}
+{$I Sortable/Containment.inc}
 {$I Sortable/Counting.inc}
 {$I Sortable/Deduplication.inc}
 {$I Sortable/Directionality.inc}
