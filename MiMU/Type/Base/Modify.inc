@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function Assign(const item: MType): MType; overload;
+function IO(const input, output: MType): MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -17,5 +18,19 @@ function MTypeHelper.Assign(const item: MType): MType; overload;
 begin
   Result := item;
   Self := item;
+end;
+
+{==============================================================================]
+  <IO>
+  @action: Simultaneously assigns an input value to the instance (Self) 
+           and returns a distinct output value.
+  @note: Used as a fluent inline initializer to collapse multiple variable 
+         assignments into a single expression (e.g., initializing loop counters 
+         and bounds at the same time).
+[==============================================================================}
+function MTypeHelper.IO(const input, output: MType): MType; overload;
+begin
+  Self := input;
+  Result := output;
 end;
 {$ENDIF}

@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function Earliest(const sItem: MType): Integer; overload;
 function Find(const ID: TRange; const item: MType): Integer; overload;
 function Find(const ID: TIntegerArray; const item: MType): Integer; overload;
 function Find(const ID: TRange; const items: MArray): Integer; overload;
@@ -13,6 +14,7 @@ function Last: Integer; overload;
 function Last(const item: MType): Integer; overload;
 function Last(const items: MArray): Integer; overload;
 function LastIndex(const sItem: MType): Integer; overload;
+function Latest(const sItem: MType): Integer; overload;
 function Loc(const item: MType; const index: Integer = 2147483647): Integer; overload;
 function Loc(const items: MArray; const index: Integer = 2147483647): Integer; overload;
 function Location(const item: MType; const index: Integer = 2147483647): Integer; overload;
@@ -31,6 +33,25 @@ function SubarrayPosition(const pattern: MArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Earliest>
+  @action: Returns the 0-based index of the earliest (lowest-indexed) 
+           occurrence of a value by scanning the array forward.
+  @param: sItem The integer value to locate within the array.
+  @return: The lowest index where the value matches; the length of the array 
+           if the value is not found or if the array is empty.
+  @note: Utilizes a short-circuit evaluation strategy to guard the boundary 
+         check (Result < l) before performing the array lookup.
+[==============================================================================}
+function MArrayHelper.Earliest(const sItem: MType): Integer; overload;
+var
+  l: Integer;
+begin
+  l := Result.IO(0, Self.Length);
+  while ((Result < l) and (Self[Result] <> sItem)) do
+    Inc(Result);
+end;
+
 {==============================================================================]
   <Find>
   @action: Scans array for item by IDs. Returns position if found.
@@ -301,6 +322,23 @@ begin
   while (Result.Decrement > -1) do
     if (Self[Result] = sItem) then
       Exit;
+end;
+
+{==============================================================================]
+  <Latest>
+  @action: Returns the 0-based index of the most recent (highest-indexed) 
+           occurrence of a value by scanning the array backward.
+  @param: sItem The integer value to locate within the array.
+  @return: The highest index where the value matches; -1 if the value is 
+           not found or if the array is empty.
+  @note: Utilizes a short-circuit evaluation strategy to guard the boundary 
+         check (Result > -1) before performing the array lookup.
+[==============================================================================}
+function MArrayHelper.Latest(const sItem: MType): Integer; overload;
+begin
+  Result := High(Self);
+  while ((Result > -1) and (Self[Result] <> sItem)) do
+    Dec(Result);
 end;
 
 {==============================================================================]
