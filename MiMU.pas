@@ -57,6 +57,7 @@ type
 
 generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Sort<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
+generic function Swappify<T>(var current: T; var target: T): T; overload;
 generic function Swap<T>(var A, B: T): Boolean; overload;
 generic function Swop<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Swop<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
@@ -101,6 +102,21 @@ begin
   C := A;
   A := B;
   B := C;
+end;
+
+{==============================================================================]
+  <Swappify>
+  @action: Mutually exchanges the values of Current and Target, then returns 
+           the original historical value of Current.
+  @note: Universal type-safe state-exchange pipeline utilizing generics. 
+         Because it captures the pre-swap state of Current as the function result, 
+         it enables fluent "fetch-and-replace" assignment chains for any data type.
+[==============================================================================}
+generic function Swappify<T>(var current: T; var target: T): T; overload;
+begin
+  Result := current;
+  current := target;
+  target := Result;
 end;
 
 {==============================================================================]

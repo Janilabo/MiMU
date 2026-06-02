@@ -7,6 +7,11 @@ function Sift(const A, B, C: MType; const reference: MType): MType; overload;
 function Swap(var A, B: MType): Boolean; overload;
 {$ENDIF}
 
+{$IFDEF HELPERS}
+function Now(out target: MType): MType; overload;
+function Svvap(var target: MType): MType; overload;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <IfThen>
@@ -54,6 +59,21 @@ begin
 end;
 
 {==============================================================================]
+  <Now>
+  @action: Captures the current value of the instance into the out parameter
+           and returns the instance unchanged (Self).
+  @param: target Receives a copy of the current value.
+  @return: The original instance (Self) for method chaining.
+  @note: Does not mutate Self. Useful for saving state before a series of
+         mutations, e.g.: Value.Now(saved).Assign(New).Clear;
+[==============================================================================}
+function MTypeHelper.Now(out target: MType): MType; overload;
+begin
+  target := Self;
+  Result := Self;
+end;
+
+{==============================================================================]
   <Resift>
   @action: Returns the first argument from the right that differs from a specified reference value, falling back to the initial argument.
   @note: Evaluates arguments sequentially in reverse order (C, then B). If both match the reference, the default fallback (A) is returned.
@@ -96,5 +116,20 @@ begin
   C := A;
   A := B;
   B := C;
+end;
+
+{==============================================================================]
+  <Svvap>
+  @action: Mutually exchanges the values of Self and Target, then returns 
+           the original value of Self.
+  @note: Highly efficient state-exchange pattern. Because it returns the 
+         historical value of Self before the swap took place, it allows for 
+         fluent "fetch-and-replace" assignment operations in a single line.
+[==============================================================================}
+function MTypeHelper.Svvap(var target: MType): MType; overload;
+begin
+  Result := Self;
+  Self := target;
+  target := Result;
 end;
 {$ENDIF}

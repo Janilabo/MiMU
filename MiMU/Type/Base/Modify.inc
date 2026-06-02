@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function Assign(const item: MType): MType; overload;
+function Clear: MType; overload;
 function IO(const input, output: MType): MType; overload;
 function IO(const input: MType): MType; overload;
 {$ENDIF}
@@ -19,6 +20,21 @@ function MTypeHelper.Assign(const item: MType): MType; overload;
 begin
   Result := item;
   Self := item;
+end;
+
+{==============================================================================]
+  <Clear>
+  @action: Resets the current instance to its default (zero-initialized) value
+           and returns the value that was previously stored.
+  @note: Uses Default(MType) to obtain the zero-initialized value for any type
+         (ordinals → 0, strings → '', objects → nil, records → all fields zeroed).
+         The previous value is returned, enabling state capture before clearing.
+         This method mutates the instance (Self) in-place.
+[==============================================================================}
+function MTypeHelper.Clear: MType; overload;
+begin
+  Result := Self;
+  Self := Default(MType);
 end;
 
 {==============================================================================]

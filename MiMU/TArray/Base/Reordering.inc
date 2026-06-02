@@ -7,6 +7,7 @@ function Exchanges(const target: MArray): TConnectionArray; overload;
 function Movement(const moves: TConnectionArray): MArray; overload;
 function Movements(const target: MArray): TConnectionArray; overload;
 function Reposition(const oldIndex, newIndex: Integer): Boolean; overload;
+function Svvap(var target: MArray): MArray; overload;
 function Swapped(var target: MArray): Integer; overload;
 function Trade(var b: MArray): Integer; overload;
 {$ENDIF}
@@ -213,6 +214,23 @@ begin
     end;
     Self[newIndex] := s;
   end;
+end;
+
+{==============================================================================]
+  <Svvap>
+  @action: Mutually exchanges the underlying data pointers of Self and Target, 
+           then returns a shallow copy reference to the original Self array.
+  @note: High-performance O(1) pointer-swap operation. Safely bypasses 
+         execution if an array attempts to swap with itself, ensuring complete 
+         protection against identity aliasing across both Delphi and FPC.
+[==============================================================================}
+function MArrayHelper.Svvap(var target: MArray): MArray; overload;
+begin
+  if (@Self = @target) then
+    Exit(Self);
+  Result := Self;
+  Self := target;
+  target := Result;
 end;
 
 {==============================================================================]
