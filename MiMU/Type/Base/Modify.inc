@@ -3,6 +3,8 @@ function Assign(const item: MType): MType; overload;
 function Clear: MType; overload;
 function IO(const input, output: MType): MType; overload;
 function IO(const input: MType): MType; overload;
+function SetIf(const condition: Boolean; const val: MType): MType; overload;
+function TradeIf(const condition: Boolean; const new: MType): MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -63,5 +65,35 @@ function MTypeHelper.IO(const input: MType): MType; overload;
 begin
   Result := Self;
   Self := input;
+end;
+
+{==============================================================================]
+  <SetIf>
+  @action: Assigns val to Self if condition is True, then returns Self.
+  @param: condition Boolean predicate that controls assignment.
+  @param: val The value to assign when condition is True.
+  @return: Self (the mutated or unchanged instance) for chaining.
+  @note: Does not return the previous value. For capturing old state, use TradeIf.
+[==============================================================================}
+function MTypeHelper.SetIf(const condition: Boolean; const val: MType): MType; overload;
+begin
+  if condition then
+    Self := val;
+  Result := Self;
+end;
+
+{==============================================================================]
+  <TradeIf>
+  @action: Conditionally overwrites Self with NextValue if the condition is 
+           met (True), always returning the original historical value of Self.
+  @note: Highly efficient state-capture mutation pattern. Serves as a 
+         conditional transaction: it updates the instance inline while 
+         safely yielding the pre-mutation state for history or undo tracking.
+[==============================================================================}
+function MTypeHelper.TradeIf(const condition: Boolean; const new: MType): MType; overload;
+begin
+  Result := Self;
+  if condition then
+    Self := new;
 end;
 {$ENDIF}
