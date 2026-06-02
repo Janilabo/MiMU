@@ -5,6 +5,7 @@ function IO(const input, output: MType): MType; overload;
 function IO(const input: MType): MType; overload;
 function SetIf(const condition: Boolean; const val: MType): MType; overload;
 function TradeIf(const condition: Boolean; const new: MType): MType; overload;
+function Xchange(const target: MType): MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -95,5 +96,16 @@ begin
   Result := Self;
   if condition then
     Self := new;
+end;
+
+{==============================================================================]
+  <Xchange>
+  @action: Replaces the current instance with a new target value and returns the original state.
+  @note: Acts as an atomic-style swap (destructive read). Essential for value types (records) to hand off state in a single line.
+[==============================================================================}
+function MTypeHelper.Xchange(const target: MType): MType; overload;
+begin
+  Result := Self;
+  Self := target;
 end;
 {$ENDIF}

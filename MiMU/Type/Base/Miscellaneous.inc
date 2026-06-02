@@ -8,11 +8,26 @@ function Swap(var A, B: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF HELPERS}
+function AsIs(out output: MType): MType; overload;
 function Now(out target: MType): MType; overload;
 function Svvap(var target: MType): MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsIs>
+  @action: Copies the current type instance (Self) into the out parameter 'output' using the Assign method,
+           then returns the output parameter as the function result.
+  @note:   The 'out' modifier means 'output' is treated as uninitialized upon entry;
+           the Assign method must handle this correctly (e.g., by creating or clearing the target instance).
+		   The returned value is the same as 'output', allowing chaining or immediate use.
+		   This overload likely complements other AsIs overloads with different parameter types.
+[==============================================================================}
+function MTypeHelper.AsIs(out output: MType): MType; overload;
+begin
+  Result := output.Assign(Self);
+end;
+
 {==============================================================================]
   <IfThen>
   @action: Returns one of two values depending on the evaluation of a boolean expression.
