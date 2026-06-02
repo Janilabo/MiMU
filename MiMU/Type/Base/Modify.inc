@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Assign(const item: MType): MType; overload;
 function IO(const input, output: MType): MType; overload;
+function IO(const input: MType): MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -30,7 +31,21 @@ end;
 [==============================================================================}
 function MTypeHelper.IO(const input, output: MType): MType; overload;
 begin
-  Self := input;
   Result := output;
+  Self := input;
+end;
+
+{==============================================================================]
+  <IO>
+  @action: Captures and returns the current value of the instance (Self) 
+           while simultaneously updating it with a new input value.
+  @note: Acts as an atomic state-transition utility. It is used to cleanly 
+         extract an existing state, object reference, or resource handle 
+         before overwriting it.
+[==============================================================================}
+function MTypeHelper.IO(const input: MType): MType; overload;
+begin
+  Result := Self;
+  Self := input;
 end;
 {$ENDIF}

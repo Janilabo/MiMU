@@ -12,6 +12,7 @@ function Decrease(const N: Integer = 1): Integer; overload;
 function Decrease(const B: Boolean; const N: Integer = 1): Integer; overload;
 function Decrement(const N: Integer = 1): Integer; overload;
 function Decrement(const B: Boolean; const N: Integer = 1): Integer; overload;
+function Decret(const N: Integer = 1): Integer; overload;
 function Give(const N: Integer = 1): Integer; overload;
 function Give(const B: Boolean; const N: Integer = 1): Integer; overload;
 function Incr(const N: Integer = 1): Integer; overload;
@@ -19,8 +20,13 @@ function Increase(const N: Integer = 1): Integer; overload;
 function Increase(const B: Boolean; const N: Integer = 1): Integer; overload;
 function Increment(const N: Integer = 1): Integer; overload;
 function Increment(const B: Boolean; const N: Integer = 1): Integer; overload;
+function Incret(const N: Integer = 1): Integer; overload;
+function Post(const N: Integer = 1): Integer; overload;
+function Pre(const N: Integer = 1): Integer; overload;
 function Pred(const N: Integer = 1; const minBound: Integer = -2147483648): Integer; overload;
 function Put(const N: Integer = 1): Integer; overload;
+function Retinc(const N: Integer = 1): Integer; overload;
+function Retdec(const N: Integer = 1): Integer; overload;
 function Succ(const N: Integer = 1; const maxBound: Integer = 2147483647): Integer; overload;
 function Take(const N: Integer = 1): Integer; overload;
 function Take(const B: Boolean; const N: Integer = 1): Integer; overload;
@@ -215,6 +221,20 @@ begin
 end;
 
 {==============================================================================]
+  <Decret>
+  @action: Decrements Self by N, then returns the newly updated value.
+  @param: N The step delta to decrement by (defaults to 1).
+  @return: The freshly decremented value of Self.
+  @note: Prefix decrement operator. Useful for dropping a tracking index 
+         immediately before evaluating bounds or performing memory access.
+[==============================================================================}
+function TIntegerHelper.Decret(const N: Integer = 1): Integer; overload;
+begin
+  Dec(Self, N);
+  Result := Self;
+end;
+
+{==============================================================================]
   <Give>
   @action: Increases the integer by N.
   @note: Mutates Self and returns the updated value after addition.
@@ -303,6 +323,46 @@ begin
 end;
 
 {==============================================================================]
+  <Incret>
+  @action: Increments Self by N, then returns the newly updated value.
+  @param: N The step delta to increment by (defaults to 1).
+  @return: The freshly incremented value of Self.
+  @note: Prefix increment operator. Useful for stepping a tracking index 
+         immediately before evaluating bounds or performing memory access.
+[==============================================================================}
+function TIntegerHelper.Incret(const N: Integer = 1): Integer; overload;
+begin
+  Inc(Self, N);
+  Result := Self;
+end;
+
+{==============================================================================]
+  <Post>
+  @action: Calculates a relative offset posterior to the current value.
+  @param: N The distance to look forward (defaults to 1).
+  @return: The pure mathematical result of (Self + N).
+  @note: Immutable. Does not mutate Self. Useful for safe, side-effect-free
+         look-ahead operations in arrays and streams.
+[==============================================================================}
+function TIntegerHelper.Post(const N: Integer = 1): Integer; overload;
+begin
+  Result := (Self + N);
+end;
+
+{==============================================================================]
+  <Pre>
+  @action: Calculates a relative offset preceding the current value.
+  @param: N The distance to look backward (defaults to 1).
+  @return: The pure mathematical result of (Self - N).
+  @note: Immutable. Does not mutate Self. Useful for safe, side-effect-free
+         look-behind operations in arrays and streams.
+[==============================================================================}
+function TIntegerHelper.Pre(const N: Integer = 1): Integer; overload;
+begin
+  Result := (Self - N);
+end;
+
+{==============================================================================]
   <Pred>
   @action: Returns the predecessor of Self, decreased by N, not below minBound.
   @note: Uses Int64 arithmetic to prevent underflow; default N = 1, default minBound = Low(Integer).
@@ -322,6 +382,30 @@ function TIntegerHelper.Put(const N: Integer = 1): Integer; overload;
 begin
   Result := (Self + N);
   Self := Result
+end;
+
+{==============================================================================]
+  <Retinc>
+  @action: Returns the current value of Self, then increments Self by N.
+  @param: N The step delta to increment by (defaults to 1).
+  @return: The historical (old) value of Self prior to the increment.
+[==============================================================================}
+function TIntegerHelper.Retinc(const N: Integer = 1): Integer; overload;
+begin
+  Result := Self;
+  Inc(Self, N);
+end;
+
+{==============================================================================]
+  <Retdec>
+  @action: Returns the current value of Self, then decrements Self by N.
+  @param: N The step delta to decrement by (defaults to 1).
+  @return: The historical (old) value of Self prior to the decrement.
+[==============================================================================}
+function TIntegerHelper.Retdec(const N: Integer = 1): Integer; overload;
+begin
+  Result := Self;
+  Dec(Self, N);
 end;
 
 {==============================================================================]

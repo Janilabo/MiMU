@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Ascension(const target: Integer = 0): TIntegerArray; overload;
+function Ascment(const N: Integer = 2): TIntegerArray; overload;
 function Descension(const target: Integer = 0): TIntegerArray; overload;
+function Descment(const N: Integer = 2): TIntegerArray; overload;
 function Downstairs(const target: Integer = 0): TIntegerArray; overload;
 function Onto(const target: Integer = 0): TIntegerArray; overload;
 function Path(const target: Integer = 0): TIntegerArray; overload;
@@ -41,6 +43,27 @@ begin
 end;
 
 {==============================================================================]
+  <Ascment>
+  @action: Generates an ascending sequence of N consecutive integers starting 
+           from the current value of Self.
+  @param: N The total number of elements to generate in the resulting array 
+           (defaults to 1).
+  @return: A dynamic TIntegerArray populated with the ascending range 
+           [Self, Self + 1, ..., Self + N - 1].
+  @note: A custom blend of "Ascend" and "Increment" serving as an inline 
+         arithmetic sequence factory. Safely handles N <= 0 by returning 
+         an empty array.
+[==============================================================================}
+function TIntegerHelper.Ascment(const N: Integer = 2): TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Max(0, N));
+  for i := 0 to High(Result) do
+    Result[i] := (Self + i);
+end;
+
+{==============================================================================]
   <Descension>
   @action: Generates a descending sequence array of integers starting from Self 
            down to and including the target value.
@@ -62,6 +85,27 @@ begin
     P^ := (Self - i);
     Inc(P);
   end;
+end;
+
+{==============================================================================]
+  <Descment>
+  @action: Generates a descending sequence of N consecutive integers starting 
+           from the current value of Self.
+  @param: N The total number of elements to generate in the resulting array 
+           (defaults to 1).
+  @return: A dynamic TIntegerArray populated with the descending range 
+           [Self, Self - 1, ..., Self - N + 1].
+  @note: A custom blend of "Descend" and "Decrement" serving as an inline 
+         reverse arithmetic sequence factory. Safely handles N <= 0 by returning 
+         an empty array.
+[==============================================================================}
+function TIntegerHelper.Descment(const N: Integer = 2): TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, Max(0, N));
+  for i := 0 to High(Result) do
+    Result[i] := (Self - i);
 end;
 
 {==============================================================================]
