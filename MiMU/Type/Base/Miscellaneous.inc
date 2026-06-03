@@ -14,7 +14,9 @@ function Broadcast(out a, b, c: MType): MType; overload;
 function Broadcast(out a, b, c, d: MType): MType; overload;
 function Broadcast(const p: array of MPointer): MType; overload;
 function Coalesce(const alternative: MType): MType; overload;
+function Into(const p: array of MPointer): MType; overload;
 function Now(out target: MType): MType; overload;
+function Plant(const p: array of MPointer): Integer; overload;
 function Store(var a: MType): MType; overload;
 function Store(var a, b: MType): MType; overload;
 function Store(var a, b, c: MType): MType; overload;
@@ -143,6 +145,24 @@ begin
 end;
 
 {==============================================================================]
+  <Into>
+  @action: Copies the current instance value ('Self') into each 'MType' memory 
+           location provided in the pointer array and returns 'Self'.
+  @note: Uses a clean 'for..in' enumeration to cycle through the array. Unlike the 
+         'Plant' or 'Broadcast' variants, this implementation assumes all pointers 
+         in the array are valid and initialized; passing a 'nil' pointer will 
+         cause an access violation runtime error.
+[==============================================================================}
+function MTypeHelper.Into(const p: array of MPointer): MType; overload;
+var
+  s: MPointer;
+begin
+  for s in p do
+    s^ := Self;
+  Result := Self;
+end;
+
+{==============================================================================]
   <Now>
   @action: Captures the current value of the instance into the out parameter
            and returns the instance unchanged (Self).
@@ -155,6 +175,30 @@ function MTypeHelper.Now(out target: MType): MType; overload;
 begin
   target := Self;
   Result := Self;
+end;
+
+{==============================================================================]
+  <Plant>
+  @action: Distributes the current instance value ('Self') to an open array of 
+           'MType' pointers and returns the total number of successfully 
+           updated targets.
+  @note: Safely bypasses any 'nil' pointers elements within the array. The 
+         returned integer reflects only the active memory locations that 
+         successfully received the value, rather than the raw length of the 
+         passed array.
+[==============================================================================}
+function MTypeHelper.Plant(const p: array of MPointer): Integer; overload;
+var
+  h, l, i: Integer;
+begin
+  h := High(p);
+  l := Low(p);
+  Result := ((h - l) + 1);
+  for i := l to h do
+    if (p[i] <> nil) then
+      p[i]^ := Self
+    else
+      Dec(Result);
 end;
 
 {==============================================================================]
