@@ -9,6 +9,7 @@ function Swap(var A, B: MType): Boolean; overload;
 
 {$IFDEF HELPERS}
 function AsIs(out output: MType): MType; overload;
+function Coalesce(const alternative: MType): MType; overload;
 function Now(out target: MType): MType; overload;
 function Svvap(var target: MType): MType; overload;
 {$ENDIF}
@@ -18,14 +19,30 @@ function Svvap(var target: MType): MType; overload;
   <AsIs>
   @action: Copies the current type instance (Self) into the out parameter 'output' using the Assign method,
            then returns the output parameter as the function result.
-  @note:   The 'out' modifier means 'output' is treated as uninitialized upon entry;
-           the Assign method must handle this correctly (e.g., by creating or clearing the target instance).
-		   The returned value is the same as 'output', allowing chaining or immediate use.
-		   This overload likely complements other AsIs overloads with different parameter types.
+  @note: The 'out' modifier means 'output' is treated as uninitialized upon entry;
+         the Assign method must handle this correctly (e.g., by creating or clearing the target instance).
+	     The returned value is the same as 'output', allowing chaining or immediate use.
+         This overload likely complements other AsIs overloads with different parameter types.
 [==============================================================================}
 function MTypeHelper.AsIs(out output: MType): MType; overload;
 begin
   Result := output.Assign(Self);
+end;
+
+{==============================================================================]
+  <Coalesce>
+  @action: Returns Self if it contains a non-default value; otherwise, returns 
+           the specified alternative fallback value.
+  @note: Universal type-safe null/zero safety net. Emulates database-style 
+         coalescing logic, allowing fluent inline defaults for uninitialized 
+         or empty variables without manual conditional nesting.
+[==============================================================================}
+function MTypeHelper.Coalesce(const alternative: MType): MType; overload;
+begin
+  if (Self <> Default(MType)) then
+    Result := Self
+  else
+    Result := alternative;
 end;
 
 {==============================================================================]

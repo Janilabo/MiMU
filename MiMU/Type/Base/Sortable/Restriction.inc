@@ -5,6 +5,7 @@ function CapMin(const sMinimum: MType): Boolean; overload;
 function Capped(const sMinimum, sMaximum: MType): MType; overload;
 function CappedMax(const sMaximum: MType): MType; overload;
 function CappedMin(const sMinimum: MType): MType; overload;
+function Guard(const gLow, gHigh, fallback: MType): MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -91,5 +92,21 @@ begin
   if (Self < sMinimum) then
     Exit(sMinimum);
   Result := Self;
+end;
+
+{==============================================================================]
+  <Guard>
+  @action: Returns Self if it falls within the inclusive range of [Min..Max]; 
+           otherwise, returns the specified fallback value.
+  @note: High-speed O(1) range-validation pipeline. Acts as an assertive 
+         boundary filter, ensuring data integrity by instantly discarding 
+         out-of-bounds values in favor of a safe alternative.
+[==============================================================================}
+function MTypeHelper.Guard(const gLow, gHigh, fallback: MType): MType; overload;
+begin
+  if ((Self >= gLow) and (Self <= gHigh)) then
+    Result := Self
+  else
+    Result := fallback;
 end;
 {$ENDIF}
