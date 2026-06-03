@@ -9,13 +9,17 @@ function Swap(var A, B: MType): Boolean; overload;
 
 {$IFDEF HELPERS}
 function AsIs(out output: MType): MType; overload;
+function Broadcast(out a, b: MType): MType; overload;
+function Broadcast(out a, b, c: MType): MType; overload;
+function Broadcast(out a, b, c, d: MType): MType; overload;
+function Broadcast(const p: array of MPointer): MType; overload;
 function Coalesce(const alternative: MType): MType; overload;
 function Now(out target: MType): MType; overload;
 function Store(var a: MType): MType; overload;
 function Store(var a, b: MType): MType; overload;
 function Store(var a, b, c: MType): MType; overload;
 function Store(var a, b, c, d: MType): MType; overload;
-function Store(const a: array of MPointer): MType; overload;
+function Store(const p: array of MPointer): MType; overload;
 function Svvap(var target: MType): MType; overload;
 {$ENDIF}
 
@@ -32,6 +36,49 @@ function Svvap(var target: MType): MType; overload;
 function MTypeHelper.AsIs(out output: MType): MType; overload;
 begin
   Result := output.Assign(Self);
+end;
+
+{==============================================================================]
+  <Broadcast>
+  @action: Copies the value of the current instance ('Self') to multiple external 
+           variables or memory locations simultaneously.
+  @note: This method supports two patterns: individual 'out' parameters for explicit 
+         variables, and an open array of 'MPointer' types to dynamically distribute 
+         the value to an arbitrary number of heap-allocated destinations while 
+         safely ignoring 'nil' references.
+[==============================================================================}
+function MTypeHelper.Broadcast(out a, b: MType): MType; overload;
+begin
+  a := Self;
+  b := Self;
+  Result := Self;
+end;
+
+function MTypeHelper.Broadcast(out a, b, c: MType): MType; overload;
+begin
+  a := Self;
+  b := Self;
+  c := Self;
+  Result := Self;
+end;
+
+function MTypeHelper.Broadcast(out a, b, c, d: MType): MType; overload;
+begin
+  a := Self;
+  b := Self;
+  c := Self;
+  d := Self;
+  Result := Self;
+end;
+
+function MTypeHelper.Broadcast(const p: array of MPointer): MType; overload;
+var
+  i: Integer;
+begin
+  for i := Low(p) to High(p) do
+    if (p[i] <> nil) then
+      p[i]^ := Self;
+  Result := Self;
 end;
 
 {==============================================================================]
@@ -168,13 +215,13 @@ begin
   Result := Self.Now(a).Now(b).Now(c).Now(d);
 end;
 
-function MTypeHelper.Store(const a: array of MPointer): MType; overload;
+function MTypeHelper.Store(const p: array of MPointer): MType; overload;
 var
   i: Integer;
 begin
   Result := Self;
-  for i := Low(a) to High(a) do
-    Result := Result.Now(a[i]^);
+  for i := Low(p) to High(p) do
+    Result := Result.Now(p[i]^);
 end;
 
 {==============================================================================]
