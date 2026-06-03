@@ -6,6 +6,8 @@ function Capped(const sMinimum, sMaximum: MType): MType; overload;
 function CappedMax(const sMaximum: MType): MType; overload;
 function CappedMin(const sMinimum: MType): MType; overload;
 function Guard(const gLow, gHigh, fallback: MType): MType; overload;
+function Confine(const sMinimum, sMaximum: MType): MType; overload;
+function Confined(const sMinimum, sMaximum: MType): MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -92,6 +94,39 @@ begin
   if (Self < sMinimum) then
     Exit(sMinimum);
   Result := Self;
+end;
+
+{==============================================================================]
+  <Confine>
+  @action: Clamps the current instance value between a minimum and maximum threshold, 
+           modifying the instance in-place and returning the updated value.
+  @note: This is a mutating operation. If the current value is outside the bounds, 
+         'Self' is permanently updated to the breached boundary.
+[==============================================================================}
+function MTypeHelper.Confine(const sMinimum, sMaximum: MType): MType; overload;
+begin
+  if (Self < sMinimum) then
+    Self := sMinimum
+  else if (Self > sMaximum) then
+    Self := sMaximum;
+  Result := Self;
+end;
+
+{==============================================================================]
+  <Confined>
+  @action: Returns the current value restricted within the specified minimum and 
+           maximum limits without altering the original instance.
+  @note: This is a non-mutating, read-only operation. 'Self' remains unchanged, 
+         making it safe for functional-style chaining or passing to expressions.
+[==============================================================================}
+function MTypeHelper.Confined(const sMinimum, sMaximum: MType): MType; overload;
+begin
+  if (Self < sMinimum) then
+    Result := sMinimum
+  else if (Self > sMaximum) then
+    Result := sMaximum
+  else
+    Result := Self;
 end;
 
 {==============================================================================]

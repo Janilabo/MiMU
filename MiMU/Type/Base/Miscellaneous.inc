@@ -11,6 +11,11 @@ function Swap(var A, B: MType): Boolean; overload;
 function AsIs(out output: MType): MType; overload;
 function Coalesce(const alternative: MType): MType; overload;
 function Now(out target: MType): MType; overload;
+function Store(var a: MType): MType; overload;
+function Store(var a, b: MType): MType; overload;
+function Store(var a, b, c: MType): MType; overload;
+function Store(var a, b, c, d: MType): MType; overload;
+function Store(const a: array of MPointer): MType; overload;
 function Svvap(var target: MType): MType; overload;
 {$ENDIF}
 
@@ -133,6 +138,43 @@ begin
     Result := B
   else
     Result := C;
+end;
+
+{==============================================================================]
+  <Store>
+  @action: Sequentially processes and stores multiple 'MType' variables into the 
+           current instance by cascading calls to the 'Now' method.
+  @note: Uses a fluent, method-chaining pattern. Because the parameters are passed 
+         by reference ('var'), the underlying 'Now' method may modify the passed 
+         variables or update internal state dependencies between them.
+[==============================================================================}
+function MTypeHelper.Store(var a: MType): MType; overload;
+begin
+  Result := Self.Now(a);
+end;
+
+function MTypeHelper.Store(var a, b: MType): MType; overload;
+begin
+  Result := Self.Now(a).Now(b);
+end;
+
+function MTypeHelper.Store(var a, b, c: MType): MType; overload;
+begin
+  Result := Self.Now(a).Now(b).Now(c);
+end;
+
+function MTypeHelper.Store(var a, b, c, d: MType): MType; overload;
+begin
+  Result := Self.Now(a).Now(b).Now(c).Now(d);
+end;
+
+function MTypeHelper.Store(const a: array of MPointer): MType; overload;
+var
+  i: Integer;
+begin
+  Result := Self;
+  for i := Low(a) to High(a) do
+    Result := Result.Now(a[i]^);
 end;
 
 {==============================================================================]

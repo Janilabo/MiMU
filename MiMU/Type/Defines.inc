@@ -6,6 +6,7 @@
   {$DEFINE MTypeHelper := TIntegerHelper}
   {$DEFINE MArrayHelper := TIntegerArrayHelper}
   {$DEFINE M2DArrayHelper := T2DIntegerArrayHelper}
+  {$DEFINE MPointer := PInteger}
   {$DEFINE Sortable}
 {$ENDIF}
 
@@ -17,6 +18,7 @@
   {$DEFINE MTypeHelper := TDoubleHelper}
   {$DEFINE MArrayHelper := TDoubleArrayHelper}
   {$DEFINE M2DArrayHelper := T2DDoubleArrayHelper}
+  {$DEFINE MPointer := PDouble}
   {$DEFINE Sortable}
 {$ENDIF}
 
@@ -28,6 +30,7 @@
   {$DEFINE MTypeHelper := TStringHelper}
   {$DEFINE MArrayHelper := TStringArrayHelper}
   {$DEFINE M2DArrayHelper := T2DStringArrayHelper}
+  {$DEFINE MPointer := PString}
   {$DEFINE Sortable}
 {$ENDIF}
 
@@ -39,6 +42,7 @@
   {$DEFINE MTypeHelper := TCharHelper}
   {$DEFINE MArrayHelper := TCharArrayHelper}
   {$DEFINE M2DArrayHelper := T2DCharArrayHelper}
+  {$DEFINE MPointer := PChar}
   {$DEFINE Sortable}
 {$ENDIF}
 
@@ -50,6 +54,7 @@
   {$DEFINE MTypeHelper := TBooleanHelper}
   {$DEFINE MArrayHelper := TBooleanArrayHelper}
   {$DEFINE M2DArrayHelper := T2DBooleanArrayHelper}
+  {$DEFINE MPointer := PBoolean}
   {$UNDEF Sortable}
 {$ENDIF}
 
@@ -61,6 +66,7 @@
   {$DEFINE MTypeHelper := TPointHelper}
   {$DEFINE MArrayHelper := TPointArrayHelper}
   {$DEFINE M2DArrayHelper := T2DPointArrayHelper}
+  {$DEFINE MPointer := PPoint}
   {$DEFINE FType := Integer}
   {$DEFINE FArray := TIntegerArray}
   {$DEFINE Sortable}
@@ -74,6 +80,7 @@
   {$DEFINE MTypeHelper := TBoxHelper}
   {$DEFINE MArrayHelper := TBoxArrayHelper}
   {$DEFINE M2DArrayHelper := T2DBoxArrayHelper}
+  {$DEFINE MPointer := PBox}
   {$DEFINE FType := Integer}
   {$DEFINE FArray := TIntegerArray}
   {$UNDEF Sortable}
@@ -87,6 +94,7 @@
   {$DEFINE MTypeHelper := TRangeHelper}
   {$DEFINE MArrayHelper := TRangeArrayHelper}
   {$DEFINE M2DArrayHelper := T2DRangeArrayHelper}
+  {$DEFINE MPointer := PRange}
   {$DEFINE FType := Integer}
   {$DEFINE FArray := TIntegerArray}
   {$UNDEF Sortable}
@@ -100,6 +108,7 @@
   {$DEFINE MTypeHelper := TConnectionHelper}
   {$DEFINE MArrayHelper := TConnectionArrayHelper}
   {$DEFINE M2DArrayHelper := T2DConnectionArrayHelper}
+  {$DEFINE MPointer := PConnection}
   {$UNDEF Sortable}
 {$ENDIF}
 
@@ -111,6 +120,7 @@
   {$DEFINE MTypeHelper := TCircleHelper}
   {$DEFINE MArrayHelper := TCircleArrayHelper}
   {$DEFINE M2DArrayHelper := T2DCircleArrayHelper}
+  {$DEFINE MPointer := PCircle}
   {$UNDEF Sortable}
 {$ENDIF}
 
@@ -122,6 +132,7 @@
   {$DEFINE MTypeHelper := TTriangleHelper}
   {$DEFINE MArrayHelper := TTriangleArrayHelper}
   {$DEFINE M2DArrayHelper := T2DTriangleArrayHelper}
+  {$DEFINE MPointer := PTriangle}
   {$UNDEF Sortable}
 {$ENDIF}
 
@@ -133,6 +144,7 @@
   {$DEFINE MTypeHelper := TSegmentHelper}
   {$DEFINE MArrayHelper := TSegmentArrayHelper}
   {$DEFINE M2DArrayHelper := T2DSegmentArrayHelper}
+  {$DEFINE MPointer := PSegment}
   {$UNDEF Sortable}
 {$ENDIF}
 
@@ -144,5 +156,6 @@
   {$DEFINE MTypeHelper := TInt64Helper}
   {$DEFINE MArrayHelper := TInt64ArrayHelper}
   {$DEFINE M2DArrayHelper := T2DInt64ArrayHelper}
+  {$DEFINE MPointer := PInt64}
   {$DEFINE Sortable}
 {$ENDIF}
