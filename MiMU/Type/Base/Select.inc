@@ -1,10 +1,12 @@
 {$IFDEF HELPERS}
 function All(const conditions: TBooleanArray; const fallback: MType; const wanted: Boolean = True): MType; overload;
+function Allowed(const conditions: TBooleanArray; const target: Integer; const fallback: MType; const wanted: Boolean = True): MType; overload;
 function Any(const conditions: TBooleanArray; const fallback: MType; const wanted: Boolean = True): MType; overload;
 function Both(const A, B: Boolean; const fallback: MType; const wanted: Boolean = True): MType; overload;
 function Either(const A, B: Boolean; const fallback: MType; const wanted: Boolean = True): MType; overload;
 function Neither(const A, B: Boolean; const fallback: MType; const wanted: Boolean = True): MType; overload;
 function None(const conditions: TBooleanArray; const fallback: MType; const wanted: Boolean = True): MType; overload;
+function Required(const conditions: TBooleanArray; const target: Integer; const fallback: MType; const wanted: Boolean = True): MType; overload;
 function When(const condition: Boolean; const fallback: MType): MType; overload;
 function Unless(const condition: Boolean; const fallback: MType): MType; overload;
 {$ENDIF}
@@ -29,6 +31,40 @@ begin
   for c in conditions do
     if (c <> wanted) then
       Exit(fallback);
+end;
+
+{==============================================================================]
+  <Allowed>
+  @action: Enforces a maximum tolerance ceiling on matching conditions. Returns 
+           'fallback' the exact moment the quantity of booleans matching 
+           'wanted' exceeds the permitted 'target' threshold; otherwise, 
+           returns 'Self'.
+  @note: Implements a defensive dual-layer short-circuit optimization. It 
+         pre-checks the array bounds to instantly pass if the ceiling cannot 
+         be reached, and utilizes a predictive look-ahead inside the iteration 
+         loop to bail out early with a 'Self' success the millisecond it 
+         becomes mathematically certain that even if all remaining unexamined 
+         elements match 'wanted', the total count will never breach the 
+         allowed threshold.
+[==============================================================================}
+function MTypeHelper.Allowed(const conditions: TBooleanArray; const target: Integer; const fallback: MType; const wanted: Boolean = True): MType; overload;
+var
+  i, m, l: Integer;
+begin
+  if (target < 0) then
+    Exit(fallback);
+  l := conditions.Length;
+  if (target >= l) then
+    Exit(Self);
+  m := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if ((conditions[i] = wanted) and (m.Increment > target)) then
+      Exit(fallback);
+    if ((m + (l - 1 - i)) <= target) then
+      Exit(Self);
+  end;
+  Result := Self;
 end;
 
 {==============================================================================]
@@ -130,6 +166,38 @@ begin
     if (c = wanted) then
       Exit(fallback);
   Result := Self;
+end;
+
+{==============================================================================]
+  <Required>
+  @action: Enforces a mandatory minimum floor of matching conditions. Returns 
+           'Self' the exact moment the quantity of booleans matching 'wanted' 
+           reaches the 'target' threshold; otherwise, redirects to 'fallback'.
+  @note: Implements an aggressive dual-layer short-circuit optimization. It 
+         pre-checks the array bounds to instantly catch structural failures, 
+         and utilizes a predictive look-ahead inside the iteration loop to 
+         bail out with a 'fallback' failure the millisecond it becomes 
+         mathematically impossible for the remaining unexamined elements to 
+         satisfy the required target count.
+[==============================================================================}
+function MTypeHelper.Required(const conditions: TBooleanArray; const target: Integer; const fallback: MType; const wanted: Boolean = True): MType; overload;
+var
+  i, m, l: Integer;
+begin
+  if (target <= 0) then
+    Exit(Self);
+  l := conditions.Length;
+  if (target > l) then
+    Exit(fallback);
+  m := 0;
+  for i := 0 to (l - 1) do
+  begin
+    if ((conditions[i] = wanted) and (m.Increment >= target)) then
+      Exit(Self);
+    if ((m + (l - 1 - i)) < target) then
+      Exit(fallback);
+  end;
+  Result := fallback;
 end;
 
 {==============================================================================]
