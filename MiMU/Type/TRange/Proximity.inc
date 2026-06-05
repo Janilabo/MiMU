@@ -33,6 +33,7 @@ function Scored(const target: Integer): Integer; overload;
 function Separation(const other: TRange): Integer; overload;
 function Separaty(const r: TRange): Integer; overload;
 function Space(const target: TRange): Integer; overload;
+function ToGo(const current: Integer; const Inclusive: Boolean = False): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -666,4 +667,20 @@ begin
   else
     Result := 0;
 end;
+
+{==============================================================================]
+  <TRange.ToGo>
+  @action: Returns the number of elements from current position to the end.
+  @param: current The current position in the range
+  @param: Inclusive If True, includes current element in count;
+                    If False (default), excludes current element
+  @return: Count of remaining elements
+[==============================================================================}
+function TRange.ToGo(const current: Integer; const Inclusive: Boolean = False): Integer; overload;
+begin
+  if Self.Ascending then
+    Result := ((Self.stop - current) + Ord(Inclusive))
+  else
+    Result := ((current - Self.stop) + Ord(Inclusive));
+end; 
 {$ENDIF}

@@ -1,8 +1,10 @@
 {$IFDEF HELPERS}
 function Falseness: Integer; overload;
 function Occupancy(const val: Boolean = True): Double; overload;
+function Matching(const tState: Boolean): Integer; overload;
 function Score(const iTrue: Integer = 1; const iFalse: Integer = 0): Integer; overload;
 function Trueness: Integer; overload;
+function Unmatching(const tState: Boolean): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -19,6 +21,20 @@ begin
   for i := 0 to High(Self) do
     if not Self[i] then
       Inc(Result);
+end;
+
+{==============================================================================]
+  <Matching>
+  @action: Counts how many elements in the boolean array match the specified target state.
+  @note: Implemented using a branchless approach, casting the boolean comparison directly to an integer via Ord() to accumulate the count.
+[==============================================================================}
+function TBooleanArrayHelper.Matching(const tState: Boolean): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Result := (Result + Ord(Self[i] = tState));
 end;
 
 {==============================================================================]
@@ -69,5 +85,15 @@ begin
   for i := 0 to High(Self) do
     if Self[i] then
       Inc(Result);
+end;
+
+{==============================================================================]
+  <Unmatching>
+  @action: Counts how many elements in the boolean array do not match the specified target state.
+  @note: Reuses the Matching function by passing the inverted (not) tState, ensuring clean code reuse without duplicating the loop.
+[==============================================================================}
+function TBooleanArrayHelper.Unmatching(const tState: Boolean): Integer; overload;
+begin
+  Result := Self.Matching(not tState);
 end;
 {$ENDIF}
