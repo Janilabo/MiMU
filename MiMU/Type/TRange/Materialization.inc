@@ -125,6 +125,7 @@ function Raw: TIntegerArray; overload;
 function Realize: TIntegerArray; overload;
 function Recursived: TIntegerArray; overload;
 function Recursively: TIntegerArray; overload;
+function Reify: TIntegerArray; overload;
 function Release: TIntegerArray; overload;
 function Released: TIntegerArray; overload;
 function Render: TIntegerArray; overload;
@@ -167,6 +168,7 @@ function Unrolled: TIntegerArray; overload;
 function Unwrap: TIntegerArray; overload;
 function Unzip: TIntegerArray; overload;
 function Valued: TIntegerArray; overload;
+function Valuement: TIntegerArray; overload;
 function Values: TIntegerArray; overload;
 function View(const vSize: Integer = 2147483647; const sIndex: Integer = 0): TIntegerArray; overload;
 function Yielded: TIntegerArray; overload;
@@ -3582,6 +3584,27 @@ begin
 end;
 
 {==============================================================================]
+  <Reify>
+  @action: Converts the TRange object into a concrete TIntegerArray containing 
+           all integers within the defined range boundaries.
+  @note: Uses a single for-loop with direct mathematical indexing instead of 
+         sequential mutation, populating the array from start to stop regardless 
+         of whether the range is ascending or descending.
+[==============================================================================}
+function TRange.Reify: TIntegerArray; overload;
+var
+  s, i: Integer;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  for i := 0 to (s - 1) do
+    if Self.Ascending then
+      Result[i] := (Self.start + i)
+    else
+      Result[(s - 1) - i] := (Self.stop + i);
+end;
+
+{==============================================================================]
   <Release>
   @action: Returns ALL TRange items as TIntegerArray.
   @note: Fills a circular buffer (ring) with range values, then drains it
@@ -4684,6 +4707,24 @@ begin
       b[j] := (Self.start + ((i + j) * d));
     Move(b[0], Result[i], (z * Min(BLOCK_SIZE, (s - i))));
   end;
+end;
+
+{==============================================================================]
+  <Valuement>
+  @action: Generates an array of integers representing all values within the specified range from start to stop.
+  @note: Allocates an array matching the range size, determines step direction (1 or -1) via Self.Ascending, and sequentially populates the result using side-effect increments.
+[==============================================================================}
+function TRange.Valuement: TIntegerArray; overload;
+var
+  d, s, r: Integer;
+begin
+  SetLength(Result, Self.Size);
+  d := IfThen(Self.Ascending, 1, -1);
+  s := Self.start;
+  r := 0;
+  while (s <> Self.stop) do
+    Result[r.Increase] := s.Increase(d);
+  Result[r] := s;
 end;
 
 {==============================================================================]
