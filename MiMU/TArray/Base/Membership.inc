@@ -19,6 +19,9 @@ function Dull: Boolean; overload;
 function EndsWith(const aItem: MType): Boolean; overload;
 function EndsWith(const aItem: MArray): Boolean; overload;
 function Exact(const items: MArray): Boolean; overload;
+function Existence(const mItem: MType): Boolean; overload;
+function Existency(const mItem: MType): Boolean; overload;
+function Existing(const mItem: MType): Boolean; overload;
 function FreeOf(const forbidden: MArray): Boolean; overload;
 function GotAtLeast(const item: MType; const limit: Integer): Boolean; overload;
 function GotAtMost(const item: MType; const limit: Integer): Boolean; overload;
@@ -483,6 +486,51 @@ begin
     f[j] := True;
   end;
   Result := f.Uniform(True);
+end;
+
+{==============================================================================]
+  <Existence>
+  @action: Checks if a specific item exists within the array by scanning it from end to start.
+  @note: Returns True if found, False otherwise. Time complexity is O(N).
+[==============================================================================}
+function MArrayHelper.Existence(const mItem: MType): Boolean; overload;
+var
+  h: Integer;
+begin
+  h := High(Self);
+  while ((h > -1) and (Self[h] <> mItem)) do
+    Dec(h);
+  Result := (h > -1);
+end;
+
+{==============================================================================]
+  <Existency>
+  @action: Explicitly loops backward through the array to check if the specified item exists.
+  @note: Scans from the highest index down to 0, short-circuiting and returning True immediately if a match is found.
+[==============================================================================}
+function MArrayHelper.Existency(const mItem: MType): Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := High(Self) downto 0 do
+    if (Self[i] = mItem) then
+      Exit(True);
+  Result := False;
+end;
+
+{==============================================================================]
+  <Existing>
+  @action: Iterates through the array to determine if the specified item is present.
+  @note: Uses a for-in enumerator for a forward-scan; stops and returns True immediately upon the first match (short-circuiting).
+[==============================================================================}
+function MArrayHelper.Existing(const mItem: MType): Boolean; overload;
+var
+  s: MType;
+begin
+  for s in Self do
+    if (s = mItem) then
+      Exit(True);
+  Result := False;
 end;
 
 {==============================================================================]
