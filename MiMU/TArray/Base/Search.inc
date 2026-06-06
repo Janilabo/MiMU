@@ -4,6 +4,8 @@ function Find(const ID: TRange; const item: MType): Integer; overload;
 function Find(const ID: TIntegerArray; const item: MType): Integer; overload;
 function Find(const ID: TRange; const items: MArray): Integer; overload;
 function Find(const ID: TIntegerArray; const items: MArray): Integer; overload;
+function FindNext(const item: MType; var current: Integer): Boolean; overload;
+function FindPrevious(const item: MType; var current: Integer): Boolean; overload;
 function First: Integer; overload;
 function First(const item: MType): Integer; overload;
 function First(const items: MArray): Integer; overload;
@@ -124,6 +126,34 @@ begin
     if items.Contains(Self[ID[i]]) then
       Exit(ID[i]);
   Result := -1;
+end;
+
+{==============================================================================]
+  <FindNext>
+  @action: Searches forward for the next occurrence of an item in the array, 
+           starting from the position after the 'current' index. Updates 
+           'current' to the found index.
+  @note: Returns True if found, False otherwise. To find the first match or 
+         use in a loop, initialize 'current' to -1.
+[==============================================================================}
+function MArrayHelper.FindNext(const item: MType; var current: Integer): Boolean; overload;
+begin
+  current := Self.Pos(item, (current + 1));
+  Result := (current > -1);
+end;
+
+{==============================================================================]
+  <FindPrevious>
+  @action: Searches backward for the previous occurrence of an item in the array, 
+           starting from the position before the 'current' index. Updates 
+           'current' to the found index.
+  @note: Returns True if found, False otherwise. To find the last match or 
+         use in a loop, initialize 'current' to the length of the array.
+[==============================================================================}
+function MArrayHelper.FindPrevious(const item: MType; var current: Integer): Boolean; overload;
+begin
+  current := Self.Loc(item, (current - 1));
+  Result := (current > -1);
 end;
 
 {==============================================================================]

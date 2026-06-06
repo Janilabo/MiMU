@@ -3,8 +3,12 @@ function Amount(const item: MType): Integer; overload;
 function Amount(const items: MArray): Integer; overload;
 function Count(const item: MType): Integer; overload;
 function Count(const items: MArray): Integer; overload;
+function CountBackward(const item: MType; const offset: Integer = 999999999): Integer; overload;
+function Counter(const item: MType): Integer; overload;
+function CountForward(const item: MType; const offset: Integer = -1): Integer; overload;
 function CountOf(const item: MType): Integer; overload;
 function CountOf(const items: MArray): Integer; overload;
+function Countre(const item: MType; const index: Integer = 0): Integer; overload;
 function IntersectionCounted(const items: MArray): Integer; overload;
 function Occurrences(const item: MType): Integer; overload;
 function Uniformity: Double; overload;
@@ -100,6 +104,55 @@ begin
 end;
 
 {==============================================================================]
+  <CountBackward>
+  @action: Counts the occurrences of an item from a specific starting index 
+           moving backward to the beginning of the array.
+  @note: The 'offset' defaults to 999999999, acting as a sentinel value 
+         that tells the underlying Loc function to scan the entire array 
+         from the absolute end.
+[==============================================================================}
+function MArrayHelper.CountBackward(const item: MType; const offset: Integer = 999999999): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  i := offset;
+  while Self.FindPrevious(item, i) do
+    Inc(Result);
+end;
+
+{==============================================================================]
+  <Counter>
+  @action: Counts the total occurrences of a specific item within the array.
+  @note: Iterates backward through the array from the last element down to index 0 using a decremented while loop.
+[==============================================================================}
+function MArrayHelper.Counter(const item: MType): Integer; overload;
+var
+  l: Integer;
+begin
+  l := Self.Length;
+  while (l.Decrement > -1) do
+    Inc(Result, Ord(Self[l] = item));
+end;
+
+{==============================================================================]
+  <CountForward>
+  @action: Counts the occurrences of an item from a specific starting index 
+           moving forward to the end of the array.
+  @note: The 'offset' defaults to -1, which automatically primes FindNext 
+         to scan the entire array from the very first element (index 0).
+[==============================================================================}
+function MArrayHelper.CountForward(const item: MType; const offset: Integer = -1): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  i := offset;
+  while Self.FindNext(item, i) do
+    Inc(Result);
+end;
+
+{==============================================================================]
   <CountOf>
   @action: Counts the number of elements in the array that match the specified item.
   @note:
@@ -134,6 +187,18 @@ begin
   Result := Self.Length;
   for i := 0 to High(Self) do
     Dec(Result, Ord(not items.Contains(Self[i])));
+end;
+
+{==============================================================================]
+  <Countre>
+  @action: Counts the total occurrences of a specific item within the array.
+  @note: Uses a recursive approach that scans from a given starting index (defaulting to 0) to the end of the array.
+[==============================================================================}
+function MArrayHelper.Countre(const item: MType; const index: Integer = 0): Integer; overload;
+begin
+  if (index > High(Self)) then
+    Exit(0);
+  Result := (Ord(Self[index] = item) + Self.Countre(item, (index + 1)));
 end;
 
 {==============================================================================]
