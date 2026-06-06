@@ -3,6 +3,8 @@ function Amount(const item: MType): Integer; overload;
 function Amount(const items: MArray): Integer; overload;
 function Count(const item: MType): Integer; overload;
 function Count(const items: MArray): Integer; overload;
+function CountOf(const item: MType): Integer; overload;
+function CountOf(const items: MArray): Integer; overload;
 function IntersectionCounted(const items: MArray): Integer; overload;
 function Occurrences(const item: MType): Integer; overload;
 function Uniformity: Double; overload;
@@ -95,6 +97,43 @@ begin
   for i := 0 to High(Self) do
     if items.Contains(Self[i]) then
       Inc(Result);
+end;
+
+{==============================================================================]
+  <CountOf>
+  @action: Counts the number of elements in the array that match the specified item.
+  @note:
+    - Iterates through the array, decrementing the total length by 1 for every element that does not match.
+    - Returns 0 if the array is empty or if no matching elements are found.
+    - Time complexity: O(n), where n = length of Self.
+[==============================================================================}
+function MArrayHelper.CountOf(const item: MType): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Length;
+  for i := 0 to High(Self) do
+    Dec(Result, Ord(Self[i] <> item));
+end;
+
+{==============================================================================]
+  <CountOf>
+  @action: Counts the total number of elements in the array that exist within the specified subset of items.
+  @note:
+    - Iterates through the array and decrements the total length for every element that is not found in the items array.
+    - Effectively counts the size of the intersection between Self and items (including duplicate occurrences in Self).
+    - Returns 0 if Self is empty, or if no elements match anything in items.
+    - Time complexity: O(n * m) in the worst case, where n = length of Self and m = length of items (depending on items.Contains implementation).
+[==============================================================================}
+function MArrayHelper.CountOf(const items: MArray): Integer; overload;
+var
+  i: Integer;
+begin
+  if (items.Length = 0) then
+    Exit(0);
+  Result := Self.Length;
+  for i := 0 to High(Self) do
+    Dec(Result, Ord(not items.Contains(Self[i])));
 end;
 
 {==============================================================================]

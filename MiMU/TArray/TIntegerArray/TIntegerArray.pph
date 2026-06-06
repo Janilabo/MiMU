@@ -24,6 +24,7 @@
 {$I Clustering.inc}
 {$I Combine.inc}
 {$I Conversion.inc}
+{$I Counting.inc}
 {$I Deduplicate.inc}
 {$I Extrema.inc}
 {$I Insertion.inc}

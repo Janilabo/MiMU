@@ -1,12 +1,12 @@
 {$IFDEF HELPERS}
-function CountOf(const items: MArray; const iAscending: Boolean = True): Integer; overload;
+function CountFor(const items: MArray; const iAscending: Boolean = True): Integer; overload;
 function Counted(const items: MArray; const iSorted: Boolean = False): Integer; overload;
 function IntersectionCount(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <CountOf>
+  <CountFor>
   @action: Counts how many elements in Self are present in the array items, assuming
            items is already sorted in either ascending or descending order.
   @note:
@@ -18,7 +18,7 @@ function IntersectionCount(const items: MArray; const oAscending: Boolean = True
     - Time complexity: O(N log M), where N = Length(Self),
       M = Length(Items).
 [==============================================================================}
-function MArrayHelper.CountOf(const items: MArray; const iAscending: Boolean = True): Integer; overload;
+function MArrayHelper.CountFor(const items: MArray; const iAscending: Boolean = True): Integer; overload;
 var
   i: Integer;
 begin

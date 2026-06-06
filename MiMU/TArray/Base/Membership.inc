@@ -22,6 +22,7 @@ function Exact(const items: MArray): Boolean; overload;
 function Existence(const mItem: MType): Boolean; overload;
 function Existency(const mItem: MType): Boolean; overload;
 function Existing(const mItem: MType): Boolean; overload;
+function Extant(const mItem: MType; const backwardScan: Boolean = False): Boolean; overload;
 function FreeOf(const forbidden: MArray): Boolean; overload;
 function GotAtLeast(const item: MType; const limit: Integer): Boolean; overload;
 function GotAtMost(const item: MType; const limit: Integer): Boolean; overload;
@@ -531,6 +532,20 @@ begin
     if (s = mItem) then
       Exit(True);
   Result := False;
+end;
+
+{==============================================================================]
+  <Extant>
+  @action: Checks whether a specific item exists within the array.
+  @note: If 'backwardScan' is False, the array is scanned normally from 0 to High. 
+         If 'backwardScan' is True, the array is scanned in reverse from High downto 0.
+[==============================================================================}
+function MArrayHelper.Extant(const mItem: MType; const backwardScan: Boolean = False): Boolean; overload;
+begin
+  if not backwardScan then
+    Result := (Self.Count(mItem) > 0)
+  else
+    Result := (Self.CountOf(mItem) > 0);
 end;
 
 {==============================================================================]
