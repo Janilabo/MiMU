@@ -37,6 +37,7 @@
 {$I Reversal.inc}
 {$I Sampling.inc}
 {$I Scaling.inc}
+{$I Search.inc}
 {$I Segmentation.inc}
 {$I Selection.inc}
 {$I Size.inc}
