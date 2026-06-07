@@ -10,6 +10,10 @@ function IsAsc(const strictly: Boolean = False): Boolean; overload;
 function IsDesc(const strictly: Boolean = False): Boolean; overload;
 function Orientation: Integer; overload;
 function Rising: Boolean; overload;
+function StrictlyAscending: Boolean; overload;
+function StrictlyDecreasing: Boolean; overload;
+function StrictlyDescending: Boolean; overload;
+function StrictlyIncreasing: Boolean; overload;
 function Unidirectional: Boolean; overload;
 function Upward: Boolean; overload;
 {$ENDIF}
@@ -204,6 +208,72 @@ begin
     if (Self[i] > Self[i + 1]) then
       Exit(False);
   Result := True;
+end;
+
+{==============================================================================]
+  <StrictlyAscending>
+  @action: Checks if the array elements are strictly increasing.
+  @note: Returns False if any element is less than or equal to the preceding one,
+         or if the array is empty (no duplicates allowed).
+[==============================================================================}
+function MArrayHelper.StrictlyAscending: Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 1 to High(Self) do
+    if (Self[i - 1] >= Self[i]) then
+      Exit(False);
+  Result := (High(Self) > -1);
+end;
+
+{==============================================================================]
+  <StrictlyDecreasing>
+  @action: Checks if the elements of the integer array are in a strictly decreasing order.
+  @note: Uses a while loop with an increment helper. Returns False if any element is
+         less than or equal to the next one, or if the array is empty.
+[==============================================================================}
+function MArrayHelper.StrictlyDecreasing: Boolean; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  i := 0;
+  Result := (l > 0);
+  while (Result and (i.Increment < l)) do
+    Result := (Self[i - 1] > Self[i]);
+end;
+
+{==============================================================================]
+  <StrictlyDescending>
+  @action: Checks if the array elements are strictly decreasing.
+  @note: Returns False if any element is greater than or equal to the preceding one,
+         or if the array is empty (no duplicates allowed).
+[==============================================================================}
+function MArrayHelper.StrictlyDescending: Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 1 to High(Self) do
+    if (Self[i - 1] <= Self[i]) then
+      Exit(False);
+  Result := (High(Self) > -1);
+end;
+
+{==============================================================================]
+  <StrictlyIncreasing>
+  @action: Checks if the elements of the integer array are in a strictly increasing order.
+  @note: Uses a while loop with an increment helper. Returns False if any element is
+         greater than or equal to the next one, or if the array is empty.
+[==============================================================================}
+function MArrayHelper.StrictlyIncreasing: Boolean; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  i := 0;
+  Result := (l > 0);
+  while (Result and (i.Increment < l)) do
+    Result := (Self[i - 1] < Self[i]);
 end;
 
 {==============================================================================]

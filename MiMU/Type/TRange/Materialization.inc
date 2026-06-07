@@ -71,6 +71,7 @@ function Gathered: TIntegerArray; overload;
 function Generate: TIntegerArray; overload;
 function Generated: TIntegerArray; overload;
 function Harvest: TIntegerArray; overload;
+function Inflate: TIntegerArray; overload;
 function Inhabitants: TIntegerArray; overload;
 function Integered: TIntegerArray; overload;
 function Integers: TIntegerArray; overload;
@@ -1998,6 +1999,33 @@ begin
   begin
     SetLength(Result, (r + 1));
     Result[r] := (Result[r - 1] - d);
+  end;
+end;
+
+{==============================================================================]
+  <Inflate>
+  @action: Materializes the entire sequential span of the TRange into a flat,
+           concrete dynamic array of integers.
+  @note: Pre-allocates memory for the target array using Self.Size to prevent
+         re-allocations. It then utilizes internal tracking properties
+         (Incremental/Decremental) to safely iterate and fill the buffer
+         in the precise direction of the range.
+[==============================================================================}
+function TRange.Inflate: TIntegerArray; overload;
+var
+  s: TRange;
+  r: Integer;
+begin
+  s := Self;
+  r := 0;
+  SetLength(Result, Self.Size);
+  case Self.Ascending of
+    True:
+    while s.Incremental do
+      Result[r.Increase] := s.start.Increase;
+    False:
+    while s.Decremental do
+      Result[r.Increase] := s.start.Decrease;
   end;
 end;
 
