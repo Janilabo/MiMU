@@ -22,7 +22,9 @@ function Collect: TIntegerArray; overload;
 function Collection: TIntegerArray; overload;
 function Composition: TIntegerArray; overload;
 function Concretize: TIntegerArray; overload;
+function Concretized: TIntegerArray; overload;
 function Content: TIntegerArray; overload;
+function Contented: TIntegerArray; overload;
 function Contents: TIntegerArray; overload;
 function Contentum: TIntegerArray; overload;
 function Crossfill: TIntegerArray; overload;
@@ -38,6 +40,7 @@ function Digits(const dIndex: Integer): Integer; overload;
 function Digits(const dIDs: TIntegerArray): TIntegerArray; overload;
 function Disclose: TIntegerArray; overload;
 function Discrete: TIntegerArray; overload;
+function Disintegrate: TIntegerArray; overload;
 function Dismantle: TIntegerArray; overload;
 function Dismantled: TIntegerArray; overload;
 function Dissolve: TIntegerArray; overload;
@@ -830,6 +833,32 @@ begin
 end;
 
 {==============================================================================]
+  <Concretized>
+  @action: Flattens and materializes the abstract TRange into a concrete array 
+           of sequential integers.
+  @note: Leverages a zero-based standardized range template to seamlessly map 
+         the array allocation size and loop indices. This simplifies the 
+         internal loop logic to a single, linear pass, eliminating the risk 
+         of center-element boundary calculation bugs on odd-sized ranges.
+[==============================================================================}
+function TRange.Concretized: TIntegerArray; overload;
+var
+  s: TRange;
+  i: Integer;
+begin
+  s := Self.Standard;
+  SetLength(Result, (s.stop + 1));
+  case Self.Ascending of
+    True:
+    for i := s.start to s.stop do
+      Result[i] := (Self.start + i);
+    False:
+    for i := s.start to s.stop do
+      Result[i] := (Self.start - i);
+  end;
+end;
+
+{==============================================================================]
   <Content>
   @action: Returns digits of the given range.
   @note: None.
@@ -843,6 +872,27 @@ begin
   c := Self.start;
   for i := 0 to High(Result) do
     Result[i] := c.Increase(s);
+end;
+
+{==============================================================================]
+  <Contented>
+  @action: Flattens the TRange boundaries into a concrete array of sequential 
+           integers using a branchless directional offset.
+  @note: Leverages a zero-based standardized range template to pre-calculate 
+         the exact array allocation length. It uses a directional step multiplier 
+         (1 for Ascending, -1 for Descending) to calculate the values in a single, 
+         unified loop, discarding the need for multi-branch conditional logic.
+[==============================================================================}
+function TRange.Contented: TIntegerArray; overload;
+var
+  s: TRange;
+  i, d: Integer;
+begin
+  s := Self.Standard;
+  SetLength(Result, (s.stop + 1));
+  d := IfThen(Self.Ascending, 1, -1);
+  for i := s.start to s.stop do
+    Result[i] := (Self.start + (i * d));
 end;
 
 {==============================================================================]
@@ -1173,6 +1223,42 @@ begin
     Inc(x);
     Dec(y);
   end;
+end;
+
+{==============================================================================]
+  <Disintegrate>
+  @action: Materializes the abstract TRange bounds into a concrete array of 
+           individual sequential integers.
+  @note: Uses a dual-ended algorithm that populates the array from both 
+         extremes toward the center simultaneously, respecting the 
+         directional orientation (Ascending/Descending) of the range.
+         Assumes a strict step interval of 1 (or -1) relative to Size.
+[==============================================================================}
+function TRange.Disintegrate: TIntegerArray; overload;
+var
+  i, d, s: Integer;
+  a: Boolean;
+begin
+  s := Self.Size;
+  d := (s div 2);
+  SetLength(Result, s);
+  a := Self.Ascending;
+  case a of
+    True:
+    for i := 0 to (d - 1) do
+    begin
+      Result[i] := (Self.start + i);
+      Result[(s - 1) - i] := (Self.stop - i);
+    end;
+    False:
+    for i := 0 to (d - 1) do
+    begin
+      Result[i] := (Self.start - i);
+      Result[(s - 1) - i] := (Self.stop + i);
+    end;
+  end;
+  if ((d * 2) < s) then
+    Result[d] := IfThen(a, (Self.start + d), (Self.stop + d));
 end;
 
 {==============================================================================]

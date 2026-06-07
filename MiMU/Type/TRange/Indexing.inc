@@ -14,7 +14,9 @@ function IDs(const dVals: TIntegerArray): TIntegerArray; overload;
 function Indexed: TIntegerArray; overload;
 function Indexes: TIntegerArray; overload;
 function Indexing: TIntegerArray; overload;
+function Indexment: TIntegerArray; overload;
 function Indiced: TIntegerArray; overload;
+function Indicement: TIntegerArray; overload;
 function Indices: TIntegerArray; overload;
 function IndexList: TIntegerArray; overload;
 function Keys: TIntegerArray; overload;
@@ -374,6 +376,23 @@ begin
 end;
 
 {==============================================================================]
+  <Indexment>
+  @action: Generates a zero-based array of sequential indices corresponding strictly 
+           to the internal slot positions of the TRange.
+  @note: Bypasses the absolute start/stop range values to produce a relative 
+         index map. It utilizes an iterative decrementing state tracker (r) 
+         to populate each array slot with its own structural index value.
+[==============================================================================}
+function TRange.Indexment: TIntegerArray; overload;
+var
+  r: Integer;
+begin
+  r := Result.SetSize(Self.Size);
+  while (r.Decrease > 0) do
+    Result[r] := r;
+end;
+
+{==============================================================================]
   <Indiced>
   @action: Returns TRange indexes.
   @note: None.
@@ -383,6 +402,25 @@ begin
   SetLength(Result, 0);
   while (Result.Length < Self.Size) do
     Result.Supply(System.Length(Result));
+end;
+
+{==============================================================================]
+  <Indicement>
+  @action: Generates a zero-based array of sequential indices mapping the internal 
+           slot layout of the TRange using a post-test loop.
+  @note: Populates the array in reverse order starting from the maximum index 
+         (Size - 1) down to 0. It utilizes a fluent post-test decrementing 
+         tracker (R) that cleanly terminates the sequence the moment the 
+         counter passes below zero (-1).
+[==============================================================================}
+function TRange.Indicement: TIntegerArray; overload;
+var
+  R: Integer;
+begin
+  R := (Result.SetSize(Self.Size) - 1);
+  repeat
+    Result[R] := R;
+  until (R.Decrement = -1);
 end;
 
 {==============================================================================]

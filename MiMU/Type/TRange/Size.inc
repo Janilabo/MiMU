@@ -46,9 +46,11 @@ function Quantum: Integer; overload;
 function Quota: Integer; overload;
 function Reach: Integer; overload;
 function Scope: Integer; overload;
+function Siza: Integer; overload;
 function Size: Integer; overload;
 function Size(var lVal, hVal: Integer): Integer; overload;
 function Size(var vSize: Integer): Integer; overload;
+function Size64: Int64; overload;
 function Sizection(const dMultiplier: Integer): Integer; overload;
 function Sizection: Integer; overload;
 function Sized: Integer; overload;
@@ -770,6 +772,21 @@ begin
 end;
 
 {==============================================================================]
+  <Siza>
+  @action: Calculates the total count of discrete integer elements within the 
+           range boundaries as a signed 32-bit integer.
+  @note: Performs the internal delta subtraction using an Int64 cast to 
+         prevent 32-bit integer overflow. The final expression is explicitly 
+         cast back to a 32-bit Integer to suppress compiler truncation 
+         warnings (W1044). Note that ranges spanning the absolute maximum 
+         bounds of the 32-bit spectrum will overflow this return type to 0.
+[==============================================================================}
+function TRange.Siza: Integer; overload;
+begin
+  Result := Integer(Abs(Int64(Self.stop) - Self.start) + 1);
+end;
+
+{==============================================================================]
   <Size>
   @action: Returns size of the given range.
   @note: None.
@@ -806,6 +823,20 @@ function TRange.Size(var vSize: Integer): Integer; overload;
 begin
   vSize := Self.Size;
   Result := vSize;
+end;
+
+{==============================================================================]
+  <Size64>
+  @action: Calculates the total count of discrete integer elements within the 
+           range boundaries as a 64-bit integer.
+  @note: Uses an Int64 cast prior to subtraction to prevent 32-bit integer 
+         overflow. This allows the method to safely return the correct size 
+         even for extreme ranges that span the entire 32-bit integer spectrum 
+         (up to a maximum total size of 4,294,967,296 elements).
+[==============================================================================}
+function TRange.Size64: Int64; overload;
+begin
+  Result := (Abs(Int64(Self.stop) - Self.start) + 1);
 end;
 
 {==============================================================================]

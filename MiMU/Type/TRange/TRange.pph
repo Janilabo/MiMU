@@ -42,6 +42,7 @@
 {$I Size.inc}
 {$I Space.inc}
 {$I Spatial.inc}
+{$I Standardization.inc}
 {$I Status.inc}
 {$I Summing.inc}
 {$I Terminal.inc}
