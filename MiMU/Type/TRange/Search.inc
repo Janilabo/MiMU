@@ -1,30 +1,18 @@
 {$IFDEF METHODS}
-function Identifier(const val: Integer): Integer; overload;
 function Identify(const val: Integer): Integer; overload;
 function IndexBy(const val: Integer): Integer; overload;
 function IndexFor(const val: Integer): Integer; overload;
 function IndexFrom(const val: Integer): Integer; overload;
 function IndexOf(const val: Integer): Integer; overload;
 function Indexy(const val: Integer): Integer; overload;
+function Proj(const val: Integer): Integer; overload;
+function Project(const val: Integer): Integer; overload;
+function Projecta(const val: Integer): Integer; overload;
+function Projected(const val: Integer): Integer; overload;
+function Projectify(const val: Integer): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Identifier>
-  @action: Calculates the zero-based relative index of a specific value within 
-           the TRange using a single-line, branchless ordinal division formula.
-  @note: Uses a wrapped denominator subtraction to safely compute a direction 
-         vector (1 for Ascending, -1 for Descending). This vector divides the 
-         raw distance from the start boundary, cleanly neutralizing negative 
-         offsets for descending ranges without branching or absolute value calls.
-[==============================================================================}
-function TRange.Identifier(const val: Integer): Integer; overload;
-begin
-  if not Self.Contains(val) then
-    Exit(-1);
-  Result := ((val - Self.start) div (Ord(Self.Ascending) - Ord(not Self.Ascending)));
-end;
-
 {==============================================================================]
   <Identify>
   @action: Searches for a specific value within the TRange and returns its 
@@ -59,10 +47,7 @@ function TRange.IndexBy(const val: Integer): Integer; overload;
 begin
   if not Self.Contains(val) then
     Exit(-1);
-  case Self.Ascending of
-    True: Result := (val - Self.start);
-    False: Result := ((Self.Size - 1) - (val - Self.stop));
-  end;
+  Result := Self.Projecta(val);
 end;
 
 {==============================================================================]
@@ -78,22 +63,22 @@ function TRange.IndexFor(const val: Integer): Integer; overload;
 begin
   if not Self.Contains(val) then
     Exit(-1);
-  Result := Abs(val - Self.start);
+  Result := Self.Proj(val);
 end;
 
 {==============================================================================]
   <IndexFrom>
   @action: Returns the zero-based relative index of a specific value within
            the TRange using directional integer division.
-  @note:   Validates containment, then divides the raw value-delta by the
-           explicit directional step vector (1 or -1). This eliminates
-           absolute value calls while remaining safe for descending ranges.
+  @note: Validates containment, then divides the raw value-delta by the
+         explicit directional step vector (1 or -1). This eliminates
+         absolute value calls while remaining safe for descending ranges.
 [==============================================================================}
 function TRange.IndexFrom(const val: Integer): Integer; overload;
 begin
   if not Self.Contains(val) then
     Exit(-1);
-  Result := ((val - Self.start) div Ord(Self.Ascending) - Ord(not Self.Ascending));
+  Result := Self.Project(val);
 end;
 
 {==============================================================================]
@@ -108,6 +93,80 @@ function TRange.IndexOf(const val: Integer): Integer; overload;
 begin
   if not Self.Contains(val) then
     Exit(-1);
+  Result := Self.Projected(val);
+end;
+
+{==============================================================================]
+  <Indexy>
+  @action: Returns the zero-based relative index of a specific value within
+           the TRange using a math-derived sign multiplier.
+  @note: Converts the Ascending boolean into a 1 or -1 multiplier via
+         algebraic subtraction (True = 1, False = -1). Multiplying the raw
+         distance by this factor ensures a positive index without branching.
+[==============================================================================}
+function TRange.Indexy(const val: Integer): Integer; overload;
+begin
+  if not Self.Contains(val) then
+    Exit(-1);
+  Result := Self.Projectify(val);
+end;
+
+{==============================================================================]
+  <Proj>
+  @action: Projects an integer value onto the TRange coordinate space as an 
+           absolute, infinite distance offset from the starting boundary.
+  @note: Utilizes the Abs function to instantly resolve the distance vector 
+         from Self.start. This creates a branchless projection that treats 
+         offsets symmetrically on both sides of the origin, bypassing 
+         directional tracking logic entirely.
+[==============================================================================}
+function TRange.Proj(const val: Integer): Integer; overload;
+begin
+  Result := Abs(val - Self.start);
+end;
+
+{==============================================================================]
+  <Project>
+  @action: Projects a value onto the TRange linear coordinate space, returning
+           negative indices for undershoot and greater-than-size indices for overshoot.
+  @note: Removes boundary containment constraints entirely. Uses a branchless
+         direction vector divisor to project an infinite local coordinate system
+         running continuously through both sides of the range bounds.
+[==============================================================================}
+function TRange.Project(const val: Integer): Integer; overload;
+begin
+  Result := ((val - Self.start) div (Ord(Self.Ascending) - Ord(not Self.Ascending)));
+end;
+
+{==============================================================================]
+  <Projecta>
+  @action: Returns the zero-based relative index of a specific value within
+           the TRange by calculating its offset from the structural minimum boundary.
+  @note: Flattens directionality by resolving the true mathematical floor
+         of the range using an inline conditional. For descending ranges,
+         it mirrors the offset relative to the maximum size.
+[==============================================================================}
+function TRange.Projecta(const val: Integer): Integer; overload;
+begin
+  if not Self.Contains(val) then
+    Exit(-1);
+  case Self.Ascending of
+    True: Result := (val - Self.start);
+    False: Result := ((Self.Size - 1) - (val - Self.stop));
+  end;
+end;
+
+{==============================================================================]
+  <Projected>
+  @action: Projects an integer value onto the TRange coordinate space as an 
+           absolute, infinite distance offset from the starting boundary.
+  @note: Utilizes the Abs function to instantly resolve the distance vector 
+         from Self.start. This creates a branchless projection that treats 
+         offsets symmetrically on both sides of the origin, bypassing 
+         directional tracking logic entirely.
+[==============================================================================}
+function TRange.Projected(const val: Integer): Integer; overload;
+begin
   if Self.Ascending then
     Result := (val - Self.start)
   else
@@ -115,17 +174,16 @@ begin
 end;
 
 {==============================================================================]
-  <Indexy>
-  @action: Returns the zero-based relative index of a specific value within
-           the TRange using a math-derived sign multiplier.
-  @note:   Converts the Ascending boolean into a 1 or -1 multiplier via
-           algebraic subtraction (True = 1, False = -1). Multiplying the raw
-           distance by this factor ensures a positive index without branching.
+  <Projectify>
+  @action: Projects an integer value onto an infinite, directional index 
+           coordinate system relative to the TRange's orientation.
+  @note: Uses a branchless algebraic formula to calculate a 1 or -1 direction 
+         multiplier directly from the Ascending state. This scales the raw 
+         distance from the start boundary out into infinity, allowing for 
+         negative indices on undershoots and size-exceeding indices on overshoots.
 [==============================================================================}
-function TRange.Indexy(const val: Integer): Integer; overload;
+function TRange.Projectify(const val: Integer): Integer; overload;
 begin
-  if not Self.Contains(val) then
-    Exit(-1);
   Result := ((val - Self.start) * ((Ord(Self.Ascending) * 2) - 1));
 end;
 {$ENDIF}
