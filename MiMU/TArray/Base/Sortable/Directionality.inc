@@ -3,6 +3,8 @@ function Ascending: Boolean; overload;
 function Descending: Boolean; overload;
 function Decreasing: Boolean; overload;
 function Direction: Integer; overload;
+function Directionally: Integer; overload;
+function Directioned: Integer; overload;
 function Downward: Boolean; overload;
 function Falling: Boolean; overload;
 function Increasing: Boolean; overload;
@@ -84,6 +86,64 @@ begin
     Result := 1
   else
     Result := -1;
+end;
+
+{==============================================================================]
+  <Directionally>
+  @action: Determines if the array trends upward (1), downward (-1), or changes direction (0).
+  @note: Evaluates the array's monotonic trend in a single pass, exiting early if a direction conflict occurs.
+[==============================================================================}
+function MArrayHelper.Directionally: Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 1 to High(Self) do
+  case (Self[i] > Self[i - 1]) of
+    True:
+    begin
+      if (Result = -1) then
+        Exit(0);
+      Result := 1;
+    end;
+    False:
+    if (Self[i] < Self[i - 1]) then
+    begin
+      if (Result = 1) then
+        Exit(0);
+      Result := -1;
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <Directioned>
+  @action: Analyzes the array progression and returns an integer representing 
+           its overall sorted direction.
+  @return:  1 = Array is monotonically increasing (ascending / flat segments).
+           -1 = Array is monotonically decreasing (descending / flat segments).
+            0 = Array changes direction (mixed trend), is empty, or has 1 element.
+  @note: Uses two separate sequential loops with early `Break` optimization.
+         An array of identical elements (e.g., [5,5,5]) will exit early as 1.
+[==============================================================================}
+function MArrayHelper.Directioned: Integer; overload;
+var
+  h, i: Integer;
+begin
+  h := High(Self);
+  if (h < 1) then
+    Exit(0);
+  for i := 1 to h do
+    if (Self[i] < Self[i - 1]) then
+      Break
+    else if (i = h) then
+      Exit(1);
+  for i := 1 to h do
+    if (Self[i] > Self[i - 1]) then
+      Break
+    else if (i = h) then
+      Exit(-1);
+  Result := 0;
 end;
 
 {==============================================================================]

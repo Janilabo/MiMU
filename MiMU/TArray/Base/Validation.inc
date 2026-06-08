@@ -14,6 +14,7 @@ function IsConstant(const item: MType): Boolean; overload;
 function IsConstant: Boolean; overload;
 function IsDistinct: Boolean; overload;
 function Palindrome: Boolean; overload;
+function Stationary: Boolean; overload;
 function Symmetrical: Boolean; overload;
 function Uniform: Boolean; overload;
 function Uniform(const item: MType): Boolean; overload;
@@ -291,6 +292,23 @@ begin
 	  Exit(False)
 	else if (i.Decrement < l) then
 	  Break;
+  Result := True;
+end;
+
+{==============================================================================]
+  <Stationary>
+  @action: Returns True if all elements in the array are identical (zero variance).
+  @note: Returns True for empty arrays or single-element arrays by default.
+         Short-circuits and exits False immediately upon encountering the 
+         first mismatched adjacent element.
+[==============================================================================}
+function MArrayHelper.Stationary: Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 1 to High(Self) do
+    if (Self[i] <> Self[i - 1]) then
+      Exit(False);
   Result := True;
 end;
 

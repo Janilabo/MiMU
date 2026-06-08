@@ -26,6 +26,7 @@
 {$I Conversion.inc}
 {$I Counting.inc}
 {$I Deduplicate.inc}
+{$I Directionality.inc}
 {$I Extrema.inc}
 {$I Insertion.inc}
 {$I Merging.inc}

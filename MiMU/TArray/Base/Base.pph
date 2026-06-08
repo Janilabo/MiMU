@@ -41,6 +41,7 @@
 {$I Sortable/Scanning.inc}
 {$I Sortable/Search.inc}
 {$I Sortable/Sorted.inc}
+{$I Sortable/Trajectory.inc}
 {$I Sortable/Trend.inc}
 {$I Sortable/Validation.inc}
 
