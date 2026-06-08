@@ -8,11 +8,15 @@ function Falling: Boolean; overload;
 function Increasing: Boolean; overload;
 function IsAsc(const strictly: Boolean = False): Boolean; overload;
 function IsDesc(const strictly: Boolean = False): Boolean; overload;
+function IsStrictAscending: Boolean; overload;
+function IsStrictDescending: Boolean; overload;
 function Orientation: Integer; overload;
 function Rising: Boolean; overload;
 function StrictlyAscending: Boolean; overload;
+function StrictlyAscends: Boolean; overload;
 function StrictlyDecreasing: Boolean; overload;
 function StrictlyDescending: Boolean; overload;
+function StrictlyDescends: Boolean; overload;
 function StrictlyIncreasing: Boolean; overload;
 function Unidirectional: Boolean; overload;
 function Upward: Boolean; overload;
@@ -162,6 +166,46 @@ begin
 end;
 
 {==============================================================================]
+  <IsStrictAscending>
+  @action: Sequential check for strict ascending order with early exit.
+  @note: Highly optimized for CPU branch prediction and immediate failure exit.
+[==============================================================================}
+function MArrayHelper.IsStrictAscending: Boolean; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (l <= 1) then
+    Exit(l = 1);
+  if (Self[0] >= Self[1]) then
+    Exit(False);
+  for i := 1 to (l - 2) do
+    if (Self[i] >= Self[i + 1]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <IsStrictDescending>
+  @action: Sequential check for strict descending order with early exit.
+  @note: Highly optimized for CPU branch prediction and immediate failure exit.
+[==============================================================================}
+function MArrayHelper.IsStrictDescending: Boolean; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (l <= 1) then
+    Exit(l = 1);
+  if (Self[0] <= Self[1]) then
+    Exit(False);
+  for i := 1 to (l - 2) do
+    if (Self[i] <= Self[i + 1]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
   <Orientation>
   @action: Returns the direction which way array goes
   @note: -1 = DESCENDING, 0=NO ORDER OR MIXED ARRAY, 1=ASCENDING
@@ -227,6 +271,23 @@ begin
 end;
 
 {==============================================================================]
+  <StrictlyAscends>
+  @action: Checks if the array is strictly sorted in ascending order.
+  @note: Uses a two-pointer approach checking from both ends simultaneously.
+         Returns False if any adjacent elements are equal.
+[==============================================================================}
+function MArrayHelper.StrictlyAscends: Boolean; overload;
+var
+  r, l: Integer;
+begin
+  r := Self.Length;
+  l := -1;
+  Result := (r > 0);
+  while (Result and (l.Increment < r.Decrement)) do
+    Result := ((Self[l] < Self[l + 1]) and (Self[r - 1] < Self[r]));
+end;
+
+{==============================================================================]
   <StrictlyDecreasing>
   @action: Checks if the elements of the integer array are in a strictly decreasing order.
   @note: Uses a while loop with an increment helper. Returns False if any element is
@@ -257,6 +318,23 @@ begin
     if (Self[i - 1] <= Self[i]) then
       Exit(False);
   Result := (High(Self) > -1);
+end;
+
+{==============================================================================]
+  <StrictlyDescends>
+  @action: Checks if the array is strictly sorted in descending order.
+  @note: Uses a two-pointer approach checking from both ends simultaneously.
+         Returns False if any adjacent elements are equal.
+[==============================================================================}
+function MArrayHelper.StrictlyDescends: Boolean; overload;
+var
+  r, l: Integer;
+begin
+  r := Self.Length;
+  l := -1;
+  Result := (r > 0);
+  while (Result and (l.Increment < r.Decrement)) do
+    Result := ((Self[l] > Self[l + 1]) and (Self[r - 1] > Self[r]));
 end;
 
 {==============================================================================]
