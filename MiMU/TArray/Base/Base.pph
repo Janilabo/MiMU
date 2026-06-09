@@ -4,9 +4,11 @@
 {$I Composition.inc}
 {$I Construction.inc}
 {$I Counting.inc}
+{$I Equality.inc}
 {$I Frequency.inc}
 {$I Grouping.inc}
 {$I Indexing.inc}
+{$I Inequality.inc}
 {$I Membership.inc}
 {$I Merging.inc}
 {$I Miscellaneous.inc}
