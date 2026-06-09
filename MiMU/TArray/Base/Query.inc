@@ -1,10 +1,15 @@
 {$IFDEF HELPERS}
 function AllOf(const candidates: MArray): Boolean; overload;
+function Alike(const target: MArray): Boolean; overload;
 function AnyOf(const candidates: MArray): Boolean; overload;
+function Congruent(const target: MArray): Boolean; overload;
 function Differ(const target: MArray): Boolean; overload;
 function Empty: Boolean; overload;
 function Equal(const target: MArray): Boolean; overload;
+function Equivalent(const target: MArray): Boolean; overload;
 function Exists: Boolean; overload;
+function Identic(const target: MArray): Boolean; overload;
+function Identical(const target: MArray): Boolean; overload;
 function Includes(const item: MType; const index: Integer = 2147483647): Boolean; overload;
 function Multi(const threshold: Integer = 2): Boolean; overload;
 function Multi(const threshold: TRange): Boolean; overload;
@@ -14,10 +19,13 @@ function Oversize(const limit: Integer): Boolean; overload;
 function Plain: Boolean; overload;
 function Populated(const population: TRange): Boolean; overload;
 function Populated(const populationMin: Integer = 1; const populationMax: Integer = 2147483647): Boolean; overload;
+function Same(const target: MArray): Boolean; overload;
+function Selfsame(const target: MArray): Boolean; overload;
 function Singular: Boolean; overload;
 function SizeBetween(const sMin, sMax: Integer): Boolean; overload;
 function SizeMax(const target: Integer): Boolean; overload;
 function SizeMin(const target: Integer): Boolean; overload;
+function Twin(const target: MArray): Boolean; overload;
 function Undersize(const limit: Integer): Boolean; overload;
 function Void: Boolean; overload;
 {$ENDIF}
@@ -51,6 +59,24 @@ begin
 end;
 
 {==============================================================================]
+  <Alike>
+  @action: Compares the current MArray instance with another target MArray to 
+           determine if they contain the exact same elements in the same order.
+  @note: Validates the arrays in reverse order, starting from the highest index. 
+         If lengths mismatch, the loop is bypassed and returns False. A True 
+         result is achieved only if the loop successfully decrements past zero.
+[==============================================================================}
+function MArrayHelper.Alike(const target: MArray): Boolean; overload;
+var
+  h: Integer;
+begin
+  h := IfThen((Self.Length = target.Length), High(Self), Low(Integer));
+  while ((h > -1) and (Self[h] = target[h])) do
+    Dec(h);
+  Result := (h = -1);
+end; 
+
+{==============================================================================]
   <AnyOf>
   @action: Returns True if arr contains at least one item from candidates.
   @note: Always False if arr or candidates is empty.
@@ -73,6 +99,25 @@ begin
   finally
     d.Free;
   end;
+end;
+
+{==============================================================================]
+  <Congruent>
+  @action: Compares the current MArray instance with another target MArray to 
+           determine if they contain the exact same elements in the same order.
+  @note: Leverages a while loop that increments an index pointer as long as elements 
+         match. If lengths mismatch, the loop is bypassed and returns False. 
+         A True result is only yielded if the index successfully reaches the array length.
+[==============================================================================}
+function MArrayHelper.Congruent(const target: MArray): Boolean; overload;
+var
+  i, l: Integer;
+begin
+  l := IfThen((Self.Length = target.Length), Self.Length, -1);
+  i := 0;
+  while ((i < l) and (Self[i] = target[i])) do
+    Inc(i);
+  Result := (i = l);
 end;
 
 {==============================================================================]
@@ -118,6 +163,25 @@ begin
 end;
 
 {==============================================================================]
+  <Equivalent>
+  @action: Compares the current MArray instance with another target MArray to 
+           determine if they contain the exact same elements in the same order.
+  @note: Uses an IfThen initialization to pre-evaluate length alignment. If lengths 
+         do not match, the loop is skipped and it returns False. Otherwise, it 
+         performs a short-circuiting element check.
+[==============================================================================}
+function MArrayHelper.Equivalent(const target: MArray): Boolean; overload;
+var
+  i, l: Integer;
+begin
+  l := IfThen((Self.Length = target.Length), Self.Length, -1);
+  for i := 0 to (l - 1) do
+    if (Self[i] <> target[i]) then
+      Exit(False);
+  Result := (l > -1);
+end;
+
+{==============================================================================]
   <Exists>
   @action: Returns true if array length is not 0.
   @note: Alternative for arr.Populated.
@@ -125,6 +189,44 @@ end;
 function MArrayHelper.Exists: Boolean; overload;
 begin
   Result := (Self.Size > 0);
+end;
+
+{==============================================================================]
+  <Identic>
+  @action: Compares the current MArray instance with another target MArray to 
+           determine if they contain the exact same elements in the same order.
+  @note: Uses a while loop with short-circuit evaluation. The loop terminates 
+         immediately if a mismatch is found or if the array lengths differ.
+[==============================================================================}
+function MArrayHelper.Identic(const target: MArray): Boolean; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  Result := (l = target.Length);
+  i := -1;
+  while (Result and (i.Increment < l)) do
+    Result := (Self[i] = target[i]);
+end;
+
+{==============================================================================]
+  <Identical>
+  @action: Compares the current MArray instance with another target MArray to 
+           determine if they contain the exact same elements in the same order.
+  @note: Returns False immediately if the lengths differ or at the first 
+         mismatched element (short-circuit evaluation). Performance is O(n).
+[==============================================================================}
+function MArrayHelper.Identical(const target: MArray): Boolean; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (l <> target.Length) then
+    Exit(False);
+  for i := 0 to (l - 1) do
+    if (Self[i] <> target[i]) then
+      Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]
@@ -251,6 +353,48 @@ begin
 end;
 
 {==============================================================================]
+  <Same>
+  @action: Checks whether this array contains the exact same elements in the 
+           exact same order as the target array.
+  @note: Uses a two-pointer approach, comparing values from both ends inward 
+         simultaneously. Returns False immediately if lengths differ.
+[==============================================================================}
+function MArrayHelper.Same(const target: MArray): Boolean; overload;
+var
+  L, R: Integer;
+begin
+  R := Self.Length;
+  if (R <> target.Length) then
+    Exit(False);
+  L := -1;
+  while (L.Increment < R.Decrement) do
+    if ((Self[L] <> target[L]) or (Self[R] <> target[R])) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Selfsame>
+  @action: Checks whether this array contains the exact same elements in the 
+           exact same order as the target array.
+  @note: Uses a backward loop starting from the maximum index of both arrays. 
+         Relies on a try..except block to catch out-of-bounds mismatches.
+[==============================================================================}
+function MArrayHelper.Selfsame(const target: MArray): Boolean; overload;
+var
+  i: Integer;
+begin
+  try
+    for i := Max(High(Self), High(target)) downto 0 do
+      if (Self[i] <> target[i]) then
+        Exit(False);
+    Result := True;
+  except
+    Result := False;
+  end;
+end;
+
+{==============================================================================]
   <Singular>
   @action: Returns true if all array items are identical.
   @note: None.
@@ -268,7 +412,7 @@ end;
 {==============================================================================]
   <SizeBetween>
   @action: Returns true if size is at equal/greater than sMin and equal/lesser than sMax.
-  @note: 	
+  @note: None.
 [==============================================================================}
 function MArrayHelper.SizeBetween(const sMin, sMax: Integer): Boolean; overload;
 begin
@@ -278,7 +422,7 @@ end;
 {==============================================================================]
   <SizeMax>
   @action: Returns true if size is at equal/lesser than target.
-  @note: 	
+  @note: None.
 [==============================================================================}
 function MArrayHelper.SizeMax(const target: Integer): Boolean; overload;
 begin
@@ -288,11 +432,29 @@ end;
 {==============================================================================]
   <SizeMin>
   @action: Returns true if size is at equal/greater than target.
-  @note: 	
+  @note: None.	
 [==============================================================================}
 function MArrayHelper.SizeMin(const target: Integer): Boolean; overload;
 begin
   Result := (Self.Size >= target);
+end;
+
+{==============================================================================]
+  <Twin>
+  @action: Checks whether this array is an exact structural match (twin) of 
+           the target array by verifying lengths and element values.
+  @note: Uses a two-pointer inward scan. Short-circuits the loop condition 
+         automatically the moment an element mismatch drops Result to False.
+[==============================================================================}
+function MArrayHelper.Twin(const target: MArray): Boolean; overload;
+var
+  L, R: Integer;
+begin
+  R := Self.Length;
+  Result := (R = target.Length);
+  L := -1;
+  while (Result and (L.Increment < R.Decrement)) do
+    Result := ((Self[L] = target[L]) and (Self[R] = target[R]));
 end;
 
 {==============================================================================]
