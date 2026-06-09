@@ -17,9 +17,11 @@ function IsDistinct: Boolean; overload;
 function IsUniform: Boolean; overload;
 function Palindrome: Boolean; overload;
 function Palindromequal: Boolean; overload;
+function Palindromeque: Boolean; overload;
 function Palindromer: Boolean; overload;
 function Palindromic: Boolean; overload;
 function Palindromical: Boolean; overload;
+function Palindromy: Boolean; overload;
 function Stationary: Boolean; overload;
 function Symmetrical: Boolean; overload;
 function Uniform: Boolean; overload;
@@ -345,10 +347,21 @@ end;
 {==============================================================================]
   <Palindromequal>
   @action: Checks whether the elements in the array form a palindrome.
+  @note: Implements a declarative approach by comparing the array directly 
+         to its reversed copy. Highly readable, but incurs memory overhead.
+[==============================================================================}
+function MArrayHelper.Palindromequal: Boolean; overload;
+begin
+  Result := Self.Equal(Self.Reversed);
+end;
+
+{==============================================================================]
+  <Palindromeque>
+  @action: Checks whether the elements in the array form a palindrome.
   @note: Uses a single-index loop bounds-checked up to the exact midpoint.
          Compares mirrored elements using a negative-logic check (`not (=)`).
 [==============================================================================}
-function MArrayHelper.Palindromequal: Boolean; overload;
+function MArrayHelper.Palindromeque: Boolean; overload;
 var
   i, l: Integer;
 begin
@@ -361,13 +374,21 @@ end;
 
 {==============================================================================]
   <Palindromer>
-  @action: Checks whether the elements in the array form a palindrome.
-  @note: Implements a declarative approach by comparing the array directly 
-         to its reversed copy. Highly readable, but incurs memory overhead.
+  @action: Recursively checks if array is a palindrome by comparing ends.
+  @note: Elegant but uses stack space. Not suitable for very large arrays.
 [==============================================================================}
 function MArrayHelper.Palindromer: Boolean; overload;
+  function P(L, R: Integer): Boolean;
+  begin
+    if (L >= R) then
+      Result := True
+    else if (Self[L] <> Self[R]) then
+      Result := False
+    else
+      Result := P((L + 1), (R - 1));
+  end;
 begin
-  Result := Self.Equal(Self.Reversed);
+  Result := P(0, High(Self));
 end;
 
 {==============================================================================]
@@ -405,6 +426,31 @@ begin
       Exit(False);
   Result := True;
 end; 
+
+{==============================================================================]
+  <Palindromy>
+  @action: Checks whether the elements in the array form a palindrome.
+  @note: Splits the array by buffering the first half into a temporary 
+         structure, then validates it against the second half in reverse.
+[==============================================================================}
+function MArrayHelper.Palindromy: Boolean; overload;
+var
+  s: MArray;
+  l, i, p, m: Integer;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(True);
+  m := (l div 2);
+  SetLength(s, m);
+  for i := 0 to (m - 1) do
+    s[i] := Self[i];
+  p := (m - 1);
+  for i := (l - m) to (l - 1) do
+    if (s[p.Decrease] <> Self[i]) then
+      Exit(False);
+  Result := True;
+end;
 
 {==============================================================================]
   <Stationary>
