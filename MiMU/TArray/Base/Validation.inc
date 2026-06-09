@@ -10,10 +10,16 @@ function Fits(const target: TRange): Boolean; overload;
 function Heterogeneous: Boolean; overload;
 function Homogeneous(const item: MType): Boolean; overload;
 function Homogeneous: Boolean; overload;
+function Invariant: Boolean; overload;
 function IsConstant(const item: MType): Boolean; overload;
 function IsConstant: Boolean; overload;
 function IsDistinct: Boolean; overload;
+function IsUniform: Boolean; overload;
 function Palindrome: Boolean; overload;
+function Palindromequal: Boolean; overload;
+function Palindromer: Boolean; overload;
+function Palindromic: Boolean; overload;
+function Palindromical: Boolean; overload;
 function Stationary: Boolean; overload;
 function Symmetrical: Boolean; overload;
 function Uniform: Boolean; overload;
@@ -218,6 +224,27 @@ begin
 end;
 
 {==============================================================================]
+  <Invariant>
+  @action: Checks if all elements in the array are identical to the first element.
+  @return: True if all elements match, or if the array contains fewer than 2 elements.
+           False if any element deviates from the initial element.
+  @note: Uses a single-anchor cached variable (`s`) optimization. 
+         Vacuously true for empty arrays `[]`
+[==============================================================================}
+function MArrayHelper.Invariant: Boolean; overload;
+var
+  i: Integer;
+  s: MType;
+begin
+  if (High(Self) > 0) then
+    s := Self[0];
+  for i := 1 to High(Self) do
+    if (Self[i] <> s) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
   <IsConstant>
   @action: Returns true if arr consists of item ONLY.
   @note: Requires at least single item. Otherwise returns False. (With empty arrays)
@@ -267,6 +294,26 @@ begin
 end;
 
 {==============================================================================]
+  <IsUniform>
+  @action: Checks whether all elements in the array are identical.
+  @note: Uses a two-pointer approach, scanning inward from both ends 
+         simultaneously. Returns True for arrays with fewer than 2 elements.
+[==============================================================================}
+function MArrayHelper.IsUniform: Boolean; overload;
+var
+  L, R: Integer;
+begin
+  R := Self.Length;
+  if (R < 2) then
+    Exit(True);
+  L := -1;
+  while (L.Increment < R.Decrement) do
+    if ((Self[L] <> Self[R]) or (Self[L] <> Self[L + 1]) or (Self[R] <> Self[R - 1])) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
   <Palindrome>
   @action: Evaluates if the array is symmetrical by comparing elements from 
            the start and end simultaneously.
@@ -294,6 +341,70 @@ begin
 	  Break;
   Result := True;
 end;
+
+{==============================================================================]
+  <Palindromequal>
+  @action: Checks whether the elements in the array form a palindrome.
+  @note: Uses a single-index loop bounds-checked up to the exact midpoint.
+         Compares mirrored elements using a negative-logic check (`not (=)`).
+[==============================================================================}
+function MArrayHelper.Palindromequal: Boolean; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  for i := 0 to ((l div 2) - 1) do
+    if not (Self[i] = Self[(l - 1) - i]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Palindromer>
+  @action: Checks whether the elements in the array form a palindrome.
+  @note: Implements a declarative approach by comparing the array directly 
+         to its reversed copy. Highly readable, but incurs memory overhead.
+[==============================================================================}
+function MArrayHelper.Palindromer: Boolean; overload;
+begin
+  Result := Self.Equal(Self.Reversed);
+end;
+
+{==============================================================================]
+  <Palindromic>
+  @action: Checks whether the elements in the array form a palindrome.
+  @note: Uses a two-pointer approach, comparing outside elements inward. 
+         Returns True if the array reads the same forwards and backwards.
+[==============================================================================}
+function MArrayHelper.Palindromic: Boolean; overload;
+var
+  L, R: Integer;
+begin
+  R := Self.Length;
+  L := -1;
+  while (L.Increment < R.Decrement) do
+    if (Self[L] <> Self[R]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Palindromical>
+  @action: Checks whether the elements in the array form a palindrome.
+  @note: Uses an optimized single-index loop that scans from the outside 
+         inward, stopping exactly at the midpoint (Length div 2).
+[==============================================================================}
+function MArrayHelper.Palindromical: Boolean; overload;
+var
+  i, h, m: Integer;
+begin
+  m := (Self.Length - 1);
+  h := ((m + 1) div 2);
+  for i := 0 to (h - 1) do
+    if (Self[i] <> Self[m - i]) then
+      Exit(False);
+  Result := True;
+end; 
 
 {==============================================================================]
   <Stationary>
