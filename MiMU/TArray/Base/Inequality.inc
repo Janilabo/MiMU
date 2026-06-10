@@ -2,6 +2,7 @@
 function Differ(const target: MArray): Boolean; overload;
 function Different(const target: MArray): Boolean; overload;
 function Discordant(const target: MArray): Boolean; overload;
+function Dissimilar(const target: MArray; const stride: Integer = 10): Boolean; overload;
 function NonIdentic(const target: MArray): Boolean; overload;
 function NonIdentical(const target: MArray): Boolean; overload;
 function Nontwin(const target: MArray): Boolean; overload;
@@ -67,6 +68,35 @@ begin
   while ((i < l) and (Self[i] = target[i])) do
     Inc(i);
   Result := (i < l);
+end;
+
+{==============================================================================]
+  <Dissimilar>
+  @action: Compares the current array with a target array using a strided, multi-pass approach.
+  @note: Returns True if the lengths differ. Otherwise, it first checks elements 
+         spaced apart by a calculated stride 's'. If no mismatch is found, it 
+         fills in the gaps by checking the remaining elements in subsequent passes.
+[==============================================================================}
+function MArrayHelper.Dissimilar(const target: MArray; const stride: Integer = 10): Boolean; overload;
+var
+  i, s, p, l: Integer;
+begin
+  l := Self.Length;
+  if (l <> target.Length) then
+    Exit(True);
+  s := Max(1, (l div Max(1, stride)));
+  i := -s;
+  while (i.Increment(s) < l) do
+    if (Self[i] <> target[i]) then
+      Exit(True);
+  for p := 1 to (s - 1) do
+  begin
+    i := (p - s);
+    while (i.Increment(s) < l) do
+      if Self[i] <> target[i] then
+        Exit(True);
+  end;
+  Result := False;
 end;
 
 {==============================================================================]

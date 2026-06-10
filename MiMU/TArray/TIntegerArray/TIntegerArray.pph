@@ -27,7 +27,9 @@
 {$I Counting.inc}
 {$I Deduplicate.inc}
 {$I Directionality.inc}
+{$I Equality.inc}
 {$I Extrema.inc}
+{$I Inequality.inc}
 {$I Insertion.inc}
 {$I Merging.inc}
 {$I Monotone.inc}
