@@ -1,7 +1,10 @@
 {$IFDEF HELPERS}
+function Clonage: MArray; overload;
 function Clone(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Clone(const ID: TIntegerArray): MArray; overload;
 function Cloned: MArray; overload;
+function Clonement: MArray; overload;
+function Clonify: MArray; overload;
 function Copied: MArray; overload;
 function Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Doublet(const fromIndex: Integer = 0; const toIndex: Integer = 2147483647): MArray; overload;
@@ -33,6 +36,39 @@ function Taily: MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Clonage>
+  @action: Creates and returns a deep or optimized copy of the current multidimensional or custom array.
+  @note: Uses direct small-size optimization for lengths 0 to 3, and a 4-pointer inward-converging 
+         loop (C4 procedure) for larger arrays to maximize cache locality and performance.
+[==============================================================================}
+function MArrayHelper.Clonage: MArray; overload;
+  procedure C4(const l, f, b, r: Integer);
+  begin
+    Result[l] := Self[l];
+    Result[f] := Self[f];
+    Result[b] := Self[b];
+    Result[r] := Self[r];
+  end;
+var
+  s, l, r, b, f, i: Integer;
+begin
+  s := Self.Length;
+  case s of
+    0: Exit([]);
+    1: Exit([Self[0]]);
+    2: Exit([Self[0], Self[1]]);
+    3: Exit([Self[0], Self[1], Self[2]]);
+  end;
+  SetLength(Result, s);
+  l := 0;
+  r := (s - 1);
+  b := (r div 2);
+  f := Ceil(r / 2);
+  for i := 1 to (s div 2) do
+    C4(l.Increase, f.Increase, b.Decrease, r.Decrease);
+end;
+
 {==============================================================================]
   <Clone>
   @action: Returns copy of an array arr.
@@ -98,6 +134,76 @@ begin
     Result[r.start] := Self[r.start];
     if (r.start <> r.stop) then
       Result[r.stop] := Self[r.stop];
+  end;
+end;
+
+{==============================================================================]
+  <Clonement>
+  @action: Creates and returns a copy of the current MArray using an inline 
+           4-pointer indexing strategy.
+  @note: Uses direct small-size optimization for lengths 0 to 3. For larger arrays, 
+         it mirrors elements inward from the edges (l, r) and outward from the 
+         center (b, f) simultaneously, using Inc2/Dec2 to update boundaries.
+[==============================================================================}
+function MArrayHelper.Clonement: MArray; overload;
+var
+  d: Double;
+  s, b, f, l, r, i, c: Integer;
+begin
+  s := Self.Length;
+  case s of
+    0: Exit([]);
+    1: Exit([Self[0]]);
+    2: Exit([Self[0], Self[1]]);
+    3: Exit([Self[0], Self[1], Self[2]]);
+  end;
+  SetLength(Result, s);
+  r := (s - 1);
+  d := (r / 2);
+  b := Floor(d);
+  l := 0;
+  f := Ceil(d);
+  c := b;
+  for i := 1 to c do
+  begin
+    Result[l] := Self[l];
+    Result[b] := Self[b];
+    Result[f] := Self[f];
+    Result[r] := Self[r];
+	Inc2(l, f);
+	Dec2(b, r);
+  end;
+end;
+
+{==============================================================================]
+  <Clonify>
+  @action: Creates and returns a copy of the current MArray using a parallelized 
+           or quadrant-segmented indexing strategy.
+  @note: Divides the array into four conceptual segments based on the midpoints 
+         (l, m, r) and copies elements into the result array across multiple offset 
+         positions simultaneously within a single loop structure.
+[==============================================================================}
+function MArrayHelper.Clonify: MArray; overload;
+var
+  i, s, m, l, r: Integer;
+begin
+  s := Self.Length;
+  SetLength(Result, s);
+  if (s = 0) then
+    Exit;
+  m := (s div 2);
+  l := (m div 2);
+  r := (m + (s - m) div 2);
+  for i := 0 to (s - 1) do
+  begin
+    if (i < l) then
+      Result[i] := Self[i];
+    if ((i + l) < m) then
+      Result[i + l] := Self[i + l];
+    if ((i + m) < r) then
+      Result[i + m] := Self[i + m];
+    if ((i + r) < s) then
+      Result[i + r] := Self[i + r];
   end;
 end;
 

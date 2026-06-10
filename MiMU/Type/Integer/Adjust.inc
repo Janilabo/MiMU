@@ -43,12 +43,18 @@ function X4(const N: Integer = 1): Integer; overload;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
+function Dec2(var A, B: Integer; const N: Integer = 1): Int64; overload;
+function Dec3(var A, B, C: Integer; const N: Integer = 1): Int64; overload;
+function Dec4(var A, B, C, D: Integer; const N: Integer = 1): Int64; overload;
 function DecGet(var val: Integer; const N: Integer = 1): Integer; overload;
 function DecGet(var val: Integer; const B: Boolean; const N: Integer = 1): Integer; overload;
 function GetDec(var val: Integer; const N: Integer = 1): Integer; overload;
 function GetDec(var val: Integer; const B: Boolean; const N: Integer = 1): Integer; overload;
 function GetInc(var val: Integer; const N: Integer = 1): Integer; overload;
 function GetInc(var val: Integer; const B: Boolean; const N: Integer = 1): Integer; overload;
+function Inc2(var A, B: Integer; const N: Integer = 1): Int64; overload;
+function Inc3(var A, B, C: Integer; const N: Integer = 1): Int64; overload;
+function Inc4(var A, B, C, D: Integer; const N: Integer = 1): Int64; overload;
 function IncGet(var val: Integer; const N: Integer = 1): Integer; overload;
 function IncGet(var val: Integer; const B: Boolean; const N: Integer = 1): Integer; overload;
 function X(var val: Integer; const N: Integer = 1): Integer; overload;
@@ -607,6 +613,48 @@ begin
 end;
 
 {==============================================================================]
+  <Dec2>
+  @action: Decrements two variables by a specified value and returns their sum.
+  @note: Operates directly on the passed variables (var). Defaults to subtracting 1.
+         Returns the sum as Int64 to prevent overflow.
+[==============================================================================}
+function Dec2(var A, B: Integer; const N: Integer = 1): Int64; overload;
+begin
+  Dec(A, N);
+  Dec(B, N);
+  Result := (Int64(A) + Int64(B));
+end;
+
+{==============================================================================]
+  <Dec3>
+  @action: Decrements three variables by a specified value and returns their sum.
+  @note: Operates directly on the passed variables (var). Defaults to subtracting 1.
+         Returns the sum as Int64 to prevent overflow.
+[==============================================================================}
+function Dec3(var A, B, C: Integer; const N: Integer = 1): Int64; overload;
+begin
+  Dec(A, N);
+  Dec(B, N);
+  Dec(C, N);
+  Result := (Int64(A) + Int64(B) + Int64(C));
+end;
+
+{==============================================================================]
+  <Dec4>
+  @action: Decrements four variables by a specified value and returns their sum.
+  @note: Operates directly on the passed variables (var). Defaults to subtracting 1.
+         Returns the sum as Int64 to prevent overflow.
+[==============================================================================}
+function Dec4(var A, B, C, D: Integer; const N: Integer = 1): Int64; overload;
+begin
+  Dec(A, N);
+  Dec(B, N);
+  Dec(C, N);
+  Dec(D, N);
+  Result := (Int64(A) + Int64(B) + Int64(C) + Int64(D));
+end;
+
+{==============================================================================]
   <DecGet>
   @action: Decrements val by N.
   @note: Returns the updated value after subtraction (prefix decrement semantics).
@@ -676,6 +724,48 @@ begin
   Result := val;
   if B then
     val := (val + N);
+end;
+
+{==============================================================================]
+  <Inc2>
+  @action: Increments two variables by a specified value and returns their sum.
+  @note: Operates directly on the passed variables (var). Defaults to adding 1.
+         Returns the sum as Int64 to prevent overflow.
+[==============================================================================}
+function Inc2(var A, B: Integer; const N: Integer = 1): Int64; overload;
+begin
+  Inc(A, N);
+  Inc(B, N);
+  Result := (Int64(A) + Int64(B));
+end;
+
+{==============================================================================]
+  <Inc3>
+  @action: Increments three variables by a specified value and returns their sum.
+  @note: Operates directly on the passed variables (var). Defaults to adding 1.
+         Returns the sum as Int64 to prevent overflow.
+[==============================================================================}
+function Inc3(var A, B, C: Integer; const N: Integer = 1): Int64; overload;
+begin
+  Inc(A, N);
+  Inc(B, N);
+  Inc(C, N);
+  Result := (Int64(A) + Int64(B) + Int64(C));
+end;
+
+{==============================================================================]
+  <Inc4>
+  @action: Increments four variables by a specified value and returns their sum.
+  @note: Operates directly on the passed variables (var). Defaults to adding 1.
+         Returns the sum as Int64 to prevent overflow.
+[==============================================================================}
+function Inc4(var A, B, C, D: Integer; const N: Integer = 1): Int64; overload;
+begin
+  Inc(A, N);
+  Inc(B, N);
+  Inc(C, N);
+  Inc(D, N);
+  Result := (Int64(A) + Int64(B) + Int64(C) + Int64(D));
 end;
 
 {==============================================================================]

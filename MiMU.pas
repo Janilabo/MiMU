@@ -55,6 +55,8 @@ type
 
 {$I MiMU/MiMU.inc}
 
+generic function IncEx<T>(var values: array of T; const N: T = 1): Integer; overload;
+generic function DecEx<T>(var values: array of T; const N: T = 1): Integer; overload;
 generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Sort<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Swappify<T>(var current: T; var target: T): T; overload;
@@ -86,6 +88,36 @@ implementation
 function MiMU_Version: Double;
 begin
   Result := MiMU_VERSION_NUMBER;
+end;
+
+{==============================================================================]
+  <IncEx>
+  @action: Increments every element in an open array by a specified value.
+  @note: Operates directly on the passed array (var). Defaults to adding 1.
+         Returns the total number of elements that were increased.
+[==============================================================================}
+generic function IncEx<T>(var values: array of T; const N: T = 1): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Length(values);
+  for i := Low(values) to High(values) do
+    values[i] := (values[i] + N);
+end;
+
+{==============================================================================]
+  <DecEx>
+  @action: Decrements every element in an open array by a specified value.
+  @note: Operates directly on the passed array (var). Defaults to subtracting 1.
+         Returns the total number of elements that were decreased.
+[==============================================================================}
+generic function DecEx<T>(var values: array of T; const N: T = 1): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Length(values);
+  for i := Low(values) to High(values) do
+    values[i] := (values[i] - N);
 end;
 
 {==============================================================================]
