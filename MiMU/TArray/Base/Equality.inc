@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function Alike(const target: MArray): Boolean; overload;
+function Analogous(const target: MArray): Boolean; overload;
 function Congruent(const target: MArray): Boolean; overload;
 function Equal(const target: MArray): Boolean; overload;
 function Equivalent(const target: MArray): Boolean; overload;
@@ -27,7 +28,34 @@ begin
   while ((h > -1) and (Self[h] = target[h])) do
     Dec(h);
   Result := (h = -1);
-end; 
+end;
+
+{==============================================================================]
+  <Analogous>
+  @action: Compares the current array with a target array to determine if they 
+           are identical in both length and element values.
+  @note: Uses a loop unrolling optimization technique (processing blocks of 4 
+         elements) to improve comparison performance for larger arrays.
+[==============================================================================}
+function MArrayHelper.Analogous(const target: MArray): Boolean; overload;
+var
+  l, i, j, b: Integer;
+begin
+  l := Self.Length;
+  if (l <> target.Length) then
+    Exit(False);
+  b := (l div 4);
+  for i := 0 to (b - 1) do
+  begin
+    j := (i * 4);
+    if ((Self[j] <> target[j]) or (Self[j + 1] <> target[j + 1]) or (Self[j + 2] <> target[j + 2]) or (Self[j + 3] <> target[j + 3])) then
+      Exit(False);
+  end;
+  for i := (b * 4) to (l - 1) do
+    if (Self[i] <> target[i]) then
+      Exit(False);
+  Result := True;
+end;
 
 {==============================================================================]
   <Congruent>

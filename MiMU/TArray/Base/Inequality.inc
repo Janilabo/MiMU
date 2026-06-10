@@ -3,6 +3,7 @@ function Differ(const target: MArray): Boolean; overload;
 function Different(const target: MArray): Boolean; overload;
 function Discordant(const target: MArray): Boolean; overload;
 function Dissimilar(const target: MArray; const stride: Integer = 10): Boolean; overload;
+function Nonanalogous(const target: MArray): Boolean; overload;
 function NonIdentic(const target: MArray): Boolean; overload;
 function NonIdentical(const target: MArray): Boolean; overload;
 function Nontwin(const target: MArray): Boolean; overload;
@@ -96,6 +97,34 @@ begin
       if Self[i] <> target[i] then
         Exit(True);
   end;
+  Result := False;
+end;
+
+{==============================================================================]
+  <Nonanalogous>
+  @action: Compares the current array with a target array to determine if they
+           are different in length or contain any mismatched element values.
+  @note: Uses a loop unrolling optimization (processing elements in strides of 4) 
+         to quickly detect inequalities in large arrays and exits early on the 
+         first discrepancy found.
+[==============================================================================}
+function MArrayHelper.Nonanalogous(const target: MArray): Boolean; overload;
+var
+  l, j, i, b: Integer;
+begin
+  l := Self.Length;
+  if (l <> target.Length) then
+    Exit(True);
+  b := (l div 4);
+  for i := 0 to (b - 1) do
+  begin
+    j := (i * 4);
+    if ((Self[j] <> target[j]) or (Self[j + 1] <> target[j + 1]) or  (Self[j + 2] <> target[j + 2]) or (Self[j + 3] <> target[j + 3])) then
+      Exit(True);
+  end;
+  for i := (b * 4) to (l - 1) do
+    if (Self[i] <> target[i]) then
+      Exit(True);
   Result := False;
 end;
 
