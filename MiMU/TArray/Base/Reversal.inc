@@ -2,6 +2,7 @@
 function Antipodean: MArray; overload;
 function Backwards: MArray; overload;
 function Desrever: MArray; overload;
+function Destack: MArray; overload;
 function Esrever: Boolean; overload;
 function Flip: Boolean; overload;
 function Obverse: MArray; overload;
@@ -9,6 +10,7 @@ function Obversed: MArray; overload;
 function Oppose: Boolean; overload;
 function Opposite: MArray; overload;
 function Reflex(const rIndex: Integer): MType; overload;
+function Regress: MArray; overload;
 function Reversal: MArray; overload;
 function Reverse: Boolean; overload;
 function Reversed: MArray; overload;
@@ -74,6 +76,31 @@ begin
   r := Result.SetSize(Self.Length);
   for i := 0 to High(Self) do
     Result[r.Decrement] := Self[i];
+end;
+
+{==============================================================================]
+  <Destack>
+  @action: Returns a new array containing the elements of the original array
+           in reverse order using a stack-based strategy.
+  @note: Pushes all elements onto a generic stack, then pops them sequentially
+         into the result array. The LIFO nature of the stack naturally produces
+         the reversed order without any index arithmetic.
+[==============================================================================}
+function MArrayHelper.Destack: MArray; overload;
+var
+  s: specialize TStack<MType>;
+  i, l: Integer;
+begin
+  l := Result.SetSize(Self.Length);
+  s := specialize TStack<MType>.Create;
+  try
+    for i := 0 to (l - 1) do
+      s.Push(Self[i]);
+    for i := 0 to (l - 1) do
+      Result[i] := s.Pop;
+  finally
+    s.Free;
+  end;
 end;
 
 {==============================================================================]
@@ -212,6 +239,29 @@ end;
 function MArrayHelper.Reflex(const rIndex: Integer): MType; overload;
 begin
   Result := Self[High(Self) - rIndex];
+end;
+
+{==============================================================================]
+  <Regress>
+  @action: Returns a new array with the elements of the original array in 
+           completely reversed order.
+  @note: Performs the reversal by interleaving elements in two forward passes. 
+         The first pass fills even-indexed positions by reading backward from 
+         the end of the source. The second pass fills odd-indexed positions 
+         continuing the backward read, seamlessly weaving the full reversed array.
+[==============================================================================}
+function MArrayHelper.Regress: MArray; overload;
+var
+  i, l, j, s: Integer;
+begin
+  l := Result.SetSize(Self.Length);
+  s := (l - 1);
+  for j := -2 to -1 do
+  begin
+    i := j;
+    while (i.Increment(2) < l) do
+      Result[i] := Self[s - i];
+  end;
 end;
 
 {==============================================================================]
@@ -414,7 +464,7 @@ function MArrayHelper.Revert: MArray; overload;
 var
   h, i: Integer;
 begin
-  h := (Result.SetSize(Result, Self.Length) - 1);
+  h := (Result.SetSize(Self.Length) - 1);
   for i := 0 to h do
     Result[i] := Self[h - i];
 end;
