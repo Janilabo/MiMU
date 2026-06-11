@@ -1,10 +1,15 @@
 {$IFDEF HELPERS}
+function Desize(out excess: MArray; const aSize: Integer = 0): Integer; overload;
+function Desize(const aSize: Integer = 0): Integer; overload;
 function Fit: Integer; overload;
 function Fit(const aSize: Integer): Integer; overload;
 function Fit(const aBounds: TRange): Integer; overload;
 function Length: Integer; overload;
+function Relength(const aSize: Integer = 0): Integer; overload;
+function Relength(out backup: MArray; const aSize: Integer = 0): Integer; overload;
 function Resize(const aChange: Integer): Integer; overload;
 function Resize(const aChange: Integer; const null: MType): Integer; overload;
+function SetLen(const aSize: Integer = 1): Integer; overload;
 function SetSize(const sSize: Integer = 1): Integer; overload;
 function SetSize(const sSize: Integer; const iCreated: MType): Integer; overload;
 function Size: Integer; overload;
@@ -13,6 +18,43 @@ function Size(const aSize: Integer; const null: MType): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Desize>
+  @action: Resizes the dynamic array to the specified target size. If the array 
+           shrinks, the truncated elements are captured in the 'excess' array.
+           Returns the net change in length (negative for shrinkage, positive for growth).
+  @note: By default, if aSize is omitted, it defaults to 0 (clearing the array). 
+         If the array grows or stays the same size, the 'excess' array is not 
+         populated.
+[==============================================================================}
+function MArrayHelper.Desize(out excess: MArray; const aSize: Integer = 0): Integer; overload;
+var
+  s, l: Integer;
+begin
+  s := Max(0, aSize);
+  l := Self.Length;
+  Result := (s - l);
+  if (l > s) then
+    excess := Self.Copy(s, -Result);
+  SetLength(Self, s);
+end;
+
+{==============================================================================]
+  <Desize>
+  @action: Resizes the dynamic array to the specified target size and returns 
+           the net change in length (negative for shrinkage, positive for growth).
+  @note: By default, if aSize is omitted, it defaults to 0 (clearing the array).
+         This overload quickly resizes the array without preserving discarded data.
+[==============================================================================}
+function MArrayHelper.Desize(const aSize: Integer = 0): Integer; overload;
+var
+  s: Integer;
+begin
+  s := Max(0, aSize);
+  Result := (s - Self.Length);
+  SetLength(Self, s);
+end;
+
 {==============================================================================]
   <Fit>
   @action: Returns array length.
@@ -73,6 +115,36 @@ begin
 end;
 
 {==============================================================================]
+  <Relength>
+  @action: Resizes the dynamic array to the specified size and returns the 
+           difference (delta) between the new length and the original length.
+  @note: A positive return value indicates the array grew, while a negative 
+         value indicates it shrank. Negative input for aSize is safely 
+         clamped to 0. Defaults to 0 if no size is provided.
+[==============================================================================}
+function MArrayHelper.Relength(const aSize: Integer = 0): Integer; overload;
+begin
+  Result := Self.Length;
+  SetLength(Self, Max(0, aSize));
+  Result := (Self.Length - Result);
+end;
+
+{==============================================================================]
+  <Relength>
+  @action: Creates a complete copy of the current array into the 'backup' 
+           parameter, then resizes the array to the specified size. Returns 
+           the difference (delta) between the new and original lengths.
+  @note: By default, if aSize is omitted, it defaults to 0 (clearing the array).
+         The 'backup' parameter will hold the exact state of the entire array 
+         prior to the resize operation.
+[==============================================================================}
+function MArrayHelper.Relength(out backup: MArray; const aSize: Integer = 0): Integer; overload;
+begin
+  backup := Self.Clone;
+  Result := Self.Relength(aSize);
+end;
+
+{==============================================================================]
   <Resize>
   @action: Updates's arr length with aChange.
   @note: aChange > 0 => Result will give how many elements were added
@@ -105,6 +177,22 @@ begin
   Result := (Self.Size - l);
   for i := 0 to (Result - 1) do
     Self[l + i] := null;
+end;
+
+{==============================================================================]
+  <SetLen>
+  @action: Changes the length of the dynamic array. Returns the original length
+           of the array before the resizing operation.
+  @note: If aSize is a negative number, the array will be cleared (set to 0).
+         The parameter defaults to 1 if omitted.
+[==============================================================================}
+function MArrayHelper.SetLen(const aSize: Integer = 1): Integer; overload;
+begin
+  Result := Self.Length;
+  if (aSize > -1) then
+    SetLength(Self, aSize)
+  else
+    SetLength(Self, 0);
 end;
 
 {==============================================================================]
