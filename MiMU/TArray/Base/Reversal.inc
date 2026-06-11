@@ -4,12 +4,14 @@ function Backwards: MArray; overload;
 function Desrever: MArray; overload;
 function Esrever: Boolean; overload;
 function Flip: Boolean; overload;
+function Obverse: MArray; overload;
 function Oppose: Boolean; overload;
 function Opposite: MArray; overload;
 function Reflex(const rIndex: Integer): MType; overload;
 function Reversal: MArray; overload;
 function Reverse: Boolean; overload;
 function Reversed: MArray; overload;
+function ReverseEx: MArray; overload;
 function Reversement: Boolean; overload;
 function Reversified: MArray; overload;
 function Reversify: Boolean; overload;
@@ -107,6 +109,24 @@ begin
   Result := (r.stop > 0);
   while (r.start < r.stop) do
     Exchange(r.start.Increase, r.stop.Decrease);
+end;
+
+{==============================================================================]
+  <Obverse>
+  @action: Returns a new array containing the elements of the original array
+           in reverse order using a symmetric midpoint subtraction technique.
+  @note: Allocates the target array and determines its maximum index boundary (h).
+         Iterates forward through the source elements, mapping each input item
+         directly to its corresponding mirrored offset position (h - i) in the
+         destination array.
+[==============================================================================}
+function MArrayHelper.Obverse: MArray; overload;
+var
+  i, h: Integer;
+begin
+  h := (Result.SetSize(Self.Length) - 1);
+  for i := 0 to h do
+    Result[h - i] := Self[i];
 end;
 
 {==============================================================================]
@@ -220,6 +240,49 @@ begin
   for i := 0 to (l - 1) do
     Result[i] := Self[(l - i) - 1];
 end;
+
+{==============================================================================]
+  <ReverseEx>
+  @action: Returns a new array containing the elements of the original array
+           in reverse order, utilizing optimized hardcoded branches for small
+           array sizes.
+  @note: Allocates the target array and evaluates its length. For lengths 0 to
+         4, it completely bypasses loop overhead by hardcoding the direct
+         index-to-index reverse assignments. For larger arrays, it falls back
+         to a forward for-loop that populates the destination array backward
+         via a custom integer helper (l.Decrement).
+[==============================================================================}
+function MArrayHelper.ReverseEx: MArray; overload;
+var
+  l, i: Integer;
+begin
+  l := Result.SetSize(Self.Length);
+  case l of
+    0: Exit;
+    1: Result[0] := Self[0];
+    2:
+    begin
+      Result[0] := Self[1];
+      Result[1] := Self[0];
+    end;
+    3:
+    begin
+      Result[0] := Self[2];
+      Result[1] := Self[1];
+      Result[2] := Self[0];
+    end;
+    4:
+    begin
+      Result[0] := Self[3];
+      Result[1] := Self[2];
+      Result[2] := Self[1];
+      Result[3] := Self[0];
+    end;
+  else
+    for i := 0 to High(Result) do
+      Result[l.Decrement] := Self[i];
+  end;
+end; 
 
 {==============================================================================]
   <Reversement>
