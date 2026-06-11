@@ -1,5 +1,7 @@
 {$IFDEF HELPERS}
+function Antipodean: MArray; overload;
 function Backwards: MArray; overload;
+function Desrever: MArray; overload;
 function Esrever: Boolean; overload;
 function Flip: Boolean; overload;
 function Oppose: Boolean; overload;
@@ -14,9 +16,29 @@ function Reversify: Boolean; overload;
 function Reversion: MArray; overload;
 function Revert: MArray; overload;
 function Reverted: MArray; overload;
+function RReverse: MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Antipodean>
+  @action: Returns a new array containing the elements of the original array 
+           in reverse order.
+  @note: Scans the source array backward from its highest index down to 0 using 
+         a downto for-loop. It populates the destination array sequentially 
+         from the beginning by utilizing a custom integer helper (r.Increase) 
+         to step forward.
+[==============================================================================}
+function MArrayHelper.Antipodean: MArray; overload;
+var
+  i, r: Integer;
+begin
+  r := 0;
+  SetLength(Result, Self.Length);
+  for i := High(Self) downto 0 do
+    Result[r.Increase] := Self[i];
+end;
+
 {==============================================================================]
   <Backwards>
   @action: Returns arr as reversed.
@@ -31,6 +53,24 @@ begin
   i := 0;
   while (l > 0) do
     Result[i.Increase] := Self[l.Decrement];
+end;
+
+{==============================================================================]
+  <Desrever>
+  @action: Returns a new array containing the elements of the original array 
+           in reverse order.
+  @note: Allocates the target array size and uses a single forward for-loop 
+         to scan the source array from index 0 upward. It populates the 
+         destination array in reverse by utilizing a custom integer helper 
+         (r.Decrement) to step backward from the end of the destination array.
+[==============================================================================}
+function MArrayHelper.Desrever: MArray; overload;
+var
+  i, r: Integer;
+begin
+  r := Result.SetSize(Self.Length);
+  for i := 0 to High(Self) do
+    Result[r.Decrement] := Self[i];
 end;
 
 {==============================================================================]
@@ -312,5 +352,27 @@ begin
     Result[L] := Self[R];
     Result[R] := Self[L];
   end;
+end;
+
+{==============================================================================]
+  <RReverse>
+  @action: Returns a new array containing the elements of the original array 
+           in reverse order using a recursive strategy.
+  @note: Creates a duplicate of the original array via Self.Clone, then passes 
+         it into a nested recursive function (R). The recursion walks inward 
+         from both bounds (A and B), swapping elements at each step, and terminates 
+         when the boundaries meet or cross.
+[==============================================================================}
+function MArrayHelper.RReverse: MArray; overload;
+  function R(const C: MArray; const A, B: Integer): MArray;
+  begin
+    if (A >= B) then
+      Exit(C);
+    Result := C;
+    Swap(Result[A], Result[B]);
+    Result := R(Result, (A + 1), (B - 1));
+  end;
+begin
+  Result := R(Self.Clone, 0, High(Self));
 end;
 {$ENDIF}
