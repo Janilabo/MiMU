@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function Backwards: MArray; overload;
+function Esrever: Boolean; overload;
 function Flip: Boolean; overload;
 function Oppose: Boolean; overload;
 function Opposite: MArray; overload;
@@ -8,9 +9,11 @@ function Reversal: MArray; overload;
 function Reverse: Boolean; overload;
 function Reversed: MArray; overload;
 function Reversement: Boolean; overload;
+function Reversified: MArray; overload;
 function Reversify: Boolean; overload;
 function Reversion: MArray; overload;
 function Revert: MArray; overload;
+function Reverted: MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -28,6 +31,27 @@ begin
   i := 0;
   while (l > 0) do
     Result[i.Increase] := Self[l.Decrement];
+end;
+
+{==============================================================================]
+  <Esrever>
+  @action: Reverses the elements of the original array in-place and returns 
+           True if any swaps were executed.
+  @note: Modifies the source array directly (zero-allocation). Initializes a 
+         range structure bounding the array, and uses a while-loop to swap 
+         elements from the outside edges inward. Uses standalone functional 
+         mutators (Increment and Decrement) to adjust bounds 
+         until they meet or cross in the middle.
+[==============================================================================}
+function MArrayHelper.Esrever: Boolean; overload;
+var
+  R: TRange;
+begin
+  R.Create(-1, Self.Length);
+  Result := (R.stop > 1);
+  if Result then
+  while (R.start.Increment < R.stop.Decrement) do
+    Swap(Self[R.start], Self[R.stop]);
 end;
 
 {==============================================================================]
@@ -178,6 +202,28 @@ begin
 end;
 
 {==============================================================================]
+  <Reversified>
+  @action: Returns a new array containing the elements of the original array 
+           in reverse order.
+  @note: Initializes a range structure spanning from index 0 to the high index 
+         of the array. If the target array allocation succeeds, it uses a 
+         two-pointer repeat-until loop, swapping elements from the outer edges 
+         inward. Relies on custom integer helpers (start.Increment and 
+         stop.Decrement) to advance the bounds and terminate the loop.
+[==============================================================================}
+function MArrayHelper.Reversified: MArray; overload;
+var
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  if (Result.SetSize(R.stop + 1) > 0) then
+  repeat
+    Result[R.start] := Self[R.stop];
+    Result[R.stop] := Self[R.start];
+  until (R.start.Increment > R.stop.Decrement);
+end;
+
+{==============================================================================]
   <Reversify>
   @action: Reverses the order of elements in a 1D array.
            Works by creating a temporary array and copying elements in reverse order.
@@ -242,5 +288,29 @@ begin
   SetLength(Result, (h + 1));
   for i := 0 to h do
     Result[i] := Self[h - i];
+end;
+
+{==============================================================================]
+  <Reverted>
+  @action: Returns a new array with the elements of the original array in 
+           reverse order.
+  @note: Uses a two-pointer approach meeting in the middle. Relies on custom 
+         integer helpers (L.Increment and R.Decrement) acting as pre-operation 
+         mutators to safely handle 0-based indexing and loop termination.
+[==============================================================================}
+function MArrayHelper.Reverted: MArray; overload;
+var
+  L, R: Integer;
+begin
+  R := Self.Length;
+  SetLength(Result, R);
+  if (R = 0) then
+    Exit;
+  L := -1;
+  while (L.Increment <= R.Decrement) do
+  begin
+    Result[L] := Self[R];
+    Result[R] := Self[L];
+  end;
 end;
 {$ENDIF}

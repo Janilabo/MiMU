@@ -6,6 +6,7 @@ function Cloned: MArray; overload;
 function Clonement: MArray; overload;
 function Clonify: MArray; overload;
 function Copied: MArray; overload;
+function Ditto: MArray; overload;
 function Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Doublet(const fromIndex: Integer = 0; const toIndex: Integer = 2147483647): MArray; overload;
 function Dupe: MArray; overload;
@@ -33,6 +34,7 @@ function Slice(const r: TRangeArray): MArray; overload;
 function StartWith(const aItem: MType): MArray; overload;
 function StartWith(const aItem: MArray): MArray; overload;
 function Taily: MType; overload;
+function Twinned: MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -254,6 +256,29 @@ begin
   if l.Odd then
     Result[h] := Self[h];
 end;
+
+{==============================================================================]
+  <Ditto>
+  @action: Returns a new array that is a direct duplicate (clone) of the 
+           original array.
+  @note: Initializes a range structure spanning from index 0 to the high index 
+         of the array. If the target array allocation succeeds, it uses a 
+         two-pointer repeat-until loop, copying elements to their identical 
+         positions from both ends inward. Relies on custom integer helpers 
+         (start.Increment and stop.Decrement) to advance the bounds and 
+         terminate the loop.
+[==============================================================================}
+function MArrayHelper.Ditto: MArray; overload;
+var
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  if (Result.SetSize(R.stop + 1) > 0) then
+  repeat
+    Result[R.start] := Self[R.start];
+    Result[R.stop] := Self[R.stop];
+  until (R.start.Increment > R.stop.Decrement);
+end; 
 
 {==============================================================================]
   <Doublet>
@@ -766,5 +791,30 @@ end;
 function MArrayHelper.Taily: MType; overload;
 begin
   Result := Self[High(Self)];
+end;
+
+{==============================================================================]
+  <Twinned>
+  @action: Returns a new array that is a direct duplicate (clone) of the 
+           original array.
+  @note: Allocates a new array of identical length and uses a two-pointer 
+         while-loop meeting in the middle to copy elements from both ends 
+         simultaneously. Relies on custom integer helpers (L.Increment and 
+         R.Decrement) to adjust bounds and handle iteration.
+[==============================================================================}
+function MArrayHelper.Twinned: MArray; overload;
+var
+  L, R: Integer;
+begin
+  R := Self.Length;
+  SetLength(Result, R);
+  if (R = 0) then
+    Exit;
+  L := -1;
+  while (L.Increment <= R.Decrement) do
+  begin
+    Result[L] := Self[L];
+    Result[R] := Self[R];
+  end;
 end;
 {$ENDIF}

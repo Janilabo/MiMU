@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Evert: Boolean; overload;
 function Everted: TIntegerArray; overload;
+function Evertify: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -56,6 +57,31 @@ begin
     D^ := S^;
     Inc(D);
     Dec(S);
+  end;
+end;
+
+{==============================================================================]
+  <Evertify>
+  @action: Reverses the array using direct pointer manipulation.
+  @note: Faster than index-based loops because it eliminates bound checking
+         and index-to-address calculation overhead.
+[==============================================================================}
+function TIntegerArrayHelper.Evertify: TIntegerArray; overload;
+var
+  i, o: PInteger;
+  s, h: Integer;
+begin
+  h := High(Self);
+  SetLength(Result, (h + 1));
+  if (h = -1) then
+    Exit;
+  i := @Self[0];
+  o := @Result[h];
+  for s := 0 to h do
+  begin
+    o^ := i^;
+    Inc(i);
+    Dec(o);
   end;
 end;
 {$ENDIF}
