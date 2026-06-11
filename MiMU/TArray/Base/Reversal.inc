@@ -5,6 +5,7 @@ function Desrever: MArray; overload;
 function Esrever: Boolean; overload;
 function Flip: Boolean; overload;
 function Obverse: MArray; overload;
+function Obversed: MArray; overload;
 function Oppose: Boolean; overload;
 function Opposite: MArray; overload;
 function Reflex(const rIndex: Integer): MType; overload;
@@ -127,6 +128,32 @@ begin
   h := (Result.SetSize(Self.Length) - 1);
   for i := 0 to h do
     Result[h - i] := Self[i];
+end;
+
+{==============================================================================]
+  <Obversed>
+  @action: Returns a new array containing the elements of the original array
+           in reverse order (the "obverse" or opposite side).
+  @param: None - operates on the current array instance.
+  @return: MArray - A new array with the same elements as Self, but in
+           reversed order. The original array is not modified.
+  @note: Non-destructive. The name derives from "obverse" - the opposite
+         side of a coin or object, reflecting the reversed nature of the
+         output. Time complexity: O(n). Space complexity: O(n) for the
+         result array. Equivalent to Self.Reversed but with an alternative
+         naming convention.
+  @example:
+    // Assuming arr = [1, 2, 3, 4]
+    newArr := arr.Obversed;  // newArr = [4, 3, 2, 1]
+    // arr remains [1, 2, 3, 4]
+[==============================================================================}
+function MArrayHelper.Obversed: MArray; overload;
+var
+  s, l: Integer;
+begin
+  l := Result.SetSize(s.Assign(Self.Length));
+  while (l.Decrement > -1) do
+    Result[(s - l) - 1] := Self[l];
 end;
 
 {==============================================================================]
@@ -387,8 +414,7 @@ function MArrayHelper.Revert: MArray; overload;
 var
   h, i: Integer;
 begin
-  h := High(Self);
-  SetLength(Result, (h + 1));
+  h := (Result.SetSize(Result, Self.Length) - 1);
   for i := 0 to h do
     Result[i] := Self[h - i];
 end;
