@@ -1,4 +1,6 @@
 {$IFDEF HELPERS}
+function Backup: MArray; overload;
+function Carbon: MArray; overload;
 function Clonage: MArray; overload;
 function Clone(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Clone(const ID: TIntegerArray): MArray; overload;
@@ -32,6 +34,7 @@ function Piece(const sIndexes: TRange): MArray; overload;
 function Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
 function Replica(const oAscending: Boolean = True): MArray; overload;
 function Replicate(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
+function Selfie: MArray; overload;
 function Slice(const r: TRange): MArray; overload;
 function Slice(const r: TRangeArray): MArray; overload;
 function StartWith(const aItem: MType): MArray; overload;
@@ -41,6 +44,36 @@ function Twinned: MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Backup>
+  @action: Creates a shallow copy of the current array by iterating backwards.
+  @note: Allocates new memory and populates the result array from the last element to the first.
+[==============================================================================}
+function MArrayHelper.Backup: MArray; overload;
+var
+  l: Integer;
+begin
+  l := Result.SetSize(Self.Length);
+  while (l.Decrement > -1) do
+    Result[l] := Self[l];
+end;
+
+{==============================================================================]
+  <Carbon>
+  @action: Creates a shallow copy of the current array by dynamically supplying elements into a cleared destination array.
+  @note: Initializes a zero-length result and sequentially appends source elements until lengths match.
+[==============================================================================}
+function MArrayHelper.Carbon: MArray; overload;
+var
+  r, l: Integer;
+begin
+  l := Self.Length;
+  SetLength(Result, 0);
+  r := 0;
+  while (r < l) do
+    Result.Supply(Self[r.Increase]);
+end;
+
 {==============================================================================]
   <Clonage>
   @action: Creates and returns a deep or optimized copy of the current multidimensional or custom array.
@@ -175,8 +208,8 @@ begin
     Result[b] := Self[b];
     Result[f] := Self[f];
     Result[r] := Self[r];
-	Inc2(l, f);
-	Dec2(b, r);
+    Inc2(l, f);
+    Dec2(b, r);
   end;
 end;
 
@@ -213,29 +246,6 @@ begin
 end;
 
 {==============================================================================]
-  <Copy>
-  @action: Returns copy of an array arr.
-  @note: Contains support for starting index and count. -1 count uses Length(arr)!
-[==============================================================================}
-function MArrayHelper.Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
-var
-  i, c, l: Integer;
-begin
-  l := Self.Length;
-  if (index < l) then
-  begin
-    i := Max(index, 0);
-    c := count;
-    if ((i + c) > l) then
-      c := (l - i);
-    SetLength(Result, c);
-    for l := 0 to (c - 1) do
-      Result[l] := Self[l + i];
-  end else
-    SetLength(Result, 0);
-end;
-
-{==============================================================================]
   <Copied>
   @action: Simply returns a copy of array.
   @note: None.
@@ -258,6 +268,29 @@ begin
   end;
   if l.Odd then
     Result[h] := Self[h];
+end;
+
+{==============================================================================]
+  <Copy>
+  @action: Returns copy of an array arr.
+  @note: Contains support for starting index and count. -1 count uses Length(arr)!
+[==============================================================================}
+function MArrayHelper.Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
+var
+  i, c, l: Integer;
+begin
+  l := Self.Length;
+  if (index < l) then
+  begin
+    i := Max(index, 0);
+    c := count;
+    if ((i + c) > l) then
+      c := (l - i);
+    SetLength(Result, c);
+    for l := 0 to (c - 1) do
+      Result[l] := Self[l + i];
+  end else
+    SetLength(Result, 0);
 end;
 
 {==============================================================================]
@@ -723,6 +756,19 @@ begin
   SetLength(Result, IfThen(((i + count) > l), (l - i), count));
   for l := 0 to High(Result) do
     Result[l] := Self[l + i];
+end;
+
+{==============================================================================]
+  <Selfie>
+  @action: Creates and returns a complete duplicate (clone) of the current array.
+  @note: Allocates new memory for the result array and copies elements sequentially.
+[==============================================================================}
+function MArrayHelper.Selfie: MArray; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to (Result.SetSize(Self.Length) - 1) do
+    Result[i] := Self[i];
 end;
 
 {==============================================================================]
