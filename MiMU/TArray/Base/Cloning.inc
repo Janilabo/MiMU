@@ -6,6 +6,9 @@ function Cloned: MArray; overload;
 function Clonement: MArray; overload;
 function Clonify: MArray; overload;
 function Copied: MArray; overload;
+function Data(out target: MArray): Integer; overload;
+function Data(out aLength: Integer): MArray; overload;
+function Data: MArray; overload;
 function Ditto: MArray; overload;
 function Copy(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Doublet(const fromIndex: Integer = 0; const toIndex: Integer = 2147483647): MArray; overload;
@@ -255,6 +258,47 @@ begin
   end;
   if l.Odd then
     Result[h] := Self[h];
+end;
+
+{==============================================================================]
+  <Data>
+  @action: Duplicates the array into the 'target' parameter and returns its length.
+  @note: Uses Copy() to perform a deep copy if the source contains elements. 
+         Otherwise, explicitly clears the 'target' array and returns 0.
+[==============================================================================}
+function MArrayHelper.Data(out target: MArray): Integer; overload;
+begin
+  Result := Self.Length;
+  if (Result > 0) then
+    target := System.Copy(Self, 0, Result)
+  else
+    SetLength(target, 0);
+end;
+
+{==============================================================================]
+  <Data>
+  @action: Returns a deep copy of the array and outputs its element count via 'aLength'.
+  @note: Uses Copy() to perform a deep copy if the source contains elements. 
+         Otherwise, explicitly clears the Result array and sets 'aLength' to 0.
+[==============================================================================}
+function MArrayHelper.Data(out aLength: Integer): MArray; overload;
+begin
+  aLength := Self.Length;
+  if (aLength > 0) then
+    Result := System.Copy(Self, 0, aLength)
+  else
+    SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <Data>
+  @action: Creates and returns a completely independent, deep copy of the array.
+  @note: Direct functional approach using native Copy(). Safely handles empty 
+         or unassigned arrays by returning an empty instance.
+[==============================================================================}
+function MArrayHelper.Data: MArray; overload;
+begin
+  Result := System.Copy(Self, 0, Self.Length)
 end;
 
 {==============================================================================]

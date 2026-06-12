@@ -4,17 +4,22 @@ function Desize(const aSize: Integer = 0): Integer; overload;
 function Fit: Integer; overload;
 function Fit(const aSize: Integer): Integer; overload;
 function Fit(const aBounds: TRange): Integer; overload;
+function GetLength: Integer; overload;
 function Length: Integer; overload;
+function Lengthex(const aSize: Integer = 0): Integer; overload;
 function Relength(const aSize: Integer = 0): Integer; overload;
 function Relength(out backup: MArray; const aSize: Integer = 0): Integer; overload;
 function Resize(const aChange: Integer): Integer; overload;
 function Resize(const aChange: Integer; const null: MType): Integer; overload;
+function Resizement(const aChange: Integer = 0): Integer; overload;
+function Resizement(const aChange: Integer; const null: MType): Integer; overload;
 function SetLen(const aSize: Integer = 1): Integer; overload;
 function SetSize(const sSize: Integer = 1): Integer; overload;
 function SetSize(const sSize: Integer; const iCreated: MType): Integer; overload;
 function Size: Integer; overload;
 function Size(const aSize: Integer): MArray; overload;
 function Size(const aSize: Integer; const null: MType): MArray; overload;
+function Sizex(out data: MArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -105,13 +110,41 @@ begin
 end;
 
 {==============================================================================]
-  <Len>
+  <GetLength>
+  @action: Calculates and returns the total number of elements (the length) of the array instance.
+  @note: Safely handles nil (unassigned) instances by returning 0, and uses High(Self) + 1 to determine the count.
+[==============================================================================}
+function MArrayHelper.GetLength: Integer; overload;
+begin
+  if (Self = nil) then
+    Exit(0); 
+  Result := (High(Self) + 1);
+end;
+
+{==============================================================================]
+  <Length>
   @action: Simply Result := System.Length(arr);
   @note: None.
 [==============================================================================}
 function MArrayHelper.Length: Integer; overload;
 begin
   Result := System.Length(Self);
+end;
+
+{==============================================================================]
+  <Lengthex>
+  @action: Sets the array to a new length and returns the previous length.
+           The name combines "Length" with "ex" (meaning former/previous).
+  @param aSize: Desired new length. If negative, the array is set to length 0.
+                Default is 0, making the array empty and returning its former size.
+  @return: The length of the array before the resize (the "ex‑length").
+  @note: The operation is performed in‑place. Use IfThen to clamp negative values.
+         Time complexity O(1) (only resizes, no element copying unless shrinking).
+[==============================================================================}
+function MArrayHelper.Lengthex(const aSize: Integer = 0): Integer; overload;
+begin
+  Result := Self.Length;
+  SetLength(Self, IfThen((aSize > -1), aSize, 0));
 end;
 
 {==============================================================================]
@@ -177,6 +210,56 @@ begin
   Result := (Self.Size - l);
   for i := 0 to (Result - 1) do
     Self[l + i] := null;
+end;
+
+{==============================================================================]
+  <Resizement>
+  @action: Resizes the array by a signed amount (positive = grow, negative = shrink,
+           zero = no change). Returns the new length with overflow protection.
+  @note: Uses a case statement based on the sign of aChange.
+         - If aChange = 0: returns current length without modification.
+         - If aChange > 0: sets new length = old + aChange, clamped to MaxInt
+           (2,147,483,647) to prevent overflow during addition.
+         - If aChange < 0: sets new length = Max(0, old + aChange) (never below 0).
+         The operation is in‑place. This overload does not initialize new elements.
+[==============================================================================}
+function MArrayHelper.Resizement(const aChange: Integer = 0): Integer; overload;
+begin
+  case aChange.Compare(0) of
+    0: Result := Self.Length;
+    1: Result := Self.SetSize(Min(MaxInt, (Int64(Self.Length) + aChange)));
+    -1: Result := Self.SetSize(Max(0, (Self.Length + aChange)));
+  end;
+end;
+
+{==============================================================================]
+  <Resizement>
+  @action: Resizes the array by a signed amount. If growing, fills the new
+           elements with a specified value. If shrinking, simply truncates.
+  @param aChange: Positive = grow by that many, negative = shrink by that many,
+                  zero = no change.
+  @param null: Value to assign to any newly created elements (when growing).
+  @return: New length of the array after resizing.
+  @note: In‑place operation. Uses the integer‑only Resizement overload for the
+         actual resize, then fills new positions. The parameter name 'null' is
+         appropriate for pointer/reference types; for value types consider
+         'defaultValue' or 'fillValue'.
+[==============================================================================}
+function MArrayHelper.Resizement(const aChange: Integer; const null: MType): Integer; overload;
+var
+  l, i: Integer;
+begin
+  if (aChange = 0) then
+    Exit(Self.Length);
+  if (aChange > 0) then
+  begin
+    l := Self.Length;
+    Result := Self.Resizement(aChange);
+	if (Result > l) then
+	for i := l to (Result - 1) do
+      Self[i] := null;
+  end else
+    Result := Self.Resizement(aChange);
 end;
 
 {==============================================================================]
@@ -265,5 +348,26 @@ begin
     Result[i] := Self[i];
   for i := l to (aSize - 1) do
     Result[i] := null;
+end;
+
+{==============================================================================]
+  <Sizex>
+  @action: Duplicates the current array into the 'data' parameter and returns the element count.
+  @note: Safely handles nil (unassigned) instances by clearing 'data' and returning 0. 
+         Otherwise, allocates matching memory for 'data' and copies elements via a loop.
+[==============================================================================}
+function MArrayHelper.Sizex(out data: MArray): Integer; overload;
+var
+  i: Integer;
+begin
+  if (Self = nil) then
+  begin
+    SetLength(data, 0);
+    Exit(0);
+  end;
+  Result := (High(Self) + 1);
+  SetLength(data, Result);
+  for i := 0 to (Result - 1) do
+    data[i] := Self[i];
 end;
 {$ENDIF}
