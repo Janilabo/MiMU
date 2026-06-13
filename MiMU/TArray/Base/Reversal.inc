@@ -22,6 +22,7 @@ function Reversion: MArray; overload;
 function Revert: MArray; overload;
 function Reverted: MArray; overload;
 function RReverse: MArray; overload;
+function Upend: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -513,5 +514,20 @@ function MArrayHelper.RReverse: MArray; overload;
   end;
 begin
   Result := R(Self.Clone, 0, High(Self));
+end;
+
+{==============================================================================]
+  <Upend>
+  @action: Reverses the order of the elements in the array in-place.
+  @note: Modifies the original array by swapping pairs from the outside inward. 
+         Returns the number of swaps performed (the midpoint index).
+[==============================================================================}
+function MArrayHelper.Upend: Integer; overload;
+var
+  h, i: Integer;
+begin
+  Result := ((h.Assign(High(Self)) + 1) div 2);
+  for i := 0 to (Result - 1) do
+    Swap(Self[i], Self[h - i]);
 end;
 {$ENDIF}
