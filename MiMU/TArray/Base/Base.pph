@@ -3,7 +3,9 @@
 {$I Cloning.inc}
 {$I Composition.inc}
 {$I Construction.inc}
+{$I Copying.inc}
 {$I Counting.inc}
+{$I Endpoints.inc}
 {$I Equality.inc}
 {$I Frequency.inc}
 {$I Grouping.inc}
