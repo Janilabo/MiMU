@@ -1,11 +1,11 @@
 {$IFDEF HELPERS}
 function Downsize(const aCeiling: Integer = -1): Integer; overload;
-function Fixid(const fIndex: Integer = 0): Integer; overload;
-function Invalid(const fIndex: Integer = 0): Boolean; overload;
+function Fixid(const aIndex: Integer = 0): Integer; overload;
+function Invalid(const aIndex: Integer = 0): Boolean; overload;
 function Secure: Integer; overload;
 function Upsize(const aFloor: Integer; const null: MType): Integer; overload;
 function Upsize(const aFloor: Integer = 1): Integer; overload;
-function Valid(const fIndex: Integer = 0): Boolean; overload;
+function Valid(const aIndex: Integer = 0): Boolean; overload;
 function Wipe: Integer; overload;
 {$ENDIF}
 
@@ -23,8 +23,11 @@ var
 begin
   l := Self.Length;
   if (aCeiling < 0) then
-    Self := nil
-  else if (l > aCeiling) then
+  begin
+    Self := nil;
+    Exit(l);
+  end;
+  if (l > aCeiling) then
     SetLength(Self, aCeiling);
   Result := (l - Self.Length);
 end;
@@ -34,19 +37,19 @@ end;
   @action: Fixes a raw identifier/index by clamping it into valid array bounds.
   @note: Returns -1 on empty arrays, neutralizing potential range estimation errors.
 [==============================================================================}
-function MArrayHelper.Fixid(const fIndex: Integer = 0): Integer; overload;
+function MArrayHelper.Fixid(const aIndex: Integer = 0): Integer; overload;
 var
   l: Integer;
 begin
   l := Self.Length;
   if (l = 0) then
     Result := -1
-  else if (fIndex < 0) then
+  else if (aIndex < 0) then
     Result := 0
-  else if (fIndex >= l) then
+  else if (aIndex >= l) then
     Result := (l - 1)
   else
-    Result := fIndex;
+    Result := aIndex;
 end;
 
 {==============================================================================]
@@ -54,9 +57,9 @@ end;
   @action: Analyzes the given index to determine if it falls outside the valid array range.
   @note: Returns True if the index will cause a range error, or if called on an empty array.
 [==============================================================================}
-function MArrayHelper.Invalid(const fIndex: Integer = 0): Boolean; overload;
+function MArrayHelper.Invalid(const aIndex: Integer = 0): Boolean; overload;
 begin
-  Result := ((fIndex <= -1) or (fIndex >= Self.Length));
+  Result := ((aIndex <= -1) or (aIndex >= Self.Length));
 end;
 
 {==============================================================================]
@@ -114,9 +117,9 @@ end;
   @action: Analyzes the given index to determine if it safely exists within the array.
   @note: Returns True if the index is active and completely safe for read/write operations.
 [==============================================================================}
-function MArrayHelper.Valid(const fIndex: Integer = 0): Boolean; overload;
+function MArrayHelper.Valid(const aIndex: Integer = 0): Boolean; overload;
 begin
-  Result := ((fIndex > -1) and (fIndex < Self.Length));
+  Result := ((aIndex > -1) and (aIndex < Self.Length));
 end;
 
 {==============================================================================]
