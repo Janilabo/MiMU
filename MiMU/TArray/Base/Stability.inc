@@ -1,11 +1,34 @@
 {$IFDEF HELPERS}
-function Secure: Integer; overload;
+function Downsize(const aCeiling: Integer = -1): Integer; overload;
 function Fixid(const fIndex: Integer = 0): Integer; overload;
 function Invalid(const fIndex: Integer = 0): Boolean; overload;
+function Secure: Integer; overload;
+function Upsize(const aFloor: Integer; const null: MType): Integer; overload;
+function Upsize(const aFloor: Integer = 1): Integer; overload;
 function Valid(const fIndex: Integer = 0): Boolean; overload;
+function Wipe: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Downsize>
+  @action: Enforces a maximum structural size ceiling on the array and returns 
+           the exact count of evicted elements.
+  @note: Passing a negative threshold (or omitting the argument) triggers a 
+         full Wipe. Returns 0 if the array is already within bounds.
+[==============================================================================}
+function MArrayHelper.Downsize(const aCeiling: Integer = -1): Integer; overload;
+var
+  l: Integer;
+begin
+  l := Self.Length;
+  if (aCeiling < 0) then
+    Self := nil
+  else if (l > aCeiling) then
+    SetLength(Self, aCeiling);
+  Result := (l - Self.Length);
+end;
+
 {==============================================================================]
   <Fixid>
   @action: Fixes a raw identifier/index by clamping it into valid array bounds.
@@ -24,16 +47,6 @@ begin
     Result := (l - 1)
   else
     Result := fIndex;
-end;
-
-{==============================================================================]
-  <Valid>
-  @action: Analyzes the given index to determine if it safely exists within the array.
-  @note: Returns True if the index is active and completely safe for read/write operations.
-[==============================================================================}
-function MArrayHelper.Valid(const fIndex: Integer = 0): Boolean; overload;
-begin
-  Result := ((fIndex > -1) and (fIndex < Self.Length));
 end;
 
 {==============================================================================]
@@ -56,5 +69,66 @@ function MArrayHelper.Secure: Integer; overload;
 begin
   Result := Self.Length;
   SetLength(Self, Result);
+end;
+
+{==============================================================================]
+  <Upsize>
+  @action: Enforces a minimum structural size floor on the array, initializing 
+           any newly allocated trailing slots with a default fallback value.
+  @note: Returns the exact count of new elements appended to reach the floor.
+         If the array is already at or above the floor limit, it returns 0.
+[==============================================================================}
+function MArrayHelper.Upsize(const aFloor: Integer; const null: MType): Integer; overload;
+var
+  l, i: Integer;
+begin
+  l := Self.Length;
+  if (aFloor <= l) then
+    Exit(0);
+  SetLength(Self, aFloor);
+  for i := l to (aFloor - 1) do
+    Self[i] := null;
+  Result := (Self.Length - l);
+end;
+
+{==============================================================================]
+  <Upsize>
+  @action: Enforces a minimum structural size floor on the array and returns 
+           the exact count of newly allocated elements.
+  @note: Omitting the argument defaults to 1, guaranteeing the array has at 
+         least one physical element slot. New slots contain uninitialized data.
+[==============================================================================}
+function MArrayHelper.Upsize(const aFloor: Integer = 1): Integer; overload;
+var
+  l, i: Integer;
+begin
+  l := Self.Length;
+  if (aFloor <= l) then
+    Exit(0);
+  SetLength(Self, aFloor);
+  Result := (Self.Length - l);
+end;
+
+{==============================================================================]
+  <Valid>
+  @action: Analyzes the given index to determine if it safely exists within the array.
+  @note: Returns True if the index is active and completely safe for read/write operations.
+[==============================================================================}
+function MArrayHelper.Valid(const fIndex: Integer = 0): Boolean; overload;
+begin
+  Result := ((fIndex > -1) and (fIndex < Self.Length));
+end;
+
+{==============================================================================]
+  <Wipe>
+  @action: Deep-clears the array by neutralizing its heap footprint and 
+           returns the count of cleared elements.
+  @note: Sets the instance to nil, forcing full resource deallocation 
+         while safely returning the original length.
+[==============================================================================}
+function MArrayHelper.Wipe: Integer; overload;
+begin
+  Result := Self.Length;
+  Self := nil; 
 end;
 {$ENDIF}
