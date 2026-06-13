@@ -28,6 +28,7 @@
 {$I Selection.inc}
 {$I Size.inc}
 {$I Sort.inc}
+{$I Stability.inc}
 {$I Transform.inc}
 {$I Validation.inc}
 

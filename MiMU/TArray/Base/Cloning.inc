@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function Another: MArray; overload;
 function Backup: MArray; overload;
 function Carbon: MArray; overload;
 function Clonage: MArray; overload;
@@ -10,6 +11,7 @@ function Copied: MArray; overload;
 function Data(out target: MArray): Integer; overload;
 function Data(out aLength: Integer): MArray; overload;
 function Data: MArray; overload;
+function Detach: MArray; overload;
 function Ditto: MArray; overload;
 function Dupe: MArray; overload;
 function Selfie: MArray; overload;
@@ -17,6 +19,31 @@ function Twinned: MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Another>
+  @action: Simply returns a copy of array.
+  @note: None.
+[==============================================================================}
+function MArrayHelper.Another: MArray; overload;
+var
+  h, i, l: Integer;
+begin
+  l := Self.Length;
+  case l of
+    0: Exit([]);
+    1: Exit([Self[0]]);
+  end;
+  SetLength(Result, l);
+  h := (l div 2);
+  for i := 0 to (h - 1) do
+  begin
+    Result[i] := Self[i];
+    Result[(l - i) - 1] := Self[(l - i) - 1];
+  end;
+  if l.Odd then
+    Result[h] := Self[h];
+end;
+
 {==============================================================================]
   <Backup>
   @action: Creates a shallow copy of the current array by iterating backwards.
@@ -195,23 +222,8 @@ end;
   @note: None.
 [==============================================================================}
 function MArrayHelper.Copied: MArray; overload;
-var
-  h, i, l: Integer;
 begin
-  l := Self.Length;
-  case l of
-    0: Exit([]);
-    1: Exit([Self[0]]);
-  end;
-  SetLength(Result, l);
-  h := (l div 2);
-  for i := 0 to (h - 1) do
-  begin
-    Result[i] := Self[i];
-    Result[(l - i) - 1] := Self[(l - i) - 1];
-  end;
-  if l.Odd then
-    Result[h] := Self[h];
+  Result := System.Copy(Self);
 end;
 
 {==============================================================================]
@@ -253,6 +265,17 @@ end;
 function MArrayHelper.Data: MArray; overload;
 begin
   Result := System.Copy(Self, 0, Self.Length)
+end;
+
+{==============================================================================]
+  <Detach>
+  @action: Decouples the array from any shared memory references by forcing a unique allocation.
+  @note: Uses copy-on-write behavior to ensure modifications to the result do not affect the original source.
+[==============================================================================}
+function MArrayHelper.Detach: MArray; overload;
+begin
+  Result := Self;
+  SetLength(Result, Self.Length);
 end;
 
 {==============================================================================]
