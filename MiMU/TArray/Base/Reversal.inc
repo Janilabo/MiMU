@@ -14,6 +14,7 @@ function Opposite: MArray; overload;
 function Rebel: MArray; overload;
 function Reflex(const rIndex: Integer): MType; overload;
 function Regress: MArray; overload;
+function Relist: MArray; overload;
 function Reversal: MArray; overload;
 function Reverse: Boolean; overload;
 function Reversed: MArray; overload;
@@ -331,6 +332,39 @@ begin
     i := j;
     while (i.Increment(2) < l) do
       Result[i] := Self[s - i];
+  end;
+end;
+
+{==============================================================================]
+  <Relist>
+  @action: Returns a new array containing the elements of the original array
+           in reverse order by leveraging TList<T>.Reverse from the
+           Generics.Collections unit.
+  @note: The name is a portmanteau of "reverse" and "list". The method creates
+         a generic TList<MType>, appends all elements from Self, calls the
+         built‑in Reverse method (which reverses the list in‑place), and then
+         copies the elements back to a new MArray result. While not the most
+         memory‑efficient (requires two passes and a separate list), it
+         demonstrates reusing the standard collection library. The original
+         array remains unchanged.
+[==============================================================================}
+function MArrayHelper.Relist: MArray; overload;
+var
+  l: specialize TList<MType>;
+  i: Integer;
+begin
+  if (Self.Length < 2) then
+    Exit(Self.Clone);
+  l := specialize TList<MType>.Create;
+  try
+    for i := 0 to High(Self) do
+      l.Add(Self[i]);
+    l.Reverse;
+    SetLength(Result, l.Count);
+    for i := 0 to (l.Count - 1) do
+      Result[i] := l[i];
+  finally
+    l.Free;
   end;
 end;
 

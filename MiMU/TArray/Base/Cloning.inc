@@ -14,6 +14,7 @@ function Data: MArray; overload;
 function Detach: MArray; overload;
 function Ditto: MArray; overload;
 function Dupe: MArray; overload;
+function Imitate: MArray; overload;
 function Selfie: MArray; overload;
 function Twinned: MArray; overload;
 {$ENDIF}
@@ -326,6 +327,31 @@ begin
     Result[i] := Self[i];
     Result[j] := Self[j];
   end;
+end;
+
+{==============================================================================]
+  <Imitate>
+  @action: Returns a shallow copy of the original array, preserving element order.
+  @note: Implements the copy using a `label` and `goto` to iterate backwards from 
+         the highest index. The name derives from Latin *imitari* ("to copy"), 
+         reflecting that the result imitates the source exactly. Time complexity: 
+         O(n). Space complexity: O(n) for the result array. Uses the custom 
+         `Integer.Decrement` helper to control the loop. The original array is 
+         not modified.
+[==============================================================================}
+function MArrayHelper.Imitate: MArray; overload;
+label
+  loop;
+var
+  s: Integer;
+begin
+  s := (Result.SetSize(Self.Length) - 1);
+  if (s < 0) then
+    Exit;
+  loop:
+  Result[s] := Self[s];
+  if (s.Decrement > -1) then
+    goto loop;
 end;
 
 {==============================================================================]
