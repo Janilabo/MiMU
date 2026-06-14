@@ -8,6 +8,7 @@
 {$I Endpoints.inc}
 {$I Equality.inc}
 {$I Frequency.inc}
+{$I Geometry.inc}
 {$I Grouping.inc}
 {$I Indexing.inc}
 {$I Inequality.inc}
