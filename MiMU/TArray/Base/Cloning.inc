@@ -8,13 +8,14 @@ function Cloned: MArray; overload;
 function Clonement: MArray; overload;
 function Clonify: MArray; overload;
 function Copied: MArray; overload;
+function Copycat: MArray; overload;
 function Data(out target: MArray): Integer; overload;
 function Data(out aLength: Integer): MArray; overload;
 function Data: MArray; overload;
 function Detach: MArray; overload;
 function Ditto: MArray; overload;
 function Dupe: MArray; overload;
-function Imitate: MArray; overload;
+function Imago: MArray; overload;
 function Selfie: MArray; overload;
 function Twinned: MArray; overload;
 {$ENDIF}
@@ -228,6 +229,21 @@ begin
 end;
 
 {==============================================================================]
+  <Copycat>
+  @action: Creates and returns a new array that is an exact duplicate (clone) of the original array.
+  @note: By prepending each element (`[Self[i]] + Result`) while looping backwards (`downto 0`), the original order of the elements is preserved.
+         Note that array concatenation in a loop is highly inefficient for large arrays due to continuous memory reallocations.
+[==============================================================================}
+function MArrayHelper.Copycat: MArray; overload;
+var
+  i: Integer;
+begin
+  Result := [];
+  for i := High(Self) downto 0 do
+    Result := ([Self[i]] + Result);
+end;
+
+{==============================================================================]
   <Data>
   @action: Duplicates the array into the 'target' parameter and returns its length.
   @note: Uses Copy() to perform a deep copy if the source contains elements. 
@@ -330,7 +346,7 @@ begin
 end;
 
 {==============================================================================]
-  <Imitate>
+  <Imago>
   @action: Returns a shallow copy of the original array, preserving element order.
   @note: Implements the copy using a `label` and `goto` to iterate backwards from 
          the highest index. The name derives from Latin *imitari* ("to copy"), 
@@ -339,7 +355,7 @@ end;
          `Integer.Decrement` helper to control the loop. The original array is 
          not modified.
 [==============================================================================}
-function MArrayHelper.Imitate: MArray; overload;
+function MArrayHelper.Imago: MArray; overload;
 label
   loop;
 var

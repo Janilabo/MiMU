@@ -2,6 +2,7 @@
 function Antipodean: MArray; overload;
 function Backwards: MArray; overload;
 function Converse: MArray; overload;
+function Conversed: MArray; overload;
 function Desrever: MArray; overload;
 function Destack: MArray; overload;
 function Esrever: Boolean; overload;
@@ -79,6 +80,22 @@ begin
   if (Self.Length < 2) then
     Exit(Self);
   Result := ([Self[High(Self)]] + System.Copy(Self, 0, High(Self)).Converse);
+end;
+
+{==============================================================================]
+  <Conversed>
+  @action: reates and returns a new array with the elements of the original array in reverse order.
+  @note: Operates on a custom `MArray` type. It uses a `downto` loop to iterate from the highest index to 0,
+        appending each element to the result.
+		Note that array concatenation (`Result + [...]`) in a loop can be performance-intensive for very large arrays due to repeated reallocations.
+[==============================================================================}
+function MArrayHelper.Conversed: MArray; overload;
+var
+  i: Integer;
+begin
+  Result := [];
+  for i := High(Self) downto 0 do
+    Result := (Result + [Self[i]]);
 end;
 
 {==============================================================================]
