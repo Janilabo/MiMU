@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Antipodean: MArray; overload;
 function Backwards: MArray; overload;
+function Converse: MArray; overload;
 function Desrever: MArray; overload;
 function Destack: MArray; overload;
 function Esrever: Boolean; overload;
@@ -8,7 +9,9 @@ function Flip: Boolean; overload;
 function Obverse: MArray; overload;
 function Obversed: MArray; overload;
 function Oppose: Boolean; overload;
+function Opposed: MArray; overload;
 function Opposite: MArray; overload;
+function Rebel: MArray; overload;
 function Reflex(const rIndex: Integer): MType; overload;
 function Regress: MArray; overload;
 function Reversal: MArray; overload;
@@ -59,6 +62,22 @@ begin
   i := 0;
   while (l > 0) do
     Result[i.Increase] := Self[l.Decrement];
+end;
+
+{==============================================================================]
+  <Converse>
+  @action: Reverses the order of elements in an MArray instance using a 
+           recursive divide-and-conquer approach.
+  @note: While functional, this recursive implementation has a time complexity 
+         of O(N²) and high memory overhead due to repeated array slicing 
+         (System.Copy) and concatenation (+) at every recursion depth. For 
+         large datasets, an in-place iterative swap is highly recommended.
+[==============================================================================}
+function MArrayHelper.Converse: MArray; overload;
+begin
+  if (Self.Length < 2) then
+    Exit(Self);
+  Result := ([Self[High(Self)]] + System.Copy(Self, 0, High(Self)).Converse);
 end;
 
 {==============================================================================]
@@ -206,8 +225,33 @@ begin
 end;
 
 {==============================================================================]
+  <Opposed>
+  @action: Reverses the order of elements in the array in-place using a 
+           two-pointer iterative approach.
+  @note: Highly efficient O(N) time complexity with O(1) auxiliary space. 
+         Note that this implementation relies on side-effect modifications 
+         within the loop condition (.Increment and .Decrement helpers) to 
+         advance the pointers before each swap.
+[==============================================================================}
+function MArrayHelper.Opposed: MArray; overload;
+var
+  L, R: Integer;
+  S: MType;
+begin
+  Result := System.Copy(Self);
+  L := -1;
+  R := Result.Length;
+  while (L.Increment < R.Decrement) do
+  begin
+    S := Result[L];
+    Result[L] := Result[R];
+    Result[R] := S;
+  end;
+end;
+
+{==============================================================================]
   <Opposite>
-  @action: eturns a new array containing the elements of the current array
+  @action: Returns a new array containing the elements of the current array
            in reverse order. The original array is not modified.
   @note: The order of elements is inverted: the last element becomes
          the first, the second-to-last becomes the second, and so on.
@@ -222,6 +266,31 @@ begin
   SetLength(Result, 0);
   while (l.Decrease > 0) do
     Result := (Result + [Self[l]]);
+end;
+
+{==============================================================================]
+  <Rebel>
+  @action: Reverses the order of elements in the array using a backward-looping 
+           mechanism controlled by an explicit goto label.
+  @note: Achieves O(N) efficiency by pre-allocating the result array and copying 
+         elements directly. However, the use of a 'goto' statement and sequential 
+         labels deviates from modern structured programming paradigms (like for/while loops).
+[==============================================================================}
+function MArrayHelper.Rebel: MArray; overload;
+label
+  loop;
+var
+  i, s: Integer;
+begin
+  s := High(Self);
+  if (s < 1) then
+    Exit(Self.Copy);
+  SetLength(Result, (s + 1));
+  i := 0;
+  loop:
+  Result[i.Increase] := Self[s];
+  if (s.Decrement > -1) then
+    goto loop;
 end;
 
 {==============================================================================]
