@@ -9,6 +9,7 @@ function ToArray3(const A, B, C: MType): MArray; overload;
 {$IFDEF HELPERS}
 function T2DArray(const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload;
 function TArray(const aSize: Integer = 1): MArray; overload;
+function Times(const N: Integer = 1): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -112,5 +113,19 @@ begin
   SetLength(Result, aSize);
   for i := 0 to High(Result) do
     Result[i] := Self;
+end;
+
+{==============================================================================]
+ <Times>
+ @action: Creates an array containing N copies of the current value (Self).
+ @note: The resulting array length will be Max(0, N). If N <= 0, an empty array is returned.
+[==============================================================================}
+function MTypeHelper.Times(const N: Integer = 1): MArray; overload;
+var
+  l: Integer;
+begin
+  l := Result.SetSize(Max(0, N));
+  while (l > 0) do
+    Result[l.Decrement] := Self;
 end;
 {$ENDIF}

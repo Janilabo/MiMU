@@ -66,6 +66,7 @@ function Flattened: TIntegerArray; overload;
 function Flooded: TIntegerArray; overload;
 function Filled: TIntegerArray; overload;
 function Formation: TIntegerArray; overload;
+function Formulate: TIntegerArray; overload;
 function Gather: TIntegerArray; overload;
 function Gathered: TIntegerArray; overload;
 function Generate: TIntegerArray; overload;
@@ -1877,6 +1878,42 @@ begin
   end;
   SetLength(Result, s);
   Move(b[0], Result[0], System.Length(b));
+end;
+
+{==============================================================================]
+  <Formulate>
+  @action: Populates a pre-allocated dynamic array with a sequential range of integers (either ascending or descending) using loop unrolling for optimization.
+  @note: Utilizes a 10-element unrolled local buffer to batch-write values, reducing loop overhead and conditional checks for large ranges,
+         while falling back to a standard loop for trailing elements.
+[==============================================================================}
+function TRange.Formulate: TIntegerArray; overload;
+var
+  t: array[0..9] of Integer;
+  d, s, i, r, l: Integer;
+procedure A(const B, C: Integer);
+begin
+  Result[B + 0] := (t[0] + C);
+  Result[B + 1] := (t[1] + C);
+  Result[B + 2] := (t[2] + C);
+  Result[B + 3] := (t[3] + C);
+  Result[B + 4] := (t[4] + C);
+  Result[B + 5] := (t[5] + C);
+  Result[B + 6] := (t[6] + C);
+  Result[B + 7] := (t[7] + C);
+  Result[B + 8] := (t[8] + C);
+  Result[B + 9] := (t[9] + C);
+end;
+begin
+  l := Result.SetSize(Self.Size);
+  s := Self.start;
+  r := 0;
+  d := IfThen(Self.Ascending, 1, -1);
+  for i := 0 to 9 do
+    t[i] := (i * d);
+  while ((r + 9) < l) do
+    A(r.Increase(10), s.Increase(10 * d));
+  while (r < l) do
+    Result[r.Increase] := s.Increase(d);
 end;
 
 {==============================================================================]
