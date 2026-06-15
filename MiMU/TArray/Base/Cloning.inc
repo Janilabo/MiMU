@@ -16,6 +16,7 @@ function Detach: MArray; overload;
 function Ditto: MArray; overload;
 function Dupe: MArray; overload;
 function Imago: MArray; overload;
+function Proversion: MArray; overload;
 function Selfie: MArray; overload;
 function Twinned: MArray; overload;
 {$ENDIF}
@@ -368,6 +369,21 @@ begin
   Result[s] := Self[s];
   if (s.Decrement > -1) then
     goto loop;
+end;
+
+{==============================================================================]
+  <Proversion>
+  @action: Preserves the original forward order of the elements in the MArray 
+           and returns an identical copy.
+  @note: This is a recursive identity implementation. Because it recursively 
+         copies slices of the array, running this on large arrays will cause 
+         heavy memory overhead and risks a stack overflow error.
+[==============================================================================}
+function MArrayHelper.Proversion: MArray; overload;
+begin
+  if (Self.Length < 2) then
+    Exit(Self);
+  Result := ([Self[0]] + System.Copy(Self, 1, (Self.Length - 1)).Proversion);
 end;
 
 {==============================================================================]

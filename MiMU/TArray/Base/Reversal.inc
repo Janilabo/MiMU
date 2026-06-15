@@ -9,9 +9,11 @@ function Esrever: Boolean; overload;
 function Flip: Boolean; overload;
 function Obverse: MArray; overload;
 function Obversed: MArray; overload;
+function Obversion: MArray; overload;
 function Oppose: Boolean; overload;
 function Opposed: MArray; overload;
 function Opposite: MArray; overload;
+function Overturn: Boolean; overload;
 function Rebel: MArray; overload;
 function Reflex(const rIndex: Integer): MType; overload;
 function Regress: MArray; overload;
@@ -19,6 +21,7 @@ function Relist: MArray; overload;
 function Reversal: MArray; overload;
 function Reverse: Boolean; overload;
 function Reversed: MArray; overload;
+function ReversedEx: MArray; overload;
 function ReverseEx: MArray; overload;
 function Reversement: Boolean; overload;
 function Reversified: MArray; overload;
@@ -222,6 +225,20 @@ begin
 end;
 
 {==============================================================================]
+  <Obversion>
+  @action: Reverses the order of the elements in the MArray and returns the result.
+  @note: This is a recursive implementation. While elegant, it may cause a stack 
+         overflow error on exceptionally large arrays due to the deep call stack 
+         and repeated array copying.
+[==============================================================================}
+function MArrayHelper.Obversion: MArray; overload;
+begin
+  if (Self.Length < 2) then
+    Exit(Self);
+  Result := (System.Copy(Self, 1, (Self.Length - 1)).Obversion + [Self[0]]);
+end;
+
+{==============================================================================]
   <Oppose>
   @action: Reverses the elements of the array **in place**, swapping the first
            element with the last, the second with the second-to-last, and so on.
@@ -284,6 +301,43 @@ begin
   SetLength(Result, 0);
   while (l.Decrease > 0) do
     Result := (Result + [Self[l]]);
+end;
+
+{==============================================================================]
+  <Overturn>
+  @action: Reverses the order of the elements within the MArray in place, 
+           mutating the original structure. Returns True if the array was 
+           long enough to be modified (Length > 1), otherwise False.
+  @note: Highly optimized via loop unrolling. By swapping 4 element pairs 
+         simultaneously from the outside edges inward, it significantly 
+         reduces loop overhead and maximizes cache performance. Completely 
+         safe from stack overflows.
+[==============================================================================}
+function MArrayHelper.Overturn: Boolean; overload;
+var
+  l, h: Integer;
+  C: MType;
+procedure S(const A, B: Integer);
+begin
+  C := Self[A];
+  Self[A] := Self[B];
+  Self[B] := C;
+end;
+begin
+  h := High(Self);
+  Result := (h > 0);
+  if not Result then
+    Exit;
+  l := 0;
+  while ((l + 3) < (h - 3)) do
+  begin
+    S((l + 3), (h - 3));
+	S((l + 2), (h - 2));
+    S((l + 1), (h - 1));
+	S(l.Increase(4), h.Decrease(4));
+  end;
+  while (l < h) do
+    S(l.Increase, h.Decrease);
 end;
 
 {==============================================================================]
@@ -437,6 +491,32 @@ begin
   SetLength(Result, l);
   for i := 0 to (l - 1) do
     Result[i] := Self[(l - i) - 1];
+end;
+
+{==============================================================================]
+  <ReversedEx>
+  @action: Reverses the order of the elements in the MArray and returns the result.
+  @note: Uses an optimized hybrid approach. Small arrays (lengths 0 to 5) are 
+         handled instantly via hardcoded lookup cases to eliminate loop overhead. 
+         Larger arrays are safely reversed iteratively using a single loop, 
+         making it highly performant and completely safe from stack overflows.
+[==============================================================================}
+function MArrayHelper.ReversedEx: MArray; overload;
+var
+  h, i: Integer;
+begin
+  h := High(Self); 
+  case h of
+    -1: Exit([]);
+    0: Exit([Self[0]]);
+    1: Exit([Self[1], Self[0]]);
+    2: Exit([Self[2], Self[1], Self[0]]);
+    3: Exit([Self[3], Self[2], Self[1], Self[0]]);
+    4: Exit([Self[4], Self[3], Self[2], Self[1], Self[0]]);
+  end;
+  SetLength(Result, (h + 1));
+  for i := 0 to h do
+    Result[i] := Self[h - i];
 end;
 
 {==============================================================================]
