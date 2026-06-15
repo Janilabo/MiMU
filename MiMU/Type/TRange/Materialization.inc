@@ -153,6 +153,7 @@ function Stop1: TIntegerArray; overload;
 function Storage: TIntegerArray; overload;
 function Succinct: TIntegerArray; overload;
 function Sweep: TIntegerArray; overload;
+function Tabulate: TIntegerArray; overload;
 function Tandem: TIntegerArray; overload;
 function TIA: TIntegerArray; overload;
 function ToArr: TIntegerArray; overload;
@@ -4306,6 +4307,36 @@ begin
     Result[l.Increase] := r;
   end;
   SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <Tabulate>
+  @action: Generates a sequential range of integers (ascending or descending) into a pre-allocated array by processing elements in blocks of 8.
+  @note: Uses a fixed-size local cache array (`t`) and cache-friendly block increments to maximize CPU loop-unrolling efficiency,
+         using a dedicated loop to cleanly handle any remaining trailing elements.
+[==============================================================================}
+function TRange.Tabulate: TIntegerArray; overload;
+const
+  BLOCK_SIZE = 8;
+var
+  t: array[0..BLOCK_SIZE - 1] of Integer;
+  d, s, r, l, i, j: Integer;
+begin
+  l := Result.SetSize(Self.Size);
+  d := IfThen(Self.Ascending, 1, -1);
+  for i := 0 to (BLOCK_SIZE - 1) do
+    t[i] := (i * d);
+  s := Self.start;
+  r := 0;
+  while ((r + (BLOCK_SIZE - 1)) < l) do
+  begin
+    for j := 0 to (BLOCK_SIZE - 1) do
+      Result[r + j] := (s + t[j]);
+    Inc(r, BLOCK_SIZE);
+    Inc(s, (BLOCK_SIZE * d));
+  end;
+  for j := 0 to ((l - r) - 1) do
+    Result[r + j] := (s + t[j]);
 end;
 
 {==============================================================================]
