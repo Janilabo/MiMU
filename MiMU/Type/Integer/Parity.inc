@@ -12,6 +12,8 @@ function OddValue: Boolean; overload;
 function Parity: Byte; overload;
 function ParityEven: Boolean; overload;
 function ParityOdd: Boolean; overload;
+function Unodd: Boolean; overload;
+function Uneven: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -148,5 +150,27 @@ end;
 function TIntegerHelper.ParityOdd: Boolean; overload;
 begin
   Result := (Self.Parity = 1);
+end;
+
+{==============================================================================]
+  <Unodd>
+  @action: Checks if the integer is an even number.
+  @note: Returns True if the number is even, and False if it is odd. 
+         Uses bitwise XOR logic to determine parity.
+[==============================================================================}
+function TIntegerHelper.Unodd: Boolean; overload;
+begin
+  Result := ((Self xor 1) = (Self + 1));
+end;
+
+{==============================================================================]
+  <Uneven>
+  @action: Checks if the integer is an odd number.
+  @note: Returns True if the number is odd, and False if it is even. 
+         This is the strict logical inverse of Unodd.
+[==============================================================================}
+function TIntegerHelper.Uneven: Boolean; overload;
+begin
+  Result := not ((Self xor 1) = (Self + 1));
 end;
 {$ENDIF}
