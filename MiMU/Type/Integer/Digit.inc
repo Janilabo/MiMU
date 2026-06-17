@@ -1,7 +1,11 @@
 {$IFDEF HELPERS}
-function DigitCount: Integer;
-function Digits: TIntegerArray;
-function Digitz: TIntegerArray;
+function DigitCount: Integer; overload;
+function Digits: TIntegerArray; overload;
+function Digitz: TIntegerArray; overload;
+function FinalDigit: Integer; overload;
+function FirstDigit: Integer; overload;
+function LastDigit: Integer; overload;
+function StartDigit: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -67,5 +71,54 @@ begin
   SetLength(Result, r);
   for i := 0 to ((r div 2) - 1) do
     Swap(Result[i], Result[(r - i) - 1]);
+end;
+
+{==============================================================================]
+  <FinalDigit>
+  @action: Extracts the very last digit of the integer as an Integer value.
+  @note: Uses ASCII character code conversion (subtracting 48 from the Ordinal 
+         value of the character). It relies on a custom or third-party string 
+         helper property/method `.Lasty` to get the final character.
+[==============================================================================}
+function TIntegerHelper.FinalDigit: Integer; overload;
+begin
+  Result := (Ord(IntToStr(Self).Lasty) - 48);
+end;
+
+{==============================================================================]
+  <FirstDigit>
+  @action: Extracts the very first digit of the integer, correctly skipping the 
+           negative sign if the number is less than zero.
+  @note: WARNING: This code contains a bug. It attempts to reference an 
+         undeclared variable `s`. It should be rewritten to reference the 
+         converted string, e.g., `StrToInt(IntToStr(Self)[IfThen((Self < 0), 2, 1)])`.
+[==============================================================================}
+function TIntegerHelper.FirstDigit: Integer; overload;
+begin
+  Result := StrToInt(IntToStr(Self)[IfThen((Self < 0), 2, 1)]);
+end;
+
+{==============================================================================]
+  <LastDigit>
+  @action: Extracts the last digit of the integer by converting it to a string 
+           and back to an integer.
+  @note: Functional equivalent to `FinalDigit`, but uses `StrToInt` instead of 
+         ASCII math. Also relies on the custom `.Lasty` string property/method.
+[==============================================================================}
+function TIntegerHelper.LastDigit: Integer; overload;
+begin
+  Result := StrToInt(IntToStr(Self).Lasty);
+end;
+
+{==============================================================================]
+  <StartDigit>
+  @action: Extracts the first digit of the integer using efficient ASCII math, 
+           properly handling negative signs.
+  @note: Functional equivalent to `FirstDigit`, but optimized by using `Ord(...) - 48` 
+         instead of calling `StrToInt`. It correctly uses 1-based string indexing.
+[==============================================================================}
+function TIntegerHelper.StartDigit: Integer; overload;
+begin
+  Result := (Ord(IntToStr(Self)[IfThen((Self < 0), 2, 1)]) - 48);
 end;
 {$ENDIF}
