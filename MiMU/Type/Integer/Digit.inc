@@ -1,11 +1,20 @@
 {$IFDEF HELPERS}
 function DigitCount: Integer; overload;
+function Digit1st: Integer; overload;
+function DigitFirst: Integer; overload;
+function DigitLst: Integer; overload;
+function DigitLast: Integer; overload;
 function Digits: TIntegerArray; overload;
+function Digitted: TIntegerArray; overload;
 function Digitz: TIntegerArray; overload;
 function FinalDigit: Integer; overload;
 function FirstDigit: Integer; overload;
+function FrontDigit: Integer; overload;
+function HeadDigit: Integer; overload;
 function LastDigit: Integer; overload;
+function RearDigit: Integer; overload;
 function StartDigit: Integer; overload;
+function TailDigit: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -15,7 +24,7 @@ function StartDigit: Integer; overload;
   @note: If x is negative value, the negative sign is ignored.
          Works with -2147483648 - 2147483647!
 [==============================================================================}
-function TIntegerHelper.DigitCount: Integer;
+function TIntegerHelper.DigitCount: Integer; overload;
 var
   a, n, m: Int64;
 begin
@@ -29,13 +38,85 @@ begin
 end;
 
 {==============================================================================]
+  <Digit1st>
+  @action: Extracts the first (most significant) digit of the integer using 
+           pure mathematical division.
+  @note: Highly optimized compared to string parsing. It handles negative 
+         numbers by converting them to positive via an absolute value check, 
+         then loops to find the correct power-of-10 divisor to isolate the 
+         leading digit. Safe from string allocation overhead.
+[==============================================================================}
+function TIntegerHelper.Digit1st: Integer; overload;
+var
+  n, d, t: Int64;
+begin
+  n := Int64(IfThen((Self < 0), -Self, Self));
+  d := 1;
+  t := (n div 10);
+  while (d <= t) do
+    d := (d * 10);
+  Result := (n div d);
+end;
+
+{==============================================================================]
+  <DigitFirst>
+  @action: Extracts the first (most significant) digit of the integer using a 
+           pre-calculated powers-of-10 lookup table.
+  @note: Highly optimized O(1) time complexity approach. It instantly handles 
+         zero, converts negative numbers via `Abs`, and walks backward through 
+         the `POW10` array to find the exact divisor scale without performing 
+         expensive math operations in a loop.
+[==============================================================================}
+function TIntegerHelper.DigitFirst: Integer; overload;
+const
+  POW10: array[0..9] of Int64 = (1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000);
+var
+  n: Int64;
+  i: Integer;
+begin
+  if (Self = 0) then
+    Exit(0);
+  n := Abs(Self);
+  i := 9;
+  while ((i > 0) and (n < POW10[i])) do
+    Dec(i);
+  Result := (n div POW10[i]);
+end;
+
+{==============================================================================]
+  <DigitLst>
+  @action: Extracts the last (least significant) digit of the integer using 
+           the modulo operator.
+  @note: Highly efficient. It converts negative numbers to positive values 
+         and applies `mod 10` to instantly strip away everything except the 
+         final digit.
+[==============================================================================}
+function TIntegerHelper.DigitLst: Integer; overload;
+begin
+  Result := (Int64(IfThen((Self < 0), -Self, Self)) mod 10);
+end;
+
+{==============================================================================]
+  <DigitLast>
+  @action: Extracts the last (least significant) digit of the integer using 
+           the modulo operator.
+  @note: Highly efficient. It converts negative numbers to positive values 
+         and applies `mod 10` to instantly strip away everything except the 
+         final digit.
+[==============================================================================}
+function TIntegerHelper.DigitLast: Integer; overload;
+begin
+  Result := (Abs(Self) mod 10);
+end;
+
+{==============================================================================]
   <Digits>
   @action: Converts Integer value (x) to digits of it.
            Example: 1234 => 1,2,3,4, -999 => 9,9,9
   @note: If x is negative value, the negative sign is ignored.
          Works with -2147483648 - 2147483647!
 [==============================================================================}
-function TIntegerHelper.Digits: TIntegerArray;
+function TIntegerHelper.Digits: TIntegerArray; overload;
 var
   s: string;
   l, i: Integer;
@@ -48,13 +129,42 @@ begin
 end;
 
 {==============================================================================]
+  <Digitted>
+  @action: Extracts all digits of the integer into a dynamic TIntegerArray,
+           ordered from most significant digit to least significant digit.
+  @note: Cross-compiler compatible implementation optimized for Free Pascal and
+         Delphi. Bypasses the strict `var` reference checks of `DivMod` by using
+         native `mod` and `div` operators, which seamlessly handle `Int64` data
+         types and prevent `Low(Integer)` overflow traps.
+[==============================================================================}
+function TIntegerHelper.Digitted: TIntegerArray; overload;
+var
+  n: Int64;
+  b: array[0..9] of Integer;
+  l, i: Integer;
+begin
+  if (Self = 0) then
+    Exit([0]);
+  n := Abs(Int64(Self));
+  l := 0;
+  while (n > 0) do
+  begin
+    b[l.Increase] := (n mod 10);
+    n := (n div 10);
+  end;
+  SetLength(Result, l);
+  for i := 0 to (l - 1) do
+    Result[i] := b[(l - 1) - i];
+end;
+
+{==============================================================================]
   <Digitz>
   @action: Converts Integer value (x) to digits of it.
            Example: 1234 => 1,2,3,4, -999 => 9,9,9
   @note: If x is negative value, the negative sign is ignored.
          Works with -2147483648 - 2147483647!
 [==============================================================================}
-function TIntegerHelper.Digitz: TIntegerArray;
+function TIntegerHelper.Digitz: TIntegerArray; overload;
 var
   a, n, m: Int64;
   i, r: Integer;
@@ -99,6 +209,51 @@ begin
 end;
 
 {==============================================================================]
+  <FrontDigit>
+  @action: Extracts the first (most significant) digit of the integer by 
+           repeatedly dividing the number by 10 until a single digit remains.
+  @note: Highly intuitive and does not require an array lookup table. 
+         CRITICAL: To prevent an integer overflow bug when `Self` is exactly 
+         `Low(Integer)` (-2,147,483,648), `Self` must be safely cast to an 
+         `Int64` before taking its absolute value: `n := Abs(Int64(Self));`.
+[==============================================================================}
+function TIntegerHelper.FrontDigit: Integer; overload;
+var
+  n: Int64;
+begin
+  n := Abs(Self);
+  while (n >= 10) do
+    n := (n div 10);
+  Result := n;
+end;
+
+{==============================================================================]
+  <HeadDigit>
+  @action: Extracts the first (most significant) digit of the integer using a 
+           pre-calculated powers-of-10 lookup table and System.Math.DivMod.
+  @note: Highly optimized O(1) approach. It features explicit short-circuiting 
+         for zero, and handles boundaries safely by immediately returning `2` 
+         if `Self` is either `Low(Integer)` (-2147483648) or `High(Integer)` 
+         (2147483647).
+[==============================================================================}
+function TIntegerHelper.HeadDigit: Integer; overload;
+const
+  POW10: array[0..9] of Integer = (1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000);
+var
+  n, i, d: Integer;
+begin
+  if (Self = 0) then
+    Exit(0);
+  if ((Self = Low(Integer)) or (Self = High(Integer))) then
+    Exit(2);
+  n := Abs(Self);
+  i := 9;
+  while ((i > 0) and (n < POW10[i])) do
+    Dec(i);
+  Math.DivMod(n, POW10[i], Result, d);
+end;
+
+{==============================================================================]
   <LastDigit>
   @action: Extracts the last digit of the integer by converting it to a string 
            and back to an integer.
@@ -111,6 +266,25 @@ begin
 end;
 
 {==============================================================================]
+  <RearDigit>
+  @action: Extracts the last (least significant) digit of the integer using 
+           conditional modulo operations.
+  @note: Thread-safe and safe from overflow bugs. It explicitly branches to 
+         handle zero, positive integers, and negative integers (using an 
+         un-sign inversion `-Self` cast to Int64) to isolate the final digit 
+         via `mod 10`.
+[==============================================================================}
+function TIntegerHelper.RearDigit: Integer; overload;
+begin
+  if (Self = 0) then
+    Result := 0
+  else if (Self > 0) then
+    Result := (Int64(Self) mod 10)
+  else
+    Result := (Int64(-Self) mod 10);
+end;
+
+{==============================================================================]
   <StartDigit>
   @action: Extracts the first digit of the integer using efficient ASCII math, 
            properly handling negative signs.
@@ -120,5 +294,27 @@ end;
 function TIntegerHelper.StartDigit: Integer; overload;
 begin
   Result := (Ord(IntToStr(Self)[IfThen((Self < 0), 2, 1)]) - 48);
+end;
+
+{==============================================================================]
+  <TailDigit>
+  @action: Extracts the last (least significant) digit of the integer using
+           the optimized System.Math.DivMod procedure.
+  @note: Highly efficient and safe from boundary bugs. It explicitly handles
+         and hardcodes the return values for `Low(Integer)` (-2147483648 -> 8)
+         and `High(Integer)` (2147483647 -> 7), allowing it to safely use a
+         single assembly instruction via `DivMod` for all other values.
+[==============================================================================}
+function TIntegerHelper.TailDigit: Integer; overload;
+var
+  d: Integer;
+begin
+  if (Self = 0) then
+    Exit(0);
+  if (Self = Low(Integer)) then
+    Exit(8)
+  else if (Self = High(Integer)) then
+    Exit(7);
+  Math.DivMod(Abs(Self), 10, d, Result);
 end;
 {$ENDIF}
