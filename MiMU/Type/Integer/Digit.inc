@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function AsDigits: TIntegerArray; overload;
 function DigitCount: Integer; overload;
 function Digit1st: Integer; overload;
 function DigitFirst: Integer; overload;
@@ -10,14 +11,45 @@ function Digitz: TIntegerArray; overload;
 function FinalDigit: Integer; overload;
 function FirstDigit: Integer; overload;
 function FrontDigit: Integer; overload;
+function GetDigits: TIntegerArray; overload;
 function HeadDigit: Integer; overload;
 function LastDigit: Integer; overload;
 function RearDigit: Integer; overload;
 function StartDigit: Integer; overload;
 function TailDigit: Integer; overload;
+function ToDigits: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsDigits>
+  @action: Converts the integer into an array of its individual digits.
+  @note: Treats negative numbers as positive (ignores the sign via Abs). 
+         Returns [0] if the value is 0.
+[==============================================================================}
+function TIntegerHelper.AsDigits: TIntegerArray; overload;
+var
+  n, c, i, d: Integer;
+begin
+  if (Self = 0) then
+    Exit([0]);
+  n := Abs(Self);
+  d := n;
+  c := 0;
+  while (d > 0) do
+  begin
+    Inc(c);
+    d := (d div 10);
+  end;
+  SetLength(Result, c);
+  d := n;
+  for i := (c - 1) downto 0 do
+  begin
+    Result[i] := (d mod 10);
+    d := (d div 10);
+  end;
+end;
+
 {==============================================================================]
   <DigitCount>
   @action: Returns count of digits Integer x value contains.
@@ -119,12 +151,11 @@ end;
 function TIntegerHelper.Digits: TIntegerArray; overload;
 var
   s: string;
-  l, i: Integer;
+  i: Integer;
 begin
   s := IntToStr(Abs(Self));
-  l := Length(s);
-  SetLength(Result, l);
-  for i := 0 to (l - 1) do
+  SetLength(Result, Length(s));
+  for i := 0 to High(Result) do
     Result[i] := StrToInt(s[i + 1]);
 end;
 
@@ -228,6 +259,31 @@ begin
 end;
 
 {==============================================================================]
+  <GetDigits>
+  @action: Extracts the individual digits of the integer into an array using a fixed-size local buffer.
+  @note: Treats negative numbers as positive (ignores the sign via Abs). 
+         Returns [0] if the value is 0. Reverses the internal buffer to maintain correct digit order.
+[==============================================================================}
+function TIntegerHelper.GetDigits: TIntegerArray; overload;
+var
+  n, c, i: Integer;
+  r: array[0..9] of Integer;
+begin
+  if (Self = 0) then
+    Exit([0]);
+  n := Abs(Self);
+  c := 0;
+  while (n > 0) do
+  begin
+    r[c.Increase] := (n mod 10);
+    n := (n div 10);
+  end;
+  SetLength(Result, c);
+  for i := 0 to (c - 1) do
+    Result[i] := r[(c - 1) - i];
+end;
+
+{==============================================================================]
   <HeadDigit>
   @action: Extracts the first (most significant) digit of the integer using a 
            pre-calculated powers-of-10 lookup table and System.Math.DivMod.
@@ -316,5 +372,21 @@ begin
   else if (Self = High(Integer)) then
     Exit(7);
   Math.DivMod(Abs(Self), 10, d, Result);
+end;
+
+{==============================================================================]
+  <ToDigits>
+  @action: Converts the integer into an array of its individual digits using string conversion.
+  @note: Treats negative numbers as positive (ignores the sign via Abs). 
+         Relies on character ASCII offsets (subtracting 48 from the character code).
+[==============================================================================}
+function TIntegerHelper.ToDigits: TIntegerArray; overload;
+var
+  s: string;
+  i: Integer;
+begin
+  s := IntToStr(Abs(Self));
+  for i := 1 to Result.SetSize(Length(s)) do
+    Result[i-1] := (Ord(s[i]) - 48);
 end;
 {$ENDIF}
