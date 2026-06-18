@@ -5,6 +5,8 @@ function Digit1st: Integer; overload;
 function DigitFirst: Integer; overload;
 function DigitLst: Integer; overload;
 function DigitLast: Integer; overload;
+function Digitlist: TIntegerArray; overload;
+function Digitment: TIntegerArray; overload;
 function Digits: TIntegerArray; overload;
 function Digitted: TIntegerArray; overload;
 function Digitz: TIntegerArray; overload;
@@ -139,6 +141,56 @@ end;
 function TIntegerHelper.DigitLast: Integer; overload;
 begin
   Result := (Abs(Self) mod 10);
+end;
+
+{==============================================================================]
+  <Digitlist>
+  @action: Extracts the digits of the integer into an array using a generic TList for dynamic storage.
+  @note: Treats negative numbers as positive (ignores the sign via Abs). Returns [0] if the value is 0. 
+         Allocates and frees a generic collection (specialize TList<Integer>) internally.
+[==============================================================================}
+function TIntegerHelper.Digitlist: TIntegerArray; overload;
+var
+  i, n: Integer;
+  l: specialize TList<Integer>;
+begin
+  if (Self = 0) then
+    Exit([0]);
+  n := Abs(Self);
+  l := specialize TList<Integer>.Create;
+  try
+    while (n > 0) do
+    begin
+      l.Add(n mod 10);
+      n := (n div 10);
+    end;
+    l.Reverse;
+    Result := l.ToArray;
+  finally
+    l.Free;
+  end;
+end;
+
+{==============================================================================]
+  <Digitment>
+  @action: Extracts the digits of the integer into an array using logarithmic math to determine length and position.
+  @note: Treats negative numbers as positive (ignores the sign via Abs). Returns [0] if the value is 0. 
+         Relies on floating-point math (Log10, Power, Floor, Round) from the System.Math unit.
+[==============================================================================}
+function TIntegerHelper.Digitment: TIntegerArray; overload;
+var
+  n, i, d: Integer;
+begin
+  if (Self = 0) then
+    Exit([0]);
+  n := Abs(Self);
+  d := Round(Power(10, (Result.SetSize(Floor(Log10(n)) + 1) - 1)));
+  for i := 0 to High(Result) do
+  begin
+    Result[i] := (n div d);
+    n := (n mod d);
+    d := (d div 10);
+  end;
 end;
 
 {==============================================================================]
