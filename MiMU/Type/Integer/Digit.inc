@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function AsDigits: TIntegerArray; overload;
+function DigitAmount: Integer; overload;
 function DigitCount: Integer; overload;
 function Digit1st: Integer; overload;
 function DigitFirst: Integer; overload;
@@ -8,6 +9,8 @@ function DigitLast: Integer; overload;
 function Digitlist: TIntegerArray; overload;
 function Digitment: TIntegerArray; overload;
 function Digits: TIntegerArray; overload;
+function DigitsAmount: Integer; overload;
+function DigitsCounted: Integer; overload;
 function Digitted: TIntegerArray; overload;
 function Digitz: TIntegerArray; overload;
 function FinalDigit: Integer; overload;
@@ -50,6 +53,23 @@ begin
     Result[i] := (d mod 10);
     d := (d div 10);
   end;
+end;
+
+{==============================================================================]
+  <DigitAmount>
+  @action: Returns the total number of digits in the integer.
+  @note: Works accurately for all positive and negative Int64 values.
+[==============================================================================}
+function TIntegerHelper.DigitAmount: Integer; overload;
+var
+  n: Int64;
+  i: Integer;
+begin
+  n := Abs(Int64(Self));
+  for i := 1 to 9 do
+    if (n <= ALL_NINES[i]) then
+      Exit(i);
+  Result := 10;
 end;
 
 {==============================================================================]
@@ -209,6 +229,52 @@ begin
   SetLength(Result, Length(s));
   for i := 0 to High(Result) do
     Result[i] := StrToInt(s[i + 1]);
+end;
+
+{==============================================================================]
+  <DigitsAmount>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function TIntegerHelper.DigitsAmount: Integer; overload;
+begin
+  if (Self = 0) then
+    Exit(1);
+  if (Self = Low(Integer)) then
+    Exit(10);
+  Result := (Floor(Log10(Abs(Self))) + 1);
+end;
+
+{==============================================================================]
+  <DigitsCounted>
+  @action: Returns the total number of digits in the 32-bit Integer instance.
+  @note: Works accurately for all positive and negative Integer values without
+         relying on string conversions or loops.
+[==============================================================================}
+function TIntegerHelper.DigitsCounted: Integer; overload;
+begin
+  if (Self = Low(Integer)) then
+    Exit(10);
+  Result := Abs(Self);
+  if (Result < 10) then
+    Exit(1);
+  if (Result < 100) then
+    Exit(2);
+  if (Result < 1000) then
+    Exit(3);
+  if (Result < 10000) then
+    Exit(4);
+  if (Result < 100000) then
+    Exit(5);
+  if (Result < 1000000) then
+    Exit(6);
+  if (Result < 10000000) then
+    Exit(7);
+  if (Result < 100000000) then
+    Exit(8);
+  if (Result < 1000000000) then
+    Exit(9);
+  Result := 10;
 end;
 
 {==============================================================================]

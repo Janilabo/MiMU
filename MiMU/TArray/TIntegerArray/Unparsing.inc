@@ -88,13 +88,6 @@ end;
   @note: Restricted to arrays of length 19 or fewer to prevent Int64 overflow. Returns -1 if the array exceeds this limit.
 [==============================================================================}
 function TIntegerArrayHelper.Valuent: Int64; overload;
-const
-  POW10: array[0..18] of Int64 = (
-    1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000,
-    1000000000, 10000000000, 100000000000, 1000000000000, 10000000000000,
-    100000000000000, 1000000000000000, 10000000000000000, 100000000000000000,
-    1000000000000000000
-  );
 var
   i, l: Integer;
 begin
@@ -103,6 +96,6 @@ begin
     Exit(-1);
   Result := 0;
   for i := 0 to (l - 1) do
-    Result := (Result + (Self[i] * POW10[(l - i) - 1]));
+    Result := (Result + (Self[i] * POWERS_OF_TEN[(l - i) - 1]));
 end;
 {$ENDIF}
