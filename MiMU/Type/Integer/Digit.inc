@@ -4,6 +4,7 @@ function DigitAmount: Integer; overload;
 function DigitCount: Integer; overload;
 function Digit1st: Integer; overload;
 function DigitFirst: Integer; overload;
+function Digiting: TIntegerArray; overload;
 function DigitLst: Integer; overload;
 function DigitLast: Integer; overload;
 function Digitlist: TIntegerArray; overload;
@@ -138,6 +139,26 @@ begin
 end;
 
 {==============================================================================]
+  <Digiting>
+  @action: Splits the integer value into an array of its individual digits.
+  @note: Handles negative numbers by taking the absolute value; expects a 
+         helper property or method `DigitCount` to correctly size the result array.
+[==============================================================================}
+function TIntegerHelper.Digiting: TIntegerArray; overload;
+var
+  n: Int64;
+  i: Integer;
+begin
+  n := Abs(Int64(Self));
+  SetLength(Result, Self.DigitCount);
+  for i := High(Result) downto 0 do
+  begin
+    Result[i] := (n mod 10);
+    n := n div 10;
+  end;
+end;
+
+{==============================================================================]
   <DigitLst>
   @action: Extracts the last (least significant) digit of the integer using 
            the modulo operator.
@@ -233,8 +254,10 @@ end;
 
 {==============================================================================]
   <DigitsAmount>
-  @action: ?
-  @note: ?
+  @action: Returns the total number of digits in the Integer instance using
+           a logarithmic calculation.
+  @note: Requires the 'Math' unit. Safely handles zero and the minimum 
+         possible negative integer boundary.
 [==============================================================================}
 function TIntegerHelper.DigitsAmount: Integer; overload;
 begin

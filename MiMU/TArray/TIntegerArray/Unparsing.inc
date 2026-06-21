@@ -4,6 +4,7 @@ function Bevalue: Int64; overload;
 function ToValue: Int64; overload;
 function Valuement: Int64; overload;
 function Valuent: Int64; overload;
+function ToInt64: Int64; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -97,5 +98,21 @@ begin
   Result := 0;
   for i := 0 to (l - 1) do
     Result := (Result + (Self[i] * POWERS_OF_TEN[(l - i) - 1]));
+end;
+
+{==============================================================================]
+  <ToInt64>
+  @action: Combines an array of individual digits back into a single Int64 integer.
+  @note: Relies on a precalculated `POWERS_OF_TEN` array. Ensure the input array 
+         length does not exceed the maximum precision of a 64-bit signed integer 
+         (up to 19 digits) to prevent overflow or out-of-bounds errors.
+[==============================================================================}
+function TIntegerArrayHelper.ToInt64: Int64; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Result := (Result + (Self[i] * POWERS_OF_TEN[High(Self) - i]));
 end;
 {$ENDIF}
