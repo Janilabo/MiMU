@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function AsDigits: TIntegerArray; overload;
+function CountDigits: Integer; overload;
 function DigitAmount: Integer; overload;
 function DigitCount: Integer; overload;
 function Digit1st: Integer; overload;
@@ -9,9 +10,12 @@ function DigitLst: Integer; overload;
 function DigitLast: Integer; overload;
 function Digitlist: TIntegerArray; overload;
 function Digitment: TIntegerArray; overload;
+function DigitQuantity: Integer; overload;
 function Digits: TIntegerArray; overload;
 function DigitsAmount: Integer; overload;
+function DigitsCount: Integer; overload;
 function DigitsCounted: Integer; overload;
+function DigitsQuantity: Integer; overload;
 function Digitted: TIntegerArray; overload;
 function Digitz: TIntegerArray; overload;
 function FinalDigit: Integer; overload;
@@ -20,6 +24,7 @@ function FrontDigit: Integer; overload;
 function GetDigits: TIntegerArray; overload;
 function HeadDigit: Integer; overload;
 function LastDigit: Integer; overload;
+function NDigited(const digitCount: Integer): Boolean; overload;
 function RearDigit: Integer; overload;
 function StartDigit: Integer; overload;
 function TailDigit: Integer; overload;
@@ -53,6 +58,33 @@ begin
   begin
     Result[i] := (d mod 10);
     d := (d div 10);
+  end;
+end;
+
+{==============================================================================]
+  <CountDigits>
+  @action: Calculates the total number of digits required to represent the 
+           integer value in base-10.
+  @note: Negative signs are ignored in the count. Safely handles the 
+         Low(Integer) boundary condition to prevent an integer overflow 
+         when calling Abs().
+[==============================================================================}
+function TIntegerHelper.CountDigits: Integer; overload;
+begin
+  if (Self = Low(Integer)) then
+    Exit(10);
+  case Abs(Self) of
+    0..9: Result := 1;
+    10..99: Result := 2;
+    100..999: Result := 3;
+    1000..9999: Result := 4;
+    10000..99999: Result := 5;
+    100000..999999: Result := 6;
+    1000000..9999999: Result := 7;
+    10000000..99999999: Result := 8;
+    100000000..999999999: Result := 9;
+  else
+    Result := 10;
   end;
 end;
 
@@ -235,6 +267,26 @@ begin
 end;
 
 {==============================================================================]
+  <DigitQuantity>
+  @action: Counts the total number of digits in the integer by checking the 
+           length of its string representation.
+  @note: Automatically strips or offsets the negative sign for negative numbers. 
+         Safely isolates Low(Integer) to prevent a string conversion that includes 
+         an unexpected overflow representation.
+[==============================================================================}
+function TIntegerHelper.DigitQuantity: Integer; overload;
+begin
+  if (Self = 0) then
+    Result := 1
+  else if (Self > 0) then
+    Result := Length(IntToStr(Self))
+  else if (Self = Low(Integer)) then
+    Result := 10
+  else
+    Result := (Length(IntToStr(Self)) - 1);
+end;
+
+{==============================================================================]
   <Digits>
   @action: Converts Integer value (x) to digits of it.
            Example: 1234 => 1,2,3,4, -999 => 9,9,9
@@ -269,6 +321,27 @@ begin
 end;
 
 {==============================================================================]
+  <DigitsCount>
+  @action: Counts the total number of digits in the integer by repeatedly 
+           dividing the absolute value by 10 until it reaches zero.
+  @note: Uses purely integer math. Safely bypasses the loop for Low(Integer) 
+         to prevent an integer overflow error when calling Abs().
+[==============================================================================}
+function TIntegerHelper.DigitsCount: Integer; overload;
+var
+  s: Integer;
+begin
+  if (Self = Low(Integer)) then
+    Exit(10);
+  Result := 0;
+  s := Abs(Self);
+  repeat
+    s := (s div 10);
+    Inc(Result);
+  until (s = 0);
+end;
+
+{==============================================================================]
   <DigitsCounted>
   @action: Returns the total number of digits in the 32-bit Integer instance.
   @note: Works accurately for all positive and negative Integer values without
@@ -298,6 +371,58 @@ begin
   if (Result < 1000000000) then
     Exit(9);
   Result := 10;
+end;
+
+{==============================================================================]
+  <DigitsQuantity>
+  @action: Calculates the number of digits in the integer using a hardcoded 
+           binary search tree structure to minimize conditional evaluations.
+  @note: Casts to Int64 to allow safe absolute value calculation. Directly 
+         bypasses the decision tree for Low(Integer) to protect bounds.
+[==============================================================================}
+function TIntegerHelper.DigitsQuantity: Integer; overload;
+var
+  V: Int64;
+begin
+  if (Self = Low(Integer)) then
+    Exit(10);
+  V := Abs(Int64(Self));
+  case (V < 10000) of
+    True:
+    case (V < 100) of
+      True:
+      if (V < 10) then
+        Result := 1
+      else
+        Result := 2;
+      False:
+      if (V < 1000) then
+        Result := 3
+      else
+        Result := 4;
+    end;
+    False:
+    case (V < 1000000) of
+      True:
+      if (V < 100000) then
+        Result := 5
+      else
+        Result := 6;
+      False:
+      case (V < 100000000) of
+        True:
+        if (V < 10000000) then
+          Result := 7
+        else
+          Result := 8;
+        False:
+        if (V < 1000000000) then
+          Result := 9
+        else
+          Result := 10;
+      end;
+    end;
+  end;
 end;
 
 {==============================================================================]
@@ -460,6 +585,20 @@ end;
 function TIntegerHelper.LastDigit: Integer; overload;
 begin
   Result := StrToInt(IntToStr(Self).Lasty);
+end;
+
+{==============================================================================]
+  <NDigited>
+  @action: Checks if the current integer has exactly the specified number of digits.
+  @note: 
+    * Validates that digitCount is within a safe range for a 32-bit signed integer (1 to 10).
+    * Uses Abs(Self) to support both positive and negative numbers seamlessly.
+    * Performs a high-performance mathematical boundary check against a pre-defined 
+      lookup array (ALL_NINES) instead of executing a slow string conversion.
+[==============================================================================}
+function TIntegerHelper.NDigited(const digitCount: Integer): Boolean; overload;
+begin
+  Result := (InRange(digitCount, 1, 10) and InRange(Abs(Self), (ALL_NINES[digitCount - 1] + 1), ALL_NINES[digitCount]));
 end;
 
 {==============================================================================]
