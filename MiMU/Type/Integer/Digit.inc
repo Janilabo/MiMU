@@ -8,12 +8,14 @@ function DigitCounter: Integer; overload;
 function Digit1st: Integer; overload;
 function DigitFirst: Integer; overload;
 function Digiting: TIntegerArray; overload;
-function DigitLst: Integer; overload;
 function DigitLast: Integer; overload;
+function DigitLength: Integer; overload;
 function Digitlist: TIntegerArray; overload;
+function DigitLst: Integer; overload;
 function Digitment: TIntegerArray; overload;
 function DigitQuantity: Integer; overload;
 function Digits: TIntegerArray; overload;
+function DigitSize: Integer; overload;
 function DigitsAmount: Integer; overload;
 function DigitsCount: Integer; overload;
 function DigitsCounted: Integer; overload;
@@ -245,16 +247,22 @@ begin
 end;
 
 {==============================================================================]
-  <DigitLst>
-  @action: Extracts the last (least significant) digit of the integer using 
-           the modulo operator.
-  @note: Highly efficient. It converts negative numbers to positive values 
-         and applies `mod 10` to instantly strip away everything except the 
-         final digit.
+  <DigitLength>
+  @action: Determines the digit count by finding the largest power of ten
+           that fits into the absolute value via repeated subtraction,
+           then counting that position in the power table.
+  @note: Uses only subtraction and table lookup; no division, multiplication,
+         or floating-point. Promotes to Int64 for safe Abs() on Low(Integer).
 [==============================================================================}
-function TIntegerHelper.DigitLst: Integer; overload;
+function TIntegerHelper.DigitLength: Integer; overload;
+var
+  s: Int64;
 begin
-  Result := (Int64(IfThen((Self < 0), -Self, Self)) mod 10);
+  s := Abs(Int64(Self));
+  Result := 9;
+  while ((Result > 0) and (s < POWERS_OF_TEN[Result])) do
+    Dec(Result);
+  Inc(Result);
 end;
 
 {==============================================================================]
@@ -296,6 +304,19 @@ begin
   finally
     l.Free;
   end;
+end;
+
+{==============================================================================]
+  <DigitLst>
+  @action: Extracts the last (least significant) digit of the integer using 
+           the modulo operator.
+  @note: Highly efficient. It converts negative numbers to positive values 
+         and applies `mod 10` to instantly strip away everything except the 
+         final digit.
+[==============================================================================}
+function TIntegerHelper.DigitLst: Integer; overload;
+begin
+  Result := (Int64(IfThen((Self < 0), -Self, Self)) mod 10);
 end;
 
 {==============================================================================]
@@ -356,6 +377,25 @@ begin
   SetLength(Result, Length(s));
   for i := 0 to High(Result) do
     Result[i] := StrToInt(s[i + 1]);
+end;
+
+{==============================================================================]
+  <DigitSize>
+  @action: Calculates the number of digits required to represent the integer as a string in base-10.
+  @note: Handles negative numbers by taking their absolute value (the minus sign is not counted as a digit). Explicitly handles special edge cases like 0 and Low(Integer).
+[==============================================================================}
+function TIntegerHelper.DigitSize: Integer; overload;
+var
+  s: Int64;
+begin
+  if (Self = Low(Integer)) then
+    Exit(10);
+  if (Self = 0) then
+    Exit(1);
+  s := Abs(Int64(Self));
+  Result := 0;
+  while ((Result < 10) and (s >= Int64(POWERS_OF_TEN[Result]))) do
+    Inc(Result);
 end;
 
 {==============================================================================]
