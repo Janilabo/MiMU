@@ -3,6 +3,7 @@ function AsDigits: TIntegerArray; overload;
 function CountDigits: Integer; overload;
 function DigitAmount: Integer; overload;
 function DigitCount: Integer; overload;
+function DigitCounter: Integer; overload;
 function Digit1st: Integer; overload;
 function DigitFirst: Integer; overload;
 function Digiting: TIntegerArray; overload;
@@ -25,6 +26,7 @@ function GetDigits: TIntegerArray; overload;
 function HeadDigit: Integer; overload;
 function LastDigit: Integer; overload;
 function NDigited(const digitCount: Integer): Boolean; overload;
+function QuantifyDigits: Integer; overload;
 function RearDigit: Integer; overload;
 function StartDigit: Integer; overload;
 function TailDigit: Integer; overload;
@@ -122,6 +124,35 @@ begin
     n := (a mod m);
     m := (m * 10);
   until ((Result.Increment = 10) or (n = a));
+end;
+
+{==============================================================================]
+  <DigitCounter>
+  @action: Calculates the total number of digits in the current integer value 
+           using an optimized binary search approach.
+  @note: Thread-safe and handles edge cases such as zero (1 digit) and 
+         the minimum possible integer value (10 digits).
+[==============================================================================}
+function TIntegerHelper.DigitCounter: Integer; overload;
+var
+  s: Int64;
+  h, m: Integer;
+begin
+  if (Self = 0) then
+    Exit(1);
+  if (Self = Low(Integer)) then
+    Exit(10);
+  s := Abs(Int64(Self));
+  Result := 1;
+  h := 10;
+  while (Result < h) do
+  begin
+    m := ((Result + h) div 2);
+    if (s < POWERS_OF_TEN[m]) then
+      h := m
+    else
+      Result := (m + 1);
+  end;
 end;
 
 {==============================================================================]
@@ -599,6 +630,49 @@ end;
 function TIntegerHelper.NDigited(const digitCount: Integer): Boolean; overload;
 begin
   Result := (InRange(digitCount, 1, 10) and InRange(Abs(Self), (ALL_NINES[digitCount - 1] + 1), ALL_NINES[digitCount]));
+end;
+
+{==============================================================================]
+  <QuantifyDigits>
+  @action: Determines the total digit count using a nested if-then-else 
+           decision tree to minimize comparisons.
+  @note: Leverages an Int64 cast for safe absolute value processing. Directly 
+         returns 10 for Low(Integer) to prevent overflow anomalies.
+[==============================================================================}
+function TIntegerHelper.QuantifyDigits: Integer; overload;
+var
+  s: Int64;
+begin
+  if (Self = Low(Integer)) then
+    Exit(10);
+  s := Abs(Int64(Self));
+  if (s < 10000) then
+  begin
+    if (s < 100) then
+      if (s < 10) then
+        Result := 1
+      else
+        Result := 2
+    else if (s < 1000) then
+      Result := 3
+    else
+      Result := 4;
+  end else if (s < 1000000) then
+  begin
+    if (s < 100000) then
+      Result := 5
+    else
+      Result := 6;
+  end else if (s < 100000000) then
+  begin
+    if (s < 10000000) then
+      Result := 7
+    else
+      Result := 8;
+  end else if (s < 1000000000) then
+    Result := 9
+  else
+    Result := 10;
 end;
 
 {==============================================================================]
