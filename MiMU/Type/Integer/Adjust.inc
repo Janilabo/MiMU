@@ -40,6 +40,7 @@ function X(const N: Integer = 1): Integer; overload;
 function X2(const N: Integer = 1): Integer; overload;
 function X3(const N: Integer = 1): Integer; overload;
 function X4(const N: Integer = 1): Integer; overload;
+function X10(const N: Integer = 1): Integer; overload;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
@@ -61,6 +62,7 @@ function X(var val: Integer; const N: Integer = 1): Integer; overload;
 function X2(var val: Integer; const N: Integer = 1): Integer; overload;
 function X3(var val: Integer; const N: Integer = 1): Integer; overload;
 function X4(var val: Integer; const N: Integer = 1): Integer; overload;
+function X10(var val: Integer; const N: Integer = 1): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -613,6 +615,20 @@ begin
 end;
 
 {==============================================================================]
+  <X10>
+  @action: Returns the value of the integer multiplied by 10 and further scaled by
+           the specified factor `N`.
+  @note:
+    - Does not modify the original integer; returns the computed value.
+    - Equivalent to `Self * (10 * N)`.
+    - If `N` is not specified, it defaults to 1 and the result is `Self * 10`.
+[==============================================================================}
+function TIntegerHelper.X10(const N: Integer = 1): Integer; overload;
+begin
+  Result := ((Self * 10) * N);
+end;
+
+{==============================================================================]
   <Dec2>
   @action: Decrements two variables by a specified value and returns their sum.
   @note: Operates directly on the passed variables (var). Defaults to subtracting 1.
@@ -849,6 +865,21 @@ end;
 function X4(var val: Integer; const N: Integer = 1): Integer; overload;
 begin
   val := ((val * 4) * N);
+  Result := val;
+end;
+
+{==============================================================================]
+  <X10>
+  @action: Multiplies the given integer variable `val` by 10 and further scales it by
+           the specified factor `N`, returning the resulting value.
+  @note:
+    - The parameter `val` is modified in-place.
+    - Equivalent to: `val := val * (10 * N)`.
+    - If `N` is not specified, it defaults to 1 and `val` is multiplied by 10.
+[==============================================================================}
+function X10(var val: Integer; const N: Integer = 1): Integer; overload;
+begin
+  val := ((val * 10) * N);
   Result := val;
 end;
 {$ENDIF}

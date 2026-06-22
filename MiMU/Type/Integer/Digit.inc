@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function AsDigits: TIntegerArray; overload;
+function CalculateDigits: Integer; overload;
 function CountDigits: Integer; overload;
 function DigitAmount: Integer; overload;
 function DigitCount: Integer; overload;
@@ -26,8 +27,10 @@ function GetDigits: TIntegerArray; overload;
 function HeadDigit: Integer; overload;
 function LastDigit: Integer; overload;
 function NDigited(const digitCount: Integer): Boolean; overload;
+function NDigits: Integer; overload;
 function QuantifyDigits: Integer; overload;
 function RearDigit: Integer; overload;
+function ReckonDigits: Integer; overload;
 function StartDigit: Integer; overload;
 function TailDigit: Integer; overload;
 function ToDigits: TIntegerArray; overload;
@@ -61,6 +64,26 @@ begin
     Result[i] := (d mod 10);
     d := (d div 10);
   end;
+end;
+
+{==============================================================================]
+  <CalculateDigits>
+  @action: Counts the total number of digits in the integer by repeatedly
+           multiplying a threshold by 10 until it exceeds the absolute value.
+  @note: Inverse of the div-10 loop strategy. Safely handles Low(Integer)
+         to prevent overflow when calling Abs().
+[==============================================================================}
+function TIntegerHelper.CalculateDigits: Integer; overload;
+var
+  s, m: Integer;
+begin
+  if (Self = Low(Integer)) then
+    Exit(10);
+  s := Abs(Self);
+  Result := 1;
+  m := 1;
+  while ((Result < 10) and (s >= m.X(10))) do
+    Inc(Result);
 end;
 
 {==============================================================================]
@@ -633,6 +656,24 @@ begin
 end;
 
 {==============================================================================]
+  <NDigits>
+  @action: Counts the total number of digits in the integer by converting it
+           to a ShortString via Str() and measuring the resulting length.
+  @note: Avoids heap allocation by writing into a stack-local ShortString.
+         Negative sign character is excluded from the count. Handles
+         Low(Integer) safely without requiring Abs().
+[==============================================================================}
+function TIntegerHelper.NDigits: Integer; overload;
+var
+  s: ShortString;
+begin
+  Str(Self, s);
+  Result := Length(s);
+  if (Self < 0) then
+    Dec(Result);
+end;
+
+{==============================================================================]
   <QuantifyDigits>
   @action: Determines the total digit count using a nested if-then-else 
            decision tree to minimize comparisons.
@@ -692,6 +733,25 @@ begin
     Result := (Int64(Self) mod 10)
   else
     Result := (Int64(-Self) mod 10);
+end;
+
+{==============================================================================]
+  <ReckonDigits>
+  @action: Determines the total digit count of the integer value through
+           recursive integer division, using the call stack depth as the
+           implicit counter.
+  @note: A private helper handles the recursion on an Int64 to avoid
+         overflow on Abs(Low(Integer)). Negative sign is not counted.
+[==============================================================================}
+function TIntegerHelper.ReckonDigits: Integer; overload;
+  function R(const n: Int64): Integer;
+  begin
+    if (n < 10) then
+      Exit(1);
+    Result := (1 + R(n div 10));
+  end;
+begin
+  Result := R(Abs(Int64(Self)));
 end;
 
 {==============================================================================]
