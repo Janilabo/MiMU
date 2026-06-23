@@ -14,6 +14,8 @@ function Broadcast(out a, b, c: MType): MType; overload;
 function Broadcast(out a, b, c, d: MType): MType; overload;
 function Broadcast(const p: array of MPointer): MType; overload;
 function Coalesce(const alternative: MType): MType; overload;
+function Counteract(const A, B: MType): Boolean; overload;
+function Counterpart(const A, B: MType): MType; overload;
 function Into(const p: array of MPointer): MType; overload;
 function Now(out target: MType): MType; overload;
 function Plant(const p: array of MPointer): Integer; overload;
@@ -97,6 +99,45 @@ begin
     Result := Self
   else
     Result := alternative;
+end;
+
+{==============================================================================]
+  <Counteract>
+  @action: Evaluates the value in-place against a binary pair (A and B). If it 
+           matches A, it mutates to B; if it matches B, it mutates to A. 
+           Returns True if a state transition occurred.
+  @note: Destructive core operation. Acts as a strict domain-gated state flipper. 
+         Out-of-bounds values that match neither parameter remain completely 
+         unmodified and return False.
+[==============================================================================}
+function MTypeHelper.Counteract(const A, B: MType): Boolean; overload;
+var
+  S: MType;
+begin
+  S := Self;
+  if (Self = A) then
+    Self := B
+  else if (Self = B) then
+    Self := A;
+  Result := (Self <> S);
+end;
+
+{==============================================================================]
+  <Counterpart>
+  @action: Evaluates the value against a binary pair (A and B) and returns its 
+           matching opposite. If the value equals A, it yields B; if it equals 
+           B, it yields A. Otherwise, it passes the original value through.
+  @note: Pure expression function. This method operates entirely without side 
+         effects, leaving the underlying instance completely unmodified.
+[==============================================================================}
+function MTypeHelper.Counterpart(const A, B: MType): MType; overload;
+begin
+  if (Self = A) then
+    Result := B
+  else if (Self = B) then
+    Result := A
+  else
+    Result := Self;
 end;
 
 {==============================================================================]

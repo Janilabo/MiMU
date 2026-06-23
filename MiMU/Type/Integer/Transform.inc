@@ -5,11 +5,14 @@ function NegA: Integer; overload;
 function NegAbs: Integer; overload;
 function Negate: Integer; overload;
 function Negated: Integer; overload;
+function Negatize: Boolean; overload;
 function Opponize: Boolean; overload;
 function Oppose: Integer; overload;
 function Opposite: Integer; overload;
 function Posite: Integer; overload;
 function Posited: Integer; overload;
+function Positize: Boolean; overload;
+function Zeroize: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -92,6 +95,20 @@ begin
 end;
 
 {==============================================================================]
+  <Negatize>
+  @action: Converts a strictly positive integer into its negative counterpart in-place. 
+           Returns True if the sign was flipped, or False if the integer was already negative or 0.
+  @note: Destructive operation. This functions as a conditional absolute negation, leaving 
+         non-positive values entirely unaffected while providing a boolean success flag.
+[==============================================================================}
+function TIntegerHelper.Negatize: Boolean; overload;
+begin
+  Result := (Self > 0);
+  if Result then
+    Self := -Self;
+end;
+
+{==============================================================================]
   <Opponize>
   @action: Inverts the sign of the integer in-place (positive to negative, or negative to positive) as long as it is not zero. 
            Returns True if the integer was successfully inverted, or False if the integer was 0 (and thus left unchanged).
@@ -155,5 +172,31 @@ begin
     Result := -Self
   else
     Result := Self;
+end;
+
+{==============================================================================]
+  <Positize>
+  @action: Converts a strictly negative integer into its positive counterpart in-place. 
+           Returns True if the sign was flipped, or False if the integer was already positive or 0.
+  @note: Destructive operation. This functions as a conditional absolute value mechanism, leaving 
+         non-negative values entirely unaffected while providing a boolean success flag.
+[==============================================================================}
+function TIntegerHelper.Positize: Boolean; overload;
+begin
+  Result := (Self < 0);
+  if Result then
+    Self := -Self;
+end;
+
+{==============================================================================]
+  <Zeroize>
+  @action: Forces the integer to 0 in-place. Returns True if the value was changed,
+           or False if the value was already 0.
+[==============================================================================}
+function TIntegerHelper.Zeroize: Boolean; overload;
+begin
+  Result := (Self <> 0);
+  if Result then
+    Self := 0;
 end;
 {$ENDIF}
