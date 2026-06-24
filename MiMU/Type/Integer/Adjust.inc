@@ -7,20 +7,24 @@ function AdjustedMin(const cValue: Integer; const limit: Integer = -2147483648):
 function AdjustMax(const cValue: Integer; const limit: Integer = 2147483647): Boolean; overload;
 function AdjustMin(const cValue: Integer; const limit: Integer = -2147483648): Boolean; overload;
 function Cut(const N: Integer = 1): Integer; overload;
+function Dec2(const AMin: Integer; const N: Integer = 1): Boolean; overload;
 function Decr(const N: Integer = 1): Integer; overload;
 function Decrease(const N: Integer = 1): Integer; overload;
 function Decrease(const B: Boolean; const N: Integer = 1): Integer; overload;
 function Decrement(const N: Integer = 1): Integer; overload;
 function Decrement(const B: Boolean; const N: Integer = 1): Integer; overload;
 function Decret(const N: Integer = 1): Integer; overload;
+function DecTo(const AMin: Integer; const N: Integer = 1): Boolean; overload; 
 function Give(const N: Integer = 1): Integer; overload;
 function Give(const B: Boolean; const N: Integer = 1): Integer; overload;
+function Inc2(const AMax: Integer; const N: Integer = 1): Boolean; overload;
 function Incr(const N: Integer = 1): Integer; overload;
 function Increase(const N: Integer = 1): Integer; overload;
 function Increase(const B: Boolean; const N: Integer = 1): Integer; overload;
 function Increment(const N: Integer = 1): Integer; overload;
 function Increment(const B: Boolean; const N: Integer = 1): Integer; overload;
 function Incret(const N: Integer = 1): Integer; overload;
+function IncTo(const AMax: Integer; const N: Integer = 1): Boolean; overload;
 function Post(const N: Integer = 1): Integer; overload;
 function Pre(const N: Integer = 1): Integer; overload;
 function Pred(const N: Integer = 1; const minBound: Integer = -2147483648): Integer; overload;
@@ -167,6 +171,21 @@ begin
 end;
 
 {==============================================================================]
+  <Dec2>
+  @action: Attempts to decrement the integer by N, floored at a minimum limit.
+  @note: Returns True if the value was strictly greater than AMin before the operation.
+         If Self is already below AMin, it safely clamps Self to AMin and returns False.
+[==============================================================================}
+function TIntegerHelper.Dec2(const AMin: Integer; const N: Integer = 1): Boolean; overload;
+begin
+  Result := (Self > AMin);
+  if Result then
+    Self := Max((Self - N), AMin)
+  else if (Self < AMin) then
+    Self := AMin;
+end;
+
+{==============================================================================]
   <Decr>
   @action: Decrements the integer value by N (default = 1) and returns
            the updated result.
@@ -243,6 +262,17 @@ begin
 end;
 
 {==============================================================================]
+  <DecTo>
+  @action: Decrements the integer by N towards a minimum limit.
+  @note: Returns True if the resulting value has successfully reached or hit AMin.
+[==============================================================================}
+function TIntegerHelper.DecTo(const AMin: Integer; const N: Integer = 1): Boolean; overload;
+begin
+  Self := Max((Self - N), AMin);
+  Result := (Self = AMin);
+end;
+
+{==============================================================================]
   <Give>
   @action: Increases the integer by N.
   @note: Mutates Self and returns the updated value after addition.
@@ -266,6 +296,21 @@ begin
     Exit(Self);
   Result := (Self + N);
   Inc(Self, N);
+end;
+
+{==============================================================================]
+  <Inc2>
+  @action: Attempts to increment the integer by N, capped at a maximum limit.
+  @note: Returns True if the value was strictly less than AMax before the operation.
+         If Self already exceeds AMax, it safely clamps Self to AMax and returns False.
+[==============================================================================}
+function TIntegerHelper.Inc2(const AMax: Integer; const N: Integer = 1): Boolean; overload;
+begin
+  Result := (Self < AMax);
+  if Result then
+    Self := Min((Self + N), AMax)
+  else if (Self > AMax) then
+    Self := AMax;
 end;
 
 {==============================================================================]
@@ -342,6 +387,17 @@ function TIntegerHelper.Incret(const N: Integer = 1): Integer; overload;
 begin
   Inc(Self, N);
   Result := Self;
+end;
+
+{==============================================================================]
+  <IncTo>
+  @action: Increments the integer by N towards a maximum limit.
+  @note: Returns True if the resulting value has successfully reached or hit AMax.
+[==============================================================================}
+function TIntegerHelper.IncTo(const AMax: Integer; const N: Integer = 1): Boolean; overload;
+begin
+  Self := Min((Self + N), AMax);
+  Result := (Self = AMax);
 end;
 
 {==============================================================================]
