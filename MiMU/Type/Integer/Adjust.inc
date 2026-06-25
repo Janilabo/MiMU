@@ -34,6 +34,8 @@ function Retdec(const N: Integer = 1): Integer; overload;
 function Succ(const N: Integer = 1; const maxBound: Integer = 2147483647): Integer; overload;
 function Take(const N: Integer = 1): Integer; overload;
 function Take(const B: Boolean; const N: Integer = 1): Integer; overload;
+function TryDec(const AMin: Integer; const N: Integer = 1): Boolean; overload;
+function TryInc(const AMax: Integer; const N: Integer = 1): Boolean; overload;
 function Update(const cValue: Integer; const limits: TRange): Boolean; overload;
 function Updated(const cValue: Integer; const limits: TRange): Integer; overload;
 function UpdatedMax(const cValue: Integer; const limit: Integer = 2147483647): Integer; overload;
@@ -506,6 +508,36 @@ begin
     Exit(Self);
   Result := (Self - N);
   Dec(Self, N);
+end;
+
+{==============================================================================]
+  <TryDec>
+  @action: Attempts to decrement Self by N, but only if the result
+           would not go below AMin.
+  @return: True if the decrement was applied; False if it would go below AMin.
+  @note: Value remains unchanged if False.
+[==============================================================================}
+function TIntegerHelper.TryDec(const AMin: Integer; const N: Integer = 1): Boolean; overload;
+begin
+  Result := ((Self - N) >= AMin);
+  if not Result then
+    Exit;
+  Self := (Self - N);
+end;
+
+{==============================================================================]
+  <TryInc>
+  @action: Attempts to increment Self by N, but only if the result
+           would not exceed AMax.
+  @return: True if the increment was applied; False if it would exceed AMax.
+  @note: Value remains unchanged if False.
+[==============================================================================}
+function TIntegerHelper.TryInc(const AMax: Integer; const N: Integer = 1): Boolean; overload;
+begin
+  Result := ((Self + N) <= AMax);
+  if not Result then
+    Exit;
+  Self := (Self + N);
 end;
 
 {==============================================================================]

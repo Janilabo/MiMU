@@ -127,7 +127,7 @@ var
 begin
   n := Abs(Int64(Self));
   for i := 1 to 9 do
-    if (n <= ALL_NINES[i]) then
+    if (n <= NINES_TABLE[i]) then
       Exit(i);
   Result := 10;
 end;
@@ -692,7 +692,7 @@ end;
 [==============================================================================}
 function TIntegerHelper.NDigited(const digitCount: Integer): Boolean; overload;
 begin
-  Result := (InRange(digitCount, 1, 10) and InRange(Abs(Self), (ALL_NINES[digitCount - 1] + 1), ALL_NINES[digitCount]));
+  Result := (InRange(digitCount, 1, 10) and InRange(Abs(Self), (NINES_TABLE[digitCount - 1] + 1), NINES_TABLE[digitCount]));
 end;
 
 {==============================================================================]

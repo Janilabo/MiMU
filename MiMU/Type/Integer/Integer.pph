@@ -8,6 +8,7 @@
 {$I Duplication.inc}
 {$I Factorization.inc}
 {$I Generation.inc}
+{$I Math.inc}
 {$I Parity.inc}
 {$I Polarity.inc}
 {$I Proximity.inc}

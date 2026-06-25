@@ -1,29 +1,9 @@
 {$IFDEF HELPERS}
-function DivisibleBy(const value: Integer): Boolean;
-function Divisors: TIntegerArray;
-function Factors: TIntegerArray;
-function MultipleOf(const value: Integer): Boolean;
+function Divisors: TIntegerArray; overload;
+function Factors: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <DivisibleBy>
-  @action: Returns True if the current integer (`Self`) is evenly divisible by
-           `value`. The function checks whether dividing `Self` by `value`
-           yields an integer with no remainder. Uses an arithmetic identity
-           (`Self = (Self div value) * value`) instead of the modulus operator.
-  @note:
-    - Returns True for `value = 1` or `value = -1` (all integers are divisible
-      by ±1).
-    - Returns False for `value = 0` to avoid division-by-zero.
-    - Works correctly for positive and negative integers.
-    - Uses a remainder-free equality test rather than `mod`.
-[==============================================================================}
-function TIntegerHelper.DivisibleBy(const value: Integer): Boolean;
-begin
-  Result := (((value = 1) or (value = -1)) or ((value <> 0) and ((Self - (Self div value) * value) = 0)));
-end;
-
 {==============================================================================]
   <Divisors>
   @action: Returns an array of all positive divisors of Self, including Self itself.
@@ -33,7 +13,7 @@ end;
     - The resulting array contains only positive numbers and is in ascending order.
     - May be less efficient for large numbers compared to a square-root optimized method.
 [==============================================================================}
-function TIntegerHelper.Divisors: TIntegerArray;
+function TIntegerHelper.Divisors: TIntegerArray; overload;
 var
   a, i, r: Integer;
 begin
@@ -79,22 +59,5 @@ begin
   end;
   SetLength(Result, r);
   Result.QuickSort;
-end;
-
-{==============================================================================]
-  <MultipleOf>
-  @action: Returns True if the current integer (`Self`) is a multiple of
-           `value`. The function tests whether the remainder of `Self mod value`
-           is zero.
-  @note:
-    - Returns True for `value = 1` or `value = -1` (all integers are multiples
-      of ±1).
-    - Returns False for `value = 0`, since no integer is a multiple of zero.
-    - Works correctly with signed operands.
-    - Uses the standard modulus operator for remainder testing.
-[==============================================================================}
-function TIntegerHelper.MultipleOf(const value: Integer): Boolean;
-begin
-  Result := (((value = 1) or (value = -1)) or ((value <> 0) and ((Self mod value) = 0)));
 end;
 {$ENDIF}

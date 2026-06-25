@@ -9,6 +9,8 @@ function Majority3(const A, B, C: MType): Boolean; overload;
 function Among(const A, B: MType): Boolean; overload;
 function Amongst(const A, B: MType): Boolean; overload;
 function IsAbove(const target: MType): Boolean; overload;
+function IsAtLeast(const target: MType): Boolean; overload;
+function IsAtMost(const target: MType): Boolean; overload;
 function IsBelow(const target: MType): Boolean; overload;
 function IsBetween(const A, B: MType): Boolean; overload;
 function IsIn(const A, B: MType): Boolean; overload;
@@ -103,6 +105,26 @@ end;
 function MTypeHelper.IsAbove(const target: MType): Boolean; overload;
 begin
   Result := (Self > target);
+end;
+
+{==============================================================================]
+  <IsAtLeast>
+  @action: Checks if the current value is greater than or equal to the target value.
+  @note: Returns True if Self is greater than or equal to target.
+[==============================================================================}
+function MTypeHelper.IsAtLeast(const target: MType): Boolean; overload;
+begin
+  Result := (Self >= target);
+end;
+
+{==============================================================================]
+  <IsAtMost>
+  @action: Checks if the current value is less than or equal to the target value.
+  @note: Returns True if Self is less than or equal to target.
+[==============================================================================}
+function MTypeHelper.IsAtMost(const target: MType): Boolean; overload;
+begin
+  Result := (Self <= target);
 end;
 
 {==============================================================================]
