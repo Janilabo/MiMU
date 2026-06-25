@@ -3,10 +3,15 @@ function Divability(const value: Integer): Boolean; overload;
 function Divable(const value: Integer): Boolean; overload;
 function Divisibility(const value: Integer): Boolean; overload;
 function DivisibleBy(const value: Integer): Boolean; overload;
+function IsMultipleBy(const value: Integer): Boolean; overload;
+function IsMultipleFrom(const value: Integer): Boolean; overload;
+function IsMultipleOf(const value: Integer): Boolean; overload;
 function IsPowerOf2: Boolean; overload;
 function IsPowerOfTwo: Boolean; overload;
 function IsPowOf2: Boolean; overload;
 function IsPowOfTwo: Boolean; overload;
+function MultipleBy(const value: Integer): Boolean; overload;
+function MultipleFrom(const value: Integer): Boolean; overload;
 function MultipleOf(const value: Integer): Boolean; overload;
 {$ENDIF}
 
@@ -68,6 +73,41 @@ begin
 end;
 
 {==============================================================================]
+  <IsMultipleBy>
+  @action: Determines whether the current integer is a multiple of the specified value.
+  @note: Uses integer division (`div`) and multiplication to reconstruct the original number.
+         Safely avoids division-by-zero errors via short-circuit evaluation.
+[==============================================================================}
+function TIntegerHelper.IsMultipleBy(const value: Integer): Boolean; overload;
+begin
+  Result := ((value <> 0) and (((Self div value) * value) = Self));
+end;
+
+{==============================================================================]
+  <IsMultipleFrom>
+  @action: Checks if a number is a multiple using floating-point math.
+  @note: Useful when adapting integer logic to generalized `Extended` or `Double` math routines.
+[==============================================================================}
+function TIntegerHelper.IsMultipleFrom(const value: Integer): Boolean; overload;
+begin
+  if (value = 0) then
+    Exit(False);
+  Result := (Frac(Self / value) = 0.0);
+end;
+
+{==============================================================================]
+  <IsMultipleOf>
+  @action: Determines whether the current integer is a multiple of the specified value.
+  @note: Returns False if the passed value is 0 to prevent a division-by-zero runtime error.
+[==============================================================================}
+function TIntegerHelper.IsMultipleOf(const value: Integer): Boolean; overload;
+begin
+  if (value = 0) then
+    Exit(False);
+  Result := ((Self mod value) = 0);
+end;
+
+{==============================================================================]
   <IsPowerOf2>
   @action: Returns True if the integer is a positive power of 2 (e.g., 1, 2, 4, 8, 16...), and False otherwise.
   @note: Uses an efficient bitwise trick `(Self and (Self - 1)) = 0` which executes in O(1) time without loops or floating-point math.
@@ -116,19 +156,42 @@ begin
 end;
 
 {==============================================================================]
+  <MultipleBy>
+  @action: Determines whether the current integer is a multiple of the specified value, ignoring sign.
+  @note: Uses `Abs` to normalize negative divisors, then uses short-circuit evaluation to safely avoid division-by-zero errors,
+         if the absolute value is 0.
+[==============================================================================}
+function TIntegerHelper.MultipleBy(const value: Integer): Boolean; overload;
+var
+  a: Integer;
+begin
+  a := Abs(value);
+  Result := ((a > 0) and ((Self mod a) = 0));
+end;
+
+{==============================================================================]
+  <MultipleFrom>
+  @action: Determines whether the current integer is a multiple of the specified value.
+  @note: Optimizes performance for powers of 2 by using bitwise AND operations
+         (`value and (value - 1) = 0`) instead of a standard modulo division. Safely handles 0 by returning False.
+[==============================================================================}
+function TIntegerHelper.MultipleFrom(const value: Integer): Boolean; overload;
+begin
+  if (value = 0) then
+    Result := False
+  else if ((value > 0) and (value and (value - 1) = 0)) then
+    Result := ((Self and (value - 1)) = 0)
+  else
+    Result := ((Self mod value) = 0);
+end;
+
+{==============================================================================]
   <MultipleOf>
-  @action: Returns True if the current integer (`Self`) is a multiple of
-           `value`. The function tests whether the remainder of `Self mod value`
-           is zero.
-  @note:
-    - Returns True for `value = 1` or `value = -1` (all integers are multiples
-      of ±1).
-    - Returns False for `value = 0`, since no integer is a multiple of zero.
-    - Works correctly with signed operands.
-    - Uses the standard modulus operator for remainder testing.
+  @action: Determines whether the current integer is a multiple of the specified value.
+  @note: Uses a short-circuit boolean evaluation (`value <> 0`) to safely avoid division-by-zero errors.
 [==============================================================================}
 function TIntegerHelper.MultipleOf(const value: Integer): Boolean; overload;
 begin
-  Result := (((value = 1) or (value = -1)) or ((value <> 0) and ((Self mod value) = 0)));
+  Result := ((value <> 0) and ((Self mod value) = 0));
 end;
 {$ENDIF}

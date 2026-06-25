@@ -20,6 +20,7 @@ function DigitsAmount: Integer; overload;
 function DigitsCount: Integer; overload;
 function DigitsCounted: Integer; overload;
 function DigitsQuantity: Integer; overload;
+function Digitsum: Int64; overload;
 function Digitted: TIntegerArray; overload;
 function Digitz: TIntegerArray; overload;
 function FinalDigit: Integer; overload;
@@ -516,6 +517,25 @@ begin
           Result := 10;
       end;
     end;
+  end;
+end;
+
+{==============================================================================]
+  <Digitsum>
+  @action: Calculates the sum of all individual digits of the current integer.
+  @note: Uses `Abs` to properly handle negative integers.
+         Processes digits from right to left using modulo (`mod 10`) and integer division (`div 10`) until the number is exhausted.
+[==============================================================================}
+function TIntegerHelper.Digitsum: Int64; overload;
+var
+  n: Integer;
+begin
+  Result := 0;
+  n := Abs(Self);
+  while (n > 0) do
+  begin
+    Inc(Result, (n mod 10));
+    n := (n div 10);
   end;
 end;
 
