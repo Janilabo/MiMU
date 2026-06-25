@@ -2,6 +2,7 @@
 function AsDigits: TIntegerArray; overload;
 function CalculateDigits: Integer; overload;
 function CountDigits: Integer; overload;
+function CountOfDigits: Integer; overload;
 function DigitAmount: Integer; overload;
 function DigitCount: Integer; overload;
 function DigitCounter: Integer; overload;
@@ -20,7 +21,7 @@ function DigitsAmount: Integer; overload;
 function DigitsCount: Integer; overload;
 function DigitsCounted: Integer; overload;
 function DigitsQuantity: Integer; overload;
-function Digitsum: Int64; overload;
+function Digitsum: Integer; overload;
 function Digitted: TIntegerArray; overload;
 function Digitz: TIntegerArray; overload;
 function FinalDigit: Integer; overload;
@@ -114,6 +115,21 @@ begin
   else
     Result := 10;
   end;
+end;
+
+{==============================================================================]
+  <CountOfDigits>
+  @action: Calculates the total number of digits required to represent the current integer.
+  @note: Uses logarithmic math (`Log10`) branching explicitly into three distinct logic paths to handle zero, positive numbers, and negative numbers.
+[==============================================================================}
+function TIntegerHelper.CountOfDigits: Integer; overload;
+begin
+  if (Self = 0) then
+    Result := 1
+  else if (Self > 0) then
+    Result := (Trunc(Log10(Self)) + 1)
+  else
+    Result := (Trunc(Log10(-Self)) + 1);
 end;
 
 {==============================================================================]
@@ -526,7 +542,7 @@ end;
   @note: Uses `Abs` to properly handle negative integers.
          Processes digits from right to left using modulo (`mod 10`) and integer division (`div 10`) until the number is exhausted.
 [==============================================================================}
-function TIntegerHelper.Digitsum: Int64; overload;
+function TIntegerHelper.Digitsum: Integer; overload;
 var
   n: Integer;
 begin
