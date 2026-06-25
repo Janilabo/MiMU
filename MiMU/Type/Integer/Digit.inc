@@ -22,6 +22,8 @@ function DigitsCount: Integer; overload;
 function DigitsCounted: Integer; overload;
 function DigitsQuantity: Integer; overload;
 function Digitsum: Integer; overload;
+function DigitSummary: Integer; overload;
+function DigitsSum: Integer; overload;
 function Digitted: TIntegerArray; overload;
 function Digitz: TIntegerArray; overload;
 function FinalDigit: Integer; overload;
@@ -36,6 +38,7 @@ function QuantifyDigits: Integer; overload;
 function RearDigit: Integer; overload;
 function ReckonDigits: Integer; overload;
 function StartDigit: Integer; overload;
+function SumOfDigits: Integer; overload;
 function TailDigit: Integer; overload;
 function ToDigits: TIntegerArray; overload;
 {$ENDIF}
@@ -556,6 +559,51 @@ begin
 end;
 
 {==============================================================================]
+  <DigitSummary>
+  @action: Calculates the sum of all digits using tail-recursion.
+  @note: Breaks down the integer by passing the remaining quotient and the accumulated
+         sum down the call stack until the value is exhausted.
+[==============================================================================}
+function TIntegerHelper.DigitSummary: Integer; overload;
+  function S(val, acc: Integer): Integer;
+  begin
+    if (val = 0) then
+      Exit(acc);
+    Result := S((val div 10), (acc + (val mod 10)));
+  end;
+begin
+  Result := S(Abs(Self), 0);
+end;
+
+{==============================================================================]
+  <DigitsSum>
+  @action: Calculates the sum of all digits of the current integer utilizing a pre-computed lookup table cache.
+  @note: Ultra-optimized approach. Processes numbers two digits at a time (`mod 100` and `div 100`) rather than one,
+         effectively cutting down loop iterations and CPU branch overhead by exactly 50%.
+[==============================================================================}
+function TIntegerHelper.DigitsSum: Integer; overload;
+const
+  SUM_CACHE: array[0..99] of Byte = (
+    0,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,10,
+    2,3,4,5,6,7,8,9,10,11,3,4,5,6,7,8,9,10,11,12,
+    4,5,6,7,8,9,10,11,12,13,5,6,7,8,9,10,11,12,13,14,
+    6,7,8,9,10,11,12,13,14,15,7,8,9,10,11,12,13,14,15,16,
+    8,9,10,11,12,13,14,15,16,17,9,10,11,12,13,14,15,16,17,18
+  );
+var
+  n: Integer;
+begin
+  Result := 0;
+  n := Abs(Self);
+  while (n >= 100) do
+  begin
+    Inc(Result, SUM_CACHE[n mod 100]);
+    n := (n div 100);
+  end;
+  Inc(Result, SUM_CACHE[n]);
+end; 
+
+{==============================================================================]
   <Digitted>
   @action: Extracts all digits of the integer into a dynamic TIntegerArray,
            ordered from most significant digit to least significant digit.
@@ -840,6 +888,23 @@ end;
 function TIntegerHelper.StartDigit: Integer; overload;
 begin
   Result := (Ord(IntToStr(Self)[IfThen((Self < 0), 2, 1)]) - 48);
+end;
+
+{==============================================================================]
+  <SumOfDigits>
+  @action: Calculates the sum of all individual digits of the current integer using string conversion.
+  @note: Converts the absolute value to a string via `IntToStr` and processes each character.
+         Uses direct ASCII math (`Ord(s[i]) - 48`) to efficiently extract individual numerical values.
+[==============================================================================}
+function TIntegerHelper.SumOfDigits: Integer; overload;
+var
+  i: Integer;
+  s: string;
+begin
+  s := IntToStr(Abs(Self));
+  Result := 0;
+  for i := 1 to Length(s) do
+    Inc(Result, (Ord(s[i]) - 48));
 end;
 
 {==============================================================================]

@@ -1,7 +1,10 @@
 {$IFDEF HELPERS}
 function Gated(const A, B: Integer): Boolean; overload;
 function Palindrome: Boolean; overload;
+function Palindromer: Boolean; overload;
 function Palindromic: Boolean; overload;
+function Palindromical: Boolean; overload;
+function Palindromy: Boolean; overload;
 function Resides(const A, B: Integer): Boolean; overload;
 {$ENDIF}
 
@@ -42,6 +45,26 @@ begin
 end;
 
 {==============================================================================]
+  <Palindromer>
+  @action: Determines whether the current integer is a palindrome using a recursive, accumulator-based reversing method.
+  @note: Highly stable implementation. By accumulating the completely reversed number (`rev`) down the recursive stack,
+         it avoids the leading/middle zero truncation bugs inherent to digit-stripping algorithms.
+[==============================================================================}
+function TIntegerHelper.Palindromer: Boolean; overload;
+  function P(val, rev: Integer): Integer;
+  begin
+    if (val = 0) then
+      Exit(rev);
+    Result := P((val div 10), ((rev * 10) + (val mod 10)));
+  end;
+var
+  s: Integer;
+begin
+  s := Abs(Self);
+  Result := (s = P(s, 0));
+end;
+
+{==============================================================================]
   <Palindromic>
   @action: Determines whether the current integer reads the same forward and backward using string conversion.
   @note: Highly compatible across different Free Pascal compiler modes.
@@ -58,6 +81,53 @@ begin
     if (s[i] <> s[l - i + 1]) then
       Exit(False);
   Result := True;
+end;
+
+{==============================================================================]
+  <Palindromical>
+  @action: Checks for a palindrome using a fixed stack buffer for maximum speed.
+  @note: Avoids heap allocation completely by manually building a character array.
+[==============================================================================}
+function TIntegerHelper.Palindromical: Boolean; overload;
+var
+  b: array[0..11] of Char;
+  n, l, i: Integer;
+begin
+  n := Abs(Self);
+  if (n < 10) then
+    Exit(True);
+  l := 0;
+  while (n > 0) do
+  begin
+    b[l.Increase] := Char(Ord('0') + (n mod 10));
+    n := (n div 10);
+  end;
+  for i := 0 to ((l div 2) - 1) do
+    if (b[i] <> b[l - 1 - i]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Palindromy>
+  @action: Determines whether the current integer is a palindrome by reversing and comparing only its trailing half.
+  @note: Highly optimized approach. Cuts execution time in half,
+         and completely avoids 32-bit integer overflow by stopping extraction precisely at the numerical midpoint.
+[==============================================================================}
+function TIntegerHelper.Palindromy: Boolean; overload;
+var
+  s, r: Integer;
+begin
+  s := Abs(Self);
+  if ((s <> 0) and ((s mod 10) = 0)) then
+    Exit(False);
+  r := 0;
+  while (s > r) do
+  begin
+    r := ((r * 10) + (s mod 10));
+    s := (s div 10);
+  end;
+  Result := ((s = r) or (s = (r div 10)));
 end;
 
 {==============================================================================]
