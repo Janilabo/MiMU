@@ -3,6 +3,7 @@ function AllOf(const candidates: MArray): Boolean; overload;
 function AnyOf(const candidates: MArray): Boolean; overload;
 function Empty: Boolean; overload;
 function Exists: Boolean; overload;
+function HasData: Boolean; overload;
 function Includes(const item: MType; const index: Integer = 2147483647): Boolean; overload;
 function Multi(const threshold: Integer = 2): Boolean; overload;
 function Multi(const threshold: TRange): Boolean; overload;
@@ -91,6 +92,19 @@ end;
 function MArrayHelper.Exists: Boolean; overload;
 begin
   Result := (Self.Size > 0);
+end;
+
+{==============================================================================]
+  <HasData>
+  @action: Determines whether the helper's structural array instance is
+           allocated and non-nil.
+  @note: Uses a safe explicit pointer assignment check against nil. Requires
+         parentheses around the equality operation to enforce proper operator
+         precedence under FPC/Lazarus syntax rules.
+[==============================================================================}
+function MArrayHelper.HasData: Boolean; overload;
+begin
+  Result := not (Self = nil);
 end;
 
 {==============================================================================]

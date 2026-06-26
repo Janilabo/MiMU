@@ -1,8 +1,9 @@
 {$IFDEF HELPERS}
 function Signage(const origin: Integer = 0): Integer; overload;
+function Signature(const origin: Integer = 0): string; overload;
 function Signed(const origin: Integer = 0): Integer; overload;
 function Signify(const origin: Integer = 0): Integer; overload;
-function Signing(const origin: Integer): Integer; overload;
+function Signing(const origin: Integer = 0): Integer; overload;
 function SignOf(const origin: Integer = 0): Integer; overload;
 function Signum(const origin: Integer = 0): Integer; overload;
 {$ENDIF}
@@ -18,6 +19,24 @@ begin
   Result := (Self - origin);
   if (Result <> 0) then
     Result := IfThen((Result < 0), -1, 1);
+end;
+
+{==============================================================================]
+  <Signature>
+  @action: Returns '+', '-', or '' based on the sign of the integer relative 
+           to a baseline origin value.
+  @note: Useful for trend tracking, layout prefixing, or relative log formatting. 
+         Compares the integer against the origin parameter (defaulting to 0); 
+         returns an empty string ('') if the integer exactly matches the origin.
+[==============================================================================}
+function TIntegerHelper.Signature(const origin: Integer = 0): string; overload;
+begin
+  if (Self > origin) then
+    Result := '+'
+  else if (Self < origin) then
+    Result := '-'
+  else
+    Result := '';
 end;
 
 {==============================================================================]
@@ -51,7 +70,7 @@ end;
   @note: Implemented using standard conditional branching (if-then-else). 
          While highly readable, it introduces CPU branch evaluation points.
 [==============================================================================}
-function TIntegerHelper.Signing(const origin: Integer): Integer; overload;
+function TIntegerHelper.Signing(const origin: Integer = 0): Integer; overload;
 begin
   if (origin < 0) then
     Result := -1

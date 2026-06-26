@@ -14,6 +14,7 @@ function LimitMin(const limit: Double): Double;
 function Restrict(const minimum, maximum: Double): Double;
 function RestrictMax(const limit: Double): Double;
 function RestrictMin(const limit: Double): Double;
+function Rounded: Integer; overload;
 function Saturate: Double;
 {$ENDIF}
 
@@ -183,6 +184,16 @@ end;
 function TDoubleHelper.RestrictMin(const limit: Double): Double;
 begin
   Result := (Self - ((Self - limit) - Abs(Self - limit)) / 2);
+end;
+
+{==============================================================================]
+  <Rounded>
+  @action: Rounds the floating-point value to the nearest integer.
+  @note: Uses asymmetric arithmetic rounding, converting values like 4.5 to 5.
+[==============================================================================}
+function TDoubleHelper.Rounded: Integer; overload;
+begin
+  Result := System.Round(Self);
 end;
 
 {==============================================================================]
