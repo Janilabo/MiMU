@@ -4,11 +4,13 @@ function Palindromal: Boolean; overload;
 function Palindrome: Boolean; overload;
 function Palindromean: Boolean; overload;
 function Palindromed: Boolean; overload;
+function Palindromem: Boolean; overload;
 function Palindromer: Boolean; overload;
 function Palindromic: Boolean; overload;
 function Palindromical: Boolean; overload;
 function Palindromix: Boolean; overload;
 function Palindromous: Boolean; overload;
+function Palindromsy: Boolean; overload;
 function Palindromy: Boolean; overload;
 function Resides(const A, B: Integer): Boolean; overload;
 {$ENDIF}
@@ -41,7 +43,7 @@ function TIntegerHelper.Palindromal: Boolean; overload;
 var
   n, p, l, h: Integer;
 begin
-  n  := Abs(Self);
+  n := Abs(Self);
   p := 1;
   while ((n div p) >= 10) do
     p := (p * 10);
@@ -125,6 +127,30 @@ var
 begin
   s := IntToStr(Abs(Self));
   Result := (s = s.Reversed);
+end;
+
+{==============================================================================]
+  <Palindromem>
+  @action: Determines whether the current integer is a palindrome by filling a
+           stack byte buffer and delegating the symmetric comparison to `CompareMem`.
+  @note: Builds a forward digit array and a reversed copy into two stack buffers,
+         then calls `CompareMem` to compare them in one operation.
+         Avoids any loop-level branching after the fill phase.
+[==============================================================================}
+function TIntegerHelper.Palindromem: Boolean; overload;
+var
+  f, r: array[0..11] of Byte;
+  n, l, i: Integer;
+begin
+  n := Abs(Self);
+  l := 0;
+  repeat
+    f[l.Increase] := (n mod 10);
+    n := (n div 10);
+  until (n = 0);
+  for i := 0 to (l - 1) do
+    r[i] := f[l - 1 - i];
+  Result := CompareMem(@f, @r, l);
 end;
 
 {==============================================================================]
@@ -247,6 +273,31 @@ begin
     Inc(l);
     Dec(h);
   end;
+  Result := True;
+end;
+
+{==============================================================================]
+  <Palindromsy>
+  @action: Determines whether the absolute value of the integer is a palindrome 
+           using a two-pointer approach on its string representation.
+  @note: Optimizes performance by immediately returning True for single-digit 
+         numbers (-9 to 9) via InRange. For larger numbers, it uses converging 
+         left (l) and right (r) indices to compare characters from the outside in, 
+         short-circuiting (returning False) at the first mismatch.
+[==============================================================================}
+function TIntegerHelper.Palindromsy: Boolean; overload;
+var
+  s: string;
+  l, r: Integer;
+begin
+  if InRange(Self, -9, 9) then
+    Exit(True);
+  s := IntToStr(Abs(Self));
+  l := 0;
+  r := (Length(s) + 1);
+  while (l.Increment < r.Decrement) do
+    if (s[l] <> s[r]) then
+      Exit(False);
   Result := True;
 end;
 

@@ -8,6 +8,7 @@ function CharSet: TCharArray; overload;
 function DistinctCharacters: TCharArray; overload;
 function DistinctChars: TCharArray; overload;
 function Firsty(const null: Char = #0): Char; overload;
+function Head: Char; overload;
 function Heady: Char; overload;
 function IDs: TIntegerArray; overload;
 function IDs(const ID: TIntegerArray): TCharArray; overload;
@@ -18,6 +19,7 @@ function SetOfCharacters: TCharArray; overload;
 function SetOfChars: TCharArray; overload;
 function UniqueCharacters(const oAscending: Boolean = True): TCharArray; overload;
 function UniqueChars: TCharArray; overload;
+function Tail: Char; overload;
 function Taily: Char; overload;
 {$ENDIF}
 
@@ -217,6 +219,19 @@ begin
 end;
 
 {==============================================================================]
+  <Head>
+  @action: Returns the first character of the string.
+  @note: If the string is empty, the function safely returns the null character 
+         (#0) to prevent range check errors or access violations.
+[==============================================================================}
+function TStringHelper.Head: Char; overload;
+begin
+  if (Length(Self) = 0) then
+    Exit(#0);
+  Result := Self[1];
+end;
+
+{==============================================================================]
   <Heady>
   @action: Returns the first character of the string.
   @note: Unsafe, fast method.
@@ -351,6 +366,22 @@ begin
       else if (j = h) then
         Result[h.Increment] := Self[i];
   SetLength(Result, (h + 1));
+end;
+
+{==============================================================================]
+  <Tail>
+  @action: Returns the last character of the string.
+  @note: If the string is empty, the function safely returns the null character 
+         (#0) to prevent range check errors or access violations.
+[==============================================================================}
+function TStringHelper.Tail: Char; overload;
+var
+  l: Integer;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit(#0);
+  Result := Self[l];
 end;
 
 {==============================================================================]

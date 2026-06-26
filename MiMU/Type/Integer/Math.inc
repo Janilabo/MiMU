@@ -10,9 +10,11 @@ function IsPowerOf2: Boolean; overload;
 function IsPowerOfTwo: Boolean; overload;
 function IsPowOf2: Boolean; overload;
 function IsPowOfTwo: Boolean; overload;
+function IsPrime: Boolean; overload;
 function MultipleBy(const value: Integer): Boolean; overload;
 function MultipleFrom(const value: Integer): Boolean; overload;
 function MultipleOf(const value: Integer): Boolean; overload;
+function Squared: Int64; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -156,6 +158,32 @@ begin
 end;
 
 {==============================================================================]
+  <IsPrime>
+  @action: Determines whether the integer is a prime number.
+  @note: Uses an optimized 2,3,5-wheel trial division algorithm. Handles negative 
+         numbers and edge cases (0, 1) quickly, and leverages the internal 
+         '.Squared' helper to optimize loop boundary checks up to √Self.
+[==============================================================================}
+function TIntegerHelper.IsPrime: Boolean; overload;
+var
+  i: Integer;
+begin
+  if (Self < 2) then
+    Exit(False);
+  if (Self < 4) then
+    Exit(True);
+  if (((Self mod 2) = 0) or ((Self mod 3) = 0)) then
+    Exit(False);
+  i := 5;
+  while (i.Squared <= Self) do
+    if (((Self mod i) = 0) or ((Self mod (i + 2)) = 0)) then
+      Exit(False)
+    else
+      Inc(i, 6);
+  Result := True;
+end;
+
+{==============================================================================]
   <MultipleBy>
   @action: Determines whether the current integer is a multiple of the specified value, ignoring sign.
   @note: Uses `Abs` to normalize negative divisors, then uses short-circuit evaluation to safely avoid division-by-zero errors,
@@ -193,5 +221,16 @@ end;
 function TIntegerHelper.MultipleOf(const value: Integer): Boolean; overload;
 begin
   Result := ((value <> 0) and ((Self mod value) = 0));
+end;
+
+{==============================================================================]
+  <Squared>
+  @action: Multiplies the integer value by itself and returns the result.
+  @note: Casts 'Self' to Int64 before multiplication to prevent 32-bit integer 
+         overflow during the squaring operation.
+[==============================================================================}
+function TIntegerHelper.Squared: Int64; overload;
+begin
+  Result := (Int64(Self) * Int64(Self));
 end;
 {$ENDIF}

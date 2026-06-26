@@ -1,8 +1,9 @@
 {$IFDEF HELPERS}
-function Blank: Boolean;
-function Empty: Boolean;
-function Exists: Boolean;
-function Void: Boolean;
+function Blank: Boolean; overload;
+function Empty: Boolean; overload;
+function Emptyish: Boolean; overload;
+function Exists: Boolean; overload;
+function Void: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -11,7 +12,7 @@ function Void: Boolean;
   @action: Returns true if string is empty or consists of whitespaces only.
   @note: None.
 [==============================================================================}
-function TStringHelper.Blank: Boolean;
+function TStringHelper.Blank: Boolean; overload;
 var
   i: Integer;
 begin
@@ -26,9 +27,22 @@ end;
   @action: Returns true if string is empty (Length is 0).
   @note: None.
 [==============================================================================}
-function TStringHelper.Empty: Boolean;
+function TStringHelper.Empty: Boolean; overload;
 begin
   Result := (Length(Self) = 0);
+end;
+
+{==============================================================================]
+  <Emptyish>
+  @action: Determines whether a string is empty or consists solely of whitespace 
+           characters.
+  @note: Strips leading and trailing spaces, tabs, and control characters via 
+         Trim before checking. Returns True for '', '   ', or line breaks, 
+         making it highly resilient for user input validation.
+[==============================================================================}
+function TStringHelper.Emptyish: Boolean; overload;
+begin
+  Result := (SysUtils.Trim(Self) = '');
 end;
 
 {==============================================================================]
@@ -36,7 +50,7 @@ end;
   @action: Returns true if string is not empty.
   @note: Length(str) > 0.
 [==============================================================================}
-function TStringHelper.Exists: Boolean;
+function TStringHelper.Exists: Boolean; overload;
 begin
   Result := (Length(Self) > 0);
 end;
@@ -46,7 +60,7 @@ end;
   @action: Returns true if string is empty (Length is 0).
   @note: None.
 [==============================================================================}
-function TStringHelper.Void: Boolean;
+function TStringHelper.Void: Boolean; overload;
 begin
   Result := (Self = '');
 end;

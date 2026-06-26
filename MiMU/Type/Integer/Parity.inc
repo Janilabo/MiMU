@@ -2,12 +2,14 @@
 function Even: Boolean; overload;
 function Even2: Boolean; overload;
 function EvenNumber: Boolean; overload;
+function Evensy: Boolean; overload;
 function EvenValue: Boolean; overload;
 function IsEven: Boolean; overload;
 function IsOdd: Boolean; overload;
 function Odd: Boolean; overload;
 function Odd2: Boolean; overload;
 function OddNumber: Boolean; overload;
+function Oddsy: Boolean; overload;
 function OddValue: Boolean; overload;
 function Parity: Byte; overload;
 function ParityEven: Boolean; overload;
@@ -46,6 +48,18 @@ end;
 function TIntegerHelper.EvenNumber: Boolean; overload;
 begin
   Result := (((Self div 2) * 2) = Self);
+end;
+
+{==============================================================================]
+  <Evensy>
+  @action: Determines whether the integer is an even number by inspecting its 
+           last digit.
+  @note: Converts the integer to a string and checks if the final character 
+         is an even digit ('0', '2', '4', '6', or '8').
+[==============================================================================}
+function TIntegerHelper.Evensy: Boolean; overload;
+begin
+  Result := (IntToStr(Self).Taily in ['0', '2', '4', '6', '8']);
 end;
 
 {==============================================================================]
@@ -108,6 +122,18 @@ end;
 function TIntegerHelper.OddNumber: Boolean; overload;
 begin
   Result := not Self.EvenNumber;
+end;
+
+{==============================================================================]
+  <Oddsy>
+  @action: Determines whether the integer is an odd number by inspecting its 
+           last digit.
+  @note: Converts the integer to a string and checks if the final character 
+         is an odd digit ('1', '3', '5', '7', or '9').
+[==============================================================================}
+function TIntegerHelper.Oddsy: Boolean; overload;
+begin
+  Result := (IntToStr(Self).Taily in ['1', '3', '5', '7', '9']);
 end;
 
 {==============================================================================]
