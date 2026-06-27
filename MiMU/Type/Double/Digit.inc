@@ -1,8 +1,10 @@
 {$IFDEF HELPERS}
-function Accuracy(const a: Integer): Double;
-function Digits: TIntegerArray;
-function MaxDecimal: Double;
-function MinDecimal: Double;
+function Accuracy(const a: Integer): Double; overload;
+function Digits: TIntegerArray; overload;
+function Fractional: Double; overload;
+function MaxDecimal: Double; overload;
+function MinDecimal: Double; overload;
+function Whole: Double; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -13,7 +15,7 @@ function MinDecimal: Double;
            123   123.4   123.45   123.456   123.4567   123.45678
   @note: None
 [==============================================================================}
-function TDoubleHelper.Accuracy(const a: Integer): Double;
+function TDoubleHelper.Accuracy(const a: Integer): Double; overload;
 var
   d: Double;
   z: Boolean;
@@ -36,7 +38,7 @@ end;
            Example: 1234 => 1,2,3,4, -999 => 9,9,9
   @note: If x is negative value, the negative sign is ignored.
 [==============================================================================}
-function TDoubleHelper.Digits: TIntegerArray;
+function TDoubleHelper.Digits: TIntegerArray; overload;
 var
   s: string;
   l, i: Integer;
@@ -49,12 +51,24 @@ begin
 end;
 
 {==============================================================================]
+  <Fractional>
+  @action: Returns the fractional part of a floating-point number.
+  @note: Uses System.Int to isolate the integer portion. For negative numbers, 
+         note that System.Int rounds toward zero, meaning Fractional retains 
+         the original sign (e.g., -5.75 returns -0.75).
+[==============================================================================}
+function TDoubleHelper.Fractional: Double; overload;
+begin
+  Result := (Self - System.Int(Self));
+end;
+
+{==============================================================================]
   <MaxDecimal>
   @action: Returns the maximum decimal value.
            0.12345 => 0.99999
   @note: None
 [==============================================================================}
-function TDoubleHelper.MaxDecimal: Double;
+function TDoubleHelper.MaxDecimal: Double; overload;
 var
   d: Double;
 begin
@@ -73,7 +87,7 @@ end;
            0.12345 => 0.00001
   @note: None
 [==============================================================================}
-function TDoubleHelper.MinDecimal: Double;
+function TDoubleHelper.MinDecimal: Double; overload;
 var
   d: Double;
 begin
@@ -84,5 +98,16 @@ begin
     Result := StrToFloat('-0,' + StringOfChar('0', (Length(FloatToStr(d)) - 4)) + '1')
   else
     Result := StrToFloat('0,' + StringOfChar('0', (Length(FloatToStr(d)) - 3)) + '1');
+end;
+
+{==============================================================================]
+  <Whole>
+  @action: Returns the whole integer component of the floating-point number.
+  @note: Drops the decimal portion by subtracting the fractional component
+         from the original value (e.g., 123.4567 - 0.4567 = 123.0).
+[==============================================================================}
+function TDoubleHelper.Whole: Double; overload;
+begin
+  Result := (Self - System.Frac(Self));
 end;
 {$ENDIF}

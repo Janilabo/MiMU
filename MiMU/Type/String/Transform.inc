@@ -6,8 +6,10 @@ function EndWith(const s: string; const index: Integer = 2147483647): Boolean; o
 function Exch(const aIndex, bIndex: Integer): Boolean; overload;
 function Exchange(const aIndex, bIndex: Integer): Boolean; overload;
 function Flip: string; overload;
+function LeftOf(const aDelimiter: string): string; overload;
 function Reverse: Boolean; overload;
 function Reversed: string; overload;
+function RightOf(const aDelimiter: string): string; overload;
 function StartWith(const s: string; const index: Integer = 1): Boolean; overload;
 function Wrapped(const aChar: Char = #32): string; overload;
 {$ENDIF}
@@ -134,6 +136,23 @@ begin
 end;
 
 {==============================================================================]
+  <LeftOf>
+  @action: Returns the substring leading up to the first occurrence of a
+           specified delimiter string.
+  @note: If the delimiter is not found, it safely returns the entire original
+         string.
+[==============================================================================}
+function TStringHelper.LeftOf(const aDelimiter: string): string; overload;
+var
+  P: Integer;
+begin
+  P := System.Pos(aDelimiter, Self);
+  if (P = 0) then
+    Exit(Self);
+  Result := System.Copy(Self, 1, (P - 1));
+end;
+
+{==============================================================================]
   <Reverse>
   @action: Returns reversed str.
   @note: None
@@ -177,6 +196,22 @@ begin
       Result[m + 1] := Self[m + 1];
   end else
     Result := Self;
+end;
+
+{==============================================================================]
+  <RightOf>
+  @action: Returns the substring following the first occurrence of a
+           specified delimiter string.
+  @note: If the delimiter is not found, it returns an empty string ('').
+[==============================================================================}
+function TStringHelper.RightOf(const aDelimiter: string): string; overload;
+var
+  P: Integer;
+begin
+  P := System.Pos(aDelimiter, Self);
+  if (P = 0) then
+    Exit('');
+  Result := System.Copy(Self, (P + System.Length(aDelimiter)), System.Length(Self));
 end;
 
 {==============================================================================]

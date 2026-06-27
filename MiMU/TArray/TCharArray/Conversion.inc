@@ -1,12 +1,13 @@
 {$IFDEF HELPERS}
 function Join: string; overload;
 function Join(const glue: string): string; overload;
-function Ordinals: TIntegerArray;
-function Str: string;
+function Joined: string; overload;
+function Ordinals: TIntegerArray; overload;
+function Str: string; overload;
 function Stringify: string; overload;
 function Stringify(const glue: string): string; overload;
-function ToStr: string;
-function TSA: TStringArray;
+function ToStr: string; overload;
+function TSA: TStringArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -42,11 +43,28 @@ begin
 end;
 
 {==============================================================================]
+  <Joined>
+  @action: Joins an array of characters into a single, continuous string.
+  @note: Highly efficient implementation that performs a direct memory copy 
+         (Move) from the character array to the result string without looping.
+[==============================================================================}
+function TCharArrayHelper.Joined: string; overload;
+var
+  l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit('');
+  SetLength(Result, l);
+  Move(Self[0], Result[1], (l * SizeOf(Char)));
+end;
+
+{==============================================================================]
   <Ordinals>
   @action: Returns Ord() of every array items as TIntegerArray.
   @note: None.
 [==============================================================================}
-function TCharArrayHelper.Ordinals: TIntegerArray;
+function TCharArrayHelper.Ordinals: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -60,7 +78,7 @@ end;
   @action: Returns arr joined together as string.
   @note: None.
 [==============================================================================}
-function TCharArrayHelper.Str: string;
+function TCharArrayHelper.Str: string; overload;
 begin
   if Self.Empty then
     Exit('');
@@ -110,7 +128,7 @@ end;
   @action: Returns arr joined together as string.
   @note: None.
 [==============================================================================}
-function TCharArrayHelper.ToStr: string;
+function TCharArrayHelper.ToStr: string; overload;
 begin
   SetLength(Result, Self.Size);
   if Self.Exists then
@@ -122,7 +140,7 @@ end;
   @action: Returns TCharArray as TStringArray.
   @note: None.
 [==============================================================================}
-function TCharArrayHelper.TSA: TStringArray;
+function TCharArrayHelper.TSA: TStringArray; overload;
 var
   i: Integer;
 begin

@@ -5,6 +5,7 @@
 {$I Comparison.inc}
 {$I Digit.inc}
 {$I Distance.inc}
+{$I Math.inc}
 {$I Percent.inc}
 {$I Polarity.inc}
 {$I Restriction.inc}
