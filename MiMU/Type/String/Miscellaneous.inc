@@ -3,6 +3,8 @@ function AsTRange: TRange; overload;
 function BoolifyBinary: TBooleanArray; overload;
 function IfEmpty(const fallback: string): string; overload;
 function IsBinary(const emptyTrue: Boolean = True): Boolean; overload;
+function IsNumeric: Boolean; overload;
+function IsNumerical: Boolean; overload;
 function PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string; overload;
 function Quotatation: string; overload;
 function ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange; overload;
@@ -61,6 +63,50 @@ begin
     if not (Self[i] in ['0', '1']) then
       Exit(False);
   Result := True;
+end;
+
+{==============================================================================]
+  <IsNumeric>
+  @action: Validates whether the string contains exclusively numeric digits.
+  @note: High-performance pointer scan that returns False instantly upon 
+         encountering the first non-digit character.
+		 NO SUPPORT for -/+ sign.
+[==============================================================================}
+function TStringHelper.IsNumeric: Boolean; overload;
+var
+  P: PChar;
+begin
+  Result := (Self <> '');
+  if not Result then
+    Exit;
+  P := PChar(Self);
+  while (P^ <> #0) do
+    if (P^ in ['0'..'9']) then
+      Inc(P)
+	else
+	  Exit(False);
+end;
+
+{==============================================================================]
+  <IsNumerical>
+  @action: Validates whether the string represents a valid signed or unsigned 
+           whole integer number.
+  @note: Highly optimized index-shifting design. Uses an analytical offset 
+         to cleanly bypass an optional leading sign, backed by a structural length 
+         boundary gate to reject isolated operational symbols.
+[==============================================================================}
+function TStringHelper.IsNumerical: Boolean; overload;
+var
+  i, l, s: Integer;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit(False);
+  s := IfThen(((Self[1] = '-') or (Self[1] = '+')), 1, 0);
+  for i := (1 + s) to l do
+    if not (Self[i] in [#48..#57]) then
+      Exit(False);
+  Result := ((l > 1) or (s = 0));
 end;
 
 {==============================================================================]

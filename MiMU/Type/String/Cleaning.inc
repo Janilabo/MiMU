@@ -3,10 +3,12 @@ function Cleaned: string; overload;
 function Despace: string; overload;
 function Despaced: string; overload;
 function Despacement: string; overload;
+function Despacing: string; overload;
 function Sanitize: string; overload;
-function Trim(const t: Char = #32): string;
-function TrimLeft(const t: Char = #32): string;
-function TrimRight(const t: Char = #32): string;
+function Tighten(const target: Char = #32): string; overload;
+function Trim(const t: Char = #32): string; overload;
+function TrimLeft(const t: Char = #32): string; overload;
+function TrimRight(const t: Char = #32): string; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -110,6 +112,30 @@ begin
 end;
 
 {==============================================================================]
+  <Despacing>
+  @action: Normalizes internal spacing by collapsing all consecutive whitespace
+           characters down to a single space.
+  @note: Two-pointer approach operating directly on a pre-allocated result
+         buffer. Advances a write-head only when the incoming char is not a
+         duplicate space, avoiding any boolean flag or look-ahead indexing.
+[==============================================================================}
+function TStringHelper.Despacing: string; overload;
+var
+  i, l, w: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  w := 0;
+  for i := 1 to l do
+    if ((Self[i] <> #32) or (w = 0) or (Result[w] <> #32)) then
+      Result[w.Increment] := Self[i];
+  if (w < l) then
+    SetLength(Result, w);
+end;
+
+{==============================================================================]
   <Sanitize>
   @action: Creates a new string filtering out specific control characters (ASCII 0 to 31), while explicitly preserving carriage returns (#13) and line feeds (#10).
   @note: Highly efficient performance compared to Cleaned. It pre-allocates memory and builds the string left-to-right using a custom `.Increment` helper on the index pointer,
@@ -132,11 +158,51 @@ begin
 end;
 
 {==============================================================================]
+  <Tighten>
+  @action: Strips leading and trailing occurrences of [target] and collapses
+           all internal consecutive runs of [target] down to a single instance.
+  @note:  Generalises space-normalisation to any character. A string composed
+          entirely of [target] returns an empty string. Defaults to #32.
+[==============================================================================}
+function TStringHelper.Tighten(const target: Char = #32): string; overload;
+var
+  i, l, w, r: Integer;
+begin
+  l := Length(Self);
+  SetLength(Result, l);
+  if (l = 0) then
+    Exit;
+  w := 0;
+  i := 1;
+  while (i <= l) do
+  case (Self[i] = target) of
+    True:
+    begin
+      if ((w > 0) and (Result[w] <> target)) then
+        Result[w.Increment] := target;
+      Inc(i);
+    end;
+    False:
+    begin
+      r := i;
+      while ((i <= l) and (Self[i] <> target)) do
+        Inc(i);
+      Move(Self[r], Result[w + 1], (i - r));
+      Inc(w, (i - r));
+    end;
+  end;
+  if ((w > 0) and (Result[w] = target)) then
+    Dec(w);
+  if (w < l) then
+    SetLength(Result, w);
+end; 
+
+{==============================================================================]
   <Trim>
   @action: Returns str with left-side and right-side trimmed/cleaned of t.
   @note: None
 [==============================================================================}
-function TStringHelper.Trim(const t: Char = #32): string;
+function TStringHelper.Trim(const t: Char = #32): string; overload;
 var
   i, l, x, y: Integer;
 begin
@@ -171,7 +237,7 @@ end;
   @action: Returns str with left-side trimmed/cleaned of t.
   @note: None
 [==============================================================================}
-function TStringHelper.TrimLeft(const t: Char = #32): string;
+function TStringHelper.TrimLeft(const t: Char = #32): string; overload;
 var
   i, l: Integer;
 begin
@@ -187,7 +253,7 @@ end;
   @action: Returns str with right-side trimmed/cleaned of t.
   @note: None
 [==============================================================================}
-function TStringHelper.TrimRight(const t: Char = #32): string;
+function TStringHelper.TrimRight(const t: Char = #32): string; overload;
 var
   i, l: Integer;
 begin
