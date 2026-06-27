@@ -1,10 +1,11 @@
 {$IFDEF HELPERS}
-function AsTRange: TRange;
-function BoolifyBinary: TBooleanArray;
-function IsBinary(const emptyTrue: Boolean = True): Boolean;
-function PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string;
-function Quotatation: string;
-function ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange;
+function AsTRange: TRange; overload;
+function BoolifyBinary: TBooleanArray; overload;
+function IfEmpty(const fallback: string): string; overload;
+function IsBinary(const emptyTrue: Boolean = True): Boolean; overload;
+function PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string; overload;
+function Quotatation: string; overload;
+function ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -13,7 +14,7 @@ function ToTRange(const glueRange: string = '..'; const openRange: Char = '['; c
   @action: Returns indexes of string as TRange.
   @note: With empty string this function returns as 0..0!
 [==============================================================================}
-function TStringHelper.AsTRange: TRange;
+function TStringHelper.AsTRange: TRange; overload;
 begin
   Result.Build(Min(1, Length(Self)), Length(Self));
 end;
@@ -23,7 +24,7 @@ end;
   @action: '10101' => [True, False, True, False, True]
   @note: Considers only '1' as True, everything else as False.
 [==============================================================================}
-function TStringHelper.BoolifyBinary: TBooleanArray;
+function TStringHelper.BoolifyBinary: TBooleanArray; overload;
 var
   i: Integer;
 begin
@@ -33,11 +34,24 @@ begin
 end;
 
 {==============================================================================]
+  <IfEmpty>
+  @action: Returns a default alternative (fallback) string if the current string is empty.
+  @note: Eliminates inline 'if Self = "" then' ternary conditions.
+[==============================================================================}
+function TStringHelper.IfEmpty(const fallback: string): string; overload;
+begin
+  if (Self = '') then 
+    Result := fallback
+  else 
+    Result := Self;
+end;
+
+{==============================================================================]
   <IsBinary>
   @action: Returns true if str contains only 0's and 1's
   @note: If str is empty and emptyTrue is True, then this function returns True with empty strings.
 [==============================================================================}
-function TStringHelper.IsBinary(const emptyTrue: Boolean = True): Boolean;
+function TStringHelper.IsBinary(const emptyTrue: Boolean = True): Boolean; overload;
 var
   i: Integer;
 begin
@@ -54,7 +68,7 @@ end;
   @action: Returns string with all characters escaped that are part of the regular expression syntax.
   @note: Based on the character set...
 [==============================================================================}
-function TStringHelper.PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string;
+function TStringHelper.PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string; overload;
 var
   l, i: Integer;
 begin
@@ -71,7 +85,7 @@ end;
   @action: Returns the quoted version of str.
   @note: None
 [==============================================================================}
-function TStringHelper.Quotatation: string;
+function TStringHelper.Quotatation: string; overload;
 begin
   Result := ('''' + StringReplace(Self, '''', '''''', [rfReplaceAll]) + '''');
 end;
@@ -81,7 +95,7 @@ end;
  @action: Converts string to TRange.
  @note: None
 [==============================================================================}
-function TStringHelper.ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange;
+function TStringHelper.ToTRange(const glueRange: string = '..'; const openRange: Char = '['; const closeRange: Char = ']'): TRange; overload;
 var
   s: string;
   p: Integer;
