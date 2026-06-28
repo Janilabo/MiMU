@@ -7,6 +7,7 @@
 {$I Conversion.inc}
 {$I Counting.inc}
 {$I Miscellaneous.inc}
+{$I Numerics.inc}
 {$I Position.inc}
 {$I Search.inc}
 {$I Slice.inc}
