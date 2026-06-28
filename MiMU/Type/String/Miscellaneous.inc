@@ -6,6 +6,8 @@ function IsBinary(const emptyTrue: Boolean = True): Boolean; overload;
 function IsNumber: Boolean; overload;
 function IsNumeric: Boolean; overload;
 function IsNumerical: Boolean; overload;
+function Number: Boolean; overload;
+function Numbery: Boolean; overload;
 function Numerable: Boolean; overload;
 function Numeric: Boolean; overload;
 function Numerical: Boolean; overload;
@@ -120,6 +122,66 @@ begin
       Inc(P)
 	else
 	  Exit(False);
+end;
+
+{==============================================================================]
+  <Number>
+  @action: Returns True if the string represents a signed integer; False
+           otherwise. Accepts an optional leading sign ('+'/'-') followed by
+           one or more digit characters ('0'..'9'). Empty strings and bare
+           sign characters return False.
+  @note: Uses a two-pointer pincer scan: a left index advances from the
+         first digit and a right index retreats from the tail, meeting at
+         the centre. Each iteration validates one character from each end,
+         halving the number of loop passes relative to a single-direction
+         scan. An odd-length digit run leaves one unvisited middle character
+         which is checked as a post-loop guard.
+[==============================================================================}
+function TStringHelper.Number: Boolean; overload;
+var
+  l, r, o, s: Integer;
+begin
+  s := Length(Self);
+  if (s = 0) then
+    Exit(False);
+  o := Integer((Self[1] = '-') or (Self[1] = '+'));
+  if ((s - o) = 0) then
+    Exit(False);
+  l := o;
+  r := (s + 1);
+  while (l.Increment < r.Decrement) do
+    if ((Cardinal(Ord(Self[l]) - 48) > 9) or (Cardinal(Ord(Self[r]) - 48) > 9)) then
+      Exit(False);
+  Result := ((l > r) or (Cardinal(Ord(Self[l]) - 48) <= 9));
+end;
+
+{==============================================================================]
+  <Numbery>
+  @action: Checks if the current string represents a valid, whole integer number (including optional leading positive '+' or negative '-' signs).
+  @note: Highly optimized, low-level pointer arithmetic implementation.
+         It performs a two-pointer scan (from both ends inward) and assumes standard ASCII/UTF-8 character encoding for digits ('0'..'9').
+[==============================================================================}
+function TStringHelper.Numbery: Boolean; overload;
+var
+  L, R: PByte;
+  o, s: Integer;
+begin
+  s := Length(Self);
+  if (s = 0) then
+    Exit(False);
+  o := Integer((Self[1] = '-') or (Self[1] = '+'));
+  if ((s - o) = 0) then
+    Exit(False);
+  L := (PByte(PChar(Self)) + o);
+  R := (PByte(PChar(Self)) + (s - 1));
+  while (L < R) do
+    if not ((Cardinal(L^ - 48) > 9) or (Cardinal(R^ - 48) > 9)) then
+    begin
+      Inc(L);
+      Dec(R);
+    end else
+      Exit(False);
+  Result := not ((L = R) and (Cardinal(L^ - 48) > 9));
 end;
 
 {==============================================================================]
