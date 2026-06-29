@@ -18,6 +18,7 @@ function Rebel: MArray; overload;
 function Reflex(const rIndex: Integer): MType; overload;
 function Regress: MArray; overload;
 function Relist: MArray; overload;
+function Reverc: Boolean; overload;
 function Reversal: MArray; overload;
 function Reverse: Boolean; overload;
 function Reversed: MArray; overload;
@@ -28,6 +29,7 @@ function Reversement: Boolean; overload;
 function Reversified: MArray; overload;
 function Reversify: Boolean; overload;
 function Reversion: MArray; overload;
+function Reversively: MArray; overload;
 function Reversivly: MArray; overload;
 function Revert: MArray; overload;
 function Reverted: MArray; overload;
@@ -64,8 +66,7 @@ function MArrayHelper.Backwards: MArray; overload;
 var
   l, i: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   i := 0;
   while (l > 0) do
     Result[i.Increase] := Self[l.Decrement];
@@ -254,8 +255,7 @@ function MArrayHelper.Oppose: Boolean; overload;
 var
   l, i: Integer;
 begin
-  l := Self.Length;
-  Result := (l > 1);
+  Result := (l.Assign(Self.Length) > 1);
   if Result then
   for i := 0 to ((l div 2) - 1) do
     Self.Exch(i, ((l - 1) - i));
@@ -442,6 +442,28 @@ begin
 end;
 
 {==============================================================================]
+  <Reverc>
+  @action: Reverses the array in‑place using a recursive two‑pointer swap.
+  @note: Zero extra array allocations. Recursion depth = N/2, so it may
+         cause stack overflow for huge arrays (N > 50 000). Included here
+         to demonstrate a pure recursive mutation, distinct from your
+         allocation‑heavy recursive versions.
+[==============================================================================}
+function MArrayHelper.Reverc: Boolean; overload;
+  procedure R(L, H: Integer);
+  begin
+    if (L >= H) then
+      Exit;
+    Swap(Self[L], Self[H]);
+    R((L + 1), (H - 1));
+  end;
+begin
+  Result := (Self.Length > 1);
+  if Result then
+    R(0, High(Self));
+end;
+
+{==============================================================================]
   <Reversal>
   @action: Returns array with items in reversed order.
   @note: None.
@@ -473,8 +495,7 @@ function MArrayHelper.Reverse: Boolean; overload;
 var
   i, l: Integer;
 begin
-  l := Self.Length;
-  Result := (l > 1);
+  Result := (l.Assign(Self.Length) > 1);
   if Result then
   for i := 0 to ((l div 2) - 1) do
     Exchange(i, ((l - i) - 1));
@@ -489,8 +510,7 @@ function MArrayHelper.Reversed: MArray; overload;
 var
   i, l: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   for i := 0 to (l - 1) do
     Result[i] := Self[(l - i) - 1];
 end;
@@ -672,6 +692,21 @@ begin
 end;
 
 {==============================================================================]
+  <Reversively>
+  @action: Returns a new array with the elements of the source array in reverse order.
+  @note: Efficiently allocates the required memory upfront and maps elements to their 
+         inverted indices, achieving an optimized linear time complexity ($O(n)$).
+[==============================================================================}
+function MArrayHelper.Reversively: MArray; overload;
+var
+  i, l: Integer;
+begin
+  l := Result.SetSize(Self.Length);
+  for i := 0 to (l - 1) do
+    Result[(l - 1) - i] := Self[i];
+end;
+
+{==============================================================================]
   <Reversivly>
   @action: Returns a new array containing the elements of the source array in reverse order.
   @note: Uses a loop to continuously insert elements at index 0 of the result array.
@@ -716,8 +751,7 @@ function MArrayHelper.Reverted: MArray; overload;
 var
   L, R: Integer;
 begin
-  R := Self.Length;
-  SetLength(Result, R);
+  R := Result.SetSize(Self.Length);
   if (R = 0) then
     Exit;
   L := -1;
