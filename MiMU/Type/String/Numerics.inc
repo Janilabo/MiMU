@@ -11,6 +11,8 @@ function IsNumber: Boolean; overload;
 function IsNumeric: Boolean; overload;
 function IsNumerical: Boolean; overload;
 function Number: Boolean; overload;
+function Numberic: Boolean; overload;
+function Numberous: Boolean; overload;
 function Numbery: Boolean; overload;
 function Numberyous: Boolean; overload;
 function Numerable: Boolean; overload;
@@ -183,7 +185,7 @@ begin
   if (l = 0) then
     Exit(False);
   p := PChar(Self);
-  if ((p^ = '-') or (p^ = '+')) then
+  if (p^ in SIGN_CHARS) then
   begin
     Inc(p);
     Dec(l);
@@ -191,7 +193,7 @@ begin
   if (l = 0) then
     Exit(False);
   while (l > 0) do
-    if not ((p^ < '0') or (p^ > '9')) then
+    if (p^ in DIGIT_CHARS) then
     begin
       Inc(p);
       Dec(l);
@@ -216,7 +218,7 @@ begin
     Exit;
   P := PChar(Self);
   while (P^ <> #0) do
-    if (P^ in ['0'..'9']) then
+    if (P^ in DIGIT_CHARS) then
       Inc(P)
 	else
 	  Exit(False);
@@ -242,7 +244,7 @@ begin
   s := Length(Self);
   if (s = 0) then
     Exit(False);
-  o := Integer((Self[1] = '-') or (Self[1] = '+'));
+  o := Integer(Self[1] in SIGN_CHARS);
   if ((s - o) = 0) then
     Exit(False);
   l := o;
@@ -251,6 +253,71 @@ begin
     if ((Cardinal(Ord(Self[l]) - 48) > 9) or (Cardinal(Ord(Self[r]) - 48) > 9)) then
       Exit(False);
   Result := ((l > r) or (Cardinal(Ord(Self[l]) - 48) <= 9));
+end;
+
+{==============================================================================]
+  <Numberic>
+  @action: Returns True if the string is non-empty and represents a valid
+           signed or unsigned whole integer; False otherwise.
+  @note: Uses a for..in enumerator over the string characters, delegating
+         digit membership to DIGIT_CHARS and sign membership to SIGN_CHARS.
+         A boolean flag gates the first character via a case..of dispatch,
+         permitting either a digit or an optional leading sign; all subsequent
+         characters must be digits. A bare sign with no following digits
+         returns False.
+[==============================================================================}
+function TStringHelper.Numberic: Boolean; overload;
+var
+  l: Integer;
+  c: Char;
+  f: Boolean;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit(False);
+  f := True;
+  for c in Self do
+  case f of
+    True:
+    begin
+      f := False;
+      if not ((c in DIGIT_CHARS) or (c in SIGN_CHARS)) then
+        Exit(False);
+    end;
+	False:
+    if not (c in DIGIT_CHARS) then
+      Exit(False);
+  end;
+  Result := not ((l = 1) and (Self[1] in SIGN_CHARS));
+end;
+
+{==============================================================================]
+  <Numberous>
+  @action: Returns True if the string is non-empty and represents a valid
+           signed or unsigned whole integer; False otherwise.
+  @note: Uses a PChar null-terminator walk, advancing the pointer through
+         the string without index arithmetic or a cached length. An optional
+         leading sign is consumed by a single pointer increment before the
+         main digit scan; a bare sign with no following digits is rejected
+         by the second null-terminator guard.
+[==============================================================================}
+function TStringHelper.Numberous: Boolean; overload;
+var
+  p: PChar;
+begin
+  p := PChar(Self);
+  if (p^ = #0) then
+    Exit(False);
+  if (p^ in SIGN_CHARS) then
+    Inc(p);
+  if (p^ = #0) then
+    Exit(False);
+  while (p^ <> #0) do
+    if (p^ in DIGIT_CHARS) then
+	  Inc(p)
+	else
+      Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]
@@ -267,7 +334,7 @@ begin
   s := Length(Self);
   if (s = 0) then
     Exit(False);
-  o := Integer((Self[1] = '-') or (Self[1] = '+'));
+  o := Integer(Self[1] in SIGN_CHARS);
   if ((s - o) = 0) then
     Exit(False);
   L := (PByte(PChar(Self)) + o);
@@ -295,7 +362,7 @@ begin
   l := Length(Self);
   if (l = 0) then
     Exit(False);
-  s := Integer((Self[1] = '-') or (Self[1] = '+'));
+  s := Integer(Self[1] in SIGN_CHARS);
   if ((l - s) = 0) then
     Exit(False);
   for i := (1 + s) to ((1 + s + l) div 2) do
@@ -319,7 +386,7 @@ begin
   l := Length(Self);
   if (l = 0) then
     Exit(False);
-  s := IfThen(((Self[1] = '-') or (Self[1] = '+')), 1, 0);
+  s := IfThen((Self[1] in SIGN_CHARS), 1, 0);
   for i := (1 + s) to l do
     if not (Self[i] in [#48..#57]) then
       Exit(False);
@@ -336,20 +403,17 @@ end;
   - Uses 1-based string indexing.
 [==============================================================================}
 function TStringHelper.Numerable: Boolean; overload;
-const
-  DIGIT_SET: set of Char = ['0'..'9'];
-  SIGN_SET: set of Char = ['-', '+'];
 var
   i, s, l: Integer;
 begin
   l := Length(Self);
   if (l = 0) then
     Exit(False);
-  s := Integer(Self[1] in SIGN_SET);
+  s := Integer(Self[1] in SIGN_CHARS);
   if ((s = 1) and (l = 1)) then
     Exit(False);
   for i := (1 + s) to l do
-    if not (Self[i] in DIGIT_SET) then
+    if not (Self[i] in DIGIT_CHARS) then
       Exit(False);
   Result := True;
 end;
@@ -370,7 +434,7 @@ begin
   l := Length(Self);
   if (l = 0) then
     Exit(False);
-  s := Integer((Self[1] = '-') or (Self[1] = '+'));
+  s := Integer(Self[1] in SIGN_CHARS);
   if ((l - s) = 0) then
     Exit(False);
   for i := (1 + s) to l do
@@ -395,10 +459,10 @@ begin
   l := Length(Self);
   if (l = 0) then
     Exit(False);
-  i := IfThen(((Self[1] = '-') or (Self[1] = '+')), 2, 1);
+  i := IfThen((Self[1] in SIGN_CHARS), 2, 1);
   if (i > l) then
     Exit(False);
-  while ((i <= l) and (Self[i] >= '0') and (Self[i] <= '9')) do
+  while ((i <= l) and (Self[i] in DIGIT_CHARS)) do
     Inc(i);
   Result := (i > l);
 end;

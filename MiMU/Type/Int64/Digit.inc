@@ -64,7 +64,7 @@ begin
     Exit(19);
   n := Abs(Self);
   for i := 1 to 18 do
-    if (n <= NINES_TABLE[i]) then
+    if (n <= DIGIT_MAXIMA[i]) then
       Exit(i);
   Result := 19;
 end;

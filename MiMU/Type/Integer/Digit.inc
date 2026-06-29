@@ -147,7 +147,7 @@ var
 begin
   n := Abs(Int64(Self));
   for i := 1 to 9 do
-    if (n <= NINES_TABLE[i]) then
+    if (n <= DIGIT_MAXIMA[i]) then
       Exit(i);
   Result := 10;
 end;
@@ -776,7 +776,7 @@ end;
 [==============================================================================}
 function TIntegerHelper.NDigited(const digitCount: Integer): Boolean; overload;
 begin
-  Result := (InRange(digitCount, 1, 10) and InRange(Abs(Self), (NINES_TABLE[digitCount - 1] + 1), NINES_TABLE[digitCount]));
+  Result := (InRange(digitCount, 1, 10) and InRange(Abs(Self), (DIGIT_MAXIMA[digitCount - 1] + 1), DIGIT_MAXIMA[digitCount]));
 end;
 
 {==============================================================================]
