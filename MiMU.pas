@@ -53,7 +53,12 @@ const
   DIGIT_CHARS: set of Char = ['0'..'9'];
   SIGN_CHARS: set of Char = ['+', '-'];
   
+  BOOL_CHR: array[Boolean] of Char = ('0', '1');
+  BOOL_BIT: array[Boolean] of Byte = (0, 1);
+  BOOL_STR: array[Boolean] of string = ('False', 'True');
+  
   {Digit value tables}
+  DECIMAL_VALUES: array['0'..'9'] of Byte = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
   BASE_DIGITS: array[0..9] of Byte = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
   DIGIT_MINIMA: array[0..18] of Int64 = (
     0, 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 10000000000, 100000000000, 1000000000000,
@@ -82,6 +87,13 @@ const
   ALPHA_CHARS: set of Char = ['A'..'Z', 'a'..'z'];
   UPPER_CHARS: set of Char = ['A'..'Z'];
   LOWER_CHARS: set of Char = ['a'..'z'];
+  
+  NULL = #0;
+  TAB = #9;
+  LF = #10;
+  CR = #13;
+  SPACE = #32;
+  CRLF = #13#10;
 
   MIN_INTEGER: Integer = -2147483648;
   MAX_INTEGER: Integer = 2147483647;

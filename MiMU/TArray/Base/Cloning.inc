@@ -15,7 +15,9 @@ function Data: MArray; overload;
 function Detach: MArray; overload;
 function Ditto: MArray; overload;
 function Dupe: MArray; overload;
+function Fork: MArray; overload;
 function Imago: MArray; overload;
+function Imprint: MArray; overload;
 function Proversion: MArray; overload;
 function Selfie: MArray; overload;
 function Twinned: MArray; overload;
@@ -347,6 +349,16 @@ begin
 end;
 
 {==============================================================================]
+  <Fork>
+  @action: Concatenates the source array with an empty array.
+  @note: Creates a flat, shallow copy (clone) of the array using System.Concat.
+[==============================================================================}
+function MArrayHelper.Fork: MArray; overload;
+begin
+  Result := System.Concat(Self, []);
+end;
+
+{==============================================================================]
   <Imago>
   @action: Returns a shallow copy of the original array, preserving element order.
   @note: Implements the copy using a `label` and `goto` to iterate backwards from 
@@ -369,6 +381,16 @@ begin
   Result[s] := Self[s];
   if (s.Decrement > -1) then
     goto loop;
+end;
+
+{==============================================================================]
+  <Imprint>
+  @action: Inserts the source array elements into an empty destination array.
+  @note: Creates a flat, shallow copy (clone) of the array using System.Insert.
+[==============================================================================}
+function MArrayHelper.Imprint: MArray; overload;
+begin
+  Insert(Self, Result, 0);
 end;
 
 {==============================================================================]

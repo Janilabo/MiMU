@@ -22,11 +22,13 @@ function Reversal: MArray; overload;
 function Reverse: Boolean; overload;
 function Reversed: MArray; overload;
 function ReversedEx: MArray; overload;
+function Reversedly: MArray; overload;
 function ReverseEx: MArray; overload;
 function Reversement: Boolean; overload;
 function Reversified: MArray; overload;
 function Reversify: Boolean; overload;
 function Reversion: MArray; overload;
+function Reversivly: MArray; overload;
 function Revert: MArray; overload;
 function Reverted: MArray; overload;
 function RReverse: MArray; overload;
@@ -520,6 +522,23 @@ begin
 end;
 
 {==============================================================================]
+  <Reversedly>
+  @action: Allocates a new array and copies the elements of the source array in reverse order.
+  @note: Returns a new inverted array without modifying the original source array (Self).
+[==============================================================================}
+function MArrayHelper.Reversedly: MArray; overload;
+var
+  l, r: Integer;
+begin
+  l := Result.SetSize(Self.Length);
+  if (l = 0) then
+    Exit;
+  r := -1;
+  while (l.Decrement > -1) do
+    Result[r.Increment] := Self[l];
+end;
+
+{==============================================================================]
   <ReverseEx>
   @action: Returns a new array containing the elements of the original array
            in reverse order, utilizing optimized hardcoded branches for small
@@ -650,6 +669,21 @@ begin
   end;
   if l.Odd then
     Result[h] := Self[h];
+end;
+
+{==============================================================================]
+  <Reversivly>
+  @action: Returns a new array containing the elements of the source array in reverse order.
+  @note: Uses a loop to continuously insert elements at index 0 of the result array.
+         Note that this approach incurs a performance penalty ($O(n^2)$ complexity) due to repeated memory shifting during insertion.
+[==============================================================================}
+function MArrayHelper.Reversivly: MArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+    Insert(Self[i], Result, 0);
 end;
 
 {==============================================================================]
