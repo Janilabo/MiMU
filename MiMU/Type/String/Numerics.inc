@@ -3,6 +3,7 @@ function IsBinared: Boolean; overload;
 function IsBinarial: Boolean; overload;
 function IsBinaric: Boolean; overload;
 function IsBinaried: Boolean; overload;
+function IsBinarily: Boolean; overload;
 function IsBinarsy: Boolean; overload;
 function IsBinary: Boolean; overload;
 function IsBinaural: Boolean; overload;
@@ -90,6 +91,33 @@ begin
     else
       Inc(P);
   Result := (Length(Self) > 0);
+end;
+
+{==============================================================================]
+  <IsBinarily>
+  @action: Returns True if the string is non-empty and contains only the
+           characters '0' and '1'; False otherwise.
+  @note: Casts the string's first character address to PByte, walking raw
+         memory and testing each byte directly against 48 and 49 (the ASCII
+         ordinals of '0' and '1'), avoiding Ord() calls entirely. The index
+         variable i drives iteration count while P advances independently
+         as the read head
+[==============================================================================}
+function TStringHelper.IsBinarily: Boolean; overload;
+var
+  P: PByte;
+  i, l: Integer;
+begin
+  l := Length(Self);
+  if (l = 0) then
+    Exit(False);
+  P := PByte(@Self[1]);
+  for i := 1 to l do
+    if ((P^ = 48) or (P^ = 49)) then
+      Inc(P)
+    else
+      Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]
