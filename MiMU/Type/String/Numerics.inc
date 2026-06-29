@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function IsBinarial: Boolean; overload;
-function IsBinary(const emptyTrue: Boolean = True): Boolean; overload;
+function IsBinaried: Boolean; overload;
+function IsBinarsy: Boolean; overload;
+function IsBinary: Boolean; overload;
 function IsNumber: Boolean; overload;
 function IsNumeric: Boolean; overload;
 function IsNumerical: Boolean; overload;
@@ -25,30 +27,66 @@ function Numerical: Boolean; overload;
 [==============================================================================}
 function TStringHelper.IsBinarial: Boolean; overload;
 var
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Length(Self);
-  for i := 1 to l do
+  for i := 1 to Length(Self) do
     if ((Ord(Self[i]) xor 48) > 1) then
       Exit(False);
-  Result := (l > 0);
+  Result := (Length(Self) > 0);
+end;
+
+{==============================================================================]
+  <IsBinaried>
+  @action: Checks if the string contains only binary characters ('0' and '1') 
+           using a null-terminated pointer loop.
+  @note: Returns True if the string is non-empty and consists strictly of 
+         '0' and '1' characters; returns False otherwise. Safe against 
+         string-indexing settings since it uses PChar traversal.
+[==============================================================================}
+function TStringHelper.IsBinaried: Boolean; overload;
+var
+  P: PChar;
+begin
+  P := PChar(Self);
+  while (P^ <> #0) do
+    if ((P^ <> '0') and (P^ <> '1')) then
+      Exit(False)
+    else
+      Inc(P);
+  Result := (Length(Self) > 0);
+end;
+
+{==============================================================================]
+  <IsBinarsy>
+  @action: Checks if the string contains only binary characters ('0' and '1') 
+           by evaluating the characters in reverse order using a custom integer helper.
+  @note: Returns True if the string is non-empty and consists strictly of 
+         '0' and '1' characters; returns False otherwise. Uses pseudo-methods 
+         on the loop variable (requires specific custom helpers to compile).
+[==============================================================================}
+function TStringHelper.IsBinarsy: Boolean; overload;
+var
+  l: Integer;
+begin
+  Result := (l.Assign(Length(Self)) > 0);
+  while ((l > 0) and Result) do
+    Result := (Self[l.Decrease] in ['0', '1']);
 end;
 
 {==============================================================================]
   <IsBinary>
-  @action: Returns true if str contains only 0's and 1's
-  @note: If str is empty and emptyTrue is True, then this function returns True with empty strings.
+  @action: Checks if the string contains only binary characters ('0' and '1').
+  @note: Returns True if the string is non-empty and consists strictly of 
+         '0' and '1' characters; returns False otherwise.
 [==============================================================================}
-function TStringHelper.IsBinary(const emptyTrue: Boolean = True): Boolean; overload;
+function TStringHelper.IsBinary: Boolean; overload;
 var
   i: Integer;
 begin
-  if (Self = '') then
-    Exit(emptyTrue);
   for i := 1 to Length(Self) do
     if not (Self[i] in ['0', '1']) then
       Exit(False);
-  Result := True;
+  Result := (Length(Self) > 0);
 end;
 
 {==============================================================================]
