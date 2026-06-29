@@ -45,6 +45,10 @@ uses
   Classes, SysUtils, StrUtils, Math, Generics.Collections, Generics.Defaults, FGL, gdeque;
 
 const
+  BINARY_CHARS: set of Char = ['0', '1'];
+  BINARY_BITS: set of Byte = [0, 1];
+  BINARY_BOOLS: set of Boolean = [False, True];
+  BINARY_CODES: set of Byte = [48, 49];
   NINES_TABLE: array[0..18] of Int64 = (
     0, 9, 99, 999, 9999, 99999, 999999, 9999999, 99999999, 999999999, 9999999999, 99999999999, 999999999999, 9999999999999,
     99999999999999, 999999999999999, 9999999999999999, 99999999999999999, 999999999999999999

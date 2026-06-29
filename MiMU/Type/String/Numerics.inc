@@ -1,8 +1,11 @@
 {$IFDEF HELPERS}
+function IsBinared: Boolean; overload;
 function IsBinarial: Boolean; overload;
+function IsBinaric: Boolean; overload;
 function IsBinaried: Boolean; overload;
 function IsBinarsy: Boolean; overload;
 function IsBinary: Boolean; overload;
+function IsBinaural: Boolean; overload;
 function IsNumber: Boolean; overload;
 function IsNumeric: Boolean; overload;
 function IsNumerical: Boolean; overload;
@@ -15,6 +18,23 @@ function Numerical: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <IsBinared>
+  @action: Checks whether a non-empty string consists solely of binary characters ('0' and '1').
+  @note: Utilizes an inner recursive helper function (R) to perform a short-circuiting,
+         left-to-right linear scan of each character in the string.
+[==============================================================================}
+function TStringHelper.IsBinared: Boolean; overload;
+  function R(const s: string; i: Integer): Boolean;
+  begin
+    if (i > Length(s)) then
+      Exit(True);
+    Result := ((s[i] in BINARY_CHARS) and R(s, (i + 1)));
+  end;
+begin
+  Result := ((Length(Self) > 0) and R(Self, 1));
+end;
+
 {==============================================================================]
   <IsBinarial>
   @action: Returns True if the string contains only the characters '0' and
@@ -31,6 +51,22 @@ var
 begin
   for i := 1 to Length(Self) do
     if ((Ord(Self[i]) xor 48) > 1) then
+      Exit(False);
+  Result := (Length(Self) > 0);
+end;
+
+{==============================================================================]
+  <IsBinaric>
+  @action: Checks whether a non-empty string contains exclusively binary characters.
+  @note: Implements a clean, idiomatic iterative approach using a standard `for..in` loop to scan characters,
+         relying on an external constant set (`BINARY_CHARS`) for character validation.
+[==============================================================================}
+function TStringHelper.IsBinaric: Boolean; overload;
+var
+  c: Char;
+begin
+  for c in Self do
+    if not (c in BINARY_CHARS) then
       Exit(False);
   Result := (Length(Self) > 0);
 end;
@@ -70,7 +106,7 @@ var
 begin
   Result := (l.Assign(Length(Self)) > 0);
   while ((l > 0) and Result) do
-    Result := (Self[l.Decrease] in ['0', '1']);
+    Result := (Self[l.Decrease] in BINARY_CHARS);
 end;
 
 {==============================================================================]
@@ -84,9 +120,25 @@ var
   i: Integer;
 begin
   for i := 1 to Length(Self) do
-    if not (Self[i] in ['0', '1']) then
+    if not (Self[i] in BINARY_CHARS) then
       Exit(False);
   Result := (Length(Self) > 0);
+end;
+
+{==============================================================================]
+  <IsBinaural>
+  @action: Checks whether the string consists entirely of binary digits ('0' and '1').
+  @note: Uses a two-pointer approach (via TRange) moving simultaneously from both ends of the string inward to validate the characters.
+         Note that despite the acoustic terminology ("Binaural"), functionally this performs a binary character validation.
+[==============================================================================}
+function TStringHelper.IsBinaural: Boolean; overload;
+var
+  s: TRange;
+begin
+  s.Create(0, (Length(Self) + 1));
+  Result := (s.stop > 1);
+  while (Result and (s.start.Increment <= s.stop.Decrement)) do
+    Result := ((Self[s.start] in BINARY_CHARS) and (Self[s.stop] in BINARY_CHARS));
 end;
 
 {==============================================================================]
