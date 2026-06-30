@@ -1,12 +1,72 @@
 {$IFDEF HELPERS}
+function AtLeft(const N: Integer = 0): MArray; overload;
+function AtRight(const N: Integer = 0): MArray; overload;
 function Domain: TRange; overload;
+function LeftBy(const N: Integer = 0): Integer; overload;
 function Pad(const N: Integer = 0): Integer; overload;
 function Padded(const N: Integer = 0): MArray; overload;
+function RightBy(const N: Integer = 0): Integer; overload;
 function Sample(const sSize: Integer): MArray; overload;
 function Zigzag(const zAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AtLeft>
+  @action: Modifies the array at its left side (index 0). Adds new elements to 
+           the beginning (N > 0), or truncates elements from the start (N < 0).
+  @note: Positive values shift existing data right to pad the beginning; 
+         negative values slice elements off the left side.
+[==============================================================================}
+function MArrayHelper.AtLeft(const N: Integer = 0): MArray; overload;
+var
+  l, i: Integer;
+begin
+  l := Self.Length;
+  case (N < 0) of
+    True:
+    begin
+      SetLength(Result, Max(0, (l - -N)));
+      for i := 0 to High(Result) do
+        Result[i] := Self[i + -N];
+    end;
+    False:
+    begin
+      SetLength(Result, (l + N));
+      for i := 0 to (l - 1) do
+        Result[i + N] := Self[i];
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <AtRight>
+  @action: Modifies the array at its right side (the tail). Adds new elements 
+           to the end (N > 0), or truncates elements from the end (N < 0).
+  @note: Positive values extend the array length leaving trailing space; 
+         negative values slice elements off the right side.
+[==============================================================================}
+function MArrayHelper.AtRight(const N: Integer = 0): MArray; overload;
+var
+  l, i: Integer;
+begin
+  l := Self.Length;
+  case (N < 0) of
+    True:
+    begin
+      SetLength(Result, Max(0, (l - -N)));
+      for i := 0 to High(Result) do
+        Result[i] := Self[i];
+    end;
+    False:
+    begin
+      SetLength(Result, (l + N));
+      for i := 0 to (l - 1) do
+        Result[i] := Self[i];
+    end;
+  end;
+end;
+
 {==============================================================================]
   <Domain>
   @action: Returns the valid index range of the array.
@@ -21,6 +81,37 @@ begin
     Result.start := -1
   else
     Result.start := 0;
+end;
+
+{==============================================================================]
+  <LeftBy>
+  @action: Mutates the array on its left side (index 0) and returns the new length.
+           Pads the start (N > 0) or truncates from the start (N < 0).
+  @note: Alters Self directly.
+[==============================================================================}
+function MArrayHelper.LeftBy(const N: Integer = 0): Integer; overload;
+var
+  l, i: Integer;
+begin
+  l := Self.Length;
+  case (N < 0) of
+    True:
+    begin
+      Result := Max(0, (l - Abs(N)));
+      for i := 0 to (Result - 1) do
+        Self[i] := Self[i + Abs(N)];
+      SetLength(Self, Result);
+    end;
+    False:
+    begin
+      Result := (l + N);
+      SetLength(Self, Result);
+      for i := (l - 1) downto 0 do
+        Self[i + N] := Self[i];
+      for i := 0 to (N - 1) do
+        Self[i] := Default(MType);
+    end;
+  end;
 end;
 
 {==============================================================================]
@@ -86,6 +177,33 @@ begin
         Result[i] := Self[i];
       for i := 0 to (N - 1) do
         Result[i + l] := Default(MType);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <RightBy>
+  @action: Mutates the array on its right side (the tail) and returns the new length.
+           Pads the end (N > 0) or truncates from the end (N < 0).
+  @note: Alters Self directly.
+[==============================================================================}
+function MArrayHelper.RightBy(const N: Integer = 0): Integer; overload;
+var
+  l, i: Integer;
+begin
+  l := Self.Length;
+  case (N < 0) of
+    True:
+    begin
+      Result := Max(0, (l - Abs(N)));
+      SetLength(Self, Result);
+    end;
+    False:
+    begin
+      Result := (l + N);
+      SetLength(Self, Result);
+      for i := l to (Result - 1) do
+        Self[i] := Default(MType);
     end;
   end;
 end;
