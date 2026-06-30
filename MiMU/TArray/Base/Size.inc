@@ -7,6 +7,7 @@ function Fit(const aBounds: TRange): Integer; overload;
 function GetLength: Integer; overload;
 function Length: Integer; overload;
 function Lengthex(const aSize: Integer = 0): Integer; overload;
+function LengthTo(const N: Integer): Integer; overload;
 function Relength(const aSize: Integer = 0): Integer; overload;
 function Relength(out backup: MArray; const aSize: Integer = 0): Integer; overload;
 function Resize(const aChange: Integer): Integer; overload;
@@ -19,6 +20,7 @@ function SetSize(const sSize: Integer; const iCreated: MType): Integer; overload
 function Size: Integer; overload;
 function Size(const aSize: Integer): MArray; overload;
 function Size(const aSize: Integer; const null: MType): MArray; overload;
+function SizeTo(const N: Integer): Integer; overload;
 function Sizex(out data: MArray): Integer; overload;
 {$ENDIF}
 
@@ -145,6 +147,25 @@ function MArrayHelper.Lengthex(const aSize: Integer = 0): Integer; overload;
 begin
   Result := Self.Length;
   SetLength(Self, IfThen((aSize > -1), aSize, 0));
+end;
+
+{==============================================================================]
+  <LengthTo>
+  @action: Resizes the array to exactly N elements. Automatically handles 
+           truncation if N is smaller than the current length, or explicitly 
+           initializes new elements to their default value if N is larger.
+  @note: Guarantees N is at least 0. Returns the newly established length of 
+         the array.
+[==============================================================================}
+function MArrayHelper.LengthTo(const N: Integer): Integer; overload;
+var
+  i, l: Integer;
+begin
+  Result := Max(N, 0);
+  l := Self.Length;
+  SetLength(Self, Result);
+  for i := l to (Result - 1) do
+    Self[i] := Default(MType);
 end;
 
 {==============================================================================]
@@ -348,6 +369,24 @@ begin
     Result[i] := Self[i];
   for i := l to (aSize - 1) do
     Result[i] := null;
+end;
+
+{==============================================================================]
+  <SizeTo>
+  @action: Resizes the array to contain exactly N elements. Truncates trailing 
+           elements if N is smaller than the current length, or pads the array 
+           with default values if N is larger.
+  @note: Guarantees N is at least 0. Returns the newly established length of 
+         the array.
+[==============================================================================}
+function MArrayHelper.SizeTo(const N: Integer): Integer; overload;
+begin
+  Result := Max(N, 0);
+  if (Result < Self.Length) then
+    System.Delete(Self, Result, (Self.Length - Result))
+  else
+    while (Self.Length < Result) do
+      System.Insert(Default(MType), Self, Self.Length);
 end;
 
 {==============================================================================]
