@@ -5,6 +5,7 @@
 {$I Construction.inc}
 {$I Copying.inc}
 {$I Counting.inc}
+{$I Duplication.inc}
 {$I Endpoints.inc}
 {$I Equality.inc}
 {$I Frequency.inc}
