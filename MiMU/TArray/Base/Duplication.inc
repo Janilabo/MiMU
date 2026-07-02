@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Repeated(const rCount: Integer = 1): MArray; overload;
 function Repeatedly(const rCount: Integer = 1): MArray; overload;
+function Repeatify(const rCount: Integer = 1): MArray; overload;
+function Repeato(const rCount: Integer = 1): MArray; overload;
 function Repeta(const rCount: Integer = 1): MArray; overload;
 function Repetat(const rCount: Integer = 1): Integer; overload;
 function Repete(const rCount: Integer = 1): MArray; overload;
@@ -57,6 +59,42 @@ begin
     for i := 0 to (c - 1) do
       Result[f + i] := p[i];
     f += c;
+  end;
+end;
+
+{==============================================================================]
+  <Repeatify>
+  @action: Creates a new array by repeating the elements of the source array a specified number of times.
+  @note: If rCount is 0 or negative, it safely allocates and returns an empty array.
+[==============================================================================}
+function MArrayHelper.Repeatify(const rCount: Integer = 1): MArray; overload;
+var
+  i, r, s: Integer;
+begin
+  if (Result.SetSize(s.Assign(Self.Length) * Max(0, rCount)) > 0) then
+  for i := 0 to (rCount - 1) do
+    for r := 0 to (s - 1) do
+      Result[(i * s) + r] := Self[r];
+end;
+
+{==============================================================================]
+  <Repeato>
+  @action: Duplicates the elements of the source array sequentially into a new array a specified number of times.
+  @note: Uses an internal pointer offset (`l`) to shift the destination block for each repetition pass. Returns an empty array if rCount <= 0.
+[==============================================================================}
+function MArrayHelper.Repeato(const rCount: Integer = 1): MArray; overload;
+var
+  i, r, l, s: Integer;
+begin
+  s := High(Self);
+  if (Result.SetSize((s + 1) * Max(0, rCount)) < 0) then
+    Exit;
+  l := 0;
+  for i := 0 to (rCount - 1) do
+  begin
+    for r := 0 to s do
+      Result[r + l] := Self[r];
+    Inc(l, (s + 1));
   end;
 end;
 
