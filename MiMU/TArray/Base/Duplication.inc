@@ -4,7 +4,9 @@ function Repeta(const rCount: Integer = 1): MArray; overload;
 function Repete(const rCount: Integer = 1): MArray; overload;
 function Repetite(const rCount: Integer = 1): Integer; overload;
 function Repetited(const rCount: Integer = 1): MArray; overload;
+function Repetize(const rCount: Integer = 1): MArray; overload;
 function Repped(const rCount: Integer = 1): MArray; overload;
+function Reppite(const rCount: Integer = 1): Integer; overload;
 function Reps(const rCount: Integer = 1): MArray; overload;
 {$ENDIF}
 
@@ -100,6 +102,29 @@ begin
 end;
 
 {==============================================================================]
+  <Repetize>
+  @action: Duplicates the elements of the current array a specified number of times sequentially,
+           using a goto-driven loop instead of a structured for/while construct.
+  @note: If rCount is less than 1 or Self length is 0, an empty array is returned.
+[==============================================================================}
+function MArrayHelper.Repetize(const rCount: Integer = 1): MArray; overload;
+var
+  l, r, i: Integer;
+label
+  loop;
+begin
+  l := Self.Length;
+  if ((rCount < 1) or (l = 0)) then
+    Exit([]);
+  r := Result.SetSize(l * rCount);
+  i := 0;
+  loop:
+  Result[i] := Self[i mod l];
+  if (i.Increment < r) then
+    goto loop;
+end;
+
+{==============================================================================]
   <Repped>
   @action: Duplicates the elements of the current array a specified number of times sequentially, walking source and destination as raw pointers.
   @note: If rCount is less than 1 or Self length is 0, an empty array is returned.
@@ -114,6 +139,37 @@ begin
   Result.SetSize(l * rCount);
   r := @Result[0];
   for c := 1 to rCount do
+  begin
+    s := @Self[0];
+    for i := 1 to l do
+    begin
+      r^ := s^;
+      Inc(s);
+      Inc(r);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <Reppite>
+  @action: Mutates the current array by repeating its original elements a specified number of times in-place,
+           walking source and destination as raw pointers.
+  @note: Returns the new total length of the array. If rCount is 1 or the array is empty, exits early with no changes.
+         If rCount is 0 or negative, the array is cleared and 0 is returned.
+[==============================================================================}
+function MArrayHelper.Reppite(const rCount: Integer = 1): Integer; overload;
+var
+  l, c, i: Integer;
+  s, r: MPointer;
+begin
+  l := Self.Length;
+  if ((rCount = 1) or (l = 0)) then
+    Exit(l);
+  if (rCount < 1) then
+    Exit(Self.Nullify);
+  Result := Self.SetSize(l * rCount);
+  r := @Self[l];
+  for c := 2 to rCount do
   begin
     s := @Self[0];
     for i := 1 to l do

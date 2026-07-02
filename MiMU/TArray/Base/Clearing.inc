@@ -2,6 +2,7 @@
 function Clear: Boolean; overload;
 function Free: Integer; overload;
 function Kill: Integer; overload;
+function Nullify: Integer; overload;
 function Recreate(const arrSize: Integer): Boolean; overload;
 function Reinitialize(const aSize: Integer = 1): Integer; overload;
 function Reset: Integer; overload;
@@ -38,6 +39,17 @@ end;
 function MArrayHelper.Kill: Integer; overload;
 begin
   Result := Self.Size;
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
+  <Nullify>
+  @action: Deallocates the array memory and reduces its length to zero.
+  @note: Returns 0 to represent the new length or an initialized state code.
+[==============================================================================}
+function MArrayHelper.Nullify: Integer; overload;
+begin
+  Result := 0;
   SetLength(Self, 0);
 end;
 
