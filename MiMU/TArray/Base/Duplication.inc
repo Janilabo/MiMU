@@ -1,9 +1,12 @@
 {$IFDEF HELPERS}
 function Repeated(const rCount: Integer = 1): MArray; overload;
+function Repeatedly(const rCount: Integer = 1): MArray; overload;
 function Repeta(const rCount: Integer = 1): MArray; overload;
+function Repetat(const rCount: Integer = 1): Integer; overload;
 function Repete(const rCount: Integer = 1): MArray; overload;
 function Repetite(const rCount: Integer = 1): Integer; overload;
 function Repetited(const rCount: Integer = 1): MArray; overload;
+function Repetitum(const rCount: Integer = 1): MArray; overload;
 function Repetize(const rCount: Integer = 1): MArray; overload;
 function Repped(const rCount: Integer = 1): MArray; overload;
 function Reppite(const rCount: Integer = 1): Integer; overload;
@@ -31,6 +34,33 @@ begin
 end;
 
 {==============================================================================]
+  <Repeatedly>
+  @action: Duplicates the elements of the current array a specified number of times sequentially, using exponential growth via System.Copy calls instead of Move.
+  @note: If rCount is less than 1 or Self length is 0, an empty array is returned. Safe for managed types.
+[==============================================================================}
+function MArrayHelper.Repeatedly(const rCount: Integer = 1): MArray; overload;
+var
+  l, r, f, c, i: Integer;
+  p: MArray;
+begin
+  l := Self.Length;
+  if ((rCount < 1) or (l = 0)) then
+    Exit([]);
+  r := Result.SetSize(l * rCount);
+  for i := 0 to (l - 1) do
+    Result[i] := Self[i];
+  f := l;
+  while (f < r) do
+  begin
+    c := Min(f, (r - f));
+    p := System.Copy(Result, 0, c);
+    for i := 0 to (c - 1) do
+      Result[f + i] := p[i];
+    f += c;
+  end;
+end;
+
+{==============================================================================]
   <Repeta>
   @action: Duplicates the elements of the current array a specified number of times sequentially, appending each repetition via System.Insert.
   @note: If rCount is less than 1 or Self length is 0, an empty array is returned. O(rCount^2)-ish due to repeated Insert shifting; illustrative rather than performant.
@@ -44,7 +74,29 @@ begin
     Exit;
   for r := 1 to rCount do
     System.Insert(Self, Result, Result.Length);
-end; 
+end;
+
+{==============================================================================]
+  <Repetat>
+  @action: Mutates the current array by repeating its original elements a specified number of times in-place,
+           by repeatedly concatenating Self onto itself and reassigning.
+  @note: Returns the new total length of the array. If rCount is 1 or the array is empty, exits early with no changes.
+         If rCount is 0 or negative, the array is cleared and 0 is returned. Safe for managed types.
+[==============================================================================}
+function MArrayHelper.Repetat(const rCount: Integer = 1): Integer; overload;
+var
+  original, c: Integer;
+  s: MArray;
+begin
+  if ((rCount = 1) or (Self.Length = 0)) then
+    Exit(Self.Length);
+  if (rCount < 1) then
+    Result := Self.Nullify;
+  s := Self;
+  for c := 2 to rCount do
+    Self := System.Concat(Self, s);
+  Result := Self.Length;
+end;
 
 {==============================================================================]
   <Repete>
@@ -99,6 +151,22 @@ begin
     Exit([]);
   for i := 0 to (Result.SetSize(l * rCount) - 1) do
     Result[i] := Self[i mod l];
+end;
+
+{==============================================================================]
+  <Repetitum>
+  @action: Duplicates the elements of the current array a specified number of times sequentially, by repeated Concat accumulation.
+  @note: If rCount is less than 1 or Self length is 0, an empty array is returned. Safe for managed types.
+[==============================================================================}
+function MArrayHelper.Repetitum(const rCount: Integer = 1): MArray; overload;
+var
+  c: Integer;
+begin
+  if ((rCount < 1) or (Self.Length = 0)) then
+    Exit([]);
+  Result := Self.Clone;
+  for c := 2 to rCount do
+    Result := System.Concat(Result, Self);
 end;
 
 {==============================================================================]
