@@ -45,6 +45,7 @@ begin
       Dec(Result);
 end;
 
+
 {==============================================================================]
   <Fetch>
   @action: Swaps an element from a `source` array into the current array (`Self`) at `aIndex`, returning the element's *original* value from `Self`.
