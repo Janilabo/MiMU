@@ -18,7 +18,6 @@ function Rebel: MArray; overload;
 function Reflex(const rIndex: Integer): MType; overload;
 function Regress: MArray; overload;
 function Relist: MArray; overload;
-function Retreat: MArray; overload;
 function Reverc: Boolean; overload;
 function Reversal: MArray; overload;
 function Reverse: Boolean; overload;
@@ -440,19 +439,6 @@ begin
   finally
     l.Free;
   end;
-end;
-
-{==============================================================================]
-  <Retreat>
-  @action: Copies `Self` into `Result` in reverse order, emptying `Self` in the process.
-  @note: Order-reversing variant of the Relocation family; uses `Pop` to drain `Self` from the back, so `Result` ends up in reverse original order.
-[==============================================================================}
-function MArrayHelper.Retreat: MArray; overload;
-var
-  i: Integer;
-begin
-  for i := 0 to (Result.SetSize(Self.Length) - 1) do
-    Result[i] := Self.Pop;
 end;
 
 {==============================================================================]
