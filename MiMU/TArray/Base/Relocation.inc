@@ -3,6 +3,7 @@ function Cede: MArray; overload;
 function Consume: MArray; overload;
 function Decant: MArray; overload;
 function Deforce: MArray; overload;
+function Denude: MArray; overload;
 function Discharge: MArray; overload;
 function Drain: MArray; overload;
 function Evacuate: MArray; overload;
@@ -65,6 +66,21 @@ begin
   Result := nil;
   Insert(Self, Result, 0);
   SetLength(Self, 0);
+end;
+
+{==============================================================================]
+  <Denude>
+  @action: Copies `Self` into `Result` in original order, emptying `Self` in the process.
+  @note: Order-preserving variant of the Relocation family; drains `Self` from the back via `Pop`,
+         but writes to `Result` at the mirrored index (`h - i`) to cancel out the reversal.
+[==============================================================================}
+function MArrayHelper.Denude: MArray; overload;
+var
+  h, i: Integer;
+begin
+  h := High(Self);
+  for i := 0 to (Result.SetSize(h + 1) - 1) do
+    Result[h - i] := Self.Pop;
 end;
 
 {==============================================================================]
