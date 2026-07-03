@@ -1,14 +1,34 @@
 {$IFDEF HELPERS}
+function Cede: MArray; overload;
 function Consume: MArray; overload;
 function Decant: MArray; overload;
+function Deforce: MArray; overload;
 function Discharge: MArray; overload;
 function Drain: MArray; overload;
 function Evacuate: MArray; overload;
 function Loot: MArray; overload;
+function Recoup: MArray; overload;
+function Unload: MArray; overload;
 function Withdraw: MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Cede>
+  @action: Transfers all elements from the current array to the Result array
+           by popping them from the end, maintaining original element order.
+  @note: This operation actively mutates the source array (Self), leaving it 
+         empty once all elements are popped.
+[==============================================================================}
+function MArrayHelper.Cede: MArray; overload;
+var
+  r: Integer;
+begin
+  r := Result.SetSize(Self.Length);
+  while (r > 0) do
+    Result[r.Decrement] := Self.Pop;
+end;
+
 {==============================================================================]
   <Consume>
   @action: Produces a fresh copy of `Self`'s contents via `System.Concat`
@@ -32,6 +52,19 @@ function MArrayHelper.Decant: MArray; overload;
 begin
   Result := Self;
   Self := nil;
+end;
+
+{==============================================================================]
+  <Deforce>
+  @action: Transfers all elements from the current array to a new array, 
+           leaving the original array empty.
+  @note: This operations clears the source array instance (sets length to 0).
+[==============================================================================}
+function MArrayHelper.Deforce: MArray; overload;
+begin
+  Result := nil;
+  Insert(Self, Result, 0);
+  SetLength(Self, 0);
 end;
 
 {==============================================================================]
@@ -97,6 +130,46 @@ var
 begin
   Result := Self;
   Self := e;
+end;
+
+{==============================================================================]
+  <Recoup>
+  @action: Tail-recursively consumes `Self` head-first, accumulating into
+    `Result` via `Concat` at each call.
+  @note: Distinct from `Evacuate`'s post-order index recursion — here the
+    accumulator is threaded forward through the call chain and built up via
+    concatenation rather than assigned by descending index.
+[==============================================================================}
+function MArrayHelper.Recoup: MArray; overload;
+var
+  h: Integer;
+  function R(const A: MArray; index: Integer): MArray;
+  begin
+    if (index > h) then
+      Exit(A);
+    Result := R(System.Concat(A, [Self[index]]), (index + 1));
+  end;
+begin
+  h := High(Self);
+  Result := R(nil, 0);
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
+  <Unload>
+  @action: Copies all elements from the current array into the Result array 
+           element-by-element, then clears the source array.
+  @note: Relies on custom helpers for Result.SetSize and r.Decrement. The 
+         source array (Self) is completely emptied (Length set to 0).
+[==============================================================================}
+function MArrayHelper.Unload: MArray; overload;
+var
+  r: Integer;
+begin
+  r := Result.SetSize(Self.Length);
+  while (r.Decrement > -1) do
+    Result[r] := Self[r];
+  SetLength(Self, 0);
 end;
 
 {==============================================================================]
