@@ -1,9 +1,32 @@
 {$IFDEF HELPERS}
+function Assign(const target: MArray): MArray; overload;
 function Replace(const old, new: MType): MArray; overload;
 function Replace(const old, new: MType; const exceptions: TIntegerArray): MArray; overload;
+function Update(const target: MArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Assign>
+  @action: Copies the elements of the source array into the current array instance 
+           and returns a duplicate of the newly assigned data.
+  @note: Both the current instance (Self) and the return value (Result) are resized 
+         to match the length of the incoming array before performing a element-by-element copy.
+[==============================================================================}
+function MArrayHelper.Assign(const target: MArray): MArray; overload;
+var
+  i, l: Integer;
+begin
+  l := target.Length;
+  SetLength(Self, l);
+  SetLength(Result, l);
+  for i := 0 to High(Result) do
+  begin
+    Self[i] := target[i];
+	Result[i] := target[i];
+  end;
+end;
+
 {==============================================================================]
   <Replace>
   @action: Returns a new array based on the current array, where all occurrences
@@ -56,5 +79,18 @@ begin
       Result[i] := Self[i];
   for i := 0 to High(r) do
     Result[e[i]] := r[i];
+end;
+
+{==============================================================================]
+  <Update>
+  @action: Overwrites Self with a copy of target and returns the new length.
+  @note: Mutates Self by reassignment; target is duplicated via System.Copy
+         so Self and target remain independent after the call. Differs from
+         the MArray-returning overload only in its return value.
+[==============================================================================}
+function MArrayHelper.Update(const target: MArray): Integer; overload;
+begin
+  MArray(Self) := System.Copy(target);
+  Result := Self.Length;
 end;
 {$ENDIF}

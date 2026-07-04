@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function Claim: Integer; overload;
 function Downsize(const aCeiling: Integer = -1): Integer; overload;
 function Fixid(const aIndex: Integer = 0): Integer; overload;
 function Invalid(const aIndex: Integer = 0): Boolean; overload;
@@ -10,6 +11,20 @@ function Wipe: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Claim>
+  @action: Forces Self to become a uniquely-owned array, detached from any
+           shared reference, and returns its length.
+  @note: Uses the grow-then-shrink SetLength trick to force reallocation
+         when Self's reference count is greater than 1.
+[==============================================================================}
+function MArrayHelper.Claim: Integer; overload;
+begin
+  Result := Self.Length;
+  SetLength(Self, (Result + 1));
+  SetLength(Self, Result);
+end; 
+
 {==============================================================================]
   <Downsize>
   @action: Enforces a maximum structural size ceiling on the array and returns 

@@ -32,6 +32,7 @@
 {$I Seeding.inc}
 {$I Selection.inc}
 {$I Size.inc}
+{$I Slice.inc}
 {$I Sort.inc}
 {$I Stability.inc}
 {$I Transform.inc}
