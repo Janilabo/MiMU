@@ -3,6 +3,7 @@ function Cede: MArray; overload;
 function Consume: MArray; overload;
 function Decant: MArray; overload;
 function Deforce: MArray; overload;
+function Delist: MArray; overload;
 function Denude: MArray; overload;
 function Discharge: MArray; overload;
 function Drain: MArray; overload;
@@ -65,6 +66,27 @@ function MArrayHelper.Deforce: MArray; overload;
 begin
   Result := nil;
   Insert(Self, Result, 0);
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
+  <Delist>
+  @action: Routes the transfer through a `specialize TList<T>` as an
+    intermediate buffer — `AddRange` in, `ToArray` out — before clearing `Self`.
+  @note: The only variant that hands the copy off to `Generics.Collections`
+    rather than doing it with native dynamic-array operations.
+[==============================================================================}
+function MArrayHelper.Delist: MArray; overload;
+var
+  L: specialize TList<MType>;
+begin
+  L := specialize TList<MType>.Create;
+  try
+    L.AddRange(Self);
+    Result := L.ToArray;
+  finally
+    L.Free;
+  end;
   SetLength(Self, 0);
 end;
 

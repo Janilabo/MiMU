@@ -22,6 +22,10 @@ function Size(const aSize: Integer): MArray; overload;
 function Size(const aSize: Integer; const null: MType): MArray; overload;
 function SizeTo(const N: Integer): Integer; overload;
 function Sizex(out data: MArray): Integer; overload;
+function ToLength(const sSize: Integer; out old: Integer): Integer; overload;
+function ToLength(const sSize: Integer = 1): Integer; overload;
+function ToSize(const sSize: Integer = 1): Integer; overload;
+function ToSize(const sSize: Integer; const iCreated: MType): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -408,5 +412,62 @@ begin
   SetLength(data, Result);
   for i := 0 to (Result - 1) do
     data[i] := Self[i];
+end;
+
+{==============================================================================]
+  <ToLength>
+  @action: Resizes the dynamic array to the specified length and outputs the 
+           previous array length to old variable.
+  @return: Returns the new size of the array (guaranteed to be >= 0).
+[==============================================================================}
+function MArrayHelper.ToLength(const sSize: Integer; out old: Integer): Integer; overload;
+begin
+  old := Self.Length;
+  Result := Max(0, sSize);
+  SetLength(Self, Result);
+end;
+
+{==============================================================================]
+  <ToLength>
+  @action: Resizes the dynamic array to the specified length (defaults to 1).
+  @return: Returns the new size of the array (guaranteed to be >= 0).
+[==============================================================================}
+function MArrayHelper.ToLength(const sSize: Integer = 1): Integer; overload;
+var
+  o: Integer;
+begin
+  Result := Self.ToLength(sSize, o);
+end;
+
+{==============================================================================]
+  <ToSize>
+  @action: Resizes the dynamic array to the specified length.
+  @note: If the new size is smaller than the current size, elements at the end 
+         are truncated. If sSize is negative, the array is cleared (size 0).
+  @return: Returns the new size of the array (guaranteed to be >= 0).
+[==============================================================================}
+function MArrayHelper.ToSize(const sSize: Integer = 1): Integer; overload;
+begin
+  Result := Max(0, sSize);
+  SetLength(Self, Result);
+end;
+
+{==============================================================================]
+  <ToSize>
+  @action: Resizes the dynamic array and initializes any newly added elements.
+  @note: If the array expands, all new elements between the old length and the 
+         new length are populated with the provided `iCreated` value. 
+         Truncates elements if the new size is smaller.
+  @return: Returns the new size of the array (guaranteed to be >= 0).
+[==============================================================================}
+function MArrayHelper.ToSize(const sSize: Integer; const iCreated: MType): Integer; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  Result := Max(0, sSize);
+  SetLength(Self, Result);
+  for i := l to (Result - 1) do
+    Self[i] := iCreated;
 end;
 {$ENDIF}
