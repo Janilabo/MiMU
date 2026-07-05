@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function Adopt(const target: MArray): MArray; overload;
 function Assign(const target: MArray): MArray; overload;
 function Replace(const old, new: MType): MArray; overload;
 function Replace(const old, new: MType; const exceptions: TIntegerArray): MArray; overload;
@@ -6,6 +7,20 @@ function Update(const target: MArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Adopt>
+  @action: Replaces Self's contents with a copy of target, returning a copy
+           of Self's original (pre-Adopt) contents.
+  @note:   Both Self and target are duplicated via .Copy, so the returned
+           Result, the new Self, and target all remain fully independent
+           buffers with no aliasing between them.
+[==============================================================================}
+function MArrayHelper.Adopt(const target: MArray): MArray; overload;
+begin
+  Result := Self.Copy;
+  Self := target.Copy;
+end;
+
 {==============================================================================]
   <Assign>
   @action: Copies the elements of the source array into the current array instance 
