@@ -20,6 +20,7 @@ function Regress: MArray; overload;
 function Relist: MArray; overload;
 function Reverc: Boolean; overload;
 function Reversal: MArray; overload;
+function Reversally: MArray; overload;
 function Reverse: Boolean; overload;
 function Reversed: MArray; overload;
 function ReversedEx: MArray; overload;
@@ -31,6 +32,7 @@ function Reversify: Boolean; overload;
 function Reversion: MArray; overload;
 function Reversively: MArray; overload;
 function Reversivly: MArray; overload;
+function Reversy: MArray; overload;
 function Revert: MArray; overload;
 function Reverted: MArray; overload;
 function RReverse: MArray; overload;
@@ -487,6 +489,44 @@ begin
 end;
 
 {==============================================================================]
+  <Reversally>
+  @action: Creates and returns a new array with the elements of the source array in reverse order.
+  @note: Employs a center-pivot mirroring algorithm. It calculates the mathematical midpoint 
+         of the array and uses coordinate reflection (distance from the pivot) to map elements 
+         from their original positions to their mirrored, reversed indices.
+[==============================================================================}
+function MArrayHelper.Reversally: MArray; overload;
+var
+  i, d, l: Integer;
+  m: Double;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(Self.Copy);
+  SetLength(Result, l);
+  d := (l div 2);
+  case l.Even of
+    True:
+    begin
+      m := (d - 0.5);
+      for i := 0 to (l - 1) do
+      case m.Compare(i) of
+        0: Result[i] := Self[i];
+        1: Result[i] := Self[Round(m + (m - i))];
+        -1: Result[i] := Self[Round(m - (i - m))];
+      end;
+    end;
+    False:
+    for i := 0 to (l - 1) do
+    case d.Compare(i) of
+      0: Result[i] := Self[i];
+      1: Result[i] := Self[d + (d - i)];
+      -1: Result[i] := Self[d - (i - d)];
+    end;
+  end;
+end;
+
+{==============================================================================]
   <Reverse>
   @action: Reverses items in array.
   @note: Returns true with success (array contains 2 or more items)
@@ -719,6 +759,24 @@ begin
   SetLength(Result, 0);
   for i := 0 to High(Self) do
     Insert(Self[i], Result, 0);
+end;
+
+{==============================================================================]
+  <Reversy>
+  @action: Populates and returns a pre-allocated array with elements from the source array in reverse order.
+  @note: Uses a synchronized dual-index traversal (converging/shifting pointers). The destination index ('l') 
+         moves sequentially forward while the source index ('r') moves backward, transferring elements 
+         in a single pass.
+[==============================================================================}
+function MArrayHelper.Reversy: MArray; overload;
+var
+  l, r, s: Integer;
+begin
+  s := Result.SetSize(Self.Length);
+  l := 0;
+  r := (s - 1);
+  while (l < s) do
+    Result[l.Increase] := Self[r.Decrease];
 end;
 
 {==============================================================================]

@@ -9,8 +9,10 @@ function IDs(const ID: TIntegerArray): MArray; overload;
 function IDs(const ID: TIntegerArray; const item: MType): MArray; overload;
 function IDs(const ID: TIntegerArray; const items: MArray): MArray; overload;
 function Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
+function Indexer: TRange; overload;
 function Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
+function Indexr: TRange; overload;
 function Indices(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
 function LoadID(var target: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
@@ -278,6 +280,21 @@ begin
 end;
 
 {==============================================================================]
+  <Indexer>
+  @action: Returns a TRange representing the index boundaries of the array.
+  @note: Uses an explicit conditional check. If the array is not empty (High >= 0), 
+         start is set to 0. For an empty array (High = -1), start becomes -1.
+[==============================================================================}
+function MArrayHelper.Indexer: TRange; overload;
+begin
+  Result.stop := High(Self);
+  if (Result.stop > -1) then
+    Result.start := 0
+  else
+    Result.start := -1;
+end;
+
+{==============================================================================]
   <Indexes>
   @action: Returns IDs of arr as TIntegerArray.
   @note: None.
@@ -325,6 +342,19 @@ begin
   SetLength(Result, Self.Size);
   if (Result.Size >  0) then
     RI(Result, 0, High(Self));
+end;
+
+{==============================================================================]
+  <Indexr>
+  @action: Returns a TRange representing the index boundaries of the array.
+  @note: Uses a branchless boolean-to-integer evaluation trick. If the array is 
+         empty, `Result.stop = -1` evaluates to True (1), making start -1. Otherwise, 
+         it evaluates to False (0), making start 0.
+[==============================================================================}
+function MArrayHelper.Indexr: TRange; overload;
+begin
+  Result.stop := High(Self);
+  Result.start := -Integer(Result.stop = -1);
 end;
 
 {==============================================================================]
