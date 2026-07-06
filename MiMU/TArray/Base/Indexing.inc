@@ -12,9 +12,12 @@ function Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indexer: TRange; overload;
 function Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
+function Indexment: TIntegerArray; overload;
 function Indexr: TRange; overload;
 function Indices(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
+function Indicia: TIntegerArray; overload;
+function Indicing: TIntegerArray; overload;
 function LoadID(var target: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
 function LoadIDs(var target: TIntegerArray): Integer; overload;
 function LoadIndexes(var target: TIntegerArray): Integer; overload;
@@ -345,6 +348,27 @@ begin
 end;
 
 {==============================================================================]
+  <Indexment>
+  @action: Populates and returns an array of indices corresponding to the source array,
+           using a two-pointer approach (from the outside in) for parallel assignment.
+  @note: Requires side-effect methods `Increment` and `Decrement` on integers, 
+         and a custom `SetSize` method that initializes the result array length 
+         and returns its highest valid index (High).
+[==============================================================================}
+function MArrayHelper.Indexment: TIntegerArray; overload;
+var
+  l, r: Integer;
+begin
+  l := -1;
+  r := Result.SetSize(Self.Length);
+  while (l.Increment <= r.Decrement) do
+  begin
+    Result[l] := l;
+    Result[r] := r;
+  end;
+end;
+
+{==============================================================================]
   <Indexr>
   @action: Returns a TRange representing the index boundaries of the array.
   @note: Uses a branchless boolean-to-integer evaluation trick. If the array is 
@@ -405,6 +429,40 @@ begin
       Result[i - l] := i;
   end;
 end;
+
+{==============================================================================]
+  <Indicia>
+  @action: Returns an array containing the sequential 0-based indices of the source array.
+  @note: Returns an empty array ([]) if the source array is empty.
+[==============================================================================}
+function MArrayHelper.Indicia: TIntegerArray; overload;
+begin
+  if (Self.Length < 1) then
+    Exit([]);
+  Result := TRange.Construct(0, High(Self)).ToArray;
+end;
+
+{==============================================================================]
+  <Indicing>
+  @action: Populates and returns an array of indices corresponding to the source array,
+           using a two-pointer approach from the outside in.
+  @note: Correctly handles both even and odd length arrays by explicitly checking
+         for and assigning the center element (when left equals right) after the main loop.
+[==============================================================================}
+function MArrayHelper.Indicing: TIntegerArray; overload;
+var
+  l, h: Integer;
+begin
+  l := -1;
+  h := Result.SetSize(Self.Length);
+  while (l.Increment < h.Decrement) do
+  begin
+    Result[l] := l;
+    Result[h] := h;
+  end;
+  if (l = h) then
+    Result[l] := l;
+end; 
 
 {==============================================================================]
   <LoadID>
@@ -541,8 +599,7 @@ function MArrayHelper.Slots: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to (Self.Size - 1) do
+  for i := 0 to (Result.SetSize(Self.Length) - 1) do
     Result[i] := i;
 end;
 

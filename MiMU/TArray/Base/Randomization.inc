@@ -1,11 +1,17 @@
 {$IFDEF HELPERS}
 function Any(const null: MType): MType; overload;
 function Any: MType; overload;
+function Derange: Boolean; overload;
+function Deranged: MArray; overload;
 function Disordered: MArray; overload;
 function FisherYates: MArray; overload;
 function Mix(const mixings: Integer = 1): Boolean; overload;
 function Mixed(const mixings: Integer = 1): MArray; overload;
 function Muddled: MArray; overload;
+function Randex(const N: Integer = 1): TIntegerArray; overload;
+function Randiced: TIntegerArray; overload;
+function Randices: TIntegerArray; overload;
+function Randicing: TIntegerArray; overload;
 function Randomed: MArray; overload;
 function Randomized: MArray; overload;
 function Randsy: MArray; overload;
@@ -39,6 +45,46 @@ end;
 function MArrayHelper.Any: MType; overload;
 begin
   Result := Self[Low(Self) + Random(Self.Size)];
+end;
+
+{==============================================================================]
+  <Derange>
+  @action: Shuffles Self in-place using Sattolo's algorithm, guaranteeing a
+           single N-cycle permutation (no element can remain in, or return to,
+           its original index).
+  @note: Differs from Fisher-Yates by drawing each swap index from [0, i-1]
+         instead of [0, i], excluding the current position. This trades
+         uniform-permutation coverage for a guaranteed derangement w.r.t.
+         cyclic structure — every element is guaranteed to move. Time
+         complexity O(n), no extra allocation.
+[==============================================================================}
+function MArrayHelper.Derange: Boolean; overload;
+var
+  i: Integer;
+begin
+  Result := (Self.Length > 1);
+  if Result then
+  for i := High(Self) downto 1 do
+    Self.Exch(i, Random(i));
+end;
+
+{==============================================================================]
+  <Deranged>
+  @action: Returns a copy of Self shuffled via Sattolo's algorithm, guaranteeing
+           a single N-cycle permutation.
+  @note: Non-mutating counterpart to Derange. Original array is left untouched.
+         Useful whenever you need a shuffle with the "everybody moves" property
+         that plain FisherYates does not guarantee (Fisher-Yates can, with
+         nonzero probability, leave an element fixed in place).
+[==============================================================================}
+function MArrayHelper.Deranged: MArray; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Copy;
+  if (Result.Length > 1) then
+  for i := High(Result) downto 1 do
+    Result.Exch(i, Random(i));
 end;
 
 {==============================================================================]
@@ -156,6 +202,64 @@ begin
   for i := 0 to (Min(l.Length, r.Length) - 1) do
     Result.Exch(l[i], r[i]);
   Result.Exch(m, Random(s));
+end;
+
+{==============================================================================]
+  <Randex>
+  @action: Selects `N` unique, random indices from the array, returning them in a randomized order.
+  @note: Uses a partial Fisher-Yates shuffle algorithm for optimal performance ($O(N)$ time complexity).
+         If `N` meets or exceeds the array's length, it safely returns all indices scrambled.
+[==============================================================================}
+function MArrayHelper.Randex(const N: Integer = 1): TIntegerArray; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (N >= l) then
+    Exit(Self.Randices);
+  Result := Self.Indexes;
+  for i := 0 to (N - 1) do
+    Swap(Result[i], Result[i + Random(l - i)]);
+  SetLength(Result, N);
+end;
+
+{==============================================================================]
+  <Randiced>
+  @action: Returns a randomly ordered array of all valid indices (0..High(Self)).
+  @note: Equivalent to Self.Indexes.FisherYates.
+[==============================================================================}
+function MArrayHelper.Randiced: TIntegerArray; overload;
+begin
+  Result := Self.Indexes.FisherYates;
+end;
+
+{==============================================================================]
+  <Randices>
+  @action: Returns a randomly ordered array of all valid indices (0..High(Self)).
+  @note: Useful for parallel iteration or non-destructive random access.
+[==============================================================================}
+function MArrayHelper.Randices: TIntegerArray; overload;
+begin
+  Result := Self.Indexes.Mixed;
+end;
+
+{==============================================================================]
+  <Randicing>
+  @action: Generates a completely shuffled array of all available indices from the source array.
+  @note: Uses a random-key weights approach by pairing sequential indices with random floating-point values
+         and sorting them via a weighted QuickSort. Time complexity is $O(L \log L)$, where $L$ is the array length.
+[==============================================================================}
+function MArrayHelper.Randicing: TIntegerArray; overload;
+var
+  i: Integer;
+  k: TDoubleArray;
+begin
+  for i := 0 to (Result.SetSize(k.SetSize(Self.Length)) - 1) do
+  begin
+    Result[i] := i;
+    k[i] := Random;
+  end;
+  Result.QuickSortWeighted(k);
 end;
 
 {==============================================================================]
