@@ -2,14 +2,18 @@
 function Any(const null: MType): MType; overload;
 function Any: MType; overload;
 function Disordered: MArray; overload;
+function FisherYates: MArray; overload;
 function Mix(const mixings: Integer = 1): Boolean; overload;
 function Mixed(const mixings: Integer = 1): MArray; overload;
+function Muddled: MArray; overload;
 function Randomed: MArray; overload;
 function Randomized: MArray; overload;
+function Randsy: MArray; overload;
 function Scramble(const swaps: Integer = -1): MArray; overload;
 function Shake(const shakes: Integer = 1): MArray; overload;
 function Shuffle(const shuffles: Integer = 1): MArray; overload;
 function Shuffled(const mixings: Integer = 1): MArray; overload;
+function Shufflist: MArray; overload;
 function Some: MArray; overload;
 function Some(const amount: Integer): MArray; overload;
 {$ENDIF}
@@ -63,6 +67,30 @@ begin
 end;
 
 {==============================================================================]
+  <FisherYates>
+  @action: Produces a uniformly random permutation (shuffle) of the array elements 
+           by performing the standard Fisher‑Yates (Knuth) in‑place algorithm on 
+           a copy of the source array. Each of the n! possible orderings is 
+           equally likely, assuming a fair random generator.
+  @note: Time complexity O(n), space complexity O(n) due to the internal copy 
+         (the original array remains unchanged). The algorithm iterates from 
+         the last index down to 1, swapping each position with a randomly 
+         chosen earlier or equal index (0..i). This is the recommended 
+         method for true random shuffling, in contrast to the biased 
+         cross‑half mixing of Randsy. For cryptographic robustness, use 
+         a secure random generator; otherwise, the built‑in Random() 
+         suffices for general purposes.
+[==============================================================================}
+function MArrayHelper.FisherYates: MArray; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Copy;
+  for i := High(Result) downto 1 do
+    Result.Exch(i, Random(i + 1));
+end;
+
+{==============================================================================]
   <Mix>
   @action: Ramdomizes array with custom mixings.
   @note: None.
@@ -96,6 +124,38 @@ begin
   for m := 1 to mixings do
     for i := 0 to (l - 1) do
       Swap(Result[Random(l)], Result[Random(l)]);
+end;
+
+{==============================================================================]
+  <Muddled>
+  @action: Shuffles the array by generating randomized index maps for the left 
+           and right halves, then performing deterministic parallel cross-swaps.
+  @note: Breaks the array indices into two separate tracking pools (excluding 
+         the midpoint), shuffles those pools independently via .Mix, and then 
+         swaps elements between the halves at those mixed positions. Finishes 
+         by swapping the midpoint globally. Linear time complexity O(n).
+[==============================================================================}
+function MArrayHelper.Muddled: MArray; overload;
+var
+  s, m, i: Integer;
+  l, r: TIntegerArray;
+begin
+  s := Self.Length;
+  Result := Self.Copy;
+  if (s < 2) then
+    Exit;
+  m := (s div 2);
+  SetLength(l, m);
+  for i := 0 to High(l) do
+    l[i] := i;
+  SetLength(r, (s - m - 1));
+  for i := 0 to High(r) do
+    r[i] := (m + 1 + i);
+  l.Mix;
+  r.Mix;
+  for i := 0 to (Min(l.Length, r.Length) - 1) do
+    Result.Exch(l[i], r[i]);
+  Result.Exch(m, Random(s));
 end;
 
 {==============================================================================]
@@ -138,6 +198,38 @@ begin
     r := Random(l);
     Result[i[r]] := Self[s];
     i[r] := i[l.Decrement];
+  end;
+end;
+
+{==============================================================================]
+  <Randsy>
+  @action: Shuffles the array by partitioning it into left and right halves 
+           and cross-swapping elements over the midpoint boundary with a slight 
+           random overlap into the boundary zones.
+  @note: Elements in the left half swap into the right range (potentially bleeding 
+         into the midpoint/left edge), elements in the right half swap into the 
+         left range (potentially bleeding into the midpoint/right edge), and the 
+         center pivot element swaps globally. Linear time complexity O(n).
+[==============================================================================}
+function MArrayHelper.Randsy: MArray; overload;
+var
+  i, s, m: Integer;
+  l, r: TRange;
+begin
+  s := Self.Length;
+  if (s < 2) then
+    Exit(Self.Copy);
+  if (s < 5) then
+    Exit(Self.Randomized);
+  m := (s div 2);
+  l.Create(0, (m - 1));
+  r.Create((m + 1), (s - 1));
+  Result := Self.Copy;
+  for i := 0 to (s - 1) do
+  case i.Compare(m) of
+    0: Result.Exch(i, Random(s));
+    -1: Result.Exch(i, (r.Rand - Random(2)));
+    1: Result.Exch(i, (l.Rand + Random(2)));
   end;
 end;
 
@@ -212,6 +304,29 @@ begin
   i.Mix(mixings);
   for r := 0 to (l - 1) do
     Result[r] := Self[i[r]];
+end;
+
+{==============================================================================]
+  <Shufflist>
+  @action: Returns a new array with all elements randomly shuffled.
+  @note: Leverages Delphi's native TList<T>.Shuffle method for an efficient, 
+         built-in Fisher-Yates implementation. Does not mutate the original array.
+[==============================================================================}
+function MArrayHelper.Shufflist: MArray; overload;
+var
+  l: specialize TList<MType>;
+  i: Integer;
+begin
+  l := specialize TList<MType>.Create;
+  try
+    for i := 0 to High(Self) do
+      l.Add(Self[i]);
+    for i := (l.Count - 1) downto 1 do
+      l.Exchange(i, Random(i + 1));
+    Result := l.ToArray;
+  finally
+    l.Free;
+  end;
 end;
 
 {==============================================================================]
