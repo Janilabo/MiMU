@@ -4,6 +4,7 @@ function Any: MType; overload;
 function Disordered: MArray; overload;
 function Mix(const mixings: Integer = 1): Boolean; overload;
 function Mixed(const mixings: Integer = 1): MArray; overload;
+function Randomed: MArray; overload;
 function Randomized: MArray; overload;
 function Scramble(const swaps: Integer = -1): MArray; overload;
 function Shake(const shakes: Integer = 1): MArray; overload;
@@ -95,6 +96,26 @@ begin
   for m := 1 to mixings do
     for i := 0 to (l - 1) do
       Swap(Result[Random(l)], Result[Random(l)]);
+end;
+
+{==============================================================================]
+  <Randomed>
+  @action: Returns a new array with the elements shuffled into a random order.
+  @note: Uses a random-weight quicksort approach to achieve the shuffle. 
+         Does not mutate the original array.
+[==============================================================================}
+function MArrayHelper.Randomed: MArray; overload;
+var
+  i, l: Integer;
+  w: TDoubleArray;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(Self.Copy);
+  SetLength(w, l);
+  for i := 0 to (l - 1) do
+    w[i] := Random;
+  Result := Self.QuickSorted(w);
 end;
 
 {==============================================================================]
