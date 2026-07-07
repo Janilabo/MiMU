@@ -27,6 +27,7 @@ function ReversedEx: MArray; overload;
 function Reversedly: MArray; overload;
 function ReverseEx: MArray; overload;
 function Reversement: Boolean; overload;
+function Reversied: MArray; overload;
 function Reversified: MArray; overload;
 function Reversify: Boolean; overload;
 function Reversion: MArray; overload;
@@ -659,6 +660,21 @@ begin
   i := -1;
   while (i.Increment < l.Decrement) do
     Swap(Self[i], Self[l]);
+end;
+
+{==============================================================================]
+  <Reversied>
+  @action: Allocates and fills a new array with the elements of the source array in reverse order.
+  @note: Uses a single-variable backward iteration (`downto`). By looping from the end of the 
+         source array to the beginning, it cleanly maps the current source index ('i') to its 
+         inverted destination index calculated via `High(Self) - i`.
+[==============================================================================}
+function MArrayHelper.Reversied: MArray; overload;
+var
+  i: Integer;
+begin
+  for i := (Result.SetSize(Self.Length) - 1) downto 0 do
+    Result[High(Self) - i] := Self[i];
 end;
 
 {==============================================================================]

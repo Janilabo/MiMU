@@ -8,6 +8,7 @@ function FisherYates: MArray; overload;
 function Mix(const mixings: Integer = 1): Boolean; overload;
 function Mixed(const mixings: Integer = 1): MArray; overload;
 function Muddled: MArray; overload;
+function Raffle(const rCount: Integer = 1): MArray; overload;
 function Randex(const N: Integer = 1): TIntegerArray; overload;
 function Randiced: TIntegerArray; overload;
 function Randices: TIntegerArray; overload;
@@ -202,6 +203,28 @@ begin
   for i := 0 to (Min(l.Length, r.Length) - 1) do
     Result.Exch(l[i], r[i]);
   Result.Exch(m, Random(s));
+end;
+
+{==============================================================================]
+  <Raffle>
+  @action: Returns a new array containing a specified number of randomly selected, 
+           unique elements from the source array (a random sample without replacement).
+  @note: Uses a partial Fisher-Yates shuffle algorithm for O(k) efficiency, ensuring 
+         unbiased randomness. Original array remains unmodified.
+[==============================================================================}
+function MArrayHelper.Raffle(const rCount: Integer = 1): MArray; overload;
+var
+  i, l: Integer;
+begin
+  if (rCount <= 0) then
+    Exit([]);
+  if (rCount >= Self.Length) then
+    Exit(Self.Randomized);
+  Result := Self.Copy;
+  l := Result.Length;
+  for i := 0 to (rCount - 1) do
+    Result.Exch(i, (i + Random(l - i)));
+  SetLength(Result, rCount);
 end;
 
 {==============================================================================]

@@ -8,6 +8,8 @@ function IDs(const aAscending: Boolean = True): TIntegerArray; overload;
 function IDs(const ID: TIntegerArray): MArray; overload;
 function IDs(const ID: TIntegerArray; const item: MType): MArray; overload;
 function IDs(const ID: TIntegerArray; const items: MArray): MArray; overload;
+function Indeca: TIntegerArray; overload;
+function Indexa: TIntegerArray; overload;
 function Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indexer: TRange; overload;
 function Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
@@ -258,6 +260,53 @@ begin
   l := items.Length;
   for i := 0 to High(ID) do
     Result[ID[i]] := items[i mod l];
+end;
+
+{==============================================================================]
+  <Indeca>
+  @action: Returns an array of Self's valid indices using a 4x manually
+           unrolled loop to reduce per-iteration branch overhead.
+  @note: Processes indices in groups of 4, with a remainder tail loop for
+         lengths not divisible by 4. Purely a micro-optimization mechanic;
+         functionally identical to Indexes.
+[==============================================================================}
+function MArrayHelper.Indeca: TIntegerArray; overload;
+var
+  l, i, r: Integer;
+begin
+  l := Result.SetSize(Self.Length);
+  r := ((l div 4) * 4);
+  i := -4;
+  while (i.Increment(4) < r) do
+  begin
+    Result[i] := i;
+    Result[i + 1] := (i + 1);
+    Result[i + 2] := (i + 2);
+    Result[i + 3] := (i + 3);
+  end;
+  Dec(i);
+  while (i.Increment < l) do
+    Result[i] := i;
+end;
+
+{==============================================================================]
+  <Indexa>
+  @action: Fills the index array using direct pointer arithmetic.
+  @note: Bypasses bounds checking for maximum raw performance.
+[==============================================================================}
+function MArrayHelper.Indexa: TIntegerArray; overload;
+var
+  i: Integer;
+  P: PInteger;
+begin
+  if (Result.SetSize(Self.Length) = 0) then
+    Exit;
+  P := @Result[0];
+  for i := 0 to High(Result) do
+  begin
+    P^ := i;
+    Inc(P);
+  end;
 end;
 
 {==============================================================================]
