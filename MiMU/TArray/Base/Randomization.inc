@@ -4,9 +4,13 @@ function Any: MType; overload;
 function Derange: Boolean; overload;
 function Deranged: MArray; overload;
 function Disordered: MArray; overload;
+function Draft(const N: Integer = 1): MArray; overload;
+function Favor(const weights: TDoubleArray): MType; overload;
+function Favor(const weights: TIntegerArray): MType; overload;
 function FisherYates: MArray; overload;
 function Mix(const mixings: Integer = 1): Boolean; overload;
 function Mixed(const mixings: Integer = 1): MArray; overload;
+function Mixing: Integer; overload;
 function Muddled: MArray; overload;
 function Raffle(const rCount: Integer = 1): MArray; overload;
 function Randex(const N: Integer = 1): TIntegerArray; overload;
@@ -16,6 +20,7 @@ function Randicing: TIntegerArray; overload;
 function Randomed: MArray; overload;
 function Randomized: MArray; overload;
 function Randsy: MArray; overload;
+function Scoop(const sCount: Integer = 1): MArray; overload;
 function Scramble(const swaps: Integer = -1): MArray; overload;
 function Shake(const shakes: Integer = 1): MArray; overload;
 function Shuffle(const shuffles: Integer = 1): MArray; overload;
@@ -23,6 +28,7 @@ function Shuffled(const mixings: Integer = 1): MArray; overload;
 function Shufflist: MArray; overload;
 function Some: MArray; overload;
 function Some(const amount: Integer): MArray; overload;
+function Sweepstake(const sCount: Integer = 1): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -114,6 +120,91 @@ begin
 end;
 
 {==============================================================================]
+  <Draft>
+  @action: Returns an array of N unique elements randomly sampled from Self, without replacement (uniform reservoir sampling).
+  @note: If N >= Self.Length, returns a randomized copy of the full array. Returns an empty array if N <= 0.
+[==============================================================================}
+function MArrayHelper.Draft(const N: Integer = 1): MArray; overload;
+var
+  i, r: Integer;
+begin
+  if (N <= 0) then
+    Exit([]);
+  if (N >= Self.Length) then
+    Exit(Self.Randomized);
+  SetLength(Result, N);
+  for i := 0 to (N - 1) do
+    Result[i] := Self[i];
+  for i := N to High(Self) do
+  begin
+    r := Random(i + 1);
+    if (r < N) then
+      Result[r] := Self[i];
+  end;
+end; 
+
+{==============================================================================]
+  <Favor>
+  @action: Returns a single random element from Self where the probability of 
+           selecting each element is proportional to its matching floating-point weight.
+  @note: Uses a Fitness-Proportionate (Roulette Wheel) Selection algorithm. 
+         The `weights` array must have the exact same length as Self. Returns 
+         the default value of MType if either array is empty or lengths mismatch.
+[==============================================================================}
+function MArrayHelper.Favor(const weights: TDoubleArray): MType; overload;
+var
+  h, i: Integer;
+  w, s, r: Double;
+begin
+  h := High(weights);
+  if ((h = -1) or (High(Self) <> h)) then
+    Exit(Default(MType));
+  w := 0;
+  for i := 0 to h do
+    w := (w + weights[i]);
+  r := (Random * w);
+  s := 0;
+  for i := 0 to h do
+  begin
+    s := (s + weights[i]);
+    if (r <= s) then
+      Exit(Self[i]);
+  end;
+  Result := Self[h];
+end;
+
+{==============================================================================]
+  <Favor>
+  @action: Returns a single random element from Self where the probability of 
+           selecting each element is proportional to its matching integer weight.
+  @note: Accumulates weights using a 64-bit integer to prevent overflow during 
+         summation. The `weights` array must match Self's length exactly. Returns 
+         the default value of MType if either array is empty or lengths mismatch.
+[==============================================================================}
+function MArrayHelper.Favor(const weights: TIntegerArray): MType; overload;
+var
+  h, i: Integer;
+  w, s: Int64;
+  r: Double;
+begin
+  h := High(weights);
+  if ((h = -1) or (High(Self) <> h)) then
+    Exit(Default(MType));
+  w := 0;
+  for i := 0 to h do
+    w := (w + weights[i]);
+  r := (Random * w);
+  s := 0;
+  for i := 0 to h do
+  begin
+    s := (s + weights[i]);
+    if (r <= s) then
+      Exit(Self[i]);
+  end;
+  Result := Self[h];
+end;
+
+{==============================================================================]
   <FisherYates>
   @action: Produces a uniformly random permutation (shuffle) of the array elements 
            by performing the standard Fisher‑Yates (Knuth) in‑place algorithm on 
@@ -171,6 +262,23 @@ begin
   for m := 1 to mixings do
     for i := 0 to (l - 1) do
       Swap(Result[Random(l)], Result[Random(l)]);
+end;
+
+{==============================================================================]
+  <Mixing>
+  @action: Randomizes the sequence of the array completely in-place using the 
+           standard Fisher-Yates algorithm, returning the final array length.
+  @note: Mutating variant of FisherYates. Unlike its counterparts, it operates 
+         directly on Self with zero extra allocations, providing optimal performance 
+         O(N) for in-place data modifications. Returns 0 if the array is empty.
+[==============================================================================}
+function MArrayHelper.Mixing: Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Length;
+  for i := (Result - 1) downto 1 do
+    Self.Exch(i, Random(i + 1));
 end;
 
 {==============================================================================]
@@ -361,6 +469,24 @@ begin
 end;
 
 {==============================================================================]
+  <Scoop>
+  @action: Returns a new array containing a specified number of randomly selected 
+           elements from the source array, allowing for duplicate selections.
+  @note: Implements random sampling with replacement, identical in behavior to 
+         Sweepstake but optimized using inline dynamic array resizing via 
+         Result.SetSize(). Safely handles edge cases by forcing a size of 0 if 
+         the source array is empty or if sCount is less than 1.
+[==============================================================================}
+function MArrayHelper.Scoop(const sCount: Integer = 1): MArray; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  for i := 0 to (Result.SetSize(Integer(l > 0) * (Max(0, sCount))) - 1) do
+    Result[i] := Self[Random(l)];
+end;
+
+{==============================================================================]
   <Scramble>
   @action: Returns scrambled array, that is randomized with offset and swapping.
   @note: Supports custom swaps.
@@ -474,5 +600,26 @@ end;
 function MArrayHelper.Some(const amount: Integer): MArray; overload;
 begin
   Result := Self.Shuffle.Copy(0, Max(1, Min(amount, Self.Size)));
+end;
+
+{==============================================================================]
+  <Sweepstake>
+  @action: Returns a new array containing a specified number of randomly selected 
+           elements from the source array, allowing the same element to be chosen multiple times.
+  @note: Implements random sampling with replacement (independent draws). This 
+         differs from Raffle, as duplicate selections can occur. If sCount is 
+         greater than the source array's length, the resulting array will safely 
+         be populated entirely with repeating random elements.
+[==============================================================================}
+function MArrayHelper.Sweepstake(const sCount: Integer = 1): MArray; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if ((l = 0) or (sCount < 1)) then
+    Exit([]);
+  SetLength(Result, sCount);
+  for i := 0 to (sCount - 1) do
+    Result[i] := Self[Random(l)];
 end;
 {$ENDIF}
