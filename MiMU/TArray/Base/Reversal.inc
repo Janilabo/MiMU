@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function Antipodean: MArray; overload;
+function Backwardize: MArray; overload;
 function Backwards: MArray; overload;
 function Converse: MArray; overload;
 function Conversed: MArray; overload;
@@ -37,6 +38,7 @@ function Reversy: MArray; overload;
 function Revert: MArray; overload;
 function Reverted: MArray; overload;
 function RReverse: MArray; overload;
+function Snapshot: MArray; overload;
 function Upend: Integer; overload;
 {$ENDIF}
 
@@ -58,6 +60,29 @@ begin
   SetLength(Result, Self.Length);
   for i := High(Self) downto 0 do
     Result[r.Increase] := Self[i];
+end;
+
+{==============================================================================]
+  <Backwardize>
+  @action: Reverses the sequence of elements in the array.
+  @note: Dual-behavior operation: mutates the original array (Self) in-place 
+         while simultaneously populates and returns a new reversed array (Result).
+[==============================================================================}
+function MArrayHelper.Backwardize: MArray; overload;
+var
+  l, r: Integer;
+begin
+  l := -1;
+  r := Result.SetSize(Self.Length);
+  while (l.Increment < r.Decrement) do
+  begin
+    Result[l] := Self[r];
+    Result[r] := Self[l];
+    Self[l] := Result[r];
+    Self[r] := Result[l];
+  end;
+  if (l = r) then
+    Result[l] := Self[l];
 end;
 
 {==============================================================================]
@@ -856,6 +881,30 @@ function MArrayHelper.RReverse: MArray; overload;
   end;
 begin
   Result := R(Self.Clone, 0, High(Self));
+end;
+
+{==============================================================================]
+  <Snapshot>
+  @action: Captures a clean, forward-facing duplicate of the array sequence.
+  @note: Dual-behavior side effect: The returned clone (Result) preserves the 
+         original array layout, while the source array (Self) is completely 
+         reversed in-place.
+[==============================================================================}
+function MArrayHelper.Snapshot: MArray; overload;
+var
+  l, r: Integer;
+begin
+  l := -1;
+  r := Result.SetSize(Self.Length);
+  while (l.Increment < r.Decrement) do
+  begin
+    Result[l] := Self[l];
+    Result[r] := Self[r];
+    Self[l] := Result[r];
+    Self[r] := Result[l];
+  end;
+  if (l = r) then
+    Result[l] := Self[l];
 end;
 
 {==============================================================================]
