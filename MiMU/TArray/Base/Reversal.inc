@@ -4,6 +4,7 @@ function Backwardize: MArray; overload;
 function Backwards: MArray; overload;
 function Converse: MArray; overload;
 function Conversed: MArray; overload;
+function Convert: MArray; overload;
 function Desrever: MArray; overload;
 function Destack: MArray; overload;
 function Esrever: Boolean; overload;
@@ -36,7 +37,10 @@ function Reversively: MArray; overload;
 function Reversivly: MArray; overload;
 function Reversy: MArray; overload;
 function Revert: MArray; overload;
+function Reverta: MArray; overload;
+function Reverte: MArray; overload;
 function Reverted: MArray; overload;
+function Reverto: MArray; overload;
 function RReverse: MArray; overload;
 function Snapshot: MArray; overload;
 function Upend: Integer; overload;
@@ -130,6 +134,31 @@ begin
   Result := [];
   for i := High(Self) downto 0 do
     Result := (Result + [Self[i]]);
+end;
+
+{==============================================================================]
+  <Convert>
+  @action: Transforms Self into its reversed form while capturing a 
+           forward-facing copy in Result using a unified single-pass loop.
+  @note: Employs a state-aware nested function (M) that dynamically shifts its 
+         data source from Self to Result once the iteration index crosses the 
+         array's midpoint, safely avoiding data corruption without explicit 
+         midpoint branching inside the loop body.
+[==============================================================================}
+function MArrayHelper.Convert: MArray; overload;
+var
+  i, l: Integer;
+  function M(const src, snap: MArray): MType;
+  begin
+    if (i <= (l div 2)) then
+      Result := src[l - i]
+    else
+      Result := snap[l - i];
+  end;
+begin
+  l := (Result.SetSize(Self.Length) - 1);
+  for i := 0 to l do
+    Result[i] := Self[i].IO(M(Self, Result));
 end;
 
 {==============================================================================]
@@ -839,6 +868,45 @@ begin
 end;
 
 {==============================================================================]
+  <Reverta>
+  @action: Duplicates the array sequence into Result, then reverses Self.
+  @note: Uses two separate sequential passes: the first loop clones Self into 
+         Result forward; the second loop uses Result to overwrite Self backward.
+[==============================================================================}
+function MArrayHelper.Reverta: MArray; overload;
+var
+  i, l: Integer;
+begin
+  l := (Result.SetSize(Self.Length) - 1);
+  for i := 0 to l do
+    Result[i] := Self[i];
+  for i := 0 to l do
+    Self[i] := Result[l - i];
+end;
+
+{==============================================================================]
+  <Reverte>
+  @action: Performs a simultaneous forward-copy and backward-swap in a single 
+           pass across the first half of the array.
+  @note: Optimized single-pass variant. The loop explicitly terminates at the 
+         midpoint (l div 2) to safely swap the outer bounds inward without 
+         overwriting or corrupting the data sequence.
+[==============================================================================}
+function MArrayHelper.Reverte: MArray; overload;
+var
+  i, l: Integer;
+begin
+  l := (Result.SetSize(Self.Length) - 1);
+  for i := 0 to (l div 2) do
+  begin
+    Result[i] := Self[i];
+    Self[i] := Self[l - i];
+    Result[l - i] := Self[i];
+    Self[l - i] := Result[i];
+  end;
+end;
+
+{==============================================================================]
   <Reverted>
   @action: Returns a new array with the elements of the original array in 
            reverse order.
@@ -859,6 +927,31 @@ begin
     Result[L] := Self[R];
     Result[R] := Self[L];
   end;
+end;
+
+{==============================================================================]
+  <Reverto>
+  @action: Simultaneously clones the original elements into Result while 
+           reversing Self from the outside in.
+  @note: Highly optimized midpoint pass (0 to m). Copies mirrored elements into 
+         Result first to safely use them as buffers for the inversion of Self. 
+         Explicitly captures the absolute center element for odd-sized lengths.
+[==============================================================================}
+function MArrayHelper.Reverto: MArray; overload;
+var
+  i, l, m: Integer;
+begin
+  l := (Result.SetSize(Self.Length) - 1);
+  m := (l div 2);
+  for i := 0 to m do
+  begin
+    Result[i] := Self[i];
+    Result[l - i] := Self[l - i];
+    Self[i] := Result[l - i];
+    Self[l - i] := Result[i];
+  end;
+  if l.Even then
+    Result[m] := Self[m];
 end;
 
 {==============================================================================]
