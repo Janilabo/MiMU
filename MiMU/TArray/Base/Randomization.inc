@@ -33,7 +33,9 @@ function Sweepstake(const sCount: Integer = 1): MArray; overload;
 
 {$IFDEF FUNCTIONS}
 function Interleaf(const A, B: MArray): MArray; overload;
+function Interleave(const A, B: MArray): MArray; overload;
 function Riffle(const A, B: MArray): MArray; overload;
+function Shuffle(const A, B: MArray): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -64,6 +66,40 @@ begin
 end;
 
 {==============================================================================]
+  <Interleave>
+  @action: Randomly interleaves two arrays into one, preserving each array's
+           internal element order.
+  @note: Pre-computes a placement mask so every possible interleaving is
+         equally likely (fixes the tail-bias present in the coin-flip
+         variants); randomness is front-loaded, the copy pass is pure
+         mechanical placement.
+[==============================================================================}
+function Interleave(const A, B: MArray): MArray; overload;
+var
+  x, y, i, r: Integer;
+  m: TBooleanArray;
+begin
+  x := A.Length;
+  y := B.Length;
+  SetLength(Result, (x + y));
+  m.Create((x + y), False);
+  i := 0;
+  while (i < x) do
+  begin
+    r := Random(x + y);
+    if m[r] then
+      Continue;
+    m[r] := True;
+    Inc(i);
+  end;
+  for i := High(m) downto 0 do
+    if m[i] then
+      Result[i] := A[x.Decrement]
+    else
+      Result[i] := B[y.Decrement];
+end;
+
+{==============================================================================]
   <Riffle>
   @action: Randomly interleaves two arrays into one, preserving each array's
            internal element order.
@@ -83,6 +119,36 @@ begin
   r := 0;
   while ((i < x) and (j < y)) do
     if RandomB then
+      Result[r.Increase] := A[i.Increase]
+    else
+      Result[r.Increase] := B[j.Increase];
+  while (i < x) do
+    Result[r.Increase] := A[i.Increase];
+  while (j < y) do
+    Result[r.Increase] := B[j.Increase];
+end;
+
+{==============================================================================]
+  <Shuffle>
+  @action: Randomly interleaves two arrays into one, preserving each array's
+           internal element order.
+  @note: Weights the per-step draw by each side's remaining length rather
+         than a fair coin, matching the Gilbert-Shannon-Reeds model of a
+         physical riffle shuffle (the array with more elements left is
+         proportionally more likely to be drawn from next).
+[==============================================================================}
+function Shuffle(const A, B: MArray): MArray; overload;
+var
+  i, j, r, x, y: Integer;
+begin
+  x := A.Length;
+  y := B.Length;
+  SetLength(Result, (x + y));
+  i := 0;
+  j := 0;
+  r := 0;
+  while ((i < x) and (j < y)) do
+    if (Random(x - i + y - j) < (x - i)) then
       Result[r.Increase] := A[i.Increase]
     else
       Result[r.Increase] := B[j.Increase];
