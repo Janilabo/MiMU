@@ -31,7 +31,67 @@ function Some(const amount: Integer): MArray; overload;
 function Sweepstake(const sCount: Integer = 1): MArray; overload;
 {$ENDIF}
 
+{$IFDEF FUNCTIONS}
+function Interleaf(const A, B: MArray): MArray; overload;
+function Riffle(const A, B: MArray): MArray; overload;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Interleaf>
+  @action: Randomly interleaves two arrays into one, preserving each array's
+           internal element order.
+  @note: Back-fill variant — fills Result from the tail forward using
+         RandomB, decrementing x, y, and r as A and B are consumed from
+         their ends.
+[==============================================================================}
+function Interleaf(const A, B: MArray): MArray; overload;
+var
+  r, x, y: Integer;
+begin
+  x := A.Length;
+  y := B.Length;
+  r := Result.SetSize(x + y);
+  while ((x > 0) and (y > 0)) do
+    if RandomB then
+      Result[r.Decrement] := A[x.Decrement]
+    else
+      Result[r.Decrement] := B[y.Decrement];
+  while (x > 0) do
+    Result[r.Decrement] := A[x.Decrement];
+  while (y > 0) do
+    Result[r.Decrement] := B[y.Decrement];
+end;
+
+{==============================================================================]
+  <Riffle>
+  @action: Randomly interleaves two arrays into one, preserving each array's
+           internal element order.
+  @note: Front-fill variant — fills Result from the head forward using
+         RandomB, incrementing i, j, and r as A and B are consumed from
+         their starts.
+[==============================================================================}
+function Riffle(const A, B: MArray): MArray; overload;
+var
+  i, j, r, x, y: Integer;
+begin
+  x := A.Length;
+  y := B.Length;
+  SetLength(Result, (x + y));
+  i := 0;
+  j := 0;
+  r := 0;
+  while ((i < x) and (j < y)) do
+    if RandomB then
+      Result[r.Increase] := A[i.Increase]
+    else
+      Result[r.Increase] := B[j.Increase];
+  while (i < x) do
+    Result[r.Increase] := A[i.Increase];
+  while (j < y) do
+    Result[r.Increase] := B[j.Increase];
+end;
+
 {==============================================================================]
   <Any>
   @action: Returns random array item from Self.
