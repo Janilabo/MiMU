@@ -18,7 +18,9 @@ function Randiced: TIntegerArray; overload;
 function Randices: TIntegerArray; overload;
 function Randicing: TIntegerArray; overload;
 function Randomed: MArray; overload;
+function Randomised: MArray; overload;
 function Randomized: MArray; overload;
+function Randomned: MArray; overload;
 function Randsy: MArray; overload;
 function Scoop(const sCount: Integer = 1): MArray; overload;
 function Scramble(const swaps: Integer = -1): MArray; overload;
@@ -26,9 +28,12 @@ function Shake(const shakes: Integer = 1): MArray; overload;
 function Shuffle(const shuffles: Integer = 1): MArray; overload;
 function Shuffled(const mixings: Integer = 1): MArray; overload;
 function Shufflist: MArray; overload;
+function Shuffly: MArray; overload;
 function Some: MArray; overload;
 function Some(const amount: Integer): MArray; overload;
 function Sweepstake(const sCount: Integer = 1): MArray; overload;
+function Unsettle: Integer; overload;
+function Unsettled: MArray; overload;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
@@ -414,7 +419,6 @@ var
   i: Integer;
 begin
   Result := Self.Copy;
-  if (Result.Length > 1) then
   for i := High(Result) downto 1 do
     Result.Exch(i, Random(i));
 end;
@@ -739,6 +743,32 @@ begin
 end;
 
 {==============================================================================]
+  <Randomised>
+  @action: Returns a completely shuffled copy of the current array instance.
+  @note: Implements a classic, in-place Fisher-Yates (Knuth) shuffle algorithm 
+         using a temporary index-tracking array (`s`). By shuffling indices 
+         rather than the data objects themselves, it ensures an unbiased, 
+         unbound random distribution with $O(N)$ efficiency.
+[==============================================================================}
+function MArrayHelper.Randomised: MArray; overload;
+var
+  s: TIntegerArray;
+  l, r: Integer;
+begin
+  l := Result.SetSize(Self.Length);
+  if (l = 0) then
+    Exit;
+  s := Self.Indexes;
+  while (l.Decrement > 0) do
+  begin
+    r := Random(l + 1);
+    Result[l] := Self[s[r]];
+    s[r] := s[l];
+  end;
+  Result[0] := Self[s[0]];
+end;
+
+{==============================================================================]
   <Randomized>
   @action: Returns randomized copy of array
   @note: None.
@@ -759,6 +789,32 @@ begin
     Result[i[r]] := Self[s];
     i[r] := i[l.Decrement];
   end;
+end;
+
+{==============================================================================]
+  <Randomned>
+  @action: Returns a new array containing Self's elements in uniformly
+           random order, leaving Self unmodified.
+  @note: Pre-generates the full pool of random values in a single pass
+         before any swapping occurs (rather than calling Random inline
+         per swap), then performs a standard Fisher-Yates shuffle via
+         Exch, consuming the pre-generated pool with mod (i + 1). Minor,
+         practically negligible modulo bias versus a division-based
+         unbiased range reduction.
+[==============================================================================}
+function MArrayHelper.Randomned: MArray; overload;
+var
+  i: Integer;
+  r: TIntegerArray;
+begin
+  Result := Self.Cloned;
+  if (Result.Length < 2) then
+    Exit;
+  SetLength(r, Result.Length);
+  for i := 0 to High(r) do
+    r[i] := Random(High(Integer));
+  for i := High(Result) downto 1 do
+    Result.Exch(i, (r[i] mod (i + 1)));
 end;
 
 {==============================================================================]
@@ -908,6 +964,24 @@ begin
 end;
 
 {==============================================================================]
+  <Shuffly>
+  @action: Shuffles the array instance in-place on a duplicated copy, returning a 
+           randomized version of the original array.
+  @note: Implements the text-book Fisher-Yates (Knuth) shuffle algorithm. It clones 
+         the current array and iterates backward from the highest index down to 1, 
+         swapping the element at the current position with an element at a randomly 
+         selected lower or equal index.
+[==============================================================================}
+function MArrayHelper.Shuffly: MArray; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Clone;
+  for i := High(Result) downto 1 do
+    Swap(Result[i], Result[Random(i + 1)]);
+end;
+
+{==============================================================================]
   <Some>
   @action: Returns random amount of random array items from Self.
   @note: Does not return empty arrays.
@@ -946,5 +1020,48 @@ begin
   SetLength(Result, sCount);
   for i := 0 to (sCount - 1) do
     Result[i] := Self[Random(l)];
+end;
+
+{==============================================================================]
+  <Unsettle>
+  @action: Randomly permutes Self in place via Sattolo's algorithm (no
+           element retains its original index), then performs one
+           additional unconstrained random swap. Returns the array's
+           new length.
+  @note: The final swap can select the same index twice (no-op) or any
+         two arbitrary positions, so — unlike Derange — the strict
+         no-fixed-point guarantee is not preserved after this call.
+[==============================================================================}
+function MArrayHelper.Unsettle: Integer; overload;
+var
+  i, r: Integer;
+begin
+  Result := Self.Length;
+  for i := (Result - 1) downto 1 do
+    Self.Exch(i, Random(i));
+  if (Result > 1) then
+    Self.Exch(Random(Result), Random(Result));
+end;
+
+{==============================================================================]
+  <Unsettled>
+  @action: Returns a new array containing Self's elements permuted via
+           Sattolo's algorithm (no element retains its original index),
+           followed by one additional unconstrained random swap. Self is
+           left unmodified.
+  @note: Non-mutating twin of Unsettle. The final swap can select the
+         same index twice (no-op) or any two arbitrary positions, so —
+         unlike Deranged — the strict no-fixed-point guarantee is not
+         preserved in the returned array.
+[==============================================================================}
+function MArrayHelper.Unsettled: MArray; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Clone;
+  for i := High(Result) downto 1 do
+    Result.Exch(i, Random(i));
+  if (Result.Length > 1) then
+    Result.Exch(Random(Result.Length), Random(Result.Length));
 end;
 {$ENDIF}
