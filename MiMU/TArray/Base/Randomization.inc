@@ -18,10 +18,12 @@ function Randiced: TIntegerArray; overload;
 function Randices: TIntegerArray; overload;
 function Randicing: TIntegerArray; overload;
 function Randomed: MArray; overload;
+function Randomise: Integer; overload;
 function Randomised: MArray; overload;
 function Randomized: MArray; overload;
 function Randomned: MArray; overload;
 function Randsy: MArray; overload;
+function Recomposed: MArray; overload;
 function Scoop(const sCount: Integer = 1): MArray; overload;
 function Scramble(const swaps: Integer = -1): MArray; overload;
 function Shake(const shakes: Integer = 1): MArray; overload;
@@ -743,6 +745,23 @@ begin
 end;
 
 {==============================================================================]
+  <Randomise>
+  @action: Shuffles the elements of the array randomly in-place.
+  @return: The total number of elements (Length) in the array.
+  @note: Implements an efficient, unbiased Fisher-Yates shuffle. Relies on 
+         the internal .Exch() helper and a custom .Decrement iterator.
+[==============================================================================}
+function MArrayHelper.Randomise: Integer; overload;
+var
+  l: Integer;
+begin
+  l := Self.Length;
+  Result := l;
+  while (l.Decrement > -1) do
+    Self.Exch(Random(l + 1), l);
+end;
+
+{==============================================================================]
   <Randomised>
   @action: Returns a completely shuffled copy of the current array instance.
   @note: Implements a classic, in-place Fisher-Yates (Knuth) shuffle algorithm 
@@ -847,6 +866,27 @@ begin
     -1: Result.Exch(i, (r.Rand - Random(2)));
     1: Result.Exch(i, (l.Rand + Random(2)));
   end;
+end;
+
+{==============================================================================]
+  <Recomposed>
+  @action: Recursively splits the array and weaves the halves back together.
+  @note: Uses a divide-and-conquer strategy. It clones arrays of length < 2,
+         otherwise splits the array down the middle, recursively recomposes 
+         both halves, and interleaves them using the Riffle method.
+[==============================================================================}
+function MArrayHelper.Recomposed: MArray; overload;
+var
+  M, S: Integer;
+  L, R: MArray;
+begin
+  S := Self.Length;
+  if (S < 2) then
+    Exit(Self.Clone);
+  M := (S div 2);
+  L := System.Copy(Self, 0, M).Recomposed;
+  R := System.Copy(Self, M, (S - M)).Recomposed;
+  Result := Riffle(L, R);
 end;
 
 {==============================================================================]
