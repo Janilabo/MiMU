@@ -32,10 +32,12 @@ function Sweepstake(const sCount: Integer = 1): MArray; overload;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
+function Conflate(const A, B: MArray): MArray; overload;
 function Confound(const A, B: MArray): MArray; overload;
 function Disarray(const A, B: MArray): MArray; overload;
 function Interleaf(const A, B: MArray): MArray; overload;
 function Interleave(const A, B: MArray): MArray; overload;
+function Mingle(const A, B: MArray): MArray; overload;
 function Redealt(const A, B: MArray): MArray; overload;
 function Riffle(const A, B: MArray): MArray; overload;
 function Roulette(const A, B: MArray): MArray; overload;
@@ -44,6 +46,39 @@ function Wash(const A, B: MArray): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Conflate>
+  @action: Merges two arrays into a single array while shuffling the elements 
+           on-the-fly using an online streaming randomization algorithm.
+  @note: Implements an optimized variation of the reservoir sampling / inside-out 
+         Fisher-Yates shuffle. It processes arrays A and B sequentially, placing 
+         each new element into a random position `r` within the currently grown 
+         pool, and moving displaced elements to the newly opened slot `n`.
+[==============================================================================}
+function Conflate(const A, B: MArray): MArray; overload;
+var
+  i, r, n: Integer;
+begin
+  SetLength(Result, (A.Length + B.Length));
+  n := 0;
+  for i := 0 to High(A) do
+  begin
+    r := Random(n + 1);
+    if (r <> n) then
+      Result[n] := Result[r];
+    Result[r] := A[i];
+    Inc(n);
+  end;
+  for i := 0 to High(B) do
+  begin
+    r := Random(n + 1);
+    if (r <> n) then
+      Result[n] := Result[r];
+    Result[r] := B[i];
+    Inc(n);
+  end;
+end;
+
 {==============================================================================]
   <Confound>
   @action: Combines two arrays into a single, fully randomized array by pre-shuffling 
@@ -180,6 +215,40 @@ begin
       Result[i] := A[x.Decrement]
     else
       Result[i] := B[y.Decrement];
+end;
+
+{==============================================================================]
+  <Mingle>
+  @action: Merges two arrays into a temporary generic list and extracts elements 
+           at random positions to build a shuffled combined array.
+  @note: This implementation utilizes a Free Pascal / Delphi generic `TList` to 
+         safely pool all elements from arrays A and B. It then iteratively draws 
+         and deletes items from random positions in the list until it is empty, 
+         guaranteeing a uniform shuffle while ensuring proper memory cleanup via 
+         a `try...finally` block.
+[==============================================================================}
+function Mingle(const A, B: MArray): MArray; overload;
+var
+  L: specialize TList<MType>;
+  i, r: Integer;
+begin
+  L := specialize TList<MType>.Create;
+  try
+    for i := 0 to High(A) do
+      L.Add(A[i]);
+    for i := 0 to High(B) do
+      L.Add(B[i]);
+    SetLength(Result, L.Count);
+    i := 0;
+    while (L.Count > 0) do
+    begin
+      r := Random(L.Count);
+      Result[i.Increase] := L[r];
+      L.Delete(r);
+    end;
+  finally
+    L.Free;
+  end;
 end;
 
 {==============================================================================]
