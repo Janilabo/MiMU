@@ -32,13 +32,96 @@ function Sweepstake(const sCount: Integer = 1): MArray; overload;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
+function Confound(const A, B: MArray): MArray; overload;
+function Disarray(const A, B: MArray): MArray; overload;
 function Interleaf(const A, B: MArray): MArray; overload;
 function Interleave(const A, B: MArray): MArray; overload;
+function Redealt(const A, B: MArray): MArray; overload;
 function Riffle(const A, B: MArray): MArray; overload;
+function Roulette(const A, B: MArray): MArray; overload;
 function Shuffle(const A, B: MArray): MArray; overload;
+function Wash(const A, B: MArray): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Confound>
+  @action: Combines two arrays into a single, fully randomized array by pre-shuffling 
+           both inputs and merging them using a reverse-order weighted lottery.
+  @note: Unlike 'Disarray' which picks random indices on the fly, 'Confound' first 
+         fully randomizes copies of arrays A and B. It then populates the final array 
+         from the *last* index to the *first* index (using `r.Decrement`), pulling 
+         sequentially from the pre-shuffled pools based on the remaining item ratios.
+[==============================================================================}
+function Confound(const A, B: MArray): MArray; overload;
+var
+  i, j, r, x, y: Integer;
+  c, d: MArray;
+begin
+  c := A.Randomized;
+  d := B.Randomized;
+  x := c.Length;
+  y := d.Length;
+  r := Result.SetSize(x + y);
+  i := 0;
+  j := 0;
+  while ((i < x) and (j < y)) do
+    if (Random((x - i) + (y - j)) < (x - i)) then
+      Result[r.Decrement] := c[i.Increase]
+    else
+      Result[r.Decrement] := d[j.Increase];
+  while (i < x) do
+    Result[r.Decrement] := c[i.Increase];
+  while (j < y) do
+    Result[r.Decrement] := d[j.Increase];
+end;
+
+{==============================================================================]
+  <Disarray>
+  @action: Merges and completely shuffles (randomizes) two custom arrays into a single array.
+  @note: Combines arrays A and B while preserving their original contents from mutation. 
+         It uses an internal index-mapping array and a weighted random selection process 
+         (similar to a Fisher-Yates shuffle variation) to ensure an unbiased, random 
+         distribution of elements in the resulting combined array.
+[==============================================================================}
+function Disarray(const A, B: MArray): MArray; overload;
+var
+  i, j, r, x, y, z: Integer;
+  C, D: TIntegerArray;
+begin
+  x := A.Length;
+  if (x = 0) then
+    Exit(B.Randomized);
+  y := B.Length;
+  if (y = 0) then
+    Exit(A.Randomized);
+  SetLength(Result, (x + y));
+  C := A.Indexes;
+  D := B.Indexes;
+  i := 0;
+  j := 0;
+  r := 0;
+  while ((x > 0) and (y > 0)) do
+  case (Random(x + y) < x) of
+    True:
+    begin
+      z := Random(x);
+      Result[r.Increase] := A[C[z]];
+      Swap(C[z], C[x.Decrement]);
+    end;
+    False:
+    begin
+      z := Random(y);
+      Result[r.Increase] := B[D[z]];
+      Swap(D[z], D[y.Decrement]);
+    end;
+  end;
+  while (x > 0) do
+    Result[r.Increase] := A[C[x.Decrement]];
+  while (y > 0) do
+    Result[r.Increase] := B[D[y.Decrement]];
+end;
+
 {==============================================================================]
   <Interleaf>
   @action: Randomly interleaves two arrays into one, preserving each array's
@@ -100,6 +183,27 @@ begin
 end;
 
 {==============================================================================]
+  <Redealt>
+  @action: Randomly interleaves two arrays into one, preserving each array's
+           internal element order.
+  @note: Recursively picks the head of A or B and conses it onto the
+         riffle of the remainders; mirrors the recursive mechanism used
+         in the Recursed shuffle variant. Costly (repeated slicing) but
+         mechanically distinct.
+[==============================================================================}
+function Redealt(const A, B: MArray): MArray; overload;
+begin
+  if (A.Length = 0) then
+    Exit(B.Clone);
+  if (B.Length = 0) then
+    Exit(A.Clone);
+  if RandomB then
+    Result := ([A[0]] + Redealt(System.Copy(A, 1, (A.Length - 1)), B))
+  else
+    Result := ([B[0]] + Redealt(A, System.Copy(B, 1, (B.Length - 1))));
+end; 
+
+{==============================================================================]
   <Riffle>
   @action: Randomly interleaves two arrays into one, preserving each array's
            internal element order.
@@ -126,6 +230,20 @@ begin
     Result[r.Increase] := A[i.Increase];
   while (j < y) do
     Result[r.Increase] := B[j.Increase];
+end;
+
+{==============================================================================]
+  <Roulette>
+  @action: Merges two arrays and shuffles their combined elements using a randomized 
+           quicksort key-sorting mechanism.
+  @note: This function leverages a unique randomization strategy. It generates a 
+         matching-sized array of pseudo-random floating-point numbers via 'Randomal' 
+         to act as sorting weights. It then uses 'QuickSorted' to order the combined 
+         elements based on these random keys, resulting in a shuffled final array.
+[==============================================================================}
+function Roulette(const A, B: MArray): MArray; overload;
+begin
+  Result := A.Combine(B).QuickSorted(Randomal(A.Length + B.Length));
 end;
 
 {==============================================================================]
@@ -156,6 +274,18 @@ begin
     Result[r.Increase] := A[i.Increase];
   while (j < y) do
     Result[r.Increase] := B[j.Increase];
+end;
+
+{==============================================================================]
+  <Wash>
+  @action: Concatenates two arrays into one and completely shuffles the combined result.
+  @note: This is a highly streamlined, expressive implementation. It sequentially 
+         appends array B to the end of array A, and then invokes the native 
+         `.Randomized` method on the entire combined pool to achieve uniform distribution.
+[==============================================================================}
+function Wash(const A, B: MArray): MArray; overload;
+begin
+  Result := A.Append(B).Randomized;
 end;
 
 {==============================================================================]

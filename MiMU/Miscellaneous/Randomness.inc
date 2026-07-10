@@ -22,6 +22,7 @@ function Randify(const R: Integer = 2): Integer; overload;
 function RandIn(const R: Integer = 2; const N: Integer = 2): Integer; overload;
 function Rando(const R: Integer = 2): Integer; overload;
 function Random2(const x: Integer; const r: Integer = 2): Integer; overload;
+function Randomal(const rSize: Integer = 1): TDoubleArray; overload;
 function RandomB: Boolean; overload;
 function RandomBit: Byte; overload;
 function RandomBool: Boolean; overload;
@@ -333,6 +334,22 @@ begin
   for i := 1 to Random(r + 1) do
     Random(x);
   Result := Random(x);
+end;
+
+{==============================================================================]
+  <Randomal>
+  @action: Allocates a 1D array of a specified size and fills it with pseudo-random 
+           floating-point numbers between 0.0 and 1.0.
+  @note: Automatically handles negative or invalid sizes by defaulting to an empty 
+         array via `Max(0, rSize)`. If no size parameter is provided, it defaults 
+         to generating a single-element array.
+[==============================================================================}
+function Randomal(const rSize: Integer = 1): TDoubleArray; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to (Result.SetSize(Max(0, rSize)) - 1) do
+    Result[i] := Random;
 end;
 
 {==============================================================================]
