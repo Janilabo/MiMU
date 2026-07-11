@@ -1,23 +1,73 @@
 {$IFDEF METHODS}
+function CountEven: Integer; overload;
+function CountOdd: Integer; overload;
 function Even: Boolean; overload;
 function EvenAmount: Integer; overload;
 function Evenc: Integer; overload;
 function EvenCount: Integer; overload;
 function Evened: TIntegerArray; overload;
 function Evens: Integer; overload;
+function Evensie: TIntegerArray; overload;
 function EvenSummed: Boolean; overload;
+function Evenx: Integer; overload;
 function Evenz: TIntegerArray; overload;
+function GetEven: TIntegerArray; overload;
+function GetOdd: TIntegerArray; overload;
 function Odd: Boolean; overload;
 function OddAmount: Integer; overload;
 function Oddc: Integer; overload;
 function OddCount: Integer; overload;
 function Odded: TIntegerArray; overload;
 function Odds: Integer; overload;
+function Oddsie: TIntegerArray; overload;
 function OddSummed: Boolean; overload;
+function Oddx: Integer; overload;
 function Oddz: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <EvenTally>
+  @action: Calculates the count of even/odd integers in the range via direct iteration.
+  @note: O(n) reference implementation. Useful as a correctness oracle for the
+         O(1) formulas elsewhere in this family. Handles ascending, descending,
+         and singular ranges via explicit direction-aware loop bounds.
+[==============================================================================}
+function TRange.CountEven: Integer; overload;
+var
+  i, d: Integer;
+begin
+  if Self.Singular then
+    Exit(Integer(Self.start.Even));
+  Result := 0;
+  d := Self.Direction;
+  i := Self.start;
+  while (((d > 0) and (i <= Self.stop)) or ((d < 0) and (i >= Self.stop))) do
+    if i.Increase(d).Even then
+      Inc(Result);
+end;
+
+{==============================================================================]
+  <EvenTally>
+  @action: Calculates the count of even/odd integers in the range via direct iteration.
+  @note: O(n) reference implementation. Useful as a correctness oracle for the
+         O(1) formulas elsewhere in this family. Handles ascending, descending,
+         and singular ranges via explicit direction-aware loop bounds.
+[==============================================================================}
+function TRange.CountOdd: Integer; overload;
+var
+  i, d: Integer;
+begin
+  if Self.Singular then
+    Exit(Integer(Self.start.Odd));
+  Result := 0;
+  d := Self.Direction;
+  i := Self.start;
+  while (((d > 0) and (i <= Self.stop)) or ((d < 0) and (i >= Self.stop))) do
+    if i.Increase(d).Odd then
+      Inc(Result);
+end;
+
 {==============================================================================]
   <Even>
   @action: Returns True when the size of the range is an even integer.
@@ -37,10 +87,7 @@ end;
 [==============================================================================}
 function TRange.EvenAmount: Integer; overload;
 begin
-  if Self.Singular then
-    Result := Integer(Self.start.Even)
-  else
-    Result := ((Self.Size div 2) + Integer(Self.start.Even and Self.stop.Even));
+  Result := ((Self.Size div 2) + Integer(Self.start.Even and Self.stop.Even));
 end;
 
 {==============================================================================]
@@ -123,6 +170,23 @@ begin
 end;
 
 {==============================================================================]
+  <Evensie>
+  @action: Filters the range, returning a new array containing only the even integers.
+  @note: Reuses the internal array allocation before resizing it to match the count of even numbers found.
+[==============================================================================}
+function TRange.Evensie: TIntegerArray; overload;
+var
+  i, r: Integer;
+begin
+  Result := Self.ToArray;
+  r := 0;
+  for i := 0 to High(Result) do
+    if Result[i].Even then
+      Result[r.Increase] := Result[i];
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
   <EvenSummed>
   @action: Returns True when Start and Stop sum to an even value.
   @note: Useful for parity-based branching or alternating patterns.
@@ -130,6 +194,17 @@ end;
 function TRange.EvenSummed: Boolean; overload;
 begin
   Result := (((Self.start + Self.stop) mod 2) = 0);
+end;
+
+{==============================================================================]
+  <Evenx>
+  @action: Calculates the total count of even integers contained within the range.
+  @note: Floor-division derivation via Fiv, using the range's direction-agnostic
+         Maximum/Minimum.
+[==============================================================================}
+function TRange.Evenx: Integer; overload;
+begin
+  Result := (Fiv(Self.Maximum, 2) - Fiv((Self.Minimum - 1), 2));
 end;
 
 {==============================================================================]
@@ -157,6 +232,44 @@ begin
 end;
 
 {==============================================================================]
+  <GetEven>
+  @action: Produces an array containing all even integers within the range,
+           ordered according to the range direction.
+  @note: Aligns the starting value to the nearest even boundary, then fills
+         the result by direct index arithmetic rather than iterative
+         accumulation. Allocation and loop bound are combined via SetSize's
+         return value.
+[==============================================================================}
+function TRange.GetEven: TIntegerArray; overload;
+var
+  d, i, s: Integer;
+begin
+  d := Self.Direction;
+  s := IfThen(Self.start.Even, Self.start, (Self.start + d));
+  for i := 0 to (Result.SetSize(Self.Evenc) - 1) do
+    Result[i] := (s + (i * d) * 2);
+end;
+
+{==============================================================================]
+  <GetOdd>
+  @action: Produces an array containing all odd integers within the range,
+           ordered according to the range direction.
+  @note: Aligns the starting value to the nearest odd boundary, then fills
+         the result by direct index arithmetic rather than iterative
+         accumulation. Allocation and loop bound are combined via SetSize's
+         return value.
+[==============================================================================}
+function TRange.GetOdd: TIntegerArray; overload;
+var
+  d, i, s: Integer;
+begin
+  d := Self.Direction;
+  s := IfThen(Self.start.Odd, Self.start, (Self.start + d));
+  for i := 0 to (Result.SetSize(Self.Oddc) - 1) do
+    Result[i] := (s + (i * d) * 2);
+end;
+
+{==============================================================================]
   <Odd>
   @action: Returns True when the size of the range is an odd integer.
   @note: Delegates to Self.Size.Odd; no side effects.
@@ -175,10 +288,7 @@ end;
 [==============================================================================}
 function TRange.OddAmount: Integer; overload;
 begin
-  if Self.Singular then
-    Result := Integer(Self.start.Odd)
-  else
-    Result := ((Self.Size div 2) + Integer(Self.start.Odd and Self.stop.Odd));
+  Result := ((Self.Size div 2) + Integer(Self.start.Odd and Self.stop.Odd));
 end;
 
 {==============================================================================]
@@ -243,6 +353,23 @@ begin
 end;
 
 {==============================================================================]
+  <Oddsie>
+  @action: Filters the range, returning a new array containing only the odd integers.
+  @note: Reuses the internal array allocation before resizing it to match the count of odd numbers found.
+[==============================================================================}
+function TRange.Oddsie: TIntegerArray; overload;
+var
+  i, r: Integer;
+begin
+  Result := Self.ToArray;
+  r := 0;
+  for i := 0 to High(Result) do
+    if Result[i].Odd then
+      Result[r.Increase] := Result[i];
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
   <OddSummed>
   @action: Returns True if the sum of Start and Stop is not even.
   @note: Checks parity of (Start + Stop).
@@ -250,6 +377,17 @@ end;
 function TRange.OddSummed: Boolean; overload;
 begin
   Result := not (((Self.start + Self.stop) mod 2) = 0);
+end;
+
+{==============================================================================]
+  <Oddx>
+  @action: Calculates the total count of odd integers contained within the range.
+  @note: Floor-division derivation via Fiv, using the range's direction-agnostic
+         Maximum/Minimum.
+[==============================================================================}
+function TRange.Oddx: Integer; overload;
+begin
+  Result := (Fiv((Self.Maximum + 1), 2) - Fiv(Self.Minimum, 2));
 end;
 
 {==============================================================================]

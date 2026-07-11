@@ -1,29 +1,31 @@
 {$IFDEF FUNCTIONS}
-function AsNextPowerOf2(const x: Integer): Integer;
-function AtNextPowerOf2(const x: Integer): Integer;
-function CountNextPowerOf2(const x: Integer): Integer;
-function FindNextPowerOf2(const x: Integer): Integer;
-function ForNextPowerOf2(const x: Integer): Integer;
-function GetNextPowerOf2(const x: Integer): Integer;
-function GetPowersOf2(const upTo: Integer = 2147483647): TIntegerArray;
-function IsPowerOf2(const x: Integer): Boolean;
-function IsPowerOfTwo(const x: Integer): Boolean;
-function IsPowOf2(const x: Integer): Boolean;
-function NearestPowerOf2(const x: Integer): Integer;
-function NearestPowerOfTwo(const x: Integer): Integer;
-function NextPowerOf2(const x: Integer): Integer;
-function PowerOf2: TIntegerArray;
-function PowerOf2Array: TIntegerArray;
+function AsNextPowerOf2(const x: Integer): Integer; overload;
+function AtNextPowerOf2(const x: Integer): Integer; overload;
+function CountNextPowerOf2(const x: Integer): Integer; overload;
+function FindNextPowerOf2(const x: Integer): Integer; overload;
+function Fiv(const a, b: Integer): Integer; overload;
+function Fivision(const a, b: Integer): Integer; overload;
+function ForNextPowerOf2(const x: Integer): Integer; overload;
+function GetNextPowerOf2(const x: Integer): Integer; overload;
+function GetPowersOf2(const upTo: Integer = 2147483647): TIntegerArray; overload;
+function IsPowerOf2(const x: Integer): Boolean; overload;
+function IsPowerOfTwo(const x: Integer): Boolean; overload;
+function IsPowOf2(const x: Integer): Boolean; overload;
+function NearestPowerOf2(const x: Integer): Integer; overload;
+function NearestPowerOfTwo(const x: Integer): Integer; overload;
+function NextPowerOf2(const x: Integer): Integer; overload;
+function PowerOf2: TIntegerArray; overload;
+function PowerOf2Array: TIntegerArray; overload;
 function PowersOf2: TIntegerArray; overload;
 function PowersOf2(const pCount: Integer): TIntegerArray; overload;
-function PreviousPowerOf2(const x: Integer): Integer;
-function PreviousPowerOfTwo(const x: Integer): Integer;
-function ReturnNextPowerOf2(const x: Integer): Integer;
-function ToNextPowerOf2(const x: Integer): Integer;
+function PreviousPowerOf2(const x: Integer): Integer; overload;
+function PreviousPowerOfTwo(const x: Integer): Integer; overload;
+function ReturnNextPowerOf2(const x: Integer): Integer; overload;
+function ToNextPowerOf2(const x: Integer): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-function AsNextPowerOf2(const x: Integer): Integer;
+function AsNextPowerOf2(const x: Integer): Integer; overload;
 begin
   if (x < 2) then
     Exit(1);
@@ -32,7 +34,7 @@ begin
     Result := (Result * 2);
 end;
 
-function AtNextPowerOf2(const x: Integer): Integer;
+function AtNextPowerOf2(const x: Integer): Integer; overload;
 const
   powers: array[0..31] of Integer =
     (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768,
@@ -49,7 +51,7 @@ begin
   Result := Low(Integer);
 end;
 
-function CountNextPowerOf2(const x: Integer): Integer;
+function CountNextPowerOf2(const x: Integer): Integer; overload;
 var
   v, z: Integer;
 begin
@@ -67,14 +69,42 @@ begin
   Result := (1 shl z);
 end;
 
-function FindNextPowerOf2(const x: Integer): Integer;
+function FindNextPowerOf2(const x: Integer): Integer; overload;
 begin
   if (x < 2) then
     Exit(1);
   Result := (1 shl (Ceil(Log2(x))));
 end;
 
-function ForNextPowerOf2(const x: Integer): Integer;
+{==============================================================================]
+  <Fiv>
+  @action: Performs floored integer division on two inputs, rounding towards 
+           negative infinity.
+  @note: Uses a branchless, expression-driven optimization. The result of a 
+         standard truncating 'div' is adjusted down by 1 if there is a non-zero 
+         remainder and the operands possess opposing signs.
+[==============================================================================}
+function Fiv(const a, b: Integer): Integer; overload;
+begin
+  Result := ((a div b) - Integer(((a mod b) <> 0) and ((a < 0) <> (b < 0))));
+end;
+
+{==============================================================================]
+  <Fivision>
+  @action: Performs floored integer division on two inputs, rounding towards 
+           negative infinity.
+  @note: Implements the exact same floored division logic as Fiv, but prioritizes
+         readability by utilizing an explicit conditional branch (Dec) rather 
+         than type-casting a boolean expression to an integer.
+[==============================================================================}
+function Fivision(const a, b: Integer): Integer; overload;
+begin
+  Result := (a div b);
+  if (((a mod b) <> 0) and ((a < 0) <> (b < 0))) then
+    Dec(Result);
+end;
+
+function ForNextPowerOf2(const x: Integer): Integer; overload;
 var
   i, r: Integer;
 begin
@@ -88,7 +118,7 @@ begin
   Result := (Result + 1);
 end;
 
-function GetNextPowerOf2(const x: Integer): Integer;
+function GetNextPowerOf2(const x: Integer): Integer; overload;
 begin
   if (x < 2) then
     Exit(1);
@@ -101,7 +131,7 @@ begin
   end;
 end;
 
-function GetPowersOf2(const upTo: Integer = 2147483647): TIntegerArray;
+function GetPowersOf2(const upTo: Integer = 2147483647): TIntegerArray; overload;
 var
   i, p, l: Integer;
 begin
@@ -120,17 +150,17 @@ begin
   SetLength(Result, l);
 end;
 
-function IsPowerOf2(const x: Integer): Boolean;
+function IsPowerOf2(const x: Integer): Boolean; overload;
 begin
   Result := ((x > 0) and ((x and (x - 1)) = 0));
 end;
 
-function IsPowerOfTwo(const x: Integer): Boolean;
+function IsPowerOfTwo(const x: Integer): Boolean; overload;
 begin
   Result := ((x > 0) and ((x and -x) = x));
 end;
 
-function IsPowOf2(const x: Integer): Boolean;
+function IsPowOf2(const x: Integer): Boolean; overload;
 const
   powers: array[0..30] of Integer =
     (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768,
@@ -156,7 +186,7 @@ begin
   Result := False;
 end; 
 
-function NearestPowerOf2(const x: Integer): Integer;
+function NearestPowerOf2(const x: Integer): Integer; overload;
 var
   n, p: Integer;
 begin
@@ -172,7 +202,7 @@ begin
     Result := n;
 end;
 
-function NearestPowerOfTwo(const x: Integer): Integer;
+function NearestPowerOfTwo(const x: Integer): Integer; overload;
 var
   n, p: Integer;
 begin
@@ -188,7 +218,7 @@ begin
     Result := n;
 end;
 
-function NextPowerOf2(const x: Integer): Integer;
+function NextPowerOf2(const x: Integer): Integer; overload;
 begin
   if (x < 2) then
     Exit(1);
@@ -199,7 +229,7 @@ begin
     Result := (Result shl 1);
 end;
 
-function PowerOf2: TIntegerArray;
+function PowerOf2: TIntegerArray; overload;
 const
   powers: array[0..30] of Integer = 
     (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768,
@@ -210,7 +240,7 @@ begin
   Move(powers[0], Result[0], (31 * SizeOf(Integer)));
 end;
 
-function PowerOf2Array: TIntegerArray;
+function PowerOf2Array: TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -238,7 +268,7 @@ begin
     Result[i] := 1 shl i;
 end;
 
-function PreviousPowerOf2(const x: Integer): Integer;
+function PreviousPowerOf2(const x: Integer): Integer; overload;
 var
   r: Integer;
 begin
@@ -253,7 +283,7 @@ begin
   Result := (r - (r shr 1));
 end;
 
-function PreviousPowerOfTwo(const x: Integer): Integer;
+function PreviousPowerOfTwo(const x: Integer): Integer; overload;
 begin
   if (x < 1) then
     Exit(0);
@@ -265,7 +295,7 @@ begin
   Result := (Result shr 1);
 end;
 
-function ReturnNextPowerOf2(const x: Integer): Integer;
+function ReturnNextPowerOf2(const x: Integer): Integer; overload;
 begin
   if (x < 2) then
     Exit(1);
@@ -274,7 +304,7 @@ begin
   Result := (NextPowerOf2((x shr 1) + 1) shl 1);
 end;
 
-function ToNextPowerOf2(const x: Integer): Integer;
+function ToNextPowerOf2(const x: Integer): Integer; overload;
 var
   r: Integer;
 begin
