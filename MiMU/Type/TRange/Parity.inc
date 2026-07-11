@@ -12,7 +12,9 @@ function EvenSummed: Boolean; overload;
 function Evenx: Integer; overload;
 function Evenz: TIntegerArray; overload;
 function GetEven: TIntegerArray; overload;
+function GetEvens: TIntegerArray; overload;
 function GetOdd: TIntegerArray; overload;
+function GetOdds: TIntegerArray; overload;
 function Odd: Boolean; overload;
 function OddAmount: Integer; overload;
 function Oddc: Integer; overload;
@@ -251,6 +253,28 @@ begin
 end;
 
 {==============================================================================]
+  <GetEvens>
+  @action: Populates and returns an array containing all even integers within 
+           the range, preserving the range's traversal direction.
+  @note: Allocates the exact required memory using Evenc. It establishes the 
+         final array element by anchoring to the end of the range (adjusting 
+         by the direction step if 'stop' is odd), then populates backwards 
+         by decrementing by double the direction step.
+[==============================================================================}
+function TRange.GetEvens: TIntegerArray; overload;
+var
+  d, i, s, r: Integer;
+begin
+  if (Result.SetSize(Self.Evenc) = 0) then
+    Exit;
+  d := Self.Direction;
+  r := High(Result);
+  Result[r] := IfThen(Self.stop.Even, Self.stop, (Self.stop - d));
+  while (r.Decrement > -1) do
+    Result[r] := (Result[r + 1] - (d * 2));
+end;
+
+{==============================================================================]
   <GetOdd>
   @action: Produces an array containing all odd integers within the range,
            ordered according to the range direction.
@@ -267,6 +291,28 @@ begin
   s := IfThen(Self.start.Odd, Self.start, (Self.start + d));
   for i := 0 to (Result.SetSize(Self.Oddc) - 1) do
     Result[i] := (s + (i * d) * 2);
+end;
+
+{==============================================================================]
+  <GetOdds>
+  @action: Populates and returns an array containing all odd integers within 
+           the range, preserving the range's traversal direction.
+  @note: Allocates the exact required memory using Oddc. It establishes the 
+         final array element by anchoring to the end of the range (adjusting 
+         by the direction step if 'stop' is even), then populates backwards 
+         by decrementing by double the direction step.
+[==============================================================================}
+function TRange.GetOdds: TIntegerArray; overload;
+var
+  d, i, s, r: Integer;
+begin
+  if (Result.SetSize(Self.Oddc) = 0) then
+    Exit;
+  d := Self.Direction;
+  r := High(Result);
+  Result[r] := IfThen(Self.stop.Odd, Self.stop, (Self.stop - d));
+  while (r.Decrement > -1) do
+    Result[r] := (Result[r + 1] - (d * 2));
 end;
 
 {==============================================================================]
