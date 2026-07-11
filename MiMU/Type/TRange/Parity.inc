@@ -1,11 +1,15 @@
 {$IFDEF METHODS}
 function Even: Boolean; overload;
+function EvenAmount: Integer; overload;
+function Evenc: Integer; overload;
 function EvenCount: Integer; overload;
 function Evened: TIntegerArray; overload;
 function Evens: Integer; overload;
 function EvenSummed: Boolean; overload;
 function Evenz: TIntegerArray; overload;
 function Odd: Boolean; overload;
+function OddAmount: Integer; overload;
+function Oddc: Integer; overload;
 function OddCount: Integer; overload;
 function Odded: TIntegerArray; overload;
 function Odds: Integer; overload;
@@ -22,6 +26,33 @@ function Oddz: TIntegerArray; overload;
 function TRange.Even: Boolean; overload;
 begin
   Result := Self.Size.Even;
+end;
+
+{==============================================================================]
+  <EvenAmount>
+  @action: Calculates the total count of even integers contained within the range.
+  @note: Uses an optimized, loop-free approach. For odd-sized ranges, it relies on
+         the mathematical principle that the boundary elements share the same 
+         parity, adjusting the base division via a bitwise logical 'and'.
+[==============================================================================}
+function TRange.EvenAmount: Integer; overload;
+begin
+  if Self.Singular then
+    Result := Integer(Self.start.Even)
+  else
+    Result := ((Self.Size div 2) + Integer(Self.start.Even and Self.stop.Even));
+end;
+
+{==============================================================================]
+  <Evenc>
+  @action: Calculates the total count of even integers contained within the range.
+  @note: Uses a highly optimized, loop-free mathematical formula. If the total 
+         size of the range is odd, the remainder element is counted as even 
+         only if the range begins on an even number.
+[==============================================================================}
+function TRange.Evenc: Integer; overload;
+begin
+  Result := ((Self.Size div 2) + Integer(Self.Size.Odd and Self.start.Even));
 end;
 
 {==============================================================================]
@@ -133,6 +164,33 @@ end;
 function TRange.Odd: Boolean; overload;
 begin
   Result := Self.Size.Odd;
+end;
+
+{==============================================================================]
+  <OddAmount>
+  @action: Calculates the total count of odd integers contained within the range.
+  @note: Employs the same O(1) mathematical alignment optimization as EvenAmount.
+         Directly evaluates boundary parities to handle remainder distribution 
+         without requiring loops or branching on range size parity.
+[==============================================================================}
+function TRange.OddAmount: Integer; overload;
+begin
+  if Self.Singular then
+    Result := Integer(Self.start.Odd)
+  else
+    Result := ((Self.Size div 2) + Integer(Self.start.Odd and Self.stop.Odd));
+end;
+
+{==============================================================================]
+  <Oddc>
+  @action: Calculates the total count of odd integers contained within the range.
+  @note: Implements the complement approach by subtracting the even integer 
+         count from the total range size, ensuring perfect logical symmetry 
+         with zero redundant evaluations.
+[==============================================================================}
+function TRange.Oddc: Integer; overload;
+begin
+  Result := (Self.Size - Self.EvenAmount);
 end;
 
 {==============================================================================]
