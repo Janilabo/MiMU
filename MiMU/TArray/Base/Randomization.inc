@@ -3,7 +3,10 @@ function Any(const null: MType): MType; overload;
 function Any: MType; overload;
 function Derange: Boolean; overload;
 function Deranged: MArray; overload;
+function Disarray: MArray; overload;
+function Disindex: TIntegerArray; overload;
 function Disordered: MArray; overload;
+function Disself: MArray; overload;
 function Draft(const N: Integer = 1): MArray; overload;
 function Favor(const weights: TDoubleArray): MType; overload;
 function Favor(const weights: TIntegerArray): MType; overload;
@@ -426,6 +429,44 @@ begin
 end;
 
 {==============================================================================]
+  <Disarray>
+  @action: Shuffles (randomizes) the elements of the array.
+  @note: Implements an in-place Fisher-Yates shuffle variant using an index array to populate the result without modifying the original array.
+[==============================================================================}
+function MArrayHelper.Disarray: MArray; overload;
+var
+  i, r, l: Integer;
+  s: TIntegerArray;
+begin
+  l := Result.SetSize(Self.Length);
+  if (l = 0) then
+    Exit;
+  s := Self.Indexes;
+  i := 0;
+  while (l.Decrement > -1) do
+  begin
+    r := Random(l + 1);
+    Result[i.Increase] := Self[s[r]];
+    s[r] := s[l];
+  end;
+end;
+
+{==============================================================================]
+  <Disindex>
+  @action: Generates a shuffled (randomized) array of the original array's indices.
+  @note: Implements a classic, in-place Fisher-Yates shuffle algorithm directly on an index array.
+[==============================================================================}
+function MArrayHelper.Disindex: TIntegerArray; overload;
+var
+  s: Integer;
+begin
+  s := Self.Length;
+  Result := Self.Indexes;
+  while (s.Decrement > 0) do
+    Swap(Result[Random(s + 1)], Result[s]);
+end;
+
+{==============================================================================]
   <Disordered>
   @action: Returns array with randomized order (disorder)
   @note: [1,2,3] => [1,3,2] | [2,1,3] | [2,3,1] | [3,2,1] ...
@@ -447,6 +488,28 @@ begin
     until (not m[r]);
     Result[i] := Self[r];
     m[r] := True;
+  end;
+end;
+
+{==============================================================================]
+  <Disself>
+  @action: Creates a new array containing a shuffled (randomized) copy of the original array's elements.
+  @note: Implements the Inside-Out Fisher-Yates algorithm, building the shuffled result forward in O(n) time without needing temporary index tracking arrays.
+[==============================================================================}
+function MArrayHelper.Disself: MArray; overload;
+var
+  i, r, l: Integer;
+begin
+  l := Result.SetSize(Self.Length);
+  if (l = 0) then
+    Exit;
+  Result[0] := Self[0];
+  for i := 1 to (l - 1) do
+  begin
+    r := Random(i + 1);
+    if (r <> i) then
+      Result[i] := Result[r];
+    Result[r] := Self[i];
   end;
 end;
 
