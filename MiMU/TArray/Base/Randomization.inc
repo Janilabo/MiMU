@@ -20,6 +20,7 @@ function Randex(const N: Integer = 1): TIntegerArray; overload;
 function Randiced: TIntegerArray; overload;
 function Randices: TIntegerArray; overload;
 function Randicing: TIntegerArray; overload;
+function Randomally(const swaps: Integer = -1): MArray; overload;
 function Randomed: MArray; overload;
 function Randomise: Integer; overload;
 function Randomised: MArray; overload;
@@ -785,6 +786,26 @@ begin
     k[i] := Random;
   end;
   Result.QuickSortWeighted(k);
+end;
+
+{==============================================================================]
+  <Randomally>
+  @action: Shuffles the array by performing a specified number of random
+           transpositions (swaps of two randomly chosen positions). This is
+           a classic Markov chain that converges to uniform distribution.
+  @note: If `swaps < 0`, defaults to `10 * Length` (a rough O(n log n) mixing
+         bound). Self is left unmodified; a copy is returned.
+[==============================================================================}
+function MArrayHelper.Randomally(const swaps: Integer = -1): MArray; overload;
+var
+  i, s, r, a, b: Integer;
+begin
+  Result := Self.Copy;
+  r := Result.Length;
+  if (r > 1) then
+  for i := 1 to IfThen((swaps < 0), (r * 10), swaps) do
+    if Randice(r, a, b) then
+      Result.Exch(a, b);
 end;
 
 {==============================================================================]

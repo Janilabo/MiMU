@@ -20,6 +20,7 @@ function R1_9: Byte; overload;
 function R1_99: Byte; overload;
 function R10_99: Byte; overload;
 function Rand(const R: Integer = 2): Integer; overload;
+function Randice(const N: Integer; var A, B: Integer): Boolean; overload;
 function RandDigit: Byte; overload;
 function Randify(const R: Integer = 2): Integer; overload;
 function RandIn(const R: Integer = 2; const N: Integer = 2): Integer; overload;
@@ -49,6 +50,7 @@ function RandomRight(const R: Integer = 2): Integer; overload;
 function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload;
 function RandomUpper(const R: Integer = 2): Integer; overload;
 function RandomValue(const maxDigits: Byte = 1): Int64; overload;
+function Randouble(const N: Integer; var A, B: Integer): Boolean; overload;
 function RandOut(const R: Integer = 2; const N: Integer = 2): Integer; overload;
 function Rign: Integer; overload;
 function Toss: Integer; overload;
@@ -300,6 +302,23 @@ begin
     1: Result := Random(R);
     -1: Result := -(Random(-R));
   end;
+end;
+
+{==============================================================================]
+  <Randice>
+  @action: Draws two independent random integers from [0, N) into A and B;
+           returns True if they differ.
+  @note: A and B are always assigned regardless of the result. N follows
+         Random()'s convention: the upper bound is exclusive. Logically the
+         inverse of Randouble (Randice = not Randouble for the same draw),
+         kept as a separate named function rather than a negation for
+         call-site readability.
+[==============================================================================}
+function Randice(const N: Integer; var A, B: Integer): Boolean; overload;
+begin
+  A := Random(N);
+  B := Random(N);
+  Result := (A <> B);
 end;
 
 {==============================================================================]
@@ -736,6 +755,20 @@ begin
   for i := 1 to maxDigits do
     s[i] := Char(48 + Random(10));
   Result := StrToInt64(s);
+end;
+
+{==============================================================================]
+  <Randouble>
+  @action: Draws two independent random integers from [0, N) into A and B;
+           returns True if they match.
+  @note: A and B are always assigned regardless of the result. N follows
+         Random()'s convention: the upper bound is exclusive.
+[==============================================================================}
+function Randouble(const N: Integer; var A, B: Integer): Boolean; overload;
+begin
+  A := Random(N);
+  B := Random(N);
+  Result := (A = B);
 end;
 
 {==============================================================================]
