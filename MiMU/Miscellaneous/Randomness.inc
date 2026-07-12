@@ -6,6 +6,9 @@ function Digitry: Byte; overload;
 function Fate: Boolean; overload;
 function GenerateDigit: Byte; overload;
 function Guess: Boolean; overload;
+function IsHeads: Boolean; overload;
+function IsTails: Boolean; overload;
+function Luck(const pool: UInt32 = 4294967295): Boolean; overload;
 function Maybe: Boolean; overload;
 function Perchance(const tWeight, fWeight: Integer): Boolean; overload;
 function Perhaps: Boolean; overload;
@@ -21,6 +24,7 @@ function RandDigit: Byte; overload;
 function Randify(const R: Integer = 2): Integer; overload;
 function RandIn(const R: Integer = 2; const N: Integer = 2): Integer; overload;
 function Rando(const R: Integer = 2): Integer; overload;
+function Random2: Boolean; overload;
 function Random2(const x: Integer; const r: Integer = 2): Integer; overload;
 function Randomal(const rSize: Integer = 1): TDoubleArray; overload;
 function RandomB: Boolean; overload;
@@ -146,6 +150,42 @@ const
   B: array[0..1] of Boolean = (False, True);
 begin
   Result := B[Random(2)];
+end;
+
+{==============================================================================]
+  <IsHeads>
+  @action: Simulates a coin toss, returning True if the result is "Heads".
+  @note: Uses a 50/50 pseudo-random distribution. Equivalent to rolling a 1 
+         on a 0-1 range.
+[==============================================================================}
+function IsHeads: Boolean; overload;
+begin
+  Result := (Random(2) in [1]);
+end;
+
+{==============================================================================]
+  <IsTails>
+  @action: Simulates a coin toss, returning True if the result is "Tails".
+  @note: Uses a 50/50 pseudo-random distribution. Equivalent to rolling a 0 
+         on a 0-1 range.
+[==============================================================================}
+function IsTails: Boolean; overload;
+begin
+  Result := (Random(2) in [0]); 
+end;
+
+{==============================================================================]
+  <Luck>
+  @action: Simulates a luck-based chance check by comparing two independent 
+           pseudo-random rolls from the specified pool.
+  @note: Returns True if the first roll strictly beats the second roll. 
+         Defaults to the maximum value of UInt32 (4294967295). Due to the 
+         possibility of identical rolls resulting in False, the true success 
+         rate is marginally below 50%.
+[==============================================================================}
+function Luck(const pool: UInt32 = 4294967295): Boolean; overload;
+begin
+  Result := (Random(pool) > Random(pool));
 end;
 
 {==============================================================================]
@@ -320,6 +360,17 @@ begin
   if (R = 0) then
     Exit(0);
   Result := (Random(Abs(R)) * Sign(R));
+end;
+
+{==============================================================================]
+  <Random2>
+  @action: Returns a 50/50 boolean outcome by XOR-mixing two independent random bits.
+  @note: Combines two separate RandomBit draws so the result depends on their
+         disagreement rather than either value alone, preserving perfect binary odds.
+[==============================================================================}
+function Random2: Boolean; overload;
+begin
+  Result := ((RandomBit xor RandomBit) = 1);
 end;
 
 {==============================================================================]
