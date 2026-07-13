@@ -10,12 +10,17 @@ function Quantized(const sStep: Integer = 1): TIntegerArray; overload;
 function Raffle(const N: Integer = 1): TIntegerArray; overload;
 function Rand: Integer; overload;
 function Randed: TIntegerArray; overload;
+function Randomal: Integer; overload;
+function Randomer: Integer; overload;
 function RandomEx(const forbidden: Integer): Integer; overload;
 function RandomEx(const forbidden: TIntegerArray): Integer; overload;
 function Randomize: TIntegerArray; overload;
 function Randomized: TIntegerArray; overload;
 function Randomly: Integer; overload;
 function Randoms(const rSize: Integer = 1): TIntegerArray; overload;
+function Randomval: Integer; overload;
+function Randstart: Integer; overload;
+function Randstop: Integer; overload;
 function Roll(const rCount: Integer = 1): TIntegerArray; overload;
 function Sample(const sSize: Integer = 1): TIntegerArray; overload;
 function Sampled(const totalElements: Integer = 1): TIntegerArray; overload;
@@ -27,6 +32,10 @@ function Shuffled(const sCount: Integer): TIntegerArray; overload;
 function Shuffled: TIntegerArray; overload;
 function Some: TIntegerArray; overload;
 function Some(const amount: Integer): TIntegerArray; overload;
+function Startr: Integer; overload;
+function Startra: Integer; overload;
+function Stopr: Integer; overload;
+function Stopra: Integer; overload;
 function Subsample(const sSize: Integer = 1): TIntegerArray; overload;
 function Subsampled(const sSize: Integer = 1): TIntegerArray; overload;
 function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
@@ -289,6 +298,32 @@ begin
 end;
 
 {==============================================================================]
+  <Randomal>
+  @action: Returns a pseudo-random integer within the range boundaries using 
+           explicit Minimum and Maximum properties.
+  @note: The result is inclusive of both Minimum and Maximum. Uses the Math 
+         unit's RandomRange function, adjusting the upper bound by +1 to counteract 
+         its exclusive nature.
+[==============================================================================}
+function TRange.Randomal: Integer; overload;
+begin
+  Result := RandomRange(Self.Minimum, (Self.Maximum + 1));
+end;
+
+{==============================================================================]
+  <Randomer>
+  @action: Returns a pseudo-random integer within the range by subtracting a 
+           random offset from the Maximum boundary.
+  @note: Generates a value by counting downward from Self.Maximum using the 
+         range's Size property. The result spans from (Self.Maximum - Self.Size + 1) 
+         up to Self.Maximum.
+[==============================================================================}
+function TRange.Randomer: Integer; overload;
+begin
+  Result := (Self.Maximum - Random(Self.Size));
+end;
+
+{==============================================================================]
   <RandomEx>
   @action: Returns a random value within the range, excluding a specific number.
   @note: 
@@ -428,6 +463,67 @@ begin
   s := ((Self.Maximum - m) + 1);
   for i := 0 to (rSize - 1) do
     Result[i] := (m + Random(s));
+end;
+
+{==============================================================================]
+  <Randomval>
+  @action: Returns a pseudo-random integer within the current TRange bounds,
+           inclusive of the start and stop values.
+  @note: Automatically handles both ascending (e.g., 1 to 10) and descending
+         (e.g., 10 to 1) ranges by adjusting the boundaries passed to RandomRange.
+[==============================================================================}
+function TRange.Randomval: Integer; overload;
+begin
+  if Self.Descending then
+    Exit(RandomRange(Self.stop, (Self.start + 1)));
+  Result := RandomRange(Self.start, (Self.stop + 1))
+end;
+
+{==============================================================================]
+  <Randstart>
+  @action: Randomly walks the range from `start` toward `stop`, returning the
+           first index where `RandomB` succeeds; falls back to `stop` if no
+           hit occurs. Direction follows `Self.Ascending`.
+  @note: Biased toward `start` — an early success is more likely than a
+         late one. Overloaded; see other `Randstart` variant(s) for
+         related behavior.
+[==============================================================================}
+function TRange.Randstart: Integer; overload;
+begin
+  case Self.Ascending of
+    True:
+    for Result := Self.start to Self.stop do
+      if RandomB then
+        Exit;
+    False:
+    for Result := Self.start downto Self.stop do
+      if RandomB then
+        Exit;
+  end;
+  Result := Self.stop;
+end;
+
+{==============================================================================]
+  <Randstop>
+  @action: Randomly walks the range from `stop` toward `start`, returning the
+           first index where `RandomB` succeeds; falls back to `start` if no
+           hit occurs. Direction follows `Self.Ascending`.
+  @note:   Biased toward `stop` — an early success is more likely than a
+           late one. Mirror counterpart to `Randstart`.
+[==============================================================================}
+function TRange.Randstop: Integer; overload;
+begin
+  case Self.Ascending of
+    True:
+    for Result := Self.stop downto Self.start do
+      if RandomB then
+        Exit;
+    False:
+    for Result := Self.stop to Self.start do
+      if RandomB then
+        Exit;
+  end;
+  Result := Self.start;
 end;
 
 {==============================================================================]
@@ -667,6 +763,96 @@ end;
 function TRange.Some(const amount: Integer): TIntegerArray; overload;
 begin
   Result := Copy(Self.Shuffle, 0, Max(1, Min(amount, Self.Size)));
+end;
+
+{==============================================================================]
+  <Startr>
+  @action: Generates a pseudo-random integer that is heavily weighted (skewed) 
+           towards the start boundary of the range using a geometric distribution.
+  @note: Uses a logarithmic transformation of a uniform random float to create 
+         an exponential decay distribution. The resulting offset is capped at 
+         (Size - 1) to prevent out-of-bounds values, and is applied relative to 
+         the direction of the range (added if ascending, subtracted if descending).
+[==============================================================================}
+function TRange.Startr: Integer; overload;
+var
+  s: Integer;
+begin
+  s := Self.Size;
+  Result := Trunc(Ln(Random) / Ln(0.5));
+  if (Result >= s) then
+    Result := (s - 1);
+  if Self.Ascending then
+    Result := (Self.start + Result)
+  else
+    Result := (Self.start - Result);
+end;
+
+{==============================================================================]
+  <Startra>
+  @action: Materializes the range into an array via `ToArray`, then randomly
+           walks it front-to-back, returning the first element where
+           `RandomB` succeeds; falls back to the first element (`s[0]`) if no
+           hit occurs.
+  @note: Array-based counterpart to `Randstart` — same start-biased search,
+         but operates over a materialized `TIntegerArray` rather than
+         iterating `start`/`stop` directly. Overloaded.
+[==============================================================================}
+function TRange.Startra: Integer; overload;
+var
+  r: Integer;
+  s: TIntegerArray;
+begin
+  s := Self.ToArray;
+  for r := 0 to High(s) do
+    if RandomB then
+      Exit(s[r]);
+  Result := s[0];
+end;
+
+{==============================================================================]
+  <Stopr>
+  @action: Generates a pseudo-random integer that is heavily weighted (skewed) 
+           towards the stop boundary of the range using a geometric distribution.
+  @note: Uses a logarithmic transformation of a uniform random float to create 
+         an exponential decay distribution. The resulting offset is capped at 
+         (Size - 1) to prevent out-of-bounds values, and is applied moving backward 
+         from the stop boundary (subtracted if ascending, added if descending).
+[==============================================================================}
+function TRange.Stopr: Integer; overload;
+var
+  s: Integer;
+begin
+  s := Self.Size;
+  Result := Trunc(Ln(Random) / Ln(0.5));
+  if (Result >= s) then
+    Result := (s - 1);
+  if Self.Ascending then
+    Result := (Self.stop - Result)
+  else
+    Result := (Self.stop + Result);
+end;
+
+{==============================================================================]
+  <Stopra>
+  @action: Materializes the range into an array via `ToArray`, then randomly
+           walks it back-to-front, returning the first element where
+           `RandomB` succeeds; falls back to the last element (`s[High(s)]`)
+           if no hit occurs.
+  @note: Array-based counterpart to `Randstop` — same stop-biased search,
+         but operates over a materialized `TIntegerArray` rather than
+         iterating `start`/`stop` directly. Overloaded.
+[==============================================================================}
+function TRange.Stopra: Integer; overload;
+var
+  r: Integer;
+  s: TIntegerArray;
+begin
+  s := Self.ToArray;
+  for r := High(s) downto 0 do
+    if RandomB then
+      Exit(s[r]);
+  Result := s[High(s)];
 end;
 
 {==============================================================================]
