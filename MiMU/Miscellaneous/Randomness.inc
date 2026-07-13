@@ -35,10 +35,12 @@ function Randomal(const rSize: Integer = 1): TDoubleArray; overload;
 function RandomB: Boolean; overload;
 function RandomBit: Byte; overload;
 function RandomBool: Boolean; overload;
+function RandomCeil(const N: Integer = 2): Integer; overload;
 function RandomCenter(const R: Integer; const sharpness: Double = 2.0): Integer; overload;
 function RandomCode(const digitCount: Byte = 1): Int64; overload;
 function RandomDigit: Byte; overload;
 function RandomEx(const l: Integer = 2): Integer; overload;
+function RandomFloor(const N: Integer = 2): Integer; overload;
 function RandomHigh(const R: Integer = 2; const biasStrength: Double = 2.0): Integer; overload;
 function RandomLeft(const R: Integer = 2): Integer; overload;
 function RandomLow(const R: Integer = 2; const biasStrength: Double = 2.0): Integer; overload;
@@ -530,6 +532,26 @@ begin
 end;
 
 {==============================================================================]
+  <RandomCeil>
+  @action: Draws two independent values via `Random(N)` and returns the
+           larger of the two.
+  @note: Biases the result toward the upper end of `[0, N)` — taking the
+         max of two uniform draws skews the distribution toward `N - 1`.
+         Overloaded.
+[==============================================================================}
+function RandomCeil(const N: Integer = 2): Integer; overload;
+var
+  a, b: Integer;
+begin
+  a := Random(N);
+  b := Random(N);
+  if (a > b) then
+    Result := a
+  else
+    Result := b;
+end;
+
+{==============================================================================]
   <RandomCenter>
   @action: Generates a random integer from 0 to R - 1, sharply centered around the middle of the range.
   @note: Generalization of RandomMiddle. Applies the Central Limit Theorem by averaging multiple uniform random variables ($s$ iterations).
@@ -598,6 +620,26 @@ begin
     Result := Random(l)
   else
     Result := (Random(Abs(l)) * -1);
+end;
+
+{==============================================================================]
+  <RandomFloor>
+  @action: Draws two independent values via `Random(N)` and returns the
+           smaller of the two.
+  @note: Biases the result toward the lower end of `[0, N)` — taking the
+         min of two uniform draws skews the distribution toward `0`.
+         Mirror counterpart to `RandomCeil`. Overloaded.
+[==============================================================================}
+function RandomFloor(const N: Integer = 2): Integer; overload;
+var
+  a, b: Integer;
+begin
+  a := Random(N);
+  b := Random(N);
+  if (a < b) then
+    Result := a
+  else
+    Result := b;
 end;
 
 {==============================================================================]
