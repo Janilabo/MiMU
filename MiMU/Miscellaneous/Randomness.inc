@@ -4,12 +4,16 @@ function Bool(const threshold: Double = 0.5): Boolean; overload;
 function Chance: Boolean; overload;
 function Digitry: Byte; overload;
 function Fate: Boolean; overload;
+function Fortunal(const aMin, aMax: Integer; const target: Integer; const Limit: Integer = High(Integer)): Integer; overload;
+function Fortune(const N: Integer; const target: Integer; const limit: Integer = High(Integer)): Integer; overload;
 function GenerateDigit: Byte; overload;
 function Guess: Boolean; overload;
 function IsHeads: Boolean; overload;
 function IsTails: Boolean; overload;
 function Luck(const pool: UInt32 = 4294967295): Boolean; overload;
 function Maybe: Boolean; overload;
+function Misfortunal(const aMin, aMax: Integer; const target: Integer; const limit: Integer = High(Integer)): Integer; overload;
+function Misfortune(const N: Integer; const target: Integer; const limit: Integer = High(Integer)): Integer; overload;
 function Perchance(const tWeight, fWeight: Integer): Boolean; overload;
 function Perhaps: Boolean; overload;
 function Possibly: Boolean; overload;
@@ -124,6 +128,42 @@ begin
 end;
 
 {==============================================================================]
+  <Fortunal>
+  @action: Range-bounded sibling of Fortune — measures a lucky streak,
+           counting consecutive RandomRange(aMin, aMax+1) draws that equal
+           `target`, stopping at the first miss or at `Limit`.
+  @note: Short-circuits to `limit` when (aMin = aMax) and (target = aMin),
+         since every draw is then guaranteed to equal `target` — mirrors
+         Fortune's (N <= 1) and (target = 0) guard for the same reason.
+[==============================================================================}
+function Fortunal(const aMin, aMax: Integer; const target: Integer; const Limit: Integer = High(Integer)): Integer; overload;
+begin
+  if ((aMin = aMax) and (target = aMin)) then
+    Exit(limit);
+  Result := 0;
+  while ((Result < limit) and (RandomRange(aMin, (aMax + 1)) = target)) do
+    Inc(Result);
+end;
+
+{==============================================================================]
+  <Fortune>
+  @action: Measures a lucky streak — counts consecutive Random(N) draws that
+           equal `target`, stopping at the first miss or at `Limit`, whichever comes first.
+  @note: Short-circuits to `limit` when (N <= 1) and (target = 0), since
+         Random(N) is guaranteed to equal 0 on every draw in that degenerate
+         case — this avoids looping needlessly (and avoids relying on the
+         undefined behavior of Random(0)) when the streak is trivially maximal.
+[==============================================================================}
+function Fortune(const N: Integer; const target: Integer; const limit: Integer = High(Integer)): Integer; overload;
+begin
+  if ((N <= 1) and (target = 0)) then
+    Exit(limit);
+  Result := 0;
+  while ((Result < limit) and (Random(N) = target)) do
+    Inc(Result);
+end;
+
+{==============================================================================]
   <GenerateDigit>
   @action: Returns a single Byte digit from 0 to 9 using a fast bitwise population count.
   @note: Packs 9 independent RandomBit choices into a 32-bit register, then shifts 
@@ -198,6 +238,42 @@ end;
 function Maybe: Boolean; overload;
 begin
   Result := ((GetTickCount64 and 1) = 0);
+end;
+
+{==============================================================================]
+  <Misfortunal>
+  @action: Range-bounded sibling of Misfortune — measures a dry spell,
+           counting consecutive RandomRange(aMin, aMax+1) draws that do NOT
+           equal `target`, stopping the instant `target` is drawn or at `Limit`.
+  @note: Short-circuits to `limit` when `target` falls outside
+         [aMin, aMax], since it can then never be drawn — mirrors
+         Misfortune's out-of-[0,N) guard for the same reason.
+[==============================================================================}
+function Misfortunal(const aMin, aMax: Integer; const target: Integer; const limit: Integer = High(Integer)): Integer; overload;
+begin
+  if ((target < aMin) or (target > aMax)) then
+    Exit(limit);
+  Result := 0;
+  while ((Result < limit) and (RandomRange(aMin, (aMax + 1)) <> target)) do
+    Inc(Result);
+end;
+
+{==============================================================================]
+  <Misfortune>
+  @action: Measures a dry spell — counts consecutive Random(N) draws that
+           do NOT equal `target`, stopping the instant `target` is finally drawn
+           (or at `limit`, whichever comes first).
+  @note: Short-circuits to `Limit` when `target` falls outside [0, N),
+         since Random(N) can then never equal it — the streak is guaranteed to
+         run the full length, so the loop is skipped entirely.
+[==============================================================================}
+function Misfortune(const N: Integer; const target: Integer; const limit: Integer = High(Integer)): Integer; overload;
+begin
+  if ((target < 0) or (target >= N)) then
+    Exit(limit);
+  Result := 0;
+  while ((Result < limit) and (Random(N) <> target)) do
+    Inc(Result);
 end;
 
 {==============================================================================]
