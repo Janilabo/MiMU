@@ -3,6 +3,8 @@ function Arbitrium: Boolean; overload;
 function Bool(const threshold: Double = 0.5): Boolean; overload;
 function Chance: Boolean; overload;
 function Digitry: Byte; overload;
+function Evener(const N: Integer): Integer; overload;
+function Evener(const aMin, aMax: Integer): Integer; overload;
 function Fate: Boolean; overload;
 function Fortunal(const aMin, aMax: Integer; const target: Integer; const Limit: Integer = High(Integer)): Integer; overload;
 function Fortune(const N: Integer; const target: Integer; const limit: Integer = High(Integer)): Integer; overload;
@@ -12,8 +14,11 @@ function IsHeads: Boolean; overload;
 function IsTails: Boolean; overload;
 function Luck(const pool: UInt32 = 4294967295): Boolean; overload;
 function Maybe: Boolean; overload;
+function Medianate(const N: Integer): Integer; overload;
 function Misfortunal(const aMin, aMax: Integer; const target: Integer; const limit: Integer = High(Integer)): Integer; overload;
 function Misfortune(const N: Integer; const target: Integer; const limit: Integer = High(Integer)): Integer; overload;
+function Odder(const N: Integer): Integer; overload;
+function Odder(const aMin, aMax: Integer): Integer; overload;
 function Perchance(const tWeight, fWeight: Integer): Boolean; overload;
 function Perhaps: Boolean; overload;
 function Possibly: Boolean; overload;
@@ -39,6 +44,8 @@ function RandomCeil(const N: Integer = 2): Integer; overload;
 function RandomCenter(const R: Integer; const sharpness: Double = 2.0): Integer; overload;
 function RandomCode(const digitCount: Byte = 1): Int64; overload;
 function RandomDigit: Byte; overload;
+function RandomEven: Integer; overload;
+function RandomEven(const N: Integer): Integer; overload;
 function RandomEx(const l: Integer = 2): Integer; overload;
 function RandomFloor(const N: Integer = 2): Integer; overload;
 function RandomHigh(const R: Integer = 2; const biasStrength: Double = 2.0): Integer; overload;
@@ -47,11 +54,16 @@ function RandomLow(const R: Integer = 2; const biasStrength: Double = 2.0): Inte
 function RandomLower(const R: Integer = 2): Integer; overload;
 function RandomMax(const x: Integer; const r: Integer = 2): Integer; overload;
 function RandomMean(const x: Integer; const sample: Integer = 10): Integer; overload;
+function Randomic(const N: Integer): Integer; overload;
+function Randomite(const N: Integer): Integer; overload;
 function RandomMid(const R: Integer): Integer; overload;
 function RandomMiddle(const R: Integer): Integer; overload;
 function RandomMin(const x: Integer; const r: Integer = 2): Integer; overload;
+function Randomness(const N: Integer): Integer; overload;
 function RandomNumber(const digitCount: Byte = 1): Int64; overload;
 function Randomish(const R: Integer = 2): Integer; overload;
+function RandomOdd: Integer; overload;
+function RandomOdd(const N: Integer): Integer; overload;
 function RandomRight(const R: Integer = 2): Integer; overload;
 function RandomSample(const x: Integer; const size: Integer): TIntegerArray; overload;
 function RandomUpper(const R: Integer = 2): Integer; overload;
@@ -117,6 +129,66 @@ begin
     if RandomBool then
       Inc(Result, (RandomBit + RandomBit));
   end;
+end;
+
+{==============================================================================]
+  <Evener>
+  @action: Returns a uniformly random even value in [0, N) via direct
+           arithmetic — draws an index into the even subset and scales by 2.
+  @note: O(1), exactly uniform. Arithmetic counterpart to `RandomEven`
+         (which uses rejection sampling); functionally equivalent output
+         distribution, different mechanism. Overloaded.
+[==============================================================================}
+function Evener(const N: Integer): Integer; overload;
+begin
+  if (N < 1) then
+    Exit(-1);
+  Result := (Random((N + 1) div 2) * 2);
+end;
+
+{==============================================================================]
+  <Evener>
+  @action: Returns a uniformly random even value within the inclusive range
+           [aMin, aMax], via direct arithmetic — locates the first and last
+           even values in range, then draws an index and scales by 2.
+  @note: O(1), exactly uniform over the even subset of [aMin, aMax].
+         Returns -1 if aMin > aMax, or if no even value exists in range
+         (e.g. aMin = aMax and both are odd). Overloaded.
+[==============================================================================}
+function Evener(const aMin, aMax: Integer): Integer; overload;
+var
+  f, l: Integer;
+begin
+  if (aMin > aMax) then
+    Exit(-1);
+  if aMin.Even then
+    f := aMin
+  else
+    f := (aMin + 1);
+  if aMax.Even then
+    l := aMax
+  else
+    l := (aMax - 1);
+  if (f > l) then
+    Exit(-1);
+  Result := (f + (Random(((l - f) div 2) + 1) * 2));
+end;
+
+{==============================================================================]
+  <EvenR>
+  @action: Draws via `Random(N)` and clears the low bit (`and not 1`) to
+           force an even result.
+  @note: NOT uniform when N is odd — the last valid even value (N-1)
+         occurs at roughly half the frequency of every other even value,
+         since bit-clearing pairs (2k, 2k+1) -> 2k, and an odd-sized draw
+         pool leaves the final value unpaired. Uniform only when N is
+         even. Prefer `Evener` for exact uniformity regardless of N.
+[==============================================================================}
+function EvenR(const N: Integer): Integer; overload;
+begin
+  if (N < 1) then
+    Exit(-1);
+  Result := (Random(N) and not 1);
 end;
 
 {==============================================================================]
@@ -243,6 +315,43 @@ begin
 end;
 
 {==============================================================================]
+  <Medianate>
+  @action: Draws three independent values via `Random(N)` and returns the
+           median (middle) of the three, using a boolean-case branch
+           structure to resolve the ordering.
+  @note: Biases the result toward the center of [0, N) — median-of-three
+         produces a bell-shaped distribution peaking near the midpoint,
+         unlike flat `Random(N)`. Same distribution as `RandomMid`, styled
+         as a `case`-based control-flow variant rather than nested `if`.
+         Companion to `RandomCeil`/`RandomFloor` (max/min-of-two bias
+         toward the endpoints).
+[==============================================================================}
+function Medianate(const N: Integer): Integer; overload;
+var
+  a, b, c: Integer;
+begin
+  a := Random(N);
+  b := Random(N);
+  c := Random(N);
+  case (a > b) of
+    True:
+    if (b > c) then
+      Result := b
+    else if (a > c) then
+      Result := c
+    else
+      Result := a;
+    False:
+    if (a > c) then
+      Result := a
+    else if (b > c) then
+      Result := c
+    else
+      Result := b;
+  end;
+end;
+
+{==============================================================================]
   <Misfortunal>
   @action: Range-bounded sibling of Misfortune — measures a dry spell,
            counting consecutive RandomRange(aMin, aMax+1) draws that do NOT
@@ -276,6 +385,68 @@ begin
   Result := 0;
   while ((Result < limit) and (Random(N) <> target)) do
     Inc(Result);
+end;
+
+{==============================================================================]
+  <Odder>
+  @action: Returns a uniformly random odd value in [0, N) via direct
+           arithmetic — draws an index into the odd subset, scales by 2, and
+           offsets by 1.
+  @note: O(1), exactly uniform. Arithmetic counterpart to `RandomOdd`
+         (which uses rejection sampling); functionally equivalent output
+         distribution, different mechanism. Overloaded.
+[==============================================================================}
+function Odder(const N: Integer): Integer; overload;
+begin
+  if (N < 2) then
+    Exit(-1);
+  Result := ((Random(N div 2) * 2) + 1);
+end;
+
+{==============================================================================]
+  <Odder>
+  @action: Returns a uniformly random odd value within the inclusive range
+           [aMin, aMax], via direct arithmetic — locates the first and last
+           odd values in range, then draws an index and scales by 2.
+  @note: O(1), exactly uniform over the odd subset of [aMin, aMax].
+         Returns -1 if aMin > aMax, or if no odd value exists in range
+         (e.g. aMin = aMax and both are even). Overloaded.
+[==============================================================================}
+function Odder(const aMin, aMax: Integer): Integer; overload;
+var
+  f, l: Integer;
+begin
+  if (aMin > aMax) then
+    Exit(-1);
+  if aMin.Odd then
+    f := aMin
+  else
+    f := (aMin + 1);
+  if aMax.Odd then
+    l := aMax
+  else
+    l := (aMax - 1);
+  if (f > l) then
+    Exit(-1);
+  Result := (f + (Random(((l - f) div 2) + 1) * 2));
+end;
+
+{==============================================================================]
+  <OddR>
+  @action: Draws via `Random(N-1)` and sets the low bit (`or 1`) to force an
+           odd result.
+  @note: NOT uniform when N is even — the last valid odd value (N-1)
+         occurs at roughly half the frequency of every other odd value,
+         for the same pairing reason as `EvenR`. Uniform only when N is
+         odd. The `N-1` draw pool (rather than `N`) avoids returning a
+         value equal to N, which a naive `Random(N) or 1` would risk.
+         Prefer `Odder` for exact uniformity regardless of N.
+[==============================================================================}
+function OddR(const N: Integer): Integer; overload;
+begin
+  if (N < 2) then
+    Exit(-1);
+  Result := (Random(N - 1) or 1);
 end;
 
 {==============================================================================]
@@ -610,6 +781,38 @@ begin
 end;
 
 {==============================================================================]
+  <RandomEven>
+  @action: Repeatedly draws via `Random(2147483647)` until an even value
+           is produced.
+  @note: Parameterless overload — draws from the widest practical Integer
+         range rather than requiring a caller-specified N. Expected ~2
+         iterations. See `RandomEven(N)` for a bounded-range variant.
+[==============================================================================}
+function RandomEven: Integer; overload;
+begin
+  repeat
+    Result := Random(2147483647);
+  until Result.Even;
+end;
+
+{==============================================================================]
+  <RandomEven>
+  @action: Repeatedly draws via `Random(N)` until an even value is produced.
+  @note: Rejection-sampling approach — expected ~2 iterations for balanced
+         N. Returns -1 as an invalid-input sentinel for N < 1 (no values
+         to draw from). N = 1 always terminates immediately (0 is even).
+         Overloaded.
+[==============================================================================}
+function RandomEven(const N: Integer): Integer; overload;
+begin
+  if (N < 1) then
+    Exit(-1);
+  repeat
+    Result := Random(N);
+  until Result.Even;
+end;
+
+{==============================================================================]
   <RandomEx>
   @action: Returns a sign-preserved random integer using explicit bounds checks.
   @note: Negative values of l return a negative result range via an inverse flip.
@@ -657,6 +860,50 @@ begin
     Result := 0
   else if (Result >= R) then
     Result := (R - 1);
+end;
+
+{==============================================================================]
+  <Randomic>
+  @action: Builds a random-length array of `Random(N)` draws, then returns
+           one element chosen uniformly at random from that array.
+  @note: Statistically equivalent to a plain `Random(N)` call — every
+         array slot is itself uniform over [0, N), so selecting among
+         them doesn't skew the result. Overloaded.
+[==============================================================================}
+function Randomic(const N: Integer): Integer; overload;
+var
+  r: TIntegerArray;
+  i: Integer;
+begin
+  if (N < 0) then
+    Exit(-1);
+  if (N < 3) then
+    Exit(Random(N));
+  for i := 0 to (r.SetSize(Max(1, Random(N + 1))) - 1) do
+    r[i] := Random(N);
+  Result := r[Random(r.Length)];
+end;
+
+{==============================================================================]
+  <Randomite>
+  @action: Flips a coin via `RandomB` to choose a parity, then delegates to
+           `RandomEven(N)` or `RandomOdd(N)` accordingly. For N < 10, returns
+           `Random(N)` directly.
+  @note: NOT equivalent to Random(N) for odd N — enforces an exact 50/50
+         split between even/odd outcomes regardless of how many values of
+         each parity exist in [0, N). Only matches Random(N)'s uniform
+         distribution when N is even (equal parity counts). Overloaded.
+[==============================================================================}
+function Randomite(const N: Integer): Integer; overload;
+begin
+  if (N < 0) then
+    Exit(-1);
+  if (N < 10) then
+    Exit(Random(N));
+  if RandomB then
+    Result := RandomEven(N)
+  else
+    Result := RandomOdd(N);
 end;
 
 {==============================================================================]
@@ -725,6 +972,47 @@ function RandomMean(const x: Integer; const sample: Integer = 10): Integer; over
 begin
   Result := Round(RandomSample(x, sample).Mean);
 end;
+
+{==============================================================================]
+  <Randomness>
+  @action: Flips a coin via `RandomB` to choose a parity (even or odd), then
+           fills an array exclusively with `Random(N)` draws of that parity,
+           and returns one element chosen at random from it.
+  @note: NOT equivalent to Random(N) for odd N — this enforces an exact
+         50/50 split between even and odd *outcomes*, regardless of how
+         many even vs. odd values exist in [0, N). For odd N (unequal
+         parity counts), individual values in the smaller group become
+         more probable than individual values in the larger group. Only
+         matches plain Random(N)'s uniform distribution when N is even.
+         Overloaded.
+[==============================================================================}
+function Randomness(const N: Integer): Integer; overload;
+var
+  r: TIntegerArray;
+  i, l: Integer;
+begin
+  if (N < 0) then
+    Exit(-1);
+  if (N < 10) then
+    Exit(Random(N));
+  l := r.SetSize(Max(1, Random(N + 1)));
+  i := 0;
+  case RandomB of
+    True:
+	repeat
+	  r[i] := Random(N);
+	  if r[i].Even then
+	    Inc(i);
+	until (i = l);
+	False:
+	repeat
+	  r[i] := Random(N);
+	  if r[i].Odd then
+	    Inc(i);
+	until (i = l);
+  end;
+  Result := r[Random(l)];
+end; 
 
 {==============================================================================]
   <RandomMid>
@@ -809,6 +1097,38 @@ begin
   Result := Random(Abs(R));
   if ((R shr 31) <> 0) then
     Result := -Result;
+end;
+
+{==============================================================================]
+  <RandomOdd>
+  @action: Repeatedly draws via `Random(2147483647)` until an odd value
+           is produced.
+  @note: Parameterless overload — draws from the widest practical Integer
+         range rather than requiring a caller-specified N. Expected ~2
+         iterations. See `RandomOdd(N)` for a bounded-range variant.
+[==============================================================================}
+function RandomOdd: Integer; overload;
+begin
+  repeat
+    Result := Random(2147483647);
+  until Result.Odd;
+end;
+
+{==============================================================================]
+  <RandomOdd>
+  @action: Repeatedly draws via `Random(N)` until an odd value is produced.
+  @note: Rejection-sampling approach — expected ~2 iterations for balanced
+         N. Returns -1 as an invalid-input sentinel for N < 2, since no
+         odd value exists in [0, N) when N ≤ 1. Mirror counterpart to
+         `RandomEven`. Overloaded.
+[==============================================================================}
+function RandomOdd(const N: Integer): Integer; overload;
+begin
+  if (N < 2) then
+    Exit(-1);
+  repeat
+    Result := Random(N);
+  until Result.Odd;
 end;
 
 {==============================================================================]
