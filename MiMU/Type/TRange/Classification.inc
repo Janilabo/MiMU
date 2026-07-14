@@ -1,15 +1,21 @@
 {$IFDEF METHODS}
 function Ascendable: Boolean; overload;
 function Ascendable(const val: Integer): Boolean; overload;
+function Ascendal: Boolean; overload;
 function Ascending: Boolean; overload;
+function Asceal: Boolean; overload;
+function Ascency: Boolean; overload;
 function Ascends: Boolean; overload;
 function Ascing: Boolean; overload;
 function Atomic: Boolean; overload;
 function Composite: Boolean; overload;
 function Decreasing: Boolean; overload;
 function Decremental: Boolean; overload;
+function Desceal: Boolean; overload;
 function Descendable: Boolean; overload;
 function Descendable(const val: Integer): Boolean; overload;
+function Descency: Boolean; overload;
+function Descendal: Boolean; overload;
 function Descending: Boolean; overload;
 function Descends: Boolean; overload;
 function Descing: Boolean; overload;
@@ -25,6 +31,8 @@ function IsPlural: Boolean; overload;
 function IsSingle: Boolean; overload;
 function IsSingular: Boolean; overload;
 function Multiple: Boolean; overload;
+function Nonascending: Boolean; overload;
+function Nondescending: Boolean; overload;
 function Plural: Boolean; overload;
 function Shrinking: Boolean; overload;
 function Shrinks: Boolean; overload;
@@ -52,6 +60,16 @@ function Rising: Boolean; overload;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
+  <Asceal>
+  @action: Determines if the range is configured in ascending (increasing) order.
+  @note: Returns True if the start boundary is less than or equal to the stop boundary.
+[==============================================================================}
+function TRange.Asceal: Boolean; overload;
+begin
+  Result := (Self.start <= Self.stop);
+end;
+
+{==============================================================================]
   <Ascendable>
   @action: Checks if the range is currently oriented in an ascending direction.
   @note: Returns True if start is less than or equal to stop, indicating a 
@@ -74,27 +92,43 @@ begin
 end;
 
 {==============================================================================]
+  <Ascency>
+  @action: Determines if the range is strictly ascending using a sign-of-difference check.
+  @note: Returns True if (stop - start) is positive. Only applicable to numeric range types.
+[==============================================================================}
+function TRange.Ascency: Boolean; overload;
+begin
+  Result := (Sign(Self.stop - Self.start) > 0);
+end;
+
+{==============================================================================]
+  <Ascendal>
+  @action: Determines if the range is strictly ascending (increasing).
+  @note: Returns True only if the start boundary is strictly less than the stop boundary.
+[==============================================================================}
+function TRange.Ascendal: Boolean; overload;
+begin
+  Result := (Self.start.Compare(Self.stop) < 0);
+end;
+
+{==============================================================================]
   <Ascending>
-  @action: Returns True if the range is ordered in ascending or neutral order,
-           i.e. the start value is less than or equal to the stop value.
-  @note: A range with equal start and stop values is considered ascending.
-         This function is logically equivalent to not Descending.
+  @action: Determines if the range is strictly ascending.
+  @note: Returns True if the start value is strictly less than the stop value.
 [==============================================================================}
 function TRange.Ascending: Boolean; overload;
 begin
-  Result := (Self.start <= Self.stop);
+  Result := (Self.start < Self.stop);
 end;
 
 {==============================================================================]
   <Ascends>
-  @action: Returns True if the range does not descend, meaning the start value
-           is less than or equal to the stop value.
-  @note: This function is semantically equivalent to Ascending and is provided
-         for readability in contexts where verb-style predicates are preferred.
+  @action: Determines if the range is strictly ascending by negating a greater-than-or-equal-to comparison.
+  @note: Returns True if the start value is strictly less than the stop value. Logically equivalent to "not (start >= stop)".
 [==============================================================================}
 function TRange.Ascends: Boolean; overload;
 begin
-  Result := not (Self.start > Self.stop);
+  Result := not (Self.start >= Self.stop);
 end;
 
 {==============================================================================]
@@ -149,6 +183,16 @@ begin
 end;
 
 {==============================================================================]
+  <Desceal>
+  @action: Determines if the range is configured in descending (decreasing) order.
+  @note: Returns True if the start boundary is greater than or equal to the stop boundary.
+[==============================================================================}
+function TRange.Desceal: Boolean; overload;
+begin
+  Result := (Self.start >= Self.stop);
+end;
+
+{==============================================================================]
   <Descendable>
   @action: Checks if the range is currently oriented in a descending direction.
   @note: Returns True if start is greater than or equal to stop, indicating a 
@@ -168,6 +212,26 @@ end;
 function TRange.Descendable(const val: Integer): Boolean; overload;
 begin
   Result := (Self.start >= val);
+end;
+
+{==============================================================================]
+  <Descency>
+  @action: Determines if the range is strictly descending using a sign-of-difference check.
+  @note: Returns True if (start - stop) is positive. Only applicable to numeric range types.
+[==============================================================================}
+function TRange.Descency: Boolean; overload;
+begin
+  Result := (Sign(Self.start - Self.stop) > 0);
+end;
+
+{==============================================================================]
+  <Descendal>
+  @action: Determines if the range is strictly descending (decreasing).
+  @note: Returns True only if the start boundary is strictly greater than the stop boundary.
+[==============================================================================}
+function TRange.Descendal: Boolean; overload;
+begin
+  Result := (Self.start.Compare(Self.stop) > 0);
 end;
 
 {==============================================================================]
@@ -267,13 +331,12 @@ end;
 
 {==============================================================================]
   <IsAscending>
-  @action: Determines whether the range is in ascending order.
-  @note: Returns True if Start is less than or equal to Stop.
-         Useful for iteration or conditional logic that depends on direction.
+  @action: Determines if the range is strictly ascending by checking if the start value is less than the stop value.
+  @note: Returns True if (start - stop) is less than zero. Requires a numeric type that supports subtraction.
 [==============================================================================}
 function TRange.IsAscending: Boolean; overload;
 begin
-  Result := ((Self.start - Self.stop) <= 0);
+  Result := ((Self.start - Self.stop) < 0);
 end;
 
 {==============================================================================]
@@ -334,6 +397,28 @@ function TRange.Multiple: Boolean; overload;
 begin
   Result := (Self.Size > 1);
 end;
+
+{==============================================================================]
+  <Nonascending>
+  @action: Evaluates if the range is currently oriented in a non-ascending direction.
+  @note: Returns True if start is greater than or equal to stop, ensuring that
+         no upward progression exists between the boundaries.
+[==============================================================================}
+function TRange.Nonascending: Boolean; overload;
+begin
+  Result := not (Self.start < Self.stop);
+end;
+
+{==============================================================================]
+  <Nondescending>
+  @action: Evaluates if the range is currently oriented in a non-descending direction.
+  @note: Returns True if start is less than or equal to stop, ensuring that
+         no downward progression exists between the boundaries.
+[==============================================================================}
+function TRange.Nondescending: Boolean; overload;
+begin
+  Result := not (Self.start > Self.stop);
+end; 
 
 {==============================================================================]
   <Plural>

@@ -91,7 +91,7 @@ end;
 [==============================================================================}
 function TRange.Standardized: TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := TRange.Construct(0, (Self.stop - Self.start))
   else
     Result := TRange.Construct(0, (Self.start - Self.stop));
@@ -108,6 +108,6 @@ end;
 [==============================================================================}
 function TRange.Standardo: TRange; overload;
 begin
-  Result := TRange.Construct(0, (Ord(Self.Ascending) - Ord(not Self.Ascending)) * (Self.stop - Self.start));
+  Result := TRange.Construct(0, (Ord(Self.Asceal) - Ord(not Self.Asceal)) * (Self.stop - Self.start));
 end;
 {$ENDIF}

@@ -9,6 +9,8 @@ function IsSubstantial(const threshold: Integer): Boolean; overload;
 function IsWide(const val: Integer): Boolean; overload;
 function Natural: Boolean; overload;
 function Negative: Boolean;
+function Nonascend(const val: Integer): Boolean; overload;
+function Nondescend(const val: Integer): Boolean; overload;
 function NonNegative: Boolean;
 function NonPositive: Boolean;
 function Positive: Boolean;
@@ -122,6 +124,28 @@ end;
 function TRange.Negative: Boolean;
 begin
   Result := ((Self.start < 0) and (Self.stop < 0));
+end;
+
+{==============================================================================]
+  <Nonascend>
+  @action: Evaluates if the range can accept a new value without ascending.
+  @note: Returns True if the specified value is less than or equal to the start
+         boundary, keeping any progression non-ascending.
+[==============================================================================}
+function TRange.Nonascend(const val: Integer): Boolean; overload;
+begin
+  Result := not (Self.start < val);
+end;
+
+{==============================================================================]
+  <Nondescend>
+  @action: Evaluates if the range can accept a new value without descending.
+  @note: Returns True if the specified value is greater than or equal to the start
+         boundary, keeping any progression non-descending.
+[==============================================================================}
+function TRange.Nondescend(const val: Integer): Boolean; overload;
+begin
+  Result := not (Self.start > val);
 end;
 
 {==============================================================================]

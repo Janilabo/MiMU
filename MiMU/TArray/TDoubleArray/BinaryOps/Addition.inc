@@ -18,7 +18,7 @@ var
 begin
   o := aAscending.Select(1, -1);
   r.Create(0, High(Self));
-  while r.Ascending do
+  while r.Asceal do
   begin
     m := r.Pivot;
     if ((o * Self[m]) < (o * x)) then
@@ -46,7 +46,7 @@ var
 begin
   o := aAscending.Select(1, -1);
   r.Create(0, High(Self));
-  while r.Ascending do
+  while r.Asceal do
   begin
     m := r.Pivot;
     if ((o * Self[m]) < (o * x)) then
@@ -74,7 +74,7 @@ var
 begin
   r.Create(0, High(Self));
   o := aAscending.Select(1, -1);
-  while r.Ascending do
+  while r.Asceal do
   begin
     m := r.Pivot;
     if ((o * Self[m]) < (o * x)) then

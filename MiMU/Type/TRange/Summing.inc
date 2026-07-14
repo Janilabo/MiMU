@@ -44,7 +44,7 @@ begin
   Result := Self.start;
   if Self.Singular then
     Exit;
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   r := 1;
   repeat
     aItems[r] := (aItems[r - 1] + s);
@@ -66,7 +66,7 @@ begin
   l := Self.Size;
   SetLength(aItems, l);
   Result := 0;
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   r := 0;
   i := Self.Start;
   while (r < l) do
@@ -200,7 +200,7 @@ begin
   if Self.Singular then
     Exit;
   s := Self.start;
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   while (s.Increase(d) <> Self.stop) do
     Inc(Result, s);
 end;
@@ -383,7 +383,7 @@ function TRange.Summative: Int64; overload;
 var
   s, d: Integer;
 begin
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   s := Self.start;
   Result := Self.start;
   while (s <> Self.stop) do

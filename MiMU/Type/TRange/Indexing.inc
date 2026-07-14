@@ -269,7 +269,7 @@ end;
 [==============================================================================}
 function TRange.IDs(const dValue: Integer): Integer; overload;
 begin
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     if ((dValue < Self.start) or (dValue > Self.stop)) then
       Result := -2147483648

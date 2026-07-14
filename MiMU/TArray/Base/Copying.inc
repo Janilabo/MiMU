@@ -244,7 +244,7 @@ var
 begin
   SetLength(Result, ID.Size);
   a := 0;
-  case ID.Ascending of
+  case ID.Asceal of
     True:
     for i := ID.start to ID.stop do
       Result[a.Increase] := Self[i];
@@ -363,7 +363,7 @@ var
   i: Integer;
 begin
   SetLength(Result, r.Size);
-  case r.Ascending of
+  case r.Asceal of
     True:
     for i := r.start to r.stop do
       Result[i - r.start] := Self[i];
@@ -390,7 +390,7 @@ begin
     l := (l + r[i].Size);
   SetLength(Result, l);
   for i := High(r) downto 0 do
-  case r[i].Ascending of
+  case r[i].Asceal of
     True:
     for j := r[i].stop downto r[i].start do
       Result[l.Decrement] := Self[j];

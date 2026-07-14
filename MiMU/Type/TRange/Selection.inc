@@ -39,7 +39,7 @@ var
   a: Boolean;
   l, h, i: Integer;
 begin
-  a := Self.Ascending;
+  a := Self.Asceal;
   l := Max(Self.Minimum, other.Minimum);
   h := Min(Self.Maximum, other.Maximum);
   if (l > h) then
@@ -79,7 +79,7 @@ begin
     m[i - l] := True;
   SetLength(Result, Min(s.Size, o.Size));
   r := 0;
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := o.start to o.stop do
       if m[i - l] then Result[r.Increase] := i;
@@ -111,7 +111,7 @@ begin
   h := Min(Self.Maximum, other.Maximum);
   if (l > h) then
     Exit([]);
-  a := Self.Ascending;
+  a := Self.Asceal;
   SetLength(Result, ((h - l) + 1));
   for i := 0 to High(Result) do
     Result[i] := IfThen(a, (l + i), (h - i));
@@ -143,7 +143,7 @@ var
   i, v, d: Integer;
 begin
   SetLength(Result, 0);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   v := Self.start;
   for i := 0 to (Self.Size - 1) do
   begin
@@ -196,7 +196,7 @@ var
   i, v, d: Integer;
 begin
   SetLength(Result, 0);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   v := Self.start;
   for i := 0 to (Self.Size - 1) do
   begin
@@ -223,7 +223,7 @@ begin
   if (s = 1) then
     Exit([r.start]);
   SetLength(Result, s);
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := 0 to (s - 1) do
       Result[i] := r.start.Increase;
@@ -263,7 +263,7 @@ begin
       Inc(b);
   end;
   SetLength(Result, r);
-  if not Self.Ascending then
+  if not Self.Asceal then
     Result.Reverse;
 end;
 
@@ -279,7 +279,7 @@ begin
   s := Self.Size;
   SetLength(Result, s);
   r := 0;
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   for i := 0 to (s - 1) do
   begin
     v := (Self.start + (i * d));
@@ -303,7 +303,7 @@ function TRangeHelper.Subtract(const other: TRange): TRangeArray; overload;
 var
   R: TRange;
 begin
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     begin
       if Self.Meet(TRange.Construct(Low(Integer), (other.Minimum - 1)), R) then
@@ -344,7 +344,7 @@ begin
   o := other.Normalize;
   SetLength(Result, Self.Size);
   r := 0;
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     begin
       for i := s.start to Min(s.stop, (o.start - 1)) do
@@ -393,7 +393,7 @@ begin
     m[i - l] := True;
   SetLength(Result, s.Size);
   r := 0;
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := s.start to s.stop do
       if not m[i - l] then
@@ -429,7 +429,7 @@ begin
   h := Min(s.stop, other.Maximum);
   if (l > h) then
     Exit(Self.Digits);
-  a := Self.Ascending;
+  a := Self.Asceal;
   SetLength(Result, (Self.Size - ((h - l) + 1)));
   r := 0;
   case a of
@@ -472,7 +472,7 @@ begin
     Exit(Self.Extract);
   SetLength(Result, (Self.Size - r.Size));
   l := 0;
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     begin
       for i := Self.start to (r.start - 1) do
@@ -517,7 +517,7 @@ begin
 	True: Result[r.Increase] := a.Increase;
   end;
   SetLength(Result, r);
-  if not Self.Ascending then
+  if not Self.Asceal then
     Result.Reverse;
 end;
 
@@ -533,7 +533,7 @@ begin
   s := Self.Size;
   SetLength(Result, s);
   r := 0;
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   for i := 0 to (s - 1) do
   begin
     v := (Self.start + (i * d));
@@ -567,7 +567,7 @@ begin
     Exit([Self]);
   if ((O.start <= S.start) and (O.stop >= S.stop)) then
     Exit([]);
-  A := Self.Ascending;
+  A := Self.Asceal;
   SetLength(Result, 2);
   R := 0;
   case A of

@@ -151,7 +151,7 @@ begin
   begin
     a := Self[i];
     r.Create(0, (i - 1));
-    while r.Ascending do
+    while r.Asceal do
     begin
       m := r.Pivot;
       if (Sign(a - Self[m]) = o) then

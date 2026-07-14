@@ -184,7 +184,7 @@ end;
 [==============================================================================}
 function TRange.Joinage(const val: Integer): TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := TRange.Construct(Min(val, Min(Self.start, Self.stop)), Max(val, Max(Self.start, Self.stop)))
   else
     Result := TRange.Construct(Max(val, Max(Self.start, Self.stop)), Min(val, Min(Self.start, Self.stop)));
@@ -200,7 +200,7 @@ end;
 [==============================================================================}
 function TRange.Joinage(const other: TRange): TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := TRange.Construct(Min(Min(other.start, other.stop), Min(Self.start, Self.stop)), Max(Max(other.start, other.stop), Max(Self.start, Self.stop)))
   else
     Result := TRange.Construct(Max(Max(other.start, other.stop), Max(Self.start, Self.stop)), Min(Min(other.start, other.stop), Min(Self.start, Self.stop)));

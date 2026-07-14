@@ -41,7 +41,7 @@ function Wrap(const val: Integer): Integer; overload;
 [==============================================================================}
 function TRange.Anchor(const aLength: Integer = 1): TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := Self.AnchorStart(aLength)
   else
     Result := Self.AnchorStop(aLength);
@@ -61,7 +61,7 @@ function TRange.AnchorStart(const aLength: Integer = 1): TRange; overload;
 begin
   if (aLength < 2) then
     Exit(TRange.Construct(Self.start, Self.start));
-  if Self.Ascending then
+  if Self.Asceal then
     Result.Create(Self.start, (Self.start + (aLength - 1)))
   else
     Result.Create(Self.start, (Self.start - (aLength - 1)));
@@ -82,7 +82,7 @@ function TRange.AnchorStop(const aLength: Integer = 1): TRange; overload;
 begin
   if (aLength < 2) then
     Exit(TRange.Construct(Self.stop, Self.stop));
-  if Self.Ascending then
+  if Self.Asceal then
     Result.Create((Self.stop - (aLength - 1)), Self.stop)
   else
     Result.Create((Self.stop + (aLength - 1)), Self.stop);

@@ -304,13 +304,13 @@ begin
       begin
         x := r;
         p := Self[r.Middle];
-        while x.Ascending do
+        while x.Asceal do
         begin
           while (Sign(Self[x.start].Compare(p)) = o) do
             Inc(x.start);
           while (Sign(Self[x.stop].Compare(p)) = -o) do
             Dec(x.stop);
-          if x.Ascending then
+          if x.Asceal then
             Exchange(x.start.Increase, x.stop.Decrease);
         end;
         if ((x.stop - r.start) < (r.stop - x.start)) then

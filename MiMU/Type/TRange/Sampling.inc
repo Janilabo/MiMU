@@ -49,7 +49,7 @@ function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
 [==============================================================================}
 function TRange.Any: Integer; overload;
 begin
-  Result := ((Self.start + Random(Self.Size)) * IfThen(Self.Ascending, 1, -1));
+  Result := ((Self.start + Random(Self.Size)) * IfThen(Self.Asceal, 1, -1));
 end;
 
 {==============================================================================]
@@ -66,7 +66,7 @@ end;
 [==============================================================================}
 function TRange.Arbitrary: Integer; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := (Self.start + Random((Self.stop - Self.start) + 1))
   else
     Result := (Self.stop + Random((Self.start - Self.stop) + 1));
@@ -150,7 +150,7 @@ end;
 [==============================================================================}
 function TRange.Lucky: Integer; overload;
 begin
-  Result := (Self.start + (Random(Self.Size) * IfThen(Self.Ascending, 1, -1)));
+  Result := (Self.start + (Random(Self.Size) * IfThen(Self.Asceal, 1, -1)));
 end;
 
 {==============================================================================]
@@ -162,7 +162,7 @@ function TRange.Mixed(const mixings: Integer = 1): TIntegerArray; overload;
 var
   i, s, r: Integer;
 begin
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := ((Self.start + i) * s);
@@ -191,7 +191,7 @@ begin
     Exit([]);
   d := Self.Direction;
   v := Self.start;
-  if Self.Ascending then
+  if Self.Asceal then
     c := (((Self.stop - Self.start) div sStep) + 1)
   else
     c := (((Self.start - Self.stop) div sStep) + 1);
@@ -438,7 +438,7 @@ end;
 [==============================================================================}
 function TRange.Randomly: Integer; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := (Self.start + Random(Self.Count))
   else
     Result := (Self.start - Random(Self.Count));
@@ -490,7 +490,7 @@ end;
 [==============================================================================}
 function TRange.Randstart: Integer; overload;
 begin
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for Result := Self.start to Self.stop do
       if RandomB then
@@ -513,7 +513,7 @@ end;
 [==============================================================================}
 function TRange.Randstop: Integer; overload;
 begin
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for Result := Self.stop downto Self.start do
       if RandomB then
@@ -653,7 +653,7 @@ begin
   if Self.Singular then
     Exit([Self.start]);
   SetLength(Result, Self.Size);
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := 0 to High(Result) do
     begin
@@ -682,7 +682,7 @@ function TRange.Shake(const shakes: Integer = 1): TIntegerArray; overload;
 var
   i, s, r: Integer;
 begin
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := ((Self.Start + i) * s);
@@ -701,7 +701,7 @@ function TRange.Shuffle(const shuffles: Integer = 1): TIntegerArray; overload;
 var
   i, s, r: Integer;
 begin
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
     Result[i] := ((Self.start + i) * s);
@@ -782,7 +782,7 @@ begin
   Result := Trunc(Ln(Random) / Ln(0.5));
   if (Result >= s) then
     Result := (s - 1);
-  if Self.Ascending then
+  if Self.Asceal then
     Result := (Self.start + Result)
   else
     Result := (Self.start - Result);
@@ -827,7 +827,7 @@ begin
   Result := Trunc(Ln(Random) / Ln(0.5));
   if (Result >= s) then
     Result := (s - 1);
-  if Self.Ascending then
+  if Self.Asceal then
     Result := (Self.stop - Result)
   else
     Result := (Self.stop + Result);
@@ -881,8 +881,8 @@ begin
     Exit([]);
   r := Random((s - c) + 1);
   SetLength(Result, c);
-  m := IfThen(Self.Ascending, (Self.start + r), (Self.start - r));
-  case Self.Ascending of
+  m := IfThen(Self.Asceal, (Self.start + r), (Self.start - r));
+  case Self.Asceal of
     True:
     for i := 0 to (c - 1) do
       Result[i] := (m + i);
@@ -917,8 +917,8 @@ begin
     Exit([]);
   r := Random((s - c) + 1);
   SetLength(Result, c);
-  m := IfThen(Self.Ascending, (Self.start + r), (Self.start - r));
-  d := IfThen(Self.Ascending, 1, -1);
+  m := IfThen(Self.Asceal, (Self.start + r), (Self.start - r));
+  d := IfThen(Self.Asceal, 1, -1);
   for i := 0 to (c - 1) do
     Result[i] := (m + (i * d));
 end;

@@ -589,7 +589,7 @@ begin
   Result := -1;
   r.Create(0, High(Self));
   o := aAscending.Select(1, -1);
-  while r.Ascending do
+  while r.Asceal do
   begin
     m := r.Pivot;
     case ((o * Self[m]) < (o * x)) of
@@ -666,7 +666,7 @@ begin
   Result := -1;
   r.Create(0, High(Self));
   o := aAscending.Select(1, -1);
-  while r.Ascending do
+  while r.Asceal do
   begin
     m := r.Pivot;
     case ((o * Self[m]) > (o * x)) of
@@ -1020,7 +1020,7 @@ begin
   f := x.Normalize;
   o := aAscending.Select(1, -1);
   r.Create(0, High(Self));
-  while r.Ascending do
+  while r.Asceal do
   begin
     m := r.Pivot;
     if ((o * Self[m]) < (o * f.start)) then
@@ -1082,7 +1082,7 @@ begin
   f := x.Normalize;
   o := aAscending.Select(1, -1);
   r.Create(0, High(Self));
-  while r.Ascending do
+  while r.Asceal do
   begin
     m := r.Pivot;
     if ((o * Self[m]) < (o * f.start)) then

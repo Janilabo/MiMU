@@ -444,7 +444,7 @@ begin
     Exit([Self.start]);
   SetLength(Result, Self.Size);
   s := IfThen(rReverse, Self.stop, Self.start);
-  if Self.Ascending then
+  if Self.Asceal then
     r := IfThen(rReverse, -1, 1)
   else
     r := IfThen(rReverse, 1, -1);

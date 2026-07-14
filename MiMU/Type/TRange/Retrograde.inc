@@ -37,7 +37,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   v := (Self.start + ((l - 1) * s));
   for i := 0 to (l - 1) do
     Result[i] := v.Decrease(s);
@@ -65,7 +65,7 @@ var
   i, s, d: Integer;
 begin
   SetLength(Result, Self.Size);
-  d := IfThen(Self.Ascending, -1, 1);
+  d := IfThen(Self.Asceal, -1, 1);
   s := Self.stop;
   for i := 0 to High(Result) do
     Result[i] := Next(s, d);
@@ -129,7 +129,7 @@ var
 begin
   r := Self.stop;
   Result.Create(Self.Size, r);
-  d := IfThen(Self.Ascending, -1, 1);
+  d := IfThen(Self.Asceal, -1, 1);
   for i := 0 to High(Result) do
     Result[i] := r.Increase(d);
 end;
@@ -180,7 +180,7 @@ begin
     Exit([Self.stop]);
   SetLength(Result, s);
   P := @Result[0];
-  d := IfThen(Self.Ascending, -1, 1);
+  d := IfThen(Self.Asceal, -1, 1);
   P^ := Self.stop;
   for i := 1 to (s - 1) do
   begin
@@ -223,7 +223,7 @@ var
   i: Integer;
 begin
   SetLength(Result, Self.Size);
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := 0 to High(Result) do
       Result[i] := (Self.stop - i);
@@ -255,7 +255,7 @@ begin
   if (s < 2) then
     Exit([Self.stop]);
   r := Self.stop;
-  d := IfThen(Self.Ascending, -1, 1);
+  d := IfThen(Self.Asceal, -1, 1);
   for i := 0 to (s - 1) do
     Result[i] := (r + (i * d));
 end;
@@ -402,7 +402,7 @@ begin
   SetLength(Result, s);
   P := @Result[0];
   r := Self.stop;
-  d := IfThen(Self.Ascending, -1, 1);
+  d := IfThen(Self.Asceal, -1, 1);
   for i := 0 to (s - 1) do
   begin
     P^ := r;
@@ -441,7 +441,7 @@ begin
   if (s = 1) then
     Exit([Self.start]);
   SetLength(Result, s);
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := 0 to (s - 1) do
       Result[i] := (((Self.start + s) - 1) - i);
@@ -469,7 +469,7 @@ begin
     Exit([Self.start]);
   SetLength(Result, s);
   for i := 0 to (s - 1) do
-    if Self.Ascending then
+    if Self.Asceal then
       Result[i] := (Self.stop - i)
     else
       Result[i] := (Self.stop + i);

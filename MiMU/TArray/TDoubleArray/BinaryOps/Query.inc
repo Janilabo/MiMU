@@ -43,22 +43,21 @@ begin
   h := High(Self);
   Result.Create(0, h);
   o := aAscending.Select(1, -1);
-  while (Result.Ascending and (not f)) do
+  while (Result.Asceal and (not f)) do
   begin
     m := Result.Pivot;
     f := ((o * Self[m]) = (o * x));
     if f then
-	begin
+    begin
       Result.Create(m, m);
       while ((Result.start > 0) and (Self[Result.start - 1] = x)) do
         Dec(Result.start);
       while ((Result.stop < h) and (Self[Result.stop + 1] = x)) do
         Inc(Result.stop);
-    end else
-      if ((o * Self[m]) < (o * x)) then
-        Result.start := (m + 1)
-      else
-        Result.stop := (m - 1);
+    end else if ((o * Self[m]) < (o * x)) then
+      Result.start := (m + 1)
+    else
+      Result.stop := (m - 1);
   end;
   if not f then
     Result.Create(-1, -1);
@@ -520,7 +519,7 @@ begin
     Exit([]);
   SetLength(Result, r.Size);
   h := High(Result);
-  case values.Ascending of
+  case values.Asceal of
     True:
     for i := 0 to h do
       Result[i] := Self[r.start + i];

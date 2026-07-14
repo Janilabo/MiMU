@@ -631,7 +631,7 @@ var
 begin
   if (Self.Length <= 1) then
     Exit(Self.Copy);
-  a := Self[0].Ascending;
+  a := Self[0].Asceal;
   S := Self.Normalized;
   S.SortByStart;
   SetLength(Result, S.Length);
@@ -922,7 +922,7 @@ begin
       Result[l.Increase] := R;
       R := S[i];
     end else
-	  R.stop := Max(R.stop, S[i].stop);
+      R.stop := Max(R.stop, S[i].stop);
   Result[l.Increase] := R;
   SetLength(Result, l);
 end;

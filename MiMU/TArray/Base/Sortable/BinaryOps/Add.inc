@@ -62,10 +62,10 @@ var
 begin
   r.Create(0, High(Self));
   o := aAscending.Select(1, -1);
-  while r.Ascending do
+  while r.Asceal do
   begin
     m := r.Pivot;
-	if ((aAscending and (Self[m] < item)) or ((not aAscending) and (Self[m] > item))) then
+    if ((aAscending and (Self[m] < item)) or ((not aAscending) and (Self[m] > item))) then
       r.start := (m + 1)
     else
       r.stop := (m - 1);

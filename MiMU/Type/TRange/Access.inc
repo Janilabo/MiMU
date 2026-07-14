@@ -123,7 +123,7 @@ end;
 [==============================================================================}
 function TRange.At(const index: Integer = 0): Integer; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := (Self.start + index)
   else
     Result := (Self.start - index);
@@ -137,7 +137,7 @@ begin
   SetLength(Result, ID.Length);
   if ID.Empty then
     Exit;
-  a := Self.Ascending;
+  a := Self.Asceal;
   for i := 0 to High(Result) do
     Result[i] := IfThen(a, (Self.start + ID[i]), (Self.start - ID[i]));
 end;
@@ -153,7 +153,7 @@ end;
 [==============================================================================}
 function TRange.AtIndex(const index: Integer = 0): Integer; overload;
 begin
-  Result := (Self.start + (index * (IfThen(Self.Ascending, 1, -1))));
+  Result := (Self.start + (index * (IfThen(Self.Asceal, 1, -1))));
 end;
 
 {==============================================================================]
@@ -291,7 +291,7 @@ function TRange.Fetch(const index: Integer = 0): Integer; overload;
 label 
   forward, backward;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     goto forward
   else
     goto backward;   
@@ -342,7 +342,7 @@ function TRange.Lookup(const index: Integer = 0): Integer; overload;
 const
   d: array[Boolean] of Integer = (-1, 1);
 begin
-  Result := (Self.start + (index * d[Self.Ascending]));
+  Result := (Self.start + (index * d[Self.Asceal]));
 end;
 
 function TRange.Lookup(const ID: TIntegerArray): TIntegerArray; overload;
@@ -355,7 +355,7 @@ begin
   SetLength(Result, ID.Length);
   if ID.Empty then
     Exit;
-  a := Self.Ascending;
+  a := Self.Asceal;
   for i := 0 to High(Result) do
     Result[i] := (Self.start + (ID[i] * d[a]));
 end;
@@ -436,7 +436,7 @@ end;
 [==============================================================================}
 function TRange.Member(const index: Integer = 0): Integer; overload;
 begin
-  Result := IfThen(Self.Ascending, (Self.start + index), (Self.start - index));
+  Result := IfThen(Self.Asceal, (Self.start + index), (Self.start - index));
 end;
 
 function TRange.Member(const ID: TIntegerArray): TIntegerArray; overload;
@@ -447,7 +447,7 @@ begin
   SetLength(Result, ID.Length);
   if ID.Empty then
     Exit;
-  a := Self.Ascending;
+  a := Self.Asceal;
   for i := 0 to High(Result) do
     if a then
       Result[i] := (Self.start + ID[i])
@@ -469,7 +469,7 @@ var
   i: Integer;
 begin
   Result := Self.start;
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := 1 to index do
       Result := Succ(Result);
@@ -644,7 +644,7 @@ function TRange.Retrieve(const index: Integer = 0): Integer; overload;
 begin
   if (index <= 0) then
     Result := Self.start
-  else if Self.Ascending then
+  else if Self.Asceal then
     Result := Succ(Self.Retrieve(index - 1))
   else
     Result := Pred(Self.Retrieve(index - 1));
@@ -799,6 +799,6 @@ end;
 [==============================================================================}
 function TRange.Yield(const index: Integer = 0): Integer; overload;
 begin
-  Result := (Self.start + (index * ((Integer(Self.Ascending) * 2) - 1)));
+  Result := (Self.start + (index * ((Integer(Self.Asceal) * 2) - 1)));
 end;
 {$ENDIF}

@@ -152,7 +152,7 @@ end;
 [==============================================================================}
 function TRange.MinMax: TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Exit(Self);
   Result.Create(Self.stop, Self.start);
 end;
@@ -175,7 +175,7 @@ end;
  function TRange.Normal: TRange; overload;
 begin
   Result := Self;
-  if Result.Ascending then
+  if Result.Asceal then
     Exit;
   Result.start := (Result.start xor Result.stop);
   Result.stop := (Result.start xor Result.stop);
@@ -247,7 +247,7 @@ var
   a: TIntegerArray;
 begin
   a := [Self.start, Self.stop];
-  Result.Create(a[Ord(Self.Descending)], a[Ord(Self.Ascending)]);
+  Result.Create(a[Ord(Self.Descending)], a[Ord(Self.Asceal)]);
 end;
 
 {==============================================================================]

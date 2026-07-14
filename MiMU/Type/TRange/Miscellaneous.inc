@@ -66,7 +66,7 @@ var
   procedure C(const A, B: Integer);
   begin
     SetLength(Result, (Result.Length + 1));
-    if Self.Ascending then
+    if Self.Asceal then
       Result[High(Result)] := TRange.Construct(A, B)
     else
       Result[High(Result)] := TRange.Construct(B, A);
@@ -227,7 +227,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  s := IFThen(Self.Ascending, 1, -1);
+  s := IFThen(Self.Asceal, 1, -1);
   for i := 0 to (l - 1) do
     Result[i] := arr[Self.start + (i * s)];
 end;
@@ -238,7 +238,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  s := IFThen(Self.Ascending, 1, -1);
+  s := IFThen(Self.Asceal, 1, -1);
   for i := 0 to (l - 1) do
     Result[i] := arr[Self.start + (i * s)];
 end;
@@ -249,7 +249,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  s := IFThen(Self.Ascending, 1, -1);
+  s := IFThen(Self.Asceal, 1, -1);
   for i := 0 to (l - 1) do
     Result[i] := arr[Self.start + (i * s)];
 end;
@@ -260,7 +260,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  s := IFThen(Self.Ascending, 1, -1);
+  s := IFThen(Self.Asceal, 1, -1);
   for i := 0 to (l - 1) do
     Result[i] := arr[Self.start + (i * s)];
 end;
@@ -271,7 +271,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  s := IFThen(Self.Ascending, 1, -1);
+  s := IFThen(Self.Asceal, 1, -1);
   for i := 0 to (l - 1) do
     Result[i] := arr[Self.start + (i * s)];
 end;
@@ -282,7 +282,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  s := IFThen(Self.Ascending, 1, -1);
+  s := IFThen(Self.Asceal, 1, -1);
   for i := 0 to (l - 1) do
     Result[i] := arr[Self.start + (i * s)];
 end;
@@ -293,7 +293,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  s := IFThen(Self.Ascending, 1, -1);
+  s := IFThen(Self.Asceal, 1, -1);
   for i := 0 to (l - 1) do
     Result[i] := arr[Self.start + (i * s)];
 end;
@@ -304,7 +304,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  s := IFThen(Self.Ascending, 1, -1);
+  s := IFThen(Self.Asceal, 1, -1);
   for i := 0 to (l - 1) do
     Result[i] := arr[Self.start + (i * s)];
 end;

@@ -15,7 +15,7 @@ function Succeeds(const val: Integer): Boolean; overload;
 [==============================================================================}
 function TRange.Ahead(const val: Integer): Boolean; overload;
 begin
-  Result := ((Self.Ascending and (val > Self.stop)) or (Self.Descending and (val < Self.stop)));
+  Result := ((Self.Asceal and (val > Self.stop)) or (Self.Descending and (val < Self.stop)));
 end;
 
 {==============================================================================]
@@ -27,7 +27,7 @@ end;
 [==============================================================================}
 function TRange.Behind(const val: Integer): Boolean; overload;
 begin
-  Result := ((Self.Ascending and (val < Self.start)) or (Self.Descending and (val > Self.start)));
+  Result := ((Self.Asceal and (val < Self.start)) or (Self.Descending and (val > Self.start)));
 end;
 
 {==============================================================================]
@@ -50,6 +50,6 @@ end;
 [==============================================================================}
 function TRange.Succeeds(const val: Integer): Boolean; overload;
 begin
-  Result := (Self.Singular or (Self.Ascending and (val >= Self.start)) or (Self.Descending and (val <= Self.start)));
+  Result := (Self.Singular or (Self.Asceal and (val >= Self.start)) or (Self.Descending and (val <= Self.start)));
 end;
 {$ENDIF}

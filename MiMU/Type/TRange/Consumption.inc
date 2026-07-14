@@ -55,7 +55,7 @@ function TRange.PickStart: Integer; overload;
 begin
   if Self.Singular then
     Result := Self.start
-  else if Self.Ascending then
+  else if Self.Asceal then
     Result := Self.start.Increase
   else
     Result := Self.start.Decrease;
@@ -74,7 +74,7 @@ function TRange.PickStop: Integer; overload;
 begin
   if Self.Singular then
     Result := Self.stop
-  else if Self.Ascending then
+  else if Self.Asceal then
     Result := Self.stop.Decrease
   else
     Result := Self.stop.Increase;
@@ -90,7 +90,7 @@ end;
 [==============================================================================}
 function TRange.PopStart: Integer; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := Self.start.Increase
   else
     Result := Self.start.Decrease;
@@ -106,7 +106,7 @@ end;
 [==============================================================================}
 function TRange.PopStop: Integer; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := Self.stop.Decrease
   else
     Result := Self.stop.Increase;
@@ -126,7 +126,7 @@ function TRange.PullStart: Integer; overload;
 begin
   if Self.Singular then
     Exit(Self.start);
-  case Self.Ascending of
+  case Self.Asceal of
     True: Result := Self.start.Increase;
     False: Result := Self.start.Decrease;
   end;
@@ -146,7 +146,7 @@ function TRange.PullStop: Integer; overload;
 begin
   if Self.Singular then
     Exit(Self.stop);
-  case Self.Ascending of
+  case Self.Asceal of
     True: Result := Self.stop.Decrease;
     False: Result := Self.stop.Increase;
   end;

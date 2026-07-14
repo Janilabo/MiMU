@@ -62,7 +62,7 @@ end;
 function MArrayHelper.Find(const ID: TRange; const item: MType): Integer; overload;
 begin
   if Self.Populated then
-  case ID.Ascending of
+  case ID.Asceal of
     True:
     for Result := ID.start to ID.stop do
       if (Self[Result] = item) then
@@ -99,7 +99,7 @@ end;
 function MArrayHelper.Find(const ID: TRange; const items: MArray): Integer; overload;
 begin
   if (Self.Populated and items.Populated) then
-  case ID.Ascending of
+  case ID.Asceal of
     True:
     for Result := ID.start to ID.stop do
       if items.Contains(Self[Result]) then
@@ -283,7 +283,7 @@ end;
 [==============================================================================}
 function MArrayHelper.IndexOf(const item: MType; const ID: TRange): Integer; overload;
 begin
-  case ID.Ascending of
+  case ID.Asceal of
     True:
     for Result := ID.start to ID.stop do
       if (Self[Result] = item) then

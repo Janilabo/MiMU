@@ -44,12 +44,12 @@ begin
   h := High(Self);
   Result.Create(0, h);
   o := aAscending.Select(1, -1);
-  while (Result.Ascending and (not f)) do
+  while (Result.Asceal and (not f)) do
   begin
     m := Result.Pivot;
     f := ((o * Self[m]) = (o * x));
     if f then
-	begin
+    begin
       Result.Create(m, m);
       while ((Result.start > 0) and (Self[Result.start - 1] = x)) do
         Dec(Result.start);

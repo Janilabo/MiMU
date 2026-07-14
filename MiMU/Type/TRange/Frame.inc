@@ -39,7 +39,7 @@ var
   h: Integer;
 begin
   h := Self.Half;
-  if Self.Ascending then
+  if Self.Asceal then
     Result.Create((rCenter - h), (rCenter + h))
   else
     Result.Create((rCenter + h), (rCenter - h));
@@ -78,7 +78,7 @@ end;
 [==============================================================================}
 function TRange.Localize: Integer; overload;
 begin
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     begin
       Result := Self.start;
@@ -104,7 +104,7 @@ end;
 function TRange.Localized: TRange; overload;
 begin
   Result := Self;
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     begin
       Dec(Result.stop, Result.start);
@@ -158,7 +158,7 @@ end;
 [==============================================================================}
 function TRange.Template: TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result.Create(0, (Self.Maximum - Self.Minimum))
   else
     Result.Create((Self.Maximum - Self.Minimum), 0);

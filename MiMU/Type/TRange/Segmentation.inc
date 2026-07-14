@@ -697,7 +697,7 @@ begin
   if s.Empty then
     Exit([TRange.Construct(Self.start, Self.stop)]);
   s.Compress;
-  s.QuickSort(Self.Ascending);
+  s.QuickSort(Self.Asceal);
   d := Self.Wind;
   SetLength(Result, (System.Length(s) + 1));
   l := 0;
@@ -877,7 +877,7 @@ begin
   s := Self.Size;
   SetLength(Result, strideCount);
   SetLength(l, strideCount);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   for i := 0 to (StrideCount - 1) do
     l[i] := ((((s - i) + strideCount) - 1) div strideCount);
   for i := 0 to (strideCount - 1) do
@@ -1064,7 +1064,7 @@ begin
   SetLength(Result, p);
   d := (s div p);
   m := (s mod p);
-  o := IfThen(Self.Ascending, 1, -1);
+  o := IfThen(Self.Asceal, 1, -1);
   b := Self.start;
   for i := 0 to (p - 1) do
   begin

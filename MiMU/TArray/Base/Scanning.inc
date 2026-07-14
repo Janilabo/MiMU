@@ -145,19 +145,19 @@ begin
   if Self.Populated then
   begin
     SetLength(Result, ID.Size);
-    case ID.Ascending of
+    case ID.Asceal of
       True:
       for i := ID.start to ID.stop do
         if (r >= limit) then
-	      Break
+	  Break
         else if (Self[i] = item) then
           Result[r.Increase] := i;
       False:
       for i := ID.start downto ID.stop do
         if (r >= limit) then
           Break
-		else if (Self[i] = item) then
-	      Result[r.Increase] := i;
+	else if (Self[i] = item) then
+	  Result[r.Increase] := i;
     end;
   end;
   SetLength(Result, r);
@@ -180,7 +180,7 @@ begin
       if (r >= limit) then
         Break
       else if (Self[ID[i]] = item) then
-	    Result[r.Increase] := ID[i];
+        Result[r.Increase] := ID[i];
   end;
   SetLength(Result, r);
 end;
@@ -198,7 +198,7 @@ begin
   if (Self.Populated and items.Populated) then
   begin
     SetLength(Result, ID.Size);
-    case ID.Ascending of
+    case ID.Asceal of
       True:
       for i := ID.start to ID.stop do
         if (r >= limit) then
@@ -233,7 +233,7 @@ begin
       if (r >= limit) then
         Break
       else if items.Contains(Self[ID[i]]) then
-	    Result[r.Increase] := ID[i];
+        Result[r.Increase] := ID[i];
   end;
   SetLength(Result, r);
 end;

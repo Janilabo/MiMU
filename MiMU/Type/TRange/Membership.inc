@@ -173,7 +173,7 @@ function TRange.Admits(const val: Integer): Boolean; overload;
 var
   a: Boolean;
 begin
-  a := Self.Ascending;
+  a := Self.Asceal;
   Result := ((a and ((val >= Self.start) <> (val > Self.stop))) or ((not a) and ((val >= Self.stop) <> (val > Self.start))));
 end;
 
@@ -352,7 +352,7 @@ end;
 [==============================================================================}
 function TRange.Covering(const val: Integer): Boolean; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := (((val - Self.start) or (Self.stop - val)) >= 0)
   else
     Result := (((val - Self.stop) or (Self.start - val)) >= 0);
@@ -781,7 +781,7 @@ function TRange.InSet(const val: Integer): Boolean; overload;
 begin
   if not ((val in [0..255]) and (Self.start in [0..255]) and (Self.stop in [0..255])) then
     Result := False
-  else if Self.Ascending then
+  else if Self.Asceal then
     Result := (val in [Self.start..Self.stop])
   else
     Result := (val in [Self.stop..Self.start]);
@@ -979,7 +979,7 @@ end;
 [==============================================================================}
 function TRange.Item(const x: Integer): Boolean; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := ((x >= Self.start) and (x <= Self.stop))
   else
     Result := ((x >= Self.stop) and (x <= Self.start));
@@ -1158,7 +1158,7 @@ function TRange.Outlier(const val: Integer): Boolean; overload;
 begin
   if Self.Singular then
     Result := (val <> Self.start)
-  else if Self.Ascending then
+  else if Self.Asceal then
     Result := (Abs(val - ((Self.start + Self.stop) / 2)) > ((Self.stop - Self.start) / 2))
   else
     Result := (Abs(val - ((Self.start + Self.stop) / 2)) > ((Self.start - Self.stop) / 2));

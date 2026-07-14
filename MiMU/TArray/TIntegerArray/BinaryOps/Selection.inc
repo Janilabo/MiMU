@@ -223,7 +223,7 @@ begin
     Exit([]);
   SetLength(Result, r.Size);
   h := High(Result);
-  case values.Ascending of
+  case values.Asceal of
     True:
     for i := 0 to h do
       Result[i] := Self[r.start + i];

@@ -230,6 +230,6 @@ end;
 [==============================================================================}
 function TRange.Spanitude: Integer; overload;
 begin
-  Result := IfThen(Self.Ascending, (Self.stop - Self.start), (Self.start - Self.stop));
+  Result := IfThen(Self.Asceal, (Self.stop - Self.start), (Self.start - Self.stop));
 end;
 {$ENDIF}

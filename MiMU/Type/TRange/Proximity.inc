@@ -678,7 +678,7 @@ end;
 [==============================================================================}
 function TRange.ToGo(const current: Integer; const Inclusive: Boolean = False): Integer; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := ((Self.stop - current) + Ord(Inclusive))
   else
     Result := ((current - Self.stop) + Ord(Inclusive));

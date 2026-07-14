@@ -863,7 +863,7 @@ begin
   Result := -1;
   o := aAscending.Select(1, -1);
   r.Create(0, High(Self));
-  while (r.Ascending and (Result = -1)) do
+  while (r.Asceal and (Result = -1)) do
   begin
     m := r.Pivot;
     if ((o * Self[m]) = (o * x)) then
@@ -1073,7 +1073,7 @@ var
 begin
   Result := -1;
   r.Create(0, High(Self));
-  while r.Ascends do
+  while r.Asceal do
   begin
     i := r.Pivot;
     if (Self[i] = x) then

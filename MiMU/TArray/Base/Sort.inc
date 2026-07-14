@@ -281,7 +281,7 @@ begin
     c := weight[aID[a.stop]].Compare(w);
     while (aAscending and (c > 0)) or ((not aAscending) and (c < 0)) do
       c := weight[aID[a.stop.Decrement]].Compare(w);
-    if a.Ascending then
+    if a.Asceal then
       Swap(aID[a.start.Increase], aID[a.stop.Decrease]);
   until a.Drops;
   if (L < a.stop) then
@@ -325,7 +325,7 @@ begin
     c := weight[aID[a.stop]].Compare(w);
     while (aAscending and (c > 0)) or ((not aAscending) and (c < 0)) do
       c := weight[aID[a.stop.Decrement]].Compare(w);
-    if a.Ascending then
+    if a.Asceal then
       Swap(aID[a.start.Increase], aID[a.stop.Decrease]);
   until a.Drops;
   if (L < a.stop) then

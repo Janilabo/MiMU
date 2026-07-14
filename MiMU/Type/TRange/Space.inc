@@ -22,7 +22,7 @@ function TRangeHelper.SpaceAround(const margin: Integer): TRangeArray; overload;
 var
   o: Integer;
 begin
-  o := IfThen(Self.Ascending, 1, -1);
+  o := IfThen(Self.Asceal, 1, -1);
   Result := [TRange.Construct((Self.start - (o * margin)), (Self.start - o)), TRange.Construct((Self.stop + o), (Self.stop + (o * margin)))];
 end;
 

@@ -23,7 +23,7 @@ function SnipStop: Boolean; overload;
 function TRange.Contract(const N: Integer = 1): TRange; overload;
 begin
   Result := Self;
-  if Self.Ascending then
+  if Self.Asceal then
     Self.Modify(N, -N)
   else
     Self.Modify(-N, N);
@@ -38,7 +38,7 @@ end;
 [==============================================================================}
 function TRange.Contracted(const N: Integer = 1): TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result.Create((Self.start + N), (Self.stop - N))
   else
     Result.Create((Self.start - N), (Self.stop + N));
@@ -55,7 +55,7 @@ end;
 function TRange.Expand(const N: Integer = 1): TRange; overload;
 begin
   Result := Self;
-  if Self.Ascending then
+  if Self.Asceal then
     Self.Modify(-N, N)
   else
     Self.Modify(N, -N);
@@ -71,7 +71,7 @@ end;
 [==============================================================================}
 function TRange.Expanded(const N: Integer = 1): TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result.Create((Self.start - N), (Self.stop + N))
   else
     Result.Create((Self.start + N), (Self.stop - N));

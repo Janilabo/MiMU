@@ -182,7 +182,7 @@ function TRange.Countage: Integer; overload;
 var
   D: Integer;
 begin
-  D := IfThen(Self.Ascending, Self.Delta, Self.Contra);
+  D := IfThen(Self.Asceal, Self.Delta, Self.Contra);
   Result := (D shr 31);
   Result := (((D xor Result) - Result) + 1);
 end;
@@ -278,7 +278,7 @@ function TRange.Distal: Integer; overload;
 var
   a: Boolean;
 begin
-  a := Self.Ascending;
+  a := Self.Asceal;
   Result := (IfThen(a, Self.stop, Self.start) - IfThen(a, Self.start, Self.stop) + 1);
 end;
 
@@ -338,7 +338,7 @@ function TRange.GetCount: Integer; overload;
 var
   d, m: Integer;
 begin
-  d := IfThen(Self.Ascending, (Self.stop - Self.start), (Self.start - Self.stop));
+  d := IfThen(Self.Asceal, (Self.stop - Self.start), (Self.start - Self.stop));
   m := (d shr 31);
   Result := (((d xor m) - m) + 1);
 end;
@@ -352,7 +352,7 @@ function TRange.GetLength: Integer; overload;
 begin
   if Self.Singular then
     Exit(1);
-  if Self.Ascending then
+  if Self.Asceal then
     Result := Self.Delta
   else
     Result := Self.Contra;
@@ -954,7 +954,7 @@ end;
 [==============================================================================}
 function TRange.Volyme: Integer; overload;
 begin
-  Result := (IfThen(Self.Ascending, (Self.stop - Self.start), (Self.start - Self.stop)) + 1);
+  Result := (IfThen(Self.Asceal, (Self.stop - Self.start), (Self.start - Self.stop)) + 1);
 end;
 
 {==============================================================================]

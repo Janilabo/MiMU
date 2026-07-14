@@ -31,7 +31,7 @@ begin
   if (r = 0) then
     Exit;
   for i := High(Self) downto 0 do
-  case Self[i].Ascending of
+  case Self[i].Asceal of
     True:
     for s := Self[i].stop downto Self[i].start do
       Result[r.Decrement] := s;
@@ -75,7 +75,7 @@ begin
     Inc(s, Self[i].Size);
   SetLength(Result, s);
   for i := High(Self) downto 0 do
-    if Self[i].Ascending then
+    if Self[i].Asceal then
       A(Result, s.Decrement(Self[i].Size), Self[i].start, Self[i].Size)
     else
       D(Result, s.Decrement(Self[i].Size), Self[i].start, Self[i].Size);
@@ -193,7 +193,7 @@ begin
   for i := 0 to (l - 1) do
   begin
     p := o[i];
-    case Self[i].Ascending of
+    case Self[i].Asceal of
       True:
       for j := Self[i].start to Self[i].stop do
         Result[p.Increase] := j;

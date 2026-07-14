@@ -20,8 +20,8 @@ var
   i: Integer;
 begin
   for i := 0 to High(Self) do
-    if not Self[i].Ascending then
-	  Exit(False);
+    if not Self[i].Asceal then
+      Exit(False);
   Result := not Self.Empty;
 end;
 
@@ -36,7 +36,7 @@ var
 begin
   for i := 0 to High(Self) do
     if not Self[i].Ascends then
-	  Exit(False);
+      Exit(False);
   Result := not Self.Empty;
 end;
 
@@ -51,7 +51,7 @@ var
 begin
   for i := 0 to High(Self) do
     if not Self[i].Decreasing then
-	  Exit(False);
+      Exit(False);
   Result := not Self.Empty;
 end;
 
@@ -66,7 +66,7 @@ var
 begin
   for i := 0 to High(Self) do
     if not Self[i].Descending then
-	  Exit(False);
+      Exit(False);
   Result := not Self.Empty;
 end;
 
@@ -81,7 +81,7 @@ var
 begin
   for i := 0 to High(Self) do
     if not Self[i].Descends then
-	  Exit(False);
+      Exit(False);
   Result := not Self.Empty;
 end;
 
@@ -96,7 +96,7 @@ var
 begin
   for i := 0 to High(Self) do
     if not Self[i].Increasing then
-	  Exit(False);
+      Exit(False);
   Result := not Self.Empty;
 end;
 
@@ -111,7 +111,7 @@ var
 begin
   for i := 0 to High(Self) do
     if not Self[i].IsAscending then
-	  Exit(False);
+      Exit(False);
   Result := not Self.Empty;
 end;
 
@@ -126,7 +126,7 @@ var
 begin
   for i := 0 to High(Self) do
     if not Self[i].Descending then
-	  Exit(False);
+      Exit(False);
   Result := not Self.Empty;
 end;
 {$ENDIF}

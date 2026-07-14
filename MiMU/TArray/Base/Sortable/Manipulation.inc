@@ -27,7 +27,7 @@ begin
       Inc(r.start);
     while (arr[r.stop] > p) do
       Dec(r.stop);
-    if r.Ascending then
+    if r.Asceal then
       arr.Exchange(r.start.Increase, r.stop.Decrease);
   until (r.start > r.stop);
   if (valLow < r.stop) then
@@ -77,7 +77,7 @@ begin
       Inc(r.start);
     while (arr[r.stop] < p) do
       Dec(r.stop);
-    if r.Ascending then
+    if r.Asceal then
       arr.Exchange(r.start.Increase, r.stop.Decrease);
   until (r.start > r.stop);
   if (valLow < r.stop) then

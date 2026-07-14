@@ -140,7 +140,7 @@ begin
   Result[0] := Self.start;
   if Self.start.Odd then
     Result[0] := (Result[0] + Self.Direction);
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := 1 to High(Result) do
       Result[i] := (Result[i - 1] + 2);
@@ -377,7 +377,7 @@ begin
   Result[0] := Self.start;
   if Self.start.Even then
     Result[0] := (Result[0] + Self.Direction);
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := 1 to High(Result) do
       Result[i] := (Result[i - 1] + 2);

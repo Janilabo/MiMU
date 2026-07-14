@@ -86,7 +86,7 @@ begin
   if (N < 1) then
     Exit([]);
   SetLength(Result, Min(N, Self.Size));
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   for i := 0 to High(Result) do
     Result[i] := (Self.start + (i * d));
 end;
@@ -150,7 +150,7 @@ end;
 [==============================================================================}
 function TRange.Origin(const sSteps: Integer = 0): TIntegerArray; overload;
 begin
-  Result := TRange.Construct(Self.start, IfThen(Self.Ascending, (Self.start + sSteps), (Self.start - sSteps))).Items;
+  Result := TRange.Construct(Self.start, IfThen(Self.Asceal, (Self.start + sSteps), (Self.start - sSteps))).Items;
 end;
 
 {==============================================================================]
@@ -166,7 +166,7 @@ begin
     Exit([]);
   c := Min(N, Self.Size);
   SetLength(Result, c);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   for i := 0 to High(Result) do
     Result[i] := (Self.stop - ((c - 1 - i) * d));
 end;
@@ -186,7 +186,7 @@ begin
     Exit([]);
   if (rClamp and (N > Self.Size)) then
     Result := Self.Items
-  else if Self.Ascending then
+  else if Self.Asceal then
     Result := TRange.Construct(Self.start, (Self.start + (N - 1))).Items
   else
     Result := TRange.Construct(Self.start, (Self.start - (N - 1))).Items;
@@ -207,7 +207,7 @@ begin
     Exit([]);
   if (rClamp and (N > Self.Size)) then
     Result := Self.Reversed.Items
-  else if Self.Ascending then
+  else if Self.Asceal then
     Result := TRange.Construct(Self.stop, (Self.stop - (N - 1))).Items
   else
     Result := TRange.Construct(Self.stop, (Self.stop + (N - 1))).Items;
@@ -235,7 +235,7 @@ end;
 [==============================================================================}
 function TRange.Terminus(const sSteps: Integer = 0): TIntegerArray; overload;
 begin
-  Result := TRange.Construct(Self.stop, IfThen(Self.Ascending, (Self.stop - sSteps), (Self.stop + sSteps))).Items;
+  Result := TRange.Construct(Self.stop, IfThen(Self.Asceal, (Self.stop - sSteps), (Self.stop + sSteps))).Items;
 end;
 
 {==============================================================================]

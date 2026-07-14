@@ -247,7 +247,7 @@ end;
 [==============================================================================}
 function TRange.Reversion: TRange; overload;
 begin
-  Result := Range((Self.start + ((Self.Size - 1) * IfThen(Self.Ascending, 1, -1))), Self.start);
+  Result := Range((Self.start + ((Self.Size - 1) * IfThen(Self.Asceal, 1, -1))), Self.start);
 end;
 
 {==============================================================================]
@@ -267,7 +267,7 @@ var
   a: Boolean;
 begin
   s := (Self.Size - 1);
-  a := Self.Ascending;
+  a := Self.Asceal;
   Result.start := (Self.start + (s * IfThen(a, 1, -1)));
   Result.stop := IfThen(a, (Result.start - s), (Result.start + s));
 end;
@@ -321,7 +321,7 @@ function TRange.Toggle: TRange; overload;
 var
   s: Integer;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
   begin
     s := Self.Delta;
     Result.start := (Self.start + s);
@@ -346,7 +346,7 @@ end;
 [==============================================================================}
 function TRange.Turnaround: TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result.start := (Self.start + Self.Span)
   else
     Result.start := (Self.start - Self.Span);

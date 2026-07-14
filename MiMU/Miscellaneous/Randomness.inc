@@ -1,5 +1,6 @@
 {$IFDEF FUNCTIONS}
 function Arbitrium: Boolean; overload;
+function Ballot(const N: Integer; const K: Integer = 1): TIntegerArray; overload;
 function Bool(const threshold: Double = 0.5): Boolean; overload;
 function Chance: Boolean; overload;
 function Deal(const N: Integer; const K: Integer = 1): TIntegerArray; overload;
@@ -91,6 +92,36 @@ var
 begin
   r := Random(2);
   Result := b;
+end;
+
+{==============================================================================]
+  <Ballot>
+  @action: Generates a random ballot of K unique integers from the pool [0, N-1].
+  @note: Implements Floyd's random sampling algorithm recursively to simulate drawing 
+         exactly K unique "votes" or indices from a population of size N without 
+         replacement, guaranteeing zero duplicate elements.
+[==============================================================================}
+function Ballot(const N: Integer; const K: Integer = 1): TIntegerArray; overload;
+  procedure B(t, s: Integer);
+  var
+    i, r, j: Integer;
+  begin
+    if (s = 0) then
+      Exit;
+    r := Random(t + 1);
+    j := r;
+    for i := 0 to (Result.Length - s - 1) do
+      if (Result[i] = r) then
+      begin
+        j := t;
+        Break;
+      end;
+    Result[Result.Length - s] := j;
+    B((t + 1), (s - 1));
+  end;
+begin
+  if (Result.SetSize(Integer((N > 0) and (K > 0) and (K <= N)) * K) > 0) then
+    B((N - K), K);
 end;
 
 {==============================================================================]

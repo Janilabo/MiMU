@@ -225,7 +225,7 @@ begin
   if Self.Singular then
     Exit([Self.start]);
   SetLength(Result, Self.Size);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   p := PInteger(Result);
   i := (Self.start - d);
   while (i.Increment(d) <> (Self.stop + d)) do
@@ -250,7 +250,7 @@ begin
   if (target.Length <> Result) then
     SetLength(target, Result);
   p := PInteger(target);
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := Self.start to Self.stop do
     begin
@@ -307,7 +307,7 @@ begin
   SetLength(Result, s);
   i := 0;
   v := Self.start;
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   loop:
   if (i >= s) then
     goto finish;
@@ -354,7 +354,7 @@ begin
   h := High(Result);
   l := ((h + 1) div 2);
   i := 0;
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     repeat
       Result[i] := (Self.start + i);
@@ -367,7 +367,7 @@ begin
     until (i.Increment > l);
   end;
   if h.Even then
-    Result[i] := IfThen(Self.Ascending, (Self.start + i), (Self.start - i));
+    Result[i] := IfThen(Self.Asceal, (Self.start + i), (Self.start - i));
 end;
 
 {==============================================================================]
@@ -395,7 +395,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   c := 0;
   while ((c * CHUNK_SIZE) < s) do
   begin
@@ -424,7 +424,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   v := Self.start;
   p := PInt64(@Result[0]);
   i := 0;
@@ -450,7 +450,7 @@ var
   r: TRange;
 begin
   SetLength(Result, Self.Size);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   r.Create(-1, Result.Length);
   while (r.start.Increment <= r.stop.Decrement) do
   begin
@@ -512,7 +512,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   n := 1;
   b := 0;
   while (n < s) do
@@ -642,7 +642,7 @@ begin
   SetLength(Result, Self.Size);
   P := @Result[0];
   v := Self.start;
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := 1 to Result.Length do
     begin
@@ -674,7 +674,7 @@ begin
   SetLength(Result, Self.Size);
   P := @Result[0];
   v := Self.start;
-  a := Self.Ascending;
+  a := Self.Asceal;
   for i := 1 to Result.Length do
   begin
     if a then
@@ -706,7 +706,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   P(Result, 0, Self.start, d);
 end;
 
@@ -801,7 +801,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   t := (s div 3);
   l := @Result[0];
   m := @Result[t];
@@ -851,7 +851,7 @@ var
 begin
   s := Self.Standard;
   SetLength(Result, (s.stop + 1));
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := s.start to s.stop do
       Result[i] := (Self.start + i);
@@ -871,7 +871,7 @@ var
   i, c, s: Integer;
 begin
   SetLength(Result, Self.Size);
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   c := Self.start;
   for i := 0 to High(Result) do
     Result[i] := c.Increase(s);
@@ -893,7 +893,7 @@ var
 begin
   s := Self.Standard;
   SetLength(Result, (s.stop + 1));
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   for i := s.start to s.stop do
     Result[i] := (Self.start + (i * d));
 end;
@@ -933,7 +933,7 @@ var
   l, d, s: Integer;
 begin
   l := Result.SetSize(Self.Size);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   s := Self.stop;
   while Self.Contains(s) do
     Result[l.Decrement] := s.Decrease(d);
@@ -1154,7 +1154,7 @@ function TRange.Digits(const dIndex: Integer): Integer; overload;
 begin
   if ((dIndex < 0) or (dIndex >= Self.Area)) then
     Result := -2147483648
-  else if Self.Ascending then
+  else if Self.Asceal then
     Result := (Self.start + dIndex)
   else
     Result := (Self.start - dIndex);
@@ -1245,7 +1245,7 @@ begin
   s := Self.Size;
   d := (s div 2);
   SetLength(Result, s);
-  a := Self.Ascending;
+  a := Self.Asceal;
   case a of
     True:
     for i := 0 to (d - 1) do
@@ -1416,7 +1416,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  if Self.Ascending then
+  if Self.Asceal then
     RA
   else
     RD;
@@ -1434,7 +1434,7 @@ var
 begin
   i := specialize TList<Integer>.Create;
   try
-    case Self.Ascending of
+    case Self.Asceal of
       True:
       for e := Self.start to Self.stop do
         i.Add(e);
@@ -1746,7 +1746,7 @@ var
   i, s: Integer;
 begin
   SetLength(Result, Self.Size);
-  s := IfThen(Self.Ascending, Self.start, Self.stop);
+  s := IfThen(Self.Asceal, Self.start, Self.stop);
   for i := 0 to High(Result) do
     Result[i] := (s + i);
   if Self.Descending then
@@ -1767,7 +1767,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  if ((Self.start = 0) and Self.Ascending) then
+  if ((Self.start = 0) and Self.Asceal) then
   begin
     FillChar(Result[0], (s * SizeOf(Integer)), 0);
     for i := 1 to (s - 1) do
@@ -1775,7 +1775,7 @@ begin
   end else
   begin
     FillChar(Result[0], (s * SizeOf(Integer)), Byte(Self.start));
-    d := IfThen(Self.Ascending, 1, -1);
+    d := IfThen(Self.Asceal, 1, -1);
     for i := 0 to (s - 1) do
       Result[i] := (Self.start + (i * d));
   end;
@@ -1908,7 +1908,7 @@ begin
   l := Result.SetSize(Self.Size);
   s := Self.start;
   r := 0;
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   for i := 0 to 9 do
     t[i] := (i * d);
   while ((r + 9) < l) do
@@ -1978,7 +1978,7 @@ begin
   if Self.Singular then
     Exit([Self.start]);
   SetLength(Result, 0);
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := Self.start to Self.stop do
       Result := (Result + [i]);
@@ -2014,7 +2014,7 @@ var
 begin
   SetLength(Result, Self.Size);
   v := Self.start;
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   for i := 0 to High(Result) do
     Result[i] := NextValue;
 end;
@@ -2057,7 +2057,7 @@ begin
   s := Self;
   r := 0;
   SetLength(Result, Self.Size);
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     while s.Incremental do
       Result[r.Increase] := s.start.Increase;
@@ -2109,7 +2109,7 @@ function TRange.Integered: TIntegerArray; overload;
 var
   i, r: Integer;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
   begin
     r := Result.SetSize((Self.stop - Self.start) + 1);
     for i := Self.stop downto Self.start do
@@ -2215,7 +2215,7 @@ begin
   s := Self.Size;
   SetLength(Result, s);
   for i := 0 to High(Result) do
-    Result[i] := IfThen(Self.Ascending, 1, -1);
+    Result[i] := IfThen(Self.Asceal, 1, -1);
   Result[0] := Self.start;
   for i := 1 to High(Result) do
     Result[i] := (Result[i - 1] + Result[i]);
@@ -2238,7 +2238,7 @@ begin
   SetLength(Result, Self.Size);
   Result[0] := Self.start;
   for i := 1 to High(Result) do
-    if Self.Ascending then
+    if Self.Asceal then
       Result[i] := (Result[i - 1] + 1)
     else
       Result[i] := (Result[i - 1] - 1);
@@ -2267,7 +2267,7 @@ begin
   for i := 0 to High(Result) do
   begin
     Result[i] := v;
-    if Self.Ascending then
+    if Self.Asceal then
       v := (v + s)
     else
       v := (v - s);
@@ -2317,7 +2317,7 @@ var
 begin
   SetLength(Result, Integer(Abs(Int64(Self.stop) - Self.start) + 1));
   P := @Result[0];
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   r := Self.start;
   for i := 0 to High(Result) do
   begin
@@ -2352,7 +2352,7 @@ begin
   Result := Integer(Abs(Int64(Self.stop) - Self.start) + 1);
   SetLength(rDigits, Result);
   P := @rDigits[0];
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   if rReverse then
   begin
     r := Self.stop;
@@ -2390,7 +2390,7 @@ begin
   if Self.Singular then
     Exit([Self.start]);
   SetLength(Result, 0);
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   r := (Self.start - s);
   while (r.Increase(s) <> Self.stop) do
     Result.Supply(r);
@@ -2502,7 +2502,7 @@ begin
     False:
     begin
       SetLength(rDigits, 0);
-      s := IfThen(Self.Ascending, 1, -1);
+      s := IfThen(Self.Asceal, 1, -1);
       if rReverse then
       begin
         r := Self.Reversed;
@@ -2534,7 +2534,7 @@ var
 begin
   SetLength(Result, 0);
   for i := 0 to (Self.Size - 1) do
-    Result := (Result + [IfThen(Self.Ascending, (Self.start + i), (Self.start - i))]);
+    Result := (Result + [IfThen(Self.Asceal, (Self.start + i), (Self.start - i))]);
 end;
 
 {==============================================================================]
@@ -2571,7 +2571,7 @@ begin
   Result := 0;
   b := 4;
   SetLength(rDigits, b);
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   if rReverse then
   begin
     r := Self.Reversed;
@@ -2619,7 +2619,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  FillDWord(Result[0], s, DWord(IfThen(Self.Ascending, 1, -1)));
+  FillDWord(Result[0], s, DWord(IfThen(Self.Asceal, 1, -1)));
   Result[0] := Self.start;
   for i := 1 to (s - 1) do
     Result[i] := (Result[i - 1] + Result[i]);
@@ -2650,11 +2650,11 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  case ((Self.start = 0) and Self.Ascending) of
+  case ((Self.start = 0) and Self.Asceal) of
     False:
     begin
       FillDWord(Result[0], s, DWord(Self.start));
-      case Self.Ascending of
+      case Self.Asceal of
 	    True:
         for i := 1 to (s - 1) do
           Inc(Result[i], i);
@@ -2714,7 +2714,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   p := @Result[0];
   i := -8;
   m := (8 * SizeOf(Integer));
@@ -2833,7 +2833,7 @@ var
 begin
   l := specialize TList<Integer>.Create;
   try
-    case Self.Ascending of
+    case Self.Asceal of
 	  True:
       for i := Self.start to Self.stop do
         l.Add(i);
@@ -2866,7 +2866,7 @@ begin
   l := TList.Create;
   try
     l.Count := Self.Size;
-    s := IfThen(Self.Ascending, 1, -1);
+    s := IfThen(Self.Asceal, 1, -1);
     v := Self.start;
     for i := 0 to (l.Count - 1) do
     begin
@@ -2915,7 +2915,7 @@ var
 begin
   SetLength(Result, Self.Size);
   h := High(Result);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   E(0);
 end;
 
@@ -2979,7 +2979,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   v := Self.start;
   i := 0;
   while ((i + 3) < s) do
@@ -3009,7 +3009,7 @@ var
   i, s, v: Integer;
   p: PInteger;
 begin
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   SetLength(Result, Self.Size);
   v := Self.Start;
   p := @Result[0];
@@ -3031,7 +3031,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   r := 0;
   i := Self.start;
   while (r < l) do
@@ -3077,7 +3077,7 @@ begin
   z := SizeOf(Integer);
   GetMem(p, (s * z));
   try
-    d := IfThen(Self.Ascending, 1, -1);
+    d := IfThen(Self.Asceal, 1, -1);
     w := p;
     for i := 0 to (s - 1) do
     begin
@@ -3103,7 +3103,7 @@ begin
   SetLength(Result, Self.Size);
   c := Self.start;
   for i := 0 to High(Result) do
-    if Self.Ascending then
+    if Self.Asceal then
       Result[i] := c.Increase
     else
       Result[i] := c.Decrease;
@@ -3259,7 +3259,7 @@ end;
 [==============================================================================}
 function TRange.Numerated: TIntegerArray; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := Self.IDs.Addended(Self.start)
   else
     Result := Self.IDs.Delended(Self.start);
@@ -3461,7 +3461,7 @@ begin
   if (n = 1) then
     Exit([Self.start]);
   SetLength(Result, n);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   Result[0] := Self.start;
   b := 1;
   z := SizeOf(Integer);
@@ -3585,7 +3585,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   c := (s div 2);
   Result[c] := (Self.start + (c * d));
   for i := 1 to c do
@@ -3613,7 +3613,7 @@ begin
   Q := specialize TQueue<Integer>.Create;
   try
     h := Abs(Self.stop - Self.start);
-    s := IfThen(Self.Ascending, 1, -1);
+    s := IfThen(Self.Asceal, 1, -1);
     for i := 0 to h do
       Q.Enqueue(Self.start + (i * s));
     Result := Q.ToArray;
@@ -3641,7 +3641,7 @@ begin
   s := Self.Size;
   SetLength(Result, s);
   m := (s div 2);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   l := @Result[0];
   h := @Result[m];
   for i := 0 to (m - 1) do
@@ -3750,7 +3750,7 @@ begin
   s := Self.Size;
   SetLength(Result, s);
   for i := 0 to (s - 1) do
-    if Self.Ascending then
+    if Self.Asceal then
       Result[i] := (Self.start + i)
     else
       Result[(s - 1) - i] := (Self.stop + i);
@@ -3774,7 +3774,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   v := Self.start;
   h := 0;
   t := 0;
@@ -3808,7 +3808,7 @@ var
 begin
   l := Self.Size;
   SetLength(Result, l);
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   i := -10;
   r := Self.start;
   while (i.Increment(10) < l) do
@@ -3870,7 +3870,7 @@ begin
   SetLength(Result, Self.Size);
   Result[0] := Self.start;
   for i := 1 to High(Result) do
-    Result[i] := (Result[i - 1] + IfThen(Self.Ascending, 1, -1));
+    Result[i] := (Result[i - 1] + IfThen(Self.Asceal, 1, -1));
 end;
 
 {==============================================================================]
@@ -3884,7 +3884,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   v := Self.start;
   i := 0;
   while ((i + 15) < s) do
@@ -4007,7 +4007,7 @@ begin
   if (s = 1) then
     Exit([Self.start]);
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   r.index := 0;
   r.value := Self.start;
   r.done := False;
@@ -4035,7 +4035,7 @@ begin
   SetLength(Result, Self.Size);
   P := @Result[0];
   Result[0] := Self.start;
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   for i := 1 to High(Result) do
   begin
     Inc(P);
@@ -4058,7 +4058,7 @@ begin
   s := specialize TStack<Integer>.Create;
   try
     l := Self.Size;
-    d := IfThen(Self.Ascending, 1, -1);
+    d := IfThen(Self.Asceal, 1, -1);
     v := Self.stop;
     for i := 1 to l do
     begin
@@ -4081,7 +4081,7 @@ end;
 function TRange.Staged: TIntegerArray; overload;
 begin
   Result.Create(Self.Size, Self.stop);
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     while (Result[0].Decrement > Self.start) do
       Result[Result[0] - Self.start] := Result[0];
@@ -4103,7 +4103,7 @@ begin
   r := Self.start;
   SetLength(Result, Self.Size);
   Result[0] := Self.start;
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     while (r.Increment <= Self.stop) do
       Result[r - Self.start] := r;
@@ -4149,7 +4149,7 @@ begin
   if (sSize < 1) then
     Exit([]);
   SetLength(Result, ((Abs(Int64(Self.stop) - Self.start) div sSize) + 1));
-  d := IfThen(Self.Ascending, sSize, -Integer(sSize));
+  d := IfThen(Self.Asceal, sSize, -Integer(sSize));
   r := Self.start;
   for i := 0 to High(Result) do
     Result[i] := r.Increase(d);
@@ -4165,7 +4165,7 @@ var
   i, s: Integer;
   p: PInteger;
 begin
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   Result := Self.Reserve;
   p := @Result[0];
   p^ := Self.start;
@@ -4198,7 +4198,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   for j := 0 to 1 do
   begin
     i := (j - 2);
@@ -4239,7 +4239,7 @@ begin
   b := System.Length(BASE_DIGITS);
   s := Self.Size;
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   o := -b;
   while (o.Increment(b) < s) do
     for i := 0 to Min((b - 1), ((s - o) - 1)) do
@@ -4259,7 +4259,7 @@ var
 begin
   SetLength(Result, Self.Size);
   Result[0] := Self.start;
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := 1 to High(Result) do
       Result[i] := Succ(Result[i - 1]);
@@ -4298,7 +4298,7 @@ begin
   b := 8;
   SetLength(Result, b);
   l := 0;
-  s := IfThen(Self.Ascending, 1, -1);
+  s := IfThen(Self.Asceal, 1, -1);
   r := (Self.start - s);
   while (r.Increase(s) <> Self.stop) do
   begin
@@ -4323,7 +4323,7 @@ var
   d, s, r, l, i, j: Integer;
 begin
   l := Result.SetSize(Self.Size);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   for i := 0 to (BLOCK_SIZE - 1) do
     t[i] := (i * d);
   s := Self.start;
@@ -4400,7 +4400,7 @@ var
 begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Result) do
-    if Self.Ascending then
+    if Self.Asceal then
       Result[i] := (Self.start + i)
     else
       Result[i] := (Self.start - i);
@@ -4470,7 +4470,7 @@ begin
   SetLength(Result, s);
   for i := 0 to (s - 1) do
     Result[i] := i;
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     for i := 0 to (s - 1) do
       Result[i] := (Self.start + Result[i]);
@@ -4520,7 +4520,7 @@ var
   p: PInteger;
   i, s: Integer;
 begin
-  a := Self.Ascending;
+  a := Self.Asceal;
   s := Self.Size;
   SetLength(Result, s);
   p := @Result[0];
@@ -4643,7 +4643,7 @@ begin
   if Self.Singular then
     Exit([Self.start]);
   SetLength(Result, Self.Size);
-  F2W(Self, 0, High(Result), Self.Ascending, Result);
+  F2W(Self, 0, High(Result), Self.Asceal, Result);
 end;
 
 {==============================================================================]
@@ -4719,7 +4719,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  o := Self.Ascending;
+  o := Self.Asceal;
   for i := 0 to (s - 1) do
     if (i < (s div 2)) then
       Result[i] := o.Select((Self.start + i), (Self.start - i))
@@ -4753,7 +4753,7 @@ end;
 function TRange.Unroll: TIntegerArray; overload;
 begin
   Result := [Self.stop];
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     while (Result[0] > Self.start) do
       Result := ([Result[0] - 1] + Result);
@@ -4809,7 +4809,7 @@ begin
   s := Self.Size;
   SetLength(Result, s);
   h := ((s + 1) div 2);
-  a := Self.Ascending;
+  a := Self.Asceal;
   for i := 0 to (h - 1) do
   case a of
     True:
@@ -4838,7 +4838,7 @@ begin
     Exit([Self.start]);
   SetLength(Result, Self.Size);
   r.Create(0, High(Result));
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     repeat
       Result[r.start] := (Self.start + r.start);
@@ -4880,7 +4880,7 @@ var
 begin
   s := Self.Size;
   SetLength(Result, s);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   i := -BLOCK_SIZE; 
   z := SizeOf(Integer);
   while (i.Increment(BLOCK_SIZE) < s) do
@@ -4901,7 +4901,7 @@ var
   d, s, r: Integer;
 begin
   SetLength(Result, Self.Size);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   s := Self.start;
   r := 0;
   while (s <> Self.stop) do
@@ -4920,7 +4920,7 @@ var
 begin
   r := 0;
   SetLength(Result, Self.Size);
-  case Self.Ascending of
+  case Self.Asceal of
     False:
     for i := Self.start downto Self.stop do
       Result[r.Increase] := i;
@@ -4980,7 +4980,7 @@ var
   end;
 begin
   SetLength(Result, 0);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   v := Self.start;
   for i := 0 to (Self.Size - 1) do
     Y(v.Increase(d));

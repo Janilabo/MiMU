@@ -41,7 +41,7 @@ end;
 [==============================================================================}
 class function TRange.Randomly(const R: TRange): TRange; overload;
 begin
-  if R.Ascending then
+  if R.Asceal then
     Result.Create(RandomRange(R.start, (R.stop + 1)), RandomRange(R.start, (R.stop + 1)))
   else
     Result.Create(RandomRange(R.stop, (R.start + 1)), RandomRange(R.stop, (R.start + 1)));

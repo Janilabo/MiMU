@@ -150,10 +150,10 @@ var
 begin
   SetLength(Result, Self.Size);
   for i := 0 to High(Self) do
-    if Self[i].Ascending then
-	  Result[i] := Self[i]
-	else
-	  Result[i] := Self[i].Reversed;
+    if Self[i].Asceal then
+      Result[i] := Self[i]
+    else
+      Result[i] := Self[i].Reversed;
 end;
 
 {==============================================================================]
@@ -196,7 +196,7 @@ begin
   for i := 0 to (l - 1) do
     if (Self[i].start > Self[i].stop) then
       f[n.Increase] := i
-	else
+    else
       Result[i] := Self[i];
   for i := 0 to (n - 1) do
     Result[f[i]] := TRange.Construct(Self[f[i]].stop, Self[f[i]].start);

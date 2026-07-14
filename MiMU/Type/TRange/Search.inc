@@ -28,7 +28,7 @@ var
 begin
   if not Self.Contains(val) then
     Exit(-1);
-  d := IfThen(Self.Ascending, 1, -1);
+  d := IfThen(Self.Asceal, 1, -1);
   s := (Self.start - d);
   for Result := 0 to (Self.Size - 1) do
     if (s.Increment(d) = val) then
@@ -135,7 +135,7 @@ end;
 [==============================================================================}
 function TRange.Project(const val: Integer): Integer; overload;
 begin
-  Result := ((val - Self.start) div (Ord(Self.Ascending) - Ord(not Self.Ascending)));
+  Result := ((val - Self.start) div (Ord(Self.Asceal) - Ord(not Self.Asceal)));
 end;
 
 {==============================================================================]
@@ -150,7 +150,7 @@ function TRange.Projecta(const val: Integer): Integer; overload;
 begin
   if not Self.Contains(val) then
     Exit(-1);
-  case Self.Ascending of
+  case Self.Asceal of
     True: Result := (val - Self.start);
     False: Result := ((Self.Size - 1) - (val - Self.stop));
   end;
@@ -167,7 +167,7 @@ end;
 [==============================================================================}
 function TRange.Projected(const val: Integer): Integer; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := (val - Self.start)
   else
     Result := (Self.start - val);
@@ -184,6 +184,6 @@ end;
 [==============================================================================}
 function TRange.Projectify(const val: Integer): Integer; overload;
 begin
-  Result := ((val - Self.start) * ((Ord(Self.Ascending) * 2) - 1));
+  Result := ((val - Self.start) * ((Ord(Self.Asceal) * 2) - 1));
 end;
 {$ENDIF}

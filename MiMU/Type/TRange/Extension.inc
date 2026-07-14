@@ -25,7 +25,7 @@ var
   s: TRange;
 begin
   s := Self;
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     if (val < Self.start) then
       Self.start := val
@@ -55,7 +55,7 @@ begin
   s := Self;
   l := vals.Minimum;
   h := vals.Maximum;
-  case Self.Ascending of
+  case Self.Asceal of
     True:
     begin
       if (l < Self.start) then
@@ -83,7 +83,7 @@ end;
 [==============================================================================}
 function TRange.Absorbed(const target: Integer): TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := TRange.Construct(Min(Self.start, target), Max(Self.stop, target))
   else
     Result := TRange.Construct(Max(Self.start, target), Min(Self.stop, target));
@@ -100,7 +100,7 @@ end;
 [==============================================================================}
 function TRange.Absorbed(const target: TRange): TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := TRange.Construct(Min(Self.start, target.Minimum), Max(Self.stop, target.Maximum))
   else
     Result := TRange.Construct(Max(Self.start, target.Maximum), Min(Self.stop, target.Minimum));
@@ -233,7 +233,7 @@ end;
 [==============================================================================}
 function TRange.Include(const val: Integer): TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result.Create(Min(Self.Minimum, val), Max(Self.Maximum, val))
   else
     Result.Create(Max(Self.Maximum, val), Min(Self.Minimum, val));
@@ -259,7 +259,7 @@ var
   r: TRange;
 begin
   r := target.Normalize;
-  if Self.Ascending then
+  if Self.Asceal then
     Result.Create(Min(Self.Minimum, r.start), Max(Self.Maximum, r.stop))
   else
     Result.Create(Max(Self.Maximum, r.stop), Min(Self.Minimum, r.start));
@@ -275,7 +275,7 @@ end;
 [==============================================================================}
 function TRange.IncludeMax(const val: Integer): TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result.Create(Self.start, Max(Self.Maximum, val))
   else
     Result.Create(Max(Self.Maximum, val), Self.stop);
@@ -291,7 +291,7 @@ end;
 [==============================================================================}
 function TRange.IncludeMin(const val: Integer): TRange; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result.Create(Min(Self.Minimum, val), Self.stop)
   else
     Result.Create(Self.start, Min(Self.Minimum, val));

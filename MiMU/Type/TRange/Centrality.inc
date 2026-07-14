@@ -330,7 +330,7 @@ end;
 [==============================================================================}
 function TRange.Medlo: Integer; overload;
 begin
-  Result := (Self.start + (((Self.Size - 1) div 2) * IfThen(Self.Ascending, 1, -1)));
+  Result := (Self.start + (((Self.Size - 1) div 2) * IfThen(Self.Asceal, 1, -1)));
 end;
 
 {==============================================================================]
@@ -375,7 +375,7 @@ function TRange.Midar: Integer; overload;
 begin
   if Self.Singular then
     Exit(Self.start);
-  Result := (Self.start + ((Self.Size div 2) * IfThen(Self.Ascending, 1, -1)));
+  Result := (Self.start + ((Self.Size div 2) * IfThen(Self.Asceal, 1, -1)));
 end;
 
 {==============================================================================]
@@ -386,7 +386,7 @@ end;
 [==============================================================================}
 function TRange.MidBit: Integer; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Exit(Self.start + (Self.Delta shr 1));
   Result := TRange.Construct(Self.stop, Self.start).MidBit;
 end;
@@ -409,7 +409,7 @@ end;
 [==============================================================================}
 function TRange.MiddleBit: Integer; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := (Self.start + (Self.Delta shr 1))
   else
     Result := (Self.start - (Self.Contra shr 1));
@@ -488,7 +488,7 @@ end;
 [==============================================================================}
 function TRange.MiddleValue: Double; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := (Self.start + (Self.Delta / 2))
   else
     Result := (Self.stop + (Self.Contra / 2));
@@ -623,7 +623,7 @@ end;
 [==============================================================================}
 function TRange.Pivot: Integer; overload;
 begin
-  if Self.Ascending then
+  if Self.Asceal then
     Result := (Self.start + (Self.Delta div 2))
   else
     Result := (Self.stop + (Self.Contra div 2));
