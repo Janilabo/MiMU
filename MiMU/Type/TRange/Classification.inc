@@ -1,4 +1,6 @@
 {$IFDEF METHODS}
+function Ascendable: Boolean; overload;
+function Ascendable(const val: Integer): Boolean; overload;
 function Ascending: Boolean; overload;
 function Ascends: Boolean; overload;
 function Ascing: Boolean; overload;
@@ -6,6 +8,8 @@ function Atomic: Boolean; overload;
 function Composite: Boolean; overload;
 function Decreasing: Boolean; overload;
 function Decremental: Boolean; overload;
+function Descendable: Boolean; overload;
+function Descendable(const val: Integer): Boolean; overload;
 function Descending: Boolean; overload;
 function Descends: Boolean; overload;
 function Descing: Boolean; overload;
@@ -47,6 +51,28 @@ function Rising: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Ascendable>
+  @action: Checks if the range is currently oriented in an ascending direction.
+  @note: Returns True if start is less than or equal to stop, indicating a 
+         valid upward or flat progression.
+[==============================================================================}
+function TRange.Ascendable: Boolean; overload;
+begin
+  Result := (Self.start <= Self.stop);
+end;
+
+{==============================================================================]
+  <Ascendable>
+  @action: Evaluates if the range can maintain or form an ascending sequence with the value.
+  @note: Returns True if the specified value is greater than or equal to the start 
+         boundary, meaning progression from start to val climbs upward or remains flat.
+[==============================================================================}
+function TRange.Ascendable(const val: Integer): Boolean; overload;
+begin
+  Result := (Self.start <= val);
+end;
+
 {==============================================================================]
   <Ascending>
   @action: Returns True if the range is ordered in ascending or neutral order,
@@ -120,6 +146,28 @@ end;
 function TRange.Decremental: Boolean; overload;
 begin
   Result := (Self.stop <= Self.start);
+end;
+
+{==============================================================================]
+  <Descendable>
+  @action: Checks if the range is currently oriented in a descending direction.
+  @note: Returns True if start is greater than or equal to stop, indicating a 
+         valid downward or flat progression.
+[==============================================================================}
+function TRange.Descendable: Boolean; overload;
+begin
+  Result := (Self.start >= Self.stop);
+end;
+
+{==============================================================================]
+  <Descendable>
+  @action: Evaluates if the range can maintain or form a descending sequence with the value.
+  @note: Returns True if the specified value is less than or equal to the start 
+         boundary, meaning progression from start to val drops downward or remains flat.
+[==============================================================================}
+function TRange.Descendable(const val: Integer): Boolean; overload;
+begin
+  Result := (Self.start >= val);
 end;
 
 {==============================================================================]

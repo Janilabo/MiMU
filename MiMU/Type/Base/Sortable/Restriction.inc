@@ -5,9 +5,15 @@ function CapMin(const sMinimum: MType): Boolean; overload;
 function Capped(const sMinimum, sMaximum: MType): MType; overload;
 function CappedMax(const sMaximum: MType): MType; overload;
 function CappedMin(const sMinimum: MType): MType; overload;
-function Guard(const gLow, gHigh, fallback: MType): MType; overload;
 function Confine(const sMinimum, sMaximum: MType): MType; overload;
 function Confined(const sMinimum, sMaximum: MType): MType; overload;
+function Extremate(const item: MType): Boolean; overload;
+function Extremify(const item: MType): Boolean; overload;
+function Guard(const gLow, gHigh, fallback: MType): MType; overload;
+function Maxate(const item: MType): Boolean; overload;
+function Maxify(const item: MType): Boolean; overload;
+function Minate(const item: MType): Boolean; overload;
+function Minify(const item: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -130,6 +136,29 @@ begin
 end;
 
 {==============================================================================]
+  <Extremate>
+  @action: Conditionally replaces Self with item if item differs from Self in either direction.
+  @note: Returns True if item is either lower or higher than Self (i.e. not equal),
+         in which case Self is updated to item via Minate or Maxate.
+		 Otherwise Self is left unchanged and False is returned.
+[==============================================================================}
+function MTypeHelper.Extremate(const item: MType): Boolean; overload;
+begin
+  Result := (Self.Minate(item) or Self.Maxate(item));
+end;
+
+{==============================================================================]
+  <Extremify>
+  @action: Expands this instance's range boundaries to include the passed item.
+  @note: Conditionally updates Self to the new absolute minimum or maximum 
+         boundary, returning True if either boundary changed.
+[==============================================================================}
+function MTypeHelper.Extremify(const item: MType): Boolean; overload;
+begin
+  Result := (Self.Minify(item) or Self.Maxify(item));
+end;
+
+{==============================================================================]
   <Guard>
   @action: Returns Self if it falls within the inclusive range of [Min..Max]; 
            otherwise, returns the specified fallback value.
@@ -143,5 +172,63 @@ begin
     Result := Self
   else
     Result := fallback;
+end;
+
+{==============================================================================]
+  <Maxate>
+  @action: Conditionally replaces Self with item if item is higher.
+  @note: Returns True if item > Self, in which case Self is updated to item.
+         Otherwise Self is left unchanged and False is returned.
+[==============================================================================}
+function MTypeHelper.Maxate(const item: MType): Boolean; overload;
+begin
+  Result := (item > Self);
+  if Result then
+    Self := item;
+end;
+
+{==============================================================================]
+  <Maxify>
+  @action: Restricts this instance to a minimum lower bound.
+  @note: If the passed item is larger than the current value, 
+         updates Self to the item and returns True (indicating a change).
+[==============================================================================}
+function MTypeHelper.Maxify(const item: MType): Boolean; overload;
+var
+  s: MType;
+begin
+  s := Self;
+  if (item > Self) then
+    Self := item;
+  Result := (Self <> s);
+end;
+
+{==============================================================================]
+  <Minate>
+  @action: Conditionally replaces Self with item if item is lower.
+  @note: Returns True if item < Self, in which case Self is updated to item.
+         Otherwise Self is left unchanged and False is returned.
+[==============================================================================}
+function MTypeHelper.Minate(const item: MType): Boolean; overload;
+begin
+  Result := (item < Self);
+  if Result then
+    Self := item;
+end;
+
+{==============================================================================]
+  <Minify>
+  @action: Restricts this instance to a maximum upper bound.
+  @note: If the passed item is smaller than the current value, 
+         updates Self to the item and returns True (indicating a change).
+[==============================================================================}
+function MTypeHelper.Minify(const item: MType): Boolean; overload;
+var
+  s: MType;
+begin
+  s := Self;
+  if (item < Self) then
+    Self := item;
+  Result := (Self <> s);
 end;
 {$ENDIF}
