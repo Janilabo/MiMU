@@ -2,6 +2,7 @@
 function Arbitrium: Boolean; overload;
 function Bool(const threshold: Double = 0.5): Boolean; overload;
 function Chance: Boolean; overload;
+function Deal(const N: Integer; const K: Integer = 1): TIntegerArray; overload;
 function Digitry: Byte; overload;
 function Evener(const N: Integer): Integer; overload;
 function Evener(const aMin, aMax: Integer): Integer; overload;
@@ -10,6 +11,7 @@ function Fortunal(const aMin, aMax: Integer; const target: Integer; const Limit:
 function Fortune(const N: Integer; const target: Integer; const limit: Integer = High(Integer)): Integer; overload;
 function GenerateDigit: Byte; overload;
 function Guess: Boolean; overload;
+function Hand(const N: Integer; const K: Integer = 1): TIntegerArray; overload;
 function IsHeads: Boolean; overload;
 function IsTails: Boolean; overload;
 function Luck(const pool: UInt32 = 4294967295): Boolean; overload;
@@ -71,6 +73,7 @@ function RandomValue(const maxDigits: Byte = 1): Int64; overload;
 function Randouble(const N: Integer; var A, B: Integer): Boolean; overload;
 function RandOut(const R: Integer = 2; const N: Integer = 2): Integer; overload;
 function Rign: Integer; overload;
+function Selectio(const N: Integer; const K: Integer = 1): TIntegerArray; overload;
 function Toss: Integer; overload;
 {$ENDIF}
 
@@ -108,6 +111,39 @@ end;
 function Chance: Boolean; overload;
 begin
   Result := (((Random(High(Integer))) mod 2) = 0);
+end;
+
+{==============================================================================]
+  <Deal>
+  @action: Returns K uniformly random UNIQUE values from [0, N), using
+           Floyd's algorithm — expands the candidate pool one value at a
+           time, swapping in the current boundary when a collision occurs.
+  @note: O(K) time and space — does NOT materialize or shuffle the full
+         [0, N) range, unlike a partial Fisher-Yates over a full array.
+         Only efficient when K is meaningfully smaller than N; if K is
+         close to N, a full-shuffle approach is more efficient. Returns
+         an empty array if K > N or if N < 1.
+[==============================================================================}
+function Deal(const N: Integer; const K: Integer = 1): TIntegerArray; overload;
+var
+  i, r, t, j: Integer;
+  f: Boolean;
+begin
+  for i := 0 to (Result.SetSize(Integer((N > 0) and (K > 0) and (K <= N)) * K) - 1) do
+  begin
+    t := ((N - K) + i);
+    r := Random(t + 1);
+    f := False;
+    for j := 0 to (i - 1) do
+      if (Result[j] = r) then
+      begin
+        f := True;
+        Result[i] := t;
+        Break;
+      end;
+    if not f then
+      Result[i] := r;
+  end;
 end;
 
 {==============================================================================]
@@ -266,6 +302,39 @@ const
   B: array[0..1] of Boolean = (False, True);
 begin
   Result := B[Random(2)];
+end;
+
+{==============================================================================]
+  <Hand>
+  @action: Draws K unique random values from [0, N) via rejection sampling —
+           repeatedly draws with `Random(N)`, rejecting and redrawing on
+           collision against previously chosen values.
+  @note: Result array is sized via a fused validity-check/size expression:
+         `Integer(valid) * K` collapses to 0 for invalid input (N <= 0,
+         K <= 0, or K > N), avoiding a separate guard clause. O(K^2)
+         worst-case due to the linear containment scan per draw; degrades
+         as K approaches N. See `Selectio` for an O(N) marker-array
+         alternative. Overloaded, default K = 1.
+[==============================================================================}
+function Hand(const N: Integer; const K: Integer = 1): TIntegerArray; overload;
+var
+  i, r, j: Integer;
+  e: Boolean;
+begin
+  for i := 0 to (Result.SetSize(Integer((N > 0) and (K > 0) and (K <= N)) * K) - 1) do
+  begin
+    repeat
+      r := Random(N);
+      e := False;
+      for j := 0 to (i - 1) do
+        if (Result[j] = r) then
+        begin
+          e := True;
+          Break;
+        end;
+    until not e;
+    Result[i] := r;
+  end;
 end;
 
 {==============================================================================]
@@ -1238,6 +1307,32 @@ end;
 function Rign: Integer; overload;
 begin
   Result := (Random(3) - 1);
+end;
+
+{==============================================================================]
+  <Selectio>
+  @action: Draws K unique random values from [0, N) using a boolean marker
+           array — draws via `Random(N)`, and accepts the value only if its
+           marker slot transitions from unset to set (via `TBooleanHelper.
+           Enable`, which mutates and returns whether it was a fresh hit).
+  @note: O(N) space, O(1) expected collision check per draw (no linear
+         scan, unlike `Hand`).
+[==============================================================================}
+function Selectio(const N: Integer; const K: Integer = 1): TIntegerArray; overload;
+var
+  m: TBooleanArray;
+  i, r: Integer;
+begin
+  if (Result.SetSize(Integer((N > 0) and (K > 0) and (K <= N)) * K) = 0) then
+    Exit;
+  m.Create(N, False);
+  i := 0;
+  while (i < K) do
+  begin
+    r := Random(N);
+    if m[r].Enable then
+      Result[i.Increase] := r;
+  end;
 end;
 
 {==============================================================================]
