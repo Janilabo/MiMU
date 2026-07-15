@@ -3,13 +3,13 @@
 {$I Access.inc}
 {$I Adjust.inc}
 {$I Arraying.inc}
+{$I Cardinality.inc}
 {$I Centrality.inc}
 {$I Chunking.inc}
 {$I Comparison.inc}
 {$I Construction.inc}
 {$I Consumption.inc}
 {$I Conversion.inc}
-{$I Classification.inc}
 {$I Data.inc}
 {$I Direction.inc}
 {$I Encoding.inc}
@@ -29,6 +29,7 @@
 {$I Normalization.inc}
 {$I Offset.inc}
 {$I Ordering.inc}
+{$I Orientation.inc}
 {$I Parity.inc}
 {$I Populating.inc}
 {$I Position.inc}
