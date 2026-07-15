@@ -300,7 +300,7 @@ begin
     qsPush(0, Result);
     r.Create(0, Result);
     while qsPop(r.start, r.stop) do
-      while r.Growing do
+      while r.Ascending do
       begin
         x := r;
         p := Self[r.Middle];

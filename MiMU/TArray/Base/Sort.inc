@@ -283,7 +283,7 @@ begin
       c := weight[aID[a.stop.Decrement]].Compare(w);
     if a.Asceal then
       Swap(aID[a.start.Increase], aID[a.stop.Decrease]);
-  until a.Drops;
+  until a.Descends;
   if (L < a.stop) then
     QS_IDs(aID, L, a.stop);
   if (a.start < R) then
@@ -327,7 +327,7 @@ begin
       c := weight[aID[a.stop.Decrement]].Compare(w);
     if a.Asceal then
       Swap(aID[a.start.Increase], aID[a.stop.Decrease]);
-  until a.Drops;
+  until a.Descends;
   if (L < a.stop) then
     QS_IDs(aID, L, a.stop);
   if (a.start < R) then

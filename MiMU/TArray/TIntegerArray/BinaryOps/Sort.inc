@@ -158,7 +158,7 @@ begin
     begin
       a := Self[j];
       r.Create(0, j);
-      while r.Grows do
+      while r.Ascends do
       begin
         m := r.Pivot;
         if (Sign(Self[m] - a) = o) then
@@ -193,7 +193,7 @@ begin
     begin
       a := Self[j];
       r.Create(0, j);
-      while r.Grows do
+      while r.Ascends do
       begin
         m := r.Pivot;
         if (Sign(Result[m] - a) = o) then
