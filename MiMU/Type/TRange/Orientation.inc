@@ -12,6 +12,9 @@ function Descending: Boolean; overload;
 function Descends: Boolean; overload;
 function Descing: Boolean; overload;
 function IsDescending: Boolean; overload;
+
+function Nonascending: Boolean; overload;
+function Nondescending: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -140,5 +143,27 @@ end;
 function TRange.IsDescending: Boolean; overload;
 begin
   Result := ((Self.start - Self.stop) > 0);
+end;
+
+{==============================================================================]
+  <Nonascending>
+  @action: Evaluates if the range is currently oriented in a non-ascending direction.
+  @note: Returns True if start is greater than or equal to stop, ensuring that
+         no upward progression exists between the boundaries.
+[==============================================================================}
+function TRange.Nonascending: Boolean; overload;
+begin
+  Result := not (Self.start < Self.stop);
+end;
+
+{==============================================================================]
+  <Nondescending>
+  @action: Evaluates if the range is currently oriented in a non-descending direction.
+  @note: Returns True if start is less than or equal to stop, ensuring that
+         no downward progression exists between the boundaries.
+[==============================================================================}
+function TRange.Nondescending: Boolean; overload;
+begin
+  Result := not (Self.start > Self.stop);
 end;
 {$ENDIF}
