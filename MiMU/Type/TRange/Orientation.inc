@@ -4,12 +4,13 @@ function Ascendal: Boolean; overload;
 function Ascending: Boolean; overload;
 function Ascends: Boolean; overload;
 function Ascing: Boolean; overload;
+function IsAscending: Boolean; overload;
+
 function Descency: Boolean; overload;
 function Descendal: Boolean; overload;
 function Descending: Boolean; overload;
 function Descends: Boolean; overload;
 function Descing: Boolean; overload;
-function IsAscending: Boolean; overload;
 function IsDescending: Boolean; overload;
 {$ENDIF}
 
@@ -66,6 +67,16 @@ begin
 end;
 
 {==============================================================================]
+  <IsAscending>
+  @action: Determines if the range is strictly ascending by checking if the start value is less than the stop value.
+  @note: Returns True if (start - stop) is less than zero. Requires a numeric type that supports subtraction.
+[==============================================================================}
+function TRange.IsAscending: Boolean; overload;
+begin
+  Result := ((Self.start - Self.stop) < 0);
+end;
+
+{==============================================================================]
   <Descency>
   @action: Determines if the range is strictly descending using a sign-of-difference check.
   @note: Returns True if (start - stop) is positive. Only applicable to numeric range types.
@@ -118,16 +129,6 @@ end;
 function TRange.Descing: Boolean; overload;
 begin
   Result := (Self.start > Self.stop);
-end;
-
-{==============================================================================]
-  <IsAscending>
-  @action: Determines if the range is strictly ascending by checking if the start value is less than the stop value.
-  @note: Returns True if (start - stop) is less than zero. Requires a numeric type that supports subtraction.
-[==============================================================================}
-function TRange.IsAscending: Boolean; overload;
-begin
-  Result := ((Self.start - Self.stop) < 0);
 end;
 
 {==============================================================================]

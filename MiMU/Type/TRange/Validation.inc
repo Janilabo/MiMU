@@ -1,35 +1,74 @@
 {$IFDEF METHODS}
-function Bipolar: Boolean;
-function Exceeds(const maxElements: Integer): Boolean;
+function Ascendual: Boolean; overload;
+function Bipolar: Boolean; overload;
+function Descendual: Boolean; overload;
+function Dual: Boolean; overload;
+function Exceeds(const maxElements: Integer): Boolean; overload;
 function IsNarrow(const val: Integer): Boolean; overload;
-function Insufficient(const minElements: Integer): Boolean;
+function Insufficient(const minElements: Integer): Boolean; overload;
 function IsNegligible(const threshold: Integer = 0): Boolean; overload;
 function IsSignificant(const threshold: Integer = 0): Boolean; overload;
 function IsSubstantial(const threshold: Integer): Boolean; overload;
 function IsWide(const val: Integer): Boolean; overload;
 function Natural: Boolean; overload;
-function Negative: Boolean;
+function Negative: Boolean; overload;
 function Nonascend(const val: Integer): Boolean; overload;
 function Nondescend(const val: Integer): Boolean; overload;
-function NonNegative: Boolean;
-function NonPositive: Boolean;
-function Positive: Boolean;
-function Terminal(const sValue: Integer = 0): Boolean;
+function NonNegative: Boolean; overload;
+function NonPositive: Boolean; overload;
+function Positive: Boolean; overload;
+function Terminal(const sValue: Integer = 0): Boolean; overload;
 function Uniform(const val: Integer): Boolean; overload;
 function Uniform: Boolean; overload;
-function Zero: Boolean;
+function Zero: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Ascendual>
+  @action: Determines whether the range is a minimal, ascending two-point step.
+  @note:
+    - Returns True strictly if the range is sorted in ascending order and contains exactly 2 elements.
+    - Useful for detecting direct forward transitions or adjacent increments.
+[==============================================================================}
+function TRange.Ascendual: Boolean; overload;
+begin
+  Result := (Self.Ascending and (Self.size = 2));
+end;
+
 {==============================================================================]
   <Bipolar>
   @action: Returns True if the range spans both negative and positive numbers.
   @note: The function is True when Self.start and Self.stop have opposite signs,
          i.e., one is negative and the other is positive. Zero endpoints are not included.
 [==============================================================================}
-function TRange.Bipolar: Boolean;
+function TRange.Bipolar: Boolean; overload;
 begin
   Result := ((Self.start < 0) and (Self.stop > 0)) or ((Self.start > 0) and (Self.stop < 0));
+end;
+
+{==============================================================================]
+  <Descendual>
+  @action: Determines whether the range is a minimal, descending two-point step.
+  @note:
+    - Returns True strictly if the range is sorted in descending order and contains exactly 2 elements.
+    - Useful for detecting direct backward transitions or adjacent decrements.
+[==============================================================================}
+function TRange.Descendual: Boolean; overload;
+begin
+  Result := (Self.Descending and (Self.size = 2));
+end;
+
+{==============================================================================]
+  <Dual>
+  @action: Determines whether the range represents exactly two adjacent, consecutive values.
+  @note: 
+    - Returns True if the stop boundary is exactly one unit greater or one unit less than the start boundary.
+    - Represents a tight two-element pairing (a step of exactly 1 in either direction).
+[==============================================================================}
+function TRange.Dual: Boolean; overload;
+begin
+  Result := (((Self.start + 1) = Self.stop) or ((Self.start - 1) = Self.stop));
 end;
 
 {==============================================================================]
@@ -37,7 +76,7 @@ end;
   @action: Returns true if TRange contains more than maxElements.
   @note: TRange Exceeds maximum elements.
 [==============================================================================}
-function TRange.Exceeds(const maxElements: Integer): Boolean;
+function TRange.Exceeds(const maxElements: Integer): Boolean; overload;
 begin
   Result := (Self.Size > maxElements);
 end;
@@ -47,7 +86,7 @@ end;
   @action: Returns true if TRange contains less than minElements.
   @note: TRange is behind minimum elements.
 [==============================================================================}
-function TRange.Insufficient(const minElements: Integer): Boolean;
+function TRange.Insufficient(const minElements: Integer): Boolean; overload;
 begin
   Result := (Self.Size < minElements);
 end;
@@ -121,7 +160,7 @@ end;
   @action: Returns True if both endpoints of the range are strictly negative.
   @note: Both Self.start and Self.stop must be less than 0.
 [==============================================================================}
-function TRange.Negative: Boolean;
+function TRange.Negative: Boolean; overload;
 begin
   Result := ((Self.start < 0) and (Self.stop < 0));
 end;
@@ -153,7 +192,7 @@ end;
   @action: Returns True if both endpoints of the range are zero or positive.
   @note: Both Self.start and Self.stop must be greater than or equal to 0.
 [==============================================================================}
-function TRange.NonNegative: Boolean;
+function TRange.NonNegative: Boolean; overload;
 begin
   Result := ((Self.start > -1) and (Self.stop > -1));
 end;
@@ -163,7 +202,7 @@ end;
   @action: Returns True if both endpoints of the range are zero or negative.
   @note: Both Self.start and Self.stop must be less than or equal to 0.
 [==============================================================================}
-function TRange.NonPositive: Boolean;
+function TRange.NonPositive: Boolean; overload;
 begin
   Result := ((Self.start < 1) and (Self.stop < 1));
 end;
@@ -173,7 +212,7 @@ end;
   @action: Returns True if both endpoints of the range are strictly positive.
   @note: Both Self.start and Self.stop must be greater than 0.
 [==============================================================================}
-function TRange.Positive: Boolean;
+function TRange.Positive: Boolean; overload;
 begin
   Result := ((Self.start > 0) and (Self.stop > 0));
 end;
@@ -186,7 +225,7 @@ end;
          value of sValue is 0. Can be used to check for 0, 1, or any other
          integer at an endpoint.
 [==============================================================================}
-function TRange.Terminal(const sValue: Integer = 0): Boolean;
+function TRange.Terminal(const sValue: Integer = 0): Boolean; overload;
 begin
   Result := (((Self.start = sValue) and (Self.stop > sValue)) or ((Self.stop = sValue) and (Self.start > sValue)));
 end;
@@ -216,7 +255,7 @@ end;
   @action: Returns True if both endpoints of the range are exactly zero.
   @note: Self.start = 0 and Self.stop = 0.
 [==============================================================================}
-function TRange.Zero: Boolean;
+function TRange.Zero: Boolean; overload;
 begin
   Result := ((Self.start = 0) and (Self.stop = 0));
 end;

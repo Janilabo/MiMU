@@ -16,7 +16,6 @@ function StartHigher: Boolean; overload;
 function StartLower: Boolean; overload;
 function Startmax: Boolean; overload;
 function Startmin: Boolean; overload;
-function Startminded: Boolean; overload;
 function Startsided: Boolean; overload;
 function Startwise: Boolean; overload;
 function Stopbent: Boolean; overload;
@@ -24,7 +23,6 @@ function StopHigher: Boolean; overload;
 function StopLower: Boolean; overload;
 function Stopmax: Boolean; overload;
 function Stopmin: Boolean; overload;
-function Stopminded: Boolean; overload;
 function Stopsided: Boolean; overload;
 function Stopwise: Boolean; overload;
 {$ENDIF}
@@ -48,7 +46,7 @@ end;
 [==============================================================================}
 function TRange.Ascendable: Boolean; overload;
 begin
-  Result := (Self.start <= Self.stop);
+  Result := (Self.Singular or (Self.start < Self.stop));
 end;
 
 {==============================================================================]
@@ -100,7 +98,7 @@ end;
 [==============================================================================}
 function TRange.Descendable: Boolean; overload;
 begin
-  Result := (Self.start >= Self.stop);
+  Result := (Self.Singular or (Self.start > Self.stop));
 end;
 
 {==============================================================================]
@@ -194,7 +192,7 @@ end;
 [==============================================================================}
 function TRange.Startmax: Boolean; overload;
 begin
-  Result := (Max(Self.start, Self.stop) = Self.start);
+  Result := (Self.Maximum = Self.start);
 end;
 
 {==============================================================================]
@@ -203,17 +201,6 @@ end;
   @note: Returns True for singular ranges (start = stop).
 [==============================================================================}
 function TRange.Startmin: Boolean; overload;
-begin
-  Result := (Min(Self.start, Self.stop) = Self.start);
-end;
-
-{==============================================================================]
-  <Startminded>
-  @action: Determines whether the range is currently aligned with its start boundary.
-  @note: Returns True when the Minimum value equals the Start value, indicating
-         that the range is positioned at or biased toward the start endpoint.
-[==============================================================================}
-function TRange.Startminded: Boolean; overload;
 begin
   Result := (Self.Minimum = Self.start);
 end;
@@ -276,7 +263,7 @@ end;
 [==============================================================================}
 function TRange.Stopmax: Boolean; overload;
 begin
-  Result := (Max(Self.start, Self.stop) = Self.stop);
+  Result := (Self.Maximum = Self.stop);
 end;
 
 {==============================================================================]
@@ -285,17 +272,6 @@ end;
   @note: Returns True for singular ranges (start = stop).
 [==============================================================================}
 function TRange.Stopmin: Boolean; overload;
-begin
-  Result := (Min(Self.start, Self.stop) = Self.stop);
-end;
-
-{==============================================================================]
-  <Stopminded>
-  @action: Determines whether the range is currently aligned with its stop boundary.
-  @note: Returns True when the Minimum value equals the Stop value, indicating
-         that the range is positioned at or biased toward the stop endpoint.
-[==============================================================================}
-function TRange.Stopminded: Boolean; overload;
 begin
   Result := (Self.Minimum = Self.stop);
 end;
