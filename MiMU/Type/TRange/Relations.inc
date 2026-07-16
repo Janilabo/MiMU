@@ -1,15 +1,4 @@
 {$IFDEF METHODS}
-function Differ(const b: TRange): Boolean; overload;
-function Differs(const b: TRange): Boolean; overload;
-
-function Equal(const b: TRange): Boolean; overload;
-function Equaled(const b: TRange): Boolean; overload;
-function Equals(const b: TRange): Boolean; overload;
-function Equaly(const b: TRange): Boolean; overload;
-function Equivale(const b: TRange): Boolean; overload;
-function Equivalent(const b: TRange): Boolean; overload;
-function IsEquivalent(const target: TRange): Boolean; overload;
-
 function Abuts(const other: TRange): Boolean; overload;
 function Adjacency(const target: TRange): Boolean; overload;
 function Adjacent(const other: TRange): Boolean; overload;
@@ -48,118 +37,12 @@ function Within(const target: TRange; const minDist, maxDist: Integer): Boolean;
 function Within(const target: TRange; const dist: Integer = 0): Boolean; overload;
 function Within(const target: Integer; const minDist, maxDist: Integer): Boolean; overload;
 function Within(const target: Integer; const dist: Integer = 0): Boolean; overload;
-function Coequal(const target: TRange; const strictly: Boolean = False): Boolean; overload;
 
 function RelationshipTo(const target: TRange): Byte; overload;
 function RelationTo(const target: TRange): Byte; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Differ>
-  @action: Checks if a unmatches b exactly.
-  @note: 0..3 and 3..0 will NOT be treated as match.
-[==============================================================================}
-function TRange.Differ(const b: TRange): Boolean; overload;
-begin
-  Result := ((Self.start <> b.start) or (Self.stop <> b.stop));
-end;
-
-{==============================================================================]
-  <Differs>
-  @action: Checks if a unmatches b.
-  @note: 0..3 and 3..0 will be treated as match.
-[==============================================================================}
-function TRange.Differs(const b: TRange): Boolean; overload;
-begin
-  Result := ((Min(Self.start, Self.stop) <> Min(b.start, b.stop)) or (Max(Self.start, Self.stop) <> Max(b.start, b.stop)));
-end;
-
-{==============================================================================]
-  <Equal>
-  @action: Checks if a matches b exactly.
-  @note: 0..3 and 3..0 will NOT be treated as match.
-[==============================================================================}
-function TRange.Equal(const b: TRange): Boolean; overload;
-begin
-  Result := ((Self.start = b.start) and (Self.stop = b.stop));
-end;
-
-{==============================================================================]
-  <Equaled>
-  @action: Checks if a unmatches b.
-  @note: 0..3 and 3..0 will be treated as match.
-[==============================================================================}
-function TRange.Equaled(const b: TRange): Boolean; overload;
-begin
-  Result := (((Self.start xor b.start) or (Self.stop xor b.stop)) = 0);
-end;
-
-{==============================================================================]
-  <Equals>
-  @action: Evaluates whether two ranges are structurally and directionally identical.
-  @note: 
-    - Computes zero-differential equality for both start and stop boundaries.
-    - Unlike value-containment comparisons, this requires matching orientations
-	  (e.g., an ascending range will not equal its inverted descending counterpart).
-[==============================================================================}
-function TRange.Equals(const b: TRange): Boolean; overload;
-begin
-  Result := (((Self.start - b.start) = 0) and ((Self.stop - b.stop) = 0));
-end;
-
-{==============================================================================]
-  <Equaly>
-  @action: Performs a branchless logical evaluation to determine if two ranges share identical structures.
-  @note: 
-    - Converts individual boundary equality evaluations into ordinal integer states (0 or 1).
-    - Multiplies the states to eliminate conditional branch mispredictions at the hardware level.
-    - Requires matching start and stop trajectories; inverted matching ranges will return False.
-[==============================================================================}
-function TRange.Equaly(const b: TRange): Boolean; overload;
-begin
-  Result := Boolean(Ord(Self.start = b.start) * Ord(Self.stop = b.stop));
-end; 
-
-{==============================================================================]
-  <Equivale>
-  @action: Checks if a matches b.
-  @note: 0..3 and 3..0 will be treated as match.
-[==============================================================================}
-function TRange.Equivale(const b: TRange): Boolean; overload;
-begin
-  Result := ((Self.Minimum = b.Minimum) and (Self.Maximum = b.Maximum));
-end;
-
-{==============================================================================]
-  <Equivalent>
-  @action: Determines whether two ranges represent the same interval,
-           regardless of boundary ordering.
-  @return: True: both ranges have identical bounds (direct or reversed)
-           False: ranges differ in at least one boundary
-  @note: Order-insensitive comparison; [a..b] is equivalent to [b..a].
-         Does not require prior normalization.
-[==============================================================================}
-function TRange.Equivalent(const b: TRange): Boolean; overload;
-begin
-  Result := (((Self.start = b.start) and (Self.stop = b.stop)) or ((Self.start = b.stop) and (Self.stop = b.start)));
-end;
-
-{==============================================================================]
-  <IsEquivalent>
-  @action: Returns True if both ranges occupy the exact same physical span 
-           on the number line.        
-  @note: This is a spatial check, not a structural one. For example, 
-         [1..10] and [10..1] are considered equivalent because they 
-         cover the same ground.
-         Relies on RelationshipTo(target) returning 3 (Binary 0011), 
-         indicating that both the Minimum and Maximum boundaries match.
-[==============================================================================}
-function TRange.IsEquivalent(const target: TRange): Boolean; overload;
-begin
-  Result := (Self.RelationshipTo(target) = 3);
-end;
-
 {==============================================================================]
   <Abuts>
   @action: Determines whether two ranges are directly adjacent (touching but not overlapping).
@@ -608,55 +491,6 @@ end;
 function TRange.Within(const target: Integer; const dist: Integer = 0): Boolean; overload;
 begin
   Result := (Self.Relationality(target) <= dist);
-end;
-
-{==============================================================================]
-  <Coequal>
-  @action: Determines whether two ranges are equal under either strict or
-           normalized comparison semantics.
-           Supports dual-mode equality:
-             * Strict equality: direct field comparison (start/stop).
-             * Non-strict equality: compares normalized bounds to account for
-               differing internal representations.
-  @note:
-    - strictly = True:
-        * Performs exact, field-level comparison:
-            (Self.start = target.start) AND
-            (Self.stop  = target.stop)
-        * No normalization is applied.
-        * Fastest path (O(1)).
-    - strictly = False:
-        * Compares normalized ranges:
-            s := Self.Normalized
-            t := target.Normalized
-            Result = (s.start = t.start) AND (s.stop = t.stop)
-        * Ensures equivalence even if:
-            - bounds are reversed (start > stop)
-            - internal representation differs but logical interval matches
-    - Normalization guarantees:
-        * start ≤ stop
-        * consistent canonical form for comparison
-    - Complexity:
-        * Strict:     O(1)
-        * Non-strict: O(1), assuming Normalized is O(1)
-    - Use cases:
-        * strictly = True:
-            When structural identity matters (exact stored values).
-        * strictly = False:
-            When logical interval equivalence is required.
-    - Notes:
-        * Non-strict mode is safer for external inputs or mixed range sources.
-        * Strict mode avoids overhead when invariants are already enforced.
-[==============================================================================}
-function TRange.Coequal(const target: TRange; const strictly: Boolean = False): Boolean; overload;
-var
-  s, t: TRange;
-begin
-  if strictly then
-    Exit((Self.start = target.start) and (Self.stop = target.stop));
-  s := Self.Normalized;
-  t := target.Normalized;
-  Result := ((s.start = t.start) and (s.stop = t.stop));
 end;
 
 {==============================================================================]
