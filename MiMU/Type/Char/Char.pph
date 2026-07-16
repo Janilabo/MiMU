@@ -1,8 +1,8 @@
 {$I ../Base/Base.inc}
 
-{$I Char/Casing.inc}
-{$I Char/Classification.inc}
-{$I Char/Comparison.inc}
-{$I Char/Convert.inc}
-{$I Char/Counting.inc}
-{$I Char/Tokenizing.inc}
+{$I @Char/Casing.inc}
+{$I @Char/Classification.inc}
+{$I @Char/Comparison.inc}
+{$I @Char/Convert.inc}
+{$I @Char/Counting.inc}
+{$I @Char/Tokenizing.inc}

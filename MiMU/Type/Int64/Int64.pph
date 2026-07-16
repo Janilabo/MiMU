@@ -1,11 +1,11 @@
 {$I ../Base/Base.inc}
 
-{$I Int64/Adjust.inc}
-{$I Int64/Comparison.inc}
-{$I Int64/Digit.inc}
-{$I Int64/Distance.inc}
-{$I Int64/Math.inc}
-{$I Int64/Parity.inc}
-{$I Int64/Primality.inc}
-{$I Int64/Randomness.inc}
-{$I Int64/Transform.inc}
+{$I @Int64/Adjust.inc}
+{$I @Int64/Comparison.inc}
+{$I @Int64/Digit.inc}
+{$I @Int64/Distance.inc}
+{$I @Int64/Math.inc}
+{$I @Int64/Parity.inc}
+{$I @Int64/Primality.inc}
+{$I @Int64/Randomness.inc}
+{$I @Int64/Transform.inc}

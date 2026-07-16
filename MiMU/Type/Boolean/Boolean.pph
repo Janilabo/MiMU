@@ -1,7 +1,7 @@
 {$I ../Base/Base.inc}
 
-{$I Boolean/Convert.inc}
-{$I Boolean/Operation.inc}
-{$I Boolean/Randomness.inc}
-{$I Boolean/Select.inc}
-{$I Boolean/State.inc}
+{$I @Boolean/Convert.inc}
+{$I @Boolean/Operation.inc}
+{$I @Boolean/Randomness.inc}
+{$I @Boolean/Select.inc}
+{$I @Boolean/State.inc}

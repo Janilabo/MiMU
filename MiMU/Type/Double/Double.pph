@@ -1,12 +1,12 @@
 {$I ../Base/Base.inc}
 
-{$I Double/Adjust.inc}
-{$I Double/Angle.inc}
-{$I Double/Comparison.inc}
-{$I Double/Digit.inc}
-{$I Double/Distance.inc}
-{$I Double/Math.inc}
-{$I Double/Percent.inc}
-{$I Double/Polarity.inc}
-{$I Double/Restriction.inc}
-{$I Double/Transform.inc}
+{$I @Double/Adjust.inc}
+{$I @Double/Angle.inc}
+{$I @Double/Comparison.inc}
+{$I @Double/Digit.inc}
+{$I @Double/Distance.inc}
+{$I @Double/Math.inc}
+{$I @Double/Percent.inc}
+{$I @Double/Polarity.inc}
+{$I @Double/Restriction.inc}
+{$I @Double/Transform.inc}

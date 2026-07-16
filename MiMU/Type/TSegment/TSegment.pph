@@ -1,5 +1,5 @@
 {$I ../Base/Base.inc}
 
-{$I TSegment/Bounds.inc}
-{$I TSegment/Construction.inc}
-{$I TSegment/Sampling.inc}
+{$I @TSegment/Bounds.inc}
+{$I @TSegment/Construction.inc}
+{$I @TSegment/Sampling.inc}
