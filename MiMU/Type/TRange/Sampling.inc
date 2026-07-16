@@ -366,7 +366,7 @@ begin
   if (s = 1) then
     Exit(Self.start);
   f := forbidden.Cleaned;
-  if ((s = f.Length) and Self.Equivalent(TRange.Construct(f[0], f[High(f)]))) then
+  if ((s = f.Length) and Self.Matches(TRange.Construct(f[0], f[High(f)]))) then
     Exit(Self.start);
   d := Self.Direction;
   repeat

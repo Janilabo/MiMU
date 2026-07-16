@@ -11,9 +11,9 @@ function Equaly(const b: TRange): Boolean; overload;
 function Equalz(const b: TRange): Boolean; overload;
 function Equant(const b: TRange): Boolean; overload;
 
-function Equivale(const b: TRange): Boolean; overload;
-function Equivalent(const b: TRange): Boolean; overload;
-function IsEquivalent(const target: TRange): Boolean; overload;
+function Match(const b: TRange): Boolean; overload;
+function Matches(const b: TRange): Boolean; overload;
+function Matching(const target: TRange): Boolean; overload;
 
 function Differ(const b: TRange): Boolean; overload;
 function Differing(const b: TRange): Boolean; overload;
@@ -177,17 +177,17 @@ begin
 end;
 
 {==============================================================================]
-  <Equivale>
+  <Match>
   @action: Checks if a matches b.
   @note: 0..3 and 3..0 will be treated as match.
 [==============================================================================}
-function TRange.Equivale(const b: TRange): Boolean; overload;
+function TRange.Match(const b: TRange): Boolean; overload;
 begin
   Result := ((Self.Minimum = b.Minimum) and (Self.Maximum = b.Maximum));
 end;
 
 {==============================================================================]
-  <Equivalent>
+  <Matches>
   @action: Determines whether two ranges represent the same interval,
            regardless of boundary ordering.
   @return: True: both ranges have identical bounds (direct or reversed)
@@ -195,13 +195,13 @@ end;
   @note: Order-insensitive comparison; [a..b] is equivalent to [b..a].
          Does not require prior normalization.
 [==============================================================================}
-function TRange.Equivalent(const b: TRange): Boolean; overload;
+function TRange.Matches(const b: TRange): Boolean; overload;
 begin
   Result := (((Self.start = b.start) and (Self.stop = b.stop)) or ((Self.start = b.stop) and (Self.stop = b.start)));
 end;
 
 {==============================================================================]
-  <IsEquivalent>
+  <Matching>
   @action: Returns True if both ranges occupy the exact same physical span 
            on the number line.        
   @note: This is a spatial check, not a structural one. For example, 
@@ -210,7 +210,7 @@ end;
          Relies on RelationshipTo(target) returning 3 (Binary 0011), 
          indicating that both the Minimum and Maximum boundaries match.
 [==============================================================================}
-function TRange.IsEquivalent(const target: TRange): Boolean; overload;
+function TRange.Matching(const target: TRange): Boolean; overload;
 begin
   Result := (Self.RelationshipTo(target) = 3);
 end;
