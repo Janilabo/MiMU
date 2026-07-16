@@ -1,4 +1,4 @@
-{$I ../Base/Base.inc}
+{$I ../TArray.inc}
 
-{$I Composition.inc}
-{$I Metric.inc}
+{$I @TStringArray/Composition.inc}
+{$I @TStringArray/Metric.inc}

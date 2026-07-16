@@ -1,13 +1,27 @@
-{$I T2DIntegerArray/T2DIntegerArray.inc}
-{$I T2DDoubleArray/T2DDoubleArray.inc}
-{$I T2DStringArray/T2DStringArray.inc}
-{$I T2DCharArray/T2DCharArray.inc}
-{$I T2DBooleanArray/T2DBooleanArray.inc}
-{$I T2DPointArray/T2DPointArray.inc}
-{$I T2DBoxArray/T2DBoxArray.inc}
-{$I T2DRangeArray/T2DRangeArray.inc}
-{$I T2DConnectionArray/T2DConnectionArray.inc}
-{$I T2DCircleArray/T2DCircleArray.inc}
-{$I T2DTriangleArray/T2DTriangleArray.inc}
-{$I T2DSegmentArray/T2DSegmentArray.inc}
-{$I T2DInt64Array/T2DInt64Array.inc}
+{$IF DEFINED(HELPERS) OR DEFINED(FUNCTIONS)}
+{$I T2DArray.pph}
+{$ENDIF}
+
+{$IFDEF T2D}
+class function Create(const item: MType; const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload;
+{$ENDIF}
+
+{$IFDEF IMPLEMENTATION}
+{$I T2DArray.pph}
+
+{==============================================================================]
+  <Create>
+  @action: Creates array with item where size is length of the array.
+  @note: item is placed on every index in result.
+[==============================================================================}
+class function T2D.Create(const item: MType; const size1D: Integer = 1; const size2D: Integer = 1): M2DArray; overload;
+var
+  i, j, s: Integer;
+begin
+  s := (Max(0, size2D) - 1);
+  SetLength(Result, Max(0, size1D), (s + 1));
+  for i := 0 to High(Result) do
+    for j := 0 to s do
+      Result[i][j] := item;
+end;
+{$ENDIF}

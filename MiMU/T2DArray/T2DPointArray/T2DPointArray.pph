@@ -1,3 +1,3 @@
-{$I ../Base/Base.inc}
+{$I ../T2DArray.inc}
 
-{$I Bounding.inc}
+{$I @T2DPointArray/Bounding.inc}

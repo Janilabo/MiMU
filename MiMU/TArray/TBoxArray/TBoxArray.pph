@@ -1,5 +1,5 @@
-{$I ../Base/Base.inc}
+{$I ../TArray.inc}
 
-{$I Bounds.inc}
-{$I Components.inc}
-{$I Extraction.inc}
+{$I @TBoxArray/Bounds.inc}
+{$I @TBoxArray/Components.inc}
+{$I @TBoxArray/Extraction.inc}

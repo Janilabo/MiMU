@@ -1,4 +1,4 @@
-{$I ../Base/Base.inc}
+{$I ../TArray.inc}
 
-{$I Conversion.inc}
-{$I Reduction.inc}
+{$I @TCharArray/Conversion.inc}
+{$I @TCharArray/Reduction.inc}

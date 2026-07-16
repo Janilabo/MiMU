@@ -1,0 +1,10 @@
+{$I @T2DArray/Clearing.inc}
+{$I @T2DArray/Compacting.inc}
+{$I @T2DArray/Flattening.inc}
+{$I @T2DArray/Metric.inc}
+{$I @T2DArray/Reversion.inc}
+{$I @T2DArray/Validation.inc}
+
+{$IFDEF Sortable}
+{$I @T2DArray/Sortable/Merge.inc}
+{$ENDIF}

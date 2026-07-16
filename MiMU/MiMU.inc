@@ -5,8 +5,8 @@
     TVariantArray = array of Variant;
     TConstArray = array of TVarRec;
   {$I Type/Type+.inc}
-  {$I TArray/TArray.inc}
-  {$i T2DArray/T2DArray.inc}
+  {$I TArray/TArray+.inc}
+  {$i T2DArray/T2DArray+.inc}
   {$UNDEF TYPES}
 
   {$DEFINE OPERATORS}
@@ -16,14 +16,14 @@
   {$DEFINE HELPERS}
   type
   {$I Type/Type+.inc}
-  {$I TArray/TArray.inc}
-  {$i T2DArray/T2DArray.inc}
+  {$I TArray/TArray+.inc}
+  {$i T2DArray/T2DArray+.inc}
   {$UNDEF HELPERS}
 
   {$DEFINE FUNCTIONS}
   {$I Type/Type+.inc}
-  {$I TArray/TArray.inc}
-  {$i T2DArray/T2DArray.inc}
+  {$I TArray/TArray+.inc}
+  {$i T2DArray/T2DArray+.inc}
   {$I Miscellaneous/BinarySearch.inc}
   {$I Miscellaneous/Bounds.inc}
   {$I Miscellaneous/Mathematics.inc}
@@ -36,19 +36,19 @@
   {$DEFINE TBS}
     TBinarySearch = class
     public
-    {$I TArray/TArray.inc}
+    {$I TArray/TArray+.inc}
     end;
   {$UNDEF TBS}
   {$DEFINE T1D}
     T1D = class
     public
-    {$I TArray/TArray.inc}
+    {$I TArray/TArray+.inc}
     end;
   {$UNDEF T1D}
   {$DEFINE T2D}
     T2D = class
     public
-    {$i T2DArray/T2DArray.inc}
+    {$i T2DArray/T2DArray+.inc}
     end;
   {$UNDEF T2D}
   {$UNDEF CLASSES}
@@ -56,8 +56,8 @@
 
 {$IFDEF IMPLEMENTATION}
   {$I Type/Type+.inc}
-  {$I TArray/TArray.inc}
-  {$i T2DArray/T2DArray.inc}
+  {$I TArray/TArray+.inc}
+  {$i T2DArray/T2DArray+.inc}
   {$I Miscellaneous/BinarySearch.inc}
   {$I Miscellaneous/Bounds.inc}
   {$I Miscellaneous/Mathematics.inc}

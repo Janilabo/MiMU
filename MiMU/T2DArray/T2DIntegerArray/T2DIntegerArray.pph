@@ -1,4 +1,4 @@
-{$I ../Base/Base.inc}
+{$I ../T2DArray.inc}
 
-{$I Construction.inc}
-{$I Merging.inc}
+{$I @T2DIntegerArray/Construction.inc}
+{$I @T2DIntegerArray/Merging.inc}

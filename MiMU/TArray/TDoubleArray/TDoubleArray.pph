@@ -1,15 +1,15 @@
-{$I ../Base/Base.inc}
+{$I ../TArray.inc}
 
-{$I BinaryOps/Addition.inc}
-{$I BinaryOps/Bounds.inc}
-{$I BinaryOps/Counting.inc}
-{$I BinaryOps/Deduplicate.inc}
-{$I BinaryOps/Membership.inc}
-{$I BinaryOps/Merging.inc}
-{$I BinaryOps/Modify.inc}
-{$I BinaryOps/Query.inc}
-{$I BinaryOps/Search.inc}
-{$I BinaryOps/Sort.inc}
+{$I @TDoubleArray/BinaryOps/Addition.inc}
+{$I @TDoubleArray/BinaryOps/Bounds.inc}
+{$I @TDoubleArray/BinaryOps/Counting.inc}
+{$I @TDoubleArray/BinaryOps/Deduplicate.inc}
+{$I @TDoubleArray/BinaryOps/Membership.inc}
+{$I @TDoubleArray/BinaryOps/Merging.inc}
+{$I @TDoubleArray/BinaryOps/Modify.inc}
+{$I @TDoubleArray/BinaryOps/Query.inc}
+{$I @TDoubleArray/BinaryOps/Search.inc}
+{$I @TDoubleArray/BinaryOps/Sort.inc}
 
-{$I Monotone.inc}
-{$I TernaryOps.inc}
+{$I @TDoubleArray/Monotone.inc}
+{$I @TDoubleArray/TernaryOps.inc}
