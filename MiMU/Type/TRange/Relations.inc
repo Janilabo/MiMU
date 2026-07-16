@@ -1,50 +1,165 @@
 {$IFDEF METHODS}
+function Differ(const b: TRange): Boolean; overload;
+function Differs(const b: TRange): Boolean; overload;
+
+function Equal(const b: TRange): Boolean; overload;
+function Equaled(const b: TRange): Boolean; overload;
+function Equals(const b: TRange): Boolean; overload;
+function Equaly(const b: TRange): Boolean; overload;
+function Equivale(const b: TRange): Boolean; overload;
+function Equivalent(const b: TRange): Boolean; overload;
+function IsEquivalent(const target: TRange): Boolean; overload;
+
 function Abuts(const other: TRange): Boolean; overload;
 function Adjacency(const target: TRange): Boolean; overload;
 function Adjacent(const other: TRange): Boolean; overload;
-function Coequal(const target: TRange; const strictly: Boolean = False): Boolean; overload;
 function Consecutive(const r: TRange): Boolean; overload;
 function Contiguous(const r: TRange): Boolean; overload;
-function Differ(const b: TRange): Boolean; overload;
-function Differs(const b: TRange): Boolean; overload;
-function Equal(const b: TRange): Boolean; overload;
-function Equals(const b: TRange): Boolean; overload;
-function Equivalent(const b: TRange): Boolean; overload;
-function Follows(const r: TRange): Boolean; overload;
-function Gapless(const r: TRange): Boolean; overload;
-function Intersects(const target: TRange): Boolean; overload;
-function Intersects(const target: Integer): Boolean; overload;
 function IsAdjacent(const other: TRange): Boolean; overload;
-function IsConnected(const target: TRange): Boolean; overload;
-function IsEquivalent(const target: TRange): Boolean; overload;
-function IsMergeable(const other: TRange): Boolean; overload;
 function IsNeighbor(const r: TRange): Boolean; overload;
-function Jointed(const r: TRange): Boolean; overload;
-function Linkable(const target: TRange): Boolean; overload;
-function Loose(const target: TRange): Boolean; overload;
-function Meet(const other: TRange; out mRange: TRange): Boolean; overload;
-function Mergeable(const other: TRange): Boolean; overload;
 function Neighbor(const b: TRange): Boolean; overload;
 function Neighboring(const r: TRange): Boolean; overload;
 function Neighbors(const r: TRange): Boolean; overload;
 function Neighbour(const b: TRange): Boolean; overload;
+
+function Follows(const r: TRange): Boolean; overload;
+function Precedes(const r: TRange): Boolean; overload;
+
+function Gapless(const r: TRange): Boolean; overload;
+function Intersects(const target: TRange): Boolean; overload;
+function Intersects(const target: Integer): Boolean; overload;
+function IsConnected(const target: TRange): Boolean; overload;
+function IsMergeable(const other: TRange): Boolean; overload;
+function Jointed(const r: TRange): Boolean; overload;
+function Linkable(const target: TRange): Boolean; overload;
+function Meet(const other: TRange; out mRange: TRange): Boolean; overload;
+function Mergeable(const other: TRange): Boolean; overload;
 function Overlap(const b: TRange): Boolean; overload;
 function Overlapping(const b: TRange): Boolean; overload;
 function Overlaps(const other: TRange): Boolean; overload;
-function Precedes(const r: TRange): Boolean; overload;
-function RelationshipTo(const target: TRange): Byte; overload;
-function RelationTo(const target: TRange): Byte; overload;
-function Separated(const other: TRange): Boolean; overload;
 function Touch(const b: TRange): Boolean; overload;
 function Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
 function Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
+
+function Loose(const target: TRange): Boolean; overload;
+function Separated(const other: TRange; const aGap: UInt32 = 1): Boolean; overload;
+
 function Within(const target: TRange; const minDist, maxDist: Integer): Boolean; overload;
 function Within(const target: TRange; const dist: Integer = 0): Boolean; overload;
 function Within(const target: Integer; const minDist, maxDist: Integer): Boolean; overload;
 function Within(const target: Integer; const dist: Integer = 0): Boolean; overload;
+function Coequal(const target: TRange; const strictly: Boolean = False): Boolean; overload;
+
+function RelationshipTo(const target: TRange): Byte; overload;
+function RelationTo(const target: TRange): Byte; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Differ>
+  @action: Checks if a unmatches b exactly.
+  @note: 0..3 and 3..0 will NOT be treated as match.
+[==============================================================================}
+function TRange.Differ(const b: TRange): Boolean; overload;
+begin
+  Result := ((Self.start <> b.start) or (Self.stop <> b.stop));
+end;
+
+{==============================================================================]
+  <Differs>
+  @action: Checks if a unmatches b.
+  @note: 0..3 and 3..0 will be treated as match.
+[==============================================================================}
+function TRange.Differs(const b: TRange): Boolean; overload;
+begin
+  Result := ((Min(Self.start, Self.stop) <> Min(b.start, b.stop)) or (Max(Self.start, Self.stop) <> Max(b.start, b.stop)));
+end;
+
+{==============================================================================]
+  <Equal>
+  @action: Checks if a matches b exactly.
+  @note: 0..3 and 3..0 will NOT be treated as match.
+[==============================================================================}
+function TRange.Equal(const b: TRange): Boolean; overload;
+begin
+  Result := ((Self.start = b.start) and (Self.stop = b.stop));
+end;
+
+{==============================================================================]
+  <Equaled>
+  @action: Checks if a unmatches b.
+  @note: 0..3 and 3..0 will be treated as match.
+[==============================================================================}
+function TRange.Equaled(const b: TRange): Boolean; overload;
+begin
+  Result := (((Self.start xor b.start) or (Self.stop xor b.stop)) = 0);
+end;
+
+{==============================================================================]
+  <Equals>
+  @action: Evaluates whether two ranges are structurally and directionally identical.
+  @note: 
+    - Computes zero-differential equality for both start and stop boundaries.
+    - Unlike value-containment comparisons, this requires matching orientations
+	  (e.g., an ascending range will not equal its inverted descending counterpart).
+[==============================================================================}
+function TRange.Equals(const b: TRange): Boolean; overload;
+begin
+  Result := (((Self.start - b.start) = 0) and ((Self.stop - b.stop) = 0));
+end;
+
+{==============================================================================]
+  <Equaly>
+  @action: Performs a branchless logical evaluation to determine if two ranges share identical structures.
+  @note: 
+    - Converts individual boundary equality evaluations into ordinal integer states (0 or 1).
+    - Multiplies the states to eliminate conditional branch mispredictions at the hardware level.
+    - Requires matching start and stop trajectories; inverted matching ranges will return False.
+[==============================================================================}
+function TRange.Equaly(const b: TRange): Boolean; overload;
+begin
+  Result := Boolean(Ord(Self.start = b.start) * Ord(Self.stop = b.stop));
+end; 
+
+{==============================================================================]
+  <Equivale>
+  @action: Checks if a matches b.
+  @note: 0..3 and 3..0 will be treated as match.
+[==============================================================================}
+function TRange.Equivale(const b: TRange): Boolean; overload;
+begin
+  Result := ((Self.Minimum = b.Minimum) and (Self.Maximum = b.Maximum));
+end;
+
+{==============================================================================]
+  <Equivalent>
+  @action: Determines whether two ranges represent the same interval,
+           regardless of boundary ordering.
+  @return: True: both ranges have identical bounds (direct or reversed)
+           False: ranges differ in at least one boundary
+  @note: Order-insensitive comparison; [a..b] is equivalent to [b..a].
+         Does not require prior normalization.
+[==============================================================================}
+function TRange.Equivalent(const b: TRange): Boolean; overload;
+begin
+  Result := (((Self.start = b.start) and (Self.stop = b.stop)) or ((Self.start = b.stop) and (Self.stop = b.start)));
+end;
+
+{==============================================================================]
+  <IsEquivalent>
+  @action: Returns True if both ranges occupy the exact same physical span 
+           on the number line.        
+  @note: This is a spatial check, not a structural one. For example, 
+         [1..10] and [10..1] are considered equivalent because they 
+         cover the same ground.
+         Relies on RelationshipTo(target) returning 3 (Binary 0011), 
+         indicating that both the Minimum and Maximum boundaries match.
+[==============================================================================}
+function TRange.IsEquivalent(const target: TRange): Boolean; overload;
+begin
+  Result := (Self.RelationshipTo(target) = 3);
+end;
+
 {==============================================================================]
   <Abuts>
   @action: Determines whether two ranges are directly adjacent (touching but not overlapping).
@@ -82,55 +197,6 @@ begin
 end;
 
 {==============================================================================]
-  <Coequal>
-  @action: Determines whether two ranges are equal under either strict or
-           normalized comparison semantics.
-           Supports dual-mode equality:
-             * Strict equality: direct field comparison (start/stop).
-             * Non-strict equality: compares normalized bounds to account for
-               differing internal representations.
-  @note:
-    - strictly = True:
-        * Performs exact, field-level comparison:
-            (Self.start = target.start) AND
-            (Self.stop  = target.stop)
-        * No normalization is applied.
-        * Fastest path (O(1)).
-    - strictly = False:
-        * Compares normalized ranges:
-            s := Self.Normalized
-            t := target.Normalized
-            Result = (s.start = t.start) AND (s.stop = t.stop)
-        * Ensures equivalence even if:
-            - bounds are reversed (start > stop)
-            - internal representation differs but logical interval matches
-    - Normalization guarantees:
-        * start ≤ stop
-        * consistent canonical form for comparison
-    - Complexity:
-        * Strict:     O(1)
-        * Non-strict: O(1), assuming Normalized is O(1)
-    - Use cases:
-        * strictly = True:
-            When structural identity matters (exact stored values).
-        * strictly = False:
-            When logical interval equivalence is required.
-    - Notes:
-        * Non-strict mode is safer for external inputs or mixed range sources.
-        * Strict mode avoids overhead when invariants are already enforced.
-[==============================================================================}
-function TRange.Coequal(const target: TRange; const strictly: Boolean = False): Boolean; overload;
-var
-  s, t: TRange;
-begin
-  if strictly then
-    Exit((Self.start = target.start) and (Self.stop = target.stop));
-  s := Self.Normalized;
-  t := target.Normalized;
-  Result := ((s.start = t.start) and (s.stop = t.stop));
-end;
-
-{==============================================================================]
   <Consecutive>
   @action: Determines whether two ranges form a continuous, non-overlapping sequence.
   @note: Returns True if Self and r are disjoint but adjacent such that their
@@ -158,110 +224,6 @@ begin
 end;
 
 {==============================================================================]
-  <Differ>
-  @action: Checks if a unmatches b exactly.
-  @note: 0..3 and 3..0 will NOT be treated as match.
-[==============================================================================}
-function TRange.Differ(const b: TRange): Boolean; overload;
-begin
-  Result := ((Self.start <> b.start) or (Self.stop <> b.stop));
-end;
-
-{==============================================================================]
-  <Differs>
-  @action: Checks if a unmatches b.
-  @note: 0..3 and 3..0 will be treated as match.
-[==============================================================================}
-function TRange.Differs(const b: TRange): Boolean; overload;
-begin
-  Result := ((Min(Self.start, Self.stop) <> Min(b.start, b.stop)) or (Max(Self.start, Self.stop) <> Max(b.start, b.stop)));
-end;
-
-{==============================================================================]
-  <Equal>
-  @action: Checks if a matches b exactly.
-  @note: 0..3 and 3..0 will NOT be treated as match.
-[==============================================================================}
-function TRange.Equal(const b: TRange): Boolean; overload;
-begin
-  Result := ((Self.start = b.start) and (Self.stop = b.stop));
-end;
-
-{==============================================================================]
-  <Equals>
-  @action: Checks if a matches b.
-  @note: 0..3 and 3..0 will be treated as match.
-[==============================================================================}
-function TRange.Equals(const b: TRange): Boolean; overload;
-begin
-  Result := ((Self.Minimum = b.Minimum) and (Self.Maximum = b.Maximum));
-end;
-
-{==============================================================================]
-  <Equivalent>
-  @action: Determines whether two ranges represent the same interval,
-           regardless of boundary ordering.
-  @return: True: both ranges have identical bounds (direct or reversed)
-           False: ranges differ in at least one boundary
-  @note: Order-insensitive comparison; [a..b] is equivalent to [b..a].
-         Does not require prior normalization.
-[==============================================================================}
-function TRange.Equivalent(const b: TRange): Boolean; overload;
-begin
-  Result := (((Self.start = b.start) and (Self.stop = b.stop)) or ((Self.start = b.stop) and (Self.stop = b.start)));
-end;
-
-{==============================================================================]
-  <Follows>
-  @action: Determines whether the current range immediately follows another.
-  @note: Returns True if Self starts exactly one unit after r ends, i.e.
-         Self.Minimum = r.Maximum + 1. This implies direct adjacency with
-         Self positioned after r and no overlap or gap.
-[==============================================================================}
-function TRange.Follows(const r: TRange): Boolean; overload;
-begin
-  Result := (Self.Minimum = (r.Maximum + 1));
-end;
-
-{==============================================================================]
-  <Gapless>
-  @action: Determines whether two ranges are contiguous or overlapping.
-  @note: Returns True if Self and r either overlap or are directly adjacent,
-         i.e. there is no gap between them. This is evaluated by checking
-         whether the maximum of the lower bounds is less than or equal to
-         the minimum of the upper bounds plus one. This condition allows:
-         - overlap (intersection > 0)
-         - adjacency (exact boundary touch)
-         but excludes any separation greater than one unit.
-[==============================================================================}
-function TRange.Gapless(const r: TRange): Boolean; overload;
-begin
-  Result := (Max(Self.Minimum, r.Minimum) <= (Min(Self.Maximum, r.Maximum) + 1));
-end;
-
-{==============================================================================]
-  <Intersects>
-  @action: Determines if there is any shared numerical space between ranges.
-  @note: 
-    Returns True only if the intersection size is 1 or greater. 
-    If the ranges are merely touching (Adjacent), this returns False.
-[==============================================================================}
-function TRange.Intersects(const target: TRange): Boolean; overload;
-begin
-  Result := (Self.Intersecta(target) > 0);
-end;
-
-{==============================================================================]
-  <Intersects>
-  @action: Checks if the given integer falls within the range's boundaries.
-  @note: This is semantically identical to a "Contains" or "Includes" check.
-[==============================================================================}
-function TRange.Intersects(const target: Integer): Boolean; overload;
-begin
-  Result := InRange(target, Self.Minimum, Self.Maximum);
-end;
-
-{==============================================================================]
   <IsAdjacent>
   @action: Determines whether this range is directly adjacent to another range.
   @note: Returns True if the ranges do not overlap but touch at exactly one
@@ -276,53 +238,6 @@ begin
 end;
 
 {==============================================================================]
-  <IsConnected>
-  @action: Determines if Self and the target range share any physical points, 
-           including shared boundaries (touching).
-           
-  @note:   POLARITY AGNOSTIC: 
-           Evaluates physical boundaries (Min/Max). Returns True if there is 
-           an overlap, containment, or if the ranges are adjacent (e.g., [1..5] 
-           and [5..10] are connected at point 5).
-           
-           LOGIC: 
-           Returns True if (Self.Min <= Target.Max) AND (Target.Min <= Self.Max).
-           If False, the ranges are "Disjoint" (separated by a gap).
-[==============================================================================}
-function TRange.IsConnected(const target: TRange): Boolean; overload;
-begin
-  Result := ((Self.Minimum <= target.Maximum) and (target.Minimum <= Self.Maximum));
-end;
-
-{==============================================================================]
-  <IsEquivalent>
-  @action: Returns True if both ranges occupy the exact same physical span 
-           on the number line.        
-  @note: This is a spatial check, not a structural one. For example, 
-         [1..10] and [10..1] are considered equivalent because they 
-         cover the same ground.
-         Relies on RelationshipTo(target) returning 3 (Binary 0011), 
-         indicating that both the Minimum and Maximum boundaries match.
-[==============================================================================}
-function TRange.IsEquivalent(const target: TRange): Boolean; overload;
-begin
-  Result := (Self.RelationshipTo(target) = 3);
-end;
-
-{==============================================================================]
-  <IsMergeable>
-  @action: Determines whether this range can be merged with another range.
-  @note: Returns True if the ranges overlap or are directly adjacent.
-         Mergeable ranges can be combined into a single contiguous range
-         without introducing gaps.
-         This method assumes both ranges are valid (Minimum <= Maximum).
-[==============================================================================}
-function TRange.IsMergeable(const other: TRange): Boolean; overload;
-begin
-  Result := (Self.Overlaps(other) or Self.IsAdjacent(other));
-end;
-
-{==============================================================================]
   <IsNeighbor>
   @action: Determines whether two ranges are directly adjacent.
   @note: Returns True if Self either immediately follows or precedes r.
@@ -331,90 +246,6 @@ end;
 function TRange.IsNeighbor(const r: TRange): Boolean; overload;
 begin
   Result := (Self.Follows(r) or Self.Precedes(r));
-end;
-
-{==============================================================================]
-  <Jointed>
-  @action: Determines whether two ranges are connected without a gap.
-  @note: Returns True if Self and r either overlap or are directly adjacent.
-         Computes the separation between ranges (g), where:
-           g = 0  → overlap
-           g = 1  → touching (adjacent)
-           g > 1  → gap
-         The result is True when g <= 1, meaning the ranges form a continuous
-         interval when combined.
-[==============================================================================}
-function TRange.Jointed(const r: TRange): Boolean; overload;
-var
-  g: Integer;
-begin
-  if (Self.Maximum < r.Minimum) then
-    g := (r.Minimum - Self.Maximum)
-  else if (r.Maximum < Self.Minimum) then
-    g := (Self.Minimum - r.Maximum)
-  else
-    g := 0;
-  Result := (g <= 1);
-end;
-
-{==============================================================================]
-  <Linkable>
-  @action: Returns True if the target range is adjacent to or overlaps with
-           the current range.
-  @note: Uses a proximity check (Distance <= 1) to determine if two ranges
-         can be merged into a single continuous interval.
-[==============================================================================}
-function TRange.Linkable(const target: TRange): Boolean; overload;
-begin
-  Result := not ((Self.Minimum > (target.Maximum + 1)) or (target.Minimum > (Self.Maximum + 1)));
-end;
-
-{==============================================================================]
-  <Loose>
-  @action: Returns True if this range and the target range are strictly separated,
-           i.e., there is a positive gap between them. Equivalent to saying the
-           ranges are disjoint with no touching endpoints.
-  @note:
-    • Uses the Gap method: Result = Self.Gap(target) > 0
-[==============================================================================}
-function TRange.Loose(const target: TRange): Boolean; overload;
-begin
-  Result := (Self.Gap(target) > 0);
-end;
-
-{==============================================================================]
-  <Meet>
-  @action: Computes whether two ranges overlap and, if so, returns their intersection.
-  @note: Returns True when the normalized ranges share at least one common value (l <= h).
-         The resulting range represents the inclusive intersection [max(start), min(stop)].
-[==============================================================================}
-function TRange.Meet(const other: TRange; out mRange: TRange): Boolean; overload;
-var
-  s, o: TRange;
-  h, l: Integer;
-begin
-  s := Self.Normalize;
-  o := other.Normalize;
-  l := Max(s.start, o.start);
-  h := Min(s.stop, o.stop);
-  Result := (l <= h);
-  if Result then
-    mRange := TRange.Construct(l, h);
-end;
-
-{==============================================================================]
-  <Mergeable>
-  @action: Determines whether this range is mergeable with another range.
-  @note: Returns True if the ranges overlap or are directly adjacent.
-         The evaluation is inclusive of a one-unit boundary, meaning that
-         ranges with no gap between them can be combined into a single
-         contiguous range. This condition is equivalent to testing whether
-         the union of the two ranges would form a continuous interval.
-         This method assumes both ranges are valid (Minimum <= Maximum).
-[==============================================================================}
-function TRange.Mergeable(const other: TRange): Boolean; overload;
-begin
-  Result := ((Self.Minimum <= (other.Maximum + 1)) and ((Self.Maximum + 1) >= other.Minimum));
 end;
 
 {==============================================================================]
@@ -472,6 +303,171 @@ begin
 end;
 
 {==============================================================================]
+  <Follows>
+  @action: Determines whether the current range immediately follows another.
+  @note: Returns True if Self starts exactly one unit after r ends, i.e.
+         Self.Minimum = r.Maximum + 1. This implies direct adjacency with
+         Self positioned after r and no overlap or gap.
+[==============================================================================}
+function TRange.Follows(const r: TRange): Boolean; overload;
+begin
+  Result := ((r.Maximum + 1) = Self.Minimum);
+end;
+
+{==============================================================================]
+  <Precedes>
+  @action: Determines whether the current range immediately precedes another.
+  @note: Returns True if Self ends exactly one unit before r begins, i.e.
+         Self.Maximum + 1 = r.Minimum. This implies direct adjacency with
+         Self positioned before r and no overlap or gap.
+[==============================================================================}
+function TRange.Precedes(const r: TRange): Boolean; overload;
+begin
+  Result := (r.Minimum = (Self.Maximum + 1));
+end;
+
+{==============================================================================]
+  <Gapless>
+  @action: Determines whether two ranges are contiguous or overlapping.
+  @note: Returns True if Self and r either overlap or are directly adjacent,
+         i.e. there is no gap between them. This is evaluated by checking
+         whether the maximum of the lower bounds is less than or equal to
+         the minimum of the upper bounds plus one. This condition allows:
+         - overlap (intersection > 0)
+         - adjacency (exact boundary touch)
+         but excludes any separation greater than one unit.
+[==============================================================================}
+function TRange.Gapless(const r: TRange): Boolean; overload;
+begin
+  Result := (Max(Self.Minimum, r.Minimum) <= (Min(Self.Maximum, r.Maximum) + 1));
+end;
+
+{==============================================================================]
+  <Intersects>
+  @action: Determines if there is any shared numerical space between ranges.
+  @note: 
+    Returns True only if the intersection size is 1 or greater. 
+    If the ranges are merely touching (Adjacent), this returns False.
+[==============================================================================}
+function TRange.Intersects(const target: TRange): Boolean; overload;
+begin
+  Result := (Self.Intersecta(target) > 0);
+end;
+
+{==============================================================================]
+  <Intersects>
+  @action: Checks if the given integer falls within the range's boundaries.
+  @note: This is semantically identical to a "Contains" or "Includes" check.
+[==============================================================================}
+function TRange.Intersects(const target: Integer): Boolean; overload;
+begin
+  Result := InRange(target, Self.Minimum, Self.Maximum);
+end;
+
+{==============================================================================]
+  <IsConnected>
+  @action: Determines if Self and the target range share any physical points, 
+           including shared boundaries (touching).
+           
+  @note:   POLARITY AGNOSTIC: 
+           Evaluates physical boundaries (Min/Max). Returns True if there is 
+           an overlap, containment, or if the ranges are adjacent (e.g., [1..5] 
+           and [5..10] are connected at point 5).
+           
+           LOGIC: 
+           Returns True if (Self.Min <= Target.Max) AND (Target.Min <= Self.Max).
+           If False, the ranges are "Disjoint" (separated by a gap).
+[==============================================================================}
+function TRange.IsConnected(const target: TRange): Boolean; overload;
+begin
+  Result := ((Self.Minimum <= target.Maximum) and (target.Minimum <= Self.Maximum));
+end;
+
+{==============================================================================]
+  <IsMergeable>
+  @action: Determines whether this range can be merged with another range.
+  @note: Returns True if the ranges overlap or are directly adjacent.
+         Mergeable ranges can be combined into a single contiguous range
+         without introducing gaps.
+         This method assumes both ranges are valid (Minimum <= Maximum).
+[==============================================================================}
+function TRange.IsMergeable(const other: TRange): Boolean; overload;
+begin
+  Result := (Self.Overlaps(other) or Self.IsAdjacent(other));
+end;
+
+{==============================================================================]
+  <Jointed>
+  @action: Determines whether two ranges are connected without a gap.
+  @note: Returns True if Self and r either overlap or are directly adjacent.
+         Computes the separation between ranges (g), where:
+           g = 0  → overlap
+           g = 1  → touching (adjacent)
+           g > 1  → gap
+         The result is True when g <= 1, meaning the ranges form a continuous
+         interval when combined.
+[==============================================================================}
+function TRange.Jointed(const r: TRange): Boolean; overload;
+var
+  g: Integer;
+begin
+  if (Self.Maximum < r.Minimum) then
+    g := (r.Minimum - Self.Maximum)
+  else if (r.Maximum < Self.Minimum) then
+    g := (Self.Minimum - r.Maximum)
+  else
+    g := 0;
+  Result := (g <= 1);
+end;
+
+{==============================================================================]
+  <Linkable>
+  @action: Returns True if the target range is adjacent to or overlaps with
+           the current range.
+  @note: Uses a proximity check (Distance <= 1) to determine if two ranges
+         can be merged into a single continuous interval.
+[==============================================================================}
+function TRange.Linkable(const target: TRange): Boolean; overload;
+begin
+  Result := not ((Self.Minimum > (target.Maximum + 1)) or (target.Minimum > (Self.Maximum + 1)));
+end;
+
+{==============================================================================]
+  <Meet>
+  @action: Computes whether two ranges overlap and, if so, returns their intersection.
+  @note: Returns True when the normalized ranges share at least one common value (l <= h).
+         The resulting range represents the inclusive intersection [max(start), min(stop)].
+[==============================================================================}
+function TRange.Meet(const other: TRange; out mRange: TRange): Boolean; overload;
+var
+  s, o: TRange;
+  h, l: Integer;
+begin
+  s := Self.Normalize;
+  o := other.Normalize;
+  l := Max(s.start, o.start);
+  h := Min(s.stop, o.stop);
+  Result := (l <= h);
+  if Result then
+    mRange := TRange.Construct(l, h);
+end;
+
+{==============================================================================]
+  <Mergeable>
+  @action: Determines whether this range is mergeable with another range.
+  @note: Returns True if the ranges overlap or are directly adjacent.
+         The evaluation is inclusive of a one-unit boundary, meaning that
+         ranges with no gap between them can be combined into a single
+         contiguous range. This condition is equivalent to testing whether
+         the union of the two ranges would form a continuous interval.
+         This method assumes both ranges are valid (Minimum <= Maximum).
+[==============================================================================}
+function TRange.Mergeable(const other: TRange): Boolean; overload;
+begin
+  Result := ((Self.Minimum <= (other.Maximum + 1)) and ((Self.Maximum + 1) >= other.Minimum));
+end;
+
+{==============================================================================]
   <Overlap>
   @action: Checks if a and b overlap eachother.
   @note: Returns true if overlap is found.
@@ -505,15 +501,162 @@ begin
 end;
 
 {==============================================================================]
-  <Precedes>
-  @action: Determines whether the current range immediately precedes another.
-  @note: Returns True if Self ends exactly one unit before r begins, i.e.
-         Self.Maximum + 1 = r.Minimum. This implies direct adjacency with
-         Self positioned before r and no overlap or gap.
+  <Touch>
+  @action: Returns true if range touches b.
+  @note: Touch = only single value is shared between the ranges.
 [==============================================================================}
-function TRange.Precedes(const r: TRange): Boolean; overload;
+function TRange.Touch(const b: TRange): Boolean; overload;
+var
+  l, h: TRange;
 begin
-  Result := (r.Minimum = (Self.Maximum + 1));
+  l := Self.Normalize;
+  h := b.Normalize;
+  Result := TRange.Construct(Max(l.start, h.start), Min(l.stop, h.stop)).Singular;
+end;
+
+{==============================================================================]
+  <Touches>
+  @action: Returns true if range touches b with minimum and maximum contact.
+  @note: Touch = minimum/maximum shared values.
+[==============================================================================}
+function TRange.Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
+var
+  x, y: TRange;
+  i, s: Integer;
+begin
+  x := Self.Normalize;
+  y := b.Normalize;
+  s := 0;
+  for i := x.start to x.stop do
+    if ((i >= y.start) and (i <= y.stop)) then
+      if (s.Increment > maxTouch) then
+        Exit(False);
+  Result := (s >= minTouch);
+end;
+
+{==============================================================================]
+  <Touching>
+  @action: Returns true if range touches b with minimum and maximum contact.
+  @note: Touch = minimum/maximum shared values.
+[==============================================================================}
+function TRange.Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
+var
+  x, y: TRange;
+  s, i: Integer;
+begin
+  x := Self.Normalize;
+  y := b.Normalize;
+  s := 0;
+  for i := x.start to x.stop do
+    if ((i >= y.start) and (i <= y.stop)) then
+      if (s.Increment > maxTouch) then
+        Exit(False);
+  Result := (s >= minTouch);
+end;
+
+{==============================================================================]
+  <Loose>
+  @action: Returns True if this range and the target range are strictly separated,
+           i.e., there is a positive gap between them. Equivalent to saying the
+           ranges are disjoint with no touching endpoints.
+  @note:
+    • Uses the Gap method: Result = Self.Gap(target) > 0
+[==============================================================================}
+function TRange.Loose(const target: TRange): Boolean; overload;
+begin
+  Result := (Self.Gap(target) > 0);
+end;
+
+{==============================================================================]
+  <Separated>
+  @action: Determines whether two ranges are completely disjointed and separated by a minimum distance (aGap).
+  @note:
+    - Evaluates the absolute spatial boundaries using Minimum and Maximum values.
+    - Returns True if the gap between the ranges is strictly greater than the specified gap.
+    - aGap of 0 checks for simple non-overlap, while aGap of 1 (default) ensures at least one unmapped index exists between them.
+[==============================================================================}
+function TRange.Separated(const other: TRange; const aGap: UInt32 = 1): Boolean; overload;
+begin
+  Result := ((Self.Maximum < (other.Minimum - aGap)) or (other.Maximum < (Self.Minimum - aGap)));
+end;
+
+{==============================================================================]
+  <Within>
+  @action: Boolean check using signed distance logic.
+  @param: minDist - The lower bound of the signed distance.
+  @param: maxDist - The upper bound of the signed distance.
+[==============================================================================}
+function TRange.Within(const target: TRange; const minDist, maxDist: Integer): Boolean; overload;
+begin
+  Result := InRange(Self.Relationality(target), minDist, maxDist);
+end;
+
+function TRange.Within(const target: TRange; const dist: Integer = 0): Boolean; overload;
+begin
+  Result := (Self.Relationality(target) <= dist);
+end;
+
+{==============================================================================]
+  <Within>
+  @action: Checks if a point is within a specific proximity to the range.
+[==============================================================================}
+function TRange.Within(const target: Integer; const minDist, maxDist: Integer): Boolean; overload;
+begin
+  Result := InRange(Self.Relationality(target), minDist, maxDist);
+end;
+
+function TRange.Within(const target: Integer; const dist: Integer = 0): Boolean; overload;
+begin
+  Result := (Self.Relationality(target) <= dist);
+end;
+
+{==============================================================================]
+  <Coequal>
+  @action: Determines whether two ranges are equal under either strict or
+           normalized comparison semantics.
+           Supports dual-mode equality:
+             * Strict equality: direct field comparison (start/stop).
+             * Non-strict equality: compares normalized bounds to account for
+               differing internal representations.
+  @note:
+    - strictly = True:
+        * Performs exact, field-level comparison:
+            (Self.start = target.start) AND
+            (Self.stop  = target.stop)
+        * No normalization is applied.
+        * Fastest path (O(1)).
+    - strictly = False:
+        * Compares normalized ranges:
+            s := Self.Normalized
+            t := target.Normalized
+            Result = (s.start = t.start) AND (s.stop = t.stop)
+        * Ensures equivalence even if:
+            - bounds are reversed (start > stop)
+            - internal representation differs but logical interval matches
+    - Normalization guarantees:
+        * start ≤ stop
+        * consistent canonical form for comparison
+    - Complexity:
+        * Strict:     O(1)
+        * Non-strict: O(1), assuming Normalized is O(1)
+    - Use cases:
+        * strictly = True:
+            When structural identity matters (exact stored values).
+        * strictly = False:
+            When logical interval equivalence is required.
+    - Notes:
+        * Non-strict mode is safer for external inputs or mixed range sources.
+        * Strict mode avoids overhead when invariants are already enforced.
+[==============================================================================}
+function TRange.Coequal(const target: TRange; const strictly: Boolean = False): Boolean; overload;
+var
+  s, t: TRange;
+begin
+  if strictly then
+    Exit((Self.start = target.start) and (Self.stop = target.stop));
+  s := Self.Normalized;
+  t := target.Normalized;
+  Result := ((s.start = t.start) and (s.stop = t.stop));
 end;
 
 {==============================================================================]
@@ -599,104 +742,5 @@ begin
     Result := (Result or 4);
   if (Self.Maximum > target.Maximum) then
     Result := (Result or 8);
-end;
-
-{==============================================================================]
-  <Separated>
-  @action: Determines whether this range is strictly separated from another range.
-  @note: Returns True if there is at least one discrete value between the two
-         ranges. Overlapping or directly adjacent ranges are not considered
-         separated. In other words, this method evaluates whether the gap
-         between the ranges is greater than zero.
-         This method assumes both ranges are valid (Minimum <= Maximum).
-[==============================================================================}
-function TRange.Separated(const other: TRange): Boolean; overload;
-begin
-  Result := ((Self.Maximum < (other.Minimum - 1)) or (other.Maximum < (Self.Minimum - 1)));
-end; 
-
-{==============================================================================]
-  <Touch>
-  @action: Returns true if range touches b.
-  @note: Touch = only single value is shared between the ranges.
-[==============================================================================}
-function TRange.Touch(const b: TRange): Boolean; overload;
-var
-  l, h, r: TRange;
-begin
-  l := Self.Normalize;
-  h := b.Normalize;
-  r.Create(Max(l.start, h.start), Min(l.stop, h.stop));
-  Result := r.Singular;
-end;
-
-{==============================================================================]
-  <Touches>
-  @action: Returns true if range touches b with minimum and maximum contact.
-  @note: Touch = minimum/maximum shared values.
-[==============================================================================}
-function TRange.Touches(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
-var
-  x, y: TRange;
-  i, s: Integer;
-begin
-  x := Self.Normalize;
-  y := b.Normalize;
-  s := 0;
-  for i := x.start to x.stop do
-    if ((i >= y.start) and (i <= y.stop)) then
-      if (s.Increment > maxTouch) then
-        Exit(False);
-  Result := (s >= minTouch);
-end;
-
-{==============================================================================]
-  <Touching>
-  @action: Returns true if range touches b with minimum and maximum contact.
-  @note: Touch = minimum/maximum shared values.
-[==============================================================================}
-function TRange.Touching(const b: TRange; const maxTouch: Integer = 1; const minTouch: Integer = 1): Boolean; overload;
-var
-  x, y: TRange;
-  s, i: Integer;
-begin
-  x := Self.Normalize;
-  y := b.Normalize;
-  s := 0;
-  for i := x.start to x.stop do
-    if ((i >= y.start) and (i <= y.stop)) then
-      if (s.Increment > maxTouch) then
-        Exit(False);
-  Result := (s >= minTouch);
-end;
-
-{==============================================================================]
-  <Within>
-  @action: Boolean check using signed distance logic.
-  @param: minDist - The lower bound of the signed distance.
-  @param: maxDist - The upper bound of the signed distance.
-[==============================================================================}
-function TRange.Within(const target: TRange; const minDist, maxDist: Integer): Boolean; overload;
-begin
-  Result := InRange(Self.Relationality(target), minDist, maxDist);
-end;
-
-function TRange.Within(const target: TRange; const dist: Integer = 0): Boolean; overload;
-begin
-  Result := (Self.Relationality(target) <= dist);
-end;
-
-{==============================================================================]
-  <Within>
-  @action: Checks if a point is within a specific proximity to the range.
-[==============================================================================}
-function TRange.Within(const target: Integer; const minDist, maxDist: Integer): Boolean; overload;
-begin
-  Result := InRange(Self.Relationality(target), minDist, maxDist);
-end;
-
-function TRange.Within(const target: Integer; const dist: Integer = 0): Boolean; overload;
-begin
-  Result := (Self.Relationality(target) <= dist);
 end;
 {$ENDIF}

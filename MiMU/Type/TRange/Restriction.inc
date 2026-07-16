@@ -378,7 +378,7 @@ var
   e: TRange;
 begin
   e := Self.Clamp(zone);
-  Result := not e.Equals(Self);
+  Result := not e.Equivale(Self);
   if Result then
     Self := e;
 end;
@@ -393,7 +393,7 @@ var
   e: TRange;
 begin
   e := Self.ClampMax(maxValue);
-  Result := not e.Equals(Self);
+  Result := not e.Equivale(Self);
   if Result then
     Self := e;
 end;
@@ -408,7 +408,7 @@ var
   e: TRange;
 begin
   e := Self.ClampMin(minValue);
-  Result := not e.Equals(Self);
+  Result := not e.Equivale(Self);
   if Result then
     Self := e;
 end;
