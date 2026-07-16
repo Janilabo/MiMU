@@ -42,6 +42,7 @@ function PopulationCount: Integer; overload;
 function PopulationSize: Integer; overload;
 function Quantified: Int64; overload;
 function Quantify: Integer; overload;
+function Quantitas: Integer; overload;
 function Quantity: Integer; overload;
 function Quantum: Integer; overload;
 function Quota: Integer; overload;
@@ -718,6 +719,23 @@ begin
   m := (d shr 31);
   Result := (((d xor m) - m) + 1);
 end;
+
+{==============================================================================]
+  <Quantitas>
+  @action: Calculates the absolute, inclusive discrete element count of the range.
+  @note: 
+    - Automatically normalizes the boundaries (via sorting/swapping) to handle both ascending and descending ranges.
+    - Returns the total number of discrete integer points spanned, ensuring a minimum result of 1.
+[==============================================================================}
+function TRange.Quantitas: Integer; overload;
+var
+  s: TIntegerArray;
+begin
+  s := [Self.start, Self.stop];
+  if (s[0] > s[1]) then
+    Swap(s[0], s[1]);
+  Result := ((s[1] - s[0]) + 1);
+end; 
 
 {==============================================================================]
   <Quantity>
