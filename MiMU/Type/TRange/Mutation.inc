@@ -34,25 +34,24 @@ end;
 
 {==============================================================================]
   <Shrink>
-  @action: Compresses the lower bounds of the range inward up to a specified threshold.
+  @action: Compresses the range inward by snapping the nearest boundary to a target value.
   @note: 
-    - Moves the lower boundary (start for ascending, stop for descending) to match val.
-    - Fails and returns False if val sits completely outside the internal bounds of the range.
+    - Requires the range to be plural (Size > 1) and contain the target value.
+    - If the value matches an exact boundary, the opposite boundary snaps to it.
+    - Otherwise, it dynamically updates whichever boundary (start or stop) is closer to val.
 [==============================================================================}
 function TRange.Shrink(const val: Integer): Boolean; overload;
 begin
-  case Self.Descending of
-    False:
-    if ((val > Self.start) and (val <= Self.stop)) then
-      Self.start := val
-    else
-      Exit(False);
-    True:
-    if ((val > Self.stop) and (val <= Self.start)) then
-      Self.stop := val
-    else
-      Exit(False);
-  end;
-  Result := True;
+  Result := (Self.Plural and Self.Contains(val));
+  if not Result then
+    Exit;
+  if (val = Self.start) then
+    Self.stop := val
+  else if (val = Self.stop) then
+    Self.start := val
+  else if (val.Distance(Self.start) < val.Distance(Self.stop)) then
+    Self.start := val
+  else
+    Self.stop := val;
 end;
 {$ENDIF}
