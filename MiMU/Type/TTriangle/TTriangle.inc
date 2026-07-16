@@ -12,7 +12,7 @@ PTriangle = ^TTriangle;
 
 {$IFDEF HELPERS}
 TTriangleHelper = type helper for TTriangle
-  {$I ../Base/Base.inc}
+  {$I ../Type.inc}
 end;
 {$ENDIF}
 
@@ -21,7 +21,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}
-{$I ../Base/Base.inc}
+{$I ../Type.inc}
 {$ENDIF}
 
 {$UNDEF TTriangle}

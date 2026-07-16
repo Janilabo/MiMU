@@ -1,4 +1,4 @@
-{$I ../Base/Base.inc}
+{$I ../Type.inc}
 
 {$I @Boolean/Convert.inc}
 {$I @Boolean/Operation.inc}

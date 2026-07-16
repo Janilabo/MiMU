@@ -1,4 +1,4 @@
-{$I ../Base/Base.inc}
+{$I ../Type.inc}
 
 {$I @TCircle/Border.inc}
 {$I @TCircle/Bounding.inc}

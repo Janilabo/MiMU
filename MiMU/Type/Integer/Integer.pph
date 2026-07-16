@@ -1,4 +1,4 @@
-{$I ../Base/Base.inc}
+{$I ../Type.inc}
 
 {$I @Integer/Adjust.inc}
 {$I @Integer/Bit.inc}

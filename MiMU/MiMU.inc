@@ -4,24 +4,24 @@
     TByteSet = set of Byte;
     TVariantArray = array of Variant;
     TConstArray = array of TVarRec;
-  {$I Type/Type.inc}
+  {$I Type/Type+.inc}
   {$I TArray/TArray.inc}
   {$i T2DArray/T2DArray.inc}
   {$UNDEF TYPES}
 
   {$DEFINE OPERATORS}
-  {$I Type/Type.inc}
+  {$I Type/Type+.inc}
   {$UNDEF OPERATORS}
 
   {$DEFINE HELPERS}
   type
-  {$I Type/Type.inc}
+  {$I Type/Type+.inc}
   {$I TArray/TArray.inc}
   {$i T2DArray/T2DArray.inc}
   {$UNDEF HELPERS}
 
   {$DEFINE FUNCTIONS}
-  {$I Type/Type.inc}
+  {$I Type/Type+.inc}
   {$I TArray/TArray.inc}
   {$i T2DArray/T2DArray.inc}
   {$I Miscellaneous/BinarySearch.inc}
@@ -55,7 +55,7 @@
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-  {$I Type/Type.inc}
+  {$I Type/Type+.inc}
   {$I TArray/TArray.inc}
   {$i T2DArray/T2DArray.inc}
   {$I Miscellaneous/BinarySearch.inc}

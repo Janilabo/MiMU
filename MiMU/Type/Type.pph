@@ -1,0 +1,18 @@
+{$I @Type/Arrays.inc}
+{$I @Type/Counting.inc}
+{$I @Type/Miscellaneous.inc}
+{$I @Type/Modify.inc}
+{$I @Type/Search.inc}
+{$I @Type/Select.inc}
+{$I @Type/Validation.inc}
+
+{$IFDEF Sortable}
+{$I @Type/Sortable/Central.inc}
+{$I @Type/Sortable/Extrema.inc}
+{$I @Type/Sortable/Miscellaneous.inc}
+{$I @Type/Sortable/Order.inc}
+{$I @Type/Sortable/Restriction.inc}
+{$I @Type/Sortable/Sort.inc}
+{$I @Type/Sortable/Sorted.inc}
+{$I @Type/Sortable/Validation.inc}
+{$ENDIF}

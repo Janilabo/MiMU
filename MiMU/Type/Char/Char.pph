@@ -1,4 +1,4 @@
-{$I ../Base/Base.inc}
+{$I ../Type.inc}
 
 {$I @Char/Casing.inc}
 {$I @Char/Classification.inc}

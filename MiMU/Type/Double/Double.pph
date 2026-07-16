@@ -1,4 +1,4 @@
-{$I ../Base/Base.inc}
+{$I ../Type.inc}
 
 {$I @Double/Adjust.inc}
 {$I @Double/Angle.inc}

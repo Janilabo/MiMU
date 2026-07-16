@@ -1,4 +1,4 @@
-{$I ../Base/Base.inc}
+{$I ../Type.inc}
 
 {$I @TSegment/Bounds.inc}
 {$I @TSegment/Construction.inc}

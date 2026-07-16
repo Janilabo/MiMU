@@ -1,4 +1,4 @@
-{$I ../Base/Base.inc}
+{$I ../Type.inc}
 
 {$I @String/Characters.inc}
 {$I @String/Cleaning.inc}
