@@ -1,16 +1,20 @@
 {$IFDEF METHODS}
 function Ascency: Boolean; overload;
 function Ascendal: Boolean; overload;
+function Ascendent: Boolean; overload;
 function Ascending: Boolean; overload;
 function Ascends: Boolean; overload;
 function Ascing: Boolean; overload;
+function Ascional: Boolean; overload;
 function IsAscending: Boolean; overload;
 
 function Descency: Boolean; overload;
 function Descendal: Boolean; overload;
+function Descendent: Boolean; overload;
 function Descending: Boolean; overload;
 function Descends: Boolean; overload;
 function Descing: Boolean; overload;
+function Descional: Boolean; overload;
 function IsDescending: Boolean; overload;
 
 function Nonascending: Boolean; overload;
@@ -36,6 +40,18 @@ end;
 function TRange.Ascendal: Boolean; overload;
 begin
   Result := (Self.start.Compare(Self.stop) < 0);
+end;
+
+{==============================================================================]
+  <Ascendent>
+  @action: Determines whether the range features an ascending or upward-sloping orientation.
+  @note: 
+    - Returns True if the stop boundary is strictly greater than the start boundary.
+    - Captures a forward directional state where values increase from start to finish.
+[==============================================================================}
+function TRange.Ascendent: Boolean; overload;
+begin
+  Result := IfThen(Self.Ascending, True, False);
 end;
 
 {==============================================================================]
@@ -70,6 +86,16 @@ begin
 end;
 
 {==============================================================================]
+  <Ascional>
+  @action: Determines whether the range has a strictly upward or positive direction.
+  @note: Returns True if the Direction value is greater than 0, indicating an ascending trajectory.
+[==============================================================================}
+function TRange.Ascional: Boolean; overload;
+begin
+  Result := (Self.Direction > 0);
+end;
+
+{==============================================================================]
   <IsAscending>
   @action: Determines if the range is strictly ascending by checking if the start value is less than the stop value.
   @note: Returns True if (start - stop) is less than zero. Requires a numeric type that supports subtraction.
@@ -97,6 +123,18 @@ end;
 function TRange.Descendal: Boolean; overload;
 begin
   Result := (Self.start.Compare(Self.stop) > 0);
+end;
+
+{==============================================================================]
+  <Descendent>
+  @action: Determines whether the range features a descending or downward-sloping orientation.
+  @note: 
+    - Returns True if the start boundary is strictly greater than the stop boundary.
+    - Captures a backward directional state where values decrease from start to finish.
+[==============================================================================}
+function TRange.Descendent: Boolean; overload;
+begin
+  Result := IfThen(Self.Descending, True, False);
 end;
 
 {==============================================================================]
@@ -132,6 +170,16 @@ end;
 function TRange.Descing: Boolean; overload;
 begin
   Result := (Self.start > Self.stop);
+end;
+
+{==============================================================================]
+  <Descional>
+  @action: Determines whether the range has a strictly downward or negative direction.
+  @note: Returns True if the Direction value is less than 0, indicating a descending trajectory.
+[==============================================================================}
+function TRange.Descional: Boolean; overload;
+begin
+  Result := (Self.Direction < 0);
 end;
 
 {==============================================================================]

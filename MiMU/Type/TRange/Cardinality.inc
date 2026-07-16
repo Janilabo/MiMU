@@ -6,13 +6,21 @@ function IsSingleton: Boolean; overload;
 function IsSingular: Boolean; overload;
 function Singleton: Boolean; overload;
 function Singular: Boolean; overload;
+function Uninal: Boolean; overload;
 
 function Composite: Boolean; overload;
 function Directional: Boolean; overload;
 function IsDirectional: Boolean; overload;
 function IsInterval: Boolean; overload;
 function IsPlural: Boolean; overload;
+function Multinal(const N: Integer): Boolean; overload;
+function Multinal: Boolean; overload;
+function Multiple(const N: Integer): Boolean; overload;
 function Multiple: Boolean; overload;
+function Multitude(const N: Integer): Boolean; overload;
+function Multitude: Boolean; overload;
+function Multival(const N: Integer): Boolean; overload;
+function Multival: Boolean; overload;
 function Plural: Boolean; overload;
 function Proper: Boolean; overload;
 {$ENDIF}
@@ -97,6 +105,18 @@ begin
 end;
 
 {==============================================================================]
+  <Uninal>
+  @action: Determines whether the range represents a single, static point.
+  @note: 
+    - Returns True if the Direction is exactly 0, meaning start equals stop.
+    - Represents a valid, healthy range consisting of exactly one discrete unit.
+[==============================================================================}
+function TRange.Uninal: Boolean; overload;
+begin
+  Result := (Self.Direction = 0);
+end;
+
+{==============================================================================]
   <Composite>
   @action: Returns true if range start does NOT equal to stop
   @note: None.
@@ -153,6 +173,42 @@ begin
 end;
 
 {==============================================================================]
+  <Multinal>
+  @action: Verifies whether the range matches an exact element count aligned with its current vector direction.
+  @note: 
+    - Returns True if N > 0 and the step arithmetic matches the stop boundary.
+    - Scales the discrete element distance by Self.Direction, ensuring tracking along the proper orientation.
+[==============================================================================}
+function TRange.Multinal(const N: Integer): Boolean; overload;
+begin
+  Result := ((N > 0) and ((Self.start + (Self.Direction * (N - 1))) = Self.stop));
+end;
+
+{==============================================================================]
+  <Multinal>
+  @action: Determines whether the range has a valid, non-zero multiplicity or trajectory.
+  @note: 
+    - Returns True if the range has a clear forward or backward direction (Direction <> 0).
+    - Returns False if the range is degenerate/stationary (Direction = 0).
+[==============================================================================}
+function TRange.Multinal: Boolean; overload;
+begin
+  Result := IfThen((Self.Direction = 0), False, True);
+end;
+
+{==============================================================================]
+  <Multiple>
+  @action: Verifies whether the range contains a discrete size matching the specified count.
+  @note: 
+    - Returns True if N is greater than 0 and the internal Size property exactly equals N.
+    - Serves as a direct, explicit alternative to checking the internal element count.
+[==============================================================================}
+function TRange.Multiple(const N: Integer): Boolean; overload;
+begin
+  Result := ((N > 0) and (Self.Size = N));
+end;
+
+{==============================================================================]
   <Multiple>
   @action: Determines whether the range contains more than one value.
   @note: 
@@ -163,6 +219,54 @@ end;
 function TRange.Multiple: Boolean; overload;
 begin
   Result := (Self.Size > 1);
+end;
+
+{==============================================================================]
+  <Multitude>
+  @action: Determines whether the range spans a discrete multitude of exactly N elements.
+  @note:
+    - Defaults to N = 1, functioning as a strict singleton check (start = stop).
+    - If N > 1, returns True if the total discrete count of items in the range equals N.
+    - Handles both positive and negative trajectories seamlessly.
+[==============================================================================}
+function TRange.Multitude(const N: Integer): Boolean; overload;
+begin
+  Result := ((N > 0) and (((Self.start + (N - 1)) = Self.stop) or ((Self.start - (N - 1)) = Self.stop)));
+end;
+
+{==============================================================================]
+  <Multitude>
+  @action: Determines whether the range contains a multitude of multiple elements.
+  @note: 
+    - Returns True if the range spans more than a single discrete point (Size > 1).
+    - Acts as the logical complement to the singleton state by negating Multitude(1).
+[==============================================================================}
+function TRange.Multitude: Boolean; overload;
+begin
+  Result := not Self.Multitude(1);
+end;
+
+{==============================================================================]
+  <Multival>
+  @action: Determines whether the range spans a discrete multitude of exactly N elements.
+  @note:
+    - Uses TIntegerHelper's Compare method against Self.Size rather than direct equality.
+    - Returns True only when N exactly matches the range's discrete element count.
+[==============================================================================}
+function TRange.Multival(const N: Integer): Boolean; overload;
+begin
+  Result := (N.Compare(Self.Size) = 0);
+end;
+
+{==============================================================================]
+  <Multival>
+  @action: Determines whether the range contains a multitude of multiple elements.
+  @note: Returns True if start and stop differ, using TRange's Compare method
+         rather than direct inequality.
+[==============================================================================}
+function TRange.Multival: Boolean; overload;
+begin
+  Result := (Self.start.Compare(Self.stop) <> 0);
 end;
 
 {==============================================================================]

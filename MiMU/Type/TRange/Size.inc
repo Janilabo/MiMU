@@ -9,6 +9,7 @@ function Count: Integer; overload;
 function Countage: Integer; overload;
 function Counted: Int64; overload;
 function Counting: Integer; overload;
+function Countment: Integer; overload;
 function Coverage: Integer; overload;
 function Depth: Integer; overload;
 function Diameter: Integer; overload;
@@ -213,6 +214,26 @@ end;
 function TRange.Counting: Integer; overload;
 begin
   Result := ((Self.Delta * Self.Direction) + 1);
+end;
+
+{==============================================================================]
+  <Countment>
+  @action: Returns the inclusive size of the range by naive one-step counting.
+  @note: Deliberately O(n) rather than O(1); walks from start to stop one
+         unit at a time, incrementing a counter. Included for mechanical
+         completeness rather than performance.
+[==============================================================================}
+function TRange.Countment: Integer; overload;
+var
+  i, d: Integer;
+begin
+  Result := 1;
+  if Self.Singular then
+    Exit;
+  d := Self.Direction;
+  i := Self.start;
+  while (i.Increase(d) <> Self.stop) do
+    Inc(Result);
 end;
 
 {==============================================================================]
