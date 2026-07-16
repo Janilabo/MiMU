@@ -1,5 +1,7 @@
 {$I ../Base/Base.inc}
 
+{$I Enumerator.inc}
+
 {$I TBox/Axis.inc}
 {$I TBox/Borders.inc}
 {$I TBox/Boundary.inc}
@@ -10,7 +12,6 @@
 {$I TBox/Construction.inc}
 {$I TBox/Containment.inc}
 {$I TBox/Dimensions.inc}
-{$I TBox/Enumerator.inc}
 {$I TBox/Extension.inc}
 {$I TBox/Frame.inc}
 {$I TBox/Grid.inc}

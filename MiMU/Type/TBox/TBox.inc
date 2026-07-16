@@ -1,7 +1,7 @@
 {$DEFINE TBox}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
-{$I TBox/Enumerator.inc}
+{$I Enumerator.inc}
 TBox = record
   X1, Y1, X2, Y2: Integer;
   {$UNDEF TYPES}{$DEFINE METHODS}{$I TBox.pph}{$UNDEF METHODS}{$DEFINE TYPES}
@@ -19,7 +19,7 @@ end;
 {$ENDIF}
 
 {$IF DEFINED(OPERATORS) OR DEFINED(IMPLEMENTATION)}
-{$I TBox/Operators.inc}
+{$I Operators.inc}
 {$ENDIF}
 
 {$IF DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION)}

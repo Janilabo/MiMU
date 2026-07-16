@@ -17,7 +17,7 @@ TDistance = function(const A, B: TPoint): Double;
 {$ENDIF}
 
 {$IF DEFINED(OPERATORS) OR DEFINED(IMPLEMENTATION)}
-{$I TPoint/Operators.inc}
+{$I Operators.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}

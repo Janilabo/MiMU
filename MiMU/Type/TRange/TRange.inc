@@ -1,7 +1,7 @@
 {$DEFINE TRange}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
-{$I TRange/Enumerator.inc}
+{$I Enumerator.inc}
 TRange = record
   start, stop: Integer;
   {$UNDEF TYPES}{$DEFINE METHODS}{$I TRange.pph}{$UNDEF METHODS}{$DEFINE TYPES}
@@ -13,7 +13,7 @@ PRange = ^TRange;
 {$ENDIF}
 
 {$IF DEFINED(OPERATORS) OR DEFINED(IMPLEMENTATION)}
-{$I TRange/Operators.inc}
+{$I Operators.inc}
 {$ENDIF}
 
 {$IFDEF HELPERS}

@@ -1,5 +1,7 @@
 {$I ../Base/Base.inc}
 
+{$I Enumerator.inc}
+
 {$I TRange/Access.inc}
 {$I TRange/Adjust.inc}
 {$I TRange/Arraying.inc}
@@ -13,7 +15,6 @@
 {$I TRange/Data.inc}
 {$I TRange/Direction.inc}
 {$I TRange/Encoding.inc}
-{$I TRange/Enumerator.inc}
 {$I TRange/Equality.inc}
 {$I TRange/Expansion.inc}
 {$I TRange/Extension.inc}
