@@ -1,13 +1,13 @@
 {$I ../Base/Base.inc}
 
-{$I Adjacency.inc}
-{$I Comparison.inc}
-{$I Construction.inc}
-{$I Containment.inc}
-{$I Convert.inc}
-{$I Distance.inc}
-{$I Grid.inc}
-{$I Metrics.inc}
-{$I Proximity.inc}
-{$I Transform.inc}
-{$I Uniformity.inc}
+{$I TPoint/Adjacency.inc}
+{$I TPoint/Comparison.inc}
+{$I TPoint/Construction.inc}
+{$I TPoint/Containment.inc}
+{$I TPoint/Convert.inc}
+{$I TPoint/Distance.inc}
+{$I TPoint/Grid.inc}
+{$I TPoint/Metrics.inc}
+{$I TPoint/Proximity.inc}
+{$I TPoint/Transform.inc}
+{$I TPoint/Uniformity.inc}
