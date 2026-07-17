@@ -1,11 +1,8 @@
 {$IFDEF METHODS}
 function Deconstruct(var rStart, rStop: Integer): Integer; overload;
-function Disizequal(const target: TRange): Boolean; overload;
 function Progress(const pPercent: Double): Integer; overload;
 function Reserve: TIntegerArray; overload;
 function Reserve(var aRange: TIntegerArray): Integer; overload;
-function Sizequal(const target: TRange; const tolerance: Integer): Boolean; overload;
-function Sizequal(const target: TRange): Boolean; overload;
 function Stippled: TIntegerArray; overload;
 function YoYo: TIntegerArray; overload;
 {$ENDIF}
@@ -181,16 +178,6 @@ begin
 end;
 
 {==============================================================================]
-  <Disizequal>
-  @action: Determines whether two ranges have different discrete sizes.
-  @note: Returns True if Self.Size does not equal target.Size. Logical negation of Sizequal.
-[==============================================================================}
-function TRange.Disizequal(const target: TRange): Boolean; overload;
-begin
-  Result := (Self.Size <> target.Size);
-end;
-
-{==============================================================================]
   <Progress>
   @action: Returns a position within the range corresponding to the given progress
           ratio.
@@ -320,28 +307,6 @@ begin
   s := IFThen(Self.Asceal, 1, -1);
   for i := 0 to (l - 1) do
     Result[i] := arr[Self.start + (i * s)];
-end;
-
-{==============================================================================]
-  <Sizequal>
-  @action: Determines whether two ranges have the same discrete size, regardless
-           of position or direction.
-  @note: Returns True if Self.Size equals target.Size.
-[==============================================================================}
-function TRange.Sizequal(const target: TRange): Boolean; overload;
-begin
-  Result := (Self.Size = target.Size);
-end;
-
-{==============================================================================]
-  <Sizequal>
-  @action: Determines whether two ranges have discrete sizes within a given tolerance.
-  @note: Returns True if the absolute difference between sizes is <= Tolerance.
-         Tolerance = 0 behaves identically to exact Sizequal.
-[==============================================================================}
-function TRange.Sizequal(const target: TRange; const tolerance: Integer): Boolean; overload;
-begin
-  Result := (Abs(Self.Size - target.Size) <= tolerance);
 end;
 
 {==============================================================================]

@@ -37,6 +37,9 @@ function RandDigit: Byte; overload;
 function Randify(const R: Integer = 2): Integer; overload;
 function RandIn(const R: Integer = 2; const N: Integer = 2): Integer; overload;
 function Rando(const R: Integer = 2): Integer; overload;
+function Random(const rn: TRange): Integer; overload;
+function Random(const bx: TBox): TPoint; overload;
+function Random(const aFrom, aTo: Int64): Int64; overload;
 function Random2: Boolean; overload;
 function Random2(const x: Integer; const r: Integer = 2): Integer; overload;
 function Randomal(const rSize: Integer = 1): TDoubleArray; overload;
@@ -728,6 +731,63 @@ begin
   if (R = 0) then
     Exit(0);
   Result := (Random(Abs(R)) * Sign(R));
+end;
+
+{==============================================================================]
+  <Random>
+  @action: Returns a single random Integer drawn from within the bounds of a
+           TRange, inclusive on both ends.
+  @note: 
+    - The range is normalized first (rn.Normalized), so a reversed range
+      (start > stop) is handled safely and still yields a valid draw.
+    - Overload of the standard Random() taking a TRange directly, avoiding
+      the need to manually extract Minimum/Maximum before drawing.
+[==============================================================================}
+function Random(const rn: TRange): Integer; overload;
+var
+  r: TRange;
+begin
+  r := rn.Normalized;
+  Result := (r.start + Random((r.stop - r.start) + 1));
+end;
+
+{==============================================================================]
+  <Random>
+  @action: Returns a random TPoint with X and Y independently drawn from within
+           the bounds of a TBox, inclusive on both ends.
+  @note: 
+    - X is drawn from [bx.X1, bx.X2]; Y is drawn from [bx.Y1, bx.Y2], independently.
+    - Does not normalize the box; assumes X1 <= X2 and Y1 <= Y2. A reversed
+      box (X1 > X2 or Y1 > Y2) will produce an invalid Random() call with a
+      negative range argument.
+    - Overload of the standard Random() taking a TBox directly, sparing the
+      caller from drawing X and Y separately.
+[==============================================================================}
+function Random(const bx: TBox): TPoint; overload;
+begin
+  Result.X := (bx.X1 + Random((bx.X2 - bx.X1) + 1));
+  Result.Y := (bx.Y1 + Random((bx.Y2 - bx.Y1) + 1));
+end;
+
+{==============================================================================]
+  <Random>
+  @action: Returns a random Int64 drawn from between two arbitrary bounds,
+           inclusive on both ends, regardless of argument order.
+  @note: 
+    - aFrom and aTo need not be ordered; Result is seeded with Min(aFrom, aTo)
+      and Max(aFrom, aTo) is computed separately, so Random(10, 5) behaves
+      identically to Random(5, 10).
+    - Uses Result directly as the lower-bound accumulator rather than
+      declaring separate Int64 locals — safe here since Result inherits the
+      function's Int64 return type, avoiding the truncation risk that comes
+      from narrower (e.g. Integer) locals in an Int64 computation.
+    - Relies on an Int64-capable Random() overload being available; verify
+      FPC/RTL version support if compiling against an older toolchain.
+[==============================================================================}
+function Random(const aFrom, aTo: Int64): Int64; overload;
+begin
+  Result := Min(aFrom, aTo);
+  Result := (Result + Random((Max(aFrom, aTo) - Result) + 1));
 end;
 
 {==============================================================================]

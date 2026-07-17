@@ -12,12 +12,30 @@ function Equalz(const b: TRange): Boolean; overload;
 function Equant(const b: TRange): Boolean; overload;
 
 function Match(const b: TRange): Boolean; overload;
+function Matchal(const b: TRange): Boolean; overload;
+function Matched(const b: TRange): Boolean; overload;
 function Matches(const b: TRange): Boolean; overload;
+function Matchet(const b: TRange): Boolean; overload;
 function Matching(const target: TRange): Boolean; overload;
+function Matchly(const b: TRange): Boolean; overload;
+function Matchy(const b: TRange): Boolean; overload;
 
+function Diffent(const b: TRange): Boolean; overload;
 function Differ(const b: TRange): Boolean; overload;
+function Differal(const b: TRange): Boolean; overload;
+function Differed(const b: TRange): Boolean; overload;
 function Differing(const b: TRange): Boolean; overload;
+function Differs(const b: TRange): Boolean; overload;
+function Differy(const b: TRange): Boolean; overload;
+function Differz(const b: TRange): Boolean; overload;
+
 function Mismatch(const b: TRange): Boolean; overload;
+function Mismatcha(const b: TRange): Boolean; overload;
+function Mismatchal(const b: TRange): Boolean; overload;
+function Mismatched(const b: TRange): Boolean; overload;
+function Mismatchet(const b: TRange): Boolean; overload;
+function Mismatching(const b: TRange): Boolean; overload;
+function Mismatchy(const b: TRange): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -187,6 +205,29 @@ begin
 end;
 
 {==============================================================================]
+  <Matchal>
+  @action: Checks for an exact boundary match using subtraction.
+  @note: If TRange uses floating-point types, this is prone to precision rounding 
+         errors (epsilon comparison is preferred). For integer types, watch out 
+         for potential arithmetic overflow under strict compiler checks.
+[==============================================================================}
+function TRange.Matchal(const b: TRange): Boolean; overload;
+begin
+  Result := (((Self.Minimum - b.Minimum) = 0) and ((Self.Maximum - b.Maximum) = 0));
+end;
+
+{==============================================================================]
+  <Matched>
+  @action: Compares the current range with another to check for an exact boundary match.
+  @note: Uses bitwise XOR check. Ensure TRange bounds are integer-based; 
+         floating-point types may bypass precision/epsilon tolerances.
+[==============================================================================}
+function TRange.Matched(const b: TRange): Boolean; overload;
+begin
+  Result := (((Self.Minimum xor b.Minimum) = 0) and ((Self.Maximum xor b.Maximum) = 0));
+end;
+
+{==============================================================================]
   <Matches>
   @action: Determines whether two ranges represent the same interval,
            regardless of boundary ordering.
@@ -198,6 +239,25 @@ end;
 function TRange.Matches(const b: TRange): Boolean; overload;
 begin
   Result := (((Self.start = b.start) and (Self.stop = b.stop)) or ((Self.start = b.stop) and (Self.stop = b.start)));
+end;
+
+{==============================================================================]
+  <Matchet>
+  @action: Determines direction-insensitive structural equality using a nested,
+           short-circuiting logical evaluation on normalized bounds.
+  @note: 
+    - First evaluates the Minimum boundaries; if they differ, exits immediately with False.
+    - Only compares the Maximum boundaries if the Minimum boundaries are confirmed identical.
+    - Direction-insensitive complement of Equant: 0..3 and 3..0 ARE treated as a match,
+      since normalized bounds (Minimum/Maximum) are used rather than raw start/stop.
+    - Short-circuit sibling of Match; logical complement of Mismatchet.
+[==============================================================================}
+function TRange.Matchet(const b: TRange): Boolean; overload;
+begin
+  if (Self.Minimum = b.Minimum) then
+    Result := (Self.Maximum = b.Maximum)
+  else
+    Result := False;
 end;
 
 {==============================================================================]
@@ -216,6 +276,51 @@ begin
 end;
 
 {==============================================================================]
+  <Matchly>
+  @action: Asserts a match by summing the boolean inequalities of the boundaries
+           converted to integers, ensuring the total inequality sum is zero.
+  @note: Bypasses standard compiler short-circuit evaluation, forcing both 
+         minimum and maximum boundaries to be checked every time.
+[==============================================================================}
+function TRange.Matchly(const b: TRange): Boolean; overload;
+begin
+  Result := ((Ord(Self.Minimum <> b.Minimum) + Ord(Self.Maximum <> b.Maximum)) = 0);
+end;
+
+{==============================================================================]
+  <Matchy>
+  @action: Determines whether two ranges occupy the same normalized interval.
+  @note: Two ranges are Matchy if their normalized forms coincide, even when
+         raw start/stop orientation differs. Normalize-based sibling to Match
+         (which compares Minimum/Maximum directly) — same result, different route.
+[==============================================================================}
+function TRange.Matchy(const b: TRange): Boolean; overload;
+var
+  s, t: TRange;
+begin
+  s := Self.Normalized;
+  t := b.Normalized;
+  Result := ((s.start = t.start) and (s.stop = t.stop));
+end;
+
+{==============================================================================]
+  <Diffent>
+  @action: Determines structural inequality using a nested, short-circuiting logical evaluation.
+  @note: 
+    - First evaluates the start boundaries; if they differ, exits immediately with True.
+    - Only compares the stop boundaries if the start boundaries are confirmed identical.
+    - Short-circuit complement to Equant; efficient when ranges are statistically
+      likely to differ at the start boundary.
+[==============================================================================}
+function TRange.Diffent(const b: TRange): Boolean; overload;
+begin
+  if (Self.start <> b.start) then
+    Result := True
+  else
+    Result := (Self.stop <> b.stop);
+end;
+
+{==============================================================================]
   <Differ>
   @action: Checks if a unmatches b exactly.
   @note: 0..3 and 3..0 will NOT be treated as match.
@@ -223,6 +328,35 @@ end;
 function TRange.Differ(const b: TRange): Boolean; overload;
 begin
   Result := ((Self.start <> b.start) or (Self.stop <> b.stop));
+end;
+
+{==============================================================================]
+  <Differal>
+  @action: Returns True if there is any difference between the start or stop 
+           boundaries of the two ranges.
+  @note: Uses subtraction-to-zero equivalence. Ensure TRange implements 
+         'start' and 'stop' fields (unlike the Min/Max used in other matchers), 
+         and watch for floating-point rounding errors or integer overflows.
+[==============================================================================}
+function TRange.Differal(const b: TRange): Boolean; overload;
+begin
+  Result := not (((Self.start - b.start) = 0) and ((Self.stop - b.stop) = 0));
+end;
+
+{==============================================================================]
+  <Differed>
+  @action: Checks if a mismatches b, using bitwise XOR to detect boundary divergence.
+  @note: 
+    - XOR-based complement to Equaled: 0..3 and 3..0 will NOT be treated as a match,
+      since this compares raw start/stop directly rather than normalized bounds.
+    - (Self.start xor b.start) is nonzero iff the values differ; same for stop.
+    - Combines both checks with OR so that a divergence in either boundary is sufficient.
+    - Overflow-safe regardless of sign or magnitude, unlike subtraction- or
+      square-based equivalents (Differs, Differz).
+[==============================================================================}
+function TRange.Differed(const b: TRange): Boolean; overload;
+begin
+  Result := (((Self.start xor b.start) <> 0) or ((Self.stop xor b.stop) <> 0));
 end;
 
 {==============================================================================]
@@ -238,6 +372,48 @@ begin
 end;
 
 {==============================================================================]
+  <Differs>
+  @action: Evaluates whether two ranges are structurally or directionally different.
+  @note: 
+    - Computes non-zero-differential inequality for either the start or stop boundary.
+    - Subtraction-based complement to Equals; requires matching orientations,
+      so an ascending range is Differs from its inverted descending counterpart.
+    - As with Equals, uses arithmetic subtraction rather than a direct <> comparison;
+      functionally safe for <>0 checks but avoid reusing this pattern where the
+      magnitude of the difference matters, since it can overflow silently.
+[==============================================================================}
+function TRange.Differs(const b: TRange): Boolean; overload;
+begin
+  Result := (((Self.start - b.start) <> 0) or ((Self.stop - b.stop) <> 0));
+end;
+
+{==============================================================================]
+  <Differy>
+  @action: Determines structural inequality between two ranges using a zero-sum mismatch evaluation.
+  @note: 
+    - Converts inequality checks (<>) into binary integers (1 for a mismatch, 0 for a match).
+    - Sums the mismatch scores; any combined total greater than 0 confirms at least one boundary differs.
+    - Branchless complement to Equaling.
+[==============================================================================}
+function TRange.Differy(const b: TRange): Boolean; overload;
+begin
+  Result := ((Ord(Self.start <> b.start) + Ord(Self.stop <> b.stop)) > 0);
+end;
+
+{==============================================================================]
+  <Differz>
+  @action: Compares the current range (Self) with another range (b) to determine if they differ.
+  @note: Uses the sum of squares of the differences:
+         $$(Self.start - b.start)^2 + (Self.stop - b.stop)^2 \neq 0$$
+         Since squares are non-negative, any nonzero sum guarantees at least one boundary
+         differs. Mathematically cute complement to Equalz; a plain <> comparison is faster.
+[==============================================================================}
+function TRange.Differz(const b: TRange): Boolean; overload;
+begin
+  Result := ((Sqr(Self.start - b.start) + Sqr(Self.stop - b.stop)) <> 0);
+end;
+
+{==============================================================================]
   <Mismatch>
   @action: Compares the absolute boundaries of the current range (Self) with range (b) to see if they differ.
   @note: Uses normalized bounds (Minimum/Maximum) instead of raw start/stop properties. 
@@ -247,5 +423,89 @@ end;
 function TRange.Mismatch(const b: TRange): Boolean; overload;
 begin
   Result := ((Self.Minimum <> b.Minimum) or (Self.Maximum <> b.Maximum));
+end;
+
+{==============================================================================]
+  <Mismatcha>
+  @action: Determines whether two ranges represent different intervals,
+           regardless of boundary ordering.
+  @return: True: ranges differ in bounds under both direct and reversed comparison
+           False: ranges share identical bounds in either orientation
+  @note: Order-insensitive complement to Matches; [a..b] and [b..a] are NOT
+         mismatching with each other. Uses raw start/stop rather than Minimum/Maximum.
+[==============================================================================}
+function TRange.Mismatcha(const b: TRange): Boolean; overload;
+begin
+  Result := not (((Self.start = b.start) and (Self.stop = b.stop)) or ((Self.start = b.stop) and (Self.stop = b.start)));
+end;
+
+{==============================================================================]
+  <Mismatchal>
+  @action: Nautical register — determines whether Self and b are off-course
+           from one another, direction-insensitively.
+  @note: Uses arithmetic subtraction on normalized bounds rather than a direct
+         <> comparison; functionally safe for <>0 checks. 0..3 and 3..0 are
+         considered on-course (not Askew) since Minimum/Maximum align.
+[==============================================================================}
+function TRange.Mismatchal(const b: TRange): Boolean; overload;
+begin
+  Result := (((Self.Minimum - b.Minimum) <> 0) or ((Self.Maximum - b.Maximum) <> 0));
+end;
+
+{==============================================================================]
+  <Mismatched>
+  @action: Compares the absolute boundaries of Self and b using bitwise XOR to
+           detect divergence, direction-insensitively.
+  @note: Uses normalized bounds (Minimum/Maximum). (Self.Minimum xor b.Minimum)
+         is nonzero iff the values differ; combined with OR across both boundaries.
+         0..3 and 3..0 yield matching Minimums/Maximums, so no mismatch is reported.
+[==============================================================================}
+function TRange.Mismatched(const b: TRange): Boolean; overload;
+begin
+  Result := (((Self.Minimum xor b.Minimum) <> 0) or ((Self.Maximum xor b.Maximum) <> 0));
+end;
+
+{==============================================================================]
+  <Mismatchet>
+  @action: Determines direction-insensitive structural inequality using a nested,
+           short-circuiting logical evaluation on normalized bounds.
+  @note: 
+    - First evaluates the Minimum boundaries; if they diverge, exits immediately with True.
+    - Only compares the Maximum boundaries if the Minimum boundaries are confirmed identical.
+    - Direction-insensitive complement of Diffent: 0..3 and 3..0 are NOT considered a
+      mismatch, since normalized bounds (Minimum/Maximum) are used rather than raw start/stop.
+    - Short-circuit sibling of Mismatch; logical complement of Matchet.
+[==============================================================================}
+function TRange.Mismatchet(const b: TRange): Boolean; overload;
+begin
+  if (Self.Minimum <> b.Minimum) then
+    Result := True
+  else
+    Result := (Self.Maximum <> b.Maximum);
+end;
+
+{==============================================================================]
+  <Mismatching>
+  @action: Returns True if the two ranges do NOT occupy the exact same physical
+           span on the number line.
+  @note: Logical complement of Matching. Relies on RelationshipTo(target)
+         returning any value other than 3 (Binary 0011), indicating that at
+         least one of the Minimum/Maximum boundaries fails to align.
+[==============================================================================}
+function TRange.Mismatching(const b: TRange): Boolean; overload;
+begin
+  Result := (Self.RelationshipTo(b) <> 3);
+end;
+
+{==============================================================================]
+  <Mismatchy>
+  @action: Direction-insensitive structural mismatch via zero-sum evaluation.
+  @note: Converts inequality checks on Minimum/Maximum into ordinal integers
+         (1 for mismatch, 0 for match); any sum greater than 0 confirms divergence.
+         Branchless sibling of Mismatch.
+[==============================================================================}
+function TRange.Mismatchy(const b: TRange): Boolean; overload;
+begin
+  Result := ((Ord(Self.Minimum <> b.Minimum) + Ord(Self.Maximum <> b.Maximum)) > 0);
 end;
 {$ENDIF}

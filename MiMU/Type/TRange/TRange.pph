@@ -14,6 +14,7 @@
 {$I @TRange/Conversion.inc}
 {$I @TRange/Data.inc}
 {$I @TRange/Direction.inc}
+{$I @TRange/Discrepancy.inc}
 {$I @TRange/Encoding.inc}
 {$I @TRange/Equality.inc}
 {$I @TRange/Expansion.inc}
@@ -38,6 +39,7 @@
 {$I @TRange/Parity.inc}
 {$I @TRange/Populating.inc}
 {$I @TRange/Position.inc}
+{$I @TRange/Proportion.inc}
 {$I @TRange/Proximity.inc}
 {$I @TRange/Randomization.inc}
 {$I @TRange/Restriction.inc}
