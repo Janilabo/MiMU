@@ -4,6 +4,8 @@ function Flip: TRange; overload;
 function Flipped: TRange; overload;
 function Invert: Boolean; overload;
 function Inverted: TRange; overload;
+function Reciproc: Boolean; overload;
+function Reciprocal: TRange; overload;
 function Reconstruct: TRange; overload;
 function Redo: TRange; overload;
 function Reinterpret: TRange; overload;
@@ -104,6 +106,33 @@ function TRange.Inverted: TRange; overload;
 begin
   Result.start := -Self.start;
   Result.stop := -Self.stop;
+end;
+
+{==============================================================================]
+  <Reciproc>
+  @action: Swaps the start and stop boundaries of the range in place. 
+           Returns True if the bounds were distinct and the layout was inverted.
+  @note: 
+    - Pure in-place mutation helper.
+    - If start equals stop, the range is a zero-length point and cannot be 
+      reciprocated; the method leaves the state untouched and returns False.
+[==============================================================================}
+function TRange.Reciproc: Boolean; overload;
+begin
+  Result := Swap(Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <Reciprocal>
+  @action: Returns a new TRange instance with inverted direction by swapping 
+           the 'start' and 'stop' boundaries of the current range.
+  @note: 
+    - Sibling function to Normalized.
+    - Pure, immutable operation; does not alter the state of the original range.
+[==============================================================================}
+function TRange.Reciprocal: TRange; overload;
+begin
+  Result.Create(Self.stop, Self.start);
 end;
 
 {==============================================================================]

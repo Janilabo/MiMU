@@ -1,7 +1,9 @@
 {$IFDEF METHODS}
 function Dimensions(var bHorizontal, bVertical: TRange): Integer; overload;
 function Dimensions(var bWidth, bHeight: Integer): Integer; overload;
+function GetH: Integer; overload;
 function GetHeight: Integer; overload;
+function GetW: Integer; overload;
 function GetWidth: Integer; overload;
 function Height: Integer; overload;
 function Height(const h: Integer): Integer; overload;
@@ -41,6 +43,19 @@ begin
 end;
 
 {==============================================================================]
+  <GetH>
+  @action: Calculates the absolute height of the box along the Y-axis.
+  @note: 
+    - Uses an inclusive coordinate calculation ((Y2 - Y1) + 1).
+    - If Y1 equals Y2, the function evaluates to a height of 1 pixel/unit, 
+      representing a non-degenerate single-line span.
+[==============================================================================}
+function TBox.GetH: Integer; overload;
+begin
+  Result := ((Self.Y2 - Self.Y1) + 1);
+end;
+
+{==============================================================================]
   <GetHeight>
   @action: Returns bx height.
   @note: Fast, works with only valid TBoxes.
@@ -48,6 +63,19 @@ end;
 function TBox.GetHeight: Integer; overload;
 begin
   Result := Succ(Self.YSpan);
+end;
+
+{==============================================================================]
+  <GetW>
+  @action: Calculates the absolute width of the box along the X-axis.
+  @note: 
+    - Uses an inclusive coordinate calculation ((X2 - X1) + 1).
+    - If X1 equals X2, the function evaluates to a width of 1 pixel/unit, 
+      representing a non-degenerate single-column span.
+[==============================================================================}
+function TBox.GetW: Integer; overload;
+begin
+  Result := ((Self.X2 - Self.X1) + 1);
 end;
 
 {==============================================================================]

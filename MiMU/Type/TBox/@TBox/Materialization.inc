@@ -4,6 +4,7 @@ function All(var target: TPointArray): Integer; overload;
 function Allness: TPointArray; overload;
 function Atomize: TPointArray; overload;
 function Breakdown: TPointArray; overload;
+function Columnmajor: TPointArray; overload;
 function Content: TPointArray; overload;
 function Contents: TPointArray; overload;
 function Decompose: TPointArray; overload;
@@ -28,6 +29,7 @@ function Pixeled: TPointArray; overload;
 function Pixels: TPointArray; overload;
 function Pixels(const pIndex: Integer): TPoint; overload;
 function Pointalize: TPointArray; overload;
+function Pointed: TPointArray; overload;
 function Pointify: TPointArray; overload;
 function Points: TPointArray; overload;
 function Points(const pIndex: Integer): TPoint; overload;
@@ -35,6 +37,7 @@ function Points(const pIDs: TIntegerArray): TPointArray; overload;
 function Points(var xArray, yArray: TIntegerArray): Integer; overload;
 function Pts: TPointArray; overload;
 function Release: TPointArray; overload;
+function Rowmajor: TPointArray; overload;
 function Stack: TPointArray; overload;
 function ToPoints: TPointArray; overload;
 function TPA: TPointArray; overload;
@@ -180,6 +183,28 @@ begin
     while (h.Increment <= Self.X2) do
       Result[r.Increase] := Point(h, v);
   end;
+end;
+
+{==============================================================================]
+  <Columnmajor>
+  @action: Returns all points in column-major order: (X1,Y1) → (X1,Y2),
+           (X2,Y1) → (X2,Y2), etc.
+  @note: Uses pointer arithmetic for speed; order differs from row-major.
+[==============================================================================}
+function TBox.Columnmajor: TPointArray; overload;
+var
+  c, r: Integer;
+  p: PPoint;
+begin
+  SetLength(Result, Self.Px);
+  p := @Result[0];
+  for c := Self.X1 to Self.X2 do
+    for r := Self.Y1 to Self.Y2 do
+    begin
+      p^.X := c;
+      p^.Y := r;
+      Inc(p);
+    end;
 end;
 
 {==============================================================================]
@@ -695,6 +720,30 @@ begin
 end;
 
 {==============================================================================]
+  <Pointed>
+  @action: Flattens the entire 2D coordinate space of the box into a 1D array 
+           of individual TPoint records representing every discrete coordinate pair.
+  @note: 
+    - The array layout populates from the bottom-right corner (X2, Y2) winding 
+      backwards up to the top-left corner (X1, X1). 
+    - Uses 'Self.Area' to pre-allocate memory dynamically via 'Result.SetSize'.
+    - Leverages your custom 'l.Decrement' tracking pattern inline to safely mapping 
+      the coordinates directly to the underlying dynamic index layout.
+[==============================================================================}
+function TBox.Pointed: TPointArray; overload;
+var
+  r, c: TRange;
+  h, v, l: Integer;
+begin
+  r := Self.Y1Y2;
+  c := Self.X1X2;
+  l := Result.SetSize(Self.Area);
+  for v := r.stop downto r.start do
+    for h := c.stop downto c.start do
+      Result[l.Decrement] := Point(h, v);
+end;
+
+{==============================================================================]
   <Pointify>
   @action: Converts the TBox into a 1D TPointArray by first constructing a 2D grid representation of the coordinates.
   @note: Allocates a dynamic 2D array (T2DPointArray) matching the box dimensions,
@@ -812,6 +861,29 @@ begin
       r[h - Self.X1] := Point(h, v);
     Result := (Result + r);
   end;
+end;
+
+{==============================================================================]
+  <Rowmajor>
+  @action: Returns all points in row-major order: (X1,Y1) → (X2,Y1),
+           (X1,Y2) → (X2,Y2), etc.
+  @note: Uses pointer arithmetic for speed; matches the typical enumeration
+         order of your other methods like Contents/Materialized.
+[==============================================================================}
+function TBox.Rowmajor: TPointArray; overload;
+var
+  c, r: Integer;
+  p: PPoint;
+begin
+  SetLength(Result, Self.Px);
+  p := @Result[0];
+  for r := Self.Y1 to Self.Y2 do
+    for c := Self.X1 to Self.X2 do
+    begin
+      p^.X := c;
+      p^.Y := r;
+      Inc(p);
+    end;
 end;
 
 {==============================================================================]

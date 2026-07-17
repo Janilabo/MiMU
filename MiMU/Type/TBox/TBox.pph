@@ -31,6 +31,7 @@
 {$I @TBox/Sampling.inc}
 {$I @TBox/Scaling.inc}
 {$I @TBox/Segmentation.inc}
+{$I @TBox/Size.inc}
 {$I @TBox/Traversal.inc}
 {$I @TBox/Uniformity.inc}
 {$I @TBox/Validity.inc}

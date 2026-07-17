@@ -217,8 +217,7 @@ end;
 [==============================================================================}
 function TRange.Reserve(var aRange: TIntegerArray): Integer; overload;
 begin
-  Result := Self.Size;
-  SetLength(aRange, Result);
+  Result := aRange.SetSize(Self.Size);
 end;
 
 function TRangeHelper.Select(const arr: TIntegerArray): TIntegerArray; overload;

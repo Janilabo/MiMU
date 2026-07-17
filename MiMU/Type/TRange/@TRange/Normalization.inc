@@ -1,13 +1,9 @@
 {$IFDEF METHODS}
 function AsNormal: TRange; overload;
-function Backwards: TRange; overload;
 function Forwards: TRange; overload;
 function Grab: TRange; overload;
-function HighToLow: TRange; overload;
-function HiLo: TRange; overload;
 function LoHi: TRange; overload;
 function LowToHigh: TRange; overload;
-function MaxMin: TRange; overload;
 function MinMax: TRange; overload;
 function Norm: TRange; overload;
 function Normal: TRange; overload;
@@ -19,6 +15,23 @@ function Normally: TRange; overload;
 function Normed: TRange; overload;
 function ToNormal: TRange; overload;
 function ToNormalized: TRange; overload;
+
+function Abnorm: TRange; overload;
+function Abnormal: TRange; overload;
+function Abnormally: TRange; overload;
+function AsAbnormal: TRange; overload;
+function Backwards: TRange; overload;
+function Denormalization: TRange; overload;
+function Denormalize: TRange; overload;
+function Denormalized: TRange; overload;
+function Denormalizify: Boolean; overload;
+function Denormed: TRange; overload;
+function HighToLow: TRange; overload;
+function HiLo: TRange; overload;
+function MaxMin: TRange; overload;
+function Snatch: TRange; overload;
+function ToAbnormal: TRange; overload;
+function ToDenormalized: TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -33,20 +46,6 @@ begin
     Result := TRange.Construct(Self.start, Self.stop)
   else
     Result := TRange.Construct(Self.stop, Self.start)
-end;
-
-{==============================================================================]
-  <Backwards>
-  @action: Ensures range is descending (start >= stop)
-  @note: Uses branch-free arithmetic to swap if needed
-[==============================================================================}
-function TRange.Backwards: TRange; overload;
-var
-  m: Integer;
-begin
-  m := Max(Self.start, Self.stop);
-  Result.start := m;
-  Result.stop := (Self.start + (Self.stop - m));
 end;
 
 {==============================================================================]
@@ -70,37 +69,7 @@ end;
 [==============================================================================}
 function TRange.Grab: TRange; overload;
 begin
-  Result := IfThen(Self.Descending, Result.Create(Self.stop, Self.start), Self);
-end;
-
-{==============================================================================]
-  <HighToLow>
-  @action: Ensures range is descending (start >= stop)
-  @note: Uses branch-free arithmetic to swap if needed
-[==============================================================================}
-function TRange.HighToLow: TRange; overload;
-var
-  a, s: Integer;
-begin
-  a := Abs(Self.Contra);
-  s := Self.Combined;
-  Result.stop := ((s - a) div 2);
-  Result.start := ((s + a) div 2);
-end;
-
-{==============================================================================]
-  <HiLo>
-  @action: Ensures range is descending (start >= stop)
-  @note: Uses branch-free arithmetic to swap if needed
-[==============================================================================}
-function TRange.HiLo: TRange; overload;
-var
-  c, d: Integer;
-begin
-  d := Self.Delta;
-  c := -(Ord(d > 0));
-  Result.start := (Self.start + (d and c));
-  Result.stop := (Self.stop - (d and c));
+  Result := IfThen(Self.Descending, TRange.Construct(Self.stop, Self.start), Self);
 end;
 
 {==============================================================================]
@@ -131,18 +100,6 @@ begin
   s := Self.Combined;
   Result.start := ((s - a) div 2);
   Result.stop := ((s + a) div 2);
-end;
-
-{==============================================================================]
-  <MaxMin>
-  @action: Returns a normalized descending version of the range, ensuring start >= stop.
-  @note: If the current range is already descending, the function returns Self unchanged.
-[==============================================================================}
-function TRange.MaxMin: TRange; overload;
-begin
-  if Self.Descending then
-    Exit(Self);
-  Result.Create(Self.stop, Self.start);
 end;
 
 {==============================================================================]
@@ -287,6 +244,222 @@ begin
   s[0] := Self.start;
   s[1] := Self.stop;
   if (s[0] > s[1]) then
+  begin
+    s[0] := (s[0] xor s[1]);
+    s[1] := (s[0] xor s[1]);
+    s[0] := (s[0] xor s[1]);
+  end;
+  Result.start := s[0];
+  Result.stop := s[1];
+end;
+
+{==============================================================================]
+  <Abnorm>
+  @action: Using if-then comparison this function returns "descending" range.
+  @note: Mirrors Norm.
+[==============================================================================}
+function TRange.Abnorm: TRange; overload;
+begin
+  Result := IfThen(Self.Ascending, Self.Reversed, Self);
+end;
+
+{==============================================================================]
+  <Abnormal>
+  @action: XOR-swap based, forces descending order.
+  @note: Mirrors Normal.
+[==============================================================================}
+function TRange.Abnormal: TRange; overload;
+begin
+  Result := Self;
+  if Result.Descending then
+    Exit;
+  Result.start := (Result.start xor Result.stop);
+  Result.stop := (Result.start xor Result.stop);
+  Result.start := (Result.start xor Result.stop);
+end;
+
+{==============================================================================]
+  <Abnormally>
+  @action: Ord-based, forces descending order.
+  @note: Mirrors Normally.
+[==============================================================================}
+function TRange.Abnormally: TRange; overload;
+var
+  a: TIntegerArray;
+begin
+  a := [Self.start, Self.stop];
+  Result.Create(a[Ord(Self.Ascending)], a[Ord(Self.Descending)]);
+end;
+
+{==============================================================================]
+  <AsAbnormal>
+  @action: Return range with ordered bounds (start >= stop)
+  @note: Mirrors AsNormal; uses Compare for ordering, flipped comparison
+[==============================================================================}
+function TRange.AsAbnormal: TRange; overload;
+begin
+  if (Self.start.Compare(Self.stop) >= 0) then
+    Result := TRange.Construct(Self.start, Self.stop)
+  else
+    Result := TRange.Construct(Self.stop, Self.start)
+end;
+
+{==============================================================================]
+  <Backwards>
+  @action: Ensures range is descending (start >= stop)
+  @note: Uses branch-free arithmetic to swap if needed
+[==============================================================================}
+function TRange.Backwards: TRange; overload;
+var
+  m: Integer;
+begin
+  m := Max(Self.start, Self.stop);
+  Result.start := m;
+  Result.stop := (Self.start + (Self.stop - m));
+end;
+
+{==============================================================================]
+  <Denormalization>
+  @action: Returns a new range with endpoints reordered so that `start >= stop`.
+  @note:
+    - Mirrors Normalization; if already descending, returned unchanged.
+    - Uses bitwise operations for a branchless, efficient conditional swap.
+[==============================================================================}
+function TRange.Denormalization: TRange; overload;
+var
+  m: Integer;
+begin
+  m := -Ord(Self.start < Self.stop);
+  Result.start := (Self.start xor ((Self.start xor Self.stop) and m));
+  Result.stop := (Self.stop xor ((Self.start xor Self.stop) and m));
+end;
+
+{==============================================================================]
+  <Denormalize>
+  @action: Using Max-Mining this function returns "descending" range.
+  @note: Mirrors Normalize; no true inverse exists (lossy), this forces order only.
+[==============================================================================}
+function TRange.Denormalize: TRange; overload;
+begin
+  Result.start := Self.Maximum;
+  Result.stop := Self.Minimum;
+end;
+
+{==============================================================================]
+  <Denormalized>
+  @action: Normalize to descending range (start >= stop)
+  @note: Mirrors Normalized; swaps start/stop if ascending, otherwise returns self
+[==============================================================================}
+function TRange.Denormalized: TRange; overload;
+begin
+  if Self.Ascending then
+    Result := TRange.Construct(Self.stop, Self.start)
+  else
+    Result := Self;
+end;
+
+{==============================================================================]
+  <Denormalizify>
+  @action: Checks if range is ascending and denormalizes it by swapping bounds.
+  @note: Mirrors Normalizify. Mutates Self via implicit var parameter — same
+    caveat applies here as flagged on Normalizify. Returns True if swap occurred.
+[==============================================================================}
+function TRange.Denormalizify: Boolean; overload;
+begin
+  Result := Self.Ascending;
+  if Result then
+    Swap(Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <Denormed>
+  @action: Using if-then comparison this function returns "descending" range.
+  @note: Mirrors Normed.
+[==============================================================================}
+function TRange.Denormed: TRange; overload;
+begin
+  Result.Create(IfThen((Self.start > Self.stop), Self.start, Self.stop), IfThen((Self.start > Self.stop), Self.stop, Self.start));
+end;
+
+{==============================================================================]
+  <HighToLow>
+  @action: Ensures range is descending (start >= stop)
+  @note: Uses branch-free arithmetic to swap if needed
+[==============================================================================}
+function TRange.HighToLow: TRange; overload;
+var
+  a, s: Integer;
+begin
+  a := Abs(Self.Contra);
+  s := Self.Combined;
+  Result.stop := ((s - a) div 2);
+  Result.start := ((s + a) div 2);
+end;
+
+{==============================================================================]
+  <HiLo>
+  @action: Ensures range is descending (start >= stop)
+  @note: Uses branch-free arithmetic to swap if needed
+[==============================================================================}
+function TRange.HiLo: TRange; overload;
+var
+  c, d: Integer;
+begin
+  d := Self.Delta;
+  c := -(Ord(d > 0));
+  Result.start := (Self.start + (d and c));
+  Result.stop := (Self.stop - (d and c));
+end;
+
+{==============================================================================]
+  <MaxMin>
+  @action: Returns a normalized descending version of the range, ensuring start >= stop.
+  @note: If the current range is already descending, the function returns Self unchanged.
+[==============================================================================}
+function TRange.MaxMin: TRange; overload;
+begin
+  if Self.Descending then
+    Exit(Self);
+  Result.Create(Self.stop, Self.start);
+end;
+
+{==============================================================================]
+  <Snatch>
+  @action: Returns TRange with range, swaps range.start and range.stop if they are in ascending order.
+  @note: Mirrors Grab.
+[==============================================================================}
+function TRange.Snatch: TRange; overload;
+begin
+  Result := IfThen(Self.Ascending, TRange.Construct(Self.stop, Self.start), Self);
+end;
+
+{==============================================================================]
+  <ToAbnormal>
+  @action: Reconstruct start/stop from Combined/Contra and force descending order
+  @note: Mirrors ToNormal; uses (Combined ± Contra) / 2 to derive bounds
+[==============================================================================}
+function TRange.ToAbnormal: TRange; overload;
+var
+  s, e: Integer;
+begin
+  s := ((Self.Combined + Self.Contra) div 2);
+  e := ((Self.Combined - Self.Contra) div 2);
+  Result.start := Max(s, e);
+  Result.stop := Min(s, e);
+end;
+
+{==============================================================================]
+  <ToDenormalized>
+  @action: Force range descending (start >= stop) via XOR swap
+  @note: Mirrors ToNormalized; avoids temp variable but reduces readability
+[==============================================================================}
+function TRange.ToDenormalized: TRange; overload;
+var
+  s: array[0..1] of Integer;
+begin
+  s[0] := Self.start;
+  s[1] := Self.stop;
+  if (s[0] < s[1]) then
   begin
     s[0] := (s[0] xor s[1]);
     s[1] := (s[0] xor s[1]);
