@@ -1,4 +1,5 @@
 {$IFDEF METHODS}
+function Dimensionality: Integer; overload;
 function Dimensions(var bHorizontal, bVertical: TRange): Integer; overload;
 function Dimensions(var bWidth, bHeight: Integer): Integer; overload;
 function GetH: Integer; overload;
@@ -18,6 +19,23 @@ function YSpan: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Dimensionality>
+  @action: Returns the geometric dimension of the box (-1 for invalid/empty, 0 for a point, 1 for a line, 2 for an area).
+  @note: Optimized for performance by checking the most common state (2D) first, then falling back to 0D, 1D, or invalid.
+[==============================================================================}
+function TBox.Dimensionality: Integer; overload;
+begin
+  if ((Self.X2 > Self.X1) and (Self.Y2 > Self.Y1)) then
+    Result := 2
+  else if ((Self.X1 = Self.X2) and (Self.Y1 = Self.Y2)) then
+    Result := 0
+  else if not ((Self.X1 > Self.X2) or (Self.Y2 > Self.Y1)) then
+    Result := 1
+  else
+    Result := -1;
+end;
+
 {==============================================================================]
   <Dimensions>
   @action: Returns area of the TBox

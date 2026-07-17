@@ -2,9 +2,6 @@
 function Boxy: Boolean; overload;
 function Collapsed: Boolean; overload;
 function Equilateral: Boolean; overload;
-function Is0D: Boolean; overload;
-function Is1D: Boolean; overload;
-function Is2D: Boolean; overload;
 function IsHorizontalLine: Boolean; overload;
 function IsLine: Boolean; overload;
 function IsPoint: Boolean; overload;
@@ -14,6 +11,13 @@ function Plural: Boolean; overload;
 function Rectangular: Boolean; overload;
 function Singular: Boolean; overload;
 function Square: Boolean; overload;
+
+function In0D: Boolean; overload;
+function In1D: Boolean; overload;
+function In2D: Boolean; overload;
+function Is0D: Boolean; overload;
+function Is1D: Boolean; overload;
+function Is2D: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -45,39 +49,6 @@ end;
 function TBox.Equilateral: Boolean; overload;
 begin
   Result := ((Self.X2 - Self.X1) = (Self.Y2 - Self.Y1));
-end;
-
-{==============================================================================]
-  <Is0D>
-  @action: Determines if the box represents a zero-dimensional point (exactly 1 pixel in total size).
-  @note: Returns true only when Width * Height equals 1.
-[==============================================================================}
-function TBox.Is0D: Boolean; overload;
-begin
-  Result := (Self.Size = 1);
-end;
-
-{==============================================================================]
-  <Is1D>
-  @action: Determines if the box represents a one-dimensional line (either a single row or a single column, but not both).
-  @note: Evaluates if exactly one dimension equals 1 while the other is greater than 1.
-[==============================================================================}
-function TBox.Is1D: Boolean; overload;
-begin
-  if (Self.Width = 1) then
-    Result := (Self.Height > 1)
-  else
-    Result := (Self.Height = 1);
-end;
-
-{==============================================================================]
-  <Is2D>
-  @action: Determines if the box represents a two-dimensional area.
-  @note: Returns true only when both the Width and Height are strictly greater than 1.
-[==============================================================================}
-function TBox.Is2D: Boolean; overload;
-begin
-  Result := ((Self.Width > 1) and (Self.Height > 1));
 end;
 
 {==============================================================================]
@@ -168,5 +139,68 @@ end;
 function TBox.Square: Boolean; overload;
 begin
   Result := (((Self.X2 > Self.X1) and (Self.Y2 > Self.Y1)) and ((Self.X2 - Self.X1) = (Self.Y2 - Self.Y1)));
+end;
+
+{==============================================================================]
+  <In0D>
+  @action: Determines if the box represents a zero-dimensional point (exactly 1x1 size).
+  @note: Uses direct boolean AND evaluation to ensure both dimensions are exactly 1.
+[==============================================================================}
+function TBox.In0D: Boolean; overload;
+begin
+  Result := ((Self.Width = 1) and (Self.Height = 1));
+end;
+
+{==============================================================================]
+  <In1D>
+  @action: Determines if the box represents a one-dimensional line (horizontal or vertical strip).
+  @note: Evaluates if exactly one dimension is equal to 1 while the opposing dimension is greater than 1.
+[==============================================================================}
+function TBox.In1D: Boolean; overload;
+begin
+  Result := (((Self.Width = 1) and (Self.Height > 1)) or  ((Self.Height = 1) and (Self.Width > 1)));
+end;
+
+{==============================================================================]
+  <In2D>
+  @action: Determines if the box has a two-dimensional layout.
+  @note: Uses an inverted evaluation; assumes any layout where neither dimension is 1 qualifies as 2D.
+[==============================================================================}
+function TBox.In2D: Boolean; overload;
+begin
+  Result := not ((Self.Width = 1) or (Self.Height = 1));
+end;
+
+{==============================================================================]
+  <Is0D>
+  @action: Determines if the box represents a zero-dimensional point (exactly 1 pixel in total size).
+  @note: Returns true only when Width * Height equals 1.
+[==============================================================================}
+function TBox.Is0D: Boolean; overload;
+begin
+  Result := (Self.Size = 1);
+end;
+
+{==============================================================================]
+  <Is1D>
+  @action: Determines if the box represents a one-dimensional line (either a single row or a single column, but not both).
+  @note: Evaluates if exactly one dimension equals 1 while the other is greater than 1.
+[==============================================================================}
+function TBox.Is1D: Boolean; overload;
+begin
+  if (Self.Width = 1) then
+    Result := (Self.Height > 1)
+  else
+    Result := (Self.Height = 1);
+end;
+
+{==============================================================================]
+  <Is2D>
+  @action: Determines if the box represents a two-dimensional area.
+  @note: Returns true only when both the Width and Height are strictly greater than 1.
+[==============================================================================}
+function TBox.Is2D: Boolean; overload;
+begin
+  Result := ((Self.Width > 1) and (Self.Height > 1));
 end;
 {$ENDIF}
