@@ -18,6 +18,8 @@ function In2D: Boolean; overload;
 function Is0D: Boolean; overload;
 function Is1D: Boolean; overload;
 function Is2D: Boolean; overload;
+function IsND(const N: Integer): Boolean; overload;
+function IsND: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -202,5 +204,25 @@ end;
 function TBox.Is2D: Boolean; overload;
 begin
   Result := ((Self.Width > 1) and (Self.Height > 1));
+end;
+
+{==============================================================================]
+  <IsND>
+  @action: Checks if the box matches a specific geometric dimension N (-1 to 2).
+  @note: Uses InRange to validate that the requested dimension N is a valid geometric tier before comparison.
+[==============================================================================}
+function TBox.IsND(const N: Integer): Boolean; overload;
+begin
+  Result := (InRange(N, -1, 2) and (Self.Dimensionality = N));
+end;
+
+{==============================================================================]
+  <IsND>
+  @action: Determines whether the box possesses a valid geometric dimension (0D, 1D, or 2D).
+  @note: Returns True if the coordinates are properly formed, and False if the box is inverted, malformed, or invalid (-1).
+[==============================================================================}
+function TBox.IsND: Boolean; overload;
+begin
+  Result := (Self.Dimensionality > -1);
 end;
 {$ENDIF}

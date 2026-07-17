@@ -1,5 +1,11 @@
 {$IFDEF METHODS}
+function Dimensign: Integer; overload;
+function Dimensio: Integer; overload;
+function Dimension: Integer; overload;
 function Dimensionality: Integer; overload;
+function Dimensionally: Integer; overload;
+function Dimensions: Integer; overload;
+
 function Dimensions(var bHorizontal, bVertical: TRange): Integer; overload;
 function Dimensions(var bWidth, bHeight: Integer): Integer; overload;
 function GetH: Integer; overload;
@@ -20,20 +26,136 @@ function YSpan: Integer; overload;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
+  <Dimensign>
+  @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
+  @note: Delegates axis comparison to 'Sign' on each delta; a negative sign on
+         either axis is immediately invalid, otherwise the result is just a
+         count of how many axes are strictly extended.
+[==============================================================================}
+function TBox.Dimensign: Integer; overload;
+var
+  h, v: Integer;
+begin
+  h := Sign(Self.X2 - Self.X1);
+  v := Sign(Self.Y2 - Self.Y1);
+  if ((h < 0) or (v < 0)) then
+    Exit(-1);
+  Result := (Ord(h > 0) + Ord(v > 0));
+end;
+
+{==============================================================================]
+  <Dimensio>
+  @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
+  @note: The stripped-down baseline of the family: a single inversion check
+         upfront, then the result is just a count of strictly extended axes.
+         No intermediate variables, no Sign/CompareValue delegation — just
+         direct comparisons.
+[==============================================================================}
+function TBox.Dimensio: Integer; overload;
+begin
+  if ((Self.X1 > Self.X2) or (Self.Y1 > Self.Y2)) then
+    Exit(-1);
+  Result := (Ord(Self.X2 > Self.X1) + Ord(Self.Y2 > Self.Y1));
+end;
+
+{==============================================================================]
+  <Dimension>
+  @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
+  @note: A highly optimized, linear layout that uses consecutive early exits 
+         and falls through to a default -1 for any inverted coordinates.
+[==============================================================================}
+function TBox.Dimension: Integer; overload;
+begin
+  if (Self.X2 > Self.X1) then
+    if (Self.Y2 > Self.Y1) then
+      Exit(2)
+    else if (Self.Y2 = Self.Y1) then
+      Exit(1);
+  if (Self.X2 = Self.X1) then
+    if (Self.Y2 = Self.Y1) then
+      Exit(0)
+    else if (Self.Y2 > Self.Y1) then
+      Exit(1);
+  Result := -1;
+end;
+
+{==============================================================================]
   <Dimensionality>
-  @action: Returns the geometric dimension of the box (-1 for invalid/empty, 0 for a point, 1 for a line, 2 for an area).
-  @note: Optimized for performance by checking the most common state (2D) first, then falling back to 0D, 1D, or invalid.
+  @action: Returns the geometric dimension of the box (-1 for invalid/empty,
+           0 for a point, 1 for a line, 2 for an area).
+  @note:
+    - Optimized for performance by checking the most common state (2D) first,
+      then falling back to 0D, 1D, or invalid.
+    - The 1D branch relies on 'not((X inverted) or (Y inverted))': since the
+      2D and 0D cases are already peeled off above it, this leaves only the
+      two genuine line orientations (one axis flat, the other extended) to
+      resolve to 1, with every remaining inverted-axis combination correctly
+      falling through to -1.
 [==============================================================================}
 function TBox.Dimensionality: Integer; overload;
 begin
   if ((Self.X2 > Self.X1) and (Self.Y2 > Self.Y1)) then
     Result := 2
-  else if ((Self.X1 = Self.X2) and (Self.Y1 = Self.Y2)) then
+  else if ((Self.X2 = Self.X1) and (Self.Y2 = Self.Y1)) then
     Result := 0
-  else if not ((Self.X1 > Self.X2) or (Self.Y2 > Self.Y1)) then
+  else if not ((Self.X1 > Self.X2) or (Self.Y1 > Self.Y2)) then
     Result := 1
   else
     Result := -1;
+end;
+
+{==============================================================================]
+  <Dimensionally>
+  @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
+  @note: Uses a nested boolean case-tree to explicitly evaluate and isolate all 
+         9 possible boundary layout permutations without any overlap.
+[==============================================================================}
+function TBox.Dimensionally: Integer; overload;
+begin
+  case (Self.X2 > Self.X1) of
+    True:
+    if (Self.Y2 > Self.Y1) then
+      Result := 2
+    else if (Self.Y2 = Self.Y1) then
+      Result := 1
+    else
+      Result := -1;
+    False:
+    case (Self.X2 = Self.X1) of
+      True:
+      if (Self.Y2 = Self.Y1) then
+        Result := 0
+      else if (Self.Y2 > Self.Y1) then
+        Result := 1
+      else
+        Result := -1;
+      False: Result := -1;
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <Dimensions>
+  @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
+  @note: Uses early exits inside an optimized case branch, letting all invalid 
+         or inverted permutations gracefully fall through to a default -1.
+[==============================================================================}
+function TBox.Dimensions: Integer; overload;
+begin
+  case (Self.X2 > Self.X1) of
+    True:
+    if (Self.Y2 > Self.Y1) then
+      Exit(2)
+    else if (Self.Y2 = Self.Y1) then
+      Exit(1);
+    False:
+    if (Self.X2 = Self.X1) then
+      if (Self.Y2 = Self.Y1) then
+        Exit(0)
+      else if (Self.Y2 > Self.Y1) then
+        Exit(1);
+  end;
+  Result := -1;
 end;
 
 {==============================================================================]
