@@ -1,17 +1,41 @@
 {$IFDEF METHODS}
-function Columnwise: TPointArray;
-function Rowwise: TPointArray;
-function Spiral: TPointArray;
-function Traverse: TPointArray;
+function Columnmajor: TPointArray; overload;
+function Columnwise: TPointArray; overload;
+function Rowmajor: TPointArray; overload;
+function Rowwise: TPointArray; overload;
+function Spiral: TPointArray; overload;
+function Traverse: TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Columnmajor>
+  @action: Returns all points in column-major order: (X1,Y1) → (X1,Y2),
+           (X2,Y1) → (X2,Y2), etc.
+  @note: Uses pointer arithmetic for speed; order differs from row-major.
+[==============================================================================}
+function TBox.Columnmajor: TPointArray; overload;
+var
+  c, r: Integer;
+  p: PPoint;
+begin
+  SetLength(Result, Self.Px);
+  p := @Result[0];
+  for c := Self.X1 to Self.X2 do
+    for r := Self.Y1 to Self.Y2 do
+    begin
+      p^.X := c;
+      p^.Y := r;
+      Inc(p);
+    end;
+end;
+
 {==============================================================================]
   <Columnwise>
   @action: Returns all TBox TPoints as Column-wise.
   @note: None.
 [==============================================================================}
-function TBox.Columnwise: TPointArray;
+function TBox.Columnwise: TPointArray; overload;
 var
   h, v, r: Integer;
 begin
@@ -23,11 +47,34 @@ begin
 end;
 
 {==============================================================================]
+  <Rowmajor>
+  @action: Returns all points in row-major order: (X1,Y1) → (X2,Y1),
+           (X1,Y2) → (X2,Y2), etc.
+  @note: Uses pointer arithmetic for speed; matches the typical enumeration
+         order of your other methods like Contents/Materialized.
+[==============================================================================}
+function TBox.Rowmajor: TPointArray; overload;
+var
+  c, r: Integer;
+  p: PPoint;
+begin
+  SetLength(Result, Self.Px);
+  p := @Result[0];
+  for r := Self.Y1 to Self.Y2 do
+    for c := Self.X1 to Self.X2 do
+    begin
+      p^.X := c;
+      p^.Y := r;
+      Inc(p);
+    end;
+end;
+
+{==============================================================================]
   <Rowwise>
   @action: Returns all TBox TPoints as Row-wise.
   @note: None.
 [==============================================================================}
-function TBox.Rowwise: TPointArray;
+function TBox.Rowwise: TPointArray; overload;
 var
   h, v, r: Integer;
 begin
@@ -43,7 +90,7 @@ end;
   @action: Returns TBox TPoints as spiral shaped TPointArray.
   @note: Alternative for TBox.Traverse.
 [==============================================================================}
-function TBox.Spiral: TPointArray;
+function TBox.Spiral: TPointArray; overload;
 var
   b: TBox;
   h, v, r: Integer;
@@ -78,7 +125,7 @@ end;
   @action: Returns TBox TPoints as spiral shaped TPointArray.
   @note: Alternative for TBox.Spiral.
 [==============================================================================}
-function TBox.Traverse: TPointArray;
+function TBox.Traverse: TPointArray; overload;
 var
   m: T2DBooleanArray;
   c: TPoint;

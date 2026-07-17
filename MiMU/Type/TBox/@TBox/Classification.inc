@@ -1,17 +1,19 @@
 {$IFDEF METHODS}
-function Boxy: Boolean;
-function Collapsed: Boolean;
-function Equilateral: Boolean;
-function Is2D: Boolean;
-function IsHorizontalLine: Boolean;
-function IsLine: Boolean;
-function IsPoint: Boolean;
-function IsVerticalLine: Boolean;
-function Linear: Boolean;
-function Plural: Boolean;
-function Rectangular: Boolean;
-function Singular: Boolean;
-function Square: Boolean;
+function Boxy: Boolean; overload;
+function Collapsed: Boolean; overload;
+function Equilateral: Boolean; overload;
+function Is0D: Boolean; overload;
+function Is1D: Boolean; overload;
+function Is2D: Boolean; overload;
+function IsHorizontalLine: Boolean; overload;
+function IsLine: Boolean; overload;
+function IsPoint: Boolean; overload;
+function IsVerticalLine: Boolean; overload;
+function Linear: Boolean; overload;
+function Plural: Boolean; overload;
+function Rectangular: Boolean; overload;
+function Singular: Boolean; overload;
+function Square: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -20,7 +22,7 @@ function Square: Boolean;
   @action: Returns true if TBox is valid rectangle
   @note: None.
 [==============================================================================}
-function TBox.Boxy: Boolean;
+function TBox.Boxy: Boolean; overload;
 begin
   Result := ((Self.X1 <> Self.X2) and (Self.Y1 <> Self.Y2));
 end;
@@ -30,7 +32,7 @@ end;
   @action: Returns true if TBox is either point or a horizontal/vertical line.
   @note: Returns False if TBox is rectangle with workable area.
 [==============================================================================}
-function TBox.Collapsed: Boolean;
+function TBox.Collapsed: Boolean; overload;
 begin
   Result := ((Self.X1 = Self.X2) or (Self.Y1 = Self.Y2));
 end;
@@ -40,17 +42,40 @@ end;
   @action: Returns true if width equals height.
   @note: (X2 - X1) = (Y2 - Y1), so WIDTH equals HEIGHT.
 [==============================================================================}
-function TBox.Equilateral: Boolean;
+function TBox.Equilateral: Boolean; overload;
 begin
   Result := ((Self.X2 - Self.X1) = (Self.Y2 - Self.Y1));
 end;
 
 {==============================================================================]
-  <Is2D>
-  @action: Returns true if TBox is valid rectangle with area.
-  @note: None.
+  <Is0D>
+  @action: Determines if the box represents a zero-dimensional point (exactly 1 pixel in total size).
+  @note: Returns true only when Width * Height equals 1.
 [==============================================================================}
-function TBox.Is2D: Boolean;
+function TBox.Is0D: Boolean; overload;
+begin
+  Result := (Self.Size = 1);
+end;
+
+{==============================================================================]
+  <Is1D>
+  @action: Determines if the box represents a one-dimensional line (either a single row or a single column, but not both).
+  @note: Evaluates if exactly one dimension equals 1 while the other is greater than 1.
+[==============================================================================}
+function TBox.Is1D: Boolean; overload;
+begin
+  if (Self.Width = 1) then
+    Result := (Self.Height > 1)
+  else
+    Result := (Self.Height = 1);
+end;
+
+{==============================================================================]
+  <Is2D>
+  @action: Determines if the box represents a two-dimensional area.
+  @note: Returns true only when both the Width and Height are strictly greater than 1.
+[==============================================================================}
+function TBox.Is2D: Boolean; overload;
 begin
   Result := ((Self.Width > 1) and (Self.Height > 1));
 end;
@@ -60,7 +85,7 @@ end;
   @action: Returns true if TBox is horizontal line. (Width <> 1) and (Height = 1)
   @note: None.
 [==============================================================================}
-function TBox.IsHorizontalLine: Boolean;
+function TBox.IsHorizontalLine: Boolean; overload;
 begin
   Result := ((Y1 = Y2) and (X1 <> X2));
 end;
@@ -70,7 +95,7 @@ end;
   @action: Returns true if TBox is horizontal or vertical line.
   @note: None.
 [==============================================================================}
-function TBox.IsLine: Boolean;
+function TBox.IsLine: Boolean; overload;
 begin
   Result := (Self.IsHorizontalLine or Self.IsVerticalLine);
 end;
@@ -80,7 +105,7 @@ end;
   @action: Returns true if TBox is just a single point.
   @note: None.
 [==============================================================================}
-function TBox.IsPoint: Boolean;
+function TBox.IsPoint: Boolean; overload;
 begin
   Result := not ((Self.X1 <> Self.X2) or (Self.Y1 <> Self.Y2));
 end;
@@ -90,7 +115,7 @@ end;
   @action: Returns true if TBox is vertical line. (Width = 1) and (Height <> 1)
   @note: None.
 [==============================================================================}
-function TBox.IsVerticalLine: Boolean;
+function TBox.IsVerticalLine: Boolean; overload;
 begin
   Result := ((X1 = X2) and (Y1 <> Y2));
 end;
@@ -100,7 +125,7 @@ end;
   @action: Returns true if TBox is horizontal or vertical line.
   @note: None.
 [==============================================================================}
-function TBox.Linear: Boolean;
+function TBox.Linear: Boolean; overload;
 begin
   Result := (((Self.X1 = Self.X2) xor (Self.Y1 = Self.Y2)) and (not Self.IsPoint));
 end;
@@ -110,7 +135,7 @@ end;
   @action: Returns true if TBox contains more than single point.
   @note: None.
 [==============================================================================}
-function TBox.Plural: Boolean;
+function TBox.Plural: Boolean; overload;
 begin
   Result := ((Self.X2 > Self.X1) or (Self.Y2 > Self.Y1));
 end;
@@ -120,7 +145,7 @@ end;
   @action: Returns true if TBox width AND height are higher than 1.
   @note: (X2 > X1 and Y2 > Y1).
 [==============================================================================}
-function TBox.Rectangular: Boolean;
+function TBox.Rectangular: Boolean; overload;
 begin
   Result := ((Self.X2 > Self.X1) and (Self.Y2 > Self.Y1));
 end;
@@ -130,7 +155,7 @@ end;
   @action: Returns true if TBox is just a single point.
   @note: None.
 [==============================================================================}
-function TBox.Singular: Boolean;
+function TBox.Singular: Boolean; overload;
 begin
   Result := ((Self.X1 = Self.X2) and (Self.Y1 = Self.Y2));
 end;
@@ -140,7 +165,7 @@ end;
   @action: Returns true if width equals height.
   @note: (X2 - X1) = (Y2 - Y1), so WIDTH equals HEIGHT.
 [==============================================================================}
-function TBox.Square: Boolean;
+function TBox.Square: Boolean; overload;
 begin
   Result := (((Self.X2 > Self.X1) and (Self.Y2 > Self.Y1)) and ((Self.X2 - Self.X1) = (Self.Y2 - Self.Y1)));
 end;

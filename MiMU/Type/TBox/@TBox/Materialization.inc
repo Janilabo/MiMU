@@ -4,7 +4,6 @@ function All(var target: TPointArray): Integer; overload;
 function Allness: TPointArray; overload;
 function Atomize: TPointArray; overload;
 function Breakdown: TPointArray; overload;
-function Columnmajor: TPointArray; overload;
 function Content: TPointArray; overload;
 function Contents: TPointArray; overload;
 function Decompose: TPointArray; overload;
@@ -39,7 +38,6 @@ function Points(const pIDs: TIntegerArray): TPointArray; overload;
 function Points(var xArray, yArray: TIntegerArray): Integer; overload;
 function Pts: TPointArray; overload;
 function Release: TPointArray; overload;
-function Rowmajor: TPointArray; overload;
 function Stack: TPointArray; overload;
 function ToPoints: TPointArray; overload;
 function TPA: TPointArray; overload;
@@ -185,28 +183,6 @@ begin
     while (h.Increment <= Self.X2) do
       Result[r.Increase] := Point(h, v);
   end;
-end;
-
-{==============================================================================]
-  <Columnmajor>
-  @action: Returns all points in column-major order: (X1,Y1) → (X1,Y2),
-           (X2,Y1) → (X2,Y2), etc.
-  @note: Uses pointer arithmetic for speed; order differs from row-major.
-[==============================================================================}
-function TBox.Columnmajor: TPointArray; overload;
-var
-  c, r: Integer;
-  p: PPoint;
-begin
-  SetLength(Result, Self.Px);
-  p := @Result[0];
-  for c := Self.X1 to Self.X2 do
-    for r := Self.Y1 to Self.Y2 do
-    begin
-      p^.X := c;
-      p^.Y := r;
-      Inc(p);
-    end;
 end;
 
 {==============================================================================]
@@ -908,29 +884,6 @@ begin
       r[h - Self.X1] := Point(h, v);
     Result := (Result + r);
   end;
-end;
-
-{==============================================================================]
-  <Rowmajor>
-  @action: Returns all points in row-major order: (X1,Y1) → (X2,Y1),
-           (X1,Y2) → (X2,Y2), etc.
-  @note: Uses pointer arithmetic for speed; matches the typical enumeration
-         order of your other methods like Contents/Materialized.
-[==============================================================================}
-function TBox.Rowmajor: TPointArray; overload;
-var
-  c, r: Integer;
-  p: PPoint;
-begin
-  SetLength(Result, Self.Px);
-  p := @Result[0];
-  for r := Self.Y1 to Self.Y2 do
-    for c := Self.X1 to Self.X2 do
-    begin
-      p^.X := c;
-      p^.Y := r;
-      Inc(p);
-    end;
 end;
 
 {==============================================================================]

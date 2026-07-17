@@ -7,6 +7,7 @@ function Indexed: T2DIntegerArray; overload;
 function Indexes: TIntegerArray; overload;
 function IndexList: TIntegerArray; overload;
 function IndexOf(const p: TPoint): Integer; overload;
+function ToIndex(const p: TPoint): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -160,5 +161,18 @@ begin
         Exit
       else
         Inc(Result);
+end;
+
+{==============================================================================]
+  <ToIndex>
+  @action: Reduces a 2D spatial TPoint back into its row-major flat 1D index
+           relative to the box's origin.
+  @note:
+    - The inverse of 'At(pID)'/'Access(pID)'. No bounds validation — the
+      point-in, index-out mirror image of the fast 'At' variant.
+[==============================================================================}
+function TBox.ToIndex(const p: TPoint): Integer; overload;
+begin
+  Result := (((p.Y - Self.Y1) * Self.Width) + (p.X - Self.X1));
 end;
 {$ENDIF}
