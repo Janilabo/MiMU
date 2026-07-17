@@ -18,6 +18,7 @@ function Explode: TPointArray; overload;
 function Exploded: TPointArray; overload;
 function Extract: TPointArray; overload;
 function Filled: TPointArray; overload;
+function Filling: TPointArray; overload;
 function Flat: TPointArray; overload;
 function Flatten: TPointArray; overload;
 function Generate: TPointArray; overload;
@@ -31,6 +32,7 @@ function Pixels(const pIndex: Integer): TPoint; overload;
 function Pointalize: TPointArray; overload;
 function Pointed: TPointArray; overload;
 function Pointify: TPointArray; overload;
+function Pointment: TPointArray; overload;
 function Points: TPointArray; overload;
 function Points(const pIndex: Integer): TPoint; overload;
 function Points(const pIDs: TIntegerArray): TPointArray; overload;
@@ -475,8 +477,15 @@ end;
 
 {==============================================================================]
   <Filled>
-  @action: ?
-  @note: ?
+  @action: Generates a 1D array of TPoint records covering every discrete grid coordinate 
+           inside the box, ordering them sequentially in a flat, row-by-row layout.
+  @note: 
+    - Allocates memory all at once using standard 'SetLength' based on the 
+      flat calculation (Width * Height).
+    - Initialized rapidly with a blank slate via 'FillChar'.
+    - Unlike the nested loops in Pointed, this populates forward from top-left (X1, Y1) 
+      to bottom-right (X2, Y2) using mathematical flattening rules: 'mod' provides the 
+      column offset, and 'div' tracking provides the current row index.
 [==============================================================================}
 function TBox.Filled: TPointArray; overload;
 var
@@ -491,6 +500,25 @@ begin
     Result[i].X := (Self.X1 + (i mod w));
     Result[i].Y := (Self.Y1 + (i div w));
   end;
+end;
+
+{==============================================================================]
+  <Filling>
+  @action: Generates a 1D array of TPoint records covering every discrete grid coordinate 
+           inside the box, ordering them sequentially in a flat, row-by-row layout.
+  @note: 
+    - A streamlined, ultra-compact sibling to 'Filled'.
+    - Leverages inline evaluation: passes 'w' and 'h' by reference directly into the 
+      'Self.Size' call inside the loop's size allocation boundary expression.
+    - Utilizes 'Result.SetSize' dynamically to size and initialize the collection structure 
+      all on a single line before evaluating the 'mod' and 'div' flattening grid formulas.
+[==============================================================================}
+function TBox.Filling: TPointArray; overload;
+var
+  w, h, i: Integer;
+begin
+  for i := 0 to (Result.SetSize(Self.Size(w, h)) - 1) do
+    Result[i] := Point((Self.X1 + (i mod w)), (Self.Y1 + (i div w)));
 end;
 
 {==============================================================================]
@@ -762,6 +790,25 @@ begin
   Result := [];
   for r := 0 to High(p) do
     Result := (Result + p[r]);
+end;
+
+{==============================================================================]
+  <Pointment>
+  @action: Allocates and generates a complete 2D spatial TPointArray covering 
+           every discrete coordinate coordinate inside the box boundaries.
+  @note: 
+    - Unpacks the entire area of the box using high-speed, row-major flattening.
+    - Highly optimized: uses a single memory allocation ('SetSize') and loops 
+      backwards using 'r.Decrement' to pipe positions straight through your 
+      raw, unchecked 'At(pID)' locator.
+[==============================================================================}
+function TBox.Pointment: TPointArray; overload;
+var
+  r: Integer;
+begin
+  r := Result.SetSize(Self.Area);
+  while (r.Decrement > -1) do
+    Result[r] := Self.At(r);
 end;
 
 {==============================================================================]
