@@ -1,8 +1,18 @@
 {$IFDEF METHODS}
 function Ascendual: Boolean; overload;
+function Ascenduet: Boolean; overload;
+function Ascenduo: Boolean; overload;
+function Ascouple: Boolean; overload;
 function Bipolar: Boolean; overload;
+function Coupled: Boolean; overload;
 function Descendual: Boolean; overload;
+function Descenduet: Boolean; overload;
+function Descenduo: Boolean; overload;
+function Descouple: Boolean; overload;
+function Doublet: Boolean; overload;
 function Dual: Boolean; overload;
+function Duet: Boolean; overload;
+function Duo: Boolean; overload;
 function Exceeds(const maxElements: Integer): Boolean; overload;
 function IsNarrow(const val: Integer): Boolean; overload;
 function Insufficient(const minElements: Integer): Boolean; overload;
@@ -37,6 +47,39 @@ begin
 end;
 
 {==============================================================================]
+  <Ascenduet>
+  @action: Returns True if the range represents a single, positive consecutive step.
+  @note: Ensures the stop boundary is greater than the start boundary via native
+         comparison (= 1) while verifying a precise forward unitary gap size.
+[==============================================================================}
+function TRange.Ascenduet: Boolean; overload;
+begin
+  Result := ((Self.stop.Compare(Self.start) = 1) and ((Self.stop - Self.start) = 1));
+end;
+
+{==============================================================================]
+  <Ascenduo>
+  @action: Returns True if the range represents a single, positive consecutive step.
+  @note: Validates that the start boundary sits exactly one unit below the 
+         stop boundary (e.g., [4..5]).
+[==============================================================================}
+function TRange.Ascenduo: Boolean; overload;
+begin
+  Result := (Self.start = (Self.stop - 1));
+end;
+
+{==============================================================================]
+  <Ascouple>
+  @action: Returns True if the range represents a single, positive consecutive step.
+  @note: Uses a zero-balanced arithmetic subtraction formula. Evaluates to True 
+         only when the forward distance delta minus one equals exactly zero.
+[==============================================================================}
+function TRange.Ascouple: Boolean; overload;
+begin
+  Result := (((Self.stop - Self.start) - 1) = 0);
+end;
+
+{==============================================================================]
   <Bipolar>
   @action: Returns True if the range spans both negative and positive numbers.
   @note: The function is True when Self.start and Self.stop have opposite signs,
@@ -45,6 +88,18 @@ end;
 function TRange.Bipolar: Boolean; overload;
 begin
   Result := ((Self.start < 0) and (Self.stop > 0)) or ((Self.start > 0) and (Self.stop < 0));
+end;
+
+{==============================================================================]
+  <Coupled>
+  @action: Returns True if the range spans exactly one consecutive step in either direction.
+  @note: Leverages the high-level Size property. Assuming Size calculates the 
+         inclusive element count, a size of exactly 2 confirms that the range 
+         contains only two adjacent structural points.
+[==============================================================================}
+function TRange.Coupled: Boolean; overload;
+begin
+  Result := (Self.Size = 2);
 end;
 
 {==============================================================================]
@@ -60,6 +115,53 @@ begin
 end;
 
 {==============================================================================]
+  <Descenduet>
+  @action: Returns True if the range represents a single, negative consecutive step.
+  @note: Ensures the start boundary is greater than the stop boundary via native
+         comparison (= 1) while verifying a precise reverse unitary gap size.
+[==============================================================================}
+function TRange.Descenduet: Boolean; overload;
+begin
+  Result := ((Self.start.Compare(Self.stop) = 1) and ((Self.start - Self.stop) = 1));
+end;
+
+{==============================================================================]
+  <Descenduo>
+  @action: Returns True if the range represents a single, negative consecutive step.
+  @note: Validates that the start boundary sits exactly one unit above the 
+         stop boundary (e.g., [5..4]).
+[==============================================================================}
+function TRange.Descenduo: Boolean; overload;
+begin
+  Result := (Self.start = (Self.stop + 1));
+end;
+
+{==============================================================================]
+  <Descouple>
+  @action: Returns True if the range represents a single, negative consecutive step.
+  @note: Uses a zero-balanced arithmetic addition formula. Evaluates to True 
+         only when the backward distance delta plus one equals exactly zero.
+[==============================================================================}
+function TRange.Descouple: Boolean; overload;
+begin
+  Result := (((Self.stop - Self.start) + 1) = 0);
+end;
+
+{==============================================================================]
+  <Doublet>
+  @action: Returns True if the range spans exactly one consecutive step in either direction.
+  @note: Leverages a tight, short-circuited array pattern lookup. InRange safely
+         bounds-checks the Delta value before indexing into a static boolean 
+         map, ensuring branchless performance for valid inputs.
+[==============================================================================}
+function TRange.Doublet: Boolean; overload;
+const
+  r: array[0..2] of Boolean = (True, False, True);
+begin
+  Result := (InRange(Self.Delta, -1, 1) and r[Self.Delta + 1]);
+end;
+
+{==============================================================================]
   <Dual>
   @action: Determines whether the range represents exactly two adjacent, consecutive values.
   @note: 
@@ -69,6 +171,29 @@ end;
 function TRange.Dual: Boolean; overload;
 begin
   Result := (((Self.start + 1) = Self.stop) or ((Self.start - 1) = Self.stop));
+end;
+
+{==============================================================================]
+  <Duet>
+  @action: Returns True if the range spans exactly one consecutive step in either direction.
+  @note: Implements a high-performance, branchless bitwise strategy. By squaring 
+         the distance delta, signs are eliminated, mapping both 1 and -1 to a 
+         perfect bitwise match (xor 1 = 0). Safe for negative values.
+[==============================================================================}
+function TRange.Duet: Boolean; overload;
+begin
+  Result := (((Self.stop - Self.start) * (Self.stop - Self.start)) xor 1) = 0;
+end;
+
+{==============================================================================]
+  <Duo>
+  @action: Returns True if the range spans exactly one consecutive step in either direction.
+  @note: Evaluates both Ascenduo and Descenduo, returning True if the absolute 
+         distance between start and stop is exactly one unit.
+[==============================================================================}
+function TRange.Duo: Boolean; overload;
+begin
+  Result := (Self.Ascenduo or Self.Descenduo);
 end;
 
 {==============================================================================]

@@ -9,10 +9,12 @@ function Dimension: Integer; overload;
 function Dimensionality: Integer; overload;
 function Dimensionally: Integer; overload;
 function Dimensionary: Integer; overload;
+function Dimensioned: Integer; overload;
 function Dimensions: Integer; overload;
 
 function Dimensions(var bHorizontal, bVertical: TRange): Integer; overload;
 function Dimensions(var bWidth, bHeight: Integer): Integer; overload;
+function Dimensive: Integer; overload;
 function GetH: Integer; overload;
 function GetHeight: Integer; overload;
 function GetW: Integer; overload;
@@ -111,8 +113,9 @@ end;
 
 {==============================================================================]
   <Dimensing>
-  @action: Returns area of the TBox
-  @note: Stores width & height variables.
+  @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
+  @note: Uses a nested helper function to map individual axis deltas to binary flags 
+         (0 or 1), summing them together to determine total dimensional depth.
 [==============================================================================}
 function TBox.Dimensing: Integer; overload;
   function E(const a, b: Integer): Integer;
@@ -242,6 +245,29 @@ begin
 end;
 
 {==============================================================================]
+  <Dimensioned>
+  @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
+  @note: Leverages native structural comparison values (1, 0, -1) to create a
+         strict, nested state-machine matrix that filters out inversions.
+[==============================================================================}
+function TBox.Dimensioned: Integer; overload;
+begin
+  case Self.X2.Compare(Self.X1) of
+    1:
+    case Self.Y2.Compare(Self.Y1) of
+      1: Exit(2);
+      0: Exit(1);
+    end;
+    0:
+    case Self.Y2.Compare(Self.Y1) of
+      1: Exit(1);
+      0: Exit(0);
+    end;
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
   <Dimensions>
   @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
   @note: Uses early exits inside an optimized case branch, letting all invalid 
@@ -287,6 +313,32 @@ begin
   bWidth := Self.Horizontal.Size;
   bHeight := Self.Vertical.Size;
   Result := (bWidth * bHeight);
+end;
+
+{==============================================================================]
+  <Dimensive>
+  @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
+  @note: Uses native comparison signatures filtered through immediate inversion 
+         guards, handling the remaining layouts via a top-down logical funnel.
+[==============================================================================}
+function TBox.Dimensive: Integer; overload;
+var
+  h, v: Integer;
+begin
+  h := Self.X2.Compare(Self.X1);
+  if (h = -1) then
+    Exit(-1);
+  v := Self.Y2.Compare(Self.Y1);
+  if (v = -1) then
+    Exit(-1);
+  if (h = 0) then
+    if (v = 0) then
+      Exit(0)
+    else
+      Exit(1);
+  if (v = 0) then
+    Exit(1);
+  Result := 2;
 end;
 
 {==============================================================================]

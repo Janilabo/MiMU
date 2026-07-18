@@ -12,6 +12,7 @@ function Rectangular: Boolean; overload;
 function Singular: Boolean; overload;
 function Square: Boolean; overload;
 
+function Dimensioned(const N: Integer): Boolean; overload;
 function In0D: Boolean; overload;
 function In1D: Boolean; overload;
 function In2D: Boolean; overload;
@@ -141,6 +142,17 @@ end;
 function TBox.Square: Boolean; overload;
 begin
   Result := (((Self.X2 > Self.X1) and (Self.Y2 > Self.Y1)) and ((Self.X2 - Self.X1) = (Self.Y2 - Self.Y1)));
+end;
+
+{==============================================================================]
+  <Dimensioned>
+  @action: Checks if the box matches a specific geometric dimension target (-1 to 2).
+  @note: Uses InRange to safeguard the input tier before querying the state-machine
+         dimension property, ensuring zero overhead on out-of-bounds inputs.
+[==============================================================================}
+function TBox.Dimensioned(const N: Integer): Boolean; overload;
+begin
+  Result := ((N > -2) and (N < 3) and (Self.Dimensioned = N));
 end;
 
 {==============================================================================]
