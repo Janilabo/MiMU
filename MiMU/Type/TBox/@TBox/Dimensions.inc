@@ -1,9 +1,14 @@
 {$IFDEF METHODS}
+function Dimensal: Integer; overload;
+function Dimensed: Integer; overload;
+function Dimensia: Integer; overload;
 function Dimensign: Integer; overload;
+function Dimensing: Integer; overload;
 function Dimensio: Integer; overload;
 function Dimension: Integer; overload;
 function Dimensionality: Integer; overload;
 function Dimensionally: Integer; overload;
+function Dimensionary: Integer; overload;
 function Dimensions: Integer; overload;
 
 function Dimensions(var bHorizontal, bVertical: TRange): Integer; overload;
@@ -26,6 +31,67 @@ function YSpan: Integer; overload;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
+  <Dimensal>
+  @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
+  @note: Maps coordinate delta states to a physical coordinate-signature point (s) 
+         and matches it against an explicit structural truth table array.
+[==============================================================================}
+function TBox.Dimensal: Integer; overload;
+const
+  m: array[0..3] of TPoint = ((X:0; Y:0), (X:1; Y:0), (X:0; Y:1), (X:1; Y:1));
+  d: array[0..3] of Integer = (0, 1, 1, 2);
+var
+  s: TPoint;
+  i: Integer;
+begin
+  if ((Self.X2 < Self.X1) or (Self.Y2 < Self.Y1)) then
+    Exit(-1);
+  s := Point(Ord(Self.X2 > Self.X1), Ord(Self.Y2 > Self.Y1));
+  for i := 0 to 3 do
+    if ((m[i].X = s.X) and (m[i].Y = s.Y)) then
+      Exit(d[i]);
+  Result := -1;
+end;
+
+{==============================================================================]
+  <Dimensed>
+  @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
+  @note: Uses a top-down elimination strategy on Width and Height values, 
+         gracefully capturing all 1D states via falling-edge constraints.
+[==============================================================================}
+function TBox.Dimensed: Integer; overload;
+var
+  W, H: Integer;
+begin
+  W := Self.Width;
+  H := Self.Height;
+  if ((W > 1) and (H > 1)) then
+    Exit(2);
+  if ((W = 1) and (H = 1)) then
+    Exit(0);
+  if ((W > 0) and (H > 0)) then
+    Exit(1);
+  Result := -1;
+end;
+
+{==============================================================================]
+  <Dimensia>
+  @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
+  @note: Uses a branchless arithmetic signature mapped directly to a flat case lookup.
+[==============================================================================}
+function TBox.Dimensia: Integer; overload;
+begin
+  case (Ord(Self.X2 > Self.X1) + (Ord(Self.X2 < Self.X1) * 2)) + ((Ord(Self.Y2 > Self.Y1) + (Ord(Self.Y2 < Self.Y1) * 2)) * 3) of
+    0: Exit(0);
+    1: Exit(1);
+    3: Exit(1);
+    4: Exit(2);
+  else
+    Result := -1;
+  end;
+end;
+
+{==============================================================================]
   <Dimensign>
   @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
   @note: Delegates axis comparison to 'Sign' on each delta; a negative sign on
@@ -41,6 +107,28 @@ begin
   if ((h < 0) or (v < 0)) then
     Exit(-1);
   Result := (Ord(h > 0) + Ord(v > 0));
+end;
+
+{==============================================================================]
+  <Dimensing>
+  @action: Returns area of the TBox
+  @note: Stores width & height variables.
+[==============================================================================}
+function TBox.Dimensing: Integer; overload;
+  function E(const a, b: Integer): Integer;
+  begin
+    if (b < a) then
+      Exit(-1);
+    Result := Ord(b > a);
+  end;
+var
+  h, v: Integer;
+begin
+  h := E(Self.X1, Self.X2);
+  v := E(Self.Y1, Self.Y2);
+  if ((h < 0) or (v < 0)) then
+    Exit(-1);
+  Result := (h + v);
 end;
 
 {==============================================================================]
@@ -132,6 +220,25 @@ begin
       False: Result := -1;
     end;
   end;
+end;
+
+{==============================================================================]
+  <Dimensionary>
+  @action: Returns the exact geometric dimension of the box (-1, 0, 1, or 2).
+  @note: Encodes each axis into a bit, builds a 2-bit lookup key, and dispatches
+         via 'case' — the whole 'case' block is gated behind an upfront inversion
+         check, so an inverted box falls straight through to -1 without ever
+         reaching the lookup.
+[==============================================================================}
+function TBox.Dimensionary: Integer; overload;
+begin
+  if not((Self.X1 > Self.X2) or (Self.Y1 > Self.Y2)) then
+  case ((Ord(Self.X2 > Self.X1) shl 1) or Ord(Self.Y2 > Self.Y1)) of
+    0: Exit(0);
+    1, 2: Exit(1);
+    3: Exit(2);
+  end;
+  Result := -1;
 end;
 
 {==============================================================================]
