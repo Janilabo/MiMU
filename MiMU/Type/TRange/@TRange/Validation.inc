@@ -4,7 +4,9 @@ function Ascenduet: Boolean; overload;
 function Ascenduo: Boolean; overload;
 function Ascouple: Boolean; overload;
 function Bipolar: Boolean; overload;
+function Couple: Boolean; overload;
 function Coupled: Boolean; overload;
+function Coupley: Boolean; overload;
 function Descendual: Boolean; overload;
 function Descenduet: Boolean; overload;
 function Descenduo: Boolean; overload;
@@ -26,11 +28,21 @@ function Nonascend(const val: Integer): Boolean; overload;
 function Nondescend(const val: Integer): Boolean; overload;
 function NonNegative: Boolean; overload;
 function NonPositive: Boolean; overload;
+function Nullbound: Boolean; overload;
+function Axial: Boolean; overload;
+function Anchoral: Boolean; overload;
+function Anchored: Boolean; overload;
+function Anchorly: Boolean; overload;
+function Midzero: Boolean; overload;
 function Positive: Boolean; overload;
 function Terminal(const sValue: Integer = 0): Boolean; overload;
 function Uniform(const val: Integer): Boolean; overload;
 function Uniform: Boolean; overload;
 function Zero: Boolean; overload;
+function Balanced: Boolean; overload;
+function Balancy: Boolean; overload;
+function Unbalanced: Boolean; overload;
+function Unbalancy: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -91,13 +103,37 @@ begin
 end;
 
 {==============================================================================]
+  <Couple>
+  @action: Returns True if the range spans exactly one consecutive step in either direction.
+  @note: Uses ordinal Succ/Pred stepping rather than arithmetic subtraction,
+         routing the check through the compiler's ordinal-type successor and
+         predecessor machinery instead of a raw '-' operator.
+[==============================================================================}
+function TRange.Couple: Boolean; overload;
+begin
+  Result := ((System.Succ(Self.start) = Self.stop) or (System.Pred(Self.start) = Self.stop));
+end;
+
+{==============================================================================]
   <Coupled>
+  @action: Returns True if the range spans exactly one consecutive step in either direction.
+  @note: Minimal absolute-value form — collapses direction via Abs(Delta)
+         and compares directly against unity, with no intermediate branching
+         or lookup structure.
+[==============================================================================}
+function TRange.Coupled: Boolean; overload;
+begin
+  Result := (Abs(Self.Delta) = 1);
+end;
+
+{==============================================================================]
+  <Coupley>
   @action: Returns True if the range spans exactly one consecutive step in either direction.
   @note: Leverages the high-level Size property. Assuming Size calculates the 
          inclusive element count, a size of exactly 2 confirms that the range 
          contains only two adjacent structural points.
 [==============================================================================}
-function TRange.Coupled: Boolean; overload;
+function TRange.Coupley: Boolean; overload;
 begin
   Result := (Self.Size = 2);
 end;
@@ -333,6 +369,80 @@ begin
 end;
 
 {==============================================================================]
+  <Nullbound>
+  @action: Returns True if the range's midpoint is exactly zero.
+  @note:
+    - A range is zero-centered when start and stop are additive inverses of
+      one another, i.e. (start + stop) = 0 (e.g., [-2..2], [2..-2], [-1..1],
+      [1..-1]).
+    - Also holds for the degenerate single-point range [0..0], since its
+      only value is trivially its own midpoint.
+[==============================================================================}
+function TRange.Nullbound: Boolean; overload;
+begin
+  Result := ((Self.start + Self.stop) = 0);
+end;
+
+{==============================================================================]
+  <Axial>
+  @action: Returns True if the range's midpoint is exactly zero.
+  @note: Tests via direct negation comparison rather than addition-to-zero —
+         confirms stop is the exact arithmetic negative of start.
+[==============================================================================}
+function TRange.Axial: Boolean; overload;
+begin
+  Result := (Self.stop = -Self.start);
+end;
+
+{==============================================================================]
+  <Anchoral>
+  @action: Returns True if the range's midpoint is exactly zero.
+  @note: Uses squared-sum equality — since (start + stop)^2 = 0 only when
+         the sum itself is zero, this frames the check as a quadratic
+         identity rather than a linear addition or negation comparison.
+[==============================================================================}
+function TRange.Anchoral: Boolean; overload;
+begin
+  Result := (Sqr(Self.start + Self.stop) = 0);
+end;
+
+{==============================================================================]
+  <Anchored>
+  @action: Returns True if the range's midpoint is exactly zero.
+  @note: Tests via multiplication sign inversion — start multiplied by -1
+         must equal stop, framing the check as a scalar reflection rather
+         than an additive or subtractive identity.
+[==============================================================================}
+function TRange.Anchored: Boolean; overload;
+begin
+  Result := ((Self.start * -1) = Self.stop);
+end;
+
+{==============================================================================]
+  <Anchorly>
+  @action: Returns True if the range's midpoint is exactly zero.
+  @note: Routes through the ordinal Compare method rather than an operator —
+         confirms start and the negation of stop compare as exactly equal.
+[==============================================================================}
+function TRange.Anchorly: Boolean; overload;
+begin
+  Result := (Self.start.Compare(-Self.stop) = 0);
+end;
+
+{==============================================================================]
+  <Midzero>
+  @action: Returns True if the range's midpoint is exactly zero.
+  @note: Evaluates zero-midpoint symmetry via a linear differential identity. 
+         By checking if the spatial difference matches twice the starting boundary, 
+         the formula algebraically reduces to (start + stop = 0) without requiring 
+         multiplication operations to cross zero.
+[==============================================================================}
+function TRange.Midzero: Boolean; overload;
+begin
+  Result := ((Self.start - Self.stop) = (2 * Self.start));
+end;
+
+{==============================================================================]
   <Positive>
   @action: Returns True if both endpoints of the range are strictly positive.
   @note: Both Self.start and Self.stop must be greater than 0.
@@ -383,5 +493,58 @@ end;
 function TRange.Zero: Boolean; overload;
 begin
   Result := ((Self.start = 0) and (Self.stop = 0));
+end;
+
+{==============================================================================]
+  <Balanced>
+  @action: Returns True if the range has an exact, integer-valued midpoint.
+  @note:
+    - A range is balanced when start and stop share the same parity, meaning
+      (start + stop) is evenly divisible by 2 with no fractional remainder.
+    - Uses Abs on the summed boundaries to avoid relying on negative-operand
+      'mod' semantics, guaranteeing consistent behavior across all sign
+      combinations of start and stop.
+[==============================================================================}
+function TRange.Balanced: Boolean; overload;
+begin
+  Result := ((Abs(Self.start + Self.stop) mod 2) = 0);
+end;
+
+{==============================================================================]
+  <Balancy>
+  @action: Returns True if the range has an exact, integer-valued midpoint.
+  @note: A range is balanced when start and stop share the same parity, meaning
+         their sum is an even number. Uses a branchless bitwise AND mask on the 
+         lowest bit, completely bypassing division to guarantee high performance 
+         and perfect stability across all sign combinations.
+[==============================================================================}
+function TRange.Balancy: Boolean; overload;
+begin
+  Result := (((Self.start + Self.stop) and 1) = 0);
+end;
+
+{==============================================================================]
+  <Unbalanced>
+  @action: Returns True if the range has no exact, integer-valued midpoint.
+  @note:
+    - Tests parity directly rather than delegating to Balanced — evaluates
+      whether (start + stop) is odd via Abs-guarded 'mod', avoiding any
+      dependency on Boolean negation or a separate function call.
+[==============================================================================}
+function TRange.Unbalanced: Boolean; overload;
+begin
+  Result := ((Abs(Self.start + Self.stop) mod 2) = 1);
+end;
+
+{==============================================================================]
+  <Unbalancy>
+  @action: Returns True if the range has no exact, integer-valued midpoint.
+  @note: Tests parity directly via bitwise mask rather than delegating or using
+         negation. Evaluates whether the lowest binary bit of the summed 
+         boundaries is set, confirming the sum is odd.
+[==============================================================================}
+function TRange.Unbalancy: Boolean; overload;
+begin
+  Result := (((Self.start + Self.stop) and 1) = 1);
 end;
 {$ENDIF}
