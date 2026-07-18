@@ -1,4 +1,6 @@
 {$IFDEF METHODS}
+function Apply(const source: TRange): TRange; overload;
+function Apply(const val: Integer = 0): TRange; overload;
 function Assign(const val: Integer = 0): TRange; overload;
 function Assign(const sStart, sStop: Integer): TRange; overload;
 class function Ascending(const A, B: Integer): TRange; overload; static;
@@ -45,6 +47,33 @@ function R(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; 
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Apply>
+  @action: Overwrites the boundaries of this range with the coordinates of 
+           the source range.
+  @note: Returns a snapshot of this range's original start and stop limits 
+         before the new bounds are applied.
+[==============================================================================}
+function TRange.Apply(const source: TRange): TRange; overload;
+begin
+  Result.start := Self.start;
+  Result.stop := Self.stop;
+  Self.start := source.start;
+  Self.stop := source.stop;
+end;
+
+{==============================================================================]
+  <Apply>
+  @action: Resets this range to a zero-length span centered at a single uniform 
+           coordinate value.
+  @note: Returns a snapshot of this range's original boundaries by chaining 
+         into the primary TRange.Apply overload via a transient Range template.
+[==============================================================================}
+function TRange.Apply(const val: Integer = 0): TRange; overload;
+begin
+  Result := Self.Apply(Range(val, val));
+end;
+
 {==============================================================================]
   <Assign>
   @action: Reconstructs the range in place as a single-point range, returning

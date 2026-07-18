@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Assign(const item: MType): MType; overload;
 function Clear: MType; overload;
+function Configure(const source: MType): MType; overload;
 function IO(const input, output: MType): MType; overload;
 function IO(const input: MType): MType; overload;
 function SetIf(const condition: Boolean; const val: MType): MType; overload;
@@ -38,6 +39,22 @@ function MTypeHelper.Clear: MType; overload;
 begin
   Result := Self;
   Self := Default(MType);
+end;
+
+{==============================================================================]
+  <Configure>
+  @action: Overwrites the state of this instance with the values from the 
+           source instance via an atomic value assignment.
+  @note: Returns a complete snapshot of this instance's original state prior 
+         to the configuration update. Safe for managed records.
+[==============================================================================}
+function MTypeHelper.Configure(const source: MType): MType; overload;
+var
+  s: MType;
+begin
+  s := source;
+  Result := Self;
+  Self := s;
 end;
 
 {==============================================================================]

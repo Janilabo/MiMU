@@ -1,4 +1,6 @@
 {$IFDEF METHODS}
+function Apply(const source: TBox): TBox; overload;
+function Apply(const val: Integer = 0): TBox; overload;
 function Assign(const val: Integer = 0): TBox; overload;
 function Assign(const sX1, sY1, sX2, sY2: Integer): TBox; overload;
 function Build(const minX, minY, maxX, maxY: Integer): Integer; overload;
@@ -35,6 +37,37 @@ function B(const val: Integer = 0): TBox; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Apply>
+  @action: Overwrites the coordinate boundaries (X1, Y1, X2, Y2) of this box 
+           with the values from the source box instance.
+  @note: Returns a snapshot of this box's original geometric state before 
+         the new dimensions are applied.
+[==============================================================================}
+function TBox.Apply(const source: TBox): TBox; overload;
+begin
+  Result.X1 := Self.X1;
+  Result.Y1 := Self.Y1;
+  Result.X2 := Self.X2;
+  Result.Y2 := Self.Y2;
+  Self.X1 := source.X1;
+  Self.Y1 := source.Y1;
+  Self.X2 := source.X2;
+  Self.Y2 := source.Y2;
+end;
+
+{==============================================================================]
+  <Apply>
+  @action: Flattens or uniformly snaps all corner coordinates of this box to a 
+           single integer point value (defaults to 0).
+  @note: Returns a snapshot of this box's original state. Chains into the 
+         primary TBox.Apply overload using a transient Box factory template.
+[==============================================================================}
+function TBox.Apply(const val: Integer = 0): TBox; overload;
+begin
+  Result := Self.Apply(Box(val, val, val, val));
+end;
+
 {==============================================================================]
   <Assign>
   @action: Reconstructs the box in place as a single-point box, returning

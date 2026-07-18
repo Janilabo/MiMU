@@ -1,4 +1,6 @@
 {$IFDEF METHODS}
+function Apply(const source: TPoint): TPoint; overload;
+function Apply(const val: Integer = 0): TPoint; overload;
 function Assign(const val: Integer = 0): TPoint; overload;
 function Assign(const pX, pY: Integer): TPoint; overload;
 function Build(const pX, pY: Integer): TPoint; overload;
@@ -19,6 +21,32 @@ function P(const val: Integer = 0): TPoint; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Apply>
+  @action: Overwrites the X and Y coordinates of this point with the values from 
+           the source point.
+  @note: Returns a snapshot of this point's original coordinates before the 
+         new values are applied.
+[==============================================================================}
+function TPoint.Apply(const source: TPoint): TPoint; overload;
+begin
+  Result.X := Self.X;
+  Result.Y := Self.Y;
+  Self.X := source.X;
+  Self.Y := source.Y;
+end;
+
+{==============================================================================]
+  <Apply>
+  @action: Updates both coordinates of this point to a uniform integer value 
+           (defaults to 0).
+  @note: Returns a snapshot of this point's original state.
+[==============================================================================}
+function TPoint.Apply(const val: Integer = 0): TPoint; overload;
+begin
+  Result := Self.Apply(Point(val, val));
+end;
+
 {==============================================================================]
   <Assign>
   @action: Sets both X and Y coordinates to a uniform value (defaults to 0).
