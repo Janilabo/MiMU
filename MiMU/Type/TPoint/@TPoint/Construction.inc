@@ -1,5 +1,7 @@
 {$IFDEF METHODS}
-function Build(const pX, pY: Integer): TPoint;
+function Assign(const val: Integer = 0): TPoint; overload;
+function Assign(const pX, pY: Integer): TPoint; overload;
+function Build(const pX, pY: Integer): TPoint; overload;
 class function Construct(const pX, pY: Integer): TPoint; overload; static;
 constructor Create(const pX, pY: Integer); overload;
 constructor Create(const value: Integer); overload;
@@ -18,11 +20,35 @@ function P(const val: Integer = 0): TPoint; overload;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
+  <Assign>
+  @action: Sets both X and Y coordinates to a uniform value (defaults to 0).
+  @note: Returns the original state of the point before the new value is applied.
+[==============================================================================}
+function TPoint.Assign(const val: Integer = 0): TPoint; overload;
+begin
+  Result := Self;
+  Self.X := val;
+  Self.Y := val;
+end;
+
+{==============================================================================]
+  <Assign>
+  @action: Sets the X and Y coordinates to the specified distinct values.
+  @note: Returns the original state of the point before the new values are applied.
+[==============================================================================}
+function TPoint.Assign(const pX, pY: Integer): TPoint; overload;
+begin
+  Result := Self;
+  Self.X := pX;
+  Self.Y := pY;
+end;
+
+{==============================================================================]
   <Build>
   @action: Returns TPoint with X and Y.
   @note: None.
 [==============================================================================}
-function TPoint.Build(const pX, pY: Integer): TPoint;
+function TPoint.Build(const pX, pY: Integer): TPoint; overload;
 begin
   Self.X := pX;
   Self.Y := pY;
