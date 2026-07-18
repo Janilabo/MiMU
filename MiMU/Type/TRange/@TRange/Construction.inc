@@ -5,6 +5,9 @@ class function Construct(const rVal: Integer): TRange; overload; static;
 class function Construct: TRange; overload; static;
 class function Construct(const arr: TIntegerArray; const oAscending: Boolean = True): TRange; overload; static;
 function Build(const rStart: Integer = 0; const rStop: Integer = 0): Integer; overload;
+function Cast(const val: Integer = 0): TRange; overload;
+function Cast(const sStart, sStop: Integer): TRange; overload;
+function Cast(const sRange: TRange): TRange; overload;
 constructor Create(const rStart, rStop: Integer); overload;
 constructor Create(const value: Integer); overload;
 constructor Create(const data: string); overload;
@@ -66,6 +69,63 @@ begin
   Self.start := Min(rStart, rStop);
   Self.stop := Max(rStop, rStart);
   Result := ((Self.stop - Self.start) + 1);
+end;
+
+{==============================================================================]
+  <Cast>
+  @action: Reconstructs the range in place as a single-point range, returning
+           the range as it existed prior to this call.
+  @note:
+    - Both Self.start and Self.stop are overwritten with val, collapsing the
+      range to a single degenerate point (defaults to 0 if omitted).
+    - The returned TRange reflects the PRIOR boundaries, not the newly
+      assigned ones — callers needing the updated range should inspect Self
+      after the call, not the function result.
+    - Overload of Cast(sStart, sStop: Integer) / Cast(sRange: TRange),
+      collapsing to a point range from a single scalar instead of two
+      discrete bounds or a source TRange.
+[==============================================================================}
+function TRange.Cast(const val: Integer = 0): TRange; overload;
+begin
+  Result := Self;
+  Self.start := val;
+  Self.stop := val;
+end;
+
+{==============================================================================]
+  <Cast>
+  @action: Reconstructs the range's boundaries in place, returning the range
+           as it existed prior to this call.
+  @note:
+    - Self.start/Self.stop are overwritten unconditionally with the supplied
+      sStart/sStop values.
+    - The returned TRange reflects the PRIOR boundaries, not the newly
+      assigned ones — callers needing the updated range should inspect Self
+      after the call, not the function result.
+[==============================================================================}
+function TRange.Cast(const sStart, sStop: Integer): TRange; overload;
+begin
+  Result := Self;
+  Self.start := sStart;
+  Self.stop := sStop;
+end;
+
+{==============================================================================]
+  <Cast>
+  @action: Reconstructs the range in place from another TRange, returning the
+           range as it existed prior to this call.
+  @note:
+    - Self is overwritten wholesale with sRange's boundaries.
+    - The returned TRange reflects the PRIOR boundaries, not the newly
+      assigned ones — callers needing the updated range should inspect Self
+      after the call, not the function result.
+    - Overload of Cast(sStart, sStop: Integer), accepting a full TRange as
+      the replacement source instead of discrete scalar bounds.
+[==============================================================================}
+function TRange.Cast(const sRange: TRange): TRange; overload;
+begin
+  Result := Self;
+  Self := sRange;
 end;
 
 {==============================================================================]

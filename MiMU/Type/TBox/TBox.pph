@@ -26,6 +26,7 @@
 {$I @TBox/Offset.inc}
 {$I @TBox/Placement.inc}
 {$I @TBox/Position.inc}
+{$I @TBox/Projection.inc}
 {$I @TBox/Proximity.inc}
 {$I @TBox/Resizing.inc}
 {$I @TBox/Restriction.inc}

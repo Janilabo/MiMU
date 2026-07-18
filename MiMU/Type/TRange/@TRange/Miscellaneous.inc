@@ -12,6 +12,7 @@ function Complement(const target: TRange): TRangeArray; overload;
 function Cutout(const target: TRange): TRangeArray; overload;
 function Disjunct(const other: TRange): TRangeArray; overload;
 function Disjunction(const other: TRange): TRangeArray; overload;
+function Exclave(const universe: TRange): TRangeArray; overload;
 function Select(const arr: TIntegerArray): TIntegerArray; overload;
 function Select(const arr: TDoubleArray): TDoubleArray; overload;
 function Select(const arr: TStringArray): TStringArray; overload;
@@ -175,6 +176,36 @@ begin
     Result.Supply(TRange.Construct(l, (b - 1)));
   if (e < r) then
     Result.Supply(TRange.Construct((e + 1), r));
+end;
+
+{==============================================================================]
+  <Exclave>
+  @action: Returns the portion(s) of a universe range that fall outside Self.
+  @note:
+    - Normalizes both Self and universe first, so direction (ascending/
+      descending) of either range doesn't affect the calculation.
+    - Can produce zero, one, or two resulting ranges depending on where Self
+      sits relative to universe:
+        * Self fully covers universe        -> empty result (0 ranges)
+        * Self touches one edge of universe -> one resulting range
+        * Self sits strictly inside universe -> two resulting ranges
+    - Uses r.Increase as a fused post-increment index/counter, writing into
+      Result[r] then advancing r in a single expression per branch.
+[==============================================================================}
+function TRangeHelper.Exclave(const universe: TRange): TRangeArray; overload;
+var
+  r: Integer;
+  s, u: TRange;
+begin
+  s := Self.Normalized;
+  u  := universe.Normalized;
+  SetLength(Result, 2);
+  r := 0;
+  if (s.start > u.start) then
+    Result[r.Increase].Create(u.start, Min((s.start - 1), u.stop));
+  if (s.stop < u.stop) then
+    Result[r.Increase].Create(Max((s.stop + 1), u.start), u.stop);
+  SetLength(Result, r);
 end;
 
 {==============================================================================]

@@ -34,6 +34,7 @@ function Anchoral: Boolean; overload;
 function Anchored: Boolean; overload;
 function Anchorly: Boolean; overload;
 function Midzero: Boolean; overload;
+function Midzeroing: Boolean; overload;
 function Positive: Boolean; overload;
 function Terminal(const sValue: Integer = 0): Boolean; overload;
 function Uniform(const val: Integer): Boolean; overload;
@@ -440,6 +441,18 @@ end;
 function TRange.Midzero: Boolean; overload;
 begin
   Result := ((Self.start - Self.stop) = (2 * Self.start));
+end;
+
+{==============================================================================]
+  <Midzeroing>
+  @action: Returns True if the range's midpoint is exactly zero.
+  @note: Floating-point average check — divides the summed boundaries by
+         2.0 and compares against 0.0, routing the test through real-number
+         division rather than integer arithmetic.
+[==============================================================================}
+function TRange.Midzeroing: Boolean; overload;
+begin
+  Result := (((Self.start + Self.stop) / 2.0) = 0.0);
 end;
 
 {==============================================================================]

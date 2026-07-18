@@ -39,6 +39,7 @@
 {$I @TRange/Parity.inc}
 {$I @TRange/Populating.inc}
 {$I @TRange/Position.inc}
+{$I @TRange/Projection.inc}
 {$I @TRange/Proportion.inc}
 {$I @TRange/Proximity.inc}
 {$I @TRange/Randomization.inc}

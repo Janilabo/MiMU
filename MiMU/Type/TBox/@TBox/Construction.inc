@@ -4,6 +4,9 @@ function Build(const pTop, pBottom: TPoint): Integer; overload;
 function Build(const valueX, valueY: Integer): Integer; overload;
 function Build(const target: TPoint): Integer; overload;
 function Build(const value: Integer = 0): Integer; overload;
+function Cast(const val: Integer = 0): TBox; overload;
+function Cast(const sBox: TBox): TBox; overload;
+function Cast(const sX1, sY1, sX2, sY2: Integer): TBox; overload;
 class function Construct(const bXS, bYS, bXE, bYE: Integer): TBox; overload; static;
 constructor Create(const minX, minY, maxX, maxY: Integer); overload;
 constructor Create(const pTop, pBottom: TPoint); overload;
@@ -85,6 +88,74 @@ end;
 function TBox.Build(const value: Integer = 0): Integer; overload;
 begin
   Result := Self.Build(value, value, value, value);
+end;
+
+{==============================================================================]
+  <Cast>
+  @action: Reconstructs the box in place as a single-point box, returning
+           the box as it existed prior to this call.
+  @note:
+    - X1, Y1, X2, and Y2 are all overwritten with val, collapsing the box
+      to a single degenerate point (defaults to 0 if omitted).
+    - The returned TBox reflects the PRIOR coordinates, not the newly
+      assigned ones — callers needing the updated box should inspect Self
+      after the call, not the function result.
+    - Overload of Cast(sBox: TBox) / Cast(sX1, sY1, sX2, sY2: Integer),
+      collapsing to a point box from a single scalar instead of a source
+      TBox or four discrete coordinates.
+[==============================================================================}
+function TBox.Cast(const val: Integer = 0): TBox; overload;
+begin
+  Result := Self;
+  Self.X1 := val;
+  Self.Y1 := val;
+  Self.X2 := val;
+  Self.Y2 := val;
+end;
+
+{==============================================================================]
+  <Cast>
+  @action: Reconstructs the box in place from another TBox, returning the
+           box as it existed prior to this call.
+  @note:
+    - Self is overwritten field-by-field with sBox's coordinates.
+    - The returned TBox reflects the PRIOR coordinates, not the newly
+      assigned ones — callers needing the updated box should inspect Self
+      after the call, not the function result.
+    - Overload of Cast(val: Integer) / Cast(sX1, sY1, sX2, sY2: Integer),
+      accepting a full TBox as the replacement source instead of a single
+      scalar or discrete coordinates.
+[==============================================================================}
+function TBox.Cast(const sBox: TBox): TBox; overload;
+begin
+  Result := Self;
+  Self.X1 := sBox.X1;
+  Self.Y1 := sBox.Y1;
+  Self.X2 := sBox.X2;
+  Self.Y2 := sBox.Y2;
+end;
+
+{==============================================================================]
+  <Cast>
+  @action: Reconstructs the box's coordinates in place from four discrete
+           values, returning the box as it existed prior to this call.
+  @note:
+    - X1, Y1, X2, and Y2 are overwritten unconditionally with the supplied
+      sX1, sY1, sX2, sY2 values.
+    - The returned TBox reflects the PRIOR coordinates, not the newly
+      assigned ones — callers needing the updated box should inspect Self
+      after the call, not the function result.
+    - Overload of Cast(val: Integer) / Cast(sBox: TBox), accepting four
+      discrete coordinates as the replacement source instead of a single
+      scalar or a source TBox.
+[==============================================================================}
+function TBox.Cast(const sX1, sY1, sX2, sY2: Integer): TBox; overload;
+begin
+  Result := Self;
+  Self.X1 := sX1;
+  Self.Y1 := sY1;
+  Self.X2 := sX2;
+  Self.Y2 := sY2;
 end;
 
 {==============================================================================]
