@@ -3,6 +3,7 @@
 {$I @T2DArray/Flattening.inc}
 {$I @T2DArray/Metric.inc}
 {$I @T2DArray/Reversion.inc}
+{$I @T2DArray/Size.inc}
 {$I @T2DArray/Validation.inc}
 
 {$IFDEF Sortable}

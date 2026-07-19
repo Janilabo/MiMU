@@ -92,13 +92,9 @@ function MTypeHelper.T2DArray(const size1D: Integer = 1; const size2D: Integer =
 var
   i, j: Integer;
 begin
-  SetLength(Result, size1D);
-  for i := 0 to High(Result) do
-  begin
-    SetLength(Result[i], size2D);
-    for j := 0 to High(Result[i]) do
+  for i := 0 to (Result.SetSize(size1D) - 1) do
+    for j := 0 to (Result[i].SetSize(size2D) - 1) do
       Result[i][j] := Self;
-  end;
 end;
 
 {==============================================================================]
@@ -110,8 +106,7 @@ function MTypeHelper.TArray(const aSize: Integer = 1): MArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, aSize);
-  for i := 0 to High(Result) do
+  for i := 0 to (Result.SetSize(aSize) - 1) do
     Result[i] := Self;
 end;
 
