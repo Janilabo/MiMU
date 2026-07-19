@@ -1,10 +1,14 @@
 {$IFDEF HELPERS}
+function Alloc(const sSize: Integer = 1): Integer; overload;
 function Desize(out excess: MArray; const aSize: Integer = 0): Integer; overload;
 function Desize(const aSize: Integer = 0): Integer; overload;
 function Fit: Integer; overload;
 function Fit(const aSize: Integer): Integer; overload;
 function Fit(const aBounds: TRange): Integer; overload;
+function Footprint(const asBytes: Boolean = False): Int64; overload;
 function GetLength: Integer; overload;
+function GetSize: Integer; overload;
+function Len: Integer; overload;
 function Length: Integer; overload;
 function Lengthex(const aSize: Integer = 0): Integer; overload;
 function LengthTo(const N: Integer): Integer; overload;
@@ -29,6 +33,17 @@ function ToSize(const sSize: Integer; const iCreated: MType): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Alloc>
+  @action: Allocates memory for the dynamic array up to the specified size.
+  @note: Clears the array if sSize <= 0. Returns the highest valid index (High),
+         which is (sSize - 1), rather than the total count.
+[==============================================================================}
+function MArrayHelper.Alloc(const sSize: Integer = 1): Integer; overload;
+begin
+  Result := (Self.SetSize(sSize) - 1);
+end;
+
 {==============================================================================]
   <Desize>
   @action: Resizes the dynamic array to the specified target size. If the array 
@@ -116,6 +131,21 @@ begin
 end;
 
 {==============================================================================]
+  <Footprint>
+  @action: Returns the memory footprint or element count of the dynamic array.
+  @note: Uses a 64-bit integer to guarantee overflow prevention across platforms.
+         If AsBytes is True, returns the exact size of the data block in bytes 
+         (Count * SizeOf(MType)). Defaults to False, returning the raw element count.
+[==============================================================================}
+function MArrayHelper.Footprint(const asBytes: Boolean = False): Int64; overload;
+begin
+  if asBytes then
+    Result := (Int64(System.Length(Self)) * SizeOf(MType))
+  else
+    Result := System.Length(Self);
+end;
+
+{==============================================================================]
   <GetLength>
   @action: Calculates and returns the total number of elements (the length) of the array instance.
   @note: Safely handles nil (unassigned) instances by returning 0, and uses High(Self) + 1 to determine the count.
@@ -125,6 +155,31 @@ begin
   if (Self = nil) then
     Exit(0); 
   Result := (High(Self) + 1);
+end;
+
+{==============================================================================]
+  <GetSize>
+  @action: Calculates and returns the total number of elements in the array.
+  @note: Uses Assigned(Self) rather than a direct nil-equality comparison
+         to guard against an unassigned array, framing the check as an
+         RTL-idiomatic assignment test.
+[==============================================================================}
+function MArrayHelper.GetSize: Integer; overload;
+begin
+  if not Assigned(Self) then
+    Exit(0);
+  Result := System.Length(Self);
+end;
+
+{==============================================================================]
+  <Len>
+  @action: Calculates and returns the total number of elements in the array.
+  @note: Uses IfThen to branchlessly select between 0 (nil case) and
+         System.Length(Self), rather than an explicit if/Exit guard.
+[==============================================================================}
+function MArrayHelper.Len: Integer; overload;
+begin
+  Result := IfThen((Self = nil), 0, System.Length(Self));
 end;
 
 {==============================================================================]
