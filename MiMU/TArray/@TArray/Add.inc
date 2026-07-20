@@ -243,8 +243,7 @@ var
   i, s: Integer;
 begin
   s := Self.Length;
-  SetLength(Result, (s + other.Length));
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(s + other.Length) do
     if (i < s) then
       Result[i] := Self[i]
     else
@@ -274,11 +273,9 @@ end;
 [==============================================================================}
 function MArrayHelper.Extend(const item: MType): MArray; overload;
 var
-  i, h: Integer;
+  i: Integer;
 begin
-  h := High(Self);
-  SetLength(Result, (h + 2));
-  for i := 0 to h do
+  for i := 0 to (Result.Alloc(Self.Length + 1) - 1) do
     Result[i + 1] := Self[i];
   Result[0] := item;
 end;
@@ -290,12 +287,11 @@ end;
 [==============================================================================}
 function MArrayHelper.Extend(const items: MArray): MArray; overload;
 var
-  i, h, l: Integer;
+  i, l: Integer;
 begin
-  h := High(Self);
   l := items.Length;
-  SetLength(Result, ((h + 1) + l));
-  for i := 0 to h do
+  SetLength(Result, (Self.Length + l));
+  for i := 0 to High(Self) do
     Result[i + l] := Self[i];
   for i := 0 to (l - 1) do
     Result[i] := items[i];
