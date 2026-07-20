@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function Destroy: Int64; overload;
+function Destruct: Int64; overload;
 function Free: Int64; overload;
 function Kill: Integer; overload;
 function Kill(const k2D: TIntegerArray): Int64; overload;
@@ -24,6 +25,26 @@ begin
   begin
     Result := (Result + Self[i].Size);
     SetLength(Self[i], 0);	
+  end;
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
+  <Destruct>
+  @action: Frees a 2D dynamic array, cleans up sub-array elements, and clears main array memory.
+  @note: Returns the total count of elements cleared across all sub-arrays.
+         Finalize explicitly cleans up managed types before memory is deallocated via SetLength(..., 0).
+[==============================================================================}
+function M2DArrayHelper.Destruct: Int64; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+  begin 
+    Result.Increase(Self[i].Length);
+    Finalize(Self[i]);
+    SetLength(Self[i], 0);
   end;
   SetLength(Self, 0);
 end;
@@ -82,13 +103,9 @@ function M2DArrayHelper.Pull: M2DArray; overload;
 var
   i, j: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
-  begin
-    SetLength(Result[i], Self[i].Size);
-    for j := 0 to High(Self[i]) do
+  for i := 0 to Result.Alloc(Self.Length) do
+    for j := 0 to Result[i].Alloc(Self[i].Size) do
       Result[i][j] := Self[i][j];
-  end;
   SetLength(Self, 0);
 end;
 

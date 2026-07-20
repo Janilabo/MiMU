@@ -89,16 +89,13 @@ end;
 [==============================================================================}
 function MArrayHelper.Add(const item: MType; const duplicates: Boolean = True): MArray; overload;
 var
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, (l + 1));
-  for i := 0 to (l - 1) do
-    Result[i] := Self[i];
   if ((not duplicates) and Self.Contains(item)) then
-    SetLength(Result, l)
-  else
-    Result[l] := item;
+    Exit(Self.Clone);
+  for i := 0 to (Result.Alloc(Self.Length + 1) - 1) do
+    Result[i] := Self[i];
+  Result[Self.Length] := item;
 end;
 
 {==============================================================================]
@@ -108,28 +105,25 @@ end;
 [==============================================================================}
 function MArrayHelper.Add(const items: MArray; const duplicates: Boolean = True): MArray; overload;
 var
-  a, h, i, s: Integer;
+  a, i, s: Integer;
 begin
   s := Self.Length;
-  i := items.Length;
-  SetLength(Result, (s + i));
-  if ((i = 0) and (s = 0)) then
+  if (Result.SetSize(s + items.Length) = 0) then
     Exit;
-  h := High(items);
   for i := 0 to (s - 1) do
     Result[i] := Self[i];
   case duplicates of
     False:
     begin
       a := 0;
-      for i := 0 to h do
+      for i := 0 to High(items) do
         if not Result.Contains(items[i]) then
           Result[s + a.Increase] := items[i];
       SetLength(Result, (s + a));
     end;
     True:
-    for i := 0 to h do
-      Result[i] := items[i];
+    for i := 0 to High(items) do
+      Result[s + i] := items[i];
   end;
 end;
 

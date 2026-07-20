@@ -58,8 +58,7 @@ function TIntegerHelper.Ascment(const N: Integer = 2): TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Max(0, N));
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Max(0, N)) do
     Result[i] := (Self + i);
 end;
 
@@ -103,8 +102,7 @@ function TIntegerHelper.Descment(const N: Integer = 2): TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Max(0, N));
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Max(0, N)) do
     Result[i] := (Self - i);
 end;
 
@@ -119,8 +117,7 @@ function TIntegerHelper.Downstairs(const target: Integer = 0): TIntegerArray; ov
 var
   i: Integer;
 begin
-  SetLength(Result, (Max(0, (Self - target)) + 1));
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Max(0, (Self - target)) + 1) do
     Result[i] := (Self - i);
 end;
 
@@ -137,14 +134,12 @@ function TIntegerHelper.Onto(const target: Integer = 0): TIntegerArray; overload
 var
   i: Integer;
 begin
-  if (Self <> target) then
-    SetLength(Result, (Abs(target - Self) + 1));
   case Self.Compare(target) of
     0: Result := [Self];
     -1:
-    for i := 0 to High(Result) do
+    for i := 0 to Result.Alloc(Abs(target - Self) + 1) do
       Result[i] := (Self + i);
-    1:  for i := 0 to High(Result) do
+    1:  for i := 0 to Result.Alloc(Abs(target - Self) + 1) do
       Result[i] := (Self - i);
   end;
 end;
@@ -244,17 +239,11 @@ begin
   case sCount.Compare(0) of
     0: Exit([Self]);
     -1:
-    begin
-      SetLength(Result, (-sCount + 1));
-      for i := 0 to High(Result) do
-        Result[i] := (Self - i);
-    end;
+    for i := 0 to Result.Alloc(-sCount + 1) do
+      Result[i] := (Self - i);
     1:
-    begin
-      SetLength(Result, (sCount + 1));
-      for i := 0 to High(Result) do
-        Result[i] := (Self + i);
-    end;
+    for i := 0 to Result.Alloc(sCount + 1) do
+      Result[i] := (Self + i);
   end;
 end;
 
@@ -268,9 +257,8 @@ function TIntegerHelper.Thru(const target: Integer): TIntegerArray; overload;
 var
   i, s: Integer;
 begin
-  SetLength(Result, (Abs(target - Self) + 1));
   s := IfThen((Self <= target), 1, -1);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Abs(target - Self) + 1) do
     Result[i] := (Self + (i * s));
 end;
 
@@ -285,8 +273,7 @@ function TIntegerHelper.Upstairs(const target: Integer = 0): TIntegerArray; over
 var
   i: Integer;
 begin
-  SetLength(Result, (Max(0, (target - Self)) + 1));
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Max(0, (target - Self)) + 1) do
     Result[i] := (Self + i);
 end;
 
@@ -305,9 +292,8 @@ var
 begin
   if (Self = target) then
     Exit([Self]);
-  SetLength(Result, (Abs(target - Self) + 1));
   s := IfThen((target > Self), 1, -1);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Abs(target - Self) + 1) do
     Result[i] := (Self + (i * s));
 end;
 
@@ -327,10 +313,9 @@ var
 begin
   if (Self = target) then
     Exit([Self]);
-  SetLength(Result, (Abs(target - Self) + 1));
   s := IfThen((target > Self), 1, -1);
   z := SizeOf(Integer);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Abs(target - Self) + 1) do
     PInteger(@Result[0] + (i * z))^ := (Self + (i * s));
 end;
 

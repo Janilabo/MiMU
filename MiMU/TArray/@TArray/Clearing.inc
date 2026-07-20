@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function Clear: Boolean; overload;
+function Destruct: Integer; overload;
 function Free: Integer; overload;
 function Kill: Integer; overload;
 function Nullify: Integer; overload;
@@ -19,6 +20,19 @@ function Reset: Integer; overload;
 function MArrayHelper.Clear: Boolean; overload;
 begin
   Result := (Self.Length > 0);
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
+  <Destruct>
+  @action: Thoroughly destroys array contents, finalizes managed types, and frees memory.
+  @note: More comprehensive than Clear - ensures all elements are properly finalized.
+  @returns: Number of elements that were destroyed.
+[==============================================================================}
+function MArrayHelper.Destruct: Integer; overload;
+begin
+  Result := Self.Size;
+  Finalize(Self);
   SetLength(Self, 0);
 end;
 
