@@ -5,6 +5,8 @@ function Kill: Integer; overload;
 function Nullify: Integer; overload;
 function Recreate(const arrSize: Integer): Boolean; overload;
 function Reinitialize(const aSize: Integer = 1): Integer; overload;
+function Release: MArray; overload;
+function Repossess(const newSize: Integer = 0): MArray; overload;
 function Reset: Integer; overload;
 {$ENDIF}
 
@@ -83,6 +85,30 @@ begin
   Result := Max(0, aSize);
   if (Result > 0) then
     SetLength(Self, Result);
+end;
+
+{==============================================================================]
+  <Release>
+  @action: Creates a copy of the dynamic array and clears the source array to release memory/ownership.
+  @note: Uses System.Copy to clone the source dynamic array into Result, then resets the caller's length to 0.
+[==============================================================================}
+function MArrayHelper.Release: MArray; overload;
+begin
+  Result := System.Copy(Self);
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
+  <Repossess>
+  @action: Transfers the current array contents to Result, clears the original array, and optionally pre-allocates a new capacity.
+  @note: Copies Self into Result, zeroes out Self, and then resizes Self to newSize if a value greater than 0 is specified.
+[==============================================================================}
+function MArrayHelper.Repossess(const newSize: Integer = 0): MArray; overload;
+begin
+  Result := System.Copy(Self);
+  SetLength(Self, 0);
+  if (newSize > 0) then
+    SetLength(Self, newSize);
 end;
 
 {==============================================================================]

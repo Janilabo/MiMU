@@ -5,6 +5,7 @@ function Kill: Integer; overload;
 function Kill(const k2D: TIntegerArray): Int64; overload;
 function Pull: M2DArray; overload;
 function Recreate(const arrSize: Integer): Boolean; overload;
+function Release: M2DArray; overload;
 function Reset: Int64; overload;
 {$ENDIF}
 
@@ -108,6 +109,20 @@ begin
       SetLength(Self, l)
     else
       SetLength(Self, arrSize);
+end;
+
+{==============================================================================]
+  <Release>
+  @action: Creates a deep copy of the 2D dynamic array structure and clears the source array.
+  @note: Allocates a new outer array matching Self's length, copies each inner array individually via System.Copy, and zeroes out Self.
+[==============================================================================}
+function M2DArrayHelper.Release: M2DArray; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to Result.Alloc(Self.Length) do
+    Result[i] := System.Copy(Self[i]);
+  SetLength(Self, 0);
 end;
 
 {==============================================================================]
