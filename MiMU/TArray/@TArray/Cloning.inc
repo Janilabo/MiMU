@@ -201,8 +201,7 @@ function MArrayHelper.Clonify: MArray; overload;
 var
   i, s, m, l, r: Integer;
 begin
-  s := Self.Length;
-  SetLength(Result, s);
+  s := Result.SetSize(Self.Length);
   if (s = 0) then
     Exit;
   m := (s div 2);
@@ -330,8 +329,7 @@ function MArrayHelper.Dupe: MArray; overload;
 var
   i, l, j: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   if (l = 0) then
     Exit;
   if ((l mod 2) <> 0) then
@@ -434,8 +432,7 @@ function MArrayHelper.Twinned: MArray; overload;
 var
   L, R: Integer;
 begin
-  R := Self.Length;
-  SetLength(Result, R);
+  R := Result.SetSize(Self.Length);
   if (R = 0) then
     Exit;
   L := -1;

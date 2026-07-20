@@ -18,9 +18,7 @@ begin
   if (l = 0) then
     Exit(Self.Copy);
   s := Self.Size;
-  r := IfThen((index < 0), Max((Abs(index) + s), l), Max(s, (index + l)));
-  SetLength(Result, r);
-  for i := 0 to (r - 1) do
+  for i := 0 to Result.Alloc(IfThen((index < 0), Max((Abs(index) + s), l), Max(s, (index + l)))) do
     if not ((index <= 0) and (i < l)) then
     begin
       j := (i - index);

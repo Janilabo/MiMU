@@ -303,17 +303,14 @@ label
 var
   i, v, d, s: Integer;
 begin
-  s := Self.Size;
-  SetLength(Result, s);
+  s := Result.SetSize(Self.Size);
   i := 0;
   v := Self.start;
   d := IfThen(Self.Asceal, 1, -1);
   loop:
   if (i >= s) then
     goto finish;
-  Result[i] := v;
-  Inc(v, d);
-  Inc(i);
+  Result[i.Increase] := v.Increase(d);
   goto loop;
   finish:
 end;

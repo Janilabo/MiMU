@@ -160,8 +160,7 @@ begin
     while (l.Decrement > -1) do
       if aItem.Contains(Self[l]) then
         Break;
-    SetLength(Result, (l + 1));
-    for r := 0 to l do
+    for r := 0 to Result.Alloc(l + 1) do
       Result[r] := Self[r];
   end else
     SetLength(Result, 0);
@@ -282,8 +281,7 @@ function MArrayHelper.Piece(const sIndexes: TRange): MArray; overload;
 var
   s: Integer;
 begin
-  s := sIndexes.Size;
-  SetLength(Result, s);
+  s := Result.SetSize(sIndexes.Size);
   Move(Self[sIndexes.Minimum], Result[0], (s * SizeOf(MType)));
   if sIndexes.Descending then
     Result.Reverse;
@@ -296,14 +294,12 @@ end;
 [==============================================================================}
 function MArrayHelper.Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
 var
-  m, l, i: Integer;
+  m, i: Integer;
 begin
   if ((index > 0) and (index < Self.Size) and (count > 0)) then
   begin
     m := Max(0, (index - count));
-    l := (((index - 1) - m) + 1);
-    SetLength(Result, l);
-    for i := 0 to (l - 1) do
+    for i := 0 to Result.Alloc(((index - 1) - m) + 1) do
       Result[i] := Self[m + i];
   end else
     SetLength(Result, 0);
@@ -347,8 +343,7 @@ begin
   if (index >= l) then
     Exit([]);
   i := Max(index, 0);
-  SetLength(Result, IfThen(((i + count) > l), (l - i), count));
-  for l := 0 to High(Result) do
+  for l := 0 to Result.Alloc(IfThen(((i + count) > l), (l - i), count)) do
     Result[l] := Self[l + i];
 end;
 
@@ -483,15 +478,13 @@ end;
 [==============================================================================}
 function MArrayHelper.Take(const ID: TIntegerArray): MArray; overload;
 var
-  i, h, l, r: Integer;
+  i, h, r: Integer;
 begin
   r := 0;
   if (ID.Populated and Self.Populated) then
   begin
     h := High(Self);
-    l := ID.Size;
-    SetLength(Result, l);
-    for i := 0 to (l - 1) do
+    for i := 0 to Result.Alloc(ID.Size) do
       if ((ID[i] <= h) and (ID[i] > -1)) then
         Result[r.Increase] := Self[ID[i]];
   end;

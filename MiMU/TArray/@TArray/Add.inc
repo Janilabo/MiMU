@@ -306,8 +306,7 @@ function MArrayHelper.Feed(const item: MType; const allowDuplicates: Boolean = F
 begin
   if ((not allowDuplicates) and Self.Includes(item)) then
     Exit(-1);
-  Result := Self.Size;
-  SetLength(Self, (Result + 1));
+  Result := Self.Alloc(Self.Length + 1);
   Self[Result] := item; 
 end;
 
@@ -320,8 +319,7 @@ function MArrayHelper.Grow(const item: MType; const allowDuplicates: Boolean = F
 begin
   if ((not allowDuplicates) and Self.Contains(item)) then
     Exit(-1);
-  Result := Self.Size;
-  SetLength(Self, (Result + 1));
+  Result := Self.Alloc(Self.Length + 1);
   Self[Result] := item;
 end;
 
@@ -376,13 +374,11 @@ end;
 [==============================================================================}
 function MArrayHelper.Push(const item: MType): MArray; overload;
 var
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, (l + 1));
-  for i := 0 to (l - 1) do
+  for i := 0 to (Result.Alloc(Self.Length + 1) - 1) do
     Result[i] := Self[i];
-  Result[l] := item;
+  Result[High(Result)] := item;
 end;
 
 {==============================================================================]
@@ -392,14 +388,13 @@ end;
 [==============================================================================}
 function MArrayHelper.Push(const items: MArray): MArray; overload;
 var
-  h, i, l: Integer;
+  i, l: Integer;
 begin
-  h := High(items);
   l := Self.Length;
-  SetLength(Result, (l + (h + 1)));
+  SetLength(Result, (l + items.Length));
   for i := 0 to (l - 1) do
     Result[i] := Self[i];
-  for i := 0 to h do
+  for i := 0 to High(items) do
     Result[l + i] := items[i];
 end;
 
@@ -412,8 +407,7 @@ function MArrayHelper.Put(const ID: TIntegerArray; const item: MType): MArray; o
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i];
   for i := 0 to High(ID) do
     Result[ID[i]] := item;
@@ -428,10 +422,9 @@ function MArrayHelper.Put(const ID: TIntegerArray; const items: MArray): MArray;
 var
   i, l: Integer;
 begin
-  SetLength(Result, Self.Size);
-  l := items.Length;
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i];
+  l := items.Length;
   for i := 0 to High(ID) do
     Result[ID[i]] := items[i mod l];
 end;
@@ -459,8 +452,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Supply(const item: MType): Integer; overload;
 begin
-  Result := Self.Size;
-  SetLength(Self, (Result + 1));
+  Result := Self.Alloc(Self.Length + 1);
   Self[Result] := item;
 end;
 
@@ -488,11 +480,9 @@ end;
 [==============================================================================}
 function MArrayHelper.Unshift(const item: MType): MArray; overload;
 var
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, (l + 1));
-  for i := l downto 1 do
+  for i := Result.Alloc(Self.Length + 1) downto 1 do
     Result[i] := Self[i - 1];
   Result[0] := item;
 end;
@@ -504,14 +494,12 @@ end;
 [==============================================================================}
 function MArrayHelper.Unshift(const items: MArray): MArray; overload;
 var
-  l, i, r: Integer;
+  l, i: Integer;
 begin
   if items.Empty then
     Exit(Self.Copy);
   l := items.Length;
-  r := (Self.Size + l);
-  SetLength(Result, r);
-  for i := (r - 1) downto l do
+  for i := Result.Alloc(Self.Size + l) downto l do
     Result[i] := Self[i - l];
   for i := 0 to (l - 1) do
     Result[i] := items[i];

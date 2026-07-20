@@ -38,8 +38,7 @@ var
   i: Integer;
 begin
   Result := Self.Clone;
-  SetLength(Self, Max(0, aSize));
-  for i := 0 to High(Self) do
+  for i := 0 to Self.Alloc(Max(0, aSize)) do
     Self[i] := item;
 end;
 

@@ -79,8 +79,7 @@ var
   l: Integer;
 begin
   l := Self.Length;
-  Result := ((l > 0) or (arrSize <> 0));
-  SetLength(Self, 0);
+  Result := ((l > Self.Nullify) or (arrSize <> 0));
   if Result then
     if (arrSize < 0) then
       SetLength(Self, l)
@@ -95,9 +94,8 @@ end;
 [==============================================================================}
 function MArrayHelper.Reinitialize(const aSize: Integer = 1): Integer; overload;
 begin
-  SetLength(Self, 0);
   Result := Max(0, aSize);
-  if (Result > 0) then
+  if (Result > Self.Nullify) then
     SetLength(Self, Result);
 end;
 
@@ -120,8 +118,7 @@ end;
 function MArrayHelper.Repossess(const newSize: Integer = 0): MArray; overload;
 begin
   Result := System.Copy(Self);
-  SetLength(Self, 0);
-  if (newSize > 0) then
+  if (newSize > Self.Nullify) then
     SetLength(Self, newSize);
 end;
 
