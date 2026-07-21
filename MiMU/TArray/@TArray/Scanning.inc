@@ -28,12 +28,9 @@ begin
   h := High(Self);
   s := Min(index, h);
   if ((h > -1) and (s > -1)) then
-  begin
-    SetLength(Result, (s + 1));
-    for i := s downto 0 do
-      if (Self[i] = item) then
-        Result[r.Increase] := i;
-  end;
+  for i := Result.Alloc(s + 1) downto 0 do
+    if (Self[i] = item) then
+      Result[r.Increase] := i;
   SetLength(Result, r);
 end;
 
@@ -50,12 +47,9 @@ begin
   h := High(Self);
   s := Min(index, h);
   if ((h > -1) and (s > -1) and items.Exists) then
-  begin
-    SetLength(Result, (s + 1));
-    for i := s downto 0 do
-      if items.Contains(Self[i]) then
-        Result[r.Increase] := i;
-  end;
+  for i := Result.Alloc(s + 1) downto 0 do
+    if items.Contains(Self[i]) then
+      Result[r.Increase] := i;
   SetLength(Result, r);
 end;
 
@@ -68,9 +62,8 @@ function MArrayHelper.Locations: TIntegerArray; overload;
 var
   i, r: Integer;
 begin
-  SetLength(Result, Self.Size);
   r := 0;
-  for i := High(Result) downto 0 do
+  for i := Result.Alloc(Self.Length) downto 0 do
     Result[r.Increase] := i;
 end;
 
@@ -127,8 +120,7 @@ function MArrayHelper.Positions: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := i;
 end;
 
@@ -267,9 +259,8 @@ begin
   try
     for i := 0 to High(items) do
       d.AddOrSetValue(items[i], 0);
-    SetLength(Result, Self.Length);
     c := 0;
-    for i := 0 to High(Self) do
+    for i := 0 to Result.Alloc(Self.Length) do
       if d.ContainsKey(Self[i]) then
         Result[c.Increase] := i;
     SetLength(Result, c);
@@ -291,19 +282,16 @@ begin
   p := pattern.Size;
   r := 0;
   if ((p > 0) and (p <= l)) then
+  for i := Result.Alloc((l - p) + 1) downto 0 do
   begin
-    SetLength(Result, ((l - p) + 1));
-    for i := (l - p) downto 0 do
-    begin
-      s := 0;
-      for j := 0 to (p - 1) do
-        if (Self[i + j] <> pattern[j]) then
-          Break
-        else
-          s := (s + 1);
-      if (s = p) then
-        Result[r.Increase] := i;
-    end;
+    s := 0;
+    for j := 0 to (p - 1) do
+      if (Self[i + j] <> pattern[j]) then
+        Break
+      else
+        s := (s + 1);
+    if (s = p) then
+      Result[r.Increase] := i;
   end;
   SetLength(Result, r);
 end;
@@ -322,20 +310,17 @@ begin
   p := pattern.Size;
   r := 0;
   if ((p > 0) and (p <= l)) then
+  for i := 0 to Result.Alloc((l - p) + 1) do
   begin
-    SetLength(Result, ((l - p) + 1));
-    for i := 0 to (l - p) do
-    begin
-      f := True;
-      for j := 0 to (p - 1) do
-        if (Self[i + j] <> pattern[j]) then
-        begin
-          f := False;
-          Break;
-        end;
-      if f then
-        Result[r.Increase] := i;
-    end;
+    f := True;
+    for j := 0 to (p - 1) do
+      if (Self[i + j] <> pattern[j]) then
+      begin
+        f := False;
+        Break;
+      end;
+    if f then
+      Result[r.Increase] := i;
   end;
   SetLength(Result, r);
 end;

@@ -115,8 +115,7 @@ var
 begin
   if ID.Empty then
     Exit(Self.Copy);
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   r := 0;
   for i := 0 to (l - 1) do
     if not ID.Contains(i) then
@@ -218,8 +217,7 @@ var
 begin
   if (items.Empty or Self.Empty) then
     Exit(Self.Copy);
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   d := 0;
   m := Max(0, index);
   for i := 0 to (m - 1) do
@@ -265,8 +263,7 @@ var
 begin
   if not (Self.Empty or (index < 0)) then
   begin
-    l := Self.Length;
-    SetLength(r, l);
+    l := r.SetSize(Self.Length);
     m := Min(index, (l - 1));
 	d := 0;
     for i := m downto 0 do
@@ -315,8 +312,7 @@ begin
   if (Self.Populated and items.Populated and (index >= 0)) then
   begin
     h := High(items);
-    l := Self.Length;
-    SetLength(r, l);
+    l := r.SetSize(Self.Length);
     m := Min(index, (l - 1));
 	d := 0;
     for i := m downto 0 do
@@ -419,8 +415,7 @@ function MArrayHelper.Pull: MArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i];
   SetLength(Self, 0);
 end;
@@ -616,8 +611,7 @@ var
   i, l, s: Integer;
 begin
   l := Self.Length;
-  s := Max(0, Min(sCount, l));
-  SetLength(Result, s);
+  s := Result.SetSize(Max(0, Min(sCount, l)));
   if (l = 0) then
     Exit;
   for i := 0 to (s - 1) do

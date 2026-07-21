@@ -63,8 +63,7 @@ var
   i, j, l: Integer;
 begin
   l := items.Length;
-  SetLength(Self, (l * times));
-  Result := (Self.Size > 0);
+  Result := (Self.SetSize(l * times) > 0);
   if Result then
   for i := 0 to (l - 1) do
     for j := 0 to (times - 1) do
@@ -80,8 +79,7 @@ function MArrayHelper.Populate(const item: MType; const times: Integer = 1): Boo
 var
   i: Integer;
 begin;
-  SetLength(Self, times);
-  Result := (Self.Size > 0);
+  Result := (Self.SetSize(times) > 0);
   if Result then
   for i := 0 to (times - 1) do
     Self[i] := item;

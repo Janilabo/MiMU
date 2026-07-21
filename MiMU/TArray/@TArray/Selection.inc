@@ -73,8 +73,7 @@ begin
   if ((not iMatching) and items.Empty) then
     Exit(Self.Copy);
   r := 0;
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     if (items.Contains(Self[i]) = iMatching) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
@@ -543,16 +542,14 @@ var
   h, i, l: Integer;
   a: TIntegerArray;
 begin
-  l := Self.Length;
-  if ((l = 0) or allowed.Empty) then
+  if (Self.Empty or allowed.Empty) then
     Exit([]);
-  SetLength(Result, l);
   if not aSorted then
     a := allowed.QuickSorted
   else
     a := allowed.Copy;
   h := 0;
-  for i := 0 to (l - 1) do
+  for i := 0 to Result.Alloc(Self.Length) do
     if a.BinaryContains(i) then
       Result[h.Increase] := Self[i];
   SetLength(Result, h);
@@ -610,8 +607,7 @@ begin
   if e.Empty then
     Exit([]);
   e := e.Canonical;
-  SetLength(Result, e.Length);
-  for i := 0 to High(e) do
+  for i := 0 to Result.Alloc(e.Length) do
     Result[i] := Self[e[i]];
 end;
 
@@ -677,8 +673,7 @@ begin
   l := Self.Length;
   if ((l = 0) or ID.Empty) then
     Exit([]);
-  SetLength(m, l);
-  for i := 0 to High(m) do
+  for i := 0 to m.Alloc(l) do
     m[i] := False;
   for i := 0 to High(ID) do
     if ((ID[i] >= 0) and (ID[i] < l)) then
@@ -706,9 +701,8 @@ function MArrayHelper.Fetch(const IDs: TIntegerArray; const null: MType): MArray
 var
   h, i: Integer;
 begin
-  SetLength(Result, IDs.Length);
   h := High(Self);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(IDs.Length) do
     if InRange(IDs[i], 0, h) then
       Result[i] := Self[IDs[i]]
     else
@@ -727,8 +721,7 @@ function MArrayHelper.Fetch(const IDs: TIntegerArray): MArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, IDs.Length);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(IDs.Length) do
     Result[i] := Self[IDs[i]]
 end;
 
@@ -980,8 +973,7 @@ begin
   if forbidden.Empty then
     Exit(Self.Copy);
   l := Self.Length;
-  SetLength(Result, l);
-  if (l = 0) then
+  if (Result.SetSize(l) = 0) then
     Exit;
   if not fSorted then
     f := forbidden.QuickSorted
@@ -1127,8 +1119,7 @@ begin
   l := Self.Length;
   if (l = 0) then
     Exit([]);
-  SetLength(m, l);
-  for i := 0 to High(m) do
+  for i := 0 to m.Alloc(l) do
     m[i] := True;
   for i := 0 to High(ID) do
     if ((ID[i] >= 0) and (ID[i] < l)) then
@@ -1316,8 +1307,7 @@ function MArrayHelper.Lead: MArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Max(0, (Self.Length - 1)));
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Max(0, (Self.Length - 1))) do
     Result[i] := Self[i];
 end;
 
@@ -1363,15 +1353,11 @@ begin
   case (items.Populated and (m < l)) of
     True:
     begin
-      SetLength(Result, m);
-      for i := 0 to (m - 1) do
+      for i := 0 to Result.Alloc(m) do
         Result[i] := Self[i];
       for i := m to (l - 1) do
         if items.Contains(Self[i]) then
-        begin
-          SetLength(Result, (Result.Size + 1));
-          Result[High(Result)] := Self[i];
-        end;
+          Result.Supply(Self[i]);
     end;
     False: Result := Self.Copy;
   end;
@@ -1431,8 +1417,7 @@ function MArrayHelper.Rest: MArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Max(0, (Self.Length - 1)));
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Max(0, (Self.Length - 1))) do
     Result[i] := Self[i + 1];
 end;
 

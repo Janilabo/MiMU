@@ -61,8 +61,7 @@ var
   i, r: Integer;
 begin
   r := 0;
-  SetLength(Result, Self.Length);
-  for i := High(Self) downto 0 do
+  for i := Result.Alloc(Self.Length) downto 0 do
     Result[r.Increase] := Self[i];
 end;
 
@@ -490,8 +489,7 @@ begin
     for i := 0 to High(Self) do
       l.Add(Self[i]);
     l.Reverse;
-    SetLength(Result, l.Count);
-    for i := 0 to (l.Count - 1) do
+    for i := 0 to Result.Alloc(l.Count) do
       Result[i] := l[i];
   finally
     l.Free;
@@ -631,8 +629,7 @@ begin
     3: Exit([Self[3], Self[2], Self[1], Self[0]]);
     4: Exit([Self[4], Self[3], Self[2], Self[1], Self[0]]);
   end;
-  SetLength(Result, (h + 1));
-  for i := 0 to h do
+  for i := 0 to Result.Alloc(h + 1) do
     Result[i] := Self[h - i];
 end;
 

@@ -98,8 +98,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Fit(const aSize: Integer): Integer; overload;
 begin
-  Result := Max(0, aSize);
-  SetLength(Self, Result);
+  Result := Self.SetSize(Max(0, aSize));
 end;
 
 {==============================================================================]
@@ -222,8 +221,7 @@ var
 begin
   Result := Max(N, 0);
   l := Self.Length;
-  SetLength(Self, Result);
-  for i := l to (Result - 1) do
+  for i := l to Self.Alloc(Result) do
     Self[i] := Default(MType);
 end;
 
@@ -463,8 +461,7 @@ begin
     SetLength(data, 0);
     Exit(0);
   end;
-  Result := (High(Self) + 1);
-  SetLength(data, Result);
+  Result := data.SetSize(Self.Length);
   for i := 0 to (Result - 1) do
     data[i] := Self[i];
 end;
@@ -503,8 +500,7 @@ end;
 [==============================================================================}
 function MArrayHelper.ToSize(const sSize: Integer = 1): Integer; overload;
 begin
-  Result := Max(0, sSize);
-  SetLength(Self, Result);
+  Result := Self.SetSize(Max(0, sSize));
 end;
 
 {==============================================================================]
