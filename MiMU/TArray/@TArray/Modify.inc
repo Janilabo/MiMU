@@ -31,10 +31,8 @@ function MArrayHelper.Assign(const target: MArray): MArray; overload;
 var
   i, l: Integer;
 begin
-  l := target.Length;
-  SetLength(Self, l);
-  SetLength(Result, l);
-  for i := 0 to High(Result) do
+  l := Self.SetSize(target.Length);
+  for i := 0 to Result.Alloc(l) do
   begin
     Self[i] := target[i];
 	Result[i] := target[i];
@@ -53,8 +51,7 @@ function MArrayHelper.Replace(const old, new: MType): MArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     if (Self[i] = old) then
       Result[i] := new
     else
@@ -78,9 +75,8 @@ var
   e: TIntegerArray;
   r: MArray;
 begin
-  h := High(Self);
-  SetLength(Result, (h + 1));
-  if Self.Empty then
+  h := Result.Alloc(Self.Length);
+  if (h = -1) then
     Exit;
   e := exceptions.ExtractValues(TRange.Construct(0, h));
   SetLength(r, e.Length);

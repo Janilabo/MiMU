@@ -66,8 +66,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Fetch(const source: MArray; const aIndexes: TIntegerArray): MArray; overload;
 begin
-  SetLength(Result, AIndexes.Length);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(AIndexes.Length) do
   begin
     Result := Self[aIndexes[i]];
     Self[aIndexes[i]] := source[aIndexes[i]];
@@ -96,8 +95,7 @@ function MArrayHelper.Place(var target: MArray; const aIndexes: TIntegerArray): 
 var
   i: Integer;
 begin
-  SetLength(Result, aIndexes.Length);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(aIndexes.Length) do
   begin
     Result[i] := target[aIndexes[i]];
     target[aIndexes[i]] := Self[aIndexes[i]];

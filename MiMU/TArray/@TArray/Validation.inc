@@ -442,8 +442,7 @@ begin
   if (l < 2) then
     Exit(True);
   m := (l div 2);
-  SetLength(s, m);
-  for i := 0 to (m - 1) do
+  for i := 0 to s.Alloc(m) do
     s[i] := Self[i];
   p := (m - 1);
   for i := (l - m) to (l - 1) do

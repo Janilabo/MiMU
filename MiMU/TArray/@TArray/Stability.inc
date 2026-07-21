@@ -4,6 +4,7 @@ function Downsize(const aCeiling: Integer = -1): Integer; overload;
 function Fixid(const aIndex: Integer = 0): Integer; overload;
 function Invalid(const aIndex: Integer = 0): Boolean; overload;
 function Secure: Integer; overload;
+function Sever: Integer; overload;
 function Upsize(const aFloor: Integer; const null: MType): Integer; overload;
 function Upsize(const aFloor: Integer = 1): Integer; overload;
 function Valid(const aIndex: Integer = 0): Boolean; overload;
@@ -23,7 +24,7 @@ begin
   Result := Self.Length;
   SetLength(Self, (Result + 1));
   SetLength(Self, Result);
-end; 
+end;
 
 {==============================================================================]
   <Downsize>
@@ -87,6 +88,21 @@ function MArrayHelper.Secure: Integer; overload;
 begin
   Result := Self.Length;
   SetLength(Self, Result);
+end;
+
+{==============================================================================]
+  <Sever>
+  @action: Forces Self to become a uniquely-owned array, detached from any
+           shared reference, and returns its length.
+  @note: Uses the grow-then-shrink trick in a single expression: Alloc grows
+         capacity to Length + 1 (forcing FPC to reallocate when Self's
+         refcount is greater than 1), then returns Length - 1 of that request
+         — i.e. the original length — which SetSize then applies, restoring
+         Self to its true size with freshly-owned, non-shared memory.
+[==============================================================================}
+function MArrayHelper.Sever: Integer; overload;
+begin
+  Result := Self.SetSize(Self.Alloc(Self.Length + 1));
 end;
 
 {==============================================================================]
