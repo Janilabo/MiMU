@@ -6,6 +6,7 @@
 {$I @TArray/Construction.inc}
 {$I @TArray/Copying.inc}
 {$I @TArray/Counting.inc}
+{$I @TArray/Custody.inc}
 {$I @TArray/Duplication.inc}
 {$I @TArray/Endpoints.inc}
 {$I @TArray/Equality.inc}
@@ -20,6 +21,7 @@
 {$I @TArray/Modify.inc}
 {$I @TArray/Partition.inc}
 {$I @TArray/Position.inc}
+{$I @TArray/Proportion.inc}
 {$I @TArray/Query.inc}
 {$I @TArray/Randomization.inc}
 {$I @TArray/Recede.inc}

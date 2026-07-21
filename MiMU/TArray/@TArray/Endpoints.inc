@@ -28,7 +28,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Firsty(const null: MType): MType; overload;
 begin
-  if (Self.Length = 0) then
+  if Self.Empty then
     Result := null
   else
     Result := Self[0];

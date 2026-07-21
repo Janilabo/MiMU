@@ -12,6 +12,7 @@
 {$I @TRange/Construction.inc}
 {$I @TRange/Consumption.inc}
 {$I @TRange/Conversion.inc}
+{$I @TRange/Custody.inc}
 {$I @TRange/Data.inc}
 {$I @TRange/Direction.inc}
 {$I @TRange/Discrepancy.inc}

@@ -80,11 +80,12 @@ end;
 [==============================================================================}
 function MArrayHelper.BuiltWithout(const forbidden: MArray): Boolean; overload;
 var
-  i, j: Integer;
+  h, i, j: Integer;
 begin
-  if not (Self.Empty or forbidden.Empty) then
+  h := High(forbidden);
+  if not (Self.Empty or (h = -1)) then
   for i := 0 to High(Self) do
-    for j := 0 to High(forbidden) do
+    for j := 0 to h do
       if (Self[i] = forbidden[j]) then
         Exit(False);
   Result := True;
@@ -388,12 +389,10 @@ begin
   end;
   c := 0;
   for i := 0 to (l - 1) do
-  begin
     if ((Self[i] = mItem) and (c.Increment > target)) then
+      Exit(False)
+    else if ((c + (l - 1 - i)) < target) then
       Exit(False);
-    if ((c + (l - 1 - i)) < target) then
-      Exit(False);
-  end;
   Result := (c = target);
 end;
 
@@ -710,12 +709,10 @@ begin
   h := (l div 2);
   c := 0;
   for i := 0 to (l - 1) do
-  begin
     if ((Self[i] = mItem) and (c.Increment > h)) then
-      Exit(True);
-    if ((c + (l - i - 1)) <= h) then
+      Exit(True)
+    else if ((c + (l - i - 1)) <= h) then
       Exit(False);
-  end;
   Result := (c > h);
 end;
 
@@ -830,14 +827,12 @@ begin
     Exit(True);
   c := 0;
   for i := 0 to (l - 1) do
-  begin
     if ((Self[i] = mItem) and (c.Increment > maxTarget)) then
-      Exit(False);
-    if ((c + (l - i - 1)) < minTarget) then
-      Exit(False);
-    if ((c >= minTarget) and ((c + (l - i - 1)) <= maxTarget)) then
+      Exit(False)
+    else if ((c + (l - i - 1)) < minTarget) then
+      Exit(False)
+    else if ((c >= minTarget) and ((c + (l - i - 1)) <= maxTarget)) then
       Exit(True);
-  end;
   Result := ((c >= minTarget) and (c <= maxTarget));
 end;
 
@@ -863,12 +858,10 @@ begin
   c := 0;
   m := l;
   for i := 0 to (l - 1) do
-  begin
     if ((Self[i] = mItem) and (c.Increment > target)) then
-      Exit(False);
-    if ((c + m.Decrement) <= target) then
+      Exit(False)
+    else if ((c + m.Decrement) <= target) then
       Exit(True);
-  end;
   Result := (c <= target);
 end;
 
@@ -891,12 +884,10 @@ begin
     Exit(False);
   c := 0;
   for i := 0 to (l - 1) do
-  begin
     if ((Self[i] = mItem) and (c.Increment > target)) then
+      Exit(False)
+    else if ((c + (l - i - 1)) < target) then
       Exit(False);
-    if ((c + (l - i - 1)) < target) then
-      Exit(False);
-  end;
   Result := (c = target);
 end;
 

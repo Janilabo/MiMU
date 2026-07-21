@@ -161,8 +161,7 @@ var
   r: Integer;
 begin
   Result := [];
-  if ((rCount < 1) or (Self.Length = 0)) then
-    Exit;
+  if not Self.Empty then
   for r := 1 to rCount do
     System.Insert(Self, Result, Result.Length);
 end;

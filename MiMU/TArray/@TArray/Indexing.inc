@@ -123,8 +123,7 @@ var
   i, l: Integer;
   P: PInteger;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   if (l < 1) then
     goto ready;
   P := PInteger(Result);
@@ -190,8 +189,7 @@ function MArrayHelper.ID(const aAscending: Boolean = True): TIntegerArray; overl
 var
   i, l, b, s: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   b := (Integer(not aAscending) * (l - 1));
   s := IfThen(aAscending, 1, -1);
   for i := 0 to (l - 1) do
@@ -207,15 +205,16 @@ function MArrayHelper.IDs(const aAscending: Boolean = True): TIntegerArray; over
 var
   h, i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  h := High(Self);
   case aAscending of
     True:
-    for i := 0 to h do
+    for i := 0 to Result.Alloc(Self.Length) do
       Result[i] := i;
     False:
-    for i := h downto 0 do
-      Result[h - i] := i;
+	begin
+	  h := Result.Alloc(Self.Length);
+      for i := h downto 0 do
+        Result[h - i] := i;
+	end;
   end;
 end;
 
@@ -228,8 +227,7 @@ function MArrayHelper.IDs(const ID: TIntegerArray): MArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, ID.Size);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(ID.Length) do
     Result[i] := Self[ID[i]];
 end;
 
@@ -318,8 +316,7 @@ function MArrayHelper.Indexed(const aAscending: Boolean = True): TIntegerArray; 
 var
   l: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   if Self.Populated then
   case aAscending of
     True:
@@ -355,8 +352,7 @@ function MArrayHelper.Indexes(const aAscending: Boolean = True): TIntegerArray; 
 var
   i, l: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   for i := 0 to (l - 1) do
     Result[i] := IfThen(aAscending, i, ((l - i) - 1));
 end;
@@ -391,8 +387,7 @@ begin
   RI(return, (M + 1), R);
 end;
 begin
-  SetLength(Result, Self.Size);
-  if (Result.Size >  0) then
+  if (Result.SetSize(Self.Size) > 0) then
     RI(Result, 0, High(Self));
 end;
 
@@ -439,8 +434,7 @@ function MArrayHelper.Indiced(const aAscending: Boolean = True): TIntegerArray; 
 var
   r: TRange;
 begin
-  SetLength(Result, Self.Size);
-  if Self.Empty then
+  if (Result.SetSize(Self.Size) = 0) then
     Exit;
   r.Create(0, High(Self));
   case aAscending of
@@ -468,7 +462,7 @@ var
 begin
   l := Low(Self);
   h := High(Self);
-  SetLength(Result, ((h - l) + 1));
+  if (Result.SetSize((h - l) + 1) > 0) then
   case aAscending of
     False:
     for i := l to h do
@@ -486,7 +480,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Indicia: TIntegerArray; overload;
 begin
-  if (Self.Length < 1) then
+  if Self.Empty then
     Exit([]);
   Result := TRange.Construct(0, High(Self)).ToArray;
 end;
@@ -648,7 +642,7 @@ function MArrayHelper.Slots: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  for i := 0 to (Result.SetSize(Self.Length) - 1) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := i;
 end;
 
@@ -695,9 +689,8 @@ function MArrayHelper.ToIndexes: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
-  SetLength(Result, Self.Length);
   l := Low(Self);
-  for i := l to High(Self) do
+  for i := l to Result.Alloc(Self.Length) do
     Result[i - l] := i;
 end;
 

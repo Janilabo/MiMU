@@ -39,8 +39,7 @@ begin
       SetLength(Result, (g.Increment + 1));
       SetLength(Result[g], 0);
     end;
-    SetLength(Result[g], (Result[g].Size + 1));
-    Result[g][High(Result[g])] := Self[i];
+	Result[g].Supply(Self[i]);
   end;
 end;
 
@@ -69,8 +68,7 @@ begin
       SetLength(Result, (g.Increment + 1));
       SetLength(Result[g], 0);
     end;
-    SetLength(Result[g], (Result[g].Length + 1));
-    Result[g][High(Result[g])] := Self[i];
+	Result[g].Supply(Self[i]);
   end;
 end;
 
@@ -93,8 +91,7 @@ begin
       SetLength(Result, (g.Increment + 1));
       SetLength(Result[g], 0);
     end;
-    SetLength(Result[g], (Result[g].Length + 1));
-    Result[g][High(Result[g])] := Self[i];
+    Result[g].Supply(Self[i]);
   end;
 end;
 
@@ -109,8 +106,7 @@ var
   i, h, g, l: Integer;
 begin
   l := Self.Size;
-  SetLength(Result, l);
-  if (l = 0) then
+  if (Result.SetSize(l) = 0) then
     Exit;
   SetLength(Result[0], l);
   Result[0][0] := Self[0];
@@ -203,15 +199,13 @@ end;
 [==============================================================================}
 function MArrayHelper.Group: M2DArray; overload;
 var
-  h, i, r, g, l: Integer;
+  h, i, r, g: Integer;
   f: Boolean;
 begin
   if Self.Empty then
     Exit([]);
   g := -1;
-  h := High(Self);
-  SetLength(Result, (h + 1));
-  for i := 0 to h do
+  for i := 0 to Result.Alloc(Self.Length) do
   begin
     f := False;
     for r := 0 to g do
@@ -219,9 +213,7 @@ begin
       f := (Self[i] = Result[r][0]);
       if f then
       begin
-        l := Result[r].Length;
-        SetLength(Result[r], (l + 1));
-        Result[r][l] := Self[i];
+        Result[r].Supply(Self[i]);
         Break;
       end;
     end;
@@ -239,10 +231,9 @@ end;
 function MArrayHelper.Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload;
 var
   w: TIntegerArray;
-  i, l, g: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
-  if ((l = 0) or (weight.Size <> l))then
+  if (Self.Empty or (Self.Length <> weight.Length)) then
     Exit([]);
   if not wSorted then
     w := weight.QuickSorted
@@ -251,21 +242,15 @@ begin
   w.BinaryPrune;
   Result.Recreate(w.Size);
   for i := 0 to High(Self) do
-  begin
-    g := w.BinarySearch(weight[i]);
-    l := Result[g].Length;
-    SetLength(Result[g], (l + 1));
-    Result[g][l] := Self[i];
-  end;
+    Result[w.BinarySearch(weight[i])].Supply(Self[i]);
 end;
 
 function MArrayHelper.Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload;
 var
   w: TDoubleArray;
-  i, l, g: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
-  if ((l = 0) or (weight.Size <> l))then
+  if (Self.Empty or (Self.Length <> weight.Length)) then
     Exit([]);
   if not wSorted then
     w := weight.QuickSorted
@@ -274,12 +259,7 @@ begin
   w.BinaryPrune;
   Result.Recreate(w.Size);
   for i := 0 to High(Self) do
-  begin
-    g := w.BinarySearch(weight[i]);
-    l := Result[g].Length;
-    SetLength(Result[g], (l + 1));
-    Result[g][l] := Self[i];
-  end;
+    Result[w.BinarySearch(weight[i])].Supply(Self[i]);
 end;
 
 {==============================================================================]

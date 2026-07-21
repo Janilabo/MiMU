@@ -3,7 +3,6 @@ function Adopt(const target: MArray): MArray; overload;
 function Assign(const target: MArray): MArray; overload;
 function Replace(const old, new: MType): MArray; overload;
 function Replace(const old, new: MType; const exceptions: TIntegerArray): MArray; overload;
-function Update(const target: MArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -94,18 +93,5 @@ begin
       Result[i] := Self[i];
   for i := 0 to High(r) do
     Result[e[i]] := r[i];
-end;
-
-{==============================================================================]
-  <Update>
-  @action: Overwrites Self with a copy of target and returns the new length.
-  @note: Mutates Self by reassignment; target is duplicated via System.Copy
-         so Self and target remain independent after the call. Differs from
-         the MArray-returning overload only in its return value.
-[==============================================================================}
-function MArrayHelper.Update(const target: MArray): Integer; overload;
-begin
-  MArray(Self) := System.Copy(target);
-  Result := Self.Length;
 end;
 {$ENDIF}

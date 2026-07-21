@@ -40,8 +40,7 @@ begin
     c := count;
     if ((i + c) > l) then
       c := (l - i);
-    SetLength(Result, c);
-    for l := 0 to (c - 1) do
+    for l := 0 to Result.Alloc(c) do
       Result[l] := Self[l + i];
   end else
     SetLength(Result, 0);
@@ -75,8 +74,7 @@ var
 begin
   l := Self.Length;
   m := Max(0, xTimes);
-  SetLength(Result, (m * l));
-  if (l > 0) then
+  if (Result.SetSize(m * l) > 0) then
   for i := 0 to (m - 1) do
     for j := 0 to (l - 1) do
       Result[(i * l) + j] := Self[j];
@@ -99,8 +97,7 @@ begin
   else
     r := returnIDs.Copy;
   h := High(r);
-  s := High(Self);
-  SetLength(Result, Self.Size);
+  s := Result.Alloc(Self.Size);
   l := 0;
   c := 0;
   for i := 0 to s do
@@ -460,11 +457,10 @@ begin
   if (count > 0) then
   begin
     if (index < 0) then
-      c := (index + count)
+      c := Result.SetSize(index + count)
     else
-      c := Min(count, (Self.Size - index));
+      c := Result.SetSize(Min(count, (Self.Size - index)));
     s := Max(0, index);
-    SetLength(Result, c);
     for i := s to ((s + c) - 1) do
       Result[i - s] := Self[i];
   end else
