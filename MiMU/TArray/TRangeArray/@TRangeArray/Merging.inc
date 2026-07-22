@@ -1001,7 +1001,7 @@ begin
   l := Self.Length;
   if (l = 0) then
     Exit([]);
-  SetLength(s, Self.Sized);
+  SetLength(s, Self.Sizing);
   r := 0;
   for i := 0 to (l - 1) do
     for j := Self[i].Minimum to Self[i].Maximum do
@@ -1038,7 +1038,7 @@ begin
   l := Self.Length;
   if (l = 0) then
     Exit([]);
-  SetLength(s, Self.Sized);
+  SetLength(s, Self.Sizing);
   r := 0;
   for i := 0 to (l - 1) do
     for j := Self[i].Minimum to Self[i].Maximum do

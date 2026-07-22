@@ -2,6 +2,7 @@
 function BinaryAdd(const x: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
 function BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean; overload;
+function BinaryGrow(const x: TRange; const aAscending: Boolean = True): Integer; overload;
 function BinaryInsert(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryPlacement(const item: Integer; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -90,6 +91,23 @@ begin
   for i := High(Self) downto (r.start + 1) do
     Self[i] := Self[i - 1];
   Self[r.start] := x;
+end;
+
+{==============================================================================]
+  <BinaryGrow>
+  @action: Inserts a range of integer values into a sorted array using binary 
+           search, keeping the array ordered. Returns the total number of 
+           elements successfully added/inserted.
+  @note: Iterates through all discrete values from x.Minimum to x.Maximum and 
+         accumulates the return count of the single-element BinaryGrow method.
+[==============================================================================}
+function TIntegerArrayHelper.BinaryGrow(const x: TRange; const aAscending: Boolean = True): Integer; overload;
+var
+  s: Integer;
+begin
+  Result := 0;
+  for s := x.Minimum to x.Maximum do
+    Result.Increase(Self.BinaryGrow(s, aAscending));
 end;
 
 {==============================================================================]

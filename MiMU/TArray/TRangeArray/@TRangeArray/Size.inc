@@ -2,7 +2,10 @@
 function Amounts: TInt64Array; overload;
 function Counts: TIntegerArray; overload;
 function Lengths: TIntegerArray; overload;
-function Sized: Int64; overload;
+function Sizem: Int64; overload;
+function Sizery: Int64; overload;
+function Sizid: Int64; overload;
+function Sizing: Int64; overload;
 function Sizes: TIntegerArray; overload;
 {$ENDIF}
 
@@ -16,8 +19,7 @@ function TRangeArrayHelper.Amounts: TInt64Array; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := Self[i].Amount;
 end;
 
@@ -30,8 +32,7 @@ function TRangeArrayHelper.Counts: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := Self[i].Count;
 end;
 
@@ -44,17 +45,92 @@ function TRangeArrayHelper.Lengths: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := Self[i].Length;
 end;
 
 {==============================================================================]
-  <Sized>
+  <Sizem>
+  @action: Calculates the total count of unique integers covered by the ranges,
+           merging any overlapping or adjacent intervals.
+  @note: Sorts ranges by start value and normalizes/merges touching intervals 
+         in-place in O(N log N) time, avoiding individual value iteration.
+[==============================================================================}
+function TRangeArrayHelper.Sizem: Int64; overload;
+var
+  s: TRangeArray;
+  i, l: Integer;
+begin
+  Result := 0;
+  case Self.Length of
+    0: Exit;
+    1: Exit(Self[0].Size);
+  end;
+  s := Self.SortedByMinimum.Normalized;
+  l := 0;
+  for i := 1 to High(s) do
+    if (s[i].start > (s[l].stop + 1)) then
+      s[l.Increment] := s[i]
+    else if (s[i].stop > s[l].stop) then
+      s[l].stop := s[i].stop;
+  for i := 0 to l do
+    Inc(Result, ((Int64(s[i].stop) - s[i].start) + 1));
+end;
+
+{==============================================================================]
+  <Sizery>
+  @action: Calculates the total count of unique integer values covered across 
+           all ranges in the array.
+  @note: Collects discrete values from each range into a sorted integer array 
+         via BinaryGrow to eliminate duplicates, returning the resulting 
+         array length.
+[==============================================================================}
+function TRangeArrayHelper.Sizery: Int64; overload;
+var
+  j, i: Integer;
+  r: TIntegerArray;
+begin
+  case Self.Length of
+    0: Exit(0);
+	1: Exit(Self[0].Size);
+  end;
+  SetLength(r, 0);
+  for i := 0 to High(Self) do
+    for j := Self[i].Minimum to Self[i].Maximum do
+      r.BinaryGrow(j);
+  Result := r.Length;
+end;
+
+{==============================================================================]
+  <Sizid>
+  @action: Calculates the total count of unique integer values covered across 
+           all ranges using a hash dictionary for deduplication.
+  @note: Iterates through each discrete integer from Minimum to Maximum for 
+         every range, inserting values into an ObjFPC specialized TDictionary 
+         to eliminate duplicates.
+[==============================================================================}
+function TRangeArrayHelper.Sizid: Int64; overload;
+var
+  d: specialize TDictionary<Integer, Byte>;
+  i, j: Integer;
+begin
+  d := specialize TDictionary<Integer, Byte>.Create;
+  try
+    for i := 0 to High(Self) do
+      for j := Self[i].Minimum to Self[i].Maximum do
+        d.AddOrSetValue(j, 0);
+    Result := d.Count;
+  finally
+    d.Free;
+  end;
+end;
+
+{==============================================================================]
+  <Sizing>
   @action: Computes the total size across all ranges in the array.
   @note: Accumulates range.Size into Int64 result.
 [==============================================================================}
-function TRangeArrayHelper.Sized: Int64; overload;
+function TRangeArrayHelper.Sizing: Int64; overload;
 var
   i: Integer;
 begin
@@ -72,8 +148,7 @@ function TRangeArrayHelper.Sizes: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := Self[i].Size;
 end;
 {$ENDIF}
