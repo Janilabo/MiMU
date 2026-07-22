@@ -2,6 +2,7 @@
 function Amounts: TInt64Array; overload;
 function Counts: TIntegerArray; overload;
 function Lengths: TIntegerArray; overload;
+function Sizeck: Int64; overload;
 function Sizem: Int64; overload;
 function Sizery: Int64; overload;
 function Sizid: Int64; overload;
@@ -47,6 +48,33 @@ var
 begin
   for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := Self[i].Length;
+end;
+
+{==============================================================================]
+  <Sizeck>
+  @action: Computes total unique coverage by checking off visited slots 
+           in a Boolean lookup array.
+  @note: Ideal for dense, bounded integer ranges.
+[==============================================================================}
+function TRangeArrayHelper.Sizeck: Int64; overload;
+var
+  m: TBooleanArray;
+  b: TRange;
+  i, r: Integer;
+begin
+  Result := 0;
+  case Self.Length of
+    0: Exit;
+    1: Exit(Self[0].Size);
+  end;
+  b := Self.Bounds;
+  m.Create(((b.stop - b.start) + 1), False);
+  for i := 0 to High(Self) do
+    for r := Self[i].Minimum to Self[i].Maximum do
+      m[r - b.start] := True;
+  for i := 0 to High(m) do
+    if m[i] then
+      Inc(Result);
 end;
 
 {==============================================================================]

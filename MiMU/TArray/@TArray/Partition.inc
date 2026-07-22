@@ -148,8 +148,7 @@ begin
   l := Self.Length;
   if ((parts > 0) and (l > 0)) then
   begin
-    p := Min(parts, l);
-    SetLength(Result, p);
+    p := Result.SetSize(Min(parts, l));
     b := (l div p);
     r := (l mod p);
     s := 0;
@@ -158,8 +157,7 @@ begin
       c := b;
       if (i < r) then
         Inc(c);
-      SetLength(Result[i], c);
-      for j := 0 to (c - 1) do
+      for j := 0 to Result[i].Alloc(c) do
         Result[i][j] := Self[s.Increase];
     end;
   end else
@@ -173,22 +171,19 @@ end;
 [==============================================================================}
 function MArrayHelper.Partition(const pSize: Integer): M2DArray; overload;
 var
-  p, i, j, s, r, l: Integer;
+  i, j, s, r, l: Integer;
 begin
   if ((pSize > 0) and Self.Populated) then
   begin
     l := Self.Length;
-    p := ((l + (pSize - 1)) div pSize);
-    SetLength(Result, p);
-    for i := 0 to (p - 1) do
+    for i := 0 to Result.Alloc((l + (pSize - 1)) div pSize) do
     begin
       s := (i * pSize);
       if ((s + pSize) > l) then
         r := (l - s)
       else
         r := pSize;
-      SetLength(Result[i], r);
-      for j := 0 to (r - 1) do
+      for j := 0 to Result[i].Alloc(r) do
         Result[i][j] := Self[s + j];
     end;
   end else

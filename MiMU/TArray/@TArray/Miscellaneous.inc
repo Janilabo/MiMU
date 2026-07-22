@@ -20,22 +20,18 @@ function Zigzag(const zAscending: Boolean = True): MArray; overload;
 [==============================================================================}
 function MArrayHelper.AtLeft(const N: Integer = 0): MArray; overload;
 var
-  l, i: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
   case (N < 0) of
-    True:
-    begin
-      SetLength(Result, Max(0, (l - -N)));
-      for i := 0 to High(Result) do
-        Result[i] := Self[i + -N];
-    end;
     False:
     begin
-      SetLength(Result, (l + N));
-      for i := 0 to (l - 1) do
+      SetLength(Result, (Self.Length + N));
+      for i := 0 to High(Self) do
         Result[i + N] := Self[i];
     end;
+	True:
+    for i := 0 to Result.Alloc(Max(0, (Self.Length - -N))) do
+      Result[i] := Self[i + -N];
   end;
 end;
 
@@ -48,22 +44,18 @@ end;
 [==============================================================================}
 function MArrayHelper.AtRight(const N: Integer = 0): MArray; overload;
 var
-  l, i: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
   case (N < 0) of
-    True:
-    begin
-      SetLength(Result, Max(0, (l - -N)));
-      for i := 0 to High(Result) do
-        Result[i] := Self[i];
-    end;
     False:
     begin
-      SetLength(Result, (l + N));
-      for i := 0 to (l - 1) do
+      SetLength(Result, (Self.Length + N));
+      for i := 0 to High(Self) do
         Result[i] := Self[i];
     end;
+	True:
+    for i := 0 to Result.Alloc(Max(0, (Self.Length - -N))) do
+      Result[i] := Self[i];
   end;
 end;
 
@@ -193,18 +185,13 @@ var
 begin
   l := Self.Length;
   case (N < 0) of
-    True:
-    begin
-      Result := Max(0, (l - Abs(N)));
-      SetLength(Self, Result);
-    end;
     False:
     begin
-      Result := (l + N);
-      SetLength(Self, Result);
+      Result := Self.SetSize(l + N);
       for i := l to (Result - 1) do
         Self[i] := Default(MType);
     end;
+	True: Result := Self.SetSize(Max(0, (l - Abs(N))));
   end;
 end;
 
