@@ -2,6 +2,7 @@
 function Alloc(const sSize: Integer = 1): Integer; overload;
 function Desize(out excess: MArray; const aSize: Integer = 0): Integer; overload;
 function Desize(const aSize: Integer = 0): Integer; overload;
+function Downlength(const N: UInt32 = 1): Integer; overload;
 function Fit: Integer; overload;
 function Fit(const aSize: Integer): Integer; overload;
 function Fit(const aBounds: TRange): Integer; overload;
@@ -14,6 +15,8 @@ function Lengthex(const aSize: Integer = 0): Integer; overload;
 function LengthTo(const N: Integer): Integer; overload;
 function Relength(const aSize: Integer = 0): Integer; overload;
 function Relength(out backup: MArray; const aSize: Integer = 0): Integer; overload;
+function Reshape(const aSize: Integer): MArray; overload;
+function Reshape(const aSize: Integer; const null: MType): MArray; overload;
 function Resize(const aChange: Integer): Integer; overload;
 function Resize(const aChange: Integer; const null: MType): Integer; overload;
 function Resizement(const aChange: Integer = 0): Integer; overload;
@@ -22,14 +25,13 @@ function SetLen(const aSize: Integer = 1): Integer; overload;
 function SetSize(const sSize: Integer = 1): Integer; overload;
 function SetSize(const sSize: Integer; const iCreated: MType): Integer; overload;
 function Size: Integer; overload;
-function Size(const aSize: Integer): MArray; overload;
-function Size(const aSize: Integer; const null: MType): MArray; overload;
+function Size(const sSize: Integer): Integer; overload;
+function Size(const sSize: Integer; const iCreated: MType): Integer; overload;
 function SizeTo(const N: Integer): Integer; overload;
 function Sizex(out data: MArray): Integer; overload;
 function ToLength(const sSize: Integer; out old: Integer): Integer; overload;
 function ToLength(const sSize: Integer = 1): Integer; overload;
-function ToSize(const sSize: Integer = 1): Integer; overload;
-function ToSize(const sSize: Integer; const iCreated: MType): Integer; overload;
+function Uplength(const N: UInt32 = 1): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -79,6 +81,19 @@ begin
   s := Max(0, aSize);
   Result := (s - Self.Length);
   SetLength(Self, s);
+end;
+
+{==============================================================================]
+  <Downlength>
+  @action: Reduces the array by N elements and returns the resulting length.
+  @note: Mutates Self in-place using SetLength. Uses Min() to clamp the delta, 
+         ensuring the length never drops below 0 when N exceeds array size.
+[==============================================================================}
+function MArrayHelper.Downlength(const N: UInt32 = 1): Integer; overload;
+begin
+  if (N > 0) then
+    SetLength(Self, (Self.Length - Min(Integer(N), Self.Length)));
+  Result := Self.Length;
 end;
 
 {==============================================================================]
@@ -256,6 +271,43 @@ begin
 end;
 
 {==============================================================================]
+  <Reshape>
+  @action: Creates and returns a copy of the array resized to a new length.
+  @note: Non-mutating operation. Copies existing elements up to the smaller of 
+         the current length or aSize. If expanded, new trailing slots remain 
+         uninitialized (default-initialized by runtime).
+[==============================================================================}
+function MArrayHelper.Reshape(const aSize: Integer): MArray; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  SetLength(Result, aSize);
+  for i := 0 to (Min(l, aSize) - 1) do
+    Result[i] := Self[i];
+end;
+
+{==============================================================================]
+  <Reshape>
+  @action: Creates and returns a copy of the array resized to a new length, 
+           filling any new slots with a specified default value.
+  @note: Non-mutating operation. Copies existing elements up to the smaller of 
+         the current length or aSize. If expanded, any new trailing slots are 
+         explicitly populated with the null/default value.
+[==============================================================================}
+function MArrayHelper.Reshape(const aSize: Integer; const null: MType): MArray; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  SetLength(Result, aSize);
+  for i := 0 to (Min(l, aSize) - 1) do
+    Result[i] := Self[i];
+  for i := l to (aSize - 1) do
+    Result[i] := null;
+end;
+
+{==============================================================================]
   <Resize>
   @action: Updates's arr length with aChange.
   @note: aChange > 0 => Result will give how many elements were added
@@ -284,7 +336,7 @@ var
   i, l: Integer;
 begin
   l := Self.Length;
-  SetLength(Self, aChange);
+  SetLength(Self, (l + aChange));
   Result := (Self.Size - l);
   for i := 0 to (Result - 1) do
     Self[l + i] := null;
@@ -398,34 +450,32 @@ end;
 
 {==============================================================================]
   <Size>
-  @action: Set's arr length to aSize.
-  @note: None.
+  @action: Resizes the dynamic array to the specified length.
+  @note: If the new size is smaller than the current size, elements at the end 
+         are truncated. If sSize is negative, the array is cleared (size 0).
+  @return: Returns the new size of the array (guaranteed to be >= 0).
 [==============================================================================}
-function MArrayHelper.Size(const aSize: Integer): MArray; overload;
-var
-  i, l: Integer;
+function MArrayHelper.Size(const sSize: Integer): Integer; overload;
 begin
-  l := Self.Length;
-  SetLength(Result, aSize);
-  for i := 0 to (Min(l, aSize) - 1) do
-    Result[i] := Self[i];
+  Result := Self.SetSize(sSize);
 end;
 
 {==============================================================================]
   <Size>
-  @action: Set's arr length to size.
-  @note: Uses null for created indexes.
+  @action: Resizes the dynamic array and initializes any newly added elements.
+  @note: If the array expands, all new elements between the old length and the 
+         new length are populated with the provided `iCreated` value. 
+         Truncates elements if the new size is smaller.
+  @return: Returns the new size of the array (guaranteed to be >= 0).
 [==============================================================================}
-function MArrayHelper.Size(const aSize: Integer; const null: MType): MArray; overload;
+function MArrayHelper.Size(const sSize: Integer; const iCreated: MType): Integer; overload;
 var
   i, l: Integer;
 begin
   l := Self.Length;
-  SetLength(Result, aSize);
-  for i := 0 to (Min(l, aSize) - 1) do
-    Result[i] := Self[i];
-  for i := l to (aSize - 1) do
-    Result[i] := null;
+  Result := Self.SetSize(sSize);
+  for i := l to (Result - 1) do
+    Self[i] := iCreated;
 end;
 
 {==============================================================================]
@@ -442,8 +492,8 @@ begin
   if (Result < Self.Length) then
     System.Delete(Self, Result, (Self.Length - Result))
   else
-    while (Self.Length < Result) do
-      System.Insert(Default(MType), Self, Self.Length);
+  while (Self.Length < Result) do
+    System.Insert(Default(MType), Self, Self.Length);
 end;
 
 {==============================================================================]
@@ -457,10 +507,7 @@ var
   i: Integer;
 begin
   if (Self = nil) then
-  begin
-    SetLength(data, 0);
-    Exit(0);
-  end;
+    Exit(data.Nullify);
   Result := data.SetSize(Self.Length);
   for i := 0 to (Result - 1) do
     data[i] := Self[i];
@@ -492,33 +539,15 @@ begin
 end;
 
 {==============================================================================]
-  <ToSize>
-  @action: Resizes the dynamic array to the specified length.
-  @note: If the new size is smaller than the current size, elements at the end 
-         are truncated. If sSize is negative, the array is cleared (size 0).
-  @return: Returns the new size of the array (guaranteed to be >= 0).
+  <Uplength>
+  @action: Expands the array by N elements and returns the resulting length.
+  @note: Mutates Self in-place using SetLength. If N is 0, the array size 
+         remains unchanged. Existing elements are preserved.
 [==============================================================================}
-function MArrayHelper.ToSize(const sSize: Integer = 1): Integer; overload;
+function MArrayHelper.Uplength(const N: UInt32 = 1): Integer; overload;
 begin
-  Result := Self.SetSize(Max(0, sSize));
-end;
-
-{==============================================================================]
-  <ToSize>
-  @action: Resizes the dynamic array and initializes any newly added elements.
-  @note: If the array expands, all new elements between the old length and the 
-         new length are populated with the provided `iCreated` value. 
-         Truncates elements if the new size is smaller.
-  @return: Returns the new size of the array (guaranteed to be >= 0).
-[==============================================================================}
-function MArrayHelper.ToSize(const sSize: Integer; const iCreated: MType): Integer; overload;
-var
-  i, l: Integer;
-begin
-  l := Self.Length;
-  Result := Max(0, sSize);
-  SetLength(Self, Result);
-  for i := l to (Result - 1) do
-    Self[i] := iCreated;
+  if (N > 0) then
+    SetLength(Self, (Self.Length + N));
+  Result := Self.Length;
 end;
 {$ENDIF}
