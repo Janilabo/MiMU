@@ -91,8 +91,7 @@ var
 begin
   if Self.Empty then
     Exit([]);
-  h := High(Self);
-  SetLength(Result, (h + 1));
+  h := Result.Alloc(Self.Length);
   l := 0;
   i := 0;
   while (i <= h) do
@@ -135,10 +134,9 @@ var
   i, s, e, c, d: Integer;
   a: TIntegerArray;
 begin
-  if Self.Empty then
-    Exit([]);
+  if (Result.SetSize(Self.Length) = 0) then
+    Exit;
   a := Self.QuickSorted(rAscending);
-  SetLength(Result, a.Length);
   c := 0;
   s := a[0];
   e := a[0];
@@ -179,11 +177,10 @@ var
   h, i, l, r, c: Integer;
   s: TIntegerArray;
 begin
-  if Self.Empty then
-    Exit([]);
+  if (Result.SetSize(Self.Length) = 0) then
+    Exit;
   s := Self.QuickSorted(rAscending);
   h := High(Self);
-  SetLength(Result, (h + 1));
   c := 0;
   l := 0;
   case rAscending of
@@ -233,8 +230,7 @@ var
   h, i, c, s: Integer;
 begin
   h := High(Self);
-  SetLength(Result, 0);
-  if (h = -1) then
+  if (h = Result.Invalidate) then
     Exit;
   c := Self[0];
   s := 0;
@@ -277,8 +273,7 @@ var
   i, j, l, s: Integer;
 begin
   l := Self.Length;
-  SetLength(Result, 0);
-  if (l = 0) then
+  if (l = Result.Empten) then
     Exit;
   i := 0;
   while (i < l) do
@@ -322,9 +317,8 @@ function TIntegerArrayHelper.Rangified: TRangeArray; overload;
 var
   i, l, n, s, p: Integer;
 begin
-  SetLength(Result, 0);
   l := Self.Length;
-  if (l = 0) then
+  if (l = Result.Empten) then
     Exit;
   n := 0;
   p := 0;
@@ -363,10 +357,9 @@ var
   i, c, l, p, s: Integer;
   b: TIntegerArray;
 begin
-  l := Self.Length;
+  l := b.SetSize(Self.Length);
   if (l = 0) then
     Exit([]);
-  SetLength(b, l);
   b[0] := 0;
   c := 1;
   p := 0;
@@ -384,8 +377,7 @@ begin
     p := s;
   end;
   b[c] := l;
-  SetLength(Result, c);
-  for i := 0 to (c - 1) do
+  for i := 0 to Result.Alloc(c) do
     Result[i].Create(Self[b[i]], Self[b[i + 1] - 1]);
 end;
 
@@ -446,8 +438,7 @@ var
   h, i, c, s: Integer;
 begin
   h := High(Self);
-  SetLength(Result, 0);
-  if (h = -1) then
+  if (h = Result.Invalidate) then
     Exit;
   c := Self[0];
   s := 0;
@@ -555,9 +546,8 @@ var
   end;
 begin
   h := High(Self);
-  if (h = -1) then
-    Exit([]);
-  SetLength(Result, (h + 1));
+  if (Result.SetSize(h + 1) = 0) then
+    Exit;
   c := 0;
   i := 0;
   while HasNext(i) do
@@ -596,8 +586,7 @@ var
   end;
 begin
   h := High(Self);
-  SetLength(Result, (h + 1));
-  if (h = -1) then
+  if (Result.SetSize(h + 1) = 0) then
     Exit;
   c := 0;
   i := -1;
@@ -607,8 +596,7 @@ begin
     d := PeekDirection(i);
     while ((i < h) and (d <> 0) and (PeekDirection(i) = d)) do
       Inc(i);
-    Result[c].stop := Self[i];
-    Inc(c);
+    Result[c.Increase].stop := Self[i];
   end;
   SetLength(Result, c);
 end;
@@ -635,17 +623,15 @@ var
   b: TIntegerArray;
 begin
   l := Self.Length;
-  if (l = 0) then
+  if (b.SetSize(l) = 0) then
     Exit([]);
-  SetLength(b, l);
   b[0] := 0;
   c := 1;
   for i := 1 to (l - 1) do
     if (((Self[i] <> (Self[i - 1] + 1)) and (Self[i] <> (Self[i - 1] - 1))) or ((i > 1) and (((Self[i - 1] = (Self[i - 2] + 1)) and (Self[i] = (Self[i - 1] - 1))) or ((Self[i - 1] = (Self[i - 2] - 1)) and (Self[i] = (Self[i - 1] + 1)))))) then
       b[c.Increase] := i;
   b[c] := l;
-  SetLength(Result, c);
-  for i := 0 to (c - 1) do
+  for i := 0 to Result.Alloc(c) do
     Result[i].Create(Self[b[i]], Self[b[i + 1] - 1]);
 end;
 
@@ -675,8 +661,7 @@ var
   c: TRange;
   b, i: Integer;
 begin
-  SetLength(Result, 0);
-  if Self.Empty then
+  if (Self.Length = Result.Empten) then
     Exit;
   b := Max(buffer, -1);
   s := Self.QuickSorted;
@@ -787,11 +772,10 @@ begin
     0: Exit([]);
     1: Exit([TRange.Construct(Self[0])]);
   end;
-  SetLength(Result, (h + 1));
   c := 0;
   r.Create(Self[0]);
   d := 0;
-  for i := 1 to h do
+  for i := 1 to Result.Alloc(h + 1) do
   case Self[i].Compare(r.stop) of
     0: Continue;
     1:

@@ -293,7 +293,7 @@ begin
       begin
         if ((a[i] = Result[j][0]) or s.Value(Abs(a[i] - Result[j][0]))) then
         begin
-		  Result[j].Supply(a[i]);
+	  Result[j].Supply(a[i]);
           m := True;
           Break;
         end;
@@ -301,8 +301,8 @@ begin
       if not m then
         Result[r.Increase] := [a[i]];
     end;
-	a.Nullify;
-	SetLength(Result, r);
+    a.Empten;
+    SetLength(Result, r);
   end;
 end;
 
@@ -344,13 +344,13 @@ begin
           if ((Self[i] = Result[a][0]) or s.Value(Abs(Self[i] - Result[a][0]))) then
           begin
             m := True;
-			Result[a].Supply(Self[i]);
+	    Result[a].Supply(Self[i]);
             Break;
           end;
         if not m then
           Result[r.Increase] := [Self[i]];
       end;
-	  SetLength(Result, r);
+      SetLength(Result, r);
     end;
   end;
 end;
@@ -429,8 +429,8 @@ begin
       if not m then
         Result[r.Increase] := [a[i]];
     end;
-    a.Nullify;
-	SetLength(Result, r);
+    a.Empten;
+    SetLength(Result, r);
   end;
 end;
 
@@ -480,14 +480,14 @@ begin
           Result[j][l] := a[i];
           Break;
         end;
-	    if m then
-	      Break;
+	if m then
+	  Break;
       end;
       if not m then
         Result[r.Increase] := [a[i]];
     end;
-    a.Nullify;
-	SetLength(Result, r);
+    a.Empten;
+    SetLength(Result, r);
   end;
 end;
 
@@ -529,21 +529,21 @@ begin
         begin
           l := Result[a].Length;
           for b := 0 to (l - 1) do
-	      begin
-	        m := ((Self[i] = Result[a][b]) or s.Value(Abs(Self[i] - Result[a][b])));
-	        if not m then
+	  begin
+	    m := ((Self[i] = Result[a][b]) or s.Value(Abs(Self[i] - Result[a][b])));
+	    if not m then
               Continue;
-	        SetLength(Result[a], (l + 1));
+	    SetLength(Result[a], (l + 1));
             Result[a][l] := Self[i];
             Break;
           end;
-	      if m then
-	        Break;
+	  if m then
+	    Break;
         end;
         if not m then
           Result[r.Increase] := [Self[i]];
       end;
-	  SetLength(Result, r);
+      SetLength(Result, r);
     end;
   end;
 end;

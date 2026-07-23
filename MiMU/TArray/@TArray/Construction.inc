@@ -2,6 +2,7 @@
 function Build(const item: MType; const aSize: Integer = 1): MArray; overload;
 function Create(const item: MType): MArray; overload;
 function Create(const aSize: Integer; const item: MType): MArray; overload;
+function Establish(const aSize: UInt32 = 0): Boolean; overload;
 class function Forge(const rItem: MType; const rSize: Integer = 1): MArray; overload; static;
 {$ENDIF}
 
@@ -40,6 +41,16 @@ begin
   Result := Self.Clone;
   for i := 0 to Self.Alloc(Max(0, aSize)) do
     Self[i] := item;
+end;
+
+{==============================================================================]
+  <Establish>
+  @action: Allocates the array to a specified size and returns whether the resulting capacity is non-zero.
+  @note: Uses `SetSize` to establish array capacity. Returns True if `aSize > 0`, otherwise False.
+[==============================================================================}
+function MArrayHelper.Establish(const aSize: UInt32 = 0): Boolean; overload;
+begin
+  Result := (Self.SetSize(aSize) > 0);
 end;
 
 {==============================================================================]

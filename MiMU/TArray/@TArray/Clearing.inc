@@ -2,8 +2,9 @@
 function Clear: Boolean; overload;
 function Destruct: Integer; overload;
 function Free: Integer; overload;
+function Empten: Integer; overload;
+function Invalidate: Integer; overload;
 function Kill: Integer; overload;
-function Nullify: Integer; overload;
 function Recreate(const arrSize: Integer): Boolean; overload;
 function Reinitialize(const aSize: Integer = 1): Integer; overload;
 function Release: MArray; overload;
@@ -37,6 +38,17 @@ begin
 end;
 
 {==============================================================================]
+  <Empten>
+  @action: Deallocates the array memory and reduces its length to zero.
+  @note: Returns 0 to represent the new length or an initialized state code.
+[==============================================================================}
+function MArrayHelper.Empten: Integer; overload;
+begin
+  Result := 0;
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
   <Free>
   @action: Result := Length(Self) + SetLength(Self, 0) combo.
   @note: None.
@@ -44,6 +56,17 @@ end;
 function MArrayHelper.Free: Integer; overload;
 begin
   Result := Self.Size;
+  SetLength(Self, 0);
+end;
+
+{==============================================================================]
+  <Invalidate>
+  @action: Resets the array to zero length and returns an invalid index marker.
+  @note: Returns -1 (representing High(Self) or an out-of-bounds index sentinel).
+[==============================================================================}
+function MArrayHelper.Invalidate: Integer; overload;
+begin
+  Result := -1;
   SetLength(Self, 0);
 end;
 
@@ -59,17 +82,6 @@ begin
 end;
 
 {==============================================================================]
-  <Nullify>
-  @action: Deallocates the array memory and reduces its length to zero.
-  @note: Returns 0 to represent the new length or an initialized state code.
-[==============================================================================}
-function MArrayHelper.Nullify: Integer; overload;
-begin
-  Result := 0;
-  SetLength(Self, 0);
-end;
-
-{==============================================================================]
   <Recreate>
   @action: Clear the array and reallocate to arrSize (negative = previous length).
   @note: Returns True if array was non-empty and arrSize <> 0.
@@ -79,7 +91,7 @@ var
   l: Integer;
 begin
   l := Self.Length;
-  Result := ((l > Self.Nullify) or (arrSize <> 0));
+  Result := ((l > Self.Empten) or (arrSize <> 0));
   if Result then
     if (arrSize < 0) then
       SetLength(Self, l)
@@ -95,7 +107,7 @@ end;
 function MArrayHelper.Reinitialize(const aSize: Integer = 1): Integer; overload;
 begin
   Result := Max(0, aSize);
-  if (Result > Self.Nullify) then
+  if (Result > Self.Empten) then
     SetLength(Self, Result);
 end;
 
@@ -118,7 +130,7 @@ end;
 function MArrayHelper.Repossess(const newSize: Integer = 0): MArray; overload;
 begin
   Result := System.Copy(Self);
-  if (newSize > Self.Nullify) then
+  if (newSize > Self.Empten) then
     SetLength(Self, newSize);
 end;
 

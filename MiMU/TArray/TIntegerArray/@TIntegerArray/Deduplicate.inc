@@ -27,18 +27,17 @@ var
   r: TRange;
   b: TBooleanArray;
 begin
-  l := 0;
-  if Self.Exists then
+  if (Result.SetSize(Self.Length) > 0) then
   begin
-    SetLength(Result, Self.Size);
+    l := 0;
     r := Self.Bounds;
 	b.Create(r.Size, False);
     for i := 0 to High(Self) do
       if b[Self[i] - r.start].Enable then
         Result[l.Increase] := Self[i];
     SetLength(b, 0);
+	SetLength(Result, l);
   end;
-  SetLength(Result, l);
 end;
 
 {==============================================================================]

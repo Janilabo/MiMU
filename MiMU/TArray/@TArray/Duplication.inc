@@ -181,7 +181,7 @@ begin
   if ((rCount = 1) or (Self.Length = 0)) then
     Exit(Self.Length);
   if (rCount < 1) then
-    Result := Self.Nullify;
+    Result := Self.Empten;
   s := Self;
   for c := 2 to rCount do
     Self := System.Concat(Self, s);
@@ -206,7 +206,7 @@ begin
   if ((rCount = 1) or (Self.Length = 0)) then
     Exit(Self.Length);
   if (rCount < 1) then
-    Exit(Self.Nullify);
+    Exit(Self.Empten);
   s := Self.Clone;
   Result := (rCount * s.Length); 
   while (Self.Length < Result) do
@@ -370,7 +370,7 @@ begin
   if ((rCount = 1) or (l = 0)) then
     Exit(l);
   if (rCount < 1) then
-    Exit(Self.Nullify);
+    Exit(Self.Empten);
   Result := Self.SetSize(l * rCount);
   r := @Self[l];
   for c := 2 to rCount do

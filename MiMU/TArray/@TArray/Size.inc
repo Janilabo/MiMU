@@ -507,7 +507,7 @@ var
   i: Integer;
 begin
   if (Self = nil) then
-    Exit(data.Nullify);
+    Exit(data.Empten);
   Result := data.SetSize(Self.Length);
   for i := 0 to (Result - 1) do
     data[i] := Self[i];
