@@ -1,6 +1,5 @@
 {$IFDEF HELPERS}
 function Duped: TIntegerArray; overload;
-function Isolate: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -16,21 +15,6 @@ function Isolate: TIntegerArray; overload;
     • If the original array is empty, the result is also an empty array.
 [==============================================================================}
 function TIntegerArrayHelper.Duped: TIntegerArray; overload;
-var
-  l: Integer;
-begin
-  l := Self.Length;
-  SetLength(Result, l);
-  if (l > 0) then
-    Move(Self[0], Result[0], (l * SizeOf(Integer)));
-end;
-
-{==============================================================================]
-  <Isolate>
-  @action: Creates and returns a independent, deep copy (a duplicate array) of the current TIntegerArray instance.
-  @note: Allocates new memory for the result array and copies the raw data blocks using a high-speed memory move.
-[==============================================================================}
-function TIntegerArrayHelper.Isolate: TIntegerArray; overload;
 begin
   if (Result.SetSize(Self.Length) > 0) then
     Move(Self[0], Result[0], (Self.Length * SizeOf(Integer)));

@@ -83,8 +83,7 @@ function TIntegerArrayHelper.Charify: TCharArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Chr(Self[i]);
 end;
 
@@ -98,13 +97,8 @@ function TIntegerArrayHelper.Charify(var str: string): TCharArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  SetLength(str, Self.Size);
-  for i := 0 to High(Self) do
-  begin
-    Result[i] := Chr(Self[i]);
-    str[i + 1] := Result[i];
-  end;
+  for i := 0 to Result.Alloc(str.SetSize(Self.Length)) do
+    str[i + 1] := Result[i].Assign(Chr(Self[i]));
 end;
 
 {==============================================================================]
@@ -128,8 +122,7 @@ begin
     0: Exit([]);
     1: Exit([TRange.Construct(Self[0], Self[0])]);
   end;
-  SetLength(Result, (l - 1));
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(l - 1) do
     Result[i].Create(Self[i], Self[i + 1]);
 end;
 
@@ -226,8 +219,7 @@ function TIntegerArrayHelper.Stringify: string; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to (Result.SetSize(Self.Size) - 1) do
     Result[i + 1] := Chr(Self[i]);
 end;
 
@@ -241,13 +233,8 @@ function TIntegerArrayHelper.Stringify(var chars: TCharArray): string; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  SetLength(chars, Self.Size);
-  for i := 0 to High(Self) do
-  begin
-    Result[i + 1] := Chr(Self[i]);
-    chars[i] := Result[i];
-  end;
+  for i := 0 to chars.Alloc(Result.SetSize(Self.Length)) do
+    Result[i + 1] := chars[i].Assign(Chr(Self[i]));
 end;
 
 {==============================================================================]
@@ -372,7 +359,7 @@ var
   i: Integer;
 begin
   SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to High(Result) do
     Result[i] := Self[i];
 end;
 {$ENDIF}

@@ -16,20 +16,16 @@ function Mount(const other: TIntegerArray): TIntegerArray; overload;
 function TIntegerArrayHelper.Combinate(const items: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
 var
   s: TIntegerArray;
-  l, a, i, j, k, v, c: Integer;
+  l, a, i, j, v, c: Integer;
 begin
   l := Self.Length;
   a := items.Size;
-  if ((l = 0) and (a = 0)) then
-  begin
-    SetLength(Self, 0);
-    Exit(0);
-  end;
+  Result := 0;
+  if (Self.SetSize(l + a) = 0) then
+    Exit;
   s := Self.Copy;
-  SetLength(Self, (l + a));
   i := 0;
   j := 0;
-  k := 0;
   v := IfThen(oAscending, 2147483647, -2147483648);
   while ((i < l) or (j < a)) do
   begin
@@ -50,15 +46,14 @@ begin
       else
         Continue;
     end;
-    if ((k = 0) or (c <> v)) then
+    if ((Result = 0) or (c <> v)) then
     begin
-      Self[k.Increase] := c;
+      Self[Result.Increase] := c;
       v := c;
     end;
   end;
-  if (k <> Self.Size) then
-    SetLength(Self, k);
-  Result := k;
+  if (Result <> Self.Size) then
+    SetLength(Self, Result);
 end;
 
 {==============================================================================]
@@ -130,8 +125,7 @@ var
 begin
   s := Self.Length;
   o := other.Length;
-  SetLength(Result, (o + s));
-  if ((o + s) = 0) then
+  if (Result.SetSize(o + s) = 0) then
     Exit;
   i := SizeOf(Integer);
   if (s > 0) then

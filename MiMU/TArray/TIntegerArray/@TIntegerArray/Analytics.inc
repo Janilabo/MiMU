@@ -43,9 +43,8 @@ begin
   if Self.Empty then
     Exit(0.0);
   r.Create(Self[0], Self[0]);
-  SetLength(a, Self.Size);
   c := 0;
-  for i := 0 to High(Self) do
+  for i := 0 to a.Alloc(Self.Size) do
   begin
     r.Absorb(Self[i]);
     u := True;
@@ -116,11 +115,12 @@ end;
 function TIntegerArrayHelper.Median: Double; overload;
 var
   a: TIntegerArray;
-  i, j, n, s: Integer;
+  i, j, n, s, d: Integer;
 begin
   n := Self.Size;
   if (n = 0) then
     Exit(-2147483648);
+  d := (n div 2);
   a := Self.Copy;
   for i := 0 to (n - 2) do
     if (a[i] > a[i + 1]) then
@@ -132,9 +132,9 @@ begin
       Break;
     end;
   if ((n mod 2) = 1) then
-    Result := a[n div 2]
+    Result := a[d]
   else
-    Result := ((a[(n div 2) - 1] + a[n div 2]) / 2);
+    Result := ((a[d - 1] + a[d]) / 2);
 end;
 
 {==============================================================================]
@@ -144,15 +144,16 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Middle: Double; overload;
 var
-  l: Integer;
+  l, d: Integer;
 begin
   l := Self.Length;
   if (l = 0) then
     Exit(-2147483648);
+  d := (l div 2);
   if ((l mod 2) = 1) then
-    Result := Self[l div 2]
+    Result := Self[d]
   else
-    Result := ((Self[(l div 2) - 1] + Self[l div 2]) / 2.0);
+    Result := ((Self[d - 1] + Self[d]) / 2.0);
 end;
 
 {==============================================================================]

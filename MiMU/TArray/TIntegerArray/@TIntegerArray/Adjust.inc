@@ -40,8 +40,7 @@ function TIntegerArrayHelper.Addended(const N: Integer): TIntegerArray; overload
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := (N + Self[i]);
 end;
 
@@ -61,8 +60,7 @@ function TIntegerArrayHelper.Deced(const N: Integer): TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := (Self[i] - N);
 end;
 
@@ -128,8 +126,7 @@ function TIntegerArrayHelper.Delended(const N: Integer): TIntegerArray; overload
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := (N - Self[i]);
 end;
 
@@ -148,8 +145,7 @@ function TIntegerArrayHelper.Inced(const N: Integer): TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := (Self[i] + N);
 end;
 
@@ -199,15 +195,13 @@ end;
 function TIntegerArrayHelper.Minus(const N: Integer = 1): TIntegerArray; overload;
 var
   s, r: PInteger;
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
-  if (l = 0) then
+  if (Result.SetSize(Self.Length) = 0) then
     Exit;
   s := @Self[0];
   r := @Result[0];
-  for i := 0 to (l - 1) do
+  for i := 0 to High(Result) do
   begin
     r^ := (s^ - N);
     Inc(s);
@@ -224,15 +218,13 @@ end;
 function TIntegerArrayHelper.Plus(const N: Integer = 1): TIntegerArray; overload;
 var
   s, r: PInteger;
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
-  if (l = 0) then
+  if (Result.SetSize(Self.Length) = 0) then
     Exit;
   s := @Self[0];
   r := @Result[0];
-  for i := 0 to (l - 1) do
+  for i := 0 to High(Result) do
   begin
     r^ := (s^ + N);
     Inc(s);
@@ -260,9 +252,8 @@ var
 begin
   if not InRange(rMode, 0, 3) then
     Exit(Self.Copy);
-  SetLength(Result, Self.Length);
   r := (rStep + rOffset);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
   case rMode of
     0: Result[i] := (Self[i] + r.Increase(rStep));
     1: Result[i] := (Self[i] - r.Increase(rStep));

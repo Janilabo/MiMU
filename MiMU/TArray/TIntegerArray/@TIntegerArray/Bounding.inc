@@ -188,10 +188,9 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.GetRange(const rAscending: Boolean = True): TRange; overload;
 var
-  i, l, v: Integer;
+  i, v: Integer;
 begin
-  l := Self.Length;
-  case l of
+  case Self.Length of
     0: Exit;
 	1: Exit(TRange.Construct(Self[0], Self[0]));
   end;
@@ -199,14 +198,14 @@ begin
   Result.stop := Self[0];
   case rAscending of
     True:
-    for i := 1 to (l - 1) do
+    for i := 1 to High(Self) do
     begin
       v := Self[i];
       Result.start := Min(Result.start, v);
       Result.stop := Max(Result.stop, v);
 	end;
 	False:
-    for i := 1 to (l - 1) do
+    for i := 1 to High(Self) do
     begin
       v := Self[i];
       Result.start := Max(Result.start, v);

@@ -1,6 +1,12 @@
 {$IFDEF HELPERS}
 function Clique(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
 function Clique(const diff: Integer): T2DIntegerArray; overload;
+function Cluster(const diff: UInt32 = 0; const oAscending: Boolean = True): T2DIntegerArray; overload;
+function Cluster(const oAscending: Boolean; const diff: UInt32 = 0): T2DIntegerArray; overload;
+function Cluster(const minDiff, maxDiff: UInt32; const oAscending: Boolean = True): T2DIntegerArray; overload;
+function Cluster(const oAscending: Boolean; const minDiff, maxDiff: UInt32): T2DIntegerArray; overload;
+function Clustered(const radius: UInt32 = 0; const oAscending: Boolean = True): T2DIntegerArray; overload;
+function Clusters(const radius: UInt32 = 0): T2DIntegerArray; overload;
 function Groub(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
 function Groub(const diff: Integer): T2DIntegerArray; overload;
 function Group(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
@@ -23,22 +29,19 @@ function Split(const diff: Integer): T2DIntegerArray; overload;
 [==============================================================================}
 function TIntegerArrayHelper.Clique(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
 var
-  a, b, h, l, i, r: Integer;
+  a, b, l, i, r: Integer;
   m: Boolean;
   s: TRange;
 begin
-  r := 0;
-  h := High(Self);
-  if (h > -1) then
+  if (Result.SetSize(Self.Length) > 0) then
   begin
-    SetLength(Result, (h + 1));
     SetLength(Result[0], 1);
     Result[0][0] := Self[0];
-    if (h > 0) then
+    if (High(Self) > 0) then
     begin
       r := 1;
       s.Build(minDiff, maxDiff);
-      for i := 1 to h do
+      for i := 1 to High(Self) do
       begin
         m := False;
         for a := 0 to (r - 1) do
@@ -60,9 +63,9 @@ begin
         if not m then
           Result[r.Increase] := [Self[i]];
       end;
+	  SetLength(Result, r);
     end;
-  end;
-  SetLength(Result, r);
+  end; 
 end;
 
 {==============================================================================]
@@ -77,6 +80,193 @@ begin
 end;
 
 {==============================================================================]
+  <Cluster>
+  @action: Groups sorted integer values into sub-arrays (clusters) based on a maximum absolute difference threshold between consecutive elements.
+  @note: First sorts the array according to `oAscending`. If the absolute difference between the last clustered element and the current element exceeds `diff`,
+         a new cluster is started. Automatically trims output dimensions to fit.
+[==============================================================================}
+function TIntegerArrayHelper.Cluster(const diff: UInt32 = 0; const oAscending: Boolean = True): T2DIntegerArray; overload;
+var
+  s: TIntegerArray;
+  i, l, r, g: Integer;
+begin
+  g := Result.SetSize(Self.Length);
+  if (g = 0) then
+    Exit;
+  r := 0;
+  s := Self.QuickSorted(oAscending);
+  Result[0] := [s[0]];
+  SetLength(Result[0], g);
+  l := 0;
+  for i := 1 to High(s) do
+    if (Result[r][l].Difference(s[i]) > diff) then
+    begin
+      SetLength(Result[r.Increase], (l + 1));
+      SetLength(Result[r], (g - i));
+      Result[r][0] := s[i];
+      l := 0;
+    end else
+      Result[r][l.Increment] := s[i];
+  SetLength(Result[r], (l + 1));
+  SetLength(Result, (r + 1));
+end;
+
+function TIntegerArrayHelper.Cluster(const oAscending: Boolean; const diff: UInt32 = 0): T2DIntegerArray; overload;
+begin
+  Result := Self.Cluster(diff, oAscending);
+end;
+
+{==============================================================================]
+  <Cluster>
+  @action: Groups sorted integer values into sub-arrays (clusters) where consecutive elements must fall within a specific difference range (`minDiff` to `maxDiff`).
+  @note: First sorts the array according to `oAscending`. An element is added to the current cluster only if its absolute difference from the previous element satisfies `minDiff <= difference <= maxDiff`; otherwise,
+         a new cluster begins.
+[==============================================================================}
+function TIntegerArrayHelper.Cluster(const minDiff, maxDiff: UInt32; const oAscending: Boolean = True): T2DIntegerArray; overload;
+var
+  s: TIntegerArray;
+  i, l, r, g, d: Integer;
+begin
+  g := Result.SetSize(Self.Length);
+  if (g = 0) then
+    Exit;
+  r := 0;
+  s := Self.QuickSorted(oAscending);
+  Result[0] := [s[0]];
+  SetLength(Result[0], g);
+  l := 0;
+  for i := 1 to High(s) do
+  begin
+    d := Result[r][l].Difference(s[i]);
+    if ((d < minDiff) or (d > maxDiff)) then
+    begin
+      SetLength(Result[r.Increase], (l + 1));
+      SetLength(Result[r], (g - i));
+      Result[r][0] := s[i];
+      l := 0;
+    end else
+      Result[r][l.Increment] := s[i];
+  end;
+  SetLength(Result[r], (l + 1));
+  SetLength(Result, (r + 1));
+end;
+
+function TIntegerArrayHelper.Cluster(const oAscending: Boolean; const minDiff, maxDiff: UInt32): T2DIntegerArray; overload;
+begin
+  Result := Self.Cluster(minDiff, maxDiff, oAscending);
+end;
+
+{==============================================================================]
+  <Clustered>
+  @action: Groups integers into clusters based on whether consecutive sorted elements fall within a maximum distance (radius).
+  @note: Sorts the array according to `oAscending` before grouping. Starts a new sub-array whenever the absolute difference between adjacent elements exceeds `radius`.
+         Returns a dynamic 2D array trimmed to the exact number of created clusters.
+[==============================================================================}
+function TIntegerArrayHelper.Clustered(const radius: UInt32 = 0; const oAscending: Boolean = True): T2DIntegerArray; overload;
+var
+  s, r: TIntegerArray;
+  i, c: Integer;
+begin
+  if (Result.SetSize(Self.Length) = 0) then
+    Exit;
+  s := Self.QuickSorted(oAscending);
+  c := 0;
+  r := [];
+  case oAscending of
+    True:
+    for i := 0 to High(s) do
+      if ((i = 0) or ((s[i] - s[i - 1]) > radius)) then
+      begin
+        if (r.Length > 0) then
+          Result[c.Increase] := r;
+        r := [s[i]];
+      end else
+        r.Supply(s[i]);
+    False:
+    for i := 0 to High(s) do
+      if (i = 0) or ((s[i - 1] - s[i]) > radius) then
+      begin
+        if (r.Length > 0) then
+          Result[c.Increase] := r;
+        r := [s[i]];
+      end else
+        r.Supply(s[i]);
+  end;
+  if (r.Length > 0) then
+    Result[c.Increase] := r;
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <Clusters>
+  @action: Groups the integers in the array into clusters based on a given distance threshold.
+  @note: Uses a 1D range-bucket breadth-first search (BFS) approach; values are added to a cluster
+         if their absolute difference from any member is less than or equal to radius.
+[==============================================================================}
+function TIntegerArrayHelper.Clusters(const radius: UInt32 = 0): T2DIntegerArray; overload;
+var
+  s, i, j, c, r, x, p, d, z: Integer;
+  a, b: TRange;
+  v: TBooleanArray;
+  g: T2DIntegerArray;
+  q: TIntegerArray;
+  e: Boolean;
+begin
+  case Self.Length of
+    0: Exit([]);
+    1: Exit([Self]);
+  end;
+  SetLength(Result, Self.Length);
+  b := Self.Bounds;
+  s := (b.stop - b.start);
+  d := Max(0, radius);
+  c := Ceil(d);
+  SetLength(g, (s + 1));
+  SetLength(v, (s + 1));
+  for i := 0 to High(Self) do
+    g[Self[i] - b.start].Supply(Self[i]);
+  r := 0;
+  for i := 0 to High(Self) do
+  begin
+    if (v[Self[i] - b.start] or g[Self[i] - b.start].Empty) then
+      Continue;
+    SetLength(q, 1);
+    q[0] := Self[i];
+    while (q.Length > 0) do
+    begin
+      z := q[High(q)];
+      SetLength(q, High(q));
+      a.start := Max(0, ((z - b.start) - c));
+      a.stop := Min(s, ((z - b.start) + c));
+      for x := a.start to a.stop do
+      begin
+        if v[x] then
+          Continue;
+        for j := 0 to High(g[x]) do
+          if ((not (g[x][j] = Low(Integer))) and (Abs(z - g[x][j]) <= d)) then
+          begin
+            Result[r].Supply(g[x][j]);
+            q.Supply(g[x][j]);
+            g[x][j] := Low(Integer);
+          end;
+        e := True;
+        for j := 0 to High(g[x]) do
+          if (g[x][j] <> Low(Integer)) then
+          begin
+            e := False;
+            Break;
+          end;
+        if e then
+          v[x] := True;
+      end;
+    end;
+    if (Result[r].Length > 0) then
+      Inc(r);
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
   <Groub>
   @action: Splits given TIntArray (arr) into T2DIntArray by grouping together the integer values
           that are within a given difference range (minDiff, maxDiff) of the first integer value in the sub-array.
@@ -85,14 +275,13 @@ end;
 function TIntegerArrayHelper.Groub(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
 var
   a: TIntegerArray;
-  i, j, r, l: Integer;
+  i, j, r: Integer;
   s: TRange;
   m: Boolean;
 begin
-  if Self.Exists then
+  if (Result.SetSize(Self.Size) > 0) then
   begin
     a := Self.BinarySorted;
-    SetLength(Result, Self.Size);
     SetLength(Result[0], 1);
     Result[0][0] := a[0];
     r := 1;
@@ -104,9 +293,7 @@ begin
       begin
         if ((a[i] = Result[j][0]) or s.Value(Abs(a[i] - Result[j][0]))) then
         begin
-          l := Result[j].Length;
-          SetLength(Result[j], (l + 1));
-          Result[j][l] := a[i];
+		  Result[j].Supply(a[i]);
           m := True;
           Break;
         end;
@@ -114,9 +301,9 @@ begin
       if not m then
         Result[r.Increase] := [a[i]];
     end;
-  end else
-    r := 0;
-  SetLength(Result, r);
+	a.Nullify;
+	SetLength(Result, r);
+  end;
 end;
 
 {==============================================================================]
@@ -138,39 +325,34 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Group(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
 var
-  a, h, l, i, r: Integer;
+  a, i, r: Integer;
   m: Boolean;
   s: TRange;
 begin
-  r := 0;
-  h := High(Self);
-  if (h > -1) then
+  if (Result.SetSize(Self.Length) > 0) then
   begin
-    SetLength(Result, (h + 1));
     SetLength(Result[0], 1);
     Result[0][0] := Self[0];
-    if (h > 0) then
+    if (High(Self) > 0) then
     begin
       r := 1;
       s.Build(minDiff, maxDiff);
-      for i := 1 to h do
+      for i := 1 to High(Self) do
       begin
         m := False;
         for a := 0 to (r - 1) do
           if ((Self[i] = Result[a][0]) or s.Value(Abs(Self[i] - Result[a][0]))) then
           begin
             m := True;
-            l := Result[a].Length;
-            SetLength(Result[a], (l + 1));
-            Result[a][l] := Self[i];
+			Result[a].Supply(Self[i]);
             Break;
           end;
         if not m then
           Result[r.Increase] := [Self[i]];
       end;
+	  SetLength(Result, r);
     end;
   end;
-  SetLength(Result, r);
 end;
 
 {==============================================================================]
@@ -191,25 +373,18 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Groups(const aSorted: Boolean = False): T2DIntegerArray; overload;
 var
-  i, l, g: Integer;
+  i: Integer;
   a: TIntegerArray;
 begin
-  if Self.Empty then
-    Exit([]);
+  if (Result.SetSize(Self.Length) = 0) then
+    Exit;
   if not aSorted then
     a := Self.QuickSorted
   else
     a := Self.Copy;
   a.BinaryPrune;
-  SetLength(Result, 0);
-  SetLength(Result, a.Size);
   for i := 0 to High(Self) do
-  begin
-    g := a.BinarySearch(Self[i]);
-    l := Result[g].Length;
-    SetLength(Result[g], (l + 1));
-    Result[g][l] := Self[i];
-  end;
+    Result[a.BinarySearch(Self[i])].Supply(Self[i]);
 end;
 
 {==============================================================================]
@@ -225,10 +400,9 @@ var
   m: Boolean;
   s: TRange;
 begin
-  if Self.Exists then
+  if (Result.SetSize(Self.Length) > 0) then
   begin
     a := Self.BinarySorted;
-    SetLength(Result, a.Size);
     SetLength(Result[0], 1);
     Result[0][0] := a[0];
     r := 1;
@@ -255,10 +429,9 @@ begin
       if not m then
         Result[r.Increase] := [a[i]];
     end;
-    SetLength(a, 0);
-  end else
-    r := 0;
-  SetLength(Result, r);
+    a.Nullify;
+	SetLength(Result, r);
+  end;
 end;
 
 {==============================================================================]
@@ -285,10 +458,9 @@ var
   m: Boolean;
   s: TRange;
 begin
-  if Self.Exists then
+  if (Result.SetSize(Self.Length) > 0) then
   begin
     a := Self.BinarySorted;
-    SetLength(Result, a.Size);
     SetLength(Result[0], 1);
     Result[0][0] := a[0];
     r := 1;
@@ -314,10 +486,9 @@ begin
       if not m then
         Result[r.Increase] := [a[i]];
     end;
-    SetLength(a, 0);
-  end else
-    r := 0;
-  SetLength(Result, r);
+    a.Nullify;
+	SetLength(Result, r);
+  end;
 end;
 
 {==============================================================================]
@@ -339,22 +510,19 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Split(const minDiff, maxDiff: Integer): T2DIntegerArray; overload;
 var
-  a, b, h, l, i, r: Integer;
+  a, b, l, i, r: Integer;
   m: Boolean;
   s: TRange;
 begin
-  r := 0;
-  h := High(Self);
-  if (h > -1) then
+  if (Result.SetSize(Self.Length) > 0) then
   begin
-    SetLength(Result, (h + 1));
     SetLength(Result[0], 1);
     Result[0][0] := Self[0];
-    if (h > 0) then
+    if (High(Self) > 0) then
     begin
       r := 1;
       s.Build(minDiff, maxDiff);
-      for i := 1 to h do
+      for i := 1 to High(Self) do
       begin
         m := False;
         for a := 0 to (r - 1) do
@@ -375,9 +543,9 @@ begin
         if not m then
           Result[r.Increase] := [Self[i]];
       end;
+	  SetLength(Result, r);
     end;
   end;
-  SetLength(Result, r);
 end;
 
 {==============================================================================]

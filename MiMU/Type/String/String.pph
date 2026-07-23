@@ -10,6 +10,7 @@
 {$I @String/Numerics.inc}
 {$I @String/Position.inc}
 {$I @String/Search.inc}
+{$I @String/Size.inc}
 {$I @String/Slice.inc}
 {$I @String/Split.inc}
 {$I @String/State.inc}
