@@ -2,6 +2,7 @@
 function Border: TPointArray; overload;
 function Border(const pX, pY: Integer): Boolean; overload;
 function Border(const pt: TPoint): Boolean; overload;
+function Bordering(var pixels: TPointArray): Integer; overload;
 function Boundary: TPointArray;
 function Contour: TPointArray;
 function CornerPoints: TPointArray;
@@ -13,6 +14,7 @@ function Edge(const pt: TPoint): Boolean; overload;
 function Outline: TPointArray; overload;
 function Outline(const pX, pY: Integer): Boolean; overload;
 function Outline(const pt: TPoint): Boolean; overload;
+function Perimetrify: TPointArray; overload;
 function Shell: TPointArray;
 {$ENDIF}
 
@@ -50,6 +52,25 @@ end;
 function TBox.Border(const pt: TPoint): Boolean; overload;
 begin
   Result := Self.Border(pt.X, pt.Y);
+end;
+
+{==============================================================================]
+  <Bordering>
+  @action: Populates an array with all pixel coordinates forming the outer border of the box and returns the pixel count.
+  @note: Allocates buffer memory, iterates through the box grid to collect edge points (where x or y lies on the boundary),
+         and truncates the resulting `pixels` array to the exact count.
+[==============================================================================}
+function TBox.Bordering(var pixels: TPointArray): Integer; overload;
+var
+  r, c: Integer;
+begin
+  Result := 0;
+  SetLength(pixels, ((2 * Self.Width) + (2 * Self.Height)));
+  for r := Self.Y1 to Self.Y2 do
+    for c := Self.X1 to Self.X2 do
+      if ((c = Self.X1) or (c = Self.X2) or (r = Self.Y1) or (r = Self.Y2)) then
+        pixels[Result.Increase] := Point(c, r);
+  SetLength(pixels, Result);
 end;
 
 {==============================================================================]
@@ -218,6 +239,26 @@ end;
 function TBox.Outline(const pt: TPoint): Boolean; overload;
 begin
   Result := Self.Outline(pt.X, pt.Y);
+end;
+
+{==============================================================================]
+  <Perimetrify>
+  @action: Generates and returns an array of coordinates outlining the box border in a continuous perimeter loop.
+  @returns: A TPointArray containing all boundary pixels ordered along the 4 edges.
+[==============================================================================}
+function TBox.Perimetrify: TPointArray; overload;
+var
+  h, v, r: Integer;
+begin
+  r := Result.SetSize(Self.Perimeter);
+  for v := (Self.Y1 + 1) to Self.Y2 do
+    Result[r.Decrement] := Point(Self.X1, v);
+  for h := (Self.X1 + 1) to Self.X2 do
+    Result[r.Decrement] := Point(h, Self.Y2);
+  for v := (Self.Y2 - 1) downto Self.Y1 do
+    Result[r.Decrement] := Point(Self.X2, v);
+  for h := (Self.X2 - 1) downto Self.X1 do
+    Result[r.Decrement] := Point(h, Self.Y1);
 end;
 
 {==============================================================================]

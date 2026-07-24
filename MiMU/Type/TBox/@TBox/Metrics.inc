@@ -3,6 +3,7 @@ function Circumference: Integer; overload;
 function Diagonal: Double; overload;
 function Perim: Integer; overload;
 function Perimeter: Integer; overload;
+function Perimetral: Integer; overload;
 function Perimetric: Integer; overload;
 function Perimetry: Integer; overload;
 function Population(const scale: Integer = 1): Integer; overload;
@@ -62,6 +63,17 @@ begin
   if ((w <= 1) or (h <= 1)) then
     Exit(w * h);
   Result := ((2 * (w + h)) - 4);
+end;
+
+{==============================================================================]
+  <Perimetral>
+  @action: Returns the total number of distinct pixels forming the outer border shell of the box.
+  @note: Uses area subtraction (Total Area - Interior Area).
+         Employs Max(0, Dim - 2) to safely set interior dimensions to zero for boxes with Width or Height <= 2.
+[==============================================================================}
+function TBox.Perimetral: Integer; overload;
+begin
+  Result := (Self.Area - (Max(0, (Self.Width - 2)) * Max(0, (Self.Height - 2))));
 end;
 
 {==============================================================================]
