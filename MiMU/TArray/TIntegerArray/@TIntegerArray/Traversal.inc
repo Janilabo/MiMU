@@ -16,17 +16,21 @@ function Retreat(const currentIndex: Integer; const range: TRange; const aAscend
            the end of the array is reached or no valid element is found.
 [==============================================================================}
 function TIntegerArrayHelper.Advance(const currentIndex: Integer; const range: TRange; const aAscending: Boolean = True): Integer; overload;
+var
+  h: Integer;
 begin
   Result := currentIndex;
+  h := High(Self);
+  if (h > -1) then
   case aAscending of
     True:
-    while InRange(Result.Increment, 0, High(Self)) do
+    while InRange(Result.Increment, 0, h) do
       if (Self[Result] < Self[Result - 1]) then
         Exit(-1)
       else if range.Contains(Self[Result]) then
         Exit(Result);
     False:
-    while InRange(Result.Increment, 0, High(Self)) do
+    while InRange(Result.Increment, 0, h) do
       if (Self[Result] > Self[Result - 1]) then
         Exit(-1)
       else if range.Contains(Self[Result]) then
@@ -47,17 +51,21 @@ end;
            the beginning of the array is reached or no valid element is found.
 [==============================================================================}
 function TIntegerArrayHelper.Retreat(const currentIndex: Integer; const range: TRange; const aAscending: Boolean = True): Integer; overload;
+var
+  h: Integer;
 begin
   Result := currentIndex;
+  h := High(Self);
+  if (h > -1) then
   case aAscending of
     True:
-    while InRange(Result.Decrement, 0, High(Self)) do
+    while InRange(Result.Decrement, 0, h) do
       if (Self[Result] < Self[Result - 1]) then
         Exit(-1)
       else if range.Contains(Self[Result]) then
         Exit(Result);
     False:
-    while InRange(Result.Decrement, 0, High(Self)) do
+    while InRange(Result.Decrement, 0, h) do
       if (Self[Result] > Self[Result - 1]) then
         Exit(-1)
       else if range.Contains(Self[Result]) then

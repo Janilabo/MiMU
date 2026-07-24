@@ -71,8 +71,7 @@ var
   i, o: PInteger;
   s, h: Integer;
 begin
-  h := High(Self);
-  SetLength(Result, (h + 1));
+  h := Result.Alloc(Self.Length);
   if (h = -1) then
     Exit;
   i := @Self[0];

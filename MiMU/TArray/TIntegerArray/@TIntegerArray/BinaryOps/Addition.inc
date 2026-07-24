@@ -120,9 +120,8 @@ var
   m, i: Integer;
   r: TRange;
 begin
-  Result := Self.Size;
-  SetLength(Self, (Result + 1));
-  if (Result > 0) then
+  Result := Self.Length;
+  if (Self.SetSize(Result + 1) > 1) then
   begin
     r.Create(0, (Result - 1));
     while (r.start <= r.stop) do

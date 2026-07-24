@@ -19,8 +19,7 @@ function TIntegerArrayHelper.ExtractEven: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
-  SetLength(Result, Self.Size);
-  if Self.Empty then
+  if (Result.SetSize(Self.Length) = 0) then
     Exit;
   l := 0;
   for i := 0 to High(Self) do
@@ -38,8 +37,7 @@ function TIntegerArrayHelper.ExtractOdd: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
-  SetLength(Result, Self.Size);
-  if Self.Empty then
+  if (Result.SetSize(Self.Length) = 0) then
     Exit;
   l := 0;
   for i := 0 to High(Self) do
@@ -64,9 +62,8 @@ function TIntegerArrayHelper.ExtractValues(const values: TRange): TIntegerArray;
 var
   i, r: Integer;
 begin
-  SetLength(Result, Self.Length);
   r := 0;
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     if values.Contains(Self[i]) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
@@ -98,9 +95,8 @@ begin
   if values.Empty then
     Exit([]);
   v := values.TIA.QuickSorted.Pruned;
-  SetLength(Result, Self.Length);
   r := 0;
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     if v.BinaryContains(Self[i]) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
@@ -115,8 +111,7 @@ function TIntegerArrayHelper.FilterEven: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
-  SetLength(Result, Self.Size);
-  if Self.Empty then
+  if (Result.SetSize(Self.Length) = 0) then
     Exit;
   l := 0;
   for i := 0 to High(Self) do
@@ -134,8 +129,7 @@ function TIntegerArrayHelper.FilterOdd: TIntegerArray; overload;
 var
   i, l: Integer;
 begin
-  SetLength(Result, Self.Size);
-  if Self.Empty then
+  if (Result.SetSize(Self.Length) = 0) then
     Exit;
   l := 0;
   for i := 0 to High(Self) do
@@ -162,9 +156,8 @@ function TIntegerArrayHelper.FilterValues(const values: TRange): TIntegerArray; 
 var
   i, r: Integer;
 begin
-  SetLength(Result, Self.Length);
   r := 0;
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     if not values.Contains(Self[i]) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
@@ -197,9 +190,8 @@ begin
   if values.Empty then
     Exit(Self.Cloned);
   v := values.TIA.QuickSorted.Pruned;
-  SetLength(Result, Self.Length);
   r := 0;
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     if not v.BinaryContains(Self[i]) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);

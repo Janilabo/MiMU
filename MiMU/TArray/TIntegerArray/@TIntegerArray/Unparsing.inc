@@ -162,9 +162,8 @@ var
 begin
   if (Self.Length = 0) then
     Exit(0);
-  SetLength(a, Self.Length);
   w := 1;
-  for i := High(Self) downto 0 do
+  for i := a.Alloc(Self.Length) downto 0 do
   begin
     a[i] := w;
     w := (w * POWERS_OF_TEN[Abs(Int64(Self[i])).DigitCount]);
@@ -235,8 +234,7 @@ var
   i: Integer;
   r: string;
 begin
-  SetLength(r, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to (r.SetSize(Self.Length) - 1) do
     r[i + 1] := Chr(Ord('0') + Self[i]);
   Result := StrToInt64(r);
 end;
@@ -267,10 +265,11 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.ToInt64: Int64; overload;
 var
-  i: Integer;
+  h, i: Integer;
 begin
   Result := 0;
-  for i := 0 to High(Self) do
-    Result := (Result + (Self[i] * POWERS_OF_TEN[High(Self) - i]));
+  h := High(Self);
+  for i := 0 to h do
+    Result := (Result + (Self[i] * POWERS_OF_TEN[h - i]));
 end;
 {$ENDIF}

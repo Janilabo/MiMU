@@ -25,7 +25,7 @@ begin
   H := High(Self);
   if (H < 1) then
     Exit(H);
-  S.Create(0, High(Self));
+  S.Create(0, H);
   while (S.start < S.stop) do
   begin
     L := (S.start + ((S.stop - S.start) div 3));

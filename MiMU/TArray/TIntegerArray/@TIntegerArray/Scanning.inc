@@ -16,15 +16,13 @@ function WhereIn(const items: TIntegerArray): TIntegerArray; overload;
 function TIntegerArrayHelper.Hits(const items: TRange; const oAscending: Boolean = True): TIntegerArray; overload;
 var
   r: TRange;
-  i, k, l: Integer;
+  i, k: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
-  if (l = 0) then
+  if (Result.SetSize(Self.Length) = 0) then
     Exit;
   r := items.Normalize;
   k := 0;
-  for i := 0 to (l - 1) do
+  for i := 0 to High(Result) do
     if InRange(Self[i], r.start, r.stop) then
       Result[k.Increase] := i
     else if ((oAscending and (Self[i] > r.stop)) or ((not oAscending) and (Self[i] < r.start))) then
@@ -57,9 +55,8 @@ begin
     b.Size := r;
     for i := 0 to High(items) do
       b[items[i] - l] := True;
-    SetLength(Result, Self.Length);
     c := 0;
-    for i := 0 to High(Self) do
+    for i := 0 to Result.Alloc(Self.Length) do
     begin
       v := Self[i];
       if (((v >= l) and (v <= h)) and b[v - l]) then

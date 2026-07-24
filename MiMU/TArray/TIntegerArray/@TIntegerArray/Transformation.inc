@@ -202,12 +202,12 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Reflected: TIntegerArray; overload;
 var
-  i: Integer;
+  h, i: Integer;
   s: SizeInt;
 begin
-  SetLength(Result, Self.Size);
+  h := Result.Alloc(Self.Length);
   s := SizeOf(Integer);
-  for i := 0 to High(Self) do
-    Move(Self[High(Self) - i], Result[i], s);
+  for i := 0 to h do
+    Move(Self[h - i], Result[i], s);
 end;
 {$ENDIF}
