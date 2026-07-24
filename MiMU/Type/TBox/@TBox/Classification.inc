@@ -1,4 +1,5 @@
 {$IFDEF METHODS}
+function Asymmetric: Boolean; overload;
 function Boxy: Boolean; overload;
 function Collapsed: Boolean; overload;
 function Equilateral: Boolean; overload;
@@ -11,6 +12,9 @@ function Plural: Boolean; overload;
 function Rectangular: Boolean; overload;
 function Singular: Boolean; overload;
 function Square: Boolean; overload;
+function Squere: Boolean; overload;
+function Squore: Boolean; overload;
+function Symmetric: Boolean; overload;
 
 function Dimensioned(const N: Integer): Boolean; overload;
 function In0D: Boolean; overload;
@@ -24,6 +28,17 @@ function IsND: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Asymmetric>
+  @action: Returns true if the box has unequal width and height spans.
+  @note: Pure dimensional symmetry check (Self.Width <> Self.Height).
+         Evaluates to True whenever the horizontal and vertical extents differ.
+[==============================================================================}
+function TBox.Asymmetric: Boolean; overload;
+begin
+  Result := (Self.Width <> Self.Height);
+end;
+
 {==============================================================================]
   <Boxy>
   @action: Returns true if TBox is valid rectangle
@@ -136,12 +151,44 @@ end;
 
 {==============================================================================]
   <Square>
-  @action: Returns true if width equals height.
-  @note: (X2 - X1) = (Y2 - Y1), so WIDTH equals HEIGHT.
+  @action: Returns true if the box has valid positive dimensions and equal width and height.
+  @note: Ensures the box is not inverted or zero-area (X2 > X1 and Y2 > Y1)
+         and verifies that horizontal and vertical spans are equal ((X2 - X1) = (Y2 - Y1)).
 [==============================================================================}
 function TBox.Square: Boolean; overload;
 begin
   Result := (((Self.X2 > Self.X1) and (Self.Y2 > Self.Y1)) and ((Self.X2 - Self.X1) = (Self.Y2 - Self.Y1)));
+end;
+
+{==============================================================================]
+  <Squere>
+  @action: Returns true if the box is a valid positive-area square with an even width/height.
+  @note: Evaluates whether `Self.Square` is true and `Self.Width` is an even integer.
+[==============================================================================}
+function TBox.Squere: Boolean; overload;
+begin
+  Result := (Self.Square and Self.Width.Even);
+end;
+
+{==============================================================================]
+  <Squore>
+  @action: Returns true if the box is a valid positive-area square with an odd width/height.
+  @note: Evaluates whether `Self.Square` is true and `Self.Width` is an odd integer.
+[==============================================================================}
+function TBox.Squore: Boolean; overload;
+begin
+  Result := (Self.Square and Self.Width.Odd);
+end;
+
+{==============================================================================]
+  <Symmetric>
+  @action: Returns true if the box has identical width and height spans.
+  @note: Pure dimension check (Self.Width = Self.Height) without bounds or positive-area validation.
+         Evaluates to True for zero-area (0x0) or degenerate coordinates as long as X and Y extents are equal.
+[==============================================================================}
+function TBox.Symmetric: Boolean; overload;
+begin
+  Result := (Self.Width = Self.Height);
 end;
 
 {==============================================================================]
