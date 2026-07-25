@@ -3,11 +3,11 @@ function Border: TPointArray; overload;
 function Border(const pX, pY: Integer): Boolean; overload;
 function Border(const pt: TPoint): Boolean; overload;
 function Bordering(var pixels: TPointArray): Integer; overload;
-function Boundary: TPointArray;
-function Contour: TPointArray;
-function CornerPoints: TPointArray;
-function CornerPts: TPointArray;
-function Corners: TPointArray;
+function Boundary: TPointArray; overload;
+function Contour: TPointArray; overload;
+function CornerPoints: TPointArray; overload;
+function CornerPts: TPointArray; overload;
+function Corners: TPointArray; overload;
 function Edge: TPointArray; overload;
 function Edge(const pX, pY: Integer): Boolean; overload;
 function Edge(const pt: TPoint): Boolean; overload;
@@ -15,7 +15,7 @@ function Outline: TPointArray; overload;
 function Outline(const pX, pY: Integer): Boolean; overload;
 function Outline(const pt: TPoint): Boolean; overload;
 function Perimetrify: TPointArray; overload;
-function Shell: TPointArray;
+function Shell: TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -76,13 +76,17 @@ end;
 {==============================================================================]
   <Boundary>
   @action: Returns all points that form the hollow outline of the box.
-  @note: Array of all boundary (perimeter) points.
+  @note: Populates an array with all boundary (perimeter) coordinates. 
+        Safely handles 2D boxes, 1D line segments, and single-pixel points.
 [==============================================================================}
-function TBox.Boundary: TPointArray;
+function TBox.Boundary: TPointArray; overload;
 var
   s, r: Integer;
 begin
-  SetLength(Result, (2 * ((Self.Width + Self.Height) - 2)));
+  if ((Self.Width <= 1) or (Self.Height <= 1)) then
+    SetLength(Result, (Self.Width * Self.Height))
+  else
+    SetLength(Result, (2 * ((Self.Width + Self.Height) - 2)));
   r := 0;
   for s := Self.X1 to Self.X2 do
   begin
@@ -103,7 +107,7 @@ end;
   @action: Returns TBox contour points as TPointArray.
   @note: Skips all the inside points.
 [==============================================================================}
-function TBox.Contour: TPointArray;
+function TBox.Contour: TPointArray; overload;
 var
   z: TIntegerArray;
   s: TSegment;
@@ -123,7 +127,7 @@ end;
   @action: Returns all 4 corner points of bx.
   @note: None
 [==============================================================================}
-function TBox.CornerPoints: TPointArray;
+function TBox.CornerPoints: TPointArray; overload;
 begin
   SetLength(Result, 4);
   Result[0].X := Self.X1;
@@ -141,7 +145,7 @@ end;
   @action: Returns all 4 corner points of bx.
   @note: Gives also duplicates, if TBox is not rectangular.
 [==============================================================================}
-function TBox.CornerPts: TPointArray;
+function TBox.CornerPts: TPointArray; overload;
 begin
   Result := [Point(Self.X1, Self.Y1), Point(Self.X2, Self.Y1), Point(Self.X2, Self.Y2), Point(Self.X1, Self.Y2)];
 end;
@@ -151,7 +155,7 @@ end;
   @action: Returns corner points of bx.
   @note: Outputs only unique TPoints.
 [==============================================================================}
-function TBox.Corners: TPointArray;
+function TBox.Corners: TPointArray; overload;
 var
   p: TPoint;
 begin
@@ -269,7 +273,7 @@ end;
   @note: Includes corners and edges. Useful for drawing box outlines or
          collision detection along the perimeter.
 [==============================================================================}
-function TBox.Shell: TPointArray;
+function TBox.Shell: TPointArray; overload;
 var
   i, r: Integer;
 begin
