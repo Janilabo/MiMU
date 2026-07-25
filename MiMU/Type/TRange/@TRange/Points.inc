@@ -3,13 +3,17 @@ function Horizontal(const Y: Integer = 0): TPointArray; overload;
 function Horizontaled(const Y: Integer = 0): TPointArray; overload;
 function Horizontalen(const Y: Integer = 0): TPointArray; overload;
 function Horizontaline(const Y: Integer = 0): TPointArray; overload;
+function Horizontalize(const Y: Integer = 0): TPointArray; overload;
 function Horizontally(const Y: Integer = 0): TPointArray; overload;
+function Horizontalment(const Y: Integer = 0): TPointArray; overload;
 
 function Vertical(const X: Integer = 0): TPointArray; overload;
 function Verticaled(const X: Integer = 0): TPointArray; overload;
 function Verticalen(const X: Integer = 0): TPointArray; overload;
 function Verticaline(const X: Integer = 0): TPointArray; overload;
+function Verticalize(const X: Integer = 0): TPointArray; overload;
 function Vertically(const X: Integer = 0): TPointArray; overload;
+function Verticalment(const X: Integer = 0): TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -79,6 +83,27 @@ begin
   end;
 end;
 
+{==============================================================================
+  <Horizontalize>
+  @action: Converts the 1D range into an array of 2D points aligned horizontally along a fixed Y-coordinate.
+  @note: Uses a two-pointer inward approach (filling head and tail simultaneously) to map range values to Point(X, Y).
+[==============================================================================}
+function TRange.Horizontalize(const Y: Integer = 0): TPointArray; overload;
+var
+  d: Integer;
+  s, r: TRange;
+begin
+  r.start := -1;
+  r.stop := Result.SetSize(Self.Size);
+  d := Self.Direction;
+  s := Self;
+  while (r.start.Increment <= r.stop.Decrement) do
+  begin
+    Result[r.start] := Point(s.start.Increase(d), Y);
+    Result[r.stop] := Point(s.stop.Decrease(d), Y);
+  end;
+end;
+
 {==============================================================================]
   <Horizontally>
   @action: Generates a TPointArray forming a horizontal line across the range.
@@ -99,6 +124,21 @@ begin
     P^.Y := Y;
     Inc(P);
   end;
+end;
+
+{==============================================================================]
+  <Horizontalment>
+  @action: Projects the range's values into an array of 2D points along a horizontal line at a given Y-coordinate.
+  @note: Converts the range to an integer array via ToArray and allocates the point array sequentially, unlike the two-pointer approach in Horizontalize.
+[==============================================================================}
+function TRange.Horizontalment(const Y: Integer = 0): TPointArray; overload;
+var
+  x: TIntegerArray;
+  i: Integer;
+begin
+  x := Self.ToArray;
+  for i := 0 to Result.Alloc(x.Length) do
+    Result[i] := Point(x[i], Y);
 end;
 
 {==============================================================================
@@ -167,6 +207,27 @@ begin
   end;
 end;
 
+{==============================================================================
+  <Verticalize>
+  @action: Converts the 1D range into an array of 2D points aligned vertically along a fixed X-coordinate.
+  @note: Uses a two-pointer inward approach (filling head and tail simultaneously) to map range values to Point(X, Y).
+[==============================================================================}
+function TRange.Verticalize(const X: Integer = 0): TPointArray; overload;
+var
+  d: Integer;
+  s, r: TRange;
+begin
+  r.stop := Result.SetSize(Self.Size);
+  r.start := -1;
+  d := Self.Direction;
+  s := Self;
+  while (r.start.Increment <= r.stop.Decrement) do
+  begin
+    Result[r.start] := Point(X, s.start.Increase(d));
+    Result[r.stop] := Point(X, s.stop.Decrease(d));
+  end;
+end;
+
 {==============================================================================]
   <Vertically>
   @action: Generates a TPointArray forming a vertical line across the range.
@@ -187,5 +248,20 @@ begin
 	P^.Y := y.Increase(d);
     Inc(P);
   end;
+end;
+
+{==============================================================================]
+  <Verticalment>
+  @action: Projects the range's values into an array of 2D points along a vertical line at a given X-coordinate.
+  @note: Converts the range to an integer array via ToArray and allocates the point array sequentially, unlike the two-pointer approach in Verticalize.
+[==============================================================================}
+function TRange.Verticalment(const X: Integer = 0): TPointArray; overload;
+var
+  y: TIntegerArray;
+  i: Integer;
+begin
+  y := Self.ToArray;
+  for i := 0 to Result.Alloc(y.Length) do
+    Result[i] := Point(x, y[i]);
 end;
 {$ENDIF}
