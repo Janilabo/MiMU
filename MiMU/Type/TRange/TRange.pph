@@ -38,6 +38,7 @@
 {$I @TRange/Ordering.inc}
 {$I @TRange/Orientation.inc}
 {$I @TRange/Parity.inc}
+{$I @TRange/Points.inc}
 {$I @TRange/Populating.inc}
 {$I @TRange/Position.inc}
 {$I @TRange/Projection.inc}
