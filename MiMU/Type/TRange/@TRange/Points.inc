@@ -1,11 +1,13 @@
 {$IFDEF METHODS}
 function Horizontal(const Y: Integer = 0): TPointArray; overload;
 function Horizontaled(const Y: Integer = 0): TPointArray; overload;
+function Horizontalen(const Y: Integer = 0): TPointArray; overload;
 function Horizontaline(const Y: Integer = 0): TPointArray; overload;
 function Horizontally(const Y: Integer = 0): TPointArray; overload;
 
 function Vertical(const X: Integer = 0): TPointArray; overload;
 function Verticaled(const X: Integer = 0): TPointArray; overload;
+function Verticalen(const X: Integer = 0): TPointArray; overload;
 function Verticaline(const X: Integer = 0): TPointArray; overload;
 function Vertically(const X: Integer = 0): TPointArray; overload;
 {$ENDIF}
@@ -38,6 +40,23 @@ begin
   x := Self.start;
   for i := 0 to (Result.SetSize(Self.Size) - 1) do
     Result[i] := Point(x.Increase(d), Y);
+end;
+
+{==============================================================================]
+  <Horizontalen>
+  @action: Generates an array of TPoint structures representing a horizontal line segment across the defined TRange.
+  @note: Sets all points in the returned TPointArray to a fixed Y-coordinate (defaulting to 0)
+         while stepping the X-coordinate sequentially from Self.start using Self.Direction.
+[==============================================================================}
+function TRange.Horizontalen(const Y: Integer = 0): TPointArray; overload;
+var
+  i, d: Integer;
+begin
+  for i := 0 to Result.Alloc(Self.Size) do
+    Result[i].Y := Y;
+  d := Self.Direction;
+  for i := 0 to High(Result) do
+    Result[i].X := (Self.start + (i * d));
 end;
 
 {==============================================================================]
@@ -109,6 +128,23 @@ begin
   y := Self.start;
   for i := 0 to (Result.SetSize(Self.Size) - 1) do
     Result[i] := Point(X, y.Increase(d));
+end;
+
+{==============================================================================]
+  <Verticalen>
+  @action: Generates an array of TPoint structures representing a vertical line segment across the defined TRange.
+  @note: Sets all points in the returned TPointArray to a fixed X-coordinate (defaulting to 0)
+         while stepping the Y-coordinate sequentially from Self.start using Self.Direction.
+[==============================================================================}
+function TRange.Verticalen(const X: Integer = 0): TPointArray; overload;
+var
+  i, d: Integer;
+begin
+  for i := 0 to Result.Alloc(Self.Size) do
+    Result[i].X := X;
+  d := Self.Direction;
+  for i := 0 to High(Result) do
+    Result[i].Y := (Self.start + (i * d));
 end;
 
 {==============================================================================]
