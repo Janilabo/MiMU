@@ -3,6 +3,7 @@ function Border: TPointArray; overload;
 function Border(const pX, pY: Integer): Boolean; overload;
 function Border(const pt: TPoint): Boolean; overload;
 function Bordering(var pixels: TPointArray): Integer; overload;
+function Boundarify: TPointArray; overload;
 function Boundary: TPointArray; overload;
 function Contour: TPointArray; overload;
 function CornerPoints: TPointArray; overload;
@@ -11,11 +12,13 @@ function Corners: TPointArray; overload;
 function Edge: TPointArray; overload;
 function Edge(const pX, pY: Integer): Boolean; overload;
 function Edge(const pt: TPoint): Boolean; overload;
+function Margin: TPointArray; overload;
 function Outline: TPointArray; overload;
 function Outline(const pX, pY: Integer): Boolean; overload;
 function Outline(const pt: TPoint): Boolean; overload;
 function Perimetrify: TPointArray; overload;
 function Shell: TPointArray; overload;
+function Verge: TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -71,6 +74,42 @@ begin
       if ((c = Self.X1) or (c = Self.X2) or (r = Self.Y1) or (r = Self.Y2)) then
         pixels[Result.Increase] := Point(c, r);
   SetLength(pixels, Result);
+end;
+
+{==============================================================================]
+  <Boundarify>
+  @action: Returns every distinct pixel forming the outer border of the box, degenerating gracefully for lines, points, and empty boxes.
+  @note: For a full 2D box, walks the top/bottom rows (inclusive of corners) then the left/right columns (exclusive of the already-counted corner rows),
+         filling the result array back-to-front via SetSize + Decrement so the point count matches Perim/Perimeter/Perimetry exactly.
+         Degenerates to a single Verticalize/Horizontalize range for 1D line segments, a single point for zero-dimension boxes, and an empty array for invalid/empty boxes.
+[==============================================================================}
+function TBox.Boundarify: TPointArray; overload;
+var
+  s, r: Integer;
+begin
+  case Self.Dimension of
+    2:
+    begin
+      r := Result.SetSize(((Self.Width * 2) + (Self.Height * 2)) - 4);
+      for s := Self.X2 downto Self.X1 do
+      begin
+        Result[r.Decrement] := Point(s, Self.Y2);
+        Result[r.Decrement] := Point(s, Self.Y1);
+      end;
+      for s := (Self.Y2 - 1) downto (Self.Y1 + 1) do
+      begin
+        Result[r.Decrement] := Point(Self.X2, s);
+        Result[r.Decrement] := Point(Self.X1, s);
+      end;
+    end;
+    1:
+    if (Self.X1 = Self.X2) then
+      Result := TRange.Construct(Self.Y1, Self.Y2).Verticalize(Self.X1)
+    else
+      Result := TRange.Construct(Self.X1, Self.X2).Horizontalize(Self.Y1);
+    0: Result := [Point(Self.X1, Self.Y1)];
+	-1: Result := [];
+  end;
 end;
 
 {==============================================================================]
@@ -210,6 +249,48 @@ begin
 end;
 
 {==============================================================================]
+  <Margin>
+  @action: Returns every distinct pixel forming the outer border of the box, walked one step at a time in clockwise order starting from the top-left corner.
+  @note: Classifies each step's position via Which against X1/X2 and Y1/Y2, letting the corner/edge transition table be expressed as nested case-of blocks rather than if/else chains.
+         Degenerate boxes (width or height <= 1, or invalid/inverted bounds) defer entirely to Self.All rather than a specialized dispatch.
+[==============================================================================}
+function TBox.Margin: TPointArray; overload;
+var
+  i: Integer;
+  p: TPoint;
+  procedure R; overload;
+  begin
+    case p.X.Which(Self.X1, Self.X2) of
+      0:
+      case p.Y.Which(Self.Y1, Self.Y2) of
+        0: Inc(p.X);
+        1: Dec(p.Y);
+      else
+        Dec(p.Y);
+      end;
+      1:
+      case p.Y.Which(Self.Y1, Self.Y2) of
+        0: Inc(p.Y);
+        1: Dec(p.X);
+      else
+        Inc(p.Y);
+      end;
+    else if (p.Y = Self.Y1) then
+      Inc(p.X)
+    else if (p.Y = Self.Y2) then
+      Dec(p.X);
+    end;
+    Result[i] := p;
+  end;
+begin
+  if ((Self.X2 <= Self.X1) or (Self.Y2 <= Self.Y1)) then
+    Exit(Self.All);
+  p := Point(Self.X1, (Self.Y1 + 1));
+  for i := 0 to Result.Alloc(Self.Perimeter) do
+    R;
+end;
+
+{==============================================================================]
   <Outline>
   @action: Returns TBox outline points as TPointArray.
   @note: Skips all the inside points.
@@ -254,6 +335,8 @@ function TBox.Perimetrify: TPointArray; overload;
 var
   h, v, r: Integer;
 begin
+  if ((Self.Width <= 1) or (Self.Height <= 1)) then
+    Exit(Self.All);
   r := Result.SetSize(Self.Perimeter);
   for v := (Self.Y1 + 1) to Self.Y2 do
     Result[r.Decrement] := Point(Self.X1, v);
@@ -277,6 +360,8 @@ function TBox.Shell: TPointArray; overload;
 var
   i, r: Integer;
 begin
+  if ((Self.Width <= 1) or (Self.Height <= 1)) then
+    Exit(Self.All);
   SetLength(Result, ((2 * (Self.Width + Self.Height)) - 4));
   r := 0;
   for i := Self.X1 to Self.X2 do
@@ -287,5 +372,51 @@ begin
     Result[r.Increase] := Point(i, Self.Y2);
   for i := (Self.Y2 - 1) downto (Self.Y1 + 1) do
     Result[r.Increase] := Point(Self.X1, i);
-end; 
+end;
+
+{==============================================================================]
+  <Verge>
+  @action: Returns every distinct pixel forming the outer border of the box, walked one step at a time in clockwise order starting from the top-left corner.
+  @note: Uses no explicit direction state — each step is inferred purely from the current point's position relative to the four edges, corners triggering a turn.
+         Degenerate boxes (width or height <= 1, or invalid/inverted bounds) defer entirely to Self.All rather than a specialized dispatch.
+[==============================================================================}
+function TBox.Verge: TPointArray; overload;
+var
+  i: Integer;
+  p: TPoint;
+  procedure R; overload;
+  begin
+    case (p.X = Self.X1) of
+      False:
+      case (p.X = Self.X2) of
+        True:
+        if (p.Y = Self.Y1) then
+          Inc(p.Y)
+        else if (p.Y = Self.Y2) then
+          Dec(p.X)
+        else
+          Inc(p.Y);
+        False:
+        if (p.Y = Self.Y1) then
+          Inc(p.X)
+        else if (p.Y = Self.Y2) then
+          Dec(p.X);
+      end;
+      True:
+      if (p.Y = Self.Y1) then
+        Inc(p.X)
+      else if (p.Y = Self.Y2) then
+        Dec(p.Y)
+      else
+        Dec(p.Y);
+    end;
+    Result[i] := p;
+  end;
+begin
+  if ((Self.X2 <= Self.X1) or (Self.Y2 <= Self.Y1)) then
+    Exit(Self.All);
+  p := Point(Self.X1, (Self.Y1 + 1));
+  for i := 0 to Result.Alloc(Self.Perimeter) do
+    R;
+end;
 {$ENDIF}
