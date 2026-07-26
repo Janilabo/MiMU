@@ -2,12 +2,20 @@
 function All(const conditions: TBooleanArray; const fallback: MType; const wanted: Boolean = True): MType; overload;
 function Allowed(const conditions: TBooleanArray; const target: Integer; const fallback: MType; const wanted: Boolean = True): MType; overload;
 function Any(const conditions: TBooleanArray; const fallback: MType; const wanted: Boolean = True): MType; overload;
+function Balanced(const conditions: TBooleanArray; const fallback: MType; const wanted: Boolean = True): MType; overload;
 function Both(const A, B: Boolean; const fallback: MType; const wanted: Boolean = True): MType; overload;
+function Compliant(const conditions: TBooleanArray; const target: TRange; const fallback: MType; const wanted: Boolean = True): MType; overload;
+function Concur(const A, B: Boolean; const fallback: MType): MType; overload;
+function Discord(const A, B: Boolean; const fallback: MType): MType; overload;
 function Either(const A, B: Boolean; const fallback: MType; const wanted: Boolean = True): MType; overload;
+function Implies(const A, B: Boolean; const fallback: MType): MType; overload;
+function Majority(const conditions: TBooleanArray; const fallback: MType; const wanted: Boolean = True): MType; overload;
 function Neither(const A, B: Boolean; const fallback: MType; const wanted: Boolean = True): MType; overload;
 function None(const conditions: TBooleanArray; const fallback: MType; const wanted: Boolean = True): MType; overload;
+function Only(const conditions: TBooleanArray; const fallback: MType; const target: UInt32 = 1; const wanted: Boolean = True): MType; overload;
+function Quota(const conditions: TBooleanArray; const target: Integer; const fallback: MType; const wanted: Boolean = True): MType; overload;
 function Required(const conditions: TBooleanArray; const target: Integer; const fallback: MType; const wanted: Boolean = True): MType; overload;
-function When(const condition: Boolean; const fallback: MType): MType; overload;
+function When(const condition: Boolean; const fallback: MType; const wanted: Boolean = True): MType; overload;
 function Which(const A, B: MType): Integer; overload;
 function Which(const A, B, C: MType): Integer; overload;
 function Which(const A, B, C, D: MType): Integer; overload;
@@ -92,6 +100,35 @@ begin
   Result := fallback;
 end;
 
+{==============================================================================][
+  <Balanced>
+  @action: Returns `Self` if the array contains an even number of elements and an 
+           equal split of `wanted` (defaults to `True`) and opposite boolean values; 
+           otherwise returns `fallback`.
+  @note: Short-circuits early if array length is odd, or as soon as either matching 
+         or opposing element counts exceed half the total elements.
+[==============================================================================}
+function MTypeHelper.Balanced(const conditions: TBooleanArray; const fallback: MType; const wanted: Boolean = True): MType; overload;
+var
+  i, m, t, l: Integer;
+begin
+  l := conditions.Length;
+  if l.Odd then
+    Exit(fallback);
+  t := (l div 2);
+  m := 0;
+  for i := 0 to (l - 1) do
+  case (conditions[i] = wanted) of 
+    True:
+    if (m.Increment > t) then
+      Exit(fallback);
+    False:
+	if ((m + (l - 1 - i)) < t) then
+      Exit(fallback);
+  end;
+  Result := Self.When((m = t), fallback);
+end;
+
 {==============================================================================]
   <Both>
   @action: Asserts that BOTH boolean conditions ('A' and 'B') uniformly match 
@@ -113,6 +150,49 @@ begin
 end;
 
 {==============================================================================]
+  <Compliant>
+  @action: Returns `Self` if the total count of matching boolean conditions falls 
+           within the specified range; otherwise returns `fallback`.
+  @note: Normalizes the range first and short-circuits with `fallback` early if 
+         matches exceed `target.Stop` or if remaining elements cannot reach `target.Start`.
+[==============================================================================}
+function MTypeHelper.Compliant(const conditions: TBooleanArray; const target: TRange; const fallback: MType; const wanted: Boolean = True): MType; overload;
+var
+  i, m, l: Integer;
+  t: TRange;
+begin
+  l := conditions.Length;
+  t := target.Normalize;
+  if ((t.start < 0) or (t.start > l)) then
+    Exit(fallback);
+  m := 0;
+  for i := 0 to (l - 1) do
+    if (((conditions[i] = wanted) and (m.Increment > t.stop)) or ((m + (l - 1 - i)) < t.start)) then
+      Exit(fallback);
+  Result := Self.When((m >= t.start), fallback);
+end;
+
+{==============================================================================]
+  <Concur>
+  @action: Returns `Self` if two boolean conditions are identical (both True or both False); otherwise returns `fallback`.
+  @note: Acts as a logical equivalence (XNOR) gate, evaluating agreement between two states.
+[==============================================================================}
+function MTypeHelper.Concur(const A, B: Boolean; const fallback: MType): MType; overload;
+begin
+  Result := Self.When((A = B), fallback);
+end;
+
+{==============================================================================]
+  <Discord>
+  @action: Returns `Self` if two boolean conditions differ (one True and one False); otherwise returns `fallback`.
+  @note: Acts as an exclusive OR (XOR) gate, evaluating disagreement/conflict between two states.
+[==============================================================================}
+function MTypeHelper.Discord(const A, B: Boolean; const fallback: MType): MType; overload;
+begin
+  Result := Self.When((A <> B), fallback);
+end;
+
+{==============================================================================]
   <Either>
   @action: Compares two boolean conditions ('A' and 'B') against a target state 
            ('wanted'). Returns the current 'MType' instance ('Self') if either 
@@ -130,6 +210,30 @@ begin
     Result := Self
   else
     Result := fallback;
+end;
+
+{==============================================================================][
+  <Implies>
+  @action: Returns `Self` if boolean condition `A` material implies condition `B` 
+           (`not A or B`); otherwise returns `fallback`.
+  @note: Implements material implication (A → B). Returns `fallback` only in 
+         the single failure case where `A` is True and `B` is False.
+[==============================================================================}
+function MTypeHelper.Implies(const A, B: Boolean; const fallback: MType): MType; overload;
+begin
+  Result := Self.When(((not A) or B), fallback);
+end;
+
+{==============================================================================]
+  <Majority>
+  @action: Returns `Self` if more than 50% of the boolean conditions match `wanted`; 
+           otherwise returns `fallback`.
+  @note: Delegates evaluation to `Required`, calculating the minimum threshold 
+         as `(Length div 2) + 1` (strict simple majority).
+[==============================================================================}
+function MTypeHelper.Majority(const conditions: TBooleanArray; const fallback: MType; const wanted: Boolean = True): MType; overload;
+begin
+  Result := Self.Required(conditions, ((conditions.Length div 2) + 1), fallback, wanted);
 end;
 
 {==============================================================================]
@@ -173,6 +277,50 @@ begin
 end;
 
 {==============================================================================]
+  <Only>
+  @action: Returns `Self` if the number of matching boolean conditions in `conditions` 
+           equals `target` (defaulting to exactly 1); otherwise returns `fallback`.
+  @note: A specialized shortcut for exact-count matching with early-exit 
+         short-circuiting when matches exceed `target` or remaining elements fall short.
+[==============================================================================}
+function MTypeHelper.Only(const conditions: TBooleanArray; const fallback: MType; const target: UInt32 = 1; const wanted: Boolean = True): MType; overload;
+var
+  i, m, l: Integer;
+begin
+  l := conditions.Length;
+  if (target > l) then
+    Exit(fallback);
+  m := 0;
+  for i := 0 to (l - 1) do
+    if (((conditions[i] = wanted) and (m.Increment > target)) or ((m + (l - 1 - i)) < target)) then
+      Exit(fallback);
+  Result := Self.When((m = target), fallback);
+end;
+
+{==============================================================================]
+  <Quota>
+  @action: Returns `Self` if the number of matches in `conditions` strictly 
+           equals `target`; otherwise, returns `fallback` early (or at the end).
+  @note: Uses early-exit short-circuiting when it becomes mathematically 
+         impossible for the remaining array elements to meet or equal the target.
+[==============================================================================}
+function MTypeHelper.Quota(const conditions: TBooleanArray; const target: Integer; const fallback: MType; const wanted: Boolean = True): MType; overload;
+var
+  i, m, l: Integer;
+begin
+  if ((target < 0) or (target > conditions.Length)) then
+    Exit(fallback);
+  l := conditions.Length;
+  m := 0;
+  for i := 0 to (l - 1) do
+    if ((conditions[i] = wanted) and (m.Increment > target)) then
+      Exit(fallback)
+    else if ((m + (l - 1 - i)) < target) then
+      Exit(fallback);
+  Result := Self.When((m = target), fallback);
+end;
+
+{==============================================================================]
   <Required>
   @action: Enforces a mandatory minimum floor of matching conditions. Returns 
            'Self' the exact moment the quantity of booleans matching 'wanted' 
@@ -206,14 +354,14 @@ end;
 
 {==============================================================================]
   <When>
-  @action: Returns Self if the condition is met (True), otherwise returns 
-           the specified fallback value.
+  @action: Returns `Self` if `condition` matches `wanted` (defaults to `True`); 
+           otherwise returns `fallback`.
   @note: Streamlines inline fluent conditional evaluations, replacing clunky 
          ternary simulations or verbose if/then blocks.
 [==============================================================================}
-function MTypeHelper.When(const condition: Boolean; const fallback: MType): MType; overload;
+function MTypeHelper.When(const condition: Boolean; const fallback: MType; const wanted: Boolean = True): MType; overload;
 begin
-  if condition then 
+  if (condition = wanted) then 
     Result := Self 
   else 
     Result := fallback;
