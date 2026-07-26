@@ -42,6 +42,7 @@ function PopulationCount: Integer; overload;
 function PopulationSize: Integer; overload;
 function Quantified: Int64; overload;
 function Quantify: Integer; overload;
+function Quantita: Integer; overload;
 function Quantitas: Integer; overload;
 function Quantity: Integer; overload;
 function Quantum: Integer; overload;
@@ -721,6 +722,16 @@ begin
 end;
 
 {==============================================================================]
+  <Quantita>
+  @action: Returns the total count of numbers contained within the range, inclusive of both endpoints.
+  @note: Works for both ascending and descending ranges. Returns 1 if start equals stop.
+[==============================================================================}
+function TRange.Quantita: Integer; overload;
+begin
+  Result := (((Self.stop - Self.start) * Math.Sign(Self.stop - Self.start + Ord(Self.stop = Self.start))) + 1);
+end;
+
+{==============================================================================]
   <Quantitas>
   @action: Calculates the absolute, inclusive discrete element count of the range.
   @note: 
@@ -735,7 +746,7 @@ begin
   if (s[0] > s[1]) then
     Swap(s[0], s[1]);
   Result := ((s[1] - s[0]) + 1);
-end; 
+end;
 
 {==============================================================================]
   <Quantity>

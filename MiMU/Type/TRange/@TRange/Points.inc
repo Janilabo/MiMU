@@ -2,6 +2,7 @@
 function Horizontal(const Y: Integer = 0): TPointArray; overload;
 function Horizontaled(const Y: Integer = 0): TPointArray; overload;
 function Horizontalen(const Y: Integer = 0): TPointArray; overload;
+function Horizontalify(const Y: Integer = 0): TPointArray; overload;
 function Horizontaline(const Y: Integer = 0): TPointArray; overload;
 function Horizontalize(const Y: Integer = 0): TPointArray; overload;
 function Horizontally(const Y: Integer = 0): TPointArray; overload;
@@ -10,6 +11,7 @@ function Horizontalment(const Y: Integer = 0): TPointArray; overload;
 function Vertical(const X: Integer = 0): TPointArray; overload;
 function Verticaled(const X: Integer = 0): TPointArray; overload;
 function Verticalen(const X: Integer = 0): TPointArray; overload;
+function Verticalify(const X: Integer = 0): TPointArray; overload;
 function Verticaline(const X: Integer = 0): TPointArray; overload;
 function Verticalize(const X: Integer = 0): TPointArray; overload;
 function Vertically(const X: Integer = 0): TPointArray; overload;
@@ -61,6 +63,21 @@ begin
   d := Self.Direction;
   for i := 0 to High(Result) do
     Result[i].X := (Self.start + (i * d));
+end;
+
+{==============================================================================]
+  <Horizontalify>
+  @action: Converts the range into an array of points forming a horizontal line, using the range values as X-coordinates.
+  @note: The Y-coordinate is constant for all points and defaults to 0 if not specified.
+[==============================================================================}
+function TRange.Horizontalify(const Y: Integer = 0): TPointArray; overload;
+var
+  i, x: Integer;
+begin
+  i := 0;
+  SetLength(Result, Self.Size);
+  for x in Self do
+    Result[i.Increase] := Point(x, Y);
 end;
 
 {==============================================================================]
@@ -185,6 +202,21 @@ begin
   d := Self.Direction;
   for i := 0 to High(Result) do
     Result[i].Y := (Self.start + (i * d));
+end;
+
+{==============================================================================]
+  <Verticalify>
+  @action: Converts the range into an array of points forming a vertical line, using the range values as Y-coordinates.
+  @note: The X-coordinate is constant for all points and defaults to 0 if not specified.
+[==============================================================================}
+function TRange.Verticalify(const X: Integer = 0): TPointArray; overload;
+var
+  i, y: Integer;
+begin
+  i := 0;
+  SetLength(Result, Self.Size);
+  for y in Self do
+    Result[i.Increase] := Point(X, y);
 end;
 
 {==============================================================================]
