@@ -1,5 +1,6 @@
 {$I @T2DArray/Clearing.inc}
 {$I @T2DArray/Compacting.inc}
+{$I @T2DArray/Custody.inc}
 {$I @T2DArray/Flattening.inc}
 {$I @T2DArray/Reversion.inc}
 {$I @T2DArray/Size.inc}

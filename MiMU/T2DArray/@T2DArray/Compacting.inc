@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Glean: Integer; overload;
 function Gleaned: M2DArray; overload;
+function Reap: Integer; overload;
+function Reaped: M2DArray; overload;
 function Squeeze: Integer; overload;
 function Squeezed: M2DArray; overload;
 {$ENDIF}
@@ -42,6 +44,56 @@ begin
     if (Self[i].Length > 0) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <Reap>
+  @action: Removes all empty sub-arrays from Self in place, preserving the
+           relative order of the remaining (non-empty) sub-arrays, via a full
+           element-by-element deep copy into each surviving row's position. Returns
+           the total number of elements retained across all rows.
+  @note: Mutating — Self is modified directly. Unlike Glean, which relocates
+         surviving rows by reference reassignment (O(1) per row, aliasing the
+         original row data), Reap resizes and manually copies every element into
+         place (O(n) per row), leaving each surviving row's data fully independent
+         of its prior storage. Result reports total element count, not row count.
+[==============================================================================}
+function M2DArrayHelper.Reap: Integer; overload;
+var
+  i, j, r: Integer;
+begin
+  Result := 0;
+  r := -1;
+  for i := 0 to High(Self) do
+    if (Self[i].Length > 0) then
+    begin
+      Inc(Result, Self[i].Length);
+      for j := 0 to Self[r.Increment].Alloc(Self[i].Length) do
+        Self[r][j] := Self[i][j];
+    end;
+  SetLength(Self, (r + 1));
+end;
+
+{==============================================================================]
+  <Reaped>
+  @action: Returns a copy of Self with all empty sub-arrays removed,
+           preserving the relative order of the remaining (non-empty) sub-arrays, via
+           a full element-by-element deep copy of each surviving row into the result.
+  @note: Non-mutating; Self is left unchanged. Unlike Gleaned, which builds
+         the result by reference reassignment (aliasing the original rows), Reaped
+         resizes and manually copies every element into the result, so the
+         surviving rows in Result are fully independent of Self's underlying data.
+[==============================================================================}
+function M2DArrayHelper.Reaped: M2DArray; overload;
+var
+  i, j, r: Integer;
+begin
+  r := -1;
+  for i := 0 to (Result.SetSize(Self.Length) - 1) do
+    if (Self[i].Length > 0) then
+    for j := 0 to Result[r.Increment].Alloc(Self[i].Length) do
+      Result[r][j] := Self[i][j];
+  SetLength(Result, (r + 1));
 end;
 
 {==============================================================================]

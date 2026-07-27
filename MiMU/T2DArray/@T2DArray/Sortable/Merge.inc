@@ -142,7 +142,6 @@ end;
 [==============================================================================}
 function M2DArrayHelper.Meld(const oAscending: Boolean = True): MArray; overload;
 var
-  s: MType;
   l, r, i, k: Integer;
   m: TIntegerArray;
   a: TRangeArray;
