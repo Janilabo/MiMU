@@ -1,6 +1,5 @@
 {$IFDEF METHODS}
 function AMean: Double; overload;
-function Amid: Integer; overload;
 function Average: Double; overload;
 function Base: Integer; overload;
 function Bisect: Integer; overload;
@@ -30,6 +29,7 @@ function MiddleDigit: Integer; overload;
 function MiddleLeft: Integer; overload;
 function MiddlePoint: Double; overload;
 function MiddleRight: Integer; overload;
+function Middlern: Integer; overload;
 function MiddleStep: Integer; overload;
 function MiddleVal: Integer; overload;
 function MiddleValue: Double; overload;
@@ -58,22 +58,6 @@ function Pivot: Integer; overload;
 function TRange.AMean: Double; overload;
 begin
   Result := Math.Mean([Double(Self.start), Double(Self.stop)]);
-end;
-
-{==============================================================================]
-  <Amid>
-  @action: Returns the anchor point of the range.
-           The anchor is defined as the upper midpoint of the range and is calculated
-           as (Start + Stop + 1) div 2. This biases the result toward the upper bound
-           when the range has an even number of elements.
-  @note:
-    - No normalization is performed; Start and Stop are used as-is.
-    - For a singular range (Start = Stop), the anchor equals Start.
-    - The result is always within the inclusive range Start .. Stop.
-[==============================================================================}
-function TRange.Amid: Integer; overload;
-begin
-  Result := ((Self.start + Self.stop + 1) div 2);
 end;
 
 {==============================================================================]
@@ -465,6 +449,22 @@ begin
   if Self.Descending then
     Exit(Self.stop + (Self.Contra + 1) div 2);
   Result := (Self.start + (Self.Delta + 1) div 2);
+end;
+
+{==============================================================================]
+  <Middlern>
+  @action: Returns the anchor point of the range.
+           The anchor is defined as the upper midpoint of the range and is calculated
+           as (Start + Stop + 1) div 2. This biases the result toward the upper bound
+           when the range has an even number of elements.
+  @note:
+    - No normalization is performed; Start and Stop are used as-is.
+    - For a singular range (Start = Stop), the anchor equals Start.
+    - The result is always within the inclusive range Start .. Stop.
+[==============================================================================}
+function TRange.Middlern: Integer; overload;
+begin
+  Result := ((Self.start + Self.stop + 1) div 2);
 end;
 
 {==============================================================================]
