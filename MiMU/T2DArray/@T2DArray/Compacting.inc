@@ -32,8 +32,7 @@ function M2DArrayHelper.Squeezed: M2DArray; overload;
 var
   i, r: Integer;
 begin
-  SetLength(Result, Self.Length);
-  if Result.Empty then
+  if (Result.SetSize(Self.Length) = 0) then
     Exit;
   r := 0;
   for i := 0 to High(Self) do

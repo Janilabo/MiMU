@@ -19,8 +19,7 @@ function M2DArrayHelper.Flat: MArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, 0);
-  for i := 0 to High(Self) do
+  for i := Result.Empten to High(Self) do
     Result := Concat(Result, Self[i]);
 end;
 
@@ -49,8 +48,7 @@ function M2DArrayHelper.Linearize: MArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, 0);
-  for i := 0 to High(Self) do
+  for i := Result.Empten to High(Self) do
     Result := (Result + Self[i]);
 end;
 
@@ -63,8 +61,7 @@ function M2DArrayHelper.Merge: MArray; overload;
 var
   i, j, l: Integer;
 begin
-  SetLength(Result, Self.Sized);
-  l := Result.Length;
+  l := Result.SetSize(Self.Sized);
   if (l > 0) then
   for i := High(Self) downto 0 do
     for j := High(Self[i]) downto 0 do
@@ -80,9 +77,8 @@ function M2DArrayHelper.Merged: MArray; overload;
 var
   i, j, o, s: Integer;
 begin
-  SetLength(Result, 0);
   o := 0;
-  for i := 0 to High(Self) do
+  for i := Result.Empten to High(Self) do
   begin
     s := Self[i].Size;
     if (s > 0) then
@@ -104,8 +100,7 @@ function M2DArrayHelper.TArray: MArray; overload;
 var
   i, j, l: Integer;
 begin
-  SetLength(Result, 0);
-  for i := 0 to High(Self) do
+  for i := Result.Empten to High(Self) do
   begin
     l := Result.Length;
     SetLength(Result, (l + Self[i].Size));

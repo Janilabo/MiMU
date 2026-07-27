@@ -157,8 +157,7 @@ function M2DArrayHelper.Length(var lengths: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
-  Result := Self.Length;
-  SetLength(lengths, Result);
+  Result := lengths.SetSize(Self.Length);
   for i := 0 to (Result - 1) do
     lengths[i] := Self[i].Length;
 end;
@@ -248,8 +247,7 @@ function M2DArrayHelper.Size(var sizes: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
-  Result := Self.Size;
-  SetLength(sizes, Result);
+  Result := sizes.SetSize(Self.Size);
   for i := 0 to (Result - 1) do
     sizes[i] := Self[i].Size;
 end;
@@ -264,8 +262,7 @@ var
   i: Integer;
 begin
   Result := 0;
-  SetLength(lengths, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to lengths.Alloc(Self.Length) do
   begin
     lengths[i] := Self[i].Length;
     Result := (Result + lengths[i]);

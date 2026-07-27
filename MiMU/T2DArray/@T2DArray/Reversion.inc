@@ -35,8 +35,7 @@ function M2DArrayHelper.Reversed: M2DArray; overload;
 var
   i, l: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   for i := 0 to (l - 1) do
     Result[i] := Self[(l - 1) - i];
 end;

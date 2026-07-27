@@ -21,14 +21,12 @@ begin
   if (h < 0) then
     Exit([]);
   s := 0;
-  SetLength(a, (h + 1));
-  for i := 0 to h do
+  for i := 0 to a.Alloc(h + 1) do
   begin
     s := (s + Self[i].Length);
     a[i] := 0;
   end;
-  SetLength(Result, s);
-  for i := 0 to (s - 1) do
+  for i := 0 to Result.Alloc(s) do
   begin
     f := False;
     b := -1;
@@ -69,17 +67,15 @@ var
   v: MType;
 begin
   s := 0;
-  h := High(Self);
-  SetLength(a, (h + 1));
+  h := a.Alloc(Self.Length);
   for i := 0 to h do
   begin
     s := (s + Self[i].Length);
     a[i] := 0;
   end;
-  SetLength(Result, s);
   case oAscending of
     True:
-    for i := 0 to (s - 1) do
+    for i := 0 to Result.Alloc(s) do
     begin
       f := False;
       b := -1;
@@ -105,7 +101,7 @@ begin
       end;
     end;
     False:
-    for i := 0 to (s - 1) do
+    for i := 0 to Result.Alloc(s) do
     begin
       f := False;
       b := -1;
