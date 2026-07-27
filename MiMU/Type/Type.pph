@@ -1,9 +1,11 @@
 {$I @Type/Arrays.inc}
 {$I @Type/Counting.inc}
+{$I @Type/Logic.inc}
 {$I @Type/Miscellaneous.inc}
 {$I @Type/Modify.inc}
+{$I @Type/Quantifiers.inc}
+{$I @Type/Scanning.inc}
 {$I @Type/Search.inc}
-{$I @Type/Select.inc}
 {$I @Type/Validation.inc}
 
 {$IFDEF Sortable}

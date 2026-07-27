@@ -1,129 +1,72 @@
 {$IFDEF HELPERS}
-function Locations(const target: MArray): TIntegerArray; overload;
-function LocationsIn(const target: MArray): TIntegerArray; overload;
-function Positions(const target: MArray): TIntegerArray; overload;
-function PositionsIn(const target: MArray): TIntegerArray; overload;
-function Scan(const target: MArray): TIntegerArray; overload;
+function Which(const A, B: MType): Integer; overload;
+function Which(const A, B, C: MType): Integer; overload;
+function Which(const A, B, C, D: MType): Integer; overload;
+function Which(const N: MArray; const fallback: Integer = -1): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Locations>
-  @action: Returns the zero-based locations at which elements in target are equal to Self.
-  @note: Allocates the result array using CountIn to determine the exact number of matches.
-         Iterates over target from beginning to end while filling the result array from
-         the end, resulting in indexes ordered in descending order.
-         If no matches are found, an empty array is returned.
-         This method is functionally equivalent to Positions but differs in the
-         ordering of the returned indexes.
+  <Which>
+  @action: Returns the zero-based index of Self among two options (A=0, B=1), or -1 if unmapped.
+  @note: Evaluates sequentially from left to right and returns on the first match.
 [==============================================================================}
-function MTypeHelper.Locations(const target: MArray): TIntegerArray; overload;
-var
-  i, l: Integer;
+function MTypeHelper.Which(const A, B: MType): Integer; overload;
 begin
-  SetLength(Result, Self.CountIn(target));
-  l := Result.Length;
-  if (l > 0) then
-  for i := 0 to High(target) do
-    if (target[i] = Self) then
-      Result[l.Decrement] := i;
+  if (Self = A) then
+    Result := 0
+  else if (Self = B) then
+    Result := 1
+  else
+    Result := -1;
 end;
 
 {==============================================================================]
-  <LocationsIn>
-  @action: Returns the zero-based locations at which elements in target are equal to Self.
-  @note: Allocates the result array using AppearsIn to determine the exact number of matches.
-         Iterates over target from beginning to end while filling the result array from the end,
-         producing indexes in descending order.
-         If no matches are found, an empty array is returned.
-         This implementation is functionally equivalent to PositionsIn but returns the
-         indexes in reversed order.
+  <Which>
+  @action: Returns the zero-based index of Self among three options (A=0, B=1, C=2), or -1 if unmapped.
+  @note: Evaluates sequentially from left to right and returns on the first match.
 [==============================================================================}
-function MTypeHelper.LocationsIn(const target: MArray): TIntegerArray; overload;
-var
-  i, l: Integer;
+function MTypeHelper.Which(const A, B, C: MType): Integer; overload;
 begin
-  SetLength(Result, Self.AppearsIn(target));
-  l := Result.Length;
-  if (l > 0) then
-  for i := 0 to High(target) do
-    if (Self = target[i]) then
-      Result[l.Decrement] := i;
+  if (Self = A) then
+    Result := 0
+  else if (Self = B) then
+    Result := 1
+  else if (Self = C) then
+    Result := 2
+  else
+    Result := -1;
 end;
 
 {==============================================================================]
-  <Positions>
-  @action: Returns the zero-based positions at which elements in target are equal to Self.
-  @note: Allocates the result array using CountIn to determine the exact number of matches.
-         Iterates over target from the end toward the beginning and fills the result
-         array from the end, producing indexes in ascending order.
-         If no matches are found, an empty array is returned.
-         This implementation guarantees a single allocation and predictable memory
-         usage.
+  <Which>
+  @action: Returns the zero-based index of Self among four options (A=0, B=1, C=2, D=3), or -1 if unmapped.
+  @note: Evaluates sequentially from left to right and returns on the first match.
 [==============================================================================}
-function MTypeHelper.Positions(const target: MArray): TIntegerArray; overload;
-var
-  i, l: Integer;
+function MTypeHelper.Which(const A, B, C, D: MType): Integer; overload;
 begin
-  SetLength(Result, Self.CountIn(target));
-  l := Result.Length;
-  if (l > 0) then
-  for i := High(target) downto 0 do
-    if (target[i] = Self) then
-      Result[l.Decrement] := i;
+  if (Self = A) then
+    Result := 0
+  else if (Self = B) then
+    Result := 1
+  else if (Self = C) then
+    Result := 2
+  else if (Self = D) then
+    Result := 3
+  else
+    Result := -1;
 end;
 
 {==============================================================================]
-  <PositionsIn>
-  @action: Returns the zero-based positions at which elements in target are equal to Self.
-  @note: Allocates the result array using AppearsIn to determine the exact number of matches.
-         Iterates over target from the end toward the beginning, filling the result array
-         from the end, which produces indexes in ascending order.
-         If no matches are found, an empty array is returned.
-         This implementation minimizes memory allocations while preserving deterministic
-         ordering.
+  <Which>
+  @action: Searches for Self within an array of targets and returns its zero-based index.
+  @note: Returns the specified fallback value (defaulting to -1) if no matching element is found.
 [==============================================================================}
-function MTypeHelper.PositionsIn(const target: MArray): TIntegerArray; overload;
-var
-  i, l: Integer;
+function MTypeHelper.Which(const N: MArray; const fallback: Integer = -1): Integer; overload;
 begin
-  SetLength(Result, Self.AppearsIn(target));
-  l := Result.Length;
-  if (l > 0) then
-  for i := High(target) downto 0 do
-    if (Self = target[i]) then
-      Result[l.Decrement] := i;
-end;
-
-{==============================================================================]
-  <Scan>
-  @action: Scans the given array target and returns the zero-based indexes at which
-           elements are equal to Self.
-  @note: Performs a single-pass linear scan and collects matching indexes.
-         The result array grows dynamically using geometric expansion to minimize
-         reallocations.
-         Indexes are returned in ascending order.
-         If target is empty or no matches are found, an empty array is returned.
-         This implementation favors reduced passes over the array and is well suited
-         for cases where the number of matches is unknown.
-[==============================================================================}
-function MTypeHelper.Scan(const target: MArray): TIntegerArray; overload;
-var
-  i, r, c: Integer;
-begin
-  SetLength(Result, 0);
-  if target.Empty then
-    Exit;
-  r := 0;
-  c := 8;
-  SetLength(Result, c);
-  for i := 0 to High(target) do
-    if (target[i] = Self) then
-    begin
-      if (r = c) then
-        SetLength(Result, c.Increase(c * 2));
-      Result[r.Increase] := i;
-    end;
-  SetLength(Result, r);
+  for Result := 0 to High(N) do
+    if (Self = N[Result]) then
+	  Exit;
+  Result := fallback;
 end;
 {$ENDIF}
