@@ -1,7 +1,6 @@
 {$IFDEF HELPERS}
 function AtLeft(const N: Integer = 0): MArray; overload;
 function AtRight(const N: Integer = 0): MArray; overload;
-function Domain: TRange; overload;
 function LeftBy(const N: Integer = 0): Integer; overload;
 function Pad(const N: Integer = 0): Integer; overload;
 function Padded(const N: Integer = 0): MArray; overload;
@@ -57,22 +56,6 @@ begin
     for i := 0 to Result.Alloc(Max(0, (Self.Length - -N))) do
       Result[i] := Self[i];
   end;
-end;
-
-{==============================================================================]
-  <Domain>
-  @action: Returns the valid index range of the array.
-  @note:
-    - If the array is empty, start and stop are set to -1.
-    - Otherwise, start = 0 and stop = Length(Self) - 1.
-[==============================================================================}
-function MArrayHelper.Domain: TRange; overload;
-begin
-  Result.stop := (Self.Size - 1);
-  if (Result.stop = -1) then
-    Result.start := -1
-  else
-    Result.start := 0;
 end;
 
 {==============================================================================]

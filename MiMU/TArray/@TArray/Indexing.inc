@@ -11,11 +11,9 @@ function IDs(const ID: TIntegerArray; const items: MArray): MArray; overload;
 function Indeca: TIntegerArray; overload;
 function Indexa: TIntegerArray; overload;
 function Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
-function Indexer: TRange; overload;
 function Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indexment: TIntegerArray; overload;
-function Indexr: TRange; overload;
 function Indices(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indicia: TIntegerArray; overload;
@@ -329,21 +327,6 @@ begin
 end;
 
 {==============================================================================]
-  <Indexer>
-  @action: Returns a TRange representing the index boundaries of the array.
-  @note: Uses an explicit conditional check. If the array is not empty (High >= 0), 
-         start is set to 0. For an empty array (High = -1), start becomes -1.
-[==============================================================================}
-function MArrayHelper.Indexer: TRange; overload;
-begin
-  Result.stop := High(Self);
-  if (Result.stop > -1) then
-    Result.start := 0
-  else
-    Result.start := -1;
-end;
-
-{==============================================================================]
   <Indexes>
   @action: Returns IDs of arr as TIntegerArray.
   @note: None.
@@ -410,19 +393,6 @@ begin
     Result[l] := l;
     Result[r] := r;
   end;
-end;
-
-{==============================================================================]
-  <Indexr>
-  @action: Returns a TRange representing the index boundaries of the array.
-  @note: Uses a branchless boolean-to-integer evaluation trick. If the array is 
-         empty, `Result.stop = -1` evaluates to True (1), making start -1. Otherwise, 
-         it evaluates to False (0), making start 0.
-[==============================================================================}
-function MArrayHelper.Indexr: TRange; overload;
-begin
-  Result.stop := High(Self);
-  Result.start := -Integer(Result.stop = -1);
 end;
 
 {==============================================================================]
