@@ -6,6 +6,7 @@ function Allness: TIntegerArray; overload;
 function ArrayOf: TIntegerArray; overload;
 function AsArr: TIntegerArray; overload;
 function AsArray: TIntegerArray; overload;
+function Assemble: TIntegerArray; overload;
 function Atomize: TIntegerArray; overload;
 function Atomized: TIntegerArray; overload;
 function Bank: TIntegerArray; overload;
@@ -17,7 +18,6 @@ function Bundle: TIntegerArray; overload;
 function Burst: TIntegerArray; overload;
 function Capture: TIntegerArray; overload;
 function Captured: TIntegerArray; overload;
-function Catalogue: TIntegerArray; overload;
 function Collect: TIntegerArray; overload;
 function Collection: TIntegerArray; overload;
 function Composition: TIntegerArray; overload;
@@ -368,6 +368,31 @@ begin
 end;
 
 {==============================================================================]
+  <Assemble>
+  @action: Returns ALL TRange items as TIntegerArray.
+  @note: Continuation-passing style. Each step receives the partially-built
+         array and the next index as its "continuation" argument; control
+         flows forward only, never returning to the caller between elements.
+         Implemented iteratively to avoid stack growth (FPC has no TCO).
+[==============================================================================}
+function TRange.Assemble: TIntegerArray; overload;
+var
+  i, v, d, s: Integer;
+  procedure P(var arr: TIntegerArray; const idx, value, step: Integer);
+  begin
+    if (idx >= arr.Length) then
+      Exit;
+    arr[idx] := value;
+    P(arr, (idx + 1), (value + step), step);
+  end;
+begin
+  s := Self.Size;
+  SetLength(Result, s);
+  d := IfThen(Self.Asceal, 1, -1);
+  P(Result, 0, Self.start, d);
+end;
+
+{==============================================================================]
   <Atomize>
   @action: Returns an array of all integers in the range in sequential order,
            generated in fixed-size chunks.
@@ -680,31 +705,6 @@ begin
       P^ := v.Decrease;
     Inc(P);
   end;
-end;
-
-{==============================================================================]
-  <Catalogue>
-  @action: Returns ALL TRange items as TIntegerArray.
-  @note: Continuation-passing style. Each step receives the partially-built
-         array and the next index as its "continuation" argument; control
-         flows forward only, never returning to the caller between elements.
-         Implemented iteratively to avoid stack growth (FPC has no TCO).
-[==============================================================================}
-function TRange.Catalogue: TIntegerArray; overload;
-var
-  i, v, d, s: Integer;
-  procedure P(var arr: TIntegerArray; const idx, value, step: Integer);
-  begin
-    if (idx >= arr.Length) then
-      Exit;
-    arr[idx] := value;
-    P(arr, (idx + 1), (value + step), step);
-  end;
-begin
-  s := Self.Size;
-  SetLength(Result, s);
-  d := IfThen(Self.Asceal, 1, -1);
-  P(Result, 0, Self.start, d);
 end;
 
 {==============================================================================]

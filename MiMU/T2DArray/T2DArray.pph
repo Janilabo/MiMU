@@ -1,3 +1,5 @@
+{$I @T2DArray/Cadastre.inc}
+{$I @T2DArray/Catalogue.inc}
 {$I @T2DArray/Clearing.inc}
 {$I @T2DArray/Compacting.inc}
 {$I @T2DArray/Custody.inc}
