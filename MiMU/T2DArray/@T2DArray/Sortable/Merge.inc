@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Flattify(const oAscending: Boolean = True): MArray; overload;
 function Flatty(const oAscending: Boolean = True): MArray; overload;
+function KMerge(const oAscending: Boolean = True): MArray; overload;
 function Meld(const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
@@ -126,6 +127,64 @@ begin
         Result[i] := v;
         Inc(a[b]);
       end;
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <KMerge>
+  @action: Performs a k-way merge across all rows of a 2D array, each assumed to
+           be individually sorted, producing a single flat, fully sorted array. Order is
+           ascending by default, or descending when oAscending is False.
+  @note: Repeatedly selects the smallest (or largest) unconsumed head element
+         across all non-empty rows and appends it to the result, advancing that row's
+         cursor and dropping any row that becomes exhausted. Rows need not be equal
+         in length; empty rows are skipped entirely.
+[==============================================================================}
+function M2DArrayHelper.KMerge(const oAscending: Boolean = True): MArray; overload;
+var
+  s: M2DArray;
+  l, r, i, k: Integer;
+  m: TIntegerArray;
+  a: TRangeArray;
+begin
+  s := Self.Gleaned;
+  if (s.Length = 0) then
+    Exit([]);
+  r := 0;
+  l := 0;
+  for i := 0 to m.Alloc(a.SetSize(s.Length)) do
+  begin
+    Inc(l, s[i].Length);
+    m[r.Increase] := i;
+    a[i].Create(0, High(s[i]));
+  end;
+  SetLength(Result, l);
+  k := -1;
+  case oAscending of
+    True:
+    while (r > 0) do
+    begin
+      l := 0;
+      for i := 1 to (r - 1) do
+        if (s[m[l]][a[m[l]].start] > s[m[i]][a[m[i]].start]) then
+          l := i;
+      Result[k.Increment] := s[m[l]][a[m[l]].start];
+      Inc(a[m[l]].start);
+      if a[m[l]].Descending then
+        m[l] := m[r.Decrement];
+    end;
+    False:
+    while (r > 0) do
+    begin
+      l := 0;
+      for i := 1 to (r - 1) do
+        if (s[m[l]][a[m[l]].start] < s[m[i]][a[m[i]].start]) then
+          l := i;
+      Result[k.Increment] := s[m[l]][a[m[l]].start];
+      Inc(a[m[l]].start);
+      if a[m[l]].Descending then
+        m[l] := m[r.Decrement];
     end;
   end;
 end;

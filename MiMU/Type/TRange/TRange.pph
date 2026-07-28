@@ -32,6 +32,7 @@
 {$I @TRange/Materialization.inc}
 {$I @TRange/Membership.inc}
 {$I @TRange/Merging.inc}
+{$I @TRange/Modifiers.inc}
 {$I @TRange/Mutation.inc}
 {$I @TRange/Normalization.inc}
 {$I @TRange/Offset.inc}
