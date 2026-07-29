@@ -49,6 +49,7 @@
 {$I @TArray/Sortable/Directionality.inc}
 {$I @TArray/Sortable/Extrema.inc}
 {$I @TArray/Sortable/Manipulation.inc}
+{$I @TArray/Sortable/Merge.inc}
 {$I @TArray/Sortable/Metric.inc}
 {$I @TArray/Sortable/Monotonic.inc}
 {$I @TArray/Sortable/Order.inc}
