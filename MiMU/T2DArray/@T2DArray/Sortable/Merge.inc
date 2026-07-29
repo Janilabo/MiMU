@@ -2,6 +2,8 @@
 function Flattify(const oAscending: Boolean = True): MArray; overload;
 function Flatty(const oAscending: Boolean = True): MArray; overload;
 function KMerge(const oAscending: Boolean = True): MArray; overload;
+function Marshal(const oAscending: Boolean = True; const method: UInt32 = 0): MArray; overload;
+function Marshal(const method: UInt32): MArray; overload;
 function Meld(const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
@@ -187,6 +189,44 @@ begin
         m[l] := m[r.Decrement];
     end;
   end;
+end;
+
+{==============================================================================]
+  <Marshal>
+  @action: Flattens a 2D array into a single 1D array and sorts it using a
+           selectable sorting algorithm, ascending by default.
+  @note: Unlike Flattify/Flatty/KMerge/Meld, sub-arrays need NOT be
+         pre-sorted — this concatenates all rows via Merge and then applies
+         a full sort, rather than relying on an N-way merge scan. method
+         selects the sort implementation: 0 QuickSort, 1 QuickSort3W,
+         2 QSort, 3 MergeSort, 4 MergeSortBU, 5 ShellSort, 6 HeapSort,
+         7 InsertionSort, 8 BubbleSort, 9 CombSort, 10 SelectionSort;
+         any other value falls back to HybridSort.
+[==============================================================================}
+function M2DArrayHelper.Marshal(const oAscending: Boolean = True; const method: UInt32 = 0): MArray; overload;
+begin
+  Result := Self.Merge;
+  if (Result.Length > 1) then
+  case method of
+    0: Result.QuickSort(oAscending);
+    1: Result.QuickSort3W(oAscending);
+	2: Result.QSort(oAscending);
+    3: Result.MergeSort(oAscending);
+    4: Result.MergeSortBU(oAscending);
+    5: Result.ShellSort(oAscending);
+    6: Result.HeapSort(oAscending);
+    7: Result.InsertionSort(oAscending);
+    8: Result.BubbleSort(oAscending);
+    9: Result.CombSort(oAscending);
+	10: Result.SelectionSort(oAscending);
+  else
+    Result.HybridSort(oAscending);
+  end;
+end;
+
+function M2DArrayHelper.Marshal(const method: UInt32): MArray; overload;
+begin
+  Result := Self.Marshal(True, method);
 end;
 
 {==============================================================================]
