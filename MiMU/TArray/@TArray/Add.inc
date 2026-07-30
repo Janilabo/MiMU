@@ -44,7 +44,6 @@ var
 begin
   l := A.Length;
   s := Result.SetSize(l + B.Length);
-  SetLength(Result, s);
   while (s.Decrement >= l) do
     Result[s] := B[s - l];
   while (s.Decrement >= -1) do
@@ -141,12 +140,11 @@ end;
 [==============================================================================}
 function MArrayHelper.Annex(const item: MType): MArray; overload;
 var
-  l: Integer;
+  i: Integer;
 begin
-  Result := Self.Copy;
-  l := Result.Length;
-  SetLength(Result, (l + 1));
-  Result[l] := item;
+  for i := 0 to (Result.Alloc(Self.Length + 1) - 1) do
+    Result[i] := Self[i];
+  Result[High(Result)] := item;
 end;
 
 {==============================================================================]

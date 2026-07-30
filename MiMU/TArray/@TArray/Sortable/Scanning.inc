@@ -33,8 +33,7 @@ begin
   case (Self[i] = s[j]) of
     True:
     begin
-      Result[k.Increase] := i;
-      Inc(i);
+      Result[k.Increase] := i.Increase;
       Inc(j);
     end;
 	False:
@@ -80,8 +79,7 @@ begin
   case (Self[i] = items[j]) of
     True:
     begin
-      Result[k] := i;
-      Inc(k);
+      Result[k.Increase] := i;
       Inc(j);
     end;
     False:
@@ -119,7 +117,7 @@ var
   s: MArray;
 begin
   l := Self.Length;
-  if (items.Empty or (l = 0)) then
+  if ((l = 0) or items.Empty) then
     Exit([]);
   s := items.QuickSorted(oAscending);
   z := High(s);
@@ -129,11 +127,8 @@ begin
   c := 0;
   while ((x < l) and (y <= z)) do
     if (Self[x] = s[y]) then
-    begin
-      Result[c] := x;
-      Inc(c);
-      Inc(x);
-    end else if ((oAscending and (Self[x] < s[y])) or ((not oAscending) and (Self[x] > s[y]))) then
+      Result[c.Increase] := x.Increase
+    else if ((oAscending and (Self[x] < s[y])) or ((not oAscending) and (Self[x] > s[y]))) then
       Inc(x)
     else
       Inc(y);

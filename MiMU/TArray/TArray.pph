@@ -11,6 +11,7 @@
 {$I @TArray/Duplication.inc}
 {$I @TArray/Endpoints.inc}
 {$I @TArray/Equality.inc}
+{$I @TArray/Fill.inc}
 {$I @TArray/Frequency.inc}
 {$I @TArray/Geometry.inc}
 {$I @TArray/Grouping.inc}
