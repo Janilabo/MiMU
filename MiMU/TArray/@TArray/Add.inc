@@ -6,6 +6,8 @@ function Cat(const A, B: MArray): MArray; overload;
 function Accommodate(const item: MType; const index: Integer): Integer; overload;
 function Add(const item: MType; const duplicates: Boolean = True): MArray; overload;
 function Add(const items: MArray; const duplicates: Boolean = True): MArray; overload;
+function Affix(const item: MType): MArray; overload;
+function Affix(const items: MArray): MArray; overload;
 function Annex(const item: MType): MArray; overload;
 function Annex(const items: MArray): MArray; overload;
 function Append(const item: MType; const duplicates: Boolean = True): MArray; overload;
@@ -124,6 +126,33 @@ begin
     for i := 0 to High(items) do
       Result[s + i] := items[i];
   end;
+end;
+
+{==============================================================================]
+  <Affix>
+  @action: Returns a new array containing all elements of Self followed by
+           `item` appended at the end.
+  @note: Non-mutating — Self is left unchanged.
+[==============================================================================}
+function MArrayHelper.Affix(const item: MType): MArray; overload;
+begin
+  Result.Zet(item, Result.Implant(Self, 1));
+end;
+
+{==============================================================================]
+  <Affix>
+  @action: Returns a new array containing all elements of Self followed by all
+           elements of `items` appended at the end, in order.
+  @note: Non-mutating — Self is left unchanged. Result is Self.Length +
+         items.Length elements long.
+[==============================================================================}
+function MArrayHelper.Affix(const items: MArray): MArray; overload;
+var
+  r, s: Integer;
+begin
+  s := Self.Length;
+  for r := s to Result.Implant(Self, items.Length) do
+    Result[r] := items[r - s];
 end;
 
 {==============================================================================]

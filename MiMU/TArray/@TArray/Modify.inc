@@ -3,6 +3,8 @@ function Adopt(const target: MArray): MArray; overload;
 function Assign(const target: MArray): MArray; overload;
 function Replace(const old, new: MType): MArray; overload;
 function Replace(const old, new: MType; const exceptions: TIntegerArray): MArray; overload;
+function Zet(const item: MType; const sIndex: UInt32 = 0): Boolean; overload;
+function Zet(const item: MType; const sIndexes: TIntegerArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -89,5 +91,37 @@ begin
       Result[i] := Self[i];
   for i := 0 to High(r) do
     Result[e[i]] := r[i];
+end;
+
+{==============================================================================]
+  <Zet>
+  @action: Writes `item` to Self[sIndex], returning True if the value actually
+           changed (i.e. was different beforehand) or False if it was already
+           equal to `item`.
+  @note: Mutates Self in place.
+[==============================================================================}
+function MArrayHelper.Zet(const item: MType; const sIndex: UInt32 = 0): Boolean; overload;
+begin
+  Result := not (Self[sIndex] = item);
+  Self[sIndex] := item;
+end;
+
+{==============================================================================]
+  <Zet>
+  @action: Writes `item` to every index in `sIndexes`, returning the count of
+           positions whose value actually changed (excludes positions already
+           equal to `item`).
+  @note: Mutates Self in place.
+[==============================================================================}
+function MArrayHelper.Zet(const item: MType; const sIndexes: TIntegerArray): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := sIndexes.Length;
+  for i := 0 to High(sIndexes) do
+    if not (Self[sIndexes[i]] = item) then
+      Self[sIndexes[i]] := item
+    else
+      Dec(Result);
 end;
 {$ENDIF}
