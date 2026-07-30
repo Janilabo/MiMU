@@ -53,10 +53,8 @@ var
   l: Integer;
 begin
   l := Self.Length;
-  if (l = 0) then
-    Exit('');
-  SetLength(Result, l);
-  Move(Self[0], Result[1], (l * SizeOf(Char)));
+  if (Result.SetSize(l) > 0) then
+    Move(Self[0], Result[1], (l * SizeOf(Char)));
 end;
 
 {==============================================================================]
@@ -68,8 +66,7 @@ function TCharArrayHelper.Ordinals: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Ord(Self[i]);
 end;
 
@@ -94,8 +91,7 @@ function TCharArrayHelper.Stringify: string; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to (Result.SetSize(Self.Size) - 1) do
     Result[i + 1] := Self[i];
 end;
 
@@ -144,8 +140,7 @@ function TCharArrayHelper.TSA: TStringArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i];
 end;
 {$ENDIF}

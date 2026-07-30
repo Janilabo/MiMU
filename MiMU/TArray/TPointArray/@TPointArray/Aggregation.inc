@@ -164,7 +164,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.XTo2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
 var
-  l, i, j, k, c, p, s, m: Integer;
+  l, i, j, k, p, s, m: Integer;
 begin
   l := Self.Length;
   SetLength(yArr, 0);
@@ -173,10 +173,7 @@ begin
   if (l = 0) then
     Exit;
   yArr := Self.YAxis;
-  c := yArr.Size;
-  SetLength(Result, c);
-  SetLength(selfIDs, c);
-  for i := 0 to (c - 1) do
+  for i := 0 to selfIDs.Alloc(Result.SetSize(yArr.Size)) do
   begin
     k := 0;
     for j := 0 to (l - 1) do
@@ -216,7 +213,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.XTo2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
 var
-  l, i, j, k, c: Integer;
+  l, i, j, k: Integer;
 begin
   l := Self.Length;
   SetLength(yArr, 0);
@@ -224,9 +221,7 @@ begin
   if (l = 0) then
     Exit;
   yArr := Self.YAxis;
-  c := yArr.Size;
-  SetLength(Result, c);
-  for i := 0 to (c - 1) do
+  for i := 0 to Result.Alloc(yArr.Size) do
   begin
     k := 0;
     for j := 0 to (l - 1) do
@@ -391,7 +386,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.YTo2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
 var
-  l, i, j, k, c, p, s, m: Integer;
+  l, i, j, k, p, s, m: Integer;
 begin
   l := Self.Length;
   SetLength(xArr, 0);
@@ -400,10 +395,7 @@ begin
   if (l = 0) then
     Exit;
   xArr := Self.XAxis;
-  c := xArr.Size;
-  SetLength(Result, c);
-  SetLength(selfIDs, c);
-  for i := 0 to (c - 1) do
+  for i := 0 to selfIDs.Alloc(Result.SetSize(xArr.Size)) do
   begin
     k := 0;
     for j := 0 to (l - 1) do
@@ -451,9 +443,7 @@ begin
   if (l = 0) then
     Exit;
   xArr := Self.XAxis;
-  c := xArr.Size;
-  SetLength(Result, c);
-  for i := 0 to (c - 1) do
+  for i := 0 to Result.Alloc(xArr.Size) do
   begin
     k := 0;
     for j := 0 to (l - 1) do

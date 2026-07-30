@@ -17,8 +17,7 @@ begin
     Exit(Self.Clone);
   s := [];
   l := 0;
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
   begin
     if (Self[i] in s) then
       Continue;

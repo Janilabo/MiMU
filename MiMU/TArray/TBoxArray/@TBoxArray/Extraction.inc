@@ -19,8 +19,7 @@ function TBoxArrayHelper.X1s: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i].X1;
 end;
 
@@ -33,8 +32,7 @@ function TBoxArrayHelper.X1Values: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   while (l.Decrement > -1) do
     Result[l] := Self[l].X1;
 end;
@@ -48,8 +46,7 @@ function TBoxArrayHelper.X2s: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i].X2;
 end;
 
@@ -62,8 +59,7 @@ function TBoxArrayHelper.X2Values: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   while (l.Decrement > -1) do
     Result[l] := Self[l].X2;
 end;
@@ -77,8 +73,7 @@ function TBoxArrayHelper.Y1s: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i].Y1;
 end;
 
@@ -91,8 +86,7 @@ function TBoxArrayHelper.Y1Values: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   while (l.Decrement > -1) do
     Result[l] := Self[l].Y1;
 end;
@@ -106,8 +100,7 @@ function TBoxArrayHelper.Y2s: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i].Y2;
 end;
 
@@ -120,8 +113,7 @@ function TBoxArrayHelper.Y2Values: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   while (l.Decrement > -1) do
     Result[l] := Self[l].Y2;
 end;

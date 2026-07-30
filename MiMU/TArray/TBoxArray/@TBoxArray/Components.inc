@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
-function Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
+function Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer; overload;
+function Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
   @action: Stores arr X1/X2 and Y1/Y2 values to x1/x2Arr and y1/y2Arr.
   @note: Returns Length(arr).
 [==============================================================================}
-function TBoxArrayHelper.Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
+function TBoxArrayHelper.Unzip(var x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
@@ -24,12 +24,11 @@ end;
   @action: Zips TBoxArray with x1/x2Arr and y1/y2Arr.
   @note: Uses minimum length(!), if xArr differs from yArr size.
 [==============================================================================}
-function TBoxArrayHelper.Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer;
+function TBoxArrayHelper.Zip(const x1Arr, y1Arr, x2Arr, y2Arr: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
-  Result := Min(Min(x1Arr.Size, x2Arr.Size), Min(y1Arr.Size, y2Arr.Size));
-  SetLength(Self, Result);
+  Result := Self.SetSize(Min(Min(x1Arr.Size, x2Arr.Size), Min(y1Arr.Size, y2Arr.Size)));
   for i := 0 to (Result - 1) do
     Self[i] := Box(x1Arr[i], y1Arr[i], x2Arr[i], y2Arr[i]);
 end;
