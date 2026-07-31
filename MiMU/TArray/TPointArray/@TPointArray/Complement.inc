@@ -57,8 +57,7 @@ begin
     for i := 0 to High(Self) do
       if m[Self[i].X - b.X1][Self[i].Y - b.Y1].Enable then
         Inc(x);
-    SetLength(Result, ((w * h) - x));
-    if (Result.Size > 0) then
+    if (Result.SetSize((w * h) - x) > 0) then
     for y := 0 to (h - 1) do
       for x := 0 to (w - 1) do
         if not m[x][y] then

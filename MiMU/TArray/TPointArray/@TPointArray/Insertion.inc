@@ -20,8 +20,7 @@ begin
   i := items.Size;
   if (i = 0) then
     Exit(l);
-  Result := (l + i);
-  SetLength(Self, Result);
+  Result := Self.SetSize(l + i);
   Move(items[0], Self[l], (i * SizeOf(TPoint)));
 end;
 

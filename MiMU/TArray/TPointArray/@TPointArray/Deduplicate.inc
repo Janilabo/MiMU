@@ -31,8 +31,7 @@ begin
   begin
     b := Self.Bounds(w, h);
     m := T2D.Create(False, w, h);
-    SetLength(Result, Self.Size);
-    for i := 0 to High(Self) do
+    for i := 0 to Result.Alloc(Self.Size) do
       if m[Self[i].X - b.X1][Self[i].Y - b.Y1].Enable then
         Result[r.Increase] := Self[i];
     SetLength(m, 0);
