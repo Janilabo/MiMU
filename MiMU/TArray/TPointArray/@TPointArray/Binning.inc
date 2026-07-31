@@ -424,9 +424,7 @@ begin
   if (n = 0) then
     Exit([]);
   h := Self.XTo2D(v, z);
-  SetLength(p, n);
-  SetLength(s, n);
-  for i := 0 to (n - 1) do
+  for i := 0 to p.Alloc(s.SetSize(n)) do
   begin
     p[i] := i;
     s[i] := 1;
@@ -444,8 +442,7 @@ begin
           Unioned(i, z[r][c]);
     end;
   end;
-  SetLength(m, n);
-  for i := 0 to (n - 1) do
+  for i := 0 to m.Alloc(n) do
     m[i] := -1;
   g := 0;
   for i := 0 to (n - 1) do
@@ -457,8 +454,7 @@ begin
   SetLength(k, g);
   for i := 0 to (n - 1) do
     Inc(k[m[FindRoot(i)]]);
-  SetLength(Result, g);
-  for i := 0 to (g - 1) do
+  for i := 0 to Result.Alloc(g) do
     SetLength(Result[i], k[i]);
   SetLength(t, g);
   for i := 0 to (n - 1) do

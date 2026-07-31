@@ -91,9 +91,7 @@ var
 begin
   if Self.Empty then
     Exit(Result.Create(-2147483648));
-  SetLength(a, Self.Size);
-  SetLength(b, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to a.Alloc(b.SetSize(Self.Size)) do
   begin
     a[i] := Self[i].X;
     b[i] := Self[i].Y;

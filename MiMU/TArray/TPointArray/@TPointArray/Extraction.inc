@@ -94,15 +94,12 @@ end;
 [==============================================================================}
 function TPointArrayHelper.Project(var sX, sY: TIntegerArray): TBox; overload;
 var
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
-  SetLength(sX, l);
-  SetLength(sY, l);
-  if (l = 0) then
+  if (sY.SetSize(sX.SetSize(Self.Length)) = 0) then
     Exit;
   Result.Create(Self[0].X, Self[0].Y, Self[0].X, Self[0].Y);
-  for i := 0 to (l - 1) do
+  for i := 0 to High(Self) do
   begin
     sX[i] := Self[i].X;
     if (sX[i] < Result.X1) then
@@ -126,9 +123,7 @@ function TPointArrayHelper.Unzip(var xArr, yArr: TIntegerArray): Integer;
 var
   i: Integer;
 begin
-  Result := Self.Size;
-  SetLength(xArr, Result);
-  SetLength(yArr, Result);
+  Result := yArr.SetSize(xArr.SetSize(Self.Size));
   for i := 0 to (Result - 1) do
   begin
     xArr[i] := Self[i].X;
@@ -182,8 +177,7 @@ function TPointArrayHelper.Xs: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i].X;
 end;
 
@@ -211,8 +205,7 @@ function TPointArrayHelper.XValues: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   while (l.Decrement > -1) do
     Result[l] := Self[l].X;
 end;
@@ -261,8 +254,7 @@ function TPointArrayHelper.Ys: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i].Y;
 end;
 
@@ -290,8 +282,7 @@ function TPointArrayHelper.YValues: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   while (l.Decrement > -1) do
     Result[l] := Self[l].Y;
 end;
@@ -305,8 +296,7 @@ function TPointArrayHelper.Zip(const xArr, yArr: TIntegerArray): Integer;
 var
   i: Integer;
 begin
-  Result := Min(xArr.Size, yArr.Size);
-  SetLength(Self, Result);
+  Result := Self.SetSize(Min(xArr.Size, yArr.Size));
   for i := 0 to (Result - 1) do
     Self[i] := Point(xArr[i], yArr[i]);
 end;

@@ -35,10 +35,9 @@ begin
   r := 0;
   if (n.start < l) then
   begin
-    SetLength(Result, l);
     x := Self.X2D(y);
     z := Ceil(radius);
-    for i := 0 to High(Self) do
+    for i := 0 to Result.Alloc(l) do
     begin
       c := 0;
       p := Self[i];
@@ -86,9 +85,8 @@ begin
   r := 0;
   if (n.start < l) then
   begin
-    SetLength(Result, l);
     x := Self.X2D(y);
-    for i := 0 to High(Self) do
+    for i := 0 to Result.Alloc(l) do
     begin
       c := 0;
       b := y.BinarySpan(TRange.Construct((Self[i].Y - yRadius), (Self[i].Y + yRadius)));
@@ -122,10 +120,9 @@ begin
   l := Self.Length;
   if ((maximumNeighbours < 0) or (l = 0)) then
     Exit([]);
-  SetLength(Result, l);
   r := 0;
   x := Self.X2D(y);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(l) do
   begin
     c := 0;
     b := y.BinarySpan(TRange.Construct((Self[i].Y - yRadius), (Self[i].Y + yRadius)));
@@ -159,11 +156,10 @@ begin
   l := Self.Length;
   if ((maximumNeighbours < 0) or (l = 0)) then
     Exit([]);
-  SetLength(Result, l);
   r := 0;
   x := Self.X2D(y);
   z := Ceil(radius);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(l) do
   begin
     c := 0;
     p := Self[i];
@@ -203,10 +199,9 @@ begin
   l := Self.Length;
   if ((minimumNeighbours > l) or (l = 0)) then
     Exit([]);
-  SetLength(Result, l);
   r := 0;
   x := Self.X2D(y);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(l) do
   begin
     c := 0;
     b := y.BinarySpan(TRange.Construct((Self[i].Y - yRadius), (Self[i].Y + yRadius)));
@@ -241,11 +236,10 @@ begin
   l := Self.Length;
   if ((minimumNeighbours > l) or (l = 0)) then
     Exit([]);
-  SetLength(Result, l);
   r := 0;
   x := Self.X2D(y);
   z := Ceil(radius);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(l) do
   begin
     c := 0;
     p := Self[i];
