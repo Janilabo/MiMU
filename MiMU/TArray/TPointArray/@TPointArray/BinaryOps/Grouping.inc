@@ -22,18 +22,17 @@ function TPointArrayHelper.BinaryGrouped: T2DPointArray; overload;
 var
   r, h, i, l: Integer;
 begin
-  SetLength(Result, 0);
   h := High(Self);
   if (h > -1) then
   begin
     r := 0;
-    l := Min((h + 1), ((Self[h].Y - Self[0].Y) + 1));
-    SetLength(Result, l);
+    l := Result.SetSize(Min((h + 1), ((Self[h].Y - Self[0].Y) + 1)));
     for i := Self[0].Y to Self[h].Y do
       if (Result[r].Supply(Self.BinaryYPoints(i)) > -1) then
         Inc(r);
     if (r < l) then
       SetLength(Result, r);
-  end;
+  end else
+    SetLength(Result, 0);
 end;
 {$ENDIF}

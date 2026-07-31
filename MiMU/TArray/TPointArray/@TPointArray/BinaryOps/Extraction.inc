@@ -118,13 +118,11 @@ var
   h, i, y, m, l: Integer;
   r: TRange;
 begin
-  SetLength(Result, 0);
-  h := High(Self);
+  h := Result.Alloc(Self.Size);
   if (h < 0) then
     Exit;
   l := 0;
   i := 0;
-  SetLength(Result, Self.Size);
   while (i <= h) do
   begin
     y := Self[i].Y;
@@ -157,8 +155,7 @@ function TPointArrayHelper.BinaryYs(const unique: Boolean = True): TIntegerArray
 var
   i, c: Integer;
 begin
-  SetLength(Result, Self.Size);
-  if Self.Empty then
+  if (Result.SetSize(Self.Size) = 0) then
     Exit;
   Result[0] := Self[0].Y;
   c := 1;

@@ -312,7 +312,7 @@ begin
               Exit;
           end else
 	        Inc(i);
-    end;
+      end;
     False:
     for y := aBounds.Y2 downto aBounds.Y1 do
       for x := aBounds.X2 downto aBounds.X1 do

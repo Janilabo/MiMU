@@ -253,8 +253,7 @@ begin
     end else
       r.stop := (m - 1);
   end;
-  SetLength(Result, ((l - f) + 1));
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc((l - f) + 1) do
     Result[i] := Self[f + i];
 end;
 {$ENDIF}

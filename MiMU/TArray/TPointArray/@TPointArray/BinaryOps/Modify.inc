@@ -47,8 +47,7 @@ var
 begin
   s := Self.Size;
   o := items.Size;
-  SetLength(Result, (s + o));
-  if (Result.Size < 1) then
+  if (Result.SetSize(s + o) < 1) then
     Exit;
   i := 0;
   j := 0;
@@ -154,9 +153,8 @@ begin
   p := Self.BinaryPosL(item);
   if (p = -1) then
     Exit(Self.Copy);
-  SetLength(Result, Self.Size);
   l := 0;
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     if ((i = p) or (Self[i] <> item)) then
       Result[l.Increase] := Self[i];
   SetLength(Result, l);

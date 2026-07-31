@@ -37,8 +37,7 @@ var
   i: Integer;
 begin
   Result := Self.BinaryPosL(item);
-  SetLength(Self, (Self.Size + 1));
-  for i := High(Self) downto (Result + 1) do
+  for i := Self.Alloc(Self.Size + 1) downto (Result + 1) do
     Self[i] := Self[i - 1];
   Self[Result] := item;
 end;

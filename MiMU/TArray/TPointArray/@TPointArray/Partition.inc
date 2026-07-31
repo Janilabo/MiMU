@@ -34,10 +34,8 @@ begin
       end;
     if (p = -1) then
     begin
-      p := x.Size;
-      SetLength(x, (p + 1));
+      p := x.Alloc(Result.SetSize(x.Size + 1));
       x[p] := Self[i].X;
-      SetLength(Result, (p + 1));
     end;
     Result[p].Supply(Self[i]);
   end;
@@ -69,10 +67,8 @@ begin
       end;
     if (p = -1) then
     begin
-      p := y.Size;
-      SetLength(y, (p + 1));
+      p := y.Alloc(Result.SetSize(y.Size + 1));
       y[p] := Self[i].Y;
-      SetLength(Result, (p + 1));
     end;
     Result[p].Supply(Self[i]);
   end;
@@ -98,11 +94,9 @@ begin
     begin
       if not m.TryGetValue(Self[i].X, p) then
       begin
-        p := o.Size;
-        SetLength(o, (p + 1));
+        p := o.Alloc(Result.SetSize(o.Size + 1));
         o[p] := Self[i].X;
         m.Add(Self[i].X, p);
-        SetLength(Result, (p + 1));
       end;
       Result[p].Supply(Self[i]);
     end;
@@ -131,11 +125,9 @@ begin
     begin
       if not m.TryGetValue(Self[i].Y, p) then
       begin
-        p := o.Size;
-        SetLength(o, (p + 1));
+        p := o.Alloc(Result.SetSize(o.Size + 1));
         o[p] := Self[i].Y;
         m.Add(Self[i].Y, p);
-        SetLength(Result, (p + 1));
       end;
       Result[p].Supply(Self[i]);
     end;

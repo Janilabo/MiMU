@@ -17,18 +17,17 @@ function Nearby(const targets: TPointArray; const xRadius, yRadius: Integer): TP
 [==============================================================================}
 function TPointArrayHelper.Edge(const scan8W: Boolean = False): TPointArray;
 var
-  i, l, x, y, w, h, r: Integer;
+  i, x, y, w, h, r: Integer;
   m: T2DBooleanArray;
   b: TBox;
 begin
-  l := Self.Length;
-  if (l > 4) then
+  if (Self.Length > 4) then
   begin
     b := Self.Bounds;
     b := b.Expand;
     b.Size(w, h);
     m := T2D.Create(False, w, h);
-    for i := 0 to (l - 1) do
+    for i := 0 to High(Self) do
       m[Self[i].X - b.X1][Self[i].Y - b.Y1] := True;
     SetLength(Result, (w * h));
     w := (w - 2);
