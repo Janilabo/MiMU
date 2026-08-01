@@ -6,6 +6,7 @@ function Level(const sIndex: Integer): Integer; overload;
 function Repoint(const sIndex: Integer): Integer; overload;
 function Reroot(const sIndex: Integer): Integer; overload;
 function Root(const sIndex: Integer): Integer; overload;
+function Siblings(const a: Integer): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -148,5 +149,28 @@ begin
   Result := sIndex;
   while (Self[Result] <> Result) do
     Result := Self[Result];
+end;
+
+{==============================================================================]
+  <Siblings>
+  @action: Returns every index in Self that shares the same root as "a" —
+           i.e. all elements belonging to the same set as "a", including "a"
+           itself. Iterates the full array, resolving each index's root and
+           comparing it against "a"'s root.
+  @note: Does not mutate Self. O(n) per call regardless of chain depth, since
+         every index must be checked. For repeated membership queries against
+         the same set, consider materializing all sets at once with a full
+         partition pass instead of calling Members per element.
+[==============================================================================}
+function TIntegerArrayHelper.Siblings(const a: Integer): TIntegerArray; overload;
+var
+  r, i, c: Integer;
+begin
+  r := Self.Root(a);
+  c := 0;
+  for i := 0 to Result.Alloc(Self.Length) do
+    if (Self.Root(i) = r) then
+      Result[c.Increase] := i;
+  SetLength(Result, c);
 end;
 {$ENDIF}
