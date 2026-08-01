@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function Deref(const via: TIntegerArray; const sIndex: Integer): MType; overload;
+function Level(var parent: TIntegerArray; const sIndex: Integer): MType; overload;
 function Root(const parent: TIntegerArray; const sIndex: Integer): MType; overload;
 function Repoint(var via: TIntegerArray; const sIndex: Integer): MType; overload;
 function Reroot(var parent: TIntegerArray; const sIndex: Integer): MType; overload;
@@ -20,6 +21,30 @@ begin
     Result := Self[sIndex]
   else
     Result := Self.Deref(via, via[sIndex]);
+end;
+
+{==============================================================================]
+  <Level>
+  @action: Follows the redirection chain in "parent" starting at "sIndex",
+           repointing every visited node directly to its grandparent as it
+           advances one node at a time (path splitting), then returns the
+           value at the final root index in Self.
+  @note: Mutates "parent" in place. This is path splitting, not path halving —
+         every node on the path gets compressed, not just every other node.
+         Result is Self[root], not the root index itself.
+[==============================================================================}
+function MArrayHelper.Level(var parent: TIntegerArray; const sIndex: Integer): MType; overload;
+var
+  r, n: Integer;
+begin
+  r := sIndex;
+  while (parent[r] <> r) do
+  begin
+    n := parent[r];
+    parent[r] := parent[parent[r]];
+    r := n;
+  end;
+  Result := Self[r];
 end;
 
 {==============================================================================]

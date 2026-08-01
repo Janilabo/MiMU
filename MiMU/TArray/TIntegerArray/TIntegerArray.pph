@@ -34,6 +34,7 @@
 {$I @TIntegerArray/Merging.inc}
 {$I @TIntegerArray/Monotone.inc}
 {$I @TIntegerArray/Navigation.inc}
+{$I @TIntegerArray/Parental.inc}
 {$I @TIntegerArray/Reversal.inc}
 {$I @TIntegerArray/Scanning.inc}
 {$I @TIntegerArray/Selection.inc}
