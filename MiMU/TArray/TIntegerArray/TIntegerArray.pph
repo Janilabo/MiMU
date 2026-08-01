@@ -29,6 +29,7 @@
 {$I @TIntegerArray/Directionality.inc}
 {$I @TIntegerArray/Equality.inc}
 {$I @TIntegerArray/Extrema.inc}
+{$I @TIntegerArray/Fellowship.inc}
 {$I @TIntegerArray/Inequality.inc}
 {$I @TIntegerArray/Insertion.inc}
 {$I @TIntegerArray/Merging.inc}
