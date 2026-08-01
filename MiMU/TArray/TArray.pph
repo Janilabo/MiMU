@@ -27,6 +27,7 @@
 {$I @TArray/Query.inc}
 {$I @TArray/Randomization.inc}
 {$I @TArray/Recede.inc}
+{$I @TArray/Redirection.inc}
 {$I @TArray/Relocation.inc}
 {$I @TArray/Removal.inc}
 {$I @TArray/Reordering.inc}
