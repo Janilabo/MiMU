@@ -16,9 +16,10 @@ function Rootage(const sIndex: Integer): Integer; overload;
 
 function Rootings: T2DIntegerArray; overload;
 function Clan(const sIndex: Integer): TIntegerArray; overload;
-function Siblings(const sIndex: Integer): TIntegerArray; overload;
 function Rootmax: TIntegerArray; overload;
 function Rootmin: TIntegerArray; overload;
+function Rootset: TIntegerArray; overload;
+function Siblings(const sIndex: Integer): TIntegerArray; overload;
 
 function Linked(const a, b: Integer): Boolean; overload;
 function Linken(const a, b: Integer): Boolean; overload;
@@ -26,6 +27,7 @@ function Union(const a, b: Integer): Boolean; overload;
 function Union(const a, b: Integer; var size: TIntegerArray): Boolean; overload;
 function Unioned(const a, b: Integer): Boolean; overload;
 function Unionize(const a, b: Integer): Boolean; overload;
+function Unison(const a, b: Integer): Integer; overload;
 function Unite(const a, b: Integer): Boolean; overload;
 
 function Rootify: Integer; overload;
@@ -322,29 +324,6 @@ begin
 end;
 
 {==============================================================================]
-  <Siblings>
-  @action: Returns every index in Self that shares the same root as sIndex —
-           i.e. all elements belonging to the same set as sIndex, including sIndex
-           itself. Iterates the full array, resolving each index's root and
-           comparing it against sIndex's root.
-  @note: Does not mutate Self. O(n) per call regardless of chain depth, since
-         every index must be checked. For repeated membership queries against
-         the same set, consider materializing all sets at once with a full
-         partition pass instead of calling Members per element.
-[==============================================================================}
-function TIntegerArrayHelper.Siblings(const sIndex: Integer): TIntegerArray; overload;
-var
-  r, i, c: Integer;
-begin
-  r := Self.Root(sIndex);
-  c := 0;
-  for i := 0 to Result.Alloc(Self.Length) do
-    if (Self.Root(i) = r) then
-      Result[c.Increase] := i;
-  SetLength(Result, c);
-end;
-
-{==============================================================================]
   <Rootmax>
   @action: Returns the indices belonging to the largest set in Self — the
            set with the most members. If multiple sets are tied for largest,
@@ -390,6 +369,54 @@ begin
     if (System.Length(r[i]) < System.Length(r[m])) then
       m := i;
   Result := r[m];
+end;
+
+{==============================================================================]
+  <Rootset>
+  @action: Returns the index of every distinct root/representative in Self,
+           one per set, in ascending order.
+  @note: Calling this compresses every visited chain as a side effect (each
+         Rootage call along the way applies path compression).
+[==============================================================================}
+function TIntegerArrayHelper.Rootset: TIntegerArray; overload;
+var
+  s: TIntegerArray;
+  i, r, c: Integer;
+begin
+  c := 0;
+  for i := 0 to Result.Alloc(s.SetSize(Self.Length)) do
+  begin
+    r := Self.Rootage(i);
+    if (s[r] = 0) then
+    begin
+      s[r] := 1;
+      Result[c.Increase] := r;
+    end;
+  end;
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <Siblings>
+  @action: Returns every index in Self that shares the same root as sIndex —
+           i.e. all elements belonging to the same set as sIndex, including sIndex
+           itself. Iterates the full array, resolving each index's root and
+           comparing it against sIndex's root.
+  @note: Does not mutate Self. O(n) per call regardless of chain depth, since
+         every index must be checked. For repeated membership queries against
+         the same set, consider materializing all sets at once with a full
+         partition pass instead of calling Members per element.
+[==============================================================================}
+function TIntegerArrayHelper.Siblings(const sIndex: Integer): TIntegerArray; overload;
+var
+  r, i, c: Integer;
+begin
+  r := Self.Root(sIndex);
+  c := 0;
+  for i := 0 to Result.Alloc(Self.Length) do
+    if (Self.Root(i) = r) then
+      Result[c.Increase] := i;
+  SetLength(Result, c);
 end;
 
 {==============================================================================]
@@ -531,6 +558,25 @@ begin
     True: Self[r] := l;
     False: Self[l] := r;
   end;
+end;
+
+{==============================================================================]
+  <Unison>
+  @action: Merges the group containing `b` into the group containing `a`, relabeling every element that shared `b`'s group label to `a`'s group label.
+  @note: Returns the surviving group label (`Self[a]`'s original value). No-op if `a` and `b` already belong to the same index (`a = b`), still returning that label.
+[==============================================================================}
+function TIntegerArrayHelper.Unison(const a, b: Integer): Integer; overload;
+var
+  o, s, m: Integer;
+begin
+  s := Self[a];
+  if (a = b) then
+    Exit(s);
+  o := Self[b];
+  for m := 0 to High(Self) do
+    if (Self[m] = o) then
+      Self[m] := s;
+  Result := s;
 end;
 
 {==============================================================================]

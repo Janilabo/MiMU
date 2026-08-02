@@ -585,29 +585,6 @@ function TPointArrayHelper.Clusterize(const radius: Double; const distFunc: TDis
 var
   m, p: TIntegerArray;
   r, l, i, j: Integer;
-  function PFind(x: Integer): Integer;
-  var
-    s: Integer;
-  begin
-    Result := x;
-    while (p[Result] <> Result) do
-      Result := p[Result];
-    while (p[x] <> x) do
-    begin
-      s := p[x];
-      p[x] := Result;
-      x := s;
-    end;
-  end;
-  procedure PUnioned(a, b: Integer);
-  var
-    f, t: Integer;
-  begin
-    f := PFind(a);
-    t := PFind(b);
-    if (f <> t) then
-      p[t] := f;
-  end;
 begin
   l := Self.Length;
   if (l = 0) then
@@ -618,14 +595,14 @@ begin
   for i := 0 to (l - 1) do
     for j := (i + 1) to (l - 1) do
 	  if Self[i].Within(Self[j], radius, distFunc) then
-        PUnioned(i, j);
+        p.Unioned(i, j);
   SetLength(m, l);
   for i := 0 to (l - 1) do
     m[i] := -1;
   SetLength(Result, 0);
   for i := 0 to (l - 1) do
   begin
-    r := PFind(i);
+    r := p.Rootage(i);
     if (m[r] = -1) then
     begin
       m[r] := System.Length(Result);
@@ -650,29 +627,6 @@ function TPointArrayHelper.Clusterize(const xRadius, yRadius: Integer): T2DPoint
 var
   m, p: TIntegerArray;
   i, j, r, c: Integer;
-  function PFind(x: Integer): Integer;
-  var
-    s: Integer;
-  begin
-    Result := x;
-    while (p[Result] <> Result) do
-      Result := p[Result];
-    while (p[x] <> x) do
-    begin
-      s := p[x];
-      p[x] := Result;
-      x := s;
-    end;
-  end;
-  procedure PUnioned(a, b: Integer);
-  var
-    f, t: Integer;
-  begin
-    f := PFind(a);
-    t := PFind(b);
-    if (f <> t) then
-      p[t] := f;
-  end;
 begin
   SetLength(Result, 0);
   if Self.Empty then
@@ -683,14 +637,14 @@ begin
   for i := 0 to (High(Self) - 1) do
     for j := (i + 1) to High(Self) do
       if Self[i].Within(Self[j], xRadius, yRadius) then
-        PUnioned(i, j);
+        p.Unioned(i, j);
   SetLength(m, Self.Size);
   for i := 0 to High(m) do
     m[i] := -1;
   c := 0;
   for i := 0 to High(Self) do
   begin
-    r := PFind(i);
+    r := p.Rootage(i);
     if (m[r] = -1) then
     begin
       m[r] := c;
@@ -1043,18 +997,6 @@ var
   g, y: TIntegerArray;
   x, s: T2DIntegerArray;
   h, v: TRange;
-  procedure MC(const a, b: Integer);
-  var
-    o, n, m: Integer;
-  begin
-    if (a = b) then
-      Exit;
-    o := g[b];
-    n := g[a];
-    for m := 0 to High(g) do
-      if (g[m] = o) then
-        g[m] := n;
-  end;
 begin
   l := Self.Length;
   case l of
@@ -1079,7 +1021,7 @@ begin
         if not v.Employs(-1) then
         for k := v.start to v.stop do
           if Self[s[c][i]].Within(Self[s[j][k]], xRadius, yRadius) then
-            MC(s[c][i], s[j][k]);
+            g.Unison(s[c][i], s[j][k]);
       end;
   end;
   case method of
@@ -1118,17 +1060,6 @@ var
   g, y: TIntegerArray;
   x, s: T2DIntegerArray;
   h, v: TRange;
-  procedure MC(const a, b: Integer);
-  var
-    o, n, m: Integer;
-  begin
-    if (a = b) then Exit;
-    o := g[b];
-    n := g[a];
-    for m := 0 to High(g) do
-      if (g[m] = o) then
-        g[m] := n;
-  end;
 begin
   l := Self.Length;
   case l of
@@ -1154,7 +1085,7 @@ begin
         if not v.Employs(-1) then
         for k := v.start to v.stop do
           if Self[s[c][i]].Within(Self[s[j][k]], radius, metric) then
-            MC(s[c][i], s[j][k]);
+            g.Unison(s[c][i], s[j][k]);
       end;
   end;
   case method of
