@@ -27,15 +27,14 @@
 {$I @TIntegerArray/Counting.inc}
 {$I @TIntegerArray/Deduplicate.inc}
 {$I @TIntegerArray/Directionality.inc}
+{$I @TIntegerArray/Disjoint.inc}
 {$I @TIntegerArray/Equality.inc}
 {$I @TIntegerArray/Extrema.inc}
-{$I @TIntegerArray/Fellowship.inc}
 {$I @TIntegerArray/Inequality.inc}
 {$I @TIntegerArray/Insertion.inc}
 {$I @TIntegerArray/Merging.inc}
 {$I @TIntegerArray/Monotone.inc}
 {$I @TIntegerArray/Navigation.inc}
-{$I @TIntegerArray/Parental.inc}
 {$I @TIntegerArray/Reversal.inc}
 {$I @TIntegerArray/Scanning.inc}
 {$I @TIntegerArray/Selection.inc}

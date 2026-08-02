@@ -8,6 +8,7 @@
 {$IFDEF HELPERS}
 TIntegerArrayHelper = type helper for TIntegerArray
   {$I TIntegerArray.pph}
+  class function Identity(const N: Integer = 1): TIntegerArray; overload; static;
   function Numberline: TIntegerArray;
   function Reinit: Integer; overload;
 end;
@@ -20,6 +21,19 @@ end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Identity>
+  @action: Creates a TIntegerArray of length N where each element equals its own index.
+  @note: Suitable as the initial state for a disjoint-set parent array.
+[==============================================================================}
+class function TIntegerArrayHelper.Identity(const N: Integer = 1): TIntegerArray; overload; static;
+var
+  i: Integer;
+begin
+  for i := 0 to Result.Alloc(Max(0, N)) do
+    Result[i] := i;
+end;
+
 {==============================================================================]
   <Numberline>
   @action: Returns numberline of array arr.

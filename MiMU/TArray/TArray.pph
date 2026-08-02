@@ -7,6 +7,7 @@
 {$I @TArray/Copying.inc}
 {$I @TArray/Counting.inc}
 {$I @TArray/Custody.inc}
+{$I @TArray/Disjoint.inc}
 {$I @TArray/Domain.inc}
 {$I @TArray/Duplication.inc}
 {$I @TArray/Endpoints.inc}
@@ -27,7 +28,6 @@
 {$I @TArray/Query.inc}
 {$I @TArray/Randomization.inc}
 {$I @TArray/Recede.inc}
-{$I @TArray/Redirection.inc}
 {$I @TArray/Relocation.inc}
 {$I @TArray/Removal.inc}
 {$I @TArray/Reordering.inc}
